@@ -1,0 +1,15 @@
+<div class="login">
+
+  <h4>Enter your AuthToken</h4>
+
+  <div class="input-group input-auth">
+    <input type="text" class="form-control" ng-model="authToken"/>
+    <span class="input-group-btn">
+      <button class="btn btn-primary" type="button" ng-click="authorizeToken(authToken)">Submit</button>
+    </span>
+  </div><!-- /input-group -->
+
+  <br/>
+  <pre class="result" ng-show="status">Status code: {{status}}</pre>
+
+</div>

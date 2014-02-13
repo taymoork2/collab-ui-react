@@ -1,0 +1,33 @@
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+
+@import 'sass-bootstrap/lib/bootstrap';
+
+/******** Resets & Globals **********/
+
+/******** Login *********************/
+.login {
+  margin-left:10px;
+}
+
+.input-auth {
+  width:60%;
+}
+
+.result {
+  padding:15px;
+
+}
+
+/************ Entitlement ************/
+div.admin {
+    padding: 0px 50px 100px 50px;
+    background-color: #eaeaea;
+}
+
+div.admin div.adminform {
+    width:500px;
+}
+
+div.admin textarea {
+    width: 500px;
+}

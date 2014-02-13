@@ -1,0 +1,16 @@
+<div class="admin">
+  <br/><br/>
+  <h3>Add WX2 Entitlement</h3>
+  <div>
+    <p>Enter the email-address to be WX2 entitled:</p>
+    <div class="adminform">
+      <textarea name="users" rows="7" ng-model="users" placeholder="Usage: <one email-address per line>"></textarea><br/>
+      <button class="btn btn-primary pull-right" ng-click="entitle(users)">Add Entitlement</button>
+      <button class="btn btn-danger pull-left" ng-click="deEntitle(users)">Remove Entitlement</button>
+    </div>
+  </div>
+</div>
+
+<br/>
+<div id="results"></div>
+

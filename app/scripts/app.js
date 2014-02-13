@@ -9,8 +9,16 @@ angular.module('wx2AdminWebClientApp', [
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+      })
+      .when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+      })
+      .when('/entitlement', {
+        templateUrl: 'views/entitlement.html',
+        controller: 'EntitlementCtrl'
       })
       .otherwise({
         redirectTo: '/'
