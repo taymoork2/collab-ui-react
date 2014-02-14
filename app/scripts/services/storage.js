@@ -12,7 +12,12 @@ angular.module('wx2AdminWebClientApp')
 
       get: function(key) {
         return localStorage.getItem(key);
+      },
+
+      clear: function() {
+        localStorage.clear();
       }
+
     };
 
   });
