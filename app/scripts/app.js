@@ -17,6 +17,10 @@ angular.module('wx2AdminWebClientApp', [
           templateUrl: 'views/login.html',
           controller: 'LoginCtrl'
         })
+        .when('/users', {
+          templateUrl: 'views/users.html',
+          controller: 'UsersCtrl'
+        })
         .when('/entitlement', {
           templateUrl: 'views/entitlement.html',
           controller: 'EntitlementCtrl'

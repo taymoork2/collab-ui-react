@@ -3,6 +3,8 @@
 angular.module('wx2AdminWebClientApp')
   .factory('Config', function() {
     return {
+      adminUrl: 'http://localhost:8080/atlas-server/atlas/api/v1/',
+      defaultOrgId: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5',
       conversationUrl: 'https://conv-a.wbx2.com/conversation/api/v1',
       locusUrl: 'https://locus-a.wbx2.com/locus/api/v1',
       logoutUrl: 'https://idbrokerbeta.webex.com/idb/UI/Logout',
