@@ -32,11 +32,34 @@ angular.module('wx2AdminWebClientApp')
 
 					$http.defaults.headers.common.Authorization = 'Bearer ' + token;
 					$http.put(userUrl + orgId + '/user', userData)
-						.success(function() {
-							$scope.status = 'Account(s) ' + userList + ' added successfully';
+						.success(function(data) {
+							$scope.results = {
+								'resultList': []
+							};
+
+							for (var i = 0; i < data.userResponse.length; i++) {
+
+								var userResult = {
+									'email': data.userResponse[i].email
+								};
+
+								var userStatus = data.userResponse[i].status;
+
+								if (userStatus === 200) {
+									userResult.message = 'added successfully';
+								} else if (userStatus === 409) {
+									userResult.message = 'already exists';
+								} else {
+									userResult.message = 'not added, status: ' + userStatus;
+								}
+
+								$scope.results.resultList.push(userResult);
+
+							}
+
 						})
 						.error(function(data, status) {
-							$scope.status = data || 'Request failed.  Status: ' + status;
+							$scope.status = 'Request failed.  Status: ' + status + '\n' + data;
 						});
 
 				}

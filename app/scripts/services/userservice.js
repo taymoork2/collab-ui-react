@@ -27,14 +27,15 @@ angular.module('wx2AdminWebClientApp')
 					}
 
 					$http.defaults.headers.common.Authorization = 'Bearer ' + token;
-					$http.put(userUrl + Config.defaultOrgId + '/user', userData)
-						.success(function(data) {
+					$http.post(userUrl + 'user', userData)
+						.success(function(data, status) {
 							data.success = true;
-							callback(data);
+							callback(data, status);
 						})
-						.error(function(data) {
+						.error(function(data,status) {
 							data.success = false;
-							callback(data);
+							data.status = status;
+							callback(data, status);
 						});
 
 
