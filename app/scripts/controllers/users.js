@@ -5,6 +5,7 @@ angular.module('wx2AdminWebClientApp')
 		function($scope, $location, $http, Storage, Config) {
 
 			$scope.token = null;
+			$scope.status = null;
 			var token = Storage.get('accessToken');
 			var userUrl = Config.adminUrl;
 			var orgId = Config.defaultOrgId;
