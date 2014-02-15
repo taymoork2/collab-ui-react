@@ -4,13 +4,13 @@ angular.module('wx2AdminWebClientApp')
 	.controller('EntitlementCtrl', ['$scope', '$location', 'Userservice', 'Log',
 		function($scope, $location, Userservice, Log) {
 			$scope.entitle = function(userList) {
-				Log.debug('Users: ', userList);
+				Log.debug('Entitlements: ', userList);
 
 				var callback = function(data, status) {
 					$scope.status = null;
+					$scope.results = null;
 					if (data.success) {
 						Log.info('User successfully entitled', data);
-						$scope.status = 'Account(s) ' + userList + ' entitled successfully';
 						$scope.results = {
 							'resultList': []
 						};

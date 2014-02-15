@@ -6,6 +6,7 @@ angular.module('wx2AdminWebClientApp')
 
 			var userUrl = Config.adminUrl;
 			var token = Storage.get('accessToken');
+			var orgId = Config.defaultOrgId;
 
 			return {
 				entitleUsers: function(userEmailArray, callback) {
@@ -37,7 +38,37 @@ angular.module('wx2AdminWebClientApp')
 							data.status = status;
 							callback(data, status);
 						});
+				},
 
+				addUsers: function(userEmailArray, callback) {
+					var userData = {
+						'users': []
+					};
+
+					for (var i = 0; i < userEmailArray.length; i++) {
+						var userEmail = userEmailArray[i].trim();
+
+						if (userEmail.length > 0) {
+							var user = {
+								'email': userEmail,
+								'password': 'xyz',
+								'name': userEmail,
+							};
+							userData.users.push(user);
+						}
+					}
+
+					$http.defaults.headers.common.Authorization = 'Bearer ' + token;
+					$http.put(userUrl + orgId + '/user', userData)
+						.success(function(data, status) {
+							data.success = true;
+							callback(data, status);
+						})
+						.error(function(data,status) {
+							data.success = false;
+							data.status = status;
+							callback(data, status);
+						});
 
 				}
 
