@@ -6,9 +6,8 @@ angular.module('wx2AdminWebClientApp')
 			$scope.entitle = function(userList) {
 				Log.debug('Users: ', userList);
 
-				$scope.status = null;
-
 				var callback = function(data, status) {
+					$scope.status = null;
 					if (data.success) {
 						Log.info('User successfully entitled', data);
 						$scope.status = 'Account(s) ' + userList + ' entitled successfully';
