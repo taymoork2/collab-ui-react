@@ -12,5 +12,12 @@
 </div>
 
 <br/>
-<pre id="results" ng-show="status">{{status}}</pre>
+<div id="results" ng-show="results">
+  <br/>
+  <ul class="list-unstyled">
+    <li ng-repeat="userResult in results.resultList">{{userResult.email}} {{userResult.message}}
+    </li>  
+  </ul>
+</div>
 
+<pre id="results" ng-show="status">{{status}}</pre>
