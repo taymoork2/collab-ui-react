@@ -12,3 +12,13 @@ Setup the environment:
 * Run package managers in the cloned project to pull dependencies: 
 * $ bower install && npm install 
 * Launch the app: $ grunt serve 
+
+Run the protractor e2e test:
+----------------------------
+
+* Start the selenium server: ./node_modules/protractor/bin/webdriver-manager start
+* Run the tests: $ grunt protractor 
+* Configurations are located in protractor-config.js
+* Test file is located at test/e2e-protractor/<test-file>_spec.js
+
+ 

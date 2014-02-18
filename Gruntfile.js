@@ -7,7 +7,7 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
@@ -54,6 +54,15 @@ module.exports = function (grunt) {
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
+      },
+      e2eTest: {
+        files: ['test/e2e-protractor/{,*/}*.js',
+          '<%= yeoman.app %>/scripts/{,*/}*.js',
+          '<%= yeoman.app %>/{,*/}*.html',
+          '.tmp/styles/{,*/}*.css',
+          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+        ],
+        tasks: ['protractor']
       }
     },
 
@@ -139,6 +148,22 @@ module.exports = function (grunt) {
       }
     },
 
+    protractor: {
+      options: {
+        configFile: 'protractor-config.js',
+        keepAlive: true,
+        noColor: false,
+        args: {}
+      },
+      chrome: {
+        options: {
+          args: {
+            browser: 'chrome'
+          }
+        }
+      }
+    },
+
     // Automatically inject Bower components into the app
     'bower-install': {
       app: {
@@ -146,9 +171,6 @@ module.exports = function (grunt) {
         ignorePath: '<%= yeoman.app %>/'
       }
     },
-
-
-
 
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
@@ -353,7 +375,8 @@ module.exports = function (grunt) {
   });
 
 
-  grunt.registerTask('serve', function (target) {
+
+  grunt.registerTask('serve', function(target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
@@ -368,7 +391,7 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('server', function () {
+  grunt.registerTask('server', function() {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve']);
   });
