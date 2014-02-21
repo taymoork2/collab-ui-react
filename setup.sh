@@ -44,6 +44,16 @@ else
   echo "bower is already installed"
 fi
 
+# Check and install grunt
+which grunt > /dev/null 2>&1
+GRUNT_RET=$?
+if [ $GRUNT_RET -ne 0 ]; then
+  echo "grunt not found, installing:"
+  npm install -g grunt-cli
+else
+  echo "grunt is already installed"
+fi
+
 # Install dependecies
 bundle install
 npm install
