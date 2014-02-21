@@ -9,5 +9,5 @@
 </div>
 
 <pre class="result" ng-show="result">{{result}}</pre>
-<pre class="result" ng-show="loginForm.$error.required">Email is required.</pre>
+<pre class="result" ng-show="loginForm.$error.required && !result">Email is required.</pre>
 <pre class="result" ng-show="loginForm.$error.email && !loginForm.email">The email format is not valid.</pre>
