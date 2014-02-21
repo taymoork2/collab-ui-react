@@ -10,7 +10,7 @@
 describe('Login Page', function() {
   it('should display the login form', function() {
     browser.get('#/login').then(function() {
-      expect(element(by.css('form')).getAttribute('name')).toEqual('loginForm');
+      expect(element(by.css('form')).getAttribute('name')).toEqual('loinForm');
     });
   });
 });
