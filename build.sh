@@ -5,7 +5,7 @@
 
 # Build
 grunt build || exit $?
-grunt protractor || exit $?
+npm test || exit $?
 
 # Check build number
 if [ -n "$BUILD_NUMBER" ]; then
@@ -14,8 +14,6 @@ else
     echo "Build Number not set $BUILD_NUMBER"
     BUILD_NUMBER=0
 fi
-
-npm test || exit $?
 
 # Package
 rm -f wx2-admin-web-client.*.tar.gz
