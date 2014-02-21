@@ -5,14 +5,19 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 /******** Resets & Globals **********/
 
 /******** Login *********************/
-#loginBtn {
-  width: 40% !important;
-  margin-right: auto;
-  margin-left: auto;
+.input-auth {
+  width: 40%;
 }
+
+// #loginBtn {
+//   width: 40% !important;
+//   margin-right: auto;
+//   margin-left: auto;
+// }
 
 .result {
   padding:15px;
+  margin-top:15px;
 }
 
 /************ Entitlement ************/

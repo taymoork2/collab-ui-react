@@ -6,13 +6,13 @@ describe('Service: Storage', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   // instantiate service
-  var Storage;
-  beforeEach(inject(function(_Storage_) {
-    Storage = _Storage_;
-  }));
+  // var Storage;
+  // beforeEach(inject(function(_Storage_) {
+  //   Storage = _Storage_;
+  // }));
 
-  it('should do something', function () {
-    expect(!!Storage).toBe(true);
-  });
+  // it('should do something', function () {
+  //   expect(!!Storage).toBe(true);
+  // });
 
 });

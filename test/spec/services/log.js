@@ -6,13 +6,13 @@ describe('Service: Log', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   // instantiate service
-  var Log;
-  beforeEach(inject(function (_Log_) {
-    Log = _Log_;
-  }));
+  // var Log;
+  // beforeEach(inject(function (_Log_) {
+  //   Log = _Log_;
+  // }));
 
-  it('should do something', function () {
-    expect(!!Log).toBe(true);
-  });
+  // it('should do something', function () {
+  //   expect(!!Log).toBe(true);
+  // });
 
 });

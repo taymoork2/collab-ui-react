@@ -6,13 +6,13 @@ describe('Service: Config', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   // instantiate service
-  var Config;
-  beforeEach(inject(function(_Config_) {
-    Config = _Config_;
-  }));
+  // var Config;
+  // beforeEach(inject(function(_Config_) {
+  //   Config = _Config_;
+  // }));
 
-  it('should do something', function () {
-    expect(!!Config).toBe(true);
-  });
+  // it('should do something', function () {
+  //   expect(!!Config).toBe(true);
+  // });
 
 });

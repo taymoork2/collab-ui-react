@@ -54,15 +54,6 @@ module.exports = function(grunt) {
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
-      },
-      e2eTest: {
-        files: ['test/e2e-protractor/{,*/}*.js',
-          '<%= yeoman.app %>/scripts/{,*/}*.js',
-          '<%= yeoman.app %>/{,*/}*.html',
-          '.tmp/styles/{,*/}*.css',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-        ],
-        tasks: ['protractor']
       }
     },
 
@@ -145,22 +136,6 @@ module.exports = function(grunt) {
           src: '{,*/}*.css',
           dest: '.tmp/styles/'
         }]
-      }
-    },
-
-    protractor: {
-      options: {
-        configFile: 'protractor-config.js',
-        keepAlive: true,
-        noColor: false,
-        args: {}
-      },
-      chrome: {
-        options: {
-          args: {
-            browser: 'chrome'
-          }
-        }
       }
     },
 
@@ -371,7 +346,24 @@ module.exports = function(grunt) {
         configFile: 'karma.conf.js',
         singleRun: true
       }
+    },
+
+    protractor: {
+      options: {
+        configFile: 'protractor-config.js',
+        keepAlive: true,
+        noColor: false,
+        args: {}
+      },
+      chrome: {
+        options: {
+          args: {
+            browser: 'chrome'
+          }
+        }
+      }
     }
+
   });
 
 
@@ -398,10 +390,11 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', [
     'clean:server',
+    'bower-install',
     'concurrent:test',
     'autoprefixer',
     'connect:test',
-    'karma'
+    'protractor'
   ]);
 
   grunt.registerTask('build', [

@@ -6,13 +6,13 @@ describe('Service: Auth', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   // instantiate service
-  var Auth;
-  beforeEach(inject(function(_Auth_) {
-    Auth = _Auth_;
-  }));
+  // var Auth;
+  // beforeEach(inject(function(_Auth_) {
+  //   Auth = _Auth_;
+  // }));
 
-  it('should do something', function () {
-    expect(!!Auth).toBe(true);
-  });
+  // // it('should do something', function () {
+  // //   expect(!!Auth).toBe(true);
+  // // });
 
 });

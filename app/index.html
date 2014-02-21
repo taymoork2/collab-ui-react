@@ -30,7 +30,7 @@
         <div class="container-fluid">
           <a class="navbar-brand" href="#">Cisco WX² Admin Tool</a>
           <ul class="nav navbar-nav pull-right">
-            <li class="pull-right" ng-controller="LogoutCtrl"><a href="#" ng-show="loggedIn" ng-click="logout()">Sign Out</a></li>
+            <li class="pull-right" ng-controller="LogoutCtrl"><a href="#" ng-show="loggedIn" ng-click="logout()" id="logout">Sign Out</a></li>
         </div><!-- /.container-fluid -->
       </nav>
 
@@ -61,6 +61,8 @@
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/request/request.js"></script>
+    <script src="bower_components/base64/base64.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

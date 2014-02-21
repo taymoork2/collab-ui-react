@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Setup
+./setup.sh
+
 # Build
 grunt build || exit $?
 grunt protractor || exit $?
