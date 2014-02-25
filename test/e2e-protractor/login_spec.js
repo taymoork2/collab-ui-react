@@ -11,6 +11,6 @@ describe('Login Page', function() {
   it('should display the login form', function() {
     browser.get('#/login');
     browser.waitForAngular();
-    expect(element(by.css('form')).getAttribute('name')).toEqual('loinForm');
+    expect(element(by.css('form')).getAttribute('name')).toEqual('loginForm');
   });
 });
