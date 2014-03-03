@@ -1,13 +1,4 @@
 <div ng-show="!token" class="login">
-  <h4>Enter your Email</h4>
-  <form name="loginForm" class="input-group input-auth">
-    <input type="email" name="email" class="form-control" ng-model="loginForm.email" required>
-    <span class="input-group-btn">
-      <button class="btn btn-primary" type="button" ng-disabled="loginForm.$invalid" ng-click="login(loginForm)">Submit</button>
-    </span>
-  </form><!-- /input-group -->
 </div>
 
 <pre class="result" ng-show="result">{{result}}</pre>
-<pre class="result" ng-show="loginForm.$error.required && !result">Email is required.</pre>
-<pre class="result" ng-show="loginForm.$error.email && !loginForm.email">The email format is not valid.</pre>

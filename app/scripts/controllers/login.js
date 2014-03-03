@@ -4,19 +4,13 @@ angular.module('wx2AdminWebClientApp')
   .controller('LoginCtrl', ['$scope', '$location', '$window', '$http', 'Storage', 'Config',
     function($scope, $location, $window, $http, Storage, Config) {
 
+      var authorizeUrl = Config.adminUrl + 'authorize';
       var token = Storage.get('accessToken');
+      $scope.result = 'Loading...';
       $scope.token = token ? true : false;
 
-      var authorizeUrl = Config.adminUrl + 'authorize';
-
-      $scope.login = function(loginInput) {
-        if (loginInput.$valid) {
-          var oauth2LoginUrl = Config.oauth2LoginUrl + loginInput.email;
-          $window.location.href = oauth2LoginUrl;
-        }
-      };
-
       if (token) {
+        $scope.result = 'Authorizing user...';
         $http.defaults.headers.common.Authorization = 'Bearer ' + token;
         $http.get(authorizeUrl)
           .success(function() {
@@ -29,6 +23,7 @@ angular.module('wx2AdminWebClientApp')
           });
       } else {
         console.log('No accessToken.');
+        $window.location.href = Config.oauth2LoginUrl;
       }
 
     }
