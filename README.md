@@ -21,4 +21,3 @@ Run the protractor e2e test:
 * Configurations are located in protractor-config.js
 * Test file is located at test/e2e-protractor/<test-file>_spec.js
 
- 
