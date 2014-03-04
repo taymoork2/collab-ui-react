@@ -1,8 +1,16 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-	.controller('UsersCtrl', ['$scope', '$location', 'Userservice', 'Log',
-		function($scope, $location, Userservice, Log) {
+	.controller('UsersCtrl', ['$scope', '$location', 'Userservice', 'Log', 'Storage', 'Config', 'Authinfo',
+		function($scope, $location, Userservice, Log, Storage, Config, Authinfo) {
+
+			$scope.adminOrgName = Authinfo.getOrgName();
+
+			$scope.isAddEnabled = Authinfo.isAddUserEnabled();
+
+			function getUsers(userList) {
+				return userList.split(';');
+			}
 
 			$scope.addUsers = function(userList) {
 
@@ -44,15 +52,54 @@ angular.module('wx2AdminWebClientApp')
 				};
 
 				if (userList) {
-					var usersArray = userList.split(';');
-					Userservice.addUsers(usersArray, callback);
+					Userservice.addUsers(getUsers(userList), callback);
 
 				}
 			};
 
-			$scope.gotoEntitlement = function() {
-				$location.path('/entitlement');
-			};
+			$scope.entitleUsers = function(userList) {
+				Log.debug('Entitlements: ', userList);
 
+				var callback = function(data, status) {
+					$scope.status = null;
+					$scope.results = null;
+					if (data.success) {
+						Log.info('User successfully entitled', data);
+						$scope.results = {
+							'resultList': []
+						};
+
+						for (var i = 0; i < data.userResponse.length; i++) {
+
+							var userResult = {
+								'email': data.userResponse[i].email
+							};
+
+							var userStatus = data.userResponse[i].status;
+
+							if (userStatus === 200) {
+								userResult.message = 'entitled successfully';
+							} else if (userStatus === 404) {
+								userResult.message = 'does not exists';
+							} else {
+								userResult.message = 'not entitled, status: ' + userStatus;
+							}
+
+							$scope.results.resultList.push(userResult);
+
+						}
+					
+					} else {
+						Log.warn('Could not entitle the user', data);
+						$scope.status = 'Request failed.  Status: ' + status + '\n' + data;
+					}
+				};
+
+				if (userList) {
+					Userservice.entitleUsers(getUsers(userList), callback);
+
+				}
+
+			};
 		}
 	]);

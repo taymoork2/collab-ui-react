@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('LoginCtrl', ['$scope', '$location', '$window', '$http', 'Storage', 'Config',
-    function($scope, $location, $window, $http, Storage, Config) {
+  .controller('LoginCtrl', ['$scope', '$location', '$window', '$http', 'Storage', 'Config', 'Authinfo',
+    function($scope, $location, $window, $http, Storage, Config, Authinfo) {
 
       var authorizeUrl = Config.adminServiceUrl + 'authorize';
       var token = Storage.get('accessToken');
@@ -16,11 +16,13 @@ angular.module('wx2AdminWebClientApp')
         $scope.result = 'Authorizing user...';
         $http.defaults.headers.common.Authorization = 'Bearer ' + token;
         $http.get(authorizeUrl)
-          .success(function() {
+          .success(function(data) {
             $scope.token = true;
             $location.path('/users');
+            Authinfo.initialize(data);
           })
           .error(function(data, status) {
+            Authinfo.clear();
             $scope.data = data || 'Authorization failed.';
             $scope.result = 'Authorization failed. Status: ' + status + '.';
           });
