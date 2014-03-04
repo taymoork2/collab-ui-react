@@ -2,11 +2,11 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html ng-app="wx2AdminWebClientApp"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>WX² Admin Portal</title>
+  <title ng-bind="Localize.appTtitle">Squared Admin Portal</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <link rel="icon" type="image/png" href="images/logo.png">
@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="styles/app.css">
   <!-- endbuild -->
 </head>
-<body ng-app="wx2AdminWebClientApp">
+<body ng-cloak>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
       <![endif]-->
@@ -28,7 +28,7 @@
       <!-- Add your site or application content here -->
       <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Cisco WX² Admin Tool</a>
+          <a class="navbar-brand" href="#">{{Localize.appTitle}}</a>
           <ul class="nav navbar-nav pull-right">
             <li class="pull-right" ng-controller="LogoutCtrl"><a href="#" ng-show="loggedIn" ng-click="logout()" id="logout">Sign Out</a></li>
         </div><!-- /.container-fluid -->
@@ -78,6 +78,7 @@
     <script src="scripts/controllers/logout.js"></script>
     <script src="scripts/controllers/users.js"></script>
     <script src="scripts/services/userService.js"></script>
+    <script src="scripts/services/Localize.js"></script>
     <!-- endbuild -->
   </body>
   </html>
