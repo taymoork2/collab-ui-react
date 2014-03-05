@@ -4,6 +4,12 @@ angular.module('wx2AdminWebClientApp')
   .controller('LogoutCtrl', ['$scope', '$window', 'Storage', 'Config', 'Log', 'Authinfo',
     function($scope, $window, Storage, Config, Log, Authinfo) {
 
+      //update the scope when Authinfo data has been populated.
+      $scope.$on('AuthinfoUpdated', function() {
+        $scope.username = Authinfo.getUserName();
+        $scope.orgname = Authinfo.getOrgName();
+      });
+
       if (Storage.get('accessToken')) {
         $scope.loggedIn = true;
       } else {
@@ -20,8 +26,6 @@ angular.module('wx2AdminWebClientApp')
         $window.location.href = logoutUrl;
       };
 
-      //Set Authinfo scope variables
-      console.log(Authinfo.getUserName());
     }
 
   ]);

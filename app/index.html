@@ -30,8 +30,8 @@
         <div class="container-fluid">
           <a class="navbar-brand" href="#" ng-bind="Localize.appTitle"></a>
           <ul class="nav navbar-nav pull-right" ng-controller="LogoutCtrl" ng-show="loggedIn">
-            <li class="nav-item">{{username}}</li>
-            <li class="nav-item">{{orgname}}</li>
+            <li class="nav-item" ng-show='username'>{{username}}<span class="separator">|</span></li>
+            <li class="nav-item" ng-show='orgname'>{{orgname}}<span class="separator">|</span></li>
             <li class="pull-right"><a ng-click="logout()" id="logoutBtn">Sign Out</a></li>
           </ul>
         </div><!-- /.container-fluid -->

@@ -1,35 +1,28 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('LoginCtrl', ['$scope', '$location', '$window', '$http', 'Storage', 'Config', 'Authinfo',
-    function($scope, $location, $window, $http, Storage, Config, Authinfo) {
+  .controller('LoginCtrl', ['$scope', '$location', '$window', '$http', 'Storage', 'Config', 'Auth',
+    function($scope, $location, $window, $http, Storage, Config, Auth) {
 
-      var authorizeUrl = Config.adminServiceUrl + 'orgadmininfo';
       var token = Storage.get('accessToken');
       $scope.result = 'Loading...';
-      $scope.token = token ? true : false;
+      $scope.isAuthorized = false;
 
       // Set oauth url depending on the environment
       var oauth2LoginUrl = document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('localhost') !== -1 ? Config.oauth2LoginUrlDev : Config.oauth2LoginUrlProd;
 
       if (token) {
         $scope.result = 'Authorizing user...';
-        $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-        $http.get(authorizeUrl)
-          .success(function(data) {
-            $scope.token = true;
+        Auth.authorize(token, $scope).then(function(){
+          if($scope.isAuthorized){
             $location.path('/users');
-            Authinfo.initialize(data);
-          })
-          .error(function(data, status) {
-            Authinfo.clear();
-            $scope.data = data || 'Authorization failed.';
-            $scope.result = 'Authorization failed. Status: ' + status + '.';
-          });
+          }
+        });
       } else {
         console.log('No accessToken.');
         $window.location.href = oauth2LoginUrl;
       }
+
     }
 
   ]);
