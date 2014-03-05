@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('LogoutCtrl', ['$scope', '$window', 'Storage', 'Config', 'Log', 'Authinfo',
+  .controller('NavigationCtrl', ['$scope', '$window', 'Storage', 'Config', 'Log', 'Authinfo',
     function($scope, $window, Storage, Config, Log, Authinfo) {
 
       //update the scope when Authinfo data has been populated.

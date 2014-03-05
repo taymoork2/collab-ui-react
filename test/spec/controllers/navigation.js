@@ -1,17 +1,17 @@
 'use strict';
 
-describe('Controller: LogoutCtrl', function () {
+describe('Controller: NavigationCtrl', function () {
 
   // load the controller's module
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var LogoutCtrl,
+  var NavigationCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    LogoutCtrl = $controller('LogoutCtrl', {
+    NavigationCtrl = $controller('NavigationCtrl', {
       $scope: scope
     });
   }));

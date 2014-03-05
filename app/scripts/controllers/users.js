@@ -4,16 +4,18 @@ angular.module('wx2AdminWebClientApp')
   .controller('UsersCtrl', ['$scope', '$location', 'Userservice', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth',
     function($scope, $location, Userservice, Log, Storage, Config, Authinfo, Auth) {
 
+
       //Populating authinfo data if empty.
-      var token = Storage.get('accessToken');
-      if (token) {
-        Log.debug('Authorizing user...');
-        Auth.authorize(token, $scope);
-      } else {
-        Log.debug('No accessToken.');
+      if (Authinfo.isEmpty()) {
+        var token = Storage.get('accessToken');
+        if (token) {
+          Log.debug('Authorizing user... Populating admin data...');
+          Auth.authorize(token, $scope);
+        } else {
+          Log.debug('No accessToken.');
+        }
       }
 
-      $scope.adminOrgName = Authinfo.getOrgName();
       $scope.isAddEnabled = Authinfo.isAddUserEnabled();
 
       function getUsers(userList) {

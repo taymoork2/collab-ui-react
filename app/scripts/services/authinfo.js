@@ -34,7 +34,17 @@ angular.module('wx2AdminWebClientApp')
 
         isAddUserEnabled: function() {
           return authData.addUserEnabled;
+        },
+
+        isEmpty: function() {
+          for (var datakey in authData) {
+            if (authData[datakey] !== null) {
+              return false;
+            }
+          }
+          return true;
         }
+
       };
     }
   ]);

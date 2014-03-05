@@ -3,13 +3,12 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import 'sass-bootstrap/lib/bootstrap';
 
 /******** Resets & Globals **********/
-#logoutBtn {
+#logout-btn {
   &:hover {
     cursor: pointer;
   }
   padding-left: 5px;
 }
-
 
 /******** Login *********************/
 .input-auth {
@@ -32,7 +31,6 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
   padding: 5px;
   color: #777777;
   margin-top:10px;
-
 }
 
 .separator {
