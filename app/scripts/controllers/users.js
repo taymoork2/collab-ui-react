@@ -44,7 +44,7 @@ angular.module('wx2AdminWebClientApp')
 							$scope.results.resultList.push(userResult);
 
 						}
-						
+
 					} else {
 						Log.warn('Could not entitle the user', data);
 						$scope.status = 'Request failed.  Status: ' + status + '\n' + data;
@@ -88,7 +88,7 @@ angular.module('wx2AdminWebClientApp')
 							$scope.results.resultList.push(userResult);
 
 						}
-					
+
 					} else {
 						Log.warn('Could not entitle the user', data);
 						$scope.status = 'Request failed.  Status: ' + status + '\n' + data;

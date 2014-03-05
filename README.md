@@ -16,8 +16,7 @@ Setup the environment:
 Run the protractor e2e test:
 ----------------------------
 
-* Start the selenium server: ./node_modules/protractor/bin/webdriver-manager start
 * Run the tests: $ npm test or $ grunt test
 * Configurations are located in protractor-config.js
-* Test file is located at test/e2e-protractor/<test-file>_spec.js
+* Test files are located at test/e2e-protractor/\<test-file\>_spec.js
 

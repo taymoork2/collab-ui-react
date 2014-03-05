@@ -3,6 +3,9 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 @import 'sass-bootstrap/lib/bootstrap';
 
 /******** Resets & Globals **********/
+#logoutBtn:hover {
+  cursor: pointer;
+}
 
 /******** Login *********************/
 .input-auth {

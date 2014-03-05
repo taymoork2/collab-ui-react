@@ -8,7 +8,7 @@ angular.module('wx2AdminWebClientApp')
         'orgname' : null,
         'addUserEnabled' : null
       };
-    
+
     return {
       initialize: function(data) {
         authData.username = data.name;
