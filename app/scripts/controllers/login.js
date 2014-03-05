@@ -4,7 +4,7 @@ angular.module('wx2AdminWebClientApp')
   .controller('LoginCtrl', ['$scope', '$location', '$window', '$http', 'Storage', 'Config', 'Authinfo',
     function($scope, $location, $window, $http, Storage, Config, Authinfo) {
 
-      var authorizeUrl = Config.adminServiceUrl + 'authorize';
+      var authorizeUrl = Config.adminServiceUrl + 'orgadmininfo';
       var token = Storage.get('accessToken');
       $scope.result = 'Loading...';
       $scope.token = token ? true : false;
