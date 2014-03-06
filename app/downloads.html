@@ -6,29 +6,27 @@
   <meta name="description" content="Cisco Squared Download Page">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cisco Squared Download Page</title>
-
-  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script src="bower_components/jquery/jquery.js"></script>
 </head>
 <body>
   <script>
   $(document).ready(function(){
 
     var webClientURL = null;
-    var iOSURL = null;
+    var iPhoneURL = null;
     var androidURL = null;
 
     $.getJSON('download_urls.json')
     .done(function(data){
       webClientURL = data.webClientURL;
-      iOSURL = data.iOSURL;
+      iPhoneURL = data.iPhoneURL;
       androidURL = data.androidURL;
 
-      if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {
-        console.log("Matched iOS agent.");
-        window.location.replace(iOSURL);
-      }else if(navigator.userAgent.match(/Android/i)){
-        console.log("Matched Android agent.");
+      if(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) {
+        console.log("Matched iPhone agent.");
+        window.location.replace(iPhoneURL);
+      }else if(navigator.userAgent.match(/Android/i) && navigator.userAgent.match(/mobile/i)){
+        console.log("Matched Android mobile agent.");
         window.location.replace(androidURL);
       } else {
         console.log('Matched desktop agent.');
