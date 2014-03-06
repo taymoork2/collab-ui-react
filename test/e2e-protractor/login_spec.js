@@ -17,7 +17,11 @@ describe('Login flow', function() {
   it('should redirect to CI global login page.', function() {
     browser.get('#/login');
     browser.waitForAngular();
-    expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
+    browser.driver.wait(function() {
+      return browser.driver.isElementPresent(by.css('#IDToken1'));
+    }).then(function() {
+      expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
+    });
   });
 
   it('should log in with valid credentials and display users page', function() {
