@@ -33,10 +33,10 @@ describe('Login flow', function() {
     browser.get('#/login');
     browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
     browser.driver.findElement(by.css('#IDButton2')).click();
-    browser.sleep(2000);
+    browser.sleep(5000);
     browser.driver.findElement(by.css('#IDToken2')).sendKeys(testuser.password);
     browser.driver.findElement(by.css('#Button1')).click();
-    browser.sleep(2000);
+    browser.sleep(5000);
     expect(browser.driver.getCurrentUrl()).toContain('/users');
     expect(browser.driver.findElement(by.css('h2')).getText()).toContain('User Accounts');
   });
