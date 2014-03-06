@@ -1,6 +1,6 @@
 <div class="admin">
-  </br>
-  <h2>User Accounts </br><small>Add new user(s)</small></h2>
+  <br />
+  <h2>User Accounts <br /><small>Add new user(s)</small></h2>
   <div>
     <form class="form-horizontal" role="form">
     	<div class="form-group">
@@ -11,8 +11,8 @@
   		</div>
 		<div class="form-group">
     		<div class="col-sm-offset-2 col-sm-10">
-      			<button class="btn btn-primary" ng-disabled="isAddEnabled" ng-click="addUsers(userList)">Add</button>
-            <button class="btn btn-primary" ng-disabled="!isAddEnabled" ng-click="entitleUsers(userList)">Entitle</button>
+      			<button class="btn btn-primary" ng-disabled="!isAddEnabled" ng-click="addUsers(userList)">Add</button>
+            <button class="btn btn-primary" ng-disabled="isAddEnabled" ng-click="entitleUsers(userList)">Entitle</button>
       			<button class="btn btn-link">Cancel</button>
    		</div>
   		</div>
@@ -21,10 +21,10 @@
   </div>
 </div>
 
-<br/>
+<br />
 
 <div id="results" ng-show="results">
-  <br/>
+  <br />
   <ul class="list-unstyled">
     <li ng-repeat="userResult in results.resultList">{{userResult.email}} {{userResult.message}}
     </li>
