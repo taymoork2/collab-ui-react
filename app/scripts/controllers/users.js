@@ -23,24 +23,23 @@ angular.module('wx2AdminWebClientApp')
         }
       }
 
+      $scope.status = null;
+      $scope.results = null;
+
       $scope.isAddEnabled = function() {
         return Authinfo.isAddUserEnabled();
       };
 
       $scope.addUsers = function(usersList) {
         console.log(usersList);
-
         Log.debug('Entitlements: ', usersList);
+        $scope.results = {
+          resultList: []
+        };
 
         var callback = function(data, status) {
-          $scope.status = null;
-          $scope.results = null;
           if (data.success) {
             Log.info('User add request returned:', data);
-            $scope.results = {
-              'resultList': []
-            };
-
             for (var i = 0; i < data.userResponse.length; i++) {
 
               var userResult = {
@@ -69,23 +68,22 @@ angular.module('wx2AdminWebClientApp')
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           Userservice.addUsers(usersList, callback);
-        }else {
+        } else {
           console.log('No users entered.');
+          var userResult = {
+            message: 'Please enter user(s).'
+          };
+          $scope.results.resultList.push(userResult);
         }
 
       };
 
       $scope.entitleUsers = function(usersList) {
         Log.debug('Entitlements: ', usersList);
-
+        $scope.results.resultList = [];
         var callback = function(data, status) {
-          $scope.status = null;
-          $scope.results = null;
           if (data.success) {
             Log.info('User successfully entitled', data);
-            $scope.results = {
-              'resultList': []
-            };
 
             for (var i = 0; i < data.userResponse.length; i++) {
 
@@ -117,6 +115,10 @@ angular.module('wx2AdminWebClientApp')
           Userservice.entitleUsers(usersList, callback);
         } else {
           console.log('No users entered.');
+          var userResult = {
+            message: 'Please enter user(s).'
+          };
+          $scope.results.resultList.push(userResult);
         }
 
       };
