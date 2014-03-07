@@ -16,7 +16,9 @@ angular.module('wx2AdminWebClientApp')
         }
       }
 
-      $scope.isAddEnabled = Authinfo.isAddUserEnabled();
+      $scope.isAddEnabled = function() {
+        return Authinfo.isAddUserEnabled();
+      };
 
       function getUsers(userList) {
         return userList.split(';');
