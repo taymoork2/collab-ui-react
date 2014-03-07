@@ -35,17 +35,14 @@ describe('App flow', function() {
     it('should not log in with invalid credentials', function() {
       browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
       browser.driver.findElement(by.css('#IDButton2')).click();
-
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.css('#IDToken2'));
       }).then(function() {
         browser.driver.findElement(by.css('#IDToken2')).sendKeys('fakePassword');
         browser.driver.findElement(by.css('#Button1')).click();
       });
-
       expect(browser.driver.findElement(by.css('.generic-error')).getText()).toBe('You\'ve entered an incorrect username or password.');
       expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
-
     });
 
     it('should log in with valid credentials and display users page', function() {
@@ -60,7 +57,7 @@ describe('App flow', function() {
       expect(browser.getCurrentUrl()).toContain('/users');
       expect(browser.driver.findElement(by.css('h2')).getText()).toContain('User Accounts');
     });
-  });
+  }); //State is logged-in
 
   // Navigation bar
   describe('Navigation Bar Flow', function() {
