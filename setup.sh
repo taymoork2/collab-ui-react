@@ -58,3 +58,5 @@ fi
 bundle install
 npm install
 bower install
+grunt bower-install
+
