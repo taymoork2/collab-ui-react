@@ -11,13 +11,13 @@ exports.config = {
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: 'http://localhost:9001',
+  baseUrl: 'http://localhost:8000',
 
   jasmineNodeOpts: {
     onComplete: null,
     isVerbose: true,
     showColors: true,
     includeStackTrace: true,
-    defaultTimeoutInterval: 50000
+    defaultTimeoutInterval: 150000
   }
 };
