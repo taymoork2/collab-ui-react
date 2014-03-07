@@ -9,7 +9,7 @@ angular.module('wx2AdminWebClientApp')
         multiple: true,
         simple_tags: true,
         tags: [],
-        tokenSeparators:[',', ' ']
+        tokenSeparators: [',', ' ']
       };
 
       //Populating authinfo data if empty.
@@ -65,8 +65,10 @@ angular.module('wx2AdminWebClientApp')
           }
         };
 
-        if (usersList) {
+        if (typeof usersList !== 'undefined' && usersList.length > 0) {
           Userservice.addUsers(usersList, callback);
+        }else {
+          console.log('No users entered.');
         }
 
       };
@@ -109,8 +111,10 @@ angular.module('wx2AdminWebClientApp')
           }
         };
 
-        if (usersList) {
+        if (typeof usersList !== 'undefined' && usersList.length > 0) {
           Userservice.entitleUsers(usersList, callback);
+        } else {
+          console.log('No users entered.');
         }
 
       };
