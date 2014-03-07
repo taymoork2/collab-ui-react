@@ -5,6 +5,7 @@ angular.module('wx2AdminWebClientApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
+  'ui.select2'
 ])
   .config(['$routeProvider',
     function($routeProvider) {

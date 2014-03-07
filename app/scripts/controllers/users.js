@@ -4,6 +4,13 @@ angular.module('wx2AdminWebClientApp')
   .controller('UsersCtrl', ['$scope', '$location', 'Userservice', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth',
     function($scope, $location, Userservice, Log, Storage, Config, Authinfo, Auth) {
 
+      //Options for Select2 plugin
+      $scope.select2Options = {
+        multiple: true,
+        simple_tags: true,
+        tags: [],
+        tokenSeparators:[',', ' ']
+      };
 
       //Populating authinfo data if empty.
       if (Authinfo.isEmpty()) {
@@ -18,19 +25,16 @@ angular.module('wx2AdminWebClientApp')
 
       $scope.isAddEnabled = Authinfo.isAddUserEnabled();
 
-      function getUsers(userList) {
-        return userList.split(';');
-      }
+      $scope.addUsers = function(usersList) {
+        console.log(usersList);
 
-      $scope.addUsers = function(userList) {
-
-        Log.debug('Entitlements: ', userList);
+        Log.debug('Entitlements: ', usersList);
 
         var callback = function(data, status) {
           $scope.status = null;
           $scope.results = null;
           if (data.success) {
-            Log.info('User add reqeust returned:', data);
+            Log.info('User add request returned:', data);
             $scope.results = {
               'resultList': []
             };
@@ -61,14 +65,14 @@ angular.module('wx2AdminWebClientApp')
           }
         };
 
-        if (userList) {
-          Userservice.addUsers(getUsers(userList), callback);
-
+        if (usersList) {
+          Userservice.addUsers(usersList, callback);
         }
+
       };
 
-      $scope.entitleUsers = function(userList) {
-        Log.debug('Entitlements: ', userList);
+      $scope.entitleUsers = function(usersList) {
+        Log.debug('Entitlements: ', usersList);
 
         var callback = function(data, status) {
           $scope.status = null;
@@ -105,9 +109,8 @@ angular.module('wx2AdminWebClientApp')
           }
         };
 
-        if (userList) {
-          Userservice.entitleUsers(getUsers(userList), callback);
-
+        if (usersList) {
+          Userservice.entitleUsers(usersList, callback);
         }
 
       };

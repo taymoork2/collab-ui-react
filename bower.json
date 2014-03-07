@@ -12,7 +12,8 @@
     "angular-sanitize": "1.2.6",
     "angular-route": "1.2.6",
     "request": "~2.34.1",
-    "base64": "~0.2.0"
+    "base64": "~0.2.0",
+    "angular-ui-select2": "~0.0.5"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",
