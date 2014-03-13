@@ -22,6 +22,10 @@ angular.module('wx2AdminWebClientApp', [
           templateUrl: 'views/users.html',
           controller: 'UsersCtrl'
         })
+        .when('/downloads', {
+          templateUrl: 'views/downloads.html',
+          controller: 'DownloadsCtrl'
+        })
         .otherwise({
           redirectTo: '/'
         });
