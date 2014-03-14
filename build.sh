@@ -16,7 +16,7 @@ else
 fi
 
 # Temporary fix of the linking
-sed -i '' 's/#fixtokenfield/bower_components\/bootstrap-tokenfield\/dist\/css\/bootstrap-tokenfield.css/g' index.html
+sed -i '' 's/#fixtokenfield/bower_components\/bootstrap-tokenfield\/dist\/css\/bootstrap-tokenfield.css/g' app/index.html
 
 # Package
 rm -f wx2-admin-web-client.*.tar.gz
