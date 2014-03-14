@@ -10,7 +10,7 @@
 var testuser = {
   username: 'adminTestUser@wx2.example.com',
   password: 'C1sc0123!',
-  orgname: '67d88fc6eab5 Inc.,'
+  orgname: 'WebEx Self-Service Org'
 };
 
 
@@ -56,6 +56,12 @@ describe('App flow', function() {
 
       expect(browser.getCurrentUrl()).toContain('/users');
       expect(browser.driver.findElement(by.css('h2')).getText()).toContain('User Accounts');
+    });
+
+    it('should enable only add button on /users page when adminTestUser is logged in', function() {
+      expect(browser.driver.isElementPresent(by.id('btnAdd'))).toBe(true);
+      expect(browser.driver.isElementPresent(by.css('#btnAdd.ng-hide'))).toBe(false);
+      expect(browser.driver.isElementPresent(by.css('#btnEntitle.ng-hide'))).toBe(true);
     });
   }); //State is logged-in
 

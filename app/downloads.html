@@ -1,42 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="Cisco Squared Download Page">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cisco Squared Download Page</title>
-  <script src="bower_components/jquery/jquery.js"></script>
-</head>
 <body>
   <script>
-  $(document).ready(function(){
-
-    var webClientURL = null;
-    var iPhoneURL = null;
-    var androidURL = null;
-
-    $.getJSON('download_urls.json')
-    .done(function(data){
-      webClientURL = data.webClientURL;
-      iPhoneURL = data.iPhoneURL;
-      androidURL = data.androidURL;
-
-      if(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) {
-        console.log("Matched iPhone agent.");
-        window.location.replace(iPhoneURL);
-      }else if(navigator.userAgent.match(/Android/i) && navigator.userAgent.match(/mobile/i)){
-        console.log("Matched Android mobile agent.");
-        window.location.replace(androidURL);
-      } else {
-        console.log('Matched desktop agent.');
-        window.location.replace(webClientURL);
-      }
-    })
-    .fail(function(jqxhr, textStatus, error){
-      console.log("Request failed: " + textStatus + ", " + error);
-    });
-  });
+  var newurl = window.location.origin + '/#/downloads?' +
+    window.location.search.substr(1);
+  window.location.replace(newurl);
   </script>
 </body>
 </html>

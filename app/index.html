@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title ng-bind="Localize.appTitle">Squared Admin Portal</title>
+  <title ng-bind="Localize.varTitle()"></title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <link rel="icon" type="image/png" href="images/logo.png">
@@ -29,7 +29,7 @@
       <!-- Add your site or application content here -->
       <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#" ng-bind="Localize.appTitle"></a>
+          <a class="navbar-brand" href="#" ng-bind="Localize.varTitle()"></a>
           <ul class="nav navbar-nav pull-right" ng-controller="NavigationCtrl" ng-show="loggedIn">
             <li class="nav-item" ng-show="username" ng-cloak>{{username}}<span class="separator">|</span></li>
             <li class="nav-item" ng-show="orgname" ng-cloak>{{orgname}}<span class="separator">|</span></li>
@@ -83,6 +83,7 @@
     <script src="scripts/services/userService.js"></script>
     <script src="scripts/services/Localize.js"></script>
     <script src="scripts/services/authInfo.js"></script>
+    <script src="scripts/controllers/downloads.js"></script>
     <!-- endbuild -->
   </body>
   </html>

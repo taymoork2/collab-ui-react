@@ -28,7 +28,6 @@ angular.module('wx2AdminWebClientApp')
               }
               userData.users.push(user);
             }
-
           }
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
@@ -73,11 +72,21 @@ angular.module('wx2AdminWebClientApp')
               data.status = status;
               callback(data, status);
             });
+        },
 
+        sendEmail: function(userEmail, callback) {
+
+          $http.post(userUrl + 'user/mail?email=' + userEmail)
+            .success(function(data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function(data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
         }
-
       };
-
-
     }
   ]);
