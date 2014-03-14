@@ -6,10 +6,6 @@ angular.module('wx2AdminWebClientApp')
 
       var userUrl = Config.adminServiceUrl;
       var token = Storage.get('accessToken');
-      var user = {
-        'email': null,
-        'name': null
-      };
 
       return {
         entitleUsers: function(usersDataArray, callback) {
@@ -20,6 +16,10 @@ angular.module('wx2AdminWebClientApp')
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
             var userName = usersDataArray[i].name.trim();
+            var user = {
+              'email': null,
+              'name': null
+            };
 
             if (userEmail.length > 0 && typeof userEmail !== 'undefined') {
               user.email = userEmail;
@@ -51,7 +51,10 @@ angular.module('wx2AdminWebClientApp')
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
             var userName = usersDataArray[i].name.trim();
-
+            var user = {
+              'email': null,
+              'name': null
+            };
             if (userEmail.length > 0 && typeof userEmail !== 'undefined') {
               user.email = userEmail;
               if (userName.length > 0 && userName !== false && typeof userName !== 'undefined') {
