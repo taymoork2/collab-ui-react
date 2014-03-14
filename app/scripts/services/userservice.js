@@ -30,7 +30,7 @@ angular.module('wx2AdminWebClientApp')
 							data.success = true;
 							callback(data, status);
 						})
-						.error(function(data,status) {
+						.error(function(data, status) {
 							data.success = false;
 							data.status = status;
 							callback(data, status);
@@ -59,12 +59,26 @@ angular.module('wx2AdminWebClientApp')
 							data.success = true;
 							callback(data, status);
 						})
-						.error(function(data,status) {
+						.error(function(data, status) {
 							data.success = false;
 							data.status = status;
 							callback(data, status);
 						});
 
+				},
+
+				sendEmail: function(userEmail, callback) {
+
+					$http.post(userUrl + 'user/email?email=' + userEmail)
+						.success(function(data, status) {
+							data.success = true;
+							callback(data, status);
+						})
+						.error(function(data, status) {
+							data.success = false;
+							data.status = status;
+							callback(data, status);
+						});
 				}
 
 			};

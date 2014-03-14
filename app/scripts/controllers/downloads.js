@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-	.controller('DownloadsCtrl', ['$scope', '$location', '$http',
-		function($scope, $location, $http) {
+	.controller('DownloadsCtrl', ['$scope', '$location', '$http', 'Userservice',
+		function($scope, $location, $http, Userservice) {
 
 			$scope.email = $location.search().email;
 
@@ -33,12 +33,22 @@ angular.module('wx2AdminWebClientApp')
 			};
 
 			$scope.isWeb = function() {
-				return !$scope.isIOS() && !$scope.isAndroid();
+				return !$scope.isIPhone() && !$scope.isAndroid();
 			};
 
 			$scope.hasJustResetPassword = $location.search().pwdResetSuccess;
+
+			var callback = function(data, status) {
+				if (data.success) {
+					$scope.sendStatus = 'email success';
+				} else {
+					$scope.sendStatus = 'email failed status: ' + status;
+				}
+			};
+
 			if ($scope.hasJustResetPassword) {
 				// call backend to send email
+				Userservice.sendEmail($scope.email, callback);
 			}
 
 		}
