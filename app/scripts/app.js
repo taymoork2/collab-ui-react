@@ -4,8 +4,7 @@ angular.module('wx2AdminWebClientApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute',
-  'ui.select2'
+  'ngRoute'
 ])
   .config(['$routeProvider',
     function($routeProvider) {
@@ -32,6 +31,9 @@ angular.module('wx2AdminWebClientApp', [
 
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
+
+      //Enable logging
+      $rootScope.debug = true;
 
       console.log('run() started.');
 

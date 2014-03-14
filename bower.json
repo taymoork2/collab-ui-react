@@ -5,19 +5,16 @@
     "angular": "1.2.6",
     "json3": "~3.2.6",
     "es5-shim": "~2.1.0",
-    "jquery": "~1.10.2",
-    "sass-bootstrap": "~3.0.2",
     "angular-resource": "1.2.6",
     "angular-cookies": "1.2.6",
     "angular-sanitize": "1.2.6",
     "angular-route": "1.2.6",
-    "request": "~2.34.1",
     "base64": "~0.2.0",
-    "angular-ui-select2": "~0.0.5"
+    "bootstrap-tokenfield": "~0.11.9",
+    "addressparser": "~0.1.1"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",
-    "angular-scenario": "1.2.6",
-    "angular-ui-select2": "~0.0.5"
+    "angular-scenario": "1.2.6"
   }
 }

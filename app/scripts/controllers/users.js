@@ -1,16 +1,25 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', 'Userservice', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth',
-    function($scope, $location, Userservice, Log, Storage, Config, Authinfo, Auth) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth',
+    function($scope, $location, $window, Userservice, Log, Storage, Config, Authinfo, Auth) {
 
-      //Options for Select2 plugin
-      $scope.select2Options = {
-        multiple: true,
-        simple_tags: true,
-        tags: [],
-        tokenSeparators: [',', ' ']
-      };
+      //tokenfield setup - Should make it into a directive later.
+      angular.element('#usersfield').tokenfield({
+        delimiter: [',', ';']
+      })
+        .on('tokenfield:preparetoken', function(e) {
+          //Removing anything in brackets from user data
+          var value = e.token.value.replace(/ *\([^)]*\) */g, '');
+          e.token.value = value;
+        })
+        .on('tokenfield:createtoken', function(e) {
+          var emailregex = /\S+@\S+\.\S+/;
+          var valid = emailregex.test(e.token.value);
+          if (!valid) {
+            angular.element(e.relatedTarget).addClass('invalid');
+          }
+        });
 
       //Populating authinfo data if empty.
       if (Authinfo.isEmpty()) {
@@ -23,6 +32,11 @@ angular.module('wx2AdminWebClientApp')
         }
       }
 
+
+      var getUsersList = function() {
+        return $window.addressparser.parse(angular.element('#usersfield').tokenfield('getTokensList'));
+      };
+
       $scope.status = null;
       $scope.results = null;
 
@@ -30,7 +44,8 @@ angular.module('wx2AdminWebClientApp')
         return Authinfo.isAddUserEnabled();
       };
 
-      $scope.addUsers = function(usersList) {
+      $scope.addUsers = function() {
+        var usersList = getUsersList();
         console.log(usersList);
         Log.debug('Entitlements: ', usersList);
         $scope.results = {
@@ -78,7 +93,8 @@ angular.module('wx2AdminWebClientApp')
 
       };
 
-      $scope.entitleUsers = function(usersList) {
+      $scope.entitleUsers = function() {
+        var usersList = getUsersList();
         Log.debug('Entitlements: ', usersList);
         $scope.results = {
           resultList: []
