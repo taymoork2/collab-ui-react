@@ -6,6 +6,10 @@
   padding-left: 5px;
 }
 
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
 /******** Login *********************/
 .input-auth {
   width: 40%;
