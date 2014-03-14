@@ -32,7 +32,6 @@ angular.module('wx2AdminWebClientApp')
         }
       }
 
-
       var getUsersList = function() {
         return $window.addressparser.parse(angular.element('#usersfield').tokenfield('getTokensList'));
       };
@@ -48,12 +47,13 @@ angular.module('wx2AdminWebClientApp')
         var usersList = getUsersList();
         console.log(usersList);
         Log.debug('Entitlements: ', usersList);
-
         var callback = function(data, status) {
           if (data.success) {
             Log.info('User add request returned:', data);
+            $scope.results = {
+              resultList: []
+            };
             for (var i = 0; i < data.userResponse.length; i++) {
-
               var userResult = {
                 'email': data.userResponse[i].email
               };
@@ -67,8 +67,6 @@ angular.module('wx2AdminWebClientApp')
               } else {
                 userResult.message = 'not added, status: ' + userStatus;
               }
-
-              $scope.results = { resultList: [] };
               $scope.results.resultList.push(userResult);
 
             }
@@ -86,7 +84,9 @@ angular.module('wx2AdminWebClientApp')
           var userResult = {
             message: 'Please enter user(s).'
           };
-          $scope.results = { resultList: [] };
+          $scope.results = {
+            resultList: []
+          };
           $scope.results.resultList.push(userResult);
         }
 
@@ -95,11 +95,12 @@ angular.module('wx2AdminWebClientApp')
       $scope.entitleUsers = function() {
         var usersList = getUsersList();
         Log.debug('Entitlements: ', usersList);
-
         var callback = function(data, status) {
           if (data.success) {
             Log.info('User successfully entitled', data);
-
+            $scope.results = {
+              resultList: []
+            };
             for (var i = 0; i < data.userResponse.length; i++) {
 
               var userResult = {
@@ -116,7 +117,6 @@ angular.module('wx2AdminWebClientApp')
                 userResult.message = 'not entitled, status: ' + userStatus;
               }
 
-              $scope.results = { resultList: [] };
               $scope.results.resultList.push(userResult);
 
             }
@@ -134,7 +134,9 @@ angular.module('wx2AdminWebClientApp')
           var userResult = {
             message: 'Please enter user(s).'
           };
-          $scope.results = { resultList: [] };
+          $scope.results = {
+            resultList: []
+          };
           $scope.results.resultList.push(userResult);
         }
 
