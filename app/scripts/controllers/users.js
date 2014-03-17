@@ -112,7 +112,7 @@ angular.module('wx2AdminWebClientApp')
               if (userStatus === 200) {
                 userResult.message = 'entitled successfully';
               } else if (userStatus === 404) {
-                userResult.message = 'does not exists';
+                userResult.message = 'does not exist';
               } else {
                 userResult.message = 'not entitled, status: ' + userStatus;
               }

@@ -10,7 +10,7 @@ angular.module('wx2AdminWebClientApp')
 			.success(function(data) {
 				$scope.webClientURL = data.webClientURL;
 				$scope.iPhoneURL = data.iPhoneURL;
-				$scope.androidURL = data.androidURL;
+				$scope.androidURL = data.AndroidURL;
 			})
 			.error(function(data, status) {
 				console.log('Failed to read download_url.json.' + data + ' Status: ' + status);
