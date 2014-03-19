@@ -1,12 +1,15 @@
 <div class="admin">
   <br />
-  <h2>User Accounts <br /><small>Add new user(s)</small></h2>
+  <h2>Manage Users<br />
+    <small ng-show="isAddEnabled()">Add new users</small>
+    <small ng-show="!isAddEnabled()">Entitle users</small>
+  </h2>
   <div>
     <form class="form-horizontal" role="form">
       <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label" >Email(s)</label>
+        <label for="inputEmail3" class="col-sm-2 control-label" >Email</label>
         <div class="col-sm-10">
-          <input type="text" id="usersfield" placeholder="Enter user(s) separated by commas or semi-colons." />
+          <input type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
         </div>
       </div>
       <div class="form-group">

@@ -9,10 +9,14 @@
 
 var testuser = {
   username: 'adminTestUser@wx2.example.com',
+  ssousername: 'adminADSyncTestUser@wx2.example.com',
   password: 'C1sc0123!',
   orgname: 'WebEx Self-Service Org'
 };
 
+function randomId() {
+  return (Math.random() + 1).toString(36).slice(2);
+}
 
 // Notes:
 // - State is conversed between each describe and it blocks.
@@ -55,15 +59,78 @@ describe('App flow', function() {
       });
 
       expect(browser.getCurrentUrl()).toContain('/users');
-      expect(browser.driver.findElement(by.css('h2')).getText()).toContain('User Accounts');
+      expect(element(by.css('h2')).getText()).toContain('Manage Users');
     });
 
-    it('should enable only add button on /users page when adminTestUser is logged in', function() {
-      expect(browser.driver.isElementPresent(by.id('btnAdd'))).toBe(true);
-      expect(browser.driver.isElementPresent(by.css('#btnAdd.ng-hide'))).toBe(false);
-      expect(browser.driver.isElementPresent(by.css('#btnEntitle.ng-hide'))).toBe(true);
-    });
+
+
   }); //State is logged-in
+
+  // Add User Flows: state is in the users page
+  describe('Add User Flows', function() {
+
+    describe('Page initialization', function() {
+
+      it('should initialize users page for adding users', function() {
+        expect(element(by.tagName('small')).getText()).toBe('Add new users');
+        expect(element(by.id('btnAdd')).isDisplayed()).toBe(true);
+        expect(element(by.id('btnEntitle')).isDisplayed()).toBe(false);
+      });
+
+      it('should display error if no user is entered', function() {
+        element(by.id('btnAdd')).click();
+        var result = element(by.repeater('userResult in results.resultList').row(0));
+        expect(result.getText()).toBe('Please enter valid user email(s).');
+      });
+
+    });
+
+    describe('Add an existing user', function() {
+      it('should display input user email in results with already exists message', function() {
+        element(by.id('usersfield')).clear();
+        element(by.id('usersfield')).sendKeys(testuser.username);
+        element(by.id('btnAdd')).click();
+        element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain(testuser.username);
+          expect(rows[0].getText()).toContain('already exists');
+        });
+      });
+    });
+
+    describe('Add a new user', function() {
+      it('should display input user email in results with success message', function() {
+        var inputEmail = randomId() + '@example.com';
+        element(by.id('usersfield')).clear();
+        element(by.id('usersfield')).sendKeys(inputEmail);
+        element(by.id('btnAdd')).click();
+        element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain(inputEmail);
+          expect(rows[0].getText()).toContain('added successfully');
+        });
+      });
+    });
+
+    // describe('Add multiple users separated with commas and semicolons', function() {
+    //   it('should display input user email in results', function() {
+    //     var randomEmail = randomId() + '@example.com';
+    //     element(by.id('usersfield')).clear();
+    //     element(by.id('usersfield')).sendKeys(testuser.username + ', ' + testuser.ssousername + '; ' + randomEmail);
+    //     element(by.id('btnAdd')).click();
+    //     element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
+    //       expect(rows.length).toBe(3);
+    //       expect(rows[0].getText()).toContain(testuser.username);
+    //       expect(rows[0].getText()).toContain('already exists');
+    //       expect(rows[1].getText()).toContain(testuser.ssousername);
+    //       expect(rows[1].getText()).toContain('already exists');
+    //       expect(rows[2].getText()).toContain(randomEmail);
+    //       expect(rows[2].getText()).toContain('added successfully');
+    //     });
+    //   });
+    // });
+
+  });
 
   // Navigation bar
   describe('Navigation Bar Flow', function() {
