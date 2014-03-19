@@ -21,26 +21,29 @@ angular.module('wx2AdminWebClientApp')
               'name': null
             };
 
-            if (userEmail.length > 0 && typeof userEmail !== 'undefined') {
+            if (userEmail.length > 0) {
               user.email = userEmail;
-              if (userName.length > 0 && userName !== false && typeof userName !== 'undefined') {
+              if (userName.length > 0 && userName !== false) {
                 user.name = userName;
               }
               userData.users.push(user);
             }
           }
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-          $http.post(userUrl + 'user', userData)
-            .success(function(data, status) {
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function(data, status) {
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
+          if (userData.users.length > 0) {
+            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.post(userUrl + 'user', userData)
+              .success(function(data, status) {
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function(data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          }
+
         },
 
         addUsers: function(usersDataArray, callback) {
@@ -55,30 +58,33 @@ angular.module('wx2AdminWebClientApp')
               'email': null,
               'name': null
             };
-            if (userEmail.length > 0 && typeof userEmail !== 'undefined') {
+            if (userEmail.length > 0) {
               user.email = userEmail;
-              if (userName.length > 0 && userName !== false && typeof userName !== 'undefined') {
+              if (userName.length > 0 && userName !== false) {
                 user.name = userName;
               }
               userData.users.push(user);
             }
           }
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-          $http.put(userUrl + 'user', userData)
-            .success(function(data, status) {
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function(data, status) {
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
+          if (userData.users.length > 0) {
+            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.put(userUrl + 'user', userData)
+              .success(function(data, status) {
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function(data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          } else {
+            callback('No valid emails entered.');
+          }
         },
 
         sendEmail: function(userEmail, callback) {
-
           $http.post(userUrl + 'user/mail?email=' + encodeURIComponent(userEmail))
             .success(function(data, status) {
               data.success = true;

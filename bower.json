@@ -11,7 +11,8 @@
     "angular-route": "1.2.6",
     "base64": "~0.2.0",
     "addressparser": "~0.1.1",
-    "bootstrap-tokenfield": "~0.11.9"
+    "bootstrap-tokenfield": "~0.11.9",
+    "fontawesome": "~4.0.3"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",
