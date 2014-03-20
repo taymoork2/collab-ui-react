@@ -6,16 +6,33 @@ angular.module('wx2AdminWebClientApp')
 
       $scope.status = null;
       $scope.results = null;
+      var invalidcount = 0;
 
       //placeholder logic
-      var checkPlaceholder = function(){
-        console.log('checking placeholder');
-        if(angular.element('.token-label').length > 0){
-          console.log(angular.element('.token-label').length);
-          angular.element('input').attr('placeholder','');
-        }else{
+      var checkPlaceholder = function() {
+        if (angular.element('.token-label').length > 0) {
+          angular.element('input').attr('placeholder', '');
+        } else {
           angular.element('input').attr('placeholder', 'Enter user(s) separated by commas or semi-colons.');
         }
+      };
+
+      //email validation logic
+      var validateEmail = function(input) {
+        var emailregex = /\S+@\S+\.\S+/;
+        var emailregexbrackets = /<\s*\S+@\S+\.\S+\s*>/;
+        var emailregexquotes = /"\s*\S+@\S+\.\S+\s*"/;
+        var valid = false;
+
+        if (/[<>]/.test(input) && emailregexbrackets.test(input)) {
+          valid = true;
+        } else if (/["]/.test(input) && emailregexquotes.test(input)) {
+          valid = true;
+        } else if (!/[<>]/.test(input) && !/["]/.test(input) && emailregex.test(input)) {
+          valid = true;
+        }
+
+        return valid;
       };
 
       //tokenfield setup - Should make it into a directive later.
@@ -25,18 +42,40 @@ angular.module('wx2AdminWebClientApp')
       })
         .on('tokenfield:preparetoken', function(e) {
           //Removing anything in brackets from user data
-          var value = e.token.value.replace(/ *\([^)]*\) */g, '');
+          var value = e.token.value.replace(/\s*\([^)]*\)\s*/g, ' ');
           e.token.value = value;
         })
         .on('tokenfield:createtoken', function(e) {
-          var emailregex = /\S+@\S+\.\S+/;
-          var valid = emailregex.test(e.token.value);
-          if (!valid) {
+          if (!validateEmail(e.token.value)) {
             angular.element(e.relatedTarget).addClass('invalid');
+            invalidcount++;
+          }
+          console.log(invalidcount);
+          if(invalidcount>0){
+            angular.element('#btnAdd').prop('disabled', true);
+            angular.element('#btnEntitle').prop('disabled', true);
+          }else{
+            angular.element('#btnAdd').prop('disabled', false);
+            angular.element('#btnEntitle').prop('disabled', false);
           }
           checkPlaceholder();
         })
-        .on('tokenfield:removetoken', function() {
+        .on('tokenfield:edittoken', function(e){
+          if(!validateEmail(e.token.value)){
+            invalidcount--;
+          }
+        })
+        .on('tokenfield:removetoken', function(e) {
+          if(!validateEmail(e.token.value)){
+            invalidcount--;
+          }
+          if(invalidcount>0){
+            angular.element('#btnAdd').prop('disabled', true);
+            angular.element('#btnEntitle').prop('disabled', true);
+          }else{
+            angular.element('#btnAdd').prop('disabled', false);
+            angular.element('#btnEntitle').prop('disabled', false);
+          }
           checkPlaceholder();
         });
 
