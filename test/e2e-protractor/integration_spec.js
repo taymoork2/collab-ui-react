@@ -6,6 +6,7 @@
 /* global by */
 /* global expect */
 /* global element */
+/* global protractor */
 
 var testuser = {
   username: 'adminTestUser@wx2.example.com',
@@ -19,7 +20,7 @@ function randomId() {
 }
 
 // Notes:
-// - State is conversed between each describe and it blocks.
+// - State is conserved between each describe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 describe('App flow', function() {
@@ -97,6 +98,29 @@ describe('App flow', function() {
       });
 
     });
+
+    // describe('Input validation', function() {
+    //   var validinputs = ['user@test.com', '<user@user.test>', '"user@user.test"'];
+    //   var invalidinputs = ['user', '<user@user.com', 'user@user.com>', '"user@user.com', 'user@user.com"'];
+    //   it('should tokenize a valid input and activate button', function() {
+
+    //     for (var validinput in validinputs) {
+    //       element(by.id('usersfield')).clear();
+    //       element(by.id('usersfield')).sendKeys(validinput);
+    //       element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
+    //       expect(element(by.css('.invalid')).isPresent()).toBe(false);
+    //       expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe(null);
+    //     }
+
+    //     for (var invalidinput in invalidinputs) {
+    //       element(by.id('usersfield')).clear();
+    //       element(by.id('usersfield')).sendKeys(invalidinput);
+    //       element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
+    //       expect(element(by.css('.invalid')).isPresent()).toBe(true);
+    //       expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe('true');
+    //     }
+    //   });
+    // });
 
     describe('Add an existing user', function() {
       it('should display input user email in results with already exists message', function() {

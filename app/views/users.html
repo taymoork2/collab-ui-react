@@ -25,10 +25,16 @@
 
 <br />
 
-<div class="alert alert-{{alertType}}" ng-show="error || results && results.resultList.length > 0">
-  <ul>
-    <li class="list-unstyled" ng-repeat="userResult in results.resultList">{{userResult.email}} {{userResult.message}}
-    </li>
-    <li class="list-unstyled" ng-show="error">{{error}}</li>
-  </ul>
+<div ng-show="error || results && results.resultList.length > 0">
+  <div class="alert alert-success" ng-show="(results.resultList|filter:{alertType:'success'}).length > 0">
+    <div ng-repeat="userResult in results.resultList | filter:{alertType:'success'}">
+      {{userResult.email}} {{userResult.message}}
+    </div>
+  </div>
+  <div class="alert alert-danger" ng-show="(results.resultList|filter:{alertType:'danger'}).length > 0" >
+    <div ng-repeat="userResult in results.resultList | filter:{alertType:'danger'}">
+      {{userResult.email}} {{userResult.message}}
+    </div>
+  </div>
+  <div class="alert alert-danger" ng-show="error">{{error}}</div>
 </div>

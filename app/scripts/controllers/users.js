@@ -50,29 +50,28 @@ angular.module('wx2AdminWebClientApp')
             angular.element(e.relatedTarget).addClass('invalid');
             invalidcount++;
           }
-          console.log(invalidcount);
-          if(invalidcount>0){
+          if (invalidcount > 0) {
             angular.element('#btnAdd').prop('disabled', true);
             angular.element('#btnEntitle').prop('disabled', true);
-          }else{
+          } else {
             angular.element('#btnAdd').prop('disabled', false);
             angular.element('#btnEntitle').prop('disabled', false);
           }
           checkPlaceholder();
         })
-        .on('tokenfield:edittoken', function(e){
-          if(!validateEmail(e.token.value)){
+        .on('tokenfield:edittoken', function(e) {
+          if (!validateEmail(e.token.value)) {
             invalidcount--;
           }
         })
         .on('tokenfield:removetoken', function(e) {
-          if(!validateEmail(e.token.value)){
+          if (!validateEmail(e.token.value)) {
             invalidcount--;
           }
-          if(invalidcount>0){
+          if (invalidcount > 0) {
             angular.element('#btnAdd').prop('disabled', true);
             angular.element('#btnEntitle').prop('disabled', true);
-          }else{
+          } else {
             angular.element('#btnAdd').prop('disabled', false);
             angular.element('#btnEntitle').prop('disabled', false);
           }
@@ -105,7 +104,6 @@ angular.module('wx2AdminWebClientApp')
         $scope.error = null;
         var isComplete = true;
         var usersList = getUsersList();
-        console.log(usersList);
         Log.debug('Entitlements: ', usersList);
         var callback = function(data, status) {
           if (data.success) {
@@ -113,21 +111,22 @@ angular.module('wx2AdminWebClientApp')
 
             for (var i = 0; i < data.userResponse.length; i++) {
               var userResult = {
-                'email': data.userResponse[i].email
+                email: data.userResponse[i].email,
+                alertType: null
               };
 
               var userStatus = data.userResponse[i].status;
 
               if (userStatus === 200) {
                 userResult.message = 'added successfully';
-                $scope.alertType = 'success';
+                userResult.alertType = 'success';
               } else if (userStatus === 409) {
                 userResult.message = 'already exists';
-                $scope.alertType = 'danger';
+                userResult.alertType = 'danger';
                 isComplete = false;
               } else {
                 userResult.message = 'not added, status: ' + userStatus;
-                $scope.alertType = 'danger';
+                userResult.alertType = 'danger';
                 isComplete = false;
               }
               $scope.results.resultList.push(userResult);
@@ -141,14 +140,11 @@ angular.module('wx2AdminWebClientApp')
             } else {
               $scope.error = 'Request failed: ' + data;
             }
-            $scope.alertType = 'danger';
             isComplete = false;
           }
 
           if (isComplete) {
             angular.element('#usersfield').tokenfield('setTokens', ' ');
-          } else {
-            $scope.alertType = 'danger';
           }
           angular.element('#btnAdd').button('reset');
 
@@ -158,10 +154,10 @@ angular.module('wx2AdminWebClientApp')
           angular.element('#btnAdd').button('loading');
           Userservice.addUsers(usersList, callback);
         } else {
-          $scope.alertType = 'danger';
           console.log('No users entered.');
           var userResult = {
-            message: 'Please enter valid user email(s).'
+            message: 'Please enter valid user email(s).',
+            alertType: 'danger'
           };
           $scope.results = {
             resultList: []
@@ -185,21 +181,22 @@ angular.module('wx2AdminWebClientApp')
             for (var i = 0; i < data.userResponse.length; i++) {
 
               var userResult = {
-                'email': data.userResponse[i].email
+                email: data.userResponse[i].email,
+                alertType: null
               };
 
               var userStatus = data.userResponse[i].status;
 
               if (userStatus === 200) {
                 userResult.message = 'entitled successfully';
-                $scope.alertType = 'success';
+                userResult.alertType = 'success';
               } else if (userStatus === 404) {
                 userResult.message = 'does not exist';
-                $scope.alertType = 'danger';
+                userResult.alertType = 'danger';
                 isComplete = false;
               } else {
                 userResult.message = 'not entitled, status: ' + userStatus;
-                $scope.alertType = 'danger';
+                userResult.alertType = 'danger';
                 isComplete = false;
               }
 
@@ -214,14 +211,11 @@ angular.module('wx2AdminWebClientApp')
             } else {
               $scope.error = 'Request failed: ' + data;
             }
-            $scope.alertType = 'danger';
             isComplete = false;
           }
 
           if (isComplete) {
             angular.element('#usersfield').tokenfield('setTokens', ' ');
-          } else {
-            $scope.alertType = 'danger';
           }
           angular.element('#btnEntitle').button('reset');
 
@@ -232,9 +226,9 @@ angular.module('wx2AdminWebClientApp')
           Userservice.entitleUsers(usersList, callback);
         } else {
           console.log('No users entered.');
-          $scope.alertType = 'danger';
           var userResult = {
-            message: 'Please enter valid user email(s).'
+            message: 'Please enter valid user email(s).',
+            alertType: 'danger'
           };
           $scope.results = {
             resultList: []
