@@ -16,11 +16,11 @@ angular.module('wx2AdminWebClientApp')
           scope.isAuthorized = true;
           deferred.resolve();
         })
-        .error(function(data, status) {
+        .error(function(data) {
           Authinfo.clear();
           scope.isAuthorized = false;
           scope.data = data || 'Authorization failed.';
-          scope.result = 'Authorization failed. Status: ' + status + '.';
+          scope.result = 'Authorization failed. You do not have administrator priviledges.';
           deferred.reject();
         });
 

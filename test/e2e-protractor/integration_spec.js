@@ -99,28 +99,30 @@ describe('App flow', function() {
 
     });
 
-    // describe('Input validation', function() {
-    //   var validinputs = ['user@test.com', '<user@user.test>', '"user@user.test"'];
-    //   var invalidinputs = ['user', '<user@user.com', 'user@user.com>', '"user@user.com', 'user@user.com"'];
-    //   it('should tokenize a valid input and activate button', function() {
-
-    //     for (var validinput in validinputs) {
-    //       element(by.id('usersfield')).clear();
-    //       element(by.id('usersfield')).sendKeys(validinput);
-    //       element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
-    //       expect(element(by.css('.invalid')).isPresent()).toBe(false);
-    //       expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe(null);
-    //     }
-
-    //     for (var invalidinput in invalidinputs) {
-    //       element(by.id('usersfield')).clear();
-    //       element(by.id('usersfield')).sendKeys(invalidinput);
-    //       element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
-    //       expect(element(by.css('.invalid')).isPresent()).toBe(true);
-    //       expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe('true');
-    //     }
-    //   });
-    // });
+    describe('Input validation', function() {
+      var validinputs = ['user@test.com', '<user@user.test>', '"user@user.test"'];
+      var invalidinputs = ['user', '<user@user.com', 'user@user.com>', '"user@user.com', 'user@user.com"'];
+      it('should tokenize a valid input and activate button', function() {
+        for (var i = 0; i < validinputs.length; i++) {
+          element(by.id('usersfield')).clear();
+          element(by.id('usersfield')).sendKeys(validinputs[i]);
+          element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
+          expect(element(by.css('.invalid')).isPresent()).toBe(false);
+          expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe(null);
+          element(by.css('.close')).click();
+        }
+      });
+      it('should invalidate token with invalid inputs and disable button', function() {
+        for (var i = 0; i < invalidinputs.length; i++) {
+          element(by.id('usersfield')).clear();
+          element(by.id('usersfield')).sendKeys(invalidinputs[i]);
+          element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
+          expect(element(by.css('.invalid')).isPresent()).toBe(true);
+          expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe('true');
+          element(by.css('.close')).click();
+        }
+      });
+    });
 
     describe('Add an existing user', function() {
       it('should display input user email in results with already exists message', function() {
