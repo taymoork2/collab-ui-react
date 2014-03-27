@@ -4,11 +4,15 @@ $headers_color: #777777;
 
 /******** Resets & Globals **********/
 .container {
-  width: 1120px;
+  width: 1087px;
 }
 
 .btn {
   padding: 9px 22px;
+}
+
+body {
+  min-width: 1152px !important;
 }
 
 h2 {
