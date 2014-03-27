@@ -1,19 +1,19 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-	.factory('Localize', ['$location',
-		function($location) {
-			return {
-				appTitle: 'Squared Admin Portal',
-				genericTitle: 'Squared',
+  .factory('Localize', ['$location',
+    function($location) {
+      return {
+        appTitle: 'Squared Admin Tool',
+        genericTitle: 'Squared',
 
-				varTitle: function() {
-					if ($location.url().indexOf('downloads') === -1) {
-						return this.appTitle;
-					} else {
-						return this.genericTitle;
-					}
-				}
-			};
-		}
-	]);
+        varTitle: function() {
+          if ($location.url().indexOf('downloads') === -1) {
+            return this.appTitle;
+          } else {
+            return this.genericTitle;
+          }
+        }
+      };
+    }
+  ]);

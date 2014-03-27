@@ -32,12 +32,20 @@
       <!-- Add your site or application content here -->
       <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#" ng-bind="Localize.varTitle()"></a>
-          <ul class="nav navbar-nav pull-right" ng-controller="NavigationCtrl" ng-show="loggedIn">
-            <li class="nav-item" ng-show="username">{{username}}<span class="separator">|</span></li>
-            <li class="nav-item" ng-show="orgname">{{orgname}}<span class="separator">|</span></li>
-            <li class="pull-right"><a ng-click="logout()" id="logout-btn">Log out</a></li>
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#" ng-bind="Localize.varTitle()"></a>
+          </div>
+
+          <ul class="nav navbar-nav navbar-right" ng-controller="NavigationCtrl" ng-show="loggedIn">
+            <li ng-show="username">Welcome, {{username}}</li>
+            <li ng-show="orgname">({{orgname}})</li>
+            <li ng-click="logout()" id="logout-btn">Log out</li>
           </ul>
+            <span class="glyphicon glyphicon-search" id="icon-search"></span>
+             <input id="search-input" type="text" class="form-control" placeholder="Search (to be implemented)"  disabled>
+
+
+
         </div><!-- /.container-fluid -->
       </nav>
 

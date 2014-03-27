@@ -60,7 +60,7 @@ describe('App flow', function() {
       });
 
       expect(browser.getCurrentUrl()).toContain('/users');
-      expect(element(by.css('h2')).getText()).toContain('Manage Users');
+      expect(element(by.css('h2')).getText()).toContain('MANAGE USERS');
     });
 
   }); //State is logged-in

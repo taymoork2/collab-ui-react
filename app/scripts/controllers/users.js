@@ -11,9 +11,9 @@ angular.module('wx2AdminWebClientApp')
       //placeholder logic
       var checkPlaceholder = function() {
         if (angular.element('.token-label').length > 0) {
-          angular.element('input').attr('placeholder', '');
+          angular.element('#usersfield-tokenfield').attr('placeholder', '');
         } else {
-          angular.element('input').attr('placeholder', 'Enter user(s) separated by commas or semi-colons.');
+          angular.element('#usersfield-tokenfield').attr('placeholder', 'Enter email addresses separated by commas or semi-colons');
         }
       };
 

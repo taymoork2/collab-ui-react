@@ -1,7 +1,47 @@
 /******** Variables **********/
 $brand_color: #00AADF;
+$headers_color: #777777;
 
 /******** Resets & Globals **********/
+.container {
+  width: 1120px;
+}
+
+.btn {
+  padding: 9px 22px;
+}
+
+h2 {
+  color: $headers_color;
+}
+
+.panel {
+  border-radius: 7px;
+  -moz-border-radius: 7px;
+}
+
+.panel-title {
+  color: $headers_color;
+  border-top-left-radius:7px;
+  border-top-right-radius: 7px;
+  margin-left: 5px;
+}
+
+.panel-heading {
+  padding: 15px;
+  background-color: #EBEBEB !important;
+}
+
+.panel-body {
+  padding: 20px;
+}
+
+label {
+  color:#908A8C;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
 #logout-btn {
   &:hover {
     cursor: pointer;
@@ -14,38 +54,107 @@ $brand_color: #00AADF;
   display: none !important;
 }
 
+.navbar {
+  background-color: #EBEBEB;
+}
+
+.navbar-right {
+  padding: 15px;
+  margin-right: 271px;
+  li {
+    margin-right:8px;
+    font-size: 15px;
+    color: #7B7C7D;
+  }
+}
+
+#search-input {
+  width: 283px;
+  height: 34px;
+  position: absolute;
+  right: 46px;
+  top: 8px;
+  border: 1px solid #EBEBEB;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  padding-left: 31px;
+  color:#A2A3A3;
+}
+
+#usersfield-tokenfield {
+  position: relative;
+  top: -1px;
+  margin: 0px;
+}
+
+.tokenfield {
+  padding:8px;
+}
+
+.form-group {
+  padding: 10px;
+}
+
+.form-control[disabled] {
+  background-color: #FFFFFF;
+}
+
+.token {
+  // position:relative;
+  border-radius: 10px !important;
+  -moz-border-radius: 10px !important;
+  margin-right: 5px;
+  background-color: #6FA8F6 !important;
+  color: white !important;
+}
+
+.invalid {
+  background-color: #f2efef !important;
+  color: #555 !important;
+  .close {
+    color: #555 !important;
+    &:hover {
+      color: #555 !important;
+    }
+  }
+}
+
+.close {
+  color:white !important;
+  opacity: 0.7 !important;
+  &:hover{
+    color:white !important;
+    opacity: 1.0 !important;
+  }
+}
+// textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
+//   border-color: gray;
+//   box-shadow: 0 0.5px 0.5px gray inset, 0 0 4px gray;
+//   outline: 0 none;
+// }
+
+#icon-search {
+  position: absolute;
+  top: 18px;
+  right: 306px;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+.container-fluid {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
 /******** Login *********************/
 .input-auth {
   width: 40%;
 }
 
 /****** Header and Navigation ********/
-.nav-item {
-  padding: 5px;
-  color: #777777;
-  margin-top:10px;
-}
-
-.separator {
-  margin-left: 10px;
-}
 
 .navbar-brand {
   color: $brand_color !important;
+  font-weight: bold;
 }
 
-/************ Entitlement ************/
-div.admin {
-  padding: 0px 50px 100px 50px;
-  background-color: #eaeaea;
-  border: 1px solid transparent;
-  border-radius: 4px;
-}
-
-div.admin div.adminform {
-  width:500px;
-}
-
-div.admin textarea {
-  width: 500px;
-}
