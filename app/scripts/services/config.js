@@ -13,6 +13,7 @@ angular.module('wx2AdminWebClientApp')
       logoutUrl: 'https://idbrokerbeta.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
       conversationUrl: 'https://conv-a.wbx2.com/conversation/api/v1',
       locusUrl: 'https://locus-a.wbx2.com/locus/api/v1',
+      scimUrl: 'https://idcsbeta.webex.com/identity/scim/%s/v1/Users?filter=entitlements%20eq%20%22webex-squared%22&sortBy=name&sortOrder=ascending&attributes=name,userName',
       refreshTokenInterval: 30 * 1000, //in seconds. Be sure (refreshTokenInterval < expires_in)
 
       supportEmailAddress: 'wx2support@external.cisco.com',
