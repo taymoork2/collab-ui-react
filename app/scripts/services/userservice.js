@@ -1,11 +1,18 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config',
-    function($http, $rootScope, $location, Storage, Config) {
+  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo',
+    function($http, $rootScope, $location, Storage, Config, Authinfo) {
 
       var userUrl = Config.adminServiceUrl;
       var token = Storage.get('accessToken');
+      var scimUrl = Config.scimUrl;
+
+      function sprintf(template, values) {
+        return template.replace(/%s/g, function() {
+          return values.shift();
+        });
+      }
 
       return {
         entitleUsers: function(usersDataArray, callback) {
@@ -82,6 +89,31 @@ angular.module('wx2AdminWebClientApp')
           } else {
             callback('No valid emails entered.');
           }
+        },
+
+        listUsers: function(startIdx, count, callback) {
+
+          var listUrl = sprintf(scimUrl, [Authinfo.getOrgId()]);
+          if (startIdx && startIdx > 0) {
+            listUrl = listUrl + '&startIdx=' + startIdx;
+          }
+            
+          if (count && count > 0) {
+            listUrl = listUrl + '&count=' + count;
+          }
+          
+          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.get(listUrl)
+            .success(function(data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function(data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
+
         },
 
         sendEmail: function(userEmail, callback) {
