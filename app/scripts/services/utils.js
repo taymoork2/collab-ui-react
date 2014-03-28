@@ -2,7 +2,8 @@
 
 /*jshint bitwise: false*/
 angular.module('wx2AdminWebClientApp')
-  .factory('Utils', function() {
+  .factory('Utils', ['$location',
+    function($location) {
 
     var Base64 = {
       _keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
@@ -113,5 +114,14 @@ angular.module('wx2AdminWebClientApp')
           return 'God';
         }
       },
+
+      hideForRoute: function(routeString) {
+        if ($location.url().indexOf(routeString) > -1) {
+          return true;
+        } else {
+          return false;
+        }
+      }
     };
-  });
+  }
+]);

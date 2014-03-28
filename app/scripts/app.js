@@ -30,11 +30,12 @@ angular.module('wx2AdminWebClientApp', [
         });
     }
   ])
-  .run(['$cookies', '$rootScope', 'Auth', 'Storage', 'Localize',
-    function($cookies, $rootScope, Auth, Storage, Localize) {
+  .run(['$cookies', '$rootScope', 'Auth', 'Storage', 'Localize', 'Utils',
+    function($cookies, $rootScope, Auth, Storage, Localize, Utils) {
 
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
+      $rootScope.Utils = Utils;
 
       //Enable logging
       $rootScope.debug = true;
