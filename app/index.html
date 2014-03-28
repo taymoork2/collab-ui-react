@@ -36,14 +36,17 @@
             <a class="navbar-brand" href="#" ng-bind="Localize.varTitle()"></a>
           </div>
 
-          <ul class="nav navbar-nav navbar-right" ng-controller="NavigationCtrl" ng-show="loggedIn">
+          <ul class="nav navbar-nav navbar-right" ng-controller="NavigationCtrl" ng-show="loggedIn && !Utils.hideForRoute('downloads')" >
             <li ng-show="username">Welcome, {{username}}</li>
             <li ng-show="orgname">({{orgname}})</li>
             <li ng-click="logout()" id="logout-btn">Log out</li>
           </ul>
-<!--             <span class="glyphicon glyphicon-search" id="icon-search"></span>
-             <input id="search-input" type="text" class="form-control" placeholder="Search (to be implemented...)"  disabled>
-  -->       </div><!-- /.container-fluid -->
+
+          <div ng-hide="Utils.hideForRoute('downloads')">
+            <span class="glyphicon glyphicon-search" id="icon-search"></span>
+            <input id="search-input" type="text" class="form-control" placeholder="Search (to be implemented...)"  disabled>
+          </div>
+        </div><!-- /.container-fluid -->
       </nav>
 
       <div class="container" ng-view=""></div>
