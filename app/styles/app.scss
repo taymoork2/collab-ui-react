@@ -22,6 +22,22 @@ h2 {
 .panel {
   border-radius: 7px;
   -moz-border-radius: 7px;
+  margin-bottom: 30px;
+}
+
+th {
+  font-weight: normal;
+  color: #B9B5B1;
+  border-bottom: none !important;
+}
+
+td {
+  font-size: 15px !important;
+  color: #3B3A36 !important;
+}
+
+table th, .table td {
+ border-top: none !important;
 }
 
 .panel-title {
@@ -129,6 +145,20 @@ label {
   &:hover{
     color:white !important;
     opacity: 1.0 !important;
+  }
+}
+
+.dropdown-menu {
+  border-top: none !important;
+  left: -14px !important;
+  top: 80% !important;
+  min-width: 132px !important;
+  & li a {
+    color: #8E8F96 !important;
+    &:hover {
+      background-color: #EBEBEB;
+      cursor:pointer;
+    }
   }
 }
 // textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {

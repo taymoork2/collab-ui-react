@@ -8,6 +8,17 @@ angular.module('wx2AdminWebClientApp')
       $scope.results = null;
       var invalidcount = 0;
 
+      //Populating authinfo data if empty.
+      if (Authinfo.isEmpty()) {
+        var token = Storage.get('accessToken');
+        if (token) {
+          Log.debug('Authorizing user... Populating admin data...');
+          Auth.authorize(token, $scope);
+        } else {
+          Log.debug('No accessToken.');
+        }
+      }
+
       //placeholder logic
       var checkPlaceholder = function() {
         if (angular.element('.token-label').length > 0) {
@@ -16,6 +27,18 @@ angular.module('wx2AdminWebClientApp')
           angular.element('#usersfield-tokenfield').attr('placeholder', 'Enter email addresses separated by commas or semi-colons');
         }
       };
+
+      //list users only when we have authinfo data back
+      $scope.$on('AuthinfoUpdated', function() {
+        Userservice.listUsers(1, 0, function(data) {
+          if(data.success){
+            console.log(data.Resources);
+            $scope.queryuserslist = data.Resources;
+          } else {
+            Log.debug('Query existing users failed.');
+          }
+        });
+      });
 
       //email validation logic
       var validateEmail = function(input) {
@@ -77,17 +100,6 @@ angular.module('wx2AdminWebClientApp')
           }
           checkPlaceholder();
         });
-
-      //Populating authinfo data if empty.
-      if (Authinfo.isEmpty()) {
-        var token = Storage.get('accessToken');
-        if (token) {
-          Log.debug('Authorizing user... Populating admin data...');
-          Auth.authorize(token, $scope);
-        } else {
-          Log.debug('No accessToken.');
-        }
-      }
 
       var getUsersList = function() {
         return $window.addressparser.parse(angular.element('#usersfield').tokenfield('getTokensList'));

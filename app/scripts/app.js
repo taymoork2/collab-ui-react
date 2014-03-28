@@ -39,8 +39,6 @@ angular.module('wx2AdminWebClientApp', [
       //Enable logging
       $rootScope.debug = true;
 
-      console.log('run() started.');
-
       var data = null;
 
       if (document.URL.indexOf('access_token') !== -1) {
@@ -52,7 +50,7 @@ angular.module('wx2AdminWebClientApp', [
         data = Auth.getFromStandardGetParams(document.URL);
         console.log(data);
       } else {
-        console.log('no data');
+        console.log('No access code data.');
       }
 
     }

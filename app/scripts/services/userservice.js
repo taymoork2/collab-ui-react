@@ -97,11 +97,11 @@ angular.module('wx2AdminWebClientApp')
           if (startIdx && startIdx > 0) {
             listUrl = listUrl + '&startIdx=' + startIdx;
           }
-            
+
           if (count && count > 0) {
             listUrl = listUrl + '&count=' + count;
           }
-          
+
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.get(listUrl)
             .success(function(data, status) {
