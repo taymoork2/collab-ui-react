@@ -5,15 +5,15 @@
 <p>Your account {{email}} is now active.</p>
 
 <div id="iosTxt" ng-show="isIPhone()">
-<p>	Please <a href="{{iPhoneURL}}">download your IOS application</a> and start using Squared.</p>
+<p>Please install Squared by following <a ng-href="{{iPhoneURL}}">this link.</a></p>
 </div>
 
 <div id="androidTxt" ng-show="isAndroid()">
-<p>	Please <a ng-href="{{androidURL}}">download your Android application</a> and start using Squared.</p>
+<p>Please install Squared by following <a ng-href="{{androidURL}}">this link.</a></p>
 </div>
 
 <div id="webTxt" ng-show="isWeb()">
-<p>	Please start using <a ng-href="{{webClientURL}}"> Squared.</a></p>
+<p>Please start using <a ng-href="{{webClientURL}}"> Squared.</a></p>
 </div>
 
 <div id="sendStatus" ng-show="false" mailStatus='{{sendStatus}}'></div>
