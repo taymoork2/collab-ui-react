@@ -17,6 +17,15 @@ angular.module('wx2AdminWebClientApp')
         } else {
           Log.debug('No accessToken.');
         }
+      } else { //Authinfo has data. Load up users.
+        Userservice.listUsers(1, 0, function(data) {
+          if (data.success) {
+            console.log(data.Resources);
+            $scope.queryuserslist = data.Resources;
+          } else {
+            Log.debug('Query existing users failed.');
+          }
+        });
       }
 
       //placeholder logic
@@ -31,7 +40,7 @@ angular.module('wx2AdminWebClientApp')
       //list users only when we have authinfo data back
       $scope.$on('AuthinfoUpdated', function() {
         Userservice.listUsers(1, 0, function(data) {
-          if(data.success){
+          if (data.success) {
             console.log(data.Resources);
             $scope.queryuserslist = data.Resources;
           } else {
