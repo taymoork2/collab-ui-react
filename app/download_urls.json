@@ -1,5 +1,5 @@
 {
   "webClientURL": "https://wx2-web.wbx2.com",
-  "iPhoneURL": "https://www.apple.com/itunes/",
-  "AndroidURL": "https://play.google.com"
+  "iPhoneURL": "http://testflightapp.com",
+  "AndroidURL": "https://play.google.com/apps/testing/com.cisco.wx2.android"
 }
