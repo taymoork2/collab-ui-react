@@ -7,16 +7,19 @@
 /* global expect */
 /* global element */
 
-var testuser = 'testUser@wx2.example.com';
+var testuser = 'fakegmiosuser@gmail.com';
+
+// encoded adminEmail for atlasmapservice@gmail.com
+var emailParams = '&forward=YWRtaW5UZXN0VXNlckB3eDIuZXhhbXBsZS5jb20&pwdResetSuccess=true';
 
 // Notes:
 // - State is conserved between each describe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
-describe('Downloads Page with email parameter only', function() {
+describe('Downloads Page with email parameter and reset/admin email params', function() {
 
   it('should display email account', function() {
-    browser.get('#/downloads?email=' + testuser);
+    browser.get('#/downloads?email=' + testuser + emailParams);
     expect(element(by.binding('email')).getText()).toContain(testuser);
   });
 
@@ -31,19 +34,30 @@ describe('Downloads Page with email parameter only', function() {
     expect(browser.driver.isElementPresent(by.css('#androidTxt.ng-hide'))).toBe(true);
   });
 
-  // it('should not have sent any email', function() {
-  //  expect(element(by.id('sendStatus')).getText()).toBe('');
-  // });
+  it('should not display logged in user, logout link, and search field', function() {
+    expect(element(by.binding('username')).getText()).toBe('');
+    expect(element(by.binding('orgname')).getText()).toBe('');
+    expect(element(by.id('logout-btn')).isDisplayed()).toBe(false);
+    expect(element(by.id('icon-search')).isDisplayed()).toBe(false);
+    expect(element(by.id('search-input')).isDisplayed()).toBe(false);
+  });
+  it('should have invoked send email api', function() {
+    element(by.id('sendStatus')).getAttribute('mailStatus').then(function(value) {
+      expect(value).toBe('email success');
+    });
+  });
 });
 
-describe('Downloads Page with email parameter and passwordResetSuccess=true', function() {
+describe('Downloads Page with email parameter only', function() {
 
   it('should display email account', function() {
-    browser.get('#/downloads?email=' + testuser + '&pwdResetSuccess=true');
+    browser.get('#/downloads?email=' + testuser);
     expect(element(by.binding('email')).getText()).toContain(testuser);
   });
 
-  // it('should have invoked send email api', function() {
-  //  expect(element(by.id('sendStatus')).getText()).toContain('email');
-  // });
+  it('should not have sent any email', function() {
+    element(by.id('sendStatus')).getAttribute('mailStatus').then(function(value) {
+      expect(value).toBe('');
+    });
+  });
 });

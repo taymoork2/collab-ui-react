@@ -36,19 +36,20 @@ angular.module('wx2AdminWebClientApp')
 				return !$scope.isIPhone() && !$scope.isAndroid();
 			};
 
-			$scope.hasJustResetPassword = $location.search().pwdResetSuccess;
+			var hasJustResetPassword = $location.search().pwdResetSuccess;
 
-			var callback = function(data, status) {
-				if (data.success) {
-					$scope.sendStatus = 'email success';
-				} else {
-					$scope.sendStatus = 'email failed status: ' + status;
-				}
-			};
+			if (hasJustResetPassword) {
+				// call backend to send 
 
-			if ($scope.hasJustResetPassword) {
-				// call backend to send email
-				Userservice.sendEmail($scope.email, callback);
+				var callback = function(data, status) {
+					if (data.success) {
+						$scope.sendStatus = 'email success';
+					} else {
+						$scope.sendStatus = 'email failed status: ' + status;
+					}
+				};
+
+				Userservice.sendEmail($scope.email, $location.search().forward, callback);
 			}
 
 		}

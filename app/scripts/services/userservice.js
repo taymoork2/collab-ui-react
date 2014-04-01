@@ -116,8 +116,12 @@ angular.module('wx2AdminWebClientApp')
 
         },
 
-        sendEmail: function(userEmail, callback) {
-          $http.post(userUrl + 'user/mail?email=' + encodeURIComponent(userEmail))
+        sendEmail: function(userEmail, adminEmail, callback) {
+          var requestBody = {
+            'recipientEmail': userEmail,
+            'adminEmail': adminEmail
+          };
+          $http.post(userUrl + 'user/mail/provisioning', requestBody)
             .success(function(data, status) {
               data.success = true;
               callback(data, status);
