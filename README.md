@@ -4,7 +4,7 @@ WebexSquared AdminWebClient
 Setup the environment:
 ---------------------
 * Use setup.sh or: 
-* install node.js (for npm): http://nodejs.org/download/
+* install node.js version >= v0.10.26 (for npm): http://nodejs.org/download/
 * install rvm (to install ruby): $ \curl -sSL https://get.rvm.io | bash -s stable --ruby
 * update gem and install gem dependencies: $ gem update --system 
 * $ gem install sass (Make sure to install sass first)
@@ -12,6 +12,7 @@ Setup the environment:
 * Run package managers in the cloned project to pull dependencies: 
 * $ bower install && npm install 
 * Launch the app: $ grunt serve 
+* After git pulls, run bower install and npm install to make sure to pull new dependencies. 
 
 Run the protractor e2e test:
 ----------------------------

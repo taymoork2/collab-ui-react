@@ -14,12 +14,22 @@ function set_global_npm_path {
 }
 echo "$PATH" | grep -q '/usr/local/bin' && echo "Global NPM path is set" || set_global_npm_path
 
+# Check if rvm is installed, otherwise install it
+rvm --version > /dev/null 2>&1
+RVM_RET=$?
+if [ $RVM_RET -ne 0 ]; then
+    echo "RVM not found, installing:"
+    \curl -sSL https://get.rvm.io | bash -s stable --ruby
+else
+    echo "RVM is already installed"
+fi
+
 # Check if brew is installed, otherwise install it
 brew --version > /dev/null 2>&1
 BREW_RET=$?
 if [ $BREW_RET -ne 0 ]; then
     echo "BREW not found, installing:"
-    ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+    ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 else
     echo "BREW is already installed"
 fi

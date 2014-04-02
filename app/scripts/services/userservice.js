@@ -91,11 +91,11 @@ angular.module('wx2AdminWebClientApp')
           }
         },
 
-        listUsers: function(startIdx, count, callback) {
+        listUsers: function(startIndex, count, callback) {
 
           var listUrl = sprintf(scimUrl, [Authinfo.getOrgId()]);
-          if (startIdx && startIdx > 0) {
-            listUrl = listUrl + '&startIdx=' + startIdx;
+          if (startIndex && startIndex > 0) {
+            listUrl = listUrl + '&startIndex=' + startIndex;
           }
 
           if (count && count > 0) {

@@ -66,6 +66,12 @@
         </tr>
       </tbody>
     </table>
+    <ul class="pagination">
+      <li><a ng-click="pagination.firstPage()"><i class="fa fa-angle-double-left"></i></a></li>
+      <li><a ng-click="pagination.prevPage();"><i class="fa fa-angle-left"></i></a></li>
+      <li class="pagination-current"><a>{{pagination.page + 1}}</a></li>
+      <li><a ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
+      <li><a ng-click="pagination.lastPage()"><i class="fa fa-angle-double-right"></i></a></li>
+    </ul>
   </div>
-</div>
 </div>

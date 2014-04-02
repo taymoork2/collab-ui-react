@@ -185,6 +185,17 @@ label {
   padding-right: 50px;
 }
 
+.pagination {
+  margin-left: 38%;
+  li a {
+    padding: 11px 20px;
+    font-size: 15px;
+    color: #595959 !important;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
 /******** Login *********************/
 .input-auth {
   width: 40%;

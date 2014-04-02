@@ -1,12 +1,15 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth',
-    function($scope, $location, $window, Userservice, Log, Storage, Config, Authinfo, Auth) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
+    function($scope, $location, $window, Userservice, Log, Storage, Config, Authinfo, Auth, Pagination) {
 
+      //Initialize variables
       $scope.status = null;
       $scope.results = null;
       var invalidcount = 0;
+      var usersperpage = 20;
+      $scope.pagination = Pagination.init($scope, usersperpage);
 
       //Populating authinfo data if empty.
       if (Authinfo.isEmpty()) {
@@ -18,31 +21,24 @@ angular.module('wx2AdminWebClientApp')
           Log.debug('No accessToken.');
         }
       } else { //Authinfo has data. Load up users.
-        Userservice.listUsers(1, 0, function(data) {
+        Userservice.listUsers(1, usersperpage, function(data) {
           if (data.success) {
             console.log(data.Resources);
             $scope.queryuserslist = data.Resources;
+            $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
           } else {
             Log.debug('Query existing users failed.');
           }
         });
       }
 
-      //placeholder logic
-      var checkPlaceholder = function() {
-        if (angular.element('.token-label').length > 0) {
-          angular.element('#usersfield-tokenfield').attr('placeholder', '');
-        } else {
-          angular.element('#usersfield-tokenfield').attr('placeholder', 'Enter email addresses separated by commas or semi-colons');
-        }
-      };
-
       //list users only when we have authinfo data back
       $scope.$on('AuthinfoUpdated', function() {
-        Userservice.listUsers(1, 0, function(data) {
+        Userservice.listUsers(1, usersperpage, function(data) {
           if (data.success) {
             console.log(data.Resources);
             $scope.queryuserslist = data.Resources;
+            $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
           } else {
             Log.debug('Query existing users failed.');
           }
@@ -65,6 +61,15 @@ angular.module('wx2AdminWebClientApp')
         }
 
         return valid;
+      };
+
+      //placeholder logic
+      var checkPlaceholder = function() {
+        if (angular.element('.token-label').length > 0) {
+          angular.element('#usersfield-tokenfield').attr('placeholder', '');
+        } else {
+          angular.element('#usersfield-tokenfield').attr('placeholder', 'Enter email addresses separated by commas or semi-colons');
+        }
       };
 
       //tokenfield setup - Should make it into a directive later.
