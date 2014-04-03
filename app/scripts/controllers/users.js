@@ -8,6 +8,17 @@ angular.module('wx2AdminWebClientApp')
       $scope.results = null;
       var invalidcount = 0;
 
+      var getUserList = function() {
+        Userservice.listUsers(1, 0, function(data) {
+          if (data.success) {
+            console.log(data.Resources);
+            $scope.queryuserslist = data.Resources;
+          } else {
+            Log.debug('Query existing users failed.');
+          }
+        });
+      };
+
       //Populating authinfo data if empty.
       if (Authinfo.isEmpty()) {
         var token = Storage.get('accessToken');
@@ -18,14 +29,7 @@ angular.module('wx2AdminWebClientApp')
           Log.debug('No accessToken.');
         }
       } else { //Authinfo has data. Load up users.
-        Userservice.listUsers(1, 0, function(data) {
-          if (data.success) {
-            console.log(data.Resources);
-            $scope.queryuserslist = data.Resources;
-          } else {
-            Log.debug('Query existing users failed.');
-          }
-        });
+        getUserList();
       }
 
       //placeholder logic
@@ -37,16 +41,9 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-      //list users only when we have authinfo data back
+      //list users when we have authinfo data back, or new users have been added/activated
       $scope.$on('AuthinfoUpdated', function() {
-        Userservice.listUsers(1, 0, function(data) {
-          if (data.success) {
-            console.log(data.Resources);
-            $scope.queryuserslist = data.Resources;
-          } else {
-            Log.debug('Query existing users failed.');
-          }
-        });
+        getUserList();
       });
 
       //email validation logic
@@ -129,6 +126,7 @@ angular.module('wx2AdminWebClientApp')
         var callback = function(data, status) {
           if (data.success) {
             Log.info('User add request returned:', data);
+            getUserList();
 
             for (var i = 0; i < data.userResponse.length; i++) {
               var userResult = {
@@ -199,6 +197,8 @@ angular.module('wx2AdminWebClientApp')
         var callback = function(data, status) {
           if (data.success) {
             Log.info('User successfully entitled', data);
+            getUserList();
+
             for (var i = 0; i < data.userResponse.length; i++) {
 
               var userResult = {
