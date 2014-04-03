@@ -16,6 +16,20 @@ angular.module('wx2AdminWebClientApp')
       var usersperpage = Config.usersperpage;
       $scope.pagination = Pagination.init($scope, usersperpage);
 
+      var getUserList = function() {
+        Userservice.listUsers(0, usersperpage, function(data, status) {
+          if (data.success) {
+            Log.debug(data.Resources);
+            $scope.queryuserslist = data.Resources;
+            if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
+              $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
+            }
+          } else {
+            Log.debug('Query existing users failed. Status: ' + status);
+          }
+        });
+      };
+
       //Populating authinfo data if empty.
       if (Authinfo.isEmpty()) {
         var token = Storage.get('accessToken');
@@ -26,32 +40,12 @@ angular.module('wx2AdminWebClientApp')
           Log.debug('No accessToken.');
         }
       } else { //Authinfo has data. Load up users.
-        Userservice.listUsers(0, usersperpage, function(data, status) {
-          if (data.success) {
-            Log.debug(data.Resources);
-            $scope.queryuserslist = data.Resources;
-            if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
-              $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
-            }
-          } else {
-            Log.debug('Query existing users failed. Status: ' + status);
-          }
-        });
+        getUserList();
       }
 
-      //list users only when we have authinfo data back
+      //list users when we have authinfo data back, or new users have been added/activated
       $scope.$on('AuthinfoUpdated', function() {
-        Userservice.listUsers(0, usersperpage, function(data, status) {
-          if (data.success) {
-            Log.debug(data.Resources);
-            $scope.queryuserslist = data.Resources;
-            if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
-              $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
-            }
-          } else {
-            Log.debug('Query existing users failed. Status: ' + status);
-          }
-        });
+        getUserList();
       });
 
       //email validation logic
@@ -143,6 +137,7 @@ angular.module('wx2AdminWebClientApp')
         var callback = function(data, status) {
           if (data.success) {
             Log.info('User add request returned:', data);
+            getUserList();
 
             for (var i = 0; i < data.userResponse.length; i++) {
               var userResult = {
@@ -213,6 +208,8 @@ angular.module('wx2AdminWebClientApp')
         var callback = function(data, status) {
           if (data.success) {
             Log.info('User successfully entitled', data);
+            getUserList();
+
             for (var i = 0; i < data.userResponse.length; i++) {
 
               var userResult = {
