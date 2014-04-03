@@ -16,62 +16,43 @@ angular.module('wx2AdminWebClientApp')
           scope: scope
         };
 
+        var listUsers = function(startIndex) {
+          Userservice.listUsers(startIndex, paginator.perPage, function(data, status) {
+            if (data.success) {
+              Log.debug(data.Resources);
+              paginator.scope.queryuserslist = data.Resources;
+            } else {
+              Log.debug('Query existing users failed. Status: ' + status);
+            }
+          });
+        };
+
         paginator.prevPage = function() {
           if (paginator.page > 0) {
             paginator.page -= 1;
-            Userservice.listUsers(paginator.page * paginator.perPage + 1, paginator.perPage, function(data) {
-              if (data.success) {
-                console.log(data.Resources);
-                paginator.scope.queryuserslist = data.Resources;
-              } else {
-                Log.debug('Query existing users failed.');
-              }
-            });
+            listUsers(paginator.page * paginator.perPage + 1);
           }
         };
 
         paginator.nextPage = function() {
           if (paginator.page < paginator.numPages - 1) {
             paginator.page += 1;
-            Userservice.listUsers(paginator.page * paginator.perPage + 1, paginator.perPage, function(data) {
-              if (data.success) {
-                console.log(data.Resources);
-                paginator.scope.queryuserslist = data.Resources;
-              } else {
-                Log.debug('Query existing users failed.');
-              }
-            });
+            listUsers(paginator.page * paginator.perPage + 1);
           }
         };
 
         paginator.firstPage = function() {
           if (paginator.page > 0) {
             paginator.page = 0;
-            Userservice.listUsers(1, paginator.perPage, function(data) {
-              if (data.success) {
-                console.log(data.Resources);
-                paginator.scope.queryuserslist = data.Resources;
-              } else {
-                Log.debug('Query existing users failed.');
-              }
-            });
+            listUsers(1);
           }
-
         };
 
         paginator.lastPage = function() {
           if (paginator.page < paginator.numPages - 1) {
             paginator.page = paginator.numPages - 1;
-            Userservice.listUsers(paginator.page * paginator.perPage + 1, paginator.perPage, function(data) {
-              if (data.success) {
-                console.log(data.Resources);
-                paginator.scope.queryuserslist = data.Resources;
-              } else {
-                Log.debug('Query existing users failed.');
-              }
-            });
+            listUsers(paginator.page * paginator.perPage + 1);
           }
-
         };
 
         return paginator;

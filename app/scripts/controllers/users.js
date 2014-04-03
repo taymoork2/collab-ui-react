@@ -7,8 +7,13 @@ angular.module('wx2AdminWebClientApp')
       //Initialize variables
       $scope.status = null;
       $scope.results = null;
+      $scope.sorts = {
+        name: 'fa-sort-asc',
+        email: 'fa-sort',
+        date: 'fa-sort'
+      };
       var invalidcount = 0;
-      var usersperpage = 20;
+      var usersperpage = Config.usersperpage;
       $scope.pagination = Pagination.init($scope, usersperpage);
 
       //Populating authinfo data if empty.
@@ -21,26 +26,30 @@ angular.module('wx2AdminWebClientApp')
           Log.debug('No accessToken.');
         }
       } else { //Authinfo has data. Load up users.
-        Userservice.listUsers(1, usersperpage, function(data) {
+        Userservice.listUsers(0, usersperpage, function(data, status) {
           if (data.success) {
-            console.log(data.Resources);
+            Log.debug(data.Resources);
             $scope.queryuserslist = data.Resources;
-            $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
+            if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
+              $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
+            }
           } else {
-            Log.debug('Query existing users failed.');
+            Log.debug('Query existing users failed. Status: ' + status);
           }
         });
       }
 
       //list users only when we have authinfo data back
       $scope.$on('AuthinfoUpdated', function() {
-        Userservice.listUsers(1, usersperpage, function(data) {
+        Userservice.listUsers(0, usersperpage, function(data, status) {
           if (data.success) {
-            console.log(data.Resources);
+            Log.debug(data.Resources);
             $scope.queryuserslist = data.Resources;
-            $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
+            if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
+              $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
+            }
           } else {
-            Log.debug('Query existing users failed.');
+            Log.debug('Query existing users failed. Status: ' + status);
           }
         });
       });

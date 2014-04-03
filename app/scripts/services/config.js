@@ -19,6 +19,6 @@ angular.module('wx2AdminWebClientApp')
 
       supportEmailAddress: 'wx2support@external.cisco.com',
       supportEmailSubject: 'WX² Web Feedback',
-
+      usersperpage: 20
     };
   });
