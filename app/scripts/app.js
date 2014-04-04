@@ -4,9 +4,7 @@ angular.module('wx2AdminWebClientApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute',
-  'ui.bootstrap',
-  'dialogs'
+  'ngRoute'
 ])
   .config(['$routeProvider',
     function($routeProvider) {

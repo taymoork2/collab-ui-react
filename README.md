@@ -3,7 +3,7 @@ WebexSquared AdminWebClient
 
 Setup the environment:
 ---------------------
-* Use setup.sh or: 
+* Use setup.sh or (if it fails): 
 * install node.js version >= v0.10.26 (for npm): http://nodejs.org/download/
 * install rvm (to install ruby): $ \curl -sSL https://get.rvm.io | bash -s stable --ruby
 * update gem and install gem dependencies: $ gem update --system 
