@@ -41,9 +41,9 @@
             <li ng-click="logout()" id="logout-btn">Log out</li>
           </ul>
 
-          <div ng-hide="Utils.hideForRoute('downloads')">
+          <div ng-hide="Utils.hideForRoute('downloads')" ng-controller="SearchCtrl">
+            <input id="search-input" type="text" class="form-control" placeholder="Search users by name or email" ng-model="searchStr" ng-change="searchItem()">
             <span class="glyphicon glyphicon-search" id="icon-search"></span>
-            <input id="search-input" type="text" class="form-control" placeholder="Search (to be implemented...)"  disabled>
           </div>
         </div><!-- /.container-fluid -->
       </nav>
@@ -75,7 +75,7 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/base64/base64.js"></script>
-    <script src="bower_components/addressparser/addressparser.js"></script>
+    <script src="bower_components/addressparser/src/addressparser.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js"></script>
     <!-- endbower -->
@@ -90,7 +90,9 @@
     <script src="scripts/services/log.js"></script>
     <script src="scripts/controllers/navigation.js"></script>
     <script src="scripts/controllers/users.js"></script>
+    <script src="scripts/controllers/search.js"></script>
     <script src="scripts/services/userService.js"></script>
+    <script src="scripts/services/userListService.js"></script>
     <script src="scripts/services/Localize.js"></script>
     <script src="scripts/services/authInfo.js"></script>
     <script src="scripts/controllers/downloads.js"></script>

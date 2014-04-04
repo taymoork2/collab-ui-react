@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
-    function($scope, $location, $window, Userservice, Log, Storage, Config, Authinfo, Auth, Pagination) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
+    function($scope, $location, $window, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination) {
 
       //Initialize variables
       $scope.status = null;
@@ -17,7 +17,7 @@ angular.module('wx2AdminWebClientApp')
       $scope.pagination = Pagination.init($scope, usersperpage);
 
       var getUserList = function() {
-        Userservice.listUsers(0, usersperpage, function(data, status) {
+        UserListService.listUsers(0, usersperpage, function(data, status) {
           if (data.success) {
             Log.debug(data.Resources);
             $scope.totalResults = data.totalResults;
@@ -27,6 +27,20 @@ angular.module('wx2AdminWebClientApp')
             }
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
+          }
+        });
+      };
+
+      var searchUsers = function(str) {
+        UserListService.searchUsers(str, 0, usersperpage, function(data) {
+          if (data.success) {
+            Log.debug('found matches['+data.totalResults+']: ' + data.Resources);
+            $scope.queryuserslist = data.Resources;
+            if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
+              $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
+            }
+          } else {
+            Log.debug('Search users failed for: ' + str);
           }
         });
       };
@@ -270,5 +284,22 @@ angular.module('wx2AdminWebClientApp')
         }
 
       };
+
+      //Search users based on search criteria
+      $scope.$on('SEARCH_ITEM', function(e, str) {
+        Log.debug('got broadcast for search:' + str);
+        if (str === '')
+        {
+          getUserList();
+          $scope.pagination.mode = 'list';
+          $scope.pagination.param = '';
+        }
+        else
+        {
+          searchUsers(str);
+          $scope.pagination.mode = 'search';
+          $scope.pagination.param = str;
+        }
+      });
     }
   ]);
