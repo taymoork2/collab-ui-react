@@ -77,19 +77,34 @@ describe('List users flow', function() {
         var totalresults = parseInt(value, 10);
         if (totalresults > 20) {
           var numPages = Math.ceil(totalresults / 20);
-          var i=0;
-          for (i = 0; i < numPages - 1; i++) {
-            totalresults -= 20;
-            expect(element(by.css('.pagination-current a')).getText()).toBe((i + 1).toString());
-            element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-              expect(rows.length).toBe(20);
-            });
-            element(by.id('next-page')).click();
-          }
+          //Initial page
+          expect(element(by.css('.pagination-current a')).getText()).toBe('1');
+          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+            expect(rows.length).toBe(20);
+          });
           //last page
+          element(by.id('last-page')).click();
           expect(element(by.css('.pagination-current a')).getText()).toBe((numPages).toString());
           element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBe(totalresults);
+            expect(rows.length).toBeGreaterThan(0);
+          });
+          //back to first page
+          element(by.id('first-page')).click();
+          expect(element(by.css('.pagination-current a')).getText()).toBe('1');
+          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+            expect(rows.length).toBe(20);
+          });
+          //next page
+          element(by.id('next-page')).click();
+          expect(element(by.css('.pagination-current a')).getText()).toBe('2');
+          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+            expect(rows.length).toBeGreaterThan(0);
+          });
+          //previous page
+          element(by.id('prev-page')).click();
+          expect(element(by.css('.pagination-current a')).getText()).toBe('1');
+          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+            expect(rows.length).toBe(20);
           });
         }
       });
