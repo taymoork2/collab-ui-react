@@ -20,6 +20,7 @@ angular.module('wx2AdminWebClientApp')
         Userservice.listUsers(0, usersperpage, function(data, status) {
           if (data.success) {
             Log.debug(data.Resources);
+            $scope.totalResults = data.totalResults;
             $scope.queryuserslist = data.Resources;
             if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
               $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);

@@ -20,6 +20,7 @@ angular.module('wx2AdminWebClientApp')
           Userservice.listUsers(startIndex, paginator.perPage, function(data, status) {
             if (data.success) {
               Log.debug(data.Resources);
+              paginator.scope.totalResults = data.totalResults;
               paginator.scope.queryuserslist = data.Resources;
             } else {
               Log.debug('Query existing users failed. Status: ' + status);

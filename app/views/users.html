@@ -40,7 +40,7 @@
 <div class="panel panel-default" ng-show="queryuserslist" id="userslistpanel">
   <div class="panel-heading">
     <h3 class="panel-title">
-      <strong>Existing Users</strong>
+      <strong>Existing Users <span id="totalresults" value="{{totalResults}}">({{totalResults}})</span></strong>
     </h3>
   </div>
   <div class="panel-body">
@@ -67,11 +67,11 @@
       </tbody>
     </table>
     <ul class="pagination">
-      <li><a ng-click="pagination.firstPage()"><i class="fa fa-angle-double-left"></i></a></li>
-      <li><a ng-click="pagination.prevPage();"><i class="fa fa-angle-left"></i></a></li>
+      <li><a id="first-page" ng-click="pagination.firstPage()"><i class="fa fa-angle-double-left"></i></a></li>
+      <li><a id="prev-page" ng-click="pagination.prevPage();"><i class="fa fa-angle-left"></i></a></li>
       <li class="pagination-current"><a>{{pagination.page + 1}}</a></li>
-      <li><a ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
-      <li><a ng-click="pagination.lastPage()"><i class="fa fa-angle-double-right"></i></a></li>
+      <li><a id="next-page" ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
+      <li><a id="last-page" ng-click="pagination.lastPage()"><i class="fa fa-angle-double-right"></i></a></li>
     </ul>
   </div>
 </div>
