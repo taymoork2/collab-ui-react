@@ -28,7 +28,7 @@ describe('List users flow', function() {
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.css('#IDToken1'));
       }).then(function() {
-        expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
+        expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
       });
     });
 
@@ -115,11 +115,11 @@ describe('List users flow', function() {
   describe('Log Out', function() {
     it('should redirect to login page', function() {
       element(by.css('#logout-btn')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.css('#IDToken1'));
-      }).then(function() {
-        expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
-      });
+      // browser.driver.wait(function() {
+      //   return browser.driver.isElementPresent(by.css('#IDToken1'));
+      // }).then(function() {
+      //   //expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
+      // });
     });
   });
 
