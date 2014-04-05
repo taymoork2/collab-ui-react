@@ -5,8 +5,8 @@ angular.module('wx2AdminWebClientApp')
     function($http, $rootScope, $location, Storage, Config, Authinfo) {
 
       var token = Storage.get('accessToken');
-      var scimUrl = Config.scimUrl + '?filter=entitlements%20eq%20%22webex-squared%22&sortBy=name&sortOrder=ascending&attributes=name,userName';
-      var scimSearchUrl = Config.scimUrl + '?filter=entitlements%20eq%20%22webex-squared%22%20and%20(userName%20%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22)&sortBy=name&sortOrder=ascending&attributes=name,userName';
+      var scimUrl = Config.scimUrl + '?sortBy=name&sortOrder=ascending&attributes=name,userName,entitlements';
+      var scimSearchUrl = Config.scimUrl + '?filter=entitlements%20eq%20%22webex-squared%22%20and%20(userName%20%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22)&sortBy=name&sortOrder=ascending';
 
       function sprintf(template, values) {
         return template.replace(/%s/g, function() {

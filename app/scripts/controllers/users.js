@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
-    function($scope, $location, $window, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination) {
 
       //Initialize variables
       $scope.status = null;
@@ -17,7 +17,8 @@ angular.module('wx2AdminWebClientApp')
       $scope.pagination = Pagination.init($scope, usersperpage);
 
       var getUserList = function() {
-        UserListService.listUsers(0, usersperpage, function(data, status) {
+        var startIndex = $scope.pagination.page * usersperpage + 1;
+        UserListService.listUsers(startIndex, usersperpage, function(data, status) {
           if (data.success) {
             Log.debug(data.Resources);
             $scope.totalResults = data.totalResults;
@@ -32,9 +33,11 @@ angular.module('wx2AdminWebClientApp')
       };
 
       var searchUsers = function(str) {
-        UserListService.searchUsers(str, 0, usersperpage, function(data) {
+        var startIndex = $scope.pagination.page * usersperpage + 1;
+        UserListService.searchUsers(str, startIndex, usersperpage, function(data) {
           if (data.success) {
             Log.debug('found matches['+data.totalResults+']: ' + data.Resources);
+            $scope.totalResults = data.totalResults;
             $scope.queryuserslist = data.Resources;
             if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
               $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
@@ -293,13 +296,47 @@ angular.module('wx2AdminWebClientApp')
           getUserList();
           $scope.pagination.mode = 'list';
           $scope.pagination.param = '';
+          $scope.pagination.page = 0;
         }
         else
         {
           searchUsers(str);
           $scope.pagination.mode = 'search';
           $scope.pagination.param = str;
+          $scope.pagination.page = 0;
         }
       });
+
+      $scope.getEntitlementState = function(user) {
+        if (!user.entitlements || user.entitlements.length === 0) {
+          return false;
+        } else {
+          return (user.entitlements.indexOf('webex-squared') > -1);
+        }
+        
+      };
+
+      $scope.changeEntitlement = function(userEmail, isEntitle) {
+        
+        var dlg = $dialogs.confirm('Change Service Entitlement', 'Are you sure you want to ' + (isEntitle? 'enable':'disable') + ' squared service for user ' + userEmail + '?');
+        dlg.result.then(function() {
+          $scope.confirmed = true;
+          Userservice.changeEntitlement([{'address':userEmail, 'isEntitle':isEntitle}], function(data, status) {
+            if (data.success) {
+              // ToDo: parse result to determine if success for user[0]
+              // ToDo: add result area to show success message
+              getUserList();
+            }
+            else {
+              console.log('Deactivate user failed for: ' + userEmail + ' Status:' + status);
+            }
+          });
+        }, function() {
+          console.log('User canceled deactivate for: ' + userEmail + ' Status:' + status);
+          $scope.confirmed = false;
+        });
+
+      };
+
     }
   ]);
