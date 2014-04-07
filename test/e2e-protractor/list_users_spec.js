@@ -14,6 +14,10 @@ var testuser = {
   orgname: 'SquaredAdminTool'
 };
 
+function randomId() {
+  return (Math.random() + 1).toString(36).slice(2);
+}
+
 // Notes:
 // - State is conserved between each describe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
@@ -107,6 +111,29 @@ describe('List users flow', function() {
             expect(rows.length).toBe(20);
           });
         }
+      });
+    });
+  });
+
+  // Add User
+  describe('Add User', function() {
+
+    it('should add user successfully and increase user count', function() {
+      var initialCount;
+      element(by.id('totalresults')).getAttribute('value').then(function(count) {
+        initialCount =  parseInt(count, 10);
+      });
+      var inputEmail = randomId() + '@example.com';
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inputEmail);
+      element(by.id('btnAdd')).click();
+      element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
+        expect(rows.length).toBe(1);
+        expect(rows[0].getText()).toContain(inputEmail);
+        expect(rows[0].getText()).toContain('added successfully');
+        element(by.id('totalresults')).getAttribute('value').then(function(count) {
+          expect(parseInt(count, 10)).toBeGreaterThan(initialCount);
+        });
       });
     });
   });

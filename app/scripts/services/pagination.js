@@ -18,9 +18,9 @@ angular.module('wx2AdminWebClientApp')
           param: ''
         };
 
-        var listUsers = function(startIndex, sortType, sortOrder) {
+        var listUsers = function(startIndex, sortBy, sortOrder) {
 
-          UserListService.listUsers(startIndex, paginator.perPage, sortType, sortOrder, function(data, status) {
+          UserListService.listUsers(startIndex, paginator.perPage, sortBy, sortOrder, function(data, status) {
             if (data.success) {
               Log.debug(data.Resources);
               paginator.scope.totalResults = data.totalResults;
@@ -31,9 +31,9 @@ angular.module('wx2AdminWebClientApp')
           });
         };
 
-        var searchUsers = function(str, startIndex, sortType, sortOrder) {
+        var searchUsers = function(str, startIndex, sortBy, sortOrder) {
 
-          UserListService.searchUsers(str, startIndex, paginator.perPage, sortType, sortOrder, function(data, status) {
+          UserListService.searchUsers(str, startIndex, paginator.perPage, sortBy, sortOrder, function(data, status) {
             if (data.success) {
               Log.debug(data.Resources);
               paginator.scope.totalResults = data.totalResults;

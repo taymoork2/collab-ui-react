@@ -43,16 +43,16 @@
     "karma-phantomjs-launcher": "~0.1.2",
     "karma": "~0.10.9",
     "karma-ng-html2js-preprocessor": "~0.1.0",
-    "protractor": "~0.17.0",
-    "grunt-protractor-runner": "~0.2.3",
+    "protractor": "^0.21.0",
     "request": "~2.33.0",
-    "base64": "~2.1.0"
+    "base64": "~2.1.0",
+    "grunt-protractor-runner": "^0.2.4"
   },
   "engines": {
     "node": ">=0.8.0"
   },
   "scripts": {
     "test": "grunt test",
-    "install": "./node_modules/protractor/bin/webdriver-manager update"
+    "install": "./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
   }
 }

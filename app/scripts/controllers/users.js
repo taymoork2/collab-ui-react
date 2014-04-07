@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
-    function($scope, $location, $window, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination) {
 
       //Initialize variables
       $scope.status = null;
@@ -10,22 +10,39 @@ angular.module('wx2AdminWebClientApp')
       $scope.sort = {
         by: 'name',
         order: 'ascending',
-        icon: {name:'fa-sort-asc', email:'fa-sort', date:'fa-sort'}
+        icon: {
+          name: 'fa-sort-asc',
+          email: 'fa-sort',
+          date: 'fa-sort'
+        }
       };
       var invalidcount = 0;
       var usersperpage = Config.usersperpage;
       $scope.pagination = Pagination.init($scope, usersperpage);
 
       //sorting function
-      $scope.setSort = function(type){
-        if(type==='name'){
-
+      $scope.setSort = function(type) {
+        if (type === 'name') {
+          if ($scope.sort.by === 'email') {
+            $scope.sort.by = 'name';
+            $scope.sort.order = 'ascending';
+            $scope.sort.icon.name = 'fa-sort-asc';
+            $scope.sort.icon.email = 'fa-sort';
+          } else if ($scope.sort.by === 'name') {
+            if ($scope.sort.order === 'ascending') {
+              $scope.sort.order = 'descending';
+              $scope.sort.icon.name = 'fa-sort-desc';
+            } else {
+              $scope.sort.order = 'ascending';
+              $scope.sort.icon.name = 'fa-sort-asc';
+            }
+          }
         }
-
       };
 
       var getUserList = function() {
-        UserListService.listUsers(0, usersperpage, $scope.sort.by, $scope.sort.order, function(data, status) {
+        var startIndex = $scope.pagination.page * usersperpage + 1;
+        UserListService.listUsers(startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function(data, status) {
           if (data.success) {
             Log.debug(data.Resources);
             $scope.totalResults = data.totalResults;
@@ -40,7 +57,8 @@ angular.module('wx2AdminWebClientApp')
       };
 
       var searchUsers = function(str) {
-        UserListService.searchUsers(str, 0, usersperpage, $scope.sort.by, $scope.sort.order, function(data) {
+        var startIndex = $scope.pagination.page * usersperpage + 1;
+        UserListService.searchUsers(str, startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function(data) {
           if (data.success) {
             Log.debug('found matches[' + data.totalResults + ']: ' + data.Resources);
             $scope.totalResults = data.totalResults;
@@ -301,15 +319,49 @@ angular.module('wx2AdminWebClientApp')
         Log.debug('got broadcast for search:' + str);
         if (str === '') {
           getUserList();
-          $scope.pagination.page = 0;
           $scope.pagination.mode = 'list';
           $scope.pagination.param = '';
+          $scope.pagination.page = 0;
         } else {
           searchUsers(str);
-          $scope.pagination.page = 0;
           $scope.pagination.mode = 'search';
           $scope.pagination.param = str;
+          $scope.pagination.page = 0;
         }
       });
+
+      $scope.getEntitlementState = function(user) {
+        if (!user.entitlements || user.entitlements.length === 0) {
+          return false;
+        } else {
+          return (user.entitlements.indexOf('webex-squared') > -1);
+        }
+
+      };
+
+      $scope.changeEntitlement = function(userEmail, isEntitle) {
+
+        var dlg = $dialogs.confirm('Change Service Entitlement', 'Are you sure you want to ' + (isEntitle ? 'enable' : 'disable') + ' squared service for user ' + userEmail + '?');
+        dlg.result.then(function() {
+          $scope.confirmed = true;
+          Userservice.changeEntitlement([{
+            'address': userEmail,
+            'isEntitle': isEntitle
+          }], function(data, status) {
+            if (data.success) {
+              // ToDo: parse result to determine if success for user[0]
+              // ToDo: add result area to show success message
+              getUserList();
+            } else {
+              console.log('Deactivate user failed for: ' + userEmail + ' Status:' + status);
+            }
+          });
+        }, function() {
+          console.log('User canceled deactivate for: ' + userEmail + ' Status:' + status);
+          $scope.confirmed = false;
+        });
+
+      };
+
     }
   ]);
