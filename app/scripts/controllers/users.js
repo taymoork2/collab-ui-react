@@ -7,22 +7,30 @@ angular.module('wx2AdminWebClientApp')
       //Initialize variables
       $scope.status = null;
       $scope.results = null;
-      $scope.sorts = {
-        name: 'fa-sort-asc',
-        email: 'fa-sort',
-        date: 'fa-sort'
+      $scope.sort = {
+        by: 'name',
+        order: 'ascending',
+        icon: {name:'fa-sort-asc', email:'fa-sort', date:'fa-sort'}
       };
       var invalidcount = 0;
       var usersperpage = Config.usersperpage;
       $scope.pagination = Pagination.init($scope, usersperpage);
 
+      //sorting function
+      $scope.setSort = function(type){
+        if(type==='name'){
+
+        }
+
+      };
+
       var getUserList = function() {
-        UserListService.listUsers(0, usersperpage, function(data, status) {
+        UserListService.listUsers(0, usersperpage, $scope.sort.by, $scope.sort.order, function(data, status) {
           if (data.success) {
             Log.debug(data.Resources);
             $scope.totalResults = data.totalResults;
             $scope.queryuserslist = data.Resources;
-            if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
+            if (data.totalResults !== 0 && data.totalResults !== null && $scope.pagination.perPage !== 0 && $scope.pagination.perPage !== null) {
               $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
             }
           } else {
@@ -32,11 +40,12 @@ angular.module('wx2AdminWebClientApp')
       };
 
       var searchUsers = function(str) {
-        UserListService.searchUsers(str, 0, usersperpage, function(data) {
+        UserListService.searchUsers(str, 0, usersperpage, $scope.sort.by, $scope.sort.order, function(data) {
           if (data.success) {
-            Log.debug('found matches['+data.totalResults+']: ' + data.Resources);
+            Log.debug('found matches[' + data.totalResults + ']: ' + data.Resources);
+            $scope.totalResults = data.totalResults;
             $scope.queryuserslist = data.Resources;
-            if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
+            if (data.totalResults !== 0 && data.totalResults !== null && $scope.pagination.perPage !== 0 && $scope.pagination.perPage !== null) {
               $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
             }
           } else {
@@ -190,6 +199,7 @@ angular.module('wx2AdminWebClientApp')
 
           if (isComplete) {
             angular.element('#usersfield').tokenfield('setTokens', ' ');
+            checkPlaceholder();
           }
           angular.element('#btnAdd').button('reset');
 
@@ -263,6 +273,7 @@ angular.module('wx2AdminWebClientApp')
 
           if (isComplete) {
             angular.element('#usersfield').tokenfield('setTokens', ' ');
+            checkPlaceholder();
           }
           angular.element('#btnEntitle').button('reset');
 
@@ -288,15 +299,14 @@ angular.module('wx2AdminWebClientApp')
       //Search users based on search criteria
       $scope.$on('SEARCH_ITEM', function(e, str) {
         Log.debug('got broadcast for search:' + str);
-        if (str === '')
-        {
+        if (str === '') {
           getUserList();
+          $scope.pagination.page = 0;
           $scope.pagination.mode = 'list';
           $scope.pagination.param = '';
-        }
-        else
-        {
+        } else {
           searchUsers(str);
+          $scope.pagination.page = 0;
           $scope.pagination.mode = 'search';
           $scope.pagination.param = str;
         }

@@ -5,8 +5,8 @@ angular.module('wx2AdminWebClientApp')
     function($http, $rootScope, $location, Storage, Config, Authinfo) {
 
       var token = Storage.get('accessToken');
-      var scimUrl = Config.scimUrl + '?filter=entitlements%20eq%20%22webex-squared%22&sortBy=name&sortOrder=ascending&attributes=name,userName';
-      var scimSearchUrl = Config.scimUrl + '?filter=entitlements%20eq%20%22webex-squared%22%20and%20(userName%20%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22)&sortBy=name&sortOrder=ascending&attributes=name,userName';
+      var scimUrl = Config.scimUrl + '?filter=entitlements%20eq%20%22webex-squared%22&attributes=name,userName';
+      var scimSearchUrl = Config.scimUrl + '?filter=entitlements%20eq%20%22webex-squared%22%20and%20(userName%20%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22)&attributes=name,userName';
 
       function sprintf(template, values) {
         return template.replace(/%s/g, function() {
@@ -15,8 +15,8 @@ angular.module('wx2AdminWebClientApp')
       }
 
       return {
-  
-        listUsers: function(startIndex, count, callback) {
+
+        listUsers: function(startIndex, count, sortBy, sortOrder, callback) {
 
           var listUrl = sprintf(scimUrl, [Authinfo.getOrgId()]);
           if (startIndex && startIndex > 0) {
@@ -25,6 +25,14 @@ angular.module('wx2AdminWebClientApp')
 
           if (count && count > 0) {
             listUrl = listUrl + '&count=' + count;
+          }
+
+          if (sortBy && sortBy.length > 0) {
+            listUrl = listUrl + '&sortBy=' + sortBy;
+          }
+
+          if (sortOrder && sortOrder.length > 0) {
+            listUrl = listUrl + '&sortOrder=' + sortOrder;
           }
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
@@ -41,7 +49,7 @@ angular.module('wx2AdminWebClientApp')
 
         },
 
-        searchUsers: function(searchStr, startIndex, count, callback) {
+        searchUsers: function(searchStr, startIndex, count, sortBy, sortOrder, callback) {
 
           var searchUrl = sprintf(scimSearchUrl, [Authinfo.getOrgId(), searchStr, searchStr, searchStr]);
           if (startIndex && startIndex > 0) {
@@ -50,6 +58,14 @@ angular.module('wx2AdminWebClientApp')
 
           if (count && count > 0) {
             searchUrl = searchUrl + '&count=' + count;
+          }
+
+          if (sortBy && sortBy.length > 0) {
+            searchUrl = searchUrl + '&sortBy=' + sortBy;
+          }
+
+          if (sortOrder && sortOrder.length > 0) {
+            searchUrl = searchUrl + '&sortOrder=' + sortOrder;
           }
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;

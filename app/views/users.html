@@ -47,9 +47,9 @@
     <table class="table">
       <thead>
         <tr>
-          <th id="name-sort">NAME <i class="fa {{sorts.name}}"></i></th>
-          <th id="email-sort">EMAIL <i class="fa {{sorts.email}}"></i></th>
-          <th id="date-sort">ADDED <i class="fa {{sorts.date}}"></i></th>
+          <th ng-click="setSort(name)" id="name-sort">NAME <i class="fa {{sort.icon.name}}"></i></th>
+          <th id="email-sort">EMAIL <i class="fa {{sort.icon.email}}"></i></th>
+          <th id="date-sort">ADDED <i class="fa {{sort.icon.date}}"></i></th>
           <th>STATUS/TOOLS</th>
         </tr>
       </thead>

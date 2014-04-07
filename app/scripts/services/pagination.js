@@ -18,9 +18,9 @@ angular.module('wx2AdminWebClientApp')
           param: ''
         };
 
-        var listUsers = function(startIndex) {
+        var listUsers = function(startIndex, sortType, sortOrder) {
 
-          UserListService.listUsers(startIndex, paginator.perPage, function(data, status) {
+          UserListService.listUsers(startIndex, paginator.perPage, sortType, sortOrder, function(data, status) {
             if (data.success) {
               Log.debug(data.Resources);
               paginator.scope.totalResults = data.totalResults;
@@ -31,11 +31,12 @@ angular.module('wx2AdminWebClientApp')
           });
         };
 
-        var searchUsers = function(str, startIndex) {
-          
-          UserListService.searchUsers(str, startIndex, paginator.perPage, function(data, status) {
+        var searchUsers = function(str, startIndex, sortType, sortOrder) {
+
+          UserListService.searchUsers(str, startIndex, paginator.perPage, sortType, sortOrder, function(data, status) {
             if (data.success) {
               Log.debug(data.Resources);
+              paginator.scope.totalResults = data.totalResults;
               paginator.scope.queryuserslist = data.Resources;
             } else {
               Log.debug('search users failed. Status: ' + status);
@@ -48,11 +49,11 @@ angular.module('wx2AdminWebClientApp')
             paginator.page -= 1;
             if (paginator.mode === 'search')
             {
-              searchUsers(paginator.param, paginator.page * paginator.perPage + 1);
+              searchUsers(paginator.param, paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order);
             }
             else
             {
-              listUsers(paginator.page * paginator.perPage + 1);
+              listUsers(paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order);
             }
           }
         };
@@ -63,11 +64,11 @@ angular.module('wx2AdminWebClientApp')
 
             if (paginator.mode === 'search')
             {
-              searchUsers(paginator.param, paginator.page * paginator.perPage + 1);
+              searchUsers(paginator.param, paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order);
             }
             else
             {
-              listUsers(paginator.page * paginator.perPage + 1);
+              listUsers(paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order);
             }
           }
         };
@@ -77,11 +78,11 @@ angular.module('wx2AdminWebClientApp')
             paginator.page = 0;
             if (paginator.mode === 'search')
             {
-              searchUsers(paginator.param, 1);
+              searchUsers(paginator.param, 1, paginator.scope.sort.by, paginator.scope.sort.order);
             }
             else
             {
-              listUsers(1);
+              listUsers(1, paginator.scope.sort.by, paginator.scope.sort.order);
             }
           }
         };
@@ -91,11 +92,11 @@ angular.module('wx2AdminWebClientApp')
             paginator.page = paginator.numPages - 1;
             if (paginator.mode === 'search')
             {
-              searchUsers(paginator.param, paginator.page * paginator.perPage + 1);
+              searchUsers(paginator.param, paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order);
             }
             else
             {
-              listUsers(paginator.page * paginator.perPage + 1);
+              listUsers(paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order);
             }
           }
         };
