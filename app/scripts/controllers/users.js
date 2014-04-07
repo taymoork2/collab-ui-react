@@ -32,22 +32,6 @@ angular.module('wx2AdminWebClientApp')
         });
       };
 
-      var searchUsers = function(str) {
-        var startIndex = $scope.pagination.page * usersperpage + 1;
-        UserListService.searchUsers(str, startIndex, usersperpage, function(data) {
-          if (data.success) {
-            Log.debug('found matches['+data.totalResults+']: ' + data.Resources);
-            $scope.totalResults = data.totalResults;
-            $scope.queryuserslist = data.Resources;
-            if(data.totalResults!==0&&data.totalResults!==null&&$scope.pagination.perPage!==0&&$scope.pagination.perPage!==null){
-              $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
-            }
-          } else {
-            Log.debug('Search users failed for: ' + str);
-          }
-        });
-      };
-
       //Populating authinfo data if empty.
       if (Authinfo.isEmpty()) {
         var token = Storage.get('accessToken');
@@ -291,20 +275,8 @@ angular.module('wx2AdminWebClientApp')
       //Search users based on search criteria
       $scope.$on('SEARCH_ITEM', function(e, str) {
         Log.debug('got broadcast for search:' + str);
-        if (str === '')
-        {
-          getUserList();
-          $scope.pagination.mode = 'list';
-          $scope.pagination.param = '';
-          $scope.pagination.page = 0;
-        }
-        else
-        {
-          searchUsers(str);
-          $scope.pagination.mode = 'search';
-          $scope.pagination.param = str;
-          $scope.pagination.page = 0;
-        }
+        $scope.pagination.page = 0;
+        getUserList();
       });
 
       $scope.getEntitlementState = function(user) {

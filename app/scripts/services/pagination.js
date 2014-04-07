@@ -13,9 +13,7 @@ angular.module('wx2AdminWebClientApp')
           numPages: 1,
           perPage: perPage,
           page: 0,
-          scope: scope,
-          mode: 'list',
-          param: ''
+          scope: scope
         };
 
         var listUsers = function(startIndex) {
@@ -31,29 +29,10 @@ angular.module('wx2AdminWebClientApp')
           });
         };
 
-        var searchUsers = function(str, startIndex) {
-          
-          UserListService.searchUsers(str, startIndex, paginator.perPage, function(data, status) {
-            if (data.success) {
-              Log.debug(data.Resources);
-              paginator.scope.queryuserslist = data.Resources;
-            } else {
-              Log.debug('search users failed. Status: ' + status);
-            }
-          });
-        };
-
         paginator.prevPage = function() {
           if (paginator.page > 0) {
             paginator.page -= 1;
-            if (paginator.mode === 'search')
-            {
-              searchUsers(paginator.param, paginator.page * paginator.perPage + 1);
-            }
-            else
-            {
-              listUsers(paginator.page * paginator.perPage + 1);
-            }
+            listUsers(paginator.page * paginator.perPage + 1);
           }
         };
 
@@ -61,42 +40,21 @@ angular.module('wx2AdminWebClientApp')
           if (paginator.page < paginator.numPages - 1) {
             paginator.page += 1;
 
-            if (paginator.mode === 'search')
-            {
-              searchUsers(paginator.param, paginator.page * paginator.perPage + 1);
-            }
-            else
-            {
-              listUsers(paginator.page * paginator.perPage + 1);
-            }
+            listUsers(paginator.page * paginator.perPage + 1);
           }
         };
 
         paginator.firstPage = function() {
           if (paginator.page > 0) {
             paginator.page = 0;
-            if (paginator.mode === 'search')
-            {
-              searchUsers(paginator.param, 1);
-            }
-            else
-            {
-              listUsers(1);
-            }
+            listUsers(1);
           }
         };
 
         paginator.lastPage = function() {
           if (paginator.page < paginator.numPages - 1) {
             paginator.page = paginator.numPages - 1;
-            if (paginator.mode === 'search')
-            {
-              searchUsers(paginator.param, paginator.page * paginator.perPage + 1);
-            }
-            else
-            {
-              listUsers(paginator.page * paginator.perPage + 1);
-            }
+            listUsers(paginator.page * paginator.perPage + 1);
           }
         };
 
