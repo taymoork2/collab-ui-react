@@ -5,8 +5,10 @@ angular.module('wx2AdminWebClientApp')
     function($http, $rootScope, $location, Storage, Config, Authinfo) {
 
       var token = Storage.get('accessToken');
-      var scimUrl = Config.scimUrl + '?attributes=name,userName,entitlements';
-      var scimSearchUrl = Config.scimUrl + '?filter=entitlements%20eq%20%22webex-squared%22%20and%20(userName%20%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22)';
+      var filter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
+      var attributes = 'attributes=name,userName,entitlements';
+      var scimUrl = Config.scimUrl + '?' + '&' + attributes;
+      var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
 
       function sprintf(template, values) {
         return template.replace(/%s/g, function() {
@@ -19,6 +21,11 @@ angular.module('wx2AdminWebClientApp')
         listUsers: function(startIndex, count, sortBy, sortOrder, callback) {
 
           var listUrl = sprintf(scimUrl, [Authinfo.getOrgId()]);
+
+          if ($rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined') {
+            listUrl = sprintf(scimSearchUrl, [Authinfo.getOrgId(), $rootScope.searchStr, $rootScope.searchStr, $rootScope.searchStr]);
+          }
+
           if (startIndex && startIndex > 0) {
             listUrl = listUrl + '&startIndex=' + startIndex;
           }
@@ -47,40 +54,9 @@ angular.module('wx2AdminWebClientApp')
               callback(data, status);
             });
 
-        },
-
-        searchUsers: function(searchStr, startIndex, count, sortBy, sortOrder, callback) {
-
-          var searchUrl = sprintf(scimSearchUrl, [Authinfo.getOrgId(), searchStr, searchStr, searchStr]);
-          if (startIndex && startIndex > 0) {
-            searchUrl = searchUrl + '&startIndex=' + startIndex;
-          }
-
-          if (count && count > 0) {
-            searchUrl = searchUrl + '&count=' + count;
-          }
-
-          if (sortBy && sortBy.length > 0) {
-            searchUrl = searchUrl + '&sortBy=' + sortBy;
-          }
-
-          if (sortOrder && sortOrder.length > 0) {
-            searchUrl = searchUrl + '&sortOrder=' + sortOrder;
-          }
-
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-          $http.get(searchUrl)
-            .success(function(data, status) {
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function(data, status) {
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
         }
-
       };
+
+
     }
   ]);

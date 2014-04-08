@@ -12,33 +12,13 @@ angular.module('wx2AdminWebClientApp')
         order: 'ascending',
         icon: {
           name: 'fa-sort-asc',
-          email: 'fa-sort',
+          username: 'fa-sort',
           date: 'fa-sort'
         }
       };
       var invalidcount = 0;
       var usersperpage = Config.usersperpage;
       $scope.pagination = Pagination.init($scope, usersperpage);
-
-      //sorting function
-      $scope.setSort = function(type) {
-        if (type === 'name') {
-          if ($scope.sort.by === 'email') {
-            $scope.sort.by = 'name';
-            $scope.sort.order = 'ascending';
-            $scope.sort.icon.name = 'fa-sort-asc';
-            $scope.sort.icon.email = 'fa-sort';
-          } else if ($scope.sort.by === 'name') {
-            if ($scope.sort.order === 'ascending') {
-              $scope.sort.order = 'descending';
-              $scope.sort.icon.name = 'fa-sort-desc';
-            } else {
-              $scope.sort.order = 'ascending';
-              $scope.sort.icon.name = 'fa-sort-asc';
-            }
-          }
-        }
-      };
 
       var getUserList = function() {
         var startIndex = $scope.pagination.page * usersperpage + 1;
@@ -52,22 +32,6 @@ angular.module('wx2AdminWebClientApp')
             }
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
-          }
-        });
-      };
-
-      var searchUsers = function(str) {
-        var startIndex = $scope.pagination.page * usersperpage + 1;
-        UserListService.searchUsers(str, startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function(data) {
-          if (data.success) {
-            Log.debug('found matches[' + data.totalResults + ']: ' + data.Resources);
-            $scope.totalResults = data.totalResults;
-            $scope.queryuserslist = data.Resources;
-            if (data.totalResults !== 0 && data.totalResults !== null && $scope.pagination.perPage !== 0 && $scope.pagination.perPage !== null) {
-              $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
-            }
-          } else {
-            Log.debug('Search users failed for: ' + str);
           }
         });
       };
@@ -317,17 +281,8 @@ angular.module('wx2AdminWebClientApp')
       //Search users based on search criteria
       $scope.$on('SEARCH_ITEM', function(e, str) {
         Log.debug('got broadcast for search:' + str);
-        if (str === '') {
-          getUserList();
-          $scope.pagination.mode = 'list';
-          $scope.pagination.param = '';
-          $scope.pagination.page = 0;
-        } else {
-          searchUsers(str);
-          $scope.pagination.mode = 'search';
-          $scope.pagination.param = str;
-          $scope.pagination.page = 0;
-        }
+        $scope.pagination.page = 0;
+        getUserList();
       });
 
       $scope.getEntitlementState = function(user) {
@@ -340,7 +295,6 @@ angular.module('wx2AdminWebClientApp')
       };
 
       $scope.changeEntitlement = function(userEmail, isEntitle) {
-
         var dlg = $dialogs.confirm('Change Service Entitlement', 'Are you sure you want to ' + (isEntitle ? 'enable' : 'disable') + ' squared service for user ' + userEmail + '?');
         dlg.result.then(function() {
           $scope.confirmed = true;
@@ -360,7 +314,54 @@ angular.module('wx2AdminWebClientApp')
           console.log('User canceled deactivate for: ' + userEmail + ' Status:' + status);
           $scope.confirmed = false;
         });
+      };
 
+      //sorting function
+      $scope.setSort = function(type) {
+        switch (type) {
+        case 'name':
+          if ($scope.sort.by === 'userName') {
+            $scope.sort.by = 'name';
+            $scope.sort.order = 'ascending';
+            $scope.sort.icon.name = 'fa-sort-asc';
+            $scope.sort.icon.username = 'fa-sort';
+            getUserList();
+          } else if ($scope.sort.by === 'name') {
+            if ($scope.sort.order === 'ascending') {
+              $scope.sort.order = 'descending';
+              $scope.sort.icon.name = 'fa-sort-desc';
+              getUserList();
+            } else {
+              $scope.sort.order = 'ascending';
+              $scope.sort.icon.name = 'fa-sort-asc';
+              getUserList();
+            }
+          }
+          break;
+
+        case 'username':
+          if ($scope.sort.by === 'name') {
+            $scope.sort.by = 'userName';
+            $scope.sort.order = 'ascending';
+            $scope.sort.icon.username = 'fa-sort-asc';
+            $scope.sort.icon.name = 'fa-sort';
+            getUserList();
+          } else if ($scope.sort.by === 'userName') {
+            if ($scope.sort.order === 'ascending') {
+              $scope.sort.order = 'descending';
+              $scope.sort.icon.username = 'fa-sort-desc';
+              getUserList();
+            } else {
+              $scope.sort.order = 'ascending';
+              $scope.sort.icon.username = 'fa-sort-asc';
+              getUserList();
+            }
+          }
+          break;
+
+        default:
+          Log.debug('Sort type not recognized.');
+        }
       };
 
     }

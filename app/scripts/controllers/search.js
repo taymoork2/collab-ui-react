@@ -6,7 +6,9 @@ angular.module('wx2AdminWebClientApp')
 
 		$scope.searchItem = function() {
 			var str = $scope.searchStr;
+			//str = encodeURIComponent(str);
 			Log.debug('search string is:' + str);
+			$rootScope.searchStr = str;
 			$rootScope.$broadcast('SEARCH_ITEM', str);
 		};
 
