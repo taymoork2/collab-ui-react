@@ -11,7 +11,8 @@
 var testuser = {
   username: 'pbr-org-admin@squared2webex.com',
   password: 'C1sc0123!',
-  orgname: 'SquaredAdminTool'
+  orgname: 'SquaredAdminTool',
+  searchStr: 'fake'
 };
 
 function randomId() {
@@ -56,6 +57,46 @@ describe('List users flow', function() {
   describe('Listing users on page load', function() {
     it('should show first page of users', function() {
       expect(element(by.css('.pagination-current a')).getText()).toBe('1');
+    });
+    it('should list 20 or less users', function() {
+      element(by.id('totalresults')).getAttribute('value').then(function(value) {
+        var totalresults = parseInt(value, 10);
+        if (totalresults < 20) {
+          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+            expect(rows.length).toBe(totalresults);
+          });
+        } else {
+          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+            expect(rows.length).toBe(20);
+          });
+        }
+      });
+    });
+  });
+
+  // Asserting search users.
+  describe('search users on page', function() {
+    it('should show first page of users based on search string', function() {
+      var initTotal = 0;
+      var afterTotal = 0;
+      element(by.id('totalresults')).getAttribute('value').then(function(value) {
+        initTotal = parseInt(value, 10);
+      });
+      
+      element(by.id('search-input')).sendKeys(testuser.searchStr).then(function() {
+        element(by.id('totalresults')).getAttribute('value').then(function(value) {
+          afterTotal = parseInt(value, 10);
+          expect(initTotal).toBeGreaterThan(afterTotal);
+          if (afterTotal > 0)
+          {
+            element(by.binding('user.userName')).getText().then(function(uname) {
+              expect(uname).toContain(testuser.searchStr);
+            });
+          }
+          element(by.id('search-input')).clear();
+        });
+      });
+
     });
     it('should list 20 or less users', function() {
       element(by.id('totalresults')).getAttribute('value').then(function(value) {
