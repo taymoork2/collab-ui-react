@@ -12,7 +12,6 @@
     "base64": "~0.2.0",
     "addressparser": "~0.1.1",
     "bootstrap-tokenfield": "~0.11.9",
-    "fontawesome-clean": "*",
     "components-font-awesome": "~4.0.3",
     "angular-dialog-service": "~3.1.0"
   },

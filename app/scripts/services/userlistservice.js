@@ -6,11 +6,9 @@ angular.module('wx2AdminWebClientApp')
 
       var token = Storage.get('accessToken');
       var filter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
-      var sortBy = 'sortBy=name';
-      var sortOrder = 'sortOrder=ascending';
       var attributes = 'attributes=name,userName,entitlements';
-      var scimUrl = Config.scimUrl + '?' + sortBy + '&' + sortOrder + '&' + attributes;
-      var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + sortBy + '&' + sortOrder + '&' + attributes;
+      var scimUrl = Config.scimUrl + '?' + '&' + attributes;
+      var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
 
       function sprintf(template, values) {
         return template.replace(/%s/g, function() {
@@ -19,14 +17,13 @@ angular.module('wx2AdminWebClientApp')
       }
 
       return {
-  
-        listUsers: function(startIndex, count, callback) {
+
+        listUsers: function(startIndex, count, sortBy, sortOrder, callback) {
 
           var listUrl = sprintf(scimUrl, [Authinfo.getOrgId()]);
 
-          if ($rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined')
-          {
-            listUrl= sprintf(scimSearchUrl, [Authinfo.getOrgId(), $rootScope.searchStr, $rootScope.searchStr, $rootScope.searchStr]);
+          if ($rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined') {
+            listUrl = sprintf(scimSearchUrl, [Authinfo.getOrgId(), $rootScope.searchStr, $rootScope.searchStr, $rootScope.searchStr]);
           }
 
           if (startIndex && startIndex > 0) {
@@ -35,6 +32,14 @@ angular.module('wx2AdminWebClientApp')
 
           if (count && count > 0) {
             listUrl = listUrl + '&count=' + count;
+          }
+
+          if (sortBy && sortBy.length > 0) {
+            listUrl = listUrl + '&sortBy=' + sortBy;
+          }
+
+          if (sortOrder && sortOrder.length > 0) {
+            listUrl = listUrl + '&sortOrder=' + sortOrder;
           }
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
@@ -50,7 +55,8 @@ angular.module('wx2AdminWebClientApp')
             });
 
         }
-
       };
+
+
     }
   ]);

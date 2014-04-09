@@ -150,6 +150,49 @@ describe('List users flow', function() {
           expect(element(by.css('.pagination-current a')).getText()).toBe('1');
           element.all(by.repeater('user in queryuserslist')).then(function(rows) {
             expect(rows.length).toBe(20);
+            element(by.id('search-input')).clear();
+          });
+        }
+      });
+    });
+  });
+
+  // Asserting sorting of users.
+  describe('Sorting users', function() {
+    it('should sort users by name', function() {
+      element(by.id('totalresults')).getAttribute('value').then(function(value) {
+        var totalresults = parseInt(value, 10);
+        if (totalresults > 0) {
+          //get first user
+          var user = null;
+          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+            user = rows[0].getText();
+          });
+          //Click on name sort and expect the first user not to be the same
+          element(by.id('name-sort')).click().then(function() {
+            element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+              expect(rows[0].getText()).not.toBe(user);
+            });
+          });
+        }
+      });
+    });
+    it('should sort users by username', function() {
+      element(by.id('username-sort')).click();
+      element(by.id('totalresults')).getAttribute('value').then(function(value) {
+        var totalresults = parseInt(value, 10);
+        if (totalresults > 0) {
+          //get first user
+          var user = null;
+          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+            user = rows[0].getText();
+          });
+          //Click on username sort and expect the first user to be last now
+          element(by.id('username-sort')).click().then(function() {
+            element(by.id('last-page')).click();
+            element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+              expect(rows[rows.length-1].getText()).toBe(user);
+            });
           });
         }
       });
@@ -162,7 +205,7 @@ describe('List users flow', function() {
     it('should add user successfully and increase user count', function() {
       var initialCount;
       element(by.id('totalresults')).getAttribute('value').then(function(count) {
-        initialCount =  parseInt(count, 10);
+        initialCount = parseInt(count, 10);
       });
       var inputEmail = randomId() + '@example.com';
       element(by.id('usersfield')).clear();

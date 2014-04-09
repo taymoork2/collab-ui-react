@@ -16,9 +16,9 @@ angular.module('wx2AdminWebClientApp')
           scope: scope
         };
 
-        var listUsers = function(startIndex) {
+        var listUsers = function(startIndex, sortBy, sortOrder) {
 
-          UserListService.listUsers(startIndex, paginator.perPage, function(data, status) {
+          UserListService.listUsers(startIndex, paginator.perPage, sortBy, sortOrder, function(data, status) {
             if (data.success) {
               Log.debug(data.Resources);
               paginator.scope.totalResults = data.totalResults;
@@ -32,29 +32,28 @@ angular.module('wx2AdminWebClientApp')
         paginator.prevPage = function() {
           if (paginator.page > 0) {
             paginator.page -= 1;
-            listUsers(paginator.page * paginator.perPage + 1);
+            listUsers(paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order);
           }
         };
 
         paginator.nextPage = function() {
           if (paginator.page < paginator.numPages - 1) {
             paginator.page += 1;
-
-            listUsers(paginator.page * paginator.perPage + 1);
+            listUsers(paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order);
           }
         };
 
         paginator.firstPage = function() {
           if (paginator.page > 0) {
             paginator.page = 0;
-            listUsers(1);
+            listUsers(1, paginator.scope.sort.by, paginator.scope.sort.order);
           }
         };
 
         paginator.lastPage = function() {
           if (paginator.page < paginator.numPages - 1) {
             paginator.page = paginator.numPages - 1;
-            listUsers(paginator.page * paginator.perPage + 1);
+            listUsers(paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order);
           }
         };
 
