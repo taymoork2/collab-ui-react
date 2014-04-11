@@ -41,6 +41,9 @@ describe('Downloads Page with email parameter and reset/admin email params', fun
     expect(element(by.id('icon-search')).isDisplayed()).toBe(false);
     expect(element(by.id('search-input')).isDisplayed()).toBe(false);
   });
+  it('should not display tab bar', function() {
+    expect(element(by.id('tabs')).isDisplayed()).toBe(false);
+  });
   it('should have invoked send email api', function() {
     element(by.id('sendStatus')).getAttribute('mailStatus').then(function(value) {
       expect(value).toBe('email success');

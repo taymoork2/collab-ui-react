@@ -49,6 +49,14 @@
         </div><!-- /.container-fluid -->
       </nav>
 
+      <div  class="container" ng-hide="Utils.hideForRoute('downloads')" ng-controller="TabsCtrl">
+        <tabset id="tabs" type="navType">
+          <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" select="changeTab(tab.path)">
+          </tab>
+        </tabset>
+        <hr width='100%'>
+      </div>
+
       <div class="container" ng-view=""></div>
 
       <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -94,6 +102,7 @@
     <script src="scripts/controllers/navigation.js"></script>
     <script src="scripts/controllers/users.js"></script>
     <script src="scripts/controllers/search.js"></script>
+    <script src="scripts/controllers/tabs.js"></script>
     <script src="scripts/services/userService.js"></script>
     <script src="scripts/services/userListService.js"></script>
     <script src="scripts/services/Localize.js"></script>

@@ -171,6 +171,62 @@ describe('App flow', function() {
 
   });
 
+  describe('Validate user page', function() {
+    it('should have a tab bar', function() {
+      expect(element(by.id('tabs')).isDisplayed()).toBe(true);
+      element.all(by.repeater('tab in tabs')).then(function(tabCount) {
+        expect(tabCount.length).toBe(12);
+      });
+    });
+
+    it('clicking on home tab should change the view', function() {
+      browser.driver.findElement(by.css('li[heading="Home"]')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function() {
+        expect(browser.getCurrentUrl()).toContain('/users');
+      });
+    });
+
+    it('clicking on policies tab should change the view', function() {
+      browser.driver.findElement(by.css('li[heading="Policies"]')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function() {
+        expect(browser.getCurrentUrl()).toContain('/policies');
+      });
+    });
+
+    it('clicking on templates tab should change the view', function() {
+      browser.driver.findElement(by.css('li[heading="Templates"]')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function() {
+        expect(browser.getCurrentUrl()).toContain('/templates');
+        expect(element(by.css('h2')).getText()).toContain('MANAGE TEMPLATES');
+      });
+    });
+
+    it('clicking on orgs tab should change the view', function() {
+      browser.driver.findElement(by.css('li[heading="Organizations"]')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function() {
+        expect(browser.getCurrentUrl()).toContain('/orgs');
+        expect(element(by.css('h2')).getText()).toContain('MANAGE ORGANIZATIONS');
+      });
+    });
+
+    it('clicking on reports tab should change the view', function() {
+      browser.driver.findElement(by.css('li[heading="Reports"]')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function() {
+        expect(browser.getCurrentUrl()).toContain('/reports');
+      });
+    });
+  });
+
   // Log Out
   describe('Log Out', function() {
     it('should redirect to login page', function() {
