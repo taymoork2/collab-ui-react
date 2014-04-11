@@ -75,6 +75,49 @@ def publish():
     if results.failed:
         abort('Could not remove the tar \'%s.\'' % gz_file)
 
+# Publish the site by pushing the gz file to the server, explode it, and
+# change the soft link to latest folder.
+@task
+def publish_int():
+
+    # Put the tar there...
+    results = put(local_path='*.gz', remote_path='/tmp', use_sudo=False)
+    if results.failed:
+        abort('Could not upload the files.')
+    if len(results) != 1:
+        abort('Uploaded more files than anticipated.')
+    gz_file = results[0]
+
+    # Make the target dir...
+    parent_dir = '/var/www/virtuals/wxadminweb-int-versions'
+    target_dir = '%s/wxadminweb-v%s' % (parent_dir, get_build(gz_file))
+    results = run('mkdir -p %s' % target_dir)
+    if results.failed:
+        abort('Could not mkdir \'%s.\'' % target_dir)
+    results = run('chmod 775 %s' % target_dir)
+    if results.failed:
+        abort('Could not chmod \'%s.\'' % target_dir)
+
+    # Explode the tar there without the dist/ prefix...
+    with cd(target_dir):
+        results = run('tar --strip-components=1 -pxvf %s' % gz_file)
+        if results.failed:
+            abort('Could not extract tar \'%s.\'' % gz_file)
+
+    # Softlink latest...
+    with cd('/var/www/virtuals/wxadminweb-int-versions'):
+        results = run('rm -f wxadminweb; ln -sf %s wxadminweb' % os.path.basename(target_dir))
+        if results.failed:
+            abort('Could not extract tar \'%s.\'' % gz_file)
+
+        # Do you see what I see...
+        run('ls -l wxadminweb/')
+
+    # Delete the tar.
+    results = run('rm -f %s' % gz_file, timeout=60)
+    if results.failed:
+        abort('Could not remove the tar \'%s.\'' % gz_file)
+
 
 @task(default='true')
 def usage():
