@@ -23,7 +23,8 @@ angular.module('wx2AdminWebClientApp')
           var listUrl = sprintf(scimUrl, [Authinfo.getOrgId()]);
 
           if ($rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined') {
-            listUrl = sprintf(scimSearchUrl, [Authinfo.getOrgId(), $rootScope.searchStr, $rootScope.searchStr, $rootScope.searchStr]);
+            var encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
+            listUrl = sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
           }
 
           if (startIndex && startIndex > 0) {
