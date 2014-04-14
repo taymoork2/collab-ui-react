@@ -4,7 +4,7 @@ angular.module('wx2AdminWebClientApp')
   .factory('Auth', function($http, $location, $q, Config, Authinfo) {
 
     var auth = {
-      authorizeUrl: Config.adminServiceUrl + 'orgadmininfo'
+      authorizeUrl: Config.adminServiceUrl.prod + 'orgadmininfo'
     };
 
     auth.authorize = function(token, scope) {

@@ -9,7 +9,14 @@ angular.module('wx2AdminWebClientApp')
       $scope.isAuthorized = false;
 
       // Set oauth url depending on the environment
-      var oauth2LoginUrl = document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('localhost') !== -1 ? Config.oauth2LoginUrlDev : Config.oauth2LoginUrlProd;
+      var oauth2LoginUrl = null;
+      if (Config.isDev()) {
+        oauth2LoginUrl = Config.oauth2LoginUrl.dev;
+      } else if (Config.isIntegration()) {
+        oauth2LoginUrl = Config.oauth2LoginUrl.integration;
+      } else {
+        oauth2LoginUrl = Config.oauth2LoginUrl.prod;
+      }
 
       if (token) {
         $scope.result = 'Authorizing user...';

@@ -17,7 +17,14 @@ angular.module('wx2AdminWebClientApp')
       }
 
       //Set logout redirect depending on environment
-      var logoutUrl = document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('localhost') !== -1 ? Config.logoutUrl + encodeURIComponent('http://127.0.0.1:8000') : Config.logoutUrl + encodeURIComponent(Config.adminClientUrl);
+      var logoutUrl = null;
+      if (Config.isDev()) {
+        logoutUrl = Config.logoutUrl + encodeURIComponent(Config.adminClientUrl.dev);
+      } else if(Config.isIntegration()) {
+        logoutUrl = Config.logoutUrl + encodeURIComponent(Config.adminClientUrl.integration);
+      } else {
+        logoutUrl = Config.logoutUrl + encodeURIComponent(Config.adminClientUrl.prod);
+      }
 
       $scope.logout = function() {
         Storage.clear();
