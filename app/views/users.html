@@ -2,25 +2,58 @@
   <h2>MANAGE USERS</h2>
   <br>
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">
-        <strong id="subTitleAdd" ng-show="isAddEnabled()">Add new users</strong>
-        <strong id="subTitleEnable" ng-show="!isAddEnabled()">Entitle users</strong>
-      </h3>
-    </div>
-    <div class="panel-body">
-      <form role="form">
-        <div class="form-group">
-          <label for="inputEmail3">Email</label>
-          <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
+    <accordion close-others="false">
+    <accordion-group is-open="isAddOpen">
+      <accordion-heading>
+        <div class="panel-heading" style="padding: 0px;">
+          <div id="addUsers">
+            <h3 class="panel-title">
+              <strong id="subTitleAdd" ng-show="isAddEnabled()">Add new users</strong>
+              <strong id="subTitleEnable" ng-show="!isAddEnabled()">Entitle users</strong>
+            </h3>
+          </div>
+          <div style="float:right; margin-top:-20px">
+            <i class="glyphicon" ng-class="{'fa fa-chevron-up': isAddOpen, 'fa fa-chevron-down': !isAddOpen}"></i>
+          </div>
         </div>
-        <div class="form-group">
-          <button class="btn btn-link pull-right">Cancel</button>
-          <button id="btnAdd" class="btn btn-primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Add</button>
-          <button id="btnEntitle" class="btn btn-primary pull-right" ng-show="!isAddEnabled()" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Entitle</button>
-        </div>
-      </form>
-    </div>
+      </accordion-heading>
+
+      <div class="panel-body" style="padding:0px; border-top:0px">
+        <form role="form">
+          <div class="form-group">
+            <accordion close-others="oneAtATime">
+              <accordion-group is-open="isopen">
+                  <accordion-heading>
+                      <div>
+                        <label for="inputEmail3">Email</label>
+                        <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
+                        <br>
+                        Entitlements &nbsp;&nbsp;<i class="glyphicon" ng-class="{'fa fa-chevron-up': isopen, 'fa fa-chevron-down': !isopen}"></i>
+                      </div>
+                  </accordion-heading>
+                  <div >
+                    <div class="entitle-btn-grp">
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-primary entitle-btn" ng-model="radioModelCallInit" btn-radio="'On'">On</button>
+                        <button type="button" class="btn btn-primary entitle-btn" ng-model="radioModelCallInit" btn-radio="'Off'">Off</button>
+                      </div>
+                      <span style="font-size:16px; padding:10px">Call-Initiation</span>
+                    </div>
+                  </div>
+              </accordion-group>
+            </accordion>
+            
+          </div>
+          <div class="form-group">
+            <button class="btn btn-link pull-right">Cancel</button>
+            <button id="btnAdd" class="btn btn-primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Add</button>
+            <button id="btnEntitle" class="btn btn-primary pull-right" ng-show="!isAddEnabled()" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Entitle</button>
+          </div>
+        </form>
+      </div>
+    </accordian-heading>
+    </accordian>
+
     <div ng-show="error || results && results.resultList.length > 0">
       <div class="alert alert-success" ng-show="(results.resultList|filter:{alertType:'success'}).length > 0">
         <div ng-repeat="userResult in results.resultList | filter:{alertType:'success'}">

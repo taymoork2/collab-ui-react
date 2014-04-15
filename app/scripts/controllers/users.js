@@ -364,5 +364,13 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
+      //accordian functionality
+      $scope.oneAtATime = true;
+      $scope.isopen = true;
+      $scope.isAddOpen = true;
+
+      //radio group
+      $scope.radioModelCallInit = 'Off';
+
     }
   ]);
