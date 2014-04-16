@@ -189,7 +189,7 @@ angular.module('wx2AdminWebClientApp')
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnAdd').button('loading');
-          Userservice.addUsers(usersList, callback);
+          Userservice.addUsers(usersList, getEntitlements(), callback);
         } else {
           console.log('No users entered.');
           var userResult = {
@@ -263,7 +263,7 @@ angular.module('wx2AdminWebClientApp')
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnEntitle').button('loading');
-          Userservice.entitleUsers(usersList, callback);
+          Userservice.updateUsers(usersList, getEntitlements(), callback);
         } else {
           console.log('No users entered.');
           var userResult = {
@@ -298,10 +298,9 @@ angular.module('wx2AdminWebClientApp')
         var dlg = $dialogs.confirm('Change Service Entitlement', 'Are you sure you want to ' + (isEntitle ? 'enable' : 'disable') + ' squared service for user ' + userEmail + '?');
         dlg.result.then(function() {
           $scope.confirmed = true;
-          Userservice.changeEntitlement([{
-            'address': userEmail,
-            'isEntitle': isEntitle
-          }], function(data, status) {
+          Userservice.updateUsers([{
+            'address': userEmail
+          }], getEntitlements(), function(data, status) {
             if (data.success) {
               // ToDo: parse result to determine if success for user[0]
               // ToDo: add result area to show success message
@@ -370,7 +369,21 @@ angular.module('wx2AdminWebClientApp')
       $scope.isAddOpen = true;
 
       //radio group
-      $scope.radioModelCallInit = 'Off';
+      $scope.entitlements = {};
+      $scope.entitlements.webExSquared = 'ACTIVE';
+      $scope.entitlements.squaredCallInitiation = 'INACTIVE';
+
+      var getEntitlements = function(){
+        var entitleList = [];
+        for (var key in $scope.entitlements) {
+          var ent = {};
+          ent.entitlementName = key;
+          ent.entitlementState = $scope.entitlements[key];
+          entitleList.push(ent);
+        }
+        Log.debug(entitleList);
+        return entitleList;
+      };
 
     }
   ]);

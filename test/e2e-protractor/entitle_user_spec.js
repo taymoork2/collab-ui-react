@@ -9,9 +9,9 @@
 
 var testuser = {
   username: 'adminTestUser@wx2.example.com',
-  ssousername: 'adminADSyncTestUser@wx2.example.com',
+  ssousername: 'pbr-sso-org-admin@squared2webex.com',
   password: 'C1sc0123!',
-  orgname: 'WebEx Self-Service Org'
+  orgname: '(SquaredAdminTool_SSO)'
 };
 
 function randomId() {
@@ -40,10 +40,11 @@ describe('Entitle flow', function() {
       browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.ssousername);
       browser.driver.findElement(by.css('#IDButton2')).click();
       browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.css('#IDToken2'));
+        return browser.driver.isElementPresent(by.id('username'));
       }).then(function() {
-        browser.driver.findElement(by.css('#IDToken2')).sendKeys(testuser.password);
-        browser.driver.findElement(by.css('#Button1')).click();
+        browser.driver.findElement(by.id('username')).sendKeys(testuser.ssousername);
+        browser.driver.findElement(by.id('password')).sendKeys(testuser.password);
+        browser.driver.findElement(by.css('button')).click();
       });
 
       expect(browser.getCurrentUrl()).toContain('/users');
@@ -89,12 +90,12 @@ describe('Entitle flow', function() {
     describe('Entitle an existing user', function() {
       it('should display input user email in results with success message', function() {
         element(by.id('usersfield')).clear();
-        element(by.id('usersfield')).sendKeys(testuser.username);
+        element(by.id('usersfield')).sendKeys(testuser.ssousername);
         element(by.id('btnEntitle')).click();
         element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
           expect(rows.length).toBe(1);
-          expect(rows[0].getText()).toContain(testuser.username);
-          expect(rows[0].getText()).toContain('entitled successfully');
+          expect(rows[0].getText()).toContain(testuser.ssousername);
+          expect(rows[0].getText()).toContain('409');
         });
       });
     });

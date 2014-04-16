@@ -4,65 +4,22 @@ angular.module('wx2AdminWebClientApp')
   .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config',
     function($http, $rootScope, $location, Storage, Config) {
 
-      var userUrl = Config.adminServiceUrl.prod;
+      var userUrl = Config.getAdminServiceUrl();
       var token = Storage.get('accessToken');
 
       return {
-        entitleUsers: function(usersDataArray, callback) {
+
+        updateUsers: function(usersDataArray, entitlements, callback) {
           var userData = {
             'users': []
           };
 
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
-            var userName = usersDataArray[i].name.trim();
-            var user = {
-              'email': null,
-              'name': null
-            };
-
-            if (userEmail.length > 0) {
-              user.email = userEmail;
-              if (userName.length > 0 && userName !== false) {
-                user.name = userName;
-              }
-              userData.users.push(user);
-            }
-          }
-
-          if (userData.users.length > 0) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-            $http.post(userUrl + 'user', userData)
-              .success(function(data, status) {
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function(data, status) {
-                data.success = false;
-                data.status = status;
-                callback(data, status);
-              });
-          }
-
-        },
-
-        changeEntitlement: function(usersDataArray, callback) {
-          var userData = {
-            'users': []
-          };
-
-          for (var i = 0; i < usersDataArray.length; i++) {
-            var userEmail = usersDataArray[i].address.trim();
-            var isEntitle = usersDataArray[i].isEntitle;
             if (userEmail.length > 0) {
               var user = {
                 'email': userEmail,
-                'userEntitlements': [
-                  {
-                    'entitlementName': 'webExSquared',
-                    'entitlementState': isEntitle? 'on':'off'
-                  }
-                ]
+                'userEntitlements': entitlements
               };
               userData.users.push(user);
             }
@@ -87,7 +44,7 @@ angular.module('wx2AdminWebClientApp')
 
         },
 
-        addUsers: function(usersDataArray, callback) {
+        addUsers: function(usersDataArray, entitlements, callback) {
           var userData = {
             'users': []
           };
@@ -97,7 +54,8 @@ angular.module('wx2AdminWebClientApp')
             var userName = usersDataArray[i].name.trim();
             var user = {
               'email': null,
-              'name': null
+              'name': null,
+              'userEntitlements' : entitlements
             };
             if (userEmail.length > 0) {
               user.email = userEmail;
@@ -110,7 +68,7 @@ angular.module('wx2AdminWebClientApp')
 
           if (userData.users.length > 0) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-            $http.put(userUrl + 'user', userData)
+            $http.post(userUrl + 'users', userData)
               .success(function(data, status) {
                 data.success = true;
                 callback(data, status);
