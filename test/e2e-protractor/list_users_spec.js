@@ -49,6 +49,10 @@ describe('List users flow', function() {
 
       expect(browser.getCurrentUrl()).toContain('/users');
       expect(element(by.css('h2')).getText()).toContain('MANAGE USERS');
+      //check to make sure add users panel is visible
+      expect(element(by.id('usersfield')).isDisplayed()).toEqual(true);
+      expect(element(by.id('btn_callInit_on')).isDisplayed()).toEqual(true);
+      expect(element(by.id('btnAdd')).isDisplayed()).toEqual(true);
     });
 
   }); //State is logged-in

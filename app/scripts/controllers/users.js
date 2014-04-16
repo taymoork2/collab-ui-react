@@ -227,7 +227,7 @@ angular.module('wx2AdminWebClientApp')
         var isComplete = true;
         var callback = function(data, status) {
           if (data.success) {
-            Log.info('User successfully entitled', data);
+            Log.info('User successfully updated', data);
             getUserList();
 
             for (var i = 0; i < data.userResponse.length; i++) {
@@ -240,14 +240,14 @@ angular.module('wx2AdminWebClientApp')
               var userStatus = data.userResponse[i].status;
 
               if (userStatus === 200) {
-                userResult.message = 'entitled successfully';
+                userResult.message = 'updated successfully';
                 userResult.alertType = 'success';
               } else if (userStatus === 404) {
                 userResult.message = 'does not exist';
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {
-                userResult.message = 'not entitled, status: ' + userStatus;
+                userResult.message = 'not updated, status: ' + userStatus;
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
@@ -257,7 +257,7 @@ angular.module('wx2AdminWebClientApp')
             }
 
           } else {
-            Log.warn('Could not entitle the user', data);
+            Log.warn('Could not update the user', data);
             if (status) {
               $scope.error = 'Request failed with status: ' + status + '. Message: ' + data;
             } else {
