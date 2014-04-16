@@ -37,6 +37,16 @@ angular.module('wx2AdminWebClientApp')
 
       isProd: function(){
         return document.URL.indexOf('admin.wbx2.com') !== -1;
+      },
+
+      getAdminServiceUrl: function() {
+        if (this.isDev()) {
+          return this.adminServiceUrl.integration;
+        } else {
+          return this.adminServiceUrl.prod;
+        }
       }
+
+
     };
   });

@@ -4,6 +4,19 @@ angular.module('wx2AdminWebClientApp')
   .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
     function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination) {
 
+      function Feature (name, state) {
+        this.entitlementName = name;
+        this.entitlementState = state? 'ACTIVE' : 'INACTIVE';
+      }
+
+      function squaredFeature(state) {
+        return new Feature('webExSquared', state);
+      }
+
+      function callFeature(state) {
+        return new Feature('squaredCallInitiation', state);
+      }
+
       //Initialize variables
       $scope.status = null;
       $scope.results = null;
@@ -189,7 +202,7 @@ angular.module('wx2AdminWebClientApp')
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnAdd').button('loading');
-          Userservice.addUsers(usersList, callback);
+          Userservice.addUsers(usersList, getEntitlements(), callback);
         } else {
           console.log('No users entered.');
           var userResult = {
@@ -263,7 +276,7 @@ angular.module('wx2AdminWebClientApp')
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnEntitle').button('loading');
-          Userservice.entitleUsers(usersList, callback);
+          Userservice.updateUsers(usersList, getEntitlements(), callback);
         } else {
           console.log('No users entered.');
           var userResult = {
@@ -295,11 +308,23 @@ angular.module('wx2AdminWebClientApp')
       };
 
       $scope.changeEntitlement = function(userEmail, isEntitle) {
-        var dlg = $dialogs.create('views/_entitlements.html', 'entitlementDialogCtrl', {}, {key: false});
-        dlg.result.then(function(){
-          console.log('success');
-        }, function(){
-          console.log('failed');
+        var dlg = $dialogs.confirm('Change Service Entitlement', 'Are you sure you want to ' + (isEntitle ? 'enable' : 'disable') + ' squared service for user ' + userEmail + '?');
+        dlg.result.then(function() {
+          $scope.confirmed = true;
+          Userservice.updateUsers([{
+            'address': userEmail
+          }], [squaredFeature(isEntitle)], function(data, status) {
+            if (data.success) {
+              // ToDo: parse result to determine if success for user[0]
+              // ToDo: add result area to show success message
+              getUserList();
+            } else {
+              console.log('Deactivate user failed for: ' + userEmail + ' Status:' + status);
+            }
+          });
+        }, function() {
+          console.log('User canceled deactivate for: ' + userEmail + ' Status:' + status);
+          $scope.confirmed = false;
         });
       };
 
@@ -349,6 +374,25 @@ angular.module('wx2AdminWebClientApp')
         default:
           Log.debug('Sort type not recognized.');
         }
+      };
+
+      //accordian functionality
+      $scope.oneAtATime = true;
+      $scope.isopen = true;
+      $scope.isAddOpen = true;
+
+      //radio group
+      $scope.entitlements = {};
+      $scope.entitlements.webExSquared = true;
+      $scope.entitlements.squaredCallInitiation = false;
+
+      var getEntitlements = function(){
+        var entitleList = [];
+        for (var key in $scope.entitlements) {
+          entitleList.push(new Feature(key, $scope.entitlements[key]));
+        }
+        Log.debug(entitleList);
+        return entitleList;
       };
 
     }
