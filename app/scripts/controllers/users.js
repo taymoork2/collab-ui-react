@@ -295,24 +295,11 @@ angular.module('wx2AdminWebClientApp')
       };
 
       $scope.changeEntitlement = function(userEmail, isEntitle) {
-        var dlg = $dialogs.confirm('Change Service Entitlement', 'Are you sure you want to ' + (isEntitle ? 'enable' : 'disable') + ' squared service for user ' + userEmail + '?');
-        dlg.result.then(function() {
-          $scope.confirmed = true;
-          Userservice.changeEntitlement([{
-            'address': userEmail,
-            'isEntitle': isEntitle
-          }], function(data, status) {
-            if (data.success) {
-              // ToDo: parse result to determine if success for user[0]
-              // ToDo: add result area to show success message
-              getUserList();
-            } else {
-              console.log('Deactivate user failed for: ' + userEmail + ' Status:' + status);
-            }
-          });
-        }, function() {
-          console.log('User canceled deactivate for: ' + userEmail + ' Status:' + status);
-          $scope.confirmed = false;
+        var dlg = $dialogs.create('views/_entitlements.html', 'entitlementDialogCtrl', {}, {key: false});
+        dlg.result.then(function(){
+          console.log('success');
+        }, function(){
+          console.log('failed');
         });
       };
 
@@ -365,4 +352,9 @@ angular.module('wx2AdminWebClientApp')
       };
 
     }
-  ]);
+  ])
+.controller('entitlementDialogCtrl', function($scope, $modalInstance) {
+  $scope.cancel = function(){
+    $modalInstance.dismiss('test');
+  };
+});
