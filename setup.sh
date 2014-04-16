@@ -54,6 +54,9 @@ else
   echo "bower is already installed"
 fi
 
+# Updating bower to the latest
+npm update -g bower
+
 # Check and install grunt
 which grunt > /dev/null 2>&1
 GRUNT_RET=$?

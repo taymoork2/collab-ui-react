@@ -4,6 +4,19 @@ angular.module('wx2AdminWebClientApp')
   .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
     function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination) {
 
+      function Feature (name, state) {
+        this.entitlementName = name;
+        this.entitlementState = state? 'ACTIVE' : 'INACTIVE';
+      }
+
+      function squaredFeature(state) {
+        return new Feature('webExSquared', state);
+      }
+
+      function callFeature(state) {
+        return new Feature('squaredCallInitiation', state);
+      }
+
       //Initialize variables
       $scope.status = null;
       $scope.results = null;
@@ -300,7 +313,7 @@ angular.module('wx2AdminWebClientApp')
           $scope.confirmed = true;
           Userservice.updateUsers([{
             'address': userEmail
-          }], getEntitlements(), function(data, status) {
+          }], [squaredFeature(isEntitle)], function(data, status) {
             if (data.success) {
               // ToDo: parse result to determine if success for user[0]
               // ToDo: add result area to show success message
@@ -370,16 +383,13 @@ angular.module('wx2AdminWebClientApp')
 
       //radio group
       $scope.entitlements = {};
-      $scope.entitlements.webExSquared = 'ACTIVE';
-      $scope.entitlements.squaredCallInitiation = 'INACTIVE';
+      $scope.entitlements.webExSquared = true;
+      $scope.entitlements.squaredCallInitiation = false;
 
       var getEntitlements = function(){
         var entitleList = [];
         for (var key in $scope.entitlements) {
-          var ent = {};
-          ent.entitlementName = key;
-          ent.entitlementState = $scope.entitlements[key];
-          entitleList.push(ent);
+          entitleList.push(new Feature(key, $scope.entitlements[key]));
         }
         Log.debug(entitleList);
         return entitleList;
