@@ -1,12 +1,30 @@
 <!-- This is the modal for the entitlement window -->
-  <div class="modal-header dialog-header-confirm">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title"><span class="glyphicon glyphicon-edit"></span> Modify Entitlements</h4>
+<div class="modal-header dialog-header-confirm">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+  <h4 class="modal-title"><span class="glyphicon glyphicon-edit"></span> Modify Entitlements</h4>
+</div>
+<div class="modal-body">
+  <h5>List of entitlements</h5>
+  <div class="entitle-btn-grp">
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements.webExSquared" btn-radio="true">On</button>
+      <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements.webExSquared" btn-radio="false">Off</button>
+    </div>
+    <span style="font-size:16px; padding:10px">
+      Webex-Squared
+    </span>
   </div>
-  <div class="modal-body">
-    <p>List of entitlements.</p>
+  <div class="entitle-btn-grp">
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements.squaredCallInitiation" btn-radio="true">On</button>
+      <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements.squaredCallInitiation" btn-radio="false">Off</button>
+    </div>
+    <span style="font-size:16px; padding:10px">
+      Call-Initiation
+    </span>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
-  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Cancel</button>
+  <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+</div>

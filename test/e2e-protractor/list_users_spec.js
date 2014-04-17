@@ -82,7 +82,7 @@ describe('List users flow', function() {
       element(by.id('totalresults')).getAttribute('value').then(function(value) {
         initTotal = parseInt(value, 10);
       });
-      
+
       element(by.id('search-input')).sendKeys(testuser.searchStr).then(function() {
         element(by.id('totalresults')).getAttribute('value').then(function(value) {
           afterTotal = parseInt(value, 10);
@@ -224,6 +224,17 @@ describe('List users flow', function() {
       //     expect(parseInt(count, 10)).toBeGreaterThan(initialCount);
       //   });
       // });
+    });
+  });
+
+  // Update entitlements
+  describe('Updating entitlements', function() {
+
+    it('should display the entitlements dialog box', function() {
+      element(by.css('.dropdown-toggle')).click();
+      element(by.css('.dropdown-menu li')).click();
+      expect(element(by.css('.modal-content')).isPresent()).toBe(true);
+      element(by.css('button.close')).click();
     });
   });
 

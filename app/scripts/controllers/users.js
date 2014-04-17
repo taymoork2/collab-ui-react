@@ -307,24 +307,23 @@ angular.module('wx2AdminWebClientApp')
 
       };
 
-      $scope.changeEntitlement = function(userEmail, isEntitle) {
-        var dlg = $dialogs.confirm('Change Service Entitlement', 'Are you sure you want to ' + (isEntitle ? 'enable' : 'disable') + ' squared service for user ' + userEmail + '?');
-        dlg.result.then(function() {
-          $scope.confirmed = true;
+      $scope.changeEntitlement = function(user) {
+        var dlg = $dialogs.create('views/_entitlements.html', 'entitlementDialogCtrl', user);
+        dlg.result.then(function(entitlements){
+          console.log(entitlements);
+          console.log(user);
           Userservice.updateUsers([{
-            'address': userEmail
-          }], [squaredFeature(isEntitle)], function(data, status) {
-            if (data.success) {
-              // ToDo: parse result to determine if success for user[0]
-              // ToDo: add result area to show success message
+            'address': user.userName
+          }], [squaredFeature(entitlements.webExSquared), callFeature(entitlements.squaredCallInitiation)], function(data){
+            if(data.success) {
+              //ToDo: parse result
               getUserList();
             } else {
-              console.log('Deactivate user failed for: ' + userEmail + ' Status:' + status);
+              Log.error('Failed updating user with entitlements.');
             }
           });
         }, function() {
-          console.log('User canceled deactivate for: ' + userEmail + ' Status:' + status);
-          $scope.confirmed = false;
+          console.log('canceled');
         });
       };
 
@@ -397,8 +396,28 @@ angular.module('wx2AdminWebClientApp')
 
     }
   ])
-.controller('entitlementDialogCtrl', function($scope, $modalInstance) {
+.controller('entitlementDialogCtrl', function($scope, $modalInstance, data) {
+  console.log(data);
+  $scope.entitlements = {};
+  if (!data.entitlements || data.entitlements.length === 0) {
+    $scope.entitlements.webExSquared = false;
+    $scope.entitlements.squaredCallInitiation = false;
+  } else {
+    $scope.entitlements.webExSquared = data.entitlements.indexOf('webex-squared') > -1;
+    $scope.entitlements.squaredCallInitiation = data.entitlements.indexOf('squared-call-initiation') > -1;
+  }
+
   $scope.cancel = function(){
-    $modalInstance.dismiss('test');
+    $modalInstance.dismiss('canceled');
   };
+
+  $scope.save = function(){
+
+    if (!$scope.entitlements.webExSquared){
+      $scope.entitlements.squaredCallInitiation = false;
+    }
+
+    $modalInstance.close($scope.entitlements);
+  };
+
 });
