@@ -246,6 +246,10 @@ angular.module('wx2AdminWebClientApp')
                 userResult.message = 'does not exist';
                 userResult.alertType = 'danger';
                 isComplete = false;
+               } else if (userStatus === 409) {
+                userResult.message = 'entitlement previously updated';
+                userResult.alertType = 'danger';
+                isComplete = false;
               } else {
                 userResult.message = 'not updated, status: ' + userStatus;
                 userResult.alertType = 'danger';
