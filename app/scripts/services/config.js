@@ -6,7 +6,7 @@ angular.module('wx2AdminWebClientApp')
 
       adminClientUrl: {
         dev: 'http://127.0.0.1:8000',
-        integration: 'https://int-admin.wbx2.com',
+        integration: 'https://int-admin.wbx2.com/',
         prod: 'https://admin.wbx2.com/'
       },
 
