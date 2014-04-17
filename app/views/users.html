@@ -3,55 +3,54 @@
   <br>
   <div class="panel panel-default">
 
-      <div class="panel-heading">
-        <div id="addUsers">
-          <h3 class="panel-title">
-            <strong id="subTitleAdd" ng-show="isAddEnabled()">Add new users</strong>
-            <strong id="subTitleEnable" ng-show="!isAddEnabled()">Entitle users</strong>
-          </h3>
-        </div>
+    <div class="panel-heading">
+      <div id="addUsers">
+        <h3 class="panel-title">
+          <strong id="subTitleAdd" ng-show="isAddEnabled()">Add new users</strong>
+          <strong id="subTitleEnable" ng-show="!isAddEnabled()">Entitle users</strong>
+        </h3>
       </div>
-
-      <div class="panel-body">
-        <form role="form">
-          <div class="form-group">
-            <label for="inputEmail3">Email</label>
-            <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
-            <br>
-                    
-            <div class="entitle-btn-grp">
-              <div class="btn-group">
-                <button id='btn_callInit_on' type="button" class="btn btn-primary entitle-btn" ng-model="entitlements['squaredCallInitiation']" btn-radio="true">On</button>
-                <button id='btn_callInit_off' type="button" class="btn btn-primary entitle-btn" ng-model="entitlements['squaredCallInitiation']" btn-radio="false">Off</button>
-              </div>
-              <label style="font-size:16px; padding:5px">
-                Call-Initiation
-              </label>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <button class="btn btn-link pull-right">Cancel</button>
-            <button id="btnAdd" class="btn btn-primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Add</button>
-            <button id="btnEntitle" class="btn btn-primary pull-right" ng-show="!isAddEnabled()" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Update</button>
-          </div>
-        </form>
-      </div>
-
-    <div ng-show="error || results && results.resultList.length > 0">
-      <div class="alert alert-success" ng-show="(results.resultList|filter:{alertType:'success'}).length > 0">
-        <div ng-repeat="userResult in results.resultList | filter:{alertType:'success'}">
-          {{userResult.email}} {{userResult.message}}
-        </div>
-      </div>
-      <div class="alert alert-danger" ng-show="(results.resultList|filter:{alertType:'danger'}).length > 0" >
-        <div ng-repeat="userResult in results.resultList | filter:{alertType:'danger'}">
-          {{userResult.email}} {{userResult.message}}
-        </div>
-      </div>
-      <div class="alert alert-danger" ng-show="error">{{error}}</div>
     </div>
+
+    <div class="panel-body">
+      <form role="form">
+        <div class="form-group">
+          <label for="inputEmail3">Email</label>
+          <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
+          <br>
+
+          <div class="entitle-btn-grp">
+            <div class="btn-group right">
+             <input type="checkbox" id="btn_callInit" ng-model="entitlements.squaredCallInitiation" icheck>
+           </div>
+           <label style="font-size:15px; padding:5px">
+            Call-Initiation
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button class="btn btn-link pull-right">Cancel</button>
+        <button id="btnAdd" class="btn btn-primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Add</button>
+        <button id="btnEntitle" class="btn btn-primary pull-right" ng-show="!isAddEnabled()" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Update</button>
+      </div>
+    </form>
   </div>
+
+  <div ng-show="error || results && results.resultList.length > 0">
+    <div class="alert alert-success" ng-show="(results.resultList|filter:{alertType:'success'}).length > 0">
+      <div ng-repeat="userResult in results.resultList | filter:{alertType:'success'}">
+        {{userResult.email}} {{userResult.message}}
+      </div>
+    </div>
+    <div class="alert alert-danger" ng-show="(results.resultList|filter:{alertType:'danger'}).length > 0" >
+      <div ng-repeat="userResult in results.resultList | filter:{alertType:'danger'}">
+        {{userResult.email}} {{userResult.message}}
+      </div>
+    </div>
+    <div class="alert alert-danger" ng-show="error">{{error}}</div>
+  </div>
+</div>
 </div>
 
 <div class="panel panel-default" ng-show="queryuserslist" id="userslistpanel">
@@ -77,8 +76,7 @@
           <td>N/A</td>
           <td class="btn-group"><span class="dropdown-toggle" data-toggle="dropdown">{{getEntitlementState(user)? 'Active':'Inactive'}} <span class="caret"></span></span>
             <ul class="dropdown-menu" role="menu" >
-              <li ng-hide="getEntitlementState(user)" ng-click="changeEntitlement(user.userName, true)"><a>Entitle</a></li>
-              <li ng-show="getEntitlementState(user)" ng-click="changeEntitlement(user.userName, false)"><a>Remove Entitlement</a></li>
+              <li ng-click="changeEntitlement(user)"><a>Modify</a></li>
             </ul>
           </td>
         </tr>
