@@ -21,19 +21,19 @@
 
             <div class="entitle-btn-grp">
               <div class="btn-group">
-                <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements['squaredCallInitiation']" btn-radio="true">On</button>
-                <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements['squaredCallInitiation']" btn-radio="false">Off</button>
+                <button id='btn_callInit_on' type="button" class="btn btn-primary entitle-btn" ng-model="entitlements['squaredCallInitiation']" btn-radio="true">On</button>
+                <button id='btn_callInit_off' type="button" class="btn btn-primary entitle-btn" ng-model="entitlements['squaredCallInitiation']" btn-radio="false">Off</button>
               </div>
-              <span style="font-size:16px; padding:10px">
+              <label style="font-size:16px; padding:5px">
                 Call-Initiation
-              </span>
+              </label>
             </div>
           </div>
 
           <div class="form-group">
             <button class="btn btn-link pull-right">Cancel</button>
             <button id="btnAdd" class="btn btn-primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Add</button>
-            <button id="btnEntitle" class="btn btn-primary pull-right" ng-show="!isAddEnabled()" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Entitle</button>
+            <button id="btnEntitle" class="btn btn-primary pull-right" ng-show="!isAddEnabled()" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Update</button>
           </div>
         </form>
       </div>
