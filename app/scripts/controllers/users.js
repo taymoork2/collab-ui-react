@@ -397,7 +397,6 @@ angular.module('wx2AdminWebClientApp')
     }
   ])
 .controller('entitlementDialogCtrl', function($scope, $modalInstance, data) {
-  console.log(data);
   $scope.entitlements = {};
   if (!data.entitlements || data.entitlements.length === 0) {
     $scope.entitlements.webExSquared = false;

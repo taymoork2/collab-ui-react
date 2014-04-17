@@ -5,21 +5,19 @@
 </div>
 <div class="modal-body">
   <h5>List of entitlements</h5>
-  <div class="entitle-btn-grp">
+  <div class="entitle-check-grp">
     <div class="btn-group">
-      <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements.webExSquared" btn-radio="true">On</button>
-      <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements.webExSquared" btn-radio="false">Off</button>
+      <input type="checkbox" name="webExSquaredCheck" ng-model="entitlements.webExSquared" icheck>
     </div>
-    <span style="font-size:16px; padding:10px">
+    <span style="font-size:15px; padding:10px">
       Webex-Squared
     </span>
   </div>
-  <div class="entitle-btn-grp">
+  <div class="entitle-check-grp">
     <div class="btn-group">
-      <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements.squaredCallInitiation" btn-radio="true">On</button>
-      <button type="button" class="btn btn-primary entitle-btn" ng-model="entitlements.squaredCallInitiation" btn-radio="false">Off</button>
+      <input type="checkbox" name="callInitiationCheck" ng-model="entitlements.squaredCallInitiation" icheck>
     </div>
-    <span style="font-size:16px; padding:10px">
+    <span style="font-size:15px; padding:10px">
       Call-Initiation
     </span>
   </div>

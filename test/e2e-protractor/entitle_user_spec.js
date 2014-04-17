@@ -92,7 +92,7 @@ describe('Entitle flow', function() {
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(testuser.ssousername).then(function() {
           //entitle for call initiation
-          element(by.id('btn_callInit_on')).click().then (function() {
+          element(by.css('.iCheck-helper')).click().then(function() {
             element(by.id('btnEntitle')).click();
             element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
               expect(rows.length).toBe(1);
@@ -102,7 +102,7 @@ describe('Entitle flow', function() {
               element(by.id('usersfield')).clear();
               element(by.id('usersfield')).sendKeys(testuser.ssousername).then(function() {
                 //un-entitle for call initiation
-                element(by.id('btn_callInit_off')).click().then (function() {
+                element(by.css('.iCheck-helper')).click().then(function() {
                   element(by.id('btnEntitle')).click();
                   element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
                     expect(rows.length).toBe(1);
@@ -111,7 +111,6 @@ describe('Entitle flow', function() {
                   });
                 });
               });
-
             });
           });
         });
