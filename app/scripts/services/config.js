@@ -17,7 +17,7 @@ angular.module('wx2AdminWebClientApp')
 
       oauth2LoginUrl: {
         dev: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=token&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=webex-squared',
-        integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=token&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fint-admin.wbx2.com&state=random-string&service=webex-squared',
+        integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=token&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fint-admin.wbx2.com%2F&state=random-string&service=webex-squared',
         prod: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=token&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fadmin.wbx2.com%2F&state=random-string&service=webex-squared'
       },
 
