@@ -4,6 +4,7 @@
 ./setup.sh
 
 # Build
+grunt clean || exit $?
 grunt build || exit $?
 npm test || exit $?
 
