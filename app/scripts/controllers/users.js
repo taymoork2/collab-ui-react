@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope) {
 
       function Feature (name, state) {
         this.entitlementName = name;
@@ -35,13 +35,21 @@ angular.module('wx2AdminWebClientApp')
 
       var getUserList = function() {
         var startIndex = $scope.pagination.page * usersperpage + 1;
-        UserListService.listUsers(startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function(data, status) {
+        UserListService.listUsers(startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function(data, status, searchStr) {
           if (data.success) {
-            Log.debug(data.Resources);
-            $scope.totalResults = data.totalResults;
-            $scope.queryuserslist = data.Resources;
-            if (data.totalResults !== 0 && data.totalResults !== null && $scope.pagination.perPage !== 0 && $scope.pagination.perPage !== null) {
-              $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
+            if ($rootScope.searchStr === searchStr)
+            {
+              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+              Log.debug(data.Resources);
+              $scope.totalResults = data.totalResults;
+              $scope.queryuserslist = data.Resources;
+              if (data.totalResults !== 0 && data.totalResults !== null && $scope.pagination.perPage !== 0 && $scope.pagination.perPage !== null) {
+                $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
+              }
+            }
+            else
+            {
+              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
             }
           } else {
             Log.debug('Query existing users failed. Status: ' + status);

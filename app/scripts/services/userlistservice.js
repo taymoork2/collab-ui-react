@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo',
-    function($http, $rootScope, $location, Storage, Config, Authinfo) {
+  .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log',
+    function($http, $rootScope, $location, Storage, Config, Authinfo, Log) {
 
       var token = Storage.get('accessToken');
       var filter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
@@ -21,10 +21,12 @@ angular.module('wx2AdminWebClientApp')
         listUsers: function(startIndex, count, sortBy, sortOrder, callback) {
 
           var listUrl = sprintf(scimUrl, [Authinfo.getOrgId()]);
+          var searchStr;
 
           if ($rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined') {
             var encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
             listUrl = sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+            searchStr = $rootScope.searchStr;
           }
 
           if (startIndex && startIndex > 0) {
@@ -47,12 +49,13 @@ angular.module('wx2AdminWebClientApp')
           $http.get(listUrl)
             .success(function(data, status) {
               data.success = true;
-              callback(data, status);
+              Log.debug('Callback with search=' + searchStr);
+              callback(data, status, searchStr);
             })
             .error(function(data, status) {
               data.success = false;
               data.status = status;
-              callback(data, status);
+              callback(data, status, searchStr);
             });
 
         }
