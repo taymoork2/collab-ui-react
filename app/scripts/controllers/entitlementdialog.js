@@ -23,6 +23,10 @@ angular.module('wx2AdminWebClientApp')
           $scope.entitlements.squaredCallInitiation = false;
         }
 
+        if ($scope.entitlements.squaredCallInitiation) {
+          $scope.entitlements.webExSquared = true;
+        }
+
         $modalInstance.close($scope.entitlements);
       };
 

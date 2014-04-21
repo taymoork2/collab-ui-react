@@ -11,8 +11,8 @@ var testuser = {
   username: 'adminTestUser@wx2.example.com',
   ssousername: 'adminADSyncTestUser@wx2.example.com',
   password: 'C1sc0123!',
-  orgname: 'WebEx Self-Service Org' 
-  // -- shibboleth idp 
+  orgname: 'WebEx Self-Service Org'
+  // -- shibboleth idp
   // ssousername: 'pbr-sso-org-admin@squared2webex.com',
   // orgname: '(SquaredAdminTool_SSO)'
 };
@@ -49,7 +49,7 @@ describe('Entitle flow', function() {
       }).then(function() {
         browser.driver.findElement(by.css('#IDToken2')).sendKeys(testuser.password);
         browser.driver.findElement(by.css('#Button1')).click();
-        // -- shibboleth idp 
+        // -- shibboleth idp
         // browser.driver.findElement(by.id('username')).sendKeys(testuser.ssousername);
         // browser.driver.findElement(by.id('password')).sendKeys(testuser.password);
         // browser.driver.findElement(by.css('button')).click();
@@ -124,11 +124,9 @@ describe('Entitle flow', function() {
               expect(rows.length).toBe(1);
               expect(rows[0].getText()).toContain(testuser.username);
               expect(rows[0].getText()).toContain('updated successfully');
-
             });
           });
         });
-
       });
     });
 
@@ -176,7 +174,6 @@ describe('Entitle flow', function() {
       //  // expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
       // });
     });
-
   });
 
 
