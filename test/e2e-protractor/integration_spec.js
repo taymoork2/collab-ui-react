@@ -137,9 +137,21 @@ describe('App flow', function() {
       });
     });
 
+    describe('Cancel', function() {
+      it('should clear user input field and error message', function() {
+        element(by.id('btnCancel')).click();
+        element(by.id('usersfield')).getText().then(function(input) {
+          expect(input).toBe('');
+        });
+        element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
+          expect(rows.length).toBe(0);
+        });
+      });
+    });
+
     describe('Add a new user', function() {
       it('should display input user email in results with success message', function() {
-        var inputEmail = randomId() + '@example.com';
+        var inputEmail = 'atlas-' + randomId() + '@example.com';
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(inputEmail);
         element(by.id('btnAdd')).click();
@@ -153,7 +165,7 @@ describe('App flow', function() {
 
     // describe('Add multiple users separated with commas and semicolons', function() {
     //   it('should display input user email in results', function() {
-    //     var randomEmail = randomId() + '@example.com';
+    //     var randomEmail = 'atlas-' + randomId() + '@example.com';
     //     element(by.id('usersfield')).clear();
     //     element(by.id('usersfield')).sendKeys(testuser.username + ', ' + testuser.ssousername + '; ' + randomEmail);
     //     element(by.id('btnAdd')).click();

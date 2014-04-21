@@ -41,7 +41,7 @@ angular.module('wx2AdminWebClientApp')
 
       getAdminServiceUrl: function() {
         if (this.isDev()) {
-          return this.adminServiceUrl.integration;
+          return this.adminServiceUrl.prod;
         } else {
           return this.adminServiceUrl.prod;
         }

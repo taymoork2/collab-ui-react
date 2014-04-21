@@ -30,7 +30,7 @@
       </div>
 
       <div class="form-group">
-        <button class="btn btn-link pull-right">Cancel</button>
+        <div id="btnCancel" class="btn btn-link pull-right" ng-click="clearPanel()">Clear</div>
         <button id="btnAdd" class="btn btn-primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Add</button>
         <button id="btnEntitle" class="btn btn-primary pull-right" ng-show="!isAddEnabled()" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">Update</button>
       </div>

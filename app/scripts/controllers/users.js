@@ -149,6 +149,17 @@ angular.module('wx2AdminWebClientApp')
         return $window.addressparser.parse(angular.element('#usersfield').tokenfield('getTokensList'));
       };
 
+      var resetUsersfield = function() {
+        angular.element('#usersfield').tokenfield('setTokens', ' ');
+        checkPlaceholder();
+        invalidcount = 0;
+      };
+
+      $scope.clearPanel = function() {
+        resetUsersfield();
+        $scope.results = null;
+      };
+
       $scope.isAddEnabled = function() {
         return Authinfo.isAddUserEnabled();
       };
@@ -201,8 +212,7 @@ angular.module('wx2AdminWebClientApp')
           }
 
           if (isComplete) {
-            angular.element('#usersfield').tokenfield('setTokens', ' ');
-            checkPlaceholder();
+            resetUsersfield();
           }
           angular.element('#btnAdd').button('reset');
 
@@ -254,7 +264,7 @@ angular.module('wx2AdminWebClientApp')
                 userResult.message = 'does not exist';
                 userResult.alertType = 'danger';
                 isComplete = false;
-               } else if (userStatus === 409) {
+              } else if (userStatus === 409) {
                 userResult.message = 'entitlement previously updated';
                 userResult.alertType = 'danger';
                 isComplete = false;
@@ -279,8 +289,7 @@ angular.module('wx2AdminWebClientApp')
           }
 
           if (isComplete) {
-            angular.element('#usersfield').tokenfield('setTokens', ' ');
-            checkPlaceholder();
+            resetUsersfield();
           }
           angular.element('#btnEntitle').button('reset');
 
