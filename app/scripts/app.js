@@ -48,8 +48,8 @@ angular.module('wx2AdminWebClientApp', [
         });
     }
   ])
-  .run(['$cookies', '$rootScope', 'Auth', 'Storage', 'Localize', 'Utils',
-    function($cookies, $rootScope, Auth, Storage, Localize, Utils) {
+  .run(['$cookies', '$rootScope', 'Auth', 'Storage', 'Localize', 'Utils', 'Log',
+    function($cookies, $rootScope, Auth, Storage, Localize, Utils, Log) {
 
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
@@ -62,14 +62,14 @@ angular.module('wx2AdminWebClientApp', [
 
       if (document.URL.indexOf('access_token') !== -1) {
         data = Auth.getFromGetParams(document.URL);
-        console.log(data);
+        Log.debug('Retrieving access token...', data);
         Storage.put('accessToken', data.access_token);
 
       } else if (document.URL.indexOf('code') !== -1) {
         data = Auth.getFromStandardGetParams(document.URL);
         console.log(data);
       } else {
-        console.log('No access code data.');
+        Log.debug('No access code data.');
       }
 
     }

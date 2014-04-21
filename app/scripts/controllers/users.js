@@ -40,7 +40,7 @@ angular.module('wx2AdminWebClientApp')
             if ($rootScope.searchStr === searchStr)
             {
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
-              Log.debug(data.Resources);
+              Log.debug('Returned data.', data.Resources);
               $scope.totalResults = data.totalResults;
               $scope.queryuserslist = data.Resources;
               if (data.totalResults !== 0 && data.totalResults !== null && $scope.pagination.perPage !== 0 && $scope.pagination.perPage !== null) {
@@ -331,16 +331,36 @@ angular.module('wx2AdminWebClientApp')
       $scope.changeEntitlement = function(user) {
         var dlg = $dialogs.create('views/entitlements_dialog.html', 'entitlementDialogCtrl', user);
         dlg.result.then(function(entitlements){
-          console.log(entitlements);
-          console.log(user);
+          Log.debug('Entitling user.', user);
           Userservice.updateUsers([{
             'address': user.userName
           }], [squaredFeature(entitlements.webExSquared), callFeature(entitlements.squaredCallInitiation)], function(data){
             if(data.success) {
-              //ToDo: parse result
               getUserList();
+              var userStatus = data.userResponse[0].status;
+              $scope.entitleResult = {
+                msg: null,
+                type: 'null'
+              };
+              if (userStatus === 200) {
+                $scope.entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
+                $scope.entitleResult.type = 'success';
+              } else if (userStatus === 404) {
+                $scope.entitleResult.msg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
+                $scope.entitleResult.type = 'danger';
+              } else if (userStatus === 409) {
+                $scope.entitleResult.msg = 'Entitlement(s) previously updated.';
+                $scope.entitleResult.type = 'danger';
+              } else {
+                $scope.entitleResult.msg = data.userResponse[0].email + '\'s entitlements were not updated, status: ' + userStatus;
+                $scope.entitleResult.type = 'danger';
+              }
             } else {
               Log.error('Failed updating user with entitlements.');
+              $scope.entitleResult = {
+                msg: 'Failed to update ' + data.userResponse[0].email + '\'s entitlements.',
+                type: 'danger'
+              };
             }
           });
         }, function() {
