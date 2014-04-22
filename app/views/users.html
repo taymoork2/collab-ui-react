@@ -90,4 +90,8 @@
       <li><a id="last-page" ng-click="pagination.lastPage()"><i class="fa fa-angle-double-right"></i></a></li>
     </ul>
   </div>
+  <!-- Temporary hack for error reporting. -->
+  <div ng-show="entitleResult" class="alert alert-{{entitleResult.type}}">
+      {{entitleResult.msg}}
+  </div>
 </div>
