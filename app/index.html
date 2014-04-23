@@ -53,11 +53,11 @@
               <i class="fa fa-bars fa-lg"></i> 
             </span>
             <ul class="dropdown-menu setting-menu" role="menu" >
-              <li ng-click="logout()" id="logout-btn">
-                <i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>Log out
-              </li>
               <li ng-click="sendFeedback()" id="feedback-btn">
                 <i class="fa fa-envelope-o fa-lg" style="padding:10px;"></i>Feedback
+              </li>
+              <li ng-click="logout()" id="logout-btn" ng-show="loggedIn && !Utils.hideForRoute('downloads')">
+                <i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>Log out
               </li>
             </ul>
             

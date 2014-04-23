@@ -8,9 +8,9 @@
 * Disable logging by appending ?disableLogging=true *after* the hash fragment.
 */
 angular.module('wx2AdminWebClientApp')
-.factory('Log', function($rootScope, $location) {
-	var logKeepOnNavigate = false;
-	var logLinesToAttach = 100;
+.service('Log', ['$rootScope', '$location', 'Config', function($rootScope, $location, Config) {
+	var logKeepOnNavigate = Config.logConfig.keepOnNavigate;
+	var logLinesToAttach = Config.logConfig.linesToAttach;
 
 	var Log = function(msg, data, type) {
 		if (enableLogging()) {
@@ -80,4 +80,4 @@ angular.module('wx2AdminWebClientApp')
 	});
 
 	return Log;
-});
+}]);

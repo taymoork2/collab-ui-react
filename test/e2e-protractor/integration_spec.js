@@ -69,6 +69,7 @@ describe('App flow', function() {
   describe('Navigation Bar', function() {
     it('should still be logged in', function() {
       expect(browser.driver.isElementPresent(by.id('setting-bar'))).toBe(true);
+      expect(browser.driver.isElementPresent(by.id('feedback-btn'))).toBe(true);
     });
 
     it('should display the username and the orgname', function() {
