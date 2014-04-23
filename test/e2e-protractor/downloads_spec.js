@@ -40,6 +40,7 @@ describe('Downloads Page with email parameter and reset/admin email params', fun
     expect(element(by.id('logout-btn')).isDisplayed()).toBe(false);
     expect(element(by.id('icon-search')).isDisplayed()).toBe(false);
     expect(element(by.id('search-input')).isDisplayed()).toBe(false);
+    expect(element(by.id('setting-bar')).isDisplayed()).toBe(false);
   });
   it('should not display tab bar', function() {
     expect(element(by.id('tabs')).isDisplayed()).toBe(false);
