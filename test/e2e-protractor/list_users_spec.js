@@ -210,7 +210,7 @@ describe('List users flow', function() {
   // Add User
   describe('Add User', function() {
     var inputEmail;
-    
+
     it('should add user successfully and increase user count', function() {
       var initialCount;
       element(by.id('totalresults')).getAttribute('value').then(function(count) {
@@ -228,11 +228,14 @@ describe('List users flow', function() {
             });
 
             element(by.id('search-input')).sendKeys(inputEmail).then(function() {
+              
               setTimeout(function(){
+                browser.ignoreSynchronization = true;
                 element.all(by.repeater('user in queryuserslist')).then(function(rows) {
                   expect(rows.length).toBe(1);
                 });
               }, 3000); //timeout
+
             }); //end search
           }); //end add
         });
@@ -269,10 +272,8 @@ describe('List users flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should redirect to login page', function() {
-      browser.sleep(1000);
       element(by.id('setting-bar')).click();
       browser.driver.wait(function() {
-        expect(browser.driver.isElementPresent(by.id('feedback-btn'))).toBe(true);
         return browser.driver.isElementPresent(by.id('logout-btn'));
       }).then(function() {
         element(by.id('logout-btn')).click();
