@@ -269,12 +269,12 @@ describe('List users flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should redirect to login page', function() {
+      browser.sleep(1000);
       element(by.id('setting-bar')).click();
       browser.driver.wait(function() {
         expect(browser.driver.isElementPresent(by.id('feedback-btn'))).toBe(true);
         return browser.driver.isElementPresent(by.id('logout-btn'));
       }).then(function() {
-        browser.sleep(1000);
         element(by.id('logout-btn')).click();
       });
     });
