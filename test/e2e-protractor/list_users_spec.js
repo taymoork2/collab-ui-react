@@ -230,9 +230,10 @@ describe('List users flow', function() {
             element(by.id('search-input')).sendKeys(inputEmail).then(function() {
               
               setTimeout(function(){
-                browser.ignoreSynchronization = true;
-                element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-                  expect(rows.length).toBe(1);
+                browser.wait(function() {
+                  element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+                    expect(rows.length).toBe(1);
+                  });
                 });
               }, 3000); //timeout
 
