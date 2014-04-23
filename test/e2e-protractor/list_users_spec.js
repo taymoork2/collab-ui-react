@@ -274,6 +274,7 @@ describe('List users flow', function() {
         expect(browser.driver.isElementPresent(by.id('feedback-btn'))).toBe(true);
         return browser.driver.isElementPresent(by.id('logout-btn'));
       }).then(function() {
+        browser.sleep(1000);
         element(by.id('logout-btn')).click();
       });
     });
