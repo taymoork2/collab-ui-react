@@ -252,9 +252,9 @@ describe('List users flow', function() {
   // Update entitlements
   describe('Updating entitlements', function() {
     it('should display initial entitlements from newly added user', function() {
-      browser.sleep(2000);
+      browser.sleep(1000);
       element(by.css('.caret')).click();
-      element(by.css('.dropdown-menu li')).click();
+      element(by.css('.btn-group li')).click();
       var modal = element(by.css('.modal-content'));
       expect(modal.isPresent()).toBe(true);
       modal.element.all(by.css('.icheckbox_square-blue')).then(function(items) {
@@ -269,12 +269,13 @@ describe('List users flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should redirect to login page', function() {
-      element(by.css('#logout-btn')).click();
-      // browser.driver.wait(function() {
-      //   return browser.driver.isElementPresent(by.css('#IDToken1'));
-      // }).then(function() {
-      //   //expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
-      // });
+      element(by.id('setting-bar')).click();
+      browser.driver.wait(function() {
+        expect(browser.driver.isElementPresent(by.id('feedback-btn'))).toBe(true);
+        return browser.driver.isElementPresent(by.id('logout-btn'));
+      }).then(function() {
+        element(by.id('logout-btn')).click();
+      });
     });
   });
 

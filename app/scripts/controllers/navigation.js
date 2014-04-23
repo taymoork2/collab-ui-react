@@ -33,6 +33,17 @@ angular.module('wx2AdminWebClientApp')
         $window.location.href = logoutUrl;
       };
 
+      $scope.sendFeedback = function() {
+        var mailto = 'wx2-portal@cisco.com';
+        var subject = 'Squared%20Admin%20Feedback';
+        var userAgent = navigator.userAgent;
+        userAgent = encodeURIComponent(userAgent);
+        var logHistory = Log.getArchiveUrlencoded();
+        var feedbackUrl = 'mailto:'+mailto+'?subject='+subject+'&body=User%20Agent:'+userAgent+'%0D%0A%0D%0APlease%20type%20your%20feedback%20below:%0D%0A%0D%0A%0D%0A%0D%0AUser%20Logs:%0D%0A'+logHistory;
+        Log.debug('sending feedback: ' + feedbackUrl);
+        $window.location.href = feedbackUrl;
+      };
+
     }
 
   ]);

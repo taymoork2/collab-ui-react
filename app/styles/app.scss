@@ -65,12 +65,13 @@ label {
   margin-bottom: 10px;
 }
 
-#logout-btn {
+#logout-btn, #feedback-btn {
   &:hover {
     cursor: pointer;
+    background-color: #EBEBEB;
   }
   padding-left: 5px;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 [ng\:cloak], [ng-cloak], .ng-cloak {
@@ -233,6 +234,18 @@ label {
 
 .dialog-subtitle {
   margin-bottom:15px;
+}
+
+.setting-bar {
+  padding: 15px;
+  right: 0px;
+  float: right;
+  position: absolute;
+}
+
+.setting-menu {
+  left: -98px !important;
+  top: 35px !important;
 }
 
 
