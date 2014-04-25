@@ -22,7 +22,7 @@ angular.module('wx2AdminWebClientApp')
       },
 
       feedbackNavConfig: {
-        mailto: 'wx2-portal@cisco.com',
+        mailto: 'sq-admin-support@cisco.com',
         subject: 'Squared%20Admin%20Feedback'
       },
 
