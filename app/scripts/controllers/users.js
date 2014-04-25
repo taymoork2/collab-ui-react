@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope', 'Notification',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope, Notification) {
 
       function Feature (name, state) {
         this.entitlementName = name;
@@ -32,6 +32,8 @@ angular.module('wx2AdminWebClientApp')
       var invalidcount = 0;
       var usersperpage = Config.usersperpage;
       $scope.pagination = Pagination.init($scope, usersperpage);
+      Notification.init($scope);
+      $scope.popup = Notification.popup;
 
       var getUserList = function() {
         var startIndex = $scope.pagination.page * usersperpage + 1;
@@ -168,7 +170,6 @@ angular.module('wx2AdminWebClientApp')
         $scope.results = {
           resultList: []
         };
-        $scope.error = null;
         var isComplete = true;
         var usersList = getUsersList();
         Log.debug('Entitlements: ', usersList);
@@ -198,15 +199,34 @@ angular.module('wx2AdminWebClientApp')
                 isComplete = false;
               }
               $scope.results.resultList.push(userResult);
-
             }
+            //concatenating the results in an array of strings for notify function
+            var successes = [];
+            var errors = [];
+            var count_s = 0;
+            var count_e = 0;
+            for (var idx in $scope.results.resultList) {
+              if ($scope.results.resultList[idx].alertType === 'success') {
+                successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
+                count_s++;
+              } else {
+                errors[count_e] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
+                count_e++;
+              }
+            }
+            //Displaying notifications
+            Notification.notify(successes, 'success');
+            Notification.notify(errors, 'error');
 
           } else {
             Log.warn('Could not add the user', data);
+            var error = null;
             if (status) {
-              $scope.error = 'Request failed with status: ' + status + '. Message: ' + data;
+              error = ['Request failed with status: ' + status + '. Message: ' + data];
+              Notification.notify(error, 'error');
             } else {
-              $scope.error = 'Request failed: ' + data;
+              error = ['Request failed: ' + data];
+              Notification.notify(error, 'error');
             }
             isComplete = false;
           }
@@ -223,21 +243,14 @@ angular.module('wx2AdminWebClientApp')
           Userservice.addUsers(usersList, getEntitlements(), callback);
         } else {
           console.log('No users entered.');
-          var userResult = {
-            message: 'Please enter valid user email(s).',
-            alertType: 'danger'
-          };
-          $scope.results = {
-            resultList: []
-          };
-          $scope.results.resultList.push(userResult);
+          var error = ['Please enter valid user email(s).'];
+          Notification.notify(error, 'error');
         }
 
       };
 
       $scope.entitleUsers = function() {
         var usersList = getUsersList();
-        $scope.error = null;
         Log.debug('Entitlements: ', usersList);
         $scope.results = {
           resultList: []
@@ -273,17 +286,36 @@ angular.module('wx2AdminWebClientApp')
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
-
               $scope.results.resultList.push(userResult);
-
             }
+
+            //concatenating the results in an array of strings for notify function
+            var successes = [];
+            var errors = [];
+            var count_s = 0;
+            var count_e = 0;
+            for (var idx in $scope.results.resultList) {
+              if ($scope.results.resultList[idx].alertType === 'success') {
+                successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
+                count_s++;
+              } else {
+                errors[count_e] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
+                count_e++;
+              }
+            }
+            //Displaying notifications
+            Notification.notify(successes, 'success');
+            Notification.notify(errors, 'error');
 
           } else {
             Log.warn('Could not update the user', data);
+            var error = null;
             if (status) {
-              $scope.error = 'Request failed with status: ' + status + '. Message: ' + data;
+              error = ['Request failed with status: ' + status + '. Message: ' + data];
+              Notification.notify(error, 'error');
             } else {
-              $scope.error = 'Request failed: ' + data;
+              error = ['Request failed: ' + data];
+              Notification.notify(error, 'error');
             }
             isComplete = false;
           }
@@ -300,14 +332,8 @@ angular.module('wx2AdminWebClientApp')
           Userservice.updateUsers(usersList, getEntitlements(), callback);
         } else {
           console.log('No users entered.');
-          var userResult = {
-            message: 'Please enter valid user email(s).',
-            alertType: 'danger'
-          };
-          $scope.results = {
-            resultList: []
-          };
-          $scope.results.resultList.push(userResult);
+          var error = 'Please enter valid user email(s).';
+          Notification.notify(error, 'error');
         }
 
       };
@@ -335,32 +361,34 @@ angular.module('wx2AdminWebClientApp')
           Userservice.updateUsers([{
             'address': user.userName
           }], [squaredFeature(entitlements.webExSquared), callFeature(entitlements.squaredCallInitiation)], function(data){
-            if(data.success) {
-              getUserList();
-              var userStatus = data.userResponse[0].status;
-              $scope.entitleResult = {
+            var entitleResult = {
                 msg: null,
                 type: 'null'
               };
+            if(data.success) {
+              getUserList();
+              var userStatus = data.userResponse[0].status;
               if (userStatus === 200) {
-                $scope.entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
-                $scope.entitleResult.type = 'success';
+                entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
+                entitleResult.type = 'success';
               } else if (userStatus === 404) {
-                $scope.entitleResult.msg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
-                $scope.entitleResult.type = 'danger';
+                entitleResult.msg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
+                entitleResult.type = 'error';
               } else if (userStatus === 409) {
-                $scope.entitleResult.msg = 'Entitlement(s) previously updated.';
-                $scope.entitleResult.type = 'danger';
+                entitleResult.msg = 'Entitlement(s) previously updated.';
+                entitleResult.type = 'error';
               } else {
-                $scope.entitleResult.msg = data.userResponse[0].email + '\'s entitlements were not updated, status: ' + userStatus;
-                $scope.entitleResult.type = 'danger';
+                entitleResult.msg = data.userResponse[0].email + '\'s entitlements were not updated, status: ' + userStatus;
+                entitleResult.type = 'error';
               }
+              Notification.notify([entitleResult.msg], entitleResult.type);
             } else {
               Log.error('Failed updating user with entitlements.');
-              $scope.entitleResult = {
+              entitleResult = {
                 msg: 'Failed to update ' + data.userResponse[0].email + '\'s entitlements.',
-                type: 'danger'
+                type: 'error'
               };
+              Notification.notify([entitleResult.msg], entitleResult.type);
             }
           });
         }, function() {
@@ -434,6 +462,5 @@ angular.module('wx2AdminWebClientApp')
         Log.debug(entitleList);
         return entitleList;
       };
-
     }
   ]);

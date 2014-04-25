@@ -8,6 +8,7 @@ $headers_color: #777777;
 /******** Resets & Globals **********/
 .container {
   width: 1087px;
+  overflow: none;
 }
 
 .btn {
@@ -44,7 +45,6 @@ table th, .table td {
 }
 
 .panel-title {
-  color: $headers_color;
   border-top-left-radius:7px;
   border-top-right-radius: 7px;
   margin-left: 5px;
@@ -52,7 +52,14 @@ table th, .table td {
 
 .panel-heading {
   padding: 15px;
+}
+
+.panel-users {
   background-color: #EBEBEB !important;
+}
+
+.users-title {
+  color:#777777 !important;
 }
 
 .panel-body {
@@ -235,4 +242,63 @@ label {
   margin-bottom:15px;
 }
 
+.alertify-logs {
+  bottom: 30px !important;
+  right:30px !important;
+  width:160px !important;
+  text-align: center !important;
+  opacity: 0.95 !important;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.alertify-log {
+  text-shadow: none !important;
+}
+
+.alertify-log-error {
+  background-color: #f2dede !important;
+  color: #a94442 !important;
+  border:1px solid #ebccd1 !important;
+}
+
+.alertify-log-success {
+  background-color: #dff0d8 !important;
+  color: #3c763d !important;
+  border:1px solid #CCD5C4 !important;
+}
+
+.notification-panel {
+  text-align: left;
+  height:250px;
+  width: 450px;
+  y-overflow: auto;
+  z-index: 5001;
+  position:fixed !important;
+  bottom: 0px !important;
+  right: -450px;
+}
+
+.notification {
+  z-index: -1;
+}
+
+.panel-danger-body {
+  color: #a94442 !important;
+  font-size:13px;
+}
+
+.panel-success-body {
+  color: #3c763d !important;
+  font-size:13px;
+}
+
+.panel-notification-heading {
+  font-size: 15px;
+}
+
+.fa-times {
+  cursor:pointer;
+}
 

@@ -1,11 +1,12 @@
+<div class="notification"></div>
 <div class="admin">
   <h2>MANAGE USERS</h2>
   <br>
   <div class="panel panel-default">
 
-    <div class="panel-heading">
+    <div class="panel-heading panel-users">
       <div id="addUsers">
-        <h3 class="panel-title">
+        <h3 class="panel-title users-title">
           <strong id="subTitleAdd" ng-show="isAddEnabled()">Add new users</strong>
           <strong id="subTitleEnable" ng-show="!isAddEnabled()">Entitle users</strong>
         </h3>
@@ -36,26 +37,12 @@
       </div>
     </form>
   </div>
-
-  <div ng-show="error || results && results.resultList.length > 0">
-    <div class="alert alert-success" ng-show="(results.resultList|filter:{alertType:'success'}).length > 0">
-      <div ng-repeat="userResult in results.resultList | filter:{alertType:'success'}">
-        {{userResult.email}} {{userResult.message}}
-      </div>
-    </div>
-    <div class="alert alert-danger" ng-show="(results.resultList|filter:{alertType:'danger'}).length > 0" >
-      <div ng-repeat="userResult in results.resultList | filter:{alertType:'danger'}">
-        {{userResult.email}} {{userResult.message}}
-      </div>
-    </div>
-    <div class="alert alert-danger" ng-show="error">{{error}}</div>
-  </div>
 </div>
 </div>
 
 <div class="panel panel-default" ng-show="queryuserslist" id="userslistpanel">
-  <div class="panel-heading">
-    <h3 class="panel-title">
+  <div class="panel-heading panel-users">
+    <h3 class="panel-title users-title">
       <strong>Existing Users <span id="totalresults" value="{{totalResults}}">({{totalResults}})</span></strong>
     </h3>
   </div>
@@ -89,9 +76,5 @@
       <li><a id="next-page" ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
       <li><a id="last-page" ng-click="pagination.lastPage()"><i class="fa fa-angle-double-right"></i></a></li>
     </ul>
-  </div>
-  <!-- Temporary hack for error reporting. -->
-  <div ng-show="entitleResult" class="alert alert-{{entitleResult.type}}">
-      {{entitleResult.msg}}
   </div>
 </div>
