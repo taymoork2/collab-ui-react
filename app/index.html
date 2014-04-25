@@ -42,12 +42,26 @@
           <ul class="nav navbar-nav navbar-right" ng-controller="NavigationCtrl" ng-show="loggedIn && !Utils.hideForRoute('downloads')" >
             <li ng-show="username">Welcome, {{username}}</li>
             <li ng-show="orgname">({{orgname}})</li>
-            <li ng-click="logout()" id="logout-btn">Log out</li>
+
           </ul>
 
           <div ng-hide="Utils.hideForRoute('downloads')" ng-controller="SearchCtrl">
             <input id="search-input" type="text" class="form-control" placeholder="Search users by name or email" ng-model="searchStr" ng-change="searchItem()">
             <span class="glyphicon glyphicon-search" id="icon-search"></span>
+          </div>
+          <div class="setting-bar" id="setting-bar" ng-controller="NavigationCtrl" ng-show="!Utils.hideForRoute('downloads')">
+            <span class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-bars fa-lg"></i>
+            </span>
+            <ul class="dropdown-menu setting-menu" role="menu">
+              <li ng-click="sendFeedback()" id="feedback-btn">
+                <i class="fa fa-envelope-o fa-lg" style="padding:10px;"></i>Feedback
+              </li>
+              <li ng-click="logout()" id="logout-btn" ng-show="loggedIn">
+                <i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>Log out
+              </li>
+            </ul>
+
           </div>
         </div><!-- /.container-fluid -->
       </nav>
@@ -94,6 +108,7 @@
     <script src="bower_components/jquery-icheck/icheck.min.js"></script>
     <script src="bower_components/alertify.js/lib/alertify.js"></script>
     <script src="bower_components/draggable/draggable.min.js"></script>
+    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
@@ -106,6 +121,7 @@
     <script src="scripts/services/log.js"></script>
     <script src="scripts/controllers/navigation.js"></script>
     <script src="scripts/controllers/users.js"></script>
+    <script src="scripts/controllers/listusers.js"></script>
     <script src="scripts/controllers/search.js"></script>
     <script src="scripts/controllers/tabs.js"></script>
     <script src="scripts/services/userService.js"></script>

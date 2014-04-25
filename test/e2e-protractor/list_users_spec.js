@@ -209,17 +209,39 @@ describe('List users flow', function() {
 
   // Add User
   describe('Add User', function() {
+    var inputEmail;
 
     it('should add user successfully and increase user count', function() {
       var initialCount;
       element(by.id('totalresults')).getAttribute('value').then(function(count) {
         initialCount = parseInt(count, 10);
       });
-      var inputEmail = randomId() + '@example.com';
+      inputEmail = randomId() + '@example.com';
       element(by.id('usersfield')).clear();
-      element(by.id('usersfield')).sendKeys(inputEmail);
-      element(by.id('btnAdd')).click();
+      element(by.id('usersfield')).sendKeys(inputEmail).then(function() {
+        //entitle for call initiation
+        element(by.css('.iCheck-helper')).click().then(function() {
+          element(by.id('btnAdd')).click().then(function(){
+            // Temporary until tests are converted to new error messaging
+            // element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
+            //   expect(rows[0].getText()).toContain(inputEmail);
+            //   expect(rows[0].getText()).toContain('added successfully');
+            // });
 
+            element(by.id('search-input')).sendKeys(inputEmail).then(function() {
+
+              setTimeout(function(){
+                browser.wait(function() {
+                  element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+                    expect(rows.length).toBe(1);
+                  });
+                });
+              }, 3000); //timeout
+
+            }); //end search
+          }); //end add
+        });
+      });
       //TEST BROKEN DUE TO SCIM, UNCOMMENT LATER
       // element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
       //   expect(rows.length).toBe(1);
@@ -234,11 +256,17 @@ describe('List users flow', function() {
 
   // Update entitlements
   describe('Updating entitlements', function() {
-
-    it('should display the entitlements dialog box', function() {
-      element(by.css('.dropdown-toggle')).click();
-      element(by.css('.dropdown-menu li')).click();
-      expect(element(by.css('.modal-content')).isPresent()).toBe(true);
+    it('should display initial entitlements from newly added user', function() {
+      browser.sleep(1000);
+      element(by.css('.caret')).click();
+      element(by.css('.btn-group li')).click();
+      var modal = element(by.css('.modal-content'));
+      expect(modal.isPresent()).toBe(true);
+      modal.element.all(by.css('.icheckbox_square-blue')).then(function(items) {
+        expect(items.length).toBe(2);
+        expect(items[0].getAttribute('class')).toContain('checked');
+        expect(items[1].getAttribute('class')).toContain('checked');
+      });
       element(by.css('button.close')).click();
     });
   });
@@ -246,12 +274,12 @@ describe('List users flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should redirect to login page', function() {
-      element(by.css('#logout-btn')).click();
-      // browser.driver.wait(function() {
-      //   return browser.driver.isElementPresent(by.css('#IDToken1'));
-      // }).then(function() {
-      //   //expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
-      // });
+      element(by.id('setting-bar')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('logout-btn'));
+      }).then(function() {
+        element(by.id('logout-btn')).click();
+      });
     });
   });
 

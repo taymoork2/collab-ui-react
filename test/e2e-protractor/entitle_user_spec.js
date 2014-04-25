@@ -64,7 +64,9 @@ describe('Entitle flow', function() {
   // Navigation bar
   describe('Navigation Bar', function() {
     it('should still be logged in', function() {
-      expect(browser.driver.isElementPresent(by.css('#logout-btn'))).toBe(true);
+      expect(browser.driver.isElementPresent(by.id('setting-bar'))).toBe(true);
+      expect(browser.driver.isElementPresent(by.id('logout-btn'))).toBe(true);
+      expect(browser.driver.isElementPresent(by.id('feedback-btn'))).toBe(true);
     });
 
     it('should display the sso username and the orgname', function() {
@@ -171,12 +173,12 @@ describe('Entitle flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should redirect to login page', function() {
-      element(by.css('#logout-btn')).click();
-      // browser.driver.wait(function() {
-      //   return browser.driver.isElementPresent(by.css('#IDToken1'));
-      // }).then(function() {
-      //  // expect(browser.driver.getCurrentUrl()).toContain('idbrokerbeta.webex.com');
-      // });
+      element(by.id('setting-bar')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('logout-btn'));
+      }).then(function() {
+        element(by.id('logout-btn')).click();
+      });
     });
   });
 

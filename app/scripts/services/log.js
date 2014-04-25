@@ -1,58 +1,83 @@
 'use strict';
 
+// Allow console.log in this file only
+// jshint devel:true
+// jshint undef:false
+
+/**
+* Disable logging by appending ?disableLogging=true *after* the hash fragment.
+*/
 angular.module('wx2AdminWebClientApp')
-  .service('Log', function Log($rootScope, $location) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
-    //var Log = {};
+.service('Log', ['$rootScope', '$location', 'Config', function($rootScope, $location, Config) {
+	var logKeepOnNavigate = Config.logConfig.keepOnNavigate;
+	var logLinesToAttach = Config.logConfig.linesToAttach;
 
-    var enableLogging = function() {
-      return $rootScope.debug && !$location.search().disableLogging;
-    };
+	var Log = function(msg, data, type) {
+		if (enableLogging()) {
+			if (!type) {
+				type = 'log';
+			}
 
-    Log.formatter = function(msg, data) {
-      var stacktrace = null;
+			console[type](Log.formatter(msg, data));
+			this.keepArchive(type, msg, data);
+		}
+	};
 
-      try {
-        //stacktrace = printStackTrace();
-      } catch (exception) {
-        stacktrace = exception;
-      }
+	if (localStorage.logArchive && logKeepOnNavigate) {
+		$rootScope.logArchiveLines = JSON.parse(localStorage.logArchive);
+	} else {
+		$rootScope.logArchiveLines = [];
+	}
 
-      var ret = {
-        'msg': msg,
-        'tstamp': new Date(),
-        'stacktrace': stacktrace,
-      };
+	var enableLogging = function() {
+		return $rootScope.debug && !$location.search().disableLogging;
+	};
 
-      if (data) {
-        ret.data = data;
-      }
-      return ret;
-    };
+	Log.keepArchive = function(level, msg, data) {
+		if ($rootScope.logArchiveLines.length >= logLinesToAttach) {
+			$rootScope.logArchiveLines = $rootScope.logArchiveLines.splice(1);
+		}
 
-    Log.debug = function(msg, data) {
-      if (enableLogging()) {
-        console.debug(Log.formatter(msg, data));
-      }
-    };
+		var strLogEntry = level + '\t' + msg;
+		if (data) {
+			//TODO: consider shortening the data
+			strLogEntry += '\t' + JSON.stringify(data);
+		}
 
-    Log.info = function(msg, data) {
-      if (enableLogging()) {
-        console.info(Log.formatter(msg, data));
-      }
-    };
+		$rootScope.logArchiveLines.push(strLogEntry);
 
-    Log.warn = function(msg, data) {
-      if (enableLogging()) {
-        console.warn(Log.formatter(msg, data));
-      }
-    };
+		if (logKeepOnNavigate) {
+			localStorage.logArchive = JSON.stringify($rootScope.logArchiveLines);
+		}
+	};
 
-    Log.error = function(msg, data) {
-      if (enableLogging()) {
-        console.error(Log.formatter(msg, data));
-      }
-    };
+	Log.getArchiveUrlencoded = function() {
+		var s = '';
+		$rootScope.logArchiveLines.forEach(function(line) {
+			s += encodeURIComponent(line + '\r\n');
+		});
+		// s = s.substr(0,1024*8);
+		return s;
+	};
 
-    return Log;
-  });
+	Log.formatter = function(msg, data) {
+		var stacktrace = null;
+
+		var ret = {
+			msg: msg,
+			tstamp: new Date(),
+			stacktrace: stacktrace,
+		};
+
+		if (data) {
+			ret.data = data;
+		}
+		return ret;
+	};
+
+	_.each(['debug', 'info', 'log', 'warn', 'error'], function(type) {
+		Log[type] = _.partialRight(Log, type);
+	});
+
+	return Log;
+}]);
