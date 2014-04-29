@@ -274,9 +274,8 @@ describe('List users flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should redirect to login page', function() {
-      element(by.id('setting-bar')).click().then(function() {
-        element(by.id('logout-btn')).click();
-      });
+      element(by.id('setting-bar')).click();
+      element(by.id('logout-btn')).click();
     });
   });
 
