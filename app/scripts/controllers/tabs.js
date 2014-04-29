@@ -1,26 +1,26 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-	.controller('TabsCtrl', ['$scope', '$location', 'Log', 'Utils',
-		function($scope, $location, Log, Utils) {
+	.controller('TabsCtrl', ['$scope', '$location', 'Log', 'Utils', '$filter',
+		function($scope, $location, Log, Utils, $filter) {
 
 			$scope.tabs = [{
-				title: 'Home',
+				title: 'tabs.homeTab',
 				path: '/home'
 			}, {
-				title: 'Organizations',
+				title: 'tabs.orgTab',
 				path: '/orgs'
 			}, {
-				title: 'User Accounts',
+				title: 'tabs.userTab',
 				path: '/users'
 			}, {
-				title: 'Templates',
+				title: 'tabs.templateTab',
 				path: '/templates'
 			}, {
-				title: 'Policies',
+				title: 'tabs.policyTab',
 				path: '/policies'
 			}, {
-				title: 'Reports',
+				title: 'tabs.reportTab',
 				path: '/reports'
 			}];
 
@@ -37,6 +37,10 @@ angular.module('wx2AdminWebClientApp')
 				}
 			};
 			setActiveTab();
+
+			$scope.getTabTitle = function(title) {
+				return $filter('translate')(title);
+			};
 
 			$scope.changeTab = function(tabPath) {
 				if(!Utils.hideForRoute('downloads'))

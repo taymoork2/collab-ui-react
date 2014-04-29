@@ -6,10 +6,11 @@ angular.module('wx2AdminWebClientApp', [
   'ngSanitize',
   'ngRoute',
   'ui.bootstrap',
-  'dialogs'
+  'dialogs',
+  'pascalprecht.translate'
 ])
-  .config(['$routeProvider',
-    function($routeProvider) {
+  .config(['$routeProvider', '$translateProvider',
+    function($routeProvider, $translateProvider) {
       $routeProvider
         .when('/', {
           templateUrl: 'views/login.html',
@@ -46,6 +47,14 @@ angular.module('wx2AdminWebClientApp', [
         .otherwise({
           redirectTo: '/'
         });
+
+      $translateProvider.useStaticFilesLoader({
+        prefix: 'l10n/',
+        suffix: '.json'
+      });
+
+      // Tell the module what language to use by default
+      $translateProvider.preferredLanguage('en_US');
     }
   ])
   .run(['$cookies', '$rootScope', 'Auth', 'Storage', 'Localize', 'Utils', 'Log',

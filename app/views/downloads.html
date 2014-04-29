@@ -1,19 +1,19 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<p>Thank you for registering with Cisco Squared.  </p>
-<p>Your account {{email}} is now active.</p>
+<p>{{'downloadPage.thank' | translate}}  </p>
+<p>{{'downloadPage.account' | translate: tlData}}</p>
 
 <div id="iosTxt" ng-show="isIPhone()">
-<p>Please install Squared by following <a ng-href="{{iPhoneURL}}">this link.</a></p>
+<p>{{'downloadPage.install' | translate}} <a ng-href="{{iPhoneURL}}">{{'downloadPage.link' | translate}}</a></p>
 </div>
 
 <div id="androidTxt" ng-show="isAndroid()">
-<p>Please install Squared by following <a ng-href="{{androidURL}}">this link.</a></p>
+<p>{{'downloadPage.install' | translate}} <a ng-href="{{androidURL}}">{{'downloadPage.link' | translate}}</a></p>
 </div>
 
 <div id="webTxt" ng-show="isWeb()">
-<p>Please start using <a ng-href="{{webClientURL}}"> Squared.</a></p>
+<p>{{'downloadPage.using' | translate}} <a ng-href="{{webClientURL}}"> {{'downloadPage.squared' | translate}}</a></p>
 </div>
 
 <div id="sendStatus" mailStatus='{{sendStatus}}' />

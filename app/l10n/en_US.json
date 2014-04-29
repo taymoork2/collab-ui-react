@@ -1,0 +1,62 @@
+{
+  "usersPage" : {
+    "manageUsers" : "MANAGE USERS",
+    "subTitleAdd" : "Add new users",
+    "subTitleEnable" : "Entitle users",
+    "email" : "Email",
+    "callInit" : "Call-Initiation",
+    "clear" : "Clear",
+    "add" : "Add",
+    "update" : "Update",
+    "nameHeader" : "NAME",
+    "emailHeader" : "EMAIL",
+    "addedHeader" : "ADDED",
+    "statusHeader" : "STATUS/TOOLS",
+    "modify" : "Modify",
+    "existingUsers" : "Existing Users",
+    "userInput" : "Enter email addresses separated by commas or semi-colons",
+    "active": "Active",
+    "inactive" : "Inactive"
+  },
+  "tabs" : {
+    "homeTab" : "Home",
+    "orgTab" : "Organizations",
+    "userTab" : "User Accounts",
+    "templateTab" : "Templates",
+    "policyTab" : "Policies",
+    "reportTab" : "Reports"
+  },
+  "index" : {
+    "welcome" : "Welcome",
+    "feedback" : "Feedback",
+    "logout" : "Log out",
+    "appTitle" : "Squared Admin Tool",
+    "genericTitle" : "Squared",
+    "search" : "Search users by name or email"
+  },
+  "entitlementPage" : {
+    "title" : "Modify Entitlements",
+    "heading" : "List of entitlements for",
+    "wbxsq" : "Webex-Squared",
+    "callinit" : "Call-Initiation"
+  },
+  "downloadPage" : {
+    "thank" : "Thank you for registering with Cisco Squared.",
+    "account" : "Your account {{email}} is now active.",
+    "install" : "Please install Squared by following",
+    "link" : "this link.",
+    "using" : "Please start using",
+    "squared" : "Squared."
+  },
+  "orgsPage" : {
+    "title" : "MANAGE ORGANIZATIONS"
+  },
+  "templatesPage" : {
+    "title" : "MANAGE TEMPLATES"
+  },
+  "common" : {
+    "cancel" : "Cancel",
+    "save" : "Save"
+  }
+
+}

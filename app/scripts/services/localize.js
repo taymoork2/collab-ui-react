@@ -1,17 +1,15 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .factory('Localize', ['$location',
-    function($location) {
+  .factory('Localize', ['$location', '$filter',
+    function($location, $filter) {
       return {
-        appTitle: 'Squared Admin Tool',
-        genericTitle: 'Squared',
 
         varTitle: function() {
           if ($location.url().indexOf('downloads') === -1) {
-            return this.appTitle;
+            return $filter('translate')('index.appTitle');
           } else {
-            return this.genericTitle;
+            return $filter('translate')('index.genericTitle');
           }
         }
       };

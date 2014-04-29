@@ -40,13 +40,13 @@
           </div>
 
           <ul class="nav navbar-nav navbar-right" ng-controller="NavigationCtrl" ng-show="loggedIn && !Utils.hideForRoute('downloads')" >
-            <li ng-show="username">Welcome, {{username}}</li>
+            <li ng-show="username">{{'index.welcome' | translate}}, {{username}}</li>
             <li ng-show="orgname">({{orgname}})</li>
 
           </ul>
 
           <div ng-hide="Utils.hideForRoute('downloads')" ng-controller="SearchCtrl">
-            <input id="search-input" type="text" class="form-control" placeholder="Search users by name or email" ng-model="searchStr" ng-change="searchItem()">
+            <input id="search-input" type="text" class="form-control" placeholder="{{'index.search' | translate}}" ng-model="searchStr" ng-change="searchItem()">
             <span class="glyphicon glyphicon-search" id="icon-search"></span>
           </div>
           <div class="setting-bar" id="setting-bar" ng-controller="NavigationCtrl" ng-show="!Utils.hideForRoute('downloads')">
@@ -55,10 +55,10 @@
             </span>
             <ul class="dropdown-menu setting-menu" role="menu">
               <li ng-click="sendFeedback()" id="feedback-btn">
-                <i class="fa fa-envelope-o fa-lg" style="padding:10px;"></i>Feedback
+                <i class="fa fa-envelope-o fa-lg" style="padding:10px;"></i>{{'index.feedback' | translate}}
               </li>
               <li ng-click="logout()" id="logout-btn" ng-show="loggedIn">
-                <i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>Log out
+                <i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>{{'index.logout' | translate}}
               </li>
             </ul>
 
@@ -68,7 +68,7 @@
 
       <div  class="container" ng-hide="Utils.hideForRoute('downloads')" ng-controller="TabsCtrl">
         <tabset id="tabs" type="navType">
-          <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" select="changeTab(tab.path)">
+          <tab ng-repeat="tab in tabs" heading="{{getTabTitle(tab.title)}}" active="tab.active" select="changeTab(tab.path)">
           </tab>
         </tabset>
         <hr width='100%'>
@@ -109,6 +109,8 @@
     <script src="bower_components/alertify.js/lib/alertify.js"></script>
     <script src="bower_components/draggable/draggable.min.js"></script>
     <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
