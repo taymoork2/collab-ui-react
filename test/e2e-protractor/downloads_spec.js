@@ -20,7 +20,7 @@ describe('Downloads Page with email parameter and reset/admin email params', fun
 
   it('should display email account', function() {
     browser.get('#/downloads?email=' + testuser + emailParams);
-    expect(element(by.binding('email')).getText()).toContain(testuser);
+    expect(element(by.id('account')).getText()).toContain(testuser);
   });
 
   it('should display message only for non-mobile device', function() {
@@ -56,7 +56,7 @@ describe('Downloads Page with email parameter only', function() {
 
   it('should display email account', function() {
     browser.get('#/downloads?email=' + testuser);
-    expect(element(by.binding('email')).getText()).toContain(testuser);
+    expect(element(by.id('account')).getText()).toContain(testuser);
   });
 
   it('should not have sent any email', function() {
