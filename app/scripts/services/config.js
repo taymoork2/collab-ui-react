@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .factory('Config', function(Utils) {
+  .factory('Config', function($window, Utils) {
     return {
 
       adminClientUrl: {
@@ -42,25 +42,25 @@ angular.module('wx2AdminWebClientApp')
         keepOnNavigate: false
       },
 
-      isDev: function(){
+      isDev: function() {
         return document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('localhost') !== -1;
       },
 
-      isIntegration: function(){
+      isIntegration: function() {
         return document.URL.indexOf('int-admin.wbx2.com') !== -1;
       },
 
-      isProd: function(){
+      isProd: function() {
         return document.URL.indexOf('admin.wbx2.com') !== -1;
       },
 
-      getEnv: function(){
-        if (this.isProd()) {
-          return 'prod';
+      getEnv: function() {
+        if (this.isDev()) {
+          return 'dev';
         } else if (this.isIntegration()) {
           return 'integration';
         } else {
-          return 'dev';
+          return 'prod';
         }
 
       },
@@ -74,6 +74,7 @@ angular.module('wx2AdminWebClientApp')
       },
 
       getOauthLoginUrl: function() {
+        $window.alert(this.getEnv());
         var params = [this.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()])];
         return Utils.sprintf(this.oauth2LoginUrlPattern, params);
       }
