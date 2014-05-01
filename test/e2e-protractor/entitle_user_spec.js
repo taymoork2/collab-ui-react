@@ -91,11 +91,14 @@ describe('Entitle flow', function() {
 
       it('should display error if no user is entered', function() {
         element(by.id('btnEntitle')).click();
-        var result = element(by.repeater('userResult in results.resultList').row(0));
         //Temporary while fixing error messaging.
-        //expect(result.getText()).toBe('Please enter valid user email(s).');
+        element(by.css('.alertify-log-error')).click().then(function() {
+          browser.sleep(500);
+          expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
+          browser.sleep(500);
+          element(by.css('.fa-times')).click();
+        });
       });
-
     });
 
     describe('Entitle an existing user with call-initiation', function() {
@@ -105,16 +108,17 @@ describe('Entitle flow', function() {
           //entitle for call initiation
           element(by.css('.iCheck-helper')).click().then(function() {
             element(by.id('btnEntitle')).click();
-            //Temporary while fixing error messaging.
-            // element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
-            //   expect(rows.length).toBe(1);
-            //   expect(rows[0].getText()).toContain(testuser.username);
-            //   expect(rows[0].getText()).toContain('updated successfully');
-
-            // });
+            browser.sleep(500);
+            element(by.css('.alertify-log-success')).click();
+            element.all(by.css('.panel-success-body p')).then(function(rows) {
+              expect(rows.length).toBe(1);
+              expect(rows[0].getText()).toContain(testuser.username);
+              expect(rows[0].getText()).toContain('updated successfully');
+              browser.sleep(500);
+              element(by.css('.fa-times')).click();
+            });
           });
         });
-
       });
     });
 
@@ -124,12 +128,16 @@ describe('Entitle flow', function() {
         element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
           element(by.css('.iCheck-helper')).click().then(function() {
             element(by.id('btnEntitle')).click();
-            //Temporary while fixing error messaging.
-            // element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
-            //   expect(rows.length).toBe(1);
-            //   expect(rows[0].getText()).toContain(testuser.username);
-            //   expect(rows[0].getText()).toContain('updated successfully');
-            // });
+            browser.sleep(500); //for the animation
+            element(by.css('.alertify-log-success')).click();
+            browser.sleep(500); //for the animation
+            element.all(by.css('.panel-success-body p')).then(function(rows) {
+              expect(rows.length).toBe(1);
+              expect(rows[0].getText()).toContain(testuser.username);
+              expect(rows[0].getText()).toContain('updated successfully');
+              browser.sleep(500);
+              element(by.css('.fa-times')).click();
+            });
           });
         });
       });
@@ -141,12 +149,16 @@ describe('Entitle flow', function() {
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(inputEmail);
         element(by.id('btnEntitle')).click();
-        //Temporary while fixing error messaging.
-        // element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
-        //   expect(rows.length).toBe(1);
-        //   expect(rows[0].getText()).toContain(inputEmail);
-        //   expect(rows[0].getText()).toContain('does not exist');
-        // });
+        browser.sleep(500); //for the animation
+        element(by.css('.alertify-log-error')).click();
+        browser.sleep(500); //for the animation
+        element.all(by.css('.panel-danger-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain(inputEmail);
+          expect(rows[0].getText()).toContain('does not exist');
+          browser.sleep(500);
+          element(by.css('.fa-times')).click();
+        });
       });
     });
 
@@ -172,7 +184,7 @@ describe('Entitle flow', function() {
 
   // Log Out
   describe('Log Out', function() {
-    it('should redirect to login page', function() {
+    it('should log out', function() {
       element(by.id('setting-bar')).click();
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.id('logout-btn'));

@@ -5,6 +5,16 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 $brand_color: #00AADF;
 $headers_color: #777777;
 
+/******* Mixins **************/
+@mixin close-icon($margin-top, $color, $hover-color) {
+  cursor:pointer;
+  margin-top:$margin-top;
+  color: $color !important;
+  &:hover {
+    color: $hover-color !important;
+  }
+}
+
 /******** Resets & Globals **********/
 .container {
   width: 1087px;
@@ -275,7 +285,7 @@ label {
   height:250px;
   width: 450px;
   y-overflow: auto;
-  z-index: 5001;
+  z-index: 5001 !important;
   position:fixed !important;
   bottom: 0px !important;
   right: -450px;
@@ -299,8 +309,20 @@ label {
   font-size: 15px;
 }
 
-.fa-times {
-  cursor:pointer;
+.alertify-log-error .fa-times {
+  @include close-icon(4px, #B67775, #a94442);
+}
+
+.panel-danger .fa-times {
+  @include close-icon(2px, #B67775, #a94442);
+}
+
+.alertify-log-success .fa-times {
+  @include close-icon(4px, #6DA76E, #3c763d);
+}
+
+.panel-success .fa-times {
+  @include close-icon(2px, #6DA76E, #3c763d);
 }
 
 .setting-bar {
