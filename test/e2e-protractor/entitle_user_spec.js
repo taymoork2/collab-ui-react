@@ -99,7 +99,6 @@ describe('Entitle flow', function() {
           element(by.css('.fa-times')).click();
         });
       });
-
     });
 
     describe('Entitle an existing user with call-initiation', function() {

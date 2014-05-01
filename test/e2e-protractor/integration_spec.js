@@ -135,14 +135,14 @@ describe('App flow', function() {
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(testuser.username);
         element(by.id('btnAdd')).click();
-        browser.sleep(500); //for the animation
+        browser.sleep(600); //for the animation
         element(by.css('.alertify-log-error')).click();
-        browser.sleep(500); //for the animation
+        browser.sleep(600); //for the animation
         element.all(by.css('.panel-danger-body p')).then(function(rows) {
           expect(rows.length).toBe(1);
           expect(rows[0].getText()).toContain(testuser.username);
           expect(rows[0].getText()).toContain('already exists');
-          browser.sleep(500);
+          browser.sleep(600);
           element(by.css('.fa-times')).click();
         });
       });
@@ -163,13 +163,13 @@ describe('App flow', function() {
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(inputEmail);
         element(by.id('btnAdd')).click();
-        browser.sleep(500);
+        browser.sleep(600);
         element(by.css('.alertify-log-success')).click();
         element.all(by.css('.panel-success-body p')).then(function(rows) {
           expect(rows.length).toBe(1);
           expect(rows[0].getText()).toContain(inputEmail);
           expect(rows[0].getText()).toContain('added successfully');
-          browser.sleep(500);
+          browser.sleep(600);
           element(by.css('.fa-times')).click();
         });
       });

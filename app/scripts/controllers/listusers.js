@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope', 'Notification',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope, Notification) {
+  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope', 'Notification', '$filter',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope, Notification, $filter) {
 
       function Feature (name, state) {
         this.entitlementName = name;
@@ -185,6 +185,17 @@ angular.module('wx2AdminWebClientApp')
 
         default:
           Log.debug('Sort type not recognized.');
+        }
+      };
+
+      $scope.getStatus = function(status) {
+        if (status === 'active')
+        {
+          return $filter('translate')('usersPage.active');
+        }
+        else
+        {
+          return $filter('translate')('usersPage.inactive');
         }
       };
 

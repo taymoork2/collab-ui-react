@@ -5,6 +5,10 @@ angular.module('wx2AdminWebClientApp')
 		function($scope, $location, $http, Userservice) {
 
 			$scope.email = $location.search().email;
+			$scope.tlData = {
+		    email : $scope.email
+		  };
+
 
 			$http.get('download_urls.json')
 			.success(function(data) {

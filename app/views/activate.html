@@ -1,0 +1,36 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<div id="webDiv" ng-show="isWeb()">
+
+<div id="mobileSrcProvisionSuccess" ng-show="result.provisionSuccess">
+	<p>You successfully link {{deviceName}} to Squared!</p>
+
+	<p>You can now start using Squared on your mobile device to securely communicate with your work contacts.</p>
+
+	<p>If you want to use Squared on desktop, you can <a ng-href="{{webClientURL}}">Sign-up here </a>using the same email address, for security reasons, you’ll be prompt to create a password for web access.</p>
+
+	<p>If you have additional Android device you can download Squared client on <a ng-href="{{androidURL}}">Google Play.</a></p>
+
+	<p>If you have additional iPhone device you can download Squared client on <a ng-href="{{iPhoneURL}}">iPhone App Store</a></p>
+</div>
+
+<div id="mobileSrcCodeExpired" ng-show="result.codeExpired">
+	<p>The link/code to activate User’s iPhone to Squared has expired!</p>
+
+	<p>You can request a new code to activate Squared on User’s iPhone for {{userEmail}} account by clicking on the link below:</p>
+
+	<div id="sendCodeLink" class="btn-link pull-left" ng-click="resendCode()">Send me a new activation code</div>
+</div>
+
+<div id="mobileSrcResendSuccess" ng-show="result.resendSuccess">
+	<p>A new confirmation code has been sent to your work email address: {{userEmail}}</p>
+	<p>Please use this last code we sent you to activate Squared.</p>
+</div>
+
+<div id="exception" ng-show="result.errmsg">
+	<p>Unexpected error processing request. {{result.errmsg}}</p>
+</div>
+
+</div>

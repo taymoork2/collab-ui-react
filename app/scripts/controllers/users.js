@@ -1,9 +1,17 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Authinfo', '$rootScope', 'Notification',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Authinfo, $rootScope, Notification) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Authinfo', '$rootScope', 'Notification', '$filter',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Authinfo, $rootScope, Notification, $filter) {
 
+      $scope.init = function () {
+        setPlaceholder();
+      };
+
+      var setPlaceholder = function () {
+        var placeholder = $filter('translate')('usersPage.userInput');
+        angular.element('#usersfield-tokenfield').attr('placeholder', placeholder);
+      };
 
       //Initialize
       Notification.init($scope);
@@ -38,7 +46,7 @@ angular.module('wx2AdminWebClientApp')
         if (angular.element('.token-label').length > 0) {
           angular.element('#usersfield-tokenfield').attr('placeholder', '');
         } else {
-          angular.element('#usersfield-tokenfield').attr('placeholder', 'Enter email addresses separated by commas or semi-colons');
+          setPlaceholder();
         }
       };
 
