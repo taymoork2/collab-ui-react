@@ -44,6 +44,10 @@ angular.module('wx2AdminWebClientApp', [
           templateUrl: 'views/reports.html',
           controller: 'UsersCtrl'
         })
+        .when('/activate', {
+          templateUrl: 'views/activate.html',
+          controller: 'ActivateCtrl'
+        })
         .otherwise({
           redirectTo: '/'
         });

@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .factory('Localize', ['$location', '$filter',
-    function($location, $filter) {
+  .factory('Localize', ['$location', '$filter', 'Utils',
+    function($location, $filter, Utils) {
       return {
 
         varTitle: function() {
-          if ($location.url().indexOf('downloads') === -1) {
+          if (Utils.isAdminPage()) {
             return $filter('translate')('index.appTitle');
           } else {
             return $filter('translate')('index.genericTitle');

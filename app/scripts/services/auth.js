@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .factory('Auth', function($http, $location, $q, Config, Authinfo) {
+  .factory('Auth', function($http, $location, $q, Log, Config, Authinfo, Utils) {
 
     var auth = {
-      authorizeUrl: Config.adminServiceUrl.prod + 'orgadmininfo'
+      authorizeUrl: Config.adminServiceUrl.prod + 'orgadmininfo',
+      oauthUrl: Config.oauth2Url
     };
 
     auth.authorize = function(token, scope) {
@@ -61,5 +62,31 @@ angular.module('wx2AdminWebClientApp')
       return result;
     };
 
+    auth.getAccessToken = function() {
+      var deferred = $q.defer();
+      var token = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
+      var data = 'grant_type=client_credentials&scope=' + Config.oauthClientRegistration.scope;
+
+      $http({
+        method: 'POST',
+        url: auth.oauthUrl + 'access_token',
+        data: data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + token
+        }
+      })
+      .success(function(data) {
+        deferred.resolve(data.access_token);
+      })
+      .error(function(data, status) {
+        Log.error('Failed to obtain oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
+        deferred.reject('Token request failed: ' + data.error_description);
+      });
+      
+      return deferred.promise;
+    };
+
     return auth;
+
   });

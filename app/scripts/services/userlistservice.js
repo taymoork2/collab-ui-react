@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log',
-    function($http, $rootScope, $location, Storage, Config, Authinfo, Log) {
+  .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils',
+    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils) {
 
       var token = Storage.get('accessToken');
       var filter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
@@ -10,22 +10,16 @@ angular.module('wx2AdminWebClientApp')
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
       var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
 
-      function sprintf(template, values) {
-        return template.replace(/%s/g, function() {
-          return values.shift();
-        });
-      }
-
       return {
 
         listUsers: function(startIndex, count, sortBy, sortOrder, callback) {
 
-          var listUrl = sprintf(scimUrl, [Authinfo.getOrgId()]);
+          var listUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
           var searchStr;
 
           if ($rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined') {
             var encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
-            listUrl = sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
           }
 

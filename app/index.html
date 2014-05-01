@@ -14,7 +14,7 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css styles/vendor.css -->
   <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css" />
   <link rel="stylesheet" href="bower_components/angular-dialog-service/dialogs.css" />
   <!-- endbower -->
   <!-- endbuild -->
@@ -39,17 +39,18 @@
             <a class="navbar-brand" href="#" ng-bind="Localize.varTitle()"></a>
           </div>
 
-          <ul class="nav navbar-nav navbar-right" ng-controller="NavigationCtrl" ng-show="loggedIn && !Utils.hideForRoute('downloads')" >
+          <ul class="nav navbar-nav navbar-right" ng-controller="NavigationCtrl" ng-show="loggedIn && Utils.isAdminPage()" >
             <li ng-show="username">{{'index.welcome' | translate}}, {{username}}</li>
             <li ng-show="orgname">({{orgname}})</li>
 
           </ul>
 
-          <div ng-hide="Utils.hideForRoute('downloads')" ng-controller="SearchCtrl">
+          <div ng-hide="!Utils.isAdminPage()" ng-controller="SearchCtrl">
             <input id="search-input" type="text" class="form-control" placeholder="{{'index.search' | translate}}" ng-model="searchStr" ng-change="searchItem()">
+
             <span class="glyphicon glyphicon-search" id="icon-search"></span>
           </div>
-          <div class="setting-bar" id="setting-bar" ng-controller="NavigationCtrl" ng-show="!Utils.hideForRoute('downloads')">
+          <div class="setting-bar" id="setting-bar" ng-controller="NavigationCtrl" ng-show="Utils.isAdminPage()">
             <span class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-bars fa-lg"></i>
             </span>
@@ -66,7 +67,7 @@
         </div><!-- /.container-fluid -->
       </nav>
 
-      <div  class="container" ng-hide="Utils.hideForRoute('downloads')" ng-controller="TabsCtrl">
+      <div  class="container" ng-hide="!Utils.isAdminPage()" ng-controller="TabsCtrl">
         <tabset id="tabs" type="navType">
           <tab ng-repeat="tab in tabs" heading="{{getTabTitle(tab.title)}}" active="tab.active" select="changeTab(tab.path)">
           </tab>
@@ -135,6 +136,8 @@
     <script src="scripts/directives/icheck.js"></script>
     <script src="scripts/controllers/entitlementDialog.js"></script>
     <script src="scripts/services/notification.js"></script>
+    <script src="scripts/controllers/activate.js"></script>
+    <script src="scripts/services/activateservice.js"></script>
     <!-- endbuild -->
   </body>
   </html>

@@ -43,8 +43,7 @@ angular.module('wx2AdminWebClientApp')
 			};
 
 			$scope.changeTab = function(tabPath) {
-				if(!Utils.hideForRoute('downloads'))
-				{
+				if (Utils.isAdminPage()) {
 					Log.debug('using path: ' + tabPath);
 					$location.path(tabPath);
 				}
