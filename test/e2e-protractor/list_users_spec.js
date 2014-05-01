@@ -276,9 +276,13 @@ describe('List users flow', function() {
 
   // Log Out
   describe('Log Out', function() {
-    it('should redirect to login page', function() {
+    it('should log out', function() {
       element(by.id('setting-bar')).click();
-      element(by.id('logout-btn')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('logout-btn'));
+      }).then(function() {
+        element(by.id('logout-btn')).click();
+      });
     });
   });
 
