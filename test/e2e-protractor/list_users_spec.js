@@ -7,6 +7,7 @@
 /* global by */
 /* global expect */
 /* global element */
+/* global protractor */
 
 var testuser = {
   username: 'pbr-org-admin@squared2webex.com',
@@ -20,7 +21,7 @@ function randomId() {
 }
 
 // Notes:
-// - State is conserved between each describe and it blocks.
+// - State is conserved between each despribe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 describe('List users flow', function() {
@@ -221,16 +222,19 @@ describe('List users flow', function() {
       element(by.id('usersfield')).sendKeys(inputEmail).then(function() {
         //entitle for call initiation
         element(by.css('.iCheck-helper')).click().then(function() {
-          element(by.id('btnAdd')).click().then(function(){
-            // Temporary until tests are converted to new error messaging
-            // element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
-            //   expect(rows[0].getText()).toContain(inputEmail);
-            //   expect(rows[0].getText()).toContain('added successfully');
-            // });
+          element(by.id('btnAdd')).click().then(function() {
+            browser.sleep(500);
+            element(by.css('.alertify-log-success')).click();
+            element.all(by.css('.panel-success-body p')).then(function(rows) {
+              expect(rows[0].getText()).toContain(inputEmail);
+              expect(rows[0].getText()).toContain('added successfully');
+              browser.sleep(500);
+              element(by.css('.fa-times')).click();
+            });
 
             element(by.id('search-input')).sendKeys(inputEmail).then(function() {
 
-              setTimeout(function(){
+              setTimeout(function() {
                 browser.wait(function() {
                   element.all(by.repeater('user in queryuserslist')).then(function(rows) {
                     expect(rows.length).toBe(1);
@@ -274,7 +278,10 @@ describe('List users flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should redirect to login page', function() {
-      element(by.id('setting-bar')).click().then(function() {
+      element(by.id('setting-bar')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('logout-btn'));
+      }).then(function() {
         element(by.id('logout-btn')).click();
       });
     });

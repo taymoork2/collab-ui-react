@@ -270,7 +270,7 @@ angular.module('wx2AdminWebClientApp')
           Userservice.updateUsers(usersList, getEntitlements(), callback);
         } else {
           console.log('No users entered.');
-          var error = 'Please enter valid user email(s).';
+          var error = ['Please enter valid user email(s).'];
           Notification.notify(error, 'error');
         }
 
