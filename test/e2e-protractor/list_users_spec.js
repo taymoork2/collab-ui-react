@@ -278,11 +278,7 @@ describe('List users flow', function() {
   describe('Log Out', function() {
     it('should redirect to login page', function() {
       element(by.id('setting-bar')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('logout-btn'));
-      }).then(function() {
-        element(by.id('logout-btn')).click();
-      });
+      element(by.id('logout-btn')).click();
     });
   });
 
