@@ -42,7 +42,7 @@ angular.module('wx2AdminWebClientApp', [
         })
         .when('/reports', {
           templateUrl: 'views/reports.html',
-          controller: 'UsersCtrl'
+          controller: 'ReportsCtrl'
         })
         .when('/activate', {
           templateUrl: 'views/activate.html',
@@ -67,6 +67,7 @@ angular.module('wx2AdminWebClientApp', [
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
       $rootScope.Utils = Utils;
+      $rootScope.services = [];
 
       //Enable logging
       $rootScope.debug = true;

@@ -4,7 +4,9 @@
     "subTitleAdd" : "Add new users",
     "subTitleEnable" : "Entitle users",
     "email" : "Email",
-    "callInit" : "Call-Initiation",
+    "squaredCallInitiation" : "Call-Initiation",
+    "webExSquared" : "Webex-Squared",
+    "squaredFusionUC" : "Fusion UC",
     "clear" : "Clear",
     "add" : "Add",
     "update" : "Update",
@@ -17,6 +19,11 @@
     "userInput" : "Enter email addresses separated by commas or semi-colons",
     "active": "Active",
     "inactive" : "Inactive"
+  },
+  "entitlements" : {
+    "webExSquared" : "webex-squared",
+    "squaredCallInitiation" : "squared-call-initiation",
+    "squaredFusionUC" : "squared-fusion-uc"
   },
   "tabs" : {
     "homeTab" : "Home",
@@ -36,9 +43,7 @@
   },
   "entitlementPage" : {
     "title" : "Modify Entitlements",
-    "heading" : "List of entitlements for",
-    "wbxsq" : "Webex-Squared",
-    "callinit" : "Call-Initiation"
+    "heading" : "List of entitlements for"
   },
   "downloadPage" : {
     "thank" : "Thank you for registering with Cisco Squared.",
@@ -53,6 +58,9 @@
   },
   "templatesPage" : {
     "title" : "MANAGE TEMPLATES"
+  },
+  "reportsPage" : {
+    "title" : "ORGANIZATION REPORTS"
   },
   "common" : {
     "cancel" : "Cancel",
