@@ -6,7 +6,7 @@
 
     <div class="panel-heading panel-users">
       <div id="addUsers">
-        <h3 class="panel-title">
+        <h3 class="panel-title users-title">
           <strong id="subTitleAdd" ng-show="isAddEnabled()" translate="usersPage.subTitleAdd"></strong>
           <strong id="subTitleEnable" ng-show="!isAddEnabled()" translate="usersPage.subTitleEnable"></strong>
         </h3>
@@ -19,13 +19,13 @@
           <label for="inputEmail3" translate="usersPage.email"></label>
           <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
           <br>
-
           <div class="entitle-btn-grp">
-            <div class="btn-group right">
-             <input type="checkbox" id="btn_callInit" ng-model="entitlements.squaredCallInitiation" icheck>
+            <div class="btn-group right" ng-repeat="service in services" ng-if="service!='webExSquared'">
+             <input type="checkbox" id="{{'btn_'+service}}" ng-model="entitlements[service]" icheck>
+             <label style="font-size:15px; padding:5px">{{'usersPage.'+service | translate}}</label>
            </div>
-           <label style="font-size:15px; padding:5px" translate="usersPage.callInit">
-          </label>
+           
+          
         </div>
       </div>
 

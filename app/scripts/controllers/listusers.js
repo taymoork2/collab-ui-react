@@ -17,6 +17,10 @@ angular.module('wx2AdminWebClientApp')
         return new Feature('squaredCallInitiation', state);
       }
 
+      function getFeature(service, state) {
+        return new Feature(service, state);
+      }
+
       //Initialize variables
       $scope.status = null;
       $scope.results = null;
@@ -99,12 +103,12 @@ angular.module('wx2AdminWebClientApp')
       };
 
       $scope.changeEntitlement = function(user) {
-        var dlg = $dialogs.create('views/entitlements_dialog.html', 'entitlementDialogCtrl', user);
+        var dlg = $dialogs.create('views/entitlements_dialog.html', 'entitlementDialogCtrl', user, Authinfo.getServices());
         dlg.result.then(function(entitlements){
           Log.debug('Entitling user.', user);
           Userservice.updateUsers([{
             'address': user.userName
-          }], [squaredFeature(entitlements.webExSquared), callFeature(entitlements.squaredCallInitiation)], function(data){
+          }], getUserEntitlementList(entitlements), function(data){
             var entitleResult = {
                 msg: null,
                 type: 'null'
@@ -138,6 +142,16 @@ angular.module('wx2AdminWebClientApp')
         }, function() {
           console.log('canceled');
         });
+      };
+
+      var getUserEntitlementList = function(entitlements) {
+        var entList = [];
+        for (var i=0;i<$rootScope.services.length;i++)
+        {
+          var service = $rootScope.services[i];
+          entList.push(getFeature(service, entitlements[service]));
+        }
+        return entList;
       };
 
       //sorting function

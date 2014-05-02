@@ -8,7 +8,8 @@ angular.module('wx2AdminWebClientApp')
         'username': null,
         'orgname': null,
         'orgid': null,
-        'addUserEnabled': null
+        'addUserEnabled': null,
+        'services': null
       };
 
       return {
@@ -17,6 +18,7 @@ angular.module('wx2AdminWebClientApp')
           authData.orgname = data.orgName;
           authData.orgid = data.orgId;
           authData.addUserEnabled = data.addUserEnabled;
+          authData.services = data.services;
           $rootScope.$broadcast('AuthinfoUpdated');
         },
 
@@ -25,6 +27,7 @@ angular.module('wx2AdminWebClientApp')
           authData.orgname = null;
           authData.orgid = null;
           authData.addUserEnabled = null;
+          authData.services = null;
         },
 
         getOrgName: function() {
@@ -41,6 +44,10 @@ angular.module('wx2AdminWebClientApp')
 
         isAddUserEnabled: function() {
           return authData.addUserEnabled;
+        },
+
+        getServices: function() {
+          return authData.services;
         },
 
         isEmpty: function() {

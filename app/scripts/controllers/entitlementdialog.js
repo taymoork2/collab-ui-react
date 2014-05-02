@@ -1,16 +1,22 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('entitlementDialogCtrl', ['$scope', '$modalInstance', 'data',
-    function($scope, $modalInstance, data) {
+  .controller('entitlementDialogCtrl', ['$scope', '$modalInstance', 'data', '$rootScope', '$filter',
+    function($scope, $modalInstance, data, $rootScope, $filter) {
       $scope.username = data.userName;
       $scope.entitlements = {};
-      if (!data.entitlements || data.entitlements.length === 0) {
-        $scope.entitlements.webExSquared = false;
-        $scope.entitlements.squaredCallInitiation = false;
-      } else {
-        $scope.entitlements.webExSquared = data.entitlements.indexOf('webex-squared') > -1;
-        $scope.entitlements.squaredCallInitiation = data.entitlements.indexOf('squared-call-initiation') > -1;
+      for (var i=0;i<$rootScope.services.length;i++)
+      {
+        var service = $rootScope.services[i];
+        var ciService = $filter('translate')('entitlements.'+service);
+        if (data.entitlements && data.entitlements.indexOf(ciService) > -1)
+        {
+          $scope.entitlements[service] = true;
+        }
+        else
+        {
+          $scope.entitlements[service] = false;
+        }
       }
 
       $scope.cancel = function() {

@@ -18,15 +18,12 @@
     "existingUsers" : "Existing Users",
     "userInput" : "Enter email addresses separated by commas or semi-colons",
     "active": "Active",
-    "inactive" : "Inactive",
-    "callInit" : "Call-Initiation"
+    "inactive" : "Inactive"
   },
   "entitlements" : {
     "webExSquared" : "webex-squared",
     "squaredCallInitiation" : "squared-call-initiation",
-    "squaredFusionUC" : "squared-fusion-uc",
-    "wbxsq" : "Webex-Squared",
-    "callinit" : "Call-Initiation"
+    "squaredFusionUC" : "squared-fusion-uc"
   },
   "tabs" : {
     "homeTab" : "Home",

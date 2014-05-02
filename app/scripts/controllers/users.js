@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Authinfo', '$rootScope', 'Notification', '$filter',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Authinfo, $rootScope, Notification, $filter) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter) {
 
       $scope.init = function () {
         setPlaceholder();
@@ -286,8 +286,36 @@ angular.module('wx2AdminWebClientApp')
 
       //radio group
       $scope.entitlements = {};
-      $scope.entitlements.webExSquared = true;
-      $scope.entitlements.squaredCallInitiation = false;
+      var setEntitlementList = function(){
+        for (var i=0;i<$rootScope.services.length;i++)
+        {
+          $scope.entitlements[$rootScope.services[i]] = false;
+          if ($rootScope.services[i] === 'webExSquared')
+          {
+            $scope.entitlements[$rootScope.services[i]] = true;
+          }
+        }
+      };
+
+      //Populating authinfo data if empty.
+      if (Authinfo.isEmpty()) {
+        var token = Storage.get('accessToken');
+        if (token) {
+          Log.debug('Authorizing user... Populating admin data...');
+          Auth.authorize(token, $scope).then(function(){
+            if (undefined !== $rootScope.services && $rootScope.services.length === 0)
+            {
+              $rootScope.services = Authinfo.getServices();
+            }
+          });
+        } else {
+          Log.debug('No accessToken.');
+        }
+      }
+
+      $scope.$on('AuthinfoUpdated', function() {
+        setEntitlementList();
+      });
 
       var getEntitlements = function(){
         var entitleList = [];
@@ -297,5 +325,6 @@ angular.module('wx2AdminWebClientApp')
         Log.debug(entitleList);
         return entitleList;
       };
+
     }
   ]);

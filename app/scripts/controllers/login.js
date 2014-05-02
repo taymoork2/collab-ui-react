@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('LoginCtrl', ['$scope', '$location', '$window', '$http', 'Storage', 'Config', 'Auth',
-    function($scope, $location, $window, $http, Storage, Config, Auth) {
+  .controller('LoginCtrl', ['$scope', '$rootScope', '$location', '$window', '$http', 'Storage', 'Config', 'Auth', 'Authinfo',
+    function($scope, $rootScope, $location, $window, $http, Storage, Config, Auth, Authinfo) {
 
       var token = Storage.get('accessToken');
       $scope.result = 'Loading...';
@@ -16,6 +16,7 @@ angular.module('wx2AdminWebClientApp')
         Auth.authorize(token, $scope).then(function(){
           if($scope.isAuthorized){
             $location.path('/users');
+            $rootScope.services = Authinfo.getServices();
           }
         });
       } else {
