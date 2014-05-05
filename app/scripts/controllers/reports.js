@@ -1,8 +1,10 @@
 'use strict';
 
+/* global AmCharts */
+
 angular.module('wx2AdminWebClientApp')
-	.controller('ReportsCtrl', ['$scope',
-		function($scope) {
+	.controller('ReportsCtrl', [
+		function() {
 
 			var data = [{
 				'eventName': 'Call-Terminated Success',

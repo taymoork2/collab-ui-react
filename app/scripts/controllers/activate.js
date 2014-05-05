@@ -30,7 +30,7 @@ angular.module('wx2AdminWebClientApp')
 
 				// to be changed to the encoded api
 				Activateservice.verifyCode($scope.userEmail, pushId, confirmationCode)
-				.then(function(data) {
+				.then(function(/*data*/) {
 					// TODO: parse decoded fields from response
 					// $scope.userEmail = data.email;
 					// $scope.deviceName = data.deviceName;

@@ -1,20 +1,14 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('NavigationCtrl', ['$scope', '$window', 'Storage', 'Config', 'Log', 'Authinfo',
-    function($scope, $window, Storage, Config, Log, Authinfo) {
+  .controller('NavigationCtrl', ['$scope', '$location', '$window', 'Storage', 'Config', 'Log', 'Authinfo', 'Auth',
+    function($scope, $location, $window, Storage, Config, Log, Authinfo, Auth) {
 
       //update the scope when Authinfo data has been populated.
       $scope.$on('AuthinfoUpdated', function() {
         $scope.username = Authinfo.getUserName();
         $scope.orgname = Authinfo.getOrgName();
       });
-
-      if (Storage.get('accessToken')) {
-        $scope.loggedIn = true;
-      } else {
-        $scope.loggedIn = false;
-      }
 
       //Set logout redirect depending on environment
       var logoutUrl = null;
@@ -41,6 +35,13 @@ angular.module('wx2AdminWebClientApp')
         Log.debug('sending feedback: ' + feedbackUrl);
         $window.location.href = feedbackUrl;
       };
+
+      if (Auth.isLoggedIn()) {
+        $scope.loggedIn = true;
+      } else if (!Auth.allowedPath()) {
+        $scope.loggedIn = false;
+        $location.path('/login');
+      }
 
     }
 

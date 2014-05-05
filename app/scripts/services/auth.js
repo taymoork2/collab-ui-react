@@ -1,11 +1,30 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .factory('Auth', function($http, $location, $q, Log, Config, Authinfo, Utils) {
+  .factory('Auth', function($http, $location, $q, Log, Config, Authinfo, Utils, Storage) {
 
     var auth = {
       authorizeUrl: Config.adminServiceUrl.prod + 'orgadmininfo',
-      oauthUrl: Config.oauth2Url
+      oauthUrl: Config.oauth2Url,
+      allowedPaths: ['/activate', '/downloads']
+    };
+
+    auth.isLoggedIn = function() {
+      if (Storage.get('accessToken')) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    auth.allowedPath = function() {
+      var currentPath = $location.path();
+      for ( var idx in auth.allowedPaths ) {
+        if (auth.allowedPaths[idx] === currentPath) {
+          return true;
+        }
+      }
+      return false;
     };
 
     auth.authorize = function(token, scope) {
@@ -83,7 +102,7 @@ angular.module('wx2AdminWebClientApp')
         Log.error('Failed to obtain oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
         deferred.reject('Token request failed: ' + data.error_description);
       });
-      
+
       return deferred.promise;
     };
 

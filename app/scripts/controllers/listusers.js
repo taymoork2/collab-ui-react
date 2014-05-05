@@ -9,14 +9,6 @@ angular.module('wx2AdminWebClientApp')
         this.entitlementState = state? 'ACTIVE' : 'INACTIVE';
       }
 
-      function squaredFeature(state) {
-        return new Feature('webExSquared', state);
-      }
-
-      function callFeature(state) {
-        return new Feature('squaredCallInitiation', state);
-      }
-
       function getFeature(service, state) {
         return new Feature(service, state);
       }

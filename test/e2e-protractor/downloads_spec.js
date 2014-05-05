@@ -7,7 +7,7 @@
 /* global expect */
 /* global element */
 
-var testuser = 'fakegmiosuser@gmail.com';
+var testuser = 'fakegmuser+test@gmail.com';
 
 // encoded adminEmail for atlasmapservice@gmail.com
 var emailParams = '&forward=YWRtaW5UZXN0VXNlckB3eDIuZXhhbXBsZS5jb20&pwdResetSuccess=true';

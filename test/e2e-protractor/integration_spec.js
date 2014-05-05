@@ -37,6 +37,15 @@ describe('App flow', function() {
       });
     });
 
+    it('should redirect to login page when not logged in', function() {
+      browser.get('#/users');
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.css('#IDToken1'));
+      }).then(function() {
+        expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
+      });
+    });
+
     it('should not log in with invalid credentials', function() {
       browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
       browser.driver.findElement(by.css('#IDButton2')).click();
