@@ -19,6 +19,10 @@ angular.module('wx2AdminWebClientApp')
           authData.orgid = data.orgId;
           authData.addUserEnabled = data.addUserEnabled;
           authData.services = data.services;
+          if (undefined !== $rootScope.services && $rootScope.services.length === 0)
+          {
+            $rootScope.services = data.services;
+          }
           $rootScope.$broadcast('AuthinfoUpdated');
         },
 

@@ -302,18 +302,17 @@ angular.module('wx2AdminWebClientApp')
         var token = Storage.get('accessToken');
         if (token) {
           Log.debug('Authorizing user... Populating admin data...');
-          Auth.authorize(token, $scope).then(function(){
-            if (undefined !== $rootScope.services && $rootScope.services.length === 0)
-            {
-              $rootScope.services = Authinfo.getServices();
-            }
-          });
+          Auth.authorize(token, $scope);
         } else {
           Log.debug('No accessToken.');
         }
       }
 
       $scope.$on('AuthinfoUpdated', function() {
+        if (undefined !== $rootScope.services && $rootScope.services.length === 0)
+        {
+          $rootScope.services = Authinfo.getServices();
+        }
         setEntitlementList();
       });
 
@@ -325,6 +324,10 @@ angular.module('wx2AdminWebClientApp')
         Log.debug(entitleList);
         return entitleList;
       };
+
+      //set intitially when loading the page
+      //on initial login the AuthinfoUpdated broadcast may not be caught if not on user page
+      setEntitlementList();
 
     }
   ]);
