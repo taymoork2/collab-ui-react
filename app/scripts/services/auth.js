@@ -6,7 +6,7 @@ angular.module('wx2AdminWebClientApp')
     var auth = {
       authorizeUrl: Config.adminServiceUrl.prod + 'orgadmininfo',
       oauthUrl: Config.oauth2Url,
-      allowedPaths: ['/activate', '/downloads']
+      allowedPaths: Config.allowedPaths
     };
 
     auth.isLoggedIn = function() {
@@ -17,7 +17,7 @@ angular.module('wx2AdminWebClientApp')
       }
     };
 
-    auth.allowedPath = function() {
+    auth.isAllowedPath = function() {
       var currentPath = $location.path();
       for ( var idx in auth.allowedPaths ) {
         if (auth.allowedPaths[idx] === currentPath) {

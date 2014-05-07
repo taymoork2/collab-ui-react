@@ -38,7 +38,7 @@ angular.module('wx2AdminWebClientApp')
 
       if (Auth.isLoggedIn()) {
         $scope.loggedIn = true;
-      } else if (!Auth.allowedPath()) {
+      } else if (!Auth.isAllowedPath()) {
         $scope.loggedIn = false;
         $location.path('/login');
       }

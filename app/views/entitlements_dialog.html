@@ -5,16 +5,14 @@
 </div>
 <div class="modal-body">
   <h5 class="dialog-subtitle">{{'entitlementPage.heading' | translate}} {{username}}:</h5>
-  
   <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements">
     <div class="btn-group">
       <input type="checkbox" name="{{service}}" ng-model="entitlements[service]" icheck>
     </div>
     <span style="font-size:15px; padding:10px">
-      {{'usersPage.'+service | translate}}
+      {{'usersPage.' + service | translate}}
     </span>
   </div>
-
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">{{'common.cancel' | translate}}</button>

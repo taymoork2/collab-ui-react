@@ -109,18 +109,6 @@ angular.module('wx2AdminWebClientApp')
           });
         },
 
-        personNameOrId: function(person) {
-          if (person) {
-            if (person.displayName) {
-              return person.displayName;
-            } else {
-              return person.id ? person.id : 'Somebody';
-            }
-          } else {
-            return 'God';
-          }
-        },
-
         isAdminPage: function() {
           var nonAdminRoutes = ['activate', 'downloads'];
           for (var i = 0; i < nonAdminRoutes.length; i++) {
