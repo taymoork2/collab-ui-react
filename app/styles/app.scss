@@ -368,3 +368,11 @@ label {
   width: 300px;
 }
 
+td a {
+  color: #3B3A36;
+  cursor: pointer;
+  &:hover {
+    color: #3B3A36;
+  }
+}
+

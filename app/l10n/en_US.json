@@ -71,7 +71,11 @@
     "resetPwd" : "Reset Password",
     "notifyUser" : "Notify User",
     "deleteUser" : "Delete User",
-    "removeUser" : "Remove User"
+    "removeUser" : "Remove User",
+    "logName" : "Name",
+    "logDate" : "Date",
+    "logDownload" : "Download",
+    "logAction" : "Action"
   },
   "common" : {
     "cancel" : "Cancel",
