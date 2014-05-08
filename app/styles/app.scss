@@ -25,6 +25,16 @@ $headers_color: #777777;
   padding: 9px 22px;
 }
 
+.btn-profile-grp {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.btn-profile {
+  width: 100%;
+  height: 60px;
+}
+
 body {
   min-width: 1152px !important;
 }
@@ -347,4 +357,14 @@ label {
   font-size : 11px;
 }
 
+.profile-panel {
+  position: absolute;
+  width: 750px;
+}
+
+.profile-tools-panel {
+  position: relative;
+  float: right;
+  width: 300px;
+}
 

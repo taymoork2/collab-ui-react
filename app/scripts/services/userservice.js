@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config',
-    function($http, $rootScope, $location, Storage, Config) {
+  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils',
+    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils) {
 
       var userUrl = Config.adminServiceUrl.prod;
       var token = Storage.get('accessToken');
@@ -81,6 +81,22 @@ angular.module('wx2AdminWebClientApp')
           } else {
             callback('No valid emails entered.');
           }
+        },
+
+        getUser: function(userid, callback) {
+          var scimUrl = Config.scimUrl + '/' + userid;
+          var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
+          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.get(userUrl)
+            .success(function(data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function(data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
         },
 
         sendEmail: function(userEmail, adminEmail, callback) {

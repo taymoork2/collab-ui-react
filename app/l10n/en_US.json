@@ -65,7 +65,13 @@
   "profilePage" : {
     "userProfile" : "User Profile",
     "userDetails" : "User Details",
-    "userLogs" : "User Logs"
+    "userLogs" : "User Logs",
+    "tools" : "Tools",
+    "requestLogs" : "Request Client Logs",
+    "resetPwd" : "Reset Password",
+    "notifyUser" : "Notify User",
+    "deleteUser" : "Delete User",
+    "removeUser" : "Remove User"
   },
   "common" : {
     "cancel" : "Cancel",
