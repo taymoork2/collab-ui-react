@@ -237,6 +237,21 @@ describe('List users flow', function() {
                 browser.wait(function() {
                   element.all(by.repeater('user in queryuserslist')).then(function(rows) {
                     expect(rows.length).toBe(1);
+
+                    //check user profile
+                    element(by.css('td a')).click();
+                    //validate buttons and log panel is visible
+                    expect(element(by.id('btnRequestLogs')).isDisplayed()).toEqual(true);
+                    expect(element(by.id('btnDeleteUser')).isDisplayed()).toEqual(true);
+                    expect(element(by.id('btnResetPwd')).isDisplayed()).toEqual(true);
+                    expect(element(by.id('userSupport')).isDisplayed()).toEqual(true);
+                    //validate user profile is for correct user
+                    expect(element(by.id('fnameField')).isDisplayed()).toEqual(true);
+                    expect(element(by.id('lnameField')).isDisplayed()).toEqual(true);
+                    expect(element(by.id('emailField')).isDisplayed()).toEqual(true);
+
+                    expect(element(by.id('emailField')).getText()).toBe(inputEmail);
+                    element(by.id('usertab')).click();
                   });
                 });
               }, 3000); //timeout
@@ -285,5 +300,6 @@ describe('List users flow', function() {
   //     });
   //   });
   // });
+
 
 });
