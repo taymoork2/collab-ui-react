@@ -57,8 +57,8 @@
       </thead>
       <tbody>
         <tr ng-repeat="user in queryuserslist">
-          <td><a ng-click="showUserProfile(user)"><span ng-if="user.name">{{user.name.familyName}}, {{user.name.givenName}}</span><a/></td>
-          <td>{{user.userName}}</td>
+          <td><span ng-if="user.name">{{user.name.familyName}}, {{user.name.givenName}}</span></td>
+          <td><a ng-click="showUserProfile(user)">{{user.userName}}</a></td>
           <td>N/A</td>
           <td class="btn-group"><span class="dropdown-toggle" data-toggle="dropdown">{{ getEntitlementState(user)? getStatus('active'):getStatus('inactive') }} <span class="caret"></span></span>
             <ul class="dropdown-menu" role="menu" >

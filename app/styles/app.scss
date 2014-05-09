@@ -28,10 +28,11 @@ $headers_color: #777777;
 .btn-profile-grp {
   padding-top: 15px;
   padding-bottom: 15px;
+  text-align: center;
 }
 
 .btn-profile {
-  width: 100%;
+  width: 70%;
   height: 60px;
 }
 
@@ -365,7 +366,29 @@ label {
 .profile-tools-panel {
   position: relative;
   float: right;
-  width: 300px;
+  width: 280px;
+}
+
+.profile-logo {
+  float: left;
+  position: absolute;
+  left: 30px;
+  top: 80px;
+}
+
+.profile-form {
+  left: 130px;
+  position: relative;
+}
+
+.profile-input {
+  width: 400px;
+  display: inline-block;
+}
+
+.profile-text-input {
+  padding-bottom: 15px;
+  padding-top: 15px; 
 }
 
 td a {

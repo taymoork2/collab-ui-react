@@ -1,14 +1,27 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-.controller('UserProfileCtrl', ['$scope', '$location', '$route', '$routeParams', 'Log', 'Utils', '$translate', 'Userservice',
-	function($scope, $location, $route, $routeParams, Log, Utils, $translate, Userservice) {
+.controller('UserProfileCtrl', ['$scope', '$location', '$route', '$routeParams', 'Log', 'Utils', '$translate', 'Userservice', 'Authinfo',
+	function($scope, $location, $route, $routeParams, Log, Utils, $translate, Userservice, Authinfo) {
+
 		var userid = $route.current.params.uid;
+		$scope.orgName = Authinfo.getOrgName();
 
 		Userservice.getUser(userid, function(data, status) {
 			if (data.success) {
 				$scope.user = data;
-			} else {
+				if ($scope.user.photos)
+				{
+					for (var i in $scope.user.photos) {
+						if ($scope.user.photos[i].type === 'thumbnail')
+						{
+
+							$scope.photoPath = $scope.user.photos[i].value;
+						}
+					} //end for
+				} //endif
+			}
+			else {
 				Log.debug('Get existing user failed. Status: ' + status);
 			}
 		});
@@ -27,6 +40,9 @@ angular.module('wx2AdminWebClientApp')
       date: new Date(),
     }];
 
+		$scope.gotoPath = function(path) {
+			$location.path(path);
+		};
 
 	}
 ]);

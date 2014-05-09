@@ -75,7 +75,14 @@
     "logName" : "Name",
     "logDate" : "Date",
     "logDownload" : "Download",
-    "logAction" : "Action"
+    "logAction" : "Action",
+    "fname" : "First Name",
+    "lname" : "Last Name",
+    "email" : "Email",
+    "org" : "Organization",
+    "title" : "Title",
+    "modDate" : "Last Modification Date",
+    "save" : "Save"
   },
   "common" : {
     "cancel" : "Cancel",
