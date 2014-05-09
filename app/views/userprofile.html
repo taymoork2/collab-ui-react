@@ -1,0 +1,136 @@
+<div class="notification"></div>
+<h3>
+    <a ng-click="gotoPath('/users')"><span id="usertab" translate="tabs.userTab"></span></a> / {{user.displayName}}
+  </h3>
+  <br>
+<div class="admin profile-panel" ng-init="init()"> 
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading panel-users">
+        <div id="userProfile">
+          <h3 class="panel-title users-title">
+            <strong id="subTitleAdd" translate="profilePage.userDetails"></strong>
+          </h3>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <form role="form">
+          <div>
+
+            <div class="profile-logo" ng-hide="photoPath">
+              <i class="fa fa-user fa-5x"></i>
+            </div>
+            <div class="profile-logo"  ng-show="photoPath">
+              <img src="{{photoPath}}"></img>
+            </div>
+
+            <div class="profile-form">
+              
+              <div class="form-group profile-text-input">
+                <label for="firstName" style="width: 150px;" translate="profilePage.fname"></label>
+                <input class="form-control profile-input" type="text" id="fnameField" value="{{user.name.givenName}}"/>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="lastName" style="width: 150px;" translate="profilePage.lname"></label>
+                <input class="form-control profile-input" type="text" id="lnameField" value="{{user.name.familyName}}"/>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="email" style="width: 150px;" translate="profilePage.email"></label>
+                <input class="form-control profile-input" type="text" id="emailField" value="{{user.userName}}"/>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="org" style="width: 150px;" translate="profilePage.org"></label>
+                <input class="form-control profile-input" type="text" id="orgField" value="{{orgName}}"/>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="title" style="width: 150px;" translate="profilePage.title"></label>
+                <input class="form-control profile-input" type="text" id="titleField" value="{{user.title}}"/>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="modDate" style="width: 150px;" translate="profilePage.modDate"></label>
+                <input class="form-control profile-input" type="text" id="modDateField" value=""/>
+              </div>
+
+            </div>
+            <div>
+              <button id="btnSave" class="btn btn-primary pull-right" ng-click="saveUser()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.save"></span></button>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="panel panel-default">
+    <div id="userSupport">
+      <div class="panel-heading panel-users">
+        <h3 class="panel-title users-title">
+          <strong id="listSupportItems" translate="profilePage.userLogs"></strong>
+        </h3>
+      </div>
+
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th><span translate="profilePage.logName"></span></th>
+              <th><span translate="profilePage.logDate"></span></th>
+              <th><span translate="profilePage.logAction"></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="log in userlogs">
+              <td><span ng-if="log.name">{{log.name}}</span></td>
+              <td>{{log.date}}</td>
+              <td><a ng-click="downloadLog(log)">{{'profilePage.logDownload' | translate}}</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default profile-tools-panel">
+  <div id="userSupport">
+    <div class="panel-heading panel-users">
+      <h3 class="panel-title users-title">
+        <strong id="tools" translate="profilePage.tools"></strong>
+      </h3>
+    </div>
+    <div class="form-group">
+      <div class="btn-profile-grp">
+        <button id="btnRequestLogs" class="btn btn-primary btn-profile" ng-click="requestLogs()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.requestLogs"></span></button>
+      </div>
+
+      <div class="btn-profile-grp">
+        <button id="btnResetPwd" class="btn btn-primary btn-profile" ng-click="requestLogs()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.resetPwd"></span></button>
+      </div>
+
+      <div class="btn-profile-grp">
+        <button id="btnNotifyUser" class="btn btn-primary btn-profile" ng-click="requestLogs()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.notifyUser"></span></button>
+      </div>
+
+      <div class="btn-profile-grp">
+        <button id="btnDeleteUser" class="btn btn-primary btn-profile" ng-click="requestLogs()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.deleteUser"></span></button>
+      </div>
+
+      <div class="btn-profile-grp">
+        <button id="btnRemoveUser" class="btn btn-primary btn-profile" ng-click="requestLogs()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.removeUser"></span></button>
+      </div>
+
+    </div>
+  </div>
+
+  <div>
+  </div>
+</div>
+
