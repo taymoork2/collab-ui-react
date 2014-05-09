@@ -48,6 +48,14 @@ angular.module('wx2AdminWebClientApp', [
           templateUrl: 'views/activate.html',
           controller: 'ActivateCtrl'
         })
+        .when('/splunk', {
+          templateUrl: 'views/splunk.html',
+          controller: 'ActivateCtrl'
+        })
+        .when('/userprofile/:uid', {
+          templateUrl: 'views/userprofile.html',
+          controller: 'UserProfileCtrl'
+        })
         .otherwise({
           redirectTo: '/'
         });

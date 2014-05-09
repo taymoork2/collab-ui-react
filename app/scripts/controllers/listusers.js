@@ -205,5 +205,9 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
+      $scope.showUserProfile = function(user) {
+        $location.path('/userprofile/' + user.id);
+      };
+
     }
   ]);
