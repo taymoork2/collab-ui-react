@@ -399,3 +399,7 @@ td a {
   }
 }
 
+input:disabled {  
+  background-color: #eeeeee !important;
+  font-style: italic;
+}

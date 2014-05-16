@@ -2,7 +2,9 @@
   "name": "wx2adminwebclient",
   "version": "0.0.0",
   "dependencies": {
-    "mimelib": "^0.2.14"
+    "mimelib": "^0.2.14",
+    "grunt-protractor-runner": "^0.2.4",
+    "protractor": "^0.22.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

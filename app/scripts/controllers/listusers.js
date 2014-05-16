@@ -124,8 +124,9 @@ angular.module('wx2AdminWebClientApp')
               Notification.notify([entitleResult.msg], entitleResult.type);
             } else {
               Log.error('Failed updating user with entitlements.');
+              Log.error(data);
               entitleResult = {
-                msg: 'Failed to update ' + data.userResponse[0].email + '\'s entitlements.',
+                msg: 'Failed to update ' + user.userName + '\'s entitlements.',
                 type: 'error'
               };
               Notification.notify([entitleResult.msg], entitleResult.type);

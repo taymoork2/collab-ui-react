@@ -297,17 +297,6 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-      //Populating authinfo data if empty.
-      if (Authinfo.isEmpty()) {
-        var token = Storage.get('accessToken');
-        if (token) {
-          Log.debug('Authorizing user... Populating admin data...');
-          Auth.authorize(token, $scope);
-        } else {
-          Log.debug('No accessToken.');
-        }
-      }
-
       $scope.$on('AuthinfoUpdated', function() {
         if (undefined !== $rootScope.services && $rootScope.services.length === 0)
         {

@@ -9,10 +9,10 @@
 /* global protractor */
 
 var testuser = {
-  username: 'adminTestUser@wx2.example.com',
+  username: 'pbr-org-admin@squared2webex.com',
   ssousername: 'adminADSyncTestUser@wx2.example.com',
   password: 'C1sc0123!',
-  orgname: 'WebEx Self-Service Org'
+  orgname: 'SquaredAdminTool'
 };
 
 function randomId() {
@@ -55,7 +55,8 @@ describe('App flow', function() {
         browser.driver.findElement(by.css('#IDToken2')).sendKeys('fakePassword');
         browser.driver.findElement(by.css('#Button1')).click();
       });
-      expect(browser.driver.findElement(by.css('.generic-error')).getText()).toBe('You\'ve entered an incorrect username or password.');
+
+      expect(browser.driver.findElement(by.css('.generic-error')).getText()).toBe('You\'ve entered an incorrect email address or password.');
       expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
     });
 

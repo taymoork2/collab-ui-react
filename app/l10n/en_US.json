@@ -82,7 +82,9 @@
     "org" : "Organization",
     "title" : "Title",
     "modDate" : "Last Modification Date",
-    "save" : "Save"
+    "save" : "Save",
+    "success" : "User successfully updated.",
+    "error" : "Update user failed."
   },
   "common" : {
     "cancel" : "Cancel",
