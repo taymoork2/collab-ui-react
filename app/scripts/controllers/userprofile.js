@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-.controller('UserProfileCtrl', ['$scope', '$location', '$route', '$routeParams', 'Log', 'Utils', '$translate', 'Userservice', 'Authinfo',
-	function($scope, $location, $route, $routeParams, Log, Utils, $translate, Userservice, Authinfo) {
+.controller('UserProfileCtrl', ['$scope', '$location', '$route', '$routeParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config',
+	function($scope, $location, $route, $routeParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config) {
 
 		var userid = $route.current.params.uid;
 		$scope.orgName = Authinfo.getOrgName();
@@ -42,6 +42,35 @@ angular.module('wx2AdminWebClientApp')
 
 		$scope.gotoPath = function(path) {
 			$location.path(path);
+		};
+
+		$scope.updateUser = function() {
+			var userData = {
+				'schemas' : Config.scimSchemas,
+        'title': $scope.user.title,
+        'name' : {
+		      'givenName' : $scope.user.name.givenName,
+		      'familyName' : $scope.user.name.familyName
+		    },
+      };
+
+      Log.debug('Updating user: ' + userid + ' with data: ');
+      Log.debug(userData);
+
+      Userservice.updateUserProfile(userid, userData, function(data, status) {
+				if (data.success) {
+					var successMessage = [];
+					successMessage.push($filter('translate')('profilePage.success'));
+					Notification.notify(successMessage, 'success');
+					$scope.user = data;
+				}
+				else {
+					Log.debug('Update existing user failed. Status: ' + status);
+					var errorMessage = [];
+					errorMessage.push($filter('translate')('profilePage.error'));
+					Notification.notify(errorMessage, 'error');
+				}
+			});
 		};
 
 	}

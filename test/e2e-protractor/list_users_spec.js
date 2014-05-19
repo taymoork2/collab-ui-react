@@ -210,6 +210,8 @@ describe('List users flow', function() {
   // Add User
   describe('Add User', function() {
     var inputEmail;
+    var inputTitle = 'EngTest';
+    var inputLastName = 'testLastName';
 
     it('should add user successfully and increase user count', function() {
       var initialCount;
@@ -251,6 +253,26 @@ describe('List users flow', function() {
                     expect(element(by.id('emailField')).isDisplayed()).toEqual(true);
 
                     expect(element(by.id('emailField')).getText()).toBe(inputEmail);
+
+                    //edit user profile fields and save
+                    element(by.id('titlefield')).sendKeys(inputTitle);
+                    element(by.id('lnamefield')).sendKeys(inputLastName);
+                    element(by.id('btnSave')).click().then(function() {
+                      browser.wait(function() {
+                        browser.sleep(500);
+                        //verify data is there
+                        expect(element(by.id('lnameField'))).toEqual(inputLastName);
+                        expect(element(by.id('titleField'))).toEqual(inputTitle);
+                        
+                        //verify success message
+                        element(by.css('.alertify-log-success')).click();
+                        element.all(by.css('.panel-success-body p')).then(function(rows) {
+                          expect(rows[0].getText()).toContain(inputEmail);
+                          expect(rows[0].getText()).toContain('added successfully');
+                        });
+                      });
+                    });
+
                     element(by.id('usertab')).click();
                   });
                 });

@@ -99,6 +99,29 @@ angular.module('wx2AdminWebClientApp')
             });
         },
 
+        updateUserProfile: function(userid, userData, callback) {
+          var scimUrl = Config.scimUrl + '/' + userid;
+          scimUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
+
+          if (userData) {
+            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http({
+              method: 'PATCH',
+              url: scimUrl,
+              data: userData
+            })
+              .success(function(data, status) {
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function(data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          }
+        },
+
         sendEmail: function(userEmail, adminEmail, callback) {
           var requestBody = {
             'recipientEmail': userEmail,

@@ -183,25 +183,6 @@ describe('App flow', function() {
         });
       });
     });
-
-    // describe('Add multiple users separated with commas and semicolons', function() {
-    //   it('should display input user email in results', function() {
-    //     var randomEmail = 'atlas-' + randomId() + '@example.com';
-    //     element(by.id('usersfield')).clear();
-    //     element(by.id('usersfield')).sendKeys(testuser.username + ', ' + testuser.ssousername + '; ' + randomEmail);
-    //     element(by.id('btnAdd')).click();
-    //     element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
-    //       expect(rows.length).toBe(3);
-    //       expect(rows[0].getText()).toContain(testuser.username);
-    //       expect(rows[0].getText()).toContain('already exists');
-    //       expect(rows[1].getText()).toContain(testuser.ssousername);
-    //       expect(rows[1].getText()).toContain('already exists');
-    //       expect(rows[2].getText()).toContain(randomEmail);
-    //       expect(rows[2].getText()).toContain('added successfully');
-    //     });
-    //   });
-    // });
-
   });
 
   describe('Validate user page', function() {
