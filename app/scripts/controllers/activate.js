@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-	.controller('ActivateCtrl', ['$scope', '$location', '$http', 'Log', 'Activateservice',
+	.controller('ActivateCtrl', ['$scope', '$location', '$http', '$window', 'Log', 'Activateservice',
 
-		function($scope, $location, $http, Log, Activateservice) {
+		function($scope, $location, $http, $window, Log, Activateservice) {
 
 			//initialize ng-show variables
 			$scope.result = {
@@ -18,41 +18,63 @@ angular.module('wx2AdminWebClientApp')
 				$scope.result.resendSuccess = resend;
 			};
 
-			//
-			//var params = $location.search().params;
+			var activateWeb = function() {
+				showHide(true, false, false);
+			};
 
-			$scope.userEmail = $location.search().email;
-			$scope.deviceName = $location.search().deviceName;
-			var pushId = $location.search().pushId;
-			var confirmationCode = $location.search().confirmationCode;
+			var activateErrorWeb = function() {
+				showHide(false, true, false);
+			};
 
-			if (confirmationCode) {
+			var activateMobile = function() {
+				// launch app with URL: squared://confirmation_code_verified
+				$window.open('squared://confirmation_code_verified');
+			};
 
-				// to be changed to the encoded api
-				Activateservice.verifyCode($scope.userEmail, pushId, confirmationCode)
-				.then(function(/*data*/) {
-					// TODO: parse decoded fields from response
-					// $scope.userEmail = data.email;
-					// $scope.deviceName = data.deviceName;
+			var activateErrorMobile = function(errorCode) {
+				// launch app with error URL: squared://confirmation_error_code/xxxx
+				$window.open('squared://confirmation_error_code/' + errorCode);
+			};
 
-					showHide(true, false, false);
+			var encryptedParam = $location.search().eqp;
 
-					// TODO: handle other invalid/expired code condition
-					// showHide(false, true, false);
+			if (encryptedParam) {
 
-					// TODO: launch app if not web
+				Activateservice.activateUser(encryptedParam)
+				.then(function(data) {
+					$scope.userEmail = data.email;
+					$scope.deviceName = data.deviceName;
+					$scope.pushId = data.pushId;
+					$scope.deviceId = data.deviceId;
 
-				}, function(status) {
-					if (status === 409) {
-						Log.error('user ' + $scope.userEmail + ' alread exists');
-						$scope.result.errmsg = 'user ' + $scope.userEmail + ' alread exists';
+					if (!$scope.isWeb) {
+						if (!data.codeException) {
+							activateMobile();
+						} else {
+							activateErrorMobile(data.codeException);
+						}
 					} else {
-						Log.error('Failed to verify code and create user. Status: ' + status);
-						$scope.result.errmsg = 'status: ' + status;
+						if (!data.codeException) {
+							activateWeb();
+						} else {
+							activateErrorWeb();
+						}
+					}
+				}, function(status) {
+					if (!$scope.isWeb) {
+						activateErrorMobile(status);
+					} else {
+						if (status === 409) {
+							$scope.result.errmsg = 'user ' + $scope.userEmail + ' alread exists';
+						} else {
+							$scope.result.errmsg = 'Failed to verify code and create user. Status: ' + status;
+						}
+						Log.error($scope.result.errmsg);
 					}
 				});
 			} else {
-				showHide(false, true, false);
+				$scope.result.errmsg = 'Null param on actiation page';
+				Log.error($scope.result.errmsg);
 			}
 
 			$scope.isIPhone = function() {
@@ -79,10 +101,11 @@ angular.module('wx2AdminWebClientApp')
 
 			$scope.resendCode = function() {
 
-				Activateservice.resendCode($scope.userEmail, pushId, $scope.deviceName)
+				Activateservice.resendCode($scope.userEmail, $scope.pushId, $scope.deviceName, $scope.deviceId)
 				.then(function(data) {
 					if (data) {
 						showHide(false, false, true);
+						$scope.eqp = data.eqp;
 					}
 				}, function(status) {
 					if (status === 404) {
@@ -94,10 +117,6 @@ angular.module('wx2AdminWebClientApp')
 					}
 				});
 
-			};
-
-			$scope.testAction = function() {
-				showHide(false, true, false);
 			};
 		}
 	]);

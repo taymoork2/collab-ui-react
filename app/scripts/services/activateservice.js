@@ -8,26 +8,23 @@ angular.module('wx2AdminWebClientApp')
 			var userUrl = Config.getAdminServiceUrl();
 
 			return {
-
-				// TODO: change to encoded param api
-				verifyCode: function(email, deviceId, code) {
+			
+				activateUser: function(encryptedParam) {
 					var deferred = $q.defer();
 					var requestBody = {
-						'email': email,
-						'confirmationCode': code,
-						'pushId': 'randomdeviceid'
+						'encryptedQueryString': encryptedParam
 					};
 
 					Auth.getAccessToken()
 					.then(function(token) {
 
 						$http.defaults.headers.common.Authorization = 'Bearer ' + token;
-						$http.post(userUrl + 'users/provision', requestBody)
+						$http.post(userUrl + 'users/email/activate', requestBody)
 							.success(function(data) {
 								deferred.resolve(data);
 							})
 							.error(function(data, status) {
-								Log.error('Failed user provisioning.  Status: ' + status);
+								Log.error('Failed user activation.  Status: ' + status);
 								deferred.reject(status);
 							});
 					}, function(reason) {
@@ -37,12 +34,13 @@ angular.module('wx2AdminWebClientApp')
 					return deferred.promise;
 				},
 
-				resendCode: function(email, pushId, deviceName) {
+				resendCode: function(email, pushId, deviceName, deviceId) {
 					var deferred = $q.defer();
 					var requestBody = {
 						'email': email,
 						'pushId': pushId,
-						'deviceName': deviceName
+						'deviceName': deviceName,
+						'deviceId': deviceId
 					};
 
 					Auth.getAccessToken()
