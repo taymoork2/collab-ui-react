@@ -117,7 +117,28 @@ angular.module('wx2AdminWebClientApp')
             }
           }
           return true;
+        },
+
+        isIPhone: function() {
+          if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i)) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+
+        isAndroid: function() {
+          if (navigator.userAgent.match(/Android/i) && navigator.userAgent.match(/mobile/i)) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+
+        isWeb: function() {
+          return !this.isIPhone() && !this.isAndroid();
         }
+
       };
     }
   ]);

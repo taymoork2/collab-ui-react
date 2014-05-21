@@ -9,7 +9,6 @@ angular.module('wx2AdminWebClientApp')
 		    email : $scope.email
 		  };
 
-
 			$http.get('download_urls.json')
 			.success(function(data) {
 				$scope.webClientURL = data.webClientURL;
@@ -19,26 +18,6 @@ angular.module('wx2AdminWebClientApp')
 			.error(function(data, status) {
 				console.log('Failed to read download_url.json.' + data + ' Status: ' + status);
 			});
-
-			$scope.isIPhone = function() {
-				if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) {
-					return true;
-				} else {
-					return false;
-				}
-			};
-
-			$scope.isAndroid = function() {
-				if (navigator.userAgent.match(/Android/i) && navigator.userAgent.match(/mobile/i)) {
-					return true;
-				} else {
-					return false;
-				}
-			};
-
-			$scope.isWeb = function() {
-				return !$scope.isIPhone() && !$scope.isAndroid();
-			};
 
 			var hasJustResetPassword = $location.search().pwdResetSuccess;
 

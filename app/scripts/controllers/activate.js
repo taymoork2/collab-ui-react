@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-	.controller('ActivateCtrl', ['$scope', '$location', '$http', '$window', 'Log', 'Activateservice',
+	.controller('ActivateCtrl', ['$scope', '$location', '$http', '$window', 'Log', 'Utils', 'Activateservice',
 
-		function($scope, $location, $http, $window, Log, Activateservice) {
+		function($scope, $location, $http, $window, Log, Utils, Activateservice) {
 
 			//initialize ng-show variables
 			$scope.result = {
@@ -19,6 +19,8 @@ angular.module('wx2AdminWebClientApp')
 			};
 
 			var activateWeb = function() {
+				$scope.iosDownload = deviceIsAndroid();
+				$scope.androidDownload = deviceIsIPhone();
 				showHide(true, false, false);
 			};
 
@@ -46,8 +48,9 @@ angular.module('wx2AdminWebClientApp')
 					$scope.deviceName = data.deviceName;
 					$scope.pushId = data.pushId;
 					$scope.deviceId = data.deviceId;
+					$scope.deviceUserAgent = data.userAgent;
 
-					if (!$scope.isWeb) {
+					if (!Utils.isWeb()) {
 						if (!data.codeException) {
 							activateMobile();
 						} else {
@@ -61,7 +64,7 @@ angular.module('wx2AdminWebClientApp')
 						}
 					}
 				}, function(status) {
-					if (!$scope.isWeb) {
+					if (!Utils.isWeb()) {
 						activateErrorMobile(status);
 					} else {
 						if (status === 409) {
@@ -77,16 +80,14 @@ angular.module('wx2AdminWebClientApp')
 				Log.error($scope.result.errmsg);
 			}
 
-			$scope.isIPhone = function() {
-				return navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i);
+			var deviceIsIPhone = function() {
+				var platform = $scope.deviceUserAgent;
+				return platform.search(/iPhone/i) > -1 || platform.search(/iPod/i) >-1 || platform.search(/iPad/i) >-1;
 			};
 
-			$scope.isAndroid = function() {
-				return navigator.userAgent.match(/Android/i) && navigator.userAgent.match(/mobile/i);
-			};
-
-			$scope.isWeb = function() {
-				return !$scope.isIPhone() && !$scope.isAndroid();
+			var deviceIsAndroid = function() {
+				var platform = $scope.deviceUserAgent;
+				return platform.search(/Android/i) >-1 && platform.search(/mobile/i) >-1;
 			};
 
 			$http.get('download_urls.json')

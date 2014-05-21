@@ -4,15 +4,15 @@
 <p>{{'downloadPage.thank' | translate}}  </p>
 <p id="account">{{'downloadPage.account' | translate: tlData}}</p>
 
-<div id="iosTxt" ng-show="isIPhone()">
+<div id="iosTxt" ng-show="Utils.isIPhone()">
 <p>{{'downloadPage.install' | translate}} <a ng-href="{{iPhoneURL}}">{{'downloadPage.link' | translate}}</a></p>
 </div>
 
-<div id="androidTxt" ng-show="isAndroid()">
+<div id="androidTxt" ng-show="Utils.isAndroid()">
 <p>{{'downloadPage.install' | translate}} <a ng-href="{{androidURL}}">{{'downloadPage.link' | translate}}</a></p>
 </div>
 
-<div id="webTxt" ng-show="isWeb()">
+<div id="webTxt" ng-show="Utils.isWeb()">
 <p>{{'downloadPage.using' | translate}} <a ng-href="{{webClientURL}}"> {{'downloadPage.squared' | translate}}</a></p>
 </div>
 
