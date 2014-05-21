@@ -24,8 +24,8 @@
              <input type="checkbox" id="{{'btn_'+service}}" ng-model="entitlements[service]" icheck>
              <label style="font-size:15px; padding:5px">{{'usersPage.'+service | translate}}</label>
            </div>
-           
-          
+
+
         </div>
       </div>
 
@@ -42,7 +42,7 @@
 <div class="panel panel-default" ng-show="queryuserslist" id="userslistpanel" ng-controller="ListUsersCtrl">
   <div class="panel-heading panel-users">
     <h3 class="panel-title users-title">
-      <strong> {{'usersPage.existingUsers' | translate}}<span id="totalresults" value="{{totalResults}}">({{totalResults}})</span></strong>
+      <strong> {{'usersPage.existingUsers' | translate}}</strong>
     </h3>
   </div>
   <div class="panel-body">
@@ -68,12 +68,11 @@
         </tr>
       </tbody>
     </table>
+    <div id="queryresults" value="{{queryuserslist.length}}" style="display: none;">{{queryuserslist.length}}</div>
     <ul class="pagination">
-      <li><a id="first-page" ng-click="pagination.firstPage()"><i class="fa fa-angle-double-left"></i></a></li>
       <li><a id="prev-page" ng-click="pagination.prevPage();"><i class="fa fa-angle-left"></i></a></li>
-      <li class="pagination-current"><a>{{pagination.page + 1}}</a></li>
+      <li class="pagination-current"><a>{{page}}</a></li>
       <li><a id="next-page" ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
-      <li><a id="last-page" ng-click="pagination.lastPage()"><i class="fa fa-angle-double-right"></i></a></li>
     </ul>
   </div>
 </div>

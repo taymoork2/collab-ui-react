@@ -1,5 +1,7 @@
 'use strict';
 
+/* global $ */
+
 angular.module('wx2AdminWebClientApp')
   .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope', 'Notification', '$filter',
     function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope, Notification, $filter) {
@@ -14,6 +16,7 @@ angular.module('wx2AdminWebClientApp')
       }
 
       //Initialize variables
+      $scope.page = 1;
       $scope.status = null;
       $scope.results = null;
       $scope.sort = {
@@ -39,11 +42,7 @@ angular.module('wx2AdminWebClientApp')
             {
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
               Log.debug('Returned data.', data.Resources);
-              $scope.totalResults = data.totalResults;
               $scope.queryuserslist = data.Resources;
-              if (data.totalResults !== 0 && data.totalResults !== null && $scope.pagination.perPage !== 0 && $scope.pagination.perPage !== null) {
-                $scope.pagination.numPages = Math.ceil(data.totalResults / $scope.pagination.perPage);
-              }
             }
             else
             {
@@ -209,6 +208,11 @@ angular.module('wx2AdminWebClientApp')
       $scope.showUserProfile = function(user) {
         $location.path('/userprofile/' + user.id);
       };
+
+      $scope.$on('PAGINATION_UPDATED', function(){
+        $scope.page = $scope.pagination.page + 1;
+        $('.pagination-current a').html($scope.page);
+      });
 
     }
   ]);

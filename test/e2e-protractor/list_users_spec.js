@@ -24,6 +24,20 @@ function randomId() {
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 describe('List users flow', function() {
+  beforeEach(function() {
+    this.addMatchers({
+      toBeLessThanOrEqualTo: function() {
+        return {
+          compare: function(actual, expected) {
+            return {
+              pass: actual < expected || actual === expected,
+              message: 'Expected ' + actual + 'to be less than or equal to ' + expected
+            };
+          }
+        };
+      }
+    });
+  });
 
   // Logging in. Write your tests after the login flow is complete.
   describe('Login as non-sso admin user', function() {
@@ -64,17 +78,8 @@ describe('List users flow', function() {
       expect(element(by.css('.pagination-current a')).getText()).toBe('1');
     });
     it('should list 20 or less users', function() {
-      element(by.id('totalresults')).getAttribute('value').then(function(value) {
-        var totalresults = parseInt(value, 10);
-        if (totalresults < 20) {
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBe(totalresults);
-          });
-        } else {
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBe(20);
-          });
-        }
+      element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+        expect(rows.length).toBeLessThanOrEqualTo(20);
       });
     });
   });
@@ -82,83 +87,43 @@ describe('List users flow', function() {
   // Asserting search users.
   describe('search users on page', function() {
     it('should show first page of users based on search string', function() {
-      var initTotal = 0;
-      var afterTotal = 0;
-      element(by.id('totalresults')).getAttribute('value').then(function(value) {
-        initTotal = parseInt(value, 10);
-      });
-
       element(by.id('search-input')).sendKeys(testuser.searchStr).then(function() {
-        element(by.id('totalresults')).getAttribute('value').then(function(value) {
-          afterTotal = parseInt(value, 10);
-          //TEST BROKEN DUE TO SCIM, UNCOMMENT LATER
-          // expect(initTotal).toBeGreaterThan(afterTotal);
-          // if (afterTotal > 0)
-          // {
-          //   element(by.binding('user.userName')).getText().then(function(uname) {
-          //     expect(uname).toContain(testuser.searchStr);
-          //   });
-          // }
+        browser.sleep(1000);
+        element(by.id('queryresults')).getAttribute('value').then(function(value) {
+          var queryresults = parseInt(value, 10);
+          if (queryresults > 0) {
+            element(by.binding('user.userName')).getText().then(function(uname) {
+              expect(uname).toContain(testuser.searchStr);
+            });
+          }
           element(by.id('search-input')).clear();
         });
       });
-
-    });
-    it('should list 20 or less users', function() {
-      element(by.id('totalresults')).getAttribute('value').then(function(value) {
-        var totalresults = parseInt(value, 10);
-        if (totalresults < 20) {
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBe(totalresults);
-          });
-        } else {
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBe(20);
-          });
-        }
-      });
     });
   });
+
 
   // Asserting pagination of users.
   describe('Paginating users returned', function() {
     it('should paginate the total number of users', function() {
       //pagination is only relevant if total matches exceeds 20
-      element(by.id('totalresults')).getAttribute('value').then(function(value) {
-        var totalresults = parseInt(value, 10);
-        if (totalresults > 20) {
-          var numPages = Math.ceil(totalresults / 20);
-          //Initial page
-          expect(element(by.css('.pagination-current a')).getText()).toBe('1');
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBe(20);
-          });
-          //last page
-          element(by.id('last-page')).click();
-          expect(element(by.css('.pagination-current a')).getText()).toBe((numPages).toString());
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBeGreaterThan(0);
-          });
-          //back to first page
-          element(by.id('first-page')).click();
-          expect(element(by.css('.pagination-current a')).getText()).toBe('1');
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBe(20);
-          });
-          //next page
-          element(by.id('next-page')).click();
-          expect(element(by.css('.pagination-current a')).getText()).toBe('2');
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBeGreaterThan(0);
-          });
-          //previous page
-          element(by.id('prev-page')).click();
-          expect(element(by.css('.pagination-current a')).getText()).toBe('1');
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            expect(rows.length).toBe(20);
-            element(by.id('search-input')).clear();
-          });
-        }
+      //Initial page
+      expect(element(by.css('.pagination-current a')).getText()).toBe('1');
+      element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+        expect(rows.length).toBe(20);
+      });
+      //next page
+      element(by.id('next-page')).click();
+      expect(element(by.css('.pagination-current a')).getText()).toBe('2');
+      element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+        expect(rows.length).toBeGreaterThan(0);
+      });
+      //previous page
+      element(by.id('prev-page')).click();
+      expect(element(by.css('.pagination-current a')).getText()).toBe('1');
+      element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+        expect(rows.length).toBe(20);
+        element(by.id('search-input')).clear();
       });
     });
   });
@@ -166,9 +131,9 @@ describe('List users flow', function() {
   // Asserting sorting of users.
   describe('Sorting users', function() {
     it('should sort users by name', function() {
-      element(by.id('totalresults')).getAttribute('value').then(function(value) {
-        var totalresults = parseInt(value, 10);
-        if (totalresults > 0) {
+      element(by.id('queryresults')).getAttribute('value').then(function(value) {
+        var queryresults = parseInt(value, 10);
+        if (queryresults > 1) {
           //get first user
           var user = null;
           element.all(by.repeater('user in queryuserslist')).then(function(rows) {
@@ -176,31 +141,28 @@ describe('List users flow', function() {
           });
           //Click on name sort and expect the first user not to be the same
           element(by.id('name-sort')).click().then(function() {
-            //TEST BROKEN DUE TO SCIM, UNCOMMENT LATER
-            // element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            //   expect(rows[0].getText()).not.toBe(user);
-            // });
+            element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+              expect(rows[0].getText()).not.toBe(user);
+            });
           });
         }
       });
     });
+
     it('should sort users by username', function() {
-      element(by.id('username-sort')).click();
-      element(by.id('totalresults')).getAttribute('value').then(function(value) {
-        var totalresults = parseInt(value, 10);
-        if (totalresults > 0) {
+      element(by.id('queryresults')).getAttribute('value').then(function(value) {
+        var queryresults = parseInt(value, 10);
+        if (queryresults > 1) {
           //get first user
           var user = null;
           element.all(by.repeater('user in queryuserslist')).then(function(rows) {
             user = rows[0].getText();
           });
-          //Click on username sort and expect the first user to be last now
+          //Click on username sort and expect the first user not to be the same
           element(by.id('username-sort')).click().then(function() {
-            element(by.id('last-page')).click();
-            //TEST BROKEN DUE TO SCIM, UNCOMMENT LATER
-            // element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            //   expect(rows[rows.length-1].getText()).toBe(user);
-            // });
+            element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+              expect(rows[0].getText()).not.toBe(user);
+            });
           });
         }
       });
@@ -214,10 +176,6 @@ describe('List users flow', function() {
     var inputLastName = 'testLastName';
 
     it('should add user successfully and increase user count', function() {
-      var initialCount;
-      element(by.id('totalresults')).getAttribute('value').then(function(count) {
-        initialCount = parseInt(count, 10);
-      });
       inputEmail = randomId() + '@example.com';
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inputEmail).then(function() {
@@ -263,7 +221,7 @@ describe('List users flow', function() {
                         //verify data is there
                         expect(element(by.id('lnameField'))).toEqual(inputLastName);
                         expect(element(by.id('titleField'))).toEqual(inputTitle);
-                        
+
                         //verify success message
                         element(by.css('.alertify-log-success')).click();
                         element.all(by.css('.panel-success-body p')).then(function(rows) {
@@ -282,15 +240,6 @@ describe('List users flow', function() {
           }); //end add
         });
       });
-      //TEST BROKEN DUE TO SCIM, UNCOMMENT LATER
-      // element.all(by.repeater('userResult in results.resultList')).then(function(rows) {
-      //   expect(rows.length).toBe(1);
-      //   expect(rows[0].getText()).toContain(inputEmail);
-      //   expect(rows[0].getText()).toContain('added successfully');
-      //   element(by.id('totalresults')).getAttribute('value').then(function(count) {
-      //     expect(parseInt(count, 10)).toBeGreaterThan(initialCount);
-      //   });
-      // });
     });
   });
 
@@ -322,6 +271,4 @@ describe('List users flow', function() {
   //     });
   //   });
   // });
-
-
 });

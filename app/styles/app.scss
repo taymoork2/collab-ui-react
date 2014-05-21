@@ -37,7 +37,7 @@ $headers_color: #777777;
 }
 
 body {
-  min-width: 1152px !important;
+  min-width: 960px !important;
 }
 
 h2, h3 {
@@ -388,7 +388,7 @@ label {
 
 .profile-text-input {
   padding-bottom: 15px;
-  padding-top: 15px; 
+  padding-top: 15px;
 }
 
 td a {
@@ -399,7 +399,7 @@ td a {
   }
 }
 
-input:disabled {  
+input:disabled {
   background-color: #eeeeee !important;
   font-style: italic;
 }
