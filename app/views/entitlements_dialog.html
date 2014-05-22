@@ -10,7 +10,7 @@
       <input type="checkbox" name="{{service}}" ng-model="entitlements[service]" icheck>
     </div>
     <span style="font-size:15px; padding:10px">
-      {{'usersPage.' + service | translate}}
+      {{getServiceName(service)}}
     </span>
   </div>
 </div>

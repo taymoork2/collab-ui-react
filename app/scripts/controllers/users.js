@@ -289,10 +289,10 @@ angular.module('wx2AdminWebClientApp')
       var setEntitlementList = function(){
         for (var i=0;i<$rootScope.services.length;i++)
         {
-          $scope.entitlements[$rootScope.services[i]] = false;
-          if ($rootScope.services[i] === 'webExSquared')
+          $scope.entitlements[$rootScope.services[i].sqService] = false;
+          if ($rootScope.services[i].sqService === 'webExSquared')
           {
-            $scope.entitlements[$rootScope.services[i]] = true;
+            $scope.entitlements[$rootScope.services[i].sqService] = true;
           }
         }
       };

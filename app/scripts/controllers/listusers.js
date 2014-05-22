@@ -140,7 +140,7 @@ angular.module('wx2AdminWebClientApp')
         var entList = [];
         for (var i=0;i<$rootScope.services.length;i++)
         {
-          var service = $rootScope.services[i];
+          var service = $rootScope.services[i].sqService;
           entList.push(getFeature(service, entitlements[service]));
         }
         return entList;

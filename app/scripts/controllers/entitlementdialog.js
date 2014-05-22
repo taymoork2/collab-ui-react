@@ -3,13 +3,13 @@
 /* global $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('entitlementDialogCtrl', ['$scope', '$modalInstance', 'data', '$rootScope', '$filter',
-    function($scope, $modalInstance, data, $rootScope, $filter) {
+  .controller('entitlementDialogCtrl', ['$scope', '$modalInstance', 'data', '$rootScope',
+    function($scope, $modalInstance, data, $rootScope) {
       $scope.username = data.userName;
       $scope.entitlements = {};
       for (var i = 0; i < $rootScope.services.length; i++) {
-        var service = $rootScope.services[i];
-        var ciService = $filter('translate')('entitlements.' + service);
+        var service = $rootScope.services[i].sqService;
+        var ciService = $rootScope.services[i].ciService;
         if (data.entitlements && data.entitlements.indexOf(ciService) > -1) {
           $scope.entitlements[service] = true;
         } else {
@@ -39,6 +39,16 @@ angular.module('wx2AdminWebClientApp')
         //Checks webExSquared if any other entitlement is selected.
         if (elementName !== 'webExSquared' && $scope.entitlements[elementName] === true) {
           $('input[name=webExSquared]').iCheck('check');
+        }
+      };
+
+      $scope.getServiceName = function (service) {
+        for (var i = 0; i < $rootScope.services.length; i++) {
+          var svc = $rootScope.services[i];
+          if (svc.sqService === service)
+          {
+            return svc.displayName;
+          }
         }
       };
 
