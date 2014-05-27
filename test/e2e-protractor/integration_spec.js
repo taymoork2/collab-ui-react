@@ -14,9 +14,7 @@ var testuser = {
   orgname: 'SquaredAdminTool'
 };
 
-function randomId() {
-  return (Math.random() + 1).toString(36).slice(2);
-}
+var utils = require('./testUtils.js');
 
 // Notes:
 // - State is conserved between each describe and it blocks.
@@ -167,7 +165,7 @@ describe('App flow', function() {
 
     describe('Add a new user', function() {
       it('should display input user email in results with success message', function() {
-        var inputEmail = 'atlas-' + randomId() + '@example.com';
+        var inputEmail = utils.randomTestEmail();
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(inputEmail);
         element(by.id('btnAdd')).click();

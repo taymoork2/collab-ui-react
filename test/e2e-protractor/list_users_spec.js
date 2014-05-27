@@ -15,9 +15,7 @@ var testuser = {
   searchStr: 'fake'
 };
 
-function randomId() {
-  return (Math.random() + 1).toString(36).slice(2);
-}
+var utils = require('./testUtils.js');
 
 // Notes:
 // - State is conserved between each despribe and it blocks.
@@ -176,7 +174,8 @@ describe('List users flow', function() {
     var inputLastName = 'testLastName';
 
     it('should add user successfully and increase user count', function() {
-      inputEmail = randomId() + '@example.com';
+      inputEmail = utils.randomTestEmail();
+
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inputEmail).then(function() {
         //entitle for call initiation
