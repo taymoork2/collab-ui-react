@@ -4,9 +4,6 @@
     "subTitleAdd" : "Add new users",
     "subTitleEnable" : "Entitle users",
     "email" : "Email",
-    "squaredCallInitiation" : "Call-Initiation",
-    "webExSquared" : "Webex-Squared",
-    "squaredFusionUC" : "Fusion UC",
     "clear" : "Clear",
     "add" : "Add",
     "update" : "Update",
@@ -19,11 +16,6 @@
     "userInput" : "Enter email addresses separated by commas or semi-colons",
     "active": "Active",
     "inactive" : "Inactive"
-  },
-  "entitlements" : {
-    "webExSquared" : "webex-squared",
-    "squaredCallInitiation" : "squared-call-initiation",
-    "squaredFusionUC" : "squared-fusion-uc"
   },
   "tabs" : {
     "homeTab" : "Home",

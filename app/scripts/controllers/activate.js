@@ -67,11 +67,7 @@ angular.module('wx2AdminWebClientApp')
 					if (!Utils.isWeb()) {
 						activateErrorMobile(status);
 					} else {
-						if (status === 409) {
-							$scope.result.errmsg = 'user ' + $scope.userEmail + ' alread exists';
-						} else {
-							$scope.result.errmsg = 'Failed to verify code and create user. Status: ' + status;
-						}
+						$scope.result.errmsg = 'Failed to verify code and create user. Status: ' + status;
 						Log.error($scope.result.errmsg);
 					}
 				});
@@ -105,8 +101,8 @@ angular.module('wx2AdminWebClientApp')
 				Activateservice.resendCode($scope.userEmail, $scope.pushId, $scope.deviceName, $scope.deviceId)
 				.then(function(data) {
 					if (data) {
-						showHide(false, false, true);
 						$scope.eqp = data.eqp;
+						showHide(false, false, true);
 					}
 				}, function(status) {
 					if (status === 404) {

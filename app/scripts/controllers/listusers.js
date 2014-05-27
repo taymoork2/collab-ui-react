@@ -135,8 +135,9 @@ angular.module('wx2AdminWebClientApp')
 
       var getUserEntitlementList = function(entitlements) {
         var entList = [];
-        for (var i = 0; i < $rootScope.services.length; i++) {
-          var service = $rootScope.services[i];
+        for (var i = 0; i< $rootScope.services.length ; i++)
+        {
+          var service = $rootScope.services[i].sqService;
           entList.push(getFeature(service, entitlements[service]));
         }
         return entList;

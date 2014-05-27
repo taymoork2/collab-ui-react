@@ -289,10 +289,12 @@ angular.module('wx2AdminWebClientApp')
       var setEntitlementList = function(){
         for (var i=0;i<$rootScope.services.length;i++)
         {
-          $scope.entitlements[$rootScope.services[i]] = false;
-          if ($rootScope.services[i] === 'webExSquared')
+          var svc = $rootScope.services[i].sqService;
+
+          $scope.entitlements[svc] = false;
+          if (svc === 'webExSquared')
           {
-            $scope.entitlements[$rootScope.services[i]] = true;
+            $scope.entitlements[svc] = true;
           }
         }
       };
@@ -312,6 +314,16 @@ angular.module('wx2AdminWebClientApp')
         }
         Log.debug(entitleList);
         return entitleList;
+      };
+
+      $scope.getServiceName = function (service) {
+        for (var i = 0; i < $rootScope.services.length; i++) {
+          var svc = $rootScope.services[i];
+          if (svc.sqService === service)
+          {
+            return svc.displayName;
+          }
+        }
       };
 
       //set intitially when loading the page
