@@ -20,9 +20,9 @@
           <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
           <br>
           <div class="entitle-btn-grp">
-            <div class="btn-group right" ng-repeat="service in services" ng-if="service.sqService!='webExSquared'">
-             <input type="checkbox" id="{{'btn_'+service.sqService}}" ng-model="entitlements[service.sqService]" icheck>
-             <label style="font-size:15px; padding:5px">{{service.displayName}}</label>
+            <div class="btn-group right" ng-repeat="(service, val) in entitlements" ng-if="service!='webExSquared'">
+             <input type="checkbox" id="{{'btn_'+service}}" ng-model="entitlements[service]" icheck>
+             <label style="font-size:15px; padding:5px">{{getServiceName(service)}}</label>
            </div>
 
 

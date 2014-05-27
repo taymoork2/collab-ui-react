@@ -253,7 +253,7 @@ describe('List users flow', function() {
       expect(modal.isPresent()).toBe(true);
       modal.element.all(by.css('.icheckbox_square-blue')).then(function(items) {
         expect(items.length).toBe(3);
-        expect(items[1].getAttribute('class')).toContain('checked');
+        expect(items[0].getAttribute('class')).toContain('checked');
         expect(items[2].getAttribute('class')).toContain('checked');
       });
       element(by.css('button.close')).click();
