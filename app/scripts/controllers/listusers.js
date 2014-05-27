@@ -3,12 +3,12 @@
 /* global $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope', 'Notification', '$filter',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope, Notification, $filter) {
+  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope', 'Notification', '$filter', '$q',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope, Notification, $filter, $q) {
 
-      function Feature (name, state) {
+      function Feature(name, state) {
         this.entitlementName = name;
-        this.entitlementState = state? 'ACTIVE' : 'INACTIVE';
+        this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
       }
 
       function getFeature(service, state) {
@@ -38,14 +38,11 @@ angular.module('wx2AdminWebClientApp')
         var startIndex = $scope.pagination.page * usersperpage + 1;
         UserListService.listUsers(startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function(data, status, searchStr) {
           if (data.success) {
-            if ($rootScope.searchStr === searchStr)
-            {
+            if ($rootScope.searchStr === searchStr) {
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
               Log.debug('Returned data.', data.Resources);
               $scope.queryuserslist = data.Resources;
-            }
-            else
-            {
+            } else {
               Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
             }
           } else {
@@ -95,16 +92,16 @@ angular.module('wx2AdminWebClientApp')
 
       $scope.changeEntitlement = function(user) {
         var dlg = $dialogs.create('views/entitlements_dialog.html', 'entitlementDialogCtrl', user, Authinfo.getServices());
-        dlg.result.then(function(entitlements){
+        dlg.result.then(function(entitlements) {
           Log.debug('Entitling user.', user);
           Userservice.updateUsers([{
             'address': user.userName
-          }], getUserEntitlementList(entitlements), function(data){
+          }], getUserEntitlementList(entitlements), function(data) {
             var entitleResult = {
-                msg: null,
-                type: 'null'
-              };
-            if(data.success) {
+              msg: null,
+              type: 'null'
+            };
+            if (data.success) {
               getUserList();
               var userStatus = data.userResponse[0].status;
               if (userStatus === 200) {
@@ -138,8 +135,7 @@ angular.module('wx2AdminWebClientApp')
 
       var getUserEntitlementList = function(entitlements) {
         var entList = [];
-        for (var i=0;i<$rootScope.services.length;i++)
-        {
+        for (var i = 0; i < $rootScope.services.length; i++) {
           var service = $rootScope.services[i];
           entList.push(getFeature(service, entitlements[service]));
         }
@@ -195,12 +191,9 @@ angular.module('wx2AdminWebClientApp')
       };
 
       $scope.getStatus = function(status) {
-        if (status === 'active')
-        {
+        if (status === 'active') {
           return $filter('translate')('usersPage.active');
-        }
-        else
-        {
+        } else {
           return $filter('translate')('usersPage.inactive');
         }
       };
@@ -209,10 +202,63 @@ angular.module('wx2AdminWebClientApp')
         $location.path('/userprofile/' + user.id);
       };
 
-      $scope.$on('PAGINATION_UPDATED', function(){
+      $scope.$on('PAGINATION_UPDATED', function() {
         $scope.page = $scope.pagination.page + 1;
         $('.pagination-current a').html($scope.page);
       });
+
+      $scope.exportCSV = function() {
+
+        var deferred = $q.defer();
+        var users = [];
+        var page = 0;
+        var exportedUsers = [];
+
+        var getUsersBatch = function(startIndex) {
+          UserListService.listUsers(startIndex, 0, 'userName', 'ascending', function(data, status) {
+            if (data.success) {
+              users = users.concat(data.Resources);
+              console.log(users);
+              console.log(users.length);
+              page++;
+              getUsersBatch(page * 1000 + 1);
+            } else if (status===500){
+              Log.debug('No more users to return. Exporting to file... ');
+              $('#export-icon').html('<i class=\'fa fa-file-text\'></i>');
+              //formatting the data for export
+              for(var i=0; i < users.length; i++){
+                var exportedUser = {};
+                var entitlements = '';
+
+                exportedUser.userName = users[i].userName;
+
+                if(users[i].hasOwnProperty('name') && users[i].name.familyName !== '' && users[i].name.givenName !== '' ){
+                  exportedUser.name = users[i].name.givenName + ' ' + users[i].name.familyName;
+                } else {
+                  exportedUser.name = 'N/A';
+                }
+
+                for(var entitlement in users[i].entitlements){
+                  entitlements += users[i].entitlements[entitlement] + ' ';
+                }
+
+                exportedUser.entitlements = entitlements;
+
+                exportedUsers.push(exportedUser);
+              }
+              console.log(exportedUsers);
+              deferred.resolve(exportedUsers);
+            } else {
+              Log.debug('Exporting users failed. Status ' + status );
+              deferred.reject(status);
+            }
+          }, 'webex-squared');
+        };
+
+        $('#export-icon').html('<i class=\'fa fa-refresh fa-spin\'></i>');
+        getUsersBatch(1);
+        return deferred.promise;
+      };
 
     }
   ]);

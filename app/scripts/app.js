@@ -7,7 +7,8 @@ angular.module('wx2AdminWebClientApp', [
   'ngRoute',
   'ui.bootstrap',
   'dialogs',
-  'pascalprecht.translate'
+  'pascalprecht.translate',
+  'ngCsv'
 ])
   .config(['$routeProvider', '$translateProvider',
     function($routeProvider, $translateProvider) {

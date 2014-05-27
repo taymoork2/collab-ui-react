@@ -5,22 +5,37 @@ angular.module('wx2AdminWebClientApp')
     function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils) {
 
       var token = Storage.get('accessToken');
-      var filter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
+      var searchfilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
       var attributes = 'attributes=name,userName,entitlements';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
-      var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
 
       return {
 
-        listUsers: function(startIndex, count, sortBy, sortOrder, callback) {
+        listUsers: function(startIndex, count, sortBy, sortOrder, callback, entitlement) {
 
           var listUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
           var searchStr;
+          var filter;
+          var scimSearchUrl = null;
+          var encodedSearchStr = '';
 
-          if ($rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined') {
-            var encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
+          if(typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined'){
+            //It seems CI does not support 'ANDing' filters in this situation.
+            filter = searchfilter + '%20and%20entitlements%20eq%20%22' +  window.encodeURIComponent(entitlement) +'%22';
+            scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
+            encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
             listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
+          } else if($rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined') {
+            filter = searchfilter;
+            scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
+            encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
+            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+            searchStr = $rootScope.searchStr;
+          } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
+            filter = 'filter=entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
+            scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
+            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
           }
 
           if (startIndex && startIndex > 0) {
