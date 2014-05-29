@@ -259,6 +259,12 @@ describe('List users flow', function() {
     });
   });
 
+  describe('Exporting to CSV', function() {
+    it('should display the CSV export button', function() {
+      expect(element(by.id('export-btn')).isDisplayed()).toBe(true);
+    });
+  });
+
   // Ignoring this last logout() to avoid protractor synchronization issues.
   // Warning: Only do this if this is the last test in the suite.
   // // Log Out

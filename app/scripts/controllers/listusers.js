@@ -219,35 +219,31 @@ angular.module('wx2AdminWebClientApp')
           UserListService.listUsers(startIndex, 0, 'userName', 'ascending', function(data, status) {
             if (data.success) {
               users = users.concat(data.Resources);
-              console.log(users);
-              console.log(users.length);
               page++;
               getUsersBatch(page * 1000 + 1);
             } else if (status===500){
               Log.debug('No more users to return. Exporting to file... ');
               $('#export-icon').html('<i class=\'fa fa-file-text\'></i>');
+              if(users.length===0){
+                Log.debug('No users found.');
+                return;
+              }
               //formatting the data for export
               for(var i=0; i < users.length; i++){
                 var exportedUser = {};
                 var entitlements = '';
-
                 exportedUser.userName = users[i].userName;
-
                 if(users[i].hasOwnProperty('name') && users[i].name.familyName !== '' && users[i].name.givenName !== '' ){
                   exportedUser.name = users[i].name.givenName + ' ' + users[i].name.familyName;
                 } else {
                   exportedUser.name = 'N/A';
                 }
-
                 for(var entitlement in users[i].entitlements){
                   entitlements += users[i].entitlements[entitlement] + ' ';
                 }
-
                 exportedUser.entitlements = entitlements;
-
                 exportedUsers.push(exportedUser);
               }
-              console.log(exportedUsers);
               deferred.resolve(exportedUsers);
             } else {
               Log.debug('Exporting users failed. Status ' + status );

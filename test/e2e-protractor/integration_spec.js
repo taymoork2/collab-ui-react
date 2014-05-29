@@ -150,6 +150,7 @@ describe('App flow', function() {
           expect(rows[0].getText()).toContain('already exists');
           browser.sleep(500);
           element(by.css('.fa-times')).click();
+          browser.sleep(500);
         });
       });
     });

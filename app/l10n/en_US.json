@@ -15,7 +15,9 @@
     "existingUsers" : "Existing Users",
     "userInput" : "Enter email addresses separated by commas or semi-colons",
     "active": "Active",
-    "inactive" : "Inactive"
+    "inactive" : "Inactive",
+    "csvBtnTitle" : "Export to CSV",
+    "csvFilename" : "exported_users.csv"
   },
   "tabs" : {
     "homeTab" : "Home",
