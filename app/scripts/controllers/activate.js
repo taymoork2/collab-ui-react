@@ -78,12 +78,12 @@ angular.module('wx2AdminWebClientApp')
 
 			var deviceIsIPhone = function() {
 				var platform = $scope.deviceUserAgent;
-				return platform.search(/iPhone/i) > -1 || platform.search(/iPod/i) >-1 || platform.search(/iPad/i) >-1;
+				return platform.search(/iOS/i) > -1 || platform.search(/iPhone/i) > -1 || platform.search(/iPod/i) >-1 || platform.search(/iPad/i) >-1;
 			};
 
 			var deviceIsAndroid = function() {
 				var platform = $scope.deviceUserAgent;
-				return platform.search(/Android/i) >-1 && platform.search(/mobile/i) >-1;
+				return platform.search(/Android/i) >-1;
 			};
 
 			$http.get('download_urls.json')
