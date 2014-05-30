@@ -16,10 +16,6 @@ exports.randomTestEmail = function() {
 	return 'atlas-' + this.randomId() + '@wx2.example.com';
 };
 
-exports.randomTestGmail = function() {
-	return 'phtest77+' + this.randomId() + '@wx2.example.com';
-};
-
 exports.sendRequest = function(options) {
   var defer = protractor.promise.defer();
 

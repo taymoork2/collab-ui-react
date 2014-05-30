@@ -30,12 +30,12 @@ angular.module('wx2AdminWebClientApp')
 
 			var activateMobile = function() {
 				// launch app with URL: squared://confirmation_code_verified
-				$window.open('squared://confirmation_code_verified');
+				$window.location.href = 'squared://confirmation_code_verified';
 			};
 
 			var activateErrorMobile = function(errorCode) {
 				// launch app with error URL: squared://confirmation_error_code/xxxx
-				$window.open('squared://confirmation_error_code/' + errorCode);
+				$window.location.href = 'squared://confirmation_error_code/' + errorCode;
 			};
 
 			var encryptedParam = $location.search().eqp;
@@ -98,7 +98,7 @@ angular.module('wx2AdminWebClientApp')
 
 			$scope.resendCode = function() {
 
-				Activateservice.resendCode($scope.userEmail, $scope.pushId, $scope.deviceName, $scope.deviceId)
+				Activateservice.resendCode(encryptedParam)
 				.then(function(data) {
 					if (data) {
 						$scope.eqp = data.eqp;

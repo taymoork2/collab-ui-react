@@ -16,7 +16,7 @@ var utils = require('./testUtils.js');
 var config = require('./testConfig.js');
 
 var token = null;
-var testEmail = utils.randomTestGmail();
+var testEmail = 'phtest99@gmail.com';  // static email for testing self registration
 var deviceUserAgent = config.deviceUserAgent.iPhone;
 var encryptedQueryParam = null;
 

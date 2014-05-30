@@ -34,19 +34,16 @@ angular.module('wx2AdminWebClientApp')
 					return deferred.promise;
 				},
 
-				resendCode: function(email, pushId, deviceName, deviceId) {
+				resendCode: function(eqp) {
 					var deferred = $q.defer();
 					var requestBody = {
-						'email': email,
-						'pushId': pushId,
-						'deviceName': deviceName,
-						'deviceId': deviceId
+						'encryptedQueryString': eqp
 					};
 
 					Auth.getAccessToken()
 					.then(function(token) {
 						$http.defaults.headers.common.Authorization = 'Bearer ' + token;
-						$http.post(userUrl + 'users/email/verify', requestBody)
+						$http.post(userUrl + 'users/email/reverify', requestBody)
 							.success(function(data) {
 								deferred.resolve(data);
 							})
