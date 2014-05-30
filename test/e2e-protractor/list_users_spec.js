@@ -167,6 +167,21 @@ describe('List users flow', function() {
     });
   });
 
+  describe('Log management', function() {
+    it('should display logs for user', function() {
+      element(by.id('search-input')).sendKeys(testuser.username);
+      browser.sleep(1000);
+      element(by.css('td a')).click();
+      browser.sleep(1000);
+      expect(element(by.id('logs-panel')).isDisplayed()).toEqual(true);
+      element.all(by.repeater('log in userLogs')).then(function(rows) {
+        expect(rows.length).toBeGreaterThan(0);
+      });
+      element(by.id('search-input')).clear();
+      element(by.id('usertab')).click();
+    });
+  });
+
   // Add User
   describe('Add User', function() {
     var inputEmail;

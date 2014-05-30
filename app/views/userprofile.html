@@ -3,7 +3,7 @@
     <a ng-click="gotoPath('/users')"><span id="usertab" translate="tabs.userTab"></span></a> / {{user.displayName}}
   </h3>
   <br>
-<div class="admin profile-panel" ng-init="init()"> 
+<div class="admin profile-panel" ng-init="init()">
   <div>
     <div class="panel panel-default">
       <div class="panel-heading panel-users">
@@ -26,7 +26,7 @@
             </div>
 
             <div class="profile-form">
-              
+
               <div class="form-group profile-text-input">
                 <label for="firstName" style="width: 150px;" translate="profilePage.fname"></label>
                 <input class="form-control profile-input" type="text" id="fnameField" ng-model="user.name.givenName" value="{{user.name.givenName}}"/>
@@ -69,7 +69,7 @@
   </div>
 
 
-  <div class="panel panel-default">
+  <div class="panel panel-default" ng-show="userLogs" id="logs-panel">
     <div id="userSupport">
       <div class="panel-heading panel-users">
         <h3 class="panel-title users-title">
@@ -87,7 +87,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="log in userlogs">
+            <tr ng-repeat="log in userLogs">
               <td><span ng-if="log.name">{{log.name}}</span></td>
               <td>{{log.date}}</td>
               <td><a ng-click="downloadLog(log)">{{'profilePage.logDownload' | translate}}</a></td>

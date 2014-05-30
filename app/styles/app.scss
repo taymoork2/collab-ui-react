@@ -146,7 +146,7 @@ label {
 .form-group {
   padding: 10px;
   margin-bottom: 0px;
-  padding-bottom: 0px;
+  padding-bottom: 20px;
   padding-top: 0px;
 }
 
@@ -422,6 +422,10 @@ input:disabled {
     transition: opacity 1s;
     -webkit-transition: opacity 1s;
   }
+}
+
+#btnSave {
+  margin-right: 15px;
 }
 
 
