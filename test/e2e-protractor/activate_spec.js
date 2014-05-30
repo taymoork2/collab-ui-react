@@ -111,7 +111,7 @@ describe('Self Registration Activation Page', function() {
       expect(element(by.id('iosDownload')).isDisplayed()).toBe(false);
 
       // setting up next test
-      setup(config.deviceUserAgent.androidHTC1);
+      setup(config.deviceUserAgent.android);
     });
   });
 

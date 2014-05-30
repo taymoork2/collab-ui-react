@@ -15,7 +15,7 @@ exports.adminServiceUrl = {
 };
 
 exports.deviceUserAgent = {
-	androidHTC1: 'wx2_android',
+	android: 'wx2-android/1 (Android 4.4.2; LGE Hammerhead / Google Nexus 5; )[preload=false;locale=en_US;clientidbase=android-google]',
 	iPhone: 'wx2_iOS',
 	iPad: 'Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53',
 	iPod: 'Mozilla/5.0 (iPod touch; CPU iPhone OS 7_0_3 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B511 Safari/9537.53'
