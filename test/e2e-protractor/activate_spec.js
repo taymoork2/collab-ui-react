@@ -172,13 +172,4 @@ describe('Self Registration Activation Page', function() {
     });
   });
 
-  describe('Desktop activation using resent activation link', function() {
-    it('should activate successfully', function() {
-      browser.get('#/activate?eqp=' + resentEqp);
-      expect(element(by.id('provisionSuccess')).isDisplayed()).toBe(true);
-      expect(element(by.id('codeExpired')).isDisplayed()).toBe(false);
-      expect(element(by.id('resendSuccess')).isDisplayed()).toBe(false);
-    });
-  });
-
 });
