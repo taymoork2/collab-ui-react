@@ -15,6 +15,7 @@ var testuser = {
 };
 
 var utils = require('./testUtils.js');
+var deleteUtils = require('./deleteUtils.js');
 
 // Notes:
 // - State is conserved between each describe and it blocks.
@@ -165,8 +166,8 @@ describe('App flow', function() {
     });
 
     describe('Add a new user', function() {
+      var inputEmail = utils.randomTestEmail();
       it('should display input user email in results with success message', function() {
-        var inputEmail = utils.randomTestEmail();
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(inputEmail);
         element(by.id('btnAdd')).click();
@@ -179,6 +180,15 @@ describe('App flow', function() {
           expect(rows[0].getText()).toContain('added successfully');
           browser.sleep(500);
           element(by.css('.fa-times')).click();
+
+        });
+      });
+
+      it('should delete added user', function() {
+        deleteUtils.deleteUser(inputEmail).then(function(message) {
+          expect(message).toEqual(200);
+        }, function(data) {
+          expect(data.status).toEqual(200);
         });
       });
     });
