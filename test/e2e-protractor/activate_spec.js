@@ -14,6 +14,8 @@
 
 var utils = require('./testUtils.js');
 var config = require('./testConfig.js');
+var deleteUtils = require('./deleteUtils.js');
+
 
 var token = null;
 var testEmail = utils.randomTestGmail();
@@ -170,6 +172,15 @@ describe('Self Registration Activation Page', function() {
         });
       });
     });
+
+    it('should delete added user', function() {
+      deleteUtils.deleteUser(testEmail).then(function(message) {
+        expect(message).toEqual(200);
+      }, function(data) {
+        expect(data.status).toEqual(200);
+      });
+    });
+
   });
 
 });

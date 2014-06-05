@@ -16,6 +16,9 @@ var testuser = {
 };
 
 var utils = require('./testUtils.js');
+var deleteUtils = require('./deleteUtils.js');
+
+var inputEmail;
 
 // Notes:
 // - State is conserved between each despribe and it blocks.
@@ -183,7 +186,6 @@ describe('List users flow', function() {
 
   // Add User
   describe('Add User', function() {
-    var inputEmail;
     var inputTitle = 'EngTest';
     var inputLastName = 'testLastName';
 
@@ -254,6 +256,7 @@ describe('List users flow', function() {
         });
       });
     });
+
   });
 
   // Update entitlements
@@ -278,6 +281,17 @@ describe('List users flow', function() {
       expect(element(by.id('export-btn')).isDisplayed()).toBe(true);
     });
   });
+
+  describe('Clean up added user', function() {
+    it('should delete added user', function() {
+      deleteUtils.deleteUser(inputEmail).then(function(message) {
+        expect(message).toEqual(200);
+      }, function(data) {
+        expect(data.status).toEqual(200);
+      });
+    });
+  });
+
 
   // Ignoring this last logout() to avoid protractor synchronization issues.
   // Warning: Only do this if this is the last test in the suite.
