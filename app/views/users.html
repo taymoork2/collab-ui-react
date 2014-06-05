@@ -1,12 +1,11 @@
 <div class="notification"></div>
 <div class="admin" ng-init="init()">
   <h2 translate="usersPage.manageUsers"></h2>
-  <br>
-  <div class="panel panel-default">
 
-    <div class="panel-heading panel-users">
+  <div class="panel panel-default">
+    <div class="panel-heading panel-heading-default">
       <div id="addUsers">
-        <h3 class="panel-title users-title">
+        <h3 class="panel-title panel-title-default">
           <strong id="subTitleAdd" ng-show="isAddEnabled()" translate="usersPage.subTitleAdd"></strong>
           <strong id="subTitleEnable" ng-show="!isAddEnabled()" translate="usersPage.subTitleEnable"></strong>
         </h3>
@@ -24,12 +23,10 @@
              <input type="checkbox" id="{{'btn_'+service}}" ng-model="entitlements[service]" icheck>
              <label style="font-size:15px; padding:5px">{{getServiceName(service)}}</label>
            </div>
+         </div>
+       </div>
 
-
-        </div>
-      </div>
-
-      <div class="form-group">
+       <div class="form-group">
         <div id="btnCancel" class="btn btn-link pull-right" ng-click="clearPanel()"><span translate="usersPage.clear"></span></div>
         <button id="btnAdd" class="btn btn-primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.add"></span></button>
         <button id="btnEntitle" class="btn btn-primary pull-right" ng-show="!isAddEnabled()" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.update"></span></button>
@@ -40,10 +37,10 @@
 
 
 <div class="panel panel-default" ng-show="queryuserslist" id="userslistpanel" ng-controller="ListUsersCtrl">
-  <div class="panel-heading panel-users">
-    <h3 class="panel-title users-title">
+  <div class="panel-heading panel-heading-default">
+    <h3 class="panel-title panel-title-default">
       <strong> {{'usersPage.existingUsers' | translate}}</strong>
-      <span title="{{'usersPage.csvBtnTitle' | translate}}" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}"><span id="export-icon"><i class="fa fa-file-text"></i></span></span>
+      <div id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled"><span id="export-icon"><i class="fa fa-file-text"></i></span></div>
     </h3>
   </div>
   <div class="panel-body">

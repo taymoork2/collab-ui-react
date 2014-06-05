@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter',
+    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter) {
 
       $scope.init = function () {
         setPlaceholder();

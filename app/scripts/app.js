@@ -31,7 +31,7 @@ angular.module('wx2AdminWebClientApp', [
         })
         .when('/orgs', {
           templateUrl: 'views/organizations.html',
-          controller: 'UsersCtrl'
+          controller: 'OrganizationsCtrl'
         })
         .when('/templates', {
           templateUrl: 'views/templates.html',
@@ -77,6 +77,7 @@ angular.module('wx2AdminWebClientApp', [
       $rootScope.Localize = Localize;
       $rootScope.Utils = Utils;
       $rootScope.services = [];
+      $rootScope.exporting = false;
 
       //Enable logging
       $rootScope.debug = true;

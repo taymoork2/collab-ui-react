@@ -48,7 +48,11 @@
     "squared" : "Squared."
   },
   "orgsPage" : {
-    "title" : "MANAGE ORGANIZATIONS"
+    "title" : "MANAGE ORGANIZATIONS",
+    "subTitleOrgs": "Organizations Tools",
+    "exportBtn": "Global CSV Export",
+    "csvFilename": "users.csv",
+    "loadingMsg": "Exporting data... <i class='fa fa-refresh fa-spin' style='margin-left:10px;'></i>"
   },
   "templatesPage" : {
     "title" : "MANAGE TEMPLATES"

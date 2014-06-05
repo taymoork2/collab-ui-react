@@ -82,25 +82,6 @@ describe('List users flow', function() {
     });
   });
 
-  // Asserting search users.
-  describe('search users on page', function() {
-    it('should show first page of users based on search string', function() {
-      element(by.id('search-input')).sendKeys(testuser.searchStr).then(function() {
-        browser.sleep(1000);
-        element(by.id('queryresults')).getAttribute('value').then(function(value) {
-          var queryresults = parseInt(value, 10);
-          if (queryresults > 0) {
-            element(by.binding('user.userName')).getText().then(function(uname) {
-              expect(uname).toContain(testuser.searchStr);
-            });
-          }
-          element(by.id('search-input')).clear();
-        });
-      });
-    });
-  });
-
-
   // Asserting pagination of users.
   describe('Paginating users returned', function() {
     it('should paginate the total number of users', function() {
@@ -163,6 +144,24 @@ describe('List users flow', function() {
             });
           });
         }
+      });
+    });
+  });
+
+// Asserting search users.
+  describe('search users on page', function() {
+    it('should show first page of users based on search string', function() {
+      element(by.id('search-input')).sendKeys(testuser.searchStr).then(function() {
+        browser.sleep(1000);
+        element(by.id('queryresults')).getAttribute('value').then(function(value) {
+          var queryresults = parseInt(value, 10);
+          if (queryresults > 0) {
+            element(by.binding('user.userName')).getText().then(function(uname) {
+              expect(uname).toContain(testuser.searchStr);
+            });
+          }
+          element(by.id('search-input')).clear();
+        });
       });
     });
   });

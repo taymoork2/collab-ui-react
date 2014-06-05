@@ -3,8 +3,8 @@
 /* global $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope', 'Notification', '$filter', '$q',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope, Notification, $filter, $q) {
+  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope', 'Notification', '$filter',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope, Notification, $filter) {
 
       function Feature(name, state) {
         this.entitlementName = name;
@@ -208,53 +208,9 @@ angular.module('wx2AdminWebClientApp')
         $('.pagination-current a').html($scope.page);
       });
 
-      $scope.exportCSV = function() {
-
-        var deferred = $q.defer();
-        var users = [];
-        var page = 0;
-        var exportedUsers = [];
-
-        var getUsersBatch = function(startIndex) {
-          UserListService.listUsers(startIndex, 0, 'userName', 'ascending', function(data, status) {
-            if (data.success) {
-              users = users.concat(data.Resources);
-              page++;
-              getUsersBatch(page * 1000 + 1);
-            } else if (status===500){
-              Log.debug('No more users to return. Exporting to file... ');
-              $('#export-icon').html('<i class=\'fa fa-file-text\'></i>');
-              if(users.length===0){
-                Log.debug('No users found.');
-                return;
-              }
-              //formatting the data for export
-              for(var i=0; i < users.length; i++){
-                var exportedUser = {};
-                var entitlements = '';
-                exportedUser.userName = users[i].userName;
-                if(users[i].hasOwnProperty('name') && users[i].name.familyName !== '' && users[i].name.givenName !== '' ){
-                  exportedUser.name = users[i].name.givenName + ' ' + users[i].name.familyName;
-                } else {
-                  exportedUser.name = 'N/A';
-                }
-                for(var entitlement in users[i].entitlements){
-                  entitlements += users[i].entitlements[entitlement] + ' ';
-                }
-                exportedUser.entitlements = entitlements;
-                exportedUsers.push(exportedUser);
-              }
-              deferred.resolve(exportedUsers);
-            } else {
-              Log.debug('Exporting users failed. Status ' + status );
-              deferred.reject(status);
-            }
-          }, 'webex-squared');
-        };
-
-        $('#export-icon').html('<i class=\'fa fa-refresh fa-spin\'></i>');
-        getUsersBatch(1);
-        return deferred.promise;
+      $scope.exportBtn = { disabled: false };
+      $scope.exportCSV = function(){
+        return UserListService.exportCSV($scope);
       };
 
     }

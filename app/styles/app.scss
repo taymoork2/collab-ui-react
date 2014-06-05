@@ -48,6 +48,7 @@ h2, h3 {
   border-radius: 7px;
   -moz-border-radius: 7px;
   margin-bottom: 30px;
+  margin-top: 30px;
 }
 
 th {
@@ -71,16 +72,16 @@ table th, .table td {
   margin-left: 5px;
 }
 
+.panel-title-default {
+  color:#777777 !important;
+}
+
 .panel-heading {
   padding: 15px;
 }
 
-.panel-users {
+.panel-heading-default {
   background-color: #EBEBEB !important;
-}
-
-.users-title {
-  color:#777777 !important;
 }
 
 .panel-body {
@@ -411,6 +412,8 @@ input:disabled {
 
 #export-btn {
   display: inline-block;
+  padding: 0;
+  line-height: 0;
   font-size: 1.25em;
   margin-left: 10px;
   opacity:0.5;
@@ -428,4 +431,17 @@ input:disabled {
   margin-right: 15px;
 }
 
+#global-export-btn {
+
+}
+
+#geb-wrapper {
+  display: inline-block;
+}
+
+#btncover {
+  position: absolute;
+  width: 164px;
+  height: 40px;
+}
 

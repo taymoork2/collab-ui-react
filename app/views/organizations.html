@@ -1,4 +1,20 @@
-<div class="admin">
-  <h2>{{'orgsPage.title' | translate}}</h2>
-  <br>
+<h2>{{'orgsPage.title' | translate}}</h2>
+<div class="panel panel-default">
+  <div class="panel-heading panel-heading-default">
+    <div id="org-tools">
+      <h3 class="panel-title panel-title-default">
+        <strong id="subTitleOrgs" translate="orgsPage.subTitleOrgs" ng-click="globalExport()"></strong>
+      </h3>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div id="btncover"></div>
+      <button type="button" id="geb-wrapper" ng-csv="exportCSV()" filename="{{ 'orgsPage.csvFilename' | translate }}" ng-disabled="exportBtn.disabled">
+      <div id="global-export-btn" ng-disabled="exportBtn.disabled" class="btn btn-default"><span ng-bind-html="exportBtn.title"></span>
+      </div>
+    </button>
+  </div>
 </div>
+
+
