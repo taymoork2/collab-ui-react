@@ -3,11 +3,31 @@
 /* global $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('OrganizationsCtrl', ['$rootScope', '$scope', 'UserListService', 'Authinfo', 'Storage', 'Log', 'Auth', '$filter',
-    function($rootScope, $scope, UserListService, Authinfo, Storage, Log, Auth, $filter) {
+  .controller('OrganizationsCtrl', ['$rootScope','$scope', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Auth', 'UserListService',
+    function($rootScope, $scope, Storage, Log, $filter, Orgservice, Authinfo, Auth, UserListService) {
 
-      //Populating authinfo data if empty.
-      if (Authinfo.isEmpty()) {
+      $scope.orgName = Authinfo.getOrgName();
+
+      var getorgInfo = function () {
+        Orgservice.getOrg(function(data, status) {
+          if (data.success) {
+            $scope.org = data;
+            if (data.services)
+            {
+              $scope.svcs = data.services;
+            }
+
+          } else {
+            Log.debug('Get existing org failed. Status: ' + status);
+          }
+        });
+      };
+
+      if (!Authinfo.isEmpty()) {
+        getorgInfo();
+      }
+      else
+      {
         var token = Storage.get('accessToken');
         if (token) {
           Log.debug('Authorizing user... Populating admin data...');
@@ -15,8 +35,6 @@ angular.module('wx2AdminWebClientApp')
         } else {
           Log.debug('No accessToken.');
         }
-      } else {
-        Log.debug('Authinfo data found.');
       }
 
       //Making sure the search field is cleared
@@ -42,5 +60,12 @@ angular.module('wx2AdminWebClientApp')
         return UserListService.exportCSV($scope);
       };
 
+      $scope.$on('AuthinfoUpdated', function() {
+        getorgInfo();
+      });
+
+      $scope.resetOrg = function() {
+        getorgInfo();
+      };
     }
   ]);
