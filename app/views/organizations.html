@@ -1,4 +1,82 @@
-<div class="admin">
-  <h2>{{'orgsPage.title' | translate}}</h2>
+<div class="notification"></div>
+  <h2 translate="orgsPage.title"></h2>
   <br>
+<div class="admin profile-panel" ng-init="init()">
+  <div>
+    <div class="panel panel-default">
+      <div class="panel-heading panel-users">
+        <div id="orgTitle">
+          <h3 class="panel-title users-title">
+            <strong translate="orgsPage.orgDetails"></strong>
+          </h3>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <form role="form">
+          <div>
+
+            <div>
+
+              <div class="form-group profile-text-input">
+                <label for="displayName" style="width: 150px;" translate="orgsPage.displayName"></label>
+                <input class="form-control profile-input" type="text" id="displayName" ng-model="org.displayName" value="{{org.displayName}}"/>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="services" style="width: 150px; vertical-align: top" translate="orgsPage.services"></label>
+                <div class="profile-input">
+                  <ul ng-repeat="svc in svcs">
+                    <li>{{svc}}</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="estimatedSize" style="width: 150px;" translate="orgsPage.estimatedSize"></label>
+                <input class="form-control profile-input" type="text" id="estimatedSize" ng-model="org.estimatedSize" value="{{org.estimatedSize}}"/>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="domains" style="width: 150px;" translate="orgsPage.domains"></label>
+                <input class="form-control profile-input" type="text" id="domains" value="{{orgDomains}}" disabled/>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="orgAdmins" style="width: 150px;" translate="orgsPage.orgAdmins"></label>
+                <input class="form-control profile-input" type="text" id="orgAdmins" value="{{org.email}}" disabled//>
+              </div>
+
+              <div class="form-group profile-text-input">
+                <label for="totalUsers" style="width: 150px;" translate="orgsPage.totalUsers"></label>
+                <input class="form-control profile-input" type="text" id="totalUsers" value="{{totalUsers}}" disabled/>
+              </div>
+
+              <div class="form-group">
+                <label for="dirSync" style="width: 150px;" translate="orgsPage.dirSync"></label>
+                <input class="profile-input" type="checkbox" id="dirSync" value="{{org.dirsyncEnabled}}" disabled/>
+              </div>
+
+              <div class="form-group">
+                <label for="sso" style="width: 150px;" translate="orgsPage.sso"></label>
+                <input class="profile-input" type="checkbox" id="sso" value="{{org.ssoEnabled}}" disabled/>
+              </div>
+
+            </div>
+            <div>
+              <button id="btnSave" style="display:none" class="btn btn-primary pull-right" ng-click="updateOrg()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="orgsPage.update"></span></button>  
+            </div>
+            <div>
+              <button id="btnReset" class="btn btn-primary pull-right" ng-click="resetOrg()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="orgsPage.reset"></span></button>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </div>
+
+</div>
+

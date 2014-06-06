@@ -35,6 +35,8 @@ angular.module('wx2AdminWebClientApp')
 
       scimUrl: 'https://identity.webex.com/identity/scim/%s/v1/Users',
 
+      scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
+
       scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
 
       usersperpage: 20,

@@ -48,7 +48,19 @@
     "squared" : "Squared."
   },
   "orgsPage" : {
-    "title" : "MANAGE ORGANIZATIONS"
+    "title" : "MANAGE ORGANIZATIONS",
+    "orgDetails" : "Organization Details",
+    "displayName" : "Display Name",
+    "services" : "Services",
+    "estimatedSize" : "Estimated Size",
+    "domains" : "Domains",
+    "orgAdmins" : "Organization Admins",
+    "totalUsers" : "Total Users",
+    "update" : "Update",
+    "reset" : "Refresh",
+    "dirSync" : "Dirsync Enabled",
+    "sso" : "SSO Enabled"
+
   },
   "templatesPage" : {
     "title" : "MANAGE TEMPLATES"

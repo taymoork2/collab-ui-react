@@ -31,7 +31,7 @@ angular.module('wx2AdminWebClientApp', [
         })
         .when('/orgs', {
           templateUrl: 'views/organizations.html',
-          controller: 'UsersCtrl'
+          controller: 'OrganizationsCtrl'
         })
         .when('/templates', {
           templateUrl: 'views/templates.html',
