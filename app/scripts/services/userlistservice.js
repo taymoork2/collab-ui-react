@@ -114,7 +114,7 @@ angular.module('wx2AdminWebClientApp')
                 deferred.resolve(exportedUsers);
               } else {
                 Log.debug('Exporting users failed. Status ' + status);
-                deferred.reject(status);
+                deferred.reject('Exporting users failed. Status ' + status);
               }
             }, 'webex-squared');
           };

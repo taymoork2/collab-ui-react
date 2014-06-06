@@ -31,7 +31,7 @@
 //   describe('Navigating to organization tab', function() {
 //     it('clicking on orgs tab should show the org info', function() {
 //       browser.driver.wait(function() {
-//         browser.waitForAngualar();
+//         browser.waitForAngular();
 //       }).then (function() {
 //         browser.driver.findElement(by.css('li[heading="Organizations"]')).click();
 //         browser.driver.wait(function() {
@@ -50,5 +50,5 @@
 //     });
 //   });
 
-  
+
 // });

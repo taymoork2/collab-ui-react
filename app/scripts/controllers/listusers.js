@@ -210,7 +210,12 @@ angular.module('wx2AdminWebClientApp')
 
       $scope.exportBtn = { disabled: false };
       $scope.exportCSV = function(){
-        return UserListService.exportCSV($scope);
+        var promise = UserListService.exportCSV($scope);
+        promise.then(null, function(error){
+          Notification.notify(Array.new(error), 'error');
+        });
+
+        return promise;
       };
 
     }

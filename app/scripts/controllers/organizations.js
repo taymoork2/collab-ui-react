@@ -3,8 +3,12 @@
 /* global $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('OrganizationsCtrl', ['$rootScope','$scope', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Auth', 'UserListService',
-    function($rootScope, $scope, Storage, Log, $filter, Orgservice, Authinfo, Auth, UserListService) {
+  .controller('OrganizationsCtrl', ['$rootScope','$scope', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Auth', 'UserListService', 'Notification',
+    function($rootScope, $scope, Storage, Log, $filter, Orgservice, Authinfo, Auth, UserListService, Notification) {
+
+      //Initialize
+      Notification.init($scope);
+      $scope.popup = Notification.popup;
 
       $scope.orgName = Authinfo.getOrgName();
 
@@ -40,7 +44,9 @@ angular.module('wx2AdminWebClientApp')
       //Making sure the search field is cleared
       $('#search-input').val('');
 
+      //A div used to cover the export button when it's disabled.
       $('#btncover').hide();
+
       $scope.exportBtn = {
         title: $filter('translate')('orgsPage.exportBtn'),
         disabled: false
@@ -57,7 +63,12 @@ angular.module('wx2AdminWebClientApp')
       });
 
       $scope.exportCSV = function() {
-        return UserListService.exportCSV($scope);
+        var promise = UserListService.exportCSV($scope);
+        promise.then(null, function(error){
+          Notification.notify(Array.new(error), 'error');
+        });
+
+        return promise;
       };
 
       $scope.$on('AuthinfoUpdated', function() {
