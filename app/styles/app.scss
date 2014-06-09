@@ -17,7 +17,7 @@ $headers_color: #777777;
 
 /******** Resets & Globals **********/
 .container {
-  width: 1087px;
+  width: 1000px;
   overflow: none;
 }
 
@@ -448,7 +448,7 @@ input:disabled {
 
 .metrics-refresh {
   position: absolute;
-  top: 500px;
+  top: 275px;
   text-align: center;
   width: 1057px;
 }
@@ -460,6 +460,17 @@ input:disabled {
 
 .org-panel {
   width: 750px;
+}
+
+.tab-panel {
+  width: 160px;
+  float: left;
+  padding: 10px;
+}
+
+.content-panel {
+  position: absolute;
+  left: 160px;
 }
 
 

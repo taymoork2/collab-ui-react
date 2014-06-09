@@ -63,7 +63,6 @@ describe('List users flow', function() {
       });
 
       expect(browser.getCurrentUrl()).toContain('/users');
-      expect(element(by.css('h2')).getText()).toContain('MANAGE USERS');
       //check to make sure add users panel is visible
       expect(element(by.id('usersfield')).isDisplayed()).toEqual(true);
       //This button is now covered by another <ins> element.
@@ -219,7 +218,6 @@ describe('List users flow', function() {
                     expect(element(by.id('btnRequestLogs')).isDisplayed()).toEqual(true);
                     expect(element(by.id('btnDeleteUser')).isDisplayed()).toEqual(true);
                     expect(element(by.id('btnResetPwd')).isDisplayed()).toEqual(true);
-                    expect(element(by.id('userSupport')).isDisplayed()).toEqual(true);
                     //validate user profile is for correct user
                     expect(element(by.id('fnameField')).isDisplayed()).toEqual(true);
                     expect(element(by.id('lnameField')).isDisplayed()).toEqual(true);

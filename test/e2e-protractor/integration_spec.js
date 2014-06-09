@@ -67,7 +67,7 @@ describe('App flow', function() {
       });
 
       expect(browser.getCurrentUrl()).toContain('/users');
-      expect(element(by.css('h2')).getText()).toContain('MANAGE USERS');
+      expect(element(by.id('userslistpanel')).isDisplayed()).toBe(true);
     });
 
   }); //State is logged-in
@@ -198,7 +198,7 @@ describe('App flow', function() {
     it('should have a tab bar', function() {
       expect(element(by.id('tabs')).isDisplayed()).toBe(true);
       element.all(by.repeater('tab in tabs')).then(function(tabCount) {
-        expect(tabCount.length).toBe(12);
+        expect(tabCount.length).toBe(10);
       });
     });
 
@@ -208,15 +208,6 @@ describe('App flow', function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
         expect(browser.getCurrentUrl()).toContain('/users');
-      });
-    });
-
-    it('clicking on policies tab should change the view', function() {
-      browser.driver.findElement(by.css('li[heading="Policies"]')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('tabs'));
-      }).then(function() {
-        expect(browser.getCurrentUrl()).toContain('/policies');
       });
     });
 
@@ -236,7 +227,7 @@ describe('App flow', function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
         expect(browser.getCurrentUrl()).toContain('/orgs');
-        expect(element(by.css('h2')).getText()).toContain('MANAGE ORGANIZATIONS');
+        expect(element(by.id('orgTitle')).isDisplayed()).toBe(true);
       });
     });
 

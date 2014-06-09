@@ -37,20 +37,12 @@ angular.module('wx2AdminWebClientApp', [
           templateUrl: 'views/templates.html',
           controller: 'UsersCtrl'
         })
-        .when('/policies', {
-          templateUrl: 'views/policies.html',
-          controller: 'UsersCtrl'
-        })
         .when('/reports', {
           templateUrl: 'views/reports.html',
           controller: 'ReportsCtrl'
         })
         .when('/activate', {
           templateUrl: 'views/activate.html',
-          controller: 'ActivateCtrl'
-        })
-        .when('/splunk', {
-          templateUrl: 'views/splunk.html',
           controller: 'ActivateCtrl'
         })
         .when('/userprofile/:uid', {

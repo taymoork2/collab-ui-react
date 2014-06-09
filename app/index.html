@@ -67,15 +67,17 @@
         </div><!-- /.container-fluid -->
       </nav>
 
-      <div  class="container" ng-hide="!Utils.isAdminPage()" ng-controller="TabsCtrl">
-        <tabset id="tabs" type="navType">
-          <tab ng-repeat="tab in tabs" heading="{{getTabTitle(tab.title)}}" active="tab.active" select="changeTab(tab.path)">
-          </tab>
-        </tabset>
-        <hr width='100%'>
-      </div>
+      <div>
+        <div  class="tab-panel" ng-hide="!Utils.isAdminPage()" ng-controller="TabsCtrl">
+          <tabset id="tabs" vertical="true" type="navType">
+            <tab ng-repeat="tab in tabs" heading="{{getTabTitle(tab.title)}}" active="tab.active" select="changeTab(tab.path)">
+            </tab>
+          </tabset>
+          <hr width='100%'>
+        </div>
 
-      <div class="container" ng-view=""></div>
+        <div class="container content-panel" ng-view=""></div>
+      </div>
 
       <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
       <script>

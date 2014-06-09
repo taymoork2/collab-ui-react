@@ -8,20 +8,17 @@ angular.module('wx2AdminWebClientApp')
 				title: 'tabs.homeTab',
 				path: '/home'
 			}, {
-				title: 'tabs.orgTab',
-				path: '/orgs'
-			}, {
 				title: 'tabs.userTab',
 				path: '/users'
 			}, {
-				title: 'tabs.templateTab',
-				path: '/templates'
-			}, {
-				title: 'tabs.policyTab',
-				path: '/policies'
-			}, {
 				title: 'tabs.reportTab',
 				path: '/reports'
+			}, {
+				title: 'tabs.orgTab',
+				path: '/orgs'
+			}, {
+				title: 'tabs.templateTab',
+				path: '/templates'
 			}];
 
 			$scope.navType = 'pills';
