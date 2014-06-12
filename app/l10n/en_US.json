@@ -25,7 +25,8 @@
     "userTab" : "User Accounts",
     "templateTab" : "Templates",
     "policyTab" : "Policies",
-    "reportTab" : "Reports"
+    "reportTab" : "Reports",
+    "logsTab" : "Logs"
   },
   "index" : {
     "welcome" : "Welcome",
@@ -74,17 +75,12 @@
   "profilePage" : {
     "userProfile" : "User Profile",
     "userDetails" : "User Details",
-    "userLogs" : "User Logs",
     "tools" : "Tools",
     "requestLogs" : "Request Client Logs",
     "resetPwd" : "Reset Password",
     "notifyUser" : "Notify User",
     "deleteUser" : "Delete User",
     "removeUser" : "Remove User",
-    "logName" : "Name",
-    "logDate" : "Date",
-    "logDownload" : "Download",
-    "logAction" : "Action",
     "fname" : "First Name",
     "lname" : "Last Name",
     "email" : "Email",
@@ -94,6 +90,20 @@
     "save" : "Save",
     "success" : "User successfully updated.",
     "error" : "Update user failed."
+  },
+  "logsPage" : {
+    "subtitleLogs" : "Search for logs",
+    "inputlabel" :"Email",
+    "listlogsbtn" : "Search",
+    "userLogs" : "User Logs",
+    "logName" : "Name",
+    "logDate" : "Date",
+    "logDownload" : "Download",
+    "logAction" : "Action",
+    "errEmptyinput" : "Search input cannot be empty.",
+    "errUsernotfound" : "Could not find user: ",
+    "errLogsnotfound" : "No logs have been found for the current user.",
+    "errLogqueryfail" : "Failed to retrieve logs. Status: "
   },
   "common" : {
     "cancel" : "Cancel",

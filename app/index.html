@@ -42,7 +42,6 @@
           <ul class="nav navbar-nav navbar-right" ng-controller="NavigationCtrl" ng-show="loggedIn && Utils.isAdminPage()" >
             <li ng-show="username">{{'index.welcome' | translate}}, {{username}}</li>
             <li ng-show="orgname">({{orgname}})</li>
-
           </ul>
 
           <div ng-hide="!Utils.isAdminPage()" ng-controller="SearchCtrl">
@@ -67,17 +66,16 @@
         </div><!-- /.container-fluid -->
       </nav>
 
-      <div>
-        <div  class="tab-panel" ng-hide="!Utils.isAdminPage()" ng-controller="TabsCtrl">
-          <tabset id="tabs" vertical="true" type="navType">
-            <tab ng-repeat="tab in tabs" heading="{{getTabTitle(tab.title)}}" active="tab.active" select="changeTab(tab.path)">
-            </tab>
-          </tabset>
-          <hr width='100%'>
-        </div>
-
-        <div class="container content-panel" ng-view=""></div>
+      <div  class="tab-panel" ng-hide="!Utils.isAdminPage()" ng-controller="TabsCtrl">
+        <tabset id="tabs" vertical="true" type="navType">
+          <tab ng-repeat="tab in tabs" heading="{{getTabTitle(tab.title)}}" active="tab.active" select="changeTab(tab.path)">
+          </tab>
+        </tabset>
+        <hr width='100%'>
       </div>
+
+      <div class="container content-panel" ng-view=""></div>
+
 
       <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
       <script>
@@ -115,6 +113,7 @@
     <script src="bower_components/angular-translate/angular-translate.js"></script>
     <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
     <script src="bower_components/amcharts/dist/amcharts/amcharts.js"></script>
+    <script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
@@ -149,6 +148,7 @@
     <script src="scripts/services/orgservice.js"></script>
     <script src="bower_components/amcharts/dist/amcharts/pie.js"></script>
     <script src="scripts/controllers/organizations.js"></script>
+    <script src="scripts/controllers/logs.js"></script>
     <!-- endbuild -->
     <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
   </body>

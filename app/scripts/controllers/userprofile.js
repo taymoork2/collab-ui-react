@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UserProfileCtrl', ['$scope', '$location', '$route', '$routeParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config', 'LogService',
-    function($scope, $location, $route, $routeParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config, LogService) {
+  .controller('UserProfileCtrl', ['$scope', '$location', '$route', '$routeParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config',
+    function($scope, $location, $route, $routeParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config) {
 
       var userid = $route.current.params.uid;
       $scope.orgName = Authinfo.getOrgName();
@@ -20,27 +20,6 @@ angular.module('wx2AdminWebClientApp')
           } //endif
         } else {
           Log.debug('Get existing user failed. Status: ' + status);
-        }
-      });
-
-      //Retrieving logs for user
-      LogService.listLogs(userid, function(data, status){
-        if(data.success){
-          $scope.userLogs = [];
-          //parse the data
-          for(var index in data.logDetails) {
-            var logdata = data.logDetails[index].name.split('/');
-            var log = {
-              orgId: logdata[0],
-              userId: logdata[1],
-              clientType: logdata[2],
-              name: logdata[3],
-              date: data.logDetails[index].last_modified
-            };
-            $scope.userLogs.push(log);
-          }
-        } else {
-          Log.debug('Failed to retrieve user logs. Status: '+ status);
         }
       });
 

@@ -195,12 +195,12 @@ describe('App flow', function() {
   });
 
   describe('Validate user page', function() {
-    it('should have a tab bar', function() {
-      expect(element(by.id('tabs')).isDisplayed()).toBe(true);
-      element.all(by.repeater('tab in tabs')).then(function(tabCount) {
-        expect(tabCount.length).toBe(10);
-      });
-    });
+    // it('should have a tab bar', function() {
+    //   expect(element(by.id('tabs')).isDisplayed()).toBe(true);
+    //   element.all(by.repeater('tab in tabs')).then(function(tabCount) {
+    //     expect(tabCount.length).toBe(10);
+    //   });
+    // });
 
     it('clicking on home tab should change the view', function() {
       browser.driver.findElement(by.css('li[heading="Home"]')).click();

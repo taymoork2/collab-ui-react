@@ -49,6 +49,10 @@ angular.module('wx2AdminWebClientApp', [
           templateUrl: 'views/userprofile.html',
           controller: 'UserProfileCtrl'
         })
+        .when('/logs', {
+          templateUrl: 'views/logs.html',
+          controller: 'LogsCtrl'
+        })
         .otherwise({
           redirectTo: '/'
         });

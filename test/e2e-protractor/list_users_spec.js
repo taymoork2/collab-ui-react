@@ -168,21 +168,6 @@ describe('List users flow', function() {
     });
   });
 
-  describe('Log management', function() {
-    it('should display logs for user', function() {
-      element(by.id('search-input')).sendKeys(testuser.username);
-      browser.sleep(1000);
-      element(by.css('td a')).click();
-      browser.sleep(1000);
-      expect(element(by.id('logs-panel')).isDisplayed()).toEqual(true);
-      element.all(by.repeater('log in userLogs')).then(function(rows) {
-        expect(rows.length).toBeGreaterThan(0);
-      });
-      element(by.id('search-input')).clear();
-      element(by.id('usertab')).click();
-    });
-  });
-
   // Add User
   describe('Add User', function() {
     var inputTitle = 'EngTest';
@@ -215,7 +200,6 @@ describe('List users flow', function() {
                     //check user profile
                     element(by.css('td a')).click();
                     //validate buttons and log panel is visible
-                    expect(element(by.id('btnRequestLogs')).isDisplayed()).toEqual(true);
                     expect(element(by.id('btnDeleteUser')).isDisplayed()).toEqual(true);
                     expect(element(by.id('btnResetPwd')).isDisplayed()).toEqual(true);
                     //validate user profile is for correct user
@@ -290,15 +274,16 @@ describe('List users flow', function() {
     });
   });
 
-
   // Ignoring this last logout() to avoid protractor synchronization issues.
   // Warning: Only do this if this is the last test in the suite.
-  // // Log Out
+  // Log Out
   // describe('Log Out', function() {
   //   it('should log out', function() {
-  //     element(by.id('setting-bar')).click().then(function(){
+  //     element(by.id('setting-bar')).click();
+  //     browser.driver.wait(function() {
+  //       return browser.driver.isElementPresent(by.id('logout-btn'));
+  //     }).then(function() {
   //       element(by.id('logout-btn')).click();
-  //       browser.ignoreSynchronization = true;
   //     });
   //   });
   // });

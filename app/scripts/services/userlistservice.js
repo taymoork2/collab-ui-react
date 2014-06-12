@@ -87,7 +87,7 @@ angular.module('wx2AdminWebClientApp')
                 $compile(angular.element('#global-export-btn').html($filter('translate')('orgsPage.exportBtn')))(scope);
                 $rootScope.exporting = false;
                 $rootScope.$broadcast('EXPORT_FINISHED');
-                if(scope.exportBtn){
+                if (scope.exportBtn) {
                   $('#btncover').hide();
                 }
 
@@ -122,13 +122,32 @@ angular.module('wx2AdminWebClientApp')
           $('#export-icon').html('<i class=\'fa fa-refresh fa-spin\'></i>');
           $compile(angular.element('#global-export-btn').html($filter('translate')('orgsPage.loadingMsg')))(scope);
           $rootScope.exporting = true;
-          if(scope.exportBtn){
+          if (scope.exportBtn) {
             scope.exportBtn.disabled = true;
             $('#btncover').show();
           }
 
           getUsersBatch(1);
           return deferred.promise;
+        },
+
+        getUser: function(searchinput, callback) {
+          var filter = 'filter=userName%20eq%20%22' + window.encodeURIComponent(searchinput) + '%22';
+          var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
+          var getUserUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.get(getUserUrl)
+            .success(function(data, status) {
+              data.success = true;
+              Log.debug('Retrieved user successfully.');
+              callback(data, status);
+            })
+            .error(function(data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
         }
       };
 

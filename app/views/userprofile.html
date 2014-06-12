@@ -67,36 +67,6 @@
       </form>
     </div>
   </div>
-
-
-  <div class="panel panel-default" ng-show="userLogs" id="logs-panel">
-    <div id="userSupport">
-      <div class="panel-heading panel-users">
-        <h3 class="panel-title users-title">
-          <strong id="listSupportItems" translate="profilePage.userLogs"></strong>
-        </h3>
-      </div>
-
-      <div class="panel-body">
-        <table class="table">
-          <thead>
-            <tr>
-              <th><span translate="profilePage.logName"></span></th>
-              <th><span translate="profilePage.logDate"></span></th>
-              <th><span translate="profilePage.logAction"></span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="log in userLogs">
-              <td><span ng-if="log.name">{{log.name}}</span></td>
-              <td>{{log.date}}</td>
-              <td><a ng-click="downloadLog(log)">{{'profilePage.logDownload' | translate}}</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 </div>
 
 

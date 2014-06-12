@@ -22,6 +22,26 @@ angular.module('wx2AdminWebClientApp')
               data.status = status;
               callback(data, status);
             });
+        },
+
+        downloadLog: function(filename, callback) {
+          var logsUrl = Config.getAdminServiceUrl() + 'logs/';
+          var payload = {
+            file: filename
+          };
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.post(logsUrl, payload)
+            .success(function(data, status) {
+              data.success = true;
+              Log.debug('Retrieved tempURL for log: ' + filename);
+              callback(data, status);
+            })
+            .error(function(data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
         }
       };
     }

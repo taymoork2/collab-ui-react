@@ -19,7 +19,11 @@ angular.module('wx2AdminWebClientApp')
 			}, {
 				title: 'tabs.templateTab',
 				path: '/templates'
-			}];
+			}, {
+        title: 'tabs.logsTab',
+        path: '/logs'
+
+      }];
 
 			$scope.navType = 'pills';
 
