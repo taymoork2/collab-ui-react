@@ -4,7 +4,7 @@ angular.module('wx2AdminWebClientApp')
   .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils',
     function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils) {
 
-      var userUrl = Config.adminServiceUrl.prod;
+      var userUrl = Config.getAdminServiceUrl();
       var token = Storage.get('accessToken');
 
       return {
