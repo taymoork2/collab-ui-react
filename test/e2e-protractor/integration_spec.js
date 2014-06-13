@@ -212,22 +212,27 @@ describe('App flow', function() {
     });
 
     it('clicking on templates tab should change the view', function() {
-      browser.driver.findElement(by.css('li[heading="Templates"]')).click();
+      browser.driver.findElement(by.css('li[heading="Support"]')).click();
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
-        expect(browser.getCurrentUrl()).toContain('/templates');
-        expect(element(by.css('h2')).getText()).toContain('MANAGE TEMPLATES');
+        expect(browser.getCurrentUrl()).toContain('/logs');
       });
     });
 
     it('clicking on orgs tab should change the view', function() {
-      browser.driver.findElement(by.css('li[heading="Organizations"]')).click();
+      browser.driver.findElement(by.css('li[heading="Manage"]')).click();
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
         expect(browser.getCurrentUrl()).toContain('/orgs');
         expect(element(by.id('orgTitle')).isDisplayed()).toBe(true);
+        expect(element(by.id('displayName')).isDisplayed()).toEqual(true);
+        expect(element(by.id('estimatedSize')).isDisplayed()).toEqual(true);
+        expect(element(by.id('totalUsers')).isDisplayed()).toEqual(true);
+        expect(element(by.id('sso')).isDisplayed()).toEqual(true);
+        expect(element(by.id('btnSave')).isDisplayed()).toEqual(false);
+        expect(element(by.id('btnReset')).isDisplayed()).toEqual(true);
       });
     });
 
@@ -241,7 +246,7 @@ describe('App flow', function() {
     });
 
     it('clicking on users tab should change the view', function() {
-      browser.driver.findElement(by.css('li[heading="User Accounts"]')).click();
+      browser.driver.findElement(by.css('li[heading="Users"]')).click();
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {

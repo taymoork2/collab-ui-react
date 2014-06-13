@@ -21,12 +21,10 @@
   },
   "tabs" : {
     "homeTab" : "Home",
-    "orgTab" : "Organizations",
-    "userTab" : "User Accounts",
-    "templateTab" : "Templates",
-    "policyTab" : "Policies",
+    "orgTab" : "Manage",
+    "userTab" : "Users",
     "reportTab" : "Reports",
-    "logsTab" : "Logs"
+    "logsTab" : "Support"
   },
   "index" : {
     "welcome" : "Welcome",
@@ -111,7 +109,7 @@
     "save" : "Save"
   },
   "homePage" : {
-    "overview" : "Overview (1 Month duration)",
+    "overview" : "Last 4 weeks",
     "activeUsers" : "Active Users",
     "calls" : "Active Users",
     "conversations" : "Conversations",

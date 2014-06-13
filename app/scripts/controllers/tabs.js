@@ -11,14 +11,11 @@ angular.module('wx2AdminWebClientApp')
 				title: 'tabs.userTab',
 				path: '/users'
 			}, {
-				title: 'tabs.reportTab',
-				path: '/reports'
-			}, {
 				title: 'tabs.orgTab',
 				path: '/orgs'
 			}, {
-				title: 'tabs.templateTab',
-				path: '/templates'
+				title: 'tabs.reportTab',
+				path: '/reports'
 			}, {
         title: 'tabs.logsTab',
         path: '/logs'
