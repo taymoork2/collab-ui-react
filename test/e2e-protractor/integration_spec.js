@@ -207,7 +207,7 @@ describe('App flow', function() {
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
-        expect(browser.getCurrentUrl()).toContain('/users');
+        expect(browser.getCurrentUrl()).toContain('/home');
       });
     });
 
@@ -237,6 +237,15 @@ describe('App flow', function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
         expect(browser.getCurrentUrl()).toContain('/reports');
+      });
+    });
+
+    it('clicking on users tab should change the view', function() {
+      browser.driver.findElement(by.css('li[heading="User Accounts"]')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function() {
+        expect(browser.getCurrentUrl()).toContain('/users');
       });
     });
   });

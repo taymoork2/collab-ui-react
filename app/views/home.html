@@ -1,0 +1,114 @@
+
+<div>
+	<h3>Overview 05/16/2014</h3>
+</div>
+<div style="position:relative;">
+	
+	<div style="position:absolute;">
+		<div class="overview-top">
+			<div style="position:absolute">
+				<i class="fa fa-user fa-2x"></i>
+			</div>
+			<div class="overview-top-content">
+				<span>Active Users</span>
+			</div>
+		</div>
+		<div class="overview-bottom" id="au-content">
+			<span class="overview-values" ng-show="showAUContent">{{activeUserCount}}</span>
+		</div>
+		<div id="au-refresh" class="au-refresh" ng-show="showAURefresh"></div>
+	</div>
+
+	<div style="position:absolute; left:259px">
+		<div class="overview-top">
+			<div style="position:absolute">
+				<i class="fa fa-phone fa-2x"></i>
+			</div>
+			<div class="overview-top-content">
+				<span>Calls</span>
+			</div>
+		</div>
+		<div class="overview-bottom" id="calls-content">
+			<span class="overview-values" ng-show="showCallsContent">{{callsCount}}</span>
+		</div>
+		<div id="calls-refresh" class="calls-refresh" ng-show="showCallsRefresh"></div>
+	</div>
+
+	<div style="position:absolute; left:518px">
+		<div class="overview-top">
+			<div style="position:absolute">
+				<i class="fa fa-comments-o fa-2x"></i>
+			</div>
+			<div class="overview-top-content">
+				<span>Conversations</span>
+			</div>
+		</div>
+		<div class="overview-bottom" id="convo-content">
+			<span class="overview-values" ng-show="showConvoContent">{{convoCount}}</span>
+		</div>
+		<div id="convo-refresh" class="convo-refresh" ng-show="showConvoRefresh"></div>
+	</div>
+
+	<div style="position:absolute; left:777px">
+		<div class="overview-top">
+			<div style="position:absolute">
+				<i class="fa fa-pencil-square-o fa-2x"></i>
+			</div>
+			<div class="overview-top-content">
+				<span>Content Share</span>
+			</div>
+		</div>
+		<div class="overview-bottom" id="share-content">
+			<span class="overview-values" ng-show="showShareContent">{{cShareCount}}</span><span ng-show="showShareContent">/GB</span>
+		</div>
+		<div id="share-refresh" class="share-refresh" ng-show="showShareRefresh"></div>
+	</div>
+
+</div>
+
+<div style="position:relative; top:140px">
+	<div>
+		<h3>Daily active users</h3>
+	</div>
+	<div id="activeUsersChart"></div>
+	<div id="au-graph-refresh" class="au-graph-refresh" ng-show="showAUGraphRefresh"></div>
+</div>
+
+<div class="monitoring-panel">
+	<div class="monitoring-cell">
+		<h3>Monitoring</h3>
+	</div>
+	<div class="monitoring-cell">
+		<span>Conversations</span> <i class="fa fa-circle circle-icon"></i>
+	</div>
+	<div class="monitoring-cell">
+		<span>Media/Calling</span> <i class="fa fa-circle circle-icon"></i>
+	</div>
+	<div class="monitoring-cell">
+		<div>
+			<span>Mobile Clients</span> <i class="fa fa-circle circle-icon"></i>
+		</div>
+	</div>
+	<div class="monitoring-cell">
+		<span>Web Clients</span> <i class="fa fa-circle circle-icon"></i>
+	</div>
+</div>
+
+<div class="home-setup-panel">
+	<div class="home-setup">
+			<h3>Quick Setup</h3>
+			<br>
+			<span>Quickly provision  your users or groups</span>
+			<button class="btn btn-primary home-setup-button">Launch</button>
+	</div>
+
+	<div class="home-setup-adv">
+			<h3>Advanced Setup</h3>
+			<br>
+			<span>Provision users with a guided wizard to set up Directory Sync, Single Sign on and customized reports</span>
+			<button class="btn btn-primary home-setup-button">Launch</button>
+	</div>
+</div>
+
+
+

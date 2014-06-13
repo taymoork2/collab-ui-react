@@ -16,7 +16,7 @@ angular.module('wx2AdminWebClientApp')
 				ReportsService.callUsageMetrics(function(data, status)
 				{
 					if (data.success) {
-						searchData = data;
+						searchData = data.reportDetail;
 						makeChart(searchData);
 						if (searchData.length !== 0)
 						{
