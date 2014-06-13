@@ -52,7 +52,7 @@ describe('List users flow', function() {
       });
     });
 
-    it('should log in with valid sso admin user and display users page', function() {
+    it('should log in with valid sso admin user and display home page', function() {
       browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
       browser.driver.findElement(by.css('#IDButton2')).click();
       browser.driver.wait(function() {
@@ -62,6 +62,16 @@ describe('List users flow', function() {
         browser.driver.findElement(by.css('#Button1')).click();
       });
 
+      expect(browser.getCurrentUrl()).toContain('/home');
+    });
+
+  }); //State is logged-in
+
+  it('clicking on users tab should change the view', function() {
+    browser.driver.findElement(by.css('li[heading="Users"]')).click();
+    browser.driver.wait(function() {
+      return browser.driver.isElementPresent(by.id('tabs'));
+    }).then(function() {
       expect(browser.getCurrentUrl()).toContain('/users');
       //check to make sure add users panel is visible
       expect(element(by.id('usersfield')).isDisplayed()).toEqual(true);
@@ -69,8 +79,7 @@ describe('List users flow', function() {
       //expect(element(by.id('btn_callInit')).isDisplayed()).toEqual(true);
       expect(element(by.id('btnAdd')).isDisplayed()).toEqual(true);
     });
-
-  }); //State is logged-in
+  });
 
   // Asserting listing users.
   describe('Listing users on page load', function() {

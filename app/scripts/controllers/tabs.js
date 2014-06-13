@@ -25,7 +25,6 @@ angular.module('wx2AdminWebClientApp')
 			$scope.navType = 'pills';
 
 			var setActiveTab = function() {
-				$scope.tabs[1].active = 'true';
 				var curPath = $location.path();
 				for (var idx in $scope.tabs) {
 					var tab = $scope.tabs[idx];

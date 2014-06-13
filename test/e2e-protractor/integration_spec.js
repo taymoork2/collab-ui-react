@@ -57,7 +57,7 @@ describe('App flow', function() {
       expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
     });
 
-    it('should log in with valid credentials and display users page', function() {
+    it('should log in with valid credentials and display home page', function() {
 
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.css('#IDToken2'));
@@ -66,11 +66,19 @@ describe('App flow', function() {
         browser.driver.findElement(by.css('#Button1')).click();
       });
 
-      expect(browser.getCurrentUrl()).toContain('/users');
-      expect(element(by.id('userslistpanel')).isDisplayed()).toBe(true);
+      expect(browser.getCurrentUrl()).toContain('/home');
     });
 
   }); //State is logged-in
+
+  it('clicking on users tab should change the view', function() {
+    browser.driver.findElement(by.css('li[heading="Users"]')).click();
+    browser.driver.wait(function() {
+      return browser.driver.isElementPresent(by.id('tabs'));
+    }).then(function() {
+      expect(browser.getCurrentUrl()).toContain('/users');
+    });
+  });
 
   // Navigation bar
   describe('Navigation Bar', function() {
