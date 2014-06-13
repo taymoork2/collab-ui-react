@@ -70,7 +70,8 @@
     "title" : "MANAGE TEMPLATES"
   },
   "reportsPage" : {
-    "title" : "ORGANIZATION REPORTS"
+    "title" : "ORGANIZATION REPORTS",
+    "callMetrics" : "1:1 call usage metrics (Monthly) - PST"
   },
   "profilePage" : {
     "userProfile" : "User Profile",
@@ -108,6 +109,24 @@
   "common" : {
     "cancel" : "Cancel",
     "save" : "Save"
+  },
+  "homePage" : {
+    "overview" : "Overview (1 Month duration)",
+    "activeUsers" : "Active Users",
+    "calls" : "Active Users",
+    "conversations" : "Conversations",
+    "contentShare" : "Content Share",
+    "daily" : "Daily active users",
+    "monitoring" : "Monitoring",
+    "media" : "Media/Calling",
+    "mobile" : "Mobile Clients",
+    "web" : "Web Clients",
+    "quickSetup" : "Quick Setup",
+    "quickProv" : "Quickly provision  your users or groups",
+    "advSetup" : "Advanced Setup",
+    "advProv" : "Provision users with a guided wizard to set up Directory Sync, Single Sign on and customized reports",
+    "launchBtn" : "Launch"
+
   }
 
 }
