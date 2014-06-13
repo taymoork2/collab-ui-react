@@ -151,7 +151,7 @@ angular.module('wx2AdminWebClientApp')
 			getConversationMetrics();
 			getContentShareMetrics();
 
-			var chart = AmCharts.makeChart("activeUsersChart", {
+			var homeChart = AmCharts.makeChart("activeUsersChart", {
 				"type": "serial",
 				"theme": "light",
 				"pathToImages": "http://www.amcharts.com/lib/3/images/",
