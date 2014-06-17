@@ -102,7 +102,7 @@ describe('App flow', function() {
       it('should initialize users page for adding users', function() {
         expect(element(by.id('subTitleAdd')).isDisplayed()).toBe(true);
         expect(element(by.id('subTitleEnable')).isDisplayed()).toBe(false);
-        expect(element(by.id('subTitleAdd')).getText()).toBe('Add new users');
+        expect(element(by.id('subTitleAdd')).getText()).toBe('Manage users');
         expect(element(by.id('btnAdd')).isDisplayed()).toBe(true);
         expect(element(by.id('btnEntitle')).isDisplayed()).toBe(true);
       });
