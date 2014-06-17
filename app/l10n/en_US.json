@@ -1,7 +1,7 @@
 {
   "usersPage" : {
     "manageUsers" : "MANAGE USERS",
-    "subTitleAdd" : "Add new users",
+    "subTitleAdd" : "Manage users",
     "subTitleEnable" : "Entitle users",
     "email" : "Email",
     "clear" : "Clear",

@@ -104,7 +104,7 @@ describe('App flow', function() {
         expect(element(by.id('subTitleEnable')).isDisplayed()).toBe(false);
         expect(element(by.id('subTitleAdd')).getText()).toBe('Add new users');
         expect(element(by.id('btnAdd')).isDisplayed()).toBe(true);
-        expect(element(by.id('btnEntitle')).isDisplayed()).toBe(false);
+        expect(element(by.id('btnEntitle')).isDisplayed()).toBe(true);
       });
 
       it('should display error if no user is entered', function() {
@@ -197,6 +197,51 @@ describe('App flow', function() {
           expect(message).toEqual(200);
         }, function(data) {
           expect(data.status).toEqual(200);
+        });
+      });
+    });
+  });
+
+  //Entitle User Flows: state is in the users page
+  describe('Entitle User Flows', function() {
+    describe('Entitle an existing user with call-initiation', function() {
+      it('should display input user email in results with success message', function() {
+        element(by.id('usersfield')).clear();
+        element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
+          //entitle for call initiation
+          element(by.css('.iCheck-helper')).click().then(function() {
+            element(by.id('btnEntitle')).click();
+            browser.sleep(500);
+            element(by.css('.alertify-log-success')).click();
+            element.all(by.css('.panel-success-body p')).then(function(rows) {
+              expect(rows.length).toBe(1);
+              expect(rows[0].getText()).toContain(testuser.username);
+              expect(rows[0].getText()).toContain('updated successfully');
+              browser.sleep(500);
+              element(by.css('.fa-times')).click();
+            });
+          });
+        });
+      });
+    });
+
+    describe('Update existing user to un-entitle call-initiation', function() {
+      it('should display input user email in results with success message', function() {
+        element(by.id('usersfield')).clear();
+        element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
+          element(by.css('.iCheck-helper')).click().then(function() {
+            element(by.id('btnEntitle')).click();
+            browser.sleep(500); //for the animation
+            element(by.css('.alertify-log-success')).click();
+            browser.sleep(500); //for the animation
+            element.all(by.css('.panel-success-body p')).then(function(rows) {
+              expect(rows.length).toBe(1);
+              expect(rows[0].getText()).toContain(testuser.username);
+              expect(rows[0].getText()).toContain('updated successfully');
+              browser.sleep(500);
+              element(by.css('.fa-times')).click();
+            });
+          });
         });
       });
     });
