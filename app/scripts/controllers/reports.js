@@ -12,7 +12,8 @@ angular.module('wx2AdminWebClientApp')
 
 			var getMetrics = function()
 			{
-				ReportsService.getUsageMetrics('callUsage', function(data, status)
+				var params = {'intervalCount':1, 'intervalType':'month'};
+				ReportsService.getUsageMetrics('callUsage', params, function(data, status)
 				{
 					if (data.success) {
 						searchData = data.reportDetail;
