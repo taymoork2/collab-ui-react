@@ -2,8 +2,8 @@
 /* global $, Bloodhound */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('LogsCtrl', ['$scope', '$q', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService',
-    function($scope, $q, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Auth, Authinfo, UserListService, LogService) {
+  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService',
+    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Auth, Authinfo, UserListService, LogService) {
 
       //Initialize
       Notification.init($scope);
@@ -57,6 +57,10 @@ angular.module('wx2AdminWebClientApp')
       } else { //Authinfo has data. Initialize.
         Log.debug('Authinfo data is loaded.');
         initializeTypeahead();
+        //Check if this is an allowed tab
+        if(!Authinfo.isAllowedTab()){
+          $location.path('/login');
+        }
       }
 
       $scope.$on('AuthinfoUpdated', function() {

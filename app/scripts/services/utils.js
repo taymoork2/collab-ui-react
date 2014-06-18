@@ -137,6 +137,18 @@ angular.module('wx2AdminWebClientApp')
 
         isWeb: function() {
           return !this.isIPhone() && !this.isAndroid();
+        },
+
+        removeDuplicates: function(array) {
+          var a = array.concat();
+          for (var i = 0; i < a.length; ++i) {
+            for (var j = i + 1; j < a.length; ++j) {
+              if (a[i].title === a[j].title) {
+                a.splice(j--, 1);
+              }
+            }
+          }
+          return a;
         }
 
       };

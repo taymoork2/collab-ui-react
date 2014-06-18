@@ -71,6 +71,14 @@ describe('App flow', function() {
 
   }); //State is logged-in
 
+  //Test which tabs are present
+  it('should display correct tabs for user based on role', function(){
+    expect(element(by.css('li[heading="Home"]')).isDisplayed()).toBe(true);
+    expect(element(by.css('li[heading="Users"]')).isDisplayed()).toBe(true);
+    expect(element(by.css('li[heading="Manage"]')).isDisplayed()).toBe(true);
+    expect(element(by.css('li[heading="Reports"]')).isDisplayed()).toBe(true);
+  });
+
   it('clicking on users tab should change the view', function() {
     browser.driver.findElement(by.css('li[heading="Users"]')).click();
     browser.driver.wait(function() {
@@ -264,15 +272,6 @@ describe('App flow', function() {
       });
     });
 
-    it('clicking on templates tab should change the view', function() {
-      browser.driver.findElement(by.css('li[heading="Support"]')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('tabs'));
-      }).then(function() {
-        expect(browser.getCurrentUrl()).toContain('/logs');
-      });
-    });
-
     it('clicking on orgs tab should change the view', function() {
       browser.driver.findElement(by.css('li[heading="Manage"]')).click();
       browser.driver.wait(function() {
@@ -319,6 +318,5 @@ describe('App flow', function() {
       });
     });
   });
-
 
 });

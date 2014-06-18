@@ -48,6 +48,32 @@ angular.module('wx2AdminWebClientApp')
 
       allowedPaths: ['/activate', '/downloads'],
 
+      tabs: {
+        fullAdmin: [{
+          title: 'tabs.homeTab',
+          path: '/home'
+        }, {
+          title: 'tabs.userTab',
+          path: '/users'
+        }, {
+          title: 'tabs.orgTab',
+          path: '/orgs'
+        }, {
+          title: 'tabs.reportTab',
+          path: '/reports'
+        }],
+        wx2User: [{
+          title: 'tabs.homeTab',
+          path: '/home'
+        }, {
+          title: 'tabs.reportTab',
+          path: '/reports'
+        }, {
+          title: 'tabs.supportTab',
+          path: '/support'
+        }]
+      },
+
       isDev: function() {
         return document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('localhost') !== -1;
       },

@@ -3,7 +3,7 @@
     <div class="panel-heading panel-heading-default">
       <div id="listLogs">
         <h3 class="panel-title panel-title-default">
-          <strong id="subtitleLogs" translate="logsPage.subtitleLogs"></strong>
+          <strong id="subtitleLogs" translate="supportPage.subtitleLogs"></strong>
         </h3>
       </div>
     </div>
@@ -11,14 +11,14 @@
     <div class="panel-body">
       <form role="form">
         <div class="form-group">
-          <label translate="logsPage.inputlabel"></label>
+          <label translate="supportPage.inputlabel"></label>
           <br/>
           <input class="form-control typeahead" type="text" id="logsearchfield" placeholder="Enter email address" />
           <br>
        </div>
 
        <div class="form-group">
-        <button id="logSearchBtn" class="btn btn-primary pull-right" ng-click="getLogs()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="logsPage.listlogsbtn"></span></button>
+        <button id="logSearchBtn" class="btn btn-primary pull-right" ng-click="getLogs()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="supportPage.listlogsbtn"></span></button>
       </div>
     </form>
   </div>
@@ -28,7 +28,7 @@
     <div id="userSupport">
       <div class="panel-heading panel-heading-default">
         <h3 class="panel-title panel-title-default">
-          <strong id="listSupportItems">{{'logsPage.userLogs' | translate }}</strong>
+          <strong id="listSupportItems">{{'supportPage.userLogs' | translate }}</strong>
         </h3>
       </div>
 
@@ -37,16 +37,16 @@
         <table class="table" ng-show="userLogs">
           <thead>
             <tr>
-              <th><span translate="logsPage.logName"></span></th>
-              <th><span translate="logsPage.logDate"></span></th>
-              <th><span translate="logsPage.logAction"></span></th>
+              <th><span translate="supportPage.logName"></span></th>
+              <th><span translate="supportPage.logDate"></span></th>
+              <th><span translate="supportPage.logAction"></span></th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="log in userLogs">
               <td><span ng-if="log.name">{{log.name}}</span></td>
               <td>{{log.date}}</td>
-              <td><a ng-click="downloadLog(log.filename)">{{'logsPage.logDownload' | translate}}</a></td>
+              <td><a ng-click="downloadLog(log.filename)">{{'supportPage.logDownload' | translate}}</a></td>
             </tr>
           </tbody>
         </table>

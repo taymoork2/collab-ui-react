@@ -61,7 +61,12 @@ angular.module('wx2AdminWebClientApp')
           Log.debug('No accessToken.');
         }
       } else { //Authinfo has data. Load up users.
+        //Check if this is an allowed tab
+        if(!Authinfo.isAllowedTab()){
+          $location.path('/login');
+        }
         getUserList();
+
       }
 
       //Search users based on search criteria

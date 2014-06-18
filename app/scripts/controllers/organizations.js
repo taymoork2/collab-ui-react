@@ -3,13 +3,12 @@
 /* global $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('OrganizationsCtrl', ['$rootScope','$scope', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Auth', 'UserListService', 'Notification',
-    function($rootScope, $scope, Storage, Log, $filter, Orgservice, Authinfo, Auth, UserListService, Notification) {
+  .controller('OrganizationsCtrl', ['$rootScope','$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Auth', 'UserListService', 'Notification',
+    function($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, Auth, UserListService, Notification) {
 
       //Initialize
       Notification.init($scope);
       $scope.popup = Notification.popup;
-
       $scope.orgName = Authinfo.getOrgName();
 
       var getorgInfo = function () {
@@ -29,6 +28,10 @@ angular.module('wx2AdminWebClientApp')
 
       if (!Authinfo.isEmpty()) {
         getorgInfo();
+        //Check if this is an allowed tab
+        if(!Authinfo.isAllowedTab()){
+          $location.path('/login');
+        }
       }
       else
       {

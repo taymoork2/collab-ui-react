@@ -24,7 +24,7 @@
     "orgTab" : "Manage",
     "userTab" : "Users",
     "reportTab" : "Reports",
-    "logsTab" : "Support"
+    "supportTab" : "Support"
   },
   "index" : {
     "welcome" : "Welcome",
@@ -90,7 +90,7 @@
     "success" : "User successfully updated.",
     "error" : "Update user failed."
   },
-  "logsPage" : {
+  "supportPage" : {
     "subtitleLogs" : "Search for logs",
     "inputlabel" :"Email",
     "listlogsbtn" : "Search",

@@ -1,15 +1,16 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .service('Authinfo', ['$rootScope',
-    function Authinfo($rootScope) {
+  .service('Authinfo', ['$rootScope', '$location',
+    function Authinfo($rootScope, $location) {
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
         'username': null,
         'orgname': null,
         'orgid': null,
         'addUserEnabled': null,
-        'services': null
+        'services': null,
+        'tabs': null
       };
 
       return {
@@ -19,6 +20,7 @@ angular.module('wx2AdminWebClientApp')
           authData.orgid = data.orgId;
           authData.addUserEnabled = data.addUserEnabled;
           authData.services = data.services;
+          authData.roles = data.roles;
           $rootScope.services = data.services;
           $rootScope.$broadcast('AuthinfoUpdated');
         },
@@ -49,6 +51,28 @@ angular.module('wx2AdminWebClientApp')
 
         getServices: function() {
           return authData.services;
+        },
+
+        getRoles: function() {
+          return authData.roles;
+        },
+
+        setTabs: function(allowedTabs) {
+          authData.tabs = allowedTabs;
+          $rootScope.$broadcast('AllowedTabsUpdated');
+        },
+
+        isAllowedTab: function() {
+          var curPath = $location.path();
+          var flag = false;
+          for (var idx in authData.tabs) {
+            var tab = authData.tabs[idx];
+            if (tab.path === curPath) {
+              flag = true;
+              break;
+            }
+          }
+          return flag;
         },
 
         isEmpty: function() {

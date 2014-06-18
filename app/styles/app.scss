@@ -467,9 +467,9 @@ input:disabled {
   z-index: 1;
 }
 
-.au-refresh, 
-.calls-refresh, 
-.convo-refresh, 
+.au-refresh,
+.calls-refresh,
+.convo-refresh,
 .share-refresh {
   position: absolute;
   top: 85px;
@@ -553,23 +553,23 @@ input:disabled {
   width   : 100%;
   height    : 500px;
   font-size : 11px;
-} 
+}
 
 .overview-top {
-  width:260px; height:65px; 
-  position:absolute; 
-  border-left: solid 1px #c0c0c0; 
+  width:260px; height:65px;
+  position:absolute;
+  border-left: solid 1px #c0c0c0;
   border-right: solid 1px #c0c0c0;
   padding: 20px;
 }
 
 .overview-bottom {
-  width:260px; 
-  height:56px; 
+  width:260px;
+  height:56px;
   position:relative;
-  background-color: #d8d8d8; 
-  border-left: solid 1px #c0c0c0; 
-  border-right: solid 1px #c0c0c0; 
+  background-color: #d8d8d8;
+  border-left: solid 1px #c0c0c0;
+  border-right: solid 1px #c0c0c0;
   top:64px;
   padding-left: 25px;
   padding-top: 15px;
@@ -594,17 +594,17 @@ input:disabled {
 }
 
 .monitoring-cell {
-  border-bottom: solid 1px #c0c0c0; 
+  border-bottom: solid 1px #c0c0c0;
   padding-top: 7px;
   padding-bottom: 7px;
 }
 
 .circle-icon {
   color: #00CC66;
-  float:right; 
+  float:right;
   position:relative;
   right: 20px;
-  top: 2px; 
+  top: 2px;
 }
 
 .home-setup {
@@ -641,6 +641,10 @@ input:disabled {
   bottom: 30px;
   position: absolute;
   left: 265px;
+}
+
+.navbar-header {
+  margin-left: -56px;
 }
 
 
