@@ -6,11 +6,9 @@ angular.module('wx2AdminWebClientApp')
 
       //update the tabs when Authinfo data has been populated.
       $scope.$on('AuthinfoUpdated', function() {
-        console.log(Authinfo.getRoles());
         var roles  = Authinfo.getRoles();
         if (roles.indexOf('Full_Admin') > -1 && roles.indexOf('WX2_User') > -1) {
           $scope.tabs = Utils.removeDuplicates(Config.tabs.fullAdmin.concat(Config.tabs.wx2User));
-          console.log($scope.tabs);
         } else if (roles.indexOf('WX2_User') > -1) {
           $scope.tabs = Config.tabs.wx2User;
         } else if (roles.indexOf('Full_Admin') > -1) {

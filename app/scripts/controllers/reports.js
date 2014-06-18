@@ -1,4 +1,4 @@
-
+'use strict';
 /* global AmCharts */
 
 angular.module('wx2AdminWebClientApp')
@@ -12,7 +12,8 @@ angular.module('wx2AdminWebClientApp')
 
 			var getMetrics = function()
 			{
-				ReportsService.callUsageMetrics(function(data, status)
+				var params = {'intervalCount':1, 'intervalType':'month'};
+				ReportsService.getUsageMetrics('callUsage', params, function(data, status)
 				{
 					if (data.success) {
 						searchData = data.reportDetail;

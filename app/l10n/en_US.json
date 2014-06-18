@@ -111,10 +111,10 @@
   "homePage" : {
     "overview" : "Last 4 weeks",
     "activeUsers" : "Active Users",
-    "calls" : "Active Users",
+    "calls" : "Calls",
     "conversations" : "Conversations",
     "contentShare" : "Content Share",
-    "daily" : "Daily active users",
+    "activity" : "Monthly Activity",
     "monitoring" : "Monitoring",
     "media" : "Media/Calling",
     "mobile" : "Mobile Clients",

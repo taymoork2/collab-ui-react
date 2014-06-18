@@ -269,6 +269,14 @@ describe('App flow', function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
         expect(browser.getCurrentUrl()).toContain('/home');
+        expect(element(by.id('Conversations')).isDisplayed()).toBe(true);
+        expect(element(by.id('Mobile Clients')).isDisplayed()).toBe(true);
+        expect(element(by.id('Web Client')).isDisplayed()).toBe(true);
+        expect(element(by.id('activeUsersChart')).isDisplayed()).toBe(true);
+        expect(element(by.id('au-content')).isDisplayed()).toBe(true);
+        expect(element(by.id('calls-content')).isDisplayed()).toBe(true);
+        expect(element(by.id('convo-content')).isDisplayed()).toBe(true);
+        expect(element(by.id('share-content')).isDisplayed()).toBe(true);
       });
     });
 

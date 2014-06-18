@@ -599,12 +599,28 @@ input:disabled {
   padding-bottom: 7px;
 }
 
-.circle-icon {
+.circle-icon-green {
   color: #00CC66;
   float:right;
   position:relative;
   right: 20px;
   top: 2px;
+}
+
+.circle-icon-red {
+  color: red;
+  float:right; 
+  position:relative;
+  right: 20px;
+  top: 2px; 
+}
+
+.circle-icon-yellow {
+  color: yellow;
+  float:right; 
+  position:relative;
+  right: 20px;
+  top: 2px; 
 }
 
 .home-setup {
