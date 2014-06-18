@@ -8,6 +8,7 @@ angular.module('wx2AdminWebClientApp')
       var callMetricsUrl = Config.getAdminServiceUrl() + 'reports/stats/callUsage';
       var activeUsersUrl = Config.getAdminServiceUrl() + 'reports/counts/activeUsers';
       var timeChartUrl = Config.getAdminServiceUrl() + 'reports/timeCharts/';
+      var healthUrl = 'http://status.squaredpreview.com/index.json';
 
       var urls = {
         'callUsage':callMetricsUrl,
@@ -68,7 +69,23 @@ angular.module('wx2AdminWebClientApp')
               data.errorMsg = data;
               callback(data, status);
             });
+        },
+
+        healthMonitor: function(callback) {
+          $http.get(healthUrl)
+            .success(function(data, status) {
+              data.success = true;
+              Log.debug('Callback for healthMonitor');
+              callback(data, status);
+            })
+            .error(function(data, status) {
+              data.success = false;
+              data.status = status;
+              data.errorMsg = data;
+              callback(data, status);
+            });
         }
+
       };
     }
   ]);

@@ -183,6 +183,18 @@ angular.module('wx2AdminWebClientApp')
 			});
 		};
 
+		var getHealthMetrics = function()
+		{
+			ReportsService.healthMonitor(function(data, status)
+			{
+				if (data.success) {
+					$scope.healthMetrics = data.components;
+				} else {
+					Log.debug('Query active users metrics failed. Status: ' + status);
+				}
+			});
+		};
+
 		if (!Authinfo.isEmpty())
 		{
 			getActiveUsersCount();
@@ -190,6 +202,7 @@ angular.module('wx2AdminWebClientApp')
 			getConversationMetrics();
 			getContentShareMetrics();
 			getActiveUsersMetrics();
+			getHealthMetrics();
 		}
 		else
     {
@@ -208,6 +221,7 @@ angular.module('wx2AdminWebClientApp')
 			getConversationMetrics();
 			getContentShareMetrics();
 			getActiveUsersMetrics();
+			getHealthMetrics();
     });
 
 		var makeChart = function(sdata) {

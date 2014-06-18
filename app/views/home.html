@@ -78,19 +78,10 @@
 	<div class="monitoring-cell">
 		<h3 translate="homePage.monitoring"></h3>
 	</div>
-	<div class="monitoring-cell">
-		<span translate="homePage.conversations"></span> <i class="fa fa-circle circle-icon"></i>
-	</div>
-	<div class="monitoring-cell">
-		<span translate="homePage.media"></span> <i class="fa fa-circle circle-icon"></i>
-	</div>
-	<div class="monitoring-cell">
-		<div>
-			<span translate="homePage.mobile"></span> <i class="fa fa-circle circle-icon"></i>
+	<div ng-repeat="health in healthMetrics">
+		<div class="monitoring-cell" id="{{health.name}}">
+			<span>{{health.name}}</span> <i ng-class="{true:'fa fa-circle circle-icon-green', false:'fa fa-circle circle-icon-red'}[health.status==='operational']"></i>
 		</div>
-	</div>
-	<div class="monitoring-cell">
-		<span translate="homePage.web"></span> <i class="fa fa-circle circle-icon"></i>
 	</div>
 </div>
 
