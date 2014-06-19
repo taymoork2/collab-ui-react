@@ -10,6 +10,7 @@ angular.module('wx2AdminWebClientApp')
         'orgid': null,
         'addUserEnabled': null,
         'services': null,
+        'roles': null,
         'tabs': null
       };
 
@@ -31,6 +32,8 @@ angular.module('wx2AdminWebClientApp')
           authData.orgid = null;
           authData.addUserEnabled = null;
           authData.services = null;
+          authData.tabs = null;
+          authData.roles = null;
         },
 
         getOrgName: function() {

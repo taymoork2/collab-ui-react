@@ -7,13 +7,12 @@ angular.module('wx2AdminWebClientApp')
       //update the tabs when Authinfo data has been populated.
       $scope.$on('AuthinfoUpdated', function() {
         var roles  = Authinfo.getRoles();
-        if (roles.indexOf('Full_Admin') > -1 && roles.indexOf('WX2_User') > -1) {
-          $scope.tabs = Utils.removeDuplicates(Config.tabs.fullAdmin.concat(Config.tabs.wx2User));
-        } else if (roles.indexOf('WX2_User') > -1) {
-          $scope.tabs = Config.tabs.wx2User;
-        } else if (roles.indexOf('Full_Admin') > -1) {
-          $scope.tabs = Config.tabs.fullAdmin;
+        var tabs = [];
+        for(var idx = roles.length - 1; idx >= 0; idx--) {
+          console.log(Config.roles[roles[idx]]);
+          tabs = tabs.concat(Config.roles[roles[idx]]);
         }
+        $scope.tabs = Utils.removeDuplicates(tabs, 'title');
         Authinfo.setTabs($scope.tabs);
         //Check if this is an allowed tab
         if(!Authinfo.isAllowedTab()){

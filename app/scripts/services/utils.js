@@ -139,11 +139,11 @@ angular.module('wx2AdminWebClientApp')
           return !this.isIPhone() && !this.isAndroid();
         },
 
-        removeDuplicates: function(array) {
+        removeDuplicates: function(array, key) {
           var a = array.concat();
           for (var i = 0; i < a.length; ++i) {
             for (var j = i + 1; j < a.length; ++j) {
-              if (a[i].title === a[j].title) {
+              if (a[i][key] === a[j][key]) {
                 a.splice(j--, 1);
               }
             }

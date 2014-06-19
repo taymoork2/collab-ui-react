@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .factory('Config', function($window, Utils) {
-    return {
+  .factory('Config', ['$window', 'Utils',
+    function($window, Utils) {
+    var config = {
 
       adminClientUrl: {
         dev: 'http://127.0.0.1:8000',
@@ -49,29 +50,26 @@ angular.module('wx2AdminWebClientApp')
       allowedPaths: ['/activate', '/downloads'],
 
       tabs: {
-        fullAdmin: [{
+        home: {
           title: 'tabs.homeTab',
           path: '/home'
-        }, {
+        },
+        users: {
           title: 'tabs.userTab',
           path: '/users'
-        }, {
+        },
+        orgs: {
           title: 'tabs.orgTab',
           path: '/orgs'
-        }, {
+        },
+        reports: {
           title: 'tabs.reportTab',
           path: '/reports'
-        }],
-        wx2User: [{
-          title: 'tabs.homeTab',
-          path: '/home'
-        }, {
-          title: 'tabs.reportTab',
-          path: '/reports'
-        }, {
+        },
+        support: {
           title: 'tabs.supportTab',
           path: '/support'
-        }]
+        }
       },
 
       isDev: function() {
@@ -111,4 +109,12 @@ angular.module('wx2AdminWebClientApp')
       }
 
     };
-  });
+
+    config.roles = {
+      Full_Admin: [config.tabs.home, config.tabs.users, config.tabs.orgs, config.tabs.reports],
+      WX2_User: [config.tabs.home, config.tabs.reports, config.tabs.support],
+      User: []
+    };
+
+    return config;
+  }]);

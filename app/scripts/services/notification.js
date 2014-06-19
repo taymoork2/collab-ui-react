@@ -60,7 +60,6 @@ angular.module('wx2AdminWebClientApp')
           }
         },
         popup: function(type, id) {
-          console.log(id);
           var output = '';
           var popup = '';
           var i = 0;
@@ -78,7 +77,7 @@ angular.module('wx2AdminWebClientApp')
                 $(this).remove();
               });
             });
-            draggable($('.notification-panel').get(0), $('.panel-notification-heading').get(0));
+            //draggable($('.notification-panel').get(0), $('.panel-notification-heading').get(0));
           } else {
             for (i in _successes[id]) {
               output += '<p>' + _successes[id][i] + '</p>';
@@ -93,7 +92,7 @@ angular.module('wx2AdminWebClientApp')
                 $(this).remove();
               });
             });
-            draggable($('.notification-panel').get(0), $('.panel-notification-heading').get(0));
+            //draggable($('.notification-panel').get(0), $('.panel-notification-heading').get(0));
           }
         }
       };
