@@ -134,7 +134,7 @@ angular.module('wx2AdminWebClientApp')
             }
           });
         }, function() {
-          console.log('canceled');
+          console.log('Dialog canceled');
         });
       };
 
@@ -222,6 +222,14 @@ angular.module('wx2AdminWebClientApp')
 
         return promise;
       };
+
+      if ($rootScope.exporting === true) {
+        $scope.exportBtn.disabled = true;
+      }
+
+      $scope.$on('EXPORT_FINISHED', function() {
+        $scope.exportBtn.disabled = false;
+      });
 
     }
   ]);
