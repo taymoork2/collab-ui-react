@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .factory('Auth', function($http, $location, $q, Log, Config, Authinfo, Utils, Storage) {
-
+  .factory('Auth', function($http, $location, $window, $q, Log, Config, Authinfo, Utils, Storage, $rootScope) {
     var auth = {
       authorizeUrl: Config.getAdminServiceUrl() + 'userauthinfo',
       oauthUrl: Config.oauth2Url,
@@ -48,6 +47,7 @@ angular.module('wx2AdminWebClientApp')
             scope.result = 'Authorization failed with status ' + status + '.  Server may be down, please contact system administrator.';
           }
           deferred.reject();
+          auth.logout();
         });
 
       return deferred.promise;
@@ -104,6 +104,33 @@ angular.module('wx2AdminWebClientApp')
       });
 
       return deferred.promise;
+    };
+
+    auth.isAuthorized = function(scope) {
+      if (!Authinfo.isEmpty()) {
+        //Check if this is an allowed tab
+        if(!Authinfo.isAllowedTab()){
+          $location.path('/login');
+        }
+        return true;
+      }
+      else
+      {
+        var token = Storage.get('accessToken');
+        if (token) {
+          Log.debug('Authorizing user... Populating admin data...');
+          this.authorize(token, scope);
+        } else {
+          $location.path('/login');
+        }
+      }
+    };
+
+    auth.logout = function() {
+      Storage.clear();
+      $rootScope.loggedIn = false;
+      Log.debug('Redirecting to logout url.');
+      $window.location.href = Config.getLogoutUrl();
     };
 
     return auth;

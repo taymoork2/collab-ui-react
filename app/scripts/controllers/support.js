@@ -47,20 +47,9 @@ angular.module('wx2AdminWebClientApp')
       };
       //Populating authinfo data if empty.
       var token = Storage.get('accessToken');
-      if (Authinfo.isEmpty()) {
-        if (token) {
-          Log.debug('Authorizing user... Populating admin data...');
-          Auth.authorize(token, $scope);
-        } else {
-          Log.debug('No accessToken.');
-        }
-      } else { //Authinfo has data. Initialize.
+      if (Auth.isAuthorized($scope)) {
         Log.debug('Authinfo data is loaded.');
         initializeTypeahead();
-        //Check if this is an allowed tab
-        if(!Authinfo.isAllowedTab()){
-          $location.path('/login');
-        }
       }
 
       $scope.$on('AuthinfoUpdated', function() {

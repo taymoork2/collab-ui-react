@@ -2,8 +2,8 @@
 
 /*jshint bitwise: false*/
 angular.module('wx2AdminWebClientApp')
-  .factory('Utils', ['$location',
-    function($location) {
+  .factory('Utils', ['$rootScope', '$location',
+    function($rootScope, $location) {
 
       var Base64 = {
         _keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
@@ -98,8 +98,6 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-
-
       return {
         Base64: Base64,
 
@@ -150,7 +148,6 @@ angular.module('wx2AdminWebClientApp')
           }
           return a;
         }
-
       };
     }
   ]);

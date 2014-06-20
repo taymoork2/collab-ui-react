@@ -26,22 +26,8 @@ angular.module('wx2AdminWebClientApp')
         });
       };
 
-      if (!Authinfo.isEmpty()) {
+      if (Auth.isAuthorized($scope)) {
         getorgInfo();
-        //Check if this is an allowed tab
-        if(!Authinfo.isAllowedTab()){
-          $location.path('/login');
-        }
-      }
-      else
-      {
-        var token = Storage.get('accessToken');
-        if (token) {
-          Log.debug('Authorizing user... Populating admin data...');
-          Auth.authorize(token, $scope);
-        } else {
-          Log.debug('No accessToken.');
-        }
       }
 
       //Making sure the search field is cleared

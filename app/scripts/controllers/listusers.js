@@ -3,8 +3,8 @@
 /* global $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Authinfo', 'Auth', 'Pagination', '$rootScope', 'Notification', '$filter',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Authinfo, Auth, Pagination, $rootScope, Notification, $filter) {
+  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Auth', 'Authinfo',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Pagination, $rootScope, Notification, $filter, Auth, Authinfo) {
 
       function Feature(name, state) {
         this.entitlementName = name;
@@ -52,21 +52,8 @@ angular.module('wx2AdminWebClientApp')
       };
 
       //Populating authinfo data if empty.
-      if (Authinfo.isEmpty()) {
-        var token = Storage.get('accessToken');
-        if (token) {
-          Log.debug('Authorizing user... Populating admin data...');
-          Auth.authorize(token, $scope);
-        } else {
-          Log.debug('No accessToken.');
-        }
-      } else { //Authinfo has data. Load up users.
-        //Check if this is an allowed tab
-        if(!Authinfo.isAllowedTab()){
-          $location.path('/login');
-        }
+      if (Auth.isAuthorized($scope)) {
         getUserList();
-
       }
 
       //Search users based on search criteria

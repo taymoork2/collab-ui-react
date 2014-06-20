@@ -106,6 +106,10 @@ angular.module('wx2AdminWebClientApp')
       getOauthLoginUrl: function() {
         var params = [this.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()])];
         return Utils.sprintf(this.oauth2LoginUrlPattern, params);
+      },
+
+      getLogoutUrl: function() {
+        return this.logoutUrl + encodeURIComponent(this.adminClientUrl[this.getEnv()]);
       }
 
     };

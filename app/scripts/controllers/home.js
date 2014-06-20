@@ -3,8 +3,8 @@
 /* global AmCharts, $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('HomeCtrl', ['$scope', 'ReportsService', 'Log', 'Auth', 'Authinfo', 'Storage', '$location',
-    function($scope, ReportsService, Log, Auth, Authinfo, Storage, $location) {
+  .controller('HomeCtrl', ['$scope', 'ReportsService', 'Log', 'Auth',
+    function($scope, ReportsService, Log, Auth) {
 
       $('#au-graph-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
       $('#au-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
@@ -187,26 +187,15 @@ angular.module('wx2AdminWebClientApp')
         });
       };
 
-      if (!Authinfo.isEmpty()) {
-        //Check if this is an allowed tab
-        if(!Authinfo.isAllowedTab()){
-          $location.path('/login');
-        }
+      if (Auth.isAuthorized($scope)) {
         getActiveUsersCount();
         getCallMetrics();
         getConversationMetrics();
         getContentShareMetrics();
         getActiveUsersMetrics();
         getHealthMetrics();
-      } else {
-        var token = Storage.get('accessToken');
-        if (token) {
-          Log.debug('Authorizing user... Populating admin data...');
-          Auth.authorize(token, $scope);
-        } else {
-          Log.debug('No accessToken.');
-        }
       }
+
 
       $scope.$on('AuthinfoUpdated', function() {
         getActiveUsersCount();
