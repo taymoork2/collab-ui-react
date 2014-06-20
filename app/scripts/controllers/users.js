@@ -4,6 +4,9 @@ angular.module('wx2AdminWebClientApp')
   .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter',
     function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter) {
 
+      //check if page is authorized
+      Auth.isAuthorized($scope);
+
       $scope.init = function () {
         setPlaceholder();
       };
