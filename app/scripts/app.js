@@ -86,7 +86,6 @@ angular.module('wx2AdminWebClientApp', [
 
       if (document.URL.indexOf('access_token') !== -1) {
         data = Auth.getFromGetParams(document.URL);
-        Log.debug('Retrieving access token...', data);
         Storage.put('accessToken', data.access_token);
 
       } else if (document.URL.indexOf('code') !== -1) {
