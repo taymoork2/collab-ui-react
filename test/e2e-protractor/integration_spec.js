@@ -302,6 +302,16 @@ describe('App flow', function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
         expect(browser.getCurrentUrl()).toContain('/reports');
+        expect(element(by.id('chartdiv')).isDisplayed()).toBe(true);
+        expect(element(by.id('avgEntitlementsdiv')).isDisplayed()).toBe(true);
+        expect(element(by.id('avgCallsdiv')).isDisplayed()).toBe(true);
+        expect(element(by.id('avgConversationsdiv')).isDisplayed()).toBe(true);
+        expect(element(by.id('activeUsersdiv')).isDisplayed()).toBe(true);
+        expect(element(by.id('refresh')).isDisplayed()).toBe(true);
+        expect(element(by.id('avg-entitlements-refresh')).isDisplayed()).toBe(true);
+        expect(element(by.id('avg-calls-refresh')).isDisplayed()).toBe(true);
+        expect(element(by.id('avg-conversations-refresh')).isDisplayed()).toBe(true);
+        expect(element(by.id('active-users-refresh')).isDisplayed()).toBe(true);
       });
     });
 

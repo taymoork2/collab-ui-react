@@ -1,8 +1,42 @@
-<div>
-	<div>
-		<h3 translate="reportsPage.callMetrics"></h3>
+<div style="position:absolute; width:100%">
+	<div class ="call-status">
+		<div>
+			<h3 translate="reportsPage.callMetrics"></h3>
+		</div>
+		<div id="chartdiv"></div>
+		<div id="refresh" class="metrics-refresh" ng-show="showRefresh"></div>
 	</div>
-	<div id="chartdiv"></div>
-	<div id="refresh" class="metrics-refresh" ng-show="showRefresh"></div>
+
+	<div class ="all-reports">
+		<div>
+			<h3 translate="reportsPage.avgEntitlements"></h3>
+		</div>
+		<div id="avgEntitlementsdiv" class="timechartDiv"></div>
+		<div id="avg-entitlements-refresh" class="metrics-refresh" ng-show="showAvgEntitlementsRefresh"></div>
+	</div>
+
+	<div class ="all-reports">
+		<div>
+			<h3 translate="reportsPage.avgCalls"></h3>
+		</div>
+		<div id="avgCallsdiv" class="timechartDiv"></div>
+		<div id="avg-calls-refresh" class="metrics-refresh" ng-show="showAvgCallsRefresh"></div>
+	</div>
+
+	<div class ="all-reports">
+		<div>
+			<h3 translate="reportsPage.avgConversations"></h3>
+		</div>
+		<div id="avgConversationsdiv" class="timechartDiv"></div>
+		<div id="avg-conversations-refresh" class="metrics-refresh" ng-show="showAvgConversationsRefresh"></div>
+	</div>
+
+	<div class ="all-reports">
+		<div>
+			<h3 translate="reportsPage.activeUsers"></h3>
+		</div>
+		<div id="activeUsersdiv" class="timechartDiv"></div>
+		<div id="active-users-refresh" class="metrics-refresh" ng-show="showActiveUsersRefresh"></div>
+	</div>
 </div>
 

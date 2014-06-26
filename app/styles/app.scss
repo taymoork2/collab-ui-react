@@ -354,11 +354,59 @@ label {
   padding-right: 9px;
 }
 
+.call-status {
+  position:relative;
+  width:92%;
+}
+
+.all-reports {
+  position:relative;
+  width:45%;
+  float:left;
+  margin: 5px;
+}
+
+.metrics-refresh {
+  position: relative;
+  top: -275px;
+  text-align: center;
+}
+
 #chartdiv {
   width   : 100%;
   height    : 500px;
   font-size : 11px;
 }
+
+.timechartDiv {
+  width   : 100%;
+  height    : 450px;
+  font-size : 11px;
+}
+/*
+#avgEntitlementsdiv {
+  width   : 100%;
+  height    : 500px;
+  font-size : 11px;
+}
+
+#avgCallsdiv {
+  width   : 100%;
+  height    : 500px;
+  font-size : 11px;
+}
+
+#avgConversationsdiv {
+  width   : 100%;
+  height    : 500px;
+  font-size : 11px;
+}
+
+#activeUsersdiv {
+  width   : 100%;
+  height    : 500px;
+  font-size : 11px;
+}*/
 
 #activeUsersChart {
   width   : 775px;
@@ -452,13 +500,6 @@ input:disabled {
   height: 40px;
 }
 
-.metrics-refresh {
-  position: absolute;
-  top: 190px;
-  text-align: center;
-  width: 1057px;
-}
-
 .au-graph-refresh {
   position: absolute;
   top: 225px;
@@ -547,12 +588,6 @@ input:disabled {
 
 .tt-input {
   width: 541%;
-}
-
-#chartdiv {
-  width   : 100%;
-  height    : 500px;
-  font-size : 11px;
 }
 
 .overview-top {
