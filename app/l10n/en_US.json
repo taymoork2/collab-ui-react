@@ -70,7 +70,7 @@
   "reportsPage" : {
     "title" : "ORGANIZATION REPORTS",
     "callMetrics" : "1:1 call usage metrics (Monthly) - PST",
-    "avgEntitlements" : "Average Entitlements",
+    "avgEntitlements" : "Entitlements",
     "avgCalls" : "Average Calls",
     "avgConversations" : "Average Conversations",
     "activeUsers" : "Active Users"

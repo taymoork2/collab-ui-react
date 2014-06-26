@@ -329,6 +329,18 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
+      $scope.showInvite = false;
+      $scope.setSelectedTab = function(tab) {
+        if (tab === 'invite')
+        {
+          $scope.showInvite = true;
+        }
+        else
+        {
+          $scope.showInvite = false;
+        }
+      };
+
       //set intitially when loading the page
       //on initial login the AuthinfoUpdated broadcast may not be caught if not on user page
       setEntitlementList();

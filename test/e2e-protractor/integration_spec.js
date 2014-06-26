@@ -106,6 +106,11 @@ describe('App flow', function() {
   describe('Add User Flows', function() {
 
     describe('Page initialization', function() {
+      it('click on invite subtab should show manage users', function () {
+        browser.driver.findElement(by.css('li[heading="Invite"]')).click();
+        expect(element(by.id('userslistpanel')).isDisplayed()).toEqual(false);
+        expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
+      });
 
       it('should initialize users page for adding users', function() {
         expect(element(by.id('subTitleAdd')).isDisplayed()).toBe(true);

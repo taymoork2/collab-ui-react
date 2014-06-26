@@ -73,19 +73,18 @@ describe('List users flow', function() {
       return browser.driver.isElementPresent(by.id('tabs'));
     }).then(function() {
       expect(browser.getCurrentUrl()).toContain('/users');
-      //check to make sure add users panel is visible
-      expect(element(by.id('usersfield')).isDisplayed()).toEqual(true);
-      //This button is now covered by another <ins> element.
-      //expect(element(by.id('btn_callInit')).isDisplayed()).toEqual(true);
-      expect(element(by.id('btnAdd')).isDisplayed()).toEqual(true);
+      //check to make sure add users panel is not visible
+      expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(false);
     });
   });
 
   // Asserting listing users.
   describe('Listing users on page load', function() {
+
     it('should show first page of users', function() {
       expect(element(by.css('.pagination-current a')).getText()).toBe('1');
     });
+
     it('should list 20 or less users', function() {
       element.all(by.repeater('user in queryuserslist')).then(function(rows) {
         expect(rows.length).toBeLessThanOrEqualTo(20);
@@ -182,6 +181,15 @@ describe('List users flow', function() {
     var inputTitle = 'EngTest';
     var inputLastName = 'testLastName';
 
+    it('click on invite subtab should show manage users', function () {
+      browser.driver.findElement(by.css('li[heading="Invite"]')).click();
+      expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
+      expect(element(by.id('usersfield')).isDisplayed()).toEqual(true);
+      //This button is now covered by another <ins> element.
+      //expect(element(by.id('btn_callInit')).isDisplayed()).toEqual(true);
+      expect(element(by.id('btnAdd')).isDisplayed()).toEqual(true);
+    });
+
     it('should add user successfully and increase user count', function() {
       inputEmail = utils.randomTestEmail();
 
@@ -253,6 +261,7 @@ describe('List users flow', function() {
   // Update entitlements
   describe('Updating entitlements', function() {
     it('should display initial entitlements from newly added user', function() {
+      browser.driver.findElement(by.id('userSubtab')).click();
       browser.sleep(1000);
       element(by.css('.caret')).click();
       element(by.css('.btn-group li')).click();
