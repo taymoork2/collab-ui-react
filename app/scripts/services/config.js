@@ -39,8 +39,8 @@ angular.module('wx2AdminWebClientApp')
         scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
 
         healthCheckUrl: {
-          dev: 'http://status.squaredpreview.com/index.json',
-          prod: 'https://status.squaredpreview.com/index.json'
+          dev: 'http://squaredpreview.statuspage.io/index.json',
+          prod: 'https://squaredpreview.statuspage.io/index.json'
         },
 
         scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
