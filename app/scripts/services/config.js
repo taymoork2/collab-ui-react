@@ -38,6 +38,11 @@ angular.module('wx2AdminWebClientApp')
 
         scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
 
+        healthCheckUrl: {
+          dev: 'http://status.squaredpreview.com/index.json',
+          prod: 'https://status.squaredpreview.com/index.json'
+        },
+
         scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
 
         usersperpage: 20,
@@ -110,6 +115,14 @@ angular.module('wx2AdminWebClientApp')
 
         getLogoutUrl: function() {
           return this.logoutUrl + encodeURIComponent(this.adminClientUrl[this.getEnv()]);
+        },
+
+        getHealthCheckUrlServiceUrl: function() {
+          if (this.isDev()) {
+            return this.healthCheckUrl.dev;
+          } else {
+            return this.healthCheckUrl.prod;
+          }
         }
 
       };
