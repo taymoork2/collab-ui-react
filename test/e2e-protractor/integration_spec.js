@@ -112,16 +112,35 @@ describe('App flow', function() {
         expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
       });
 
-      it('should initialize users page for adding users', function() {
+      it('should initialize users page for add/entitle/invite users', function() {
         expect(element(by.id('subTitleAdd')).isDisplayed()).toBe(true);
         expect(element(by.id('subTitleEnable')).isDisplayed()).toBe(false);
         expect(element(by.id('subTitleAdd')).getText()).toBe('Manage users');
         expect(element(by.id('btnAdd')).isDisplayed()).toBe(true);
         expect(element(by.id('btnEntitle')).isDisplayed()).toBe(true);
+        expect(element(by.id('btnInvite')).isDisplayed()).toBe(true);
       });
 
-      it('should display error if no user is entered', function() {
+      it('should display error if no user is entered on add', function() {
         element(by.id('btnAdd')).click();
+        element(by.css('.alertify-log-error')).click().then(function() {
+          browser.sleep(500);
+          expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
+          browser.sleep(500);
+          element(by.css('.fa-times')).click();
+        });
+      });
+      it('should display error if no user is entered on update', function() {
+        element(by.id('btnEntitle')).click();
+        element(by.css('.alertify-log-error')).click().then(function() {
+          browser.sleep(500);
+          expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
+          browser.sleep(500);
+          element(by.css('.fa-times')).click();
+        });
+      });
+      it('should display error if no user is entered on invite', function() {
+        element(by.id('btnInvite')).click();
         element(by.css('.alertify-log-error')).click().then(function() {
           browser.sleep(500);
           expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
@@ -142,6 +161,8 @@ describe('App flow', function() {
           element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
           expect(element(by.css('.invalid')).isPresent()).toBe(false);
           expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe(null);
+          expect(element(by.id('btnEntitle')).getAttribute('disabled')).toBe(null);
+          expect(element(by.id('btnInvite')).getAttribute('disabled')).toBe(null);
           element(by.css('.close')).click();
           element(by.css('.fa-times')).click();
         }
@@ -153,6 +174,8 @@ describe('App flow', function() {
           element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
           expect(element(by.css('.invalid')).isPresent()).toBe(true);
           expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe('true');
+          expect(element(by.id('btnEntitle')).getAttribute('disabled')).toBe('true');
+          expect(element(by.id('btnInvite')).getAttribute('disabled')).toBe('true');
           element(by.css('.close')).click();
         }
       });
@@ -260,7 +283,28 @@ describe('App flow', function() {
     });
   });
 
-  describe('Validate user page', function() {
+  describe('Invite users', function() {
+    it('should invite users successfully', function() {
+      var inviteEmail = utils.randomTestEmail();
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+        element(by.id('btnInvite')).click();
+        browser.sleep(800); //for the animation
+        element(by.css('.alertify-log-success')).click();
+        browser.sleep(500); //for the animation
+        element.all(by.css('.panel-success-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain('sent successfully');
+          browser.sleep(500);
+          element(by.css('.fa-times')).click();
+
+        });
+ 
+      });
+    });
+  });
+
+  describe('Switching tabs', function() {
     // it('should have a tab bar', function() {
     //   expect(element(by.id('tabs')).isDisplayed()).toBe(true);
     //   element.all(by.repeater('tab in tabs')).then(function(tabCount) {

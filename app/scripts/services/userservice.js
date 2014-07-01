@@ -122,6 +122,40 @@ angular.module('wx2AdminWebClientApp')
           }
         },
 
+        inviteUsers: function(usersDataArray, callback) {
+          var userData = {
+            'inviteList': []
+          };
+
+          for (var i = 0; i < usersDataArray.length; i++) {
+            var userEmail = usersDataArray[i].address.trim();
+            var userName = usersDataArray[i].name.trim();
+            var user = {
+              'email': userEmail,
+              'name': userName
+            };
+            if (userEmail.length > 0) {
+              userData.inviteList.push(user);
+            }
+          }
+
+          if (userData.inviteList.length > 0) {
+            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.post(userUrl + 'invitations', userData)
+              .success(function(data, status) {
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function(data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          } else {
+            callback('No valid emails entered.');
+          }
+        },
+
         sendEmail: function(userEmail, adminEmail, callback) {
           var requestBody = {
             'recipientEmail': userEmail,
