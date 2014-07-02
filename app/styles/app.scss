@@ -759,10 +759,16 @@ input:disabled {
   margin-top: 20px;
 }
 
-li[heading='Invite'] {
+#userSubtab {
   cursor:pointer;
+  a {
+    color:#333333;
+  }
 }
 
-li[heading='Users'] {
+#inviteSubtab {
   cursor:pointer;
+  a {
+    color:#333333;
+  }
 }

@@ -190,7 +190,6 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-
       $scope.showUserDetails = function(user) {
         //remove selected class on previous user
         if($scope.currentUser){

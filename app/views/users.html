@@ -46,7 +46,7 @@
 </div>
 
 <div ng-controller="ListUsersCtrl">
-  <div ng-show="queryuserslist && !showInvite" id="userslistpanel">
+  <div ng-show="!showInvite" id="userslistpanel">
     <table id="userslist" class="table table-bordered">
       <thead>
         <tr>
@@ -57,7 +57,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in queryuserslist" ng-click="showUserDetails(user)" id="{{user.id}}">
+        <tr ng-show="!queryuserslist"><td></td><td></td><td></td><td></td></tr>
+        <tr ng-show="queryuserslist" ng-repeat="user in queryuserslist" ng-click="showUserDetails(user)" id="{{user.id}}">
           <td><span ng-if="user.name">{{user.name.givenName}}</span></td>
           <td><span ng-if="user.name">{{user.name.familyName}}</span></td>
           <td>{{user.userName}}</td>
@@ -66,7 +67,7 @@
       </tbody>
     </table>
     <div id="queryresults" value="{{queryuserslist.length}}" style="display: none;">{{queryuserslist.length}}</div>
-    <ul class="pagination">
+    <ul class="pagination" ng-show="queryuserslist">
       <li><a id="prev-page" ng-click="pagination.prevPage();"><i class="fa fa-angle-left"></i></a></li>
       <li class="pagination-current"><a>{{page}}</a></li>
       <li><a id="next-page" ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
