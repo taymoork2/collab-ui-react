@@ -16,6 +16,7 @@ angular.module('wx2AdminWebClientApp')
         Auth.authorize(token, $scope).then(function(){
           if($scope.isAuthorized){
             $location.path('/home');
+            Config.tabs.home.active = 'true';
             $rootScope.services = Authinfo.getServices();
           }
         });

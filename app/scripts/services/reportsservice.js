@@ -8,7 +8,7 @@ angular.module('wx2AdminWebClientApp')
       var callMetricsUrl = Config.getAdminServiceUrl() + 'reports/stats/callUsage';
       var activeUsersUrl = Config.getAdminServiceUrl() + 'reports/counts/activeUsers';
       var timeChartUrl = Config.getAdminServiceUrl() + 'reports/timeCharts/';
-      var healthUrl = 'http://status.squaredpreview.com/index.json';
+      var healthUrl = Config.getHealthCheckUrlServiceUrl();
 
       var urls = {
         'callUsage':callMetricsUrl,

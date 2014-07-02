@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter',
-    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter', '$translate',
+    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter, $translate) {
 
       //check if page is authorized
       Auth.isAuthorized($scope);
@@ -53,6 +53,18 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
+      var checkButtons = function() {
+        if (invalidcount > 0) {
+          angular.element('#btnAdd').prop('disabled', true);
+          angular.element('#btnEntitle').prop('disabled', true);
+          angular.element('#btnInvite').prop('disabled', true);
+        } else {
+          angular.element('#btnAdd').prop('disabled', false);
+          angular.element('#btnEntitle').prop('disabled', false);
+          angular.element('#btnInvite').prop('disabled', false);
+        }
+      };
+
       //tokenfield setup - Should make it into a directive later.
       angular.element('#usersfield').tokenfield({
         delimiter: [',', ';'],
@@ -68,13 +80,7 @@ angular.module('wx2AdminWebClientApp')
             angular.element(e.relatedTarget).addClass('invalid');
             invalidcount++;
           }
-          if (invalidcount > 0) {
-            angular.element('#btnAdd').prop('disabled', true);
-            angular.element('#btnEntitle').prop('disabled', true);
-          } else {
-            angular.element('#btnAdd').prop('disabled', false);
-            angular.element('#btnEntitle').prop('disabled', false);
-          }
+          checkButtons();
           checkPlaceholder();
         })
         .on('tokenfield:edittoken', function(e) {
@@ -86,13 +92,7 @@ angular.module('wx2AdminWebClientApp')
           if (!validateEmail(e.token.value)) {
             invalidcount--;
           }
-          if (invalidcount > 0) {
-            angular.element('#btnAdd').prop('disabled', true);
-            angular.element('#btnEntitle').prop('disabled', true);
-          } else {
-            angular.element('#btnAdd').prop('disabled', false);
-            angular.element('#btnEntitle').prop('disabled', false);
-          }
+          checkButtons();
           checkPlaceholder();
         });
 
@@ -192,7 +192,7 @@ angular.module('wx2AdminWebClientApp')
           Userservice.addUsers(usersList, getEntitlements(), callback);
         } else {
           console.log('No users entered.');
-          var error = ['Please enter valid user email(s).'];
+          var error = [$filter('translate')('usersPage.validEmailInput')];
           Notification.notify(error, 'error');
         }
 
@@ -281,7 +281,45 @@ angular.module('wx2AdminWebClientApp')
           Userservice.updateUsers(usersList, getEntitlements(), callback);
         } else {
           console.log('No users entered.');
-          var error = ['Please enter valid user email(s).'];
+          var error = [$filter('translate')('usersPage.validEmailInput')];
+          Notification.notify(error, 'error');
+        }
+
+      };
+
+      $scope.inviteUsers = function() {
+        var usersList = getUsersList();
+        Log.debug('Invite: ', usersList);
+        $scope.results = {
+          resultList: []
+        };
+        var isComplete = true;
+        var callback = function(data, status) {
+
+          if (data.success) {
+            Log.info('User invitation sent successfully.', data.id);
+            var success = [$translate.instant('usersPage.successInvite', data)];  // HOW TO ADD substitution?
+            Notification.notify(success, 'success');
+          } else {
+            Log.error('Could not process invitation.  Status: ' + status, data);
+            var error = [$translate.instant('userPage.errInvite', data)];
+            Notification.notify(error, 'error');
+            isComplete = false;
+          }
+
+          if (isComplete) {
+            resetUsersfield();
+          }
+          angular.element('#btnInvite').button('reset');
+
+        };
+
+        if (typeof usersList !== 'undefined' && usersList.length > 0) {
+          angular.element('#btnInvite').button('loading');
+          Userservice.inviteUsers(usersList, callback);
+        } else {
+          console.log('No users entered.');
+          var error = [$filter('translate')('usersPage.validEmailInput')];
           Notification.notify(error, 'error');
         }
 
@@ -326,6 +364,18 @@ angular.module('wx2AdminWebClientApp')
           {
             return svc.displayName;
           }
+        }
+      };
+
+      $scope.showInvite = false;
+      $scope.setSelectedTab = function(tab) {
+        if (tab === 'invite')
+        {
+          $scope.showInvite = true;
+        }
+        else
+        {
+          $scope.showInvite = false;
         }
       };
 

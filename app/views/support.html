@@ -45,7 +45,7 @@
           <tbody>
             <tr ng-repeat="log in userLogs">
               <td><span ng-if="log.name">{{log.name}}</span></td>
-              <td>{{log.date}}</td>
+              <td>{{log.date | date:'MMM d, y HH:mm:ss Z'}}</td>
               <td><a ng-click="downloadLog(log.filename)">{{'supportPage.logDownload' | translate}}</a></td>
             </tr>
           </tbody>

@@ -38,7 +38,7 @@ angular.module('wx2AdminWebClientApp')
             if (data.length !== 0) {
               $scope.showAURefresh = false;
               $scope.showAUContent = true;
-              $scope.activeUserCount = data.count;
+              $scope.activeUserCount = data.data;
             } else {
               $('#au-refresh').html('<span>No results available.</span>');
             }
@@ -78,7 +78,7 @@ angular.module('wx2AdminWebClientApp')
           $scope.callsCount = 0;
           if (data.success) {
             if (data.length !== 0) {
-              var calls = data.reportDetail;
+              var calls = data.data;
               if (calls.length > 0) {
                 $scope.callsCount = getMetricData(calls, 'calls');
               }
@@ -106,7 +106,7 @@ angular.module('wx2AdminWebClientApp')
           $scope.convoCount = 0;
           if (data.success) {
             if (data.length !== 0) {
-              var convos = data.reportDetail;
+              var convos = data.data;
               if (convos.length > 0) {
                 $scope.convoCount = getMetricData(convos, 'convos');
               }
@@ -134,7 +134,7 @@ angular.module('wx2AdminWebClientApp')
           $scope.cShareCount = 0;
           if (data.success) {
             if (data.length !== 0) {
-              var cShares = data.reportDetail;
+              var cShares = data.data;
               if (cShares.length > 0) {
                 var countVal = getMetricData(cShares, 'share');
                 $scope.cShareCount = countVal.toFixed(4);
@@ -163,7 +163,7 @@ angular.module('wx2AdminWebClientApp')
           var auCount = 0;
           if (data.success) {
             if (data.length !== 0) {
-              var aUsers = data.reportDetail;
+              var aUsers = data.data;
               if (aUsers.length > 0) {
                 auCount = getMetricData(aUsers, 'users');
               }

@@ -1,12 +1,21 @@
 <div class="notification"></div>
+
+<div  class="user-tab-panel" ng-hide="!Utils.isAdminPage()">
+  <tabset justified="true">
+    <tab heading="Users" id="userSubtab" select="setSelectedTab('users')"></tab>
+    <tab heading="Invite" id="inviteSubtab" select="setSelectedTab('invite')"></tab>
+  </tabset>
+  <div ng-controller="ListUsersCtrl" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled"><span id="export-icon"><i class="fa fa-file-text"></i></span></div>
+</div>
+
 <div ng-init="init()">
-  <!-- <div class="panel panel-default">
+
+  <div class="panel panel-default" ng-show="showInvite" id="manageUsersPanel">
     <div class="panel-heading panel-heading-default">
       <div id="addUsers">
         <h3 class="panel-title panel-title-default">
           <strong id="subTitleAdd" ng-show="isAddEnabled()" translate="usersPage.subTitleAdd"></strong>
           <strong id="subTitleEnable" ng-show="!isAddEnabled()" translate="usersPage.subTitleEnable"></strong>
-          <div id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled"><span id="export-icon"><i class="fa fa-file-text"></i></span></div>
         </h3>
       </div>
     </div>
@@ -29,13 +38,15 @@
         <div id="btnCancel" class="btn btn-link pull-right" ng-click="clearPanel()"><span translate="usersPage.clear"></span></div>
         <button id="btnAdd" class="btn btn-primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.add"></span></button>
         <button id="btnEntitle" class="btn btn-primary pull-right" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.update"></span></button>
+        <button id="btnInvite" class="btn btn-primary pull-right" ng-click="inviteUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.invite"></span></button>
+
       </div>
     </form>
   </div>
-</div> -->
+</div>
 
 <div ng-controller="ListUsersCtrl">
-  <div ng-show="queryuserslist">
+  <div ng-show="queryuserslist && !showInvite" id="userslistpanel">
     <table id="userslist" class="table table-bordered">
       <thead>
         <tr>
@@ -49,7 +60,7 @@
         <tr ng-repeat="user in queryuserslist" ng-click="showUserDetails(user)" id="{{user.id}}">
           <td><span ng-if="user.name">{{user.name.givenName}}</span></td>
           <td><span ng-if="user.name">{{user.name.familyName}}</span></td>
-          <td><a>{{user.userName}}</a></td>
+          <td>{{user.userName}}</td>
           <td class="text-center" ng-bind-html="getEntitlementState(user)?getStatusIcon('active'):getStatusIcon('inactive')"></td>
         </tr>
       </tbody>

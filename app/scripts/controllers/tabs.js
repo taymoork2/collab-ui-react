@@ -24,13 +24,16 @@ angular.module('wx2AdminWebClientApp')
 
       var setActiveTab = function() {
         var curPath = $location.path();
+        var path = '/login';
         for (var idx in $scope.tabs) {
           var tab = $scope.tabs[idx];
           if (tab.path === curPath) {
             tab.active = 'true';
+            path = curPath;
             break;
           }
         }
+        $location.path(path);
       };
 
       $scope.getTabTitle = function(title) {

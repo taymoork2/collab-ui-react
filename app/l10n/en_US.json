@@ -10,6 +10,7 @@
     "firstnameHeader" : "First Name",
     "lastnameHeader" : "Last Name",
     "emailHeader" : "Email",
+    "invite" : "Invite",
     "addedHeader" : "ADDED",
     "statusHeader" : "STATUS/TOOLS",
     "modify" : "Modify",
@@ -17,8 +18,11 @@
     "userInput" : "Enter email addresses separated by commas or semi-colons",
     "active": "<span class='glyphicon glyphicon-ok'></span>",
     "inactive" : "",
+    "validEmailInput" : "Please enter valid user email(s).",
     "csvBtnTitle" : "Export to CSV",
-    "csvFilename" : "exported_users.csv"
+    "csvFilename" : "exported_users.csv",
+    "successInvite" : "Your invitation has been sent successfully.  (Email ID: {{id}}) ",
+    "errInvite" : "Unable to process your invitation. Status: {{status}}."
   },
   "tabs" : {
     "homeTab" : "Home",
@@ -70,7 +74,11 @@
   },
   "reportsPage" : {
     "title" : "ORGANIZATION REPORTS",
-    "callMetrics" : "1:1 call usage metrics (Monthly) - PST"
+    "callMetrics" : "1:1 call usage metrics (Monthly) - PST",
+    "avgEntitlements" : "Entitlements",
+    "avgCalls" : "Average Calls",
+    "avgConversations" : "Average Conversations",
+    "activeUsers" : "Active Users"
   },
   "profilePage" : {
     "userProfile" : "User Profile",
