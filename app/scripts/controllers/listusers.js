@@ -28,6 +28,7 @@ angular.module('wx2AdminWebClientApp')
           date: 'fa-sort'
         }
       };
+      $scope.currentUser = null;
 
       var usersperpage = Config.usersperpage;
       $scope.pagination = Pagination.init($scope, usersperpage);
@@ -83,45 +84,43 @@ angular.module('wx2AdminWebClientApp')
       };
 
       $scope.changeEntitlement = function(user) {
-        var dlg = $dialogs.create('views/entitlements_dialog.html', 'entitlementDialogCtrl', user, Authinfo.getServices());
-        dlg.result.then(function(entitlements) {
-          Log.debug('Entitling user.', user);
-          Userservice.updateUsers([{
-            'address': user.userName
-          }], getUserEntitlementList(entitlements), function(data) {
-            var entitleResult = {
-              msg: null,
-              type: 'null'
-            };
-            if (data.success) {
-              getUserList();
-              var userStatus = data.userResponse[0].status;
-              if (userStatus === 200) {
-                entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
-                entitleResult.type = 'success';
-              } else if (userStatus === 404) {
-                entitleResult.msg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
-                entitleResult.type = 'error';
-              } else if (userStatus === 409) {
-                entitleResult.msg = 'Entitlement(s) previously updated.';
-                entitleResult.type = 'error';
-              } else {
-                entitleResult.msg = data.userResponse[0].email + '\'s entitlements were not updated, status: ' + userStatus;
-                entitleResult.type = 'error';
-              }
-              Notification.notify([entitleResult.msg], entitleResult.type);
+        Log.debug('Entitling user.', user);
+        angular.element('#btnSave').button('loading');
+        Userservice.updateUsers([{
+          'address': user.userName
+        }], getUserEntitlementList($scope.entitlements), function(data) {
+          var entitleResult = {
+            msg: null,
+            type: 'null'
+          };
+          if (data.success) {
+            getUserList();
+            var userStatus = data.userResponse[0].status;
+            if (userStatus === 200) {
+              entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
+              entitleResult.type = 'success';
+            } else if (userStatus === 404) {
+              entitleResult.msg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
+              entitleResult.type = 'error';
+            } else if (userStatus === 409) {
+              entitleResult.msg = 'Entitlement(s) previously updated.';
+              entitleResult.type = 'error';
             } else {
-              Log.error('Failed updating user with entitlements.');
-              Log.error(data);
-              entitleResult = {
-                msg: 'Failed to update ' + user.userName + '\'s entitlements.',
-                type: 'error'
-              };
-              Notification.notify([entitleResult.msg], entitleResult.type);
+              entitleResult.msg = data.userResponse[0].email + '\'s entitlements were not updated, status: ' + userStatus;
+              entitleResult.type = 'error';
             }
-          });
-        }, function() {
-          console.log('Dialog canceled');
+            Notification.notify([entitleResult.msg], entitleResult.type);
+            angular.element('#btnSave').button('reset');
+          } else {
+            Log.error('Failed updating user with entitlements.');
+            Log.error(data);
+            entitleResult = {
+              msg: 'Failed to update ' + user.userName + '\'s entitlements.',
+              type: 'error'
+            };
+            Notification.notify([entitleResult.msg], entitleResult.type);
+            angular.element('#btnSave').button('reset');
+          }
         });
       };
 
@@ -183,7 +182,7 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-      $scope.getStatus = function(status) {
+      $scope.getStatusIcon = function(status) {
         if (status === 'active') {
           return $filter('translate')('usersPage.active');
         } else {
@@ -191,8 +190,78 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-      $scope.showUserProfile = function(user) {
-        $location.path('/userprofile/' + user.id);
+
+      $scope.showUserDetails = function(user) {
+        //remove selected class on previous user
+        if($scope.currentUser){
+          angular.element('#'+ $scope.currentUser.id).removeClass('selected');
+        }
+        $scope.currentUser = user;
+        angular.element('#' + user.id).addClass('selected');
+
+        //Service profile
+        $scope.entitlements = {};
+        for (var i = 0; i < $rootScope.services.length; i++) {
+          var service = $rootScope.services[i].sqService;
+          var ciService = $rootScope.services[i].ciService;
+          if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
+            $scope.entitlements[service] = true;
+          } else {
+            $scope.entitlements[service] = false;
+          }
+        }
+
+        //User profile
+        $scope.orgName = Authinfo.getOrgName();
+        if ($scope.currentUser.photos) {
+          for (var idx in $scope.currentUser.photos) {
+            if ($scope.currentUser.photos[idx].type === 'thumbnail') {
+              $scope.photoPath = $scope.currentUser.photos[idx].value;
+            }
+          } //end for
+        } //endif
+
+      };
+
+      $scope.updateUser = function() {
+        angular.element('#btnSave').button('loading');
+        var userData = {
+          'schemas': Config.scimSchemas,
+          'title': $scope.currentUser.title,
+          'name': {
+            'givenName': $scope.currentUser.name.givenName,
+            'familyName': $scope.currentUser.name.familyName
+          },
+        };
+
+        Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
+        Log.debug(userData);
+
+        Userservice.updateUserProfile($scope.currentUser.id, userData, function(data, status) {
+          if (data.success) {
+            var successMessage = [];
+            successMessage.push($filter('translate')('profilePage.success'));
+            Notification.notify(successMessage, 'success');
+            angular.element('#btnSave').button('reset');
+            $scope.user = data;
+          } else {
+            Log.debug('Update existing user failed. Status: ' + status);
+            var errorMessage = [];
+            errorMessage.push($filter('translate')('profilePage.error'));
+            Notification.notify(errorMessage, 'error');
+            angular.element('#btnSave').button('reset');
+          }
+        });
+      };
+
+      $scope.getServiceName = function (service) {
+        for (var i = 0; i < $rootScope.services.length; i++) {
+          var svc = $rootScope.services[i];
+          if (svc.sqService === service)
+          {
+            return svc.displayName;
+          }
+        }
       };
 
       $scope.$on('PAGINATION_UPDATED', function() {

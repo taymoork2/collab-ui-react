@@ -1,5 +1,5 @@
 'use strict';
-/* global AmCharts */
+/* global AmCharts, $ */
 
 angular.module('wx2AdminWebClientApp')
 	.controller('ReportsCtrl', ['$scope', 'ReportsService', 'Log',

@@ -13,7 +13,8 @@ angular.module('wx2AdminWebClientApp')
 
       adminServiceUrl: {
         dev: 'http://localhost:8080/atlas-server/admin/api/v1/',
-        integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+        integration: 'https://atlas-a.wbx2.com/admin/api/v1/',
+        // integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
         prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
       },
 

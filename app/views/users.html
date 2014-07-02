@@ -1,11 +1,12 @@
 <div class="notification"></div>
 <div ng-init="init()">
-  <div class="panel panel-default">
+  <!-- <div class="panel panel-default">
     <div class="panel-heading panel-heading-default">
       <div id="addUsers">
         <h3 class="panel-title panel-title-default">
           <strong id="subTitleAdd" ng-show="isAddEnabled()" translate="usersPage.subTitleAdd"></strong>
           <strong id="subTitleEnable" ng-show="!isAddEnabled()" translate="usersPage.subTitleEnable"></strong>
+          <div id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled"><span id="export-icon"><i class="fa fa-file-text"></i></span></div>
         </h3>
       </div>
     </div>
@@ -31,36 +32,25 @@
       </div>
     </form>
   </div>
-</div>
+</div> -->
 
-
-<div class="panel panel-default" ng-show="queryuserslist" id="userslistpanel" ng-controller="ListUsersCtrl">
-  <div class="panel-heading panel-heading-default">
-    <h3 class="panel-title panel-title-default">
-      <strong> {{'usersPage.existingUsers' | translate}}</strong>
-      <div id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled"><span id="export-icon"><i class="fa fa-file-text"></i></span></div>
-    </h3>
-  </div>
-  <div class="panel-body">
-    <table class="table">
+<div ng-controller="ListUsersCtrl">
+  <div ng-show="queryuserslist">
+    <table id="userslist" class="table table-bordered">
       <thead>
         <tr>
-          <th ng-click="setSort('name')" id="name-sort"><span translate="usersPage.nameHeader"></span> <i class="fa {{sort.icon.name}}"></i></th>
-          <th ng-click="setSort('username')" id="username-sort"><span translate="usersPage.emailHeader"></span> <i class="fa {{sort.icon.username}}"></i></th>
-          <th id="date-sort"><span translate="usersPage.addedHeader"></span> <i class="fa {{sort.icon.date}}"></i></th>
-          <th><span translate="usersPage.statusHeader"></span></th>
+          <th ng-click="setSort('name')" id="name-sort"><span translate="usersPage.firstnameHeader"></span> <i class="fa {{sort.icon.name}} pull-right"></i></th>
+          <th ng-click="setSort('name')" id="name-sort"><span translate="usersPage.lastnameHeader"></span> <i class="fa {{sort.icon.name}} pull-right"></i></th>
+          <th ng-click="setSort('username')" id="username-sort"><span translate="usersPage.emailHeader"></span> <i class="fa {{sort.icon.username}} pull-right"></i></th>
+          <th class="text-center"><img src="images/logo_gray.png" height="20px" width="20px" alt=""></img></th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in queryuserslist">
-          <td><span ng-if="user.name">{{user.name.familyName}}, {{user.name.givenName}}</span></td>
-          <td><a ng-click="showUserProfile(user)">{{user.userName}}</a></td>
-          <td>N/A</td>
-          <td class="btn-group"><span class="dropdown-toggle" data-toggle="dropdown">{{ getEntitlementState(user)? getStatus('active'):getStatus('inactive') }} <span class="caret"></span></span>
-            <ul class="dropdown-menu" role="menu" >
-              <li ng-click="changeEntitlement(user)"><a translate="usersPage.modify"></a></li>
-            </ul>
-          </td>
+        <tr ng-repeat="user in queryuserslist" ng-click="showUserDetails(user)" id="{{user.id}}">
+          <td><span ng-if="user.name">{{user.name.givenName}}</span></td>
+          <td><span ng-if="user.name">{{user.name.familyName}}</span></td>
+          <td><a>{{user.userName}}</a></td>
+          <td class="text-center" ng-bind-html="getEntitlementState(user)?getStatusIcon('active'):getStatusIcon('inactive')"></td>
         </tr>
       </tbody>
     </table>
@@ -71,4 +61,76 @@
       <li><a id="next-page" ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
     </ul>
   </div>
+
+  <table class="table table-bordered" id="details-table" ng-show="currentUser">
+    <thead>
+      <tr>
+        <th ng-if="currentUser.name.givenName">Plan details for {{currentUser.name.givenName}}</th>
+        <th ng-if="!currentUser.name.givenName">Plan details for {{currentUser.userName}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <tabset justified="true">
+            <tab heading="Service Profile">
+              <div class="details-body">
+                <strong>Services</strong>
+                <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements">
+                  <div class="btn-group">
+                    <input type="checkbox" name="{{service}}" ng-model="entitlements[service]" icheck>
+                  </div>
+                  <span style="font-size:15px; padding:10px">
+                    {{getServiceName(service)}}
+                  </span>
+                </div>
+                <button id="btnSave" class="btn btn-primary" style="margin-left:62%; margin-top:5px;" ng-click="changeEntitlement(currentUser)" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.save"></span></button>
+              </div>
+            </tab>
+            <tab heading="User Profile">
+              <div class="details-body">
+                <div style="margin-bottom:5px;" ng-hide="photoPath">
+                  <i class="fa fa-user fa-4x"></i>
+                </div>
+                <div style="margin-bottom:5px;" ng-show="photoPath">
+                  <img src="{{photoPath}}"></img>
+                </div>
+                <div class="form-profile-grp">
+                  <label style="margin-bottom:0px;" for="firstName" translate="profilePage.fname"></label>
+                  <input class="form-control" type="text" id="fnameField" ng-model="currentUser.name.givenName" value="{{currentUser.name.givenName}}"/>
+                </div>
+
+                <div class="form-profile-grp">
+                  <label style="margin-bottom:0px;" for="lastName" translate="profilePage.lname"></label>
+                  <input class="form-control" type="text" id="lnameField" ng-model="currentUser.name.familyName" value="{{currentUser.name.familyName}}"/>
+                </div>
+
+                <div class="form-profile-grp">
+                  <label style="margin-bottom:0px;" for="email" translate="profilePage.email"></label>
+                  <input class="form-control" type="text" id="emailField" value="{{currentUser.userName}}" disabled/>
+                </div>
+
+                <div class="form-profile-grp">
+                  <label style="margin-bottom:0px;" for="org" translate="profilePage.org"></label>
+                  <input class="form-control" type="text" id="orgField" value="{{orgName}}" disabled/>
+                </div>
+
+                <div class="form-profile-grp">
+                  <label style="margin-bottom:0px;" for="title" translate="profilePage.title"></label>
+                  <input class="form-control" type="text" id="titleField" ng-model="currentUser.title" value="{{currentUser.title}}"/>
+                </div>
+
+                <div class="form-profile-grp">
+                  <label style="margin-bottom:0px;" for="modDate" translate="profilePage.modDate"></label>
+                  <input class="form-control" type="text" id="modDateField" value="{{currentUser.meta.lastModified}}" disabled/>
+                </div>
+
+                <button id="btnSave" class="btn btn-primary" style="margin-left:62%; margin-top:5px;" ng-click="updateUser()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.save"></span></button>
+              </div>
+            </tab>
+          </tabset>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

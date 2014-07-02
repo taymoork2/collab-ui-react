@@ -9,7 +9,6 @@ angular.module('wx2AdminWebClientApp')
         var roles  = Authinfo.getRoles();
         var tabs = [];
         for(var idx = roles.length - 1; idx >= 0; idx--) {
-          console.log(Config.roles[roles[idx]]);
           tabs = tabs.concat(Config.roles[roles[idx]]);
         }
         $scope.tabs = Utils.removeDuplicates(tabs, 'title');
@@ -30,8 +29,6 @@ angular.module('wx2AdminWebClientApp')
           if (tab.path === curPath) {
             tab.active = 'true';
             break;
-          } else {
-            $location.path('/login');
           }
         }
       };
