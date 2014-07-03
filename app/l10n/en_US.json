@@ -7,20 +7,21 @@
     "clear" : "Clear",
     "add" : "Add",
     "update" : "Update",
+    "firstnameHeader" : "First Name",
+    "lastnameHeader" : "Last Name",
+    "emailHeader" : "Email",
     "invite" : "Invite",
-    "nameHeader" : "NAME",
-    "emailHeader" : "EMAIL",
     "addedHeader" : "ADDED",
     "statusHeader" : "STATUS/TOOLS",
     "modify" : "Modify",
     "existingUsers" : "Existing Users",
     "userInput" : "Enter email addresses separated by commas or semi-colons",
+    "active": "<span class='glyphicon glyphicon-ok'></span>",
+    "inactive" : "",
     "validEmailInput" : "Please enter valid user email(s).",
-    "active": "Active",
-    "inactive" : "Inactive",
     "csvBtnTitle" : "Export to CSV",
     "csvFilename" : "exported_users.csv",
-    "successInvite" : "Your invitation has been sent successfully.  (Email ID: {{id}}) ",   
+    "successInvite" : "Your invitation has been sent successfully.  (Email ID: {{id}}) ",
     "errInvite" : "Unable to process your invitation. Status: {{status}}."
   },
   "tabs" : {
@@ -49,6 +50,9 @@
     "link" : "this link.",
     "using" : "Please start using",
     "squared" : "Squared."
+  },
+  "invitePage" : {
+    "redirect" : "Redirecting..."
   },
   "orgsPage" : {
     "title" : "MANAGE ORGANIZATIONS",

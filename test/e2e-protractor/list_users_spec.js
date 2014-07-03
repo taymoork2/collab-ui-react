@@ -261,23 +261,20 @@ describe('List users flow', function() {
   // Update entitlements
   describe('Updating entitlements', function() {
     it('should display initial entitlements from newly added user', function() {
-      browser.driver.findElement(by.id('userSubtab')).click();
+      element(by.id('userSubtab')).click();
       browser.sleep(1000);
-      element(by.css('.caret')).click();
-      element(by.css('.btn-group li')).click();
-      var modal = element(by.css('.modal-content'));
-      expect(modal.isPresent()).toBe(true);
-      modal.element.all(by.css('.icheckbox_square-blue')).then(function(items) {
+      element(by.css('tr')).click();
+      element.all(by.css('.details-body .icheckbox_square-blue')).then(function(items) {
         expect(items.length).toBe(4);
         expect(items[0].getAttribute('class')).toContain('checked');
         expect(items[3].getAttribute('class')).toContain('checked');
       });
-      element(by.css('button.close')).click();
     });
   });
 
   describe('Exporting to CSV', function() {
     it('should display the CSV export button', function() {
+      element(by.css('li[heading="Users"]')).click();
       expect(element(by.id('export-btn')).isDisplayed()).toBe(true);
     });
   });

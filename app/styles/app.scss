@@ -53,18 +53,25 @@ h2, h3 {
 }
 
 th {
-  font-weight: normal;
-  color: #B9B5B1;
+  font-weight: bold;
+  color: #474745;
   border-bottom: none !important;
+  background-color: #EBEBEB;
+  i {
+    color: #9A9A9A;
+  }
 }
 
 td {
   font-size: 15px !important;
-  color: #3B3A36 !important;
+  color: #3B3A36;
+  &.text-center {
+    color: #4BB72B;
+  }
 }
 
 table th, .table td {
- border-top: none !important;
+ // border-top: none !important;
 }
 
 .panel-title {
@@ -466,6 +473,9 @@ input:disabled {
 }
 
 #export-btn {
+  position:absolute;
+  top:11px;
+  left: 274px;
   display: inline-block;
   padding: 0;
   line-height: 0;
@@ -480,14 +490,6 @@ input:disabled {
     transition: opacity 1s;
     -webkit-transition: opacity 1s;
   }
-}
-
-#btnSave {
-  margin-right: 15px;
-}
-
-#global-export-btn {
-
 }
 
 #geb-wrapper {
@@ -534,6 +536,9 @@ input:disabled {
   width: 160px;
   float: left;
   padding: 10px;
+  a {
+    cursor: pointer;
+  }
 }
 
 .content-panel {
@@ -544,46 +549,46 @@ input:disabled {
 /* Twitter typeahead styling */
 .tt-query,
 .tt-hint {
-    width: 541%;
-    padding: 8px 12px;
-    font-size: 14px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    font-style: normal !important;
+  width: 541%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-style: normal !important;
 }
 
 .tt-query {
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
 .tt-hint {
-    color: #999
+  color: #999
 }
 
 .tt-dropdown-menu {
-    width: 541%;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  width: 541%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  box-shadow: 0 5px 10px rgba(0,0,0,.2);
 }
 
 .tt-suggestion {
-    padding: 3px 20px;
-    font-size: 14px;
-    line-height: 24px;
+  padding: 3px 20px;
+  font-size: 14px;
+  line-height: 24px;
 }
 
 .tt-suggestion.tt-cursor {
-    color: #fff;
-    background-color: #0097cf;
+  color: #fff;
+  background-color: #0097cf;
 
 }
 
 .tt-suggestion p {
-    margin: 0;
+  margin: 0;
 }
 
 .tt-input {
@@ -698,4 +703,72 @@ input:disabled {
   margin-left: -56px;
 }
 
+#details-table {
+  position:relative;
+  top: -909px;
+  left: 989px;
+  width: 300px;
+}
 
+.details-body {
+  margin-left: 25px;
+  font-size: 14px !important;
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+#details-table {
+  .tab-pane {
+   background-color: #F8F8F8;
+   border-left: 1px solid lightgray;
+   border-right: 1px solid lightgray;
+   border-bottom: 1px solid lightgray;
+  }
+
+ .tabbable li.active {
+  background-color: #F8F8F8;
+  border:0;
+  a {
+    background-color: #F8F8F8;
+    border-bottom-color: #F8F8F8 !important;
+  }
+  }
+}
+
+.form-profile-grp {
+  margin-right:20px;
+  margin-bottom: 5px;
+}
+
+.icheckbox_square-blue {
+  background-color: white !important;
+}
+
+#userslist tr {
+  cursor: crosshair;
+  &:hover {
+    background-color: #E8F1F8;
+  }
+}
+
+.selected {
+  background-color: #E8F1F8;
+}
+
+#userslist {
+  margin-top: 20px;
+}
+
+#userSubtab {
+  cursor:pointer;
+  a {
+    color:#333333;
+  }
+}
+
+#inviteSubtab {
+  cursor:pointer;
+  a {
+    color:#333333;
+  }
+}

@@ -72,7 +72,7 @@ describe('App flow', function() {
   }); //State is logged-in
 
   //Test which tabs are present
-  it('should display correct tabs for user based on role', function(){
+  it('should display correct tabs for user based on role', function() {
     expect(element(by.css('li[heading="Home"]')).isDisplayed()).toBe(true);
     expect(element(by.css('li[heading="Users"]')).isDisplayed()).toBe(true);
     expect(element(by.css('li[heading="Manage"]')).isDisplayed()).toBe(true);
@@ -80,7 +80,7 @@ describe('App flow', function() {
   });
 
   it('clicking on users tab should change the view', function() {
-    browser.driver.findElement(by.css('li[heading="Users"]')).click();
+    element(by.css('li[heading="Users"]')).click();
     browser.driver.wait(function() {
       return browser.driver.isElementPresent(by.id('tabs'));
     }).then(function() {
@@ -106,8 +106,8 @@ describe('App flow', function() {
   describe('Add User Flows', function() {
 
     describe('Page initialization', function() {
-      it('click on invite subtab should show manage users', function () {
-        browser.driver.findElement(by.css('li[heading="Invite"]')).click();
+      it('click on invite subtab should show manage users', function() {
+        element(by.id('inviteSubtab')).click();
         expect(element(by.id('userslistpanel')).isDisplayed()).toEqual(false);
         expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
       });
@@ -128,8 +128,10 @@ describe('App flow', function() {
           expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
           browser.sleep(500);
           element(by.css('.fa-times')).click();
+          browser.sleep(500);
         });
       });
+
       it('should display error if no user is entered on update', function() {
         element(by.id('btnEntitle')).click();
         element(by.css('.alertify-log-error')).click().then(function() {
@@ -137,8 +139,10 @@ describe('App flow', function() {
           expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
           browser.sleep(500);
           element(by.css('.fa-times')).click();
+          browser.sleep(500);
         });
       });
+
       it('should display error if no user is entered on invite', function() {
         element(by.id('btnInvite')).click();
         element(by.css('.alertify-log-error')).click().then(function() {
@@ -146,6 +150,7 @@ describe('App flow', function() {
           expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
           browser.sleep(500);
           element(by.css('.fa-times')).click();
+          browser.sleep(500);
         });
       });
 
@@ -285,6 +290,7 @@ describe('App flow', function() {
 
   describe('Invite users', function() {
     it('should invite users successfully', function() {
+      element(by.id('inviteSubtab')).click();
       var inviteEmail = utils.randomTestEmail();
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
@@ -297,9 +303,7 @@ describe('App flow', function() {
           expect(rows[0].getText()).toContain('sent successfully');
           browser.sleep(500);
           element(by.css('.fa-times')).click();
-
         });
- 
       });
     });
   });
@@ -313,7 +317,7 @@ describe('App flow', function() {
     // });
 
     it('clicking on home tab should change the view', function() {
-      browser.driver.findElement(by.css('li[heading="Home"]')).click();
+      element(by.css('li[heading="Home"]')).click();
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
@@ -330,7 +334,7 @@ describe('App flow', function() {
     });
 
     it('clicking on orgs tab should change the view', function() {
-      browser.driver.findElement(by.css('li[heading="Manage"]')).click();
+      element(by.css('li[heading="Manage"]')).click();
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
@@ -346,7 +350,7 @@ describe('App flow', function() {
     });
 
     it('clicking on reports tab should change the view', function() {
-      browser.driver.findElement(by.css('li[heading="Reports"]')).click();
+      element(by.css('li[heading="Reports"]')).click();
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {
@@ -365,7 +369,7 @@ describe('App flow', function() {
     });
 
     it('clicking on users tab should change the view', function() {
-      browser.driver.findElement(by.css('li[heading="Users"]')).click();
+      element(by.css('li[heading="Users"]')).click();
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.id('tabs'));
       }).then(function() {

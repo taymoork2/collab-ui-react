@@ -8,7 +8,8 @@ angular.module('wx2AdminWebClientApp', [
   'ui.bootstrap',
   'dialogs',
   'pascalprecht.translate',
-  'ngCsv'
+  'ngCsv',
+  'ipCookie'
 ])
   .config(['$routeProvider', '$translateProvider',
     function($routeProvider, $translateProvider) {
@@ -56,6 +57,10 @@ angular.module('wx2AdminWebClientApp', [
         .when('/support', {
           templateUrl: 'views/support.html',
           controller: 'SupportCtrl'
+        })
+        .when('/invite', {
+          templateUrl: 'views/invite.html',
+          controller: 'InviteCtrl'
         })
         .otherwise({
           redirectTo: '/'
