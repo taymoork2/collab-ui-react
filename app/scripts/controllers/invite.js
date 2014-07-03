@@ -16,7 +16,7 @@ angular.module('wx2AdminWebClientApp')
 					entitlements: 'webExSquared'
 				};
 				var cookieOptions = {
-					// domain: 'wbx2.com',
+					domain: 'wbx2.com',
 					expires: 1  // 1 day
 				};
 
