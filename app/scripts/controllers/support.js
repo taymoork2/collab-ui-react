@@ -9,6 +9,38 @@ angular.module('wx2AdminWebClientApp')
       Notification.init($scope);
       $scope.popup = Notification.popup;
 
+      $scope.sortIconDate =  'fa-sort-asc';
+      $scope.sortIconName =  'fa-sort';
+
+      $scope.logsSortBy = 'date';
+      $scope.reverseLogs = false;
+
+      $scope.toggleSort = function(type) {
+        $scope.reverseLogs = !$scope.reverseLogs;
+        switch(type) {
+        case 'name':
+          changeSortIcon('name', 'sortIconName', 'sortIconDate');
+          break;
+        
+        case 'date':
+          changeSortIcon('date', 'sortIconDate', 'sortIconName');
+          break;
+
+        default:
+          Log.debug('Sort type not recognized.');
+        }
+      };
+
+      var changeSortIcon = function(logsSortBy, sortIcon, resetIcon) {
+        $scope.logsSortBy = logsSortBy;
+        if($scope.reverseLogs === true) {
+          $scope[sortIcon] =  'fa-sort-desc';
+        } else {
+          $scope[sortIcon] =  'fa-sort-asc';
+        }
+        $scope[resetIcon] =  'fa-sort';
+      };
+
       var initializeTypeahead = function() {
         var scimSearchUrl = Config.scimUrl + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
         var suggestUsersUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
@@ -137,3 +169,4 @@ angular.module('wx2AdminWebClientApp')
       };
     }
   ]);
+

@@ -37,13 +37,13 @@
         <table class="table" ng-show="userLogs">
           <thead>
             <tr>
-              <th><span translate="supportPage.logName"></span></th>
-              <th><span translate="supportPage.logDate"></span></th>
+              <th ng-click="toggleSort('name')"><span translate="supportPage.logName"></span> <i class="fa {{sortIconName}}"></i></th>
+              <th ng-click="toggleSort('date')"><span translate="supportPage.logDate"></span> <i class="fa {{sortIconDate}}"></i></th>
               <th><span translate="supportPage.logAction"></span></th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="log in userLogs">
+            <tr ng-repeat="log in userLogs | orderBy:logsSortBy:reverseLogs">
               <td><span ng-if="log.name">{{log.name}}</span></td>
               <td>{{log.date | date:'MMM d, y HH:mm:ss Z'}}</td>
               <td><a ng-click="downloadLog(log.filename)">{{'supportPage.logDownload' | translate}}</a></td>
