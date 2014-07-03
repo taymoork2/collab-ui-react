@@ -108,7 +108,7 @@ angular.module('wx2AdminWebClientApp')
         },
 
         isAdminPage: function() {
-          var nonAdminRoutes = ['activate', 'downloads'];
+          var nonAdminRoutes = ['activate', 'downloads', 'invite'];
           for (var i = 0; i < nonAdminRoutes.length; i++) {
             if ($location.url().indexOf(nonAdminRoutes[i]) > -1) {
               return false;

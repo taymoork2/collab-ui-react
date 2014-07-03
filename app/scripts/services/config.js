@@ -52,7 +52,7 @@ angular.module('wx2AdminWebClientApp')
           keepOnNavigate: false
         },
 
-        allowedPaths: ['/activate', '/downloads'],
+        allowedPaths: ['/activate', '/downloads', '/invite'],
 
         tabs: {
           home: {

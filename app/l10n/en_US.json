@@ -51,6 +51,9 @@
     "using" : "Please start using",
     "squared" : "Squared."
   },
+  "invitePage" : {
+    "redirect" : "Redirecting..."
+  },
   "orgsPage" : {
     "title" : "MANAGE ORGANIZATIONS",
     "subTitleOrgs": "Organizations Tools",
