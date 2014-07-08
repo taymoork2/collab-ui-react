@@ -367,8 +367,8 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-      $scope.userTabActive = 'true';
-      $scope.inviteTabActive = 'false';
+      $scope.userTabActive = true;
+      $scope.inviteTabActive = false;
 
       var setTab = function (tab) {
         if ($rootScope.selectedSubTab && $rootScope.selectedSubTab !== undefined)
@@ -378,14 +378,14 @@ angular.module('wx2AdminWebClientApp')
         if (tab === 'invite')
         {
           $scope.showInvite = true;
-          $scope.userTabActive = 'false';
-          $scope.inviteTabActive = 'true';
+          $scope.userTabActive = false;
+          $scope.inviteTabActive = true;
         }
         else
         {
           $scope.showInvite = false;
-          $scope.userTabActive = 'true';
-          $scope.inviteTabActive = 'false';
+          $scope.userTabActive = true;
+          $scope.inviteTabActive = false;
         }
         $rootScope.selectedSubTab = undefined;
       };

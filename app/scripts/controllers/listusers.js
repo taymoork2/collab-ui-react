@@ -36,6 +36,8 @@ angular.module('wx2AdminWebClientApp')
       $scope.popup = Notification.popup;
 
       var getUserList = function() {
+        //clear currentUser if a new search begins
+        $scope.currentUser = null;
         var startIndex = $scope.pagination.page * usersperpage + 1;
         UserListService.listUsers(startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function(data, status, searchStr) {
           if (data.success) {
@@ -43,6 +45,7 @@ angular.module('wx2AdminWebClientApp')
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
               Log.debug('Returned data.', data.Resources);
               $scope.queryuserslist = data.Resources;
+              $rootScope.$broadcast('PAGINATION_UPDATED');
             } else {
               Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
             }
@@ -126,8 +129,7 @@ angular.module('wx2AdminWebClientApp')
 
       var getUserEntitlementList = function(entitlements) {
         var entList = [];
-        for (var i = 0; i< $rootScope.services.length ; i++)
-        {
+        for (var i = 0; i < $rootScope.services.length; i++) {
           var service = $rootScope.services[i].sqService;
           entList.push(getFeature(service, entitlements[service]));
         }
@@ -192,8 +194,8 @@ angular.module('wx2AdminWebClientApp')
 
       $scope.showUserDetails = function(user) {
         //remove selected class on previous user
-        if($scope.currentUser){
-          angular.element('#'+ $scope.currentUser.id).removeClass('selected');
+        if ($scope.currentUser) {
+          angular.element('#' + $scope.currentUser.id).removeClass('selected');
         }
         $scope.currentUser = user;
         angular.element('#' + user.id).addClass('selected');
@@ -212,13 +214,19 @@ angular.module('wx2AdminWebClientApp')
 
         //User profile
         $scope.orgName = Authinfo.getOrgName();
-        if ($scope.currentUser.photos) {
-          for (var idx in $scope.currentUser.photos) {
-            if ($scope.currentUser.photos[idx].type === 'thumbnail') {
-              $scope.photoPath = $scope.currentUser.photos[idx].value;
-            }
-          } //end for
-        } //endif
+        Userservice.getUser($scope.currentUser.id, function(data, status) {
+          if (data.success) {
+            if (data.photos) {
+              for (var i in data.photos) {
+                if (data.photos[i].type === 'thumbnail') {
+                  $scope.photoPath = data.photos[i].value;
+                }
+              } //end for
+            } //endif
+          } else {
+            Log.debug('Get existing user failed. Status: ' + status);
+          }
+        });
 
       };
 
@@ -253,25 +261,27 @@ angular.module('wx2AdminWebClientApp')
         });
       };
 
-      $scope.getServiceName = function (service) {
+      $scope.getServiceName = function(service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
-          if (svc.sqService === service)
-          {
+          if (svc.sqService === service) {
             return svc.displayName;
           }
         }
       };
 
       $scope.$on('PAGINATION_UPDATED', function() {
+        $scope.currentUser = null;
         $scope.page = $scope.pagination.page + 1;
         $('.pagination-current a').html($scope.page);
       });
 
-      $scope.exportBtn = { disabled: false };
-      $scope.exportCSV = function(){
+      $scope.exportBtn = {
+        disabled: false
+      };
+      $scope.exportCSV = function() {
         var promise = UserListService.exportCSV($scope);
-        promise.then(null, function(error){
+        promise.then(null, function(error) {
           Notification.notify(Array.new(error), 'error');
         });
 

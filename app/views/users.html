@@ -75,7 +75,7 @@
     </ul>
   </div>
 
-  <table class="table table-bordered" id="details-table" ng-show="currentUser">
+  <table class="table table-bordered" id="details-table" ng-show="currentUser && !showInvite">
     <thead>
       <tr>
         <th ng-if="currentUser.name.givenName">Plan details for {{currentUser.name.givenName}}</th>

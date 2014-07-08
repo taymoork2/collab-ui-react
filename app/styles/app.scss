@@ -304,7 +304,6 @@ label {
   text-align: left;
   height:250px;
   width: 450px;
-  y-overflow: auto;
   z-index: 5001 !important;
   position:fixed !important;
   bottom: 0px !important;
@@ -318,11 +317,15 @@ label {
 .panel-danger-body {
   color: #a94442 !important;
   font-size:13px;
+  overflow: auto;
+  height: 198px;
 }
 
 .panel-success-body {
   color: #3c763d !important;
   font-size:13px;
+  overflow: auto;
+  height: 198px;
 }
 
 .panel-notification-heading {
@@ -669,9 +672,9 @@ input:disabled {
 }
 
 #details-table {
-  position:relative;
-  top: -909px;
-  left: 989px;
+  position:absolute;
+  top: 62px;
+  left: 1000px;
   width: 300px;
 }
 
