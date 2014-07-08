@@ -298,11 +298,11 @@ angular.module('wx2AdminWebClientApp')
 
           if (data.success) {
             Log.info('User invitation sent successfully.', data.id);
-            var success = [$translate.instant('usersPage.successInvite', data)];  // HOW TO ADD substitution?
+            var success = [$translate.instant('usersPage.successInvite', data)];
             Notification.notify(success, 'success');
           } else {
             Log.error('Could not process invitation.  Status: ' + status, data);
-            var error = [$translate.instant('userPage.errInvite', data)];
+            var error = [$translate.instant('usersPage.errInvite', data)];
             Notification.notify(error, 'error');
             isComplete = false;
           }

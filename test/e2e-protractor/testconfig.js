@@ -20,3 +20,7 @@ exports.deviceUserAgent = {
 	iPad: 'Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53',
 	iPod: 'Mozilla/5.0 (iPod touch; CPU iPhone OS 7_0_3 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B511 Safari/9537.53'
 };
+
+exports.orgId = {
+  pbrOrg: '4214d345-7caf-4e32-b015-34de878d1158'
+};

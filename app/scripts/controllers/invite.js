@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-	.controller('InviteCtrl', ['$scope', '$location', '$window', '$http', 'ipCookie', 'Utils', 'Inviteservice', 'Log', 
-		function($scope, $location, $window, $http, ipCookie, Utils, Inviteservice, Log) {
+	.controller('InviteCtrl', ['$scope', '$location', '$window', '$http', 'ipCookie', 'Utils', 'Inviteservice', 'Config', 'Log',
+		function($scope, $location, $window, $http, ipCookie, Utils, Inviteservice, Config, Log) {
 
 			// check if cookie is present 
 			var cookieName = 'invdata';
@@ -13,32 +13,26 @@ angular.module('wx2AdminWebClientApp')
 				inviteCookie = {
 					userEmail: null,
 					displayName: null,
-					entitlements: 'webExSquared'
+					orgId: null,
+					entitlements: null
 				};
 				var cookieOptions = {
-					domain: '.wbx2.com',
-					expires: 1  // 1 day
+					domain: Config.isDev() ? null : '.wbx2.com',
+					expires: 1 // 1 day
 				};
 
 				// extracts param from url
 				var encryptedUser = $location.search().user;
 
 				// call backend to decrypt param 
-				Inviteservice.resolveMockedUser(encryptedUser)
+				Inviteservice.resolveInvitedUser(encryptedUser)
 					.then(function(data) {
-						$scope.sendStatus = 'email success';
+						Log.debug('param decrypted');
 
-						if (data.email) {
-							inviteCookie.userEmail = data.email;
-						}
-
-						if (data.displayName) {
-							inviteCookie.displayName = data.displayName;
-						}
-
-						if (data.entitlements) {
-							inviteCookie.entitlements = data.entitlements;
-						}
+						inviteCookie.userEmail = data.email;
+						inviteCookie.displayName = data.displayName;
+						inviteCookie.entitlements = data.entitlements;
+						inviteCookie.orgId = data.orgId;
 
 						ipCookie(cookieName, inviteCookie, cookieOptions);
 					});
