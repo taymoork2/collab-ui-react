@@ -136,7 +136,7 @@ angular.module('wx2AdminWebClientApp')
                     userId: logdata[1],
                     clientType: logdata[2],
                     name: logdata[3],
-                    date: data.logDetails[index].last_modified
+                    date: moment.utc(data.logDetails[index].last_modified).local().format('MMM d, YYYY h:mm A ZZ')
                   };
                   $scope.userLogs.push(log);
                   angular.element('#logSearchBtn').button('reset');
