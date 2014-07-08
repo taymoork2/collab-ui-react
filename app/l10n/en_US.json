@@ -141,10 +141,10 @@
     "launchBtn" : "Launch"
   },
   "inviteModal" : {
-    "title" : "Invite Users",
-    "heading" : "Entitle organization users",
+    "title" : "Service Entitlement",
+    "heading" : " Enable Service Entitlement",
     "content" : "Invite users in the organization to use squared...",
-    "inviteAll" : "Invite all users in organization"
+    "inviteAll" : "Enable organization wide service entitlement"
   }
 
 }
