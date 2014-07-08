@@ -11,8 +11,8 @@ angular.module('wx2AdminWebClientApp')
         for(var idx = roles.length - 1; idx >= 0; idx--) {
           tabs = tabs.concat(Config.roles[roles[idx]]);
         }
-        $scope.tabs = Utils.removeDuplicates(tabs, 'title');
-        Authinfo.setTabs($scope.tabs);
+        $rootScope.tabs = Utils.removeDuplicates(tabs, 'title');
+        Authinfo.setTabs($rootScope.tabs);
         //Check if this is an allowed tab
         if(!Authinfo.isAllowedTab()){
           $location.path('/login');
@@ -25,8 +25,8 @@ angular.module('wx2AdminWebClientApp')
       var setActiveTab = function() {
         var curPath = $location.path();
         var path = '/login';
-        for (var idx in $scope.tabs) {
-          var tab = $scope.tabs[idx];
+        for (var idx in $rootScope.tabs) {
+          var tab = $rootScope.tabs[idx];
           if (tab.path === curPath) {
             tab.active = 'true';
             path = curPath;

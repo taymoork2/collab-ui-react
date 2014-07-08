@@ -367,16 +367,35 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-      $scope.showInvite = false;
-      $scope.setSelectedTab = function(tab) {
+      $scope.userTabActive = 'true';
+      $scope.inviteTabActive = 'false';
+
+      var setTab = function (tab) {
+        if ($rootScope.selectedSubTab && $rootScope.selectedSubTab !== undefined)
+        {
+          tab = $rootScope.selectedSubTab;
+        }
         if (tab === 'invite')
         {
           $scope.showInvite = true;
+          $scope.userTabActive = 'false';
+          $scope.inviteTabActive = 'true';
         }
         else
         {
           $scope.showInvite = false;
+          $scope.userTabActive = 'true';
+          $scope.inviteTabActive = 'false';
         }
+        $rootScope.selectedSubTab = undefined;
+      };
+
+      $scope.changeTab = function(tab) {
+        setTab(tab);
+      };
+
+      $scope.getTabTitle = function(title) {
+        return $filter('translate')(title);
       };
 
       //set intitially when loading the page

@@ -330,6 +330,17 @@ describe('App flow', function() {
         expect(element(by.id('calls-content')).isDisplayed()).toBe(true);
         expect(element(by.id('convo-content')).isDisplayed()).toBe(true);
         expect(element(by.id('share-content')).isDisplayed()).toBe(true);
+        expect(element(by.css('.home-setup-panel')).isDisplayed()).toBe(true);
+        element(by.id('btnQuickSetup')).click().then(function(){
+          browser.sleep(1000);
+          expect(element(by.id('chk_invite')).isDisplayed()).toBe(true);
+          element(by.id('chk_invite')).click().then(function(){
+            expect(element(by.id('btnQuickSetupAction')).getText()).toEqual('Next');
+            element(by.id('btnQuickSetupAction')).click().then(function(){
+              expect(browser.getCurrentUrl()).toContain('/users');
+            });
+          });
+        });
       });
     });
 

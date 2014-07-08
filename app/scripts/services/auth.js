@@ -133,6 +133,15 @@ angular.module('wx2AdminWebClientApp')
       $window.location.href = Config.getLogoutUrl();
     };
 
+    auth.isUserAdmin = function() {
+      if (Authinfo.getRoles().indexOf('Full_Admin') > -1) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    };
+
     return auth;
 
   });

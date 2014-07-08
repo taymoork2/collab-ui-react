@@ -22,7 +22,9 @@
     "csvBtnTitle" : "Export to CSV",
     "csvFilename" : "exported_users.csv",
     "successInvite" : "Your invitation has been sent successfully.  (Email ID: {{id}}) ",
-    "errInvite" : "Unable to process your invitation. Status: {{status}}."
+    "errInvite" : "Unable to process your invitation. Status: {{status}}.",
+    "listSubTab" : "Users",
+    "inviteSubTab" : "Invite"
   },
   "tabs" : {
     "homeTab" : "Home",
@@ -117,7 +119,9 @@
   },
   "common" : {
     "cancel" : "Cancel",
-    "save" : "Save"
+    "save" : "Save",
+    "ok" : "Ok",
+    "next" : "Next"
   },
   "homePage" : {
     "overview" : "Last 4 weeks",
@@ -135,7 +139,12 @@
     "advSetup" : "Advanced Setup",
     "advProv" : "Provision users with a guided wizard to set up Directory Sync, Single Sign on and customized reports",
     "launchBtn" : "Launch"
-
+  },
+  "inviteModal" : {
+    "title" : "Invite Users",
+    "heading" : "Entitle organization users",
+    "content" : "Invite users in the organization to use squared...",
+    "inviteAll" : "Invite all users in organization"
   }
 
 }

@@ -147,6 +147,25 @@ angular.module('wx2AdminWebClientApp')
             }
           }
           return a;
+        },
+
+        changeTab: function(curPath, param) {
+          var path = '/home';
+          for (var idx in $rootScope.tabs) {
+            var tab = $rootScope.tabs[idx];
+            if (curPath.indexOf(tab.path) > -1) {
+              tab.active = 'true';
+              path = tab.path;
+              break;
+            }
+          }//end for
+          if (!param){
+            $location.path(path);
+          }
+          else {
+            $location.search(param.key, param.val).path(path);
+            param = undefined;
+          }
         }
       };
     }

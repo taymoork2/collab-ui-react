@@ -2,9 +2,10 @@
 
 <div  class="user-tab-panel" ng-hide="!Utils.isAdminPage()">
   <tabset justified="true">
-    <tab heading="Users" id="userSubtab" select="setSelectedTab('users')"></tab>
-    <tab heading="Invite" id="inviteSubtab" select="setSelectedTab('invite')"></tab>
+    <tab heading="{{getTabTitle('usersPage.listSubTab')}}" id="userSubtab" active="userTabActive" select="changeTab('users')"></tab>
+    <tab heading="{{getTabTitle('usersPage.inviteSubTab')}}" id="inviteSubtab" active="inviteTabActive"  select="changeTab('invite')"></tab>
   </tabset>
+
   <div ng-controller="ListUsersCtrl" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled"><span id="export-icon"><i class="fa fa-file-text"></i></span></div>
 </div>
 

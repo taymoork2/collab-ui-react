@@ -73,8 +73,8 @@ describe('List users flow', function() {
       return browser.driver.isElementPresent(by.id('tabs'));
     }).then(function() {
       expect(browser.getCurrentUrl()).toContain('/users');
-      //check to make sure add users panel is not visible
-      expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(false);
+      //check to make sure add users panel is visible
+      expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
     });
   });
 
@@ -82,6 +82,7 @@ describe('List users flow', function() {
   describe('Listing users on page load', function() {
 
     it('should show first page of users', function() {
+      browser.driver.findElement(by.id('userSubtab')).click();
       expect(element(by.css('.pagination-current a')).getText()).toBe('1');
     });
 

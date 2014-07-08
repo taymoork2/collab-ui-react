@@ -1,3 +1,5 @@
+'use strict';
+
 exports.config = {
   // Spec patterns are relative to the location of this config.
   specs: [
@@ -20,6 +22,7 @@ exports.config = {
     includeStackTrace: true,
     defaultTimeoutInterval: 20000
   },
+  
   // The timeout for each script run on the browser. This should be longer
   // than the maximum time your application needs to stabilize between tasks.
   allScriptsTimeout: 20000

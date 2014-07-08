@@ -3,8 +3,8 @@
 /* global AmCharts, $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('HomeCtrl', ['$scope', 'ReportsService', 'Log', 'Auth',
-    function($scope, ReportsService, Log, Auth) {
+  .controller('HomeCtrl', ['$scope', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs',
+    function($scope, ReportsService, Log, Auth, Authinfo, $dialogs) {
 
       $('#au-graph-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
       $('#au-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
@@ -27,6 +27,7 @@ angular.module('wx2AdminWebClientApp')
       $scope.showShareContent = false;
 
       var chartVals = [];
+      $scope.isAdmin = false;
 
       var getActiveUsersCount = function() {
         var params = {
@@ -187,6 +188,13 @@ angular.module('wx2AdminWebClientApp')
         });
       };
 
+      $scope.inviteUsers = function() {
+        var dlg = $dialogs.create('views/quicksetup_dialog.html', 'quicksetupDialogCtrl');
+        dlg.result.then(function() {
+
+        });
+      };
+
       if (Auth.isAuthorized($scope)) {
         getActiveUsersCount();
         getCallMetrics();
@@ -194,8 +202,8 @@ angular.module('wx2AdminWebClientApp')
         getContentShareMetrics();
         getActiveUsersMetrics();
         getHealthMetrics();
+        $scope.isAdmin = Auth.isUserAdmin();
       }
-
 
       $scope.$on('AuthinfoUpdated', function() {
         getActiveUsersCount();
@@ -204,6 +212,7 @@ angular.module('wx2AdminWebClientApp')
         getContentShareMetrics();
         getActiveUsersMetrics();
         getHealthMetrics();
+        $scope.isAdmin = Auth.isUserAdmin();
       });
 
       var makeChart = function(sdata) {

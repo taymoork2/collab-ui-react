@@ -1,0 +1,27 @@
+<!-- This is the modal for the entitlement window -->
+<div class="modal-header dialog-header-confirm">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+  <h4 class="modal-title"><span class="glyphicon glyphicon-edit"></span> {{'inviteModal.title' | translate}}</h4>
+</div>
+
+<div class="modal-body">
+  <h5 class="dialog-subtitle">{{'inviteModal.heading' | translate}}</h5>
+  <div>
+    <span>{{'inviteModal.content' | translate}}</span>
+  </div>
+
+  <div class="entitle-check-grp">
+    <div class="btn-group" id="chk_invite">
+      <input type="checkbox" name="inviteAll" ng-model="inviteAll" ng-change="toggleButton()" icheck>
+    </div>
+    <span style="font-size:15px; padding:10px">
+      {{'inviteModal.inviteAll' | translate}}
+    </span>
+  </div>
+
+</div>
+
+
+<div class="modal-footer">
+  <button id="btnQuickSetupAction" type="button" class="btn btn-primary" ng-click="doAction()">{{buttonLabel}}</button>
+</div>

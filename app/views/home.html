@@ -85,19 +85,19 @@
 	</div>
 </div>
 
-<div class="home-setup-panel">
+<div class="home-setup-panel" ng-show="isAdmin">
 	<div class="home-setup">
 			<h3 translate="homePage.quickSetup"></h3>
 			<br>
 			<span translate="homePage.quickProv"></span>
-			<button class="btn btn-primary home-setup-button" translate="homePage.launchBtn"></button>
+			<button id="btnQuickSetup" class="btn btn-primary home-setup-button" translate="homePage.launchBtn" ng-click="inviteUsers()"></button>
 	</div>
 
 	<div class="home-setup-adv">
 			<h3 translate="homePage.advSetup"></h3>
 			<br>
 			<span translate="homePage.advProv"></span>
-			<button class="btn btn-primary home-setup-button" translate="homePage.launchBtn"></button>
+			<button id="btnAdvSetup" class="btn btn-primary home-setup-button" translate="homePage.launchBtn"></button>
 	</div>
 </div>
 
