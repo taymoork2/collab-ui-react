@@ -25,7 +25,14 @@ angular.module('wx2AdminWebClientApp')
 					});
 			};
 
-			// check if cookie is present 
+			// extracts param from url
+			var encryptedUser = $location.search().user;
+
+			if (encryptedUser === undefined) {
+				redirect();
+			}
+
+			// check if cookie already exists.  Only call backend if not.
 			var cookieName = 'invdata';
 			var inviteCookie = ipCookie(cookieName);
 
@@ -41,9 +48,6 @@ angular.module('wx2AdminWebClientApp')
 					domain: Config.isDev() ? null : '.wbx2.com',
 					expires: 1 // 1 day
 				};
-
-				// extracts param from url
-				var encryptedUser = $location.search().user;
 
 				// call backend to decrypt param 
 				Inviteservice.resolveInvitedUser(encryptedUser)

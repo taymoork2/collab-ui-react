@@ -17,7 +17,18 @@ var encryptedQueryParam = 'bnlA6k3ZerWIccYYY2RndVEeMjFu914UOsnFVyYNQoMrkJ7Hye+VF
 
 describe('invite page with user param', function() {
 
-  it('should forward to squared app', function() {
+  it('should forward to squared app without page param', function() {
+
+    browser.get('#/invite');
+
+    browser.driver.wait(function() {
+      return browser.driver.isElementPresent(by.id('btn-login'));
+    }).then(function() {
+      expect(browser.driver.getCurrentUrl()).toContain('wx2-web.wbx2.com');
+    });
+
+  });
+  it('should forward to squared app with page param', function() {
 
     browser.get('#/invite?user=' + encryptedQueryParam);
 
