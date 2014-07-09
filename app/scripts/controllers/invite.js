@@ -4,6 +4,27 @@ angular.module('wx2AdminWebClientApp')
 	.controller('InviteCtrl', ['$scope', '$location', '$window', '$http', 'ipCookie', 'Utils', 'Inviteservice', 'Config', 'Log',
 		function($scope, $location, $window, $http, ipCookie, Utils, Inviteservice, Config, Log) {
 
+			var redirect = function() {
+				var redirectUrl = null;
+
+				// redirect based on user agent
+				$http.get('download_urls.json')
+					.success(function(data) {
+						if (Utils.isIPhone()) {
+							redirectUrl = data.iPhoneURL;
+						} else if (Utils.isAndroid()) {
+							redirectUrl = data.iPhoneURL;
+						} else {
+							redirectUrl = data.webClientURL;
+						}
+						Log.info('Redirect to: ' + redirectUrl);
+						$window.location.href = redirectUrl;
+					})
+					.error(function(data, status) {
+						Log.error('Failed to read download_url.json.' + data + ' Status: ' + status);
+					});
+			};
+
 			// check if cookie is present 
 			var cookieName = 'invdata';
 			var inviteCookie = ipCookie(cookieName);
@@ -35,27 +56,13 @@ angular.module('wx2AdminWebClientApp')
 						inviteCookie.orgId = data.orgId;
 
 						ipCookie(cookieName, inviteCookie, cookieOptions);
+
+						redirect();
 					});
+
+			} else {
+				redirect();
 			}
-
-			// redirect based on user agent
-			var redirectUrl = null;
-
-			$http.get('download_urls.json')
-				.success(function(data) {
-					if (Utils.isIPhone()) {
-						redirectUrl = data.iPhoneURL;
-					} else if (Utils.isAndroid()) {
-						redirectUrl = data.iPhoneURL;
-					} else {
-						redirectUrl = data.webClientURL;
-					}
-					Log.info('Redirect to: ' + redirectUrl);
-					$window.location.href = redirectUrl;
-				})
-				.error(function(data, status) {
-					Log.error('Failed to read download_url.json.' + data + ' Status: ' + status);
-				});
 
 		}
 	]);
