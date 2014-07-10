@@ -517,7 +517,6 @@ input:disabled {
 /* Twitter typeahead styling */
 .tt-query,
 .tt-hint {
-  width: 541%;
   padding: 8px 12px;
   font-size: 14px;
   border: 2px solid #ccc;
@@ -535,7 +534,6 @@ input:disabled {
 }
 
 .tt-dropdown-menu {
-  width: 541%;
   background-color: #fff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -560,7 +558,10 @@ input:disabled {
 }
 
 .tt-input {
-  width: 541%;
+}
+
+.twitter-typeahead {
+  width: 99%;
 }
 
 .overview-top {

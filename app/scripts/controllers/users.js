@@ -367,27 +367,24 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-      $scope.userTabActive = true;
-      $scope.inviteTabActive = false;
+      if($rootScope.selectedSubTab === 'invite') {
+        $scope.inviteTabActive = true;
+      } else {
+        $scope.userTabActive = true;
+      }
 
       var setTab = function (tab) {
-        if ($rootScope.selectedSubTab && $rootScope.selectedSubTab !== undefined)
-        {
-          tab = $rootScope.selectedSubTab;
-        }
         if (tab === 'invite')
         {
-          $scope.showInvite = true;
           $scope.userTabActive = false;
           $scope.inviteTabActive = true;
         }
         else
         {
-          $scope.showInvite = false;
           $scope.userTabActive = true;
           $scope.inviteTabActive = false;
         }
-        $rootScope.selectedSubTab = undefined;
+        $rootScope.selectedSubTab = null;
       };
 
       $scope.changeTab = function(tab) {
