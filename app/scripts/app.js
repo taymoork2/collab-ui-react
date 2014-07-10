@@ -75,8 +75,8 @@ angular.module('wx2AdminWebClientApp', [
       $translateProvider.preferredLanguage('en_US');
     }
   ])
-  .run(['$cookies', '$rootScope', 'Auth', 'Storage', 'Localize', 'Utils', 'Log',
-    function($cookies, $rootScope, Auth, Storage, Localize, Utils, Log) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Storage', 'Localize', 'Utils', 'Log',
+    function($cookies, $location, $rootScope, Auth, Storage, Localize, Utils, Log) {
 
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
@@ -99,6 +99,13 @@ angular.module('wx2AdminWebClientApp', [
       } else {
         Log.debug('No access code data.');
       }
+
+      //When a route is loaded, activate the tab corresponding to that route
+      $rootScope.$watch(function(){
+        return $location.path();
+      }, function(){
+        Utils.setNavigationTab();
+      });
 
     }
   ]);

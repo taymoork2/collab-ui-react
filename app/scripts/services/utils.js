@@ -158,13 +158,25 @@ angular.module('wx2AdminWebClientApp')
               path = tab.path;
               break;
             }
-          }//end for
-          if (!param){
+          } //end for
+          if (!param) {
             $location.path(path);
-          }
-          else {
+          } else {
             $location.search(param.key, param.val).path(path);
             param = undefined;
+          }
+        },
+
+        setNavigationTab: function() {
+          var curPath = $location.path();
+          var path = null;
+          for (var idx in $rootScope.tabs) {
+            var tab = $rootScope.tabs[idx];
+            if (tab.path === curPath) {
+              tab.active = 'true';
+              path = curPath;
+              break;
+            }
           }
         }
       };

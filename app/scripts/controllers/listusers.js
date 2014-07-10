@@ -213,6 +213,7 @@ angular.module('wx2AdminWebClientApp')
         }
 
         //User profile
+        $scope.photoPath = null;
         $scope.orgName = Authinfo.getOrgName();
         Userservice.getUser($scope.currentUser.id, function(data, status) {
           if (data.success) {
