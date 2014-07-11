@@ -125,6 +125,7 @@ angular.module('wx2AdminWebClientApp')
       //Retrieving logs for user
       $scope.getLogs = function() {
         $('#logsearchfield').typeahead('close');
+        $scope.userLogs = [];
         angular.element('#logSearchBtn').button('loading');
         //check whether email address or uuid was enetered
         var searchinput = $('#logsearchfield').val();
