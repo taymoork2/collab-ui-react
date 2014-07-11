@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter', '$translate',
-    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter, $translate) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService',
+    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService) {
 
       //check if page is authorized
       Auth.isAuthorized($scope);
@@ -191,7 +191,7 @@ angular.module('wx2AdminWebClientApp')
           angular.element('#btnAdd').button('loading');
           Userservice.addUsers(usersList, getEntitlements(), callback);
         } else {
-          console.log('No users entered.');
+          Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];
           Notification.notify(error, 'error');
         }
@@ -280,12 +280,14 @@ angular.module('wx2AdminWebClientApp')
           angular.element('#btnEntitle').button('loading');
           Userservice.updateUsers(usersList, getEntitlements(), callback);
         } else {
-          console.log('No users entered.');
+          Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];
           Notification.notify(error, 'error');
         }
 
       };
+
+      var startLog;
 
       $scope.inviteUsers = function() {
         var usersList = getUsersList();
@@ -306,6 +308,9 @@ angular.module('wx2AdminWebClientApp')
             Notification.notify(error, 'error');
             isComplete = false;
           }
+          
+          var msg = 'inviting ' + usersList.length + ' users...';
+          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), status, startLog, usersList.length);
 
           if (isComplete) {
             resetUsersfield();
@@ -316,9 +321,12 @@ angular.module('wx2AdminWebClientApp')
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnInvite').button('loading');
+
+          startLog = moment();
+
           Userservice.inviteUsers(usersList, callback);
         } else {
-          console.log('No users entered.');
+          Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];
           Notification.notify(error, 'error');
         }

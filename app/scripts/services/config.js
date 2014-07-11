@@ -38,6 +38,8 @@ angular.module('wx2AdminWebClientApp')
 
         scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
 
+        logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
+
         healthCheckUrl: {
           dev: 'http://squaredpreview.statuspage.io/index.json',
           prod: 'https://squaredpreview.statuspage.io/index.json'
@@ -123,6 +125,10 @@ angular.module('wx2AdminWebClientApp')
           } else {
             return this.healthCheckUrl.prod;
           }
+        },
+
+        getLogMetricsUrl: function() {
+          return this.logMetricUrl;
         }
 
       };
