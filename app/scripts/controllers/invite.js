@@ -4,7 +4,35 @@ angular.module('wx2AdminWebClientApp')
 	.controller('InviteCtrl', ['$scope', '$location', '$window', '$http', 'ipCookie', 'Utils', 'Inviteservice', 'Config', 'Log',
 		function($scope, $location, $window, $http, ipCookie, Utils, Inviteservice, Config, Log) {
 
-			// check if cookie is present 
+			var redirect = function() {
+				var redirectUrl = null;
+
+				// redirect based on user agent
+				$http.get('download_urls.json')
+					.success(function(data) {
+						if (Utils.isIPhone()) {
+							redirectUrl = data.iPhoneURL;
+						} else if (Utils.isAndroid()) {
+							redirectUrl = data.iPhoneURL;
+						} else {
+							redirectUrl = data.webClientURL;
+						}
+						Log.info('Redirect to: ' + redirectUrl);
+						$window.location.href = redirectUrl;
+					})
+					.error(function(data, status) {
+						Log.error('Failed to read download_url.json.' + data + ' Status: ' + status);
+					});
+			};
+
+			// extracts param from url
+			var encryptedUser = $location.search().user;
+
+			if (encryptedUser === undefined) {
+				redirect();
+			}
+
+			// check if cookie already exists.  Only call backend if not.
 			var cookieName = 'invdata';
 			var inviteCookie = ipCookie(cookieName);
 
@@ -21,9 +49,6 @@ angular.module('wx2AdminWebClientApp')
 					expires: 1 // 1 day
 				};
 
-				// extracts param from url
-				var encryptedUser = $location.search().user;
-
 				// call backend to decrypt param 
 				Inviteservice.resolveInvitedUser(encryptedUser)
 					.then(function(data) {
@@ -35,27 +60,13 @@ angular.module('wx2AdminWebClientApp')
 						inviteCookie.orgId = data.orgId;
 
 						ipCookie(cookieName, inviteCookie, cookieOptions);
+
+						redirect();
 					});
+
+			} else {
+				redirect();
 			}
-
-			// redirect based on user agent
-			var redirectUrl = null;
-
-			$http.get('download_urls.json')
-				.success(function(data) {
-					if (Utils.isIPhone()) {
-						redirectUrl = data.iPhoneURL;
-					} else if (Utils.isAndroid()) {
-						redirectUrl = data.iPhoneURL;
-					} else {
-						redirectUrl = data.webClientURL;
-					}
-					Log.info('Redirect to: ' + redirectUrl);
-					$window.location.href = redirectUrl;
-				})
-				.error(function(data, status) {
-					Log.error('Failed to read download_url.json.' + data + ' Status: ' + status);
-				});
 
 		}
 	]);
