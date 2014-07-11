@@ -7,4 +7,6 @@ app/bower_components
 npm-debug.log
 *.gz
 *.pyc
+*.iml
+.idea/
 

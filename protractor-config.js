@@ -20,10 +20,10 @@ exports.config = {
     isVerbose: true,
     showColors: true,
     includeStackTrace: true,
-    defaultTimeoutInterval: 20000
+    defaultTimeoutInterval: 25000
   },
   
   // The timeout for each script run on the browser. This should be longer
   // than the maximum time your application needs to stabilize between tasks.
-  allScriptsTimeout: 20000
+  allScriptsTimeout: 25000
 };
