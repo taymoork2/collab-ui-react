@@ -2,12 +2,14 @@
 /* global $, Bloodhound */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService',
-    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Auth, Authinfo, UserListService, LogService) {
+  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService', '$translate',
+    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Auth, Authinfo, UserListService, LogService, $translate) {
 
       //Initialize
       Notification.init($scope);
       $scope.popup = Notification.popup;
+
+      $('#logsearchfield').attr('placeholder', $filter('translate')('supportPage.inputPlaceholder'));
 
       $scope.sortIconDate =  'fa-sort-asc';
       $scope.sortIconName =  'fa-sort';
@@ -89,71 +91,99 @@ angular.module('wx2AdminWebClientApp')
         initializeTypeahead();
       });
 
-      var getUserId = function() {
-        var searchinput = $('#logsearchfield').val();
+      var getUserId = function(searchinput) {
         var deferred = $q.defer();
-        $('#search-input').val('');
-        if (searchinput === '' || typeof searchinput === 'undefined') {
-          Log.debug('Search input cannot be empty.');
-          Notification.notify([$filter('translate')('logsPage.errEmptyinput')], 'error');
-          angular.element('#logSearchBtn').button('reset');
-        } else {
-          UserListService.getUser(searchinput, function(data, status) {
-            if (data.success) {
-              Log.debug('Returned data for: ' + searchinput, data.Resources);
-              if (data.Resources.length > 0) {
-                deferred.resolve(data.Resources[0].id);
-                $scope.userName = data.Resources[0].userName;
-              } else {
-                Log.debug('Could not find user: ' + searchinput);
-                angular.element('#logSearchBtn').button('reset');
-                Notification.notify([$filter('translate')('logsPage.errUsernotfound') + searchinput], 'error');
-              }
+        UserListService.getUser(searchinput, function(data, status) {
+          if (data.success) {
+            Log.debug('Returned data for: ' + searchinput, data.Resources);
+            if (data.Resources.length > 0) {
+              deferred.resolve(data.Resources[0].id);
+              $scope.userName = data.Resources[0].userName;
             } else {
-              Log.debug('Query existing users failed. Status: ' + status);
-              deferred.reject('Querying user failed. Status: ' + status);
+              Log.debug('Could not find user: ' + searchinput);
+              angular.element('#logSearchBtn').button('reset');
+              Notification.notify([$translate.instant('supportPage.errUsernotfound', {input:searchinput})], 'error');
             }
-          });
-        }
+          } else {
+            Log.debug('Query existing users failed. Status: ' + status);
+            deferred.reject('Querying user failed. Status: ' + status);
+          }
+        });
         return deferred.promise;
+      };
+
+      var validateEmail = function(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+      };
+
+      var validateUuid = function(uuid) {
+        var re = /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/;
+        return re.test(uuid);
       };
 
       //Retrieving logs for user
       $scope.getLogs = function() {
         $('#logsearchfield').typeahead('close');
         angular.element('#logSearchBtn').button('loading');
-        getUserId().then(function(userid) {
-          LogService.listLogs(userid, function(data, status) {
-            if (data.success) {
-              $scope.userLogs = [];
-              //parse the data
-              if (data.logDetails.length > 0) {
-                for (var index in data.logDetails) {
-                  var logdata = data.logDetails[index].name.split('/');
-                  var log = {
-                    filename: data.logDetails[index].name,
-                    orgId: logdata[0],
-                    userId: logdata[1],
-                    clientType: logdata[2],
-                    name: logdata[3],
-                    date: moment.utc(data.logDetails[index].last_modified).local().format('MMM d, YYYY h:mm A ZZ')
-                  };
-                  $scope.userLogs.push(log);
-                  angular.element('#logSearchBtn').button('reset');
-                }
-              } else {
+        //check whether email address or uuid was enetered
+        var searchinput = $('#logsearchfield').val();
+        if (typeof searchinput === 'undefined' || searchinput === '') {
+          Log.debug('Search input cannot be empty.');
+          Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
+          angular.element('#logSearchBtn').button('reset');
+        } else if(validateEmail(searchinput)) {
+          getUserId(searchinput).then(function(userid) {
+            fetchLogsForUser(userid);
+          }, function(error) {
+            angular.element('#logSearchBtn').button('reset');
+            Notification.notify([error], 'error');
+          });
+        } else if (validateUuid(searchinput)) {
+          fetchLogsForUser(searchinput);
+        } else {
+          Log.debug('Invalid input: ' + searchinput);
+          angular.element('#logSearchBtn').button('reset');
+          var error = [$translate.instant('supportPage.errInvalidInput', {input:searchinput})];
+          Notification.notify(error, 'error');
+        }
+      };
+
+      var fetchLogsForUser = function(userid) {
+        LogService.listLogs(userid, function(data, status) {
+          if (data.success) {
+            $scope.userLogs = [];
+            //parse the data
+            if (data.logDetails.length > 0) {
+              for (var index in data.logDetails) {
+                var logdata = data.logDetails[index].name.split('/');
+                var log = {
+                  filename: data.logDetails[index].name,
+                  orgId: logdata[0],
+                  userId: logdata[1],
+                  clientType: logdata[2],
+                  name: logdata[3],
+                  date: moment.utc(data.logDetails[index].last_modified).local().format('MMM d, YYYY h:mm A ZZ')
+                };
+                $scope.userLogs.push(log);
                 angular.element('#logSearchBtn').button('reset');
               }
-
             } else {
-              Log.debug('Failed to retrieve user logs. Status: ' + status);
-              Notification.notify([$filter('translate')('logsPage.errLogqueryfail') + status]);
+              $scope.userLogs = [];
               angular.element('#logSearchBtn').button('reset');
             }
-          });
-        }, function(error) {
-          Notification.notify([error], 'error');
-          angular.element('#logSearchBtn').button('reset');
+          } else {
+            $scope.userLogs = [];
+            angular.element('#logSearchBtn').button('reset');
+            Log.debug('Failed to retrieve user logs. Status: ' + status);
+            if (status === 403) {
+              Notification.notify([$translate.instant('supportPage.errUnauthorizedUserAccess', {input:userid})], 'error');
+            } else if (status === 404) {
+              Notification.notify([$translate.instant('supportPage.errUserdoesnotexist', {input:userid})], 'error');
+            } else {
+              Notification.notify([$translate.instant('supportPage.errLogQuery', {status:status})], 'error');
+            }
+          }
         });
       };
 

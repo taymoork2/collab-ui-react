@@ -105,17 +105,19 @@
   },
   "supportPage" : {
     "subtitleLogs" : "Search for logs",
-    "inputlabel" :"Email",
     "listlogsbtn" : "Search",
     "userLogs" : "User Logs",
     "logName" : "Name",
     "logDate" : "Date",
     "logDownload" : "Download",
     "logAction" : "Action",
+    "errUserdoesnotexist" : "User does not exist : {{input}}",
+    "errUnauthorizedUserAccess" : "You are not authorized to view the logs of this user : {{input}}",
     "errEmptyinput" : "Search input cannot be empty.",
-    "errUsernotfound" : "Could not find user: ",
-    "errLogsnotfound" : "No logs have been found for the current user.",
-    "errLogqueryfail" : "Failed to retrieve logs. Status: "
+    "errInvalidInput" : "Invalid input: {{input}}. Enter valid email address or uuid.",
+    "errLogQuery" : "Failed to retrieve logs. Status: {{status}}",
+    "errUsernotfound" : "Could not find user: {{input}}",
+    "inputPlaceholder": "Enter user email address or user ID (UUID)"
   },
   "common" : {
     "cancel" : "Cancel",

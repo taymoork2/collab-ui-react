@@ -295,7 +295,7 @@ describe('App flow', function() {
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
         element(by.id('btnInvite')).click();
-        browser.sleep(800); //for the animation
+        browser.sleep(1000); //for the animation
         element(by.css('.alertify-log-success')).click();
         browser.sleep(500); //for the animation
         element.all(by.css('.panel-success-body p')).then(function(rows) {
