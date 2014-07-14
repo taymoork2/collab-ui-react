@@ -110,7 +110,7 @@ angular.module('wx2AdminWebClientApp')
       if (!Authinfo.isEmpty()) {
         //Check if this is an allowed tab
         if(!Authinfo.isAllowedTab()){
-          $location.path('/login');
+          $location.path('/unauthorized');
         }
         return true;
       }

@@ -62,6 +62,9 @@ angular.module('wx2AdminWebClientApp', [
           templateUrl: 'views/invite.html',
           controller: 'InviteCtrl'
         })
+        .when('/unauthorized', {
+          templateUrl: 'views/unauthorized.html'
+        })
         .otherwise({
           redirectTo: '/'
         });
