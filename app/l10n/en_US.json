@@ -147,6 +147,10 @@
     "heading" : " Enable Service Entitlement",
     "content" : "Invite users in the organization to use squared...",
     "inviteAll" : "Enable organization wide service entitlement"
+  },
+  "unauthorizedPage" : {
+    "title" : "Unauthorized",
+    "text" : "You are not authorized to access the page you requested."
   }
 
 }
