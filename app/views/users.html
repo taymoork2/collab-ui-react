@@ -63,7 +63,7 @@
           <td><span ng-if="user.name">{{user.name.givenName}}</span></td>
           <td><span ng-if="user.name">{{user.name.familyName}}</span></td>
           <td>{{user.userName}}</td>
-          <td class="text-center" ng-bind-html="getEntitlementState(user)?getStatusIcon('active'):getStatusIcon('inactive')"></td>
+          <td class="text-center icon-{{user.id}}" ng-bind-html="getEntitlementState(user)?getStatusIcon('active'):getStatusIcon('inactive')"></td>
         </tr>
       </tbody>
     </table>

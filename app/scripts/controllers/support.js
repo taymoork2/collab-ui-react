@@ -1,5 +1,5 @@
 'use strict';
-/* global $, Bloodhound */
+/* global $, Bloodhound, moment */
 
 angular.module('wx2AdminWebClientApp')
   .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService', '$translate',
@@ -11,19 +11,19 @@ angular.module('wx2AdminWebClientApp')
 
       $('#logsearchfield').attr('placeholder', $filter('translate')('supportPage.inputPlaceholder'));
 
-      $scope.sortIconDate =  'fa-sort-asc';
-      $scope.sortIconName =  'fa-sort';
+      $scope.sortIconDate = 'fa-sort-asc';
+      $scope.sortIconName = 'fa-sort';
 
       $scope.logsSortBy = 'date';
       $scope.reverseLogs = false;
 
       $scope.toggleSort = function(type) {
         $scope.reverseLogs = !$scope.reverseLogs;
-        switch(type) {
+        switch (type) {
         case 'name':
           changeSortIcon('name', 'sortIconName', 'sortIconDate');
           break;
-        
+
         case 'date':
           changeSortIcon('date', 'sortIconDate', 'sortIconName');
           break;
@@ -35,12 +35,12 @@ angular.module('wx2AdminWebClientApp')
 
       var changeSortIcon = function(logsSortBy, sortIcon, resetIcon) {
         $scope.logsSortBy = logsSortBy;
-        if($scope.reverseLogs === true) {
-          $scope[sortIcon] =  'fa-sort-desc';
+        if ($scope.reverseLogs === true) {
+          $scope[sortIcon] = 'fa-sort-desc';
         } else {
-          $scope[sortIcon] =  'fa-sort-asc';
+          $scope[sortIcon] = 'fa-sort-asc';
         }
-        $scope[resetIcon] =  'fa-sort';
+        $scope[resetIcon] = 'fa-sort';
       };
 
       var initializeTypeahead = function() {
@@ -102,7 +102,9 @@ angular.module('wx2AdminWebClientApp')
             } else {
               Log.debug('Could not find user: ' + searchinput);
               angular.element('#logSearchBtn').button('reset');
-              Notification.notify([$translate.instant('supportPage.errUsernotfound', {input:searchinput})], 'error');
+              Notification.notify([$translate.instant('supportPage.errUsernotfound', {
+                input: searchinput
+              })], 'error');
             }
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
@@ -133,7 +135,7 @@ angular.module('wx2AdminWebClientApp')
           Log.debug('Search input cannot be empty.');
           Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
           angular.element('#logSearchBtn').button('reset');
-        } else if(validateEmail(searchinput)) {
+        } else if (validateEmail(searchinput)) {
           getUserId(searchinput).then(function(userid) {
             fetchLogsForUser(userid);
           }, function(error) {
@@ -145,7 +147,9 @@ angular.module('wx2AdminWebClientApp')
         } else {
           Log.debug('Invalid input: ' + searchinput);
           angular.element('#logSearchBtn').button('reset');
-          var error = [$translate.instant('supportPage.errInvalidInput', {input:searchinput})];
+          var error = [$translate.instant('supportPage.errInvalidInput', {
+            input: searchinput
+          })];
           Notification.notify(error, 'error');
         }
       };
@@ -178,11 +182,17 @@ angular.module('wx2AdminWebClientApp')
             angular.element('#logSearchBtn').button('reset');
             Log.debug('Failed to retrieve user logs. Status: ' + status);
             if (status === 403) {
-              Notification.notify([$translate.instant('supportPage.errUnauthorizedUserAccess', {input:userid})], 'error');
+              Notification.notify([$translate.instant('supportPage.errUnauthorizedUserAccess', {
+                input: userid
+              })], 'error');
             } else if (status === 404) {
-              Notification.notify([$translate.instant('supportPage.errUserdoesnotexist', {input:userid})], 'error');
+              Notification.notify([$translate.instant('supportPage.errUserdoesnotexist', {
+                input: userid
+              })], 'error');
             } else {
-              Notification.notify([$translate.instant('supportPage.errLogQuery', {status:status})], 'error');
+              Notification.notify([$translate.instant('supportPage.errLogQuery', {
+                status: status
+              })], 'error');
             }
           }
         });
@@ -200,4 +210,3 @@ angular.module('wx2AdminWebClientApp')
       };
     }
   ]);
-

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .service('Orgservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils',
-    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils) {
+  .service('Orgservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth',
+    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth) {
 
       var token = Storage.get('accessToken');
 
@@ -20,6 +20,7 @@ angular.module('wx2AdminWebClientApp')
               data.success = false;
               data.status = status;
               callback(data, status);
+              Auth.handleStatus(status);
             });
         }
 

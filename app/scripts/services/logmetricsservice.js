@@ -1,8 +1,9 @@
 'use strict';
+/* global moment */
 
 angular.module('wx2AdminWebClientApp')
-  .service('LogMetricsService', ['$http', 'Authinfo', 'Config', 'Log', 'Storage',
-    function($http, Authinfo, Config, Log, Storage) {
+  .service('LogMetricsService', ['$http', 'Authinfo', 'Config', 'Log', 'Storage', 'Auth',
+    function($http, Authinfo, Config, Log, Storage, Auth) {
 
       var token = Storage.get('accessToken');
 
@@ -18,7 +19,7 @@ angular.module('wx2AdminWebClientApp')
       return {
         eventAction: {buttonClick:'BUTTONCLICK',
                       pageLoad:'PAGELOAD'},
-                      
+
         eventType: {inviteUsers:'INVITEUSERS'},
 
         getEventAction: function(eAction){
@@ -36,7 +37,7 @@ angular.module('wx2AdminWebClientApp')
 
           if (eType !== undefined && eAction !== undefined) {
             var endLog = moment();
-            var timeDiff = moment(endLog,"DD/MM/YYYY HH:mm:ss").diff(moment(startLog,"DD/MM/YYYY HH:mm:ss"));
+            var timeDiff = moment(endLog,'DD/MM/YYYY HH:mm:ss').diff(moment(startLog,'DD/MM/YYYY HH:mm:ss'));
             var elapsedTime = moment().milliseconds(timeDiff).milliseconds();
 
             events[0] = new LogMetricEvent(eAction, eType, status, elapsedTime, units);
@@ -53,11 +54,12 @@ angular.module('wx2AdminWebClientApp')
                 .error(function(data, status) {
                   data.success = false;
                   data.status = status;
+                  Auth.handleStatus(status);
                 });
             }
           }
           else {
-            Log.error("Invalid eventAction/eventType.");
+            Log.error('Invalid eventAction/eventType.');
           }
         }
 

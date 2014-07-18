@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils',
-    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils) {
+  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth', 'Utils',
+    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils) {
 
       var userUrl = Config.getAdminServiceUrl();
       var token = Storage.get('accessToken');
@@ -39,6 +39,7 @@ angular.module('wx2AdminWebClientApp')
                 data.success = false;
                 data.status = status;
                 callback(data, status);
+                Auth.handleStatus(status);
               });
           }
 
@@ -77,6 +78,7 @@ angular.module('wx2AdminWebClientApp')
                 data.success = false;
                 data.status = status;
                 callback(data, status);
+                Auth.handleStatus(status);
               });
           } else {
             callback('No valid emails entered.');
@@ -96,6 +98,7 @@ angular.module('wx2AdminWebClientApp')
               data.success = false;
               data.status = status;
               callback(data, status);
+              Auth.handleStatus(status);
             });
         },
 
@@ -118,6 +121,7 @@ angular.module('wx2AdminWebClientApp')
                 data.success = false;
                 data.status = status;
                 callback(data, status);
+                Auth.handleStatus(status);
               });
           }
         },
@@ -150,6 +154,7 @@ angular.module('wx2AdminWebClientApp')
                 data.success = false;
                 data.status = status;
                 callback(data, status);
+                Auth.handleStatus(status);
               });
           } else {
             callback('No valid emails entered.');

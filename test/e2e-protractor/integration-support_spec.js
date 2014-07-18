@@ -6,7 +6,6 @@
 /* global by */
 /* global expect */
 /* global element */
-/* global protractor */
 
 var testuser = {
   username: 'pbr-org-admin-test@wx2.example.com',

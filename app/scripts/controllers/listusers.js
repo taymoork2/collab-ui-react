@@ -97,11 +97,15 @@ angular.module('wx2AdminWebClientApp')
             type: 'null'
           };
           if (data.success) {
-            getUserList();
             var userStatus = data.userResponse[0].status;
             if (userStatus === 200) {
               entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
               entitleResult.type = 'success';
+              if($scope.entitlements.webExSquared === true){
+                angular.element('.icon-' + user.id).html($filter('translate')('usersPage.active'));
+              } else {
+                angular.element('.icon-' + user.id).html($filter('translate')('usersPage.inactive'));
+              }
             } else if (userStatus === 404) {
               entitleResult.msg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
               entitleResult.type = 'error';

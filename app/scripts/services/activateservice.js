@@ -8,7 +8,7 @@ angular.module('wx2AdminWebClientApp')
 			var userUrl = Config.getAdminServiceUrl();
 
 			return {
-			
+
 				activateUser: function(encryptedParam) {
 					var deferred = $q.defer();
 					var requestBody = {

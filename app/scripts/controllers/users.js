@@ -1,5 +1,7 @@
 'use strict';
 
+/* global moment */
+
 angular.module('wx2AdminWebClientApp')
   .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService',
     function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService) {
@@ -308,7 +310,7 @@ angular.module('wx2AdminWebClientApp')
             Notification.notify(error, 'error');
             isComplete = false;
           }
-          
+
           var msg = 'inviting ' + usersList.length + ' users...';
           LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), status, startLog, usersList.length);
 
