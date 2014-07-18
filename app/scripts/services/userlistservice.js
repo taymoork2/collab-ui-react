@@ -2,8 +2,8 @@
 /* global $ */
 
 angular.module('wx2AdminWebClientApp')
-  .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils', '$q', '$filter', '$compile',
-    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile) {
+  .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils', '$q', '$filter', '$compile', 'Auth',
+    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
       var token = Storage.get('accessToken');
       var searchfilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
@@ -66,6 +66,7 @@ angular.module('wx2AdminWebClientApp')
               data.success = false;
               data.status = status;
               callback(data, status, searchStr);
+              Auth.handleStatus(status);
             });
         },
 
@@ -147,6 +148,7 @@ angular.module('wx2AdminWebClientApp')
               data.success = false;
               data.status = status;
               callback(data, status);
+              Auth.handleStatus(status);
             });
         }
       };

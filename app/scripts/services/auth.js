@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .factory('Auth', function($http, $location, $window, $q, Log, Config, Authinfo, Utils, Storage, $rootScope) {
+  .factory('Auth', function($http, $filter, $location, $timeout, $window, $q, Log, Config, Authinfo, Utils, Storage, $rootScope, $dialogs) {
+    var progress = 0;
     var auth = {
       authorizeUrl: Config.getAdminServiceUrl() + 'userauthinfo',
       oauthUrl: Config.oauth2Url,
@@ -18,7 +19,7 @@ angular.module('wx2AdminWebClientApp')
 
     auth.isAllowedPath = function() {
       var currentPath = $location.path();
-      for ( var idx in auth.allowedPaths ) {
+      for (var idx in auth.allowedPaths) {
         if (auth.allowedPaths[idx] === currentPath) {
           return true;
         }
@@ -40,14 +41,14 @@ angular.module('wx2AdminWebClientApp')
           scope.isAuthorized = false;
           scope.data = data || 'Authorization failed.';
           if (status === 403) {
-            scope.result = 'Authorization failed. You do not have administrator priviledges.';
+            scope.result = $filter('translate')('errors.status403');
           } else if (status === 401) {
-            scope.result = 'Authorization failed. Server unable to process authorization token.';
+            scope.result = $filter('translate')('errors.status401');
           } else {
-            scope.result = 'Authorization failed with status ' + status + '.  Server may be down, please contact system administrator.';
+            scope.result = $filter('translate')('errors.serverDown');
           }
           deferred.reject();
-          auth.logout();
+          $timeout(auth.logout, 8000);
         });
 
       return deferred.promise;
@@ -95,13 +96,13 @@ angular.module('wx2AdminWebClientApp')
           'Authorization': 'Basic ' + token
         }
       })
-      .success(function(data) {
-        deferred.resolve(data.access_token);
-      })
-      .error(function(data, status) {
-        Log.error('Failed to obtain oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
-        deferred.reject('Token request failed: ' + data.error_description);
-      });
+        .success(function(data) {
+          deferred.resolve(data.access_token);
+        })
+        .error(function(data, status) {
+          Log.error('Failed to obtain oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
+          deferred.reject('Token request failed: ' + data.error_description);
+        });
 
       return deferred.promise;
     };
@@ -109,13 +110,11 @@ angular.module('wx2AdminWebClientApp')
     auth.isAuthorized = function(scope) {
       if (!Authinfo.isEmpty()) {
         //Check if this is an allowed tab
-        if(!Authinfo.isAllowedTab()){
+        if (!Authinfo.isAllowedTab()) {
           $location.path('/unauthorized');
         }
         return true;
-      }
-      else
-      {
+      } else {
         var token = Storage.get('accessToken');
         if (token) {
           Log.debug('Authorizing user... Populating admin data...');
@@ -136,10 +135,31 @@ angular.module('wx2AdminWebClientApp')
     auth.isUserAdmin = function() {
       if (Authinfo.getRoles().indexOf('Full_Admin') > -1) {
         return true;
-      }
-      else {
+      } else {
         return false;
       }
+    };
+
+    auth.handleStatus = function(status) {
+      if (status === 401 || status === 403) {
+        console.log('Token is not authorized or invalid. Logging user out.');
+        $dialogs.wait(undefined, $filter('translate')('errors.expired') , progress);
+        this.delayedLogout();
+      }
+    };
+
+    auth.delayedLogout = function() {
+      $timeout(function(){
+        if(progress<100){
+          progress+=10;
+          $rootScope.$broadcast('dialogs.wait.progress', {'progress': progress});
+          auth.delayedLogout();
+        } else {
+          $rootScope.$broadcast('dialogs.wait.complete');
+          progress = 0;
+          auth.logout();
+        }
+      }, 1000);
     };
 
     return auth;

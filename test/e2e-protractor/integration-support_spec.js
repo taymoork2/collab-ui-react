@@ -6,7 +6,6 @@
 /* global by */
 /* global expect */
 /* global element */
-/* global protractor */
 
 var testuser = {
   username: 'pbr-org-admin-test@wx2.example.com',
@@ -62,6 +61,10 @@ describe('Support flow', function() {
       });
     });
 
+    it('should not display results panel initially', function() {
+      expect(element(by.id('logs-panel')).isDisplayed()).toEqual(false);
+    });
+
     it('should display error for empty input', function() {
       //element(by.id('logsearchfield')).clear();
       element(by.id('logSearchBtn')).click();
@@ -80,6 +83,9 @@ describe('Support flow', function() {
       element(by.id('logsearchfield')).sendKeys(testuser.searchValidEmail).then(function() {
         element(by.id('logSearchBtn')).click();
         browser.sleep(3000);
+        expect(element(by.id('emailAddressHeading')).getText()).toBe('Email Address');
+        expect(element(by.id('locusIdHeading')).getText()).toBe('Locus ID');
+        expect(element(by.id('dateHeading')).getText()).toBe('Date');
         element.all(by.repeater('log in userLogs')).then(function(rows) {
           expect(rows.length).toBeGreaterThan(0);
         });
@@ -91,6 +97,9 @@ describe('Support flow', function() {
       element(by.id('logsearchfield')).sendKeys(testuser.searchValidUuid).then(function() {
         element(by.id('logSearchBtn')).click();
         browser.sleep(3000);
+        expect(element(by.id('emailAddressHeading')).getText()).toBe('Email Address');
+        expect(element(by.id('locusIdHeading')).getText()).toBe('Locus ID');
+        expect(element(by.id('dateHeading')).getText()).toBe('Date');
         element.all(by.repeater('log in userLogs')).then(function(rows) {
           expect(rows.length).toBeGreaterThan(0);
         });
@@ -102,6 +111,7 @@ describe('Support flow', function() {
       element(by.id('logsearchfield')).sendKeys(testuser.searchInvalidSearchInput).then(function() {
         element(by.id('logSearchBtn')).click();
         browser.sleep(500);
+        expect(element(by.id('noResults')).getText()).toBe('No Results.');
         element(by.css('.alertify-log-error')).click().then(function() {
           browser.sleep(500);
           expect(element(by.css('.panel-danger-body p')).getText()).toContain('Invalid input:');
@@ -119,6 +129,7 @@ describe('Support flow', function() {
       element(by.id('logsearchfield')).sendKeys(testuser.searchUuidNotExisting).then(function() {
         element(by.id('logSearchBtn')).click();
         browser.sleep(500);
+        expect(element(by.id('noResults')).getText()).toBe('No Results.');
         element(by.css('.alertify-log-error')).click().then(function() {
           browser.sleep(500);
           expect(element(by.css('.panel-danger-body p')).getText()).toContain('User does not exist :');
@@ -135,6 +146,7 @@ describe('Support flow', function() {
       element(by.id('logsearchfield')).sendKeys(testuser.searchUuidUnauthorized).then(function() {
         element(by.id('logSearchBtn')).click();
         browser.sleep(500);
+        expect(element(by.id('noResults')).getText()).toBe('No Results.');
         element(by.css('.alertify-log-error')).click().then(function() {
           browser.sleep(500);
           expect(element(by.css('.panel-danger-body p')).getText()).toContain('You are not authorized to view the logs of this user :');

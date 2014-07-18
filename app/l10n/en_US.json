@@ -106,11 +106,18 @@
   "supportPage" : {
     "subtitleLogs" : "Search for logs",
     "listlogsbtn" : "Search",
+    "noResults" : "No Results.",
     "userLogs" : "User Logs",
+    "logEmailAddress": "Email Address",
     "logName" : "Name",
     "logDate" : "Date",
-    "logDownload" : "Download",
-    "logAction" : "Action",
+    "logLocusId" : "Locus ID",
+    "logTrackId" : "Tracking ID",
+    "logCallStartTime" : "Call Start Time",
+    "logPlatform" : "Platform",
+    "logUserid" : "User ID",
+    "logOrgId" : "Org ID",
+    "logAction" : "Download",
     "errUserdoesnotexist" : "User does not exist : {{input}}",
     "errUnauthorizedUserAccess" : "You are not authorized to view the logs of this user : {{input}}",
     "errEmptyinput" : "Search input cannot be empty.",
@@ -151,6 +158,12 @@
   "unauthorizedPage" : {
     "title" : "Unauthorized",
     "text" : "You are not authorized to access the page you requested."
+  },
+  "errors" : {
+    "status403" : "Authorization failed. You do not have administrator priviledges.<br/>You will automatically be logged out in a few seconds.",
+    "status401" : "Authorization failed. Server unable to process authorization token.<br/>You will automatically be logged out in a few seconds.",
+    "serverDown" : "Authorization failed. Server may be down, please contact system administrator.<br/>You will automatically be logged out in a few seconds.",
+    "expired" : "Your session is expired. You will automatically be logged out in a few seconds. Please login again to continue using the service."
   }
 
 }

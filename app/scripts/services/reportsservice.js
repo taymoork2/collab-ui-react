@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('wx2AdminWebClientApp')
-  .service('ReportsService', ['$http', '$location', 'Storage', 'Config', 'Log', 'Authinfo',
-    function($http, $location, Storage, Config, Log, Authinfo) {
+  .service('ReportsService', ['$http', '$location', 'Storage', 'Config', 'Log', 'Authinfo', 'Auth',
+    function($http, $location, Storage, Config, Log, Authinfo, Auth) {
 
       var token = Storage.get('accessToken');
       var callMetricsUrl = Config.getAdminServiceUrl() + 'reports/stats/callUsage';
@@ -54,9 +54,9 @@ angular.module('wx2AdminWebClientApp')
 
         getUsageMetrics: function(metricType, params, callback) {
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-          
+
           var metricUrl = buildUrl(metricType, params);
-           
+
           $http.get(metricUrl)
             .success(function(data, status) {
               data.success = true;
@@ -68,6 +68,7 @@ angular.module('wx2AdminWebClientApp')
               data.status = status;
               data.errorMsg = data;
               callback(data, status);
+              Auth.handleStatus(status);
             });
         },
 
