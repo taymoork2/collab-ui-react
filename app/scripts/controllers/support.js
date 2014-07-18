@@ -8,24 +8,56 @@ angular.module('wx2AdminWebClientApp')
       //Initialize
       Notification.init($scope);
       $scope.popup = Notification.popup;
+      $('#logs-panel').hide();
 
       $('#logsearchfield').attr('placeholder', $filter('translate')('supportPage.inputPlaceholder'));
 
-      $scope.sortIconDate = 'fa-sort-asc';
-      $scope.sortIconName = 'fa-sort';
+      //initialize sort icons
+      var sortIcons = ['sortIconEmailAddress', 'sortIconDate', 'sortIconName', 'sortIconLocusId', 'sortIconCallStart', 'sortIconPlatform', 'sortIconUserId'];
+      for(var sortIcon in sortIcons) {
+        if(sortIcons[sortIcon] === 'sortIconDate') {
+          $scope[sortIcons[sortIcon]] = 'fa-sort-desc';
+        } else {
+          $scope[sortIcons[sortIcon]] = 'fa-sort';
+        }
+      }
+
+      $scope.sortIconDate = 'fa-sort-desc';
+      $scope.sortIconName =  'fa-sort';
 
       $scope.logsSortBy = 'date';
-      $scope.reverseLogs = false;
+      $scope.reverseLogs = true;
 
       $scope.toggleSort = function(type) {
         $scope.reverseLogs = !$scope.reverseLogs;
-        switch (type) {
+        switch(type) {
+
+        case 'emailAddress':
+          changeSortIcon('emailAddress', 'sortIconEmailAddress');
+          break;
+
         case 'name':
-          changeSortIcon('name', 'sortIconName', 'sortIconDate');
+          changeSortIcon('name', 'sortIconName');
           break;
 
         case 'date':
-          changeSortIcon('date', 'sortIconDate', 'sortIconName');
+          changeSortIcon('date', 'sortIconDate');
+          break;
+
+        case 'locusId':
+          changeSortIcon('locusId', 'sortIconLocusId');
+          break;
+
+        case 'callStart':
+          changeSortIcon('callStart', 'sortIconCallStart');
+          break;
+
+        case 'platform':
+          changeSortIcon('platform', 'sortIconPlatform');
+          break;
+
+        case 'userId':
+          changeSortIcon('userId', 'sortIconUserId');
           break;
 
         default:
@@ -33,14 +65,19 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-      var changeSortIcon = function(logsSortBy, sortIcon, resetIcon) {
+      var changeSortIcon = function(logsSortBy, sortIcon) {
         $scope.logsSortBy = logsSortBy;
         if ($scope.reverseLogs === true) {
           $scope[sortIcon] = 'fa-sort-desc';
         } else {
           $scope[sortIcon] = 'fa-sort-asc';
         }
-        $scope[resetIcon] = 'fa-sort';
+
+        for(var otherIcon in sortIcons) {
+          if(sortIcons[otherIcon] !== sortIcon) {
+            $scope[sortIcons[otherIcon]] = 'fa-sort';
+          }
+        }
       };
 
       var initializeTypeahead = function() {
@@ -100,6 +137,7 @@ angular.module('wx2AdminWebClientApp')
               deferred.resolve(data.Resources[0].id);
               $scope.userName = data.Resources[0].userName;
             } else {
+              $('#logs-panel').show();
               Log.debug('Could not find user: ' + searchinput);
               angular.element('#logSearchBtn').button('reset');
               Notification.notify([$translate.instant('supportPage.errUsernotfound', {
@@ -107,6 +145,7 @@ angular.module('wx2AdminWebClientApp')
               })], 'error');
             }
           } else {
+            $('#logs-panel').show();
             Log.debug('Query existing users failed. Status: ' + status);
             deferred.reject('Querying user failed. Status: ' + status);
           }
@@ -154,31 +193,43 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
+      $scope.formatDate = function(date) {
+        if (date !== ''){
+          return moment.utc(date).local().format('MMM D, YYYY h:mm A ZZ');
+        } else {
+          return date;
+        }
+      };
+
       var fetchLogsForUser = function(userid) {
         LogService.listLogs(userid, function(data, status) {
           if (data.success) {
-            $scope.userLogs = [];
             //parse the data
+            $scope.userLogs = [];
             if (data.logDetails.length > 0) {
               for (var index in data.logDetails) {
-                var logdata = data.logDetails[index].name.split('/');
                 var log = {
-                  filename: data.logDetails[index].name,
-                  orgId: logdata[0],
-                  userId: logdata[1],
-                  clientType: logdata[2],
-                  name: logdata[3],
-                  date: moment.utc(data.logDetails[index].last_modified).local().format('MMM D, YYYY h:mm A ZZ')
+                  name: data.logDetails[index].name,
+                  filename: data.logDetails[index].filename,
+                  orgId: data.logDetails[index].orgId,
+                  userId: data.logDetails[index].userId,
+                  locusId: data.logDetails[index].locusId,
+                  platform: data.logDetails[index].platform,
+                  date: data.logDetails[index].last_modified,
+                  callStartTime: data.logDetails[index].callStartTime,
+                  feedbackId: data.logDetails[index].feedbackId,
+                  emailAddress: data.logDetails[index].emailAddress
                 };
                 $scope.userLogs.push(log);
                 angular.element('#logSearchBtn').button('reset');
+                $('#logs-panel').show();
               }
             } else {
-              $scope.userLogs = [];
+              $('#logs-panel').show();
               angular.element('#logSearchBtn').button('reset');
             }
           } else {
-            $scope.userLogs = [];
+            $('#logs-panel').show();
             angular.element('#logSearchBtn').button('reset');
             Log.debug('Failed to retrieve user logs. Status: ' + status);
             if (status === 403) {
