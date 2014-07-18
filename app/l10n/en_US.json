@@ -21,7 +21,8 @@
     "validEmailInput" : "Please enter valid user email(s).",
     "csvBtnTitle" : "Export to CSV",
     "csvFilename" : "exported_users.csv",
-    "successInvite" : "Your invitation has been sent successfully.  (Email ID: {{id}}) ",
+    "emailSent" : "{{email}} email sent successfully",
+    "emailFailed" : "{{email}} email not sent, {message}",
     "errInvite" : "Unable to process your invitation. Status: {{status}}.",
     "listSubTab" : "Users",
     "inviteSubTab" : "Invite"
