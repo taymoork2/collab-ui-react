@@ -302,8 +302,44 @@ angular.module('wx2AdminWebClientApp')
 
           if (data.success) {
             Log.info('User invitation sent successfully.', data.id);
-            var success = [$translate.instant('usersPage.successInvite', data)];
-            Notification.notify(success, 'success');
+            // var success = [$translate.instant('usersPage.successInvite', data)];
+            // Notification.notify(success, 'success');
+            for (var i = 0; i < data.inviteResponse.length; i++) {
+
+              var userResult = {
+                email: data.inviteResponse[i].email,
+                alertType: null
+              };
+
+              var userStatus = data.inviteResponse[i].message;
+
+              if (userStatus.indexOf('Queued') > -1) {
+                userResult.alertType = 'success';
+              } else {
+                userResult.message = userStatus;
+                userResult.alertType = 'danger';
+                isComplete = false;
+              }
+              $scope.results.resultList.push(userResult);
+            }
+
+            //concatenating the results in an array of strings for notify function
+            var successes = [];
+            var errors = [];
+            var count_s = 0;
+            var count_e = 0;
+            for (var idx in $scope.results.resultList) {
+              if ($scope.results.resultList[idx].alertType === 'success') {
+                successes[count_s] = $translate.instant('usersPage.emailSent', $scope.results.resultList[idx]);
+                count_s++;
+              } else {
+                errors[count_e] = $translate.instant('usersPage.emailFailed', $scope.results.resultList[idx]);
+                count_e++;
+              }
+            }
+            //Displaying notifications
+            Notification.notify(successes, 'success');
+            Notification.notify(errors, 'error');
           } else {
             Log.error('Could not process invitation.  Status: ' + status, data);
             var error = [$translate.instant('usersPage.errInvite', data)];
