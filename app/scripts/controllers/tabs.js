@@ -8,7 +8,7 @@ angular.module('wx2AdminWebClientApp')
       $scope.$on('AuthinfoUpdated', function() {
         var roles  = Authinfo.getRoles();
         var tabs = [];
-        for(var idx = roles.length - 1; idx >= 0; idx--) {
+        for(var idx = 0; idx < roles.length; idx++) {
           tabs = tabs.concat(Config.roles[roles[idx]]);
         }
         $rootScope.tabs = Utils.removeDuplicates(tabs, 'title');

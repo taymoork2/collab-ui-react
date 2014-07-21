@@ -48,7 +48,7 @@ angular.module('wx2AdminWebClientApp')
             scope.result = $filter('translate')('errors.serverDown');
           }
           deferred.reject();
-          $timeout(auth.logout, 8000);
+          $timeout(auth.logout, 5000);
         });
 
       return deferred.promise;
@@ -141,7 +141,8 @@ angular.module('wx2AdminWebClientApp')
     };
 
     auth.handleStatus = function(status) {
-      if (status === 401 || status === 403) {
+      // 401 should probably be checked too but CI needs to fix it's error responses
+      if (status === 403) {
         console.log('Token is not authorized or invalid. Logging user out.');
         $dialogs.wait(undefined, $filter('translate')('errors.expired') , progress);
         this.delayedLogout();
