@@ -3,8 +3,8 @@
 /* global AmCharts, $ */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('HomeCtrl', ['$scope', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs',
-    function($scope, ReportsService, Log, Auth, Authinfo, $dialogs) {
+  .controller('HomeCtrl', ['$scope', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config',
+    function($scope, ReportsService, Log, Auth, Authinfo, $dialogs, Config) {
 
       $('#au-graph-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
       $('#au-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
@@ -25,6 +25,8 @@ angular.module('wx2AdminWebClientApp')
       $scope.showCallsContent = false;
       $scope.showConvoContent = false;
       $scope.showShareContent = false;
+
+      $scope.statusPageUrl = Config.getStatusPageUrl();
 
       var chartVals = [];
       $scope.isAdmin = false;

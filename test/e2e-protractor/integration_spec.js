@@ -145,6 +145,7 @@ describe('App flow', function() {
 
       it('should display error if no user is entered on invite', function() {
         element(by.id('btnInvite')).click();
+        browser.sleep(500);
         element(by.css('.alertify-log-error')).click().then(function() {
           browser.sleep(500);
           expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
@@ -331,6 +332,7 @@ describe('App flow', function() {
         expect(element(by.id('convo-content')).isDisplayed()).toBe(true);
         expect(element(by.id('share-content')).isDisplayed()).toBe(true);
         expect(element(by.css('.home-setup-panel')).isDisplayed()).toBe(true);
+
         element(by.id('btnQuickSetup')).click().then(function(){
           browser.sleep(1000);
           expect(element(by.id('chk_invite')).isDisplayed()).toBe(true);
@@ -339,6 +341,29 @@ describe('App flow', function() {
             element(by.id('btnQuickSetupAction')).click().then(function(){
               expect(browser.getCurrentUrl()).toContain('/users');
             });
+          });
+        });
+      });
+    });
+
+    it('clicking on system health panel should open to status page in a new tab', function() {
+      element(by.css('li[heading="Home"]')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function() {
+        var appWindow = browser.getWindowHandle();
+        element(by.css('.monitoring-cell')).click().then(function(){
+          browser.sleep(3000);
+          browser.getAllWindowHandles().then(function (handles) {
+            browser.sleep(1500);
+            var newWindowHandle = handles[1];
+            browser.switchTo().window(newWindowHandle).then(function () {
+              expect(browser.driver.getCurrentUrl()).toContain('status.squaredpreview.com/');
+            });
+            browser.driver.close().then(function () {
+              browser.switchTo().window(appWindow);
+            });
+            browser.sleep(500);
           });
         });
       });

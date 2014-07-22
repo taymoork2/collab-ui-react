@@ -75,14 +75,16 @@
 </div>
 
 <div class="monitoring-panel">
-	<div class="monitoring-cell">
-		<h3 translate="homePage.monitoring"></h3>
-	</div>
-	<div ng-repeat="health in healthMetrics">
-		<div class="monitoring-cell" id="{{health.name}}">
-			<span>{{health.name}}</span> <i ng-class="{true:'fa fa-circle circle-icon-green', false:'fa fa-circle circle-icon-red'}[health.status==='operational']"></i>
+	<a ng-href="{{statusPageUrl}}" target="_blank">
+		<div class="monitoring-cell">
+			<h3 translate="homePage.monitoring"></h3>
 		</div>
-	</div>
+		<div ng-repeat="health in healthMetrics">
+			<div class="monitoring-cell" id="{{health.name}}">
+				<span>{{health.name}}</span> <i ng-class="{true:'fa fa-circle circle-icon-green', false:'fa fa-circle circle-icon-red'}[health.status==='operational']"></i>
+			</div>
+		</div>
+	</a>
 </div>
 
 <div class="home-setup-panel" ng-show="isAdmin">

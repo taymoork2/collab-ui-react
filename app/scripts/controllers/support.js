@@ -215,7 +215,7 @@ angular.module('wx2AdminWebClientApp')
                   userId: data.logDetails[index].userId,
                   locusId: data.logDetails[index].locusId,
                   platform: data.logDetails[index].platform,
-                  date: data.logDetails[index].last_modified,
+                  date: data.logDetails[index].lastModified,
                   callStartTime: data.logDetails[index].callStartTime,
                   feedbackId: data.logDetails[index].feedbackId,
                   emailAddress: data.logDetails[index].emailAddress
