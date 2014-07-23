@@ -38,7 +38,7 @@ angular.module('wx2AdminWebClientApp')
 
         scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
 
-        statusPageUrl: 'https://status.wbx2.com',
+        statusPageUrl: 'http://status.squaredpreview.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
 
