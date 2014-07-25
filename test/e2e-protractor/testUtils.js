@@ -18,7 +18,7 @@ exports.randomTestEmail = function() {
 };
 
 exports.randomTestGmail = function() {
-  return 'phtest77+' + this.randomId() + '@gmail.com';
+  return 'collabctg+' + this.randomId() + '@gmail.com';
 };
 
 exports.sendRequest = function(options) {
