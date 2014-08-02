@@ -42,6 +42,8 @@ angular.module('wx2AdminWebClientApp')
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
 
+        squaredAppUrl: 'squared://',
+
         healthCheckUrl: {
           dev: 'http://squaredpreview.statuspage.io/index.json',
           prod: 'https://squaredpreview.statuspage.io/index.json'
@@ -135,6 +137,10 @@ angular.module('wx2AdminWebClientApp')
 
         getStatusPageUrl: function() {
           return this.statusPageUrl;
+        },
+
+        getSquaredAppUrl: function() {
+          return this.squaredAppUrl;
         }
 
       };

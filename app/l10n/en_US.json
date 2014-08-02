@@ -55,7 +55,8 @@
     "squared" : "Squared."
   },
   "invitePage" : {
-    "redirect" : "Redirecting..."
+    "redirect" : "Redirecting...",
+    "launch" : "Lauching App..."
   },
   "orgsPage" : {
     "title" : "MANAGE ORGANIZATIONS",
