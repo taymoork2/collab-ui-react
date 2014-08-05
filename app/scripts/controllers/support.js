@@ -163,7 +163,7 @@ angular.module('wx2AdminWebClientApp')
           if (data.success) {
             //parse the data
             $scope.userLogs = [];
-            if (data.metadataList.length > 0) {
+            if (data.metadataList && data.metadataList.length > 0) {
               for (var index in data.metadataList) {
                 var metadata = data.metadataList[index].meta;
                 var locus = '';
