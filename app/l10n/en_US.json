@@ -120,13 +120,9 @@
     "logUserid" : "User ID",
     "logOrgId" : "Org ID",
     "logAction" : "Download",
-    "errUserdoesnotexist" : "User does not exist : {{input}}",
-    "errUnauthorizedUserAccess" : "You are not authorized to view the logs of this user : {{input}}",
     "errEmptyinput" : "Search input cannot be empty.",
-    "errInvalidInput" : "Invalid input: {{input}}. Enter valid email address or uuid.",
     "errLogQuery" : "Failed to retrieve logs. Status: {{status}}",
-    "errUsernotfound" : "Could not find user: {{input}}",
-    "inputPlaceholder": "Enter user email address or user ID (UUID)"
+    "inputPlaceholder": "Enter search term (Email address, user ID, Locus ID, etc.)"
   },
   "common" : {
     "cancel" : "Cancel",

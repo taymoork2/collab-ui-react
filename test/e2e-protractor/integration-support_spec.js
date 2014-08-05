@@ -13,9 +13,7 @@ var testuser = {
   orgname: 'SquaredAdminTool',
   searchValidEmail: 'pbr-org-admin@squared2webex.com',
   searchValidUuid: 'd6688fc9-414d-44ce-a166-759530291edc',
-  searchInvalidSearchInput: 'invalidSearchInput',
-  searchUuidNotExisting: 'd6688fc9-414d-44ce-a166-759530291eds',
-  searchUuidUnauthorized: '2c7bfde0-93c8-4ccd-a961-1b04df05bb66'
+  searchNonexistentMetadata: 'qqt7y812twuiy900909-2jijeqbd,,.mjmj123qwsah77&89%$3wesa@54a'
 };
 
 describe('Support flow', function() {
@@ -106,55 +104,12 @@ describe('Support flow', function() {
       });
     });
 
-    it('should display error for invalid input', function() {
+    it('should not return results for non existent metadata search', function() {
       element(by.id('logsearchfield')).clear();
-      element(by.id('logsearchfield')).sendKeys(testuser.searchInvalidSearchInput).then(function() {
+      element(by.id('logsearchfield')).sendKeys(testuser.searchNonexistentMetadata).then(function() {
         element(by.id('logSearchBtn')).click();
         browser.sleep(500);
         expect(element(by.id('noResults')).getText()).toBe('No Results.');
-        element(by.css('.alertify-log-error')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.css('.panel-danger-body p')).getText()).toContain('Invalid input:');
-          expect(element(by.css('.panel-danger-body p')).getText()).toContain(testuser.searchInvalidSearchInput);
-          expect(element(by.css('.panel-danger-body p')).getText()).toContain('Enter valid email address or uuid.');
-          browser.sleep(500);
-          element(by.css('.fa-times')).click();
-          browser.sleep(500);
-        });
-      });
-    });
-
-    it('should display error for non existing uuid', function() {
-      element(by.id('logsearchfield')).clear();
-      element(by.id('logsearchfield')).sendKeys(testuser.searchUuidNotExisting).then(function() {
-        element(by.id('logSearchBtn')).click();
-        browser.sleep(500);
-        expect(element(by.id('noResults')).getText()).toBe('No Results.');
-        element(by.css('.alertify-log-error')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.css('.panel-danger-body p')).getText()).toContain('User does not exist :');
-          expect(element(by.css('.panel-danger-body p')).getText()).toContain(testuser.searchUuidNotExisting);
-          browser.sleep(500);
-          element(by.css('.fa-times')).click();
-          browser.sleep(500);
-        });
-      });
-    });
-
-    it('should display error for unauthorized uuid', function() {
-      element(by.id('logsearchfield')).clear();
-      element(by.id('logsearchfield')).sendKeys(testuser.searchUuidUnauthorized).then(function() {
-        element(by.id('logSearchBtn')).click();
-        browser.sleep(500);
-        expect(element(by.id('noResults')).getText()).toBe('No Results.');
-        element(by.css('.alertify-log-error')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.css('.panel-danger-body p')).getText()).toContain('You are not authorized to view the logs of this user :');
-          expect(element(by.css('.panel-danger-body p')).getText()).toContain(testuser.searchUuidUnauthorized);
-          browser.sleep(500);
-          element(by.css('.fa-times')).click();
-          browser.sleep(500);
-        });
       });
     });
 

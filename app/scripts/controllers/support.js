@@ -128,40 +128,11 @@ angular.module('wx2AdminWebClientApp')
         initializeTypeahead();
       });
 
-      var getUserId = function(searchinput) {
-        var deferred = $q.defer();
-        UserListService.getUser(searchinput, function(data, status) {
-          if (data.success) {
-            Log.debug('Returned data for: ' + searchinput, data.Resources);
-            if (data.Resources.length > 0) {
-              deferred.resolve(data.Resources[0].id);
-              $scope.userName = data.Resources[0].userName;
-            } else {
-              $('#logs-panel').show();
-              Log.debug('Could not find user: ' + searchinput);
-              angular.element('#logSearchBtn').button('reset');
-              Notification.notify([$translate.instant('supportPage.errUsernotfound', {
-                input: searchinput
-              })], 'error');
-            }
-          } else {
-            $('#logs-panel').show();
-            Log.debug('Query existing users failed. Status: ' + status);
-            deferred.reject('Querying user failed. Status: ' + status);
-          }
-        });
-        return deferred.promise;
-      };
-
-      var validateEmail = function(email) {
-        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
-      };
-
-      var validateUuid = function(uuid) {
+      var validateLocusId = function(locusId) {
         var re = /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/;
-        return re.test(uuid);
+        return re.test(locusId);
       };
+
 
       //Retrieving logs for user
       $scope.getLogs = function() {
@@ -169,27 +140,13 @@ angular.module('wx2AdminWebClientApp')
         $scope.userLogs = [];
         angular.element('#logSearchBtn').button('loading');
         //check whether email address or uuid was enetered
-        var searchinput = $('#logsearchfield').val();
-        if (typeof searchinput === 'undefined' || searchinput === '') {
+        var searchInput = $('#logsearchfield').val();
+        if (searchInput) {
+          searchLogs(searchInput);
+        } else {
           Log.debug('Search input cannot be empty.');
           Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
           angular.element('#logSearchBtn').button('reset');
-        } else if (validateEmail(searchinput)) {
-          getUserId(searchinput).then(function(userid) {
-            fetchLogsForUser(userid);
-          }, function(error) {
-            angular.element('#logSearchBtn').button('reset');
-            Notification.notify([error], 'error');
-          });
-        } else if (validateUuid(searchinput)) {
-          fetchLogsForUser(searchinput);
-        } else {
-          Log.debug('Invalid input: ' + searchinput);
-          angular.element('#logSearchBtn').button('reset');
-          var error = [$translate.instant('supportPage.errInvalidInput', {
-            input: searchinput
-          })];
-          Notification.notify(error, 'error');
         }
       };
 
@@ -201,50 +158,51 @@ angular.module('wx2AdminWebClientApp')
         }
       };
 
-      var fetchLogsForUser = function(userid) {
-        LogService.listLogs(userid, function(data, status) {
+      var searchLogs = function(searchInput) {
+        LogService.searchLogs(searchInput, function(data, status) {
           if (data.success) {
             //parse the data
             $scope.userLogs = [];
-            if (data.logDetails.length > 0) {
-              for (var index in data.logDetails) {
+            if (data.metadataList.length > 0) {
+              for (var index in data.metadataList) {
+                var metadata = data.metadataList[index].meta;
+                var locus = '';
+
+                if (metadata && metadata.locusId) {
+                  locus = metadata.locusId;
+                }
+
+                if (locus === '') {
+                  var fullFilename = data.metadataList[index].filename;
+                  var filename = fullFilename.substr(fullFilename.lastIndexOf('/')+1);
+                  var lastIndex = filename.indexOf('_');
+                  locus = filename.substr(0, lastIndex);
+                }
+
+                if(!validateLocusId(locus)) {
+                  locus = '-NA-';
+                }
+
                 var log = {
-                  name: data.logDetails[index].name,
-                  filename: data.logDetails[index].filename,
-                  orgId: data.logDetails[index].orgId,
-                  userId: data.logDetails[index].userId,
-                  locusId: data.logDetails[index].locusId,
-                  platform: data.logDetails[index].platform,
-                  date: data.logDetails[index].lastModified,
-                  callStartTime: data.logDetails[index].callStartTime,
-                  feedbackId: data.logDetails[index].feedbackId,
-                  emailAddress: data.logDetails[index].emailAddress
+                  emailAddress: data.metadataList[index].emailAddress,
+                  locusId: locus,
+                  date: data.metadataList[index].timestamp
                 };
                 $scope.userLogs.push(log);
                 angular.element('#logSearchBtn').button('reset');
                 $('#logs-panel').show();
               }
             } else {
-              $('#logs-panel').show();
               angular.element('#logSearchBtn').button('reset');
+              $('#logs-panel').show();
             }
           } else {
             $('#logs-panel').show();
             angular.element('#logSearchBtn').button('reset');
             Log.debug('Failed to retrieve user logs. Status: ' + status);
-            if (status === 403) {
-              Notification.notify([$translate.instant('supportPage.errUnauthorizedUserAccess', {
-                input: userid
-              })], 'error');
-            } else if (status === 404) {
-              Notification.notify([$translate.instant('supportPage.errUserdoesnotexist', {
-                input: userid
-              })], 'error');
-            } else {
-              Notification.notify([$translate.instant('supportPage.errLogQuery', {
-                status: status
-              })], 'error');
-            }
+            Notification.notify([$translate.instant('supportPage.errLogQuery', {
+              status: status
+            })], 'error');
           }
         });
       };
