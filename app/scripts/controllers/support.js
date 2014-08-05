@@ -184,6 +184,7 @@ angular.module('wx2AdminWebClientApp')
                 }
 
                 var log = {
+                  fullFilename: data.metadataList[index].filename,
                   emailAddress: data.metadataList[index].emailAddress,
                   locusId: locus,
                   date: data.metadataList[index].timestamp
