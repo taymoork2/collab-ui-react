@@ -58,7 +58,7 @@ angular.module('wx2AdminWebClientApp')
           keepOnNavigate: false
         },
 
-        allowedPaths: ['/activate', '/downloads', '/invite'],
+        allowedPaths: ['/activate', '/downloads', '/invite', '/invitelauncher'],
 
         tabs: {
           home: {
