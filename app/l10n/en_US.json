@@ -22,7 +22,9 @@
     "csvBtnTitle" : "Export to CSV",
     "csvFilename" : "exported_users.csv",
     "emailSent" : "{{email}} email sent successfully",
-    "emailFailed" : "{{email}} email not sent, {message}",
+    "emailFailed" : "{{email}} email not sent, {{message}}",
+    "entitled"    : "{{email}} is already entitled",
+    "forbidden"   : "{{email}} cannot be invited to service",
     "errInvite" : "Unable to process your invitation. Status: {{status}}.",
     "listSubTab" : "Users",
     "inviteSubTab" : "Invite"
