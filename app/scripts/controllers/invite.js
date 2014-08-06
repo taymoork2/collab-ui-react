@@ -13,7 +13,7 @@ angular.module('wx2AdminWebClientApp')
 						if (Utils.isIPhone()) {
 							redirectUrl = data.iPhoneURL;
 						} else if (Utils.isAndroid()) {
-							redirectUrl = data.iPhoneURL;
+							redirectUrl = data.AndroidURL;
 						} else {
 							redirectUrl = data.webClientURL;
 						}
