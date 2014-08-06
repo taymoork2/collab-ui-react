@@ -36,25 +36,19 @@
         <table class="table" ng-show="userLogs">
           <thead>
             <tr>
-              <th nowrap ng-click="toggleSort('emailAddress')"><span id="emailAddressHeading" translate="supportPage.logEmailAddress"></span> <i class="fa {{sortIconEmailAddress}}"></i></th>
-              <!-- <th nowrap ng-click="toggleSort('name')"><span translate="supportPage.logName"></span> <i class="fa {{sortIconName}}"></i></th> -->
-              <th nowrap ng-click="toggleSort('locusId')"><span id="locusIdHeading" translate="supportPage.logLocusId"></span> <i class="fa {{sortIconLocusId}}"></i></th>
-              <!-- <th nowrap ng-click="toggleSort('platform')"><span id="platformHeading" translate="supportPage.logPlatform"></span> <i class="fa {{sortIconPlatform}}"></i></th>
-              <th nowrap ng-click="toggleSort('userId')"><span id="userIdHeading" translate="supportPage.logUserid"></span> <i class="fa {{sortIconUserId}}"></i></th> -->
-              <th nowrap ng-click="toggleSort('date')"><span id="dateHeading" translate="supportPage.logDate"></span> <i class="fa {{sortIconDate}}"></i></th>
-              <!-- <th nowrap ng-click="toggleSort('callStart')"><span id="callStartHeading" translate="supportPage.logCallStartTime"></span> <i class="fa {{sortIconCallStart}}"></i></th> -->
+              <th nowrap ng-click="toggleSort('emailAddress', 'sortIconEmailAddress')"><span id="emailAddressHeading" translate="supportPage.logEmailAddress"></span> <i class="fa {{sortIconEmailAddress}}"></i></th>
+              <th nowrap ng-click="toggleSort('locusId', 'sortIconLocusId')"><span id="locusIdHeading" translate="supportPage.logLocusId"></span> <i class="fa {{sortIconLocusId}}"></i></th>
+              <th nowrap ng-click="toggleSort('callStart', 'sortIconCallStart')"><span id="callStartHeading" translate="supportPage.logCallStart"></span> <i class="fa {{sortIconCallStart}}"></i></th>
+              <th nowrap ng-click="toggleSort('date', 'sortIconDate')"><span id="dateHeading" translate="supportPage.logDate"></span> <i class="fa {{sortIconDate}}"></i></th>
               <th nowrap><span translate="supportPage.logAction"></span></th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="log in userLogs | orderBy:logsSortBy:reverseLogs">
               <td>{{log.emailAddress}}</td>
-              <!-- <td><span ng-if="log.filename">{{log.filename}}</span></td> -->
               <td>{{log.locusId}}</td>
-              <!-- <td>{{log.platform}}</td>
-              <td>{{log.userId}}</td> -->
+              <td>{{log.callStart}}</td>
               <td>{{formatDate(log.date)}}</td>
-              <!-- <td>{{formatDate(log.callStartTime)}}</td> -->
               <td class="center"><a ng-click="downloadLog(log.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></td>
             </tr>
           </tbody>

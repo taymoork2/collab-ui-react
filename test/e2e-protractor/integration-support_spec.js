@@ -83,7 +83,8 @@ describe('Support flow', function() {
         browser.sleep(3000);
         expect(element(by.id('emailAddressHeading')).getText()).toBe('Email Address');
         expect(element(by.id('locusIdHeading')).getText()).toBe('Locus ID');
-        expect(element(by.id('dateHeading')).getText()).toBe('Date');
+        expect(element(by.id('callStartHeading')).getText()).toBe('Call Start Time');
+        expect(element(by.id('dateHeading')).getText()).toBe('Upload Time');
         element.all(by.repeater('log in userLogs')).then(function(rows) {
           expect(rows.length).toBeGreaterThan(0);
         });
@@ -97,9 +98,11 @@ describe('Support flow', function() {
         browser.sleep(3000);
         expect(element(by.id('emailAddressHeading')).getText()).toBe('Email Address');
         expect(element(by.id('locusIdHeading')).getText()).toBe('Locus ID');
-        expect(element(by.id('dateHeading')).getText()).toBe('Date');
+        expect(element(by.id('callStartHeading')).getText()).toBe('Call Start Time');
+        expect(element(by.id('dateHeading')).getText()).toBe('Upload Time');
         element.all(by.repeater('log in userLogs')).then(function(rows) {
           expect(rows.length).toBeGreaterThan(0);
+          expect(element(by.binding('log.callStart')).getText()).toBe('2014-07-07T17:41:09.711Z');
         });
       });
     });

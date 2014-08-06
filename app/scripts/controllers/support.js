@@ -13,7 +13,7 @@ angular.module('wx2AdminWebClientApp')
       $('#logsearchfield').attr('placeholder', $filter('translate')('supportPage.inputPlaceholder'));
 
       //initialize sort icons
-      var sortIcons = ['sortIconEmailAddress', 'sortIconDate', 'sortIconName', 'sortIconLocusId', 'sortIconCallStart', 'sortIconPlatform', 'sortIconUserId'];
+      var sortIcons = ['sortIconEmailAddress', 'sortIconDate', 'sortIconLocusId', 'sortIconCallStart'];
       for(var sortIcon in sortIcons) {
         if(sortIcons[sortIcon] === 'sortIconDate') {
           $scope[sortIcons[sortIcon]] = 'fa-sort-desc';
@@ -22,47 +22,12 @@ angular.module('wx2AdminWebClientApp')
         }
       }
 
-      $scope.sortIconDate = 'fa-sort-desc';
-      $scope.sortIconName =  'fa-sort';
-
       $scope.logsSortBy = 'date';
       $scope.reverseLogs = true;
 
-      $scope.toggleSort = function(type) {
+      $scope.toggleSort = function(type, icon) {
         $scope.reverseLogs = !$scope.reverseLogs;
-        switch(type) {
-
-        case 'emailAddress':
-          changeSortIcon('emailAddress', 'sortIconEmailAddress');
-          break;
-
-        case 'name':
-          changeSortIcon('name', 'sortIconName');
-          break;
-
-        case 'date':
-          changeSortIcon('date', 'sortIconDate');
-          break;
-
-        case 'locusId':
-          changeSortIcon('locusId', 'sortIconLocusId');
-          break;
-
-        case 'callStart':
-          changeSortIcon('callStart', 'sortIconCallStart');
-          break;
-
-        case 'platform':
-          changeSortIcon('platform', 'sortIconPlatform');
-          break;
-
-        case 'userId':
-          changeSortIcon('userId', 'sortIconUserId');
-          break;
-
-        default:
-          Log.debug('Sort type not recognized.');
-        }
+        changeSortIcon(type, icon);
       };
 
       var changeSortIcon = function(logsSortBy, sortIcon) {
@@ -133,6 +98,10 @@ angular.module('wx2AdminWebClientApp')
         return re.test(locusId);
       };
 
+      var validateCallStartTime = function(callStart) {
+        var re = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/;
+        return re.test(callStart);
+      };
 
       //Retrieving logs for user
       $scope.getLogs = function() {
@@ -152,7 +121,7 @@ angular.module('wx2AdminWebClientApp')
 
       $scope.formatDate = function(date) {
         if (date !== ''){
-          return moment.utc(date).local().format('MMM D, YYYY h:mm A ZZ');
+          return moment.utc(date).local().format('MMM D \'YY H:mm ZZ');
         } else {
           return date;
         }
@@ -168,13 +137,22 @@ angular.module('wx2AdminWebClientApp')
                 var metadata = data.metadataList[index].meta;
                 var locus = '';
 
-                if (metadata && metadata.locusId) {
-                  locus = metadata.locusId;
+                if (metadata && metadata.locusid) {
+                  locus = metadata.locusid;
+                }
+
+                var fullFilename = data.metadataList[index].filename;
+                var filename = fullFilename.substr(fullFilename.lastIndexOf('/') + 1);
+                
+                var callStartIndex = filename.indexOf('_') + 1;
+                var callStartEndIndex = filename.indexOf('Z', callStartIndex) + 1;
+                var callStartTime = filename.substring(callStartIndex, callStartEndIndex);
+
+                if(!validateCallStartTime(callStartTime)) {
+                  callStartTime = '-NA-';
                 }
 
                 if (locus === '') {
-                  var fullFilename = data.metadataList[index].filename;
-                  var filename = fullFilename.substr(fullFilename.lastIndexOf('/')+1);
                   var lastIndex = filename.indexOf('_');
                   locus = filename.substr(0, lastIndex);
                 }
@@ -184,9 +162,10 @@ angular.module('wx2AdminWebClientApp')
                 }
 
                 var log = {
-                  fullFilename: data.metadataList[index].filename,
+                  fullFilename: fullFilename,
                   emailAddress: data.metadataList[index].emailAddress,
                   locusId: locus,
+                  callStart: callStartTime,
                   date: data.metadataList[index].timestamp
                 };
                 $scope.userLogs.push(log);
