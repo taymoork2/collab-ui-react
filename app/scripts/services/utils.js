@@ -126,7 +126,7 @@ angular.module('wx2AdminWebClientApp')
         },
 
         isAndroid: function() {
-          if (navigator.userAgent.match(/Android/i) && navigator.userAgent.match(/mobile/i)) {
+          if (navigator.userAgent.match(/Android/i)) {
             return true;
           } else {
             return false;
