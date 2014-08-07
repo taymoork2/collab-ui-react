@@ -43,7 +43,7 @@ describe('invite page with user param', function() {
   it('should forward to squared app', function() {
 
     browser.get('#/invitelauncher').then(function() {
-      expect(browser.driver.isElementPresent(by.css('ng-scope')));
+      expect(element(by.id('invitelauncher')).isDisplayed()).toBe(true);
     });
   });
 
