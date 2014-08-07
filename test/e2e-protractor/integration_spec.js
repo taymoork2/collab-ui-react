@@ -11,7 +11,8 @@
 var testuser = {
   username: 'pbr-org-admin@squared2webex.com',
   password: 'C1sc0123!',
-  orgname: 'SquaredAdminTool'
+  orgname: 'SquaredAdminTool',
+  usernameWithNoEntitlements: 'doNotDeleteTestUser@wx2.example.com'
 };
 
 var utils = require('./testUtils.js');
@@ -307,6 +308,43 @@ describe('App flow', function() {
         });
       });
     });
+
+    it('should not invite users successfully if they are already entitled', function() {
+      element(by.id('inviteSubtab')).click();
+      var inviteEmail = testuser.username;
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+        element(by.id('btnInvite')).click();
+        browser.sleep(1000); //for the animation
+        element(by.css('.alertify-log-error')).click();
+        browser.sleep(500); //for the animation
+        element.all(by.css('.panel-danger-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain('already entitled');
+          browser.sleep(500);
+          element(by.css('.fa-times')).click();
+        });
+      });
+    });
+
+    it('should not invite users successfully from org which has autoentitlement flag disabled', function() {
+      element(by.id('inviteSubtab')).click();
+      var inviteEmail = testuser.usernameWithNoEntitlements;
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+        element(by.id('btnInvite')).click();
+        browser.sleep(1000); //for the animation
+        element(by.css('.alertify-log-error')).click();
+        browser.sleep(500); //for the animation
+        element.all(by.css('.panel-danger-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain('cannot be invited to service');
+          browser.sleep(500);
+          element(by.css('.fa-times')).click();
+        });
+      });
+    });
+
   });
 
   describe('Switching tabs', function() {

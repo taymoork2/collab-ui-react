@@ -311,15 +311,15 @@ angular.module('wx2AdminWebClientApp')
                 alertType: null
               };
 
-              var userStatus = data.inviteResponse[i].message;
+              var userStatus = data.inviteResponse[i].status;
 
-              if (userStatus.indexOf('Queued') > -1) {
+              if (userStatus == 200) {
                 userResult.alertType = 'success';
               } else {
-                userResult.message = userStatus;
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
+              userResult.status = userStatus;
               $scope.results.resultList.push(userResult);
             }
 
@@ -329,9 +329,15 @@ angular.module('wx2AdminWebClientApp')
             var count_s = 0;
             var count_e = 0;
             for (var idx in $scope.results.resultList) {
-              if ($scope.results.resultList[idx].alertType === 'success') {
+              if ($scope.results.resultList[idx].status == 200) {
                 successes[count_s] = $translate.instant('usersPage.emailSent', $scope.results.resultList[idx]);
                 count_s++;
+              } else if ($scope.results.resultList[idx].status == 304) {
+                errors[count_e] = $translate.instant('usersPage.entitled', $scope.results.resultList[idx]);
+                count_e++;
+              } else if ($scope.results.resultList[idx].status == 403) {
+                errors[count_e] = $translate.instant('usersPage.forbidden', $scope.results.resultList[idx]);
+                count_e++;
               } else {
                 errors[count_e] = $translate.instant('usersPage.emailFailed', $scope.results.resultList[idx]);
                 count_e++;
