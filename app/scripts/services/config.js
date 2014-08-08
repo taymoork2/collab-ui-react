@@ -125,7 +125,7 @@ angular.module('wx2AdminWebClientApp')
 
         getHealthCheckUrlServiceUrl: function() {
           if (this.isDev()) {
-            return this.healthCheckUrl.dev;
+            return this.healthCheckUrl.prod;
           } else {
             return this.healthCheckUrl.prod;
           }

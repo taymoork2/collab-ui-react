@@ -152,6 +152,12 @@ label {
   padding:8px;
 }
 
+.refresh-button{
+  float:left;
+  padding-top:7px;
+  padding-left:7px;
+}
+
 .form-group {
   padding: 10px;
   margin-bottom: 0px;
@@ -251,6 +257,11 @@ label {
 .navbar-brand {
   color: $brand_color !important;
   font-weight: bold;
+}
+
+.refresh-div
+{
+  float:left;
 }
 
 .entitle-btn-grp {
@@ -586,6 +597,18 @@ input:disabled {
   border-left: solid 1px #c0c0c0;
   border-right: solid 1px #c0c0c0;
   padding: 20px;
+}
+
+.overview-title{
+  height:56px;
+  position:relative;
+}
+
+.overview-updated {
+  position:absolute;
+  left:790px;
+  margin-bottom: 0px;
+  margin-top: 15px;
 }
 
 .overview-bottom {

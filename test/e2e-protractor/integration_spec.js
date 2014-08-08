@@ -450,6 +450,98 @@ describe('App flow', function() {
     });
   });
 
+  describe('Home data refresh', function() {
+
+    it('should load refresh directive template', function() {
+        element(by.css('li[heading="Home"]')).click();
+        browser.driver.wait(function() {
+          return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function(){
+          expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
+          expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
+        });
+      });
+
+    it('should load cached values into directive when switching tabs', function() {
+        element(by.css('li[heading="Users"]')).click();
+        browser.driver.wait(function() {
+          return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function(){
+           element(by.css('li[heading="Home"]')).click();
+          browser.driver.wait(function() {
+            return browser.driver.isElementPresent(by.id('tabs'));
+        }).then(function(){
+            expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
+            expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
+            expect(element(by.id('au-content')).isDisplayed()).toEqual(true);
+            expect(element(by.id('calls-content')).isDisplayed()).toEqual(true);
+            expect(element(by.id('convo-content')).isDisplayed()).toEqual(true);
+            expect(element(by.id('share-content')).isDisplayed()).toEqual(true);
+            expect(element(by.id('activeUsersChart')).isDisplayed()).toEqual(true);
+          });
+        });
+      });
+
+    it('should load new values and update time when clicking refresh', function() {
+      browser.driver.findElement(by.id('refreshButton')).click().then(function() {
+            expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
+          expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
+          expect(element(by.id('au-content')).isDisplayed()).toEqual(true);
+          expect(element(by.id('calls-content')).isDisplayed()).toEqual(true);
+          expect(element(by.id('convo-content')).isDisplayed()).toEqual(true);
+          expect(element(by.id('share-content')).isDisplayed()).toEqual(true);
+          expect(element(by.id('activeUsersChart')).isDisplayed()).toEqual(true);
+        });
+      });
+     
+    });
+
+    describe('Reports data refresh', function() {
+
+      it('should load refresh directive template', function() {
+        element(by.css('li[heading="Reports"]')).click();
+        browser.driver.wait(function() {
+          return browser.driver.isElementPresent(by.id('tabs'));
+        }).then(function(){
+          expect(element(by.id('reportsRefreshData')).isDisplayed()).toEqual(true);
+          expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
+        });
+      });
+
+      it('should load cached values into directive when switching tabs', function() {
+      //browser.sleep(3000);
+
+        element(by.css('li[heading="Users"]')).click();
+          browser.driver.wait(function() {
+            return browser.driver.isElementPresent(by.id('tabs'));
+          }).then(function(){
+            element(by.css('li[heading="Reports"]')).click();
+            browser.driver.wait(function() {
+              return browser.driver.isElementPresent(by.id('tabs'));
+            }).then(function(){
+            expect(element(by.id('reportsRefreshData')).isDisplayed()).toEqual(true);
+            expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
+            expect(element(by.id('avgEntitlementsdiv')).isDisplayed()).toEqual(true);
+              expect(element(by.id('avgConversationsdiv')).isDisplayed()).toEqual(true);
+              expect(element(by.id('activeUsersdiv')).isDisplayed()).toEqual(true);
+              expect(element(by.id('avgCallsdiv')).isDisplayed()).toEqual(true);
+          });
+        });
+      });
+
+      it('should load new values and update time when clicking refresh', function() {
+        browser.driver.findElement(by.id('refreshButton')).click().then(function(){
+          expect(element(by.id('reportsRefreshData')).isDisplayed()).toEqual(true);
+          expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
+          expect(element(by.id('avgEntitlementsdiv')).isDisplayed()).toEqual(true);
+          expect(element(by.id('avgConversationsdiv')).isDisplayed()).toEqual(true);
+          expect(element(by.id('activeUsersdiv')).isDisplayed()).toEqual(true);
+          expect(element(by.id('avgCallsdiv')).isDisplayed()).toEqual(true);
+
+        });
+      });
+    });
+
   // Log Out
   describe('Log Out', function() {
     it('should log out', function() {
