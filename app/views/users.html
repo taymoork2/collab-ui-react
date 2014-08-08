@@ -38,7 +38,7 @@
        <div class="form-group">
         <div id="btnCancel" class="btn btn-link pull-right" ng-click="clearPanel()"><span translate="usersPage.clear"></span></div>
         <button id="btnAdd" class="btn btn-primary pull-right" ng-show="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.add"></span></button>
-        <button id="btnEntitle" class="btn btn-primary pull-right" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.update"></span></button>
+        <button id="btnEntitle" class="btn btn-primary pull-right" ng-click="entitleUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.entitle"></span></button>
         <button id="btnInvite" class="btn btn-primary pull-right" ng-click="inviteUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.invite"></span></button>
 
       </div>
@@ -90,7 +90,7 @@
               <div class="details-body">
                 <strong>Services</strong>
                 <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements">
-                  <div class="btn-group">
+                  <div class="btn-group" id="{{'chk_'+service}}">
                     <input type="checkbox" name="{{service}}" ng-model="entitlements[service]" icheck>
                   </div>
                   <span style="font-size:15px; padding:10px">

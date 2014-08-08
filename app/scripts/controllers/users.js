@@ -191,7 +191,7 @@ angular.module('wx2AdminWebClientApp')
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnAdd').button('loading');
-          Userservice.addUsers(usersList, getEntitlements(), callback);
+          Userservice.addUsers(usersList, getEntitlements('add'), callback);
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];
@@ -222,7 +222,7 @@ angular.module('wx2AdminWebClientApp')
               var userStatus = data.userResponse[i].status;
 
               if (userStatus === 200) {
-                userResult.message = 'updated successfully';
+                userResult.message = 'entitled successfully';
                 userResult.alertType = 'success';
               } else if (userStatus === 404) {
                 userResult.message = 'does not exist';
@@ -233,7 +233,7 @@ angular.module('wx2AdminWebClientApp')
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {
-                userResult.message = 'not updated, status: ' + userStatus;
+                userResult.message = 'not entitled, status: ' + userStatus;
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
@@ -259,7 +259,7 @@ angular.module('wx2AdminWebClientApp')
             Notification.notify(errors, 'error');
 
           } else {
-            Log.warn('Could not update the user', data);
+            Log.warn('Could not entitle the user', data);
             var error = null;
             if (status) {
               error = ['Request failed with status: ' + status + '. Message: ' + data];
@@ -280,7 +280,7 @@ angular.module('wx2AdminWebClientApp')
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnEntitle').button('loading');
-          Userservice.updateUsers(usersList, getEntitlements(), callback);
+          Userservice.updateUsers(usersList, getEntitlements('entitle'), callback);
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];
@@ -400,10 +400,14 @@ angular.module('wx2AdminWebClientApp')
         setEntitlementList();
       });
 
-      var getEntitlements = function(){
+      var getEntitlements = function(action){
         var entitleList = [];
+        var state = null;
         for (var key in $scope.entitlements) {
-          entitleList.push(new Feature(key, $scope.entitlements[key]));
+          state = $scope.entitlements[key];
+          if (action === 'add' || (action === 'entitle' && state)) {
+            entitleList.push(new Feature(key, state));
+          }
         }
         Log.debug(entitleList);
         return entitleList;

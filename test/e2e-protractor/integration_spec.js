@@ -259,7 +259,7 @@ describe('App flow', function() {
             element.all(by.css('.panel-success-body p')).then(function(rows) {
               expect(rows.length).toBe(1);
               expect(rows[0].getText()).toContain(testuser.username);
-              expect(rows[0].getText()).toContain('updated successfully');
+              expect(rows[0].getText()).toContain('entitled successfully');
               browser.sleep(500);
               element(by.css('.fa-times')).click();
             });
@@ -268,22 +268,54 @@ describe('App flow', function() {
       });
     });
 
-    describe('Update existing user to un-entitle call-initiation', function() {
-      it('should display input user email in results with success message', function() {
+    describe('Attempt to un-entitle call-initiation', function() {
+      it('should display input user email in results with entitlement previously updated message', function() {
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
           element(by.css('.iCheck-helper')).click().then(function() {
             element(by.id('btnEntitle')).click();
             browser.sleep(500); //for the animation
-            element(by.css('.alertify-log-success')).click();
+            element(by.css('.alertify-log-error')).click();
             browser.sleep(500); //for the animation
-            element.all(by.css('.panel-success-body p')).then(function(rows) {
+            element.all(by.css('.panel-danger-body p')).then(function(rows) {
               expect(rows.length).toBe(1);
               expect(rows[0].getText()).toContain(testuser.username);
-              expect(rows[0].getText()).toContain('updated successfully');
+              expect(rows[0].getText()).toContain('entitlement previously updated');
               browser.sleep(500);
               element(by.css('.fa-times')).click();
             });
+          });
+        });
+      });
+    });
+
+    describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
+      it('should show call-initiation entitlement for the user', function() {
+        element(by.id('search-input')).sendKeys(testuser.username).then(function() {
+          element(by.id('userSubtab')).click();
+          browser.sleep(1000);
+          element(by.id('queryresults')).getAttribute('value').then(function(value) {
+            var queryresults = parseInt(value, 10);
+            if (queryresults > 0) {
+              element(by.binding('user.userName')).getText().then(function(uname) {
+                expect(uname).toContain(testuser.username);
+              });
+              element(by.binding('user.userName')).click();
+              browser.sleep(500);
+              element(by.id('chk_squaredCallInitiation')).click();
+              browser.sleep(500);
+              element(by.id('btnSave')).click();
+              browser.sleep(1000);
+              element(by.css('.alertify-log-success')).click();
+              browser.sleep(500);
+              element.all(by.css('.panel-success-body p')).then(function(rows) {
+                expect(rows.length).toBe(1);
+                expect(rows[0].getText()).toContain(testuser.username);
+                expect(rows[0].getText()).toContain('updated successfully');
+                browser.sleep(500);
+                element(by.css('.fa-times')).click();
+              });
+            }
           });
         });
       });
