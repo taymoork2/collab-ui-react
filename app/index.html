@@ -86,6 +86,7 @@
 
      ga('create', 'UA-XXXXX-X');
      ga('send', 'pageview');
+     
      </script>
 
      <script src="bower_components/addressparser/src/addressparser.js"></script>
@@ -121,47 +122,57 @@
     <!-- endbuild -->
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/app.js"></script>
-    <script src="scripts/controllers/login.js"></script>
-    <script src="scripts/services/auth.js"></script>
-    <script src="scripts/services/config.js"></script>
-    <script src="scripts/services/utils.js"></script>
-    <script src="scripts/services/storage.js"></script>
-    <script src="scripts/services/log.js"></script>
-    <script src="scripts/controllers/navigation.js"></script>
-    <script src="scripts/controllers/users.js"></script>
-    <script src="scripts/controllers/home.js"></script>
-    <script src="scripts/controllers/organizations.js"></script>
-    <script src="scripts/controllers/listusers.js"></script>
-    <script src="scripts/controllers/search.js"></script>
-    <script src="scripts/controllers/reports.js"></script>
-    <script src="scripts/controllers/tabs.js"></script>
-    <script src="scripts/controllers/userprofile.js"></script>
-    <script src="scripts/services/userService.js"></script>
-    <script src="scripts/services/userListService.js"></script>
-    <script src="scripts/services/Localize.js"></script>
-    <script src="scripts/services/logmetricsservice.js"></script>
-    <script src="scripts/services/authInfo.js"></script>
-    <script src="scripts/services/reportsservice.js">​</script>
-    <script src="scripts/controllers/downloads.js"></script>
-    <script src="scripts/services/pagination.js"></script>
-    <script src="scripts/directives/icheck.js"></script>
-    <script src="scripts/controllers/entitlementDialog.js"></script>
-    <script src="scripts/controllers/quicksetupDialog.js"></script>
-    <script src="scripts/services/notification.js"></script>
-    <script src="scripts/controllers/activate.js"></script>
-    <script src="scripts/services/activateservice.js"></script>
-    <script src="scripts/services/logservice.js"></script>
-    <script src="scripts/services/orgservice.js"></script>
+    <script src="scripts/appconfig.js"></script>
+    <script src="scripts/apprun.js"></script>
+
+    <script src="modules/core/scripts/controllers/navigation.js"></script>
+    <script src="modules/core/scripts/controllers/login.js"></script>
+    <script src="modules/core/scripts/controllers/main.js"></script>
+    <script src="modules/core/scripts/controllers/users.js"></script>
+    <script src="modules/core/scripts/controllers/listusers.js"></script>
+
+    <script src="modules/core/scripts/services/auth.js"></script>
+    <script src="modules/core/scripts/services/config.js"></script>
+    <script src="modules/core/scripts/services/utils.js"></script>
+    <script src="modules/core/scripts/services/storage.js"></script>
+    <script src="modules/core/scripts/services/log.js"></script>
+    <script src="modules/core/scripts/services/Localize.js"></script>
+    <script src="modules/core/scripts/services/authInfo.js"></script>
+    <script src="modules/core/scripts/services/notification.js"></script>
+    <script src="modules/core/scripts/services/pagination.js"></script>
+    <script src="modules/core/scripts/services/userService.js"></script>
+    <script src="modules/core/scripts/services/userListService.js"></script>
+
+    <script src="modules/squared/scripts/controllers/home.js"></script>
+    <script src="modules/squared/scripts/controllers/organizations.js"></script>
+    <script src="modules/squared/scripts/controllers/search.js"></script>
+    <script src="modules/squared/scripts/controllers/reports.js"></script>
+    <script src="modules/squared/scripts/controllers/tabs.js"></script>
+    <script src="modules/squared/scripts/controllers/userprofile.js"></script>
+    <script src="modules/squared/scripts/controllers/downloads.js"></script>
+    <script src="modules/squared/scripts/controllers/entitlementDialog.js"></script>
+    <script src="modules/squared/scripts/controllers/quicksetupDialog.js"></script>
+    <script src="modules/squared/scripts/controllers/organizations.js"></script>
+    <script src="modules/squared/scripts/controllers/support.js"></script>
+    <script src="modules/squared/scripts/controllers/invite.js"></script>
+    <script src="modules/squared/scripts/controllers/activate.js"></script>
+    <script src="modules/squared/scripts/controllers/invitelauncher.js"></script>
+
+    <script src="modules/squared/scripts/services/logmetricsservice.js"></script>
+    <script src="modules/squared/scripts/services/reportsservice.js">​</script>
+    <script src="modules/squared/scripts/services/activateservice.js"></script>
+    <script src="modules/squared/scripts/services/logservice.js"></script>
+    <script src="modules/squared/scripts/services/orgservice.js"></script>
+    <script src="modules/squared/scripts/services/inviteService.js"></script>
+    <script src="modules/squared/scripts/services/homecacheservice.js"></script>
+    <script src="modules/squared/scripts/services/reportscacheservice.js"></script>
+    
+    <script src="modules/squared/scripts/directives/icheck.js"></script>
+    <script src="modules/squared/scripts/directives/reload-data.js"></script>
+    <script src="modules/squared/scripts/directives/fundoorating.js"></script>
+
     <script src="bower_components/amcharts/dist/amcharts/pie.js"></script>
     <script src="bower_components/amcharts/dist/amcharts/serial.js"></script>
-    <script src="scripts/controllers/organizations.js"></script>
-    <script src="scripts/controllers/support.js"></script>
-    <script src="scripts/controllers/invite.js"></script>
-    <script src="scripts/services/inviteService.js"></script>
-    <script src="scripts/controllers/invitelauncher.js"></script>
-    <script src="scripts/directives/reload-data.js"></script>
-    <script src="scripts/services/homecacheservice.js"></script>
-    <script src="scripts/services/reportscacheservice.js"></script>
     
     <!-- endbuild -->
     <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>

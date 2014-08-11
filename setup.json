@@ -1,0 +1,131 @@
+{
+	"main": {
+		"appName": "wx2AdminWebClientApp",
+		"modules": [
+			"ngCookies",
+	    "ngResource",
+	    "ngSanitize",
+	    "ngRoute",
+	    "ui.bootstrap",
+  		"dialogs",
+  		"pascalprecht.translate",
+	    "ngCsv",
+	    "ipCookie",
+	    "Core"
+		],
+		"routes": {
+			"defaultRoute": "/",
+			"paths": [
+				{
+					"path": "/",
+	        "templateUrl": "modules/core/views/login.html",
+	        "controller": "LoginCtrl"
+	      },
+	      {
+					"path": "/login",
+	        "templateUrl": "modules/core/views/login.html",
+	        "controller": "LoginCtrl"
+	      },
+	      {
+					"path": "/test",
+	        "templateUrl": "modules/core/views/main.html",
+	        "controller": "MainCtrl"
+	      },
+	      {
+					"path": "/usertest",
+	        "templateUrl": "modules/core/views/users.html",
+	      }
+			]
+		}
+	},
+
+	"components":[
+		{
+			"core": {
+				"appName": "Core",
+				"modules": []
+			}
+		},
+
+		{
+			"huron": {
+				"appName": "Huron",
+				"modules": []
+			}
+		},
+
+		{
+			"squared": {
+				"appName": "Squared",
+				"modules": [
+					"Core",
+		    	"ListUsers",
+		    	"FundooDirectiveTutorial"
+				],
+				"routes": {
+					"paths": [
+						{
+							"path": "/home", 
+			        "templateUrl": "modules/squared/views/home.html",
+			        "controller": "HomeCtrl"
+	      		},
+			      {
+			      	"path": "/users",
+			        "templateUrl": "modules/squared/views/users.html",
+			        "controller": "UsersCtrl"
+			      },
+			      {
+			      	"path": "/downloads",
+			        "templateUrl": "modules/squared/views/downloads.html",
+			        "controller": "DownloadsCtrl"
+			      },
+			      {
+			      	"path": "/orgs",
+			        "templateUrl": "modules/squared/views/organizations.html",
+			        "controller": "OrganizationsCtrl"
+			      },
+			      {
+			      	"path": "/templates",
+			        "templateUrl": "modules/squared/views/templates.html",
+			        "controller": "UsersCtrl"
+			      },
+			      {
+			      	"path": "/reports",
+			        "templateUrl": "modules/squared/views/reports.html",
+			        "controller": "ReportsCtrl"
+			      },
+			      {
+			      	"path": "/activate",
+			        "templateUrl": "modules/squared/views/activate.html",
+			        "controller": "ActivateCtrl"
+			      },
+			      {
+			      	"path": "/userprofile/:uid",
+			        "templateUrl": "modules/squared/views/userprofile.html",
+			        "controller": "UserProfileCtrl"
+			      },
+			      {
+			      	"path": "/support",
+			        "templateUrl": "modules/squared/views/support.html",
+			        "controller": "SupportCtrl"
+			      },
+			      {
+			      	"path": "/invite",
+			        "templateUrl": "modules/squared/views/invite.html",
+			        "controller": "InviteCtrl"
+			      },
+			      {
+			      	"path": "/unauthorized",
+			        "templateUrl": "modules/squared/views/unauthorized.html"
+			      },
+			      {
+			      	"path": "/invitelauncher",
+			        "templateUrl": "modules/squared/views/invitelauncher.html",
+			        "controller": "InvitelauncherCtrl"
+			      }
+					]
+				}
+			}
+		}
+	]
+}
