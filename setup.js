@@ -6,7 +6,6 @@ var args = process.argv;
 var writePath = args[3];
 var jsonFile = args[2];
 
-
 console.log('reading json file: ' + jsonFile);
 console.log('writing files to: ' + writePath);
 
