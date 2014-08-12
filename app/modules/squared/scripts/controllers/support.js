@@ -135,21 +135,17 @@ angular.module('Squared')
             if (data.metadataList && data.metadataList.length > 0) {
               for (var index in data.metadataList) {
                 var metadata = data.metadataList[index].meta;
-                var locus = '';
-
-                if (metadata && metadata.locusid) {
-                  locus = metadata.locusid;
-                }
 
                 var fullFilename = data.metadataList[index].filename;
                 var filename = fullFilename.substr(fullFilename.lastIndexOf('/') + 1);
-                
-                var callStartIndex = filename.indexOf('_') + 1;
-                var callStartEndIndex = filename.indexOf('Z', callStartIndex) + 1;
-                var callStartTime = filename.substring(callStartIndex, callStartEndIndex);
-
-                if(!validateCallStartTime(callStartTime)) {
-                  callStartTime = '-NA-';
+      
+                var locus = '';
+                if (metadata) {
+                  if (metadata.locusid) {
+                    locus = metadata.locusid;
+                  } else {
+                    locus = '-NA-';
+                  }
                 }
 
                 if (locus === '') {
@@ -159,6 +155,17 @@ angular.module('Squared')
 
                 if(!validateLocusId(locus)) {
                   locus = '-NA-';
+                }
+
+                var callStartTime = '-NA-';
+                if(locus !== '-NA-') {
+                  var callStartIndex = filename.indexOf('_') + 1;
+                  var callStartEndIndex = filename.indexOf('Z', callStartIndex) + 1;
+                  callStartTime = filename.substring(callStartIndex, callStartEndIndex);
+
+                  if(!validateCallStartTime(callStartTime)) {
+                    callStartTime = '-NA-';
+                  }
                 }
 
                 var log = {

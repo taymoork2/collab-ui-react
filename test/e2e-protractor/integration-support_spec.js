@@ -102,7 +102,7 @@ describe('Support flow', function() {
         expect(element(by.id('dateHeading')).getText()).toBe('Upload Time');
         element.all(by.repeater('log in userLogs')).then(function(rows) {
           expect(rows.length).toBeGreaterThan(0);
-          expect(element(by.binding('log.callStart')).getText()).toBe('2014-07-07T17:41:09.711Z');
+          expect(element(by.binding('log.callStart')).getText()).toBe('-NA-');
         });
       });
     });

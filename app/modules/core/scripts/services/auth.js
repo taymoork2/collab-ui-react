@@ -9,6 +9,8 @@ angular.module('Core')
       allowedPaths: Config.allowedPaths
     };
 
+    var ciErrorMsg = 'Sorry, you don\'t have sufficient privileges';
+
     auth.isLoggedIn = function() {
       if (Storage.get('accessToken')) {
         return true;
@@ -140,9 +142,8 @@ angular.module('Core')
       }
     };
 
-    auth.handleStatus = function(status) {
-      // 401 should probably be checked too but CI needs to fix it's error responses
-      if (status === 403) {
+    auth.handleStatus = function(status, description) {
+      if ((status === 401 && description !== ciErrorMsg) || status === 403) {
         console.log('Token is not authorized or invalid. Logging user out.');
         $dialogs.wait(undefined, $filter('translate')('errors.expired') , progress);
         this.delayedLogout();
