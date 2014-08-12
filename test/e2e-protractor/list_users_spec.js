@@ -265,9 +265,9 @@ describe('List users flow', function() {
       browser.sleep(1000);
       element(by.css('tr')).click();
       element.all(by.css('.details-body .icheckbox_square-blue')).then(function(items) {
-        expect(items.length).toBe(4);
+        expect(items.length).toBe(5);
         expect(items[0].getAttribute('class')).toContain('checked');
-        expect(items[3].getAttribute('class')).toContain('checked');
+        expect(items[4].getAttribute('class')).toContain('checked');
       });
     });
   });
