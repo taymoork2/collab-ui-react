@@ -134,45 +134,39 @@ angular.module('Squared')
             $scope.userLogs = [];
             if (data.metadataList && data.metadataList.length > 0) {
               for (var index in data.metadataList) {
-                var metadata = data.metadataList[index].meta;
-
                 var fullFilename = data.metadataList[index].filename;
-                var filename = fullFilename.substr(fullFilename.lastIndexOf('/') + 1);
+                var metadata = data.metadataList[index].meta;
       
-                var locus = '';
+                // retrieve locus and callstart from metadata
+                var locus = '-NA-', callstart = '-NA-', feedbackid = '-NA-';
                 if (metadata) {
                   if (metadata.locusid) {
                     locus = metadata.locusid;
-                  } else {
-                    locus = '-NA-';
                   }
-                }
-
-                if (locus === '') {
+                  if (metadata.callstart) {
+                    callstart = metadata.callstart;
+                  }
+                  if (metadata.feedbackid) {
+                    feedbackid = metadata.feedbackid;
+                  }
+                } else {
+                  //no metadata, for backward compatibility get locus and callstart from log filename
+                  var filename = fullFilename.substr(fullFilename.lastIndexOf('/') + 1);
                   var lastIndex = filename.indexOf('_');
                   locus = filename.substr(0, lastIndex);
-                }
 
-                if(!validateLocusId(locus)) {
-                  locus = '-NA-';
-                }
+                  var callStartEndIndex = filename.indexOf('Z', lastIndex + 1) + 1;
+                  callstart = filename.substring(lastIndex + 1, callStartEndIndex);
 
-                var callStartTime = '-NA-';
-                if(locus !== '-NA-') {
-                  var callStartIndex = filename.indexOf('_') + 1;
-                  var callStartEndIndex = filename.indexOf('Z', callStartIndex) + 1;
-                  callStartTime = filename.substring(callStartIndex, callStartEndIndex);
-
-                  if(!validateCallStartTime(callStartTime)) {
-                    callStartTime = '-NA-';
-                  }
+                  locus = checkValidityOfLocus(locus);
+                  callstart = checkValidityOfCallStart(callstart);
                 }
 
                 var log = {
                   fullFilename: fullFilename,
                   emailAddress: data.metadataList[index].emailAddress,
                   locusId: locus,
-                  callStart: callStartTime,
+                  callStart: callstart,
                   date: data.metadataList[index].timestamp
                 };
                 $scope.userLogs.push(log);
@@ -192,6 +186,20 @@ angular.module('Squared')
             })], 'error');
           }
         });
+      };
+
+      var checkValidityOfLocus = function(locus) {
+        if (!validateLocusId(locus)) {
+          locus = '-NA-';
+        }
+        return locus;
+      };
+
+      var checkValidityOfCallStart = function(callstart) {
+        if(!validateCallStartTime(callstart)) {
+          callstart = '-NA-';
+        }
+        return callstart;
       };
 
       $scope.downloadLog = function(filename) {
