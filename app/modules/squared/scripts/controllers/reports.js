@@ -2,7 +2,7 @@
 /* global AmCharts, $ */
 
 angular.module('Squared')
-	.controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Auth', 'reportsCache',
+	.controller('ReportsCtrl', ['$scope','$parse', 'ReportsService', 'Log', 'Auth', 'reportsCache',
 		function($scope, $parse, ReportsService, Log, Auth, reportsCache) {
 
 			 $('#avgEntitlementsdiv').addClass('chart-border');
@@ -10,12 +10,45 @@ angular.module('Squared')
 			 $('#avgConversationsdiv').addClass('chart-border');
 			 $('#activeUsersdiv').addClass('chart-border');
 
+			var fullCacheSize = 5; 
 			var chartVals = [];
 
-			$scope.manualReload = function(){
+			var entitlementsLoaded = false;
+			var avgCallsLoaded = false;
+			var avgConvLoaded = false;
+			var auLoaded = false;
 
-				$scope.reportsRefreshTime = new Date().getTime();
-        		$scope.addToCache('lastReportsTime', $scope.reportsRefreshTime);
+		     var checkAllValues = function(){
+	         	if(entitlementsLoaded && avgCallsLoaded && avgConvLoaded && auLoaded){
+	            	$scope.reportsRefreshTime = new Date().getTime();
+	        		$scope.addToCache('lastReportsTime', $scope.reportsRefreshTime);
+	         	}
+	        };
+
+		      var checkDataLoaded = function(data){
+				if(data === 'entitlements'){
+					entitlementsLoaded = true;
+					checkAllValues();
+				}
+				if(data === 'avgCalls'){
+					avgCallsLoaded = true;
+					checkAllValues();
+				}
+				if(data === 'avgConversations'){
+					avgConvLoaded = true;
+					checkAllValues();
+				}
+				if(data === 'activeUsers'){
+					auLoaded = true;
+					checkAllValues();
+				}
+			};
+
+			$scope.manualReload = function(){
+				entitlementsLoaded = false;
+				avgCallsLoaded = false;
+				avgConvLoaded = false;
+				auLoaded = false;
 
 		        getTimeCharts('entitlements', 1, 'month', 1, 'week', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', '#B8DBFF');
 				getTimeCharts('avgCalls', 1, 'month', 1, 'week', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Calls', '#FFFF99');
@@ -31,7 +64,6 @@ angular.module('Squared')
 				$scope.showAvgCallsRefresh = true;
 				$scope.showAvgConversationsRefresh = true;
 				$scope.showActiveUsersRefresh = true;
-
       		};
 
       		var displayCacheValue = function(data){
@@ -74,7 +106,7 @@ angular.module('Squared')
 		    };
 
 			var firstLoaded = function(){
-        		if (!sessionStorage['loadedReports'] || reportsCache.info().size === 0){
+        		if (!sessionStorage['loadedReports'] || reportsCache.info().size < fullCacheSize){
           			$scope.manualReload();
          			sessionStorage['loadedReports'] = 'yes';
         		}
@@ -110,6 +142,7 @@ angular.module('Squared')
 				};
 				ReportsService.getUsageMetrics(type, params, function(data, status) {
 					var avCount = 0;
+					checkDataLoaded(type);
 					if (data.success) {
 						if (data.data.length !== 0) {
 							$('#'+divName).removeClass('chart-border');

@@ -16,6 +16,14 @@ angular.module('Squared')
 
       $scope.statusPageUrl = Config.getStatusPageUrl();
 
+      var fullCacheSize = 6;
+
+      var activerUserLoaded = false;
+      var callMetricLoaded = false;
+      var convMetricLoaded = false;
+      var contentLoaded = false;
+      var auMetricLoaded = false;
+
       var chartVals = [];
       $scope.isAdmin = false;
 
@@ -31,28 +39,38 @@ angular.module('Squared')
         return homeCache.info();
       };
 
+        var allValuesLoaded = function(){
+          if(activerUserLoaded && callMetricLoaded && convMetricLoaded && contentLoaded && auMetricLoaded){
+            $scope.homeRefreshTime = new Date().getTime();
+            $scope.addToCache('lastHomeTime', $scope.homeRefreshTime);
+          }
+      };
+
       $scope.manualReload = function(){
-        $scope.homeRefreshTime = new Date().getTime();
-        $scope.addToCache('lastHomeTime', $scope.homeRefreshTime);
+          activerUserLoaded = false;
+          callMetricLoaded = false;
+          convMetricLoaded = false;
+          contentLoaded = false;
+          auMetricLoaded = false;
 
-        getActiveUsersCount();
-        getCallMetrics();
-        getConversationMetrics();
-        getContentShareMetrics();
-        getActiveUsersMetrics();
-        getHealthMetrics();
+          getActiveUsersCount();
+          getCallMetrics();
+          getConversationMetrics();
+          getContentShareMetrics();
+          getActiveUsersMetrics();
+          getHealthMetrics();
 
-        $scope.showAUGraphRefresh = true;
-        $scope.showAURefresh = true;
-        $scope.showCallsRefresh = true;
-        $scope.showConvoRefresh = true;
-        $scope.showShareRefresh = true;
+          $scope.showAUGraphRefresh = true;
+          $scope.showAURefresh = true;
+          $scope.showCallsRefresh = true;
+          $scope.showConvoRefresh = true;
+          $scope.showShareRefresh = true;
 
-        $scope.showAUGraph = false;
-        $scope.showAUContent = false;
-        $scope.showCallsContent = false;
-        $scope.showConvoContent = false;
-        $scope.showShareContent = false;
+          $scope.showAUGraph = false;
+          $scope.showAUContent = false;
+          $scope.showCallsContent = false;
+          $scope.showConvoContent = false;
+          $scope.showShareContent = false;
       };
 
       var displayCacheValue = function(key){
@@ -61,8 +79,7 @@ angular.module('Squared')
           if(cachedValues.message){
             $(cachedValues.divName).html(cachedValues.message);
             return false;
-          }
-         
+          }         
           return true;
       };
 
@@ -99,7 +116,7 @@ angular.module('Squared')
        };
 
       var firstLoaded = function(){
-        if (!sessionStorage['loadedHome'] || homeCache.info().size === 0){
+        if (!sessionStorage['loadedHome'] || homeCache.info().size < fullCacheSize){
           $scope.manualReload();
          sessionStorage['loadedHome'] = 'yes';
         }
@@ -114,6 +131,8 @@ angular.module('Squared')
           'intervalType': 'month'
         };
         ReportsService.getUsageMetrics('activeUserCount', params, function(data, status) {
+          activerUserLoaded = true;
+          allValuesLoaded();
           if (data.success) {
             if (data.length !== 0) {
               $scope.showAURefresh = false;
@@ -158,6 +177,8 @@ angular.module('Squared')
         ReportsService.getUsageMetrics('calls', params, function(data, status) {
           $scope.callsCount = 0;
           $scope.addToCache('callsCount', $scope.callsCount); 
+          callMetricLoaded = true;
+          allValuesLoaded();
           if (data.success) {
             if (data.length !== 0) {
               var calls = data.data;
@@ -192,6 +213,8 @@ angular.module('Squared')
         ReportsService.getUsageMetrics('conversations', params, function(data, status) {
           $scope.convoCount = 0;
           $scope.addToCache('convoCount', $scope.convoCount);
+          convMetricLoaded = true;
+          allValuesLoaded();
           if (data.success) {
             if (data.length !== 0) {
               var convos = data.data;    
@@ -226,6 +249,8 @@ angular.module('Squared')
         ReportsService.getUsageMetrics('contentShareSizes', params, function(data, status) {
           $scope.cShareCount = 0;
           $scope.addToCache('cShareCount', $scope.cShareCount);
+          contentLoaded = true;
+          allValuesLoaded();
           if (data.success) {
             if (data.length !== 0) {
               var cShares = data.data;
@@ -262,6 +287,8 @@ angular.module('Squared')
         ReportsService.getUsageMetrics('activeUsers', params, function(data, status) {
           var auCount = 0;
           $scope.addToCache('activeUserCount', auCount);
+          auMetricLoaded = true;
+          allValuesLoaded();
           if (data.success) {
             if (data.length !== 0) {
               var aUsers = data.data;
@@ -290,7 +317,7 @@ angular.module('Squared')
       };
 
       $scope.inviteUsers = function() {
-        var dlg = $dialogs.create('modules/squared/views/quicksetup_dialog.html', 'quicksetupDialogCtrl');
+         var dlg = $dialogs.create('modules/squared/views/quicksetup_dialog.html', 'quicksetupDialogCtrl');
         dlg.result.then(function() {
 
         });
