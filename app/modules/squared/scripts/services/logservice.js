@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Squared')
-  .service('LogService', ['$http', 'Storage', 'Config', 'Log',
-    function($http, Storage, Config, Log) {
+  .service('LogService', ['$http', 'Storage', 'Config', 'Log', 'Auth',
+    function($http, Storage, Config, Log, Auth) {
 
       var token = Storage.get('accessToken');
 
@@ -21,6 +21,7 @@ angular.module('Squared')
               data.success = false;
               data.status = status;
               callback(data, status);
+              Auth.handleStatus(status);
             });
         },
 
@@ -38,6 +39,7 @@ angular.module('Squared')
               data.success = false;
               data.status = status;
               callback(data, status);
+              Auth.handleStatus(status);
             });
         },
 
@@ -58,6 +60,7 @@ angular.module('Squared')
               data.success = false;
               data.status = status;
               callback(data, status);
+              Auth.handleStatus(status);
             });
         }
       };
