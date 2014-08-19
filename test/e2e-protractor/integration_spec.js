@@ -268,7 +268,7 @@ describe('App flow', function() {
       });
     });
 
-    describe('Attempt to un-entitle call-initiation', function() {
+    describe('Attempt to un-entitle jabberMessenger', function() {
       it('should display input user email in results with entitlement previously updated message', function() {
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
@@ -289,8 +289,8 @@ describe('App flow', function() {
       });
     });
 
-    describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
-      it('should show call-initiation entitlement for the user', function() {
+    describe('Verify jabberMessenger entitlement exists for user and un-entitle', function() {
+      it('should show jabberMessenger entitlement for the user', function() {
         element(by.id('search-input')).sendKeys(testuser.username).then(function() {
           element(by.id('userSubtab')).click();
           browser.sleep(1000);
@@ -302,7 +302,7 @@ describe('App flow', function() {
               });
               element(by.binding('user.userName')).click();
               browser.sleep(500);
-              element(by.id('chk_squaredCallInitiation')).click();
+              element(by.id('chk_jabberMessenger')).click();
               browser.sleep(500);
               element(by.id('btnSave')).click();
               browser.sleep(1000);
