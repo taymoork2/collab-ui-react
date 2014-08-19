@@ -182,7 +182,7 @@ describe('List users flow', function() {
     var inputLastName = 'testLastName';
 
     it('click on invite subtab should show manage users', function () {
-      browser.driver.findElement(by.css('li[heading="Invite"]')).click();
+      browser.driver.findElement(by.id('addUsers')).click();
       expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
       expect(element(by.id('usersfield')).isDisplayed()).toEqual(true);
       //This button is now covered by another <ins> element.
@@ -205,50 +205,29 @@ describe('List users flow', function() {
               expect(rows[0].getText()).toContain('added successfully');
               browser.sleep(500);
               element(by.css('.fa-times')).click();
+              browser.sleep(500);
+              element(by.id('closeAddUser')).click();
+              browser.sleep(500);
             });
-
+            
             element(by.id('search-input')).sendKeys(inputEmail).then(function() {
-
-              setTimeout(function() {
-                browser.wait(function() {
-                  element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-                    expect(rows.length).toBe(1);
-
-                    //check user profile
-                    element(by.css('td a')).click();
-                    //validate buttons and log panel is visible
-                    expect(element(by.id('btnDeleteUser')).isDisplayed()).toEqual(true);
-                    expect(element(by.id('btnResetPwd')).isDisplayed()).toEqual(true);
-                    //validate user profile is for correct user
-                    expect(element(by.id('fnameField')).isDisplayed()).toEqual(true);
-                    expect(element(by.id('lnameField')).isDisplayed()).toEqual(true);
-                    expect(element(by.id('emailField')).isDisplayed()).toEqual(true);
-
-                    expect(element(by.id('emailField')).getText()).toBe(inputEmail);
-
-                    //edit user profile fields and save
-                    element(by.id('titlefield')).sendKeys(inputTitle);
-                    element(by.id('lnamefield')).sendKeys(inputLastName);
-                    element(by.id('btnSave')).click().then(function() {
-                      browser.wait(function() {
-                        browser.sleep(500);
-                        //verify data is there
-                        expect(element(by.id('lnameField'))).toEqual(inputLastName);
-                        expect(element(by.id('titleField'))).toEqual(inputTitle);
-
-                        //verify success message
-                        element(by.css('.alertify-log-success')).click();
-                        element.all(by.css('.panel-success-body p')).then(function(rows) {
-                          expect(rows[0].getText()).toContain(inputEmail);
-                          expect(rows[0].getText()).toContain('added successfully');
-                        });
-                      });
-                    });
-
-                    element(by.id('usertab')).click();
-                  });
-                });
-              }, 3000); //timeout
+              browser.sleep(1000);
+              
+              element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+                expect(rows.length).toBe(1);
+                element(by.id(inputEmail)).click();
+                browser.sleep(1000);
+                //check user profile
+                element(by.id('userProfile')).click();
+                //validate buttons and log panel is visible
+                //expect(element(by.id('btnDeleteUser')).isDisplayed()).toEqual(true);
+                //expect(element(by.id('btnResetPwd')).isDisplayed()).toEqual(true);
+                //validate user profile is for correct user
+                expect(element(by.id('fnameField')).isDisplayed()).toEqual(true);
+                expect(element(by.id('lnameField')).isDisplayed()).toEqual(true);
+                expect(element(by.id('emailField')).isDisplayed()).toEqual(true);
+              });
+              
 
             }); //end search
           }); //end add
@@ -261,20 +240,21 @@ describe('List users flow', function() {
   // Update entitlements
   describe('Updating entitlements', function() {
     it('should display initial entitlements from newly added user', function() {
-      element(by.id('userSubtab')).click();
       browser.sleep(1000);
       element(by.css('tr')).click();
       element.all(by.css('.details-body .icheckbox_square-blue')).then(function(items) {
         expect(items.length).toBe(7);
         expect(items[0].getAttribute('class')).toContain('checked');
         expect(items[6].getAttribute('class')).toContain('checked');
+        browser.sleep(1000);
       });
     });
   });
 
   describe('Exporting to CSV', function() {
     it('should display the CSV export button', function() {
-      element(by.css('li[heading="Users"]')).click();
+      element(by.id('userMoreOptions')).click();
+      browser.sleep(1000);
       expect(element(by.id('export-btn')).isDisplayed()).toBe(true);
     });
   });

@@ -1,6 +1,6 @@
 {
   "usersPage" : {
-    "manageUsers" : "MANAGE USERS",
+    "manageUsers" : "Users",
     "subTitleAdd" : "Manage users",
     "subTitleEnable" : "Entitle users",
     "email" : "Email",
@@ -26,8 +26,8 @@
     "entitled"    : "{{email}} is already entitled",
     "forbidden"   : "{{email}} cannot be invited to service",
     "errInvite" : "Unable to process your invitation. Status: {{status}}.",
-    "listSubTab" : "Users",
-    "inviteSubTab" : "Invite"
+    "exportUsers" : "export Users",
+    "moreOptions" : "More Actions"
   },
   "tabs" : {
     "homeTab" : "Home",

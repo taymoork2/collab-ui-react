@@ -1,23 +1,43 @@
 <div class="notification"></div>
 
-<div  class="user-tab-panel" ng-hide="!Utils.isAdminPage()">
-  <tabset justified="true">
-    <tab heading="{{getTabTitle('usersPage.listSubTab')}}" id="userSubtab" active="userTabActive" select="changeTab('users')"></tab>
-    <tab heading="{{getTabTitle('usersPage.inviteSubTab')}}" id="inviteSubtab" active="inviteTabActive"  select="changeTab('invite')"></tab>
-  </tabset>
-
-  <div ng-controller="ListUsersCtrl" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled"><span id="export-icon"><i class="fa fa-file-text"></i></span></div>
+<div>
+  <div style="position: absolute;">
+    <span class="user-title">{{'usersPage.manageUsers' | translate}}</span>
+  </div>
+  <div class="user-option-buttons" ng-show="Utils.isAdminPage() && userTabActive">
+    <div id="userOptions" style="position: absolute;">
+      <button id="addUsers" class="btn btn-success btn-xs" ng-click="changeTab('invite')">
+        <span translate="usersPage.add"></span>
+      </button>
+    </div>
+    <div class="user-options-bar">
+      <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="userMoreOptions" data-toggle="dropdown">
+        {{'usersPage.moreOptions' | translate}}
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu user-options-menu" role="menu" aria-labelledby="userMoreOptions">
+        <li>
+          <div ng-controller="ListUsersCtrl" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled">
+            <span id="export-icon"><i class="fa fa-file-text"></i> {{'usersPage.exportUsers' | translate}}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <div ng-init="init()">
 
-  <div class="panel panel-default" ng-show="inviteTabActive" id="manageUsersPanel">
+  <div class="panel panel-default add-user-panel" ng-show="inviteTabActive" id="manageUsersPanel">
     <div class="panel-heading panel-heading-default">
       <div id="addUsers">
         <h3 class="panel-title panel-title-default">
           <strong id="subTitleAdd" ng-show="isAddEnabled()" translate="usersPage.subTitleAdd"></strong>
           <strong id="subTitleEnable" ng-show="!isAddEnabled()" translate="usersPage.subTitleEnable"></strong> 
         </h3>
+      </div>
+      <div  ng-click="changeTab('users')">
+        <span style="float: right"><i id='closeAddUser' class="fa fa-minus add-user-close"></i></span>
       </div>
     </div>
 
@@ -51,6 +71,8 @@
     <table id="userslist" class="table table-bordered">
       <thead>
         <tr>
+          <th id="usericon" class="center">
+            <i class="fa fa-user"></i></th>
           <th ng-click="setSort('name')" id="name-sort"><span translate="usersPage.firstnameHeader"></span> <i class="fa {{sort.icon.name}} pull-right"></i></th>
           <th ng-click="setSort('name')" id="name-sort"><span translate="usersPage.lastnameHeader"></span> <i class="fa {{sort.icon.name}} pull-right"></i></th>
           <th ng-click="setSort('username')" id="username-sort"><span translate="usersPage.emailHeader"></span> <i class="fa {{sort.icon.username}} pull-right"></i></th>
@@ -58,11 +80,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-show="!queryuserslist"><td></td><td></td><td></td><td></td></tr>
-        <tr ng-show="queryuserslist" ng-repeat="user in queryuserslist" ng-click="showUserDetails(user)" id="{{user.id}}">
+        <tr ng-show="!queryuserslist">
+          <td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr ng-show="queryuserslist" ng-repeat="user in queryuserslist" ng-click="showUserDetails(user)" id="{{user.id}}" ng-class-odd="'odd'" ng-class-even="'even'">
+          <td class="center">
+            <img ng-if="user.name" src='{{getUserPhoto(user)}}' class='user-img'></img>
+          </td>
           <td><span ng-if="user.name">{{user.name.givenName}}</span></td>
           <td><span ng-if="user.name">{{user.name.familyName}}</span></td>
-          <td>{{user.userName}}</td>
+          <td id={{user.userName}}>{{user.userName}}</td>
           <td class="text-center icon-{{user.id}}" ng-bind-html="getEntitlementState(user)?getStatusIcon('active'):getStatusIcon('inactive')"></td>
         </tr>
       </tbody>
@@ -100,7 +127,7 @@
                 <button id="btnSave" class="btn btn-primary" style="margin-left:62%; margin-top:5px;" ng-click="changeEntitlement(currentUser)" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.save"></span></button>
               </div>
             </tab>
-            <tab heading="User Profile">
+            <tab id="userProfile" heading="User Profile">
               <div class="details-body">
                 <div style="margin-bottom:5px;" ng-hide="photoPath">
                   <i class="fa fa-user fa-4x"></i>

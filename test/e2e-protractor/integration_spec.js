@@ -107,8 +107,8 @@ describe('App flow', function() {
   describe('Add User Flows', function() {
 
     describe('Page initialization', function() {
-      it('click on invite subtab should show manage users', function() {
-        element(by.id('inviteSubtab')).click();
+      it('click on invite subtab should show add users', function() {
+        element(by.id('addUsers')).click();
         expect(element(by.id('userslistpanel')).isDisplayed()).toEqual(false);
         expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
       });
@@ -247,6 +247,7 @@ describe('App flow', function() {
 
   //Entitle User Flows: state is in the users page
   describe('Entitle User Flows', function() {
+
     describe('Entitle an existing user with call-initiation', function() {
       it('should display input user email in results with success message', function() {
         element(by.id('usersfield')).clear();
@@ -283,6 +284,9 @@ describe('App flow', function() {
               expect(rows[0].getText()).toContain('entitlement previously updated');
               browser.sleep(500);
               element(by.css('.fa-times')).click();
+              browser.sleep(500);
+              element(by.id('closeAddUser')).click();
+              browser.sleep(500);
             });
           });
         });
@@ -292,7 +296,6 @@ describe('App flow', function() {
     describe('Verify jabberMessenger entitlement exists for user and un-entitle', function() {
       it('should show jabberMessenger entitlement for the user', function() {
         element(by.id('search-input')).sendKeys(testuser.username).then(function() {
-          element(by.id('userSubtab')).click();
           browser.sleep(1000);
           element(by.id('queryresults')).getAttribute('value').then(function(value) {
             var queryresults = parseInt(value, 10);
@@ -324,7 +327,8 @@ describe('App flow', function() {
 
   describe('Invite users', function() {
     it('should invite users successfully', function() {
-      element(by.id('inviteSubtab')).click();
+      element(by.id('addUsers')).click();
+      browser.sleep(500);
       var inviteEmail = utils.randomTestEmail();
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
@@ -342,7 +346,6 @@ describe('App flow', function() {
     });
 
     it('should not invite users successfully if they are already entitled', function() {
-      element(by.id('inviteSubtab')).click();
       var inviteEmail = testuser.username;
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
@@ -360,7 +363,6 @@ describe('App flow', function() {
     });
 
     it('should not invite users successfully from org which has autoentitlement flag disabled', function() {
-      element(by.id('inviteSubtab')).click();
       var inviteEmail = testuser.usernameWithNoEntitlements;
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {

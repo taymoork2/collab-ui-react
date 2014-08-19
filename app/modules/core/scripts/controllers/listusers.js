@@ -55,6 +55,19 @@ angular.module('Core')
         });
       };
 
+      $scope.getUserPhoto = function(user) {
+        var photo;
+        if (user.photos) {
+          for (var i in user.photos) {
+            if (user.photos[i].type === 'thumbnail') {
+              photo = user.photos[i].value;
+              break;
+            }
+          } //end for
+        } //endif
+        return photo;
+      };
+
       //Populating authinfo data if empty.
       if (Auth.isAuthorized($scope)) {
         getUserList();
@@ -196,13 +209,17 @@ angular.module('Core')
         }
       };
 
+      var currentClass;
       $scope.showUserDetails = function(user) {
         //remove selected class on previous user
         if ($scope.currentUser) {
           angular.element('#' + $scope.currentUser.id).removeClass('selected');
+          angular.element('#' + $scope.currentUser.id).addClass(currentClass);
         }
         $scope.currentUser = user;
         angular.element('#' + user.id).addClass('selected');
+        currentClass = angular.element('#' + user.id).hasClass('odd') ? 'odd' : 'even';
+        angular.element('#' + user.id).removeClass(currentClass);
 
         //Service profile
         $scope.entitlements = {};

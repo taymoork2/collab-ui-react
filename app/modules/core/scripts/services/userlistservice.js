@@ -7,7 +7,7 @@ angular.module('Core')
 
       var token = Storage.get('accessToken');
       var searchfilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
-      var attributes = 'attributes=name,userName,entitlements,displayName';
+      var attributes = 'attributes=name,userName,entitlements,displayName,photos';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
 
       var userlistservice = {

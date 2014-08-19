@@ -26,6 +26,11 @@ $headers_color: #777777;
   margin-right: 10px;
 }
 
+.btnAdd {
+  padding: 2px 40px;
+  margin-right: 10px;
+}
+
 .btn-profile-grp {
   padding-top: 15px;
   padding-bottom: 15px;
@@ -452,9 +457,7 @@ input:disabled {
 }
 
 #export-btn {
-  position:absolute;
-  top:11px;
-  left: 274px;
+  position:relative;
   display: inline-block;
   padding: 0;
   line-height: 0;
@@ -763,20 +766,61 @@ input:disabled {
   background-color: #E8F1F8;
 }
 
+.odd {
+  background-color: #FFFFFF;
+}
+.even {
+  background-color: whitesmoke;
+}
+
 #userslist {
   margin-top: 20px;
 }
 
-#userSubtab {
+#addUsers {
   cursor:pointer;
   a {
     color:#333333;
   }
 }
 
-#inviteSubtab {
-  cursor:pointer;
-  a {
-    color:#333333;
-  }
+.user-img {
+  width: 35px;
 }
+
+.user-option-buttons {
+  width: 230px;
+  position: relative;
+  float: right;
+  margin-bottom: 15px;
+}
+
+.add-user-close {
+  float: right;
+  bottom: 15px;
+  position: relative; 
+}
+
+.user-title {
+  margin-bottom: 15px;
+  color: #00aadf;
+  font-size: 36px;
+}
+
+.add-user-panel {
+  position: relative;
+  top: 21px;
+}
+
+.user-options-bar {
+  right: 0px;
+  float: right;
+  position: relative;
+}
+
+.user-options-menu {
+  left: 0px !important;
+  top: 40px !important;
+}
+
+
