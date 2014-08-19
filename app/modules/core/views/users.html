@@ -68,7 +68,7 @@
 
 <div ng-controller="ListUsersCtrl">
   <div ng-show="userTabActive" id="userslistpanel">
-    <table id="userslist" class="table table-bordered">
+    <table id="userslist" ng-class="userPreview ? 'table preview-user-table table-bordered' : 'table table-bordered'">
       <thead>
         <tr>
           <th id="usericon" class="center">
@@ -76,10 +76,11 @@
           <th ng-click="setSort('name')" id="name-sort"><span translate="usersPage.firstnameHeader"></span> <i class="fa {{sort.icon.name}} pull-right"></i></th>
           <th ng-click="setSort('name')" id="name-sort"><span translate="usersPage.lastnameHeader"></span> <i class="fa {{sort.icon.name}} pull-right"></i></th>
           <th ng-click="setSort('username')" id="username-sort"><span translate="usersPage.emailHeader"></span> <i class="fa {{sort.icon.username}} pull-right"></i></th>
-          <th class="text-center"><img src="images/logo_gray.png" height="20px" width="20px" alt=""></img></th>
+          <th id="entitlementCol" class="text-center" ng-show="!userPreview"><img src="images/logo_gray.png" height="20px" width="20px" alt=""></img></th>
         </tr>
       </thead>
       <tbody>
+
         <tr ng-show="!queryuserslist">
           <td></td><td></td><td></td><td></td><td></td>
         </tr>
@@ -87,90 +88,60 @@
           <td class="center">
             <img ng-if="user.name" src='{{getUserPhoto(user)}}' class='user-img'></img>
           </td>
-          <td><span ng-if="user.name">{{user.name.givenName}}</span></td>
+          <td id="userNameCell"><span ng-if="user.name">{{user.name.givenName}}</span></td>
           <td><span ng-if="user.name">{{user.name.familyName}}</span></td>
-          <td id={{user.userName}}>{{user.userName}}</td>
-          <td class="text-center icon-{{user.id}}" ng-bind-html="getEntitlementState(user)?getStatusIcon('active'):getStatusIcon('inactive')"></td>
+          <td id='{{user.userName}}'>{{user.userName}}</td>
+          <td class="text-center icon-{{user.id}}" ng-bind-html="getEntitlementState(user)?getStatusIcon('active'):getStatusIcon('inactive')" ng-show="!userPreview"></td>
+
         </tr>
       </tbody>
     </table>
     <div id="queryresults" value="{{queryuserslist.length}}" style="display: none;">{{queryuserslist.length}}</div>
-    <ul class="pagination" ng-show="queryuserslist">
-      <li><a id="prev-page" ng-click="pagination.prevPage();"><i class="fa fa-angle-left"></i></a></li>
-      <li class="pagination-current"><a>{{page}}</a></li>
-      <li><a id="next-page" ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
-    </ul>
+      <ul class="pagination" ng-show="queryuserslist">
+        <li><a id="prev-page" ng-click="pagination.prevPage();"><i class="fa fa-angle-left"></i></a></li>
+        <li class="pagination-current"><a>{{page}}</a></li>
+        <li><a id="next-page" ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
+      </ul>
+    </div>
+
+  <div ng-show="userPreview" class="details-panel-card" id="details-panel">
+    <div class="name-card">
+        <div class="name-card-image">
+          <img ng-src="{{photoPath}}"></img>
+        </div>
+        <div class="name-card-info">
+          <a href="#/userprofile/{{currentUser.id}}">
+            <span class="name" ng-if="currentUser.name.givenName && currentUser.name.familyName">{{currentUser.name.givenName}} {{currentUser.name.familyName}}</span>
+            <span class="name" ng-if="!currentUser.name.givenName && !currentUser.name.familyName">{{currentUser.name.userName}}</span><br>
+          </a>
+          <span>{{currentUser.title}}</span><br>
+          <span>{{currentUser.addresses.streetAddress}}</span>
+        </div>      
+        <div class="name-card-cancel" ng-click="closePreview()" id="exitPreviewButton">
+          <i class="fa fa-times"></i>
+        </div>
+    </div>
+
+    <div class="standard-card group-card preview-card-title" ng-show="false">
+      <div class="group-title">
+        <span translate="usersPreview.groupPreview"></span>
+      </div>
+      <div class="group-type">
+        Default Group Name <i class="fa fa-caret-down"></i>
+      </div>
+    </div>
+    <div class="standard-card services-card">
+      <span class="preview-card-title" translate="usersPreview.servicesPreview"></span>
+      <telephony-info main-phone="" shared-phone="" ng-show="false">
+      </telephony-info>
+      <conferencing-info user-email="" ng-show="false">
+      </conferencing-info>
+      <conversations-info>
+      </conversations-info>
+    </div>
+    <usage-info ng-show="false">
+    </usage-info>    
+    <endpoints-info ng-show="false">
+    </endpoints-info>
   </div>
-
-  <table class="table table-bordered" id="details-table" ng-show="currentUser && userTabActive">
-    <thead>
-      <tr>
-        <th ng-if="currentUser.name.givenName">Plan details for {{currentUser.name.givenName}}</th>
-        <th ng-if="!currentUser.name.givenName">Plan details for {{currentUser.userName}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <tabset justified="true">
-            <tab heading="Service Profile">
-              <div class="details-body">
-                <strong>Services</strong>
-                <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements">
-                  <div class="btn-group" id="{{'chk_'+service}}">
-                    <input type="checkbox" name="{{service}}" ng-model="entitlements[service]" icheck>
-                  </div>
-                  <span style="font-size:15px; padding:10px">
-                    {{getServiceName(service)}}
-                  </span>
-                </div>
-                <button id="btnSave" class="btn btn-primary" style="margin-left:62%; margin-top:5px;" ng-click="changeEntitlement(currentUser)" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.save"></span></button>
-              </div>
-            </tab>
-            <tab id="userProfile" heading="User Profile">
-              <div class="details-body">
-                <div style="margin-bottom:5px;" ng-hide="photoPath">
-                  <i class="fa fa-user fa-4x"></i>
-                </div>
-                <div style="margin-bottom:5px;" ng-show="photoPath">
-                  <img src="{{photoPath}}"></img>
-                </div>
-                <div class="form-profile-grp">
-                  <label style="margin-bottom:0px;" for="firstName" translate="profilePage.fname"></label>
-                  <input class="form-control" type="text" id="fnameField" ng-model="currentUser.name.givenName" value="{{currentUser.name.givenName}}"/>
-                </div>
-
-                <div class="form-profile-grp">
-                  <label style="margin-bottom:0px;" for="lastName" translate="profilePage.lname"></label>
-                  <input class="form-control" type="text" id="lnameField" ng-model="currentUser.name.familyName" value="{{currentUser.name.familyName}}"/>
-                </div>
-
-                <div class="form-profile-grp">
-                  <label style="margin-bottom:0px;" for="email" translate="profilePage.email"></label>
-                  <input class="form-control" type="text" id="emailField" value="{{currentUser.userName}}" disabled/>
-                </div>
-
-                <div class="form-profile-grp">
-                  <label style="margin-bottom:0px;" for="org" translate="profilePage.org"></label>
-                  <input class="form-control" type="text" id="orgField" value="{{orgName}}" disabled/>
-                </div>
-
-                <div class="form-profile-grp">
-                  <label style="margin-bottom:0px;" for="title" translate="profilePage.title"></label>
-                  <input class="form-control" type="text" id="titleField" ng-model="currentUser.title" value="{{currentUser.title}}"/>
-                </div>
-
-                <div class="form-profile-grp">
-                  <label style="margin-bottom:0px;" for="modDate" translate="profilePage.modDate"></label>
-                  <input class="form-control" type="text" id="modDateField" value="{{currentUser.meta.lastModified}}" disabled/>
-                </div>
-
-                <button id="btnSave" class="btn btn-primary" style="margin-left:62%; margin-top:5px;" ng-click="updateUser()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.save"></span></button>
-              </div>
-            </tab>
-          </tabset>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>

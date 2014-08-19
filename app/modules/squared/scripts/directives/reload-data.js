@@ -3,7 +3,7 @@
 //Setting it to false just for this file because it does not recognize jQuery's '$' symbol.
 /* global $ */
 
-angular.module('wx2AdminWebClientApp')
+angular.module('Squared')
   .directive('reloadData', function() {
     return {
     restrict: 'E',

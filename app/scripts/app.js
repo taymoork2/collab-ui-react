@@ -14,6 +14,8 @@ angular.module('Core', []);
 angular.module('Squared', ['Core',
     'FundooDirectiveTutorial']);
 
+angular.module('Huron', ['Core']);
+
 angular
   .module('wx2AdminWebClientApp', [
     'ngCookies',
@@ -26,7 +28,8 @@ angular
     'ngCsv',
     'ipCookie',
     'Core',
-    'Squared'
+    'Squared',
+    'Huron'
   ]);
   
 

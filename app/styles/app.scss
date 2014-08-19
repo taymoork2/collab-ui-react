@@ -79,6 +79,11 @@ table th, .table td {
  // border-top: none !important;
 }
 
+.preview-user-table{
+  width: 75% !important;
+  margin-top: 50px !important;
+}
+
 .panel-title {
   border-top-left-radius:7px;
   border-top-right-radius: 7px;
@@ -710,15 +715,132 @@ input:disabled {
   left: 265px;
 }
 
+.group-title{
+  float:left;  
+}
+
+.group-type{
+  padding-left:15px;
+  float:left;
+}
+
+
+.name
+{
+  font-size:24px;
+  font-weight:normal;
+  padding-bottom:3px;
+}
+
+.name-card
+{
+  height:100px;
+  background-color:white;
+  margin-bottom:3px;
+}
+
+.name-card-image
+{
+  height:100px;
+  width:100px;
+  float:left;
+}
+
+.name-card-info
+{
+  padding:10px;
+  float:left;  
+}
+
+.name-card-cancel
+{
+  padding:10px;
+  float:right;
+}
+
+.name-card-image img
+{
+  height:100%;
+  width:100%;
+}
+
+.standard-card
+{
+  padding:10px 10px 10px 18px;
+  background-color:white;
+  margin-bottom:3px;
+}
+
+.standard-card .usage-card
+{
+  height:275px;
+}
+
+.usage-card img
+{
+  height:90%;
+  width:90%;
+}
+
+.group-card
+{
+  height:40px;
+}
+
+.standard-card .services-card
+{
+  height:319px;
+}
+
+.standard-card .endpoints-card
+{
+  height:75px;
+}
+
+.services-types
+{
+  position:relative;
+  margin: 10px 0;
+}
+
+.services-subtitle
+{
+  font-size:16px;
+  font-weight:500;
+}
+
+.sub-service
+{
+  padding-left:25px; 
+}
+
+.preview-card-title
+{
+  font-size:16px;
+  font-weight: normal;
+}
+
+.services-indicator
+{
+  float:right;
+}
+
+.preview-details
+{
+  border-spacing: 2px;
+  border-color: gray;
+}
+
 .navbar-header {
   margin-left: -56px;
 }
 
-#details-table {
+.details-panel-card {
+  background-color: whitesmoke;
   position:absolute;
-  top: 62px;
-  left: 1000px;
-  width: 300px;
+  top: 50px;
+  left: 750px;
+  width: 500px;
 }
 
 .details-body {

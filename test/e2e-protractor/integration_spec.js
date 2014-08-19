@@ -128,18 +128,19 @@ describe('App flow', function() {
           browser.sleep(500);
           expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
           browser.sleep(500);
-          element(by.css('.fa-times')).click();
+          element(by.id('notifications-cancel')).click();
           browser.sleep(500);
         });
       });
 
       it('should display error if no user is entered on update', function() {
         element(by.id('btnEntitle')).click();
+        browser.sleep(500);
         element(by.css('.alertify-log-error')).click().then(function() {
           browser.sleep(500);
           expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
           browser.sleep(500);
-          element(by.css('.fa-times')).click();
+          element(by.id('notifications-cancel')).click();
           browser.sleep(500);
         });
       });
@@ -151,7 +152,7 @@ describe('App flow', function() {
           browser.sleep(500);
           expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
           browser.sleep(500);
-          element(by.css('.fa-times')).click();
+          element(by.id('notifications-cancel')).click();
           browser.sleep(500);
         });
       });
@@ -171,7 +172,8 @@ describe('App flow', function() {
           expect(element(by.id('btnEntitle')).getAttribute('disabled')).toBe(null);
           expect(element(by.id('btnInvite')).getAttribute('disabled')).toBe(null);
           element(by.css('.close')).click();
-          element(by.css('.fa-times')).click();
+          browser.sleep(1000);
+          element(by.id('small-notification-cancel')).click();
         }
       });
       it('should invalidate token with invalid inputs and disable button', function() {
@@ -184,6 +186,8 @@ describe('App flow', function() {
           expect(element(by.id('btnEntitle')).getAttribute('disabled')).toBe('true');
           expect(element(by.id('btnInvite')).getAttribute('disabled')).toBe('true');
           element(by.css('.close')).click();
+          //browser.sleep(1000);
+          //element(by.id('small-notification-cancel')).click();
         }
       });
     });
@@ -201,7 +205,7 @@ describe('App flow', function() {
           expect(rows[0].getText()).toContain(testuser.username);
           expect(rows[0].getText()).toContain('already exists');
           browser.sleep(500);
-          element(by.css('.fa-times')).click();
+          element(by.id('notifications-cancel')).click();
           browser.sleep(500);
         });
       });
@@ -230,7 +234,7 @@ describe('App flow', function() {
           expect(rows[0].getText()).toContain(inputEmail);
           expect(rows[0].getText()).toContain('added successfully');
           browser.sleep(500);
-          element(by.css('.fa-times')).click();
+          element(by.id('notifications-cancel')).click();
 
         });
       });
@@ -245,102 +249,21 @@ describe('App flow', function() {
     });
   });
 
-  //Entitle User Flows: state is in the users page
-  describe('Entitle User Flows', function() {
-
-    describe('Entitle an existing user with call-initiation', function() {
-      it('should display input user email in results with success message', function() {
-        element(by.id('usersfield')).clear();
-        element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
-          //entitle for call initiation
-          element(by.css('.iCheck-helper')).click().then(function() {
-            element(by.id('btnEntitle')).click();
-            browser.sleep(500);
-            element(by.css('.alertify-log-success')).click();
-            element.all(by.css('.panel-success-body p')).then(function(rows) {
-              expect(rows.length).toBe(1);
-              expect(rows[0].getText()).toContain(testuser.username);
-              expect(rows[0].getText()).toContain('entitled successfully');
-              browser.sleep(500);
-              element(by.css('.fa-times')).click();
-            });
-          });
-        });
-      });
-    });
-
-    describe('Attempt to un-entitle jabberMessenger', function() {
-      it('should display input user email in results with entitlement previously updated message', function() {
-        element(by.id('usersfield')).clear();
-        element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
-          element(by.css('.iCheck-helper')).click().then(function() {
-            element(by.id('btnEntitle')).click();
-            browser.sleep(500); //for the animation
-            element(by.css('.alertify-log-error')).click();
-            browser.sleep(500); //for the animation
-            element.all(by.css('.panel-danger-body p')).then(function(rows) {
-              expect(rows.length).toBe(1);
-              expect(rows[0].getText()).toContain(testuser.username);
-              expect(rows[0].getText()).toContain('entitlement previously updated');
-              browser.sleep(500);
-              element(by.css('.fa-times')).click();
-              browser.sleep(500);
-              element(by.id('closeAddUser')).click();
-              browser.sleep(500);
-            });
-          });
-        });
-      });
-    });
-
-    describe('Verify jabberMessenger entitlement exists for user and un-entitle', function() {
-      it('should show jabberMessenger entitlement for the user', function() {
-        element(by.id('search-input')).sendKeys(testuser.username).then(function() {
-          browser.sleep(1000);
-          element(by.id('queryresults')).getAttribute('value').then(function(value) {
-            var queryresults = parseInt(value, 10);
-            if (queryresults > 0) {
-              element(by.binding('user.userName')).getText().then(function(uname) {
-                expect(uname).toContain(testuser.username);
-              });
-              element(by.binding('user.userName')).click();
-              browser.sleep(500);
-              element(by.id('chk_jabberMessenger')).click();
-              browser.sleep(500);
-              element(by.id('btnSave')).click();
-              browser.sleep(1000);
-              element(by.css('.alertify-log-success')).click();
-              browser.sleep(500);
-              element.all(by.css('.panel-success-body p')).then(function(rows) {
-                expect(rows.length).toBe(1);
-                expect(rows[0].getText()).toContain(testuser.username);
-                expect(rows[0].getText()).toContain('updated successfully');
-                browser.sleep(500);
-                element(by.css('.fa-times')).click();
-              });
-            }
-          });
-        });
-      });
-    });
-  });
 
   describe('Invite users', function() {
     it('should invite users successfully', function() {
-      element(by.id('addUsers')).click();
-      browser.sleep(500);
       var inviteEmail = utils.randomTestEmail();
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
         element(by.id('btnInvite')).click();
-        browser.sleep(1000); //for the animation
+        browser.sleep(3000); //for the animation
         element(by.css('.alertify-log-success')).click();
         browser.sleep(500); //for the animation
         element.all(by.css('.panel-success-body p')).then(function(rows) {
           expect(rows.length).toBe(1);
           expect(rows[0].getText()).toContain('sent successfully');
           browser.sleep(500);
-          element(by.css('.fa-times')).click();
+          element(by.id('notifications-cancel')).click();
         });
       });
     });
@@ -357,7 +280,7 @@ describe('App flow', function() {
           expect(rows.length).toBe(1);
           expect(rows[0].getText()).toContain('already entitled');
           browser.sleep(500);
-          element(by.css('.fa-times')).click();
+          element(by.id('notifications-cancel')).click();
         });
       });
     });
@@ -374,20 +297,43 @@ describe('App flow', function() {
           expect(rows.length).toBe(1);
           expect(rows[0].getText()).toContain('cannot be invited to service');
           browser.sleep(500);
-          element(by.css('.fa-times')).click();
+          element(by.id('notifications-cancel')).click();
+          element(by.id('closeAddUser')).click();
+          browser.sleep(500);
         });
       });
     });
-
   });
 
+  describe('Users preview panel', function() {
+
+      it('should show the squared entitlement column on first load', function() {
+            expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(true);
+      });
+
+      it('should show the preview panel when clicking on a user', function() {
+        element(by.id('userNameCell')).click().then(function(){           
+          expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(false);
+          expect(element(by.id('details-panel')).isDisplayed()).toEqual(true);
+        });
+      });
+
+      it('should exit the preview panel when clicking the x', function() {
+          element(by.id('exitPreviewButton')).click().then(function(){           
+          expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(true);
+          expect(element(by.id('details-panel')).isDisplayed()).toEqual(false);
+      });
+  });
+
+    });
+
   describe('Switching tabs', function() {
-    // it('should have a tab bar', function() {
-    //   expect(element(by.id('tabs')).isDisplayed()).toBe(true);
-    //   element.all(by.repeater('tab in tabs')).then(function(tabCount) {
-    //     expect(tabCount.length).toBe(10);
-    //   });
-    // });
+    it('should have a tab bar', function() {
+      expect(element(by.id('tabs')).isDisplayed()).toBe(true);
+      element.all(by.repeater('tab in tabs')).then(function(tabCount) {
+        expect(tabCount.length).toBe(10);
+      });
+    });
 
     it('clicking on home tab should change the view', function() {
       element(by.css('li[heading="Home"]')).click();

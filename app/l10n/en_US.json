@@ -29,6 +29,15 @@
     "exportUsers" : "export Users",
     "moreOptions" : "More Actions"
   },
+  "usersPreview" : {
+    "groupPreview" : "Group:",
+    "servicesPreview" : "Services",
+    "telephonyPreview" : "Telephony",
+    "conferencingPreview" : "Conferencing",
+    "convPreview" : "Conversations",
+    "usagePreview" : "Usage",
+    "endpointsPreview" : "Endpoints"
+  },
   "tabs" : {
     "homeTab" : "Home",
     "orgTab" : "Manage",

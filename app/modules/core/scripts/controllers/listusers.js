@@ -6,6 +6,8 @@ angular.module('Core')
   .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Auth', 'Authinfo',
     function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Pagination, $rootScope, Notification, $filter, Auth, Authinfo) {
 
+      $scope.userPreview = false; 
+
       function Feature(name, state) {
         this.entitlementName = name;
         this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
@@ -210,7 +212,13 @@ angular.module('Core')
       };
 
       var currentClass;
+
+      $scope.closePreview = function(){
+        $scope.userPreview = false;
+      }
+
       $scope.showUserDetails = function(user) {
+         $scope.userPreview = true; 
         //remove selected class on previous user
         if ($scope.currentUser) {
           angular.element('#' + $scope.currentUser.id).removeClass('selected');
@@ -234,7 +242,7 @@ angular.module('Core')
         }
 
         //User profile
-        $scope.photoPath = null;
+        $scope.photoPath = '//:0';
         $scope.orgName = Authinfo.getOrgName();
         Userservice.getUser($scope.currentUser.id, function(data, status) {
           if (data.success) {
@@ -293,7 +301,6 @@ angular.module('Core')
       };
 
       $scope.$on('PAGINATION_UPDATED', function() {
-        $scope.currentUser = null;
         $scope.page = $scope.pagination.page + 1;
         $('.pagination-current a').html($scope.page);
       });
