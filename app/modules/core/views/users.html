@@ -47,11 +47,11 @@
           <label for="inputEmail3" translate="usersPage.email"></label>
           <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
           <br>
-          <div class="entitle-btn-grp">
-            <div class="btn-group right" ng-repeat="(service, val) in entitlements" ng-if="service!='webExSquared'">
-             <input type="checkbox" id="{{'btn_'+service}}" ng-model="entitlements[service]" icheck>
-             <label style="font-size:15px; padding:5px">{{getServiceName(service)}}</label>
-           </div>
+          <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements" ng-if="service!='webExSquared'">
+            <div class="btn-group" id="{{'btn_'+service}}">
+             <input type="checkbox" ng-model="entitlements[service]" icheck>
+            </div>
+            <label><span style="font-size:15px; padding:5px">{{getServiceName(service)}}</span></label>
          </div>
        </div>
 
@@ -92,10 +92,10 @@
           <td><span ng-if="user.name">{{user.name.familyName}}</span></td>
           <td id='{{user.userName}}'>{{user.userName}}</td>
           <td class="text-center icon-{{user.id}}" ng-bind-html="getEntitlementState(user)?getStatusIcon('active'):getStatusIcon('inactive')" ng-show="!userPreview"></td>
-
         </tr>
       </tbody>
     </table>
+
     <div id="queryresults" value="{{queryuserslist.length}}" style="display: none;">{{queryuserslist.length}}</div>
       <ul class="pagination" ng-show="queryuserslist">
         <li><a id="prev-page" ng-click="pagination.prevPage();"><i class="fa fa-angle-left"></i></a></li>
@@ -104,7 +104,7 @@
       </ul>
     </div>
 
-  <div ng-show="userPreview" class="details-panel-card" id="details-panel">
+  <div ng-show="userPreview" ng-class="conversationsPanel ? 'details-panel-card-shifted' : 'details-panel-card'" id="details-panel">
     <div class="name-card">
         <div class="name-card-image">
           <img ng-src="{{photoPath}}"></img>
@@ -136,12 +136,18 @@
       </telephony-info>
       <conferencing-info user-email="" ng-show="false">
       </conferencing-info>
-      <conversations-info>
-      </conversations-info>
+      <div ng-click="showConversationPanel()">
+        <conversations-info>
+        </conversations-info>
+      </div>
     </div>
     <usage-info ng-show="false">
     </usage-info>    
     <endpoints-info ng-show="false">
     </endpoints-info>
+  <div ng-show="conversationsPanel" class="sub-details-panel">
+    <div user-entitlements
+      current-user="currentUser"
+      entitlements="entitlements"/>
   </div>
 </div>

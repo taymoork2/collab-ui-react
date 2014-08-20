@@ -249,7 +249,6 @@ describe('App flow', function() {
     });
   });
 
-
   describe('Invite users', function() {
     it('should invite users successfully', function() {
       var inviteEmail = utils.randomTestEmail();
@@ -446,10 +445,10 @@ describe('App flow', function() {
         element(by.css('li[heading="Users"]')).click();
         browser.driver.wait(function() {
           return browser.driver.isElementPresent(by.id('tabs'));
-      }).then(function(){
-           element(by.css('li[heading="Home"]')).click();
+        }).then(function(){
+          element(by.css('li[heading="Home"]')).click();
           browser.driver.wait(function() {
-            return browser.driver.isElementPresent(by.id('tabs'));
+          return browser.driver.isElementPresent(by.id('tabs'));
         }).then(function(){
             expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
             expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
@@ -464,7 +463,7 @@ describe('App flow', function() {
 
     it('should load new values and update time when clicking refresh', function() {
       browser.driver.findElement(by.id('refreshButton')).click().then(function() {
-            expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
+          expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
           expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
           expect(element(by.id('au-content')).isDisplayed()).toEqual(true);
           expect(element(by.id('calls-content')).isDisplayed()).toEqual(true);
@@ -499,9 +498,9 @@ describe('App flow', function() {
             browser.driver.wait(function() {
               return browser.driver.isElementPresent(by.id('tabs'));
             }).then(function(){
-            expect(element(by.id('reportsRefreshData')).isDisplayed()).toEqual(true);
-            expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
-            expect(element(by.id('avgEntitlementsdiv')).isDisplayed()).toEqual(true);
+              expect(element(by.id('reportsRefreshData')).isDisplayed()).toEqual(true);
+              expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
+              expect(element(by.id('avgEntitlementsdiv')).isDisplayed()).toEqual(true);
               expect(element(by.id('avgConversationsdiv')).isDisplayed()).toEqual(true);
               expect(element(by.id('activeUsersdiv')).isDisplayed()).toEqual(true);
               expect(element(by.id('avgCallsdiv')).isDisplayed()).toEqual(true);
