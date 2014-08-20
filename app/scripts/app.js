@@ -12,7 +12,6 @@
 angular.module('Core', []);
 
 angular.module('Squared', ['Core',
-    'UserEnt',
     'FundooDirectiveTutorial']);
 
 angular.module('Huron', ['Core']);

@@ -1,7 +1,7 @@
 'use strict';
 
 
-angular.module('UserEnt', [])
+angular.module('Squared')
   .controller('UserEntitlementsCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter',
     function($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter) {
 
