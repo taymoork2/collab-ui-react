@@ -297,8 +297,89 @@ describe('App flow', function() {
           expect(rows[0].getText()).toContain('cannot be invited to service');
           browser.sleep(500);
           element(by.id('notifications-cancel')).click();
+        });
+      });
+    });
+  });
+
+  //Entitle User Flows: state is in the users page
+  describe('Entitle User Flows', function() {
+    describe('Entitle an existing user with call-initiation', function() {
+      it('should display input user email in results with success message', function() {
+        element(by.id('usersfield')).clear();
+        element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
+          //entitle for call initiation
+          element(by.id('btn_squaredCallInitiation')).click().then(function() {
+            element(by.id('btnEntitle')).click();
+            browser.sleep(500);
+            element(by.css('.alertify-log-success')).click();
+            element.all(by.css('.panel-success-body p')).then(function(rows) {
+              expect(rows.length).toBe(1);
+              expect(rows[0].getText()).toContain(testuser.username);
+              expect(rows[0].getText()).toContain('entitled successfully');
+              browser.sleep(500);
+              element(by.css('.fa-times')).click();
+            });
+          });
+        });
+      });
+    });
+
+    describe('Attempt to un-entitle call-initiation', function() {
+      it('should display input user email in results with entitlement previously updated message', function() {
+        element(by.id('usersfield')).clear();
+        element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
+          element(by.id('btn_squaredCallInitiation')).click().then(function() {
+            element(by.id('btnEntitle')).click();
+            browser.sleep(500); //for the animation
+            element(by.css('.alertify-log-error')).click();
+            browser.sleep(500); //for the animation
+            element.all(by.css('.panel-danger-body p')).then(function(rows) {
+              expect(rows.length).toBe(1);
+              expect(rows[0].getText()).toContain(testuser.username);
+              expect(rows[0].getText()).toContain('entitlement previously updated');
+              browser.sleep(500);
+              element(by.css('.fa-times')).click();
+            });
+          });
+        });
+      });
+    });
+
+    describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
+      it('should show call-initiation entitlement for the user', function() {
+        element(by.id('search-input')).sendKeys(testuser.username).then(function() {
           element(by.id('closeAddUser')).click();
           browser.sleep(500);
+          element(by.id('queryresults')).getAttribute('value').then(function(value) {
+            var queryresults = parseInt(value, 10);
+            if (queryresults > 0) {
+              element(by.binding('user.userName')).getText().then(function(uname) {
+                expect(uname).toContain(testuser.username);
+              });
+              element(by.binding('user.userName')).click();
+              browser.sleep(500);
+              element(by.id('opt_conv')).click();
+              browser.sleep(500);
+              element(by.id('chk_squaredCallInitiation')).click();
+              browser.sleep(500);
+              element(by.id('btnSave')).click();
+              browser.sleep(2000);
+              element(by.css('.alertify-log-success')).click();
+              browser.sleep(500);
+              element.all(by.css('.panel-success-body p')).then(function(rows) {
+                expect(rows.length).toBe(1);
+                expect(rows[0].getText()).toContain(testuser.username);
+                expect(rows[0].getText()).toContain('updated successfully');
+                browser.sleep(500);
+                element(by.css('.fa-times')).click();
+              });
+              element(by.id('search-input')).clear();
+              browser.sleep(500);
+              element(by.id('exitPreviewButton')).click();
+              browser.sleep(500);
+            }
+          });
         });
       });
     });
@@ -307,11 +388,11 @@ describe('App flow', function() {
   describe('Users preview panel', function() {
 
       it('should show the squared entitlement column on first load', function() {
-            expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(true);
+        expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(true);
       });
 
       it('should show the preview panel when clicking on a user', function() {
-        element(by.id('userNameCell')).click().then(function(){           
+        element(by.id('userNameCell')).click().then(function(){
           expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(false);
           expect(element(by.id('details-panel')).isDisplayed()).toEqual(true);
         });
@@ -319,12 +400,11 @@ describe('App flow', function() {
 
       it('should exit the preview panel when clicking the x', function() {
           browser.sleep(1000);
-          element(by.id('exitPreviewButton')).click().then(function(){           
-          expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(true);
-          expect(element(by.id('details-panel')).isDisplayed()).toEqual(false);
-      });
-  });
-
+          element(by.id('exitPreviewButton')).click().then(function(){
+            expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(true);
+            expect(element(by.id('details-panel')).isDisplayed()).toEqual(false);
+          });
+        });
     });
 
   describe('Switching tabs', function() {

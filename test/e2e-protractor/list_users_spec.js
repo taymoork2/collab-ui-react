@@ -178,9 +178,6 @@ describe('List users flow', function() {
 
   // Add User
   describe('Add User', function() {
-    var inputTitle = 'EngTest';
-    var inputLastName = 'testLastName';
-
     it('click on invite subtab should show manage users', function () {
       browser.driver.findElement(by.id('addUsers')).click();
       expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
@@ -230,6 +227,45 @@ describe('List users flow', function() {
     });
   });
 
+  //Update entitlements
+  describe('Updating entitlements', function() {
+    it('should display initial entitlements from newly added user', function() {
+      element(by.id('search-input')).clear();
+      browser.sleep(500);
+      element(by.id('search-input')).sendKeys(inputEmail).then(function() {
+        browser.sleep(1000);
+        element(by.binding('user.userName')).getText().then(function(uname) {
+          expect(uname).toContain(inputEmail);
+        });
+        element(by.binding('user.userName')).click();
+        browser.sleep(500);
+        element(by.id('opt_conv')).click();
+        browser.sleep(500);
+        element.all(by.css('.details-body .icheckbox_square-blue')).then(function(items) {
+          expect(items.length).toBe(7);
+          expect(items[0].getAttribute('class')).toContain('checked');
+          expect(items[6].getAttribute('class')).toContain('checked');
+        });
+        browser.sleep(500);
+        element(by.id('chk_squaredFusionUC')).click();
+        browser.sleep(500);
+        element(by.id('btnSave')).click();
+        browser.sleep(2000);
+        element(by.css('.alertify-log-success')).click();
+        browser.sleep(500);
+        element.all(by.css('.panel-success-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain(inputEmail);
+          expect(rows[0].getText()).toContain('updated successfully');
+          browser.sleep(500);
+          element(by.css('.fa-times')).click();
+        });
+        element(by.id('exitPreviewButton')).click();
+        browser.sleep(500);
+      });
+    });
+  });
+
   describe('Exporting to CSV', function() {
     it('should display the CSV export button', function() {
       element(by.id('userMoreOptions')).click();
@@ -260,6 +296,6 @@ describe('List users flow', function() {
   //       element(by.id('logout-btn')).click();
   //     });
   //   });
-   });
+});
 
 //});
