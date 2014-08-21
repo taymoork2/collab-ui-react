@@ -185,24 +185,6 @@ angular.module('Core')
             $scope.entitlements[service] = false;
           }
         }
-
-        // //User profile
-        // $scope.photoPath = '//:0';
-        // $scope.orgName = Authinfo.getOrgName();
-        // Userservice.getUser($scope.currentUser.id, function(data, status) {
-        //   if (data.success) {
-        //     if (data.photos) {
-        //       for (var i in data.photos) {
-        //         if (data.photos[i].type === 'thumbnail') {
-        //           $scope.photoPath = data.photos[i].value;
-        //         }
-        //       } //end for
-        //     } //endif
-        //   } else {
-        //     Log.debug('Get existing user failed. Status: ' + status);
-        //   }
-        // });
-
       };
 
       $scope.updateUser = function() {
