@@ -319,7 +319,8 @@ describe('App flow', function() {
 
       it('should exit the preview panel when clicking the x', function() {
           browser.sleep(1000);
-          element(by.id('exitPreviewButton')).click().then(function(){           
+          element(by.id('exitPreviewButton')).click().then(function(){    
+          browser.sleep(1000);       
           expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(true);
           expect(element(by.id('details-panel')).isDisplayed()).toEqual(false);
       });
