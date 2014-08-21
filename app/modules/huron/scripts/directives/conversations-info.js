@@ -6,7 +6,7 @@
 angular.module('Huron')
   .directive('conversationsInfo', function() {
     return {
-    restrict: 'E',
+    restrict: 'A',
     scope:{
       userEmail: "=",
     },

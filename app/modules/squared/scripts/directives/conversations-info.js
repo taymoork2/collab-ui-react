@@ -6,7 +6,7 @@
 angular.module('Squared')
   .directive('conversationsInfo', function() {
     return {
-    restrict: 'E',
+    restrict: 'A',
     scope:{
       userEmail: "=",
     },
@@ -14,5 +14,5 @@ angular.module('Squared')
     link: function(scope, elem, attrs){
 
     }
-    };
-  });
+  };
+});

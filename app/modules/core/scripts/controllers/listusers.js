@@ -12,7 +12,7 @@ angular.module('Core')
 
       //Initialize variables
       $scope.page = 1;
-      $scope.status = null;
+      $scope.status = null; 
       $scope.results = null;
       $scope.sort = {
         by: 'name',
@@ -186,22 +186,22 @@ angular.module('Core')
           }
         }
 
-        //User profile
-        $scope.photoPath = '//:0';
-        $scope.orgName = Authinfo.getOrgName();
-        Userservice.getUser($scope.currentUser.id, function(data, status) {
-          if (data.success) {
-            if (data.photos) {
-              for (var i in data.photos) {
-                if (data.photos[i].type === 'thumbnail') {
-                  $scope.photoPath = data.photos[i].value;
-                }
-              } //end for
-            } //endif
-          } else {
-            Log.debug('Get existing user failed. Status: ' + status);
-          }
-        });
+        // //User profile
+        // $scope.photoPath = '//:0';
+        // $scope.orgName = Authinfo.getOrgName();
+        // Userservice.getUser($scope.currentUser.id, function(data, status) {
+        //   if (data.success) {
+        //     if (data.photos) {
+        //       for (var i in data.photos) {
+        //         if (data.photos[i].type === 'thumbnail') {
+        //           $scope.photoPath = data.photos[i].value;
+        //         }
+        //       } //end for
+        //     } //endif
+        //   } else {
+        //     Log.debug('Get existing user failed. Status: ' + status);
+        //   }
+        // });
 
       };
 
