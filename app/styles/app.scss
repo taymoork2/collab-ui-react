@@ -739,6 +739,15 @@ input:disabled {
   margin-bottom:3px;
 }
 
+.ellipsis-name
+{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 330px;
+}
+
 .name-card-image
 {
   height:100px;
@@ -910,7 +919,7 @@ input:disabled {
 }
 
 #userslist {
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 #addUsers {
