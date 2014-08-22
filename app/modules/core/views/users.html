@@ -106,13 +106,16 @@
 
   <div ng-show="userPreview" ng-class="conversationsPanel ? 'details-panel-card-shifted' : 'details-panel-card'" id="details-panel">
     <div class="name-card">
-        <div class="name-card-image">
-          <img ng-src="{{photoPath}}"></img>
+        <div class="name-card-image center">
+          <img ng-if='getUserPhoto(currentUser)' src='{{getUserPhoto(currentUser)}}'></img>
+          <i ng-if='!getUserPhoto(currentUser)' class="fa fa-user fa-5x"></i>
         </div>
         <div class="name-card-info">
           <a href="#/userprofile/{{currentUser.id}}">
+          <div id="name-preview" class="ellipsis-name">
             <span class="name" ng-if="currentUser.name.givenName && currentUser.name.familyName">{{currentUser.name.givenName}} {{currentUser.name.familyName}}</span>
-            <span class="name" ng-if="!currentUser.name.givenName && !currentUser.name.familyName">{{currentUser.name.userName}}</span><br>
+            <span class="name" ng-if="!currentUser.name.givenName && !currentUser.name.familyName">{{currentUser.userName}}</span><br>
+          </div>
           </a>
           <span>{{currentUser.title}}</span><br>
           <span>{{currentUser.addresses.streetAddress}}</span>
@@ -132,19 +135,19 @@
     </div>
     <div class="standard-card services-card">
       <span class="preview-card-title" translate="usersPreview.servicesPreview"></span>
-      <telephony-info main-phone="" shared-phone="" ng-show="false">
-      </telephony-info>
-      <conferencing-info user-email="" ng-show="false">
-      </conferencing-info>
-      <div ng-click="showConversationPanel()">
-        <conversations-info>
-        </conversations-info>
+      <div telephony-info ng-show="false">
+      </div telephony-info>
+      <div conferencing-info ng-show="false">
+      </div conferencing-info>
+      <div ng-click="showConversationPanel()" id="opt_conv">
+        <div conversations-info>
+        </div conversations-info>
       </div>
     </div>
-    <usage-info ng-show="false">
-    </usage-info>    
-    <endpoints-info ng-show="false">
-    </endpoints-info>
+    <div usage-info ng-show="false">
+    </div usage-info>    
+    <div endpoints-info ng-show="false">
+    </div endpoints-info>
   <div ng-show="conversationsPanel" class="sub-details-panel">
     <div user-entitlements
       current-user="currentUser"

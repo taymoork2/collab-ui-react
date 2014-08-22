@@ -6,7 +6,7 @@
 angular.module('Huron')
   .directive('telephonyInfo', function() {
     return {
-    restrict: 'E',
+    restrict: 'A',
     scope:{
       mainPhone: "=",
       sharedPhone: "="

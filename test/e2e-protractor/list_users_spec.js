@@ -25,7 +25,7 @@ var inputEmail;
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 describe('List users flow', function() {
-  beforeEach(function() {
+  beforeEach(function() {   
     this.addMatchers({
       toBeLessThanOrEqualTo: function() {
         return {
@@ -176,6 +176,96 @@ describe('List users flow', function() {
     });
   });
 
+  // Add User
+  describe('Add User', function() {
+    it('click on invite subtab should show manage users', function () {
+      browser.driver.findElement(by.id('addUsers')).click();
+      expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
+      expect(element(by.id('usersfield')).isDisplayed()).toEqual(true);
+      //This button is now covered by another <ins> element.
+      //expect(element(by.id('btn_callInit')).isDisplayed()).toEqual(true);
+      expect(element(by.id('btnAdd')).isDisplayed()).toEqual(true);
+    });
+
+    it('should add user successfully and increase user count', function() {
+      inputEmail = utils.randomTestEmail();
+
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inputEmail).then(function() {
+        //entitle for call initiation
+        element(by.css('.iCheck-helper')).click().then(function() {
+          element(by.id('btnAdd')).click().then(function() {
+            browser.sleep(500);
+            element(by.css('.alertify-log-success')).click();
+            element.all(by.css('.panel-success-body p')).then(function(rows) {
+              expect(rows[0].getText()).toContain(inputEmail);
+              expect(rows[0].getText()).toContain('added successfully');
+              browser.sleep(500);
+              element(by.id('notifications-cancel')).click();
+              browser.sleep(500);
+              element(by.id('closeAddUser')).click();
+              browser.sleep(500);
+            });
+            
+            element(by.id('search-input')).sendKeys(inputEmail).then(function() {
+              browser.sleep(1000);
+              
+              element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+                expect(rows.length).toBe(1);
+                //check user profile
+                element(by.id('userNameCell')).click();
+                browser.sleep(1000);
+                //validate user profile is for correct user
+                expect(element(by.id('details-panel')).isDisplayed()).toEqual(true);
+                expect(element(by.id('name-preview')).isDisplayed()).toEqual(true);
+                element(by.id('exitPreviewButton')).click();
+              });
+            }); //end search
+          }); //end add
+        });
+      });
+    });
+  });
+
+  //Update entitlements
+  describe('Updating entitlements', function() {
+    it('should display initial entitlements from newly added user', function() {
+      element(by.id('search-input')).clear();
+      browser.sleep(500);
+      element(by.id('search-input')).sendKeys(inputEmail).then(function() {
+        browser.sleep(1000);
+        element(by.binding('user.userName')).getText().then(function(uname) {
+          expect(uname).toContain(inputEmail);
+        });
+        element(by.binding('user.userName')).click();
+        browser.sleep(500);
+        element(by.id('opt_conv')).click();
+        browser.sleep(500);
+        element.all(by.css('.details-body .icheckbox_square-blue')).then(function(items) {
+          expect(items.length).toBe(7);
+          expect(items[0].getAttribute('class')).toContain('checked');
+          expect(items[6].getAttribute('class')).toContain('checked');
+        });
+        browser.sleep(500);
+        element(by.id('chk_squaredFusionUC')).click();
+        browser.sleep(500);
+        element(by.id('btnSave')).click();
+        browser.sleep(2000);
+        element(by.css('.alertify-log-success')).click();
+        browser.sleep(500);
+        element.all(by.css('.panel-success-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain(inputEmail);
+          expect(rows[0].getText()).toContain('updated successfully');
+          browser.sleep(500);
+          element(by.css('.fa-times')).click();
+        });
+        element(by.id('exitPreviewButton')).click();
+        browser.sleep(500);
+      });
+    });
+  });
+
   describe('Exporting to CSV', function() {
     it('should display the CSV export button', function() {
       element(by.id('userMoreOptions')).click();
@@ -206,6 +296,6 @@ describe('List users flow', function() {
   //       element(by.id('logout-btn')).click();
   //     });
   //   });
-  // });
-
 });
+
+//});

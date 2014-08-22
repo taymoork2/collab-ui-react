@@ -80,7 +80,7 @@ angular
         templateUrl: 'modules/squared/views/unauthorized.html'
       })
       .when('/invitelauncher', {
-        templateUrl: 'modules/squared/views/invitelauncher.html',
+        templateUrl: 'modules/squared/views/invitelauncher.html?'+new Date().getTime(),
         controller: 'InvitelauncherCtrl'
       });
   

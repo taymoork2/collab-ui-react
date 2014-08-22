@@ -6,7 +6,7 @@
 angular.module('Huron')
   .directive('endpointsInfo', function() {
     return {
-    restrict: 'E',
+    restrict: 'A',
     scope:{
       userEmail: "=",
     },
