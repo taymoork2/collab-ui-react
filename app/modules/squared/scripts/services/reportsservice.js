@@ -8,6 +8,7 @@ angular.module('Squared')
       var callMetricsUrl = Config.getAdminServiceUrl() + 'reports/stats/callUsage';
       var activeUsersUrl = Config.getAdminServiceUrl() + 'reports/counts/activeUsers';
       var timeChartUrl = Config.getAdminServiceUrl() + 'reports/timeCharts/';
+      var logInfoBaseUrl = Config.getAdminServiceUrl() + 'reports/tables/calls/'
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
 
       var urls = {
@@ -75,7 +76,7 @@ angular.module('Squared')
         },
 
         getLogInfo: function(locusId, startTime, callback) {
-          var logInfoUrl = Config.getAdminServiceUrl() + 'reports/tables/calls/' + locusId + '?locusCallStartTime=' + startTime;
+          var logInfoUrl = logInfoBaseUrl + locusId + '?locusCallStartTime=' + startTime;
 
           console.log(logInfoUrl);
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
