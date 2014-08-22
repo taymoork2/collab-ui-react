@@ -359,7 +359,7 @@ describe('App flow', function() {
               });
               element(by.binding('user.userName')).click();
               browser.sleep(500);
-              element(by.id('opt_conv')).click();
+              element(by.id('squaredPanel')).click();
               browser.sleep(500);
               element(by.id('chk_squaredCallInitiation')).click();
               browser.sleep(500);

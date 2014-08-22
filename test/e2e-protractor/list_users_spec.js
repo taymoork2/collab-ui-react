@@ -239,7 +239,7 @@ describe('List users flow', function() {
         });
         element(by.binding('user.userName')).click();
         browser.sleep(500);
-        element(by.id('opt_conv')).click();
+        element(by.id('squaredPanel')).click();
         browser.sleep(500);
         element.all(by.css('.details-body .icheckbox_square-blue')).then(function(items) {
           expect(items.length).toBe(7);
@@ -284,18 +284,16 @@ describe('List users flow', function() {
     });
   });
 
-  // Ignoring this last logout() to avoid protractor synchronization issues.
-  // Warning: Only do this if this is the last test in the suite.
-  // Log Out
-  // describe('Log Out', function() {
-  //   it('should log out', function() {
-  //     element(by.id('setting-bar')).click();
-  //     browser.driver.wait(function() {
-  //       return browser.driver.isElementPresent(by.id('logout-btn'));
-  //     }).then(function() {
-  //       element(by.id('logout-btn')).click();
-  //     });
-  //   });
-});
+  //Log Out
+  describe('Log Out', function() {
+    it('should log out', function() {
+      element(by.id('setting-bar')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('logout-btn'));
+      }).then(function() {
+        element(by.id('logout-btn')).click();
+      });
+    });
+  });
 
-//});
+});

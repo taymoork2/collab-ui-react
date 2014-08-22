@@ -3,8 +3,8 @@
 /* global moment */
 
 angular.module('wx2AdminWebClientApp')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService',
-    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService) {
+  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config',
+    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config) {
 
       //check if page is authorized
       Auth.isAuthorized($scope);
@@ -449,6 +449,32 @@ angular.module('wx2AdminWebClientApp')
 
       $scope.getTabTitle = function(title) {
         return $filter('translate')(title);
+      };
+
+      $scope.isSquaredEnabled = function()
+      {
+        return isEntitled(Config.squaredEntitlement);
+      };
+
+      $scope.isHuronEnabled = function()
+      {
+        return isEntitled(Config.huronEntitlement);
+      };
+
+      var isEntitled = function(ent) {
+        if ($rootScope.services)
+        {
+          for (var i=0;i<$rootScope.services.length;i++)
+          {
+            var svc = $rootScope.services[i].sqService;
+
+            if (svc === ent)
+            {
+              return true;
+            }
+          }
+        }
+        return false;
       };
 
       //set intitially when loading the page
