@@ -415,7 +415,6 @@ describe('App flow', function() {
         expect(element(by.id('avg-entitlements-refresh')).isDisplayed()).toBe(true);
         expect(element(by.id('avg-calls-refresh')).isDisplayed()).toBe(true);
         expect(element(by.id('avg-conversations-refresh')).isDisplayed()).toBe(true);
-        expect(element(by.id('active-users-refresh')).isDisplayed()).toBe(true);
       });
     });
 
