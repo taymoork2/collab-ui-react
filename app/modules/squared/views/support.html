@@ -23,7 +23,7 @@
   </div>
 </div>
 
-<div class="panel panel-default"  id="logs-panel">
+<div class="panel panel-default"  id="logs-panel" ng-hide="callInfoActive">
     <div id="userSupport">
       <div class="panel-heading panel-heading-default">
         <h3 class="panel-title panel-title-default">
@@ -41,6 +41,7 @@
               <th nowrap ng-click="toggleSort('callStart', 'sortIconCallStart')"><span id="callStartHeading" translate="supportPage.logCallStart"></span> <i class="fa {{sortIconCallStart}}"></i></th>
               <th nowrap ng-click="toggleSort('date', 'sortIconDate')"><span id="dateHeading" translate="supportPage.logDate"></span> <i class="fa {{sortIconDate}}"></i></th>
               <th nowrap><span translate="supportPage.logAction"></span></th>
+              <th nowrap><span translate="supportPage.callAction"></span></th>
             </tr>
           </thead>
           <tbody>
@@ -50,9 +51,105 @@
               <td>{{log.callStart}}</td>
               <td>{{formatDate(log.date)}}</td>
               <td class="center"><a ng-click="downloadLog(log.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></td>
+              <td class="center"><a ng-click="showCallInfo(log.emailAddress, log.locusId, log.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></a></td>
             </tr>
           </tbody>
         </table>
+      </div>  
+    </div>
+  </div>
+  <div class="panel panel-default call-info-panel" ng-show="callInfoActive">
+    <div class="panel-heading panel-heading-default">
+      <div>
+        <h3 class="panel-title panel-title-default">
+          <strong id="subTitleCallInfo" translate="supportPage.subTitleCallInfo"></strong>
+          <strong>{{emailAddress}}</strong> 
+        </h3>
       </div>
+      <div  ng-click="closeCallInfo()">
+        <span style="float: right"><i id='closeAddUser' class="fa fa-times add-user-close"></i></span>
+      </div>
+    </div>
+    <div class="panel-body">
+      <label ng-show="logInfo.length === 0 || !logInfo"><span id="noResults" translate="supportPage.noResults"></label>
+      <table class="table" ng-show="logInfo.length !== 0">
+        <thead>
+          <tr>
+            <th>locusId : {{logInfo[0].locusId}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="info in logInfo">
+            <td>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <td>Locus Call Start Time</td>
+                    <td>Attributes</td>
+                    <td>Value</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{info.locusCallStartTime}}</td>
+                    <td>userId</td>
+                    <td>{{info.userId}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>orgId</td>
+                    <td>{{info.orgId}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>locusId</td>
+                    <td>{{info.locusId}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>locusCallStartTime</td>
+                    <td>{{info.locusCallStartTime}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>deviceId</td>
+                    <td>{{info.deviceId}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>isGroupCall</td>
+                    <td>{{info.isGroupCall}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>callDuration</td>
+                    <td>{{info.callDuration}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>userAgent</td>
+                    <td>{{info.userAgent}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>networkName</td>
+                    <td>{{info.networkName}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>networkType</td>
+                    <td>{{info.networkType}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>trackingId</td>
+                    <td>{{info.trackingId}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>

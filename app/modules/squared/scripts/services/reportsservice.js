@@ -50,6 +50,8 @@ angular.module('Squared')
         return metricUrl;
       };
 
+      
+
       return {
 
         getUsageMetrics: function(metricType, params, callback) {
@@ -67,6 +69,25 @@ angular.module('Squared')
               data.success = false;
               data.status = status;
               data.errorMsg = data;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
+        },
+
+        getLogInfo: function(locusId, startTime, callback) {
+          var logInfoUrl = Config.getAdminServiceUrl() + 'reports/tables/calls/' + locusId + '?locusCallStartTime=' + startTime;
+
+          console.log(logInfoUrl);
+          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.get(logInfoUrl)
+            .success(function(data, status) {
+              data.success = true;
+              Log.debug('Retrieved call info for : ' + locusId + ' startTime : ' + startTime);
+              callback(data, status);
+            })
+            .error(function(data, status) {
+              data.success = false;
+              data.status = status;
               callback(data, status);
               Auth.handleStatus(status);
             });

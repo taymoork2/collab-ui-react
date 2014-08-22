@@ -2,8 +2,8 @@
 /* global $, Bloodhound, moment */
 
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService', '$translate',
-    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Auth, Authinfo, UserListService, LogService, $translate) {
+  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', '$translate',
+    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Auth, Authinfo, UserListService, LogService, ReportsService, $translate) {
 
       //Initialize
       Notification.init($scope);
@@ -24,6 +24,7 @@ angular.module('Squared')
 
       $scope.logsSortBy = 'date';
       $scope.reverseLogs = true;
+      
 
       $scope.toggleSort = function(type, icon) {
         $scope.reverseLogs = !$scope.reverseLogs;
@@ -202,6 +203,33 @@ angular.module('Squared')
         return callstart;
       };
 
+      var getLogInfo = function(locusId, startTime) {
+        ReportsService.getLogInfo(locusId, startTime, function(data, status) {
+          if (data.success) {
+            if (data.callRecords.length > 0) {
+              for (var index in data.callRecords) {
+                var info = {
+                  userId:data.callRecords[index].userId,
+                  orgId:data.callRecords[index].orgId,
+                  locusId:data.callRecords[index].locusId,
+                  locusCallStartTime:data.callRecords[index].locusCallStartTime,
+                  deviceId:data.callRecords[index].deviceId,
+                  isGroupCall:data.callRecords[index].isGroupCall,
+                  callDuration:data.callRecords[index].callDuration,
+                  // userAgent:data.callRecords[index].usrAgent;
+                  networkName:data.callRecords[index].networkName,
+                  networkType:data.callRecords[index].networkType,
+                  trackingId:data.callRecords[index].trackingId,
+                };
+                $scope.logInfo.push(info);
+              }
+            }
+          } else {
+            Log.debug('Failed to retrieve log information. Status: ' + status);
+          }
+        });
+      };
+
       $scope.downloadLog = function(filename) {
         LogService.downloadLog(filename, function(data, status) {
           if (data.success) {
@@ -211,6 +239,20 @@ angular.module('Squared')
             Notification.notify(['Failed to download log: ' + filename + '. Status: ' + status], 'error');
           }
         });
+      };
+
+      $scope.showCallInfo = function(emailAddress, locusId, startTime) {
+        $scope.callInfoActive = true;
+        $scope.logInfo = [];
+        $scope.emailAddress = emailAddress;
+        if (locusId === '-NA-' || startTime === '-NA-') {
+          return;
+        }
+        getLogInfo(locusId, startTime);
+      };
+
+      $scope.closeCallInfo = function() {
+        $scope.callInfoActive = false;
       };
     }
   ]);

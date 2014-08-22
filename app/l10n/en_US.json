@@ -126,9 +126,11 @@
     "logLocusId" : "Locus ID",
     "logCallStart" : "Call Start Time",
     "logAction" : "Download",
+    "callAction" : "Call Info",
     "errEmptyinput" : "Search input cannot be empty.",
     "errLogQuery" : "Failed to retrieve logs. Status: {{status}}",
-    "inputPlaceholder": "Enter search term (Email address, user ID, Locus ID, etc.)"
+    "inputPlaceholder": "Enter search term (Email address, user ID, Locus ID, etc.)",
+    "subTitleCallInfo": "Call Info records for"
   },
   "common" : {
     "cancel" : "Cancel",
