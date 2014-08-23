@@ -128,7 +128,7 @@
                   <tr>
                     <td></td>
                     <td>userAgent</td>
-                    <td>{{info.userAgent}}</td>
+                    <td>{{info.usrAgent}}</td>
                   </tr>
                   <tr>
                     <td></td>
@@ -144,6 +144,71 @@
                     <td></td>
                     <td>trackingId</td>
                     <td>{{info.trackingId}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>audioStart</td>
+                    <td>{{info.audioStart}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>videoStart</td>
+                    <td>{{info.videoStart}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>audioRxJitter</td>
+                    <td>{{info.audioRxJitter}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>audioTxJitter</td>
+                    <td>{{info.audioTxJitter}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>videoRxJitter</td>
+                    <td>{{info.videoRxJitter}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>videoTxJitter</td>
+                    <td>{{info.videoTxJitter}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>audioRxLossRatio</td>
+                    <td>{{info.audioRxLossRatio}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>audioTxLossRatio</td>
+                    <td>{{info.audioTxLossRatio}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>videoRxLossRatio</td>
+                    <td>{{info.videoRxLossRatio}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>videoTxLossRatio</td>
+                    <td>{{info.videoTxLossRatio}}</td>
+                  </tr>
+                  <tr ng-show="info.errorCode === 0">
+                    <td></td>
+                    <td>errorCode</td>
+                    <td>0</td>
+                  </tr>
+                  <tr ng-show="info.errorCode === 1">
+                    <td></td>
+                    <td>error.component</td>
+                    <td>{{info.component}}</td>
+                  </tr>
+                  <tr ng-show="info.errorCode === 1">
+                    <td></td>
+                    <td>error.message</td>
+                    <td>{{info.errMessage}}</td>
                   </tr>
                 </tbody>
               </table>

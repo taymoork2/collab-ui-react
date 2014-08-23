@@ -78,7 +78,6 @@ angular.module('Squared')
         getLogInfo: function(locusId, startTime, callback) {
           var logInfoUrl = logInfoBaseUrl + locusId + '?locusCallStartTime=' + startTime;
 
-          console.log(logInfoUrl);
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.get(logInfoUrl)
             .success(function(data, status) {

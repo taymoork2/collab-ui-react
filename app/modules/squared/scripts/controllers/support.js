@@ -208,6 +208,34 @@ angular.module('Squared')
           if (data.success) {
             if (data.callRecords.length > 0) {
               for (var index in data.callRecords) {
+                var audioStart, videoStart, audioRxJitter, audioTxJitter, videoRxJitter, videoTxJitter;
+                var audioRxLossRatio, audioTxLossRatio, videoRxLossRatio, videoTxLossRatio;
+                var mediaStats = data.callRecords[index].mediaStats;
+                var errorInfo = data.callRecords[index].errorInfo;
+                var component, errMessage;
+                var errorCode = 0;
+                if (mediaStats) {
+                  audioStart = mediaStats.audioStart;
+                  videoStart = mediaStats.videoStart;
+                  audioRxJitter = mediaStats.audioRxJitter;
+                  audioTxJitter = mediaStats.audioTxJitter;
+                  videoRxJitter = mediaStats.videoRxJitter;
+                  videoTxJitter = mediaStats.videoTxJitter;
+                  audioRxLossRatio = mediaStats.audioRxLossRatio;
+                  audioTxLossRatio = mediaStats.audioTxLossRatio;
+                  videoRxLossRatio = mediaStats.videoRxLossRatio;
+                  videoTxLossRatio = mediaStats.videoTxLossRatio;
+                }
+                if (errorInfo) {
+                  if (errorInfo.component) {
+                    component = errorInfo.component;
+                    errorCode = 1;
+                  }
+                  if (errorInfo.message) { 
+                    errMessage = errorInfo.message;
+                    errorCode = 1;
+                  }
+                }
                 var info = {
                   userId:data.callRecords[index].userId,
                   orgId:data.callRecords[index].orgId,
@@ -216,10 +244,23 @@ angular.module('Squared')
                   deviceId:data.callRecords[index].deviceId,
                   isGroupCall:data.callRecords[index].isGroupCall,
                   callDuration:data.callRecords[index].callDuration,
-                  // userAgent:data.callRecords[index].usrAgent;
+                  usrAgent:data.callRecords[index].usrAgent,
                   networkName:data.callRecords[index].networkName,
                   networkType:data.callRecords[index].networkType,
                   trackingId:data.callRecords[index].trackingId,
+                  audioStart:audioStart,
+                  videoStart:videoStart,
+                  audioRxJitter:audioRxJitter,
+                  audioTxJitter:audioTxJitter,
+                  videoRxJitter:videoRxJitter,
+                  videoTxJitter:videoTxJitter,
+                  audioRxLossRatio:audioRxLossRatio,
+                  audioTxLossRatio:audioTxLossRatio,
+                  videoRxLossRatio:videoRxLossRatio,
+                  videoTxLossRatio:videoTxLossRatio,
+                  errorCode:errorCode,
+                  component:component,
+                  errMessage:errMessage
                 };
                 $scope.logInfo.push(info);
               }
