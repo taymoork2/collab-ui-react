@@ -163,7 +163,7 @@ describe('Support flow', function() {
         });
         element(by.id('callInfo-icon')).click();
         browser.sleep(1000);
-        expect(element(by.id('closeCallInfo')).isDisplayed());
+        expect(element(by.id('closeCallInfo')).isDisplayed()).toBe(true);
       });
     });
 
