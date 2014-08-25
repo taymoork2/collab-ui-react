@@ -204,28 +204,14 @@ angular.module('Squared')
       };
 
       var getLogInfo = function(locusId, startTime) {
+        $scope.getPending = true;
         ReportsService.getLogInfo(locusId, startTime, function(data, status) {
           if (data.success) {
             if (data.callRecords.length > 0) {
               for (var index in data.callRecords) {
-                var audioStart, videoStart, audioRxJitter, audioTxJitter, videoRxJitter, videoTxJitter;
-                var audioRxLossRatio, audioTxLossRatio, videoRxLossRatio, videoTxLossRatio;
-                var mediaStats = data.callRecords[index].mediaStats;
                 var errorInfo = data.callRecords[index].errorInfo;
                 var component, errMessage;
                 var errorCode = 0;
-                if (mediaStats) {
-                  audioStart = mediaStats.audioStart;
-                  videoStart = mediaStats.videoStart;
-                  audioRxJitter = mediaStats.audioRxJitter;
-                  audioTxJitter = mediaStats.audioTxJitter;
-                  videoRxJitter = mediaStats.videoRxJitter;
-                  videoTxJitter = mediaStats.videoTxJitter;
-                  audioRxLossRatio = mediaStats.audioRxLossRatio;
-                  audioTxLossRatio = mediaStats.audioTxLossRatio;
-                  videoRxLossRatio = mediaStats.videoRxLossRatio;
-                  videoTxLossRatio = mediaStats.videoTxLossRatio;
-                }
                 if (errorInfo) {
                   if (errorInfo.component) {
                     component = errorInfo.component;
@@ -238,6 +224,7 @@ angular.module('Squared')
                 }
                 var info = {
                   userId:data.callRecords[index].userId,
+                  emailAddress:data.callRecords[index].emailAddress,
                   orgId:data.callRecords[index].orgId,
                   locusId:data.callRecords[index].locusId,
                   locusCallStartTime:data.callRecords[index].locusCallStartTime,
@@ -248,25 +235,31 @@ angular.module('Squared')
                   networkName:data.callRecords[index].networkName,
                   networkType:data.callRecords[index].networkType,
                   trackingId:data.callRecords[index].trackingId,
-                  audioStart:audioStart,
-                  videoStart:videoStart,
-                  audioRxJitter:audioRxJitter,
-                  audioTxJitter:audioTxJitter,
-                  videoRxJitter:videoRxJitter,
-                  videoTxJitter:videoTxJitter,
-                  audioRxLossRatio:audioRxLossRatio,
-                  audioTxLossRatio:audioTxLossRatio,
-                  videoRxLossRatio:videoRxLossRatio,
-                  videoTxLossRatio:videoTxLossRatio,
+                  audioStart:data.callRecords[index].mediaStats.audioStart,
+                  videoStart:data.callRecords[index].mediaStats.videoStart,
+                  audioRxJitter:data.callRecords[index].mediaStats.audioRxJitter,
+                  audioTxJitter:data.callRecords[index].mediaStats.audioTxJitter,
+                  videoRxJitter:data.callRecords[index].mediaStats.videoRxJitter,
+                  videoTxJitter:data.callRecords[index].mediaStats.videoTxJitter,
+                  audioRxLossRatio:data.callRecords[index].mediaStats.audioRxLossRatio,
+                  audioTxLossRatio:data.callRecords[index].mediaStats.audioTxLossRatio,
+                  videoRxLossRatio:data.callRecords[index].mediaStats.videoRxLossRatio,
+                  videoTxLossRatio:data.callRecords[index].mediaStats.videoTxLossRatio,
                   errorCode:errorCode,
                   component:component,
                   errMessage:errMessage
                 };
                 $scope.logInfo.push(info);
               }
+            } else {
+              $scope.getPending = false;
+              angular.element('#logInfoPendingBtn').button('reset');
+              Log.debug('No records found for : ' + locusId + ' startTime :' + startTime);
             }
           } else {
             Log.debug('Failed to retrieve log information. Status: ' + status);
+            $scope.getPending = false;
+            angular.element('#logInfoPendingBtn').button('reset');
           }
         });
       };
@@ -287,6 +280,7 @@ angular.module('Squared')
         $scope.logInfo = [];
         $scope.emailAddress = emailAddress;
         if (locusId === '-NA-' || startTime === '-NA-') {
+          $scope.getPending = false;
           return;
         }
         getLogInfo(locusId, startTime);
