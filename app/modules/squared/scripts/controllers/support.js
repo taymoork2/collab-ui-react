@@ -210,8 +210,23 @@ angular.module('Squared')
             if (data.callRecords.length > 0) {
               for (var index in data.callRecords) {
                 var errorInfo = data.callRecords[index].errorInfo;
+                var mediaStats = data.callRecords[index].mediaStats;
+                var audioStart, videoStart, audioRxJitter, audioTxJitter, videoRxJitter, videoTxJitter;
+                var audioRxLossRatio, audioTxLossRatio, videoRxLossRatio, videoTxLossRatio;
                 var component, errMessage;
                 var errorCode = 0;
+                if (mediaStats) {
+                  audioStart = mediaStats.audioStart;
+                  videoStart = mediaStats.videoStart;
+                  audioRxJitter = mediaStats.audioRxJitter;
+                  audioTxJitter = mediaStats.audioTxJitter;
+                  videoRxJitter = mediaStats.videoRxJitter;
+                  videoTxJitter = mediaStats.videoTxJitter;
+                  audioRxLossRatio = mediaStats.audioRxLossRatio;
+                  audioTxLossRatio = mediaStats.audioTxLossRatio;
+                  videoRxLossRatio = mediaStats.videoRxLossRatio;
+                  videoTxLossRatio = mediaStats.videoTxLossRatio;
+                }
                 if (errorInfo) {
                   if (errorInfo.component) {
                     component = errorInfo.component;
@@ -235,16 +250,16 @@ angular.module('Squared')
                   networkName:data.callRecords[index].networkName,
                   networkType:data.callRecords[index].networkType,
                   trackingId:data.callRecords[index].trackingId,
-                  audioStart:data.callRecords[index].mediaStats.audioStart,
-                  videoStart:data.callRecords[index].mediaStats.videoStart,
-                  audioRxJitter:data.callRecords[index].mediaStats.audioRxJitter,
-                  audioTxJitter:data.callRecords[index].mediaStats.audioTxJitter,
-                  videoRxJitter:data.callRecords[index].mediaStats.videoRxJitter,
-                  videoTxJitter:data.callRecords[index].mediaStats.videoTxJitter,
-                  audioRxLossRatio:data.callRecords[index].mediaStats.audioRxLossRatio,
-                  audioTxLossRatio:data.callRecords[index].mediaStats.audioTxLossRatio,
-                  videoRxLossRatio:data.callRecords[index].mediaStats.videoRxLossRatio,
-                  videoTxLossRatio:data.callRecords[index].mediaStats.videoTxLossRatio,
+                  audioStart:audioStart,
+                  videoStart:videoStart,
+                  audioRxJitter:audioRxJitter,
+                  audioTxJitter:audioTxJitter,
+                  videoRxJitter:videoRxJitter,
+                  videoTxJitter:videoTxJitter,
+                  audioRxLossRatio:audioRxLossRatio,
+                  audioTxLossRatio:audioTxLossRatio,
+                  videoRxLossRatio:videoRxLossRatio,
+                  videoTxLossRatio:videoTxLossRatio,
                   errorCode:errorCode,
                   component:component,
                   errMessage:errMessage
