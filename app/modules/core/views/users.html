@@ -37,7 +37,7 @@
         </h3>
       </div>
       <div  ng-click="changeTab('users')">
-        <span style="float: right"><i id='closeAddUser' class="fa fa-minus add-user-close"></i></span>
+        <span style="float: right"><i id='closeAddUser' class="fa fa-times add-user-close"></i></span>
       </div>
     </div>
 
@@ -135,20 +135,13 @@
     </div>
     <div class="standard-card services-card">
       <span class="preview-card-title" translate="usersPreview.servicesPreview"></span>
-      <div telephony-info ng-show="false">
-      </div telephony-info>
-      <div conferencing-info ng-show="false">
-      </div conferencing-info>
-      <div ng-click="showConversationPanel()" id="opt_conv">
-        <div conversations-info>
-        </div conversations-info>
-      </div>
-    </div>
-    <div usage-info ng-show="false">
-    </div usage-info>    
-    <div endpoints-info ng-show="false">
+      <div id="huronPanel" telephony-info ng-show="isHuronEnabled()"></div telephony-info>
+      <div id="conferencePanel" conferencing-info ng-show="false"></div conferencing-info>
+      <div id="squaredPanel" conversations-info ng-click="showConversationPanel()" ng-show="isSquaredEnabled()"></div conversations-info>
+    </div>   
+    <div id="endpointPanel" endpoints-info ng-show="false">
     </div endpoints-info>
-  <div ng-show="conversationsPanel" class="sub-details-panel">
+  <div id="entitlementPanel" ng-show="conversationsPanel" class="sub-details-panel">
     <div user-entitlements
       current-user="currentUser"
       entitlements="entitlements"/>
