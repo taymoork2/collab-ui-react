@@ -102,48 +102,52 @@
         <li class="pagination-current"><a>{{page}}</a></li>
         <li><a id="next-page" ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
       </ul>
-    </div>
-
-  <div ng-show="userPreview" ng-class="conversationsPanel ? 'details-panel-card-shifted' : 'details-panel-card'" id="details-panel">
-    <div class="name-card">
-        <div class="name-card-image center">
-          <img ng-if='getUserPhoto(currentUser)' src='{{getUserPhoto(currentUser)}}'></img>
-          <i ng-if='!getUserPhoto(currentUser)' class="fa fa-user fa-5x"></i>
-        </div>
-        <div class="name-card-info">
-          <a href="#/userprofile/{{currentUser.id}}">
-          <div id="name-preview" class="ellipsis-name">
-            <span class="name" ng-if="currentUser.name.givenName && currentUser.name.familyName">{{currentUser.name.givenName}} {{currentUser.name.familyName}}</span>
-            <span class="name" ng-if="!currentUser.name.givenName && !currentUser.name.familyName">{{currentUser.userName}}</span><br>
+    </div>    
+  <div class="outer-details-div" id="entire-slide">
+    <div ng-show="userPreview" class="details-panel-card"  id="details-panel">
+      <div class="name-card">
+          <div class="name-card-image center">
+            <img ng-if='getUserPhoto(currentUser)' src='{{getUserPhoto(currentUser)}}'></img>
+            <i ng-if='!getUserPhoto(currentUser)' class="fa fa-user fa-5x"></i>
           </div>
-          </a>
-          <span>{{currentUser.title}}</span><br>
-          <span>{{currentUser.addresses.streetAddress}}</span>
-        </div>      
-        <div class="name-card-cancel" ng-click="closePreview()" id="exitPreviewButton">
-          <i class="fa fa-times"></i>
+          <div class="name-card-info">
+            <a href="#/userprofile/{{currentUser.id}}">
+            <div id="name-preview" class="ellipsis-name">
+              <span class="name" ng-if="currentUser.name.givenName && currentUser.name.familyName">{{currentUser.name.givenName}} {{currentUser.name.familyName}}</span>
+              <span class="name" ng-if="!currentUser.name.givenName && !currentUser.name.familyName">{{currentUser.userName}}</span><br>
+            </div>
+            </a>
+            <span>{{currentUser.title}}</span><br>
+            <span>{{currentUser.addresses.streetAddress}}</span>
+          </div>      
+          <div class="name-card-cancel" ng-click="closePreview()" id="exitPreviewButton">
+            <i class="fa fa-times"></i>
+          </div>
+      </div>
+      <div class="standard-card group-card preview-card-title" ng-show="false">
+        <div class="group-title">
+          <span translate="usersPreview.groupPreview"></span>
         </div>
-    </div>
+        <div class="group-type">
+          Default Group Name <i class="fa fa-caret-down"></i>
+        </div>
+      </div>
 
-    <div class="standard-card group-card preview-card-title" ng-show="false">
-      <div class="group-title">
-        <span translate="usersPreview.groupPreview"></span>
-      </div>
-      <div class="group-type">
-        Default Group Name <i class="fa fa-caret-down"></i>
+      <div class="standard-card services-card">
+        <span class="preview-card-title" translate="usersPreview.servicesPreview"></span>
+        <div id="huronPanel" telephony-info ng-show="isHuronEnabled()"></div telephony-info>
+        <div id="conferencePanel" conferencing-info ng-show="false"></div conferencing-info>
+        <div id="squaredPanel" conversations-info ng-click="showConversationPanel()" ng-show="isSquaredEnabled()"></div conversations-info>
+        <div id="endpointPanel" endpoints-info ng-show="false">
+        </div endpoints-info>
+      </div>   
+    </div>
+    
+    <div id="entitlementPanel" ng-show="conversationsPanel" class="sub-details-panel">
+      <div user-entitlements
+        current-user="currentUser"
+        entitlements="entitlements">
       </div>
     </div>
-    <div class="standard-card services-card">
-      <span class="preview-card-title" translate="usersPreview.servicesPreview"></span>
-      <div id="huronPanel" telephony-info ng-show="isHuronEnabled()"></div telephony-info>
-      <div id="conferencePanel" conferencing-info ng-show="false"></div conferencing-info>
-      <div id="squaredPanel" conversations-info ng-click="showConversationPanel()" ng-show="isSquaredEnabled()"></div conversations-info>
-    </div>   
-    <div id="endpointPanel" endpoints-info ng-show="false">
-    </div endpoints-info>
-  <div id="entitlementPanel" ng-show="conversationsPanel" class="sub-details-panel">
-    <div user-entitlements
-      current-user="currentUser"
-      entitlements="entitlements"/>
   </div>
 </div>
