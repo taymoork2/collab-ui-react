@@ -255,7 +255,7 @@ describe('App flow', function() {
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
         element(by.id('btnInvite')).click();
-        browser.sleep(3000); //for the animation
+        browser.sleep(2000); //for the animation
         element(by.css('.alertify-log-success')).click();
         browser.sleep(500); //for the animation
         element.all(by.css('.panel-success-body p')).then(function(rows) {
@@ -272,7 +272,7 @@ describe('App flow', function() {
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
         element(by.id('btnInvite')).click();
-        browser.sleep(1000); //for the animation
+        browser.sleep(2000); //for the animation
         element(by.css('.alertify-log-error')).click();
         browser.sleep(500); //for the animation
         element.all(by.css('.panel-danger-body p')).then(function(rows) {
@@ -289,7 +289,7 @@ describe('App flow', function() {
       element(by.id('usersfield')).clear();
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
         element(by.id('btnInvite')).click();
-        browser.sleep(1000); //for the animation
+        browser.sleep(2000); //for the animation
         element(by.css('.alertify-log-error')).click();
         browser.sleep(500); //for the animation
         element.all(by.css('.panel-danger-body p')).then(function(rows) {
@@ -311,13 +311,13 @@ describe('App flow', function() {
           //entitle for call initiation
           element(by.id('btn_squaredCallInitiation')).click().then(function() {
             element(by.id('btnEntitle')).click();
-            browser.sleep(500);
+            browser.sleep(800);
             element(by.css('.alertify-log-success')).click();
             element.all(by.css('.panel-success-body p')).then(function(rows) {
               expect(rows.length).toBe(1);
               expect(rows[0].getText()).toContain(testuser.username);
               expect(rows[0].getText()).toContain('entitled successfully');
-              browser.sleep(500);
+              browser.sleep(800);
               element(by.css('.fa-times')).click();
             });
           });
@@ -331,14 +331,14 @@ describe('App flow', function() {
         element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
           element(by.id('btn_squaredCallInitiation')).click().then(function() {
             element(by.id('btnEntitle')).click();
-            browser.sleep(500); //for the animation
+            browser.sleep(800); //for the animation
             element(by.css('.alertify-log-error')).click();
-            browser.sleep(500); //for the animation
+            browser.sleep(800); //for the animation
             element.all(by.css('.panel-danger-body p')).then(function(rows) {
               expect(rows.length).toBe(1);
               expect(rows[0].getText()).toContain(testuser.username);
               expect(rows[0].getText()).toContain('entitlement previously updated');
-              browser.sleep(500);
+              browser.sleep(800);
               element(by.css('.fa-times')).click();
             });
           });
@@ -358,9 +358,9 @@ describe('App flow', function() {
                 expect(uname).toContain(testuser.username);
               });
               element(by.binding('user.userName')).click();
-              browser.sleep(500);
+              browser.sleep(2000);
               element(by.id('squaredPanel')).click();
-              browser.sleep(500);
+              browser.sleep(2000);
               element(by.id('chk_squaredCallInitiation')).click();
               browser.sleep(500);
               element(by.id('btnSave')).click();
@@ -377,7 +377,7 @@ describe('App flow', function() {
               element(by.id('search-input')).clear();
               browser.sleep(500);
               element(by.id('exitPreviewButton')).click();
-              browser.sleep(500);
+              browser.sleep(800);
             }
           });
         });
