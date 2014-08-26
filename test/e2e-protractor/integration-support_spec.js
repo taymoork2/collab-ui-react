@@ -166,6 +166,7 @@ describe('Support flow', function() {
         expect(element(by.id('closeCallInfo')).isDisplayed()).toBe(true);
         element(by.id('closeCallInfo')).click();
         expect(element(by.id('closeCallInfo')).isDisplayed()).toBe(false);
+        expect(element(by.id('logs-panel')).isDisplayed()).toBe(true);
       });
     });
 

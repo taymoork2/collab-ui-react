@@ -275,6 +275,8 @@ angular.module('Squared')
             Log.debug('Failed to retrieve log information. Status: ' + status);
             $scope.getPending = false;
             angular.element('#logInfoPendingBtn').button('reset');
+            Notification.notify([$translate.instant('supportPage.errCallInfoQuery', 
+                { status: status })], 'error');
           }
         });
       };

@@ -156,7 +156,8 @@
     "errorComponent":"error.component",
     "errorMessage":"error.message",
     "rx":"Rx",
-    "tx":"Tx"
+    "tx":"Tx",
+    "errCallInfoQuery":"Failed to retrieve call info. Status: {{status}}"
   },
   "common" : {
     "cancel" : "Cancel",
