@@ -236,7 +236,6 @@ label {
   position: absolute;
   top: 18px;
   right: 306px;
-  z-index: 1;
   opacity: 0.6;
 }
 
@@ -844,28 +843,6 @@ input:disabled {
   margin-left: -56px;
 }
 
-.details-panel-card {
-  background-color: whitesmoke;
-  position:absolute;
-  top: 0px;
-  left: 750px;
-  width: 500px;
-  height: 100%;
-  padding: 5px;
-}
-
-.details-panel-card-shifted
-{
-  background-color: whitesmoke;
-  position:absolute;
-  top: 0px;
-  left: 0px;
-  width: 500px;
-  height: 100%;
-  padding: 5px;
-
-}
-
 .details-body {
   margin-left: 25px;
   font-size: 14px !important;
@@ -970,17 +947,37 @@ input:disabled {
 
 .sub-details-panel {
   background-color: white;
-  position:absolute;
-  top: 0px;
-  left: 500px;
-  width: 500px;
+  float:right;
+  width:500px;
   height: 100%;
+  padding: 5px;
+  position:relative;
 }
+
+.details-panel-card {
+  background-color: whitesmoke;
+  float:left;
+  width:500px;
+  height: 100%;
+  padding: 5px;
+  position:relative;
+}
+
+.outer-details-div{
+  top: 0px;
+  left: 750px;
+  margin-left: 300px;
+  display:inline-block;
+  width: fit-content;
+  height: 100%;
+  position:absolute;
+}
+
 
 .ent-detail-panel {
   background-color: white;
   position:absolute;
-  width: 300px;
+  width: 500px;
 }
 
 .call-info-panel {

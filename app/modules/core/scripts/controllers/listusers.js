@@ -27,6 +27,13 @@ angular.module('Core')
 
       $scope.showConversationPanel = function(){
         $scope.conversationsPanel = true;
+
+        $('#entire-slide').animate({
+              'left': '0px'
+            }, 1000, function(){
+            });
+
+
       };
 
       var usersperpage = Config.usersperpage;
@@ -159,10 +166,21 @@ angular.module('Core')
       $scope.closePreview = function(){
         $scope.userPreview = false;
         $scope.conversationsPanel = false;
+
+        $('#entire-slide').css({'left': '750px', 'margin-left': '300px'});
+        angular.element('#' + $scope.currentUser.id).removeClass('selected');
+        angular.element('#' + $scope.currentUser.id).addClass(currentClass);
+
+        $scope.currentUser = null;
       };
 
       $scope.showUserDetails = function(user) {
         $scope.userPreview = true;
+
+        $('#entire-slide').animate({
+              'margin-left': '0px'
+            }, 1000, function(){
+            });
 
         //remove selected class on previous user
         if ($scope.currentUser) {
