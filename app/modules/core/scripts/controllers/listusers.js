@@ -63,7 +63,7 @@ angular.module('Core')
 
       $scope.getUserPhoto = function(user) {
         var photo;
-        if (user.photos) {
+        if (user && user.photos) {
           for (var i in user.photos) {
             if (user.photos[i].type === 'thumbnail') {
               photo = user.photos[i].value;
