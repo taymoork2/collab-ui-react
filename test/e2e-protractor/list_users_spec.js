@@ -242,9 +242,9 @@ describe('List users flow', function() {
         element(by.id('squaredPanel')).click();
         browser.sleep(500);
         element.all(by.css('.details-body .icheckbox_square-blue')).then(function(items) {
-          expect(items.length).toBe(7);
+          expect(items.length).toBe(8);
           expect(items[0].getAttribute('class')).toContain('checked');
-          expect(items[6].getAttribute('class')).toContain('checked');
+          expect(items[7].getAttribute('class')).toContain('checked');
         });
         browser.sleep(500);
         element(by.id('chk_squaredFusionUC')).click();

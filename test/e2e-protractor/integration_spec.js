@@ -290,11 +290,11 @@ describe('App flow', function() {
       element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
         element(by.id('btnInvite')).click();
         browser.sleep(2000); //for the animation
-        element(by.css('.alertify-log-error')).click();
+        element(by.css('.alertify-log-success')).click();
         browser.sleep(500); //for the animation
-        element.all(by.css('.panel-danger-body p')).then(function(rows) {
+        element.all(by.css('.panel-success-body p')).then(function(rows) {
           expect(rows.length).toBe(1);
-          expect(rows[0].getText()).toContain('cannot be invited to service');
+          expect(rows[0].getText()).toContain('doNotDeleteTestUser@wx2.example.com email sent successfully');
           browser.sleep(500);
           element(by.id('notifications-cancel')).click();
         });
@@ -544,7 +544,7 @@ describe('App flow', function() {
       });
 
     it('should load new values and update time when clicking refresh', function() {
-      browser.driver.findElement(by.id('refreshButton')).click().then(function() {
+      browser.driver.findElement(by.id('time-click-div')).click().then(function() {
           expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
           expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
           expect(element(by.id('au-content')).isDisplayed()).toEqual(true);
