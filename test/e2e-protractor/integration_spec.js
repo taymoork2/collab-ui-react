@@ -285,22 +285,22 @@ describe('App flow', function() {
     });
 
     /* UNCOMMENT WHEN BACKEND IS PUSHED TO PROD */
-    // it('should invite users successfully from org which has autoentitlement flag disabled', function() {
-    //   var inviteEmail = testuser.usernameWithNoEntitlements;
-    //   element(by.id('usersfield')).clear();
-    //   element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-    //     element(by.id('btnInvite')).click();
-    //     browser.sleep(2000); //for the animation
-    //     element(by.css('.alertify-log-success')).click();
-    //     browser.sleep(500); //for the animation
-    //     element.all(by.css('.panel-success-body p')).then(function(rows) {
-    //       expect(rows.length).toBe(1);
-    //       expect(rows[0].getText()).toContain('sent successfully');
-    //       browser.sleep(500);
-    //       element(by.id('notifications-cancel')).click();
-    //     });
-    //   });
-    // });
+    it('should invite users successfully from org which has autoentitlement flag disabled', function() {
+      var inviteEmail = testuser.usernameWithNoEntitlements;
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+        element(by.id('btnInvite')).click();
+        browser.sleep(2000); //for the animation
+        element(by.css('.alertify-log-success')).click();
+        browser.sleep(500); //for the animation
+        element.all(by.css('.panel-success-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain('sent successfully');
+          browser.sleep(500);
+          element(by.id('notifications-cancel')).click();
+        });
+      });
+    });
   });
 
   //Entitle User Flows: state is in the users page
