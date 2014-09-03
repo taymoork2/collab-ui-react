@@ -615,7 +615,7 @@ input:disabled {
   position:absolute;
   left:790px;
   margin-bottom: 0px;
-  margin-top: 15px;
+  margin-top: -17px;
 }
 
 .overview-bottom {
@@ -973,7 +973,6 @@ input:disabled {
   position:absolute;
 }
 
-
 .ent-detail-panel {
   background-color: white;
   position:absolute;
@@ -983,4 +982,13 @@ input:disabled {
 .call-info-panel {
   position: relative;
   top: 21px;
+}
+
+.welcome-message{
+  padding: 15px;
+  margin-left: 150px !important;
+}
+
+.narrow-button{
+  height: 30px;
 }

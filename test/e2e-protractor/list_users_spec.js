@@ -64,22 +64,21 @@ describe('List users flow', function() {
 
       expect(browser.getCurrentUrl()).toContain('/home');
     });
-
   }); //State is logged-in
-
-  it('clicking on users tab should change the view', function() {
-    browser.driver.findElement(by.css('li[heading="Users"]')).click();
-    browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('tabs'));
-    }).then(function() {
-      expect(browser.getCurrentUrl()).toContain('/users');
-      //check to make sure add users panel is not visible
-      expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(false);
-    });
-  });
 
   // Asserting listing users.
   describe('Listing users on page load', function() {
+
+    it('clicking on users tab should change the view', function() {
+      browser.driver.findElement(by.css('li[heading="Users"]')).click();
+      browser.driver.wait(function() {
+        return browser.driver.isElementPresent(by.id('tabs'));
+      }).then(function() {
+        expect(browser.getCurrentUrl()).toContain('/users');
+        //check to make sure add users panel is not visible
+        expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(false);
+      });
+    });
 
     it('should show first page of users', function() {
       expect(element(by.css('.pagination-current a')).getText()).toBe('1');
@@ -227,6 +226,7 @@ describe('List users flow', function() {
     });
   });
 
+  /* UNCOMMENT WHEN BACKEND IS PUSHED TO PROD */
   //Update entitlements
   describe('Updating entitlements', function() {
     it('should display initial entitlements from newly added user', function() {
@@ -242,15 +242,16 @@ describe('List users flow', function() {
         element(by.id('squaredPanel')).click();
         browser.sleep(500);
         element.all(by.css('.details-body .icheckbox_square-blue')).then(function(items) {
-          expect(items.length).toBe(7);
+          expect(items.length).toBe(8);
           expect(items[0].getAttribute('class')).toContain('checked');
-          expect(items[6].getAttribute('class')).toContain('checked');
+          expect(items[7].getAttribute('class')).toContain('checked');
         });
         browser.sleep(500);
         element(by.id('chk_squaredFusionUC')).click();
         browser.sleep(500);
         element(by.id('btnSave')).click();
         browser.sleep(2000);
+        browser.debugger();
         element(by.css('.alertify-log-success')).click();
         browser.sleep(500);
         element.all(by.css('.panel-success-body p')).then(function(rows) {

@@ -6,12 +6,12 @@
   </div>
   <div class="user-option-buttons" ng-show="Utils.isAdminPage() && userTabActive">
     <div id="userOptions" style="position: absolute;">
-      <button id="addUsers" class="btn btn-success btn-xs" ng-click="changeTab('invite')">
+      <button id="addUsers" class="btn btn-success narrow-button" ng-click="changeTab('invite')">
         <span translate="usersPage.add"></span>
       </button>
     </div>
     <div class="user-options-bar">
-      <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="userMoreOptions" data-toggle="dropdown">
+      <button class="btn btn-default narrow-button dropdown-toggle" type="button" id="userMoreOptions" data-toggle="dropdown">
         {{'usersPage.moreOptions' | translate}}
         <span class="caret"></span>
       </button>
