@@ -27,7 +27,7 @@ angular.module('Squared')
         var path = '/login';
         for (var idx in $rootScope.tabs) {
           var tab = $rootScope.tabs[idx];
-          if (tab.path === curPath) {
+          if (Utils.startsWith(curPath, tab.path)) {
             tab.active = 'true';
             path = curPath;
             break;

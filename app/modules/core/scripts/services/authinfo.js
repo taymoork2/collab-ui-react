@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$location',
-    function Authinfo($rootScope, $location) {
+  .service('Authinfo', ['$rootScope', '$location', 'Utils',
+    function Authinfo($rootScope, $location, Utils) {
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
         'username': null,
@@ -70,7 +70,7 @@ angular.module('Core')
           var flag = false;
           for (var idx in authData.tabs) {
             var tab = authData.tabs[idx];
-            if (tab.path === curPath) {
+            if (Utils.startsWith(curPath, tab.path)) {
               flag = true;
               break;
             }

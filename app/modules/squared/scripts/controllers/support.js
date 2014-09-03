@@ -2,8 +2,8 @@
 /* global $, Bloodhound, moment */
 
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', '$translate',
-    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Auth, Authinfo, UserListService, LogService, ReportsService, $translate) {
+  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', '$translate', 'PageParam',
+    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Auth, Authinfo, UserListService, LogService, ReportsService, $translate, PageParam) {
 
       //Initialize
       Notification.init($scope);
@@ -25,6 +25,13 @@ angular.module('Squared')
       $scope.logsSortBy = 'date';
       $scope.reverseLogs = true;
       
+
+      $scope.input = {search : PageParam.getParam('search')};
+      if ($scope.input.search) {
+        PageParam.clear();
+      }
+
+      Log.debug('param search string: ' + $scope.input.search);
 
       $scope.toggleSort = function(type, icon) {
         $scope.reverseLogs = !$scope.reverseLogs;
@@ -275,7 +282,7 @@ angular.module('Squared')
             Log.debug('Failed to retrieve log information. Status: ' + status);
             $scope.getPending = false;
             angular.element('#logInfoPendingBtn').button('reset');
-            Notification.notify([$translate.instant('supportPage.errCallInfoQuery', 
+            Notification.notify([$translate.instant('supportPage.errCallInfoQuery',
                 { status: status })], 'error');
           }
         });
@@ -292,6 +299,7 @@ angular.module('Squared')
         });
       };
 
+
       $scope.showCallInfo = function(emailAddress, locusId, startTime) {
         $scope.callInfoActive = true;
         $scope.logInfo = [];
@@ -306,5 +314,14 @@ angular.module('Squared')
       $scope.closeCallInfo = function() {
         $scope.callInfoActive = false;
       };
+
+      if ($scope.input.search) {
+        $('#logsearchfield').val($scope.input.search);
+
+        setTimeout(function() {
+          $scope.getLogs();
+        }, 0);  // setTimeout to allow label translation to resolve
+      }
+
     }
   ]);
