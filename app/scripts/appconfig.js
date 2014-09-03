@@ -24,17 +24,17 @@ angular
     $translateProvider.useStaticFilesLoader({
         prefix: 'l10n/',
         suffix: '.json'
-    });
+      });
 
      //Tell the module what language to use by default
     $translateProvider.preferredLanguage('en_US');
   
-}]);
+  }]);
 
 angular
   .module('Squared')
-  .config(['$routeProvider', '$translateProvider',
-    function($routeProvider, $translateProvider) {
+  .config(['$routeProvider',
+    function($routeProvider) {
     $routeProvider
       .when('/home', {
         templateUrl: 'modules/squared/views/home.html',
@@ -84,4 +84,4 @@ angular
         controller: 'InvitelauncherCtrl'
       });
   
-}]);
+  }]);
