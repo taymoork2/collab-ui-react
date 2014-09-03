@@ -107,6 +107,14 @@ angular.module('Core')
           });
         },
 
+        startsWith: function(str, prefix) {
+          return str.lastIndexOf(prefix, 0) === 0;
+        },
+
+        endsWith: function(str, suffix) {
+          return str.indexOf(suffix, str.length - suffix.length) !== -1;
+        },
+
         isAdminPage: function() {
           var nonAdminRoutes = ['activate', 'downloads', 'invite'];
           for (var i = 0; i < nonAdminRoutes.length; i++) {

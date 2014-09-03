@@ -104,6 +104,7 @@ describe('Support flow', function() {
         expect(element(by.id('dateHeading')).getText()).toBe('Upload Time');
         element.all(by.repeater('log in userLogs')).then(function(rows) {
           expect(rows.length).toBeGreaterThan(0);
+          expect(element(by.binding('log.emailAddress')).getText()).toBe(testuser.searchValidEmail);
         });
       });
     });
@@ -119,6 +120,7 @@ describe('Support flow', function() {
         expect(element(by.id('dateHeading')).getText()).toBe('Upload Time');
         element.all(by.repeater('log in userLogs')).then(function(rows) {
           expect(rows.length).toBeGreaterThan(0);
+          expect(element(by.binding('log.emailAddress')).getText()).toBe(testuser.searchValidEmail);
         });
       });
     });
@@ -183,6 +185,87 @@ describe('Support flow', function() {
       });
     });
   });
+
+  // describe('Search via external link', function() {
+
+  //   describe('Search via link when user not logged in', function() {
+
+  //     it('should redirect to CI global login page.', function() {
+  //       browser.get('#/login?pp=support_search:' + testuser.searchValidLocusid);
+  //       browser.driver.wait(function() {
+  //         return browser.driver.isElementPresent(by.css('#IDToken1'));
+  //       }).then(function() {
+  //         expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
+  //       });
+  //     });
+
+  //     it('should log in with valid credentials and redirect to support page', function() {
+  //       browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
+  //       browser.driver.findElement(by.css('#IDButton2')).click();
+  //       browser.driver.wait(function() {
+  //         return browser.driver.isElementPresent(by.css('#IDToken2'));
+  //       }).then(function() {
+  //         browser.driver.findElement(by.css('#IDToken2')).sendKeys(testuser.password);
+  //         browser.driver.findElement(by.css('#Button1')).click();
+  //       });
+
+  //       expect(browser.getCurrentUrl()).toContain('/support');
+  //     });
+
+  //     it('should populate search field from query param and search immediately', function() {
+  //       browser.sleep(60000);
+  //       element(by.id('logsearchfield')).getText().then(function(input) {
+  //           expect(input).toBe(testuser.searchValidLocusid);
+  //         });
+  //       browser.sleep(3000);
+  //       element.all(by.repeater('log in userLogs')).then(function(rows) {
+  //         expect(rows.length).toBeGreaterThan(0);
+  //         expect(element(by.binding('log.locusId')).getText()).toBe(testuser.searchValidLocusid);
+  //         expect(element(by.binding('log.callStart')).getText()).not.toBe('-NA-');
+  //       });
+  //     });
+
+  //   });
+
+  //   describe('Search via external while user logged in', function() {
+
+  //     it('switch to another tab first', function() {
+  //       element(by.css('li[heading="Manage"]')).click();
+  //       browser.driver.wait(function() {
+  //         return browser.driver.isElementPresent(by.id('tabs'));
+  //       }).then(function() {
+  //         expect(browser.getCurrentUrl()).toContain('/orgs');
+  //       });
+  //     });
+
+  //     it('search uuid via external link should redirect to support page and perform search', function() {
+  //       browser.get('#/login?pp=support_search:' + testuser.searchValidUuid);
+  //       expect(browser.getCurrentUrl()).toContain('/support');
+  //       element(by.id('logsearchfield')).getText().then(function(input) {
+  //           expect(input).toBe(testuser.searchValidUuid);
+  //         });
+  //       browser.sleep(3000);
+  //       element.all(by.repeater('log in userLogs')).then(function(rows) {
+  //         expect(rows.length).toBeGreaterThan(0);
+  //         expect(element(by.binding('log.emailAddress')).getText()).toBe(testuser.searchValidEmail);
+  //       });
+  //     });
+
+  //   });
+
+  // });
+
+  // // Log Out
+  // describe('Log Out', function() {
+  //   it('should log out', function() {
+  //     element(by.id('setting-bar')).click();
+  //     browser.driver.wait(function() {
+  //       return browser.driver.isElementPresent(by.id('logout-btn'));
+  //     }).then(function() {
+  //       element(by.id('logout-btn')).click();
+  //     });
+  //   });
+  // });
 
   describe('Squared Support Role', function() {
   // Logging in. Write your tests after the login flow is complete.

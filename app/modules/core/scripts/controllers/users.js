@@ -2,7 +2,7 @@
 
 /* global moment */
 
-angular.module('wx2AdminWebClientApp')
+angular.module('Core')
   .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config',
     function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config) {
 
@@ -165,9 +165,13 @@ angular.module('wx2AdminWebClientApp')
                 count_e++;
               }
             }
-            //Displaying notifications
-            Notification.notify(successes, 'success');
-            Notification.notify(errors, 'error');
+             //Displaying notifications
+            if (successes.length + errors.length === usersList.length)
+            {
+              angular.element('#btnAdd').button('reset');
+              Notification.notify(successes, 'success');
+              Notification.notify(errors, 'error');
+            }
 
           } else {
             Log.warn('Could not add the user', data);
@@ -180,18 +184,25 @@ angular.module('wx2AdminWebClientApp')
               Notification.notify(error, 'error');
             }
             isComplete = false;
+            angular.element('#btnAdd').button('reset');
           }
 
           if (isComplete) {
             resetUsersfield();
           }
-          angular.element('#btnAdd').button('reset');
 
         };
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnAdd').button('loading');
-          Userservice.addUsers(usersList, getEntitlements('add'), callback);
+
+          var i,temparray,chunk = Config.batchSize;
+          for (i=0; i<usersList.length; i+=chunk) {
+            temparray = usersList.slice(i,i+chunk);
+            //update entitlements
+            Userservice.addUsers(usersList, getEntitlements('add'), callback);
+          }
+          
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];
@@ -254,9 +265,14 @@ angular.module('wx2AdminWebClientApp')
                 count_e++;
               }
             }
+
             //Displaying notifications
-            Notification.notify(successes, 'success');
-            Notification.notify(errors, 'error');
+            if (successes.length + errors.length === usersList.length)
+            {
+              angular.element('#btnEntitle').button('reset');
+              Notification.notify(successes, 'success');
+              Notification.notify(errors, 'error');
+            }
 
           } else {
             Log.warn('Could not entitle the user', data);
@@ -269,18 +285,25 @@ angular.module('wx2AdminWebClientApp')
               Notification.notify(error, 'error');
             }
             isComplete = false;
+            angular.element('#btnEntitle').button('reset');
           }
 
           if (isComplete) {
             resetUsersfield();
           }
-          angular.element('#btnEntitle').button('reset');
 
         };
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnEntitle').button('loading');
-          Userservice.updateUsers(usersList, getEntitlements('entitle'), callback);
+
+          var i,temparray,chunk = Config.batchSize;
+          for (i=0; i<usersList.length; i+=chunk) {
+            temparray = usersList.slice(i,i+chunk);
+            //update entitlements
+            Userservice.updateUsers(temparray, getEntitlements('entitle'), callback);
+          }
+        
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];
@@ -344,13 +367,19 @@ angular.module('wx2AdminWebClientApp')
               }
             }
             //Displaying notifications
-            Notification.notify(successes, 'success');
-            Notification.notify(errors, 'error');
+            if (successes.length + errors.length === usersList.length)
+            {
+              angular.element('#btnInvite').button('reset');
+              Notification.notify(successes, 'success');
+              Notification.notify(errors, 'error');
+            }
+
           } else {
             Log.error('Could not process invitation.  Status: ' + status, data);
             var error = [$translate.instant('usersPage.errInvite', data)];
             Notification.notify(error, 'error');
             isComplete = false;
+            angular.element('#btnInvite').button('reset');
           }
 
           var msg = 'inviting ' + usersList.length + ' users...';
@@ -359,7 +388,6 @@ angular.module('wx2AdminWebClientApp')
           if (isComplete) {
             resetUsersfield();
           }
-          angular.element('#btnInvite').button('reset');
 
         };
 
@@ -368,7 +396,13 @@ angular.module('wx2AdminWebClientApp')
 
           startLog = moment();
 
-          Userservice.inviteUsers(usersList, callback);
+          var i,temparray,chunk = Config.batchSize;
+          for (i=0; i<usersList.length; i+=chunk) {
+            temparray = usersList.slice(i,i+chunk);
+            //update entitlements
+            Userservice.inviteUsers(usersList, callback);
+          }
+          
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];

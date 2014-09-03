@@ -14,6 +14,10 @@ angular.module('Core')
         return localStorage.getItem(key);
       },
 
+      remove: function(key) {
+        localStorage.removeItem(key);
+      },
+      
       clear: function() {
         localStorage.clear();
       }
