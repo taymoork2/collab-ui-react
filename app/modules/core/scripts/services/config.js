@@ -85,6 +85,7 @@ angular.module('Core')
 
         huronEntitlement: 'huron',
         squaredEntitlement: 'webExSquared',
+        batchSize: 20,
 
         isDev: function() {
           return document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('localhost') !== -1;

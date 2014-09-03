@@ -166,7 +166,8 @@ describe('App flow', function() {
         for (var i = 0; i < validinputs.length; i++) {
           element(by.id('usersfield')).clear();
           element(by.id('usersfield')).sendKeys(validinputs[i]);
-          element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
+          element(by.id('btnAdd')).click();
+          browser.sleep(500);
           expect(element(by.css('.invalid')).isPresent()).toBe(false);
           expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe(null);
           expect(element(by.id('btnEntitle')).getAttribute('disabled')).toBe(null);
@@ -180,7 +181,8 @@ describe('App flow', function() {
         for (var i = 0; i < invalidinputs.length; i++) {
           element(by.id('usersfield')).clear();
           element(by.id('usersfield')).sendKeys(invalidinputs[i]);
-          element(by.id('usersfield')).sendKeys(protractor.Key.ENTER);
+          element(by.id('btnAdd')).click();
+          browser.sleep(500);
           expect(element(by.css('.invalid')).isPresent()).toBe(true);
           expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe('true');
           expect(element(by.id('btnEntitle')).getAttribute('disabled')).toBe('true');
