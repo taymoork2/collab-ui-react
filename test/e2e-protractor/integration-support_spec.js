@@ -8,7 +8,7 @@
 /* global element */
 
 var testuser = {
-  username: 'pbr-org-admin-test@wx2.example.com',
+  username: 'pbr-org-admin@squared2webex.com',
   password: 'C1sc0123!',
   orgname: 'SquaredAdminTool',
   searchValidEmail: 'pbr-org-admin@squared2webex.com',
@@ -18,7 +18,7 @@ var testuser = {
 };
 
 var supportuser = {
-  username: 'atlasmapservice+support1@gmail.com',
+  username: 'sqtest-admin-support@squared.example.com',
   password: 'C1sc0123!',
 };
 
@@ -43,9 +43,13 @@ describe('Support flow', function() {
       }).then(function() {
         browser.driver.findElement(by.css('#IDToken2')).sendKeys(testuser.password);
         browser.driver.findElement(by.css('#Button1')).click();
+        browser.driver.wait(function() {
+          return browser.driver.isElementPresent(by.id('tabs'));
+        }).then(function() {
+          expect(browser.getCurrentUrl()).toContain('/home');
+        });
       });
 
-      expect(browser.getCurrentUrl()).toContain('/home');
     });
 
     it('should display correct tabs for user based on role', function() {
@@ -267,7 +271,7 @@ describe('Support flow', function() {
   //   });
   // });
 
-  describe('Squared Support Role', function() {
+  describe('Non-admin Squared Support Role', function() {
   // Logging in. Write your tests after the login flow is complete.
     describe('Login as squared support user', function() {
 
@@ -288,9 +292,12 @@ describe('Support flow', function() {
         }).then(function() {
           browser.driver.findElement(by.css('#IDToken2')).sendKeys(testuser.password);
           browser.driver.findElement(by.css('#Button1')).click();
+          browser.driver.wait(function() {
+            return browser.driver.isElementPresent(by.id('tabs'));
+          }).then(function() {
+            expect(browser.getCurrentUrl()).toContain('/home');
+          });
         });
-
-        expect(browser.getCurrentUrl()).toContain('/home');
       });
 
       it('should display correct tabs for user based on role', function() {
