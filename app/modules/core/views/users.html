@@ -86,7 +86,7 @@
         </tr>
         <tr ng-show="queryuserslist" ng-repeat="user in queryuserslist" ng-click="showUserDetails(user)" id="{{user.id}}" ng-class-odd="'odd'" ng-class-even="'even'">
           <td class="center">
-            <img ng-if="user.name" src='{{getUserPhoto(user)}}' class='user-img'></img>
+            <img ng-show='currentUserPhoto' src='{{getUserPhoto(user)}}' class='user-img'></img>
           </td>
           <td id="userNameCell"><span ng-if="user.name">{{user.name.givenName}}</span></td>
           <td><span ng-if="user.name">{{user.name.familyName}}</span></td>

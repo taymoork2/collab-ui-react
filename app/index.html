@@ -41,7 +41,7 @@
             <a class="navbar-brand" href="#" ng-bind="Localize.varTitle()"></a>
           </div>
 
-          <ul class="nav navbar-nav welcome-message" ng-controller="NavigationCtrl" ng-show="loggedIn && Utils.isAdminPage()" >
+          <ul class="nav navbar-nav navbar-right welcome-message" ng-controller="NavigationCtrl" ng-show="loggedIn && Utils.isAdminPage()" >
             <li ng-show="username">{{'index.welcome' | translate}}, {{username}}</li>
             <li ng-show="orgname">({{orgname}})</li>
           </ul>

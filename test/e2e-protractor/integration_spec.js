@@ -252,58 +252,58 @@ describe('App flow', function() {
   });
 
   /* NEED TO REWRITE FOR BACKEND */
-  // describe('Invite users', function() {
-  //   it('should invite users successfully', function() {
-  //     var inviteEmail = utils.randomTestEmail();
-  //     element(by.id('usersfield')).clear();
-  //     element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-  //       element(by.id('btnInvite')).click();
-  //       browser.sleep(2000); //for the animation
-  //       element(by.css('.alertify-log-success')).click();
-  //       browser.sleep(500); //for the animation
-  //       element.all(by.css('.panel-success-body p')).then(function(rows) {
-  //         expect(rows.length).toBe(1);
-  //         expect(rows[0].getText()).toContain('sent successfully');
-  //         browser.sleep(500);
-  //         element(by.id('notifications-cancel')).click();
-  //       });
-  //     });
-  //   });
+  describe('Invite users', function() {
+    it('should invite users successfully', function() {
+      var inviteEmail = utils.randomTestEmail();
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+        element(by.id('btnInvite')).click();
+        browser.sleep(2000); //for the animation
+        element(by.css('.alertify-log-success')).click();
+        browser.sleep(500); //for the animation
+        element.all(by.css('.panel-success-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain('sent successfully');
+          browser.sleep(500);
+          element(by.id('notifications-cancel')).click();
+        });
+      });
+    });
 
-  //   it('should not invite users successfully if they are already entitled', function() {
-  //     var inviteEmail = testuser.username;
-  //     element(by.id('usersfield')).clear();
-  //     element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-  //       element(by.id('btnInvite')).click();
-  //       browser.sleep(2000); //for the animation
-  //       element(by.css('.alertify-log-error')).click();
-  //       browser.sleep(500); //for the animation
-  //       element.all(by.css('.panel-danger-body p')).then(function(rows) {
-  //         expect(rows.length).toBe(1);
-  //         expect(rows[0].getText()).toContain('already entitled');
-  //         browser.sleep(500);
-  //         element(by.id('notifications-cancel')).click();
-  //       });
-  //     });
-  //   });
-  //
-  //   it('should invite users successfully from org which has autoentitlement flag disabled', function() {
-  //     var inviteEmail = testuser.usernameWithNoEntitlements;
-  //     element(by.id('usersfield')).clear();
-  //     element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-  //       element(by.id('btnInvite')).click();
-  //       browser.sleep(2000); //for the animation
-  //       element(by.css('.alertify-log-success')).click();
-  //       browser.sleep(500); //for the animation
-  //       element.all(by.css('.panel-success-body p')).then(function(rows) {
-  //         expect(rows.length).toBe(1);
-  //         expect(rows[0].getText()).toContain('sent successfully');
-  //         browser.sleep(500);
-  //         element(by.id('notifications-cancel')).click();
-  //       });
-  //     });
-  //   });
-  // });
+    it('should not invite users successfully if they are already entitled', function() {
+      var inviteEmail = testuser.username;
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+        element(by.id('btnInvite')).click();
+        browser.sleep(2000); //for the animation
+        element(by.css('.alertify-log-error')).click();
+        browser.sleep(500); //for the animation
+        element.all(by.css('.panel-danger-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain('already entitled');
+          browser.sleep(500);
+          element(by.id('notifications-cancel')).click();
+        });
+      });
+    });
+  
+    // it('should invite users successfully from org which has autoentitlement flag disabled', function() {
+    //   var inviteEmail = testuser.usernameWithNoEntitlements;
+    //   element(by.id('usersfield')).clear();
+    //   element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+    //     element(by.id('btnInvite')).click();
+    //     browser.sleep(2000); //for the animation
+    //     element(by.css('.alertify-log-success')).click();
+    //     browser.sleep(500); //for the animation
+    //     element.all(by.css('.panel-success-body p')).then(function(rows) {
+    //       expect(rows.length).toBe(1);
+    //       expect(rows[0].getText()).toContain('sent successfully');
+    //       browser.sleep(500);
+    //       element(by.id('notifications-cancel')).click();
+    //     });
+    //   });
+    // });
+  });
 
   //Entitle User Flows: state is in the users page
   describe('Entitle User Flows', function() {
@@ -415,7 +415,7 @@ describe('App flow', function() {
     it('should have a tab bar', function() {
       expect(element(by.id('tabs')).isDisplayed()).toBe(true);
       element.all(by.repeater('tab in tabs')).then(function(tabCount) {
-        expect(tabCount.length).toBe(10);
+        expect(tabCount.length).toBe(8);
       });
     });
 
