@@ -8,8 +8,8 @@
 // /* global element */
 
 // var testuser = {
-//   username: 'adminTestUser@wx2.example.com',
-//   ssousername: 'adminADSyncTestUser@wx2.example.com',
+//   username: 'sqtest-admin@squared.example.com',
+//   ssousername: 'sqtest-adminADSyncTestUser@squared.example.com',
 //   password: 'C1sc0123!',
 //   orgname: 'WebEx Self-Service Org'
 //   // -- shibboleth idp
