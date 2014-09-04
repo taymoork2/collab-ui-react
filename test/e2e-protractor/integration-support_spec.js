@@ -8,7 +8,7 @@
 /* global element */
 
 var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
+  username: 'pbr-org-admin-test@wx2.example.com',
   password: 'C1sc0123!',
   orgname: 'SquaredAdminTool',
   searchValidEmail: 'pbr-org-admin@squared2webex.com',

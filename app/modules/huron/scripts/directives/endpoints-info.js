@@ -6,15 +6,15 @@
 angular.module('Huron')
   .directive('endpointsInfo', function() {
     return {
-    restrict: 'A',
-    scope:{
-      userEmail: "=",
-    },
-    templateUrl: 'modules/huron/scripts/directives/views/endpoints-info.html',
-    link: function(scope, elem, attrs){
+      restrict: 'A',
+      scope:{
+        userEmail: '=',
+      },
+      templateUrl: 'modules/huron/scripts/directives/views/endpoints-info.html',
+      link: function(scope, elem, attrs){
 
-      scope.endPointsData = 'testing4';
+        scope.endPointsData = 'testing4';
 
-    }
+      }
     };
   });

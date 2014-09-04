@@ -6,17 +6,17 @@
 angular.module('Huron')
   .directive('telephonyInfo', function() {
     return {
-    restrict: 'A',
-    scope:{
-      mainPhone: "=",
-      sharedPhone: "="
-    },
-    templateUrl: 'modules/huron/scripts/directives/views/telephony-info.html',
-    link: function(scope, elem, attrs){
+      restrict: 'A',
+      scope:{
+        mainPhone: '=',
+        sharedPhone: '='
+      },
+      templateUrl: 'modules/huron/scripts/directives/views/telephony-info.html',
+      link: function(scope, elem, attrs){
 
-      scope.mainPhoneData = 'testing1';
-      scope.sharedPhoneData = 'testing2';
+        scope.mainPhoneData = 'testing1';
+        scope.sharedPhoneData = 'testing2';
 
-    }
+      }
     };
   });

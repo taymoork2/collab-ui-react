@@ -336,7 +336,7 @@ angular.module('Core')
 
               var userStatus = data.inviteResponse[i].status;
 
-              if (userStatus == 200) {
+              if (userStatus === 200) {
                 userResult.alertType = 'success';
               } else {
                 userResult.alertType = 'danger';
@@ -352,13 +352,13 @@ angular.module('Core')
             var count_s = 0;
             var count_e = 0;
             for (var idx in $scope.results.resultList) {
-              if ($scope.results.resultList[idx].status == 200) {
+              if ($scope.results.resultList[idx].status === 200) {
                 successes[count_s] = $translate.instant('usersPage.emailSent', $scope.results.resultList[idx]);
                 count_s++;
-              } else if ($scope.results.resultList[idx].status == 304) {
+              } else if ($scope.results.resultList[idx].status === 304) {
                 errors[count_e] = $translate.instant('usersPage.entitled', $scope.results.resultList[idx]);
                 count_e++;
-              } else if ($scope.results.resultList[idx].status == 403) {
+              } else if ($scope.results.resultList[idx].status === 403) {
                 errors[count_e] = $translate.instant('usersPage.forbidden', $scope.results.resultList[idx]);
                 count_e++;
               } else {
@@ -483,32 +483,6 @@ angular.module('Core')
 
       $scope.getTabTitle = function(title) {
         return $filter('translate')(title);
-      };
-
-      $scope.isSquaredEnabled = function()
-      {
-        return isEntitled(Config.squaredEntitlement);
-      };
-
-      $scope.isHuronEnabled = function()
-      {
-        return isEntitled(Config.huronEntitlement);
-      };
-
-      var isEntitled = function(ent) {
-        if ($rootScope.services)
-        {
-          for (var i=0;i<$rootScope.services.length;i++)
-          {
-            var svc = $rootScope.services[i].sqService;
-
-            if (svc === ent)
-            {
-              return true;
-            }
-          }
-        }
-        return false;
       };
 
       //set intitially when loading the page

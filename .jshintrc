@@ -1,4 +1,5 @@
 {
+  "-W069": false, //ignore property dot notation
   "node": true,
   "browser": true,
   "esnext": true,
@@ -14,7 +15,7 @@
   "quotmark": "single",
   "regexp": true,
   "undef": true,
-  "unused": true,
+  "unused": false, //ignore unused variables for predefined functions
   "strict": true,
   "trailing": true,
   "smarttabs": true,

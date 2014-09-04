@@ -2,7 +2,7 @@
 
 /* global protractor */
 
-var config = require('./testConfig.js');
+var config = require('./testconfig.js');
 var utils = require('./testUtils.js');
 
 exports.deleteUser = function(email) {
@@ -25,7 +25,7 @@ exports.deleteUser = function(email) {
       console.log('user deletion failed: ', email, data);
       defer.reject(data);
     });
-  
+
   });
   return defer.promise;
 };
