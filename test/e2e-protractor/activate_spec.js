@@ -147,8 +147,8 @@ describe('Self Registration Activation Page', function() {
 
     it('should display without admin controls on navigation bar', function() {
 
+      browser.sleep(10000);
       browser.get('#/activate?eqp=' + encryptedQueryParam);
-      browser.sleep(2000);
       expect(element(by.id('logout-btn')).isDisplayed()).toBe(false);
       expect(element(by.id('icon-search')).isDisplayed()).toBe(false);
       expect(element(by.id('search-input')).isDisplayed()).toBe(false);
