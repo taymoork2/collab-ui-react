@@ -3,7 +3,7 @@
 exports.config = {
   // Spec patterns are relative to the location of this config.
   specs: [
-    'test/e2e-protractor/*_spec.js'
+    'test/e2e-protractor/integration_spec.js'
   ],
 
   capabilities: {
