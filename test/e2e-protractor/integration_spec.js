@@ -415,7 +415,7 @@ describe('App flow', function() {
     it('should have a tab bar', function() {
       expect(element(by.id('tabs')).isDisplayed()).toBe(true);
       element.all(by.repeater('tab in tabs')).then(function(tabCount) {
-        expect(tabCount.length).toBe(8);
+        expect(tabCount.length).toBe(10);
       });
     });
 
