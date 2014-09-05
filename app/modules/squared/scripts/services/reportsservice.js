@@ -8,7 +8,7 @@ angular.module('Squared')
       var callMetricsUrl = Config.getAdminServiceUrl() + 'reports/stats/callUsage';
       var activeUsersUrl = Config.getAdminServiceUrl() + 'reports/counts/activeUsers';
       var timeChartUrl = Config.getAdminServiceUrl() + 'reports/timeCharts/';
-      var logInfoBaseUrl = Config.getAdminServiceUrl() + 'reports/tables/calls/'
+      var logInfoBaseUrl = Config.getAdminServiceUrl() + 'reports/tables/calls/';
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
 
       var urls = {
@@ -51,7 +51,7 @@ angular.module('Squared')
         return metricUrl;
       };
 
-      
+
 
       return {
 

@@ -6,7 +6,7 @@
 /* global browser */
 /* global expect */
 
-//var config = require('./testConfig.js');
+//var config = require('./testconfig.js');
 
 // encrypted param from invitation email link for "Test User <phtest77+int1@gmail.com>"
 //var encryptedQueryParam = 'bnlA6k3ZerWIccYYY2RndVEeMjFu914UOsnFVyYNQoMrkJ7Hye+VFJ20BW2ghuv/7auSaumsYWmMkAlT+HIMqMKyK7AmUY3QhKY8fFXx34AQbKMkqy1ogx8uJUp1QL0E';

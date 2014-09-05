@@ -24,7 +24,7 @@ angular.module('Squared')
 
       $scope.logsSortBy = 'date';
       $scope.reverseLogs = true;
-      
+
 
       $scope.input = {search : PageParam.getParam('search')};
       if ($scope.input.search) {
@@ -144,7 +144,7 @@ angular.module('Squared')
               for (var index in data.metadataList) {
                 var fullFilename = data.metadataList[index].filename;
                 var metadata = data.metadataList[index].meta;
-      
+
                 // retrieve locus and callstart from metadata
                 var locus = '-NA-', callstart = '-NA-', feedbackid = '-NA-';
                 if (metadata) {
@@ -239,7 +239,7 @@ angular.module('Squared')
                     component = errorInfo.component;
                     errorCode = 1;
                   }
-                  if (errorInfo.message) { 
+                  if (errorInfo.message) {
                     errMessage = errorInfo.message;
                     errorCode = 1;
                   }

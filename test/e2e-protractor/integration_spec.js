@@ -176,7 +176,7 @@ describe('App flow', function() {
           browser.sleep(1000);
           element(by.id('small-notification-cancel')).click();
         }
-      });
+      }, 45000);
       it('should invalidate token with invalid inputs and disable button', function() {
         for (var i = 0; i < invalidinputs.length; i++) {
           element(by.id('usersfield')).clear();

@@ -13,7 +13,7 @@
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 var utils = require('./testUtils.js');
-var config = require('./testConfig.js');
+var config = require('./testconfig.js');
 var deleteUtils = require('./deleteUtils.js');
 
 

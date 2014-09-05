@@ -116,7 +116,7 @@ module.exports = function (grunt) {
           'Gruntfile.js',
           '<%= yeoman.app %>/scripts/{,*/}*.js',
           '<%= yeoman.app %>/modules/{,*/}{,*/}*.js',
-          '<%= yeoman.app %>/modules/{,*/}scripts/{,*/}*.js'
+          '<%= yeoman.app %>/modules/{,*/}{,*/}{,*/}*.js'
         ]
       },
       test: {
@@ -404,6 +404,7 @@ module.exports = function (grunt) {
       'bower-install',
       'concurrent:server',
       'autoprefixer',
+      'newer:jshint',
       'connect:livereload',
       'watch'
     ]);

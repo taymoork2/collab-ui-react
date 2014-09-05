@@ -1,225 +1,223 @@
 'use strict';
-/* global AmCharts, $ */
+/* global AmCharts, $:false */
 
 angular.module('Squared')
-	.controller('ReportsCtrl', ['$scope','$parse', 'ReportsService', 'Log', 'Auth', 'reportsCache',
-		function($scope, $parse, ReportsService, Log, Auth, reportsCache) {
+  .controller('ReportsCtrl', ['$scope','$parse', 'ReportsService', 'Log', 'Auth', 'reportsCache',
+    function($scope, $parse, ReportsService, Log, Auth, reportsCache) {
 
-			 $('#avgEntitlementsdiv').addClass('chart-border');
-			 $('#avgCallsdiv').addClass('chart-border');
-			 $('#avgConversationsdiv').addClass('chart-border');
-			 $('#activeUsersdiv').addClass('chart-border');
+      $('#avgEntitlementsdiv').addClass('chart-border');
+      $('#avgCallsdiv').addClass('chart-border');
+      $('#avgConversationsdiv').addClass('chart-border');
+      $('#activeUsersdiv').addClass('chart-border');
 
-			var fullCacheSize = 5; 
-			var chartVals = [];
+      var fullCacheSize = 5;
+      var chartVals = [];
 
-			var entitlementsLoaded = false;
-			var avgCallsLoaded = false;
-			var avgConvLoaded = false;
-			var auLoaded = false;
+      var entitlementsLoaded = false;
+      var avgCallsLoaded = false;
+      var avgConvLoaded = false;
+      var auLoaded = false;
 
-		     var checkAllValues = function(){
-	         	if(entitlementsLoaded && avgCallsLoaded && avgConvLoaded && auLoaded){
-	            	$scope.reportsRefreshTime = new Date().getTime();
-	        		$scope.addToCache('lastReportsTime', $scope.reportsRefreshTime);
-	         	}
-	        };
+      var checkAllValues = function(){
+        if(entitlementsLoaded && avgCallsLoaded && avgConvLoaded && auLoaded){
+          $scope.reportsRefreshTime = new Date().getTime();
+          $scope.addToCache('lastReportsTime', $scope.reportsRefreshTime);
+        }
+      };
 
-		      var checkDataLoaded = function(data){
-				if(data === 'entitlements'){
-					entitlementsLoaded = true;
-					checkAllValues();
-				}
-				if(data === 'avgCalls'){
-					avgCallsLoaded = true;
-					checkAllValues();
-				}
-				if(data === 'avgConversations'){
-					avgConvLoaded = true;
-					checkAllValues();
-				}
-				if(data === 'activeUsers'){
-					auLoaded = true;
-					checkAllValues();
-				}
-			};
+      var checkDataLoaded = function(data){
+        if(data === 'entitlements'){
+          entitlementsLoaded = true;
+          checkAllValues();
+        }
+        if(data === 'avgCalls'){
+          avgCallsLoaded = true;
+          checkAllValues();
+        }
+        if(data === 'avgConversations'){
+          avgConvLoaded = true;
+          checkAllValues();
+        }
+        if(data === 'activeUsers'){
+          auLoaded = true;
+          checkAllValues();
+        }
+      };
 
-			$scope.manualReload = function(){
-				entitlementsLoaded = false;
-				avgCallsLoaded = false;
-				avgConvLoaded = false;
-				auLoaded = false;
+      $scope.manualReload = function(){
+        entitlementsLoaded = false;
+        avgCallsLoaded = false;
+        avgConvLoaded = false;
+        auLoaded = false;
 
-		        getTimeCharts('entitlements', 1, 'month', 1, 'week', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', '#B8DBFF');
-				getTimeCharts('avgCalls', 1, 'month', 1, 'week', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Calls', '#FFFF99');
-				getTimeCharts('avgConversations', 1, 'month', 1, 'week', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Conversations', '#C2FFC2');
-				getTimeCharts('activeUsers', 1, 'month', 1, 'week', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', '#FFCCFF');
-      		
-      			$('#avg-entitlements-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-				$('#avg-calls-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-				$('#avg-conversations-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-				$('#active-users-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
+        getTimeCharts('entitlements', 1, 'month', 1, 'week', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', '#B8DBFF');
+        getTimeCharts('avgCalls', 1, 'month', 1, 'week', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Calls', '#FFFF99');
+        getTimeCharts('avgConversations', 1, 'month', 1, 'week', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Conversations', '#C2FFC2');
+        getTimeCharts('activeUsers', 1, 'month', 1, 'week', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', '#FFCCFF');
 
-      			$scope.showAvgEntitlementsRefresh = true;
-				$scope.showAvgCallsRefresh = true;
-				$scope.showAvgConversationsRefresh = true;
-				$scope.showActiveUsersRefresh = true;
-      		};
+        $('#avg-entitlements-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
+        $('#avg-calls-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
+        $('#avg-conversations-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
+        $('#active-users-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
 
-      		var displayCacheValue = function(data){
-      			var jsonValues = $scope.readFromCache(data);
-      			if(jsonValues.message){
-      				$('#'+jsonValues.divName).html(jsonValues.message);
-      			}
-      			else{
-      				makeTimeChart(jsonValues.chartVals, jsonValues.divName, jsonValues.type, jsonValues.title, jsonValues.color);
-      				$scope[jsonValues.refreshVarName] = false;
-      			}
-      		};	
+        $scope.showAvgEntitlementsRefresh = true;
+        $scope.showAvgCallsRefresh = true;
+        $scope.showAvgConversationsRefresh = true;
+        $scope.showActiveUsersRefresh = true;
+      };
 
-      		var loadCacheValues = function(){
+      var displayCacheValue = function(data){
+        var jsonValues = $scope.readFromCache(data);
+        if(jsonValues.message){
+          $('#'+jsonValues.divName).html(jsonValues.message);
+        }
+        else{
+          makeTimeChart(jsonValues.chartVals, jsonValues.divName, jsonValues.type, jsonValues.title, jsonValues.color);
+          $scope[jsonValues.refreshVarName] = false;
+        }
+      };
 
-      			$scope.reportsRefreshTime = $scope.readFromCache('lastReportsTime');
+      var loadCacheValues = function(){
 
-      			$scope.showAvgEntitlementsRefresh = true;
-				$scope.showAvgCallsRefresh = true;
-				$scope.showAvgConversationsRefresh = true;
-				$scope.showActiveUsersRefresh = true;
+        $scope.reportsRefreshTime = $scope.readFromCache('lastReportsTime');
 
-      			displayCacheValue('entitlements');
-      			displayCacheValue('avgCalls');
-      			displayCacheValue('avgConversations');
-      			displayCacheValue('activeUsers');
+        $scope.showAvgEntitlementsRefresh = true;
+        $scope.showAvgCallsRefresh = true;
+        $scope.showAvgConversationsRefresh = true;
+        $scope.showActiveUsersRefresh = true;
 
-		      };
+        displayCacheValue('entitlements');
+        displayCacheValue('avgCalls');
+        displayCacheValue('avgConversations');
+        displayCacheValue('activeUsers');
 
-      		$scope.addToCache = function(key, value){
-		        reportsCache.put(key, value);
-		     };
+      };
 
-		    $scope.readFromCache = function(key){
-		        return reportsCache.get(key);
-		    };
+      $scope.addToCache = function(key, value){
+        reportsCache.put(key, value);
+      };
 
-		    $scope.getCacheStats = function(){
-		    	return reportsCache.info();
-		    };
+      $scope.readFromCache = function(key){
+        return reportsCache.get(key);
+      };
 
-			var firstLoaded = function(){
-        		if (!sessionStorage['loadedReports'] || reportsCache.info().size < fullCacheSize){
-          			$scope.manualReload();
-         			sessionStorage['loadedReports'] = 'yes';
-        		}
-        		else{
-            		loadCacheValues();
-          		}
-      		};
+      $scope.getCacheStats = function(){
+        return reportsCache.info();
+      };
 
-			var getMetricData = function(dataList, metric) {
-				var count = 0;
-				for (var i = 0; i < dataList.length; i++) {
-					var val = {};
-					if (chartVals[i]) {
-						val = chartVals[i];
-					}
+      var firstLoaded = function(){
+        if (!sessionStorage['loadedReports'] || reportsCache.info().size < fullCacheSize){
+          $scope.manualReload();
+          sessionStorage['loadedReports'] = 'yes';
+        }
+        else{
+          loadCacheValues();
+        }
+      };
 
-					val[metric] = dataList[i].count;
-					var dateVal = new Date(dataList[i].date);
-					dateVal = dateVal.toDateString();
-					val.week = dateVal.substring(dateVal.indexOf(' ') + 1);
-					chartVals[i] = val;
-					count += dataList[i].count;
-				}
-				return count;
-			};
+      var getMetricData = function(dataList, metric) {
+        var count = 0;
+        for (var i = 0; i < dataList.length; i++) {
+          var val = {};
+          if (chartVals[i]) {
+            val = chartVals[i];
+          }
 
-			var getTimeCharts = function(type, intervalCount, intervalType, spanCount, spanType, divName, refreshDivName, refreshVarName, title, color) {
-				var params = {
-					'intervalCount': intervalCount,
-					'intervalType': intervalType,
-					'spanCount': spanCount,
-					'spanType': spanType
-				};
-				ReportsService.getUsageMetrics(type, params, function(data, status) {
-					var avCount = 0;
-					checkDataLoaded(type);
-					if (data.success) {
-						if (data.data.length !== 0) {
-							$('#'+divName).removeClass('chart-border');
-							var result = data.data;
-							if (result.length > 0) {
-								avCount = getMetricData(result, type);
-							}
-							makeTimeChart(chartVals, divName, type, title, color);
-							var cacheValues = {'chartVals':chartVals, 'divName':divName, 'type':type, 'title':title, 'color':color, 'refreshVarName':refreshVarName};
-							$scope.addToCache(type, cacheValues);
-							$scope[refreshVarName] = false;
+          val[metric] = dataList[i].count;
+          var dateVal = new Date(dataList[i].date);
+          dateVal = dateVal.toDateString();
+          val.week = dateVal.substring(dateVal.indexOf(' ') + 1);
+          chartVals[i] = val;
+          count += dataList[i].count;
+        }
+        return count;
+      };
 
-						} else {
-							$('#'+refreshDivName).html('<h3>No results available.</h3>');
-							var resultsValues = {'divName':refreshDivName, 'message':'<h3>No results available.</h3>'};
-							$scope.addToCache(type, resultsValues);
-							Log.debug('No results for '+type+' metrics.');
-						}
-					} else {
-						$('#'+refreshDivName).html('<h3>Error processing request</h3>');
-						var resultsValues = {'divName':refreshDivName, 'message':'<h3>Error processing request</h3>'};
-						$scope.addToCache(type, resultsValues);
-						Log.debug('Query '+type+' metrics failed. Status: ' + status);
-					}
-				});
-			};
+      var getTimeCharts = function(type, intervalCount, intervalType, spanCount, spanType, divName, refreshDivName, refreshVarName, title, color) {
+        var params = {
+          'intervalCount': intervalCount,
+          'intervalType': intervalType,
+          'spanCount': spanCount,
+          'spanType': spanType
+        };
+        ReportsService.getUsageMetrics(type, params, function(data, status) {
+          var avCount = 0;
+          checkDataLoaded(type);
+          if (data.success) {
+            if (data.data.length !== 0) {
+              $('#'+divName).removeClass('chart-border');
+              var result = data.data;
+              if (result.length > 0) {
+                avCount = getMetricData(result, type);
+              }
+              makeTimeChart(chartVals, divName, type, title, color);
+              var cacheValues = {'chartVals':chartVals, 'divName':divName, 'type':type, 'title':title, 'color':color, 'refreshVarName':refreshVarName};
+              $scope.addToCache(type, cacheValues);
+              $scope[refreshVarName] = false;
 
-			var makeTimeChart = function(sdata, divName, metricName, title, color) {
-				var homeChart = AmCharts.makeChart(divName, {
-					'type': 'serial',
-					'theme': 'chalk',
-					'pathToImages': 'http://www.amcharts.com/lib/3/images/',
-					'colors':[color],
-					'legend': {
-						'equalWidths': false,
-						'periodValueText': 'total: [[value.sum]]',
-						'position': 'top',
-						'valueAlign': 'left',
-						'valueWidth': 100
-					},
-					'dataProvider': sdata,
-					'valueAxes': [{
-						'stackType': 'regular',
-						'gridAlpha': 0.07,
-						'position': 'left',
-						'title': title
-					}],
-					'graphs': [{
-						'fillAlphas': 0.6,
-						'hidden': false,
-						'lineAlpha': 0.4,
-						'title': title,
-						'valueField': metricName
-					}],
-					'plotAreaBorderAlpha': 0,
-					'marginTop': 10,
-					'marginLeft': 0,
-					'marginBottom': 0,
-					'chartScrollbar': {},
-					'chartCursor': {
-						'cursorAlpha': 0
-					},
-					'categoryField': 'week',
-					'categoryAxis': {
-						'startOnAxis': true,
-						'axisColor': '#DADADA',
-						'gridAlpha': 0.07
-					}
-				});
-			};
+            } else {
+              $('#'+refreshDivName).html('<h3>No results available.</h3>');
+              $scope.addToCache(type, {'divName':refreshDivName, 'message':'<h3>No results available.</h3>'});
+              Log.debug('No results for '+type+' metrics.');
+            }
+          } else {
+            $('#'+refreshDivName).html('<h3>Error processing request</h3>');
+            $scope.addToCache(type, {'divName':refreshDivName, 'message':'<h3>Error processing request</h3>'});
+            Log.debug('Query '+type+' metrics failed. Status: ' + status);
+          }
+        });
+      };
 
-			if (Auth.isAuthorized($scope)) {
-				firstLoaded();
-			}
+      var makeTimeChart = function(sdata, divName, metricName, title, color) {
+        var homeChart = AmCharts.makeChart(divName, {
+          'type': 'serial',
+          'theme': 'chalk',
+          'pathToImages': 'http://www.amcharts.com/lib/3/images/',
+          'colors':[color],
+          'legend': {
+            'equalWidths': false,
+            'periodValueText': 'total: [[value.sum]]',
+            'position': 'top',
+            'valueAlign': 'left',
+            'valueWidth': 100
+          },
+          'dataProvider': sdata,
+          'valueAxes': [{
+            'stackType': 'regular',
+            'gridAlpha': 0.07,
+            'position': 'left',
+            'title': title
+          }],
+          'graphs': [{
+            'fillAlphas': 0.6,
+            'hidden': false,
+            'lineAlpha': 0.4,
+            'title': title,
+            'valueField': metricName
+          }],
+          'plotAreaBorderAlpha': 0,
+          'marginTop': 10,
+          'marginLeft': 0,
+          'marginBottom': 0,
+          'chartScrollbar': {},
+          'chartCursor': {
+            'cursorAlpha': 0
+          },
+          'categoryField': 'week',
+          'categoryAxis': {
+            'startOnAxis': true,
+            'axisColor': '#DADADA',
+            'gridAlpha': 0.07
+          }
+        });
+      };
 
-			$scope.$on('AuthinfoUpdated', function() {
-				 firstLoaded();
-			});
-		}
-	]);
+      if (Auth.isAuthorized($scope)) {
+        firstLoaded();
+      }
+
+      $scope.$on('AuthinfoUpdated', function() {
+        firstLoaded();
+      });
+    }
+  ]);
