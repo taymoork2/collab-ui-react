@@ -83,8 +83,10 @@ angular.module('Core')
           }
         },
 
-        huronEntitlement: 'huron',
-        squaredEntitlement: 'webExSquared',
+        entitlements: {
+          squared: 'webex-squared',
+          huron: 'huron'
+        },
         batchSize: 20,
 
         isDev: function() {

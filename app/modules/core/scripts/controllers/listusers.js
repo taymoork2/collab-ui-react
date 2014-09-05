@@ -12,7 +12,7 @@ angular.module('Core')
 
       //Initialize variables
       $scope.page = 1;
-      $scope.status = null; 
+      $scope.status = null;
       $scope.results = null;
       $scope.sort = {
         by: 'name',
@@ -23,15 +23,40 @@ angular.module('Core')
           date: 'fa-sort'
         }
       };
-      
+
+      $scope.isSquaredEnabled = function()
+      {
+        return isEntitled(Config.entitlements.squared);
+      };
+
+      $scope.isHuronEnabled = function()
+      {
+        return isEntitled(Config.entitlements.huron);
+      };
+
+      var isEntitled = function(ent) {
+        if ($scope.currentUser && $scope.currentUser.entitlements)
+        {
+          for (var i=0;i<$scope.currentUser.entitlements.length;i++)
+          {
+            var svc = $scope.currentUser.entitlements[i];
+
+            if (svc === ent)
+            {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
 
       $scope.showConversationPanel = function(){
         $scope.conversationsPanel = true;
 
         $('#entire-slide').animate({
-              'left': '0px'
-            }, 1000, function(){
-            });
+          'left': '0px'
+        }, 1000, function(){
+        });
 
 
       };
@@ -184,9 +209,9 @@ angular.module('Core')
         $scope.userPreview = true;
 
         $('#entire-slide').animate({
-              'margin-left': '0px'
-            }, 1000, function(){
-            });
+          'margin-left': '0px'
+        }, 1000, function(){
+        });
 
         //remove selected class on previous user
         if ($scope.currentUser) {

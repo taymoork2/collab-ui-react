@@ -33,7 +33,7 @@
       <div id="addUsers">
         <h3 class="panel-title panel-title-default">
           <strong id="subTitleAdd" ng-show="isAddEnabled()" translate="usersPage.subTitleAdd"></strong>
-          <strong id="subTitleEnable" ng-show="!isAddEnabled()" translate="usersPage.subTitleEnable"></strong> 
+          <strong id="subTitleEnable" ng-show="!isAddEnabled()" translate="usersPage.subTitleEnable"></strong>
         </h3>
       </div>
       <div  ng-click="changeTab('users')">
@@ -102,7 +102,7 @@
         <li class="pagination-current"><a>{{page}}</a></li>
         <li><a id="next-page" ng-click="pagination.nextPage()"><i class="fa fa-angle-right"></i></a></li>
       </ul>
-    </div>    
+    </div>
   <div class="outer-details-div" id="entire-slide">
     <div ng-show="userPreview" class="details-panel-card"  id="details-panel">
       <div class="name-card">
@@ -119,7 +119,7 @@
             </a>
             <span>{{currentUser.title}}</span><br>
             <span>{{currentUser.addresses.streetAddress}}</span>
-          </div>      
+          </div>
           <div class="name-card-cancel" ng-click="closePreview()" id="exitPreviewButton">
             <i class="fa fa-times"></i>
           </div>
@@ -137,12 +137,12 @@
         <span class="preview-card-title" translate="usersPreview.servicesPreview"></span>
         <div id="huronPanel" telephony-info ng-show="isHuronEnabled()"></div telephony-info>
         <div id="conferencePanel" conferencing-info ng-show="false"></div conferencing-info>
-        <div id="squaredPanel" conversations-info ng-click="showConversationPanel()" ng-show="isSquaredEnabled()"></div conversations-info>
+        <div id="squaredPanel" conversations-info ng-click="showConversationPanel()"></div conversations-info>
         <div id="endpointPanel" endpoints-info ng-show="false">
         </div endpoints-info>
-      </div>   
+      </div>
     </div>
-    
+
     <div id="entitlementPanel" ng-show="conversationsPanel" class="sub-details-panel">
       <div user-entitlements
         current-user="currentUser"

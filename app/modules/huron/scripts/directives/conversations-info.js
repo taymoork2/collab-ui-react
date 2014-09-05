@@ -6,13 +6,13 @@
 angular.module('Huron')
   .directive('conversationsInfo', function() {
     return {
-    restrict: 'A',
-    scope:{
-      userEmail: "=",
-    },
-    templateUrl: 'modules/huron/scripts/directives/views/conversations-info.html',
-    link: function(scope, elem, attrs){
+      restrict: 'A',
+      scope:{
+        userEmail: '=',
+      },
+      templateUrl: 'modules/huron/scripts/directives/views/conversations-info.html',
+      link: function(scope, elem, attrs){
 
-    }
+      }
     };
   });

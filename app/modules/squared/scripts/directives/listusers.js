@@ -1,4 +1,5 @@
 'use strict';
+/* global $:false */
 
 angular.module('ListUsers', [])
   .controller('ListUsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Auth', 'Authinfo',
@@ -307,7 +308,7 @@ angular.module('ListUsers', [])
       templateUrl: 'modules/squared/scripts/directives/views/listusers.html',
       link: function (scope, elem, attrs) {
 
-        
+
       }
     };
   });

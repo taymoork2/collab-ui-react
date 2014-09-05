@@ -6,15 +6,15 @@
 angular.module('Huron')
   .directive('conferencingInfo', function() {
     return {
-    restrict: 'A',
-    scope:{
-      userEmail: "=",
-    },
-    templateUrl: 'modules/huron/scripts/directives/views/conferencing-info.html',
-    link: function(scope, elem, attrs){
+      restrict: 'A',
+      scope:{
+        userEmail: '=',
+      },
+      templateUrl: 'modules/huron/scripts/directives/views/conferencing-info.html',
+      link: function(scope, elem, attrs){
 
-      scope.userEmailData = 'testing3';
+        scope.userEmailData = 'testing3';
 
-    }
+      }
     };
   });

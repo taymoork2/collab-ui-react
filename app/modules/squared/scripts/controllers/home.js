@@ -39,52 +39,52 @@ angular.module('Squared')
         return homeCache.info();
       };
 
-        var allValuesLoaded = function(){
-          if(activerUserLoaded && callMetricLoaded && convMetricLoaded && contentLoaded && auMetricLoaded){
-            $scope.homeRefreshTime = new Date().getTime();
-            $scope.addToCache('lastHomeTime', $scope.homeRefreshTime);
-          }
+      var allValuesLoaded = function(){
+        if(activerUserLoaded && callMetricLoaded && convMetricLoaded && contentLoaded && auMetricLoaded){
+          $scope.homeRefreshTime = new Date().getTime();
+          $scope.addToCache('lastHomeTime', $scope.homeRefreshTime);
+        }
       };
 
       $scope.manualReload = function(){
-          activerUserLoaded = false;
-          callMetricLoaded = false;
-          convMetricLoaded = false;
-          contentLoaded = false;
-          auMetricLoaded = false;
+        activerUserLoaded = false;
+        callMetricLoaded = false;
+        convMetricLoaded = false;
+        contentLoaded = false;
+        auMetricLoaded = false;
 
-          getActiveUsersCount();
-          getCallMetrics();
-          getConversationMetrics();
-          getContentShareMetrics();
-          getActiveUsersMetrics();
-          getHealthMetrics();
+        getActiveUsersCount();
+        getCallMetrics();
+        getConversationMetrics();
+        getContentShareMetrics();
+        getActiveUsersMetrics();
+        getHealthMetrics();
 
-          $scope.showAUGraphRefresh = true;
-          $scope.showAURefresh = true;
-          $scope.showCallsRefresh = true;
-          $scope.showConvoRefresh = true;
-          $scope.showShareRefresh = true;
+        $scope.showAUGraphRefresh = true;
+        $scope.showAURefresh = true;
+        $scope.showCallsRefresh = true;
+        $scope.showConvoRefresh = true;
+        $scope.showShareRefresh = true;
 
-          $scope.showAUGraph = false;
-          $scope.showAUContent = false;
-          $scope.showCallsContent = false;
-          $scope.showConvoContent = false;
-          $scope.showShareContent = false;
+        $scope.showAUGraph = false;
+        $scope.showAUContent = false;
+        $scope.showCallsContent = false;
+        $scope.showConvoContent = false;
+        $scope.showShareContent = false;
       };
 
       var displayCacheValue = function(key){
-          var cachedValues = $scope.readFromCache(key);
+        var cachedValues = $scope.readFromCache(key);
 
-          if(cachedValues.message){
-            $(cachedValues.divName).html(cachedValues.message);
-            return false;
-          }         
-          return true;
+        if(cachedValues.message){
+          $(cachedValues.divName).html(cachedValues.message);
+          return false;
+        }
+        return true;
       };
 
       var loadCacheValues = function(){
-         $scope.homeRefreshTime = $scope.readFromCache('lastHomeTime');
+        $scope.homeRefreshTime = $scope.readFromCache('lastHomeTime');
 
         if(displayCacheValue('activeUserCount')){
           $scope.activeUserCount = $scope.readFromCache('activeUserCount');
@@ -100,7 +100,7 @@ angular.module('Squared')
         }
 
         chartVals = $scope.readFromCache('chartCacheValues');
-        
+
         if(chartVals){
           makeChart(chartVals);
         }
@@ -113,16 +113,16 @@ angular.module('Squared')
         $scope.showAUGraphRefresh = false;
 
         getHealthMetrics();
-       };
+      };
 
       var firstLoaded = function(){
         if (!sessionStorage['loadedHome'] || homeCache.info().size < fullCacheSize){
           $scope.manualReload();
-         sessionStorage['loadedHome'] = 'yes';
+          sessionStorage['loadedHome'] = 'yes';
         }
         else{
-            loadCacheValues();
-          }
+          loadCacheValues();
+        }
       };
 
       var getActiveUsersCount = function() {
@@ -176,7 +176,7 @@ angular.module('Squared')
         };
         ReportsService.getUsageMetrics('calls', params, function(data, status) {
           $scope.callsCount = 0;
-          $scope.addToCache('callsCount', $scope.callsCount); 
+          $scope.addToCache('callsCount', $scope.callsCount);
           callMetricLoaded = true;
           allValuesLoaded();
           if (data.success) {
@@ -184,21 +184,19 @@ angular.module('Squared')
               var calls = data.data;
               if (calls.length > 0) {
                 $scope.callsCount = getMetricData(calls, 'calls');
-                $scope.addToCache('callsCount', $scope.callsCount);                
+                $scope.addToCache('callsCount', $scope.callsCount);
               }
               $scope.showCallsRefresh = false;
               $scope.showCallsContent = true;
             } else {
               $('#calls-refresh').html('<span>No results available.</span>');
-              var resultsValues = {'divName':'#calls-refresh', 'message':'<span>No results available.</span>'};
-              $scope.addToCache('callsCount', resultsValues);
+              $scope.addToCache('callsCount', {'divName':'#calls-refresh', 'message':'<span>No results available.</span>'});
             }
             makeChart(chartVals);
           } else {
             Log.debug('Query calls metrics failed. Status: ' + status);
             $('#calls-refresh').html('<span>Error processing request</span>');
-            var resultsValues = {'divName':'#calls-refresh', 'message':'<span>Error processing request</span>'};
-            $scope.addToCache('callsCount', resultsValues);
+            $scope.addToCache('callsCount', {'divName':'#calls-refresh', 'message':'<span>Error processing request</span>'});
           }
         });
       };
@@ -217,7 +215,7 @@ angular.module('Squared')
           allValuesLoaded();
           if (data.success) {
             if (data.length !== 0) {
-              var convos = data.data;    
+              var convos = data.data;
               if (convos.length > 0) {
                 $scope.convoCount = getMetricData(convos, 'convos');
                 $scope.addToCache('convoCount', $scope.convoCount);
@@ -226,15 +224,13 @@ angular.module('Squared')
               $scope.showConvoContent = true;
             } else {
               $('#convo-refresh').html('<span>No results available.</span>');
-              var resultsValues = {'divName':'#convo-refresh', 'message':'<span>No results available.</span>'};
-              $scope.addToCache('convoCount', resultsValues);
+              $scope.addToCache('convoCount', {'divName':'#convo-refresh', 'message':'<span>No results available.</span>'});
             }
             makeChart(chartVals);
           } else {
             Log.debug('Query conversation metrics failed. Status: ' + status);
             $('#convo-refresh').html('<span>Error processing request</span>');
-            var resultsValues = {'divName':'#convo-refresh', 'message':'<span>Error processing request</span>'};
-            $scope.addToCache('convoCount', resultsValues);
+            $scope.addToCache('convoCount', {'divName':'#convo-refresh', 'message':'<span>Error processing request</span>'});
           }
         });
       };
@@ -263,16 +259,14 @@ angular.module('Squared')
               $scope.showShareContent = true;
             } else {
               $('#share-refresh').html('<span>No results available.</span>');
-              var resultsValues = {'divName':'#share-refresh', 'message':'<span>No results available.</span>'};
-              $scope.addToCache('cShareCount', resultsValues);
+              $scope.addToCache('cShareCount', {'divName':'#share-refresh', 'message':'<span>No results available.</span>'});
 
             }
             makeChart(chartVals);
           } else {
             Log.debug('Query content share metrics failed. Status: ' + status);
             $('#share-refresh').html('<span>Error processing request</span>');
-            var resultsValues = {'divName':'#share-refresh', 'message':'<span>Error processing request</span>'};
-            $scope.addToCache('cShareCount', resultsValues);
+            $scope.addToCache('cShareCount', {'divName':'#share-refresh', 'message':'<span>Error processing request</span>'});
           }
         });
       };
@@ -317,7 +311,7 @@ angular.module('Squared')
       };
 
       $scope.inviteUsers = function() {
-         var dlg = $dialogs.create('modules/squared/views/quicksetup_dialog.html', 'quicksetupDialogCtrl');
+        var dlg = $dialogs.create('modules/squared/views/quicksetup_dialog.html', 'quicksetupDialogCtrl');
         dlg.result.then(function() {
 
         });

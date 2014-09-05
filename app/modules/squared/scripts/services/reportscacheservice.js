@@ -2,5 +2,5 @@
 
 angular.module('Squared')
   .factory('reportsCache', function($cacheFactory) {
-  	return $cacheFactory('reportsCache');
+    return $cacheFactory('reportsCache');
   });

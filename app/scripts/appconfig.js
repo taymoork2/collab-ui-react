@@ -12,7 +12,7 @@ angular
         templateUrl: 'modules/core/views/login.html',
         controller: 'LoginCtrl'
       })
-      
+
       .when('/test', {
         templateUrl: 'modules/core/views/main.html',
         controller: 'MainCtrl'
@@ -22,14 +22,14 @@ angular
       });
 
     $translateProvider.useStaticFilesLoader({
-        prefix: 'l10n/',
-        suffix: '.json'
-      });
+      prefix: 'l10n/',
+      suffix: '.json'
+    });
 
      //Tell the module what language to use by default
     $translateProvider.preferredLanguage('en_US');
-  
-  }]);
+  }
+]);
 
 angular
   .module('Squared')
@@ -83,5 +83,5 @@ angular
         templateUrl: 'modules/squared/views/invitelauncher.html?'+new Date().getTime(),
         controller: 'InvitelauncherCtrl'
       });
-  
-  }]);
+  }
+]);

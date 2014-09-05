@@ -2,7 +2,7 @@
 
 /* global protractor */
 
-var config = require('./testConfig.js');
+var config = require('./testconfig.js');
 var request = require('request');
 // var jar = request.jar();
 // var req = request.defaults({
@@ -31,7 +31,7 @@ exports.sendRequest = function(options) {
     console.log('--error: ' + error);
     console.log('--status code: ' + response.statusCode);
     console.log('--message: ' + message);
-   
+
     if (error || response.statusCode >= 400) {
       defer.reject({
         status: response.statusCode,
