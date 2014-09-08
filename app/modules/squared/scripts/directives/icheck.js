@@ -24,7 +24,9 @@ angular.module('wx2AdminWebClientApp')
                 return ngModel.$setViewValue(event.target.checked);
               });
             }
-            $scope.validateEntitlements(element);
+            if ($scope.validateEntitlements) {
+              $scope.validateEntitlements(element);
+            }
           });
         });
       }

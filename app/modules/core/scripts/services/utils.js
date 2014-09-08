@@ -148,8 +148,12 @@ angular.module('Core')
         removeDuplicates: function(array, key) {
           var a = array.concat();
           for (var i = 0; i < a.length; ++i) {
+            if (typeof a[i] === 'undefined') {
+              a.splice(i--, 1);
+              continue;
+            }
             for (var j = i + 1; j < a.length; ++j) {
-              if (a[i][key] === a[j][key]) {
+              if ((typeof a[j] === 'undefined') || (a[i][key] === a[j][key])) {
                 a.splice(j--, 1);
               }
             }
