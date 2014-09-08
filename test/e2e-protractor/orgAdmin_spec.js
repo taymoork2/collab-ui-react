@@ -9,12 +9,12 @@
 /* global element */
 
 var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
+  username: 'pbr-test-admin@squared2webex.com',
   password: 'C1sc0123!',
 };
 
 var testuser2 = {
-  username: 'sqtest-admin@squared.example.com',
+  username: 'pbr-test-user@squared2webex.com',
   password: 'C1sc0123!',
 };
 
@@ -86,7 +86,12 @@ describe('Log Out', function() {
 });
 
 
-
+// Log Out
+describe('Wait', function() {
+  it('should wait before logging in', function() {
+    browser.sleep(2000);
+  });
+});
 
 
 
@@ -118,7 +123,7 @@ describe('Login as non squared team member admin user', function() {
 
 }); //State is logged-in
 
-describe('Check squared team member entitlements', function() {
+describe('Check non squared team member entitlements', function() {
   it('clicking on users tab should change the view', function() {
     browser.driver.findElement(by.css('li[heading="Users"]')).click();
     browser.driver.wait(function() {
