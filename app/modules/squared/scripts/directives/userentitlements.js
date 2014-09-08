@@ -2,8 +2,8 @@
 
 
 angular.module('Squared')
-  .controller('UserEntitlementsCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter',
-    function($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter) {
+  .controller('UserEntitlementsCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo',
+    function($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
 
 
       function Feature (name, state) {
@@ -14,6 +14,10 @@ angular.module('Squared')
       function getFeature(service, state) {
         return new Feature(service, state);
       }
+
+      $scope.isServiceAllowed = function(service) {
+        return Authinfo.isServiceAllowed(service);
+      };
 
       $scope.getServiceName = function (service) {
         for (var i = 0; i < $rootScope.services.length; i++) {

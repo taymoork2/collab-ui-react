@@ -485,6 +485,36 @@ angular.module('Core')
         return $filter('translate')(title);
       };
 
+      $scope.isSquaredEnabled = function()
+      {
+        return isEntitled(Config.squaredEntitlement);
+      };
+
+      $scope.isHuronEnabled = function()
+      {
+        return isEntitled(Config.huronEntitlement);
+      };
+
+      var isEntitled = function(ent) {
+        if ($rootScope.services)
+        {
+          for (var i=0;i<$rootScope.services.length;i++)
+          {
+            var svc = $rootScope.services[i].sqService;
+
+            if (svc === ent)
+            {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+
+      $scope.isServiceAllowed = function(service) {
+        return Authinfo.isServiceAllowed(service);
+      };
+
       //set intitially when loading the page
       //on initial login the AuthinfoUpdated broadcast may not be caught if not on user page
       setEntitlementList();

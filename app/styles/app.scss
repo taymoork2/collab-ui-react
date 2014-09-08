@@ -80,7 +80,7 @@ table th, .table td {
 }
 
 .preview-user-table{
-  width: 75% !important;
+  width: 64% !important;
   margin-top: 50px !important;
 }
 
@@ -440,6 +440,7 @@ label {
 .profile-text-input {
   padding-bottom: 15px;
   padding-top: 15px;
+  width: 500px;
 }
 
 td a {
@@ -948,7 +949,7 @@ input:disabled {
 .sub-details-panel {
   background-color: white;
   float:right;
-  width:500px;
+  width:650px;
   height: 100%;
   padding: 5px;
   position:relative;
@@ -985,8 +986,7 @@ input:disabled {
 }
 
 .welcome-message{
-  padding: 15px;
-  margin-left: 150px !important;
+  margin-right:315px !important;
 }
 
 .narrow-button{

@@ -86,17 +86,23 @@ angular.module('Core')
         });
       };
 
+      $scope.currentUserPhoto = null;
+
       $scope.getUserPhoto = function(user) {
-        var photo;
+        //var photo = null;
         if (user && user.photos) {
           for (var i in user.photos) {
             if (user.photos[i].type === 'thumbnail') {
-              photo = user.photos[i].value;
+              $scope.currentUserPhoto = user.photos[i].value;
               break;
             }
           } //end for
         } //endif
-        return photo;
+        else
+        {
+          $scope.currentUserPhoto = null;
+        }
+        return $scope.currentUserPhoto;
       };
 
       //Populating authinfo data if empty.

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .factory('Auth', function($http, $filter, $location, $timeout, $window, $q, Log, Config, Authinfo, Utils, Storage, $rootScope, $dialogs) {
+  .factory('Auth', ['$http', '$filter', '$location', '$timeout', '$window', '$q', 'Log', 'Config', 'Authinfo', 'Utils', 'Storage', '$rootScope', '$dialogs',
+    function($http, $filter, $location, $timeout, $window, $q, Log, Config, Authinfo, Utils, Storage, $rootScope, $dialogs) {
     var progress = 0;
     var auth = {
       authorizeUrl: Config.getAdminServiceUrl() + 'userauthinfo',
@@ -34,8 +35,8 @@ angular.module('Core')
       $http.defaults.headers.common.Authorization = 'Bearer ' + token;
       $http.get(auth.authorizeUrl)
         .success(function(data) {
-          Authinfo.initialize(data);
           scope.isAuthorized = true;
+          Authinfo.initialize(data);
           deferred.resolve();
         })
         .error(function(data, status) {
@@ -166,4 +167,4 @@ angular.module('Core')
 
     return auth;
 
-  });
+  }]);
