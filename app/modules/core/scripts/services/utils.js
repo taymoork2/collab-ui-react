@@ -187,6 +187,7 @@ angular.module('Core')
             }
           }
         }
+
       };
     }
   ]);

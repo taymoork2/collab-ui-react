@@ -177,6 +177,7 @@ angular.module('Core')
               callback(data, status);
             });
         }
+
       };
     }
   ]);
