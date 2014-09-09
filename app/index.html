@@ -10,7 +10,7 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <link rel="icon" type="image/png" href="images/logo.png">
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />  
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css styles/vendor.css -->
   <!-- bower:css -->
@@ -28,6 +28,8 @@
   <link rel="stylesheet" href="bower_components/jquery-icheck/skins/square/blue.css" />
   <link rel="stylesheet" href="bower_components/alertify.js/themes/alertify.core.css" />
   <link rel="stylesheet" href="bower_components/alertify.js/themes/alertify.default.css" />
+  <link rel="stylesheet" href="bower_components/angular-wizard/dist/angular-wizard.css" />
+   
 </head>
 <body ng-cloak>
     <!--[if lt IE 7]>
@@ -99,7 +101,7 @@
     <![endif]-->
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -120,6 +122,7 @@
     <script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
     <script src="bower_components/angular-cookie/angular-cookie.js"></script>
     <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-wizard/dist/angular-wizard.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
@@ -132,6 +135,8 @@
     <script src="modules/core/scripts/controllers/main.js"></script>
     <script src="modules/core/scripts/controllers/users.js"></script>
     <script src="modules/core/scripts/controllers/listusers.js"></script>
+    <script src="modules/core/scripts/controllers/organizations.js"></script>
+    <script src="modules/core/scripts/controllers/setupsso.js"></script>
 
     <script src="modules/core/scripts/services/auth.js"></script>
     <script src="modules/core/scripts/services/config.js"></script>
@@ -145,9 +150,10 @@
     <script src="modules/core/scripts/services/pagination.js"></script>
     <script src="modules/core/scripts/services/userservice.js"></script>
     <script src="modules/core/scripts/services/userlistservice.js"></script>
+    <script src="modules/core/scripts/services/orgservice.js"></script>
+    <script src="modules/core/scripts/services/ssoservice.js"></script>
 
     <script src="modules/squared/scripts/controllers/home.js"></script>
-    <script src="modules/squared/scripts/controllers/organizations.js"></script>
     <script src="modules/squared/scripts/controllers/search.js"></script>
     <script src="modules/squared/scripts/controllers/reports.js"></script>
     <script src="modules/squared/scripts/controllers/tabs.js"></script>
@@ -155,17 +161,15 @@
     <script src="modules/squared/scripts/controllers/downloads.js"></script>
     <script src="modules/squared/scripts/controllers/entitlementdialog.js"></script>
     <script src="modules/squared/scripts/controllers/quicksetupdialog.js"></script>
-    <script src="modules/squared/scripts/controllers/organizations.js"></script>
     <script src="modules/squared/scripts/controllers/support.js"></script>
     <script src="modules/squared/scripts/controllers/invite.js"></script>
     <script src="modules/squared/scripts/controllers/activate.js"></script>
     <script src="modules/squared/scripts/controllers/invitelauncher.js"></script>
-
+    
     <script src="modules/squared/scripts/services/logmetricsservice.js"></script>
     <script src="modules/squared/scripts/services/reportsservice.js">​</script>
     <script src="modules/squared/scripts/services/activateservice.js"></script>
     <script src="modules/squared/scripts/services/logservice.js"></script>
-    <script src="modules/squared/scripts/services/orgservice.js"></script>
     <script src="modules/squared/scripts/services/inviteservice.js"></script>
     <script src="modules/squared/scripts/services/homecacheservice.js"></script>
     <script src="modules/squared/scripts/services/reportscacheservice.js"></script>

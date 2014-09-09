@@ -2,9 +2,9 @@
 
 /* global $ */
 
-angular.module('Squared')
-  .controller('OrganizationsCtrl', ['$rootScope','$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Auth', 'UserListService', 'Notification',
-    function($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, Auth, UserListService, Notification) {
+angular.module('Core')
+  .controller('OrganizationsCtrl', ['$rootScope','$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Auth', 'UserListService', 'Notification', '$dialogs',
+    function($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, Auth, UserListService, Notification, $dialogs) {
 
       //Initialize
       Notification.init($scope);
@@ -67,6 +67,13 @@ angular.module('Squared')
 
       $scope.resetOrg = function() {
         getorgInfo();
+      };
+
+      $scope.enableSSO = function() {
+        var dlg = $dialogs.create('modules/core/views/setupsso.html', 'setupSSODialogCtrl');
+        dlg.result.then(function() {
+
+        });
       };
     }
   ]);

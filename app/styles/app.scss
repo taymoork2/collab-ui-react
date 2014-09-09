@@ -992,3 +992,57 @@ input:disabled {
 .narrow-button{
   height: 30px;
 }
+
+#fileToUploadTextHolder,
+#fileToUploadBtnHolder {
+  position: absolute;
+  opacity: 0;
+  -moz-opacity: 0;
+  filter: alpha(opacity=0);
+  width: 105px;
+  display: inline;
+}
+
+.fileholder {
+  width: 250px !important;
+  height: 26px !important;
+}
+
+#importBtn {
+  margin-right: 346px;
+  min-width: 100px;
+}
+
+#importCancelBtn,
+#importNextBtn,
+#exportCancelBtn,
+#exportBackBtn,
+#exportNextBtn,
+#testssoCancelBtn,
+#testssoBackBtn,
+#testssoNextBtn,
+#enablessoCancelBtn,
+#enablessoBackBtn,
+#enablessoFinishBtn,
+ {
+  min-width: 100px;
+  bottom: 50px;
+}
+
+.ssoNavBtns {
+  position: absolute;
+  bottom: 75px;
+}
+
+#ssoModalBody {
+  min-height: 400px;
+}
+
+.ssoDesc:after, #importFileDiv:after, #ssoFooter:after {
+  content: '\000A\000A';
+  white-space: pre-wrap;
+}
+
+.dialog-header-confirm {
+background-color: #333333 !important;
+}

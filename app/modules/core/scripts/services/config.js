@@ -34,6 +34,10 @@ angular.module('Core')
 
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
+        ssoSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
+
+        ssoTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+
         scimUrl: 'https://identity.webex.com/identity/scim/%s/v1/Users',
 
         scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
@@ -127,6 +131,14 @@ angular.module('Core')
 
         getLogoutUrl: function() {
           return this.logoutUrl + encodeURIComponent(this.adminClientUrl[this.getEnv()]);
+        },
+
+        getSSOSetupUrl: function() {
+          return this.ssoSetupUrl;
+        },
+
+        getSSOTestUrl: function() {
+          return this.ssoTestUrl;
         },
 
         getHealthCheckUrlServiceUrl: function() {

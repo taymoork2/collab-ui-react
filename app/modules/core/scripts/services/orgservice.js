@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('Squared')
+angular.module('Core')
   .service('Orgservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth',
     function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth) {
 

@@ -49,7 +49,7 @@ angular
         controller: 'DownloadsCtrl'
       })
       .when('/orgs', {
-        templateUrl: 'modules/squared/views/organizations.html',
+        templateUrl: 'modules/core/views/organizations.html',
         controller: 'OrganizationsCtrl'
       })
       .when('/templates', {

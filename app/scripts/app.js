@@ -11,8 +11,8 @@
 
 angular.module('Core', []);
 
-angular.module('Squared', ['Core',
-    'FundooDirectiveTutorial']);
+angular.module('Squared', ['Core'
+    ]);
 
 angular.module('Huron', ['Core']);
 
@@ -29,7 +29,8 @@ angular
     'ipCookie',
     'Core',
     'Squared',
-    'Huron'
+    'Huron',
+    'mgo-angular-wizard'
   ]);
   
 
