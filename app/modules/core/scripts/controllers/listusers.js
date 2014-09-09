@@ -24,41 +24,13 @@ angular.module('Core')
         }
       };
 
-      $scope.isSquaredEnabled = function()
-      {
-        return isEntitled(Config.entitlements.squared);
-      };
 
-      $scope.isHuronEnabled = function()
-      {
-        return isEntitled(Config.entitlements.huron);
-      };
-
-      var isEntitled = function(ent) {
-        if ($scope.currentUser && $scope.currentUser.entitlements)
-        {
-          for (var i=0;i<$scope.currentUser.entitlements.length;i++)
-          {
-            var svc = $scope.currentUser.entitlements[i];
-
-            if (svc === ent)
-            {
-              return true;
-            }
-          }
-        }
-        return false;
-      };
-
-      $scope.showConversationPanel = function(){
+      $scope.showConversationPanel = function() {
         $scope.conversationsPanel = true;
 
         $('#entire-slide').animate({
           'left': '0px'
-        }, 1000, function(){
-        });
-
-
+        }, 1000, function() {});
       };
 
       var usersperpage = Config.usersperpage;
@@ -86,23 +58,17 @@ angular.module('Core')
         });
       };
 
-      $scope.currentUserPhoto = null;
-
       $scope.getUserPhoto = function(user) {
-        //var photo = null;
-        if (user && user.photos) {
+        var photo;
+        if (user.photos) {
           for (var i in user.photos) {
             if (user.photos[i].type === 'thumbnail') {
-              $scope.currentUserPhoto = user.photos[i].value;
+              photo = user.photos[i].value;
               break;
             }
           } //end for
         } //endif
-        else
-        {
-          $scope.currentUserPhoto = null;
-        }
-        return $scope.currentUserPhoto;
+        return photo;
       };
 
       //Populating authinfo data if empty.
@@ -194,11 +160,14 @@ angular.module('Core')
 
       var currentClass;
 
-      $scope.closePreview = function(){
+      $scope.closePreview = function() {
         $scope.userPreview = false;
         $scope.conversationsPanel = false;
 
-        $('#entire-slide').css({'left': '750px', 'margin-left': '300px'});
+        $('#entire-slide').css({
+          'left': '750px',
+          'margin-left': '300px'
+        });
         angular.element('#' + $scope.currentUser.id).removeClass('selected');
         angular.element('#' + $scope.currentUser.id).addClass(currentClass);
 
@@ -210,8 +179,7 @@ angular.module('Core')
 
         $('#entire-slide').animate({
           'margin-left': '0px'
-        }, 1000, function(){
-        });
+        }, 1000, function() {});
 
         //remove selected class on previous user
         if ($scope.currentUser) {

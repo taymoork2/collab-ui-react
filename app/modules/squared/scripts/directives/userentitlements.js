@@ -5,10 +5,9 @@ angular.module('Squared')
   .controller('UserEntitlementsCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo',
     function($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
 
-
-      function Feature (name, state) {
+      function Feature(name, state) {
         this.entitlementName = name;
-        this.entitlementState = state? 'ACTIVE' : 'INACTIVE';
+        this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
       }
 
       function getFeature(service, state) {
@@ -22,8 +21,7 @@ angular.module('Squared')
       $scope.getServiceName = function (service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
-          if (svc.sqService === service)
-          {
+          if (svc.sqService === service) {
             return svc.displayName;
           }
         }
@@ -53,7 +51,7 @@ angular.module('Squared')
             if (userStatus === 200) {
               entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
               entitleResult.type = 'success';
-              if($scope.entitlements.webExSquared === true){
+              if ($scope.entitlements.webExSquared === true) {
                 angular.element('.icon-' + user.id).html($filter('translate')('usersPage.active'));
               } else {
                 angular.element('.icon-' + user.id).html($filter('translate')('usersPage.inactive'));
@@ -70,6 +68,21 @@ angular.module('Squared')
             }
             Notification.notify([entitleResult.msg], entitleResult.type);
             angular.element('#btnSave').button('reset');
+
+            var index = $scope.queryuserslist.map(function(element) {
+              return element.id;
+            }).indexOf($scope.currentUser.id);
+            var updatedUser = $scope.queryuserslist[index];
+            for (var i = 0; i < $rootScope.services.length; i++) {
+              var service = $rootScope.services[i].sqService;
+              var ciService = $rootScope.services[i].ciService;
+              if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciService) === -1) {
+                updatedUser.entitlements.push(ciService);
+              } else if($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciService) > -1) {
+                updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciService), 1);
+              }
+            }
+
           } else {
             Log.error('Failed updating user with entitlements.');
             Log.error(data);
@@ -89,7 +102,8 @@ angular.module('Squared')
       restrict: 'A',
       scope: {
         currentUser: '=',
-        entitlements: '='
+        entitlements: '=',
+        queryuserslist: '='
       },
       templateUrl: 'modules/squared/scripts/directives/views/userentitlements.html'
     };

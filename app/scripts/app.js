@@ -32,5 +32,5 @@ angular
     'Huron',
     'mgo-angular-wizard'
   ]);
-  
+
 
