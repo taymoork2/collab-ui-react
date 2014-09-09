@@ -146,6 +146,22 @@ describe('Support flow', function() {
       });
     });
 
+    it('should display call-info panel for the log', function() {
+      element(by.id('callInfo-icon')).click();
+      browser.sleep(1000);
+      expect(element(by.id('closeCallInfo')).isDisplayed()).toBe(true);
+    });
+
+    it('should display log-list panel on search', function() {
+      element(by.id('logSearchBtn')).click();
+      browser.sleep(3000);
+      expect(element(by.id('closeCallInfo')).isDisplayed()).toBe(false);
+      expect(element(by.id('emailAddressHeading')).getText()).toBe('Email Address');
+      expect(element(by.id('locusIdHeading')).getText()).toBe('Locus ID');
+      expect(element(by.id('callStartHeading')).getText()).toBe('Call Start Time');
+      expect(element(by.id('dateHeading')).getText()).toBe('Upload Time');
+    });
+
     it('should not return results for non existent metadata search', function() {
       element(by.id('logsearchfield')).clear();
       element(by.id('logsearchfield')).sendKeys(testuser.searchNonexistentMetadata).then(function() {

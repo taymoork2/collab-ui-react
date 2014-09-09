@@ -120,6 +120,7 @@
     "subtitleLogs" : "Search for logs",
     "listlogsbtn" : "Search",
     "noResults" : "No Results.",
+    "searching" : "Searching...",
     "userLogs" : "User Logs",
     "logEmailAddress": "Email Address",
     "logDate" : "Upload Time",

@@ -120,7 +120,9 @@ angular.module('Squared')
         var searchInput = $('#logsearchfield').val();
         if (searchInput) {
           searchLogs(searchInput);
+          $('#noResults').text([$filter('translate')('supportPage.searching')]);
         } else {
+          $('#noResults').text([$filter('translate')('supportPage.noResults')]);
           Log.debug('Search input cannot be empty.');
           Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
           angular.element('#logSearchBtn').button('reset');
@@ -136,6 +138,7 @@ angular.module('Squared')
       };
 
       var searchLogs = function(searchInput) {
+        $scope.closeCallInfo();
         LogService.searchLogs(searchInput, function(data, status) {
           if (data.success) {
             //parse the data
@@ -182,10 +185,12 @@ angular.module('Squared')
                 $('#logs-panel').show();
               }
             } else {
+              $('#noResults').text([$filter('translate')('supportPage.noResults')]);
               angular.element('#logSearchBtn').button('reset');
               $('#logs-panel').show();
             }
           } else {
+            $('#noResults').text([$filter('translate')('supportPage.noResults')]);
             $('#logs-panel').show();
             angular.element('#logSearchBtn').button('reset');
             Log.debug('Failed to retrieve user logs. Status: ' + status);
