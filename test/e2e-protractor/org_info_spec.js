@@ -27,7 +27,7 @@ describe('Login as non-sso admin user', function() {
     });
   });
 
-  it('should log in with valid sso admin user and display home page', function() {
+  it('should log in with valid non-sso admin user and display home page', function() {
     browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
     browser.driver.findElement(by.css('#IDButton2')).click();
     browser.driver.wait(function() {
