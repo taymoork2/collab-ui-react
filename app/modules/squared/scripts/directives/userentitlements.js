@@ -4,6 +4,7 @@
 angular.module('Squared')
   .controller('UserEntitlementsCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo',
     function($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
+
       function Feature(name, state) {
         this.entitlementName = name;
         this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
