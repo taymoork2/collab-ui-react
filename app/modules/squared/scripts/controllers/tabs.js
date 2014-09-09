@@ -9,7 +9,10 @@ angular.module('Squared')
         var roles  = Authinfo.getRoles();
         var tabs = [];
         for(var idx = 0; idx < roles.length; idx++) {
-          tabs = tabs.concat(Config.roles[roles[idx]]);
+          var allowedTabs = Config.roles[roles[idx]];
+          if(allowedTabs) {
+            tabs = tabs.concat(allowedTabs);
+          }
         }
         $rootScope.tabs = Utils.removeDuplicates(tabs, 'title');
         Authinfo.setTabs($rootScope.tabs);
