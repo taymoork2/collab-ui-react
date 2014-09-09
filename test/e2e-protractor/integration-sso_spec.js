@@ -51,7 +51,7 @@ describe('Enabling SSO flow', function() {
     it('should display setup SSO button and clicking it should launch the wizard', function() {
       expect(element(by.id('btnSSO')).isDisplayed()).toBe(true);
       element(by.id('btnSSO')).click().then(function() {
-        browser.sleep(500);
+        browser.sleep(1000);
         expect(element(by.css('.steps-indicator.steps-4')).isDisplayed()).toBe(true);
       });
     });
