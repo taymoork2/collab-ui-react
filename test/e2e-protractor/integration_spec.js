@@ -199,7 +199,7 @@ describe('App flow', function() {
         element(by.id('usersfield')).clear();
         element(by.id('usersfield')).sendKeys(testuser.username);
         element(by.id('btnAdd')).click();
-        browser.sleep(500); //for the animation
+        browser.sleep(1000); //for the animation
         element(by.css('.alertify-log-error')).click();
         browser.sleep(500); //for the animation
         element.all(by.css('.panel-danger-body p')).then(function(rows) {
