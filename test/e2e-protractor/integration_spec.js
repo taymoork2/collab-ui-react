@@ -314,7 +314,7 @@ describe('App flow', function() {
           //entitle for call initiation
           element(by.id('btn_squaredCallInitiation')).click().then(function() {
             element(by.id('btnEntitle')).click();
-            browser.sleep(800);
+            browser.sleep(1000);
             element(by.css('.alertify-log-success')).click();
             element.all(by.css('.panel-success-body p')).then(function(rows) {
               expect(rows.length).toBe(1);
