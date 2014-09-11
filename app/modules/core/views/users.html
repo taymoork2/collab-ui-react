@@ -17,7 +17,7 @@
       </button>
       <ul class="dropdown-menu user-options-menu" role="menu" aria-labelledby="userMoreOptions">
         <li>
-          <div ng-controller="ListUsersCtrl" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled">
+          <div ng-controller="ExportUsersCtrl" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="btn" ng-disabled="exportBtn.disabled">
             <span id="export-icon"><i class="fa fa-file-text"></i> {{'usersPage.exportUsers' | translate}}</span>
           </div>
         </li>

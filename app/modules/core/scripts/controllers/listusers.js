@@ -262,25 +262,5 @@ angular.module('Core')
         $('.pagination-current a').html($scope.page);
       });
 
-      $scope.exportBtn = {
-        disabled: false
-      };
-      $scope.exportCSV = function() {
-        var promise = UserListService.exportCSV($scope);
-        promise.then(null, function(error) {
-          Notification.notify(Array.new(error), 'error');
-        });
-
-        return promise;
-      };
-
-      if ($rootScope.exporting === true) {
-        $scope.exportBtn.disabled = true;
-      }
-
-      $scope.$on('EXPORT_FINISHED', function() {
-        $scope.exportBtn.disabled = false;
-      });
-
     }
   ]);
