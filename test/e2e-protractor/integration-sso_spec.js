@@ -16,7 +16,11 @@ describe('Enabling SSO flow', function() {
   // Logging in. Write your tests after the login flow is complete.
   describe('Login as sso admin user', function() {
 
-    it('should redirect to CI global login page.', function() {
+    it('should login', function(){
+      login.loginSSO(testuser.username, testuser.password);
+    });
+
+    xit('should redirect to CI global login page.', function() {
       browser.get('#/login');
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.css('#IDToken1'));
@@ -25,7 +29,7 @@ describe('Enabling SSO flow', function() {
       });
     });
 
-    it('should log in with valid admin user and display home page', function() {
+    xit('should log in with valid admin user and display home page', function() {
       browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
       browser.driver.findElement(by.css('#IDButton2')).click();
       browser.sleep(500);
@@ -52,7 +56,7 @@ describe('Enabling SSO flow', function() {
       expect(element(by.id('btnSSO')).isDisplayed()).toBe(true);
       element(by.id('btnSSO')).click().then(function() {
         browser.sleep(1000);
-        expect(element(by.css('.steps-indicator.steps-4')).isDisplayed()).toBe(true);
+        expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
       });
     });
 
@@ -81,7 +85,7 @@ describe('Enabling SSO flow', function() {
           expect(element(by.id('exportCancelBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('exportBackBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('exportNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.css('.steps-indicator.steps-4')).isDisplayed()).toBe(true);
+          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
         });
         element(by.id('exportNextBtn')).click().then(function() {
           browser.sleep(500);
@@ -89,14 +93,14 @@ describe('Enabling SSO flow', function() {
           expect(element(by.id('testssoCancelBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('testssoBackBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('testssoNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.css('.steps-indicator.steps-4')).isDisplayed()).toBe(true);
+          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
         });
         element(by.id('testssoNextBtn')).click().then(function() {
           browser.sleep(500);
           expect(element(by.id('enablessoCancelBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('enablessoBackBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('enablessoFinishBtn')).isDisplayed()).toBe(true);
-          expect(element(by.css('.steps-indicator.steps-4')).isDisplayed()).toBe(true);
+          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
         });
         element(by.id('enablessoBackBtn')).click().then(function() {
           browser.sleep(500);
@@ -104,7 +108,7 @@ describe('Enabling SSO flow', function() {
           expect(element(by.id('testssoCancelBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('testssoBackBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('testssoNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.css('.steps-indicator.steps-4')).isDisplayed()).toBe(true);
+          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
         });
         element(by.id('testssoBackBtn')).click().then(function() {
           browser.sleep(500);
@@ -112,7 +116,7 @@ describe('Enabling SSO flow', function() {
           expect(element(by.id('exportCancelBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('exportBackBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('exportNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.css('.steps-indicator.steps-4')).isDisplayed()).toBe(true);
+          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
         });
         element(by.id('exportBackBtn')).click().then(function() {
           browser.sleep(500);
@@ -120,7 +124,7 @@ describe('Enabling SSO flow', function() {
           expect(element(by.id('fileToUploadBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('importCancelBtn')).isDisplayed()).toBe(true);
           expect(element(by.id('importNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.css('.steps-indicator.steps-4')).isDisplayed()).toBe(true);
+          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
         });
       });
     });

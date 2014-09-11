@@ -15,8 +15,7 @@ var testuser = {
   usernameWithNoEntitlements: 'doNotDeleteTestUser@wx2.example.com'
 };
 
-var utils = require('./testUtils.js');
-var deleteUtils = require('./deleteUtils.js');
+
 
 // Notes:
 // - State is conserved between each describe and it blocks.
@@ -24,81 +23,69 @@ var deleteUtils = require('./deleteUtils.js');
 
 describe('App flow', function() {
 
+
   // Logging in. Write your tests after the login flow is complete.
   describe('Login flow', function() {
 
-    it('should redirect to CI global login page.', function() {
+    it('should redirect to CI global login page', function() {
       browser.get('#/login');
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.css('#IDToken1'));
-      }).then(function() {
-        expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
-      });
+      browser.driver.wait(login.isLoginUsernamePresent);
+      expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
     });
 
     it('should redirect to login page when not logged in', function() {
       browser.get('#/users');
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.css('#IDToken1'));
-      }).then(function() {
-        expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
-      });
-    });
-
-    it('should not log in with invalid credentials', function() {
-      browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
-      browser.driver.findElement(by.css('#IDButton2')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.css('#IDToken2'));
-      }).then(function() {
-        browser.driver.findElement(by.css('#IDToken2')).sendKeys('fakePassword');
-        browser.driver.findElement(by.css('#Button1')).click();
-      });
-      expect(browser.driver.findElement(by.css('.generic-error')).getText()).toBe('You\'ve entered an incorrect email address or password.');
+      browser.driver.wait(login.isLoginUsernamePresent);
       expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
     });
 
-    it('should log in with valid credentials and display home page', function() {
+    it('should not log in with invalid credentials', function() {
+      expect(login.isLoginUsernamePresent()).toBeTruthy();
+      login.setLoginUsername(testuser.username);
+      login.clickLoginNext();
+      browser.driver.wait(login.isLoginPasswordPresent);
+      login.setLoginPassword('fakePassword');
+      login.clickLoginSubmit();
+      login.assertLoginError('You\'ve entered an incorrect email address or password.');
+      expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
+    });
 
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.css('#IDToken2'));
-      }).then(function() {
-        browser.driver.findElement(by.css('#IDToken2')).sendKeys(testuser.password);
-        browser.driver.findElement(by.css('#Button1')).click();
-      });
+    xit('should log in with valid credentials and display home page', function() {
+      expect(login.isLoginPasswordPresent()).toBeTruthy();
+      login.setLoginPassword(testuser.password);
+      login.clickLoginSubmit();
+      navigation.expectCurrentUrl('/home');
+    });
 
-      expect(browser.getCurrentUrl()).toContain('/home');
+    it('should just login', function(){
+      login.login(testuser.username,testuser.password);
     });
 
   }); //State is logged-in
 
-  //Test which tabs are present
-  it('should display correct tabs for user based on role', function() {
-    expect(element(by.css('li[heading="Home"]')).isDisplayed()).toBe(true);
-    expect(element(by.css('li[heading="Users"]')).isDisplayed()).toBe(true);
-    expect(element(by.css('li[heading="Manage"]')).isDisplayed()).toBe(true);
-    expect(element(by.css('li[heading="Reports"]')).isDisplayed()).toBe(true);
-  });
-
-  it('clicking on users tab should change the view', function() {
-    element(by.css('li[heading="Users"]')).click();
-    browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('tabs'));
-    }).then(function() {
-      expect(browser.getCurrentUrl()).toContain('/users');
-    });
-  });
-
   // Navigation bar
   describe('Navigation Bar', function() {
+
+    it('should display correct tabs for user based on role', function() {
+      expect(navigation.homeTab.isDisplayed()).toBeTruthy();
+      expect(navigation.usersTab.isDisplayed()).toBeTruthy();
+      expect(navigation.manageTab.isDisplayed()).toBeTruthy();
+      expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
+    });
+
+    it('clicking on users tab should change the view', function() {
+      navigation.usersTab.click();
+      navigation.expectCurrentUrl('/users');
+    });
+
     it('should still be logged in', function() {
-      expect(browser.driver.isElementPresent(by.id('setting-bar'))).toBe(true);
-      expect(browser.driver.isElementPresent(by.id('feedback-btn'))).toBe(true);
+      expect(navigation.settings.isPresent()).toBeTruthy();
+      expect(navigation.feedbackButton.isPresent()).toBeTruthy();
     });
 
     it('should display the username and the orgname', function() {
-      expect(element(by.binding('username')).getText()).toContain(testuser.username);
-      expect(element(by.binding('orgname')).getText()).toContain(testuser.orgname);
+      expect(navigation.username.getText()).toContain(testuser.username);
+      expect(navigation.orgname.getText()).toContain(testuser.orgname);
     });
 
   });
@@ -108,53 +95,33 @@ describe('App flow', function() {
 
     describe('Page initialization', function() {
       it('click on invite subtab should show add users', function() {
-        element(by.id('addUsers')).click();
-        expect(element(by.id('userslistpanel')).isDisplayed()).toEqual(false);
-        expect(element(by.id('manageUsersPanel')).isDisplayed()).toEqual(true);
+        users.addUsers.click();
+        expect(users.listPanel.isDisplayed()).toBeFalsy();
+        expect(users.managePanel.isDisplayed()).toBeTruthy();
       });
 
       it('should initialize users page for add/entitle/invite users', function() {
-        expect(element(by.id('subTitleAdd')).isDisplayed()).toBe(true);
-        expect(element(by.id('subTitleEnable')).isDisplayed()).toBe(false);
-        expect(element(by.id('subTitleAdd')).getText()).toBe('Manage users');
-        expect(element(by.id('btnAdd')).isDisplayed()).toBe(true);
-        expect(element(by.id('btnEntitle')).isDisplayed()).toBe(true);
-        expect(element(by.id('btnInvite')).isDisplayed()).toBe(true);
+        expect(users.subTitleAdd.isDisplayed()).toBeTruthy()
+        expect(users.subTitleEnable.isDisplayed()).toBeFalsy();
+        expect(users.subTitleAdd.getText()).toBe('Manage users');
+        expect(users.addButton.isDisplayed()).toBeTruthy();
+        expect(users.entitleButton.isDisplayed()).toBeTruthy();
+        expect(users.inviteButton.isDisplayed()).toBeTruthy()
       });
 
       it('should display error if no user is entered on add', function() {
-        element(by.id('btnAdd')).click();
-        element(by.css('.alertify-log-error')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
-          browser.sleep(500);
-          element(by.id('notifications-cancel')).click();
-          browser.sleep(500);
-        });
+        users.addButton.click();
+        users.assertError('Please enter valid user email(s).');
       });
 
       it('should display error if no user is entered on update', function() {
-        element(by.id('btnEntitle')).click();
-        browser.sleep(500);
-        element(by.css('.alertify-log-error')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
-          browser.sleep(500);
-          element(by.id('notifications-cancel')).click();
-          browser.sleep(500);
-        });
+        users.entitleButton.click();
+        users.assertError('Please enter valid user email(s).');
       });
 
       it('should display error if no user is entered on invite', function() {
-        element(by.id('btnInvite')).click();
-        browser.sleep(500);
-        element(by.css('.alertify-log-error')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
-          browser.sleep(500);
-          element(by.id('notifications-cancel')).click();
-          browser.sleep(500);
-        });
+        users.inviteButton.click();
+        users.assertError('Please enter valid user email(s).');
       });
 
     });
@@ -164,83 +131,154 @@ describe('App flow', function() {
       var invalidinputs = ['user', '<user@user.com', 'user@user.com>', '"user@user.com', 'user@user.com"'];
       it('should tokenize a valid input and activate button', function() {
         for (var i = 0; i < validinputs.length; i++) {
-          element(by.id('usersfield')).clear();
-          element(by.id('usersfield')).sendKeys(validinputs[i]);
-          element(by.id('btnAdd')).click();
-          browser.sleep(500);
-          expect(element(by.css('.invalid')).isPresent()).toBe(false);
-          expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe(null);
-          expect(element(by.id('btnEntitle')).getAttribute('disabled')).toBe(null);
-          expect(element(by.id('btnInvite')).getAttribute('disabled')).toBe(null);
-          element(by.css('.close')).click();
-          browser.sleep(1000);
-          element(by.id('small-notification-cancel')).click();
+          users.addUsersField.clear();
+          users.addUsersField.sendKeys(validinputs[i]);
+          expect(users.invalid.isPresent()).toBeFalsy();
+          expect(users.addButton.isEnabled()).toBeTruthy();
+          expect(users.entitleButton.isEnabled()).toBeTruthy();
+          expect(users.inviteButton.isEnabled()).toBeTruthy();
+          users.addButton.click();
+          users.assertError('already exists');
+          users.close.click();
         }
       }, 45000);
       it('should invalidate token with invalid inputs and disable button', function() {
         for (var i = 0; i < invalidinputs.length; i++) {
-          element(by.id('usersfield')).clear();
-          element(by.id('usersfield')).sendKeys(invalidinputs[i]);
-          element(by.id('btnAdd')).click();
-          browser.sleep(500);
-          expect(element(by.css('.invalid')).isPresent()).toBe(true);
-          expect(element(by.id('btnAdd')).getAttribute('disabled')).toBe('true');
-          expect(element(by.id('btnEntitle')).getAttribute('disabled')).toBe('true');
-          expect(element(by.id('btnInvite')).getAttribute('disabled')).toBe('true');
-          element(by.css('.close')).click();
-          //browser.sleep(1000);
-          //element(by.id('small-notification-cancel')).click();
+          users.addUsersField.clear();
+          users.addUsersField.sendKeys(invalidinputs[i]);
+          users.addButton.click(); // Needed to leave focus
+          expect(users.invalid.isPresent()).toBeTruthy();
+          expect(users.addButton.isEnabled()).toBeFalsy();
+          expect(users.entitleButton.isEnabled()).toBeFalsy();
+          expect(users.inviteButton.isEnabled()).toBeFalsy();
+          users.close.click();
         }
       });
     });
 
     describe('Add an existing user', function() {
       it('should display input user email in results with already exists message', function() {
-        element(by.id('usersfield')).clear();
-        element(by.id('usersfield')).sendKeys(testuser.username);
-        element(by.id('btnAdd')).click();
-        browser.sleep(1000); //for the animation
-        element(by.css('.alertify-log-error')).click();
-        browser.sleep(500); //for the animation
-        element.all(by.css('.panel-danger-body p')).then(function(rows) {
-          expect(rows.length).toBe(1);
-          expect(rows[0].getText()).toContain(testuser.username);
-          expect(rows[0].getText()).toContain('already exists');
-          browser.sleep(500);
-          element(by.id('notifications-cancel')).click();
-          browser.sleep(500);
-        });
+        users.addUsersField.clear();
+        users.addUsersField.sendKeys(testuser.username);
+        users.addButton.click();
+        users.assertError('already exists');
       });
     });
 
     describe('Cancel', function() {
       it('should clear user input field and error message', function() {
-        element(by.id('btnCancel')).click();
-        element(by.id('usersfield')).getText().then(function(input) {
-          expect(input).toBe('');
-        });
+        users.cancelButton.click();
+        expect(users.addUsersField.getText()).toBe('');
       });
     });
+  });
 
-    describe('Add a new user', function() {
-      var inputEmail = utils.randomTestEmail();
-      it('should display input user email in results with success message', function() {
-        element(by.id('usersfield')).clear();
-        element(by.id('usersfield')).sendKeys(inputEmail);
-        element(by.id('btnAdd')).click();
-        browser.sleep(1000);
+  /* NEED TO REWRITE FOR BACKEND */
+  describe('Invite users', function() {
+    xit('should invite users successfully', function() {
+      var inviteEmail = utils.randomTestEmail();
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+        element(by.id('btnInvite')).click();
+        browser.sleep(2000); //for the animation
         element(by.css('.alertify-log-success')).click();
         browser.sleep(500); //for the animation
         element.all(by.css('.panel-success-body p')).then(function(rows) {
           expect(rows.length).toBe(1);
-          expect(rows[0].getText()).toContain(inputEmail);
-          expect(rows[0].getText()).toContain('added successfully');
+          expect(rows[0].getText()).toContain('sent successfully');
           browser.sleep(500);
           element(by.id('notifications-cancel')).click();
-
         });
       });
+    });
 
+    xit('should not invite users successfully if they are already entitled', function() {
+      var inviteEmail = testuser.username;
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+        element(by.id('btnInvite')).click();
+        browser.sleep(2000); //for the animation
+        element(by.css('.alertify-log-error')).click();
+        browser.sleep(500); //for the animation
+        element.all(by.css('.panel-danger-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain('already entitled');
+          browser.sleep(500);
+          element(by.id('notifications-cancel')).click();
+        });
+      });
+    });
+
+    xit('should invite users successfully from org which has autoentitlement flag disabled', function() {
+      var inviteEmail = testuser.usernameWithNoEntitlements;
+      element(by.id('usersfield')).clear();
+      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
+        element(by.id('btnInvite')).click();
+        browser.sleep(2000); //for the animation
+        element(by.css('.alertify-log-success')).click();
+        browser.sleep(500); //for the animation
+        element.all(by.css('.panel-success-body p')).then(function(rows) {
+          expect(rows.length).toBe(1);
+          expect(rows[0].getText()).toContain('sent successfully');
+          browser.sleep(500);
+          element(by.id('notifications-cancel')).click();
+        });
+      });
+    });
+  });
+
+  //Entitle User Flows: state is in the users page
+  describe('Entitle User Flows', function() {
+    var inputEmail = utils.randomTestEmail();
+
+    describe('Add a new user', function() {
+      it('should display input user email in results with success message', function() {
+        users.addUsersField.clear();
+        users.addUsersField.sendKeys(inputEmail);
+        users.addButton.click();
+        users.assertSuccess(inputEmail,'added successfully');
+      });
+    });
+
+    describe('Entitle an existing user with call-initiation', function() {
+      it('should display input user email in results with success message', function() {
+        users.addUsersField.clear();
+        users.addUsersField.sendKeys(inputEmail);
+        users.manageCallInitiation.click();
+        users.entitleButton.click();
+        users.assertSuccess(inputEmail,'entitled successfully');
+      });
+    });
+
+    describe('Attempt to un-entitle call-initiation', function() {
+      it('should display input user email in results with entitlement previously updated message', function() {
+        users.addUsersField.clear();
+        users.addUsersField.sendKeys(inputEmail);
+        users.manageCallInitiation.click();
+        users.entitleButton.click();
+        users.assertError(inputEmail,'entitlement previously updated');
+        users.closeAddUsers.click();
+      });
+    });
+
+    describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
+      it('should show call-initiation entitlement for the user', function() {
+        users.search(inputEmail);
+        expect(users.resultUsername.getText()).toContain(inputEmail);
+        users.resultUsername.click();
+        expect(users.squaredPanel.isDisplayed()).toBeTruthy();
+        users.squaredPanel.click();
+        browser.sleep(1000); //TODO fix this - animation should be resolved by angular
+        expect(users.callInitiationCheckbox.isDisplayed()).toBeTruthy();
+        users.callInitiationCheckbox.click();
+        users.saveButton.click();
+        users.assertSuccess(inputEmail,'updated successfully');
+        users.searchField.clear();
+        users.closePreview.click();
+      });
+    });
+
+    describe('Delete user used for entitle test', function(){
       it('should delete added user', function() {
         deleteUtils.deleteUser(inputEmail).then(function(message) {
           expect(message).toEqual(200);
@@ -249,203 +287,48 @@ describe('App flow', function() {
         });
       });
     });
-  });
 
-  /* NEED TO REWRITE FOR BACKEND */
-  // describe('Invite users', function() {
-  //   it('should invite users successfully', function() {
-  //     var inviteEmail = utils.randomTestEmail();
-  //     element(by.id('usersfield')).clear();
-  //     element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-  //       element(by.id('btnInvite')).click();
-  //       browser.sleep(2000); //for the animation
-  //       element(by.css('.alertify-log-success')).click();
-  //       browser.sleep(500); //for the animation
-  //       element.all(by.css('.panel-success-body p')).then(function(rows) {
-  //         expect(rows.length).toBe(1);
-  //         expect(rows[0].getText()).toContain('sent successfully');
-  //         browser.sleep(500);
-  //         element(by.id('notifications-cancel')).click();
-  //       });
-  //     });
-  //   });
-
-  //   it('should not invite users successfully if they are already entitled', function() {
-  //     var inviteEmail = testuser.username;
-  //     element(by.id('usersfield')).clear();
-  //     element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-  //       element(by.id('btnInvite')).click();
-  //       browser.sleep(2000); //for the animation
-  //       element(by.css('.alertify-log-error')).click();
-  //       browser.sleep(500); //for the animation
-  //       element.all(by.css('.panel-danger-body p')).then(function(rows) {
-  //         expect(rows.length).toBe(1);
-  //         expect(rows[0].getText()).toContain('already entitled');
-  //         browser.sleep(500);
-  //         element(by.id('notifications-cancel')).click();
-  //       });
-  //     });
-  //   });
-  
-  //   // it('should invite users successfully from org which has autoentitlement flag disabled', function() {
-  //   //   var inviteEmail = testuser.usernameWithNoEntitlements;
-  //   //   element(by.id('usersfield')).clear();
-  //   //   element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-  //   //     element(by.id('btnInvite')).click();
-  //   //     browser.sleep(2000); //for the animation
-  //   //     element(by.css('.alertify-log-success')).click();
-  //   //     browser.sleep(500); //for the animation
-  //   //     element.all(by.css('.panel-success-body p')).then(function(rows) {
-  //   //       expect(rows.length).toBe(1);
-  //   //       expect(rows[0].getText()).toContain('sent successfully');
-  //   //       browser.sleep(500);
-  //   //       element(by.id('notifications-cancel')).click();
-  //   //     });
-  //   //   });
-  //   // });
-  // });
-
-  //Entitle User Flows: state is in the users page
-  describe('Entitle User Flows', function() {
-    describe('Entitle an existing user with call-initiation', function() {
-      it('should display input user email in results with success message', function() {
-        element(by.id('usersfield')).clear();
-        element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
-          //entitle for call initiation
-          element(by.id('btn_squaredCallInitiation')).click().then(function() {
-            element(by.id('btnEntitle')).click();
-            browser.sleep(1000);
-            element(by.css('.alertify-log-success')).click();
-            element.all(by.css('.panel-success-body p')).then(function(rows) {
-              expect(rows.length).toBe(1);
-              expect(rows[0].getText()).toContain(testuser.username);
-              expect(rows[0].getText()).toContain('entitled successfully');
-              browser.sleep(800);
-              element(by.css('.fa-times')).click();
-            });
-          });
-        });
-      });
-    });
-
-    describe('Attempt to un-entitle call-initiation', function() {
-      it('should display input user email in results with entitlement previously updated message', function() {
-        element(by.id('usersfield')).clear();
-        element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
-          element(by.id('btn_squaredCallInitiation')).click().then(function() {
-            element(by.id('btnEntitle')).click();
-            browser.sleep(800); //for the animation
-            element(by.css('.alertify-log-error')).click();
-            browser.sleep(800); //for the animation
-            element.all(by.css('.panel-danger-body p')).then(function(rows) {
-              expect(rows.length).toBe(1);
-              expect(rows[0].getText()).toContain(testuser.username);
-              expect(rows[0].getText()).toContain('entitlement previously updated');
-              browser.sleep(800);
-              element(by.css('.fa-times')).click();
-            });
-          });
-        });
-      });
-    });
-
-    describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
-      it('should show call-initiation entitlement for the user', function() {
-        element(by.id('search-input')).sendKeys(testuser.username).then(function() {
-          element(by.id('closeAddUser')).click();
-          browser.sleep(500);
-          element(by.id('queryresults')).getAttribute('value').then(function(value) {
-            var queryresults = parseInt(value, 10);
-            if (queryresults > 0) {
-              element(by.binding('user.userName')).getText().then(function(uname) {
-                expect(uname).toContain(testuser.username);
-              });
-              element(by.binding('user.userName')).click();
-              browser.sleep(2000);
-              element(by.id('squaredPanel')).click();
-              browser.sleep(2000);
-              element(by.id('chk_squaredCallInitiation')).click();
-              browser.sleep(500);
-              element(by.id('btnSave')).click();
-              browser.sleep(2000);
-              element(by.css('.alertify-log-success')).click();
-              browser.sleep(500);
-              element.all(by.css('.panel-success-body p')).then(function(rows) {
-                expect(rows.length).toBe(1);
-                expect(rows[0].getText()).toContain(testuser.username);
-                expect(rows[0].getText()).toContain('updated successfully');
-                browser.sleep(500);
-                element(by.css('.fa-times')).click();
-              });
-              element(by.id('search-input')).clear();
-              browser.sleep(500);
-              element(by.id('exitPreviewButton')).click();
-              browser.sleep(800);
-            }
-          });
-        });
-      });
-    });
   });
 
   describe('Users preview panel', function() {
 
-      it('should show the squared entitlement column on first load', function() {
-        expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(true);
-      });
-
-      it('should show the preview panel when clicking on a user', function() {
-        element(by.id('userNameCell')).click().then(function(){
-          expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(false);
-          expect(element(by.id('details-panel')).isDisplayed()).toEqual(true);
-        });
-      });
-
-      it('should exit the preview panel when clicking the x', function() {
-          browser.sleep(2000);
-          element(by.id('exitPreviewButton')).click().then(function(){
-            browser.sleep(1000);
-            expect(element(by.id('entitlementCol')).isDisplayed()).toEqual(true);
-            expect(element(by.id('details-panel')).isDisplayed()).toEqual(false);
-          });
-        });
+    it('should show the squared entitlement column on first load', function() {
+      expect(users.entitlementCol.isDisplayed()).toBeTruthy();
     });
+
+    it('should show the preview panel when clicking on a user', function() {
+      users.resultUsername.click();
+      expect(users.entitlementCol.isDisplayed()).toBeFalsy();
+      expect(users.previewPanel.isDisplayed()).toBeTruthy();
+    });
+
+    it('should exit the preview panel when clicking the x', function() {
+      users.closePreview.click();
+      expect(users.entitlementCol.isDisplayed()).toBeTruthy();
+      expect(users.previewPanel.isDisplayed()).toBeFalsy();
+    });
+  });
 
   describe('Switching tabs', function() {
     it('should have a tab bar', function() {
-      expect(element(by.id('tabs')).isDisplayed()).toBe(true);
-      element.all(by.repeater('tab in tabs')).then(function(tabCount) {
-        expect(tabCount.length).toBe(10);
-      });
+      expect(navigation.tabs.isDisplayed()).toBeTruthy();
+      expect(navigation.getTabCount()).toEqual(10);
     });
 
     it('clicking on home tab should change the view', function() {
-      element(by.css('li[heading="Home"]')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('tabs'));
-      }).then(function() {
-        expect(browser.getCurrentUrl()).toContain('/home');
-        expect(element(by.id('Conversations')).isDisplayed()).toBe(true);
-        expect(element(by.id('Mobile Clients')).isDisplayed()).toBe(true);
-        expect(element(by.id('Web Client')).isDisplayed()).toBe(true);
-        expect(element(by.id('activeUsersChart')).isDisplayed()).toBe(true);
-        expect(element(by.id('au-content')).isDisplayed()).toBe(true);
-        expect(element(by.id('calls-content')).isDisplayed()).toBe(true);
-        expect(element(by.id('convo-content')).isDisplayed()).toBe(true);
-        expect(element(by.id('share-content')).isDisplayed()).toBe(true);
-        expect(element(by.css('.home-setup-panel')).isDisplayed()).toBe(true);
+      navigation.homeTab.click();
+      navigation.expectCurrentUrl('/home');
+      expect(home.activeUsers.isDisplayed()).toBeTruthy();
+      expect(home.calls.isDisplayed()).toBeTruthy();
+      expect(home.conversations.isDisplayed()).toBeTruthy();
+      expect(home.contentShare.isDisplayed()).toBeTruthy();
+      expect(home.homeSetup.isDisplayed()).toBeTruthy();
 
-        element(by.id('btnQuickSetup')).click().then(function(){
-          browser.sleep(1000);
-          expect(element(by.id('chk_invite')).isDisplayed()).toBe(true);
-          element(by.id('chk_invite')).click().then(function(){
-            expect(element(by.id('btnQuickSetupAction')).getText()).toEqual('Next');
-            element(by.id('btnQuickSetupAction')).click().then(function(){
-              expect(browser.getCurrentUrl()).toContain('/users');
-            });
-          });
-        });
-      });
+      home.quickSetupButton.click();
+      home.enableServiceEntitlement.click();
+      expect(home.quickSetupNextButton.getText()).toEqual('Next');
+      home.quickSetupNextButton.click();
+      navigation.expectCurrentUrl('/users');
     });
 
     it('clicking on system health panel should open to status page in a new tab', function() {
@@ -472,149 +355,113 @@ describe('App flow', function() {
     });
 
     it('clicking on orgs tab should change the view', function() {
-      element(by.css('li[heading="Manage"]')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('tabs'));
-      }).then(function() {
-        expect(browser.getCurrentUrl()).toContain('/orgs');
-        expect(element(by.id('orgTitle')).isDisplayed()).toBe(true);
-        expect(element(by.id('displayName')).isDisplayed()).toEqual(true);
-        expect(element(by.id('estimatedSize')).isDisplayed()).toEqual(true);
-        expect(element(by.id('totalUsers')).isDisplayed()).toEqual(true);
-        expect(element(by.id('sso')).isDisplayed()).toEqual(true);
-        expect(element(by.id('btnSave')).isDisplayed()).toEqual(false);
-        expect(element(by.id('btnReset')).isDisplayed()).toEqual(true);
-      });
+      navigation.manageTab.click();
+      navigation.expectCurrentUrl('/orgs');
+      expect(manage.displayName.isDisplayed()).toBeTruthy();
+      expect(manage.estimatedSize.isDisplayed()).toBeTruthy();
+      expect(manage.totalUsers.isDisplayed()).toBeTruthy();
+      expect(manage.enableSSO.isDisplayed()).toBeTruthy();
+      expect(manage.saveButton.isDisplayed()).toBeFalsy();
+      expect(manage.refreshButton.isDisplayed()).toBeTruthy();
     });
 
     it('clicking on reports tab should change the view', function() {
-      element(by.css('li[heading="Reports"]')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('tabs'));
-      }).then(function() {
-        expect(browser.getCurrentUrl()).toContain('/reports');
-        expect(element(by.id('avgEntitlementsdiv')).isDisplayed()).toBe(true);
-        expect(element(by.id('avgCallsdiv')).isDisplayed()).toBe(true);
-        expect(element(by.id('avgConversationsdiv')).isDisplayed()).toBe(true);
-        expect(element(by.id('activeUsersdiv')).isDisplayed()).toBe(true);
-        expect(element(by.id('avg-entitlements-refresh')).isDisplayed()).toBe(true);
-        expect(element(by.id('avg-calls-refresh')).isDisplayed()).toBe(true);
-        expect(element(by.id('avg-conversations-refresh')).isDisplayed()).toBe(true);
-        //expect(element(by.id('active-users-refresh')).isDisplayed()).toBe(true);
-      });
+      navigation.reportsTab.click();
+      navigation.expectCurrentUrl('/reports');
+      expect(reports.entitlements.isDisplayed()).toBeTruthy();
+      expect(reports.calls.isDisplayed()).toBeTruthy();
+      expect(reports.conversations.isDisplayed()).toBeTruthy();
+      expect(reports.activeUsers.isDisplayed()).toBeTruthy();
+      expect(reports.entitlementsRefresh.isDisplayed()).toBeTruthy();
+      expect(reports.callsRefresh.isDisplayed()).toBeTruthy();
+      expect(reports.conversationsRefresh.isDisplayed()).toBeTruthy();
+      //expect(reports.activeUsersRefresh.isDisplayed()).toBeTruthy();
     });
 
     it('clicking on users tab should change the view', function() {
-      element(by.css('li[heading="Users"]')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('tabs'));
-      }).then(function() {
-        expect(browser.getCurrentUrl()).toContain('/users');
-      });
+      navigation.usersTab.click();
+      navigation.expectCurrentUrl('/users');
     });
   });
 
   describe('Home data refresh', function() {
 
     it('should load refresh directive template', function() {
-        element(by.css('li[heading="Home"]')).click();
-        browser.driver.wait(function() {
-          return browser.driver.isElementPresent(by.id('tabs'));
-      }).then(function(){
-          expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
-          expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
-        });
-      });
+      navigation.homeTab.click();
+      navigation.expectCurrentUrl('/home');
+      expect(home.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(home.refreshData.isDisplayed()).toBeTruthy();
+    });
 
     it('should load cached values into directive when switching tabs', function() {
-        element(by.css('li[heading="Users"]')).click();
-        browser.driver.wait(function() {
-          return browser.driver.isElementPresent(by.id('tabs'));
-        }).then(function(){
-          element(by.css('li[heading="Home"]')).click();
-          browser.driver.wait(function() {
-          return browser.driver.isElementPresent(by.id('tabs'));
-        }).then(function(){
-            expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
-            expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
-            expect(element(by.id('au-content')).isDisplayed()).toEqual(true);
-            expect(element(by.id('calls-content')).isDisplayed()).toEqual(true);
-            expect(element(by.id('convo-content')).isDisplayed()).toEqual(true);
-            expect(element(by.id('share-content')).isDisplayed()).toEqual(true);
-            expect(element(by.id('activeUsersChart')).isDisplayed()).toEqual(true);
-          });
-        });
-      });
+      navigation.usersTab.click();
+      navigation.expectCurrentUrl('/users');
+      navigation.homeTab.click();
+      navigation.expectCurrentUrl('/home');
+
+      expect(home.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(home.refreshData.isDisplayed()).toBeTruthy();
+      expect(home.activeUsers.isDisplayed()).toBeTruthy();
+      expect(home.calls.isDisplayed()).toBeTruthy();
+      expect(home.conversations.isDisplayed()).toBeTruthy();
+      expect(home.contentShare.isDisplayed()).toBeTruthy();
+      expect(home.homeSetup.isDisplayed()).toBeTruthy();
+      expect(home.activeUsersChart.isDisplayed()).toBeTruthy();
+    });
 
     it('should load new values and update time when clicking refresh', function() {
-      browser.driver.findElement(by.id('time-click-div')).click().then(function() {
-          expect(element(by.id('homeRefreshData')).isDisplayed()).toEqual(true);
-          expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
-          expect(element(by.id('au-content')).isDisplayed()).toEqual(true);
-          expect(element(by.id('calls-content')).isDisplayed()).toEqual(true);
-          expect(element(by.id('convo-content')).isDisplayed()).toEqual(true);
-          expect(element(by.id('share-content')).isDisplayed()).toEqual(true);
-          expect(element(by.id('activeUsersChart')).isDisplayed()).toEqual(true);
-        });
-      });
-     
+      home.refreshButton.click();
+      expect(home.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(home.refreshData.isDisplayed()).toBeTruthy();
+      expect(home.activeUsers.isDisplayed()).toBeTruthy();
+      expect(home.calls.isDisplayed()).toBeTruthy();
+      expect(home.conversations.isDisplayed()).toBeTruthy();
+      expect(home.contentShare.isDisplayed()).toBeTruthy();
+      expect(home.homeSetup.isDisplayed()).toBeTruthy();
+      expect(home.activeUsersChart.isDisplayed()).toBeTruthy();
+    });
+  });
+
+  describe('Reports data refresh', function() {
+
+    it('should load refresh directive template', function() {
+      navigation.reportsTab.click();
+      navigation.expectCurrentUrl('/reports');
+      expect(reports.refreshData.isDisplayed()).toBeTruthy();
+      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
     });
 
-    describe('Reports data refresh', function() {
-
-      it('should load refresh directive template', function() {
-        element(by.css('li[heading="Reports"]')).click();
-        browser.driver.wait(function() {
-          return browser.driver.isElementPresent(by.id('tabs'));
-        }).then(function(){
-          expect(element(by.id('reportsRefreshData')).isDisplayed()).toEqual(true);
-          expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
-        });
-      });
-
-      it('should load cached values into directive when switching tabs', function() {
-      //browser.sleep(3000);
-
-        element(by.css('li[heading="Users"]')).click();
-          browser.driver.wait(function() {
-            return browser.driver.isElementPresent(by.id('tabs'));
-          }).then(function(){
-            element(by.css('li[heading="Reports"]')).click();
-            browser.driver.wait(function() {
-              return browser.driver.isElementPresent(by.id('tabs'));
-            }).then(function(){
-              expect(element(by.id('reportsRefreshData')).isDisplayed()).toEqual(true);
-              expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
-              expect(element(by.id('avgEntitlementsdiv')).isDisplayed()).toEqual(true);
-              expect(element(by.id('avgConversationsdiv')).isDisplayed()).toEqual(true);
-              expect(element(by.id('activeUsersdiv')).isDisplayed()).toEqual(true);
-              expect(element(by.id('avgCallsdiv')).isDisplayed()).toEqual(true);
-          });
-        });
-      });
-
-      it('should load new values and update time when clicking refresh', function() {
-        browser.driver.findElement(by.id('refreshButton')).click().then(function(){
-          expect(element(by.id('reportsRefreshData')).isDisplayed()).toEqual(true);
-          expect(element(by.id('lastReloadedTime')).isDisplayed()).toEqual(true);
-          expect(element(by.id('avgEntitlementsdiv')).isDisplayed()).toEqual(true);
-          expect(element(by.id('avgConversationsdiv')).isDisplayed()).toEqual(true);
-          expect(element(by.id('activeUsersdiv')).isDisplayed()).toEqual(true);
-          expect(element(by.id('avgCallsdiv')).isDisplayed()).toEqual(true);
-
-        });
-      });
+    it('should load cached values into directive when switching tabs', function() {
+      navigation.usersTab.click();
+      navigation.expectCurrentUrl('/users');
+      navigation.reportsTab.click();
+      navigation.expectCurrentUrl('/reports');
+      expect(reports.refreshData.isDisplayed()).toBeTruthy();
+      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(reports.entitlements.isDisplayed()).toBeTruthy();
+      expect(reports.calls.isDisplayed()).toBeTruthy();
+      expect(reports.conversations.isDisplayed()).toBeTruthy();
+      expect(reports.activeUsers.isDisplayed()).toBeTruthy();
     });
+
+    it('should load new values and update time when clicking refresh', function() {
+      reports.refreshButton.click();
+      expect(reports.refreshData.isDisplayed()).toBeTruthy();
+      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(reports.entitlements.isDisplayed()).toBeTruthy();
+      expect(reports.calls.isDisplayed()).toBeTruthy();
+      expect(reports.conversations.isDisplayed()).toBeTruthy();
+      expect(reports.activeUsers.isDisplayed()).toBeTruthy();
+    });
+  });
 
   // Log Out
   describe('Log Out', function() {
     it('should log out', function() {
-      element(by.id('setting-bar')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('logout-btn'));
-      }).then(function() {
-        element(by.id('logout-btn')).click();
-      });
+      expect(navigation.settings.isDisplayed()).toBeTruthy();
+      navigation.settings.click();
+      expect(navigation.logoutButton.isDisplayed()).toBeTruthy();
+      navigation.logoutButton.click();
     });
   });
 

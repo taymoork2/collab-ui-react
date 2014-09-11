@@ -18,7 +18,11 @@ var testuser = {
 // Logging in. Write your tests after the login flow is complete.
 describe('Login as non-sso admin user', function() {
 
-  it('should redirect to CI global login page.', function() {
+  it('should login', function(){
+    login.login(testuser.username, testuser.password);
+  });
+
+  xit('should redirect to CI global login page.', function() {
     browser.get('#/login');
     browser.driver.wait(function() {
       return browser.driver.isElementPresent(by.css('#IDToken1'));
@@ -27,7 +31,7 @@ describe('Login as non-sso admin user', function() {
     });
   });
 
-  it('should log in with valid sso admin user and display home page', function() {
+  xit('should log in with valid sso admin user and display home page', function() {
     browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
     browser.driver.findElement(by.css('#IDButton2')).click();
     browser.driver.wait(function() {

@@ -25,7 +25,7 @@ var inputEmail;
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 describe('List users flow', function() {
-  beforeEach(function() {   
+  beforeEach(function() {
     this.addMatchers({
       toBeLessThanOrEqualTo: function() {
         return {
@@ -43,7 +43,11 @@ describe('List users flow', function() {
   // Logging in. Write your tests after the login flow is complete.
   describe('Login as non-sso admin user', function() {
 
-    it('should redirect to CI global login page.', function() {
+    it('should login', function(){
+      login.login(testuser.username, testuser.password);
+    });
+
+    xit('should redirect to CI global login page.', function() {
       browser.get('#/login');
       browser.driver.wait(function() {
         return browser.driver.isElementPresent(by.css('#IDToken1'));
@@ -52,7 +56,7 @@ describe('List users flow', function() {
       });
     });
 
-    it('should log in with valid sso admin user and display home page', function() {
+    xit('should log in with valid sso admin user and display home page', function() {
       browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
       browser.driver.findElement(by.css('#IDButton2')).click();
       browser.driver.wait(function() {
@@ -205,10 +209,10 @@ describe('List users flow', function() {
               element(by.id('closeAddUser')).click();
               browser.sleep(500);
             });
-            
+
             element(by.id('search-input')).sendKeys(inputEmail).then(function() {
               browser.sleep(1000);
-              
+
               element.all(by.repeater('user in queryuserslist')).then(function(rows) {
                 expect(rows.length).toBe(1);
                 //check user profile
