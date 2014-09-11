@@ -47,7 +47,7 @@
           <label for="inputEmail3" translate="usersPage.email"></label>
           <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
           <br>
-          <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements" ng-if="service!=='webExSquared' && isServiceAllowed(service)">
+          <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements" ng-if="service!='webExSquared'">
             <div class="btn-group" id="{{'btn_'+service}}">
              <input type="checkbox" ng-model="entitlements[service]" icheck>
             </div>
@@ -86,7 +86,7 @@
         </tr>
         <tr ng-show="queryuserslist" ng-repeat="user in queryuserslist" ng-click="showUserDetails(user)" id="{{user.id}}" ng-class-odd="'odd'" ng-class-even="'even'">
           <td class="center">
-            <img ng-show='currentUserPhoto' src='{{getUserPhoto(user)}}' class='user-img'></img>
+            <img ng-if="user.name" src='{{getUserPhoto(user)}}' class='user-img'></img>
           </td>
           <td id="userNameCell"><span ng-if="user.name">{{user.name.givenName}}</span></td>
           <td><span ng-if="user.name">{{user.name.familyName}}</span></td>
@@ -135,7 +135,7 @@
 
       <div class="standard-card services-card">
         <span class="preview-card-title" translate="usersPreview.servicesPreview"></span>
-        <div id="huronPanel" telephony-info ng-show="isHuronEnabled()"></div telephony-info>
+        <div id="huronPanel" telephony-info current-user="currentUser" ng-show="isHuronEnabled()"></div telephony-info>
         <div id="conferencePanel" conferencing-info ng-show="false"></div conferencing-info>
         <div id="squaredPanel" conversations-info ng-click="showConversationPanel()"></div conversations-info>
         <div id="endpointPanel" endpoints-info ng-show="false">

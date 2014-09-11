@@ -50,6 +50,7 @@ angular.module('Core')
         $('#entire-slide').animate({
           'left': '0px'
         }, 1000, function() {});
+
       };
 
       var usersperpage = Config.usersperpage;
