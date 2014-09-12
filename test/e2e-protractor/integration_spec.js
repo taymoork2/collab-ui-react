@@ -266,15 +266,15 @@ describe('App flow', function() {
       });
 
       it('should show the preview panel when clicking on a user', function() {
-        users.resultUsername.click();
-        expect(users.entitlementCol.isDisplayed()).toBeFalsy();
-        expect(users.previewPanel.isDisplayed()).toBeTruthy();
+        utils.click(users.resultUsername);
+        utils.expectIsNotDisplayed(users.entitlementCol);
+        utils.expectIsDisplayed(users.previewPanel);
       });
 
       it('should exit the preview panel when clicking the x', function() {
-        users.closePreview.click();
-        expect(users.entitlementCol.isDisplayed()).toBeTruthy();
-        expect(users.previewPanel.isDisplayed()).toBeFalsy();
+        utils.click(users.closePreview);
+        utils.expectIsDisplayed(users.entitlementCol);
+        utils.expectIsNotDisplayed(users.previewPanel);
       });
     });
 
@@ -321,11 +321,12 @@ describe('App flow', function() {
       expect(home.conversations.isDisplayed()).toBeTruthy();
       expect(home.contentShare.isDisplayed()).toBeTruthy();
       expect(home.homeSetup.isDisplayed()).toBeTruthy();
+    });
 
-      home.quickSetupButton.click();
-      home.enableServiceEntitlement.click();
-      expect(home.quickSetupNextButton.getText()).toEqual('Next');
-      home.quickSetupNextButton.click();
+    it('clicking on quick setup launch should open a dialog and change the page', function(){
+      utils.click(home.quickSetupButton);
+      utils.click(home.enableServiceEntitlement);
+      utils.click(home.quickSetupNextButton);
       navigation.expectCurrentUrl('/users');
     });
 
@@ -373,7 +374,6 @@ describe('App flow', function() {
       expect(reports.entitlementsRefresh.isDisplayed()).toBeTruthy();
       expect(reports.callsRefresh.isDisplayed()).toBeTruthy();
       expect(reports.conversationsRefresh.isDisplayed()).toBeTruthy();
-      //expect(reports.activeUsersRefresh.isDisplayed()).toBeTruthy();
     });
 
     it('clicking on users tab should change the view', function() {

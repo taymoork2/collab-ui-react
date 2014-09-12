@@ -13,7 +13,7 @@ var HomePage = function(){
 
   this.homeSetup = element(by.css('.home-setup-panel'));
   this.quickSetupButton = element(by.id('btnQuickSetup'));
-  this.quickSetupNextButton = element(by.id('btnQuickSetupAction'));
+  this.quickSetupNextButton = element(by.buttonText('Next'));
   this.advancedSetupButton = element(by.id('btnAdvSetup'));
   this.enableServiceEntitlement = element(by.id('chk_invite'));
 }

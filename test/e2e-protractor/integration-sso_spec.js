@@ -56,7 +56,7 @@ describe('Enabling SSO flow', function() {
       expect(element(by.id('btnSSO')).isDisplayed()).toBe(true);
       element(by.id('btnSSO')).click().then(function() {
         browser.sleep(1000);
-        expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
+        utils.expectIsDisplayed(element(by.id('ssoModalHeader')));
       });
     });
 
@@ -72,13 +72,13 @@ describe('Enabling SSO flow', function() {
     it('should close the wizard when Cancel button is clicked', function() {
       element(by.id('importCancelBtn')).click().then(function() {
         browser.sleep(500);
-        expect(element(by.id('btnSSO')).isDisplayed()).toBe(true);
+        utils.expectIsDisplayed(element(by.id('btnSSO')));
       });
     });
 
     it('should navigate steps by clicking on Next and Previous buttons', function() {
       element(by.id('btnSSO')).click().then(function() {
-        browser.sleep(500);
+        utils.expectIsDisplayed(element(by.id('ssoModalHeader')));
         element(by.id('importNextBtn')).click().then(function() {
           browser.sleep(500);
           expect(element(by.id('downloadMeta')).isDisplayed()).toBe(true);

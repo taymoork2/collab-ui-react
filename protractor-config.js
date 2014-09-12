@@ -6,9 +6,12 @@ exports.config = {
     'test/e2e-protractor/*_spec.js'
   ],
 
+  // Uses ChromeDriver directly instead of selenium server
+  chromeOnly: true,
+
   capabilities: {
     'browserName': 'chrome',
-    'chromeOptions': {'args': ['--disable-extensions']}
+    'chromeOptions': {'args': ['--disable-extensions', '--start-maximized']}
   },
 
   // A base URL for your application under test. Calls to protractor.get()
@@ -45,7 +48,6 @@ exports.config = {
       }
     }));
 */
-    browser.driver.manage().window().maximize();
   },
 
   jasmineNodeOpts: {

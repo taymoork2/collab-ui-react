@@ -75,3 +75,39 @@ exports.getToken = function() {
   return defer.promise;
 
 };
+
+
+// Utility functions to be used with animation effects
+// Will wait for element to be displayed before attempting to take action
+exports.expectIsDisplayed = function(elem) {
+  browser.wait(function(){
+    return elem.isDisplayed().then(function(isDisplayed){
+      return isDisplayed;
+    }, function(){
+      return false;
+    });
+  });
+  expect(elem.isDisplayed()).toBeTruthy();
+}
+
+exports.expectIsNotDisplayed = function(elem) {
+  browser.wait(function(){
+    return elem.isDisplayed().then(function(isDisplayed){
+      return !isDisplayed;
+    }, function(){
+      return false;
+    });
+  });
+  expect(elem.isDisplayed()).toBeFalsy();
+}
+
+exports.click = function(elem) {
+  browser.wait(function(){
+    return elem.isDisplayed().then(function(isDisplayed){
+      return isDisplayed;
+    }, function(){
+      return false;
+    });
+  });
+  elem.click();
+};
