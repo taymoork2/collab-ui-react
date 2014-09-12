@@ -15,9 +15,6 @@ var testuser = {
   searchStr: 'fake'
 };
 
-var utils = require('./testUtils.js');
-var deleteUtils = require('./deleteUtils.js');
-
 var inputEmail;
 
 // Notes:

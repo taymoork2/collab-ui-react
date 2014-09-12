@@ -2,8 +2,8 @@
 
 /* global protractor */
 
-var config = require('./testconfig.js');
-var utils = require('./testUtils.js');
+var config = require('./test.config.js');
+var utils = require('./test.utils.js');
 
 exports.deleteUser = function(email) {
   var defer = protractor.promise.defer();
@@ -18,7 +18,7 @@ exports.deleteUser = function(email) {
       },
     };
 
-    utils.sendRequest(options).then(function(status) {
+    utils.sendRequest(options).then(function() {
       console.log('user deleted successfully: ', email);
       defer.fulfill(200);
     }, function(data) {

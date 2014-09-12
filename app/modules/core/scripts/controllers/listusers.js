@@ -24,6 +24,25 @@ angular.module('Core')
         }
       };
 
+      $scope.isSquaredEnabled = function() {
+        return isEntitled(Config.entitlements.squared);
+      };
+
+      $scope.isHuronEnabled = function() {
+        return isEntitled(Config.entitlements.huron);
+      };
+
+      var isEntitled = function(ent) {
+        if ($scope.currentUser && $scope.currentUser.entitlements) {
+          for (var i = 0; i < $scope.currentUser.entitlements.length; i++) {
+            var svc = $scope.currentUser.entitlements[i];
+            if (svc === ent) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
 
       $scope.showConversationPanel = function() {
         $scope.conversationsPanel = true;
@@ -58,17 +77,20 @@ angular.module('Core')
         });
       };
 
+      $scope.currentUserPhoto = null;
       $scope.getUserPhoto = function(user) {
-        var photo;
-        if (user.photos) {
+        if (user && user.photos) {
           for (var i in user.photos) {
             if (user.photos[i].type === 'thumbnail') {
-              photo = user.photos[i].value;
+              $scope.currentUserPhoto = user.photos[i].value;
               break;
             }
           } //end for
         } //endif
-        return photo;
+        else {
+          $scope.currentUserPhoto = null;
+        }
+        return $scope.currentUserPhoto;
       };
 
       //Populating authinfo data if empty.

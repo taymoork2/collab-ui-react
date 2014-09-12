@@ -15,8 +15,6 @@ var testuser = {
   usernameWithNoEntitlements: 'doNotDeleteTestUser@wx2.example.com'
 };
 
-
-
 // Notes:
 // - State is conserved between each describe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
@@ -261,6 +259,25 @@ describe('App flow', function() {
       });
     });
 
+    describe('Users preview panel', function() {
+
+      it('should show the squared entitlement column on first load', function() {
+        expect(users.entitlementCol.isDisplayed()).toBeTruthy();
+      });
+
+      it('should show the preview panel when clicking on a user', function() {
+        users.resultUsername.click();
+        expect(users.entitlementCol.isDisplayed()).toBeFalsy();
+        expect(users.previewPanel.isDisplayed()).toBeTruthy();
+      });
+
+      it('should exit the preview panel when clicking the x', function() {
+        users.closePreview.click();
+        expect(users.entitlementCol.isDisplayed()).toBeTruthy();
+        expect(users.previewPanel.isDisplayed()).toBeFalsy();
+      });
+    });
+
     describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
       it('should show call-initiation entitlement for the user', function() {
         users.search(inputEmail);
@@ -288,25 +305,6 @@ describe('App flow', function() {
       });
     });
 
-  });
-
-  describe('Users preview panel', function() {
-
-    it('should show the squared entitlement column on first load', function() {
-      expect(users.entitlementCol.isDisplayed()).toBeTruthy();
-    });
-
-    it('should show the preview panel when clicking on a user', function() {
-      users.resultUsername.click();
-      expect(users.entitlementCol.isDisplayed()).toBeFalsy();
-      expect(users.previewPanel.isDisplayed()).toBeTruthy();
-    });
-
-    it('should exit the preview panel when clicking the x', function() {
-      users.closePreview.click();
-      expect(users.entitlementCol.isDisplayed()).toBeTruthy();
-      expect(users.previewPanel.isDisplayed()).toBeFalsy();
-    });
   });
 
   describe('Switching tabs', function() {

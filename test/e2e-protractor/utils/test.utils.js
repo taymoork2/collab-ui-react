@@ -2,7 +2,7 @@
 
 /* global protractor */
 
-var config = require('./testconfig.js');
+var config = require('./test.config.js');
 var request = require('request');
 // var jar = request.jar();
 // var req = request.defaults({

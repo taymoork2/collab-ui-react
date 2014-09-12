@@ -31,8 +31,9 @@ exports.config = {
     global.manage = new ManagePage();
     global.reports = new ReportsPage();
 
-    global.utils = require('./test/e2e-protractor/testUtils.js');
-    global.deleteUtils = require('./test/e2e-protractor/deleteUtils.js');
+    global.utils = require('./test/e2e-protractor/utils/test.utils.js');
+    global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
+    global.config = require('./test/e2e-protractor/utils/test.config.js');
 /*
     var ScreenShotReporter = require('protractor-screenshot-reporter');
     var path = require('path');
