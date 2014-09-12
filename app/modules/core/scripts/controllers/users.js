@@ -13,6 +13,10 @@ angular.module('Core')
         setPlaceholder();
       };
 
+      $scope.isSquaredInviter = function () {
+        return Authinfo.isSquaredInviter();
+      };
+
       var setPlaceholder = function () {
         var placeholder = $filter('translate')('usersPage.userInput');
         angular.element('#usersfield-tokenfield').attr('placeholder', placeholder);

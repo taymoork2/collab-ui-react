@@ -99,6 +99,11 @@ angular.module('Core')
           return roles.indexOf('WX2_User') > -1;
         },
 
+        isSquaredInviter: function() {
+          var roles = this.getRoles();
+          return roles.indexOf('WX2_SquaredInviter') > -1;
+        },
+
         isServiceAllowed: function(service) {
           if (service==='squaredTeamMember' && !this.isSquaredTeamMember()){
             return false;

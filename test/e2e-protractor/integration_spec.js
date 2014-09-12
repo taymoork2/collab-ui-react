@@ -15,6 +15,11 @@ var testuser = {
   usernameWithNoEntitlements: 'doNotDeleteTestUser@wx2.example.com'
 };
 
+var notsqinviteruser = {
+  username: 'sqtest-admin@squared.example.com',
+  password: 'C1sc0123!',
+};
+
 // Notes:
 // - State is conserved between each describe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
@@ -65,10 +70,12 @@ describe('App flow', function() {
   describe('Navigation Bar', function() {
 
     it('should display correct tabs for user based on role', function() {
+      expect(navigation.getTabCount()).toBe(10);  // double number of actual tabs due to generated divs
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
       expect(navigation.usersTab.isDisplayed()).toBeTruthy();
       expect(navigation.manageTab.isDisplayed()).toBeTruthy();
       expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
+      expect(navigation.supportTab.isDisplayed()).toBeTruthy();
     });
 
     it('clicking on users tab should change the view', function() {
@@ -171,57 +178,29 @@ describe('App flow', function() {
     });
   });
 
-  /* NEED TO REWRITE FOR BACKEND */
   describe('Invite users', function() {
-    xit('should invite users successfully', function() {
+    it('should invite users successfully', function() {
       var inviteEmail = utils.randomTestEmail();
-      element(by.id('usersfield')).clear();
-      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-        element(by.id('btnInvite')).click();
-        browser.sleep(2000); //for the animation
-        element(by.css('.alertify-log-success')).click();
-        browser.sleep(500); //for the animation
-        element.all(by.css('.panel-success-body p')).then(function(rows) {
-          expect(rows.length).toBe(1);
-          expect(rows[0].getText()).toContain('sent successfully');
-          browser.sleep(500);
-          element(by.id('notifications-cancel')).click();
-        });
-      });
+      users.addUsersField.clear();
+      users.addUsersField.sendKeys(inviteEmail);
+      users.inviteButton.click();
+      users.assertSuccess('sent successfully');
     });
 
-    xit('should not invite users successfully if they are already entitled', function() {
+    it('should not invite users successfully if they are already entitled', function() {
       var inviteEmail = testuser.username;
-      element(by.id('usersfield')).clear();
-      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-        element(by.id('btnInvite')).click();
-        browser.sleep(2000); //for the animation
-        element(by.css('.alertify-log-error')).click();
-        browser.sleep(500); //for the animation
-        element.all(by.css('.panel-danger-body p')).then(function(rows) {
-          expect(rows.length).toBe(1);
-          expect(rows[0].getText()).toContain('already entitled');
-          browser.sleep(500);
-          element(by.id('notifications-cancel')).click();
-        });
-      });
+      users.addUsersField.clear();
+      users.addUsersField.sendKeys(inviteEmail);
+      users.inviteButton.click();
+      users.assertError('already entitled');
     });
 
-    xit('should invite users successfully from org which has autoentitlement flag disabled', function() {
+    it('should invite users successfully from org which has autoentitlement flag disabled', function() {
       var inviteEmail = testuser.usernameWithNoEntitlements;
-      element(by.id('usersfield')).clear();
-      element(by.id('usersfield')).sendKeys(inviteEmail).then(function() {
-        element(by.id('btnInvite')).click();
-        browser.sleep(2000); //for the animation
-        element(by.css('.alertify-log-success')).click();
-        browser.sleep(500); //for the animation
-        element.all(by.css('.panel-success-body p')).then(function(rows) {
-          expect(rows.length).toBe(1);
-          expect(rows[0].getText()).toContain('sent successfully');
-          browser.sleep(500);
-          element(by.id('notifications-cancel')).click();
-        });
-      });
+      users.addUsersField.clear();
+      users.addUsersField.sendKeys(inviteEmail);
+      users.inviteButton.click();
+      users.assertSuccess('sent successfully');
     });
   });
 
@@ -450,6 +429,57 @@ describe('App flow', function() {
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();
+    });
+  });
+
+  // Log Out
+  describe('Log Out', function() {
+    it('should log out', function() {
+      expect(navigation.settings.isDisplayed()).toBeTruthy();
+      navigation.settings.click();
+      expect(navigation.logoutButton.isDisplayed()).toBeTruthy();
+      navigation.logoutButton.click();
+    });
+  });
+
+  //Log in with a user with no SquaredInviter Entitlement
+  describe('No SquaredInviter Entitlement', function() {
+  // Logging in. Write your tests after the login flow is complete.
+    describe('Login as sqtest-admin user', function() {
+
+      it('should login', function(){
+        login.login(notsqinviteruser.username, notsqinviteruser.password);
+      });
+
+      it('should display correct tabs for user based on role', function() {
+        expect(navigation.getTabCount()).toBe(8);  // double number of actual tabs due to generated divs
+        expect(navigation.homeTab.isDisplayed()).toBeTruthy();
+        expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
+        expect(navigation.usersTab.isDisplayed()).toBeTruthy();
+        expect(navigation.manageTab.isDisplayed()).toBeTruthy();
+      });
+
+      it('clicking on users tab should change the view', function() {
+        navigation.usersTab.click();
+        browser.sleep(1000);
+        navigation.expectCurrentUrl('/users');
+      });
+
+      it('click on invite subtab should show add users', function() {
+        users.addUsers.click();
+        expect(users.listPanel.isDisplayed()).toBeFalsy();
+        expect(users.managePanel.isDisplayed()).toBeTruthy();
+      });
+
+      it('should initialize users page for add/entitle/invite users with disabled invite button', function() {
+        expect(users.subTitleAdd.isDisplayed()).toBeTruthy();
+        expect(users.subTitleEnable.isDisplayed()).toBeFalsy();
+        expect(users.subTitleAdd.getText()).toBe('Manage users');
+        expect(users.addButton.isDisplayed()).toBeTruthy();
+        expect(users.entitleButton.isDisplayed()).toBeTruthy();
+        expect(users.inviteButton.isEnabled()).toBeFalsy();
+      });
+
     });
   });
 

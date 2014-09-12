@@ -7,6 +7,7 @@ var Navigation = function(){
   this.usersTab = element(by.css('li[heading="Users"]'));
   this.manageTab = element(by.css('li[heading="Manage"]'));
   this.reportsTab = element(by.css('li[heading="Reports"]'));
+  this.supportTab = element(by.css('li[heading="Support"]'));
   this.settings = element(by.id('setting-bar'));
   this.feedbackButton = element(by.id('feedback-btn'));
   this.username = element(by.binding('username'));

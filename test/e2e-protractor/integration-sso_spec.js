@@ -19,132 +19,92 @@ describe('Enabling SSO flow', function() {
     it('should login', function(){
       login.loginSSO(testuser.username, testuser.password);
     });
-
-    xit('should redirect to CI global login page.', function() {
-      browser.get('#/login');
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.css('#IDToken1'));
-      }).then(function() {
-        expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
-      });
-    });
-
-    xit('should log in with valid admin user and display home page', function() {
-      browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
-      browser.driver.findElement(by.css('#IDButton2')).click();
-      browser.sleep(500);
-      browser.driver.findElement(by.css('#username')).sendKeys(testuser.username);
-      browser.driver.findElement(by.css('#password')).sendKeys(testuser.password);
-      browser.driver.findElement(by.css('button[type="submit"]')).click();
-      browser.sleep(1000);
-      expect(browser.getCurrentUrl()).toContain('/home');
-    });
-
   }); //State is logged-in
 
   describe('Manage tab - SSO flow', function() {
     it('clicking on manage tab should change the view', function() {
-      element(by.css('li[heading="Manage"]')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('tabs'));
-      }).then(function() {
-        expect(browser.getCurrentUrl()).toContain('/orgs');
-      });
+      navigation.manageTab.click();
+      navigation.expectCurrentUrl('/orgs');
     });
 
     it('should display setup SSO button and clicking it should launch the wizard', function() {
-      expect(element(by.id('btnSSO')).isDisplayed()).toBe(true);
-      element(by.id('btnSSO')).click().then(function() {
-        browser.sleep(1000);
-        utils.expectIsDisplayed(element(by.id('ssoModalHeader')));
-      });
+      utils.expectIsDisplayed(ssowizard.btnSSO);
+      ssowizard.btnSSO.click();
+      utils.expectIsDisplayed(ssowizard.ssoModalHeader);
     });
 
     it('should display the Import IDP meatadata step when the wizard launches', function() {
-      expect(element(by.id('fileToUploadText')).isDisplayed()).toBe(true);
-      expect(element(by.id('fileToUploadBtn')).isDisplayed()).toBe(true);
-      expect(element(by.id('fileToUploadTextHolder')).isDisplayed()).toBe(false);
-      expect(element(by.id('fileToUploadBtnHolder')).isDisplayed()).toBe(false);
-      expect(element(by.id('importCancelBtn')).isDisplayed()).toBe(true);
-      expect(element(by.id('importNextBtn')).isDisplayed()).toBe(true);
+      utils.expectIsDisplayed(ssowizard.fileToUploadText);
+      utils.expectIsDisplayed(ssowizard.fileToUploadBtn);
+      utils.expectIsNotDisplayed(ssowizard.fileToUploadTextHolder);
+      utils.expectIsNotDisplayed(ssowizard.fileToUploadBtnHolder);
+      utils.expectIsDisplayed(ssowizard.importCancelBtn);
+      utils.expectIsDisplayed(ssowizard.importNextBtn);
     });
 
     it('should close the wizard when Cancel button is clicked', function() {
-      element(by.id('importCancelBtn')).click().then(function() {
-        browser.sleep(500);
-        utils.expectIsDisplayed(element(by.id('btnSSO')));
-      });
+      ssowizard.importCancelBtn.click();
+      utils.expectIsDisplayed(ssowizard.btnSSO);
     });
 
     it('should navigate steps by clicking on Next and Previous buttons', function() {
-      element(by.id('btnSSO')).click().then(function() {
-        utils.expectIsDisplayed(element(by.id('ssoModalHeader')));
-        element(by.id('importNextBtn')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.id('downloadMeta')).isDisplayed()).toBe(true);
-          expect(element(by.id('exportCancelBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('exportBackBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('exportNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
-        });
-        element(by.id('exportNextBtn')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.id('ssoTestBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('testssoCancelBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('testssoBackBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('testssoNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
-        });
-        element(by.id('testssoNextBtn')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.id('enablessoCancelBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('enablessoBackBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('enablessoFinishBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
-        });
-        element(by.id('enablessoBackBtn')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.id('ssoTestBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('testssoCancelBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('testssoBackBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('testssoNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
-        });
-        element(by.id('testssoBackBtn')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.id('downloadMeta')).isDisplayed()).toBe(true);
-          expect(element(by.id('exportCancelBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('exportBackBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('exportNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
-        });
-        element(by.id('exportBackBtn')).click().then(function() {
-          browser.sleep(500);
-          expect(element(by.id('fileToUploadText')).isDisplayed()).toBe(true);
-          expect(element(by.id('fileToUploadBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('importCancelBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('importNextBtn')).isDisplayed()).toBe(true);
-          expect(element(by.id('ssoModalHeader')).isDisplayed()).toBe(true);
-        });
-      });
+      ssowizard.btnSSO.click();
+      utils.expectIsDisplayed(ssowizard.ssoModalHeader);
+      
+      ssowizard.importNextBtn.click();
+      utils.expectIsDisplayed(ssowizard.downloadMeta);
+      utils.expectIsDisplayed(ssowizard.exportCancelBtn);
+      utils.expectIsDisplayed(ssowizard.exportBackBtn);
+      utils.expectIsDisplayed(ssowizard.ssoModalHeader);
+        
+      ssowizard.exportNextBtn.click();
+      utils.expectIsDisplayed(ssowizard.ssoTestBtn);
+      utils.expectIsDisplayed(ssowizard.testssoCancelBtn);
+      utils.expectIsDisplayed(ssowizard.testssoBackBtn);
+      utils.expectIsDisplayed(ssowizard.testssoNextBtn);
+      utils.expectIsDisplayed(ssowizard.ssoModalHeader);
+      
+      ssowizard.testssoNextBtn.click();
+      utils.expectIsDisplayed(ssowizard.enablessoCancelBtn);
+      utils.expectIsDisplayed(ssowizard.enablessoBackBtn);
+      utils.expectIsDisplayed(ssowizard.enablessoFinishBtn);
+      utils.expectIsDisplayed(ssowizard.ssoModalHeader);
+       
+      ssowizard.enablessoBackBtn.click();
+      utils.expectIsDisplayed(ssowizard.ssoTestBtn);
+      utils.expectIsDisplayed(ssowizard.testssoCancelBtn);
+      utils.expectIsDisplayed(ssowizard.testssoBackBtn);
+      utils.expectIsDisplayed(ssowizard.testssoNextBtn);
+      utils.expectIsDisplayed(ssowizard.ssoModalHeader);
+     
+      ssowizard.testssoBackBtn.click();
+      utils.expectIsDisplayed(ssowizard.downloadMeta);
+      utils.expectIsDisplayed(ssowizard.exportCancelBtn);
+      utils.expectIsDisplayed(ssowizard.exportBackBtn);
+      utils.expectIsDisplayed(ssowizard.ssoModalHeader);
+
+      ssowizard.exportBackBtn.click();
+      utils.expectIsDisplayed(ssowizard.fileToUploadText);
+      utils.expectIsDisplayed(ssowizard.fileToUploadBtn);
+      utils.expectIsNotDisplayed(ssowizard.fileToUploadTextHolder);
+      utils.expectIsNotDisplayed(ssowizard.fileToUploadBtnHolder);
+      utils.expectIsDisplayed(ssowizard.importCancelBtn);
+      utils.expectIsDisplayed(ssowizard.importNextBtn);
     });
 
     it('should close the wizard when clicking on the X mark', function() {
-      element(by.id('closeSSOModal')).click().then(function() {
-        expect(element(by.id('btnSSO')).isDisplayed()).toBe(true);
-      });
+      ssowizard.closeSSOModal.click();
+      utils.expectIsDisplayed(ssowizard.btnSSO);
     });
   });
 
   // Log Out
   describe('Log Out', function() {
     it('should log out', function() {
-      element(by.id('setting-bar')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.id('logout-btn'));
-      }).then(function() {
-        element(by.id('logout-btn')).click();
-      });
+      utils.expectIsDisplayed(navigation.settings);
+      navigation.settings.click();
+      utils.expectIsDisplayed(navigation.logoutButton);
+      navigation.logoutButton.click();
     });
   });
 });
