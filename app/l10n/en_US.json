@@ -158,7 +158,8 @@
     "errorMessage":"error.message",
     "rx":"Rx",
     "tx":"Tx",
-    "errCallInfoQuery":"Failed to retrieve call info. Status: {{status}}"
+    "errCallInfoQuery":"Failed to retrieve call info. Status: {{status}}",
+    "subTitleCallFlow":"Call Flow"
   },
   "common" : {
     "cancel" : "Cancel",

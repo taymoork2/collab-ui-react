@@ -24,6 +24,8 @@ angular.module('Squared')
 
       $scope.logsSortBy = 'date';
       $scope.reverseLogs = true;
+      $scope.callFlowActive = false;
+      $scope.callFlowUrl = 'images/solid_white.png';
 
 
       $scope.input = {search : PageParam.getParam('search')};
@@ -113,6 +115,7 @@ angular.module('Squared')
 
       //Retrieving logs for user
       $scope.getLogs = function() {
+        $scope.closeCallInfo();
         $('#logsearchfield').typeahead('close');
         $scope.userLogs = [];
         angular.element('#logSearchBtn').button('loading');
@@ -227,6 +230,11 @@ angular.module('Squared')
                 var audioRxLossRatio, audioTxLossRatio, videoRxLossRatio, videoTxLossRatio;
                 var component, errMessage;
                 var errorCode = 0;
+                var starttime = moment(data.callRecords[index].locusCallStartTime);
+                var graphUrl = Config.getLocusServiceUrl() + '/locus/api/v1/callflows?start=' + starttime + '&format=svg';
+                var graphUserIdUrl = graphUrl + '&uid=' + data.callRecords[index].userId ;
+                var graphLocusIdUrl = graphUrl + '&lid=' + data.callRecords[index].locusId;
+                var graphTrackingIdUrl = graphUrl + '&tid=' + data.callRecords[index].trackingId;
                 if (mediaStats) {
                   audioStart = mediaStats.audioStart;
                   videoStart = mediaStats.videoStart;
@@ -274,7 +282,10 @@ angular.module('Squared')
                   videoTxLossRatio:videoTxLossRatio,
                   errorCode:errorCode,
                   component:component,
-                  errMessage:errMessage
+                  errMessage:errMessage,
+                  graphUserIdUrl:graphUserIdUrl,
+                  graphLocusIdUrl:graphLocusIdUrl,
+                  graphTrackingIdUrl:graphTrackingIdUrl
                 };
                 $scope.logInfo.push(info);
               }
@@ -304,9 +315,17 @@ angular.module('Squared')
         });
       };
 
+      $scope.downloadFlow = function(downloadUrl) {
+        $scope.callInfoActive = false;
+        $scope.logPanelActive = false;
+        $scope.callFlowActive = true;
+        $scope.callFlowUrl = downloadUrl;
+      };
 
       $scope.showCallInfo = function(emailAddress, locusId, startTime) {
         $scope.callInfoActive = true;
+        $scope.logPanelActive = false;
+        $scope.callFlowActive = false;
         $scope.logInfo = [];
         $scope.emailAddress = emailAddress;
         if (locusId === '-NA-' || startTime === '-NA-') {
@@ -318,6 +337,15 @@ angular.module('Squared')
 
       $scope.closeCallInfo = function() {
         $scope.callInfoActive = false;
+        $scope.logPanelActive = true;
+        $scope.callFlowActive = false;
+      };
+
+      $scope.closeCallFlow = function() {
+        $scope.callFlowUrl = 'images/solid_white.png';
+        $scope.callInfoActive = true;
+        $scope.logPanelActive = false;
+        $scope.callFlowActive = false;
       };
 
       if ($scope.input.search) {

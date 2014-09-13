@@ -17,6 +17,12 @@ angular.module('Core')
           prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
         },
 
+        locusServiceUrl: {
+          dev: 'http://localhost:8080/locus-mount',
+          integration: 'http://admin-portal-test-public.wbx2.com:8080/locus',
+          prod: 'https://locus-a.wbx2.com'
+        },
+
         oauth2LoginUrlPattern: '%sauthorize?response_type=token&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=webex-squared',
 
         oauthClientRegistration: {
@@ -122,6 +128,10 @@ angular.module('Core')
           } else {
             return this.adminServiceUrl.prod;
           }
+        },
+
+        getLocusServiceUrl: function() {
+          return this.locusServiceUrl.integration;
         },
 
         getOauthLoginUrl: function() {
