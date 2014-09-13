@@ -18,7 +18,7 @@ angular.module('Squared')
 
       var fullCacheSize = 6;
 
-      var activerUserLoaded = false;
+      var chartValuesLoaded = false;
       var callMetricLoaded = false;
       var convMetricLoaded = false;
       var contentLoaded = false;
@@ -40,14 +40,14 @@ angular.module('Squared')
       };
 
       var allValuesLoaded = function(){
-        if(activerUserLoaded && callMetricLoaded && convMetricLoaded && contentLoaded && auMetricLoaded){
+        if(chartValuesLoaded && callMetricLoaded && convMetricLoaded && contentLoaded && auMetricLoaded){
           $scope.homeRefreshTime = new Date().getTime();
           $scope.addToCache('lastHomeTime', $scope.homeRefreshTime);
         }
       };
 
       $scope.manualReload = function(){
-        activerUserLoaded = false;
+        chartValuesLoaded = false;
         callMetricLoaded = false;
         convMetricLoaded = false;
         contentLoaded = false;
@@ -131,8 +131,9 @@ angular.module('Squared')
           'intervalType': 'month'
         };
         ReportsService.getUsageMetrics('activeUserCount', params, function(data, status) {
-          activerUserLoaded = true;
-          allValuesLoaded();
+          $scope.activeUserCount = 0;
+          $scope.addToCache('activeUserCount', $scope.activeUserCount);
+          auMetricLoaded = true;
           if (data.success) {
             if (data.length !== 0) {
               $scope.showAURefresh = false;
@@ -140,10 +141,12 @@ angular.module('Squared')
               $scope.activeUserCount = data.data;
             } else {
               $('#au-refresh').html('<span>No results available.</span>');
+              $scope.addToCache('activeUserCount', {'divName':'#au-refresh', 'message':'<span>No results available.</span>'});
             }
           } else {
             Log.debug('Query active users failed. Status: ' + status);
             $('#au-refresh').html('<span>Error processing request</span>');
+            $scope.addToCache('activeUserCount', {'divName':'#au-refresh', 'message':'<span>Error processing request</span>'});
           }
         });
       };
@@ -164,6 +167,8 @@ angular.module('Squared')
           count += dataList[i].count;
         }
         $scope.addToCache('chartCacheValues', chartVals);
+        chartValuesLoaded = true;
+        allValuesLoaded();
         return count;
       };
 
@@ -182,7 +187,7 @@ angular.module('Squared')
           if (data.success) {
             if (data.length !== 0) {
               var calls = data.data;
-              if (calls.length > 0) {
+              if (calls.length >= 0) {
                 $scope.callsCount = getMetricData(calls, 'calls');
                 $scope.addToCache('callsCount', $scope.callsCount);
               }
@@ -216,7 +221,7 @@ angular.module('Squared')
           if (data.success) {
             if (data.length !== 0) {
               var convos = data.data;
-              if (convos.length > 0) {
+              if (convos.length >= 0) {
                 $scope.convoCount = getMetricData(convos, 'convos');
                 $scope.addToCache('convoCount', $scope.convoCount);
               }
@@ -250,7 +255,7 @@ angular.module('Squared')
           if (data.success) {
             if (data.length !== 0) {
               var cShares = data.data;
-              if (cShares.length > 0) {
+              if (cShares.length >= 0) {
                 var countVal = getMetricData(cShares, 'share');
                 $scope.cShareCount = countVal.toFixed(4);
                 $scope.addToCache('cShareCount', $scope.cShareCount);
@@ -280,15 +285,12 @@ angular.module('Squared')
         };
         ReportsService.getUsageMetrics('activeUsers', params, function(data, status) {
           var auCount = 0;
-          $scope.addToCache('activeUserCount', auCount);
-          auMetricLoaded = true;
           allValuesLoaded();
           if (data.success) {
             if (data.length !== 0) {
               var aUsers = data.data;
-              if (aUsers.length > 0) {
+              if (aUsers.length >= 0) {
                 auCount = getMetricData(aUsers, 'users');
-                $scope.addToCache('activeUserCount', auCount);
               }
               makeChart(chartVals);
             } else {
