@@ -99,19 +99,16 @@ describe('Self Registration Activation Page', function() {
 
     });
 
-    it('should activate user and display android download info', function() {
+    it('should activate user and display success info', function() {
 
       expect(element(by.id('provisionSuccess')).isDisplayed()).toBe(true);
       expect(element(by.id('codeExpired')).isDisplayed()).toBe(false);
       expect(element(by.id('resendSuccess')).isDisplayed()).toBe(false);
-      expect(element(by.id('androidDownload')).isDisplayed()).toBe(true);
-      expect(element(by.id('iosDownload')).isDisplayed()).toBe(false);
 
       // setting up next test
       setup(config.deviceUserAgent.android);
     });
   });
-
 
   describe('Desktop activation for android device', function() {
 
@@ -127,12 +124,10 @@ describe('Self Registration Activation Page', function() {
       // run = false;
     });
 
-    it('should activate user and display ios download info', function() {
+    it('should activate user and display success info', function() {
       expect(element(by.id('provisionSuccess')).isDisplayed()).toBe(true);
       expect(element(by.id('codeExpired')).isDisplayed()).toBe(false);
       expect(element(by.id('resendSuccess')).isDisplayed()).toBe(false);
-      expect(element(by.id('androidDownload')).isDisplayed()).toBe(false);
-      expect(element(by.id('iosDownload')).isDisplayed()).toBe(true);
 
       // run = false;
     });

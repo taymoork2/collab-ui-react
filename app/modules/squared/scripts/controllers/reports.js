@@ -2,7 +2,7 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope','$parse', 'ReportsService', 'Log', 'Auth', 'reportsCache',
+  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Auth', 'reportsCache',
     function($scope, $parse, ReportsService, Log, Auth, reportsCache) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
@@ -18,42 +18,42 @@ angular.module('Squared')
       var avgConvLoaded = false;
       var auLoaded = false;
 
-      var checkAllValues = function(){
-        if(entitlementsLoaded && avgCallsLoaded && avgConvLoaded && auLoaded){
+      var checkAllValues = function() {
+        if (entitlementsLoaded && avgCallsLoaded && avgConvLoaded && auLoaded) {
           $scope.reportsRefreshTime = new Date().getTime();
           $scope.addToCache('lastReportsTime', $scope.reportsRefreshTime);
         }
       };
 
-      var checkDataLoaded = function(data){
-        if(data === 'entitlements'){
+      var checkDataLoaded = function(data) {
+        if (data === 'entitlements') {
           entitlementsLoaded = true;
           checkAllValues();
         }
-        if(data === 'avgCalls'){
+        if (data === 'avgCalls') {
           avgCallsLoaded = true;
           checkAllValues();
         }
-        if(data === 'avgConversations'){
+        if (data === 'avgConversations') {
           avgConvLoaded = true;
           checkAllValues();
         }
-        if(data === 'activeUsers'){
+        if (data === 'activeUsers') {
           auLoaded = true;
           checkAllValues();
         }
       };
 
-      $scope.manualReload = function(){
+      $scope.manualReload = function() {
         entitlementsLoaded = false;
         avgCallsLoaded = false;
         avgConvLoaded = false;
         auLoaded = false;
 
-        getTimeCharts('entitlements', 1, 'month', 1, 'week', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', '#B8DBFF');
-        getTimeCharts('avgCalls', 1, 'month', 1, 'week', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Calls', '#FFFF99');
-        getTimeCharts('avgConversations', 1, 'month', 1, 'week', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Conversations', '#C2FFC2');
-        getTimeCharts('activeUsers', 1, 'month', 1, 'week', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', '#FFCCFF');
+        getTimeCharts('entitlements', 1, 'month', 1, 'week', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', '#3333CC');
+        getTimeCharts('avgCalls', 1, 'month', 1, 'week', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Calls', '#FF9900');
+        getTimeCharts('avgConversations', 1, 'month', 1, 'week', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Conversations', '#009933');
+        getTimeCharts('activeUsers', 1, 'month', 1, 'week', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', '#CC0000');
 
         $('#avg-entitlements-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
         $('#avg-calls-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
@@ -66,18 +66,17 @@ angular.module('Squared')
         $scope.showActiveUsersRefresh = true;
       };
 
-      var displayCacheValue = function(data){
+      var displayCacheValue = function(data) {
         var jsonValues = $scope.readFromCache(data);
-        if(jsonValues.message){
-          $('#'+jsonValues.divName).html(jsonValues.message);
-        }
-        else{
+        if (jsonValues.message) {
+          $('#' + jsonValues.divName).html(jsonValues.message);
+        } else {
           makeTimeChart(jsonValues.chartVals, jsonValues.divName, jsonValues.type, jsonValues.title, jsonValues.color);
           $scope[jsonValues.refreshVarName] = false;
         }
       };
 
-      var loadCacheValues = function(){
+      var loadCacheValues = function() {
 
         $scope.reportsRefreshTime = $scope.readFromCache('lastReportsTime');
 
@@ -93,24 +92,23 @@ angular.module('Squared')
 
       };
 
-      $scope.addToCache = function(key, value){
+      $scope.addToCache = function(key, value) {
         reportsCache.put(key, value);
       };
 
-      $scope.readFromCache = function(key){
+      $scope.readFromCache = function(key) {
         return reportsCache.get(key);
       };
 
-      $scope.getCacheStats = function(){
+      $scope.getCacheStats = function() {
         return reportsCache.info();
       };
 
-      var firstLoaded = function(){
-        if (!sessionStorage['loadedReports'] || reportsCache.info().size < fullCacheSize){
+      var firstLoaded = function() {
+        if (!sessionStorage['loadedReports'] || reportsCache.info().size < fullCacheSize) {
           $scope.manualReload();
           sessionStorage['loadedReports'] = 'yes';
-        }
-        else{
+        } else {
           loadCacheValues();
         }
       };
@@ -145,25 +143,38 @@ angular.module('Squared')
           checkDataLoaded(type);
           if (data.success) {
             if (data.data.length !== 0) {
-              $('#'+divName).removeClass('chart-border');
+              $('#' + divName).removeClass('chart-border');
               var result = data.data;
               if (result.length > 0) {
                 avCount = getMetricData(result, type);
               }
               makeTimeChart(chartVals, divName, type, title, color);
-              var cacheValues = {'chartVals':chartVals, 'divName':divName, 'type':type, 'title':title, 'color':color, 'refreshVarName':refreshVarName};
+              var cacheValues = {
+                'chartVals': chartVals,
+                'divName': divName,
+                'type': type,
+                'title': title,
+                'color': color,
+                'refreshVarName': refreshVarName
+              };
               $scope.addToCache(type, cacheValues);
               $scope[refreshVarName] = false;
 
             } else {
-              $('#'+refreshDivName).html('<h3>No results available.</h3>');
-              $scope.addToCache(type, {'divName':refreshDivName, 'message':'<h3>No results available.</h3>'});
-              Log.debug('No results for '+type+' metrics.');
+              $('#' + refreshDivName).html('<h3>No results available.</h3>');
+              $scope.addToCache(type, {
+                'divName': refreshDivName,
+                'message': '<h3>No results available.</h3>'
+              });
+              Log.debug('No results for ' + type + ' metrics.');
             }
           } else {
-            $('#'+refreshDivName).html('<h3>Error processing request</h3>');
-            $scope.addToCache(type, {'divName':refreshDivName, 'message':'<h3>Error processing request</h3>'});
-            Log.debug('Query '+type+' metrics failed. Status: ' + status);
+            $('#' + refreshDivName).html('<h3>Error processing request</h3>');
+            $scope.addToCache(type, {
+              'divName': refreshDivName,
+              'message': '<h3>Error processing request</h3>'
+            });
+            Log.debug('Query ' + type + ' metrics failed. Status: ' + status);
           }
         });
       };
@@ -173,7 +184,7 @@ angular.module('Squared')
           'type': 'serial',
           'theme': 'chalk',
           'pathToImages': 'http://www.amcharts.com/lib/3/images/',
-          'colors':[color],
+          'colors': [color],
           'legend': {
             'equalWidths': false,
             'periodValueText': 'total: [[value.sum]]',

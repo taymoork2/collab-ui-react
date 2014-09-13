@@ -82,6 +82,10 @@ angular
       .when('/invitelauncher', {
         templateUrl: 'modules/squared/views/invitelauncher.html?'+new Date().getTime(),
         controller: 'InvitelauncherCtrl'
+      })
+      .when('/applauncher', {
+        templateUrl: 'modules/squared/views/applauncher.html',
+        controller: 'ApplauncherCtrl'
       });
   }
 ]);
