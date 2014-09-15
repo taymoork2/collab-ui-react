@@ -72,7 +72,7 @@ angular.module('Squared')
 					}
 				});
 			} else {
-				$scope.result.errmsg = 'Null param on actiation page';
+				$scope.result.errmsg = 'Null param on activation page';
 				Log.error($scope.result.errmsg);
 			}
 

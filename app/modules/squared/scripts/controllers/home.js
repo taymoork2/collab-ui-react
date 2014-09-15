@@ -324,6 +324,7 @@ angular.module('Squared')
           'type': 'serial',
           'theme': 'chalk',
           'pathToImages': 'http://www.amcharts.com/lib/3/images/',
+          'colors': ['#CC0000', '#FF9900', '#009933', '#3333CC'],
           'legend': {
             'equalWidths': false,
             'periodValueText': 'total: [[value.sum]]',

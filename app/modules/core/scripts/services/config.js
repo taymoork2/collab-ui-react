@@ -68,7 +68,7 @@ angular.module('Core')
           keepOnNavigate: false
         },
 
-        allowedPaths: ['/activate', '/downloads', '/invite', '/invitelauncher'],
+        allowedPaths: ['/activate', '/downloads', '/invite', '/invitelauncher', '/applauncher'],
 
         tabs: {
           home: {
