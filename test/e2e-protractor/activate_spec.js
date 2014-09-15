@@ -83,7 +83,7 @@ describe('Self Registration Activation Page', function() {
   // beforeEach(function() {
   //   setup();
   // });
-
+  var invalidatedParam;
   describe('Desktop activation for iOS device', function() {
 
     it('should display without admin controls on navigation bar', function() {
@@ -105,6 +105,7 @@ describe('Self Registration Activation Page', function() {
       expect(element(by.id('codeExpired')).isDisplayed()).toBe(false);
       expect(element(by.id('resendSuccess')).isDisplayed()).toBe(false);
 
+      invalidatedParam = encryptedQueryParam;
       // setting up next test
       setup(config.deviceUserAgent.android);
     });
@@ -136,7 +137,7 @@ describe('Self Registration Activation Page', function() {
   describe('Desktop activation after code is invalidated', function() {
 
     it('should display without admin controls on navigation bar', function() {
-      browser.get('#/activate?eqp=' + encryptedQueryParam);
+      browser.get('#/activate?eqp=' + invalidatedParam);
       expect(element(by.id('logout-btn')).isDisplayed()).toBe(false);
       expect(element(by.id('icon-search')).isDisplayed()).toBe(false);
       expect(element(by.id('search-input')).isDisplayed()).toBe(false);
