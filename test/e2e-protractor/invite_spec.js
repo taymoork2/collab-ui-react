@@ -19,7 +19,6 @@ var encryptedQueryParam = 'bnlA6k3ZerWIccYYY2RndVEeMjFu914UOsnFVyYNQoOtS2WBXdmPi
 describe('invite page with user param', function() {
 
   it('should forward to squared app without page param', function() {
-
     browser.get('#/invite');
 
     browser.driver.wait(function() {
@@ -27,10 +26,9 @@ describe('invite page with user param', function() {
     }).then(function() {
       expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
     });
-
   });
-  it('should forward to squared app with page param', function() {
 
+  it('should forward to squared app with page param', function() {
     browser.get('#/invite?user=' + encryptedQueryParam);
 
     browser.driver.wait(function() {
@@ -38,29 +36,15 @@ describe('invite page with user param', function() {
     }).then(function() {
       expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
     });
-
   });
-
-// it('should create cookie', function() {
-//   browser.sleep(2000);
-//   browser.manage().getCookie('invdata').then(function(data) {
-//     console.log('cookie: ' + data);
-//     expect(data).not.toBe(null);
-//     expect(data.userEmail).toBe('phtest77+int1@gmail.com');
-//     expect(data.displayName).toBe('Test');
-//     expect(data.orgId).toBe(config.orgId.pbrOrg);
-//   });
-// });
 
 });
 
 describe('Invite Launcher Flow', function()  {
 
   it('invitelauncher should forward to squared app', function() {
-
     browser.get('#/invitelauncher');
-
-    expect(element(by.id('invitelauncher')).isDisplayed()).toBe(true);
+    expect(invite.inviteLauncher.isDisplayed()).toBeTruthy();
   });
 
 });
@@ -68,7 +52,6 @@ describe('Invite Launcher Flow', function()  {
 describe('App Launcher Flow', function() {
 
   it('applauncher should forward to squared app', function() {
- 
     browser.get('#/applauncher');
 
     browser.driver.wait(function() {

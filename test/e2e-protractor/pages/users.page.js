@@ -9,6 +9,9 @@ var UsersPage = function(){
   this.managePanel = element(by.id('manageUsersPanel'));
   this.squaredPanel = element(by.id('squaredPanel'));
   this.entitlementPanel = element(by.id('entitlementPanel'));
+  this.huronPanel = element(by.id('huronPanel'));
+  this.conferencePanel = element(by.id('conferencePanel'));
+  this.endpointPanel = element(by.id('endpointPanel'));
   this.entitlementCol = element(by.id('entitlementCol'));
   this.previewPanel = element(by.id('details-panel'));
 
@@ -19,6 +22,7 @@ var UsersPage = function(){
   this.close = element(by.css('.close'));
 
   this.manageCallInitiation = element(by.id('btn_squaredCallInitiation')); // on add users
+  this.manageSquaredTeamMember = element(by.id('btn_squaredTeamMember'));
   this.callInitiationCheckbox = element(by.css('#chk_squaredCallInitiation')); // on edit user
   this.closePreview = element(by.id('exitPreviewButton'));
 
@@ -62,13 +66,24 @@ var UsersPage = function(){
     this.notificationCancel.click();
   };
 
-  this.search = function(query){
+  this.search = function(query, size){
     this.searchField.clear();
     browser.sleep(500);
     this.searchField.sendKeys(query);
     browser.sleep(1000);
     element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-      expect(rows.length).toBe(1);
+      if (size){
+        expect(rows.length).toBe(size);
+      }
+      else{
+        expect(rows.length).toBe(1);
+      }
+    });
+  };
+
+  this.assertEntitlementListSize = function (size) {
+    element.all(by.css('.details-body .icheckbox_square-blue')).then(function(items) {
+      expect(items.length).toBe(size);
     });
   };
 };

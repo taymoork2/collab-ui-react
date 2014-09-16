@@ -28,6 +28,8 @@ exports.config = {
     var ReportsPage = require('./test/e2e-protractor/pages/reports.page.js');
     var SupportPage = require('./test/e2e-protractor/pages/support.page.js');
     var SSOWizardPage = require('./test/e2e-protractor/pages/ssowizard.page.js');
+    var InvitePage = require('./test/e2e-protractor/pages/invite.page.js');
+    var DownloadPage = require('./test/e2e-protractor/pages/download.page.js');
 
     global.users = new UsersPage();
     global.navigation = new Navigation();
@@ -37,6 +39,8 @@ exports.config = {
     global.reports = new ReportsPage();
     global.support = new SupportPage();
     global.ssowizard = new SSOWizardPage();
+    global.invite = new InvitePage();
+    global.download = new DownloadPage();
 
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');

@@ -20,7 +20,7 @@ describe('Downloads Page with email parameter and reset/admin email params', fun
 
   it('should display email account', function() {
     browser.get('#/downloads?email=' + testuser + emailParams);
-    expect(element(by.id('account')).getText()).toContain(testuser);
+    expect(download.account.getText()).toContain(testuser);
   });
 
   it('should display message only for non-mobile device', function() {
@@ -35,18 +35,18 @@ describe('Downloads Page with email parameter and reset/admin email params', fun
   });
 
   it('should not display logged in user, logout link, and search field', function() {
-    expect(element(by.binding('username')).getText()).toBe('');
-    expect(element(by.binding('orgname')).getText()).toBe('');
-    expect(element(by.id('logout-btn')).isDisplayed()).toBe(false);
-    expect(element(by.id('icon-search')).isDisplayed()).toBe(false);
-    expect(element(by.id('search-input')).isDisplayed()).toBe(false);
-    expect(element(by.id('setting-bar')).isDisplayed()).toBe(false);
+    expect(download.userName.getText()).toBe('');
+    expect(download.orgName.getText()).toBe('');
+    expect(download.logoutButton.isDisplayed()).toBeFalsy();
+    expect(download.iconSearch.isDisplayed()).toBeFalsy();
+    expect(download.searchInput.isDisplayed()).toBeFalsy();
+    expect(download.settingBar.isDisplayed()).toBeFalsy();
   });
   it('should not display tab bar', function() {
-    expect(element(by.id('tabs')).isDisplayed()).toBe(false);
+    expect(download.tabs.isDisplayed()).toBeFalsy();
   });
   it('should have invoked send email api', function() {
-    element(by.id('sendStatus')).getAttribute('mailStatus').then(function(value) {
+    download.sendStatus.getAttribute('mailStatus').then(function(value) {
       expect(value).toBe('email success');
     });
   });
@@ -56,11 +56,11 @@ describe('Downloads Page with email parameter only', function() {
 
   it('should display email account', function() {
     browser.get('#/downloads?email=' + testuser);
-    expect(element(by.id('account')).getText()).toContain(testuser);
+    expect(download.account.getText()).toContain(testuser);
   });
 
   it('should not have sent any email', function() {
-    element(by.id('sendStatus')).getAttribute('mailStatus').then(function(value) {
+    download.sendStatus.getAttribute('mailStatus').then(function(value) {
       expect(value).toBe('');
     });
   });
