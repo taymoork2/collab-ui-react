@@ -31,9 +31,8 @@ describe('Support flow', function() {
     });
 
     it('should display correct tabs for user based on role', function() {
-      expect(navigation.getTabCount()).toBe(12);  // double number of actual tabs due to generated divs
+      expect(navigation.getTabCount()).toBe(4);
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
-      expect(navigation.usersTab.isDisplayed()).toBeTruthy();
       expect(navigation.manageTab.isDisplayed()).toBeTruthy();
       expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
       expect(navigation.supportTab.isDisplayed()).toBeTruthy();
@@ -48,7 +47,7 @@ describe('Support flow', function() {
     });
 
     it('clicking on support tab should change the view', function() {
-      navigation.supportTab.click();
+      navigation.clickSupport();
       navigation.expectCurrentUrl('/support');
     });
 
@@ -140,10 +139,7 @@ describe('Support flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should log out', function() {
-      expect(navigation.settings.isDisplayed()).toBeTruthy();
-      navigation.settings.click();
-      expect(navigation.logoutButton.isDisplayed()).toBeTruthy();
-      navigation.logoutButton.click();
+      navigation.logout();
     });
   });
 
@@ -239,7 +235,7 @@ describe('Support flow', function() {
       });
 
       it('should display correct tabs for user based on role', function() {
-        expect(navigation.getTabCount()).toBe(6);  // double number of actual tabs due to generated divs
+        expect(navigation.getTabCount()).toBe(3);
         expect(navigation.homeTab.isDisplayed()).toBeTruthy();
         expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
         expect(navigation.supportTab.isDisplayed()).toBeTruthy();
@@ -250,10 +246,7 @@ describe('Support flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should log out', function() {
-      expect(navigation.settings.isDisplayed()).toBeTruthy();
-      navigation.settings.click();
-      expect(navigation.logoutButton.isDisplayed()).toBeTruthy();
-      navigation.logoutButton.click();
+      navigation.logout();
     });
   });
 });

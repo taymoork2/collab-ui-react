@@ -27,7 +27,7 @@ describe('Login as squared team member admin user', function() {
 
 describe('Check squared team member entitlements', function() {
   it('clicking on users tab should change the view', function() {
-    navigation.usersTab.click();
+    navigation.clickUsers();
   });
 
   it('click on add button should show entitlements the admin can use', function () {
@@ -44,10 +44,7 @@ describe('Check squared team member entitlements', function() {
 // Log Out
 describe('Log Out', function() {
   it('should log out', function() {
-    expect(navigation.settings.isDisplayed()).toBeTruthy();
-    navigation.settings.click();
-    expect(navigation.logoutButton.isDisplayed()).toBeTruthy();
-    navigation.logoutButton.click();
+    navigation.logout();
   });
 });
 
@@ -60,7 +57,7 @@ describe('Login as non squared team member admin user', function() {
 
 describe('Check non squared team member entitlements', function() {
   it('clicking on users tab should change the view', function() {
-    navigation.usersTab.click();
+    navigation.clickUsers();
   });
 
   it('click on add button should show entitlements the admin can use', function () {
@@ -77,10 +74,7 @@ describe('Check non squared team member entitlements', function() {
 // Log Out
 describe('Log Out', function() {
   it('should log out', function() {
-    expect(navigation.settings.isDisplayed()).toBeTruthy();
-    navigation.settings.click();
-    expect(navigation.logoutButton.isDisplayed()).toBeTruthy();
-    navigation.logoutButton.click();
+    navigation.logout();
   });
 });
 

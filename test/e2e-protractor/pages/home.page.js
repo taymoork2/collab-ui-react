@@ -7,6 +7,8 @@ var HomePage = function(){
   this.contentShare = element(by.id('share-content'));
   this.activeUsersChart = element(by.id('activeUsersChart'));
 
+  this.monitoring = element(by.css('.monitoring-cell'));
+
   this.refreshButton = element(by.id('time-click-div'));
   this.reloadedTime = element(by.id('lastReloadedTime'));
   this.refreshData = element(by.id('homeRefreshData'));

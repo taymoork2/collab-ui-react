@@ -76,6 +76,9 @@ exports.getToken = function() {
 
 };
 
+exports.scrollTop = function() {
+  browser.executeScript('window.scrollTo(0,0);');
+};
 
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action

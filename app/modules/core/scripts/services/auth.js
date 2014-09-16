@@ -130,7 +130,6 @@ angular.module('Core')
 
     auth.logout = function() {
       Storage.clear();
-      $rootScope.loggedIn = false;
       Log.debug('Redirecting to logout url.');
       $window.location.href = Config.getLogoutUrl();
     };

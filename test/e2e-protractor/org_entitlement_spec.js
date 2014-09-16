@@ -40,7 +40,7 @@ describe('Org Entitlement flow', function() {
 
 describe('Navigating to users tab', function() {
 	it('clicking on users tab should change the view', function() {
-    navigation.usersTab.click();
+    navigation.clickUsers();
   });
 });
 
@@ -59,10 +59,7 @@ describe('clicking a user', function() {
 // Log Out
 describe('Log Out', function() {
   it('should log out', function() {
-    expect(navigation.settings.isDisplayed()).toBeTruthy();
-    navigation.settings.click();
-    expect(navigation.logoutButton.isDisplayed()).toBeTruthy();
-    navigation.logoutButton.click();
+    navigation.logout();
   });
 });
 

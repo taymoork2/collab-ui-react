@@ -34,16 +34,8 @@ describe('Downloads Page with email parameter and reset/admin email params', fun
     expect(browser.driver.isElementPresent(by.css('#androidTxt.ng-hide'))).toBe(true);
   });
 
-  it('should not display logged in user, logout link, and search field', function() {
-    expect(download.userName.getText()).toBe('');
-    expect(download.orgName.getText()).toBe('');
-    expect(download.logoutButton.isDisplayed()).toBeFalsy();
-    expect(download.iconSearch.isDisplayed()).toBeFalsy();
-    expect(download.searchInput.isDisplayed()).toBeFalsy();
-    expect(download.settingBar.isDisplayed()).toBeFalsy();
-  });
-  it('should not display tab bar', function() {
-    expect(download.tabs.isDisplayed()).toBeFalsy();
+  it('should not display logged in user, logout link, search field, and tabs', function() {
+    navigation.expectAdminSettingsDisplayed(false);
   });
   it('should have invoked send email api', function() {
     download.sendStatus.getAttribute('mailStatus').then(function(value) {

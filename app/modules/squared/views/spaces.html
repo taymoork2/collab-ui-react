@@ -1,20 +1,22 @@
 <div class="notification"></div>
-<div>
-  <div style="position: absolute;">
+<div class="row page-header">
+  <div class="col-md-6 col-sm-6">
     <span class="user-title">{{'spacesPage.title' | translate}}</span>
   </div>
-  <div class="user-option-buttons" ng-show="Utils.isAdminPage()">
-    <div id="userOptions" style="position: absolute;">
-      <button id="addUsers" class="btn btn-success narrow-button" data-toggle="modal" data-target="#addRoomDialog">
-        <span translate="usersPage.add"></span>
-      </button>
-    </div>
-    <div class="user-options-bar">
-      <button class="btn btn-default narrow-button dropdown-toggle" type="button" id="userMoreOptions" data-toggle="dropdown">
+  <div class="user-option-buttons col-md-6 col-sm-6" ng-show="Utils.isAdminPage()">
+    <div class="user-options-bar dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" id="userMoreOptions" data-toggle="dropdown">
         {{'usersPage.moreOptions' | translate}}
         <span class="caret"></span>
       </button>
+      <ul class="dropdown-menu user-options-menu" role="menu" aria-labelledby="userMoreOptions">
+        <li>
+        </li>
+      </ul>
     </div>
+      <button id="addUsers" class="btn btn-success add-users-button" data-toggle="modal" data-target="#addRoomDialog">
+        <span translate="usersPage.add"></span>
+      </button>
   </div>
 </div>
 <div>

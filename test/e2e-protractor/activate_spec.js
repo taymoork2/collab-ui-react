@@ -88,10 +88,7 @@ describe('Self Registration Activation Page', function() {
 
       browser.get('#/activate?eqp=' + encryptedQueryParam);
 
-      expect(users.logoutButton.isDisplayed()).toBeFalsy();
-      expect(users.iconSearch.isDisplayed()).toBeFalsy();
-      expect(users.searchField.isDisplayed()).toBeFalsy();
-      expect(users.settingsBar.isDisplayed()).toBeFalsy();
+      navigation.expectAdminSettingsDisplayed(false);
     });
 
     it('should activate user and display success info', function() {
@@ -111,10 +108,7 @@ describe('Self Registration Activation Page', function() {
     it('should display without admin controls on navigation bar', function() {
       browser.get('#/activate?eqp=' + encryptedQueryParam);
 
-      expect(users.logoutButton.isDisplayed()).toBeFalsy();
-      expect(users.iconSearch.isDisplayed()).toBeFalsy();
-      expect(users.searchField.isDisplayed()).toBeFalsy();
-      expect(users.settingsBar.isDisplayed()).toBeFalsy();
+      navigation.expectAdminSettingsDisplayed(false);
 
       // run = false;
     });
@@ -133,10 +127,7 @@ describe('Self Registration Activation Page', function() {
     it('should display without admin controls on navigation bar', function() {
       browser.get('#/activate?eqp=' + invalidatedParam);
 
-      expect(users.logoutButton.isDisplayed()).toBeFalsy();
-      expect(users.iconSearch.isDisplayed()).toBeFalsy();
-      expect(users.searchField.isDisplayed()).toBeFalsy();
-      expect(users.settingsBar.isDisplayed()).toBeFalsy();
+      navigation.expectAdminSettingsDisplayed(false);
     });
 
 

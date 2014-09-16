@@ -39,7 +39,7 @@ describe('Org Info flow', function() {
 
 describe('Navigating to organization tab', function() {
 	it('clicking on orgs tab should show the org info', function() {
-		navigation.manageTab.click();
+		navigation.clickOrganization();
     expect(manage.displayName.isDisplayed()).toBeTruthy();
     expect(manage.estimatedSize.isDisplayed()).toBeTruthy();
     expect(manage.totalUsers.isDisplayed()).toBeTruthy();
@@ -52,10 +52,7 @@ describe('Navigating to organization tab', function() {
 // Log Out
 describe('Log Out', function() {
   it('should log out', function() {
-    expect(navigation.settings.isDisplayed()).toBeTruthy();
-    navigation.settings.click();
-    expect(navigation.logoutButton.isDisplayed()).toBeTruthy();
-    navigation.logoutButton.click();
+    navigation.logout();
   });
 });
 

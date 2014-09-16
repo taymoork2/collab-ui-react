@@ -146,7 +146,7 @@ angular.module('Core')
         },
 
         removeDuplicates: function(array, key) {
-          var a = array.concat();
+          var a = array.concat().reverse();
           for (var i = 0; i < a.length; ++i) {
             if (typeof a[i] === 'undefined') {
               a.splice(i--, 1);
@@ -158,18 +158,27 @@ angular.module('Core')
               }
             }
           }
-          return a;
+          return a.reverse();
         },
 
         changeTab: function(curPath, param) {
           var path = '/home';
           for (var idx in $rootScope.tabs) {
-            var tab = $rootScope.tabs[idx];
-            if (curPath.indexOf(tab.path) > -1) {
-              tab.active = 'true';
-              path = tab.path;
+            if ($rootScope.tabs[idx].subPages) {
+              for(var i in $rootScope.tabs[idx].subPages) {
+                if (this.comparePaths(curPath, $rootScope.tabs[idx].subPages[i].link)) {
+                  $rootScope.tabs[idx].subPages[i].isActive = 'true';
+                  path = curPath;
+                  break;
+                }
+              }
+            }
+            if (this.comparePaths(curPath, $rootScope.tabs[idx].link)) {
+              $rootScope.tabs[idx].isActive = 'true';
+              path = curPath;
               break;
             }
+
           } //end for
           if (!param) {
             $location.path(path);
@@ -179,17 +188,27 @@ angular.module('Core')
           }
         },
 
-        setNavigationTab: function() {
-          var curPath = $location.path();
-          var path = null;
-          for (var idx in $rootScope.tabs) {
-            var tab = $rootScope.tabs[idx];
-            if (tab.path === curPath) {
-              tab.active = 'true';
-              path = curPath;
-              break;
-            }
+        comparePaths: function(path1, path2) {
+          // if either paths are undefined return false.
+          if (!path1 || !path2) {
+            return false;
           }
+
+          var path1Trimmed, path2Trimmed;
+
+          if (this.startsWith(path1, '/') || this.startsWith(path1, '#')) {
+            path1Trimmed = path1.substring(1);
+          } else {
+            path1Trimmed = path1;
+          }
+
+          if (this.startsWith(path2, '/') || this.startsWith(path2, '#')) {
+            path2Trimmed = path2.substring(1);
+          } else {
+            path2Trimmed = path2;
+          }
+
+          return path1Trimmed === path2Trimmed;
         }
 
       };

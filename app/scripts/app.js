@@ -11,8 +11,8 @@
 
 angular.module('Core', []);
 
-angular.module('Squared', ['Core'
-    ]);
+
+angular.module('Squared', ['Core']);
 
 angular.module('Huron', ['Core']);
 
@@ -31,7 +31,8 @@ angular
     'Squared',
     'Huron',
     'ngGrid',
-    'mgo-angular-wizard'
+    'mgo-angular-wizard',
+    'cisco.ui'
   ]);
 
 

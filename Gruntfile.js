@@ -176,7 +176,9 @@ module.exports = function (grunt) {
     'bower-install': {
       app: {
         html: '<%= yeoman.app %>/index.html',
-        ignorePath: '<%= yeoman.app %>/'
+        ignorePath: '<%= yeoman.app %>/',
+        exclude: ['bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+                  'bower_components/angular-mocks/angular-mocks.js']
       }
     },
 

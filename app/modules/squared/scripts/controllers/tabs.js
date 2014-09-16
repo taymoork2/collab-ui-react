@@ -4,6 +4,8 @@ angular.module('Squared')
   .controller('TabsCtrl', ['Config', '$rootScope', '$scope', '$location', 'Log', 'Utils', '$filter', 'Auth', 'Authinfo',
     function(Config, $rootScope, $scope, $location, Log, Utils, $filter, Auth, Authinfo) {
 
+      $scope.tabs = [];
+
       //update the tabs when Authinfo data has been populated.
       $scope.$on('AuthinfoUpdated', function() {
         var roles  = Authinfo.getRoles();
@@ -14,40 +16,54 @@ angular.module('Squared')
             tabs = tabs.concat(allowedTabs);
           }
         }
-        $rootScope.tabs = Utils.removeDuplicates(tabs, 'title');
-        Authinfo.setTabs($rootScope.tabs);
+        $scope.tabs = Utils.removeDuplicates(tabs, 'title');
+        // TODO extract to a service
+        $rootScope.tabs = $scope.tabs;
+
+        //Localize tabs
+        for(var index in $scope.tabs) {
+          $scope.tabs[index].title = getTabTitle($scope.tabs[index].title);
+          if($scope.tabs[index].subPages) {
+            for(var i in $scope.tabs[index].subPages) {
+              $scope.tabs[index].subPages[i].title = $filter('translate')($scope.tabs[index].subPages[i].title);
+              $scope.tabs[index].subPages[i].desc = $filter('translate')($scope.tabs[index].subPages[i].desc);
+            }
+          }
+        }
+
+        Authinfo.setTabs($scope.tabs);
         //Check if this is an allowed tab
         if(!Authinfo.isAllowedTab()){
           $location.path('/login');
         }
-        setActiveTab();
+        // setActiveTab();
+        $scope.setNavigationTab();
       });
 
-      $scope.navType = 'pills';
+      $rootScope.$on('$routeChangeSuccess', function() {
+        $scope.setNavigationTab();
+      });
 
-      var setActiveTab = function() {
-        var curPath = $location.path();
-        var path = '/login';
-        for (var idx in $rootScope.tabs) {
-          var tab = $rootScope.tabs[idx];
-          if (Utils.startsWith(curPath, tab.path)) {
-            tab.active = 'true';
-            path = curPath;
-            break;
-          }
-        }
-        $location.path(path);
-      };
-
-      $scope.getTabTitle = function(title) {
+      var getTabTitle = function(title) {
         return $filter('translate')(title);
       };
 
-      $scope.changeTab = function(tabPath) {
-        if (Utils.isAdminPage()) {
-          Log.debug('using path: ' + tabPath);
-          $location.path(tabPath);
+      $scope.setNavigationTab = function() {
+        resetActiveTabState();
+
+        for (var idx in $scope.tabs) {
+          if ($scope.tabs[idx].link === $location.path()) {
+            $scope.tabs[idx].isActive = true;
+            break;
+          }
         }
       };
+
+      var resetActiveTabState = function() {
+        for(var idx in $scope.tabs) {
+          $scope.tabs[idx].isActive = false;
+        }
+      };
+
     }
   ]);

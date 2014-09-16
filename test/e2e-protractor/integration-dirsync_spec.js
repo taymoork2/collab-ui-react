@@ -23,7 +23,7 @@ describe('Directory Sync flow', function() {
 
   describe('Manage tab - Dirsync flow', function() {
     it('clicking on manage tab should change the view', function() {
-      navigation.manageTab.click();
+      navigation.clickOrganization();
       navigation.expectCurrentUrl('/orgs');
     });
 
@@ -47,18 +47,18 @@ describe('Directory Sync flow', function() {
     it('should navigate steps by clicking on Next and Previous buttons', function() {
       disyncwizard.btnDirSync.click();
       utils.expectIsDisplayed(disyncwizard.ssoModalHeader);
-      
+
       disyncwizard.domainNextBtn.click();
       utils.expectIsDisplayed(disyncwizard.syncNowBtn);
       utils.expectIsDisplayed(disyncwizard.installCancelBtn);
       utils.expectIsDisplayed(disyncwizard.installBackBtn);
       utils.expectIsDisplayed(disyncwizard.installNextBtn);
-        
+
       disyncwizard.installNextBtn.click();
       utils.expectIsDisplayed(disyncwizard.synchCancelBtn);
       utils.expectIsDisplayed(disyncwizard.synchBackBtn);
       utils.expectIsDisplayed(disyncwizard.synchFinishBtn);
-      
+
       disyncwizard.synchBackBtn.click();
       utils.expectIsDisplayed(disyncwizard.syncNowBtn);
       utils.expectIsDisplayed(disyncwizard.installCancelBtn);
@@ -69,7 +69,7 @@ describe('Directory Sync flow', function() {
       utils.expectIsDisplayed(disyncwizard.domainCancelBtn);
       utils.expectIsDisplayed(disyncwizard.domainNextBtn);
       utils.expectIsDisplayed(disyncwizard.dirDomainText);
-    
+
     });
 
     it('should successfully start directory sync on clicking Sync now button', function() {
@@ -88,10 +88,7 @@ describe('Directory Sync flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should log out', function() {
-      utils.expectIsDisplayed(navigation.settings);
-      navigation.settings.click();
-      utils.expectIsDisplayed(navigation.logoutButton);
-      navigation.logoutButton.click();
+     navigation.logout();
     });
   });
 });

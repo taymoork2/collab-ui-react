@@ -2,7 +2,8 @@
 
 // TODO - break up into UserList/UserAdd/UserPreview
 var UsersPage = function(){
-  this.searchField = element(by.id('search-input'));
+  this.searchButton = element(by.css('.header-search button'));
+  this.searchField = element(by.css('.search-form input'));
   this.resultUsername = element(by.binding('user.userName'));
 
   this.listPanel = element(by.id('userslistpanel'));
@@ -24,7 +25,7 @@ var UsersPage = function(){
 
   this.manageCallInitiation = element(by.id('btn_squaredCallInitiation')); // on add users
   this.manageSquaredTeamMember = element(by.id('btn_squaredTeamMember'));
-  this.callInitiationCheckbox = element(by.css('#chk_squaredCallInitiation')); // on edit user
+  this.callInitiationCheckbox = element(by.id('chk_squaredCallInitiation')); // on edit user
   this.closePreview = element(by.id('exitPreviewButton'));
 
   this.subTitleAdd = element(by.id('subTitleAdd'));
@@ -124,18 +125,15 @@ var UsersPage = function(){
   };
 
   this.search = function(query, size){
+    this.searchButton.click();
+    utils.expectIsDisplayed(this.searchField);
     this.searchField.clear();
-    browser.sleep(500);
-    this.searchField.sendKeys(query);
     browser.sleep(1000);
-    element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-      if(size){
-        expect(rows.length).toBe(size);
-      }
-      else{
-        expect(rows.length).toBe(1);
-      }
-    });
+    if (query) {
+      this.searchField.sendKeys(query);
+      browser.sleep(1000);
+      expect(this.queryCount.count()).toBe(size ? size : 1);
+    }
   };
 
   this.assertEntitlementListSize = function (size) {

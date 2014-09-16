@@ -26,12 +26,5 @@ angular
         Log.debug('No access code data.');
       }
 
-      //When a route is loaded, activate the tab corresponding to that route
-      $rootScope.$watch(function(){
-        return $location.path();
-      }, function(){
-        Utils.setNavigationTab();
-      });
-
     }
-    ]);
+  ]);

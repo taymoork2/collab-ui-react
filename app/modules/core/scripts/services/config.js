@@ -72,28 +72,36 @@ angular.module('Core')
 
         tabs: {
           home: {
+            tab: 'homeTab',
             title: 'tabs.homeTab',
-            path: '/home'
-          },
-          users: {
-            title: 'tabs.userTab',
-            path: '/users'
+            link: '/home'
           },
           orgs: {
+            tab: 'orgTab',
             title: 'tabs.orgTab',
-            path: '/orgs'
+            subPages: [{
+              title: 'tabs.userTab',
+              desc: 'tabs.userTabDesc',
+              link: '#users'
+            }, {
+              title: 'tabs.spacesTab',
+              desc: 'tabs.spacesTabDesc',
+              link: '#spaces',
+            },{
+              title: 'tabs.orgDetailsTab',
+              desc: 'tabs.orgDetailsTabDesc',
+              link: '#orgs'
+            }]
           },
           reports: {
+            tab: 'reportTab',
             title: 'tabs.reportTab',
-            path: '/reports'
+            link: '/reports'
           },
           support: {
+            tab: 'supportTab',
             title: 'tabs.supportTab',
-            path: '/support'
-          },
-          spaces: {
-            title: 'tabs.spacesTab',
-            path: '/spaces'
+            link: '/support'
           }
         },
 
@@ -179,8 +187,8 @@ angular.module('Core')
 
       config.roles = {
         Full_Admin: [config.tabs.home, config.tabs.users, config.tabs.orgs, config.tabs.reports, config.tabs.spaces],
-        WX2_User: [config.tabs.home, config.tabs.reports, config.tabs.support],
-        WX2_Support: [config.tabs.home, config.tabs.reports, config.tabs.support],
+        WX2_User: [config.tabs.home, config.tabs.reports, config.tabs.support, config.tabs.spaces],
+        WX2_Support: [config.tabs.home, config.tabs.reports, config.tabs.support, config.tabs.spaces],
         WX2_SquaredInviter: [],
         User: []
       };

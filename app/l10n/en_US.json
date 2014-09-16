@@ -42,9 +42,13 @@
     "homeTab" : "Home",
     "orgTab" : "Manage",
     "userTab" : "Users",
+    "userTabDesc" : "Manage Users And Their Features, Assign Devices, And Trouble Shoot Issues.",
     "reportTab" : "Reports",
     "supportTab" : "Support",
-    "spacesTab" : "Shared Spaces (Rooms)"
+    "spacesTab" : "Shared Spaces",
+    "spacesTabDesc" : "Create Spaces Such As Lobbies Or Conference Rooms To Install Devices.",
+    "orgDetailsTab" : "Organization",
+    "orgDetailsTabDesc" : "Manage Organization Details, View Assigned Services, And Access Tools."
   },
   "index" : {
     "welcome" : "Welcome",

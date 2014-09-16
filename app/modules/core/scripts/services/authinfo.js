@@ -74,15 +74,20 @@ angular.module('Core')
 
         isAllowedTab: function() {
           var curPath = $location.path();
-          var flag = false;
+
           for (var idx in authData.tabs) {
-            var tab = authData.tabs[idx];
-            if (Utils.startsWith(curPath, tab.path)) {
-              flag = true;
-              break;
+            if (authData.tabs[idx].subPages) {
+              for(var i in authData.tabs[idx].subPages) {
+                if (Utils.comparePaths(curPath, authData.tabs[idx].subPages[i].link)) {
+                  return true;
+                }
+              }
+            }
+            if (Utils.comparePaths(curPath, authData.tabs[idx].link)) {
+              return true;
             }
           }
-          return flag;
+          return false;
         },
 
         isEmpty: function() {

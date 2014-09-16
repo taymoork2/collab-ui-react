@@ -24,7 +24,7 @@ describe('Enabling SSO flow', function() {
 
   describe('Manage tab - SSO flow', function() {
     it('clicking on manage tab should change the view', function() {
-      navigation.manageTab.click();
+      navigation.clickOrganization();
       navigation.expectCurrentUrl('/orgs');
     });
 
@@ -51,33 +51,33 @@ describe('Enabling SSO flow', function() {
     it('should navigate steps by clicking on Next and Previous buttons', function() {
       ssowizard.btnSSO.click();
       utils.expectIsDisplayed(ssowizard.ssoModalHeader);
-      
+
       ssowizard.importNextBtn.click();
       utils.expectIsDisplayed(ssowizard.downloadMeta);
       utils.expectIsDisplayed(ssowizard.exportCancelBtn);
       utils.expectIsDisplayed(ssowizard.exportBackBtn);
       utils.expectIsDisplayed(ssowizard.ssoModalHeader);
-        
+
       ssowizard.exportNextBtn.click();
       utils.expectIsDisplayed(ssowizard.ssoTestBtn);
       utils.expectIsDisplayed(ssowizard.testssoCancelBtn);
       utils.expectIsDisplayed(ssowizard.testssoBackBtn);
       utils.expectIsDisplayed(ssowizard.testssoNextBtn);
       utils.expectIsDisplayed(ssowizard.ssoModalHeader);
-      
+
       ssowizard.testssoNextBtn.click();
       utils.expectIsDisplayed(ssowizard.enablessoCancelBtn);
       utils.expectIsDisplayed(ssowizard.enablessoBackBtn);
       utils.expectIsDisplayed(ssowizard.enablessoFinishBtn);
       utils.expectIsDisplayed(ssowizard.ssoModalHeader);
-       
+
       ssowizard.enablessoBackBtn.click();
       utils.expectIsDisplayed(ssowizard.ssoTestBtn);
       utils.expectIsDisplayed(ssowizard.testssoCancelBtn);
       utils.expectIsDisplayed(ssowizard.testssoBackBtn);
       utils.expectIsDisplayed(ssowizard.testssoNextBtn);
       utils.expectIsDisplayed(ssowizard.ssoModalHeader);
-     
+
       ssowizard.testssoBackBtn.click();
       utils.expectIsDisplayed(ssowizard.downloadMeta);
       utils.expectIsDisplayed(ssowizard.exportCancelBtn);
@@ -102,10 +102,7 @@ describe('Enabling SSO flow', function() {
   // Log Out
   describe('Log Out', function() {
     it('should log out', function() {
-      utils.expectIsDisplayed(navigation.settings);
-      navigation.settings.click();
-      utils.expectIsDisplayed(navigation.logoutButton);
-      navigation.logoutButton.click();
+      navigation.logout();
     });
   });
 });

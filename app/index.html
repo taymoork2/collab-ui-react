@@ -10,196 +10,190 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <link rel="icon" type="image/png" href="images/logo.png">
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css styles/vendor.css -->
-  <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.css" />
-  <link rel="stylesheet" href="bower_components/angular-dialog-service/dialogs.css" />
-  <link rel="stylesheet" href="bower_components/bootstrap-cisco/dist/css/bootstrap-cisco.min.css" />
-  <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css" />
-  <!-- endbower -->
-  <!-- endbuild -->
-  <!-- build:css({.tmp,app}) styles/main.css -->
-  <link rel="stylesheet" href="styles/app.css">
-  <!-- endbuild -->
   <link rel="stylesheet" href="bower_components/bootstrap-cisco/dist/css/bootstrap-cisco.css" />
-  <link rel="stylesheet" href="bower_components/bootstrap-cisco/dist/css/bootstrap-cisco-theme.css" />
   <link rel="stylesheet" href="bower_components/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css">
   <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
   <link rel="stylesheet" href="bower_components/jquery-icheck/skins/square/blue.css" />
   <link rel="stylesheet" href="bower_components/alertify.js/themes/alertify.core.css" />
   <link rel="stylesheet" href="bower_components/alertify.js/themes/alertify.default.css" />
   <link rel="stylesheet" href="bower_components/angular-wizard/dist/angular-wizard.css" />
-
+  <link rel="stylesheet" href="bower_components/angular-dialog-service/dialogs.css" />
+  <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css" />
+  <!-- endbuild -->
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css({.tmp,app}) styles/main.css -->
+  <link rel="stylesheet" href="styles/app.css">
+  <!-- endbuild -->
 </head>
 <body ng-cloak>
-    <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-      <![endif]-->
-
-      <!-- Add your site or application content here -->
-      <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#" ng-bind="Localize.varTitle()"></a>
-          </div>
-
-          <ul class="nav navbar-nav navbar-right welcome-message" ng-controller="NavigationCtrl" ng-show="loggedIn && Utils.isAdminPage()" >
-            <li ng-show="username">{{'index.welcome' | translate}}, {{username}}</li>
-            <li ng-show="orgname">({{orgname}})</li>
-          </ul>
-
-          <div ng-hide="!Utils.isAdminPage()" ng-controller="SearchCtrl">
-            <input id="search-input" type="text" class="form-control" placeholder="{{'index.search' | translate}}" ng-model="searchStr" ng-change="searchItem()">
-
-            <span class="glyphicon glyphicon-search" id="icon-search"></span>
-          </div>
-          <div class="setting-bar" id="setting-bar" ng-controller="NavigationCtrl" ng-show="Utils.isAdminPage()">
-            <span class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-bars fa-lg"></i>
-            </span>
-            <ul class="dropdown-menu setting-menu" role="menu">
-              <li ng-click="sendFeedback()" id="feedback-btn">
-                <i class="fa fa-envelope-o fa-lg" style="padding:10px;"></i>{{'index.feedback' | translate}}
-              </li>
-              <li ng-click="logout()" id="logout-btn" ng-show="loggedIn">
-                <i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>{{'index.logout' | translate}}
-              </li>
-            </ul>
-
-          </div>
-        </div><!-- /.container-fluid -->
-      </nav>
-
-      <div  class="tab-panel" ng-hide="!Utils.isAdminPage()" ng-controller="TabsCtrl">
-        <tabset id="tabs" vertical="true" type="navType">
-          <tab ng-repeat="tab in tabs" heading="{{getTabTitle(tab.title)}}" active="tab.active" select="changeTab(tab.path)">
-          </tab>
-        </tabset>
-        <hr width='100%'>
+  <!--[if lt IE 7]>
+  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+  <div class="app-container container-fluid">
+    <!-- Add your site or application content here -->
+    <header cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" ng-controller="HeaderCtrl">
+      <div class="header-search" ng-controller="SearchCtrl" ng-show="Utils.isAdminPage()">
+        <cs-headersearch></cs-headersearch>
       </div>
+      <div class="settings-menu dropdown" ng-controller="SettingsMenuCtrl" ng-show="Utils.isAdminPage()">
+        <button class="btn btn-header dropdown-toggle"><i class="icon-settings icon"></i></button>
+        <ul class="dropdown-menu" role="menu" >
+          <li ng-repeat="item in menuItems"><a href="{{item.link}}">{{item.title}}</a></li>
+        </ul>
+      </div>
+      <div class="user-info dropdown" ng-controller="UserInfoCtrl" ng-show="Utils.isAdminPage()">
+        <button class="btn-user dropdown-toggle">
+        <img class="user-img" ng-src="{{image}}"/>
+        <ul class="user-info-text">
+          <li class="user-name">{{username}}</li>
+          <li class="org-name">{{orgname}}</li>
+        </ul>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li class="user-name">{{username}}</li>
+          <li class="org-name">{{orgname}}</li>
+          <li class="divider"></li>
+          <li id="feedback-btn">
+            <a ng-click="sendFeedback()" tabindex="0"><i class="fa fa-envelope-o fa-lg" style="padding:10px;"></i>{{'index.feedback' | translate}}</a>
+          </li>
+          <li id="logout-btn" ng-show="loggedIn">
+            <a ng-click="logout()" tabindex="0"><i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>{{'index.logout' | translate}}</a>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <div class="wrapper">
+      <div class="row">
+        <div class="col-md-12">
+          <cs-left-nav pages="tabs" ng-controller="TabsCtrl" ng-show="Utils.isAdminPage()"></cs-left-nav>
+          <div class="page-content-wrapper">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="container content-panel" ng-view=""></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-XXXXX-X');
+  ga('send', 'pageview');
+  </script>
+  <script src="bower_components/addressparser/src/addressparser.js"></script>
+  <!--[if lt IE 9]>
+  <script src="bower_components/es5-shim/es5-shim.js"></script>
+  <script src="bower_components/json3/lib/json3.min.js"></script>
+  <![endif]-->
+  <!-- build:js scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/base64/base64.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/angular-dialog-service/dialogs.js"></script>
+  <script src="bower_components/jquery-icheck/icheck.min.js"></script>
+  <script src="bower_components/alertify.js/lib/alertify.js"></script>
+  <script src="bower_components/draggable/draggable.min.js"></script>
+  <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+  <script src="bower_components/angular-translate/angular-translate.js"></script>
+  <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+  <script src="bower_components/amcharts/dist/amcharts/amcharts.js"></script>
+  <script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+  <script src="bower_components/angular-cookie/angular-cookie.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/ng-grid/build/ng-grid.js"></script>
+  <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
+  <script src="bower_components/bootstrap-cisco-ng/dist/cisco-ui-tpls.min.js"></script>
+  <script src="bower_components/angular-wizard/dist/angular-wizard.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:js({.tmp,app}) scripts/scripts.js -->
+  <script src="scripts/app.js"></script>
+  <script src="scripts/appconfig.js"></script>
+  <script src="scripts/apprun.js"></script>
 
-      <div class="container content-panel" ng-view=""></div>
+  <script src="modules/core/scripts/controllers/navigation.js"></script>
+  <script src="modules/core/scripts/controllers/login.js"></script>
+  <script src="modules/core/scripts/controllers/main.js"></script>
+  <script src="modules/core/scripts/controllers/users.js"></script>
+  <script src="modules/core/scripts/controllers/listusers.js"></script>
+  <script src="modules/core/scripts/controllers/organizations.js"></script>
+  <script src="modules/core/scripts/controllers/setupsso.js"></script>
+  <script src="modules/core/scripts/controllers/exportusers.js"></script>
+  <script src="modules/core/scripts/controllers/setupdirsync.js"></script>
 
+  <script src="modules/core/scripts/controllers/header.js"></script>
+  <script src="modules/core/scripts/services/auth.js"></script>
+  <script src="modules/core/scripts/services/config.js"></script>
+  <script src="modules/core/scripts/services/utils.js"></script>
+  <script src="modules/core/scripts/services/storage.js"></script>
+  <script src="modules/core/scripts/services/log.js"></script>
+  <script src="modules/core/scripts/services/localize.js"></script>
+  <script src="modules/core/scripts/services/authinfo.js"></script>
+  <script src="modules/core/scripts/services/notification.js"></script>
+  <script src="modules/core/scripts/services/pageparam.js"></script>
+  <script src="modules/core/scripts/services/pagination.js"></script>
+  <script src="modules/core/scripts/services/userservice.js"></script>
+  <script src="modules/core/scripts/services/userlistservice.js"></script>
+  <script src="modules/core/scripts/services/orgservice.js"></script>
+  <script src="modules/core/scripts/services/ssoservice.js"></script>
+  <script src="modules/core/scripts/services/dirsyncservice.js"></script>
 
-      <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-      <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script src="modules/squared/scripts/controllers/home.js"></script>
+  <script src="modules/squared/scripts/controllers/search.js"></script>
+  <script src="modules/squared/scripts/controllers/reports.js"></script>
+  <script src="modules/squared/scripts/controllers/tabs.js"></script>
+  <script src="modules/squared/scripts/controllers/userprofile.js"></script>
+  <script src="modules/squared/scripts/controllers/downloads.js"></script>
+  <script src="modules/squared/scripts/controllers/entitlementdialog.js"></script>
+  <script src="modules/squared/scripts/controllers/quicksetupdialog.js"></script>
+  <script src="modules/squared/scripts/controllers/support.js"></script>
+  <script src="modules/squared/scripts/controllers/invite.js"></script>
+  <script src="modules/squared/scripts/controllers/activate.js"></script>
+  <script src="modules/squared/scripts/controllers/invitelauncher.js"></script>
+  <script src="modules/squared/scripts/controllers/applauncher.js"></script>
+  <script src="modules/squared/scripts/controllers/spaces.js"></script>
 
-     ga('create', 'UA-XXXXX-X');
-     ga('send', 'pageview');
-
-     </script>
-
-     <script src="bower_components/addressparser/src/addressparser.js"></script>
-
-    <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.min.js"></script>
-    <![endif]-->
-    <!-- build:js scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/base64/base64.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script src="bower_components/angular-dialog-service/dialogs.js"></script>
-    <script src="bower_components/jquery-icheck/icheck.min.js"></script>
-    <script src="bower_components/alertify.js/lib/alertify.js"></script>
-    <script src="bower_components/draggable/draggable.min.js"></script>
-    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-    <script src="bower_components/angular-translate/angular-translate.js"></script>
-    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
-    <script src="bower_components/amcharts/dist/amcharts/amcharts.js"></script>
-    <script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
-    <script src="bower_components/angular-cookie/angular-cookie.js"></script>
-    <script src="bower_components/moment/moment.js"></script>
-    <script src="bower_components/angular-wizard/dist/angular-wizard.js"></script>
-    <script src="bower_components/ng-grid/build/ng-grid.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <script src="scripts/app.js"></script>
-    <script src="scripts/appconfig.js"></script>
-    <script src="scripts/apprun.js"></script>
-
-    <script src="modules/core/scripts/controllers/navigation.js"></script>
-    <script src="modules/core/scripts/controllers/login.js"></script>
-    <script src="modules/core/scripts/controllers/main.js"></script>
-    <script src="modules/core/scripts/controllers/users.js"></script>
-    <script src="modules/core/scripts/controllers/listusers.js"></script>
-    <script src="modules/core/scripts/controllers/organizations.js"></script>
-    <script src="modules/core/scripts/controllers/setupsso.js"></script>
-    <script src="modules/core/scripts/controllers/setupdirsync.js"></script>
-    <script src="modules/core/scripts/controllers/exportusers.js"></script>
-
-    <script src="modules/core/scripts/services/auth.js"></script>
-    <script src="modules/core/scripts/services/config.js"></script>
-    <script src="modules/core/scripts/services/utils.js"></script>
-    <script src="modules/core/scripts/services/storage.js"></script>
-    <script src="modules/core/scripts/services/log.js"></script>
-    <script src="modules/core/scripts/services/localize.js"></script>
-    <script src="modules/core/scripts/services/authinfo.js"></script>
-    <script src="modules/core/scripts/services/notification.js"></script>
-    <script src="modules/core/scripts/services/pageparam.js"></script>
-    <script src="modules/core/scripts/services/pagination.js"></script>
-    <script src="modules/core/scripts/services/userservice.js"></script>
-    <script src="modules/core/scripts/services/userlistservice.js"></script>
-    <script src="modules/core/scripts/services/orgservice.js"></script>
-    <script src="modules/core/scripts/services/ssoservice.js"></script>
-    <script src="modules/core/scripts/services/dirsyncservice.js"></script>
-
-    <script src="modules/squared/scripts/controllers/home.js"></script>
-    <script src="modules/squared/scripts/controllers/search.js"></script>
-    <script src="modules/squared/scripts/controllers/reports.js"></script>
-    <script src="modules/squared/scripts/controllers/tabs.js"></script>
-    <script src="modules/squared/scripts/controllers/userprofile.js"></script>
-    <script src="modules/squared/scripts/controllers/downloads.js"></script>
-    <script src="modules/squared/scripts/controllers/entitlementdialog.js"></script>
-    <script src="modules/squared/scripts/controllers/quicksetupdialog.js"></script>
-    <script src="modules/squared/scripts/controllers/support.js"></script>
-    <script src="modules/squared/scripts/controllers/invite.js"></script>
-    <script src="modules/squared/scripts/controllers/activate.js"></script>
-    <script src="modules/squared/scripts/controllers/invitelauncher.js"></script>
-    <script src="modules/squared/scripts/controllers/applauncher.js"></script>
-    <script src="modules/squared/scripts/controllers/spaces.js"></script>
-
-    <script src="modules/squared/scripts/services/logmetricsservice.js"></script>
-    <script src="modules/squared/scripts/services/reportsservice.js"></script>
-    <script src="modules/squared/scripts/services/activateservice.js"></script>
-    <script src="modules/squared/scripts/services/logservice.js"></script>
-    <script src="modules/squared/scripts/services/inviteservice.js"></script>
-    <script src="modules/squared/scripts/services/homecacheservice.js"></script>
-    <script src="modules/squared/scripts/services/reportscacheservice.js"></script>
-    <script src="modules/squared/scripts/services/spacesservice.js"></script>
-
-    <script src="modules/squared/scripts/directives/icheck.js"></script>
-    <script src="modules/squared/scripts/directives/reload-data.js"></script>
-    <script src="modules/squared/scripts/directives/fundoorating.js"></script>
-    <script src="modules/huron/scripts/directives/telephony-info.js"></script>
-    <script src="modules/huron/scripts/directives/conferencing-info.js"></script>
-    <script src="modules/squared/scripts/directives/conversations-info.js"></script>
-    <script src="modules/huron/scripts/directives/usage-info.js"></script>
-    <script src="modules/huron/scripts/directives/endpoints-info.js"></script>
-    <script src="modules/squared/scripts/directives/userentitlements.js"></script>
-
-    <script src="modules/huron/scripts/services/telephonyservices.js"></script>
-    <script src="modules/huron/scripts/services/huron-config.js"></script>
-
-    <script src="bower_components/amcharts/dist/amcharts/pie.js"></script>
-    <script src="bower_components/amcharts/dist/amcharts/serial.js"></script>
-
-    <!-- endbuild -->
-    <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
-  </body>
-  </html>
+  <script src="modules/squared/scripts/services/logmetricsservice.js"></script>
+  <script src="modules/squared/scripts/services/reportsservice.js"></script>
+  <script src="modules/squared/scripts/services/activateservice.js"></script>
+  <script src="modules/squared/scripts/services/logservice.js"></script>
+  <script src="modules/squared/scripts/services/inviteservice.js"></script>
+  <script src="modules/squared/scripts/services/homecacheservice.js"></script>
+  <script src="modules/squared/scripts/services/reportscacheservice.js"></script>
+  <script src="modules/squared/scripts/services/spacesservice.js"></script>
+  <script src="modules/squared/scripts/directives/icheck.js"></script>
+  <script src="modules/squared/scripts/directives/reload-data.js"></script>
+  <script src="modules/squared/scripts/directives/fundoorating.js"></script>
+  <script src="modules/huron/scripts/directives/telephony-info.js"></script>
+  <script src="modules/huron/scripts/directives/conferencing-info.js"></script>
+  <script src="modules/squared/scripts/directives/conversations-info.js"></script>
+  <script src="modules/huron/scripts/directives/usage-info.js"></script>
+  <script src="modules/huron/scripts/directives/endpoints-info.js"></script>
+  <script src="modules/squared/scripts/directives/userentitlements.js"></script>
+  <script src="modules/huron/scripts/services/telephonyservices.js"></script>
+  <script src="modules/huron/scripts/services/huron-config.js"></script>
+  <script src="bower_components/amcharts/dist/amcharts/pie.js"></script>
+  <script src="bower_components/amcharts/dist/amcharts/serial.js"></script>
+  <!-- endbuild -->
+  <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+  <script src="bower_components/bootstrap-cisco-ng/dist/cisco-ui-tpls.js"></script>
+</body>
+</html>

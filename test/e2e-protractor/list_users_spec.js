@@ -35,6 +35,7 @@ describe('List users flow', function() {
         };
       }
     });
+    utils.scrollTop();
   });
 
   // Logging in. Write your tests after the login flow is complete.
@@ -70,8 +71,7 @@ describe('List users flow', function() {
   // Asserting listing users.
   describe('Listing users on page load', function() {
     it('clicking on users tab should change the view', function() {
-      navigation.usersTab.click();
-      expect(navigation.tabs.isDisplayed()).toBeTruthy();
+      navigation.clickUsers();
       navigation.expectCurrentUrl('/users');
       expect(users.managePanel.isDisplayed()).toBeFalsy();
     });
@@ -100,7 +100,7 @@ describe('List users flow', function() {
      users.prevPage.click();
       users.assertPage('1');
       users.assertResultsLength(20);
-      users.searchField.clear();
+      users.search();
     });
   });
 
@@ -119,16 +119,6 @@ describe('List users flow', function() {
   describe('search users on page', function() {
     it('should show first page of users based on search string', function() {
       users.search(testuser.searchStr, 20);
-
-      users.queryResults.getAttribute('value').then(function(value) {
-          var qResults = parseInt(value, 10);
-          if (qResults > 0) {
-            users.resultUsername.getText().then(function(uname) {
-              expect(uname).toContain(testuser.searchStr);
-            });
-          }
-          users.searchField.clear();
-        });
     });
   });
 
@@ -211,9 +201,7 @@ describe('List users flow', function() {
   //Log Out
   describe('Log Out', function() {
     it('should log out', function() {
-      users.settingsBar.click();
-      expect(users.logoutButton.isDisplayed()).toBeTruthy();
-      users.logoutButton.click();
+     navigation.logout();
     });
   });
 
