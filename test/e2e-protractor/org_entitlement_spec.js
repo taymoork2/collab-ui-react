@@ -50,9 +50,9 @@ describe('clicking a user', function() {
     expect(users.resultUsername.getText()).toContain(testuser.searchStr);
     users.resultUsername.click();
     expect(users.squaredPanel.isDisplayed()).toBeTruthy();
-    expect(users.huronPanel.​isDisplayed()).toBeFalsy();
-    expect(users.conferencePanel.​isDisplayed()).toBeFalsy();
-    expect(users.endpointPanel.​isDisplayed()).toBeFalsy();
+    expect(users.huronPanel.isDisplayed()).toBeFalsy();
+    expect(users.conferencePanel.isDisplayed()).toBeFalsy();
+    expect(users.endpointPanel.isDisplayed()).toBeFalsy();
   });
 });
 
