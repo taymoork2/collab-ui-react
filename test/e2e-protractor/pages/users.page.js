@@ -14,6 +14,7 @@ var UsersPage = function(){
   this.endpointPanel = element(by.id('endpointPanel'));
   this.entitlementCol = element(by.id('entitlementCol'));
   this.previewPanel = element(by.id('details-panel'));
+  this.previewName = element(by.id('name-preview'));
 
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield'));
@@ -41,6 +42,62 @@ var UsersPage = function(){
   this.successBody = element(by.css('.panel-success-body p'));
 
   this.notificationCancel = element(by.id('notifications-cancel'));
+
+  this.currentPage = element(by.css('.pagination-current a'));
+  this.queryCount = element.all(by.repeater('user in queryuserslist'));
+  this.nextPage = element(by.id('next-page'));
+  this.prevPage = element(by.id('prev-page'));
+  this.queryResults = element(by.id('queryresults'));
+  this.iCheck = element(by.css('.iCheck-helper'));
+
+  this.moreOptions = element(by.id('userMoreOptions'));
+  this.settingsBar = element(by.id('setting-bar'));
+  this.exportButton = element(by.id('export-btn'));
+  this.logoutButton = element(by.id('logout-btn'));
+  this.userNameCell = element(by.id('userNameCell'));
+  this.checkBoxEnts = element.all(by.css('.details-body .icheckbox_square-blue'));
+  this.fusionCheckBox = element(by.id('chk_squaredFusionUC'));
+  this.iconSearch = element(by.id('icon-search'));
+
+  this.assertSorting = function(nameToSort){
+    this.queryResults.getAttribute('value').then(function(value) {
+        var queryresults = parseInt(value, 10);
+        if (queryresults > 1) {
+          //get first user
+          var user = null;
+          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+            user = rows[0].getText();
+          });
+          //Click on username sort and expect the first user not to be the same
+          element(by.id(nameToSort)).click().then(function() {
+            element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+              expect(rows[0].getText()).not.toBe(user);
+            });
+          });
+        }
+      });
+  };
+
+  this.assertPage = function(page){
+    expect(this.currentPage.getText()).toBe(page);
+  };
+
+  this.assertResultsLength = function(results) {
+    element.all(by.repeater('user in queryuserslist')).then(function(rows){
+      if(results == 20)
+      {
+        expect(rows.length).toBeLessThanOrEqualTo(results);
+      }
+      else if(results == 0)
+      {
+        expect(rows.length).toBeGreaterThan(results);
+      }
+      else
+      {
+        expect(rows.length).toBe(results);
+      }
+    });
+  };
 
   this.assertError = function(msg1, msg2){
     expect(this.errorAlert.isDisplayed()).toBeTruthy();
@@ -72,7 +129,7 @@ var UsersPage = function(){
     this.searchField.sendKeys(query);
     browser.sleep(1000);
     element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-      if (size){
+      if(size){
         expect(rows.length).toBe(size);
       }
       else{

@@ -20,6 +20,10 @@ exports.config = {
 
   onPrepare: function() {
 
+    global.utils = require('./test/e2e-protractor/utils/test.utils.js');
+    global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
+    global.config = require('./test/e2e-protractor/utils/test.config.js');
+
     var UsersPage = require('./test/e2e-protractor/pages/users.page.js');
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');
     var LoginPage = require('./test/e2e-protractor/pages/login.page.js');
@@ -30,6 +34,7 @@ exports.config = {
     var SSOWizardPage = require('./test/e2e-protractor/pages/ssowizard.page.js');
     var InvitePage = require('./test/e2e-protractor/pages/invite.page.js');
     var DownloadPage = require('./test/e2e-protractor/pages/download.page.js');
+    var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
 
     global.users = new UsersPage();
     global.navigation = new Navigation();
@@ -41,10 +46,8 @@ exports.config = {
     global.ssowizard = new SSOWizardPage();
     global.invite = new InvitePage();
     global.download = new DownloadPage();
+    global.activate = new ActivatePage();
 
-    global.utils = require('./test/e2e-protractor/utils/test.utils.js');
-    global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
-    global.config = require('./test/e2e-protractor/utils/test.config.js');
 /*
     var ScreenShotReporter = require('protractor-screenshot-reporter');
     var path = require('path');
