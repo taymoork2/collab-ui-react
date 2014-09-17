@@ -5,6 +5,9 @@ exports.config = {
   specs: [
     'test/e2e-protractor/*_spec.js'
   ],
+  exclude: [
+    'test/e2e-protractor/telephony_info_spec.js'  // excluding until proper user with proper entitlement is added to integration
+  ],
 
   // Uses ChromeDriver directly instead of selenium server
   chromeOnly: true,
