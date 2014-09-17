@@ -178,9 +178,9 @@ angular.module('Core')
       };
 
       config.roles = {
-        Full_Admin: [config.tabs.home, config.tabs.users, config.tabs.orgs, config.tabs.reports, config.tabs.spaces],
-        WX2_User: [config.tabs.home, config.tabs.reports, config.tabs.support, config.tabs.spaces],
-        WX2_Support: [config.tabs.home, config.tabs.reports, config.tabs.support, config.tabs.spaces],
+        Full_Admin: [config.tabs.home, config.tabs.users, config.tabs.orgs, config.tabs.reports],
+        WX2_User: [config.tabs.home, config.tabs.reports, config.tabs.support],
+        WX2_Support: [config.tabs.home, config.tabs.reports, config.tabs.support],
         WX2_SquaredInviter: [],
         User: []
       };
