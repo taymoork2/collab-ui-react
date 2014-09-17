@@ -70,7 +70,7 @@ describe('App flow', function() {
   describe('Navigation Bar', function() {
 
     it('should display correct tabs for user based on role', function() {
-      expect(navigation.getTabCount()).toBe(10);  // double number of actual tabs due to generated divs
+      expect(navigation.getTabCount()).toBe(12);  // double number of actual tabs due to generated divs
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
       expect(navigation.usersTab.isDisplayed()).toBeTruthy();
       expect(navigation.manageTab.isDisplayed()).toBeTruthy();
@@ -289,7 +289,7 @@ describe('App flow', function() {
   describe('Switching tabs', function() {
     it('should have a tab bar', function() {
       expect(navigation.tabs.isDisplayed()).toBeTruthy();
-      expect(navigation.getTabCount()).toEqual(10);
+      expect(navigation.getTabCount()).toEqual(12);
     });
 
     it('clicking on home tab should change the view', function() {
@@ -452,7 +452,7 @@ describe('App flow', function() {
       });
 
       it('should display correct tabs for user based on role', function() {
-        expect(navigation.getTabCount()).toBe(8);  // double number of actual tabs due to generated divs
+        expect(navigation.getTabCount()).toBe(10);  // double number of actual tabs due to generated divs
         expect(navigation.homeTab.isDisplayed()).toBeTruthy();
         expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
         expect(navigation.usersTab.isDisplayed()).toBeTruthy();

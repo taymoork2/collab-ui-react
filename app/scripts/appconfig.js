@@ -86,6 +86,10 @@ angular
       .when('/applauncher', {
         templateUrl: 'modules/squared/views/applauncher.html',
         controller: 'ApplauncherCtrl'
+      })
+      .when('/spaces', {
+        templateUrl: 'modules/squared/views/spaces.html',
+        controller: 'SpacesCtrl'
       });
   }
 ]);

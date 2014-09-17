@@ -43,7 +43,8 @@
     "orgTab" : "Manage",
     "userTab" : "Users",
     "reportTab" : "Reports",
-    "supportTab" : "Support"
+    "supportTab" : "Support",
+    "spacesTab" : "Shared Spaces (Rooms)"
   },
   "index" : {
     "welcome" : "Welcome",
@@ -230,6 +231,9 @@
     "status401" : "Authorization failed. Server unable to process authorization token.<br/>You will automatically be logged out in a few seconds.",
     "serverDown" : "Authorization failed. Server may be down, please contact system administrator.<br/>You will automatically be logged out in a few seconds.",
     "expired" : "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service."
+  },
+  "spacesPage" : {
+    "title" : "Shared Spaces"
   }
 
 }
