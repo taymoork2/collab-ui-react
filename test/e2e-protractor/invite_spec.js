@@ -62,5 +62,17 @@ describe('App Launcher Flow', function() {
 
   });
 
+
+  it('applauncher should forward to squared app', function() {
+    browser.get('/applauncher.html');
+
+    browser.driver.wait(function() {
+      return browser.driver.isElementPresent(by.id('btn-login'));
+    }).then(function() {
+      expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
+    });
+
+  });
+
 });
 

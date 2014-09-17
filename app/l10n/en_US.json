@@ -68,7 +68,7 @@
   },
   "invitePage" : {
     "redirect" : "Redirecting...",
-    "launch" : "Lauching App..."
+    "launch" : "Launching App..."
   },
   "orgsPage" : {
     "title" : "MANAGE ORGANIZATIONS",
