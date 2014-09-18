@@ -1052,6 +1052,9 @@ background-color: #333333 !important;
     width: 800px;
     height: 600px;
     margin-top: 50px !important;
+    & > :nth-child(2) {
+      overflow-x: hidden;
+    }
 }
 
 .room-panel {
