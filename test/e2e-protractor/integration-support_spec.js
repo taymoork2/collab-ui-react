@@ -31,7 +31,7 @@ describe('Support flow', function() {
     });
 
     it('should display correct tabs for user based on role', function() {
-      expect(navigation.getTabCount()).toBe(10);  // double number of actual tabs due to generated divs
+      expect(navigation.getTabCount()).toBe(12);  // double number of actual tabs due to generated divs
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
       expect(navigation.usersTab.isDisplayed()).toBeTruthy();
       expect(navigation.manageTab.isDisplayed()).toBeTruthy();

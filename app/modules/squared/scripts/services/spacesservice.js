@@ -4,34 +4,24 @@ angular.module('Squared')
   .service('SpacesService', ['$http', 'Storage', 'Config', 'Log', 'Auth',
     function($http, Storage, Config, Log, Auth) {
 
-      var roomUrl = Config.getAdminServiceUrl();
+      var roomUrl = Config.getAdminServiceUrl() + 'rooms';
       var token = Storage.get('accessToken');
 
       return {
-        listRooms: function() {
-          // var logsUrl = Config.getAdminServiceUrl() + 'logs/' + userId;
-
-          // $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-          // $http.get(logsUrl)
-          //   .success(function(data, status) {
-          //     data.success = true;
-          //     Log.debug('Retrieved logs for user: ' + userId);
-          //     callback(data, status);
-          //   })
-          //   .error(function(data, status) {
-          //     data.success = false;
-          //     data.status = status;
-          //     callback(data, status);
-          //     Auth.handleStatus(status);
-          //   });
-
-          var rooms = [{Room: 'Moroni'},
-                     {Room: 'Tiancum'},
-                     {Room: 'Jacob'},
-                     {Room: 'Nephi'},
-                     {Room: 'Enos'}];
-
-          return rooms;
+        listRooms: function(callback) {
+          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.get(roomUrl)
+            .success(function(data, status) {
+              data.success = true;
+              Log.debug('Retrieved list of rooms for org: ' + token);
+              callback(data, status);
+            })
+            .error(function(data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
         },
 
         addRoom: function(newRoomName, callback){
@@ -41,7 +31,7 @@ angular.module('Squared')
 
           if (roomData.name.length > 0) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-            $http.post(roomUrl + 'rooms', roomData)
+            $http.post(roomUrl, roomData)
               .success(function(data, status) {
                 data.success = true;
                 callback(data, status);
