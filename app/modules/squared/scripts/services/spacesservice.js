@@ -4,7 +4,7 @@ angular.module('Squared')
   .service('SpacesService', ['$http', 'Storage', 'Config', 'Log', 'Auth',
     function($http, Storage, Config, Log, Auth) {
 
-      var roomUrl = Config.getAdminServiceUrl() + 'rooms';
+      var roomUrl = Config.getAdminServiceUrl() + 'devices';
       var token = Storage.get('accessToken');
 
       return {

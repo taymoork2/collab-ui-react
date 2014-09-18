@@ -28,7 +28,15 @@ angular.module('Squared')
 
       SpacesService.listRooms(function(data, status){
         if(data.success === true ){
-          $scope.roomData = getDummyData();
+          var devices = [];
+          if (data.devices)
+          {
+            for (var i = 0; i < data.devices.length; i++) {
+              var device = data.devices[i];
+              devices.push({'room': device.accountName, 'code': device.activationCode, 'activationDate': device.activationTime});
+            }
+          }
+          $scope.roomData = devices;
         }
         else{
           Log.error('Error getting rooms. Status: ' + status);
@@ -41,6 +49,8 @@ angular.module('Squared')
         data: 'roomData',
         multiSelect: false,
         showFilter: true,
+        rowHeight: 38,
+        headerRowHeight: 38,
         sortInfo: { fields: ['activationDate','room'],
                     directions: ['asc']},
 

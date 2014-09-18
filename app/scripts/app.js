@@ -11,7 +11,7 @@
 
 angular.module('Core', []);
 
-angular.module('Squared', ['Core', 'ngGrid'
+angular.module('Squared', ['Core'
     ]);
 
 angular.module('Huron', ['Core']);
@@ -30,6 +30,7 @@ angular
     'Core',
     'Squared',
     'Huron',
+    'ngGrid',
     'mgo-angular-wizard'
   ]);
 

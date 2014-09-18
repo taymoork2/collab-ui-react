@@ -139,6 +139,7 @@ angular.module('Squared')
               $scope.showAURefresh = false;
               $scope.showAUContent = true;
               $scope.activeUserCount = data.data;
+              $scope.addToCache('activeUserCount', $scope.activeUserCount);
             } else {
               $('#au-refresh').html('<span>No results available.</span>');
               $scope.addToCache('activeUserCount', {'divName':'#au-refresh', 'message':'<span>No results available.</span>'});

@@ -1049,7 +1049,7 @@ background-color: #333333 !important;
 
 .gridStyle {
     border: 1px solid rgb(212,212,212);
-    width: 500px;
+    width: 800px;
     height: 600px;
     margin-top: 50px !important;
 }
@@ -1060,4 +1060,20 @@ background-color: #333333 !important;
 
 .close{
   color: black !important;
+}
+
+.ngRow.selected {
+  background-color: #E8F1F8;
+}
+
+.ngSortPriority {
+  display: none;
+}
+
+.ngCellText, .ngHeaderText {
+  padding: 9px;
+}
+
+.ngSortButtonDown, .ngSortButtonUp {
+  left: 145px;
 }

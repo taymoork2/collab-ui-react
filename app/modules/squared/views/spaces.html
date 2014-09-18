@@ -32,7 +32,7 @@
           <h3 class="modal-title" id="addRoomTitle" translate="spacesPage.modalTitle"></h3>
         </div>
         <div class="modal-body">
-          <input class="form-control profile-input" name="roomName" ng-model="newRoomName" type="text" id="newRoom" required></input>
+          <input class="form-control profile-input" name="roomName" ng-model="newRoomName" type="text" id="newRoom" placeholder="Enter room name..." required></input>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" ng-click="addRoom()" data-dismiss="modal" ng-disabled="!newRoomName.length">

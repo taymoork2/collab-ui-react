@@ -350,9 +350,6 @@ describe('App flow', function() {
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();
-      expect(reports.entitlementsRefresh.isDisplayed()).toBeTruthy();
-      expect(reports.callsRefresh.isDisplayed()).toBeTruthy();
-      expect(reports.conversationsRefresh.isDisplayed()).toBeTruthy();
     });
 
     it('clicking on users tab should change the view', function() {
