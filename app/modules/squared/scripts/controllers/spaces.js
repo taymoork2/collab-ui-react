@@ -1,4 +1,5 @@
 'use strict';
+/* global moment */
 
 angular.module('Squared')
   .controller('SpacesCtrl', ['$scope', '$location', 'Auth', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Authinfo', 'Notification', 'Config',

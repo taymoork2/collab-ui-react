@@ -100,7 +100,7 @@ var UsersPage = function(){
   };
 
   this.assertError = function(msg1, msg2){
-    expect(this.errorAlert.isDisplayed()).toBeTruthy();
+    utils.expectIsDisplayed(this.errorAlert);
     this.errorAlert.click();
     if (msg1){
       expect(this.errorBody.getText()).toContain(msg1);
@@ -112,7 +112,7 @@ var UsersPage = function(){
   };
 
   this.assertSuccess = function(msg1, msg2){
-    expect(this.successAlert.isDisplayed()).toBeTruthy();
+    utils.expectIsDisplayed(this.successAlert);
     this.successAlert.click();
     if (msg1){
       expect(this.successBody.getText()).toContain(msg1);

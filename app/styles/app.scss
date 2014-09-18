@@ -1024,6 +1024,15 @@ input:disabled {
 #enablessoCancelBtn,
 #enablessoBackBtn,
 #enablessoFinishBtn,
+#syncNowBtn,
+#domainCancelBtn,
+#domainNextBtn,
+#installCancelBtn,
+#installBackBtn,
+#installNextBtn,
+#synchCancelBtn,
+#synchBackBtn,
+#synchFinishBtn
  {
   min-width: 100px;
   bottom: 50px;
@@ -1036,6 +1045,38 @@ input:disabled {
 
 #ssoModalBody {
   min-height: 400px;
+}
+
+#yourDomainDiv, #installDiv, #connectionDiv, #synchDiv, #groupDiv {
+  margin-top: 30px;
+  margin-left: 40px;
+}
+
+#numUsers {
+  margin-left: 60px;
+}
+
+#domainDesc {
+  margin-left: 60px;
+  margin-top: 10px;
+  color: gray;
+}
+
+.dirsync-refresh-button{
+  float:right;
+  margin-right: 75px;
+}
+
+.subheading {
+  margin-right: 10px;
+}
+
+.installStep, #userResults {
+  margin-bottom: 10px;
+}
+
+.boldText {
+  font-weight: bold;
 }
 
 .ssoDesc:after, #importFileDiv:after, #ssoFooter:after {
@@ -1079,4 +1120,14 @@ background-color: #333333 !important;
 
 .ngSortButtonDown, .ngSortButtonUp {
   left: 145px;
+}
+
+.dirgridStyle {
+  margin-top: 10px;
+  width: 450px;
+  height: 180px;
+  border: 1px solid lightgray;
+  & > :nth-child(2) {
+    overflow-x: hidden;
+  }
 }

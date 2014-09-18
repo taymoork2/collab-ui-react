@@ -75,5 +75,12 @@ angular.module('Core')
 
         });
       };
+
+      $scope.popupDirsync = function() {
+        var dlg = $dialogs.create('modules/core/views/setupdirsync.html', 'setupDirSyncDialogCtrl');
+        dlg.result.then(function() {
+
+        });
+      };
     }
   ]);

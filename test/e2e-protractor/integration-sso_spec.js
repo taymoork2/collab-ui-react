@@ -17,7 +17,8 @@ describe('Enabling SSO flow', function() {
   describe('Login as sso admin user', function() {
 
     it('should login', function(){
-      login.loginSSO(testuser.username, testuser.password);
+      //because we already logged in as SSO user in the previous spec
+      login.loginSSOSecondTime(testuser.username, testuser.password);
     });
   }); //State is logged-in
 
@@ -33,7 +34,7 @@ describe('Enabling SSO flow', function() {
       utils.expectIsDisplayed(ssowizard.ssoModalHeader);
     });
 
-    it('should display the Import IDP meatadata step when the wizard launches', function() {
+    it('should display the Import IDP metadata step when the wizard launches', function() {
       utils.expectIsDisplayed(ssowizard.fileToUploadText);
       utils.expectIsDisplayed(ssowizard.fileToUploadBtn);
       utils.expectIsNotDisplayed(ssowizard.fileToUploadTextHolder);

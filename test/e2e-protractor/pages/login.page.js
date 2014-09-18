@@ -67,6 +67,15 @@ var LoginPage = function(){
     expect(browser.getCurrentUrl()).toContain('/home');
     browser.executeScript("$.fx.off = true;"); // Disable jQuery animations
   };
+
+  this.loginSSOSecondTime = function(username) {
+    this.get();
+    browser.driver.wait(this.isLoginUsernamePresent);
+    this.setLoginUsername(username);
+    this.clickLoginNext();
+    expect(browser.getCurrentUrl()).toContain('/home');
+    browser.executeScript("$.fx.off = true;"); // Disable jQuery animations
+  };
 }
 
 module.exports = LoginPage;

@@ -90,7 +90,8 @@
         <div id="global-export-btn" ng-disabled="exportBtn.disabled" class="btn btn-default"><span ng-bind-html="exportBtn.title"></span>
         </div>
       </button>
-      <button ng-hide= "!org.ssoEnabled" id="btnSSO" class="btn btn-primary pull-right" ng-click="enableSSO()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="ssoModal.btnTitle"></span></button>
+      <button ng-hide= "!org.ssoEnabled" id="btnSSO" class="btn btn-primary pull-right" ng-click="enableSSO()"><span translate="ssoModal.btnTitle"></span></button>
+      <button ng-hide= "!org.ssoEnabled" id="btnDirSync" class="btn btn-primary pull-right" ng-click="popupDirsync()"><span translate="dirsyncModal.btnTitle"></span></button>
   </div>
 </div>
 
