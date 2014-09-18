@@ -26,23 +26,46 @@ angular.module('Squared')
         return rooms;
       };
 
-      SpacesService.listRooms(function(data, status){
-        if(data.success === true ){
-          var devices = [];
-          if (data.devices)
+      var formatActivationCode = function(activationCode) {
+        var acode = '';
+        if (activationCode)
+        {
+          var parts = activationCode.match(/[\s\S]{1,4}/g) || [];
+          for (var x=0; x < parts.length-1; x++)
           {
-            for (var i = 0; i < data.devices.length; i++) {
-              var device = data.devices[i];
-              devices.push({'room': device.accountName, 'code': device.activationCode, 'activationDate': device.activationTime});
-            }
+            acode = acode + parts[x]+' ';
           }
-          $scope.roomData = devices;
+          acode = acode + parts[parts.length-1];
         }
-        else{
-          Log.error('Error getting rooms. Status: ' + status);
-          $scope.roomData = getDummyData();
-        }
-      });
+        return acode;
+      };
+
+      $scope.getAllRooms = function() {
+        SpacesService.listRooms(function(data, status){
+          if(data.success === true ){
+            var devices = [];
+            if (data.devices)
+            {
+              for (var i = 0; i < data.devices.length; i++) {
+                var device = data.devices[i];
+                var activationCode = device.activationCode;
+                if (activationCode)
+                {
+                  activationCode = formatActivationCode(activationCode);
+                }
+                devices.push({'room': device.accountName, 'code': activationCode, 'activationDate': device.activationTime});
+              }
+            }
+            $scope.roomData = devices;
+          }
+          else{
+            Log.error('Error getting rooms. Status: ' + status);
+            $scope.roomData = getDummyData();
+          }
+        });
+      };
+
+      $scope.getAllRooms();
 
       $scope.newRoomName = null;
       $scope.gridOptions = {
@@ -73,7 +96,7 @@ angular.module('Squared')
           if(data.success === true ){
             var successMessage = [$scope.newRoomName + ' added successfully.'];
             Notification.notify(successMessage, 'success');
-            $scope.myData = SpacesService.listRooms();
+            $scope.getAllRooms();
             $scope.clearRoom();
           }
           else{
