@@ -41,7 +41,7 @@ angular.module('Squared')
         return acode;
       };
 
-      var getAllRooms = function() {
+      $scope.getAllRooms = function() {
         SpacesService.listRooms(function(data, status){
           if(data.success === true ){
             var devices = [];
@@ -73,7 +73,7 @@ angular.module('Squared')
         });
       };
 
-      getAllRooms();
+      $scope.getAllRooms();
 
       $scope.newRoomName = null;
       $scope.gridOptions = {
@@ -105,8 +105,8 @@ angular.module('Squared')
             var successMessage = [$scope.newRoomName + ' added successfully.'];
             Notification.notify(successMessage, 'success');
             setTimeout(function(){
-              getAllRooms();
-            }, 500);
+              $scope.getAllRooms();
+            }, 1000);
             $scope.clearRoom();
           }
           else{
