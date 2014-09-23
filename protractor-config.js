@@ -3,7 +3,7 @@
 exports.config = {
   // Spec patterns are relative to the location of this config.
   specs: [
-    'test/e2e-protractor/shared*_spec.js'
+    'test/e2e-protractor/*_spec.js'
   ],
   exclude: [
     'test/e2e-protractor/telephony_info_spec.js'  // excluding until proper user with proper entitlement is added to integration
