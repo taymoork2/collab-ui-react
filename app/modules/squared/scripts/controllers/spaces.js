@@ -11,22 +11,6 @@ angular.module('Squared')
         Log.debug('Authinfo data is loaded.');
       }
 
-      var rooms = [];
-      var getDummyData = function() {
-        rooms.push({'room': 'Moroni', 'code': 1234, 'activationDate': ''});
-        rooms.push({'room': 'Tiancum', 'code': 1234, 'activationDate':''});
-        rooms.push({'room': 'Jacob', 'code': '', 'activationDate': 'Jan 4 2014'});
-        rooms.push({'room': 'Nephi', 'code': '', 'activationDate': 'Jan 7 2014'});
-        rooms.push({'room': 'Enos', 'code': '', 'activationDate': 'Jan 14 2014'});
-        rooms.push({'room': 'Mars', 'code': 1234, 'activationDate': ''});
-        rooms.push({'room': 'Jupiter', 'code': 1234, 'activationDate': ''});
-        rooms.push({'room': 'Venus', 'code': '', 'activationDate': 'Jun 18 2014'});
-        rooms.push({'room': 'Saturn', 'code': '', 'activationDate': 'Jun 12 2014'});
-        rooms.push({'room': 'Earth', 'code': 1234, 'activationDate': ''});
-
-        return rooms;
-      };
-
       var formatActivationCode = function(activationCode) {
         var acode = '';
         if (activationCode)
@@ -41,7 +25,7 @@ angular.module('Squared')
         return acode;
       };
 
-      $scope.getAllRooms = function() {
+      var getAllRooms = function() {
         SpacesService.listRooms(function(data, status){
           if(data.success === true ){
             var devices = [];
@@ -68,12 +52,11 @@ angular.module('Squared')
           }
           else{
             Log.error('Error getting rooms. Status: ' + status);
-            $scope.roomData = getDummyData();
           }
         });
       };
 
-      $scope.getAllRooms();
+      getAllRooms();
 
       $scope.newRoomName = null;
       $scope.gridOptions = {
@@ -105,14 +88,13 @@ angular.module('Squared')
             var successMessage = [$scope.newRoomName + ' added successfully.'];
             Notification.notify(successMessage, 'success');
             setTimeout(function(){
-              $scope.getAllRooms();
+              getAllRooms();
             }, 1000);
             $scope.clearRoom();
           }
           else{
             var errorMessage = ['Error adding ' + $scope.newRoomName + '. Status: ' + status];
             Notification.notify(errorMessage, 'error');
-            rooms.push({'room': $scope.newRoomName, 'code': 1234, 'activationDate': ''});
           }
         });
       };

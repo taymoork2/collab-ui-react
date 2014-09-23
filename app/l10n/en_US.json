@@ -277,7 +277,8 @@
   },
   "spacesPage" : {
     "title" : "Shared Spaces",
-    "modalTitle" : "Add Room"
+    "modalTitle" : "Add Room",
+    "add": "Add"
   }
 
 }

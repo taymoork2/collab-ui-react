@@ -14,12 +14,12 @@
         </li>
       </ul>
     </div>
-      <button id="addUsers" class="btn btn-success add-users-button" data-toggle="modal" data-target="#addRoomDialog">
-        <span translate="usersPage.add"></span>
+      <button id="addRooms" class="btn btn-success add-users-button" data-toggle="modal" data-target="#addRoomDialog">
+        <span translate="spacesPage.add"></span>
       </button>
   </div>
 </div>
-<div>
+<div id="roomsListPanel">
   <div class="gridStyle" ng-grid="gridOptions"></div>
 </div>
   <div class="modal fade" id="addRoomDialog" tabindex="-1" role="dialog" aria-labelledby="addRoomTitle" aria-hidden="true">
@@ -37,7 +37,7 @@
           <input class="form-control profile-input" name="roomName" ng-model="newRoomName" type="text" id="newRoom" placeholder="Enter room name..." required></input>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" ng-click="addRoom()" data-dismiss="modal" ng-disabled="!newRoomName.length">
+          <button id="btnAdd" type="button" class="btn btn-primary" ng-click="addRoom()" data-dismiss="modal" ng-disabled="!newRoomName.length">
             <span translate="usersPage.add"></span>
           </button>
           <div id="btnCancel" class="btn btn-link pull-right" ng-click="clearRoom()">

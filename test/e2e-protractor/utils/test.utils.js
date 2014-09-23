@@ -17,6 +17,10 @@ exports.randomTestEmail = function() {
 	return 'atlas-' + this.randomId() + '@wx2.example.com';
 };
 
+exports.randomTestRoom = function() {
+  return 'atlas-' + this.randomId();
+};
+
 exports.randomTestGmail = function() {
   return 'collabctg+' + this.randomId() + '@gmail.com';
 };
@@ -91,7 +95,7 @@ exports.expectIsDisplayed = function(elem) {
     });
   });
   expect(elem.isDisplayed()).toBeTruthy();
-}
+};
 
 exports.expectIsNotDisplayed = function(elem) {
   browser.wait(function(){
@@ -102,7 +106,7 @@ exports.expectIsNotDisplayed = function(elem) {
     });
   });
   expect(elem.isDisplayed()).toBeFalsy();
-}
+};
 
 exports.click = function(elem) {
   browser.wait(function(){
@@ -114,3 +118,4 @@ exports.click = function(elem) {
   });
   elem.click();
 };
+

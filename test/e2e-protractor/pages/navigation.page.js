@@ -1,6 +1,7 @@
 'use strict'
 
 var Navigation = function(){
+
   this.tabs = element(by.css('cs-left-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
   this.homeTab = element(by.css('li.homeTab a'));
@@ -9,6 +10,8 @@ var Navigation = function(){
   this.orgTab = element(by.css('a[href="#orgs"]'));
   this.reportsTab = element(by.css('li.reportTab a'));
   this.supportTab = element(by.css('li.supportTab a'));
+  this.sharedSpacesTab = element(by.css('a[href="#spaces"]'));
+
   this.settings = element(by.id('setting-bar'));
   this.feedbackButton = element(by.id('feedback-btn'));
   this.username = element(by.binding('username'));
@@ -27,7 +30,7 @@ var Navigation = function(){
   this.clickOrganization = function() {
     this.manageTab.click();
     this.orgTab.click();
-  }
+  };
 
   this.clickUsers = function() {
     this.manageTab.click();
@@ -36,7 +39,7 @@ var Navigation = function(){
 
   this.clickSharedSpaces = function() {
     this.manageTab.click();
-    this.sharedSpaces.click();
+    this.sharedSpacesTab.click();
   };
 
   this.clickReports = function() {
@@ -82,6 +85,6 @@ var Navigation = function(){
     this.userInfoButton.click();
     this.logoutButton.click();
   };
-}
+};
 
 module.exports = Navigation;

@@ -3,7 +3,7 @@
 exports.config = {
   // Spec patterns are relative to the location of this config.
   specs: [
-    'test/e2e-protractor/*_spec.js'
+    'test/e2e-protractor/shared*_spec.js'
   ],
   exclude: [
     'test/e2e-protractor/telephony_info_spec.js'  // excluding until proper user with proper entitlement is added to integration
@@ -39,6 +39,7 @@ exports.config = {
     var InvitePage = require('./test/e2e-protractor/pages/invite.page.js');
     var DownloadPage = require('./test/e2e-protractor/pages/download.page.js');
     var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
+    var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
 
     global.users = new UsersPage();
     global.navigation = new Navigation();
@@ -52,6 +53,7 @@ exports.config = {
     global.invite = new InvitePage();
     global.download = new DownloadPage();
     global.activate = new ActivatePage();
+    global.spaces = new SpacesPage();
 
 /*
     var ScreenShotReporter = require('protractor-screenshot-reporter');
