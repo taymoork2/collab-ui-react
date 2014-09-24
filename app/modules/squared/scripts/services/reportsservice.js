@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Squared')
-  .service('ReportsService', ['$http', '$location', 'Storage', 'Config', 'Log', 'Authinfo', 'Auth',
-    function($http, $location, Storage, Config, Log, Authinfo, Auth) {
+  .service('ReportsService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Log', 'Authinfo', 'Auth',
+    function($http, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
 
       var token = Storage.get('accessToken');
       var callMetricsUrl = Config.getAdminServiceUrl() + 'reports/stats/callUsage';
@@ -47,11 +47,13 @@ angular.module('Squared')
         {
           metricUrl += '&spanType=' + params.spanType;
         }
+        if (params.cache)
+        {
+          metricUrl += '&cache=' + params.cache;
+        }
 
         return metricUrl;
       };
-
-
 
       return {
 
@@ -73,6 +75,86 @@ angular.module('Squared')
               callback(data, status);
               Auth.handleStatus(status);
             });
+        },
+
+        getAllMetrics :function(useCache){
+          var params = {
+            'intervalCount': 1,
+            'intervalType': 'month',
+            'cache' : useCache
+          };
+
+          this.getUsageMetrics('activeUserCount', params, function(data, status) {
+              var response = {
+                'data': data,
+                'status': status
+              };
+              $rootScope.$broadcast('ActiveUserCountLoaded', response);
+            });
+
+          params = {
+            'intervalCount': 1,
+            'intervalType': 'month',
+            'spanCount': 1,
+            'spanType': 'week',
+            'cache' : useCache
+          };
+
+          this.getUsageMetrics('calls', params, function(data, status) {
+              var response = {
+                'data': data,
+                'status': status
+              };
+              $rootScope.$broadcast('CallsLoaded', response);
+            });
+
+          this.getUsageMetrics('conversations', params, function(data, status) {
+            var response = {
+                'data': data,
+                'status': status
+              };
+            $rootScope.$broadcast('ConvLoaded', response);
+          });
+
+          this.getUsageMetrics('contentShareSizes', params, function(data, status) {
+            var response = {
+                'data': data,
+                'status': status
+              };
+            $rootScope.$broadcast('ContentShareLoaded', response);
+          });
+
+          this.getUsageMetrics('activeUsers', params, function(data, status) {
+            var response = {
+                'data': data,
+                'status': status
+              };
+            $rootScope.$broadcast('ActiveUserMetricsLoaded', response);
+          });
+
+          this.getUsageMetrics('entitlements', params, function(data, status) {
+            var response = {
+                'data': data,
+                'status': status
+              };
+            $rootScope.$broadcast('EntitlementsLoaded', response);
+          });
+
+          this.getUsageMetrics('avgCalls', params, function(data, status) {
+            var response = {
+                'data': data,
+                'status': status
+              };
+            $rootScope.$broadcast('AvgCallsLoaded', response);
+          });
+
+          this.getUsageMetrics('avgConversations', params, function(data, status) {
+            var response = {
+                'data': data,
+                'status': status
+              };
+            $rootScope.$broadcast('AvgConversationsLoaded', response);
+          });
         },
 
         getLogInfo: function(locusId, startTime, callback) {

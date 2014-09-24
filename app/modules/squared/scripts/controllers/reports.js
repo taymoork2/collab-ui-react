@@ -2,15 +2,14 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Auth', 'reportsCache',
-    function($scope, $parse, ReportsService, Log, Auth, reportsCache) {
+  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Auth',
+    function($scope, $parse, ReportsService, Log, Auth) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
       $('#avgConversationsdiv').addClass('chart-border');
       $('#activeUsersdiv').addClass('chart-border');
 
-      var fullCacheSize = 5;
       var chartVals = [];
 
       var entitlementsLoaded = false;
@@ -18,10 +17,11 @@ angular.module('Squared')
       var avgConvLoaded = false;
       var auLoaded = false;
 
+      var responseTime;
+
       var checkAllValues = function() {
         if (entitlementsLoaded && avgCallsLoaded && avgConvLoaded && auLoaded) {
-          $scope.reportsRefreshTime = new Date().getTime();
-          $scope.addToCache('lastReportsTime', $scope.reportsRefreshTime);
+          $scope.reportsRefreshTime = responseTime;
         }
       };
 
@@ -44,16 +44,34 @@ angular.module('Squared')
         }
       };
 
-      $scope.manualReload = function() {
+      $scope.$on('EntitlementsLoaded', function(event, response){
+        getTimeCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', '#3333CC');
+      });
+
+      $scope.$on('AvgCallsLoaded', function(event, response){
+        getTimeCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Calls', '#FF9900');
+      });
+
+      $scope.$on('AvgConversationsLoaded', function(event, response){
+        getTimeCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Conversations', '#009933');
+      });
+
+      $scope.$on('AvgConversationsLoaded', function(event, response){
+        getTimeCharts(response, 'activeUsers','activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', '#CC0000');
+      });
+
+      $scope.manualReload = function(backendCache) {
+
+        if(backendCache === null){
+          backendCache = true;
+        }
+
         entitlementsLoaded = false;
         avgCallsLoaded = false;
         avgConvLoaded = false;
         auLoaded = false;
 
-        getTimeCharts('entitlements', 1, 'month', 1, 'week', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', '#3333CC');
-        getTimeCharts('avgCalls', 1, 'month', 1, 'week', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Calls', '#FF9900');
-        getTimeCharts('avgConversations', 1, 'month', 1, 'week', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Conversations', '#009933');
-        getTimeCharts('activeUsers', 1, 'month', 1, 'week', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', '#CC0000');
+        ReportsService.getAllMetrics(backendCache);
 
         $('#avg-entitlements-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
         $('#avg-calls-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
@@ -64,53 +82,6 @@ angular.module('Squared')
         $scope.showAvgCallsRefresh = true;
         $scope.showAvgConversationsRefresh = true;
         $scope.showActiveUsersRefresh = true;
-      };
-
-      var displayCacheValue = function(data) {
-        var jsonValues = $scope.readFromCache(data);
-        if (jsonValues.message) {
-          $('#' + jsonValues.divName).html(jsonValues.message);
-        } else {
-          makeTimeChart(jsonValues.chartVals, jsonValues.divName, jsonValues.type, jsonValues.title, jsonValues.color);
-          $scope[jsonValues.refreshVarName] = false;
-        }
-      };
-
-      var loadCacheValues = function() {
-
-        $scope.reportsRefreshTime = $scope.readFromCache('lastReportsTime');
-
-        $scope.showAvgEntitlementsRefresh = true;
-        $scope.showAvgCallsRefresh = true;
-        $scope.showAvgConversationsRefresh = true;
-        $scope.showActiveUsersRefresh = true;
-
-        displayCacheValue('entitlements');
-        displayCacheValue('avgCalls');
-        displayCacheValue('avgConversations');
-        displayCacheValue('activeUsers');
-
-      };
-
-      $scope.addToCache = function(key, value) {
-        reportsCache.put(key, value);
-      };
-
-      $scope.readFromCache = function(key) {
-        return reportsCache.get(key);
-      };
-
-      $scope.getCacheStats = function() {
-        return reportsCache.info();
-      };
-
-      var firstLoaded = function() {
-        if (!sessionStorage['loadedReports'] || reportsCache.info().size < fullCacheSize) {
-          $scope.manualReload();
-          sessionStorage['loadedReports'] = 'yes';
-        } else {
-          loadCacheValues();
-        }
       };
 
       var getMetricData = function(dataList, metric) {
@@ -131,53 +102,29 @@ angular.module('Squared')
         return count;
       };
 
-      var getTimeCharts = function(type, intervalCount, intervalType, spanCount, spanType, divName, refreshDivName, refreshVarName, title, color) {
-        var params = {
-          'intervalCount': intervalCount,
-          'intervalType': intervalType,
-          'spanCount': spanCount,
-          'spanType': spanType
-        };
-        ReportsService.getUsageMetrics(type, params, function(data, status) {
+      var getTimeCharts = function(response, type, divName, refreshDivName, refreshVarName, title, color) {
           var avCount = 0;
           checkDataLoaded(type);
-          if (data.success) {
-            if (data.data.length !== 0) {
+          if (response.data.success) {
+            if (response.data.data.length !== 0) {
+              responseTime = response.data.date;
               $('#' + divName).removeClass('chart-border');
-              var result = data.data;
+              var result = response.data.data;
               if (result.length > 0) {
                 avCount = getMetricData(result, type);
               }
               makeTimeChart(chartVals, divName, type, title, color);
-              var cacheValues = {
-                'chartVals': chartVals,
-                'divName': divName,
-                'type': type,
-                'title': title,
-                'color': color,
-                'refreshVarName': refreshVarName
-              };
-              $scope.addToCache(type, cacheValues);
               $scope[refreshVarName] = false;
 
             } else {
               $('#' + refreshDivName).html('<h3>No results available.</h3>');
-              $scope.addToCache(type, {
-                'divName': refreshDivName,
-                'message': '<h3>No results available.</h3>'
-              });
               Log.debug('No results for ' + type + ' metrics.');
             }
           } else {
             $('#' + refreshDivName).html('<h3>Error processing request</h3>');
-            $scope.addToCache(type, {
-              'divName': refreshDivName,
-              'message': '<h3>Error processing request</h3>'
-            });
             Log.debug('Query ' + type + ' metrics failed. Status: ' + status);
           }
-        });
-      };
+        };
 
       var makeTimeChart = function(sdata, divName, metricName, title, color) {
         var homeChart = AmCharts.makeChart(divName, {
@@ -224,11 +171,11 @@ angular.module('Squared')
       };
 
       if (Auth.isAuthorized($scope)) {
-        firstLoaded();
+        $scope.manualReload(true);
       }
 
       $scope.$on('AuthinfoUpdated', function() {
-        firstLoaded();
+        $scope.manualReload(true);
       });
     }
   ]);

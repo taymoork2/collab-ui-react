@@ -11,7 +11,7 @@ var ReportsPage = function(){
   this.conversationsRefresh = element(by.id('avg-conversations-refresh'));
   this.activeUsersRefresh = element(by.id('active-users-refresh'));
 
-  this.refreshButton = element(by.id('refreshButton'));
+  this.refreshButton = element(by.id('reports-click-div'));
   this.refreshData = element(by.id('reportsRefreshData'));
   this.reloadedTime = element(by.id('lastReloadedTime'));
 }

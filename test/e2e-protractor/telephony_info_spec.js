@@ -7,9 +7,9 @@ var testuser = {
 
 // Logging in. Write your tests after the login flow is complete.
 describe('Login as non-sso admin user', function() {
-  it('should login'), function(){}
+  it('should login', function(){
     login.login(testuser.username,testuser.password);
-  );
+  });
 }); //State is logged-in
 
 
