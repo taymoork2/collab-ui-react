@@ -5,8 +5,17 @@
          <td><span class="services-subtitle" translate="usersPreview.telephonyPreview"></span></td>
        </tr>
        <tr ng-repeat="directoryNumber in userDnList" id="{{directoryNumber.id}}">
-         <td><span class="sub-service">{{directoryNumber.pattern}}  {{directoryNumber.dnUsage}}</span><i class="fa fa-angle-right pull-right"></i></td>
+         <td><div ng-click="showDirectoryNumberPanel(directoryNumber)"><span class="sub-service">{{directoryNumber.pattern}}  {{directoryNumber.dnUsage}}</span><i class="fa fa-angle-right pull-right"></i></div></td>
        </tr>
+       <tr>
+         <td><span class="services-subtitle" translate="usersPreview.telephonyFeaturesPreview"></span></td>
+       </tr>
+       <tr>
+        <td><div ng-click="showVoicemailPanel()"><span class="sub-service">Voicemail <span class="text-muted">{{voicemail}}</span></span><i class="fa fa-angle-right pull-right"></i></div></td>
+      </tr>
+       <tr>
+        <td><div ng-click="showSingleNumberReachPanel()"><span class="sub-service">Single Number Reach <span class="text-muted">{{singleNumberReach}}</span></span><i class="fa fa-angle-right pull-right"></i></div></td>
+      </tr>
      </tbody>
-   </table>
+   </table> 
  </div>

@@ -8,6 +8,9 @@ angular.module('Core')
 
       $scope.userPreview = false;
       $scope.conversationsPanel = false;
+      $scope.directoryNumberPanel = false;
+      $scope.voicemailPanel = false;
+      $scope.singleNumberReachPanel = false;
       $scope.currentUser = null;
 
       //Initialize variables
@@ -46,6 +49,9 @@ angular.module('Core')
 
       $scope.showConversationPanel = function() {
         $scope.conversationsPanel = true;
+        $scope.directoryNumberPanel = false;
+        $scope.voicemailPanel = false;
+        $scope.singleNumberReachPanel = false;
 
         $('#entire-slide').animate({
           'left': '0px'
@@ -185,6 +191,9 @@ angular.module('Core')
       $scope.closePreview = function() {
         $scope.userPreview = false;
         $scope.conversationsPanel = false;
+        $scope.directoryNumberPanel = false;
+        $scope.voicemailPanel = false;
+        $scope.singleNumberReachPanel = false;
 
         $('#entire-slide').css({
           'left': '750px',

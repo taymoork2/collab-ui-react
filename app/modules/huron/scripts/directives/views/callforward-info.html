@@ -1,0 +1,66 @@
+<div>
+	<form ng-controller="callForwardInfoCtrl" role="form">
+	<h4>Call Forwarding</h4>	
+    <div class="form-group">
+      <div>                
+        <div class="radio">
+          <label>		
+          	<input type="radio" ng-model="forward" value="all" name="rdo_callforward">Forward all calls
+          </label><br>
+          <div ng-show="isCallForwardSelected('all')">
+          	<div class="input-group">
+              <input id="cfa" type="text" class="form-control" ng-model="forwardAllCalls" ng-blur="changeForwardAllCalls()">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a href="#cfa" target="_self" ng-click="selectForwardAllCalls(value)">{{value}}</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="radio">
+          <label>	
+          	<input type="radio" ng-model="forward" value="busy" name="rdo_callforward">Forward calls when line is busy or away
+      	  </label><br>
+          <div ng-show="isCallForwardSelected('busy')">
+          	For internal and external calls<br>
+          	When line is busy, send calls to:<br>
+          	<div class="input-group">
+              <input id="cfb" type="text" class="form-control" ng-model="forwardBusyCalls" ng-blur="changeForwardBusyCalls()">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a href="#cfb" target="_self" ng-click="selectForwardBusyCalls(value)">{{value}}</a></li>
+                </ul>
+              </div>
+            </div><br>
+        	  When there is no answer, send calls to:<br>
+        	  <div class="input-group">
+              <input id="cfna" type="text" class="form-control" ng-model="forwardNoAnswerCalls" ng-blur="changeForwardNoAnswerCalls()">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a href="#cfna" target="_self" ng-click="selectForwardNoAnswerCalls(value)">{{value}}</a></li>
+                </ul>
+              </div>
+            </div><br>
+        	  <br>
+            <cs-checkbox id="ckbox1" ng-model="forwardExternalCalls" cklabel="Forward external calls differently"/>
+        	  <br>
+        	  <div ng-show="forwardExternalCalls">
+        		  When line is busy, send calls to:<br>
+          		<select>
+          			<option value="">-- choose a number --</option>
+        		  </select><br>
+        		  When there is no answer, send calls to:<br>
+        		  <select>
+          			<option value="">-- choose a number --</option>
+        		  </select><br>
+        	  </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
