@@ -72,45 +72,59 @@ angular.module('Core')
 
         allowedPaths: ['/activate', '/downloads', '/invite', '/invitelauncher', '/applauncher'],
 
-        tabs: {
-          home: {
+        tabs: [
+          {
+            index: 0,
+            name: 'home',
             tab: 'homeTab',
             title: 'tabs.homeTab',
             link: '/home'
-          },
-          orgs: {
+          },{
+            index: 1,
+            name: 'manage',
             tab: 'orgTab',
             title: 'tabs.orgTab',
-            subPages: [{
-              title: 'tabs.userTab',
-              desc: 'tabs.userTabDesc',
-              link: '#users'
-            }, {
-              title: 'tabs.spacesTab',
-              desc: 'tabs.spacesTabDesc',
-              link: '#spaces',
-            },{
-              title: 'tabs.orgDetailsTab',
-              desc: 'tabs.orgDetailsTabDesc',
-              link: '#orgs'
-            }]
-          },
-          reports: {
+            subPages: [
+              {
+                index: 0,
+                name: 'users',
+                title: 'tabs.userTab',
+                desc: 'tabs.userTabDesc',
+                link: '#users'
+              },{
+                index: 1,
+                name: 'spaces',
+                title: 'tabs.spacesTab',
+                desc: 'tabs.spacesTabDesc',
+                link: '#spaces',
+              },{
+                index: 2,
+                name: 'organizations',
+                title: 'tabs.orgDetailsTab',
+                desc: 'tabs.orgDetailsTabDesc',
+                link: '#orgs'
+              }
+            ]
+          },{
+            index: 2,
+            name: 'reports',
             tab: 'reportTab',
             title: 'tabs.reportTab',
             link: '/reports'
-          },
-          support: {
+          },{
+            index: 3,
+            name: 'support',
             tab: 'supportTab',
             title: 'tabs.supportTab',
             link: '/support'
           }
-        },
+        ],
 
         entitlements: {
           squared: 'webex-squared',
           huron: 'huron'
         },
+
         batchSize: 20,
 
         isDev: function() {
@@ -192,12 +206,12 @@ angular.module('Core')
       };
 
       config.roles = {
-        Full_Admin: [config.tabs.home, config.tabs.users, config.tabs.orgs, config.tabs.reports, config.tabs.spaces],
-        WX2_User: [config.tabs.home, config.tabs.reports, config.tabs.support, config.tabs.spaces],
-        WX2_Support: [config.tabs.home, config.tabs.reports, config.tabs.support, config.tabs.spaces],
-        WX2_SquaredInviter: [],
-        User: []
-      };
+          Full_Admin: [config.tabs[0], config.tabs[1], config.tabs[1].subPages[0], config.tabs[1].subPages[1], config.tabs[1].subPages[2], config.tabs[2]],
+          WX2_User: [config.tabs[0], config.tabs[2], config.tabs[3], config.tabs[1].subPages[1]],
+          WX2_Support: [config.tabs[0], config.tabs[2], config.tabs[3], config.tabs[1].subPages[1]],
+          WX2_SquaredInviter: [],
+          User: []
+        };
 
       return config;
     }
