@@ -132,6 +132,7 @@
     "logLocusId" : "Locus ID",
     "logCallStart" : "Call Start Time",
     "logAction" : "Download",
+    "callflowAction" : "Callflow Charts",
     "callAction" : "Call Info",
     "errEmptyinput" : "Search input cannot be empty.",
     "errLogQuery" : "Failed to retrieve logs. Status: {{status}}",

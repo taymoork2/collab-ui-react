@@ -41,6 +41,7 @@
               <th nowrap ng-click="toggleSort('callStart', 'sortIconCallStart')"><span id="callStartHeading" translate="supportPage.logCallStart"></span> <i class="fa {{sortIconCallStart}}"></i></th>
               <th nowrap ng-click="toggleSort('date', 'sortIconDate')"><span id="dateHeading" translate="supportPage.logDate"></span> <i class="fa {{sortIconDate}}"></i></th>
               <th nowrap><span translate="supportPage.logAction"></span></th>
+              <th nowrap><span translate="supportPage.callflowAction"></span></th>
               <th nowrap><span translate="supportPage.callAction"></span></th>
             </tr>
           </thead>
@@ -51,6 +52,7 @@
               <td>{{log.callStart}}</td>
               <td>{{formatDate(log.date)}}</td>
               <td class="center"><a ng-click="downloadLog(log.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></td>
+              <td class="center"><a ng-click="getCallflowCharts(log.fullFilename)"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></a></td>
               <td class="center"><a ng-click="showCallInfo(log.emailAddress, log.locusId, log.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></a></td>
             </tr>
           </tbody>

@@ -19,6 +19,7 @@ var SupportPage = function(){
   this.callStart = element(by.binding('log.callStart'));
 
   this.callInfoIcon = element(by.id('callInfo-icon'));
+  this.downloadCallflowChartsIcon = element(by.id('download-callflowCharts-icon'));
   this.closeCallInfo = element(by.id('closeCallInfo'));
 
   this.getRowCount = function() {

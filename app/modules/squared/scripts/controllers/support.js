@@ -22,11 +22,11 @@ angular.module('Squared')
         }
       }
 
+
       $scope.logsSortBy = 'date';
       $scope.reverseLogs = true;
       $scope.callFlowActive = false;
       $scope.callFlowUrl = 'images/solid_white.png';
-
 
       $scope.input = {search : PageParam.getParam('search')};
       if ($scope.input.search) {
@@ -308,6 +308,19 @@ angular.module('Squared')
         LogService.downloadLog(filename, function(data, status) {
           if (data.success) {
             window.location.assign(data.tempURL);
+          } else {
+            Log.debug('Failed to download log: ' + filename + '. Status: ' + status);
+            Notification.notify(['Failed to download log: ' + filename + '. Status: ' + status], 'error');
+          }
+        });
+      };
+
+      $scope.getCallflowCharts = function(filename) {
+        LogService.downloadLog(filename, function(data, status) {
+          if (data.success) {
+            Log.debug('Successfully retrieved the logfile tempURL');
+            var callflowChartsUrl = Config.getCallflowServiceUrl() + '?clientLogs=' + window.encodeURIComponent(data.tempURL);
+            window.open(callflowChartsUrl, '_blank');
           } else {
             Log.debug('Failed to download log: ' + filename + '. Status: ' + status);
             Notification.notify(['Failed to download log: ' + filename + '. Status: ' + status], 'error');

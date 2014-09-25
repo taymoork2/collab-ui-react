@@ -52,6 +52,8 @@ angular.module('Core')
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
 
+        callflowServiceUrl: 'http://admin-portal-test-public.wbx2.com:8081/integration_tool/run',
+
         squaredAppUrl: 'squared://',
 
         healthCheckUrl: {
@@ -173,6 +175,10 @@ angular.module('Core')
 
         getLogMetricsUrl: function() {
           return this.logMetricUrl;
+        },
+
+        getCallflowServiceUrl: function() {
+          return this.callflowServiceUrl;
         },
 
         getStatusPageUrl: function() {

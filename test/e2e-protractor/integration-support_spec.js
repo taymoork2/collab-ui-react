@@ -131,6 +131,7 @@ describe('Support flow', function() {
       expect(support.closeCallInfo.isDisplayed()).toBeTruthy();
       support.closeCallInfo.click();
       expect(support.closeCallInfo.isDisplayed()).toBeFalsy();
+      expect(support.downloadCallflowChartsIcon.isDisplayed()).toBeTruthy();
       expect(support.logsPanel.isDisplayed()).toBeTruthy();
     });
 
