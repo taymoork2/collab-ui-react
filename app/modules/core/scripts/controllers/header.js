@@ -17,7 +17,7 @@ angular.module('Core')
       $scope.orgname = Authinfo.getOrgName();
     });
 
-    $scope.image = 'images/most-interesting-man.jpg';
+    //$scope.image = 'images/most-interesting-man.jpg';
 
     $scope.logout = function() {
       Auth.logout();

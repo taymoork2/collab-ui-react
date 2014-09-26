@@ -14,13 +14,13 @@
   <!-- build:css styles/vendor.css -->
   <link rel="stylesheet" href="bower_components/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css">
   <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
-  <link rel="stylesheet" href="bower_components/jquery-icheck/skins/square/blue.css" />
   <link rel="stylesheet" href="bower_components/alertify.js/themes/alertify.core.css" />
   <link rel="stylesheet" href="bower_components/alertify.js/themes/alertify.default.css" />
   <link rel="stylesheet" href="bower_components/angular-wizard/dist/angular-wizard.css" />
   <link rel="stylesheet" href="bower_components/angular-dialog-service/dialogs.css" />
   <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css" />
   <!-- endbuild -->
+  <link rel="stylesheet" href="bower_components/jquery-icheck/skins/square/blue.css" />
   <link rel="stylesheet" href="bower_components/bootstrap-cisco/dist/css/bootstrap-cisco.css" />
   <!-- build:css({.tmp,app}) styles/main.css -->
   <link rel="stylesheet" href="styles/app.css">
@@ -44,7 +44,7 @@
       </div>
       <div class="user-info dropdown" ng-controller="UserInfoCtrl" ng-show="Utils.isAdminPage()">
         <button class="btn-user dropdown-toggle">
-        <img class="user-img" ng-src="{{image}}"/>
+        <img class="user-img" src="images/most-interesting-man.jpg"/>
         <ul class="user-info-text">
           <li class="user-name">{{username}}</li>
           <li class="org-name">{{orgname}}</li>
@@ -96,7 +96,7 @@
   <![endif]-->
   <!-- build:js scripts/vendor.js -->
   <!-- bower:js -->
-  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/jquery/jquery.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-resource/angular-resource.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
