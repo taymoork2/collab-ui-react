@@ -23,7 +23,8 @@ angular.module('Core')
           prod: 'https://locus-a.wbx2.com'
         },
 
-        oauth2LoginUrlPattern: '%sauthorize?response_type=token&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=webex-squared',
+        ciRedirectUrl: 'redirect_uri=%s',
+        oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=webex-squared',
 
         oauthClientRegistration: {
           id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
@@ -68,6 +69,12 @@ angular.module('Core')
         logConfig: {
           linesToAttach: 100,
           keepOnNavigate: false
+        },
+
+        tokenTimers: { //timers: 1200000(20 mins), 1800000(30 mins), 900000(15 mins)
+          timeoutTimer: 1200000,
+          refreshTimer: 1800000,
+          refreshDelay: 900000
         },
 
         allowedPaths: ['/activate', '/downloads', '/invite', '/invitelauncher', '/applauncher'],
@@ -171,6 +178,11 @@ angular.module('Core')
         getOauthLoginUrl: function() {
           var params = [this.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()])];
           return Utils.sprintf(this.oauth2LoginUrlPattern, params);
+        },
+
+        getRedirectUrl: function() {
+          var params = [encodeURIComponent(this.adminClientUrl[this.getEnv()])];
+          return Utils.sprintf(this.ciRedirectUrl, params);
         },
 
         getLogoutUrl: function() {

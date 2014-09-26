@@ -3,8 +3,8 @@
 /* global AmCharts, $ */
 
 angular.module('Squared')
-  .controller('HomeCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config',
-    function($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config) {
+  .controller('HomeCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$location',
+    function($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $location) {
 
       $('#au-graph-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
       $('#au-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
@@ -15,6 +15,7 @@ angular.module('Squared')
       $('#activeUsersChart').addClass('chart-border');
 
       $scope.statusPageUrl = Config.getStatusPageUrl();
+
 
       var chartValuesLoaded = false;
       var callMetricLoaded = false;

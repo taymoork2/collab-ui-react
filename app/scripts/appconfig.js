@@ -16,6 +16,7 @@ angular
       suffix: '.json'
     });
 
+  //  $locationProvider.html5Mode(true);
      //Tell the module what language to use by default
     $translateProvider.preferredLanguage('en_US');
   }

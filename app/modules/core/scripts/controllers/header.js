@@ -39,6 +39,12 @@ angular.module('Core')
       $scope.loggedIn = false;
       $location.path('/login');
     }
+
+    $scope.$on('ACCESS_TOKEN_REVIEVED', function() {
+      if (Auth.isLoggedIn()) {
+        $scope.loggedIn = true;
+      }
+    });
   }
 ])
 

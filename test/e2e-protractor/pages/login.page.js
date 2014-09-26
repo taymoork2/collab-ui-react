@@ -52,7 +52,7 @@ var LoginPage = function(){
     this.setLoginPassword(password);
     this.clickLoginSubmit();
     expect(browser.getCurrentUrl()).toContain('/home');
-    browser.executeScript("$.fx.off = true;"); // Disable jQuery animations
+    browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 
   this.loginSSO = function(username,password) {
@@ -65,7 +65,7 @@ var LoginPage = function(){
     this.setSSOPassword(password);
     this.clickSSOSubmit();
     expect(browser.getCurrentUrl()).toContain('/home');
-    browser.executeScript("$.fx.off = true;"); // Disable jQuery animations
+    browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 
   this.loginSSOSecondTime = function(username) {
@@ -75,8 +75,8 @@ var LoginPage = function(){
     this.clickLoginNext();
     browser.sleep(1000);
     expect(browser.getCurrentUrl()).toContain('/home');
-    browser.executeScript("$.fx.off = true;"); // Disable jQuery animations
+    browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
-}
+};
 
 module.exports = LoginPage;

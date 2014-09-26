@@ -14,24 +14,37 @@ angular.module('Core')
       $scope.result = 'Loading...';
       $scope.isAuthorized = false;
 
-      if (token) {
+      var authorizeUser = function() {
         $scope.result = 'Authorizing user...';
+        token = Storage.get('accessToken');
         Auth.authorize(token, $scope).then(function(){
           if($scope.isAuthorized){
             var path = 'home';
             if (PageParam.getRoute()) {
               path = PageParam.getRoute();
             }
+
             $location.url('/' + path);
+            //$window.location.href = urlPath + '/#/' + path;
+
             Config.tabs[path].active = 'true';
             $rootScope.services = Authinfo.getServices();
           }
         });
+      };
+
+      $scope.$on('ACCESS_TOKEN_REVIEVED', function() {
+        authorizeUser();
+      });
+
+      if (token) {
+        authorizeUser();
       } else {
-        // Set oauth url depending on the environment
-        var oauth2LoginUrl = Config.getOauthLoginUrl();
-        console.log('No accessToken.');
-        $window.location.href = oauth2LoginUrl;
+        if ($rootScope.status && $rootScope.status !== 'loading')
+        {
+          // Set oauth url depending on the environment
+          Auth.redirectToLogin();
+        }
       }
 
     }

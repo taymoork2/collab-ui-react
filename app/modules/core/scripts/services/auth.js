@@ -121,6 +121,55 @@ angular.module('Core')
       return deferred.promise;
     };
 
+    auth.getNewAccessToken = function(code) {
+      var deferred = $q.defer();
+      var token = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
+      var data = 'grant_type=authorization_code&code=' + code + '&scope=' + Config.oauthClientRegistration.scope + '&' + Config.getRedirectUrl();
+      $http({
+        method: 'POST',
+        url: auth.oauthUrl + 'access_token',
+        data: data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + token
+        }
+      })
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data, status) {
+          Log.error('Failed to obtain new oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
+          deferred.reject('Token request failed: ' + data.error_description);
+        });
+
+      return deferred.promise;
+    };
+
+    auth.RefreshAccessToken = function(refresh_tok) {
+      var deferred = $q.defer();
+      var cred = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
+      var data = 'grant_type=refresh_token&refresh_token='+ refresh_tok + '&scope=' + Config.oauthClientRegistration.scope;
+
+      $http({
+        method: 'POST',
+        url: auth.oauthUrl + 'access_token',
+        data: data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + cred
+        }
+      })
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data, status) {
+          Log.error('Failed to refresh oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
+          deferred.reject('Token request failed: ' + data.error_description);
+        });
+
+      return deferred.promise;
+    };
+
     auth.isAuthorized = function(scope) {
       if (!Authinfo.isEmpty()) {
         //Check if this is an allowed tab
@@ -174,8 +223,8 @@ angular.module('Core')
     auth.handleStatus = function(status, description) {
       if ((status === 401 && description !== ciErrorMsg) || status === 403) {
         console.log('Token is not authorized or invalid. Logging user out.');
-        $dialogs.wait(undefined, $filter('translate')('errors.expired') , progress);
-        this.delayedLogout();
+        // $dialogs.wait(undefined, $filter('translate')('errors.expired') , progress);
+        // this.delayedLogout();
       }
     };
 
@@ -191,6 +240,12 @@ angular.module('Core')
           auth.logout();
         }
       }, 1000);
+    };
+
+    auth.redirectToLogin = function() {
+      var oauth2LoginUrl = Config.getOauthLoginUrl();
+      console.log('No accessToken.');
+      $window.location.href = oauth2LoginUrl;
     };
 
     return auth;
