@@ -51,7 +51,9 @@
     "orgDetailsTab" : "Organization",
     "orgDetailsTabDesc" : "Manage Organization Details, View Assigned Services, And Access Tools.",
     "fusionDetailsTab" : "Fusion",
-    "fusionDetailsTabDesc" : "Manage Fusion Connectors"
+    "fusionDetailsTabDesc" : "Manage Fusion Connectors",
+    "callRoutingTab" : "Call Routing",
+    "callRoutingTabDesc" : "Manage Call Routing Features Such As Call Park"
   },
   "index" : {
     "welcome" : "Welcome",
@@ -302,7 +304,7 @@
         "display_name":     "Name",
         "connector_type":   "Connector Type"
     }
-    },
+  },
   "firstTimeWizard" : {
     "accountReview": "Account Review",
     "serviceSetup" : "Service Setup",
@@ -331,5 +333,25 @@
     "nextSteps" : "Press the Next button when you're ready to verify that identity information is being synchronized.",
     "results" : "Results",
     "syncAgreementText" : "users in sync agreement"
+  },
+  "callRoutingPage" : {
+    "title" : "Call Routing",
+    "callPark" : "Call Park"
+  },
+  "callPark" : {
+    "createTitle" : "Create New Call Park",
+    "name" : "Name",
+    "numbers" : "Number(s)",
+    "numbersDescription" : "The system will dynamically assign a call park number for the user. Alternatively, you can select specific number(s).",
+    "patternRange" : "Number Range",
+    "patternSingle" : "Single Number",
+    "retrievalPrefix" : "Retrieval Prefix",
+    "retrievalPrefixDescription" : "Dial this number before the call park number to retreive a parked call. No alpha characters.",
+    "callReversion" : "Call Reversion Rule",
+    "callReversionDescription" : "This defines the routing of the call when it is not picked up",
+    "owner" : "Person who parked the call",
+    "numberPrompt" : "Enter Number",
+    "createButton" : "Create Call Park",
+    "cancelButton" : "Cancel"
   }
 }

@@ -5,8 +5,10 @@ exports.config = {
   specs: [
     'test/e2e-protractor/*_spec.js'
   ],
+  // excluding until proper user with proper entitlement is added to integration
   exclude: [
-    'test/e2e-protractor/telephony_info_spec.js'  // excluding until proper user with proper entitlement is added to integration
+    'test/e2e-protractor/telephony_info_spec.js',
+    'test/e2e-protractor/callrouting_spec.js'
   ],
 
   // Uses ChromeDriver directly instead of selenium server
@@ -40,6 +42,7 @@ exports.config = {
     var DownloadPage = require('./test/e2e-protractor/pages/download.page.js');
     var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
     var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
+    var CallRoutingPage = require('./test/e2e-protractor/pages/callrouting.page.js');
 
     global.users = new UsersPage();
     global.navigation = new Navigation();
@@ -54,6 +57,7 @@ exports.config = {
     global.download = new DownloadPage();
     global.activate = new ActivatePage();
     global.spaces = new SpacesPage();
+    global.callrouting = new CallRoutingPage();
 
 /*
     var ScreenShotReporter = require('protractor-screenshot-reporter');

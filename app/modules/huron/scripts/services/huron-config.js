@@ -1,15 +1,23 @@
 'use strict';
 
 angular.module('Huron')
-  .factory('HuronConfig', ['$window',
-    function($window) {
+  .factory('HuronConfig', ['Config',
+    function(Config) {
       var config = {
-
-        cmiUrl: 'http://rcdn6-vm68-68:8080/cmi',
-        // cmiUrl: 'http://cmi.huron-alpha.com',
+        cmiUrl: {
+          dev: 'http://rcdn6-vm68-68:8080/cmi',
+          integration: 'http://cmi.cfa-hitest.huron-alpha.com',
+          prod: 'http://cmi.huron-alpha.com'
+        },
 
         getCmiUrl: function() {
-          return this.cmiUrl;
+          if (Config.isDev()) {
+            return this.cmiUrl.dev;
+          } else if (Config.isIntegration()) {
+            return this.cmiUrl.integration;
+          } else {
+            return this.cmiUrl.prod;
+          }
         }
       };
       return config;

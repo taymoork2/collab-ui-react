@@ -127,6 +127,19 @@ angular
 ]);
 
 angular
+  .module('Huron')
+  .config(['$stateProvider',
+    function($stateProvider) {
+    $stateProvider
+      .state('callrouting', {
+        url: '/callrouting',
+        templateUrl: 'modules/huron/views/callrouting.html',
+        controller: 'CallRoutingCtrl'
+      });
+  }
+]);
+
+angular
   .module('Hercules')
   .config(['$stateProvider', function($stateProvider) {
     $stateProvider
@@ -135,4 +148,5 @@ angular
         templateUrl: 'modules/hercules/views/connectors.html',
         controller: 'ConnectorCtrl'
       });
-  }]);
+  }
+]);

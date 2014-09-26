@@ -1,0 +1,22 @@
+<div class="notification"></div>
+
+<div class="row page-header">
+  <div class="col-md-6 col-sm-6">
+    <span class="user-title">{{'callRoutingPage.title' | translate}}</span>
+  </div>
+</div>
+<div class="row">
+  <!-- temporary placeholder -->
+  <div class="col-sm-4 col-md-3">
+    <div class="thumbnail">
+      <div class="caption">
+        <h3>{{'callRoutingPage.callPark' | translate}} <button type="button" ng-click="addCallPark()">+</button></h3>
+        <ul>
+          <li ng-repeat="callPark in callParks">
+            {{callPark.description}} -- {{callPark.pattern}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

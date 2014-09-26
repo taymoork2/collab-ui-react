@@ -75,4 +75,8 @@ angular.module('Huron')
       //TODO: Uncomment when we start authenticating to CMI
       //get: {method:'GET', headers: {"Authorization":'Bearer ' + Storage.get('accessToken'))} }
     });
+  })
+
+  .factory('CallParkService', function($resource, HuronConfig){
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directedcallparks/:callParkId', {customerId: '@customerId', callParkId: '@callParkId'});
   });

@@ -8,6 +8,30 @@ angular.module('Squared')
       // Otherwise user will see unlocalized tabs.
       $scope.tabs = [];
 
+      //TODO refactor roles/links strategy
+      var filterLinks = function(tabs) {
+        if (!Authinfo.supportsHuron()) {
+          for (var i in Config.serviceLinks.huron) {
+            removeLink(tabs, Config.serviceLinks.huron[i]);
+          }
+        }
+      };
+
+      var removeLink = function(tabs, link) {
+        for (var i = 0; i < tabs.length; i++) {
+          if (tabs[i] && tabs[i].link === link) {
+            tabs.splice(i--, 1);
+          }
+          else if (tabs[i] && tabs[i].subPages) {
+            for (var j = 0; j < tabs[i].subPages.length; j++) {
+              if (tabs[i].subPages[j] && tabs[i].subPages[j].link === link) {
+                tabs[i].subPages.splice(j--, 1);
+              }
+            }
+          }
+        }
+      };
+
       //update the tabs when Authinfo data has been populated.
       $scope.$on('AuthinfoUpdated', function() {
         var roles  = Authinfo.getRoles();
@@ -25,6 +49,9 @@ angular.module('Squared')
             tabs.splice(idx, 1);
           }
         }
+        // Remove unsupported service links
+        filterLinks(tabs);
+
         $scope.tabs = tabs;
         // TODO extract to a service
         $rootScope.tabs = $scope.tabs;
@@ -49,7 +76,13 @@ angular.module('Squared')
         setNavigationTab();
       });
 
-      $rootScope.$on('$routeChangeSuccess', function() {
+      $rootScope.$on('$stateChangeStart', function(event) {
+        if (!Auth.isAllowedPath()) {
+          Auth.isAuthorized(event.currentScope);
+        }
+      });
+
+      $rootScope.$on('$stateChangeSuccess', function() {
         setNavigationTab();
       });
 

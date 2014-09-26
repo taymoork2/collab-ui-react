@@ -113,9 +113,16 @@ angular.module('Core')
                 desc: 'tabs.orgDetailsTabDesc',
                 link: '#orgs'
               },{
+                index: 3,
                 title: 'tabs.fusionDetailsTab',
                 desc: 'tabs.fusionDetailsTabDesc',
                 link: '#fusion'
+              },{
+                index: 4,
+                name: 'callrouting',
+                title: 'tabs.callRoutingTab',
+                desc: 'tabs.callRoutingTabDesc',
+                link: '#callrouting'
               }
             ]
           },{
@@ -135,7 +142,8 @@ angular.module('Core')
 
         entitlements: {
           squared: 'webex-squared',
-          huron: 'huron'
+          huron: 'huron',
+          fusion: 'squared-fusion-uc'
         },
 
         batchSize: 20,
@@ -230,6 +238,10 @@ angular.module('Core')
           WX2_SquaredInviter: [],
           User: []
         };
+
+      config.serviceLinks = {
+        huron: ['#callrouting']
+      };
 
       return config;
     }

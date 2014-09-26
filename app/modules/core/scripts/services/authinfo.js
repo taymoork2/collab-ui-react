@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$location', 'Utils',
-    function Authinfo($rootScope, $location, Utils) {
+  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config',
+    function Authinfo($rootScope, $location, Utils, Config) {
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
         'username': null,
@@ -75,6 +75,10 @@ angular.module('Core')
         isAllowedTab: function() {
           var curPath = $location.path();
 
+          if (curPath === '/' || curPath === '/login') {
+            return true;
+          }
+
           for (var idx in authData.tabs) {
             if (authData.tabs[idx].subPages) {
               for(var i in authData.tabs[idx].subPages) {
@@ -121,6 +125,18 @@ angular.module('Core')
           {
             return true;
           }
+        },
+
+        supportsHuron: function() {
+          var services = this.getServices();
+          if (services) {
+            for (var i = 0; i < services.length; i++) {
+              if (services[i] && services[i].ciService === Config.entitlements.huron) {
+                return true;
+              }
+            }
+          }
+          return false;
         }
 
       };

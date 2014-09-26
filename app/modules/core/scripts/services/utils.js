@@ -146,7 +146,7 @@ angular.module('Core')
         },
 
         removeDuplicates: function(array, key) {
-          var a = array.concat().reverse();
+          var a = array.concat();
           for (var i = 0; i < a.length; ++i) {
             if (typeof a[i] === 'undefined') {
               a.splice(i--, 1);
@@ -158,7 +158,7 @@ angular.module('Core')
               }
             }
           }
-          return a.reverse();
+          return a;
         },
 
         changeTab: function(curPath, param) {

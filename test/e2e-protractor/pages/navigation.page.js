@@ -8,6 +8,7 @@ var Navigation = function(){
   this.manageTab = element(by.css('li.orgTab a'))
   this.usersTab = element(by.css('a[href="#users"]'));
   this.orgTab = element(by.css('a[href="#orgs"]'));
+  this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.reportsTab = element(by.css('li.reportTab a'));
   this.supportTab = element(by.css('li.supportTab a'));
   this.sharedSpacesTab = element(by.css('a[href="#spaces"]'));
@@ -40,6 +41,11 @@ var Navigation = function(){
   this.clickSharedSpaces = function() {
     this.manageTab.click();
     this.sharedSpacesTab.click();
+  };
+
+  this.clickCallRouting = function() {
+    this.manageTab.click();
+    this.callRoutingTab.click();
   };
 
   this.clickReports = function() {
