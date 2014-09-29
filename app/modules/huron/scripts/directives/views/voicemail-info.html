@@ -2,17 +2,18 @@
   <form ng-controller="VoicemailInfoCtrl" role="form">
     <div class="container-fluid">
       <div class="row">
-        <h3>&nbsp;&nbsp;&nbsp;&nbsp;Voicemail</h3>
         <button class="btn btn-primary" style="float: right" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="save()"><span translate="common.save"></span></button>
         <!--<button id="btnCancel" class="btn btn-default" style="margin-left:62%; margin-top:5px;" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="common.cancel"></span></button>-->
+        <h3>&nbsp;&nbsp;&nbsp;&nbsp;{{'voicemailPanel.title' | translate}}</h3>
+
       </div>
     </div>  
     <div class="details-body">
       <div>
-        Voicemail&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="voicemailEnabled"></cs-switchbutton>
+        {{'voicemailPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="voicemailEnabled"></cs-switchbutton>
       </div>  
       <br>
-      <p class="text-muted">Note:  Turning off voicemail could impact user's call forwarding settings</p>      
+      <p class="text-muted">{{'voicemailPanel.voicemailNote' | translate}}</p>      
     </div>
   </form>
 </div>

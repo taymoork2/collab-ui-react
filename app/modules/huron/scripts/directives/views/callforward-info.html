@@ -6,7 +6,8 @@
         <div class="radio">
           <label>		
           	<input type="radio" ng-model="forward" value="all" name="rdo_callforward">Forward all calls
-          </label><br>
+          </label>
+          </div>
           <div ng-show="isCallForwardSelected('all')">
           	<div class="input-group">
               <input id="cfa" type="text" class="form-control" ng-model="forwardAllCalls" ng-blur="changeForwardAllCalls()">
@@ -17,12 +18,12 @@
                 </ul>
               </div>
             </div>
-          </div>
-        </div>
+          </div>        
         <div class="radio">
           <label>	
           	<input type="radio" ng-model="forward" value="busy" name="rdo_callforward">Forward calls when line is busy or away
-      	  </label><br>
+      	  </label>
+          </div>
           <div ng-show="isCallForwardSelected('busy')">
           	For internal and external calls<br>
           	When line is busy, send calls to:<br>
@@ -46,7 +47,7 @@
               </div>
             </div><br>
         	  <br>
-            <cs-checkbox id="ckbox1" ng-model="forwardExternalCalls" cklabel="Forward external calls differently"/>
+            <cs-checkbox id="ckForwardExternalCalls" ng-model="forwardExternalCalls" cklabel="Forward external calls differently"></cs-checkbox>
         	  <br>
         	  <div ng-show="forwardExternalCalls">
         		  When line is busy, send calls to:<br>
@@ -58,8 +59,7 @@
           			<option value="">-- choose a number --</option>
         		  </select><br>
         	  </div>
-          </div>
-        </div>
+          </div>        
       </div>
     </div>
   </form>

@@ -3,20 +3,20 @@
     <header class="heading" style="overflow:visible;">
       <button class="btn btn-primary" style="float:right" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="save()"><span translate="common.save"></span></button>
       <!--<button class="btn btn-default" style="float:right" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="common.cancel"></span></button>-->
-      <h3>&nbsp;&nbsp;&nbsp;&nbsp;Single Number Reach</h3>
+      <h3>&nbsp;&nbsp;&nbsp;&nbsp;{{'singleNumberReachPanel.title' | translate}}</h3>
     </header>
     <div class="details-body">
-      <p class="text-muted">Enables users to answer incoming calls to their extension to another number</p><br><br>
+      <p class="text-muted">{{'singleNumberReachPanel.description' | translate}}</p><br><br>
       <div>
-        <div class="form-group" ng-show="singleNumberReachEnabled">
-            Single Number Reach&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="singleNumberReachEnabled"></cs-switchbutton><br><br>
+        {{'singleNumberReachPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="singleNumberReachEnabled"></cs-switchbutton><br><br>
+        <div class="form-group" ng-show="singleNumberReachEnabled">            
             <div class="col-sm-5">
               <input type="text" class="form-control" id="number" ng-model="destination" ng-disabled="!singleNumberReachEnabled">               
             </div>
             <label class="control-label" for="number">*</label>
           </div>
         <div ng-show="false">
-          <p class="text-muted">SNR can cover all the user's lines or limited to specific lines</p>
+          <p class="text-muted">{{'singleNumberReachPanel.snrNote' | translate}}</p>
           <br>
           <cs-radiobutton choice="snrLineOption" options="snrOptions" label="label" value="line" /><br>
           <div ng-show="snrLineOption !== 'all'">

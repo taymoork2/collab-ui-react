@@ -50,6 +50,20 @@ angular.module('Huron')
           }
         }
       });
+
+      $scope.$watch('directoryNumberDetail', function(newVal, oldVal) {
+        if (newVal) {
+          if ($scope.directoryNumberDetail.callForwardBusy.voicemailEnabled === 'true' && $scope.directoryNumberDetail.callForwardAll.voicemailEnabled === 'false') {
+            $scope.forward = 'busy';
+            if ($scope.directoryNumberDetail.callForwardBusy.intVoicemailEnabled === 'false' && $scope.directoryNumberDetail.callForwardNoAnswer.intVoicemailEnabled === 'false') {
+              $scope.forwardExternalCalls = true;
+            }
+          }
+          if ($scope.directoryNumberDetail.callForwardAll.voicemailEnabled === 'false' && $scope.directoryNumberDetail.callForwardBusy.voicemailEnabled === 'false') {
+            $scope.forward = 'all';
+          }
+        }
+      });
     }
 ])
   .directive('callForwardInfo', function() {

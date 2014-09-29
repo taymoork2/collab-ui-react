@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-   .controller('SingleNumberReachInfoCtrl', ['$scope', '$q', '$http', 'RemoteDestinationService', 'Log', 'Config', 'Notification',
-	function($scope, $q, $http, RemoteDestinationService, Log, Config, Notification) {
+   .controller('SingleNumberReachInfoCtrl', ['$scope', '$q', '$http', 'RemoteDestinationService', 'Log', 'Config', 'Notification', '$filter',
+	function($scope, $q, $http, RemoteDestinationService, Log, Config, Notification, $filter) {
 	$scope.destination = null;
 	$scope.remoteDestinations = null;
 	$scope.singleNumberReachEnabled = false;
@@ -15,16 +15,57 @@ angular.module('Huron')
 	}];
 	$scope.snrLineOption = $scope.snrOptions[0];
 
-	$scope.deleteRemoteDestinationInfo = function(user) {
+	$scope.createRemoteDestinationInfo = function(user, destination) {
 		var deferred = $q.defer();
+		var rdBean = {'destination': destination,
+					  'name' : 'RD-' + this.getRandomString(),
+					  'autoAssignRemoteDestinationProfile' : true
+					 };
+		var result = {
+			msg: null,
+			type: 'null'
+		};
+
 		// TODO: Remove the following line when we are authenticating with CMI
 		delete $http.defaults.headers.common.Authorization;
-		RemoteDestinationService.delete({customerId: user.meta.organizationID, userId: user.id},
+		RemoteDestinationService.save({customerId: user.meta.organizationID, userId: user.id }, rdBean,
+			function(data) {
+				deferred.resolve(data);
+				$scope.singleNumberReach = 'On';
+				result.msg = $filter('translate')('singleNumberReachPanel.success');
+				result.type = 'success';
+				Notification.notify([result.msg], result.type);
+			},function(error) {
+				Log.debug('updateRemoteDestinationInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
+				result.msg = $filter('translate')('singleNumberReachPanel.error') + error.data;
+				result.type = 'error';
+				Notification.notify([result.msg], result.type);
+				deferred.reject(error);
+			});
+		return deferred.promise;
+	};
+
+	$scope.deleteRemoteDestinationInfo = function(user) {
+		var deferred = $q.defer();
+		var result = {
+			msg: null,
+			type: 'null'
+		};
+		// TODO: Remove the following line when we are authenticating with CMI
+		delete $http.defaults.headers.common.Authorization;
+		RemoteDestinationService.delete({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.remoteDestinations[0].uuid},
 			function(data) {
 				deferred.resolve(data);
 				$scope.destination = null;
+				$scope.singleNumberReach = 'Off';
+				result.msg = $filter('translate')('singleNumberReachPanel.removeSuccess');
+				result.type = 'success';
+				Notification.notify([result.msg], result.type);
 			},function(error) {
 				Log.debug('deleteRemoteDestinationInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
+				result.msg = $filter('translate')('singleNumberReachPanel.error') + error.data;
+				result.type = 'error';
+				Notification.notify([result.msg], result.type);
 				deferred.reject(error);
 			});
 		return deferred.promise;
@@ -62,20 +103,29 @@ angular.module('Huron')
 	$scope.updateRemoteDestinationInfo = function(user, destination) {
 		var deferred = $q.defer();
 		var rdBean = {'destination': destination};
+		var result = {
+			msg: null,
+			type: 'null'
+		};
 
 		// TODO: Remove the following line when we are authenticating with CMI
 		delete $http.defaults.headers.common.Authorization;
 		RemoteDestinationService.update({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.remoteDestinations[0].uuid}, rdBean,
 			function(data) {
 				deferred.resolve(data);
-				$scope.destination = null;
+				result.msg = $filter('translate')('singleNumberReachPanel.success');
+				result.type = 'success';
+				Notification.notify([result.msg], result.type);
 			},function(error) {
 				Log.debug('updateRemoteDestinationInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
+				result.msg = $filter('translate')('singleNumberReachPanel.error') + error.data;
+				result.type = 'error';
+				Notification.notify([result.msg], result.type);
 				deferred.reject(error);
 			});
 		return deferred.promise;
 	};
-
+	
 	$scope.save = function() {
 		if ($scope.remoteDestinations !== null && $scope.remoteDestinations !== undefined && $scope.remoteDestinations.length > 0) {
 			if (!$scope.singleNumberReachEnabled) {
@@ -84,7 +134,7 @@ angular.module('Huron')
 				$scope.updateRemoteDestinationInfo($scope.currentUser, $scope.destination);
 			}
 		} else {
-
+			$scope.createRemoteDestinationInfo($scope.currentUser, $scope.destination);
 		}
 	};
 
@@ -97,6 +147,16 @@ angular.module('Huron')
           }
         }
       });
+	
+	function getRandomString() {
+		var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+		var randomString = '';
+		for (var i = 0; i < 12; i++) {
+			var randIndex = Math.floor(Math.random() * charSet.length);
+			randomString += charSet.substring(randIndex,randIndex+1);
+		}
+		return randomString;
+	}
 }
 ])
   .directive('singleNumberReachInfo', function() {

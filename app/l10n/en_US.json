@@ -354,5 +354,19 @@
     "numberPrompt" : "Enter Number",
     "createButton" : "Create Call Park",
     "cancelButton" : "Cancel"
+  },
+  "singleNumberReachPanel" : {
+    "title" : "Single Number Reach",
+    "description" : "Enables users to answer incoming calls to their extension to another number",
+    "toggle" : "Single Number Reach",
+    "snrNote" : "SNR can cover all the user's lines or limited to specific lines",
+    "success" : "Single Number Reach configuration saved successfully",
+    "removeSuccess" : "Single Number Reach configuration removed successfully",
+    "error" : "Single Number Reach configuration failed"
+  },
+  "voicemailPanel" : {
+    "title" : "Voicemail",
+    "toggle" : "Voicemail",
+    "voicemailNote" : "Note: Turning off voicemail could impact user's call forwarding settings"
   }
 }

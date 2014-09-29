@@ -23,7 +23,7 @@ angular.module('Huron')
 
                 $scope.processDirectoryNumberDetails = function (dn) {
                     $scope.directoryNumberDetail = dn;
-                    $scope.assignedInternalNumber = {'pattern': dn.pattern, 'id': dn.uuid};
+                    $scope.assignedInternalNumber = {'pattern': dn.pattern.substr(1), 'id': dn.uuid};
                   };
 
                 $scope.getUnassignedDirectoryNumbers = function (user) {
@@ -43,17 +43,17 @@ angular.module('Huron')
                 $scope.processUnassignedDirectoryNumbers = function (unassignedNumbers) {
 	                var unassignedNumber = null;
                   for (var i = 0; i < unassignedNumbers.length; i++) {
-                    unassignedNumber = {'pattern': unassignedNumbers[i].pattern, 'id': unassignedNumbers[i].uuid};
+                    unassignedNumber = {'pattern': unassignedNumbers[i].pattern.substr(1), 'id': unassignedNumbers[i].uuid};
                     $scope.unassingedDirectoryNumbers.push(unassignedNumber);
                   }
-                  unassignedNumber = {'pattern': $scope.directoryNumberDetail.pattern, 'id': $scope.directoryNumberDetail.uuid};
+                  unassignedNumber = {'pattern': $scope.directoryNumber.pattern.substr(1), 'id': $scope.directoryNumber.uuid};
                   $scope.unassingedDirectoryNumbers.push(unassignedNumber);
                 };
 
                 $scope.$watch('directoryNumber', function (newVal, oldVal) {
                     if (newVal) {
                       $scope.getDirectoryNumberDetails($scope.currentUser)
-                                .then(function (response) { $scope.processDirectoryNumberDetails(response); })
+                                .then(function (response) {$scope.processDirectoryNumberDetails(response);})
                                 .catch(function (response) {$scope.processDirectoryNumberDetails(null);});
                       $scope.getUnassignedDirectoryNumbers($scope.currentUser)
                                 .then(function (response) {$scope.processUnassignedDirectoryNumbers(response);})

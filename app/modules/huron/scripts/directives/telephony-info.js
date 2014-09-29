@@ -8,8 +8,6 @@ angular.module('Huron')
     function($scope, $q, $http, UserDirectoryNumberService, UserServiceCommon, Log, Config, Notification) {
 
       $scope.userDnList = [];
-      //$scope.directoryNumberPanel = false;
-      //$scope.voicemailPanel = false;
       $scope.directoryNumber = null;
       $scope.telephonyUser = null;
       $scope.voicemail = 'Off';
@@ -64,11 +62,6 @@ angular.module('Huron')
           } else {
             $scope.voicemail = 'Off';
           }
-          if ($scope.singleNumberReachEnabled !== undefined && !$scope.singleNumberReachEnabled) {
-            $scope.singleNumberReach = 'On';
-          } else {
-            $scope.singleNumberReach = 'Off';
-          }
         } else {
           $scope.telephonyUser = null;
         }
@@ -108,6 +101,16 @@ angular.module('Huron')
             $scope.getUserDnInfo(newVal)
               .then(function (response) { $scope.processUserDnInfo(response); })
               .catch(function(response) { $scope.processUserDnInfo(null); });
+          }
+        }
+      });
+
+      $scope.$watch('singleNumberReachEnabled', function(newVal,oldVal) {
+        if (newVal) {
+          if ($scope.singleNumberReachEnabled !== undefined && $scope.singleNumberReachEnabled) {
+            $scope.singleNumberReach = 'On';
+          } else {
+            $scope.singleNumberReach = 'Off';
           }
         }
       });

@@ -17,8 +17,9 @@ angular.module('Huron')
 	});
 
 	$scope.save = function(user) {
-		if (!$scope.isVoicemailEnabled()) {
+		if ($scope.voicemailEnabled && !$scope.isVoicemailEnabled()) {
 			$scope.telephonyUser.services.push('VOICEMAIL');
+			$scope.telephonyUser.voicemail = {'dtmfAccessId' : $scope.directoryNumber.pattern.substr(1)};
 			// TODO: Remove the following line when we are authenticating with CMI
 			delete $http.defaults.headers.common.Authorization;
 			UserServiceCommon.update({customerId: user.meta.organizationID, userId: user.id},$scope.telephonyUser);
