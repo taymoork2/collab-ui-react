@@ -206,7 +206,7 @@ angular.module('Core')
             //update entitlements
             Userservice.addUsers(usersList, getEntitlements('add'), callback);
           }
-          
+
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];
@@ -307,7 +307,7 @@ angular.module('Core')
             //update entitlements
             Userservice.updateUsers(temparray, getEntitlements('entitle'), callback);
           }
-        
+
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];
@@ -406,7 +406,7 @@ angular.module('Core')
             //update entitlements
             Userservice.inviteUsers(usersList, callback);
           }
-          
+
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];

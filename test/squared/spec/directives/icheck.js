@@ -13,7 +13,7 @@ describe('Directive: icheck', function () {
   }));
 
   it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<icheck></icheck>');
+    element = angular.element('<icheck>this is the icheck directive</icheck>');
     element = $compile(element)(scope);
     expect(element.text()).toBe('this is the icheck directive');
   }));
