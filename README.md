@@ -36,3 +36,4 @@ Run all the tests:
 
 * To run unit tests and e2e tests: $ npm test or $ grunt test
 
+
