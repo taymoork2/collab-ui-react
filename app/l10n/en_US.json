@@ -49,7 +49,9 @@
     "spacesTab" : "Shared Spaces",
     "spacesTabDesc" : "Create Spaces Such As Lobbies Or Conference Rooms To Install Devices.",
     "orgDetailsTab" : "Organization",
-    "orgDetailsTabDesc" : "Manage Organization Details, View Assigned Services, And Access Tools."
+    "orgDetailsTabDesc" : "Manage Organization Details, View Assigned Services, And Access Tools.",
+    "fusionDetailsTab" : "Fusion",
+    "fusionDetailsTabDesc" : "Manage Fusion Connectors"
   },
   "index" : {
     "welcome" : "Welcome",

@@ -11,10 +11,11 @@
 
 angular.module('Core', []);
 
-
 angular.module('Squared', ['Core']);
 
 angular.module('Huron', ['Core']);
+
+angular.module('Hercules', ['Core']);
 
 angular
   .module('wx2AdminWebClientApp', [
@@ -32,7 +33,8 @@ angular
     'Huron',
     'ngGrid',
     'mgo-angular-wizard',
-    'cisco.ui'
+    'cisco.ui',
+    'Hercules'
   ]);
 
 

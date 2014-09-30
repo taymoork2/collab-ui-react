@@ -103,6 +103,10 @@ angular.module('Core')
                 title: 'tabs.orgDetailsTab',
                 desc: 'tabs.orgDetailsTabDesc',
                 link: '#orgs'
+              },{
+                title: 'tabs.fusionDetailsTab',
+                desc: 'tabs.fusionDetailsTabDesc',
+                link: '#fusion'
               }
             ]
           },{
