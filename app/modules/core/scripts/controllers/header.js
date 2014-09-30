@@ -42,8 +42,15 @@ angular.module('Core')
   }
 ])
 
-.controller('SettingsMenuCtrl', ['$scope',
-  function($scope) {
+.controller('SettingsMenuCtrl', ['$scope', '$dialogs', '$location',
+  function($scope, $dialogs, $location) {
+    //LOOKTHISUPDUDE
     $scope.menuItems = [];
+    //$scope.menuItems = [{link: '/initialsetup', title: 'Initial Setup'}];
+  
+    $scope.doAction = function(path) {
+      $location.path(path);
+    };
+
   }
 ]);

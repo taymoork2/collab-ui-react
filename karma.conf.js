@@ -39,6 +39,7 @@ module.exports = function(config) {
       'app/bower_components/typeahead.js/dist/typeahead.bundle.js',
       'app/bower_components/moment/moment.js',
       'app/bower_components/angular-ui-utils/ui-utils.js',
+      'app/bower_components/angular-ui-router/release/angular-ui-router.js',
       'app/scripts/*.js',
       'app/scripts/**/*.js',
       'app/**/scripts/*.js',

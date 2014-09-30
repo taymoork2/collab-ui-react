@@ -29,7 +29,8 @@
     "ng-grid": "~2.0.13",
     "bootstrap-cisco": "0.0.18",
     "bootstrap-cisco-ng": "0.0.18",
-    "angular-wizard": "~0.4.0"
+    "angular-wizard": "~0.4.0",
+    "angular-ui-router": "~0.2.10"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",

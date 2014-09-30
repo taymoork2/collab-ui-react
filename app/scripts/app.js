@@ -28,13 +28,14 @@ angular
     'pascalprecht.translate',
     'ngCsv',
     'ipCookie',
-    'Core',
-    'Squared',
-    'Huron',
+    'ui.router',
     'ngGrid',
     'mgo-angular-wizard',
     'cisco.ui',
-    'Hercules'
+    'Hercules',
+    'Core',
+    'Squared',
+    'Huron'
   ]);
 
 

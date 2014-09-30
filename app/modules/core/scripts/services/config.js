@@ -72,6 +72,8 @@ angular.module('Core')
 
         allowedPaths: ['/activate', '/downloads', '/invite', '/invitelauncher', '/applauncher'],
 
+        allowedFtwPaths: ['/initialsetup', '/initialsetup/accountreview', '/initialsetup/servicesetup', '/initialsetup/adduser', '/initialsetup/getstarted'],
+
         tabs: [
           {
             index: 0,

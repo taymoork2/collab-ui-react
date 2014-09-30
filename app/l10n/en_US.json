@@ -231,10 +231,17 @@
     "enableSSOSuccess" : "Single Sign On (SSO) successfully enabled for all users"
   },
   "dirsyncModal" : {
+    "chooseSync" : "Choose Sync",
+    "chooseSyncDesc" : "Do you want to manually enter users or synchronize users from Active Directory?",
+    "chooseManualDesc" : "Manual User Entry",
+    "chooseADSyncDesc" : "Active Directory Sync",
     "btnTitle" : "DirSync",
     "title" : "Directory Sync",
+    "manualTitle" : "User Entry",
     "yourDomainTitle" : "Your Domain",
     "installTitle" : "Install Cloud Connector",
+    "syncStatus" : "Sync Status",
+    "grantServices" : "Grant Services",
     "connectionTitle" : "Connection",
     "synchTitle" : "Synch Title",
     "groupTitle" : "Group Assignment",
@@ -295,5 +302,16 @@
         "display_name":     "Name",
         "connector_type":   "Connector Type"
     }
+    },
+  "firstTimeWizard" : {
+    "accountReview": "Account Review",
+    "serviceSetup" : "Service Setup",
+    "addUsers" : "Add Users",
+    "getStarted" : "Get Started",
+    "chooseSync" : "Please select an option",
+    "cancelBtn" : "Cancel",
+    "backBtn" : "Back",
+    "nextBtn" : "Next",
+    "skipBtn" : "Skip"
   }
 }

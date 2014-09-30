@@ -1,24 +1,14 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$routeProvider', '$translateProvider',
-    function($routeProvider, $translateProvider) {
-    $routeProvider
-      .when('/', {
+  .config(['$translateProvider','$stateProvider', '$urlRouterProvider',
+    function($translateProvider, $stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('login');
+    $stateProvider
+      .state('login', {
+        url: '/login',
         templateUrl: 'modules/core/views/login.html',
         controller: 'LoginCtrl'
-      })
-      .when('/login', {
-        templateUrl: 'modules/core/views/login.html',
-        controller: 'LoginCtrl'
-      })
-
-      .when('/test', {
-        templateUrl: 'modules/core/views/main.html',
-        controller: 'MainCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
 
     $translateProvider.useStaticFilesLoader({
@@ -33,63 +23,104 @@ angular
 
 angular
   .module('Squared')
-  .config(['$routeProvider',
-    function($routeProvider) {
-    $routeProvider
-      .when('/home', {
+  .config(['$urlRouterProvider', '$stateProvider',
+    function($urlRouterProvider, $stateProvider) {
+    $urlRouterProvider.when('/initialsetup','/initialsetup/accountreview');
+
+    $stateProvider
+      .state('home', {
+        url: '/home',
         templateUrl: 'modules/squared/views/home.html',
         controller: 'HomeCtrl'
       })
-      .when('/users', {
+      .state('users', {
+        url: '/users',
         templateUrl: 'modules/core/views/users.html',
         controller: 'UsersCtrl'
       })
-      .when('/downloads', {
+      .state('downloads', {
+        url: '/downloads',
         templateUrl: 'modules/squared/views/downloads.html',
         controller: 'DownloadsCtrl'
       })
-      .when('/orgs', {
+      .state('orgs', {
+        url: '/orgs',
         templateUrl: 'modules/core/views/organizations.html',
         controller: 'OrganizationsCtrl'
       })
-      .when('/templates', {
+      .state('templates', {
+        url: '/templates',
         templateUrl: 'modules/squared/views/templates.html',
         controller: 'UsersCtrl'
       })
-      .when('/reports', {
+      .state('reports', {
+        url: '/reports',
         templateUrl: 'modules/squared/views/reports.html',
         controller: 'ReportsCtrl'
       })
-      .when('/activate', {
+      .state('activate', {
+        url: '/activate',
         templateUrl: 'modules/squared/views/activate.html',
         controller: 'ActivateCtrl'
       })
-      .when('/userprofile/:uid', {
+      .state('userprofile', {
+        url: '/userprofile/:uid',
         templateUrl: 'modules/squared/views/userprofile.html',
         controller: 'UserProfileCtrl'
       })
-      .when('/support', {
+      .state('support', {
+        url: '/support',
         templateUrl: 'modules/squared/views/support.html',
         controller: 'SupportCtrl'
       })
-      .when('/invite', {
+      .state('invite', {
+        url: '/invite',
         templateUrl: 'modules/squared/views/invite.html',
         controller: 'InviteCtrl'
       })
-      .when('/unauthorized', {
+      .state('unauthorized', {
+        url: '/unauthorized',
         templateUrl: 'modules/squared/views/unauthorized.html'
       })
-      .when('/invitelauncher', {
+      .state('invitelauncher', {
+        url: '/invitelauncher',
         templateUrl: 'modules/squared/views/invitelauncher.html?'+new Date().getTime(),
         controller: 'InvitelauncherCtrl'
       })
-      .when('/applauncher', {
+      .state('applauncher', {
+        url: '/applauncher',
         templateUrl: 'modules/squared/views/applauncher.html',
         controller: 'ApplauncherCtrl'
       })
-      .when('/spaces', {
+      .state('spaces', {
+        url: '/spaces',
         templateUrl: 'modules/squared/views/spaces.html',
         controller: 'SpacesCtrl'
+      })
+      .state('initialsetup', {
+        url: '/initialsetup',
+        templateUrl: 'modules/core/views/initialsetup.html',
+        controller: 'InitialSetupCtrl'
+      })
+      .state('initialsetup.accountreview', {
+        url: '/accountreview',
+        templateUrl: 'modules/core/views/initialsetup.accountreview.html',
+        controller: 'AccountReviewCtrl'
+      })
+      .state('initialsetup.servicesetup', {
+        url: '/servicesetup',
+        templateUrl: 'modules/core/views/initialsetup.servicesetup.html',
+        controller: 'ServiceSetupCtrl'
+      })
+      .state('initialsetup.adduser', {
+        url: '/adduser',
+        templateUrl: 'modules/core/views/initialsetup.adduser.html',
+        controller: 'AddUserCtrl'
+      })
+      .state('initialsetup.getstarted', {
+        url: '/getstarted',
+        templateUrl: 'modules/core/views/initialsetup.getstarted.html',
+        controller: 'GetStartedCtrl'
       });
   }
 ]);

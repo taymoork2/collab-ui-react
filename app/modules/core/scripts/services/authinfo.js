@@ -106,7 +106,11 @@ angular.module('Core')
 
         isSquaredInviter: function() {
           var roles = this.getRoles();
-          return roles.indexOf('WX2_SquaredInviter') > -1;
+          if(roles !== null && roles.length > 0) {
+            return roles.indexOf('WX2_SquaredInviter') > -1;
+          } else {
+            return null;
+          }
         },
 
         isServiceAllowed: function(service) {
