@@ -11,7 +11,7 @@ angular.module('Core')
       }
 
       $scope.nextStep = function() {
-        $location.path('/initialsetup/servicesetup');
+        $location.path('/initialsetup/adduser');
       };
     }
   ]);

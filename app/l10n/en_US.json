@@ -312,6 +312,24 @@
     "cancelBtn" : "Cancel",
     "backBtn" : "Back",
     "nextBtn" : "Next",
-    "skipBtn" : "Skip"
+    "skipBtn" : "Skip",
+    "doneBtn" : "Finish",
+    "chooseSync" : "Choose Sync",
+    "chooseSyncDesc" : "Do you want to manually enter users or synchronize users from Active Directory?",
+    "chooseManualDesc" : "Manual User Entry",
+    "chooseADSyncDesc" : "Active Directory Sync",
+    "manualTitle" : "User Entry",
+    "yourDomainTitle" : "Your Domain",
+    "installTitle" : "Install Cloud Connector",
+    "syncStatus" : "Sync Status",
+    "domain" : "Domain",
+    "defaultPlaceholder" : "Default",
+    "domainDesc" : "Identify the Active Directory domain you will be syncing.",
+    "installStep1" : "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
+    "installStep2" : "2. Configure the Active Directory synchronization agreement.",
+    "installStep3" : "3. Test the synchronization agreement.",
+    "nextSteps" : "Press the Next button when you're ready to verify that identity information is being synchronized.",
+    "results" : "Results",
+    "syncAgreementText" : "users in sync agreement"
   }
 }

@@ -73,6 +73,7 @@ var LoginPage = function(){
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();
+    browser.sleep(1000);
     expect(browser.getCurrentUrl()).toContain('/home');
     browser.executeScript("$.fx.off = true;"); // Disable jQuery animations
   };

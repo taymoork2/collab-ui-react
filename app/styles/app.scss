@@ -1112,7 +1112,6 @@ background-color: #333333;
 }
 
 .initial-setup-body {
-  // border: solid 1px #c0c0c0;
   position: relative;
   top: -500px;
   left: 300px;
@@ -1139,7 +1138,6 @@ background-color: #333333;
 }
 
 .initialSetupContent {
-  // border: solid 1px #c0c0c0;
   position: relative;
   padding: 10px;
   height: 340px;
@@ -1201,6 +1199,11 @@ a:hover.ftwNavLink {
 
 a:active.ftwNavLink {
   color: white;
+}
+
+.syncradio {
+  margin-right: 10px !important;
+  margin-left: 40px !important;
 }
 
 .choosesyncOpts:after, .initialSetupContent:before {

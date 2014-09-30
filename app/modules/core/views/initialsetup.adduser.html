@@ -1,35 +1,59 @@
 <div class="notification"></div>
 <div class="initialSetupTabs">
 	<div class="initialSetupTab" id="chooseSyncTab">
-		<a class="ftwTabLink" ng-click="showStep('chooseSync')"> <span translate="dirsyncModal.chooseSync"></span></a>
+		<a class="ftwTabLink" ng-click="showStep('chooseSync')">
+			<span translate="firstTimeWizard.chooseSync"></span>
+		</a>
 	</div>
 	<div class="initialSetupTab" id="manualTab">
-		<a class="ftwTabLink" ng-click="showStep('manual')"> <span translate="dirsyncModal.manualTitle"></span></a>
+		<a class="ftwTabLink" ng-click="showStep('manual')">
+			<span translate="firstTimeWizard.manualTitle"></span>
+		</a>
 	</div>
 	<div class="initialSetupTab" id="domainTab">
-		<a class="ftwTabLink" ng-click="showStep('domain')"> <span translate="dirsyncModal.yourDomainTitle"></span></a>
+		<a class="ftwTabLink" ng-click="showStep('domain')">
+			<span translate="firstTimeWizard.yourDomainTitle"></span>
+		</a>
 	</div>
 	<div class="initialSetupTab" id="installCloudTab">
-		<a class="ftwTabLink" ng-click="showStep('installCloud')"> <span translate="dirsyncModal.installTitle"></span></a>
+		<a class="ftwTabLink" ng-click="showStep('installCloud')"> 
+			<span translate="firstTimeWizard.installTitle"></span>
+		</a>
 	</div>
 	<div class="initialSetupTab" id="syncStatusTab">
-		<a class="ftwTabLink" ng-click="installNextStep()"> <span translate="dirsyncModal.syncStatus"></span></a>
+		<a class="ftwTabLink" ng-click="installNextStep()">
+			<span translate="firstTimeWizard.syncStatus"></span>
+		</a>
 	</div>
 </div>
 
 <div id="chooseSync">
 	<div class="initialSetupContent">
 		<div class="ftwCenterContent">
-			<div class="choosesyncOpts"><span translate="dirsyncModal.chooseSyncDesc"></span></div>
+			<div class="choosesyncOpts">
+				<span translate="firstTimeWizard.chooseSyncDesc"></span>
+			</div>
 			<div class="chooseSyncOptions">
-			 	<div class="choosesyncOpts"><input type="radio" ng-model="chooseSync" value="manual"><span translate="dirsyncModal.chooseManualDesc"></span></div>
-			  <div class="choosesyncOpts"><input type="radio" ng-model="chooseSync" value="dirsync"><span translate="dirsyncModal.chooseADSyncDesc"></span></div>
+			 	<div class="choosesyncOpts">
+			 		<input type="radio" class="syncradio" ng-model="chooseSync" value="manual"/>
+			 		<span translate="firstTimeWizard.chooseManualDesc"></span>
+			 	</div>
+			  <div class="choosesyncOpts">
+			  	<input type="radio" class="syncradio" ng-model="chooseSync" value="dirsync"/>
+			  	<span translate="firstTimeWizard.chooseADSyncDesc"></span>
+			  </div>
 		</div>
 		</div>
 		<div class="initialSetupAddUserNavBtns">
-			<button class="btn btn-primary pull-left" ng-click="chooseSkipStep()"><span translate="firstTimeWizard.skipBtn"></span></button>
-			<button class="btn btn-primary pull-left" ng-click="chooseBackStep()"><span translate="firstTimeWizard.backBtn"></span></button>
-	  	<button class="btn btn-primary pull-left" ng-click="chooseNextStep()"><span translate="firstTimeWizard.nextBtn"></span></button>
+			<button class="btn btn-primary pull-left" ng-click="chooseSkipStep()">
+				<span translate="firstTimeWizard.skipBtn"></span>
+			</button>
+			<button class="btn btn-primary pull-left" ng-click="chooseBackStep()">
+				<span translate="firstTimeWizard.backBtn"></span>
+			</button>
+	  	<button class="btn btn-primary pull-left" ng-click="chooseNextStep()" ng-disabled="!chooseSync">
+	  		<span translate="firstTimeWizard.nextBtn"></span>
+	  	</button>
 		</div>
 	</div>
 
@@ -44,13 +68,21 @@
         <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
       </div>
       <div class="form-group">
-        <div id="btnCancel" class="btn btn-link pull-right" ng-click="clearPanel()"><span translate="usersPage.clear"></span></div>
-        <button type="button" id="btnInvite" class="btn btn-primary pull-right" ng-click="inviteUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="usersPage.invite"></span></button>
+        <div id="btnCancel" class="btn btn-link pull-right" ng-click="clearPanel()">
+        	<span translate="usersPage.clear"></span>
+        </div>
+        <button type="button" id="btnInvite" class="btn btn-primary pull-right" ng-click="inviteUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+        	<span translate="usersPage.invite"></span>
+        </button>
       </div>
     </form>
   	<div class="initialSetupAddUserNavBtns">
-  		<button class="btn btn-primary pull-left" ng-click="manualBackStep()"><span translate="firstTimeWizard.backBtn"></span></button>
-		  <button class="btn btn-primary pull-left" ng-click="manualNextStep()"><span translate="firstTimeWizard.nextBtn"></span></button>
+  		<button class="btn btn-primary pull-left" ng-click="manualBackStep()">
+  			<span translate="firstTimeWizard.backBtn"></span>
+  		</button>
+		  <button class="btn btn-primary pull-left" ng-click="manualNextStep()">
+		  	<span translate="firstTimeWizard.doneBtn"></span>
+		  </button>
 		</div>
   </div>
 </div>	
@@ -58,15 +90,18 @@
 <div id="domain" class="ng-hide">
 	<div class="initialSetupContent" ng-init="getDefaultDomain()">
     <div class="ftwCenterContent">
-      <span class="subheading" translate="dirsyncModal.domain"></span>
-      <input type="text" id="dirDomainText" placeholder="{{'dirsyncModal.defaultPlaceholder' | translate}}" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/> 
+      <span class="subheading" translate="firstTimeWizard.domain"></span>
+      <input type="text" id="dirDomainText" placeholder="{{'firstTimeWizard.defaultPlaceholder' | translate}}" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/> 
       <div id="domainDesc">
-        <span translate="dirsyncModal.domainDesc"></span>
+        <span translate="firstTimeWizard.domainDesc"></span>
       </div>
     </div>
     <div class="initialSetupAddUserNavBtns">
-    	<button class="btn btn-primary pull-left" ng-click="domainBackStep()"><span translate="firstTimeWizard.backBtn"></span></button>
-		  <button class="btn btn-primary pull-left" ng-click="domainNextStep()" ng-disabled="!domain"><span translate="firstTimeWizard.nextBtn"></span></button>
+    	<button class="btn btn-primary pull-left" ng-click="domainBackStep()">
+    		<span translate="firstTimeWizard.backBtn"></span>
+    	</button>
+		  <button class="btn btn-primary pull-left" ng-click="domainNextStep()" ng-disabled="!domain">	<span translate="firstTimeWizard.nextBtn"></span>
+		  </button>
 		</div>
   </div>
 </div>	
@@ -74,14 +109,18 @@
 <div id="installCloud" class="ng-hide">
 	<div class="initialSetupContent">
 		<div class="ftwCenterContent">
-			<div class="installStep"> <span translate="dirsyncModal.installStep1"></span></div>
-		  <div class="installStep"> <span translate="dirsyncModal.installStep2"></span></div>
-		  <div class="installStep"> <span translate="dirsyncModal.installStep3"></span></div>
-		  <div class="installStep"> <span translate="dirsyncModal.nextSteps"></span></div>
+			<div class="installStep"> <span translate="firstTimeWizard.installStep1"></span></div>
+		  <div class="installStep"> <span translate="firstTimeWizard.installStep2"></span></div>
+		  <div class="installStep"> <span translate="firstTimeWizard.installStep3"></span></div>
+		  <div class="installStep"> <span translate="firstTimeWizard.nextSteps"></span></div>
 		</div>
 		<div class="initialSetupAddUserNavBtns">
-			<button class="btn btn-primary pull-left" ng-click="installBackStep()"><span translate="firstTimeWizard.backBtn"></span></button>
-		  <button class="btn btn-primary pull-left" ng-click="installNextStep()"><span translate="firstTimeWizard.nextBtn"></span></button>
+			<button class="btn btn-primary pull-left" ng-click="installBackStep()">
+				<span translate="firstTimeWizard.backBtn"></span>
+			</button>
+		  <button class="btn btn-primary pull-left" ng-click="installNextStep()">
+		  	<span translate="firstTimeWizard.nextBtn"></span>
+		  </button>
 		</div>
 	</div>
 </div>
@@ -89,21 +128,29 @@
 <div id="syncStatus" class="ng-hide">
 	<div class="initialSetupContent">
 		<div class="syncStatusText">
-			<span class="subheading" translate="dirsyncModal.results"></span>
+			<span class="subheading" translate="firstTimeWizard.results"></span>
 	      <span class="boldText"> {{dirsyncStatus}} </span>
 
 	      <span class="sync-dirsync-refresh-button">
 	        {{formatDate(lastEndTime)}}
-	      <span id="refreshButton">
-	        <a href ng-click="getStatus()"><i class="fa fa-refresh"></i></a></span>
+		      <span id="refreshButton">
+		        <a href ng-click="getStatus()"><i class="fa fa-refresh"></i></a>
+		      </span>
 	      </span>
 	    </div>
 
-      <div id="syncNumUsers"><span class="boldText"> {{numUsersInSync}} </span><span translate="dirsyncModal.syncAgreementText"></span> </div>
+      <div id="syncNumUsers">
+      	<span class="boldText"> {{numUsersInSync}} </span>
+      	<span translate="firstTimeWizard.syncAgreementText"></span> 
+      </div>
       <div class="ftwdirgridStyle" ng-grid="gridOptions"></div>
       <div class="initialSetupAddUserNavBtns">
-      	<button class="btn btn-primary pull-left" ng-click="syncBackStep()"><span translate="firstTimeWizard.backBtn"></span></button>
-			  <button class="btn btn-primary pull-left" ng-click="syncNextStep()"><span translate="firstTimeWizard.nextBtn"></span></button>
+      	<button class="btn btn-primary pull-left" ng-click="syncBackStep()">
+      		<span translate="firstTimeWizard.backBtn"></span>
+      	</button>
+			  <button class="btn btn-primary pull-left" ng-click="syncNextStep()">
+			  	<span translate="firstTimeWizard.doneBtn"></span>
+			  </button>
 			</div>
 	</div>
 </div>

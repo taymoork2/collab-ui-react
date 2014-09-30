@@ -53,15 +53,15 @@ angular.module('Core')
 	    };
 
 	    $scope.chooseSkipStep = function() {
-				$location.path('/initialsetup/getstarted');
+				$location.path('/home');
 	    };
 
-	    $scope.choosebackStep = function() {
-				$location.path('/initialsetup/servicesetup');
+	    $scope.chooseBackStep = function() {
+				$location.path('/initialsetup/accountreview');
 	    };
 
 	    $scope.manualNextStep = function() {
-				$location.path('/initialsetup/getstarted');
+				$location.path('/home');
 	    };
 
 	    $scope.manualBackStep = function() {
@@ -87,7 +87,7 @@ angular.module('Core')
 	    };
 
 	    $scope.syncNextStep = function() {
-				$location.path('/initialsetup/getstarted');
+				$location.path('/home');
 	    };
 
 	    $scope.syncBackStep = function() {

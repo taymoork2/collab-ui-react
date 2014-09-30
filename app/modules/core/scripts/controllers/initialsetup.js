@@ -11,7 +11,7 @@ angular.module('Core')
         Log.debug('Authinfo data is loaded.');
       }
 
-			var allNavs = ['accountreview', 'servicesetup', 'adduser', 'getstarted'];
+			var allNavs = ['accountreview', 'adduser'];
 
       $scope.showNav = function(thisNav) {
 				$location.path('/initialsetup/'+thisNav);
