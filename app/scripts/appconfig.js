@@ -99,7 +99,7 @@ angular
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/fusion', {
-      templateUrl: 'modules/hercules/views/connector.html',
+      templateUrl: 'modules/hercules/views/connectors.html',
       controller: 'ConnectorCtrl'
     });
   }]);

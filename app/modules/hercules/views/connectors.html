@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <div class="page-header">
+    <span class="user-title" translate="hercules.page_title"></span>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div ng-show="loading" translate="hercules.connectors.loading"></div>
+      <div ng-show="error" translate="hercules.connectors.loading_error"></div>
+      <div ng-show="!loading">
+        <div ng-show="connectors.length == 0" translate="hercules.connectors.no_connectors"></div>
+        <table ng-show="connectors" class="table table-bordered">
+          <thead>
+            <tr>
+              <th translate="hercules.connectors.host_name"></th>
+              <th translate="hercules.connectors.connector_type"></th>
+              <th translate="hercules.connectors.display_name"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="connector in connectors" id="{{connector.id}}">
+              <td>{{connector.host_name}}</td>
+              <td>{{connector.connector_type}}</td>
+              <td>{{connector.display_name}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

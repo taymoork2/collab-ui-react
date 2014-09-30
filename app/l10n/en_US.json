@@ -283,6 +283,17 @@
     "title" : "Shared Spaces",
     "modalTitle" : "Add Room",
     "add": "Add"
+  },
+  "hercules": {
+    "page_title": "Fusion Connectors",
+    "connectors": {
+        "loading":          "Loading...",
+        "loading_error":    "Unable to load connectors.",
+        "no_connectors":    "No fusion connectors registered.",
+        "cluster_id":       "Cluster ID",
+        "host_name":        "Host Name",
+        "display_name":     "Name",
+        "connector_type":   "Connector Type"
+    }
   }
-
 }
