@@ -1,11 +1,15 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('UserProfileCtrl', ['$scope', '$location', '$route', '$routeParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config',
-    function($scope, $location, $route, $routeParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config) {
+  .controller('UserProfileCtrl', ['$scope', '$location', '$route', '$stateParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config', 'Auth',
+    function($scope, $location, $route, $stateParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config, Auth) {
 
-      var userid = $route.current.params.uid;
+      var userid = $stateParams.uid;
       $scope.orgName = Authinfo.getOrgName();
+
+      if (Auth.isAuthorizedFtwPath($scope)) {
+        Log.debug('Authinfo data is loaded.');
+      }
 
       Userservice.getUser(userid, function(data, status) {
         if (data.success) {

@@ -256,7 +256,7 @@ describe('App flow', function() {
         users.resultUsername.click();
         expect(users.squaredPanel.isDisplayed()).toBeTruthy();
         users.squaredPanel.click();
-        browser.sleep(1000); //TODO fix this - animation should be resolved by angular
+        browser.sleep(2000); //TODO fix this - animation should be resolved by angular
         expect(users.callInitiationCheckbox.isDisplayed()).toBeTruthy();
         users.callInitiationCheckbox.click();
         users.saveButton.click();

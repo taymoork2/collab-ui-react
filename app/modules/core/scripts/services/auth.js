@@ -6,7 +6,7 @@ angular.module('Core')
     var progress = 0;
     var auth = {
       authorizeUrl: Config.getAdminServiceUrl() + 'userauthinfo',
-      oauthUrl: Config.oauth2Url,
+      oauthUrl: Config.oauthUrl.oauth2Url,
       allowedPaths: Config.allowedPaths,
       allowedFtwPaths: Config.allowedFtwPaths
     };
@@ -34,7 +34,7 @@ angular.module('Core')
     auth.isAllowedFtwPath = function() {
       var currentPath = $location.path();
       for (var idx in auth.allowedFtwPaths) {
-        if (auth.allowedFtwPaths[idx] === currentPath) {
+        if (Utils.startsWith(currentPath, auth.allowedFtwPaths[idx])) {  //if (auth.allowedFtwPaths[idx] === currentPath) {
           return true;
         }
       }
@@ -99,7 +99,8 @@ angular.module('Core')
     auth.getAccessToken = function() {
       var deferred = $q.defer();
       var token = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
-      var data = 'grant_type=client_credentials&scope=' + Config.oauthClientRegistration.scope;
+      var data = Config.oauthUrl.oauth2ClientUrlPattern + Config.oauthClientRegistration.scope;
+
 
       $http({
         method: 'POST',
@@ -124,7 +125,7 @@ angular.module('Core')
     auth.getNewAccessToken = function(code) {
       var deferred = $q.defer();
       var token = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
-      var data = 'grant_type=authorization_code&code=' + code + '&scope=' + Config.oauthClientRegistration.scope + '&' + Config.getRedirectUrl();
+      var data = Config.getOauthCodeUrl(code) + Config.oauthClientRegistration.scope + '&' + Config.getRedirectUrl();
       $http({
         method: 'POST',
         url: auth.oauthUrl + 'access_token',
@@ -148,7 +149,7 @@ angular.module('Core')
     auth.RefreshAccessToken = function(refresh_tok) {
       var deferred = $q.defer();
       var cred = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
-      var data = 'grant_type=refresh_token&refresh_token='+ refresh_tok + '&scope=' + Config.oauthClientRegistration.scope;
+      var data = Config.getOauthAccessCodeUrl(refresh_tok) + Config.oauthClientRegistration.scope;
 
       $http({
         method: 'POST',
@@ -173,7 +174,7 @@ angular.module('Core')
     auth.isAuthorized = function(scope) {
       if (!Authinfo.isEmpty()) {
         //Check if this is an allowed tab
-        if (!Authinfo.isAllowedTab()) {
+        if (!Authinfo.isAllowedTab() && !this.isAllowedFtwPath()) {
           $location.path('/unauthorized');
         }
         return true;

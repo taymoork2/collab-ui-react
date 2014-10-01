@@ -59,7 +59,7 @@ angular
           .then(function (adata){
             Storage.put('accessToken', adata.access_token);
           });
-        }, Config.tokenTimers.refreshTimer); //30 minutes
+        }, Config.tokenTimers.refreshTimer); //45 minutes
       };
 
       var logoutTimer = startTimer();

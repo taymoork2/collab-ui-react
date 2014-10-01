@@ -3,8 +3,8 @@
 /* global AmCharts, $ */
 
 angular.module('Squared')
-  .controller('HomeCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$location',
-    function($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $location) {
+  .controller('HomeCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config',
+    function($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config) {
 
       $('#au-graph-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
       $('#au-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');

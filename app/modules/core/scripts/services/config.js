@@ -23,16 +23,20 @@ angular.module('Core')
           prod: 'https://locus-a.wbx2.com'
         },
 
-        ciRedirectUrl: 'redirect_uri=%s',
-        oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=webex-squared',
-
         oauthClientRegistration: {
           id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
           secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',
           scope: 'webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization'
         },
 
-        oauth2Url: 'https://idbroker.webex.com/idb/oauth2/v1/',
+        oauthUrl: {
+          ciRedirectUrl: 'redirect_uri=%s',
+          oauth2Url: 'https://idbroker.webex.com/idb/oauth2/v1/',
+          oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=webex-squared',
+          oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
+          oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
+          oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope='
+        },
 
         feedbackNavConfig: {
           mailto: 'sq-admin-support@cisco.com',
@@ -71,15 +75,15 @@ angular.module('Core')
           keepOnNavigate: false
         },
 
-        tokenTimers: { //timers: 1200000(20 mins), 1800000(30 mins), 900000(15 mins)
+        tokenTimers: { //timers: 1200000(20 mins), 2700000(45 mins), 900000(15 mins)
           timeoutTimer: 1200000,
-          refreshTimer: 1800000,
+          refreshTimer: 2700000,
           refreshDelay: 900000
         },
 
         allowedPaths: ['/activate', '/downloads', '/invite', '/invitelauncher', '/applauncher'],
 
-        allowedFtwPaths: ['/initialsetup', '/initialsetup/accountreview', '/initialsetup/servicesetup', '/initialsetup/adduser', '/initialsetup/getstarted'],
+        allowedFtwPaths: ['/initialsetup', '/initialsetup/accountreview', '/initialsetup/servicesetup', '/initialsetup/adduser', '/initialsetup/getstarted', '/userprofile'],
 
         tabs: [
           {
@@ -184,13 +188,23 @@ angular.module('Core')
         },
 
         getOauthLoginUrl: function() {
-          var params = [this.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()])];
-          return Utils.sprintf(this.oauth2LoginUrlPattern, params);
+          var params = [this.oauthUrl.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()])];
+          return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
         getRedirectUrl: function() {
           var params = [encodeURIComponent(this.adminClientUrl[this.getEnv()])];
-          return Utils.sprintf(this.ciRedirectUrl, params);
+          return Utils.sprintf(this.oauthUrl.ciRedirectUrl, params);
+        },
+
+        getOauthCodeUrl: function(code) {
+          var params = [code];
+          return Utils.sprintf(this.oauthUrl.oauth2CodeUrlPattern, params);
+        },
+
+        getOauthAccessCodeUrl: function(refresh) {
+          var params = [refresh];
+          return Utils.sprintf(this.oauthUrl.oauth2AccessCodeUrlPattern, params);
         },
 
         getLogoutUrl: function() {

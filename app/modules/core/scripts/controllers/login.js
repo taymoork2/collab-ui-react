@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LoginCtrl', ['$scope', '$rootScope', '$location', '$window', '$http', '$routeParams', 'Storage', 'Config', 'Auth', 'Authinfo', 'PageParam',
-    function($scope, $rootScope, $location, $window, $http, $routeParams, Storage, Config, Auth, Authinfo, PageParam) {
+  .controller('LoginCtrl', ['$scope', '$rootScope', '$location', '$window', '$http', 'Storage', 'Config', 'Auth', 'Authinfo', 'PageParam',
+    function($scope, $rootScope, $location, $window, $http, Storage, Config, Auth, Authinfo, PageParam) {
 
       var token = Storage.get('accessToken');
-      var pageParam = $routeParams.pp;
+
+      var pageParam = $location.search().pp;
       if (pageParam) {
         console.log('page param detected: ' + pageParam);
         PageParam.set(pageParam);
@@ -23,9 +24,7 @@ angular.module('Core')
             if (PageParam.getRoute()) {
               path = PageParam.getRoute();
             }
-
             $location.url('/' + path);
-            //$window.location.href = urlPath + '/#/' + path;
 
             Config.tabs[path].active = 'true';
             $rootScope.services = Authinfo.getServices();
