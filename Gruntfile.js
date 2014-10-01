@@ -476,7 +476,8 @@ module.exports = function (grunt) {
   grunt.registerTask('test', [
     'test-setup',
     'protractor:squared',
-    'protractor:huron'
+    'protractor:huron',
+    'protractor:hercules'
   ]);
 
   grunt.registerTask('build', [
