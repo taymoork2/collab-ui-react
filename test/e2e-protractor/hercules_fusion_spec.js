@@ -12,8 +12,8 @@ var testuser = {
   password: 'C1sc0123!',
 };
 
-describe('Login as squared team member admin user', function() {
-  it('should login', function(){
+describe('Log in as admin', function() {
+  it('should log in', function(){
     login.login(testuser.username, testuser.password);
   });
 });
@@ -27,5 +27,10 @@ describe('Fusion Page', function() {
     navigation.expectCurrentUrl('/fusion');
     expect(browser.driver.isElementPresent(by.id('fusion-root'))).toBe(true);
   });
+});
 
+describe('Log out', function() {
+  it('should log out', function() {
+   navigation.logout();
+  });
 });
