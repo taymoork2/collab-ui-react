@@ -121,6 +121,11 @@ angular
         url: '/getstarted',
         templateUrl: 'modules/core/views/initialsetup.getstarted.html',
         controller: 'GetStartedCtrl'
+      })
+      .state('partnerhome', {
+        url: '/partnerhome',
+        templateUrl: 'modules/squared/views/partnerhome.html',
+        controller: 'PartnerHomeCtrl'
       });
   }
 ]);

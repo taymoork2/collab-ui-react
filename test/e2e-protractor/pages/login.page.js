@@ -51,7 +51,19 @@ var LoginPage = function(){
     browser.driver.wait(this.isLoginPasswordPresent);
     this.setLoginPassword(password);
     this.clickLoginSubmit();
-    expect(browser.getCurrentUrl()).toContain('/home');
+    navigation.expectCurrentUrl('/home');
+    browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
+  };
+
+  this.partnerlogin = function(username,password) {
+    this.get();
+    browser.driver.wait(this.isLoginUsernamePresent);
+    this.setLoginUsername(username);
+    this.clickLoginNext();
+    browser.driver.wait(this.isLoginPasswordPresent);
+    this.setLoginPassword(password);
+    this.clickLoginSubmit();
+    navigation.expectCurrentUrl('/partnerhome');
     browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 
@@ -64,7 +76,7 @@ var LoginPage = function(){
     this.setSSOUsername(username);
     this.setSSOPassword(password);
     this.clickSSOSubmit();
-    expect(browser.getCurrentUrl()).toContain('/home');
+    navigation.expectCurrentUrl('/home');
     browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 
@@ -73,8 +85,7 @@ var LoginPage = function(){
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();
-    browser.sleep(1000);
-    expect(browser.getCurrentUrl()).toContain('/home');
+    navigation.expectCurrentUrl('/home');
     browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 };

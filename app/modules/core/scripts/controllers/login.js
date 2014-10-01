@@ -24,6 +24,11 @@ angular.module('Core')
             if (PageParam.getRoute()) {
               path = PageParam.getRoute();
             }
+
+            if(Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
+              path = 'partnerhome';
+            }
+
             $location.url('/' + path);
 
             Config.tabs[path].active = 'true';

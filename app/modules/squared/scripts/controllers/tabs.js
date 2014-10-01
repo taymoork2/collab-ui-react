@@ -36,17 +36,23 @@ angular.module('Squared')
       $scope.$on('AuthinfoUpdated', function() {
         var roles  = Authinfo.getRoles();
         var allowedTabs = [];
-        var tabs = Config.tabs;
+        var tabs = Config.tabs.slice();
 
         // Collect all allowed tabs from assigned roles
         for(var x = 0; x < roles.length; x++) {
           allowedTabs = allowedTabs.concat(Config.roles[roles[x]]);
         }
 
+        var filterTabs = function(idx) {
+          return function (el) {
+            return el.tab !== Config.tabs[idx].tab;
+          };
+        };
+
         // Remove unauthorized tabs
-        for(var idx in Config.tabs) {
+        for(var idx =0; idx < Config.tabs.length; idx++) {
           if (allowedTabs.indexOf(Config.tabs[idx]) === -1) {
-            tabs.splice(idx, 1);
+            tabs = tabs.filter(filterTabs(idx));
           }
         }
         // Remove unsupported service links

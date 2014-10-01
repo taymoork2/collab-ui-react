@@ -94,6 +94,12 @@ angular.module('Core')
             link: '/home'
           },{
             index: 1,
+            name: 'partnerhome',
+            tab: 'partnerhomeTab',
+            title: 'tabs.partnerhomeTab',
+            link: '/partnerhome'
+          },{
+            index: 2,
             name: 'manage',
             tab: 'orgTab',
             title: 'tabs.orgTab',
@@ -130,13 +136,13 @@ angular.module('Core')
               }
             ]
           },{
-            index: 2,
+            index: 3,
             name: 'reports',
             tab: 'reportTab',
             title: 'tabs.reportTab',
             link: '/reports'
           },{
-            index: 3,
+            index: 4,
             name: 'support',
             tab: 'supportTab',
             title: 'tabs.supportTab',
@@ -246,11 +252,13 @@ angular.module('Core')
       };
 
       config.roles = {
-          Full_Admin: [config.tabs[0], config.tabs[1], config.tabs[1].subPages[0], config.tabs[1].subPages[1], config.tabs[1].subPages[2], config.tabs[2]],
-          WX2_User: [config.tabs[0], config.tabs[2], config.tabs[3], config.tabs[1].subPages[1]],
-          WX2_Support: [config.tabs[0], config.tabs[2], config.tabs[3], config.tabs[1].subPages[1]],
+          Full_Admin: [config.tabs[0], config.tabs[2], config.tabs[2].subPages[0], config.tabs[2].subPages[1], config.tabs[2].subPages[2], config.tabs[3]],
+          WX2_User: [config.tabs[0], config.tabs[3], config.tabs[4], config.tabs[2].subPages[1]],
+          WX2_Support: [config.tabs[0], config.tabs[3], config.tabs[4], config.tabs[2].subPages[1]],
           WX2_SquaredInviter: [],
-          User: []
+          User: [],
+          PARTNER_ADMIN: [],
+          PARTNER_USER: [config.tabs[1]]
         };
 
       config.serviceLinks = {

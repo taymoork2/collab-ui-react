@@ -5,6 +5,7 @@ var Navigation = function(){
   this.tabs = element(by.css('cs-left-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
   this.homeTab = element(by.css('li.homeTab a'));
+  this.partnerHomeTab = element(by.css('li.partnerhomeTab a'));
   this.manageTab = element(by.css('li.orgTab a'))
   this.usersTab = element(by.css('a[href="#users"]'));
   this.orgTab = element(by.css('a[href="#orgs"]'));

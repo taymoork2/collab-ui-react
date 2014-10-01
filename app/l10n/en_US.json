@@ -53,7 +53,8 @@
     "fusionDetailsTab" : "Fusion",
     "fusionDetailsTabDesc" : "Manage Fusion Connectors",
     "callRoutingTab" : "Call Routing",
-    "callRoutingTabDesc" : "Manage Call Routing Features Such As Call Park"
+    "callRoutingTabDesc" : "Manage Call Routing Features Such As Call Park",
+    "partnerhomeTab" : "Home"
   },
   "index" : {
     "welcome" : "Welcome",
