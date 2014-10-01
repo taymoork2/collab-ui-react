@@ -1,16 +1,6 @@
 'use strict';
 
 exports.config = {
-  // Spec patterns are relative to the location of this config.
-  specs: [
-    'test/e2e-protractor/*_spec.js'
-  ],
-  // excluding until proper user with proper entitlement is added to integration
-  exclude: [
-    'test/e2e-protractor/telephony_info_spec.js',
-    'test/e2e-protractor/callrouting_spec.js'
-  ],
-
   // Uses ChromeDriver directly instead of selenium server
   chromeOnly: true,
 
@@ -24,6 +14,8 @@ exports.config = {
   baseUrl: 'http://localhost:8000',
 
   onPrepare: function() {
+    require('jasmine-reporters');
+    jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('test/e2e-protractor/reports',true,true));
 
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');

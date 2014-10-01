@@ -10,4 +10,5 @@ npm-debug.log
 *.iml
 .idea/
 *.rdb
+test/e2e-protractor/reports
 

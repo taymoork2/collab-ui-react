@@ -139,7 +139,8 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: '.tmp',
+      test: 'test/e2e-protractor/reports'
     },
 
     // Add vendor prefixed styles
@@ -382,12 +383,42 @@ module.exports = function (grunt) {
         configFile: 'protractor-config.js',
         keepAlive: false,
         noColor: false,
-        args: {}
+        args: {
+          browser: 'chrome'
+        }
       },
-      chrome: {
+      squared: {
         options: {
           args: {
-            browser: 'chrome'
+            specs: [
+              'test/e2e-protractor/squared/*_spec.js'
+            ]
+          }
+        }
+      },
+      huron: {
+        options: {
+          // Don't fail on error
+          keepAlive: true,
+          args: {
+            specs: [
+              'test/e2e-protractor/huron/*_spec.js'
+            ],
+            // Skip until integration is established
+            exclude: [
+              'test/e2e-protractor/huron/callrouting_spec.js'
+            ]
+          }
+        }
+      },
+      hercules: {
+        options: {
+          // Don't fail on error
+          keepAlive: true,
+          args: {
+            specs: [
+              'test/e2e-protractor/hercules/*_spec.js'
+            ]
           }
         }
       }
@@ -417,14 +448,35 @@ module.exports = function (grunt) {
     grunt.task.run(['serve']);
   });
 
-  grunt.registerTask('test', [
+  grunt.registerTask('test-setup', [
+    'clean:test',
     'clean:server',
     'bower-install',
     'concurrent:test',
     'autoprefixer',
     'connect:test',
-    'karma',
-    'protractor'
+    'karma'
+  ]);
+
+  grunt.registerTask('test-squared', [
+    'test-setup',
+    'protractor:squared'
+  ]);
+
+  grunt.registerTask('test-huron', [
+    'test-setup',
+    'protractor:huron'
+  ]);
+
+  grunt.registerTask('test-hercules', [
+    'test-setup',
+    'protractor:hercules'
+  ]);
+
+  grunt.registerTask('test', [
+    'test-setup',
+    'protractor:squared',
+    'protractor:huron'
   ]);
 
   grunt.registerTask('build', [
