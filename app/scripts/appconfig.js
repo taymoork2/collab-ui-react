@@ -128,10 +128,11 @@ angular
 
 angular
   .module('Hercules')
-  .config(['$routeProvider', function($routeProvider) {
-    $routeProvider
-      .when('/fusion', {
-      templateUrl: 'modules/hercules/views/connectors.html',
-      controller: 'ConnectorCtrl'
-    });
+  .config(['$stateProvider', function($stateProvider) {
+    $stateProvider
+      .state('fusion', {
+        url: '/fusion',
+        templateUrl: 'modules/hercules/views/connectors.html',
+        controller: 'ConnectorCtrl'
+      });
   }]);
