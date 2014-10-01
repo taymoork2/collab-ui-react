@@ -19,62 +19,53 @@ var testuser2 = {
 };
 
 // Logging in. Write your tests after the login flow is complete.
-describe('Login as squared team member admin user', function() {
-  it('should login', function(){
-    login.login(testuser.username, testuser.password);
-  });
-}); //State is logged-in
+describe('Org admin flow', function() {
+  describe('Check squared team member entitlements', function() {
+    it('should login as squared team member admin user', function(){
+      login.login(testuser.username, testuser.password);
+    });
 
-describe('Check squared team member entitlements', function() {
-  it('clicking on users tab should change the view', function() {
-    navigation.clickUsers();
-  });
+    it('clicking on users tab should change the view', function() {
+      navigation.clickUsers();
+    });
 
-  it('click on add button should show entitlements the admin can use', function () {
-    users.addUsers.click();
-    expect(users.listPanel.isDisplayed()).toBeFalsy();
-    expect(users.managePanel.isDisplayed()).toBeTruthy();
+    it('click on add button should show entitlements the admin can use', function () {
+      users.addUsers.click();
+      expect(users.listPanel.isDisplayed()).toBeFalsy();
+      expect(users.managePanel.isDisplayed()).toBeTruthy();
 
-    users.assertEntitlementListSize(8);
-    expect(users.manageSquaredTeamMember.isDisplayed()).toBeTruthy();
-  });
+      users.assertEntitlementListSize(8);
+      expect(users.manageSquaredTeamMember.isDisplayed()).toBeTruthy();
+    });
 
-});
-
-// Log Out
-describe('Log Out', function() {
-  it('should log out', function() {
-    navigation.logout();
-  });
-});
-
-// Logging in. Write your tests after the login flow is complete.
-describe('Login as non squared team member admin user', function() {
-  it('should login', function(){
-    login.login(testuser2.username, testuser2.password);
-  });
-}); //State is logged-in
-
-describe('Check non squared team member entitlements', function() {
-  it('clicking on users tab should change the view', function() {
-    navigation.clickUsers();
+    it('should log out', function() {
+      navigation.logout();
+    });
   });
 
-  it('click on add button should show entitlements the admin can use', function () {
-    users.addUsers.click();
-    expect(users.listPanel.isDisplayed()).toBeFalsy();
-    expect(users.managePanel.isDisplayed()).toBeTruthy();
 
-    users.assertEntitlementListSize(7);
-    expect(users.manageSquaredTeamMember.isPresent()).toBeFalsy();
-  });
 
-});
+  describe('Check non squared team member entitlements', function() {
+    it('should login as non squared team member admin user', function(){
+      login.login(testuser2.username, testuser2.password);
+    });
 
-// Log Out
-describe('Log Out', function() {
-  it('should log out', function() {
-    navigation.logout();
+    it('clicking on users tab should change the view', function() {
+      navigation.clickUsers();
+    });
+
+    it('click on add button should show entitlements the admin can use', function () {
+      users.addUsers.click();
+      expect(users.listPanel.isDisplayed()).toBeFalsy();
+      expect(users.managePanel.isDisplayed()).toBeTruthy();
+
+      users.assertEntitlementListSize(7);
+      expect(users.manageSquaredTeamMember.isPresent()).toBeFalsy();
+    });
+
+    it('should log out', function() {
+      navigation.logout();
+    });
   });
 });
 

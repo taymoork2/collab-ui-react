@@ -6,16 +6,11 @@ var testuser = {
 };
 
 // Logging in. Write your tests after the login flow is complete.
-describe('Login as non-sso admin user', function() {
+describe('Telephony Info', function() {
   it('should login', function(){
     login.login(testuser.username,testuser.password);
   });
-}); //State is logged-in
 
-
-
-// Log Out
-describe('Log Out', function() {
   it('should log out', function() {
     navigation.logout();
   });

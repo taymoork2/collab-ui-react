@@ -13,33 +13,13 @@ var testuser = {
   password: 'C1sc0123!',
 };
 
-// Logging in. Write your tests after the login flow is complete.
-describe('Login as squared team member admin user', function() {
-  it('should login', function(){
+describe('Org Info flow', function() {
+  it('should login as squared team member admin user', function(){
     login.login(testuser.username, testuser.password);
   });
-}); //State is logged-in
 
-describe('Org Info flow', function() {
-  beforeEach(function() {
-    this.addMatchers({
-      toBeLessThanOrEqualTo: function() {
-        return {
-          compare: function(actual, expected) {
-            return {
-              pass: actual < expected || actual === expected,
-              message: 'Expected ' + actual + 'to be less than or equal to ' + expected
-            };
-          }
-        };
-      }
-    });
-  });
-});
-
-describe('Navigating to organization tab', function() {
-	it('clicking on orgs tab should show the org info', function() {
-		navigation.clickOrganization();
+  it('clicking on orgs tab should show the org info', function() {
+    navigation.clickOrganization();
     expect(manage.displayName.isDisplayed()).toBeTruthy();
     expect(manage.estimatedSize.isDisplayed()).toBeTruthy();
     expect(manage.totalUsers.isDisplayed()).toBeTruthy();
@@ -47,12 +27,8 @@ describe('Navigating to organization tab', function() {
     expect(manage.saveButton.isDisplayed()).toBeFalsy();
     expect(manage.refreshButton.isDisplayed()).toBeTruthy();
   });
-});
 
-// Log Out
-describe('Log Out', function() {
   it('should log out', function() {
     navigation.logout();
   });
 });
-

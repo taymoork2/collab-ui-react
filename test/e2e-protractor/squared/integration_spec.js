@@ -53,13 +53,6 @@ describe('App flow', function() {
       expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
     });
 
-    xit('should log in with valid credentials and display home page', function() {
-      expect(login.isLoginPasswordPresent()).toBeTruthy();
-      login.setLoginPassword(testuser.password);
-      login.clickLoginSubmit();
-      navigation.expectCurrentUrl('/home');
-    });
-
     it('should just login', function(){
       login.login(testuser.username,testuser.password);
     });

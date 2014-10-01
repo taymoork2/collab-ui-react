@@ -12,13 +12,10 @@ var testuser = {
   password: 'C1sc0123!',
 };
 
-describe('Log in as admin', function() {
-  it('should log in', function(){
+describe('Fusion Page', function() {
+  it('should log in as admin', function(){
     login.login(testuser.username, testuser.password);
   });
-});
-
-describe('Fusion Page', function() {
 
   it('should navigate to the fusion page and display something', function() {
     navigation.manageTab.click();
@@ -27,9 +24,7 @@ describe('Fusion Page', function() {
     navigation.expectCurrentUrl('/fusion');
     expect(browser.driver.isElementPresent(by.id('fusion-root'))).toBe(true);
   });
-});
 
-describe('Log out', function() {
   it('should log out', function() {
    navigation.logout();
   });

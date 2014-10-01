@@ -23,10 +23,9 @@ var supportuser = {
 };
 
 describe('Support flow', function() {
-  // Logging in. Write your tests after the login flow is complete.
-  describe('Login as non-sso admin user', function() {
 
-    it('should login', function(){
+  describe('Support tab', function() {
+    it('should login as non-sso admin user', function(){
       login.login(testuser.username, testuser.password);
     });
 
@@ -37,10 +36,6 @@ describe('Support flow', function() {
       expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
       expect(navigation.supportTab.isDisplayed()).toBeTruthy();
     });
-
-  }); //State is logged-in
-
-  describe('Support tab', function() {
     //Test if Support tab is present
     it('should display correct tabs for user based on role', function() {
       expect(navigation.supportTab.isDisplayed()).toBeTruthy();
@@ -135,16 +130,10 @@ describe('Support flow', function() {
       expect(support.logsPanel.isDisplayed()).toBeTruthy();
     });
 
-  });
-
-  // Log Out
-  describe('Log Out', function() {
     it('should log out', function() {
       navigation.logout();
     });
   });
-
-
 
   // describe('Search via external link', function() {
 
@@ -228,24 +217,17 @@ describe('Support flow', function() {
   // });
 
   describe('Non-admin Squared Support Role', function() {
-  // Logging in. Write your tests after the login flow is complete.
-    describe('Login as squared support user', function() {
-
-      it('should login', function(){
-        login.login(supportuser.username, supportuser.password);
-      });
-
-      it('should display correct tabs for user based on role', function() {
-        expect(navigation.getTabCount()).toBe(3);
-        expect(navigation.homeTab.isDisplayed()).toBeTruthy();
-        expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
-        expect(navigation.supportTab.isDisplayed()).toBeTruthy();
-      });
+    it('should login as squared support user', function(){
+      login.login(supportuser.username, supportuser.password);
     });
-  });
 
-  // Log Out
-  describe('Log Out', function() {
+    it('should display correct tabs for user based on role', function() {
+      expect(navigation.getTabCount()).toBe(3);
+      expect(navigation.homeTab.isDisplayed()).toBeTruthy();
+      expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
+      expect(navigation.supportTab.isDisplayed()).toBeTruthy();
+    });
+
     it('should log out', function() {
       navigation.logout();
     });

@@ -38,35 +38,9 @@ describe('List users flow', function() {
     utils.scrollTop();
   });
 
-  // Logging in. Write your tests after the login flow is complete.
-  describe('Login as non-sso admin user', function() {
-
-    it('should login', function(){
-      login.login(testuser.username, testuser.password);
-    });
-
-    xit('should redirect to CI global login page.', function() {
-      browser.get('#/login');
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.css('#IDToken1'));
-      }).then(function() {
-        expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
-      });
-    });
-
-    xit('should log in with valid sso admin user and display home page', function() {
-      browser.driver.findElement(by.css('#IDToken1')).sendKeys(testuser.username);
-      browser.driver.findElement(by.css('#IDButton2')).click();
-      browser.driver.wait(function() {
-        return browser.driver.isElementPresent(by.css('#IDToken2'));
-      }).then(function() {
-        browser.driver.findElement(by.css('#IDToken2')).sendKeys(testuser.password);
-        browser.driver.findElement(by.css('#Button1')).click();
-      });
-
-      expect(browser.getCurrentUrl()).toContain('/home');
-    });
-  }); //State is logged-in
+  it('should login as non-sso admin user', function(){
+    login.login(testuser.username, testuser.password);
+  });
 
   // Asserting listing users.
   describe('Listing users on page load', function() {
@@ -198,11 +172,8 @@ describe('List users flow', function() {
     });
   });
 
-  //Log Out
-  describe('Log Out', function() {
-    it('should log out', function() {
-     navigation.logout();
-    });
+  it('should log out', function() {
+   navigation.logout();
   });
 
 });
