@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config',
-    function Authinfo($rootScope, $location, Utils, Config) {
+  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', '$filter',
+    function Authinfo($rootScope, $location, Utils, Config, $filter) {
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
         'username': null,
@@ -12,7 +12,76 @@ angular.module('Core')
         'entitlements': null,
         'services': null,
         'roles': null,
-        'tabs': null
+        'tabs': [],
+        'isInitialized': false
+      };
+
+      var getTabTitle = function(title) {
+        return $filter('translate')(title);
+      };
+
+      var isAllowedState = function(state) {
+        if (state) {
+          if (Config.allowedStates && Config.allowedStates.indexOf(state) !== -1) {
+            return true;
+          }
+          var roles = authData.roles;
+          if (roles) {
+            for (var i in roles) {
+              var role = roles[i];
+              if (role && Config.roleStates[role] && Config.roleStates[role].indexOf(state) !== -1) {
+                return true;
+              }
+            }
+          }
+          var services = authData.services;
+          if (services) {
+            for (var j in services) {
+              var service = services[j];
+              if (service && Config.serviceStates[service.ciService] && Config.serviceStates[service.ciService].indexOf(state) !== -1) {
+                return true;
+              }
+            }
+          }
+        }
+        return false;
+      };
+
+      //update the tabs when Authinfo data has been populated.
+      var initializeTabs = function() {
+        var tabs = angular.copy(Config.tabs);
+
+        // Remove states out of tab structure that are not allowed or had all their subPages removed
+        for (var i = 0; i < tabs.length; i++) {
+          if (tabs[i] && tabs[i].subPages) {
+            for (var j = 0; j < tabs[i].subPages.length; j++) {
+              if (tabs[i].subPages[j] && !isAllowedState(tabs[i].subPages[j].state)) {
+                tabs[i].subPages.splice(j--, 1);
+              }
+            }
+            if (tabs[i].subPages.length === 0) {
+              tabs.splice(i--, 1);
+            }
+          }
+          else if (tabs[i] && !isAllowedState(tabs[i].state)) {
+            tabs.splice(i--, 1);
+          }
+        }
+        // TODO this shouldn't be needed - refactor how active state is set
+        $rootScope.tabs = tabs;
+
+        //Localize tabs
+        for(var index in tabs) {
+          tabs[index].title = getTabTitle(tabs[index].title);
+          if(tabs[index].subPages) {
+            for(var k in tabs[index].subPages) {
+              tabs[index].subPages[k].title = $filter('translate')(tabs[index].subPages[k].title);
+              tabs[index].subPages[k].desc = $filter('translate')(tabs[index].subPages[k].desc);
+            }
+          }
+        }
+
+        return tabs;
       };
 
       return {
@@ -24,7 +93,10 @@ angular.module('Core')
           authData.entitlements = data.entitlements;
           authData.services = data.services;
           authData.roles = data.roles;
+          authData.tabs = initializeTabs();
+          // TODO remove this from rootScope
           $rootScope.services = data.services;
+          authData.isInitialized = true;
           $rootScope.$broadcast('AuthinfoUpdated');
         },
 
@@ -35,8 +107,9 @@ angular.module('Core')
           authData.addUserEnabled = null;
           authData.entitlements = null;
           authData.services = null;
-          authData.tabs = null;
+          authData.tabs = [];
           authData.roles = null;
+          authData.isInitialized = false;
         },
 
         getOrgName: function() {
@@ -67,40 +140,16 @@ angular.module('Core')
           return authData.roles;
         },
 
-        setTabs: function(allowedTabs) {
-          authData.tabs = allowedTabs;
-          $rootScope.$broadcast('AllowedTabsUpdated');
+        getTabs: function() {
+          return authData.tabs;
         },
 
-        isAllowedTab: function() {
-          var curPath = $location.path();
-
-          if (curPath === '/' || curPath === '/login') {
-            return true;
-          }
-
-          for (var idx in authData.tabs) {
-            if (authData.tabs[idx].subPages) {
-              for(var i in authData.tabs[idx].subPages) {
-                if (Utils.comparePaths(curPath, authData.tabs[idx].subPages[i].link)) {
-                  return true;
-                }
-              }
-            }
-            if (Utils.comparePaths(curPath, authData.tabs[idx].link)) {
-              return true;
-            }
-          }
-          return false;
+        isAllowedState: function(state) {
+          return isAllowedState(state);
         },
 
-        isEmpty: function() {
-          for (var datakey in authData) {
-            if (authData[datakey] !== null) {
-              return false;
-            }
-          }
-          return true;
+        isInitialized: function() {
+          return authData.isInitialized;
         },
 
         isSquaredTeamMember: function() {
@@ -125,20 +174,7 @@ angular.module('Core')
           {
             return true;
           }
-        },
-
-        supportsHuron: function() {
-          var services = this.getServices();
-          if (services) {
-            for (var i = 0; i < services.length; i++) {
-              if (services[i] && services[i].ciService === Config.entitlements.huron) {
-                return true;
-              }
-            }
-          }
-          return false;
         }
-
       };
     }
   ]);

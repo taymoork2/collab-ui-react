@@ -81,22 +81,20 @@ angular.module('Core')
           refreshDelay: 900000
         },
 
-        allowedPaths: ['/activate', '/downloads', '/invite', '/invitelauncher', '/applauncher'],
-
-        allowedFtwPaths: ['/initialsetup', '/initialsetup/accountreview', '/initialsetup/servicesetup', '/initialsetup/adduser', '/initialsetup/getstarted', '/userprofile'],
-
         tabs: [
           {
             index: 0,
             name: 'home',
             tab: 'homeTab',
             title: 'tabs.homeTab',
+            state: 'home',
             link: '/home'
           },{
             index: 1,
             name: 'partnerhome',
             tab: 'partnerhomeTab',
             title: 'tabs.partnerhomeTab',
+            state: 'partnerhome',
             link: '/partnerhome'
           },{
             index: 2,
@@ -109,29 +107,34 @@ angular.module('Core')
                 name: 'users',
                 title: 'tabs.userTab',
                 desc: 'tabs.userTabDesc',
+                state: 'users',
                 link: '#users'
               },{
                 index: 1,
                 name: 'spaces',
                 title: 'tabs.spacesTab',
                 desc: 'tabs.spacesTabDesc',
+                state: 'spaces',
                 link: '#spaces',
               },{
                 index: 2,
                 name: 'organizations',
                 title: 'tabs.orgDetailsTab',
                 desc: 'tabs.orgDetailsTabDesc',
+                state: 'orgs',
                 link: '#orgs'
               },{
                 index: 3,
                 title: 'tabs.fusionDetailsTab',
                 desc: 'tabs.fusionDetailsTabDesc',
+                state: 'fusion',
                 link: '#fusion'
               },{
                 index: 4,
                 name: 'callrouting',
                 title: 'tabs.callRoutingTab',
                 desc: 'tabs.callRoutingTabDesc',
+                state: 'callrouting',
                 link: '#callrouting'
               }
             ]
@@ -140,12 +143,14 @@ angular.module('Core')
             name: 'reports',
             tab: 'reportTab',
             title: 'tabs.reportTab',
+            state: 'reports',
             link: '/reports'
           },{
             index: 4,
             name: 'support',
             tab: 'supportTab',
             title: 'tabs.supportTab',
+            state: 'support',
             link: '/support'
           }
         ],
@@ -251,19 +256,26 @@ angular.module('Core')
 
       };
 
-      config.roles = {
-          Full_Admin: [config.tabs[0], config.tabs[2], config.tabs[2].subPages[0], config.tabs[2].subPages[1], config.tabs[2].subPages[2], config.tabs[3]],
-          WX2_User: [config.tabs[0], config.tabs[3], config.tabs[4], config.tabs[2].subPages[1]],
-          WX2_Support: [config.tabs[0], config.tabs[3], config.tabs[4], config.tabs[2].subPages[1]],
-          WX2_SquaredInviter: [],
-          User: [],
-          PARTNER_ADMIN: [],
-          PARTNER_USER: [config.tabs[1]]
-        };
-
-      config.serviceLinks = {
-        huron: ['#callrouting']
+      config.roleStates = {
+        Full_Admin: [
+          'home', 'users', 'userprofile', 'spaces', 'orgs', 'reports',
+          'initialsetup', 'initialsetup.accountreview', 'initialsetup.servicesetup', 'initialsetup.adduser', 'initialsetup.getstarted'
+        ],
+        WX2_User: ['home', 'reports', 'support'],
+        WX2_Support: ['home', 'reports', 'support'],
+        WX2_SquaredInviter: [],
+        User: [],
+        PARTNER_ADMIN: [],
+        PARTNER_USER: ['partnerhome']
       };
+
+      config.serviceStates = {
+        'huron': ['callrouting'],
+        'squared-fusion-uc': ['fusion']
+      };
+
+      // These states do not require a role/service check
+      config.allowedStates = ['unauthorized'];
 
       return config;
     }

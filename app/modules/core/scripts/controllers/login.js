@@ -31,7 +31,7 @@ angular.module('Core')
 
             $location.url('/' + path);
 
-            Config.tabs[path].active = 'true';
+            // Config.tabs[path].active = 'true';
             $rootScope.services = Authinfo.getServices();
           }
         });

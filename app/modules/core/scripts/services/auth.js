@@ -6,9 +6,7 @@ angular.module('Core')
     var progress = 0;
     var auth = {
       authorizeUrl: Config.getAdminServiceUrl() + 'userauthinfo',
-      oauthUrl: Config.oauthUrl.oauth2Url,
-      allowedPaths: Config.allowedPaths,
-      allowedFtwPaths: Config.allowedFtwPaths
+      oauthUrl: Config.oauthUrl.oauth2Url
     };
 
     var ciErrorMsg = 'Sorry, you don\'t have sufficient privileges';
@@ -19,26 +17,6 @@ angular.module('Core')
       } else {
         return false;
       }
-    };
-
-    auth.isAllowedPath = function() {
-      var currentPath = $location.path();
-      for (var idx in auth.allowedPaths) {
-        if (auth.allowedPaths[idx] === currentPath) {
-          return true;
-        }
-      }
-      return false;
-    };
-
-    auth.isAllowedFtwPath = function() {
-      var currentPath = $location.path();
-      for (var idx in auth.allowedFtwPaths) {
-        if (Utils.startsWith(currentPath, auth.allowedFtwPaths[idx])) {  //if (auth.allowedFtwPaths[idx] === currentPath) {
-          return true;
-        }
-      }
-      return false;
     };
 
     auth.authorize = function(token, scope) {
@@ -169,42 +147,6 @@ angular.module('Core')
         });
 
       return deferred.promise;
-    };
-
-    auth.isAuthorized = function(scope) {
-      if (!Authinfo.isEmpty()) {
-        //Check if this is an allowed tab
-        if (!Authinfo.isAllowedTab() && !this.isAllowedFtwPath()) {
-          $location.path('/unauthorized');
-        }
-        return true;
-      } else {
-        var token = Storage.get('accessToken');
-        if (token) {
-          Log.debug('Authorizing user... Populating admin data...');
-          this.authorize(token, scope);
-        } else {
-          $location.path('/login');
-        }
-      }
-    };
-
-    auth.isAuthorizedFtwPath = function(scope) {
-      if (!Authinfo.isEmpty()) {
-        //Check if this is an allowed ftw path
-        if (!this.isAllowedFtwPath()) {
-          $location.path('/unauthorized');
-        }
-        return true;
-      } else {
-        var token = Storage.get('accessToken');
-        if (token) {
-          Log.debug('Authorizing user... Populating admin data...');
-          this.authorize(token, scope);
-        } else {
-          $location.path('/login');
-        }
-      }
     };
 
     auth.logout = function() {

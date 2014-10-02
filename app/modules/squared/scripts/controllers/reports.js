@@ -2,8 +2,8 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Auth',
-    function($scope, $parse, ReportsService, Log, Auth) {
+  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log',
+    function($scope, $parse, ReportsService, Log) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
@@ -170,9 +170,7 @@ angular.module('Squared')
         });
       };
 
-      if (Auth.isAuthorized($scope)) {
-        $scope.manualReload(true);
-      }
+      $scope.manualReload(true);
 
       $scope.$on('AuthinfoUpdated', function() {
         $scope.manualReload(true);

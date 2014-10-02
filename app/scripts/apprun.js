@@ -1,8 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Storage', 'Localize', 'Utils', 'Log', '$interval', '$document', 'Config',
-    function($cookies, $location, $rootScope, Auth, Storage, Localize, Utils, Log, $interval, $document, Config) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'Log', '$interval', '$document', 'Config', '$state',
+    function($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state) {
 
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
@@ -12,6 +12,31 @@ angular
 
       //Enable logging
       $rootScope.debug = true;
+
+      $rootScope.$on('$stateChangeStart', function(e, to) {
+        if (typeof to.authenticate === 'undefined' || to.authenticate) {
+          if (Authinfo.isInitialized()) {
+            if (!Authinfo.isAllowedState(to.name)) {
+              e.preventDefault();
+              $state.go('unauthorized');
+            }
+          } else {
+            var token = Storage.get('accessToken');
+            e.preventDefault();
+            if (token) {
+              Auth.authorize(token, e.currentScope)
+                .then(function(){
+                  $state.go(to.name);
+                })
+                .catch(function(){
+                  $state.go('login');
+                });
+            } else {
+              $state.go('login');
+            }
+          }
+        }
+      });
 
       var data = null;
       $rootScope.status = 'init';

@@ -161,33 +161,6 @@ angular.module('Core')
           return a;
         },
 
-        changeTab: function(curPath, param) {
-          var path = '/home';
-          for (var idx in $rootScope.tabs) {
-            if ($rootScope.tabs[idx].subPages) {
-              for(var i in $rootScope.tabs[idx].subPages) {
-                if (this.comparePaths(curPath, $rootScope.tabs[idx].subPages[i].link)) {
-                  $rootScope.tabs[idx].subPages[i].isActive = 'true';
-                  path = curPath;
-                  break;
-                }
-              }
-            }
-            if (this.comparePaths(curPath, $rootScope.tabs[idx].link)) {
-              $rootScope.tabs[idx].isActive = 'true';
-              path = curPath;
-              break;
-            }
-
-          } //end for
-          if (!param) {
-            $location.path(path);
-          } else {
-            $location.search(param.key, param.val).path(path);
-            param = undefined;
-          }
-        },
-
         comparePaths: function(path1, path2) {
           // if either paths are undefined return false.
           if (!path1 || !path2) {

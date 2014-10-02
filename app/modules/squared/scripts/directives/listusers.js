@@ -2,8 +2,8 @@
 /* global $:false */
 
 angular.module('ListUsers', [])
-  .controller('ListUsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Auth', 'Authinfo',
-    function($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Auth, Authinfo) {
+  .controller('ListUsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Authinfo',
+    function($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Authinfo) {
 
       function Feature(name, state) {
         this.entitlementName = name;
@@ -54,10 +54,7 @@ angular.module('ListUsers', [])
         });
       };
 
-      //Populating authinfo data if empty.
-      if (Auth.isAuthorized($scope)) {
-        getUserList();
-      }
+      getUserList();
 
       //Search users based on search criteria
       $scope.$on('SEARCH_ITEM', function(e, str) {

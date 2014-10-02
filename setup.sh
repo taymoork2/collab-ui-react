@@ -72,4 +72,4 @@ bundle install
 npm install
 npm update -g bower
 bower cache clean
-bower install
+bower install --force

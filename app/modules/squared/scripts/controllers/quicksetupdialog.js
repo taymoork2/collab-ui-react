@@ -1,33 +1,30 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('quicksetupDialogCtrl', ['$scope', '$modalInstance', 'data', '$rootScope', '$translate', '$location', 'Utils',
-    function($scope, $modalInstance, data, $rootScope, $translate, $location, Utils) {
+  .controller('quicksetupDialogCtrl', ['$scope', '$modalInstance', 'data', '$rootScope', '$translate', '$location', 'Utils', '$state',
+    function($scope, $modalInstance, data, $rootScope, $translate, $location, Utils, $state) {
       $scope.cancel = function() {
         $modalInstance.dismiss('canceled');
       };
 
-      $scope.inviteAll = false;
       $scope.buttonLabel = $translate.instant('common.ok');
 
       $scope.doAction = function() {
         if ($scope.inviteAll)
         {
           $rootScope.selectedSubTab = 'invite';
-          Utils.changeTab('/users');
+          $state.go('users');
         }
         $modalInstance.dismiss('canceled');
       };
 
       $scope.toggleButton = function() {
-        if (!$scope.inviteAll)
+        if ($scope.inviteAll)
         {
-          $scope.inviteAll = true;
           $scope.buttonLabel = $translate.instant('common.next');
         }
         else
         {
-          $scope.inviteAll = false;
           $scope.buttonLabel = $translate.instant('common.ok');
         }
       };

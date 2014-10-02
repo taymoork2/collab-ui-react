@@ -2,15 +2,8 @@
 /* global moment, $:false */
 
 angular.module('Core')
-  .controller('AddUserCtrl', ['$scope', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Auth', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
-    function($scope, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Auth, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
-
-			//Populating authinfo data if empty.
-      var token = Storage.get('accessToken');
-      if (Auth.isAuthorizedFtwPath($scope)) {
-        Log.debug('Authinfo data is loaded.');
-      }
-
+  .controller('AddUserCtrl', ['$scope', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
+    function($scope, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
       //Initialize
       Notification.init($scope);
       $scope.popup = Notification.popup;
@@ -103,7 +96,7 @@ angular.module('Core')
 						$('#'+step).removeClass('ng-show');
 						$('#'+step).addClass('ng-hide');
 						$('#'+step+'Tab').removeClass('tabHighlight');
-						
+
 	        } else {
 						$('#'+step).removeClass('ng-hide');
 						$('#'+step).addClass('ng-show');
@@ -223,7 +216,7 @@ angular.module('Core')
             Log.debug('Retrieved user list successfully. Status: ' + status);
             if(data) {
               $scope.numUsersInSync = data.totalResults;
-              
+
               for(var i = 0; i < data.totalResults; i++) {
                 var userArrObj = {
                   Email: null,
@@ -241,7 +234,7 @@ angular.module('Core')
             })], 'error');
           }
         });
-    
+
       };
 
       $scope.syncNow = function() {
@@ -453,7 +446,7 @@ angular.module('Core')
             //update entitlements
             Userservice.inviteUsers(usersList, callback);
           }
-          
+
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];

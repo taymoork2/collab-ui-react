@@ -3,8 +3,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Auth', 'Authinfo',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Pagination, $rootScope, Notification, $filter, Auth, Authinfo) {
+  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter',
+    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Pagination, $rootScope, Notification, $filter) {
 
       // TODO: remove from $rootScope
       $rootScope.userPreview = false;
@@ -100,10 +100,7 @@ angular.module('Core')
         return $scope.currentUserPhoto;
       };
 
-      //Populating authinfo data if empty.
-      if (Auth.isAuthorized($scope)) {
-        getUserList();
-      }
+      getUserList();
 
       //Search users based on search criteria
       $scope.$on('SEARCH_ITEM', function(e, str) {

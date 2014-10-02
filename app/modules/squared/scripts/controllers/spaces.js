@@ -2,14 +2,11 @@
 /* global moment */
 
 angular.module('Squared')
-  .controller('SpacesCtrl', ['$scope', '$location', 'Auth', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Authinfo', 'Notification', 'Config',
-    function($scope, $location, Auth, Storage, Log, Utils, $filter, SpacesService, Authinfo, Notification, Config) {
+  .controller('SpacesCtrl', ['$scope', '$location', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Notification', 'Config',
+    function($scope, $location,  Storage, Log, Utils, $filter, SpacesService, Notification, Config) {
 
       //Populating authinfo data if empty.
       var token = Storage.get('accessToken');
-      if (Auth.isAuthorized($scope)) {
-        Log.debug('Authinfo data is loaded.');
-      }
 
       var formatActivationCode = function(activationCode) {
         var acode = '';

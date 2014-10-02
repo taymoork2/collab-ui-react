@@ -35,9 +35,8 @@ angular.module('Core')
 
     if (Auth.isLoggedIn()) {
       $scope.loggedIn = true;
-    } else if (!Auth.isAllowedPath()) {
+    } else {
       $scope.loggedIn = false;
-      $location.path('/login');
     }
 
     $scope.$on('ACCESS_TOKEN_REVIEVED', function() {
@@ -53,7 +52,7 @@ angular.module('Core')
     //LOOKTHISUPDUDE
     $scope.menuItems = [];
     //$scope.menuItems = [{link: '/initialsetup', title: 'Initial Setup'}];
-  
+
     $scope.doAction = function(path) {
       $location.path(path);
     };

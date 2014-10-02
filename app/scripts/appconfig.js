@@ -8,7 +8,8 @@ angular
       .state('login', {
         url: '/login',
         templateUrl: 'modules/core/views/login.html',
-        controller: 'LoginCtrl'
+        controller: 'LoginCtrl',
+        authenticate: false
       });
 
     $translateProvider.useStaticFilesLoader({
@@ -28,6 +29,36 @@ angular
     $urlRouterProvider.when('/initialsetup','/initialsetup/accountreview');
 
     $stateProvider
+      .state('activate', {
+        url: '/activate',
+        templateUrl: 'modules/squared/views/activate.html',
+        controller: 'ActivateCtrl',
+        authenticate: false
+      })
+      .state('downloads', {
+        url: '/downloads',
+        templateUrl: 'modules/squared/views/downloads.html',
+        controller: 'DownloadsCtrl',
+        authenticate: false
+      })
+      .state('invite', {
+        url: '/invite',
+        templateUrl: 'modules/squared/views/invite.html',
+        controller: 'InviteCtrl',
+        authenticate: false
+      })
+      .state('invitelauncher', {
+        url: '/invitelauncher',
+        templateUrl: 'modules/squared/views/invitelauncher.html?'+new Date().getTime(),
+        controller: 'InvitelauncherCtrl',
+        authenticate: false
+      })
+      .state('applauncher', {
+        url: '/applauncher',
+        templateUrl: 'modules/squared/views/applauncher.html',
+        controller: 'ApplauncherCtrl',
+        authenticate: false
+      })
       .state('home', {
         url: '/home',
         templateUrl: 'modules/squared/views/home.html',
@@ -37,11 +68,6 @@ angular
         url: '/users',
         templateUrl: 'modules/core/views/users.html',
         controller: 'UsersCtrl'
-      })
-      .state('downloads', {
-        url: '/downloads',
-        templateUrl: 'modules/squared/views/downloads.html',
-        controller: 'DownloadsCtrl'
       })
       .state('orgs', {
         url: '/orgs',
@@ -58,11 +84,6 @@ angular
         templateUrl: 'modules/squared/views/reports.html',
         controller: 'ReportsCtrl'
       })
-      .state('activate', {
-        url: '/activate',
-        templateUrl: 'modules/squared/views/activate.html',
-        controller: 'ActivateCtrl'
-      })
       .state('userprofile', {
         url: '/userprofile/:uid',
         templateUrl: 'modules/squared/views/userprofile.html',
@@ -73,24 +94,9 @@ angular
         templateUrl: 'modules/squared/views/support.html',
         controller: 'SupportCtrl'
       })
-      .state('invite', {
-        url: '/invite',
-        templateUrl: 'modules/squared/views/invite.html',
-        controller: 'InviteCtrl'
-      })
       .state('unauthorized', {
         url: '/unauthorized',
         templateUrl: 'modules/squared/views/unauthorized.html'
-      })
-      .state('invitelauncher', {
-        url: '/invitelauncher',
-        templateUrl: 'modules/squared/views/invitelauncher.html?'+new Date().getTime(),
-        controller: 'InvitelauncherCtrl'
-      })
-      .state('applauncher', {
-        url: '/applauncher',
-        templateUrl: 'modules/squared/views/applauncher.html',
-        controller: 'ApplauncherCtrl'
       })
       .state('spaces', {
         url: '/spaces',

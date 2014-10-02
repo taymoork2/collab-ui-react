@@ -3,11 +3,8 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Auth', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config',
-    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Auth, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config) {
-
-      //check if page is authorized
-      Auth.isAuthorized($scope);
+  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config',
+    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config) {
 
       $scope.init = function () {
         setPlaceholder();

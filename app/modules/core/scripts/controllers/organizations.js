@@ -3,8 +3,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('OrganizationsCtrl', ['$rootScope','$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Auth', 'UserListService', 'Notification', '$dialogs',
-    function($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, Auth, UserListService, Notification, $dialogs) {
+  .controller('OrganizationsCtrl', ['$rootScope','$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
+    function($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
 
       //Initialize
       Notification.init($scope);
@@ -26,9 +26,7 @@ angular.module('Core')
         });
       };
 
-      if (Auth.isAuthorized($scope)) {
-        getorgInfo();
-      }
+      getorgInfo();
 
       //Making sure the search field is cleared
       $('#search-input').val('');

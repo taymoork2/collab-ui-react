@@ -269,10 +269,8 @@ angular.module('Squared')
         });
       };
 
-      if (Auth.isAuthorized($scope)) {
-        $scope.manualReload(true);
-        $scope.isAdmin = Auth.isUserAdmin();
-      }
+      $scope.manualReload(true);
+      $scope.isAdmin = Auth.isUserAdmin();
 
       $scope.$on('AuthinfoUpdated', function() {
         $scope.manualReload(true);

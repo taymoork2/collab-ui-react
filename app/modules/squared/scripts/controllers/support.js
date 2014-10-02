@@ -2,8 +2,8 @@
 /* global $, Bloodhound, moment */
 
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Auth', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', '$translate', 'PageParam',
-    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Auth, Authinfo, UserListService, LogService, ReportsService, $translate, PageParam) {
+  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', '$translate', 'PageParam',
+    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, $translate, PageParam) {
 
       //Initialize
       Notification.init($scope);
@@ -93,10 +93,7 @@ angular.module('Squared')
       };
       //Populating authinfo data if empty.
       var token = Storage.get('accessToken');
-      if (Auth.isAuthorized($scope)) {
-        Log.debug('Authinfo data is loaded.');
-        initializeTypeahead();
-      }
+      initializeTypeahead();
 
       $scope.$on('AuthinfoUpdated', function() {
         //Initializing typeahead engine when authinfo is ready

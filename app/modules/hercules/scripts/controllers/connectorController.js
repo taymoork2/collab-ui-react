@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('Hercules')
-  .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http', 'Auth',
-    function($scope, $rootScope, $http, Auth) {
-      Auth.isAuthorized($scope);
+  .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http',
+    function($scope, $rootScope, $http) {
 
       $scope.loading = true;
 
