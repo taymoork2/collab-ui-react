@@ -16,11 +16,6 @@ $headers_color: #777777;
 }
 
 /******** Resets & Globals **********/
-:focus {
-  outline: none;
-  webkit-box-shadow: 0 0 0 1px #0092cc;
-  box-shadow: 0 0 0 1px #0092cc;
-}
 .container {
   //width: 1000px;
   //overflow: none;
@@ -62,7 +57,7 @@ h2, h3 {
 }
 
 .panel {
-  border-radius: 7px;
+  // border-radius: 7px;
   -moz-border-radius: 7px;
   margin-bottom: 30px;
   margin-top: 30px;
@@ -107,6 +102,7 @@ table th, .table td {
 
 .panel-heading {
   padding: 15px;
+  background-color: #EBEBEB;
 }
 
 .panel-heading-default {
@@ -118,8 +114,6 @@ table th, .table td {
 }
 
 label {
-  color:#908A8C;
-  font-weight: normal;
   margin-bottom: 10px;
 }
 
@@ -891,6 +885,12 @@ input:disabled {
 .add-users-button,
 .user-options-bar {
   float: right;
+}
+
+.add-user-close {
+  float: right;
+  bottom: 15px;
+  position: relative;
 }
 
 .sub-details-panel {

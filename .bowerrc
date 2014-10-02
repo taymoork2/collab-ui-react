@@ -1,12 +1,12 @@
 
 {
-    "directory": "app/bower_components",
-    "registry": {
-   "search": [
-     "http://10.89.58.222/bower",
-     "https://bower.herokuapp.com"
-   ]
- }
+  "directory": "app/bower_components",
+  "registry": {
+    "search": [
+      "http://bower.herokuapp.com",
+      "http://10.89.58.222/bower"
+    ]
+  }
 }
 
 

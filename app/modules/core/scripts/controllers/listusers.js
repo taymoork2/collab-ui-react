@@ -6,7 +6,8 @@ angular.module('Core')
   .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Auth', 'Authinfo',
     function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Pagination, $rootScope, Notification, $filter, Auth, Authinfo) {
 
-      $scope.userPreview = false;
+      // TODO: remove from $rootScope
+      $rootScope.userPreview = false;
       $scope.conversationsPanel = false;
       $scope.directoryNumberPanel = false;
       $scope.voicemailPanel = false;
@@ -189,7 +190,7 @@ angular.module('Core')
       var currentClass;
 
       $scope.closePreview = function() {
-        $scope.userPreview = false;
+        $rootScope.userPreview = false;
         $scope.conversationsPanel = false;
         $scope.directoryNumberPanel = false;
         $scope.voicemailPanel = false;
@@ -206,7 +207,7 @@ angular.module('Core')
       };
 
       $scope.showUserDetails = function(user) {
-        $scope.userPreview = true;
+        $rootScope.userPreview = true;
 
         $('#entire-slide').animate({
           'margin-left': '0px'

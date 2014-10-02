@@ -3,7 +3,7 @@
   <div class="col-md-6 col-sm-6">
     <span class="user-title">{{'usersPage.manageUsers' | translate}}</span>
   </div>
-  <div class="col-md-6 col-sm-6 user-option-buttons" ng-show="Utils.isAdminPage() && userTabActive">
+  <div class="col-md-6 col-sm-6 user-option-buttons" ng-show="Utils.isAdminPage() && userTabActive && !userPreview">
     <div class="btn-group user-options-bar">
       <button class="btn btn-default dropdown-toggle" type="button" id="userMoreOptions" data-toggle="dropdown">
       {{'usersPage.moreOptions' | translate}}
@@ -31,7 +31,7 @@
         </h3>
       </div>
       <div  ng-click="changeTab('users')">
-        <span style="float: right"><i id='closeAddUser' class="fa fa-times add-user-close"></i></span>
+        <span><i id='closeAddUser' class="fa fa-times add-user-close pull-right"></i></span>
       </div>
     </div>
     <div class="panel-body">
@@ -142,6 +142,6 @@
       <div id="singleNumberReachPanel" ng-show="singleNumberReachPanel" class="sub-details-panel">
         <div single-number-reach-info directoryNumber="directoryNumber"></div>
       </div>
-    </div>       
+    </div>
   </div>
 </div>
