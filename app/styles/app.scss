@@ -520,7 +520,7 @@ input:disabled {
   border: 2px solid #ccc;
   border-radius: 8px;
   outline: none;
-  font-style: normal;
+  font-style: normal !important;
 }
 
 .tt-query {

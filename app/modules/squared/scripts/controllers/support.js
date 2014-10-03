@@ -171,6 +171,11 @@ angular.module('Squared')
 
                   locus = checkValidityOfLocus(locus);
                   callstart = checkValidityOfCallStart(callstart);
+
+                  if((locus === '-NA-') || (callstart === '-NA-')) {
+                    callstart = '-NA-';
+                    locus = '-NA-';
+                  }
                 }
 
                 var log = {
