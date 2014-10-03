@@ -18,7 +18,7 @@ describe('Partner flow', function() {
 
     it('should display correct tabs for user based on role', function() {
       expect(navigation.getTabCount()).toBe(1);
-      expect(navigation.partnerHomeTab.isDisplayed()).toBeTruthy();
+      expect(navigation.homeTab.isDisplayed()).toBeTruthy();
     });
 
   }); //State is logged-in

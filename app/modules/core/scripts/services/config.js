@@ -92,7 +92,7 @@ angular.module('Core')
           },{
             index: 1,
             name: 'partnerhome',
-            tab: 'partnerhomeTab',
+            tab: 'homeTab',
             title: 'tabs.partnerhomeTab',
             state: 'partnerhome',
             link: '/partnerhome'
