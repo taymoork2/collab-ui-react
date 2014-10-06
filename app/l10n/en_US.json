@@ -51,7 +51,7 @@
     "orgDetailsTab" : "Organization",
     "orgDetailsTabDesc" : "Manage Organization Details, View Assigned Services, And Access Tools.",
     "fusionDetailsTab" : "Fusion",
-    "fusionDetailsTabDesc" : "Manage Fusion Connectors",
+    "fusionDetailsTabDesc" : "Fusion Management",
     "callRoutingTab" : "Call Routing",
     "callRoutingTabDesc" : "Manage Call Routing Features Such As Call Park",
     "partnerhomeTab" : "Home"
@@ -295,15 +295,19 @@
     "add": "Add"
   },
   "hercules": {
-    "page_title": "Fusion Connectors",
+    "page_title": "Fusion Services",
     "connectors": {
+        "group_by":         "Group services by:",
         "loading":          "Loading...",
-        "loading_error":    "Unable to load connectors.",
+        "loading_error":    "Unable to load data.",
         "no_connectors":    "No fusion connectors registered.",
         "cluster_id":       "Cluster ID",
-        "host_name":        "Host Name",
-        "display_name":     "Name",
-        "connector_type":   "Connector Type"
+        "host_name":        "Expressway Host",
+        "display_name":     "Service Name",
+        "connector_type":   "Connector Type",
+        "serial":           "Serial",
+        "version":          "Version",
+        "status":           "Status"
     }
   },
   "firstTimeWizard" : {

@@ -8,22 +8,50 @@
       <div ng-show="error" translate="hercules.connectors.loading_error"></div>
       <div ng-show="!loading">
         <div ng-show="connectors.length == 0" translate="hercules.connectors.no_connectors"></div>
-        <table ng-show="connectors" class="table table-bordered">
-          <thead>
-            <tr>
-              <th translate="hercules.connectors.host_name"></th>
-              <th translate="hercules.connectors.connector_type"></th>
-              <th translate="hercules.connectors.display_name"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="connector in connectors" id="{{connector.id}}">
-              <td>{{connector.host_name}}</td>
-              <td>{{connector.connector_type}}</td>
-              <td>{{connector.display_name}}</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div ng-show="connectors.length != 0">
+
+          <form ng-show="connectors.length > 1" class="form-inline" role="form">
+            <div class="form-group">
+              <label for="groupings" translate="hercules.connectors.group_by"></label>
+              <select
+                id="groupings"
+                class="form-control"
+                ng-model="current_grouping"
+                ng-options="grouping.name for grouping in groupings">
+              </select>
+            </div>
+          </form>
+
+          <div class="panel panel-default" ng-repeat="(name, connectors) in grouped_connectors">
+            <div class="panel-heading panel-heading-default">
+              <h4>{{name}}</h4>
+            </div>
+            <div class="panel-body">
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 25%" translate="hercules.connectors.host_name"></th>
+                    <th style="width: 25%" translate="hercules.connectors.display_name"></th>
+                    <th style="width: 25%" translate="hercules.connectors.version"></th>
+                    <th style="width: 25%" translate="hercules.connectors.status"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="connector in connectors" id="{{connector.id}}">
+                    <td>{{connector.host_name}}</td>
+                    <td>{{connector.display_name}}</td>
+                    <td>{{connector.version}}</td>
+                    <td><span class="label label-success">OK</span></td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
