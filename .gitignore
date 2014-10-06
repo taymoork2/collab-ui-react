@@ -1,8 +1,8 @@
 node_modules
 dist
+build
 .tmp
-.sass-cache
-app/bower_components
+bower_components
 .DS_Store
 npm-debug.log
 *.gz
@@ -11,4 +11,5 @@ npm-debug.log
 .idea/
 *.rdb
 test/e2e-protractor/reports
-
+test/karma-unit.js
+*.sublime*

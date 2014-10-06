@@ -19,6 +19,7 @@ angular.module('Hercules', ['Core']);
 
 angular
   .module('wx2AdminWebClientApp', [
+    'templates-app',
     'ngCookies',
     'ngResource',
     'ngSanitize',
@@ -37,5 +38,3 @@ angular
     'Squared',
     'Huron'
   ]);
-
-

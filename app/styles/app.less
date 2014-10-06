@@ -1,19 +1,24 @@
-@import "bootstrap/dist/css/bootstrap.css";
-$fa-font-path: "/bower_components/font-awesome/fonts";
-@import "font-awesome/scss/font-awesome";
+@import '/bower_components/bootstrap-cisco/less/bootstrap-cisco.less';
+
+// @import "bootstrap/dist/css/bootstrap.css";
+@fa-font-path: "../fonts";
+@import "/bower_components/font-awesome/less/font-awesome";
 /******** Variables **********/
-$brand_color: #00AADF;
-$headers_color: #777777;
+// @brand-font-folder: '../bower_components/bootstrap-cisco/fonts';
+// @icon-font-path: '../bower_components/bootstrap-cisco/fonts/';
+@brand_color: #00AADF;
+@headers_color: #777777;
 
 /******* Mixins **************/
-@mixin close-icon($margin-top, $color, $hover-color) {
+.close-icon(@margin-top, @color, @hover-color) {
   cursor:pointer;
-  margin-top:$margin-top;
-  color: $color;
+  margin-top:@margin-top;
+  color: @color;
   &:hover {
-    color: $hover-color;
+    color: @hover-color;
   }
 }
+
 
 /******** Resets & Globals **********/
 .container {
@@ -53,7 +58,7 @@ body {
 }
 
 h2, h3 {
-  color: $headers_color;
+  color: @headers_color;
 }
 
 .panel {
@@ -102,7 +107,6 @@ table th, .table td {
 
 .panel-heading {
   padding: 15px;
-  background-color: #EBEBEB;
 }
 
 .panel-heading-default {
@@ -114,6 +118,7 @@ table th, .table td {
 }
 
 label {
+
   margin-bottom: 10px;
 }
 
@@ -322,19 +327,19 @@ label {
 }
 
 .alertify-log-error .fa-times {
-  @include close-icon(4px, #B67775, #a94442);
+  .close-icon(4px, #B67775, #a94442);
 }
 
 .panel-danger .fa-times {
-  @include close-icon(2px, #B67775, #a94442);
+  .close-icon(2px, #B67775, #a94442);
 }
 
 .alertify-log-success .fa-times {
-  @include close-icon(4px, #6DA76E, #3c763d);
+  .close-icon(4px, #6DA76E, #3c763d);
 }
 
 .panel-success .fa-times {
-  @include close-icon(2px, #6DA76E, #3c763d);
+  .close-icon(2px, #6DA76E, #3c763d);
 }
 
 .setting-bar {
@@ -1248,4 +1253,8 @@ a:active.ftwNavLink {
   height: 38px;
   float: left;
   text-align: left;
+}
+
+#userslist .icon-check {
+  font-size: 24px;
 }

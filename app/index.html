@@ -11,20 +11,9 @@
   <meta name="viewport" content="width=device-width">
   <link rel="icon" type="image/png" href="images/logo.png">
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-  <!-- build:css styles/vendor.css -->
-  <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
-  <link rel="stylesheet" href="bower_components/alertify.js/themes/alertify.core.css" />
-  <link rel="stylesheet" href="bower_components/alertify.js/themes/alertify.default.css" />
-  <link rel="stylesheet" href="bower_components/angular-wizard/dist/angular-wizard.css" />
-  <link rel="stylesheet" href="bower_components/angular-dialog-service/dialogs.css" />
-  <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css" />
-  <!-- endbuild -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-  <link rel="stylesheet" href="bower_components/jquery-icheck/skins/square/blue.css" />
-  <link rel="stylesheet" href="bower_components/bootstrap-cisco/dist/css/bootstrap-cisco.css" />
-  <link rel="stylesheet" href="bower_components/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css">
   <!-- build:css({.tmp,app}) styles/main.css -->
-  <link rel="stylesheet" href="styles/app.css">
+  <% styles.forEach( function ( file ) { %>
+  <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
   <!-- endbuild -->
 </head>
 <body ng-cloak>
@@ -93,123 +82,10 @@
   ga('create', 'UA-XXXXX-X');
   ga('send', 'pageview');
   </script>
-  <script src="bower_components/addressparser/src/addressparser.js"></script>
-  <!--[if lt IE 9]>
-  <script src="bower_components/es5-shim/es5-shim.js"></script>
-  <script src="bower_components/json3/lib/json3.min.js"></script>
-  <![endif]-->
-  <!-- build:js scripts/vendor.js -->
-  <!-- bower:js -->
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-resource/angular-resource.js"></script>
-  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/base64/base64.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-  <script src="bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="bower_components/angular-dialog-service/dialogs.js"></script>
-  <script src="bower_components/jquery-icheck/icheck.min.js"></script>
-  <script src="bower_components/alertify.js/lib/alertify.js"></script>
-  <script src="bower_components/draggable/draggable.min.js"></script>
-  <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-  <script src="bower_components/angular-translate/angular-translate.js"></script>
-  <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
-  <script src="bower_components/amcharts/dist/amcharts/amcharts.js"></script>
-  <script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
-  <script src="bower_components/angular-cookie/angular-cookie.js"></script>
-  <script src="bower_components/moment/moment.js"></script>
-  <script src="bower_components/ng-grid/build/ng-grid.js"></script>
-  <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
-  <script src="bower_components/bootstrap-cisco-ng/dist/cisco-ui-tpls.min.js"></script>
-  <script src="bower_components/angular-wizard/dist/angular-wizard.js"></script>
-  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-  <!-- endbower -->
-  <!-- endbuild -->
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
-  <script src="scripts/app.js"></script>
-  <script src="scripts/appconfig.js"></script>
-  <script src="scripts/apprun.js"></script>
 
-  <script src="modules/core/scripts/controllers/login.js"></script>
-  <script src="modules/core/scripts/controllers/main.js"></script>
-  <script src="modules/core/scripts/controllers/users.js"></script>
-  <script src="modules/core/scripts/controllers/listusers.js"></script>
-  <script src="modules/core/scripts/controllers/organizations.js"></script>
-  <script src="modules/core/scripts/controllers/setupsso.js"></script>
-  <script src="modules/core/scripts/controllers/exportusers.js"></script>
-  <script src="modules/core/scripts/controllers/setupdirsync.js"></script>
-  <script src="modules/core/scripts/controllers/initialsetup.js"></script>
-  <script src="modules/core/scripts/controllers/accountreview.js"></script>
-  <script src="modules/core/scripts/controllers/adduser.js"></script>
-
-  <script src="modules/core/scripts/controllers/header.js"></script>
-  <script src="modules/core/scripts/services/auth.js"></script>
-  <script src="modules/core/scripts/services/config.js"></script>
-  <script src="modules/core/scripts/services/utils.js"></script>
-  <script src="modules/core/scripts/services/storage.js"></script>
-  <script src="modules/core/scripts/services/log.js"></script>
-  <script src="modules/core/scripts/services/localize.js"></script>
-  <script src="modules/core/scripts/services/authinfo.js"></script>
-  <script src="modules/core/scripts/services/notification.js"></script>
-  <script src="modules/core/scripts/services/pageparam.js"></script>
-  <script src="modules/core/scripts/services/pagination.js"></script>
-  <script src="modules/core/scripts/services/userservice.js"></script>
-  <script src="modules/core/scripts/services/userlistservice.js"></script>
-  <script src="modules/core/scripts/services/orgservice.js"></script>
-  <script src="modules/core/scripts/services/ssoservice.js"></script>
-  <script src="modules/core/scripts/services/dirsyncservice.js"></script>
-
-  <script src="modules/squared/scripts/controllers/home.js"></script>
-  <script src="modules/squared/scripts/controllers/search.js"></script>
-  <script src="modules/squared/scripts/controllers/reports.js"></script>
-  <script src="modules/squared/scripts/controllers/tabs.js"></script>
-  <script src="modules/squared/scripts/controllers/userprofile.js"></script>
-  <script src="modules/squared/scripts/controllers/downloads.js"></script>
-  <script src="modules/squared/scripts/controllers/entitlementdialog.js"></script>
-  <script src="modules/squared/scripts/controllers/quicksetupdialog.js"></script>
-  <script src="modules/squared/scripts/controllers/support.js"></script>
-  <script src="modules/squared/scripts/controllers/invite.js"></script>
-  <script src="modules/squared/scripts/controllers/activate.js"></script>
-  <script src="modules/squared/scripts/controllers/invitelauncher.js"></script>
-  <script src="modules/squared/scripts/controllers/applauncher.js"></script>
-  <script src="modules/squared/scripts/controllers/spaces.js"></script>
-  <script src="modules/squared/scripts/controllers/partnerhome.js"></script>
-
-  <script src="modules/hercules/scripts/controllers/connector-controller.js"></script>
-  <script src="modules/hercules/scripts/services/connector-grouper.js"></script>
-
-  <script src="modules/squared/scripts/services/logmetricsservice.js"></script>
-  <script src="modules/squared/scripts/services/reportsservice.js"></script>
-  <script src="modules/squared/scripts/services/activateservice.js"></script>
-  <script src="modules/squared/scripts/services/logservice.js"></script>
-  <script src="modules/squared/scripts/services/inviteservice.js"></script>
-  <script src="modules/squared/scripts/services/spacesservice.js"></script>
-  <script src="modules/squared/scripts/services/partnerservice.js"></script>
-  <script src="modules/squared/scripts/directives/icheck.js"></script>
-  <script src="modules/squared/scripts/directives/reload-data.js"></script>
-  <script src="modules/squared/scripts/directives/fundoorating.js"></script>
-  <script src="modules/huron/scripts/directives/telephony-info.js"></script>
-  <script src="modules/huron/scripts/directives/conferencing-info.js"></script>
-  <script src="modules/huron/scripts/directives/directorynumber-info.js"></script>
-  <script src="modules/huron/scripts/directives/callforward-info.js"></script>
-  <script src="modules/huron/scripts/directives/voicemail-info.js"></script>
-  <script src="modules/huron/scripts/directives/singlenumberreach-info.js"></script>
-  <script src="modules/squared/scripts/directives/conversations-info.js"></script>
-  <script src="modules/huron/scripts/directives/usage-info.js"></script>
-  <script src="modules/huron/scripts/directives/endpoints-info.js"></script>
-  <script src="modules/squared/scripts/directives/userentitlements.js"></script>
-  <script src="modules/huron/scripts/services/telephonyservices.js"></script>
-  <script src="modules/huron/scripts/services/huron-config.js"></script>
-  <script src="bower_components/amcharts/dist/amcharts/pie.js"></script>
-  <script src="bower_components/amcharts/dist/amcharts/serial.js"></script>
-  <script src="modules/huron/scripts/controllers/callrouting.js"></script>
-  <script src="modules/huron/scripts/controllers/callpark.js"></script>
-  <script src="modules/huron/scripts/services/callpark.js"></script>
+  <% scripts.forEach( function ( file ) { %>
+    <script type="text/javascript" src="<%= file %>"></script><% }); %>
   <!-- endbuild -->
-  <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
-  <script src="bower_components/bootstrap-cisco-ng/dist/cisco-ui-tpls.js"></script>
 </body>
 </html>
