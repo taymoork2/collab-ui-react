@@ -1,11 +1,11 @@
 <div>
-	<form ng-controller="callForwardInfoCtrl" role="form">
+	<form name="callForwardForm" role="form">
 	<h4>Call Forwarding</h4>	
     <div class="form-group">
       <div>                
         <div class="radio">
           <label>		
-          	<input type="radio" ng-model="forward" value="all" name="rdo_callforward">Forward all calls
+          	<input type="radio" ng-model="forward" value="all" name="rdo_callforward">{{'callForwardPanel.forwardAllCalls' | translate}}
           </label>
           </div>
           <div ng-show="isCallForwardSelected('all')">
@@ -14,35 +14,36 @@
               <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
-                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a href="#cfa" target="_self" ng-click="selectForwardAllCalls(value)">{{value}}</a></li>
+                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a target="_self" ng-click="selectForwardAllCalls(value)">{{value}}</a></li>
                 </ul>
               </div>
             </div>
           </div>        
         <div class="radio">
           <label>	
-          	<input type="radio" ng-model="forward" value="busy" name="rdo_callforward">Forward calls when line is busy or away
+          	<input type="radio" ng-model="forward" value="busy" name="rdo_callforward">{{'callForwardPanel.forwardBusyNoAnswer' | translate}}
       	  </label>
           </div>
           <div ng-show="isCallForwardSelected('busy')">
-          	For internal and external calls<br>
-          	When line is busy, send calls to:<br>
+          	<span ng-show="!forwardExternalCalls">{{'callForwardPanel.internalAndExternal' | translate}}<br></span>
+            <span ng-show="forwardExternalCalls">{{'callForwardPanel.internalOnly' | translate}}<br></span>
+          	{{'callForwardPanel.forwardBusy' | translate}}<br>
           	<div class="input-group">
               <input id="cfb" type="text" class="form-control" ng-model="forwardBusyCalls" ng-blur="changeForwardBusyCalls()">
               <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
-                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a href="#cfb" target="_self" ng-click="selectForwardBusyCalls(value)">{{value}}</a></li>
+                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a target="_self" ng-click="selectForwardBusyCalls(value)">{{value}}</a></li>
                 </ul>
               </div>
             </div><br>
-        	  When there is no answer, send calls to:<br>
+        	  {{'callForwardPanel.forwardNoAnswer' | translate}}<br>
         	  <div class="input-group">
               <input id="cfna" type="text" class="form-control" ng-model="forwardNoAnswerCalls" ng-blur="changeForwardNoAnswerCalls()">
               <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
-                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a href="#cfna" target="_self" ng-click="selectForwardNoAnswerCalls(value)">{{value}}</a></li>
+                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a target="_self" ng-click="selectForwardNoAnswerCalls(value)">{{value}}</a></li>
                 </ul>
               </div>
             </div><br>
@@ -50,14 +51,26 @@
             <cs-checkbox id="ckForwardExternalCalls" ng-model="forwardExternalCalls" cklabel="Forward external calls differently"></cs-checkbox>
         	  <br>
         	  <div ng-show="forwardExternalCalls">
-        		  When line is busy, send calls to:<br>
-          		<select>
-          			<option value="">-- choose a number --</option>
-        		  </select><br>
-        		  When there is no answer, send calls to:<br>
-        		  <select>
-          			<option value="">-- choose a number --</option>
-        		  </select><br>
+        		  {{'callForwardPanel.forwardBusy' | translate}}<br>
+              <div class="input-group">
+          		  <input id="cfbExternal" type="text" class="form-control" ng-model="forwardExternalBusyCalls" ng-blur="changeForwardExternalBusyCalls()">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                  <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li ng-repeat="value in validForwardOptions" class="input-lg"><a target="_self" ng-click="selectForwardExternalBusyCalls(value)">{{value}}</a></li>
+                  </ul>
+                </div>
+              </div><br>
+        		  {{'callForwardPanel.forwardNoAnswer' | translate}}<br>
+        		  <div class="input-group">
+              <input id="cfnaExternal" type="text" class="form-control" ng-model="forwardExternalNoAnswerCalls" ng-blur="changeForwardExternalNoAnswerCalls()">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                  <li ng-repeat="value in validForwardOptions" class="input-lg"><a target="_self" ng-click="selectForwardExternalNoAnswerCalls(value)">{{value}}</a></li>
+                </ul>
+              </div>
+            </div><br>
         	  </div>
           </div>        
       </div>

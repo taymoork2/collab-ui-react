@@ -361,6 +361,20 @@
     "createButton" : "Create Call Park",
     "cancelButton" : "Cancel"
   },
+  "directoryNumberPanel" : {
+    "success" : " configuration saved successfully"
+  },
+  "callForwardPanel" : {
+    "success" : "Call Forward configuration saved successfully",
+    "error" : "Call Forward configuration failed",
+    "forwardAllCalls" : "Forward all calls",
+    "forwardBusyNoAnswer" : "Forward calls when line is busy or away",
+    "internalAndExternal" : "For internal and external calls",
+    "internalOnly" : "Only for internal calls",
+    "forwardBusy" : "When line is busy, send calls to:",
+    "forwardNoAnswer" : "When there is no answer, send calls to:",
+    "forwardExternal" : "Forward external calls differently"
+  },
   "singleNumberReachPanel" : {
     "title" : "Single Number Reach",
     "description" : "Enables users to answer incoming calls to their extension to another number",
@@ -371,6 +385,8 @@
     "error" : "Single Number Reach configuration failed"
   },
   "voicemailPanel" : {
+    "success" : "Voicemail configuration saved successfully",
+    "error" : "Voicemail configuration failed",
     "title" : "Voicemail",
     "toggle" : "Voicemail",
     "voicemailNote" : "Note: Turning off voicemail could impact user's call forwarding settings"

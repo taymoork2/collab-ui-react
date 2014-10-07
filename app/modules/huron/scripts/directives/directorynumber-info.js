@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-        .controller('DirectoryNumberInfoCtrl', ['$scope', '$q', '$http', 'UserDirectoryNumberService', 'UnassignedDirectoryNumberService', 'UserDirectoryNumberDetailService', 'Log', 'Config', 'Notification',
-            function ($scope, $q, $http, UserDirectoryNumberService, UnassignedDirectoryNumberService, UserDirectoryNumberDetailService, Log, Config, Notification) {
+        .controller('DirectoryNumberInfoCtrl', ['$scope', '$q', '$http', 'UserDirectoryNumberService', 'UnassignedDirectoryNumberService', 'UserDirectoryNumberDetailService', 'Log', 'Config', 'Notification', '$filter',
+            function ($scope, $q, $http, UserDirectoryNumberService, UnassignedDirectoryNumberService, UserDirectoryNumberDetailService, Log, Config, Notification, $filter) {
                 $scope.unassingedDirectoryNumbers = [];
                 $scope.assignedInternalNumber = null;
                 $scope.directoryNumberDetail = null;
@@ -48,6 +48,54 @@ angular.module('Huron')
                   }
                   unassignedNumber = {'pattern': $scope.directoryNumber.pattern.substr(1), 'id': $scope.directoryNumber.uuid};
                   $scope.unassingedDirectoryNumbers.push(unassignedNumber);
+                };
+
+                $scope.removeDirectoryNumberAssociation = function(user) {
+                    var deferred = $q.defer();
+                    // TODO: Remove the following line when we are authenticating with CMI
+                    delete $http.defaults.headers.common.Authorization;
+        
+                    UserDirectoryNumberService.delete({customerId: user.meta.organizationID, userId: user.id, directoryNumberId: $scope.directoryNumber.uuid},
+                    function(data) {
+                      deferred.resolve(data);
+                    },function(error) {
+                      Log.debug('removeDirectoryNumberAssociation failed.  Status: ' + error.status + ' Response: ' + error.data);
+                      deferred.reject(error);
+                    });
+                    return deferred.promise;
+                  };
+
+                $scope.addDirectoryNumberAssociation = function(user) {
+                    var deferred = $q.defer();
+                    var userLine = {
+                      'dnUsage': $scope.directoryNumber.dnUsage,
+                      'directoryNumber': {
+                          'uuid': user.dn.uuid
+                        }
+                      };
+                    var result = {
+                        msg: null,
+                        type: 'null'
+                      };
+                      
+                    // TODO: Remove the following line when we are authenticating with CMI
+                    delete $http.defaults.headers.common.Authorization;
+        
+                    UserDirectoryNumberService.save({customerId: user.meta.organizationID, userId: user.id }, userLine,
+                    function(data) {
+                      deferred.resolve(data);
+                      result.msg = $filter('translate')('directoryNumberPanel.removeSuccess');
+                      result.type = 'success';
+                      Notification.notify([result.msg], result.type);
+                    },function(error) {
+                      Log.debug('addDirectoryNumberAssociation failed.  Status: ' + error.status + ' Response: ' + error.data);
+                      deferred.reject(error);
+                    });
+                    return deferred.promise;
+                  };
+
+                $scope.saveDirectoryNumber = function() {
+                  $scope.$emit('saveLineSettings');
                 };
 
                 $scope.$watch('directoryNumber', function (newVal, oldVal) {

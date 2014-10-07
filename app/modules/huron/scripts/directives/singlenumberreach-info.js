@@ -18,7 +18,7 @@ angular.module('Huron')
 	$scope.createRemoteDestinationInfo = function(user, destination) {
 		var deferred = $q.defer();
 		var rdBean = {'destination': destination,
-					  'name' : 'RD-' + this.getRandomString(),
+					  'name' : 'RD-' + getRandomString(),
 					  'autoAssignRemoteDestinationProfile' : true
 					 };
 		var result = {
@@ -31,7 +31,14 @@ angular.module('Huron')
 		RemoteDestinationService.save({customerId: user.meta.organizationID, userId: user.id }, rdBean,
 			function(data) {
 				deferred.resolve(data);
-				$scope.singleNumberReach = 'On';
+
+				//Update Telephony Panel
+				if ($scope.singleNumberReachEnabled) {
+					$scope.singleNumberReach = 'On';
+				} else {
+					$scope.singleNumberReach = 'Off';
+				}
+
 				result.msg = $filter('translate')('singleNumberReachPanel.success');
 				result.type = 'success';
 				Notification.notify([result.msg], result.type);
@@ -113,6 +120,14 @@ angular.module('Huron')
 		RemoteDestinationService.update({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.remoteDestinations[0].uuid}, rdBean,
 			function(data) {
 				deferred.resolve(data);
+
+				//Update Telephony Panel
+				if ($scope.singleNumberReachEnabled) {
+					$scope.singleNumberReach = 'On';
+				} else {
+					$scope.singleNumberReach = 'Off';
+				}
+
 				result.msg = $filter('translate')('singleNumberReachPanel.success');
 				result.type = 'success';
 				Notification.notify([result.msg], result.type);
@@ -126,7 +141,7 @@ angular.module('Huron')
 		return deferred.promise;
 	};
 	
-	$scope.save = function() {
+	$scope.saveSingleNumberReach = function() {
 		if ($scope.remoteDestinations !== null && $scope.remoteDestinations !== undefined && $scope.remoteDestinations.length > 0) {
 			if (!$scope.singleNumberReachEnabled) {
 				$scope.deleteRemoteDestinationInfo($scope.currentUser);
@@ -148,7 +163,7 @@ angular.module('Huron')
         }
       });
 	
-	function getRandomString() {
+	var getRandomString = function() {
 		var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 		var randomString = '';
 		for (var i = 0; i < 12; i++) {
@@ -156,7 +171,7 @@ angular.module('Huron')
 			randomString += charSet.substring(randIndex,randIndex+1);
 		}
 		return randomString;
-	}
+	};
 }
 ])
   .directive('singleNumberReachInfo', function() {

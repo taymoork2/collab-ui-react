@@ -50,6 +50,7 @@ angular.module('Huron')
       //delete: {method:'DELETE', headers: {"Authorization":'Bearer ' + Storage.get('accessToken'))} }
 
       //TODO: Remove when we start authenticating to CMI
+      update: {method: 'PUT'},
       save: {method:'POST'}
     });
   })
