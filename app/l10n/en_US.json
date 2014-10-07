@@ -300,9 +300,9 @@
     "connectors": {
         "group_by":         "Group services by:",
         "loading":          "Loading...",
-        "loading_error":    "Unable to load data.",
-        "no_connectors":    "No fusion connectors registered.",
-        "cluster_id":       "Cluster ID",
+        "loading_error":    "Error loading data. Ensure you have accepted the certificate at https://hercules.ladidadi.org/",
+        "no_connectors":    "No fusion services registered.",
+        "cluster_id":       "Cluster",
         "host_name":        "Expressway Host",
         "display_name":     "Service Name",
         "connector_type":   "Connector Type",

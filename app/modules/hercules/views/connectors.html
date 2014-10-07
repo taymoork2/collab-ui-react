@@ -18,8 +18,9 @@
                 id="groupings"
                 class="form-control"
                 ng-model="current_grouping"
-                ng-options="grouping.name for grouping in groupings">
+                ng-options="grouping.translate_attr | translate for grouping in groupings">
               </select>
+              <input class="form-control" type="button" value="Reload" ng-click="reload()" />
             </div>
           </form>
 
@@ -43,7 +44,9 @@
                     <td>{{connector.host_name}}</td>
                     <td>{{connector.display_name}}</td>
                     <td>{{connector.version}}</td>
-                    <td><span class="label label-success">OK</span></td>
+                    <td>
+                      <span class="label label-{{connector.status_class}}">{{connector.status}}</span>
+                    </td>
                   </tr>
                 </tbody>
               </table>
