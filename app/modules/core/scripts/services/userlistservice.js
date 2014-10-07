@@ -83,11 +83,11 @@ angular.module('Core')
 
           var getUsersBatch = function(startIndex) {
             userlistservice.listUsers(startIndex, 0, 'userName', 'ascending', function(data, status) {
-              if (data.success) {
+              if (data.success && data.Resources.length > 0) {
                 users = users.concat(data.Resources);
                 page++;
                 getUsersBatch(page * 1000 + 1);
-              } else if (status === 500) {
+              } else if (status === 500 || data.Resources.length <= 0) {
                 Log.debug('No more users to return. Exporting to file... ');
                 $('#export-icon').html('<i class=\'fa fa-file-text\'></i>');
                 $compile(angular.element('#global-export-btn').html($filter('translate')('orgsPage.exportBtn')))(scope);
