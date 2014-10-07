@@ -141,9 +141,9 @@ describe('List users flow', function() {
         users.squaredPanel.click();
 
         users.checkBoxEnts.then(function(items) {
-          expect(items.length).toBe(9);
+          expect(items.length).toBe(8);
           expect(items[0].getAttribute('class')).toContain('checked');
-          expect(items[8].getAttribute('class')).toContain('checked');
+          expect(items[7].getAttribute('class')).toContain('checked');
         });
 
         users.fusionCheckBox.click();

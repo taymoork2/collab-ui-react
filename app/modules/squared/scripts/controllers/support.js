@@ -322,7 +322,10 @@ angular.module('Squared')
           if (data.success) {
             Log.debug('Successfully retrieved the logfile tempURL');
             var callflowChartsUrl = Config.getCallflowServiceUrl() + '?clientLogs=' + window.encodeURIComponent(data.tempURL);
-            window.open(callflowChartsUrl, '_blank');
+
+            var output = $filter('translate')('supportPage.downloading');
+            var downloadWindow = window.open(callflowChartsUrl, '', 'width=500, height=100').document.write(output);
+
           } else {
             Log.debug('Failed to download log: ' + filename + '. Status: ' + status);
             Notification.notify(['Failed to download log: ' + filename + '. Status: ' + status], 'error');

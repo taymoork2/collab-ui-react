@@ -171,7 +171,8 @@
     "rx":"Rx",
     "tx":"Tx",
     "errCallInfoQuery":"Failed to retrieve call info. Status: {{status}}",
-    "subTitleCallFlow":"Call Flow"
+    "subTitleCallFlow":"Call Flow",
+    "downloading": "This download might take up to 5 minutes. Please be patient..."
   },
   "common" : {
     "cancel" : "Cancel",

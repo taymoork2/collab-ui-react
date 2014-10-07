@@ -34,7 +34,7 @@ describe('Org admin flow', function() {
       expect(users.listPanel.isDisplayed()).toBeFalsy();
       expect(users.managePanel.isDisplayed()).toBeTruthy();
 
-      users.assertEntitlementListSize(9);
+      users.assertEntitlementListSize(8);
       expect(users.manageSquaredTeamMember.isDisplayed()).toBeTruthy();
     });
 
@@ -59,7 +59,7 @@ describe('Org admin flow', function() {
       expect(users.listPanel.isDisplayed()).toBeFalsy();
       expect(users.managePanel.isDisplayed()).toBeTruthy();
 
-      users.assertEntitlementListSize(8);
+      users.assertEntitlementListSize(7);
       expect(users.manageSquaredTeamMember.isPresent()).toBeFalsy();
     });
 
