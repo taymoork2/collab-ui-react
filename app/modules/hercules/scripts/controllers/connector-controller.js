@@ -6,7 +6,6 @@ angular.module('Hercules')
   .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http', 'ConnectorGrouper',
     function($scope, $rootScope, $http, grouper) {
       $scope.loading = true;
-      $scope.aggregated_status = {};
 
       $scope.groupings = [
         { attr: 'display_name', translate_attr: 'hercules.connectors.display_name' },
@@ -19,6 +18,7 @@ angular.module('Hercules')
       $scope.current_grouping = $scope.groupings[0];
 
       var decorateDataAndAggregateStatus = function(data) {
+        $scope.aggregated_status = {};
         _.each(data, function(c) {
           switch (c.status) {
             case 'running':
