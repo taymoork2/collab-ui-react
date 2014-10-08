@@ -20,6 +20,9 @@ describe('Partner flow', function() {
       expect(navigation.getTabCount()).toBe(1);
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
     });
+    it('should display trials list', function() {
+      expect(partner.trialsPanel.isDisplayed()).toBeTruthy();
+    });
 
   }); //State is logged-in
 

@@ -35,6 +35,7 @@ exports.config = {
     var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
     var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
     var CallRoutingPage = require('./test/e2e-protractor/pages/callrouting.page.js');
+    var PartnerHomePage = require('./test/e2e-protractor/pages/partner.page.js');
 
     global.users = new UsersPage();
     global.navigation = new Navigation();
@@ -50,6 +51,7 @@ exports.config = {
     global.activate = new ActivatePage();
     global.spaces = new SpacesPage();
     global.callrouting = new CallRoutingPage();
+    global.partner = new PartnerHomePage();
 
 /*
     var ScreenShotReporter = require('protractor-screenshot-reporter');

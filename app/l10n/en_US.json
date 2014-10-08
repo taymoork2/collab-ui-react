@@ -373,5 +373,13 @@
     "title" : "Voicemail",
     "toggle" : "Voicemail",
     "voicemailNote" : "Note: Turning off voicemail could impact user's call forwarding settings"
+  },
+  "partnerHomePage" : {
+    "trialsHeading" : "Trials",
+    "noResults" : "No Results",
+    "trialsCustomerName" : "Customer Name",
+    "trialsEndDate" : "End Date",
+    "trialsNumUsers" : "User Numbers",
+    "errGetTrialsQuery" : "Failed to retrieve trials. Status: {{status}}"
   }
 }
