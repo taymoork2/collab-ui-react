@@ -51,6 +51,5 @@ angular.module('Squared')
 				{field:'endDate', displayName:$translate.instant('partnerHomePage.trialsEndDate')},
 				{field:'numUsers', displayName:$translate.instant('partnerHomePage.trialsNumUsers')}]
 		};
-		$scope.showTrialsPanel = true;
 	}
   ]);
