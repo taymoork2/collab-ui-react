@@ -6,6 +6,7 @@ angular.module('Hercules')
   .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http', 'ConnectorGrouper',
     function($scope, $rootScope, $http, grouper) {
       $scope.loading = true;
+      $scope.aggregated_status = {};
 
       $scope.groupings = [
         { attr: 'display_name', translate_attr: 'hercules.connectors.display_name' },
@@ -17,7 +18,7 @@ angular.module('Hercules')
 
       $scope.current_grouping = $scope.groupings[0];
 
-      var decorateData = function(data) {
+      var decorateDataAndAggregateStatus = function(data) {
         _.each(data, function(c) {
           switch (c.status) {
             case 'running':
@@ -29,6 +30,7 @@ angular.module('Hercules')
             default:
               c.status_class = 'danger';
           }
+          $scope.aggregated_status[c.status_class] = ++$scope.aggregated_status[c.status_class] || 1;
         });
         return data;
       };
@@ -37,7 +39,7 @@ angular.module('Hercules')
         $http
           .get('https://hercules.ladidadi.org/v1/connectors')
           .success(function (data) {
-            $scope.connectors = decorateData(data);
+            $scope.connectors = decorateDataAndAggregateStatus(data);
             $scope.loading = false;
           })
           .error(function () {
