@@ -488,12 +488,12 @@ angular.module('Core')
 
       $scope.isSquaredEnabled = function()
       {
-        return isEntitled(Config.squaredEntitlement);
+        return isEntitled(Config.entitlements.squared);
       };
 
       $scope.isHuronEnabled = function()
       {
-        return isEntitled(Config.huronEntitlement);
+        return isEntitled(Config.entitlements.huron);
       };
 
       var isEntitled = function(ent) {
@@ -501,7 +501,7 @@ angular.module('Core')
         {
           for (var i=0;i<$rootScope.services.length;i++)
           {
-            var svc = $rootScope.services[i].sqService;
+            var svc = $rootScope.services[i].ciService;
 
             if (svc === ent)
             {

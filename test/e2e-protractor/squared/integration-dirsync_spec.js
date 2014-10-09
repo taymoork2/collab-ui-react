@@ -71,7 +71,7 @@ describe('Directory Sync flow', function() {
     disyncwizard.domainNextBtn.click();
     utils.expectIsDisplayed(disyncwizard.syncNowBtn);
     disyncwizard.syncNowBtn.click();
-    users.assertSuccess('Directory Sync In Progress');
+    notifications.assertSuccess('Directory Sync In Progress');
   });
 
   it('should close the wizard when clicking on the X mark', function() {

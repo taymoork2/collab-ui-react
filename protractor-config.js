@@ -21,8 +21,9 @@ exports.config = {
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
     global.config = require('./test/e2e-protractor/utils/test.config.js');
 
-    var UsersPage = require('./test/e2e-protractor/pages/users.page.js');
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');
+    var Notifications = require('./test/e2e-protractor/pages/notifications.page.js');
+    var UsersPage = require('./test/e2e-protractor/pages/users.page.js');
     var LoginPage = require('./test/e2e-protractor/pages/login.page.js');
     var HomePage = require('./test/e2e-protractor/pages/home.page.js');
     var ManagePage = require('./test/e2e-protractor/pages/manage.page.js');
@@ -36,9 +37,11 @@ exports.config = {
     var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
     var CallRoutingPage = require('./test/e2e-protractor/pages/callrouting.page.js');
     var PartnerHomePage = require('./test/e2e-protractor/pages/partner.page.js');
+    var TelephonyPage = require('./test/e2e-protractor/pages/telephony.page.js');
 
-    global.users = new UsersPage();
+    global.notifications = new Notifications();
     global.navigation = new Navigation();
+    global.users = new UsersPage();
     global.login = new LoginPage();
     global.home = new HomePage();
     global.manage = new ManagePage();
@@ -52,6 +55,7 @@ exports.config = {
     global.spaces = new SpacesPage();
     global.callrouting = new CallRoutingPage();
     global.partner = new PartnerHomePage();
+    global.telephony = new TelephonyPage();
 
 /*
     var ScreenShotReporter = require('protractor-screenshot-reporter');

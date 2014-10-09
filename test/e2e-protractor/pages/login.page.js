@@ -51,7 +51,7 @@ var LoginPage = function(){
     browser.driver.wait(this.isLoginPasswordPresent);
     this.setLoginPassword(password);
     this.clickLoginSubmit();
-    navigation.expectCurrentUrl('/home');
+    navigation.expectDriverCurrentUrl('/home');
     browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 

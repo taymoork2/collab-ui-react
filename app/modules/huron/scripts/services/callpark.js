@@ -43,6 +43,11 @@ angular.module('Huron')
           return CallParkService.query({customerId: Authinfo.getOrgId()}, angular.bind(this,function(callParks){
             this.callParks = callParks;
           })).$promise;
+        },
+
+        remove: function(callParkId) {
+          delete $http.defaults.headers.common.Authorization;
+          return CallParkService.remove({customerId: Authinfo.getOrgId(), callParkId: callParkId}).$promise;
         }
       };
     }

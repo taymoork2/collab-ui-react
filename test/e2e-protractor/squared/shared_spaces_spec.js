@@ -36,7 +36,7 @@ describe('Shared spaces flow', function() {
     spaces.newRoomField.clear();
     spaces.newRoomField.sendKeys(testRoom);
     spaces.addRoomButton.click();
-    users.assertSuccess('added successfully');
+    notifications.assertSuccess('added successfully');
   });
 
   it('should log out', function() {

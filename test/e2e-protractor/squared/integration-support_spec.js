@@ -15,7 +15,7 @@ var testuser = {
   orgname: 'SquaredAdminTool',
   searchValidEmail: 'pbr-org-admin@squared2webex.com',
   searchValidUuid: 'd6688fc9-414d-44ce-a166-759530291edc',
-  searchValidLocusid: '5354d535-9aaf-5e22-a091-34de878d2200',
+  searchValidLocusid: '5bc50bfa-4e04-4536-90dd-653eb9ebd437',
   searchNonexistentMetadata: 'qqt7y812twuiy900909-2jijeqbd,,.mjmj123qwsah77&89%$3wesa@54a'
 };
 
@@ -54,7 +54,7 @@ describe('Support flow', function() {
 
     it('should display error for empty input', function() {
       support.logSearchBtn.click();
-      users.assertError('Search input cannot be empty.');
+      notifications.assertError('Search input cannot be empty.');
     });
 
     it('should search for logs by valid email address', function() {

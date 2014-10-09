@@ -346,6 +346,7 @@
   },
   "callPark" : {
     "createTitle" : "Create New Call Park",
+    "createDescription" : "Allow users to place a call on hold so that it can be retrieved from another endpoint",
     "name" : "Name",
     "numbers" : "Number(s)",
     "numbersDescription" : "The system will dynamically assign a call park number for the user. Alternatively, you can select specific number(s).",

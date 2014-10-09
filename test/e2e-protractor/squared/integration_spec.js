@@ -108,17 +108,17 @@ describe('App flow', function() {
 
       it('should display error if no user is entered on add', function() {
         users.addButton.click();
-        users.assertError('Please enter valid user email(s).');
+        notifications.assertError('Please enter valid user email(s).');
       });
 
       it('should display error if no user is entered on update', function() {
         users.entitleButton.click();
-        users.assertError('Please enter valid user email(s).');
+        notifications.assertError('Please enter valid user email(s).');
       });
 
       it('should display error if no user is entered on invite', function() {
         users.inviteButton.click();
-        users.assertError('Please enter valid user email(s).');
+        notifications.assertError('Please enter valid user email(s).');
       });
 
     });
@@ -135,7 +135,7 @@ describe('App flow', function() {
           expect(users.entitleButton.isEnabled()).toBeTruthy();
           expect(users.inviteButton.isEnabled()).toBeTruthy();
           users.addButton.click();
-          users.assertError('already exists');
+          notifications.assertError('already exists');
           users.close.click();
         }
       }, 45000);
@@ -158,7 +158,7 @@ describe('App flow', function() {
         users.addUsersField.clear();
         users.addUsersField.sendKeys(testuser.username);
         users.addButton.click();
-        users.assertError('already exists');
+        notifications.assertError('already exists');
       });
     });
 
@@ -176,7 +176,7 @@ describe('App flow', function() {
       users.addUsersField.clear();
       users.addUsersField.sendKeys(inviteEmail);
       users.inviteButton.click();
-      users.assertSuccess('sent successfully');
+      notifications.assertSuccess('sent successfully');
     });
 
     it('should not invite users successfully if they are already entitled', function() {
@@ -184,7 +184,7 @@ describe('App flow', function() {
       users.addUsersField.clear();
       users.addUsersField.sendKeys(inviteEmail);
       users.inviteButton.click();
-      users.assertError('already entitled');
+      notifications.assertError('already entitled');
     });
 
     it('should invite users successfully from org which has autoentitlement flag disabled', function() {
@@ -192,7 +192,7 @@ describe('App flow', function() {
       users.addUsersField.clear();
       users.addUsersField.sendKeys(inviteEmail);
       users.inviteButton.click();
-      users.assertSuccess('sent successfully');
+      notifications.assertSuccess('sent successfully');
     });
   });
 
@@ -205,7 +205,7 @@ describe('App flow', function() {
         users.addUsersField.clear();
         users.addUsersField.sendKeys(inputEmail);
         users.addButton.click();
-        users.assertSuccess(inputEmail,'added successfully');
+        notifications.assertSuccess(inputEmail,'added successfully');
       });
     });
 
@@ -215,7 +215,7 @@ describe('App flow', function() {
         users.addUsersField.sendKeys(inputEmail);
         users.manageCallInitiation.click();
         users.entitleButton.click();
-        users.assertSuccess(inputEmail,'entitled successfully');
+        notifications.assertSuccess(inputEmail,'entitled successfully');
       });
     });
 
@@ -225,7 +225,7 @@ describe('App flow', function() {
         users.addUsersField.sendKeys(inputEmail);
         users.manageCallInitiation.click();
         users.entitleButton.click();
-        users.assertError(inputEmail,'entitlement previously updated');
+        notifications.assertError(inputEmail,'entitlement previously updated');
         users.closeAddUsers.click();
       });
     });
@@ -260,7 +260,7 @@ describe('App flow', function() {
         expect(users.callInitiationCheckbox.isDisplayed()).toBeTruthy();
         users.callInitiationCheckbox.click();
         users.saveButton.click();
-        users.assertSuccess(inputEmail,'updated successfully');
+        notifications.assertSuccess(inputEmail,'updated successfully');
         users.closePreview.click();
         users.search();
       });

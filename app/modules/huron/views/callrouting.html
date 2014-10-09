@@ -13,7 +13,7 @@
         <h3>{{'callRoutingPage.callPark' | translate}} <button type="button" ng-click="addCallPark()">+</button></h3>
         <ul>
           <li ng-repeat="callPark in callParks">
-            {{callPark.description}} -- {{callPark.pattern}}
+            {{callPark.description}} -- {{callPark.pattern}}  <button type="button" ng-click="deleteCallPark(callPark.uuid)">-</button>
           </li>
         </ul>
       </div>

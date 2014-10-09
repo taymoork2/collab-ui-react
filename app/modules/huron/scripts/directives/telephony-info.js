@@ -136,7 +136,7 @@ angular.module('Huron')
         $scope.directoryNumberPanel = false;
         $scope.singleNumberReachPanel = false;
         $scope.voicemailPanel = true;
-        
+
         $('#entire-slide').animate({
           'left': '0px'
         }, 1000, function() {});
@@ -147,7 +147,7 @@ angular.module('Huron')
         $scope.directoryNumberPanel = false;
         $scope.voicemailPanel = false;
         $scope.singleNumberReachPanel = true;
-        
+
         $('#entire-slide').animate({
           'left': '0px'
         }, 1000, function() {});

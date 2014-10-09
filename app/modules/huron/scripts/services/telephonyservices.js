@@ -30,7 +30,7 @@ angular.module('Huron')
   })
 
   .factory('UserDirectoryNumberService', function($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/userdirectorynumberassociations/:directoryNumberId', {customerId: '@customerId', userId: '@userId', directoryNumberId: '@directoryNumberId'}, {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/directorynumbers/:directoryNumberId', {customerId: '@customerId', userId: '@userId', directoryNumberId: '@directoryNumberId'}, {
       //TODO: Uncomment when we start authenticating to CMI
       //get: {method:'GET', isArray:true},
       //save: {method:'POST', headers: {"Authorization":'Bearer ' + Storage.get('accessToken'))} },
@@ -57,7 +57,7 @@ angular.module('Huron')
   .factory('UnassignedDirectoryNumberService', function($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/unassigneddirectorynumbers', {customerId: '@customerId'}, {
       //TODO: Uncomment when we start authenticating to CMI
-      //get: {method:'GET', isArray:true}      
+      //get: {method:'GET', isArray:true}
       get: {method:'GET', isArray:true}
     });
   })

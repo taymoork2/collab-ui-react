@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "dependencies": {
     "mimelib": "^0.2.14",
-    "grunt-protractor-runner": "^0.2.4",
-    "protractor": "^0.22.0"
+    "grunt-protractor-runner": "^1.1.4",
+    "protractor": "^1.1.1"
   },
   "devDependencies": {
     "base64": "~2.1.0",
@@ -28,7 +28,7 @@
     "grunt-karma": "~0.6.2",
     "grunt-newer": "~0.5.4",
     "grunt-ngmin": "~0.0.2",
-    "grunt-protractor-runner": "^0.2.4",
+    "grunt-protractor-runner": "^1.1.4",
     "grunt-rev": "~0.1.0",
     "grunt-svgmin": "~0.2.0",
     "grunt-usemin": "~2.0.0",
@@ -44,7 +44,7 @@
     "karma-requirejs": "~0.2.1",
     "karma-script-launcher": "~0.1.0",
     "load-grunt-tasks": "~0.2.0",
-    "protractor": "^0.21.0",
+    "protractor": "^1.1.1",
     "protractor-screenshot-reporter": "~0.0.5",
     "jasmine-reporters": "1.0.1",
     "request": "~2.33.0",

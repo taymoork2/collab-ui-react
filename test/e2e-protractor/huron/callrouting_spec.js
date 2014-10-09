@@ -5,7 +5,7 @@ var testuser = {
   password: 'C1sc0123!'
 };
 
-describe('Call Routing', function() {
+xdescribe('Call Routing', function() {
   it('should login', function(){
     login.login(testuser.username,testuser.password);
   });
@@ -22,20 +22,21 @@ describe('Call Routing', function() {
       utils.expectIsDisplayed(callrouting.name);
     });
 
-    var keys = '8501';
+    var pattern = Math.ceil(Math.random()*10000);
     it('should create a new call park', function(){
-      callrouting.name.sendKeys(keys);
+      callrouting.name.sendKeys(pattern);
       callrouting.singleNumber.click();
-      callrouting.pattern.sendKeys(keys);
-      callrouting.retrievalPrefix.sendKeys(keys);
+      callrouting.pattern.sendKeys(pattern);
+      callrouting.retrievalPrefix.sendKeys(pattern);
       callrouting.reversionPatternRadio.click();
-      callrouting.reversionPattern.sendKeys(keys);
+      callrouting.reversionPattern.sendKeys(pattern);
       callrouting.createButton.click();
-      users.assertSuccess('added successfully');
+      notifications.assertSuccess('added successfully');
     });
 
-    xit('should delete call park');
-
+    it('should delete call park', function(){
+      callrouting.deleteCallPark(pattern);
+    });
   });
 
 // Log Out

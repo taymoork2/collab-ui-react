@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('CallRoutingCtrl', ['$scope', '$dialogs', 'Notification', 'CallPark',
-    function($scope, $dialogs, Notification, CallPark) {
+  .controller('CallRoutingCtrl', ['$scope', 'Notification', 'CallPark', '$modal',
+    function($scope, Notification, CallPark, $modal) {
       Notification.init($scope);
       $scope.popup = Notification.popup;
       $scope.callParks = [];
@@ -14,8 +14,15 @@ angular.module('Huron')
       };
 
       $scope.addCallPark = function() {
-        $dialogs.create('modules/huron/views/callpark_dialog.html', 'CallParkCtrl')
-          .result.finally(listCallParks);
+        $modal.open({
+          templateUrl:'modules/huron/views/callpark_dialog.html',
+          controller: 'CallParkCtrl'
+        }).result.finally(listCallParks);
+      };
+
+      $scope.deleteCallPark = function(callParkId) {
+        CallPark.remove(callParkId)
+          .finally(listCallParks);
       };
 
       listCallParks();

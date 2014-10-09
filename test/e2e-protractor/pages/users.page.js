@@ -37,13 +37,6 @@ var UsersPage = function(){
   this.cancelButton = element(by.id('btnCancel'));
   this.saveButton = element(by.id('btnSave'));
 
-  this.errorAlert = element(by.css('.alertify-log-error'));
-  this.errorBody = element(by.css('.panel-danger-body p'));
-  this.successAlert = element(by.css('.alertify-log-success'));
-  this.successBody = element(by.css('.panel-success-body p'));
-
-  this.notificationCancel = element(by.id('notifications-cancel'));
-
   this.currentPage = element(by.css('.pagination-current a'));
   this.queryCount = element.all(by.repeater('user in queryuserslist'));
   this.nextPage = element(by.id('next-page'));
@@ -100,30 +93,6 @@ var UsersPage = function(){
     });
   };
 
-  this.assertError = function(msg1, msg2){
-    utils.expectIsDisplayed(this.errorAlert);
-    this.errorAlert.click();
-    if (msg1){
-      expect(this.errorBody.getText()).toContain(msg1);
-    }
-    if (msg2){
-      expect(this.errorBody.getText()).toContain(msg2);
-    }
-    this.notificationCancel.click();
-  };
-
-  this.assertSuccess = function(msg1, msg2){
-    utils.expectIsDisplayed(this.successAlert);
-    this.successAlert.click();
-    if (msg1){
-      expect(this.successBody.getText()).toContain(msg1);
-    }
-    if (msg2) {
-      expect(this.successBody.getText()).toContain(msg2);
-    }
-    this.notificationCancel.click();
-  };
-
   this.search = function(query, size){
     this.searchButton.click();
     utils.expectIsDisplayed(this.searchField);
@@ -132,7 +101,7 @@ var UsersPage = function(){
     if (query) {
       this.searchField.sendKeys(query);
       browser.sleep(1000);
-      expect(this.queryCount.count()).toBe(size ? size : 1);
+      expect(this.queryCount.count()).toBe(typeof size !== 'undefined' ? size : 1);
     }
   };
 

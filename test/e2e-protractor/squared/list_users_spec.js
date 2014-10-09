@@ -114,7 +114,7 @@ describe('List users flow', function() {
       users.addUsersField.sendKeys(inputEmail);
       users.iCheck.click();
       users.addButton.click();
-      users.assertSuccess(inputEmail, 'added successfully');
+      notifications.assertSuccess(inputEmail, 'added successfully');
       users.closeAddUsers.click();
 
       users.search(inputEmail);
@@ -149,7 +149,7 @@ describe('List users flow', function() {
         users.fusionCheckBox.click();
         users.saveButton.click();
         browser.debugger();
-        users.assertSuccess(inputEmail, 'updated successfully');
+        notifications.assertSuccess(inputEmail, 'updated successfully');
 
         users.closePreview.click();
     });

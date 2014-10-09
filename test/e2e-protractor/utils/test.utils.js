@@ -119,3 +119,31 @@ exports.click = function(elem) {
   elem.click();
 };
 
+exports.getSwitchState = function(elem) {
+  return elem.getAttribute('ng-model').then(function(model) {
+    return elem.evaluate(model).then(function(value) {
+      return value;
+    });
+  });
+};
+
+exports.toggleSwitch = function(elem, toggle) {
+  this.getSwitchState(elem).then(function(value){
+    if (value !== toggle) {
+      elem.element(by.css('input'))
+        .then(function(input){
+          input.click();
+        },function(){
+          elem.click();
+        });
+    }
+  });
+};
+
+exports.enableSwitch = function(elem) {
+  this.toggleSwitch(elem,true);
+};
+
+exports.disableSwitch = function(elem) {
+  this.toggleSwitch(elem,false);
+};

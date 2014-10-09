@@ -4,13 +4,13 @@ var Navigation = function(){
 
   this.tabs = element(by.css('cs-left-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
-  this.homeTab = element(by.css('li.homeTab a'));
-  this.manageTab = element(by.css('li.orgTab a'))
+  this.homeTab = element(by.css('li.homeTab > a'));
+  this.manageTab = element(by.css('li.orgTab > a'))
   this.usersTab = element(by.css('a[href="#users"]'));
   this.orgTab = element(by.css('a[href="#orgs"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
-  this.reportsTab = element(by.css('li.reportTab a'));
-  this.supportTab = element(by.css('li.supportTab a'));
+  this.reportsTab = element(by.css('li.reportTab > a'));
+  this.supportTab = element(by.css('li.supportTab > a'));
   this.sharedSpacesTab = element(by.css('a[href="#spaces"]'));
 
   this.settings = element(by.id('setting-bar'));

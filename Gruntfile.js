@@ -403,10 +403,6 @@ module.exports = function (grunt) {
           args: {
             specs: [
               'test/e2e-protractor/huron/*_spec.js'
-            ],
-            // Skip until integration is established
-            exclude: [
-              'test/e2e-protractor/huron/callrouting_spec.js'
             ]
           }
         }
