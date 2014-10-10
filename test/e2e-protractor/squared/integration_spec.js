@@ -130,12 +130,11 @@ describe('App flow', function() {
         for (var i = 0; i < validinputs.length; i++) {
           users.addUsersField.clear();
           users.addUsersField.sendKeys(validinputs[i]);
+          users.addUsersField.sendKeys(protractor.Key.ENTER);
           expect(users.invalid.isPresent()).toBeFalsy();
           expect(users.addButton.isEnabled()).toBeTruthy();
           expect(users.entitleButton.isEnabled()).toBeTruthy();
           expect(users.inviteButton.isEnabled()).toBeTruthy();
-          users.addButton.click();
-          notifications.assertError('already exists');
           users.close.click();
         }
       }, 45000);
@@ -157,6 +156,7 @@ describe('App flow', function() {
       it('should display input user email in results with already exists message', function() {
         users.addUsersField.clear();
         users.addUsersField.sendKeys(testuser.username);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.addButton.click();
         notifications.assertError('already exists');
       });
@@ -164,6 +164,7 @@ describe('App flow', function() {
 
     describe('Cancel', function() {
       it('should clear user input field and error message', function() {
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.cancelButton.click();
         expect(users.addUsersField.getText()).toBe('');
       });
@@ -175,6 +176,7 @@ describe('App flow', function() {
       var inviteEmail = utils.randomTestEmail();
       users.addUsersField.clear();
       users.addUsersField.sendKeys(inviteEmail);
+      users.addUsersField.sendKeys(protractor.Key.ENTER);
       users.inviteButton.click();
       notifications.assertSuccess('sent successfully');
     });
@@ -183,6 +185,7 @@ describe('App flow', function() {
       var inviteEmail = testuser.username;
       users.addUsersField.clear();
       users.addUsersField.sendKeys(inviteEmail);
+      users.addUsersField.sendKeys(protractor.Key.ENTER);
       users.inviteButton.click();
       notifications.assertError('already entitled');
     });
@@ -191,6 +194,7 @@ describe('App flow', function() {
       var inviteEmail = testuser.usernameWithNoEntitlements;
       users.addUsersField.clear();
       users.addUsersField.sendKeys(inviteEmail);
+      users.addUsersField.sendKeys(protractor.Key.ENTER);
       users.inviteButton.click();
       notifications.assertSuccess('sent successfully');
     });
@@ -204,6 +208,7 @@ describe('App flow', function() {
       it('should display input user email in results with success message', function() {
         users.addUsersField.clear();
         users.addUsersField.sendKeys(inputEmail);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.addButton.click();
         notifications.assertSuccess(inputEmail,'added successfully');
       });
@@ -213,6 +218,7 @@ describe('App flow', function() {
       it('should display input user email in results with success message', function() {
         users.addUsersField.clear();
         users.addUsersField.sendKeys(inputEmail);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.manageCallInitiation.click();
         users.entitleButton.click();
         notifications.assertSuccess(inputEmail,'entitled successfully');
@@ -223,6 +229,7 @@ describe('App flow', function() {
       it('should display input user email in results with entitlement previously updated message', function() {
         users.addUsersField.clear();
         users.addUsersField.sendKeys(inputEmail);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.manageCallInitiation.click();
         users.entitleButton.click();
         notifications.assertError(inputEmail,'entitlement previously updated');

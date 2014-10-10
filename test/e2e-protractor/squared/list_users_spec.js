@@ -112,6 +112,7 @@ describe('List users flow', function() {
 
       users.addUsersField.clear();
       users.addUsersField.sendKeys(inputEmail);
+      users.addUsersField.sendKeys(protractor.Key.ENTER);
       users.iCheck.click();
       users.addButton.click();
       notifications.assertSuccess(inputEmail, 'added successfully');

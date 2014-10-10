@@ -163,12 +163,12 @@ label {
   border-radius: 10px;
   -moz-border-radius: 10px;
   margin-right: 5px;
-  background-color: #6FA8F6;
+  background-color: #6FA8F6 !important;
   color: white;
 }
 
 .invalid {
-  background-color: #f2efef;
+  background-color: #f2efef !important;
   color: #555;
   .close {
     color: #555;
