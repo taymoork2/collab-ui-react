@@ -3,9 +3,11 @@
 angular.module('Huron')
    .controller('SingleNumberReachInfoCtrl', ['$scope', '$q', '$http', 'RemoteDestinationService', 'Log', 'Config', 'Notification', '$filter',
 	function($scope, $q, $http, RemoteDestinationService, Log, Config, Notification, $filter) {
-	$scope.destination = null;
-	$scope.remoteDestinations = null;
-	$scope.singleNumberReachEnabled = false;
+	$scope.snrInfo = {
+		destination : null,
+		remoteDestinations : null,
+		singleNumberReachEnabled : false
+	};
 	$scope.snrOptions = [{
 		label: 'All Lines',
 		line: 'all'
@@ -28,17 +30,10 @@ angular.module('Huron')
 
 		// TODO: Remove the following line when we are authenticating with CMI
 		delete $http.defaults.headers.common.Authorization;
-		RemoteDestinationService.save({customerId: user.meta.organizationID, userId: user.id }, rdBean,
+		RemoteDestinationService.save({customerId: user.meta.organizationID, userId: user.id}, rdBean,
 			function(data) {
 				deferred.resolve(data);
-
-				//Update Telephony Panel
-				if ($scope.singleNumberReachEnabled) {
-					$scope.singleNumberReach = 'On';
-				} else {
-					$scope.singleNumberReach = 'Off';
-				}
-
+				
 				result.msg = $filter('translate')('singleNumberReachPanel.success');
 				result.type = 'success';
 				Notification.notify([result.msg], result.type);
@@ -52,6 +47,12 @@ angular.module('Huron')
 		return deferred.promise;
 	};
 
+	$scope.processCreateRemoteDestionInfo = function(response) {
+		if (response !== null && response !== undefined) {
+			$scope.telephonyUserInfo.singleNumberReach = 'On';
+		}
+	};
+
 	$scope.deleteRemoteDestinationInfo = function(user) {
 		var deferred = $q.defer();
 		var result = {
@@ -60,11 +61,13 @@ angular.module('Huron')
 		};
 		// TODO: Remove the following line when we are authenticating with CMI
 		delete $http.defaults.headers.common.Authorization;
-		RemoteDestinationService.delete({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.remoteDestinations[0].uuid},
+		RemoteDestinationService.delete({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.snrInfo.remoteDestinations[0].uuid},
 			function(data) {
 				deferred.resolve(data);
 				$scope.destination = null;
-				$scope.singleNumberReach = 'Off';
+				$scope.snrInfo.remoteDestinations = null;
+				$scope.telephonyUserInfo.singleNumberReach = 'Off';
+
 				result.msg = $filter('translate')('singleNumberReachPanel.removeSuccess');
 				result.type = 'success';
 				Notification.notify([result.msg], result.type);
@@ -75,7 +78,6 @@ angular.module('Huron')
 				Notification.notify([result.msg], result.type);
 				deferred.reject(error);
 			});
-		return deferred.promise;
 	};
 
 	$scope.getRemoteDestinationInfo = function(user) {
@@ -95,15 +97,15 @@ angular.module('Huron')
 
 	$scope.processRemoteDestinationInfo = function(remoteDestinationInfo) {
 		if (remoteDestinationInfo) {
-			$scope.remoteDestinations = remoteDestinationInfo;
+			$scope.snrInfo.remoteDestinations = remoteDestinationInfo;
 			if (remoteDestinationInfo !== null && remoteDestinationInfo !== undefined && remoteDestinationInfo.length > 0) {
-				$scope.singleNumberReachEnabled = true;
-				$scope.destination = remoteDestinationInfo[0].destination;
+				$scope.snrInfo.singleNumberReachEnabled = true;
+				$scope.snrInfo.destination = remoteDestinationInfo[0].destination;
 			} else {
-				$scope.singleNumberReachEnabled = false;
+				$scope.snrInfo.singleNumberReachEnabled = false;
 			}
 		} else {
-			$scope.remoteDestinations = null;
+			$scope.snrInfo.remoteDestinations = null;
 		}
 	};
 
@@ -117,16 +119,10 @@ angular.module('Huron')
 
 		// TODO: Remove the following line when we are authenticating with CMI
 		delete $http.defaults.headers.common.Authorization;
-		RemoteDestinationService.update({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.remoteDestinations[0].uuid}, rdBean,
+		RemoteDestinationService.update({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.snrInfo.remoteDestinations[0].uuid}, rdBean,
 			function(data) {
 				deferred.resolve(data);
-
-				//Update Telephony Panel
-				if ($scope.singleNumberReachEnabled) {
-					$scope.singleNumberReach = 'On';
-				} else {
-					$scope.singleNumberReach = 'Off';
-				}
+				$scope.telephonyUserInfo.singleNumberReach = 'On';
 
 				result.msg = $filter('translate')('singleNumberReachPanel.success');
 				result.type = 'success';
@@ -142,14 +138,20 @@ angular.module('Huron')
 	};
 	
 	$scope.saveSingleNumberReach = function() {
-		if ($scope.remoteDestinations !== null && $scope.remoteDestinations !== undefined && $scope.remoteDestinations.length > 0) {
-			if (!$scope.singleNumberReachEnabled) {
+		if ($scope.snrInfo.remoteDestinations !== null && $scope.snrInfo.remoteDestinations !== undefined && $scope.snrInfo.remoteDestinations.length > 0) {
+			if (!$scope.snrInfo.singleNumberReachEnabled) {
 				$scope.deleteRemoteDestinationInfo($scope.currentUser);
 			} else {
-				$scope.updateRemoteDestinationInfo($scope.currentUser, $scope.destination);
+				$scope.updateRemoteDestinationInfo($scope.currentUser, $scope.snrInfo.destination);
 			}
 		} else {
-			$scope.createRemoteDestinationInfo($scope.currentUser, $scope.destination);
+			$scope.createRemoteDestinationInfo($scope.currentUser, $scope.snrInfo.destination, $scope.singleNumberReach)
+				.then(function(response) {$scope.processCreateRemoteDestionInfo(response);})
+				.then(function(response) {$scope.getRemoteDestinationInfo($scope.currentUser)
+					.then(function(response) {$scope.processRemoteDestinationInfo(response);})
+          .catch(function(response) {$scope.processRemoteDestinationInfo(null);});
+																})
+				.catch(function(response) {$scope.processCreateRemoteDestionInfo(null);});
 		}
 	};
 

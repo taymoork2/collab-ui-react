@@ -50,9 +50,9 @@ angular.module('Huron')
 
               //change the panel to reflect on or off
               if ($scope.voicemailEnabled) {
-								$scope.voicemail = 'On';
+								$scope.telephonyUserInfo.voicemail = 'On';
 							} else {
-								$scope.voicemail = 'Off';
+								$scope.telephonyUserInfo.voicemail = 'Off';
 							}
 
               result.msg = $filter('translate')('voicemailPanel.success');

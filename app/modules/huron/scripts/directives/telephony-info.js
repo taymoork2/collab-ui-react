@@ -10,8 +10,10 @@ angular.module('Huron')
       $scope.userDnList = [];
       $scope.directoryNumber = null;
       $scope.telephonyUser = null;
-      $scope.voicemail = 'Off';
-      $scope.singleNumberReach = 'Off';
+      $scope.telephonyUserInfo = {
+        voicemail : 'Off',
+        singleNumberReach : 'Off'
+      };
 
       $scope.isVoicemailEnabled = function() {
         var isVoicemailEnabled = false;
@@ -58,9 +60,9 @@ angular.module('Huron')
         if (telephonyUserInfo) {
           $scope.telephonyUser = telephonyUserInfo;
           if ($scope.isVoicemailEnabled()) {
-            $scope.voicemail = 'On';
+            $scope.telephonyUserInfo.voicemail = 'On';
           } else {
-            $scope.voicemail = 'Off';
+            $scope.telephonyUserInfo.voicemail = 'Off';
           }
         } else {
           $scope.telephonyUser = null;
@@ -105,12 +107,12 @@ angular.module('Huron')
         }
       });
 
-      $scope.$watch('singleNumberReachEnabled', function(newVal,oldVal) {
+      $scope.$watch('snrInfo.singleNumberReachEnabled', function(newVal,oldVal) {
         if (newVal) {
-          if ($scope.singleNumberReachEnabled !== undefined && $scope.singleNumberReachEnabled) {
-            $scope.singleNumberReach = 'On';
+          if ($scope.snrInfo.singleNumberReachEnabled !== undefined && $scope.snrInfo.singleNumberReachEnabled) {
+            $scope.telephonyUserInfo.singleNumberReach = 'On';
           } else {
-            $scope.singleNumberReach = 'Off';
+            $scope.telephonyUserInfo.singleNumberReach = 'Off';
           }
         }
       });

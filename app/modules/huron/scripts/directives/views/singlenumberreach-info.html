@@ -8,10 +8,10 @@
     <div class="details-body">
       <p class="text-muted">{{'singleNumberReachPanel.description' | translate}}</p><br><br>
       <div>
-        {{'singleNumberReachPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="singleNumberReachEnabled"></cs-switchbutton><br><br>
-        <div class="form-group" ng-show="singleNumberReachEnabled">            
+        {{'singleNumberReachPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="snrInfo.singleNumberReachEnabled"></cs-switchbutton><br><br>
+        <div class="form-group" ng-show="snrInfo.singleNumberReachEnabled">            
             <div class="col-sm-5">
-              <input type="text" class="form-control" id="number" ng-model="destination" ng-disabled="!singleNumberReachEnabled">               
+              <input type="text" class="form-control" id="number" ng-model="snrInfo.destination" ng-disabled="!snrInfo.singleNumberReachEnabled">               
             </div>
             <label class="control-label" for="number">*</label>
           </div>

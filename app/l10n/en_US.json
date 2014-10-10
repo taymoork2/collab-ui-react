@@ -361,6 +361,10 @@
     "createButton" : "Create Call Park",
     "cancelButton" : "Cancel"
   },
+  "telephonyPreview" : {
+    "voicemail" : "Voicemail",
+    "singleNumberReach" : "Single Number Reach"
+  },
   "directoryNumberPanel" : {
     "success" : " configuration saved successfully"
   },
