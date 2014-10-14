@@ -464,7 +464,7 @@ module.exports = function(grunt) {
       less: {
         files: [
           '<%= app_dir %>/<%= app_files.less %>',
-          '<%= app_dir %>/**.less'
+          '<%= app_dir %>/**/*.less'
         ],
         tasks: [
           'less:build',
@@ -530,10 +530,7 @@ module.exports = function(grunt) {
         options: {
           args: {
             specs: [
-              // 'test/e2e-protractor/squared/*_spec.js'
-              'test/e2e-protractor/squared/activate_spec.js',
-              'test/e2e-protractor/squared/downloads_spec.js',
-              'test/e2e-protractor/squared/invite_spec.js'
+              'test/e2e-protractor/squared/*_spec.js'
             ]
           }
         }
@@ -664,7 +661,6 @@ module.exports = function(grunt) {
       'compile',
       'connect:test'
     ]);
-
   });
 
   grunt.registerTask('test-squared', [

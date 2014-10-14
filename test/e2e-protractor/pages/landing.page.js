@@ -1,13 +1,13 @@
 'use strict'
 
-var HomePage = function(){
-  this.activeUsers = element(by.id('au-content'));
-  this.calls = element(by.id('calls-content'));
-  this.conversations = element(by.id('convo-content'));
-  this.contentShare = element(by.id('share-content'));
+var LandingPage = function() {
+  this.packages = element(by.css('.packages'));
+  this.devices = element(by.css('.devices'));
+  this.licenses = element(by.css('.licenses'));
+  this.unlicencedUsers = element(by.css('.unlicensed-users'));
   this.activeUsersChart = element(by.id('activeUsersChart'));
 
-  this.monitoring = element(by.css('.monitoring-cell'));
+  this.monitoring = element(by.css('.monitoring-panel'));
 
   this.refreshButton = element(by.id('time-click-div'));
   this.reloadedTime = element(by.id('lastReloadedTime'));
@@ -20,4 +20,4 @@ var HomePage = function(){
   this.enableServiceEntitlement = element(by.id('chk_invite'));
 }
 
-module.exports = HomePage;
+module.exports = LandingPage;

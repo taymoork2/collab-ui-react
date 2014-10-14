@@ -61,7 +61,7 @@ angular
         })
         .state('home', {
           url: '/home',
-          templateUrl: 'modules/squared/views/home.html',
+          templateUrl: 'modules/core/views/landingPage.html',
           controller: 'HomeCtrl'
         })
         .state('users', {

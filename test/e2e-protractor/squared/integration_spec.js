@@ -53,8 +53,8 @@ describe('App flow', function() {
       expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
     });
 
-    it('should just login', function(){
-      login.login(testuser.username,testuser.password);
+    it('should just login', function() {
+      login.login(testuser.username, testuser.password);
     });
 
   }); //State is logged-in
@@ -210,7 +210,7 @@ describe('App flow', function() {
         users.addUsersField.sendKeys(inputEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.addButton.click();
-        notifications.assertSuccess(inputEmail,'added successfully');
+        notifications.assertSuccess(inputEmail, 'added successfully');
       });
     });
 
@@ -221,7 +221,7 @@ describe('App flow', function() {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.manageCallInitiation.click();
         users.entitleButton.click();
-        notifications.assertSuccess(inputEmail,'entitled successfully');
+        notifications.assertSuccess(inputEmail, 'entitled successfully');
       });
     });
 
@@ -232,7 +232,7 @@ describe('App flow', function() {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.manageCallInitiation.click();
         users.entitleButton.click();
-        notifications.assertError(inputEmail,'entitlement previously updated');
+        notifications.assertError(inputEmail, 'entitlement previously updated');
         users.closeAddUsers.click();
       });
     });
@@ -267,13 +267,13 @@ describe('App flow', function() {
         expect(users.callInitiationCheckbox.isDisplayed()).toBeTruthy();
         users.callInitiationCheckbox.click();
         users.saveButton.click();
-        notifications.assertSuccess(inputEmail,'updated successfully');
+        notifications.assertSuccess(inputEmail, 'updated successfully');
         users.closePreview.click();
         users.search();
       });
     });
 
-    describe('Delete user used for entitle test', function(){
+    describe('Delete user used for entitle test', function() {
       it('should delete added user', function() {
         deleteUtils.deleteUser(inputEmail).then(function(message) {
           expect(message).toEqual(200);
@@ -294,26 +294,26 @@ describe('App flow', function() {
     it('clicking on home tab should change the view', function() {
       navigation.clickHome();
       navigation.expectCurrentUrl('/home');
-      expect(home.activeUsers.isDisplayed()).toBeTruthy();
-      expect(home.calls.isDisplayed()).toBeTruthy();
-      expect(home.conversations.isDisplayed()).toBeTruthy();
-      expect(home.contentShare.isDisplayed()).toBeTruthy();
-      expect(home.homeSetup.isDisplayed()).toBeTruthy();
+      expect(landing.packages.isDisplayed()).toBeTruthy();
+      expect(landing.devices.isDisplayed()).toBeTruthy();
+      expect(landing.licenses.isDisplayed()).toBeTruthy();
+      expect(landing.unlicencedUsers.isDisplayed()).toBeTruthy();
+      expect(landing.activeUsersChart.isDisplayed()).toBeTruthy();
     });
 
-    it('clicking on quick setup launch should open a dialog and change the page', function(){
-      utils.click(home.quickSetupButton);
-      utils.click(home.enableServiceEntitlement);
-      utils.click(home.quickSetupNextButton);
-      navigation.expectCurrentUrl('/users');
-    });
+    // it('clicking on quick setup launch should open a dialog and change the page', function(){
+    //   utils.click(landing.quickSetupButton);
+    //   utils.click(landing.enableServiceEntitlement);
+    //   utils.click(landing.quickSetupNextButton);
+    //   navigation.expectCurrentUrl('/users');
+    // });
 
     it('clicking on system health panel should open to status page in a new tab', function() {
       navigation.clickHome();
       navigation.expectCurrentUrl('/home');
       var appWindow = browser.getWindowHandle();
-      home.monitoring.click();
-      browser.getAllWindowHandles().then(function (handles) {
+      landing.monitoring.click();
+      browser.getAllWindowHandles().then(function(handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
         navigation.expectDriverCurrentUrl('status.squaredpreview.com/');
@@ -353,8 +353,8 @@ describe('App flow', function() {
     it('should load refresh directive template', function() {
       navigation.clickHome();
       navigation.expectCurrentUrl('/home');
-      expect(home.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(home.refreshData.isDisplayed()).toBeTruthy();
+      expect(landing.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(landing.refreshData.isDisplayed()).toBeTruthy();
     });
 
     it('should load cached values into directive when switching tabs', function() {
@@ -363,26 +363,26 @@ describe('App flow', function() {
       navigation.clickHome();
       navigation.expectCurrentUrl('/home');
 
-      expect(home.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(home.refreshData.isDisplayed()).toBeTruthy();
-      expect(home.activeUsers.isDisplayed()).toBeTruthy();
-      expect(home.calls.isDisplayed()).toBeTruthy();
-      expect(home.conversations.isDisplayed()).toBeTruthy();
-      expect(home.contentShare.isDisplayed()).toBeTruthy();
-      expect(home.homeSetup.isDisplayed()).toBeTruthy();
-      expect(home.activeUsersChart.isDisplayed()).toBeTruthy();
+      expect(landing.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(landing.refreshData.isDisplayed()).toBeTruthy();
+      // expect(landing.activeUsers.isDisplayed()).toBeTruthy();
+      // expect(landing.calls.isDisplayed()).toBeTruthy();
+      // expect(landing.conversations.isDisplayed()).toBeTruthy();
+      // expect(landing.contentShare.isDisplayed()).toBeTruthy();
+      // expect(landing.homeSetup.isDisplayed()).toBeTruthy();
+      expect(landing.activeUsersChart.isDisplayed()).toBeTruthy();
     });
 
     it('should load new values and update time when clicking refresh', function() {
-      home.refreshButton.click();
-      expect(home.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(home.refreshData.isDisplayed()).toBeTruthy();
-      expect(home.activeUsers.isDisplayed()).toBeTruthy();
-      expect(home.calls.isDisplayed()).toBeTruthy();
-      expect(home.conversations.isDisplayed()).toBeTruthy();
-      expect(home.contentShare.isDisplayed()).toBeTruthy();
-      expect(home.homeSetup.isDisplayed()).toBeTruthy();
-      expect(home.activeUsersChart.isDisplayed()).toBeTruthy();
+      landing.refreshButton.click();
+      expect(landing.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(landing.refreshData.isDisplayed()).toBeTruthy();
+      // expect(landing.activeUsers.isDisplayed()).toBeTruthy();
+      // expect(landing.calls.isDisplayed()).toBeTruthy();
+      // expect(landing.conversations.isDisplayed()).toBeTruthy();
+      // expect(landing.contentShare.isDisplayed()).toBeTruthy();
+      // expect(landing.homeSetup.isDisplayed()).toBeTruthy();
+      expect(landing.activeUsersChart.isDisplayed()).toBeTruthy();
     });
   });
 
@@ -428,10 +428,10 @@ describe('App flow', function() {
 
   //Log in with a user with no SquaredInviter Entitlement
   xdescribe('No SquaredInviter Entitlement', function() {
-  // Logging in. Write your tests after the login flow is complete.
+    // Logging in. Write your tests after the login flow is complete.
     describe('Login as sqtest-admin user', function() {
 
-      it('should login', function(){
+      it('should login', function() {
         login.login(notsqinviteruser.username, notsqinviteruser.password);
       });
 

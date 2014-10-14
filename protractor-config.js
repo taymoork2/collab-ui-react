@@ -6,7 +6,9 @@ exports.config = {
 
   capabilities: {
     'browserName': 'chrome',
-    'chromeOptions': {'args': ['--disable-extensions', '--start-maximized']}
+    'chromeOptions': {
+      'args': ['--disable-extensions', '--start-maximized']
+    }
   },
 
   // A base URL for your application under test. Calls to protractor.get()
@@ -15,7 +17,7 @@ exports.config = {
 
   onPrepare: function() {
     require('jasmine-reporters');
-    jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('test/e2e-protractor/reports',true,true));
+    jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('test/e2e-protractor/reports', true, true));
 
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
@@ -25,7 +27,7 @@ exports.config = {
     var Notifications = require('./test/e2e-protractor/pages/notifications.page.js');
     var UsersPage = require('./test/e2e-protractor/pages/users.page.js');
     var LoginPage = require('./test/e2e-protractor/pages/login.page.js');
-    var HomePage = require('./test/e2e-protractor/pages/home.page.js');
+    var LandingPage = require('./test/e2e-protractor/pages/landing.page.js');
     var ManagePage = require('./test/e2e-protractor/pages/manage.page.js');
     var ReportsPage = require('./test/e2e-protractor/pages/reports.page.js');
     var SupportPage = require('./test/e2e-protractor/pages/support.page.js');
@@ -43,7 +45,7 @@ exports.config = {
     global.navigation = new Navigation();
     global.users = new UsersPage();
     global.login = new LoginPage();
-    global.home = new HomePage();
+    global.landing = new LandingPage();
     global.manage = new ManagePage();
     global.reports = new ReportsPage();
     global.support = new SupportPage();
@@ -57,7 +59,7 @@ exports.config = {
     global.partner = new PartnerHomePage();
     global.telephony = new TelephonyPage();
 
-/*
+    /*
     var ScreenShotReporter = require('protractor-screenshot-reporter');
     var path = require('path');
     jasmine.getEnv().addReporter(new ScreenShotReporter({
