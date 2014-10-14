@@ -51,6 +51,7 @@ angular.module('Huron')
 		if (response !== null && response !== undefined) {
 			$scope.telephonyUserInfo.singleNumberReach = 'On';
 		}
+		angular.element('#btnSaveSingleNumberReach').button('reset');
 	};
 
 	$scope.deleteRemoteDestinationInfo = function(user) {
@@ -64,13 +65,13 @@ angular.module('Huron')
 		RemoteDestinationService.delete({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.snrInfo.remoteDestinations[0].uuid},
 			function(data) {
 				deferred.resolve(data);
-				$scope.destination = null;
+				$scope.snrInfo.destination = null;
 				$scope.snrInfo.remoteDestinations = null;
 				$scope.telephonyUserInfo.singleNumberReach = 'Off';
 
 				result.msg = $filter('translate')('singleNumberReachPanel.removeSuccess');
 				result.type = 'success';
-				Notification.notify([result.msg], result.type);
+				Notification.notify([result.msg], result.type);				
 			},function(error) {
 				Log.debug('deleteRemoteDestinationInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
 				result.msg = $filter('translate')('singleNumberReachPanel.error') + error.data;
@@ -127,17 +128,20 @@ angular.module('Huron')
 				result.msg = $filter('translate')('singleNumberReachPanel.success');
 				result.type = 'success';
 				Notification.notify([result.msg], result.type);
+				angular.element('#btnSaveSingleNumberReach').button('reset');
 			},function(error) {
 				Log.debug('updateRemoteDestinationInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
 				result.msg = $filter('translate')('singleNumberReachPanel.error') + error.data;
 				result.type = 'error';
 				Notification.notify([result.msg], result.type);
 				deferred.reject(error);
+				angular.element('#btnSaveSingleNumberReach').button('reset');
 			});
 		return deferred.promise;
 	};
 	
 	$scope.saveSingleNumberReach = function() {
+		angular.element('#btnSaveSingleNumberReach').button('loading');
 		if ($scope.snrInfo.remoteDestinations !== null && $scope.snrInfo.remoteDestinations !== undefined && $scope.snrInfo.remoteDestinations.length > 0) {
 			if (!$scope.snrInfo.singleNumberReachEnabled) {
 				$scope.deleteRemoteDestinationInfo($scope.currentUser);
@@ -152,7 +156,7 @@ angular.module('Huron')
           .catch(function(response) {$scope.processRemoteDestinationInfo(null);});
 																})
 				.catch(function(response) {$scope.processCreateRemoteDestionInfo(null);});
-		}
+		}		
 	};
 
 	$scope.$watch('currentUser', function(newVal, oldVal) {
