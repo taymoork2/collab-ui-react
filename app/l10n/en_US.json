@@ -5,7 +5,7 @@
         "subTitleEnable": "Entitle users",
         "email": "Email",
         "clear": "Clear",
-        "add": "Add",
+        "add": "Add Users",
         "entitle": "Entitle",
         "firstnameHeader": "First Name",
         "lastnameHeader": "Last Name",
@@ -293,7 +293,7 @@
     "spacesPage": {
         "title": "Shared Spaces",
         "modalTitle": "Add Room",
-        "add": "Add"
+        "add": "Add Room"
     },
     "hercules": {
         "page_title": "Fusion Services",
@@ -408,4 +408,5 @@
         "daysAgo" : "{{days}} days ago",
         "errGetTrialsQuery" : "Failed to retrieve trials. Status: {{status}}"
     }
+
 }

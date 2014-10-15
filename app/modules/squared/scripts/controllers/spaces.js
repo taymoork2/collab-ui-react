@@ -3,51 +3,49 @@
 
 angular.module('Squared')
   .controller('SpacesCtrl', ['$scope', '$location', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Notification', 'Config',
-    function($scope, $location,  Storage, Log, Utils, $filter, SpacesService, Notification, Config) {
+    function($scope, $location, Storage, Log, Utils, $filter, SpacesService, Notification, Config) {
 
       //Populating authinfo data if empty.
       var token = Storage.get('accessToken');
 
       var formatActivationCode = function(activationCode) {
         var acode = '';
-        if (activationCode)
-        {
+        if (activationCode) {
           var parts = activationCode.match(/[\s\S]{1,4}/g) || [];
-          for (var x=0; x < parts.length-1; x++)
-          {
-            acode = acode + parts[x]+' ';
+          for (var x = 0; x < parts.length - 1; x++) {
+            acode = acode + parts[x] + ' ';
           }
-          acode = acode + parts[parts.length-1];
+          acode = acode + parts[parts.length - 1];
         }
         return acode;
       };
 
       var getAllRooms = function() {
-        SpacesService.listRooms(function(data, status){
-          if(data.success === true ){
+        SpacesService.listRooms(function(data, status) {
+          if (data.success === true) {
             var devices = [];
-            if (data.devices)
-            {
+            if (data.devices) {
               for (var i = 0; i < data.devices.length; i++) {
                 var device = data.devices[i];
                 var adate = device.activationTime;
-                if (adate && adate.length > 0)
-                {
+                if (adate && adate.length > 0) {
                   adate = moment.utc(adate).local().format('MMM D YYYY, h:mm a');
                 }
 
                 var activationCode = device.activationCode;
-                if (activationCode && activationCode.length > 0)
-                {
+                if (activationCode && activationCode.length > 0) {
                   activationCode = formatActivationCode(activationCode);
                 }
 
-                devices.push({'room': device.accountName, 'code': activationCode, 'activationDate': adate});
+                devices.push({
+                  'room': device.accountName,
+                  'code': activationCode,
+                  'activationDate': adate
+                });
               }
             }
             $scope.roomData = devices;
-          }
-          else{
+          } else {
             Log.error('Error getting rooms. Status: ' + status);
           }
         });
@@ -59,15 +57,24 @@ angular.module('Squared')
       $scope.gridOptions = {
         data: 'roomData',
         multiSelect: false,
-        showFilter: true,
-        rowHeight: 38,
-        headerRowHeight: 38,
-        sortInfo: { fields: ['activationDate','room'],
-                    directions: ['asc']},
+        showFilter: false,
+        rowHeight: 44,
+        headerRowHeight: 44,
+        sortInfo: {
+          fields: ['activationDate', 'room'],
+          directions: ['asc']
+        },
 
-        columnDefs: [{field:'room', displayName:'Room'},
-                     {field:'code', displayName:'Activation Code'},
-                     {field:'activationDate', displayName:'Activation Date'}]
+        columnDefs: [{
+          field: 'room',
+          displayName: 'Room'
+        }, {
+          field: 'code',
+          displayName: 'Activation Code'
+        }, {
+          field: 'activationDate',
+          displayName: 'Activation Date'
+        }]
       };
 
 
@@ -79,21 +86,20 @@ angular.module('Squared')
         $scope.newRoomName = null;
       };
 
-      $scope.addRoom = function(){
-        SpacesService.addRoom($scope.newRoomName, function(data, status){
-          if(data.success === true ){
+      $scope.addRoom = function() {
+        SpacesService.addRoom($scope.newRoomName, function(data, status) {
+          if (data.success === true) {
             var successMessage = [$scope.newRoomName + ' added successfully.'];
             Notification.notify(successMessage, 'success');
-            setTimeout(function(){
+            setTimeout(function() {
               getAllRooms();
             }, 1000);
             $scope.clearRoom();
-          }
-          else{
+          } else {
             var errorMessage = ['Error adding ' + $scope.newRoomName + '. Status: ' + status];
             Notification.notify(errorMessage, 'error');
           }
         });
       };
     }
-]);
+  ]);

@@ -42,6 +42,7 @@ module.exports = {
       'bower_components/jquery-icheck/icheck.min.js',
       'bower_components/moment/moment.js',
       'bower_components/base64/base64.js',
+      'bower_components/nicescroll/jquery.nicescroll.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-ui-utils/ui-utils.js',
@@ -65,7 +66,7 @@ module.exports = {
       'bower_components/alertify.js/themes/alertify.default.css',
       'bower_components/angular-wizard/dist/angular-wizard.css',
       'bower_components/angular-dialog-service/dialogs.css',
-      'bower_components/ng-grid/ng-grid.css',
+      //'bower_components/ng-grid/ng-grid.css',
       'bower_components/jquery-icheck/skins/square/blue.css'
     ],
     fonts: [

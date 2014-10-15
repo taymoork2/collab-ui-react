@@ -5,19 +5,13 @@
 // @brand-font-folder: '../bower_components/bootstrap-cisco/fonts';
 // @icon-font-path: '../bower_components/bootstrap-cisco/fonts/';
 
-// ******* Mixins **************
-@import 'mixins.less';
+// ******* Variables & Mixins **************
+@import 'includes/_variables';
+@import 'includes/_mixins';
 
-/******** Resets & Globals **********/
-.container {
-  //width: 1000px;
-  //overflow: none;
-  margin: 0;
-}
+// ******* Resets & Globals **********
+@import 'includes/_common';
 
-.page-content-wrapper {
-  //width: ~"calc(100% - 100px)";
-}
 
 .btn {
   //padding: 9px 22px;
@@ -38,17 +32,6 @@
 .btn-profile {
   width: 70%;
   height: 60px;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-body {
-  //min-width: 960px;
-  padding-top: 51px;
-  background-color: #f5f5f5;
-
 }
 
 .panel {
@@ -348,6 +331,11 @@ label {
   padding-right: 9px;
 }
 
+.reports {
+  padding-left: 45px;
+  padding-top: 30px;
+}
+
 .all-reports {
   position:relative;
   width:45%;
@@ -417,18 +405,6 @@ input:disabled {
 .activate-error {
   color: #ff0000;
   font-weight: bold;
-}
-
-#export-btn {
-  margin: 0;
-  transition: opacity 300ms;
-  -webkit-transition: opacity 300ms;
-  &:hover {
-    cursor: pointer;
-    opacity:1;
-    transition: opacity 300ms;
-    -webkit-transition: opacity 300ms;
-  }
 }
 
 #download-icon {
@@ -817,7 +793,7 @@ input:disabled {
 }
 
 #userslist {
-  margin-top: 20px;
+  // margin-top: 20px;
 }
 
 #addUsers {
@@ -831,20 +807,6 @@ input:disabled {
   width: 35px;
 }
 
-.page-header {
-  margin-top: 40px;
-}
-.user-title {
-  margin-bottom: 15px;
-  color: #00aadf;
-  font-size: 36px;
-  line-height: 1;
-}
-
-.add-users-button,
-.user-options-bar {
-  float: right;
-}
 
 .add-trial-button {
   margin-top: 0px;
@@ -880,6 +842,8 @@ input:disabled {
   left: 750px;
   margin-left: 300px;
   display:inline-block;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   width: fit-content;
   height: 100%;
   position:absolute;
@@ -997,16 +961,6 @@ input:disabled {
 
 .dialog-header-confirm {
 background-color: #333333;
-}
-
-.gridStyle {
-    border: 1px solid rgb(212,212,212);
-    width: 800px;
-    height: 600px;
-    margin-top: 50px !important;
-    & > :nth-child(2) {
-      overflow-x: hidden;
-    }
 }
 
 .room-panel {
@@ -1218,13 +1172,6 @@ a:active.ftwNavLink {
   font-size: 24px;
 }
 
-
-/*************************************
- *      Views Style imports
- ************************************/
-@import '../modules/core/styles/landing-page';
-
-
 .trialsPanel {
   margin: 30px;
   padding: 20px;
@@ -1297,3 +1244,12 @@ a:active.ftwNavLink {
   color: @pagination-color;
   text-align:right;
 }
+
+/*************************************
+ *      Views Style imports
+ ************************************/
+@import 'core/_landing-page';
+@import 'core/_users';
+@import '_grid';
+
+

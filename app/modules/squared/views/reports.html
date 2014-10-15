@@ -1,42 +1,40 @@
-<div class="row">
-
-	<div ng-click="manualReload(false)" class="overview-updated" id="reports-click-div">
-			<reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime">
-			</reload-data>
-	</div>
+<div class="reports">
+  <div class="row">
+    <div ng-click="manualReload(false)" class="overview-updated" id="reports-click-div">
+      <reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime">
+      </reload-data>
+    </div>
+  </div>
+  <div class="row">
+    <div class="all-reports col-sm-6">
+      <div>
+        <h3 translate="reportsPage.avgEntitlements"></h3>
+      </div>
+      <div id="avgEntitlementsdiv" class="timechartDiv"></div>
+      <div id="avg-entitlements-refresh" class="metrics-refresh" ng-show="showAvgEntitlementsRefresh"></div>
+    </div>
+    <div class ="all-reports col-sm-6">
+      <div>
+        <h3 translate="reportsPage.avgCalls"></h3>
+      </div>
+      <div id="avgCallsdiv" class="timechartDiv"></div>
+      <div id="avg-calls-refresh" class="metrics-refresh" ng-show="showAvgCallsRefresh"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class ="all-reports col-sm-6">
+      <div>
+        <h3 translate="reportsPage.avgConversations"></h3>
+      </div>
+      <div id="avgConversationsdiv" class="timechartDiv"></div>
+      <div id="avg-conversations-refresh" class="metrics-refresh" ng-show="showAvgConversationsRefresh"></div>
+    </div>
+    <div class ="all-reports col-sm-6">
+      <div>
+        <h3 translate="reportsPage.activeUsers"></h3>
+      </div>
+      <div id="activeUsersdiv" class="timechartDiv"></div>
+      <div id="active-users-refresh" class="metrics-refresh" ng-show="showActiveUsersRefresh"></div>
+    </div>
+  </div>
 </div>
-<div class="row">
-	<div class="all-reports col-sm-6">
-		<div>
-			<h3 translate="reportsPage.avgEntitlements"></h3>
-		</div>
-		<div id="avgEntitlementsdiv" class="timechartDiv"></div>
-		<div id="avg-entitlements-refresh" class="metrics-refresh" ng-show="showAvgEntitlementsRefresh"></div>
-	</div>
-
-	<div class ="all-reports col-sm-6">
-		<div>
-			<h3 translate="reportsPage.avgCalls"></h3>
-		</div>
-		<div id="avgCallsdiv" class="timechartDiv"></div>
-		<div id="avg-calls-refresh" class="metrics-refresh" ng-show="showAvgCallsRefresh"></div>
-	</div>
-</div>
-<div class="row">
-	<div class ="all-reports col-sm-6">
-		<div>
-			<h3 translate="reportsPage.avgConversations"></h3>
-		</div>
-		<div id="avgConversationsdiv" class="timechartDiv"></div>
-		<div id="avg-conversations-refresh" class="metrics-refresh" ng-show="showAvgConversationsRefresh"></div>
-	</div>
-
-	<div class ="all-reports col-sm-6">
-		<div>
-			<h3 translate="reportsPage.activeUsers"></h3>
-		</div>
-		<div id="activeUsersdiv" class="timechartDiv"></div>
-		<div id="active-users-refresh" class="metrics-refresh" ng-show="showActiveUsersRefresh"></div>
-	</div>
-</div>
-

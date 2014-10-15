@@ -14,15 +14,14 @@ var testuser = {
 };
 
 describe('Shared spaces flow', function() {
-  it('should login as squared team member admin user', function(){
+  it('should login as squared team member admin user', function() {
     login.login(testuser.username, testuser.password);
   });
 
-	it('clicking on shared spaces tab should show the list of rooms', function() {
-		navigation.clickSharedSpaces();
+  it('clicking on shared spaces tab should show the list of rooms', function() {
+    navigation.clickSharedSpaces();
     expect(spaces.roomsList.isDisplayed()).toBeTruthy();
     expect(spaces.addButton.isDisplayed()).toBeTruthy();
-    expect(spaces.moreOptions.isDisplayed()).toBeTruthy();
   });
 
   it('clicking on add room button should be successful', function() {
@@ -43,4 +42,3 @@ describe('Shared spaces flow', function() {
     navigation.logout();
   });
 });
-

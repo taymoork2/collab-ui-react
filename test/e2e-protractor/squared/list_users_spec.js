@@ -38,7 +38,7 @@ describe('List users flow', function() {
     utils.scrollTop();
   });
 
-  it('should login as non-sso admin user', function(){
+  it('should login as non-sso admin user', function() {
     login.login(testuser.username, testuser.password);
   });
 
@@ -55,7 +55,7 @@ describe('List users flow', function() {
     });
 
     it('should list 20 or less users', function() {
-        users.assertResultsLength(20);
+      users.assertResultsLength(20);
     });
   });
 
@@ -71,7 +71,7 @@ describe('List users flow', function() {
       users.assertPage('2');
       users.assertResultsLength(0);
       //previous page
-     users.prevPage.click();
+      users.prevPage.click();
       users.assertPage('1');
       users.assertResultsLength(20);
       users.search();
@@ -89,7 +89,7 @@ describe('List users flow', function() {
     });
   });
 
-// Asserting search users.
+  // Asserting search users.
   describe('search users on page', function() {
     it('should show first page of users based on search string', function() {
       users.search(testuser.searchStr, 20);
@@ -98,7 +98,7 @@ describe('List users flow', function() {
 
   // Add User
   describe('Add User', function() {
-    it('click on invite subtab should show manage users', function () {
+    it('click on invite subtab should show manage users', function() {
       users.addUsers.click();
       expect(users.managePanel.isDisplayed()).toBeTruthy();
       expect(users.addUsersField.isDisplayed()).toBeTruthy();
@@ -135,30 +135,29 @@ describe('List users flow', function() {
       users.search(inputEmail);
 
       users.resultUsername.getText().then(function(uname) {
-          expect(uname).toContain(inputEmail);
-        });
+        expect(uname).toContain(inputEmail);
+      });
 
-        users.resultUsername.click();
-        users.squaredPanel.click();
+      users.resultUsername.click();
+      users.squaredPanel.click();
 
-        users.checkBoxEnts.then(function(items) {
-          expect(items.length).toBe(9);
-          expect(items[0].getAttribute('class')).toContain('checked');
-          expect(items[8].getAttribute('class')).toContain('checked');
-        });
+      users.checkBoxEnts.then(function(items) {
+        expect(items.length).toBe(9);
+        expect(items[0].getAttribute('class')).toContain('checked');
+        expect(items[8].getAttribute('class')).toContain('checked');
+      });
 
-        users.fusionCheckBox.click();
-        users.saveButton.click();
-        browser.debugger();
-        notifications.assertSuccess(inputEmail, 'updated successfully');
+      users.fusionCheckBox.click();
+      users.saveButton.click();
+      browser.debugger();
+      notifications.assertSuccess(inputEmail, 'updated successfully');
 
-        users.closePreview.click();
+      users.closePreview.click();
     });
   });
 
   describe('Exporting to CSV', function() {
     it('should display the CSV export button', function() {
-      users.moreOptions.click();
       expect(users.exportButton.isDisplayed()).toBeTruthy();
     });
   });
@@ -174,7 +173,7 @@ describe('List users flow', function() {
   });
 
   it('should log out', function() {
-   navigation.logout();
+    navigation.logout();
   });
 
 });

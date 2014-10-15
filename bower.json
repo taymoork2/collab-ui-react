@@ -32,6 +32,7 @@
     "moment": "~2.7.0",
     "ng-csv": "~0.2.0",
     "ng-grid": "~2.0.13",
+    "nicescroll": "~3.5.6",
     "typeahead.js": "~0.10.2"
   },
   "devDependencies": {
