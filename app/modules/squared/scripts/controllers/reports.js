@@ -56,7 +56,7 @@ angular.module('Squared')
         getTimeCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Conversations', '#009933');
       });
 
-      $scope.$on('AvgConversationsLoaded', function(event, response){
+      $scope.$on('ActiveUserMetricsLoaded', function(event, response){
         getTimeCharts(response, 'activeUsers','activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', '#CC0000');
       });
 

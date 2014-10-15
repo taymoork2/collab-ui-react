@@ -40,6 +40,7 @@ exports.config = {
     var CallRoutingPage = require('./test/e2e-protractor/pages/callrouting.page.js');
     var PartnerHomePage = require('./test/e2e-protractor/pages/partner.page.js');
     var TelephonyPage = require('./test/e2e-protractor/pages/telephony.page.js');
+    var PartnerPage = require('./test/e2e-protractor/pages/partner.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -58,6 +59,7 @@ exports.config = {
     global.callrouting = new CallRoutingPage();
     global.partner = new PartnerHomePage();
     global.telephony = new TelephonyPage();
+    global.partner = new PartnerPage();
 
     /*
     var ScreenShotReporter = require('protractor-screenshot-reporter');

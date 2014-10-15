@@ -809,8 +809,7 @@ input:disabled {
 
 
 .add-trial-button {
-  margin-top: 0px;
-  left: 25px;
+  padding-right: 15px;
 }
 
 .add-user-close {
@@ -1173,13 +1172,10 @@ a:active.ftwNavLink {
 }
 
 .trialsPanel {
-  margin: 30px;
   padding: 20px;
   background-color: #FFFFFF;
-  width: 399px;
   border-color: @list-group-border;
   border-width: 1px;
-  float: right;
 }
 
 #trialHeader {
@@ -1197,8 +1193,9 @@ a:active.ftwNavLink {
 
 .trialTitle {
   font-family: @brand-font-cisco-TT-Extra-Light;
-  font-size: 31px;
+  font-size: 24px;
   color: @navbar-inverse-link-disabled-color;
+  padding-left: 15px;
 }
 
 .trialHeading {
@@ -1253,3 +1250,126 @@ a:active.ftwNavLink {
 @import '_grid';
 
 
+.header-text{
+  opacity: 1;
+  font-size: 32px;
+  font-family: 'CiscoSansTT Extra Light', 'Cisco_Toolkit_Icons';
+  color: #444;
+  -webkit-font-smoothing: antialiased;
+}
+
+.button-text{
+  color: white;
+  font-size: 14px;
+  font-family: 'CiscoSansTT Light';
+  -webkit-font-smoothing: antialiased;
+}
+
+.cancel-color{
+  color: #666;
+}
+
+.cancel-color:hover{
+  color: black;
+}
+
+.row-spacing{
+  margin-top: 2%;
+  margin-bottom: 9%;
+}
+
+.modal-trials-header{
+  padding: 20px;
+  border-bottom: 0px;
+  background-color: #FFF;
+}
+
+.modal-options{
+  font-weight: bold;
+  font-size: 14px;
+  font-family: Arial;
+  float: right;
+  padding-top: 5px;
+}
+
+.modal-edit-options{
+  font-weight: bold;
+  font-size: 14px;
+  font-family: Arial;
+  float: left;
+  padding-top: 5px;
+}
+
+.trial-options{
+  font-weight: bold;
+  font-size: 14px;
+  font-family: Arial;
+  float:left;
+  padding-right: 10px;
+  padding-top: 5px;
+}
+
+.modal-card{
+  background-color: #F3F3F6;
+  margin-bottom: 5px;
+  padding-left: 20px;
+  padding-right: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: #444 !important;
+}
+
+.modal-form-control{
+  width: 8em;
+  padding-left: 5px;
+}
+
+.modal-trials-body{
+  padding-top: 0px;
+}
+
+.input-row-spacing{
+  margin-bottom: 7px;
+}
+
+.modal-trials-footer{
+  margin-top: 0px;
+  padding-top: 0px;
+  padding-bottom: 20px;
+  border-top: 0px;
+}
+
+.trial-form{
+  padding: 0px !important;
+}
+
+.company-info{
+  padding-top:5px;
+}
+
+.partner-container{
+  width: 100%;
+  padding: 15px;
+}
+
+.trials-heading-spacing{
+  text-align:right;
+}
+
+.ellipsis-trials
+{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px;
+}
+
+.trial-row{
+  padding-bottom: 15px;
+}
+
+/*************************************
+ *      Views Style imports
+ ************************************/
+@import 'core/_landing-page';

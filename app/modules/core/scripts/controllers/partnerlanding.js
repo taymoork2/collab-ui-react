@@ -8,6 +8,63 @@ angular.module('Squared')
     $scope.daysExpired = 5;
     $scope.displayRows = 8;
     $scope.expiredRows = 3;
+    $scope.startDate = new Date();
+    Notification.init($scope);
+    $scope.popup = Notification.popup;
+    $scope.customerName = null;
+  	$scope.customerEmail = null;
+  	$scope.licenseDuration = 30;
+ 		$scope.licenseCount = 50;
+ 		$scope.showAddTrial = true;
+ 		$scope.editTerms = true;
+    $scope.currentTrial = null;
+
+    $scope.formReset = function(){
+    	$scope.customerName = null;
+    	$scope.customerEmail = null;
+    	$scope.licenseDuration = 30;
+   		$scope.licenseCount = 50;
+    	$scope.trialForm.$setPristine(true);
+    	$scope.showAddTrial = true;
+    	$scope.editTerms = true;
+    };
+
+    $scope.startTrial = function(){
+      var createdDate = new Date();
+
+      PartnerService.startTrial($scope.customerName, $scope.customerEmail, 'COLLAB', $scope.licenseCount, $scope.licenseDuration, $scope.startDate, function(data, status){
+          if(data.success === true ){
+            var successMessage = ['A trial was successfully started for ' + $scope.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
+            Notification.notify(successMessage, 'success');
+            setTimeout(function(){
+              getTrialsList();
+            }, 1000);
+          }
+          else{
+             var errorMessage = ['Error starting a trial for ' + $scope.customerName + '. Status: ' + status];
+             Notification.notify(errorMessage, 'error');
+          }
+        });
+    };
+
+    $scope.editTrial = function(){
+      var createdDate = new Date();
+
+      PartnerService.editTrial($scope.currentTrial.duration, $scope.currentTrial.trialId, $scope.currentTrial.licenses, $scope.currentTrial.usage, function(data, status){
+          if(data.success === true ){
+            var successMessage = ['You have successfully edited a trial for ' + $scope.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
+            Notification.notify(successMessage, 'success');
+          }
+          else{
+            var errorMessage = ['Error editing a trial for ' + $scope.customerName + '. Status: ' + status];
+            Notification.notify(errorMessage, 'error');
+          }
+        });
+    };
+
+    $scope.setTrial = function(trial){
+      $scope.currentTrial = trial;
+    };
 
 		var getTrialsList = function() {
 			$scope.getPending = true;
@@ -22,6 +79,7 @@ angular.module('Squared')
 							var trial = data.trials[index];
 							var edate = moment(trial.startDate).add(trial.trialPeriod, 'days').format('MMM D, YYYY');
 							var trialObj = {
+                trialId: trial.trialId,
 								customerName: trial.customerName,
 								endDate: edate,
 								numUsers: trial.licenseCount,
@@ -84,7 +142,6 @@ angular.module('Squared')
 		getTrialsList();
 
 		$scope.showAll = function() {
-
 		};
 
 		$scope.newTrialName = null;

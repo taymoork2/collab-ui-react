@@ -130,7 +130,7 @@ angular
         })
         .state('partnerhome', {
           url: '/partnerhome',
-          templateUrl: 'modules/squared/views/partnerhome.html',
+          templateUrl: 'modules/core/views/partnerlanding.html',
           controller: 'PartnerHomeCtrl'
         });
     }
