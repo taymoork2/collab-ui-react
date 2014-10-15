@@ -846,6 +846,11 @@ input:disabled {
   float: right;
 }
 
+.add-trial-button {
+  margin-top: 0px;
+  left: 25px;
+}
+
 .add-user-close {
   float: right;
   bottom: 15px;
@@ -1213,7 +1218,82 @@ a:active.ftwNavLink {
   font-size: 24px;
 }
 
+
 /*************************************
  *      Views Style imports
  ************************************/
 @import '../modules/core/styles/landing-page';
+
+
+.trialsPanel {
+  margin: 30px;
+  padding: 20px;
+  background-color: #FFFFFF;
+  width: 399px;
+  border-color: @list-group-border;
+  border-width: 1px;
+  float: right;
+}
+
+#trialHeader {
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 10px;
+}
+
+.trialRow {
+  padding-top: 10px;
+}
+
+#expiredTrials {
+  padding-top: 30px;
+}
+
+.trialTitle {
+  font-family: @brand-font-cisco-TT-Extra-Light;
+  font-size: 31px;
+  color: @navbar-inverse-link-disabled-color;
+}
+
+.trialHeading {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 11px;
+  color: @pagination-color;
+}
+
+.expiredCustomer {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+  color: #509FCC;
+  text-align: left;
+}
+
+.expired {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+  color: @btn-link-disabled-color;
+  text-align: right;
+}
+
+.trialCustomer {
+  font-family: @brand-font-cisco-TT-Regular;
+  font-size:15px;
+  color: #509FCC;
+  text-align:left;
+}
+
+.trialLicense {
+  font-family: Arial, sans-serif;
+  font-size:13px;
+  color: @pagination-color;
+  text-align:right;
+}
+
+.trialDays {
+  font-family: Arial, sans-serif;
+  font-size:13px;
+  color: @pagination-color;
+  text-align:right;
+}

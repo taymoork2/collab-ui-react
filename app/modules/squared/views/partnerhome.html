@@ -1,4 +1,81 @@
-<div id="trialsPanel">
-  <h2>{{'partnerHomePage.trialsHeading' | translate}}</h2>
-  <div class="gridStyle" ng-grid="trialsGrid"></div>
+<div id="trialsPanel" class="container trialsPanel">
+  <div class="row">
+    <div class="col-sm-8 trialTitle">
+      <span>{{'partnerHomePage.trialsHeading' | translate}}</span>
+    </div>
+    <div class="col-sm-4 add-trial-button">
+      <button id="addTrial" class="btn btn-success pull-right" ng-click="doAction()" translate="partnerHomePage.addTrial"></button>
+    </div>
+  </div>
+
+  <div id="trialHeader" class="row">
+    <div class="col-sm-6 trialHeading">
+      <span translate="partnerHomePage.trialsCustomerName"></span>
+    </div>
+    <div class="col-sm-3 trialHeading">
+      <span translate="partnerHomePage.trialsEndDate"></span>
+    </div>
+    <div class="col-sm-3 trialHeading">
+      <span translate="partnerHomePage.trialsNumUsers"></span>
+    </div>
+  </div>
+
+  <div ng-repeat="trial in trialsList | orderBy: 'trial.createdDate' | limitTo: displayRows">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="trialCustomer">
+          <span>{{trial.customerName}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row trialRow">
+      <div class="col-sm-6">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{trial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{trial.duration}}" style="width: {{trial.percentUsed}}%;">
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 trialDays">
+        <span>{{trial.daysLeft}}</span>
+      </div>
+      <div class="col-sm-3 trialLicense">
+        <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
+      </div>
+    </div>
+  </div>
+
+ <!--  <div class="row trialRow">
+    <div class="col-sm-6">
+      <a ng-click="showAll()"><span translate="partnerHomePage.viewAll"></span></a>
+    </div>
+  </div> -->
+
+
+
+
+
+
+<div ng-show="showExpired">
+  <div id="expiredTrials" class="row">
+    <div class="col-sm-10 trialTitle">
+      <span>{{'partnerHomePage.expiredHeading' | translate}}</span>
+    </div>
+  </div>
+
+  <div class="row trialRow" ng-repeat="trial in expiredList | orderBy: 'trial.createdDate' | limitTo: expiredRows">
+    <div class="col-sm-5 expiredCustomer">
+      <div>
+        <span>{{trial.customerName}}</span>
+      </div>
+    </div>
+    <div class="col-sm-4 expired">
+      <span translate="partnerHomePage.daysAgo" translate-values="{ days: trial.daysLeft }"></span>
+    </div>
+    <div class="col-sm-3 expired">
+      <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
+    </div>
+  </div>
+
+</div>
+
 </div>
