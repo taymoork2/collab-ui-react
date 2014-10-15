@@ -5,22 +5,69 @@ angular.module('Squared')
   .controller('PartnerHomeCtrl', ['$scope', '$rootScope', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService',
     function($scope, $rootScope, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService ) {
 
+    $scope.daysExpired = 5;
+    $scope.displayRows = 8;
+    $scope.expiredRows = 3;
+
 		var getTrialsList = function() {
 			$scope.getPending = true;
 			$scope.trialsList = [];
+			$scope.expiredList = [];
 			PartnerService.getTrialsList(function(data, status) {
 				if (data.success) {
+					$scope.totalTrials = data.trials.length;
+
 					if (data.trials.length > 0) {
 						for (var index in data.trials) {
-							var date = moment(data.trials[index].startDate).add(data.trials[index].trialPeriod, 'days').format('MMM D, YYYY');
-							var trial = {
-								customerName:data.trials[index].customerOrgId,
-								endDate:date,
-								numUsers:data.trials[index].licenseCount
+							var trial = data.trials[index];
+							var edate = moment(trial.startDate).add(trial.trialPeriod, 'days').format('MMM D, YYYY');
+							var trialObj = {
+								customerName: trial.customerName,
+								endDate: edate,
+								numUsers: trial.licenseCount,
+								daysLeft: 0,
+								usage: 0,
+								licenses: 0,
+								daysUsed: 0,
+								percentUsed: 0,
+								duration: trial.trialPeriod
 							};
-							$scope.trialsList.push(trial);
+
+							if (trial.offers)
+							{
+								for (var cnt in trial.offers) {
+									var offer = trial.offers[cnt];
+									if (offer && offer.id === 'COLLAB')
+									{
+										trialObj.usage = offer.usageCount;
+										trialObj.licenses = offer.licenseCount;
+										break;
+									}
+								}
+							}
+
+							var now  = moment();
+							var then = edate;
+							var start = moment(trial.startDate).format('MMM D, YYYY');
+
+							var daysDone = moment(now).diff(start, 'days');
+							trialObj.daysUsed = daysDone;
+							trialObj.percentUsed = eval((daysDone/trial.trialPeriod)*100);
+
+							var daysLeft = moment(then).diff(now, 'days');
+							trialObj.daysLeft = daysLeft;
+							if (daysLeft >= 0)
+							{
+								$scope.trialsList.push(trialObj);
+							}
+							else
+							{
+								trialObj.daysLeft = Math.abs(daysLeft);
+								$scope.expiredList.push(trialObj);
+							}
 						}
-						Log.debug('trial records found');
+						$scope.showExpired = $scope.expiredList.length > 0;
+						Log.debug('trial records found:' + $scope.trialsList.length);
 					} else {
 						$scope.getPending = false;
 						Log.debug('No trial records found');
@@ -35,6 +82,10 @@ angular.module('Squared')
 		};
 
 		getTrialsList();
+
+		$scope.showAll = function() {
+
+		};
 
 		$scope.newTrialName = null;
 		$scope.trialsGrid = {
@@ -51,5 +102,6 @@ angular.module('Squared')
 				{field:'endDate', displayName:$translate.instant('partnerHomePage.trialsEndDate')},
 				{field:'numUsers', displayName:$translate.instant('partnerHomePage.trialsNumUsers')}]
 		};
+
 	}
   ]);

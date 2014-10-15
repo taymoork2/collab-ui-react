@@ -395,12 +395,17 @@
         "toggle": "Voicemail",
         "voicemailNote": "Note: Turning off voicemail could impact user's call forwarding settings"
     },
-    "partnerHomePage": {
-        "trialsHeading": "Trials",
-        "noResults": "No Results",
-        "trialsCustomerName": "Customer Name",
-        "trialsEndDate": "End Date",
-        "trialsNumUsers": "User Numbers",
-        "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}"
+    "partnerHomePage" : {
+        "trialsHeading" : "ACTIVE TRIALS",
+        "expiredHeading" : "EXPIRED TRIALS",
+        "addTrial" : "New Trial",
+        "noResults" : "No Results",
+        "trialsCustomerName" : "Customer",
+        "trialsEndDate" : "Day(s) Left",
+        "trialsNumUsers" : "Users/Licenses",
+        "viewAll" : "View all Trials",
+        "expiredToday" : "Expiring Today",
+        "daysAgo" : "{{days}} days ago",
+        "errGetTrialsQuery" : "Failed to retrieve trials. Status: {{status}}"
     }
 }
