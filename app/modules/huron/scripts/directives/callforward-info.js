@@ -263,9 +263,12 @@ angular.module('Huron')
             if ($scope.forwardExternalCalls) {
               if ($scope.forwardBusyCalls === 'Voicemail') {
                 $scope.directoryNumberDetail.callForwardBusy.intVoiceMailEnabled = true;
+                $scope.directoryNumberDetail.callForwardNotRegistered.intVoiceMailEnabled = true;
               } else {
                 $scope.directoryNumberDetail.callForwardBusy.intVoiceMailEnabled = false;
                 $scope.directoryNumberDetail.callForwardBusy.intDestination = $scope.forwardBusyCalls;
+                $scope.directoryNumberDetail.callForwardNotRegistered.intVoiceMailEnabled = false;
+                $scope.directoryNumberDetail.callForwardNotRegistered.intDestination = $scope.forwardBusyCalls; 
               }
               if ($scope.forwardNoAnswerCalls === 'Voicemail') {
                 $scope.directoryNumberDetail.callForwardNoAnswer.intVoiceMailEnabled = true;
@@ -275,9 +278,12 @@ angular.module('Huron')
               }
               if ($scope.forwardExternalBusyCalls === 'Voicemail') {
                 $scope.directoryNumberDetail.callForwardBusy.voicemailEnabled = true;
+                $scope.directoryNumberDetail.callForwardNotRegistered.voicemailEnabled = true;
               } else {
                 $scope.directoryNumberDetail.callForwardBusy.voicemailEnabled = false;
+                $scope.directoryNumberDetail.callForwardNotRegistered.voicemailEnabled = false;
                 $scope.directoryNumberDetail.callForwardBusy.destination = $scope.forwardExternalBusyCalls;
+                $scope.directoryNumberDetail.callForwardNotRegistered.destination = $scope.forwardExternalBusyCalls;
               }
               if ($scope.forwardExternalNoAnswerCalls === 'Voicemail') {
                 $scope.directoryNumberDetail.callForwardNoAnswer.voicemailEnabled = true;
@@ -291,7 +297,11 @@ angular.module('Huron')
                 $scope.directoryNumberDetail.callForwardBusy.voicemailEnabled = true;
                 $scope.directoryNumberDetail.callForwardNoAnswer.intVoiceMailEnabled = true;
                 $scope.directoryNumberDetail.callForwardNoAnswer.voicemailEnabled = true;
+                $scope.directoryNumberDetail.callForwardNotRegistered.intVoiceMailEnabled = true;
+                $scope.directoryNumberDetail.callForwardNotRegistered.voicemailEnabled = true;
               } else {
+                $scope.directoryNumberDetail.callForwardNotRegistered.intVoiceMailEnabled = false;
+                $scope.directoryNumberDetail.callForwardNotRegistered.voicemailEnabled = false;
                 $scope.directoryNumberDetail.callForwardBusy.intVoiceMailEnabled = false;
                 $scope.directoryNumberDetail.callForwardBusy.voicemailEnabled = false;
                 $scope.directoryNumberDetail.callForwardBusy.intDestination = $scope.forwardBusyCalls;
@@ -301,6 +311,8 @@ angular.module('Huron')
                 $scope.directoryNumberDetail.callForwardNoAnswer.voicemailEnabled = false;
                 $scope.directoryNumberDetail.callForwardNoAnswer.intDestination = $scope.forwardNoAnswerCalls;
                 $scope.directoryNumberDetail.callForwardNoAnswer.destination = $scope.forwardNoAnswerCalls;
+                $scope.directoryNumberDetail.callForwardNotRegistered.intDestination = $scope.forwardBusyCalls;
+                $scope.directoryNumberDetail.callForwardNotRegistered.destination = $scope.forwardNoAnswerCalls;
               }
             }
           }

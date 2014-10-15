@@ -23,6 +23,7 @@ angular.module('Huron')
       type: 'null'
     };
 
+		angular.element('#btnSaveVoicemail').button('loading');    
 		if ($scope.voicemailEnabled && !$scope.isVoicemailEnabled()) {
 			$scope.telephonyUser.services.push('VOICEMAIL');
 
@@ -55,6 +56,7 @@ angular.module('Huron')
 								$scope.telephonyUserInfo.voicemail = 'Off';
 							}
 
+							angular.element('#btnSaveVoicemail').button('reset');
               result.msg = $filter('translate')('voicemailPanel.success');
               result.type = 'success';
               Notification.notify([result.msg], result.type);
@@ -64,8 +66,9 @@ angular.module('Huron')
               result.type = 'error';
               Notification.notify([result.msg], result.type);
               deferred.reject(error);
+              angular.element('#btnSaveVoicemail').button('reset');
             }
-							);
+							);		
 	};
 }
 ])

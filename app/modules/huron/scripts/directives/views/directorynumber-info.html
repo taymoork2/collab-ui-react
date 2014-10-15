@@ -5,19 +5,21 @@
     <h3>&nbsp;&nbsp;&nbsp;&nbsp;Line Setting</h3>
     <div class="details-body">
       <div>
-        <h4>Direct Numbers</h4>        
-        Reach this line by any of these numbers or extensions<br>
+        <form name="directoryNumberForm" role="form">
+          <h4>Direct Numbers</h4>        
+          Reach this line by any of these numbers or extensions<br>
 
-        Internal Number Extension *<br>
-        <select ng-model="assignedInternalNumber.id" name="internalNumber" required="true" ng-options="unassignedNumber.id as unassignedNumber.pattern for unassignedNumber in unassingedDirectoryNumbers">
-          <option value="">-- choose a number --</option>
-        </select><br>
-        <div ng-show="false">
-          External Number<br>
-          <select ng-model="directoryNumber" name="directoryNumber" required="true" ng-options="directoryNumber.pattern for directoryNumber in unassingedDirectoryNumbers">
+          Internal Number Extension *<br>
+          <select ng-model="assignedInternalNumber.id" class="form-control" name="internalNumber" required="true" ng-options="unassignedNumber.id as unassignedNumber.pattern for unassignedNumber in unassingedDirectoryNumbers">
             <option value="">-- choose a number --</option>
-          </select>
-        </div>
+          </select><br>
+          <div ng-show="false">
+            External Number<br>
+            <select ng-model="directoryNumber" class="form-control" name="directoryNumber" required="true" ng-options="directoryNumber.pattern for directoryNumber in unassingedDirectoryNumbers">
+              <option value="">-- choose a number --</option>
+            </select>        
+          </div>
+        </form>
         <br><br>
         <div call-forward-info></div call-forward-info>
       </div>
