@@ -3,8 +3,8 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('UsersCtrl', ['$scope', '$state','$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config',
-    function($scope, $state, $location, $window, Userservice, UserListService, Log, Authinfo, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config) {
+  .controller('UsersCtrl', ['$scope', '$state','$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config', 'HuronUser',
+    function($scope, $state, $location, $window, Userservice, UserListService, Log, Authinfo, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config, HuronUser) {
 
       $scope.init = function () {
         setPlaceholder();
@@ -145,6 +145,9 @@ angular.module('Core')
               if (userStatus === 200) {
                 userResult.message = 'added successfully';
                 userResult.alertType = 'success';
+                if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
+                  HuronUser.create(data.userResponse[i].email, data.userResponse[i].uuid);
+                }
               } else if (userStatus === 409) {
                 userResult.message = 'already exists';
                 userResult.alertType = 'danger';

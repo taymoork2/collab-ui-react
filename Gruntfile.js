@@ -82,21 +82,16 @@ module.exports = function(grunt) {
     // The actual grunt server settings
     connect: {
       options: {
-        port: 8000,
-        // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost',
         livereload: 35729
       },
       livereload: {
         options: {
           open: true,
-          port: 8000,
           base: '<%= build_dir %>'
         }
       },
       test: {
         options: {
-          port: 8000,
           base: [
             '<%= test_dir %>',
             '<%= compile_dir %>'
@@ -105,7 +100,6 @@ module.exports = function(grunt) {
       },
       test_build: {
         options: {
-          port: 8000,
           base: [
             '<%= test_dir %>',
             '<%= build_dir %>'

@@ -210,7 +210,9 @@ angular.module('Core')
         },
 
         getAdminServiceUrl: function() {
-          if (this.isDev() || this.isIntegration()) {
+          if (this.isDev()){
+            return this.adminServiceUrl.integration;
+          } else if(this.isIntegration()) {
             return this.adminServiceUrl.integration;
           } else {
             return this.adminServiceUrl.prod;

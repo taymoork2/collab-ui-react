@@ -37,8 +37,7 @@ angular.module('Huron')
       //delete: {method:'DELETE', headers: {"Authorization":'Bearer ' + Storage.get('accessToken'))} }
 
       //TODO: Remove when we start authenticating to CMI
-      get: {method:'GET', isArray:true},
-      save: {method:'POST'}
+      get: {method:'GET', isArray:true}
     });
   })
 
@@ -64,7 +63,7 @@ angular.module('Huron')
   })
 
   .factory('UserServiceCommon', function($resource, HuronConfig){
-    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId', {customerId: '@customerId', userId:'@userId'}, {
+    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId', {}, {
       //TODO: Uncomment when we start authenticating to CMI
       //get: {method:'GET', headers: {"Authorization":'Bearer ' + Storage.get('accessToken'))} }
       update: {method:'PUT'}
