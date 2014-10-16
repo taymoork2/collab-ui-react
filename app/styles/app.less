@@ -108,15 +108,9 @@ label {
   display: none;
 }
 
-#usersfield-tokenfield {
-  position: relative;
-  top: -1px;
-  margin: 0px;
-  width: 100% !important;
-}
-
 .tokenfield {
   padding:8px;
+  height:auto !important;
 }
 
 .refresh-button{
@@ -882,8 +876,7 @@ input:disabled {
   height: 26px;
 }
 
-#importBtn {
-  margin-right: 346px;
+#importIdpBtn {
   min-width: 100px;
 }
 
@@ -1130,7 +1123,6 @@ a:active.ftwNavLink {
 
 .ftwdirgridStyle {
   margin-top: 10px;
-  margin-left: 170px;
   width: 550px;
   height: 200px;
   border: 1px solid lightgray;
@@ -1146,7 +1138,7 @@ a:active.ftwNavLink {
 }
 
 .sync-dirsync-refresh-button{
-  float:right;
+  margin-left: 53%;
 }
 
 #syncNumUsers {
@@ -1373,3 +1365,84 @@ a:active.ftwNavLink {
  *      Views Style imports
  ************************************/
 @import 'core/_landing-page';
+
+.wizard-side-item {
+  margin: 5px;
+  background-color: #FFFFFF;
+  width: 25.7em;
+  cursor: pointer;
+}
+
+.wizard-menu-icon {
+  height: 5em;
+}
+
+.wizard-menu-icon .fa {
+  position: relative;
+  top: 0.9em;
+  left: 0.6em;
+}
+
+.wizard-menu-title {
+  color: #72C8EE;
+}
+
+.wizard-menu-subtitle {
+  color: #ADADAD;
+}
+
+.wizard-nav {
+  float:left;
+}
+
+#wizard-needhelp {
+  background-color: black;
+  opacity: 0.5;
+  color: #FFFFFF;
+  height: 24.6em;
+}
+
+#wizard-help-link {
+  cursor: pointer;
+}
+
+.wizard-main-view {
+  float:left;
+  background-color: #FFFFFF;
+  width: 58em;
+  height: 40.6em;
+  color: #7D7D7D;
+  padding-right:35px;
+  padding-left:35px;
+  margin-top: 6px;
+}
+
+.wizard-nav-active {
+  background-color: #5FA8E6;
+  color: #FFFFFF ;
+}
+
+.wizard-icon-active {
+  background-color: #529AE1;
+}
+
+.wizard-btn-row {
+  margin:0;
+  padding:0;
+  position:absolute;
+  top:34em;
+  right:0em;
+}
+
+.wiz-view {
+  position:relative;
+}
+
+.wizard-form {
+  padding:0;
+}
+
+.wiz-btn {
+  margin-top: 16px;
+  margin-right: -9px;
+}

@@ -1,16 +1,20 @@
 'use strict';
 
 angular.module('Core')
-  .controller('setupSSODialogCtrl', ['$scope', '$modalInstance', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
-    function($scope, $modalInstance, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
-      
+  .controller('setupSSODialogCtrl', ['$scope',  'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
+    function($scope, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
+
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
       var strEntityIdEnd = '">';
 
-      $scope.cancel = function() {
-        $modalInstance.dismiss('canceled');
-      };
+      //Initialize
+      Notification.init($scope);
+      $scope.popup = Notification.popup;
+
+      // $scope.cancel = function() {
+      //   $modalInstance.dismiss('canceled');
+      // };
 
       $scope.setFile = function(element) {
         $scope.$apply(function($scope) {
@@ -146,10 +150,11 @@ angular.module('Core')
 
       $scope.enableSSO = function() {
         //need to set enableSSO flag in CI
-        Notification.notify([$translate.instant('ssoModal.enableSSOSuccess', {
-          status: status
-        })], 'success');
-        $scope.cancel();
+        // Notification.notify([$translate.instant('ssoModal.enableSSOSuccess', {
+        //   status: status
+        // })], 'success');
+        // $scope.cancel();
+        $scope.changeTab('addUsers');
       };
     }
   ])

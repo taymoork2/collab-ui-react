@@ -5,7 +5,7 @@
 </div>
 
 <div id="ssoModalBody" class="modal-body">
-  <wizard> 
+  <wizard>
 
     <wz-step title = "{{'ssoModal.importMetadataTitle' | translate}}">
       <div id="importMetaDiv">
@@ -13,7 +13,7 @@
         <div id="importFileDiv">
           <span translate="ssoModal.IdPFileLabel"></span>
           <input type="file" accept=".xml" ng-model="fileUpText" id="fileToUploadTextHolder" class="fileholder" onchange="angular.element(this).scope().setFile(this)"/>
-          <input type="text" class="fileholder" id="fileToUploadText" placeholder="{{'ssoModal.chooseFilePlaceHolder' | translate}}" ng-model="filename" disabled/> 
+          <input type="text" class="fileholder" id="fileToUploadText" placeholder="{{'ssoModal.chooseFilePlaceHolder' | translate}}" ng-model="filename" disabled/>
           <input type="file" accept=".xml" ng-model="fileUpBtn" id="fileToUploadBtnHolder" class="btn btn-primary right" onchange="angular.element(this).scope().setFile(this)"/>
           <button class="btn btn-primary right" id="fileToUploadBtn"><span translate="ssoModal.browseBtn"></span></button>
         </div>

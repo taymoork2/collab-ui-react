@@ -73,13 +73,13 @@ angular.module('Core')
         delimiter: [',', ';'],
         createTokensOnBlur: true
       })
-        .on('tokenfield:preparetoken', function(e) {
-          //Removing anything in brackets from user data
-          var value = e.token.value.replace(/\s*\([^)]*\)\s*/g, ' ');
-          e.token.value = value;
-        })
         .on('tokenfield:createtoken', function(e) {
-          if (!validateEmail(e.token.value)) {
+          //Removing anything in brackets from user data
+          var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
+          e.attrs.value = value;
+        })
+        .on('tokenfield:createdtoken', function(e) {
+          if (!validateEmail(e.attrs.value)) {
             angular.element(e.relatedTarget).addClass('invalid');
             invalidcount++;
           }
@@ -87,12 +87,12 @@ angular.module('Core')
           checkPlaceholder();
         })
         .on('tokenfield:edittoken', function(e) {
-          if (!validateEmail(e.token.value)) {
+          if (!validateEmail(e.attrs.value)) {
             invalidcount--;
           }
         })
         .on('tokenfield:removetoken', function(e) {
-          if (!validateEmail(e.token.value)) {
+          if (!validateEmail(e.attrs.value)) {
             invalidcount--;
           }
           checkButtons();

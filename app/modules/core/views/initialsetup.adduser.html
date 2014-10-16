@@ -16,7 +16,7 @@
 		</a>
 	</div>
 	<div class="initialSetupTab" id="installCloudTab">
-		<a class="ftwTabLink" ng-click="showStep('installCloud')"> 
+		<a class="ftwTabLink" ng-click="showStep('installCloud')">
 			<span translate="firstTimeWizard.installTitle"></span>
 		</a>
 	</div>
@@ -57,11 +57,11 @@
 		</div>
 	</div>
 
-	
+
 </div>
 
 <div id="manual" class="ng-hide">
-	<div class="initialSetupContent">
+	<div class="initialSetupContent" ng-init="setupTokenfield()">
 		<form role="form">
       <div class="form-group">
         <label for="inputEmail3" translate="usersPage.email"></label>
@@ -85,13 +85,13 @@
 		  </button>
 		</div>
   </div>
-</div>	
+</div>
 
 <div id="domain" class="ng-hide">
 	<div class="initialSetupContent" ng-init="getDefaultDomain()">
     <div class="ftwCenterContent">
       <span class="subheading" translate="firstTimeWizard.domain"></span>
-      <input type="text" id="dirDomainText" placeholder="{{'firstTimeWizard.defaultPlaceholder' | translate}}" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/> 
+      <input type="text" id="dirDomainText" placeholder="{{'firstTimeWizard.defaultPlaceholder' | translate}}" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/>
       <div id="domainDesc">
         <span translate="firstTimeWizard.domainDesc"></span>
       </div>
@@ -104,7 +104,7 @@
 		  </button>
 		</div>
   </div>
-</div>	
+</div>
 
 <div id="installCloud" class="ng-hide">
 	<div class="initialSetupContent">
@@ -141,7 +141,7 @@
 
       <div id="syncNumUsers">
       	<span class="boldText"> {{numUsersInSync}} </span>
-      	<span translate="firstTimeWizard.syncAgreementText"></span> 
+      	<span translate="firstTimeWizard.syncAgreementText"></span>
       </div>
       <div class="ftwdirgridStyle" ng-grid="gridOptions"></div>
       <div class="initialSetupAddUserNavBtns">
@@ -154,4 +154,4 @@
 			</div>
 	</div>
 </div>
-          
+
