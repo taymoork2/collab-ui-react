@@ -16,8 +16,8 @@ angular.module('Core')
 
 		$scope.licenses = {
 			total: 'Unlimited',
-			used: 371,
-			unlicensed: 16,
+			used: 0,
+			unlicensed: 0,
 			domain: ''
 		};
 
