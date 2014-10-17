@@ -300,7 +300,6 @@
         "page_title": "Fusion Services",
         "connectors": {
             "group_by": "Group services by:",
-            "loading": "Loading...",
             "loading_error": "Error loading fusion data. Ensure you have accepted the certificate at <a href='https://hercules.ladidadi.org/'>https://hercules.ladidadi.org</a>. This is a short term limitation due to the use of self signed certificates.",
             "no_connectors": "No fusion services registered.",
             "cluster_id": "Cluster",
