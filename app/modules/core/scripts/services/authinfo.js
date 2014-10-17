@@ -152,6 +152,11 @@ angular.module('Core')
           return authData.isInitialized;
         },
 
+        isAdmin: function() {
+          var roles = this.getRoles();
+          return roles.indexOf('Full_Admin') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
+        },
+
         isSquaredTeamMember: function() {
           var roles = this.getRoles();
           return roles.indexOf('WX2_User') > -1;

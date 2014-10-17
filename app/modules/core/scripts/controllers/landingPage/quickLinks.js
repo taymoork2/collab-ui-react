@@ -2,21 +2,38 @@
 
 angular.module('Core')
 
-.controller('QuikLinksCtrl', ['$scope',
-  function($scope) {
+.controller('QuikLinksCtrl', ['$scope', 'Authinfo',
+  function($scope, Authinfo) {
+
+    var isPageActive = function(name) {
+      return Authinfo.isAllowedState(name);
+    };
 
     $scope.links = [{
-      link: '#',
-      text: 'Add Users'
+      link: '#/users',
+      text: 'Add Users',
+      show: isPageActive('users')
     }, {
       link: '#',
-      text: 'Install a Device for a User'
+      text: 'Install a Device for a User',
+      show: false
+    }, {
+      link: '#/spaces',
+      text: 'Install a Devices into a Shared Space',
+      show: isPageActive('spaces')
     }, {
       link: '#',
-      text: 'Configure an Auto Attendant'
+      text: 'Configure an Auto Attendant',
+      show: false
     }, {
-      link: '#',
-      text: 'Generate Device Activation Codes'
+      link: '#/spaces',
+      text: 'Generate Device Activation Codes',
+      show: false
+    }, {
+      link: '#/support',
+      text: 'Search device logs',
+      show: isPageActive('support')
     }];
+
   }
 ]);

@@ -197,7 +197,8 @@
         "quickProv": "Quickly provision  your users or groups",
         "advSetup": "Advanced Setup",
         "advProv": "Provision users with a guided wizard to set up Directory Sync, Single Sign on and customized reports",
-        "launchBtn": "Launch"
+        "launchBtn": "Launch",
+        "errGetTrialsQuery" : "Failed to retrieve trials. Status: {{status}}"
     },
     "inviteModal": {
         "title": "Service Entitlement",
