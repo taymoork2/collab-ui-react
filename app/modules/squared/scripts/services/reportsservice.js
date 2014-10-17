@@ -10,10 +10,17 @@ angular.module('Squared')
       var timeChartUrl = Config.getAdminServiceUrl() + 'reports/timeCharts/';
       var logInfoBaseUrl = Config.getAdminServiceUrl() + 'reports/tables/calls/';
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
+      var averageCallCount = Config.getAdminServiceUrl() + 'reports/counts/avgCallsPerUser';
+      var entitlementCount = Config.getAdminServiceUrl() + 'reports/counts/entitlements';
+      var contentSharedCount = Config.getAdminServiceUrl() + 'reports/counts/contentShared';
+
 
       var urls = {
         'callUsage':callMetricsUrl,
-        'activeUserCount':activeUsersUrl
+        'activeUserCount':activeUsersUrl,
+        'averageCallCount':averageCallCount,
+        'entitlementCount':entitlementCount,
+        'contentSharedCount':contentSharedCount
       };
 
       var buildUrl = function(metricType, params) {
@@ -62,19 +69,102 @@ angular.module('Squared')
 
           var metricUrl = buildUrl(metricType, params);
 
-          $http.get(metricUrl)
+          return $http.get(metricUrl)
             .success(function(data, status) {
               data.success = true;
               Log.debug('Callback for ' + metricType + ' for org=' + Authinfo.getOrgId());
-              callback(data, status);
+              if (angular.isFunction(callback)) {
+                callback(data, status);
+              }
             })
             .error(function(data, status) {
               data.success = false;
               data.status = status;
               data.errorMsg = data;
-              callback(data, status);
+              if (angular.isFunction(callback)) {
+                callback(data, status);
+              }
               Auth.handleStatus(status);
             });
+        },
+
+        getPartnerMetrics: function(useCache) {
+          var countParam = {
+            'intervalCount': 1,
+            'intervalType': 'week',
+            'cache': useCache
+          };
+          var chartParams = {
+            'intervalCount': 1,
+            'intervalType': 'week',
+            'spanCount': 1,
+            'spanType': 'day',
+            'cache': useCache
+          };
+
+          this.getUsageMetrics('activeUsers', chartParams, function(data,status){
+            var response = {
+              'data': data,
+              'status': status
+            };
+            $rootScope.$broadcast('ActiveUsersLoaded', response);
+          });
+
+          this.getUsageMetrics('avgCallsPerUser', chartParams, function(data,status){
+            var response = {
+              'data': data,
+              'status': status
+            };
+            $rootScope.$broadcast('AverageCallsLoaded', response);
+          });
+
+          this.getUsageMetrics('entitlements', chartParams, function(data,status){
+            var response = {
+              'data': data,
+              'status': status
+            };
+            $rootScope.$broadcast('EntitlementsLoaded', response);
+          });
+
+          this.getUsageMetrics('contentShared', chartParams, function(data,status){
+            var response = {
+              'data': data,
+              'status': status
+            };
+            $rootScope.$broadcast('ContentSharedLoaded', response);
+          });
+
+          this.getUsageMetrics('activeUserCount', chartParams, function(data,status){
+            var response = {
+              'data': data,
+              'status': status
+            };
+            $rootScope.$broadcast('ActiveUserCountLoaded', response);
+          });
+
+          this.getUsageMetrics('averageCallCount', chartParams, function(data,status){
+            var response = {
+              'data': data,
+              'status': status
+            };
+            $rootScope.$broadcast('AverageCallCountLoaded', response);
+          });
+
+          this.getUsageMetrics('entitlementCount', chartParams, function(data,status){
+            var response = {
+              'data': data,
+              'status': status
+            };
+            $rootScope.$broadcast('EntitlementCountLoaded', response);
+          });
+
+          this.getUsageMetrics('contentSharedCount', chartParams, function(data,status){
+            var response = {
+              'data': data,
+              'status': status
+            };
+            $rootScope.$broadcast('ContentSharedCountLoaded', response);
+          });
         },
 
         getAllMetrics :function(useCache){

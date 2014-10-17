@@ -447,6 +447,10 @@
     "name" : "Name",
     "edit" : "Edit",
     "saveSendReminder" : "Save and Send Reminder",
-    "partnerHeading" : "Adoption and Engagement"
+    "partnerHeading" : "Adoption and Engagement",
+    "entitlementsTitle" : "Users Onboarded",
+    "activeUsersTitle" : "Daily Active Users",
+    "averageCallsTitle" : "Average Calls Per User",
+    "contentSharedTitle" : "Total Content Shared"
   }
 }
