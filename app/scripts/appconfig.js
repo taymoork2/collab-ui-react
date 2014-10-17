@@ -132,9 +132,19 @@ angular
           url: '/partnerhome',
           templateUrl: 'modules/core/views/partnerlanding.html',
           controller: 'PartnerHomeCtrl'
+        })
+        .state('partnerreports', {
+          url: '/partnerreports',
+          templateUrl: 'modules/squared/views/partnerreports.html',
+          controller: 'PartnerReportsCtrl'
+        })
+        .state('customers', {
+          url: '/customers',
+          templateUrl: 'modules/core/views/customers.html',
+          controller: 'CustomersCtrl'
         });
     }
-  ]);
+]);
 
 angular
   .module('Huron')

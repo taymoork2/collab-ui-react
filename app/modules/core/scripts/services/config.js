@@ -93,7 +93,7 @@ angular.module('Core')
             index: 1,
             name: 'partnerhome',
             tab: 'homeTab',
-            title: 'tabs.partnerhomeTab',
+            title: 'tabs.homeTab',
             state: 'partnerhome',
             link: '/partnerhome'
           },{
@@ -140,13 +140,35 @@ angular.module('Core')
             ]
           },{
             index: 3,
+            name: 'partnermanage',
+            tab: 'orgTab',
+            title: 'tabs.orgTab',
+            subPages: [
+              {
+                index: 0,
+                name: 'customers',
+                title: 'tabs.customersTab',
+                desc: 'tabs.customersTabDesc',
+                state: 'customers',
+                link: '#customers'
+              }
+            ]
+          },{
+            index: 4,
             name: 'reports',
             tab: 'reportTab',
             title: 'tabs.reportTab',
             state: 'reports',
             link: '/reports'
           },{
-            index: 4,
+            index: 5,
+            name: 'partnerreports',
+            tab: 'reportTab',
+            title: 'tabs.reportTab',
+            state: 'partnerreports',
+            link: '/partnerreports'
+          },{
+            index: 6,
             name: 'support',
             tab: 'supportTab',
             title: 'tabs.supportTab',
@@ -266,7 +288,7 @@ angular.module('Core')
         WX2_SquaredInviter: [],
         User: [],
         PARTNER_ADMIN: [],
-        PARTNER_USER: ['partnerhome']
+        PARTNER_USER: ['partnerhome', 'customers', 'partnerreports']
       };
 
       config.serviceStates = {

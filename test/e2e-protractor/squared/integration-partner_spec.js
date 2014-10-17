@@ -22,8 +22,10 @@ describe('Partner flow', function() {
     });
 
     it('should display correct tabs for user based on role', function() {
-      expect(navigation.getTabCount()).toBe(1);
+      expect(navigation.getTabCount()).toBe(3);
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
+      expect(navigation.manageTab.isDisplayed()).toBeTruthy();
+      expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
     });
     it('should display trials list', function() {
       expect(partner.trialsPanel.isDisplayed()).toBeTruthy();

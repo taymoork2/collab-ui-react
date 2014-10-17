@@ -54,7 +54,8 @@
         "fusionDetailsTabDesc": "Fusion Management",
         "callRoutingTab": "Call Routing",
         "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
-        "partnerhomeTab": "Home"
+        "customersTab" : "Customers",
+        "customersTabDesc" : "Manage Customers"
     },
     "index": {
         "welcome": "Welcome",
