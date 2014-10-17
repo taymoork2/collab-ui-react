@@ -4,23 +4,20 @@
 angular.module('Core')
   .controller('AddUserCtrl', ['$scope', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
     function($scope, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
-      //Initialize
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
 
-			var allSteps = ['chooseSync', 'domain', 'installCloud', 'syncStatus', 'manual'];
-			var manualSteps = ['manual'];
-			var dirsyncSteps = ['domain', 'installCloud', 'syncStatus'];
+      var allSteps = ['chooseSync', 'domain', 'installCloud', 'syncStatus', 'manual'];
+      var manualSteps = ['manual'];
+      var dirsyncSteps = ['domain', 'installCloud', 'syncStatus'];
 
-	    for(var stepNum in allSteps) {
-				var step = allSteps[stepNum];
-				if(step !== 'chooseSync') {
-					$('#'+step).addClass('ng-hide');
-					$('#'+step+'Tab').addClass('ng-hide');
+      for (var stepNum in allSteps) {
+        var step = allSteps[stepNum];
+        if (step !== 'chooseSync') {
+          $('#' + step).addClass('ng-hide');
+          $('#' + step + 'Tab').addClass('ng-hide');
         } else {
-					$('#'+step).addClass('ng-show');
-					$('#'+step+'Tab').addClass('ng-show');
-					$('#'+step+'Tab').addClass('tabHighlight');
+          $('#' + step).addClass('ng-show');
+          $('#' + step + 'Tab').addClass('ng-show');
+          $('#' + step + 'Tab').addClass('tabHighlight');
         }
       }
 
@@ -28,128 +25,162 @@ angular.module('Core')
       $scope.domainExists = true;
       $scope.domain = '';
       $scope.dirsyncStatus = '';
-      $scope.gridOptions = { data: 'userList',
-                             multiSelect: false };
+      $scope.gridOptions = {
+        data: 'userList',
+        multiSelect: false
+      };
 
+      $scope.setupTokenfield = function() {
+        //tokenfield setup - Should make it into a directive later.
+        angular.element('#usersfield-wiz').tokenfield({
+          delimiter: [',', ';'],
+          createTokensOnBlur: true
+        })
+          .on('tokenfield:createtoken', function(e) {
+            //Removing anything in brackets from user data
+            var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
+            e.attrs.value = value;
+          })
+          .on('tokenfield:createdtoken', function(e) {
+            if (!validateEmail(e.attrs.value)) {
+              angular.element(e.relatedTarget).addClass('invalid');
+              invalidcount++;
+            }
+            checkButtons();
+            checkPlaceholder();
+          })
+          .on('tokenfield:edittoken', function(e) {
+            if (!validateEmail(e.attrs.value)) {
+              invalidcount--;
+            }
+          })
+          .on('tokenfield:removetoken', function(e) {
+            if (!validateEmail(e.attrs.value)) {
+              invalidcount--;
+            }
+            checkButtons();
+            checkPlaceholder();
+          });
+      };
 
-	    $scope.chooseNextStep = function() {
-				var syncOption = $scope.chooseSync;
-				if(syncOption === 'dirsync') {
-					$scope.showStep('domain');
-				} else if (syncOption === 'manual') {
-					$scope.showStep('manual');
-				}	else {
-					Notification.notify([$translate.instant('firstTimeWizard.chooseSync', {
-              status: status
-            })], 'error');
-				}
-	    };
+      $scope.chooseNextStep = function() {
+        var syncOption = $scope.chooseSync;
+        if (syncOption === 'dirsync') {
+          $scope.showStep('domain');
+        } else if (syncOption === 'manual') {
+          $scope.showStep('manual');
+        } else {
+          Notification.notify([$translate.instant('firstTimeWizard.chooseSync', {
+            status: status
+          })], 'error');
+        }
+      };
 
-	    $scope.chooseSkipStep = function() {
-				$location.path('/home');
-	    };
+      $scope.chooseSkipStep = function() {
+        $location.path('/home');
+      };
 
-	    $scope.chooseBackStep = function() {
-				$location.path('/initialsetup/accountreview');
-	    };
+      $scope.chooseBackStep = function() {
+        $location.path('/initialsetup/accountreview');
+      };
 
-	    $scope.manualNextStep = function() {
-				$location.path('/home');
-	    };
+      $scope.manualNextStep = function() {
+        $location.path('/home');
+      };
 
-	    $scope.manualBackStep = function() {
-				$scope.showStep('chooseSync');
-	    };
+      $scope.manualBackStep = function() {
+        $scope.showStep('chooseSync');
+      };
 
-	    $scope.domainNextStep = function() {
-				$scope.setDomain();
-				$scope.showStep('installCloud');
-	    };
+      $scope.domainNextStep = function() {
+        $scope.setDomain();
+        $scope.showStep('installCloud');
+      };
 
-	    $scope.domainBackStep = function() {
-				$scope.showStep('chooseSync');
-	    };
+      $scope.domainBackStep = function() {
+        $scope.showStep('chooseSync');
+      };
 
-	    $scope.installNextStep = function() {
-				$scope.getStatus();
-				$scope.showStep('syncStatus');
-	    };
+      $scope.installNextStep = function() {
+        $scope.getStatus();
+        $scope.showStep('syncStatus');
+      };
 
-	    $scope.installBackStep = function() {
-				$scope.showStep('domain');
-	    };
+      $scope.installBackStep = function() {
+        $scope.showStep('domain');
+      };
 
-	    $scope.syncNextStep = function() {
-				$location.path('/home');
-	    };
+      $scope.syncNextStep = function() {
+        $location.path('/home');
+      };
 
-	    $scope.syncBackStep = function() {
-				$scope.showStep('installCloud');
-	    };
+      $scope.syncBackStep = function() {
+        $scope.showStep('installCloud');
+      };
 
-	    $scope.showStep = function(thisStep) {
+      $scope.showStep = function(thisStep) {
 
-				//remove other pages are tab highlight from view
-				for(var stepNum in allSteps) {
-					var step = allSteps[stepNum];
-					if(step !== thisStep) {
-						$('#'+step).removeClass('ng-show');
-						$('#'+step).addClass('ng-hide');
-						$('#'+step+'Tab').removeClass('tabHighlight');
+        //remove other pages are tab highlight from view
+        for (var stepNum in allSteps) {
+          var step = allSteps[stepNum];
+          if (step !== thisStep) {
+            $('#' + step).removeClass('ng-show');
+            $('#' + step).addClass('ng-hide');
+            $('#' + step + 'Tab').removeClass('tabHighlight');
 
-	        } else {
-						$('#'+step).removeClass('ng-hide');
-						$('#'+step).addClass('ng-show');
-						$('#'+step+'Tab').addClass('tabHighlight');
-	        }
-	      }
+          } else {
+            $('#' + step).removeClass('ng-hide');
+            $('#' + step).addClass('ng-show');
+            $('#' + step + 'Tab').addClass('tabHighlight');
+          }
+        }
 
-	      if(thisStep === 'chooseSync') {
-					for(var choosestepNum in allSteps) {
-						var choosestep = allSteps[choosestepNum];
-						$('#'+choosestep+'Tab').removeClass('ng-show');
-						$('#'+choosestep+'Tab').addClass('ng-hide');
-					}
-					$('#chooseSyncTab').addClass('ng-show');
-					$('#chooseSyncTab').removeClass('ng-hide');
-				} else {
-					$('#chooseSyncTab').removeClass('ng-show');
-					$('#chooseSyncTab').addClass('ng-hide');
-		      var syncOption = $scope.chooseSync;
-		      if(syncOption === 'dirsync') {
-						for(var dirstepNum in dirsyncSteps) {
-							var dirstep = dirsyncSteps[dirstepNum];
-							$('#'+dirstep+'Tab').addClass('ng-show');
-							$('#'+dirstep+'Tab').removeClass('ng-hide');
-						}
-						for(var manstepNum in manualSteps) {
-							var manstep = manualSteps[manstepNum];
-							$('#'+manstep+'Tab').removeClass('ng-show');
-							$('#'+manstep+'Tab').addClass('ng-hide');
-						}
-					} else if (syncOption === 'manual') {
-						for(var manstepNumm in manualSteps) {
-							var mannstep = manualSteps[manstepNumm];
-							$('#'+mannstep+'Tab').addClass('ng-show');
-							$('#'+mannstep+'Tab').removeClass('ng-hide');
-						}
-						for(var dirstepNumm in dirsyncSteps) {
-							var dirrstep = dirsyncSteps[dirstepNumm];
-							$('#'+dirrstep+'Tab').removeClass('ng-show');
-							$('#'+dirrstep+'Tab').addClass('ng-hide');
-						}
-					}
-				}
-	    };
+        if (thisStep === 'chooseSync') {
+          for (var choosestepNum in allSteps) {
+            var choosestep = allSteps[choosestepNum];
+            $('#' + choosestep + 'Tab').removeClass('ng-show');
+            $('#' + choosestep + 'Tab').addClass('ng-hide');
+          }
+          $('#chooseSyncTab').addClass('ng-show');
+          $('#chooseSyncTab').removeClass('ng-hide');
+        } else {
+          $('#chooseSyncTab').removeClass('ng-show');
+          $('#chooseSyncTab').addClass('ng-hide');
+          var syncOption = $scope.chooseSync;
+          if (syncOption === 'dirsync') {
+            for (var dirstepNum in dirsyncSteps) {
+              var dirstep = dirsyncSteps[dirstepNum];
+              $('#' + dirstep + 'Tab').addClass('ng-show');
+              $('#' + dirstep + 'Tab').removeClass('ng-hide');
+            }
+            for (var manstepNum in manualSteps) {
+              var manstep = manualSteps[manstepNum];
+              $('#' + manstep + 'Tab').removeClass('ng-show');
+              $('#' + manstep + 'Tab').addClass('ng-hide');
+            }
+          } else if (syncOption === 'manual') {
+            for (var manstepNumm in manualSteps) {
+              var mannstep = manualSteps[manstepNumm];
+              $('#' + mannstep + 'Tab').addClass('ng-show');
+              $('#' + mannstep + 'Tab').removeClass('ng-hide');
+            }
+            for (var dirstepNumm in dirsyncSteps) {
+              var dirrstep = dirsyncSteps[dirstepNumm];
+              $('#' + dirrstep + 'Tab').removeClass('ng-show');
+              $('#' + dirrstep + 'Tab').addClass('ng-hide');
+            }
+          }
+        }
+      };
 
-	    //*********************************************DIRSYNC*********************************************//
-			$scope.getDefaultDomain = function() {
+      //*********************************************DIRSYNC*********************************************//
+      $scope.getDefaultDomain = function() {
         DirSyncService.getDirSyncDomain(function(data, status) {
           if (data.success) {
             Log.debug('Retrieved DirSync domain name. Status: ' + status);
-            if(data && data.domains[0]) {
+            if (data && data.domains[0]) {
               $scope.domain = data.domains[0].domainName;
-              if($scope.domain.length > 0) {
+              if ($scope.domain.length > 0) {
                 $scope.domainExists = true;
               } else {
                 $scope.domainExists = false;
@@ -169,7 +200,7 @@ angular.module('Core')
       };
 
       $scope.setDomain = function() {
-        if(($scope.domain.length > 0) && ($scope.domainExists !== true)) {
+        if (($scope.domain.length > 0) && ($scope.domainExists !== true)) {
           DirSyncService.postDomainName($scope.domain, function(data, status) {
             if (data.success) {
               Log.debug('Created DirSync domain. Status: ' + status);
@@ -184,7 +215,7 @@ angular.module('Core')
       };
 
       $scope.formatDate = function(date) {
-        if (date !== ''){
+        if (date !== '') {
           return moment.utc(date).local().format('MMM D \'YY h:mm a');
         } else {
           return date;
@@ -199,7 +230,7 @@ angular.module('Core')
         DirSyncService.getDirSyncStatus(function(data, status) {
           if (data.success) {
             Log.debug('Retrieved DirSync status successfully. Status: ' + status);
-            if(data) {
+            if (data) {
               $scope.dirsyncStatus = data.result;
               $scope.lastEndTime = data.lastEndTime;
             }
@@ -214,10 +245,10 @@ angular.module('Core')
         UserListService.listUsers(null, null, null, null, function(data, status, searchStr) {
           if (data.success) {
             Log.debug('Retrieved user list successfully. Status: ' + status);
-            if(data) {
+            if (data) {
               $scope.numUsersInSync = data.totalResults;
 
-              for(var i = 0; i < data.totalResults; i++) {
+              for (var i = 0; i < data.totalResults; i++) {
                 var userArrObj = {
                   Email: null,
                   Name: null
@@ -257,13 +288,13 @@ angular.module('Core')
       };
 
       //*********************************************MANUAL ENTRY*********************************************//
-      $scope.init = function () {
+      $scope.init = function() {
         setPlaceholder();
       };
 
-      var setPlaceholder = function () {
+      var setPlaceholder = function() {
         var placeholder = $filter('translate')('usersPage.userInput');
-        angular.element('#usersfield-tokenfield').attr('placeholder', placeholder);
+        angular.element('#usersfield-wiz-tokenfield').attr('placeholder', placeholder);
       };
 
       //Initialize
@@ -271,9 +302,9 @@ angular.module('Core')
       $scope.popup = Notification.popup;
       var invalidcount = 0;
 
-      function Feature (name, state) {
+      function Feature(name, state) {
         this.entitlementName = name;
-        this.entitlementState = state? 'ACTIVE' : 'INACTIVE';
+        this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
       }
 
       //email validation logic
@@ -297,7 +328,7 @@ angular.module('Core')
       //placeholder logic
       var checkPlaceholder = function() {
         if (angular.element('.token-label').length > 0) {
-          angular.element('#usersfield-tokenfield').attr('placeholder', '');
+          angular.element('#usersfield-wiz-tokenfield').attr('placeholder', '');
         } else {
           setPlaceholder();
         }
@@ -311,43 +342,12 @@ angular.module('Core')
         }
       };
 
-      //tokenfield setup - Should make it into a directive later.
-      angular.element('#usersfield').tokenfield({
-        delimiter: [',', ';'],
-        createTokensOnBlur: true
-      })
-        .on('tokenfield:preparetoken', function(e) {
-          //Removing anything in brackets from user data
-          var value = e.token.value.replace(/\s*\([^)]*\)\s*/g, ' ');
-          e.token.value = value;
-        })
-        .on('tokenfield:createtoken', function(e) {
-          if (!validateEmail(e.token.value)) {
-            angular.element(e.relatedTarget).addClass('invalid');
-            invalidcount++;
-          }
-          checkButtons();
-          checkPlaceholder();
-        })
-        .on('tokenfield:edittoken', function(e) {
-          if (!validateEmail(e.token.value)) {
-            invalidcount--;
-          }
-        })
-        .on('tokenfield:removetoken', function(e) {
-          if (!validateEmail(e.token.value)) {
-            invalidcount--;
-          }
-          checkButtons();
-          checkPlaceholder();
-        });
-
-			var getUsersList = function() {
-        return $window.addressparser.parse(angular.element('#usersfield').tokenfield('getTokensList'));
+      var getUsersList = function() {
+        return $window.addressparser.parse(angular.element('#usersfield-wiz').tokenfield('getTokensList'));
       };
 
       var resetUsersfield = function() {
-        angular.element('#usersfield').tokenfield('setTokens', ' ');
+        angular.element('#usersfield-wiz').tokenfield('setTokens', ' ');
         checkPlaceholder();
         invalidcount = 0;
       };
@@ -358,7 +358,7 @@ angular.module('Core')
       };
 
       var startLog;
-			$scope.inviteUsers = function() {
+      $scope.inviteUsers = function() {
         var usersList = getUsersList();
         Log.debug('Invite: ', usersList);
         $scope.results = {
@@ -411,8 +411,7 @@ angular.module('Core')
               }
             }
             //Displaying notifications
-            if (successes.length + errors.length === usersList.length)
-            {
+            if (successes.length + errors.length === usersList.length) {
               angular.element('#btnInvite').button('reset');
               Notification.notify(successes, 'success');
               Notification.notify(errors, 'error');
@@ -440,9 +439,9 @@ angular.module('Core')
 
           startLog = moment();
 
-          var i,temparray,chunk = Config.batchSize;
-          for (i=0; i<usersList.length; i+=chunk) {
-            temparray = usersList.slice(i,i+chunk);
+          var i, temparray, chunk = Config.batchSize;
+          for (i = 0; i < usersList.length; i += chunk) {
+            temparray = usersList.slice(i, i + chunk);
             //update entitlements
             Userservice.inviteUsers(usersList, callback);
           }

@@ -36,5 +36,6 @@ angular
     'Hercules',
     'Core',
     'Squared',
-    'Huron'
+    'Huron',
+    'angularModalService'
   ]);

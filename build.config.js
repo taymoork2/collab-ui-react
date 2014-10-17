@@ -37,7 +37,6 @@ module.exports = {
       'bower_components/amcharts/dist/amcharts/serial.js',
       'bower_components/typeahead.js/dist/typeahead.bundle.js',
       'bower_components/lodash/dist/lodash.compat.js',
-      'bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
       'bower_components/draggable/draggable.min.js',
       'bower_components/jquery-icheck/icheck.min.js',
       'bower_components/moment/moment.js',
@@ -58,16 +57,18 @@ module.exports = {
       'bower_components/ng-csv/build/ng-csv.min.js',
       'bower_components/bootstrap-cisco-ng/dist/cisco-ui-tpls.js',
       'bower_components/angular-wizard/dist/angular-wizard.js',
-      'bower_components/ng-grid/build/ng-grid.js'
+      'bower_components/ng-grid/build/ng-grid.js',
+      'bower_components/angular-modal-service/dst/angular-modal-service.js',
+      'bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js'
     ],
     css: [
-      'bower_components/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css',
       'bower_components/alertify.js/themes/alertify.core.css',
       'bower_components/alertify.js/themes/alertify.default.css',
       'bower_components/angular-wizard/dist/angular-wizard.css',
       'bower_components/angular-dialog-service/dialogs.css',
       //'bower_components/ng-grid/ng-grid.css',
-      'bower_components/jquery-icheck/skins/square/blue.css'
+      'bower_components/jquery-icheck/skins/square/blue.css',
+      'bower_components/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css'
     ],
     fonts: [
       'bower_components/bootstrap-cisco/dist/fonts/*',

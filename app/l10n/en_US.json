@@ -313,6 +313,13 @@
         }
     },
   "firstTimeWizard" : {
+    "needHelp":"Need help?",
+    "planReview": "Plan Review",
+    "enterpriseSettings": "Enterprise Settings",
+    "planReviewSub":"Overview of your collaboration plan",
+    "enterpriseSettingsSub":"Set up global configurations",
+    "addUsersSub":"Add users manually or with AD",
+    "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
     "accountReview": "Account Review",
     "serviceSetup" : "Service Setup",
     "addUsers" : "Add Users",
@@ -323,6 +330,8 @@
     "nextBtn" : "Next",
     "skipBtn" : "Skip",
     "doneBtn" : "Finish",
+    "beginBtn" : "Begin",
+    "closeBtn" : "Close",
     "chooseSync" : "Choose Sync",
     "chooseSyncDesc" : "Do you want to manually enter users or synchronize users from Active Directory?",
     "chooseManualDesc" : "Manual User Entry",
@@ -339,7 +348,16 @@
     "installStep3" : "3. Test the synchronization agreement.",
     "nextSteps" : "Press the Next button when you're ready to verify that identity information is being synchronized.",
     "results" : "Results",
-    "syncAgreementText" : "users in sync agreement"
+    "syncAgreementText" : "users in sync agreement",
+    "setupSSOSub": "Setup Single Sign On",
+    "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
+    "manualInvite" :"Manual Invite",
+    "domainEntry" : "Domain Entry",
+    "domainSubDesc" : "Enter the AD domain to sync with:",
+    "connectorSteps" : "Follow these steps in order to install the Cloud Connector:",
+    "getStarted" : "Get Started",
+    "readyToGo" : "You're ready to go!",
+    "finishDesc" : "You have completed the set up wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again."
   },
   "callRoutingPage" : {
     "title" : "Call Routing",

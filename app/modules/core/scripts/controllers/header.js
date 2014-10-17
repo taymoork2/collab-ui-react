@@ -47,15 +47,31 @@ angular.module('Core')
   }
 ])
 
-.controller('SettingsMenuCtrl', ['$scope', '$dialogs', '$location',
-  function($scope, $dialogs, $location) {
+.controller('SettingsMenuCtrl', ['$scope', '$dialogs', '$location', 'ModalService',
+  function($scope, $dialogs, $location, ModalService) {
     //LOOKTHISUPDUDE
     $scope.menuItems = [];
-    //$scope.menuItems = [{link: '/initialsetup', title: 'Initial Setup'}];
+    $scope.menuItems = [{link: '/initialsetup', title: 'Initial Setup'}];
 
     $scope.doAction = function(path) {
-      $location.path(path);
+      if(path==='/initialsetup'){
+        ModalService.showModal({
+          templateUrl: 'modules/core/views/wizardmodal.html',
+          controller: 'WizardModalCtrl'
+        }).then(function(modal) {
+          modal.element.modal();
+          modal.close.then(function(result){
+            //Some cleanup necessary
+            angular.element('body').removeClass('modal-open');
+            angular.element('.modal-backdrop').fadeOut('normal', function(){
+              angular.element('.modal-backdrop').remove();
+            });
+          });
+        });
+      } else {
+        $location.path(path);
+      }
     };
-
   }
+
 ]);

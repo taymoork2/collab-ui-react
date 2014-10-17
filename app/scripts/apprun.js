@@ -104,7 +104,7 @@ angular
       $document.on(
         'click',
         function( event ) {
-          Log.debug('recieved click event, extending session...');
+          Log.debug('received click event, extending session...');
           $interval.cancel( logoutTimer );
           logoutTimer = startTimer();
         }
