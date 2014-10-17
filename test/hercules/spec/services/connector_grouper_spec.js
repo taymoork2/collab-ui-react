@@ -56,7 +56,7 @@ describe('Service: ConnectorConverter', function () {
     }
   ]
 
-  it('should convert connector data', function () {
+  it('should group connector data', function () {
     var converted = Grouper.groupBy(apiData, 'connector_type');
     expect(!!converted).toBe(true);
     expect(_.size(converted)).toBe(2);

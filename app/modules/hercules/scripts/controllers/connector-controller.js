@@ -3,50 +3,32 @@
 /* global _ */
 
 angular.module('Hercules')
-  .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http', 'ConnectorGrouper',
-    function($scope, $rootScope, $http, grouper) {
+  .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http', 'ConnectorGrouper', 'ConnectorService',
+    function($scope, $rootScope, $http, grouper, service) {
       $scope.loading = true;
 
       $scope.groupings = [
-        { attr: 'display_name', translate_attr: 'hercules.connectors.display_name' },
-        { attr: 'host_name',    translate_attr: 'hercules.connectors.host_name' },
-        { attr: 'cluster_id',   translate_attr: 'hercules.connectors.cluster_id' },
-        { attr: 'version',      translate_attr: 'hercules.connectors.version' },
-        { attr: 'status',       translate_attr: 'hercules.connectors.status' }
+        { attr: 'connector_type', translate_attr: 'hercules.connectors.display_name' },
+        { attr: 'host_name',      translate_attr: 'hercules.connectors.host_name' },
+        { attr: 'cluster_id',     translate_attr: 'hercules.connectors.cluster_id' },
+        { attr: 'version',        translate_attr: 'hercules.connectors.version' },
+        { attr: 'status_code',    translate_attr: 'hercules.connectors.status' }
       ];
 
       $scope.current_grouping = $scope.groupings[0];
 
-      var decorateDataAndAggregateStatus = function(data) {
-        $scope.aggregated_status = {};
-        _.each(data, function(c) {
-          switch (c.status) {
-            case 'running':
-              c.status_class = 'success';
-              break;
-            case 'installed':
-              c.status_class = 'warning';
-              break;
-            default:
-              c.status_class = 'danger';
-          }
-          $scope.aggregated_status[c.status_class] = ++$scope.aggregated_status[c.status_class] || 1;
-        });
-        return data;
-      };
-
       var loadData = function() {
-        $http
-          .get('https://hercules.ladidadi.org/v1/connectors')
-          .success(function (data) {
-            $scope.connectors = decorateDataAndAggregateStatus(data);
+        service.fetch({
+          success: function(data) {
+            $scope.connectors = data;
+            $scope.aggregated_status = service.aggregateStatus(data);
             $scope.loading = false;
-          })
-          .error(function () {
-            console.error('error fetching ladidadi data', arguments);
+          },
+          error: function() {
             $scope.error = true;
             $scope.loading = false;
-          });
+          }
+        });
       };
 
       var updateGrouping = function() {

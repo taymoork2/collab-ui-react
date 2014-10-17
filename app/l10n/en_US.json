@@ -309,7 +309,8 @@
             "connector_type": "Connector Type",
             "serial": "Serial",
             "version": "Version",
-            "status": "Status"
+            "status": "Status",
+            "alarms": "Alarms"
         }
     },
   "firstTimeWizard" : {
