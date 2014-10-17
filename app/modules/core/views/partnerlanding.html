@@ -16,29 +16,28 @@
         <div id="entitlementsLegend"></div>
         <div id="entitlementsChart"></div>
       </section>
-      <br>
-      <section class="tab-reports" style="background-color: white; width: 95%;">
+      <section class="tab-reports" style="background-color: rgba(255,255,255, .3); width: 95%; padding-top:40px;">
         <tabset justified="true">
           <tab select="resizeActiveUsersChart()">
             <tab-heading>
               <span translate="partnerHomePage.activeUsersTitle"></span>
               <div class="total">{{counts.activeUsers}}</div>
             </tab-heading>
-            <div id="dailyActiveUsersChart"></div>
+            <div id="dailyActiveUsersChart" style="background-color: rgba(255,255,255, 1); padding-top:15px;"></div>
           </tab>
           <tab select="resizeAverageCallsChart()">
             <tab-heading>
               <span translate="partnerHomePage.averageCallsTitle"></span>
               <div class="total">{{counts.averageCalls}}</div>
             </tab-heading>
-            <div id="averageCallsChart"></div>
+            <div id="averageCallsChart" style="background-color: rgba(255,255,255, 1); padding-top:15px;"></div>
           </tab>
           <tab select="resizeContentSharedChart()">
             <tab-heading>
               <span translate="partnerHomePage.contentSharedTitle"></span>
               <div class="total">{{counts.contentShared}}</div>
             </tab-heading>
-            <div id="contentSharedChart" ></div>
+            <div id="contentSharedChart" style="background-color: rgba(255,255,255, 1); padding-top:15px;"></div>
           </tab>
         </tabset>
       </section>
@@ -113,7 +112,7 @@
   </div>
 
 <!-- Add Trial Modal -->
-<div class="modal fade" id="addTrialDialog" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="addTrialTitle" aria-hidden="true">
+<div class="modal fade" id="addTrialDialog" tabindex="-1" role="dialog" aria-labelledby="addTrialTitle" aria-hidden="true">
   <div class="modal-dialog">
     <form name="trialForm">
       <div class="modal-content">
@@ -185,7 +184,7 @@
 </div>
 
 <!-- Edit Trial Modal -->
-<div class="modal fade" id="editTrialDialog" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="addTrialTitle" aria-hidden="true">
+<div class="modal fade" id="editTrialDialog" tabindex="-1" role="dialog" aria-labelledby="addTrialTitle" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header modal-trials-header trialDialog">
@@ -194,9 +193,26 @@
               <span class="icon icon-close cancel-color"></span>
             </span>
           </button>
-          <h3 class="header-text">{{currentTrial.customerName}}</h3>
+          <h3 class="header-text edit-header">{{currentTrial.customerName}}</h3>
         </div>
         <div class="modal-body modal-trials-body">
+          <div class="row">
+            <div class="col-sm-9">
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{currentTrial.duration}}" style="width: {{currentTrial.percentUsed}}%;">
+                </div>
+                <div class="days-left-edit-modal">
+                  <span>{{currentTrial.daysLeft}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+                <span class="users-edit-modal trialHeading"translate="partnerHomePage.trialsNumUsers"></span>
+                <div class="license-count-modal">
+                  <span class="license-count-first-modal">{{currentTrial.usage}}</span>/<span>{{currentTrial.licenses}}</span>
+                </div>
+            </div>
+          </div>
           <div class="modal-card">
             <h4 translate="partnerHomePage.customerInformation"></h4>
             <div class="row input-row-spacing">
@@ -270,8 +286,8 @@
           </div>
         </div>
         <div class="modal-footer modal-trials-footer" ng-show="!editTerms">
-          <button id="btnCancel" class="btn btn-primary btn-lg pull-right" ng-click="editTrial()" data-dismiss="modal">
-            <span class="button-text" translate="partnerHomePage.saveSendReminder"></span>
+          <button id="btnCancel" class="btn btn-primary btn-lg pull-right" data-dismiss="modal">
+            <span class="button-text" translate="partnerHomePage.saveSendReminder" ng-click="editTrial()"></span>
           </button>
           <div id="btnCancel" class="btn btn-default btn-lg pull-right" data-dismiss="modal">
             <span class="button-text" translate="partnerHomePage.cancel"></span>

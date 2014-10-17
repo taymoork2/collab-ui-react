@@ -1168,6 +1168,7 @@ a:active.ftwNavLink {
   background-color: #FFFFFF;
   border-color: @list-group-border;
   border-width: 1px;
+  margin-top:65px;
 }
 
 #trialHeader {
@@ -1250,7 +1251,6 @@ a:active.ftwNavLink {
 
 .partner-container .tab-reports .nav-tabs li .total {
   font-size: 24px;
-  color: #FF5F44;
 }
 
 .nav, .pagination, .carousel, .panel-title a {
@@ -1384,6 +1384,36 @@ a:active.ftwNavLink {
   padding-bottom: 15px;
 }
 
+.days-left-edit-modal{
+  position: absolute;
+  right: 23px;
+  top: -20px;
+}
+
+.users-edit-modal{
+  right: 20px;
+  top: -50px;
+  position:absolute;
+}
+
+.edit-header
+{
+  padding-bottom:50px;
+}
+
+.license-count-modal{
+  position: absolute;
+  right: 20px;
+  font-family: 'CiscoSansTT Light';
+  font-size: 24px;
+  color: #444;
+  top: -20px;
+}
+
+.license-count-first-modal{
+  color: #FF1300 !important;
+}
+
 /*************************************
  *      Views Style imports
  ************************************/
@@ -1468,4 +1498,23 @@ a:active.ftwNavLink {
 .wiz-btn {
   margin-top: 16px;
   margin-right: -9px;
+}
+
+.nav > li:focus, .nav > li:active, .nav > li.active {
+z-index: 500;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+color: #444;
+background-color: white;
+border-bottom: 0px;
+}
+
+.nav-tabs.nav-justified > li.active > a:hover {
+border-color: white
+}
+
+.nav-tabs.nav-justified > li.active > a {
+border-bottom: 0px;
+border-color: white;
 }
