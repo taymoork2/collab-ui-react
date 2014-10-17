@@ -61,7 +61,7 @@
             <span translate="partnerHomePage.trialsNumUsers"></span>
           </div>
         </div>
-        <div ng-repeat="trial in trialsList | orderBy: 'trial.createdDate' | limitTo: displayRows">
+        <div ng-repeat="trial in trialsList | orderBy: 'daysLeft' | limitTo: displayRows">
           <div class="row">
             <div class="col-sm-6">
               <div class="trialCustomer ellipsis-trials" data-toggle="modal" data-target="#editTrialDialog" ng-click="formReset(); setTrial(trial)">
@@ -92,7 +92,7 @@
             </div>
           </div>
 
-          <div class="row trialRow" ng-repeat="trial in expiredList | orderBy: 'trial.createdDate' | limitTo: expiredRows">
+          <div class="row trialRow" ng-repeat="trial in expiredList | orderBy: 'daysLeft' | limitTo: expiredRows">
             <div class="col-xs-5 col-sm-5 col-md-5 expiredCustomer">
               <div>
                 <span>{{trial.customerName}}</span>
@@ -199,6 +199,9 @@
             <div class="col-sm-9">
               <div class="progress">
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{currentTrial.duration}}" style="width: {{currentTrial.percentUsed}}%;">
+                </div>
+                <div class="days-left-trial">
+                  <span translate="partnerHomePage.trialsEndDate"></span>
                 </div>
                 <div class="days-left-edit-modal">
                   <span>{{currentTrial.daysLeft}}</span>
