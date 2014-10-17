@@ -1,7 +1,7 @@
 'use strict';
 /* global moment */
 
-angular.module('Squared')
+angular.module('Core')
   .controller('PartnerHomeCtrl', ['$scope', '$rootScope', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService',
     function($scope, $rootScope, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService ) {
 
@@ -50,10 +50,15 @@ angular.module('Squared')
     $scope.editTrial = function(){
       var createdDate = new Date();
 
-      PartnerService.editTrial($scope.currentTrial.duration, $scope.currentTrial.trialId, $scope.currentTrial.licenses, $scope.currentTrial.usage, function(data, status){
+      PartnerService.editTrial($scope.licenseDuration, $scope.currentTrial.trialId, $scope.licenseCount, $scope.currentTrial.usage, function(data, status){
           if(data.success === true ){
-            var successMessage = ['You have successfully edited a trial for ' + $scope.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
+            var successMessage = ['You have successfully edited a trial for ' + $scope.currentTrial.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
             Notification.notify(successMessage, 'success');
+            console.log('1');
+            setTimeout(function(){
+              getTrialsList();
+              console.log('2');
+            }, 1000);
           }
           else{
             var errorMessage = ['Error editing a trial for ' + $scope.customerName + '. Status: ' + status];
