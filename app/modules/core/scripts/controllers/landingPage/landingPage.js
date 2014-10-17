@@ -356,6 +356,8 @@ angular.module('Core')
           'theme': 'none',
           'fontFamily': 'CiscoSansTT Thin',
           'colors': ['#1EA7D1', '#F46315', '#EBC31C', '#50D71D'],
+          'backgroundColor': '#ffffff',
+          'backgroundAlpha': 1,
           'legend': {
             'divId': 'activeUsersLegend',
             'equalWidths': false,
@@ -402,9 +404,10 @@ angular.module('Core')
           ],
           'plotAreaBorderAlpha': 1,
           'plotAreaBorderColor': '#DDDDDD',
-          'marginTop': 10,
-          'marginLeft': 0,
-          'marginBottom': 0,
+          'marginTop': 20,
+          'marginRight': 20,
+          'marginLeft': 10,
+          'marginBottom': 10,
           // 'chartScrollbar': {},
           'chartCursor': {
             'valueLineEnabled': true,
