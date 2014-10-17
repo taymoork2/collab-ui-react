@@ -26,8 +26,8 @@
           <button class="btn btn-sm btn-default">Remind</button>
           <button class="btn btn-sm btn-default">Buy More</button>
         </section>
-        <section class="unlicensed-users col-sm-6">
-          <div ng-show="isDomainClaimed()">
+        <section class="col-sm-6">
+          <div class="unlicensed-users" ng-show="isDomainClaimed()">
             <div class="users-info">
               <span class="number">{{licenses.unlicensed}}</span>
               <span class="text">unlicensed users registered on</span>
@@ -35,10 +35,11 @@
             <h3>{{licenses.domain}}</h3>
             <button class="btn btn-sm btn-default">Convert</button>
           </div>
-          <div ng-hide="isDomainClaimed()">
+          <div class="unlicensed-users-unclaimeddomain" ng-hide="isDomainClaimed()">
             <h3>Unlicensed Users</h3>
-            <p>View unlicensed users</p>
-            <button class="btn btn-sm btn-default">View</button>
+            <p>View and convert unlicensed users</p>
+            <br/>
+            <button class="btn btn-sm btn-default">Convert</button>
           </div>
         </section>
       </div>

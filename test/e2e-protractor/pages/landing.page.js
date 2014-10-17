@@ -4,7 +4,7 @@ var LandingPage = function() {
   this.packages = element(by.css('.packages'));
   this.devices = element(by.css('.devices'));
   this.licenses = element(by.css('.licenses'));
-  this.unlicencedUsers = element(by.css('.unlicensed-users'));
+  this.unlicencedUsers = element(by.css('.unlicensed-users-unclaimeddomain'));
   this.activeUsersChart = element(by.id('activeUsersChart'));
 
   this.monitoring = element(by.css('.monitoring-panel'));
