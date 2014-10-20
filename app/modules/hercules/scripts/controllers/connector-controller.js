@@ -8,7 +8,7 @@ angular.module('Hercules')
       $scope.loading = true;
 
       $scope.groupings = [
-        { attr: 'connector_type', translate_attr: 'hercules.connectors.display_name' },
+        { attr: 'display_name',   translate_attr: 'hercules.connectors.display_name' },
         { attr: 'host_name',      translate_attr: 'hercules.connectors.host_name' },
         { attr: 'cluster_id',     translate_attr: 'hercules.connectors.cluster_id' },
         { attr: 'version',        translate_attr: 'hercules.connectors.version' },

@@ -17,16 +17,20 @@ angular.module('Hercules')
             if (addMockData) {
               data = data.concat(mockData);
             }
-            var decorated = decorate(data);
+            var decorated = convert(data);
             opts.success(decorated);
           })
           .error(opts.error);
       };
 
-      var decorate = function(data) {
-        _.each(data, function(c) {
+      var convert = function(data) {
+        return _.map(data, function(connector) {
+          var c = _.cloneDeep(connector);
           c.status = c.status || {};
+          c.version = c.version || 'unknown';
+          c.cluster_id = c.cluster_id || 'unknown';
           c.status.state = c.status.state || 'unknown';
+          c.display_name = c.display_name || c.connector_type;
           if (c.status.alerts && c.status.alerts.length) {
             c.status.status = 'error';
           }
@@ -36,8 +40,8 @@ angular.module('Hercules')
             case 'warning': c.status_class = 'warning'; break;
             default:        c.status_class = 'danger';
           }
+          return c;
         });
-        return data;
       };
 
       var aggregateStatus = function(data) {
@@ -54,7 +58,7 @@ angular.module('Hercules')
         aggregateStatus: aggregateStatus,
 
         /* private, for testing */
-        _decorate: decorate
+        _convert: convert
       };
     }
   ]);
@@ -65,9 +69,9 @@ var mockData = [
     "cluster_id": "foo",
     "serial": "1111",
     "host_name": "localhost",
-    "version": "2.0.1",
     "connector_type": "expressway_csi",
     "provisioning_url": null,
+    "display_name": "Telephony",
     "status_url": "https://hercules.ladidadi.org/v1/connector_statuses/95",
     "organization_id": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
     "created_at": "2014-09-26T10:20:32.887Z",
@@ -84,6 +88,7 @@ var mockData = [
     "serial": "12345",
     "host_name": "hostname2.cisco.com",
     "version": "1.9.8",
+    "display_name": "Fusion Management Service",
     "connector_type": "expressway_management_connector",
     "provisioning_url": "https://hercules.ladidadi.org/v1/management_connectors/22",
     "status_url": "https://hercules.ladidadi.org/v1/connector_statuses/116",
@@ -99,6 +104,7 @@ var mockData = [
     "serial": "0974F8FD",
     "host_name": "gwydlvm1186",
     "version": "69",
+    "display_name": "Fusion Management Service",
     "connector_type": "expressway_management_connector",
     "provisioning_url": "https://hercules.ladidadi.org/v1/management_connectors/18",
     "status_url": "https://hercules.ladidadi.org/v1/connector_statuses/93",
@@ -118,6 +124,7 @@ var mockData = [
     "host_name": "gwydlvm1186",
     "version": "8.5-1.0",
     "connector_type": "expressway_csi",
+    "display_name": "Telephony",
     "provisioning_url": null,
     "status_url": "https://hercules.ladidadi.org/v1/connector_statuses/94",
     "organization_id": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
