@@ -59,6 +59,12 @@ angular
           controller: 'ApplauncherCtrl',
           authenticate: false
         })
+        .state('appdownload', {
+          url: '/appdownload',
+          templateUrl: 'modules/squared/views/appdownload.html',
+          controller: 'AppdownloadCtrl',
+          authenticate: false
+        })
         .state('home', {
           url: '/home',
           templateUrl: 'modules/core/views/landingPage.html',

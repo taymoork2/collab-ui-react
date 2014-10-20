@@ -5,7 +5,7 @@
 /* global by */
 /* global browser */
 /* global expect */
-/* global element */
+
 
 //var config = require('./testconfig.js');
 
@@ -20,7 +20,7 @@ describe('invite page with user param', function() {
 
   it('should forward to squared app without page param', function() {
     browser.get('#/invite');
-
+ 
     browser.driver.wait(function() {
       return browser.driver.isElementPresent(by.id('btn-login'));
     }).then(function() {
@@ -51,7 +51,7 @@ describe('Invite Launcher Flow', function()  {
 
 describe('App Launcher Flow', function() {
 
-  it('applauncher should forward to squared app', function() {
+  it('applauncher route should forward to squared app', function() {
     browser.get('#/applauncher');
 
     browser.driver.wait(function() {
@@ -63,7 +63,7 @@ describe('App Launcher Flow', function() {
   });
 
 
-  it('applauncher should forward to squared app', function() {
+  it('applauncher page should forward to squared app', function() {
     browser.get('/applauncher.html');
 
     browser.driver.wait(function() {
@@ -75,4 +75,29 @@ describe('App Launcher Flow', function() {
   });
 
 });
+
+describe('App Download Page', function()  {
+
+  it('appdownload route should forward to webapp', function() {
+    browser.get('#/appdownload');
+
+    browser.driver.wait(function() {
+      return browser.driver.isElementPresent(by.id('btn-login'));
+    }).then(function() {
+      expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
+    });
+  });
+
+  it('applauncher page should forward to squared app', function() {
+    browser.get('/appdownload.html');
+
+    browser.driver.wait(function() {
+      return browser.driver.isElementPresent(by.id('btn-login'));
+    }).then(function() {
+      expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
+    });
+
+  });
+});
+
 
