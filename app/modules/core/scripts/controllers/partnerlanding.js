@@ -42,8 +42,7 @@ angular.module('Core')
             }, 1000);
           }
           else{
-            var errorMessage = ['Error starting a trial for ' + $scope.customerName + '. Status: ' + status];
-            Notification.notify(errorMessage, 'error');
+             Notification.notify([data.message], 'error');
           }
         });
     };
@@ -55,15 +54,12 @@ angular.module('Core')
           if(data.success === true ){
             var successMessage = ['You have successfully edited a trial for ' + $scope.currentTrial.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
             Notification.notify(successMessage, 'success');
-            console.log('1');
             setTimeout(function(){
               getTrialsList();
-              console.log('2');
             }, 1000);
           }
           else{
-            var errorMessage = ['Error editing a trial for ' + $scope.customerName + '. Status: ' + status];
-            Notification.notify(errorMessage, 'error');
+            Notification.notify([data.message], 'error');
           }
         });
     };
@@ -88,6 +84,7 @@ angular.module('Core')
 							var edate = moment(trial.startDate).add(trial.trialPeriod, 'days').format('MMM D, YYYY');
 							var trialObj = {
                 trialId: trial.trialId,
+                customerOrgId: trial.customerOrgId,
 								customerName: trial.customerName,
 								endDate: edate,
 								numUsers: trial.licenseCount,
@@ -147,6 +144,9 @@ angular.module('Core')
 		};
 
     $scope.getProgressStatus = function(obj) {
+      if(!obj){
+        obj = $scope.currentTrial;
+      }
       if (obj.daysLeft <= 5) {
         return 'danger';
       }

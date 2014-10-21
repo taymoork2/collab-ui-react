@@ -22,6 +22,7 @@ exports.config = {
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
     global.config = require('./test/e2e-protractor/utils/test.config.js');
+    global.deleteTrialUtils = require('./test/e2e-protractor/utils/deleteTrial.utils.js');
 
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');
     var Notifications = require('./test/e2e-protractor/pages/notifications.page.js');

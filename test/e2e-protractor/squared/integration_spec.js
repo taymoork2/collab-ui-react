@@ -275,11 +275,7 @@ describe('App flow', function() {
 
     describe('Delete user used for entitle test', function() {
       it('should delete added user', function() {
-        deleteUtils.deleteUser(inputEmail).then(function(message) {
-          expect(message).toEqual(200);
-        }, function(data) {
-          expect(data.status).toEqual(200);
-        });
+        expect(deleteUtils.deleteUser(inputEmail)).toEqual(200);
       });
     });
 

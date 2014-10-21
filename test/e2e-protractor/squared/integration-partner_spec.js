@@ -2,23 +2,19 @@
 
 /* global describe */
 /* global expect */
-
-var testuser = {
-  username: 'admin@fancy-lawyer.com',
-  password: 'P@ssword123'
-};
-
-var newTrial = {
-  customerName : 'Atlas_Test_Trial',
-  customerEmail : 'Atlas_Test_Trial@gmail.com'
-};
+/* global partner */
+/* global navigation */
+/* global utils */
+/* global login */
+/* global notifications */
+/* global deleteTrialUtils */
 
 describe('Partner flow', function() {
   // Logging in. Write your tests after the login flow is complete.
   describe('Login as partner admin user', function() {
 
     it('should login', function(){
-      login.partnerlogin(testuser.username, testuser.password);
+      login.partnerlogin(partner.testuser.username, partner.testuser.password);
     });
 
     it('should display correct tabs for user based on role', function() {
@@ -33,71 +29,69 @@ describe('Partner flow', function() {
 
   }); //State is logged-in
 
-  // describe('Add Partner Trial', function() {
+  describe('Add Partner Trial', function() {
 
-  //   it('should add a new trial', function(){
-  //     // click on add button
-  //     partner.addButton.click();
-  //     // start trial should be disabled
-  //     partner.startTrial.assertDisabled();
-  //     // type in name and clear --> start trial should be disabled
-  //     partner.customerNameInput.sendKeys(newTrial.customerName);
-  //     partner.customerNameInput.clear();
-  //     partner.startTrialButton.assertDisabled();
-  //     // type in name
-  //     partner.customerNameInput.sendKeys(newTrial.customerName);
-  //     // type in email partially --> start trial should be disabled
-  //     partner.customerNameInput.sendKeys(newTrial.customerEmail);
-  //     partner.customerNameInput.clear();
-  //     partner.startTrialButton.assertDisabled();
-  //     // finish typing in email
-  //     partner.customerNameInput.sendKeys(newTrial.customerEmail);
-  //     // start trial should be enabled
-  //     partner.startTrialButton.assertEnabled();
-  //     // click start trial
-  //     partner.startTrialButton.click();
-  //     // expect success
-  //     notification.assertSuccess('');
-  //     // trial should be in list
-  //     partner.assertNewTrial(newTrial.customerName);
-  //   });
+    it('should add a new trial', function(){
+      partner.addButton.click();
+      partner.assertDisabled('startTrialButton');
 
-  //   it('should send error when adding an existing trial', function(){
-  //     // click on add button
-  //     partner.addButton.click();
-  //     // type in existing trial name
-  //     partner.customerNameInput.sendKeys(newTrial.customerName);
-  //     // type in existing trial email
-  //     partner.customerNameInput.sendKeys(newTrial.customerEmail);
-  //     // click start trial
-  //     partner.startTrialButton.click();
-  //     // expect error
-  //     notification.assertError('');
-  //   });
+      partner.customerNameInput.sendKeys(partner.newTrial.customerName);
+      partner.customerNameInput.clear();
+      partner.assertDisabled('startTrialButton');
 
-  //   it('should edit an exisiting trial', function(){
-  //     // click on exisitng trial
-  //     // click on edit trial button
-  //     partner.editTrialButton.click();
-  //     // change value of license count
-  //     // change value of license duration
-  //     // click start trial
-  //     partner.startTrialButton.click();
-  //     // expect success
-  //     notification.assertSuccess('');
-  //   });
+      partner.customerEmailInput.sendKeys(partner.newTrial.customerEmail);
+      partner.customerEmailInput.clear();
+      partner.assertDisabled('startTrialButton');
 
-  //   it('should edit an exisiting trial', function(){
-  //     // call delete trial
+      partner.customerNameInput.sendKeys(partner.newTrial.customerName);
+      partner.customerEmailInput.sendKeys(partner.newTrial.customerEmail);
 
-  //     // expect success
-  //     notification.assertSuccess('');
-  //     // trial should not be in list
-  //     partner.assertDeletedTrial(newTrial.customerName);
-  //   });
+      partner.startTrialButton.click();
+      notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
 
+      utils.expectIsDisplayed(partner.newTrialRow);
+    });
 
-  // });
+    it('should send error when adding an existing trial', function(){
+      partner.addButton.click();
+      partner.assertDisabled('startTrialButton');
+
+      partner.customerNameInput.sendKeys(partner.newTrial.customerName);
+      partner.customerEmailInput.sendKeys(partner.newTrial.customerEmail);
+
+      partner.startTrialButton.click();
+      notifications.assertError(partner.newTrial.customerName, 'already exists');
+    });
+
+    it('should edit an exisiting trial', function(){
+      partner.newTrialRow.click();
+
+      utils.expectIsDisplayed(partner.editTrialModal);
+      utils.expectIsDisplayed(partner.editTrialButton);
+
+      partner.editTrialButton.click();
+
+      expect(partner.saveSendButton.isDisplayed()).toBeTruthy();
+      partner.saveSendButton.click();
+
+      notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
+
+      utils.expectIsNotDisplayed(partner.editTrialModal);
+      utils.expectIsDisplayed(partner.newTrialRow);
+    });
+
+    it('should delete an exisiting org thus deleting trial', function(done){
+      partner.newTrialRow.getAttribute('orgId').then(function(attr){
+        deleteTrialUtils.deleteOrg(attr).then(function(message) {
+          expect(message).toEqual(200);
+          done();
+        }, function(data) {
+          expect(data.status).toEqual(200);
+          done();
+        });
+      });
+    });
+  });
 
   // Log Out
   describe('Log Out', function() {
