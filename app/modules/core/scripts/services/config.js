@@ -179,7 +179,7 @@ angular.module('Core')
 
         entitlements: {
           squared: 'webex-squared',
-          huron: 'huron',
+          huron: 'ciscouc',
           fusion: 'squared-fusion-uc'
         },
 
