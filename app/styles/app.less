@@ -803,7 +803,8 @@ input:disabled {
 
 
 .add-trial-button {
-  padding-right: 15px;
+  margin-right: 0px;
+  padding: 4px 10px 2px 10px;
 }
 
 .add-user-close {
@@ -1164,11 +1165,16 @@ a:active.ftwNavLink {
 }
 
 .trialsPanel {
-  padding: 20px;
+  padding: 15px;
   background-color: #FFFFFF;
   border-color: @list-group-border;
   border-width: 1px;
-  margin-top:65px;
+  margin-top:10px;
+}
+
+.trials-refresh {
+  left: 50%;
+  position: relative;
 }
 
 #trialHeader {
@@ -1180,6 +1186,10 @@ a:active.ftwNavLink {
   padding-top: 2px;
 }
 
+.trial-danger-text {
+  color: @state-danger-text;
+}
+
 #expiredTrials {
   padding-top: 30px;
 }
@@ -1188,7 +1198,8 @@ a:active.ftwNavLink {
   font-family: @brand-font-cisco-TT-Extra-Light;
   font-size: 24px;
   color: @navbar-inverse-link-disabled-color;
-  padding-left: 15px;
+  height: 55px;
+  padding-top: 15px;
 }
 
 .trialHeading {
@@ -1241,6 +1252,13 @@ a:active.ftwNavLink {
   height: 6px;
 }
 
+.warning-bar {
+  background-color: @progress-bar-warning-bg;
+}
+
+.danger-bar {
+  background-color: @progress-bar-danger-bg;
+}
 .partner-container #entitlementsChart {
   height: 250px;
 }
@@ -1384,10 +1402,6 @@ a:active.ftwNavLink {
   -o-text-overflow: ellipsis;
   white-space: nowrap;
   width: 200px;
-}
-
-.trial-row{
-  padding-bottom: 15px;
 }
 
 .days-left-edit-modal{

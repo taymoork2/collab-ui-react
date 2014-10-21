@@ -6,27 +6,28 @@ angular.module('Core')
     function($scope, $rootScope, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService ) {
 
     $scope.daysExpired = 5;
-    $scope.displayRows = 8;
+    $scope.displayRows = 10;
     $scope.expiredRows = 3;
     $scope.startDate = new Date();
     Notification.init($scope);
     $scope.popup = Notification.popup;
     $scope.customerName = null;
-  	$scope.customerEmail = null;
-  	$scope.licenseDuration = 30;
- 		$scope.licenseCount = 50;
- 		$scope.showAddTrial = true;
- 		$scope.editTerms = true;
+    $scope.customerEmail = null;
+    $scope.licenseDuration = 30;
+    $scope.licenseCount = 50;
+    $scope.showAddTrial = true;
+    $scope.editTerms = true;
     $scope.currentTrial = null;
+    $scope.showTrialsRefresh = true;
 
     $scope.formReset = function(){
-    	$scope.customerName = null;
-    	$scope.customerEmail = null;
-    	$scope.licenseDuration = 30;
-   		$scope.licenseCount = 50;
-    	$scope.trialForm.$setPristine(true);
-    	$scope.showAddTrial = true;
-    	$scope.editTerms = true;
+      $scope.customerName = null;
+      $scope.customerEmail = null;
+      $scope.licenseDuration = 30;
+      $scope.licenseCount = 50;
+      $scope.trialForm.$setPristine(true);
+      $scope.showAddTrial = true;
+      $scope.editTerms = true;
     };
 
     $scope.startTrial = function(){
@@ -41,8 +42,8 @@ angular.module('Core')
             }, 1000);
           }
           else{
-             var errorMessage = ['Error starting a trial for ' + $scope.customerName + '. Status: ' + status];
-             Notification.notify(errorMessage, 'error');
+            var errorMessage = ['Error starting a trial for ' + $scope.customerName + '. Status: ' + status];
+            Notification.notify(errorMessage, 'error');
           }
         });
     };
@@ -72,10 +73,12 @@ angular.module('Core')
     };
 
 		var getTrialsList = function() {
+      $scope.showTrialsRefresh = true;
 			$scope.getPending = true;
 			$scope.trialsList = [];
 			$scope.expiredList = [];
 			PartnerService.getTrialsList(function(data, status) {
+        $scope.showTrialsRefresh = false;
 				if (data.success) {
 					$scope.totalTrials = data.trials.length;
 
@@ -109,7 +112,7 @@ angular.module('Core')
 								}
 							}
 
-							var now  = moment();
+							var now  = moment().format('MMM D, YYYY');
 							var then = edate;
 							var start = moment(trial.startDate).format('MMM D, YYYY');
 
@@ -119,8 +122,7 @@ angular.module('Core')
 
 							var daysLeft = moment(then).diff(now, 'days');
 							trialObj.daysLeft = daysLeft;
-							if (daysLeft >= 0)
-							{
+							if (daysLeft >= 0) {
 								$scope.trialsList.push(trialObj);
 							}
 							else
@@ -143,6 +145,24 @@ angular.module('Core')
 				}
 			});
 		};
+
+    $scope.getProgressStatus = function(obj) {
+      if (obj.daysLeft <= 5) {
+        return 'danger';
+      }
+      else if (obj.daysLeft < (obj.duration/2)) {
+        return 'warning';
+      }
+    };
+
+    $scope.getDaysLeft = function(daysLeft) {
+      if (daysLeft === 0) {
+        return $translate.instant('partnerHomePage.expireToday');
+      }
+      else {
+        return daysLeft;
+      }
+    };
 
 		getTrialsList();
 

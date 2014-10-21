@@ -5,18 +5,18 @@
 <div id="trialsPanel" class="container partner-container">
   <div class="row">
     <section class = "col-sm-12 col-md-7 col-lg-8" ng-controller="PartnerReportsCtrl" >
-       <h3>
+       <div class="trialTitle">
         <span translate="partnerHomePage.partnerHeading"></span><span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">:
         <reload-data id="partnerRefreshData" last-updated-time="partnerRefreshTime"></reload-data>
         </span>
-      </h3>
+      </div>
 
-      <section style="background-color: white; width: 95%;">
+      <section style="background-color: white;">
         <h3 id="entitlementTitle"><span translate="partnerHomePage.entitlementsTitle"></span> {{counts.entitlements}}</h3>
         <div id="entitlementsLegend"></div>
         <div id="entitlementsChart"></div>
       </section>
-      <section class="tab-reports" style="background-color: rgba(255,255,255, .3); width: 95%; padding-top:40px;">
+      <section class="tab-reports" style="background-color: rgba(255,255,255, .3); padding-top:40px;">
         <tabset justified="true">
           <tab select="resizeActiveUsersChart()">
             <tab-heading>
@@ -43,13 +43,19 @@
       </section>
       <!-- end -->
     </section>
-    <section class = "col-sm-12 col-md-5 col-lg-4">
-      <div class = "trialsPanel">
-        <div class="row trial-row">
-          <span class="trialTitle">{{'partnerHomePage.trialsHeading' | translate}}</span>
-          <button id="startTrialBtn" class="btn btn-success pull-right button-text add-trial-button" translate="partnerHomePage.addTrial" data-toggle="modal" data-target="#addTrialDialog" ng-click="formReset()"></button>
-        </div>
 
+    <section class = "col-sm-12 col-md-5 col-lg-4">
+
+      <section id="activeTrials" class="trialTitle">
+        <div class="col-xs-9 col-sm-9 col-md-9">
+          <span class="">{{'partnerHomePage.trialsHeading' | translate}}</span>
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-3">
+          <button id="startTrialBtn" class="btn btn-info pull-right button-text add-trial-button" translate="partnerHomePage.addTrial" data-toggle="modal" data-target="#addTrialDialog" ng-click="formReset()"></button>
+        </div>
+      </section>
+
+      <section class="trialsPanel">
         <div id="trialHeader" class="row">
           <div class="col-xs-6 col-sm-6 col-md-6 trialHeading">
             <span translate="partnerHomePage.trialsCustomerName"></span>
@@ -61,23 +67,26 @@
             <span translate="partnerHomePage.trialsNumUsers"></span>
           </div>
         </div>
+        <div id="trials-refresh" class="trials-refresh" ng-show="showTrialsRefresh">
+          <i class='fa fa-refresh fa-spin'></i>
+        </div>
         <div ng-repeat="trial in trialsList | orderBy: 'daysLeft' | limitTo: displayRows">
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-xs-5 col-sm-5 col-md-5">
               <div class="trialCustomer ellipsis-trials" data-toggle="modal" data-target="#editTrialDialog" ng-click="formReset(); setTrial(trial)">
                 <a href="">
                   <span>{{trial.customerName}}</span>
                 </a>
               </div>
             </div>
-            <div class="col-xs-3 col-sm-3 col-md-3 trialDays">
-              <span>{{trial.daysLeft}}</span>
+            <div class="col-xs-4 col-sm-4 col-md-4 trialDays">
+              <span ng-class="{'trial-danger-text': trial.daysLeft <= 5}">{{getDaysLeft(trial.daysLeft)}}</span>
             </div>
           </div>
           <div class="row trialRow">
             <div class="col-xs-6 col-sm-6 col-md-6">
               <div class="progress trialbar">
-                <progressbar max="trial.duration" value="trial.daysUsed"></progressbar>
+                <progressbar max="trial.duration" value="trial.daysUsed" type="{{getProgressStatus(trial)}}"></progressbar>
               </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 trialLicense">
@@ -86,7 +95,7 @@
           </div>
         </div>
         <div ng-show="showExpired">
-          <div id="expiredTrials" class="row trial-row">
+          <div id="expiredTrials" class="row">
             <div class="col-xs-10 col-sm-10 col-md-10">
               <span class="trialTitle">{{'partnerHomePage.expiredHeading' | translate}}</span>
             </div>
@@ -106,7 +115,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </section>
   </div>
 

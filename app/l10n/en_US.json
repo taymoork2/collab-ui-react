@@ -416,9 +416,9 @@
     "voicemailNote" : "Note: Turning off voicemail could impact user's call forwarding settings"
   },
   "partnerHomePage" : {
-    "trialsHeading" : "ACTIVE TRIALS",
+    "trialsHeading" : "Active Trials",
     "noResults" : "No Results",
-    "expiredHeading" : "EXPIRED TRIALS",
+    "expiredHeading" : "Expired Trials",
     "addTrial" : "New Trial",
     "noResults" : "No Results",
     "trialsCustomerName" : "Customer",
@@ -427,6 +427,7 @@
     "viewAll" : "View all Trials",
     "expiredToday" : "Expiring Today",
     "daysAgo" : "{{days}} days ago",
+    "expireToday" : "Expiring Today",
     "errGetTrialsQuery" : "Failed to retrieve trials. Status: {{status}}",
     "fifty" : "50",
     "oneHundred" : "100",
