@@ -1,0 +1,89 @@
+.outer-details-div{
+  // top: 0px;
+  // left: auto;
+  // right: ~'calc(-100% + 335px)';
+  display: inline-flex;
+  height: 100%;
+  // position:absolute;
+  // z-index: 1000;
+  width: 100%;
+}
+
+.sub-details-panel {
+  background-color: white;
+  height: 100%;
+  padding: 5px;
+  position:relative;
+  width: ~'calc(100% - 300px)';
+}
+
+.details-panel-card {
+  background-color: whitesmoke;
+  width:350px;
+  height: 100%;
+  padding: 5px;
+  position:relative;
+}
+
+
+.ent-detail-panel {
+  background-color: white;
+  position:absolute;
+  width: 500px;
+}
+
+.call-info-panel {
+  position: relative;
+  top: 21px;
+}
+
+.slide {
+  top: 0px;
+  right: -110%;
+  display: inline-flex;
+  height: 100%;
+  position:absolute;
+  z-index: 1000;
+  width: 100%;
+  transition: all 500ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
+
+  &.details,
+  &.preview {
+    //transition: all 5000ms cubic-bezier(0.250, 0.250, 0.750, 0.750);
+  }
+
+  &.preview {
+    right: ~'calc(-100% + 335px)';
+    // right: 0px;
+
+    &.details {
+      right: -15px;
+    }
+  }
+
+  // &.ng-enter, &.ng-leave {
+  //   position: absolute;
+  //   -webkit-transition:all .5s ease-in-out;
+  //     -moz-transition:all .5s ease-in-out;
+  //     -o-transition:all .5s ease-in-out;
+  //     transition:all .5s ease-in-out;
+  // }
+
+  // &.ng-enter {
+  //   right: -110%;
+  // }
+
+  // &.ng-enter-active {
+  //   right: ~'calc(-100% + 335px)';
+  // }
+
+  // &.ng-leave {
+  //   // right: -110%;
+  //   right: ~'calc(-100% + 335px)';
+  // }
+
+  // &.ng-leave-active {
+  //   right: -110%;
+  //   // right: ~'calc(-100% + 335px)';
+  // }
+}

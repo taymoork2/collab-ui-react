@@ -769,39 +769,6 @@ input:disabled {
   background-color: white;
 }
 
-#userslist tr {
-  cursor: crosshair;
-  &:hover {
-    background-color: #E8F1F8;
-  }
-}
-
-.selected {
-  background-color: #E8F1F8;
-}
-
-.odd {
-  background-color: #FFFFFF;
-}
-.even {
-  background-color: whitesmoke;
-}
-
-#userslist {
-  // margin-top: 20px;
-}
-
-#addUsers {
-  cursor:pointer;
-  a {
-    color:#333333;
-  }
-}
-
-.user-img {
-  width: 35px;
-}
-
 
 .add-trial-button {
   margin-right: 0px;
@@ -814,46 +781,6 @@ input:disabled {
   position: relative;
 }
 
-.sub-details-panel {
-  background-color: white;
-  float:right;
-  width:650px;
-  height: 100%;
-  padding: 5px;
-  position:relative;
-}
-
-.details-panel-card {
-  background-color: whitesmoke;
-  float:left;
-  width:500px;
-  height: 100%;
-  padding: 5px;
-  position:relative;
-}
-
-.outer-details-div{
-  top: 0px;
-  left: 750px;
-  margin-left: 300px;
-  display:inline-block;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  height: 100%;
-  position:absolute;
-}
-
-.ent-detail-panel {
-  background-color: white;
-  position:absolute;
-  width: 500px;
-}
-
-.call-info-panel {
-  position: relative;
-  top: 21px;
-}
 
 .welcome-message{
   margin-right:315px;
@@ -1290,7 +1217,8 @@ a:active.ftwNavLink {
  *      Views Style imports
  ************************************/
 @import 'core/_landing-page';
-@import 'core/_users';
+@import 'core/_users-list';
+@import 'core/_users-management';
 @import '_grid';
 
 

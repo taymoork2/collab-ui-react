@@ -93,7 +93,7 @@ describe('App flow', function() {
     describe('Page initialization', function() {
       it('click on invite subtab should show add users', function() {
         users.addUsers.click();
-        expect(users.listPanel.isDisplayed()).toBeFalsy();
+        expect(users.listPanel.isPresent()).toBeFalsy();
         expect(users.managePanel.isDisplayed()).toBeTruthy();
       });
 
@@ -238,32 +238,30 @@ describe('App flow', function() {
     });
 
     describe('Users preview panel', function() {
-
-      it('should show the squared entitlement column on first load', function() {
-        expect(users.entitlementCol.isDisplayed()).toBeTruthy();
-      });
-
       it('should show the preview panel when clicking on a user', function() {
-        utils.click(users.resultUsername);
-        utils.expectIsNotDisplayed(users.entitlementCol);
-        utils.expectIsDisplayed(users.previewPanel);
+        users.userListEnts.then(function(cell) {
+          cell[0].click();
+          utils.expectIsDisplayed(users.previewPanel);
+        });
       });
 
       it('should exit the preview panel when clicking the x', function() {
-        utils.click(users.closePreview);
-        utils.expectIsDisplayed(users.entitlementCol);
-        utils.expectIsNotDisplayed(users.previewPanel);
+        users.closePreview.click();
+        expect(users.previewPanel.isPresent()).toBeFalsy();
       });
     });
 
     describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
       it('should show call-initiation entitlement for the user', function() {
         users.search(inputEmail);
-        expect(users.resultUsername.getText()).toContain(inputEmail);
-        users.resultUsername.click();
+        users.userListEnts.then(function(cell) {
+          expect(cell[0].getText()).toContain(inputEmail);
+          cell[0].click();
+        });
+        browser.sleep(3000);  //TODO fix this - animation should be resolved by angular
         expect(users.squaredPanel.isDisplayed()).toBeTruthy();
         users.squaredPanel.click();
-        browser.sleep(2000); //TODO fix this - animation should be resolved by angular
+        browser.sleep(3000); //TODO fix this - animation should be resolved by angular
         expect(users.callInitiationCheckbox.isDisplayed()).toBeTruthy();
         users.callInitiationCheckbox.click();
         users.saveButton.click();

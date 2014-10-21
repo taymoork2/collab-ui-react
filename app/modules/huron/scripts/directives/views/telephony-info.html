@@ -5,17 +5,17 @@
          <td><span class="services-subtitle" translate="usersPreview.telephonyPreview"></span></td>
        </tr>
        <tr ng-repeat="directoryNumber in userDnList" id="{{directoryNumber.id}}">
-         <td><div ng-click="showDirectoryNumberPanel(directoryNumber)"><span class="sub-service">{{directoryNumber.pattern}}  {{directoryNumber.dnUsage}}</span><i class="fa fa-angle-right pull-right"></i></div></td>
+         <td><a><div ng-click="showDirectoryNumberPanel(directoryNumber)"><span class="sub-service">{{directoryNumber.pattern}}  {{directoryNumber.dnUsage}}</span><i class="fa fa-angle-right fa-lg pull-right"></i></div></a></td>
        </tr>
        <tr>
          <td><span class="services-subtitle" translate="usersPreview.telephonyFeaturesPreview"></span></td>
        </tr>
        <tr>
-        <td><div ng-click="showVoicemailPanel()"><span class="sub-service">{{'telephonyPreview.voicemail' | translate}} <span class="text-muted">{{telephonyUserInfo.voicemail}}</span></span><i class="fa fa-angle-right pull-right"></i></div></td>
+        <td><a ui-sref="users.list.preview.voicemail"><div><span class="sub-service">{{'telephonyPreview.voicemail' | translate}} <span class="text-muted">{{voicemail}}</span></span><i class="fa fa-angle-right fa-lg pull-right"></i></div></a></td>
       </tr>
        <tr>
-        <td><div ng-click="showSingleNumberReachPanel()"><span class="sub-service">{{'telephonyPreview.singleNumberReach' | translate}} <span class="text-muted">{{telephonyUserInfo.singleNumberReach}}</span></span><i class="fa fa-angle-right pull-right"></i></div></td>
+        <td><a ui-sref="users.list.preview.snr"><div><span class="sub-service">{{'telephonyPreview.singleNumberReach' | translate}} <span class="text-muted">{{singleNumberReach}}</span></span><i class="fa fa-angle-right fa-lg pull-right"></i></div></a></td>
       </tr>
      </tbody>
-   </table> 
+   </table>
  </div>

@@ -89,7 +89,7 @@ angular.module('Core')
                 getUsersBatch(page * 1000 + 1);
               } else if (status === 500 || data.Resources.length <= 0) {
                 Log.debug('No more users to return. Exporting to file... ');
-                $('#export-icon').html('<i class=\'fa fa-file-text\'></i>');
+                $('#export-icon').html('<i class=\'icon icon-content-share\'></i>');
                 $compile(angular.element('#global-export-btn').html($filter('translate')('orgsPage.exportBtn')))(scope);
                 $rootScope.exporting = false;
                 $rootScope.$broadcast('EXPORT_FINISHED');

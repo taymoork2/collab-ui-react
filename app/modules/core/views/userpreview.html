@@ -1,0 +1,39 @@
+<div class="details-panel-card" id="details-panel">
+  <div class="name-card">
+    <div class="name-card-image center">
+      <img ng-if='getUserPhoto(currentUser)' ng-src='{{getUserPhoto(currentUser)}}'/>
+      <i ng-if='!getUserPhoto(currentUser)' class="fa fa-user fa-5x"></i>
+    </div>
+    <div class="name-card-info">
+      <a href="#/userprofile/{{currentUser.id}}">
+        <div id="name-preview" class="ellipsis-name">
+          <span class="name" ng-if="currentUser.name.givenName && currentUser.name.familyName">{{currentUser.name.givenName}} {{currentUser.name.familyName}}</span>
+          <span class="name" ng-if="!currentUser.name.givenName || !currentUser.name.familyName">{{currentUser.userName}}</span><br>
+        </div>
+      </a>
+      <span>{{currentUser.title}}</span><br>
+      <span>{{currentUser.addresses.streetAddress}}</span>
+    </div>
+    <div class="name-card-cancel" ng-click="closePreview()" id="exitPreviewButton">
+      <i class="fa fa-times"></i>
+    </div>
+  </div>
+  <div class="standard-card group-card preview-card-title" ng-show="false">
+    <div class="group-title">
+      <span translate="usersPreview.groupPreview"></span>
+    </div>
+    <div class="group-type">
+      Default Group Name <i class="fa fa-caret-down"></i>
+    </div>
+  </div>
+  <div class="standard-card services-card">
+    <span class="preview-card-title" translate="usersPreview.servicesPreview"></span>
+    <div id="huronPanel" telephony-info ng-show="isHuronEnabled()"></div>
+    <div id="conferencePanel" conferencing-info ng-show="false"></div>
+    <a ui-sref="users.list.preview.conversations"><div id="squaredPanel" conversations-info></div></a>
+    <div id="endpointPanel" endpoints-info ng-show="false"></div>
+  </div>
+</div>
+<div class="sub-details-panel">
+  <div ui-view></div>
+</div>

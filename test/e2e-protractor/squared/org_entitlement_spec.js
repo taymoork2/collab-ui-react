@@ -24,9 +24,11 @@ describe('Org Entitlement flow', function() {
   });
 
   it('should display conversations panel', function() {
-    users.search(testuser.searchStr, 20);
-    expect(users.resultUsername.getText()).toContain(testuser.searchStr);
-    users.resultUsername.click();
+    users.search(testuser.searchStr, '60');
+    users.userListEnts.then(function(cell) {
+      expect(cell[0].getText()).toContain(testuser.searchStr);
+      cell[0].click();
+    });
     expect(users.squaredPanel.isDisplayed()).toBeTruthy();
     expect(users.huronPanel.isDisplayed()).toBeFalsy();
     expect(users.conferencePanel.isDisplayed()).toBeFalsy();

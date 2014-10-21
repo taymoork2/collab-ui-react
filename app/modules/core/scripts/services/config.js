@@ -68,7 +68,7 @@ angular.module('Core')
 
         scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
 
-        usersperpage: 20,
+        usersperpage: 100,
 
         logConfig: {
           linesToAttach: 100,

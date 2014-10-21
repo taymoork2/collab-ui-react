@@ -10,6 +10,7 @@
         "firstnameHeader": "First Name",
         "lastnameHeader": "Last Name",
         "emailHeader": "Email",
+        "actionHeader": "Actions",
         "invite": "Invite",
         "addedHeader": "ADDED",
         "statusHeader": "STATUS/TOOLS",

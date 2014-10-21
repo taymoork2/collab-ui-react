@@ -22,14 +22,16 @@ angular.module('Core')
 
       var isAllowedState = function(state) {
         if (state) {
-          if (Config.allowedStates && Config.allowedStates.indexOf(state) !== -1) {
+          // if nested state only check parent state
+          var parentState = state.split('.');
+          if (Config.allowedStates && Config.allowedStates.indexOf(parentState[0]) !== -1) {
             return true;
           }
           var roles = authData.roles;
           if (roles) {
             for (var i in roles) {
               var role = roles[i];
-              if (role && Config.roleStates[role] && Config.roleStates[role].indexOf(state) !== -1) {
+              if (role && Config.roleStates[role] && Config.roleStates[role].indexOf(parentState[0]) !== -1) {
                 return true;
               }
             }
@@ -38,7 +40,7 @@ angular.module('Core')
           if (services) {
             for (var j in services) {
               var service = services[j];
-              if (service && Config.serviceStates[service.ciService] && Config.serviceStates[service.ciService].indexOf(state) !== -1) {
+              if (service && Config.serviceStates[service.ciService] && Config.serviceStates[service.ciService].indexOf(parentState[0]) !== -1) {
                 return true;
               }
             }

@@ -71,8 +71,32 @@ angular
           controller: 'HomeCtrl'
         })
         .state('users', {
+          absract: true,
+          template: '<div ui-view></div>'
+        })
+        .state('users.list', {
           url: '/users',
-          templateUrl: 'modules/core/views/users.html',
+          templateUrl: 'modules/core/views/listusers.html',
+          controller: 'ListUsersCtrl'
+        })
+        .state('users.list.preview', {
+          templateUrl: 'modules/core/views/userpreview.html',
+          controller: 'UserPreviewCtrl'
+        })
+        .state('users.list.preview.conversations', {
+          template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
+        })
+        .state('users.list.preview.directorynumber', {
+          template: '<div directory-number-info directoryNumber="directoryNumber"></div>'
+        })
+        .state('users.list.preview.voicemail', {
+          template: '<div voicemail-info directoryNumber="directoryNumber"></div>'
+        })
+        .state('users.list.preview.snr', {
+          template: '<div single-number-reach-info directoryNumber="directoryNumber"></div>'
+        })
+        .state('users.add', {
+          templateUrl: 'modules/core/views/adduser.html',
           controller: 'UsersCtrl'
         })
         .state('orgs', {

@@ -1,32 +1,29 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Core')
-  .controller('ListUsersCtrl', ['$scope', '$location', '$window', '$dialogs', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter',
-    function($scope, $location, $window, $dialogs, Userservice, UserListService, Log, Storage, Config, Pagination, $rootScope, Notification, $filter) {
-
-      // TODO: remove from $rootScope
-      $rootScope.userPreview = false;
-      $scope.conversationsPanel = false;
-      $scope.directoryNumberPanel = false;
-      $scope.voicemailPanel = false;
-      $scope.singleNumberReachPanel = false;
-      $scope.currentUser = null;
+  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification',
+    function($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, Userservice, UserListService, Log, Storage, Config, Notification) {
 
       //Initialize variables
+      $scope.load = true;
       $scope.page = 1;
       $scope.status = null;
-      $scope.results = null;
+      $scope.currentDataPosition = 0;
+      $scope.queryuserslist = [];
+      $scope.totalResults = 0;
+      $scope.currentUser = null;
+      $scope.popup = Notification.popup;
+
+      $scope.userPreviewActive = false;
+      $scope.userDetailsActive = false;
+
       $scope.sort = {
         by: 'name',
-        order: 'ascending',
-        icon: {
-          name: 'fa-sort-asc',
-          username: 'fa-sort',
-          date: 'fa-sort'
-        }
+        order: 'ascending'
       };
+
+      Notification.init($scope);
+      $scope.popup = Notification.popup;
 
       $scope.isSquaredEnabled = function() {
         return isEntitled(Config.entitlements.squared);
@@ -48,33 +45,24 @@ angular.module('Core')
         return false;
       };
 
-      $scope.showConversationPanel = function() {
-        $scope.conversationsPanel = true;
-        $scope.directoryNumberPanel = false;
-        $scope.voicemailPanel = false;
-        $scope.singleNumberReachPanel = false;
-
-        $('#entire-slide').animate({
-          'left': '0px'
-        }, 1000, function() {});
-      };
-
-      var usersperpage = Config.usersperpage;
-      $scope.pagination = Pagination.init($scope, usersperpage);
-      //Notification.init($scope);
-      $scope.popup = Notification.popup;
-
-      var getUserList = function() {
+      var getUserList = function(startAt) {
         //clear currentUser if a new search begins
         $scope.currentUser = null;
-        var startIndex = $scope.pagination.page * usersperpage + 1;
-        UserListService.listUsers(startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function(data, status, searchStr) {
+        var startIndex = startAt || 0;
+        UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function(data, status, searchStr) {
           if (data.success) {
+            $timeout(function() {
+                $scope.load = true;
+              });
             if ($rootScope.searchStr === searchStr) {
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
               Log.debug('Returned data.', data.Resources);
-              $scope.queryuserslist = data.Resources;
-              $rootScope.$broadcast('PAGINATION_UPDATED');
+              $scope.totalResults = data.totalResults;
+              if (startIndex === 0) {
+                $scope.queryuserslist = data.Resources;
+              } else {
+                $scope.queryuserslist = $scope.queryuserslist.concat(data.Resources);
+              }
             } else {
               Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
             }
@@ -84,7 +72,136 @@ angular.module('Core')
         });
       };
 
-      $scope.currentUserPhoto = null;
+      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showUserDetails(row.entity)">' +
+        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
+        '<div ng-cell></div>' +
+        '</div>';
+
+      var photoCellTemplate = '<img ng-if="row.entity.photos" class="user-img" ng-src="{{getUserPhoto(row.entity)}}"/>' +
+        '<span ng-if="!row.entity.photos" class="user-img">' +
+        '<i class="icon icon-user"></i>' +
+        '</span>';
+
+      var actionsTemplate = '<span dropdown>' +
+        '<button class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<i class="icon icon-three-dots"></i>' +
+        '</button>' +
+        '<ul class="dropdown-menu" role="menu">' +
+        '<li><a href="#">Action</a></li>' +
+        '<li><a href="#">Another action</a></li>' +
+        '<li><a href="#">Something else here</a></li>' +
+        '<li class="divider"></li>' +
+        '<li><a href="#">Separated link</a></li>' +
+        '</ul>' +
+        '</span>';
+
+      $scope.gridOptions = {
+        data: 'queryuserslist',
+        multiSelect: false,
+        showFilter: false,
+        rowHeight: 44,
+        rowTemplate: rowTemplate,
+        headerRowHeight: 44,
+        useExternalSorting: true,
+
+        columnDefs: [{
+            field: 'photos',
+            displayName: '',
+            sortable: false,
+            cellTemplate: photoCellTemplate,
+            width: 70
+        }, {
+            field: 'name.givenName',
+            displayName: $filter('translate')('usersPage.firstnameHeader')
+        }, {
+            field: 'name.familyName',
+            displayName: $filter('translate')('usersPage.lastnameHeader')
+        }, {
+            field: 'userName',
+            displayName: $filter('translate')('usersPage.emailHeader')
+        }, {
+            field: 'action',
+            displayName: $filter('translate')('usersPage.actionHeader'),
+            sortable: false,
+            cellTemplate: actionsTemplate
+        }]
+      };
+
+      $scope.$on('ngGridEventScroll', function () {
+        var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
+        var scrollTop = ngGridView.scrollTop;
+        var scrollOffsetHeight = ngGridView.offsetHeight;
+        var currentScroll = scrollTop + scrollOffsetHeight;
+        var scrollHeight = ngGridView.scrollHeight;
+
+        if ($scope.load) {
+          $scope.currentDataPosition++;
+          console.log($scope.currentDataPosition * Config.usersperpage + 1);
+          $scope.load = false;
+          getUserList($scope.currentDataPosition * Config.usersperpage + 1);
+          console.log('Scrolled .. ');
+        }
+      });
+
+      $rootScope.$on('$stateChangeSuccess', function() {
+        if ($state.includes('users.list.preview.*')) {
+          $scope.userPreviewActive = true;
+          $scope.userDetailsActive = true;
+        } else if ($state.includes('users.list.preview')) {
+          $scope.userPreviewActive = true;
+          $scope.userDetailsActive = false;
+        } else {
+          $scope.userPreviewActive = false;
+          $scope.userDetailsActive = false;
+        }
+      });
+
+      // this event fires 3x when sorting is done, so watch for sortInfo change
+      $scope.$on('ngGridEventSorted', function(event, sortInfo) {
+        $scope.sortInfo = sortInfo;
+      });
+
+      $scope.$watch('sortInfo', function (newValue, oldValue) {
+        // if newValue === oldValue then page is initializing, so ignore event,
+        // otherwise getUserList() is called multiple times.
+        if (newValue !== oldValue) {
+          if ($scope.sortInfo) {
+            switch ($scope.sortInfo.fields[0]) {
+              case 'userName':
+                $scope.sort.by = 'userName';
+                break;
+              case 'name.familyName':
+              case 'name.givenName':
+                $scope.sort.by = 'name';
+                break;
+            }
+
+            if ($scope.sortInfo.directions[0] === 'asc') {
+              $scope.sort.order = 'ascending';
+            } else {
+              $scope.sort.order = 'descending';
+            }
+          }
+          getUserList();
+        }
+      }, true);
+
+      $scope.showUserDetails = function(user) {
+        //Service profile
+        $scope.entitlements = {};
+        for (var i = 0; i < $rootScope.services.length; i++) {
+            var service = $rootScope.services[i].sqService;
+            var ciService = $rootScope.services[i].ciService;
+            if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
+                $scope.entitlements[service] = true;
+            } else {
+                $scope.entitlements[service] = false;
+            }
+        }
+        $scope.currentUser = user;
+        $state.go('users.list.preview');
+      };
+
       $scope.getUserPhoto = function(user) {
         if (user && user.photos) {
           for (var i in user.photos) {
@@ -105,7 +222,6 @@ angular.module('Core')
       //Search users based on search criteria
       $scope.$on('SEARCH_ITEM', function(e, str) {
         Log.debug('got broadcast for search:' + str);
-        $scope.pagination.page = 0;
         getUserList();
       });
 
@@ -118,120 +234,6 @@ angular.module('Core')
       $scope.$on('USER_LIST_UPDATED', function() {
         getUserList();
       });
-
-      $scope.getEntitlementState = function(user) {
-        if (!user.entitlements || user.entitlements.length === 0) {
-          return false;
-        } else {
-          return (user.entitlements.indexOf('webex-squared') > -1);
-        }
-
-      };
-
-      //sorting function
-      $scope.setSort = function(type) {
-        switch (type) {
-        case 'name':
-          if ($scope.sort.by === 'userName') {
-            $scope.sort.by = 'name';
-            $scope.sort.order = 'ascending';
-            $scope.sort.icon.name = 'fa-sort-asc';
-            $scope.sort.icon.username = 'fa-sort';
-            getUserList();
-          } else if ($scope.sort.by === 'name') {
-            if ($scope.sort.order === 'ascending') {
-              $scope.sort.order = 'descending';
-              $scope.sort.icon.name = 'fa-sort-desc';
-              getUserList();
-            } else {
-              $scope.sort.order = 'ascending';
-              $scope.sort.icon.name = 'fa-sort-asc';
-              getUserList();
-            }
-          }
-          break;
-
-        case 'username':
-          if ($scope.sort.by === 'name') {
-            $scope.sort.by = 'userName';
-            $scope.sort.order = 'ascending';
-            $scope.sort.icon.username = 'fa-sort-asc';
-            $scope.sort.icon.name = 'fa-sort';
-            getUserList();
-          } else if ($scope.sort.by === 'userName') {
-            if ($scope.sort.order === 'ascending') {
-              $scope.sort.order = 'descending';
-              $scope.sort.icon.username = 'fa-sort-desc';
-              getUserList();
-            } else {
-              $scope.sort.order = 'ascending';
-              $scope.sort.icon.username = 'fa-sort-asc';
-              getUserList();
-            }
-          }
-          break;
-
-        default:
-          Log.debug('Sort type not recognized.');
-        }
-      };
-
-      $scope.getStatusIcon = function(status) {
-        if (status === 'active') {
-          return $filter('translate')('usersPage.active');
-        } else {
-          return $filter('translate')('usersPage.inactive');
-        }
-      };
-
-      var currentClass;
-
-      $scope.closePreview = function() {
-        $rootScope.userPreview = false;
-        $scope.conversationsPanel = false;
-        $scope.directoryNumberPanel = false;
-        $scope.voicemailPanel = false;
-        $scope.singleNumberReachPanel = false;
-
-        $('#entire-slide').css({
-          'left': '750px',
-          'margin-left': '300px'
-        });
-        angular.element('#' + $scope.currentUser.id).removeClass('selected');
-        angular.element('#' + $scope.currentUser.id).addClass(currentClass);
-
-        $scope.currentUser = null;
-      };
-
-      $scope.showUserDetails = function(user) {
-        $rootScope.userPreview = true;
-
-        $('#entire-slide').animate({
-          'margin-left': '0px'
-        }, 1000, function() {});
-
-        //remove selected class on previous user
-        if ($scope.currentUser) {
-          angular.element('#' + $scope.currentUser.id).removeClass('selected');
-          angular.element('#' + $scope.currentUser.id).addClass(currentClass);
-        }
-        $scope.currentUser = user;
-        angular.element('#' + user.id).addClass('selected');
-        currentClass = angular.element('#' + user.id).hasClass('odd') ? 'odd' : 'even';
-        angular.element('#' + user.id).removeClass(currentClass);
-
-        //Service profile
-        $scope.entitlements = {};
-        for (var i = 0; i < $rootScope.services.length; i++) {
-          var service = $rootScope.services[i].sqService;
-          var ciService = $rootScope.services[i].ciService;
-          if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
-            $scope.entitlements[service] = true;
-          } else {
-            $scope.entitlements[service] = false;
-          }
-        }
-      };
 
       $scope.updateUser = function() {
         angular.element('#btnSave').button('loading');
@@ -264,10 +266,31 @@ angular.module('Core')
         });
       };
 
-      $scope.$on('PAGINATION_UPDATED', function() {
-        $scope.page = $scope.pagination.page + 1;
-        $('.pagination-current a').html($scope.page);
-      });
+      // TODO: reevalute this logic and remove is not needed.
+      if($rootScope.selectedSubTab === 'invite') {
+        $scope.inviteTabActive = true;
+      } else {
+        $scope.userTabActive = true;
+      }
+
+      var setTab = function (tab) {
+        if (tab === 'invite')
+        {
+          $scope.userTabActive = false;
+          $scope.inviteTabActive = true;
+        }
+        else
+        {
+          $scope.userTabActive = true;
+          $scope.inviteTabActive = false;
+        }
+        $rootScope.selectedSubTab = null;
+      };
+
+      $scope.changeTab = function(tab) {
+        setTab(tab);
+      };
+      // end TODO
 
     }
   ]);

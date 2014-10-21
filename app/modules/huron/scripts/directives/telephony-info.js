@@ -4,8 +4,8 @@
 /* global $ */
 
 angular.module('Huron')
-  .controller('TelephonyInfoCtrl', ['$scope', '$q', '$http', 'UserDirectoryNumberService', 'UserServiceCommon','Log', 'Config', 'Notification',
-    function($scope, $q, $http, UserDirectoryNumberService, UserServiceCommon, Log, Config, Notification) {
+  .controller('TelephonyInfoCtrl', ['$scope', '$q', '$http', '$state','UserDirectoryNumberService', 'UserServiceCommon','Log', 'Config', 'Notification',
+    function($scope, $q, $http, $state, UserDirectoryNumberService, UserServiceCommon, Log, Config, Notification) {
 
       $scope.userDnList = [];
       $scope.directoryNumber = null;
@@ -122,37 +122,8 @@ angular.module('Huron')
       };
 
       $scope.showDirectoryNumberPanel = function (value) {
-        $scope.conversationsPanel = false;
-        $scope.voicemailPanel = false;
-        $scope.singleNumberReachPanel = false;
-        $scope.directoryNumberPanel = true;
         $scope.directoryNumber = value;
-
-        $('#entire-slide').animate({
-          'left': '0px'
-        }, 1000, function() {});
-      };
-
-      $scope.showVoicemailPanel = function () {
-        $scope.conversationsPanel = false;
-        $scope.directoryNumberPanel = false;
-        $scope.singleNumberReachPanel = false;
-        $scope.voicemailPanel = true;
-
-        $('#entire-slide').animate({
-          'left': '0px'
-        }, 1000, function() {});
-      };
-
-      $scope.showSingleNumberReachPanel = function () {
-        $scope.conversationsPanel = false;
-        $scope.directoryNumberPanel = false;
-        $scope.voicemailPanel = false;
-        $scope.singleNumberReachPanel = true;
-
-        $('#entire-slide').animate({
-          'left': '0px'
-        }, 1000, function() {});
+        $state.go('users.list.preview.directorynumber');
       };
 
       var isEntitled = function(ent) {

@@ -3,8 +3,8 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('UsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config',
-    function($scope, $location, $window, Userservice, UserListService, Log, Authinfo, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config) {
+  .controller('UsersCtrl', ['$scope', '$state','$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config',
+    function($scope, $state, $location, $window, Userservice, UserListService, Log, Authinfo, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config) {
 
       $scope.init = function () {
         setPlaceholder();
@@ -12,6 +12,10 @@ angular.module('Core')
 
       $scope.isSquaredInviter = function () {
         return Authinfo.isSquaredInviter();
+      };
+
+      $scope.openAddUserPanel = function() {
+        $state.go('users.list.add');
       };
 
       var setPlaceholder = function () {
@@ -456,44 +460,6 @@ angular.module('Core')
             return svc.displayName;
           }
         }
-      };
-
-      if($rootScope.selectedSubTab === 'invite') {
-        $scope.inviteTabActive = true;
-      } else {
-        $scope.userTabActive = true;
-      }
-
-      var setTab = function (tab) {
-        if (tab === 'invite')
-        {
-          $scope.userTabActive = false;
-          $scope.inviteTabActive = true;
-        }
-        else
-        {
-          $scope.userTabActive = true;
-          $scope.inviteTabActive = false;
-        }
-        $rootScope.selectedSubTab = null;
-      };
-
-      $scope.changeTab = function(tab) {
-        setTab(tab);
-      };
-
-      $scope.getTabTitle = function(title) {
-        return $filter('translate')(title);
-      };
-
-      $scope.isSquaredEnabled = function()
-      {
-        return isEntitled(Config.entitlements.squared);
-      };
-
-      $scope.isHuronEnabled = function()
-      {
-        return isEntitled(Config.entitlements.huron);
       };
 
       var isEntitled = function(ent) {

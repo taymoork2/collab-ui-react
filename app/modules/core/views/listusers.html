@@ -1,0 +1,23 @@
+<div class="user-management">
+  <div class="notification"></div>
+  <div class="row page-header">
+    <div class="col-md-6 col-sm-6">
+      <h2 class="page-title">{{'usersPage.manageUsers' | translate}}&nbsp;&nbsp;<small class="count">{{totalResults}}</small></h2>
+    </div>
+    <div class="col-md-6 col-sm-6" ng-show="Utils.isAdminPage() && userTabActive">
+      <div class="page-option-buttons">
+        <button id="addUsers" class="btn btn-lg btn-info add-button" ui-sref="users.add" translate="usersPage.add">
+        </button>
+        <a ng-controller="ExportUsersCtrl" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
+          <span id="export-icon"><i class="icon icon-content-share"></i></span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div id="usersListPanel" class="row">
+    <div gridscrollbar windowsize class="gridStyle col-md-12" style="height: {{windowHeight - 150}}px;" ng-grid="gridOptions"></div>
+  </div>
+</div>
+<div ng-class="{preview: userPreviewActive, details: userDetailsActive}" class="slide">
+  <div ui-view class="outer-details-div" id="entire-slide"></div>
+<div>

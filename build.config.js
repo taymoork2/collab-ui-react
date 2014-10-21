@@ -38,7 +38,6 @@ module.exports = {
       'bower_components/typeahead.js/dist/typeahead.bundle.js',
       'bower_components/lodash/dist/lodash.compat.js',
       'bower_components/draggable/draggable.min.js',
-      'bower_components/jquery-icheck/icheck.min.js',
       'bower_components/moment/moment.js',
       'bower_components/base64/base64.js',
       'bower_components/nicescroll/jquery.nicescroll.js',
@@ -67,7 +66,6 @@ module.exports = {
       'bower_components/angular-wizard/dist/angular-wizard.css',
       'bower_components/angular-dialog-service/dialogs.css',
       //'bower_components/ng-grid/ng-grid.css',
-      'bower_components/jquery-icheck/skins/square/blue.css',
       'bower_components/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css'
     ],
     fonts: [
@@ -75,8 +73,7 @@ module.exports = {
       'bower_components/font-awesome/fonts/*'
     ],
     images: [
-      'bower_components/bootstrap-cisco/dist/images/*',
-      'bower_components/jquery-icheck/skins/square/blue.png'
+      'bower_components/bootstrap-cisco/dist/images/*'
     ]
   },
 

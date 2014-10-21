@@ -3,12 +3,7 @@
     <h3>&nbsp;&nbsp;&nbsp;&nbsp;Messaging</h3>
     <div class="details-body">
       <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements" ng-if="isServiceAllowed(service)">
-        <div class="btn-group" id="{{'chk_'+service}}">
-          <input type="checkbox" ng-model="entitlements[service]" icheck>
-        </div>
-        <span style="font-size:15px; padding:10px">
-          {{getServiceName(service)}}
-        </span>
+        <cs-checkbox id="{{'chk_'+service}}" ng-model="entitlements[service]" cklabel="{{getServiceName(service)}}"></cs-checkbox>
       </div>
       <button id="btnSave" class="btn btn-primary" style="margin-left:62%; margin-top:5px;" ng-click="changeEntitlement(currentUser)" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="profilePage.save"></span></button>
     </div>
