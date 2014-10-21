@@ -174,14 +174,14 @@ angular.module('Core')
       }
     };
 
-    $scope.$on('ActiveUsersLoaded', loadActiveUsers);
-    $scope.$on('AverageCallsLoaded', loadAverageCalls);
-    $scope.$on('ContentSharedLoaded', loadContentShared);
-    $scope.$on('EntitlementsLoaded', loadEntitlements);
-    $scope.$on('ActiveUserCountLoaded', loadActiveUserCount);
-    $scope.$on('AverageCallCountLoaded', loadAverageCallCount);
-    $scope.$on('ContentSharedCountLoaded', loadContentSharedCount);
-    $scope.$on('EntitlementCountLoaded', loadEntitlementCount);
+    $scope.$on('activeUsersLoaded', loadActiveUsers);
+    $scope.$on('avgCallsPerUserLoaded', loadAverageCalls);
+    $scope.$on('contentSharedLoaded', loadContentShared);
+    $scope.$on('entitlementsLoaded', loadEntitlements);
+    $scope.$on('activeUserCountLoaded', loadActiveUserCount);
+    $scope.$on('averageCallCountLoaded', loadAverageCallCount);
+    $scope.$on('contentSharedCountLoaded', loadContentSharedCount);
+    $scope.$on('entitlementCountLoaded', loadEntitlementCount);
 
     $scope.resizeActiveUsersChart = function() {
       if (activeUsersChart) {

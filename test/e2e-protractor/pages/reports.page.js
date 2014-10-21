@@ -5,6 +5,12 @@ var ReportsPage = function(){
   this.calls = element(by.id('avgCallsdiv'));
   this.conversations = element(by.id('avgConversationsdiv'));
   this.activeUsers = element(by.id('activeUsersdiv'));
+  this.convOneOnOne = element(by.id('convOneOnOnediv'));
+  this.convGroup = element(by.id('convGroupdiv'));
+  this.calls = element(by.id('callsdiv'));
+  this.callsAvgDuration = element(by.id('callsAvgDurationdiv'));
+  this.contentShared = element(by.id('contentShareddiv'));
+  this.contentShareSizes = element(by.id('contentShareSizesdiv'));
 
   this.entitlementsRefresh = element(by.id('avg-entitlements-refresh'));
   this.callsRefresh = element(by.id('avg-calls-refresh'));

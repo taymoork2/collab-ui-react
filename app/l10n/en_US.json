@@ -103,11 +103,7 @@
         "title": "MANAGE TEMPLATES"
     },
     "reportsPage": {
-        "title": "ORGANIZATION REPORTS",
-        "avgEntitlements": "Entitlements",
-        "avgCalls": "Average Calls",
-        "avgConversations": "Average Conversations",
-        "activeUsers": "Active Users"
+        "title": "ORGANIZATION REPORTS"
     },
     "profilePage": {
         "userProfile": "User Profile",

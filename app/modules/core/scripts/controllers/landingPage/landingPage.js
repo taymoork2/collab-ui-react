@@ -123,7 +123,7 @@ angular.module('Core')
         $scope.showShareContent = false;
       };
 
-      $scope.$on('ActiveUserCountLoaded', function(event, response) {
+      $scope.$on('activeUserCountLoaded', function(event, response) {
         $scope.activeUserCount = 0;
         auMetricLoaded = true;
         if (response.data.success) {
@@ -161,7 +161,7 @@ angular.module('Core')
         return count;
       };
 
-      $scope.$on('CallsLoaded', function(event, response) {
+      $scope.$on('callsLoaded', function(event, response) {
         $scope.callsCount = 0;
         callMetricLoaded = true;
         allValuesLoaded();
@@ -184,7 +184,7 @@ angular.module('Core')
         }
       });
 
-      $scope.$on('ConvLoaded', function(event, response) {
+      $scope.$on('conversationsLoaded', function(event, response) {
         $scope.convoCount = 0;
         convMetricLoaded = true;
         allValuesLoaded();
@@ -207,7 +207,7 @@ angular.module('Core')
         }
       });
 
-      $scope.$on('ContentShareLoaded', function(event, response) {
+      $scope.$on('contentSharedLoaded', function(event, response) {
         $scope.cShareCount = 0;
         contentLoaded = true;
         allValuesLoaded();
@@ -231,7 +231,7 @@ angular.module('Core')
         }
       });
 
-      $scope.$on('ActiveUserMetricsLoaded', function(event, response) {
+      $scope.$on('activeUsersLoaded', function(event, response) {
         var auCount = 0;
         allValuesLoaded();
         if (response.data.success) {

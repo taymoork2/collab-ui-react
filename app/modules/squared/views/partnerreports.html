@@ -1,3 +1,58 @@
-<h1 style="margin-left:20px">Partner Reports</h1>
-<h3 style="margin-left:20px">Fake Data</h3>
-<img style="margin-left:30px; margin-top:30px; width:500px" src="images/report_placeholder.png" />
+<div class="reports">
+  <div class="row">
+    <div ng-click="manualReload(false)" class="overview-updated" id="reports-click-div">
+      <reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime">
+      </reload-data>
+    </div>
+  </div>
+  <div class="row">
+    <div class="all-reports col-sm-6">
+      <div id="avgEntitlementsdiv" class="timechartDiv"></div>
+      <div id="avg-entitlements-refresh" class="metrics-refresh" ng-show="showAvgEntitlementsRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+    <div class ="all-reports col-sm-6">
+      <div id="avgCallsdiv" class="timechartDiv"></div>
+      <div id="avg-calls-refresh" class="metrics-refresh" ng-show="showAvgCallsRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class ="all-reports col-sm-6">
+      <div id="avgConversationsdiv" class="timechartDiv"></div>
+      <div id="avg-conversations-refresh" class="metrics-refresh" ng-show="showAvgConversationsRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+    <div class ="all-reports col-sm-6">
+      <div id="activeUsersdiv" class="timechartDiv"></div>
+      <div id="active-users-refresh" class="metrics-refresh" ng-show="showActiveUsersRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class ="all-reports col-sm-6">
+      <div id="convOneOnOnediv" class="timechartDiv"></div>
+      <div id="conv-one-on-one-refresh" class="metrics-refresh" ng-show="showConvOneOnOneRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+    <div class ="all-reports col-sm-6">
+      <div id="convGroupdiv" class="timechartDiv"></div>
+      <div id="conv-group-refresh" class="metrics-refresh" ng-show="showConvGroupRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class ="all-reports col-sm-6">
+      <div id="callsdiv" class="timechartDiv"></div>
+      <div id="calls-refresh" class="metrics-refresh" ng-show="showCallsRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+    <div class ="all-reports col-sm-6">
+      <div id="callsAvgDurationdiv" class="timechartDiv"></div>
+      <div id="calls-avg-duration-refresh" class="metrics-refresh" ng-show="showCallsAvgDurationRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class ="all-reports col-sm-6">
+      <div id="contentShareddiv" class="timechartDiv"></div>
+      <div id="content-shared-refresh" class="metrics-refresh" ng-show="showContentSharedRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+    <div class ="all-reports col-sm-6">
+      <div id="contentShareSizesdiv" class="timechartDiv"></div>
+      <div id="content-share-sizes-refresh" class="metrics-refresh" ng-show="showContentShareSizesRefresh"><i class='fa fa-refresh fa-spin fa-2x'/></div>
+    </div>
+  </div>
+</div>

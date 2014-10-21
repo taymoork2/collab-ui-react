@@ -157,6 +157,11 @@ angular.module('Core')
           return roles.indexOf('Full_Admin') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
         },
 
+        isPartner: function() {
+          var roles = this.getRoles();
+          return roles.indexOf('PARTNER_USER') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
+        },
+
         isSquaredTeamMember: function() {
           var roles = this.getRoles();
           return roles.indexOf('WX2_User') > -1;

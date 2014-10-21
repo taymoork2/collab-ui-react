@@ -392,7 +392,7 @@ describe('App flow', function() {
     });
 
     it('should load cached values into directive when switching tabs', function() {
-      navigation.clickUsers()
+      navigation.clickUsers();
       navigation.expectCurrentUrl('/users');
       navigation.clickReports();
       navigation.expectCurrentUrl('/reports');
@@ -402,6 +402,12 @@ describe('App flow', function() {
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();
+      expect(reports.convOneOnOne.isDisplayed()).toBeTruthy();
+      expect(reports.convGroup.isDisplayed()).toBeTruthy();
+      expect(reports.calls.isDisplayed()).toBeTruthy();
+      expect(reports.callsAvgDuration.isDisplayed()).toBeTruthy();
+      expect(reports.contentShared.isDisplayed()).toBeTruthy();
+      expect(reports.contentShareSizes.isDisplayed()).toBeTruthy();
     });
 
     it('should load new values and update time when clicking refresh', function() {
@@ -412,6 +418,12 @@ describe('App flow', function() {
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();
+      expect(reports.convOneOnOne.isDisplayed()).toBeTruthy();
+      expect(reports.convGroup.isDisplayed()).toBeTruthy();
+      expect(reports.calls.isDisplayed()).toBeTruthy();
+      expect(reports.callsAvgDuration.isDisplayed()).toBeTruthy();
+      expect(reports.contentShared.isDisplayed()).toBeTruthy();
+      expect(reports.contentShareSizes.isDisplayed()).toBeTruthy();
     });
   });
 

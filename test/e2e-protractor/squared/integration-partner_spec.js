@@ -95,6 +95,51 @@ describe('Partner flow', function() {
     });
   });
 
+  describe('Reports Page data refresh', function() {
+
+    it('should load refresh directive template', function() {
+      navigation.clickReports();
+      navigation.expectCurrentUrl('/partnerreports');
+      expect(reports.refreshData.isDisplayed()).toBeTruthy();
+      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
+    });
+
+    it('should load cached values into directive when switching tabs', function() {
+      navigation.clickHome();
+      navigation.expectCurrentUrl('/partnerhome');
+      navigation.clickReports();
+      navigation.expectCurrentUrl('/partnerreports');
+      expect(reports.refreshData.isDisplayed()).toBeTruthy();
+      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(reports.entitlements.isDisplayed()).toBeTruthy();
+      expect(reports.calls.isDisplayed()).toBeTruthy();
+      expect(reports.conversations.isDisplayed()).toBeTruthy();
+      expect(reports.activeUsers.isDisplayed()).toBeTruthy();
+      expect(reports.convOneOnOne.isDisplayed()).toBeTruthy();
+      expect(reports.convGroup.isDisplayed()).toBeTruthy();
+      expect(reports.calls.isDisplayed()).toBeTruthy();
+      expect(reports.callsAvgDuration.isDisplayed()).toBeTruthy();
+      expect(reports.contentShared.isDisplayed()).toBeTruthy();
+      expect(reports.contentShareSizes.isDisplayed()).toBeTruthy();
+    });
+
+    it('should load new values and update time when clicking refresh', function() {
+      reports.refreshButton.click();
+      expect(reports.refreshData.isDisplayed()).toBeTruthy();
+      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
+      expect(reports.entitlements.isDisplayed()).toBeTruthy();
+      expect(reports.calls.isDisplayed()).toBeTruthy();
+      expect(reports.conversations.isDisplayed()).toBeTruthy();
+      expect(reports.activeUsers.isDisplayed()).toBeTruthy();
+      expect(reports.convOneOnOne.isDisplayed()).toBeTruthy();
+      expect(reports.convGroup.isDisplayed()).toBeTruthy();
+      expect(reports.calls.isDisplayed()).toBeTruthy();
+      expect(reports.callsAvgDuration.isDisplayed()).toBeTruthy();
+      expect(reports.contentShared.isDisplayed()).toBeTruthy();
+      expect(reports.contentShareSizes.isDisplayed()).toBeTruthy();
+    });
+  });
+
   // Log Out
   describe('Log Out', function() {
     it('should log out', function() {

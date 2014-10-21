@@ -142,7 +142,7 @@ angular
         .state('partnerreports', {
           url: '/partnerreports',
           templateUrl: 'modules/squared/views/partnerreports.html',
-          controller: 'PartnerReportsCtrl'
+          controller: 'ReportsCtrl'
         })
         .state('customers', {
           url: '/customers',

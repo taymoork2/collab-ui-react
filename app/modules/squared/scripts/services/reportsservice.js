@@ -62,6 +62,14 @@ angular.module('Squared')
         return metricUrl;
       };
 
+      var sendChartResponse = function(data, status, metricType) {
+        var response = {
+          'data': data,
+          'status': status
+        };
+        $rootScope.$broadcast(metricType +'Loaded', response);
+      };
+
       return {
 
         getUsageMetrics: function(metricType, params, callback) {
@@ -73,17 +81,13 @@ angular.module('Squared')
             .success(function(data, status) {
               data.success = true;
               Log.debug('Callback for ' + metricType + ' for org=' + Authinfo.getOrgId());
-              if (angular.isFunction(callback)) {
-                callback(data, status);
-              }
+              sendChartResponse(data, status, metricType);
             })
             .error(function(data, status) {
               data.success = false;
               data.status = status;
               data.errorMsg = data;
-              if (angular.isFunction(callback)) {
-                callback(data, status);
-              }
+              sendChartResponse(data, status, metricType);
               Auth.handleStatus(status);
             });
         },
@@ -102,69 +106,13 @@ angular.module('Squared')
             'cache': useCache
           };
 
-          this.getUsageMetrics('activeUsers', chartParams, function(data,status){
-            var response = {
-              'data': data,
-              'status': status
-            };
-            $rootScope.$broadcast('ActiveUsersLoaded', response);
-          });
+          var partnerCharts = ['activeUsers', 'avgCallsPerUser', 'entitlements', 'contentShared',
+          'contentShareSizes', 'activeUserCount', 'averageCallCount', 'entitlementCount', 'contentSharedCount',
+          'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations'];
 
-          this.getUsageMetrics('avgCallsPerUser', chartParams, function(data,status){
-            var response = {
-              'data': data,
-              'status': status
-            };
-            $rootScope.$broadcast('AverageCallsLoaded', response);
-          });
-
-          this.getUsageMetrics('entitlements', chartParams, function(data,status){
-            var response = {
-              'data': data,
-              'status': status
-            };
-            $rootScope.$broadcast('EntitlementsLoaded', response);
-          });
-
-          this.getUsageMetrics('contentShared', chartParams, function(data,status){
-            var response = {
-              'data': data,
-              'status': status
-            };
-            $rootScope.$broadcast('ContentSharedLoaded', response);
-          });
-
-          this.getUsageMetrics('activeUserCount', chartParams, function(data,status){
-            var response = {
-              'data': data,
-              'status': status
-            };
-            $rootScope.$broadcast('ActiveUserCountLoaded', response);
-          });
-
-          this.getUsageMetrics('averageCallCount', chartParams, function(data,status){
-            var response = {
-              'data': data,
-              'status': status
-            };
-            $rootScope.$broadcast('AverageCallCountLoaded', response);
-          });
-
-          this.getUsageMetrics('entitlementCount', chartParams, function(data,status){
-            var response = {
-              'data': data,
-              'status': status
-            };
-            $rootScope.$broadcast('EntitlementCountLoaded', response);
-          });
-
-          this.getUsageMetrics('contentSharedCount', chartParams, function(data,status){
-            var response = {
-              'data': data,
-              'status': status
-            };
-            $rootScope.$broadcast('ContentSharedCountLoaded', response);
-          });
+          for(var chart in partnerCharts) {
+            this.getUsageMetrics(partnerCharts[chart], chartParams);
+          }
         },
 
         getAllMetrics :function(useCache){
@@ -174,13 +122,15 @@ angular.module('Squared')
             'cache' : useCache
           };
 
-          this.getUsageMetrics('activeUserCount', params, function(data, status) {
-              var response = {
-                'data': data,
-                'status': status
-              };
-              $rootScope.$broadcast('ActiveUserCountLoaded', response);
-            });
+          // this.getUsageMetrics('activeUserCount', params, function(data, status) {
+          //     var response = {
+          //       'data': data,
+          //       'status': status
+          //     };
+          //     $rootScope.$broadcast('ActiveUserCountLoaded', response);
+          //   });
+
+          this.getUsageMetrics('activeUserCount', params);
 
           params = {
             'intervalCount': 1,
@@ -190,61 +140,13 @@ angular.module('Squared')
             'cache' : useCache
           };
 
-          this.getUsageMetrics('calls', params, function(data, status) {
-              var response = {
-                'data': data,
-                'status': status
-              };
-              $rootScope.$broadcast('CallsLoaded', response);
-            });
+          var customerCharts = ['calls', 'conversations', 'contentShareSizes', 'contentShared',
+          'activeUsers', 'entitlements', 'avgCallsPerUser', 'avgConversations', 'convOneOnOne', 'convGroup',
+          'calls', 'callsAvgDuration'];
 
-          this.getUsageMetrics('conversations', params, function(data, status) {
-            var response = {
-                'data': data,
-                'status': status
-              };
-            $rootScope.$broadcast('ConvLoaded', response);
-          });
-
-          this.getUsageMetrics('contentShareSizes', params, function(data, status) {
-            var response = {
-                'data': data,
-                'status': status
-              };
-            $rootScope.$broadcast('ContentShareLoaded', response);
-          });
-
-          this.getUsageMetrics('activeUsers', params, function(data, status) {
-            var response = {
-                'data': data,
-                'status': status
-              };
-            $rootScope.$broadcast('ActiveUserMetricsLoaded', response);
-          });
-
-          this.getUsageMetrics('entitlements', params, function(data, status) {
-            var response = {
-                'data': data,
-                'status': status
-              };
-            $rootScope.$broadcast('EntitlementsLoaded', response);
-          });
-
-          this.getUsageMetrics('avgCalls', params, function(data, status) {
-            var response = {
-                'data': data,
-                'status': status
-              };
-            $rootScope.$broadcast('AvgCallsLoaded', response);
-          });
-
-          this.getUsageMetrics('avgConversations', params, function(data, status) {
-            var response = {
-                'data': data,
-                'status': status
-              };
-            $rootScope.$broadcast('AvgConversationsLoaded', response);
-          });
+          for(var chart in customerCharts) {
+            this.getUsageMetrics(customerCharts[chart], params);
+          }
         },
 
         getLogInfo: function(locusId, startTime, callback) {

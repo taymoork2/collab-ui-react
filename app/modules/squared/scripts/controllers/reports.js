@@ -2,13 +2,19 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log',
-    function($scope, $parse, ReportsService, Log) {
+  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo',
+    function($scope, $parse, ReportsService, Log, Authinfo) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
       $('#avgConversationsdiv').addClass('chart-border');
       $('#activeUsersdiv').addClass('chart-border');
+      $('#convOneOnOnediv').addClass('chart-border');
+      $('#convGroupdiv').addClass('chart-border');
+      $('#callsdiv').addClass('chart-border');
+      $('#callsAvgDurationdiv').addClass('chart-border');
+      $('#contentShareddiv').addClass('chart-border');
+      $('#contentShareSizesdiv').addClass('chart-border');
 
       var chartVals = [];
 
@@ -16,48 +22,100 @@ angular.module('Squared')
       var avgCallsLoaded = false;
       var avgConvLoaded = false;
       var auLoaded = false;
+      var convOneOnOneLoaded = false;
+      var convGroupLoaded = false;
+      var callsLoaded = false;
+      var callsAvgDurationLoaded = false;
+      var contentSharedLoaded = false;
+      var contentShareSizesLoaded = false;
 
       var responseTime;
 
       var checkAllValues = function() {
-        if (entitlementsLoaded && avgCallsLoaded && avgConvLoaded && auLoaded) {
+        if (entitlementsLoaded && avgCallsLoaded && avgConvLoaded && auLoaded && convOneOnOneLoaded && convGroupLoaded && callsLoaded && callsAvgDurationLoaded && contentSharedLoaded && contentShareSizesLoaded) {
           $scope.reportsRefreshTime = responseTime;
         }
       };
 
       var checkDataLoaded = function(data) {
-        if (data === 'entitlements') {
+        switch(data) {
+        case 'entitlements':
           entitlementsLoaded = true;
-          checkAllValues();
-        }
-        if (data === 'avgCalls') {
+          break;
+        case 'avgCalls':
           avgCallsLoaded = true;
-          checkAllValues();
-        }
-        if (data === 'avgConversations') {
+          break;
+        case 'avgConversations':
           avgConvLoaded = true;
-          checkAllValues();
-        }
-        if (data === 'activeUsers') {
+          break;
+        case 'activeUsers':
           auLoaded = true;
-          checkAllValues();
+          break;
+        case 'convOneOnOne':
+          convOneOnOneLoaded = true;
+          break;
+        case 'convGroup':
+          convGroupLoaded = true;
+          break;
+        case 'calls':
+          callsLoaded = true;
+          break;
+        case 'callsAvgDuration':
+          callsAvgDurationLoaded = true;
+          break;
+        case 'contentShared':
+          contentSharedLoaded = true;
+          break;
+        case 'contentShareSizes':
+          contentShareSizesLoaded = true;
+          break;
         }
+        checkAllValues();
       };
 
-      $scope.$on('EntitlementsLoaded', function(event, response){
-        getTimeCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', '#3333CC');
+      var blue = '#1EA7D1';
+      var red = '#F46315';
+      var yellow = '#EBC31C';
+      var green = '#50D71D';
+
+      $scope.$on('entitlementsLoaded', function(event, response){
+        getTimeCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', blue, 'sum');
       });
 
-      $scope.$on('AvgCallsLoaded', function(event, response){
-        getTimeCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Calls', '#FF9900');
+      $scope.$on('avgCallsPerUserLoaded', function(event, response){
+        getTimeCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Avg Calls Per User', red, 'average');
       });
 
-      $scope.$on('AvgConversationsLoaded', function(event, response){
-        getTimeCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Conversations', '#009933');
+      $scope.$on('avgConversationsLoaded', function(event, response){
+        getTimeCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Avg Conversations Per User', yellow, 'average');
       });
 
-      $scope.$on('ActiveUserMetricsLoaded', function(event, response){
-        getTimeCharts(response, 'activeUsers','activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', '#CC0000');
+      $scope.$on('activeUsersLoaded', function(event, response){
+        getTimeCharts(response, 'activeUsers','activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', green, 'sum');
+      });
+
+      $scope.$on('convOneOnOneLoaded', function(event, response){
+        getTimeCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', 'One On One Conversations', blue, 'sum');
+      });
+
+      $scope.$on('convGroupLoaded', function(event, response){
+        getTimeCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', 'Group Conversations', red, 'sum');
+      });
+
+      $scope.$on('callsLoaded', function(event, response){
+        getTimeCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', 'Video Calls', yellow, 'sum');
+      });
+
+      $scope.$on('callsAvgDurationLoaded', function(event, response){
+        getTimeCharts(response, 'callsAvgDuration','callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', 'Avg Duration of Calls', green, 'average');
+      });
+
+      $scope.$on('contentSharedLoaded', function(event, response){
+        getTimeCharts(response, 'contentShared','contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', 'Content Shared', blue, 'sum');
+      });
+
+      $scope.$on('contentShareSizesLoaded', function(event, response){
+        getTimeCharts(response, 'contentShareSizes','contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', 'Amount of Content Shared', red, 'sum');
       });
 
       $scope.manualReload = function(backendCache) {
@@ -70,18 +128,29 @@ angular.module('Squared')
         avgCallsLoaded = false;
         avgConvLoaded = false;
         auLoaded = false;
+        convOneOnOneLoaded = false;
+        convGroupLoaded = false;
+        callsLoaded = false;
+        callsAvgDurationLoaded = false;
+        contentSharedLoaded = false;
+        contentShareSizesLoaded = false;
 
-        ReportsService.getAllMetrics(backendCache);
-
-        $('#avg-entitlements-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-        $('#avg-calls-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-        $('#avg-conversations-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-        $('#active-users-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-
+        if(Authinfo.isPartner()) {
+          ReportsService.getPartnerMetrics(backendCache);
+        } else {
+          ReportsService.getAllMetrics(backendCache);
+        }
+        
         $scope.showAvgEntitlementsRefresh = true;
         $scope.showAvgCallsRefresh = true;
         $scope.showAvgConversationsRefresh = true;
         $scope.showActiveUsersRefresh = true;
+        $scope.showConvOneOnOneRefresh = true;
+        $scope.showConvGroupRefresh = true;
+        $scope.showCallsRefresh = true;
+        $scope.showCallsAvgDurationRefresh = true;
+        $scope.showContentSharedRefresh = true;
+        $scope.showContentShareSizesRefresh = true;
       };
 
       var getMetricData = function(dataList, metric) {
@@ -102,7 +171,7 @@ angular.module('Squared')
         return count;
       };
 
-      var getTimeCharts = function(response, type, divName, refreshDivName, refreshVarName, title, color) {
+      var getTimeCharts = function(response, type, divName, refreshDivName, refreshVarName, title, color, operation) {
           var avCount = 0;
           checkDataLoaded(type);
           if (response.data.success) {
@@ -113,7 +182,7 @@ angular.module('Squared')
               if (result.length > 0) {
                 avCount = getMetricData(result, type);
               }
-              makeTimeChart(chartVals, divName, type, title, color);
+              makeTimeChart(chartVals, divName, type, title, color, operation);
               $scope[refreshVarName] = false;
 
             } else {
@@ -126,46 +195,64 @@ angular.module('Squared')
           }
         };
 
-      var makeTimeChart = function(sdata, divName, metricName, title, color) {
+      var makeTimeChart = function(sdata, divName, metricName, title, color, operation) {
         var homeChart = AmCharts.makeChart(divName, {
           'type': 'serial',
-          'theme': 'chalk',
-          'pathToImages': 'http://www.amcharts.com/lib/3/images/',
+          'theme': 'none',
+          'fontFamily': 'CiscoSansTT Thin',
           'colors': [color],
+          'backgroundColor': '#ffffff',
+          'backgroundAlpha': 1,
           'legend': {
             'equalWidths': false,
-            'periodValueText': 'total: [[value.sum]]',
+            'periodValueText': '[[value.' + [operation] + ']]',
+            'precision' : 2,
             'position': 'top',
-            'valueAlign': 'left',
-            'valueWidth': 100
+            'valueWidth': 10,
+            'fontSize': 30,
+            'markerType': 'none',
+            'spacing': 0,
+            'valueAlign': 'right',
+            'useMarkerColorForLabels': true,
+            'useMarkerColorForValues': true,
+            'marginLeft': -20,
+            'marginRight': 0
           },
           'dataProvider': sdata,
           'valueAxes': [{
             'stackType': 'regular',
-            'gridAlpha': 0.07,
-            'position': 'left',
-            'title': title
+            'axisColor': '#DDDDDD',
+            'gridAlpha': 0,
+            'axisAlpha': 1,
+            'color': '#999999'
           }],
           'graphs': [{
-            'fillAlphas': 0.6,
+            'fillAlphas': 0,
             'hidden': false,
-            'lineAlpha': 0.4,
+            'lineAlpha': 1,
             'title': title,
             'valueField': metricName
           }],
-          'plotAreaBorderAlpha': 0,
-          'marginTop': 10,
-          'marginLeft': 0,
-          'marginBottom': 0,
-          'chartScrollbar': {},
           'chartCursor': {
-            'cursorAlpha': 0
+            'valueLineEnabled': true,
+            'valueLineBalloonEnabled': true,
+            'cursorColor': '#AFB0B3',
+            'valueBalloonsEnabled': false,
+            'cursorPosition': 'mouse'
           },
+          'plotAreaBorderAlpha': 0,
+          'plotAreaBorderColor': '#DDDDDD',
+          'marginTop': 20,
+          'marginRight': 20,
+          'marginLeft': 10,
+          'marginBottom': 10,
           'categoryField': 'week',
           'categoryAxis': {
             'startOnAxis': true,
-            'axisColor': '#DADADA',
-            'gridAlpha': 0.07
+            'axisColor': '#DDDDDD',
+            'gridAlpha': 1,
+            'gridColor': '#DDDDDD',
+            'color': '#999999'
           }
         });
       };
