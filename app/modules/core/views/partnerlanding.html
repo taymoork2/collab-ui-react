@@ -178,10 +178,10 @@
           </div>
         </div>
         <div class="modal-footer modal-trials-footer">
-          <div id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="startTrial()" data-dismiss="modal" ng-disabled="trialForm.$invalid">
+          <button type="button" id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="startTrial()" ng-disabled="trialForm.$invalid" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
             <span class="button-text" translate="partnerHomePage.startTrial"></span>
-          </div>
-          <div id="btnCancel" class="btn btn-default btn-lg pull-right" data-dismiss="modal">
+          </button>
+          <div id="cancelNewTrialButton" class="btn btn-default btn-lg pull-right" data-dismiss="modal">
             <span class="button-text" translate="partnerHomePage.cancel"></span>
           </div>
         </div>
@@ -299,10 +299,10 @@
           </div>
         </div>
         <div class="modal-footer modal-trials-footer" ng-show="!editTerms">
-          <button id="btnCancel" class="btn btn-primary btn-lg pull-right" data-dismiss="modal">
-            <span id="saveSendButton"class="button-text" translate="partnerHomePage.saveSendReminder" ng-click="editTrial()"></span>
+          <button type="button" id="saveSendButton" class="btn btn-primary btn-lg pull-right" ng-click="editTrial()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+            <span class="button-text" translate="partnerHomePage.saveSendReminder"></span>
           </button>
-          <div id="btnCancel" class="btn btn-default btn-lg pull-right" data-dismiss="modal">
+          <div id="cancelTrialButton" class="btn btn-default btn-lg pull-right" data-dismiss="modal">
             <span class="button-text" translate="partnerHomePage.cancel"></span>
           </div>
         </div>

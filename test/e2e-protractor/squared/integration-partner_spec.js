@@ -61,9 +61,11 @@ describe('Partner flow', function() {
 
       partner.startTrialButton.click();
       notifications.assertError(partner.newTrial.customerName, 'already exists');
+      partner.cancelTrialButton.click();
     });
 
     it('should edit an exisiting trial', function(){
+      utils.expectIsNotDisplayed(partner.addTrialModal);
       partner.newTrialRow.click();
 
       utils.expectIsDisplayed(partner.editTrialModal);

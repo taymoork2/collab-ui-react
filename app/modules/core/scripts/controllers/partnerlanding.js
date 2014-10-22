@@ -32,9 +32,11 @@ angular.module('Core')
 
     $scope.startTrial = function(){
       var createdDate = new Date();
-
+      angular.element('#startTrialButton').button('loading');
       PartnerService.startTrial($scope.customerName, $scope.customerEmail, 'COLLAB', $scope.licenseCount, $scope.licenseDuration, $scope.startDate, function(data, status){
+          angular.element('#startTrialButton').button('reset');
           if(data.success === true ){
+            $("#addTrialDialog").modal("hide");
             var successMessage = ['A trial was successfully started for ' + $scope.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
             Notification.notify(successMessage, 'success');
             setTimeout(function(){
@@ -49,9 +51,11 @@ angular.module('Core')
 
     $scope.editTrial = function(){
       var createdDate = new Date();
-
+      angular.element('#saveSendButton').button('loading');
       PartnerService.editTrial($scope.licenseDuration, $scope.currentTrial.trialId, $scope.licenseCount, $scope.currentTrial.usage, function(data, status){
+          angular.element('#saveSendButton').button('reset');
           if(data.success === true ){
+            $("#editTrialDialog").modal("hide");
             var successMessage = ['You have successfully edited a trial for ' + $scope.currentTrial.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
             Notification.notify(successMessage, 'success');
             setTimeout(function(){
