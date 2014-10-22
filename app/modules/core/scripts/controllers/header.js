@@ -47,17 +47,21 @@ angular.module('Core')
   }
 ])
 
-.controller('SettingsMenuCtrl', ['$scope', '$dialogs', '$location', 'ModalService',
-  function($scope, $dialogs, $location, ModalService) {
+.controller('SettingsMenuCtrl', ['$scope', '$dialogs', '$location', 'ModalService', 'Config',
+  function($scope, $dialogs, $location, ModalService, Config) {
     //LOOKTHISUPDUDE
-    $scope.menuItems = [];
-    $scope.menuItems = [{link: '/initialsetup', title: 'Initial Setup'}];
+    if(Config.isProd()) {
+      $scope.menuItems = [];
+    } else {
+      $scope.menuItems = [{link: '/initialsetup', title: 'Initial Setup'}];
+    }
 
     $scope.doAction = function(path) {
       if(path==='/initialsetup'){
         ModalService.showModal({
           templateUrl: 'modules/core/views/wizardmodal.html',
-          controller: 'WizardModalCtrl'
+          controller: 'WizardModalCtrl',
+          keyboard: true
         }).then(function(modal) {
           modal.element.modal();
           modal.close.then(function(result){
