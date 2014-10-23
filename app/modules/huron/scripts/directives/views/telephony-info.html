@@ -1,21 +1,41 @@
- <div>
-   <table class="table">
-     <tbody>
-       <tr>
-         <td><span class="services-subtitle" translate="usersPreview.telephonyPreview"></span></td>
-       </tr>
-       <tr ng-repeat="directoryNumber in userDnList" id="{{directoryNumber.id}}">
-         <td><a><div ng-click="showDirectoryNumberPanel(directoryNumber)"><span class="sub-service">{{directoryNumber.pattern}}  {{directoryNumber.dnUsage}}</span><i class="fa fa-angle-right fa-lg pull-right"></i></div></a></td>
-       </tr>
-       <tr>
-         <td><span class="services-subtitle" translate="usersPreview.telephonyFeaturesPreview"></span></td>
-       </tr>
-       <tr>
-        <td><a ui-sref="users.list.preview.voicemail"><div><span class="sub-service">{{'telephonyPreview.voicemail' | translate}} <span class="text-muted">{{voicemail}}</span></span><i class="fa fa-angle-right fa-lg pull-right"></i></div></a></td>
-      </tr>
-       <tr>
-        <td><a ui-sref="users.list.preview.snr"><div><span class="sub-service">{{'telephonyPreview.singleNumberReach' | translate}} <span class="text-muted">{{singleNumberReach}}</span></span><i class="fa fa-angle-right fa-lg pull-right"></i></div></a></td>
-      </tr>
-     </tbody>
-   </table>
- </div>
+<div class="row">
+  <div class="sub-title col-md-12">
+      <span translate="usersPreview.telephonyPreview"></span>
+  </div>
+</div>
+<div class="row">
+  <div class="dir-number-list col-md-12">
+    <div ng-repeat="directoryNumber in userDnList" id="{{directoryNumber.id}}" class="dir-number sub-service row">
+      <a href id="{{directoryNumber.id}}" ng-click="showDirectoryNumberPanel(directoryNumber)">
+        <div class="col-md-12">
+          <span class="number">{{directoryNumber.pattern}}</span>
+          <span class="usage">{{directoryNumber.dnUsage}}</span>
+          <i class="icon icon-arrow-next pull-right"></i>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="voicemail col-md-12">
+    <div class="sub-service">
+      <a ui-sref="users.list.preview.voicemail">
+        <span>{{'telephonyPreview.voicemail' | translate}}</span>
+          <i class="icon icon-arrow-next pull-right"></i>
+        <span class="status">{{telephonyUserInfo.voicemail}}</span>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="single-number-reach col-md-12">
+    <div class="sub-service">
+      <a ui-sref="users.list.preview.snr">
+        <span>{{'telephonyPreview.singleNumberReach' | translate}}</span>
+          <i class="icon icon-arrow-next pull-right"></i>
+        </span>
+        <span class="status">{{telephonyUserInfo.singleNumberReach}}</span>
+      </a>
+    </div>
+  </div>
+</div>

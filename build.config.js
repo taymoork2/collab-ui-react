@@ -42,6 +42,7 @@ module.exports = {
       'bower_components/base64/base64.js',
       'bower_components/nicescroll/jquery.nicescroll.js',
       'bower_components/angular/angular.js',
+      'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-ui-utils/ui-utils.js',
       'bower_components/angular-cookie/angular-cookie.js',

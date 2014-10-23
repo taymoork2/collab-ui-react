@@ -67,8 +67,8 @@ angular
         })
         .state('home', {
           url: '/home',
-          templateUrl: 'modules/core/views/landingPage.html',
-          controller: 'HomeCtrl'
+          templateUrl: 'modules/core/landingPage/landingPage.tpl.html',
+          controller: 'LandingPageCtrl'
         })
         .state('users', {
           absract: true,
@@ -76,11 +76,11 @@ angular
         })
         .state('users.list', {
           url: '/users',
-          templateUrl: 'modules/core/views/listusers.html',
+          templateUrl: 'modules/core/users/userList/userList.tpl.html',
           controller: 'ListUsersCtrl'
         })
         .state('users.list.preview', {
-          templateUrl: 'modules/core/views/userpreview.html',
+          templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
           controller: 'UserPreviewCtrl'
         })
         .state('users.list.preview.conversations', {
@@ -96,7 +96,7 @@ angular
           template: '<div single-number-reach-info directoryNumber="directoryNumber"></div>'
         })
         .state('users.add', {
-          templateUrl: 'modules/core/views/adduser.html',
+          templateUrl: 'modules/core/users/userAdd/userAdd.tpl.html',
           controller: 'UsersCtrl'
         })
         .state('orgs', {
@@ -166,7 +166,7 @@ angular
         .state('partnerreports', {
           url: '/partnerreports',
           templateUrl: 'modules/squared/views/partnerreports.html',
-          controller: 'ReportsCtrl'
+          controller: 'PartnerReportsCtrl'
         })
         .state('customers', {
           url: '/customers',
@@ -174,7 +174,7 @@ angular
           controller: 'CustomersCtrl'
         });
     }
-]);
+  ]);
 
 angular
   .module('Huron')

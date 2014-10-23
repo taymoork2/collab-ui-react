@@ -1,13 +1,13 @@
 'use strict'
 
 // TODO - break up into UserList/UserAdd/UserPreview
-var UsersPage = function(){
+var UsersPage = function() {
   this.searchButton = element(by.css('.header-search button'));
   this.searchField = element(by.css('.search-form input'));
 
   this.listPanel = element(by.id('userslistpanel'));
   this.managePanel = element(by.id('manageUsersPanel'));
-  this.squaredPanel = element(by.id('squaredPanel'));
+  this.squaredPanel = element(by.id('conversations-link'));
   this.entitlementPanel = element(by.id('entitlementPanel'));
   this.huronPanel = element(by.id('huronPanel'));
   this.conferencePanel = element(by.id('conferencePanel'));
@@ -53,41 +53,36 @@ var UsersPage = function(){
   this.iconSearch = element(by.id('icon-search'));
   this.userListEnts = element.all(by.binding('userName'));
 
-  this.assertSorting = function(nameToSort){
+  this.assertSorting = function(nameToSort) {
     this.queryResults.getAttribute('value').then(function(value) {
-        var queryresults = parseInt(value, 10);
-        if (queryresults > 1) {
-          //get first user
-          var user = null;
+      var queryresults = parseInt(value, 10);
+      if (queryresults > 1) {
+        //get first user
+        var user = null;
+        element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+          user = rows[0].getText();
+        });
+        //Click on username sort and expect the first user not to be the same
+        element(by.id(nameToSort)).click().then(function() {
           element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-            user = rows[0].getText();
+            expect(rows[0].getText()).not.toBe(user);
           });
-          //Click on username sort and expect the first user not to be the same
-          element(by.id(nameToSort)).click().then(function() {
-            element.all(by.repeater('user in queryuserslist')).then(function(rows) {
-              expect(rows[0].getText()).not.toBe(user);
-            });
-          });
-        }
-      });
+        });
+      }
+    });
   };
 
-  this.assertPage = function(page){
+  this.assertPage = function(page) {
     expect(this.currentPage.getText()).toBe(page);
   };
 
   this.assertResultsLength = function(results) {
-    element.all(by.repeater('user in queryuserslist')).then(function(rows){
-      if(results == 20)
-      {
+    element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+      if (results === 20) {
         expect(rows.length).toBeLessThanOrEqualTo(results);
-      }
-      else if(results == 0)
-      {
+      } else if (results === 0) {
         expect(rows.length).toBeGreaterThan(results);
-      }
-      else
-      {
+      } else {
         expect(rows.length).toBe(results);
       }
     });
@@ -105,7 +100,7 @@ var UsersPage = function(){
     }
   };
 
-  this.assertEntitlementListSize = function (size) {
+  this.assertEntitlementListSize = function(size) {
     element.all(by.repeater('(service, val) in entitlements')).then(function(items) {
       expect(items.length).toBe(size);
     });

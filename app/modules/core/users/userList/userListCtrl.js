@@ -52,8 +52,8 @@ angular.module('Core')
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function(data, status, searchStr) {
           if (data.success) {
             $timeout(function() {
-                $scope.load = true;
-              });
+              $scope.load = true;
+            });
             if ($rootScope.searchStr === searchStr) {
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
               Log.debug('Returned data.', data.Resources);
@@ -105,29 +105,29 @@ angular.module('Core')
         useExternalSorting: true,
 
         columnDefs: [{
-            field: 'photos',
-            displayName: '',
-            sortable: false,
-            cellTemplate: photoCellTemplate,
-            width: 70
+          field: 'photos',
+          displayName: '',
+          sortable: false,
+          cellTemplate: photoCellTemplate,
+          width: 70
         }, {
-            field: 'name.givenName',
-            displayName: $filter('translate')('usersPage.firstnameHeader')
+          field: 'name.givenName',
+          displayName: $filter('translate')('usersPage.firstnameHeader')
         }, {
-            field: 'name.familyName',
-            displayName: $filter('translate')('usersPage.lastnameHeader')
+          field: 'name.familyName',
+          displayName: $filter('translate')('usersPage.lastnameHeader')
         }, {
-            field: 'userName',
-            displayName: $filter('translate')('usersPage.emailHeader')
+          field: 'userName',
+          displayName: $filter('translate')('usersPage.emailHeader')
         }, {
-            field: 'action',
-            displayName: $filter('translate')('usersPage.actionHeader'),
-            sortable: false,
-            cellTemplate: actionsTemplate
+          field: 'action',
+          displayName: $filter('translate')('usersPage.actionHeader'),
+          sortable: false,
+          cellTemplate: actionsTemplate
         }]
       };
 
-      $scope.$on('ngGridEventScroll', function () {
+      $scope.$on('ngGridEventScroll', function() {
         var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
         var scrollTop = ngGridView.scrollTop;
         var scrollOffsetHeight = ngGridView.offsetHeight;
@@ -161,7 +161,7 @@ angular.module('Core')
         $scope.sortInfo = sortInfo;
       });
 
-      $scope.$watch('sortInfo', function (newValue, oldValue) {
+      $scope.$watch('sortInfo', function(newValue, oldValue) {
         // if newValue === oldValue then page is initializing, so ignore event,
         // otherwise getUserList() is called multiple times.
         if (newValue !== oldValue) {
@@ -190,13 +190,13 @@ angular.module('Core')
         //Service profile
         $scope.entitlements = {};
         for (var i = 0; i < $rootScope.services.length; i++) {
-            var service = $rootScope.services[i].sqService;
-            var ciService = $rootScope.services[i].ciService;
-            if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
-                $scope.entitlements[service] = true;
-            } else {
-                $scope.entitlements[service] = false;
-            }
+          var service = $rootScope.services[i].sqService;
+          var ciService = $rootScope.services[i].ciService;
+          if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
+            $scope.entitlements[service] = true;
+          } else {
+            $scope.entitlements[service] = false;
+          }
         }
         $scope.currentUser = user;
         $state.go('users.list.preview');
@@ -267,20 +267,17 @@ angular.module('Core')
       };
 
       // TODO: reevalute this logic and remove is not needed.
-      if($rootScope.selectedSubTab === 'invite') {
+      if ($rootScope.selectedSubTab === 'invite') {
         $scope.inviteTabActive = true;
       } else {
         $scope.userTabActive = true;
       }
 
-      var setTab = function (tab) {
-        if (tab === 'invite')
-        {
+      var setTab = function(tab) {
+        if (tab === 'invite') {
           $scope.userTabActive = false;
           $scope.inviteTabActive = true;
-        }
-        else
-        {
+        } else {
           $scope.userTabActive = true;
           $scope.inviteTabActive = false;
         }

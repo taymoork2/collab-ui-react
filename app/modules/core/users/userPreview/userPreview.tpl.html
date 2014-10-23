@@ -1,0 +1,15 @@
+<div class="details-panel-card preview-panel container-fluid" id="details-panel">
+  <user-info-card></user-info-card>
+  <user-group-card></user-group-card>
+  <user-services-card>
+    <div telephony-info id="huronPanel" ng-show="isHuronEnabled()"></div>
+    <div conferencing-info id="conferencePanel" ng-show="false"></div>
+    <div conversations-info id="squaredPanel"></div>
+    <div endpoints-info id="endpointPanel" ng-show="false"></div>
+  </user-services-card>
+  <user-devices-card></user-devices-card>
+  <user-usage-card></user-usage-card>
+</div>
+<div class="sub-details-panel details-panel">
+  <div ui-view></div>
+</div>

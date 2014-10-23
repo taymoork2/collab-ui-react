@@ -81,101 +81,95 @@ angular.module('Core')
           refreshDelay: 900000
         },
 
-        tabs: [
-          {
+        tabs: [{
+          index: 0,
+          name: 'home',
+          tab: 'homeTab',
+          title: 'tabs.homeTab',
+          state: 'home',
+          link: '/home'
+        }, {
+          index: 1,
+          name: 'partnerhome',
+          tab: 'homeTab',
+          title: 'tabs.homeTab',
+          state: 'partnerhome',
+          link: '/partnerhome'
+        }, {
+          index: 2,
+          name: 'manage',
+          tab: 'orgTab',
+          title: 'tabs.orgTab',
+          subPages: [{
             index: 0,
-            name: 'home',
-            tab: 'homeTab',
-            title: 'tabs.homeTab',
-            state: 'home',
-            link: '/home'
-          },{
+            name: 'users',
+            title: 'tabs.userTab',
+            desc: 'tabs.userTabDesc',
+            state: 'users',
+            link: '#users'
+          }, {
             index: 1,
-            name: 'partnerhome',
-            tab: 'homeTab',
-            title: 'tabs.homeTab',
-            state: 'partnerhome',
-            link: '/partnerhome'
-          },{
+            name: 'spaces',
+            title: 'tabs.spacesTab',
+            desc: 'tabs.spacesTabDesc',
+            state: 'spaces',
+            link: '#spaces',
+          }, {
             index: 2,
-            name: 'manage',
-            tab: 'orgTab',
-            title: 'tabs.orgTab',
-            subPages: [
-              {
-                index: 0,
-                name: 'users',
-                title: 'tabs.userTab',
-                desc: 'tabs.userTabDesc',
-                state: 'users',
-                link: '#users'
-              },{
-                index: 1,
-                name: 'spaces',
-                title: 'tabs.spacesTab',
-                desc: 'tabs.spacesTabDesc',
-                state: 'spaces',
-                link: '#spaces',
-              },{
-                index: 2,
-                name: 'organizations',
-                title: 'tabs.orgDetailsTab',
-                desc: 'tabs.orgDetailsTabDesc',
-                state: 'orgs',
-                link: '#orgs'
-              },{
-                index: 3,
-                title: 'tabs.fusionDetailsTab',
-                desc: 'tabs.fusionDetailsTabDesc',
-                state: 'fusion',
-                link: '#fusion'
-              },{
-                index: 4,
-                name: 'callrouting',
-                title: 'tabs.callRoutingTab',
-                desc: 'tabs.callRoutingTabDesc',
-                state: 'callrouting',
-                link: '#callrouting'
-              }
-            ]
-          },{
+            name: 'organizations',
+            title: 'tabs.orgDetailsTab',
+            desc: 'tabs.orgDetailsTabDesc',
+            state: 'orgs',
+            link: '#orgs'
+          }, {
             index: 3,
-            name: 'partnermanage',
-            tab: 'orgTab',
-            title: 'tabs.orgTab',
-            subPages: [
-              {
-                index: 0,
-                name: 'customers',
-                title: 'tabs.customersTab',
-                desc: 'tabs.customersTabDesc',
-                state: 'customers',
-                link: '#customers'
-              }
-            ]
-          },{
+            title: 'tabs.fusionDetailsTab',
+            desc: 'tabs.fusionDetailsTabDesc',
+            state: 'fusion',
+            link: '#fusion'
+          }, {
             index: 4,
-            name: 'reports',
-            tab: 'reportTab',
-            title: 'tabs.reportTab',
-            state: 'reports',
-            link: '/reports'
-          },{
-            index: 5,
-            name: 'partnerreports',
-            tab: 'reportTab',
-            title: 'tabs.reportTab',
-            state: 'partnerreports',
-            link: '/partnerreports'
-          },{
-            index: 6,
-            name: 'support',
-            tab: 'supportTab',
-            title: 'tabs.supportTab',
-            state: 'support',
-            link: '/support'
-          }
-        ],
+            name: 'callrouting',
+            title: 'tabs.callRoutingTab',
+            desc: 'tabs.callRoutingTabDesc',
+            state: 'callrouting',
+            link: '#callrouting'
+          }]
+        }, {
+          index: 3,
+          name: 'partnermanage',
+          tab: 'orgTab',
+          title: 'tabs.orgTab',
+          subPages: [{
+            index: 0,
+            name: 'customers',
+            title: 'tabs.customersTab',
+            desc: 'tabs.customersTabDesc',
+            state: 'customers',
+            link: '#customers'
+          }]
+        }, {
+          index: 4,
+          name: 'reports',
+          tab: 'reportTab',
+          title: 'tabs.reportTab',
+          state: 'reports',
+          link: '/reports'
+        }, {
+          index: 5,
+          name: 'partnerreports',
+          tab: 'reportTab',
+          title: 'tabs.reportTab',
+          state: 'partnerreports',
+          link: '/partnerreports'
+        }, {
+          index: 6,
+          name: 'support',
+          tab: 'supportTab',
+          title: 'tabs.supportTab',
+          state: 'support',
+          link: '/support'
+        }],
 
         entitlements: {
           squared: 'webex-squared',

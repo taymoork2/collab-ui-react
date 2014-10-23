@@ -3,7 +3,7 @@
 /* global AmCharts, $ */
 
 angular.module('Core')
-  .controller('HomeCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config',
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config',
     function($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config) {
 
       $('#au-graph-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
@@ -24,67 +24,6 @@ angular.module('Core')
       var auMetricLoaded = false;
 
       var chartVals = [];
-      // var chartVals = [{
-      //   "calls": 74,
-      //   "convos": 37,
-      //   "users": 27,
-      //   "share": 2.48,
-      //   "week": "Mar 1"
-      // }, {
-      //   "calls": 50,
-      //   "convos": 94,
-      //   "users": 24,
-      //   "share": 5.12,
-      //   "week": "Mar 8"
-      // }, {
-      //   "calls": 64,
-      //   "convos": 51,
-      //   "users": 67,
-      //   "share": 9.43,
-      //   "week": "Mar 15"
-      // }, {
-      //   "calls": 46,
-      //   "convos": 61,
-      //   "users": 29,
-      //   "share": 6.96,
-      //   "week": "Mar 22"
-      // }, {
-      //   "calls": 48,
-      //   "convos": 20,
-      //   "users": 59,
-      //   "share": 7.87,
-      //   "week": "Mar 29"
-      // }, {
-      //   "calls": 65,
-      //   "convos": 60,
-      //   "users": 41,
-      //   "share": 1.8,
-      //   "week": "Jun 5"
-      // }, {
-      //   "calls": 64,
-      //   "convos": 79,
-      //   "users": 96,
-      //   "share": 8.18,
-      //   "week": "Jun 5"
-      // }, {
-      //   "calls": 78,
-      //   "convos": 2,
-      //   "users": 20,
-      //   "share": 4.02,
-      //   "week": "Jun 12"
-      // }, {
-      //   "calls": 2,
-      //   "convos": 24,
-      //   "users": 12,
-      //   "share": 3.45,
-      //   "week": "Jun 19"
-      // }, {
-      //   "calls": 50,
-      //   "convos": 91,
-      //   "users": 82,
-      //   "share": 7.2,
-      //   "week": "Jun 26"
-      // }];
 
       $scope.isAdmin = false;
       var responseTime;
@@ -356,8 +295,6 @@ angular.module('Core')
           'theme': 'none',
           'fontFamily': 'CiscoSansTT Thin',
           'colors': ['#1EA7D1', '#F46315', '#EBC31C', '#50D71D'],
-          'backgroundColor': '#ffffff',
-          'backgroundAlpha': 1,
           'legend': {
             'divId': 'activeUsersLegend',
             'equalWidths': false,
@@ -376,39 +313,32 @@ angular.module('Core')
           },
           'dataProvider': sdata,
           'graphs': [{
-              'fillAlphas': 0,
-              'lineAlpha': 1,
-              'hidden': false,
-              'title': 'Calls',
-              'valueField': 'calls'
-            }, {
-              'fillAlphas': 0,
-              'lineAlpha': 1,
-              'hidden': false,
-              'title': 'Conversations',
-              'valueField': 'convos'
-            }, {
-              'fillAlphas': 0,
-              'lineAlpha': 1,
-              'hidden': false,
-              'title': 'Content',
-              'valueField': 'share'
-            }
-            // {
-            //   'fillAlphas': 0,
-            //   'hidden': false,
-            //   'lineAlpha': 1,
-            //   'title': 'Active Users',
-            //   'valueField': 'users'
-            // }
-          ],
+            'fillAlphas': 0,
+            'lineAlpha': 1,
+            'hidden': false,
+            'title': 'Calls',
+            'valueField': 'calls'
+          }, {
+            'fillAlphas': 0,
+            'lineAlpha': 1,
+            'hidden': false,
+            'title': 'Conversations',
+            'valueField': 'convos'
+          }, {
+            'fillAlphas': 0,
+            'lineAlpha': 1,
+            'hidden': false,
+            'title': 'Content',
+            'valueField': 'share'
+          }],
           'plotAreaBorderAlpha': 1,
           'plotAreaBorderColor': '#DDDDDD',
+          'backgroundColor': '#ffffff',
+          'backgroundAlpha': 1,
           'marginTop': 20,
           'marginRight': 20,
-          'marginLeft': 10,
           'marginBottom': 10,
-          // 'chartScrollbar': {},
+          'marginLeft': 10,
           'chartCursor': {
             'valueLineEnabled': true,
             'valueLineBalloonEnabled': true,
@@ -433,9 +363,7 @@ angular.module('Core')
           }]
 
         });
-        homeChart.addListener('changed', function(eObj) {
-          console.log(eObj);
-        });
+
       };
 
       $scope.manualReload(true);

@@ -351,8 +351,6 @@ label {
 }
 
 .profile-panel {
-  position: absolute;
-  width: 750px;
 }
 
 .profile-tools-panel {
@@ -606,130 +604,7 @@ input:disabled {
   left: 265px;
 }
 
-.group-title{
-  float:left;
-}
 
-.group-type{
-  padding-left:15px;
-  float:left;
-}
-
-
-.name
-{
-  font-size:24px;
-  font-weight:normal;
-  padding-bottom:3px;
-}
-
-.name-card
-{
-  height:100px;
-  background-color:white;
-  margin-bottom:3px;
-}
-
-.ellipsis-name
-{
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -o-text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 330px;
-}
-
-.name-card-image
-{
-  height:100px;
-  width:100px;
-  float:left;
-}
-
-.name-card-info
-{
-  padding:10px;
-  float:left;
-}
-
-.name-card-cancel
-{
-  padding:10px;
-  float:right;
-}
-
-.name-card-image img
-{
-  height:100%;
-  width:100%;
-}
-
-.standard-card
-{
-  padding:10px 10px 10px 18px;
-  background-color:white;
-  margin-bottom:3px;
-}
-
-.standard-card .usage-card
-{
-  height:275px;
-}
-
-.usage-card img
-{
-  height:90%;
-  width:90%;
-}
-
-.group-card
-{
-  height:40px;
-}
-
-.standard-card .services-card
-{
-  height:319px;
-}
-
-.standard-card .endpoints-card
-{
-  height:75px;
-}
-
-.services-types
-{
-  position:relative;
-  margin: 10px 0;
-}
-
-.services-subtitle
-{
-  font-size:16px;
-  font-weight:500;
-}
-
-.sub-service
-{
-  padding-left:25px;
-}
-
-.preview-card-title
-{
-  font-size:16px;
-  font-weight: normal;
-}
-
-.services-indicator
-{
-  float:right;
-}
-
-.preview-details
-{
-  border-spacing: 2px;
-  border-color: gray;
-}
 
 .navbar-header {
   margin-left: -56px;
@@ -1213,15 +1088,6 @@ a:active.ftwNavLink {
   cursor: pointer;
 }
 
-/*************************************
- *      Views Style imports
- ************************************/
-@import 'core/_landing-page';
-@import 'core/_users-list';
-@import 'core/_users-management';
-@import '_grid';
-
-
 .header-text{
   opacity: 1;
   font-size: 32px;
@@ -1288,7 +1154,7 @@ a:active.ftwNavLink {
   padding-right: 15px;
   padding-top: 15px;
   padding-bottom: 15px;
-  color: #444;
+  color: #444 !important;
 }
 
 .modal-form-control{
@@ -1363,10 +1229,9 @@ a:active.ftwNavLink {
   top: -20px;
 }
 
-/*************************************
- *      Views Style imports
- ************************************/
-@import 'core/_landing-page';
+.license-count-first-modal{
+  color: #FF1300 !important;
+}
 
 .wizard-side-item {
   margin: 5px;
@@ -1477,3 +1342,12 @@ border-color: white;
 .edit-modal-info{
   padding-bottom: 28px;
 }
+
+/*************************************
+ *      Views Style imports
+ ************************************/
+@import '../modules/core/landingPage/_landing-page';
+@import '../modules/core/users/userList/_user-list';
+@import '../modules/core/users/userPreview/_user-preview';
+@import 'includes/_grid';
+
