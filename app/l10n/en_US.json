@@ -455,5 +455,9 @@
     "activeUsersTitle": "Daily Active Users",
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Total Content Shared"
+  },
+  "status" : {
+    "noResults" : "No results available.",
+    "errorProcessing" : "Error processing request."
   }
 }

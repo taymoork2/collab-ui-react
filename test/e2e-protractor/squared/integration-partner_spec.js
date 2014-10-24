@@ -95,6 +95,37 @@ describe('Partner flow', function() {
     });
   });
 
+  describe('Partner landing page reports', function(){
+    it('should show the reports',function(){
+      expect(partner.entitlementsChart.isDisplayed()).toBeTruthy();
+      expect(partner.entitlementsCount.getText()).toBeTruthy();
+    });
+
+    it('should show active users chart',function(){
+      partner.activeUsersTab.click();
+      expect(partner.activeUsersChart.isDisplayed()).toBeTruthy();
+      expect(partner.activeUsersCount.getText()).toBeTruthy();
+    });
+
+    it('should show average calls chart',function(){
+      partner.averageCallsTab.click();
+      expect(partner.averageCallsChart.isDisplayed()).toBeTruthy();
+      expect(partner.averageCallsCount.getText()).toBeTruthy();
+    });
+
+    it('should show content shared chart',function(){
+      partner.contentSharedTab.click();
+      expect(partner.contentSharedChart.isDisplayed()).toBeTruthy();
+      expect(partner.contentSharedCount.getText()).toBeTruthy();
+    });
+
+    it('should refresh reports', function(){
+      partner.refreshButton.click();
+      expect(partner.noResultsAvailable.isPresent()).toBeFalsy();
+      expect(partner.errorProcessing.isPresent()).toBeFalsy();
+    });
+  });
+
   describe('Reports Page data refresh', function() {
 
     it('should load refresh directive template', function() {

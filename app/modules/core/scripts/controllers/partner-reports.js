@@ -7,13 +7,36 @@ angular.module('Core')
     var activeUsersChart, averageCallsChart, contentSharedChart, entitlementsChart;
 
     $scope.counts = {};
-    $scope.partnerRefreshTime;
+    $scope.refreshTime;
+
+    $scope.reportStatus = {
+      entitlements: 'refresh',
+      activeUsers: 'refresh',
+      averageCalls: 'refresh',
+      contentShared: 'refresh'
+    };
+
+    $scope.isRefresh = function(property) {
+      return $scope.reportStatus[property] === 'refresh';
+    };
+
+    $scope.isEmpty = function(property) {
+      return $scope.reportStatus[property] === 'empty';
+    };
+
+    $scope.hasError = function(property) {
+      return $scope.reportStatus[property] === 'error';
+    };
 
     $scope.reloadReports = function(useCache) {
+      $scope.reportStatus['entitlements'] = 'refresh';
+      $scope.reportStatus['activeUsers'] = 'refresh';
+      $scope.reportStatus['averageCalls'] = 'refresh';
+      $scope.reportStatus['contentShared'] = 'refresh';
       ReportsService.getPartnerMetrics(useCache);
     };
 
-    ReportsService.getPartnerMetrics();
+    ReportsService.getPartnerMetrics(true);
 
     var makeChart = function(id,colors) {
       return AmCharts.makeChart(id, {
@@ -94,16 +117,22 @@ angular.module('Core')
       }
     };
 
-    var loadDataCallback = function(chart,response) {
+    var loadDataCallback = function(chart,response,property) {
       if (response.data.success) {
         if (response.data.length !== 0) {
-          $scope.partnerRefreshTime = response.data.date;
+          $scope.refreshTime = response.data.date;
           var data = response.data.data;
           if (data.length >= 0) {
             updateChart(chart, data);
           }
+          $scope.reportStatus[property] = 'ready';
+        } else {
+          $scope.reportStatus[property] = 'empty';
         }
+      } else {
+        $scope.reportStatus[property] = 'error';
       }
+
     };
 
     var buildActiveUsersChart = function() {
@@ -132,22 +161,22 @@ angular.module('Core')
 
     var loadActiveUsers = function(event,response) {
       buildActiveUsersChart();
-      loadDataCallback(activeUsersChart, response);
+      loadDataCallback(activeUsersChart, response, 'activeUsers');
     };
 
     var loadAverageCalls = function(event,response) {
       buildAverageCallsChart();
-      loadDataCallback(averageCallsChart, response);
+      loadDataCallback(averageCallsChart, response, 'averageCalls');
     };
 
     var loadContentShared = function(event,response) {
       buildContentSharedChart();
-      loadDataCallback(contentSharedChart, response);
+      loadDataCallback(contentSharedChart, response, 'contentShared');
     };
 
     var loadEntitlements = function(event,response) {
       buildEntitlementChart();
-      loadDataCallback(entitlementsChart, response);
+      loadDataCallback(entitlementsChart, response, 'entitlements');
     };
 
     var loadActiveUserCount = function(event,response) {

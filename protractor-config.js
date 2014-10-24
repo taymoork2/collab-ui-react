@@ -19,6 +19,7 @@ exports.config = {
     require('jasmine-reporters');
     jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('test/e2e-protractor/reports', true, true));
 
+    global.baseUrl = exports.config.baseUrl;
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
     global.config = require('./test/e2e-protractor/utils/test.config.js');

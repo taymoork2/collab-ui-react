@@ -20,7 +20,7 @@ describe('invite page with user param', function() {
 
   it('should forward to squared app without page param', function() {
     browser.get('#/invite');
- 
+
     browser.driver.wait(function() {
       return browser.driver.isElementPresent(by.id('btn-login'));
     }).then(function() {
@@ -64,7 +64,7 @@ describe('App Launcher Flow', function() {
 
 
   it('applauncher page should forward to squared app', function() {
-    browser.get('/applauncher.html');
+    browser.get('applauncher.html');
 
     browser.driver.wait(function() {
       return browser.driver.isElementPresent(by.id('btn-login'));
@@ -86,10 +86,11 @@ describe('App Download Page', function()  {
     }).then(function() {
       expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
     });
+
   });
 
   it('applauncher page should forward to squared app', function() {
-    browser.get('/appdownload.html');
+    browser.get('appdownload.html');
 
     browser.driver.wait(function() {
       return browser.driver.isElementPresent(by.id('btn-login'));

@@ -81,11 +81,9 @@ module.exports = function(grunt) {
 
     // The actual grunt server settings
     connect: {
-      options: {
-        livereload: 35729
-      },
       livereload: {
         options: {
+          livereload: 35729,
           open: true,
           base: '<%= build_dir %>'
         }
