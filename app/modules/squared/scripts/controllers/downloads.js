@@ -1,23 +1,17 @@
 'use strict';
 
 angular.module('Squared')
-	.controller('DownloadsCtrl', ['$scope', '$location', '$http', 'Userservice',
-		function($scope, $location, $http, Userservice) {
+	.controller('DownloadsCtrl', ['$scope', '$location', '$http', 'Config', 'Userservice',
+		function($scope, $location, $http, Config, Userservice) {
 
 			$scope.email = $location.search().email;
 			$scope.tlData = {
 		    email : $scope.email
 		  };
 
-			$http.get('download_urls.json')
-			.success(function(data) {
-				$scope.webClientURL = data.webClientURL;
-				$scope.iPhoneURL = data.iPhoneURL;
-				$scope.androidURL = data.AndroidURL;
-			})
-			.error(function(data, status) {
-				console.log('Failed to read download_url.json.' + data + ' Status: ' + status);
-			});
+			$scope.webClientURL = Config.getWebClientUrl();
+			$scope.iPhoneURL = Config.getItunesStoreUrl();
+			$scope.androidURL = Config.getAndroidStoreUrl();
 
 			var hasJustResetPassword = $location.search().pwdResetSuccess;
 

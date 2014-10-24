@@ -59,7 +59,14 @@ angular.module('Core')
 
         callflowServiceUrl: 'http://admin-portal-test-public.wbx2.com:8081/integration_tool/run',
 
-        squaredAppUrl: 'squared://',
+        appinfo: {
+          webClientURL: 'https://web.wbx2.com/',
+          iPhoneURL: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',
+          androidURL: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android',
+          androidAppIntent: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
+          appURL: 'squared://'
+        },
+
 
         healthCheckUrl: {
           dev: 'http://squaredpreview.statuspage.io/index.json',
@@ -267,7 +274,23 @@ angular.module('Core')
         },
 
         getSquaredAppUrl: function() {
-          return this.squaredAppUrl;
+          return this.appinfo.appURL;
+        },
+
+        getItunesStoreUrl: function() {
+          return this.appinfo.iPhoneURL;
+        },
+
+        getAndroidStoreUrl: function() {
+          return this.appinfo.androidURL;
+        },
+
+        getAndroidAppIntent: function() {
+          return this.appinfo.androidAppIntent;
+        },
+
+        getWebClientUrl: function() {
+          return this.appinfo.webClientURL;
         }
 
       };

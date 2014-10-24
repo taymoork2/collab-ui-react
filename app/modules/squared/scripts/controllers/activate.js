@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('Squared')
-	.controller('ActivateCtrl', ['$scope', '$location', '$http', '$window', 'Log', 'Utils', 'Activateservice',
+	.controller('ActivateCtrl', ['$scope', '$location', '$http', '$window', 'Log', 'Utils', 'Config', 'Activateservice',
 
-		function($scope, $location, $http, $window, Log, Utils, Activateservice) {
+		function($scope, $location, $http, $window, Log, Utils, Config, Activateservice) {
 
 			//initialize ng-show variables
 			$scope.result = {
@@ -19,8 +19,6 @@ angular.module('Squared')
 			};
 
 			var activateWeb = function() {
-				$scope.iosDownload = deviceIsAndroid();
-				$scope.androidDownload = deviceIsIPhone();
 				showHide(true, false, false);
 			};
 
@@ -30,12 +28,12 @@ angular.module('Squared')
 
 			var activateMobile = function() {
 				// launch app with URL: squared://confirmation_code_verified
-				$window.location.href = 'squared://confirmation_code_verified';
+				$window.location.href = Config.getSquaredAppUrl() + 'confirmation_code_verified';
 			};
 
 			var activateErrorMobile = function(errorCode) {
 				// launch app with error URL: squared://confirmation_error_code/xxxx
-				$window.location.href = 'squared://confirmation_error_code/' + errorCode;
+				$window.location.href = Config.getSquaredAppUrl() + 'confirmation_error_code/' + errorCode;
 			};
 
 			var encryptedParam = $location.search().eqp;
@@ -75,26 +73,6 @@ angular.module('Squared')
 				$scope.result.errmsg = 'Null param on activation page';
 				Log.error($scope.result.errmsg);
 			}
-
-			var deviceIsIPhone = function() {
-				var platform = $scope.deviceUserAgent;
-				return platform.search(/iOS/i) > -1 || platform.search(/iPhone/i) > -1 || platform.search(/iPod/i) >-1 || platform.search(/iPad/i) >-1;
-			};
-
-			var deviceIsAndroid = function() {
-				var platform = $scope.deviceUserAgent;
-				return platform.search(/Android/i) >-1;
-			};
-
-			$http.get('download_urls.json')
-				.success(function(data) {
-					$scope.webClientURL = data.webClientURL;
-					$scope.iPhoneURL = data.iPhoneURL;
-					$scope.androidURL = data.AndroidURL;
-				})
-				.error(function(data, status) {
-					console.log('Failed to read download_url.json.' + data + ' Status: ' + status);
-				});
 
 			$scope.resendCode = function() {
 

@@ -7,22 +7,15 @@ angular.module('Squared')
 			var redirect = function() {
 				var redirectUrl = null;
 
-				// redirect based on user agent
-				$http.get('download_urls.json')
-					.success(function(data) {
-						if (Utils.isIPhone()) {
-							redirectUrl = data.iPhoneURL;
-						} else if (Utils.isAndroid()) {
-							redirectUrl = data.AndroidURL;
-						} else {
-							redirectUrl = data.webClientURL;
-						}
-						Log.info('Redirect to: ' + redirectUrl);
-						$window.location.href = redirectUrl;
-					})
-					.error(function(data, status) {
-						Log.error('Failed to read download_url.json.' + data + ' Status: ' + status);
-					});
+				if (Utils.isIPhone()) {
+					redirectUrl = Config.getItunesStoreUrl();
+				} else if (Utils.isAndroid()) {
+					redirectUrl = Config.getAndroidStoreUrl();
+				} else {
+					redirectUrl = Config.getWebClientUrl();
+				}
+				Log.info('Redirect to: ' + redirectUrl);
+				$window.location.href = redirectUrl;
 			};
 
 			// extracts param from url
