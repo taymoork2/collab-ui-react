@@ -52,15 +52,32 @@ describe('Partner flow', function() {
       utils.expectIsDisplayed(partner.newTrialRow);
     });
 
-    it('should send error when adding an existing trial', function(){
+    it('should send error and highlight incorrect field when adding an existing trial', function(){
       partner.addButton.click();
       partner.assertDisabled('startTrialButton');
 
+      partner.customerNameInput.clear();
+      partner.customerEmailInput.clear();
+
       partner.customerNameInput.sendKeys(partner.newTrial.customerName);
+      partner.customerEmailInput.sendKeys(partner.differentTrial.customerEmail);
+
+      partner.startTrialButton.click();
+
+      expect(navigation.hasClass(partner.customerNameForm, 'has-error')).toBe(true);
+      notifications.assertError(partner.newTrial.customerName, 'already exists');
+
+      partner.customerNameInput.clear();
+      partner.customerEmailInput.clear();
+
+      partner.customerNameInput.sendKeys(partner.differentTrial.customerName);
       partner.customerEmailInput.sendKeys(partner.newTrial.customerEmail);
 
       partner.startTrialButton.click();
-      notifications.assertError(partner.newTrial.customerName, 'already exists');
+
+      expect(navigation.hasClass(partner.customerEmailForm, 'has-error')).toBe(true);
+      notifications.assertError(partner.newTrial.customerEmail, 'already exists');
+
       partner.cancelTrialButton.click();
     });
 

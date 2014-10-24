@@ -2,9 +2,16 @@
 
 var PartnerHomePage = function(){
 
+  var randomNumber = utils.randomId();
+
   this.newTrial = {
-    customerName : 'Atlas_Test_Trial',
-    customerEmail : 'Atlas_Test_Trial@gmail.com'
+    customerName : 'Atlas_Test_Trial' + randomNumber,
+    customerEmail : 'Atlas_Test_Trial' + randomNumber + '@gmail.com'
+  };
+
+  this.differentTrial = {
+    customerName : 'Atlas_Different',
+    customerEmail : 'Atlas_Different@gmail.com'
   };
 
   this.testuser = {
@@ -26,6 +33,8 @@ var PartnerHomePage = function(){
   this.editTrialModal = element(by.id('editTrialDialog'));
   this.addTrialModal = element(by.id('addTrialDialog'));
   this.cancelTrialButton = element(by.id('cancelNewTrialButton'));
+  this.customerNameForm =  element(by.id('customerNameForm'));
+  this.customerEmailForm =  element(by.id('customerEmailForm'));
 
   this.refreshButton = element(by.id('partnerRefreshData'));
   this.entitlementsChart = element(by.id('entitlementsChart'));

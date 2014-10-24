@@ -87,6 +87,12 @@ var Navigation = function(){
     expect(this.tabs.isDisplayed()).toBe(expectation);
   };
 
+  this.hasClass = function (element, cls) {
+    return element.getAttribute('class').then(function (classes) {
+        return classes.split(' ').indexOf(cls) !== -1;
+    });
+  };
+
   this.logout = function() {
     this.userInfoButton.click();
     this.logoutButton.click();

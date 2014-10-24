@@ -19,6 +19,8 @@ angular.module('Core')
     $scope.editTerms = true;
     $scope.currentTrial = null;
     $scope.showTrialsRefresh = true;
+    $scope.nameError = false;
+    $scope.emailError = false;
 
     $scope.formReset = function(){
       $scope.customerName = null;
@@ -28,13 +30,18 @@ angular.module('Core')
       $scope.trialForm.$setPristine(true);
       $scope.showAddTrial = true;
       $scope.editTerms = true;
+      $scope.nameError = false;
+      $scope.emailError = false;
     };
 
     $scope.startTrial = function(){
       var createdDate = new Date();
+      $scope.nameError = false;
+      $scope.emailError = false;
       angular.element('#startTrialButton').button('loading');
       PartnerService.startTrial($scope.customerName, $scope.customerEmail, 'COLLAB', $scope.licenseCount, $scope.licenseDuration, $scope.startDate, function(data, status){
           angular.element('#startTrialButton').button('reset');
+          $scope.trialForm.$setPristine(true);
           if(data.success === true ){
             $("#addTrialDialog").modal("hide");
             var successMessage = ['A trial was successfully started for ' + $scope.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
@@ -45,6 +52,12 @@ angular.module('Core')
           }
           else{
              Notification.notify([data.message], 'error');
+             if((data.message).indexOf('Org') > -1){
+                $scope.nameError = true;
+             }
+             else if((data.message).indexOf('Admin User') > -1){
+                $scope.emailError = true;
+             }
           }
         });
     };
