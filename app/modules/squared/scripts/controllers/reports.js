@@ -220,7 +220,6 @@ angular.module('Squared')
           },
           'dataProvider': sdata,
           'valueAxes': [{
-            'stackType': 'regular',
             'axisColor': '#DDDDDD',
             'gridAlpha': 0,
             'axisAlpha': 1,
@@ -249,7 +248,7 @@ angular.module('Squared')
           'marginBottom': 10,
           'categoryField': 'week',
           'categoryAxis': {
-            'startOnAxis': true,
+            'gridPosition': 'start',
             'axisColor': '#DDDDDD',
             'gridAlpha': 1,
             'gridColor': '#DDDDDD',
