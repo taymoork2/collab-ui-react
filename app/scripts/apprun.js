@@ -64,12 +64,12 @@ angular
         }
       }
 
-      var timerClock = Config.tokenTimers.timeoutTimer;  //20 minutes
+      var timerClock = Config.tokenTimers.timeoutTimer;  //50 minutes
       var startTimer = function() {
         Log.debug('starting session timer...');
         var timer = $interval(function() {
             $interval.cancel(timer);
-            //force logout when 20 minutes of inactivity
+            //force logout when 50 minutes of inactivity
             Auth.logout();
           },
           timerClock

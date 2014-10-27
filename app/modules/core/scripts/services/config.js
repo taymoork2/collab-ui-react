@@ -82,8 +82,8 @@ angular.module('Core')
           keepOnNavigate: false
         },
 
-        tokenTimers: { //timers: 1200000(20 mins), 2700000(45 mins), 900000(15 mins)
-          timeoutTimer: 1200000,
+        tokenTimers: { //timers: 3000000(50 mins), 2700000(45 mins), 900000(15 mins)
+          timeoutTimer: 3000000,
           refreshTimer: 2700000,
           refreshDelay: 900000
         },
