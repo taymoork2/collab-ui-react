@@ -227,9 +227,10 @@ angular.module('Squared')
             'color': '#999999'
           }],
           'graphs': [{
-            'fillAlphas': 0,
+            'type':'column',
+            'fillAlphas': 1,
             'hidden': false,
-            'lineAlpha': 1,
+            'lineAlpha': 0,
             'title': title,
             'valueField': metricName
           }],

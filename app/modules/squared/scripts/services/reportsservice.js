@@ -122,14 +122,6 @@ angular.module('Squared')
             'cache' : useCache
           };
 
-          // this.getUsageMetrics('activeUserCount', params, function(data, status) {
-          //     var response = {
-          //       'data': data,
-          //       'status': status
-          //     };
-          //     $rootScope.$broadcast('ActiveUserCountLoaded', response);
-          //   });
-
           this.getUsageMetrics('activeUserCount', params);
 
           params = {
