@@ -2,8 +2,8 @@
 /* global $, Bloodhound, moment */
 
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', '$translate', 'PageParam',
-    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, $translate, PageParam) {
+  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam',
+    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam) {
 
       //Initialize
       Notification.init($scope);
@@ -183,7 +183,9 @@ angular.module('Squared')
                   emailAddress: data.metadataList[index].emailAddress,
                   locusId: locus,
                   callStart: callstart,
-                  date: data.metadataList[index].timestamp
+                  date: data.metadataList[index].timestamp,
+                  userId: data.metadataList[index].userId,
+                  orgId: data.metadataList[index].orgId
                 };
                 $scope.userLogs.push(log);
                 angular.element('#logSearchBtn').button('reset');
@@ -317,23 +319,23 @@ angular.module('Squared')
         });
       };
 
-      $scope.getCallflowCharts = function(filename) {
-        LogService.downloadLog(filename, function(data, status) {
-          if (data.success) {
-            Log.debug('Successfully retrieved the logfile tempURL');
-            var callflowChartsUrl = Config.getCallflowServiceUrl() + '?clientLogs=' + window.encodeURIComponent(data.tempURL);
-
-            var output = $filter('translate')('supportPage.downloading');
-            var downloadDialog = window.confirm(output);
-            if (downloadDialog === true) {
-              var downloadWindow = window.open(callflowChartsUrl, '', 'width=500, height=100');
-              downloadWindow.document.title = output;
+      $scope.getCallflowCharts = function(orgId, userId, filename, id) {
+        angular.element('#'+id).button('loading');
+        var output = $filter('translate')('supportPage.downloading');
+        var downloadDialog = window.confirm(output);
+        if (downloadDialog === true) {
+          CallflowService.getCallflowCharts(orgId, userId, filename, function(data, status) {
+            angular.element('#'+id).button('reset');
+            if (data.success) {
+              window.location.assign(data.resultsUrl);
+            } else {
+              Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
+              Notification.notify(['Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status], 'error');
             }
-          } else {
-            Log.debug('Failed to download log: ' + filename + '. Status: ' + status);
-            Notification.notify(['Failed to download log: ' + filename + '. Status: ' + status], 'error');
-          }
-        });
+          });
+        } else {
+          angular.element('#'+id).button('reset');
+        }
       };
 
       $scope.downloadFlow = function(downloadUrl) {

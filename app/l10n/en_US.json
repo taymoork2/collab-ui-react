@@ -139,7 +139,7 @@
     "logDate": "Upload Time",
     "logLocusId": "Locus ID",
     "logCallStart": "Call Start Time",
-    "logAction": "Download",
+    "logAction": "Client Logs",
     "callflowAction": "Callflow Charts",
     "callAction": "Call Info",
     "errEmptyinput": "Search input cannot be empty.",
