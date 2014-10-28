@@ -318,15 +318,5 @@ angular.module('Huron')
           }
         };
         
-      }])
-      .directive('callForwardInfo', function() {
-        return {
-          controller: 'callForwardInfoCtrl',
-          restrict: 'A',
-          scope: false,
-          templateUrl: 'modules/huron/scripts/directives/views/callforward-info.html',
-          link: function(scope, elem, attrs) {
-
-          }
-        };
-      });
+      }]);
+  

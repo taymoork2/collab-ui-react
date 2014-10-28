@@ -90,10 +90,10 @@ angular
           template: '<div directory-number-info directoryNumber="directoryNumber"></div>'
         })
         .state('users.list.preview.voicemail', {
-          template: '<div voicemail-info directoryNumber="directoryNumber"></div>'
+          template: '<div voicemail-info></div>'
         })
         .state('users.list.preview.snr', {
-          template: '<div single-number-reach-info directoryNumber="directoryNumber"></div>'
+          template: '<div single-number-reach-info></div>'
         })
         .state('users.add', {
           templateUrl: 'modules/core/users/userAdd/userAdd.tpl.html',
