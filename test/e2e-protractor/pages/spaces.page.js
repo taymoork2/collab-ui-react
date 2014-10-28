@@ -1,6 +1,6 @@
 'use strict'
 
-var SpacesPage = function(){
+var SpacesPage = function() {
   this.roomsList = element(by.id('roomsListPanel'));
   this.estimatedSize = element(by.id('estimatedSize'));
   this.moreOptions = element(by.id('userMoreOptions'));
@@ -9,7 +9,7 @@ var SpacesPage = function(){
   this.addRoomDialog = element(by.id('addRoomDialog'));
   this.newRoomField = element(by.id('newRoom'));
   this.addRoomButton = element(by.id('btnAdd'));
-  this.btnCancel = element(by.id('btnCancel'));
+  this.btnCancel = element(by.id('btn-cancel'));
 }
 
 module.exports = SpacesPage;

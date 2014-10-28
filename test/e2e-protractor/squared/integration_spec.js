@@ -229,7 +229,7 @@ describe('App flow', function() {
           expect(cell[0].getText()).toContain(inputEmail);
           cell[0].click();
         });
-        browser.sleep(3000);  //TODO fix this - animation should be resolved by angular
+        browser.sleep(3000); //TODO fix this - animation should be resolved by angular
         expect(users.squaredPanel.isDisplayed()).toBeTruthy();
         users.squaredPanel.click();
         browser.sleep(3000); //TODO fix this - animation should be resolved by angular
@@ -237,7 +237,7 @@ describe('App flow', function() {
         users.callInitiationCheckbox.click();
         users.saveButton.click();
         notifications.assertSuccess(inputEmail, 'updated successfully');
-        users.closePreview.click();
+        users.closeDetails.click();
         users.search();
       });
     });

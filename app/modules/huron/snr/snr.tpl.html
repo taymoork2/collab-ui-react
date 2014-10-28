@@ -1,17 +1,12 @@
-<div class="ent-detail-panel">
-  <form class="form-horizontal" role="form">
-    <header class="heading" style="overflow:visible;">
-      <button id="btnSaveSingleNumberReach" class="btn btn-primary" style="float:right" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="saveSingleNumberReach()"><span translate="common.save"></span></button>
-      <!--<button class="btn btn-default" style="float:right" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="common.cancel"></span></button>-->
-      <h3>&nbsp;&nbsp;&nbsp;&nbsp;{{'singleNumberReachPanel.title' | translate}}</h3>
-    </header>
-    <div class="details-body">
+<cr-details-body title="{{'singleNumberReachPanel.title' | translate}}" on-save="saveSingleNumberReach()">
+    <div>
+      <form name="singleNumberReachForm" role="form">
       <p class="text-muted">{{'singleNumberReachPanel.description' | translate}}</p><br><br>
       <div>
         {{'singleNumberReachPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="telephonyInfo.snrInfo.singleNumberReachEnabled"></cs-switchbutton><br><br>
-        <div class="form-group" ng-show="telephonyInfo.snrInfo.singleNumberReachEnabled">            
+        <div class="form-group" ng-show="telephonyInfo.snrInfo.singleNumberReachEnabled">
             <div class="col-sm-5">
-              <input type="text" class="form-control" id="number" ng-model="telephonyInfo.snrInfo.destination" ng-disabled="!telephonyInfo.snrInfo.singleNumberReachEnabled">               
+              <input type="text" class="form-control" id="number" ng-model="telephonyInfo.snrInfo.destination" ng-disabled="!telephonyInfo.snrInfo.singleNumberReachEnabled">
             </div>
             <label class="control-label" for="number">*</label>
           </div>
@@ -22,7 +17,8 @@
           <div ng-show="snrLineOption !== 'all'">
           </div>
         </div>
-      </div>  
+      </div>
+      </form>
+      <div call-forward-info></div call-forward-info>
     </div>
-  </form>
-</div>
+</cr-details-body>

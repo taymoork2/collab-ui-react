@@ -28,6 +28,7 @@ var UsersPage = function() {
   this.fusionCheckBox = element(by.id('chk_squaredFusionUC'));
   this.squaredCheckBox = element(by.id('chk_webExSquared'));
   this.closePreview = element(by.id('exitPreviewButton'));
+  this.closeDetails = element(by.id('exit-details-btn'));
 
   this.subTitleAdd = element(by.id('subTitleAdd'));
   this.subTitleEnable = element(by.id('subTitleEnable'));
@@ -35,8 +36,8 @@ var UsersPage = function() {
   this.inviteButton = element(by.id('btnInvite'));
   this.entitleButton = element(by.id('btnEntitle'));
   this.addButton = element(by.id('btnAdd'));
-  this.cancelButton = element(by.id('btnCancel'));
-  this.saveButton = element(by.id('btnSave'));
+  this.cancelButton = element(by.id('btn-cancel'));
+  this.saveButton = element(by.id('btn-save'));
 
   this.currentPage = element(by.css('.pagination-current a'));
   this.queryCount = element(by.binding('totalResults'));

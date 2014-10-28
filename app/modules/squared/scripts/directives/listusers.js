@@ -84,7 +84,7 @@ angular.module('ListUsers', [])
 
       $scope.changeEntitlement = function(user) {
         Log.debug('Entitling user.', user);
-        angular.element('#btnSave').button('loading');
+        angular.element('#btn-save').button('loading');
         Userservice.updateUsers([{
           'address': user.userName
         }], getUserEntitlementList($scope.entitlements), function(data) {
@@ -97,7 +97,7 @@ angular.module('ListUsers', [])
             if (userStatus === 200) {
               entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
               entitleResult.type = 'success';
-              if($scope.entitlements.webExSquared === true){
+              if ($scope.entitlements.webExSquared === true) {
                 angular.element('.icon-' + user.id).html($filter('translate')('usersPage.active'));
               } else {
                 angular.element('.icon-' + user.id).html($filter('translate')('usersPage.inactive'));
@@ -113,7 +113,7 @@ angular.module('ListUsers', [])
               entitleResult.type = 'error';
             }
             Notification.notify([entitleResult.msg], entitleResult.type);
-            angular.element('#btnSave').button('reset');
+            angular.element('#btn-save').button('reset');
           } else {
             Log.error('Failed updating user with entitlements.');
             Log.error(data);
@@ -122,7 +122,7 @@ angular.module('ListUsers', [])
               type: 'error'
             };
             Notification.notify([entitleResult.msg], entitleResult.type);
-            angular.element('#btnSave').button('reset');
+            angular.element('#btn-save').button('reset');
           }
         });
       };
@@ -139,48 +139,48 @@ angular.module('ListUsers', [])
       //sorting function
       $scope.setSort = function(type) {
         switch (type) {
-        case 'name':
-          if ($scope.sort.by === 'userName') {
-            $scope.sort.by = 'name';
-            $scope.sort.order = 'ascending';
-            $scope.sort.icon.name = 'fa-sort-asc';
-            $scope.sort.icon.username = 'fa-sort';
-            getUserList();
-          } else if ($scope.sort.by === 'name') {
-            if ($scope.sort.order === 'ascending') {
-              $scope.sort.order = 'descending';
-              $scope.sort.icon.name = 'fa-sort-desc';
-              getUserList();
-            } else {
+          case 'name':
+            if ($scope.sort.by === 'userName') {
+              $scope.sort.by = 'name';
               $scope.sort.order = 'ascending';
               $scope.sort.icon.name = 'fa-sort-asc';
+              $scope.sort.icon.username = 'fa-sort';
               getUserList();
+            } else if ($scope.sort.by === 'name') {
+              if ($scope.sort.order === 'ascending') {
+                $scope.sort.order = 'descending';
+                $scope.sort.icon.name = 'fa-sort-desc';
+                getUserList();
+              } else {
+                $scope.sort.order = 'ascending';
+                $scope.sort.icon.name = 'fa-sort-asc';
+                getUserList();
+              }
             }
-          }
-          break;
+            break;
 
-        case 'username':
-          if ($scope.sort.by === 'name') {
-            $scope.sort.by = 'userName';
-            $scope.sort.order = 'ascending';
-            $scope.sort.icon.username = 'fa-sort-asc';
-            $scope.sort.icon.name = 'fa-sort';
-            getUserList();
-          } else if ($scope.sort.by === 'userName') {
-            if ($scope.sort.order === 'ascending') {
-              $scope.sort.order = 'descending';
-              $scope.sort.icon.username = 'fa-sort-desc';
-              getUserList();
-            } else {
+          case 'username':
+            if ($scope.sort.by === 'name') {
+              $scope.sort.by = 'userName';
               $scope.sort.order = 'ascending';
               $scope.sort.icon.username = 'fa-sort-asc';
+              $scope.sort.icon.name = 'fa-sort';
               getUserList();
+            } else if ($scope.sort.by === 'userName') {
+              if ($scope.sort.order === 'ascending') {
+                $scope.sort.order = 'descending';
+                $scope.sort.icon.username = 'fa-sort-desc';
+                getUserList();
+              } else {
+                $scope.sort.order = 'ascending';
+                $scope.sort.icon.username = 'fa-sort-asc';
+                getUserList();
+              }
             }
-          }
-          break;
+            break;
 
-        default:
-          Log.debug('Sort type not recognized.');
+          default:
+            Log.debug('Sort type not recognized.');
         }
       };
 
@@ -232,7 +232,7 @@ angular.module('ListUsers', [])
       };
 
       $scope.updateUser = function() {
-        angular.element('#btnSave').button('loading');
+        angular.element('#btn-save').button('loading');
         var userData = {
           'schemas': Config.scimSchemas,
           'title': $scope.currentUser.title,
@@ -250,14 +250,14 @@ angular.module('ListUsers', [])
             var successMessage = [];
             successMessage.push($filter('translate')('profilePage.success'));
             Notification.notify(successMessage, 'success');
-            angular.element('#btnSave').button('reset');
+            angular.element('#btn-save').button('reset');
             $scope.user = data;
           } else {
             Log.debug('Update existing user failed. Status: ' + status);
             var errorMessage = [];
             errorMessage.push($filter('translate')('profilePage.error'));
             Notification.notify(errorMessage, 'error');
-            angular.element('#btnSave').button('reset');
+            angular.element('#btn-save').button('reset');
           }
         });
       };
@@ -299,11 +299,11 @@ angular.module('ListUsers', [])
 
     }
   ])
-  .directive('userList', function () {
+  .directive('userList', function() {
     return {
       restrict: 'A',
       templateUrl: 'modules/squared/scripts/directives/views/listusers.html',
-      link: function (scope, elem, attrs) {
+      link: function(scope, elem, attrs) {
 
 
       }

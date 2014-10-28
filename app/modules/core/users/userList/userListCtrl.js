@@ -86,7 +86,7 @@ angular.module('Core')
         '<button class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
-        '<ul class="dropdown-menu" role="menu">' +
+        '<ul class="dropdown-menu dropdown-primary" role="menu">' +
         '<li><a href="#">Action</a></li>' +
         '<li><a href="#">Another action</a></li>' +
         '<li><a href="#">Something else here</a></li>' +
@@ -236,7 +236,7 @@ angular.module('Core')
       });
 
       $scope.updateUser = function() {
-        angular.element('#btnSave').button('loading');
+        angular.element('#btn-save').button('loading');
         var userData = {
           'schemas': Config.scimSchemas,
           'title': $scope.currentUser.title,
@@ -254,14 +254,14 @@ angular.module('Core')
             var successMessage = [];
             successMessage.push($filter('translate')('profilePage.success'));
             Notification.notify(successMessage, 'success');
-            angular.element('#btnSave').button('reset');
+            angular.element('#btn-save').button('reset');
             $scope.user = data;
           } else {
             Log.debug('Update existing user failed. Status: ' + status);
             var errorMessage = [];
             errorMessage.push($filter('translate')('profilePage.error'));
             Notification.notify(errorMessage, 'error');
-            angular.element('#btnSave').button('reset');
+            angular.element('#btn-save').button('reset');
           }
         });
       };

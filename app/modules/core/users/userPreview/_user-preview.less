@@ -27,7 +27,7 @@
   height: 100%;
   padding: 5px;
   position: relative;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.4);
+  // box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.4);
   border-right: solid 1px @gray-light;
 
   .row {
@@ -102,6 +102,10 @@
       cursor: pointer;
       color: @gray-light;
       text-align: right;
+
+      .details & {
+        display: none;
+      }
     }
   }
   .info-card-name {
@@ -224,29 +228,11 @@
 
 
 .outer-details-div {
-  // top: 0px;
-  // left: auto;
-  // right: ~'calc(-100% + 335px)';
   display: flex;
   flex-direction: row;
   height: 100%;
-  // position: absolute;
-  // z-index: 1000;
   width: 100%;
-}
-.sub-details-panel {
-  background-color: white;
-  height: 100%;
-  padding: 5px;
-  position: relative;
-  width: ~'calc(100% - 350px)';
-}
-.ent-detail-panel {
-  background-color: white;
-  position: absolute;
-  width: 500px;
-}
-.call-info-panel {
-  position: relative;
-  top: 21px;
+  // background-color: #fff;
+  background-color: #f8f8f8;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.4);
 }

@@ -45,6 +45,9 @@
     "usagePreview": "Usage",
     "endpointsPreview": "Endpoints"
   },
+  "messagingPanel": {
+      "title": "Messaging"
+  },
   "tabs": {
     "homeTab": "Home",
     "orgTab": "Manage",
@@ -185,7 +188,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "ok": "Ok",
-    "next": "Next"
+    "next": "Next",
+    "close": "close"
   },
   "homePage": {
     "overview": "Last 4 weeks",
@@ -392,7 +396,13 @@
     "singleNumberReach": "Single Number Reach"
   },
   "directoryNumberPanel": {
-    "success": " configuration saved successfully"
+      "title": "Line Configuration",
+      "success": " configuration saved successfully",
+      "directNumbers": "Direct Numbers",
+      "internalNumberLabel": "Reach this line by any of these numbers or extensions",
+      "internalNumberExtension": "Internal Number Extension",
+      "externalNumberLabel": "External Number",
+      "chooseNumber": "choose a number"
   },
   "callForwardPanel": {
     "success": "Call Forward configuration saved successfully",

@@ -112,6 +112,24 @@ module.exports = function(grunt) {
       }
     },
 
+    imagemin: {
+      vendor: {
+        files: [{
+          expand: true,
+          src: ['<%= vendor_files.images %>'],
+          dest: '<%= build_dir %>'
+        }]
+      },
+      app: {
+        files: [{
+          src: ['**/*.{png,jpg,gif}'],
+          dest: '<%= build_dir %>',
+          cwd: '<%= app_dir %>',
+          expand: true
+        }]
+      }
+    },
+
     /**
      * Copy project assets (images, fonts, etc.) and javascripts into
      * `build_dir`, and then to copy the assets to `compile_dir`.
@@ -421,7 +439,8 @@ module.exports = function(grunt) {
       appjs: {
         files: [
           '<%= app_dir %>/scripts/**/*.js',
-          '<%= app_dir %>/modules/**/*.js'
+          '<%= app_dir %>/modules/**/*.js',
+          '<%= app_dir %>/**/*.json'
         ],
         tasks: [
           'jshint:app',
@@ -601,6 +620,7 @@ module.exports = function(grunt) {
     'jshint',
     'less',
     'copy_build',
+    'imagemin',
     'autoprefixer',
     'index:build',
     'karmaconfig',

@@ -157,7 +157,7 @@ describe('List users flow', function() {
 
       notifications.assertSuccess(inputEmail, 'updated successfully');
 
-      users.closePreview.click();
+      users.closeDetails.click();
     });
   });
 

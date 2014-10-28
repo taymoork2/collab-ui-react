@@ -1,19 +1,8 @@
-<div class="ent-detail-panel">
-  <form name="voicemailForm" role="form">
-    <div class="container-fluid">
-      <div class="row">
-        <button id="btnSaveVoicemail" class="btn btn-primary" style="float: right" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="saveVoicemail()"><span translate="common.save"></span></button>
-        <!--<button id="btnCancel" class="btn btn-default" style="margin-left:62%; margin-top:5px;" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="common.cancel"></span></button>-->
-        <h3>&nbsp;&nbsp;&nbsp;&nbsp;{{'voicemailPanel.title' | translate}}</h3>
-
-      </div>
-    </div>  
-    <div class="details-body">
-      <div>
-        {{'voicemailPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="voicemailEnabled"></cs-switchbutton>
-      </div>  
-      <br>
-      <p class="text-muted">{{'voicemailPanel.voicemailNote' | translate}}</p>      
-    </div>
-  </form>
-</div>
+<cr-details-body title="{{'voicemailPanel.title' | translate}}" on-save="saveVoicemail()">
+  <div>
+    <form name="voicemailForm" role="form">
+      {{'voicemailPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="voicemailEnabled"></cs-switchbutton>
+      <p class="text-muted">{{'voicemailPanel.voicemailNote' | translate}}</p>
+    </form>
+  </div>
+</cr-details-body>

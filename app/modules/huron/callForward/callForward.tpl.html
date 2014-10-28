@@ -1,15 +1,15 @@
 <div>
-	<form name="callForwardForm" role="form">
-	<h4>Call Forwarding</h4>	
+  <form name="callForwardForm" role="form">
+  <h4>Call Forwarding</h4>
     <div class="form-group">
-      <div>                
+      <div>
         <div class="radio">
-          <label>		
-          	<input type="radio" ng-model="forward" value="all" name="rdo_callforward">{{'callForwardPanel.forwardAllCalls' | translate}}
+          <label>
+            <input type="radio" ng-model="forward" value="all" name="rdo_callforward">{{'callForwardPanel.forwardAllCalls' | translate}}
           </label>
           </div>
           <div ng-show="isCallForwardSelected('all')">
-          	<div class="input-group">
+            <div class="input-group">
               <input id="cfa" type="text" class="form-control" ng-model="forwardAllCalls" ng-blur="changeForwardAllCalls()">
               <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
@@ -18,17 +18,17 @@
                 </ul>
               </div>
             </div>
-          </div>        
+          </div>
         <div class="radio">
-          <label>	
-          	<input type="radio" ng-model="forward" value="busy" name="rdo_callforward">{{'callForwardPanel.forwardBusyNoAnswer' | translate}}
-      	  </label>
+          <label>
+            <input type="radio" ng-model="forward" value="busy" name="rdo_callforward">{{'callForwardPanel.forwardBusyNoAnswer' | translate}}
+          </label>
           </div>
           <div ng-show="isCallForwardSelected('busy')">
-          	<span ng-show="!forwardExternalCalls">{{'callForwardPanel.internalAndExternal' | translate}}<br></span>
+            <span ng-show="!forwardExternalCalls">{{'callForwardPanel.internalAndExternal' | translate}}<br></span>
             <span ng-show="forwardExternalCalls">{{'callForwardPanel.internalOnly' | translate}}<br></span>
-          	{{'callForwardPanel.forwardBusy' | translate}}<br>
-          	<div class="input-group">
+            {{'callForwardPanel.forwardBusy' | translate}}<br>
+            <div class="input-group">
               <input id="cfb" type="text" class="form-control" ng-model="forwardBusyCalls" ng-blur="changeForwardBusyCalls()">
               <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
@@ -37,8 +37,8 @@
                 </ul>
               </div>
             </div><br>
-        	  {{'callForwardPanel.forwardNoAnswer' | translate}}<br>
-        	  <div class="input-group">
+            {{'callForwardPanel.forwardNoAnswer' | translate}}<br>
+            <div class="input-group">
               <input id="cfna" type="text" class="form-control" ng-model="forwardNoAnswerCalls" ng-blur="changeForwardNoAnswerCalls()">
               <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
@@ -47,13 +47,13 @@
                 </ul>
               </div>
             </div><br>
-        	  <br>
+            <br>
             <cs-checkbox id="ckForwardExternalCalls" ng-model="forwardExternalCalls" cklabel="Forward external calls differently"></cs-checkbox>
-        	  <br>
-        	  <div ng-show="forwardExternalCalls">
-        		  {{'callForwardPanel.forwardBusy' | translate}}<br>
+            <br>
+            <div ng-show="forwardExternalCalls">
+              {{'callForwardPanel.forwardBusy' | translate}}<br>
               <div class="input-group">
-          		  <input id="cfbExternal" type="text" class="form-control" ng-model="forwardExternalBusyCalls" ng-blur="changeForwardExternalBusyCalls()">
+                <input id="cfbExternal" type="text" class="form-control" ng-model="forwardExternalBusyCalls" ng-blur="changeForwardExternalBusyCalls()">
                 <div class="input-group-btn">
                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                   <ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
@@ -61,8 +61,8 @@
                   </ul>
                 </div>
               </div><br>
-        		  {{'callForwardPanel.forwardNoAnswer' | translate}}<br>
-        		  <div class="input-group">
+              {{'callForwardPanel.forwardNoAnswer' | translate}}<br>
+              <div class="input-group">
               <input id="cfnaExternal" type="text" class="form-control" ng-model="forwardExternalNoAnswerCalls" ng-blur="changeForwardExternalNoAnswerCalls()">
               <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
@@ -71,8 +71,8 @@
                 </ul>
               </div>
             </div><br>
-        	  </div>
-          </div>        
+            </div>
+          </div>
       </div>
     </div>
   </form>

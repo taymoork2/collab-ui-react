@@ -1,0 +1,17 @@
+<div class="ent-detail-panel">
+  <div id="exit-details-btn" class="close-row" ng-click="closeDetails()">
+    <span translate="common.close"></span>
+    <i class="icon icon-close"></i>
+  </div>
+  <div class="header-row row">
+    <div class="col-md-8">
+      <h3 class="h2">{{title}}</h3>
+    </div>
+    <div class="col-md-4">
+      <!--<button id="btn-cancel" class="btn btn-default" style="margin-left:62%; margin-top:5px;" data-loading-text="<i class='icon icon-spinner icon-spin'></i>"><span translate="common.cancel"></span></button>-->
+      <button id="btn-save" class="btn btn-info btn-save" data-loading-text="<i class='icon icon-spinner icon-spin'></i>" ng-click="save()"><span translate="common.save"></span></button>
+    </div>
+  </div>
+  <div class="details-body" ng-transclude></div>
+</div>
+

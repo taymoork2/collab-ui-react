@@ -17,7 +17,7 @@ angular.module('Squared')
         return Authinfo.isServiceAllowed(service);
       };
 
-      $scope.getServiceName = function (service) {
+      $scope.getServiceName = function(service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
           if (svc.sqService === service) {
@@ -37,7 +37,7 @@ angular.module('Squared')
 
       $scope.changeEntitlement = function(user) {
         Log.debug('Entitling user.', user);
-        angular.element('#btnSave').button('loading');
+        angular.element('#btn-save').button('loading');
         Userservice.updateUsers([{
           'address': user.userName
         }], getUserEntitlementList($scope.entitlements), function(data) {
@@ -66,7 +66,7 @@ angular.module('Squared')
               entitleResult.type = 'error';
             }
             Notification.notify([entitleResult.msg], entitleResult.type);
-            angular.element('#btnSave').button('reset');
+            angular.element('#btn-save').button('reset');
 
             var index = $scope.queryuserslist.map(function(element) {
               return element.id;
@@ -77,7 +77,7 @@ angular.module('Squared')
               var ciService = $rootScope.services[i].ciService;
               if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciService) === -1) {
                 updatedUser.entitlements.push(ciService);
-              } else if($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciService) > -1) {
+              } else if ($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciService) > -1) {
                 updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciService), 1);
               }
             }
@@ -90,7 +90,7 @@ angular.module('Squared')
               type: 'error'
             };
             Notification.notify([entitleResult.msg], entitleResult.type);
-            angular.element('#btnSave').button('reset');
+            angular.element('#btn-save').button('reset');
           }
         });
       };
@@ -99,6 +99,7 @@ angular.module('Squared')
   .directive('userEntitlements', function() {
     return {
       restrict: 'A',
+      controller: 'UserEntitlementsCtrl',
       scope: {
         currentUser: '=',
         entitlements: '=',

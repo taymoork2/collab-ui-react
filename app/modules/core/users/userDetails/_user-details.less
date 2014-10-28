@@ -1,0 +1,48 @@
+.details-panel {
+  background-color: #f8f8f8;
+  height: 100%;
+  padding: 5px;
+  position: relative;
+  width: ~'calc(100% - 350px)';
+  .container-fluid;
+
+  .header-row {
+    margin-bottom: 30px;
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  .close-row {
+    font-size: 13px;
+    color: @gray;
+    float: right;
+    width: 100%;
+    text-align: right;
+    cursor: pointer;
+
+    .icon {
+      font-size: 30px;
+      text-align: left;
+      position: relative;
+      display: inline-block;
+      width: 2em;
+      height: 1em;
+      line-height: 1em;
+      vertical-align: middle;
+    }
+  }
+
+  .details-body {
+    width: 400px;
+  }
+
+}
+.ent-detail-panel {
+  .make-md-column(12);
+}
+.call-info-panel {
+  position: relative;
+  top: 21px;
+}
