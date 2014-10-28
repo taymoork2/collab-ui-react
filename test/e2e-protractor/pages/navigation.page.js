@@ -23,6 +23,7 @@ var Navigation = function(){
   this.headerSearch = element(by.css('.header-search'));
   this.settingsMenu = element(by.css('.settings-menu'));
   this.userInfo = element(by.css('.user-info'));
+  this.dropdownItems = element.all(by.repeater('item in menuItems'));
 
   this.clickHome = function() {
     this.homeTab.click();
@@ -54,6 +55,13 @@ var Navigation = function(){
 
   this.clickSupport = function() {
     this.supportTab.click();
+  };
+
+  this.clickFirstTimeWizard = function() {
+    this.settingsMenu.click();
+    this.dropdownItems.then(function(rows){
+      rows[0].click();
+    });
   };
 
   this.getTabCount = function() {

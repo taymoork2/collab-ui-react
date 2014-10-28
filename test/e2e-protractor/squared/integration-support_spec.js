@@ -95,6 +95,7 @@ describe('Support flow', function() {
     });
 
     it('should display call-info panel for the log', function() {
+      browser.driver.manage().window().maximize();
       support.callInfoIcon.click();
       expect(support.closeCallInfo.isDisplayed()).toBeTruthy();
     });

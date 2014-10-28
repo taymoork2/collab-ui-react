@@ -113,6 +113,7 @@ describe('Partner flow', function() {
   });
 
   describe('Partner landing page reports', function(){
+
     it('should show the reports',function(){
       expect(partner.entitlementsChart.isDisplayed()).toBeTruthy();
       expect(partner.entitlementsCount.getText()).toBeTruthy();
@@ -137,7 +138,9 @@ describe('Partner flow', function() {
     });
 
     it('should refresh reports', function(){
-      partner.refreshButton.click();
+      browser.executeScript('window.scrollTo(0,0);').then(function () {
+        partner.refreshButton.click();
+      });
       expect(partner.noResultsAvailable.isPresent()).toBeFalsy();
       expect(partner.errorProcessing.isPresent()).toBeFalsy();
     });

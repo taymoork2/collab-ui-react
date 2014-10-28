@@ -1,4 +1,4 @@
-<div class="modal fade" style="min-width: 1195px">
+<div class="modal fade" style="min-width: 1195px" tabindex="-1">
   <div class="notification"></div>
   <div class="row" style="width:87em; margin-left:auto; margin-right:auto; margin-top:4em;">
 
@@ -11,7 +11,7 @@
         </div>
         <div class="wizard-menu-icon col-md-3" ng-class="{'wizard-menu-subtitle':!tabs.planReview, 'wizard-icon-active':tabs.planReview}"><i class="fa fa-th-list fa-2x"></i></div>
       </div>
-      <div class="wizard-side-item row" ng-class="{'wizard-nav-active': tabs.enterpriseSettings}" id="wizard-review-link" ng-click="changeTab('enterpriseSettings')">
+      <div class="wizard-side-item row" ng-class="{'wizard-nav-active': tabs.enterpriseSettings}" id="wizard-enterpriseSettings-link" ng-click="changeTab('enterpriseSettings')">
         <div class="col-md-9">
           <h4 ng-class="{'wizard-menu-title':!tabs.enterpriseSettings}" translate="firstTimeWizard.enterpriseSettings"></h4>
           <p ng-class="{'wizard-menu-subtitle':!tabs.enterpriseSettings}" translate="firstTimeWizard.enterpriseSettingsSub"></p>
@@ -36,17 +36,17 @@
       <!-- plan review views -->
       <div ng-show="tabs.planReview" class="wiz-view">
         <h1 translate="firstTimeWizard.planReview"></h1>
-        <h3>{{'index.welcome' | translate}}!</h3>
+        <h3 class="wizard-subtitle">{{'index.welcome' | translate}}!</h3>
         <p translate="firstTimeWizard.planReviewDesc"></p>
         <div class="row wizard-btn-row">
-          <button type="button" class="btn btn-primary" ng-click="changeTab('enterpriseSettings')" translate="firstTimeWizard.beginBtn"></button>
+          <button type="button" class="btn btn-primary" id="beginBtn" ng-click="changeTab('enterpriseSettings')" translate="firstTimeWizard.beginBtn"></button>
         </div>
       </div>
 
       <!-- enterprise settings views -->
       <div ng-show="tabs.enterpriseSettings && steps.initial" class="wiz-view">
         <h1 translate="firstTimeWizard.enterpriseSettings"></h1>
-        <h3 translate="firstTimeWizard.setupSSOSub"></h3>
+        <h3 class="wizard-subtitle" translate="firstTimeWizard.setupSSOSub"></h3>
         <p translate="firstTimeWizard.setupSSODesc"></p>
         <cs-radiobutton choice="ssoChoice" options="ssoOptions" label="ssoRbLabel" value="value"></cs-radiobutton>
         <div class="row wizard-btn-row">
@@ -57,7 +57,7 @@
       <div ng-controller="setupSSODialogCtrl">
         <div ng-show="tabs.enterpriseSettings && steps.importIdpData" class="wiz-view">
           <h1 translate="firstTimeWizard.enterpriseSettings"></h1>
-          <h3>{{'ssoModal.importMetadataTitle' | translate}}</h3>
+          <h3 class="wizard-subtitle">{{'ssoModal.importMetadataTitle' | translate}}</h3>
           <div id="importMetaDiv">
             <p translate="ssoModal.importMetadataDesc"></p>
             <div id="importFileDiv">
@@ -77,7 +77,7 @@
 
         <div ng-show="tabs.enterpriseSettings && steps.exportCloudData" class="wiz-view">
           <h1 translate="firstTimeWizard.enterpriseSettings"></h1>
-          <h3>{{'ssoModal.exportMetadataTitle' | translate}}</h3>
+          <h3 class="wizard-subtitle">{{'ssoModal.exportMetadataTitle' | translate}}</h3>
           <div id="exportMetaDiv" ng-init="downloadHostedSp()">
             <p translate="ssoModal.exportMetadataDesc1"></p>
             <p translate="ssoModal.exportMetadataDesc2"></p>
@@ -91,7 +91,7 @@
 
         <div ng-show="tabs.enterpriseSettings && steps.testSSO" class="wiz-view">
           <h1 translate="firstTimeWizard.enterpriseSettings"></h1>
-          <h3>{{'ssoModal.testSSOSetupTitle' | translate}}</h3>
+          <h3 class="wizard-subtitle">{{'ssoModal.testSSOSetupTitle' | translate}}</h3>
           <p translate="ssoModal.testSSOSetupDesc" class="ssoDesc"></p>
           <button class="btn btn-primary" ng-click="openTest()"><span translate="ssoModal.launchSSOTestBtn"></span></button>
           <div class="row wizard-btn-row">
@@ -102,7 +102,7 @@
 
         <div ng-show="tabs.enterpriseSettings && steps.enableSSO" class="wiz-view">
           <h1 translate="firstTimeWizard.enterpriseSettings"></h1>
-          <h3>{{'ssoModal.enableSSOTitle' | translate}}</h3>
+          <h3 class="wizard-subtitle">{{'ssoModal.enableSSOTitle' | translate}}</h3>
           <p translate="ssoModal.enableSSODesc" class="ssoDesc"></p>
           <div class="row wizard-btn-row">
             <button type="button" class="btn btn-primary" ng-click="changeStep('testSSO')"><span translate="ssoModal.backBtn"></span></button>
@@ -115,7 +115,7 @@
       <!-- add users views -->
       <div ng-show="tabs.addUsers && steps.initial" class="wiz-view">
         <h1 translate="firstTimeWizard.addUsers"></h1>
-        <h3 translate="firstTimeWizard.chooseSync"></h3>
+        <h3 class="wizard-subtitle" translate="firstTimeWizard.chooseSync"></h3>
         <p translate="firstTimeWizard.chooseSyncDesc"></p>
         <cs-radiobutton choice="syncChoice" options="syncOptions" label="syncRbLabel" value="value"></cs-radiobutton>
         <div class="row wizard-btn-row">
@@ -126,7 +126,7 @@
       <div ng-controller="AddUserCtrl">
         <div ng-show="tabs.addUsers && steps.manualEntry" class="wiz-view">
           <h1 translate="firstTimeWizard.addUsers"></h1>
-          <h3 translate="firstTimeWizard.manualInvite"></h3>
+          <h3 class="wizard-subtitle" translate="firstTimeWizard.manualInvite"></h3>
           <form role="form">
             <div class="form-group wizard-form">
               <label for="inputEmail3" translate="usersPage.email"></label>
@@ -153,7 +153,7 @@
 
         <div ng-show="tabs.addUsers && steps.domainEntry" class="wiz-view">
           <h1 translate="firstTimeWizard.addUsers"></h1>
-          <h3 translate="firstTimeWizard.domainEntry"></h3>
+          <h3 class="wizard-subtitle" translate="firstTimeWizard.domainEntry"></h3>
           <p translate="firstTimeWizard.domainSubDesc"></p>
           <div ng-init="getDefaultDomain()">
             <span class="subheading" translate="firstTimeWizard.domain"></span>
@@ -173,7 +173,7 @@
 
         <div ng-show="tabs.addUsers && steps.installConnector" class="wiz-view">
           <h1 translate="firstTimeWizard.addUsers"></h1>
-          <h3 translate="firstTimeWizard.installTitle"></h3>
+          <h3 class="wizard-subtitle" translate="firstTimeWizard.installTitle"></h3>
           <p translate="firstTimeWizard.connectorSteps"></p>
           <div class="installStep"> <span translate="firstTimeWizard.installStep1"></span></div>
           <div class="installStep"> <span translate="firstTimeWizard.installStep2"></span></div>
@@ -191,7 +191,7 @@
 
         <div ng-show="tabs.addUsers && steps.syncStatus" class="wiz-view">
           <h1 translate="firstTimeWizard.addUsers"></h1>
-          <h3 translate="firstTimeWizard.syncStatus"></h3>
+          <h3 class="wizard-subtitle" translate="firstTimeWizard.syncStatus"></h3>
           <p class="subheading">{{'firstTimeWizard.results' | translate}}: <strong>{{dirsyncStatus}}</strong></p>
           <p style="float:left;"><strong>{{numUsersInSync}}</strong> {{'firstTimeWizard.syncAgreementText' | translate}}</span>
             <div class="sync-dirsync-refresh-button">
@@ -215,7 +215,7 @@
         <!-- finish view -->
         <div ng-show="steps.finish" class="wiz-view">
         <h1 translate="firstTimeWizard.getStarted"></h1>
-        <h3>{{'firstTimeWizard.readyToGo' | translate}}</h3>
+        <h3 class="wizard-subtitle">{{'firstTimeWizard.readyToGo' | translate}}</h3>
         <p translate="firstTimeWizard.finishDesc"></p>
         <div class="row wizard-btn-row">
           <button type="button" class="btn btn-primary" ng-click="closeModal()" translate="firstTimeWizard.closeBtn"></button>
