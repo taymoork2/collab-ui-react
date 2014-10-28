@@ -10,7 +10,7 @@ angular.module('Core')
     };
 
     $scope.links = [{
-      link: '#/users',
+      link: '#/users/add',
       text: 'Add Users',
       show: isPageActive('users')
     }, {
@@ -24,10 +24,6 @@ angular.module('Core')
     }, {
       link: '#',
       text: 'Configure an Auto Attendant',
-      show: false
-    }, {
-      link: '#/spaces',
-      text: 'Generate Device Activation Codes',
       show: false
     }, {
       link: '#/support',

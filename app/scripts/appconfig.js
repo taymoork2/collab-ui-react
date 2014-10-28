@@ -96,6 +96,7 @@ angular
           template: '<div single-number-reach-info></div>'
         })
         .state('users.add', {
+          url: '/users/add',
           templateUrl: 'modules/core/users/userAdd/userAdd.tpl.html',
           controller: 'UsersCtrl'
         })
