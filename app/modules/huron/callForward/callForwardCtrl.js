@@ -218,31 +218,37 @@ angular.module('Huron')
             } else {
               if ($scope.directoryNumberDetail.callForwardBusy.intVoicemailEnabled === 'true' || ($scope.directoryNumberDetail.callForwardBusy.destination !== null && $scope.directoryNumberDetail.callForwardBusy.destination !== undefined)) {
                 $scope.forward = 'busy';
-                if (($scope.directoryNumberDetail.callForwardBusy.voicemailEnabled !== $scope.directoryNumberDetail.callForwardNoAnswer.voicemailEnabled) || ($scope.directoryNumberDetail.callForwardBusy.destination !== $scope.directoryNumberDetail.callForwardNoAnswer.destination)) {
+                if (($scope.directoryNumberDetail.callForwardBusy.voicemailEnabled !== $scope.directoryNumberDetail.callForwardBusy.intVoiceMailEnabled) || ($scope.directoryNumberDetail.callForwardNoAnswer.voicemailEnabled !== $scope.directoryNumberDetail.callForwardNoAnswer.intVoiceMailEnabled) || ($scope.directoryNumberDetail.callForwardBusy.destination !== $scope.directoryNumberDetail.callForwardBusy.intDestination) || ($scope.directoryNumberDetail.callForwardNoAnswer.destination !== $scope.directoryNumberDetail.callForwardNoAnswer.intDestination)) {
                   $scope.forwardExternalCalls = true;
                 }
               }
             }
+            if ($scope.directoryNumberDetail.callForwardAll.voicemailEnabled === 'true') {
+              $scope.forwardAllCalls = 'Voicemail';
+            } else {
+              $scope.forwardAllCalls = $scope.directoryNumberDetail.callForwardAll.destination;
+            }
+            if ($scope.directoryNumberDetail.callForwardBusy.intVoiceMailEnabled === 'true') {
+              $scope.forwardBusyCalls = 'Voicemail';
+            } else {
+              $scope.forwardBusyCalls = $scope.directoryNumberDetail.callForwardBusy.intDestination;              
+            }
+            if ($scope.directoryNumberDetail.callForwardBusy.voicemailEnabled === 'true') {
+              $scope.forwardExternalBusyCalls = 'Voicemail';
+            } else {
+              $scope.forwardExternalBusyCalls = $scope.directoryNumberDetail.callForwardBusy.destination;
+            }
+            if ($scope.directoryNumberDetail.callForwardNoAnswer.intVoiceMailEnabled === 'true') {
+              $scope.forwardNoAnswerCalls = 'Voicemail';
+            } else {
+              $scope.forwardNoAnswerCalls = $scope.directoryNumberDetail.callForwardNoAnswer.intDestination;              
+            }
+            if ($scope.directoryNumberDetail.callForwardNoAnswer.voicemailEnabled === 'true') {
+              $scope.forwardExternalNoAnswerCalls = 'Voicemail';
+            } else {
+              $scope.forwardExternalNoAnswerCalls = $scope.directoryNumberDetail.callForwardNoAnswer.destination;
+            }
           }
-
-          if ($scope.directoryNumberDetail.callForwardAll.voicemailEnabled === 'true') {
-            $scope.forwardAllCalls = 'Voicemail';
-          } else {
-            $scope.forwardAllCalls = $scope.directoryNumberDetail.callForwardAll.destination;
-          }
-          if ($scope.directoryNumberDetail.callForwardBusy.intVoicemailEnabled === 'true') {
-            $scope.forwardBusyCalls = 'Voicemail';
-          } else {
-            $scope.forwardBusyCalls = $scope.directoryNumberDetail.callForwardBusy.intDestination;
-            $scope.forwardExternalBusyCalls = $scope.directoryNumberDetail.callForwardBusy.destination;
-          }
-          if ($scope.directoryNumberDetail.callForwardNoAnswer.voicemailEnabled === 'true') {
-            $scope.forwardNoAnswerCalls = 'Voicemail';
-          } else {
-            $scope.forwardNoAnswerCalls = $scope.directoryNumberDetail.callForwardNoAnswer.intDestination;
-            $scope.forwardExternalNoAnswerCalls = $scope.directoryNumberDetail.callForwardNoAnswer.destination;
-          }
-
         });
 
         $scope.$parent.$on('saveLineSettings', function(event, args) {
