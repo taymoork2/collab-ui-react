@@ -13,7 +13,6 @@ angular.module('Core')
       link: '#/users/add',
       text: 'Add Users',
       show: isPageActive('users')
-      // show: true
     }, {
       link: '#',
       text: 'Install a Device for a User',
