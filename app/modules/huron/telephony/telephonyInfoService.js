@@ -8,6 +8,7 @@ angular.module('Huron')
 
       service.telephonyInfo = {
         services: [],
+        currentDirectoryNumber: null,
         directoryNumbers: [],
         voicemail : 'Off',
         singleNumberReach : 'Off',
@@ -44,9 +45,14 @@ angular.module('Huron')
       };
 
       service.updateSnr = function(snr) {
-        this.snrInfo = snr;
-        this.telephonyInfo.singleNumberReach = (this.snrInfo.singleNumberReachEnabled === true) ? 'On' : 'Off';
+        this.telephonyInfo.snrInfo = snr;
+        this.telephonyInfo.singleNumberReach = (this.telephonyInfo.snrInfo.singleNumberReachEnabled === true) ? 'On' : 'Off';
         $rootScope.$broadcast(this.broadcastEvent);
+      };
+
+      service.updateCurrentDirectoryNumber = function(directoryNumber) {
+        this.telephonyInfo.currentDirectoryNumber = directoryNumber;
+        $rootScope.$broadcast(this.broadcastEvent);   
       };
 
       service.getRemoteDestinationInfo = function(user) {

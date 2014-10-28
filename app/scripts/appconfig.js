@@ -87,7 +87,7 @@ angular
           template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
         })
         .state('users.list.preview.directorynumber', {
-          template: '<div directory-number-info directoryNumber="directoryNumber"></div>'
+          template: '<div directory-number-info></div>'
         })
         .state('users.list.preview.voicemail', {
           template: '<div voicemail-info></div>'

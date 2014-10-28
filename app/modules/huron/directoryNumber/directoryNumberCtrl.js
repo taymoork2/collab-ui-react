@@ -1,8 +1,15 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('DirectoryNumberInfoCtrl', ['$scope', '$q', '$http', 'UserDirectoryNumberService', 'UnassignedDirectoryNumberService', 'UserDirectoryNumberDetailService', 'Log', 'Config', 'Notification', '$filter',
-    function ($scope, $q, $http, UserDirectoryNumberService, UnassignedDirectoryNumberService, UserDirectoryNumberDetailService, Log, Config, Notification, $filter) {
+  .controller('DirectoryNumberInfoCtrl', ['$scope', '$q', '$http', 'UserDirectoryNumberService', 'UnassignedDirectoryNumberService', 'UserDirectoryNumberDetailService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter',
+    function ($scope, $q, $http, UserDirectoryNumberService, UnassignedDirectoryNumberService, UserDirectoryNumberDetailService, TelephonyInfoService, Log, Config, Notification, $filter) {
+      $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+
+      $scope.$on('telephonyInfoUpdated', function() {
+        $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+        getDnDetails();
+      });
+
       $scope.unassingedDirectoryNumbers = [];
       $scope.assignedInternalNumber = null;
       $scope.directoryNumberDetail = null;
@@ -11,7 +18,7 @@ angular.module('Huron')
         var deferred = $q.defer();
         // TODO: Remove the following line when we are authenticating with CMI
         delete $http.defaults.headers.common.Authorization;
-        UserDirectoryNumberDetailService.get({customerId: user.meta.organizationID, directoryNumberId: $scope.directoryNumber.uuid},
+        UserDirectoryNumberDetailService.get({customerId: user.meta.organizationID, directoryNumberId: $scope.telephonyInfo.currentDirectoryNumber.uuid},
         function (data) {
             deferred.resolve(data);
           }, function (error) {
@@ -46,7 +53,7 @@ angular.module('Huron')
           unassignedNumber = {'pattern': unassignedNumbers[i].pattern.substr(1), 'id': unassignedNumbers[i].uuid};
           $scope.unassingedDirectoryNumbers.push(unassignedNumber);
         }
-        unassignedNumber = {'pattern': $scope.directoryNumber.pattern.substr(1), 'id': $scope.directoryNumber.uuid};
+        unassignedNumber = {'pattern': $scope.telephonyInfo.currentDirectoryNumber.pattern.substr(1), 'id': $scope.telephonyInfo.currentDirectoryNumber.uuid};
         $scope.unassingedDirectoryNumbers.push(unassignedNumber);
       };
 
@@ -55,7 +62,7 @@ angular.module('Huron')
         // TODO: Remove the following line when we are authenticating with CMI
         delete $http.defaults.headers.common.Authorization;
 
-        UserDirectoryNumberService.delete({customerId: user.meta.organizationID, userId: user.id, directoryNumberId: $scope.directoryNumber.uuid},
+        UserDirectoryNumberService.delete({customerId: user.meta.organizationID, userId: user.id, directoryNumberId: $scope.telephonyInfo.currentDirectoryNumber.uuid},
         function(data) {
           deferred.resolve(data);
         },function(error) {
@@ -68,7 +75,7 @@ angular.module('Huron')
       $scope.addDirectoryNumberAssociation = function(user) {
         var deferred = $q.defer();
         var userLine = {
-          'dnUsage': $scope.directoryNumber.dnUsage,
+          'dnUsage': $scope.telephonyInfo.currentDirectoryNumber.dnUsage,
           'directoryNumber': {
             'uuid': user.dn.uuid
           }
@@ -98,15 +105,21 @@ angular.module('Huron')
         $scope.$emit('saveLineSettings');
       };
 
-      $scope.$watch('directoryNumber', function (newVal, oldVal) {
-        if (newVal) {
-          $scope.getDirectoryNumberDetails($scope.currentUser)
-            .then(function (response) {$scope.processDirectoryNumberDetails(response);})
-            .catch(function (response) {$scope.processDirectoryNumberDetails(null);});
-          $scope.getUnassignedDirectoryNumbers($scope.currentUser)
-            .then(function (response) {$scope.processUnassignedDirectoryNumbers(response);})
-            .catch(function (response) {$scope.processUnassignedDirectoryNumbers(null);});
-        }
-      });
+      var getDnDetails = function() {
+        $scope.getDirectoryNumberDetails($scope.currentUser)
+          .then(function (response) {$scope.processDirectoryNumberDetails(response);})
+          .catch(function (response) {$scope.processDirectoryNumberDetails(null);});
+      }
+      
+      var getUnassignedDns = function() {
+        $scope.getUnassignedDirectoryNumbers($scope.currentUser)
+        .then(function (response) {$scope.processUnassignedDirectoryNumbers(response);})
+        .catch(function (response) {$scope.processUnassignedDirectoryNumbers(null);});
+      }
+
+      // Called when controller loads.
+      getDnDetails();
+      getUnassignedDns();
+
     }
   ]);

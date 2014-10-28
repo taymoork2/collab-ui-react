@@ -88,7 +88,7 @@ angular.module('Huron')
       };
 
       $scope.showDirectoryNumberPanel = function (value) {
-        $scope.directoryNumber = value;
+        TelephonyInfoService.updateCurrentDirectoryNumber(value);
         $state.go('users.list.preview.directorynumber');
       };
 

@@ -124,8 +124,8 @@ angular.module('Huron')
         $scope.createRemoteDestinationInfo($scope.currentUser, $scope.telephonyInfo.snrInfo.destination, $scope.singleNumberReach)
           .then(function(response) {$scope.processCreateRemoteDestionInfo(response);})
           .then(function(response) {TelephonyInfoService.getRemoteDestinationInfo($scope.currentUser)
-            .then(function(response) {$scope.processRemoteDestinationInfo(response);})
-            .catch(function(response) {$scope.processRemoteDestinationInfo(null);});
+            .then(function(response) {TelephonyInfoService.processRemoteDestinationInfo(response);})
+            .catch(function(response) {TelephonyInfoService.processRemoteDestinationInfo(null);});
           })
           .catch(function(response) {$scope.processCreateRemoteDestionInfo(null);});
       }
