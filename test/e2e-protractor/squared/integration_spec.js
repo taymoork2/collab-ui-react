@@ -26,38 +26,9 @@ var notsqinviteruser = {
 
 describe('App flow', function() {
 
-
-  // Logging in. Write your tests after the login flow is complete.
-  describe('Login flow', function() {
-
-    it('should redirect to CI global login page', function() {
-      browser.get('#/login');
-      browser.driver.wait(login.isLoginUsernamePresent);
-      expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
-    });
-
-    it('should redirect to login page when not logged in', function() {
-      browser.get('#/users');
-      browser.driver.wait(login.isLoginUsernamePresent);
-      expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
-    });
-
-    it('should not log in with invalid credentials', function() {
-      expect(login.isLoginUsernamePresent()).toBeTruthy();
-      login.setLoginUsername(testuser.username);
-      login.clickLoginNext();
-      browser.driver.wait(login.isLoginPasswordPresent);
-      login.setLoginPassword('fakePassword');
-      login.clickLoginSubmit();
-      login.assertLoginError('You\'ve entered an incorrect email address or password.');
-      expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
-    });
-
-    it('should just login', function() {
-      login.login(testuser.username, testuser.password);
-    });
-
-  }); //State is logged-in
+  it('should just login', function() {
+    login.login(testuser.username, testuser.password);
+  });
 
   // Navigation bar
   describe('Navigation Bar', function() {

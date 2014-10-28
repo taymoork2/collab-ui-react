@@ -10,11 +10,14 @@ angular.module('Core')
 
 .controller('UserInfoCtrl', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location',
   function($scope, Authinfo, Auth, Log, Config, $window, $location) {
-
-    //update the scope when Authinfo data has been populated.
-    $scope.$on('AuthinfoUpdated', function() {
+    var getAuthinfoData = function() {
       $scope.username = Authinfo.getUserName();
       $scope.orgname = Authinfo.getOrgName();
+    };
+    getAuthinfoData();
+    //update the scope when Authinfo data has been populated.
+    $scope.$on('AuthinfoUpdated', function() {
+      getAuthinfoData();
     });
 
     //$scope.image = 'images/most-interesting-man.jpg';

@@ -39,12 +39,15 @@ var LoginPage = function(){
     expect(browser.driver.findElement(by.css('.generic-error')).getText()).toContain(msg);
   };
 
+  this.loginButton = element(by.cssContainingText('span[role="button"]','Login'));
+
   this.get = function(){
     browser.get('#/login');
   };
 
   this.login = function(username,password) {
     this.get();
+    this.loginButton.click();
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();
@@ -57,6 +60,7 @@ var LoginPage = function(){
 
   this.partnerlogin = function(username,password) {
     this.get();
+    this.loginButton.click();
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();
@@ -69,6 +73,7 @@ var LoginPage = function(){
 
   this.loginSSO = function(username,password) {
     this.get();
+    this.loginButton.click();
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();
@@ -82,6 +87,7 @@ var LoginPage = function(){
 
   this.loginSSOSecondTime = function(username) {
     this.get();
+    this.loginButton.click();
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();

@@ -311,7 +311,7 @@ angular.module('Core')
       };
 
       config.serviceStates = {
-        'huron': ['callrouting'],
+        'ciscouc': ['callrouting'],
         'squared-fusion-uc': ['fusion']
       };
 

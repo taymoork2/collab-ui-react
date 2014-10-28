@@ -19,28 +19,25 @@ angular.module('Core')
       }
     };
 
-    auth.authorize = function(token, scope) {
+    auth.authorize = function(token) {
       var deferred = $q.defer();
       $http.defaults.headers.common.Authorization = 'Bearer ' + token;
       $http.get(auth.authorizeUrl)
         .success(function(data) {
-          scope.isAuthorized = true;
           Authinfo.initialize(data);
           deferred.resolve();
         })
         .error(function(data, status) {
           Authinfo.clear();
-          scope.isAuthorized = false;
-          scope.data = data || 'Authorization failed.';
+          var error;
           if (status === 403) {
-            scope.result = $filter('translate')('errors.status403');
+            error = $filter('translate')('errors.status403');
           } else if (status === 401) {
-            scope.result = $filter('translate')('errors.status401');
+            error = $filter('translate')('errors.status401');
           } else {
-            scope.result = $filter('translate')('errors.serverDown');
+            error = $filter('translate')('errors.serverDown');
           }
-          deferred.reject();
-          $timeout(auth.logout, 5000);
+          deferred.reject(error);
         });
 
       return deferred.promise;

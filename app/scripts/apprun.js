@@ -24,7 +24,7 @@ angular
             var token = Storage.get('accessToken');
             e.preventDefault();
             if (token) {
-              Auth.authorize(token, e.currentScope)
+              Auth.authorize(token)
                 .then(function(){
                   $state.go(to.name);
                 })

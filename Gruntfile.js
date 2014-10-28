@@ -460,6 +460,7 @@ module.exports = function(grunt) {
         ],
         tasks: [
           'less:build',
+          'autoprefixer:build',
           'index:build',
         ]
 

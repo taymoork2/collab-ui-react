@@ -7,9 +7,13 @@ angular
       $stateProvider
         .state('login', {
           url: '/login',
-          templateUrl: 'modules/core/views/login.html',
+          templateUrl: 'modules/core/login/login.tpl.html',
           controller: 'LoginCtrl',
           authenticate: false
+        })
+        .state('main', {
+          templateUrl: 'modules/core/views/main.tpl.html',
+          abstract: true
         });
 
       $translateProvider.useStaticFilesLoader({
@@ -33,18 +37,21 @@ angular
           url: '/activate',
           templateUrl: 'modules/squared/views/activate.html',
           controller: 'ActivateCtrl',
+          parent: 'main',
           authenticate: false
         })
         .state('downloads', {
           url: '/downloads',
           templateUrl: 'modules/squared/views/downloads.html',
           controller: 'DownloadsCtrl',
+          parent: 'main',
           authenticate: false
         })
         .state('invite', {
           url: '/invite',
           templateUrl: 'modules/squared/views/invite.html',
           controller: 'InviteCtrl',
+          parent: 'main',
           authenticate: false
         })
         .state('invitelauncher', {
@@ -57,27 +64,31 @@ angular
           url: '/applauncher',
           templateUrl: 'modules/squared/views/applauncher.html',
           controller: 'ApplauncherCtrl',
+          parent: 'main',
           authenticate: false
         })
         .state('appdownload', {
           url: '/appdownload',
           templateUrl: 'modules/squared/views/appdownload.html',
           controller: 'AppdownloadCtrl',
+          parent: 'main',
           authenticate: false
         })
         .state('home', {
           url: '/home',
           templateUrl: 'modules/core/landingPage/landingPage.tpl.html',
-          controller: 'LandingPageCtrl'
+          controller: 'LandingPageCtrl',
+          parent: 'main'
         })
         .state('users', {
           absract: true,
-          template: '<div ui-view></div>'
+          template: '<div ui-view></div>',
+          parent: 'main'
         })
         .state('users.list', {
           url: '/users',
           templateUrl: 'modules/core/users/userList/userList.tpl.html',
-          controller: 'ListUsersCtrl'
+          controller: 'ListUsersCtrl',
         })
         .state('users.list.preview', {
           templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
@@ -103,76 +114,91 @@ angular
         .state('orgs', {
           url: '/orgs',
           templateUrl: 'modules/core/views/organizations.html',
-          controller: 'OrganizationsCtrl'
+          controller: 'OrganizationsCtrl',
+          parent: 'main'
         })
         .state('templates', {
           url: '/templates',
           templateUrl: 'modules/squared/views/templates.html',
-          controller: 'UsersCtrl'
+          controller: 'UsersCtrl',
+          parent: 'main'
         })
         .state('reports', {
           url: '/reports',
           templateUrl: 'modules/squared/views/reports.html',
-          controller: 'ReportsCtrl'
+          controller: 'ReportsCtrl',
+          parent: 'main'
         })
         .state('userprofile', {
           url: '/userprofile/:uid',
           templateUrl: 'modules/squared/views/userprofile.html',
-          controller: 'UserProfileCtrl'
+          controller: 'UserProfileCtrl',
+          parent: 'main'
         })
         .state('support', {
           url: '/support',
           templateUrl: 'modules/squared/views/support.html',
-          controller: 'SupportCtrl'
+          controller: 'SupportCtrl',
+          parent: 'main'
         })
         .state('unauthorized', {
           url: '/unauthorized',
-          templateUrl: 'modules/squared/views/unauthorized.html'
+          templateUrl: 'modules/squared/views/unauthorized.html',
+          parent: 'main'
         })
         .state('spaces', {
           url: '/spaces',
           templateUrl: 'modules/squared/views/spaces.html',
-          controller: 'SpacesCtrl'
+          controller: 'SpacesCtrl',
+          parent: 'main'
         })
         .state('initialsetup', {
           url: '/initialsetup',
           templateUrl: 'modules/core/views/initialsetup.html',
-          controller: 'InitialSetupCtrl'
+          controller: 'InitialSetupCtrl',
+          parent: 'main'
         })
         .state('initialsetup.accountreview', {
           url: '/accountreview',
           templateUrl: 'modules/core/views/initialsetup.accountreview.html',
-          controller: 'AccountReviewCtrl'
+          controller: 'AccountReviewCtrl',
+          parent: 'main'
         })
         .state('initialsetup.servicesetup', {
           url: '/servicesetup',
           templateUrl: 'modules/core/views/initialsetup.servicesetup.html',
-          controller: 'ServiceSetupCtrl'
+          controller: 'ServiceSetupCtrl',
+          parent: 'main'
         })
         .state('initialsetup.adduser', {
           url: '/adduser',
           templateUrl: 'modules/core/views/initialsetup.adduser.html',
-          controller: 'AddUserCtrl'
+          controller: 'AddUserCtrl',
+          parent: 'main'
         })
         .state('initialsetup.getstarted', {
           url: '/getstarted',
           templateUrl: 'modules/core/views/initialsetup.getstarted.html',
-          controller: 'GetStartedCtrl'
+          controller: 'GetStartedCtrl',
+          parent: 'main'
         })
         .state('partnerhome', {
           url: '/partnerhome',
           templateUrl: 'modules/core/views/partnerlanding.html',
-          controller: 'PartnerHomeCtrl'
+          controller: 'PartnerHomeCtrl',
+          parent: 'main'
         })
         .state('partnerreports', {
           url: '/partnerreports',
           templateUrl: 'modules/squared/views/partnerreports.html',
-          controller: 'ReportsCtrl'
+          controller: 'ReportsCtrl',
+          parent: 'main'
         })
         .state('customers', {
           url: '/customers',
           templateUrl: 'modules/core/views/customers.html',
-          controller: 'CustomersCtrl'
+          controller: 'CustomersCtrl',
+          parent: 'main'
         });
     }
   ]);
@@ -185,7 +211,8 @@ angular
         .state('callrouting', {
           url: '/callrouting',
           templateUrl: 'modules/huron/views/callrouting.html',
-          controller: 'CallRoutingCtrl'
+          controller: 'CallRoutingCtrl',
+          parent: 'main'
         });
     }
   ]);
@@ -198,7 +225,8 @@ angular
         .state('fusion', {
           url: '/fusion',
           templateUrl: 'modules/hercules/views/connectors.html',
-          controller: 'ConnectorCtrl'
+          controller: 'ConnectorCtrl',
+          parent: 'main'
         });
     }
   ]);

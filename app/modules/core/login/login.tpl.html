@@ -1,0 +1,23 @@
+<div class="login-splash">
+  <div class="content">
+    <div class="icon icon-cisco-logo"></div>
+    <div class="title" translate="loginPage.title"></div>
+
+    <div class="results alert alert-danger" ng-bind-html="result" ng-show="result"></div>
+    <div class="round-button" ng-class="{spinner: loading === true}" ng-hide="result">
+      <div class="round-button-circle">
+        <span role="button" ng-click="login()" translate="loginPage.login" ng-hide="loading"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style media="screen" type="text/css">
+  html {
+    background:url(images/bg_1920.jpg) no-repeat center center fixed;
+    background-size: cover;
+  }
+  body {
+    background-color: transparent;
+  }
+</style>

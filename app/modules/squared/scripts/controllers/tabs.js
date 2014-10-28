@@ -6,7 +6,7 @@ angular.module('Squared')
 
       // TODO refactor isActive logic
 
-      $scope.tabs = [];
+      $scope.tabs = Authinfo.getTabs();
 
       $scope.$on('AuthinfoUpdated', function() {
         $scope.tabs = Authinfo.getTabs();

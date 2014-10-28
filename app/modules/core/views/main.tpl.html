@@ -1,0 +1,52 @@
+<div class="app-container">
+  <header cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" ng-controller="HeaderCtrl">
+    <div class="header-search" ng-controller="SearchCtrl" ng-show="Utils.isAdminPage()">
+      <cs-headersearch></cs-headersearch>
+    </div>
+    <div class="settings-menu dropdown" ng-controller="SettingsMenuCtrl" ng-show="Utils.isAdminPage()">
+      <button class="btn btn-header dropdown-toggle"><i class="icon-settings icon"></i></button>
+      <ul class="dropdown-menu" role="menu" >
+        <li ng-repeat="item in menuItems"><a ng-click="doAction(item.link)">{{item.title}}</a></li>
+      </ul>
+    </div>
+    <div class="user-info dropdown" ng-controller="UserInfoCtrl" ng-show="Utils.isAdminPage()">
+      <button class="btn-user dropdown-toggle">
+        <img ng-if="image" class="user-img" ng-src="{{image}}"/>
+        <span ng-if="!image" class="user-img">
+          <i class="icon icon-user"></i>
+        </span>
+        <ul class="user-info-text">
+          <li class="user-name">{{username}}</li>
+          <li class="org-name">{{orgname}}</li>
+        </ul>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li class="user-name">{{username}}</li>
+        <li class="org-name">{{orgname}}</li>
+        <li class="divider"></li>
+        <li id="feedback-btn">
+          <a ng-click="sendFeedback()" tabindex="0">
+            <i class="fa fa-envelope-o fa-lg" style="padding:10px;"></i>
+            {{'index.feedback' | translate}}
+          </a>
+        </li>
+        <li id="logout-btn" ng-show="loggedIn">
+          <a ng-click="logout()" tabindex="0">
+            <i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>
+            {{'index.logout' | translate}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="wrapper">
+    <cs-left-nav pages="tabs" ng-controller="TabsCtrl" ng-show="Utils.isAdminPage()"></cs-left-nav>
+    <div class="page-content-wrapper container-fluid">
+      <div class="row">
+        <div class="col-md-12 content-view" ui-view="">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
