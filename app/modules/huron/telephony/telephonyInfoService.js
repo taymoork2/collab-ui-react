@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .factory('TelephonyInfoService', ['$rootScope', '$http', '$q', 'RemoteDestinationService', 'Log',
-    function($rootScope, $http, $q, RemoteDestinationService, Log) {
+  .factory('TelephonyInfoService', ['$rootScope', '$q', 'RemoteDestinationService', 'Log',
+    function($rootScope, $q, RemoteDestinationService, Log) {
       var service = {};
       service.broadcastEvent = "telephonyInfoUpdated";
 
@@ -57,8 +57,6 @@ angular.module('Huron')
 
       service.getRemoteDestinationInfo = function(user) {
         var deferred = $q.defer();
-        // TODO: Remove the following line when we are authenticating with CMI
-        delete $http.defaults.headers.common.Authorization;
         RemoteDestinationService.query({customerId: user.meta.organizationID, userId: user.id},
           function(data) {
             deferred.resolve(data);

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('DirectoryNumberInfoCtrl', ['$scope', '$q', '$http', 'UserDirectoryNumberService', 'UnassignedDirectoryNumberService', 'UserDirectoryNumberDetailService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter',
-    function ($scope, $q, $http, UserDirectoryNumberService, UnassignedDirectoryNumberService, UserDirectoryNumberDetailService, TelephonyInfoService, Log, Config, Notification, $filter) {
+  .controller('DirectoryNumberInfoCtrl', ['$scope', '$q', 'UserDirectoryNumberService', 'UnassignedDirectoryNumberService', 'UserDirectoryNumberDetailService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter',
+    function ($scope, $q, UserDirectoryNumberService, UnassignedDirectoryNumberService, UserDirectoryNumberDetailService, TelephonyInfoService, Log, Config, Notification, $filter) {
       $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
 
       $scope.$on('telephonyInfoUpdated', function() {
@@ -16,8 +16,6 @@ angular.module('Huron')
 
       $scope.getDirectoryNumberDetails = function (user) {
         var deferred = $q.defer();
-        // TODO: Remove the following line when we are authenticating with CMI
-        delete $http.defaults.headers.common.Authorization;
         UserDirectoryNumberDetailService.get({customerId: user.meta.organizationID, directoryNumberId: $scope.telephonyInfo.currentDirectoryNumber.uuid},
         function (data) {
             deferred.resolve(data);
@@ -35,8 +33,6 @@ angular.module('Huron')
 
       $scope.getUnassignedDirectoryNumbers = function (user) {
         var deferred = $q.defer();
-        // TODO: Remove the following line when we are authenticating with CMI
-        delete $http.defaults.headers.common.Authorization;
         UnassignedDirectoryNumberService.get({customerId: user.meta.organizationID},
         function (data) {
             deferred.resolve(data);
@@ -59,9 +55,6 @@ angular.module('Huron')
 
       $scope.removeDirectoryNumberAssociation = function(user) {
         var deferred = $q.defer();
-        // TODO: Remove the following line when we are authenticating with CMI
-        delete $http.defaults.headers.common.Authorization;
-
         UserDirectoryNumberService.delete({customerId: user.meta.organizationID, userId: user.id, directoryNumberId: $scope.telephonyInfo.currentDirectoryNumber.uuid},
         function(data) {
           deferred.resolve(data);
@@ -84,9 +77,6 @@ angular.module('Huron')
           msg: null,
           type: 'null'
         };
-
-        // TODO: Remove the following line when we are authenticating with CMI
-        delete $http.defaults.headers.common.Authorization;
 
         UserDirectoryNumberService.save({customerId: user.meta.organizationID, userId: user.id }, userLine,
         function(data) {

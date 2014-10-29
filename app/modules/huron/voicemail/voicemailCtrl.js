@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('VoicemailInfoCtrl', ['$scope', '$q', '$http', 'UserServiceCommon', 'TelephonyInfoService', 'Log', 'Config', '$filter', 'Notification',
-  function($scope, $q, $http, UserServiceCommon, TelephonyInfoService, Log, Config, $filter, Notification) {
+  .controller('VoicemailInfoCtrl', ['$scope', '$q', 'UserServiceCommon', 'TelephonyInfoService', 'Log', 'Config', '$filter', 'Notification',
+  function($scope, $q, UserServiceCommon, TelephonyInfoService, Log, Config, $filter, Notification) {
     $scope.voicemailEnabled = false;
     $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
 
@@ -50,8 +50,6 @@ angular.module('Huron')
         } else {
           $scope.voicemailPayload.voicemail = {'dtmfAccessId' : $scope.directoryNumber.pattern.substr(1)};
         }
-        // TODO: Remove the following line when we are authenticating with CMI
-        delete $http.defaults.headers.common.Authorization;
       } else {
         for (var j=0; j< $scope.telephonyInfo.services.length; j++) {
           if($scope.telephonyInfo.services[j] === 'VOICEMAIL') {

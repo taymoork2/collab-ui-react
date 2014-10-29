@@ -1,11 +1,10 @@
 'use strict';
 
 angular.module('Huron')
-  .factory('HuronUnassignedLine', ['$http', 'Authinfo', 'UnassignedLineService',
-    function($http, Authinfo, UnassignedLineService) {
+  .factory('HuronUnassignedLine', ['Authinfo', 'UnassignedLineService',
+    function(Authinfo, UnassignedLineService) {
       return {
         getFirst: function() {
-          delete $http.defaults.headers.common.Authorization;
           return UnassignedLineService.query({customerId: Authinfo.getOrgId()}).$promise
             .then(function(lines){
               if (angular.isArray(lines) && lines.length > 0) {

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .factory('HuronUser', ['$http', 'Authinfo', 'UserServiceCommon', 'HuronUnassignedLine', 'UserDirectoryNumberService',
-    function($http, Authinfo, UserServiceCommon, HuronUnassignedLine, UserDirectoryNumberService) {
+  .factory('HuronUser', ['Authinfo', 'UserServiceCommon', 'HuronUnassignedLine', 'UserDirectoryNumberService',
+    function(Authinfo, UserServiceCommon, HuronUnassignedLine, UserDirectoryNumberService) {
       var userPayload = {
         'userId': null,
         'firstName': null,
@@ -23,11 +23,9 @@ angular.module('Huron')
               'uuid': directoryNumberUuid
             }
           };
-          delete $http.defaults.headers.common.Authorization;
           return UserDirectoryNumberService.save({customerId: Authinfo.getOrgId(), userId: userUuid},userLine).$promise;
         },
         delete: function(uuid) {
-          delete $http.defaults.headers.common.Authorization;
           return UserServiceCommon.remove({customerId: Authinfo.getOrgId(), userId: uuid});
         },
         create: function(email, uuid) {
@@ -39,7 +37,6 @@ angular.module('Huron')
             user.uuid = uuid;
           }
 
-          delete $http.defaults.headers.common.Authorization;
           return UserServiceCommon.save({customerId: Authinfo.getOrgId()},user).$promise
             .then(function(){
               return HuronUnassignedLine.getFirst();

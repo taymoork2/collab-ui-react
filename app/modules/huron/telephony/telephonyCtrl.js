@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('TelephonyInfoCtrl', ['$scope', '$q', '$http', '$state','UserDirectoryNumberService', 'UserServiceCommon', 'RemoteDestinationService', 'TelephonyInfoService','Log', 'Config', 'Notification',
-    function($scope, $q, $http, $state, UserDirectoryNumberService, UserServiceCommon, RemoteDestinationService, TelephonyInfoService, Log, Config, Notification) {
+  .controller('TelephonyInfoCtrl', ['$scope', '$q', '$state','UserDirectoryNumberService', 'UserServiceCommon', 'RemoteDestinationService', 'TelephonyInfoService','Log', 'Config', 'Notification',
+    function($scope, $q, $state, UserDirectoryNumberService, UserServiceCommon, RemoteDestinationService, TelephonyInfoService, Log, Config, Notification) {
 
       $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
 
@@ -12,8 +12,6 @@ angular.module('Huron')
 
       $scope.getUserDnInfo = function(user) {
         var deferred = $q.defer();
-        // TODO: Remove the following line when we are authenticating with CMI
-        delete $http.defaults.headers.common.Authorization;
         UserDirectoryNumberService.get({customerId: user.meta.organizationID, userId: user.id},
           function(data) {
             deferred.resolve(data);
@@ -26,8 +24,7 @@ angular.module('Huron')
 
       $scope.getTelephonyUserInfo = function(user) {
         var deferred = $q.defer();
-        // TODO: Remove the following line when we are authenticating with CMI
-        delete $http.defaults.headers.common.Authorization;
+
         UserServiceCommon.get({customerId: user.meta.organizationID, userId: user.id},
           function(data) {
             deferred.resolve(data);

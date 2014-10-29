@@ -5,9 +5,9 @@ angular.module('Huron')
     function(Config) {
       var config = {
         cmiUrl: {
-          dev: 'http://cmi.cfa-hitest.huron-alpha.com',
-          integration: 'http://cmi.cfa-hitest.huron-alpha.com',
-          prod: 'http://cmi.huron-alpha.com'
+          dev: 'https://cmi.hitest.huron-dev.com',
+          integration: 'https://cmi.hitest.huron-dev.com',
+          prod: 'https://cmi.hitest.huron-dev.com'
         },
 
         getCmiUrl: function() {

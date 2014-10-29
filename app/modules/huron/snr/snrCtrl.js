@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-   .controller('SingleNumberReachInfoCtrl', ['$scope', '$q', '$http', 'RemoteDestinationService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter',
-    function($scope, $q, $http, RemoteDestinationService, TelephonyInfoService, Log, Config, Notification, $filter) {
+   .controller('SingleNumberReachInfoCtrl', ['$scope', '$q', 'RemoteDestinationService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter',
+    function($scope, $q, RemoteDestinationService, TelephonyInfoService, Log, Config, Notification, $filter) {
 
     $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
     $scope.snrOptions = [{
@@ -29,8 +29,6 @@ angular.module('Huron')
         type: 'null'
       };
 
-      // TODO: Remove the following line when we are authenticating with CMI
-      delete $http.defaults.headers.common.Authorization;
       RemoteDestinationService.save({customerId: user.meta.organizationID, userId: user.id}, rdBean,
         function(data) {
           deferred.resolve(data);
@@ -61,8 +59,6 @@ angular.module('Huron')
         msg: null,
         type: 'null'
       };
-      // TODO: Remove the following line when we are authenticating with CMI
-      delete $http.defaults.headers.common.Authorization;
       RemoteDestinationService.delete({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.telephonyInfo.snrInfo.remoteDestinations[0].uuid},
         function(data) {
           deferred.resolve(data);
@@ -92,8 +88,6 @@ angular.module('Huron')
         type: 'null'
       };
 
-      // TODO: Remove the following line when we are authenticating with CMI
-      delete $http.defaults.headers.common.Authorization;
       RemoteDestinationService.update({customerId: user.meta.organizationID, userId: user.id, remoteDestId: $scope.telephonyInfo.snrInfo.remoteDestinations[0].uuid}, rdBean,
         function(data) {
           deferred.resolve(data);
