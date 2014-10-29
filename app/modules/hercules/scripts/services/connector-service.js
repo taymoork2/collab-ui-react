@@ -2,7 +2,7 @@
 
 /* global _ */
 
-var HERCULES_CONNECTOR_URL = 'http://hercules.cfa-hitest.huron-alpha.com/v1/connectors';
+var HERCULES_CONNECTOR_URL = 'https://hercules.huron-alpha.com/v1/connectors';
 
 angular.module('Hercules')
   .service('ConnectorService', ['$http',
