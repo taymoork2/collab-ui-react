@@ -1,11 +1,11 @@
 'use strict';
 
 var testuser = {
-  username: 'adminTestUser@wx2.example.com',
-  password: 'C1sc0123!'
+  username: 'admin@int1.huron-alpha.com',
+  password: 'Cisco123!'
 };
 
-xdescribe('Call Routing', function() {
+describe('Huron Call Routing', function() {
   it('should login', function(){
     login.login(testuser.username,testuser.password);
   });
