@@ -11,5 +11,8 @@ angular.module('Core')
       $scope.popup = Notification.popup;
       $scope.orgName = Authinfo.getOrgName();
 
+
+
+
     }
   ]);

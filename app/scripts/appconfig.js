@@ -196,8 +196,8 @@ angular
         })
         .state('customers', {
           url: '/customers',
-          templateUrl: 'modules/core/views/customers.html',
-          controller: 'CustomersCtrl',
+          templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
+          controller: 'PartnerHomeCtrl',
           parent: 'main'
         });
     }

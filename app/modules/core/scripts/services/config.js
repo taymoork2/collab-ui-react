@@ -53,7 +53,7 @@ angular.module('Core')
 
         scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
 
-        statusPageUrl: 'http://status.squaredpreview.com/',
+        statusPageUrl: 'http://status.projectsquared.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
 
@@ -69,8 +69,8 @@ angular.module('Core')
 
 
         healthCheckUrl: {
-          dev: 'http://squaredpreview.statuspage.io/index.json',
-          prod: 'https://squaredpreview.statuspage.io/index.json'
+          dev: 'http://status.projectsquared.com/index.json',
+          prod: 'http://status.projectsquared.com/index.json'
         },
 
         scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],

@@ -464,5 +464,18 @@
   "status" : {
     "noResults" : "No results available.",
     "errorProcessing" : "Error processing request."
+  },
+  "customerPage" : {
+    "title" : "Customers",
+    "customerNameHeader" : "Company Name",
+    "trialIdHeader": "Package",
+    "licenseHeader": "Licenses",
+    "usageHeader": "License Usage",
+    "statusHeader": "Status Days(s) Left",
+    "actionHeader": "Actions",
+    "addTrial" : "Add Trial",
+    "csvBtnTitle": "Export to CSV",
+    "csvFilename": "exported_customers.csv",
+    "custDetail": "Customer Detail"
   }
 }

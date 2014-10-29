@@ -281,7 +281,7 @@ describe('App flow', function() {
       browser.getAllWindowHandles().then(function(handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
-        navigation.expectDriverCurrentUrl('status.squaredpreview.com/');
+        navigation.expectDriverCurrentUrl('status.projectsquared.com/');
         browser.driver.close();
         browser.switchTo().window(appWindow);
       });
