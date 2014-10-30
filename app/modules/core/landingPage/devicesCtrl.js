@@ -7,10 +7,10 @@ angular.module('Core')
 
     $scope.devices = [{
       model: 'Activated',
-      qty: 15
+      qty: ''
     }, {
       model: 'Pending',
-      qty: 38
+      qty: ''
     }];
 
     var getAllRooms = function() {

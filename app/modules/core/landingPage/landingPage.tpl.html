@@ -1,7 +1,7 @@
 <div class="landing-page">
   <div class="cta row" ng-controller="LicensesCtrl" ng-show="isAdmin()">
     <section class="packages col-sm-6 col-md-3">
-      <h3 class="packages-name">{{packageInfo.name}}</h3>
+      <h3 class="packages-name" ng-bind-html="packageInfo.name"></h3>
       <progressbar max="packageInfo.termMax" value="packageInfo.termUsed"></progressbar>
       <p class="packages-days-left" ng-if="isOnTrial()">{{packageInfo.termRemaining}} {{packageInfo.termUnits}} left in your trial</p>
       <p class="packages-unlimited" ng-if="!isOnTrial()">Unlimited use</p>
@@ -18,9 +18,7 @@
       <div class="row">
         <section class="licenses col-sm-6">
           <h3 class="licenses-bought">{{licenses.total}} Licenses</h3>
-          <div class="progress">
-            <progressbar max="licenses.total" value="licenses.used"></progressbar>
-          </div>
+          <progressbar max="licenses.total" value="licenses.used"></progressbar>
           <p class="licenses-left" ng-if="isOnTrial()">{{licenses.total - licenses.used}} unused</p>
           <p class="licenses-used" ng-if="!isOnTrial()">{{licenses.used}} used</p>
           <button class="btn btn-sm btn-default">Remind</button>

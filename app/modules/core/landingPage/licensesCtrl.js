@@ -7,7 +7,7 @@ angular.module('Core')
 	function($scope, Authinfo, PartnerService, Orgservice, Log, Notification, $translate) {
 
 		$scope.packageInfo = {
-			name: 'Default Collab Package',
+			name: '&nbsp;',
 			termMax: 0,
 			termUsed: 0,
 			termRemaining: 0,
@@ -15,7 +15,7 @@ angular.module('Core')
 		};
 
 		$scope.licenses = {
-			total: 'Unlimited',
+			total: '',
 			used: 0,
 			unlicensed: 0,
 			domain: ''
@@ -71,7 +71,8 @@ angular.module('Core')
 
 					} else {
 						// not on trial, get usage from CI?
-
+						$scope.packageInfo.name = 'Default Collab Package';
+						$scope.licenses.total = 'Unlimited';
 					}
 				} else {
 					Log.debug('Failed to retrieve trial information. Status: ' + status);
@@ -101,8 +102,8 @@ angular.module('Core')
 			});
 		};
 
-		getorgInfo();
-
 		getTrials();
+
+		getorgInfo();
 	}
 ]);
