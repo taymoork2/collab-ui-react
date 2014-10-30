@@ -307,7 +307,7 @@
     "page_title": "Fusion Services",
     "connectors": {
       "group_by": "Group services by:",
-      "loading_error": "Error loading fusion data. Ensure you have accepted the certificate at <a href='https://hercules.ladidadi.org/'>https://hercules.ladidadi.org</a>. This is a short term limitation due to the use of self signed certificates.",
+      "loading_error": "Unable to load fusion data, please try again later.",
       "no_connectors": "No fusion services registered.",
       "cluster_id": "Cluster",
       "host_name": "Expressway Host",
