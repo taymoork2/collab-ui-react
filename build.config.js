@@ -8,6 +8,8 @@ module.exports = {
   test_dir: 'test',
   e2e_dir: 'test/e2e-protractor',
   app_dir: 'app',
+  unsupported_app: 'unsupported',
+  unsupported_app_dir: 'app/unsupported',
 
   app_files: {
     js: [
@@ -27,7 +29,7 @@ module.exports = {
 
     atpl: ['modules/**/*.html'],
 
-    html: ['index.html'],
+    html: ['*.html'],
     less: ['styles/app.less']
 
   },
@@ -39,6 +41,12 @@ module.exports = {
   },
 
   vendor_files: {
+    unsupported: [
+      'bower_components/json3/lib/json3.min.js',
+      'bower_components/angular/angular.js',
+      'bower_components/angular-translate/angular-translate.js',
+      'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js'
+    ],
     js: [
       'bower_components/jquery/dist/jquery.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',

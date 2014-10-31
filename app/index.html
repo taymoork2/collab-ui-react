@@ -1,6 +1,9 @@
 <!doctype html>
 <html ng-app="wx2AdminWebClientApp">
   <head>
+    <!-- build:js({.tmp,app}) scripts/unsupported.js -->
+    <script type="text/javascript" src="scripts/unsupported.js"></script>
+    <!-- endbuild -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title ng-bind="Localize.varTitle()"></title>
@@ -13,13 +16,12 @@
     <!-- endbuild -->
   </head>
   <body ng-cloak>
-    <!--[if lt IE 7]>
-    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
     <div ui-view></div>
+
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
+
       var preload = new Image();
       preload.src="images/bg_1920.jpg";
 
@@ -30,7 +32,7 @@
       ga('create', 'UA-XXXXX-X');
       ga('send', 'pageview');
     </script>
-    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <!-- build:js({.tmp,app}) scripts/index.scripts.js -->
     <% scripts.forEach( function( file ) { %>
     <script type="text/javascript" src="<%= file %>"></script><% }); %>
     <!-- endbuild -->

@@ -21,7 +21,9 @@ module.exports = function (grunt) {
 
     css_name: 'main',
 
-    js_name: 'scripts',
+    js_index_name: 'index.scripts',
+
+    js_unsupported_name: 'unsupported.scripts',
 
     meta: {
       banner: '/**\n' +
@@ -70,11 +72,20 @@ module.exports = function (grunt) {
           '<%= vendor_files.js %>',
           'module.prefix',
           '<%= build_dir %>/scripts/**/*.js',
+          '!<%= build_dir %>/scripts/unsupported.js',
           '<%= build_dir %>/modules/**/*.js',
           '<%= html2js.app.dest %>',
           'module.suffix'
         ],
-        dest: '<%= compile_dir %>/scripts/<%= js_name %>.js'
+        dest: '<%= compile_dir %>/scripts/<%= js_index_name %>.js'
+      },
+
+      compile_unsupported_js: {
+        src: [
+          '<%= vendor_files.unsupported %>',
+          '<%= build_dir %>/<%= unsupported_app %>/scripts/**/*.js'
+        ],
+        dest: '<%= compile_dir %>/scripts/<%= js_unsupported_name %>.js'
       }
     },
 
@@ -131,6 +142,28 @@ module.exports = function (grunt) {
           dot: true
         }]
       },
+      build_unsupported_app_js: {
+        files: [{
+          src: [
+            '<%= app_files.js %>'
+          ],
+          dest: '<%= build_dir %>/<%= unsupported_app %>',
+          cwd: '<%= unsupported_app_dir %>',
+          expand: true,
+          dot: true
+        }]
+      },
+      build_unsupported_app_html: {
+        files: [{
+          src: [
+            '<%= app_files.html %>'
+          ],
+          dest: '<%= build_dir %>',
+          cwd: '<%= unsupported_app_dir %>',
+          expand: true,
+          dot: true
+        }]
+      },
       build_testjs: {
         files: [{
           src: ['<%= test_files.js %>', '<%= test_dir %>/**/*.js'],
@@ -171,12 +204,24 @@ module.exports = function (grunt) {
         files: [{
           src: [
             '*.{ico,png,txt,html}',
+            'scripts/unsupported.js',
             'images/*',
             '.htaccess',
             '<%= app_files.json %>'
           ],
           dest: '<%= compile_dir %>/',
           cwd: '<%= app_dir %>',
+          expand: true,
+          dot: true
+        }]
+      },
+      compile_unsupported_app_files: {
+        files: [{
+          src: [
+            '<%= app_files.html %>'
+          ],
+          dest: '<%= compile_dir %>',
+          cwd: '<%= unsupported_app_dir %>',
           expand: true,
           dot: true
         }]
@@ -292,10 +337,10 @@ module.exports = function (grunt) {
     },
 
     /**
-     * The `index` task compiles the `index.html` file as a Grunt template. CSS
+     * The `htmlprocess` task compiles html files as a Grunt template. CSS
      * and JS files co-exist here but they get split apart later.
      */
-    index: {
+    htmlprocess: {
 
       /**
        * During development, we don't want to have wait for compilation,
@@ -303,7 +348,8 @@ module.exports = function (grunt) {
        * add all script files directly to the `<head>` of `index.html`. The
        * `src` property contains the list of included files.
        */
-      build: {
+      build_index: {
+        file: 'index.html',
         dir: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
@@ -315,15 +361,35 @@ module.exports = function (grunt) {
         ]
       },
 
+      build_unsupported: {
+        file: 'unsupported.html',
+        dir: '<%= build_dir %>',
+        src: [
+          '<%= vendor_files.unsupported %>',
+          '<%= build_dir %>/<%= unsupported_app %>/scripts/**/*.js'
+        ]
+      },
+
       /**
        * When it is time to have a completely compiled application, we can
        * alter the above to include only a single JavaScript and a single CSS
        * file. Now we're back!
        */
-      compile: {
+      compile_index: {
+        file: 'index.html',
         dir: '<%= compile_dir %>',
         src: [
-          '<%= compile_dir %>/scripts/<%= js_name %>.js',
+          '<%= compile_dir %>/scripts/<%= js_index_name %>.js',
+          // '<%= vendor_files.css %>',
+          '<%= compile_dir %>/styles/<%= css_name %>.css'
+        ]
+      },
+
+      compile_unsupported: {
+        file: 'unsupported.html',
+        dir: '<%= compile_dir %>',
+        src: [
+          '<%= compile_dir %>/scripts/<%= js_unsupported_name %>.js',
           // '<%= vendor_files.css %>',
           '<%= compile_dir %>/styles/<%= css_name %>.css'
         ]
@@ -357,6 +423,9 @@ module.exports = function (grunt) {
     jshint: {
       app: [
         '<%= app_dir %>/<%= app_files.js %>'
+      ],
+      unsupported_app: [
+        '<%= unsupported_app_dir %>/<%= app_files.js %>'
       ],
       test: [
         '<%= app_dir %>/<%= app_files.jsunit %>'
@@ -417,7 +486,9 @@ module.exports = function (grunt) {
           mangle: false
         },
         files: {
-          '<%= concat.compile_js.dest %>': '<%= concat.compile_js.dest %>'
+          '<%= concat.compile_js.dest %>': '<%= concat.compile_js.dest %>',
+          '<%= concat.compile_unsupported_js.dest %>': '<%= concat.compile_unsupported_js.dest %>',
+          '<%= compile_dir %>/scripts/unsupported.js': '<%= compile_dir %>/scripts/unsupported.js'
         }
       }
     },
@@ -428,9 +499,17 @@ module.exports = function (grunt) {
      * additional tasks can operate on them
      */
     useminPrepare: {
-      html: '<%= temp_dir %>/index.html',
-      options: {
-        dest: '<%= compile_dir %>'
+      'index-html': {
+        src: ['<%= temp_dir %>/index.html'],
+        options: {
+          dest: '<%= compile_dir %>'
+        }
+      },
+      'unsupported-html': {
+        src: ['<%= temp_dir %>/unsupported.html'],
+        options: {
+          dest: '<%= compile_dir %>'
+        }
       }
     },
 
@@ -482,7 +561,7 @@ module.exports = function (grunt) {
         tasks: [
           'jshint:app',
           'copy:build_app_files',
-          'index:build',
+          'htmlprocess_build',
           'karma:unit:run'
         ],
       },
@@ -492,7 +571,37 @@ module.exports = function (grunt) {
        */
       html: {
         files: ['<%= app_dir %>/<%= app_files.html %>'],
-        tasks: ['index:build']
+        tasks: [
+          'copy:build_app_files',
+          'htmlprocess_build'
+        ]
+      },
+
+      /**
+       * When our JavaScript source files change, we want to run lint them and
+       * run our unit tests.
+       */
+      unsupported_appjs: {
+        files: [
+          '<%= unsupported_app_dir %>/scripts/**/*.js'
+        ],
+        tasks: [
+          'jshint:unsupported_app',
+          'copy:build_unsupported_app_js',
+          'htmlprocess_build',
+          'karma:unit:run'
+        ],
+      },
+
+      /**
+       * When unsupported.html changes, we need to compile it.
+       */
+      unsupported_html: {
+        files: ['<%= unsupported_app_dir %>/<%= app_files.html %>'],
+        tasks: [
+          'copy:build_unsupported_app_html',
+          'htmlprocess_build'
+        ]
       },
 
       /**
@@ -502,7 +611,7 @@ module.exports = function (grunt) {
         files: ['<%= app_dir %>/<%= app_files.atpl %>'],
         tasks: [
           'html2js',
-          'index:build',
+          'htmlprocess_build',
         ]
       },
 
@@ -517,7 +626,7 @@ module.exports = function (grunt) {
         tasks: [
           'less:build',
           'autoprefixer:build',
-          'index:build',
+          'htmlprocess_build',
         ]
 
       },
@@ -658,7 +767,7 @@ module.exports = function (grunt) {
     'copy_build',
     'imagemin',
     'autoprefixer',
-    'index:build',
+    'htmlprocess_build',
     'karmaconfig',
     'karma:continuous'
   ]);
@@ -668,15 +777,24 @@ module.exports = function (grunt) {
     'clean:dist',
     'copy_compile',
     'ngAnnotate',
-    'concat:compile_css',
-    'concat:compile_js',
-    'index:compile',
+    'concat',
+    'htmlprocess_compile',
     'useminPrepare',
     'cssmin',
     'uglify',
     'rev',
     'usemin',
     'htmlmin'
+  ]);
+
+  grunt.registerTask('htmlprocess_build', [
+    'htmlprocess:build_index',
+    'htmlprocess:build_unsupported',
+  ]);
+
+  grunt.registerTask('htmlprocess_compile', [
+    'htmlprocess:compile_index',
+    'htmlprocess:compile_unsupported',
   ]);
 
   // Format JS files
@@ -694,6 +812,8 @@ module.exports = function (grunt) {
   // Copy the needed files into the build folder
   grunt.registerTask('copy_build', [
     'copy:build_app_files',
+    'copy:build_unsupported_app_js',
+    'copy:build_unsupported_app_html',
     'copy:build_vendor_css',
     'copy:build_vendor_fonts',
     'copy:build_vendor_images',
@@ -703,6 +823,7 @@ module.exports = function (grunt) {
   // Compile, concatenate, minify and copy app files for deployment
   grunt.registerTask('copy_compile', [
     'copy:compile_app_files',
+    'copy:compile_unsupported_app_files',
     'copy:compile_fonts',
     'copy:compile_images',
     'copy:compile_bluepng'
@@ -776,7 +897,7 @@ module.exports = function (grunt) {
    * the list into variables for the template to use and then runs the
    * compilation.
    */
-  grunt.registerMultiTask('index', 'Process index.html template', function () {
+  grunt.registerMultiTask('htmlprocess', 'Process html templates', function () {
 
     var dirRE = new RegExp('^(' + grunt.config('build_dir') + '|' + grunt.config('compile_dir') + ')\/', 'g');
     var jsFiles = filterForJS(this.filesSrc).map(function (file) {
@@ -786,7 +907,7 @@ module.exports = function (grunt) {
       return file.replace(dirRE, '');
     });
 
-    grunt.file.copy('app/index.html', this.data.dir + '/index.html', {
+    grunt.file.copy(this.data.dir + '/' + this.data.file, this.data.dir + '/' + this.data.file, {
       process: function (contents, path) {
         return grunt.template.process(contents, {
           data: {
