@@ -1,0 +1,43 @@
+<div class="trial-card row">
+
+  <div class="row">
+    <div class="info-card-name customer-info col-xs-10">
+      <span class="user-title">{{$parent.currentCustomer.offer}}</span>
+    </div>
+    <div class="info-card-name customer-info col-xs-2">
+      <span class="user-title"><a translate="customerPage.edit"></a></span>
+    </div>
+  </div>
+
+  <div class="trial-bar row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <div class="trialbar">
+        <progressbar max="$parent.currentCustomer.duration" value="$parent.currentCustomer.daysUsed" type="{{getProgressStatus($parent.currentCustomer)}}"></progressbar>
+      </div>
+    </div>
+    <div>
+      <div class="info-card-name customer-info col-xs-6">
+        <span class="user-title">{{$parent.currentCustomer.duration}}</span> <span  class="user-title"translate="customerPage.dayTrial"></span>
+      </div>
+      <div class="info-card-name customer-info right col-xs-6">
+        <span ng-class="{'trial-danger': $parent.currentCustomer.daysLeft <= 5, 'user-title': $parent.currentCustomer.daysLeft > 5}">{{$parent.currentCustomer.daysLeft}}</span>
+        <span ng-class="{'trial-danger': $parent.currentCustomer.daysLeft <= 5, 'user-title': $parent.currentCustomer.daysLeft > 5}" translate="customerPage.daysLeft"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="info-card-name customer-info col-xs-10">
+      <span class="user-title" translate="customerPage.trialTerms"></span>
+    </div>
+    <div class="info-card-name customer-info col-xs-2">
+      <span class="user-title"><a translate="customerPage.edit"></a></span>
+    </div>
+  </div>
+
+  <div class="info-card-name row customer-info col-xs-12">
+    <div class="user-title"><span translate="customerPage.licenses" class="trial-heading"></span> {{$parent.currentCustomer.licenses}}</div>
+    <div class="user-title"><span translate="customerPage.duration" class="trial-heading"></span> {{$parent.currentCustomer.duration}} <span translate="customerPage.days"></span></div>
+  </div>
+
+</div>

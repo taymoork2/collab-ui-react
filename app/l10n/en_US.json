@@ -486,6 +486,17 @@
     "addTrial" : "Add Trial",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_customers.csv",
-    "custDetail": "Customer Detail"
+    "custDetail": "Customer Detail",
+    "contactName": "Contact Name",
+    "contactEmail": "Email",
+    "contactPhone": "Phone",
+    "launchButton": "Launch Customer Portal",
+    "edit": "Edit",
+    "trialTerms": "Terms of Trial",
+    "licenses": "Number of licenses",
+    "duration": "Duration",
+    "days": "Days",
+    "dayTrial": "Day Trial",
+    "daysLeft": "day left"
   }
 }

@@ -195,10 +195,18 @@ angular
           parent: 'main'
         })
         .state('customers', {
+          absract: true,
+          template: '<div ui-view></div>',
+          parent: 'main'
+        })
+        .state('customers.list', {
           url: '/customers',
           templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
-          controller: 'PartnerHomeCtrl',
-          parent: 'main'
+          controller: 'PartnerHomeCtrl'
+        })
+        .state('customers.list.preview', {
+          templateUrl: 'modules/core/customers/customerPreview/customerPreview.tpl.html',
+          controller: 'CustomerPreviewCtrl'
         });
     }
   ]);

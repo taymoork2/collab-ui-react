@@ -8,8 +8,14 @@ angular.module('Core')
 
       return {
 
-        getOrg: function(callback) {
-          var scomUrl = Config.scomUrl + '/' + Authinfo.getOrgId();
+        getOrg: function(callback, oid) {
+          var scomUrl = null;
+          if (oid) {
+            scomUrl = Config.scomUrl + '/' + oid;
+          }
+          else {
+            scomUrl = Config.scomUrl + '/' + Authinfo.getOrgId();
+          }
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.get(scomUrl)
             .success(function(data, status) {

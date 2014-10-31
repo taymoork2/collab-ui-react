@@ -4,6 +4,9 @@
     <div class="col-md-6 col-sm-6">
       <h2 class="page-title">{{'customerPage.title' | translate}}&nbsp;&nbsp;<small class="count">{{totalTrials}}</small></h2>
     </div>
+    <div id="customer-refresh" class="customer-refresh" ng-if="showTrialsRefresh">
+      <i class='fa fa-refresh fa-spin'></i>
+    </div>
     <div class="col-md-6 col-sm-6">
       <div class="page-option-buttons">
         <button id="addTrial" class="btn btn-lg btn-info add-button" translate="customerPage.addTrial">
@@ -18,6 +21,6 @@
     <div gridscrollbar windowsize class="gridStyle col-md-12" style="height: {{windowHeight - 150}}px;" ng-grid="gridOptions"></div>
   </div>
 </div>
-<div ng-class="{preview: userPreviewActive, details: userDetailsActive}" class="user-management">
+<div ng-class="{preview: trialPreviewActive}" class="user-management">
   <div ui-view class="outer-details-div" id="entire-slide"></div>
 <div>

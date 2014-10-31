@@ -60,7 +60,7 @@ angular.module('Core')
         callflowServiceUrl: 'http://admin-portal-test-public.wbx2.com:8080/atlas-server/admin/api/v1/',
 
         appinfo: {
-          webClientURL: 'https://web.wbx2.com/',
+          webClientURL: 'https://web.projectsquared.com/',
           iPhoneURL: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',
           androidURL: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android',
           androidAppIntent: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',

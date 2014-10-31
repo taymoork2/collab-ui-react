@@ -26,6 +26,7 @@ angular.module('Core')
     $scope.nameError = false;
     $scope.emailError = false;
     $scope.totalTrialsData = [];
+    $scope.currentCustomer = null;
 
     $scope.formReset = function(){
       $scope.customerName = null;
@@ -286,6 +287,11 @@ angular.module('Core')
 
     };
 
+    $scope.showCustomerDetails = function(customer) {
+      $scope.currentCustomer = customer;
+      $state.go('customers.list.preview');
+    };
+
     $scope.sort = {
       by: 'customerName',
       order: 'ascending'
@@ -312,9 +318,9 @@ angular.module('Core')
     });
 
     $rootScope.$on('$stateChangeSuccess', function() {
-      if ($state.includes('users.list.preview.*')) {
+      if ($state.includes('customers.list.preview.*')) {
         $scope.trialPreviewActive = true;
-      } else if ($state.includes('users.list.preview')) {
+      } else if ($state.includes('customers.list.preview')) {
         $scope.trialPreviewActive = true;
       } else {
         $scope.trialPreviewActive = false;

@@ -22,9 +22,9 @@ describe('invite page with user param', function() {
     browser.get('#/invite');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('btn-login'));
+      return browser.driver.isElementPresent(by.id('sign-in-button'));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
+      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
     });
   });
 
@@ -32,9 +32,9 @@ describe('invite page with user param', function() {
     browser.get('#/invite?user=' + encryptedQueryParam);
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('btn-login'));
+      return browser.driver.isElementPresent(by.id('sign-in-button'));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
+      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
     });
   });
 
@@ -55,9 +55,9 @@ describe('App Launcher Flow', function() {
     browser.get('#/applauncher');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('btn-login'));
+      return browser.driver.isElementPresent(by.id('sign-in-button'));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
+      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
     });
 
   });
@@ -67,9 +67,9 @@ describe('App Launcher Flow', function() {
     browser.get('applauncher.html');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('btn-login'));
+      return browser.driver.isElementPresent(by.id('sign-in-button'));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
+      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
     });
 
   });
@@ -82,9 +82,9 @@ describe('App Download Page', function()  {
     browser.get('#/appdownload');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('btn-login'));
+      return browser.driver.isElementPresent(by.id('sign-in-button'));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
+      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
     });
 
   });
@@ -93,9 +93,9 @@ describe('App Download Page', function()  {
     browser.get('appdownload.html');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('btn-login'));
+      return browser.driver.isElementPresent(by.id('sign-in-button'));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.wbx2.com');
+      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
     });
 
   });
