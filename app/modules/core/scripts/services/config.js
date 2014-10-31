@@ -8,7 +8,7 @@ angular.module('Core')
         adminClientUrl: {
           dev: 'http://127.0.0.1:8000',
           integration: 'https://int-admin.wbx2.com/',
-          prod: 'https://admin.wbx2.com/'
+          prod: 'https://admin.projectsquared.com/'
         },
 
         adminServiceUrl: {
@@ -195,7 +195,7 @@ angular.module('Core')
         },
 
         isProd: function() {
-          return document.URL.indexOf('admin.wbx2.com') !== -1;
+          return document.URL.indexOf('admin.projectsquared.com') !== -1;
         },
 
         getEnv: function() {
