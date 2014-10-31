@@ -4,7 +4,7 @@
 /* global describe */
 /* global it */
 /* global expect */
-/* global navigation */
+/* global navigation, users */
 /* global login */
 /* global landing */
 
@@ -43,8 +43,12 @@ describe('Customer Admin Landing Page License Info', function() {
       expect(landing.unlicencedUsers.isDisplayed()).toBeTruthy();
     });
 
-    it('should display quick links', function() {
-      expect(landing.getQuickLinks()).toBe(3);
+    it('should display the right quick links', function() {
+      expect(landing.addUserQuickLink.isDisplayed()).toBeTruthy();
+      expect(landing.installDeviceSharedSpaceQuickLink.isDisplayed()).toBeTruthy();
+      expect(landing.deviceLogsQuickLink.isDisplayed()).toBeTruthy();
+      expect(landing.installDeviceQuickLink.isPresent()).toBeFalsy();
+      expect(landing.autoAttendantQuickLink.isPresent()).toBeFalsy();
     });
 
     it('should log out', function() {
@@ -69,8 +73,12 @@ describe('Customer Admin Landing Page License Info', function() {
       expect(landing.unlicencedUsers.isDisplayed()).toBeTruthy();
     });
 
-    it('should display quick links', function() {
-      expect(landing.getQuickLinks()).toBe(2);
+    it('should display the right quick links', function() {
+      expect(landing.addUserQuickLink.isDisplayed()).toBeTruthy();
+      expect(landing.installDeviceSharedSpaceQuickLink.isDisplayed()).toBeTruthy();
+      expect(landing.deviceLogsQuickLink.isPresent()).toBeFalsy();
+      expect(landing.installDeviceQuickLink.isPresent()).toBeFalsy();
+      expect(landing.autoAttendantQuickLink.isPresent()).toBeFalsy();
     });
 
     it('should log out', function() {
@@ -92,8 +100,12 @@ describe('Customer Admin Landing Page License Info', function() {
       expect(landing.unlicencedUsers.isDisplayed()).toBeFalsy();
     });
 
-    it('should display quick links', function() {
-      expect(landing.getQuickLinks()).toBe(1);
+    it('should display the right quick links', function() {
+      expect(landing.addUserQuickLink.isPresent()).toBeFalsy();
+      expect(landing.installDeviceSharedSpaceQuickLink.isPresent()).toBeFalsy();
+      expect(landing.deviceLogsQuickLink.isDisplayed()).toBeTruthy();
+      expect(landing.installDeviceQuickLink.isPresent()).toBeFalsy();
+      expect(landing.autoAttendantQuickLink.isPresent()).toBeFalsy();
     });
 
     it('should log out', function() {

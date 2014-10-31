@@ -1,4 +1,5 @@
 'use strict';
+/* global $ */
 
 angular.module('Core')
   .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification',
@@ -16,6 +17,14 @@ angular.module('Core')
 
       $scope.userPreviewActive = false;
       $scope.userDetailsActive = false;
+
+      var init = function () {
+        if($state.params.showAddUsers === 'add') {
+          $scope.setupTokenfield();
+          $('#addUsersDialog').modal('show');
+        }
+      };
+      $timeout(init, 0);
 
       $scope.sort = {
         by: 'name',

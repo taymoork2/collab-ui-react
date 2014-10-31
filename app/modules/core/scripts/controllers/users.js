@@ -20,6 +20,7 @@ angular.module('Core')
 
       var setPlaceholder = function () {
         var placeholder = $filter('translate')('usersPage.userInput');
+        angular.element('#usersfield-tokenfield').css('width','100%');
         angular.element('#usersfield-tokenfield').attr('placeholder', placeholder);
       };
 
@@ -72,36 +73,40 @@ angular.module('Core')
         }
       };
 
-      //tokenfield setup - Should make it into a directive later.
-      angular.element('#usersfield').tokenfield({
-        delimiter: [',', ';'],
-        createTokensOnBlur: true
-      })
-        .on('tokenfield:createtoken', function(e) {
-          //Removing anything in brackets from user data
-          var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
-          e.attrs.value = value;
+      $scope.setupTokenfield = function() {
+        //tokenfield setup - Should make it into a directive later.
+        angular.element('#usersfield').tokenfield({
+          delimiter: [',', ';'],
+          createTokensOnBlur: true
         })
-        .on('tokenfield:createdtoken', function(e) {
-          if (!validateEmail(e.attrs.value)) {
-            angular.element(e.relatedTarget).addClass('invalid');
-            invalidcount++;
-          }
-          checkButtons();
-          checkPlaceholder();
-        })
-        .on('tokenfield:edittoken', function(e) {
-          if (!validateEmail(e.attrs.value)) {
-            invalidcount--;
-          }
-        })
-        .on('tokenfield:removetoken', function(e) {
-          if (!validateEmail(e.attrs.value)) {
-            invalidcount--;
-          }
-          checkButtons();
-          checkPlaceholder();
-        });
+          .on('tokenfield:createtoken', function(e) {
+            //Removing anything in brackets from user data
+            var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
+            e.attrs.value = value;
+          })
+          .on('tokenfield:createdtoken', function(e) {
+            if (!validateEmail(e.attrs.value)) {
+              angular.element(e.relatedTarget).addClass('invalid');
+              invalidcount++;
+            }
+            checkButtons();
+            checkPlaceholder();
+          })
+          .on('tokenfield:edittoken', function(e) {
+            if (!validateEmail(e.attrs.value)) {
+              invalidcount--;
+            }
+          })
+          .on('tokenfield:removetoken', function(e) {
+            if (!validateEmail(e.attrs.value)) {
+              invalidcount--;
+            }
+            checkButtons();
+            checkPlaceholder();
+          });
+
+        angular.element('#usersfield-tokenfield').css('width','100%');
+      };
 
       var getUsersList = function() {
         return $window.addressparser.parse(angular.element('#usersfield').tokenfield('getTokensList'));
@@ -120,6 +125,10 @@ angular.module('Core')
 
       $scope.isAddEnabled = function() {
         return Authinfo.isAddUserEnabled();
+      };
+
+      $scope.isEntitleEnabled = function() {
+        return Authinfo.isEntitleUserEnabled();
       };
 
       $scope.addUsers = function() {

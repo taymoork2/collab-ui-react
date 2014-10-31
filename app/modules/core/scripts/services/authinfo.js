@@ -9,6 +9,7 @@ angular.module('Core')
         'orgname': null,
         'orgid': null,
         'addUserEnabled': null,
+        'entitleUserEnabled': null,
         'entitlements': null,
         'services': null,
         'roles': null,
@@ -92,6 +93,7 @@ angular.module('Core')
           authData.orgname = data.orgName;
           authData.orgid = data.orgId;
           authData.addUserEnabled = data.addUserEnabled;
+          authData.entitleUserEnabled = data.entitleUserEnabled;
           authData.entitlements = data.entitlements;
           authData.services = data.services;
           authData.roles = data.roles;
@@ -107,6 +109,7 @@ angular.module('Core')
           authData.orgname = null;
           authData.orgid = null;
           authData.addUserEnabled = null;
+          authData.entitleUserEnabled = null;
           authData.entitlements = null;
           authData.services = null;
           authData.tabs = [];
@@ -132,6 +135,10 @@ angular.module('Core')
 
         isAddUserEnabled: function() {
           return authData.addUserEnabled;
+        },
+
+        isEntitleUserEnabled: function() {
+          return authData.entitleUserEnabled;
         },
 
         getServices: function() {

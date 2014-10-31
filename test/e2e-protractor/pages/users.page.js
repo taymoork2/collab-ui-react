@@ -6,7 +6,7 @@ var UsersPage = function() {
   this.searchField = element(by.css('.search-form input'));
 
   this.listPanel = element(by.id('userslistpanel'));
-  this.managePanel = element(by.id('manageUsersPanel'));
+  this.manageDialog = element(by.id('modalContent'));
   this.squaredPanel = element(by.id('conversations-link'));
   this.entitlementPanel = element(by.id('entitlementPanel'));
   this.huronPanel = element(by.id('huronPanel'));
@@ -16,7 +16,7 @@ var UsersPage = function() {
   this.previewName = element(by.id('name-preview'));
 
   this.addUsers = element(by.id('addUsers'));
-  this.addUsersField = element(by.id('usersfield'));
+  this.addUsersField = element(by.id('usersfield-tokenfield'));
   this.closeAddUsers = element(by.id('closeAddUser'));
   this.invalid = element(by.css('.invalid'));
   this.close = element(by.css('.close'));
@@ -36,8 +36,11 @@ var UsersPage = function() {
   this.inviteButton = element(by.id('btnInvite'));
   this.entitleButton = element(by.id('btnEntitle'));
   this.addButton = element(by.id('btnAdd'));
+
   this.cancelButton = element(by.id('btn-cancel'));
   this.saveButton = element(by.id('btn-save'));
+
+  this.clearButton = element(by.id('btnCancel'));
 
   this.currentPage = element(by.css('.pagination-current a'));
   this.queryCount = element(by.binding('totalResults'));

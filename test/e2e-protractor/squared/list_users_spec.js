@@ -95,87 +95,11 @@ describe('List users flow', function() {
     });
   });
 
-  // // Add User
-  // describe('Add User', function() {
-  //   it('click on invite subtab should show manage users', function() {
-  //     users.addUsers.click();
-  //     expect(users.managePanel.isDisplayed()).toBeTruthy();
-  //     expect(users.addUsersField.isDisplayed()).toBeTruthy();
-  //     //This button is now covered by another <ins> element.
-  //     //expect(element(by.id('btn_callInit')).isDisplayed()).toEqual(true);
-  //     expect(users.addButton.isDisplayed()).toBeTruthy();
-  //   });
-
-  //   it('should add user successfully and increase user count', function() {
-  //     inputEmail = utils.randomTestEmail();
-
-  //     users.addUsersField.clear();
-  //     users.addUsersField.sendKeys(inputEmail);
-  //     users.addUsersField.sendKeys(protractor.Key.ENTER);
-  //     users.messengerCheckBox.click();
-  //     users.addButton.click();
-  //     notifications.assertSuccess(inputEmail, 'added successfully');
-  //     users.closeAddUsers.click();
-  //     browser.sleep(3000);
-
-  //     users.search(inputEmail);
-  //     users.userListEnts.then(function(cell) {
-  //       expect(cell[0].getText()).toContain(inputEmail);
-  //       cell[0].click();
-  //     });
-  //     browser.sleep(3000);
-  //     expect(users.previewPanel.isDisplayed()).toBeTruthy();
-  //     expect(users.previewName.isDisplayed()).toBeTruthy();
-
-  //     users.closePreview.click();
-  //   });
-  // });
-
-  // /* UNCOMMENT WHEN BACKEND IS PUSHED TO PROD */
-  // //Update entitlements
-  // describe('Updating entitlements', function() {
-  //   it('should display initial entitlements from newly added user', function() {
-  //     users.search(inputEmail);
-  //     users.userListEnts.then(function(cell) {
-  //       expect(cell[0].getText()).toContain(inputEmail);
-  //       cell[0].click();
-  //     });
-  //     browser.sleep(3000); //TODO fix this - animation should be resolved by angular
-  //     expect(users.squaredPanel.isDisplayed()).toBeTruthy();
-  //     users.squaredPanel.click();
-  //     browser.sleep(3000); //TODO fix this - animation should be resolved by angular
-
-  //     users.checkBoxEnts.then(function(items) {
-  //       expect(items.length).toBe(9);
-  //     });
-
-  //     expect(utils.hasClass(users.messengerCheckBox.element(by.css('.checkboxValue')), 'checked')).toBe(true);
-  //     expect(utils.hasClass(users.squaredCheckBox.element(by.css('.checkboxValue')), 'checked')).toBe(true);
-
-  //     users.fusionCheckBox.click();
-  //     users.saveButton.click();
-
-  //     notifications.assertSuccess(inputEmail, 'updated successfully');
-
-  //     users.closeDetails.click();
-  //   });
-  // });
-
   describe('Exporting to CSV', function() {
     it('should display the CSV export button', function() {
       expect(users.exportButton.isDisplayed()).toBeTruthy();
     });
   });
-
-  // describe('Clean up added user', function() {
-  //   it('should delete added user', function() {
-  //     deleteUtils.deleteUser(inputEmail).then(function(message) {
-  //       expect(message).toEqual(200);
-  //     }, function(data) {
-  //       expect(data.status).toEqual(200);
-  //     });
-  //   });
-  // });
 
   it('should log out', function() {
     navigation.logout();

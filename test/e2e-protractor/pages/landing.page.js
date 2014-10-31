@@ -1,6 +1,6 @@
 'use strict';
 /* global element */
-/* global by */
+/* global by, $ */
 
 var LandingPage = function() {
   this.packages = element(by.css('.packages'));
@@ -29,14 +29,12 @@ var LandingPage = function() {
   this.quickSetupNextButton = element(by.buttonText('Next'));
   this.advancedSetupButton = element(by.id('btnAdvSetup'));
   this.enableServiceEntitlement = element(by.id('chk_invite'));
-
-  this.quickLinks = element.all(by.repeater('item in links'));
-
-  this.getQuickLinks = function() {
-    return this.quickLinks.then(function(links){
-      return links.length;
-    });
-  };
+  
+  this.addUserQuickLink = element(by.id('addUserQuickLink'));
+  this.installDeviceQuickLink = element(by.id('installDeviceQuickLink'));
+  this.installDeviceSharedSpaceQuickLink = element(by.id('installDeviceSharedSpaceQuickLink'));
+  this.autoAttendantQuickLink = element(by.id('autoAttendantQuickLink'));
+  this.deviceLogsQuickLink = element(by.id('deviceLogsQuickLink'));
 };
 
 module.exports = LandingPage;

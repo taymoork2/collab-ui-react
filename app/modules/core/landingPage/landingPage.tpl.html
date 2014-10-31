@@ -95,7 +95,12 @@
         <section class="quick-links col-sm-4 col-md-12" ng-controller="QuikLinksCtrl">
           <h4>Quick Links</h4>
           <div class="list-group">
-            <a ng-repeat="item in links" ng-href="{{item.link}}" ng-if="item.show" class="list-group-item">{{item.text}}</a>
+            
+            <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" ng-if="isPageActive('users')" class="list-group-item">Add Users</a>
+            <a id="installDeviceQuickLink" ng-if="false" class="list-group-item">Install a Device for a User</a>
+            <a id="installDeviceSharedSpaceQuickLink" ng-href="#/spaces" ng-if="isPageActive('spaces')" class="list-group-item">Install a Devices into a Shared Space</a>
+            <a id="autoAttendantQuickLink" ng-if="false" class="list-group-item">Configure an Auto Attendant</a>
+            <a id="deviceLogsQuickLink" ng-href="#/support" ng-if="isPageActive('support')" class="list-group-item">Search device logs</a>
           </div>
         </section>
       </div>

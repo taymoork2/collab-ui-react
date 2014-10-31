@@ -89,6 +89,7 @@ angular
           url: '/users',
           templateUrl: 'modules/core/users/userList/userList.tpl.html',
           controller: 'ListUsersCtrl',
+          params:  { showAddUsers: {} }
         })
         .state('users.list.preview', {
           templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
@@ -105,11 +106,6 @@ angular
         })
         .state('users.list.preview.snr', {
           template: '<div single-number-reach-info></div>'
-        })
-        .state('users.add', {
-          url: '/users/add',
-          templateUrl: 'modules/core/users/userAdd/userAdd.tpl.html',
-          controller: 'UsersCtrl'
         })
         .state('orgs', {
           url: '/orgs',

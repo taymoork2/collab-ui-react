@@ -16,12 +16,12 @@
     "lastnameHeader": "Last Name",
     "emailHeader": "Email",
     "actionHeader": "Actions",
-    "invite": "Invite",
+    "invite": "Send Invites",
     "addedHeader": "ADDED",
     "statusHeader": "STATUS/TOOLS",
     "modify": "Modify",
     "existingUsers": "Existing Users",
-    "userInput": "Enter email addresses separated by commas or semi-colons",
+    "userInput": "Enter one or more email addresses separated by commas",
     "active": "<span class='glyphicon glyphicon-ok'></span>",
     "inactive": "",
     "validEmailInput": "Please enter valid user email(s).",
@@ -33,7 +33,10 @@
     "forbidden": "{{email}} cannot be invited to service",
     "errInvite": "Unable to process your invitation. Status: {{status}}.",
     "exportUsers": "export Users",
-    "moreOptions": "More Actions"
+    "moreOptions": "More Actions",
+    "inviteUsers": "Invite Users",
+    "cancel": "Cancel",
+    "addUsersDesc": "Enter the email addresses of the people in your company that will recieve Collaboration Services. They will receive an email invitation to sign up."
   },
   "usersPreview": {
     "groupPreview": "Group:",
