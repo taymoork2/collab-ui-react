@@ -3,7 +3,7 @@
 
 angular.module('ListUsers', [])
   .controller('ListUsersCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Authinfo',
-    function($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Authinfo) {
+    function ($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Authinfo) {
 
       function Feature(name, state) {
         this.entitlementName = name;
@@ -34,11 +34,11 @@ angular.module('ListUsers', [])
       //Notification.init($scope);
       $scope.popup = Notification.popup;
 
-      var getUserList = function() {
+      var getUserList = function () {
         //clear currentUser if a new search begins
         $scope.currentUser = null;
         var startIndex = $scope.pagination.page * usersperpage + 1;
-        UserListService.listUsers(startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function(data, status, searchStr) {
+        UserListService.listUsers(startIndex, usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
           if (data.success) {
             if ($rootScope.searchStr === searchStr) {
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
@@ -57,23 +57,23 @@ angular.module('ListUsers', [])
       getUserList();
 
       //Search users based on search criteria
-      $scope.$on('SEARCH_ITEM', function(e, str) {
+      $scope.$on('SEARCH_ITEM', function (e, str) {
         Log.debug('got broadcast for search:' + str);
         $scope.pagination.page = 0;
         getUserList();
       });
 
       //list users when we have authinfo data back, or new users have been added/activated
-      $scope.$on('AuthinfoUpdated', function() {
+      $scope.$on('AuthinfoUpdated', function () {
         getUserList();
       });
 
       //list is updated by adding or entitling a user
-      $scope.$on('USER_LIST_UPDATED', function() {
+      $scope.$on('USER_LIST_UPDATED', function () {
         getUserList();
       });
 
-      $scope.getEntitlementState = function(user) {
+      $scope.getEntitlementState = function (user) {
         if (!user.entitlements || user.entitlements.length === 0) {
           return false;
         } else {
@@ -82,12 +82,12 @@ angular.module('ListUsers', [])
 
       };
 
-      $scope.changeEntitlement = function(user) {
+      $scope.changeEntitlement = function (user) {
         Log.debug('Entitling user.', user);
         angular.element('#btn-save').button('loading');
         Userservice.updateUsers([{
           'address': user.userName
-        }], getUserEntitlementList($scope.entitlements), function(data) {
+        }], getUserEntitlementList($scope.entitlements), function (data) {
           var entitleResult = {
             msg: null,
             type: 'null'
@@ -127,7 +127,7 @@ angular.module('ListUsers', [])
         });
       };
 
-      var getUserEntitlementList = function(entitlements) {
+      var getUserEntitlementList = function (entitlements) {
         var entList = [];
         for (var i = 0; i < $rootScope.services.length; i++) {
           var service = $rootScope.services[i].sqService;
@@ -137,54 +137,54 @@ angular.module('ListUsers', [])
       };
 
       //sorting function
-      $scope.setSort = function(type) {
+      $scope.setSort = function (type) {
         switch (type) {
-          case 'name':
-            if ($scope.sort.by === 'userName') {
-              $scope.sort.by = 'name';
+        case 'name':
+          if ($scope.sort.by === 'userName') {
+            $scope.sort.by = 'name';
+            $scope.sort.order = 'ascending';
+            $scope.sort.icon.name = 'fa-sort-asc';
+            $scope.sort.icon.username = 'fa-sort';
+            getUserList();
+          } else if ($scope.sort.by === 'name') {
+            if ($scope.sort.order === 'ascending') {
+              $scope.sort.order = 'descending';
+              $scope.sort.icon.name = 'fa-sort-desc';
+              getUserList();
+            } else {
               $scope.sort.order = 'ascending';
               $scope.sort.icon.name = 'fa-sort-asc';
-              $scope.sort.icon.username = 'fa-sort';
               getUserList();
-            } else if ($scope.sort.by === 'name') {
-              if ($scope.sort.order === 'ascending') {
-                $scope.sort.order = 'descending';
-                $scope.sort.icon.name = 'fa-sort-desc';
-                getUserList();
-              } else {
-                $scope.sort.order = 'ascending';
-                $scope.sort.icon.name = 'fa-sort-asc';
-                getUserList();
-              }
             }
-            break;
+          }
+          break;
 
-          case 'username':
-            if ($scope.sort.by === 'name') {
-              $scope.sort.by = 'userName';
+        case 'username':
+          if ($scope.sort.by === 'name') {
+            $scope.sort.by = 'userName';
+            $scope.sort.order = 'ascending';
+            $scope.sort.icon.username = 'fa-sort-asc';
+            $scope.sort.icon.name = 'fa-sort';
+            getUserList();
+          } else if ($scope.sort.by === 'userName') {
+            if ($scope.sort.order === 'ascending') {
+              $scope.sort.order = 'descending';
+              $scope.sort.icon.username = 'fa-sort-desc';
+              getUserList();
+            } else {
               $scope.sort.order = 'ascending';
               $scope.sort.icon.username = 'fa-sort-asc';
-              $scope.sort.icon.name = 'fa-sort';
               getUserList();
-            } else if ($scope.sort.by === 'userName') {
-              if ($scope.sort.order === 'ascending') {
-                $scope.sort.order = 'descending';
-                $scope.sort.icon.username = 'fa-sort-desc';
-                getUserList();
-              } else {
-                $scope.sort.order = 'ascending';
-                $scope.sort.icon.username = 'fa-sort-asc';
-                getUserList();
-              }
             }
-            break;
+          }
+          break;
 
-          default:
-            Log.debug('Sort type not recognized.');
+        default:
+          Log.debug('Sort type not recognized.');
         }
       };
 
-      $scope.getStatusIcon = function(status) {
+      $scope.getStatusIcon = function (status) {
         if (status === 'active') {
           return $filter('translate')('usersPage.active');
         } else {
@@ -192,7 +192,7 @@ angular.module('ListUsers', [])
         }
       };
 
-      $scope.showUserDetails = function(user) {
+      $scope.showUserDetails = function (user) {
         //remove selected class on previous user
         if ($scope.currentUser) {
           angular.element('#' + $scope.currentUser.id).removeClass('selected');
@@ -215,7 +215,7 @@ angular.module('ListUsers', [])
         //User profile
         $scope.photoPath = null;
         $scope.orgName = Authinfo.getOrgName();
-        Userservice.getUser($scope.currentUser.id, function(data, status) {
+        Userservice.getUser($scope.currentUser.id, function (data, status) {
           if (data.success) {
             if (data.photos) {
               for (var i in data.photos) {
@@ -231,7 +231,7 @@ angular.module('ListUsers', [])
 
       };
 
-      $scope.updateUser = function() {
+      $scope.updateUser = function () {
         angular.element('#btn-save').button('loading');
         var userData = {
           'schemas': Config.scimSchemas,
@@ -245,7 +245,7 @@ angular.module('ListUsers', [])
         Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
         Log.debug(userData);
 
-        Userservice.updateUserProfile($scope.currentUser.id, userData, function(data, status) {
+        Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
           if (data.success) {
             var successMessage = [];
             successMessage.push($filter('translate')('profilePage.success'));
@@ -262,7 +262,7 @@ angular.module('ListUsers', [])
         });
       };
 
-      $scope.getServiceName = function(service) {
+      $scope.getServiceName = function (service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
           if (svc.sqService === service) {
@@ -271,7 +271,7 @@ angular.module('ListUsers', [])
         }
       };
 
-      $scope.$on('PAGINATION_UPDATED', function() {
+      $scope.$on('PAGINATION_UPDATED', function () {
         $scope.currentUser = null;
         $scope.page = $scope.pagination.page + 1;
         $('.pagination-current a').html($scope.page);
@@ -280,9 +280,9 @@ angular.module('ListUsers', [])
       $scope.exportBtn = {
         disabled: false
       };
-      $scope.exportCSV = function() {
+      $scope.exportCSV = function () {
         var promise = UserListService.exportCSV($scope);
-        promise.then(null, function(error) {
+        promise.then(null, function (error) {
           Notification.notify(Array.new(error), 'error');
         });
 
@@ -293,18 +293,17 @@ angular.module('ListUsers', [])
         $scope.exportBtn.disabled = true;
       }
 
-      $scope.$on('EXPORT_FINISHED', function() {
+      $scope.$on('EXPORT_FINISHED', function () {
         $scope.exportBtn.disabled = false;
       });
 
     }
   ])
-  .directive('userList', function() {
+  .directive('userList', function () {
     return {
       restrict: 'A',
       templateUrl: 'modules/squared/scripts/directives/views/listusers.html',
-      link: function(scope, elem, attrs) {
-
+      link: function (scope, elem, attrs) {
 
       }
     };

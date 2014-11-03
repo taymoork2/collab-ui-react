@@ -4,7 +4,7 @@
 
 angular.module('Squared')
   .controller('entitlementDialogCtrl', ['$scope', '$modalInstance', 'data', '$rootScope',
-    function($scope, $modalInstance, data, $rootScope) {
+    function ($scope, $modalInstance, data, $rootScope) {
       $scope.username = data.userName;
       $scope.entitlements = {};
       for (var i = 0; i < $rootScope.services.length; i++) {
@@ -17,21 +17,21 @@ angular.module('Squared')
         }
       }
 
-      $scope.cancel = function() {
+      $scope.cancel = function () {
         $modalInstance.dismiss('canceled');
       };
 
-      $scope.save = function() {
+      $scope.save = function () {
         $modalInstance.close($scope.entitlements);
       };
 
-      $scope.validateEntitlements = function(element) {
+      $scope.validateEntitlements = function (element) {
         var elementName = $(element).attr('name');
         //Unchecks all entitlements if webexSquared is unchecked.
         if (elementName === 'webExSquared' && $scope.entitlements.webExSquared === false) {
           for (var entitlement in $scope.entitlements) {
             if (entitlement !== 'webExSquared') {
-              $('input[name='+entitlement+']').iCheck('uncheck');
+              $('input[name=' + entitlement + ']').iCheck('uncheck');
             }
           }
         }
@@ -45,8 +45,7 @@ angular.module('Squared')
       $scope.getServiceName = function (service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
-          if (svc.sqService === service)
-          {
+          if (svc.sqService === service) {
             return svc.displayName;
           }
         }

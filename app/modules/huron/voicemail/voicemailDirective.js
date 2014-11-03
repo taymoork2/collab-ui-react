@@ -3,7 +3,8 @@
 angular.module('Huron')
 
 .directive('voicemailInfo', [
-  function() {
+
+  function () {
     return {
       controller: 'VoicemailInfoCtrl',
       restrict: 'EA',

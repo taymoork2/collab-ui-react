@@ -2,7 +2,7 @@
 
 angular.module('Core')
   .controller('WizardModalCtrl', ['$scope', 'close', 'Log', 'Notification', '$translate',
-    function($scope, close, Log, Notification, $translate) {
+    function ($scope, close, Log, Notification, $translate) {
 
       //tabs state definition
       $scope.tabs = {
@@ -24,11 +24,11 @@ angular.module('Core')
         syncStatus: false
       };
 
-      $scope.closeModal = function(result){
-        close(result,500);
+      $scope.closeModal = function (result) {
+        close(result, 500);
       };
 
-      $scope.changeTab = function(tab) {
+      $scope.changeTab = function (tab) {
         for (var idx in $scope.tabs) {
           $scope.tabs[idx] = false;
         }
@@ -36,26 +36,26 @@ angular.module('Core')
         $scope.changeStep('initial');
       };
 
-      $scope.changeStep = function(step) {
+      $scope.changeStep = function (step) {
         for (var idx in $scope.steps) {
           $scope.steps[idx] = false;
         }
         $scope.steps[step] = true;
       };
 
-      $scope.evaluateStep = function(currentStep, tab) {
-        if(tab !== undefined) {
+      $scope.evaluateStep = function (currentStep, tab) {
+        if (tab !== undefined) {
           //enterprise settings selection logic
-          if(currentStep==='initial'&&tab==='enterpriseSettings') {
-            if($scope.ssoChoice.value===0){
+          if (currentStep === 'initial' && tab === 'enterpriseSettings') {
+            if ($scope.ssoChoice.value === 0) {
               $scope.changeStep('importIdpData');
             } else {
               $scope.changeTab('addUsers');
             }
           }
           //add users selection logic
-          if(currentStep==='initial'&&tab==='addUsers') {
-            if($scope.syncChoice.value===0){
+          if (currentStep === 'initial' && tab === 'addUsers') {
+            if ($scope.syncChoice.value === 0) {
               $scope.changeStep('manualEntry');
             } else {
               $scope.changeStep('domainEntry');

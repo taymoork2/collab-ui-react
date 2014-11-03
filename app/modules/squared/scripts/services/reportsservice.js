@@ -2,7 +2,7 @@
 
 angular.module('Squared')
   .service('ReportsService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Log', 'Authinfo', 'Auth',
-    function($http, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
+    function ($http, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
 
       var token = Storage.get('accessToken');
       var callMetricsUrl = Config.getAdminServiceUrl() + 'reports/stats/callUsage';
@@ -14,76 +14,66 @@ angular.module('Squared')
       var entitlementCount = Config.getAdminServiceUrl() + 'reports/counts/entitlements';
       var contentSharedCount = Config.getAdminServiceUrl() + 'reports/counts/contentShared';
 
-
       var urls = {
-        'callUsage':callMetricsUrl,
-        'activeUserCount':activeUsersUrl,
-        'averageCallCount':averageCallCount,
-        'entitlementCount':entitlementCount,
-        'contentSharedCount':contentSharedCount
+        'callUsage': callMetricsUrl,
+        'activeUserCount': activeUsersUrl,
+        'averageCallCount': averageCallCount,
+        'entitlementCount': entitlementCount,
+        'contentSharedCount': contentSharedCount
       };
 
-      var buildUrl = function(metricType, params) {
+      var buildUrl = function (metricType, params) {
         var metricUrl = '';
-        if (urls[metricType])
-        {
+        if (urls[metricType]) {
           metricUrl = urls[metricType];
-        }
-        else
-        {
+        } else {
           metricUrl = timeChartUrl + metricType;
         }
 
-        if (params)
-        {
+        if (params) {
           metricUrl += '?';
         }
-        if (params.intervalCount)
-        {
+        if (params.intervalCount) {
           metricUrl += '&intervalCount=' + params.intervalCount;
         }
-        if (params.intervalType)
-        {
+        if (params.intervalType) {
           metricUrl += '&intervalType=' + params.intervalType;
         }
-        if (params.spanCount)
-        {
+        if (params.spanCount) {
           metricUrl += '&spanCount=' + params.spanCount;
         }
-        if (params.spanType)
-        {
+        if (params.spanType) {
           metricUrl += '&spanType=' + params.spanType;
         }
-        if (params.cache)
-        {
+        if (params.cache) {
           metricUrl += '&cache=' + params.cache;
         }
 
         return metricUrl;
       };
 
-      var sendChartResponse = function(data, status, metricType) {
+      var sendChartResponse = function (data, status, metricType) {
         var response = {
           'data': data,
           'status': status
         };
-        $rootScope.$broadcast(metricType +'Loaded', response);
+        $rootScope.$broadcast(metricType + 'Loaded', response);
       };
 
       return {
 
-        getUsageMetrics: function(metricType, params, callback) {
+        getUsageMetrics: function (metricType, params, callback) {
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
 
           var metricUrl = buildUrl(metricType, params);
 
           return $http.get(metricUrl)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               Log.debug('Callback for ' + metricType + ' for org=' + Authinfo.getOrgId());
               sendChartResponse(data, status, metricType);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               data.success = false;
               data.status = status;
               data.errorMsg = data;
@@ -92,7 +82,7 @@ angular.module('Squared')
             });
         },
 
-        getPartnerMetrics: function(useCache) {
+        getPartnerMetrics: function (useCache) {
           var countParam = {
             'intervalCount': 1,
             'intervalType': 'week',
@@ -107,19 +97,20 @@ angular.module('Squared')
           };
 
           var partnerCharts = ['activeUsers', 'avgCallsPerUser', 'entitlements', 'contentShared',
-          'contentShareSizes', 'activeUserCount', 'averageCallCount', 'entitlementCount', 'contentSharedCount',
-          'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations'];
+            'contentShareSizes', 'activeUserCount', 'averageCallCount', 'entitlementCount', 'contentSharedCount',
+            'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations'
+          ];
 
-          for(var chart in partnerCharts) {
+          for (var chart in partnerCharts) {
             this.getUsageMetrics(partnerCharts[chart], chartParams);
           }
         },
 
-        getAllMetrics :function(useCache){
+        getAllMetrics: function (useCache) {
           var params = {
             'intervalCount': 1,
             'intervalType': 'month',
-            'cache' : useCache
+            'cache': useCache
           };
 
           this.getUsageMetrics('activeUserCount', params);
@@ -129,29 +120,30 @@ angular.module('Squared')
             'intervalType': 'month',
             'spanCount': 1,
             'spanType': 'week',
-            'cache' : useCache
+            'cache': useCache
           };
 
           var customerCharts = ['calls', 'conversations', 'contentShareSizes', 'contentShared',
-          'activeUsers', 'entitlements', 'avgCallsPerUser', 'avgConversations', 'convOneOnOne', 'convGroup',
-          'calls', 'callsAvgDuration'];
+            'activeUsers', 'entitlements', 'avgCallsPerUser', 'avgConversations', 'convOneOnOne', 'convGroup',
+            'calls', 'callsAvgDuration'
+          ];
 
-          for(var chart in customerCharts) {
+          for (var chart in customerCharts) {
             this.getUsageMetrics(customerCharts[chart], params);
           }
         },
 
-        getLogInfo: function(locusId, startTime, callback) {
+        getLogInfo: function (locusId, startTime, callback) {
           var logInfoUrl = logInfoBaseUrl + locusId + '?locusCallStartTime=' + startTime;
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.get(logInfoUrl)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               Log.debug('Retrieved call info for : ' + locusId + ' startTime : ' + startTime);
               callback(data, status);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -159,14 +151,14 @@ angular.module('Squared')
             });
         },
 
-        healthMonitor: function(callback) {
+        healthMonitor: function (callback) {
           $http.get(healthUrl)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               Log.debug('Callback for healthMonitor');
               callback(data, status);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               data.success = false;
               data.status = status;
               data.errorMsg = data;

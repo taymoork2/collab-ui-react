@@ -2,8 +2,9 @@
 
 angular.module('Huron')
 
-.directive('callForwardInfo', [
-  function() {
+.directive('hnCallForwardInfo', [
+
+  function () {
     return {
       controller: 'callForwardInfoCtrl',
       restrict: 'EA',

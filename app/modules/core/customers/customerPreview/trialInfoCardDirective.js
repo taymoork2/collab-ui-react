@@ -2,14 +2,14 @@
 
 angular.module('Core')
 
-.directive('trialInfoCard', [
+.directive('crTrialInfoCard', [
 
-  function() {
+  function () {
     return {
       restrict: 'EA',
       replace: true,
       templateUrl: 'modules/core/customers/customerPreview/trialInfoCard.tpl.html',
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
 
       }
     };

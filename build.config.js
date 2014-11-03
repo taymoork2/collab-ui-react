@@ -10,14 +10,26 @@ module.exports = {
   app_dir: 'app',
 
   app_files: {
-    js: ['modules/**/*.js', 'scripts/**/*.js', '!**/*.spec.js', '!bower_components/**/*.js'],
-    jsunit: ['test/**/spec/**/*.js', '!bower_components/**/*.js'],
-    json: ['**/*.json', '!bower_components/**/*.json'],
+    js: [
+      'modules/**/*.js',
+      'scripts/**/*.js',
+      '!**/*.spec.js',
+      '!bower_components/**/*.js'
+    ],
+    jsunit: [
+      'test/**/spec/**/*.js',
+      '!bower_components/**/*.js'
+    ],
+    json: [
+      '**/*.json',
+      '!bower_components/**/*.json'
+    ],
 
     atpl: ['modules/**/*.html'],
 
     html: ['index.html'],
     less: ['styles/app.less']
+
   },
 
   test_files: {
@@ -77,5 +89,36 @@ module.exports = {
       'bower_components/bootstrap-cisco/dist/images/*'
     ]
   },
+
+  html_lint: {
+    customtags: [
+      'cs-*',
+      'cr-*',
+      'hn-*',
+      'hs-*',
+      'progressbar'
+    ],
+    customattrs: [
+      'cs-*',
+      'cr-*',
+      'hn-*',
+      'hs-*',
+      'translate',
+      'gridscrollbar',
+      'filename',
+      'windowsize',
+      'progressbar',
+      'navstyle',
+      'headertitle'
+    ],
+    relaxerror: [
+      'for attribute translate',
+      'Attribute href without an explicit value seen. The attribute may be dropped by IE7.',
+      'Empty heading.',
+      'Element style not allowed as child of element body in this context.',
+      'Element img is missing required attribute src.',
+      'Element ul not allowed as child of element button in this context.'
+    ]
+  }
 
 };

@@ -2,14 +2,14 @@
 
 angular.module('Core')
   .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth', 'Utils',
-    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils) {
+    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils) {
 
       var userUrl = Config.getAdminServiceUrl();
       var token = Storage.get('accessToken');
 
       return {
 
-        updateUsers: function(usersDataArray, entitlements, callback) {
+        updateUsers: function (usersDataArray, entitlements, callback) {
           var userData = {
             'users': []
           };
@@ -27,15 +27,15 @@ angular.module('Core')
           if (userData.users.length > 0) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
             $http({
-              method: 'PATCH',
-              url: userUrl + 'users',
-              data: userData
-            })
-              .success(function(data, status) {
+                method: 'PATCH',
+                url: userUrl + 'users',
+                data: userData
+              })
+              .success(function (data, status) {
                 data.success = true;
                 callback(data, status);
               })
-              .error(function(data, status) {
+              .error(function (data, status) {
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -45,7 +45,7 @@ angular.module('Core')
 
         },
 
-        addUsers: function(usersDataArray, entitlements, callback) {
+        addUsers: function (usersDataArray, entitlements, callback) {
           var userData = {
             'users': []
           };
@@ -56,7 +56,7 @@ angular.module('Core')
             var user = {
               'email': null,
               'name': null,
-              'userEntitlements' : entitlements
+              'userEntitlements': entitlements
             };
             if (userEmail.length > 0) {
               user.email = userEmail;
@@ -70,11 +70,11 @@ angular.module('Core')
           if (userData.users.length > 0) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
             $http.post(userUrl + 'users', userData)
-              .success(function(data, status) {
+              .success(function (data, status) {
                 data.success = true;
                 callback(data, status);
               })
-              .error(function(data, status) {
+              .error(function (data, status) {
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -85,16 +85,16 @@ angular.module('Core')
           }
         },
 
-        getUser: function(userid, callback) {
+        getUser: function (userid, callback) {
           var scimUrl = Config.scimUrl + '/' + userid;
           var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.get(userUrl)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               callback(data, status);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -102,22 +102,22 @@ angular.module('Core')
             });
         },
 
-        updateUserProfile: function(userid, userData, callback) {
+        updateUserProfile: function (userid, userData, callback) {
           var scimUrl = Config.scimUrl + '/' + userid;
           scimUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
 
           if (userData) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
             $http({
-              method: 'PATCH',
-              url: scimUrl,
-              data: userData
-            })
-              .success(function(data, status) {
+                method: 'PATCH',
+                url: scimUrl,
+                data: userData
+              })
+              .success(function (data, status) {
                 data.success = true;
                 callback(data, status);
               })
-              .error(function(data, status) {
+              .error(function (data, status) {
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -126,7 +126,7 @@ angular.module('Core')
           }
         },
 
-        inviteUsers: function(usersDataArray, callback) {
+        inviteUsers: function (usersDataArray, callback) {
           var userData = {
             'inviteList': []
           };
@@ -146,11 +146,11 @@ angular.module('Core')
           if (userData.inviteList.length > 0) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
             $http.post(userUrl + 'invitations', userData)
-              .success(function(data, status) {
+              .success(function (data, status) {
                 data.success = true;
                 callback(data, status);
               })
-              .error(function(data, status) {
+              .error(function (data, status) {
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -161,17 +161,17 @@ angular.module('Core')
           }
         },
 
-        sendEmail: function(userEmail, adminEmail, callback) {
+        sendEmail: function (userEmail, adminEmail, callback) {
           var requestBody = {
             'recipientEmail': userEmail,
             'adminEmail': adminEmail
           };
           $http.post(userUrl + 'user/mail/provisioning', requestBody)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               callback(data, status);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               data.success = false;
               data.status = status;
               callback(data, status);

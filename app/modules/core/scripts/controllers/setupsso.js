@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('setupSSODialogCtrl', ['$scope',  'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
-    function($scope, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
+  .controller('setupSSODialogCtrl', ['$scope', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
+    function ($scope, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
 
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
@@ -16,8 +16,8 @@ angular.module('Core')
       //   $modalInstance.dismiss('canceled');
       // };
 
-      $scope.setFile = function(element) {
-        $scope.$apply(function($scope) {
+      $scope.setFile = function (element) {
+        $scope.$apply(function ($scope) {
           $scope.file = element.files[0];
           $scope.filename = element.files[0].name;
         });
@@ -38,22 +38,22 @@ angular.module('Core')
 
       $scope.importRemoteIdp = function () {
         var metaUrl = null;
-        SSOService.getMetaInfo(function(data, status) {
+        SSOService.getMetaInfo(function (data, status) {
           if (data.success) {
-            if(data.data.length >0) {
+            if (data.data.length > 0) {
               //check if data already exists for this entityId
               var start = $scope.fileContents.indexOf(strEntityDesc);
-              start = $scope.fileContents.indexOf(strEntityId, start)+10;
+              start = $scope.fileContents.indexOf(strEntityId, start) + 10;
               var end = $scope.fileContents.indexOf(strEntityIdEnd, start);
               var newEntityId = $scope.fileContents.substring(start, end);
-              if(newEntityId.substring(0, 4) === 'http') {
-                for(var datum in data.data) {
-                  if(data.data[datum].entityId === newEntityId) {
+              if (newEntityId.substring(0, 4) === 'http') {
+                for (var datum in data.data) {
+                  if (data.data[datum].entityId === newEntityId) {
                     metaUrl = data.data[datum].url;
                   }
                 }
 
-                if(metaUrl !== null) {
+                if (metaUrl !== null) {
                   patchRemoteIdp(metaUrl);
                 } else {
                   postRemoteIdp();
@@ -75,7 +75,7 @@ angular.module('Core')
       };
 
       var postRemoteIdp = function () {
-        SSOService.importRemoteIdp($scope.fileContents, function(data, status) {
+        SSOService.importRemoteIdp($scope.fileContents, function (data, status) {
           if (data.success) {
             Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
             Notification.notify([$translate.instant('ssoModal.importSuccess', {
@@ -91,7 +91,7 @@ angular.module('Core')
       };
 
       var patchRemoteIdp = function (metaUrl) {
-        SSOService.patchRemoteIdp(metaUrl, $scope.fileContents, function(data, status) {
+        SSOService.patchRemoteIdp(metaUrl, $scope.fileContents, function (data, status) {
           if (data.success) {
             Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
             Notification.notify([$translate.instant('ssoModal.importSuccess', {
@@ -106,14 +106,14 @@ angular.module('Core')
         });
       };
 
-      $scope.openTest = function() {
+      $scope.openTest = function () {
         var entityId = null;
-        SSOService.getMetaInfo(function(data, status) {
+        SSOService.getMetaInfo(function (data, status) {
           if (data.success) {
-            if(data.data.length >0) {
+            if (data.data.length > 0) {
               entityId = data.data[0].entityId;
             }
-            if(entityId !== null) {
+            if (entityId !== null) {
               var testUrl = Config.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&requestBinding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
               $window.open(testUrl);
             } else {
@@ -132,13 +132,15 @@ angular.module('Core')
 
       };
 
-      $scope.downloadHostedSp = function() {
-        SSOService.downloadHostedSp(function(data, status) {
+      $scope.downloadHostedSp = function () {
+        SSOService.downloadHostedSp(function (data, status) {
           if (data.success) {
             $scope.metaFilename = 'idb-meta-' + Authinfo.getOrgId() + '-SP.xml';
             var content = data.metadataXml;
-            var blob = new Blob([ content ], { type : 'text/xml' });
-            $scope.url = (window.URL || window.webkitURL).createObjectURL( blob );
+            var blob = new Blob([content], {
+              type: 'text/xml'
+            });
+            $scope.url = (window.URL || window.webkitURL).createObjectURL(blob);
           } else {
             Log.debug('Failed to Export Identity Broker SP Metadata. Status: ' + status);
             Notification.notify([$translate.instant('ssoModal.downloadMetaFailed', {
@@ -148,7 +150,7 @@ angular.module('Core')
         });
       };
 
-      $scope.enableSSO = function() {
+      $scope.enableSSO = function () {
         //need to set enableSSO flag in CI
         // Notification.notify([$translate.instant('ssoModal.enableSSOSuccess', {
         //   status: status
@@ -158,9 +160,9 @@ angular.module('Core')
       };
     }
   ])
-  .config( [
+  .config([
     '$compileProvider',
-    function( $compileProvider ) {
+    function ($compileProvider) {
       $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|blob):/);
     }
   ]);

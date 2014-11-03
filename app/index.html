@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/png" href="images/logo.png">
     <!-- build:css({.tmp,app}) styles/main.css -->
-    <% styles.forEach( function ( file ) { %>
+    <% styles.forEach( function( file ) { %>
     <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
     <!-- endbuild -->
   </head>
@@ -31,7 +31,7 @@
       ga('send', 'pageview');
     </script>
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <% scripts.forEach( function ( file ) { %>
+    <% scripts.forEach( function( file ) { %>
     <script type="text/javascript" src="<%= file %>"></script><% }); %>
     <!-- endbuild -->
 

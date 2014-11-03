@@ -1,41 +1,49 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('TelephonyInfoCtrl', ['$scope', '$q', '$state','UserDirectoryNumberService', 'UserServiceCommon', 'RemoteDestinationService', 'TelephonyInfoService','Log', 'Config', 'Notification',
-    function($scope, $q, $state, UserDirectoryNumberService, UserServiceCommon, RemoteDestinationService, TelephonyInfoService, Log, Config, Notification) {
+  .controller('TelephonyInfoCtrl', ['$scope', '$q', '$state', 'UserDirectoryNumberService', 'UserServiceCommon', 'RemoteDestinationService', 'TelephonyInfoService', 'Log', 'Config', 'Notification',
+    function ($scope, $q, $state, UserDirectoryNumberService, UserServiceCommon, RemoteDestinationService, TelephonyInfoService, Log, Config, Notification) {
 
       $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
 
-      $scope.$on('telephonyInfoUpdated', function() {
+      $scope.$on('telephonyInfoUpdated', function () {
         $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
       });
 
-      $scope.getUserDnInfo = function(user) {
+      $scope.getUserDnInfo = function (user) {
         var deferred = $q.defer();
-        UserDirectoryNumberService.get({customerId: user.meta.organizationID, userId: user.id},
-          function(data) {
+        UserDirectoryNumberService.get({
+            customerId: user.meta.organizationID,
+            userId: user.id
+          },
+          function (data) {
             deferred.resolve(data);
-          },function(error) {
+          },
+          function (error) {
             Log.debug('getUserDnInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
             deferred.reject(error);
           });
         return deferred.promise;
       };
 
-      $scope.getTelephonyUserInfo = function(user) {
+      $scope.getTelephonyUserInfo = function (user) {
         var deferred = $q.defer();
 
-        UserServiceCommon.get({customerId: user.meta.organizationID, userId: user.id},
-          function(data) {
+        UserServiceCommon.get({
+            customerId: user.meta.organizationID,
+            userId: user.id
+          },
+          function (data) {
             deferred.resolve(data);
-          },function(error) {
+          },
+          function (error) {
             Log.debug('getTelephonyUserInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
             deferred.reject(error);
           });
         return deferred.promise;
       };
 
-      $scope.processTelephonyUserInfo = function(telephonyUserInfo) {
+      $scope.processTelephonyUserInfo = function (telephonyUserInfo) {
         if (telephonyUserInfo) {
           TelephonyInfoService.updateUserServices(telephonyUserInfo.services);
         }
@@ -45,18 +53,18 @@ angular.module('Huron')
         Function to inspect dnUsage from Huron and change the display
         value to what UX team wants.
       **/
-      var getDnType = function(dnUsage) {
+      var getDnType = function (dnUsage) {
         return (dnUsage === 'Primary') ? 'Main' : '';
       };
 
-      $scope.processUserDnInfo = function(userDnInfo) {
+      $scope.processUserDnInfo = function (userDnInfo) {
         if (userDnInfo) {
           var userDnList = [];
           for (var i = 0; i < userDnInfo.length; i++) {
             var userLine = {
               'dnUsage': getDnType(userDnInfo[i].dnUsage),
               'uuid': userDnInfo[i].directoryNumber.uuid,
-              'pattern': userDnInfo[i].directoryNumber.pattern.replace(/\\/g,'')
+              'pattern': userDnInfo[i].directoryNumber.pattern.replace(/\\/g, '')
             };
             userDnList.push(userLine);
           }
@@ -64,23 +72,35 @@ angular.module('Huron')
         }
       };
 
-      $scope.$watch('currentUser', function(newVal, oldVal) {
+      $scope.$watch('currentUser', function (newVal, oldVal) {
         if (newVal) {
           if ($scope.isHuronEnabled()) {
             $scope.getTelephonyUserInfo(newVal)
-              .then(function(response) {$scope.processTelephonyUserInfo(response);})
-              .catch(function(response) {$scope.processTelephonyUserInfo(null);});
+              .then(function (response) {
+                $scope.processTelephonyUserInfo(response);
+              })
+              .catch(function (response) {
+                $scope.processTelephonyUserInfo(null);
+              });
             $scope.getUserDnInfo(newVal)
-              .then(function (response) { $scope.processUserDnInfo(response); })
-              .catch(function(response) { $scope.processUserDnInfo(null); });
+              .then(function (response) {
+                $scope.processUserDnInfo(response);
+              })
+              .catch(function (response) {
+                $scope.processUserDnInfo(null);
+              });
             TelephonyInfoService.getRemoteDestinationInfo(newVal)
-              .then(function(response) {TelephonyInfoService.processRemoteDestinationInfo(response);})
-              .catch(function(response) {TelephonyInfoService.processRemoteDestinationInfo(null);});
+              .then(function (response) {
+                TelephonyInfoService.processRemoteDestinationInfo(response);
+              })
+              .catch(function (response) {
+                TelephonyInfoService.processRemoteDestinationInfo(null);
+              });
           }
         }
       });
 
-      $scope.isHuronEnabled = function() {
+      $scope.isHuronEnabled = function () {
         return isEntitled(Config.entitlements.huron);
       };
 
@@ -89,9 +109,9 @@ angular.module('Huron')
         $state.go('users.list.preview.directorynumber');
       };
 
-      var isEntitled = function(ent) {
+      var isEntitled = function (ent) {
         if ($scope.currentUser && $scope.currentUser.entitlements) {
-          for (var i=0;i<$scope.currentUser.entitlements.length;i++) {
+          for (var i = 0; i < $scope.currentUser.entitlements.length; i++) {
             var svc = $scope.currentUser.entitlements[i];
 
             if (svc === ent) {

@@ -3,11 +3,11 @@
 /*jshint bitwise: false*/
 angular.module('Core')
   .factory('Utils', ['$rootScope', '$location',
-    function($rootScope, $location) {
+    function ($rootScope, $location) {
 
       var Base64 = {
         _keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
-        encode: function(input) {
+        encode: function (input) {
           var output = '';
           var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
           var i = 0;
@@ -29,7 +29,7 @@ angular.module('Core')
           }
           return output;
         },
-        decode: function(input) {
+        decode: function (input) {
           var output = '';
           var chr1, chr2, chr3;
           var enc1, enc2, enc3, enc4;
@@ -54,7 +54,7 @@ angular.module('Core')
           output = Base64.utf8Decode(output);
           return output;
         },
-        utf8Encode: function(string) {
+        utf8Encode: function (string) {
           string = string.replace(/\r\n/g, '\n');
           var utftext = '';
           for (var n = 0; n < string.length; n++) {
@@ -72,7 +72,7 @@ angular.module('Core')
           }
           return utftext;
         },
-        utf8Decode: function(utftext) {
+        utf8Decode: function (utftext) {
           var string = '';
           var i = 0;
           var c = 0;
@@ -101,21 +101,21 @@ angular.module('Core')
       return {
         Base64: Base64,
 
-        sprintf: function(template, values) {
-          return template.replace(/%s/g, function() {
+        sprintf: function (template, values) {
+          return template.replace(/%s/g, function () {
             return values.shift();
           });
         },
 
-        startsWith: function(str, prefix) {
+        startsWith: function (str, prefix) {
           return str.lastIndexOf(prefix, 0) === 0;
         },
 
-        endsWith: function(str, suffix) {
+        endsWith: function (str, suffix) {
           return str.indexOf(suffix, str.length - suffix.length) !== -1;
         },
 
-        isAdminPage: function() {
+        isAdminPage: function () {
           var nonAdminRoutes = ['activate', 'downloads', 'invite', 'invitelauncher', 'applauncher', 'appdownload'];
           for (var i = 0; i < nonAdminRoutes.length; i++) {
             if ($location.url().indexOf(nonAdminRoutes[i]) > -1) {
@@ -125,7 +125,7 @@ angular.module('Core')
           return true;
         },
 
-        isIPhone: function() {
+        isIPhone: function () {
           if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i)) {
             return true;
           } else {
@@ -133,7 +133,7 @@ angular.module('Core')
           }
         },
 
-        isAndroid: function() {
+        isAndroid: function () {
           if (navigator.userAgent.match(/Android/i)) {
             return true;
           } else {
@@ -141,11 +141,11 @@ angular.module('Core')
           }
         },
 
-        isWeb: function() {
+        isWeb: function () {
           return !this.isIPhone() && !this.isAndroid();
         },
 
-        removeDuplicates: function(array, key) {
+        removeDuplicates: function (array, key) {
           var a = array.concat();
           for (var i = 0; i < a.length; ++i) {
             if (typeof a[i] === 'undefined') {
@@ -161,7 +161,7 @@ angular.module('Core')
           return a;
         },
 
-        comparePaths: function(path1, path2) {
+        comparePaths: function (path1, path2) {
           // if either paths are undefined return false.
           if (!path1 || !path2) {
             return false;

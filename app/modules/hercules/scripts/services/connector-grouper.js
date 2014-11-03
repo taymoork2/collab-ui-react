@@ -4,9 +4,10 @@
 
 angular.module('Hercules')
   .service('ConnectorGrouper', [
-    function() {
+
+    function () {
       return {
-        groupBy: function(data, attr) {
+        groupBy: function (data, attr) {
           return _.groupBy(data, attr);
         }
       };

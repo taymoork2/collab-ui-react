@@ -2,29 +2,25 @@
 
 angular.module('Squared')
   .controller('quicksetupDialogCtrl', ['$scope', '$modalInstance', 'data', '$rootScope', '$translate', '$location', 'Utils', '$state',
-    function($scope, $modalInstance, data, $rootScope, $translate, $location, Utils, $state) {
-      $scope.cancel = function() {
+    function ($scope, $modalInstance, data, $rootScope, $translate, $location, Utils, $state) {
+      $scope.cancel = function () {
         $modalInstance.dismiss('canceled');
       };
 
       $scope.buttonLabel = $translate.instant('common.ok');
 
-      $scope.doAction = function() {
-        if ($scope.inviteAll)
-        {
+      $scope.doAction = function () {
+        if ($scope.inviteAll) {
           $rootScope.selectedSubTab = 'invite';
           $state.go('users');
         }
         $modalInstance.dismiss('canceled');
       };
 
-      $scope.toggleButton = function() {
-        if ($scope.inviteAll)
-        {
+      $scope.toggleButton = function () {
+        if ($scope.inviteAll) {
           $scope.buttonLabel = $translate.instant('common.next');
-        }
-        else
-        {
+        } else {
           $scope.buttonLabel = $translate.instant('common.ok');
         }
       };

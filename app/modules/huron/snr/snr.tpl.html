@@ -13,12 +13,12 @@
         <div ng-show="false">
           <p class="text-muted">{{'singleNumberReachPanel.snrNote' | translate}}</p>
           <br>
-          <cs-radiobutton choice="snrLineOption" options="snrOptions" label="label" value="line" /><br>
+          <cs-radiobutton choice="snrLineOption" options="snrOptions" label="label" value="line"></cs-radiobutton><br>
           <div ng-show="snrLineOption !== 'all'">
           </div>
         </div>
       </div>
       </form>
-      <div call-forward-info></div call-forward-info>
+      <div call-forward-info></div>
     </div>
 </cr-details-body>

@@ -2,14 +2,14 @@
 
 angular.module('Core')
 
-.directive('customerInfoCard', [
+.directive('crCustomerInfoCard', [
 
-  function() {
+  function () {
     return {
       restrict: 'EA',
       replace: true,
       templateUrl: 'modules/core/customers/customerPreview/customerInfoCard.tpl.html',
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
 
       }
     };

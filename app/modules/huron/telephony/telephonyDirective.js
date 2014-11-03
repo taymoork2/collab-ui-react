@@ -2,8 +2,9 @@
 
 angular.module('Huron')
 
-.directive('telephonyInfo', [
-  function() {
+.directive('hnTelephonyInfo', [
+
+  function () {
     return {
       controller: 'TelephonyInfoCtrl',
       restrict: 'EA',

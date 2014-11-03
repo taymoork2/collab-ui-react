@@ -2,22 +2,22 @@
 
 angular.module('Core')
   .service('DirSyncService', ['$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
-    function($http, Storage, Config, Log, Auth, Authinfo) {
+    function ($http, Storage, Config, Log, Auth, Authinfo) {
 
       var token = Storage.get('accessToken');
       var dirsyncUrl = Config.getAdminServiceUrl() + 'dirsync';
 
       return {
-        getDirSyncDomain: function(callback) {
-          
+        getDirSyncDomain: function (callback) {
+
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.get(dirsyncUrl)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               Log.debug('Retrieved dirsync status');
               callback(data, status);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               Auth.handleStatus(status);
               data.success = false;
               data.status = status;
@@ -25,17 +25,17 @@ angular.module('Core')
             });
         },
 
-        getDirSyncStatus: function(callback) {
+        getDirSyncStatus: function (callback) {
           var dirsyncStatusUrl = dirsyncUrl + '/status';
-          
+
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.get(dirsyncStatusUrl)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               Log.debug('Retrieved dirsync domain');
               callback(data, status);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               Auth.handleStatus(status);
               data.success = false;
               data.status = status;
@@ -43,7 +43,7 @@ angular.module('Core')
             });
         },
 
-        postDomainName: function(domainName, callback) {
+        postDomainName: function (domainName, callback) {
           var domainUrl = dirsyncUrl + '/domain';
           var payload = {
             domainName: domainName
@@ -51,12 +51,12 @@ angular.module('Core')
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.post(domainUrl, payload)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               Log.debug('Created Directory Sync Domain: ' + domainName);
               callback(data, status);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               Auth.handleStatus(status);
               data.success = false;
               data.status = status;
@@ -64,7 +64,7 @@ angular.module('Core')
             });
         },
 
-        syncUsers: function(incrSyncInterval, callback) {
+        syncUsers: function (incrSyncInterval, callback) {
           var payload = {
             incrSyncInterval: incrSyncInterval,
             fullSyncEnable: true
@@ -76,12 +76,12 @@ angular.module('Core')
               url: dirsyncUrl,
               data: payload
             })
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               Log.debug('Started Directory Sync');
               callback(data, status);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               Auth.handleStatus(status);
               data.success = false;
               data.status = status;

@@ -9,7 +9,7 @@
  */
 angular.module('Squared')
   .controller('ApplauncherCtrl', ['$window', '$http', '$translate', 'Log', 'Config', 'Utils',
-    function($window, $http, $translate, Log, Config, Utils) {
+    function ($window, $http, $translate, Log, Config, Utils) {
 
       if (Utils.isWeb()) {
 
@@ -18,14 +18,13 @@ angular.module('Squared')
       } else if (Utils.isIPhone()) {
 
         $window.location.href = Config.getSquaredAppUrl();
-        setTimeout(function() {
-            $window.location.href = Config.getItunesStoreUrl();
-          }, 25);
+        setTimeout(function () {
+          $window.location.href = Config.getItunesStoreUrl();
+        }, 25);
 
       } else if (Utils.isAndroid()) {
         $window.location.href = Config.getAndroidAppIntent();
       }
-
 
     }
   ]);

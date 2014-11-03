@@ -2,7 +2,7 @@
 angular
   .module('wx2AdminWebClientApp')
   .config(['$translateProvider', '$stateProvider', '$urlRouterProvider',
-    function($translateProvider, $stateProvider, $urlRouterProvider) {
+    function ($translateProvider, $stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise('login');
       $stateProvider
         .state('login', {
@@ -29,7 +29,7 @@ angular
 angular
   .module('Squared')
   .config(['$urlRouterProvider', '$stateProvider',
-    function($urlRouterProvider, $stateProvider) {
+    function ($urlRouterProvider, $stateProvider) {
       $urlRouterProvider.when('/initialsetup', '/initialsetup/accountreview');
 
       $stateProvider
@@ -89,7 +89,9 @@ angular
           url: '/users',
           templateUrl: 'modules/core/users/userList/userList.tpl.html',
           controller: 'ListUsersCtrl',
-          params:  { showAddUsers: {} }
+          params: {
+            showAddUsers: {}
+          }
         })
         .state('users.list.preview', {
           templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
@@ -210,7 +212,7 @@ angular
 angular
   .module('Huron')
   .config(['$stateProvider',
-    function($stateProvider) {
+    function ($stateProvider) {
       $stateProvider
         .state('callrouting', {
           url: '/callrouting',
@@ -224,7 +226,7 @@ angular
 angular
   .module('Hercules')
   .config(['$stateProvider',
-    function($stateProvider) {
+    function ($stateProvider) {
       $stateProvider
         .state('fusion', {
           url: '/fusion',

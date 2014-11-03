@@ -3,12 +3,12 @@
 
 angular.module('Squared')
   .controller('SpacesCtrl', ['$scope', '$location', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Notification', 'Config',
-    function($scope, $location, Storage, Log, Utils, $filter, SpacesService, Notification, Config) {
+    function ($scope, $location, Storage, Log, Utils, $filter, SpacesService, Notification, Config) {
 
       //Populating authinfo data if empty.
       var token = Storage.get('accessToken');
 
-      var formatActivationCode = function(activationCode) {
+      var formatActivationCode = function (activationCode) {
         var acode = '';
         if (activationCode) {
           var parts = activationCode.match(/[\s\S]{1,4}/g) || [];
@@ -20,8 +20,8 @@ angular.module('Squared')
         return acode;
       };
 
-      var getAllRooms = function() {
-        SpacesService.listRooms(function(data, status) {
+      var getAllRooms = function () {
+        SpacesService.listRooms(function (data, status) {
           if (data.success === true) {
             var devices = [];
             if (data.devices) {
@@ -77,21 +77,20 @@ angular.module('Squared')
         }]
       };
 
-
       Notification.init($scope);
       $scope.popup = Notification.popup;
 
-      $scope.clearRoom = function() {
+      $scope.clearRoom = function () {
         angular.element('#newRoom').val('');
         $scope.newRoomName = null;
       };
 
-      $scope.addRoom = function() {
-        SpacesService.addRoom($scope.newRoomName, function(data, status) {
+      $scope.addRoom = function () {
+        SpacesService.addRoom($scope.newRoomName, function (data, status) {
           if (data.success === true) {
             var successMessage = [$scope.newRoomName + ' added successfully.'];
             Notification.notify(successMessage, 'success');
-            setTimeout(function() {
+            setTimeout(function () {
               getAllRooms();
             }, 1000);
             $scope.clearRoom();

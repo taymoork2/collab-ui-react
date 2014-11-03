@@ -3,7 +3,7 @@
 angular.module('Core')
 
 .controller('SupportCtrl', ['$scope',
-  function($scope) {
+  function ($scope) {
 
     $scope.supportCases = {
 

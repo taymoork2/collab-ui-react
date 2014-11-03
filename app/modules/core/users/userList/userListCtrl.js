@@ -3,7 +3,7 @@
 
 angular.module('Core')
   .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification',
-    function($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, Userservice, UserListService, Log, Storage, Config, Notification) {
+    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, Userservice, UserListService, Log, Storage, Config, Notification) {
 
       //Initialize variables
       $scope.load = true;
@@ -19,7 +19,7 @@ angular.module('Core')
       $scope.userDetailsActive = false;
 
       var init = function () {
-        if($state.params.showAddUsers === 'add') {
+        if ($state.params.showAddUsers === 'add') {
           $scope.setupTokenfield();
           $('#addUsersDialog').modal('show');
         }
@@ -34,15 +34,15 @@ angular.module('Core')
       Notification.init($scope);
       $scope.popup = Notification.popup;
 
-      $scope.isSquaredEnabled = function() {
+      $scope.isSquaredEnabled = function () {
         return isEntitled(Config.entitlements.squared);
       };
 
-      $scope.isHuronEnabled = function() {
+      $scope.isHuronEnabled = function () {
         return isEntitled(Config.entitlements.huron);
       };
 
-      var isEntitled = function(ent) {
+      var isEntitled = function (ent) {
         if ($scope.currentUser && $scope.currentUser.entitlements) {
           for (var i = 0; i < $scope.currentUser.entitlements.length; i++) {
             var svc = $scope.currentUser.entitlements[i];
@@ -54,13 +54,13 @@ angular.module('Core')
         return false;
       };
 
-      var getUserList = function(startAt) {
+      var getUserList = function (startAt) {
         //clear currentUser if a new search begins
         $scope.currentUser = null;
         var startIndex = startAt || 0;
-        UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function(data, status, searchStr) {
+        UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
           if (data.success) {
-            $timeout(function() {
+            $timeout(function () {
               $scope.load = true;
             });
             if ($rootScope.searchStr === searchStr) {
@@ -136,7 +136,7 @@ angular.module('Core')
         }]
       };
 
-      $scope.$on('ngGridEventScroll', function() {
+      $scope.$on('ngGridEventScroll', function () {
         var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
         var scrollTop = ngGridView.scrollTop;
         var scrollOffsetHeight = ngGridView.offsetHeight;
@@ -152,7 +152,7 @@ angular.module('Core')
         }
       });
 
-      $rootScope.$on('$stateChangeSuccess', function() {
+      $rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('users.list.preview.*')) {
           $scope.userPreviewActive = true;
           $scope.userDetailsActive = true;
@@ -166,23 +166,23 @@ angular.module('Core')
       });
 
       // this event fires 3x when sorting is done, so watch for sortInfo change
-      $scope.$on('ngGridEventSorted', function(event, sortInfo) {
+      $scope.$on('ngGridEventSorted', function (event, sortInfo) {
         $scope.sortInfo = sortInfo;
       });
 
-      $scope.$watch('sortInfo', function(newValue, oldValue) {
+      $scope.$watch('sortInfo', function (newValue, oldValue) {
         // if newValue === oldValue then page is initializing, so ignore event,
         // otherwise getUserList() is called multiple times.
         if (newValue !== oldValue) {
           if ($scope.sortInfo) {
             switch ($scope.sortInfo.fields[0]) {
-              case 'userName':
-                $scope.sort.by = 'userName';
-                break;
-              case 'name.familyName':
-              case 'name.givenName':
-                $scope.sort.by = 'name';
-                break;
+            case 'userName':
+              $scope.sort.by = 'userName';
+              break;
+            case 'name.familyName':
+            case 'name.givenName':
+              $scope.sort.by = 'name';
+              break;
             }
 
             if ($scope.sortInfo.directions[0] === 'asc') {
@@ -195,7 +195,7 @@ angular.module('Core')
         }
       }, true);
 
-      $scope.showUserDetails = function(user) {
+      $scope.showUserDetails = function (user) {
         //Service profile
         $scope.entitlements = {};
         for (var i = 0; i < $rootScope.services.length; i++) {
@@ -211,7 +211,7 @@ angular.module('Core')
         $state.go('users.list.preview');
       };
 
-      $scope.getUserPhoto = function(user) {
+      $scope.getUserPhoto = function (user) {
         if (user && user.photos) {
           for (var i in user.photos) {
             if (user.photos[i].type === 'thumbnail') {
@@ -229,22 +229,22 @@ angular.module('Core')
       getUserList();
 
       //Search users based on search criteria
-      $scope.$on('SEARCH_ITEM', function(e, str) {
+      $scope.$on('SEARCH_ITEM', function (e, str) {
         Log.debug('got broadcast for search:' + str);
         getUserList();
       });
 
       //list users when we have authinfo data back, or new users have been added/activated
-      $scope.$on('AuthinfoUpdated', function() {
+      $scope.$on('AuthinfoUpdated', function () {
         getUserList();
       });
 
       //list is updated by adding or entitling a user
-      $scope.$on('USER_LIST_UPDATED', function() {
+      $scope.$on('USER_LIST_UPDATED', function () {
         getUserList();
       });
 
-      $scope.updateUser = function() {
+      $scope.updateUser = function () {
         angular.element('#btn-save').button('loading');
         var userData = {
           'schemas': Config.scimSchemas,
@@ -258,7 +258,7 @@ angular.module('Core')
         Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
         Log.debug(userData);
 
-        Userservice.updateUserProfile($scope.currentUser.id, userData, function(data, status) {
+        Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
           if (data.success) {
             var successMessage = [];
             successMessage.push($filter('translate')('profilePage.success'));
@@ -282,7 +282,7 @@ angular.module('Core')
         $scope.userTabActive = true;
       }
 
-      var setTab = function(tab) {
+      var setTab = function (tab) {
         if (tab === 'invite') {
           $scope.userTabActive = false;
           $scope.inviteTabActive = true;
@@ -293,7 +293,7 @@ angular.module('Core')
         $rootScope.selectedSubTab = null;
       };
 
-      $scope.changeTab = function(tab) {
+      $scope.changeTab = function (tab) {
         setTab(tab);
       };
       // end TODO

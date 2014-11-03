@@ -3,7 +3,7 @@
 angular.module('Core')
 
 .controller('DevicesCtrl', ['$scope', 'SpacesService', 'Log', 'Notification', '$translate',
-  function($scope, SpacesService, Log, Notification, $translate) {
+  function ($scope, SpacesService, Log, Notification, $translate) {
 
     $scope.devices = [{
       model: 'Activated',
@@ -13,8 +13,8 @@ angular.module('Core')
       qty: ''
     }];
 
-    var getAllRooms = function() {
-      SpacesService.listRooms(function(data, status) {
+    var getAllRooms = function () {
+      SpacesService.listRooms(function (data, status) {
         if (data.success === true) {
           var activated = 0;
           var pending = 0;

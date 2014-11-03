@@ -2,15 +2,15 @@
 
 angular.module('Core')
 
-.directive('userServicesCard', [
+.directive('crUserServicesCard', [
 
-  function() {
+  function () {
     return {
       restrict: 'AE',
       transclude: true,
       replace: true,
       templateUrl: 'modules/core/users/userPreview/userServicesCard.tpl.html',
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
 
       }
     };

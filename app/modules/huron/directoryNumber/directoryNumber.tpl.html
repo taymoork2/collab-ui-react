@@ -12,14 +12,14 @@
           </select>
         </div>
         <div class="form-group" ng-show="false">
-          <label for="externalNumber">
+          <label for="directoryNumber">
             {{'directoryNumberPanel.externalNumberLabel' | translate}}
           </label>
-          <select ng-model="directoryNumber" class="form-control" name="directoryNumber" required="true" ng-options="directoryNumber.pattern for directoryNumber in unassingedDirectoryNumbers">
+          <select ng-model="directoryNumber" class="form-control" id="directoryNumber" required="true" ng-options="directoryNumber.pattern for directoryNumber in unassingedDirectoryNumbers">
             <option value="">-- {{'directoryNumberPanel.chooseNumber' | translate}} --</option>
           </select>
         </div>
       </form>
-      <div call-forward-info></div call-forward-info>
+      <div hn-call-forward-info></div>
     </div>
 </cr-details-body>

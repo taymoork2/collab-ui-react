@@ -4,18 +4,17 @@
 
 angular.module('Core')
   .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config',
-    function($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config) {
+    function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config) {
 
-      $('#au-graph-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-      $('#au-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-      $('#calls-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-      $('#convo-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
-      $('#share-refresh').html('<i class=\'fa fa-refresh fa-spin fa-2x\'></i>');
+      $('#au-graph-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
+      $('#au-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
+      $('#calls-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
+      $('#convo-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
+      $('#share-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
 
       $('#activeUsersChart').addClass('chart-border');
 
       $scope.statusPageUrl = Config.getStatusPageUrl();
-
 
       var chartValuesLoaded = false;
       var callMetricLoaded = false;
@@ -28,13 +27,13 @@ angular.module('Core')
       $scope.isAdmin = false;
       var responseTime;
 
-      var allValuesLoaded = function() {
+      var allValuesLoaded = function () {
         if (chartValuesLoaded && callMetricLoaded && convMetricLoaded && contentLoaded && auMetricLoaded) {
           $scope.homeRefreshTime = responseTime;
         }
       };
 
-      $scope.manualReload = function(backendCache) {
+      $scope.manualReload = function (backendCache) {
 
         if (backendCache === null) {
           backendCache = true;
@@ -62,7 +61,7 @@ angular.module('Core')
         $scope.showShareContent = false;
       };
 
-      $scope.$on('activeUserCountLoaded', function(event, response) {
+      $scope.$on('activeUserCountLoaded', function (event, response) {
         $scope.activeUserCount = 0;
         auMetricLoaded = true;
         if (response.data.success) {
@@ -80,7 +79,7 @@ angular.module('Core')
         }
       });
 
-      var getMetricData = function(dataList, metric) {
+      var getMetricData = function (dataList, metric) {
         var count = 0;
         for (var i = 0; i < dataList.length; i++) {
           var val = {};
@@ -100,7 +99,7 @@ angular.module('Core')
         return count;
       };
 
-      $scope.$on('callsLoaded', function(event, response) {
+      $scope.$on('callsLoaded', function (event, response) {
         $scope.callsCount = 0;
         callMetricLoaded = true;
         allValuesLoaded();
@@ -123,7 +122,7 @@ angular.module('Core')
         }
       });
 
-      $scope.$on('conversationsLoaded', function(event, response) {
+      $scope.$on('conversationsLoaded', function (event, response) {
         $scope.convoCount = 0;
         convMetricLoaded = true;
         allValuesLoaded();
@@ -146,7 +145,7 @@ angular.module('Core')
         }
       });
 
-      $scope.$on('contentSharedLoaded', function(event, response) {
+      $scope.$on('contentSharedLoaded', function (event, response) {
         $scope.cShareCount = 0;
         contentLoaded = true;
         allValuesLoaded();
@@ -170,7 +169,7 @@ angular.module('Core')
         }
       });
 
-      $scope.$on('activeUsersLoaded', function(event, response) {
+      $scope.$on('activeUsersLoaded', function (event, response) {
         var auCount = 0;
         allValuesLoaded();
         if (response.data.success) {
@@ -189,8 +188,8 @@ angular.module('Core')
         }
       });
 
-      var getHealthMetrics = function() {
-        ReportsService.healthMonitor(function(data, status) {
+      var getHealthMetrics = function () {
+        ReportsService.healthMonitor(function (data, status) {
           if (data.success) {
             $scope.healthMetrics = data.components;
             $scope.isCollapsed = true;
@@ -280,14 +279,14 @@ angular.module('Core')
         });
       };
 
-      $scope.inviteUsers = function() {
+      $scope.inviteUsers = function () {
         var dlg = $dialogs.create('modules/squared/views/quicksetup_dialog.html', 'quicksetupDialogCtrl');
-        dlg.result.then(function() {
+        dlg.result.then(function () {
 
         });
       };
 
-      var makeChart = function(sdata) {
+      var makeChart = function (sdata) {
         $scope.showAUGraph = true;
         $scope.showAUGraphRefresh = false;
         var homeChart = AmCharts.makeChart('activeUsersChart', {
@@ -369,11 +368,10 @@ angular.module('Core')
       $scope.manualReload(true);
       $scope.isAdmin = Auth.isUserAdmin();
 
-      $scope.$on('AuthinfoUpdated', function() {
+      $scope.$on('AuthinfoUpdated', function () {
         $scope.manualReload(true);
         $scope.isAdmin = Auth.isUserAdmin();
       });
-
 
       var chart = makeChart(chartVals);
     }

@@ -3,8 +3,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('OrganizationsCtrl', ['$rootScope','$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
-    function($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
+  .controller('OrganizationsCtrl', ['$rootScope', '$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
+    function ($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
 
       //Initialize
       Notification.init($scope);
@@ -12,11 +12,10 @@ angular.module('Core')
       $scope.orgName = Authinfo.getOrgName();
 
       var getorgInfo = function () {
-        Orgservice.getOrg(function(data, status) {
+        Orgservice.getOrg(function (data, status) {
           if (data.success) {
             $scope.org = data;
-            if (data.services)
-            {
+            if (data.services) {
               $scope.svcs = data.services;
             }
 
@@ -45,38 +44,38 @@ angular.module('Core')
         $('#btncover').show();
       }
 
-      $scope.$on('EXPORT_FINISHED', function() {
+      $scope.$on('EXPORT_FINISHED', function () {
         $scope.exportBtn.disabled = false;
       });
 
-      $scope.exportCSV = function() {
+      $scope.exportCSV = function () {
         $rootScope.searchStr = undefined;
         var promise = UserListService.exportCSV($scope);
-        promise.then(null, function(error){
+        promise.then(null, function (error) {
           Notification.notify(Array.new(error), 'error');
         });
 
         return promise;
       };
 
-      $scope.$on('AuthinfoUpdated', function() {
+      $scope.$on('AuthinfoUpdated', function () {
         getorgInfo();
       });
 
-      $scope.resetOrg = function() {
+      $scope.resetOrg = function () {
         getorgInfo();
       };
 
-      $scope.enableSSO = function() {
+      $scope.enableSSO = function () {
         var dlg = $dialogs.create('modules/core/views/setupsso.html', 'setupSSODialogCtrl');
-        dlg.result.then(function() {
+        dlg.result.then(function () {
 
         });
       };
 
-      $scope.popupDirsync = function() {
+      $scope.popupDirsync = function () {
         var dlg = $dialogs.create('modules/core/views/setupdirsync.html', 'setupDirSyncDialogCtrl');
-        dlg.result.then(function() {
+        dlg.result.then(function () {
 
         });
       };

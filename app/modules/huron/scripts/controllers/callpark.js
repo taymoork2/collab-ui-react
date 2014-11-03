@@ -2,7 +2,7 @@
 
 angular.module('Huron')
   .controller('CallParkCtrl', ['$scope', '$modalInstance', 'CallPark',
-    function($scope, $modalInstance, CallPark) {
+    function ($scope, $modalInstance, CallPark) {
 
       $scope.callPark = {
         'retrievalPrefix': '*'
@@ -12,25 +12,25 @@ angular.module('Huron')
         reversionPattern: 'owner'
       };
 
-      $scope.addCallParkByRange = function(callPark, rangeMin, rangeMax) {
+      $scope.addCallParkByRange = function (callPark, rangeMin, rangeMax) {
         CallPark.createByRange(callPark, rangeMin, rangeMax)
-          .then(function(){
+          .then(function () {
             $modalInstance.close();
           })
-          .catch(function(){
+          .catch(function () {
             $modalInstance.dismiss();
           });
       };
 
-      $scope.addCallPark = function(callPark) {
+      $scope.addCallPark = function (callPark) {
         CallPark.create(callPark)
-          .then(function(){
+          .then(function () {
             $modalInstance.close();
           })
-          .catch(function(){
+          .catch(function () {
             $modalInstance.dismiss();
           });
       };
     }
 
-]);
+  ]);

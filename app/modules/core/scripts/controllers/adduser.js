@@ -3,7 +3,7 @@
 
 angular.module('Core')
   .controller('AddUserCtrl', ['$scope', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
-    function($scope, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
+    function ($scope, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
 
       var allSteps = ['chooseSync', 'domain', 'installCloud', 'syncStatus', 'manual'];
       var manualSteps = ['manual'];
@@ -30,18 +30,18 @@ angular.module('Core')
         multiSelect: false
       };
 
-      $scope.setupTokenfield = function() {
+      $scope.setupTokenfield = function () {
         //tokenfield setup - Should make it into a directive later.
         angular.element('#usersfield-wiz').tokenfield({
-          delimiter: [',', ';'],
-          createTokensOnBlur: true
-        })
-          .on('tokenfield:createtoken', function(e) {
+            delimiter: [',', ';'],
+            createTokensOnBlur: true
+          })
+          .on('tokenfield:createtoken', function (e) {
             //Removing anything in brackets from user data
             var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
             e.attrs.value = value;
           })
-          .on('tokenfield:createdtoken', function(e) {
+          .on('tokenfield:createdtoken', function (e) {
             if (!validateEmail(e.attrs.value)) {
               angular.element(e.relatedTarget).addClass('invalid');
               invalidcount++;
@@ -49,12 +49,12 @@ angular.module('Core')
             checkButtons();
             checkPlaceholder();
           })
-          .on('tokenfield:edittoken', function(e) {
+          .on('tokenfield:edittoken', function (e) {
             if (!validateEmail(e.attrs.value)) {
               invalidcount--;
             }
           })
-          .on('tokenfield:removetoken', function(e) {
+          .on('tokenfield:removetoken', function (e) {
             if (!validateEmail(e.attrs.value)) {
               invalidcount--;
             }
@@ -63,7 +63,7 @@ angular.module('Core')
           });
       };
 
-      $scope.chooseNextStep = function() {
+      $scope.chooseNextStep = function () {
         var syncOption = $scope.chooseSync;
         if (syncOption === 'dirsync') {
           $scope.showStep('domain');
@@ -76,49 +76,49 @@ angular.module('Core')
         }
       };
 
-      $scope.chooseSkipStep = function() {
+      $scope.chooseSkipStep = function () {
         $location.path('/home');
       };
 
-      $scope.chooseBackStep = function() {
+      $scope.chooseBackStep = function () {
         $location.path('/initialsetup/accountreview');
       };
 
-      $scope.manualNextStep = function() {
+      $scope.manualNextStep = function () {
         $location.path('/home');
       };
 
-      $scope.manualBackStep = function() {
+      $scope.manualBackStep = function () {
         $scope.showStep('chooseSync');
       };
 
-      $scope.domainNextStep = function() {
+      $scope.domainNextStep = function () {
         $scope.setDomain();
         $scope.showStep('installCloud');
       };
 
-      $scope.domainBackStep = function() {
+      $scope.domainBackStep = function () {
         $scope.showStep('chooseSync');
       };
 
-      $scope.installNextStep = function() {
+      $scope.installNextStep = function () {
         $scope.getStatus();
         $scope.showStep('syncStatus');
       };
 
-      $scope.installBackStep = function() {
+      $scope.installBackStep = function () {
         $scope.showStep('domain');
       };
 
-      $scope.syncNextStep = function() {
+      $scope.syncNextStep = function () {
         $location.path('/home');
       };
 
-      $scope.syncBackStep = function() {
+      $scope.syncBackStep = function () {
         $scope.showStep('installCloud');
       };
 
-      $scope.showStep = function(thisStep) {
+      $scope.showStep = function (thisStep) {
 
         //remove other pages are tab highlight from view
         for (var stepNum in allSteps) {
@@ -174,8 +174,8 @@ angular.module('Core')
       };
 
       //*********************************************DIRSYNC*********************************************//
-      $scope.getDefaultDomain = function() {
-        DirSyncService.getDirSyncDomain(function(data, status) {
+      $scope.getDefaultDomain = function () {
+        DirSyncService.getDirSyncDomain(function (data, status) {
           if (data.success) {
             Log.debug('Retrieved DirSync domain name. Status: ' + status);
             if (data && data.domains[0]) {
@@ -195,13 +195,13 @@ angular.module('Core')
         });
       };
 
-      $scope.setDomainName = function(domainName) {
+      $scope.setDomainName = function (domainName) {
         $scope.domain = domainName.value;
       };
 
-      $scope.setDomain = function() {
+      $scope.setDomain = function () {
         if (($scope.domain.length > 0) && ($scope.domainExists !== true)) {
-          DirSyncService.postDomainName($scope.domain, function(data, status) {
+          DirSyncService.postDomainName($scope.domain, function (data, status) {
             if (data.success) {
               Log.debug('Created DirSync domain. Status: ' + status);
             } else {
@@ -214,7 +214,7 @@ angular.module('Core')
         }
       };
 
-      $scope.formatDate = function(date) {
+      $scope.formatDate = function (date) {
         if (date !== '') {
           return moment.utc(date).local().format('MMM D \'YY h:mm a');
         } else {
@@ -222,12 +222,12 @@ angular.module('Core')
         }
       };
 
-      $scope.getStatus = function() {
+      $scope.getStatus = function () {
         $scope.dirsyncStatus = '';
         $scope.numUsersInSync = 0;
         $scope.userList = [];
 
-        DirSyncService.getDirSyncStatus(function(data, status) {
+        DirSyncService.getDirSyncStatus(function (data, status) {
           if (data.success) {
             Log.debug('Retrieved DirSync status successfully. Status: ' + status);
             if (data) {
@@ -242,7 +242,7 @@ angular.module('Core')
           }
         });
 
-        UserListService.listUsers(null, null, null, null, function(data, status, searchStr) {
+        UserListService.listUsers(null, null, null, null, function (data, status, searchStr) {
           if (data.success) {
             Log.debug('Retrieved user list successfully. Status: ' + status);
             if (data) {
@@ -268,9 +268,9 @@ angular.module('Core')
 
       };
 
-      $scope.syncNow = function() {
+      $scope.syncNow = function () {
         angular.element('#syncNowBtn').button('loading');
-        DirSyncService.syncUsers(500, function(data, status) {
+        DirSyncService.syncUsers(500, function (data, status) {
           if (data.success) {
             angular.element('#syncNowBtn').button('reset');
             Log.debug('DirSync started successfully. Status: ' + status);
@@ -288,11 +288,11 @@ angular.module('Core')
       };
 
       //*********************************************MANUAL ENTRY*********************************************//
-      $scope.init = function() {
+      $scope.init = function () {
         setPlaceholder();
       };
 
-      var setPlaceholder = function() {
+      var setPlaceholder = function () {
         var placeholder = $filter('translate')('usersPage.userInput');
         angular.element('#usersfield-wiz-tokenfield').attr('placeholder', placeholder);
       };
@@ -308,7 +308,7 @@ angular.module('Core')
       }
 
       //email validation logic
-      var validateEmail = function(input) {
+      var validateEmail = function (input) {
         var emailregex = /\S+@\S+\.\S+/;
         var emailregexbrackets = /<\s*\S+@\S+\.\S+\s*>/;
         var emailregexquotes = /"\s*\S+@\S+\.\S+\s*"/;
@@ -326,7 +326,7 @@ angular.module('Core')
       };
 
       //placeholder logic
-      var checkPlaceholder = function() {
+      var checkPlaceholder = function () {
         if (angular.element('.token-label').length > 0) {
           angular.element('#usersfield-wiz-tokenfield').attr('placeholder', '');
         } else {
@@ -334,7 +334,7 @@ angular.module('Core')
         }
       };
 
-      var checkButtons = function() {
+      var checkButtons = function () {
         if (invalidcount > 0) {
           angular.element('#btnInvite').prop('disabled', true);
         } else {
@@ -342,30 +342,30 @@ angular.module('Core')
         }
       };
 
-      var getUsersList = function() {
+      var getUsersList = function () {
         return $window.addressparser.parse(angular.element('#usersfield-wiz').tokenfield('getTokensList'));
       };
 
-      var resetUsersfield = function() {
+      var resetUsersfield = function () {
         angular.element('#usersfield-wiz').tokenfield('setTokens', ' ');
         checkPlaceholder();
         invalidcount = 0;
       };
 
-      $scope.clearPanel = function() {
+      $scope.clearPanel = function () {
         resetUsersfield();
         $scope.results = null;
       };
 
       var startLog;
-      $scope.inviteUsers = function() {
+      $scope.inviteUsers = function () {
         var usersList = getUsersList();
         Log.debug('Invite: ', usersList);
         $scope.results = {
           resultList: []
         };
         var isComplete = true;
-        var callback = function(data, status) {
+        var callback = function (data, status) {
 
           if (data.success) {
             Log.info('User invitation sent successfully.', data.id);

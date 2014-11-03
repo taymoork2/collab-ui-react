@@ -3,6 +3,7 @@
 angular.module('Huron')
 
 .directive('directoryNumberInfo', [
+
   function () {
     return {
       controller: 'DirectoryNumberInfoCtrl',

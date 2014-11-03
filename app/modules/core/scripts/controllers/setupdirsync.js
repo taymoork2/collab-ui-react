@@ -3,7 +3,7 @@
 
 angular.module('Core')
   .controller('setupDirSyncDialogCtrl', ['$scope', '$modalInstance', 'DirSyncService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config', 'UserListService',
-    function($scope, $modalInstance, DirSyncService, Authinfo, Log, Notification, $translate, $window, Config, UserListService) {
+    function ($scope, $modalInstance, DirSyncService, Authinfo, Log, Notification, $translate, $window, Config, UserListService) {
 
       $scope.numUsersInSync = '0';
       $scope.domainExists = true;
@@ -14,11 +14,11 @@ angular.module('Core')
         multiSelect: false
       };
 
-      $scope.cancel = function() {
+      $scope.cancel = function () {
         $modalInstance.dismiss('canceled');
       };
 
-      $scope.formatDate = function(date) {
+      $scope.formatDate = function (date) {
         if (date !== '') {
           return moment.utc(date).local().format('MMM D \'YY h:mm a');
         } else {
@@ -26,8 +26,8 @@ angular.module('Core')
         }
       };
 
-      $scope.getDefaultDomain = function() {
-        DirSyncService.getDirSyncDomain(function(data, status) {
+      $scope.getDefaultDomain = function () {
+        DirSyncService.getDirSyncDomain(function (data, status) {
           if (data.success) {
             Log.debug('Retrieved DirSync domain name. Status: ' + status);
             if (data && data.domains[0]) {
@@ -47,13 +47,13 @@ angular.module('Core')
         });
       };
 
-      $scope.setDomainName = function(domainName) {
+      $scope.setDomainName = function (domainName) {
         $scope.domain = domainName.value;
       };
 
-      $scope.setDomain = function() {
+      $scope.setDomain = function () {
         if (($scope.domain.length > 0) && ($scope.domainExists !== true)) {
-          DirSyncService.postDomainName($scope.domain, function(data, status) {
+          DirSyncService.postDomainName($scope.domain, function (data, status) {
             if (data.success) {
               Log.debug('Created DirSync domain. Status: ' + status);
             } else {
@@ -66,12 +66,12 @@ angular.module('Core')
         }
       };
 
-      $scope.getStatus = function() {
+      $scope.getStatus = function () {
         $scope.dirsyncStatus = '';
         $scope.numUsersInSync = 0;
         $scope.userList = [];
 
-        DirSyncService.getDirSyncStatus(function(data, status) {
+        DirSyncService.getDirSyncStatus(function (data, status) {
           if (data.success) {
             Log.debug('Retrieved DirSync status successfully. Status: ' + status);
             if (data) {
@@ -86,7 +86,7 @@ angular.module('Core')
           }
         });
 
-        UserListService.listUsers(null, null, null, null, function(data, status, searchStr) {
+        UserListService.listUsers(null, null, null, null, function (data, status, searchStr) {
           if (data.success) {
             Log.debug('Retrieved user list successfully. Status: ' + status);
             if (data) {
@@ -112,9 +112,9 @@ angular.module('Core')
 
       };
 
-      $scope.syncNow = function() {
+      $scope.syncNow = function () {
         angular.element('#syncNowBtn').button('loading');
-        DirSyncService.syncUsers(500, function(data, status) {
+        DirSyncService.syncUsers(500, function (data, status) {
           if (data.success) {
             angular.element('#syncNowBtn').button('reset');
             Log.debug('DirSync started successfully. Status: ' + status);

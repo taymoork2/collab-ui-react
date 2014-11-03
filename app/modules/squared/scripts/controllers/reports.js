@@ -3,7 +3,7 @@
 
 angular.module('Squared')
   .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo',
-    function($scope, $parse, ReportsService, Log, Authinfo) {
+    function ($scope, $parse, ReportsService, Log, Authinfo) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
@@ -31,14 +31,14 @@ angular.module('Squared')
 
       var responseTime;
 
-      var checkAllValues = function() {
+      var checkAllValues = function () {
         if (entitlementsLoaded && avgCallsLoaded && avgConvLoaded && auLoaded && convOneOnOneLoaded && convGroupLoaded && callsLoaded && callsAvgDurationLoaded && contentSharedLoaded && contentShareSizesLoaded) {
           $scope.reportsRefreshTime = responseTime;
         }
       };
 
-      var checkDataLoaded = function(data) {
-        switch(data) {
+      var checkDataLoaded = function (data) {
+        switch (data) {
         case 'entitlements':
           entitlementsLoaded = true;
           break;
@@ -78,49 +78,49 @@ angular.module('Squared')
       var yellow = '#EBC31C';
       var green = '#50D71D';
 
-      $scope.$on('entitlementsLoaded', function(event, response){
+      $scope.$on('entitlementsLoaded', function (event, response) {
         getTimeCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', blue, 'sum');
       });
 
-      $scope.$on('avgCallsPerUserLoaded', function(event, response){
+      $scope.$on('avgCallsPerUserLoaded', function (event, response) {
         getTimeCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Avg Calls Per User', red, 'average');
       });
 
-      $scope.$on('avgConversationsLoaded', function(event, response){
+      $scope.$on('avgConversationsLoaded', function (event, response) {
         getTimeCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Avg Conversations Per User', yellow, 'average');
       });
 
-      $scope.$on('activeUsersLoaded', function(event, response){
-        getTimeCharts(response, 'activeUsers','activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', green, 'sum');
+      $scope.$on('activeUsersLoaded', function (event, response) {
+        getTimeCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', green, 'sum');
       });
 
-      $scope.$on('convOneOnOneLoaded', function(event, response){
+      $scope.$on('convOneOnOneLoaded', function (event, response) {
         getTimeCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', 'One On One Conversations', blue, 'sum');
       });
 
-      $scope.$on('convGroupLoaded', function(event, response){
+      $scope.$on('convGroupLoaded', function (event, response) {
         getTimeCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', 'Group Conversations', red, 'sum');
       });
 
-      $scope.$on('callsLoaded', function(event, response){
+      $scope.$on('callsLoaded', function (event, response) {
         getTimeCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', 'Video Calls', yellow, 'sum');
       });
 
-      $scope.$on('callsAvgDurationLoaded', function(event, response){
-        getTimeCharts(response, 'callsAvgDuration','callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', 'Avg Duration of Calls', green, 'average');
+      $scope.$on('callsAvgDurationLoaded', function (event, response) {
+        getTimeCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', 'Avg Duration of Calls', green, 'average');
       });
 
-      $scope.$on('contentSharedLoaded', function(event, response){
-        getTimeCharts(response, 'contentShared','contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', 'Content Shared', blue, 'sum');
+      $scope.$on('contentSharedLoaded', function (event, response) {
+        getTimeCharts(response, 'contentShared', 'contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', 'Content Shared', blue, 'sum');
       });
 
-      $scope.$on('contentShareSizesLoaded', function(event, response){
-        getTimeCharts(response, 'contentShareSizes','contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', 'Amount of Content Shared', red, 'sum');
+      $scope.$on('contentShareSizesLoaded', function (event, response) {
+        getTimeCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', 'Amount of Content Shared', red, 'sum');
       });
 
-      $scope.manualReload = function(backendCache) {
+      $scope.manualReload = function (backendCache) {
 
-        if(backendCache === null){
+        if (backendCache === null) {
           backendCache = true;
         }
 
@@ -135,12 +135,12 @@ angular.module('Squared')
         contentSharedLoaded = false;
         contentShareSizesLoaded = false;
 
-        if(Authinfo.isPartner()) {
+        if (Authinfo.isPartner()) {
           ReportsService.getPartnerMetrics(backendCache);
         } else {
           ReportsService.getAllMetrics(backendCache);
         }
-        
+
         $scope.showAvgEntitlementsRefresh = true;
         $scope.showAvgCallsRefresh = true;
         $scope.showAvgConversationsRefresh = true;
@@ -153,7 +153,7 @@ angular.module('Squared')
         $scope.showContentShareSizesRefresh = true;
       };
 
-      var getMetricData = function(dataList, metric) {
+      var getMetricData = function (dataList, metric) {
         var count = 0;
         for (var i = 0; i < dataList.length; i++) {
           var val = {};
@@ -171,31 +171,31 @@ angular.module('Squared')
         return count;
       };
 
-      var getTimeCharts = function(response, type, divName, refreshDivName, refreshVarName, title, color, operation) {
-          var avCount = 0;
-          checkDataLoaded(type);
-          if (response.data.success) {
-            if (response.data.data.length !== 0) {
-              responseTime = response.data.date;
-              $('#' + divName).removeClass('chart-border');
-              var result = response.data.data;
-              if (result.length > 0) {
-                avCount = getMetricData(result, type);
-              }
-              makeTimeChart(chartVals, divName, type, title, color, operation);
-              $scope[refreshVarName] = false;
-
-            } else {
-              $('#' + refreshDivName).html('<h3>No results available.</h3>');
-              Log.debug('No results for ' + type + ' metrics.');
+      var getTimeCharts = function (response, type, divName, refreshDivName, refreshVarName, title, color, operation) {
+        var avCount = 0;
+        checkDataLoaded(type);
+        if (response.data.success) {
+          if (response.data.data.length !== 0) {
+            responseTime = response.data.date;
+            $('#' + divName).removeClass('chart-border');
+            var result = response.data.data;
+            if (result.length > 0) {
+              avCount = getMetricData(result, type);
             }
-          } else {
-            $('#' + refreshDivName).html('<h3>Error processing request</h3>');
-            Log.debug('Query ' + type + ' metrics failed. Status: ' + status);
-          }
-        };
+            makeTimeChart(chartVals, divName, type, title, color, operation);
+            $scope[refreshVarName] = false;
 
-      var makeTimeChart = function(sdata, divName, metricName, title, color, operation) {
+          } else {
+            $('#' + refreshDivName).html('<h3>No results available.</h3>');
+            Log.debug('No results for ' + type + ' metrics.');
+          }
+        } else {
+          $('#' + refreshDivName).html('<h3>Error processing request</h3>');
+          Log.debug('Query ' + type + ' metrics failed. Status: ' + status);
+        }
+      };
+
+      var makeTimeChart = function (sdata, divName, metricName, title, color, operation) {
         var homeChart = AmCharts.makeChart(divName, {
           'type': 'serial',
           'theme': 'none',
@@ -206,7 +206,7 @@ angular.module('Squared')
           'legend': {
             'equalWidths': false,
             'periodValueText': '[[value.' + [operation] + ']]',
-            'precision' : 2,
+            'precision': 2,
             'position': 'top',
             'valueWidth': 10,
             'fontSize': 30,
@@ -226,7 +226,7 @@ angular.module('Squared')
             'color': '#999999'
           }],
           'graphs': [{
-            'type':'column',
+            'type': 'column',
             'fillAlphas': 1,
             'hidden': false,
             'lineAlpha': 0,
@@ -259,7 +259,7 @@ angular.module('Squared')
 
       $scope.manualReload(true);
 
-      $scope.$on('AuthinfoUpdated', function() {
+      $scope.$on('AuthinfoUpdated', function () {
         $scope.manualReload(true);
       });
     }

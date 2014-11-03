@@ -1,13 +1,13 @@
 <div class="user-info-card standard-card row">
   <div class="info-card-image col-xs-3">
-    <img ng-if='getUserPhoto(currentUser)' ng-src='{{getUserPhoto(currentUser)}}' class="user-img"/>
+    <img ng-if='getUserPhoto(currentUser)' ng-src='{{getUserPhoto(currentUser)}}' class="user-img" alt=""/>
     <span ng-if="!getUserPhoto(currentUser)" class="user-img">
       <i class="icon icon-user"></i>
     </span>
   </div>
   <div class="info-card-name col-xs-7">
     <div id="name-preview" class="name-preview">
-      <a href="#/userprofile/{{currentUser.id}}">
+      <a ng-href="#/userprofile/{{currentUser.id}}">
         <span class="user-name" ng-if="currentUser.name.givenName && currentUser.name.familyName">{{currentUser.name.givenName}} {{currentUser.name.familyName}}</span>
         <span class="user-name" ng-if="!currentUser.name.givenName || !currentUser.name.familyName">{{currentUser.userName}}</span><br>
       </a>

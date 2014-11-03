@@ -25,24 +25,23 @@ angular.module('Core')
 
       parseParam();
 
-
       return {
-        set: function(paramString) {
+        set: function (paramString) {
           if (paramString) {
             Storage.put(pageParamKey, paramString);
             parseParam();
           }
         },
 
-        getRoute: function() {
+        getRoute: function () {
           return paramData.route;
         },
 
-        getParam: function(paramName) {
+        getParam: function (paramName) {
           return paramData.param[paramName];
         },
 
-        clear: function() {
+        clear: function () {
           Storage.remove(pageParamKey);
           paramData.route = null;
           paramData.param = {};

@@ -3,7 +3,7 @@
 
 angular.module('Squared')
   .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam',
-    function($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam) {
+    function ($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam) {
 
       //Initialize
       Notification.init($scope);
@@ -14,33 +14,34 @@ angular.module('Squared')
 
       //initialize sort icons
       var sortIcons = ['sortIconEmailAddress', 'sortIconDate', 'sortIconLocusId', 'sortIconCallStart'];
-      for(var sortIcon in sortIcons) {
-        if(sortIcons[sortIcon] === 'sortIconDate') {
+      for (var sortIcon in sortIcons) {
+        if (sortIcons[sortIcon] === 'sortIconDate') {
           $scope[sortIcons[sortIcon]] = 'fa-sort-desc';
         } else {
           $scope[sortIcons[sortIcon]] = 'fa-sort';
         }
       }
 
-
       $scope.logsSortBy = 'date';
       $scope.reverseLogs = true;
       $scope.callFlowActive = false;
       $scope.callFlowUrl = 'images/solid_white.png';
 
-      $scope.input = {search : PageParam.getParam('search')};
+      $scope.input = {
+        search: PageParam.getParam('search')
+      };
       if ($scope.input.search) {
         PageParam.clear();
       }
 
       Log.debug('param search string: ' + $scope.input.search);
 
-      $scope.toggleSort = function(type, icon) {
+      $scope.toggleSort = function (type, icon) {
         $scope.reverseLogs = !$scope.reverseLogs;
         changeSortIcon(type, icon);
       };
 
-      var changeSortIcon = function(logsSortBy, sortIcon) {
+      var changeSortIcon = function (logsSortBy, sortIcon) {
         $scope.logsSortBy = logsSortBy;
         if ($scope.reverseLogs === true) {
           $scope[sortIcon] = 'fa-sort-desc';
@@ -48,14 +49,14 @@ angular.module('Squared')
           $scope[sortIcon] = 'fa-sort-asc';
         }
 
-        for(var otherIcon in sortIcons) {
-          if(sortIcons[otherIcon] !== sortIcon) {
+        for (var otherIcon in sortIcons) {
+          if (sortIcons[otherIcon] !== sortIcon) {
             $scope[sortIcons[otherIcon]] = 'fa-sort';
           }
         }
       };
 
-      var initializeTypeahead = function() {
+      var initializeTypeahead = function () {
         var scimSearchUrl = Config.scimUrl + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
         var suggestUsersUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
         var engine = new Bloodhound({
@@ -64,10 +65,10 @@ angular.module('Squared')
           limit: 5,
           remote: {
             url: suggestUsersUrl,
-            filter: function(data) {
+            filter: function (data) {
               return data.Resources;
             },
-            replace: function(url, query) {
+            replace: function (url, query) {
               return url + encodeURIComponent(query) + '%22'; //%22 is encoded double-quote
             },
             cache: true,
@@ -95,23 +96,23 @@ angular.module('Squared')
       var token = Storage.get('accessToken');
       initializeTypeahead();
 
-      $scope.$on('AuthinfoUpdated', function() {
+      $scope.$on('AuthinfoUpdated', function () {
         //Initializing typeahead engine when authinfo is ready
         initializeTypeahead();
       });
 
-      var validateLocusId = function(locusId) {
+      var validateLocusId = function (locusId) {
         var re = /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/;
         return re.test(locusId);
       };
 
-      var validateCallStartTime = function(callStart) {
+      var validateCallStartTime = function (callStart) {
         var re = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/;
         return re.test(callStart);
       };
 
       //Retrieving logs for user
-      $scope.getLogs = function() {
+      $scope.getLogs = function () {
         $scope.closeCallInfo();
         $('#logsearchfield').typeahead('close');
         $scope.userLogs = [];
@@ -129,17 +130,17 @@ angular.module('Squared')
         }
       };
 
-      $scope.formatDate = function(date) {
-        if (date !== ''){
+      $scope.formatDate = function (date) {
+        if (date !== '') {
           return moment.utc(date).local().format('MMM D \'YY H:mm ZZ');
         } else {
           return date;
         }
       };
 
-      var searchLogs = function(searchInput) {
+      var searchLogs = function (searchInput) {
         $scope.closeCallInfo();
-        LogService.searchLogs(searchInput, function(data, status) {
+        LogService.searchLogs(searchInput, function (data, status) {
           if (data.success) {
             //parse the data
             $scope.userLogs = [];
@@ -149,7 +150,9 @@ angular.module('Squared')
                 var metadata = data.metadataList[index].meta;
 
                 // retrieve locus and callstart from metadata
-                var locus = '-NA-', callstart = '-NA-', feedbackid = '-NA-';
+                var locus = '-NA-',
+                  callstart = '-NA-',
+                  feedbackid = '-NA-';
                 if (metadata) {
                   if (metadata.locusid) {
                     locus = metadata.locusid;
@@ -172,7 +175,7 @@ angular.module('Squared')
                   locus = checkValidityOfLocus(locus);
                   callstart = checkValidityOfCallStart(callstart);
 
-                  if((locus === '-NA-') || (callstart === '-NA-')) {
+                  if ((locus === '-NA-') || (callstart === '-NA-')) {
                     callstart = '-NA-';
                     locus = '-NA-';
                   }
@@ -208,23 +211,23 @@ angular.module('Squared')
         });
       };
 
-      var checkValidityOfLocus = function(locus) {
+      var checkValidityOfLocus = function (locus) {
         if (!validateLocusId(locus)) {
           locus = '-NA-';
         }
         return locus;
       };
 
-      var checkValidityOfCallStart = function(callstart) {
-        if(!validateCallStartTime(callstart)) {
+      var checkValidityOfCallStart = function (callstart) {
+        if (!validateCallStartTime(callstart)) {
           callstart = '-NA-';
         }
         return callstart;
       };
 
-      var getLogInfo = function(locusId, startTime) {
+      var getLogInfo = function (locusId, startTime) {
         $scope.getPending = true;
-        ReportsService.getLogInfo(locusId, startTime, function(data, status) {
+        ReportsService.getLogInfo(locusId, startTime, function (data, status) {
           if (data.success) {
             if (data.callRecords.length > 0) {
               for (var index in data.callRecords) {
@@ -236,7 +239,7 @@ angular.module('Squared')
                 var errorCode = 0;
                 var starttime = moment(data.callRecords[index].locusCallStartTime);
                 var graphUrl = Config.getLocusServiceUrl() + '/locus/api/v1/callflows?start=' + starttime + '&format=svg';
-                var graphUserIdUrl = graphUrl + '&uid=' + data.callRecords[index].userId ;
+                var graphUserIdUrl = graphUrl + '&uid=' + data.callRecords[index].userId;
                 var graphLocusIdUrl = graphUrl + '&lid=' + data.callRecords[index].locusId;
                 var graphTrackingIdUrl = graphUrl + '&tid=' + data.callRecords[index].trackingId;
                 if (mediaStats) {
@@ -262,34 +265,34 @@ angular.module('Squared')
                   }
                 }
                 var info = {
-                  userId:data.callRecords[index].userId,
-                  emailAddress:data.callRecords[index].emailAddress,
-                  orgId:data.callRecords[index].orgId,
-                  locusId:data.callRecords[index].locusId,
-                  locusCallStartTime:data.callRecords[index].locusCallStartTime,
-                  deviceId:data.callRecords[index].deviceId,
-                  isGroupCall:data.callRecords[index].isGroupCall,
-                  callDuration:data.callRecords[index].callDuration,
-                  usrAgent:data.callRecords[index].usrAgent,
-                  networkName:data.callRecords[index].networkName,
-                  networkType:data.callRecords[index].networkType,
-                  trackingId:data.callRecords[index].trackingId,
-                  audioStart:audioStart,
-                  videoStart:videoStart,
-                  audioRxJitter:audioRxJitter,
-                  audioTxJitter:audioTxJitter,
-                  videoRxJitter:videoRxJitter,
-                  videoTxJitter:videoTxJitter,
-                  audioRxLossRatio:audioRxLossRatio,
-                  audioTxLossRatio:audioTxLossRatio,
-                  videoRxLossRatio:videoRxLossRatio,
-                  videoTxLossRatio:videoTxLossRatio,
-                  errorCode:errorCode,
-                  component:component,
-                  errMessage:errMessage,
-                  graphUserIdUrl:graphUserIdUrl,
-                  graphLocusIdUrl:graphLocusIdUrl,
-                  graphTrackingIdUrl:graphTrackingIdUrl
+                  userId: data.callRecords[index].userId,
+                  emailAddress: data.callRecords[index].emailAddress,
+                  orgId: data.callRecords[index].orgId,
+                  locusId: data.callRecords[index].locusId,
+                  locusCallStartTime: data.callRecords[index].locusCallStartTime,
+                  deviceId: data.callRecords[index].deviceId,
+                  isGroupCall: data.callRecords[index].isGroupCall,
+                  callDuration: data.callRecords[index].callDuration,
+                  usrAgent: data.callRecords[index].usrAgent,
+                  networkName: data.callRecords[index].networkName,
+                  networkType: data.callRecords[index].networkType,
+                  trackingId: data.callRecords[index].trackingId,
+                  audioStart: audioStart,
+                  videoStart: videoStart,
+                  audioRxJitter: audioRxJitter,
+                  audioTxJitter: audioTxJitter,
+                  videoRxJitter: videoRxJitter,
+                  videoTxJitter: videoTxJitter,
+                  audioRxLossRatio: audioRxLossRatio,
+                  audioTxLossRatio: audioTxLossRatio,
+                  videoRxLossRatio: videoRxLossRatio,
+                  videoTxLossRatio: videoTxLossRatio,
+                  errorCode: errorCode,
+                  component: component,
+                  errMessage: errMessage,
+                  graphUserIdUrl: graphUserIdUrl,
+                  graphLocusIdUrl: graphLocusIdUrl,
+                  graphTrackingIdUrl: graphTrackingIdUrl
                 };
                 $scope.logInfo.push(info);
               }
@@ -302,14 +305,15 @@ angular.module('Squared')
             Log.debug('Failed to retrieve log information. Status: ' + status);
             $scope.getPending = false;
             angular.element('#logInfoPendingBtn').button('reset');
-            Notification.notify([$translate.instant('supportPage.errCallInfoQuery',
-                { status: status })], 'error');
+            Notification.notify([$translate.instant('supportPage.errCallInfoQuery', {
+              status: status
+            })], 'error');
           }
         });
       };
 
-      $scope.downloadLog = function(filename) {
-        LogService.downloadLog(filename, function(data, status) {
+      $scope.downloadLog = function (filename) {
+        LogService.downloadLog(filename, function (data, status) {
           if (data.success) {
             window.location.assign(data.tempURL);
           } else {
@@ -319,13 +323,13 @@ angular.module('Squared')
         });
       };
 
-      $scope.getCallflowCharts = function(orgId, userId, filename, id) {
-        angular.element('#'+id).button('loading');
+      $scope.getCallflowCharts = function (orgId, userId, filename, id) {
+        angular.element('#' + id).button('loading');
         var output = $filter('translate')('supportPage.downloading');
         var downloadDialog = window.confirm(output);
         if (downloadDialog === true) {
-          CallflowService.getCallflowCharts(orgId, userId, filename, function(data, status) {
-            angular.element('#'+id).button('reset');
+          CallflowService.getCallflowCharts(orgId, userId, filename, function (data, status) {
+            angular.element('#' + id).button('reset');
             if (data.success) {
               window.location.assign(data.resultsUrl);
             } else {
@@ -334,18 +338,18 @@ angular.module('Squared')
             }
           });
         } else {
-          angular.element('#'+id).button('reset');
+          angular.element('#' + id).button('reset');
         }
       };
 
-      $scope.downloadFlow = function(downloadUrl) {
+      $scope.downloadFlow = function (downloadUrl) {
         $scope.callInfoActive = false;
         $scope.logPanelActive = false;
         $scope.callFlowActive = true;
         $scope.callFlowUrl = downloadUrl;
       };
 
-      $scope.showCallInfo = function(emailAddress, locusId, startTime) {
+      $scope.showCallInfo = function (emailAddress, locusId, startTime) {
         $scope.callInfoActive = true;
         $scope.logPanelActive = false;
         $scope.callFlowActive = false;
@@ -358,13 +362,13 @@ angular.module('Squared')
         getLogInfo(locusId, startTime);
       };
 
-      $scope.closeCallInfo = function() {
+      $scope.closeCallInfo = function () {
         $scope.callInfoActive = false;
         $scope.logPanelActive = true;
         $scope.callFlowActive = false;
       };
 
-      $scope.closeCallFlow = function() {
+      $scope.closeCallFlow = function () {
         $scope.callFlowUrl = 'images/solid_white.png';
         $scope.callInfoActive = true;
         $scope.logPanelActive = false;
@@ -374,9 +378,9 @@ angular.module('Squared')
       if ($scope.input.search) {
         $('#logsearchfield').val($scope.input.search);
 
-        setTimeout(function() {
+        setTimeout(function () {
           $scope.getLogs();
-        }, 0);  // setTimeout to allow label translation to resolve
+        }, 0); // setTimeout to allow label translation to resolve
       }
 
     }

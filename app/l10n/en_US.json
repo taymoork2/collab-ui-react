@@ -49,7 +49,7 @@
     "endpointsPreview": "Endpoints"
   },
   "messagingPanel": {
-      "title": "Messaging"
+    "title": "Messaging"
   },
   "tabs": {
     "homeTab": "Home",
@@ -98,7 +98,7 @@
     "subTitleOrgs": "Organizations Tools",
     "exportBtn": "Export Users",
     "csvFilename": "users.csv",
-    "loadingMsg": "Exporting data... <i class='fa fa-refresh fa-spin' style='margin-left:10px;'></i>",
+    "loadingMsg": "Exporting data... <i class='icon icon-spinner icon-spin' style='margin-left:10px;'></i>",
     "orgDetails": "Organization Details",
     "displayName": "Display Name",
     "services": "Services",
@@ -399,13 +399,13 @@
     "singleNumberReach": "Single Number Reach"
   },
   "directoryNumberPanel": {
-      "title": "Line Configuration",
-      "success": " configuration saved successfully",
-      "directNumbers": "Direct Numbers",
-      "internalNumberLabel": "Reach this line by any of these numbers or extensions",
-      "internalNumberExtension": "Internal Number Extension",
-      "externalNumberLabel": "External Number",
-      "chooseNumber": "choose a number"
+    "title": "Line Configuration",
+    "success": " configuration saved successfully",
+    "directNumbers": "Direct Numbers",
+    "internalNumberLabel": "Reach this line by any of these numbers or extensions",
+    "internalNumberExtension": "Internal Number Extension",
+    "externalNumberLabel": "External Number",
+    "chooseNumber": "choose a number"
   },
   "callForwardPanel": {
     "success": "Call Forward configuration saved successfully",
@@ -474,19 +474,19 @@
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Total Content Shared"
   },
-  "status" : {
-    "noResults" : "No results available.",
-    "errorProcessing" : "Error processing request."
+  "status": {
+    "noResults": "No results available.",
+    "errorProcessing": "Error processing request."
   },
-  "customerPage" : {
-    "title" : "Customers",
-    "customerNameHeader" : "Company Name",
+  "customerPage": {
+    "title": "Customers",
+    "customerNameHeader": "Company Name",
     "trialIdHeader": "Package",
     "licenseHeader": "Licenses",
     "usageHeader": "License Usage",
     "statusHeader": "Status Days(s) Left",
     "actionHeader": "Actions",
-    "addTrial" : "Add Trial",
+    "addTrial": "Add Trial",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_customers.csv",
     "custDetail": "Customer Detail",

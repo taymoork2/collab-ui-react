@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   grunt.util.linefeed = '\n';
 
@@ -14,7 +14,6 @@ module.exports = function(grunt) {
     build: require('./bower.json').appPath || 'build',
     dist: 'dist'
   };
-
 
   var taskConfig = {
 
@@ -109,24 +108,6 @@ module.exports = function(grunt) {
           open: true,
           base: '<%= compile_dir %>'
         }
-      }
-    },
-
-    imagemin: {
-      vendor: {
-        files: [{
-          expand: true,
-          src: ['<%= vendor_files.images %>'],
-          dest: '<%= build_dir %>'
-        }]
-      },
-      app: {
-        files: [{
-          src: ['**/*.{png,jpg,gif}'],
-          dest: '<%= build_dir %>',
-          cwd: '<%= app_dir %>',
-          expand: true
-        }]
       }
     },
 
@@ -260,6 +241,20 @@ module.exports = function(grunt) {
       }
     },
 
+    // HTML Lint template files before building
+    htmlangular: {
+      options: {
+        tmplext: 'tpl.html',
+        customtags: '<%= html_lint.customtags %>',
+        customattrs: '<%= html_lint.customattrs %>',
+        relaxerror: '<%= html_lint.relaxerror %>',
+        reportpath: null
+      },
+      files: {
+        src: ['<%= app_dir %>/modules/**/*.tpl.html'],
+      },
+    },
+
     // Minify HTML files for production
     htmlmin: {
       dist: {
@@ -274,6 +269,24 @@ module.exports = function(grunt) {
           cwd: '<%= compile_dir %>',
           src: ['*.html'],
           dest: '<%= compile_dir %>'
+        }]
+      }
+    },
+
+    imagemin: {
+      vendor: {
+        files: [{
+          expand: true,
+          src: ['<%= vendor_files.images %>'],
+          dest: '<%= build_dir %>'
+        }]
+      },
+      app: {
+        files: [{
+          src: ['**/*.{png,jpg,gif}'],
+          dest: '<%= build_dir %>',
+          cwd: '<%= app_dir %>',
+          expand: true
         }]
       }
     },
@@ -314,6 +327,29 @@ module.exports = function(grunt) {
           // '<%= vendor_files.css %>',
           '<%= compile_dir %>/styles/<%= css_name %>.css'
         ]
+      }
+    },
+
+    // Reformat JS app files before checking in
+    jsbeautifier: {
+      beautify: {
+        src: [
+          '<%= app_dir %>/**/*.js',
+          'Gruntfile.js'
+        ],
+        options: {
+          config: '.jsbeautifyrc'
+        }
+      },
+      verify: {
+        src: [
+          '<%= app_dir %>/**/*.js',
+          'Gruntfile.js'
+        ],
+        options: {
+          mode: 'VERIFY_ONLY',
+          config: '.jsbeautifyrc'
+        }
       }
     },
 
@@ -418,7 +454,8 @@ module.exports = function(grunt) {
        * plugin should auto-detect.
        */
       options: {
-        livereload: true
+        livereload: true,
+        livereloadOnError: false
       },
       /**
        * When the Gruntfile changes, we just want to lint it. In fact, when
@@ -572,8 +609,6 @@ module.exports = function(grunt) {
     }
   };
 
-
-
   // Load grunt tasks automatically from package.json
   require('load-grunt-tasks')(grunt, {
     scope: [
@@ -586,7 +621,7 @@ module.exports = function(grunt) {
   grunt.initConfig(grunt.util._.extend(taskConfig, appConfig));
 
   // Start server to preview Build and Dist directories
-  grunt.registerTask('serve', function(target) {
+  grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
       return grunt.task.run([
         'build',
@@ -602,7 +637,7 @@ module.exports = function(grunt) {
     ]);
   });
 
-  grunt.registerTask('server', function() {
+  grunt.registerTask('server', function () {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve']);
   });
@@ -616,8 +651,9 @@ module.exports = function(grunt) {
   // Build files into the build folder for development
   grunt.registerTask('build', [
     'clean:build',
+    'htmlangular',
     'html2js',
-    'jshint',
+    'js_beautify',
     'less',
     'copy_build',
     'imagemin',
@@ -643,6 +679,18 @@ module.exports = function(grunt) {
     'htmlmin'
   ]);
 
+  // Format JS files
+  grunt.registerTask('js_beautify', [
+    'jsbeautifier:beautify',
+    'jshint'
+  ]);
+
+  // Check JS files for fomatting errors
+  grunt.registerTask('js_verify', [
+    'jsbeautifier:verify',
+    'jshint'
+  ]);
+
   // Copy the needed files into the build folder
   grunt.registerTask('copy_build', [
     'copy:build_app_files',
@@ -660,7 +708,7 @@ module.exports = function(grunt) {
     'copy:compile_bluepng'
   ]);
 
-  grunt.registerTask('test-setup', function(target) {
+  grunt.registerTask('test-setup', function (target) {
     if (target === 'build') {
       return grunt.task.run([
         'clean',
@@ -691,7 +739,7 @@ module.exports = function(grunt) {
     'protractor:hercules'
   ]);
 
-  grunt.registerTask('test', function(target) {
+  grunt.registerTask('test', function (target) {
     if (target === 'build') {
       return grunt.task.run([
         'test-setup:build',
@@ -710,14 +758,14 @@ module.exports = function(grunt) {
 
   // A utility function to get all app JavaScript sources.
   function filterForJS(files) {
-    return files.filter(function(file) {
+    return files.filter(function (file) {
       return file.match(/\.js$/);
     });
   }
 
   // A utility function to get all app CSS sources.
   function filterForCSS(files) {
-    return files.filter(function(file) {
+    return files.filter(function (file) {
       return file.match(/\.css$/);
     });
   }
@@ -728,18 +776,18 @@ module.exports = function(grunt) {
    * the list into variables for the template to use and then runs the
    * compilation.
    */
-  grunt.registerMultiTask('index', 'Process index.html template', function() {
+  grunt.registerMultiTask('index', 'Process index.html template', function () {
 
     var dirRE = new RegExp('^(' + grunt.config('build_dir') + '|' + grunt.config('compile_dir') + ')\/', 'g');
-    var jsFiles = filterForJS(this.filesSrc).map(function(file) {
+    var jsFiles = filterForJS(this.filesSrc).map(function (file) {
       return file.replace(dirRE, '');
     });
-    var cssFiles = filterForCSS(this.filesSrc).map(function(file) {
+    var cssFiles = filterForCSS(this.filesSrc).map(function (file) {
       return file.replace(dirRE, '');
     });
 
     grunt.file.copy('app/index.html', this.data.dir + '/index.html', {
-      process: function(contents, path) {
+      process: function (contents, path) {
         return grunt.template.process(contents, {
           data: {
             scripts: jsFiles,
@@ -756,11 +804,11 @@ module.exports = function(grunt) {
    * run, we use grunt to manage the list for us. The `karma/*` files are
    * compiled as grunt templates for use by Karma. Yay!
    */
-  grunt.registerMultiTask('karmaconfig', 'Process karma config templates', function() {
+  grunt.registerMultiTask('karmaconfig', 'Process karma config templates', function () {
     var jsFiles = filterForJS(this.filesSrc);
 
     grunt.file.copy('karma.conf.js', grunt.config('test_dir') + '/karma-unit.js', {
-      process: function(contents, path) {
+      process: function (contents, path) {
         return grunt.template.process(contents, {
           data: {
             scripts: jsFiles

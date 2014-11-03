@@ -3,7 +3,7 @@
 angular.module('Core')
 
 .controller('PartnerReportsCtrl', ['$scope', 'ReportsService',
-  function($scope, ReportsService) {
+  function ($scope, ReportsService) {
     var activeUsersChart, averageCallsChart, contentSharedChart, entitlementsChart;
 
     $scope.counts = {};
@@ -16,19 +16,19 @@ angular.module('Core')
       contentShared: 'refresh'
     };
 
-    $scope.isRefresh = function(property) {
+    $scope.isRefresh = function (property) {
       return $scope.reportStatus[property] === 'refresh';
     };
 
-    $scope.isEmpty = function(property) {
+    $scope.isEmpty = function (property) {
       return $scope.reportStatus[property] === 'empty';
     };
 
-    $scope.hasError = function(property) {
+    $scope.hasError = function (property) {
       return $scope.reportStatus[property] === 'error';
     };
 
-    $scope.reloadReports = function(useCache) {
+    $scope.reloadReports = function (useCache) {
       $scope.reportStatus['entitlements'] = 'refresh';
       $scope.reportStatus['activeUsers'] = 'refresh';
       $scope.reportStatus['averageCalls'] = 'refresh';
@@ -38,45 +38,44 @@ angular.module('Core')
 
     ReportsService.getPartnerMetrics(true);
 
-    var makeChart = function(id,colors) {
+    var makeChart = function (id, colors) {
       return AmCharts.makeChart(id, {
-          'type': 'serial',
-          'theme': 'none',
-          'fontFamily': 'CiscoSansTT Thin',
-          'colors': colors,
-          'graphs': [{
-            'type':'column',
-              'fillAlphas': 1,
-              'lineAlpha': 0,
-              'hidden': false,
-              'valueField': 'count',
-              'ballooonText':'[[value]]'
-            }
-          ],
-          'plotAreaBorderAlpha': 1,
-          'plotAreaBorderColor': '#DDDDDD',
-          'marginTop': 10,
-          'marginLeft': 0,
-          'marginBottom': 0,
-          'categoryField': 'date',
-          'categoryAxis': {
-            'gridPosition': 'start',
-            'axisColor': '#DDDDDD',
-            'gridAlpha': 1,
-            'gridColor': '#DDDDDD',
-            'color': '#999999'
-          },
-          'valueAxes': [{
-            'axisColor': '#DDDDDD',
-            'gridAlpha': 0,
-            'axisAlpha': 1,
-            'color': '#999999'
-          }]
-        });
+        'type': 'serial',
+        'theme': 'none',
+        'fontFamily': 'CiscoSansTT Thin',
+        'colors': colors,
+        'graphs': [{
+          'type': 'column',
+          'fillAlphas': 1,
+          'lineAlpha': 0,
+          'hidden': false,
+          'valueField': 'count',
+          'ballooonText': '[[value]]'
+        }],
+        'plotAreaBorderAlpha': 1,
+        'plotAreaBorderColor': '#DDDDDD',
+        'marginTop': 10,
+        'marginLeft': 0,
+        'marginBottom': 0,
+        'categoryField': 'date',
+        'categoryAxis': {
+          'gridPosition': 'start',
+          'axisColor': '#DDDDDD',
+          'gridAlpha': 1,
+          'gridColor': '#DDDDDD',
+          'color': '#999999'
+        },
+        'valueAxes': [{
+          'axisColor': '#DDDDDD',
+          'gridAlpha': 0,
+          'axisAlpha': 1,
+          'color': '#999999'
+        }]
+      });
     };
 
-    var makeEntitlementChart = function() {
-      var chart = makeChart('entitlementsChart',['#1EA7D1']);
+    var makeEntitlementChart = function () {
+      var chart = makeChart('entitlementsChart', ['#1EA7D1']);
       // chart.addLegend(new AmCharts.AmLegend({
       //   'equalWidths': false,
       //   'periodValueText': '[[value.sum]]',
@@ -95,11 +94,11 @@ angular.module('Core')
       return chart;
     };
 
-    var buildChart = function(id,data) {
+    var buildChart = function (id, data) {
       return makeChart(id, ['#FF5F44']);
     };
 
-    var formatDates = function(dataList) {
+    var formatDates = function (dataList) {
       if (angular.isArray(dataList)) {
         for (var i = 0; i < dataList.length; i++) {
           var dateVal = new Date(dataList[i].date);
@@ -109,7 +108,7 @@ angular.module('Core')
       }
     };
 
-    var updateChart = function(chart,data) {
+    var updateChart = function (chart, data) {
       formatDates(data);
       if (chart) {
         chart.dataProvider = data;
@@ -117,7 +116,7 @@ angular.module('Core')
       }
     };
 
-    var loadDataCallback = function(chart,response,property) {
+    var loadDataCallback = function (chart, response, property) {
       if (response.data.success) {
         if (response.data.length !== 0) {
           $scope.refreshTime = response.data.date;
@@ -135,69 +134,69 @@ angular.module('Core')
 
     };
 
-    var buildActiveUsersChart = function() {
+    var buildActiveUsersChart = function () {
       if (!activeUsersChart) {
         activeUsersChart = buildChart('dailyActiveUsersChart');
       }
     };
 
-    var buildAverageCallsChart = function() {
+    var buildAverageCallsChart = function () {
       if (!averageCallsChart) {
         averageCallsChart = buildChart('averageCallsChart');
       }
     };
 
-    var buildContentSharedChart = function() {
+    var buildContentSharedChart = function () {
       if (!contentSharedChart) {
         contentSharedChart = buildChart('contentSharedChart');
       }
     };
 
-    var buildEntitlementChart = function() {
+    var buildEntitlementChart = function () {
       if (!entitlementsChart) {
         entitlementsChart = makeEntitlementChart();
       }
     };
 
-    var loadActiveUsers = function(event,response) {
+    var loadActiveUsers = function (event, response) {
       buildActiveUsersChart();
       loadDataCallback(activeUsersChart, response, 'activeUsers');
     };
 
-    var loadAverageCalls = function(event,response) {
+    var loadAverageCalls = function (event, response) {
       buildAverageCallsChart();
       loadDataCallback(averageCallsChart, response, 'averageCalls');
     };
 
-    var loadContentShared = function(event,response) {
+    var loadContentShared = function (event, response) {
       buildContentSharedChart();
       loadDataCallback(contentSharedChart, response, 'contentShared');
     };
 
-    var loadEntitlements = function(event,response) {
+    var loadEntitlements = function (event, response) {
       buildEntitlementChart();
       loadDataCallback(entitlementsChart, response, 'entitlements');
     };
 
-    var loadActiveUserCount = function(event,response) {
+    var loadActiveUserCount = function (event, response) {
       if (response.data.success) {
         $scope.counts.activeUsers = Math.round(response.data.data);
       }
     };
 
-    var loadAverageCallCount = function(event,response) {
+    var loadAverageCallCount = function (event, response) {
       if (response.data.success) {
         $scope.counts.averageCalls = Math.round(response.data.data);
       }
     };
 
-    var loadContentSharedCount = function(event,response) {
+    var loadContentSharedCount = function (event, response) {
       if (response.data.success) {
         $scope.counts.contentShared = Math.round(response.data.data);
       }
     };
 
-    var loadEntitlementCount = function(event,response) {
+    var loadEntitlementCount = function (event, response) {
       if (response.data.success) {
         $scope.counts.entitlements = Math.round(response.data.data);
       }
@@ -212,19 +211,19 @@ angular.module('Core')
     $scope.$on('contentSharedCountLoaded', loadContentSharedCount);
     $scope.$on('entitlementCountLoaded', loadEntitlementCount);
 
-    $scope.resizeActiveUsersChart = function() {
+    $scope.resizeActiveUsersChart = function () {
       if (activeUsersChart) {
         activeUsersChart.invalidateSize();
       }
     };
 
-    $scope.resizeAverageCallsChart = function() {
+    $scope.resizeAverageCallsChart = function () {
       if (averageCallsChart) {
         averageCallsChart.invalidateSize();
       }
     };
 
-    $scope.resizeContentSharedChart = function() {
+    $scope.resizeContentSharedChart = function () {
       if (contentSharedChart) {
         contentSharedChart.invalidateSize();
       }

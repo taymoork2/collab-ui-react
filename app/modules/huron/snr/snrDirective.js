@@ -3,7 +3,8 @@
 angular.module('Huron')
 
 .directive('singleNumberReachInfo', [
-  function() {
+
+  function () {
     return {
       controller: 'SingleNumberReachInfoCtrl',
       restrict: 'EA',

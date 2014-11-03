@@ -10,7 +10,7 @@ angular.module('Core')
       ];
 
       $scope.rating = 5;
-      $scope.saveRatingToServer = function(rating) {
+      $scope.saveRatingToServer = function (rating) {
         $window.alert('Rating selected - ' + rating);
       };
     }

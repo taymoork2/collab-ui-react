@@ -5,7 +5,7 @@
 </div>
 <div class="row">
   <div class="dir-number-list col-md-12">
-    <div ng-repeat="directoryNumber in telephonyInfo.directoryNumbers" id="{{directoryNumber.id}}" class="dir-number sub-service row">
+    <div ng-repeat="directoryNumber in telephonyInfo.directoryNumbers" class="dir-number sub-service row">
       <a href id="{{directoryNumber.id}}" ng-click="showDirectoryNumberPanel(directoryNumber)">
         <div class="col-md-12">
           <span class="number">{{directoryNumber.pattern}}</span>
@@ -33,7 +33,6 @@
       <a ui-sref="users.list.preview.snr">
         <span>{{'telephonyPreview.singleNumberReach' | translate}}</span>
           <i class="icon icon-arrow-next pull-right"></i>
-        </span>
         <span class="status">{{telephonyInfo.singleNumberReach}}</span>
       </a>
     </div>

@@ -17,7 +17,7 @@
        </div>
 
        <div class="form-group">
-        <button id="logSearchBtn" class="btn btn-primary pull-right" ng-click="getLogs()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span translate="supportPage.listlogsbtn"></span></button>
+        <button id="logSearchBtn" class="btn btn-primary pull-right" ng-click="getLogs()" data-loading-text="<i class='icon icon-spinner icon-spin'></i>"><span translate="supportPage.listlogsbtn"></span></button>
       </div>
     </form>
   </div>
@@ -52,7 +52,7 @@
               <td>{{log.callStart}}</td>
               <td>{{formatDate(log.date)}}</td>
               <td class="center"><a ng-click="downloadLog(log.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></td>
-              <td class="center"><button class="btn btn-primary pull-center" ng-click="getCallflowCharts(log.orgId, log.userId, log.fullFilename, $index)" id="{{$index}}" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></td>
+              <td class="center"><button class="btn btn-primary pull-center" ng-click="getCallflowCharts(log.orgId, log.userId, log.fullFilename, $index)" id="{{$index}}" data-loading-text="<i class='icon icon-spinner icon-spin'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></td>
               <td class="center"><a ng-click="showCallInfo(log.emailAddress, log.locusId, log.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></a></td>
             </tr>
           </tbody>
@@ -76,7 +76,7 @@
     <div class="panel-body">
       <label ng-show="!getPending && (logInfo.length === 0 || !logInfo)"><span id="noResults" translate="supportPage.noResults"></label>
       <div class="center" ng-show="getPending && (logInfo.length === 0 || !logInfo)">
-        <i class='fa fa-refresh fa-spin'></i>
+        <i class='icon icon-spinner icon-spin'></i>
       </div>
       <table class="table" ng-show="logInfo.length !== 0">
         <thead>

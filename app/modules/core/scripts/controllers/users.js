@@ -3,8 +3,8 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('UsersCtrl', ['$scope', '$state','$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config', 'HuronUser',
-    function($scope, $state, $location, $window, Userservice, UserListService, Log, Authinfo, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config, HuronUser) {
+  .controller('UsersCtrl', ['$scope', '$state', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Storage', '$rootScope', 'Notification', '$filter', '$translate', 'LogMetricsService', 'Config', 'HuronUser',
+    function ($scope, $state, $location, $window, Userservice, UserListService, Log, Authinfo, Storage, $rootScope, Notification, $filter, $translate, LogMetricsService, Config, HuronUser) {
 
       $scope.init = function () {
         setPlaceholder();
@@ -14,13 +14,13 @@ angular.module('Core')
         return Authinfo.isSquaredInviter();
       };
 
-      $scope.openAddUserPanel = function() {
+      $scope.openAddUserPanel = function () {
         $state.go('users.list.add');
       };
 
       var setPlaceholder = function () {
         var placeholder = $filter('translate')('usersPage.userInput');
-        angular.element('#usersfield-tokenfield').css('width','100%');
+        angular.element('#usersfield-tokenfield').css('width', '100%');
         angular.element('#usersfield-tokenfield').attr('placeholder', placeholder);
       };
 
@@ -29,13 +29,13 @@ angular.module('Core')
       $scope.popup = Notification.popup;
       var invalidcount = 0;
 
-      function Feature (name, state) {
+      function Feature(name, state) {
         this.entitlementName = name;
-        this.entitlementState = state? 'ACTIVE' : 'INACTIVE';
+        this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
       }
 
       //email validation logic
-      var validateEmail = function(input) {
+      var validateEmail = function (input) {
         var emailregex = /\S+@\S+\.\S+/;
         var emailregexbrackets = /<\s*\S+@\S+\.\S+\s*>/;
         var emailregexquotes = /"\s*\S+@\S+\.\S+\s*"/;
@@ -53,7 +53,7 @@ angular.module('Core')
       };
 
       //placeholder logic
-      var checkPlaceholder = function() {
+      var checkPlaceholder = function () {
         if (angular.element('.token-label').length > 0) {
           angular.element('#usersfield-tokenfield').attr('placeholder', '');
         } else {
@@ -61,7 +61,7 @@ angular.module('Core')
         }
       };
 
-      var checkButtons = function() {
+      var checkButtons = function () {
         if (invalidcount > 0) {
           angular.element('#btnAdd').prop('disabled', true);
           angular.element('#btnEntitle').prop('disabled', true);
@@ -73,18 +73,18 @@ angular.module('Core')
         }
       };
 
-      $scope.setupTokenfield = function() {
+      $scope.setupTokenfield = function () {
         //tokenfield setup - Should make it into a directive later.
         angular.element('#usersfield').tokenfield({
-          delimiter: [',', ';'],
-          createTokensOnBlur: true
-        })
-          .on('tokenfield:createtoken', function(e) {
+            delimiter: [',', ';'],
+            createTokensOnBlur: true
+          })
+          .on('tokenfield:createtoken', function (e) {
             //Removing anything in brackets from user data
             var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
             e.attrs.value = value;
           })
-          .on('tokenfield:createdtoken', function(e) {
+          .on('tokenfield:createdtoken', function (e) {
             if (!validateEmail(e.attrs.value)) {
               angular.element(e.relatedTarget).addClass('invalid');
               invalidcount++;
@@ -92,12 +92,12 @@ angular.module('Core')
             checkButtons();
             checkPlaceholder();
           })
-          .on('tokenfield:edittoken', function(e) {
+          .on('tokenfield:edittoken', function (e) {
             if (!validateEmail(e.attrs.value)) {
               invalidcount--;
             }
           })
-          .on('tokenfield:removetoken', function(e) {
+          .on('tokenfield:removetoken', function (e) {
             if (!validateEmail(e.attrs.value)) {
               invalidcount--;
             }
@@ -105,40 +105,40 @@ angular.module('Core')
             checkPlaceholder();
           });
 
-        angular.element('#usersfield-tokenfield').css('width','100%');
+        angular.element('#usersfield-tokenfield').css('width', '100%');
       };
 
-      var getUsersList = function() {
+      var getUsersList = function () {
         return $window.addressparser.parse(angular.element('#usersfield').tokenfield('getTokensList'));
       };
 
-      var resetUsersfield = function() {
+      var resetUsersfield = function () {
         angular.element('#usersfield').tokenfield('setTokens', ' ');
         checkPlaceholder();
         invalidcount = 0;
       };
 
-      $scope.clearPanel = function() {
+      $scope.clearPanel = function () {
         resetUsersfield();
         $scope.results = null;
       };
 
-      $scope.isAddEnabled = function() {
+      $scope.isAddEnabled = function () {
         return Authinfo.isAddUserEnabled();
       };
 
-      $scope.isEntitleEnabled = function() {
+      $scope.isEntitleEnabled = function () {
         return Authinfo.isEntitleUserEnabled();
       };
 
-      $scope.addUsers = function() {
+      $scope.addUsers = function () {
         $scope.results = {
           resultList: []
         };
         var isComplete = true;
         var usersList = getUsersList();
         Log.debug('Entitlements: ', usersList);
-        var callback = function(data, status) {
+        var callback = function (data, status) {
           if (data.success) {
             Log.info('User add request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
@@ -182,9 +182,8 @@ angular.module('Core')
                 count_e++;
               }
             }
-             //Displaying notifications
-            if (successes.length + errors.length === usersList.length)
-            {
+            //Displaying notifications
+            if (successes.length + errors.length === usersList.length) {
               angular.element('#btnAdd').button('reset');
               Notification.notify(successes, 'success');
               Notification.notify(errors, 'error');
@@ -213,9 +212,9 @@ angular.module('Core')
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnAdd').button('loading');
 
-          var i,temparray,chunk = Config.batchSize;
-          for (i=0; i<usersList.length; i+=chunk) {
-            temparray = usersList.slice(i,i+chunk);
+          var i, temparray, chunk = Config.batchSize;
+          for (i = 0; i < usersList.length; i += chunk) {
+            temparray = usersList.slice(i, i + chunk);
             //update entitlements
             Userservice.addUsers(usersList, getEntitlements('add'), callback);
           }
@@ -228,14 +227,14 @@ angular.module('Core')
 
       };
 
-      $scope.entitleUsers = function() {
+      $scope.entitleUsers = function () {
         var usersList = getUsersList();
         Log.debug('Entitlements: ', usersList);
         $scope.results = {
           resultList: []
         };
         var isComplete = true;
-        var callback = function(data, status) {
+        var callback = function (data, status) {
           if (data.success) {
             Log.info('User successfully updated', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
@@ -284,8 +283,7 @@ angular.module('Core')
             }
 
             //Displaying notifications
-            if (successes.length + errors.length === usersList.length)
-            {
+            if (successes.length + errors.length === usersList.length) {
               angular.element('#btnEntitle').button('reset');
               Notification.notify(successes, 'success');
               Notification.notify(errors, 'error');
@@ -314,9 +312,9 @@ angular.module('Core')
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnEntitle').button('loading');
 
-          var i,temparray,chunk = Config.batchSize;
-          for (i=0; i<usersList.length; i+=chunk) {
-            temparray = usersList.slice(i,i+chunk);
+          var i, temparray, chunk = Config.batchSize;
+          for (i = 0; i < usersList.length; i += chunk) {
+            temparray = usersList.slice(i, i + chunk);
             //update entitlements
             Userservice.updateUsers(temparray, getEntitlements('entitle'), callback);
           }
@@ -331,14 +329,14 @@ angular.module('Core')
 
       var startLog;
 
-      $scope.inviteUsers = function() {
+      $scope.inviteUsers = function () {
         var usersList = getUsersList();
         Log.debug('Invite: ', usersList);
         $scope.results = {
           resultList: []
         };
         var isComplete = true;
-        var callback = function(data, status) {
+        var callback = function (data, status) {
 
           if (data.success) {
             Log.info('User invitation sent successfully.', data.id);
@@ -384,8 +382,7 @@ angular.module('Core')
               }
             }
             //Displaying notifications
-            if (successes.length + errors.length === usersList.length)
-            {
+            if (successes.length + errors.length === usersList.length) {
               angular.element('#btnInvite').button('reset');
               Notification.notify(successes, 'success');
               Notification.notify(errors, 'error');
@@ -413,9 +410,9 @@ angular.module('Core')
 
           startLog = moment();
 
-          var i,temparray,chunk = Config.batchSize;
-          for (i=0; i<usersList.length; i+=chunk) {
-            temparray = usersList.slice(i,i+chunk);
+          var i, temparray, chunk = Config.batchSize;
+          for (i = 0; i < usersList.length; i += chunk) {
+            temparray = usersList.slice(i, i + chunk);
             //update entitlements
             Userservice.inviteUsers(usersList, callback);
           }
@@ -430,28 +427,25 @@ angular.module('Core')
 
       //radio group
       $scope.entitlements = {};
-      var setEntitlementList = function(){
-        for (var i=0;i<$rootScope.services.length;i++)
-        {
+      var setEntitlementList = function () {
+        for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i].sqService;
 
           $scope.entitlements[svc] = false;
-          if (svc === 'webExSquared')
-          {
+          if (svc === 'webExSquared') {
             $scope.entitlements[svc] = true;
           }
         }
       };
 
-      $scope.$on('AuthinfoUpdated', function() {
-        if (undefined !== $rootScope.services && $rootScope.services.length === 0)
-        {
+      $scope.$on('AuthinfoUpdated', function () {
+        if (undefined !== $rootScope.services && $rootScope.services.length === 0) {
           $rootScope.services = Authinfo.getServices();
         }
         setEntitlementList();
       });
 
-      var getEntitlements = function(action){
+      var getEntitlements = function (action) {
         var entitleList = [];
         var state = null;
         for (var key in $scope.entitlements) {
@@ -467,22 +461,18 @@ angular.module('Core')
       $scope.getServiceName = function (service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
-          if (svc.sqService === service)
-          {
+          if (svc.sqService === service) {
             return svc.displayName;
           }
         }
       };
 
-      var isEntitled = function(ent) {
-        if ($rootScope.services)
-        {
-          for (var i=0;i<$rootScope.services.length;i++)
-          {
+      var isEntitled = function (ent) {
+        if ($rootScope.services) {
+          for (var i = 0; i < $rootScope.services.length; i++) {
             var svc = $rootScope.services[i].ciService;
 
-            if (svc === ent)
-            {
+            if (svc === ent) {
               return true;
             }
           }
@@ -490,7 +480,7 @@ angular.module('Core')
         return false;
       };
 
-      $scope.isServiceAllowed = function(service) {
+      $scope.isServiceAllowed = function (service) {
         return Authinfo.isServiceAllowed(service);
       };
 

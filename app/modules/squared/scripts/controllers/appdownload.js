@@ -9,7 +9,7 @@
  */
 angular.module('Squared')
   .controller('AppdownloadCtrl', ['$window', '$http', 'Log', 'Config', 'Utils',
-    function($window, $http, Log, Config, Utils) {
+    function ($window, $http, Log, Config, Utils) {
 
       if (Utils.isIPhone()) {
         $window.location.href = Config.getItunesStoreUrl();

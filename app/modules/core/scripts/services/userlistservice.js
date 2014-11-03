@@ -3,7 +3,7 @@
 
 angular.module('Core')
   .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils', '$q', '$filter', '$compile', 'Auth',
-    function($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
+    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
       var token = Storage.get('accessToken');
       var searchfilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
@@ -12,7 +12,7 @@ angular.module('Core')
 
       var userlistservice = {
 
-        listUsers: function(startIndex, count, sortBy, sortOrder, callback, entitlement) {
+        listUsers: function (startIndex, count, sortBy, sortOrder, callback, entitlement) {
 
           var listUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
           var searchStr;
@@ -20,14 +20,14 @@ angular.module('Core')
           var scimSearchUrl = null;
           var encodedSearchStr = '';
 
-          if (typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined') {
+          if (typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             //It seems CI does not support 'ANDing' filters in this situation.
             filter = searchfilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
             scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
             listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
-          } else if ($rootScope.searchStr !== '' && typeof($rootScope.searchStr) !== 'undefined') {
+          } else if ($rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             filter = searchfilter;
             scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
@@ -57,12 +57,12 @@ angular.module('Core')
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.get(listUrl)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               Log.debug('Callback with search=' + searchStr);
               callback(data, status, searchStr);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               data.success = false;
               data.status = status;
               callback(data, status, searchStr);
@@ -75,14 +75,14 @@ angular.module('Core')
             });
         },
 
-        exportCSV: function(scope) {
+        exportCSV: function (scope) {
           var deferred = $q.defer();
           var users = [];
           var page = 0;
           var exportedUsers = [];
 
-          var getUsersBatch = function(startIndex) {
-            userlistservice.listUsers(startIndex, 0, 'userName', 'ascending', function(data, status) {
+          var getUsersBatch = function (startIndex) {
+            userlistservice.listUsers(startIndex, 0, 'userName', 'ascending', function (data, status) {
               if (data.success && data.Resources.length > 0) {
                 users = users.concat(data.Resources);
                 page++;
@@ -125,7 +125,7 @@ angular.module('Core')
             }, 'webex-squared');
           };
 
-          $('#export-icon').html('<i class=\'fa fa-refresh fa-spin\'></i>');
+          $('#export-icon').html('<i class=\'icon icon-spinner icon-spin\'></i>');
           $compile(angular.element('#global-export-btn').html($filter('translate')('orgsPage.loadingMsg')))(scope);
           $rootScope.exporting = true;
           if (scope.exportBtn) {
@@ -137,19 +137,19 @@ angular.module('Core')
           return deferred.promise;
         },
 
-        getUser: function(searchinput, callback) {
+        getUser: function (searchinput, callback) {
           var filter = 'filter=userName%20eq%20%22' + window.encodeURIComponent(searchinput) + '%22';
           var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
           var getUserUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + token;
           $http.get(getUserUrl)
-            .success(function(data, status) {
+            .success(function (data, status) {
               data.success = true;
               Log.debug('Retrieved user successfully.');
               callback(data, status);
             })
-            .error(function(data, status) {
+            .error(function (data, status) {
               data.success = false;
               data.status = status;
               callback(data, status);

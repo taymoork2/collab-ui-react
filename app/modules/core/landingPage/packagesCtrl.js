@@ -3,7 +3,7 @@
 angular.module('Core')
 
 .controller('PackagesCtrl', ['$scope',
-  function($scope) {
+  function ($scope) {
 
     $scope.packageInfo = {
       name: 'Premium UC Packages',

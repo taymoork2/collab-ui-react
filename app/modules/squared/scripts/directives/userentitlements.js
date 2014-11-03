@@ -2,7 +2,7 @@
 
 angular.module('Squared')
   .controller('UserEntitlementsCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo',
-    function($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
+    function ($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
 
       function Feature(name, state) {
         this.entitlementName = name;
@@ -13,11 +13,11 @@ angular.module('Squared')
         return new Feature(service, state);
       }
 
-      $scope.isServiceAllowed = function(service) {
+      $scope.isServiceAllowed = function (service) {
         return Authinfo.isServiceAllowed(service);
       };
 
-      $scope.getServiceName = function(service) {
+      $scope.getServiceName = function (service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
           if (svc.sqService === service) {
@@ -26,7 +26,7 @@ angular.module('Squared')
         }
       };
 
-      var getUserEntitlementList = function(entitlements) {
+      var getUserEntitlementList = function (entitlements) {
         var entList = [];
         for (var i = 0; i < $rootScope.services.length; i++) {
           var service = $rootScope.services[i].sqService;
@@ -35,12 +35,12 @@ angular.module('Squared')
         return entList;
       };
 
-      $scope.changeEntitlement = function(user) {
+      $scope.changeEntitlement = function (user) {
         Log.debug('Entitling user.', user);
         angular.element('#btn-save').button('loading');
         Userservice.updateUsers([{
           'address': user.userName
-        }], getUserEntitlementList($scope.entitlements), function(data) {
+        }], getUserEntitlementList($scope.entitlements), function (data) {
           var entitleResult = {
             msg: null,
             type: 'null'
@@ -68,7 +68,7 @@ angular.module('Squared')
             Notification.notify([entitleResult.msg], entitleResult.type);
             angular.element('#btn-save').button('reset');
 
-            var index = $scope.queryuserslist.map(function(element) {
+            var index = $scope.queryuserslist.map(function (element) {
               return element.id;
             }).indexOf($scope.currentUser.id);
             var updatedUser = $scope.queryuserslist[index];
@@ -96,7 +96,7 @@ angular.module('Squared')
       };
     }
   ])
-  .directive('userEntitlements', function() {
+  .directive('userEntitlements', function () {
     return {
       restrict: 'A',
       controller: 'UserEntitlementsCtrl',

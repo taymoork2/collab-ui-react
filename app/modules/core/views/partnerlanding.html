@@ -7,7 +7,7 @@
     <section class = "col-sm-12 col-md-7 col-lg-8" ng-controller="PartnerReportsCtrl" >
        <div class="trialTitle">
         <span translate="partnerHomePage.partnerHeading"></span><span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">:
-        <reload-data id="partnerRefreshData" last-updated-time="refreshTime"></reload-data>
+        <cr-reload-data id="partnerRefreshData" last-updated-time="refreshTime"></cr-reload-data>
         </span>
       </div>
 
@@ -16,7 +16,7 @@
         <div id="entitlementsLegend"></div>
         <div id="entitlementsChart" class="report"></div>
         <div class="report-status">
-          <i class='fa fa-refresh fa-spin fa-2x' ng-if="isRefresh('entitlements')"></i>
+          <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('entitlements')"></i>
           <span translate="status.noResults" ng-if="isEmpty('entitlements')"></span>
           <span translate="status.errorProcessing" ng-if="hasError('entitlements')"></span>
         </div>
@@ -30,7 +30,7 @@
             </tab-heading>
             <div id="dailyActiveUsersChart" class="tab-report"></div>
             <div class="report-status">
-              <i class='fa fa-refresh fa-spin fa-2x' ng-if="isRefresh('activeUsers')"></i>
+              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('activeUsers')"></i>
               <span translate="status.noResults" ng-if="isEmpty('activeUsers')"></span>
               <span translate="status.errorProcessing" ng-if="hasError('activeUsers')"></span>
             </div>
@@ -42,7 +42,7 @@
             </tab-heading>
             <div id="averageCallsChart" class="tab-report"></div>
             <div class="report-status">
-              <i class='fa fa-refresh fa-spin fa-2x' ng-if="isRefresh('averageCalls')"></i>
+              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('averageCalls')"></i>
               <span translate="status.noResults" ng-if="isEmpty('averageCalls')"></span>
               <span translate="status.errorProcessing" ng-if="hasError('averageCalls')"></span>
             </div>
@@ -54,7 +54,7 @@
             </tab-heading>
             <div id="contentSharedChart" class="tab-report"></div>
             <div class="report-status">
-              <i class='fa fa-refresh fa-spin fa-2x' ng-if="isRefresh('contentShared')"></i>
+              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('contentShared')"></i>
               <span translate="status.noResults" ng-if="isEmpty('contentShared')"></span>
               <span translate="status.errorProcessing" ng-if="hasError('contentShared')"></span>
             </div>
@@ -87,7 +87,7 @@
           </div>
         </div>
         <div id="trials-refresh" class="trials-refresh" ng-show="showTrialsRefresh">
-          <i class='fa fa-refresh fa-spin'></i>
+          <i class='icon icon-spinner icon-spin'></i>
         </div>
         <div ng-repeat="trial in trialsList | orderBy: 'daysLeft' | limitTo: displayRows">
           <div class="row">
@@ -205,7 +205,7 @@
           </div>
         </div>
         <div class="modal-footer modal-trials-footer">
-          <button type="button" id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="startTrial()" ng-disabled="trialForm.$invalid" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+          <button type="button" id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="startTrial()" ng-disabled="trialForm.$invalid" data-loading-text="<i class='icon icon-spinner icon-spin'></i>">
             <span class="button-text" translate="partnerHomePage.startTrial"></span>
           </button>
           <div id="cancelNewTrialButton" class="btn btn-default btn-lg pull-right" data-dismiss="modal">
@@ -326,7 +326,7 @@
           </div>
         </div>
         <div class="modal-footer modal-trials-footer" ng-show="!editTerms">
-          <button type="button" id="saveSendButton" class="btn btn-primary btn-lg pull-right" ng-click="editTrial()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+          <button type="button" id="saveSendButton" class="btn btn-primary btn-lg pull-right" ng-click="editTrial()" data-loading-text="<i class='icon icon-spinner icon-spin'></i>">
             <span class="button-text" translate="partnerHomePage.saveSendReminder"></span>
           </button>
           <div id="cancelTrialButton" class="btn btn-default btn-lg pull-right" data-dismiss="modal">

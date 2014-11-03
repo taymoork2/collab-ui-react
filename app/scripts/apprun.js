@@ -2,7 +2,7 @@
 angular
   .module('wx2AdminWebClientApp')
   .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'Log', '$interval', '$document', 'Config', '$state',
-    function($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state) {
+    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state) {
 
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
@@ -13,7 +13,7 @@ angular
       //Enable logging
       $rootScope.debug = true;
 
-      $rootScope.$on('$stateChangeStart', function(e, to) {
+      $rootScope.$on('$stateChangeStart', function (e, to) {
         if (typeof to.authenticate === 'undefined' || to.authenticate) {
           if (Authinfo.isInitialized()) {
             if (!Authinfo.isAllowedState(to.name)) {
@@ -25,10 +25,10 @@ angular
             e.preventDefault();
             if (token) {
               Auth.authorize(token)
-                .then(function(){
+                .then(function () {
                   $state.go(to.name);
                 })
-                .catch(function(){
+                .catch(function () {
                   $state.go('login');
                 });
             } else {
@@ -51,23 +51,23 @@ angular
           data = Auth.getFromStandardGetParams(document.URL);
           $rootScope.status = 'loading';
           Auth.getNewAccessToken(data.code)
-          .then(function (adata){
-            $rootScope.status = 'loaded';
-            Storage.put('accessToken', adata.access_token);
-            Storage.put('refreshToken', adata.refresh_token);
-            $rootScope.$broadcast('ACCESS_TOKEN_REVIEVED');
-          }, function() {
-            Auth.redirectToLogin();
-          });
+            .then(function (adata) {
+              $rootScope.status = 'loaded';
+              Storage.put('accessToken', adata.access_token);
+              Storage.put('refreshToken', adata.refresh_token);
+              $rootScope.$broadcast('ACCESS_TOKEN_REVIEVED');
+            }, function () {
+              Auth.redirectToLogin();
+            });
         } else {
           Log.debug('No access code data.');
         }
       }
 
-      var timerClock = Config.tokenTimers.timeoutTimer;  //50 minutes
-      var startTimer = function() {
+      var timerClock = Config.tokenTimers.timeoutTimer; //50 minutes
+      var startTimer = function () {
         Log.debug('starting session timer...');
-        var timer = $interval(function() {
+        var timer = $interval(function () {
             $interval.cancel(timer);
             //force logout when 50 minutes of inactivity
             Auth.logout();
@@ -78,34 +78,34 @@ angular
         return timer;
       };
 
-      var refreshToken = function() {
-        var refreshTimer = $interval(function() {
+      var refreshToken = function () {
+        var refreshTimer = $interval(function () {
           Auth.RefreshAccessToken(Storage.get('refreshToken'))
-          .then(function (adata){
-            Storage.put('accessToken', adata.access_token);
-          });
+            .then(function (adata) {
+              Storage.put('accessToken', adata.access_token);
+            });
         }, Config.tokenTimers.refreshTimer); //45 minutes
       };
 
       var logoutTimer = startTimer();
 
-      var delay = $interval(function() {
-        $interval.cancel(delay);
-        if (Storage.get('accessToken')) {
-          Log.debug('starting refresh timer...');
-          //start refresh cycle after 15 minutes
-          refreshToken();
-        } else {
-          Auth.redirectToLogin();
-        }
-      },
-      Config.tokenTimers.refreshDelay); //15 minutes
+      var delay = $interval(function () {
+          $interval.cancel(delay);
+          if (Storage.get('accessToken')) {
+            Log.debug('starting refresh timer...');
+            //start refresh cycle after 15 minutes
+            refreshToken();
+          } else {
+            Auth.redirectToLogin();
+          }
+        },
+        Config.tokenTimers.refreshDelay); //15 minutes
 
       $document.on(
         'click',
-        function( event ) {
+        function (event) {
           Log.debug('received click event, extending session...');
-          $interval.cancel( logoutTimer );
+          $interval.cancel(logoutTimer);
           logoutTimer = startTimer();
         }
       );

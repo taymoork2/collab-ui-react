@@ -2,7 +2,7 @@
 
 angular.module('Huron')
   .factory('HuronConfig', ['Config',
-    function(Config) {
+    function (Config) {
       var config = {
         cmiUrl: {
           dev: 'https://cmi.hitest.huron-dev.com',
@@ -10,7 +10,7 @@ angular.module('Huron')
           prod: 'https://cmi.hitest.huron-dev.com'
         },
 
-        getCmiUrl: function() {
+        getCmiUrl: function () {
           if (Config.isDev()) {
             return this.cmiUrl.dev;
           } else if (Config.isIntegration()) {

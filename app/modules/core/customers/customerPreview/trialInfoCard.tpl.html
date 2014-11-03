@@ -17,7 +17,7 @@
     </div>
     <div>
       <div class="info-card-name customer-info col-xs-6">
-        <span class="user-title">{{$parent.currentCustomer.duration}}</span> <span  class="user-title"translate="customerPage.dayTrial"></span>
+        <span class="user-title">{{$parent.currentCustomer.duration}}</span> <span class="user-title" translate="customerPage.dayTrial"></span>
       </div>
       <div class="info-card-name customer-info right col-xs-6">
         <span ng-class="{'trial-danger': $parent.currentCustomer.daysLeft <= 5, 'user-title': $parent.currentCustomer.daysLeft > 5}">{{$parent.currentCustomer.daysLeft}}</span>

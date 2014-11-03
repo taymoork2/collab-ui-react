@@ -2,10 +2,10 @@
 
 angular.module('Core')
   .factory('Localize', ['$location', '$filter', 'Utils',
-    function($location, $filter, Utils) {
+    function ($location, $filter, Utils) {
       return {
 
-        varTitle: function() {
+        varTitle: function () {
           if (Utils.isAdminPage()) {
             return $filter('translate')('index.appTitle');
           } else {

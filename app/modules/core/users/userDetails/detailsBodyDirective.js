@@ -4,7 +4,7 @@ angular.module('Core')
 
 .directive('crDetailsBody', [
 
-  function() {
+  function () {
     return {
       restrict: 'EA',
       // replace: true,
@@ -15,8 +15,8 @@ angular.module('Core')
         close: '&close',
         title: '@title'
       },
-      controller: function($scope, $rootScope, $state, $window) {
-        $scope.closeDetails = function() {
+      controller: function ($scope, $rootScope, $state, $window) {
+        $scope.closeDetails = function () {
           $state.go('users.list');
         };
       }

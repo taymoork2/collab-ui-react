@@ -11,10 +11,10 @@ angular.module('Core')
       var success_id = 0;
       var error_id = 0;
       return {
-        init: function(scope) {
+        init: function (scope) {
           _scope = scope;
         },
-        notify: function(notifications, type) { //notifications must be an array. Type is 'success' or 'error'
+        notify: function (notifications, type) { //notifications must be an array. Type is 'success' or 'error'
           var icon = null;
           if (type === 'success') {
             icon = '<i class="fa fa-check"></i>';
@@ -28,14 +28,14 @@ angular.module('Core')
             if (type === 'success') {
               alertify.log(icon + ' 1 ' + type + '<i id="small-notification-cancel" class="fa fa-times pull-right log-success-id-' + success_id + '"></i>', type, 0);
               $compile(angular.element('.alertify-log-' + type).last().attr('ng-click', 'popup(\'' + type + '\',' + success_id + ')'))(_scope);
-              $('.fa-times.log-success-id-' + success_id).click(function() {
+              $('.fa-times.log-success-id-' + success_id).click(function () {
                 $(this).parent().off('click');
               });
               success_id++;
             } else {
               alertify.log(icon + ' 1 ' + type + '<i id="small-notification-cancel" class="fa fa-times pull-right log-error-id-' + error_id + '"></i>', type, 0);
               $compile(angular.element('.alertify-log-' + type).last().attr('ng-click', 'popup(\'' + type + '\',' + error_id + ')'))(_scope);
-              $('.fa-times.log-error-id-' + error_id).click(function() {
+              $('.fa-times.log-error-id-' + error_id).click(function () {
                 $(this).parent().off('click');
               });
               error_id++;
@@ -45,21 +45,21 @@ angular.module('Core')
             if (type === 'success') {
               alertify.log(icon + ' ' + notifications.length + ' ' + 'successes <i id="small-notification-cancel" class="fa fa-times pull-right log-success-id-' + success_id + '"></i>', type, 0);
               $compile(angular.element('.alertify-log-' + type).last().attr('ng-click', 'popup(\'' + type + '\',' + success_id + ')'))(_scope);
-              $('.fa-times.log-success-id-' + success_id).click(function() {
+              $('.fa-times.log-success-id-' + success_id).click(function () {
                 $(this).parent().off('click');
               });
               success_id++;
             } else {
               alertify.log(icon + ' ' + notifications.length + ' ' + 'errors <i id="small-notification-cancel" class="fa fa-times pull-right log-error-id-' + error_id + '"></i>', type, 0);
               $compile(angular.element('.alertify-log-' + type).last().attr('ng-click', 'popup(\'' + type + '\',' + error_id + ')'))(_scope);
-              $('.fa-times.log-error-id-' + error_id).click(function() {
+              $('.fa-times.log-error-id-' + error_id).click(function () {
                 $(this).parent().off('click');
               });
               error_id++;
             }
           }
         },
-        popup: function(type, id) {
+        popup: function (type, id) {
           var output = '';
           var popup = '';
           var i = 0;
@@ -72,8 +72,8 @@ angular.module('Core')
             $('.notification-panel').animate({
               'right': '30px'
             }, 'normal');
-            $('.fa-times.error-id-' + id).click(function() {
-              $(this).parents().eq(2).fadeOut('normal', function() {
+            $('.fa-times.error-id-' + id).click(function () {
+              $(this).parents().eq(2).fadeOut('normal', function () {
                 $(this).remove();
               });
             });
@@ -87,8 +87,8 @@ angular.module('Core')
             $('.notification-panel').animate({
               'right': '30px'
             }, 'normal');
-            $('.fa-times.success-id-' + id).click(function() {
-              $(this).parents().eq(2).fadeOut('normal', function() {
+            $('.fa-times.success-id-' + id).click(function () {
+              $(this).parents().eq(2).fadeOut('normal', function () {
                 $(this).remove();
               });
             });

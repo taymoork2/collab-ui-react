@@ -4,14 +4,13 @@
 /* global $ */
 
 angular.module('Squared')
-  .directive('conversationsInfo', function() {
+  .directive('sqConversationsInfo', function () {
     return {
       restrict: 'A',
-      scope:{
+      scope: {
         userEmail: '=',
       },
       templateUrl: 'modules/squared/scripts/directives/views/conversations-info.html',
-      link: function(scope, elem, attrs){
-      }
+      link: function (scope, elem, attrs) {}
     };
   });

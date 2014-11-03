@@ -2,12 +2,12 @@
 
 angular.module('Squared')
   .controller('UserProfileCtrl', ['$scope', '$location', '$route', '$stateParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config',
-    function($scope, $location, $route, $stateParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config) {
+    function ($scope, $location, $route, $stateParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config) {
 
       var userid = $stateParams.uid;
       $scope.orgName = Authinfo.getOrgName();
 
-      Userservice.getUser(userid, function(data, status) {
+      Userservice.getUser(userid, function (data, status) {
         if (data.success) {
           $scope.user = data;
           if ($scope.user.photos) {
@@ -23,11 +23,11 @@ angular.module('Squared')
         }
       });
 
-      $scope.gotoPath = function(path) {
+      $scope.gotoPath = function (path) {
         $location.path(path);
       };
 
-      $scope.updateUser = function() {
+      $scope.updateUser = function () {
         var userData = {
           'schemas': Config.scimSchemas,
           'title': $scope.user.title,
@@ -40,7 +40,7 @@ angular.module('Squared')
         Log.debug('Updating user: ' + userid + ' with data: ');
         Log.debug(userData);
 
-        Userservice.updateUserProfile(userid, userData, function(data, status) {
+        Userservice.updateUserProfile(userid, userData, function (data, status) {
           if (data.success) {
             var successMessage = [];
             successMessage.push($filter('translate')('profilePage.success'));

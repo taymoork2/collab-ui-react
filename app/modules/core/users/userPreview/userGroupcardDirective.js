@@ -2,14 +2,14 @@
 
 angular.module('Core')
 
-.directive('userGroupCard', [
+.directive('crUserGroupCard', [
 
-  function() {
+  function () {
     return {
       restrict: 'EA',
       replace: true,
       templateUrl: 'modules/core/users/userPreview/userGroupCard.tpl.html',
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
 
       }
     };

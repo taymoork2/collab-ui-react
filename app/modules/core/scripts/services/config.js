@@ -2,7 +2,7 @@
 
 angular.module('Core')
   .factory('Config', ['$window', 'Utils',
-    function($window, Utils) {
+    function ($window, Utils) {
       var config = {
 
         adminClientUrl: {
@@ -66,7 +66,6 @@ angular.module('Core')
           androidAppIntent: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
           appURL: 'squared://'
         },
-
 
         healthCheckUrl: {
           dev: 'http://status.projectsquared.com/index.json',
@@ -186,19 +185,19 @@ angular.module('Core')
 
         batchSize: 20,
 
-        isDev: function() {
+        isDev: function () {
           return document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('localhost') !== -1;
         },
 
-        isIntegration: function() {
+        isIntegration: function () {
           return document.URL.indexOf('int-admin.wbx2.com') !== -1;
         },
 
-        isProd: function() {
+        isProd: function () {
           return document.URL.indexOf('admin.projectsquared.com') !== -1;
         },
 
-        getEnv: function() {
+        getEnv: function () {
           if (this.isDev()) {
             return 'dev';
           } else if (this.isIntegration()) {
@@ -209,53 +208,53 @@ angular.module('Core')
 
         },
 
-        getAdminServiceUrl: function() {
-          if (this.isDev()){
+        getAdminServiceUrl: function () {
+          if (this.isDev()) {
             return this.adminServiceUrl.integration;
-          } else if(this.isIntegration()) {
+          } else if (this.isIntegration()) {
             return this.adminServiceUrl.integration;
           } else {
             return this.adminServiceUrl.prod;
           }
         },
 
-        getLocusServiceUrl: function() {
+        getLocusServiceUrl: function () {
           return this.locusServiceUrl.integration;
         },
 
-        getOauthLoginUrl: function() {
+        getOauthLoginUrl: function () {
           var params = [this.oauthUrl.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()])];
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
-        getRedirectUrl: function() {
+        getRedirectUrl: function () {
           var params = [encodeURIComponent(this.adminClientUrl[this.getEnv()])];
           return Utils.sprintf(this.oauthUrl.ciRedirectUrl, params);
         },
 
-        getOauthCodeUrl: function(code) {
+        getOauthCodeUrl: function (code) {
           var params = [code];
           return Utils.sprintf(this.oauthUrl.oauth2CodeUrlPattern, params);
         },
 
-        getOauthAccessCodeUrl: function(refresh) {
+        getOauthAccessCodeUrl: function (refresh) {
           var params = [refresh];
           return Utils.sprintf(this.oauthUrl.oauth2AccessCodeUrlPattern, params);
         },
 
-        getLogoutUrl: function() {
+        getLogoutUrl: function () {
           return this.logoutUrl + encodeURIComponent(this.adminClientUrl[this.getEnv()]);
         },
 
-        getSSOSetupUrl: function() {
+        getSSOSetupUrl: function () {
           return this.ssoSetupUrl;
         },
 
-        getSSOTestUrl: function() {
+        getSSOTestUrl: function () {
           return this.ssoTestUrl;
         },
 
-        getHealthCheckUrlServiceUrl: function() {
+        getHealthCheckUrlServiceUrl: function () {
           if (this.isDev()) {
             return this.healthCheckUrl.prod;
           } else {
@@ -263,35 +262,35 @@ angular.module('Core')
           }
         },
 
-        getLogMetricsUrl: function() {
+        getLogMetricsUrl: function () {
           return this.logMetricUrl;
         },
 
-        getCallflowServiceUrl: function() {
+        getCallflowServiceUrl: function () {
           return this.callflowServiceUrl;
         },
 
-        getStatusPageUrl: function() {
+        getStatusPageUrl: function () {
           return this.statusPageUrl;
         },
 
-        getSquaredAppUrl: function() {
+        getSquaredAppUrl: function () {
           return this.appinfo.appURL;
         },
 
-        getItunesStoreUrl: function() {
+        getItunesStoreUrl: function () {
           return this.appinfo.iPhoneURL;
         },
 
-        getAndroidStoreUrl: function() {
+        getAndroidStoreUrl: function () {
           return this.appinfo.androidURL;
         },
 
-        getAndroidAppIntent: function() {
+        getAndroidAppIntent: function () {
           return this.appinfo.androidAppIntent;
         },
 
-        getWebClientUrl: function() {
+        getWebClientUrl: function () {
           return this.appinfo.webClientURL;
         }
 

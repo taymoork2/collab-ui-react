@@ -17,11 +17,11 @@ angular.module('Core')
         'isInitialized': false
       };
 
-      var getTabTitle = function(title) {
+      var getTabTitle = function (title) {
         return $filter('translate')(title);
       };
 
-      var isAllowedState = function(state) {
+      var isAllowedState = function (state) {
         if (state) {
           // if nested state only check parent state
           var parentState = state.split('.');
@@ -51,7 +51,7 @@ angular.module('Core')
       };
 
       //update the tabs when Authinfo data has been populated.
-      var initializeTabs = function() {
+      var initializeTabs = function () {
         var tabs = angular.copy(Config.tabs);
 
         // Remove states out of tab structure that are not allowed or had all their subPages removed
@@ -65,8 +65,7 @@ angular.module('Core')
             if (tabs[i].subPages.length === 0) {
               tabs.splice(i--, 1);
             }
-          }
-          else if (tabs[i] && !isAllowedState(tabs[i].state)) {
+          } else if (tabs[i] && !isAllowedState(tabs[i].state)) {
             tabs.splice(i--, 1);
           }
         }
@@ -74,10 +73,10 @@ angular.module('Core')
         $rootScope.tabs = tabs;
 
         //Localize tabs
-        for(var index in tabs) {
+        for (var index in tabs) {
           tabs[index].title = getTabTitle(tabs[index].title);
-          if(tabs[index].subPages) {
-            for(var k in tabs[index].subPages) {
+          if (tabs[index].subPages) {
+            for (var k in tabs[index].subPages) {
               tabs[index].subPages[k].title = $filter('translate')(tabs[index].subPages[k].title);
               tabs[index].subPages[k].desc = $filter('translate')(tabs[index].subPages[k].desc);
             }
@@ -88,7 +87,7 @@ angular.module('Core')
       };
 
       return {
-        initialize: function(data) {
+        initialize: function (data) {
           authData.username = data.name;
           authData.orgname = data.orgName;
           authData.orgid = data.orgId;
@@ -104,7 +103,7 @@ angular.module('Core')
           $rootScope.$broadcast('AuthinfoUpdated');
         },
 
-        clear: function() {
+        clear: function () {
           authData.username = null;
           authData.orgname = null;
           authData.orgid = null;
@@ -117,80 +116,78 @@ angular.module('Core')
           authData.isInitialized = false;
         },
 
-        getOrgName: function() {
+        getOrgName: function () {
           return authData.orgname;
         },
 
-        getOrgId: function() {
+        getOrgId: function () {
           return authData.orgid;
         },
 
-        getUserName: function() {
+        getUserName: function () {
           return authData.username;
         },
 
-        getUserEntitlements: function() {
+        getUserEntitlements: function () {
           return authData.entitlements;
         },
 
-        isAddUserEnabled: function() {
+        isAddUserEnabled: function () {
           return authData.addUserEnabled;
         },
 
-        isEntitleUserEnabled: function() {
+        isEntitleUserEnabled: function () {
           return authData.entitleUserEnabled;
         },
 
-        getServices: function() {
+        getServices: function () {
           return authData.services;
         },
 
-        getRoles: function() {
+        getRoles: function () {
           return authData.roles;
         },
 
-        getTabs: function() {
+        getTabs: function () {
           return authData.tabs;
         },
 
-        isAllowedState: function(state) {
+        isAllowedState: function (state) {
           return isAllowedState(state);
         },
 
-        isInitialized: function() {
+        isInitialized: function () {
           return authData.isInitialized;
         },
 
-        isAdmin: function() {
+        isAdmin: function () {
           var roles = this.getRoles();
           return roles.indexOf('Full_Admin') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
         },
 
-        isPartner: function() {
+        isPartner: function () {
           var roles = this.getRoles();
           return roles.indexOf('PARTNER_USER') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
         },
 
-        isSquaredTeamMember: function() {
+        isSquaredTeamMember: function () {
           var roles = this.getRoles();
           return roles.indexOf('WX2_User') > -1;
         },
 
-        isSquaredInviter: function() {
+        isSquaredInviter: function () {
           var roles = this.getRoles();
-          if(roles !== null && roles.length > 0) {
+          if (roles !== null && roles.length > 0) {
             return roles.indexOf('WX2_SquaredInviter') > -1;
           } else {
             return null;
           }
         },
 
-        isServiceAllowed: function(service) {
-          if (service==='squaredTeamMember' && !this.isSquaredTeamMember()){
+        isServiceAllowed: function (service) {
+          if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {
             return false;
-          }
-          else
-          {
+          } else {
             return true;
           }
         }

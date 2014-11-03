@@ -47,7 +47,7 @@
     <section class="analytics-charts col-md-9">
       <h3>
       <span translate="homePage.activity"></span><span ng-click="manualReload(false)" class="overview-updated" id="time-click-div">:
-      <reload-data id="homeRefreshData" last-updated-time="homeRefreshTime"></reload-data>
+      <cr-reload-data id="homeRefreshData" last-updated-time="homeRefreshTime"></cr-reload-data>
       </span>
       </h3>
       <div id="activeUsersLegend"></div>
@@ -60,7 +60,7 @@
         <!-- TODO: To be removed when monitoring service is refactored-->
         <section class="monitoring-panel col-sm-4 col-md-12">
           <a ng-href="{{statusPageUrl}}" target="_blank">
-            <h4 class="monitoring-section" translate="homePage.monitoring"></h3>
+            <h4 class="monitoring-section" translate="homePage.monitoring"></h4>
             <div ng-repeat="health in healthMetrics">
               <div ng-class="{true:'green', false:'red'}[health.status==='operational']" class="monitoring-cell" id="{{health.name}}">
                 <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>{{health.name}}</span>
@@ -95,7 +95,7 @@
         <section class="quick-links col-sm-4 col-md-12" ng-controller="QuikLinksCtrl">
           <h4>Quick Links</h4>
           <div class="list-group">
-            
+
             <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" ng-if="isPageActive('users')" class="list-group-item">Add Users</a>
             <a id="installDeviceQuickLink" ng-if="false" class="list-group-item">Install a Device for a User</a>
             <a id="installDeviceSharedSpaceQuickLink" ng-href="#/spaces" ng-if="isPageActive('spaces')" class="list-group-item">Install a Devices into a Shared Space</a>
