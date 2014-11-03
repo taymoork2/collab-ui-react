@@ -15,7 +15,7 @@ var LandingPage = function() {
   this.licensesLeft = element(by.css('.licenses-left'));
   this.licensesUsed = element(by.css('.licenses-used'));
 
-  this.unlicencedUsers = element(by.css('.unlicensed-users-unclaimeddomain'));
+  this.unlicencedUsers = element(by.css('.unlicensed-users'));
   this.activeUsersChart = element(by.id('activeUsersChart'));
 
   this.monitoring = element(by.css('.monitoring-panel'));

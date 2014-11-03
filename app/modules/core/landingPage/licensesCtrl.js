@@ -15,14 +15,14 @@ angular.module('Core')
     };
 
     $scope.licenses = {
-      total: '',
+      total: 0,
       used: 0,
       unlicensed: 0,
       domain: ''
     };
 
-    var isOnTrial = false;
-    var isDomainClaimed = false;
+    var isOnTrial;
+    var isDomainClaimed;
 
     $scope.isOnTrial = function () {
       return isOnTrial;
@@ -37,7 +37,6 @@ angular.module('Core')
     };
 
     var populateLicenseData = function (trial) {
-      $scope.packageInfo.termMax = trial.trialPeriod;
 
       if (trial.offers) {
         var offer = trial.offers[0];
@@ -52,6 +51,7 @@ angular.module('Core')
       var start = moment(trial.startDate).format('MMM D, YYYY');
       var daysDone = moment(now).diff(start, 'days');
 
+      $scope.packageInfo.termMax = trial.trialPeriod;
       $scope.packageInfo.termUsed = daysDone;
       $scope.packageInfo.termRemaining = trial.trialPeriod - daysDone;
 
@@ -60,17 +60,14 @@ angular.module('Core')
     var getTrials = function () {
       PartnerService.getTrialsList(function (data, status) {
         if (data.success) {
-
           Log.debug('trial records found:' + data.trials.length);
-
           if (data.trials.length > 0) {
             isOnTrial = true;
             var trial = data.trials[0];
-
             populateLicenseData(trial);
-
           } else {
             // not on trial, get usage from CI?
+            isOnTrial = false;
             $scope.packageInfo.name = 'Default Collab Package';
             $scope.licenses.total = 'Unlimited';
           }
@@ -92,8 +89,9 @@ angular.module('Core')
             for (var i = 0; i < data.domains.length; i++) {
               domainList = domainList + data.domains[i] + ' ';
             }
-
             $scope.licenses.domain = domainList;
+          } else {
+            isDomainClaimed = false;
           }
 
         } else {

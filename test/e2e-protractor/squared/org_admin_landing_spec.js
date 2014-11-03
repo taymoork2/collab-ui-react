@@ -64,8 +64,8 @@ describe('Customer Admin Landing Page License Info', function() {
     it('Should display trial license info', function() {
       navigation.expectCurrentUrl('/home');
       expect(landing.packages.isDisplayed()).toBeTruthy();
-      // expect(landing.packagesName.getText()).toContain('COLLAB');
-      // expect(landing.packagesDaysLeft.isDisplayed()).toBeTruthy();
+      expect(landing.packagesName.getText()).toContain('COLLAB');
+      expect(landing.packagesDaysLeft.isDisplayed()).toBeTruthy();
       expect(landing.devices.isDisplayed()).toBeTruthy();
       expect(landing.licenses.isDisplayed()).toBeTruthy();
       expect(landing.licensesBought.getText()).toNotContain('Unlimited');
@@ -92,7 +92,6 @@ describe('Customer Admin Landing Page License Info', function() {
     });
 
     it('Should not display license info', function() {
-       // navigation.clickHome();
       navigation.expectCurrentUrl('/home');
       expect(landing.packages.isDisplayed()).toBeFalsy();
       expect(landing.devices.isDisplayed()).toBeFalsy();
