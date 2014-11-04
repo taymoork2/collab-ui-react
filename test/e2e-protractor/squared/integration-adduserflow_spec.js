@@ -130,7 +130,7 @@ describe('Add/Invite/Entitle User flow', function() {
         expect(users.inviteButton.isDisplayed()).toBeTruthy();
         expect(users.entitleButton.isDisplayed()).toBeTruthy();
         expect(users.addButton.isDisplayed()).toBeTruthy();
-        users.assertEntitlementListSize(3);
+        users.assertEntitlementListSize(2);
         expect(users.squaredCheckBox.isDisplayed()).toBeTruthy();
       });
     });
@@ -138,11 +138,13 @@ describe('Add/Invite/Entitle User flow', function() {
     it('should display error if no user is entered on update', function() {
         users.entitleButton.click();
         notifications.assertError('Please enter valid user email(s).');
+        notifications.clearNotifications();
       });
 
     it('should display error if no user is entered on add', function() {
       users.addButton.click();
       notifications.assertError('Please enter valid user email(s).');
+      notifications.clearNotifications();
     });
 
     describe('Add an existing user', function() {
@@ -192,6 +194,7 @@ describe('Add/Invite/Entitle User flow', function() {
     describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
       it('should show call-initiation entitlement for the user', function() {
         users.search(inputEmail);
+        browser.driver.manage().window().maximize();
         users.userListEnts.then(function(cell) {
           expect(cell[0].getText()).toContain(inputEmail);
           cell[0].click();

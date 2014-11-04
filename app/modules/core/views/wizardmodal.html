@@ -21,9 +21,19 @@
       <div class="wizard-side-item row" ng-class="{'wizard-nav-active': tabs.addUsers}" id="wizard-addusers-link" ng-click="changeTab('addUsers')">
         <div class="col-md-9">
           <h4 ng-class="{'wizard-menu-title':!tabs.addUsers}" translate="firstTimeWizard.addUsers"></h4>
-          <p ng-class="{'wizard-menu-subtitle':!tabs.addUsers}" translate="firstTimeWizard.addUsersSub"></p>
+          <p ng-class="{'wizard-menu-subtitle':!tabs.addUsers}">
+            <span ng-class="{'wizard-subtitle-active':steps.manualEntry}" ng-click="changeStep('manualEntry');$event.stopPropagation()" translate="firstTimeWizard.simple"></span> |
+            <span ng-class="{'wizard-subtitle-active':steps.domainEntry}" ng-click="changeStep('domainEntry');$event.stopPropagation()" translate="firstTimeWizard.advanced"></span>
+          </p>
         </div>
         <div class="wizard-menu-icon col-md-3" ng-class="{'wizard-menu-subtitle':!tabs.addUsers, 'wizard-icon-active':tabs.addUsers}"><i class="fa fa-user fa-2x"></i></div>
+      </div>
+      <div class="wizard-side-item row" ng-class="{'wizard-nav-active': tabs.finish}" id="wizard-finish-link" ng-click="changeTab('finish')">
+        <div class="col-md-9">
+          <h4 ng-class="{'wizard-menu-title':!tabs.finish}" translate="firstTimeWizard.finish"></h4>
+          <p ng-class="{'wizard-menu-subtitle':!tabs.finish}" translate="firstTimeWizard.finishSub"></p>
+        </div>
+        <div class="wizard-menu-icon col-md-3" ng-class="{'wizard-menu-subtitle':!tabs.finish, 'wizard-icon-active':tabs.finish}"><i class="fa fa-check fa-2x"></i></div>
       </div>
       <div class="wizard-side-item row" id="wizard-needhelp" style="cursor: default;">
         <p style="position:relative; top:92%; left:3%;"><span id="wizard-help-link" translate="firstTimeWizard.needHelp"></span></p>
@@ -69,7 +79,7 @@
               <button class="btn btn-primary" ng-disabled="!(filename)" ng-click="importRemoteIdp()"><span translate="ssoModal.importBtn"></span></button>
             </div>
             <div class="row wizard-btn-row">
-              <button class="btn btn-primary" ng-click="changeStep('initial')"><span translate="ssoModal.backBtn"></span></button>
+              <button class="btn btn-default" ng-click="changeStep('initial')"><span translate="ssoModal.backBtn"></span></button>
               <button type="button" class="btn btn-primary" ng-click="changeStep('exportCloudData')"><span translate="ssoModal.nextBtn"></span></button>
             </div>
           </div>
@@ -83,7 +93,7 @@
             <p translate="ssoModal.exportMetadataDesc2"></p>
             <a id="downloadMeta" class="btn btn-primary" download={{metaFilename}} ng-href="{{url}}"><span translate="ssoModal.downloadMetadataBtn"></span></a>
             <div class="row wizard-btn-row">
-              <button type="button" class="btn btn-primary" ng-click="changeStep('importIdpData')"><span translate="ssoModal.backBtn"></span></button>
+              <button type="button" class="btn btn-default" ng-click="changeStep('importIdpData')"><span translate="ssoModal.backBtn"></span></button>
               <button type="button" class="btn btn-primary" ng-click="changeStep('testSSO')"><span translate="ssoModal.nextBtn"></span></button>
             </div>
           </div>
@@ -95,7 +105,7 @@
           <p translate="ssoModal.testSSOSetupDesc" class="ssoDesc"></p>
           <button class="btn btn-primary" ng-click="openTest()"><span translate="ssoModal.launchSSOTestBtn"></span></button>
           <div class="row wizard-btn-row">
-            <button type="button" class="btn btn-primary" ng-click="changeStep('exportCloudData')"><span translate="ssoModal.backBtn"></span></button>
+            <button type="button" class="btn btn-default" ng-click="changeStep('exportCloudData')"><span translate="ssoModal.backBtn"></span></button>
             <button type="button" class="btn btn-primary" ng-click="changeStep('enableSSO')"><span translate="ssoModal.nextBtn"></span></button>
           </div>
         </div>
@@ -105,7 +115,7 @@
           <h3 class="wizard-subtitle">{{'ssoModal.enableSSOTitle' | translate}}</h3>
           <p translate="ssoModal.enableSSODesc" class="ssoDesc"></p>
           <div class="row wizard-btn-row">
-            <button type="button" class="btn btn-primary" ng-click="changeStep('testSSO')"><span translate="ssoModal.backBtn"></span></button>
+            <button type="button" class="btn btn-default" ng-click="changeStep('testSSO')"><span translate="ssoModal.backBtn"></span></button>
             <button type="button" class="btn btn-primary" ng-click="enableSSO()"><span translate="ssoModal.finishBtn"></span></button>
           </div>
         </div>
@@ -115,9 +125,11 @@
       <!-- add users views -->
       <div ng-show="tabs.addUsers && steps.initial" class="wiz-view">
         <h1 translate="firstTimeWizard.addUsers"></h1>
-        <h3 class="wizard-subtitle" translate="firstTimeWizard.chooseSync"></h3>
-        <p translate="firstTimeWizard.chooseSyncDesc"></p>
-        <cs-radiobutton choice="syncChoice" options="syncOptions" label="syncRbLabel" value="value"></cs-radiobutton>
+        <div class="rbcontainer">
+          <p translate="firstTimeWizard.simpleSub" style="position:relative;top:6em;left:3.3em;"></p>
+          <p translate="firstTimeWizard.advancedSub" style="position:relative;top:8.6em;left:3.3em;"></p>
+          <cs-radiobutton choice="syncChoice" options="syncOptions" label="syncRbLabel" value="value"></cs-radiobutton>
+        </div>
         <div class="row wizard-btn-row">
           <button type="button" class="btn btn-primary" ng-click="evaluateStep('initial', 'addUsers')" ng-disabled="syncChoice === undefined" translate="firstTimeWizard.nextBtn">Next</button>
         </div>
@@ -125,34 +137,36 @@
 
       <div ng-controller="AddUserCtrl">
         <div ng-show="tabs.addUsers && steps.manualEntry" class="wiz-view">
-          <h1 translate="firstTimeWizard.addUsers"></h1>
-          <h3 class="wizard-subtitle" translate="firstTimeWizard.manualInvite"></h3>
-          <form role="form">
-            <div class="form-group wizard-form">
-              <label for="inputEmail3" translate="usersPage.email"></label>
-              <input class="form-control" type="text" id="usersfield-wiz" placeholder="Enter email addresses separated by commas or semi-colons" ng-focus="setupTokenfield()" />
-            </div>
-            <div class="wiz-btn">
-              <button id="btnInvite" type="button" class="btn btn-primary pull-right" ng-click="inviteUsers()" data-loading-text="<i class='icon icon-spinner icon-spin'></i>">
-                <span translate="usersPage.invite"></span>
-              </button>
-              <button class="btn btn-default pull-right" ng-click="clearPanel()">
-                <span translate="usersPage.clear"></span>
-              </a>
-            </div>
-          </form>
+          <h1 translate="firstTimeWizard.addUsersSimple"></h1>
+          <div class="wizard-container">
+            <p class="wizard-subtitle" translate="firstTimeWizard.manualInvite"></p>
+            <form role="form">
+              <div class="form-group wizard-form">
+                <!-- <label for="inputEmail3" translate="usersPage.email"></label> -->
+                <input class="form-control" type="text" id="usersfield-wiz" placeholder="Enter email addresses separated by commas or semi-colons" ng-focus="setupTokenfield()" />
+              </div>
+              <div class="wiz-btn">
+                <button id="btnInvite" type="button" class="btn btn-primary pull-left" ng-click="inviteUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+                  <span translate="usersPage.invite"></span>
+                </button>
+                <!-- <button class="btn btn-default pull-right" ng-click="clearPanel()">
+                  <span translate="usersPage.clear"></span>
+                </button> -->
+              </div>
+            </form>
+          </div>
           <div class="row wizard-btn-row">
-            <button class="btn btn-primary" ng-click="changeStep('initial')">
+            <button class="btn btn-default" ng-click="changeStep('initial')">
               <span translate="firstTimeWizard.backBtn"></span>
             </button>
-            <button class="btn btn-primary" ng-click="changeStep('finish')">
+            <button class="btn btn-primary" ng-click="changeTab('finish')">
               <span translate="firstTimeWizard.doneBtn"></span>
             </button>
           </div>
         </div>
 
         <div ng-show="tabs.addUsers && steps.domainEntry" class="wiz-view">
-          <h1 translate="firstTimeWizard.addUsers"></h1>
+          <h1 translate="firstTimeWizard.addUsersAdvanced"></h1>
           <h3 class="wizard-subtitle" translate="firstTimeWizard.domainEntry"></h3>
           <p translate="firstTimeWizard.domainSubDesc"></p>
           <div ng-init="getDefaultDomain()">
@@ -162,7 +176,7 @@
               <span translate="firstTimeWizard.domainDesc"></span>
             </div>
             <div class="row wizard-btn-row">
-              <button class="btn btn-primary" ng-click="changeStep('initial')">
+              <button class="btn btn-default" ng-click="changeStep('initial')">
                 <span translate="firstTimeWizard.backBtn"></span>
               </button>
               <button class="btn btn-primary" ng-click="changeStep('installConnector')" ng-disabled="!domain">  <span translate="firstTimeWizard.nextBtn"></span>
@@ -180,7 +194,7 @@
           <div class="installStep"> <span translate="firstTimeWizard.installStep3"></span></div>
           <div class="installStep"> <span translate="firstTimeWizard.nextSteps"></span></div>
           <div class="row wizard-btn-row">
-            <button class="btn btn-primary" ng-click="changeStep('domainEntry')">
+            <button class="btn btn-default" ng-click="changeStep('domainEntry')">
               <span translate="firstTimeWizard.backBtn"></span>
             </button>
             <button class="btn btn-primary" ng-click="changeStep('syncStatus')">
@@ -202,10 +216,10 @@
             </div>
             <div class="ftwdirgridStyle" ng-grid="gridOptions"></div>
             <div class="row wizard-btn-row">
-              <button class="btn btn-primary" ng-click="changeStep('installConnector')">
+              <button class="btn btn-default" ng-click="changeStep('installConnector')">
                 <span translate="firstTimeWizard.backBtn"></span>
               </button>
-              <button class="btn btn-primary" ng-click="changeStep('finish')">
+              <button class="btn btn-primary" ng-click="changeTab('finish')">
                 <span translate="firstTimeWizard.doneBtn"></span>
               </button>
             </div>
@@ -213,14 +227,14 @@
         </div> <!-- AddUserCtrl -->
 
         <!-- finish view -->
-        <div ng-show="steps.finish" class="wiz-view">
-        <h1 translate="firstTimeWizard.getStarted"></h1>
-        <h3 class="wizard-subtitle">{{'firstTimeWizard.readyToGo' | translate}}</h3>
-        <p translate="firstTimeWizard.finishDesc"></p>
-        <div class="row wizard-btn-row">
-          <button type="button" class="btn btn-primary" ng-click="closeModal()" translate="firstTimeWizard.closeBtn"></button>
+        <div ng-show="tabs.finish" class="wiz-view">
+          <h1 translate="firstTimeWizard.getStarted"></h1>
+          <h3 class="wizard-subtitle">{{'firstTimeWizard.readyToGo' | translate}}</h3>
+          <p translate="firstTimeWizard.finishDesc"></p>
+          <div class="row wizard-btn-row">
+            <button type="button" class="btn btn-primary" ng-click="closeModal()" translate="firstTimeWizard.closeBtn"></button>
+          </div>
         </div>
-      </div>
 
       </div>
     </div>

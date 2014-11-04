@@ -1210,9 +1210,16 @@ a:active.ftwNavLink {
 
 .wizard-side-item {
   margin: 5px;
-  background-color: #FFFFFF;
+  background-color: #383A41;
   width: 25.7em;
   cursor: pointer;
+  font-family: "CiscoSansTT Light";
+  h4 {
+    color: #FFFFFF;
+  }
+  p {
+    color: #999;
+  }
 }
 
 .wizard-menu-icon {
@@ -1241,7 +1248,7 @@ a:active.ftwNavLink {
   background-color: black;
   opacity: 0.5;
   color: #FFFFFF;
-  height: 24.6em;
+  height: 19.2em;
 }
 
 #wizard-help-link {
@@ -1257,11 +1264,37 @@ a:active.ftwNavLink {
   padding-right:35px;
   padding-left:35px;
   margin-top: 6px;
+  h1 {
+    color: #3FA9E9;
+  }
+  .rbcontainer {
+    position:relative;
+    top:4em;
+    left:15em;
+    label {
+      font-size: 15px;
+      font-weight: normal;
+      color: #666;
+    }
+    .ciscoRadiobutton:nth-child(2) {
+      margin-top: 40px;
+    }
+  }
+}
+
+.wizard-container {
+  position:relative;
+  top: 5em;
+  left: 3em;
+  width: 90%;
 }
 
 .wizard-nav-active {
   background-color: #5FA8E6;
-  color: #FFFFFF ;
+  color: #FFFFFF;
+  p {
+    color: #ffffff;
+  }
 }
 
 .wizard-icon-active {
@@ -1280,6 +1313,9 @@ a:active.ftwNavLink {
   position:relative;
 }
 
+.wizard-subtitle-active {
+  color: #202020;
+}
 .wizard-form {
   padding:0;
 }

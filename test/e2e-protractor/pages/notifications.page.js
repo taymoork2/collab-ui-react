@@ -7,6 +7,7 @@ var Notifications = function(){
   this.successBody = element(by.css('.panel-success-body p'));
 
   this.notificationCancel = element(by.id('notifications-cancel'));
+  this.smallNotificationCancel = element(by.id('small-notification-cancel'));
 
   this.assertError = function(msg1, msg2){
     utils.expectIsDisplayed(this.errorAlert);
@@ -30,6 +31,15 @@ var Notifications = function(){
       expect(this.successBody.getText()).toContain(msg2);
     }
     this.notificationCancel.click();
+  };
+
+  this.clearNotifications = function() {
+    var notifications = element.all(by.id('small-notification-cancel'));
+    notifications.then(function(notifications){
+      for(var idx in notifications){
+        notifications[idx].click();
+      }
+    })
   };
 }
 

@@ -31,6 +31,7 @@ angular.module('Core')
       };
 
       $scope.setupTokenfield = function () {
+        console.log('test');
         //tokenfield setup - Should make it into a directive later.
         angular.element('#usersfield-wiz').tokenfield({
             delimiter: [',', ';'],

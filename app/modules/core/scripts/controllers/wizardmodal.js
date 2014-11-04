@@ -8,7 +8,8 @@ angular.module('Core')
       $scope.tabs = {
         planReview: true,
         enterpriseSettings: false,
-        addUsers: false
+        addUsers: false,
+        finish: false
       };
 
       //internal steps states
@@ -41,6 +42,7 @@ angular.module('Core')
           $scope.steps[idx] = false;
         }
         $scope.steps[step] = true;
+        console.log('changing step: ' + step);
       };
 
       $scope.evaluateStep = function (currentStep, tab) {
@@ -75,10 +77,10 @@ angular.module('Core')
 
       //add users syn settings tab
       $scope.syncOptions = [{
-        syncRbLabel: $translate.instant('firstTimeWizard.chooseManualDesc'),
+        syncRbLabel: $translate.instant('firstTimeWizard.simple'),
         value: 0
       }, {
-        syncRbLabel: $translate.instant('firstTimeWizard.chooseADSyncDesc'),
+        syncRbLabel: $translate.instant('firstTimeWizard.advanced'),
         value: 1
       }];
 
