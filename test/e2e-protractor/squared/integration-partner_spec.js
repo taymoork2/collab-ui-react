@@ -64,8 +64,9 @@ describe('Partner flow', function() {
 
       partner.startTrialButton.click();
 
-      expect(navigation.hasClass(partner.customerNameForm, 'has-error')).toBe(true);
       notifications.assertError(partner.newTrial.customerName, 'already exists');
+      expect(navigation.hasClass(partner.customerNameForm, 'has-error')).toBe(true);
+
 
       partner.customerNameInput.clear();
       partner.customerEmailInput.clear();
@@ -75,8 +76,8 @@ describe('Partner flow', function() {
 
       partner.startTrialButton.click();
 
-      expect(navigation.hasClass(partner.customerEmailForm, 'has-error')).toBe(true);
       notifications.assertError(partner.newTrial.customerEmail, 'already exists');
+      expect(navigation.hasClass(partner.customerEmailForm, 'has-error')).toBe(true);
 
       partner.cancelTrialButton.click();
     });

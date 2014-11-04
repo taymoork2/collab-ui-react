@@ -242,18 +242,18 @@ module.exports = function (grunt) {
     },
 
     // HTML Lint template files before building
-    htmlangular: {
-      options: {
-        tmplext: 'tpl.html',
-        customtags: '<%= html_lint.customtags %>',
-        customattrs: '<%= html_lint.customattrs %>',
-        relaxerror: '<%= html_lint.relaxerror %>',
-        reportpath: null
-      },
-      files: {
-        src: ['<%= app_dir %>/modules/**/*.tpl.html'],
-      },
-    },
+    // htmlangular: {
+    //   options: {
+    //     tmplext: 'tpl.html',
+    //     customtags: '<%= html_lint.customtags %>',
+    //     customattrs: '<%= html_lint.customattrs %>',
+    //     relaxerror: '<%= html_lint.relaxerror %>',
+    //     reportpath: null
+    //   },
+    //   files: {
+    //     src: ['<%= app_dir %>/modules/**/*.tpl.html'],
+    //   },
+    // },
 
     // Minify HTML files for production
     htmlmin: {
@@ -651,7 +651,7 @@ module.exports = function (grunt) {
   // Build files into the build folder for development
   grunt.registerTask('build', [
     'clean:build',
-    'htmlangular',
+    //'htmlangular',
     'html2js',
     'js_beautify',
     'less',

@@ -36,7 +36,10 @@
     "moreOptions": "More Actions",
     "inviteUsers": "Invite Users",
     "cancel": "Cancel",
-    "addUsersDesc": "Enter the email addresses of the people in your company that will recieve Collaboration Services. They will receive an email invitation to sign up."
+    "addUsersDesc": "Enter the email addresses of the people in your company that will recieve Collaboration Services. They will receive an email invitation to sign up.",
+    "status": "Status",
+    "pending": "Invite Pending",
+    "active": "Active"
   },
   "usersPreview": {
     "groupPreview": "Group:",

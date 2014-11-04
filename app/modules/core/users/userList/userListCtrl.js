@@ -66,6 +66,7 @@ angular.module('Core')
             if ($rootScope.searchStr === searchStr) {
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
               Log.debug('Returned data.', data.Resources);
+              // data.resources = getUserStatus(data.Resources);
               $scope.totalResults = data.totalResults;
               if (startIndex === 0) {
                 $scope.queryuserslist = data.Resources;
@@ -81,6 +82,27 @@ angular.module('Core')
         });
       };
 
+      $scope.resendInvitation = function (userEmail, userName) {
+        var userData = [{
+          'address': userEmail,
+          'name': userName
+        }];
+
+        Userservice.inviteUsers(userData, true, function (data, success) {
+
+          if (data.success) {
+            Notification.notify(['Successfully resent invitation.'], 'success');
+          } else {
+            Log.debug('Sending invitation failed. Status: ' + status);
+            Notification.notify(['Error sending invite'], 'error');
+            angular.element('#btnSave').button('reset');
+          }
+        });
+
+        angular.element('.open').removeClass('open');
+
+      };
+
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showUserDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
         '<div ng-cell></div>' +
@@ -92,15 +114,11 @@ angular.module('Core')
         '</span>';
 
       var actionsTemplate = '<span dropdown>' +
-        '<button class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button id="actionsButton" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
-        '<li><a href="#">Action</a></li>' +
-        '<li><a href="#">Another action</a></li>' +
-        '<li><a href="#">Something else here</a></li>' +
-        '<li class="divider"></li>' +
-        '<li><a href="#">Separated link</a></li>' +
+        '<li id="resendInviteOption"><a ng-click="$event.stopPropagation(); resendInvitation(row.entity.userName, row.entity.name.givenName); ">Resend Invitation</a></li>' +
         '</ul>' +
         '</span>';
 
@@ -129,6 +147,11 @@ angular.module('Core')
           field: 'userName',
           displayName: $filter('translate')('usersPage.emailHeader')
         }, {
+          field: 'userStatus',
+          cellFilter: 'userListFilter',
+          sortable: false,
+          displayName: $filter('translate')('usersPage.status')
+        }, {
           field: 'action',
           displayName: $filter('translate')('usersPage.actionHeader'),
           sortable: false,
@@ -145,10 +168,8 @@ angular.module('Core')
 
         if ($scope.load) {
           $scope.currentDataPosition++;
-          console.log($scope.currentDataPosition * Config.usersperpage + 1);
           $scope.load = false;
           getUserList($scope.currentDataPosition * Config.usersperpage + 1);
-          console.log('Scrolled .. ');
         }
       });
 

@@ -126,14 +126,29 @@ angular.module('Core')
           }
         },
 
-        inviteUsers: function (usersDataArray, callback) {
+        inviteUsers: function (usersDataArray, forceResend, callback) {
+          var apiUrl = null;
+          if (arguments.length === 2) { // if only two arguments were supplied
+            if (Object.prototype.toString.call(forceResend) === '[object Function]') {
+              callback = forceResend;
+              apiUrl = userUrl + 'invitations';
+            }
+          } else if (arguments.length === 3) {
+            apiUrl = userUrl + 'invitations/?resendInvite=' + forceResend;
+          }
+
           var userData = {
             'inviteList': []
           };
 
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
-            var userName = usersDataArray[i].name.trim();
+
+            var userName = null;
+            if (usersDataArray[i].name) {
+              userName = usersDataArray[i].name.trim();
+            }
+
             var user = {
               'email': userEmail,
               'name': userName
@@ -145,7 +160,7 @@ angular.module('Core')
 
           if (userData.inviteList.length > 0) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-            $http.post(userUrl + 'invitations', userData)
+            $http.post(apiUrl, userData)
               .success(function (data, status) {
                 data.success = true;
                 callback(data, status);

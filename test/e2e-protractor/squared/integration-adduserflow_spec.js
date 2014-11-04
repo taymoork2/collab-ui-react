@@ -64,7 +64,7 @@ describe('Add/Invite/Entitle User flow', function() {
           users.clearButton.click();
         }
       }, 45000);
-      
+
     });
 
     it('should display error if no user is entered on invite', function() {
@@ -130,19 +130,23 @@ describe('Add/Invite/Entitle User flow', function() {
         expect(users.inviteButton.isDisplayed()).toBeTruthy();
         expect(users.entitleButton.isDisplayed()).toBeTruthy();
         expect(users.addButton.isDisplayed()).toBeTruthy();
-        users.assertEntitlementListSize(3);
+        users.assertEntitlementListSize(2);
         expect(users.squaredCheckBox.isDisplayed()).toBeTruthy();
       });
     });
 
     it('should display error if no user is entered on update', function() {
         users.entitleButton.click();
+        browser.sleep(1000);
         notifications.assertError('Please enter valid user email(s).');
+        browser.sleep(1000);
       });
 
     it('should display error if no user is entered on add', function() {
       users.addButton.click();
+      browser.sleep(1000);
       notifications.assertError('Please enter valid user email(s).');
+      browser.sleep(1000);
     });
 
     describe('Add an existing user', function() {
@@ -194,7 +198,7 @@ describe('Add/Invite/Entitle User flow', function() {
         users.search(inputEmail);
         users.userListEnts.then(function(cell) {
           expect(cell[0].getText()).toContain(inputEmail);
-          cell[0].click();
+          users.gridCell.click();
         });
         browser.sleep(3000);  //TODO fix this - animation should be resolved by angular
         expect(users.squaredPanel.isDisplayed()).toBeTruthy();

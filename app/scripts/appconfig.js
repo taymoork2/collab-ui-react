@@ -192,6 +192,12 @@ angular
           controller: 'ReportsCtrl',
           parent: 'main'
         })
+        .state('swap', {
+          url: '/swap/:customerOrgId/:customerName',
+          templateUrl: 'modules/core/views/swap.html',
+          controller: 'SwapCtrl',
+          authenticate: false
+        })
         .state('customers', {
           absract: true,
           template: '<div ui-view></div>',

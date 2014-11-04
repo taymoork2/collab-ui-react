@@ -56,6 +56,11 @@ var UsersPage = function() {
   this.checkBoxEnts = element.all(by.repeater('(service, val) in entitlements'));
   this.iconSearch = element(by.id('icon-search'));
   this.userListEnts = element.all(by.binding('userName'));
+  this.userListStatus = element.all(by.binding('userStatus'));
+  this.userListAction = element(by.id('actionsButton'));
+  this.actionDropdown = element(by.css('.dropdown-menu'));
+  this.resendInviteOption = element(by.id('resendInviteOption'));
+  this.gridCell = element(by.css('.ngCell'));
 
   this.assertSorting = function(nameToSort) {
     this.queryResults.getAttribute('value').then(function(value) {
