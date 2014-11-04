@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('callForwardInfoCtrl', ['$scope', '$q', '$http', 'UserDirectoryNumberDetailService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter', 'Storage',
-    function ($scope, $q, $http, UserDirectoryNumberDetailService, TelephonyInfoService, Log, Config, Notification, $filter, Storage) {
+  .controller('callForwardInfoCtrl', ['$scope', '$q', 'UserDirectoryNumberDetailService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter', 'Storage',
+    function ($scope, $q, UserDirectoryNumberDetailService, TelephonyInfoService, Log, Config, Notification, $filter, Storage) {
       $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
       $scope.forward = 'busy';
       $scope.forwardAllCalls = '';
@@ -158,9 +158,6 @@ angular.module('Huron')
           msg: null,
           type: 'null'
         };
-
-        // TODO: Remove the following line when we are authenticating with CMI
-        delete $http.defaults.headers.common.Authorization;
 
         delete directoryNumberPUT.customer;
         delete directoryNumberPUT.uuid;
