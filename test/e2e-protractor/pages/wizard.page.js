@@ -1,13 +1,13 @@
 'use strict';
 
 var Wizard = function() {
-	this.modalWindow = element(by.css('.modal'));
+	this.wizard = element(by.css('.wizard'));
 	this.mainView = element(by.css('.wizard-main-view'));
 	this.leftNav = element(by.css('.wizard-nav'));
 	this.reviewTab = element(by.css('#wizard-review-link'));
 	this.enterpriseTab = element(by.css('#wizard-enterpriseSettings-link'));
 	this.addusersTab = element(by.css('#wizard-addusers-link'));
-	this.mainviewTitles = element.all(by.css('h1'));
+	this.mainviewTitles = element.all(by.css('.wizard-main-title'));
 	this.mainviewSubtitles = element.all(by.css('.wizard-subtitle'));
 	this.radiobuttons = element.all(by.css('cs-radiobutton input'));
 	this.beginBtn = element(by.css('#beginBtn'));
@@ -22,7 +22,7 @@ var Wizard = function() {
 	this.dirDomainInput = element(by.css('#dirDomainText'));
 	this.toInstallConnectorBtn = element.all(by.css('[ng-click="changeStep(\'installConnector\')"]'));
 	this.toSyncStatusBtn = element.all(by.css('[ng-click="changeStep(\'syncStatus\')"]'));
-	this.closeBtn = element(by.css('[ng-click="closeModal()"]'));
+	this.closeBtn = element(by.css('[ng-click="finish()"]'));
 
 	this.clickPlanReview = function() {
 		this.reviewTab.click();

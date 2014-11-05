@@ -74,11 +74,11 @@ module.exports = {
       'bower_components/angular-translate/angular-translate.js',
       'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
+      'bower_components/ui-router-extras/release/ct-ui-router-extras.js',
       'bower_components/ng-csv/build/ng-csv.min.js',
       'bower_components/bootstrap-cisco-ng/dist/cisco-ui-tpls.js',
       'bower_components/angular-wizard/dist/angular-wizard.js',
       'bower_components/ng-grid/build/ng-grid.js',
-      'bower_components/angular-modal-service/dst/angular-modal-service.js',
       'bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js'
     ],
     css: [
@@ -117,7 +117,8 @@ module.exports = {
       'windowsize',
       'progressbar',
       'navstyle',
-      'headertitle'
+      'headertitle',
+      'modal-transclude'
     ],
     relaxerror: [
       'for attribute translate',
@@ -125,7 +126,10 @@ module.exports = {
       'Empty heading.',
       'Element style not allowed as child of element body in this context.',
       'Element img is missing required attribute src.',
-      'Element ul not allowed as child of element button in this context.'
+      'Element ul not allowed as child of element button in this context.',
+      'for attribute aria-valuenow',
+      'for attribute aria-valuemax',
+      'Element option without attribute label must not be empty'
     ]
   }
 

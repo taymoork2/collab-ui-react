@@ -50,8 +50,8 @@ angular.module('Core')
   }
 ])
 
-.controller('SettingsMenuCtrl', ['$scope', '$dialogs', '$location', 'ModalService', 'Config',
-  function ($scope, $dialogs, $location, ModalService, Config) {
+.controller('SettingsMenuCtrl', ['$scope', '$location', '$state',
+  function ($scope, $location, $state) {
 
     $scope.menuItems = [{
       link: '/initialsetup',
@@ -60,20 +60,7 @@ angular.module('Core')
 
     $scope.doAction = function (path) {
       if (path === '/initialsetup') {
-        ModalService.showModal({
-          templateUrl: 'modules/core/views/wizardmodal.html',
-          controller: 'WizardModalCtrl',
-          keyboard: true
-        }).then(function (modal) {
-          modal.element.modal();
-          modal.close.then(function (result) {
-            //Some cleanup necessary
-            angular.element('body').removeClass('modal-open');
-            angular.element('.modal-backdrop').fadeOut('normal', function () {
-              angular.element('.modal-backdrop').remove();
-            });
-          });
-        });
+        $state.go('setupwizardmodal');
       } else {
         $location.path(path);
       }

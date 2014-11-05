@@ -18,7 +18,6 @@
         <div class="col-md-9">
           <div id="customerNameForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerName.$invalid && trialForm.customerName.$dirty) || (nameError && !trialForm.customerName.$dirty) }">
             <input id="customerNameInput" class="form-control" name="customerName" ng-model="customerName" type="text" required>
-            </input>
           </div>
         </div>
       </div>
@@ -28,7 +27,7 @@
         </div>
         <div class="col-md-9">
           <div id="customerEmailForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerEmail.$invalid && trialForm.customerEmail.$dirty) || (emailError && !trialForm.customerEmail.$dirty)}">
-            <input id="customerEmailInput" type="email" class="form-control" name="customerEmail" ng-model="customerEmail" required></input>
+            <input id="customerEmailInput" type="email" class="form-control" name="customerEmail" ng-model="customerEmail" required>
           </div>
         </div>
       </div>

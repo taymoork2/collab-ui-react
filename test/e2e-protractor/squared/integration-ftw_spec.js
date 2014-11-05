@@ -19,7 +19,7 @@ describe('First Time Wizard', function() {
 
   it('clicking on gear icon should open first time wizard', function() {
     navigation.clickFirstTimeWizard();
-    utils.expectIsDisplayed(wizard.modalWindow);
+    utils.expectIsDisplayed(wizard.wizard);
     utils.expectIsDisplayed(wizard.leftNav);
     utils.expectIsDisplayed(wizard.mainView);
   });
@@ -51,8 +51,8 @@ describe('First Time Wizard', function() {
     expect(wizard.mainviewSubtitles.get(5).getText()).toEqual('Enable SSO');
     wizard.enableSSOBtn.click();
     expect(wizard.mainviewTitles.get(6).isDisplayed()).toBeTruthy();
-  }); 
-  
+  });
+
   it('should complete simple invite users flow', function() {
     wizard.clickAddUsers();
     wizard.radiobuttons.get(2).click();

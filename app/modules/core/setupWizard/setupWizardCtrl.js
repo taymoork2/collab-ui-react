@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('WizardModalCtrl', ['$scope', 'close', 'Log', 'Notification', '$translate',
-    function ($scope, close, Log, Notification, $translate) {
+  .controller('SetupWizardCtrl', ['$scope', '$translate',
+    function ($scope, $translate) {
 
       //tabs state definition
       $scope.tabs = {
@@ -23,10 +23,6 @@ angular.module('Core')
         domainEntry: false,
         installConnector: false,
         syncStatus: false
-      };
-
-      $scope.closeModal = function (result) {
-        close(result, 500);
       };
 
       $scope.changeTab = function (tab) {

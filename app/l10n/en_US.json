@@ -78,7 +78,8 @@
     "logout": "Log out",
     "appTitle": "Squared Admin Tool",
     "genericTitle": "Squared",
-    "search": "Search users by name or email"
+    "search": "Search users by name or email",
+    "greeting": "Hi {{name}}"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",

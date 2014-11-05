@@ -7,13 +7,21 @@ angular
       $stateProvider
         .state('login', {
           url: '/login',
-          templateUrl: 'modules/core/login/login.tpl.html',
-          controller: 'LoginCtrl',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/login/login.tpl.html',
+              controller: 'LoginCtrl'
+            }
+          },
           authenticate: false
         })
         .state('main', {
-          templateUrl: 'modules/core/views/main.tpl.html',
-          abstract: true
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/views/main.tpl.html'
+            }
+          },
+          sticky: true
         });
 
       $translateProvider.useStaticFilesLoader({
@@ -30,7 +38,8 @@ angular
   .module('Squared')
   .config(['$urlRouterProvider', '$stateProvider',
     function ($urlRouterProvider, $stateProvider) {
-      $urlRouterProvider.when('/initialsetup', '/initialsetup/accountreview');
+      var modalMemo = 'modalMemo';
+      var wizardmodalMemo = 'wizardmodalMemo';
 
       $stateProvider
         .state('activate', {
@@ -58,6 +67,7 @@ angular
           url: '/invitelauncher',
           templateUrl: 'modules/squared/views/invitelauncher.html',
           controller: 'InvitelauncherCtrl',
+          parent: 'main',
           authenticate: false
         })
         .state('applauncher', {
@@ -150,36 +160,6 @@ angular
           controller: 'SpacesCtrl',
           parent: 'main'
         })
-        .state('initialsetup', {
-          url: '/initialsetup',
-          templateUrl: 'modules/core/views/initialsetup.html',
-          controller: 'InitialSetupCtrl',
-          parent: 'main'
-        })
-        .state('initialsetup.accountreview', {
-          url: '/accountreview',
-          templateUrl: 'modules/core/views/initialsetup.accountreview.html',
-          controller: 'AccountReviewCtrl',
-          parent: 'main'
-        })
-        .state('initialsetup.servicesetup', {
-          url: '/servicesetup',
-          templateUrl: 'modules/core/views/initialsetup.servicesetup.html',
-          controller: 'ServiceSetupCtrl',
-          parent: 'main'
-        })
-        .state('initialsetup.adduser', {
-          url: '/adduser',
-          templateUrl: 'modules/core/views/initialsetup.adduser.html',
-          controller: 'AddUserCtrl',
-          parent: 'main'
-        })
-        .state('initialsetup.getstarted', {
-          url: '/getstarted',
-          templateUrl: 'modules/core/views/initialsetup.getstarted.html',
-          controller: 'GetStartedCtrl',
-          parent: 'main'
-        })
         .state('partnerhome', {
           url: '/partnerhome',
           templateUrl: 'modules/core/views/partnerlanding.html',
@@ -211,6 +191,76 @@ angular
         .state('customers.list.preview', {
           templateUrl: 'modules/core/customers/customerPreview/customerPreview.tpl.html',
           controller: 'CustomerPreviewCtrl'
+        })
+        .state('modal', {
+          abstract: true,
+          onEnter: ['$modal', '$state', '$previousState', function ($modal, $state, $previousState) {
+            $previousState.memo(modalMemo);
+            $state.modal = $modal.open({
+              template: '<div ui-view="modal"></div>'
+            });
+            $state.modal.result.finally(function () {
+              $state.modal = null;
+              var previousState = $previousState.get(modalMemo);
+              if (previousState) {
+                return $previousState.go(modalMemo);
+              }
+            });
+          }],
+          onExit: ['$state', '$previousState', function ($state, $previousState) {
+            if ($state.modal) {
+              $previousState.forget(modalMemo);
+              $state.modal.close();
+            }
+          }]
+        })
+        .state('wizardmodal', {
+          abstract: true,
+          onEnter: ['$modal', '$state', '$previousState', function ($modal, $state, $previousState) {
+            $previousState.memo(wizardmodalMemo);
+            $state.modal = $modal.open({
+              template: '<div ui-view="modal"></div>',
+              controller: 'ModalWizardCtrl',
+              windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html'
+            });
+            $state.modal.result.finally(function () {
+              $state.modal = null;
+              var previousState = $previousState.get(wizardmodalMemo);
+              if (previousState) {
+                return $previousState.go(wizardmodalMemo);
+              }
+            });
+          }],
+          onExit: ['$state', '$previousState', function ($state, $previousState) {
+            if ($state.modal) {
+              $previousState.forget(wizardmodalMemo);
+              $state.modal.close();
+            }
+          }]
+        })
+        .state('firsttimesplash', {
+          abstract: true,
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/setupWizard/firstTimeWizard.tpl.html',
+              controller: 'FirstTimeWizardCtrl'
+            }
+          }
+        })
+        .state('firsttimewizard', {
+          parent: 'firsttimesplash',
+          url: '/firsttimewizard',
+          templateUrl: 'modules/core/setupWizard/setupWizard.tpl.html',
+          controller: 'SetupWizardCtrl'
+        })
+        .state('setupwizardmodal', {
+          parent: 'wizardmodal',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/core/setupWizard/setupWizard.tpl.html',
+              controller: 'SetupWizardCtrl'
+            }
+          }
         });
     }
   ]);

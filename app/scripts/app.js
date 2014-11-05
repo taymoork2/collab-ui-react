@@ -31,12 +31,12 @@ angular
     'ngCsv',
     'ipCookie',
     'ui.router',
+    'ct.ui.router.extras',
     'ngGrid',
     'mgo-angular-wizard',
     'cisco.ui',
     'Hercules',
     'Core',
     'Squared',
-    'Huron',
-    'angularModalService'
+    'Huron'
   ]);

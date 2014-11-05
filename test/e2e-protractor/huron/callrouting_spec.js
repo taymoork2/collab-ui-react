@@ -5,7 +5,7 @@ var testuser = {
   password: 'Cisco123!'
 };
 
-describe('Huron Call Routing', function() {
+xdescribe('Huron Call Routing', function() {
   it('should login', function(){
     login.login(testuser.username,testuser.password);
   });
