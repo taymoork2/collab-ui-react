@@ -117,7 +117,7 @@ angular.module('Core')
         '<button id="actionsButton" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
-        '<ul class="dropdown-menu dropdown-primary" role="menu">' +
+        '<ul ng-if="row.entity.userStatus"class="dropdown-menu dropdown-primary" role="menu">' +
         '<li id="resendInviteOption"><a ng-click="$event.stopPropagation(); resendInvitation(row.entity.userName, row.entity.name.givenName); ">Resend Invitation</a></li>' +
         '</ul>' +
         '</span>';
