@@ -57,7 +57,7 @@ angular.module('Core')
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
 
-        callflowServiceUrl: 'http://admin-portal-test-public.wbx2.com:8080/atlas-server/admin/api/v1/',
+        callflowServiceUrl: 'http://admin-portal-test-public.projectsquared.com:8080/atlas-server/admin/api/v1/',
 
         appinfo: {
           webClientURL: 'https://web.wbx2.com/',
