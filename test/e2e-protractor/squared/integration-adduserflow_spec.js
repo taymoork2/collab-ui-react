@@ -139,14 +139,14 @@ describe('Add/Invite/Entitle User flow', function() {
         users.entitleButton.click();
         browser.sleep(1000);
         notifications.assertError('Please enter valid user email(s).');
-        browser.sleep(1000);
+        notifications.clearNotifications();
       });
 
     it('should display error if no user is entered on add', function() {
       users.addButton.click();
       browser.sleep(1000);
       notifications.assertError('Please enter valid user email(s).');
-      browser.sleep(1000);
+      notifications.clearNotifications();
     });
 
     describe('Add an existing user', function() {
@@ -196,6 +196,7 @@ describe('Add/Invite/Entitle User flow', function() {
     describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
       it('should show call-initiation entitlement for the user', function() {
         users.search(inputEmail);
+        browser.driver.manage().window().maximize();
         users.userListEnts.then(function(cell) {
           expect(cell[0].getText()).toContain(inputEmail);
           users.gridCell.click();

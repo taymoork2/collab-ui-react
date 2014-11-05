@@ -30,7 +30,7 @@ describe('First Time Wizard', function() {
     wizard.clickEnterpriseSettings();
     expect(wizard.mainviewTitles.get(1).getText()).toEqual('Enterprise Settings');
     wizard.clickAddUsers();
-    expect(wizard.mainviewTitles.get(6).getText()).toEqual('Add Users');
+    expect(wizard.mainviewTitles.get(6).getText()).toContain('Add Users');
   });
 
   it('should complete custom sso provider flow', function(){
@@ -39,7 +39,7 @@ describe('First Time Wizard', function() {
     browser.driver.manage().window().maximize();
     element(by.id('beginBtn')).click();
     expect(wizard.mainviewTitles.get(1).getText()).toEqual('Enterprise Settings');
-    expect(wizard.mainviewSubtitles.get(1).getText()).toEqual('Setup Single Sign On');
+    expect(wizard.mainviewSubtitles.get(1).getText()).toEqual('Setup Single Sign-On');
     wizard.radiobuttons.get(0).click();
     wizard.esEvaluateBtn.click();
     expect(wizard.mainviewSubtitles.get(2).getText()).toEqual('Import IdP Metadata');
@@ -53,14 +53,14 @@ describe('First Time Wizard', function() {
     expect(wizard.mainviewTitles.get(6).isDisplayed()).toBeTruthy();
   }); 
   
-  it('should complete manual invite users flow', function() {
+  it('should complete simple invite users flow', function() {
     wizard.clickAddUsers();
     wizard.radiobuttons.get(2).click();
     wizard.auEvaluateBtn.click();
-    expect(wizard.mainviewSubtitles.get(7).getText()).toEqual('Manual Invite');
-    expect(wizard.mainviewSubtitles.get(7).isDisplayed()).toBeTruthy();
+    // expect(wizard.mainviewSubtitles.get(7).getText()).toEqual('Manual Invite');
+    // expect(wizard.mainviewSubtitles.get(7).isDisplayed()).toBeTruthy();
     expect(wizard.usersfield.isDisplayed()).toBeTruthy();
-    wizard.finishBtn.get(0).click();
+    wizard.finishBtn.get(1).click();
     expect(wizard.mainviewTitles.get(11).getText()).toEqual('Get Started');
     expect(wizard.mainviewTitles.get(11).isDisplayed()).toBeTruthy();
   });
@@ -69,16 +69,16 @@ describe('First Time Wizard', function() {
     wizard.clickAddUsers();
     wizard.radiobuttons.get(3).click();
     wizard.auEvaluateBtn.click();
-    expect(wizard.mainviewSubtitles.get(8).getText()).toEqual('Domain Entry');
-    expect(wizard.mainviewSubtitles.get(8).isDisplayed()).toBeTruthy();
+    expect(wizard.mainviewSubtitles.get(7).getText()).toEqual('Domain Entry');
+    expect(wizard.mainviewSubtitles.get(7).isDisplayed()).toBeTruthy();
     wizard.dirDomainInput.sendKeys('test_domain');
     wizard.toInstallConnectorBtn.get(0).click();
-    expect(wizard.mainviewSubtitles.get(9).getText()).toEqual('Install Cloud Connector');
-    expect(wizard.mainviewSubtitles.get(9).isDisplayed()).toBeTruthy();
+    expect(wizard.mainviewSubtitles.get(8).getText()).toEqual('Install Cloud Connector');
+    expect(wizard.mainviewSubtitles.get(8).isDisplayed()).toBeTruthy();
     wizard.toSyncStatusBtn.get(0).click();
-    expect(wizard.mainviewSubtitles.get(10).getText()).toEqual('Sync Status');
-    expect(wizard.mainviewSubtitles.get(10).isDisplayed()).toBeTruthy();
-    wizard.finishBtn.get(1).click();
+    expect(wizard.mainviewSubtitles.get(9).getText()).toEqual('Sync Status');
+    expect(wizard.mainviewSubtitles.get(9).isDisplayed()).toBeTruthy();
+    wizard.finishBtn.get(2).click();
     expect(wizard.mainviewTitles.get(11).getText()).toEqual('Get Started');
     expect(wizard.mainviewTitles.get(11).isDisplayed()).toBeTruthy();
   });

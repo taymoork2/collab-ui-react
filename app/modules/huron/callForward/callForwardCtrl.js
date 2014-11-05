@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('callForwardInfoCtrl', ['$scope', '$q', 'UserDirectoryNumberDetailService', 'Log', 'Config', 'Notification', '$filter', 'Storage',
-    function ($scope, $q, UserDirectoryNumberDetailService, Log, Config, Notification, $filter, Storage) {
+  .controller('callForwardInfoCtrl', ['$scope', '$q', '$http', 'UserDirectoryNumberDetailService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter', 'Storage',
+    function ($scope, $q, $http, UserDirectoryNumberDetailService, TelephonyInfoService, Log, Config, Notification, $filter, Storage) {
+      $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
       $scope.forward = 'busy';
       $scope.forwardAllCalls = '';
       $scope.forwardBusyCalls = '';
@@ -158,6 +159,9 @@ angular.module('Huron')
           type: 'null'
         };
 
+        // TODO: Remove the following line when we are authenticating with CMI
+        delete $http.defaults.headers.common.Authorization;
+
         delete directoryNumberPUT.customer;
         delete directoryNumberPUT.uuid;
 
@@ -223,27 +227,31 @@ angular.module('Huron')
               }
             }
           }
-          if ($scope.directoryNumberDetail.callForwardAll.voicemailEnabled === 'true') {
+          if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumberDetail.callForwardAll.voicemailEnabled === 'true')) {
             $scope.forwardAllCalls = 'Voicemail';
           } else {
-            $scope.forwardAllCalls = $scope.directoryNumberDetail.callForwardAll.destination;
+            if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumberDetail.callForwardAll.destination === undefined) || ($scope.directoryNumberDetail.callForwardAll.destination === null)) {
+              $scope.forwardAllCalls = 'Voicemail';
+            } else {
+              $scope.forwardAllCalls = $scope.directoryNumberDetail.callForwardAll.destination;
+            }
           }
-          if ($scope.directoryNumberDetail.callForwardBusy.intVoiceMailEnabled === 'true') {
+          if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumberDetail.callForwardBusy.intVoiceMailEnabled === 'true')) {
             $scope.forwardBusyCalls = 'Voicemail';
           } else {
             $scope.forwardBusyCalls = $scope.directoryNumberDetail.callForwardBusy.intDestination;
           }
-          if ($scope.directoryNumberDetail.callForwardBusy.voicemailEnabled === 'true') {
+          if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumberDetail.callForwardBusy.voicemailEnabled === 'true')) {
             $scope.forwardExternalBusyCalls = 'Voicemail';
           } else {
             $scope.forwardExternalBusyCalls = $scope.directoryNumberDetail.callForwardBusy.destination;
           }
-          if ($scope.directoryNumberDetail.callForwardNoAnswer.intVoiceMailEnabled === 'true') {
+          if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumberDetail.callForwardNoAnswer.intVoiceMailEnabled === 'true')) {
             $scope.forwardNoAnswerCalls = 'Voicemail';
           } else {
             $scope.forwardNoAnswerCalls = $scope.directoryNumberDetail.callForwardNoAnswer.intDestination;
           }
-          if ($scope.directoryNumberDetail.callForwardNoAnswer.voicemailEnabled === 'true') {
+          if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumberDetail.callForwardNoAnswer.voicemailEnabled === 'true')) {
             $scope.forwardExternalNoAnswerCalls = 'Voicemail';
           } else {
             $scope.forwardExternalNoAnswerCalls = $scope.directoryNumberDetail.callForwardNoAnswer.destination;

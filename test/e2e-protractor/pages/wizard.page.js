@@ -18,7 +18,7 @@ var Wizard = function() {
 	this.enableSSOBtn = element(by.css('[ng-click="enableSSO()"]'));
 	this.auEvaluateBtn = element(by.css('[ng-click="evaluateStep(\'initial\', \'addUsers\')"]'));
 	this.usersfield = element(by.css('#usersfield-wiz'));
-	this.finishBtn = element.all(by.css('[ng-click="changeStep(\'finish\')"]'));
+	this.finishBtn = element.all(by.css('[ng-click="changeTab(\'finish\')"]'));
 	this.dirDomainInput = element(by.css('#dirDomainText'));
 	this.toInstallConnectorBtn = element.all(by.css('[ng-click="changeStep(\'installConnector\')"]'));
 	this.toSyncStatusBtn = element.all(by.css('[ng-click="changeStep(\'syncStatus\')"]'));
