@@ -52,15 +52,11 @@ angular.module('Core')
 
 .controller('SettingsMenuCtrl', ['$scope', '$dialogs', '$location', 'ModalService', 'Config',
   function ($scope, $dialogs, $location, ModalService, Config) {
-    //LOOKTHISUPDUDE
-    if (Config.isIntegration() || Config.isDev()) {
-      $scope.menuItems = [{
-        link: '/initialsetup',
-        title: 'Initial Setup'
-      }];
-    } else {
-      $scope.menuItems = [];
-    }
+
+    $scope.menuItems = [{
+      link: '/initialsetup',
+      title: 'Initial Setup'
+    }];
 
     $scope.doAction = function (path) {
       if (path === '/initialsetup') {
