@@ -5,7 +5,10 @@
 /* global by */
 /* global browser */
 /* global expect */
+/* global config */
 
+var webClientURL = config.webClientURL;
+var loginBtnId = 'btn-login';
 
 //var config = require('./testconfig.js');
 
@@ -22,20 +25,22 @@ describe('invite page with user param', function() {
     browser.get('#/invite');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('sign-in-button'));
+      return browser.driver.isElementPresent(by.id(loginBtnId));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
+      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
     });
+
   });
 
   it('should forward to squared app with page param', function() {
     browser.get('#/invite?user=' + encryptedQueryParam);
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('sign-in-button'));
+      return browser.driver.isElementPresent(by.id(loginBtnId));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
+      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
     });
+
   });
 
 });
@@ -55,9 +60,9 @@ describe('App Launcher Flow', function() {
     browser.get('#/applauncher');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('sign-in-button'));
+      return browser.driver.isElementPresent(by.id(loginBtnId));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
+      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
     });
 
   });
@@ -67,9 +72,9 @@ describe('App Launcher Flow', function() {
     browser.get('applauncher.html');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('sign-in-button'));
+      return browser.driver.isElementPresent(by.id(loginBtnId));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
+      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
     });
 
   });
@@ -82,9 +87,9 @@ describe('App Download Page', function()  {
     browser.get('#/appdownload');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('sign-in-button'));
+      return browser.driver.isElementPresent(by.id(loginBtnId));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
+      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
     });
 
   });
@@ -93,9 +98,9 @@ describe('App Download Page', function()  {
     browser.get('appdownload.html');
 
     browser.driver.wait(function() {
-      return browser.driver.isElementPresent(by.id('sign-in-button'));
+      return browser.driver.isElementPresent(by.id(loginBtnId));
     }).then(function() {
-      expect(browser.driver.getCurrentUrl()).toContain('web.projectsquared.com');
+      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
     });
 
   });
