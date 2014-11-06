@@ -1,0 +1,62 @@
+<div class="shared-spaces">
+  <div class="notification"></div>
+  <div class="row page-header">
+    <div class="col-md-6 col-sm-6">
+      <h2 class="page-title">{{'spacesPage.title' | translate}}&nbsp;&nbsp;<small class="count">{{totalResults}}</small></h2>
+    </div>
+    <div class="col-md-6 col-sm-6" ng-show="Utils.isAdminPage()">
+      <div class="page-option-buttons">
+        <button id="addRooms" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addRoomDialog" ng-click="resetAddDevice()">
+        <span translate="spacesPage.add"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="roomsListPanel" class="row">
+    <div gridscrollbar windowsize class="gridStyle col-md-12" style="height: {{windowHeight - 150}}px;" ng-grid="gridOptions"></div>
+  </div>
+  <div class="modal fade" id="addRoomDialog" tabindex="-1" role="dialog" aria-labelledby="addRoomTitle" aria-hidden="true">
+    <div class="modal-dialog add-device-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button id="device-modal-close" type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">
+          <i class="fa fa-times"></i>
+          </span>
+          </button>
+          <h3 class="modal-title" id="addRoomTitle" translate="spacesPage.modalTitle"></h3>
+        </div>
+        <div class="modal-body">
+
+          <h4 translate="spacesPage.addDeviceStep1" class="adddevice-stepheader"></h4>
+          <p translate="spacesPage.addDeviceStep1Desc" class="adddevice-desc"></p>
+
+          <div ng-show="showAdd">
+            <input class="form-control profile-input adddevice-desc add-device-textbox" name="roomName" ng-model="newRoomName" type="text" id="newRoom" required></input>
+
+            <button id="btnAdd" type="button" class="btn btn-primary btn-lg add-device-btn" ng-click="addRoom()" ng-disabled="!newRoomName.length">
+            <span translate="spacesPage.addBtn"></span>
+            </button>
+          </div>
+
+          <div id="deviceAddCard" class="modal-deviceadd-card" ng-show="!showAdd">
+            <img src="images/SX10.png" class="pull-left"/>
+            <p id="confirmDeviceName" class="adddevice-desc device-card-content pull-left">{{newRoomName}}</p>
+            <p class="adddevice-desc device-card-content pull-left">{{newActivationCode}}</p>
+
+            <i id="closeDeviceCard" class="icon icon-close device-add-close pull-right" ng-click="resetAddDevice()"></i>
+    
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <div class="device-add-footer">
+            <button type="button" id="doneDevicesButton" class="btn btn-primary btn-lg pull-left" data-dismiss="modal" ng-disabled="showAdd">
+              <span translate="spacesPage.done"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

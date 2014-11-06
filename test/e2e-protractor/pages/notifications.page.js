@@ -35,13 +35,15 @@ var Notifications = function(){
 
   this.clearNotifications = function() {
     var notifications = element.all(by.id('small-notification-cancel'));
-    notifications.then(function(notifications){
-      for(var idx in notifications){
-        notifications[idx].click();
-      }
-    })
+    if(notifications.length > 0 ) {
+      notifications.then(function(notifications){
+        for(var idx in notifications){
+          notifications[idx].click();
+        }
+      });
+    }
   };
-}
+};
 
 module.exports = Notifications;
 

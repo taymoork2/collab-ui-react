@@ -146,7 +146,7 @@ angular
         })
         .state('spaces', {
           url: '/spaces',
-          templateUrl: 'modules/squared/views/spaces.html',
+          templateUrl: 'modules/squared/devices/devices.html',
           controller: 'SpacesCtrl',
           parent: 'main'
         })
