@@ -2,7 +2,16 @@
 
 /* global _ */
 
-var HERCULES_CONNECTOR_URL = 'https://hercules.hitest.huron-dev.com/v1/connectors';
+var getUrl = function () {
+  var key = "hercules-url";
+  var regex = new RegExp(key + "=([^&]*)");
+  var match = window.location.search.match(regex);
+  if (match && match.length == 2) {
+    return decodeURIComponent(match[1]);
+  } else {
+    return 'https://hercules.hitest.huron-dev.com/v1/connectors';
+  }
+};
 
 angular.module('Hercules')
   .service('ConnectorService', ['$http',
@@ -12,7 +21,7 @@ angular.module('Hercules')
 
       var fetch = function (opts) {
         $http
-          .get(HERCULES_CONNECTOR_URL)
+          .get(getUrl())
           .success(function (data) {
             if (addMockData) {
               data = data.concat(mockData);
