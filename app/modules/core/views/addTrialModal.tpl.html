@@ -1,6 +1,6 @@
 <!-- Add Trial Modal -->
 <form name="trialForm">
-  <div class="modal-header modal-trials-header">
+  <div class="modal-header">
     <button type="button" class="close header-text" ng-click="$parent.addTrialModalInstance.close()">
       <span aria-hidden="true">
         <span class="icon icon-close cancel-color"></span>
@@ -8,7 +8,7 @@
     </button>
     <h3 class="header-text" translate="partnerHomePage.dialogTitle"></h3>
   </div>
-  <div class="modal-body modal-trials-body">
+  <div class="modal-body">
     <div class="modal-card">
       <h4 translate="partnerHomePage.customerInformation"></h4>
       <div class="row input-row-spacing">
@@ -55,7 +55,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer modal-trials-footer">
+  <div class="modal-footer">
     <button type="button" id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="startTrial($parent.addTrialModalInstance)" ng-disabled="trialForm.$invalid" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
       <span class="button-text" translate="partnerHomePage.startTrial"></span>
     </button>
