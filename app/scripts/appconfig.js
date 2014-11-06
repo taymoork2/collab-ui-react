@@ -111,7 +111,12 @@ angular
           template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
         })
         .state('users.list.preview.directorynumber', {
-          template: '<div directory-number-info></div>'
+          templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
+          controller: 'LineSettingsCtrl'
+        })
+        .state('users.list.preview.adddirectorynumber', {
+          templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
+          controller: 'LineSettingsCtrl'
         })
         .state('users.list.preview.voicemail', {
           template: '<div voicemail-info></div>'

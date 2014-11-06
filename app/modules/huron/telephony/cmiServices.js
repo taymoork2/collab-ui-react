@@ -2,7 +2,7 @@
 
 angular.module('Huron')
   .factory('UnassignedLineService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/unassigneddirectorynumbers?order=pattern-asc', {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools?order=pattern-asc', {
       customerId: '@customerId'
     }, {});
   })
@@ -19,15 +19,8 @@ angular.module('Huron')
     userId: '@userId',
     remoteDestId: '@remoteDestId'
   }, {
-    get: {
-      method: 'GET',
-      isArray: true
-    },
     update: {
       method: 'PUT'
-    },
-    save: {
-      method: 'POST'
     }
   });
 })
@@ -37,11 +30,6 @@ angular.module('Huron')
     customerId: '@customerId',
     userId: '@userId',
     directoryNumberId: '@directoryNumberId'
-  }, {
-    get: {
-      method: 'GET',
-      isArray: true
-    }
   });
 })
 
@@ -52,9 +40,6 @@ angular.module('Huron')
   }, {
     update: {
       method: 'PUT'
-    },
-    save: {
-      method: 'POST'
     }
   });
 })
@@ -62,11 +47,6 @@ angular.module('Huron')
 .factory('UnassignedDirectoryNumberService', function ($resource, HuronConfig) {
   return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/unassigneddirectorynumbers', {
     customerId: '@customerId'
-  }, {
-    get: {
-      method: 'GET',
-      isArray: true
-    }
   });
 })
 
@@ -82,12 +62,41 @@ angular.module('Huron')
   return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId', {
     customerId: '@customerId',
     userId: '@userId'
-  }, {});
+  });
 })
 
 .factory('CallParkService', function ($resource, HuronConfig) {
   return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directedcallparks/:callParkId', {
     customerId: '@customerId',
     callParkId: '@callParkId'
+  });
+})
+
+.factory('InternalNumberPoolService', function ($resource, HuronConfig) {
+  return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools/:internalNumberId', {
+    customerId: '@customerId',
+    internalNumberId: '@internalNumberId'
+  });
+})
+
+.factory('ExternalNumberPoolService', function ($resource, HuronConfig) {
+  return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId', {
+    customerId: '@customerId',
+    externalNumberId: '@externalNumberId'
+  });
+})
+
+.factory('AlternateNumberService', function ($resource, HuronConfig) {
+  return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/alternatenumbers/:alternateNumberId', {
+    customerId: '@customerId',
+    directoryNumberId: '@directoryNumberId',
+    alternateNumberId: '@alternateNumberId'
+  });
+})
+
+.factory('DirectoryNumberCopyService', function ($resource, HuronConfig) {
+  return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/copy/:ultId', {
+    customerId: '@customerId',
+    itemId: '@ultId'
   });
 });

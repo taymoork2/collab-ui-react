@@ -3,12 +3,13 @@
 angular.module('Huron')
   .factory('TelephonyInfoService', ['$rootScope', '$q', 'RemoteDestinationService', 'Log',
     function ($rootScope, $q, RemoteDestinationService, Log) {
-      var service = {};
-      service.broadcastEvent = "telephonyInfoUpdated";
 
-      service.telephonyInfo = {
+      var broadcastEvent = "telephonyInfoUpdated";
+
+      var telephonyInfo = {
         services: [],
         currentDirectoryNumber: null,
+        alternateDirectoryNumber: null,
         directoryNumbers: [],
         voicemail: 'Off',
         singleNumberReach: 'Off',
@@ -19,74 +20,88 @@ angular.module('Huron')
         }
       };
 
-      service.getTelephonyInfo = function () {
-        return this.telephonyInfo;
-      };
+      return {
+        getTelephonyInfo: function () {
+          return telephonyInfo;
+        },
 
-      service.updateDirectoryNumbers = function (directoryNumbers) {
-        this.telephonyInfo.directoryNumbers = directoryNumbers;
-        $rootScope.$broadcast(this.broadcastEvent);
-      };
+        resetTelephonyInfo: function () {
+          telephonyInfo.services = [];
+          telephonyInfo.currentDirectoryNumber = null;
+          telephonyInfo.alternateDirectoryNumber = null,
+            telephonyInfo.directoryNumbers = [];
+          telephonyInfo.voicemail = 'Off';
+          telephonyInfo.singleNumberReach = 'Off';
+          telephonyInfo.snrInfo = {
+            destination: null,
+            remoteDestinations: null,
+            singleNumberReachEnabled: false
+          };
+        },
 
-      service.updateUserServices = function (services) {
-        this.telephonyInfo.services = services;
-        // rip thru services and toggle display values.
-        // voicemail is the only one we care about currently
-        var voicemailEnabled = false;
-        if (this.telephonyInfo.services !== null && this.telephonyInfo.services.length > 0) {
-          for (var j = 0; j < this.telephonyInfo.services.length; j++) {
-            if (this.telephonyInfo.services[j] === 'VOICEMAIL') {
-              voicemailEnabled = true
+        updateDirectoryNumbers: function (directoryNumbers) {
+          telephonyInfo.directoryNumbers = directoryNumbers;
+          $rootScope.$broadcast(broadcastEvent);
+        },
+
+        updateUserServices: function (services) {
+          telephonyInfo.services = services;
+          // rip thru services and toggle display values.
+          // voicemail is the only one we care about currently
+          var voicemailEnabled = false;
+          if (telephonyInfo.services !== null && telephonyInfo.services.length > 0) {
+            for (var j = 0; j < telephonyInfo.services.length; j++) {
+              if (telephonyInfo.services[j] === 'VOICEMAIL') {
+                voicemailEnabled = true
+              }
             }
           }
-        }
-        this.telephonyInfo.voicemail = (voicemailEnabled === true) ? 'On' : 'Off';
-        $rootScope.$broadcast(this.broadcastEvent);
-      };
+          telephonyInfo.voicemail = (voicemailEnabled === true) ? 'On' : 'Off';
+          $rootScope.$broadcast(broadcastEvent);
+        },
 
-      service.updateSnr = function (snr) {
-        this.telephonyInfo.snrInfo = snr;
-        this.telephonyInfo.singleNumberReach = (this.telephonyInfo.snrInfo.singleNumberReachEnabled === true) ? 'On' : 'Off';
-        $rootScope.$broadcast(this.broadcastEvent);
-      };
+        updateSnr: function (snr) {
+          telephonyInfo.snrInfo = snr;
+          telephonyInfo.singleNumberReach = (telephonyInfo.snrInfo.singleNumberReachEnabled === true) ? 'On' : 'Off';
+          $rootScope.$broadcast(broadcastEvent);
+        },
 
-      service.updateCurrentDirectoryNumber = function (directoryNumber) {
-        this.telephonyInfo.currentDirectoryNumber = directoryNumber;
-        $rootScope.$broadcast(this.broadcastEvent);
-      };
+        updateCurrentDirectoryNumber: function (directoryNumber) {
+          telephonyInfo.currentDirectoryNumber = directoryNumber;
+          $rootScope.$broadcast(broadcastEvent);
+        },
 
-      service.getRemoteDestinationInfo = function (user) {
-        var deferred = $q.defer();
-        RemoteDestinationService.query({
-            customerId: user.meta.organizationID,
-            userId: user.id
-          },
-          function (data) {
-            deferred.resolve(data);
-          },
-          function (error) {
-            Log.debug('getRemoteDestinationInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
-            deferred.reject(error);
-          });
-        return deferred.promise;
-      };
+        getRemoteDestinationInfo: function (user) {
+          var deferred = $q.defer();
+          RemoteDestinationService.query({
+              customerId: user.meta.organizationID,
+              userId: user.id
+            },
+            function (data) {
+              deferred.resolve(data);
+            },
+            function (error) {
+              Log.debug('getRemoteDestinationInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
+              deferred.reject(error);
+            });
+          return deferred.promise;
+        },
 
-      service.processRemoteDestinationInfo = function (remoteDestinationInfo) {
-        var snrInfo = angular.copy(this.telephonyInfo.snrInfo);
-        if (remoteDestinationInfo) {
-          snrInfo.remoteDestinations = remoteDestinationInfo;
-          if (remoteDestinationInfo !== null && remoteDestinationInfo !== undefined && remoteDestinationInfo.length > 0) {
-            snrInfo.singleNumberReachEnabled = true;
-            snrInfo.destination = remoteDestinationInfo[0].destination;
+        processRemoteDestinationInfo: function (remoteDestinationInfo) {
+          var snrInfo = angular.copy(telephonyInfo.snrInfo);
+          if (remoteDestinationInfo) {
+            snrInfo.remoteDestinations = remoteDestinationInfo;
+            if (remoteDestinationInfo !== null && remoteDestinationInfo !== undefined && remoteDestinationInfo.length > 0) {
+              snrInfo.singleNumberReachEnabled = true;
+              snrInfo.destination = remoteDestinationInfo[0].destination;
+            } else {
+              snrInfo.singleNumberReachEnabled = false;
+            }
           } else {
-            snrInfo.singleNumberReachEnabled = false;
+            snrInfo.remoteDestinations = null;
           }
-        } else {
-          snrInfo.remoteDestinations = null;
+          this.updateSnr(snrInfo);
         }
-        this.updateSnr(snrInfo);
-      };
-
-      return service;
+      }; // end return
     }
   ]);

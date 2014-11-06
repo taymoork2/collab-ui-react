@@ -12,7 +12,7 @@ angular.module('Huron')
 
       $scope.getUserDnInfo = function (user) {
         var deferred = $q.defer();
-        UserDirectoryNumberService.get({
+        UserDirectoryNumberService.query({
             customerId: user.meta.organizationID,
             userId: user.id
           },
@@ -74,6 +74,7 @@ angular.module('Huron')
 
       $scope.$watch('currentUser', function (newVal, oldVal) {
         if (newVal) {
+          TelephonyInfoService.resetTelephonyInfo();
           if ($scope.isHuronEnabled()) {
             $scope.getTelephonyUserInfo(newVal)
               .then(function (response) {
@@ -106,6 +107,9 @@ angular.module('Huron')
 
       $scope.showDirectoryNumberPanel = function (value) {
         TelephonyInfoService.updateCurrentDirectoryNumber(value);
+        if (value === 'new') {
+          $state.go('users.list.preview.directorynumber.add');
+        }
         $state.go('users.list.preview.directorynumber');
       };
 

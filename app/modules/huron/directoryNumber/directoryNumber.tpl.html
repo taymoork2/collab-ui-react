@@ -1,25 +1,18 @@
-<cr-details-body title="{{'directoryNumberPanel.title' | translate}}" on-save="saveDirectoryNumber()" close="closePreview()">
-    <div>
-      <form name="directoryNumberForm" role="form">
-        <h4 translate="directoryNumberPanel.directNumbers"></h4>
-        <div class="form-group">
-          <label for="internalNumber">
-            {{'directoryNumberPanel.internalNumberLabel' | translate}}<br>
-            <small>{{'directoryNumberPanel.internalNumberExtension' | translate}}<span class="asterix">*</span></small>
-          </label>
-          <select ng-model="assignedInternalNumber.id" class="form-control" id="internalNumber" required="true" ng-options="unassignedNumber.id as unassignedNumber.pattern for unassignedNumber in unassingedDirectoryNumbers">
-            <option value="">-- {{'directoryNumberPanel.chooseNumber' | translate}} --</option>
-          </select>
-        </div>
-        <div class="form-group" ng-show="false">
-          <label for="directoryNumber">
-            {{'directoryNumberPanel.externalNumberLabel' | translate}}
-          </label>
-          <select ng-model="directoryNumber" class="form-control" id="directoryNumber" required="true" ng-options="directoryNumber.pattern for directoryNumber in unassingedDirectoryNumbers">
-            <option value="">-- {{'directoryNumberPanel.chooseNumber' | translate}} --</option>
-          </select>
-        </div>
-      </form>
-      <div hn-call-forward-info></div>
-    </div>
-</cr-details-body>
+<h4 translate="directoryNumberPanel.directNumbers"></h4>
+<div class="form-group">
+  <label for="internalNumber">
+    {{'directoryNumberPanel.internalNumberLabel' | translate}}<br>
+    {{'directoryNumberPanel.internalNumberExtension' | translate}}<span class="asterix">*</span>
+  </label>
+  <select ng-model="assignedInternalNumber.id" class="form-control" id="internalNumber" ng-options="unassignedNumber.id as unassignedNumber.pattern for unassignedNumber in internalNumberPool">
+    <option value="">{{'directoryNumberPanel.addNewNumber' | translate}}</option>
+  </select>
+</div>
+<div class="form-group">
+  <label for="externalNumber">
+    {{'directoryNumberPanel.externalNumberLabel' | translate}}
+  </label>
+  <select ng-model="directoryNumber" class="form-control" id="externalNumber" ng-options="directoryNumber.pattern for directoryNumber in externalNumberPool">
+    <option value="">{{'directoryNumberPanel.none' | translate}}</option>
+  </select>
+</div>
