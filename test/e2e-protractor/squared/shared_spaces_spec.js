@@ -1,12 +1,7 @@
 'use strict';
 /*jshint loopfunc: true */
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global by */
-/* global expect */
-/* global element */
+/* global describe, it, browser, expect, login, spaces, navigation, utils, notifications */
 
 var testuser = {
   username: 'pbr-org-admin@squared2webex.com',
@@ -35,7 +30,13 @@ describe('Shared spaces flow', function() {
     spaces.newRoomField.clear();
     spaces.newRoomField.sendKeys(testRoom);
     spaces.addRoomButton.click();
+    utils.expectIsDisplayed(spaces.deviceCard);
+    expect(spaces.confirmDeviceName.getText()).toContain(testRoom);
+    spaces.deviceCardClose.click();
+    utils.expectIsDisplayed(spaces.addRoomButton);
     notifications.assertSuccess('added successfully');
+    spaces.deviceModalClose.click();
+    browser.sleep(1000); //TODO fix this - animation should be resolved by angular
   });
 
   it('should log out', function() {

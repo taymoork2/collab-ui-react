@@ -135,7 +135,7 @@ describe('Add/Invite/Entitle User flow', function() {
       });
     });
 
-    it('should display error if no user is entered on update', function() {
+    it('should display error if no user is entered on entitle', function() {
         users.entitleButton.click();
         browser.sleep(1000);
         notifications.assertError('Please enter valid user email(s).');
