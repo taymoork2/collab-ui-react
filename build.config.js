@@ -86,7 +86,7 @@ module.exports = {
       'bower_components/alertify.js/themes/alertify.default.css',
       'bower_components/angular-wizard/dist/angular-wizard.css',
       'bower_components/angular-dialog-service/dialogs.css',
-      'bower_components/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css',
+
       'bower_components/animate.css/animate.css'
     ],
     fonts: [

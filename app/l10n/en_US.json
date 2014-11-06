@@ -5,7 +5,7 @@
     "loading": "Loading"
   },
   "usersPage": {
-    "inviteModalBtn" : "Invite Users",
+    "inviteModalBtn": "Invite Users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
@@ -371,10 +371,10 @@
     }
   },
   "firstTimeWizard": {
-    "simple" : "Simple",
-    "advanced" : "Advanced",
-    "simpleSub" : "All you need are user's email addresses",
-    "advancedSub" : "Synchronize users from Active Directory",
+    "simple": "Simple",
+    "advanced": "Advanced",
+    "simpleSub": "All you need are user's email addresses",
+    "advancedSub": "Synchronize users from Active Directory",
     "needHelp": "Need help?",
     "planReview": "Plan Review",
     "enterpriseSettings": "Enterprise Settings",
@@ -387,8 +387,8 @@
     "serviceSetupSub": "Unified Comm. | Conversation | Video",
     "unifiedCommunication": "Unified Communications",
     "addUsers": "Add Users",
-    "addUsersSimple" : "Add Users | Simple",
-    "addUsersAdvanced" : "Add Users | Advanced",
+    "addUsersSimple": "Add Users | Simple",
+    "addUsersAdvanced": "Add Users | Advanced",
     "getStarted": "Get Started",
     "chooseSync": "Please select an option",
     "cancelBtn": "Cancel",
@@ -424,8 +424,8 @@
     "getStarted": "Get Started",
     "readyToGo": "You're ready to go!",
     "finishDesc": "You have completed the set up wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
-    "finish" : "Finish",
-    "finishSub" : "Complete your setup"
+    "finish": "Finish",
+    "finishSub": "Complete your setup"
   },
   "callRoutingPage": {
     "title": "Call Routing",
@@ -475,7 +475,7 @@
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
-    "addNew" : "Add New"
+    "addNew": "Add New"
   },
   "callerIdPanel": {
     "title": "Caller ID",
@@ -570,8 +570,18 @@
     "active": "Active Trial",
     "expiring": "Trial Expiring",
     "expired": "Expired Trial",
-    "expiresToday": "Expires Today",
-    "unused": "unused",
-    "overPlan": "licences in use over plan"
+    "expiresToday": "Expires Today"
+  },
+  "didAddModal": {
+    "title": "Add Phone Numbers",
+    "instructionsText": "The Company you are setting up needs to provide you with their existing Phone Numbers. This will initiate the porting request of the company's phone numbers.",
+    "processingText": "Adding Phone Numbers...",
+    "successText": "new phone number(s) successfully added.",
+    "failText": "phone number(s) already in the system.",
+    "sendEmail": "Send Welcome Email",
+    "notifyCustLater": "Notify Customer Later",
+    "emailSuccessText": "Email successfully sent to customer.",
+    "emailFailText": "Error sending email",
+    "inputPlacehoder": "Input Phone Numbers"
   }
 }

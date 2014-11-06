@@ -422,7 +422,8 @@ module.exports = function (grunt) {
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       app: [
-        '<%= app_dir %>/<%= app_files.js %>'
+        '<%= app_dir %>/<%= app_files.js %>',
+        '<%= app_dir %>/<%= app_files.json %>'
       ],
       unsupported_app: [
         '<%= unsupported_app_dir %>/<%= app_files.js %>'

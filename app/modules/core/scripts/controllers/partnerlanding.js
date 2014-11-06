@@ -2,8 +2,9 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$modal', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state',
-    function ($scope, $rootScope, $modal, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state) {
+  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', '$modal', 'ExternalNumberPool',
+
+    function ($scope, $rootScope, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, $modal, ExternalNumberPool) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -233,8 +234,7 @@ angular.module('Core')
       $scope.getGridDaysLeft = function (daysLeft) {
         if (daysLeft <= 0) {
           return 0;
-        }
-        else {
+        } else {
           return daysLeft;
         }
       };
@@ -284,10 +284,12 @@ angular.module('Core')
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
         '<li id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span></a></li>' +
+        '<li ng-if="isHuronEnabled()" id="{{row.entity.customerName}}SetupDIDs" class="setupDidBtn"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown(); openModal()"><span>Setup Phone Numbers</span></a></li>' +
+        '<li ng-if="isHuronEnabled()" id="{{row.entity.customerName}}DeleteDIDs"class="deleteDidBtn"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown(); deleteDIDs()"><span>Delete Phone Numbers</span></a></li>' +
         '</ul>' +
         '</span>';
 
-      var rowTemplate = '<div id="{{row.entity.customerName}}" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
+  var rowTemplate = '<div id="{{row.entity.customerName}}" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
         '<div ng-cell></div>' +
         '</div>';
@@ -399,6 +401,19 @@ angular.module('Core')
       $scope.filterList = function (filterBy) {
         $scope.filter = filterBy;
         $scope.customerList = filterBy === 'ALL' ? $scope.totalTrialsData : $scope.activeList;
+      };
+
+      $scope.openModal = function () {
+        console.log("open");
+        $modal.open({
+          templateUrl: 'modules/huron/didAdd/didAdd.tpl.html',
+          controller: 'DidAddCtrl'
+        });
+      };
+
+      $scope.deleteDIDs = function () {
+        console.log("delete");
+        ExternalNumberPool.deleteAll();
       };
 
     }

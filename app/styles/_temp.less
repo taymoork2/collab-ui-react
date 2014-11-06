@@ -101,14 +101,6 @@ label {
   display: none;
 }
 
-.tokenfield {
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  height: auto !important;
-}
-
 .refresh-button{
   float:left;
   padding-top:7px;
@@ -120,15 +112,6 @@ label {
   margin-bottom: 0px;
   padding-bottom: 20px;
   padding-top: 0px;
-}
-
-.token {
-  // position:relative;
-  border-radius: 10px;
-  -moz-border-radius: 10px;
-  margin-right: 5px;
-  background-color: #6FA8F6 !important;
-  color: white;
 }
 
 .invalid {
@@ -226,80 +209,6 @@ label {
   margin-bottom:15px;
 }
 
-.alertify-logs {
-  bottom: 30px;
-  right:30px;
-  width:160px;
-}
-
-.alertify-log {
-  text-shadow: none;
-  &:hover {
-    cursor: pointer;
-  }
-  text-align: center;
-  opacity: 0.95;
-}
-
-.alertify-log-error {
-  background-color: #f2dede;
-  color: #a94442;
-  border:1px solid #ebccd1;
-}
-
-.alertify-log-success {
-  background-color: #dff0d8;
-  color: #3c763d;
-  border:1px solid #CCD5C4;
-}
-
-.notification-panel {
-  text-align: left;
-  height:250px;
-  width: 450px;
-  z-index: 5001;
-  position:fixed;
-  bottom: 0px;
-  right: -450px;
-}
-
-.notification {
-  z-index: -1;
-}
-
-.panel-danger-body {
-  color: #a94442;
-  font-size:13px;
-  overflow: auto;
-  height: 198px;
-}
-
-.panel-success-body {
-  color: #3c763d;
-  font-size:13px;
-  overflow: auto;
-  height: 198px;
-}
-
-.panel-notification-heading {
-  font-size: 15px;
-}
-
-.alertify-log-error .fa-times {
-  .close-icon(4px, #B67775, #a94442);
-}
-
-.panel-danger .fa-times {
-  .close-icon(2px, #B67775, #a94442);
-}
-
-.alertify-log-success .fa-times {
-  .close-icon(4px, #6DA76E, #3c763d);
-}
-
-.panel-success .fa-times {
-  .close-icon(2px, #6DA76E, #3c763d);
-}
 
 .setting-bar {
   padding: 15px;
@@ -1249,9 +1158,6 @@ border-color: white;
   padding-top: 29px;
 }
 
-.dummy-data{
-  opacity: .6;
-}
 
 .dummy-data-message{
  font-size: 46px;
@@ -1278,5 +1184,10 @@ border-color: white;
 
 .indentedCheckbox {
   margin-left: 27px;
+}
+
+// TODO: remove when toolkit is updated
+.ngViewport {
+  overflow: inherit;
 }
 
