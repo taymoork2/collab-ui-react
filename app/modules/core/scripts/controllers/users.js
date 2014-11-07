@@ -131,6 +131,12 @@ angular.module('Core')
         return Authinfo.isEntitleUserEnabled();
       };
 
+      $scope.resetEntitlements = function () {
+        for (var svc in $scope.entitlements) {
+          $scope.entitlements[svc] = false;
+        }
+      };
+
       $scope.addUsers = function () {
         $scope.results = {
           resultList: []

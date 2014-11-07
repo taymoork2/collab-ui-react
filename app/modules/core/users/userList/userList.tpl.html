@@ -6,7 +6,7 @@
     </div>
     <div class="col-md-6 col-sm-6" ng-show="Utils.isAdminPage() && userTabActive">
       <div class="page-option-buttons">
-        <button id="addUsers" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addUsersDialog" translate="usersPage.add" ng-click="setupTokenfield()">
+        <button id="addUsers" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addUsersDialog" translate="usersPage.add" ng-click="setupTokenfield();resetEntitlements();">
         </button>
         <a ng-controller="ExportUsersCtrl" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
           <span id="export-icon"><i class="icon icon-content-share"></i></span>

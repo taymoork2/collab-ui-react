@@ -43,7 +43,7 @@ angular.module('Core')
         if (offer) {
           $scope.packageInfo.name = offer.id;
           $scope.licenses.total = offer.licenseCount;
-          $scope.licenses.used = offer.usageCount;
+          $scope.licenses.used = offer.usageCount > 50 ? 50 : offer.usageCount;
         }
       }
 
