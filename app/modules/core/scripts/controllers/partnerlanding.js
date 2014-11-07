@@ -25,19 +25,20 @@ angular.module('Core')
       $scope.showTrialsRefresh = true;
       $scope.nameError = false;
       $scope.emailError = false;
-      $scope.totalTrialsData = [];
-      $scope.currentCustomer = null;
+      $scope.filter = 'ALL';
 
       $scope.formReset = function () {
         $scope.customerName = null;
         $scope.customerEmail = null;
         $scope.licenseDuration = 30;
         $scope.licenseCount = 50;
-        $scope.trialForm.$setPristine(true);
         $scope.showAddTrial = true;
         $scope.editTerms = true;
+        $scope.currentTrial = null;
         $scope.nameError = false;
         $scope.emailError = false;
+        $scope.totalTrialsData = [];
+        $scope.currentCustomer = null;
       };
 
       $scope.startTrial = function () {
@@ -49,7 +50,7 @@ angular.module('Core')
           angular.element('#startTrialButton').button('reset');
           $scope.trialForm.$setPristine(true);
           if (data.success === true) {
-            $("#addTrialDialog").modal("hide");
+            $('#addTrialDialog').modal('hide');
             var successMessage = ['A trial was successfully started for ' + $scope.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
             Notification.notify(successMessage, 'success');
             setTimeout(function () {
@@ -72,7 +73,7 @@ angular.module('Core')
         PartnerService.editTrial($scope.licenseDuration, $scope.currentTrial.trialId, $scope.licenseCount, $scope.currentTrial.usage, function (data, status) {
           angular.element('#saveSendButton').button('reset');
           if (data.success === true) {
-            $("#editTrialDialog").modal("hide");
+            $('#editTrialDialog').modal('hide');
             var successMessage = ['You have successfully edited a trial for ' + $scope.currentTrial.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
             Notification.notify(successMessage, 'success');
             setTimeout(function () {
@@ -88,11 +89,23 @@ angular.module('Core')
         $scope.currentTrial = trial;
       };
 
+      $scope.getProgressStatus = function (obj) {
+        if (!obj) {
+          obj = $scope.currentTrial;
+        }
+        if (obj.daysLeft <= 5) {
+          return 'danger';
+        } else if (obj.daysLeft < (obj.duration / 2)) {
+          return 'warning';
+        }
+      };
+
       var getTrialsList = function () {
         $scope.showTrialsRefresh = true;
-        $scope.getPending = true;
-        $scope.trialsList = [];
+        $scope.activeList = [];
         $scope.expiredList = [];
+        $scope.customerList = [];
+        $scope.totalTrialsData = [];
         PartnerService.getTrialsList(function (data, status) {
           $scope.showTrialsRefresh = false;
           if (data.success) {
@@ -106,6 +119,7 @@ angular.module('Core')
                   trialId: trial.trialId,
                   customerOrgId: trial.customerOrgId,
                   customerName: trial.customerName,
+                  customerEmail: trial.customerEmail,
                   endDate: edate,
                   numUsers: trial.licenseCount,
                   daysLeft: 0,
@@ -115,7 +129,7 @@ angular.module('Core')
                   percentUsed: 0,
                   duration: trial.trialPeriod,
                   offer: '',
-                  status: trial.state
+                  status: null
                 };
 
                 if (trial.offers) {
@@ -141,15 +155,23 @@ angular.module('Core')
                 var daysLeft = moment(then).diff(now, 'days');
                 trialObj.daysLeft = daysLeft;
                 if (daysLeft >= 0) {
-                  $scope.trialsList.push(trialObj);
+                  trialObj.status = $translate.instant('customerPage.active');
+                  $scope.activeList.push(trialObj);
+                } else if (daysLeft === 0) {
+                  trialObj.status = $translate.instant('customerPage.expiring');
+                  $scope.activeList.push(trialObj);
                 } else {
-                  trialObj.daysLeft = Math.abs(daysLeft);
+                  //trialObj.daysLeft = Math.abs(daysLeft);
+                  trialObj.status = $translate.instant('customerPage.expired');
                   $scope.expiredList.push(trialObj);
                 }
                 $scope.totalTrialsData.push(trialObj);
               }
               $scope.showExpired = $scope.expiredList.length > 0;
-              Log.debug('trial records found:' + $scope.trialsList.length);
+              Log.debug('active trial records found:' + $scope.activeList.length);
+              Log.debug('total trial records found:' + $scope.totalTrialsData.length);
+              $scope.activeCount = $scope.activeList.length;
+              $scope.customerList = $scope.totalTrialsData;
             } else {
               $scope.getPending = false;
               Log.debug('No trial records found');
@@ -175,12 +197,35 @@ angular.module('Core')
         }
       };
 
+      $scope.getProgressValue = function (obj) {
+        if (obj.daysLeft <= 0) {
+          return obj.duration;
+        } else {
+          return obj.daysUsed;
+        }
+      };
+
+      $scope.getProgressPercent = function (obj) {
+        var percent = ($scope.getProgressValue(obj) / obj.duration) * 100;
+        return percent;
+      };
+
+      $scope.getProgressDuration = function (obj) {
+        return obj.duration;
+      };
+
       $scope.getDaysLeft = function (daysLeft) {
-        if (daysLeft === 0) {
-          return $translate.instant('partnerHomePage.expireToday');
+        if (daysLeft < 0) {
+          return $translate.instant('customerPage.expired');
+        } else if (daysLeft === 0) {
+          return $translate.instant('customerPage.expiresToday');
         } else {
           return daysLeft;
         }
+      };
+
+      $scope.getDaysAgo = function (days) {
+        return Math.abs(days);
       };
 
       $scope.getUsagePercent = function (trial) {
@@ -189,11 +234,9 @@ angular.module('Core')
 
       getTrialsList();
 
-      $scope.showAll = function () {};
-
       $scope.newTrialName = null;
       $scope.trialsGrid = {
-        data: 'trialsList',
+        data: 'activeList',
         multiSelect: false,
         showFilter: true,
         rowHeight: 38,
@@ -234,27 +277,35 @@ angular.module('Core')
 
       var percentTemplate = '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{getUsagePercent(row.entity)}} %</span></div>';
 
-      var statusTemplate = '<div class="ngCellText"><div style="width:225px; height:6px"><span>{{row.entity.status}}</span> ' +
-        '<div><progressbar class="trial-progress" max="row.entity.duration" value="row.entity.daysUsed" type="{{getProgressStatus(row.entity)}}"></progressbar></div>' +
-        '</div><div ng-class="{\'trial-danger-text\': trial.daysLeft <= 5}" class="trial-days"><span>{{row.entity.daysLeft}}</span></div></div>';
+      var statusTemplate = '<div class="ngCellText"><div style="width:225px; height:6px"><span>{{row.entity.status}}</span> </div></div>';
+
+      var progressTemplate = '<div class="ngCellText">' +
+        '<div class="progress"><div class="progress-bar" ng-class="{\'danger-bar\': row.entity.daysLeft <= 5, \'warning-bar\': (row.entity.daysLeft < row.entity.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(row.entity)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(row.entity)}}" style="width: {{getProgressPercent(row.entity)}}%;"></div></div>' +
+        '</div>';
+
+      var daysLeftTemplate = '<div class="ngCellText"><div ng-class="{\'trial-danger-text\': row.entity.daysLeft <= 5}"><span>{{getDaysLeft(row.entity.daysLeft)}}</span></div></div>';
 
       $scope.gridOptions = {
-        data: 'totalTrialsData',
+        data: 'customerList',
         multiSelect: false,
         showFilter: false,
         rowHeight: 44,
         rowTemplate: rowTemplate,
         headerRowHeight: 44,
-        useExternalSorting: true,
+        useExternalSorting: false,
+        sortInfo: {
+          fields: ['daysLeft'],
+          directions: ['asc']
+        },
 
         columnDefs: [{
           field: 'customerName',
           displayName: $filter('translate')('customerPage.customerNameHeader'),
-          width: '20%'
+          width: '25%'
         }, {
           field: 'offer',
           displayName: $filter('translate')('customerPage.trialIdHeader'),
-          sortable: false,
+          sortable: true,
           width: '14%'
         }, {
           field: 'license',
@@ -263,31 +314,33 @@ angular.module('Core')
           cellTemplate: licenseTemplate,
           width: '10%'
         }, {
-          field: 'usagePercent',
-          displayName: $filter('translate')('customerPage.usageHeader'),
-          sortable: false,
-          cellTemplate: percentTemplate,
-          width: '12%'
-        }, {
           field: 'status',
           displayName: $filter('translate')('customerPage.statusHeader'),
+          sortable: true,
+          cellTemplate: statusTemplate,
+          width: '105'
+        }, {
+          field: 'progress',
+          displayName: null,
           sortable: false,
-          cellTemplate: statusTemplate
+          cellTemplate: progressTemplate
+        }, {
+          field: 'daysLeft',
+          displayName: $filter('translate')('customerPage.statusDaysLeft'),
+          sortable: true,
+          cellTemplate: daysLeftTemplate,
+          width: '120'
         }, {
           field: 'action',
           displayName: $filter('translate')('customerPage.actionHeader'),
           sortable: false,
           cellTemplate: actionsTemplate,
-          width: '8%'
+          width: '90'
         }]
       };
 
-      $scope.exportCSV = function () {
-
-      };
-
       $scope.showCustomerDetails = function (customer) {
-        $scope.currentCustomer = customer;
+        $scope.currentTrial = customer;
         $state.go('customers.list.preview');
       };
 
@@ -326,31 +379,10 @@ angular.module('Core')
         }
       });
 
-      // this event fires 3x when sorting is done, so watch for sortInfo change
-      $scope.$on('ngGridEventSorted', function (event, sortInfo) {
-        $scope.sortInfo = sortInfo;
-      });
-
-      $scope.$watch('sortInfo', function (newValue, oldValue) {
-        // if newValue === oldValue then page is initializing, so ignore event,
-        // otherwise getUserList() is called multiple times.
-        if (newValue !== oldValue) {
-          if ($scope.sortInfo) {
-            switch ($scope.sortInfo.fields[0]) {
-            case 'customerName':
-              $scope.sort.by = 'customerName';
-              break;
-            }
-
-            if ($scope.sortInfo.directions[0] === 'asc') {
-              $scope.sort.order = 'ascending';
-            } else {
-              $scope.sort.order = 'descending';
-            }
-          }
-          getTrialsList();
-        }
-      }, true);
+      $scope.filterList = function (filterBy) {
+        $scope.filter = filterBy;
+        $scope.customerList = filterBy === 'ALL' ? $scope.totalTrialsData : $scope.activeList;
+      };
 
     }
   ]);

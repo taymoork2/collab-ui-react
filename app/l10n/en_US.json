@@ -465,9 +465,9 @@
     "noResults": "No Results",
     "trialsCustomerName": "Customer",
     "trialsEndDate": "Day(s) Left",
-    "trialsNumUsers": "Users / Licenses",
+    "trialsNumUsers": "Users/ Licenses",
     "viewAll": "View all Trials",
-    "expiredToday": "Expiring Today",
+    "expiredToday": "Expires Today",
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
@@ -507,7 +507,8 @@
     "trialIdHeader": "Package",
     "licenseHeader": "Licenses",
     "usageHeader": "License Usage",
-    "statusHeader": "Status Days(s) Left",
+    "statusHeader": "Status",
+    "statusDaysLeft": "Days(s) Left",
     "actionHeader": "Actions",
     "addTrial": "Add Trial",
     "csvBtnTitle": "Export to CSV",
@@ -523,6 +524,12 @@
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
-    "daysLeft": "day left"
+    "daysLeft": "day(s) left",
+    "allTrials": "All",
+    "activeTrials": "Active Trials",
+    "active": "On Trial",
+    "expiring": "Trial Expiring",
+    "expired": "Trial Expired",
+    "expiresToday": "Expires Today"
   }
 }

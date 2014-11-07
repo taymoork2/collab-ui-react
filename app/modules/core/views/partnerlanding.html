@@ -76,39 +76,39 @@
 
       <section class="trialsPanel">
         <div id="trialHeader" class="row">
-          <div class="col-xs-6 col-sm-6 col-md-6 trialHeading">
+          <div class="col-xs-7 col-sm-7 col-md-7 trialHeading">
             <span translate="partnerHomePage.trialsCustomerName"></span>
           </div>
           <div class="col-xs-3 col-sm-3 col-md-3 trialHeading trials-heading-spacing">
             <span translate="partnerHomePage.trialsEndDate"></span>
           </div>
-          <div class="col-xs-3 col-sm-3 col-md-3 trialHeading trials-heading-spacing">
+          <div class="col-xs-2 col-sm-2 col-md-2 trialHeading trials-heading-spacing">
             <span translate="partnerHomePage.trialsNumUsers"></span>
           </div>
         </div>
         <div id="trials-refresh" class="trials-refresh" ng-show="showTrialsRefresh">
           <i class='icon icon-spinner icon-spin'></i>
         </div>
-        <div ng-repeat="trial in trialsList | orderBy: 'daysLeft' | limitTo: displayRows">
+        <div ng-repeat="trial in activeList | orderBy: 'daysLeft' | limitTo: displayRows">
           <div class="row">
-            <div class="col-xs-5 col-sm-5 col-md-5">
+            <div class="col-xs-10 col-sm-10 col-md-10">
               <div class="trialCustomer ellipsis-trials" id="{{trial.customerName}}" data-toggle="modal" data-target="#editTrialDialog" ng-click="formReset(); setTrial(trial)" orgId="{{trial.customerOrgId}}" trialId="{{trial.trialId}}">
                 <a href="">
                   <span>{{trial.customerName}}</span>
                 </a>
               </div>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 trialDays">
-              <span ng-class="{'trial-danger-text': trial.daysLeft <= 5}">{{getDaysLeft(trial.daysLeft)}}</span>
-            </div>
           </div>
           <div class="row trialRow">
-            <div class="col-xs-6 col-sm-6 col-md-6">
+            <div class="col-xs-8 col-sm-8 col-md-8">
               <div class="trialbar">
                 <progressbar max="trial.duration" value="trial.daysUsed" type="{{getProgressStatus(trial)}}"></progressbar>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 trialLicense">
+            <div class="col-xs-2 col-sm-2 col-md-2 trialDays">
+              <span ng-class="{'trial-danger-text': trial.daysLeft <= 5}">{{getDaysLeft(trial.daysLeft)}}</span>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-md-2 trialLicense">
               <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
             </div>
           </div>
@@ -116,7 +116,7 @@
 
         <div id="viewAll" class="row trials-all">
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <span><a ui-sref="customers.list">{{'partnerHomePage.viewAll' | translate}}</a></span>
+            <span><a id="viewAllLink" ui-sref="customers.list">{{'partnerHomePage.viewAll' | translate}}</a></span>
           </div>
         </div>
 
@@ -134,7 +134,7 @@
               </div>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4  expired">
-              <span translate="partnerHomePage.daysAgo" translate-values="{ days: trial.daysLeft }"></span>
+              <span translate="partnerHomePage.daysAgo" translate-values="{ days: getDaysAgo(trial.daysLeft) }"></span>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3  expired">
               <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>

@@ -1,6 +1,8 @@
 .customer-list {
-  .ngCell.col0 .ngVerticalBar,
-  .ngHeaderCell.col0 .ngVerticalBar {
+  .ngCell.col3 .ngVerticalBar,
+  .ngHeaderCell.col3 .ngVerticalBar,
+  .ngCell.col4 .ngVerticalBar,
+  .ngHeaderCell.col4 .ngVerticalBar {
     display: none;
   }
 }
@@ -24,24 +26,38 @@
   padding: 15px 30px;
 }
 
-.trial-progress {
-  position:relative;
-  top:-15px;
-  left:75px;
-}
-
-.trial-days {
-  position: relative;
-  top: -6px;
-  left: 335px;
-}
-
 .ngHeaderText.colt4 {
   text-align: left;
 }
 
 .customer-refresh {
-  position: relative;
-  top: 38px;
-  left: -465px;
+  position: absolute;
+  top: 155px;
+  left: 50%;
+  z-index: 1;
 }
+
+.customer-header {
+  color: #555555;
+  font-size: 24px;
+  line-height: 1;
+  margin: 0;
+  padding: 35px 0 0px 30px;
+}
+
+.trials-badge {
+  line-height: 1;
+  margin: 0;
+  padding: 35px 0 0px 30px;
+}
+
+.badge-label {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  line-height: 1;
+  vertical-align: baseline;
+  white-space: nowrap;
+  text-align: center;
+}
+

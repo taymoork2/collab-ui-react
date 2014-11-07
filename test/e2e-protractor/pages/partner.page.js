@@ -50,9 +50,22 @@ var PartnerHomePage = function(){
   this.contentSharedCount = element(by.binding('counts.contentShared'));
   this.noResultsAvailable = element(by.cssContainingText('span','No results available'));
   this.errorProcessing = element(by.cssContainingText('span','Error processing request'));
+  this.selectRow = element(by.binding('row.entity'));
+  this.previewPanel = element(by.id('preview-panel'));
+  this.customerInfo = element(by.id('customer-info'));
+  this.trialInfo = element(by.id('trial-info'));
+
+  this.viewAllLink = element(by.id('viewAllLink'));
+  this.customerList = element(by.id('customerListPanel'));
 
   this.assertDisabled = function(id){
       expect(element(by.id(id)).getAttribute('disabled')).toBeTruthy();
+  };
+
+  this.assertResultsLength = function() {
+    element.all(by.binding('row.entity')).then(function(rows) {
+      expect(rows.length).toBeGreaterThan(1);
+    });
   };
 
 };

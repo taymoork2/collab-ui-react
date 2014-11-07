@@ -100,6 +100,18 @@ describe('Partner flow', function() {
       utils.expectIsDisplayed(partner.newTrialRow);
     });
 
+    it('should view all trials', function() {
+      partner.viewAllLink.click();
+      navigation.expectCurrentUrl('/customers');
+      expect(partner.customerList.isPresent()).toBeTruthy();
+      partner.assertResultsLength();
+      partner.selectRow.click();
+      expect(partner.previewPanel.isDisplayed()).toBeTruthy();
+      expect(partner.customerInfo.isDisplayed()).toBeTruthy();
+      expect(partner.trialInfo.isDisplayed()).toBeTruthy();
+      navigation.clickHome();
+    });
+
     it('should delete an exisiting org thus deleting trial', function(done){
       partner.newTrialRow.getAttribute('orgId').then(function(attr){
         deleteTrialUtils.deleteOrg(attr).then(function(message) {
