@@ -2,26 +2,22 @@
   <div class="modal-dialog modal-useradd-dialog">
       <div class="modal-content" id="modalContent">
         <div class="modal-header">
-          <button type="button" class="close header-text" data-dismiss="modal" id="closeAddUser">
-            <span aria-hidden="true">
-              <span class="icon icon-close cancel-color"></span>
-            </span>
+          <button type="button" class="close" data-dismiss="modal" id="closeAddUser">
+            <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
           </button>
-          <h3 class="header-text" translate="usersPage.inviteUsers"></h3>
+          <h3 class="modal-title" translate="usersPage.inviteUsers"></h3>
         </div>
         <div class="modal-body">
-          <div class="modal-useradd-card">
-            <p translate="usersPage.addUsersDesc" class="adduser-desc"></p>
+          <p translate="usersPage.addUsersDesc" class="adduser-desc"></p>
 
-            <input class="form-control useradd-textbox" type="text" id="usersfield" placeholder="Enter one or more email addresses separated by commas"/>
+          <input class="form-control useradd-textbox" type="text" id="usersfield" placeholder="Enter one or more email addresses separated by commas"/>
 
-            <!-- <div class="adduser-importlink">
-              <a>Import CSV</a>
-            </div> -->
+          <!-- <div class="adduser-importlink">
+            <a>Import CSV</a>
+          </div> -->
 
-            <div class="entitle-check-grp" ng-if="isEntitleEnabled()" ng-repeat="(service, val) in entitlements" ng-if="service!=='webExSquared' && isServiceAllowed(service)">
-              <cs-checkbox id="{{'chk_'+service}}" ng-model="entitlements[service]" cklabel="{{getServiceName(service)}}"></cs-checkbox>
-            </div>
+          <div class="entitle-check-grp" ng-if="isEntitleEnabled()" ng-repeat="(service, val) in entitlements" ng-if="service!=='webExSquared' && isServiceAllowed(service)">
+            <cs-checkbox id="{{'chk_'+service}}" ng-model="entitlements[service]" cklabel="{{getServiceName(service)}}"></cs-checkbox>
           </div>
         </div>
 

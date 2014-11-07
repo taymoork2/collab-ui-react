@@ -151,59 +151,56 @@
     <form name="trialForm">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close header-text" data-dismiss="modal">
-            <span aria-hidden="true">
-              <span class="icon icon-close cancel-color"></span>
-            </span>
+          <button type="button" class="close" data-dismiss="modal">
+            <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
           </button>
-          <h3 class="header-text" translate="partnerHomePage.dialogTitle"></h3>
+          <h3 class="modal-title" translate="partnerHomePage.dialogTitle"></h3>
         </div>
         <div class="modal-body">
-          <div class="modal-card">
-            <h4 translate="partnerHomePage.customerInformation"></h4>
-            <div class="row input-row-spacing">
-              <div class="col-md-3">
-                <span class="modal-options" translate="partnerHomePage.customerName"></span>
-              </div>
-              <div class="col-md-9">
-                <div id="customerNameForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerName.$invalid && trialForm.customerName.$dirty) || (nameError && !trialForm.customerName.$dirty) }">
-                  <input id="customerNameInput" class="form-control" name="customerName" ng-model="customerName" type="text" required></input>
-                </div>
-              </div>
+          <h4 translate="partnerHomePage.customerInformation"></h4>
+          <div class="row input-row-spacing">
+            <div class="col-md-3">
+              <span class="modal-options" translate="partnerHomePage.customerName"></span>
             </div>
-            <div class="row">
-              <div class="col-md-3">
-                <span class="modal-options" translate="partnerHomePage.customerEmail"></span>
-              </div>
-              <div class="col-md-9">
-                <div id="customerEmailForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerEmail.$invalid && trialForm.customerEmail.$dirty) || (emailError && !trialForm.customerEmail.$dirty)}">
-                  <input id="customerEmailInput" type="email" class="form-control" name="customerEmail" ng-model="customerEmail" required></input>
-                </div>
+            <div class="col-md-9">
+              <div id="customerNameForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerName.$invalid && trialForm.customerName.$dirty) || (nameError && !trialForm.customerName.$dirty) }">
+                <input id="customerNameInput" class="form-control" name="customerName" ng-model="customerName" type="text" required></input>
               </div>
             </div>
           </div>
-          <div class="modal-card">
-            <h4 translate="partnerHomePage.termsOfTrial"></h4>
-            <div class="row">
-              <div class="col-md-7">
-                <span class="trial-options" translate="partnerHomePage.numberOfLicenses"></span>
-                <select class="form-control modal-form-control" ng-model="licenseCount">
-                  <option value="50" translate="partnerHomePage.fifty"></option>
-                  <option value="100" translate="partnerHomePage.oneHundred"></option>
-                  <option value="200" translate="partnerHomePage.twoHundred"></option>
-                </select>
-              </div>
-              <div class="col-md-5">
-                <span class="trial-options" translate="partnerHomePage.duration"></span>
-                <select class="form-control modal-form-control" ng-model="licenseDuration">
-                  <option value="30" translate="partnerHomePage.thirtyDays"></option>
-                  <option value="60" translate="partnerHomePage.sixtyDays"></option>
-                  <option value="90" translate="partnerHomePage.ninetyDays"></option>
-                </select>
+          <div class="row">
+            <div class="col-md-3">
+              <span class="modal-options" translate="partnerHomePage.customerEmail"></span>
+            </div>
+            <div class="col-md-9">
+              <div id="customerEmailForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerEmail.$invalid && trialForm.customerEmail.$dirty) || (emailError && !trialForm.customerEmail.$dirty)}">
+                <input id="customerEmailInput" type="email" class="form-control" name="customerEmail" ng-model="customerEmail" required></input>
               </div>
             </div>
           </div>
         </div>
+        <div class="modal-body">
+          <h4 translate="partnerHomePage.termsOfTrial"></h4>
+          <div class="row">
+            <div class="col-md-7">
+              <span class="trial-options" translate="partnerHomePage.numberOfLicenses"></span>
+              <select class="form-control modal-form-control" ng-model="licenseCount">
+                <option value="50" translate="partnerHomePage.fifty"></option>
+                <option value="100" translate="partnerHomePage.oneHundred"></option>
+                <option value="200" translate="partnerHomePage.twoHundred"></option>
+              </select>
+            </div>
+            <div class="col-md-5">
+              <span class="trial-options" translate="partnerHomePage.duration"></span>
+              <select class="form-control modal-form-control" ng-model="licenseDuration">
+                <option value="30" translate="partnerHomePage.thirtyDays"></option>
+                <option value="60" translate="partnerHomePage.sixtyDays"></option>
+                <option value="90" translate="partnerHomePage.ninetyDays"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
         <div class="modal-footer">
           <button type="button" id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="startTrial()" ng-disabled="trialForm.$invalid" data-loading-text="<i class='icon icon-spinner icon-spin'></i>">
             <span class="button-text" translate="partnerHomePage.startTrial"></span>
@@ -222,15 +219,13 @@
   <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close header-text" data-dismiss="modal">
-            <span aria-hidden="true">
-              <span class="icon icon-close cancel-color"></span>
-            </span>
+          <button type="button" class="close" data-dismiss="modal">
+            <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
           </button>
-          <h3 class="header-text edit-header">{{currentTrial.customerName}}</h3>
+          <h3 class="modal-title edit-header">{{currentTrial.customerName}}</h3>
         </div>
-        <div class="modal-body">
-          <div class="row">
+        <div class="modal-body-white">
+          <div class="row modal-trial-status">
             <div class="col-sm-9">
               <div class="progress">
                 <div class="progress-bar" ng-class="{'danger-bar': currentTrial.daysLeft <= 5, 'warning-bar': (currentTrial.daysLeft < currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{currentTrial.duration}}" style="width: {{currentTrial.percentUsed}}%;">
@@ -253,7 +248,7 @@
                 </div>
             </div>
           </div>
-          <div class="modal-card">
+          <div class="modal-body">
             <h4 translate="partnerHomePage.customerInformation"></h4>
             <div class="row input-row-spacing">
               <div class="col-md-4">
@@ -276,7 +271,7 @@
               </div>
             </div>
           </div>
-          <div class="modal-card">
+          <div class="modal-body">
             <button id="editTrialButton" class="btn btn-primary pull-right" ng-click="editTerms = false" ng-show="editTerms">
               <span class="button-text" translate="partnerHomePage.edit"></span>
             </button>
@@ -325,11 +320,11 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer" ng-show="!editTerms">
-          <button type="button" id="saveSendButton" class="btn btn-primary btn-lg pull-right" ng-click="editTrial()" data-loading-text="<i class='icon icon-spinner icon-spin'></i>">
+        <div class="modal-footer">
+          <button type="button" ng-show="!editTerms" id="saveSendButton" class="btn btn-primary btn-lg pull-right" ng-click="editTrial()" data-loading-text="<i class='icon icon-spinner icon-spin'></i>">
             <span class="button-text" translate="partnerHomePage.saveSendReminder"></span>
           </button>
-          <div id="cancelTrialButton" class="btn btn-default btn-lg pull-right" data-dismiss="modal">
+          <div ng-show="!editTerms" id="cancelTrialButton" class="btn btn-default btn-lg pull-right" data-dismiss="modal">
             <span class="button-text" translate="partnerHomePage.cancel"></span>
           </div>
         </div>

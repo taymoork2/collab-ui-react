@@ -1,14 +1,12 @@
 <!-- Edit Trial Modal -->
 <div class="modal-header">
-  <button type="button" class="close header-text" ng-click="$parent.editTrialModalInstance.close()">
-    <span aria-hidden="true">
-      <span class="icon icon-close cancel-color"></span>
-    </span>
+  <button type="button" class="close" ng-click="$parent.editTrialModalInstance.close()">
+    <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
   </button>
-  <h3 class="header-text edit-header">{{$parent.currentTrial.customerName}}</h3>
+  <h3 class="modal-title">{{$parent.currentTrial.customerName}}</h3>
 </div>
-<div class="modal-body">
-  <div class="row">
+<div class="modal-body-white">
+  <div class="row modal-trial-status">
     <div class="col-sm-9">
       <div class="progress">
         <div class="progress-bar" ng-class="{'danger-bar': $parent.currentTrial.daysLeft <= 5, 'warning-bar': ($parent.currentTrial.daysLeft < $parent.currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{$parent.currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{$parent.currentTrial.duration}}" style="width: {{$parent.currentTrial.percentUsed}}%;">
@@ -32,7 +30,7 @@
         </div>
     </div>
   </div>
-  <div class="modal-card">
+  <div class="modal-body">
     <h4 translate="partnerHomePage.customerInformation"></h4>
     <div class="row input-row-spacing">
       <div class="col-md-4">
@@ -55,7 +53,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-card">
+  <div class="modal-body">
     <button id="editTrialButton" class="btn btn-primary pull-right" ng-click="editTerms = false" ng-show="editTerms">
       <span class="button-text" translate="partnerHomePage.edit"></span>
     </button>
@@ -104,11 +102,11 @@
     </div>
   </div>
 </div>
-<div class="modal-footer" ng-show="!editTerms">
-  <button type="button" id="saveSendButton" class="btn btn-primary btn-lg pull-right" ng-click="editTrial()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+<div class="modal-footer">
+  <button type="button"  ng-show="!editTerms" id="saveSendButton" class="btn btn-primary btn-lg pull-right" ng-click="editTrial()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
     <span class="button-text" translate="partnerHomePage.saveSendReminder"></span>
   </button>
-  <div id="cancelTrialButton" class="btn btn-default btn-lg pull-right" ng-click="$parent.editTrialModalInstance.close()">
+  <div  ng-show="!editTerms" id="cancelTrialButton" class="btn btn-default btn-lg pull-right" ng-click="$parent.editTrialModalInstance.close()">
     <span class="button-text" translate="partnerHomePage.cancel"></span>
   </div>
 </div>

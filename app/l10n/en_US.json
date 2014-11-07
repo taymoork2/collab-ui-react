@@ -312,8 +312,8 @@
   },
   "spacesPage": {
     "title": "Devices",
-    "modalTitle": "Activate a new SX10",
-    "add": "Add a New Device",
+    "modalTitle": "Activate a New Device",
+    "add": "Activate a New Device",
     "addBtn": "Generate activation code",
     "cancel": "Cancel",
     "done": "Done",
