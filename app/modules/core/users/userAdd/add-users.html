@@ -16,8 +16,10 @@
             <a>Import CSV</a>
           </div> -->
 
-          <div class="entitle-check-grp" ng-if="isEntitleEnabled()" ng-repeat="(service, val) in entitlements" ng-if="service!=='webExSquared' && isServiceAllowed(service)">
-            <cs-checkbox id="{{'chk_'+service}}" ng-model="entitlements[service]" cklabel="{{getServiceName(service)}}"></cs-checkbox>
+          <div ng-if="isEntitleEnabled() || isAddEnabled()">
+            <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements" ng-if="service!=='webExSquared' && isServiceAllowed(service)">
+              <cs-checkbox id="{{'chk_'+service}}" ng-model="entitlements[service]" cklabel="{{getServiceName(service)}}"></cs-checkbox>
+            </div>
           </div>
         </div>
 

@@ -130,8 +130,7 @@ describe('Add/Invite/Entitle User flow', function() {
         expect(users.inviteButton.isDisplayed()).toBeTruthy();
         expect(users.entitleButton.isDisplayed()).toBeTruthy();
         expect(users.addButton.isDisplayed()).toBeTruthy();
-        users.assertEntitlementListSize(2);
-        expect(users.squaredCheckBox.isDisplayed()).toBeTruthy();
+        users.assertEntitlementListSize(1);
       });
     });
 
