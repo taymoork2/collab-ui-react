@@ -32,8 +32,6 @@ describe('Shared spaces flow', function() {
     spaces.addRoomButton.click();
     utils.expectIsDisplayed(spaces.deviceCard);
     expect(spaces.confirmDeviceName.getText()).toContain(testRoom);
-    spaces.deviceCardClose.click();
-    utils.expectIsDisplayed(spaces.addRoomButton);
     notifications.assertSuccess('added successfully');
     spaces.deviceModalClose.click();
     browser.sleep(1000); //TODO fix this - animation should be resolved by angular

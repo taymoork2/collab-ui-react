@@ -65,12 +65,12 @@ angular.module('Squared')
 
       getAllRooms();
 
-      var roomTemplate = '<div class="ngCellText"><div class="device-icon-desc">{{row.getProperty(col.field)}}</div></div>';
+      var roomTemplate = '<div class="ngCellText"><div class="device-name-desc">{{row.getProperty(col.field)}}</div></div>';
 
       var deviceCellTemplate = '<div class="ngCellText"><img class="device-img" src="images/SX10.png"/><div class="device-icon-desc">SX10</div></div>';
 
       var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'Active\', \'device-status-red\': row.getProperty(col.field) !== \'Active\'}"></i>' +
-        '<div ng-class="{\'device-status-nocode\': row.getProperty(col.field)===\'Active\', \'ngCellText ngCellTextCustom\': row.getProperty(col.field) !== \'Active\'}"><p class="">{{row.getProperty(col.field)}}</p>' +
+        '<div ng-class="{\'device-status-nocode\': row.getProperty(col.field)===\'Active\', \'ngCellText ngCellTextCustom\': row.getProperty(col.field) !== \'Active\'}"><p class="device-status-pending">{{row.getProperty(col.field)}}</p>' +
         '<p ng-if="row.getProperty(col.field) !== \'Active\'">{{row.getProperty(\'code\')}}</p></div>';
 
       var actionsTemplate = '<span dropdown class="device-align-ellipses">' +

@@ -39,20 +39,18 @@
 
           <div id="deviceAddCard" class="modal-deviceadd-card" ng-show="!showAdd">
             <img src="images/SX10.png" class="pull-left"/>
+            <p class="adddevice-desc device-card-content-name pull-left">SX10</p>
             <p id="confirmDeviceName" class="adddevice-desc device-card-content pull-left">{{newRoomName}}</p>
             <p class="adddevice-desc device-card-content pull-left">{{newActivationCode}}</p>
-
-            <i id="closeDeviceCard" class="icon icon-close device-add-close pull-right" ng-click="resetAddDevice()"></i>
-    
           </div>
 
         </div>
         <div class="modal-footer">
-          <div class="device-add-footer">
-            <button type="button" id="doneDevicesButton" class="btn btn-primary btn-lg pull-left" data-dismiss="modal" ng-disabled="showAdd">
+          <!-- <div class="device-add-footer"> -->
+            <button type="button" id="doneDevicesButton" class="btn btn-primary btn-lg pull-right" data-dismiss="modal" ng-disabled="showAdd">
               <span translate="spacesPage.done"></span>
             </button>
-          </div>
+          <!-- </div> -->
         </div>
       </div>
     </div>
