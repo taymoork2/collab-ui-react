@@ -8,7 +8,7 @@
 /* global config */
 
 var webClientURL = config.webClientURL;
-var loginBtnId = 'btn-login';
+var loginBtnId = 'sign-in-button';
 
 //var config = require('./testconfig.js');
 
