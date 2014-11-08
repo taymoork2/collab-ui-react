@@ -7,7 +7,7 @@ angular.module('Huron')
         cmiUrl: {
           dev: 'https://cmi.hitest.huron-dev.com',
           integration: 'https://cmi.hitest.huron-dev.com',
-          prod: 'https://cmi.hitest.huron-dev.com'
+          prod: 'https://cmi.huron-dev.com'
         },
 
         getCmiUrl: function () {
