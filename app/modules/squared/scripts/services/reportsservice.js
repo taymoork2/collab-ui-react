@@ -4,15 +4,17 @@ angular.module('Squared')
   .service('ReportsService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Log', 'Authinfo', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
 
+      var apiUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/';
+
       var token = Storage.get('accessToken');
-      var callMetricsUrl = Config.getAdminServiceUrl() + 'reports/stats/callUsage';
-      var activeUsersUrl = Config.getAdminServiceUrl() + 'reports/counts/activeUsers';
-      var timeChartUrl = Config.getAdminServiceUrl() + 'reports/timeCharts/';
-      var logInfoBaseUrl = Config.getAdminServiceUrl() + 'reports/tables/calls/';
+      var callMetricsUrl = apiUrl + 'reports/stats/callUsage';
+      var activeUsersUrl = apiUrl + 'reports/counts/activeUsers';
+      var timeChartUrl = apiUrl + 'reports/timeCharts/';
+      var logInfoBaseUrl = apiUrl + 'reports/tables/calls/';
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
-      var averageCallCount = Config.getAdminServiceUrl() + 'reports/counts/avgCallsPerUser';
-      var entitlementCount = Config.getAdminServiceUrl() + 'reports/counts/entitlements';
-      var contentSharedCount = Config.getAdminServiceUrl() + 'reports/counts/contentShared';
+      var averageCallCount = apiUrl + 'reports/counts/avgCallsPerUser';
+      var entitlementCount = apiUrl + 'reports/counts/entitlements';
+      var contentSharedCount = apiUrl + 'reports/counts/contentShared';
 
       var urls = {
         'callUsage': callMetricsUrl,

@@ -5,7 +5,7 @@ angular.module('Core')
     function ($http, Storage, Config, Log, Auth, Authinfo) {
 
       var token = Storage.get('accessToken');
-      var dirsyncUrl = Config.getAdminServiceUrl() + 'dirsync';
+      var dirsyncUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/dirsync';
 
       return {
         getDirSyncDomain: function (callback) {

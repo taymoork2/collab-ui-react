@@ -5,8 +5,8 @@ var PartnerHomePage = function(){
   var randomNumber = utils.randomId();
 
   this.newTrial = {
-    customerName : 'Atlas_Test_Trial' + randomNumber,
-    customerEmail : 'Atlas_Test_Trial' + randomNumber + '@gmail.com'
+    customerName : 'Atlas_Test_Trial_' + randomNumber,
+    customerEmail : 'Atlas_Test_Trial_' + randomNumber + '@gmail.com'
   };
 
   this.differentTrial = {
@@ -54,6 +54,10 @@ var PartnerHomePage = function(){
   this.previewPanel = element(by.id('preview-panel'));
   this.customerInfo = element(by.id('customer-info'));
   this.trialInfo = element(by.id('trial-info'));
+  this.actionsButton = element(by.id(this.newTrial.customerName + 'ActionsButton'));
+  this.launchCustomerButton = element(by.id(this.newTrial.customerName + 'LaunchCustomerButton'));
+  this.launchCustomerPanelButton = element(by.id('launchCustomer'));
+  this.exitPreviewButton = element(by.id('exitPreviewButton'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
@@ -67,7 +71,6 @@ var PartnerHomePage = function(){
       expect(rows.length).toBeGreaterThan(1);
     });
   };
-
 };
 
 module.exports = PartnerHomePage;

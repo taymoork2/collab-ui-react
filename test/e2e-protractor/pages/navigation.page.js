@@ -12,6 +12,7 @@ var Navigation = function(){
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.sharedSpacesTab = element(by.css('a[href="#spaces"]'));
+  this.customersTab = element(by.css('a[href="#customers"]'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackButton = element(by.id('feedback-btn'));
@@ -32,6 +33,11 @@ var Navigation = function(){
   this.clickOrganization = function() {
     this.manageTab.click();
     this.orgTab.click();
+  };
+
+  this.clickCustomers = function() {
+    this.manageTab.click();
+    this.customersTab.click();
   };
 
   this.clickUsers = function() {

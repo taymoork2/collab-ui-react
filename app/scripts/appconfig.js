@@ -172,10 +172,14 @@ angular
           controller: 'ReportsCtrl',
           parent: 'main'
         })
-        .state('swap', {
-          url: '/swap/:customerOrgId/:customerName',
-          templateUrl: 'modules/core/views/swap.html',
-          controller: 'SwapCtrl',
+        .state('login_swap', {
+          url: '/login/:customerOrgId/:customerOrgName',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/login/login.tpl.html',
+              controller: 'LoginCtrl'
+            }
+          },
           authenticate: false
         })
         .state('customers', {

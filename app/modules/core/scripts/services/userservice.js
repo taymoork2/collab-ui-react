@@ -28,7 +28,7 @@ angular.module('Core')
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
             $http({
                 method: 'PATCH',
-                url: userUrl + 'users',
+                url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
                 data: userData
               })
               .success(function (data, status) {
@@ -131,10 +131,10 @@ angular.module('Core')
           if (arguments.length === 2) { // if only two arguments were supplied
             if (Object.prototype.toString.call(forceResend) === '[object Function]') {
               callback = forceResend;
-              apiUrl = userUrl + 'invitations';
+              apiUrl = userUrl + 'organization/' + Authinfo.getOrgId() + '/invitations';
             }
           } else if (arguments.length === 3) {
-            apiUrl = userUrl + 'invitations/?resendInvite=' + forceResend;
+            apiUrl = userUrl + 'organization/' + Authinfo.getOrgId() + '/invitations/?resendInvite=' + forceResend;
           }
 
           var userData = {

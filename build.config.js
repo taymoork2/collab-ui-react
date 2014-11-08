@@ -129,7 +129,10 @@ module.exports = {
       'Element ul not allowed as child of element button in this context.',
       'for attribute aria-valuenow',
       'for attribute aria-valuemax',
-      'Element option without attribute label must not be empty'
+      'Element option without attribute label must not be empty',
+      'Bad value {{$parent.currentTrial.daysUsed}} for attribute aria-valuenow on element div: Expected a minus sign or a digit but saw { instead.',
+      'Bad value {{$parent.currentTrial.duration}} for attribute aria-valuemax on element div: Expected a minus sign or a digit but saw { instead.',
+      'The element button must not appear as a descendant of the a element.'
     ]
   }
 

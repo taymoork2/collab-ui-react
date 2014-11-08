@@ -67,7 +67,6 @@ describe('Partner flow', function() {
       notifications.assertError(partner.newTrial.customerName, 'already exists');
       expect(navigation.hasClass(partner.customerNameForm, 'has-error')).toBe(true);
 
-
       partner.customerNameInput.clear();
       partner.customerEmailInput.clear();
 
@@ -83,12 +82,9 @@ describe('Partner flow', function() {
     });
 
     it('should edit an exisiting trial', function(){
-      utils.expectIsNotDisplayed(partner.addTrialModal);
       partner.newTrialRow.click();
 
-      utils.expectIsDisplayed(partner.editTrialModal);
       utils.expectIsDisplayed(partner.editTrialButton);
-
       partner.editTrialButton.click();
 
       expect(partner.saveSendButton.isDisplayed()).toBeTruthy();
@@ -96,7 +92,6 @@ describe('Partner flow', function() {
 
       notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
 
-      utils.expectIsNotDisplayed(partner.editTrialModal);
       utils.expectIsDisplayed(partner.newTrialRow);
     });
 
@@ -105,14 +100,58 @@ describe('Partner flow', function() {
       navigation.expectCurrentUrl('/customers');
       expect(partner.customerList.isPresent()).toBeTruthy();
       partner.assertResultsLength();
-      partner.selectRow.click();
-      expect(partner.previewPanel.isDisplayed()).toBeTruthy();
+      partner.newTrialRow.click();
+      utils.expectIsDisplayed(partner.previewPanel);
       expect(partner.customerInfo.isDisplayed()).toBeTruthy();
       expect(partner.trialInfo.isDisplayed()).toBeTruthy();
-      navigation.clickHome();
+    });
+  });
+
+  describe('Partner launches customer portal', function(){
+
+    it('Launch customer portal via preview panel',function(){
+      var appWindow = browser.getWindowHandle();
+
+      expect(partner.launchCustomerPanelButton.isDisplayed()).toBeTruthy();
+      partner.launchCustomerPanelButton.click();
+
+      browser.getAllWindowHandles().then(function(handles) {
+        var newWindowHandle = handles[1];
+        browser.switchTo().window(newWindowHandle);
+        navigation.expectDriverCurrentUrl('login');
+        navigation.expectDriverCurrentUrl(partner.newTrial.customerName);
+        expect(navigation.tabs.isDisplayed()).toBeTruthy();
+        browser.driver.close();
+        browser.switchTo().window(appWindow);
+      });
     });
 
+    it('Launch customer portal via dropdown',function(){
+      var appWindow = browser.getWindowHandle();
+
+      partner.exitPreviewButton.click();
+      browser.sleep(2000);
+
+      partner.actionsButton.click();
+      utils.click(partner.launchCustomerButton);
+
+      browser.getAllWindowHandles().then(function(handles) {
+        var newWindowHandle = handles[1];
+        browser.switchTo().window(newWindowHandle);
+        navigation.expectDriverCurrentUrl('login');
+        navigation.expectDriverCurrentUrl(partner.newTrial.customerName);
+        expect(navigation.tabs.isDisplayed()).toBeTruthy();
+        browser.driver.close();
+        browser.switchTo().window(appWindow);
+      });
+    });
+
+  });
+
+  describe('Partner landing page reports', function(){
+
     it('should delete an exisiting org thus deleting trial', function(done){
+      navigation.clickHome();
       partner.newTrialRow.getAttribute('orgId').then(function(attr){
         deleteTrialUtils.deleteOrg(attr).then(function(message) {
           expect(message).toEqual(200);
@@ -123,11 +162,9 @@ describe('Partner flow', function() {
         });
       });
     });
-  });
-
-  describe('Partner landing page reports', function(){
 
     it('should show the reports',function(){
+      navigation.clickHome();
       expect(partner.entitlementsChart.isDisplayed()).toBeTruthy();
       expect(partner.entitlementsCount.getText()).toBeTruthy();
     });

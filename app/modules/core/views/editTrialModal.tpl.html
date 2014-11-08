@@ -85,17 +85,17 @@
         <div class="col-md-7">
           <span class="trial-options" translate="partnerHomePage.numberOfLicenses"></span>
           <select id="editLicensesSelect" class="form-control modal-form-control" ng-model="licenseCount">
-            <option value="50" translate="partnerHomePage.fifty"></option>
-            <option value="100" translate="partnerHomePage.oneHundred"></option>
-            <option value="200" translate="partnerHomePage.twoHundred"></option>
+            <option label="50" value="50" translate="partnerHomePage.fifty"></option>
+            <option label="100" value="100" translate="partnerHomePage.oneHundred"></option>
+            <option label="200" value="200" translate="partnerHomePage.twoHundred"></option>
           </select>
         </div>
         <div class="col-md-5">
           <span class="trial-options" translate="partnerHomePage.duration"></span>
           <select id="editLengthSelect" class="form-control modal-form-control" ng-model="licenseDuration">
-          <option value="30" translate="partnerHomePage.thirtyDays"></option>
-          <option value="60" translate="partnerHomePage.sixtyDays"></option>
-          <option value="90" translate="partnerHomePage.ninetyDays"></option>
+            <option label="30 Days" value="30" translate="partnerHomePage.thirtyDays"></option>
+            <option label="60 Days" value="60" translate="partnerHomePage.sixtyDays"></option>
+            <option label="90 Days" value="90" translate="partnerHomePage.ninetyDays"></option>
           </select>
         </div>
       </div>
@@ -103,7 +103,7 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button"  ng-show="!editTerms" id="saveSendButton" class="btn btn-primary btn-lg pull-right" ng-click="editTrial()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+  <button type="button"  ng-show="!editTerms" id="saveSendButton" class="btn btn-primary btn-lg pull-right" ng-click="$parent.editTrial()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
     <span class="button-text" translate="partnerHomePage.saveSendReminder"></span>
   </button>
   <div  ng-show="!editTerms" id="cancelTrialButton" class="btn btn-default btn-lg pull-right" ng-click="$parent.editTrialModalInstance.close()">

@@ -2,8 +2,8 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state',
-    function ($scope, $rootScope, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state) {
+  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$modal', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state',
+    function ($scope, $rootScope, $modal, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -13,8 +13,8 @@ angular.module('Core')
       $scope.displayRows = 10;
       $scope.expiredRows = 3;
       $scope.startDate = new Date();
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
+      Notification.init($rootScope);
+      $rootScope.popup = Notification.popup;
       $scope.customerName = null;
       $scope.customerEmail = null;
       $scope.licenseDuration = 30;
@@ -26,6 +26,8 @@ angular.module('Core')
       $scope.nameError = false;
       $scope.emailError = false;
       $scope.filter = 'ALL';
+      $scope.addTrialModalInstance = null;
+      $scope.editTrialModalInstance = null;
 
       $scope.formReset = function () {
         $scope.customerName = null;
@@ -41,6 +43,23 @@ angular.module('Core')
         $scope.currentCustomer = null;
       };
 
+      $scope.openAddTrialModal = function () {
+        $scope.addTrialModalInstance = $modal.open({
+          templateUrl: 'modules/core/views/addTrialModal.tpl.html',
+          controller: 'PartnerHomeCtrl',
+          windowClass: 'modal-addtrial-dialog',
+          scope: $scope
+        });
+      };
+
+      $scope.openEditTrialModal = function () {
+        $scope.editTrialModalInstance = $modal.open({
+          templateUrl: 'modules/core/views/editTrialModal.tpl.html',
+          controller: 'PartnerHomeCtrl',
+          scope: $scope
+        });
+      };
+
       $scope.startTrial = function () {
         var createdDate = new Date();
         $scope.nameError = false;
@@ -48,9 +67,8 @@ angular.module('Core')
         angular.element('#startTrialButton').button('loading');
         PartnerService.startTrial($scope.customerName, $scope.customerEmail, 'COLLAB', $scope.licenseCount, $scope.licenseDuration, $scope.startDate, function (data, status) {
           angular.element('#startTrialButton').button('reset');
-          $scope.trialForm.$setPristine(true);
           if (data.success === true) {
-            $('#addTrialDialog').modal('hide');
+            $scope.addTrialModalInstance.close();
             var successMessage = ['A trial was successfully started for ' + $scope.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
             Notification.notify(successMessage, 'success');
             setTimeout(function () {
@@ -73,7 +91,7 @@ angular.module('Core')
         PartnerService.editTrial($scope.licenseDuration, $scope.currentTrial.trialId, $scope.licenseCount, $scope.currentTrial.usage, function (data, status) {
           angular.element('#saveSendButton').button('reset');
           if (data.success === true) {
-            $('#editTrialDialog').modal('hide');
+            $scope.editTrialModalInstance.close();
             var successMessage = ['You have successfully edited a trial for ' + $scope.currentTrial.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
             Notification.notify(successMessage, 'success');
             setTimeout(function () {
@@ -86,6 +104,7 @@ angular.module('Core')
       };
 
       $scope.setTrial = function (trial) {
+        console.log('here');
         $scope.currentTrial = trial;
       };
 
@@ -232,6 +251,10 @@ angular.module('Core')
         return Math.round((trial.usage / trial.licenses) * 100);
       };
 
+      $scope.closeActionsDropdown = function () {
+        angular.element('.open').removeClass('open');
+      };
+
       getTrialsList();
 
       $scope.newTrialName = null;
@@ -260,15 +283,15 @@ angular.module('Core')
       };
 
       var actionsTemplate = '<span dropdown>' +
-        '<button class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button id="{{row.entity.customerName}}ActionsButton" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
-        '<ul class="dropdown-menu" role="menu">' +
-        '<li><a href="#"><span translate="partnerHomePage.custDetail"></span></a></li>' +
+        '<ul class="dropdown-menu dropdown-primary" role="menu">' +
+        '<li id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span></a></li>' +
         '</ul>' +
         '</span>';
 
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
+      var rowTemplate = '<div id="{{row.entity.customerName}}" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
         '<div ng-cell></div>' +
         '</div>';

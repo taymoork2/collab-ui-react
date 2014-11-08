@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('Core')
-  .factory('Auth', ['$http', '$filter', '$location', '$timeout', '$window', '$q', 'Log', 'Config', 'Authinfo', 'Utils', 'Storage', '$rootScope', '$dialogs',
-    function ($http, $filter, $location, $timeout, $window, $q, Log, Config, Authinfo, Utils, Storage, $rootScope, $dialogs) {
+  .factory('Auth', ['$http', '$filter', '$location', '$timeout', '$window', '$q', 'Log', 'Config', 'SessionStorage', 'Authinfo', 'Utils', 'Storage', '$rootScope', '$dialogs',
+    function ($http, $filter, $location, $timeout, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, $rootScope, $dialogs) {
       var progress = 0;
       var auth = {
-        authorizeUrl: Config.getAdminServiceUrl() + 'userauthinfo',
+        authorizeUrl: Config.getAdminServiceUrl(),
         oauthUrl: Config.oauthUrl.oauth2Url
       };
 
@@ -21,8 +21,17 @@ angular.module('Core')
 
       auth.authorize = function (token) {
         var deferred = $q.defer();
+        var authUrl = null;
         $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-        $http.get(auth.authorizeUrl)
+        var currentOrgId = SessionStorage.get('customerOrgId');
+
+        if (currentOrgId) {
+          authUrl = auth.authorizeUrl + 'organization/' + currentOrgId + '/userauthinfo';
+        } else {
+          authUrl = auth.authorizeUrl + 'userauthinfo';
+        }
+
+        $http.get(authUrl)
           .success(function (data) {
             Authinfo.initialize(data);
             deferred.resolve();

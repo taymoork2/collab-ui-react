@@ -21,7 +21,6 @@ angular.module('Squared')
           if (true) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
             var editTrialUrl = trialsUrl + '/' + id;
-            console.log(editTrialUrl);
             $http({
                 method: 'PATCH',
                 url: editTrialUrl,
@@ -38,7 +37,6 @@ angular.module('Squared')
                 Auth.handleStatus(status);
               });
           } else {
-            console.log('empty response');
             callback('Edit trial not valid - empty request.');
           }
         },
@@ -57,7 +55,6 @@ angular.module('Squared')
 
           if (trialData.customerName.length > 0 && trialData.customerEmail.length > 0) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-            console.log(trialsUrl);
             $http.post(trialsUrl, trialData)
               .success(function (data, status) {
                 data.success = true;
@@ -70,7 +67,6 @@ angular.module('Squared')
                 Auth.handleStatus(status);
               });
           } else {
-            console.log('empty response');
             callback('Trial not valid - empty request.');
           }
         },

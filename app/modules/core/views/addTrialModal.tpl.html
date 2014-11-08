@@ -13,8 +13,8 @@
         <span class="modal-options" translate="partnerHomePage.customerName"></span>
       </div>
       <div class="col-md-9">
-        <div id="customerNameForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerName.$invalid && trialForm.customerName.$dirty) || (nameError && !trialForm.customerName.$dirty) }">
-          <input id="customerNameInput" class="form-control" name="customerName" ng-model="customerName" type="text" required>
+        <div id="customerNameForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerName.$invalid && trialForm.customerName.$dirty) || ($parent.nameError && !trialForm.customerName.$dirty) }">
+          <input id="customerNameInput" class="form-control" name="customerName" ng-model="$parent.customerName" type="text" required>
         </div>
       </div>
     </div>
@@ -23,8 +23,8 @@
         <span class="modal-options" translate="partnerHomePage.customerEmail"></span>
       </div>
       <div class="col-md-9">
-        <div id="customerEmailForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerEmail.$invalid && trialForm.customerEmail.$dirty) || (emailError && !trialForm.customerEmail.$dirty)}">
-          <input id="customerEmailInput" type="email" class="form-control" name="customerEmail" ng-model="customerEmail" required>
+        <div id="customerEmailForm" class="form-group trial-form" ng-class="{ 'has-error': (trialForm.customerEmail.$invalid && trialForm.customerEmail.$dirty) || ($parent.emailError && !trialForm.customerEmail.$dirty)}">
+          <input id="customerEmailInput" type="email" class="form-control" name="customerEmail" ng-model="$parent.customerEmail" required>
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@
     <div class="row">
       <div class="col-md-7">
         <span class="trial-options" translate="partnerHomePage.numberOfLicenses"></span>
-        <select class="form-control modal-form-control" ng-model="licenseCount">
+        <select class="form-control modal-form-control" ng-model="$parent.licenseCount">
           <option value="50" translate="partnerHomePage.fifty"></option>
           <option value="100" translate="partnerHomePage.oneHundred"></option>
           <option value="200" translate="partnerHomePage.twoHundred"></option>
@@ -42,7 +42,7 @@
       </div>
       <div class="col-md-5">
         <span class="trial-options" translate="partnerHomePage.duration"></span>
-        <select class="form-control modal-form-control" ng-model="licenseDuration">
+        <select class="form-control modal-form-control" ng-model="$parent.licenseDuration">
           <option value="30" translate="partnerHomePage.thirtyDays"></option>
           <option value="60" translate="partnerHomePage.sixtyDays"></option>
           <option value="90" translate="partnerHomePage.ninetyDays"></option>
@@ -51,7 +51,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="startTrial($parent.addTrialModalInstance)" ng-disabled="trialForm.$invalid" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+    <button type="button" id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="$parent.startTrial(); trialForm.$setPristine(true)" ng-disabled="trialForm.$invalid" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
       <span class="button-text" translate="partnerHomePage.startTrial"></span>
     </button>
     <div id="cancelNewTrialButton" class="btn btn-default btn-lg pull-right" ng-click="$parent.addTrialModalInstance.close()">

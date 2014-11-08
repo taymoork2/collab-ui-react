@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('Squared')
-  .service('SpacesService', ['$http', 'Storage', 'Config', 'Log', 'Auth',
-    function ($http, Storage, Config, Log, Auth) {
+  .service('SpacesService', ['$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
+    function ($http, Storage, Config, Log, Auth, Authinfo) {
 
-      var roomUrl = Config.getAdminServiceUrl() + 'devices';
+      var roomUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/devices';
       var token = Storage.get('accessToken');
 
       return {

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LoginCtrl', ['$scope', '$rootScope', '$location', '$window', '$http', 'Storage', 'Config', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout',
-    function ($scope, $rootScope, $location, $window, $http, Storage, Config, Auth, Authinfo, PageParam, $state, $timeout) {
+  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'Localize',
+    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, Localize) {
 
       var token = Storage.get('accessToken');
       var loadingDelay = 2000;
@@ -14,10 +14,16 @@ angular.module('Core')
         PageParam.set(pageParam);
       }
 
+      if ($stateParams.customerOrgId && $stateParams.customerOrgName) {
+        SessionStorage.put('customerOrgName', $stateParams.customerOrgName);
+        SessionStorage.put('customerOrgId', $stateParams.customerOrgId);
+      }
+
       var authorizeUser = function () {
         $scope.loading = true;
         token = Storage.get('accessToken');
-        Auth.authorize(token, $scope).then(function () {
+        var currentOrgId = SessionStorage.get('customerOrgId');
+        Auth.authorize(token).then(function () {
           var path = 'home';
           if (PageParam.getRoute()) {
             path = PageParam.getRoute();
