@@ -1,0 +1,14 @@
+<h4>{{'callerIdPanel.title' | translate}}</h4>  
+<div class="form-group">
+  <p><small>{{'callerIdPanel.description' | translate}}</small></p>
+  <div>
+    <div class="radio">
+      <label>   
+        <input type="radio" ng-model="callerIdInfo.selection" value="default" name="rdo_callerid">{{callerIdInfo.default}}
+      </label>
+    </div>
+     <div class="radio">
+       <input type="radio" ng-model="callerIdInfo.selection" value="other" name="rdo_callerid"><input id="other" type="text" class="form-control" ng-model="callerIdInfo.otherName" ng-disabled="callerIdInfo.selection === 'default'"/>
+    </div>
+  </div>
+</div>

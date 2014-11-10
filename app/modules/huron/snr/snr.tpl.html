@@ -1,7 +1,7 @@
 <cr-details-body title="{{'singleNumberReachPanel.title' | translate}}" on-save="saveSingleNumberReach()">
     <div>
       <form name="singleNumberReachForm" role="form">
-      <p class="text-muted">{{'singleNumberReachPanel.description' | translate}}</p><br><br>
+      <p><small>{{'singleNumberReachPanel.description' | translate}}</small></p>
       <div>
         {{'singleNumberReachPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="telephonyInfo.snrInfo.singleNumberReachEnabled"></cs-switchbutton><br><br>
         <div class="form-group" ng-show="telephonyInfo.snrInfo.singleNumberReachEnabled">

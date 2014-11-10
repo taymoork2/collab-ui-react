@@ -2,12 +2,12 @@
 
 angular.module('Huron')
 
-.directive('hnCallForward', [
+.directive('hnCallerId', [
   function () {
     return {
       restrict: 'EA',
       scope: false,
-      templateUrl: 'modules/huron/callForward/callForward.tpl.html'
+      templateUrl: 'modules/huron/callerId/callerId.tpl.html'
     };
   }
 ]);

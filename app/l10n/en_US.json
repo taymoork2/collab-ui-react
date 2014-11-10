@@ -424,14 +424,18 @@
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
-    "success": " configuration saved successfully",
-    "directNumbers": "Direct Numbers",
+    "success": "Line configuration saved successfully",
+    "error": "Line configuration failed",
+    "directNumbers": "Directory Numbers",
     "internalNumberLabel": "Reach this line by any of these numbers or extensions",
     "internalNumberExtension": "Internal Number Extension",
     "externalNumberLabel": "External Number",
-    "chooseNumber": "choose a number"
+    "chooseNumber": "choose a number",
+    "addNewNumber": "Add a New Number",
+    "none": "None"
   },
   "callForwardPanel": {
+    "title": "Call Forwarding",
     "success": "Call Forward configuration saved successfully",
     "error": "Call Forward configuration failed",
     "forwardAllCalls": "Forward all calls",
@@ -440,7 +444,12 @@
     "internalOnly": "Only for internal calls",
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
-    "forwardExternal": "Forward external calls differently"
+    "forwardExternal": "Forward external calls differently",
+    "addNew" : "Add New"
+  },
+  "callerIdPanel": {
+    "title": "Caller ID",
+    "description": "Change the display name for calls from this line"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
