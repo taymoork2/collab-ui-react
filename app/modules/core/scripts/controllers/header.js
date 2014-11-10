@@ -8,8 +8,8 @@ angular.module('Core')
     }
   ])
 
-.controller('UserInfoCtrl', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location',
-  function ($scope, Authinfo, Auth, Log, Config, $window, $location) {
+.controller('UserInfoCtrl', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', 'Userservice',
+  function ($scope, Authinfo, Auth, Log, Config, $window, $location, Userservice) {
     var getAuthinfoData = function () {
       $scope.username = Authinfo.getUserName();
       $scope.orgname = Authinfo.getOrgName();
@@ -20,7 +20,19 @@ angular.module('Core')
       getAuthinfoData();
     });
 
-    //$scope.image = 'images/most-interesting-man.jpg';
+    Userservice.getUser('me', function (data, status) {
+      if (data.success) {
+        if (data.photos) {
+          for (var i in data.photos) {
+            if (data.photos[i].type === 'thumbnail') {
+              $scope.image = data.photos[i].value;
+            }
+          } //end for
+        } //endif
+      } else {
+        Log.debug('Get current user failed. Status: ' + status);
+      }
+    });
 
     $scope.logout = function () {
       Auth.logout();

@@ -43,7 +43,6 @@ angular.module('Core')
         if (offer) {
           $scope.packageInfo.name = offer.id;
           $scope.licenses.total = offer.licenseCount;
-          $scope.licenses.used = offer.usageCount > 50 ? 50 : offer.usageCount;
         }
       }
 
@@ -100,8 +99,20 @@ angular.module('Core')
       });
     };
 
-    getTrials();
+    var getAdminOrgInfo = function () {
+      Orgservice.getAdminOrg(function (data, status) {
+        if (data.success) {
+          if (data.squaredUsageCount) {
+            $scope.licenses.used = data.squaredUsageCount;
+          }
+        } else {
+          Log.debug('Get existing admin org failed. Status: ' + status);
+        }
+      });
+    };
 
+    getTrials();
     getorgInfo();
+    getAdminOrgInfo();
   }
 ]);

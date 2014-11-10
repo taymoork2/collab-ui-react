@@ -18,7 +18,7 @@
       <div class="row">
         <section class="licenses col-sm-6">
           <h3 class="licenses-bought" ng-if="licenses.total!==0">{{licenses.total}} Licenses</h3>
-          <progressbar ng-if="licenses.total>0" max="licenses.total" value="licenses.used"></progressbar>
+          <progressbar ng-if="licenses.total>0" max="licenses.total" value="licenses.used > licenses.total ? licenses.total : licenses.used"></progressbar>
           <p class="licenses-left" ng-if="isOnTrial() && licenses.total>0">{{licenses.total - licenses.used}} unused</p>
           <p class="licenses-used" ng-if="isOnTrial()===false">{{licenses.used}} used</p>
           <button class="btn btn-sm btn-default fix-btn-pos">Remind</button>
