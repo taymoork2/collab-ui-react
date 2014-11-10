@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .factory('HuronUser', ['Authinfo', 'UserServiceCommon', 'HuronUnassignedLine', 'UserDirectoryNumberService',
-    function (Authinfo, UserServiceCommon, HuronUnassignedLine, UserDirectoryNumberService) {
+  .factory('HuronUser', ['Authinfo', 'UserServiceCommon', 'HuronAssignedLine', 'HuronEmailService', 'UserDirectoryNumberService', 'IdentityOTPService',
+    function (Authinfo, UserServiceCommon, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService) {
       var userPayload = {
         'userId': null,
         'firstName': null,
@@ -16,24 +16,20 @@ angular.module('Huron')
       };
 
       return {
-        assignPrimaryLine: function (userUuid, directoryNumberUuid) {
-          var userLine = {
-            'dnUsage': 'Primary',
-            'directoryNumber': {
-              'uuid': directoryNumberUuid
-            }
-          };
-          return UserDirectoryNumberService.save({
-            customerId: Authinfo.getOrgId(),
-            userId: userUuid
-          }, userLine).$promise;
-        },
         delete: function (uuid) {
           return UserServiceCommon.remove({
             customerId: Authinfo.getOrgId(),
             userId: uuid
           });
         },
+        acquireOTP: function (userName) {
+          var otpRequest = {
+            'userName': userName
+          };
+
+          return IdentityOTPService.save({}, otpRequest).$promise;
+        },
+
         create: function (email, uuid) {
           var user = angular.copy(userPayload);
           user.email = email;
@@ -43,14 +39,25 @@ angular.module('Huron')
             user.uuid = uuid;
           }
 
+          var emailInfo = {
+            'email': user.email,
+            'firstName': user.lastName,
+            'phoneNumber': null,
+            'oneTimePassword': null,
+          };
+
           return UserServiceCommon.save({
               customerId: Authinfo.getOrgId()
             }, user).$promise
             .then(function () {
-              return HuronUnassignedLine.getFirst();
-            }).then(function (directoryNumberUuid) {
-              return this.assignPrimaryLine(uuid, directoryNumberUuid);
-            }.bind(this));
+              return HuronAssignedLine.assignDirectoryNumber(user.uuid, 'Primary');
+            }).then(function (directoryNumber) {
+              emailInfo.phoneNumber = directoryNumber.pattern;
+              return this.acquireOTP(user.userId);
+            }.bind(this)).then(function (otpInfo) {
+              emailInfo.oneTimePassword = otpInfo.password;
+              return HuronEmailService.save({}, emailInfo);
+            });
         }
       };
     }

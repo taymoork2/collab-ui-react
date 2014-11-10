@@ -1,11 +1,16 @@
 'use strict';
 
 angular.module('Huron')
-  .factory('UnassignedLineService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools?order=pattern-asc', {
-      customerId: '@customerId'
-    }, {});
-  })
+/**
+ * Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
+ */
+.factory('HuronEmailService', function ($resource, HuronConfig) {
+  return $resource(HuronConfig.getEmailUrl() + '/email/userwelcome', {}, {});
+})
+
+.factory('IdentityOTPService', function ($resource, HuronConfig) {
+  return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
+})
 
 .factory('LineService', function ($resource, HuronConfig) {
   return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers?order=pattern-asc', {
@@ -97,6 +102,11 @@ angular.module('Huron')
 .factory('DirectoryNumberCopyService', function ($resource, HuronConfig) {
   return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/copy/:ultId', {
     customerId: '@customerId',
-    itemId: '@ultId'
+    ultId: '@ultId'
+  }, {
+    query: {
+      method: 'GET',
+      isArray: false
+    }
   });
 });

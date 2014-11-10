@@ -69,6 +69,8 @@ angular.module('Huron')
             userDnList.push(userLine);
           }
           TelephonyInfoService.updateDirectoryNumbers(userDnList);
+        } else {
+          TelephonyInfoService.updateDirectoryNumbers(null);
         }
       };
 
