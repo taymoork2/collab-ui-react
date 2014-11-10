@@ -9,6 +9,13 @@
       </div>
       <div class="icon icon-home"></div>
     </div>
+    <div ng-if="isHuronEnabled()" class="wizard-side-item row" ng-class="{'wizard-nav-active': tabs.serviceSetup}" id="wizard-serviceSetup-link" ng-click="changeTab('serviceSetup')">
+      <div class="wizard-menu-text">
+        <div class="wizard-menu-title" translate="firstTimeWizard.serviceSetup"></div>
+        <div class="wizard-menu-subtitle" translate="firstTimeWizard.serviceSetupSub"></div>
+      </div>
+      <div class="icon icon-settings"></div>
+    </div>
     <div class="wizard-side-item row" ng-class="{'wizard-nav-active': tabs.enterpriseSettings}" id="wizard-enterpriseSettings-link" ng-click="changeTab('enterpriseSettings')">
       <div class="wizard-menu-text">
         <div class="wizard-menu-title" translate="firstTimeWizard.enterpriseSettings"></div>
@@ -47,7 +54,66 @@
       <h3 class="wizard-subtitle">{{'index.welcome' | translate}}!</h3>
       <p translate="firstTimeWizard.planReviewDesc"></p>
       <div class="wizard-btn-row">
-        <button type="button" class="btn btn-primary" id="beginBtn" ng-click="changeTab('enterpriseSettings')" translate="firstTimeWizard.beginBtn"></button>
+        <button type="button" class="btn btn-primary" id="beginBtn" ng-click="isHuronEnabled() ? changeTab('serviceSetup') : changeTab('enterpriseSettings')" translate="firstTimeWizard.beginBtn"></button>
+      </div>
+    </div>
+
+    <!-- service setup views -->
+    <div ng-if="isHuronEnabled()" ng-show="tabs.serviceSetup" class="wiz-view" ng-controller="serviceSetupCtrl">
+      <div class="wizard-main-title" translate="firstTimeWizard.unifiedCommunication"></div>
+      <form class="container-fluid" role="form">
+        <div class="form-group row">
+          <label for="timeZone" class="wizard-large-label" translate="serviceSetupModal.timeZone"></label>
+          <p translate="serviceSetupModal.tzDescription"></p>
+          <div class="col-xs-5">
+            <select ng-disabled="!firstTimeSetup" class="form-control" ng-model="site.timeZone" ng-options="timeZone for timeZone in timeZones" id="timeZone"></select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="steeringDigit" class="wizard-large-label" translate="serviceSetupModal.steeringDigit"></label>
+          <p translate="serviceSetupModal.oddDescription"></p>
+          <div class="col-xs-2">
+            <select ng-disabled="!firstTimeSetup" class="form-control" ng-model="site.steeringDigit" ng-options="steeringDigit for steeringDigit in steeringDigits" id="steeringDigit"></select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="ID0" class="wizard-large-label" translate="serviceSetupModal.internalExtentionRange"></label>
+          <p translate="serviceSetupModal.internalNumberRangeDescription"></p>
+          <div class="container-fluid">
+            <div class="row" ng-repeat="internalNumberRange in internalNumberRanges">
+                <div class="col-xs-2">
+                  <input ng-disabled="internalNumberRange.uuid" class="form-control" type="text" ng-model="internalNumberRange.beginNumber" maxlength="5" id="ID{{$index}}" required/>
+                </div>
+                <div class="col-xs-1 wizard-top-padding" translate="serviceSetupModal.to"></div>
+                <div class="col-xs-2">
+                  <input ng-disabled="internalNumberRange.uuid" class="form-control" type="text" ng-model="internalNumberRange.endNumber" maxlength="5" required/>
+                </div>
+                <div class="col-xs-2 wizard-top-padding">
+                  <a ng-show="internalNumberRanges.indexOf(internalNumberRange) != 0 || !firstTimeSetup" ng-click="deleteInternalNumberRange(internalNumberRanges.indexOf(internalNumberRange), internalNumberRange)" translate="common.delete"></a>
+                </div>
+            </div>
+            <div ng-show="internalNumberRanges.length < 10" class="row wizard-top-padding">
+              <div class="col-md-7">
+                <a ng-click="addNewInternalNumberRange()" translate="serviceSetupModal.addMoreExtentionRanges"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="globalMOH" class="wizard-large-label" translate="serviceSetupModal.globalMOH"></label>
+          <p translate="serviceSetupModal.mohDescription"></p>
+          <div class="col-xs-4">
+            <select ng-disabled="!firstTimeSetup" class="form-control" id="globalMOH" ng-model="globalMOH">
+              <option value="fall" translate="serviceSetupModal.fall"></option>
+              <option value="winter" translate="serviceSetupModal.winter"></option>
+              <option value="ciscoDefault" translate="serviceSetupModal.ciscoDefault"></option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <div class="wizard-btn-row-scroll">
+        <button type="button" class="btn btn-default" ng-click="changeTab('planReview')" translate="firstTimeWizard.backBtn"></button>
+        <button type="button" class="btn btn-primary" ng-click="serviceSetup(site, internalNumberRanges)" translate="firstTimeWizard.nextBtn"></button>
       </div>
     </div>
 

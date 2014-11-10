@@ -193,6 +193,7 @@
     "downloading": "This download might take up to 5 minutes. Please be patient..."
   },
   "common": {
+    "delete": "Delete",
     "cancel": "Cancel",
     "save": "Save",
     "ok": "Ok",
@@ -253,6 +254,24 @@
     "readFileFailed": "Could not read IdP Metadata file",
     "importSuccess": "Successfully imported IdP metadata file",
     "enableSSOSuccess": "Single Sign-On (SSO) successfully enabled for all users"
+  },
+  "serviceSetupModal": {
+    "timeZone": "Time Zone",
+    "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
+    "steeringDigit": "Outbound Dial Digit",
+    "oddDescription": "Specify the number users must dial before placing an external call.",
+    "internalExtentionRange": "Internal Extention Range",
+    "internalNumberRangeDescription": "Specify range of internal numbers.  Length of 4 or 5 numbers are recommended.",
+    "to": "to",
+    "addMoreExtentionRanges": "Add More Extention Ranges",
+    "globalMOH": "Global Media On Hold (MOH)",
+    "mohDescription": "Provide callers with music, announcements, or video when they are placed on hold. You can change the MOH settings at the group or user level.",
+    "ciscoDefault": "Cisco Default",
+    "fall": "Fall",
+    "winter": "Winter",
+    "addSuccess": " added successfully.",
+    "emptyNumber": "Number cannot be empty",
+    "notANumber": " is not a valid number"
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -357,6 +376,8 @@
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
     "accountReview": "Account Review",
     "serviceSetup": "Service Setup",
+    "serviceSetupSub": "Unified Comm. | Conversation | Video",
+    "unifiedCommunication": "Unified Communications",
     "addUsers": "Add Users",
     "addUsersSimple" : "Add Users | Simple",
     "addUsersAdvanced" : "Add Users | Advanced",

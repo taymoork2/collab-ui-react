@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('SetupWizardCtrl', ['$scope', '$translate',
-    function ($scope, $translate) {
+  .controller('SetupWizardCtrl', ['$rootScope', '$scope', '$translate', 'Config',
+    function ($rootScope, $scope, $translate, Config) {
 
       //tabs state definition
       $scope.tabs = {
@@ -79,6 +79,20 @@ angular.module('Core')
         syncRbLabel: $translate.instant('firstTimeWizard.advanced'),
         value: 1
       }];
+
+      $scope.isHuronEnabled = function () {
+        var result = false;
+        if (!!$rootScope.services) {
+          for (var i = 0; i < $rootScope.services.length; i++) {
+            var svc = $rootScope.services[i].ciService;
+            if (svc === Config.entitlements.huron) {
+              result = true;
+              break;
+            }
+          }
+        }
+        return result;
+      };
 
     }
   ]);

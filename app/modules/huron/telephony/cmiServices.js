@@ -109,4 +109,17 @@ angular.module('Huron')
       isArray: false
     }
   });
+})
+
+.factory('SiteService', function ($resource, HuronConfig) {
+  return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites', {
+    customerId: '@customerId'
+  });
+})
+
+.factory('InternalNumberRangeService', function ($resource, HuronConfig) {
+  return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
+    customerId: '@customerId',
+    internalNumberRangeId: '@internalNumberRangeId'
+  });
 });

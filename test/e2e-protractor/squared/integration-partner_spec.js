@@ -50,7 +50,7 @@ describe('Partner flow', function() {
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
 
       utils.expectIsDisplayed(partner.newTrialRow);
-    });
+    }, 60000);
 
     it('should send error and highlight incorrect field when adding an existing trial', function(){
       partner.addButton.click();
@@ -93,7 +93,7 @@ describe('Partner flow', function() {
       notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
 
       utils.expectIsDisplayed(partner.newTrialRow);
-    });
+    }, 60000);
 
     it('should view all trials', function() {
       partner.viewAllLink.click();
