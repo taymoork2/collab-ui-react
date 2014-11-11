@@ -37,10 +37,10 @@ angular.module('Huron')
         };
 
         angular.element('#btnSaveVoicemail').button('loading');
-        if ($scope.voicemailEnabled && !$scope.isVoicemailEnabled()) {
+        if (!$scope.isVoicemailEnabled()) {
           $scope.telephonyInfo.services.push('VOICEMAIL');
 
-          if ($scope.directoryNumber === null || $scope.directoryNumber === undefined) {
+          if (typeof $scope.directoryNumber === 'undefined') {
             for (var i = 0; i < $scope.telephonyInfo.directoryNumbers.length; i++) {
               if ($scope.telephonyInfo.directoryNumbers[i].dnUsage === 'Main') {
                 $scope.voicemailPayload.voicemail = {
