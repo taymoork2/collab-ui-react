@@ -8,12 +8,18 @@
  * Controller of the wx2AdminWebClientApp
  */
 angular.module('Squared')
-  .controller('ApplauncherCtrl', ['$window', '$http', '$translate', 'Log', 'Config', 'Utils',
-    function ($window, $http, $translate, Log, Config, Utils) {
+  .controller('ApplauncherCtrl', ['$window', '$http', '$translate', 'Log', 'Config', 'Utils', '$location',
+    function ($window, $http, $translate, Log, Config, Utils, $location) {
 
       if (Utils.isWeb()) {
 
-        $window.location.href = Config.getWebClientUrl();
+        var urlParams = '';
+        var params = $location.absUrl().split('?')[1];
+        if (params) {
+          urlParams = '?' + params;
+        }
+
+        $window.location.href = Config.getWebClientUrl() + urlParams;
 
       } else if (Utils.isIPhone()) {
 

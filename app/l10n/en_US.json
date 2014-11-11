@@ -5,12 +5,13 @@
     "loading": "Loading"
   },
   "usersPage": {
+    "inviteModalBtn" : "Invite Users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
     "email": "Email",
     "clear": "Clear",
-    "add": "Invite Users",
+    "add": "Add Users",
     "entitle": "Entitle",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",

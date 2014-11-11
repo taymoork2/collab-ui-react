@@ -9,6 +9,7 @@
 
 var webClientURL = config.webClientURL;
 var loginBtnId = 'sign-in-button';
+var urlparams = '?test=test&another=another';
 
 //var config = require('./testconfig.js');
 
@@ -75,6 +76,30 @@ describe('App Launcher Flow', function() {
       return browser.driver.isElementPresent(by.id(loginBtnId));
     }).then(function() {
       expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+    });
+
+  });
+
+  it('applauncher route should forward to squared app with url paramters', function() {
+    browser.get('#/applauncher' + urlparams);
+
+    browser.driver.wait(function() {
+      return browser.driver.isElementPresent(by.id(loginBtnId));
+    }).then(function() {
+      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+      expect(browser.driver.getCurrentUrl()).toContain(urlparams);
+    });
+
+  });
+
+  it('applauncher page should forward to squared app with url parameters', function() {
+    browser.get('applauncher.html' + urlparams);
+
+    browser.driver.wait(function() {
+      return browser.driver.isElementPresent(by.id(loginBtnId));
+    }).then(function() {
+      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+      expect(browser.driver.getCurrentUrl()).toContain(urlparams);
     });
 
   });
