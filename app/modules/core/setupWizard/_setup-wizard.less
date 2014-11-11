@@ -46,7 +46,6 @@
 }
 
 .wizard-side-item + .wizard-side-item {
-  margin-bottom: 5px;
   margin-top: 5px;
 }
 
@@ -59,9 +58,29 @@
   cursor: pointer;
 }
 
+.wizard-side-item:last-child {
+  position:relative;
+  background-color: rgba(34,34,34,0.3);
+  height: 280px;
+  cursor: default;
+  flex: 1;
+
+  .help-link {
+    position: absolute;
+    bottom: 30px;
+    color: #fff;
+    cursor: pointer;
+    font-family: @brand-font-cisco-TT-Regular;
+    font-size: 13px;
+  }
+}
+
 .wizard-nav {
   width: 370px;
+  height: 620px;
   float: left;
+  display: flex;
+  flex-direction: column;
 
   .wizard-menu-text {
     float: left;
@@ -109,22 +128,6 @@
     padding: 11px 0;
     text-align: center;
   }
-}
-
-#wizard-needhelp {
-  position:relative;
-  background-color: rgba(34,34,34,0.3);
-  height: 280px;
-  cursor: default;
-}
-
-#wizard-help-link {
-  position: absolute;
-  bottom: 30px;
-  color: #fff;
-  cursor: pointer;
-  font-family: @brand-font-cisco-TT-Regular;
-  font-size: 13px;
 }
 
 .wizard-main-view {
