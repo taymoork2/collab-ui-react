@@ -109,7 +109,7 @@ angular.module('Squared')
           field: 'action',
           displayName: $filter('translate')('spacesPage.actionsHeader'),
           sortable: false,
-          cellTemplate: actionsTemplate
+          cellTemplate: ''
         }]
       };
 

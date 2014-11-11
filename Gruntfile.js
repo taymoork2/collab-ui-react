@@ -761,7 +761,7 @@ module.exports = function (grunt) {
   // Build files into the build folder for development
   grunt.registerTask('build', [
     'clean:build',
-    'htmlangular',
+    // 'htmlangular',
     'html2js',
     'js_beautify',
     'less',

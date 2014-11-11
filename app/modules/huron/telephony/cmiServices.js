@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('Huron')
-/**
- * Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
- */
-.factory('HuronEmailService', function ($resource, HuronConfig) {
-  return $resource(HuronConfig.getEmailUrl() + '/email/userwelcome', {}, {});
-})
+  /**
+   * Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
+   */
+  .factory('HuronEmailService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getEmailUrl() + '/email/userwelcome', {}, {});
+  })
 
 .factory('IdentityOTPService', function ($resource, HuronConfig) {
   return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
