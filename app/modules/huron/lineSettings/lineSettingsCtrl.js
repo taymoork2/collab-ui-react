@@ -61,8 +61,14 @@ angular.module('Huron')
       };
 
       // Caller ID Radio Button Model
+      var name;
+      if ($scope.currentUser.name) {
+        name = ($scope.currentUser.name.givenName + ' ' + $scope.currentUser.name.familyName).trim();
+      } else {
+        name = $scope.currentUser.userName;
+      }
       $scope.callerIdInfo = {
-        'default': $scope.currentUser.name.givenName + ' ' + $scope.currentUser.name.familyName,
+        'default': name,
         'otherName': null,
         'selection': 'default'
       };
