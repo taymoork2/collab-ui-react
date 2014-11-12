@@ -19,7 +19,7 @@ angular.module('Core')
 
         locusServiceUrl: {
           dev: 'http://localhost:8080/locus-mount',
-          integration: 'http://admin-portal-test-public.wbx2.com:8080/locus',
+          integration: 'https://admin-portal-test-public.wbx2.com/locus',
           prod: 'https://locus-a.wbx2.com'
         },
 
