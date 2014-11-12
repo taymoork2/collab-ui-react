@@ -1,8 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'Log', '$interval', '$document', 'Config', '$state',
-    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage',
+    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state, SessionStorage) {
 
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
@@ -13,7 +13,10 @@ angular
       //Enable logging
       $rootScope.debug = true;
 
-      $rootScope.$on('$stateChangeStart', function (e, to) {
+      var storedState = 'storedState';
+      var storedParams = 'storedParams';
+
+      $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
         if (typeof to.authenticate === 'undefined' || to.authenticate) {
           if (Authinfo.isInitialized()) {
             if (!Authinfo.isAllowedState(to.name)) {
@@ -26,12 +29,16 @@ angular
             if (token) {
               Auth.authorize(token)
                 .then(function () {
-                  $state.go(to.name);
+                  $state.go(to.name, toParams);
                 })
                 .catch(function () {
+                  SessionStorage.put(storedState, to.name);
+                  SessionStorage.putObject(storedParams, toParams);
                   $state.go('login');
                 });
             } else {
+              SessionStorage.put(storedState, to.name);
+              SessionStorage.putObject(storedParams, toParams);
               $state.go('login');
             }
           }

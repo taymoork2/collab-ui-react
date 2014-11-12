@@ -2,8 +2,8 @@
 /* global $, Bloodhound, moment */
 
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam',
-    function ($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam) {
+  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams',
+    function ($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams) {
 
       //Initialize
       Notification.init($scope);
@@ -27,12 +27,16 @@ angular.module('Squared')
       $scope.callFlowActive = false;
       $scope.callFlowUrl = 'images/solid_white.png';
 
-      $scope.input = {
-        search: PageParam.getParam('search')
-      };
-      if ($scope.input.search) {
+      var search;
+      if (PageParam.getParam('search')) {
+        search = PageParam.getParam('search');
         PageParam.clear();
+      } else if ($stateParams.search) {
+        search = $stateParams.search;
       }
+      $scope.input = {
+        search: search
+      };
 
       Log.debug('param search string: ' + $scope.input.search);
 

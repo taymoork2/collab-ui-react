@@ -33,8 +33,10 @@ describe('Login Page', function() {
     expect(browser.driver.getCurrentUrl()).toContain('idbroker.webex.com');
   });
 
-  it('should just login', function() {
-    login.login(testuser.username, testuser.password);
+  it('should login to the requested users page', function() {
+    login.setLoginPassword(testuser.password);
+    login.clickLoginSubmit();
+    navigation.expectCurrentUrl('/users');
   });
 
   it('should logout', function() {

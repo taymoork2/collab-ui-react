@@ -1,8 +1,7 @@
 'use strict';
 
 exports.config = {
-  // Uses ChromeDriver directly instead of selenium server
-  chromeOnly: true,
+  directConnect: true,
 
   capabilities: {
     'browserName': 'chrome',
@@ -13,7 +12,7 @@ exports.config = {
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: 'http://localhost:8000',
+  baseUrl: 'http://127.0.0.1:8000',
 
   onPrepare: function() {
     require('jasmine-reporters');

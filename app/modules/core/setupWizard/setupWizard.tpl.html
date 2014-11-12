@@ -59,9 +59,9 @@
     </div>
 
     <!-- service setup views -->
-    <div ng-if="isHuronEnabled()" ng-show="tabs.serviceSetup" class="wiz-view" ng-controller="serviceSetupCtrl">
+    <div ng-if="isHuronEnabled()" ng-show="tabs.serviceSetup" class="wiz-view" ng-controller="serviceSetupCtrl" style="display:flex; flex-direction: column;">
       <div class="wizard-main-title" translate="firstTimeWizard.unifiedCommunication"></div>
-      <form class="container-fluid" role="form">
+      <form class="container-fluid" role="form" style="flex: 1; overflow-y: auto;">
         <div class="form-group row">
           <label for="timeZone" class="wizard-large-label" translate="serviceSetupModal.timeZone"></label>
           <p translate="serviceSetupModal.tzDescription"></p>

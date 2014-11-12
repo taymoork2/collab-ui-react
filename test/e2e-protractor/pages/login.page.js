@@ -45,7 +45,7 @@ var LoginPage = function(){
     browser.get('#/login');
   };
 
-  this.login = function(username,password) {
+  this.login = function(username,password,expectedUrl) {
     this.get();
     this.loginButton.click();
     browser.driver.wait(this.isLoginUsernamePresent);
@@ -54,21 +54,12 @@ var LoginPage = function(){
     browser.driver.wait(this.isLoginPasswordPresent);
     this.setLoginPassword(password);
     this.clickLoginSubmit();
-    navigation.expectDriverCurrentUrl('/home');
+    navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/home');
     browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 
   this.partnerlogin = function(username,password) {
-    this.get();
-    this.loginButton.click();
-    browser.driver.wait(this.isLoginUsernamePresent);
-    this.setLoginUsername(username);
-    this.clickLoginNext();
-    browser.driver.wait(this.isLoginPasswordPresent);
-    this.setLoginPassword(password);
-    this.clickLoginSubmit();
-    navigation.expectCurrentUrl('/partnerhome');
-    browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
+    this.login(username,password,'/partnerhome');
   };
 
   this.loginSSO = function(username,password) {
