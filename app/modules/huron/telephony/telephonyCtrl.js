@@ -64,7 +64,7 @@ angular.module('Huron')
             var userLine = {
               'dnUsage': getDnType(userDnInfo[i].dnUsage),
               'uuid': userDnInfo[i].directoryNumber.uuid,
-              'pattern': userDnInfo[i].directoryNumber.pattern.replace(/\\/g, '')
+              'pattern': userDnInfo[i].directoryNumber.pattern
             };
             userDnList.push(userLine);
           }
@@ -110,7 +110,7 @@ angular.module('Huron')
       $scope.showDirectoryNumberPanel = function (value) {
         TelephonyInfoService.updateCurrentDirectoryNumber(value);
         if (value === 'new') {
-          $state.go('users.list.preview.directorynumber.add');
+          $state.go('users.list.preview.adddirectorynumber');
         }
         $state.go('users.list.preview.directorynumber');
       };

@@ -13,36 +13,65 @@ angular.module('Huron')
       $scope.forwardExternalCalls = false;
       $scope.forwardOptions = [];
       $scope.validForwardOptions = [];
+      $scope.assignedInternalNumber = {};
+      $scope.assignedExternalNumber = {};
 
       $scope.directoryNumber = DirectoryNumber.getNewDirectoryNumber();
+      $scope.altDirectoryNumber = {};
 
       var init = function () {
         $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-
-        if ($scope.telephonyInfo.voicemail === 'On') {
-          if (!_.contains($scope.validForwardOptions, 'Voicemail')) {
-            $scope.validForwardOptions.push('Voicemail');
-          }
-        }
-
-        if (typeof $scope.telephonyInfo.currentDirectoryNumber !== 'undefined' && $scope.telephonyInfo.currentDirectoryNumber !== 'new') {
-          DirectoryNumber.getDirectoryNumber($scope.telephonyInfo.currentDirectoryNumber.uuid).then(function (dn) {
-            $scope.directoryNumber = dn;
-            initCallForward();
-            initCallerId();
-          });
-        } else { // add new dn case
-          initCallForward();
-          initCallerId();
-        }
-
+        /*
+         * The internal number api takes a while moved the init code into the callback
+         * so that all objects are in the scope
+         */
         DirectoryNumber.getInternalNumberPool().then(function (internalNumberPool) {
           $scope.internalNumberPool = internalNumberPool;
-        });
+        
 
-        DirectoryNumber.getExternalNumberPool().then(function (externalNumberPool) {
-          $scope.externalNumberPool = externalNumberPool;
+          DirectoryNumber.getExternalNumberPool().then(function (externalNumberPool) {
+            $scope.externalNumberPool = externalNumberPool;
+          });
+
+          if ($scope.telephonyInfo.voicemail === 'On') {
+            if (!_.contains($scope.validForwardOptions, 'Voicemail')) {
+              $scope.validForwardOptions.push('Voicemail');
+            }
+          }
+
+          if (typeof $scope.telephonyInfo.currentDirectoryNumber !== 'undefined' && $scope.telephonyInfo.currentDirectoryNumber !== 'new') {
+            DirectoryNumber.getDirectoryNumber($scope.telephonyInfo.currentDirectoryNumber.uuid).then(function (dn) {
+              var internalNumber = {
+                'uuid' : dn.uuid,
+                'pattern' : dn.pattern
+              };
+
+              $scope.directoryNumber = dn;
+              $scope.internalNumberPool.push(internalNumber); 
+              $scope.assignedInternalNumber = internalNumber;
+
+              initCallForward();
+              initCallerId();
+            });
+
+            DirectoryNumber.getAlternateNumber($scope.telephonyInfo.currentDirectoryNumber.uuid).then(function (altDn) {
+              if (typeof altDn !== 'undefined') {
+                var externalNumber = {
+                  'uuid' : altDn.uuid,
+                  'pattern' : altDn.numMask
+                };
+
+                $scope.externalNumberPool.push(externalNumber); 
+                $scope.assignedExternalNumber = externalNumber;
+                TelephonyInfoService.updateAlternateDirectoryNumber(externalNumber);
+              }
+            });
+          } else { // add new dn case
+            initCallForward();
+            initCallerId();
+          }
         });
+        
       }
 
       $scope.$on('telephonyInfoUpdated', function () {
@@ -50,14 +79,36 @@ angular.module('Huron')
       });
 
       $scope.saveDirectoryNumber = function () {
-        processCallerId();
+        /*processCallerId();
         processCallForward();
 
-        if (typeof $scope.directoryNumber.uuid !== 'undefined') {
-          DirectoryNumber.updateDirectoryNumber($scope.directoryNumber);
+        if (typeof $scope.directoryNumber.uuid !== 'undefined' && $scope.directoryNumber.uuid !== '') { // existing internal line
+          if ($scope.directoryNumber !== $scope.telephonyInfo.currentDirectoryNumber.uuid) { // changing internal line
+            DirectoryNumber.deleteDirectoryNumber($scope.directoryNumber.uuid).then(function () {
+              DirectoryNumber.createDirectoryNumber($scope.currentUser.uuid, $scope.telephonyInfo.currentDirectoryNumber.dnUsage).then(function (dn) {
+                TelephonyInfoService.updateCurrentDirectoryNumber(dn);
+              });
+            });
+          } else {
+            DirectoryNumber.updateDirectoryNumber($scope.directoryNumber);
+          }
+        } else { // new internal line
+          DirectoryNumber.createDirectoryNumber($scope.currentUser.id, 'Primary', $scope.assignedInternalNumber.pattern).then(function (dn) {
+            TelephonyInfoService.updateCurrentDirectoryNumber(dn);
+          });
+        }*/
+
+        if ((typeof $scope.assignedExternalNumber !== 'undefined') && (typeof $scope.telephonyInfo.alternateDirectoryNumber !== 'undefined') && ($scope.telephonyInfo.alternateDirectoryNumber !== null)) {
+          if ($scope.telephonyInfo.alternateDirectoryNumber.uuid !== $scope.assignedExternalNumber.uuid) {
+            DirectoryNumber.deleteAlternateNumber($scope.directoryNumber.uuid,$scope.telephonyInfo.alternateDirectoryNumber)
+              .then(function () {
+                DirectoryNumber.updateAlternateNumber($scope.directoryNumber.uuid,$scope.assignedExternalNumber);                
+              });                  
+          }
         } else {
-          // TODO: make magic happen
+          DirectoryNumber.updateAlternateNumber($scope.directoryNumber.uuid,$scope.assignedExternalNumber);
         }
+        init();
       };
 
       // Caller ID Radio Button Model

@@ -71,6 +71,10 @@ angular.module('Huron')
           $rootScope.$broadcast(broadcastEvent);
         },
 
+        updateAlternateDirectoryNumber: function (alternateNumber) {
+          telephonyInfo.alternateDirectoryNumber = alternateNumber;
+        },
+
         getRemoteDestinationInfo: function (user) {
           var deferred = $q.defer();
           RemoteDestinationService.query({

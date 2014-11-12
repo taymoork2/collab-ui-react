@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .factory('DirectoryNumber', ['$filter', 'Authinfo', 'Log', 'Notification', 'TelephonyInfoService', 'UserDirectoryNumberDetailService', 'InternalNumberPoolService', 'ExternalNumberPoolService',
-    function ($filter, Authinfo, Log, Notification, TelephonyInfoService, UserDirectoryNumberDetailService, InternalNumberPoolService, ExternalNumberPoolService) {
+  .factory('DirectoryNumber', ['$filter', 'Authinfo', 'Log', 'Notification', 'TelephonyInfoService', 'UserDirectoryNumberDetailService', 'InternalNumberPoolService', 'ExternalNumberPoolService', 'AlternateNumberService', 'HuronAssignedLine',
+    function ($filter, Authinfo, Log, Notification, TelephonyInfoService, UserDirectoryNumberDetailService, InternalNumberPoolService, ExternalNumberPoolService, AlternateNumberService, HuronAssignedLine) {
 
       var directoryNumberPayload = {
         uuid: '',
@@ -82,8 +82,15 @@ angular.module('Huron')
             });
         },
 
-        createDirectoryNumber: function (_directoryNumber) {
+        deleteDirectoryNumber: function (uuid) {
+          return UserDirectoryNumberDetailService.delete({
+            customerId: Authinfo.getOrgId(),
+            directoryNumberId: uuid
+          }).$promise;
+        },
 
+        createDirectoryNumber: function (userId, dnUsage, dnPattern) {
+          return HuronAssignedLine.assignDirectoryNumber(userId, dnUsage, dnPattern);
         },
 
         updateDirectoryNumber: function (_directoryNumber) {
@@ -107,37 +114,84 @@ angular.module('Huron')
             });
         },
 
-        getAlternateNumber: function (uuid, dnUuid) {
-          return UserDirectoryNumberDetailService.get({
-            customerId: Authinfo.getOrgId(),
-            directoryNumberId: dnUuid,
-            alternateNumberId: uuid
-          }).$promise;
+        changeInternalNumber: function (oldDnId, newDnId) {
+          return this.deleteDirectoryNumber(oldDnId)
+            .then(function () {
+
+            }).$promise;
         },
+
+        getAlternateNumber: function (dnUuid) {
+          return AlternateNumberService.query({
+              customerId: Authinfo.getOrgId(),
+              directoryNumberId: dnUuid,
+              alternatenumbertype: 'Enterprise Number'
+            }).$promise
+            .then(function (altNumbers) {
+              if (angular.isArray(altNumbers) && altNumbers.length > 0) {
+                return AlternateNumberService.get({
+                  customerId: Authinfo.getOrgId(),
+                  directoryNumberId: dnUuid,
+                  alternateNumberId: altNumbers[0].uuid
+                }).$promise;
+              }
+            });
+        },
+
+        updateAlternateNumber: function (dnUuid,altNum) {
+          //remove hardcoding when multi-site requirements are figured out
+          var routePartition = Authinfo.getOrgId() + '_000000_E164_RP'
+          
+          //remove directory number once CMI has been fixed
+          var alternateNumber = { 
+            'directoryNumber' : {
+              'uuid' : dnUuid
+            },
+            'numMask' : altNum.pattern,
+            'routePartition' : {
+              'name' : routePartition
+            }
+          };
+
+          return AlternateNumberService.save({
+              customerId: Authinfo.getOrgId(),
+              directoryNumberId: dnUuid
+            },alternateNumber).$promise;
+        },  
+
+        deleteAlternateNumber: function (dnUuid,altNum) {
+          return AlternateNumberService.delete({
+              customerId: Authinfo.getOrgId(),
+              directoryNumberId: dnUuid,
+              alternateNumberId: altNum.uuid
+            }).$promise;
+        },    
 
         getInternalNumberPool: function () {
           return InternalNumberPoolService.query({
-              customerId: Authinfo.getOrgId()
+              customerId: Authinfo.getOrgId(),
+              directorynumber: ''
             }).$promise
             .then(function (internalNumbers) {
               var telephonyInfo = TelephonyInfoService.getTelephonyInfo();
               if (angular.isArray(internalNumbers) && typeof telephonyInfo.currentDirectoryNumber !== 'undefined' && telephonyInfo.currentDirectoryNumber !== 'new') {
                 internalNumbers.push(telephonyInfo.currentDirectoryNumber);
-                return internalNumbers;
               }
+              return internalNumbers;
             });
         },
 
         getExternalNumberPool: function () {
           return ExternalNumberPoolService.query({
-              customerId: Authinfo.getOrgId()
+              customerId: Authinfo.getOrgId(),
+              directorynumber: ''
             }).$promise
             .then(function (externalNumbers) {
               var telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-              if (angular.isArray(externalNumbers) && typeof telephonyInfo.currentDirectoryNumber !== 'undefined' && telephonyInfo.currentDirectoryNumber !== 'new') {
+              if (angular.isArray(externalNumbers) && typeof telephonyInfo.currentAlternateNumber !== 'undefined') {
                 externalNumbers.push(telephonyInfo.currentDirectoryNumber);
-                return externalNumbers;
               }
+              return externalNumbers;
             });
         }
 

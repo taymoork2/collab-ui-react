@@ -5,34 +5,64 @@ angular.module('Huron')
     function (Authinfo, InternalNumberPoolService, DirectoryNumberCopyService) {
       var lineTemplate;
       var assignedLine;
-
+     
       return {
-        assignDirectoryNumber: function (uuid, dnUsage) {
+        assignDirectoryNumber: function (userUuid, dnUsage, dnPattern) {
           if (typeof dnUsage === 'undefined') {
             dnUsage = 'Primary';
           }
-          return DirectoryNumberCopyService.query({
-              customerId: Authinfo.getOrgId()
-            }).$promise
-            .then(function (lineTemplates) {
-              var siteId = Authinfo.getOrgId() + '_000001_ULT'
-              if (angular.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
-                for (var i = 0; i < lineTemplates.choice.length; i++) {
-                  if (siteId === lineTemplates.choice[i].value) {
-                    lineTemplate = lineTemplates.choice[i];
-                  }
+          if (typeof dnPattern === 'undefined') {
+            return this.autoAssignDn(userUuid, dnUsage);
+          } else {
+            return this.assignDn(userUuid, dnUsage, dnPattern);
+          }
+        },
+        autoAssignDn: function (userUuid, dnUsage) {
+        return DirectoryNumberCopyService.query({
+            customerId: Authinfo.getOrgId()
+          }).$promise
+          .then(function (lineTemplates) {
+            var siteId = Authinfo.getOrgId() + '_000001_ULT'
+            if (angular.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
+              angular.forEach(lineTemplates.choice, function(dataset) {
+                 if (siteId === dataset.value) {
+                  lineTemplate = dataset;
+                } 
+              });
+            }
+            return this.getUnassignedDirectoryNumber();
+          }.bind(this))
+          .then(function (directoryNumber) {
+            assignedLine = directoryNumber;
+            return this.copyFromUlt(directoryNumber, dnUsage, userUuid)
+          }.bind(this))
+          .then(function () {
+            return assignedLine;
+          });
+        },
+        assignDn: function (userUuid, dnUsage, dnPattern) {
+        return DirectoryNumberCopyService.query({
+            customerId: Authinfo.getOrgId()
+          }).$promise
+          .then(function (lineTemplates) {
+            var siteId = Authinfo.getOrgId() + '_000001_ULT'
+            if (angular.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
+              for (var i = 0; i < lineTemplates.choice.length; i++) {
+                if (siteId === lineTemplates.choice[i].value) {
+                  lineTemplate = lineTemplates.choice[i];
                 }
               }
-              return this.getUnassignedDirectoryNumber();
-            }.bind(this))
-            .then(function (directoryNumber) {
-              assignedLine = directoryNumber;
-              return this.copyFromUlt(directoryNumber, dnUsage, uuid)
-            }.bind(this))
-            .then(function () {
-              return assignedLine;
-            });
+            }
+            var directoryNumber = {
+              'pattern': dnPattern
+            };
+            return this.copyFromUlt(directoryNumber, dnUsage, userUuid)
+          }.bind(this))
+          .then(function () {
+            return assignedLine;
+          });
         },
+
         getUnassignedDirectoryNumber: function () {
           return InternalNumberPoolService.query({
               customerId: Authinfo.getOrgId(),

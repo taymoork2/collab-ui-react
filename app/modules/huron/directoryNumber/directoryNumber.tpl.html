@@ -4,7 +4,7 @@
     {{'directoryNumberPanel.internalNumberLabel' | translate}}<br>
     {{'directoryNumberPanel.internalNumberExtension' | translate}}<span class="asterix">*</span>
   </label>
-  <select ng-model="assignedInternalNumber.id" class="form-control" id="internalNumber" ng-options="unassignedNumber.id as unassignedNumber.pattern for unassignedNumber in internalNumberPool">
+  <select ng-model="$parent.assignedInternalNumber" class="form-control" id="internalNumber" ng-options="directoryNumber.pattern for directoryNumber in internalNumberPool">
     <option value="">{{'directoryNumberPanel.addNewNumber' | translate}}</option>
   </select>
 </div>
@@ -12,7 +12,7 @@
   <label for="externalNumber">
     {{'directoryNumberPanel.externalNumberLabel' | translate}}
   </label>
-  <select ng-model="directoryNumber" class="form-control" id="externalNumber" ng-options="directoryNumber.pattern for directoryNumber in externalNumberPool">
+  <select ng-model="$parent.assignedExternalNumber" class="form-control" id="externalNumber" ng-options="directoryNumber.pattern for directoryNumber in externalNumberPool">
     <option value="">{{'directoryNumberPanel.none' | translate}}</option>
   </select>
 </div>
