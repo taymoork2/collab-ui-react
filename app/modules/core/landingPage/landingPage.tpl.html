@@ -43,16 +43,56 @@
   </div>
   <div class="landing-content row">
     <section class="analytics-charts col-md-9">
-      <h3>
-      <span translate="homePage.activity"></span><span ng-click="manualReload(false)" class="overview-updated" id="time-click-div">:
-      <cr-reload-data id="homeRefreshData" last-updated-time="homeRefreshTime"></cr-reload-data>
-      </span>
-      </h3>
-      <div id="activeUsersLegend"></div>
-      <!-- <div class="chartBackground"></div> -->
-      <div id="activeUsersChart"></div>
-      <div id="au-graph-refresh" class="au-graph-refresh" ng-show="showAUGraphRefresh"></div>
+
+      <div class="trialTitle">
+        <span translate="homePage.activity"></span><span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">:
+        <cr-reload-data id="homeRefreshData" last-updated-time="refreshTime"></cr-reload-data>
+        </span>
+      </div>
+  
+
+      <section class="tab-reports background-white">
+        <tabset justified="true" class="largetabs">
+          <tab select="resizeCallsChart()">
+            <tab-heading>
+              <span translate="homePage.calls"></span>
+              <div class="total">{{counts.calls}}</div>
+            </tab-heading>
+            <div id="callsChart" class="tab-report"></div>
+            <div class="report-status">
+              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('calls')"></i>
+              <span translate="status.noResults" ng-if="isEmpty('calls')"></span>
+              <span translate="status.errorProcessing" ng-if="hasError('calls')"></span>
+            </div>
+          </tab>
+          <tab select="resizeConversationsChart()">
+            <tab-heading>
+              <span translate="homePage.conversations"></span>
+              <div class="total">{{counts.conversations}}</div>
+            </tab-heading>
+            <div id="conversationsChart" class="tab-report"></div>
+            <div class="report-status">
+              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('conversations')"></i>
+              <span translate="status.noResults" ng-if="isEmpty('conversations')"></span>
+              <span translate="status.errorProcessing" ng-if="hasError('conversations')"></span>
+            </div>
+          </tab>
+          <tab select="resizeContentSharedChart()">
+            <tab-heading>
+              <span translate="homePage.contentShared"></span>
+              <div class="total">{{counts.contentShared}}</div>
+            </tab-heading>
+            <div id="contentSharedChart" class="tab-report"></div>
+            <div class="report-status">
+              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('contentShared')"></i>
+              <span translate="status.noResults" ng-if="isEmpty('contentShared')"></span>
+              <span translate="status.errorProcessing" ng-if="hasError('contentShared')"></span>
+            </div>
+          </tab>
+        </tabset>
+      </section>
     </section>
+
     <div class="widgets col-md-3">
       <div class="row">
         <!-- TODO: To be removed when monitoring service is refactored-->

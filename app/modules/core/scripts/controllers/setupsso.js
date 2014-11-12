@@ -143,9 +143,9 @@ angular.module('Core')
             $scope.url = (window.URL || window.webkitURL).createObjectURL(blob);
           } else {
             Log.debug('Failed to Export Identity Broker SP Metadata. Status: ' + status);
-            Notification.notify([$translate.instant('ssoModal.downloadMetaFailed', {
-              status: status
-            })], 'error');
+            // Notification.notify([$translate.instant('ssoModal.downloadMetaFailed', {
+            //   status: status
+            // })], 'error');
           }
         });
       };

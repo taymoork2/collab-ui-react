@@ -71,7 +71,7 @@ describe('App flow', function() {
       expect(landing.devices.isDisplayed()).toBeTruthy();
       expect(landing.licenses.isDisplayed()).toBeTruthy();
       expect(landing.unlicencedUsers.isDisplayed()).toBeTruthy();
-      expect(landing.activeUsersChart.isDisplayed()).toBeTruthy();
+      expect(landing.callsChart.isDisplayed()).toBeTruthy();
     });
 
     // it('clicking on quick setup launch should open a dialog and change the page', function(){
@@ -143,7 +143,7 @@ describe('App flow', function() {
       // expect(landing.conversations.isDisplayed()).toBeTruthy();
       // expect(landing.contentShare.isDisplayed()).toBeTruthy();
       // expect(landing.homeSetup.isDisplayed()).toBeTruthy();
-      expect(landing.activeUsersChart.isDisplayed()).toBeTruthy();
+      expect(landing.callsChart.isDisplayed()).toBeTruthy();
     });
 
     it('should load new values and update time when clicking refresh', function() {
@@ -155,7 +155,7 @@ describe('App flow', function() {
       // expect(landing.conversations.isDisplayed()).toBeTruthy();
       // expect(landing.contentShare.isDisplayed()).toBeTruthy();
       // expect(landing.homeSetup.isDisplayed()).toBeTruthy();
-      expect(landing.activeUsersChart.isDisplayed()).toBeTruthy();
+      expect(landing.callsChart.isDisplayed()).toBeTruthy();
     });
   });
 

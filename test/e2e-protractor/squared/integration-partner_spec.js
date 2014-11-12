@@ -82,7 +82,7 @@ describe('Partner flow', function() {
     });
 
     it('should edit an exisiting trial', function(){
-      partner.newTrialRow.click();
+      utils.click(partner.newTrialRow);
 
       utils.expectIsDisplayed(partner.editTrialButton);
       partner.editTrialButton.click();

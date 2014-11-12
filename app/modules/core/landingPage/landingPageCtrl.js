@@ -6,187 +6,192 @@ angular.module('Core')
   .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config',
     function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config) {
 
-      $('#au-graph-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
-      $('#au-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
-      $('#calls-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
-      $('#convo-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
-      $('#share-refresh').html('<i class=\'icon icon-spinner icon-spin icon-2x\'></i>');
+      $scope.isAdmin = false;
+      var responseTime;
+      var callsChart, conversationsChart, contentSharedChart;
 
-      $('#activeUsersChart').addClass('chart-border');
+      $scope.counts = {};
+      $scope.refreshTime;
 
       $scope.statusPageUrl = Config.getStatusPageUrl();
 
-      var chartValuesLoaded = false;
-      var callMetricLoaded = false;
-      var convMetricLoaded = false;
-      var contentLoaded = false;
-      var auMetricLoaded = false;
+      $scope.reportStatus = {
+        calls: 'refresh',
+        conversations: 'refresh',
+        contentShared: 'refresh'
+      };
 
-      var chartVals = [];
+      $scope.isRefresh = function (property) {
+        return $scope.reportStatus[property] === 'refresh';
+      };
 
-      $scope.isAdmin = false;
-      var responseTime;
+      $scope.isEmpty = function (property) {
+        return $scope.reportStatus[property] === 'empty';
+      };
 
-      var allValuesLoaded = function () {
-        if (chartValuesLoaded && callMetricLoaded && convMetricLoaded && contentLoaded && auMetricLoaded) {
-          $scope.homeRefreshTime = responseTime;
+      $scope.hasError = function (property) {
+        return $scope.reportStatus[property] === 'error';
+      };
+
+      $scope.reloadReports = function (useCache) {
+        $scope.reportStatus['calls'] = 'refresh';
+        $scope.reportStatus['conversations'] = 'refresh';
+        $scope.reportStatus['contentShared'] = 'refresh';
+        ReportsService.getAllMetrics(useCache);
+      };
+
+      ReportsService.getAllMetrics(true);
+
+      var makeChart = function (id, colors) {
+        return AmCharts.makeChart(id, {
+          'type': 'serial',
+          'theme': 'none',
+          'fontFamily': 'CiscoSansTT Thin',
+          'colors': colors,
+          'graphs': [{
+            'type': 'column',
+            'fillAlphas': 1,
+            'lineAlpha': 0,
+            'hidden': false,
+            'valueField': 'count',
+            'ballooonText': '[[value]]'
+          }],
+          'plotAreaBorderAlpha': 1,
+          'plotAreaBorderColor': '#DDDDDD',
+          'marginTop': 10,
+          'marginLeft': 0,
+          'marginBottom': 0,
+          'categoryField': 'date',
+          'categoryAxis': {
+            'gridPosition': 'start',
+            'axisColor': '#DDDDDD',
+            'gridAlpha': 1,
+            'gridColor': '#DDDDDD',
+            'color': '#999999'
+          },
+          'valueAxes': [{
+            'axisColor': '#DDDDDD',
+            'gridAlpha': 0,
+            'axisAlpha': 1,
+            'color': '#999999'
+          }]
+        });
+      };
+
+      var buildChart = function (id, data) {
+        return makeChart(id, ['#FF5F44']);
+      };
+
+      var formatDates = function (dataList) {
+        if (angular.isArray(dataList)) {
+          for (var i = 0; i < dataList.length; i++) {
+            var dateVal = new Date(dataList[i].date);
+            dateVal = dateVal.toDateString();
+            dataList[i].date = dateVal.substring(dateVal.indexOf(' ') + 1);
+          }
         }
       };
 
-      $scope.manualReload = function (backendCache) {
-
-        if (backendCache === null) {
-          backendCache = true;
+      var updateChart = function (chart, data) {
+        formatDates(data);
+        if (chart) {
+          chart.dataProvider = data;
+          chart.validateData();
         }
-
-        chartValuesLoaded = false;
-        callMetricLoaded = false;
-        convMetricLoaded = false;
-        contentLoaded = false;
-        auMetricLoaded = false;
-
-        ReportsService.getAllMetrics(backendCache);
-        getHealthMetrics();
-
-        $scope.showAUGraphRefresh = true;
-        $scope.showAURefresh = true;
-        $scope.showCallsRefresh = true;
-        $scope.showConvoRefresh = true;
-        $scope.showShareRefresh = true;
-
-        $scope.showAUGraph = false;
-        $scope.showAUContent = false;
-        $scope.showCallsContent = false;
-        $scope.showConvoContent = false;
-        $scope.showShareContent = false;
       };
 
-      $scope.$on('activeUserCountLoaded', function (event, response) {
-        $scope.activeUserCount = 0;
-        auMetricLoaded = true;
+      var loadDataCallback = function (chart, response, property) {
         if (response.data.success) {
           if (response.data.length !== 0) {
-            responseTime = response.data.date;
-            $scope.showAURefresh = false;
-            $scope.showAUContent = true;
-            $scope.activeUserCount = response.data.data;
+            $scope.refreshTime = response.data.date;
+            var data = response.data.data;
+            if (data.length >= 0) {
+              updateChart(chart, data);
+            }
+            $scope.reportStatus[property] = 'ready';
           } else {
-            $('#au-refresh').html('<span>No results available.</span>');
+            $scope.reportStatus[property] = 'empty';
           }
         } else {
-          Log.debug('Query active users failed. Status: ' + response.status);
-          $('#au-refresh').html('<span>Error processing request</span>');
+          $scope.reportStatus[property] = 'error';
         }
-      });
-
-      var getMetricData = function (dataList, metric) {
-        var count = 0;
-        for (var i = 0; i < dataList.length; i++) {
-          var val = {};
-          if (chartVals[i]) {
-            val = chartVals[i];
-          }
-
-          val[metric] = dataList[i].count;
-          var dateVal = new Date(dataList[i].date);
-          dateVal = dateVal.toDateString();
-          val.week = dateVal.substring(dateVal.indexOf(' ') + 1);
-          chartVals[i] = val;
-          count += dataList[i].count;
-        }
-        chartValuesLoaded = true;
-        allValuesLoaded();
-        return count;
       };
 
-      $scope.$on('callsLoaded', function (event, response) {
-        $scope.callsCount = 0;
-        callMetricLoaded = true;
-        allValuesLoaded();
-        if (response.data.success) {
-          if (response.data.length !== 0) {
-            responseTime = response.data.date;
-            var calls = response.data.data;
-            if (calls.length >= 0) {
-              $scope.callsCount = getMetricData(calls, 'calls');
-            }
-            $scope.showCallsRefresh = false;
-            $scope.showCallsContent = true;
-          } else {
-            $('#calls-refresh').html('<span>No results available.</span>');
-          }
-          makeChart(chartVals);
-        } else {
-          Log.debug('Query calls metrics failed. Status: ' + response.status);
-          $('#calls-refresh').html('<span>Error processing request</span>');
+      var buildCallsChart = function () {
+        if (!callsChart) {
+          callsChart = buildChart('callsChart');
         }
-      });
+      };
 
-      $scope.$on('conversationsLoaded', function (event, response) {
-        $scope.convoCount = 0;
-        convMetricLoaded = true;
-        allValuesLoaded();
-        if (response.data.success) {
-          if (response.data.length !== 0) {
-            responseTime = response.data.date;
-            var convos = response.data.data;
-            if (convos.length >= 0) {
-              $scope.convoCount = getMetricData(convos, 'convos');
-            }
-            $scope.showConvoRefresh = false;
-            $scope.showConvoContent = true;
-          } else {
-            $('#convo-refresh').html('<span>No results available.</span>');
-          }
-          makeChart(chartVals);
-        } else {
-          Log.debug('Query conversation metrics failed. Status: ' + response.status);
-          $('#convo-refresh').html('<span>Error processing request</span>');
+      var buildConversationsChart = function () {
+        if (!conversationsChart) {
+          conversationsChart = buildChart('conversationsChart');
         }
-      });
+      };
 
-      $scope.$on('contentSharedLoaded', function (event, response) {
-        $scope.cShareCount = 0;
-        contentLoaded = true;
-        allValuesLoaded();
-        if (response.data.success) {
-          if (response.data.length !== 0) {
-            responseTime = response.data.date;
-            var cShares = response.data.data;
-            if (cShares.length >= 0) {
-              var countVal = getMetricData(cShares, 'share');
-              $scope.cShareCount = countVal.toFixed(4);
-            }
-            $scope.showShareRefresh = false;
-            $scope.showShareContent = true;
-          } else {
-            $('#share-refresh').html('<span>No results available.</span>');
-          }
-          makeChart(chartVals);
-        } else {
-          Log.debug('Query content share metrics failed. Status: ' + response.status);
-          $('#share-refresh').html('<span>Error processing request</span>');
+      var buildContentSharedChart = function () {
+        if (!contentSharedChart) {
+          contentSharedChart = buildChart('contentSharedChart');
         }
-      });
+      };
 
-      $scope.$on('activeUsersLoaded', function (event, response) {
-        var auCount = 0;
-        allValuesLoaded();
+      var loadCalls = function (event, response) {
+        buildCallsChart();
+        loadDataCallback(callsChart, response, 'calls');
+      };
+
+      var loadConversations = function (event, response) {
+        buildConversationsChart();
+        loadDataCallback(conversationsChart, response, 'conversations');
+      };
+
+      var loadContentShared = function (event, response) {
+        buildContentSharedChart();
+        loadDataCallback(contentSharedChart, response, 'contentShared');
+      };
+
+      var loadCallsCount = function (event, response) {
         if (response.data.success) {
-          if (response.data.length !== 0) {
-            responseTime = response.data.date;
-            var aUsers = response.data.data;
-            if (aUsers.length >= 0) {
-              auCount = getMetricData(aUsers, 'users');
-            }
-            makeChart(chartVals);
-          } else {
-            Log.debug('No results for active users metrics.');
-          }
-        } else {
-          Log.debug('Query active users metrics failed. Status: ' + response.status);
+          $scope.counts.calls = Math.round(response.data.data);
         }
-      });
+      };
+
+      var loadConversationsCount = function (event, response) {
+        if (response.data.success) {
+          $scope.counts.conversations = Math.round(response.data.data);
+        }
+      };
+
+      var loadContentSharedCount = function (event, response) {
+        if (response.data.success) {
+          $scope.counts.contentShared = Math.round(response.data.data);
+        }
+      };
+
+      $scope.$on('callsLoaded', loadCalls);
+      $scope.$on('conversationsLoaded', loadConversations);
+      $scope.$on('contentSharedLoaded', loadContentShared);
+      $scope.$on('callsCountLoaded', loadCallsCount);
+      $scope.$on('conversationsCountLoaded', loadConversationsCount);
+      $scope.$on('contentSharedCountLoaded', loadContentSharedCount);
+
+      $scope.resizeCallsChart = function () {
+        if (callsChart) {
+          callsChart.invalidateSize();
+        }
+      };
+
+      $scope.resizeConversationsChart = function () {
+        if (conversationsChart) {
+          conversationsChart.invalidateSize();
+        }
+      };
+
+      $scope.resizeContentSharedChart = function () {
+        if (contentSharedChart) {
+          contentSharedChart.invalidateSize();
+        }
+      };
 
       var getHealthMetrics = function () {
         ReportsService.healthMonitor(function (data, status) {
@@ -286,93 +291,12 @@ angular.module('Core')
         });
       };
 
-      var makeChart = function (sdata) {
-        $scope.showAUGraph = true;
-        $scope.showAUGraphRefresh = false;
-        var homeChart = AmCharts.makeChart('activeUsersChart', {
-          'type': 'serial',
-          'theme': 'none',
-          'fontFamily': 'CiscoSansTT Thin',
-          'colors': ['#1EA7D1', '#F46315', '#EBC31C', '#50D71D'],
-          'legend': {
-            'divId': 'activeUsersLegend',
-            'equalWidths': false,
-            'periodValueText': '[[value.sum]]',
-            'position': 'top',
-            'align': 'left',
-            'valueWidth': 10,
-            'fontSize': 30,
-            'markerType': 'none',
-            'spacing': 0,
-            'valueAlign': 'right',
-            'useMarkerColorForLabels': true,
-            'useMarkerColorForValues': true,
-            'marginLeft': -20,
-            'marginRight': 0
-          },
-          'dataProvider': sdata,
-          'graphs': [{
-            'fillAlphas': 0,
-            'lineAlpha': 1,
-            'hidden': false,
-            'title': 'Calls',
-            'valueField': 'calls'
-          }, {
-            'fillAlphas': 0,
-            'lineAlpha': 1,
-            'hidden': false,
-            'title': 'Conversations',
-            'valueField': 'convos'
-          }, {
-            'fillAlphas': 0,
-            'lineAlpha': 1,
-            'hidden': false,
-            'title': 'Content',
-            'valueField': 'share'
-          }],
-          'plotAreaBorderAlpha': 1,
-          'plotAreaBorderColor': '#DDDDDD',
-          'backgroundColor': '#ffffff',
-          'backgroundAlpha': 1,
-          'marginTop': 20,
-          'marginRight': 20,
-          'marginBottom': 10,
-          'marginLeft': 10,
-          'chartCursor': {
-            'valueLineEnabled': true,
-            'valueLineBalloonEnabled': true,
-            'cursorColor': '#AFB0B3',
-            'valueBalloonsEnabled': false,
-            'cursorPosition': 'mouse'
-          },
-          'categoryField': 'week',
-          'categoryAxis': {
-            'startOnAxis': true,
-            'axisColor': '#DDDDDD',
-            'gridAlpha': 1,
-            'gridColor': '#DDDDDD',
-            'color': '#999999'
-          },
-          'valueAxes': [{
-            'stackType': 'regular',
-            'axisColor': '#DDDDDD',
-            'gridAlpha': 0,
-            'axisAlpha': 1,
-            'color': '#999999'
-          }]
-
-        });
-
-      };
-
-      $scope.manualReload(true);
       $scope.isAdmin = Auth.isUserAdmin();
+      getHealthMetrics();
 
       $scope.$on('AuthinfoUpdated', function () {
-        $scope.manualReload(true);
         $scope.isAdmin = Auth.isUserAdmin();
       });
 
-      var chart = makeChart(chartVals);
     }
   ]);

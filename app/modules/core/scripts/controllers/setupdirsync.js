@@ -40,9 +40,9 @@ angular.module('Core')
             }
           } else {
             Log.debug('Failed to retrieve directory sync configuration. Status: ' + status);
-            Notification.notify([$translate.instant('dirsyncModal.getDomainFailed', {
-              status: status
-            })], 'error');
+            // Notification.notify([$translate.instant('dirsyncModal.getDomainFailed', {
+            //   status: status
+            // })], 'error');
           }
         });
       };

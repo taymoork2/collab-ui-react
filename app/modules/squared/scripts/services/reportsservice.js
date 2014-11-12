@@ -9,6 +9,8 @@ angular.module('Squared')
       var token = Storage.get('accessToken');
       var callMetricsUrl = apiUrl + 'reports/stats/callUsage';
       var activeUsersUrl = apiUrl + 'reports/counts/activeUsers';
+      var callsUrl = apiUrl + 'reports/counts/calls';
+      var conversationsUrl = apiUrl + 'reports/counts/conversations';
       var timeChartUrl = apiUrl + 'reports/timeCharts/';
       var logInfoBaseUrl = apiUrl + 'reports/tables/calls/';
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
@@ -21,7 +23,9 @@ angular.module('Squared')
         'activeUserCount': activeUsersUrl,
         'averageCallCount': averageCallCount,
         'entitlementCount': entitlementCount,
-        'contentSharedCount': contentSharedCount
+        'contentSharedCount': contentSharedCount,
+        'callsCount': callsUrl,
+        'conversationsCount': conversationsUrl
       };
 
       var buildUrl = function (metricType, params) {
@@ -115,7 +119,10 @@ angular.module('Squared')
             'cache': useCache
           };
 
-          this.getUsageMetrics('activeUserCount', params);
+          var customerCounts = ['callsCount', 'conversationsCount', 'contentSharedCount'];
+          for (var chart in customerCounts) {
+            this.getUsageMetrics(customerCounts[chart], params);
+          }
 
           params = {
             'intervalCount': 1,
@@ -130,7 +137,7 @@ angular.module('Squared')
             'calls', 'callsAvgDuration'
           ];
 
-          for (var chart in customerCharts) {
+          for (chart in customerCharts) {
             this.getUsageMetrics(customerCharts[chart], params);
           }
         },
