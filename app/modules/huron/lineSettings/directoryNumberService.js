@@ -138,34 +138,34 @@ angular.module('Huron')
             });
         },
 
-        updateAlternateNumber: function (dnUuid,altNum) {
+        updateAlternateNumber: function (dnUuid, altNum) {
           //remove hardcoding when multi-site requirements are figured out
           var routePartition = Authinfo.getOrgId() + '_000000_E164_RP'
-          
+
           //remove directory number once CMI has been fixed
-          var alternateNumber = { 
-            'directoryNumber' : {
-              'uuid' : dnUuid
+          var alternateNumber = {
+            'directoryNumber': {
+              'uuid': dnUuid
             },
-            'numMask' : altNum.pattern,
-            'routePartition' : {
-              'name' : routePartition
+            'numMask': altNum.pattern,
+            'routePartition': {
+              'name': routePartition
             }
           };
 
           return AlternateNumberService.save({
-              customerId: Authinfo.getOrgId(),
-              directoryNumberId: dnUuid
-            },alternateNumber).$promise;
-        },  
+            customerId: Authinfo.getOrgId(),
+            directoryNumberId: dnUuid
+          }, alternateNumber).$promise;
+        },
 
-        deleteAlternateNumber: function (dnUuid,altNum) {
+        deleteAlternateNumber: function (dnUuid, altNum) {
           return AlternateNumberService.delete({
-              customerId: Authinfo.getOrgId(),
-              directoryNumberId: dnUuid,
-              alternateNumberId: altNum.uuid
-            }).$promise;
-        },    
+            customerId: Authinfo.getOrgId(),
+            directoryNumberId: dnUuid,
+            alternateNumberId: altNum.uuid
+          }).$promise;
+        },
 
         getInternalNumberPool: function () {
           return InternalNumberPoolService.query({

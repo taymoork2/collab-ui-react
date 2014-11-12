@@ -27,7 +27,6 @@ angular.module('Huron')
          */
         DirectoryNumber.getInternalNumberPool().then(function (internalNumberPool) {
           $scope.internalNumberPool = internalNumberPool;
-        
 
           DirectoryNumber.getExternalNumberPool().then(function (externalNumberPool) {
             $scope.externalNumberPool = externalNumberPool;
@@ -42,12 +41,12 @@ angular.module('Huron')
           if (typeof $scope.telephonyInfo.currentDirectoryNumber !== 'undefined' && $scope.telephonyInfo.currentDirectoryNumber !== 'new') {
             DirectoryNumber.getDirectoryNumber($scope.telephonyInfo.currentDirectoryNumber.uuid).then(function (dn) {
               var internalNumber = {
-                'uuid' : dn.uuid,
-                'pattern' : dn.pattern
+                'uuid': dn.uuid,
+                'pattern': dn.pattern
               };
 
               $scope.directoryNumber = dn;
-              $scope.internalNumberPool.push(internalNumber); 
+              $scope.internalNumberPool.push(internalNumber);
               $scope.assignedInternalNumber = internalNumber;
 
               initCallForward();
@@ -57,11 +56,11 @@ angular.module('Huron')
             DirectoryNumber.getAlternateNumber($scope.telephonyInfo.currentDirectoryNumber.uuid).then(function (altDn) {
               if (typeof altDn !== 'undefined') {
                 var externalNumber = {
-                  'uuid' : altDn.uuid,
-                  'pattern' : altDn.numMask
+                  'uuid': altDn.uuid,
+                  'pattern': altDn.numMask
                 };
 
-                $scope.externalNumberPool.push(externalNumber); 
+                $scope.externalNumberPool.push(externalNumber);
                 $scope.assignedExternalNumber = externalNumber;
                 TelephonyInfoService.updateAlternateDirectoryNumber(externalNumber);
               }
@@ -71,7 +70,7 @@ angular.module('Huron')
             initCallerId();
           }
         });
-        
+
       }
 
       $scope.$on('telephonyInfoUpdated', function () {
@@ -100,13 +99,13 @@ angular.module('Huron')
 
         if ((typeof $scope.assignedExternalNumber !== 'undefined') && (typeof $scope.telephonyInfo.alternateDirectoryNumber !== 'undefined') && ($scope.telephonyInfo.alternateDirectoryNumber !== null)) {
           if ($scope.telephonyInfo.alternateDirectoryNumber.uuid !== $scope.assignedExternalNumber.uuid) {
-            DirectoryNumber.deleteAlternateNumber($scope.directoryNumber.uuid,$scope.telephonyInfo.alternateDirectoryNumber)
+            DirectoryNumber.deleteAlternateNumber($scope.directoryNumber.uuid, $scope.telephonyInfo.alternateDirectoryNumber)
               .then(function () {
-                DirectoryNumber.updateAlternateNumber($scope.directoryNumber.uuid,$scope.assignedExternalNumber);                
-              });                  
+                DirectoryNumber.updateAlternateNumber($scope.directoryNumber.uuid, $scope.assignedExternalNumber);
+              });
           }
         } else {
-          DirectoryNumber.updateAlternateNumber($scope.directoryNumber.uuid,$scope.assignedExternalNumber);
+          DirectoryNumber.updateAlternateNumber($scope.directoryNumber.uuid, $scope.assignedExternalNumber);
         }
         init();
       };

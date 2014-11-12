@@ -7,14 +7,14 @@
         <div class="wizard-menu-title" translate="firstTimeWizard.planReview"></div>
         <div class="wizard-menu-subtitle" translate="firstTimeWizard.planReviewSub"></div>
       </div>
-      <div class="icon icon-home"></div>
+      <div class="icon icon-plan-review"></div>
     </div>
     <div ng-if="isHuronEnabled()" class="wizard-side-item row" ng-class="{'wizard-nav-active': tabs.serviceSetup}" id="wizard-serviceSetup-link" ng-click="changeTab('serviceSetup')">
       <div class="wizard-menu-text">
         <div class="wizard-menu-title" translate="firstTimeWizard.serviceSetup"></div>
         <div class="wizard-menu-subtitle" translate="firstTimeWizard.serviceSetupSub"></div>
       </div>
-      <div class="icon icon-settings"></div>
+      <div class="icon icon-tools"></div>
     </div>
     <div class="wizard-side-item row" ng-class="{'wizard-nav-active': tabs.enterpriseSettings}" id="wizard-enterpriseSettings-link" ng-click="changeTab('enterpriseSettings')">
       <div class="wizard-menu-text">
@@ -31,7 +31,7 @@
           <span ng-class="{'wizard-subtitle-active':steps.domainEntry}" ng-click="changeStep('domainEntry');$event.stopPropagation()" translate="firstTimeWizard.advanced"></span>
         </div>
       </div>
-      <div class="icon icon-user"></div>
+      <div class="icon icon-add-users"></div>
     </div>
     <div class="wizard-side-item row" ng-class="{'wizard-nav-active': tabs.finish}" id="wizard-finish-link" ng-click="changeTab('finish')">
       <div class="wizard-menu-text">
