@@ -360,6 +360,15 @@
       "version": "Version",
       "status": "Status",
       "alarms": "Alarms"
+    },
+    "status": {
+        "unknown": "Unknown",
+        "not_configured": "Not Configured",
+        "installing": "Installing",
+        "running": "Running",
+        "disabled": "Disabled",
+        "not_installed": "Not Installed",
+        "stopped": "Stopped"
     }
   },
   "firstTimeWizard": {

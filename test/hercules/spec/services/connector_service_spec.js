@@ -47,19 +47,18 @@ describe('Service: ConnectorService', function () {
     }];
     var converted = Service._convert(mockData);
     expect(converted[0].status.state).toBe('unknown');
-    expect(converted[0].status.status).toBe('error');
-    expect(converted[0].status_code).toBe('error');
+    expect(converted[0].status_code).toBe('unknown');
   });
 
-  it('should inject classes based on status', function () {
+  it('should inject classes based on state', function () {
     var converted = null;
-    converted = Service._convert([{ status: { status: 'ok' } }]);
+    converted = Service._convert([{ status: { state: 'running' } }]);
     expect(converted[0].status_class).toBe('success');
 
-    converted = Service._convert([{ status: { status: 'warning' } }]);
-    expect(converted[0].status_class).toBe('warning');
+    converted = Service._convert([{ status: { state: 'foo' } }]);
+    expect(converted[0].status_class).toBe('danger');
 
-    converted = Service._convert([{ status: { status: Math.random() } }]);
+    converted = Service._convert([{ status: { state:  'running', alerts: [{}] } }]);
     expect(converted[0].status_class).toBe('danger');
   });
 
