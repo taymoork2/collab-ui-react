@@ -78,10 +78,12 @@ angular.module('Huron')
       });
 
       $scope.saveDirectoryNumber = function () {
-        /*processCallerId();
+        processCallerId();
         processCallForward();
 
-        if (typeof $scope.directoryNumber.uuid !== 'undefined' && $scope.directoryNumber.uuid !== '') { // existing internal line
+        DirectoryNumber.updateDirectoryNumber($scope.directoryNumber);
+
+        /*if (typeof $scope.directoryNumber.uuid !== 'undefined' && $scope.directoryNumber.uuid !== '') { // existing internal line
           if ($scope.directoryNumber !== $scope.telephonyInfo.currentDirectoryNumber.uuid) { // changing internal line
             DirectoryNumber.deleteDirectoryNumber($scope.directoryNumber.uuid).then(function () {
               DirectoryNumber.createDirectoryNumber($scope.currentUser.uuid, $scope.telephonyInfo.currentDirectoryNumber.dnUsage).then(function (dn) {
