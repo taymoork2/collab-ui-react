@@ -455,6 +455,7 @@
     "cancelButton": "Cancel"
   },
   "telephonyPreview": {
+    "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
   },
@@ -466,7 +467,7 @@
     "internalNumberLabel": "Reach this line by any of these numbers or extensions",
     "internalNumberExtension": "Internal Number Extension",
     "externalNumberLabel": "External Number",
-    "chooseNumber": "choose a number",
+    "chooseNumber": "Choose a Number",
     "addNewNumber": "Add a New Number",
     "none": "None"
   },
@@ -494,7 +495,8 @@
     "snrNote": "SNR can cover all the user's lines or limited to specific lines",
     "success": "Single Number Reach configuration saved successfully",
     "removeSuccess": "Single Number Reach configuration removed successfully",
-    "error": "Single Number Reach configuration failed"
+    "error": "Single Number Reach configuration failed",
+    "placeholder": "Enter SNR Number"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",

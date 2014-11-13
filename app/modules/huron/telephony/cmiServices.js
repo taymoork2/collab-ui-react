@@ -96,6 +96,13 @@ angular.module('Huron')
     customerId: '@customerId',
     directoryNumberId: '@directoryNumberId',
     alternateNumberId: '@alternateNumberId'
+  }, {
+    save: {
+      method: 'POST',
+      headers: {
+        'Access-Control-Expose-Headers': 'Location'
+      }
+    }
   });
 })
 
@@ -107,6 +114,12 @@ angular.module('Huron')
     query: {
       method: 'GET',
       isArray: false
+    },
+    save: {
+      method: 'POST',
+      headers: {
+        'Access-Control-Expose-Headers': 'Location'
+      }
     }
   });
 })

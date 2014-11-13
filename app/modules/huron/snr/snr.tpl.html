@@ -5,10 +5,10 @@
       <div>
         {{'singleNumberReachPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="telephonyInfo.snrInfo.singleNumberReachEnabled"></cs-switchbutton><br><br>
         <div class="form-group" ng-show="telephonyInfo.snrInfo.singleNumberReachEnabled">
-            <div class="col-sm-5">
-              <input type="text" class="form-control" id="number" ng-model="telephonyInfo.snrInfo.destination" ng-disabled="!telephonyInfo.snrInfo.singleNumberReachEnabled">
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="number" ng-model="telephonyInfo.snrInfo.destination" ng-disabled="!telephonyInfo.snrInfo.singleNumberReachEnabled" placeholder="{{'singleNumberReachPanel.placeholder' | translate}}">
             </div>
-            <label class="control-label" for="number">*</label>
+            <span class="asterix">*</span>
           </div>
         <div ng-show="false">
           <p class="text-muted">{{'singleNumberReachPanel.snrNote' | translate}}</p>

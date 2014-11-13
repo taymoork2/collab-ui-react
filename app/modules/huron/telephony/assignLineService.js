@@ -8,8 +8,8 @@ angular.module('Huron')
 
       return {
         assignDirectoryNumber: function (userUuid, dnUsage, dnPattern) {
-          if (typeof dnUsage === 'undefined') {
-            dnUsage = 'Primary';
+          if (typeof dnUsage === 'undefined' || dnUsage === '') {
+            dnUsage = 'Undefined';
           }
           if (typeof dnPattern === 'undefined') {
             return this.autoAssignDn(userUuid, dnUsage);
@@ -57,10 +57,7 @@ angular.module('Huron')
                 'pattern': dnPattern
               };
               return this.copyFromUlt(directoryNumber, dnUsage, userUuid)
-            }.bind(this))
-            .then(function () {
-              return assignedLine;
-            });
+            }.bind(this));
         },
 
         getUnassignedDirectoryNumber: function () {
@@ -74,6 +71,7 @@ angular.module('Huron')
               }
             });
         },
+
         copyFromUlt: function (directoryNumber, dnUsage, userUuid) {
           var copyFromUlt = {
             'pattern': directoryNumber.pattern,
@@ -88,8 +86,12 @@ angular.module('Huron')
           return DirectoryNumberCopyService.save({
             customerId: Authinfo.getOrgId(),
             ultId: lineTemplate.uuid
-          }, copyFromUlt).$promise;
+          }, copyFromUlt, function (data, headers) {
+            data.uuid = headers('location').split("/").pop();
+            return data;
+          }).$promise;
         }
+
       };
     }
   ]);

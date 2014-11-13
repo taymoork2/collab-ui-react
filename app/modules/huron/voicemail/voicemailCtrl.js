@@ -42,16 +42,16 @@ angular.module('Huron')
 
           if (typeof $scope.directoryNumber === 'undefined') {
             for (var i = 0; i < $scope.telephonyInfo.directoryNumbers.length; i++) {
-              if ($scope.telephonyInfo.directoryNumbers[i].dnUsage === 'Main') {
+              if ($scope.telephonyInfo.directoryNumbers[i].dnUsage === 'Primary') {
                 $scope.voicemailPayload.voicemail = {
-                  'dtmfAccessId': $scope.telephonyInfo.directoryNumbers[i].pattern.substr(1)
+                  'dtmfAccessId': $scope.telephonyInfo.directoryNumbers[i].pattern
                 };
                 $scope.voicemailPayload.userId = $scope.currentUser.userName;
               }
             }
           } else {
             $scope.voicemailPayload.voicemail = {
-              'dtmfAccessId': $scope.directoryNumber.pattern.substr(1)
+              'dtmfAccessId': $scope.directoryNumber.pattern
             };
           }
         } else {
