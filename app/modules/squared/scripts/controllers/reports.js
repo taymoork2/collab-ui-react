@@ -18,22 +18,34 @@ angular.module('Squared')
 
       var chartVals = [];
 
+      var formatDates = function (dataList) {
+        if (angular.isArray(dataList)) {
+          for (var i = 0; i < dataList.length; i++) {
+            var dateVal = new Date(dataList[i].week);
+            dateVal = dateVal.toDateString();
+            dataList[i].week = dateVal.substring(dateVal.indexOf(' ') + 1);
+          }
+        }
+      };
+
+      var currentDate = new Date();
+
       var dummyChartVals = [{
         'convOneOnOne': 0,
-        'week': 'Oct 13',
+        'week': (currentDate.setDate(currentDate.getDate() + 7)),
         'convGroup': 0
       }, {
         'convGroup': 0,
-        'week': 'Oct 20'
+        'week': (currentDate.setDate(currentDate.getDate() + 7))
       }, {
         'convGroup': 0,
-        'week': 'Oct 27'
+        'week': (currentDate.setDate(currentDate.getDate() + 7))
       }, {
         'convGroup': 0,
-        'week': 'Nov 03'
+        'week': (currentDate.setDate(currentDate.getDate() + 7))
       }, {
         'convGroup': 0,
-        'week': 'Nov 10'
+        'week': (currentDate.setDate(currentDate.getDate() + 7))
       }];
 
       var entitlementsLoaded = false;
@@ -221,6 +233,7 @@ angular.module('Squared')
       };
 
       var makeTimeChart = function (sdata, divName, metricName, title, color, operation, shouldShowCursor) {
+<<<<<<< HEAD
         console.log(JSON.stringify(sdata));
         console.log(divName);
         console.log(metricName);
@@ -229,6 +242,10 @@ angular.module('Squared')
         console.log(operation);
         console.log(shouldShowCursor);
         if (sdata.length === 0) {
+=======
+        if (sdata.length === 0) {
+          formatDates(dummyChartVals);
+>>>>>>> US624 - no data on reports page @ rev 2092530
           sdata = dummyChartVals;
         }
         var homeChart = AmCharts.makeChart(divName, {

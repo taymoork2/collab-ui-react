@@ -144,7 +144,7 @@ angular.module('Huron')
 
           //remove directory number once CMI has been fixed
           var alternateNumber = {
-            'alternateNumberType' : '+E.164 Number',
+            'alternateNumberType': '+E.164 Number',
             'directoryNumber': {
               'uuid': dnUuid
             },
