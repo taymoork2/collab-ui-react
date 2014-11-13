@@ -43,7 +43,17 @@ angular.module('Hercules')
           c.display_name = c.display_name || c.connector_type;
           c.status_code = c.status.state;
 
-          c.status_class = c.status.state == 'running' ? 'success' : 'danger';
+          switch (c.status.state) {
+          case 'running':
+            c.status_class = 'success';
+            break;
+          case 'disabled':
+            c.status_class = 'default';
+            break;
+          default:
+            c.status_class = 'danger';
+          }
+
           if (c.status.alerts && c.status.alerts.length) {
             c.status_class = 'danger';
           }
