@@ -14,7 +14,8 @@ angular.module('Core')
         'services': null,
         'roles': null,
         'tabs': [],
-        'isInitialized': false
+        'isInitialized': false,
+        'setupDone': false
       };
 
       var getTabTitle = function (title) {
@@ -101,6 +102,7 @@ angular.module('Core')
           $rootScope.services = data.services;
           authData.isInitialized = true;
           $rootScope.$broadcast('AuthinfoUpdated');
+          authData.setupDone = data.setupDone;
         },
 
         clear: function () {
@@ -114,6 +116,7 @@ angular.module('Core')
           authData.tabs = [];
           authData.roles = null;
           authData.isInitialized = false;
+          authData.setupDone = null;
         },
 
         getOrgName: function () {
@@ -148,6 +151,10 @@ angular.module('Core')
           return authData.roles;
         },
 
+        getSetupDone: function () {
+          return authData.setupDone;
+        },
+
         getTabs: function () {
           return authData.tabs;
         },
@@ -163,6 +170,11 @@ angular.module('Core')
         isAdmin: function () {
           var roles = this.getRoles();
           return roles.indexOf('Full_Admin') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
+        },
+
+        isCustomerAdmin: function () {
+          var roles = this.getRoles();
+          return roles.indexOf('Full_Admin') > -1;
         },
 
         isPartner: function () {

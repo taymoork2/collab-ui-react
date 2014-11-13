@@ -85,6 +85,7 @@ describe('First Time Wizard', function() {
 
   it('should close the first time wizard and log out', function() {
     wizard.closeBtn.click();
+    browser.sleep(1000);
     navigation.logout();
   });
 });

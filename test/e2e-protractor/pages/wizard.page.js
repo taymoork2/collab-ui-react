@@ -23,6 +23,7 @@ var Wizard = function() {
 	this.toInstallConnectorBtn = element.all(by.css('[ng-click="changeStep(\'installConnector\')"]'));
 	this.toSyncStatusBtn = element.all(by.css('[ng-click="changeStep(\'syncStatus\')"]'));
 	this.closeBtn = element(by.css('[ng-click="finish()"]'));
+	this.finishTab = element(by.css('#wizard-finish-link'));
 
 	this.clickPlanReview = function() {
 		this.reviewTab.click();

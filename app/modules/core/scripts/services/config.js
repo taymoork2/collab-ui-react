@@ -298,14 +298,14 @@ angular.module('Core')
 
       config.roleStates = {
         Full_Admin: [
-          'home', 'users', 'userprofile', 'spaces', 'orgs', 'reports', 'setupwizardmodal'
+          'home', 'users', 'userprofile', 'spaces', 'orgs', 'reports', 'setupwizardmodal', 'firsttimewizard'
         ],
         WX2_User: ['home', 'reports', 'support'],
         WX2_Support: ['home', 'reports', 'support'],
         WX2_SquaredInviter: [],
         User: [],
-        PARTNER_ADMIN: [],
-        PARTNER_USER: ['partnerhome', 'customers', 'partnerreports']
+        PARTNER_ADMIN: ['partnerhome', 'customers', 'partnerreports'],
+        PARTNER_USER: ['partnerhome', 'partnerreports']
       };
 
       config.serviceStates = {

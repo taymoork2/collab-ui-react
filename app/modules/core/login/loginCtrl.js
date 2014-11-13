@@ -25,21 +25,25 @@ angular.module('Core')
 
         var currentOrgId = SessionStorage.get('customerOrgId');
         Auth.authorize($rootScope.token).then(function () {
-          var path = 'home';
-          var params;
-          if (PageParam.getRoute()) {
-            path = PageParam.getRoute();
-          } else if (SessionStorage.get(storedState)) {
-            path = SessionStorage.pop(storedState);
-            params = SessionStorage.popObject(storedParams);
-          } else if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
-            path = 'partnerhome';
-          }
-          $rootScope.services = Authinfo.getServices();
+          if (!Authinfo.getSetupDone() && Authinfo.isCustomerAdmin()) {
+            $state.go('firsttimewizard');
+          } else {
+            var path = 'home';
+            var params;
+            if (PageParam.getRoute()) {
+              path = PageParam.getRoute();
+            } else if (SessionStorage.get(storedState)) {
+              path = SessionStorage.pop(storedState);
+              params = SessionStorage.popObject(storedParams);
+            } else if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
+              path = 'partnerhome';
+            }
+            $rootScope.services = Authinfo.getServices();
 
-          $timeout(function () {
-            $state.go(path, params);
-          }, loadingDelay);
+            $timeout(function () {
+              $state.go(path, params);
+            }, loadingDelay);
+          }
         }).catch(function (error) {
           if (error) {
             $timeout(function () {

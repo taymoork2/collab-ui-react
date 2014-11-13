@@ -109,7 +109,7 @@ describe('Partner flow', function() {
 
   describe('Partner launches customer portal', function(){
 
-    it('Launch customer portal via preview panel',function(){
+    it('Launch customer portal via preview panel and display first time wizard',function(){
       var appWindow = browser.getWindowHandle();
 
       expect(partner.launchCustomerPanelButton.isDisplayed()).toBeTruthy();
@@ -118,8 +118,15 @@ describe('Partner flow', function() {
       browser.getAllWindowHandles().then(function(handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
-        navigation.expectDriverCurrentUrl('login');
-        navigation.expectDriverCurrentUrl(partner.newTrial.customerName);
+        navigation.expectDriverCurrentUrl('firsttimewizard');
+        utils.expectIsDisplayed(wizard.wizard);
+        utils.expectIsDisplayed(wizard.leftNav);
+        utils.expectIsDisplayed(wizard.mainView);
+        wizard.finishTab.click();
+        expect(wizard.mainviewTitles.get(11).getText()).toEqual('Get Started');
+        expect(wizard.mainviewTitles.get(11).isDisplayed()).toBeTruthy();
+        wizard.closeBtn.click();
+        navigation.expectDriverCurrentUrl('home');
         expect(navigation.tabs.isDisplayed()).toBeTruthy();
         browser.driver.close();
         browser.switchTo().window(appWindow);

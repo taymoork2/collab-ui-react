@@ -4,7 +4,7 @@ angular.module('Squared')
   .service('PartnerService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Log', 'Authinfo', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
 
-      var trialsUrl = Config.getAdminServiceUrl() + 'trials';
+      var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
       return {
 

@@ -46,6 +46,25 @@ angular.module('Core')
               callback(data, status);
               Auth.handleStatus(status);
             });
+        },
+
+        setSetupDone: function (callback) {
+          var adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/setup';
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http({
+              method: 'PATCH',
+              url: adminUrl
+            })
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
         }
 
       };

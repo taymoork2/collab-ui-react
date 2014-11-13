@@ -62,13 +62,34 @@ angular.module('Core')
   }
 ])
 
-.controller('SettingsMenuCtrl', ['$scope', '$location', '$state',
-  function ($scope, $location, $state) {
+.controller('SettingsMenuCtrl', ['$scope', '$location', '$state', 'Authinfo', 'Utils',
+  function ($scope, $location, $state, Authinfo, Utils) {
 
-    $scope.menuItems = [{
-      link: '/initialsetup',
-      title: 'Initial Setup'
-    }];
+    $scope.menuItems = [];
+
+    var getAuthinfoData = function () {
+      var found = false;
+      if (Authinfo.isCustomerAdmin()) {
+        for (var i = 0, l = $scope.menuItems.length; i < l; i++) {
+          if ($scope.menuItems[i].title === 'Initial Setup') {
+            found = true;
+          }
+        }
+        if (!found) {
+          $scope.menuItems.push({
+            link: '/initialsetup',
+            title: 'Initial Setup'
+          });
+        }
+      }
+    };
+    if (Utils.isAdminPage()) {
+      getAuthinfoData();
+    }
+    //update the scope when Authinfo data has been populated.
+    $scope.$on('AuthinfoUpdated', function () {
+      getAuthinfoData();
+    });
 
     $scope.doAction = function (path) {
       if (path === '/initialsetup') {
