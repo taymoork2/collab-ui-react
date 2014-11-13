@@ -6,6 +6,8 @@ angular.module('Core')
 
       var loadingDelay = 2000;
       var logoutDelay = 5000;
+      var storedState = 'storedState';
+      var storedParams = 'storedParams';
 
       var pageParam = $location.search().pp;
       if (pageParam) {
@@ -24,17 +26,19 @@ angular.module('Core')
         var currentOrgId = SessionStorage.get('customerOrgId');
         Auth.authorize($rootScope.token).then(function () {
           var path = 'home';
+          var params;
           if (PageParam.getRoute()) {
             path = PageParam.getRoute();
-          }
-
-          if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
+          } else if (SessionStorage.get(storedState)) {
+            path = SessionStorage.pop(storedState);
+            params = SessionStorage.popObject(storedParams);
+          } else if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
             path = 'partnerhome';
           }
           $rootScope.services = Authinfo.getServices();
 
           $timeout(function () {
-            $state.go(path);
+            $state.go(path, params);
           }, loadingDelay);
         }).catch(function (error) {
           if (error) {

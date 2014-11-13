@@ -1,8 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'Log', '$interval', '$document', 'Config', '$state',
-    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage',
+    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state, SessionStorage) {
 
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
@@ -13,7 +13,9 @@ angular
       //Enable logging
       $rootScope.debug = true;
 
-      $rootScope.$on('$stateChangeStart', function (e, to) {
+      var storedState = 'storedState';
+      var storedParams = 'storedParams';
+      $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
         if (typeof to.authenticate === 'undefined' || to.authenticate) {
           if (Authinfo.isInitialized()) {
             if (!Authinfo.isAllowedState(to.name)) {
@@ -26,12 +28,16 @@ angular
             if ($rootScope.token) {
               Auth.authorize($rootScope.token)
                 .then(function () {
-                  $state.go(to.name);
+                  $state.go(to.name, toParams);
                 })
                 .catch(function () {
+                  SessionStorage.put(storedState, to.name);
+                  SessionStorage.putObject(storedParams, toParams);
                   $state.go('login');
                 });
             } else {
+              SessionStorage.put(storedState, to.name);
+              SessionStorage.putObject(storedParams, toParams);
               $state.go('login');
             }
           }
@@ -65,31 +71,6 @@ angular
           Log.debug('No access code data.');
         }
       }
-
-      // var timerClock = Config.tokenTimers.timeoutTimer; //50 minutes
-      // var startTimer = function () {
-      //   Log.debug('starting session timer...');
-      //   var timer = $interval(function () {
-      //       $interval.cancel(timer);
-      //       //force logout when 50 minutes of inactivity
-      //       Auth.logout();
-      //     },
-      //     timerClock
-      //   );
-
-      //   return timer;
-      // };
-
-      // var logoutTimer = startTimer();
-
-      // $document.on(
-      //   'click',
-      //   function (event) {
-      //     Log.debug('received click event, extending session...');
-      //     $interval.cancel(logoutTimer);
-      //     logoutTimer = startTimer();
-      //   }
-      // );
 
       var refreshToken = function () {
         var refreshTimer = $interval(function () {
