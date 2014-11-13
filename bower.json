@@ -21,7 +21,7 @@
     "angular-wizard": "~0.4.0",
     "base64": "~0.2.0",
     "bootstrap": "=3.1.1",
-    "bootstrap-cisco": "=0.1.13",
+    "bootstrap-cisco": "~1.0.0",
     "bootstrap-cisco-ng": "=0.1.13",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",
