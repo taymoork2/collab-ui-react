@@ -70,8 +70,6 @@ angular.module('Core')
             tabs.splice(i--, 1);
           }
         }
-        // TODO this shouldn't be needed - refactor how active state is set
-        $rootScope.tabs = tabs;
 
         //Localize tabs
         for (var index in tabs) {

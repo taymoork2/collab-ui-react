@@ -18,10 +18,7 @@ describe('Fusion Page', function() {
   });
 
   it('should navigate to the fusion page and display something', function() {
-    navigation.manageTab.click();
-    element(by.css('a[href="#fusion"]')).click();
-
-    navigation.expectCurrentUrl('/fusion');
+    navigation.clickFusion();
     expect(browser.driver.isElementPresent(by.id('fusion-root'))).toBe(true);
   });
 

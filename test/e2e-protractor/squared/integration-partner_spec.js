@@ -20,7 +20,7 @@ describe('Partner flow', function() {
     it('should display correct tabs for user based on role', function() {
       expect(navigation.getTabCount()).toBe(3);
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
-      expect(navigation.manageTab.isDisplayed()).toBeTruthy();
+      expect(navigation.customersTab.isDisplayed()).toBeTruthy();
       expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
     });
     it('should display trials list', function() {
@@ -126,7 +126,7 @@ describe('Partner flow', function() {
         expect(wizard.mainviewTitles.get(11).getText()).toEqual('Get Started');
         expect(wizard.mainviewTitles.get(11).isDisplayed()).toBeTruthy();
         wizard.closeBtn.click();
-        navigation.expectDriverCurrentUrl('home');
+        navigation.expectDriverCurrentUrl('overview');
         expect(navigation.tabs.isDisplayed()).toBeTruthy();
         browser.driver.close();
         browser.switchTo().window(appWindow);
@@ -207,16 +207,13 @@ describe('Partner flow', function() {
 
     it('should load refresh directive template', function() {
       navigation.clickReports();
-      navigation.expectCurrentUrl('/partnerreports');
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
     });
 
     it('should load cached values into directive when switching tabs', function() {
       navigation.clickHome();
-      navigation.expectCurrentUrl('/partnerhome');
       navigation.clickReports();
-      navigation.expectCurrentUrl('/partnerreports');
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
       expect(reports.entitlements.isDisplayed()).toBeTruthy();

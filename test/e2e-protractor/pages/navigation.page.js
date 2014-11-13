@@ -4,15 +4,16 @@ var Navigation = function(){
 
   this.tabs = element(by.css('cs-left-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
-  this.homeTab = element(by.css('li.homeTab > a'));
-  this.manageTab = element(by.css('li.orgTab > a'))
-  this.usersTab = element(by.css('a[href="#users"]'));
-  this.orgTab = element(by.css('a[href="#orgs"]'));
+  this.homeTab = element(by.css('li.overviewTab > a'));
+  this.usersTab = element(by.css('li.userTab > a'));
+  this.orgTab = element(by.css('a[href="#organization"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
+  this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.supportTab = element(by.css('li.supportTab > a'));
-  this.sharedSpacesTab = element(by.css('a[href="#spaces"]'));
-  this.customersTab = element(by.css('a[href="#customers"]'));
+  this.devicesTab = element(by.css('li.deviceTab > a'));
+  this.customersTab = element(by.css('li.customerTab > a'));
+  this.developmentTab = element(by.css('li.developmentTab > a'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackButton = element(by.id('feedback-btn'));
@@ -28,39 +29,50 @@ var Navigation = function(){
 
   this.clickHome = function() {
     this.homeTab.click();
+    this.expectCurrentUrl('/overview');
   };
 
   this.clickOrganization = function() {
-    this.manageTab.click();
+    this.developmentTab.click();
     this.orgTab.click();
+    this.expectCurrentUrl('/organization');
   };
 
   this.clickCustomers = function() {
-    this.manageTab.click();
     this.customersTab.click();
+    this.expectCurrentUrl('/customers');
   };
 
   this.clickUsers = function() {
-    this.manageTab.click();
     this.usersTab.click();
+    this.expectCurrentUrl('/users');
   };
 
-  this.clickSharedSpaces = function() {
-    this.manageTab.click();
-    this.sharedSpacesTab.click();
+  this.clickDevices = function() {
+    this.devicesTab.click();
+    this.expectCurrentUrl('/devices');
   };
 
   this.clickCallRouting = function() {
-    this.manageTab.click();
+    this.developmentTab.click();
     this.callRoutingTab.click();
+    this.expectCurrentUrl('/callrouting');
   };
 
   this.clickReports = function() {
     this.reportsTab.click();
+    this.expectCurrentUrl('/reports');
   };
 
   this.clickSupport = function() {
     this.supportTab.click();
+    this.expectCurrentUrl('/support');
+  };
+
+  this.clickFusion = function() {
+    this.developmentTab.click();
+    this.fusionTab.click();
+    this.expectCurrentUrl('/fusion');
   };
 
   this.clickFirstTimeWizard = function() {

@@ -7,7 +7,7 @@ angular.module('Core')
     function ($scope, $rootScope, $state, Log, $window) {
 
       $scope.closePreview = function () {
-        $state.go('customers.list');
+        $state.go('partnercustomers.list');
       };
 
     }

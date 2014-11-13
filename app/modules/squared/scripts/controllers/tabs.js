@@ -4,18 +4,6 @@ angular.module('Squared')
   .controller('TabsCtrl', ['Config', '$rootScope', '$scope', '$location', 'Log', 'Utils', '$filter', 'Auth', 'Authinfo',
     function (Config, $rootScope, $scope, $location, Log, Utils, $filter, Auth, Authinfo) {
 
-      // TODO refactor isActive logic
-
-      $scope.tabs = Authinfo.getTabs();
-
-      $scope.$on('AuthinfoUpdated', function () {
-        $scope.tabs = Authinfo.getTabs();
-      });
-
-      $rootScope.$on('$stateChangeSuccess', function () {
-        setNavigationTab();
-      });
-
       var setNavigationTab = function () {
         resetActiveTabState();
 
@@ -42,5 +30,16 @@ angular.module('Squared')
         }
       };
 
+      $scope.tabs = Authinfo.getTabs();
+      setNavigationTab();
+
+      $scope.$on('AuthinfoUpdated', function () {
+        $scope.tabs = Authinfo.getTabs();
+        setNavigationTab();
+      });
+
+      $rootScope.$on('$stateChangeSuccess', function () {
+        setNavigationTab();
+      });
     }
   ]);

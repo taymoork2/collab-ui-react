@@ -15,7 +15,6 @@ xdescribe('Telephony Info', function() {
   it('should navigate to users page', function() {
     users.search(user,0);
     navigation.clickUsers();
-    navigation.expectCurrentUrl('/users');
     expect(users.resultUsername.getText()).toContain(user);
     users.resultUsername.click();
     expect(telephony.telephonyPanel.isDisplayed()).toBeTruthy();

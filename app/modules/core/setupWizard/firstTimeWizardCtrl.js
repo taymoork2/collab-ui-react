@@ -15,7 +15,7 @@ angular.module('Core')
             Log.debug('Failed to set setupDone for org. Status: ' + status);
           }
         });
-        $state.go('home');
+        $state.go('overview');
       };
     }
   ]);

@@ -54,12 +54,12 @@ var LoginPage = function(){
     browser.driver.wait(this.isLoginPasswordPresent);
     this.setLoginPassword(password);
     this.clickLoginSubmit();
-    navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/home');
+    navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
     browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 
   this.partnerlogin = function(username,password) {
-    this.login(username,password,'/partnerhome');
+    this.login(username,password,'/partner/overview');
   };
 
   this.loginSSO = function(username,password) {
@@ -72,7 +72,7 @@ var LoginPage = function(){
     this.setSSOUsername(username);
     this.setSSOPassword(password);
     this.clickSSOSubmit();
-    navigation.expectCurrentUrl('/home');
+    navigation.expectCurrentUrl('/overview');
     browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 
@@ -82,7 +82,7 @@ var LoginPage = function(){
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();
-    navigation.expectDriverCurrentUrl('/home');
+    navigation.expectDriverCurrentUrl('/overview');
     browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 };

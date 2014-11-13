@@ -34,16 +34,17 @@ describe('App flow', function() {
   describe('Navigation Bar', function() {
 
     it('should display correct tabs for user based on role', function() {
-      expect(navigation.getTabCount()).toBe(4);
+      expect(navigation.getTabCount()).toBe(6);
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
-      expect(navigation.manageTab.isDisplayed()).toBeTruthy();
+      expect(navigation.usersTab.isDisplayed()).toBeTruthy();
+      expect(navigation.devicesTab.isDisplayed()).toBeTruthy();
       expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
       expect(navigation.supportTab.isDisplayed()).toBeTruthy();
+      expect(navigation.developmentTab.isDisplayed()).toBeTruthy();
     });
 
     it('clicking on users tab should change the view', function() {
       navigation.clickUsers();
-      navigation.expectCurrentUrl('/users');
     });
 
     xit('should still be logged in', function() {
@@ -59,14 +60,9 @@ describe('App flow', function() {
   });
 
   describe('Switching tabs', function() {
-    xit('should have a tab bar', function() {
-      expect(navigation.tabs.isDisplayed()).toBeTruthy();
-      expect(navigation.getTabCount()).toEqual(12);
-    });
 
     it('clicking on home tab should change the view', function() {
       navigation.clickHome();
-      navigation.expectCurrentUrl('/home');
       expect(landing.packages.isDisplayed()).toBeTruthy();
       expect(landing.devices.isDisplayed()).toBeTruthy();
       expect(landing.licenses.isDisplayed()).toBeTruthy();
@@ -83,7 +79,6 @@ describe('App flow', function() {
 
     it('clicking on system health panel should open to status page in a new tab', function() {
       navigation.clickHome();
-      navigation.expectCurrentUrl('/home');
       var appWindow = browser.getWindowHandle();
       landing.monitoring.click();
       browser.getAllWindowHandles().then(function(handles) {
@@ -97,7 +92,6 @@ describe('App flow', function() {
 
     it('clicking on orgs tab should change the view', function() {
       navigation.clickOrganization();
-      navigation.expectCurrentUrl('/orgs');
       expect(manage.displayName.isDisplayed()).toBeTruthy();
       expect(manage.estimatedSize.isDisplayed()).toBeTruthy();
       expect(manage.totalUsers.isDisplayed()).toBeTruthy();
@@ -108,7 +102,6 @@ describe('App flow', function() {
 
     it('clicking on reports tab should change the view', function() {
       navigation.clickReports();
-      navigation.expectCurrentUrl('/reports');
       expect(reports.entitlements.isDisplayed()).toBeTruthy();
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
@@ -117,7 +110,6 @@ describe('App flow', function() {
 
     it('clicking on users tab should change the view', function() {
       navigation.clickUsers();
-      navigation.expectCurrentUrl('/users');
     });
   });
 
@@ -125,16 +117,13 @@ describe('App flow', function() {
 
     it('should load refresh directive template', function() {
       navigation.clickHome();
-      navigation.expectCurrentUrl('/home');
       expect(landing.reloadedTime.isDisplayed()).toBeTruthy();
       expect(landing.refreshData.isDisplayed()).toBeTruthy();
     });
 
     it('should load cached values into directive when switching tabs', function() {
       navigation.clickUsers();
-      navigation.expectCurrentUrl('/users');
       navigation.clickHome();
-      navigation.expectCurrentUrl('/home');
 
       expect(landing.reloadedTime.isDisplayed()).toBeTruthy();
       expect(landing.refreshData.isDisplayed()).toBeTruthy();
@@ -163,16 +152,13 @@ describe('App flow', function() {
 
     it('should load refresh directive template', function() {
       navigation.clickReports();
-      navigation.expectCurrentUrl('/reports');
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
     });
 
     it('should load cached values into directive when switching tabs', function() {
       navigation.clickUsers();
-      navigation.expectCurrentUrl('/users');
       navigation.clickReports();
-      navigation.expectCurrentUrl('/reports');
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
       expect(reports.entitlements.isDisplayed()).toBeTruthy();
@@ -221,7 +207,7 @@ describe('App flow', function() {
       });
 
       it('should display correct tabs for user based on role', function() {
-        expect(navigation.getTabCount()).toBe(4);
+        expect(navigation.getTabCount()).toBe(5);
         expect(navigation.homeTab.isDisplayed()).toBeTruthy();
         expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
         expect(navigation.manageTab.isDisplayed()).toBeTruthy();

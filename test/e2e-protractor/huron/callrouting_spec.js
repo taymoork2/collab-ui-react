@@ -12,7 +12,6 @@ xdescribe('Huron Call Routing', function() {
 
   it('should navigate to the page', function(){
     navigation.clickCallRouting();
-    navigation.expectCurrentUrl('/callrouting');
   });
 
   describe('Call Park feature', function(){

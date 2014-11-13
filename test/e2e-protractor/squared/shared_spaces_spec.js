@@ -13,8 +13,8 @@ describe('Shared spaces flow', function() {
     login.login(testuser.username, testuser.password);
   });
 
-  it('clicking on shared spaces tab should show the list of rooms', function() {
-    navigation.clickSharedSpaces();
+  it('clicking on devices tab should show the list of rooms', function() {
+    navigation.clickDevices();
     expect(spaces.roomsList.isDisplayed()).toBeTruthy();
     expect(spaces.addButton.isDisplayed()).toBeTruthy();
   });

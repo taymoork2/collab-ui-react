@@ -88,93 +88,73 @@ angular.module('Core')
         },
 
         tabs: [{
-          index: 0,
-          name: 'home',
-          tab: 'homeTab',
-          title: 'tabs.homeTab',
-          state: 'home',
-          link: '/home'
+          tab: 'overviewTab',
+          icon: 'icon-home',
+          title: 'tabs.overviewTab',
+          state: 'overview',
+          link: '/overview'
         }, {
-          index: 1,
-          name: 'partnerhome',
-          tab: 'homeTab',
-          title: 'tabs.homeTab',
-          state: 'partnerhome',
-          link: '/partnerhome'
+          tab: 'overviewTab',
+          icon: 'icon-home',
+          title: 'tabs.overviewTab',
+          state: 'partneroverview',
+          link: '/partner/overview'
         }, {
-          index: 2,
-          name: 'manage',
-          tab: 'orgTab',
-          title: 'tabs.orgTab',
+          tab: 'customerTab',
+          icon: 'icon-user',
+          title: 'tabs.customerTab',
+          state: 'partnercustomers',
+          link: '/partner/customers'
+        }, {
+          tab: 'userTab',
+          icon: 'icon-user',
+          title: 'tabs.userTab',
+          state: 'users',
+          link: '/users'
+        }, {
+          tab: 'deviceTab',
+          icon: 'icon-devices',
+          title: 'tabs.deviceTab',
+          state: 'devices',
+          link: '/devices'
+        }, {
+          tab: 'reportTab',
+          icon: 'icon-bars',
+          title: 'tabs.reportTab',
+          state: 'reports',
+          link: '/reports'
+        }, {
+          tab: 'reportTab',
+          icon: 'icon-bars',
+          title: 'tabs.reportTab',
+          state: 'partnerreports',
+          link: '/partner/reports'
+        }, {
+          tab: 'supportTab',
+          icon: 'icon-support',
+          title: 'tabs.supportTab',
+          state: 'support',
+          link: '/support'
+        }, {
+          tab: 'developmentTab',
+          icon: 'icon-tools',
+          title: 'tabs.developmentTab',
           subPages: [{
-            index: 0,
-            name: 'users',
-            title: 'tabs.userTab',
-            desc: 'tabs.userTabDesc',
-            state: 'users',
-            link: '#users'
+            title: 'tabs.organizationTab',
+            desc: 'tabs.organizationTabDesc',
+            state: 'organization',
+            link: '#organization'
           }, {
-            index: 1,
-            name: 'spaces',
-            title: 'tabs.spacesTab',
-            desc: 'tabs.spacesTabDesc',
-            state: 'spaces',
-            link: '#spaces',
-          }, {
-            index: 2,
-            name: 'organizations',
-            title: 'tabs.orgDetailsTab',
-            desc: 'tabs.orgDetailsTabDesc',
-            state: 'orgs',
-            link: '#orgs'
-          }, {
-            index: 3,
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
             state: 'fusion',
             link: '#fusion'
           }, {
-            index: 4,
-            name: 'callrouting',
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
             state: 'callrouting',
             link: '#callrouting'
           }]
-        }, {
-          index: 3,
-          name: 'partnermanage',
-          tab: 'orgTab',
-          title: 'tabs.orgTab',
-          subPages: [{
-            index: 0,
-            name: 'customers',
-            title: 'tabs.customersTab',
-            desc: 'tabs.customersTabDesc',
-            state: 'customers',
-            link: '#customers'
-          }]
-        }, {
-          index: 4,
-          name: 'reports',
-          tab: 'reportTab',
-          title: 'tabs.reportTab',
-          state: 'reports',
-          link: '/reports'
-        }, {
-          index: 5,
-          name: 'partnerreports',
-          tab: 'reportTab',
-          title: 'tabs.reportTab',
-          state: 'partnerreports',
-          link: '/partnerreports'
-        }, {
-          index: 6,
-          name: 'support',
-          tab: 'supportTab',
-          title: 'tabs.supportTab',
-          state: 'support',
-          link: '/support'
         }],
 
         entitlements: {
@@ -186,7 +166,7 @@ angular.module('Core')
         batchSize: 20,
 
         isDev: function () {
-          return document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('localhost') !== -1;
+          return document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('0.0.0.0') !== -1 || document.URL.indexOf('localhost') !== -1;
         },
 
         isIntegration: function () {
@@ -298,19 +278,20 @@ angular.module('Core')
 
       config.roleStates = {
         Full_Admin: [
-          'home', 'users', 'userprofile', 'spaces', 'orgs', 'reports', 'setupwizardmodal', 'firsttimewizard'
+          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard'
         ],
-        WX2_User: ['home', 'reports', 'support'],
-        WX2_Support: ['home', 'reports', 'support'],
+        WX2_User: ['overview', 'reports', 'support'],
+        WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         User: [],
-        PARTNER_ADMIN: ['partnerhome', 'customers', 'partnerreports'],
-        PARTNER_USER: ['partnerhome', 'partnerreports']
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports'],
+        PARTNER_USER: ['partneroverview', 'partnerreports']
       };
 
       config.serviceStates = {
         'ciscouc': ['callrouting'],
-        'squared-fusion-uc': ['fusion']
+        'squared-fusion-uc': ['fusion'],
+        'squared-team-member': ['organization']
       };
 
       // These states do not require a role/service check

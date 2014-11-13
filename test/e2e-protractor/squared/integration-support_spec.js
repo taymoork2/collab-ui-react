@@ -32,11 +32,13 @@ describe('Support flow', function() {
     });
 
     it('should display correct tabs for user based on role', function() {
-      expect(navigation.getTabCount()).toBe(4);
+      expect(navigation.getTabCount()).toBe(6);
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
-      expect(navigation.manageTab.isDisplayed()).toBeTruthy();
+      expect(navigation.usersTab.isDisplayed()).toBeTruthy();
+      expect(navigation.devicesTab.isDisplayed()).toBeTruthy();
       expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
       expect(navigation.supportTab.isDisplayed()).toBeTruthy();
+      expect(navigation.developmentTab.isDisplayed()).toBeTruthy();
     });
     //Test if Support tab is present
     it('should display correct tabs for user based on role', function() {
@@ -45,7 +47,6 @@ describe('Support flow', function() {
 
     it('clicking on support tab should change the view', function() {
       navigation.clickSupport();
-      navigation.expectCurrentUrl('/support');
     });
 
     it('should not display results panel initially', function() {

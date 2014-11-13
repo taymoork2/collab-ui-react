@@ -21,7 +21,19 @@ angular
               templateUrl: 'modules/core/views/main.tpl.html'
             }
           },
+          abstract: true,
           sticky: true
+        })
+        .state('partner', {
+          template: '<div ui-view></div>',
+          url: '/partner',
+          parent: 'main',
+          abstract: true
+        })
+        .state('unauthorized', {
+          url: '/unauthorized',
+          templateUrl: 'modules/squared/views/unauthorized.html',
+          parent: 'main'
         });
 
       $httpProvider.responseInterceptors.push('ResponseInterceptor');
@@ -88,14 +100,14 @@ angular
           parent: 'main',
           authenticate: false
         })
-        .state('home', {
-          url: '/home',
+        .state('overview', {
+          url: '/overview',
           templateUrl: 'modules/core/landingPage/landingPage.tpl.html',
           controller: 'LandingPageCtrl',
           parent: 'main'
         })
         .state('users', {
-          absract: true,
+          abstract: true,
           template: '<div ui-view></div>',
           parent: 'main'
         })
@@ -128,8 +140,8 @@ angular
         .state('users.list.preview.snr', {
           template: '<div single-number-reach-info></div>'
         })
-        .state('orgs', {
-          url: '/orgs',
+        .state('organization', {
+          url: '/organization',
           templateUrl: 'modules/core/views/organizations.html',
           controller: 'OrganizationsCtrl',
           parent: 'main'
@@ -158,28 +170,23 @@ angular
           controller: 'SupportCtrl',
           parent: 'main'
         })
-        .state('unauthorized', {
-          url: '/unauthorized',
-          templateUrl: 'modules/squared/views/unauthorized.html',
-          parent: 'main'
-        })
-        .state('spaces', {
-          url: '/spaces',
+        .state('devices', {
+          url: '/devices',
           templateUrl: 'modules/squared/devices/devices.html',
           controller: 'SpacesCtrl',
           parent: 'main'
         })
-        .state('partnerhome', {
-          url: '/partnerhome',
+        .state('partneroverview', {
+          parent: 'partner',
+          url: '/overview',
           templateUrl: 'modules/core/views/partnerlanding.html',
-          controller: 'PartnerHomeCtrl',
-          parent: 'main'
+          controller: 'PartnerHomeCtrl'
         })
         .state('partnerreports', {
-          url: '/partnerreports',
+          parent: 'partner',
+          url: '/reports',
           templateUrl: 'modules/squared/views/partnerreports.html',
-          controller: 'ReportsCtrl',
-          parent: 'main'
+          controller: 'ReportsCtrl'
         })
         .state('login_swap', {
           url: '/login/:customerOrgId/:customerOrgName',
@@ -191,17 +198,17 @@ angular
           },
           authenticate: false
         })
-        .state('customers', {
-          absract: true,
+        .state('partnercustomers', {
+          parent: 'partner',
           template: '<div ui-view></div>',
-          parent: 'main'
+          absract: true
         })
-        .state('customers.list', {
+        .state('partnercustomers.list', {
           url: '/customers',
           templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
           controller: 'PartnerHomeCtrl'
         })
-        .state('customers.list.preview', {
+        .state('partnercustomers.list.preview', {
           templateUrl: 'modules/core/customers/customerPreview/customerPreview.tpl.html',
           controller: 'CustomerPreviewCtrl'
         })

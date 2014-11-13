@@ -349,7 +349,7 @@ angular.module('Core')
 
       $scope.showCustomerDetails = function (customer) {
         $scope.currentTrial = customer;
-        $state.go('customers.list.preview');
+        $state.go('partnercustomers.list.preview');
       };
 
       $scope.sort = {
@@ -378,9 +378,9 @@ angular.module('Core')
       });
 
       $rootScope.$on('$stateChangeSuccess', function () {
-        if ($state.includes('customers.list.preview.*')) {
+        if ($state.includes('partnercustomers.list.preview.*')) {
           $scope.trialPreviewActive = true;
-        } else if ($state.includes('customers.list.preview')) {
+        } else if ($state.includes('partnercustomers.list.preview')) {
           $scope.trialPreviewActive = true;
         } else {
           $scope.trialPreviewActive = false;

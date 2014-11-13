@@ -32,7 +32,6 @@ describe('Customer Admin Landing Page License Info', function() {
     });
 
     it('Should display default license info', function() {
-      navigation.expectCurrentUrl('/home');
       expect(landing.packages.isDisplayed()).toBeTruthy();
       expect(landing.packagesName.getText()).toContain('Default');
       expect(landing.packagesUnlimited.isDisplayed()).toBeTruthy();
@@ -62,7 +61,6 @@ describe('Customer Admin Landing Page License Info', function() {
     });
 
     it('Should display trial license info', function() {
-      navigation.expectCurrentUrl('/home');
       expect(landing.packages.isDisplayed()).toBeTruthy();
       expect(landing.packagesName.getText()).toContain('COLLAB');
       expect(landing.packagesDaysLeft.isDisplayed()).toBeTruthy();
@@ -92,7 +90,6 @@ describe('Customer Admin Landing Page License Info', function() {
     });
 
     it('Should not display license info', function() {
-      navigation.expectCurrentUrl('/home');
       expect(landing.packages.isDisplayed()).toBeFalsy();
       expect(landing.devices.isDisplayed()).toBeFalsy();
       expect(landing.licenses.isDisplayed()).toBeFalsy();

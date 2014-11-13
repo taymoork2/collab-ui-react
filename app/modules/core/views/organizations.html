@@ -86,8 +86,8 @@
 
   <div class="panel-body">
     <div id="btncover"></div>
-      <button type="button" id="geb-wrapper" ng-csv="exportCSV()" filename="{{ 'orgsPage.csvFilename' | translate }}" ng-disabled="exportBtn.disabled">
-        <div id="global-export-btn" ng-disabled="exportBtn.disabled" class="btn btn-default"><span ng-bind-html="exportBtn.title"></span>
+      <button type="button" id="geb-wrapper" class="btn btn-default" ng-csv="exportCSV()" filename="{{ 'orgsPage.csvFilename' | translate }}" ng-disabled="exportBtn.disabled">
+        <div id="global-export-btn" ng-disabled="exportBtn.disabled"><span ng-bind-html="exportBtn.title"></span>
         </div>
       </button>
       <button ng-hide= "!org.ssoEnabled" id="btnSSO" class="btn btn-primary pull-right" ng-click="enableSSO()"><span translate="ssoModal.btnTitle"></span></button>
