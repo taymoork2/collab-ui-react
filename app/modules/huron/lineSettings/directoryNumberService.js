@@ -125,7 +125,7 @@ angular.module('Huron')
           return AlternateNumberService.query({
               customerId: Authinfo.getOrgId(),
               directoryNumberId: dnUuid,
-              alternatenumbertype: 'Enterprise Number'
+              alternatenumbertype: '+E.164 Number'
             }).$promise
             .then(function (altNumbers) {
               if (angular.isArray(altNumbers) && altNumbers.length > 0) {
@@ -144,13 +144,15 @@ angular.module('Huron')
 
           //remove directory number once CMI has been fixed
           var alternateNumber = {
+            'alternateNumberType' : '+E.164 Number',
             'directoryNumber': {
               'uuid': dnUuid
             },
             'numMask': altNum.pattern,
             'routePartition': {
               'name': routePartition
-            }
+            },
+            'addLocalRoutePartition': true
           };
 
           return AlternateNumberService.save({
