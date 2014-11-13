@@ -3,13 +3,14 @@
 angular.module('Huron')
   .factory('HuronUser', ['Authinfo', 'UserServiceCommon', 'HuronAssignedLine', 'HuronEmailService', 'UserDirectoryNumberService', 'IdentityOTPService',
     function (Authinfo, UserServiceCommon, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService) {
+      var userProfile = Authinfo.getOrgId() + '_000001_UCUP';
       var userPayload = {
         'userId': null,
         'firstName': null,
         'lastName': null,
         'email': null,
         'voice': {
-          'userProfile': 'STANDARD_USER_PROFILE'
+          'userProfile': userProfile
         },
         'services': ['VOICE'],
         'voicemail': {}
