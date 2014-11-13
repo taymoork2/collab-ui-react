@@ -35,25 +35,19 @@ angular.module('Hercules')
       var convert = function (data) {
         return _.map(data, function (connector) {
           var c = _.cloneDeep(connector);
+
           c.status = c.status || {};
           c.version = c.version || 'unknown';
           c.cluster_id = c.cluster_id || 'unknown';
           c.status.state = c.status.state || 'unknown';
           c.display_name = c.display_name || c.connector_type;
+          c.status_code = c.status.state;
+
+          c.status_class = c.status.state == 'running' ? 'success' : 'danger';
           if (c.status.alerts && c.status.alerts.length) {
-            c.status.status = 'error';
-          }
-          c.status_code = c.status.status;
-          switch (c.status.status) {
-          case 'ok':
-            c.status_class = 'success';
-            break;
-          case 'warning':
-            c.status_class = 'warning';
-            break;
-          default:
             c.status_class = 'danger';
           }
+
           return c;
         });
       };

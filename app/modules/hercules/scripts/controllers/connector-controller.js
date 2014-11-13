@@ -24,7 +24,7 @@ angular.module('Hercules')
         translate_attr: 'hercules.connectors.status'
       }];
 
-      $scope.current_grouping = $scope.groupings[0];
+      $scope.current_grouping = $scope.groupings[1];
 
       var loadData = function () {
         service.fetch({
