@@ -48,6 +48,7 @@ angular.module('Hercules')
             c.status_class = 'success';
             break;
           case 'disabled':
+          case 'not_configured':
             c.status_class = 'default';
             break;
           default:

@@ -58,6 +58,9 @@ describe('Service: ConnectorService', function () {
     converted = Service._convert([{ status: { state: 'disabled' } }]);
     expect(converted[0].status_class).toBe('default');
 
+    converted = Service._convert([{ status: { state: 'not_configured' } }]);
+    expect(converted[0].status_class).toBe('default');
+
     converted = Service._convert([{ status: { state: 'foo' } }]);
     expect(converted[0].status_class).toBe('danger');
 
