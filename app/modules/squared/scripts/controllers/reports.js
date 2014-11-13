@@ -18,6 +18,24 @@ angular.module('Squared')
 
       var chartVals = [];
 
+      var dummyChartVals = [{
+        'convOneOnOne': 0,
+        'week': 'Oct 13',
+        'convGroup': 0
+      }, {
+        'convGroup': 0,
+        'week': 'Oct 20'
+      }, {
+        'convGroup': 0,
+        'week': 'Oct 27'
+      }, {
+        'convGroup': 0,
+        'week': 'Nov 03'
+      }, {
+        'convGroup': 0,
+        'week': 'Nov 10'
+      }];
+
       var entitlementsLoaded = false;
       var avgCallsLoaded = false;
       var avgConvLoaded = false;
@@ -87,6 +105,7 @@ angular.module('Squared')
       });
 
       $scope.$on('avgConversationsLoaded', function (event, response) {
+        console.log(JSON.stringify(response));
         getTimeCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Avg Conversations Per User', yellow, 'average');
       });
 
@@ -173,29 +192,45 @@ angular.module('Squared')
 
       var getTimeCharts = function (response, type, divName, refreshDivName, refreshVarName, title, color, operation) {
         var avCount = 0;
+        var shouldShowCursor = true;
+        $scope[refreshVarName] = false;
         checkDataLoaded(type);
         if (response.data.success) {
-          if (response.data.data.length !== 0) {
-            responseTime = response.data.date;
-            $('#' + divName).removeClass('chart-border');
-            var result = response.data.data;
-            if (result.length > 0) {
-              avCount = getMetricData(result, type);
-            }
-            makeTimeChart(chartVals, divName, type, title, color, operation);
-            $scope[refreshVarName] = false;
 
-          } else {
-            $('#' + refreshDivName).html('<h3>No results available.</h3>');
-            Log.debug('No results for ' + type + ' metrics.');
+          responseTime = response.data.date;
+          angular.element('#' + divName).removeClass('chart-border');
+          var result = response.data.data;
+
+          if (result.length > 0) {
+            avCount = getMetricData(result, type);
           }
+          if (response.data.data.length === 0) {
+            angular.element('#' + divName).addClass('dummy-data');
+            angular.element('#' + refreshDivName).html('<h3 class="dummy-data-message">No Data</h3>');
+            $scope[refreshVarName] = true;
+            shouldShowCursor = false;
+            operation = 'sum';
+          }
+
+          makeTimeChart(chartVals, divName, type, title, color, operation, shouldShowCursor);
+
         } else {
           $('#' + refreshDivName).html('<h3>Error processing request</h3>');
           Log.debug('Query ' + type + ' metrics failed. Status: ' + status);
         }
       };
 
-      var makeTimeChart = function (sdata, divName, metricName, title, color, operation) {
+      var makeTimeChart = function (sdata, divName, metricName, title, color, operation, shouldShowCursor) {
+        console.log(JSON.stringify(sdata));
+        console.log(divName);
+        console.log(metricName);
+        console.log(title);
+        console.log(color);
+        console.log(operation);
+        console.log(shouldShowCursor);
+        if (sdata.length === 0) {
+          sdata = dummyChartVals;
+        }
         var homeChart = AmCharts.makeChart(divName, {
           'type': 'serial',
           'theme': 'none',
@@ -205,18 +240,19 @@ angular.module('Squared')
           'backgroundAlpha': 1,
           'legend': {
             'equalWidths': false,
+            'autoMargins': false,
             'periodValueText': '[[value.' + [operation] + ']]',
-            'precision': 2,
             'position': 'top',
             'valueWidth': 10,
             'fontSize': 30,
             'markerType': 'none',
             'spacing': 0,
             'valueAlign': 'right',
-            'useMarkerColorForLabels': true,
+            'useMarkerColorForLabels': false,
             'useMarkerColorForValues': true,
             'marginLeft': -20,
-            'marginRight': 0
+            'marginRight': 0,
+            'color': '#555'
           },
           'dataProvider': sdata,
           'valueAxes': [{
@@ -234,11 +270,17 @@ angular.module('Squared')
             'valueField': metricName
           }],
           'chartCursor': {
+            'enabled': shouldShowCursor,
             'valueLineEnabled': true,
             'valueLineBalloonEnabled': true,
             'cursorColor': '#AFB0B3',
             'valueBalloonsEnabled': false,
             'cursorPosition': 'mouse'
+          },
+          'numberFormatter': {
+            'precision': 0,
+            'decimalSeparator': '.',
+            'thousandsSeparator': ','
           },
           'plotAreaBorderAlpha': 0,
           'plotAreaBorderColor': '#DDDDDD',

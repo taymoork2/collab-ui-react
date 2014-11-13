@@ -104,7 +104,6 @@ angular.module('Core')
       };
 
       $scope.setTrial = function (trial) {
-        console.log('here');
         $scope.currentTrial = trial;
       };
 

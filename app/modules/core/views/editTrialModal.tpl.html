@@ -7,9 +7,9 @@
 </div>
 <div class="modal-body-white">
   <div class="row modal-trial-status">
-    <div class="col-sm-9">
+    <div class="col-xs-9 col-sm-9 col-md-9">
       <div class="progress">
-        <div class="progress-bar" ng-class="{'danger-bar': $parent.currentTrial.daysLeft <= 5, 'warning-bar': ($parent.currentTrial.daysLeft < $parent.currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{$parent.currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{$parent.currentTrial.duration}}" style="width: {{$parent.currentTrial.percentUsed}}%;">
+        <div class="progress-bar" ng-class="{'danger-bar': $parent.currentTrial.daysLeft <= 5, 'warning-bar': ($parent.currentTrial.daysLeft < $parent.currentTrial.duration/2), 'success-bar': ($parent.currentTrial.daysLeft >= $parent.currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{$parent.currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{$parent.currentTrial.duration}}" style="width: {{$parent.currentTrial.percentUsed}}%;">
         </div>
         <!-- TO DO: Why does this not work in the modal? -->
         <!-- <div class="modal-bar">
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-xs-3 col-sm-3 col-md-3">
         <span class="users-edit-modal trialHeading" translate="partnerHomePage.trialsNumUsers"></span>
         <div class="license-count-modal">
           <span >{{$parent.currentTrial.usage}}/{{$parent.currentTrial.licenses}}</span>
@@ -33,20 +33,20 @@
   <div class="modal-body">
     <h4 translate="partnerHomePage.customerInformation"></h4>
     <div class="row input-row-spacing">
-      <div class="col-md-4">
+      <div class="col-xs-4 col-sm-4 col-md-4">
         <span class="modal-edit-options" translate="partnerHomePage.name"></span>
       </div>
-      <div class="col-md-8">
+      <div class="col-xs-8 col-sm-8 col-md-8">
         <div class="company-info">
           <span>{{$parent.currentTrial.customerName}}</span>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-xs-4 col-sm-4 col-md-4">
         <span class="modal-edit-options" translate="partnerHomePage.customerEmail"></span>
       </div>
-      <div class="col-md-8">
+      <div class="col-xs-8 col-sm-8 col-md-8">
         <div class="company-info">
           <span>{{$parent.currentTrial.customerEmail}}</span>
         </div>
@@ -60,20 +60,20 @@
     <h4 translate="partnerHomePage.termsOfTrial"></h4>
     <div ng-show="editTerms">
       <div class="row input-row-spacing">
-        <div class="col-md-4">
+        <div class="col-xs-4 col-sm-4 col-md-4">
           <span class="modal-edit-options" translate="partnerHomePage.numberOfLicenses"></span>
         </div>
-        <div class="col-md-8">
+        <div class="col-xs-8 col-sm-8 col-md-8">
           <div class="company-info">
             <span>{{$parent.currentTrial.licenses}}</span>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-xs-4 col-sm-4 col-md-4">
           <span class="modal-edit-options" translate="partnerHomePage.duration"></span>
         </div>
-        <div class="col-md-8">
+        <div class="col-xs-8 col-sm-8 col-md-8">
           <div class="company-info">
             <span>{{$parent.currentTrial.duration}} Days</span>
           </div>
@@ -82,7 +82,7 @@
     </div>
     <div ng-show="!editTerms">
       <div class="row">
-        <div class="col-md-7">
+        <div class="col-xs-7 col-sm-7 col-md-7">
           <span class="trial-options" translate="partnerHomePage.numberOfLicenses"></span>
           <select id="editLicensesSelect" class="form-control modal-form-control" ng-model="licenseCount">
             <option label="50" value="50" translate="partnerHomePage.fifty"></option>
@@ -90,7 +90,7 @@
             <option label="200" value="200" translate="partnerHomePage.twoHundred"></option>
           </select>
         </div>
-        <div class="col-md-5">
+        <div class="col-xs-5 col-sm-5 col-md-5">
           <span class="trial-options" translate="partnerHomePage.duration"></span>
           <select id="editLengthSelect" class="form-control modal-form-control" ng-model="licenseDuration">
             <option label="30 Days" value="30" translate="partnerHomePage.thirtyDays"></option>

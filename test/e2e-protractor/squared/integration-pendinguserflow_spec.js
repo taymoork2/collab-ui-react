@@ -53,7 +53,7 @@ describe('Add/Invite/Entitle User flow', function() {
         users.search(inviteEmail);
         browser.sleep(2000);
         users.userListStatus.then(function(newcell) {
-            expect(newcell[0].getText()).toContain('Invite Pending');
+            expect(newcell[0].getText()).toContain('Active');
           });
       });
       it('should resend user invitation to pending user', function(){

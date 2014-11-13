@@ -49,7 +49,7 @@
         <cr-reload-data id="homeRefreshData" last-updated-time="refreshTime"></cr-reload-data>
         </span>
       </div>
-  
+
 
       <section class="tab-reports background-white">
         <tabset justified="true" class="largetabs">
@@ -59,10 +59,8 @@
               <div class="total">{{counts.calls}}</div>
             </tab-heading>
             <div id="callsChart" class="tab-report"></div>
-            <div class="report-status">
-              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('calls')"></i>
-              <span translate="status.noResults" ng-if="isEmpty('calls')"></span>
-              <span translate="status.errorProcessing" ng-if="hasError('calls')"></span>
+            <div id="callsRefreshDiv" class="report-status">
+              <i class='icon icon-spinner icon-spin icon-2x' ng-show="isRefresh('calls')"></i>
             </div>
           </tab>
           <tab select="resizeConversationsChart()">
@@ -71,10 +69,8 @@
               <div class="total">{{counts.conversations}}</div>
             </tab-heading>
             <div id="conversationsChart" class="tab-report"></div>
-            <div class="report-status">
+            <div id="convRefreshDiv" class="report-status">
               <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('conversations')"></i>
-              <span translate="status.noResults" ng-if="isEmpty('conversations')"></span>
-              <span translate="status.errorProcessing" ng-if="hasError('conversations')"></span>
             </div>
           </tab>
           <tab select="resizeContentSharedChart()">
@@ -83,10 +79,8 @@
               <div class="total">{{counts.contentShared}}</div>
             </tab-heading>
             <div id="contentSharedChart" class="tab-report"></div>
-            <div class="report-status">
+            <div id="contentRefreshDiv" class="report-status">
               <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('contentShared')"></i>
-              <span translate="status.noResults" ng-if="isEmpty('contentShared')"></span>
-              <span translate="status.errorProcessing" ng-if="hasError('contentShared')"></span>
             </div>
           </tab>
         </tabset>

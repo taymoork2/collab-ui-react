@@ -21,16 +21,21 @@ angular.module('Core')
         contentShared: 'refresh'
       };
 
+      var todaysDate = new Date();
+      var dummyChartVals = [{
+        'date': todaysDate.setDate(todaysDate.getDate() + 1)
+      }, {
+        'date': todaysDate.setDate(todaysDate.getDate() + 1)
+      }, {
+        'date': todaysDate.setDate(todaysDate.getDate() + 1)
+      }, {
+        'date': todaysDate.setDate(todaysDate.getDate() + 1)
+      }, {
+        'date': todaysDate.setDate(todaysDate.getDate() + 1)
+      }];
+
       $scope.isRefresh = function (property) {
         return $scope.reportStatus[property] === 'refresh';
-      };
-
-      $scope.isEmpty = function (property) {
-        return $scope.reportStatus[property] === 'empty';
-      };
-
-      $scope.hasError = function (property) {
-        return $scope.reportStatus[property] === 'error';
       };
 
       $scope.reloadReports = function (useCache) {
@@ -93,27 +98,36 @@ angular.module('Core')
       };
 
       var updateChart = function (chart, data) {
-        formatDates(data);
         if (chart) {
-          chart.dataProvider = data;
+          if (data.length === 0) {
+            formatDates(dummyChartVals);
+            chart.dataProvider = dummyChartVals;
+          } else {
+            formatDates(data);
+            chart.dataProvider = data;
+          }
           chart.validateData();
         }
       };
 
-      var loadDataCallback = function (chart, response, property) {
+      var loadDataCallback = function (chart, response, property, refreshDivName) {
         if (response.data.success) {
-          if (response.data.length !== 0) {
-            $scope.refreshTime = response.data.date;
-            var data = response.data.data;
-            if (data.length >= 0) {
-              updateChart(chart, data);
-            }
-            $scope.reportStatus[property] = 'ready';
+          $scope.refreshTime = response.data.date;
+          var data = response.data.data;
+          updateChart(chart, data);
+
+          if (response.data.data.length === 0) {
+            $scope.reportStatus[property] = 'refresh';
+            angular.element('#' + refreshDivName).addClass('dummy-data');
+            angular.element('#' + refreshDivName).html('<h3 class="dummy-data-message">No Data</h3>');
           } else {
-            $scope.reportStatus[property] = 'empty';
+            $scope.reportStatus[property] = 'ready';
+            angular.element('#' + refreshDivName).html('');
           }
         } else {
-          $scope.reportStatus[property] = 'error';
+          $scope.reportStatus[property] = 'refresh';
+          angular.element('#' + refreshDivName).addClass('dummy-data');
+          angular.element('#' + refreshDivName).html('<h3 class="dummy-data-message">Error processing request.</h3>');
         }
       };
 
@@ -137,17 +151,17 @@ angular.module('Core')
 
       var loadCalls = function (event, response) {
         buildCallsChart();
-        loadDataCallback(callsChart, response, 'calls');
+        loadDataCallback(callsChart, response, 'calls', 'callsRefreshDiv');
       };
 
       var loadConversations = function (event, response) {
         buildConversationsChart();
-        loadDataCallback(conversationsChart, response, 'conversations');
+        loadDataCallback(conversationsChart, response, 'conversations', 'convRefreshDiv');
       };
 
       var loadContentShared = function (event, response) {
         buildContentSharedChart();
-        loadDataCallback(contentSharedChart, response, 'contentShared');
+        loadDataCallback(contentSharedChart, response, 'contentShared', 'contentRefreshDiv');
       };
 
       var loadCallsCount = function (event, response) {

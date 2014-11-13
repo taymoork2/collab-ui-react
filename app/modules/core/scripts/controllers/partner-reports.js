@@ -52,6 +52,11 @@ angular.module('Core')
           'valueField': 'count',
           'ballooonText': '[[value]]'
         }],
+        'numberFormatter': {
+          'precision': 0,
+          'decimalSeparator': '.',
+          'thousandsSeparator': ','
+        },
         'plotAreaBorderAlpha': 1,
         'plotAreaBorderColor': '#DDDDDD',
         'marginTop': 10,

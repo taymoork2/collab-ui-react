@@ -6,8 +6,11 @@ angular.module('Squared')
     function ($scope, $location, Storage, Log, Utils, $filter, SpacesService, Notification, Config) {
 
       //Populating authinfo data if empty.
-      $scope.totalResults = 0;
+
+      var token = Storage.get('accessToken');
+      $scope.totalResults = null;
       $scope.showAdd = true;
+      $scope.emptyDevices = true;
 
       var formatActivationCode = function (activationCode) {
         var acode = '';

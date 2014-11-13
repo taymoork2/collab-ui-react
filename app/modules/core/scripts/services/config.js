@@ -7,7 +7,7 @@ angular.module('Core')
 
         adminClientUrl: {
           dev: 'http://127.0.0.1:8000',
-          integration: 'https://int-admin.wbx2.com/',
+          integration: 'https://int-admin.projectsquared.com/',
           prod: 'https://admin.projectsquared.com/'
         },
 
@@ -190,7 +190,7 @@ angular.module('Core')
         },
 
         isIntegration: function () {
-          return document.URL.indexOf('int-admin.wbx2.com') !== -1;
+          return document.URL.indexOf('int-admin.projectsquared.com') !== -1;
         },
 
         isProd: function () {
