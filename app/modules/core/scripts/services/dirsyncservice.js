@@ -1,16 +1,15 @@
 'use strict';
 
 angular.module('Core')
-  .service('DirSyncService', ['$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
-    function ($http, Storage, Config, Log, Auth, Authinfo) {
+  .service('DirSyncService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
+    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
 
-      var token = Storage.get('accessToken');
       var dirsyncUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/dirsync';
 
       return {
         getDirSyncDomain: function (callback) {
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(dirsyncUrl)
             .success(function (data, status) {
               data.success = true;
@@ -28,7 +27,7 @@ angular.module('Core')
         getDirSyncStatus: function (callback) {
           var dirsyncStatusUrl = dirsyncUrl + '/status';
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(dirsyncStatusUrl)
             .success(function (data, status) {
               data.success = true;
@@ -49,7 +48,7 @@ angular.module('Core')
             domainName: domainName
           };
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.post(domainUrl, payload)
             .success(function (data, status) {
               data.success = true;
@@ -70,7 +69,7 @@ angular.module('Core')
             fullSyncEnable: true
           };
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http({
               method: 'PATCH',
               url: dirsyncUrl,

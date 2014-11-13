@@ -5,7 +5,6 @@ angular.module('Core')
   .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils', '$q', '$filter', '$compile', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
-      var token = Storage.get('accessToken');
       var searchfilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
       var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
@@ -55,7 +54,7 @@ angular.module('Core')
             listUrl = listUrl + '&sortOrder=' + sortOrder;
           }
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(listUrl)
             .success(function (data, status) {
               data.success = true;
@@ -142,7 +141,7 @@ angular.module('Core')
           var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
           var getUserUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(getUserUrl)
             .success(function (data, status) {
               data.success = true;

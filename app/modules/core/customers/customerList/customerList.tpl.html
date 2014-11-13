@@ -1,20 +1,16 @@
 <div class="customer-list">
   <div class="notification"></div>
   <div class="row page-header">
-    <div class="col-md-9 col-sm-9">
-      <div class="row">
-        <div class="col-md-5 col-sm-5">
-          <h2 class="page-title">{{'customerPage.title' | translate}}</h2>
-        </div>
-        <div ng-hide="showTrialsRefresh" class="trials-badge col-md-7 col-sm-7">
-          <ul class="nav nav-pills">
-            <li ng-class="{'active' : filter === 'ALL'}"><a ng-click="filterList('ALL')"><span class="badge pull-right">{{totalTrials}}</span><span class="badge-label">{{'customerPage.allTrials' | translate}}</span></a></li>
-            <li ng-class="{'active' : filter === 'ACTIVE'}"><a ng-click="filterList('ACTIVE')"><span class="badge pull-right">{{activeCount}}</span><span class="badge-label">{{'customerPage.activeTrials' | translate}}</span></a></li>
-          </ul>
-        </div>
-      </div>
+    <div class="col-md-6 col-sm-6">
+      <h2 class="page-title">{{'customerPage.title' | translate}}&nbsp;&nbsp;<small class="count">{{totalTrials}}</small></h2>
     </div>
-    <div class="col-md-3 col-sm-3">
+    <!-- <div ng-hide="showTrialsRefresh" class="trials-badge col-md-7 col-sm-7">
+      <ul class="nav nav-pills">
+        <li ng-class="{'active' : filter === 'ALL'}"><a ng-click="filterList('ALL')"><span class="badge pull-right">{{totalTrials}}</span><span class="badge-label">{{'customerPage.allTrials' | translate}}</span></a></li>
+        <li ng-class="{'active' : filter === 'ACTIVE'}"><a ng-click="filterList('ACTIVE')"><span class="badge pull-right">{{activeCount}}</span><span class="badge-label">{{'customerPage.activeTrials' | translate}}</span></a></li>
+      </ul>
+    </div> -->
+    <div class="col-md-6 col-sm-6">
       <div class="page-option-buttons">
         <button id="addTrial" ng-click="openAddTrialModal()" class="btn btn-lg btn-info add-button" translate="customerPage.addTrial"></button>
         <a id="export-btn" ng-csv="exportCSV()" filename="{{'customerPage.csvFilename' | translate}}" title="{{'customerPage.csvBtnTitle' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
@@ -22,7 +18,9 @@
         </a>
       </div>
     </div>
+
   </div>
+
   <div id="customerListPanel" class="row">
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
   </div>

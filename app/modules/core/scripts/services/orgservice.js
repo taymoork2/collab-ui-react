@@ -4,8 +4,6 @@ angular.module('Core')
   .service('Orgservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth) {
 
-      var token = Storage.get('accessToken');
-
       return {
 
         getOrg: function (callback, oid) {
@@ -15,7 +13,7 @@ angular.module('Core')
           } else {
             scomUrl = Config.scomUrl + '/' + Authinfo.getOrgId();
           }
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(scomUrl)
             .success(function (data, status) {
               data.success = true;
@@ -36,7 +34,7 @@ angular.module('Core')
           } else {
             adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
           }
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(adminUrl)
             .success(function (data, status) {
               data.success = true;

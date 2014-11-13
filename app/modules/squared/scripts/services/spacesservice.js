@@ -1,19 +1,18 @@
 'use strict';
 
 angular.module('Squared')
-  .service('SpacesService', ['$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
-    function ($http, Storage, Config, Log, Auth, Authinfo) {
+  .service('SpacesService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
+    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
 
       var roomUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/devices';
-      var token = Storage.get('accessToken');
 
       return {
         listRooms: function (callback) {
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(roomUrl)
             .success(function (data, status) {
               data.success = true;
-              Log.debug('Retrieved list of rooms for org: ' + token);
+              Log.debug('Retrieved list of rooms for org: ' + $rootScope.token);
               callback(data, status);
             })
             .error(function (data, status) {
@@ -30,7 +29,7 @@ angular.module('Squared')
           };
 
           if (roomData.name.length > 0) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             $http.post(roomUrl, roomData)
               .success(function (data, status) {
                 data.success = true;

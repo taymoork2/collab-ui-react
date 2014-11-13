@@ -559,9 +559,9 @@
     "daysLeft": "day(s) left",
     "allTrials": "All",
     "activeTrials": "Active Trials",
-    "active": "On Trial",
+    "active": "Active Trial",
     "expiring": "Trial Expiring",
-    "expired": "Trial Expired",
+    "expired": "Expired Trial",
     "expiresToday": "Expires Today"
   }
 }

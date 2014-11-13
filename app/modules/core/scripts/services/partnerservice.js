@@ -4,14 +4,14 @@ angular.module('Squared')
   .service('PartnerService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Log', 'Authinfo', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
 
-      var token = Storage.get('accessToken');
       var trialsUrl = Config.getAdminServiceUrl() + 'trials';
 
       return {
 
-        editTrial: function (trialPeriod, id, licenseCount, usageCount, callback) {
+        editTrial: function (trialPeriod, id, licenseCount, usageCount, corgId, callback) {
           var editTrialData = {
             'trialPeriod': trialPeriod,
+            'customerOrgId': corgId,
             'offers': [{
               'id': 'COLLAB',
               'licenseCount': licenseCount
@@ -19,7 +19,7 @@ angular.module('Squared')
           };
 
           if (true) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             var editTrialUrl = trialsUrl + '/' + id;
             $http({
                 method: 'PATCH',
@@ -31,8 +31,6 @@ angular.module('Squared')
                 callback(data, status);
               })
               .error(function (data, status) {
-                data.success = false;
-                data.status = status;
                 callback(data, status);
                 Auth.handleStatus(status);
               });
@@ -54,7 +52,8 @@ angular.module('Squared')
           };
 
           if (trialData.customerName.length > 0 && trialData.customerEmail.length > 0) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
             $http.post(trialsUrl, trialData)
               .success(function (data, status) {
                 data.success = true;
@@ -73,7 +72,7 @@ angular.module('Squared')
 
         getTrialsList: function (callback) {
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(trialsUrl)
             .success(function (data, status) {
               data.success = true;

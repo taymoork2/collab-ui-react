@@ -5,7 +5,6 @@ angular.module('Core')
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils) {
 
       var userUrl = Config.getAdminServiceUrl();
-      var token = Storage.get('accessToken');
 
       return {
 
@@ -25,7 +24,7 @@ angular.module('Core')
             }
           }
           if (userData.users.length > 0) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             $http({
                 method: 'PATCH',
                 url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
@@ -68,7 +67,7 @@ angular.module('Core')
           }
 
           if (userData.users.length > 0) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             $http.post(userUrl + 'users', userData)
               .success(function (data, status) {
                 data.success = true;
@@ -88,7 +87,7 @@ angular.module('Core')
         getUser: function (userid, callback) {
           var scimUrl = Config.scimUrl + '/' + userid;
           var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(userUrl)
             .success(function (data, status) {
               data.success = true;
@@ -107,7 +106,7 @@ angular.module('Core')
           scimUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
 
           if (userData) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             $http({
                 method: 'PATCH',
                 url: scimUrl,
@@ -159,7 +158,7 @@ angular.module('Core')
           }
 
           if (userData.inviteList.length > 0) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             $http.post(apiUrl, userData)
               .success(function (data, status) {
                 data.success = true;

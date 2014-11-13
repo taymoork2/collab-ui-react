@@ -6,13 +6,13 @@ angular.module('Squared')
 
       var apiUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/';
 
-      var token = Storage.get('accessToken');
       var callMetricsUrl = apiUrl + 'reports/stats/callUsage';
       var activeUsersUrl = apiUrl + 'reports/counts/activeUsers';
       var callsUrl = apiUrl + 'reports/counts/calls';
       var conversationsUrl = apiUrl + 'reports/counts/conversations';
       var timeChartUrl = apiUrl + 'reports/timeCharts/';
       var logInfoBaseUrl = apiUrl + 'reports/tables/calls/';
+
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
       var averageCallCount = apiUrl + 'reports/counts/avgCallsPerUser';
       var entitlementCount = apiUrl + 'reports/counts/entitlements';
@@ -69,7 +69,7 @@ angular.module('Squared')
       return {
 
         getUsageMetrics: function (metricType, params, callback) {
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           var metricUrl = buildUrl(metricType, params);
 
@@ -145,7 +145,7 @@ angular.module('Squared')
         getLogInfo: function (locusId, startTime, callback) {
           var logInfoUrl = logInfoBaseUrl + locusId + '?locusCallStartTime=' + startTime;
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(logInfoUrl)
             .success(function (data, status) {
               data.success = true;
@@ -168,9 +168,6 @@ angular.module('Squared')
               callback(data, status);
             })
             .error(function (data, status) {
-              data.success = false;
-              data.status = status;
-              data.errorMsg = data;
               callback(data, status);
             });
         }

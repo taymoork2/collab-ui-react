@@ -4,11 +4,8 @@ angular.module('Core')
   .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'Localize',
     function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, Localize) {
 
-      var token = Storage.get('accessToken');
       var loadingDelay = 2000;
       var logoutDelay = 5000;
-      var storedState = 'storedState';
-      var storedParams = 'storedParams';
 
       var pageParam = $location.search().pp;
       if (pageParam) {
@@ -23,23 +20,21 @@ angular.module('Core')
 
       var authorizeUser = function () {
         $scope.loading = true;
-        token = Storage.get('accessToken');
+
         var currentOrgId = SessionStorage.get('customerOrgId');
-        Auth.authorize(token).then(function () {
+        Auth.authorize($rootScope.token).then(function () {
           var path = 'home';
-          var params;
           if (PageParam.getRoute()) {
             path = PageParam.getRoute();
-          } else if (SessionStorage.get(storedState)) {
-            path = SessionStorage.pop(storedState);
-            params = SessionStorage.popObject(storedParams);
-          } else if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
+          }
+
+          if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
             path = 'partnerhome';
           }
           $rootScope.services = Authinfo.getServices();
 
           $timeout(function () {
-            $state.go(path, params);
+            $state.go(path);
           }, loadingDelay);
         }).catch(function (error) {
           if (error) {
@@ -57,7 +52,7 @@ angular.module('Core')
         authorizeUser();
       });
 
-      if (token) {
+      if ($rootScope.token || Storage.get('accessToken')) {
         authorizeUser();
       }
 

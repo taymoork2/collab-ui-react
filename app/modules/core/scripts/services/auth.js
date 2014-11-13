@@ -3,6 +3,7 @@
 angular.module('Core')
   .factory('Auth', ['$http', '$filter', '$location', '$timeout', '$window', '$q', 'Log', 'Config', 'SessionStorage', 'Authinfo', 'Utils', 'Storage', '$rootScope', '$dialogs',
     function ($http, $filter, $location, $timeout, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, $rootScope, $dialogs) {
+
       var progress = 0;
       var auth = {
         authorizeUrl: Config.getAdminServiceUrl(),
@@ -95,6 +96,7 @@ angular.module('Core')
             }
           })
           .success(function (data) {
+            $rootScope.token = data.access_token;
             deferred.resolve(data.access_token);
           })
           .error(function (data, status) {

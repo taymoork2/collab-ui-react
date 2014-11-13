@@ -2,10 +2,8 @@
 /* global moment */
 
 angular.module('Squared')
-  .service('LogMetricsService', ['$http', 'Authinfo', 'Config', 'Log', 'Storage', 'Auth',
-    function ($http, Authinfo, Config, Log, Storage, Auth) {
-
-      var token = Storage.get('accessToken');
+  .service('LogMetricsService', ['$rootScope', '$http', 'Authinfo', 'Config', 'Log', 'Storage', 'Auth',
+    function ($rootScope, $http, Authinfo, Config, Log, Storage, Auth) {
 
       function LogMetricEvent(eventAction, eventType, status, elapsedTime, units) {
         this.logStatus = status;
@@ -51,7 +49,7 @@ angular.module('Squared')
             Log.debug(logsMetricEvent);
 
             if (Config.isProd()) {
-              $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+              $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
               $http.post(metricUrl, logsMetricEvent)
                 .success(function (data, status) {
                   data.success = true;

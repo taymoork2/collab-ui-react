@@ -6,7 +6,6 @@ angular.module('Squared')
     function ($scope, $location, Storage, Log, Utils, $filter, SpacesService, Notification, Config) {
 
       //Populating authinfo data if empty.
-      var token = Storage.get('accessToken');
       $scope.totalResults = 0;
       $scope.showAdd = true;
 

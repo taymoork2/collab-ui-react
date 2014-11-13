@@ -1,8 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage',
-    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state, SessionStorage) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'Log', '$interval', '$document', 'Config', '$state',
+    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state) {
 
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
@@ -13,10 +13,7 @@ angular
       //Enable logging
       $rootScope.debug = true;
 
-      var storedState = 'storedState';
-      var storedParams = 'storedParams';
-
-      $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
+      $rootScope.$on('$stateChangeStart', function (e, to) {
         if (typeof to.authenticate === 'undefined' || to.authenticate) {
           if (Authinfo.isInitialized()) {
             if (!Authinfo.isAllowedState(to.name)) {
@@ -24,21 +21,17 @@ angular
               $state.go('unauthorized');
             }
           } else {
-            var token = Storage.get('accessToken');
+            $rootScope.token = Storage.get('accessToken');
             e.preventDefault();
-            if (token) {
-              Auth.authorize(token)
+            if ($rootScope.token) {
+              Auth.authorize($rootScope.token)
                 .then(function () {
-                  $state.go(to.name, toParams);
+                  $state.go(to.name);
                 })
                 .catch(function () {
-                  SessionStorage.put(storedState, to.name);
-                  SessionStorage.putObject(storedParams, toParams);
                   $state.go('login');
                 });
             } else {
-              SessionStorage.put(storedState, to.name);
-              SessionStorage.putObject(storedParams, toParams);
               $state.go('login');
             }
           }
@@ -53,6 +46,7 @@ angular
           data = Auth.getFromGetParams(document.URL);
           $rootScope.status = 'loaded';
           Storage.put('accessToken', data.access_token);
+          $rootScope.token = data.access_token;
 
         } else if (document.URL.indexOf('code') !== -1) {
           data = Auth.getFromStandardGetParams(document.URL);
@@ -62,6 +56,7 @@ angular
               $rootScope.status = 'loaded';
               Storage.put('accessToken', adata.access_token);
               Storage.put('refreshToken', adata.refresh_token);
+              $rootScope.token = data.access_token;
               $rootScope.$broadcast('ACCESS_TOKEN_REVIEVED');
             }, function () {
               Auth.redirectToLogin();
@@ -71,30 +66,40 @@ angular
         }
       }
 
-      var timerClock = Config.tokenTimers.timeoutTimer; //50 minutes
-      var startTimer = function () {
-        Log.debug('starting session timer...');
-        var timer = $interval(function () {
-            $interval.cancel(timer);
-            //force logout when 50 minutes of inactivity
-            Auth.logout();
-          },
-          timerClock
-        );
+      // var timerClock = Config.tokenTimers.timeoutTimer; //50 minutes
+      // var startTimer = function () {
+      //   Log.debug('starting session timer...');
+      //   var timer = $interval(function () {
+      //       $interval.cancel(timer);
+      //       //force logout when 50 minutes of inactivity
+      //       Auth.logout();
+      //     },
+      //     timerClock
+      //   );
 
-        return timer;
-      };
+      //   return timer;
+      // };
+
+      // var logoutTimer = startTimer();
+
+      // $document.on(
+      //   'click',
+      //   function (event) {
+      //     Log.debug('received click event, extending session...');
+      //     $interval.cancel(logoutTimer);
+      //     logoutTimer = startTimer();
+      //   }
+      // );
 
       var refreshToken = function () {
         var refreshTimer = $interval(function () {
           Auth.RefreshAccessToken(Storage.get('refreshToken'))
             .then(function (adata) {
               Storage.put('accessToken', adata.access_token);
+              $rootScope.token = data.access_token;
             });
-        }, Config.tokenTimers.refreshTimer); //45 minutes
+        }, Config.tokenTimers.refreshTimer); //30 minutes
       };
-
-      var logoutTimer = startTimer();
 
       var delay = $interval(function () {
           $interval.cancel(delay);
@@ -107,15 +112,6 @@ angular
           }
         },
         Config.tokenTimers.refreshDelay); //15 minutes
-
-      $document.on(
-        'click',
-        function (event) {
-          Log.debug('received click event, extending session...');
-          $interval.cancel(logoutTimer);
-          logoutTimer = startTimer();
-        }
-      );
 
     }
   ]);

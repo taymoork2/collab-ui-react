@@ -88,7 +88,7 @@ angular.module('Core')
       $scope.editTrial = function () {
         var createdDate = new Date();
         angular.element('#saveSendButton').button('loading');
-        PartnerService.editTrial($scope.licenseDuration, $scope.currentTrial.trialId, $scope.licenseCount, $scope.currentTrial.usage, function (data, status) {
+        PartnerService.editTrial($scope.licenseDuration, $scope.currentTrial.trialId, $scope.licenseCount, $scope.currentTrial.usage, $scope.currentTrial.customerOrgId, function (data, status) {
           angular.element('#saveSendButton').button('reset');
           if (data.success === true) {
             $scope.editTrialModalInstance.close();
@@ -116,6 +116,8 @@ angular.module('Core')
           return 'danger';
         } else if (obj.daysLeft < (obj.duration / 2)) {
           return 'warning';
+        } else {
+          return 'success';
         }
       };
 
@@ -176,9 +178,6 @@ angular.module('Core')
                 if (daysLeft >= 0) {
                   trialObj.status = $translate.instant('customerPage.active');
                   $scope.activeList.push(trialObj);
-                } else if (daysLeft === 0) {
-                  trialObj.status = $translate.instant('customerPage.expiring');
-                  $scope.activeList.push(trialObj);
                 } else {
                   //trialObj.daysLeft = Math.abs(daysLeft);
                   trialObj.status = $translate.instant('customerPage.expired');
@@ -203,17 +202,6 @@ angular.module('Core')
             })], 'error');
           }
         });
-      };
-
-      $scope.getProgressStatus = function (obj) {
-        if (!obj) {
-          obj = $scope.currentTrial;
-        }
-        if (obj.daysLeft <= 5) {
-          return 'danger';
-        } else if (obj.daysLeft < (obj.duration / 2)) {
-          return 'warning';
-        }
       };
 
       $scope.getProgressValue = function (obj) {
@@ -298,12 +286,10 @@ angular.module('Core')
 
       var licenseTemplate = '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{row.entity.usage}}/{{row.entity.licenses}}</span></div>';
 
-      var percentTemplate = '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{getUsagePercent(row.entity)}} %</span></div>';
-
       var statusTemplate = '<div class="ngCellText"><div style="width:225px; height:6px"><span>{{row.entity.status}}</span> </div></div>';
 
       var progressTemplate = '<div class="ngCellText">' +
-        '<div class="progress"><div class="progress-bar" ng-class="{\'danger-bar\': row.entity.daysLeft <= 5, \'warning-bar\': (row.entity.daysLeft < row.entity.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(row.entity)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(row.entity)}}" style="width: {{getProgressPercent(row.entity)}}%;"></div></div>' +
+        '<div class="progress"><div class="progress-bar" ng-class="{\'danger-bar\': row.entity.daysLeft <= 5, \'warning-bar\': (row.entity.daysLeft < row.entity.duration/2), \'success-bar\': (row.entity.daysLeft >= row.entity.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(row.entity)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(row.entity)}}" style="width: {{getProgressPercent(row.entity)}}%;"></div></div>' +
         '</div>';
 
       var daysLeftTemplate = '<div class="ngCellText"><div ng-class="{\'trial-danger-text\': row.entity.daysLeft <= 5}"><span>{{getDaysLeft(row.entity.daysLeft)}}</span></div></div>';

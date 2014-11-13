@@ -12,7 +12,7 @@
   <div class="trial-bar row">
     <div class="col-xs-12 col-sm-12 col-md-12">
       <div class="progress">
-        <div class="progress-bar" ng-class="{'danger-bar': currentTrial.daysLeft <= 5, 'warning-bar': (currentTrial.daysLeft < currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(currentTrial)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(currentTrial)}}" style="width: {{getProgressPercent(currentTrial)}}%;"></div>
+        <div class="progress-bar" ng-class="{'danger-bar': currentTrial.daysLeft <= 5, 'warning-bar': (currentTrial.daysLeft < currentTrial.duration/2), 'success-bar': (currentTrial.daysLeft >= currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(currentTrial)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(currentTrial)}}" style="width: {{getProgressPercent(currentTrial)}}%;"></div>
       </div>
     </div>
     <div>

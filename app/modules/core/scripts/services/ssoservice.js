@@ -1,16 +1,14 @@
 'use strict';
 
 angular.module('Core')
-  .service('SSOService', ['$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
-    function ($http, Storage, Config, Log, Auth, Authinfo) {
-
-      var token = Storage.get('accessToken');
+  .service('SSOService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
+    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
 
       return {
         getMetaInfo: function (callback) {
           var remoteIdpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp?attributes=id&attributes=entityId';
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(remoteIdpUrl)
             .success(function (data, status) {
               data.success = true;
@@ -34,7 +32,7 @@ angular.module('Core')
             autofedAttribute: 'uid'
           };
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.post(remoteIdpUrl, payload)
             .success(function (data, status) {
               data.success = true;
@@ -55,7 +53,7 @@ angular.module('Core')
             metadataXml: metadataXmlContent
           };
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http({
               method: 'PATCH',
               url: metaUrl,
@@ -75,7 +73,7 @@ angular.module('Core')
         },
 
         deleteMeta: function (metaUrl, callback) {
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.delete(metaUrl)
             .success(function (data, status) {
               data.success = true;
@@ -92,7 +90,7 @@ angular.module('Core')
 
         downloadHostedSp: function (callback) {
           var hostedSpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/hosted/sp';
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(hostedSpUrl)
             .success(function (data, status) {
               data.success = true;
