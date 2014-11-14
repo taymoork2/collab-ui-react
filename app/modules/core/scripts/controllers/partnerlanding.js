@@ -230,6 +230,15 @@ angular.module('Core')
         }
       };
 
+      $scope.getGridDaysLeft = function (daysLeft) {
+        if (daysLeft <= 0) {
+          return 0;
+        }
+        else {
+          return daysLeft;
+        }
+      };
+
       $scope.getDaysAgo = function (days) {
         return Math.abs(days);
       };
@@ -291,7 +300,7 @@ angular.module('Core')
         '<div class="progress"><div class="progress-bar" ng-class="{\'danger-bar\': row.entity.daysLeft <= 5, \'warning-bar\': (row.entity.daysLeft < row.entity.duration/2), \'success-bar\': (row.entity.daysLeft >= row.entity.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(row.entity)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(row.entity)}}" style="width: {{getProgressPercent(row.entity)}}%;"></div></div>' +
         '</div>';
 
-      var daysLeftTemplate = '<div class="ngCellText"><div ng-class="{\'trial-danger-text\': row.entity.daysLeft <= 5}"><span>{{getDaysLeft(row.entity.daysLeft)}}</span></div></div>';
+      var daysLeftTemplate = '<div class="ngCellText"><div ng-class="{\'trial-danger-text\': row.entity.daysLeft <= 5}"><span>{{getGridDaysLeft(row.entity.daysLeft)}}</span></div></div>';
 
       $scope.gridOptions = {
         data: 'customerList',
