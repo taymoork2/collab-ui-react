@@ -118,7 +118,6 @@ describe('Partner flow', function() {
       browser.getAllWindowHandles().then(function(handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
-        navigation.expectDriverCurrentUrl('firsttimewizard');
         utils.expectIsDisplayed(wizard.wizard);
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);

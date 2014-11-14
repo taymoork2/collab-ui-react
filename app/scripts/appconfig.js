@@ -269,7 +269,6 @@ angular
         })
         .state('firsttimewizard', {
           parent: 'firsttimesplash',
-          url: '/firsttimewizard',
           templateUrl: 'modules/core/setupWizard/setupWizard.tpl.html',
           controller: 'SetupWizardCtrl'
         })
