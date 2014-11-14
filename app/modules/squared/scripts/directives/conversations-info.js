@@ -9,6 +9,9 @@ angular.module('Squared')
       restrict: 'A',
       scope: {
         userEmail: '=',
+        currentUser: '=',
+        entitlements: '=',
+        queryuserslist: '='
       },
       templateUrl: 'modules/squared/scripts/directives/views/conversations-info.html',
       link: function (scope, elem, attrs) {}

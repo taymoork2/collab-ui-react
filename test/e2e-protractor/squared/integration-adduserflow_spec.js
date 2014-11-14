@@ -201,11 +201,9 @@ describe('Add/Invite/Entitle User flow', function() {
           users.gridCell.click();
         });
         browser.sleep(3000);  //TODO fix this - animation should be resolved by angular
-        expect(users.squaredPanel.isDisplayed()).toBeTruthy();
-        users.squaredPanel.click();
-        browser.sleep(3000); //TODO fix this - animation should be resolved by angular
         expect(users.callInitiationCheckbox.isDisplayed()).toBeTruthy();
         users.callInitiationCheckbox.click();
+        browser.sleep(100);
         users.saveButton.click();
         notifications.assertSuccess(inputEmail, 'updated successfully');
       });

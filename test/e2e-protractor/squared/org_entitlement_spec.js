@@ -29,7 +29,6 @@ describe('Org Entitlement flow', function() {
       expect(cell[0].getText()).toContain(testuser.searchStr);
       cell[0].click();
     });
-    expect(users.squaredPanel.isDisplayed()).toBeTruthy();
     expect(users.huronPanel.isDisplayed()).toBeFalsy();
     expect(users.conferencePanel.isDisplayed()).toBeFalsy();
     expect(users.endpointPanel.isDisplayed()).toBeFalsy();

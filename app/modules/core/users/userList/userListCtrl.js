@@ -219,7 +219,7 @@ angular.module('Core')
       $scope.showUserDetails = function (user) {
         //Service profile
         $scope.entitlements = {};
-        for (var i = 0; i < $rootScope.services.length; i++) {
+        for (var i = $rootScope.services.length - 1; i >= 0; i--) {
           var service = $rootScope.services[i].sqService;
           var ciService = $rootScope.services[i].ciService;
           if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {

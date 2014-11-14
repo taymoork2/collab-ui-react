@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('UserEntitlementsCtrl', ['$scope', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo',
-    function ($scope, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
+  .controller('UserEntitlementsCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo',
+    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
+
+      $scope.entitlementsKeys = Object.keys($scope.entitlements).sort().reverse();
+      $scope.saveDisabled = true;
 
       function Feature(name, state) {
         this.entitlementName = name;
@@ -26,6 +29,10 @@ angular.module('Squared')
         }
       };
 
+      $scope.shouldAddIndent = function (key, reference) {
+        return key !== reference;
+      };
+
       var getUserEntitlementList = function (entitlements) {
         var entList = [];
         for (var i = 0; i < $rootScope.services.length; i++) {
@@ -33,6 +40,40 @@ angular.module('Squared')
           entList.push(getFeature(service, entitlements[service]));
         }
         return entList;
+      };
+
+      var watchCheckboxes = function () {
+        $timeout(function () {});
+        var flag = false;
+        $scope.$watchCollection('entitlements', function (newEntitlements, oldEntitlements) {
+          if (flag) {
+            flag = false;
+            return;
+          }
+          var changedKey = Utils.changedKey(newEntitlements, oldEntitlements);
+          if (changedKey === 'webExSquared' && !newEntitlements.webExSquared && Utils.areEntitlementsActive($scope.entitlements)) {
+            for (var key in $scope.entitlements) {
+              if (key !== 'webExSquared') {
+                $scope.entitlements[key] = false;
+                flag = true;
+              }
+            }
+            $scope.saveDisabled = false;
+          } else if (!$scope.entitlements.webExSquared && !oldEntitlements[changedKey] && changedKey !== 'webExSquared') {
+            $scope.entitlements.webExSquared = true;
+            $scope.saveDisabled = false;
+          } else if (newEntitlements !== oldEntitlements) {
+            $scope.saveDisabled = false;
+          }
+        });
+
+        $scope.$watch('currentUser', function (newUser, oldUser) {
+          if (newUser.id !== oldUser.id) {
+            $timeout(function () {
+              $scope.saveDisabled = true;
+            }, 10);
+          }
+        });
       };
 
       $scope.changeEntitlement = function (user) {
@@ -94,6 +135,8 @@ angular.module('Squared')
           }
         });
       };
+
+      watchCheckboxes();
     }
   ])
   .directive('userEntitlements', function () {

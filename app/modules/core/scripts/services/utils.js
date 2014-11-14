@@ -182,6 +182,24 @@ angular.module('Core')
           }
 
           return path1Trimmed === path2Trimmed;
+        },
+
+        changedKey: function (newObject, oldObject) {
+          for (var key in newObject) {
+            if (newObject[key] !== oldObject[key]) {
+              return key;
+            }
+          }
+        },
+
+        areEntitlementsActive: function (entitlements) {
+          var result = false;
+          for (var key in entitlements) {
+            if (entitlements[key] === true) {
+              result = true;
+            }
+          }
+          return result;
         }
 
       };

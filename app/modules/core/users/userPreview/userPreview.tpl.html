@@ -4,7 +4,7 @@
   <cr-user-services-card>
     <div hn-telephony-info id="huronPanel" ng-show="isHuronEnabled()"></div>
     <div cr-conferencing-info id="conferencePanel" ng-show="false"></div>
-    <div sq-conversations-info id="squaredPanel"></div>
+    <div sq-conversations-info current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist" id="squaredPanel"></div>
     <div sq-endpoints-info id="endpointPanel" ng-show="false"></div>
   </cr-user-services-card>
   <hn-user-devices-card></hn-user-devices-card>

@@ -1,7 +1,7 @@
-<cr-details-body title="{{'messagingPanel.title' | translate}}" on-save="changeEntitlement(currentUser)">
-  <div>
-    <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements" ng-if="isServiceAllowed(service)">
-      <cs-checkbox id="{{'chk_'+service}}" ng-model="entitlements[service]" cklabel="{{getServiceName(service)}}"></cs-checkbox>
+<cr-details-body save-disabled="saveDisabled" on-save="changeEntitlement(currentUser)">
+  <div class="entitlement-checkbox-list">
+    <div class="entitle-check-grp" ng-repeat="key in entitlementsKeys" ng-if="isServiceAllowed(key)">
+      <cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared')}" id="{{'chk_'+key}}" ng-model="entitlements[key]" cklabel="{{getServiceName(key)}}"></cs-checkbox>
     </div>
   </div>
 </cr-details-body>
