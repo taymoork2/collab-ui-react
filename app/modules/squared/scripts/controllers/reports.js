@@ -109,7 +109,7 @@ angular.module('Squared')
       var green = '#50D71D';
 
       $scope.$on('entitlementsLoaded', function (event, response) {
-        getTimeCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Entitlements', blue, 'sum');
+        getTimeCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Users Onboarded', blue, 'sum');
       });
 
       $scope.$on('avgCallsPerUserLoaded', function (event, response) {
@@ -118,7 +118,7 @@ angular.module('Squared')
 
       $scope.$on('avgConversationsLoaded', function (event, response) {
         console.log(JSON.stringify(response));
-        getTimeCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Avg Conversations Per User', yellow, 'average');
+        getTimeCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Avg Rooms Per User', yellow, 'average');
       });
 
       $scope.$on('activeUsersLoaded', function (event, response) {
@@ -126,11 +126,11 @@ angular.module('Squared')
       });
 
       $scope.$on('convOneOnOneLoaded', function (event, response) {
-        getTimeCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', 'One On One Conversations', blue, 'sum');
+        getTimeCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', 'One On One Rooms', blue, 'sum');
       });
 
       $scope.$on('convGroupLoaded', function (event, response) {
-        getTimeCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', 'Group Conversations', red, 'sum');
+        getTimeCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', 'Group Rooms', red, 'sum');
       });
 
       $scope.$on('callsLoaded', function (event, response) {
@@ -233,19 +233,9 @@ angular.module('Squared')
       };
 
       var makeTimeChart = function (sdata, divName, metricName, title, color, operation, shouldShowCursor) {
-<<<<<<< HEAD
-        console.log(JSON.stringify(sdata));
-        console.log(divName);
-        console.log(metricName);
-        console.log(title);
-        console.log(color);
-        console.log(operation);
-        console.log(shouldShowCursor);
-        if (sdata.length === 0) {
-=======
+
         if (sdata.length === 0) {
           formatDates(dummyChartVals);
->>>>>>> US624 - no data on reports page @ rev 2092530
           sdata = dummyChartVals;
         }
         var homeChart = AmCharts.makeChart(divName, {
