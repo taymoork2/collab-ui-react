@@ -68,8 +68,8 @@ angular.module('Core')
         },
 
         healthCheckUrl: {
-          dev: 'http://status.projectsquared.com/index.json',
-          prod: 'https://status.projectsquared.com/index.json'
+          dev: 'http://projectsquared.statuspage.io/index.json',
+          prod: 'https://projectsquared.statuspage.io/index.json'
         },
 
         scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
@@ -81,9 +81,9 @@ angular.module('Core')
           keepOnNavigate: false
         },
 
-        tokenTimers: { //timers: 3000000(50 mins), 1800000(30 mins), 900000(15 mins)
+        tokenTimers: { //timers: 3000000(50 mins), 39600000(11 hours), 900000(15 mins)
           timeoutTimer: 3000000,
-          refreshTimer: 1800000,
+          refreshTimer: 39600000,
           refreshDelay: 900000
         },
 

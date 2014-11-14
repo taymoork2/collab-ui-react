@@ -79,7 +79,7 @@ angular
               Storage.put('accessToken', adata.access_token);
               $rootScope.token = data.access_token;
             });
-        }, Config.tokenTimers.refreshTimer); //30 minutes
+        }, Config.tokenTimers.refreshTimer); //11 hours
       };
 
       var delay = $interval(function () {

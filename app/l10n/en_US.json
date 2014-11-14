@@ -573,6 +573,8 @@
     "active": "Active Trial",
     "expiring": "Trial Expiring",
     "expired": "Expired Trial",
-    "expiresToday": "Expires Today"
+    "expiresToday": "Expires Today",
+    "unused": "unused",
+    "overPlan": "licences in use over plan"
   }
 }

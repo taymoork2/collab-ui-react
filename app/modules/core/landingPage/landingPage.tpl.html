@@ -2,7 +2,7 @@
   <div class="cta row" ng-controller="LicensesCtrl" ng-show="isAdmin()">
     <section class="packages col-sm-6 col-md-3">
       <h3 class="packages-name" ng-bind-html="packageInfo.name"></h3>
-      <progressbar ng-if="packageInfo.termMax>0" max="packageInfo.termMax" value="packageInfo.termUsed"></progressbar>
+      <progressbar ng-if="packageInfo.termMax>0" max="packageInfo.termMax" value="packageInfo.termUsed" type="{{getTrialProgress(packageInfo)}}"></progressbar>
       <p class="packages-days-left" ng-if="packageInfo.termRemaining>0 && isOnTrial()">{{packageInfo.termRemaining}} {{packageInfo.termUnits}} left in your trial</p>
       <p class="packages-unlimited" ng-if="packageInfo.termRemaining===0 && isOnTrial()===false">Unlimited use</p>
       <button class="btn btn-sm btn-default fix-btn-pos">Buy / Upgrade</button>
@@ -18,8 +18,8 @@
       <div class="row">
         <section class="licenses col-sm-6">
           <h3 class="licenses-bought" ng-if="licenses.total!==0">{{licenses.total}} Licenses</h3>
-          <progressbar ng-if="licenses.total>0" max="licenses.total" value="licenses.used > licenses.total ? licenses.total : licenses.used"></progressbar>
-          <p class="licenses-left" ng-if="isOnTrial() && licenses.total>0">{{licenses.total - licenses.used}} unused</p>
+          <progressbar ng-if="licenses.total>0" max="licenses.total" value="licenses.used > licenses.total ? licenses.total : licenses.used" type="{{getLicenseProgress(licenses)}}"></progressbar>
+          <p class="licenses-left" ng-if="isOnTrial() && licenses.total>0">{{getUnusedLicense(licenses)}}</p>
           <p class="licenses-used" ng-if="isOnTrial()===false">{{licenses.used}} used</p>
           <button class="btn btn-sm btn-default fix-btn-pos">Remind</button>
           <button class="btn btn-sm btn-default fix-btn-pos">Buy More</button>
@@ -33,8 +33,8 @@
             <h3>{{licenses.domain}}</h3>
           </div>
           <div class="unlicensed-users-unclaimeddomain" ng-if="isDomainClaimed()===false">
-            <h3>Unlicensed Users</h3>
-            <p>View and convert unlicensed users</p>
+            <h3>140 Unlicensed Users</h3>
+            <p>View and convert users currently using the free version</p>
           </div>
           <button class="btn btn-sm btn-default fix-btn-pos">Convert</button>
         </section>

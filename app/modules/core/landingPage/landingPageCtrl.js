@@ -3,15 +3,15 @@
 /* global AmCharts, $ */
 
 angular.module('Core')
-  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config',
-    function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config) {
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate',
+    function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate) {
 
       $scope.isAdmin = false;
       var responseTime;
       var callsChart, conversationsChart, contentSharedChart;
 
       $scope.counts = {};
-      $scope.refreshTime;
+      $scope.refreshTime = null;
 
       $scope.statusPageUrl = Config.getStatusPageUrl();
 
@@ -311,6 +311,36 @@ angular.module('Core')
       $scope.$on('AuthinfoUpdated', function () {
         $scope.isAdmin = Auth.isUserAdmin();
       });
+
+      $scope.getTrialProgress = function (obj) {
+        if (obj.termRemaining <= 5) {
+          return 'danger';
+        } else if (obj.termRemaining < (obj.termMax / 2)) {
+          return 'warning';
+        } else {
+          return 'success';
+        }
+      };
+
+      $scope.getLicenseProgress = function (obj) {
+        var remaining = obj.total - obj.used;
+        if (remaining <= 5) {
+          return 'danger';
+        } else if (obj.used > (obj.total / 2)) {
+          return 'warning';
+        } else {
+          return 'success';
+        }
+      };
+
+      $scope.getUnusedLicense = function (obj) {
+        var remaining = obj.total - obj.used;
+        if (remaining >= 0) {
+          return remaining + ' ' + $translate.instant('customerPage.unused');
+        } else {
+          return Math.abs(remaining) + ' ' + $translate.instant('customerPage.overPlan');
+        }
+      };
 
     }
   ]);
