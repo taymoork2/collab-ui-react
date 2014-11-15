@@ -113,7 +113,7 @@ angular.module('Core')
         '<i class="icon icon-user"></i>' +
         '</span>';
 
-      var actionsTemplate = '<span dropdown ng-if="row.entity.userStatus">' +
+      var actionsTemplate = '<span dropdown ng-if="row.entity.userStatus === \'pending\'">' +
         '<button id="actionsButton" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
