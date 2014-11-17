@@ -83,8 +83,17 @@ describe('First Time Wizard', function() {
     expect(wizard.mainviewTitles.get(11).isDisplayed()).toBeTruthy();
   });
 
-  it('should close the first time wizard and log out', function() {
+  it('should finish the wizard and be able to reopen it', function() {
     wizard.closeBtn.click();
+    browser.sleep(1000);
+    navigation.clickFirstTimeWizard();
+    utils.expectIsDisplayed(wizard.wizard);
+    utils.expectIsDisplayed(wizard.leftNav);
+    utils.expectIsDisplayed(wizard.mainView);
+  });
+
+  it('should close the first time wizard and log out', function() {
+    element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
     browser.sleep(1000);
     navigation.logout();
   });
