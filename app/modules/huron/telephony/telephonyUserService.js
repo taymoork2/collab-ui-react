@@ -54,6 +54,15 @@ angular.module('Huron')
               return HuronAssignedLine.assignDirectoryNumber(user.uuid, 'Primary');
             }).then(function (directoryNumber) {
               emailInfo.phoneNumber = directoryNumber.pattern;
+              user.services.push('VOICEMAIL');
+              user.voicemail = {
+                'dtmfAccessId': directoryNumber.pattern
+              };
+              return UserServiceCommon.update({
+                customerId: Authinfo.getOrgId(),
+                userId: uuid
+              }, user);
+            }).then(function() {
               return this.acquireOTP(user.userId);
             }.bind(this)).then(function (otpInfo) {
               emailInfo.oneTimePassword = otpInfo.password;
