@@ -122,7 +122,7 @@
       <div class="wizard-main-title" translate="firstTimeWizard.enterpriseSettings"></div>
       <h3 class="wizard-subtitle" translate="firstTimeWizard.setupSSOSub"></h3>
       <p translate="firstTimeWizard.setupSSODesc"></p>
-      <cs-radiobutton choice="ssoChoice" options="ssoOptions" label="ssoRbLabel" value="value"></cs-radiobutton>
+      <cs-radiolist ng-model="ssoChoice" options="ssoOptions"></cs-radiolist>
       <div class="wizard-btn-row">
         <button type="button" class="btn btn-primary" ng-click="evaluateStep('initial', 'enterpriseSettings')" ng-disabled="ssoChoice === undefined" translate="firstTimeWizard.nextBtn"></button>
       </div>
@@ -190,9 +190,11 @@
     <div ng-show="tabs.addUsers && steps.initial" class="wiz-view">
       <div class="wizard-main-title" translate="firstTimeWizard.addUsers"></div>
       <div class="rbcontainer">
-        <p translate="firstTimeWizard.simpleSub" style="position:relative;top:6em;left:3.3em;"></p>
-        <p translate="firstTimeWizard.advancedSub" style="position:relative;top:9.1em;left:3.3em;"></p>
-        <cs-radiobutton choice="syncChoice" options="syncOptions" label="syncRbLabel" value="value"></cs-radiobutton>
+        <!-- <cs-radiolist ng-model="syncChoice" options="syncOptions"></cs-radiolist> -->
+        <cs-radio label="syncSimple.label" value="syncSimple.value" name="syncOptions" id="syncSimple.id" ng-model="syncChoice"></cs-radio>
+        <p translate="firstTimeWizard.simpleSub"></p>
+        <cs-radio label="syncAdvanced.label" value="syncAdvanced.value" name="syncOptions" id="syncAdvanced.id" ng-model="syncChoice"></cs-radio>
+        <p translate="firstTimeWizard.advancedSub"></p>
       </div>
       <div class="wizard-btn-row">
         <button type="button" class="btn btn-primary" ng-click="evaluateStep('initial', 'addUsers')" ng-disabled="syncChoice === undefined" translate="firstTimeWizard.nextBtn">Next</button>

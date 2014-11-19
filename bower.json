@@ -21,8 +21,8 @@
     "angular-wizard": "~0.4.0",
     "base64": "~0.2.0",
     "bootstrap": "=3.1.1",
-    "bootstrap-cisco": "~1.0.0",
-    "bootstrap-cisco-ng": "~1.0.0",
+    "bootstrap-cisco": "~1.1.0",
+    "bootstrap-cisco-ng": "~1.1.0",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",
     "draggable": "~1.0.0",
@@ -45,6 +45,7 @@
     "angular-bootstrap": "~0.11.0",
     "bootstrap": "~3.1.1",
     "angular": "1.2.20",
-    "angular-mocks": "1.2.20"
+    "angular-mocks": "1.2.20",
+    "bootstrap-cisco": "~1.1.0"
   }
 }

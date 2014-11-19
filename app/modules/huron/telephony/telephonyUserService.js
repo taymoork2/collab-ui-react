@@ -62,7 +62,7 @@ angular.module('Huron')
                 customerId: Authinfo.getOrgId(),
                 userId: uuid
               }, user);
-            }).then(function() {
+            }).then(function () {
               return this.acquireOTP(user.userId);
             }.bind(this)).then(function (otpInfo) {
               emailInfo.oneTimePassword = otpInfo.password;

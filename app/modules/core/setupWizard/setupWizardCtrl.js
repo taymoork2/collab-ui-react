@@ -45,7 +45,7 @@ angular.module('Core')
         if (tab !== undefined) {
           //enterprise settings selection logic
           if (currentStep === 'initial' && tab === 'enterpriseSettings') {
-            if ($scope.ssoChoice.value === 0) {
+            if ($scope.ssoChoice === 0) {
               $scope.changeStep('importIdpData');
             } else {
               $scope.changeTab('addUsers');
@@ -53,7 +53,7 @@ angular.module('Core')
           }
           //add users selection logic
           if (currentStep === 'initial' && tab === 'addUsers') {
-            if ($scope.syncChoice.value === 0) {
+            if ($scope.syncChoice === 0) {
               $scope.changeStep('manualEntry');
             } else {
               $scope.changeStep('domainEntry');
@@ -64,21 +64,30 @@ angular.module('Core')
 
       //enterprise settings tab
       $scope.ssoOptions = [{
-        ssoRbLabel: 'Yes, I have a custom SSO provider.',
-        value: 0
+        label: 'Yes, I have a custom SSO provider.',
+        value: 0,
+        name: 'ssoOptions',
+        id: 'ssoProvider'
       }, {
-        ssoRbLabel: 'No, I don\'t have a SSO provider.',
-        value: 1
+        label: 'No, I don\'t have a SSO provider.',
+        value: 1,
+        name: 'ssoOptions',
+        id: 'ssoNoProvider'
       }];
 
       //add users syn settings tab
-      $scope.syncOptions = [{
-        syncRbLabel: $translate.instant('firstTimeWizard.simple'),
-        value: 0
-      }, {
-        syncRbLabel: $translate.instant('firstTimeWizard.advanced'),
-        value: 1
-      }];
+      $scope.syncSimple = {
+        label: $translate.instant('firstTimeWizard.simple'),
+        value: 0,
+        name: 'syncOptions',
+        id: 'syncSimple'
+      };
+      $scope.syncAdvanced = {
+        label: $translate.instant('firstTimeWizard.advanced'),
+        value: 1,
+        name: 'syncOptions',
+        id: 'syncAdvanced'
+      };
 
       $scope.isHuronEnabled = function () {
         var result = false;
