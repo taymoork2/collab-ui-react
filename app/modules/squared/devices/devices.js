@@ -35,7 +35,6 @@ angular.module('Squared')
       };
 
       $scope.deleteDevice = function (deviceUuid, device) {
-        console.log('deleting device');
         SpacesService.deleteDevice(deviceUuid, function (data, status) {
           if (data.success === true) {
             var successMessage = device + ' deleted successfully.';
