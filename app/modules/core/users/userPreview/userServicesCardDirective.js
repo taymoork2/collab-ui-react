@@ -10,11 +10,7 @@ angular.module('Core')
       transclude: true,
       replace: true,
       templateUrl: 'modules/core/users/userPreview/userServicesCard.tpl.html',
-      link: function (scope, element, attrs) {
-
-      }
+      link: function (scope, element, attrs) {}
     };
   }
-])
-
-;
+]);

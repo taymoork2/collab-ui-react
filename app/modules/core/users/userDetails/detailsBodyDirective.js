@@ -13,7 +13,7 @@ angular.module('Core')
       scope: {
         save: '&onSave',
         close: '&close',
-        saveDisabled: '=saveDisabled'
+        title: '@title'
       },
       controller: function ($scope, $rootScope, $state, $window) {
         $scope.closeDetails = function () {

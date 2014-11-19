@@ -1,16 +1,16 @@
 <div class="ent-detail-panel">
-  <!-- <div id="exit-details-btn" class="close-row" ng-click="closeDetails()">
+  <div id="exit-details-btn" class="close-row" ng-click="closeDetails()">
     <span translate="common.close"></span>
     <i class="icon icon-close"></i>
-  </div> -->
-  <div class="details-body" ng-transclude></div>
+  </div>
   <div class="header-row row">
-    <!-- <div class="col-md-8">
+    <div class="col-md-8">
       <h3 class="h2">{{title}}</h3>
-    </div> -->
+    </div>
     <div class="col-md-4">
-      <button id="btn-save" class="btn btn-info btn-save" data-loading-text="<i class='icon icon-spinner icon-spin'></i>" ng-disabled="saveDisabled" ng-click="save()"><span translate="common.save"></span></button>
+      <button id="btn-save" class="btn btn-info btn-save" data-loading-text="<i class='icon icon-spinner icon-spin'></i>" ng-click="save()"><span translate="common.save"></span></button>
     </div>
   </div>
+  <div class="details-body" ng-transclude></div>
 </div>
 

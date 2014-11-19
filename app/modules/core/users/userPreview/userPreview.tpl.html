@@ -2,13 +2,13 @@
   <cr-user-info-card></cr-user-info-card>
   <cr-user-group-card></cr-user-group-card>
   <cr-user-services-card>
-    <div hn-telephony-info id="huronPanel" ng-show="isHuronEnabled()"></div>
-    <div cr-conferencing-info id="conferencePanel" ng-show="false"></div>
-    <div sq-conversations-info current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist" id="squaredPanel"></div>
-    <div sq-endpoints-info id="endpointPanel" ng-show="false"></div>
-  </cr-user-services-card>
-  <hn-user-devices-card></hn-user-devices-card>
-  <cr-user-usage-card></cr-user-usage-card>
+  <div hn-telephony-info id="huronPanel" ng-show="isHuronEnabled()"></div>
+  <div cr-conferencing-info id="conferencePanel" ng-show="false"></div>
+  <div sq-endpoints-info id="endpointPanel" ng-show="false"></div>
+</cr-user-services-card>
+<hn-user-devices-card></hn-user-devices-card>
+<cr-user-usage-card></cr-user-usage-card>
+<sq-user-entitlements-card></sq-user-entitlements-card>
 </div>
 <div class="sub-details-panel details-panel">
   <div class="row" ui-view></div>

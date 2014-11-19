@@ -1,7 +1,10 @@
-<cr-details-body save-disabled="saveDisabled" on-save="changeEntitlement(currentUser)">
-  <div class="entitlement-checkbox-list">
-    <div class="entitle-check-grp" ng-repeat="key in entitlementsKeys" ng-if="isServiceAllowed(key)">
-      <cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared')}" id="{{'chk_'+key}}" ng-model="entitlements[key]" cklabel="{{getServiceName(key)}}"></cs-checkbox>
-    </div>
-  </div>
-</cr-details-body>
+<div class="details-body">
+	<div class="entitle-preview-grp">
+		<div class="entitle-check-grp" ng-repeat="key in entitlementsKeys" ng-if="isServiceAllowed(key)">
+			<cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared')}" id="{{'chk_'+key}}" ng-model="entitlements[key]" cklabel="{{getServiceName(key)}}"></cs-checkbox>
+		</div>
+	</div>
+	<div class="entitle-save-btn">
+		<button id="btn-save" class="btn btn-info btn-save" data-loading-text="<i class='icon icon-spinner icon-spin'></i>" ng-disabled="saveDisabled" ng-click="changeEntitlement(currentUser)"><span translate="common.save"></span></button>
+	</div>
+</div>

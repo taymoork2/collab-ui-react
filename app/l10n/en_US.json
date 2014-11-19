@@ -50,7 +50,8 @@
     "conferencingPreview": "Conferencing",
     "convPreview": "Messaging",
     "usagePreview": "Usage",
-    "endpointsPreview": "Endpoints"
+    "endpointsPreview": "Endpoints",
+    "entitlementsPreview": "Entitlements"
   },
   "messagingPanel": {
     "title": "Messaging"
