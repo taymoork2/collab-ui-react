@@ -33,9 +33,9 @@ describe('Service: ConnectorService', function () {
   });
 
   it('should inject cluster_id if not exists', function () {
-    var mockData = [{}];
+    var mockData = [{host_name: 'foo'}];
     var converted = Service._convert(mockData);
-    expect(converted[0].cluster_id).toBe('unknown');
+    expect(converted[0].cluster_id).toBe('foo');
   });
 
   it('should inject status if alerts exist', function () {

@@ -69,7 +69,12 @@
                     <td>{{connector.display_name}}</td>
                     <td>
                       {{connector.version}}
-                      <a style="float: right" href="#" ng-show="connector.available_update" class="label label-info">
+                      <a
+                        href=""
+                        style="float: right"
+                        class="label label-info"
+                        ng-show="connector.available_update"
+                        ng-click="upgradeSoftware(connector.id)">
                         Upgrade to {{connector.available_update.version}}
                       </a>
                     </td>

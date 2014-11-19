@@ -3,8 +3,11 @@
 /* global _ */
 
 angular.module('Hercules')
-  .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http', 'ConnectorGrouper', 'ConnectorService',
-    function ($scope, $rootScope, $http, grouper, service) {
+  .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http', 'ConnectorGrouper', 'ConnectorService', 'Notification',
+    function ($scope, $rootScope, $http, grouper, service, notif) {
+      notif.init($scope);
+      $scope.popup = notif.popup;
+
       $scope.loading = true;
 
       $scope.groupings = [{
@@ -51,6 +54,17 @@ angular.module('Hercules')
         $scope.loading = true;
         $scope.connectors = [];
         loadData();
+      };
+
+      $scope.upgradeSoftware = function (connectorId) {
+        service.upgradeSoftware({
+          connectorId: connectorId,
+          success: $scope.reload,
+          error: function (data, status) {
+            notif.notify(['Request failed with status ' + status], 'error');
+          }
+        });
+        return false;
       };
 
       loadData();

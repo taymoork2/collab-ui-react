@@ -38,7 +38,7 @@ angular.module('Hercules')
 
           c.status = c.status || {};
           c.version = c.version || 'unknown';
-          c.cluster_id = c.cluster_id || 'unknown';
+          c.cluster_id = c.cluster_id || c.host_name;
           c.status.state = c.status.state || 'unknown';
           c.display_name = c.display_name || c.connector_type;
           c.status_code = c.status.state;
@@ -71,10 +71,19 @@ angular.module('Hercules')
         return aggregated_status;
       };
 
+      var upgradeSoftware = function (opts) {
+        var url = getUrl() + '/' + opts.connectorId + '/update_software_package'
+        $http
+          .post(url)
+          .success(opts.success)
+          .error(opts.error);
+      };
+
       return {
         /* public */
         fetch: fetch,
         aggregateStatus: aggregateStatus,
+        upgradeSoftware: upgradeSoftware,
 
         /* private, for testing */
         _convert: convert
