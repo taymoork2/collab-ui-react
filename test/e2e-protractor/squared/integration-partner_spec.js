@@ -154,6 +154,27 @@ describe('Partner flow', function() {
 
   });
 
+  describe('Partner launches its orgs portal', function(){
+
+      it('should launch partners org view',function(){
+        var appWindow = browser.getWindowHandle();
+
+        expect(navigation.userInfoButton.isDisplayed()).toBeTruthy();
+        navigation.launchPartnerOrgPortal();
+
+        browser.getAllWindowHandles().then(function(handles) {
+        var newWindowHandle = handles[1];
+        browser.switchTo().window(newWindowHandle);
+        navigation.expectDriverCurrentUrl('login/true');
+        expect(navigation.tabs.isDisplayed()).toBeTruthy();
+        navigation.expectDriverCurrentUrl('overview');
+        browser.driver.close();
+        browser.switchTo().window(appWindow);
+        });
+      });
+
+    });
+
   describe('Partner landing page reports', function(){
 
     it('should delete an exisiting org thus deleting trial', function(done){

@@ -78,7 +78,8 @@
     "appTitle": "Squared Admin Tool",
     "genericTitle": "Squared",
     "search": "Search users by name or email",
-    "greeting": "Hi {{name}}"
+    "greeting": "Hi {{name}}",
+    "launchPartner" : "Launch Partner Org"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",

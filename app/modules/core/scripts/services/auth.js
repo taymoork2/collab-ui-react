@@ -25,9 +25,12 @@ angular.module('Core')
         var authUrl = null;
         $http.defaults.headers.common.Authorization = 'Bearer ' + token;
         var currentOrgId = SessionStorage.get('customerOrgId');
+        var launchPartnerOrg = SessionStorage.get('launchPartnerOrg');
 
         if (currentOrgId) {
           authUrl = auth.authorizeUrl + 'organization/' + currentOrgId + '/userauthinfo';
+        } else if (launchPartnerOrg) {
+          authUrl = auth.authorizeUrl + 'organization/' + currentOrgId + '/userauthinfo?launchpartnerorg=true';
         } else {
           authUrl = auth.authorizeUrl + 'userauthinfo';
         }
