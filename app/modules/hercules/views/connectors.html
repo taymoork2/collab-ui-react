@@ -67,7 +67,12 @@
                       </a>
                     </td>
                     <td>{{connector.display_name}}</td>
-                    <td>{{connector.version}}</td>
+                    <td>
+                      {{connector.version}}
+                      <a style="float: right" href="#" ng-show="connector.available_update" class="label label-info">
+                        Upgrade to {{connector.available_update.version}}
+                      </a>
+                    </td>
                     <td>
                       <span
                         class="label label-{{connector.status_class}}"
@@ -76,12 +81,12 @@
                       </span>
                     </td>
                     <td>
-                      <a href="https://{{connector.host_name}}/alarms" target="_blank">
-                        <span
-                          ng-show="connector.status.alerts.length"
-                          class="label label-danger">
+                      <a
+                        target="_blank"
+                        class="label label-danger"
+                        ng-show="connector.status.alerts.length"
+                        href="https://{{connector.host_name}}/alarms">
                           {{connector.status.alerts.length}}
-                        </span>
                       </a>
                     </td>
                   </tr>

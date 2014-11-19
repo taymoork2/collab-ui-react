@@ -88,6 +88,10 @@ var mockData = [{
   "serial": "1111",
   "host_name": "localhost",
   "connector_type": "expressway_csi",
+  "version": "1.0",
+  "available_update": {
+    "version": "2.0"
+  },
   "provisioning_url": null,
   "display_name": "Telephony",
   "status_url": "https://hercules.ladidadi.org/v1/connector_statuses/95",
@@ -104,7 +108,10 @@ var mockData = [{
   "cluster_id": "example3.com",
   "serial": "12345",
   "host_name": "hostname2.cisco.com",
-  "version": "1.9.8",
+  "version": "1.0",
+  "available_update": {
+    "version": "2.0"
+  },
   "display_name": "Fusion Management Service",
   "connector_type": "expressway_management_connector",
   "provisioning_url": "https://hercules.ladidadi.org/v1/management_connectors/22",
@@ -120,6 +127,9 @@ var mockData = [{
   "serial": "0974F8FD",
   "host_name": "gwydlvm1186",
   "version": "69",
+  "available_update": {
+    "version": "72"
+  },
   "display_name": "Fusion Management Service",
   "connector_type": "expressway_management_connector",
   "provisioning_url": "https://hercules.ladidadi.org/v1/management_connectors/18",
