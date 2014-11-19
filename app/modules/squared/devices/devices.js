@@ -24,8 +24,34 @@ angular.module('Squared')
         return acode;
       };
 
-      var getAllRooms = function () {
-        SpacesService.listRooms(function (data, status) {
+      $scope.setDeleteDevice = function (deviceUuid, room) {
+        $scope.deleteDeviceUuid = deviceUuid;
+        $scope.deleteRoom = room;
+      };
+
+      $scope.cancelDelete = function () {
+        $scope.deleteDeviceUuid = null;
+        $scope.deleteRoom = null;
+      };
+
+      $scope.deleteDevice = function (deviceUuid, device) {
+        console.log('deleting device');
+        SpacesService.deleteDevice(deviceUuid, function (data, status) {
+          if (data.success === true) {
+            var successMessage = device + ' deleted successfully.';
+            Notification.notify([successMessage], 'success');
+            setTimeout(function () {
+              getAllDevices();
+            }, 1000);
+          } else {
+            var errorMessage = ['Error deleting ' + device + '. Status: ' + status];
+            Notification.notify(errorMessage, 'error');
+          }
+        });
+      };
+
+      var getAllDevices = function () {
+        SpacesService.listDevices(function (data, status) {
           if (data.success === true) {
             var devices = [];
             if (data.devices) {
@@ -54,6 +80,7 @@ angular.module('Squared')
                   'code': activationCode,
                   'status': deviceStatus,
                   'activationDate': adate,
+                  'deviceUuid': device.accountCisUuid,
                   'color': color
                 });
               }
@@ -65,7 +92,7 @@ angular.module('Squared')
         });
       };
 
-      getAllRooms();
+      getAllDevices();
 
       var roomTemplate = '<div class="ngCellText"><div class="device-name-desc">{{row.getProperty(col.field)}}</div></div>';
 
@@ -76,9 +103,12 @@ angular.module('Squared')
         '<p ng-if="row.getProperty(col.field) !== \'Active\'">{{row.getProperty(\'code\')}}</p></div>';
 
       var actionsTemplate = '<span dropdown class="device-align-ellipses">' +
-        '<button class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button id="actionlink" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
+        '<ul class="dropdown-menu dropdown-primary" role="menu">' +
+        '<li id="deleteDeviceAction"><a data-toggle="modal" data-target="#deleteDeviceModal" ng-click="setDeleteDevice(row.entity.deviceUuid, row.entity.room)"><span translate="spacesPage.delete"></span></a></li>' +
+        '</ul>' +
         '</span>';
 
       $scope.newRoomName = null;
@@ -111,7 +141,7 @@ angular.module('Squared')
           field: 'action',
           displayName: $filter('translate')('spacesPage.actionsHeader'),
           sortable: false,
-          cellTemplate: ''
+          cellTemplate: actionsTemplate
         }]
       };
 
@@ -124,17 +154,22 @@ angular.module('Squared')
         $scope.newRoomName = null;
       };
 
-      $scope.addRoom = function () {
-        SpacesService.addRoom($scope.newRoomName, function (data, status) {
+      $scope.addDevice = function () {
+        SpacesService.addDevice($scope.newRoomName, function (data, status) {
           if (data.success === true) {
             $scope.showAdd = false;
             if (data.activationCode && data.activationCode.length > 0) {
               $scope.newActivationCode = formatActivationCode(data.activationCode);
             }
-            var successMessage = [$scope.newRoomName + ' added successfully.'];
-            Notification.notify(successMessage, 'success');
+            var successMessage = $scope.newRoomName + ' added successfully.';
+            // Notification requires change to accomodate displaying 2nd line with different font size.
+            // for now change the font inline in the message.
+            if (data.emailConfCode === undefined && data.conversationId === undefined) {
+              successMessage = successMessage + '<br><p style="font-size:xx-small">Notifications failed.</p>';
+            }
+            Notification.notify([successMessage], 'success');
             setTimeout(function () {
-              getAllRooms();
+              getAllDevices();
             }, 1000);
           } else {
             var errorMessage = ['Error adding ' + $scope.newRoomName + '. Status: ' + status];

@@ -4,15 +4,14 @@ angular.module('Squared')
   .service('SpacesService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
     function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
 
-      var roomUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/devices';
+      var deviceUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/devices';
 
       return {
-        listRooms: function (callback) {
+        listDevices: function (callback) {
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-          $http.get(roomUrl)
+          $http.get(deviceUrl)
             .success(function (data, status) {
               data.success = true;
-              Log.debug('Retrieved list of rooms for org: ' + $rootScope.token);
               callback(data, status);
             })
             .error(function (data, status) {
@@ -23,14 +22,14 @@ angular.module('Squared')
             });
         },
 
-        addRoom: function (newRoomName, callback) {
-          var roomData = {
-            'name': newRoomName
+        addDevice: function (newDeviceName, callback) {
+          var deviceData = {
+            'name': newDeviceName
           };
 
-          if (roomData.name.length > 0) {
+          if (deviceData.name.length > 0) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-            $http.post(roomUrl, roomData)
+            $http.post(deviceUrl, deviceData)
               .success(function (data, status) {
                 data.success = true;
                 callback(data, status);
@@ -42,7 +41,29 @@ angular.module('Squared')
                 Auth.handleStatus(status);
               });
           } else {
-            callback('No valid rooms entered.');
+            callback('No valid device entered.');
+          }
+
+        },
+
+        deleteDevice: function (deviceUuid, callback) {
+
+          if ((deviceUuid !== null) && (deviceUuid.length > 0)) {
+            var deleteUrl = deviceUrl + '/' + deviceUuid;
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+            $http.delete(deleteUrl)
+              .success(function (data, status) {
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function (data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+                Auth.handleStatus(status);
+              });
+          } else {
+            callback('No valid device available to delete.');
           }
 
         }

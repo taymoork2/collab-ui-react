@@ -37,6 +37,24 @@ describe('Shared spaces flow', function() {
     browser.sleep(1000); //TODO fix this - animation should be resolved by angular
   });
 
+  it('cancel delete device', function() {
+      spaces.actionLink.click();
+      utils.expectIsDisplayed(spaces.deleteDeviceAction);
+      spaces.deleteDeviceAction.click();
+      utils.expectIsDisplayed(spaces.deleteDeviceModal);
+      spaces.cancelButton.click();
+      utils.expectIsDisplayed(spaces.actionLink);
+    });
+
+  it('should delete device', function() {
+      spaces.actionLink.click();
+      utils.expectIsDisplayed(spaces.deleteDeviceAction);
+      spaces.deleteDeviceAction.click();
+      utils.expectIsDisplayed(spaces.deleteDeviceModal);
+      spaces.deleteButton.click();
+      notifications.assertSuccess('deleted successfully');
+    });
+
   it('should log out', function() {
     navigation.logout();
   });

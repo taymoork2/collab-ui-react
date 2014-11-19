@@ -27,44 +27,72 @@
     </div>
   </div>
 </div>
+
 <!-- Add Room Modal -->
 <div class="modal fade" id="addRoomDialog" tabindex="-1" role="dialog" aria-labelledby="addRoomTitle" aria-hidden="true">
-      <div class="modal-dialog add-device-modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button id="device-modal-close" type="button" class="close" data-dismiss="modal">
-              <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
-            </button>
-            <h3 class="modal-title" id="addRoomTitle" translate="spacesPage.modalTitle"></h3>
-          </div>
-          <div class="modal-body">
+  <div class="modal-dialog add-device-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="device-modal-close" type="button" class="close" data-dismiss="modal">
+          <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+        </button>
+        <h3 class="modal-title" id="addRoomTitle" translate="spacesPage.modalTitle"></h3>
+      </div>
+      <div class="modal-body">
 
-            <h4 translate="spacesPage.addDeviceStep1" class="adddevice-stepheader"></h4>
-            <p translate="spacesPage.addDeviceStep1Desc" class="adddevice-desc"></p>
+        <h4 translate="spacesPage.addDeviceStep1" class="adddevice-stepheader"></h4>
+        <p translate="spacesPage.addDeviceStep1Desc" class="adddevice-desc"></p>
 
-            <div ng-show="showAdd">
-              <input class="form-control profile-input adddevice-desc add-device-textbox" name="roomName" ng-model="newRoomName" type="text" id="newRoom" required></input>
+        <div ng-show="showAdd">
+          <input class="form-control profile-input adddevice-desc add-device-textbox" name="roomName" ng-model="newRoomName" type="text" id="newRoom" required></input>
 
-              <button id="btnAdd" type="button" class="btn btn-primary btn-lg add-device-btn" ng-click="addRoom()" ng-disabled="!newRoomName.length">
-              <span translate="spacesPage.addBtn"></span>
-              </button>
-            </div>
-
-            <div id="deviceAddCard" class="modal-deviceadd-card" ng-show="!showAdd">
-              <img src="images/SX10.png" class="pull-left"/>
-              <p class="adddevice-desc device-card-content-name pull-left">SX10</p>
-              <p id="confirmDeviceName" class="adddevice-desc device-card-content pull-left">{{newRoomName}}</p>
-              <p class="adddevice-desc device-card-content pull-left">{{newActivationCode}}</p>
-            </div>
-
-          </div>
-          <div class="modal-footer">
-            <!-- <div class="device-add-footer"> -->
-              <button type="button" id="doneDevicesButton" class="btn btn-primary btn-lg pull-right" data-dismiss="modal" ng-disabled="showAdd">
-                <span translate="spacesPage.done"></span>
-              </button>
-            <!-- </div> -->
-          </div>
+          <button id="btnAdd" type="button" class="btn btn-primary btn-lg add-device-btn" ng-click="addDevice()" ng-disabled="!newRoomName.length">
+          <span translate="spacesPage.addBtn"></span>
+          </button>
         </div>
+
+        <div id="deviceAddCard" class="modal-deviceadd-card" ng-show="!showAdd">
+          <img src="images/SX10.png" class="pull-left"/>
+          <p class="adddevice-desc device-card-content-name pull-left">SX10</p>
+          <p id="confirmDeviceName" class="adddevice-desc device-card-content pull-left">{{newRoomName}}</p>
+          <p class="adddevice-desc device-card-content pull-left">{{newActivationCode}}</p>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <!-- <div class="device-add-footer"> -->
+          <button type="button" id="doneDevicesButton" class="btn btn-primary btn-lg pull-right" data-dismiss="modal" ng-disabled="showAdd">
+            <span translate="spacesPage.done"></span>
+          </button>
+        <!-- </div> -->
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Delete Room Modal -->
+<div class="modal fade" id="deleteDeviceModal" tabindex="-1" role="dialog" aria-labelledby="deleteRoomTitle" aria-hidden="true">
+  <div class="modal-dialog delete-device-modal">
+    <div class="modal-content" modal-transclude="">
+      <div class="modal-header">
+        <button id="device-modal-close" type="button" class="close" ng-click="cancelDelete()"  data-dismiss="modal">
+          <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+        </button>
+        <h3 class="modal-title">
+            <span translate="spacesPage.deleteDevice"></span>
+        </h3>
+      </div>
+      <div class="modal-body">
+        <p><span translate="spacesPage.deleteDeviceConfText"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelButton" class="btn btn-default" ng-click="cancelDelete()" data-dismiss="modal">
+          <span translate="spacesPage.cancel"></span>
+        </button>
+        <button id="deleteButton" class="btn btn-primary" ng-click="deleteDevice(deleteDeviceUuid, deleteRoom)" data-dismiss="modal">
+          <span translate="spacesPage.deleteDevice"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

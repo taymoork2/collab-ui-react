@@ -17,6 +17,11 @@ var SpacesPage = function() {
   this.deviceModalClose = element(by.id('device-modal-close'));
   this.confirmDeviceName = element(by.id('confirmDeviceName'));
   this.doneDevicesAdd = element(by.id('doneDevicesButton'));
+  this.actionLink = element(by.id('actionlink'));
+  this.deleteDeviceAction = element(by.id('deleteDeviceAction'));
+  this.deleteDeviceModal = element(by.id('deleteDeviceModal'));
+  this.deleteButton = element(by.id('deleteButton'));
+  this.cancelButton = element(by.id('cancelButton'));
 };
 
 module.exports = SpacesPage;
