@@ -177,7 +177,12 @@ angular.module('Core')
 
         isPartner: function () {
           var roles = this.getRoles();
-          return roles.indexOf('PARTNER_USER') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
+          if (roles) {
+            return roles.indexOf('PARTNER_USER') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
+          } else {
+            return false;
+          }
+
         },
 
         isSquaredTeamMember: function () {

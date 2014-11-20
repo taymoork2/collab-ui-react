@@ -14,7 +14,7 @@ angular.module('Core')
     }];
 
     var getAllRooms = function () {
-      SpacesService.listRooms(function (data, status) {
+      SpacesService.listDevices(function (data, status) {
         if (data.success === true) {
           var activated = 0;
           var pending = 0;

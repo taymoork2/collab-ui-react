@@ -1,18 +1,16 @@
 <h4>{{'callForwardPanel.title' | translate}}</h4>
 <div class="form-group">
-  <div class="radio">
-    <label>
-      <input type="radio" ng-model="$parent.forward" value="all" name="rdo_callforward">{{'callForwardPanel.forwardAllCalls' | translate}}
-    </label>
-  </div>
-  <div ng-show="$parent.forward === 'all'">
+  <label class="cs-radio" for="forwardAllCalls">
+    <input type="radio" ng-model="$parent.forward" value="all" name="rdo_callforward" id="forwardAllCalls">
+    <span>{{'callForwardPanel.forwardAllCalls' | translate}}</span>
+  </label>
+  <div ng-show="$parent.forward === 'all'" class="call-forward-all">
     <cs-combobox id="cfa" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardAllCalls"></cs-combobox>
   </div>
-  <div class="radio">
-    <label>
-      <input type="radio" ng-model="$parent.forward" value="busy" name="rdo_callforward">{{'callForwardPanel.forwardBusyNoAnswer' | translate}}
-    </label>
-  </div>
+  <label class="cs-radio" for="forwardBusyNoAnswer">
+    <input type="radio" ng-model="$parent.forward" value="busy" name="rdo_callforward" id="forwardBusyNoAnswer">
+    <span>{{'callForwardPanel.forwardBusyNoAnswer' | translate}}</span>
+  </label>
   <div ng-show="$parent.forward === 'busy'">
     <span ng-show="!$parent.forwardExternalCalls">{{'callForwardPanel.internalAndExternal' | translate}}<br></span>
     <span ng-show="$parent.forwardExternalCalls">{{'callForwardPanel.internalOnly' | translate}}<br></span>

@@ -37,6 +37,25 @@ describe('Shared spaces flow', function() {
     browser.sleep(1000); //TODO fix this - animation should be resolved by angular
   });
 
+  it('cancel delete device', function() {
+      spaces.actionLink.click();
+      utils.expectIsDisplayed(spaces.deleteDeviceAction);
+      spaces.deleteDeviceAction.click();
+      utils.expectIsDisplayed(spaces.deleteDeviceModal);
+      spaces.cancelButton.click();
+      browser.sleep(1000); //TODO fix this - animation should be resolved by angular
+    });
+
+  it('should delete device', function() {
+      utils.expectIsDisplayed(spaces.actionLink);
+      spaces.actionLink.click();
+      utils.expectIsDisplayed(spaces.deleteDeviceAction);
+      spaces.deleteDeviceAction.click();
+      utils.expectIsDisplayed(spaces.deleteDeviceModal);
+      spaces.deleteButton.click();
+      notifications.assertSuccess('deleted successfully');
+    });
+
   it('should log out', function() {
     navigation.logout();
   });
