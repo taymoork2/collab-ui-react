@@ -48,23 +48,13 @@ angular.module('Core')
             });
         },
 
-        setSetupDone: function (callback) {
+        setSetupDone: function () {
           var adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/setup';
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-          $http({
-              method: 'PATCH',
-              url: adminUrl
-            })
-            .success(function (data, status) {
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              Auth.handleStatus(status);
-            });
+          return $http({
+            method: 'PATCH',
+            url: adminUrl
+          });
         }
 
       };

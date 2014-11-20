@@ -122,9 +122,9 @@ describe('Partner flow', function() {
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
         wizard.finishTab.click();
-        expect(wizard.mainviewTitles.get(11).getText()).toEqual('Get Started');
-        expect(wizard.mainviewTitles.get(11).isDisplayed()).toBeTruthy();
-        wizard.closeBtn.click();
+        expect(wizard.mainviewTitle.getText()).toEqual('Get Started');
+        expect(wizard.mainviewTitle.isDisplayed()).toBeTruthy();
+        wizard.finishBtn.click();
         navigation.expectDriverCurrentUrl('overview');
         expect(navigation.tabs.isDisplayed()).toBeTruthy();
         browser.driver.close();

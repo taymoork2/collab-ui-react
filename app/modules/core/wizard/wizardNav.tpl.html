@@ -1,0 +1,16 @@
+<div class="wizard-nav">
+  <div ng-repeat="tab in tabs" id="wizard-{{tab.name}}-link" class="wizard-side-item" ng-class="{'wizard-nav-active': current.tab.name === tab.name}" ng-click="setTab(tab);">
+    <div class="wizard-menu-text">
+      <div class="wizard-menu-title" translate="{{tab.label}}"></div>
+      <div class="wizard-menu-subtitle">
+        <span ng-hide="tab.subTabs" translate="{{tab.description}}"></span>
+        <span ng-show="tab.subTabs" class="wizard-menu-subtitle" ng-repeat="subTab in tab.subTabs"><span ng-hide="$first"> | </span><span translate="{{subTab.title}}" ng-click="$event.stopPropagation();setTab(tab,subTab.name,1);" ng-class="{'wizard-subtitle-active': current.subTab === subTab.name}"></span></span>
+      </div>
+    </div>
+    <div class="icon {{tab.icon}}"></div>
+  </div>
+
+  <div class="wizard-side-item">
+    <div class="help-link" translate="firstTimeWizard.needHelp"></div>
+  </div>
+</div>

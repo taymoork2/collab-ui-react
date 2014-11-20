@@ -319,14 +319,14 @@ angular
         })
         .state('firsttimewizard', {
           parent: 'firsttimesplash',
-          templateUrl: 'modules/core/setupWizard/setupWizard.tpl.html',
+          template: '<cr-wizard tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
           controller: 'SetupWizardCtrl'
         })
         .state('setupwizardmodal', {
           parent: 'wizardmodal',
           views: {
             'modal@': {
-              templateUrl: 'modules/core/setupWizard/setupWizard.tpl.html',
+              template: '<cr-wizard tabs="tabs" finish="finish"></cr-wizard>',
               controller: 'SetupWizardCtrl'
             }
           }

@@ -1,0 +1,9 @@
+<h3 translate="firstTimeWizard.domainEntry"></h3>
+<p translate="firstTimeWizard.domainSubDesc"></p>
+<div ng-init="getDefaultDomain()">
+  <span class="subheading" translate="firstTimeWizard.domain"></span>
+  <input type="text" id="dirDomainText" placeholder="{{'firstTimeWizard.defaultPlaceholder' | translate}}" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/>
+  <div id="domainDesc">
+    <span translate="firstTimeWizard.domainDesc"></span>
+  </div>
+</div>

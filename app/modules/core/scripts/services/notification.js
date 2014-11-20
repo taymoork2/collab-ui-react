@@ -13,6 +13,7 @@ angular.module('Core')
       return {
         init: function (scope) {
           _scope = scope;
+          _scope.popup = this.popup;
         },
         notify: function (notifications, type) { //notifications must be an array. Type is 'success' or 'error'
           var icon = null;
@@ -68,7 +69,7 @@ angular.module('Core')
               output += '<p>' + _errors[id][i] + '</p>';
             }
             popup = '<div class="panel panel-danger notification-panel">' + '<div class="panel-heading panel-notification-heading"><h3 class="panel-title" style="font-size:14px;"><i class="fa fa-exclamation-triangle"></i> Error notifications <i id="notifications-cancel" class="fa fa-times pull-right error-id-' + id + '"></i></h3></div>' + '<div class="panel-body panel-danger-body">' + output + '</div></div>';
-            $compile(angular.element('.notification').after(popup))(_scope);
+            $compile(angular.element('.notification').last().after(popup))(_scope);
             $('.notification-panel').animate({
               'right': '30px'
             }, 'normal');
@@ -83,7 +84,7 @@ angular.module('Core')
               output += '<p>' + _successes[id][i] + '</p>';
             }
             popup = '<div class="panel panel-success notification-panel">' + '<div class="panel-heading panel-notification-heading"><h3 class="panel-title" style="font-size:14px;"><i class="fa fa-check"></i> Success notifications <i id="notifications-cancel" class="fa fa-times pull-right success-id-' + id + '"></i><a/></h3></div>' + '<div class="panel-body panel-success-body">' + output + '</div></div>';
-            $compile(angular.element('.notification').after(popup))(_scope);
+            $compile(angular.element('.notification').last().after(popup))(_scope);
             $('.notification-panel').animate({
               'right': '30px'
             }, 'normal');
