@@ -11,7 +11,7 @@ Setup the environment:
 * $ gem install sass (Make sure to install sass first)
 * $ gem install compass
 * Run package managers in the cloned project to pull dependencies:
-* $ bower install && npm install
+* $ npm install && bower install
 * Launch the app: $ grunt serve
 * Before pushing any code to jenkins, always use git pull --rebase
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
