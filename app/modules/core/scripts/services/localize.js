@@ -6,8 +6,11 @@ angular.module('Core')
       return {
         varTitle: function () {
           var currentOrgName = SessionStorage.get('customerOrgName');
+          var partnerOrgName = SessionStorage.get('partnerOrgName');
           if (currentOrgName) {
             return currentOrgName;
+          } else if (partnerOrgName) {
+            return partnerOrgName;
           } else if (Utils.isAdminPage()) {
             return $filter('translate')('index.appTitle');
           } else {

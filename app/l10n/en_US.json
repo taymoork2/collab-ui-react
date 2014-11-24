@@ -74,12 +74,12 @@
   "index": {
     "welcome": "Welcome",
     "feedback": "Feedback",
-    "logout": "Log out",
+    "logout": "Log Out",
     "appTitle": "Squared Admin Tool",
     "genericTitle": "Squared",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
-    "launchPartner" : "Launch Partner Org"
+    "launchPartner" : "Manage My Organization"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",
@@ -578,7 +578,8 @@
     "active": "Active Trial",
     "expiring": "Trial Expiring",
     "expired": "Expired Trial",
-    "expiresToday": "Expires Today"
+    "expiresToday": "Expires Today",
+    "unused": "unused licenses"
   },
   "didAddModal": {
     "title": "Add Phone Numbers",

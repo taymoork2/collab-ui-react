@@ -165,7 +165,7 @@ describe('Partner flow', function() {
         browser.getAllWindowHandles().then(function(handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
-        navigation.expectDriverCurrentUrl('login/true');
+        navigation.expectDriverCurrentUrl('true');
         expect(navigation.tabs.isDisplayed()).toBeTruthy();
         navigation.expectDriverCurrentUrl('overview');
         browser.driver.close();

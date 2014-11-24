@@ -14,11 +14,14 @@ angular.module('Core')
         PageParam.set(pageParam);
       }
 
+      console.log($stateParams);
+
       if ($stateParams.customerOrgId && $stateParams.customerOrgName) {
         SessionStorage.put('customerOrgName', $stateParams.customerOrgName);
         SessionStorage.put('customerOrgId', $stateParams.customerOrgId);
-      } else if ($stateParams.launchPartnerOrg) {
-        SessionStorage.put('launchPartnerOrg', $stateParams.launchPartnerOrg);
+      } else if ($stateParams.partnerOrgId && $stateParams.partnerOrgName) {
+        SessionStorage.put('partnerOrgName', $stateParams.partnerOrgName);
+        SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
       }
 
       var authorizeUser = function () {

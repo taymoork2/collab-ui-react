@@ -58,12 +58,12 @@ angular.module('Huron')
         } else { // add new dn case
           HuronAssignedLine.getUnassignedDirectoryNumber().then(function (dn) {
             if (typeof dn !== 'undefined') {
-                var internalNumber = {
+              var internalNumber = {
                 'uuid': dn.uuid,
                 'pattern': dn.pattern
               };
               $scope.assignedInternalNumber = internalNumber;
-            } 
+            }
           });
           initCallForward();
           initCallerId();
@@ -262,35 +262,35 @@ angular.module('Huron')
       $scope.$on('internalNumberPoolChanged', function () {
         var telephonyInfo = TelephonyInfoService.getTelephonyInfo();
         var internalNumber = {
-            'uuid': telephonyInfo.currentDirectoryNumber.uuid,
-            'pattern': telephonyInfo.currentDirectoryNumber.pattern
-          };
+          'uuid': telephonyInfo.currentDirectoryNumber.uuid,
+          'pattern': telephonyInfo.currentDirectoryNumber.pattern
+        };
 
-          var intNumPool = TelephonyInfoService.getInternalNumberPool();
+        var intNumPool = TelephonyInfoService.getInternalNumberPool();
 
-          if (internalNumber.uuid !== '' && internalNumber.uuid !== 'none') {
-            intNumPool.push(internalNumber);
-          }
-          $scope.assignedInternalNumber = internalNumber;
-          $scope.internalNumberPool = intNumPool;
+        if (internalNumber.uuid !== '' && internalNumber.uuid !== 'none') {
+          intNumPool.push(internalNumber);
+        }
+        $scope.assignedInternalNumber = internalNumber;
+        $scope.internalNumberPool = intNumPool;
       });
 
       $scope.$on('externalNumberPoolChanged', function () {
         var telephonyInfo = TelephonyInfoService.getTelephonyInfo();
         var externalNumber = {
-            'uuid': telephonyInfo.alternateDirectoryNumber.uuid,
-            'pattern': telephonyInfo.alternateDirectoryNumber.pattern
-          };
+          'uuid': telephonyInfo.alternateDirectoryNumber.uuid,
+          'pattern': telephonyInfo.alternateDirectoryNumber.pattern
+        };
 
-          var extNumPool = TelephonyInfoService.getExternalNumberPool();
-          
-          if (externalNumber.uuid !== '' && externalNumber.uuid !== 'none') {
-            extNumPool.push(externalNumber);
-            // Keep external assignment within this if block, otherwise setting to none messes up dropdown
-            // list by putting a blank entry in the list.
-            $scope.assignedExternalNumber = externalNumber; 
-          }
-          $scope.externalNumberPool = extNumPool;
+        var extNumPool = TelephonyInfoService.getExternalNumberPool();
+
+        if (externalNumber.uuid !== '' && externalNumber.uuid !== 'none') {
+          extNumPool.push(externalNumber);
+          // Keep external assignment within this if block, otherwise setting to none messes up dropdown
+          // list by putting a blank entry in the list.
+          $scope.assignedExternalNumber = externalNumber;
+        }
+        $scope.externalNumberPool = extNumPool;
       });
 
       $scope.$on('currentLineChanged', function () {

@@ -184,7 +184,10 @@ angular.module('Huron')
         },
 
         updateInternalNumberPool: function () {
-          var intNumPool = [{uuid: 'none', pattern: $filter('translate')('directoryNumberPanel.chooseNumber')}];
+          var intNumPool = [{
+            uuid: 'none',
+            pattern: $filter('translate')('directoryNumberPanel.chooseNumber')
+          }];
           return InternalNumberPoolService.query({
               customerId: Authinfo.getOrgId(),
               directorynumber: ''
@@ -207,7 +210,10 @@ angular.module('Huron')
         },
 
         updateExternalNumberPool: function () {
-          var extNumPool = [{uuid: 'none', pattern: $filter('translate')('directoryNumberPanel.none')}];
+          var extNumPool = [{
+            uuid: 'none',
+            pattern: $filter('translate')('directoryNumberPanel.none')
+          }];
           return ExternalNumberPoolService.query({
               customerId: Authinfo.getOrgId(),
               directorynumber: ''

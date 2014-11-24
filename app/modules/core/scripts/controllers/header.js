@@ -13,6 +13,7 @@ angular.module('Core')
     var getAuthinfoData = function () {
       $scope.username = Authinfo.getUserName();
       $scope.orgname = Authinfo.getOrgName();
+      $scope.orgId = Authinfo.getOrgId();
       $scope.isPartner = Authinfo.isPartner();
     };
     getAuthinfoData();

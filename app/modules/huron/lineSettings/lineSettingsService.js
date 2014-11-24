@@ -59,7 +59,7 @@ angular.module('Huron')
               if (typeof altNum.pattern !== 'undefined' && altNum.pattern !== '') {
                 var telInfo = TelephonyInfoService.getTelephonyInfo();
                 return DirectoryNumber.updateAlternateNumber(telInfo.currentDirectoryNumber.uuid, altNum.pattern);
-              }  
+              }
             })
             .then(function (response) {
               TelephonyInfoService.getUserDnInfo(userUuid);

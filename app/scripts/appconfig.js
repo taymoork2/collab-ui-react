@@ -199,7 +199,7 @@ angular
           authenticate: false
         })
         .state('launch_partner_org', {
-          url: '/login/:launchPartnerOrg',
+          url: '/login/:partnerOrgId/:partnerOrgName/:launchPartner',
           views: {
             'main@': {
               templateUrl: 'modules/core/login/login.tpl.html',
