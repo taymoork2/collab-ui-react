@@ -73,3 +73,5 @@ npm install
 npm update -g bower
 bower cache clean
 bower install --force
+npm update 
+bower update
