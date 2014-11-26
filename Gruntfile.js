@@ -689,7 +689,7 @@ module.exports = function (grunt) {
         options: {
           args: {
             specs: [
-              'test/e2e-protractor/squared/*_spec.js'
+              'test/e2e-protractor/squared/integration_spec.js'
 
             ]
           }

@@ -17,6 +17,7 @@ angular.module('Squared')
       var averageCallCount = apiUrl + 'reports/counts/avgCallsPerUser';
       var entitlementCount = apiUrl + 'reports/counts/entitlements';
       var contentSharedCount = apiUrl + 'reports/counts/contentShared';
+      var onboardingUrl = apiUrl + 'reports/funnel/onboarding';
 
       var urls = {
         'callUsage': callMetricsUrl,
@@ -25,7 +26,8 @@ angular.module('Squared')
         'entitlementCount': entitlementCount,
         'contentSharedCount': contentSharedCount,
         'callsCount': callsUrl,
-        'conversationsCount': conversationsUrl
+        'conversationsCount': conversationsUrl,
+        'onboardingFunnel': onboardingUrl
       };
 
       var buildUrl = function (metricType, params) {
@@ -104,12 +106,23 @@ angular.module('Squared')
 
           var partnerCharts = ['activeUsers', 'avgCallsPerUser', 'entitlements', 'contentShared',
             'contentShareSizes', 'activeUserCount', 'averageCallCount', 'entitlementCount', 'contentSharedCount',
-            'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations'
+            'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations', 'onboardingFunnel'
           ];
 
           for (var chart in partnerCharts) {
             this.getUsageMetrics(partnerCharts[chart], chartParams);
           }
+
+          chartParams = {
+            'cache': useCache
+          };
+
+          var funnelCharts = ['onboardingFunnel'];
+
+          for (chart in funnelCharts) {
+            this.getUsageMetrics(funnelCharts[chart], chartParams);
+          }
+
         },
 
         getAllMetrics: function (useCache) {
@@ -139,6 +152,16 @@ angular.module('Squared')
 
           for (chart in customerCharts) {
             this.getUsageMetrics(customerCharts[chart], params);
+          }
+
+          params = {
+            'cache': useCache
+          };
+
+          var funnelCharts = ['onboardingFunnel'];
+
+          for (chart in funnelCharts) {
+            this.getUsageMetrics(funnelCharts[chart], params);
           }
         },
 
