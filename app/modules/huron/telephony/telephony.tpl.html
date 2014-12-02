@@ -31,7 +31,7 @@
       <a ui-sref="users.list.preview.voicemail">
         <span>{{'telephonyPreview.voicemail' | translate}}</span>
           <i class="icon icon-arrow-next pull-right"></i>
-        <span class="status">{{telephonyInfo.voicemail}}</span>
+        <span id="voicemailStatus" class="status">{{telephonyInfo.voicemail}}</span>
       </a>
     </div>
   </div>
@@ -42,7 +42,7 @@
       <a ui-sref="users.list.preview.snr">
         <span>{{'telephonyPreview.singleNumberReach' | translate}}</span>
           <i class="icon icon-arrow-next pull-right"></i>
-        <span class="status">{{telephonyInfo.singleNumberReach}}</span>
+        <span id="snrStatus" class="status">{{telephonyInfo.singleNumberReach}}</span>
       </a>
     </div>
   </div>

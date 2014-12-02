@@ -29,3 +29,28 @@ exports.deleteUser = function(email) {
   });
   return defer.promise;
 };
+
+exports.deleteSquaredUCUser = function(customerUuid,userUuid,email) {
+  var defer = protractor.promise.defer();
+
+  utils.getToken().then(function(token) {
+    var options = {
+      method: 'delete',
+      url: config.squaredUCServiceUrl.integration + 'common/customers/' + customerUuid + '/users/' + userUuid,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token
+      }
+    };
+
+    utils.sendRequest(options).then(function() {
+      console.log('user deleted successfully: ', email);
+      defer.fulfill(204);
+    }, function(data) {
+      console.log('user deletion failed: ', email, data);
+      defer.reject(data);
+    });
+
+  });
+  return defer.promise;
+};
