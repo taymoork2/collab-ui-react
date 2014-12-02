@@ -14,9 +14,11 @@ var SupportPage = function(){
   this.callStartHeading = element(by.id('callStartHeading'));
   this.dateHeading = element(by.id('dateHeading'));
 
-  this.emailAddress = element(by.binding('log.emailAddress'));
-  this.locusId = element(by.binding('log.locusId'));
-  this.callStart = element(by.binding('log.callStart'));
+  this.supportTable = element(by.id('supportTable'));
+
+  this.emailAddress = element(by.binding('emailAddress'));
+  this.locusId = element(by.binding('locusId'));
+  this.callStart = element(by.binding('callStart'));
 
   this.callInfoIcon = element(by.id('callInfo-icon'));
   this.downloadCallflowChartsIcon = element(by.id('download-callflowCharts-icon'));
@@ -25,6 +27,14 @@ var SupportPage = function(){
   this.getRowCount = function() {
     return this.rowCount.then(function(rows){
       return rows.length;
+    });
+  };
+
+  this.assertResultsLength = function(size) {
+    //utils.expectIsDisplayed(element(by.binding('row.entity')));
+    element.all(by.repeater('row in renderedRows')).then(function(rows) {
+      console.log(rows.length);
+      expect(rows.length).toBeGreaterThan(size);
     });
   };
 

@@ -12,7 +12,7 @@
       <form role="form">
         <div class="form-group">
           <br/>
-          <input class="form-control" type="text" id="logsearchfield" ng-model="input.search" placeholder=''/> 
+          <input class="form-control support_input" type="text" id="logsearchfield" ng-model="input.search" placeholder=''/>
           <br>
        </div>
 
@@ -23,41 +23,14 @@
   </div>
 </div>
 
-<div class="panel panel-default"  id="logs-panel" ng-show="logPanelActive">
-    <div id="userSupport">
-      <div class="panel-heading panel-heading-default">
-        <h3 class="panel-title panel-title-default">
-          <strong id="listSupportItems">{{'supportPage.userLogs' | translate }}</strong>
-        </h3>
+<div id="logs-panel" class="col-md-12 col-sm-12" ng-hide="callInfoActive">
+    <div id="userSupport" class="customer-list">
+
+      <div class="page-header row">
+        <label ng-show="userLogs.length === 0 || !userLogs"><span id="noResults" translate="supportPage.noResults"></label>
+        <div id="supportTable" gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
       </div>
 
-      <div class="panel-body">
-        <label ng-show="userLogs.length === 0 || !userLogs"><span id="noResults" translate="supportPage.noResults"></label>
-        <table class="table" ng-show="userLogs">
-          <thead>
-            <tr>
-              <th nowrap ng-click="toggleSort('emailAddress', 'sortIconEmailAddress')"><span id="emailAddressHeading" translate="supportPage.logEmailAddress"></span> <i class="fa {{sortIconEmailAddress}}"></i></th>
-              <th nowrap ng-click="toggleSort('locusId', 'sortIconLocusId')"><span id="locusIdHeading" translate="supportPage.logLocusId"></span> <i class="fa {{sortIconLocusId}}"></i></th>
-              <th nowrap ng-click="toggleSort('callStart', 'sortIconCallStart')"><span id="callStartHeading" translate="supportPage.logCallStart"></span> <i class="fa {{sortIconCallStart}}"></i></th>
-              <th nowrap ng-click="toggleSort('date', 'sortIconDate')"><span id="dateHeading" translate="supportPage.logDate"></span> <i class="fa {{sortIconDate}}"></i></th>
-              <th nowrap><span translate="supportPage.logAction"></span></th>
-              <th nowrap><span translate="supportPage.callflowAction"></span></th>
-              <th nowrap><span translate="supportPage.callAction"></span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="log in userLogs | orderBy:logsSortBy:reverseLogs">
-              <td>{{log.emailAddress}}</td>
-              <td>{{log.locusId}}</td>
-              <td>{{log.callStart}}</td>
-              <td>{{formatDate(log.date)}}</td>
-              <td class="center"><a ng-click="downloadLog(log.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></td>
-              <td class="center"><button class="btn btn-primary pull-center" ng-click="getCallflowCharts(log.orgId, log.userId, log.fullFilename, $index)" id="{{$index}}" data-loading-text="<i class='icon icon-spinner icon-spin'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></td>
-              <td class="center"><a ng-click="showCallInfo(log.emailAddress, log.locusId, log.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>  
     </div>
   </div>
 
@@ -66,7 +39,7 @@
       <div>
         <h3 class="panel-title panel-title-default">
           <strong id="subTitleCallInfo" translate="supportPage.subTitleCallInfo"></strong>
-          <strong>{{emailAddress}}</strong> 
+          <strong>{{emailAddress}}</strong>
         </h3>
       </div>
       <div  ng-click="closeCallInfo()">
@@ -181,7 +154,7 @@
                     <td></td>
                     <td><span translate="supportPage.audioStart"></span></td>
                     <td>{{info.audioStart}}</td>
-                  </tr>     
+                  </tr>
                   <tr>
                     <td></td>
                     <td><span translate="supportPage.audioJitter"></span></td>
