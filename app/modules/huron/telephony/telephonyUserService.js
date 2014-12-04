@@ -23,7 +23,7 @@
             return UserServiceCommon.remove({
               customerId: Authinfo.getOrgId(),
               userId: uuid
-            });
+            }).$promise;
           },
           acquireOTP: function (userName) {
             var otpRequest = {
