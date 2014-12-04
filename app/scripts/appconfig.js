@@ -54,6 +54,35 @@ angular
   .module('Squared')
   .config(['$urlRouterProvider', '$stateProvider',
     function ($urlRouterProvider, $stateProvider) {
+
+      // Modal States Enter and Exit functions
+      function modalOnEnter(size) {
+        /* @ngInject */
+        return function ($modal, $state, $previousState) {
+          $previousState.memo(modalMemo);
+          $state.modal = $modal.open({
+            template: '<div ui-view="modal"></div>',
+            size: size
+          });
+          $state.modal.result.finally(function () {
+            $state.modal = null;
+            var previousState = $previousState.get(modalMemo);
+            if (previousState) {
+              return $previousState.go(modalMemo);
+            }
+          });
+        }
+      };
+
+      modalOnExit.$inject = ['$state', '$previousState'];
+
+      function modalOnExit($state, $previousState) {
+        if ($state.modal) {
+          $previousState.forget(modalMemo);
+          $state.modal.close();
+        }
+      };
+
       var modalMemo = 'modalMemo';
       var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -238,49 +267,46 @@ angular
         })
         .state('modal', {
           abstract: true,
-          onEnter: ['$modal', '$state', '$previousState', function ($modal, $state, $previousState) {
-            $previousState.memo(modalMemo);
-            $state.modal = $modal.open({
-              template: '<div ui-view="modal"></div>'
-            });
-            $state.modal.result.finally(function () {
-              $state.modal = null;
-              var previousState = $previousState.get(modalMemo);
-              if (previousState) {
-                return $previousState.go(modalMemo);
-              }
-            });
-          }],
-          onExit: ['$state', '$previousState', function ($state, $previousState) {
-            if ($state.modal) {
-              $previousState.forget(modalMemo);
-              $state.modal.close();
-            }
-          }]
+          onEnter: modalOnEnter(),
+          onExit: modalOnExit
+        })
+        .state('modalLarge', {
+          abstract: true,
+          onEnter: modalOnEnter('lg'),
+          onExit: modalOnExit
+        })
+        .state('modalSmall', {
+          abstract: true,
+          onEnter: modalOnEnter('sm'),
+          onExit: modalOnExit
         })
         .state('wizardmodal', {
           abstract: true,
-          onEnter: ['$modal', '$state', '$previousState', function ($modal, $state, $previousState) {
-            $previousState.memo(wizardmodalMemo);
-            $state.modal = $modal.open({
-              template: '<div ui-view="modal"></div>',
-              controller: 'ModalWizardCtrl',
-              windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html'
-            });
-            $state.modal.result.finally(function () {
-              $state.modal = null;
-              var previousState = $previousState.get(wizardmodalMemo);
-              if (previousState) {
-                return $previousState.go(wizardmodalMemo);
-              }
-            });
-          }],
-          onExit: ['$state', '$previousState', function ($state, $previousState) {
-            if ($state.modal) {
-              $previousState.forget(wizardmodalMemo);
-              $state.modal.close();
+          onEnter: ['$modal', '$state', '$previousState',
+            function ($modal, $state, $previousState) {
+              $previousState.memo(wizardmodalMemo);
+              $state.modal = $modal.open({
+                template: '<div ui-view="modal"></div>',
+                controller: 'ModalWizardCtrl',
+                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html'
+              });
+              $state.modal.result.finally(function () {
+                $state.modal = null;
+                var previousState = $previousState.get(wizardmodalMemo);
+                if (previousState) {
+                  return $previousState.go(wizardmodalMemo);
+                }
+              });
             }
-          }]
+          ],
+          onExit: ['$state', '$previousState',
+            function ($state, $previousState) {
+              if ($state.modal) {
+                $previousState.forget(wizardmodalMemo);
+                $state.modal.close();
+              }
+            }
+          ]
         })
         .state('firsttimesplash', {
           abstract: true,
@@ -318,6 +344,17 @@ angular
           templateUrl: 'modules/huron/views/callrouting.html',
           controller: 'CallRoutingCtrl',
           parent: 'main'
+        })
+        .state('mediaonhold', {
+          parent: 'modalLarge',
+          url: '/mediaonhold',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/huron/moh/moh.tpl.html',
+              controller: 'MohCtrl',
+              controllerAs: 'moh'
+            }
+          }
         });
     }
   ]);

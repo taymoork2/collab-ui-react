@@ -159,11 +159,12 @@ var mockData = function () {
   ];
 };
 
-console.info(JSON.stringify(mockData(), null, '  '));
+//console.info(JSON.stringify(mockData(), null, '  '));
 
 angular
   .module('Hercules')
   .service('ConnectorMock', [
+
     function ConnectorMock() {
       return {
         mockData: mockData

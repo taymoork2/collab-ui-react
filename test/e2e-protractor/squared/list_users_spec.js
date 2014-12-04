@@ -21,12 +21,12 @@ var inputEmail;
 // - State is conserved between each despribe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
-describe('List users flow', function() {
-  beforeEach(function() {
+describe('List users flow', function () {
+  beforeEach(function () {
     this.addMatchers({
-      toBeLessThanOrEqualTo: function() {
+      toBeLessThanOrEqualTo: function () {
         return {
-          compare: function(actual, expected) {
+          compare: function (actual, expected) {
             return {
               pass: actual < expected || actual === expected,
               message: 'Expected ' + actual + 'to be less than or equal to ' + expected
@@ -38,32 +38,32 @@ describe('List users flow', function() {
     utils.scrollTop();
   });
 
-  it('should login as non-sso admin user', function() {
+  it('should login as non-sso admin user', function () {
     login.login(testuser.username, testuser.password);
   });
 
   // Asserting listing users.
-  describe('Listing users on page load', function() {
-    it('clicking on users tab should change the view', function() {
+  describe('Listing users on page load', function () {
+    it('clicking on users tab should change the view', function () {
       navigation.clickUsers();
     });
 
-    xit('should show first page of users', function() {
+    xit('should show first page of users', function () {
       users.assertPage('1');
     });
 
-    it('should list more than 0 users', function() {
+    it('should list more than 0 users', function () {
       users.assertResultsLength(0);
     });
   });
 
-  describe('Display user information', function(){
-    it('display user preview panel when clicking on a user', function(){
+  describe('Display user information', function () {
+    it('display user preview panel when clicking on a user', function () {
       users.clickOnUser();
       expect(users.previewPanel.isDisplayed()).toBeTruthy();
     });
 
-    it('display user admin settings panel when clicking on next arrow', function(){
+    it('display user admin settings panel when clicking on next arrow', function () {
       utils.expectIsDisplayed(users.nextButton);
       users.nextButton.click();
 
@@ -78,8 +78,8 @@ describe('List users flow', function() {
   });
 
   // Asserting pagination of users.
-  xdescribe('Paginating users returned', function() {
-    it('should paginate the total number of users', function() {
+  xdescribe('Paginating users returned', function () {
+    it('should paginate the total number of users', function () {
       //pagination is only relevant if total matches exceeds 20
       //Initial page
       users.assertPage('1');
@@ -97,31 +97,31 @@ describe('List users flow', function() {
   });
 
   // Asserting sorting of users.
-  xdescribe('Sorting users', function() {
-    it('should sort users by name', function() {
+  xdescribe('Sorting users', function () {
+    it('should sort users by name', function () {
       users.assertSorting('name-sort');
     });
 
-    it('should sort users by username', function() {
+    it('should sort users by username', function () {
       users.assertSorting('username-sort');
     });
   });
 
   // Asserting search users.
-  describe('search users on page', function() {
-    it('should show first page of users based on search string', function() {
-      users.search(testuser.searchStr, '60');
+  describe('search users on page', function () {
+    it('should show first page of users based on search string', function () {
+      users.search(testuser.searchStr);
     });
   });
 
-  describe('Exporting to CSV', function() {
-    it('should display the CSV export button', function() {
+  describe('Exporting to CSV', function () {
+    it('should display the CSV export button', function () {
       expect(users.exportButton.isDisplayed()).toBeTruthy();
     });
   });
 
-  describe('launch feedback page', function(){
-    it('click feedback and launch form page',function(){
+  describe('launch feedback page', function () {
+    it('click feedback and launch form page', function () {
       browser.driver.manage().window().setSize(1195, 569);
 
       //Store the current window handle
@@ -131,7 +131,7 @@ describe('List users flow', function() {
       utils.click(navigation.feedbackLink);
       browser.sleep(2000);
 
-      browser.getAllWindowHandles().then(function(handles) {
+      browser.getAllWindowHandles().then(function (handles) {
         expect(handles.length).toEqual(2);
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
@@ -143,8 +143,8 @@ describe('List users flow', function() {
     });
   });
 
-  describe('logout', function(){
-    it('should log out', function() {
+  describe('logout', function () {
+    it('should log out', function () {
       navigation.logout();
     });
   });

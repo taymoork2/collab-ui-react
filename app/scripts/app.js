@@ -13,7 +13,7 @@ angular.module('Core', []);
 
 angular.module('Squared', ['Core']);
 
-angular.module('Huron', ['Core']);
+angular.module('Huron', ['Core', 'uc.moh']);
 
 angular.module('Hercules', ['Core']);
 

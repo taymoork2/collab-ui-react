@@ -156,6 +156,11 @@ angular.module('Core')
             desc: 'tabs.callRoutingTabDesc',
             state: 'callrouting',
             link: '#callrouting'
+          }, {
+            title: 'tabs.mediaOnHoldTab',
+            desc: 'tabs.mediaOnHoldTabDesc',
+            state: 'mediaonhold',
+            link: '#mediaonhold'
           }]
         }],
 
@@ -295,7 +300,7 @@ angular.module('Core')
       };
 
       config.serviceStates = {
-        'ciscouc': ['callrouting'],
+        'ciscouc': ['callrouting', 'mediaonhold'],
         'squared-fusion-uc': ['fusion'],
         'squared-team-member': ['organization']
       };

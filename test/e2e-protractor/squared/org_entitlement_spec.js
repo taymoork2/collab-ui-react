@@ -14,18 +14,18 @@ var testuser = {
   searchStr: 'fake'
 };
 
-describe('Org Entitlement flow', function() {
-  it('should login as non-sso admin user', function(){
+describe('Org Entitlement flow', function () {
+  it('should login as non-sso admin user', function () {
     login.login(testuser.username, testuser.password);
   });
 
-  it('clicking on users tab should change the view', function() {
+  it('clicking on users tab should change the view', function () {
     navigation.clickUsers();
   });
 
-  it('should display conversations panel', function() {
-    users.search(testuser.searchStr, '60');
-    users.userListEnts.then(function(cell) {
+  it('should display conversations panel', function () {
+    users.search(testuser.searchStr);
+    users.userListEnts.then(function (cell) {
       expect(cell[0].getText()).toContain(testuser.searchStr);
       cell[0].click();
     });
@@ -34,7 +34,7 @@ describe('Org Entitlement flow', function() {
     expect(users.endpointPanel.isDisplayed()).toBeFalsy();
   });
 
-  it('should log out', function() {
+  it('should log out', function () {
     navigation.logout();
   });
 });
