@@ -48,24 +48,90 @@ xdescribe('Squared UC Add User flow', function() {
         users.squaredUCCheckBox.click();
         users.addButton.click();
         notifications.assertSuccess(inputEmail, 'added successfully');     
-        users.closeAddUsers.click();  
+        users.closeAddUsers.click();
         browser.sleep(3000);
       });
     });
 
     describe('Verify user exists and has a line and voicemail is on', function() {
-      it('should show the Telephony panel and the user should have a line and voicemail is on', function() {
+      it('should show the Telephony panel', function() {
         users.search(inputEmail);
         browser.driver.manage().window().maximize();
         users.userListEnts.then(function(cell) {
           expect(cell[0].getText()).toContain(inputEmail);
           users.gridCell.click();
+          browser.sleep(3000);
         });
+      });
+      it('should have a line/directory number', function() {
         expect(telephony.telephonyPanel.isDisplayed()).toBeTruthy();
         expect(telephony.directoryNumbers.count()).toBe(1);
+      });
+      it('should have voicemail on', function() {
         expect(telephony.voicemailFeature.isDisplayed()).toBeTruthy();
         expect(telephony.voicemailStatus.getText()).toEqual('On');
-        //telephony.close.click();
+      });
+      it('should close the preview panel', function() {
+        telephony.close.click();
+      });
+    });
+
+    describe('Verify removing Squared UC', function() {
+      it('should show the Telephony panel', function() {
+        users.search(inputEmail);
+        browser.driver.manage().window().maximize();
+        users.userListEnts.then(function(cell) {
+          expect(cell[0].getText()).toContain(inputEmail);
+          users.gridCell.click();
+          browser.sleep(3000);
+        });
+      });
+      it('should uncheck Squared UC checkbox', function(){
+        telephony.squaredUCCheckBox.click();
+        telephony.saveButton.click();
+        browser.sleep(3000);
+      });
+      it('should not have line or voicemail visible', function() {
+        expect(telephony.telephonyPanel.isDisplayed()).toBeFalsy();
+        expect(telephony.voicemailFeature.isDisplayed()).toBeFalsy();
+      });
+      it('should close the preview panel', function() {
+        telephony.close.click();
+      });
+    });
+
+    describe('Verify entitling Squared UC again', function() {
+      it('should show the Telephony panel', function() {
+        users.search(inputEmail);
+        browser.driver.manage().window().maximize();
+        users.userListEnts.then(function(cell) {
+          expect(cell[0].getText()).toContain(inputEmail);
+          users.gridCell.click();
+          browser.sleep(3000);
+        });
+      });
+      it('should check Squared UC checkbox and close the preview panel', function(){
+        telephony.squaredUCCheckBox.click();
+        telephony.saveButton.click();
+        browser.sleep(3000);
+        telephony.close.click();
+      });
+      it('should show the Telephony panel', function() {
+        users.search(inputEmail);
+        browser.driver.manage().window().maximize();
+        users.userListEnts.then(function(cell) {
+          expect(cell[0].getText()).toContain(inputEmail);
+          users.gridCell.click();
+          browser.sleep(3000);
+        });
+      });
+      it('should have a line/directory number again', function() {
+        expect(telephony.telephonyPanel.isDisplayed()).toBeTruthy();
+        expect(telephony.directoryNumbers.count()).toBe(1);
+      });
+      it('should have voicemail on', function() {
+        expect(telephony.voicemailFeature.isDisplayed()).toBeTruthy();
+        expect(telephony.voicemailStatus.getText()).toEqual('On');
       });
     });
 
@@ -74,10 +140,10 @@ xdescribe('Squared UC Add User flow', function() {
        element(by.binding('currentUser.userName')).evaluate('currentUser').then(function(currentUser){
         console.dir(currentUser);
         expect(deleteUtils.deleteSquaredUCUser(currentUser.meta.organizationID, currentUser.id, currentUser.userName)).toEqual(204);
-        expect(deleteUtils.deleteUser(inputEmail)).toEqual(200);                
+        expect(deleteUtils.deleteUser(inputEmail)).toEqual(200);
         browser.sleep(3000);
        });
-      });          
+      });
     });
 
     it('should log out', function() {
