@@ -3,12 +3,11 @@
 
   angular
     .module('Huron')
-    /**
-     * Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
-     */
-    .factory('HuronEmailService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getEmailUrl() + '/email/userwelcome', {}, {});
-    })
+
+  // Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
+  .factory('HuronEmailService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getEmailUrl() + '/email/userwelcome', {}, {});
+  })
 
   .factory('IdentityOTPService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
@@ -32,6 +31,12 @@
     });
   })
 
+  .factory('UnassignedDirectoryNumberService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/unassigneddirectorynumbers', {
+      customerId: '@customerId'
+    });
+  })
+
   .factory('UserDirectoryNumberService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
@@ -40,7 +45,7 @@
     });
   })
 
-  .factory('UserDirectoryNumberDetailService', function ($resource, HuronConfig) {
+  .factory('DirectoryNumberService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId'
@@ -48,12 +53,6 @@
       update: {
         method: 'PUT'
       }
-    });
-  })
-
-  .factory('UnassignedDirectoryNumberService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/unassigneddirectorynumbers', {
-      customerId: '@customerId'
     });
   })
 
@@ -137,5 +136,24 @@
       customerId: '@customerId',
       internalNumberRangeId: '@internalNumberRangeId'
     });
-  });
+  })
+
+  .factory('UserEndpointService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/endpoints/:userEndpointAssnId', {
+      customerId: '@customerId',
+      userId: '@userId',
+      userEndpointAssnId: '@userEndpointAssnId'
+    });
+  })
+
+  .factory('SipEndpointService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipEndpointId', {
+      customerId: '@customerId',
+      sipEndpointId: '@sipEndpointId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  })
 })();

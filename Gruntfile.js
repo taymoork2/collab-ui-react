@@ -131,7 +131,7 @@ module.exports = function (grunt) {
         files: [{
           src: [
             '*.{ico,png,txt,html}',
-            'images/*',
+            'images/**/*',
             '<%= app_files.js %>',
             '<%= app_files.json %>',
             '.htaccess'
@@ -205,7 +205,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt,html}',
             'scripts/unsupported.js',
-            'images/*',
+            'images/**/*',
             '.htaccess',
             '<%= app_files.json %>'
           ],

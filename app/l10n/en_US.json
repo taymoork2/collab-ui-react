@@ -51,7 +51,10 @@
     "convPreview": "Messaging",
     "usagePreview": "Usage",
     "endpointsPreview": "Endpoints",
-    "entitlementsPreview": "Entitlements"
+    "entitlementsPreview": "Entitlements",
+    "addNewLinePreview": "Add a New Line",
+    "devicesPreview": "Devices",
+    "activateNewDevice": "Activate New Device"
   },
   "messagingPanel": {
     "title": "Messaging"
@@ -591,5 +594,14 @@
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
     "inputPlacehoder": "Input Phone Numbers"
+  },
+  "deviceDetailPage": {
+    "description": "Description",
+    "id": "ID",
+    "deactivate": "Deactivate",
+    "success": "Device updated successfully",
+    "error": "Device configuration failed",
+    "deactivateDevice": "Deactivate Device",
+    "deactivateBody": "This action cannot be undone.  Are you sure you want to deactivate this device?"
   }
 }

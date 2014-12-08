@@ -1,27 +1,41 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
+  angular
+    .module('Core')
+    .directive('crDetailsBody', crDetailsBody);
 
-.directive('crDetailsBody', [
-
-  function () {
-    return {
+  function crDetailsBody() {
+    var directive = {
       restrict: 'EA',
-      // replace: true,
       transclude: true,
       templateUrl: 'modules/core/users/userDetails/detailsBody.tpl.html',
+      require: ['^?form'],
       scope: {
         save: '&onSave',
         close: '&close',
         title: '@title'
       },
-      controller: function ($scope, $rootScope, $state, $window) {
-        $scope.closeDetails = function () {
-          $state.go('users.list');
-        };
-      }
+      link: link,
+      controller: DetailsBodyController,
+      controllerAs: 'vm'
     };
-  }
-])
 
-;
+    return directive;
+
+    function link(scope, element, attrs, ctrls) {
+      scope.detailsBodyForm = ctrls[0];
+    }
+  }
+
+  DetailsBodyController.$inject = ['$state'];
+
+  function DetailsBodyController($state) {
+    var vm = this;
+    vm.closeDetails = closeDetails;
+
+    function closeDetails() {
+      $state.go('users.list');
+    }
+  }
+})();

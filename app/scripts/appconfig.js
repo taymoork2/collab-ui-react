@@ -140,6 +140,10 @@ angular
         .state('users.list.preview.snr', {
           template: '<div single-number-reach-info></div>'
         })
+        .state('users.list.preview.device', {
+          templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
+          controller: 'DeviceDetailCtrl as vm'
+        })
         .state('organization', {
           url: '/organization',
           templateUrl: 'modules/core/views/organizations.html',
