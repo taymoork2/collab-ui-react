@@ -2,8 +2,7 @@
 
 var invitetestuser = {
   username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-  usernameWithNoEntitlements: 'doNotDeleteTestUser@wx2.example.com'
+  password: 'C1sc0123!'
 };
 
 var testuser = {
@@ -33,7 +32,7 @@ describe('Add/Invite/Entitle User flow', function() {
 
     describe('Invite users', function() {
       it('should invite users successfully', function() {
-        inviteEmail = utils.randomTestEmail();
+        inviteEmail = utils.randomTestGmail();
         users.clearButton.click();
         users.addUsersField.sendKeys(inviteEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);

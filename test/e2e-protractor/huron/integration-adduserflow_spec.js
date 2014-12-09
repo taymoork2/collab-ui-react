@@ -5,8 +5,7 @@
 
 var admintestuser= {
   username: 'admin@int1.huron-alpha.com',
-  password: 'Cisco123!',
-  usernameWithNoEntitlements: 'doNotDeleteTestUser@wx2.example.com'
+  password: 'Cisco123!'
 };
 
 var testuser = {
@@ -18,7 +17,7 @@ var testuser = {
 xdescribe('Squared UC Add User flow', function() {
   //Add and Entitle User Flows
   describe('Add and Entitle User Flows', function() {
-    var inputEmail = utils.randomTestEmail();
+    var inputEmail = utils.randomTestGmail();
     describe('Login as testuser admin and launch add users modal', function() {
       it('should login as testuser admin', function(){
         login.login(admintestuser.username, admintestuser.password);
@@ -47,7 +46,7 @@ xdescribe('Squared UC Add User flow', function() {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.squaredUCCheckBox.click();
         users.addButton.click();
-        notifications.assertSuccess(inputEmail, 'added successfully');     
+        notifications.assertSuccess(inputEmail, 'added successfully');
         users.closeAddUsers.click();
         browser.sleep(3000);
       });
