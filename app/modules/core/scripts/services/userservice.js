@@ -39,7 +39,7 @@ angular.module('Core')
                     .then(function (success) {
                       data.success = true;
                       callback(data, status);
-                    }).catch (function (error) {
+                    }).catch(function (error) {
                       Log.error('Squared UC user create unsuccessful: ' + error);
                       data.success = false;
                       callback(data, status);
