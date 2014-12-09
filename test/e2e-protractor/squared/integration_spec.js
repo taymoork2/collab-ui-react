@@ -103,6 +103,7 @@ describe('App flow', function() {
     it('clicking on reports tab should change the view', function() {
       navigation.clickReports();
       expect(reports.entitlements.isDisplayed()).toBeTruthy();
+      expect(reports.onboarding.isDisplayed()).toBeTruthy();
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();
@@ -171,6 +172,7 @@ describe('App flow', function() {
       expect(reports.callsAvgDuration.isDisplayed()).toBeTruthy();
       expect(reports.contentShared.isDisplayed()).toBeTruthy();
       expect(reports.contentShareSizes.isDisplayed()).toBeTruthy();
+      expect(reports.onboarding.isDisplayed()).toBeTruthy();
     });
 
     it('should load new values and update time when clicking refresh', function() {
@@ -187,6 +189,7 @@ describe('App flow', function() {
       expect(reports.callsAvgDuration.isDisplayed()).toBeTruthy();
       expect(reports.contentShared.isDisplayed()).toBeTruthy();
       expect(reports.contentShareSizes.isDisplayed()).toBeTruthy();
+      expect(reports.onboarding.isDisplayed()).toBeTruthy();
     });
   });
 

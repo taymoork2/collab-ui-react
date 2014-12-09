@@ -133,7 +133,7 @@
                 $scope.processCreateRemoteDestionInfo(response);
               })
               .then(function (response) {
-                TelephonyInfoService.getRemoteDestinationInfo($scope.currentUser.id);                  
+                TelephonyInfoService.getRemoteDestinationInfo($scope.currentUser.id);
               })
               .catch(function (response) {
                 $scope.processCreateRemoteDestionInfo(null);

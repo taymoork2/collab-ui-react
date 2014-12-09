@@ -55,6 +55,7 @@ module.exports = {
       'bower_components/amcharts/dist/amcharts/amcharts.js',
       'bower_components/amcharts/dist/amcharts/pie.js',
       'bower_components/amcharts/dist/amcharts/serial.js',
+      'bower_components/amcharts/dist/amcharts/funnel.js',
       'bower_components/typeahead.js/dist/typeahead.bundle.js',
       'bower_components/lodash/dist/lodash.compat.js',
       'bower_components/draggable/draggable.min.js',

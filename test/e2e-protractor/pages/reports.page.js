@@ -5,6 +5,7 @@ var ReportsPage = function(){
   this.calls = element(by.id('avgCallsdiv'));
   this.conversations = element(by.id('avgConversationsdiv'));
   this.activeUsers = element(by.id('activeUsersdiv'));
+  this.onboarding = element(by.id('onboardingFunnelDiv'));
   this.convOneOnOne = element(by.id('convOneOnOnediv'));
   this.convGroup = element(by.id('convGroupdiv'));
   this.calls = element(by.id('callsdiv'));
