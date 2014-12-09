@@ -2,9 +2,11 @@
 
 var TelephonyPage = function(){
   this.telephonyPanel = element(by.id('huronPanel'));
-  this.directoryNumbers = element.all(by.repeater('directoryNumber in userDnList'));
+  this.directoryNumbers = element.all(by.repeater('directoryNumber in vm.telephonyInfo.directoryNumbers'));
   this.voicemailFeature = element(by.cssContainingText('.sub-service','Voicemail'));
   this.snrFeature = element(by.cssContainingText('.sub-service','Single Number Reach'));
+  this.close = element(by.id('exitPreviewButton'));
+  this.squaredUCCheckBox = element(by.id('chk_ciscoUC'));
 
   this.saveButton = element.all(by.buttonText('Save')).filter(function(elem){
     return elem.isDisplayed().then(function(isDisplayed){
@@ -22,9 +24,11 @@ var TelephonyPage = function(){
   this.forwardExternalCalls = element(by.id('ckForwardExternalCalls'));
 
   this.voicemailSwitch = element(by.model('voicemailEnabled'));
+  this.voicemailStatus = element(by.id('voicemailStatus'));
 
   this.snrSwitch = element(by.model('singleNumberReachEnabled'));
   this.snrNumber = element(by.id('number'));
+  this.snrStatus = element(by.id('snrStatus'));
 }
 
 module.exports = TelephonyPage;

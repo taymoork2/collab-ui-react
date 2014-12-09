@@ -26,6 +26,7 @@ var Navigation = function(){
   this.settingsMenu = element(by.css('.settings-menu'));
   this.userInfo = element(by.css('.user-info'));
   this.dropdownItems = element.all(by.repeater('item in menuItems'));
+  this.launchPartnerButton = element(by.id('launch-partner-btn'));
 
   this.clickHome = function() {
     this.homeTab.click();
@@ -122,6 +123,11 @@ var Navigation = function(){
   this.logout = function() {
     this.userInfoButton.click();
     this.logoutButton.click();
+  };
+
+  this.launchPartnerOrgPortal = function(){
+    this.userInfoButton.click();
+    this.launchPartnerButton.click();
   };
 };
 

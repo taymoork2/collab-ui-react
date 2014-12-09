@@ -43,10 +43,11 @@ describe('Shared spaces flow', function() {
       spaces.deleteDeviceAction.click();
       utils.expectIsDisplayed(spaces.deleteDeviceModal);
       spaces.cancelButton.click();
-      utils.expectIsDisplayed(spaces.actionLink);
+      browser.sleep(1000); //TODO fix this - animation should be resolved by angular
     });
 
   it('should delete device', function() {
+      utils.expectIsDisplayed(spaces.actionLink);
       spaces.actionLink.click();
       utils.expectIsDisplayed(spaces.deleteDeviceAction);
       spaces.deleteDeviceAction.click();

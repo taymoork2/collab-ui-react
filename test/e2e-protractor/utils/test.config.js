@@ -14,6 +14,12 @@ exports.adminServiceUrl = {
   prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
 };
 
+exports.squaredUCServiceUrl = {
+  dev: 'https://cmi.hitest.huron-dev.com/',
+  integration: 'https://cmi.hitest.huron-dev.com/',
+  prod: 'https://cmi.huron-dev.com/'
+};
+
 exports.deviceUserAgent = {
 	android: 'wx2-android/1 (Android 4.4.2; LGE Hammerhead / Google Nexus 5; )[preload=false;locale=en_US;clientidbase=android-google]',
 	iPhone: 'wx2_iOS',

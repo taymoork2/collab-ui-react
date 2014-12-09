@@ -198,6 +198,16 @@ angular
           },
           authenticate: false
         })
+        .state('launch_partner_org', {
+          url: '/login/:partnerOrgId/:partnerOrgName/:launchPartner',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/login/login.tpl.html',
+              controller: 'LoginCtrl'
+            }
+          },
+          authenticate: false
+        })
         .state('partnercustomers', {
           parent: 'partner',
           template: '<div ui-view></div>',

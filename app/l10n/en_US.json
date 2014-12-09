@@ -37,7 +37,7 @@
     "moreOptions": "More Actions",
     "inviteUsers": "Invite Users",
     "cancel": "Cancel",
-    "addUsersDesc": "Enter the email addresses of the people in your company that will recieve Collaboration Services. They will receive an email invitation to sign up.",
+    "addUsersDesc": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "status": "Status",
     "pending": "Invite Pending",
     "active": "Active"
@@ -74,11 +74,12 @@
   "index": {
     "welcome": "Welcome",
     "feedback": "Feedback",
-    "logout": "Log out",
+    "logout": "Log Out",
     "appTitle": "Squared Admin Tool",
     "genericTitle": "Squared",
     "search": "Search users by name or email",
-    "greeting": "Hi {{name}}"
+    "greeting": "Hi {{name}}",
+    "launchPartner" : "Manage My Organization"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",
@@ -378,7 +379,7 @@
   "firstTimeWizard": {
     "simple": "Simple",
     "advanced": "Advanced",
-    "simpleSub": "All you need are user's email addresses",
+    "simpleSub": "All you need are users' email addresses",
     "advancedSub": "Synchronize users from Active Directory",
     "needHelp": "Need help?",
     "planReview": "Plan Review",
@@ -428,7 +429,7 @@
     "connectorSteps": "Follow these steps in order to install the Cloud Connector:",
     "getStarted": "Get Started",
     "readyToGo": "You're ready to go!",
-    "finishDesc": "You have completed the set up wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
+    "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
     "finish": "Finish",
     "finishSub": "Complete your setup"
   },
@@ -454,6 +455,7 @@
     "cancelButton": "Cancel"
   },
   "telephonyPreview": {
+    "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
   },
@@ -465,7 +467,7 @@
     "internalNumberLabel": "Reach this line by any of these numbers or extensions",
     "internalNumberExtension": "Internal Number Extension",
     "externalNumberLabel": "External Number",
-    "chooseNumber": "choose a number",
+    "chooseNumber": "Choose a Number",
     "addNewNumber": "Add a New Number",
     "none": "None"
   },
@@ -493,7 +495,8 @@
     "snrNote": "SNR can cover all the user's lines or limited to specific lines",
     "success": "Single Number Reach configuration saved successfully",
     "removeSuccess": "Single Number Reach configuration removed successfully",
-    "error": "Single Number Reach configuration failed"
+    "error": "Single Number Reach configuration failed",
+    "placeholder": "Enter SNR Number"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -575,7 +578,8 @@
     "active": "Active Trial",
     "expiring": "Trial Expiring",
     "expired": "Expired Trial",
-    "expiresToday": "Expires Today"
+    "expiresToday": "Expires Today",
+    "unused": "unused licenses"
   },
   "didAddModal": {
     "title": "Add Phone Numbers",

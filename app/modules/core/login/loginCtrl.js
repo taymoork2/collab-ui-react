@@ -11,19 +11,22 @@ angular.module('Core')
 
       var pageParam = $location.search().pp;
       if (pageParam) {
-        console.log('page param detected: ' + pageParam);
         PageParam.set(pageParam);
       }
+
+      console.log($stateParams);
 
       if ($stateParams.customerOrgId && $stateParams.customerOrgName) {
         SessionStorage.put('customerOrgName', $stateParams.customerOrgName);
         SessionStorage.put('customerOrgId', $stateParams.customerOrgId);
+      } else if ($stateParams.partnerOrgId && $stateParams.partnerOrgName) {
+        SessionStorage.put('partnerOrgName', $stateParams.partnerOrgName);
+        SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
       }
 
       var authorizeUser = function () {
         $scope.loading = true;
 
-        var currentOrgId = SessionStorage.get('customerOrgId');
         Auth.authorize($rootScope.token).then(function () {
           if (!Authinfo.getSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');
