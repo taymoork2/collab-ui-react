@@ -6,9 +6,10 @@
     <input type="radio" ng-model="callerIdInfo.selection" value="default" name="rdo_callerid" id="callerIdDefault">
     <span>{{callerIdInfo.default}}</span>
   </label>
-  <label class="cs-radio" for="callerIdOther">
+  <label class="cs-radio inline" for="callerIdOther">
     <input type="radio" ng-model="callerIdInfo.selection" value="other" name="rdo_callerid" id="callerIdOther">
-    <span><input id="other" type="text" class="form-control caller-id-other" ng-model="callerIdInfo.otherName" ng-disabled="callerIdInfo.selection === 'default'"/></span>
+    <span></span>
   </label>
+  <input id="other" type="text" class="form-control caller-id-other inline" ng-model="callerIdInfo.otherName" ng-disabled="callerIdInfo.selection === 'default'"/>
   </div>
 </div>
