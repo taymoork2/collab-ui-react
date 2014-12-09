@@ -27,6 +27,7 @@ var UsersPage = function() {
   this.messengerCheckBox = element(by.id('chk_jabberMessenger'));
   this.fusionCheckBox = element(by.id('chk_squaredFusionUC'));
   this.squaredCheckBox = element(by.id('chk_webExSquared'));
+  this.squaredUCCheckBox = element(by.id('chk_ciscoUC'));
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 

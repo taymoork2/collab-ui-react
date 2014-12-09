@@ -37,7 +37,7 @@
     "moreOptions": "More Actions",
     "inviteUsers": "Invite Users",
     "cancel": "Cancel",
-    "addUsersDesc": "Enter the email addresses of the people in your company that will recieve Collaboration Services. They will receive an email invitation to sign up.",
+    "addUsersDesc": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "status": "Status",
     "pending": "Invite Pending",
     "active": "Active"
@@ -379,7 +379,7 @@
   "firstTimeWizard": {
     "simple": "Simple",
     "advanced": "Advanced",
-    "simpleSub": "All you need are user's email addresses",
+    "simpleSub": "All you need are users' email addresses",
     "advancedSub": "Synchronize users from Active Directory",
     "needHelp": "Need help?",
     "planReview": "Plan Review",
@@ -429,7 +429,7 @@
     "connectorSteps": "Follow these steps in order to install the Cloud Connector:",
     "getStarted": "Get Started",
     "readyToGo": "You're ready to go!",
-    "finishDesc": "You have completed the set up wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
+    "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
     "finish": "Finish",
     "finishSub": "Complete your setup"
   },

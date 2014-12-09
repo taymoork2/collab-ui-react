@@ -15,7 +15,7 @@ var testuser = {
   orgname: 'SquaredAdminTool',
   searchValidEmail: 'pbr-org-admin@squared2webex.com',
   searchValidUuid: 'd6688fc9-414d-44ce-a166-759530291edc',
-  searchValidLocusid: '1203dc8f-bb8d-403d-bc8a-aa4324c8dc4e',
+  searchValidLocusid: 'a75e0191-8e6b-415b-ad00-7136c1b89add',
   searchNonexistentMetadata: 'qqt7y812twuiy900909-2jijeqbd,,.mjmj123qwsah77&89%$3wesa@54a'
 };
 
@@ -62,11 +62,9 @@ describe('Support flow', function() {
       support.logSearchField.clear();
       support.logSearchField.sendKeys(testuser.searchValidEmail);
       support.logSearchBtn.click();
-      expect(support.emailAddressHeading.getText()).toBe('Email Address');
-      expect(support.locusIdHeading.getText()).toBe('Locus ID');
-      expect(support.callStartHeading.getText()).toBe('Call Start Time');
-      expect(support.dateHeading.getText()).toBe('Upload Time');
-      expect(support.getRowCount()).toBeGreaterThan(0);
+      support.assertResultsLength(0);
+      expect(support.supportTable.isDisplayed()).toBeTruthy();
+
       expect(support.emailAddress.getText()).toBe(testuser.searchValidEmail);
     });
 
@@ -74,11 +72,9 @@ describe('Support flow', function() {
       support.logSearchField.clear();
       support.logSearchField.sendKeys(testuser.searchValidUuid);
       support.logSearchBtn.click();
-      expect(support.emailAddressHeading.getText()).toBe('Email Address');
-      expect(support.locusIdHeading.getText()).toBe('Locus ID');
-      expect(support.callStartHeading.getText()).toBe('Call Start Time');
-      expect(support.dateHeading.getText()).toBe('Upload Time');
-      expect(support.getRowCount()).toBeGreaterThan(0);
+      support.assertResultsLength(0);
+      expect(support.supportTable.isDisplayed()).toBeTruthy();
+
       expect(support.emailAddress.getText()).toBe(testuser.searchValidEmail);
     });
 
@@ -86,11 +82,9 @@ describe('Support flow', function() {
       support.logSearchField.clear();
       support.logSearchField.sendKeys(testuser.searchValidLocusid);
       support.logSearchBtn.click();
-      expect(support.emailAddressHeading.getText()).toBe('Email Address');
-      expect(support.locusIdHeading.getText()).toBe('Locus ID');
-      expect(support.callStartHeading.getText()).toBe('Call Start Time');
-      expect(support.dateHeading.getText()).toBe('Upload Time');
-      expect(support.getRowCount()).toBeGreaterThan(0);
+      support.assertResultsLength(0);
+      expect(support.supportTable.isDisplayed()).toBeTruthy();
+
       expect(support.locusId.getText()).toBe(testuser.searchValidLocusid);
       expect(support.callStart.getText()).not.toBe('-NA-');
     });
@@ -104,10 +98,7 @@ describe('Support flow', function() {
     it('should display log-list panel on search', function() {
       support.logSearchBtn.click();
       expect(support.closeCallInfo.isDisplayed()).toBeFalsy();
-      expect(support.emailAddressHeading.getText()).toBe('Email Address');
-      expect(support.locusIdHeading.getText()).toBe('Locus ID');
-      expect(support.callStartHeading.getText()).toBe('Call Start Time');
-      expect(support.dateHeading.getText()).toBe('Upload Time');
+      expect(support.supportTable.isDisplayed()).toBeTruthy();
     });
 
     it('should not return results for non existent metadata search', function() {
@@ -121,11 +112,8 @@ describe('Support flow', function() {
       support.logSearchField.clear();
       support.logSearchField.sendKeys(testuser.searchValidEmail);
       support.logSearchBtn.click();
-      expect(support.emailAddressHeading.getText()).toBe('Email Address');
-      expect(support.locusIdHeading.getText()).toBe('Locus ID');
-      expect(support.callStartHeading.getText()).toBe('Call Start Time');
-      expect(support.dateHeading.getText()).toBe('Upload Time');
-      expect(support.getRowCount()).toBeGreaterThan(0);
+      expect(support.supportTable.isDisplayed()).toBeTruthy();
+      support.assertResultsLength(0);
       support.callInfoIcon.click();
       expect(support.closeCallInfo.isDisplayed()).toBeTruthy();
       support.closeCallInfo.click();

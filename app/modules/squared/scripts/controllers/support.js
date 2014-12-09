@@ -359,7 +359,7 @@ angular.module('Squared')
         $scope.callFlowActive = false;
         $scope.logInfo = [];
         $scope.emailAddress = emailAddress;
-        if (locusId === '-NA-' || startTime === '-NA-') {
+        if (!locusId || locusId === '-NA-' || !startTime || startTime === '-NA-') {
           $scope.getPending = false;
           return;
         }
@@ -386,6 +386,64 @@ angular.module('Squared')
           $scope.getLogs();
         }, 0); // setTimeout to allow label translation to resolve
       }
+
+      var rowTemplate = '<div id="{{row.entity.customerName}}" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
+        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
+        '<div ng-cell></div>' +
+        '</div>';
+
+      var clientLogTemplate = '<div class="ngCellText"><a ng-click="downloadLog(log.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></div>';
+
+      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(log.orgId, log.userId, log.fullFilename, $index)" id="{{$index}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
+
+      var callInfoTemplate = '<div class="ngCellText"><a ng-click="showCallInfo(log.emailAddress, log.locusId, log.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></span></a></div>';
+
+      $scope.gridOptions = {
+        data: 'userLogs',
+        multiSelect: false,
+        showFilter: false,
+        rowHeight: 44,
+        rowTemplate: rowTemplate,
+        headerRowHeight: 44,
+        useExternalSorting: false,
+        sortInfo: {
+          fields: ['date'],
+          directions: ['asc']
+        },
+
+        columnDefs: [{
+          field: 'emailAddress',
+          displayName: $filter('translate')('supportPage.logEmailAddress'),
+          sortable: true
+        }, {
+          field: 'locusId',
+          displayName: $filter('translate')('supportPage.logLocusId'),
+          sortable: true
+        }, {
+          field: 'callStart',
+          displayName: $filter('translate')('supportPage.logCallStart'),
+          sortable: true
+        }, {
+          field: 'date',
+          displayName: $filter('translate')('supportPage.logDate'),
+          sortable: true
+        }, {
+          field: 'clientLog',
+          displayName: $filter('translate')('supportPage.logAction'),
+          sortable: false,
+          cellTemplate: clientLogTemplate
+        }, {
+          field: 'callFlow',
+          displayName: $filter('translate')('supportPage.callflowAction'),
+          sortable: false,
+          cellTemplate: callFlowTemplate
+        }, {
+          field: 'callInfo',
+          displayName: $filter('translate')('supportPage.callAction'),
+          sortable: false,
+          cellTemplate: callInfoTemplate
+        }]
+      };
 
     }
   ]);
