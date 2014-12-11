@@ -366,14 +366,13 @@
       "alarms": "Alarms"
     },
     "status": {
-        "unknown": "Unknown",
-        "not_configured": "Not Configured",
-        "installing": "Installing",
-        "running": "Running",
-        "disabled": "Disabled",
-        "not_installed": "Not Installed",
-        "stopped": "Stopped",
-        "offline": "Offline"
+        "unknown": "reports an unknown state. Please check the expressway for details.",
+        "not_configured": "has installed the service, but it's not configured.",
+        "installing": "is installing the service.",
+        "disabled": "has this service disabled.",
+        "not_installed": "has not installed the service.",
+        "stopped": "reports the service as stopped.",
+        "offline": "reports the service as offline."
     }
   },
   "firstTimeWizard": {

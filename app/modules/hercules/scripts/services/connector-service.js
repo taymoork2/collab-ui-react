@@ -9,39 +9,40 @@ var getUrl = function () {
   if (match && match.length == 2) {
     return decodeURIComponent(match[1]);
   } else {
-    return 'https://hercules.hitest.huron-dev.com/v1/connectors';
+    return 'https://hercules.hitest.huron-dev.com/v1/clusters';
   }
 };
 
 angular.module('Hercules')
-  .service('ConnectorService', ['$http',
-    function ConnectorService($http) {
+  .service('ConnectorService', ['$http', 'ConnectorMock',
+    function ConnectorService($http, mock) {
 
       var addMockData = window.location.href.indexOf('hercules-mock') != -1;
 
       var fetch = function (opts) {
+        // var host = mockData[1].hosts[0];
+        // mockData[1].hosts = [host, host, host, host, host, host];
+        // mockData = JSON.parse(JSON.stringify(mockData));
+        // return opts.success(convertClusters(mock.mockData()));
         $http
           .get(getUrl())
           .success(function (data) {
-            if (addMockData) {
-              data = data.concat(mockData);
-            }
-            var decorated = convert(data);
-            opts.success(decorated);
+            var converted = convertClusters(data);
+            opts.success(converted);
           })
           .error(opts.error);
       };
 
-      var convert = function (data) {
+      var convertConnectors = function (data) {
         return _.map(data, function (connector) {
           var c = _.cloneDeep(connector);
 
           c.status = c.status || {};
-          c.version = c.version || 'unknown';
-          c.cluster_id = c.cluster_id || c.host_name;
           c.status.state = c.status.state || 'unknown';
-          c.display_name = c.display_name || c.connector_type;
-          c.status_code = c.status.state;
+
+          if (c.status.alarms && c.status.alarms.length) {
+            c.status.state = 'error';
+          }
 
           switch (c.status.state) {
           case 'running':
@@ -54,120 +55,55 @@ angular.module('Hercules')
           default:
             c.status_class = 'danger';
           }
-
-          if (c.status.alerts && c.status.alerts.length) {
-            c.status_class = 'danger';
-          }
-
           return c;
         });
       };
 
-      var aggregateStatus = function (data) {
-        var aggregated_status = {};
-        _.each(data, function (c) {
-          aggregated_status[c.status_class] = ++aggregated_status[c.status_class] || 1;
-        });
-        return aggregated_status;
-      };
-
       var upgradeSoftware = function (opts) {
-        var url = getUrl() + '/' + opts.connectorId + '/update_software_package'
+        var url = getUrl() + '/' + opts.clusterId + '/upgrade';
+        var data = JSON.stringify({
+          tlp: opts.tlpUrl
+        });
         $http
-          .post(url)
+          .post(url, data)
           .success(opts.success)
           .error(opts.error);
+      };
+
+      var convertClusters = function (data) {
+        var converted = _.map(data, function (origCluster) {
+          var cluster = _.cloneDeep(origCluster);
+          _.each(cluster.services, function (service) {
+            _.each(service.connectors, function (connector) {
+              if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
+                cluster.needs_attention = cluster.intially_open = true;
+                service.needs_attention = true;
+              }
+            });
+            if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
+              var not_approved_package = _.find(cluster.provisioning_data.not_approved_packages, function (pkg) {
+                return pkg.service.service_type == service.service_type;
+              });
+              if (not_approved_package) {
+                service.not_approved_package = not_approved_package;
+              }
+            }
+          });
+          return cluster;
+        });
+        return _.sortBy(converted, function (obj) {
+          return !obj.needs_attention;
+        });
       };
 
       return {
         /* public */
         fetch: fetch,
-        aggregateStatus: aggregateStatus,
         upgradeSoftware: upgradeSoftware,
 
         /* private, for testing */
-        _convert: convert
+        _convertConnectors: convertConnectors,
+        _convertClusters: convertClusters
       };
     }
   ]);
-
-var mockData = [{
-  "id": 228,
-  "cluster_id": "foo",
-  "serial": "1111",
-  "host_name": "localhost",
-  "connector_type": "expressway_csi",
-  "version": "1.0",
-  "available_update": {
-    "version": "2.0"
-  },
-  "provisioning_url": null,
-  "display_name": "Telephony",
-  "status_url": "https://hercules.ladidadi.org/v1/connector_statuses/95",
-  "organization_id": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-  "created_at": "2014-09-26T10:20:32.887Z",
-  "updated_at": "2014-09-26T10:20:32.947Z",
-  "registered_by": null,
-  "status": {
-    "state": "running",
-    "status": "ok"
-  }
-}, {
-  "id": 249,
-  "cluster_id": "example3.com",
-  "serial": "12345",
-  "host_name": "hostname2.cisco.com",
-  "version": "1.0",
-  "available_update": {
-    "version": "2.0"
-  },
-  "display_name": "Fusion Management Service",
-  "connector_type": "expressway_management_connector",
-  "provisioning_url": "https://hercules.ladidadi.org/v1/management_connectors/22",
-  "status_url": "https://hercules.ladidadi.org/v1/connector_statuses/116",
-  "organization_id": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-  "created_at": "2014-10-13T07:19:39.234Z",
-  "updated_at": "2014-10-13T07:19:39.447Z",
-  "registered_by": null,
-  "status": null
-}, {
-  "id": 226,
-  "cluster_id": "no cluster id",
-  "serial": "0974F8FD",
-  "host_name": "gwydlvm1186",
-  "version": "69",
-  "available_update": {
-    "version": "72"
-  },
-  "display_name": "Fusion Management Service",
-  "connector_type": "expressway_management_connector",
-  "provisioning_url": "https://hercules.ladidadi.org/v1/management_connectors/18",
-  "status_url": "https://hercules.ladidadi.org/v1/connector_statuses/93",
-  "organization_id": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-  "created_at": "2014-09-26T10:10:19.235Z",
-  "updated_at": "2014-09-26T10:10:19.287Z",
-  "registered_by": null,
-  "status": {
-    "state": "stopped",
-    "status": "error"
-  }
-}, {
-  "id": 227,
-  "cluster_id": "no cluster id",
-  "serial": "0974F8FD",
-  "host_name": "gwydlvm1186",
-  "version": "8.5-1.0",
-  "connector_type": "expressway_csi",
-  "display_name": "Telephony",
-  "provisioning_url": null,
-  "status_url": "https://hercules.ladidadi.org/v1/connector_statuses/94",
-  "organization_id": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-  "created_at": "2014-09-26T10:10:23.362Z",
-  "updated_at": "2014-09-26T10:10:23.411Z",
-  "registered_by": null,
-  "status": {
-    "state": "installed",
-    "status": "ok",
-    "alerts": [{}]
-  }
-}];
