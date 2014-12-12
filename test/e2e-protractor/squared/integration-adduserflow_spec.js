@@ -6,7 +6,7 @@
 var invitetestuser = {
   username: 'pbr-org-admin@squared2webex.com',
   password: 'C1sc0123!',
-  usernameWithNoEntitlements: 'doNotDeleteTestUser@wx2.example.com'
+  usernameWithNoEntitlements: 'collabctg+doNotDeleteTestUser@gmail.com'
 };
 
 var testuser = {
@@ -44,7 +44,7 @@ describe('Add/Invite/Entitle User flow', function() {
     });
 
     describe('Input validation', function() {
-      var validinputs = ['user@test.com', '<user@user.test>', '"user@user.test"'];
+      var validinputs = ['user@projectsquared.com', '<user@user.projectsquared>', '"user@user.projectsquared"'];
       var invalidinputs = ['user', '<user@user.com', 'user@user.com>', '"user@user.com', 'user@user.com"'];
       it('should invalidate token with invalid inputs and disable button', function() {
         for (var i = 0; i < invalidinputs.length; i++) {
@@ -74,7 +74,7 @@ describe('Add/Invite/Entitle User flow', function() {
 
     describe('Invite users', function() {
       it('should invite users successfully', function() {
-        var inviteEmail = utils.randomTestEmail();
+        var inviteEmail = utils.randomTestGmail();
         users.clearButton.click();
         users.addUsersField.sendKeys(inviteEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
@@ -114,7 +114,7 @@ describe('Add/Invite/Entitle User flow', function() {
 
   //Add and Entitle User Flows
   describe('Add and Entitle User Flows', function() {
-    var inputEmail = utils.randomTestEmail();
+    var inputEmail = utils.randomTestGmail();
     describe('Login as testuser admin and launch add users modal', function() {
       it('should login as testuser admin', function(){
         login.login(testuser.username, testuser.password);

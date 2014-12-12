@@ -1,107 +1,139 @@
-<div id="fusion-root" class="container-fluid">
+<div id="fusion-root">
   <div class="page-header row">
     <div class="col-sm-6 col-md-6">
       <h2 class="page-title" translate="hercules.page_title"></h2>
     </div>
     <div class="col-sm-6 col-md-6">
       <div class="page-option-buttons">
-        <button class="btn btn-info" ng-click="reload()">
-          <i class="fa fa-refresh"></i>
+        <button class="btn btn-info" ng-click="reload()" style="margin-right: 15px;">
+          <!-- <i class="fa fa-refresh"></i> -->
           Reload
         </button>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12"  style="padding-top: 20px;">
+  <div>
+    <div class="col-md-12">
       <div ng-show="loading" style="text-align: center; padding-top: 60px;">
         <i class="icon icon-spinner icon-spin icon-2x"></i>
       </div>
       <div ng-show="error" translate="hercules.connectors.loading_error"></div>
       <div ng-show="!loading">
-        <div ng-show="connectors.length == 0" translate="hercules.connectors.no_connectors"></div>
-
-        <div ng-show="connectors.length != 0">
-
-          <form ng-show="connectors.length > 1" class="form-inline" role="form">
-            <div class="form-group">
-              <label for="groupings" translate="hercules.connectors.group_by"></label>
-              <select
-                id="groupings"
-                class="form-control"
-                ng-model="current_grouping"
-                ng-options="grouping.translate_attr | translate for grouping in groupings">
-              </select>
+        <div ng-show="clusters.length == 0" class="col-md-12">
+            <h2>Nothing to do here <span style="text-decoration: underline">yet</span></h2>
+            <h4>
+                <p>Fusion Services enables you to monitor and manage your Cloud Fusion services running on your Cisco Expressways.</p>
+                <p>Go to the Initial Setup for directions on how to activate them.</p>
+                <span style="margin-top: 30px; display: block;">You are entitled to the following services:</span>
+            </h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><i class="fa fa-phone"></i> UCM Service</div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>Zero touch meetings, move calls between desk phones and soft clients.
+                                <li>Reuse your enterprise phone number.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><i class="fa fa-calendar"></i> Calendar Service</div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>Calendar sync for consistent meeting times.
+                                <li>In-app scheduling connected to Microsoft Exchange.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div style="float: right">
-              <span
-                class="badge badge-{{cl}}"
-                style="margin-left: 3px;"
-                ng-repeat="(cl, num) in aggregated_status">
-                {{num}}
-              </span>
-            </div>
-          </form>
-
-          <div class="panel panel-default" ng-repeat="(name, connectors) in grouped_connectors">
-            <div class="panel-heading panel-heading-default">
-              <h4>{{name}}</h4>
-            </div>
-            <div class="panel-body">
-
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 30%" translate="hercules.connectors.host_name"></th>
-                    <th style="width: 30%" translate="hercules.connectors.display_name"></th>
-                    <th style="width: 30%" translate="hercules.connectors.version"></th>
-                    <th style="width: 10%" translate="hercules.connectors.status"></th>
-                    <th style="width: 10%" translate="hercules.connectors.alarms"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="connector in connectors" id="{{connector.id}}">
-                    <td>
-                      <a href="https://{{connector.host_name}}/" target="_blank">
-                        {{connector.host_name}}
-                      </a>
-                    </td>
-                    <td>{{connector.display_name}}</td>
-                    <td>
-                      {{connector.version}}
-                      <a
-                        href=""
-                        style="float: right"
-                        class="label label-info"
-                        ng-show="connector.available_update"
-                        ng-click="upgradeSoftware(connector.id)">
-                        Upgrade to {{connector.available_update.version}}
-                      </a>
-                    </td>
-                    <td>
-                      <span
-                        class="label label-{{connector.status_class}}"
-                        style="margin-right: 5px;">
-                        {{'hercules.status.' + connector.status.state | translate}}
-                      </span>
-                    </td>
-                    <td>
-                      <a
-                        target="_blank"
-                        class="label label-danger"
-                        ng-show="connector.status.alerts.length"
-                        href="https://{{connector.host_name}}/alarms">
-                          {{connector.status.alerts.length}}
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-
-            </div>
-          </div>
         </div>
+        <div ng-show="clusters.length != 0" class="col-md-12">
 
+          <accordion close-others="{{false}}">
+            <accordion-group ng-repeat="cluster in clusters" is-open="cluster.intially_open">
+              <accordion-heading>
+                <h4>
+                  <span class="{{cluster.needs_attention ? 'red' : 'green'}}" style="padding-right: 10px;">
+                    <i class="fa fa-circle-o" />
+                  </span>
+
+                  <span>{{cluster.name || 'Unknown Cluster Name'}}</span>
+
+                  <span ng-show="{{!cluster.needs_attention && cluster.provisioning_data.not_approved_packages.length}}" style="float: right; color: #00B29D;">
+                    <span class="hidden-xs">Software Upgrades Available</span>
+                    <span class="visible-xs"><i class="fa fa-cloud-download"></i></span>
+                  </span>
+
+                  <span ng-show="{{cluster.needs_attention}}"  style="float: right; color: #f05d3b;">
+                    <span class="hidden-xs">Cluster Needs Attention</span>
+                    <span class="visible-xs"><i class="fa fa-exclamation-circle"></i></span>
+                  </span>
+                </h4>
+              </accordion-heading>
+
+              <div class="connector-body">
+
+                <!-- host list -->
+                <div class="md-col-12 clearfix" style="padding-left: 15px; padding-bottom: 15px">
+                  <span style="font-size: xs; opacity: 0.5">
+                    <span>This cluster consists of {{cluster.hosts.length}} hosts:</span>
+                    <span ng-repeat="host in cluster.hosts">
+                      <a href="https://{{host.host_name}}" target="_blank">
+                        {{host.host_name}}
+                      </a>
+                      <span ng-hide="$last">|</span>
+                    </span>
+                  </span>
+                </div>
+
+                <!-- services -->
+                <div class="sw-upgrade">
+                  <div class="clearfix" ng-repeat="service in cluster.services">
+                    <div class="col-md-12 clearfix">
+                      <h4 style="float: left">
+                        {{service.display_name}}
+                        <span ng-show="{{service.needs_attention}}">needs attention:</span>
+                        <span ng-show="{{!service.needs_attention}}">is running</span>
+                      </h4>
+                      <button ng-show="service.not_approved_package" style="float: right; margin-top: 10px;" class="btn btn-info btn-sm" ng-click="upgradeSoftware(cluster.id, service.not_approved_package.tlp_url)">
+                        Upgrade Now
+                      </button>
+                    </div>
+                    <div class="col-md-12">
+
+                      <!-- connectors -->
+                      <div style="padding-left: 40px;" ng-repeat="connector in service.connectors">
+                        <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.state != 'running' && connector.state != 'disabled'}}">
+                          <span style="color: #f05d3b">{{connector.host.host_name}}</span>
+                          <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}" />
+                        </div>
+                        <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.alarms.length}}">
+                          <span style="color: #f05d3b">{{connector.host.host_name}}</span>
+                          <span>has reported {{connector.alarms.length}} alarms.</span>
+                        </div>
+                      </div>
+
+                      <!-- sw upgrade -->
+                      <div style="padding-left: 40px;" ng-show="service.not_approved_package">
+                        <div style="padding-bottom: 5px" class="clearfix">
+                          <span>A software update is avalable. Current version: {{service.connectors[0].version}} New version: {{service.not_approved_package.version}}</span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </accordion-group>
+          </accordion>
+
+        </div>
       </div>
     </div>
   </div>

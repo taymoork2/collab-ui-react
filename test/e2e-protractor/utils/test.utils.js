@@ -13,10 +13,6 @@ exports.randomId = function() {
   return (Math.random() + 1).toString(36).slice(2);
 };
 
-exports.randomTestEmail = function() {
-	return 'atlas-' + this.randomId() + '@wx2.example.com';
-};
-
 exports.randomTestRoom = function() {
   return 'atlas-' + this.randomId();
 };

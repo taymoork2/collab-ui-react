@@ -122,7 +122,7 @@ angular.module('Squared')
                 updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciService), 1);
               }
             }
-
+            $rootScope.$broadcast('entitlementsUpdated');
           } else {
             Log.error('Failed updating user with entitlements.');
             Log.error(data);

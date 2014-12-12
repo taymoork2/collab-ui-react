@@ -6,12 +6,12 @@ var PartnerHomePage = function(){
 
   this.newTrial = {
     customerName : 'Atlas_Test_Trial_' + randomNumber,
-    customerEmail : 'Atlas_Test_Trial_' + randomNumber + '@gmail.com'
+    customerEmail : 'collabctg+Atlas_Test_Trial_' + randomNumber + '@gmail.com'
   };
 
   this.differentTrial = {
-    customerName : 'Atlas_Different',
-    customerEmail : 'Atlas_Different@gmail.com'
+    customerName : 'collabctg+Atlas_Different',
+    customerEmail : 'collabctg+Atlas_Different@gmail.com'
   };
 
   this.testuser = {

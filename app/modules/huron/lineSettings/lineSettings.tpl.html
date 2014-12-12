@@ -1,7 +1,9 @@
-<cr-details-body title="{{'directoryNumberPanel.title' | translate}}" on-save="saveLineSettings()" close="closePreview()">
-  <div>
-    <hn-directory-number></hn-directory-number>
-    <hn-call-forward></hn-call-forward>
-    <hn-caller-id></hn-caller-id>   
-  </div>
-</cr-details-body>
+<form name="lineSettingsForm" role="form">
+  <cr-details-body title="{{'directoryNumberPanel.title' | translate}}" on-save="saveLineSettings()">
+    <div class="details-body">
+        <hn-directory-number></hn-directory-number>
+        <hn-call-forward></hn-call-forward>
+        <hn-caller-id></hn-caller-id>      
+    </div>
+  </cr-details-body>
+</form>

@@ -11,76 +11,132 @@ describe('Service: ConnectorService', function () {
     Service = _ConnectorService_;
   }));
 
-  it('should inject set display_name if it does not exist', function () {
-    var mockData = [{
-      connector_type: 'foo'
-    }];
-    var converted = Service._convert(mockData);
-    expect(converted[0].display_name).toBe('foo');
-  });
+  // connector conversion
 
-  it('should inject status if not exists', function () {
+  it('should inject connector status if it does not exist', function () {
     var mockData = [{}];
-    var converted = Service._convert(mockData);
+    var converted = Service._convertConnectors(mockData);
     expect(converted[0].status.state).toBe('unknown');
-    expect(converted[0].status.status).toBe(undefined);
-  });
-
-  it('should inject version if not exists', function () {
-    var mockData = [{}];
-    var converted = Service._convert(mockData);
-    expect(converted[0].version).toBe('unknown');
-  });
-
-  it('should inject cluster_id if not exists', function () {
-    var mockData = [{host_name: 'foo'}];
-    var converted = Service._convert(mockData);
-    expect(converted[0].cluster_id).toBe('foo');
   });
 
   it('should inject status if alerts exist', function () {
     var mockData = [{
       status: {
-        status: 'foo',
-        alerts: [{}]
+        state: 'running',
+        alarms: [{}]
       }
     }];
-    var converted = Service._convert(mockData);
-    expect(converted[0].status.state).toBe('unknown');
-    expect(converted[0].status_code).toBe('unknown');
+    var converted = Service._convertConnectors(mockData);
+    expect(converted[0].status.state).toBe('error');
   });
 
   it('should inject classes based on state', function () {
     var converted = null;
-    converted = Service._convert([{ status: { state: 'running' } }]);
+    converted = Service._convertConnectors([{ status: { state: 'running' } }]);
     expect(converted[0].status_class).toBe('success');
 
-    converted = Service._convert([{ status: { state: 'disabled' } }]);
+    converted = Service._convertConnectors([{ status: { state: 'disabled' } }]);
     expect(converted[0].status_class).toBe('default');
 
-    converted = Service._convert([{ status: { state: 'not_configured' } }]);
+    converted = Service._convertConnectors([{ status: { state: 'not_configured' } }]);
     expect(converted[0].status_class).toBe('default');
 
-    converted = Service._convert([{ status: { state: 'foo' } }]);
+    converted = Service._convertConnectors([{ status: { state: 'foo' } }]);
     expect(converted[0].status_class).toBe('danger');
 
-    converted = Service._convert([{ status: { state:  'running', alerts: [{}] } }]);
+    converted = Service._convertConnectors([{ status: { state:  'running', alarms: [{}] } }]);
     expect(converted[0].status_class).toBe('danger');
   });
 
-  it('should aggregate status', function () {
-    var mockData = [
-      {status_class: 'foo'},
-      {status_class: 'foo'},
-      {status_class: 'foo'},
-      {status_class: 'foo'},
-      {status_class: 'bar'}
-    ];
+  // cluster conversion
 
-    var aggregated = Service.aggregateStatus(mockData);
-    expect(_.size(aggregated)).toBe(2);
-    expect(aggregated.foo).toBe(4);
-    expect(aggregated.bar).toBe(1);
+  it('should aggregate cluster status from hosts in cluster where connectors are running or disabled', function () {
+    var mockData = [{
+      "services": [{
+        "connectors": [
+          {"state": "running"},
+          {"state": "disabled"}
+        ]
+      }]
+    }];
+    var converted = Service._convertClusters(mockData);
+    expect(converted[0].needs_attention).toBe(undefined);
+  });
+
+  it('should aggregate cluster status from hosts in cluster where one connector is not running', function () {
+    var mockData = [{
+      "services": [{
+        "connectors": [
+          {"state": "running"},
+          {"state": "installing"}
+        ]
+      }]
+    }];
+    var converted = Service._convertClusters(mockData);
+    expect(converted[0].needs_attention).toBe(true);
+  });
+
+  it('should aggregate cluster status from hosts in cluster where one connector has alarms', function () {
+    var mockData = [{
+      "services": [{
+        "connectors": [
+          {"state": "running", alarms: [{}]},
+          {"state": "disabled"}
+        ]
+      }]
+    }];
+    var converted = Service._convertClusters(mockData);
+    expect(converted[0].needs_attention).toBe(true);
+  });
+
+  it('should aggregate service status from hosts in cluster where one connector has alarms', function () {
+    var mockData = [{
+      "services": [{
+        "connectors": [
+          {"state": "running", alarms: [{}]},
+          {"state": "disabled"}
+        ]
+      }]
+    }];
+    var converted = Service._convertClusters(mockData);
+    expect(converted[0].services[0].needs_attention).toBe(true);
+  });
+
+  it('should show sw update details per service', function() {
+    var mockData = [{
+      "provisioning_data": {
+        "not_approved_packages": [
+          {
+            "service": {
+              "service_type": "c_cal",
+              "display_name": "Calendar Service"
+            },
+            "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
+            "version": "8.2-2.1"
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_type": "c_cal",
+          "display_name": "Calendar Service",
+        }
+      ]
+    }];
+
+    var converted = Service._convertClusters(mockData);
+    expect(converted[0].services[0].not_approved_package).not.toBe(null);
+    expect(converted[0].services[0].not_approved_package.service.service_type).toBe('c_cal');
+  });
+
+  it('should aggregate service status from hosts in cluster where one connector has alarms', function () {
+    var mockData = [
+      { id: 'uno_ok', "services": [{ "connectors": [ {"state": "running"} ] }] },
+      { id: 'dos_error', "services": [{ "connectors": [ {"state": "running", alarms: [{}]}, {"state": "disabled"} ] }] },
+      { id: 'tres_ok', "services": [{ "connectors": [ {"state": "running"} ] }] }
+    ];
+    var converted = Service._convertClusters(mockData);
+    expect(converted[0].id).toBe('dos_error');
   });
 
 });

@@ -57,7 +57,6 @@
           if (response !== null && response !== undefined) {
             $scope.telephonyInfo.singleNumberReach = 'On';
           }
-          angular.element('#btnSaveSingleNumberReach').button('reset');
         };
 
         $scope.deleteRemoteDestinationInfo = function (user) {
@@ -80,14 +79,12 @@
               result.msg = $filter('translate')('singleNumberReachPanel.removeSuccess');
               result.type = 'success';
               Notification.notify([result.msg], result.type);
-              angular.element('#btnSaveSingleNumberReach').button('reset');
             },
             function (error) {
               Log.debug('deleteRemoteDestinationInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
               result.msg = $filter('translate')('singleNumberReachPanel.error') + error.data;
               result.type = 'error';
               Notification.notify([result.msg], result.type);
-              angular.element('#btnSaveSingleNumberReach').button('reset');
               deferred.reject(error);
             });
         };
@@ -112,7 +109,6 @@
               result.msg = $filter('translate')('singleNumberReachPanel.success');
               result.type = 'success';
               Notification.notify([result.msg], result.type);
-              angular.element('#btnSaveSingleNumberReach').button('reset');
             },
             function (error) {
               Log.debug('updateRemoteDestinationInfo failed.  Status: ' + error.status + ' Response: ' + error.data);
@@ -120,13 +116,11 @@
               result.type = 'error';
               Notification.notify([result.msg], result.type);
               deferred.reject(error);
-              angular.element('#btnSaveSingleNumberReach').button('reset');
             });
           return deferred.promise;
         };
 
         $scope.saveSingleNumberReach = function () {
-          angular.element('#btnSaveSingleNumberReach').button('loading');
           if ($scope.telephonyInfo.snrInfo.remoteDestinations !== null && $scope.telephonyInfo.snrInfo.remoteDestinations !== undefined && $scope.telephonyInfo.snrInfo.remoteDestinations.length > 0) {
             if (!$scope.telephonyInfo.snrInfo.singleNumberReachEnabled) {
               $scope.deleteRemoteDestinationInfo($scope.currentUser);
@@ -139,13 +133,7 @@
                 $scope.processCreateRemoteDestionInfo(response);
               })
               .then(function (response) {
-                TelephonyInfoService.getRemoteDestinationInfo($scope.currentUser)
-                  .then(function (response) {
-                    TelephonyInfoService.processRemoteDestinationInfo(response);
-                  })
-                  .catch(function (response) {
-                    TelephonyInfoService.processRemoteDestinationInfo(null);
-                  });
+                TelephonyInfoService.getRemoteDestinationInfo($scope.currentUser.id);
               })
               .catch(function (response) {
                 $scope.processCreateRemoteDestionInfo(null);

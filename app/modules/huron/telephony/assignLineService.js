@@ -94,7 +94,7 @@
             }).$promise;
           }
 
-        };  // end return
+        }; // end return
       }
     ]);
 })();

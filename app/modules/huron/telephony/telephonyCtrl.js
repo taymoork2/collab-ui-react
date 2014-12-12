@@ -5,9 +5,9 @@
     .module('Huron')
     .controller('TelephonyInfoCtrl', TelephonyInfoCtrl);
 
-  TelephonyInfoCtrl.$inject = ['$scope', '$state', 'TelephonyInfoService', 'Config'];
+  TelephonyInfoCtrl.$inject = ['$scope', '$state', 'TelephonyInfoService', 'DeviceService', 'Config'];
 
-  function TelephonyInfoCtrl($scope, $state, TelephonyInfoService, Config) {
+  function TelephonyInfoCtrl($scope, $state, TelephonyInfoService, DeviceService, Config) {
     var vm = this;
     vm.showDirectoryNumberPanel = showDirectoryNumberPanel;
     vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
@@ -40,20 +40,28 @@
       return false;
     }
 
+    function updateTelephonyInfo(user) {
+      TelephonyInfoService.resetTelephonyInfo();
+      if (isHuronEnabled()) {
+        TelephonyInfoService.getTelephonyUserInfo(user.id);
+        TelephonyInfoService.getUserDnInfo(user.id);
+        TelephonyInfoService.getRemoteDestinationInfo(user.id);
+        TelephonyInfoService.loadInternalNumberPool();
+        TelephonyInfoService.loadExternalNumberPool();
+      }
+    }
+
     $scope.$on('telephonyInfoUpdated', function () {
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
     });
 
+    $scope.$on('entitlementsUpdated', function () {
+      updateTelephonyInfo($scope.currentUser);
+    });
+
     $scope.$watch('currentUser', function (newUser, oldUser) {
       if (newUser) {
-        TelephonyInfoService.resetTelephonyInfo();
-        if (isHuronEnabled()) {
-          TelephonyInfoService.getTelephonyUserInfo(newUser.id);
-          TelephonyInfoService.getUserDnInfo(newUser.id);
-          TelephonyInfoService.getRemoteDestinationInfo(newUser.id);
-          TelephonyInfoService.loadInternalNumberPool();
-          TelephonyInfoService.loadExternalNumberPool();
-        }
+        updateTelephonyInfo(newUser);
       }
     });
   }

@@ -50,7 +50,6 @@
     "karma-script-launcher": "~0.1.0",
     "load-grunt-tasks": "~0.2.0",
     "mimelib": "^0.2.14",
-    "protractor": "^1.1.1",
     "protractor-screenshot-reporter": "~0.0.5",
     "request": "~2.33.0",
     "requirejs": "~2.1.10",
@@ -61,6 +60,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "install": "./node_modules/protractor/bin/webdriver-manager update"
+    "install": "./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update",
+    "update": "./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
   }
 }
