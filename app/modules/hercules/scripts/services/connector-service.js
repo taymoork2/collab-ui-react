@@ -20,10 +20,8 @@ angular.module('Hercules')
       var addMockData = window.location.href.indexOf('hercules-mock') != -1;
 
       var fetch = function (opts) {
-        // var host = mockData[1].hosts[0];
-        // mockData[1].hosts = [host, host, host, host, host, host];
-        // mockData = JSON.parse(JSON.stringify(mockData));
-        // return opts.success(convertClusters(mock.mockData()));
+        //return opts.success([]);
+        //return opts.success(convertClusters(mock.mockData()));
         $http
           .get(getUrl())
           .success(function (data) {

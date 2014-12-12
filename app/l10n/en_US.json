@@ -358,7 +358,6 @@
     "connectors": {
       "group_by": "Group services by:",
       "loading_error": "Unable to load fusion data, please try again later.",
-      "no_connectors": "No fusion services registered.",
       "cluster_id": "Cluster",
       "host_name": "Expressway Host",
       "display_name": "Service Name",
