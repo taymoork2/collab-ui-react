@@ -6,7 +6,7 @@ exports.config = {
   capabilities: {
     'browserName': 'chrome',
     'chromeOptions': {
-      'args': ['--disable-extensions', '--start-maximized']
+      'args': ['--disable-extensions', '--start-fullscreen']
     }
   },
 
