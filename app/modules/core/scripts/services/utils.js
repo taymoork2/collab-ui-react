@@ -5,6 +5,18 @@ angular.module('Core')
   .factory('Utils', ['$rootScope', '$location',
     function ($rootScope, $location) {
 
+      var guid = (function () {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return function () {
+          return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+        };
+      })();
+
       var Base64 = {
         _keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
         encode: function (input) {
@@ -200,6 +212,10 @@ angular.module('Core')
             }
           }
           return result;
+        },
+
+        getUUID: function () {
+          return guid();
         }
 
       };

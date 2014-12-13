@@ -59,6 +59,8 @@ angular.module('Core')
 
         callflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
 
+        feedbackUrl: 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl',
+
         appinfo: {
           webClientURL: 'https://web.projectsquared.com/',
           iPhoneURL: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',

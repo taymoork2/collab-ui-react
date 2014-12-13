@@ -77,7 +77,7 @@
   "index": {
     "welcome": "Welcome",
     "feedback": "Feedback",
-    "logout": "Log Out",
+    "logout": "Sign Out",
     "appTitle": "Squared Admin Tool",
     "genericTitle": "Squared",
     "search": "Search users by name or email",

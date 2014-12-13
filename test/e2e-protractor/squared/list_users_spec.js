@@ -120,8 +120,32 @@ describe('List users flow', function() {
     });
   });
 
-  it('should log out', function() {
-    navigation.logout();
+  describe('launch feedback page', function(){
+    it('click feedback and launch form page',function(){
+      browser.driver.manage().window().setSize(1195, 569);
+
+      //Store the current window handle
+      var winHandleBefore = browser.getWindowHandle();
+
+      navigation.userInfoButton.click();
+      utils.click(navigation.feedbackLink);
+      browser.sleep(2000);
+
+      browser.getAllWindowHandles().then(function(handles) {
+        expect(handles.length).toEqual(2);
+        var newWindowHandle = handles[1];
+        browser.switchTo().window(newWindowHandle);
+        browser.driver.close();
+        browser.switchTo().window(winHandleBefore);
+      });
+
+      browser.driver.manage().window().maximize();
+    });
   });
 
+  describe('logout', function(){
+    it('should log out', function() {
+      navigation.logout();
+    });
+  });
 });
