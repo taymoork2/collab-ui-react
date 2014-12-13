@@ -515,7 +515,7 @@
     "trialsCustomerName": "Customer",
     "trialsEndDate": "Day(s) Left",
     "trialsNumUsers": "Users/ Licenses",
-    "viewAll": "View all Trials",
+    "viewAll": "View all trials",
     "expiredToday": "Expires Today",
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
@@ -551,9 +551,11 @@
     "errorProcessing": "Error processing request."
   },
   "customerPage": {
+    "all" : "All",
+    "trial" : "Trial",
     "title": "Customers",
-    "customerNameHeader": "Company Name",
-    "trialIdHeader": "Package",
+    "customerNameHeader": "Customer Name",
+    "trialIdHeader": "Service",
     "licenseHeader": "Licenses",
     "usageHeader": "License Usage",
     "statusHeader": "Status",

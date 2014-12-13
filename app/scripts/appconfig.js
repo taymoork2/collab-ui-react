@@ -223,7 +223,10 @@ angular
         .state('partnercustomers.list', {
           url: '/customers',
           templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
-          controller: 'PartnerHomeCtrl'
+          controller: 'PartnerHomeCtrl',
+          params: {
+            filter: {}
+          }
         })
         .state('partnercustomers.list.preview', {
           templateUrl: 'modules/core/customers/customerPreview/customerPreview.tpl.html',
