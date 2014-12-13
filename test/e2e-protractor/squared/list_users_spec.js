@@ -52,8 +52,28 @@ describe('List users flow', function() {
       users.assertPage('1');
     });
 
-    xit('should list 20 or less users', function() {
-      users.assertResultsLength(20);
+    it('should list more than 0 users', function() {
+      users.assertResultsLength(0);
+    });
+  });
+
+  describe('Display user information', function(){
+    it('display user preview panel when clicking on a user', function(){
+      users.clickOnUser();
+      expect(users.previewPanel.isDisplayed()).toBeTruthy();
+    });
+
+    it('display user admin settings panel when clicking on next arrow', function(){
+      utils.expectIsDisplayed(users.nextButton);
+      users.nextButton.click();
+
+      utils.expectIsDisplayed(users.rolesPanel);
+      utils.expectIsDisplayed(users.previewPanel);
+      utils.expectIsDisplayed(users.closeRolesPanel);
+
+      expect(users.closeRolesPanel.isDisplayed()).toBeTruthy();
+
+      users.closeRolesPanel.click();
     });
   });
 

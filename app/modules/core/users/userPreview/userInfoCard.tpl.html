@@ -8,6 +8,7 @@
   <div class="info-card-name col-xs-7">
     <div id="name-preview" class="name-preview">
       <a ng-href="#/userprofile/{{currentUser.id}}">
+      <!--a ui-sref="users.list.preview.roles" id="roles-link"-->
         <span class="user-name" ng-if="currentUser.name.givenName && currentUser.name.familyName">{{currentUser.name.givenName}} {{currentUser.name.familyName}}</span>
         <span class="user-name" ng-if="!currentUser.name.givenName || !currentUser.name.familyName">{{currentUser.userName}}</span><br>
       </a>
@@ -15,7 +16,16 @@
     <div class="user-title">{{currentUser.title}}</div>
     <div class="user-location">{{currentUser.addresses.streetAddress}}</div>
   </div>
-  <div class="cancel col-xs-2" ng-click="closePreview()" id="exitPreviewButton">
-    <i class="icon icon-close"></i>
+  <div class="col-xs-2" >
+    <div class="row">
+      <a ui-sref="users.list">
+        <i id="close-preview-button" class="icon icon-close next-button pull-right"></i>
+      </a>
+    </div>
+    <div class="row">
+      <a ui-sref="users.list.preview.roles">
+        <i id="next-button" class="icon icon-chevron-right next-button pull-right"></i>
+      </a>
+    </div>
   </div>
 </div>

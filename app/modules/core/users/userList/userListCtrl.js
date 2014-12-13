@@ -229,6 +229,8 @@ angular.module('Core')
           }
         }
         $scope.currentUser = user;
+        $scope.roles = user.roles;
+
         $state.go('users.list.preview');
       };
 

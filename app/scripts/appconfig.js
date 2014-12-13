@@ -126,6 +126,9 @@ angular
         .state('users.list.preview.conversations', {
           template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
         })
+        .state('users.list.preview.roles', {
+          template: '<div class="sub-details-full" user-roles current-user="currentUser" entitlements="entitlements" roles="roles" queryuserslist="queryuserslist"></div>'
+        })
         .state('users.list.preview.directorynumber', {
           templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
           controller: 'LineSettingsCtrl'

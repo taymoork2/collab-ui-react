@@ -15,6 +15,10 @@ var UsersPage = function() {
   this.previewPanel = element(by.id('details-panel'));
   this.previewName = element(by.id('name-preview'));
 
+  this.nextButton = element(by.id('next-button'));
+  this.rolesPanel = element(by.id('roles-panel'));
+  this.closeRolesPanel = element(by.id('close-roles'));
+
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield-tokenfield'));
   this.closeAddUsers = element(by.id('closeAddUser'));
@@ -82,16 +86,21 @@ var UsersPage = function() {
     });
   };
 
+  this.clickOnUser = function(){
+    element.all(by.repeater('row in renderedRows')).get(0).click();
+  };
+
   this.assertPage = function(page) {
     expect(this.currentPage.getText()).toBe(page);
   };
 
   this.assertResultsLength = function(results) {
-    element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+    element.all(by.repeater('row in renderedRows')).then(function(rows) {
       if (results === 20) {
         expect(rows.length).toBeLessThanOrEqualTo(results);
       } else if (results === 0) {
-        expect(rows.length).toBeGreaterThan(results);
+        return expect(rows.length).toBeGreaterThan(results);
+        //expect(rows.length).toBeGreaterThan(results);
       } else {
         expect(rows.length).toBe(results);
       }

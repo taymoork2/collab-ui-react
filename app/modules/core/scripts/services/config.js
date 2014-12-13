@@ -163,6 +163,10 @@ angular.module('Core')
           fusion: 'squared-fusion-uc'
         },
 
+        roles: {
+          full_admin: 'id_full_admin'
+        },
+
         batchSize: 20,
 
         isDev: function () {
