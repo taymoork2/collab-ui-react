@@ -131,11 +131,11 @@ angular
         })
         .state('users.list.preview.directorynumber', {
           templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-          controller: 'LineSettingsCtrl'
-        })
-        .state('users.list.preview.adddirectorynumber', {
-          templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-          controller: 'LineSettingsCtrl'
+          controller: 'LineSettingsCtrl',
+          params: {
+            showAddUsers: {},
+            directoryNumber: {}
+          }
         })
         .state('users.list.preview.voicemail', {
           template: '<div voicemail-info></div>'
@@ -145,7 +145,11 @@ angular
         })
         .state('users.list.preview.device', {
           templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-          controller: 'DeviceDetailCtrl as vm'
+          controller: 'DeviceDetailCtrl as vm',
+          params: {
+            showAddUsers: {},
+            device: {}
+          }
         })
         .state('organization', {
           url: '/organization',

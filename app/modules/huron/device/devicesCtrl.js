@@ -23,7 +23,6 @@
 
     function showDeviceDetailPanel(device) {
       DeviceService.setCurrentDevice(device);
-      $state.go('users.list.preview.device');
     }
 
     function isHuronEnabled() {

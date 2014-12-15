@@ -5,22 +5,17 @@
 </div>
 <div class="row">
   <div class="dir-number-list col-md-12">
-    <div ng-repeat="directoryNumber in vm.telephonyInfo.directoryNumbers track by directoryNumber.uuid" class="dir-number sub-service row">
-      <a href id="{{directoryNumber.id}}" ng-click="vm.showDirectoryNumberPanel(directoryNumber)">
-        <div class="col-md-12">
-          <span class="number">{{directoryNumber.pattern}}</span>
-          <span class="number" ng-if="directoryNumber.altDnPattern !== ''"> {{'telephonyPreview.or' | translate}} {{directoryNumber.altDnPattern}}</span>
-          <span class="usage">{{directoryNumber.dnUsage}}</span>
-          <i class="icon icon-arrow-next pull-right"></i>
-        </div>
+    <div ng-repeat="directoryNumber in vm.telephonyInfo.directoryNumbers track by directoryNumber.uuid" class="dir-number sub-service">
+      <a id="{{directoryNumber.uuid}}" ui-sref="users.list.preview.directorynumber({directoryNumber: directoryNumber.uuid})" ui-sref-active="selected" ng-click="vm.showDirectoryNumberPanel(directoryNumber)">
+        <span class="sub-service-title"><span class="number">{{directoryNumber.pattern}}</span><span class="number" ng-if="directoryNumber.altDnPattern !== ''"> {{'telephonyPreview.or' | translate}} {{directoryNumber.altDnPattern}}</span></span>
+        <span class="usage">{{directoryNumber.dnUsage}}</span>
+        <i class="icon icon-arrow-next pull-right"></i>
       </a>
     </div>
-    <div class="dir-number sub-service row" ng-show="vm.telephonyInfo.currentDirectoryNumber.uuid === 'new'">
-      <a href id="addNewLine" ng-click="vm.showDirectoryNumberPanel('new')">
-        <div class="col-md-12">
-          <span class="number">New Line</span>
-          <i class="icon icon-arrow-next pull-right"></i>
-        </div>
+    <div class="dir-number sub-service" ng-show="vm.telephonyInfo.currentDirectoryNumber.uuid === 'new'">
+      <a id="addNewLine" ui-sref="users.list.preview.directorynumber({directoryNumber: 'new'})" ui-sref-active="selected" ng-click="vm.showDirectoryNumberPanel('new')">
+        <span class="sub-service-title"><span class="number" translate="usersPreview.newLine"></span></span>
+        <i class="icon icon-arrow-next pull-right"></i>
       </a>
     </div>
   </div>
@@ -28,8 +23,8 @@
 <div class="row">
   <div class="voicemail col-md-12">
     <div class="sub-service">
-      <a ui-sref="users.list.preview.voicemail">
-        <span>{{'telephonyPreview.voicemail' | translate}}</span>
+      <a ui-sref="users.list.preview.voicemail" ui-sref-active="selected">
+        <span class="sub-service-title" translate="telephonyPreview.voicemail"></span>
           <i class="icon icon-arrow-next pull-right"></i>
         <span id="voicemailStatus" class="status">{{vm.telephonyInfo.voicemail}}</span>
       </a>
@@ -39,8 +34,8 @@
 <div class="row">
   <div class="single-number-reach col-md-12">
     <div class="sub-service">
-      <a ui-sref="users.list.preview.snr">
-        <span>{{'telephonyPreview.singleNumberReach' | translate}}</span>
+      <a ui-sref="users.list.preview.snr" ui-sref-active="selected">
+        <span class="sub-service-title" translate="telephonyPreview.singleNumberReach"></span>
           <i class="icon icon-arrow-next pull-right"></i>
         <span id="snrStatus" class="status">{{vm.telephonyInfo.singleNumberReach}}</span>
       </a>

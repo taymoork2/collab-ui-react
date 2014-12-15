@@ -40,17 +40,19 @@
   }
   .standard-card {
     border-bottom: solid 1px @gray-light;
-    padding: 20px 10px 20px 20px;
+    padding: 20px 10px 20px 10px;
 
     .title {
       font-family: @font-family-sans-serif;
       font-size: 13px;
       font-weight: bold;
       color: @gray-darker;
+      padding-left: 10px;
     }
     .sub-title {
       border-top: 1px solid @gray-lighter;
       padding-top: 10px;
+      padding-left: 10px;
       margin-top: 10px;
     }
     .sub-title,
@@ -67,6 +69,7 @@
     .icon-arrow-next {
       font-size: 25px;
       line-height: 1;
+      float: right;
     }
     .actions-button {
       line-height: 12px;
@@ -161,7 +164,6 @@
       line-height: 25px;
 
       &:hover {
-        background-color: @gray-lighter;
         text-decoration: none;
       }
 
@@ -169,27 +171,69 @@
         color: @gray;
         height: 100%;
         width: 100%;
+        text-decoration: none;
+
+
+        .sub-service-title {
+          border-radius: 20px;
+          padding: 0 10px;
+          transition: all 250ms ease-in-out;
+        }
+
+        .status,
+        .usage {
+          color: @gray-light;
+          font-size: 11px;
+        }
+        .status {
+          vertical-align: top;
+          float: right;
+          height: 25px;
+          margin-right: 10px;
+        }
+        .usage {
+          margin-left: 5px;
+        }
+
+        &:active, 
+        &:focus {
+          outline: none;
+          box-shadow: none;
+        }
 
         &:hover {
-          text-decoration: none;
+          .sub-service-title {
+            color: @brand-primary;
+            background-color: @gray-lighter;
+          }
+          .icon-arrow-next {
+            color: @gray;
+          }
+          .usage {
+            color: @brand-primary;
+          }
         }
-      }
-      .status,
-      .usage {
-        color: @gray-light;
-        font-size: 11px;
-      }
-      .status {
-        vertical-align: top;
-        float: right;
-        height: 25px;
-        margin-right: 10px;
-      }
-      .usage {
-        margin-left: 5px;
+
+        &.selected {
+          .sub-service-title {
+            color: @brand-white;
+            background-color: @brand-primary;
+          }
+          .icon-arrow-next {
+            color: @brand-primary;
+          }
+          .usage {
+            color: @brand-primary;
+          }
+        }
+       
       }
     }
   }
+}
+
+.user-entitlements-body {
+  padding-left: 10px;
 }
 
 // TODO: remove when added to the toolkit

@@ -3,8 +3,8 @@
 
   angular
     .module('Huron')
-    .controller('LineSettingsCtrl', ['$scope', '$state', '$filter', 'Log', 'Notification', 'DirectoryNumber', 'TelephonyInfoService', 'LineSettings', 'HuronAssignedLine',
-      function ($scope, $state, $filter, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine) {
+    .controller('LineSettingsCtrl', ['$scope', '$state', '$stateParams', '$filter', 'Log', 'Notification', 'DirectoryNumber', 'TelephonyInfoService', 'LineSettings', 'HuronAssignedLine',
+      function ($scope, $state, $stateParams, $filter, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine) {
         $scope.cbAddText = $filter('translate')('callForwardPanel.addNew');
         $scope.forward = 'busy';
         $scope.forwardAllCalls = '';
@@ -18,6 +18,13 @@
         $scope.externalNumberPool = [];
 
         var init = function () {
+          var directoryNumber = $stateParams.directoryNumber;
+          if (directoryNumber) {
+            if (directoryNumber === 'new') {
+              TelephonyInfoService.updateCurrentDirectoryNumber('new');
+            }
+          }
+
           $scope.assignedInternalNumber = {
             uuid: 'none',
             pattern: ''
@@ -85,9 +92,10 @@
                   $scope.directoryNumber.uuid = $scope.telephonyInfo.currentDirectoryNumber.uuid;
                   $scope.directoryNumber.pattern = $scope.telephonyInfo.currentDirectoryNumber.pattern;
                   TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
-                  processInternalNumberList();
-                  processExternalNumberList();
                   Notification.notify([$filter('translate')('directoryNumberPanel.success')], 'success');
+                  $state.go('users.list.preview.directorynumber', {
+                    directoryNumber: $scope.directoryNumber.uuid
+                  });
                 })
                 .catch(function (response) {
                   Log.debug('changeInternalLine failed.  Status: ' + response.status + ' Response: ' + response.data);
@@ -137,9 +145,10 @@
                 $scope.directoryNumber.uuid = $scope.telephonyInfo.currentDirectoryNumber.uuid;
                 $scope.directoryNumber.pattern = $scope.telephonyInfo.currentDirectoryNumber.pattern;
                 TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
-                processInternalNumberList();
-                processExternalNumberList();
                 Notification.notify([$filter('translate')('directoryNumberPanel.success')], 'success');
+                $state.go('users.list.preview.directorynumber', {
+                  directoryNumber: $scope.directoryNumber.uuid
+                });
               })
               .catch(function (response) {
                 Log.debug('addInternalLine failed.  Status: ' + response.status + ' Response: ' + response.data);
@@ -315,55 +324,35 @@
 
         var processInternalNumberList = function () {
           var telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+          var intNumPool = TelephonyInfoService.getInternalNumberPool();
           var internalNumber = {
             'uuid': telephonyInfo.currentDirectoryNumber.uuid,
             'pattern': telephonyInfo.currentDirectoryNumber.pattern
           };
 
-          TelephonyInfoService.loadInternalNumberPool().then(function () {
-            var intNumPool = TelephonyInfoService.getInternalNumberPool();
+          if (internalNumber.uuid !== '' && internalNumber.uuid !== 'none') {
+            intNumPool.push(internalNumber);
+          }
 
-            if (internalNumber.uuid !== '' && internalNumber.uuid !== 'none') {
-              intNumPool.push(internalNumber);
-            }
-            $scope.assignedInternalNumber = internalNumber;
-            $scope.internalNumberPool = intNumPool;
-          });
+          $scope.assignedInternalNumber = internalNumber;
+          $scope.internalNumberPool = intNumPool;
         };
 
         var processExternalNumberList = function () {
           var telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+          var extNumPool = TelephonyInfoService.getExternalNumberPool();
           var externalNumber = {
             'uuid': telephonyInfo.alternateDirectoryNumber.uuid,
             'pattern': telephonyInfo.alternateDirectoryNumber.pattern
           };
 
-          TelephonyInfoService.loadExternalNumberPool().then(function () {
-            var extNumPool = TelephonyInfoService.getExternalNumberPool();
-
-            if (externalNumber.uuid !== '' && externalNumber.uuid !== 'none') {
-              extNumPool.push(externalNumber);
-              // Keep external assignment within this if block, otherwise setting to none messes up dropdown
-              // list by putting a blank entry in the list.
-              $scope.assignedExternalNumber = externalNumber;
-            }
-            $scope.externalNumberPool = extNumPool;
-          });
-        };
-
-        $scope.$on('currentLineChanged', function () {
-          // Don't fire init when the state is adddirectorynumber.
-          // We only want to fire when switching between existing numbers
-          // otherwise init() is called multiple times.
-          if (!$state.includes('users.list.preview.adddirectorynumber')) {
-            init();
+          if (externalNumber.uuid !== '' && externalNumber.uuid !== 'none') {
+            extNumPool.push(externalNumber);
           }
-        });
 
-        // Called when controller loads.
-        if ($state.includes('users.list.preview.adddirectorynumber')) { // add line
-          TelephonyInfoService.updateCurrentDirectoryNumber('new');
-        }
+          $scope.assignedExternalNumber = externalNumber;
+          $scope.externalNumberPool = extNumPool;
+        };
 
         init();
         // End called when controller loads.

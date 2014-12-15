@@ -54,9 +54,5 @@
       });
     }
 
-    $scope.$on('currentDeviceChanged', function () {
-      activate();
-    });
-
   }
 })();
