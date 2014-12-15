@@ -95,9 +95,17 @@
                   <div class="clearfix" ng-repeat="service in cluster.services">
                     <div class="col-md-12 clearfix">
                       <h4 style="float: left">
-                        {{service.display_name}}
-                        <span ng-show="{{service.needs_attention}}">needs attention:</span>
-                        <span ng-show="{{!service.needs_attention}}">is running</span>
+                        <span ng-show="{{service.needs_attention}}">
+                          {{service.display_name}} needs attention:
+                        </span>
+                        <span ng-show="{{!service.needs_attention}}">
+                          <span ng-show="{{!service.is_disabled}}">
+                            {{service.display_name}} is running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}
+                          </span>
+                          <span ng-show="{{service.is_disabled}}" style="opacity: 0.5">
+                            {{service.display_name}} is disabled
+                          </span>
+                        </span>
                       </h4>
                       <button ng-show="service.not_approved_package" style="float: right; margin-top: 10px;" class="btn btn-info btn-sm" ng-click="upgradeSoftware(cluster.id, service.service_type)">
                         Upgrade Now

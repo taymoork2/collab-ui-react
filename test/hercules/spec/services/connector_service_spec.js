@@ -81,7 +81,7 @@ describe('Service: ConnectorService', function () {
       "services": [{
         "connectors": [
           {"state": "running", alarms: [{}]},
-          {"state": "disabled"}
+          {"state": "running"}
         ]
       }]
     }];
@@ -94,13 +94,45 @@ describe('Service: ConnectorService', function () {
       "services": [{
         "connectors": [
           {"state": "running", alarms: [{}]},
-          {"state": "disabled"}
+          {"state": "running"}
         ]
       }]
     }];
     var converted = Service._convertClusters(mockData);
     expect(converted[0].services[0].needs_attention).toBe(true);
   });
+
+  it('should aggregate state from disabled services', function () {
+    var mockData = [{
+      "services": [{
+        "connectors": [
+          {"state": "disabled"}
+        ]
+      }]
+    }];
+    var converted = Service._convertClusters(mockData);
+    expect(converted[0].services[0].is_disabled).toBe(true);
+    expect(!!converted[0].services[0].needs_attention).toBe(false);
+  });
+
+  it('should aggregate number of hosts running the service', function () {
+    var mockData = [{
+      "services": [{
+        "connectors": [
+          {"state": "disabled"},
+          {"state": "running"},
+          {"state": "running"},
+          {"state": "disabled"},
+          {"state": "disabled"}
+        ]
+      }]
+    }];
+    var converted = Service._convertClusters(mockData);
+    expect(converted[0].services[0].running_hosts).toBe(2);
+    expect(!!converted[0].services[0].is_disabled).toBe(false);
+    expect(!!converted[0].services[0].needs_attention).toBe(false);
+  });
+
 
   it('should show sw update details per service', function() {
     var mockData = [{
@@ -129,14 +161,26 @@ describe('Service: ConnectorService', function () {
     expect(converted[0].services[0].not_approved_package.service.service_type).toBe('c_cal');
   });
 
-  it('should aggregate service status from hosts in cluster where one connector has alarms', function () {
+  it('should sort clusters based on error status', function () {
     var mockData = [
-      { id: 'uno_ok', "services": [{ "connectors": [ {"state": "running"} ] }] },
-      { id: 'dos_error', "services": [{ "connectors": [ {"state": "running", alarms: [{}]}, {"state": "disabled"} ] }] },
-      { id: 'tres_ok', "services": [{ "connectors": [ {"state": "running"} ] }] }
+      { id: 'uno_disabled', "services": [{ "connectors": [ {"state": "disabled"} ] }] },
+      { id: 'dos_error',    "services": [{ "connectors": [ {"state": "running", alarms: [{}]}, {"state": "running"} ] }] },
+      { id: 'tres_ok',      "services": [{ "connectors": [ {"state": "running"} ] }] }
     ];
     var converted = Service._convertClusters(mockData);
     expect(converted[0].id).toBe('dos_error');
+  });
+
+  it('should services based on error status', function () {
+    var mockData = [{"services": [
+      { id: "dsbld", "connectors": [ {"state": "disabled"} ] },
+      { id: "rnnng", "connectors": [ {"state": "running"} ] },
+      { id: "errrr", "connectors": [ {"state": "error"} ] }
+    ]}];
+    var converted = Service._convertClusters(mockData);
+    expect(converted[0].services[0].id).toBe('errrr');
+    expect(converted[0].services[1].id).toBe('rnnng');
+    expect(converted[0].services[2].id).toBe('dsbld');
   });
 
 });

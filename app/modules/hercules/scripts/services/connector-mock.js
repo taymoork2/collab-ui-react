@@ -110,9 +110,6 @@ var mockData = function () {
       hosts: [{
         hostName: 'lys.001.cisco.com',
         hostState: 'running'
-      }, {
-        hostName: 'lys.002.cisco.com',
-        hostState: 'running'
       }],
       napproved: [calPkg]
     }),
@@ -126,11 +123,22 @@ var mockData = function () {
         hostName: new Date().getTime().toString(16) + '.cisco.com',
         hostState: 'running'
       }]
+    }),
+    createCluster({
+      clusterName: "Sydney Cluster",
+      services: services,
+      hosts: [{
+        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostState: 'disabled'
+      }, {
+        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostState: 'disabled'
+      }]
     })
   ];
 };
 
-console.info(JSON.stringify(mockData, null, '  '));
+console.info(JSON.stringify(mockData(), null, '  '));
 
 angular
   .module('Hercules')
