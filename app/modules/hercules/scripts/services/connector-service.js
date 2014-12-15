@@ -26,6 +26,7 @@ angular.module('Hercules')
           .get(getUrl())
           .success(function (data) {
             var converted = convertClusters(data);
+            // console.info(JSON.stringify(converted, null, '  '));
             opts.success(converted);
           })
           .error(opts.error);

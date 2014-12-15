@@ -374,7 +374,8 @@
         "disabled": "has this service disabled.",
         "not_installed": "has not installed the service.",
         "stopped": "reports the service as stopped.",
-        "offline": "reports the service as offline."
+        "offline": "reports the service as offline.",
+        "registered": "is registered but has not yet posted status."
     }
   },
   "firstTimeWizard": {
