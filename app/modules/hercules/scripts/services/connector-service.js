@@ -58,7 +58,7 @@ angular.module('Hercules')
       };
 
       var upgradeSoftware = function (opts) {
-        var url = getUrl() + '/' + opts.clusterId + '/upgrade';
+        var url = getUrl() + '/' + opts.clusterId + '/services/' + opts.serviceType + '/upgrade';
         var data = JSON.stringify({
           tlp: opts.tlpUrl
         });

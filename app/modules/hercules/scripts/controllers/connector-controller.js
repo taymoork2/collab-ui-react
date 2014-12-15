@@ -29,10 +29,10 @@ angular.module('Hercules')
         loadData();
       };
 
-      $scope.upgradeSoftware = function (clusterId, tlpUrl) {
+      $scope.upgradeSoftware = function (clusterId, serviceType) {
         service.upgradeSoftware({
           clusterId: clusterId,
-          tlpUrl: tlpUrl,
+          serviceType: serviceType,
           success: $scope.reload,
           error: function (data, status) {
             notif.notify(['Request failed with status ' + status], 'error');

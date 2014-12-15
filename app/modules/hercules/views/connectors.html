@@ -99,7 +99,7 @@
                         <span ng-show="{{service.needs_attention}}">needs attention:</span>
                         <span ng-show="{{!service.needs_attention}}">is running</span>
                       </h4>
-                      <button ng-show="service.not_approved_package" style="float: right; margin-top: 10px;" class="btn btn-info btn-sm" ng-click="upgradeSoftware(cluster.id, service.not_approved_package.tlp_url)">
+                      <button ng-show="service.not_approved_package" style="float: right; margin-top: 10px;" class="btn btn-info btn-sm" ng-click="upgradeSoftware(cluster.id, service.service_type)">
                         Upgrade Now
                       </button>
                     </div>
