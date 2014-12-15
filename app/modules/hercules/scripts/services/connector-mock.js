@@ -14,10 +14,20 @@ var createService = function (serviceName, serviceType, hosts) {
     var connector = {
       "host": createHost(host.hostName),
       "state": serviceType == 'yolo' ? 'running' : host.hostState,
-      "version": "1.0.0.1-Alpha1",
+      "version": "1.0.0.1-Alpha1"
     };
     if (Math.floor((Math.random() * 10) % 9) == 0) {
-      connector.alarms = [{}, {}, {}];
+      connector.alarms = [createAlarm({
+          title: "Unable to connect",
+          severity: "error",
+          description: "Can't connect to the damn thing. Need some help here!"
+        }),
+        createAlarm({
+          title: "My head is hurting",
+          severity: "critical",
+          description: "It's really bad man. I can't do any more work here. This cloud is just too confusing."
+        })
+      ];
     }
     return connector;
   });
@@ -46,6 +56,17 @@ var createCluster = function (opts) {
     "hosts": _.map(opts.hosts, function (host) {
       return createHost(host.hostName)
     })
+  }
+}
+
+var createAlarm = function (opts) {
+  return {
+    "id": new Date().getTime().toString(16),
+    "first_reported": new Date(),
+    "last_reported": new Date(),
+    "title": opts.title,
+    "severity": opts.severity,
+    "description": opts.description
   }
 }
 

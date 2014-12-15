@@ -119,9 +119,21 @@
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
                           <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}" />
                         </div>
-                        <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.alarms.length}}">
+                        <div hercules-popover style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.alarms.length}}">
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
-                          <span>has reported {{connector.alarms.length}} alarms.</span>
+                          has reported <a href="#" onclick="return false" class="popover-trigger">{{connector.alarms.length}} alarms.</a>
+                            <div class="popover-title hide">
+                              <i class="fa fa-exclamation-triangle" style="color: #f05d3b"></i> {{service.display_name}} Alarms
+                            </div>
+                            <div class="popover-content hide">
+                              <div ng-repeat="alarm in connector.alarms">
+                                <span style="color: #f05d3b">{{alarm.title}} ({{alarm.severity}})</span>
+                                <p>{{alarm.description}}</p>
+                              </div>
+                              <p>
+                                Go to the <a href="https://{{connector.host.host_name}}/alarms" target="_blank">Expressway alarms page</a>.
+                              </p>
+                            </div>
                         </div>
                       </div>
 
