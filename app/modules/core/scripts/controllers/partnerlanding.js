@@ -22,8 +22,8 @@ angular.module('Core')
       $rootScope.popup = Notification.popup;
       $scope.customerName = null;
       $scope.customerEmail = null;
-      $scope.licenseDuration = 30;
-      $scope.licenseCount = 50;
+      $scope.licenseDuration = 90;
+      $scope.licenseCount = 100;
       $scope.showAddTrial = true;
       $scope.editTerms = true;
       $scope.currentTrial = null;
@@ -37,8 +37,8 @@ angular.module('Core')
       $scope.formReset = function () {
         $scope.customerName = null;
         $scope.customerEmail = null;
-        $scope.licenseDuration = 30;
-        $scope.licenseCount = 50;
+        $scope.licenseDuration = 90;
+        $scope.licenseCount = 100;
         $scope.showAddTrial = true;
         $scope.editTerms = true;
         $scope.currentTrial = null;
