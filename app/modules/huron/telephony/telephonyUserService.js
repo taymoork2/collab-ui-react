@@ -56,6 +56,7 @@
                 return HuronAssignedLine.assignDirectoryNumber(user.uuid, 'Primary');
               }).then(function (directoryNumber) {
                 emailInfo.phoneNumber = directoryNumber.pattern;
+                delete user["uuid"];
                 user.services.push('VOICEMAIL');
                 user.voicemail = {
                   'dtmfAccessId': directoryNumber.pattern
