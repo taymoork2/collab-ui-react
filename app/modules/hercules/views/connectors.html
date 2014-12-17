@@ -6,7 +6,7 @@
     <div class="col-sm-6 col-md-6">
       <div class="page-option-buttons">
         <button class="btn btn-info" ng-click="reload()" style="margin-right: 15px;">
-          <!-- <i class="fa fa-refresh"></i> -->
+          <i class="fa fa-refresh"></i>
           Reload
         </button>
       </div>
@@ -20,36 +20,7 @@
       <div ng-show="error" translate="hercules.connectors.loading_error"></div>
       <div ng-show="!loading">
         <div ng-show="clusters.length == 0" class="col-md-12">
-            <h2>Nothing to do here <span style="text-decoration: underline">yet</span></h2>
-            <h4>
-                <p>Fusion Services enables you to monitor and manage your Cloud Fusion services running on your Cisco Expressways.</p>
-                <p>Go to the Initial Setup for directions on how to activate them.</p>
-                <span style="margin-top: 30px; display: block;">You are entitled to the following services:</span>
-            </h4>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><i class="fa fa-phone"></i> UCM Service</div>
-                        <div class="panel-body">
-                            <ul>
-                                <li>Zero touch meetings, move calls between desk phones and soft clients.
-                                <li>Reuse your enterprise phone number.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><i class="fa fa-calendar"></i> Calendar Service</div>
-                        <div class="panel-body">
-                            <ul>
-                                <li>Calendar sync for consistent meeting times.
-                                <li>In-app scheduling connected to Microsoft Exchange.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <hercules-nothing-fused />
         </div>
         <div ng-show="clusters.length != 0" class="col-md-12">
 
@@ -80,7 +51,7 @@
                 <!-- host list -->
                 <div class="md-col-12 clearfix" style="padding-left: 15px; padding-bottom: 15px">
                   <span style="font-size: xs; opacity: 0.5">
-                    <span>This cluster consists of {{cluster.hosts.length}} hosts:</span>
+                    <span>This cluster consists of {{cluster.hosts.length}} {{cluster.hosts.length == 1 ? 'host' : 'hosts'}}:</span>
                     <span ng-repeat="host in cluster.hosts">
                       <a href="https://{{host.host_name}}" target="_blank">
                         {{host.host_name}}

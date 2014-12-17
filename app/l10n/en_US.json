@@ -382,7 +382,7 @@
       "disabled": "has this service disabled.",
       "not_installed": "has not installed the service.",
       "stopped": "reports the service as stopped.",
-      "offline": "reports the service as offline.",
+      "offline": "has not posted status in a while and could be offline.",
       "registered": "is registered but has not yet posted status."
     }
   },
