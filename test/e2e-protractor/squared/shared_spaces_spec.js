@@ -43,6 +43,7 @@ describe('Shared spaces flow', function() {
       utils.expectIsDisplayed(spaces.deleteDeviceAction);
       spaces.deleteDeviceAction.click();
       utils.expectIsDisplayed(spaces.deleteDeviceModal);
+      utils.expectIsDisplayed(spaces.cancelButton);
       spaces.cancelButton.click();
       browser.sleep(1000);
     });
@@ -53,6 +54,7 @@ describe('Shared spaces flow', function() {
       utils.expectIsDisplayed(spaces.deleteDeviceAction);
       spaces.deleteDeviceAction.click();
       utils.expectIsDisplayed(spaces.deleteDeviceModal);
+      utils.expectIsDisplayed(spaces.deleteButton);
       spaces.deleteButton.click();
       notifications.assertSuccess('deleted successfully');
     });
