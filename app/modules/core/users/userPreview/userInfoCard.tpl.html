@@ -7,7 +7,7 @@
   </div>
   <div class="info-card-name col-xs-7">
     <div id="name-preview" class="name-preview">
-      <a ng-href="#/userprofile/{{currentUser.id}}">
+      <a id="user-profile" ng-href="#/userprofile/{{currentUser.id}}">
       <!--a ui-sref="users.list.preview.roles" id="roles-link"-->
         <span class="user-name" ng-if="currentUser.name.givenName && currentUser.name.familyName">{{currentUser.name.givenName}} {{currentUser.name.familyName}}</span>
         <span class="user-name" ng-if="!currentUser.name.givenName || !currentUser.name.familyName">{{currentUser.userName}}</span><br>

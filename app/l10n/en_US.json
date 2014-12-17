@@ -142,6 +142,7 @@
     "removeUser": "Remove User",
     "fname": "First Name",
     "lname": "Last Name",
+    "display": "Display Name",
     "email": "Email",
     "org": "Organization",
     "title": "Title",

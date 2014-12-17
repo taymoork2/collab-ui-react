@@ -60,7 +60,7 @@ describe('List users flow', function () {
   describe('Display user information', function () {
     it('display user preview panel when clicking on a user', function () {
       users.clickOnUser();
-      expect(users.previewPanel.isDisplayed()).toBeTruthy();
+      expect(users.userLink.isDisplayed()).toBeTruthy();
     });
 
     it('display user admin settings panel when clicking on next arrow', function () {
@@ -74,6 +74,14 @@ describe('List users flow', function () {
       expect(users.closeRolesPanel.isDisplayed()).toBeTruthy();
 
       users.closeRolesPanel.click();
+    });
+  });
+
+  describe('Display user profile page', function(){
+    it('display user profile page when clicking on a user name', function(){
+      users.clickOnUser();
+      expect(users.previewPanel.isDisplayed()).toBeTruthy();
+
     });
   });
 
@@ -111,6 +119,23 @@ describe('List users flow', function () {
   describe('search users on page', function () {
     it('should show first page of users based on search string', function () {
       users.search(testuser.searchStr);
+    });
+  });
+
+  describe('Display user profile', function(){
+    it('display user profile page when clicking on the user link', function(){
+      users.clickOnUser();
+      expect(users.userLink.isDisplayed()).toBeTruthy();
+      users.userLink.click();
+      navigation.expectCurrentUrl('/userprofile');
+      expect(users.fnameField.isDisplayed()).toBeTruthy();
+      expect(users.lnameField.isDisplayed()).toBeTruthy();
+      expect(users.displayField.isDisplayed()).toBeTruthy();
+      expect(users.emailField.isDisplayed()).toBeTruthy();
+      expect(users.orgField.isDisplayed()).toBeTruthy();
+      expect(users.titleField.isDisplayed()).toBeTruthy();
+      users.userTab.click();
+      users.clickOnUser();
     });
   });
 

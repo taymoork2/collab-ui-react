@@ -66,6 +66,15 @@ var UsersPage = function () {
   this.actionDropdown = element(by.css('.dropdown-menu'));
   this.resendInviteOption = element(by.id('resendInviteOption'));
   this.gridCell = element(by.css('.ngCell'));
+  this.userLink = element(by.id('user-profile'));
+
+  this.fnameField = element(by.id('fnameField'));
+  this.lnameField = element(by.id('lnameField'));
+  this.displayField = element(by.id('displayField'));
+  this.emailField = element(by.id('emailField'));
+  this.orgField = element(by.id('orgField'));
+  this.titleField = element(by.id('titleField'));
+  this.userTab = element(by.id('usertab'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
