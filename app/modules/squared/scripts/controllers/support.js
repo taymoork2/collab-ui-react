@@ -387,16 +387,20 @@ angular.module('Squared')
         }, 0); // setTimeout to allow label translation to resolve
       }
 
+      $scope.getRowIndex = function(rowItem) {
+        return $scope.userLogs.indexOf(rowItem);
+      };
+
       var rowTemplate = '<div id="{{row.entity.customerName}}" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
         '<div ng-cell></div>' +
         '</div>';
 
-      var clientLogTemplate = '<div class="ngCellText"><a ng-click="downloadLog(log.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></div>';
+      var clientLogTemplate = '<div class="ngCellText"><a ng-click="downloadLog(row.entity.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></div>';
 
-      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(log.orgId, log.userId, log.fullFilename, $index)" id="{{$index}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
+      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.fullFilename, getRowIndex(row.entity))" id="{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
 
-      var callInfoTemplate = '<div class="ngCellText"><a ng-click="showCallInfo(log.emailAddress, log.locusId, log.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></span></a></div>';
+      var callInfoTemplate = '<div class="ngCellText"><a ng-click="showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></span></a></div>';
 
       $scope.gridOptions = {
         data: 'userLogs',
