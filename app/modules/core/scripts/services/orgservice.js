@@ -48,6 +48,27 @@ angular.module('Core')
             });
         },
 
+        getUnlicensedUsers: function (callback, oid) {
+          var adminUrl = null;
+          if (oid) {
+            adminUrl = Config.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers";
+          } else {
+            adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers";
+          }
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http.get(adminUrl)
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
+        },
+
         setSetupDone: function (callback) {
           var adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/setup';
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
