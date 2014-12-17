@@ -20,12 +20,13 @@ angular.module('Hercules')
       var addMockData = window.location.href.indexOf('hercules-mock') != -1;
 
       var fetch = function (opts) {
-        //return opts.success([]);
-        //return opts.success(convertClusters(mock.mockData()));
+        // return opts.success([]);
+        // return opts.success(convertClusters(mock.mockData()));
         $http
           .get(getUrl())
           .success(function (data) {
             var converted = convertClusters(data);
+            // console.info(JSON.stringify(converted, null, '  '));
             opts.success(converted);
           })
           .error(opts.error);
@@ -58,7 +59,7 @@ angular.module('Hercules')
       };
 
       var upgradeSoftware = function (opts) {
-        var url = getUrl() + '/' + opts.clusterId + '/upgrade';
+        var url = getUrl() + '/' + opts.clusterId + '/services/' + opts.serviceType + '/upgrade';
         var data = JSON.stringify({
           tlp: opts.tlpUrl
         });
@@ -72,10 +73,19 @@ angular.module('Hercules')
         var converted = _.map(data, function (origCluster) {
           var cluster = _.cloneDeep(origCluster);
           _.each(cluster.services, function (service) {
+            service.running_hosts = 0;
             _.each(service.connectors, function (connector) {
               if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
                 cluster.needs_attention = cluster.intially_open = true;
                 service.needs_attention = true;
+                service.is_disabled = false;
+              }
+              if (connector.state == 'disabled' && service.running_hosts == 0) {
+                service.is_disabled = true;
+              }
+              if (connector.state == 'running') {
+                service.is_disabled = false;
+                service.running_hosts = ++service.running_hosts;
               }
             });
             if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
@@ -86,6 +96,11 @@ angular.module('Hercules')
                 service.not_approved_package = not_approved_package;
               }
             }
+          });
+          cluster.services = _.sortBy(cluster.services, function (obj) {
+            if (obj.needs_attention) return 1;
+            if (obj.is_disabled) return 3;
+            return 2;
           });
           return cluster;
         });

@@ -5,6 +5,7 @@ angular.module('Squared')
     function ($http, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
 
       var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
+      var managedOrgsUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
       return {
 
@@ -85,7 +86,25 @@ angular.module('Squared')
               callback(data, status);
               Auth.handleStatus(status);
             });
+        },
+
+        getManagedOrgsList: function (callback) {
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http.get(managedOrgsUrl)
+            .success(function (data, status) {
+              data.success = true;
+              Log.debug('Retrieved managed orgs list');
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
         }
+
       };
     }
   ]);

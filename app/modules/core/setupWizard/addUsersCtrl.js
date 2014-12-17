@@ -2,8 +2,41 @@
 /* global moment, $:false */
 
 angular.module('Core')
-  .controller('AddUserCtrl', ['$scope', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
-    function ($scope, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
+  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
+    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
+
+      $scope.options = {
+        addUsers: 0
+      };
+
+      $scope.syncSimple = {
+        label: $translate.instant('firstTimeWizard.simple'),
+        value: 0,
+        name: 'syncOptions',
+        id: 'syncSimple'
+      };
+      $scope.syncAdvanced = {
+        label: $translate.instant('firstTimeWizard.advanced'),
+        value: 1,
+        name: 'syncOptions',
+        id: 'syncAdvanced'
+      };
+
+      $scope.initNext = function () {
+        var deferred = $q.defer();
+        if (angular.isDefined($scope.options.addUsers) && angular.isFunction($scope.setSubTab)) {
+          if ($scope.options.addUsers === 0) {
+            $scope.setSubTab('simple');
+          } else if ($scope.options.addUsers === 1) {
+            $scope.setSubTab('advanced');
+          }
+          deferred.resolve();
+        } else {
+          deferred.reject();
+
+        }
+        return deferred.promise;
+      };
 
       var allSteps = ['chooseSync', 'domain', 'installCloud', 'syncStatus', 'manual'];
       var manualSteps = ['manual'];

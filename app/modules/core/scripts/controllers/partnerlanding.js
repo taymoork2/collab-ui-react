@@ -2,13 +2,17 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', '$modal', 'ExternalNumberPool',
+  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', '$modal', 'ExternalNumberPool',
 
-    function ($scope, $rootScope, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, $modal, ExternalNumberPool) {
-
+    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, $modal, ExternalNumberPool) {
       $scope.load = true;
       $scope.currentDataPosition = 0;
       $scope.trialPreviewActive = false;
+      if ($state.params.filter) {
+        $scope.activeFilter = $state.params.filter;
+      } else {
+        $scope.activeFilter = 'all';
+      }
 
       $scope.daysExpired = 5;
       $scope.displayRows = 10;
@@ -18,8 +22,8 @@ angular.module('Core')
       $rootScope.popup = Notification.popup;
       $scope.customerName = null;
       $scope.customerEmail = null;
-      $scope.licenseDuration = 30;
-      $scope.licenseCount = 50;
+      $scope.licenseDuration = 90;
+      $scope.licenseCount = 100;
       $scope.showAddTrial = true;
       $scope.editTerms = true;
       $scope.currentTrial = null;
@@ -33,8 +37,8 @@ angular.module('Core')
       $scope.formReset = function () {
         $scope.customerName = null;
         $scope.customerEmail = null;
-        $scope.licenseDuration = 30;
-        $scope.licenseCount = 50;
+        $scope.licenseDuration = 90;
+        $scope.licenseCount = 100;
         $scope.showAddTrial = true;
         $scope.editTerms = true;
         $scope.currentTrial = null;
@@ -125,7 +129,7 @@ angular.module('Core')
         $scope.showTrialsRefresh = true;
         $scope.activeList = [];
         $scope.expiredList = [];
-        $scope.customerList = [];
+        $scope.trialsList = [];
         $scope.totalTrialsData = [];
         PartnerService.getTrialsList(function (data, status) {
           $scope.showTrialsRefresh = false;
@@ -150,7 +154,8 @@ angular.module('Core')
                   percentUsed: 0,
                   duration: trial.trialPeriod,
                   offer: '',
-                  status: null
+                  status: null,
+                  isAllowedToManage: true
                 };
 
                 if (trial.offers) {
@@ -189,7 +194,8 @@ angular.module('Core')
               Log.debug('active trial records found:' + $scope.activeList.length);
               Log.debug('total trial records found:' + $scope.totalTrialsData.length);
               $scope.activeCount = $scope.activeList.length;
-              $scope.customerList = $scope.totalTrialsData;
+              $scope.trialsList = $scope.totalTrialsData;
+              $scope.totalTrials = $scope.trialsList.length;
             } else {
               $scope.getPending = false;
               Log.debug('No trial records found');
@@ -197,6 +203,84 @@ angular.module('Core')
           } else {
             Log.debug('Failed to retrieve trial information. Status: ' + status);
             $scope.getPending = false;
+            Notification.notify([$translate.instant('partnerHomePage.errGetTrialsQuery', {
+              status: status
+            })], 'error');
+          }
+        });
+      };
+
+      var getManagedOrgsList = function () {
+        $scope.showManagedOrgsRefresh = true;
+        $scope.managedOrgsList = [];
+        $scope.totalOrgsData = [];
+        PartnerService.getManagedOrgsList(function (data, status) {
+          $scope.showManagedOrgsRefresh = false;
+          if (data.success) {
+            $scope.totalOrgs = data.organizations.length;
+
+            if (data.organizations.length > 0) {
+              for (var index in data.organizations) {
+                var org = data.organizations[index];
+                var edate = moment(org.startDate).add(org.trialPeriod, 'days').format('MMM D, YYYY');
+                var orgObj = {
+                  trialId: org.trialId,
+                  customerOrgId: org.customerOrgId,
+                  customerName: org.customerName,
+                  customerEmail: org.customerEmail,
+                  endDate: edate,
+                  numUsers: org.licenseCount,
+                  daysLeft: 0,
+                  usage: 0,
+                  licenses: 0,
+                  daysUsed: 0,
+                  percentUsed: 0,
+                  duration: org.trialPeriod,
+                  offer: '',
+                  status: null,
+                  isAllowedToManage: org.isAllowedToManage,
+                  state: org.state
+                };
+
+                if (org.offers) {
+                  for (var cnt in org.offers) {
+                    var offer = org.offers[cnt];
+                    if (offer && offer.id === 'COLLAB') {
+                      orgObj.offer = offer.id;
+                      orgObj.usage = offer.usageCount;
+                      orgObj.licenses = offer.licenseCount;
+                      break;
+                    }
+                  }
+                }
+
+                var now = moment().format('MMM D, YYYY');
+                var then = edate;
+                var start = moment(org.startDate).format('MMM D, YYYY');
+
+                var daysDone = moment(now).diff(start, 'days');
+                orgObj.daysUsed = daysDone;
+                orgObj.percentUsed = eval(Math.round((daysDone / org.trialPeriod) * 100));
+
+                var daysLeft = moment(then).diff(now, 'days');
+                orgObj.daysLeft = daysLeft;
+                $scope.totalOrgsData.push(orgObj);
+              }
+              Log.debug('total managed orgs records found:' + $scope.totalOrgsData.length);
+              $scope.activeCount = $scope.activeList.length;
+              $scope.managedOrgsList = $scope.totalOrgsData;
+
+              if ($scope.activeFilter === 'all') {
+                $scope.gridData = $scope.managedOrgsList;
+              } else {
+                $scope.gridData = $scope.trialsList;
+              }
+
+            } else {
+              Log.debug('No managed orgs records found');
+            }
+          } else {
+            Log.debug('Failed to retrieve managed orgs information. Status: ' + status);
             Notification.notify([$translate.instant('partnerHomePage.errGetTrialsQuery', {
               status: status
             })], 'error');
@@ -252,6 +336,7 @@ angular.module('Core')
       };
 
       getTrialsList();
+      getManagedOrgsList();
 
       $scope.newTrialName = null;
       $scope.trialsGrid = {
@@ -283,7 +368,7 @@ angular.module('Core')
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
-        '<li id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span></a></li>' +
+        '<li ng-show="row.entity.isAllowedToManage" id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span></a></li>' +
         '<li ng-if="isHuronEnabled()" id="{{row.entity.customerName}}SetupDIDs" class="setupDidBtn"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown(); openModal()"><span>Setup Phone Numbers</span></a></li>' +
         '<li ng-if="isHuronEnabled()" id="{{row.entity.customerName}}DeleteDIDs"class="deleteDidBtn"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown(); deleteDIDs()"><span>Delete Phone Numbers</span></a></li>' +
         '</ul>' +
@@ -294,18 +379,18 @@ angular.module('Core')
         '<div ng-cell></div>' +
         '</div>';
 
-      var licenseTemplate = '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{row.entity.usage}}/{{row.entity.licenses}}</span></div>';
+      var licenseTemplate = '<div class="ngCellText" ng-class="col.colIndex()"><span ng-show="row.entity.trialId" ng-cell-text>{{row.entity.usage}}/{{row.entity.licenses}}</span></div>';
 
-      var statusTemplate = '<div class="ngCellText"><div style="width:225px; height:6px"><span>{{row.entity.status}}</span> </div></div>';
+      var statusTemplate = '<div class="ngCellText"><div style="width:225px; height:6px"><span>{{row.entity.state}}</span> </div></div>';
 
       var progressTemplate = '<div class="ngCellText">' +
-        '<div class="progress"><div class="progress-bar" ng-class="{\'danger-bar\': row.entity.daysLeft <= 5, \'warning-bar\': (row.entity.daysLeft < row.entity.duration/2), \'success-bar\': (row.entity.daysLeft >= row.entity.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(row.entity)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(row.entity)}}" style="width: {{getProgressPercent(row.entity)}}%;"></div></div>' +
+        '<div ng-show="row.entity.trialId" class="progress"><div class="progress-bar" ng-class="{\'danger-bar\': row.entity.daysLeft <= 5, \'warning-bar\': (row.entity.daysLeft < row.entity.duration/2), \'success-bar\': (row.entity.daysLeft >= row.entity.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(row.entity)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(row.entity)}}" style="width: {{getProgressPercent(row.entity)}}%;"></div></div>' +
         '</div>';
 
-      var daysLeftTemplate = '<div class="ngCellText"><div ng-class="{\'trial-danger-text\': row.entity.daysLeft <= 5}"><span>{{getGridDaysLeft(row.entity.daysLeft)}}</span></div></div>';
+      var daysLeftTemplate = '<div class="ngCellText"><div ng-show="row.entity.trialId" ng-class="{\'trial-danger-text\': row.entity.daysLeft <= 5}"><span>{{getGridDaysLeft(row.entity.daysLeft)}}</span></div></div>';
 
       $scope.gridOptions = {
-        data: 'customerList',
+        data: 'gridData',
         multiSelect: false,
         showFilter: false,
         rowHeight: 44,
@@ -313,7 +398,7 @@ angular.module('Core')
         headerRowHeight: 44,
         useExternalSorting: false,
         sortInfo: {
-          fields: ['daysLeft'],
+          fields: ['customerName'],
           directions: ['asc']
         },
 
@@ -400,7 +485,7 @@ angular.module('Core')
 
       $scope.filterList = function (filterBy) {
         $scope.filter = filterBy;
-        $scope.customerList = filterBy === 'ALL' ? $scope.totalTrialsData : $scope.activeList;
+        $scope.trialsList = filterBy === 'ALL' ? $scope.totalTrialsData : $scope.activeList;
       };
 
       $scope.openModal = function () {
@@ -414,6 +499,15 @@ angular.module('Core')
       $scope.deleteDIDs = function () {
         console.log("delete");
         ExternalNumberPool.deleteAll();
+      };
+
+      $scope.setFilter = function (filter) {
+        $scope.activeFilter = filter;
+        if (filter === 'trials') {
+          $scope.gridData = $scope.trialsList;
+        } else if (filter === 'all') {
+          $scope.gridData = $scope.managedOrgsList;
+        }
       };
 
     }

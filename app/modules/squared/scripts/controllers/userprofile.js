@@ -35,6 +35,7 @@ angular.module('Squared')
             'givenName': $scope.user.name.givenName,
             'familyName': $scope.user.name.familyName
           },
+          'displayName': $scope.user.displayName,
         };
 
         Log.debug('Updating user: ' + userid + ' with data: ');

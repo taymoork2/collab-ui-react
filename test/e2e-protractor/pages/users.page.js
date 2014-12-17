@@ -1,7 +1,7 @@
 'use strict'
 
 // TODO - break up into UserList/UserAdd/UserPreview
-var UsersPage = function() {
+var UsersPage = function () {
   this.searchButton = element(by.css('.header-search button'));
   this.searchField = element(by.css('.search-form input'));
 
@@ -14,6 +14,10 @@ var UsersPage = function() {
   this.endpointPanel = element(by.id('endpointPanel'));
   this.previewPanel = element(by.id('details-panel'));
   this.previewName = element(by.id('name-preview'));
+
+  this.nextButton = element(by.id('next-button'));
+  this.rolesPanel = element(by.id('roles-panel'));
+  this.closeRolesPanel = element(by.id('close-roles'));
 
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield-tokenfield'));
@@ -62,19 +66,28 @@ var UsersPage = function() {
   this.actionDropdown = element(by.css('.dropdown-menu'));
   this.resendInviteOption = element(by.id('resendInviteOption'));
   this.gridCell = element(by.css('.ngCell'));
+  this.userLink = element(by.id('user-profile'));
 
-  this.assertSorting = function(nameToSort) {
-    this.queryResults.getAttribute('value').then(function(value) {
+  this.fnameField = element(by.id('fnameField'));
+  this.lnameField = element(by.id('lnameField'));
+  this.displayField = element(by.id('displayField'));
+  this.emailField = element(by.id('emailField'));
+  this.orgField = element(by.id('orgField'));
+  this.titleField = element(by.id('titleField'));
+  this.userTab = element(by.id('usertab'));
+
+  this.assertSorting = function (nameToSort) {
+    this.queryResults.getAttribute('value').then(function (value) {
       var queryresults = parseInt(value, 10);
       if (queryresults > 1) {
         //get first user
         var user = null;
-        element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+        element.all(by.repeater('user in queryuserslist')).then(function (rows) {
           user = rows[0].getText();
         });
         //Click on username sort and expect the first user not to be the same
-        element(by.id(nameToSort)).click().then(function() {
-          element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+        element(by.id(nameToSort)).click().then(function () {
+          element.all(by.repeater('user in queryuserslist')).then(function (rows) {
             expect(rows[0].getText()).not.toBe(user);
           });
         });
@@ -82,23 +95,28 @@ var UsersPage = function() {
     });
   };
 
-  this.assertPage = function(page) {
+  this.clickOnUser = function () {
+    element.all(by.repeater('row in renderedRows')).get(0).click();
+  };
+
+  this.assertPage = function (page) {
     expect(this.currentPage.getText()).toBe(page);
   };
 
-  this.assertResultsLength = function(results) {
-    element.all(by.repeater('user in queryuserslist')).then(function(rows) {
+  this.assertResultsLength = function (results) {
+    element.all(by.repeater('row in renderedRows')).then(function (rows) {
       if (results === 20) {
         expect(rows.length).toBeLessThanOrEqualTo(results);
       } else if (results === 0) {
-        expect(rows.length).toBeGreaterThan(results);
+        return expect(rows.length).toBeGreaterThan(results);
+        //expect(rows.length).toBeGreaterThan(results);
       } else {
         expect(rows.length).toBe(results);
       }
     });
   };
 
-  this.search = function(query, size) {
+  this.search = function (query) {
     this.searchButton.click();
     utils.expectIsDisplayed(this.searchField);
     this.searchField.clear();
@@ -106,12 +124,28 @@ var UsersPage = function() {
     if (query) {
       this.searchField.sendKeys(query);
       browser.sleep(1000);
-      expect(this.queryCount.getText()).toBe(typeof size !== 'undefined' ? size : '1');
+      element.all(by.repeater('row in renderedRows')).then(function (rows) {
+        expect(rows.length).toBeGreaterThan(0);
+      });
     }
   };
 
-  this.assertEntitlementListSize = function(size) {
-    element.all(by.repeater('(service, val) in entitlements')).then(function(items) {
+  this.searchEmpty = function (query) {
+    this.searchButton.click();
+    utils.expectIsDisplayed(this.searchField);
+    this.searchField.clear();
+    browser.sleep(1000);
+    if (query) {
+      this.searchField.sendKeys(query);
+      browser.sleep(1000);
+      element.all(by.repeater('row in renderedRows')).then(function (rows) {
+        expect(rows.length).toEqual(0);
+      });
+    }
+  };
+
+  this.assertEntitlementListSize = function (size) {
+    element.all(by.repeater('(service, val) in entitlements')).then(function (items) {
       expect(items.length).toBe(size);
     });
   };

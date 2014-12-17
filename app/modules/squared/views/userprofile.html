@@ -38,6 +38,11 @@
               </div>
 
               <div class="form-group profile-text-input">
+                <label for="displayName" style="width: 150px;" translate="profilePage.display"></label>
+                <input class="form-control profile-input" type="text" id="displayField" ng-model="user.displayName" value="{{user.displayName}}"/>
+              </div>
+
+              <div class="form-group profile-text-input">
                 <label for="email" style="width: 150px;" translate="profilePage.email"></label>
                 <input class="form-control profile-input" type="text" id="emailField" value="{{user.userName}}" disabled/>
               </div>

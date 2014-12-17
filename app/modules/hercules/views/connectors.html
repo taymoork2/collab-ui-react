@@ -6,7 +6,7 @@
     <div class="col-sm-6 col-md-6">
       <div class="page-option-buttons">
         <button class="btn btn-info" ng-click="reload()" style="margin-right: 15px;">
-          <!-- <i class="fa fa-refresh"></i> -->
+          <i class="fa fa-refresh"></i>
           Reload
         </button>
       </div>
@@ -20,36 +20,7 @@
       <div ng-show="error" translate="hercules.connectors.loading_error"></div>
       <div ng-show="!loading">
         <div ng-show="clusters.length == 0" class="col-md-12">
-            <h2>Nothing to do here <span style="text-decoration: underline">yet</span></h2>
-            <h4>
-                <p>Fusion Services enables you to monitor and manage your Cloud Fusion services running on your Cisco Expressways.</p>
-                <p>Go to the Initial Setup for directions on how to activate them.</p>
-                <span style="margin-top: 30px; display: block;">You are entitled to the following services:</span>
-            </h4>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><i class="fa fa-phone"></i> UCM Service</div>
-                        <div class="panel-body">
-                            <ul>
-                                <li>Zero touch meetings, move calls between desk phones and soft clients.
-                                <li>Reuse your enterprise phone number.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><i class="fa fa-calendar"></i> Calendar Service</div>
-                        <div class="panel-body">
-                            <ul>
-                                <li>Calendar sync for consistent meeting times.
-                                <li>In-app scheduling connected to Microsoft Exchange.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <hercules-nothing-fused />
         </div>
         <div ng-show="clusters.length != 0" class="col-md-12">
 
@@ -80,7 +51,7 @@
                 <!-- host list -->
                 <div class="md-col-12 clearfix" style="padding-left: 15px; padding-bottom: 15px">
                   <span style="font-size: xs; opacity: 0.5">
-                    <span>This cluster consists of {{cluster.hosts.length}} hosts:</span>
+                    <span>This cluster consists of {{cluster.hosts.length}} {{cluster.hosts.length == 1 ? 'host' : 'hosts'}}:</span>
                     <span ng-repeat="host in cluster.hosts">
                       <a href="https://{{host.host_name}}" target="_blank">
                         {{host.host_name}}
@@ -95,11 +66,19 @@
                   <div class="clearfix" ng-repeat="service in cluster.services">
                     <div class="col-md-12 clearfix">
                       <h4 style="float: left">
-                        {{service.display_name}}
-                        <span ng-show="{{service.needs_attention}}">needs attention:</span>
-                        <span ng-show="{{!service.needs_attention}}">is running</span>
+                        <span ng-show="{{service.needs_attention}}">
+                          {{service.display_name}} needs attention:
+                        </span>
+                        <span ng-show="{{!service.needs_attention}}">
+                          <span ng-show="{{!service.is_disabled}}">
+                            {{service.display_name}} is running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}
+                          </span>
+                          <span ng-show="{{service.is_disabled}}" style="opacity: 0.5">
+                            {{service.display_name}} is disabled
+                          </span>
+                        </span>
                       </h4>
-                      <button ng-show="service.not_approved_package" style="float: right; margin-top: 10px;" class="btn btn-info btn-sm" ng-click="upgradeSoftware(cluster.id, service.not_approved_package.tlp_url)">
+                      <button ng-show="service.not_approved_package" style="float: right; margin-top: 10px;" class="btn btn-info btn-sm" ng-click="upgradeSoftware(cluster.id, service.service_type)">
                         Upgrade Now
                       </button>
                     </div>
@@ -111,9 +90,21 @@
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
                           <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}" />
                         </div>
-                        <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.alarms.length}}">
+                        <div hercules-popover style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.alarms.length}}">
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
-                          <span>has reported {{connector.alarms.length}} alarms.</span>
+                          has reported <a href="#" onclick="return false" class="popover-trigger">{{connector.alarms.length}} alarms.</a>
+                            <div class="popover-title hide">
+                              <i class="fa fa-exclamation-triangle" style="color: #f05d3b"></i> {{service.display_name}} Alarms
+                            </div>
+                            <div class="popover-content hide">
+                              <div ng-repeat="alarm in connector.alarms">
+                                <span style="color: #f05d3b">{{alarm.title}} ({{alarm.severity}})</span>
+                                <p>{{alarm.description}}</p>
+                              </div>
+                              <p>
+                                Go to the <a href="https://{{connector.host.host_name}}/alarms" target="_blank">Expressway alarms page</a>.
+                              </p>
+                            </div>
                         </div>
                       </div>
 

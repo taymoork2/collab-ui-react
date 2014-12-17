@@ -13,3 +13,4 @@ npm-debug.log
 test/e2e-protractor/reports
 test/karma-unit.js
 *.sublime*
+test/unit-test-results.xml

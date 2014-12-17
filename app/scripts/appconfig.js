@@ -54,6 +54,35 @@ angular
   .module('Squared')
   .config(['$urlRouterProvider', '$stateProvider',
     function ($urlRouterProvider, $stateProvider) {
+
+      // Modal States Enter and Exit functions
+      function modalOnEnter(size) {
+        /* @ngInject */
+        return function ($modal, $state, $previousState) {
+          $previousState.memo(modalMemo);
+          $state.modal = $modal.open({
+            template: '<div ui-view="modal"></div>',
+            size: size
+          });
+          $state.modal.result.finally(function () {
+            $state.modal = null;
+            var previousState = $previousState.get(modalMemo);
+            if (previousState) {
+              return $previousState.go(modalMemo);
+            }
+          });
+        }
+      };
+
+      modalOnExit.$inject = ['$state', '$previousState'];
+
+      function modalOnExit($state, $previousState) {
+        if ($state.modal) {
+          $previousState.forget(modalMemo);
+          $state.modal.close();
+        }
+      };
+
       var modalMemo = 'modalMemo';
       var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -126,13 +155,16 @@ angular
         .state('users.list.preview.conversations', {
           template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
         })
+        .state('users.list.preview.roles', {
+          template: '<div class="sub-details-full" user-roles current-user="currentUser" entitlements="entitlements" roles="roles" queryuserslist="queryuserslist"></div>'
+        })
         .state('users.list.preview.directorynumber', {
           templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-          controller: 'LineSettingsCtrl'
-        })
-        .state('users.list.preview.adddirectorynumber', {
-          templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-          controller: 'LineSettingsCtrl'
+          controller: 'LineSettingsCtrl',
+          params: {
+            showAddUsers: {},
+            directoryNumber: {}
+          }
         })
         .state('users.list.preview.voicemail', {
           template: '<div voicemail-info></div>'
@@ -142,7 +174,11 @@ angular
         })
         .state('users.list.preview.device', {
           templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-          controller: 'DeviceDetailCtrl as vm'
+          controller: 'DeviceDetailCtrl as vm',
+          params: {
+            showAddUsers: {},
+            device: {}
+          }
         })
         .state('organization', {
           url: '/organization',
@@ -220,7 +256,10 @@ angular
         .state('partnercustomers.list', {
           url: '/customers',
           templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
-          controller: 'PartnerHomeCtrl'
+          controller: 'PartnerHomeCtrl',
+          params: {
+            filter: {}
+          }
         })
         .state('partnercustomers.list.preview', {
           templateUrl: 'modules/core/customers/customerPreview/customerPreview.tpl.html',
@@ -228,49 +267,46 @@ angular
         })
         .state('modal', {
           abstract: true,
-          onEnter: ['$modal', '$state', '$previousState', function ($modal, $state, $previousState) {
-            $previousState.memo(modalMemo);
-            $state.modal = $modal.open({
-              template: '<div ui-view="modal"></div>'
-            });
-            $state.modal.result.finally(function () {
-              $state.modal = null;
-              var previousState = $previousState.get(modalMemo);
-              if (previousState) {
-                return $previousState.go(modalMemo);
-              }
-            });
-          }],
-          onExit: ['$state', '$previousState', function ($state, $previousState) {
-            if ($state.modal) {
-              $previousState.forget(modalMemo);
-              $state.modal.close();
-            }
-          }]
+          onEnter: modalOnEnter(),
+          onExit: modalOnExit
+        })
+        .state('modalLarge', {
+          abstract: true,
+          onEnter: modalOnEnter('lg'),
+          onExit: modalOnExit
+        })
+        .state('modalSmall', {
+          abstract: true,
+          onEnter: modalOnEnter('sm'),
+          onExit: modalOnExit
         })
         .state('wizardmodal', {
           abstract: true,
-          onEnter: ['$modal', '$state', '$previousState', function ($modal, $state, $previousState) {
-            $previousState.memo(wizardmodalMemo);
-            $state.modal = $modal.open({
-              template: '<div ui-view="modal"></div>',
-              controller: 'ModalWizardCtrl',
-              windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html'
-            });
-            $state.modal.result.finally(function () {
-              $state.modal = null;
-              var previousState = $previousState.get(wizardmodalMemo);
-              if (previousState) {
-                return $previousState.go(wizardmodalMemo);
-              }
-            });
-          }],
-          onExit: ['$state', '$previousState', function ($state, $previousState) {
-            if ($state.modal) {
-              $previousState.forget(wizardmodalMemo);
-              $state.modal.close();
+          onEnter: ['$modal', '$state', '$previousState',
+            function ($modal, $state, $previousState) {
+              $previousState.memo(wizardmodalMemo);
+              $state.modal = $modal.open({
+                template: '<div ui-view="modal"></div>',
+                controller: 'ModalWizardCtrl',
+                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html'
+              });
+              $state.modal.result.finally(function () {
+                $state.modal = null;
+                var previousState = $previousState.get(wizardmodalMemo);
+                if (previousState) {
+                  return $previousState.go(wizardmodalMemo);
+                }
+              });
             }
-          }]
+          ],
+          onExit: ['$state', '$previousState',
+            function ($state, $previousState) {
+              if ($state.modal) {
+                $previousState.forget(wizardmodalMemo);
+                $state.modal.close();
+              }
+            }
+          ]
         })
         .state('firsttimesplash', {
           abstract: true,
@@ -283,14 +319,14 @@ angular
         })
         .state('firsttimewizard', {
           parent: 'firsttimesplash',
-          templateUrl: 'modules/core/setupWizard/setupWizard.tpl.html',
+          template: '<cr-wizard tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
           controller: 'SetupWizardCtrl'
         })
         .state('setupwizardmodal', {
           parent: 'wizardmodal',
           views: {
             'modal@': {
-              templateUrl: 'modules/core/setupWizard/setupWizard.tpl.html',
+              template: '<cr-wizard tabs="tabs" finish="finish"></cr-wizard>',
               controller: 'SetupWizardCtrl'
             }
           }
@@ -308,6 +344,17 @@ angular
           templateUrl: 'modules/huron/views/callrouting.html',
           controller: 'CallRoutingCtrl',
           parent: 'main'
+        })
+        .state('mediaonhold', {
+          parent: 'modalLarge',
+          url: '/mediaonhold',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/huron/moh/moh.tpl.html',
+              controller: 'MohCtrl',
+              controllerAs: 'moh'
+            }
+          }
         });
     }
   ]);

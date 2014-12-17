@@ -3,6 +3,9 @@
 angular.module('Huron')
   .controller('serviceSetupCtrl', ['$scope', '$q', 'Notification', 'Log', 'ServiceSetup',
     function ($scope, $q, Notification, Log, ServiceSetup) {
+
+      Notification.init($scope);
+
       var DEFAULT_TZ = 'America/Los_Angeles';
       var DEFAULT_SD = '9';
       var DEFAULT_MOH = 'ciscoDefault';
@@ -95,19 +98,18 @@ angular.module('Huron')
         }
       };
 
-      $scope.serviceSetup = function (site, internalNumberRanges) {
+      $scope.initNext = function () {
         var deferreds = [];
         if ($scope.firstTimeSetup) {
-          deferreds.push(ServiceSetup.createSite(site).then(function () {
+          deferreds.push(ServiceSetup.createSite($scope.site).then(function () {
             $scope.firstTimeSetup = false;
-          }))
+          }));
         }
-        if (internalNumberRanges.length > 0) {
-          deferreds.push(ServiceSetup.createInternalNumberRanges(internalNumberRanges));
+        if ($scope.internalNumberRanges && $scope.internalNumberRanges.length > 0) {
+          deferreds.push(ServiceSetup.createInternalNumberRanges($scope.internalNumberRanges));
         }
-        $q.all(deferreds).then(function () {
+        return $q.all(deferreds).then(function () {
           listInternalExtentionRanges();
-          $scope.changeTab('enterpriseSettings');
         });
       };
 

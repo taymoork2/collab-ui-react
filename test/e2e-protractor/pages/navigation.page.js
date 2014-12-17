@@ -17,6 +17,7 @@ var Navigation = function(){
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackButton = element(by.id('feedback-btn'));
+  this.feedbackLink = element(by.id('feedback-lnk'));
   this.username = element(by.binding('username'));
   this.orgname = element(by.binding('orgname'));
   this.userInfoButton = element(by.css('.user-info button'));
@@ -123,6 +124,11 @@ var Navigation = function(){
   this.logout = function() {
     this.userInfoButton.click();
     this.logoutButton.click();
+  };
+
+  this.sendFeedback = function() {
+    this.userInfoButton.click();
+    this.feedbackButton.click();
   };
 
   this.launchPartnerOrgPortal = function(){

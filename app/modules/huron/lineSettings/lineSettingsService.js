@@ -5,9 +5,9 @@
     .module('Huron')
     .factory('LineSettings', LineSettings);
 
-  LineSettings.$inject = ['$filter', 'Authinfo', 'Log', 'Notification', 'DirectoryNumber', 'TelephonyInfoService', 'HuronAssignedLine'];
+  LineSettings.$inject = ['$filter', '$q', 'Authinfo', 'Log', 'Notification', 'DirectoryNumber', 'TelephonyInfoService', 'HuronAssignedLine'];
 
-  function LineSettings($filter, Authinfo, Log, Notification, DirectoryNumber, TelephonyInfoService, HuronAssignedLine) {
+  function LineSettings($filter, $q, Authinfo, Log, Notification, DirectoryNumber, TelephonyInfoService, HuronAssignedLine) {
     var service = {
       addInternalLine: addInternalLine,
       changeInternalLine: changeInternalLine,
@@ -40,6 +40,9 @@
                 TelephonyInfoService.updateAlternateDirectoryNumber(newAltNumber.uuid, newAltNumber.numMask);
               });
           }
+        })
+        .then(function () {
+          return $q.all([TelephonyInfoService.loadInternalNumberPool(), TelephonyInfoService.loadExternalNumberPool()]);
         });
     }
 
@@ -57,7 +60,7 @@
         })
         .then(function (dn) {
           TelephonyInfoService.updateCurrentDirectoryNumber(dn.uuid, dn.pattern, dnUsage, false);
-          TelephonyInfoService.updateAlternateDirectoryNumber(altNum.uuid, altNum.numMask);
+          TelephonyInfoService.updateAlternateDirectoryNumber(altNum.uuid, altNum.pattern);
           return DirectoryNumber.updateDirectoryNumber(dn.uuid, dnSettings);
         })
         .then(function () {
@@ -68,6 +71,9 @@
                 TelephonyInfoService.updateAlternateDirectoryNumber(newAltNumber.uuid, newAltNumber.numMask);
               });
           }
+        })
+        .then(function () {
+          return $q.all([TelephonyInfoService.loadInternalNumberPool(), TelephonyInfoService.loadExternalNumberPool()]);
         });
     }
 
@@ -81,6 +87,9 @@
           TelephonyInfoService.updateAlternateDirectoryNumber(newAltNumber.uuid, newAltNumber.numMask);
           TelephonyInfoService.getUserDnInfo(userUuid);
           return DirectoryNumber.updateDirectoryNumber(dnUuid, dnSettings);
+        })
+        .then(function () {
+          return TelephonyInfoService.loadExternalNumberPool();
         });
     }
 
@@ -98,6 +107,9 @@
           TelephonyInfoService.updateAlternateDirectoryNumber(newAltNumber.uuid, newAltNumber.numMask);
           TelephonyInfoService.getUserDnInfo(userUuid);
           return DirectoryNumber.updateDirectoryNumber(dnUuid, dnSettings);
+        })
+        .then(function () {
+          return TelephonyInfoService.loadExternalNumberPool();
         });
     }
 
@@ -108,9 +120,12 @@
 
       return DirectoryNumber.deleteAlternateNumber(dnUuid, altNumUuid)
         .then(function () {
-          TelephonyInfoService.updateAlternateDirectoryNumber('', '');
+          TelephonyInfoService.updateAlternateDirectoryNumber('none', '');
           TelephonyInfoService.getUserDnInfo(userUuid);
           return DirectoryNumber.updateDirectoryNumber(dnUuid, dnSettings);
+        })
+        .then(function () {
+          return TelephonyInfoService.loadExternalNumberPool();
         });
     }
 

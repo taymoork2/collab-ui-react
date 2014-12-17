@@ -35,7 +35,8 @@
     "ng-grid": "~2.0.13",
     "nicescroll": "~3.5.6",
     "typeahead.js": "~0.10.2",
-    "animate.css": "=3.2.0"
+    "animate.css": "=3.2.0",
+    "jasmine-jquery": "~2.0.5"
   },
   "devDependencies": {
     "angular-mocks": "1.2.20",
