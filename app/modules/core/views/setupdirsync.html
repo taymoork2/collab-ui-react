@@ -5,13 +5,13 @@
 </div>
 
 <div id="ssoModalBody" class="modal-body">
-  <wizard current-step="currentStep"> 
+  <wizard current-step="currentStep">
 
     <wz-step title = "{{'dirsyncModal.yourDomainTitle' | translate}}">
       <div id="yourDomainDiv" ng-init="getDefaultDomain()">
         <div id="domainDetailDiv">
           <span class="subheading" translate="dirsyncModal.domain"></span>
-          <input type="text" id="dirDomainText" placeholder="{{'dirsyncModal.defaultPlaceholder' | translate}}" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/> 
+          <input type="text" id="dirDomainText" placeholder="{{'dirsyncModal.defaultPlaceholder' | translate}}" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/>
           <div id="domainDesc">
             <span translate="dirsyncModal.domainDesc"></span>
           </div>
@@ -25,14 +25,14 @@
 
     <wz-step title="{{'dirsyncModal.installTitle' | translate}}">
       <div id="installDiv">
-        
+
         <div class="installStep"> <span translate="dirsyncModal.installStep1"></span></div>
         <div class="installStep"> <span translate="dirsyncModal.installStep2"></span></div>
         <div class="installStep"> <span translate="dirsyncModal.installStep3"></span></div>
         <div class="installStep"> <span translate="dirsyncModal.nextSteps"></span></div>
 
-        <button id="syncNowBtn" class="btn btn-primary pull-left" ng-click="syncNow()" data-loading-text="<i class='icon icon-spinner icon-spin'></i>"><span translate="dirsyncModal.syncNowBtn"></span></button>
-        
+        <button id="syncNowBtn" class="btn btn-primary pull-left" ng-click="syncNow()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="dirsyncModal.syncNowBtn"></span></button>
+
         <div class="ssoNavBtns">
           <button id="installCancelBtn" class="btn btn-primary pull-left" ng-click="cancel()"><span translate="ssoModal.cancelBtn"></span></button>
           <button id="installBackBtn" wz-previous class="btn btn-primary pull-left"><span translate="ssoModal.backBtn"></span></button>
@@ -50,7 +50,7 @@
           <span class="dirsync-refresh-button">
             {{formatDate(lastEndTime)}}
           <span id="refreshButton">
-            <a href ng-click="getStatus()"><i class="fa fa-refresh"></i></a></span>
+            <a href ng-click="getStatus()"><i class="icon icon-refresh"></i></a></span>
           </span>
 
           <div id="numUsers"><span class="boldText"> {{numUsersInSync}} </span><span translate="dirsyncModal.syncAgreementText"></span> </div>

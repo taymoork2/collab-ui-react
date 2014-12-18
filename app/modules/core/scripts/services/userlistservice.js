@@ -124,7 +124,7 @@ angular.module('Core')
             }, 'webex-squared');
           };
 
-          $('#export-icon').html('<i class=\'icon icon-spinner icon-spin\'></i>');
+          $('#export-icon').html('<i class=\'icon icon-spinner\'></i>');
           $compile(angular.element('#global-export-btn').html($filter('translate')('orgsPage.loadingMsg')))(scope);
           $rootScope.exporting = true;
           if (scope.exportBtn) {

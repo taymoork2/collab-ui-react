@@ -107,7 +107,7 @@
     "subTitleOrgs": "Organizations Tools",
     "exportBtn": "Export Users",
     "csvFilename": "users.csv",
-    "loadingMsg": "Exporting data... <i class='icon icon-spinner icon-spin' style='margin-left:10px;'></i>",
+    "loadingMsg": "Exporting data... <i class='icon icon-spinner' style='margin-left:10px;'></i>",
     "orgDetails": "Organization Details",
     "displayName": "Display Name",
     "services": "Services",
