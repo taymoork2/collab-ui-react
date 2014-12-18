@@ -13,6 +13,7 @@ var testuser = {
 };
 
 describe('First Time Wizard', function() {
+
   it('should login as an admin user', function(){
     login.login(testuser.username, testuser.password);
   });
@@ -57,9 +58,16 @@ describe('First Time Wizard', function() {
     wizard.nextBtn.click();
     expect(wizard.usersfield.isDisplayed()).toBeTruthy();
     wizard.finishBtn.click();
+
+    expect(wizard.fusionIntro.isDisplayed()).toBeTruthy();
+    wizard.nextBtn.click();
+    expect(wizard.fusionFuse.isDisplayed()).toBeTruthy();
+    wizard.finishBtn.click();
   });
 
   it('should reopen the wizard', function() {
+    element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
+    browser.sleep(1000);
     navigation.clickFirstTimeWizard();
     utils.expectIsDisplayed(wizard.wizard);
     utils.expectIsDisplayed(wizard.leftNav);
@@ -80,10 +88,11 @@ describe('First Time Wizard', function() {
     expect(wizard.mainviewSubtitle.getText()).toEqual('Sync Status');
     expect(wizard.mainviewSubtitle.isDisplayed()).toBeTruthy();
     utils.click(wizard.finishBtn);
-    browser.sleep(1000);
   });
 
   it('should reopen the wizard', function() {
+    element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
+    browser.sleep(1000);
     navigation.clickFirstTimeWizard();
     utils.expectIsDisplayed(wizard.wizard);
     utils.expectIsDisplayed(wizard.leftNav);

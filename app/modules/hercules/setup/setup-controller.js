@@ -3,13 +3,13 @@
 /* global _ */
 
 angular.module('Hercules')
-  .controller('FusionSetupCtrl', ['$scope', '$timeout', 'ConnectorService',
-    function ($scope, $timeout, service) {
-      var timer = 1;
+  .controller('FusionSetupCtrl', ['$scope', '$interval', 'ConnectorService',
+    function ($scope, $interval, service) {
+      var promise = true;
 
       var poll = function () {
-        if (timer) {
-          timer = $timeout(fetch, 5000);
+        if (promise) {
+          promise = $interval(fetch, 5000, 1);
         }
       };
 
@@ -20,11 +20,9 @@ angular.module('Hercules')
         });
       };
 
-      $scope.clusters = [];
-
       $scope.$on('$destroy', function () {
-        timer = 0;
-        $timeout.cancel(timer);
+        promise = null;
+        $timeout.cancel(promise);
       });
 
       fetch();
