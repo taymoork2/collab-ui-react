@@ -47,6 +47,7 @@
               'firstName': user.lastName,
               'phoneNumber': null,
               'oneTimePassword': null,
+              'expiresOn': null
             };
 
             return UserServiceCommon.save({
@@ -69,6 +70,7 @@
                 return this.acquireOTP(user.userId);
               }.bind(this)).then(function (otpInfo) {
                 emailInfo.oneTimePassword = otpInfo.password;
+                emailInfo.expiresOn = otpInfo.expiresOn;
                 return HuronEmailService.save({}, emailInfo);
               });
           }
