@@ -5,7 +5,7 @@ var TelephonyPage = function(){
   this.directoryNumbers = element.all(by.repeater('directoryNumber in vm.telephonyInfo.directoryNumbers'));
   this.voicemailFeature = element(by.cssContainingText('.sub-service','Voicemail'));
   this.snrFeature = element(by.cssContainingText('.sub-service','Single Number Reach'));
-  this.close = element(by.id('exitPreviewButton'));
+  this.close = element(by.id('close-preview-button'));
   this.squaredUCCheckBox = element(by.id('chk_ciscoUC'));
 
   this.saveButton = element.all(by.buttonText('Save')).filter(function(elem){
@@ -25,10 +25,12 @@ var TelephonyPage = function(){
 
   this.voicemailSwitch = element(by.model('voicemailEnabled'));
   this.voicemailStatus = element(by.id('voicemailStatus'));
+  this.saveVoicemail = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
 
-  this.snrSwitch = element(by.model('singleNumberReachEnabled'));
+  this.snrSwitch = element(by.model('telephonyInfo.snrInfo.singleNumberReachEnabled'));
   this.snrNumber = element(by.id('number'));
   this.snrStatus = element(by.id('snrStatus'));
+  this.saveSNR = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
 }
 
 module.exports = TelephonyPage;

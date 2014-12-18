@@ -4,9 +4,10 @@ var Wizard = function () {
   this.wizard = element(by.css('.wizard'));
   this.mainView = element(by.css('.wizard-main'));
   this.leftNav = element(by.css('.wizard-nav'));
-  this.reviewTab = element(by.css('#wizard-planReview-link'));
-  this.enterpriseTab = element(by.css('#wizard-enterpriseSettings-link'));
-  this.addusersTab = element(by.css('#wizard-addUsers-link'));
+  this.reviewTab = element(by.id('wizard-planReview-link'));
+  this.serviceSetupTab = element(by.id('wizard-serviceSetup-link'));
+  this.enterpriseTab = element(by.id('wizard-enterpriseSettings-link'));
+  this.addusersTab = element(by.id('wizard-addUsers-link'));
   this.mainviewTitle = element(by.css('.wizard-main-title'));
   this.mainviewSubtitle = element(by.css('.wizard h3'));
   this.radiobuttons = element.all(by.css('label.cs-radio'));
@@ -21,16 +22,20 @@ var Wizard = function () {
   this.toEnableSSOBtn = element(by.css('[ng-click="changeStep(\'enableSSO\')"]'));
   this.enableSSOBtn = element(by.css('[ng-click="enableSSO()"]'));
   this.auEvaluateBtn = element(by.css('[ng-click="evaluateStep(\'initial\', \'addUsers\')"]'));
-  this.usersfield = element(by.css('#usersfield-wiz'));
-  this.dirDomainInput = element(by.css('#dirDomainText'));
+  this.usersfield = element(by.id('usersfield-wiz'));
+  this.dirDomainInput = element(by.id('dirDomainText'));
   this.toInstallConnectorBtn = element.all(by.css('[ng-click="changeStep(\'installConnector\')"]'));
   this.toSyncStatusBtn = element.all(by.css('[ng-click="changeStep(\'syncStatus\')"]'));
-  this.finishTab = element(by.css('#wizard-finish-link'));
-  this.fusionIntro = element(by.css('#fuse-setup-intro'));
-  this.fusionFuse = element(by.css('#fuse-setup-fuse'));
+  this.finishTab = element(by.id('wizard-finish-link'));
+  this.fusionIntro = element(by.id('fuse-setup-intro'));
+  this.fusionFuse = element(by.id('fuse-setup-fuse'));
 
   this.clickPlanReview = function () {
     this.reviewTab.click();
+  };
+
+  this.clickServiceSetup = function () {
+    this.serviceSetupTab.click();
   };
 
   this.clickEnterpriseSettings = function () {

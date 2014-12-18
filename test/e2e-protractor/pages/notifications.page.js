@@ -30,7 +30,9 @@ var Notifications = function(){
     if (msg2) {
       expect(this.successBody.getText()).toContain(msg2);
     }
-    this.notificationCancel.click();
+    if (msg1 || msg2){
+      this.notificationCancel.click();
+    }
   };
 
   this.clearNotifications = function() {
