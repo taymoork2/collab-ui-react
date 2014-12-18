@@ -387,7 +387,7 @@ angular.module('Squared')
         }, 0); // setTimeout to allow label translation to resolve
       }
 
-      $scope.getRowIndex = function(rowItem) {
+      $scope.getRowIndex = function (rowItem) {
         return $scope.userLogs.indexOf(rowItem);
       };
 

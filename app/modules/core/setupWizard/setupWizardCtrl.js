@@ -72,6 +72,24 @@ angular.module('Core')
         }]
       }];
 
+      if (Authinfo.isFusion()) {
+        $scope.tabs.push({
+          name: 'hercules.setup',
+          label: 'hercules.setup.label',
+          title: 'hercules.setup.title',
+          description: 'hercules.setup.desc',
+          icon: 'icon-tools',
+          controller: 'FusionSetupCtrl',
+          steps: [{
+            name: 'intro',
+            template: 'modules/hercules/setup/intro.html'
+          }, {
+            name: 'fuse',
+            template: 'modules/hercules/setup/fuse.html'
+          }]
+        });
+      }
+
       if (Authinfo.isSquaredUC()) {
         $scope.tabs.splice(1, 0, {
           name: 'serviceSetup',

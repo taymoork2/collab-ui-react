@@ -3,23 +3,7 @@
   <p>Fusion Services enables you to monitor and manage your Cloud Fusion services running on your Cisco Expressways.</p>
   <p>Go to the Initial Setup for directions on how to activate them.</p>
   <p style="margin-top: 30px;">You are entitled to the following services:</p>
-  <div class="row">
-    <div class="col-sm-5" ng-repeat="(name, descs) in services">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 style="margin: 0">
-            <i class="fa fa-phone"></i>
-            {{name}}
-          </h4>
-        </div>
-        <div class="panel-body">
-          <ul style="padding-left: 15px">
-            <li ng-repeat="desc in descs">
-              {{desc}}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div
+
+  <hercules-entitled-services />
+
 </div>

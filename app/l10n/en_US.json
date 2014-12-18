@@ -23,7 +23,7 @@
     "modify": "Modify",
     "existingUsers": "Existing Users",
     "userInput": "Enter one or more email addresses separated by commas",
-    "active": "<span class='glyphicon glyphicon-ok'></span>",
+    "active": "Active",
     "inactive": "",
     "validEmailInput": "Please enter valid user email(s).",
     "csvBtnTitle": "Export to CSV",
@@ -39,8 +39,7 @@
     "cancel": "Cancel",
     "addUsersDesc": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "status": "Status",
-    "pending": "Invite Pending",
-    "active": "Active"
+    "pending": "Invite Pending"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -369,7 +368,6 @@
     "page_title": "Fusion Services",
     "connectors": {
       "group_by": "Group services by:",
-      "loading_error": "Unable to load fusion data, please try again later.",
       "cluster_id": "Cluster",
       "host_name": "Expressway Host",
       "display_name": "Service Name",
@@ -388,6 +386,11 @@
       "stopped": "reports the service as stopped.",
       "offline": "has not posted status in a while and could be offline.",
       "registered": "is registered but has not yet posted status."
+    },
+    "setup": {
+        "label": "UC Fusion Services",
+        "title": "UC Fusion Services",
+        "desc": "Synchronize your on-prem services"
     }
   },
   "firstTimeWizard": {
@@ -409,7 +412,7 @@
     "addUsersSimple": "Add Users | Simple",
     "addUsersAdvanced": "Add Users | Advanced",
     "getStarted": "Get Started",
-    "chooseSync": "Please select an option",
+    "chooseSync": "Choose Sync",
     "cancelBtn": "Cancel",
     "backBtn": "Back",
     "nextBtn": "Next",
@@ -417,7 +420,6 @@
     "doneBtn": "Finish",
     "beginBtn": "Begin",
     "closeBtn": "Close",
-    "chooseSync": "Choose Sync",
     "chooseSyncDesc": "Do you want to manually enter users or synchronize users from Active Directory?",
     "chooseManualDesc": "Manual User Entry",
     "chooseADSyncDesc": "Active Directory Sync",
@@ -440,7 +442,6 @@
     "domainEntry": "Domain Entry",
     "domainSubDesc": "Enter the AD domain to sync with:",
     "connectorSteps": "Follow these steps in order to install the Cloud Connector:",
-    "getStarted": "Get Started",
     "readyToGo": "You're ready to go!",
     "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
     "finish": "Finish",
@@ -524,7 +525,6 @@
     "noResults": "No Results",
     "expiredHeading": "Expired Trials",
     "addTrial": "New Trial",
-    "noResults": "No Results",
     "trialsCustomerName": "Customer",
     "trialsEndDate": "Day(s) Left",
     "trialsNumUsers": "Users/ Licenses",

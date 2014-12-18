@@ -1,4 +1,5 @@
 <div id="fusion-root">
+  <div class="notification"></div>
   <div class="page-header row">
     <div class="col-sm-6 col-md-6">
       <h2 class="page-title" translate="hercules.page_title"></h2>
@@ -17,9 +18,8 @@
       <div ng-show="loading" style="text-align: center; padding-top: 60px;">
         <i class="icon icon-spinner icon-spin icon-2x"></i>
       </div>
-      <div ng-show="error" translate="hercules.connectors.loading_error"></div>
       <div ng-show="!loading">
-        <div ng-show="clusters.length == 0" class="col-md-12">
+        <div ng-show="clusters.length == 0" class="col-md-12" style="padding: 20px 40px">
           <hercules-nothing-fused />
         </div>
         <div ng-show="clusters.length != 0" class="col-md-12">

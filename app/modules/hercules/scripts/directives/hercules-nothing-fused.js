@@ -2,18 +2,7 @@
   'use strict';
   angular
     .module('Hercules')
-    .controller('NothingFusedController', ['$scope', function ($scope) {
-      $scope.services = {
-        'UCM Service': [
-          'Zero touch meetings, move calls between desk phones and soft clients.',
-          'Reuse your enterprise phone number.'
-        ],
-        'Calendar Service': [
-          'Calendar sync for consistent meeting times.',
-          'In-app scheduling connected to Microsoft Exchange.'
-        ]
-      };
-    }])
+    .controller('NothingFusedController', ['$scope', 'ConnectorService', function ($scope, service) {}])
     .directive('herculesNothingFused', [
       function () {
         return {

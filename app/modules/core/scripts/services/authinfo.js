@@ -226,7 +226,12 @@ angular.module('Core')
 
         isSquaredUC: function () {
           return isEntitled(Config.entitlements.huron);
+        },
+
+        isFusion: function () {
+          return isEntitled(Config.entitlements.fusion);
         }
+
       };
     }
   ]);

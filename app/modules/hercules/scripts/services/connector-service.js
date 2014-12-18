@@ -19,17 +19,28 @@ angular.module('Hercules')
 
       var addMockData = window.location.href.indexOf('hercules-mock') != -1;
 
-      var fetch = function (opts) {
-        // return opts.success([]);
-        // return opts.success(convertClusters(mock.mockData()));
+      var lastClusterResponse = [];
+
+      var fetch = function (callback) {
+        // return callback(new Error('yolo'), []);
+        // return callback(null, convertClusters(mock.mockData()));
         $http
           .get(getUrl())
           .success(function (data) {
             var converted = convertClusters(data);
             // console.info(JSON.stringify(converted, null, '  '));
-            opts.success(converted);
+            lastClusterResponse = converted;
+            callback(null, converted);
           })
-          .error(opts.error);
+          .error(function (data, status, headers, config) {
+            callback({
+              data: data,
+              status: status,
+              headers: headers,
+              config: config
+            });
+          });
+        return lastClusterResponse;
       };
 
       var convertConnectors = function (data) {
@@ -109,10 +120,29 @@ angular.module('Hercules')
         });
       };
 
+      var services = function (cb) {
+        cb([{
+          name: 'UCM Service',
+          icon: 'fa fa-phone',
+          descs: [
+            'Zero touch meetings, move calls between desk phones and soft clients.',
+            'Reuse your enterprise phone number.'
+          ]
+        }, {
+          name: 'Calendar Service',
+          icon: 'fa fa-calendar',
+          descs: [
+            'Calendar sync for consistent meeting times.',
+            'In-app scheduling connected to Microsoft Exchange.'
+          ]
+        }]);
+      };
+
       return {
         /* public */
         fetch: fetch,
         upgradeSoftware: upgradeSoftware,
+        services: services,
 
         /* private, for testing */
         _convertConnectors: convertConnectors,
