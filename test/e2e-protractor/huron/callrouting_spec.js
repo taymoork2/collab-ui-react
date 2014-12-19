@@ -1,9 +1,11 @@
 'use strict';
 
 var testuser = {
-  username: 'admin@int1.huron-alpha.com',
-  password: 'Cisco123!'
+  username: 'admin@uc.e2e.huron-alpha.com',
+  password: 'C1sco123!'
 };
+
+var pattern = Math.ceil(Math.random()*10000);
 
 xdescribe('Huron Call Routing', function() {
   it('should login', function(){
@@ -15,26 +17,49 @@ xdescribe('Huron Call Routing', function() {
   });
 
   describe('Call Park feature', function(){
-
-    it('should click add call park', function(){
+    it('should cancel creating a new call park', function(){
       callrouting.addCallParkButton.click();
-      utils.expectIsDisplayed(callrouting.name);
+      callrouting.cancelButton.click();
+      expect(callrouting.name.isPresent()).toBeFalsey;
+      expect(callrouting.callParks.count()).toBe(0);
     });
 
-    var pattern = Math.ceil(Math.random()*10000);
-    it('should create a new call park', function(){
+    it('should create a new call park with single number', function(){
+      expect(callrouting.callParks.count()).toBe(0);
+      callrouting.addCallParkButton.click();
+      expect(callrouting.name.isDisplayed()).toBeTruthy;
       callrouting.name.sendKeys(pattern);
       callrouting.singleNumber.click();
       callrouting.pattern.sendKeys(pattern);
       callrouting.retrievalPrefix.sendKeys(pattern);
-      callrouting.reversionPatternRadio.click();
       callrouting.reversionPattern.sendKeys(pattern);
       callrouting.createButton.click();
-      notifications.assertSuccess('added successfully');
+      notifications.assertSuccess(pattern + ' added successfully');
+      expect(callrouting.callParks.count()).toBe(1);
     });
 
-    it('should delete call park', function(){
-      callrouting.deleteCallPark(pattern);
+    it('should create a new call park with range', function(){
+      expect(callrouting.callParks.count()).toBe(1);
+      callrouting.addCallParkButton.click();
+      expect(callrouting.name.isDisplayed()).toBeTruthy;
+      callrouting.name.sendKeys((pattern + 1) + " through " + (pattern + 2));
+      callrouting.rangeMin.sendKeys((pattern + 1));
+      callrouting.rangeMax.sendKeys((pattern + 2));
+      callrouting.retrievalPrefix.sendKeys(pattern);
+      callrouting.reversionPattern.sendKeys(pattern);
+      callrouting.createButton.click();
+      notifications.assertSuccess((pattern + 1) + ' added successfully', (pattern + 2) + ' added successfully');
+      expect(callrouting.callParks.count()).toBe(3);
+    });
+
+    it('should delete all call parks', function(){
+      callrouting.callParks.count().then(function(count){
+        while(count > 0){
+          count = count - 1;
+          callrouting.callParks.get(count).element(by.css('button')).click();
+        }
+      });
+      expect(callrouting.callParks.count()).toBe(0);
     });
   });
 
@@ -42,5 +67,4 @@ xdescribe('Huron Call Routing', function() {
   it('should log out', function() {
     navigation.logout();
   });
-
 });

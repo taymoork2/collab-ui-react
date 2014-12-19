@@ -1,8 +1,8 @@
 'use strict'
 
 // TODO - break up into UserList/UserAdd/UserPreview
-var UsersPage = function () {
-  this.searchButton = element(by.css('.header-search button'));
+var UsersPage = function() {
+  this.searchButton = element(by.css('.header-search-toggle'));
   this.searchField = element(by.css('.search-form input'));
 
   this.listPanel = element(by.id('userslistpanel'));
@@ -135,17 +135,18 @@ var UsersPage = function () {
     utils.expectIsDisplayed(this.searchField);
     this.searchField.clear();
     browser.sleep(1000);
-    if (query) {
+    if (typeof query == 'string' || query instanceof String) {
       this.searchField.sendKeys(query);
       browser.sleep(1000);
-      element.all(by.repeater('row in renderedRows')).then(function (rows) {
-        expect(rows.length).toEqual(0);
-      });
     }
   };
 
-  this.assertEntitlementListSize = function (size) {
-    element.all(by.repeater('(service, val) in entitlements')).then(function (items) {
+  this.returnUser = function(userEmail) {
+    return element.all(by.cssContainingText('.col3', userEmail)).first();
+  };
+
+  this.assertEntitlementListSize = function(size) {
+    element.all(by.repeater('(service, val) in entitlements')).then(function(items) {
       expect(items.length).toBe(size);
     });
   };
