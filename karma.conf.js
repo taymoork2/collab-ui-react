@@ -9,7 +9,7 @@ module.exports = function (config) {
     basePath: '../',
 
     // testing framework to use (jasmine/mocha/qunit/...)
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'sinon'],
 
     /**
      * This is the list of file patterns to load into the browser during testing.
@@ -19,8 +19,9 @@ module.exports = function (config) {
       'build/scripts/**/*.js',
       'build/templates-app.js',
       'build/modules/**/*.js',
+      'test/global.spec.js',
       'test/**/spec/**/*.js', {
-        pattern: 'test/**/spec/**/*.json',
+        pattern: 'test/fixtures/**/*.json',
         watched: true,
         served: true,
         included: false
@@ -56,6 +57,7 @@ module.exports = function (config) {
       'karma-phantomjs-launcher',
       // 'karma-chrome-launcher',
       'karma-jasmine',
+      'karma-sinon',
       'karma-junit-reporter'
     ],
 

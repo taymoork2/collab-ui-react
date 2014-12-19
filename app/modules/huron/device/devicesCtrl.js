@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('Huron')
+    .module('uc.device')
     .controller('DevicesCtrl', DevicesCtrl);
 
   DevicesCtrl.$inject = ['$scope', '$state', 'DeviceService', 'Config'];

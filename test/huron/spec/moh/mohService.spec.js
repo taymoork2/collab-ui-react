@@ -2,15 +2,14 @@
 
 describe('Service: MohService', function () {
   var mohService, httpBackend, playlistsData, playlistData1, playlists;
-  jasmine.getJSONFixtures().fixturesPath = 'base/test/huron/spec/moh/fixtures';
 
   beforeEach(module('uc.moh'));
 
   beforeEach(
     inject(
       function ($httpBackend, _mohService_) {
-        playlistsData = getJSONFixture('playlists.json');
-        playlistData1 = getJSONFixture('playlists/BBD5656B-E92B-12F5-10EF-1B01CB23A7C0.json');
+        playlistsData = getJSONFixture('huron/json/moh/playlists.json');
+        playlistData1 = getJSONFixture('huron/json/moh/playlists/BBD5656B-E92B-12F5-10EF-1B01CB23A7C0.json');
         httpBackend = $httpBackend;
         // httpBackend.when('GET', '/modules/huron/moh/mohData/playlists.json').respond(function (method, url, data) {
         //   console.log('getting playlists');

@@ -2,7 +2,6 @@
 
 describe('Controller: MohCtrl', function () {
   var controller, scope, createController, httpBackend, playlistsData, tracksData, playlistData1;
-  jasmine.getJSONFixtures().fixturesPath = 'base/test/huron/spec/moh/fixtures';
 
   beforeEach(module('uc.moh'));
   beforeEach(module('ui.router'));
@@ -11,8 +10,8 @@ describe('Controller: MohCtrl', function () {
     inject(
       function ($rootScope, $controller, $httpBackend, _mohService_) {
         scope = $rootScope.$new();
-        playlistsData = getJSONFixture('playlists.json');
-        playlistData1 = getJSONFixture('playlists/BBD5656B-E92B-12F5-10EF-1B01CB23A7C0.json');
+        playlistsData = getJSONFixture('huron/json/moh/playlists.json');
+        playlistData1 = getJSONFixture('huron/json/moh/playlists/BBD5656B-E92B-12F5-10EF-1B01CB23A7C0.json');
         httpBackend = $httpBackend;
         httpBackend.when('GET', '/modules/huron/moh/mohData/playlists.json').respond(200, playlistsData);
         httpBackend.when('GET', '/modules/huron/moh/mohData/playlists/BBD5656B-E92B-12F5-10EF-1B01CB23A7C0.json').respond(200, playlistData1);
