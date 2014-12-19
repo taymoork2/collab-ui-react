@@ -195,7 +195,8 @@
             }];
             return InternalNumberPoolService.query({
                 customerId: Authinfo.getOrgId(),
-                directorynumber: ''
+                directorynumber: '',
+                order: 'pattern'
               }).$promise
               .then(function (intPool) {
                 for (var i = 0; i < intPool.length; i++) {
@@ -220,7 +221,8 @@
             }];
             return ExternalNumberPoolService.query({
                 customerId: Authinfo.getOrgId(),
-                directorynumber: ''
+                directorynumber: '',
+                order: 'pattern'
               }).$promise
               .then(function (extPool) {
                 for (var i = 0; i < extPool.length; i++) {
