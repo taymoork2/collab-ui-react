@@ -24,9 +24,6 @@ angular.module('Core')
         angular.element('#usersfield-tokenfield').attr('placeholder', placeholder);
       };
 
-      //Initialize
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
       var invalidcount = 0;
 
       function Feature(name, state) {

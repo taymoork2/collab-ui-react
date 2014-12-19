@@ -1,3 +1,10 @@
+cr-notification {
+  position: fixed;
+  bottom: 0px;;
+  right: -450px;
+  z-index: 5001;
+}
+
 .alertify-logs {
   bottom: 30px;
   right:30px;
@@ -11,6 +18,7 @@
   }
   text-align: center;
   opacity: 0.95;
+  line-height: 1;
 }
 
 .alertify-log-error {
@@ -29,14 +37,17 @@
   text-align: left;
   height:250px;
   width: 450px;
-  z-index: 5001;
-  position:fixed;
-  bottom: 0px;
-  right: -450px;
 }
 
 .notification {
   z-index: -1;
+}
+
+.panel-title {
+  font-size: 14px;
+  span {
+    margin-left: 5px;
+  }
 }
 
 .panel-danger {
@@ -65,20 +76,12 @@
   font-size: 15px;
 }
 
-.alertify-log-error .fa-times {
-  .close-icon(4px, @brand-white, @brand-danger-light);
+.alertify-log-error .icon-close, .panel-danger .icon-close {
+  .close-icon(@brand-white, @brand-danger-light);
 }
 
-.panel-danger .fa-times {
-  .close-icon(2px, @brand-white, @brand-danger-light);
-}
-
-.alertify-log-success .fa-times {
-  .close-icon(4px, @brand-white, @brand-success-light);
-}
-
-.panel-success .fa-times {
-  .close-icon(2px, @brand-white, @brand-success-light);
+.alertify-log-success .icon-close, .panel-success .icon-close {
+  .close-icon(@brand-white, @brand-success-light);
 }
 
 .panel-danger > .panel-heading {

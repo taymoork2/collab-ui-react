@@ -5,9 +5,6 @@ angular.module('Squared')
   .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams',
     function ($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams) {
 
-      //Initialize
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
       $('#logs-panel').hide();
 
       $('#logsearchfield').attr('placeholder', $filter('translate')('supportPage.inputPlaceholder'));

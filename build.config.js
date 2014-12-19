@@ -76,6 +76,8 @@ module.exports = {
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-translate/angular-translate.js',
       'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
+      'bower_components/messageformat/messageformat.js',
+      'bower_components/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
       'bower_components/ui-router-extras/release/ct-ui-router-extras.js',
       'bower_components/ng-csv/build/ng-csv.min.js',

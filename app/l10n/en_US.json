@@ -211,6 +211,12 @@
     "back": "Back",
     "finish": "Finish"
   },
+  "notifications": {
+    "success": "Success notifications",
+    "error": "Error notifications",
+    "successTotal": "{total, plural, one{# success} other{# successes}}",
+    "errorTotal": "{total, plural, one{# error} other{# errors}}"
+  },
   "homePage": {
     "overview": "Last 4 weeks",
     "activeUsers": "Active Users",

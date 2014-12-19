@@ -1,10 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('CallRoutingCtrl', ['$scope', 'Notification', 'CallPark', '$modal',
-    function ($scope, Notification, CallPark, $modal) {
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
+  .controller('CallRoutingCtrl', ['$scope', 'CallPark', '$modal',
+    function ($scope, CallPark, $modal) {
       $scope.callParks = [];
 
       var listCallParks = function () {

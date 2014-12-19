@@ -13,7 +13,6 @@ angular.module('Core')
       $scope.queryuserslist = [];
       $scope.totalResults = 0;
       $scope.currentUser = null;
-      $scope.popup = Notification.popup;
 
       $scope.userPreviewActive = false;
       $scope.userDetailsActive = false;
@@ -30,9 +29,6 @@ angular.module('Core')
         by: 'name',
         order: 'ascending'
       };
-
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
 
       $scope.isSquaredEnabled = function () {
         return isEntitled(Config.entitlements.squared);

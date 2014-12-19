@@ -6,9 +6,6 @@ angular.module('Core')
   .controller('OrganizationsCtrl', ['$rootScope', '$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
     function ($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
 
-      //Initialize
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
       $scope.orgName = Authinfo.getOrgName();
 
       var getorgInfo = function () {

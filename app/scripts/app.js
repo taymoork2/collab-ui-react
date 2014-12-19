@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 
-angular.module('Core', []);
+angular.module('Core', ['pascalprecht.translate']);
 
 angular.module('Squared', ['Core']);
 
@@ -27,7 +27,6 @@ angular
     'ngRoute',
     'ui.bootstrap',
     'dialogs',
-    'pascalprecht.translate',
     'ngCsv',
     'ipCookie',
     'ui.router',

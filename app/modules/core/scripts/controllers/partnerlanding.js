@@ -18,8 +18,6 @@ angular.module('Core')
       $scope.displayRows = 10;
       $scope.expiredRows = 3;
       $scope.startDate = new Date();
-      Notification.init($rootScope);
-      $rootScope.popup = Notification.popup;
       $scope.customerName = null;
       $scope.customerEmail = null;
       $scope.licenseDuration = 90;

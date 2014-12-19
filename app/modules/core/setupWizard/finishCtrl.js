@@ -4,8 +4,6 @@ angular.module('Core')
   .controller('WizardFinishCtrl', ['$scope', '$q', '$translate', 'Notification',
     function ($scope, $q, $translate, Notification) {
 
-      Notification.init($scope);
-
       $scope.initNext = function () {
         var deferred = $q.defer();
         if (angular.isFunction($scope.getRequiredTabs)) {

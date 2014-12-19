@@ -1,8 +1,8 @@
 <div class="wizard-main">
-    <div class="wizard-main-title"><span translate="{{current.tab.title}}"></span><span ng-if="current.subTab && isNotFirstStep()"> | {{getSubTabTitle() | translate}}</span></div>
-    <div class="wizard-main-content" ng-include="current.step.template" ng-controller="getController"></div>
+    <div class="wizard-main-title"><span translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> | {{wizard.getSubTabTitle() | translate}}</span></div>
+    <div class="wizard-main-content" ng-include="wizard.current.step.template" ng-controller="wizard.getController"></div>
     <div class="wizard-main-btns">
-      <button type="button" class="btn btn-default" ng-if="isNotFirstStep()" ng-click="previousStep()" translate="common.back"></button>
-      <button type="button" class="btn btn-primary" ng-click="nextStep()" translate="{{getNextText()}}"></button>
+      <button type="button" class="btn btn-default" ng-if="!wizard.isFirstStep()" ng-click="wizard.previousStep()" translate="common.back"></button>
+      <button type="button" class="btn btn-primary" ng-click="wizard.nextStep()" translate="{{wizard.getNextText()}}"></button>
     </div>
 </div>

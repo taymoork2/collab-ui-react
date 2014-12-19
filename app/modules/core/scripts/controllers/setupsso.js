@@ -8,10 +8,6 @@ angular.module('Core')
       var strEntityId = 'entityID="';
       var strEntityIdEnd = '">';
 
-      //Initialize
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
-
       $scope.options = {
         configureSSO: 1
       };
@@ -35,9 +31,7 @@ angular.module('Core')
         var deferred = $q.defer();
         if ($scope.options.configureSSO == 0) {
           deferred.reject();
-          if (angular.isFunction($scope.nextTab)) {
-            $scope.nextTab();
-          }
+          $scope.$emit('nextTab');
         } else {
           deferred.resolve();
         }

@@ -31,8 +31,6 @@ angular.module('ListUsers', [])
 
       var usersperpage = Config.usersperpage;
       $scope.pagination = Pagination.init($scope, usersperpage);
-      //Notification.init($scope);
-      $scope.popup = Notification.popup;
 
       var getUserList = function () {
         //clear currentUser if a new search begins

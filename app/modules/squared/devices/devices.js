@@ -144,9 +144,6 @@ angular.module('Squared')
         }]
       };
 
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
-
       $scope.resetAddDevice = function () {
         $scope.showAdd = true;
         $('#newRoom').val('');

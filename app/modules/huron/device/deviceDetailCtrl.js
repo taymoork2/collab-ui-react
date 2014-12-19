@@ -5,8 +5,7 @@
     .module('uc.device')
     .controller('DeviceDetailCtrl', DeviceDetailCtrl);
 
-  DeviceDetailCtrl.$inject = ['$rootScope', '$scope', '$filter', '$modal', '$state', 'Log', 'DeviceService', 'Notification'];
-
+  /* @ngInject */
   function DeviceDetailCtrl($rootScope, $scope, $filter, $modal, $state, Log, DeviceService, Notification) {
     var vm = this;
     vm.device = {};

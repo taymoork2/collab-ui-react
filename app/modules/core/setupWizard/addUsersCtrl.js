@@ -24,11 +24,11 @@ angular.module('Core')
 
       $scope.initNext = function () {
         var deferred = $q.defer();
-        if (angular.isDefined($scope.options.addUsers) && angular.isFunction($scope.setSubTab)) {
+        if (angular.isDefined($scope.options.addUsers)) {
           if ($scope.options.addUsers === 0) {
-            $scope.setSubTab('simple');
+            $scope.$emit('setSubTab', 'simple');
           } else if ($scope.options.addUsers === 1) {
-            $scope.setSubTab('advanced');
+            $scope.$emit('setSubTab', 'advanced');
           }
           deferred.resolve();
         } else {
@@ -331,9 +331,6 @@ angular.module('Core')
         angular.element('#usersfield-wiz-tokenfield').attr('placeholder', placeholder);
       };
 
-      //Initialize
-      Notification.init($scope);
-      $scope.popup = Notification.popup;
       var invalidcount = 0;
 
       function Feature(name, state) {

@@ -1,8 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$httpProvider', '$injector', '$stateProvider', '$urlRouterProvider',
-    function ($httpProvider, $injector, $stateProvider, $urlRouterProvider) {
+  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider',
+    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
       $urlRouterProvider.otherwise('login');
       $stateProvider
         .state('login', {
@@ -38,15 +38,15 @@ angular
 
       $httpProvider.responseInterceptors.push('ResponseInterceptor');
 
-      var translation = $injector.get('$translateProvider');
-
-      translation.useStaticFilesLoader({
+      $translateProvider.useStaticFilesLoader({
         prefix: 'l10n/',
         suffix: '.json'
       });
 
+      $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
+
       //Tell the module what language to use by default
-      translation.preferredLanguage('en_US');
+      $translateProvider.preferredLanguage('en_US');
     }
   ]);
 

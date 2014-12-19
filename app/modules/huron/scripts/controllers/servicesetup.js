@@ -1,10 +1,8 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('serviceSetupCtrl', ['$scope', '$q', 'Notification', 'Log', 'ServiceSetup',
-    function ($scope, $q, Notification, Log, ServiceSetup) {
-
-      Notification.init($scope);
+  .controller('serviceSetupCtrl', ['$scope', '$q', 'Log', 'ServiceSetup',
+    function ($scope, $q, Log, ServiceSetup) {
 
       var DEFAULT_TZ = 'America/Los_Angeles';
       var DEFAULT_SD = '9';

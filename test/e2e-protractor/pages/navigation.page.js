@@ -29,13 +29,18 @@ var Navigation = function(){
   this.dropdownItems = element.all(by.repeater('item in menuItems'));
   this.launchPartnerButton = element(by.id('launch-partner-btn'));
 
+  this.clickDevelopmentTab = function() {
+    this.developmentTab.click();
+    browser.sleep(500);
+  };
+
   this.clickHome = function() {
     this.homeTab.click();
     this.expectCurrentUrl('/overview');
   };
 
   this.clickOrganization = function() {
-    this.developmentTab.click();
+    this.clickDevelopmentTab();
     utils.click(this.orgTab);
     this.expectCurrentUrl('/organization');
   };
@@ -56,7 +61,7 @@ var Navigation = function(){
   };
 
   this.clickCallRouting = function() {
-    this.developmentTab.click();
+    this.clickDevelopmentTab();
     this.callRoutingTab.click();
     this.expectCurrentUrl('/callrouting');
   };
@@ -72,7 +77,7 @@ var Navigation = function(){
   };
 
   this.clickFusion = function() {
-    this.developmentTab.click();
+    this.clickDevelopmentTab();
     this.fusionTab.click();
     this.expectCurrentUrl('/fusion');
   };
