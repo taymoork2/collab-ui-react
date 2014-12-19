@@ -36,7 +36,7 @@ var Navigation = function(){
 
   this.clickOrganization = function() {
     this.developmentTab.click();
-    this.orgTab.click();
+    utils.click(this.orgTab);
     this.expectCurrentUrl('/organization');
   };
 

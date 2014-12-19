@@ -135,7 +135,7 @@ describe('Partner flow', function() {
     it('Launch customer portal via dropdown',function(){
       var appWindow = browser.getWindowHandle();
 
-      partner.exitPreviewButton.click();
+      utils.click(partner.exitPreviewButton);
       browser.sleep(2000);
 
       partner.actionsButton.click();
