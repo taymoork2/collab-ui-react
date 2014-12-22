@@ -19,16 +19,28 @@ angular.module('Hercules')
 
       var addMockData = window.location.href.indexOf('hercules-mock') != -1;
 
-      var fetch = function (opts) {
-        //return opts.success([]);
-        //return opts.success(convertClusters(mock.mockData()));
+      var lastClusterResponse = [];
+
+      var fetch = function (callback) {
+        // return callback(new Error('yolo'), []);
+        // return callback(null, convertClusters(mock.mockData()));
         $http
           .get(getUrl())
           .success(function (data) {
             var converted = convertClusters(data);
-            opts.success(converted);
+            // console.info(JSON.stringify(converted, null, '  '));
+            lastClusterResponse = converted;
+            callback(null, converted);
           })
-          .error(opts.error);
+          .error(function (data, status, headers, config) {
+            callback({
+              data: data,
+              status: status,
+              headers: headers,
+              config: config
+            });
+          });
+        return lastClusterResponse;
       };
 
       var convertConnectors = function (data) {
@@ -58,7 +70,7 @@ angular.module('Hercules')
       };
 
       var upgradeSoftware = function (opts) {
-        var url = getUrl() + '/' + opts.clusterId + '/upgrade';
+        var url = getUrl() + '/' + opts.clusterId + '/services/' + opts.serviceType + '/upgrade';
         var data = JSON.stringify({
           tlp: opts.tlpUrl
         });
@@ -72,10 +84,19 @@ angular.module('Hercules')
         var converted = _.map(data, function (origCluster) {
           var cluster = _.cloneDeep(origCluster);
           _.each(cluster.services, function (service) {
+            service.running_hosts = 0;
             _.each(service.connectors, function (connector) {
               if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
                 cluster.needs_attention = cluster.intially_open = true;
                 service.needs_attention = true;
+                service.is_disabled = false;
+              }
+              if (connector.state == 'disabled' && service.running_hosts == 0) {
+                service.is_disabled = true;
+              }
+              if (connector.state == 'running') {
+                service.is_disabled = false;
+                service.running_hosts = ++service.running_hosts;
               }
             });
             if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
@@ -87,6 +108,11 @@ angular.module('Hercules')
               }
             }
           });
+          cluster.services = _.sortBy(cluster.services, function (obj) {
+            if (obj.needs_attention) return 1;
+            if (obj.is_disabled) return 3;
+            return 2;
+          });
           return cluster;
         });
         return _.sortBy(converted, function (obj) {
@@ -94,10 +120,29 @@ angular.module('Hercules')
         });
       };
 
+      var services = function (cb) {
+        cb([{
+          name: 'UCM Service',
+          icon: 'fa fa-phone',
+          descs: [
+            'Zero touch meetings, move calls between desk phones and soft clients.',
+            'Reuse your enterprise phone number.'
+          ]
+        }, {
+          name: 'Calendar Service',
+          icon: 'fa fa-calendar',
+          descs: [
+            'Calendar sync for consistent meeting times.',
+            'In-app scheduling connected to Microsoft Exchange.'
+          ]
+        }]);
+      };
+
       return {
         /* public */
         fetch: fetch,
         upgradeSoftware: upgradeSoftware,
+        services: services,
 
         /* private, for testing */
         _convertConnectors: convertConnectors,

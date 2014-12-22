@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('Huron')
+    .module('uc.device')
     .controller('DevicesCtrl', DevicesCtrl);
 
   DevicesCtrl.$inject = ['$scope', '$state', 'DeviceService', 'Config'];
@@ -23,7 +23,6 @@
 
     function showDeviceDetailPanel(device) {
       DeviceService.setCurrentDevice(device);
-      $state.go('users.list.preview.device');
     }
 
     function isHuronEnabled() {

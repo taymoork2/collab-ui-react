@@ -12,9 +12,9 @@
 // Analytics Charts
 .overview-updated {
   cursor: pointer;
-  .fa-refresh {
+  .icon-refresh {
     font-size: 14px;
-    color: @gray-light;
+    color: @gray-dark;
     line-height: 24px;
     vertical-align: top;
   }
@@ -34,7 +34,7 @@
 }
 
 .chartBackground {
-  background-color: #fff;
+  background-color: @brand-white;
   height: 285px;
   width: ~'calc(95% - 98px)';
   position: absolute;
@@ -57,7 +57,7 @@
 // Monitoring Section
 .landing-content {
   h4 {
-    color: @gray;
+    color: @gray-darker;
     font-size: 15px;
     border-bottom: 1px solid @hr-border;
     padding-bottom: 7px;
@@ -185,9 +185,9 @@ li.monitoring-cell {
 }
 
 .cta {
-  background-color: #fff;
+  background-color: @brand-white;
   padding: 20px 15px;
-  border-bottom: 1px solid @gray-light;
+  border-bottom: 1px solid @gray-dark;
   font-family: @brand-font-cisco-TT-Extra-Light;
 
   section {
@@ -196,7 +196,7 @@ li.monitoring-cell {
 
   h3 {
     font-size: 21px;
-    color: @gray;
+    color: @gray-darker;
     margin-top: 5px;
   }
 
@@ -251,7 +251,7 @@ li.monitoring-cell {
 }
 
 .packages {
-  border-right: 1px solid @gray-light;
+  border-right: 1px solid @gray-dark;
   padding-right: 30px;
   position: relative;
 }
@@ -281,7 +281,7 @@ li.monitoring-cell {
 
 .no-cases {
   font-size: 13px;
-  color: @gray-light;
+  color: @gray-dark;
 }
 
 @media (min-width: @screen-sm-min) {
@@ -293,7 +293,7 @@ li.monitoring-cell {
 @media (min-width: @screen-md-min) {
   .devices {
     float: right;
-    border-left: 1px solid @gray-light;
+    border-left: 1px solid @gray-dark;
   }
 
   .licenses,

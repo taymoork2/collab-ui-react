@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('setupSSODialogCtrl', ['$scope', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
-    function ($scope, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
+  .controller('setupSSODialogCtrl', ['$scope', '$q', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
+    function ($scope, $q, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
 
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
@@ -12,9 +12,37 @@ angular.module('Core')
       Notification.init($scope);
       $scope.popup = Notification.popup;
 
-      // $scope.cancel = function() {
-      //   $modalInstance.dismiss('canceled');
-      // };
+      $scope.options = {
+        configureSSO: 1
+      };
+      $scope.configureSSOOptions = [{
+        label: $translate.instant('ssoModal.enableSSO'),
+        value: 1,
+        name: 'ssoOptions',
+        id: 'ssoProvider'
+      }, {
+        label: $translate.instant('ssoModal.disableSSO'),
+        value: 0,
+        name: 'ssoOptions',
+        id: 'ssoNoProvider'
+      }];
+
+      $scope.enableSSONext = function () {
+        //need to set enableSSO flag in CI
+      };
+
+      $scope.initNext = function () {
+        var deferred = $q.defer();
+        if ($scope.options.configureSSO == 0) {
+          deferred.reject();
+          if (angular.isFunction($scope.nextTab)) {
+            $scope.nextTab();
+          }
+        } else {
+          deferred.resolve();
+        }
+        return deferred.promise;
+      };
 
       $scope.setFile = function (element) {
         $scope.$apply(function ($scope) {
@@ -150,14 +178,6 @@ angular.module('Core')
         });
       };
 
-      $scope.enableSSO = function () {
-        //need to set enableSSO flag in CI
-        // Notification.notify([$translate.instant('ssoModal.enableSSOSuccess', {
-        //   status: status
-        // })], 'success');
-        // $scope.cancel();
-        $scope.changeTab('addUsers');
-      };
     }
   ])
   .config([

@@ -2,7 +2,7 @@
   <div class="notification"></div>
   <div class="row page-header">
     <div class="col-md-6 col-sm-6">
-      <h2 class="page-title">{{'customerPage.title' | translate}}&nbsp;&nbsp;<small class="count">{{totalTrials}}</small></h2>
+      <h2 class="page-title">{{'customerPage.title' | translate}}&nbsp;&nbsp;<small class="count"><span ng-class="{'active-filter' : activeFilter === 'all'}" ng-click="setFilter('all')">{{'customerPage.all' | translate}} {{totalOrgs}}</span> | <span ng-class="{'active-filter' : activeFilter === 'trials'}" ng-click="setFilter('trials')">{{'customerPage.trial' | translate}} {{totalTrials}}</span></small></h2>
     </div>
     <!-- <div ng-hide="showTrialsRefresh" class="trials-badge col-md-7 col-sm-7">
       <ul class="nav nav-pills">
@@ -24,8 +24,8 @@
   <div id="customerListPanel" class="row">
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
   </div>
-  <div class="customer-refresh" ng-if="showTrialsRefresh">
-    <i class='icon icon-spinner icon-spin icon-2x'></i>
+  <div class="customer-refresh" ng-if="showManagedOrgsRefresh">
+    <i class='icon icon-spinner icon-2x'></i>
   </div>
 </div>
 <div ng-class="{preview: trialPreviewActive}" class="user-management">

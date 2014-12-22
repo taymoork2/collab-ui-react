@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('Huron')
+    .module('uc.device')
     .controller('DeviceDetailCtrl', DeviceDetailCtrl);
 
   DeviceDetailCtrl.$inject = ['$rootScope', '$scope', '$filter', '$modal', '$state', 'Log', 'DeviceService', 'Notification'];
@@ -53,10 +53,6 @@
           });
       });
     }
-
-    $scope.$on('currentDeviceChanged', function () {
-      activate();
-    });
 
   }
 })();

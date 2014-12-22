@@ -22,12 +22,12 @@
   }
 }
 .preview-panel {
-  background-color: #fff;
+  background-color: @brand-white;
   width: 350px;
   height: 100%;
   padding: 5px;
   position: relative;
-  border-right: solid 1px @gray-light;
+  border-right: solid 1px @gray-dark;
   overflow-y: auto;
 
   .row {
@@ -39,18 +39,20 @@
     padding-right: 5px;
   }
   .standard-card {
-    border-bottom: solid 1px @gray-light;
-    padding: 20px 10px 20px 20px;
+    border-bottom: solid 1px @gray-dark;
+    padding: 20px 10px 20px 10px;
 
     .title {
       font-family: @font-family-sans-serif;
       font-size: 13px;
       font-weight: bold;
-      color: @gray-darker;
+      color: @text-color;
+      padding-left: 10px;
     }
     .sub-title {
       border-top: 1px solid @gray-lighter;
       padding-top: 10px;
+      padding-left: 10px;
       margin-top: 10px;
     }
     .sub-title,
@@ -58,7 +60,7 @@
       font-family: @brand-font-cisco-TT-Extra-Light;
       font-size: 15px;
       line-height: 25px;
-      color: @gray-dark;
+      color: @text-color;
     }
     .sub-title a:hover {
       background-color: @gray-lighter;
@@ -67,10 +69,11 @@
     .icon-arrow-next {
       font-size: 25px;
       line-height: 1;
+      float: right;
     }
     .actions-button {
       line-height: 12px;
-      color: @gray;
+      color: @gray-darker;
 
       &:hover {
         color: @brand-primary;
@@ -99,7 +102,7 @@
       font-size: 30px;
       padding-top: 20px;
       cursor: pointer;
-      color: @gray-light;
+      color: @gray-dark;
       text-align: right;
 
       .details & {
@@ -110,7 +113,7 @@
     .next-button {
       font-size: 40px;
       cursor: pointer;
-      color: @gray-light;
+      color: @gray-dark;
       text-align: right;
       padding-right: 10px;
 
@@ -128,17 +131,17 @@
       .text-overflow;
     }
     a {
-      color: @gray-dark;
+      color: @text-color;
     }
     .user-name {
-      color: @gray-dark;
+      color: @text-color;
       font-family: @brand-font-cisco-TT-Extra-Light;
       font-size: 24px;
       line-height: 1;
     }
     .user-title,
     .user-location {
-      color: @gray;
+      color: @gray-darker;
       font-family: @brand-font-cisco-TT-Extra-Light;
       font-size: 13px;
     }
@@ -146,7 +149,7 @@
   .group-card {
 
     .group-type {
-      color: @gray;
+      color: @gray-darker;
       font-family: @brand-font-cisco-TT-Light;
       padding-left: 5px;
     }
@@ -161,35 +164,76 @@
       line-height: 25px;
 
       &:hover {
-        background-color: @gray-lighter;
         text-decoration: none;
       }
 
       a {
-        color: @gray;
+        color: @gray-darker;
         height: 100%;
         width: 100%;
+        text-decoration: none;
+
+
+        .sub-service-title {
+          border-radius: 20px;
+          padding: 0 10px;
+          transition: all 250ms ease-in-out;
+        }
+
+        .status,
+        .usage {
+          color: @gray-dark;
+          font-size: 11px;
+        }
+        .status {
+          vertical-align: top;
+          float: right;
+          height: 25px;
+          margin-right: 10px;
+        }
+        .usage {
+          margin-left: 5px;
+        }
+
+        &:active,
+        &:focus {
+          outline: none;
+          box-shadow: none;
+        }
 
         &:hover {
-          text-decoration: none;
+          .sub-service-title {
+            color: @brand-primary;
+            background-color: @gray-lighter;
+          }
+          .icon-arrow-next {
+            color: @gray-darker;
+          }
+          .usage {
+            color: @brand-primary;
+          }
         }
-      }
-      .status,
-      .usage {
-        color: @gray-light;
-        font-size: 11px;
-      }
-      .status {
-        vertical-align: top;
-        float: right;
-        height: 25px;
-        margin-right: 10px;
-      }
-      .usage {
-        margin-left: 5px;
+
+        &.selected {
+          .sub-service-title {
+            color: @brand-white;
+            background-color: @brand-primary;
+          }
+          .icon-arrow-next {
+            color: @brand-primary;
+          }
+          .usage {
+            color: @brand-primary;
+          }
+        }
+
       }
     }
   }
+}
+
+.user-entitlements-body {
+  padding-left: 10px;
 }
 
 // TODO: remove when added to the toolkit
@@ -231,11 +275,11 @@
 // TODO: remove when added to the toolkit
 .dropdown-primary {
   background-color: @brand-primary;
-  color: #fff;
+  color: @brand-white;
   border: none;
 
   li a {
-    color: #fff;
+    color: @brand-white;
   }
 }
 
@@ -245,7 +289,6 @@
   flex-direction: row;
   height: 100%;
   width: 100%;
-  // background-color: #fff;
-  background-color: #f8f8f8;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.4);
+  background-color: @body-bg;
+  box-shadow: 0 0 0 3px @brand-shadow;
 }

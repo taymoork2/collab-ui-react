@@ -21,8 +21,8 @@
     "angular-wizard": "~0.4.0",
     "base64": "~0.2.0",
     "bootstrap": "=3.1.1",
-    "bootstrap-cisco": "~1.1.0",
-    "bootstrap-cisco-ng": "~1.1.0",
+    "bootstrap-cisco": "~1.2.3",
+    "bootstrap-cisco-ng": "~1.2.3",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",
     "draggable": "~1.0.0",
@@ -35,7 +35,8 @@
     "ng-grid": "~2.0.13",
     "nicescroll": "~3.5.6",
     "typeahead.js": "~0.10.2",
-    "animate.css": "=3.2.0"
+    "animate.css": "=3.2.0",
+    "jasmine-jquery": "~2.0.5"
   },
   "devDependencies": {
     "angular-mocks": "1.2.20",
@@ -44,7 +45,6 @@
   "resolutions": {
     "angular-bootstrap": "~0.11.0",
     "bootstrap": "~3.1.1",
-    "bootstrap-cisco": "~1.1.0",
     "angular": "=1.2.20"
   }
 }

@@ -149,3 +149,13 @@ exports.hasClass = function (element, cls) {
       return classes.split(' ').indexOf(cls) !== -1;
   });
 };
+
+exports.findDirectoryNumber = function (message, lineNumber) {
+  for (var i = 0; i < message.length; i++) {
+    var line = message[i];
+    if (line.directoryNumber.pattern === lineNumber){
+      return line.uuid;
+    }
+  }
+  return null;
+};

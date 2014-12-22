@@ -15,13 +15,11 @@
     function showDirectoryNumberPanel(directoryNumber) {
       if (directoryNumber === 'new') {
         TelephonyInfoService.updateCurrentDirectoryNumber('new');
-        $state.go('users.list.preview.adddirectorynumber');
       } else {
         // update alternate number first
         TelephonyInfoService.updateAlternateDirectoryNumber(directoryNumber.altDnUuid, directoryNumber.altDnPattern);
         TelephonyInfoService.updateCurrentDirectoryNumber(directoryNumber.uuid, directoryNumber.pattern, directoryNumber.dnUsage);
       }
-      $state.go('users.list.preview.directorynumber');
     }
 
     function isHuronEnabled() {

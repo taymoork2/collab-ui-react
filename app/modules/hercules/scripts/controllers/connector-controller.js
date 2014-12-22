@@ -12,15 +12,17 @@ angular.module('Hercules')
 
       var loadData = function () {
         $scope.clusters = [];
-        service.fetch({
-          success: function (data) {
-            $scope.clusters = data;
-            $scope.loading = false;
-          },
-          error: function () {
-            $scope.error = true;
-            $scope.loading = false;
+        service.fetch(function (err, data) {
+          if (err) {
+            var msgs = [];
+            msgs.push('Unable to fetch data from the UC fusion backend');
+            if (err.data) {
+              msgs.push(err.data);
+            }
+            notif.notify(msgs, 'error');
           }
+          $scope.clusters = data || [];
+          $scope.loading = false;
         });
       };
 
@@ -29,10 +31,10 @@ angular.module('Hercules')
         loadData();
       };
 
-      $scope.upgradeSoftware = function (clusterId, tlpUrl) {
+      $scope.upgradeSoftware = function (clusterId, serviceType) {
         service.upgradeSoftware({
           clusterId: clusterId,
-          tlpUrl: tlpUrl,
+          serviceType: serviceType,
           success: $scope.reload,
           error: function (data, status) {
             notif.notify(['Request failed with status ' + status], 'error');

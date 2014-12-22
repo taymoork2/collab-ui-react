@@ -23,7 +23,7 @@
     "modify": "Modify",
     "existingUsers": "Existing Users",
     "userInput": "Enter one or more email addresses separated by commas",
-    "active": "<span class='glyphicon glyphicon-ok'></span>",
+    "active": "Active",
     "inactive": "",
     "validEmailInput": "Please enter valid user email(s).",
     "csvBtnTitle": "Export to CSV",
@@ -39,8 +39,7 @@
     "cancel": "Cancel",
     "addUsersDesc": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "status": "Status",
-    "pending": "Invite Pending",
-    "active": "Active"
+    "pending": "Invite Pending"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -53,6 +52,7 @@
     "endpointsPreview": "Endpoints",
     "entitlementsPreview": "Entitlements",
     "addNewLinePreview": "Add a New Line",
+    "newLine": "New Line",
     "devicesPreview": "Devices",
     "activateNewDevice": "Activate New Device"
   },
@@ -72,17 +72,19 @@
     "fusionDetailsTab": "Fusion",
     "fusionDetailsTabDesc": "Fusion Management",
     "callRoutingTab": "Call Routing",
-    "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park"
+    "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
+    "mediaOnHoldTab": "Media On Hold",
+    "mediaOnHoldTabDesc": "Media On Hold Development Example"
   },
   "index": {
-    "welcome": "Welcome",
+    "welcome": "Welcome!",
     "feedback": "Feedback",
-    "logout": "Log Out",
+    "logout": "Sign Out",
     "appTitle": "Squared Admin Tool",
     "genericTitle": "Squared",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
-    "launchPartner" : "Manage My Organization"
+    "launchPartner": "Manage My Organization"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",
@@ -105,7 +107,7 @@
     "subTitleOrgs": "Organizations Tools",
     "exportBtn": "Export Users",
     "csvFilename": "users.csv",
-    "loadingMsg": "Exporting data... <i class='icon icon-spinner icon-spin' style='margin-left:10px;'></i>",
+    "loadingMsg": "Exporting data... <i class='icon icon-spinner' style='margin-left:10px;'></i>",
     "orgDetails": "Organization Details",
     "displayName": "Display Name",
     "services": "Services",
@@ -139,6 +141,7 @@
     "removeUser": "Remove User",
     "fname": "First Name",
     "lname": "Last Name",
+    "display": "Display Name",
     "email": "Email",
     "org": "Organization",
     "title": "Title",
@@ -200,7 +203,13 @@
     "save": "Save",
     "ok": "Ok",
     "next": "Next",
-    "close": "close"
+    "close": "Close",
+    "rename": "Rename",
+    "play": "Play",
+    "done": "Done",
+    "begin": "Begin",
+    "back": "Back",
+    "finish": "Finish"
   },
   "homePage": {
     "overview": "Last 4 weeks",
@@ -230,6 +239,8 @@
   "ssoModal": {
     "btnTitle": "Setup SSO",
     "title": "Setup SSO",
+    "enableSSO": "Yes, I have a custom SSO provider.",
+    "disableSSO": "No, I don't have a SSO provider.",
     "importMetadataTitle": "Import IdP Metadata",
     "exportMetadataTitle": "Export Cloud Metadata",
     "testSSOSetupTitle": "Test SSO Setup",
@@ -357,7 +368,6 @@
     "page_title": "Fusion Services",
     "connectors": {
       "group_by": "Group services by:",
-      "loading_error": "Unable to load fusion data, please try again later.",
       "cluster_id": "Cluster",
       "host_name": "Expressway Host",
       "display_name": "Service Name",
@@ -368,13 +378,19 @@
       "alarms": "Alarms"
     },
     "status": {
-        "unknown": "reports an unknown state. Please check the expressway for details.",
-        "not_configured": "has installed the service, but it's not configured.",
-        "installing": "is installing the service.",
-        "disabled": "has this service disabled.",
-        "not_installed": "has not installed the service.",
-        "stopped": "reports the service as stopped.",
-        "offline": "reports the service as offline."
+      "unknown": "reports an unknown state. Please check the expressway for details.",
+      "not_configured": "has installed the service, but it's not configured.",
+      "installing": "is installing the service.",
+      "disabled": "has this service disabled.",
+      "not_installed": "has not installed the service.",
+      "stopped": "reports the service as stopped.",
+      "offline": "has not posted status in a while and could be offline.",
+      "registered": "is registered but has not yet posted status."
+    },
+    "setup": {
+        "label": "UC Fusion Services",
+        "title": "UC Fusion Services",
+        "desc": "Synchronize your on-prem services"
     }
   },
   "firstTimeWizard": {
@@ -387,17 +403,16 @@
     "enterpriseSettings": "Enterprise Settings",
     "planReviewSub": "Overview of your collaboration plan",
     "enterpriseSettingsSub": "Set up global configurations",
-    "addUsersSub": "<span ng-click=\"changeTab('addUsers');changeStep('manualEntry')\">Simple</span> | <span>Advanced</span>",
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
     "accountReview": "Account Review",
     "serviceSetup": "Service Setup",
-    "serviceSetupSub": "Unified Comm. | Conversation | Video",
+    "serviceSetupSub": "Set up unified communications",
     "unifiedCommunication": "Unified Communications",
     "addUsers": "Add Users",
     "addUsersSimple": "Add Users | Simple",
     "addUsersAdvanced": "Add Users | Advanced",
     "getStarted": "Get Started",
-    "chooseSync": "Please select an option",
+    "chooseSync": "Choose Sync",
     "cancelBtn": "Cancel",
     "backBtn": "Back",
     "nextBtn": "Next",
@@ -405,7 +420,6 @@
     "doneBtn": "Finish",
     "beginBtn": "Begin",
     "closeBtn": "Close",
-    "chooseSync": "Choose Sync",
     "chooseSyncDesc": "Do you want to manually enter users or synchronize users from Active Directory?",
     "chooseManualDesc": "Manual User Entry",
     "chooseADSyncDesc": "Active Directory Sync",
@@ -428,11 +442,11 @@
     "domainEntry": "Domain Entry",
     "domainSubDesc": "Enter the AD domain to sync with:",
     "connectorSteps": "Follow these steps in order to install the Cloud Connector:",
-    "getStarted": "Get Started",
     "readyToGo": "You're ready to go!",
     "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
     "finish": "Finish",
-    "finishSub": "Complete your setup"
+    "finishSub": "Complete your setup",
+    "completeRequired": "{{name}} must be completed."
   },
   "callRoutingPage": {
     "title": "Call Routing",
@@ -511,11 +525,10 @@
     "noResults": "No Results",
     "expiredHeading": "Expired Trials",
     "addTrial": "New Trial",
-    "noResults": "No Results",
     "trialsCustomerName": "Customer",
     "trialsEndDate": "Day(s) Left",
     "trialsNumUsers": "Users/ Licenses",
-    "viewAll": "View all Trials",
+    "viewAll": "View all trials",
     "expiredToday": "Expires Today",
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
@@ -523,10 +536,13 @@
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
+    "fiveHundred": "500",
     "duration": "Duration",
     "thirtyDays": "30 Days",
     "sixtyDays": "60 Days",
     "ninetyDays": "90 Days",
+    "onehundredtwentyDays": "120 Days",
+    "onehundredeightyDays": "180 Days",
     "cancel": "Cancel",
     "startTrial": "Start Trial",
     "customerInformation": "Customer Information",
@@ -551,9 +567,11 @@
     "errorProcessing": "Error processing request."
   },
   "customerPage": {
+    "all": "All",
+    "trial": "Trial",
     "title": "Customers",
-    "customerNameHeader": "Company Name",
-    "trialIdHeader": "Package",
+    "customerNameHeader": "Customer Name",
+    "trialIdHeader": "Service",
     "licenseHeader": "Licenses",
     "usageHeader": "License Usage",
     "statusHeader": "Status",
@@ -602,7 +620,7 @@
     "error": "Device configuration failed",
     "deactivateDevice": "Deactivate Device",
     "deactivateBody": "This action cannot be undone.  Are you sure you want to deactivate this device?"
-    },
+  },
   "rolesPanel": {
     "editUser": "Edit User",
     "firstName": "First Name",
@@ -618,5 +636,13 @@
     "billingAdmin": "Billing Administrator",
     "supportAdmin": "Support Administrator",
     "save": "Save"
+  },
+  "mohManagement": {
+    "title": "Media On Hold",
+    "subtitle": "New copy to come from Ahmed.",
+    "newPlaylistButton": "New Playlist",
+    "tracks": "Tracks",
+    "draganddrop": "Drag and drop to reorder tracks. These tracks will loop.",
+    "setActive": "Set Active"
   }
 }

@@ -36,7 +36,9 @@ module.exports = {
 
   test_files: {
     js: [
-      'bower_components/angular-mocks/angular-mocks.js'
+      'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+      '**/*.json'
     ]
   },
 
@@ -87,7 +89,6 @@ module.exports = {
       'bower_components/alertify.js/themes/alertify.default.css',
       'bower_components/angular-wizard/dist/angular-wizard.css',
       'bower_components/angular-dialog-service/dialogs.css',
-
       'bower_components/animate.css/animate.css'
     ],
     fonts: [

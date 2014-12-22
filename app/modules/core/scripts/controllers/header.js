@@ -8,8 +8,8 @@ angular.module('Core')
     }
   ])
 
-.controller('UserInfoCtrl', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', 'Userservice',
-  function ($scope, Authinfo, Auth, Log, Config, $window, $location, Userservice) {
+.controller('UserInfoCtrl', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', 'Userservice', '$modal', 'Notification', '$filter', 'FeedbackService', 'Utils',
+  function ($scope, Authinfo, Auth, Log, Config, $window, $location, Userservice, $modal, Notification, $filter, FeedbackService, Utils) {
     var getAuthinfoData = function () {
       $scope.username = Authinfo.getUserName();
       $scope.orgname = Authinfo.getOrgName();
@@ -42,12 +42,29 @@ angular.module('Core')
     };
 
     $scope.sendFeedback = function () {
-      var userAgent = navigator.userAgent;
-      userAgent = encodeURIComponent(userAgent);
-      var logHistory = Log.getArchiveUrlencoded();
-      var feedbackUrl = 'mailto:' + Config.feedbackNavConfig.mailto + '?subject=' + Config.feedbackNavConfig.subject + '&body=User%20Agent:' + userAgent + '%0D%0A%0D%0APlease%20type%20your%20feedback%20below:%0D%0A%0D%0A%0D%0A%0D%0AUser%20Logs:%0D%0A' + logHistory;
-      Log.debug('sending feedback: ' + feedbackUrl);
-      $window.location.href = feedbackUrl;
+      var appType = 'Atlas_' + navigator.userAgent;
+      var feedbackId = Utils.getUUID();
+
+      FeedbackService.getFeedbackUrl(appType, feedbackId, function (data, status) {
+        Log.debug('feedback status: ' + status);
+        if (data.success) {
+          //TODO In the future we will integrate the support page into a modal
+          // $scope.sendFeedbackModalInstance = $modal.open({
+          //   templateUrl: data.url,
+          //   windowClass: 'modal-feedback-dialog',
+          //   scope: $scope
+          // });
+          window.open(data.url, '_blank');
+        } else {
+          Log.debug('Cannot load feedback url: ' + status);
+        }
+      });
+    };
+
+    $scope.saveFeedback = function () {
+      var msg = $filter('translate')('directoryNumberPanel.success');
+      var type = 'success';
+      Notification.notify([msg], type);
     };
 
     if (Auth.isLoggedIn()) {

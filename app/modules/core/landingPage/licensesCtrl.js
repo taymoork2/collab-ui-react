@@ -111,8 +111,22 @@ angular.module('Core')
       });
     };
 
+    var getUnlicensedUsers = function () {
+      Orgservice.getUnlicensedUsers(function (data, status) {
+        $scope.licenses.unlicensed = 0;
+        $scope.licenses.unlicensedUsersList = null;
+        if (data.success) {
+          if (data.totalResults) {
+            $scope.licenses.unlicensed = data.totalResults;
+            $scope.licenses.unlicensedUsersList = data.resources;
+          }
+        }
+      });
+    };
+
     getTrials();
     getorgInfo();
     getAdminOrgInfo();
+    getUnlicensedUsers();
   }
 ]);

@@ -33,7 +33,7 @@
             <h3>{{licenses.domain}}</h3>
           </div>
           <div class="unlicensed-users-unclaimeddomain" ng-if="isDomainClaimed()===false">
-            <h3>140 Unlicensed Users</h3>
+            <h3>{{licenses.unlicensed}} Unlicensed Users</h3>
             <p>View and convert users currently using the free version</p>
           </div>
           <button class="btn btn-sm btn-default fix-btn-pos">Convert</button>
@@ -60,7 +60,7 @@
             </tab-heading>
             <div id="callsChart" class="tab-report"></div>
             <div id="callsRefreshDiv" class="report-status">
-              <i class='icon icon-spinner icon-spin icon-2x' ng-show="isRefresh('calls')"></i>
+              <i class='icon icon-spinner icon-2x' ng-show="isRefresh('calls')"></i>
             </div>
           </tab>
           <tab select="resizeConversationsChart()">
@@ -70,7 +70,7 @@
             </tab-heading>
             <div id="conversationsChart" class="tab-report"></div>
             <div id="convRefreshDiv" class="report-status">
-              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('conversations')"></i>
+              <i class='icon icon-spinner icon-2x' ng-if="isRefresh('conversations')"></i>
             </div>
           </tab>
           <tab select="resizeContentSharedChart()">
@@ -80,7 +80,7 @@
             </tab-heading>
             <div id="contentSharedChart" class="tab-report"></div>
             <div id="contentRefreshDiv" class="report-status">
-              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('contentShared')"></i>
+              <i class='icon icon-spinner icon-2x' ng-if="isRefresh('contentShared')"></i>
             </div>
           </tab>
         </tabset>

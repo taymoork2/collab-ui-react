@@ -17,8 +17,6 @@ angular.module('Squared')
               callback(data, status);
             })
             .error(function (data, status) {
-              data.success = false;
-              data.status = status;
               callback(data, status);
               Auth.handleStatus(status);
             });

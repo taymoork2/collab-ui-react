@@ -38,14 +38,14 @@ angular.module('Core')
 
         paginator.prevPage = function () {
           if (paginator.page > 0) {
-            $('.pagination-current a').html('<i class=\'icon icon-spinner icon-spin\'></i>');
+            $('.pagination-current a').html('<i class=\'icon icon-spinner\'></i>');
             paginator.page -= 1;
             listUsers(paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order, 'prev');
           }
         };
 
         paginator.nextPage = function () {
-          $('.pagination-current a').html('<i class=\'icon icon-spinner icon-spin\'></i>');
+          $('.pagination-current a').html('<i class=\'icon icon-spinner\'></i>');
           paginator.page += 1;
           listUsers(paginator.page * paginator.perPage + 1, paginator.scope.sort.by, paginator.scope.sort.order, 'next');
         };

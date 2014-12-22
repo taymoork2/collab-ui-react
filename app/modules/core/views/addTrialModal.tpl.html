@@ -35,23 +35,23 @@
       <div class="col-xs-7 col-sm-7 col-md-7">
         <span class="trial-options" translate="partnerHomePage.numberOfLicenses"></span>
         <select class="form-control modal-form-control" ng-model="$parent.licenseCount">
-          <option value="50" translate="partnerHomePage.fifty"></option>
           <option value="100" translate="partnerHomePage.oneHundred"></option>
           <option value="200" translate="partnerHomePage.twoHundred"></option>
+          <option value="500" translate="partnerHomePage.fiveHundred"></option>
         </select>
       </div>
       <div class="col-xs-5 col-sm-5 col-md-5">
         <span class="trial-options" translate="partnerHomePage.duration"></span>
         <select class="form-control modal-form-control" ng-model="$parent.licenseDuration">
-          <option value="30" translate="partnerHomePage.thirtyDays"></option>
-          <option value="60" translate="partnerHomePage.sixtyDays"></option>
           <option value="90" translate="partnerHomePage.ninetyDays"></option>
+          <option value="120" translate="partnerHomePage.onehundredtwentyDays"></option>
+          <option value="180" translate="partnerHomePage.onehundredeightyDays"></option>
         </select>
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="$parent.startTrial(); trialForm.$setPristine(true)" ng-disabled="trialForm.$invalid" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+    <button type="button" id="startTrialButton" class="btn btn-primary btn-lg pull-right" ng-click="$parent.startTrial(); trialForm.$setPristine(true)" ng-disabled="trialForm.$invalid" data-loading-text="<i class='icon icon-spinner'></i>">
       <span class="button-text" translate="partnerHomePage.startTrial"></span>
     </button>
     <div id="cancelNewTrialButton" class="btn btn-default btn-lg pull-right" ng-click="$parent.addTrialModalInstance.close()">

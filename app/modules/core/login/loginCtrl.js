@@ -28,7 +28,7 @@ angular.module('Core')
         $scope.loading = true;
 
         Auth.authorize($rootScope.token).then(function () {
-          if (!Authinfo.getSetupDone() && Authinfo.isCustomerAdmin()) {
+          if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');
           } else {
             var state = 'overview';

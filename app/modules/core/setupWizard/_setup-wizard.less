@@ -1,5 +1,5 @@
 .first-time-wizard {
-  color: #FFF;
+  color: @brand-white;
 
   .header {
     height: 120px;
@@ -35,200 +35,8 @@
   }
 }
 
-.wizard {
-  margin-left: auto;
-  margin-right: auto;
-  width: 1180px;
-
-  .btn {
-    margin: 0;
-  }
-
-  a {
-    cursor: pointer;
-  }
-}
-
-.wizard-side-item + .wizard-side-item {
-  margin-top: 5px;
-}
-
-.wizard-side-item {
-  height: 80px;
-  margin-right: 5px;
-  margin-left: 0px;
-  padding-left: 20px;
-  background-color: @gray-dark;
-  cursor: pointer;
-}
-
-.wizard-side-item:last-child {
-  position:relative;
-  background-color: rgba(34,34,34,0.3);
-  height: 280px;
-  cursor: default;
-  flex: 1;
-
-  .help-link {
-    position: absolute;
-    bottom: 30px;
-    color: #fff;
-    cursor: pointer;
-    font-family: @brand-font-cisco-TT-Regular;
-    font-size: 13px;
-  }
-}
-
-.wizard-nav {
-  width: 370px;
-  height: 620px;
-  float: left;
-  display: flex;
-  flex-direction: column;
-
-  .wizard-menu-text {
-    float: left;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .wizard-menu-title {
-    font-family: @brand-font-cisco-TT-Light;
-    font-size: 20px;
-    color: #fff;
-  }
-
-  .wizard-menu-subtitle {
-    font-family: @brand-font-cisco-TT-Regular;
-    font-size: 13px;
-    color: @gray-light;
-    margin-top: 11px;
-  }
-
-  .icon {
-    float: right;
-    margin-right: 40px;
-    top: 50%;
-    transform: translate(50%,-50%);
-    font-size: 28px;
-    line-height: 28px;
-    color: #BBB;
-  }
-
-  .icon-plan-review, .icon-add-users {
-    font-size: 20px;
-  }
-
-  .icon-check {
-    font-size: 38px;
-  }
-}
-
-.wizard-nav-active {
-  background-color: @component-active-bg;
-  color: #FFFFFF;
-
-  .wizard-menu-subtitle {
-    color: #fff;
-  }
-  .icon {
-    background-color: @brand-primary-dark;
-    color: @component-active-color;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    padding: 11px 0;
-    text-align: center;
-  }
-}
-
-.wizard-main-view {
-  background-color: #FFFFFF;
-  width: 810px;
-  height: 620px;
-  color: #7D7D7D;
-  padding: 30px;
-  float: left;
-  font-family: @brand-font-cisco-TT-Light;
-  overflow: hidden;
-  overflow-y: auto;
-
-  p {
-    font-family: @brand-font-cisco-TT-Light;
-  }
-
-  label {
-    font-weight: normal;
-  }
-
-  .wizard-main-title {
-    font-family: @brand-font-cisco-TT-Extra-Light;
-    font-size: 34px;
-    color: #1F99E5;
-  }
-
-  .rbcontainer {
-    position:relative;
-    top:4em;
-    left:15em;
-    label {
-      font-size: 18px;
-      font-weight: normal;
-      color: #666;
-    }
-    .ciscoRadiobutton:nth-child(2) {
-      margin-top: 40px;
-    }
-  }
-}
-
-.wizard-container {
-  position:relative;
-  top: 5em;
-  left: 3em;
-  width: 90%;
-}
-
-.wizard-btn-row {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-
-  .btn-primary {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
-
-  .btn-default {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-  }
-}
-
-.wizard-btn-action-row {
-  margin-top: 12px;
-  text-align: right;
-}
-
-.wiz-view {
-  position: relative;
-  height: 100%;
-}
-
-.wizard-subtitle-active {
-  color: #202020;
-}
-
 .wizard-form {
   padding:0;
-}
-
-.list-group-item-no-border {
-  display: block;
-  padding-bottom: 3px;
 }
 
 .wizard-top-padding {
@@ -236,23 +44,14 @@
   width: auto;
 }
 
-.wizard-btn-row-scroll {
-  width: 100%;
-  padding-top: 20px;
-
-  .btn-primary {
-    position: absolute;
-    right: 0;
-  }
-
-  .btn-default {
-    position: relative;
-    bottom: 0;
-    left: 0;
-  }
+.wizard-btn-action-row {
+  margin-top: 12px;
+  text-align: right;
 }
 
-.wizard-large-label {
-  font-size: 24px;
-  font-weight: 500;
+.wizard-container {
+  position:relative;
+  top: 5em;
+  left: 3em;
+  width: 90%;
 }

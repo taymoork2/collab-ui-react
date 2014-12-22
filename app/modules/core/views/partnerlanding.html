@@ -15,7 +15,7 @@
         <div id="entitlementsLegend"></div>
         <div id="entitlementsChart" class="report"></div>
         <div class="report-status">
-          <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('entitlements')"></i>
+          <i class='icon icon-spinner icon-2x' ng-if="isRefresh('entitlements')"></i>
           <span translate="status.noResults" ng-if="isEmpty('entitlements')"></span>
           <span translate="status.errorProcessing" ng-if="hasError('entitlements')"></span>
         </div>
@@ -29,7 +29,7 @@
             </tab-heading>
             <div id="dailyActiveUsersChart" class="tab-report"></div>
             <div class="report-status">
-              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('activeUsers')"></i>
+              <i class='icon icon-spinner icon-2x' ng-if="isRefresh('activeUsers')"></i>
               <span translate="status.noResults" ng-if="isEmpty('activeUsers')"></span>
               <span translate="status.errorProcessing" ng-if="hasError('activeUsers')"></span>
             </div>
@@ -41,7 +41,7 @@
             </tab-heading>
             <div id="averageCallsChart" class="tab-report"></div>
             <div class="report-status">
-              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('averageCalls')"></i>
+              <i class='icon icon-spinner icon-2x' ng-if="isRefresh('averageCalls')"></i>
               <span translate="status.noResults" ng-if="isEmpty('averageCalls')"></span>
               <span translate="status.errorProcessing" ng-if="hasError('averageCalls')"></span>
             </div>
@@ -53,7 +53,7 @@
             </tab-heading>
             <div id="contentSharedChart" class="tab-report"></div>
             <div class="report-status">
-              <i class='icon icon-spinner icon-spin icon-2x' ng-if="isRefresh('contentShared')"></i>
+              <i class='icon icon-spinner icon-2x' ng-if="isRefresh('contentShared')"></i>
               <span translate="status.noResults" ng-if="isEmpty('contentShared')"></span>
               <span translate="status.errorProcessing" ng-if="hasError('contentShared')"></span>
             </div>
@@ -86,7 +86,7 @@
           </div>
         </div>
         <div id="trials-refresh" class="trials-refresh" ng-show="showTrialsRefresh">
-          <i class='icon icon-spinner icon-spin'></i>
+          <i class='icon icon-spinner'></i>
         </div>
         <div ng-repeat="trial in activeList | orderBy: 'daysLeft' | limitTo: displayRows">
           <div class="row">
@@ -115,7 +115,7 @@
 
         <div id="viewAll" class="row trials-all">
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <span><a id="viewAllLink" ui-sref="partnercustomers.list">{{'partnerHomePage.viewAll' | translate}}</a></span>
+            <span ng-click="setFilter('trials')"><a id="viewAllLink" ui-sref="partnercustomers.list({filter: 'trials'})">{{'partnerHomePage.viewAll' | translate}}</a></span>
           </div>
         </div>
 

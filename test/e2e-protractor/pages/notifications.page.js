@@ -2,9 +2,7 @@
 
 var Notifications = function(){
   this.errorAlert = element(by.css('.alertify-log-error'));
-  this.errorBody = element(by.css('.panel-danger-body p'));
   this.successAlert = element(by.css('.alertify-log-success'));
-  this.successBody = element(by.css('.panel-success-body p'));
 
   this.notificationCancel = element(by.id('notifications-cancel'));
   this.smallNotificationCancel = element(by.id('small-notification-cancel'));
@@ -13,10 +11,10 @@ var Notifications = function(){
     utils.expectIsDisplayed(this.errorAlert);
     this.errorAlert.click();
     if (msg1){
-      expect(this.errorBody.getText()).toContain(msg1);
+      expect(element(by.cssContainingText('.panel-danger-body', msg1)).isDisplayed()).toBeTruthy();
     }
     if (msg2){
-      expect(this.errorBody.getText()).toContain(msg2);
+      expect(element(by.cssContainingText('.panel-danger-body', msg2)).isDisplayed()).toBeTruthy();
     }
     this.notificationCancel.click();
   };
@@ -25,12 +23,14 @@ var Notifications = function(){
     utils.expectIsDisplayed(this.successAlert);
     this.successAlert.click();
     if (msg1){
-      expect(this.successBody.getText()).toContain(msg1);
+      expect(element(by.cssContainingText('.panel-success-body', msg1)).isDisplayed()).toBeTruthy();
     }
     if (msg2) {
-      expect(this.successBody.getText()).toContain(msg2);
+      expect(element(by.cssContainingText('.panel-success-body', msg2)).isDisplayed()).toBeTruthy();
     }
-    this.notificationCancel.click();
+    if (msg1 || msg2){
+      this.notificationCancel.click();
+    }
   };
 
   this.clearNotifications = function() {
@@ -46,4 +46,3 @@ var Notifications = function(){
 };
 
 module.exports = Notifications;
-

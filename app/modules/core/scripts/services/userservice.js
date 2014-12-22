@@ -32,7 +32,7 @@ angular.module('Core')
               })
               .success(function (data, status) {
                 // This code is being added temporarily to add/remove users from Squared UC
-                // Discussions are ongoing concerning how these common functions should be 
+                // Discussions are ongoing concerning how these common functions should be
                 // integrated.
                 if (data.userResponse[0].entitled && data.userResponse[0].entitled.indexOf(Config.entitlements.huron) !== -1) {
                   HuronUser.create(data.userResponse[0].email, data.userResponse[0].uuid)
@@ -181,7 +181,7 @@ angular.module('Core')
 
             var user = {
               'email': userEmail,
-              'name': userName
+              'displayName': userName
             };
             if (userEmail.length > 0) {
               userData.inviteList.push(user);

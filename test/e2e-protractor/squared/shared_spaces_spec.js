@@ -34,16 +34,18 @@ describe('Shared spaces flow', function() {
     expect(spaces.confirmDeviceName.getText()).toContain(testRoom);
     notifications.assertSuccess('added successfully');
     spaces.deviceModalClose.click();
-    browser.sleep(1000); //TODO fix this - animation should be resolved by angular
+    browser.sleep(1000);
   });
 
   it('cancel delete device', function() {
+      utils.expectIsDisplayed(spaces.actionLink);
       spaces.actionLink.click();
       utils.expectIsDisplayed(spaces.deleteDeviceAction);
       spaces.deleteDeviceAction.click();
       utils.expectIsDisplayed(spaces.deleteDeviceModal);
+      utils.expectIsDisplayed(spaces.cancelButton);
       spaces.cancelButton.click();
-      browser.sleep(1000); //TODO fix this - animation should be resolved by angular
+      browser.sleep(1000);
     });
 
   it('should delete device', function() {
@@ -52,6 +54,7 @@ describe('Shared spaces flow', function() {
       utils.expectIsDisplayed(spaces.deleteDeviceAction);
       spaces.deleteDeviceAction.click();
       utils.expectIsDisplayed(spaces.deleteDeviceModal);
+      utils.expectIsDisplayed(spaces.deleteButton);
       spaces.deleteButton.click();
       notifications.assertSuccess('deleted successfully');
     });

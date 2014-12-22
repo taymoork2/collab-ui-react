@@ -85,6 +85,19 @@ angular.module('Core')
         return tabs;
       };
 
+      var isEntitled = function (entitlement) {
+        var services = authData.services;
+        if (services) {
+          for (var i = 0; i < services.length; i++) {
+            var service = services[i];
+            if (service && service.ciService === entitlement) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+
       return {
         initialize: function (data) {
           authData.username = data.name;
@@ -149,8 +162,12 @@ angular.module('Core')
           return authData.roles;
         },
 
-        getSetupDone: function () {
+        isSetupDone: function () {
           return authData.setupDone;
+        },
+
+        setSetupDone: function (setupDone) {
+          authData.setupDone = setupDone;
         },
 
         getTabs: function () {
@@ -205,7 +222,16 @@ angular.module('Core')
           } else {
             return true;
           }
+        },
+
+        isSquaredUC: function () {
+          return isEntitled(Config.entitlements.huron);
+        },
+
+        isFusion: function () {
+          return isEntitled(Config.entitlements.fusion);
         }
+
       };
     }
   ]);

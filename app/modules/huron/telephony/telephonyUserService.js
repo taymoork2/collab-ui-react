@@ -47,6 +47,7 @@
               'firstName': user.lastName,
               'phoneNumber': null,
               'oneTimePassword': null,
+              'expiresOn': null
             };
 
             return UserServiceCommon.save({
@@ -56,6 +57,7 @@
                 return HuronAssignedLine.assignDirectoryNumber(user.uuid, 'Primary');
               }).then(function (directoryNumber) {
                 emailInfo.phoneNumber = directoryNumber.pattern;
+                delete user["uuid"];
                 user.services.push('VOICEMAIL');
                 user.voicemail = {
                   'dtmfAccessId': directoryNumber.pattern
@@ -68,6 +70,7 @@
                 return this.acquireOTP(user.userId);
               }.bind(this)).then(function (otpInfo) {
                 emailInfo.oneTimePassword = otpInfo.password;
+                emailInfo.expiresOn = otpInfo.expiresOn;
                 return HuronEmailService.save({}, emailInfo);
               });
           }

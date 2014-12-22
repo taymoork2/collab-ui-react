@@ -1,5 +1,5 @@
 <div class="notification"></div>
-<h3>
+<h3 class="profile-path">
     <a ng-click="gotoPath('/users')"><span id="usertab" translate="tabs.userTab"></span></a> / {{user.displayName}}
   </h3>
   <br>
@@ -8,7 +8,7 @@
     <div class="panel panel-default">
       <div class="panel-heading panel-users">
         <div id="userProfile">
-          <h3 class="panel-title users-title">
+          <h3 class="panel-title users-title profile-title">
             <strong id="subTitleAdd" translate="profilePage.userDetails"></strong>
           </h3>
         </div>
@@ -38,6 +38,11 @@
               </div>
 
               <div class="form-group profile-text-input">
+                <label for="displayName" style="width: 150px;" translate="profilePage.display"></label>
+                <input class="form-control profile-input" type="text" id="displayField" ng-model="user.displayName" value="{{user.displayName}}"/>
+              </div>
+
+              <div class="form-group profile-text-input">
                 <label for="email" style="width: 150px;" translate="profilePage.email"></label>
                 <input class="form-control profile-input" type="text" id="emailField" value="{{user.userName}}" disabled/>
               </div>
@@ -59,7 +64,7 @@
 
             </div>
             <div>
-              <button id="btn-save" class="btn btn-primary pull-right" ng-click="updateUser()" data-loading-text="<i class='icon icon-spinner icon-spin'></i>"><span translate="profilePage.save"></span></button>
+              <button id="btn-save" class="btn btn-primary pull-right" ng-click="updateUser()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="profilePage.save"></span></button>
             </div>
 
           </div>
