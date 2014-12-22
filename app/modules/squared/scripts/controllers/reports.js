@@ -2,8 +2,8 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo',
-    function ($scope, $parse, ReportsService, Log, Authinfo) {
+  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config',
+    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
@@ -300,10 +300,10 @@ angular.module('Squared')
             'align': 'center',
             'periodValueText': '[[value.' + [operation] + ']]',
             'position': 'top',
-            'valueWidth': 10,
+            'valueWidth': 50,
             'fontSize': 30,
             'markerType': 'none',
-            'spacing': 0,
+            'spacing': 30,
             'valueAlign': 'right',
             'useMarkerColorForLabels': false,
             'useMarkerColorForValues': true,
@@ -320,6 +320,7 @@ angular.module('Squared')
           formatDates(dummyChartVals);
           sdata = dummyChartVals;
         }
+
         var homeChart = AmCharts.makeChart(divName, {
           'type': 'serial',
           'theme': 'none',

@@ -616,6 +616,7 @@
     "partialAdmin": "Some administrator permissions",
     "userAdmin": "User Administrator",
     "billingAdmin": "Billing Administrator",
-    "supportAdmin": "Support Administrator"
+    "supportAdmin": "Support Administrator",
+    "save": "Save"
   }
 }

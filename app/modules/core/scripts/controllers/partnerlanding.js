@@ -29,6 +29,7 @@ angular.module('Core')
       $scope.filter = 'ALL';
       $scope.addTrialModalInstance = null;
       $scope.editTrialModalInstance = null;
+      $scope.showPartnerEdit = false;
 
       $scope.formReset = function () {
         $scope.customerName = null;
