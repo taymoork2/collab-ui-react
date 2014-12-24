@@ -1,43 +1,43 @@
-<div class="trial-card row" id="trial-info">
+<div class="trial-details row" id="trial-info">
 
   <div class="row">
-    <div class="info-card-name customer-info col-xs-10">
+    <div class="col-xs-10">
       <span class="user-title">{{currentTrial.offer}}</span>
-    </div>
-    <div class="info-card-name customer-info col-xs-2">
-      <span class="user-title" ng-click="openEditTrialModal()"><a translate="customerPage.edit"></a></span>
     </div>
   </div>
 
   <div class="trial-bar row">
-    <div class="col-xs-12 col-sm-12 col-md-12">
-      <div class="progress">
+
+      <div class="progress progress-margin">
         <div class="progress-bar" ng-class="{'danger-bar': currentTrial.daysLeft <= 5, 'warning-bar': (currentTrial.daysLeft < currentTrial.duration/2), 'success-bar': (currentTrial.daysLeft >= currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(currentTrial)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(currentTrial)}}" style="width: {{getProgressPercent(currentTrial)}}%;"></div>
       </div>
-    </div>
+
     <div>
-      <div class="info-card-name customer-info col-xs-6">
+      <div class="col-xs-6">
         <span class="user-title">{{currentTrial.duration}}</span> <span class="user-title" translate="customerPage.dayTrial"></span>
       </div>
-      <div class="info-card-name customer-info right col-xs-6">
+      <div class="right col-xs-6">
         <span ng-class="{'trial-danger': currentTrial.daysLeft <= 5, 'user-title': currentTrial.daysLeft > 5}">{{getDaysLeft(currentTrial.daysLeft)}}</span>
         <span ng-if="currentTrial.daysLeft > 0" ng-class="{'trial-danger': currentTrial.daysLeft <= 5, 'user-title': currentTrial.daysLeft > 5}" translate="customerPage.daysLeft"></span>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="info-card-name customer-info col-xs-10">
-      <span class="user-title" translate="customerPage.trialTerms"></span>
+  <hr class="divider">
+  </hr>
+
+  <div class="row trial-terms">
+    <div class="col-xs-10">
+      <span translate="customerPage.trialTerms"></span>
     </div>
-    <div class="info-card-name customer-info col-xs-2">
-      <span class="user-title" ng-click="openEditTrialModal()"><a translate="customerPage.edit"></a></span>
+    <div class="col-xs-2">
+      <span class="edit-lnk" ng-click="openEditTrialModal()"><a translate="customerPage.edit"></a></span>
     </div>
   </div>
 
-  <div class="info-card-name row customer-info col-xs-12">
-    <div class="user-title"><span translate="customerPage.licenses" class="trial-heading"></span> {{currentTrial.licenses}}</div>
-    <div class="user-title"><span translate="customerPage.duration" class="trial-heading"></span> {{currentTrial.duration}} <span translate="customerPage.days"></span></div>
+  <div class="row col-xs-12">
+    <div class="user-title license-title"><span translate="customerPage.licenses" class="trial-heading"></span> {{currentTrial.licenses}}</div>
+    <div class="user-title duration-title"><span translate="customerPage.duration" class="trial-heading"></span> {{currentTrial.duration}} <span translate="customerPage.days"></span></div>
   </div>
 
 </div>

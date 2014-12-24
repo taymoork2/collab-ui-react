@@ -13,6 +13,11 @@
   line-height: 1;
   margin: 0;
   padding: 10px 0 0px 0px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .customer-info {
@@ -25,8 +30,8 @@
 }
 
 .trial-bar {
-  padding-top: 10px;
-  padding-bottom: 20px;
+  padding-top: 5px;
+  padding-bottom: 18px;
   padding-right: 20px;
 }
 
@@ -35,7 +40,12 @@
 }
 
 .trial-card {
-  padding: 10px;
+  padding: 10px 10px 20px 10px;
+  border-bottom: solid 1px @gray-dark;
+}
+
+.trial-details {
+  padding: 10px 10px 20px 20px;
   border-bottom: solid 1px @gray-dark;
 }
 
@@ -47,5 +57,33 @@
   font-family: "CiscoSansTT Extra Light";
   font-size: 13px;
   color: @brand-danger;
+}
+
+.edit-lnk {
+  font-weight: normal;
+}
+
+.trial-terms {
+  font-weight: bold;
+  padding-top: 18px
+}
+
+.duration-title {
+  padding-top: 6px;
+}
+
+.license-title {
+  padding-top: 12px;
+}
+
+.progress-margin {
+  margin-bottom: 7px;
+}
+
+.divider {
+  border: 0px;
+  height: 0px;
+  border-top: 1px solid #eeeeee;
+  margin: 0px;
 }
 
