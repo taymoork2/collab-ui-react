@@ -98,6 +98,9 @@
       directoryNumberId: '@directoryNumberId',
       alternateNumberId: '@alternateNumberId'
     }, {
+      update: {
+        method: 'PUT'
+      },
       save: {
         method: 'POST',
         headers: {

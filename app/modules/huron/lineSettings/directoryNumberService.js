@@ -43,6 +43,7 @@
       updateDirectoryNumber: updateDirectoryNumber,
       changeInternalNumber: changeInternalNumber,
       getAlternateNumber: getAlternateNumber,
+      addAlternateNumber: addAlternateNumber,
       updateAlternateNumber: updateAlternateNumber,
       deleteAlternateNumber: deleteAlternateNumber
     };
@@ -109,7 +110,6 @@
     function updateDirectoryNumber(dnUuid, dnSettings) {
       var dnPayload = angular.copy(dnSettings);
       delete dnPayload.uuid; // causes 500 error if present for PUT
-      delete dnPayload.pattern; // Don't ever want to change the pattern for PUT
       return DirectoryNumberService.update({
         customerId: Authinfo.getOrgId(),
         directoryNumberId: dnUuid
@@ -140,7 +140,7 @@
         });
     }
 
-    function updateAlternateNumber(dnUuid, pattern) {
+    function addAlternateNumber(dnUuid, pattern) {
       // TODO: remove hardcoding when multi-site requirements are figured out
       var routePartition = Authinfo.getOrgId() + '_000000_E164_RP'
 
@@ -162,6 +162,21 @@
         directoryNumberId: dnUuid
       }, alternateNumber, function (data, headers) {
         data.uuid = headers('location').split("/").pop();
+        return data;
+      }).$promise;
+    }
+
+    function updateAlternateNumber(dnUuid, altNumUuid, pattern) {
+      var alternateNumber = {
+        'numMask': pattern
+      };
+
+      return AlternateNumberService.update({
+        customerId: Authinfo.getOrgId(),
+        directoryNumberId: dnUuid,
+        alternateNumberId: altNumUuid
+      }, alternateNumber, function (data, headers) {
+        data.uuid = altNumUuid;
         return data;
       }).$promise;
     }

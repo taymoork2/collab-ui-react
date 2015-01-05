@@ -5,11 +5,10 @@
     .module('Huron')
     .factory('LineSettings', LineSettings);
 
-  LineSettings.$inject = ['$filter', '$q', 'Authinfo', 'Log', 'Notification', 'DirectoryNumber', 'TelephonyInfoService', 'HuronAssignedLine'];
-
-  function LineSettings($filter, $q, Authinfo, Log, Notification, DirectoryNumber, TelephonyInfoService, HuronAssignedLine) {
+  /* @ngInject */
+  function LineSettings($q, Authinfo, Log, Notification, DirectoryNumber, TelephonyInfoService, HuronAssignedLine) {
     var service = {
-      addInternalLine: addInternalLine,
+      addNewLine: addNewLine,
       changeInternalLine: changeInternalLine,
       addExternalLine: addExternalLine,
       changeExternalLine: changeExternalLine,
@@ -20,12 +19,13 @@
     return service;
     /////////////////////
 
-    function addInternalLine(_userUuid, _dnUsage, _pattern, _dnSettings, _altNum) {
+    function addNewLine(_userUuid, _dnUsage, _pattern, _dnSettings, _altNum) {
       var userUuid = _userUuid;
       var dnUsage = _dnUsage;
       var pattern = _pattern;
-      var dnSettings = _dnSettings;
       var altNum = _altNum;
+      var dnSettings = angular.copy(_dnSettings);
+      dnSettings.pattern = pattern;
 
       return HuronAssignedLine.assignDirectoryNumber(userUuid, dnUsage, pattern)
         .then(function (dn) {
@@ -35,7 +35,7 @@
         .then(function () {
           if (typeof altNum.pattern !== 'undefined' && altNum.pattern !== 'None') {
             var telInfo = TelephonyInfoService.getTelephonyInfo();
-            return DirectoryNumber.updateAlternateNumber(telInfo.currentDirectoryNumber.uuid, altNum.pattern)
+            return DirectoryNumber.addAlternateNumber(telInfo.currentDirectoryNumber.uuid, altNum.pattern)
               .then(function (newAltNumber) {
                 TelephonyInfoService.updateAlternateDirectoryNumber(newAltNumber.uuid, newAltNumber.numMask);
               });
@@ -46,102 +46,56 @@
         });
     }
 
-    function changeInternalLine(_oldDnUuid, _newDnUuid, _userUuid, _dnUsage, _pattern, _dnSettings, _altNum) {
-      var newDnUuid = _newDnUuid;
-      var userUuid = _userUuid;
+    function changeInternalLine(_dnUuid, _dnUsage, _pattern, _dnSettings) {
+      var dnUuid = _dnUuid;
       var dnUsage = _dnUsage;
       var pattern = _pattern;
-      var dnSettings = _dnSettings;
-      var altNum = _altNum;
+      var dnSettings = angular.copy(_dnSettings);
+      dnSettings.pattern = pattern;
 
-      return DirectoryNumber.deleteDirectoryNumber(_oldDnUuid)
-        .then(function () {
-          return HuronAssignedLine.assignDirectoryNumber(userUuid, dnUsage, pattern);
-        })
+      return DirectoryNumber.updateDirectoryNumber(dnUuid, dnSettings)
         .then(function (dn) {
-          TelephonyInfoService.updateCurrentDirectoryNumber(dn.uuid, dn.pattern, dnUsage, false);
-          TelephonyInfoService.updateAlternateDirectoryNumber(altNum.uuid, altNum.pattern);
-          return DirectoryNumber.updateDirectoryNumber(dn.uuid, dnSettings);
-        })
-        .then(function () {
-          if (typeof altNum.pattern !== 'undefined' && altNum.pattern !== 'None') {
-            var telInfo = TelephonyInfoService.getTelephonyInfo();
-            return DirectoryNumber.updateAlternateNumber(telInfo.currentDirectoryNumber.uuid, altNum.pattern)
-              .then(function (newAltNumber) {
-                TelephonyInfoService.updateAlternateDirectoryNumber(newAltNumber.uuid, newAltNumber.numMask);
-              });
-          }
-        })
-        .then(function () {
-          return $q.all([TelephonyInfoService.loadInternalNumberPool(), TelephonyInfoService.loadExternalNumberPool()]);
+          TelephonyInfoService.updateCurrentDirectoryNumber(dnUuid, dn.pattern, dnUsage, false);
+          return TelephonyInfoService.loadInternalNumberPool();
         });
     }
 
-    function addExternalLine(_dnUuid, _userUuid, pattern, _dnSettings) {
+    function addExternalLine(_dnUuid, _pattern) {
       var dnUuid = _dnUuid;
-      var userUuid = _userUuid;
-      var dnSettings = _dnSettings;
+      var pattern = _pattern;
 
-      return DirectoryNumber.updateAlternateNumber(dnUuid, pattern)
+      return DirectoryNumber.addAlternateNumber(dnUuid, pattern)
         .then(function (newAltNumber) {
           TelephonyInfoService.updateAlternateDirectoryNumber(newAltNumber.uuid, newAltNumber.numMask);
-          TelephonyInfoService.getUserDnInfo(userUuid);
-          return DirectoryNumber.updateDirectoryNumber(dnUuid, dnSettings);
-        })
-        .then(function () {
           return TelephonyInfoService.loadExternalNumberPool();
         });
     }
 
-    function changeExternalLine(_dnUuid, oldAltNumUuid, _userUuid, _altNum, _dnSettings) {
+    function changeExternalLine(_dnUuid, _altNumUuid, _altNum) {
       var dnUuid = _dnUuid;
-      var userUuid = _userUuid;
+      var altNumUuid = _altNumUuid;
       var altNum = _altNum;
-      var dnSettings = _dnSettings;
 
-      return DirectoryNumber.deleteAlternateNumber(dnUuid, oldAltNumUuid)
-        .then(function () {
-          return DirectoryNumber.updateAlternateNumber(dnUuid, altNum);
-        })
-        .then(function (newAltNumber) {
-          TelephonyInfoService.updateAlternateDirectoryNumber(newAltNumber.uuid, newAltNumber.numMask);
-          TelephonyInfoService.getUserDnInfo(userUuid);
-          return DirectoryNumber.updateDirectoryNumber(dnUuid, dnSettings);
-        })
-        .then(function () {
+      return DirectoryNumber.updateAlternateNumber(dnUuid, altNumUuid, altNum)
+        .then(function (updatedAltNumber) {
+          TelephonyInfoService.updateAlternateDirectoryNumber(updatedAltNumber.uuid, updatedAltNumber.numMask);
           return TelephonyInfoService.loadExternalNumberPool();
         });
     }
 
-    function deleteExternalLine(_dnUuid, altNumUuid, _userUuid, _dnSettings) {
+    function deleteExternalLine(_dnUuid, _altNumUuid) {
       var dnUuid = _dnUuid;
-      var userUuid = _userUuid;
-      var dnSettings = _dnSettings;
+      var altNumUuid = _altNumUuid;
 
       return DirectoryNumber.deleteAlternateNumber(dnUuid, altNumUuid)
         .then(function () {
           TelephonyInfoService.updateAlternateDirectoryNumber('none', '');
-          TelephonyInfoService.getUserDnInfo(userUuid);
-          return DirectoryNumber.updateDirectoryNumber(dnUuid, dnSettings);
-        })
-        .then(function () {
           return TelephonyInfoService.loadExternalNumberPool();
         });
     }
 
     function updateLineSettings(dnSettings) {
-      return DirectoryNumber.updateDirectoryNumber(dnSettings.uuid, dnSettings)
-        .then(function (response) {
-          var msg = $filter('translate')('directoryNumberPanel.success');
-          var type = 'success';
-          Notification.notify([msg], type);
-        })
-        .catch(function (response) {
-          Log.debug('updateLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
-          var msg = $filter('translate')('directoryNumberPanel.error');
-          var type = 'error';
-          Notification.notify([msg], type);
-        });
+      return DirectoryNumber.updateDirectoryNumber(dnSettings.uuid, dnSettings);
     }
 
   }

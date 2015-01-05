@@ -79,7 +79,7 @@ describe('Partner flow', function() {
       expect(navigation.hasClass(partner.customerEmailForm, 'has-error')).toBe(true);
 
       partner.cancelTrialButton.click();
-    });
+    }, 60000);
 
     it('should edit an exisiting trial', function(){
 
