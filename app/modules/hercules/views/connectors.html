@@ -22,6 +22,11 @@
         <div ng-show="clusters.length == 0" class="col-md-12" style="padding: 20px 40px">
           <hercules-nothing-fused />
         </div>
+
+        <div ng-show="clusters.length != 0">
+          <hercules-dashboard-header/>
+        </div>
+
         <div ng-show="clusters.length != 0" class="col-md-12">
 
           <accordion close-others="{{false}}">

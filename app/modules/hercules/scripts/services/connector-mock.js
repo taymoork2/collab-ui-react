@@ -84,7 +84,7 @@ var services = [{
   serviceType: 'c_cal'
 }, {
   serviceName: 'UCM Service',
-  serviceType: 'ucm'
+  serviceType: 'c_ucmc'
 }, {
   serviceName: 'Yolo Service',
   serviceType: 'yolo'
@@ -159,6 +159,30 @@ var mockData = function () {
   ];
 };
 
+var mockServicesData = function () {
+  return [{
+    name: 'Fusion Management Service',
+    icon: 'fa fa-tachometer',
+    type: 'c_mgmt'
+  }, {
+    name: 'UCM Service',
+    icon: 'fa fa-phone',
+    type: 'c_ucmc',
+    descs: [
+      'Zero touch meetings, move calls between desk phones and soft clients.',
+      'Reuse your enterprise phone number.'
+    ]
+  }, {
+    name: 'Calendar Service',
+    icon: 'fa fa-calendar',
+    type: 'c_cal',
+    descs: [
+      'Calendar sync for consistent meeting times.',
+      'In-app scheduling connected to Microsoft Exchange.'
+    ]
+  }];
+}
+
 //console.info(JSON.stringify(mockData(), null, '  '));
 
 angular
@@ -167,7 +191,8 @@ angular
 
     function ConnectorMock() {
       return {
-        mockData: mockData
+        mockData: mockData,
+        mockServicesData: mockServicesData
       };
     }
   ]);

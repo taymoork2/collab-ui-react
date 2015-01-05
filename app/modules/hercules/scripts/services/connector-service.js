@@ -22,8 +22,8 @@ angular.module('Hercules')
       var lastClusterResponse = [];
 
       var fetch = function (callback) {
-        // return callback(new Error('yolo'), []);
-        // return callback(null, convertClusters(mock.mockData()));
+        //return callback(new Error('yolo'), []);
+        return callback(null, convertClusters(mock.mockData()));
         $http
           .get(getUrl())
           .success(function (data) {
@@ -121,21 +121,48 @@ angular.module('Hercules')
       };
 
       var services = function (cb) {
-        cb([{
-          name: 'UCM Service',
-          icon: 'fa fa-phone',
-          descs: [
-            'Zero touch meetings, move calls between desk phones and soft clients.',
-            'Reuse your enterprise phone number.'
-          ]
-        }, {
-          name: 'Calendar Service',
-          icon: 'fa fa-calendar',
-          descs: [
-            'Calendar sync for consistent meeting times.',
-            'In-app scheduling connected to Microsoft Exchange.'
-          ]
-        }]);
+        cb(mock.mockServicesData());
+      };
+
+      var aggregateServices = function (services, clusters) {
+        var hosts = 0;
+        _.each(clusters, function (cluster) {
+          hosts += cluster.hosts.length;
+        });
+        var aggregatedServices = _.cloneDeep(services);
+        _.each(aggregatedServices, function (globalService) {
+          globalService.activatedClusters = 0;
+          globalService.activatedHosts = 0;
+          globalService.needs_attention = false;
+          globalService.software_upgrades_available = false;
+          _.each(clusters, function (cluster) {
+            _.each(cluster.services, function (serviceInCluster) {
+              if (globalService.type == serviceInCluster.service_type) {
+                if (serviceInCluster.needs_attention) {
+                  globalService.needs_attention = true;
+                }
+                if (cluster.provisioning_data) {
+                  _.each(cluster.provisioning_data.not_approved_packages, function (not_approved_package) {
+                    if (not_approved_package.service.service_type == globalService.type) {
+                      globalService.software_upgrades_available = true;
+                    }
+                  });
+                }
+                globalService.activatedClusters += 1;
+                _.each(serviceInCluster.connectors, function (connector) {
+                  if (connector.state != 'disabled') {
+                    globalService.activatedHosts += 1;
+                  }
+                });
+              }
+            });
+          });
+        });
+        return {
+          activatedClusters: clusters.length,
+          activatedHosts: hosts,
+          aggregatedServices: aggregatedServices
+        };
       };
 
       return {
@@ -143,6 +170,7 @@ angular.module('Hercules')
         fetch: fetch,
         upgradeSoftware: upgradeSoftware,
         services: services,
+        aggregateServices: aggregateServices,
 
         /* private, for testing */
         _convertConnectors: convertConnectors,

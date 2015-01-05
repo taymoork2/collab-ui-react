@@ -1,5 +1,5 @@
 <div class="row" style="border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 0; margin: 30px 0;">
-  <div class="col-sm-5" ng-repeat="service in services">
+  <div class="col-sm-5" ng-repeat="service in services | filter: { type: '!c_mgmt' }">
     <h4>
       <i class="{{service.icon}}"></i>
       {{service.name}}

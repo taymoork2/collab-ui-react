@@ -1,0 +1,17 @@
+<div class="dashboard-header row">
+  <div class="col-md-3">
+    <h4><span><i class="fa fa-cloud"></i> Expressway Clusters</span></h4>
+    <p>{{serviceAggregates.activatedClusters}} clusters, {{serviceAggregates.activatedHosts}} hosts registered</p>
+  </div>
+  <div class="col-md-3" ng-repeat="aggregatedService in serviceAggregates.aggregatedServices">
+    <h4><span><i class="fa {{aggregatedService.icon}}"></i> {{aggregatedService.name}}</span></h4>
+    <p>
+      <span ng-show="{{aggregatedService.activatedClusters != 0}}">Activated on {{aggregatedService.activatedClusters}} clusters, {{aggregatedService.activatedHosts}}  hosts</span>
+      <span ng-hide="{{aggregatedService.activatedClusters != 0}}">Not activated</span>
+    </p>
+    <p>
+      <span class="text-danger" ng-show="aggregatedService.needs_attention">Needs attention</span>
+      <span class="text-info" ng-show="!aggregatedService.needs_attention && aggregatedService.software_upgrades_available">Software Upgrades Available</span>
+    </p>
+  </div>
+</div>
