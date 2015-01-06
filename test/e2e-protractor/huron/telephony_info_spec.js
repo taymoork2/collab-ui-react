@@ -19,7 +19,7 @@ var numberText = {
   second: '4040'
 };
 
-xdescribe('Telephony Info', function() {
+describe('Telephony Info', function() {
   it('should login', function(){
     login.login(testuser.username,testuser.password);
   });
