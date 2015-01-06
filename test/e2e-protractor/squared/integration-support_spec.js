@@ -15,7 +15,7 @@ var testuser = {
   orgname: 'SquaredAdminTool',
   searchValidEmail: 'pbr-org-admin@squared2webex.com',
   searchValidUuid: 'd6688fc9-414d-44ce-a166-759530291edc',
-  searchValidLocusid: 'f59aee85-bcd3-44ea-b7c5-5667de88717e',
+  searchValidLocusid: '',
   searchNonexistentMetadata: 'qqt7y812twuiy900909-2jijeqbd,,.mjmj123qwsah77&89%$3wesa@54a'
 };
 
@@ -64,8 +64,8 @@ describe('Support flow', function() {
       support.logSearchBtn.click();
       support.assertResultsLength(0);
       expect(support.supportTable.isDisplayed()).toBeTruthy();
-
       expect(support.emailAddress.getText()).toBe(testuser.searchValidEmail);
+      testuser.searchValidLocusid = support.locusId.getText();
     });
 
     it('should search for logs by valid uuid', function() {
