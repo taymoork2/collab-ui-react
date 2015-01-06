@@ -80,6 +80,12 @@ var TelephonyPage = function(){
     dropdown.element(by.css('.input-group-btn')).click();
     dropdown.element(by.cssContainingText('a', option)).click();
   };
+
+  this.setNumber = function(dropdown, number){
+    var input = dropdown.element(by.css('input'));
+    input.click();
+    input.sendKeys(number);
+  };
 }
 
 module.exports = TelephonyPage;

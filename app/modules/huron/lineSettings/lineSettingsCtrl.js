@@ -213,11 +213,7 @@
           if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardAll.voicemailEnabled === 'true')) {
             $scope.forwardAllCalls = 'Voicemail';
           } else {
-            if (($scope.telephonyInfo.voicemail === 'On') && $scope.directoryNumber.callForwardAll.destination !== '') {
-              $scope.forwardAllCalls = 'Voicemail';
-            } else {
-              $scope.forwardAllCalls = $scope.directoryNumber.callForwardAll.destination;
-            }
+            $scope.forwardAllCalls = $scope.directoryNumber.callForwardAll.destination;
           }
 
           if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'true')) {
