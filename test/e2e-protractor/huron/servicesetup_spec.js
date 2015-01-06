@@ -7,7 +7,7 @@ var testuser = {
 
 var TEST_BEGIN_NUMBER = '9101', TEST_END_NUMBER = '9199';
 
-xdescribe('First Time Wizard - CiscoUC Service Setup', function() {
+describe('First Time Wizard - CiscoUC Service Setup', function() {
   it('should login as an admin user', function(){
     login.login(testuser.username, testuser.password);
   });
@@ -34,7 +34,7 @@ xdescribe('First Time Wizard - CiscoUC Service Setup', function() {
       elem.element(by.model('internalNumberRange.endNumber')).sendKeys(TEST_END_NUMBER);
     });
     servicesetup.save.click();
-    notifications.assertSuccess();
+    notifications.assertSuccess('added successfully');
   });
 
   it('should delete the number range', function(){

@@ -122,6 +122,27 @@ xdescribe('Telephony Info', function() {
       });
     });
 
+    it('should save call forward all to an outside number', function(){
+        expect(telephony.forwardExternalCalls.isDisplayed()).toBeFalsy();
+        telephony.selectOption(telephony.forwardAll, dropdownVariables.addNew);
+        telephony.setNumber(telephony.forwardAll, snrLine);
+        telephony.saveButton.click();
+        notifications.assertSuccess('Line configuration saved successfully');
+
+        telephony.voicemailFeature.click();
+        element(by.cssContainingText('span', 'Primary')).click();
+        browser.wait(function(){
+          return telephony.forwardAllRadio.isPresent().then(function(present){
+            return present;
+          });
+        }).then(function(){
+          expect(telephony.forwardAll.isDisplayed()).toBeTruthy();
+          expect(telephony.forwardBusy.isDisplayed()).toBeFalsy();
+          expect(telephony.forwardAway.isDisplayed()).toBeFalsy();
+          expect(telephony.forwardAll.element(by.css('input')).getAttribute('value')).toEqual(snrLine);
+        });
+    });
+
     it('should save call forward busy/away to voicemail', function(){
       telephony.directoryNumbers.first().click();
       telephony.forwardBusyAwayRadio.click();
