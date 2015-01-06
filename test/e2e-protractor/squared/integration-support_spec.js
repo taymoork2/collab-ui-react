@@ -15,7 +15,7 @@ var testuser = {
   orgname: 'SquaredAdminTool',
   searchValidEmail: 'pbr-org-admin@squared2webex.com',
   searchValidUuid: 'd6688fc9-414d-44ce-a166-759530291edc',
-  searchValidLocusid: 'a75e0191-8e6b-415b-ad00-7136c1b89add',
+  searchValidLocusid: 'f59aee85-bcd3-44ea-b7c5-5667de88717e',
   searchNonexistentMetadata: 'qqt7y812twuiy900909-2jijeqbd,,.mjmj123qwsah77&89%$3wesa@54a'
 };
 
