@@ -81,7 +81,6 @@ describe('List users flow', function () {
     it('display user profile page when clicking on a user name', function(){
       users.clickOnUser();
       expect(users.previewPanel.isDisplayed()).toBeTruthy();
-
     });
   });
 
