@@ -5,9 +5,6 @@
 angular.module('Hercules')
   .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http', 'ConnectorService', 'Notification',
     function ($scope, $rootScope, $http, service, notif) {
-      notif.init($scope);
-      $scope.popup = notif.popup;
-
       $scope.loading = true;
 
       var loadData = function () {
