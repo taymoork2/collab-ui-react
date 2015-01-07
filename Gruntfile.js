@@ -53,6 +53,7 @@ module.exports = function (grunt) {
     // Clean up the build directories before building
     clean: {
       build: '<%= build_dir %>',
+      coverage: 'coverage',
       dist: '<%= compile_dir %>',
       test: '<%= e2e_dir %>/reports'
     },
@@ -114,6 +115,14 @@ module.exports = function (grunt) {
           ]
         }
       },
+      test_coverage: {
+        options: {
+          base: [
+            '<%= test_dir %>',
+            '<%= coverage_dir %>/<%= app_dir %>'
+          ]
+        }
+      },
       dist: {
         options: {
           open: true,
@@ -127,6 +136,15 @@ module.exports = function (grunt) {
      * `build_dir`, and then to copy the assets to `compile_dir`.
      */
     copy: {
+      coverage: {
+        files: [{
+          src: '**/**',
+          cwd: '<%= build_dir %>',
+          dest: '<%= coverage_dir %>/<%= app_dir %>',
+          dot: true,
+          expand: true
+        }]
+      },
       build_app_files: {
         files: [{
           src: [
@@ -718,6 +736,70 @@ module.exports = function (grunt) {
           }
         }
       }
+    },
+
+    instrument: {
+      files: [
+        'app/**/*.js'
+      ],
+      options: {
+        basePath: '<%= coverage_dir %>'
+      }
+    },
+
+    protractor_coverage: {
+      options: {
+        configFile: 'protractor-config.js',
+        noColor: false,
+        coverageDir: '<%= coverage_dir %>',
+        args: {
+          browser: 'chrome'
+        }
+      },
+      coverage: {
+        options: {
+          args: {
+            specs: [
+              'test/e2e-protractor/**/*_spec.js'
+            ]
+          }
+        }
+      }
+    },
+
+    makeReport: {
+      src: '<%= coverage_dir %>/*.json',
+      options: {
+        type: 'lcov',
+        dir: 'coverage/e2e-protractor'
+      }
+    },
+
+    sonarRunner: {
+      analysis: {
+        options: {
+          sonar: {
+            host: {
+              url: 'http://172.27.27.150:9000'
+            },
+            jdbc: {
+              url: 'jdbc:mysql://172.27.27.150:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance',
+              username: 'sonar',
+              password: 'sonar'
+            },
+            projectKey: 'com.cisco.wx2:admin-web-client',
+            projectName: 'Admin Web Client',
+            projectVersion: '1.0-SNAPSHOT',
+            sources: 'app',
+            language: 'js',
+            javascript: {
+              lcov: {
+                reportPath: 'coverage/e2e-protractor/lcov.info'
+              }
+            }
+          }
+        }
+      }
     }
   };
 
@@ -839,6 +921,14 @@ module.exports = function (grunt) {
         'build',
         'connect:test_build'
       ]);
+    } else if (target === 'coverage') {
+      return grunt.task.run([
+        'clean',
+        'build',
+        'copy:coverage',
+        'instrument',
+        'connect:test_coverage'
+      ]);
     }
     grunt.task.run([
       'clean',
@@ -870,6 +960,13 @@ module.exports = function (grunt) {
         'protractor:squared',
         'protractor:huron',
         'protractor:hercules'
+      ]);
+    } else if (target === 'coverage') {
+      return grunt.task.run([
+        'test-setup:coverage',
+        'protractor_coverage:coverage',
+        'makeReport',
+        'sonarRunner'
       ]);
     }
     grunt.task.run([

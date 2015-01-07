@@ -4,6 +4,7 @@
 module.exports = {
 
   build_dir: 'build',
+  coverage_dir: 'coverage',
   compile_dir: 'dist',
   test_dir: 'test',
   e2e_dir: 'test/e2e-protractor',

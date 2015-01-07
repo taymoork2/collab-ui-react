@@ -28,6 +28,17 @@ module.exports = function (config) {
       }
     ],
 
+    preprocessors: {
+      'build/scripts/**/*.js': ['coverage'],
+      'build/templates-app.js': ['coverage'],
+      'build/modules/**/*.js': ['coverage']
+    },
+
+    coverageReporter: {
+      dir: 'coverage/unit',
+      type: 'cobertura'
+    },
+
     // list of files / patterns to exclude
     exclude: [],
 
@@ -54,6 +65,7 @@ module.exports = function (config) {
 
     // Which plugins to enable
     plugins: [
+      'karma-coverage',
       'karma-phantomjs-launcher',
       // 'karma-chrome-launcher',
       'karma-jasmine',
@@ -67,7 +79,7 @@ module.exports = function (config) {
 
     colors: true,
 
-    reporters: ['dots', 'junit'],
+    reporters: ['dots', 'junit', 'coverage'],
 
     junitReporter: {
       outputFile: 'test/unit-test-results.xml',
