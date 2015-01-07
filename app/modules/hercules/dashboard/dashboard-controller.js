@@ -3,7 +3,7 @@
 /* global _ */
 
 angular.module('Hercules')
-  .controller('ConnectorCtrl', ['$scope', '$rootScope', '$http', 'ConnectorService', 'Notification',
+  .controller('DashboardController', ['$scope', '$rootScope', '$http', 'ConnectorService', 'Notification',
     function ($scope, $rootScope, $http, service, notif) {
       $scope.loading = true;
 

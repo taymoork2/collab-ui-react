@@ -2,8 +2,8 @@ describe('ControllerWireing', function() {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var controllersToTest = [
-    'ConnectorCtrl',
     'FusionSetupCtrl',
+    'DashboardController',
     'DashboardHeaderController',
     'EntitledServicesController'
   ];

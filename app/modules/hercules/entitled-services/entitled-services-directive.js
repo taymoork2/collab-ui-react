@@ -13,7 +13,7 @@
           restrict: 'EA',
           scope: false,
           controller: 'EntitledServicesController',
-          templateUrl: 'modules/hercules/views/hercules-entitled-services.html'
+          templateUrl: 'modules/hercules/entitled-services/entitled-services.html'
         };
       }
     ]);

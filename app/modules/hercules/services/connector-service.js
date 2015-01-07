@@ -19,8 +19,16 @@ angular.module('Hercules')
       var lastClusterResponse = [];
 
       var fetch = function (callback) {
-        //return callback(new Error('yolo'), []);
-        //return callback(null, convertClusters(mock.mockData()));
+        if (window.location.search.match(/hercules-backend=error/)) {
+          console.info('hercules backend will return error');
+          return callback({
+            data: 'things are fubar...'
+          }, []);
+        }
+        if (window.location.search.match(/hercules-backend=mock/)) {
+          console.info('hercules backend will return mock data');
+          return callback(null, converter.convertClusters(mock.mockData()));
+        }
         $http
           .get(getUrl())
           .success(function (data) {

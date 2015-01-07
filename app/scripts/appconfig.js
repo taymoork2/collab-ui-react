@@ -366,8 +366,8 @@ angular
       $stateProvider
         .state('fusion', {
           url: '/fusion',
-          templateUrl: 'modules/hercules/views/connectors.html',
-          controller: 'ConnectorCtrl',
+          templateUrl: 'modules/hercules/dashboard/dashboard.html',
+          controller: 'DashboardController',
           parent: 'main'
         });
     }

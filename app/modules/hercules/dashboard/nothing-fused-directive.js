@@ -7,7 +7,7 @@
         return {
           restrict: 'EA',
           scope: false,
-          templateUrl: 'modules/hercules/views/hercules-nothing-fused.html'
+          templateUrl: 'modules/hercules/dashboard/nothing-fused.html'
         };
       }
     ]);

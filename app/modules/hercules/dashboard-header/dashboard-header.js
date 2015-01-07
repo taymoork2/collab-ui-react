@@ -22,7 +22,7 @@
           restrict: 'EA',
           scope: false,
           controller: 'DashboardHeaderController',
-          templateUrl: 'modules/hercules/views/hercules-dashboard-header.html'
+          templateUrl: 'modules/hercules/dashboard-header/dashboard-header.html'
         };
       }
     ]);

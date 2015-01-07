@@ -1,4 +1,4 @@
-describe('Hercules: ConnectorController', function() {
+describe('DashboardController', function() {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $scope = {};
@@ -13,7 +13,7 @@ describe('Hercules: ConnectorController', function() {
       services: sinon.stub(),
       upgradeSoftware: sinon.stub()
     }
-    controller = _$controller_('ConnectorCtrl', {
+    controller = _$controller_('DashboardController', {
       $scope: $scope,
       ConnectorService: service,
       Notification: notification
