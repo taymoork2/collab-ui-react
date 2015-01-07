@@ -22,7 +22,7 @@ angular.module('Hercules')
 
       $scope.$on('$destroy', function () {
         promise = null;
-        $timeout.cancel(promise);
+        $interval.cancel(promise);
       });
 
       fetch();
