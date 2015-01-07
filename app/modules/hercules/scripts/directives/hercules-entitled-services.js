@@ -2,7 +2,7 @@
   'use strict';
   angular
     .module('Hercules')
-    .controller('EntitledServicesController', ['$scope', 'ConnectorService', function ($scope, service) {
+    .controller('EntitledServicesController', ['$scope', 'ServiceDescriptor', function ($scope, service) {
       service.services(function (services) {
         $scope.services = services;
       });
