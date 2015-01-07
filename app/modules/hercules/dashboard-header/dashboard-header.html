@@ -4,6 +4,7 @@
     <p>{{serviceAggregates.activatedClusters}} clusters, {{serviceAggregates.activatedHosts}} hosts registered</p>
   </div>
   <div class="col-md-3" ng-repeat="aggregatedService in serviceAggregates.aggregatedServices">
+    <hr class="hidden-md hidden-lg" />
     <h4><span><i class="fa {{aggregatedService.icon}}"></i> {{aggregatedService.name}}</span></h4>
     <p>
       <span ng-show="{{aggregatedService.activatedClusters != 0}}">Activated on {{aggregatedService.activatedClusters}} clusters, {{aggregatedService.activatedHosts}}  hosts</span>
