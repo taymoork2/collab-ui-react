@@ -19,6 +19,8 @@ angular.module('Hercules')
       var lastClusterResponse = [];
 
       var fetch = function (callback) {
+        //return callback(new Error('yolo'), []);
+        //return callback(null, convertClusters(mock.mockData()));
         $http
           .get(getUrl())
           .success(function (data) {
