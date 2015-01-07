@@ -16,9 +16,6 @@ var getUrl = function () {
 angular.module('Hercules')
   .service('ConnectorService', ['$http', 'ConnectorMock',
     function ConnectorService($http, mock) {
-
-      var addMockData = window.location.href.indexOf('hercules-mock') != -1;
-
       var lastClusterResponse = [];
 
       var fetch = function (callback) {
@@ -28,7 +25,6 @@ angular.module('Hercules')
           .get(getUrl())
           .success(function (data) {
             var converted = convertClusters(data);
-            // console.info(JSON.stringify(converted, null, '  '));
             lastClusterResponse = converted;
             callback(null, converted);
           })
@@ -87,7 +83,7 @@ angular.module('Hercules')
             service.running_hosts = 0;
             _.each(service.connectors, function (connector) {
               if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
-                cluster.needs_attention = cluster.intially_open = true;
+                cluster.needs_attention = cluster.initially_open = true;
                 service.needs_attention = true;
                 service.is_disabled = false;
               }
