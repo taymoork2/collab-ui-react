@@ -11,7 +11,11 @@ angular.module('Core')
       $scope.status = null;
       $scope.currentDataPosition = 0;
       $scope.queryuserslist = [];
-      $scope.totalResults = 0;
+      $scope.filterTotals = {
+        all: {
+          number: 0
+        }
+      };
       $scope.currentUser = null;
 
       $scope.userPreviewActive = false;
@@ -63,7 +67,7 @@ angular.module('Core')
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
               Log.debug('Returned data.', data.Resources);
               // data.resources = getUserStatus(data.Resources);
-              $scope.totalResults = data.totalResults;
+              $scope.filterTotals.all.number = data.totalResults;
               if (startIndex === 0) {
                 $scope.queryuserslist = data.Resources;
               } else {
@@ -317,5 +321,30 @@ angular.module('Core')
       };
       // end TODO
 
+      // Users Grid Filters
+      $scope.filters = [{
+        name: 'Active',
+        search: 'active',
+        count: $scope.filterTotals.all
+      }, {
+        name: 'Invite Pending',
+        search: 'pending',
+        count: $scope.filterTotals.all
+      }];
+
+      // On click, filter user list and set active filter
+      $scope.filterList = function (str) {
+        $rootScope.searchStr = str;
+        $rootScope.$broadcast('SEARCH_ITEM', str);
+      };
+
+      $scope.isSearchFocused = false;
+
+      $scope.searchFocus = function () {
+        $scope.isSearchFocused = true;
+      };
+      $scope.searchBlur = function () {
+        $scope.isSearchFocused = false;
+      };
     }
   ]);

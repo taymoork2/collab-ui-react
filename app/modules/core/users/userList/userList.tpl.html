@@ -1,9 +1,9 @@
 <div class="user-list">
   <div class="row page-header">
-    <div class="col-md-6 col-sm-6">
-      <h2 class="page-title">{{'usersPage.manageUsers' | translate}}&nbsp;&nbsp;<small class="count">{{totalResults}}</small></h2>
+    <div class="page-title col-md-8 col-sm-8">
+      <span class="title">{{'usersPage.manageUsers' | translate}}</span>
     </div>
-    <div class="col-md-6 col-sm-6" ng-show="Utils.isAdminPage() && userTabActive">
+    <div class="col-md-4 col-sm-4" ng-show="Utils.isAdminPage() && userTabActive">
       <div class="page-option-buttons">
         <button id="addUsers" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addUsersDialog" translate="usersPage.inviteModalBtn" ng-click="setupTokenfield();resetEntitlements();">
         </button>

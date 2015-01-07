@@ -5,8 +5,6 @@ angular.module('Core')
   .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', '$modal', 'ExternalNumberPool',
 
     function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, $modal, ExternalNumberPool) {
-
-      console.log("BOYAA");
       $scope.load = true;
       $scope.currentDataPosition = 0;
       $scope.trialPreviewActive = false;
@@ -370,8 +368,6 @@ angular.module('Core')
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
         '<li ng-show="row.entity.isAllowedToManage" id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span></a></li>' +
-        '<li ng-if="isHuronEnabled()" id="{{row.entity.customerName}}SetupDIDs" class="setupDidBtn"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown(); openModal()"><span>Setup Phone Numbers</span></a></li>' +
-        '<li ng-if="isHuronEnabled()" id="{{row.entity.customerName}}DeleteDIDs"class="deleteDidBtn"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown(); deleteDIDs()"><span>Delete Phone Numbers</span></a></li>' +
         '</ul>' +
         '</span>';
 
@@ -510,6 +506,5 @@ angular.module('Core')
           $scope.gridData = $scope.managedOrgsList;
         }
       };
-
     }
   ]);

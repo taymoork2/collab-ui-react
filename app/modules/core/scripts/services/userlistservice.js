@@ -5,7 +5,7 @@ angular.module('Core')
   .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils', '$q', '$filter', '$compile', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
-      var searchfilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
+      var searchfilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20userStatus%20sw%20%22%s%22';
       var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
 
@@ -24,13 +24,13 @@ angular.module('Core')
             filter = searchfilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
             scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
-            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
           } else if ($rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             filter = searchfilter;
             scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
-            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
           } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
             filter = 'filter=entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
