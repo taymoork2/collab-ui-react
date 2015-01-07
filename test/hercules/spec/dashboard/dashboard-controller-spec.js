@@ -1,7 +1,7 @@
 describe('DashboardController', function() {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $scope = {};
+  var $scope = { '$reload': function() {} };
   var controller, notification, service;
 
   beforeEach(inject(function(_$controller_){
@@ -27,11 +27,6 @@ describe('DashboardController', function() {
     service.fetch.callArgWith(0, null, []);
     expect($scope.loading).toEqual(false);
     expect(notification.notify.callCount).toEqual(0);
-  });
-
-  it('logs an error if server returns an error', function() {
-    service.fetch.callArgWith(0, 'err', []);
-    expect(notification.notify.calledOnce).toEqual(true);
   });
 
   it('reloads data on reload', function() {

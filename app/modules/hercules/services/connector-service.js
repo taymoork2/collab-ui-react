@@ -14,16 +14,16 @@ var getUrl = function () {
 };
 
 angular.module('Hercules')
-  .service('ConnectorService', ['$http', 'ConnectorMock', 'ConverterService',
-    function ConnectorService($http, mock, converter) {
+  .service('ConnectorService', ['$http', 'ConnectorMock', 'ConverterService', 'Notification',
+    function ConnectorService($http, mock, converter, notification) {
       var lastClusterResponse = [];
 
       var fetch = function (callback) {
         if (window.location.search.match(/hercules-backend=error/)) {
           console.info('hercules backend will return error');
-          return callback({
-            data: 'things are fubar...'
-          }, []);
+          getUrl = function () {
+            return 'https://hercules.hitest.huron-dev.com/fubar';
+          };
         }
         if (window.location.search.match(/hercules-backend=mock/)) {
           console.info('hercules backend will return mock data');
@@ -36,14 +36,7 @@ angular.module('Hercules')
             lastClusterResponse = converted;
             callback(null, converted);
           })
-          .error(function (data, status, headers, config) {
-            callback({
-              data: data,
-              status: status,
-              headers: headers,
-              config: config
-            });
-          });
+          .error(createErrorHandler('Unable to fetch data from UC fusion backend'), callback);
         return lastClusterResponse;
       };
 
@@ -54,8 +47,18 @@ angular.module('Hercules')
         });
         $http
           .post(url, data)
-          .success(opts.success)
-          .error(opts.error);
+          .success(opts.callback)
+          .error(createErrorHandler('Unable to upgrade software'), opts.callback);
+      };
+
+      var createErrorHandler = function (message, callback) {
+        var messages = [message];
+        return function (data, status, headers, config) {
+          messages.push('Request failed with status ' + status);
+          messages.push('Check the browser console for details');
+          notification.notify(messages, 'error');
+          callback(arguments);
+        };
       };
 
       return {

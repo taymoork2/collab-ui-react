@@ -55,7 +55,7 @@ describe('Service: ConnectorService', function () {
       tlpUrl: 'yolo',
       clusterId: 'foo',
       serviceType: 'bar',
-      success: function(data) {
+      callback: function(data) {
         expect(data.foo).toBe('bar');
       }
     });
