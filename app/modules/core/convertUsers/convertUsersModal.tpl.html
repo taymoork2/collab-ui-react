@@ -1,0 +1,28 @@
+<div id="convertDialog" class="convert-users">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button id="convertModalClose" type="button" class="close" ng-click="$parent.convertModalInstance.close()">
+        <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+      </button>
+      <h3 class="modal-title">
+          <span translate="homePage.convertUsers"></span>
+      </h3>
+    </div>
+    <div class="modal-body">
+      <p><span translate="homePage.convertUsersText"></span></p>
+      <div id="unlicensedUserList" ng-show="licenses.unlicensed > 0">
+        <div id="unlicensedList" class="row">
+          <div gridscrollbar class="gridStyle" ng-grid="gridOptions"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button id="convertActionButton" class="btn btn-lg btn-primary pull-right" ng-click="convertUsers()">
+        <span translate="homePage.convert"></span>
+      </button>
+      <button id="convertCancelButton" class="btn btn-lg btn-default pull-right" ng-click="$parent.convertModalInstance.close()">
+        <span translate="homePage.cancel"></span>
+      </button>
+    </div>
+  </div>
+</div>

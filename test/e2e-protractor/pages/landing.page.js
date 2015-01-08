@@ -35,6 +35,12 @@ var LandingPage = function() {
   this.installDeviceSharedSpaceQuickLink = element(by.id('installDeviceSharedSpaceQuickLink'));
   this.autoAttendantQuickLink = element(by.id('autoAttendantQuickLink'));
   this.deviceLogsQuickLink = element(by.id('deviceLogsQuickLink'));
+
+  this.convertButton = element(by.id('convertButton'));
+  this.convertDialog = element(by.id('convertDialog'));
+  this.convertModalClose = element(by.id('convertModalClose'));
+  this.convertCancelButton = element(by.id('convertModalClose'));
+  this.convertActionButton = element(by.id('convertActionButton'));
 };
 
 module.exports = LandingPage;

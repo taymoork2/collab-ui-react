@@ -7,6 +7,7 @@
 /* global navigation, users */
 /* global login */
 /* global landing */
+/* global utils */
 
 
 var nontrialadmin = {
@@ -21,6 +22,11 @@ var trialadmin = {
 
 var nonadmin = {
   username: 'pbr-invite-user@squared2webex.com',
+  password: 'C1sc0123!',
+};
+
+var convertAdmin = {
+  username: 'sqtest-admin@squared.example.com',
   password: 'C1sc0123!',
 };
 
@@ -102,6 +108,47 @@ describe('Customer Admin Landing Page License Info', function() {
       expect(landing.deviceLogsQuickLink.isDisplayed()).toBeTruthy();
       expect(landing.installDeviceQuickLink.isPresent()).toBeFalsy();
       expect(landing.autoAttendantQuickLink.isPresent()).toBeFalsy();
+    });
+
+    it('should log out', function() {
+      navigation.logout();
+    });
+  });
+
+  describe('Convert Users Flows', function() {
+    it('login as admin user', function(){
+      login.login(convertAdmin.username, convertAdmin.password);
+    });
+
+    it('should close convert users flow', function() {
+      utils.expectIsDisplayed(landing.convertButton);
+      landing.convertButton.click();
+      utils.expectIsDisplayed(landing.convertDialog);
+      utils.expectIsDisplayed(landing.convertModalClose);
+      landing.convertModalClose.click();
+      browser.sleep(1000);
+      expect(landing.convertDialog.isPresent()).toBeFalsy();
+    });
+
+    it('should cancel convert users flow', function() {
+      utils.expectIsDisplayed(landing.convertButton);
+      landing.convertButton.click();
+      utils.expectIsDisplayed(landing.convertDialog);
+      utils.expectIsDisplayed(landing.convertCancelButton);
+      landing.convertCancelButton.click();
+      browser.sleep(1000);
+      expect(landing.convertDialog.isPresent()).toBeFalsy();
+    });
+
+    // for now just click on the convert button and verify that modal is closed
+    it('should convert users', function() {
+      utils.expectIsDisplayed(landing.convertButton);
+      landing.convertButton.click();
+      utils.expectIsDisplayed(landing.convertDialog);
+      utils.expectIsDisplayed(landing.convertActionButton);
+      landing.convertActionButton.click();
+      browser.sleep(1000);
+      expect(landing.convertDialog.isPresent()).toBeFalsy();
     });
 
     it('should log out', function() {

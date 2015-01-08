@@ -3,8 +3,8 @@
 
 angular.module('Core')
 
-.controller('LicensesCtrl', ['$scope', 'Authinfo', 'PartnerService', 'Orgservice', 'Log', 'Notification', '$translate',
-  function ($scope, Authinfo, PartnerService, Orgservice, Log, Notification, $translate) {
+.controller('LicensesCtrl', ['$scope', 'Authinfo', 'PartnerService', 'Orgservice', 'Log', 'Notification', '$modal', '$filter', '$translate',
+  function ($scope, Authinfo, PartnerService, Orgservice, Log, Notification, $modal, $filter, $translate) {
 
     $scope.packageInfo = {
       name: '&nbsp;',
@@ -124,9 +124,68 @@ angular.module('Core')
       });
     };
 
+    $scope.convertUsers = function () {
+      Log.debug('selected items : ' + $scope.gridOptions.$gridScope.selectedItems);
+      $scope.convertModalInstance.close();
+    };
+
+    $scope.getName = function (user) {
+      if (user.name === undefined && user.displayName === undefined) {
+        return "";
+      }
+      if (user.displayName !== undefined) {
+        return user.displayName;
+      }
+      if (user.name.givenName !== undefined) {
+        if (user.name.familyName !== undefined) {
+          return user.name.givenName + " " + user.name.familyName;
+        }
+        return user.name.givenName;
+      }
+      return user.name.familyName;
+    };
+
     getTrials();
     getorgInfo();
     getAdminOrgInfo();
     getUnlicensedUsers();
+
+    $scope.openConvertModal = function () {
+      $scope.convertModalInstance = $modal.open({
+        templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+        controller: 'LicensesCtrl',
+        size: 'lg',
+        scope: $scope
+      });
+    };
+
+    var nameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{getName(row.entity)}}">{{getName(row.entity)}}</p></div>';
+    var emailTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.userName}}">{{row.entity.userName}}</p></div>';
+
+    $scope.gridOptions = {
+      data: 'licenses.unlicensedUsersList',
+      rowHeight: 45,
+      headerRowHeight: 45,
+      enableHorizontalScrollbar: 0,
+      enableVerticalScrollbar: 2,
+      showSelectionCheckbox: true,
+
+      selectedItems: [],
+      columnDefs: [{
+        displayName: $filter('translate')('homePage.name'),
+        width: 342,
+        resizable: false,
+        cellTemplate: nameTemplate,
+        sortable: false
+      }, {
+        field: 'userName',
+        displayName: $filter('translate')('homePage.emailAddress'),
+        cellTemplate: emailTemplate,
+        width: 405,
+        resizable: false,
+        sortable: false
+      }]
+    };
+    $scope.gridOptions.enableHorizontalScrollbar = 0;
   }
 ]);
