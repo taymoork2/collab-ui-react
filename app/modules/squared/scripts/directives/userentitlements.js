@@ -79,8 +79,16 @@ angular.module('Squared')
       $scope.changeEntitlement = function (user) {
         Log.debug('Entitling user.', user);
         angular.element('#btn-save').button('loading');
+        var givenName = null;
+        var familyName = null;
+        if (user.name !== undefined && user.name !== null) {
+          givenName = user.name.givenName;
+          familyName = user.name.familyName;
+        }
         Userservice.updateUsers([{
-          'address': user.userName
+          'address': user.userName,
+          'givenName': givenName,
+          'familyName': familyName
         }], getUserEntitlementList($scope.entitlements), function (data) {
           var entitleResult = {
             msg: null,

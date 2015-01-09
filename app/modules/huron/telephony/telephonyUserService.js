@@ -33,11 +33,21 @@
             return IdentityOTPService.save({}, otpRequest).$promise;
           },
 
-          create: function (email, uuid) {
+          create: function (uuid, data) {
             var user = angular.copy(userPayload);
-            user.email = email;
-            user.userId = email;
-            user.lastName = email.split('@')[0];
+            user.email = data.email;
+            user.userId = data.email;
+
+            if (data.familyName) {
+              user.lastName = data.familyName;
+            } else {
+              user.lastName = data.email.split('@')[0];
+            }
+
+            if (data.givenName) {
+              user.firstName = data.givenName;
+            }
+
             if (angular.isDefined(uuid)) {
               user.uuid = uuid;
             }
@@ -73,6 +83,23 @@
                 emailInfo.expiresOn = otpInfo.expiresOn;
                 return HuronEmailService.save({}, emailInfo);
               });
+          },
+
+          update: function (uuid, data) {
+            var user = {};
+            if (data.name.givenName) {
+              user.firstName = data.name.givenName.trim();
+            }
+            if (data.name.familyName) {
+              user.lastName = data.name.familyName.trim();
+            } else {
+              user.lastName = data.userName.split('@')[0];
+            }
+
+            return UserServiceCommon.update({
+              customerId: Authinfo.getOrgId(),
+              userId: uuid
+            }, user).$promise;
           }
         };
       }
