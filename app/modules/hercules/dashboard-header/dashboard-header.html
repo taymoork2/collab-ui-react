@@ -1,10 +1,10 @@
 <div class="dashboard-header row">
-  <div class="col-md-3">
+  <div class="item col-sm-6 col-md-3">
     <h4><span><i class="fa fa-cloud"></i> Expressway Clusters</span></h4>
     <p>{{serviceAggregates.activatedClusters}} clusters, {{serviceAggregates.activatedHosts}} hosts registered</p>
   </div>
-  <div class="col-md-3" ng-repeat="aggregatedService in serviceAggregates.aggregatedServices">
-    <hr class="hidden-md hidden-lg" />
+  <div class="item col-sm-6 col-md-3" ng-repeat="aggregatedService in serviceAggregates.aggregatedServices">
+    <hr class="hidden-sm hidden-md hidden-lg" />
     <h4><span><i class="fa {{aggregatedService.icon}}"></i> {{aggregatedService.name}}</span></h4>
     <p>
       <span ng-show="{{aggregatedService.activatedClusters != 0}}">Activated on {{aggregatedService.activatedClusters}} clusters, {{aggregatedService.activatedHosts}}  hosts</span>

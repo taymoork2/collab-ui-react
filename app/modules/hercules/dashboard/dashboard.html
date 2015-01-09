@@ -116,7 +116,9 @@
                       <!-- sw upgrade -->
                       <div class="connector-info-item" ng-show="service.not_approved_package">
                         <div style="padding-bottom: 5px" class="clearfix">
-                          <span>A software update is avalable. Current version: {{service.connectors[0].version}}. New version: {{service.not_approved_package.version}}</span>
+                          <span>A software update is avalable.</span>
+                          <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
+                          <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
                         </div>
                       </div>
 
