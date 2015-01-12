@@ -13,6 +13,13 @@
     return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
   })
 
+  .factory('UserOTPService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId/otp', {
+      customerId: '@customerId',
+      userId: "@userId"
+    }, {});
+  })
+
   .factory('LineService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers?order=pattern-asc', {
       customerId: '@customerId'

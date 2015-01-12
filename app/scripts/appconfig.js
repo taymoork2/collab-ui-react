@@ -355,6 +355,20 @@ angular
               controllerAs: 'moh'
             }
           }
+        })
+        .state('generateauthcode', {
+          parent: 'modal',
+          url: '/generateauthcode',
+          params: {
+            currentUser: {}
+          },
+          views: {
+            'modal@': {
+              templateUrl: 'modules/huron/device/generateActivationCodeModal.tpl.html',
+              controller: 'GenerateActivationCodeCtrl',
+              controllerAs: 'vm'
+            }
+          }
         });
     }
   ]);

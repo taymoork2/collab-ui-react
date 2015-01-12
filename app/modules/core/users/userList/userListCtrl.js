@@ -176,7 +176,10 @@ angular.module('Core')
       });
 
       $rootScope.$on('$stateChangeSuccess', function () {
-        if ($state.includes('users.list.preview.*')) {
+        if ($state.includes('generateauthcode')) {
+          $scope.userPreviewActive = true;
+          $scope.userDetailsActive = false;
+        } else if ($state.includes('users.list.preview.*')) {
           $scope.userPreviewActive = true;
           $scope.userDetailsActive = true;
         } else if ($state.includes('users.list.preview')) {

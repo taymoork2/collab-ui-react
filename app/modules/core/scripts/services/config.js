@@ -320,7 +320,7 @@ angular.module('Core')
       };
 
       config.serviceStates = {
-        'ciscouc': ['callrouting', 'mediaonhold'],
+        'ciscouc': ['callrouting', 'mediaonhold', 'generateauthcode'],
         'squared-fusion-uc': ['fusion'],
         'squared-team-member': ['organization']
       };

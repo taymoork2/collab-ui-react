@@ -3,13 +3,13 @@
 
   angular
     .module('uc.device')
-    .directive('hnDevices', hnDevices);
+    .directive('ucOtps', ucOtps);
 
-  function hnDevices() {
+  function ucOtps() {
     var directive = {
       restrict: 'EA',
-      templateUrl: 'modules/huron/device/devices.tpl.html',
-      controller: 'DevicesCtrl',
+      templateUrl: 'modules/huron/device/otps.tpl.html',
+      controller: 'OtpsCtrl',
       controllerAs: 'vm'
     };
 

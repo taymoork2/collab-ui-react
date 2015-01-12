@@ -11,7 +11,15 @@
             integration: 'https://cmi.hitest.huron-dev.com',
             prod: 'https://cmi.huron-dev.com'
           },
+
           emailUrl: {
+            dev: 'https://hermes.hitest.huron-dev.com',
+            integration: 'https://hermes.hitest.huron-dev.com',
+            prod: 'https://hermes.huron-dev.com'
+          },
+
+          // TODO: Point to Ocelot micro service when it's ready.
+          ocelotUrl: {
             dev: 'https://hermes.hitest.huron-dev.com',
             integration: 'https://hermes.hitest.huron-dev.com',
             prod: 'https://hermes.huron-dev.com'
@@ -33,15 +41,6 @@
             }
           },
 
-          getStorefrontUrl: function () {
-            if (Config.isDev()) {
-              return this.storefrontUrl.dev;
-            } else if (Config.isIntegration()) {
-              return this.storefrontUrl.integration;
-            } else {
-              return this.storefrontUrl.prod;
-            }
-          },
           getEmailUrl: function () {
             if (Config.isDev()) {
               return this.emailUrl.dev;
@@ -50,7 +49,28 @@
             } else {
               return this.emailUrl.prod;
             }
+          },
+
+          getOcelotUrl: function () {
+            if (Config.isDev()) {
+              return this.ocelotUrl.dev;
+            } else if (Config.isIntegration()) {
+              return this.ocelotUrl.integration;
+            } else {
+              return this.ocelotUrl.prod;
+            }
+          },
+
+          getStorefrontUrl: function () {
+            if (Config.isDev()) {
+              return this.storefrontUrl.dev;
+            } else if (Config.isIntegration()) {
+              return this.storefrontUrl.integration;
+            } else {
+              return this.storefrontUrl.prod;
+            }
           }
+
         };
         return config;
       }

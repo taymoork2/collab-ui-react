@@ -14,4 +14,65 @@
   width: 625px;
 }
 
+.generate-activation-code {
+
+  .form-group {
+    margin-left: 5px;
+  }
+
+  .control-label {
+    text-align: left;
+  }
+
+	.row {
+    padding-top: 20px;
+  }
+
+  .col-sm-5 {
+    width: 37%;
+  }
+
+  .col-sm-7 {
+    width: 63%;
+  }
+	
+	.activation-code {
+		padding-top: 65px;
+    font-family: @brand-font-cisco-TT-Extra-Light;
+    font-size: 26px;
+    color: @brand-info;
+  }
+
+  .expiration {
+    font-family: Arial;
+    font-size: 12px;
+  }
+
+  .loading {
+    width: 100%;
+    text-align: center;
+    margin: 40px auto;
+
+    &.ng-enter,
+    &.ng-leave {
+      transition:none;
+    }
+    /* starting animations for enter */
+    &.ng-enter {
+    }
+    /* terminal animations for enter */
+    &.ng-enter.ng-enter-active {
+    }
+    /* starting animations for leave */
+    &.ng-leave {
+    }
+    /* terminal animations for leave */
+    &.ng-leave.ng-leave-active {
+    }
+    .icon {
+      font-size: 75px;
+    }
+  }
+}
+
 /*****  _hn-devices.less  *****/

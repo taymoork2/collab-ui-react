@@ -57,7 +57,11 @@
     "newLine": "New Line",
     "devicesPreview": "Devices",
     "activateNewDevice": "Activate New Device",
-    "fullAdmin": "Full Admin"
+    "fullAdmin": "Full Admin",
+    "generateActivationCode": "Generate Activation Code",
+    "generateActivationCodeText": "Generate an Activation Code to enable a new device for this user.",
+    "activationCodeTitle": "Activation Code for New Device",
+    "expires": "Expires"
   },
   "messagingPanel": {
     "title": "Messaging"
@@ -635,6 +639,20 @@
     "error": "Device configuration failed",
     "deactivateDevice": "Deactivate Device",
     "deactivateBody": "This action cannot be undone.  Are you sure you want to deactivate this device?"
+  },
+  "generateActivationCodeModal": {
+    "title": "Activation Code",
+    "activateBody": "Plug in your new Cisco desk phone or TelePresence device and enter the activation code when you are prompted or use the device camera to scan the QR code.",
+    "emailCode": "Email the code",
+    "copyToClipboard": "Copy to clipboard",
+    "print": "Print",
+    "send": "Send",
+    "to": "To",
+    "subject": "Subject",
+    "subjectContent": "Activate your Squared UC device",
+    "message": "Message",
+    "expires": "Expires",
+    "fromNow": "from now"
   },
   "rolesPanel": {
     "editUser": "Edit User",

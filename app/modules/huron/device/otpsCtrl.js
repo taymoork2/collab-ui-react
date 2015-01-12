@@ -3,25 +3,19 @@
 
   angular
     .module('uc.device')
-    .controller('DevicesCtrl', DevicesCtrl);
+    .controller('OtpsCtrl', OtpsCtrl);
 
   /* @ngInject */
-  function DevicesCtrl($scope, $state, DeviceService, OtpService, Config) {
+  function OtpsCtrl($scope, Config, OtpService) {
     var vm = this;
-    vm.devices = [];
     vm.otps = [];
-    vm.showDeviceDetailPanel = showDeviceDetailPanel;
 
     ////////////
 
     function activate() {
-      return DeviceService.loadDevices($scope.currentUser.id).then(function (deviceList) {
-        vm.devices = deviceList;
+      return OtpService.loadOtps($scope.currentUser.id).then(function (otps) {
+        vm.otps = otps;
       });
-    }
-
-    function showDeviceDetailPanel(device) {
-      DeviceService.setCurrentDevice(device);
     }
 
     function isHuronEnabled() {
@@ -45,16 +39,6 @@
         if (isHuronEnabled()) {
           activate();
         }
-      }
-    });
-
-    $scope.$on('updateDeviceList', function () {
-      activate();
-    });
-
-    $scope.$on('entitlementsUpdated', function () {
-      if (isHuronEnabled()) {
-        activate();
       }
     });
 
