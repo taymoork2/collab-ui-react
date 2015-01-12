@@ -5,7 +5,7 @@ var testuser = {
   password: 'C1sco123!'
 };
 
-var TEST_BEGIN_NUMBER = '9101', TEST_END_NUMBER = '9199';
+var pattern = Math.ceil(Math.random()*100000).toString();
 
 describe('First Time Wizard - CiscoUC Service Setup', function() {
   it('should login as an admin user', function(){
@@ -29,17 +29,16 @@ describe('First Time Wizard - CiscoUC Service Setup', function() {
 
   it('should add a number range', function(){
     servicesetup.addNumberRange.click();
-    servicesetup.numberRanges.last().then(function(elem){
-      elem.element(by.model('internalNumberRange.beginNumber')).sendKeys(TEST_BEGIN_NUMBER);
-      elem.element(by.model('internalNumberRange.endNumber')).sendKeys(TEST_END_NUMBER);
-    });
+    var newRange = servicesetup.numberRanges.last();
+    newRange.element(by.model('internalNumberRange.beginNumber')).sendKeys(pattern);
+    newRange.element(by.model('internalNumberRange.endNumber')).sendKeys(pattern);
     servicesetup.save.click();
     notifications.assertSuccess('added successfully');
   });
 
   it('should delete the number range', function(){
     wizard.clickServiceSetup();
-    servicesetup.deleteNumberRange(TEST_BEGIN_NUMBER);
+    servicesetup.deleteNumberRange(pattern);
     notifications.assertSuccess('deleted successfully');
   });
 

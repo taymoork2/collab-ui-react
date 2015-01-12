@@ -14,6 +14,14 @@ var CallRoutingPage = function(){
 
   this.createButton = element(by.buttonText('Create Call Park'));
   this.cancelButton = element(by.buttonText('Cancel'));
+
+  this.deleteCallPark = function(pattern) {
+    this.callParks.filter(function(elem){
+      return elem.evaluate('callPark.pattern').then(function(value){
+        return value === pattern;
+      });
+    }).first().element(by.css('button')).click();
+  };
 }
 
 module.exports = CallRoutingPage;

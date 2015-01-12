@@ -10,12 +10,10 @@ var ServiceSetup = function () {
 
   this.deleteNumberRange = function(testBeginNumber) {
     this.numberRanges.filter(function(elem){
-      return elem.element(by.model('internalNumberRange.beginNumber')).getAttribute('value').then(function(value){
+      return elem.evaluate('internalNumberRange.beginNumber').then(function(value){
         return value === testBeginNumber;
       });
-    }).then(function(filteredElements){
-      filteredElements[0].element(by.linkText('Delete')).click();
-    });
+    }).first().element(by.linkText('Delete')).click();
   };
 };
 

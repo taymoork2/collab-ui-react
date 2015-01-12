@@ -5,7 +5,7 @@ var testuser = {
   password: 'C1sco123!'
 };
 
-var pattern = Math.ceil(Math.random()*10000);
+var pattern = Math.ceil(Math.random()*10000).toString();
 
 describe('Huron Call Routing', function() {
   it('should login', function(){
@@ -21,11 +21,9 @@ describe('Huron Call Routing', function() {
       callrouting.addCallParkButton.click();
       callrouting.cancelButton.click();
       expect(callrouting.name.isPresent()).toBeFalsey;
-      expect(callrouting.callParks.count()).toBe(0);
     });
 
     it('should create a new call park with single number', function(){
-      expect(callrouting.callParks.count()).toBe(0);
       callrouting.addCallParkButton.click();
       expect(callrouting.name.isDisplayed()).toBeTruthy;
       callrouting.name.sendKeys(pattern);
@@ -35,11 +33,9 @@ describe('Huron Call Routing', function() {
       callrouting.reversionPattern.sendKeys(pattern);
       callrouting.createButton.click();
       notifications.assertSuccess(pattern + ' added successfully');
-      expect(callrouting.callParks.count()).toBe(1);
     });
 
     it('should create a new call park with range', function(){
-      expect(callrouting.callParks.count()).toBe(1);
       callrouting.addCallParkButton.click();
       expect(callrouting.name.isDisplayed()).toBeTruthy;
       callrouting.name.sendKeys((pattern + 1) + " through " + (pattern + 2));
@@ -49,17 +45,12 @@ describe('Huron Call Routing', function() {
       callrouting.reversionPattern.sendKeys(pattern);
       callrouting.createButton.click();
       notifications.assertSuccess((pattern + 1) + ' added successfully', (pattern + 2) + ' added successfully');
-      expect(callrouting.callParks.count()).toBe(3);
     });
 
     it('should delete all call parks', function(){
-      callrouting.callParks.count().then(function(count){
-        while(count > 0){
-          count = count - 1;
-          callrouting.callParks.get(count).element(by.css('button')).click();
-        }
-      });
-      expect(callrouting.callParks.count()).toBe(0);
+      callrouting.deleteCallPark(pattern);
+      callrouting.deleteCallPark(pattern + 1);
+      callrouting.deleteCallPark(pattern + 2);
     });
   });
 
