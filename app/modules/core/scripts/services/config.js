@@ -165,9 +165,10 @@ angular.module('Core')
         }],
 
         entitlements: {
-          squared: 'webex-squared',
           huron: 'ciscouc',
-          fusion: 'squared-fusion-uc'
+          squared: 'webex-squared',
+          fusion_uc: 'squared-fusion-uc',
+          fusion_cal: 'squared-fusion-cal'
         },
 
         roles: {
