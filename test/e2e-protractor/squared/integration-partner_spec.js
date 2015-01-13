@@ -225,18 +225,10 @@ describe('Partner flow', function() {
 
   describe('Reports Page data refresh', function() {
 
-    it('should load refresh directive template', function() {
-      navigation.clickReports();
-      expect(reports.refreshData.isDisplayed()).toBeTruthy();
-      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
-    });
-
     it('should load cached values into directive when switching tabs', function() {
-      navigation.clickHome();
       navigation.clickReports();
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(reports.entitlements.isDisplayed()).toBeTruthy();
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();
@@ -252,7 +244,6 @@ describe('Partner flow', function() {
       reports.refreshButton.click();
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(reports.entitlements.isDisplayed()).toBeTruthy();
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();

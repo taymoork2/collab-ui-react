@@ -76,6 +76,8 @@ var UsersPage = function() {
   this.titleField = element(by.id('titleField'));
   this.userTab = element(by.id('usertab'));
 
+  this.rolesChevron = element(by.id('rolesChevron'));
+
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
       var queryresults = parseInt(value, 10);

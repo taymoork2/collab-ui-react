@@ -2,8 +2,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification',
-    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, Userservice, UserListService, Log, Storage, Config, Notification) {
+  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification', 'Orgservice', 'Authinfo',
+    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo) {
 
       //Initialize variables
       $scope.load = true;
@@ -17,6 +17,8 @@ angular.module('Core')
         }
       };
       $scope.currentUser = null;
+      $scope.popup = Notification.popup;
+      $scope.filterByAdmin = false;
 
       $scope.userPreviewActive = false;
       $scope.userDetailsActive = false;
@@ -193,7 +195,7 @@ angular.module('Core')
 
       $scope.$watch('sortInfo', function (newValue, oldValue) {
         // if newValue === oldValue then page is initializing, so ignore event,
-        // otherwise getUserList() is called multiple times.
+        // otherwise $scope.getUserList() is called multiple times.
         if (newValue !== oldValue) {
           if ($scope.sortInfo) {
             switch ($scope.sortInfo.fields[0]) {

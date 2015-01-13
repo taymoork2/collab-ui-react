@@ -39,7 +39,9 @@
     "cancel": "Cancel",
     "addUsersDesc": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "status": "Status",
-    "pending": "Invite Pending"
+    "pending": "Invite Pending",
+    "all": "All",
+    "administrators" : "Administrators"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -54,7 +56,8 @@
     "addNewLinePreview": "Add a New Line",
     "newLine": "New Line",
     "devicesPreview": "Devices",
-    "activateNewDevice": "Activate New Device"
+    "activateNewDevice": "Activate New Device",
+    "fullAdmin": "Full Admin"
   },
   "messagingPanel": {
     "title": "Messaging"
