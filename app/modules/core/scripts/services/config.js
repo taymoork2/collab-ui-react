@@ -170,8 +170,27 @@ angular.module('Core')
           fusion: 'squared-fusion-uc'
         },
 
+        backend_roles: { // as stored in the backend
+          full_admin: 'id_full_admin',
+          all: 'atlas-portal.all',
+          billing: 'atlas-portal.billing',
+          support: 'atlas-portal.support',
+          application: 'atlas-portal.application',
+          reports: 'atlas-portal.reports'
+        },
+
         roles: {
-          full_admin: 'id_full_admin'
+          full_admin: 'Full_Admin',
+          all: 'All',
+          billing: 'Billing',
+          support: 'Support',
+          application: 'Application',
+          reports: 'Reports'
+        },
+
+        roleState: {
+          active: 'ACTIVE',
+          inactive: 'INACTIVE'
         },
 
         batchSize: 20,

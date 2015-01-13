@@ -136,6 +136,30 @@ angular.module('Core')
           return deferred.promise;
         },
 
+        listAdmins: function (partnerOrgId, callback) {
+
+          var adminUrl = Utils.sprintf(Config.scimUrl, [partnerOrgId]);
+          adminUrl = adminUrl + '?filter=managedOrgs%5BorgId%20eq%20%22' + Authinfo.getOrgId() + '%22%5D';
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http.get(adminUrl)
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              var description = null;
+              var errors = data.Errors;
+              if (errors) {
+                description = errors[0].description;
+              }
+              Auth.handleStatus(status, description);
+            });
+        },
+
         getUser: function (searchinput, callback) {
           var filter = 'filter=userName%20eq%20%22' + window.encodeURIComponent(searchinput) + '%22';
           var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;

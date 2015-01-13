@@ -12,6 +12,7 @@
         <span class="user-name" ng-if="currentUser.name.givenName && currentUser.name.familyName">{{currentUser.name.givenName}} {{currentUser.name.familyName}}</span>
         <span class="user-name" ng-if="!currentUser.name.givenName || !currentUser.name.familyName">{{currentUser.userName}}</span><br>
       </a>
+        <span class="admin-name" ng-if="currentUser.roles && currentUser.roles.indexOf('id_full_admin') != -1" translate="usersPreview.fullAdmin"></span>
     </div>
     <div class="user-title">{{currentUser.title}}</div>
     <div class="user-location">{{currentUser.addresses.streetAddress}}</div>
@@ -24,7 +25,7 @@
     </div>
     <div class="row">
       <a ui-sref="users.list.preview.roles">
-        <i id="next-button" class="icon icon-chevron-right next-button pull-right"></i>
+        <i id="rolesChevron" class="icon icon-chevron-right next-button pull-right"></i>
       </a>
     </div>
   </div>

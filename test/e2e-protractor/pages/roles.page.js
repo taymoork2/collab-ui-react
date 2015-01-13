@@ -1,0 +1,20 @@
+var RolesPage = function(){
+  var randomId = utils.randomId();
+
+  this.rolesDetailsPanel =  element(by.id('rolesDetailsPanel'));
+  this.lastNameInput = element(by.id('lastNameInput'));
+  this.fullAdmin = element(by.id('full-admin-options')).element(by.css('.ng-valid'));
+  this.saveButton = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
+  this.noAdmin = element(by.id('no-admin-options')).element(by.css('.ng-valid'));
+  this.closeButton = element(by.id('exit-details-btn'));
+
+  this.editLastName = function (){
+    utils.expectIsDisplayed(this.lastNameInput);
+    this.lastNameInput.clear();
+    browser.sleep(1000);
+    this.lastNameInput.sendKeys(randomId);
+  };
+
+};
+
+module.exports = RolesPage;

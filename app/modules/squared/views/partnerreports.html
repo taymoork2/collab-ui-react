@@ -5,7 +5,11 @@
       </cr-reload-data>
     </div>
   </div>
-  <div class="row">
+  <div class="row onboarding-row">
+    <div id="onboardingFunnelDiv" class="timechartDiv"></div>
+      <div id="onboarding-funnel-refresh" class="metrics-refresh" ng-show="showOnboardingFunnelRefresh"><i class='icon icon-spinner icon-2x'/></div>
+  </div>
+  <div class="row" ng-show="false">
     <div class="all-reports col-sm-6">
       <div id="avgEntitlementsdiv" class="timechartDiv"></div>
       <div id="avg-entitlements-refresh" class="metrics-refresh" ng-show="showAvgEntitlementsRefresh"><i class='icon icon-spinner icon-2x'/></div>

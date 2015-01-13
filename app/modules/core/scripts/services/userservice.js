@@ -221,8 +221,38 @@ angular.module('Core')
               data.status = status;
               callback(data, status);
             });
-        }
+        },
 
+        patchUserRoles: function (email, name, roles, orgId, callback) {
+          var patchUrl = userUrl + '/organization/' + orgId + '/users/roles';
+
+          var requestBody = {
+            'users': [{
+              'userRoles': roles,
+              'email': email,
+              'name': name
+            }]
+          };
+
+          console.log(requestBody);
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http({
+              method: 'PATCH',
+              url: patchUrl,
+              data: requestBody
+            })
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
+        }
       };
     }
   ]);

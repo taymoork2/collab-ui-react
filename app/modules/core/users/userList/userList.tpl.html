@@ -4,6 +4,16 @@
       <span class="title">{{'usersPage.manageUsers' | translate}}</span>
     </div>
     <div class="col-md-4 col-sm-4" ng-show="Utils.isAdminPage() && userTabActive">
+      <div class="row">
+        <div class="col-xs-6 filter" ng-click="filterByAdmin=false; getUserList();">
+         <h4 class="all-filter"><a href="">{{'usersPage.all' | translate}}[{{filterTotals.all.number}}]</a></h4>
+        </div>
+        <div class="col-xs-6 filter" ng-click="filterByAdmin=true; getUserList();">
+          <h4><a href="">{{'usersPage.administrators' | translate}}[...]</a></h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-2" ng-show="Utils.isAdminPage() && userTabActive">
       <div class="page-option-buttons">
         <button id="addUsers" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addUsersDialog" translate="usersPage.inviteModalBtn" ng-click="setupTokenfield();resetEntitlements();">
         </button>
