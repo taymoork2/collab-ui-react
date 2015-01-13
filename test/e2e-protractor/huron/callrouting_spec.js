@@ -12,8 +12,9 @@ describe('Huron Call Routing', function() {
     login.login(testuser.username,testuser.password);
   });
 
-  it('should navigate to the page', function(){
+  it('should navigate to the Call Park page', function(){
     navigation.clickCallRouting();
+    callrouting.callParkSelect.click();
   });
 
   describe('Call Park feature', function(){
@@ -53,7 +54,30 @@ describe('Huron Call Routing', function() {
       notifications.assertSuccess((pattern + 1) + ' added successfully', (pattern + 2) + ' added successfully');
     });
 
-    it('should delete all call parks', function(){
+    it('should only display info message when info icon is active', function() {
+      // info message should have been automatically turned off
+      expect(callrouting.callParkInfoTextOne.isDisplayed()).toBe(false);
+      expect(callrouting.callParkInfoTextTwo.isDisplayed()).toBe(false);
+
+      // Turn info message on
+      callrouting.callParkInfo.click();
+      expect(callrouting.callParkInfoTextOne.isDisplayed()).toBe(true);
+      expect(callrouting.callParkInfoTextTwo.isDisplayed()).toBe(true);
+
+      // Turn info message back off
+      callrouting.callParkInfo.click();
+      expect(callrouting.callParkInfoTextOne.isDisplayed()).toBe(false);
+      expect(callrouting.callParkInfoTextTwo.isDisplayed()).toBe(false);
+    });
+
+    it('should cancel a delete', function(){
+      callrouting.callParks.get(0).element(by.css('.delete-icon')).click();
+      expect(callrouting.cancelButton.isDisplayed()).toBeTruthy;
+      callrouting.cancelButton.click();
+      expect(callrouting.cancelButton.isPresent()).toBe(false);
+    });
+
+    it('should delete the previously created call parks', function(){
       callrouting.deleteCallPark(pattern);
       callrouting.deleteCallPark(pattern + 1);
       callrouting.deleteCallPark(pattern + 2);

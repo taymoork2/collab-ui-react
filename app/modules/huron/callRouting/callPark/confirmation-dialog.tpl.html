@@ -1,0 +1,14 @@
+<div class="modal-template">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()"><i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">{{'common.close' | translate}}</span></button>
+    <h4 class="modal-title">{{'callPark.deleteCallPark' | translate}}</h4>
+  </div>
+  <div class="modal-body callpark-confirmation-body">
+    <i class="warning-icon"></i>
+    <span>{{'callPark.deleteConfirmation' | translate}}</span>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="$dismiss()">{{'common.cancel' | translate}}</button>
+    <button type="button" class="btn btn-danger" ng-click="$close()">{{'common.delete' | translate}}</button>
+  </div>
+</div>

@@ -339,11 +339,39 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('callroutingBase', {
+          abstract: true,
+          parent: 'main',
+          templateUrl: 'modules/huron/callRouting/callRouting.tpl.html'
+        })
         .state('callrouting', {
           url: '/callrouting',
-          templateUrl: 'modules/huron/views/callrouting.html',
-          controller: 'CallRoutingCtrl',
-          parent: 'main'
+          parent: 'callroutingBase',
+          views: {
+            'header': {
+              templateUrl: 'modules/huron/callRouting/callRoutingHeader.tpl.html'
+            },
+            'nav': {
+              templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
+              controller: 'CallRoutingNavCtrl',
+              controllerAs: 'nav'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('callpark', {
+          url: '/callpark',
+          parent: 'callrouting',
+          templateUrl: 'modules/huron/callRouting/callPark/callPark.tpl.html',
+          controller: 'CallParkCtrl',
+          controllerAs: 'callPark'
+        })
+        .state('underconstruction', {
+          url: '/underconstruction',
+          parent: 'callrouting',
+          template: '<div></div>'
         })
         .state('mediaonhold', {
           parent: 'modalLarge',

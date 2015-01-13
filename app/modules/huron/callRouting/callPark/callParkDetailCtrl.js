@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Huron')
-  .controller('CallParkCtrl', ['$scope', '$modalInstance', 'CallPark',
+  .controller('CallParkDetailCtrl', ['$scope', '$modalInstance', 'CallPark',
     function ($scope, $modalInstance, CallPark) {
 
       $scope.callPark = {

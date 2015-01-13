@@ -48,10 +48,14 @@ angular.module('Huron')
           })).$promise;
         },
 
-        remove: function (callParkId) {
+        remove: function (callPark) {
           return CallParkService.remove({
             customerId: Authinfo.getOrgId(),
-            callParkId: callParkId
+            callParkId: callPark.uuid
+          }, function (response) {
+            Notification.notify([callPark.pattern + ' deleted successfully'], 'success');
+          }, function (response) {
+            Notification.notify([callPark.pattern + ' not deleted correctly'], 'error');
           }).$promise;
         }
       };
