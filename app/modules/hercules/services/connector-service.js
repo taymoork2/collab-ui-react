@@ -29,6 +29,10 @@ angular.module('Hercules')
           console.info('hercules backend will return mock data');
           return callback(null, converter.convertClusters(mock.mockData()));
         }
+        if (window.location.search.match(/hercules-backend=nodata/)) {
+          console.info('hercules backend will return empty result');
+          return callback(null, []);
+        }
         $http
           .get(getUrl())
           .success(function (data) {
