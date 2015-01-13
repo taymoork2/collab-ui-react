@@ -63,8 +63,8 @@ var PartnerHomePage = function(){
   this.customerList = element(by.id('customerListPanel'));
 
   this.assertDisabled = function(id){
-      expect(element(by.id(id)).isEnabled()).toBe(false);
-    };
+    expect(element(by.id(id)).isEnabled()).toBeFalsy();
+  };
 
   this.assertResultsLength = function() {
     element.all(by.binding('row.entity')).then(function(rows) {

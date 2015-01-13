@@ -67,6 +67,18 @@ else
   echo "grunt is already installed"
 fi
 
+
+
+# Check for cleanup script and run
+ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1
+CLEANUP_RET=$?
+if [ $CLEANUP_RET -ne 0 ]; then
+  echo "cleanup script not found, ignoring cleanup..."
+else
+  echo "cleanup script found, running cleanup"
+  ./cleanUpManagedOrgs.sh
+fi
+
 # Install dependecies
 bundle install
 npm install
