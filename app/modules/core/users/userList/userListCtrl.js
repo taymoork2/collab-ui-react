@@ -11,6 +11,7 @@ angular.module('Core')
       $scope.status = null;
       $scope.currentDataPosition = 0;
       $scope.queryuserslist = [];
+      $scope.activeFilter = 'all';
       $scope.filterTotals = {
         all: {
           number: 0
@@ -340,6 +341,10 @@ angular.module('Core')
         search: 'pending',
         count: $scope.filterTotals.all
       }];
+
+      $scope.setFilter = function (filter) {
+        $scope.activeFilter = filter;
+      };
 
       // On click, filter user list and set active filter
       $scope.filterList = function (str) {
