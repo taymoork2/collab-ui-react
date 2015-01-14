@@ -14,8 +14,6 @@ angular.module('Core')
         PageParam.set(pageParam);
       }
 
-      console.log($stateParams);
-
       if ($stateParams.customerOrgId && $stateParams.customerOrgName) {
         SessionStorage.put('customerOrgName', $stateParams.customerOrgName);
         SessionStorage.put('customerOrgId', $stateParams.customerOrgId);
