@@ -11,6 +11,7 @@ var TelephonyPage = function(){
   this.squaredUCCheckBox = element(by.id('chk_ciscoUC'));
 
   this.saveButton = element(by.css('.ent-detail-panel')).element(by.id("btn-save"));
+  this.saveEntitlements = element(by.css('.user-entitlements-body')).element(by.id("btn-save"));
 
   this.directoryNumberSelect = element(by.model('assignedInternalNumber.id'));
 
@@ -25,7 +26,6 @@ var TelephonyPage = function(){
 
   this.voicemailSwitch = element(by.model('voicemailEnabled')).element(by.css('input'));
   this.voicemailStatus = element(by.id('voicemailStatus'));
-  this.saveVoicemail = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
 
   this.snrSwitch = element(by.model('telephonyInfo.snrInfo.singleNumberReachEnabled')).element(by.css('input'));
   this.snrNumber = element(by.id('number'));

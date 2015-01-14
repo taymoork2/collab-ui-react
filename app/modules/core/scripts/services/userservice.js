@@ -39,7 +39,7 @@ angular.module('Core')
                     'email': data.userResponse[0].email,
                     'familyName': usersDataArray[0].familyName,
                     'givenName': usersDataArray[0].givenName
-                  }
+                  };
                   HuronUser.create(data.userResponse[0].uuid, userData)
                     .then(function (success) {
                       data.success = true;

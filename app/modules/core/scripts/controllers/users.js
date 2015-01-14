@@ -158,7 +158,10 @@ angular.module('Core')
                 userResult.message = 'added successfully';
                 userResult.alertType = 'success';
                 if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
-                  HuronUser.create(data.userResponse[i].email, data.userResponse[i].uuid);
+                  var userData = {
+                    'email': data.userResponse[0].email
+                  };
+                  HuronUser.create(data.userResponse[i].uuid, userData);
                 }
               } else if (userStatus === 409) {
                 userResult.message = 'already exists';

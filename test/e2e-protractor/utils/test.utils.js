@@ -116,11 +116,7 @@ exports.click = function(elem) {
 };
 
 exports.getSwitchState = function(elem) {
-  return elem.getAttribute('ng-model').then(function(model) {
-    return elem.evaluate(model).then(function(value) {
-      return value;
-    });
-  });
+  return elem.evaluate('buttonValue');
 };
 
 exports.toggleSwitch = function(elem, toggle) {

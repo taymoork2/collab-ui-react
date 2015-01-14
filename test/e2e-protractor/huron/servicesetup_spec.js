@@ -5,7 +5,7 @@ var testuser = {
   password: 'C1sco123!'
 };
 
-var pattern = Math.ceil(Math.random()*100000).toString();
+var pattern = Math.ceil(Math.random()*Math.pow(10,5)).toString();
 
 describe('First Time Wizard - CiscoUC Service Setup', function() {
   it('should login as an admin user', function(){

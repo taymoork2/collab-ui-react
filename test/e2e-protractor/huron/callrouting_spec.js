@@ -5,7 +5,7 @@ var testuser = {
   password: 'C1sco123!'
 };
 
-var pattern = Math.ceil(Math.random()*10000).toString();
+var pattern = Math.ceil(Math.random()*Math.pow(10,4)).toString();
 
 describe('Huron Call Routing', function() {
   it('should login', function(){
