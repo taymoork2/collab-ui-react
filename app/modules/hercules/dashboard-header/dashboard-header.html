@@ -1,18 +1,55 @@
 <div class="dashboard-header row">
   <div class="item col-sm-6 col-md-3">
-    <h4><span><i class="fa fa-cloud"></i> Expressway Clusters</span></h4>
-    <p>{{serviceAggregates.activatedClusters}} clusters, {{serviceAggregates.activatedHosts}} hosts registered</p>
-  </div>
-  <div class="item col-sm-6 col-md-3" ng-repeat="aggregatedService in serviceAggregates.aggregatedServices">
-    <hr class="hidden-sm hidden-md hidden-lg" />
-    <h4><span><i class="fa {{aggregatedService.icon}}"></i> {{aggregatedService.name}}</span></h4>
+    <h4>
+      <i class="fa fa-cloud"></i>
+      Expressway Clusters
+    </h4>
     <p>
-      <span ng-show="{{aggregatedService.activatedClusters != 0}}">Activated on {{aggregatedService.activatedClusters}} clusters, {{aggregatedService.activatedHosts}}  hosts</span>
-      <span ng-hide="{{aggregatedService.activatedClusters != 0}}">Not activated</span>
+      <div>
+        <div ng-show="serviceAggregates.running == 1">
+          {{serviceAggregates.running}} cluster OK
+        </div>
+        <div ng-hide="serviceAggregates.running == 1">
+          {{serviceAggregates.running}} clusters OK
+        </div>
+      </div>
+
+      <div ng-show="serviceAggregates.needs_attention" class="text-danger">
+        <span ng-show="serviceAggregates.needs_attention == 1">
+          {{serviceAggregates.needs_attention}} cluster needs attention
+        </span>
+        <span ng-hide="serviceAggregates.needs_attention == 1">
+          {{serviceAggregates.needs_attention}} clusters needs attention
+        </span>
+      </div>
     </p>
+  </div>
+  <div class="item col-sm-6 col-md-3" ng-repeat="(type, service) in serviceAggregates.services">
+    <hr class="hidden-sm hidden-md hidden-lg" />
+    <h4>
+      <i class="fa {{service.icon}}"></i>
+      {{service.name}}
+    </h4>
     <p>
-      <span class="text-danger" ng-show="aggregatedService.needs_attention">Needs attention</span>
-      <span class="text-info" ng-show="!aggregatedService.needs_attention && aggregatedService.software_upgrades_available">Software Upgrades Available</span>
+      <div>
+        <span ng-show="service.running == 1">
+          Running on {{service.running}} cluster
+        </span>
+        <span ng-hide="service.running == 1">
+          Running on {{service.running}} clusters
+        </span>
+      </div>
+      <div class="text-danger">
+        <span ng-show="service.needs_attention">
+          <span ng-show="service.needs_attention == 1">
+            {{service.needs_attention}} cluster needs attention
+          </span>
+          <span ng-hide="service.needs_attention == 1">
+            {{service.needs_attention}} clusters needs attention
+          </span>
+        </span>
+        &nbsp;
+      </div>
     </p>
   </div>
 </div>

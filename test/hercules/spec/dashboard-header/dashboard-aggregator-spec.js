@@ -15,12 +15,15 @@ describe('DashboardAggregator', function () {
   it('should aggregate global service status correctly', function () {
     var mockServiceData = [{
       name: 'UCM Service',
+      icon: 'UCM',
       type: 'c_ucmc'
     }, {
       name: 'Calendar Service',
+      icon: 'Calendar',
       type: 'c_cal'
     }, {
       name: 'Fusion Management Service',
+      icon: 'Management',
       type: 'c_mgmt'
     }];
 
@@ -36,7 +39,7 @@ describe('DashboardAggregator', function () {
                 "host": {
                   "host_name": "gwydlvm1397"
                 },
-                "state": "offline",
+                "state": "running",
                 "alarms": []
               }
             ]
@@ -83,7 +86,7 @@ describe('DashboardAggregator', function () {
                 "host": {
                   "host_name": "gwydlvm340"
                 },
-                "state": "stopped",
+                "state": "running",
                 "alarms": []
               },
             ]
@@ -108,7 +111,7 @@ describe('DashboardAggregator', function () {
                   "host_name": "gwydlvm340"
                 },
                 "state": "running",
-                "alarms": []
+                "alarms": [{"error": "we are phuket"}]
               }
             ]
           }
@@ -120,28 +123,32 @@ describe('DashboardAggregator', function () {
         ]
       }
     ];
+    // console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
 
-    var serviceAggregates = Service.aggregateServices(mockServiceData, Converter.convertClusters(mockClusterData));
-    expect(serviceAggregates.activatedClusters).toBe(2);
-    expect(serviceAggregates.activatedHosts).toBe(2);
+    var aggregate = Service.aggregateServices(mockServiceData, Converter.convertClusters(mockClusterData));
+    expect(aggregate.running).toBe(1);
+    expect(aggregate.needs_attention).toBe(1);
 
-    var ucmService = serviceAggregates.aggregatedServices[0];
-    expect(ucmService.activatedClusters).toBe(1);
-    expect(ucmService.activatedHosts).toBe(1);
-    expect(ucmService.needs_attention).toBe(true);
-    expect(ucmService.software_upgrades_available).toBe(false);
+    var ucmService = aggregate.services['c_ucmc'];
+    expect(ucmService.name).toBe('UCM Service');
+    expect(ucmService.icon).toBe('UCM');
+    expect(ucmService.running).toBe(0);
+    expect(ucmService.needs_attention).toBe(1);
+    expect(ucmService.software_upgrades).toBe(0);
 
-    var calService = serviceAggregates.aggregatedServices[1];
-    expect(calService.activatedClusters).toBe(2);
-    expect(calService.activatedHosts).toBe(2);
-    expect(calService.needs_attention).toBe(true);
-    expect(calService.software_upgrades_available).toBe(true);
+    var calService = aggregate.services['c_cal'];
+    expect(calService.name).toBe('Calendar Service');
+    expect(calService.icon).toBe('Calendar');
+    expect(calService.running).toBe(2);
+    expect(calService.needs_attention).toBe(0);
+    expect(calService.software_upgrades).toBe(1);
 
-    var mgmtService = serviceAggregates.aggregatedServices[2];
-    expect(mgmtService.activatedClusters).toBe(2);
-    expect(mgmtService.activatedHosts).toBe(2);
-    expect(mgmtService.needs_attention).toBe(false);
-    expect(mgmtService.software_upgrades_available).toBe(false);
+    var mgmtService = aggregate.services['c_mgmt'];
+    expect(mgmtService.name).toBe('Fusion Management Service');
+    expect(mgmtService.icon).toBe('Management');
+    expect(mgmtService.running).toBe(1);
+    expect(mgmtService.needs_attention).toBe(1);
+    expect(mgmtService.software_upgrades).toBe(0);
   });
 
 });
