@@ -388,7 +388,8 @@ angular
           parent: 'modal',
           url: '/generateauthcode',
           params: {
-            currentUser: {}
+            currentUser: {},
+            activationCode: {}
           },
           views: {
             'modal@': {

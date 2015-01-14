@@ -6,7 +6,7 @@
     .factory('DeviceService', DeviceService);
 
   /* @ngInject */
-  function DeviceService($rootScope, $http, Authinfo, UserEndpointService, SipEndpointService, HuronConfig) {
+  function DeviceService($rootScope, $http, Authinfo, UserEndpointService, SipEndpointService) {
     var currentDevice = {};
 
     var service = {
@@ -14,9 +14,7 @@
       updateDevice: updateDevice,
       deleteDevice: deleteDevice,
       getCurrentDevice: getCurrentDevice,
-      setCurrentDevice: setCurrentDevice,
-      getQrCode: getQrCode,
-      getQrCodeUrl: getQrCodeUrl
+      setCurrentDevice: setCurrentDevice
     };
 
     return service;
@@ -75,19 +73,6 @@
     function setCurrentDevice(device) {
       currentDevice = device;
       $rootScope.$broadcast("currentDeviceChanged");
-    }
-
-    function getQrCode(activationCode) {
-      var config = {
-        headers: {
-          'Accept': "image/png"
-        }
-      };
-      return $http.get(HuronConfig.getOcelotUrl() + '/getqrimage?oneTimePassword=' + activationCode, config);
-    }
-
-    function getQrCodeUrl(activationCode) {
-      return HuronConfig.getOcelotUrl() + '/getqrimage?oneTimePassword=' + activationCode
     }
 
   }

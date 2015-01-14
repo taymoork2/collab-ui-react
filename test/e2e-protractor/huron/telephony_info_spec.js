@@ -5,7 +5,7 @@ var testuser = {
   password: 'C1sco123!'
 };
 
-describe('Telephony Info', function() {
+xdescribe('Telephony Info', function() {
   var currentUser;
   var user = utils.randomTestGmail();
   var dropdownVariables = {

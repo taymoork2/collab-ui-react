@@ -6,18 +6,43 @@
     .controller('DevicesCtrl', DevicesCtrl);
 
   /* @ngInject */
-  function DevicesCtrl($scope, $state, DeviceService, OtpService, Config) {
+  function DevicesCtrl($scope, $q, DeviceService, OtpService, Config) {
     var vm = this;
     vm.devices = [];
     vm.otps = [];
+    vm.showGenerateOtpButton = false;
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
 
     ////////////
 
     function activate() {
-      return DeviceService.loadDevices($scope.currentUser.id).then(function (deviceList) {
+      var promises = [];
+
+      // reset to false when loaded
+      vm.showGenerateOtpButton = false;
+
+      var devicePromise = DeviceService.loadDevices($scope.currentUser.id).then(function (deviceList) {
         vm.devices = deviceList;
       });
+      promises.push(devicePromise);
+
+      var otpPromise = OtpService.loadOtps($scope.currentUser.id).then(function (otpList) {
+        vm.otps = otpList;
+      });
+      promises.push(otpPromise);
+
+      return $q.all(promises)
+        .then(function () {
+          if (vm.devices.length === 0 && vm.otps.length === 0) {
+            vm.showGenerateOtpButton = true;
+          }
+
+          if (vm.devices.length > 0 && vm.otps.length === 0) {
+            $scope.$parent.userDevicesCard.addGenerateAuthCodeLink();
+          } else {
+            $scope.$parent.userDevicesCard.removeGenerateAuthCodeLink();
+          }
+        });
     }
 
     function showDeviceDetailPanel(device) {
@@ -42,14 +67,23 @@
 
     $scope.$watch('currentUser', function (newUser, oldUser) {
       if (newUser) {
+        vm.showGenerateOtpButton = false;
         if (isHuronEnabled()) {
           activate();
         }
       }
     });
 
-    $scope.$on('updateDeviceList', function () {
-      activate();
+    $scope.$on('deviceDeactivated', function () {
+      if (isHuronEnabled()) {
+        activate();
+      }
+    });
+
+    $scope.$on('otpGenerated', function () {
+      if (isHuronEnabled()) {
+        activate();
+      }
     });
 
     $scope.$on('entitlementsUpdated', function () {

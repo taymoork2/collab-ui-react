@@ -665,7 +665,10 @@
     "subjectContent": "Activate your Squared UC device",
     "message": "Message",
     "expires": "Expires",
-    "fromNow": "from now"
+    "fromNow": "from now",
+    "clipboardFallback": "Press cmd+c to copy the text below.",
+    "emailSuccess": "Email sent successfully.",
+    "emailError": "Email unsuccessful."
   },
   "rolesPanel": {
     "editUser": "Edit User",

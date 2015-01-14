@@ -6,42 +6,44 @@
     .controller('GenerateActivationCodeCtrl', GenerateActivationCodeCtrl);
 
   /* @ngInject */
-  function GenerateActivationCodeCtrl($state, $filter, OtpService, DeviceService, HuronUser, ActivationCodeEmailService, Notification) {
+  function GenerateActivationCodeCtrl($stateParams, $translate, $window, OtpService, ActivationCodeEmailService, Notification) {
     var vm = this;
     vm.showEmail = false;
-    vm.userName = $state.params.currentUser.userName;
+    vm.userName = $stateParams.currentUser.userName;
+    vm.otp = $stateParams.activationCode;
     vm.email = {
-      to: vm.userName,
-      subject: $filter('translate')('generateActivationCodeModal.subjectContent'),
-      message: ''
+      to: vm.userName
+        // subject: $translate.instant('generateActivationCodeModal.subjectContent'),
+        // message: ''
     };
     vm.qrCodeUrl = '';
-    vm.otp = {};
-    vm.friendlyExpiresOn = '';
     vm.timeLeft = '';
     vm.activateEmail = activateEmail;
-    vm.getHyphenatedActivationCode = getHyphenatedActivationCode;
     vm.sendActivationCodeEmail = sendActivationCodeEmail;
+    vm.clipboardFallback = clipboardFallback;
 
     activate();
     ////////////
 
     function activate() {
-      HuronUser.acquireOTP(vm.userName).then(function (otpObj) {
-        vm.otp = otpObj;
-        // TODO:  Detect user's timezone instead of hardcoding Pacific
-        vm.friendlyExpiresOn = moment.tz(vm.otp.expiresOn, 'America/Los_Angeles').format('MMMM DD, YYYY h:mmA');
+      if (vm.otp === 'new') {
+        return OtpService.generateOtp(vm.userName).then(function (otpObj) {
+          vm.otp = otpObj;
+          vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
+          vm.qrCodeUrl = OtpService.getQrCodeUrl(otpObj.code);
+        });
+      } else {
         vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
-        vm.qrCodeUrl = DeviceService.getQrCodeUrl(otpObj.password);
-      });
+        vm.qrCodeUrl = OtpService.getQrCodeUrl(vm.otp.code);
+      }
     }
 
     function activateEmail() {
       vm.showEmail = true;
     }
 
-    function getHyphenatedActivationCode() {
-      return OtpService.hyphenateOtp(vm.otp.password);
+    function clipboardFallback(copy) {
+      $window.prompt($translate.instant('generateActivationCodeModal.clipboardFallback'), copy);
     }
 
     function sendActivationCodeEmail() {
@@ -49,20 +51,20 @@
       var emailInfo = {
         'email': vm.email.to,
         'firstName': vm.email.to,
-        'oneTimePassword': vm.otp.password,
+        'oneTimePassword': vm.otp.code,
         'expiresOn': vm.otp.expiresOn
       };
 
       ActivationCodeEmailService.save({}, emailInfo, function (response) {
         entitleResult = {
-          msg: 'Email sent succesfully',
+          msg: $translate.instant('generateActivationCodeModal.emailSuccess'),
           type: 'success'
         };
 
         Notification.notify([entitleResult.msg], entitleResult.type);
       }, function (error) {
         entitleResult = {
-          msg: 'Email unsuccesful.',
+          msg: $translate.instant('generateActivationCodeModal.emailError') + "  " + error.data,
           type: 'error'
         };
 

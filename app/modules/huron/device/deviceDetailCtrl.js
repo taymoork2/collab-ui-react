@@ -42,7 +42,7 @@
       modalInstance.result.then(function (reason) {
         DeviceService.deleteDevice(vm.device)
           .then(function (response) {
-            $rootScope.$broadcast("updateDeviceList");
+            $rootScope.$broadcast("deviceDeactivated");
             Notification.notify([$filter('translate')('deviceDetailPage.success')], 'success');
             $state.go('users.list.preview');
           })

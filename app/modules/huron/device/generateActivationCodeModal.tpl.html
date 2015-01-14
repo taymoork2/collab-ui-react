@@ -3,10 +3,10 @@
     <button type="button" class="close" ng-click="$dismiss()"><i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">close</span></button>
     <h3 class="modal-title" translate="generateActivationCodeModal.title"></h3>
   </div>
-  <div class="loading" ng-if="!vm.otp.password">
+  <div class="loading" ng-if="!vm.otp.code">
     <i class="icon icon-spinner"></i>
   </div>
-  <div class="modal-body" ng-if="vm.otp.password">
+  <div class="modal-body" ng-if="vm.otp.code">
     <div translate="generateActivationCodeModal.activateBody"></div>
     <div class="row">
       <div class="col-sm-5">
@@ -14,17 +14,17 @@
       </div>
       <div class="col-sm-7">
         <div class="activation-code">
-          {{vm.getHyphenatedActivationCode()}}
+          {{vm.otp.friendlyCode}}
         </div>
         <div class="expiration">
-          {{'generateActivationCodeModal.expires' | translate}}:  {{vm.friendlyExpiresOn}} <strong>({{vm.timeLeft}} {{'generateActivationCodeModal.fromNow' | translate}})</strong>
+          {{'generateActivationCodeModal.expires' | translate}}:  {{vm.otp.friendlyExpiresOn}} <strong>({{vm.timeLeft}} {{'generateActivationCodeModal.fromNow' | translate}})</strong>
         </div>
       </div>
     </div>
   </div>
-  <div class="modal-footer" ng-if="vm.otp.password">
+  <div class="modal-footer" ng-if="vm.otp.code">
     <button class="btn btn-default btn-lg" ng-disabled="vm.showEmail" ng-click="vm.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
-    <button class="btn btn-default btn-lg" ng-click="$dismiss()" translate="generateActivationCodeModal.copyToClipboard"></button>
+    <button class="btn btn-default btn-lg" clip-copy="vm.otp.friendlyCode" clip-click-fallback="vm.clipboardFallback(copy)">{{'generateActivationCodeModal.copyToClipboard' | translate}}</button>
     <button class="btn btn-default btn-lg" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
   </div>
   <div ng-show="vm.showEmail">

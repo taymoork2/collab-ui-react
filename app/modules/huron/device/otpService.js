@@ -6,10 +6,13 @@
     .factory('OtpService', OtpService);
 
   /* @ngInject */
-  function OtpService(Authinfo, UserOTPService) {
+  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser, HuronConfig) {
+
     var service = {
       loadOtps: loadOtps,
-      hyphenateOtp: hyphenateOtp
+      hyphenateOtp: hyphenateOtp,
+      generateOtp: generateOtp,
+      getQrCodeUrl: getQrCodeUrl
     };
 
     return service;
@@ -37,6 +40,21 @@
         });
     }
 
+    function generateOtp(userName) {
+      var otp = {};
+      return HuronUser.acquireOTP(userName).then(function (data) {
+        otp = {
+          code: data.password,
+          friendlyCode: hyphenateOtp(data.password),
+          expiresOn: data.expiresOn,
+          friendlyExpiresOn: convertExpiryTime(data.expiresOn, 'America/Los_Angeles'),
+          valid: 'valid'
+        };
+        $rootScope.$broadcast("otpGenerated");
+        return otp;
+      });
+    }
+
     function hyphenateOtp(otp) {
       if (otp) {
         return otp.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/, "$1-$2-$3-$4");
@@ -49,6 +67,9 @@
       return moment.tz(expiryTime, timezone).format('MM/DD/YY h:mmA');
     }
 
-  }
+    function getQrCodeUrl(activationCode) {
+      return HuronConfig.getOcelotUrl() + '/getqrimage?oneTimePassword=' + activationCode
+    }
 
+  }
 })();

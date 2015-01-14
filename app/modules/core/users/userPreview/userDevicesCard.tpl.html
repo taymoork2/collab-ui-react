@@ -8,7 +8,7 @@
             <i class="icon icon-three-dots"></i>
           </button>
           <ul class="dropdown-menu dropdown-primary actions-services">
-            <!-- <li><a ui-sref="generateauthcode({currentUser: currentUser})" translate="usersPreview.generateActivationCode"></a></li> -->
+            <li ng-repeat="item in userDevicesCard.dropDownItems"><a ui-sref="{{item.state}}">{{item.text}}</a></li>
           </ul>
         </div>
       </div>

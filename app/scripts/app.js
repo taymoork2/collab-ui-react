@@ -33,6 +33,7 @@ angular
     'ct.ui.router.extras',
     'ngGrid',
     'mgo-angular-wizard',
+    'ngClipboard',
     'cisco.ui',
     'Hercules',
     'Core',

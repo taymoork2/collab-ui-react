@@ -39,6 +39,7 @@ module.exports = {
     js: [
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+      'bower_components/sinon-ng/sinon-ng.js',
       '**/*.json'
     ]
   },
@@ -86,7 +87,9 @@ module.exports = {
       'bower_components/angular-wizard/dist/angular-wizard.js',
       'bower_components/ng-grid/build/ng-grid.js',
       'bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
-      'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js'
+      'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+      'bower_components/ng-clip/src/ngClip.js',
+      'bower_components/zeroclipboard/dist/ZeroClipboard.js'
     ],
     css: [
       'bower_components/alertify.js/themes/alertify.core.css',

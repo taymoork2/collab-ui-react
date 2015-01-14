@@ -7,7 +7,7 @@ var testuser = {
 
 var pattern = Math.ceil(Math.random()*Math.pow(10,5)).toString();
 
-describe('First Time Wizard - CiscoUC Service Setup', function() {
+xdescribe('First Time Wizard - CiscoUC Service Setup', function() {
   it('should login as an admin user', function(){
     login.login(testuser.username, testuser.password);
   });
