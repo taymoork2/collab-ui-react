@@ -24,8 +24,9 @@ describe('DashboardController', function() {
     expect($scope.loading).toEqual(true);
     expect(service.fetch.calledOnce).toEqual(true);
 
-    service.fetch.callArgWith(0, null, []);
+    service.fetch.callArgWith(0, null, 'clusterdata');
     expect($scope.loading).toEqual(false);
+    expect($scope.clusters).toBe('clusterdata')
     expect(notification.notify.callCount).toEqual(0);
   });
 
