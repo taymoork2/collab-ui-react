@@ -13,7 +13,7 @@ angular.module('Hercules')
         };
         element.find('.popover-trigger').popover({
           html: true,
-          trigger: "click",
+          trigger: "focus", // https://github.com/twbs/bootstrap/issues/11788
           placement: "auto",
           container: 'body',
           title: scope.getTitle,
