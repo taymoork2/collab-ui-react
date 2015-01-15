@@ -14,7 +14,7 @@ var createService = function (serviceName, serviceType, hosts) {
     var connector = {
       "host": createHost(host.hostName),
       "state": serviceType == 'yolo' ? 'running' : host.hostState,
-      "version": "1.0.0.1-Alpha1"
+      "version": '0.' + Math.floor(Math.random() * 10) + '.1.2'
     };
     if (Math.floor((Math.random() * 10) % 9) == 0) {
       connector.alarms = [createAlarm({
@@ -79,6 +79,15 @@ var calPkg = {
   "version": "8.2-2.1"
 };
 
+var calPkgApp = {
+  "service": {
+    "service_type": "c_cal",
+    "display_name": "Calendar Service"
+  },
+  "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
+  "version": '1.' + Math.floor(Math.random() * 10) + '.0'
+};
+
 var services = [{
   serviceName: 'Calendar Service',
   serviceType: 'c_cal'
@@ -87,7 +96,7 @@ var services = [{
   serviceType: 'c_ucmc'
 }, {
   serviceName: 'Yolo Service',
-  serviceType: 'yolo'
+  serviceType: 'c_mgmt'
 }];
 
 var mockData = function () {
@@ -108,7 +117,8 @@ var mockData = function () {
         hostName: 'rdcn.delta.cisco.com',
         hostState: 'running'
       }],
-      napproved: [calPkg]
+      napproved: [calPkg],
+      approved: [calPkgApp]
     }),
     createCluster({
       clusterName: "Richardsson Cluster 002",
@@ -120,7 +130,8 @@ var mockData = function () {
         hostName: 'rdcn.dos.cisco.com',
         hostState: 'installing'
       }],
-      napproved: [calPkg]
+      napproved: [calPkg],
+      approved: [calPkgApp]
     }),
     createCluster({
       clusterName: "Oslo Cluster",
@@ -132,7 +143,8 @@ var mockData = function () {
         hostName: 'lys.001.cisco.com',
         hostState: 'running'
       }],
-      napproved: [calPkg]
+      napproved: [calPkg],
+      approved: [calPkgApp]
     }),
     createCluster({
       clusterName: "Shanghai Cluster",
