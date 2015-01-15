@@ -189,6 +189,25 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].connectors[1].induced_alarms.length).toEqual(0);
   });
 
+  it('should not fail if approved_packages is empty', function() {
+    var mockData = [{
+      "provisioning_data": {
+        "approved_packages": [{ "service": { "service_type": "yolo" }, "version": "8.2-2.1" }]
+      },
+      "services": [{
+        "service_type": "c_cal",
+        "connectors": [
+          { "state": "running", version: 'foo_version', host: {host_name: 'foo_host_name'} },
+          { "state": "running", version: 'bar_version', host: {host_name: 'bar_host_name'} }
+        ]
+      }]
+    }];
+
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].needs_attention).toBeFalsy();
+    expect(converted[0].services[0].connectors[0].induced_alarms.length).toEqual(0);
+    expect(converted[0].services[0].connectors[1].induced_alarms.length).toEqual(0);
+  });
 
   it('should sort clusters based on error status', function () {
     var mockData = [
