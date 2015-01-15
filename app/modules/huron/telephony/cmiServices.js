@@ -9,6 +9,10 @@
     return $resource(HuronConfig.getEmailUrl() + '/email/userwelcome', {}, {});
   })
 
+  .factory('ActivationCodeEmailService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getEmailUrl() + '/email/activationcode', {}, {});
+  })
+
   .factory('IdentityOTPService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
   })

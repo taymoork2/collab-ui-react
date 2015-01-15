@@ -1,4 +1,4 @@
-<div class="generate-activation-code">
+<div  id="printActivationCode" class="generate-activation-code">
   <div class="modal-header">
     <button type="button" class="close" ng-click="$dismiss()"><i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">close</span></button>
     <h3 class="modal-title" translate="generateActivationCodeModal.title"></h3>
@@ -25,7 +25,7 @@
   <div class="modal-footer" ng-if="vm.otp.password">
     <button class="btn btn-default btn-lg" ng-disabled="vm.showEmail" ng-click="vm.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
     <button class="btn btn-default btn-lg" ng-click="$dismiss()" translate="generateActivationCodeModal.copyToClipboard"></button>
-    <button class="btn btn-default btn-lg" ng-click="$dismiss()" translate="generateActivationCodeModal.print"></button>
+    <button class="btn btn-default btn-lg" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
   </div>
   <div ng-show="vm.showEmail">
 
@@ -51,7 +51,7 @@
       </div>
 
     <div class="modal-footer">
-      <button class="btn btn-primary btn-lg" ng-click="$dismiss()" translate="generateActivationCodeModal.send"></button>
+      <button class="btn btn-primary btn-lg" ng-click="vm.sendActivationCodeEmail()" translate="generateActivationCodeModal.send"></button>
     </div>
   </div>
 </div>

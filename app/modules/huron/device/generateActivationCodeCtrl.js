@@ -6,7 +6,7 @@
     .controller('GenerateActivationCodeCtrl', GenerateActivationCodeCtrl);
 
   /* @ngInject */
-  function GenerateActivationCodeCtrl($state, $filter, OtpService, DeviceService, HuronUser) {
+  function GenerateActivationCodeCtrl($state, $filter, OtpService, DeviceService, HuronUser, ActivationCodeEmailService, Notification) {
     var vm = this;
     vm.showEmail = false;
     vm.userName = $state.params.currentUser.userName;
@@ -21,6 +21,7 @@
     vm.timeLeft = '';
     vm.activateEmail = activateEmail;
     vm.getHyphenatedActivationCode = getHyphenatedActivationCode;
+    vm.sendActivationCodeEmail = sendActivationCodeEmail;
 
     activate();
     ////////////
@@ -43,6 +44,30 @@
       return OtpService.hyphenateOtp(vm.otp.password);
     }
 
-  }
+    function sendActivationCodeEmail() {
+      var entitleResult;
+      var emailInfo = {
+        'email': vm.email.to,
+        'firstName': vm.email.to,
+        'oneTimePassword': vm.otp.password,
+        'expiresOn': vm.otp.expiresOn
+      };
 
+      ActivationCodeEmailService.save({}, emailInfo, function (response) {
+        entitleResult = {
+          msg: 'Email sent succesfully',
+          type: 'success'
+        };
+
+        Notification.notify([entitleResult.msg], entitleResult.type);
+      }, function (error) {
+        entitleResult = {
+          msg: 'Email unsuccesful.',
+          type: 'error'
+        };
+
+        Notification.notify([entitleResult.msg], entitleResult.type);
+      });
+    }
+  }
 })();
