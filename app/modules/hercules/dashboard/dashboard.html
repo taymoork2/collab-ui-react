@@ -91,25 +91,35 @@
 
                       <!-- connectors -->
                       <div class="connector-info-item" ng-repeat="connector in service.connectors">
+                        <!-- connector status -->
                         <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.state != 'running' && connector.state != 'disabled'}}">
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
                           <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}" />
                         </div>
+
+                        <!-- connector induced error -->
+                        <div style="padding-bottom: 5px" class="clearfix" ng-repeat="alarm in connector.induced_alarms">
+                          <span style="color: #f05d3b">{{connector.host.host_name}}</span>
+                          <span>is not running the correct software version. Should be {{alarm.expected_version}} but was {{connector.version}}.</span>
+                        </div>
+
+                        <!-- connector alarms -->
                         <div hercules-popover style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.alarms.length}}">
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
-                          has reported <a href="#" onclick="return false" class="popover-trigger">{{connector.alarms.length}} alarms.</a>
-                            <div class="popover-title hide">
-                              <i class="fa fa-exclamation-triangle" style="color: #f05d3b"></i> {{service.display_name}} Alarms
+                          <span>has reported</span>
+                          <a href="#" onclick="return false" class="popover-trigger">{{connector.alarms.length}} alarms.</a>
+                          <div class="popover-title hide">
+                            <i class="fa fa-exclamation-triangle" style="color: #f05d3b"></i> {{service.display_name}} Alarms
+                          </div>
+                          <div class="popover-content hide">
+                            <div ng-repeat="alarm in connector.alarms">
+                              <span style="color: #f05d3b">{{alarm.title}} ({{alarm.severity}})</span>
+                              <p>{{alarm.description}}</p>
                             </div>
-                            <div class="popover-content hide">
-                              <div ng-repeat="alarm in connector.alarms">
-                                <span style="color: #f05d3b">{{alarm.title}} ({{alarm.severity}})</span>
-                                <p>{{alarm.description}}</p>
-                              </div>
-                              <p>
-                                Go to the <a href="https://{{connector.host.host_name}}/alarms" target="_blank">Expressway alarms page</a>.
-                              </p>
-                            </div>
+                            <p>
+                              Go to the <a href="https://{{connector.host.host_name}}/alarms" target="_blank">Expressway alarms page</a>.
+                            </p>
+                          </div>
                         </div>
                       </div>
 

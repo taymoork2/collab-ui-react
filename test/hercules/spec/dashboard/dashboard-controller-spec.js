@@ -26,8 +26,13 @@ describe('DashboardController', function() {
 
     service.fetch.callArgWith(0, null, 'clusterdata');
     expect($scope.loading).toEqual(false);
-    expect($scope.clusters).toBe('clusterdata')
+    expect($scope.clusters).toBe('clusterdata');
     expect(notification.notify.callCount).toEqual(0);
+  });
+
+  it('returns empty array on fubar data from backend', function() {
+    service.fetch.callArgWith(0, null, null);
+    expect($scope.clusters).toEqual([]);
   });
 
   it('reloads data on reload', function() {

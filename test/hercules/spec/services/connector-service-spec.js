@@ -3,14 +3,22 @@
 describe('Service: ConnectorService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $httpBackend, Service, converter;
+  var $httpBackend, Service, converter, notification, win;
 
   beforeEach(function() {
     module(function ($provide) {
       converter = {
         convertClusters: sinon.stub()
       };
+      notification = {
+        notify: sinon.stub()
+      };
+      win = {
+        location: { search: '' }
+      };
       $provide.value('ConverterService', converter);
+      $provide.value('Notification', notification);
+      $provide.value('$window', win);
     });
   });
 
@@ -58,6 +66,87 @@ describe('Service: ConnectorService', function () {
       callback: function(data) {
         expect(data.foo).toBe('bar');
       }
+    });
+
+    $httpBackend.flush();
+  });
+
+  it('sw upgrade should log on 500 errors', function () {
+    $httpBackend
+      .when(
+        'POST',
+        'https://hercules.hitest.huron-dev.com/v1/clusters/foo/services/bar/upgrade',
+        {tlp: 'yolo'}
+      )
+      .respond(500, {foo: 'bar'});
+
+    expect(notification.notify.callCount).toBe(0);
+
+    Service.upgradeSoftware({
+      tlpUrl: 'yolo',
+      clusterId: 'foo',
+      serviceType: 'bar',
+      callback: function() {}
+    });
+
+    $httpBackend.flush();
+
+    expect(notification.notify.callCount).toBe(1);
+  });
+
+  it('should log when fetch fails', function () {
+    $httpBackend
+      .when('GET', 'https://hercules.hitest.huron-dev.com/v1/clusters')
+      .respond(500, {});
+
+    expect(notification.notify.callCount).toBe(0);
+
+    Service.fetch(function(err, data) {});
+
+    $httpBackend.flush();
+
+    expect(notification.notify.callCount).toBe(1);
+  });
+
+  it('should be possible to override url', function() {
+    win.location.search = 'hercules-url=fake-url'
+
+    $httpBackend
+      .when('GET', 'fake-url')
+      .respond({});
+
+    Service.fetch(function() {});
+
+    $httpBackend.flush();
+  });
+
+  it('should be possible to set error url', function() {
+    win.location.search = 'hercules-backend=error'
+
+    $httpBackend
+      .when('GET', 'https://hercules.hitest.huron-dev.com/fubar')
+      .respond({});
+
+    Service.fetch(function() {});
+
+    $httpBackend.flush();
+  });
+
+  it('should be possible to set mock backend', function() {
+    win.location.search = 'hercules-backend=mock'
+
+    Service.fetch(function(err, data) {
+      // assume all is good if no XHR's
+    });
+
+    $httpBackend.flush();
+  });
+
+  it('should be possible to set empty backend', function() {
+    win.location.search = 'hercules-backend=nodata'
+
+    Service.fetch(function(err, data) {
+      expect(data.length).toBe(0);
     });
 
     $httpBackend.flush();

@@ -2,35 +2,31 @@
 
 /* global _ */
 
-var getUrl = function () {
-  var key = "hercules-url";
-  var regex = new RegExp(key + "=([^&]*)");
-  var match = window.location.search.match(regex);
-  if (match && match.length == 2) {
-    return decodeURIComponent(match[1]);
-  } else {
-    return 'https://hercules.hitest.huron-dev.com/v1/clusters';
-  }
-};
-
 angular.module('Hercules')
-  .service('ConnectorService', ['$http', 'ConnectorMock', 'ConverterService', 'Notification',
-    function ConnectorService($http, mock, converter, notification) {
+  .service('ConnectorService', ['$http', '$window', 'ConnectorMock', 'ConverterService', 'Notification',
+    function ConnectorService($http, $window, mock, converter, notification) {
       var lastClusterResponse = [];
 
+      var getUrl = function () {
+        var regex = new RegExp("hercules-url=([^&]*)");
+        var match = $window.location.search.match(regex);
+        if (match && match.length == 2) {
+          return decodeURIComponent(match[1]);
+        } else {
+          return 'https://hercules.hitest.huron-dev.com/v1/clusters';
+        }
+      };
+
       var fetch = function (callback) {
-        if (window.location.search.match(/hercules-backend=error/)) {
-          console.info('hercules backend will return error');
+        if ($window.location.search.match(/hercules-backend=error/)) {
           getUrl = function () {
             return 'https://hercules.hitest.huron-dev.com/fubar';
           };
         }
-        if (window.location.search.match(/hercules-backend=mock/)) {
-          console.info('hercules backend will return mock data');
+        if ($window.location.search.match(/hercules-backend=mock/)) {
           return callback(null, converter.convertClusters(mock.mockData()));
         }
-        if (window.location.search.match(/hercules-backend=nodata/)) {
-          console.info('hercules backend will return empty result');
+        if ($window.location.search.match(/hercules-backend=nodata/)) {
           return callback(null, []);
         }
         $http
@@ -40,7 +36,7 @@ angular.module('Hercules')
             lastClusterResponse = converted;
             callback(null, converted);
           })
-          .error(createErrorHandler('Unable to fetch data from UC fusion backend'), callback);
+          .error(createErrorHandler('Unable to fetch data from UC fusion backend', callback));
         return lastClusterResponse;
       };
 
@@ -52,7 +48,7 @@ angular.module('Hercules')
         $http
           .post(url, data)
           .success(opts.callback)
-          .error(createErrorHandler('Unable to upgrade software'), opts.callback);
+          .error(createErrorHandler('Unable to upgrade software', opts.callback));
       };
 
       var createErrorHandler = function (message, callback) {
