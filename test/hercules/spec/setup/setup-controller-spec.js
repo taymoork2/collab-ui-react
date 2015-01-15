@@ -33,6 +33,19 @@ describe('Hercules: SetupController', function() {
     expect($interval.cancel.callCount).toEqual(0);
     $scope.$on.callArg(1);
     expect($interval.cancel.callCount).toEqual(1);
+    expect($scope._promise).toBe(null);
+  });
+
+  it('does not poll if inteval has been cleared', function() {
+    $scope._promise = null;
+    $scope._poll();
+    expect($scope._promise).toBe(null);
+  });
+
+  it('set default data if server borks', function() {
+    expect(service.fetch.calledOnce).toEqual(true);
+    service.fetch.callArgWith(0, null, null);
+    expect($scope.clusters).toEqual([]);
   });
 
 });

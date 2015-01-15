@@ -5,17 +5,19 @@ angular.module('Hercules')
     return {
       restrict: 'A',
       link: function (scope, element) {
+        scope.getTitle = function () {
+          return element.find('.popover-title').html();
+        };
+        scope.getContent = function () {
+          return element.find('.popover-content').html();
+        };
         element.find('.popover-trigger').popover({
           html: true,
           trigger: "click",
           placement: "auto",
           container: 'body',
-          title: function () {
-            return element.find('.popover-title').html();
-          },
-          content: function () {
-            return element.find('.popover-content').html();
-          }
+          title: scope.getTitle,
+          content: scope.getContent
         });
       }
     };
