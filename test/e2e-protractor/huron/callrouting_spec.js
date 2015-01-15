@@ -19,12 +19,15 @@ describe('Huron Call Routing', function() {
   describe('Call Park feature', function(){
     it('should cancel creating a new call park', function(){
       callrouting.addCallParkButton.click();
+      browser.sleep(1000);
       callrouting.cancelButton.click();
+      browser.sleep(1000);
       expect(callrouting.name.isPresent()).toBeFalsey;
     });
 
     it('should create a new call park with single number', function(){
       callrouting.addCallParkButton.click();
+      browser.sleep(1000);
       expect(callrouting.name.isDisplayed()).toBeTruthy;
       callrouting.name.sendKeys(pattern);
       callrouting.singleNumber.click();
@@ -32,11 +35,13 @@ describe('Huron Call Routing', function() {
       callrouting.retrievalPrefix.sendKeys(pattern);
       callrouting.reversionPattern.sendKeys(pattern);
       callrouting.createButton.click();
+      browser.sleep(1000);
       notifications.assertSuccess(pattern + ' added successfully');
     });
 
     it('should create a new call park with range', function(){
       callrouting.addCallParkButton.click();
+      browser.sleep(1000);
       expect(callrouting.name.isDisplayed()).toBeTruthy;
       callrouting.name.sendKeys((pattern + 1) + " through " + (pattern + 2));
       callrouting.rangeMin.sendKeys((pattern + 1));
@@ -44,6 +49,7 @@ describe('Huron Call Routing', function() {
       callrouting.retrievalPrefix.sendKeys(pattern);
       callrouting.reversionPattern.sendKeys(pattern);
       callrouting.createButton.click();
+      browser.sleep(1000);
       notifications.assertSuccess((pattern + 1) + ' added successfully', (pattern + 2) + ' added successfully');
     });
 

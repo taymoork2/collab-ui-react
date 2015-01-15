@@ -36,7 +36,6 @@ describe('Telephony Info', function() {
     users.returnUser(user).click();
     element(by.binding('currentUser.userName')).evaluate('currentUser').then(function(_currentUser){
       currentUser = _currentUser;
-      console.dir(currentUser);
       expect(currentUser).not.toBeNull();
     });
   });

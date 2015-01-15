@@ -41,7 +41,7 @@ angular.module('Hercules')
         }
       };
 
-      var induceAlarmsForService = function(service, cluster) {
+      var induceAlarmsForService = function (service, cluster) {
         if (cluster.provisioning_data && cluster.provisioning_data.approved_packages) {
           var expected_package = _.find(cluster.provisioning_data.approved_packages, function (pkg) {
             return pkg.service.service_type == service.service_type;
@@ -49,7 +49,7 @@ angular.module('Hercules')
           var expected_version = (expected_package == null) ? null : expected_package.version;
 
           var hasInducedAlarms = false;
-          _.each(service.connectors, function(connector) {
+          _.each(service.connectors, function (connector) {
             connector.induced_alarms = connector.induced_alarms || [];
             if (expected_version && connector.state == 'running' && connector.version != expected_version) {
               connector.induced_alarms.push({
@@ -65,7 +65,7 @@ angular.module('Hercules')
         }
       };
 
-      var updateServiceStatus = function(service, cluster) {
+      var updateServiceStatus = function (service, cluster) {
         service.running_hosts = 0;
         _.each(service.connectors, function (connector) {
           if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {

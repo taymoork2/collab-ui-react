@@ -9,6 +9,7 @@ var admintestuser= {
 };
 
 describe('Squared UC Add User flow', function() {
+  var currentUser;
   describe('Add and Entitle User Flows', function() {
     var inputEmail = utils.randomTestGmail();
     describe('Login as testuser admin and launch add users modal', function() {
@@ -48,9 +49,10 @@ describe('Squared UC Add User flow', function() {
     describe('Verify the created user', function() {
       it('should show the Telephony panel', function() {
         users.search(inputEmail);
-        users.userListEnts.then(function(cell) {
-          expect(cell[0].getText()).toContain(inputEmail);
-          users.gridCell.click();
+        users.returnUser(inputEmail).click();
+        element(by.binding('currentUser.userName')).evaluate('currentUser').then(function(_currentUser){
+          currentUser = _currentUser;
+          expect(currentUser).not.toBeNull();
         });
       });
       it('should have a line/directory number', function() {
@@ -121,11 +123,8 @@ describe('Squared UC Add User flow', function() {
 
     describe('Delete user used for add test', function() {
       it('should delete added user', function() {
-       element(by.binding('currentUser.userName')).evaluate('currentUser').then(function(currentUser){
-        console.dir(currentUser);
         expect(deleteUtils.deleteSquaredUCUser(currentUser.meta.organizationID, currentUser.id, currentUser.userName)).toEqual(204);
         expect(deleteUtils.deleteUser(inputEmail)).toEqual(200);
-       });
       });
     });
 
