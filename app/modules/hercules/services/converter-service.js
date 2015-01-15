@@ -47,6 +47,7 @@ angular.module('Hercules')
             return pkg.service.service_type == service.service_type;
           });
           var expected_version = (expected_package == null) ? null : expected_package.version;
+
           var hasInducedAlarms = false;
           _.each(service.connectors, function(connector) {
             connector.induced_alarms = connector.induced_alarms || [];
