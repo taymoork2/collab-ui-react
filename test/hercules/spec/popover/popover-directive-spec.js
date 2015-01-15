@@ -26,4 +26,13 @@ describe('DashboardHeaderDirective', function() {
     // todo: not really sure how to test this properly
     expect(element.popover().html()).toContain("popover-title");
   });
+
+  it('should get title', function() {
+    expect($rootScope.getTitle()).toBe("bar");
+  });
+
+  it('should get content', function() {
+    expect($rootScope.getContent()).toBe("foo");
+  });
+
 });
