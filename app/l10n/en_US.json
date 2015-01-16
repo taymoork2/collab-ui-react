@@ -74,7 +74,11 @@
     "callRoutingTab": "Call Routing",
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
-    "mediaOnHoldTabDesc": "Media On Hold Development Example"
+    "mediaOnHoldTabDesc": "Media On Hold Development Example",
+    "vtsDetailsTab": "VTS Details",
+    "vtsDetailsTabDesc": "VTS Management",
+    "meetingDetailsTab": "Meetings",
+    "meetingDetailsTabDesc": "Meetings Management"
   },
   "index": {
     "welcome": "Welcome!",
@@ -656,5 +660,20 @@
     "tracks": "Tracks",
     "draganddrop": "Drag and drop to reorder tracks. These tracks will loop.",
     "setActive": "Set Active"
+  },
+  "meetingsPage": {
+    "manageMeetings": "Meetings",
+    "entitle": "Entitle",
+    "status": "Status",
+    "subject" : "Subject",
+    "date" : "Date",
+    "start" : "Start",
+    "resource" : "Resource",
+    "webexSite" : "Webex Site",
+    "active": "Active",
+    "inactive": "",
+    "moreOptions": "More Actions",
+    "cancel": "Cancel",
+    "pending": "Invite Pending"
   }
 }

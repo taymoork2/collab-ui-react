@@ -17,6 +17,8 @@ angular.module('Huron', ['Core', 'uc.moh', 'uc.device']);
 
 angular.module('Hercules', ['Core']);
 
+angular.module('Mediafusion', ['Core']);
+
 angular
   .module('wx2AdminWebClientApp', [
     'templates-app',
@@ -37,5 +39,6 @@ angular
     'Hercules',
     'Core',
     'Squared',
-    'Huron'
+    'Huron',
+    'Mediafusion'
   ]);

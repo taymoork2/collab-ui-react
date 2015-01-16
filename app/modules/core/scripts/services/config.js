@@ -23,6 +23,12 @@ angular.module('Core')
           prod: 'https://locus-a.wbx2.com'
         },
 
+        meetingServiceUrl: {
+          dev: 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1',
+          integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
+        },
+
         oauthClientRegistration: {
           id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
           secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',
@@ -77,6 +83,7 @@ angular.module('Core')
         scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
 
         usersperpage: 100,
+        meetingsperpage: 100,
 
         logConfig: {
           linesToAttach: 100,
@@ -142,6 +149,16 @@ angular.module('Core')
           icon: 'icon-tools',
           title: 'tabs.developmentTab',
           subPages: [{
+            title: 'tabs.vtsDetailsTab',
+            desc: 'tabs.vtsDetailsTabDesc',
+            state: 'vts',
+            link: '#vts'
+          }, {
+            title: 'tabs.meetingDetailsTab',
+            desc: 'tabs.meetingDetailsTabDesc',
+            state: 'meetings',
+            link: '#meetings'
+          }, {
             title: 'tabs.organizationTab',
             desc: 'tabs.organizationTabDesc',
             state: 'organization',
@@ -211,6 +228,10 @@ angular.module('Core')
 
         getLocusServiceUrl: function () {
           return this.locusServiceUrl.integration;
+        },
+
+        getMeetingServiceUrl: function () {
+          return this.meetingServiceUrl.dev;
         },
 
         getOauthLoginUrl: function () {
@@ -289,7 +310,7 @@ angular.module('Core')
 
       config.roleStates = {
         Full_Admin: [
-          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard'
+          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard', 'vts', 'meetings'
         ],
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
