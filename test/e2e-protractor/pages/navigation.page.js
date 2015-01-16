@@ -14,6 +14,7 @@ var Navigation = function(){
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
   this.developmentTab = element(by.css('li.developmentTab > a'));
+  this.meetingsTab = element(by.css('a[href="#meetings"]'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackButton = element(by.id('feedback-btn'));
@@ -76,10 +77,17 @@ var Navigation = function(){
     this.expectCurrentUrl('/support');
   };
 
+
   this.clickFusion = function() {
     this.clickDevelopmentTab();
     this.fusionTab.click();
     this.expectCurrentUrl('/fusion');
+  };
+
+   this.clickMeetings = function() {
+    this.clickDevelopmentTab();
+    this.meetingsTab.click();
+    this.expectCurrentUrl('/meetings');
   };
 
   this.clickFirstTimeWizard = function() {
