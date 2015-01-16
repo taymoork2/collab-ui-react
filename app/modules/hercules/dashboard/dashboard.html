@@ -83,11 +83,16 @@
                           </span>
                         </span>
                       </h4>
-                      <button ng-show="service.not_approved_package" style="float: right; margin-top: 10px;" class="btn btn-info btn-sm hidden-xs" ng-click="upgradeSoftware(cluster.id, service.service_type)">
-                        Upgrade Now
-                      </button>
+
+                      <hercules-upgrade-button
+                        cluster-id="{{cluster.id}}"
+                        service-type="{{service.service_type}}"
+                        class="hidden-xs pull-right"
+                        ng-show="service.not_approved_package"
+                      />
+
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="margin-bottom: 20px" ng-show="{{service.needs_attention}}">
 
                       <!-- connectors -->
                       <div class="connector-info-item" ng-repeat="connector in service.connectors">
@@ -130,11 +135,13 @@
                           <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
                           <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
                         </div>
+                        <hercules-upgrade-button
+                          cluster-id="{{cluster.id}}"
+                          service-type="{{service.service_type}}"
+                          class="hidden-sm hidden-md hidden-lg"
+                          ng-show="service.not_approved_package"
+                        />
                       </div>
-
-                      <button ng-show="service.not_approved_package" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-info btn-sm hidden-sm hidden-md hidden-lg" ng-click="upgradeSoftware(cluster.id, service.service_type)">
-                        Upgrade Now
-                      </button>
 
                     </div>
                   </div>

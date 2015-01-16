@@ -20,11 +20,14 @@ angular.module('Hercules')
         loadData();
       };
 
-      $scope.upgradeSoftware = function (clusterId, serviceType) {
+      $scope.upgradeSoftware = function (clusterId, serviceType, callback) {
         service.upgradeSoftware({
           clusterId: clusterId,
           serviceType: serviceType,
-          callback: $scope.reload
+          callback: function() {
+            callback();
+            $scope.reload();
+          }
         });
         return false;
       };
