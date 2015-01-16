@@ -5,7 +5,7 @@
     <span>{{'callForwardPanel.forwardAllCalls' | translate}}</span>
   </label>
   <div ng-show="$parent.forward === 'all'" class="call-forward-all">
-    <cs-combobox id="cfa" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardAllCalls"></cs-combobox>
+    <cs-combobox id="cfa" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardAllCalls" required="true"></cs-combobox>
   </div>
   <label class="cs-radio" for="forwardBusyNoAnswer">
     <input type="radio" ng-model="$parent.forward" value="busy" name="rdo_callforward" id="forwardBusyNoAnswer">
@@ -16,21 +16,21 @@
     <span ng-show="$parent.forwardExternalCalls">{{'callForwardPanel.internalOnly' | translate}}<br></span>
     {{'callForwardPanel.forwardBusy' | translate}}
     <br>
-    <cs-combobox id="cfb" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardBusyCalls"></cs-combobox>
+    <cs-combobox id="cfb" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardBusyCalls" required="true"></cs-combobox>
     <br>
     {{'callForwardPanel.forwardNoAnswer' | translate}}<br>
-    <cs-combobox id="cfna" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardNoAnswerCalls" ></cs-combobox>
+    <cs-combobox id="cfna" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardNoAnswerCalls" required="true"></cs-combobox>
     <br>
     <cs-checkbox id="ckForwardExternalCalls" ng-model="$parent.forwardExternalCalls" cklabel="{{'callForwardPanel.forwardExternal' | translate}}"></cs-checkbox>
     <br>
     <div ng-show="$parent.forwardExternalCalls">
       {{'callForwardPanel.forwardBusy' | translate}}
       <br>
-      <cs-combobox id="cfbExternal" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardExternalBusyCalls"></cs-combobox>
+      <cs-combobox id="cfbExternal" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardExternalBusyCalls" required="true"></cs-combobox>
       <br>
       {{'callForwardPanel.forwardNoAnswer' | translate}}
       <br>
-      <cs-combobox id="cfnaExternal" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardExternalNoAnswerCalls"></cs-combobox>
+      <cs-combobox id="cfnaExternal" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardExternalNoAnswerCalls" required="true"></cs-combobox>
       <br>
     </div>
   </div>

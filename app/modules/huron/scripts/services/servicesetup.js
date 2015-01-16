@@ -5,6 +5,7 @@ angular.module('Huron')
     function ($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService) {
       return {
         internalNumberRanges: [],
+        sites: [],
 
         createSite: function (site) {
           return SiteService.save({
@@ -14,6 +15,14 @@ angular.module('Huron')
           }, function (response) {
             Notification.notify([response.config.data.siteIndex + ' not added'], 'error');
           }).$promise;
+        },
+
+        listSites: function () {
+          return SiteService.query({
+            customerId: Authinfo.getOrgId()
+          }, angular.bind(this, function (sites) {
+            this.sites = sites;
+          })).$promise;
         },
 
         createInternalNumberRanges: function (internalNumberRanges) {

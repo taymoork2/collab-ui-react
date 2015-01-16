@@ -3,6 +3,7 @@
 var TelephonyPage = function(){
   this.telephonyPanel = element(by.id('huronPanel'));
   this.directoryNumbers = element.all(by.repeater('directoryNumber in vm.telephonyInfo.directoryNumbers track by directoryNumber.uuid'));
+  this.primary = element(by.cssContainingText('span', 'Primary'));
   this.voicemailFeature = element(by.cssContainingText('.sub-service','Voicemail'))
     .element(by.cssContainingText('span', 'Voicemail'));
   this.snrFeature = element(by.cssContainingText('.sub-service','Single Number Reach'))

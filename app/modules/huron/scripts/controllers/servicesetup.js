@@ -36,13 +36,26 @@ angular.module('Huron')
       ];
       $scope.site = {
         timeZone: DEFAULT_TZ,
-        steeringDigit: DEFAULT_SD,
+        steeringDigit: null,
         siteIndex: '000001'
       };
       $scope.globalMOH = DEFAULT_MOH;
       $scope.maxExtLength = DEFAULT_EXTENTION_LENGTH;
       $scope.internalNumberRanges = [];
       $scope.firstTimeSetup = true;
+
+      var setSteeringDigit = function () {
+        // sets firstTimeSetup to false if a site exists
+        ServiceSetup.listSites().then(function () {
+          if (ServiceSetup.sites.length !== 0) {
+            $scope.site.steeringDigit = ServiceSetup.sites[0].steeringDigit;
+            $scope.firstTimeSetup = false;
+          } else {
+            $scope.site.steeringDigit = DEFAULT_SD;
+            $scope.firstTimeSetup = true;
+          }
+        });
+      };
 
       var listInternalExtentionRanges = function () {
         ServiceSetup.listInternalNumberRanges().then(function () {
@@ -51,19 +64,13 @@ angular.module('Huron')
           $scope.internalNumberRanges.sort(function (a, b) {
             return a.beginNumber - b.beginNumber;
           });
-          // TODO - Since there's no function to retrieve site info,
-          // so for now, if there's no InternalNumberRange from DB,
-          // that means it's the first time setup.
-          // This is a temporary solution.
+
           if ($scope.internalNumberRanges.length == 0) {
             // Add a default internalNumberRange
             $scope.internalNumberRanges.push({
               beginNumber: DEFAULT_FROM,
               endNumber: DEFAULT_TO
             });
-            $scope.firstTimeSetup = true;
-          } else {
-            $scope.firstTimeSetup = false;
           }
         });
       };
@@ -111,6 +118,7 @@ angular.module('Huron')
         });
       };
 
+      setSteeringDigit();
       listInternalExtentionRanges();
     }
   ]);

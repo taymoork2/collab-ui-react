@@ -140,8 +140,9 @@
   })
 
   .factory('SiteService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites', {
-      customerId: '@customerId'
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId', {
+      customerId: '@customerId',
+      siteId: '@siteId'
     });
   })
 

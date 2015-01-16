@@ -100,72 +100,74 @@
 
     function saveLineSettings() {
       processCallerId();
-      processCallForward();
+      var callForwardSet = processCallForward();
 
-      if (typeof $scope.directoryNumber.uuid !== 'undefined' && $scope.directoryNumber.uuid !== '') { // line exists
-        var promises = [];
-        if ($scope.telephonyInfo.currentDirectoryNumber.uuid !== $scope.assignedInternalNumber.uuid) { // internal line
-          var promise = LineSettings.changeInternalLine($scope.telephonyInfo.currentDirectoryNumber.uuid, $scope.telephonyInfo.currentDirectoryNumber.dnUsage, $scope.assignedInternalNumber.pattern, $scope.directoryNumber)
+      if (callForwardSet === true) {
+        if (typeof $scope.directoryNumber.uuid !== 'undefined' && $scope.directoryNumber.uuid !== '') { // line exists
+          var promises = [];
+          if ($scope.telephonyInfo.currentDirectoryNumber.uuid !== $scope.assignedInternalNumber.uuid) { // internal line
+            var promise = LineSettings.changeInternalLine($scope.telephonyInfo.currentDirectoryNumber.uuid, $scope.telephonyInfo.currentDirectoryNumber.dnUsage, $scope.assignedInternalNumber.pattern, $scope.directoryNumber)
+              .then(function (response) {
+                $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+                $scope.directoryNumber.uuid = $scope.telephonyInfo.currentDirectoryNumber.uuid;
+                $scope.directoryNumber.pattern = $scope.telephonyInfo.currentDirectoryNumber.pattern;
+                processInternalNumberList();
+              });
+            promises.push(promise);
+          } else { // no line change, just update settings
+            var promise = LineSettings.updateLineSettings($scope.directoryNumber);
+            promises.push(promise);
+          }
+
+          if ($scope.telephonyInfo.alternateDirectoryNumber.uuid !== $scope.assignedExternalNumber.uuid) { // external line
+            if (($scope.telephonyInfo.alternateDirectoryNumber.uuid === '' || $scope.telephonyInfo.alternateDirectoryNumber.uuid === 'none') && $scope.assignedExternalNumber.uuid !== 'none') { // no existing external line, add external line
+              var promise = LineSettings.addExternalLine($scope.directoryNumber.uuid, $scope.assignedExternalNumber.pattern)
+                .then(function (response) {
+                  processExternalNumberList();
+                });
+              promises.push(promise);
+            } else if (($scope.telephonyInfo.alternateDirectoryNumber.uuid !== '' || $scope.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') && $scope.assignedExternalNumber.uuid !== 'none') { // changing external line
+              var promise = LineSettings.changeExternalLine($scope.directoryNumber.uuid, $scope.telephonyInfo.alternateDirectoryNumber.uuid, $scope.assignedExternalNumber.pattern)
+                .then(function (response) {
+                  processExternalNumberList();
+                });
+              promises.push(promise);
+            } else if ($scope.telephonyInfo.alternateDirectoryNumber.uuid !== '' && $scope.assignedExternalNumber.uuid === 'none') {
+              var promise = LineSettings.deleteExternalLine($scope.directoryNumber.uuid, $scope.telephonyInfo.alternateDirectoryNumber.uuid)
+                .then(function (response) {
+                  processExternalNumberList();
+                });
+              promises.push(promise);
+            }
+          }
+
+          $q.all(promises)
+            .then(function () {
+              TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
+              Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+            })
+            .catch(function (response) {
+              Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
+              Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
+            });
+
+        } else { // new line
+          LineSettings.addNewLine($scope.currentUser.id, getDnUsage(), $scope.assignedInternalNumber.pattern, $scope.directoryNumber, $scope.assignedExternalNumber)
             .then(function (response) {
               $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
               $scope.directoryNumber.uuid = $scope.telephonyInfo.currentDirectoryNumber.uuid;
               $scope.directoryNumber.pattern = $scope.telephonyInfo.currentDirectoryNumber.pattern;
-              processInternalNumberList();
+              TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
+              Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+              $state.go('users.list.preview.directorynumber', {
+                directoryNumber: $scope.directoryNumber.uuid
+              });
+            })
+            .catch(function (response) {
+              Log.debug('addNewLine failed.  Status: ' + response.status + ' Response: ' + response.data);
+              Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
             });
-          promises.push(promise);
-        } else { // no line change, just update settings
-          var promise = LineSettings.updateLineSettings($scope.directoryNumber);
-          promises.push(promise);
         }
-
-        if ($scope.telephonyInfo.alternateDirectoryNumber.uuid !== $scope.assignedExternalNumber.uuid) { // external line
-          if (($scope.telephonyInfo.alternateDirectoryNumber.uuid === '' || $scope.telephonyInfo.alternateDirectoryNumber.uuid === 'none') && $scope.assignedExternalNumber.uuid !== 'none') { // no existing external line, add external line
-            var promise = LineSettings.addExternalLine($scope.directoryNumber.uuid, $scope.assignedExternalNumber.pattern)
-              .then(function (response) {
-                processExternalNumberList();
-              });
-            promises.push(promise);
-          } else if (($scope.telephonyInfo.alternateDirectoryNumber.uuid !== '' || $scope.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') && $scope.assignedExternalNumber.uuid !== 'none') { // changing external line
-            var promise = LineSettings.changeExternalLine($scope.directoryNumber.uuid, $scope.telephonyInfo.alternateDirectoryNumber.uuid, $scope.assignedExternalNumber.pattern)
-              .then(function (response) {
-                processExternalNumberList();
-              });
-            promises.push(promise);
-          } else if ($scope.telephonyInfo.alternateDirectoryNumber.uuid !== '' && $scope.assignedExternalNumber.uuid === 'none') {
-            var promise = LineSettings.deleteExternalLine($scope.directoryNumber.uuid, $scope.telephonyInfo.alternateDirectoryNumber.uuid)
-              .then(function (response) {
-                processExternalNumberList();
-              });
-            promises.push(promise);
-          }
-        }
-
-        $q.all(promises)
-          .then(function () {
-            TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
-            Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
-          })
-          .catch(function (response) {
-            Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
-            Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
-          });
-
-      } else { // new line
-        LineSettings.addNewLine($scope.currentUser.id, getDnUsage(), $scope.assignedInternalNumber.pattern, $scope.directoryNumber, $scope.assignedExternalNumber)
-          .then(function (response) {
-            $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-            $scope.directoryNumber.uuid = $scope.telephonyInfo.currentDirectoryNumber.uuid;
-            $scope.directoryNumber.pattern = $scope.telephonyInfo.currentDirectoryNumber.pattern;
-            TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
-            Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
-            $state.go('users.list.preview.directorynumber', {
-              directoryNumber: $scope.directoryNumber.uuid
-            });
-          })
-          .catch(function (response) {
-            Log.debug('addNewLine failed.  Status: ' + response.status + ' Response: ' + response.data);
-            Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
-          });
       }
     };
 
@@ -201,30 +203,10 @@
       if ($scope.directoryNumber.callForwardAll.voicemailEnabled === 'true' || $scope.directoryNumber.callForwardAll.destination !== '') {
         $scope.forward = 'all';
       } else {
-        if ($scope.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'true' || $scope.directoryNumber.callForwardBusy.destination !== '') {
-          $scope.forward = 'busy';
-          if (($scope.directoryNumber.callForwardBusy.voicemailEnabled !== $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled) || ($scope.directoryNumber.callForwardNoAnswer.voicemailEnabled !== $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled) || ($scope.directoryNumber.callForwardBusy.destination !== $scope.directoryNumber.callForwardBusy.intDestination) || ($scope.directoryNumber.callForwardNoAnswer.destination !== $scope.directoryNumber.callForwardNoAnswer.intDestination)) {
-            $scope.forwardExternalCalls = true;
-          }
+        $scope.forward = 'busy';
+        if ((($scope.directoryNumber.callForwardBusy.voicemailEnabled !== $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled) || ($scope.directoryNumber.callForwardNoAnswer.voicemailEnabled !== $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled)) && (($scope.directoryNumber.callForwardBusy.destination !== $scope.directoryNumber.callForwardBusy.intDestination) || ($scope.directoryNumber.callForwardNoAnswer.destination !== $scope.directoryNumber.callForwardNoAnswer.intDestination))) {
+          $scope.forwardExternalCalls = true;
         }
-      }
-
-      if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardAll.voicemailEnabled === 'true')) {
-        $scope.forwardAllCalls = 'Voicemail';
-      } else {
-        if (($scope.telephonyInfo.voicemail === 'On') && $scope.directoryNumber.callForwardAll.destination !== '') {
-          $scope.forwardAllCalls = 'Voicemail';
-        } else {
-          $scope.forwardAllCalls = $scope.directoryNumber.callForwardAll.destination;
-        }
-      }
-
-      if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'true')) {
-        $scope.forwardBusyCalls = 'Voicemail';
-      } else if (($scope.telephonyInfo.voicemail === 'On') && ($scope.telephonyInfo.currentDirectoryNumber.uuid === 'new')) { // default to voicemail for new line
-        $scope.forwardBusyCalls = 'Voicemail';
-      } else {
-        $scope.forwardBusyCalls = $scope.directoryNumber.callForwardBusy.intDestination;
       }
 
       if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardAll.voicemailEnabled === 'true')) {
@@ -233,17 +215,25 @@
         $scope.forwardAllCalls = $scope.directoryNumber.callForwardAll.destination;
       }
 
-      if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'true')) {
-        $scope.forwardNoAnswerCalls = 'Voicemail';
-      } else if (($scope.telephonyInfo.voicemail === 'On') && ($scope.telephonyInfo.currentDirectoryNumber.uuid === 'new')) { // default to voicemail for new line
+      if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'true' || $scope.telephonyInfo.currentDirectoryNumber.uuid === 'new')) { // default to voicemail for new line
+        $scope.forwardBusyCalls = 'Voicemail';
+      } else {
+        $scope.forwardBusyCalls = $scope.directoryNumber.callForwardBusy.intDestination;
+      }
+
+      if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'true' || $scope.telephonyInfo.currentDirectoryNumber.uuid === 'new')) { // default to voicemail for new line
         $scope.forwardNoAnswerCalls = 'Voicemail';
       } else {
         $scope.forwardNoAnswerCalls = $scope.directoryNumber.callForwardNoAnswer.intDestination;
       }
 
-      if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'true')) {
-        $scope.forwardExternalNoAnswerCalls = 'Voicemail';
-      } else if (($scope.telephonyInfo.voicemail === 'On') && ($scope.telephonyInfo.currentDirectoryNumber.uuid === 'new')) { // default to voicemail for new line
+      if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardBusy.voicemailEnabled === 'true' || $scope.telephonyInfo.currentDirectoryNumber.uuid === 'new')) { // default to voicemail for new line
+        $scope.forwardExternalBusyCalls = 'Voicemail';
+      } else {
+        $scope.forwardExternalBusyCalls = $scope.directoryNumber.callForwardBusy.destination;
+      }
+
+      if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'true' || $scope.telephonyInfo.currentDirectoryNumber.uuid === 'new')) { // default to voicemail for new line
         $scope.forwardExternalNoAnswerCalls = 'Voicemail';
       } else {
         $scope.forwardExternalNoAnswerCalls = $scope.directoryNumber.callForwardNoAnswer.destination;
@@ -254,9 +244,12 @@
       if ($scope.forward === 'all') {
         if ($scope.forwardAllCalls === 'Voicemail') {
           $scope.directoryNumber.callForwardAll.voicemailEnabled = true;
-        } else {
+          $scope.directoryNumber.callForwardAll.destination = '';
+        } else if ($scope.forwardAllCalls !== '') {
           $scope.directoryNumber.callForwardAll.voicemailEnabled = false;
           $scope.directoryNumber.callForwardAll.destination = $scope.forwardAllCalls;
+        } else {
+          return false;
         }
       } else {
         $scope.directoryNumber.callForwardAll.voicemailEnabled = false;
@@ -265,58 +258,82 @@
           if ($scope.forwardBusyCalls === 'Voicemail') {
             $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled = true;
             $scope.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = true;
-          } else {
+          } else if ($scope.forwardBusyCalls !== '') {
             $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled = false;
             $scope.directoryNumber.callForwardBusy.intDestination = $scope.forwardBusyCalls;
             $scope.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = false;
             $scope.directoryNumber.callForwardNotRegistered.intDestination = $scope.forwardBusyCalls;
+          } else {
+            return false;
           }
+
           if ($scope.forwardNoAnswerCalls === 'Voicemail') {
             $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled = true;
-          } else {
+          } else if ($scope.forwardNoAnswerCalls !== '') {
             $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled = false;
             $scope.directoryNumber.callForwardNoAnswer.intDestination = $scope.forwardNoAnswerCalls;
+          } else {
+            return false;
           }
+
           if ($scope.forwardExternalBusyCalls === 'Voicemail') {
             $scope.directoryNumber.callForwardBusy.voicemailEnabled = true;
             $scope.directoryNumber.callForwardNotRegistered.voicemailEnabled = true;
-          } else {
+          } else if ($scope.forwardExternalBusyCalls !== '') {
             $scope.directoryNumber.callForwardBusy.voicemailEnabled = false;
-            $scope.directoryNumber.callForwardNotRegistered.voicemailEnabled = false;
             $scope.directoryNumber.callForwardBusy.destination = $scope.forwardExternalBusyCalls;
+            $scope.directoryNumber.callForwardNotRegistered.voicemailEnabled = false;
             $scope.directoryNumber.callForwardNotRegistered.destination = $scope.forwardExternalBusyCalls;
+          } else {
+            return false;
           }
+
           if ($scope.forwardExternalNoAnswerCalls === 'Voicemail') {
             $scope.directoryNumber.callForwardNoAnswer.voicemailEnabled = true;
-          } else {
+          } else if ($scope.forwardExternalNoAnswerCalls !== '') {
             $scope.directoryNumber.callForwardNoAnswer.voicemailEnabled = false;
             $scope.directoryNumber.callForwardNoAnswer.destination = $scope.forwardExternalNoAnswerCalls;
+          } else {
+            return false;
           }
+
         } else {
           if ($scope.forwardBusyCalls === 'Voicemail') {
             $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled = true;
+            $scope.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = true;
+
             $scope.directoryNumber.callForwardBusy.voicemailEnabled = true;
+            $scope.directoryNumber.callForwardNotRegistered.voicemailEnabled = true;
+          } else if ($scope.forwardBusyCalls !== '') {
+            $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled = false;
+            $scope.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = false;
+            $scope.directoryNumber.callForwardBusy.intDestination = $scope.forwardBusyCalls;
+            $scope.directoryNumber.callForwardNotRegistered.intDestination = $scope.forwardBusyCalls;
+
+            $scope.directoryNumber.callForwardBusy.voicemailEnabled = false;
+            $scope.directoryNumber.callForwardNotRegistered.voicemailEnabled = false;
+            $scope.directoryNumber.callForwardBusy.destination = $scope.forwardBusyCalls;
+            $scope.directoryNumber.callForwardNotRegistered.destination = $scope.forwardBusyCalls;
+          } else {
+            return false;
+          }
+
+          if ($scope.forwardNoAnswerCalls === 'Voicemail') {
             $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled = true;
             $scope.directoryNumber.callForwardNoAnswer.voicemailEnabled = true;
-            $scope.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = true;
-            $scope.directoryNumber.callForwardNotRegistered.voicemailEnabled = true;
-          } else {
-            $scope.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = false;
-            $scope.directoryNumber.callForwardNotRegistered.voicemailEnabled = false;
-            $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled = false;
-            $scope.directoryNumber.callForwardBusy.voicemailEnabled = false;
-            $scope.directoryNumber.callForwardBusy.intDestination = $scope.forwardBusyCalls;
-            $scope.directoryNumber.callForwardBusy.destination = $scope.forwardBusyCalls;
-
+          } else if ($scope.forwardNoAnswerCalls !== '') {
             $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled = false;
-            $scope.directoryNumber.callForwardNoAnswer.voicemailEnabled = false;
             $scope.directoryNumber.callForwardNoAnswer.intDestination = $scope.forwardNoAnswerCalls;
+
+            $scope.directoryNumber.callForwardNoAnswer.voicemailEnabled = false;
             $scope.directoryNumber.callForwardNoAnswer.destination = $scope.forwardNoAnswerCalls;
-            $scope.directoryNumber.callForwardNotRegistered.intDestination = $scope.forwardBusyCalls;
-            $scope.directoryNumber.callForwardNotRegistered.destination = $scope.forwardNoAnswerCalls;
+          } else {
+            return false;
           }
         }
       }
+
+      return true;
     };
 
     function processInternalNumberList() {
