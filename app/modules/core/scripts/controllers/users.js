@@ -159,7 +159,7 @@ angular.module('Core')
                 userResult.alertType = 'success';
                 if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
                   var userData = {
-                    'email': data.userResponse[0].email
+                    'email': data.userResponse[i].email
                   };
                   HuronUser.create(data.userResponse[i].uuid, userData);
                 }
