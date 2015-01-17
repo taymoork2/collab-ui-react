@@ -60,6 +60,7 @@ angular.module('Hercules')
             }
           });
           if (hasInducedAlarms) {
+            cluster.needs_attention = true;
             service.needs_attention = true;
           }
         }

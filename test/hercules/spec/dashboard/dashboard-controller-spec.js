@@ -1,8 +1,7 @@
 describe('DashboardController', function() {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $scope = { '$reload': function() {} };
-  var controller, notification, service;
+  var $scope, controller, notification, service;
 
   beforeEach(inject(function(_$controller_){
     notification = {
@@ -13,6 +12,7 @@ describe('DashboardController', function() {
       services: sinon.stub(),
       upgradeSoftware: sinon.stub()
     }
+    $scope = {}
     controller = _$controller_('DashboardController', {
       $scope: $scope,
       ConnectorService: service,
@@ -46,11 +46,24 @@ describe('DashboardController', function() {
   it('upgrades software', function() {
     expect(service.upgradeSoftware.callCount).toBe(0);
 
-    $scope.upgradeSoftware('clusterid', 'servicetype');
+    $scope.upgradeSoftware('clusterid', 'servicetype', sinon.stub());
 
     expect(service.upgradeSoftware.calledOnce).toBe(true);
     expect(service.upgradeSoftware.args[0][0].clusterId).toBe('clusterid');
     expect(service.upgradeSoftware.args[0][0].serviceType).toBe('servicetype');
+  });
+
+  it('triggers callback on software upgrade', function() {
+    var callback = sinon.stub();
+    $scope.reload = sinon.stub()
+
+    $scope.upgradeSoftware('clusterid', 'servicetype', callback);
+    expect(callback.callCount).toBe(0);
+    expect($scope.reload.callCount).toBe(0);
+
+    service.upgradeSoftware.args[0][0].callback()
+    expect(callback.callCount).toBe(1);
+    expect($scope.reload.callCount).toBe(1);
   });
 
 });

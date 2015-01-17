@@ -182,6 +182,7 @@ describe('ConverterService', function () {
     }];
 
     var converted = Service.convertClusters(mockData);
+    expect(converted[0].needs_attention).toBe(true);
     expect(converted[0].services[0].needs_attention).toBe(true);
     expect(converted[0].services[0].connectors[0].induced_alarms.length).toEqual(1);
     expect(converted[0].services[0].connectors[0].induced_alarms[0].type).toEqual('software_version_mismatch');
@@ -204,6 +205,7 @@ describe('ConverterService', function () {
     }];
 
     var converted = Service.convertClusters(mockData);
+    expect(converted[0].needs_attention).toBeFalsy();
     expect(converted[0].services[0].needs_attention).toBeFalsy();
     expect(converted[0].services[0].connectors[0].induced_alarms.length).toEqual(0);
     expect(converted[0].services[0].connectors[1].induced_alarms.length).toEqual(0);
