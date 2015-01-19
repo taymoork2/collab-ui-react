@@ -211,6 +211,14 @@ describe('ConverterService', function () {
     expect(converted.running_hosts).toBeFalsy();
   });
 
+  it('set display_name to first connector if none provided', function() {
+    var mockData = [{
+      hosts: [{host_name: 'bar_host_name'}]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].name).toBe('bar_host_name');
+  });
+
   it('should raise alarm for running services that do not run the correct SW version', function() {
     var mockData = [{
       "provisioning_data": {

@@ -97,6 +97,19 @@ angular.module('Hercules')
         }
       };
 
+      var updateClusterNameIfNotSet = function(cluster) {
+        if (!cluster.name) {
+          var host = _.find(cluster.hosts, function(host) {
+            if (host.host_name) {
+              return host.host_name;
+            }
+          });
+          if (host) {
+            cluster.name = host.host_name;
+          }
+        }
+      };
+
       var convertClusters = function (data) {
         var converted = _.map(data, function (origCluster) {
           var cluster = _.cloneDeep(origCluster);
@@ -106,6 +119,7 @@ angular.module('Hercules')
             deduceAlarmsForService(service, cluster);
           });
           stripAvailablePackagesIfServicesDisabled(cluster);
+          updateClusterNameIfNotSet(cluster);
           cluster.services = _.sortBy(cluster.services, function (obj) {
             if (obj.needs_attention) return 1;
             if (obj.is_disabled) return 3;
