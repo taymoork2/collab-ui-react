@@ -6,18 +6,15 @@ angular.module('Hercules')
   .controller('DashboardController', ['$scope', '$rootScope', '$http', 'ConnectorService', 'Notification',
     function ($scope, $rootScope, $http, service, notif) {
       $scope.loading = true;
+      $scope.inflight = false;
 
-      var loadData = function () {
-        $scope.clusters = [];
+      $scope.reload = function () {
+        $scope.inflight = true;
         service.fetch(function (err, data) {
           $scope.clusters = data || [];
           $scope.loading = false;
+          $scope.inflight = false;
         });
-      };
-
-      $scope.reload = function () {
-        $scope.loading = true;
-        loadData();
       };
 
       $scope.upgradeSoftware = function (clusterId, serviceType, callback) {
@@ -32,6 +29,6 @@ angular.module('Hercules')
         return false;
       };
 
-      loadData();
+      $scope.reload();
     }
   ]);

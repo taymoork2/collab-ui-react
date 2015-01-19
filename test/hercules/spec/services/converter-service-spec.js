@@ -193,7 +193,7 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].not_approved_package).toBeFalsy();
   });
 
-  it('should raise alarm for running services that do not run the correct SW version', function() {
+    it('should raise alarm for running services that do not run the correct SW version', function() {
     var mockData = [{
       "provisioning_data": {
         "approved_packages": [{

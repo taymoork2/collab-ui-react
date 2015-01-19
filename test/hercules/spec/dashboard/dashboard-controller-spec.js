@@ -36,10 +36,17 @@ describe('DashboardController', function() {
   });
 
   it('reloads data on reload', function() {
+    expect($scope.loading).toEqual(true);
+    expect($scope.inflight).toEqual(true);
+
     service.fetch.callArgWith(0, null, []);
+    expect($scope.loading).toEqual(false);
+    expect($scope.inflight).toEqual(false);
 
     $scope.reload();
-    expect($scope.loading).toEqual(true);
+    expect($scope.loading).toEqual(false);
+    expect($scope.inflight).toEqual(true);
+
     expect(service.fetch.calledTwice).toBe(true);
   });
 

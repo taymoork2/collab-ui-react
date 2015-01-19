@@ -5,9 +5,13 @@
       <h2 class="page-title">
         <span translate="hercules.page_title" />
         <div style="float: right">
-          <button class="btn btn-info" ng-click="reload()" style="margin-right: 15px;">
-            <i class="icon icon-refresh hidden-sm hidden-md hidden-lg" />
-            <span class="hidden-xs">Reload</span>
+          <button ng-disabled="inflight" class="btn btn-info" ng-click="reload()" style="position: fixed; z-index: 10; right: 10px;">
+            <span ng-hide="inflight">
+              <i class="icon icon-refresh" />
+            </span>
+            <span ng-show="inflight">
+              <i class="icon icon-spinner icon-spin" />
+            </span>
           </button>
         </div>
       </h2>
