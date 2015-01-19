@@ -10,7 +10,7 @@ describe('Service: MeetingListService', function () {
 
   // instantiate service
   beforeEach(inject(function ($httpBackend,_MeetingListService_) {
-    meetinglistData = getJSONFixture('mediafusion/json/meetinglist/meetingListData.json');
+    meetinglistData = getJSONFixture('mediafusion/json/meetings/meetingListData.json');
     httpBackend = $httpBackend;
     httpBackend.when('GET', 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getallminmeeting')
                .respond(200, meetinglistData);

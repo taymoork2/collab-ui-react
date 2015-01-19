@@ -12,7 +12,7 @@ describe('Controller: ListMeetingsCtrl', function () {
   beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
     scope = $rootScope.$new();
 
-    meetinglistData = getJSONFixture('mediafusion/json/meetinglist/meetingListData.json');
+    meetinglistData = getJSONFixture('mediafusion/json/meetings/meetingListData.json');
     httpBackend = $httpBackend;
     httpBackend.when('GET', 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getallminmeeting')
                .respond(200, meetinglistData);
