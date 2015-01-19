@@ -60,8 +60,8 @@ describe('ConverterService', function () {
       }]
     }];
     var converted = Service.convertClusters(mockData);
-    expect(converted[0].needs_attention).toBe(undefined);
-    expect(converted[0].initially_open).toBe(undefined);
+    expect(converted[0].needs_attention).toBeFalsy();
+    expect(converted[0].initially_open).toBeFalsy();
   });
 
   it('should aggregate cluster status from hosts in cluster where one connector is not running', function () {
@@ -193,7 +193,24 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].not_approved_package).toBeFalsy();
   });
 
-    it('should raise alarm for running services that do not run the correct SW version', function() {
+  it('a cluster with all hosts disabled isnt running', function() {
+    var mockData = [{
+      "services": [
+        {
+          "service_type": "c_cal",
+          "display_name": "Calendar Service",
+          "connectors": [
+            { "state": "disabled", version: 'bar_version', host: {host_name: 'bar_host_name'} },
+            { "state": "disabled", version: 'bar_version', host: {host_name: 'bar_host_name'} }
+          ]
+        }
+      ]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted.running_hosts).toBeFalsy();
+  });
+
+  it('should raise alarm for running services that do not run the correct SW version', function() {
     var mockData = [{
       "provisioning_data": {
         "approved_packages": [{
