@@ -1,0 +1,35 @@
+{
+	"success" : true,
+	"meetings" :
+	[{	"status": "Active", 
+		"subject": "Test1",
+		"date": "1/2/2015",
+		"startTime": "1:30",
+		"resource": "Printer",
+		"webexSite": "webex1"
+	},{ "status": "Active", 
+		"subject": "Test1",
+		"date": "2/2/2015",
+		"startTime": "2:30",
+		"resource": "Xerox",
+		"webexSite": "webex2"
+	},{ "status": "Active", 
+		"subject": "Test1",
+		"date": "3/2/2015",
+		"startTime": "3:30",
+		"resource": "Printer",
+		"webexSite": "webex3"
+	},{ "status": "Active", 
+		"subject": "Test1",
+		"date": "4/2/2015",
+		"startTime": "4:30",
+		"resource": "xerox",
+		"webexSite": "webex4"
+	},{ "status": "Active", 
+		"subject": "Test1",
+		"date": "5/2/2015",
+		"startTime": "5:30",
+		"resource": "Printer",
+		"webexSite": "webex5"
+	}]
+}

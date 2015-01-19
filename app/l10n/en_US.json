@@ -663,7 +663,6 @@
   },
   "meetingsPage": {
     "manageMeetings": "Meetings",
-    "entitle": "Entitle",
     "status": "Status",
     "subject" : "Subject",
     "date" : "Date",
@@ -671,9 +670,6 @@
     "resource" : "Resource",
     "webexSite" : "Webex Site",
     "active": "Active",
-    "inactive": "",
-    "moreOptions": "More Actions",
-    "cancel": "Cancel",
     "pending": "Invite Pending"
   }
 }

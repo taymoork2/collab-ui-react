@@ -5,49 +5,6 @@ angular.module('Core')
     function ($scope, $rootScope, $timeout, $filter, Log, Config, MeetingListService) {
 
       $scope.querymeetingslist = [];
-      var meetings = [{
-        "status": "Active",
-        "subject": "Test1",
-        "date": "abcd",
-        "startTime": "abcd",
-        "resource": "abcd",
-        "webexSite": "webex"
-      }, {
-        "status": "Active",
-        "subject": "abcd1",
-        "date": "Test4",
-        "startTime": "abcd",
-        "resource": "abcd",
-        "webexSite": "webex"
-      }, {
-        "status": "Active",
-        "subject": "abcd2",
-        "date": "abcd",
-        "startTime": "abcd",
-        "resource": "abcd",
-        "webexSite": "webex"
-      }, {
-        "status": "Active",
-        "subject": "abcd3",
-        "date": "Test3",
-        "startTime": "abcd",
-        "resource": "abcd",
-        "webexSite": "webex"
-      }, {
-        "status": "Active",
-        "subject": "abcd4",
-        "date": "Test2",
-        "startTime": "abcd",
-        "resource": "abcd",
-        "webexSite": "webex"
-      }, {
-        "status": "Active",
-        "subject": "abcd5",
-        "date": "Test5",
-        "startTime": "abcd",
-        "resource": "abcd",
-        "webexSite": "webex"
-      }];
 
       var getMeetingList = function () {
         MeetingListService.listMeetings(function (data, status) {
@@ -57,7 +14,6 @@ angular.module('Core')
             Log.debug('Query existing meetings failed. Status: ' + status);
           }
         });
-        $scope.querymeetingslist = meetings;
       };
 
       $scope.gridOptions = {

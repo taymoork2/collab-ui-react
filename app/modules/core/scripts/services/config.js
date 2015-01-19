@@ -231,7 +231,13 @@ angular.module('Core')
         },
 
         getMeetingServiceUrl: function () {
-          return this.meetingServiceUrl.dev;
+          if (this.isDev()) {
+            return this.meetingServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.meetingServiceUrl.integration;
+          } else {
+            return this.meetingServiceUrl.prod;
+          }
         },
 
         getOauthLoginUrl: function () {
