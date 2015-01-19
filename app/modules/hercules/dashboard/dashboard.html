@@ -102,8 +102,8 @@
                           <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}" />
                         </div>
 
-                        <!-- connector induced error -->
-                        <div style="padding-bottom: 5px" class="clearfix" ng-repeat="alarm in connector.induced_alarms">
+                        <!-- connector deduced error -->
+                        <div style="padding-bottom: 5px" class="clearfix" ng-repeat="alarm in connector.deduced_alarms">
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
                           <span>is not running the correct software version. Should be {{alarm.expected_version}} but was {{connector.version}}.</span>
                         </div>

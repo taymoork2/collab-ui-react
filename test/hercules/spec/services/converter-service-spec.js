@@ -164,7 +164,36 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].not_approved_package.service.service_type).toBe('c_cal');
   });
 
-  it('should raise induced alarm for running services that do not run the correct SW version', function() {
+  it('should not show sw update details if service is disabled', function() {
+    var mockData = [{
+      "provisioning_data": {
+        "not_approved_packages": [
+          {
+            "service": {
+              "service_type": "c_cal",
+              "display_name": "Calendar Service"
+            },
+            "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
+            "version": "8.2-2.1"
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_type": "c_cal",
+          "display_name": "Calendar Service",
+          "connectors": [
+            { "state": "disabled", version: 'bar_version', host: {host_name: 'bar_host_name'} }
+          ]
+        }
+      ]
+    }];
+
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].not_approved_package).toBeFalsy();
+  });
+
+  it('should raise alarm for running services that do not run the correct SW version', function() {
     var mockData = [{
       "provisioning_data": {
         "approved_packages": [{
@@ -184,10 +213,10 @@ describe('ConverterService', function () {
     var converted = Service.convertClusters(mockData);
     expect(converted[0].needs_attention).toBe(true);
     expect(converted[0].services[0].needs_attention).toBe(true);
-    expect(converted[0].services[0].connectors[0].induced_alarms.length).toEqual(1);
-    expect(converted[0].services[0].connectors[0].induced_alarms[0].type).toEqual('software_version_mismatch');
-    expect(converted[0].services[0].connectors[0].induced_alarms[0].expected_version).toEqual('8.2-2.1');
-    expect(converted[0].services[0].connectors[1].induced_alarms.length).toEqual(0);
+    expect(converted[0].services[0].connectors[0].deduced_alarms.length).toEqual(1);
+    expect(converted[0].services[0].connectors[0].deduced_alarms[0].type).toEqual('software_version_mismatch');
+    expect(converted[0].services[0].connectors[0].deduced_alarms[0].expected_version).toEqual('8.2-2.1');
+    expect(converted[0].services[0].connectors[1].deduced_alarms.length).toEqual(0);
   });
 
   it('should not fail if approved_packages is empty', function() {
@@ -207,8 +236,8 @@ describe('ConverterService', function () {
     var converted = Service.convertClusters(mockData);
     expect(converted[0].needs_attention).toBeFalsy();
     expect(converted[0].services[0].needs_attention).toBeFalsy();
-    expect(converted[0].services[0].connectors[0].induced_alarms.length).toEqual(0);
-    expect(converted[0].services[0].connectors[1].induced_alarms.length).toEqual(0);
+    expect(converted[0].services[0].connectors[0].deduced_alarms.length).toEqual(0);
+    expect(converted[0].services[0].connectors[1].deduced_alarms.length).toEqual(0);
   });
 
   it('should sort clusters based on error status', function () {
