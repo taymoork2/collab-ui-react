@@ -191,6 +191,7 @@ describe('ConverterService', function () {
 
     var converted = Service.convertClusters(mockData);
     expect(converted[0].services[0].not_approved_package).toBeFalsy();
+    expect(converted[0].provisioning_data.not_approved_packages).toBeFalsy();
   });
 
   it('a cluster with all hosts disabled isnt running', function() {

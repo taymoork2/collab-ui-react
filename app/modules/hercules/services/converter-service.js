@@ -86,6 +86,17 @@ angular.module('Hercules')
         service.needs_attention = true;
       };
 
+      var stripAvailablePackagesIfServicesDisabled = function(cluster) {
+        if (cluster.provisioning_data) {
+          var allServicesDisabled = _.reduce(cluster.services, function(disabled, service) {
+            return disabled && service.is_disabled;
+          }, true);
+          if (allServicesDisabled) {
+            delete cluster.provisioning_data.not_approved_packages;
+          }
+        }
+      };
+
       var convertClusters = function (data) {
         var converted = _.map(data, function (origCluster) {
           var cluster = _.cloneDeep(origCluster);
@@ -94,6 +105,7 @@ angular.module('Hercules')
             updateNotApprovedPackageForService(service, cluster);
             deduceAlarmsForService(service, cluster);
           });
+          stripAvailablePackagesIfServicesDisabled(cluster);
           cluster.services = _.sortBy(cluster.services, function (obj) {
             if (obj.needs_attention) return 1;
             if (obj.is_disabled) return 3;
