@@ -92,10 +92,13 @@
                 <!-- services -->
                 <div class="sw-upgrade">
                   <div ng-repeat="service in cluster.services">
-                    <div class="col-md-12 clearfix" ng-show="!service.needs_attention || (service.needs_attention && service.running_hosts)">
+                    <div class="col-md-12 clearfix">
                       <h4 class="header pull-left">
                         <span class="clearfix" ng-show="{{service.needs_attention && service.running_hosts}}">
-                          {{service.display_name}} needs attention:
+                          {{service.display_name}} needs attention
+                        </span>
+                        <span class="clearfix" ng-show="{{service.needs_attention && !service.running_hosts}}">
+                          {{service.display_name}} is not running
                         </span>
                         <span ng-show="{{!service.needs_attention}}">
                           <span class="clearfix" ng-show="{{!service.is_disabled}}">
@@ -115,7 +118,7 @@
                       />
 
                     </div>
-                    <div class="col-md-12" ng-show="{{service.needs_attention && service.running_hosts}}">
+                    <div class="col-md-12" ng-show="{{service.needs_attention}}">
 
                       <!-- connectors -->
                       <div class="connector-info-item" ng-repeat="connector in service.connectors">
