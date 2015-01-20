@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('ListMeetingsCtrl', ['$scope', '$rootScope', '$timeout', '$filter', 'Log', 'Config', 'MeetingListService',
-    function ($scope, $rootScope, $timeout, $filter, Log, Config, MeetingListService) {
+  .controller('ListMeetingsCtrl', ['$scope', '$filter', 'Log', 'MeetingListService',
+    function ($scope, $filter, Log, MeetingListService) {
 
       $scope.querymeetingslist = [];
 
@@ -34,9 +34,11 @@ angular.module('Core')
           displayName: $filter('translate')('meetingsPage.subject')
         }, {
           field: 'date',
+          sortable: false,
           displayName: $filter('translate')('meetingsPage.date')
         }, {
           field: 'startTime',
+          sortable: false,
           displayName: $filter('translate')('meetingsPage.start')
         }, {
           field: 'resource',

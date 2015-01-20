@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('MeetingListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', '$filter', 'Auth',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, $filter, Auth) {
+  .service('MeetingListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
 
       var meetingUrl = Config.getMeetingServiceUrl();
       var meetinglistservice = {
