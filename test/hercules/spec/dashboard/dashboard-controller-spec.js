@@ -73,4 +73,33 @@ describe('DashboardController', function() {
     expect($scope.reload.callCount).toBe(1);
   });
 
+  it('updates state on toggle edit', function() {
+    expect($scope.editingHost).toBeFalsy();
+
+    $scope.toggleEdit('foo');
+    expect($scope.editingHost).toBe('foo');
+
+    $scope.toggleEdit('bar');
+    expect($scope.editingHost).toBe('bar');
+
+    $scope.toggleEdit('bar');
+    expect($scope.editingHost).toBeFalsy();
+  });
+
+  it('deletes host', function() {
+    service.deleteHost = sinon.stub();
+    expect($scope.deleteHostInflight).toBeFalsy();
+
+    $scope.deleteHost('clusterId', 'serial#');
+    expect($scope.deleteHostInflight).toBe(true);
+    expect(service.deleteHost.callCount).toBe(1);
+    expect(service.deleteHost.args[0][0]).toBe('clusterId');
+    expect(service.deleteHost.args[0][1]).toBe('serial#');
+
+    $scope.reload = sinon.stub()
+    service.deleteHost.callArgWith(2, null);
+    expect($scope.deleteHostInflight).toBe(false);
+    expect($scope.reload.callCount).toBe(1);
+  });
+
 });

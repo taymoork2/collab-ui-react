@@ -72,6 +72,19 @@
                   <div style="padding-top: 5px" class="clearfix" ng-repeat="host in cluster.hosts | filter: { offline: true }">
                     <span style="color: #f05d3b">{{host.host_name}}</span>
                     <span translate="{{'hercules.status.offline'}}" />
+                    <a href>
+                      <i class="icon icon-close" ng-click="toggleEdit(host.host_name)" />
+                    </a>
+                    <div style="margin-top: 5px" ng-show="host.host_name == editingHost">
+                      <button ng-disabled="deleteHostInflight" class="btn btn-danger btn-sm" ng-click="deleteHost(cluster.id, host.serial)">
+                        <span ng-hide="deleteHostInflight">
+                          Delete {{host.host_name}}?
+                        </span>
+                        <span ng-show="deleteHostInflight">
+                          <i class="icon icon-spinner icon-spin" />
+                        </span>
+                      </button>
+                    </div>
                   </div>
 
                 </div>
@@ -122,7 +135,7 @@
                         <div hercules-popover style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.alarms.length}}">
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
                           <span>has reported</span>
-                          <a href="#" onclick="return false" class="popover-trigger">{{connector.alarms.length}} alarms.</a>
+                          <a href class="popover-trigger">{{connector.alarms.length}} alarms.</a>
                           <div class="popover-title hide">
                             <i class="fa fa-exclamation-triangle" style="color: #f05d3b"></i> {{service.display_name}} Alarms
                           </div>

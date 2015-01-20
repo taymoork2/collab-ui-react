@@ -51,6 +51,14 @@ angular.module('Hercules')
           .error(createErrorHandler('Unable to upgrade software', opts.callback));
       };
 
+      var deleteHost = function(clusterId, serial, callback) {
+        var url = getUrl() + '/' + clusterId + '/hosts/' + serial;
+        $http
+          .delete(url)
+          .success(callback)
+          .error(createErrorHandler('Unable to delete host', callback));
+      };
+
       var createErrorHandler = function (message, callback) {
         var messages = [message];
         return function (data, status, headers, config) {
@@ -63,6 +71,7 @@ angular.module('Hercules')
 
       return {
         fetch: fetch,
+        deleteHost: deleteHost,
         upgradeSoftware: upgradeSoftware
       };
     }
