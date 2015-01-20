@@ -15,25 +15,43 @@ angular.module('Hercules')
       };
 
       var createEmptyServicesAggregate = function (services) {
-        return _.reduce(services, function (memo, service) {
-          memo[service.type] = {
+        return _.reduce(services, function (serviceAggregate, service) {
+          serviceAggregate[service.type] = {
             name: service.name,
             icon: service.icon,
             running: 0,
             needs_attention: 0,
             software_upgrades: 0
           };
-          return memo;
+          return serviceAggregate;
         }, {});
       };
 
-      var aggregateServiceStatus = function (memo, cluster) {
-        cluster.needs_attention ? memo.needs_attention++ : memo.running++;
+      var aggregateServiceStatus = function (clusterAggregate, cluster) {
         _.each(cluster.services, function (service) {
-          service.needs_attention ? memo.services[service.service_type].needs_attention++ : memo.services[service.service_type].running++;
-          service.not_approved_package ? memo.services[service.service_type].software_upgrades++ : null;
+          var allConnecorsDisabled = _.reduce(service.connectors, function (aggregateStatus, connector) {
+            return aggregateStatus && connector.state == 'disabled';
+          }, true);
+          if (!allConnecorsDisabled) {
+            if (service.needs_attention) {
+              clusterAggregate.services[service.service_type].needs_attention++;
+            } else {
+              clusterAggregate.services[service.service_type].running++;
+            }
+            if (service.not_approved_package) {
+              clusterAggregate.services[service.service_type].software_upgrades++;
+            }
+          }
         });
-        return memo;
+        var allServicesDisabled = _.reduce(cluster.services, function (aggregateStatus, service) {
+          return aggregateStatus && !service.running_hosts;
+        }, true);
+        if (cluster.needs_attention) {
+          clusterAggregate.needs_attention++;
+        } else if (!allServicesDisabled) {
+          clusterAggregate.running++;
+        }
+        return clusterAggregate;
       };
 
       return {

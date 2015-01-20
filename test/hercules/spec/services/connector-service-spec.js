@@ -152,4 +152,39 @@ describe('Service: ConnectorService', function () {
     $httpBackend.flush();
   });
 
+  it('should delete a host', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        'https://hercules.hitest.huron-dev.com/v1/clusters/clusterid/hosts/serial'
+      )
+      .respond(200);
+
+    var callback = sinon.stub();
+
+    Service.deleteHost('clusterid', 'serial', callback);
+
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should handle host deletion failures', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        'https://hercules.hitest.huron-dev.com/v1/clusters/clusterid/hosts/serial'
+      )
+      .respond(500);
+
+    expect(notification.notify.callCount).toBe(0);
+
+    var callback = sinon.stub();
+    Service.deleteHost('clusterid', 'serial', callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(notification.notify.callCount).toBe(1);
+  });
+
 });

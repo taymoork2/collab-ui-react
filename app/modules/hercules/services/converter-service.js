@@ -4,33 +4,16 @@ angular.module('Hercules')
   .service('ConverterService', [
     function ConverterService() {
 
-      var convertConnectors = function (data) {
-        return _.map(data, function (connector) {
-          var c = _.cloneDeep(connector);
-
-          c.status = c.status || {};
-          c.status.state = c.status.state || 'unknown';
-
-          if (c.status.alarms && c.status.alarms.length) {
-            c.status.state = 'error';
-          }
-
-          switch (c.status.state) {
-          case 'running':
-            c.status_class = 'success';
-            break;
-          case 'disabled':
-          case 'not_configured':
-            c.status_class = 'default';
-            break;
-          default:
-            c.status_class = 'danger';
-          }
-          return c;
-        });
-      };
+      var allConnectorsOffline = function (service) {
+        return _.reduce(service.connectors, function (offline, connector) {
+          return offline && connector.state == 'offline';
+        }, true);
+      }
 
       var updateNotApprovedPackageForService = function (service, cluster) {
+        if (service.is_disabled || allConnectorsOffline(service)) {
+          return;
+        }
         if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
           var not_approved_package = _.find(cluster.provisioning_data.not_approved_packages, function (pkg) {
             return pkg.service.service_type == service.service_type;
@@ -41,28 +24,23 @@ angular.module('Hercules')
         }
       };
 
-      var induceAlarmsForService = function (service, cluster) {
+      var deduceAlarmsForService = function (service, cluster) {
         if (cluster.provisioning_data && cluster.provisioning_data.approved_packages) {
           var expected_package = _.find(cluster.provisioning_data.approved_packages, function (pkg) {
             return pkg.service.service_type == service.service_type;
           });
           var expected_version = (expected_package == null) ? null : expected_package.version;
 
-          var hasInducedAlarms = false;
           _.each(service.connectors, function (connector) {
-            connector.induced_alarms = connector.induced_alarms || [];
+            connector.deduced_alarms = connector.deduced_alarms || [];
             if (expected_version && connector.state == 'running' && connector.version != expected_version) {
-              connector.induced_alarms.push({
+              connector.deduced_alarms.push({
                 type: 'software_version_mismatch',
                 expected_version: expected_version
               });
-              hasInducedAlarms = true;
+              serviceAndClusterNeedsAttention(service, cluster);
             }
           });
-          if (hasInducedAlarms) {
-            cluster.needs_attention = true;
-            service.needs_attention = true;
-          }
         }
       };
 
@@ -70,8 +48,7 @@ angular.module('Hercules')
         service.running_hosts = 0;
         _.each(service.connectors, function (connector) {
           if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
-            cluster.needs_attention = cluster.initially_open = true;
-            service.needs_attention = true;
+            serviceAndClusterNeedsAttention(service, cluster);
             service.is_disabled = false;
           }
           if (connector.state == 'disabled' && service.running_hosts == 0) {
@@ -84,14 +61,71 @@ angular.module('Hercules')
         });
       };
 
+      var serviceAndClusterNeedsAttention = function (service, cluster) {
+        cluster.needs_attention = cluster.initially_open = true;
+        service.needs_attention = true;
+      };
+
+      var stripAvailablePackagesIfServicesDisabledOrOffline = function (cluster) {
+        if (cluster.provisioning_data) {
+          var servicesDisabledOrOffline = _.reduce(cluster.services, function (disabledOrOffline, service) {
+            return disabledOrOffline && (service.is_disabled || allConnectorsOffline(service));
+          }, true);
+          if (servicesDisabledOrOffline) {
+            delete cluster.provisioning_data.not_approved_packages;
+          }
+        }
+      };
+
+      var updateClusterNameIfNotSet = function (cluster) {
+        if (!cluster.name) {
+          var host = _.find(cluster.hosts, function (host) {
+            if (host.host_name) {
+              return host.host_name;
+            }
+          });
+          if (host) {
+            cluster.name = host.host_name;
+          }
+        }
+      };
+
+      var updateHostStatus = function (cluster) {
+        var connectors = _(cluster.services)
+          .map(function (service) {
+            return service.connectors;
+          })
+          .flatten()
+          .value()
+
+        var map = _.reduce(connectors, function (map, connector) {
+          var host = connector.host ? connector.host.host_name : 'null';
+          map[host] = map[host] || [];
+          map[host].push(connector.state);
+          return map;
+        }, {});
+
+        _.each(cluster.hosts, function (host) {
+          host.offline = false;
+          if (map[host.host_name]) {
+            host.offline = _.reduce(map[host.host_name], function (offline, status) {
+              return offline && status == 'offline';
+            }, true);
+          }
+        });
+      };
+
       var convertClusters = function (data) {
         var converted = _.map(data, function (origCluster) {
           var cluster = _.cloneDeep(origCluster);
           _.each(cluster.services, function (service) {
             updateServiceStatus(service, cluster);
             updateNotApprovedPackageForService(service, cluster);
-            induceAlarmsForService(service, cluster);
+            deduceAlarmsForService(service, cluster);
           });
+          stripAvailablePackagesIfServicesDisabledOrOffline(cluster);
+          updateClusterNameIfNotSet(cluster);
+          updateHostStatus(cluster);
           cluster.services = _.sortBy(cluster.services, function (obj) {
             if (obj.needs_attention) return 1;
             if (obj.is_disabled) return 3;
@@ -105,8 +139,7 @@ angular.module('Hercules')
       };
 
       return {
-        convertClusters: convertClusters,
-        convertConnectors: convertConnectors
+        convertClusters: convertClusters
       };
     }
   ]);
