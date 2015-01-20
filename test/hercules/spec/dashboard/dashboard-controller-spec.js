@@ -69,8 +69,10 @@ describe('DashboardController', function() {
     expect($scope.reload.callCount).toBe(0);
 
     service.upgradeSoftware.args[0][0].callback()
-    expect(callback.callCount).toBe(1);
     expect($scope.reload.callCount).toBe(1);
+
+    $scope.reload.callArgWith(0, null);
+    expect(callback.callCount).toBe(1);
   });
 
   it('updates state on toggle edit', function() {
@@ -98,8 +100,10 @@ describe('DashboardController', function() {
 
     $scope.reload = sinon.stub()
     service.deleteHost.callArgWith(2, null);
-    expect($scope.deleteHostInflight).toBe(false);
     expect($scope.reload.callCount).toBe(1);
+
+    $scope.reload.callArgWith(0, null);
+    expect($scope.deleteHostInflight).toBe(false);
   });
 
 });

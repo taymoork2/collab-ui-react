@@ -9,12 +9,14 @@ angular.module('Hercules')
       $scope.inflight = false;
       $scope.deleteHostInflight = false;
 
-      $scope.reload = function () {
+      $scope.reload = function (callback) {
         $scope.inflight = true;
+        callback = callback || function() {};
         service.fetch(function (err, data) {
           $scope.clusters = data || [];
           $scope.loading = false;
           $scope.inflight = false;
+          callback();
         });
       };
 
@@ -23,8 +25,9 @@ angular.module('Hercules')
           clusterId: clusterId,
           serviceType: serviceType,
           callback: function () {
-            callback();
-            $scope.reload();
+            $scope.reload(function() {
+              callback();
+            });
           }
         });
         return false;
@@ -41,8 +44,9 @@ angular.module('Hercules')
       $scope.deleteHost = function (clusterId, serial) {
         $scope.deleteHostInflight = true;
         service.deleteHost(clusterId, serial, function() {
-          $scope.deleteHostInflight = false;
-          $scope.reload();
+          $scope.reload(function() {
+            $scope.deleteHostInflight = false;
+          });
         });
       };
 
