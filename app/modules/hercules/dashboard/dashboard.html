@@ -58,7 +58,7 @@
               <div class="connector-body">
 
                 <!-- host list -->
-                <div class="md-col-12 clearfix" style="padding-left: 15px; padding-bottom: 15px">
+                <div class="md-col-12 clearfix" style="padding-left: 15px;">
                   <span style="font-size: xs; opacity: 0.5">
                     <span>This cluster consists of {{cluster.hosts.length}} {{cluster.hosts.length == 1 ? 'host' : 'hosts'}}:</span>
                     <span ng-repeat="host in cluster.hosts">
@@ -68,21 +68,27 @@
                       <span ng-hide="$last">|</span>
                     </span>
                   </span>
+
+                  <div style="padding-top: 5px" class="clearfix" ng-repeat="host in cluster.hosts | filter: { offline: true }">
+                    <span style="color: #f05d3b">{{host.host_name}}</span>
+                    <span translate="{{'hercules.status.offline'}}" />
+                  </div>
+
                 </div>
 
                 <!-- services -->
                 <div class="sw-upgrade">
-                  <div class="clearfix" ng-repeat="service in cluster.services">
-                    <div class="col-md-12 clearfix">
-                      <h4 style="float: left">
-                        <span ng-show="{{service.needs_attention}}">
+                  <div ng-repeat="service in cluster.services">
+                    <div class="col-md-12 clearfix" ng-show="!service.needs_attention || (service.needs_attention && service.running_hosts)">
+                      <h4 class="header pull-left">
+                        <span class="clearfix" ng-show="{{service.needs_attention && service.running_hosts}}">
                           {{service.display_name}} needs attention:
                         </span>
                         <span ng-show="{{!service.needs_attention}}">
-                          <span ng-show="{{!service.is_disabled}}">
+                          <span class="clearfix" ng-show="{{!service.is_disabled}}">
                             {{service.display_name}} is running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}
                           </span>
-                          <span ng-show="{{service.is_disabled}}" style="opacity: 0.5">
+                          <span class="clearfix" ng-show="{{service.is_disabled}}" style="opacity: 0.5">
                             {{service.display_name}} is disabled
                           </span>
                         </span>
@@ -96,12 +102,12 @@
                       />
 
                     </div>
-                    <div class="col-md-12" style="margin-bottom: 20px" ng-show="{{service.needs_attention}}">
+                    <div class="col-md-12" ng-show="{{service.needs_attention && service.running_hosts}}">
 
                       <!-- connectors -->
                       <div class="connector-info-item" ng-repeat="connector in service.connectors">
                         <!-- connector status -->
-                        <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.state != 'running' && connector.state != 'disabled'}}">
+                        <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.state != 'running' && connector.state != 'disabled' && connector.state != 'offline'}}">
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
                           <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}" />
                         </div>

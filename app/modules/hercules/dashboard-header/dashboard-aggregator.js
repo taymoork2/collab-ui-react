@@ -29,7 +29,7 @@ angular.module('Hercules')
 
       var aggregateServiceStatus = function (clusterAggregate, cluster) {
         _.each(cluster.services, function (service) {
-          var allConnecorsDisabled = _.reduce(service.connectors, function(aggregateStatus, connector) {
+          var allConnecorsDisabled = _.reduce(service.connectors, function (aggregateStatus, connector) {
             return aggregateStatus && connector.state == 'disabled';
           }, true);
           if (!allConnecorsDisabled) {
@@ -43,7 +43,7 @@ angular.module('Hercules')
             }
           }
         });
-        var allServicesDisabled = _.reduce(cluster.services, function(aggregateStatus, service) {
+        var allServicesDisabled = _.reduce(cluster.services, function (aggregateStatus, service) {
           return aggregateStatus && !service.running_hosts;
         }, true);
         if (cluster.needs_attention) {

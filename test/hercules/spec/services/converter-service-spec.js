@@ -11,43 +11,6 @@ describe('ConverterService', function () {
     Service = _ConverterService_;
   }));
 
-  // connector conversion
-
-  it('should inject connector status if it does not exist', function () {
-    var mockData = [{}];
-    var converted = Service.convertConnectors(mockData);
-    expect(converted[0].status.state).toBe('unknown');
-  });
-
-  it('should inject status if alerts exist', function () {
-    var mockData = [{
-      status: {
-        state: 'running',
-        alarms: [{}]
-      }
-    }];
-    var converted = Service.convertConnectors(mockData);
-    expect(converted[0].status.state).toBe('error');
-  });
-
-  it('should inject classes based on state', function () {
-    var converted = null;
-    converted = Service.convertConnectors([{ status: { state: 'running' } }]);
-    expect(converted[0].status_class).toBe('success');
-
-    converted = Service.convertConnectors([{ status: { state: 'disabled' } }]);
-    expect(converted[0].status_class).toBe('default');
-
-    converted = Service.convertConnectors([{ status: { state: 'not_configured' } }]);
-    expect(converted[0].status_class).toBe('default');
-
-    converted = Service.convertConnectors([{ status: { state: 'foo' } }]);
-    expect(converted[0].status_class).toBe('danger');
-
-    converted = Service.convertConnectors([{ status: { state:  'running', alarms: [{}] } }]);
-    expect(converted[0].status_class).toBe('danger');
-  });
-
   // cluster conversion
 
   it('should aggregate cluster status from hosts in cluster where connectors are running or disabled', function () {
@@ -155,6 +118,9 @@ describe('ConverterService', function () {
         {
           "service_type": "c_cal",
           "display_name": "Calendar Service",
+          "connectors": [
+            { "state": "running", version: 'bar_version', host: {host_name: 'bar_host_name'} }
+          ]
         }
       ]
     }];
@@ -194,6 +160,62 @@ describe('ConverterService', function () {
     expect(converted[0].provisioning_data.not_approved_packages).toBeFalsy();
   });
 
+  it('should not show sw update details if service is offline', function() {
+    var mockData = [{
+      "provisioning_data": {
+        "not_approved_packages": [
+          {
+            "service": { "service_type": "c_cal", "display_name": "Calendar Service" },
+            "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
+            "version": "8.2-2.1"
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_type": "c_cal",
+          "display_name": "Calendar Service",
+          "connectors": [
+            { "state": "offline", version: 'bar_version', host: {host_name: 'bar_host_name'} }
+          ]
+        }
+      ]
+    }];
+
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].not_approved_package).toBeFalsy();
+    expect(converted[0].provisioning_data.not_approved_packages).toBeFalsy();
+  });
+
+  it('should show sw update details if one service is running', function() {
+    var mockData = [{
+      "provisioning_data": {
+        "not_approved_packages": [
+          {
+            "service": { "service_type": "c_cal", "display_name": "Calendar Service" },
+            "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
+            "version": "8.2-2.1"
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_type": "c_cal",
+          "display_name": "Calendar Service",
+          "connectors": [
+            { "state": "disabled", version: 'bar_version', host: {host_name: 'bar_host_name'} },
+            { "state": "offline", version: 'bar_version', host: {host_name: 'bar_host_name'} },
+            { "state": "running", version: 'bar_version', host: {host_name: 'bar_host_name'} }
+          ]
+        }
+      ]
+    }];
+
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].not_approved_package).toBeTruthy();
+    expect(converted[0].provisioning_data.not_approved_packages).toBeTruthy();
+  });
+
   it('a cluster with all hosts disabled isnt running', function() {
     var mockData = [{
       "services": [
@@ -209,6 +231,34 @@ describe('ConverterService', function () {
     }];
     var converted = Service.convertClusters(mockData);
     expect(converted.running_hosts).toBeFalsy();
+  });
+
+  it('aggregates offline state per host', function() {
+    var mockData = [{
+      "hosts": [
+        { host_name: "bar_host_name" },
+        { host_name: "qux_host_name" }
+      ],
+      "services": [
+        {
+          "service_type": "c_cal",
+          "connectors": [
+            { "state": "offline", version: 'bar_version', host: {host_name: 'bar_host_name'} },
+            { "state": "offline", version: 'bar_version', host: {host_name: 'bar_host_name'} }
+          ]
+        },
+        {
+          "service_type": "yolo",
+          "connectors": [
+            { "state": "offline", version: 'bar_version', host: {host_name: 'qux_host_name'} },
+            { "state": "running", version: 'bar_version', host: {host_name: 'qux_host_name'} }
+          ]
+        }
+      ]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].hosts[0].offline).toBe(true);
+    expect(converted[0].hosts[1].offline).toBe(false);
   });
 
   it('set display_name to first connector if none provided', function() {

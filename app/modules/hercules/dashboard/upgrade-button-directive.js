@@ -6,7 +6,7 @@
       $scope.inflight = false;
       $scope.upgradeClicked = function () {
         $scope.inflight = true;
-        $scope.upgradeSoftware($attrs.clusterId, $attrs.serviceType, function() {
+        $scope.upgradeSoftware($attrs.clusterId, $attrs.serviceType, function () {
           $scope.inflight = false;
         });
       }

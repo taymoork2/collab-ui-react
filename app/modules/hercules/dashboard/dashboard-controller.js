@@ -21,7 +21,7 @@ angular.module('Hercules')
         service.upgradeSoftware({
           clusterId: clusterId,
           serviceType: serviceType,
-          callback: function() {
+          callback: function () {
             callback();
             $scope.reload();
           }

@@ -4,34 +4,14 @@ angular.module('Hercules')
   .service('ConverterService', [
     function ConverterService() {
 
-      var convertConnectors = function (data) {
-        return _.map(data, function (connector) {
-          var c = _.cloneDeep(connector);
-
-          c.status = c.status || {};
-          c.status.state = c.status.state || 'unknown';
-
-          if (c.status.alarms && c.status.alarms.length) {
-            c.status.state = 'error';
-          }
-
-          switch (c.status.state) {
-          case 'running':
-            c.status_class = 'success';
-            break;
-          case 'disabled':
-          case 'not_configured':
-            c.status_class = 'default';
-            break;
-          default:
-            c.status_class = 'danger';
-          }
-          return c;
-        });
-      };
+      var allConnectorsOffline = function (service) {
+        return _.reduce(service.connectors, function (offline, connector) {
+          return offline && connector.state == 'offline';
+        }, true);
+      }
 
       var updateNotApprovedPackageForService = function (service, cluster) {
-        if (service.is_disabled) {
+        if (service.is_disabled || allConnectorsOffline(service)) {
           return;
         }
         if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
@@ -81,25 +61,25 @@ angular.module('Hercules')
         });
       };
 
-      var serviceAndClusterNeedsAttention = function(service, cluster) {
+      var serviceAndClusterNeedsAttention = function (service, cluster) {
         cluster.needs_attention = cluster.initially_open = true;
         service.needs_attention = true;
       };
 
-      var stripAvailablePackagesIfServicesDisabled = function(cluster) {
+      var stripAvailablePackagesIfServicesDisabledOrOffline = function (cluster) {
         if (cluster.provisioning_data) {
-          var allServicesDisabled = _.reduce(cluster.services, function(disabled, service) {
-            return disabled && service.is_disabled;
+          var servicesDisabledOrOffline = _.reduce(cluster.services, function (disabledOrOffline, service) {
+            return disabledOrOffline && (service.is_disabled || allConnectorsOffline(service));
           }, true);
-          if (allServicesDisabled) {
+          if (servicesDisabledOrOffline) {
             delete cluster.provisioning_data.not_approved_packages;
           }
         }
       };
 
-      var updateClusterNameIfNotSet = function(cluster) {
+      var updateClusterNameIfNotSet = function (cluster) {
         if (!cluster.name) {
-          var host = _.find(cluster.hosts, function(host) {
+          var host = _.find(cluster.hosts, function (host) {
             if (host.host_name) {
               return host.host_name;
             }
@@ -110,6 +90,31 @@ angular.module('Hercules')
         }
       };
 
+      var updateHostStatus = function (cluster) {
+        var connectors = _(cluster.services)
+          .map(function (service) {
+            return service.connectors;
+          })
+          .flatten()
+          .value()
+
+        var map = _.reduce(connectors, function (map, connector) {
+          var host = connector.host ? connector.host.host_name : 'null';
+          map[host] = map[host] || [];
+          map[host].push(connector.state);
+          return map;
+        }, {});
+
+        _.each(cluster.hosts, function (host) {
+          host.offline = false;
+          if (map[host.host_name]) {
+            host.offline = _.reduce(map[host.host_name], function (offline, status) {
+              return offline && status == 'offline';
+            }, true);
+          }
+        });
+      };
+
       var convertClusters = function (data) {
         var converted = _.map(data, function (origCluster) {
           var cluster = _.cloneDeep(origCluster);
@@ -118,8 +123,9 @@ angular.module('Hercules')
             updateNotApprovedPackageForService(service, cluster);
             deduceAlarmsForService(service, cluster);
           });
-          stripAvailablePackagesIfServicesDisabled(cluster);
+          stripAvailablePackagesIfServicesDisabledOrOffline(cluster);
           updateClusterNameIfNotSet(cluster);
+          updateHostStatus(cluster);
           cluster.services = _.sortBy(cluster.services, function (obj) {
             if (obj.needs_attention) return 1;
             if (obj.is_disabled) return 3;
@@ -133,8 +139,7 @@ angular.module('Hercules')
       };
 
       return {
-        convertClusters: convertClusters,
-        convertConnectors: convertConnectors
+        convertClusters: convertClusters
       };
     }
   ]);
