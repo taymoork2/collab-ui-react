@@ -2,10 +2,15 @@
 
 /* global _ */
 
+var rnd = function(max) {
+  max = max || 10000000000;
+  return Math.floor(Math.random() * max).toString(16);
+};
+
 var createHost = function (name) {
   return {
     "host_name": name,
-    "serial": new Date().getTime().toString(16)
+    "serial": rnd()
   };
 };
 
@@ -40,7 +45,7 @@ var createService = function (serviceName, serviceType, hosts) {
 
 var createCluster = function (opts) {
   return {
-    "id": new Date().getTime().toString(16),
+    "id": rnd(),
     "name": opts.clusterName,
     "provisioning_data": {
       "approved_packages": _.map(opts.approved, function (pkg) {
@@ -61,7 +66,7 @@ var createCluster = function (opts) {
 
 var createAlarm = function (opts) {
   return {
-    "id": new Date().getTime().toString(16),
+    "id": rnd(),
     "first_reported": new Date(),
     "last_reported": new Date(),
     "title": opts.title,
@@ -150,10 +155,10 @@ var mockData = function () {
       clusterName: "Shanghai Cluster",
       services: services,
       hosts: [{
-        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostName: rnd() + '.cisco.com',
         hostState: 'running'
       }, {
-        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostName: rnd() + '.cisco.com',
         hostState: 'running'
       }]
     }),
@@ -161,10 +166,10 @@ var mockData = function () {
       clusterName: "Sydney Cluster",
       services: services,
       hosts: [{
-        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostName: rnd() + '.cisco.com',
         hostState: 'disabled'
       }, {
-        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostName: rnd() + '.cisco.com',
         hostState: 'disabled'
       }]
     })

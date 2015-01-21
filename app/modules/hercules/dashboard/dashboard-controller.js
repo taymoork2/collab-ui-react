@@ -7,6 +7,7 @@ angular.module('Hercules')
     function ($scope, $rootScope, $http, service, notif) {
       $scope.loading = true;
       $scope.inflight = false;
+      $scope.visibleAlarm = {};
       $scope.deleteHostInflight = false;
 
       $scope.reload = function (callback) {
@@ -48,6 +49,18 @@ angular.module('Hercules')
             $scope.deleteHostInflight = false;
           });
         });
+      };
+
+      $scope.toggleAlarms = function(clusterId, serviceType, hostName) {
+        if ($scope.visibleAlarm.clusterId == clusterId && $scope.visibleAlarm.serviceType == serviceType && $scope.visibleAlarm.hostName == hostName) {
+          $scope.visibleAlarm = {};
+        } else {
+          $scope.visibleAlarm = {
+            clusterId: clusterId,
+            serviceType: serviceType,
+            hostName: hostName
+          };
+        }
       };
 
       $scope.reload();

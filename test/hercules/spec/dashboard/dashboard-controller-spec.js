@@ -106,4 +106,23 @@ describe('DashboardController', function() {
     expect($scope.deleteHostInflight).toBe(false);
   });
 
+  it('updates state on toggle alarms', function() {
+    expect(_.size($scope.visibleAlarm)).toBe(0);
+
+    $scope.toggleAlarms('clid', 'srv', 'host');
+    expect(_.size($scope.visibleAlarm)).toBe(3);
+    expect($scope.visibleAlarm.clusterId).toBe('clid');
+    expect($scope.visibleAlarm.serviceType).toBe('srv');
+    expect($scope.visibleAlarm.hostName).toBe('host');
+
+    $scope.toggleAlarms('clid', 'srv', 'host2');
+    expect(_.size($scope.visibleAlarm)).toBe(3);
+    expect($scope.visibleAlarm.clusterId).toBe('clid');
+    expect($scope.visibleAlarm.serviceType).toBe('srv');
+    expect($scope.visibleAlarm.hostName).toBe('host2');
+
+    $scope.toggleAlarms('clid', 'srv', 'host2');
+    expect(_.size($scope.visibleAlarm)).toBe(0);
+  });
+
 });
