@@ -25,8 +25,8 @@ angular.module('Core')
 
         meetingServiceUrl: {
           dev: 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1',
-          integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-          prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
+          integration: 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1',
+          prod: 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1'
         },
 
         oauthClientRegistration: {
