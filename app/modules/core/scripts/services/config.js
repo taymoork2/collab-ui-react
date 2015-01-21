@@ -83,7 +83,6 @@ angular.module('Core')
         scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
 
         usersperpage: 100,
-        meetingsperpage: 100,
 
         logConfig: {
           linesToAttach: 100,
@@ -149,16 +148,6 @@ angular.module('Core')
           icon: 'icon-tools',
           title: 'tabs.developmentTab',
           subPages: [{
-            title: 'tabs.vtsDetailsTab',
-            desc: 'tabs.vtsDetailsTabDesc',
-            state: 'vts',
-            link: '#vts'
-          }, {
-            title: 'tabs.meetingDetailsTab',
-            desc: 'tabs.meetingDetailsTabDesc',
-            state: 'meetings',
-            link: '#meetings'
-          }, {
             title: 'tabs.organizationTab',
             desc: 'tabs.organizationTabDesc',
             state: 'organization',
@@ -178,7 +167,12 @@ angular.module('Core')
             desc: 'tabs.mediaOnHoldTabDesc',
             state: 'mediaonhold',
             link: '#mediaonhold'
-          }]
+          }, {
+            title: 'tabs.meetingDetailsTab',
+            desc: 'tabs.meetingDetailsTabDesc',
+            state: 'meetings',
+            link: '#meetings'
+          }, ]
         }],
 
         entitlements: {
@@ -316,7 +310,7 @@ angular.module('Core')
 
       config.roleStates = {
         Full_Admin: [
-          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard', 'vts', 'meetings'
+          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard', 'meetings'
         ],
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],

@@ -378,18 +378,12 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('vts', {
-          url: '/vts',
-          templateUrl: 'modules/mediafusion/vts/vtsList/vtsList.tpl.html',
-          controller: 'ListUsersCtrl',
+        .state('meetings', {
+          url: '/meetings',
+          templateUrl: 'modules/mediafusion/meetings/meetingList/meetingList.tpl.html',
+          controller: 'ListMeetingsCtrl',
           parent: 'main'
-        })
+        });
 
-      .state('meetings', {
-        url: '/meetings',
-        templateUrl: 'modules/mediafusion/meetings/meetingList/meetingList.tpl.html',
-        controller: 'ListMeetingsCtrl',
-        parent: 'main'
-      });
     }
   ]);

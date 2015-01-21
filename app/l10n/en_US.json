@@ -75,8 +75,6 @@
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold Development Example",
-    "vtsDetailsTab": "VTS Details",
-    "vtsDetailsTabDesc": "VTS Management",
     "meetingDetailsTab": "Meetings",
     "meetingDetailsTabDesc": "Meetings Management"
   },

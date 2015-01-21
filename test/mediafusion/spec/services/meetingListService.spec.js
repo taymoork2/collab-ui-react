@@ -1,5 +1,6 @@
 'use strict';
 
+//Below is the Test Suit written for MeetingListService
 describe('Service: MeetingListService', function () {
 
   // load the service's module
@@ -8,7 +9,10 @@ describe('Service: MeetingListService', function () {
   //Initialize variables
   var MeetingListService,httpBackend,meetinglistData;
 
-  // instantiate service
+  /* Instantiate service.
+  * Reading the json data to application variable.
+  * Making a fake call to return json data to make unit test cases to be passed.
+  */
   beforeEach(inject(function ($httpBackend,_MeetingListService_) {
     meetinglistData = getJSONFixture('mediafusion/json/meetings/meetingListData.json');
     httpBackend = $httpBackend;

@@ -1,11 +1,17 @@
 'use strict';
 
+//Defining a controller for Meeting List with required dependencies.
 angular.module('Core')
   .controller('ListMeetingsCtrl', ['$scope', '$filter', 'Log', 'MeetingListService',
     function ($scope, $filter, Log, MeetingListService) {
 
       $scope.querymeetingslist = [];
 
+      /*
+       * getMeetingList function will fetch and populate Meeting list table with the meetings info from its
+       * repective MeetingListService.
+       * querymeetingslist should be populated.
+       */
       var getMeetingList = function () {
         MeetingListService.listMeetings(function (data, status) {
           if (data.success) {
@@ -15,6 +21,8 @@ angular.module('Core')
           }
         });
       };
+
+      //Gridoptions describes about table structure and behaviour.
 
       $scope.gridOptions = {
         data: 'querymeetingslist',
