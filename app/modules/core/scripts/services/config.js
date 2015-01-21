@@ -172,7 +172,7 @@ angular.module('Core')
             desc: 'tabs.meetingDetailsTabDesc',
             state: 'meetings',
             link: '#meetings'
-          }, ]
+          }]
         }],
 
         entitlements: {
