@@ -8,7 +8,7 @@ angular.module('Hercules')
 
       var mockServicesData = function () {
         return [{
-          name: 'Fusion Management Service',
+          name: 'Fusion Management',
           icon: 'fa fa-tachometer',
           type: 'c_mgmt'
         }, {
