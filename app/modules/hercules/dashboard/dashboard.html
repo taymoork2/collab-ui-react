@@ -69,7 +69,7 @@
                     </span>
                   </span>
 
-                  <div style="padding-top: 5px" class="clearfix" ng-repeat="host in cluster.hosts | filter: { offline: true }">
+                  <div style="padding-top: 5px" class="clearfix connector-info-item" ng-repeat="host in cluster.hosts | filter: { offline: true }">
                     <span style="color: #f05d3b">{{host.host_name}}</span>
                     <span translate="{{'hercules.status.offline'}}" />
                     <a href>
