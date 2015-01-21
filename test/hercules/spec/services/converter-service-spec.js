@@ -263,7 +263,7 @@ describe('ConverterService', function () {
 
   it('set display_name to first connector if none provided', function() {
     var mockData = [{
-      hosts: [{host_name: 'bar_host_name'}]
+      hosts: [{host_name: ''}, {host_name: 'bar_host_name'}, {host_name: 'qux_host_name'}]
     }];
     var converted = Service.convertClusters(mockData);
     expect(converted[0].name).toBe('bar_host_name');
