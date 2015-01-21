@@ -10,9 +10,15 @@ angular.module('Squared')
       var activeUsersUrl = apiUrl + 'reports/counts/activeUsers';
       var callsUrl = apiUrl + 'reports/counts/calls';
       var conversationsUrl = apiUrl + 'reports/counts/conversations';
-      var timeChartUrl = apiUrl + 'reports/timeCharts/';
-      var logInfoBaseUrl = apiUrl + 'reports/tables/calls/';
 
+      var timeChartUrl;
+      if (Authinfo.isPartner()) {
+        timeChartUrl = apiUrl + 'reports/timeCharts/managedOrgs/';
+      } else {
+        timeChartUrl = apiUrl + 'reports/timeCharts/';
+      }
+
+      var logInfoBaseUrl = apiUrl + 'reports/tables/calls/';
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
       var averageCallCount = apiUrl + 'reports/counts/avgCallsPerUser';
       var entitlementCount = apiUrl + 'reports/counts/entitlements';

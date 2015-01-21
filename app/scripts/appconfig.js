@@ -226,7 +226,7 @@ angular
           parent: 'partner',
           url: '/reports',
           templateUrl: 'modules/squared/views/partnerreports.html',
-          controller: 'ReportsCtrl'
+          controller: 'PartnerReportsCtrl'
         })
         .state('login_swap', {
           url: '/login/:customerOrgId/:customerOrgName',
