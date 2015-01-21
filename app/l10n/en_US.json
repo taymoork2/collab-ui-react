@@ -66,6 +66,9 @@
   "messagingPanel": {
     "title": "Messaging"
   },
+  "settings": {
+    "initialSetup": "Initial Setup"
+  },
   "tabs": {
     "overviewTab": "Overview",
     "customerTab": "Customers",
@@ -467,11 +470,22 @@
     "finishSub": "Complete your setup",
     "completeRequired": "{{name}} must be completed."
   },
-  "callRoutingPage": {
+  "callRouting": {
     "title": "Call Routing",
-    "callPark": "Call Park"
+    "autoAttendantTitle": "Auto Attendant",
+    "callParkTitle": "Call Park",
+    "callPickUpTitle": "Call Pick Up",
+    "intercomGroupsTitle": "Intercom Groups",
+    "pagingGroupsTitle": "Paging Groups",
+    "huntGroupsTitle": "Hunt Groups"
   },
   "callPark": {
+    "newCallPark": "New Call Park",
+    "callParkInformation": "Call Park information",
+    "information1": "The Call Park feature allows you to place a call on hold, so it can be retrieved from another phone in the system. If you are on an active call at your phone, you can park the call to a call park extension by pressing the Park softkey or the Call Park button. Someone on another phone in your system can then dial the call park extension to retrieve the call.",
+    "information2": "You can define either a single directory number or a range of directory numbers for use as call park extension numbers. You can park only one call at each call park extension number.",
+    "deleteCallPark": "Delete Call Park",
+    "deleteConfirmation": "Are you sure you want to delete this Call Park?",
     "createTitle": "Create New Call Park",
     "createDescription": "Allow users to place a call on hold so that it can be retrieved from another endpoint",
     "name": "Name",
@@ -485,8 +499,7 @@
     "callReversionDescription": "This defines the routing of the call when it is not picked up",
     "owner": "Person who parked the call",
     "numberPrompt": "Enter Number",
-    "createButton": "Create Call Park",
-    "cancelButton": "Cancel"
+    "createButton": "Create Call Park"
   },
   "telephonyPreview": {
     "or": "or",

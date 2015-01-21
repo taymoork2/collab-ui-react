@@ -81,23 +81,24 @@ angular.module('Core')
   }
 ])
 
-.controller('SettingsMenuCtrl', ['$scope', '$location', '$state', 'Authinfo', 'Utils',
-  function ($scope, $location, $state, Authinfo, Utils) {
+.controller('SettingsMenuCtrl', ['$scope', '$location', '$state', '$translate', 'Authinfo', 'Utils',
+  function ($scope, $location, $state, $translate, Authinfo, Utils) {
 
     $scope.menuItems = [];
+    var initialSetupText = $translate.instant('settings.initialSetup')
 
     var getAuthinfoData = function () {
       var found = false;
       if (Authinfo.isCustomerAdmin()) {
         for (var i = 0, l = $scope.menuItems.length; i < l; i++) {
-          if ($scope.menuItems[i].title === 'Initial Setup') {
+          if ($scope.menuItems[i].title === initialSetupText) {
             found = true;
           }
         }
         if (!found) {
           $scope.menuItems.push({
             link: '/initialsetup',
-            title: 'Initial Setup'
+            title: initialSetupText
           });
         }
       }
