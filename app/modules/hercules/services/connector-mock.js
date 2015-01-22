@@ -2,7 +2,7 @@
 
 /* global _ */
 
-var rnd = function(max) {
+var rnd = function (max) {
   max = max || 10000000000;
   return Math.floor(Math.random() * max).toString(16);
 };
@@ -33,6 +33,9 @@ var createService = function (serviceName, serviceType, hosts) {
           description: "It's really bad man. I can't do any more work here. This cloud is just too confusing."
         })
       ];
+      connector.connector_status = createConnectorStatus(serviceType, false)
+    } else {
+      connector.connector_status = createConnectorStatus(serviceType, true)
     }
     return connector;
   });
@@ -72,6 +75,41 @@ var createAlarm = function (opts) {
     "title": opts.title,
     "severity": opts.severity,
     "description": opts.description
+  }
+}
+
+var createConnectorStatus = function (connectorType, statusOk) {
+  if (connectorType == "c_mgmt") {
+    return null
+  }
+  var cloudServiceType = "common_identity"
+  var premServiceType = ""
+  switch (connectorType) {
+  case "c_cal":
+    cloudServiceType = "cal_service"
+    premServiceType = "exchange"
+    break;
+  case "c_ucmc":
+    cloudServiceType = "uc_service"
+    premServiceType = "ucm_axl"
+    break;
+  }
+  return {
+    "operational": true,
+    "services": {
+      "cloud": [{
+        "address": "11.11.11.11",
+        "type": cloudServiceType,
+        "state": statusOk ? "ok" : "error",
+        "stateDescription": statusOk ? "" : "Unable to connect..."
+      }],
+      "onprem": [{
+        "address": "10.10.10.10",
+        "type": premServiceType,
+        "state": statusOk ? "ok" : "error",
+        "stateDescription": statusOk ? "" : "Unable to connect..."
+      }]
+    }
   }
 }
 
