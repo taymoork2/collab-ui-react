@@ -387,7 +387,7 @@
     "deleteDeviceConfText": "Are you sure you want to delete this device?"
   },
   "hercules": {
-    "page_title": "Fusion Services",
+    "page_title": "UC APP Fusion Services",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -410,9 +410,9 @@
       "registered": "is registered but has not yet posted status."
     },
     "setup": {
-        "label": "UC Fusion Services",
-        "title": "UC Fusion Services",
-        "desc": "Synchronize your on-prem services"
+        "label": "About UC APP Fusion Services",
+        "title": "About UC APP Fusion Services",
+        "desc": "Leverage your services on-premise"
     }
   },
   "firstTimeWizard": {
