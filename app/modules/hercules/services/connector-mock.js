@@ -2,7 +2,7 @@
 
 /* global _ */
 
-var rnd = function(max) {
+var rnd = function (max) {
   max = max || 10000000000;
   return Math.floor(Math.random() * max).toString(16);
 };

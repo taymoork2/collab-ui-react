@@ -17,7 +17,7 @@ angular.module('Hercules')
         }
       };
 
-      var fetch = function (callback) {
+      var fetch = function (callback, opts) {
         if ($window.location.search.match(/hercules-backend=error/)) {
           getUrl = function () {
             return 'https://hercules.hitest.huron-dev.com/fubar';
@@ -29,6 +29,18 @@ angular.module('Hercules')
         if ($window.location.search.match(/hercules-backend=nodata/)) {
           return callback(null, []);
         }
+
+        var errorCallback = (function() {
+          if (opts && opts.squelchErrors) {
+            return function() {
+              callback(arguments);
+            }
+            return callback;
+          } else {
+            return createErrorHandler('Unable to fetch data from UC fusion backend', callback);
+          }
+        }());
+
         $http
           .get(getUrl())
           .success(function (data) {
@@ -36,7 +48,8 @@ angular.module('Hercules')
             lastClusterResponse = converted;
             callback(null, converted);
           })
-          .error(createErrorHandler('Unable to fetch data from UC fusion backend', callback));
+          .error(errorCallback);
+
         return lastClusterResponse;
       };
 
@@ -51,7 +64,7 @@ angular.module('Hercules')
           .error(createErrorHandler('Unable to upgrade software', opts.callback));
       };
 
-      var deleteHost = function(clusterId, serial, callback) {
+      var deleteHost = function (clusterId, serial, callback) {
         var url = getUrl() + '/' + clusterId + '/hosts/' + serial;
         $http
           .delete(url)

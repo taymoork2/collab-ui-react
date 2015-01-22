@@ -12,7 +12,7 @@ angular.module('Hercules')
 
       $scope.reload = function (callback) {
         $scope.inflight = true;
-        callback = callback || function() {};
+        callback = callback || function () {};
         service.fetch(function (err, data) {
           $scope.clusters = data || [];
           $scope.loading = false;
@@ -26,7 +26,7 @@ angular.module('Hercules')
           clusterId: clusterId,
           serviceType: serviceType,
           callback: function () {
-            $scope.reload(function() {
+            $scope.reload(function () {
               callback();
             });
           }
@@ -44,14 +44,14 @@ angular.module('Hercules')
 
       $scope.deleteHost = function (clusterId, serial) {
         $scope.deleteHostInflight = true;
-        service.deleteHost(clusterId, serial, function() {
-          $scope.reload(function() {
+        service.deleteHost(clusterId, serial, function () {
+          $scope.reload(function () {
             $scope.deleteHostInflight = false;
           });
         });
       };
 
-      $scope.toggleAlarms = function(clusterId, serviceType, hostName) {
+      $scope.toggleAlarms = function (clusterId, serviceType, hostName) {
         if ($scope.visibleAlarm.clusterId == clusterId && $scope.visibleAlarm.serviceType == serviceType && $scope.visibleAlarm.hostName == hostName) {
           $scope.visibleAlarm = {};
         } else {
