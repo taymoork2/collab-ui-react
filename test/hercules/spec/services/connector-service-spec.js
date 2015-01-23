@@ -187,4 +187,20 @@ describe('Service: ConnectorService', function () {
     expect(notification.notify.callCount).toBe(1);
   });
 
+  it('should be possible to squelch errors when fetch fails', function () {
+    $httpBackend
+      .when('GET', 'https://hercules.hitest.huron-dev.com/v1/clusters')
+      .respond(500, null);
+    expect(notification.notify.callCount).toBe(0);
+
+    var callback = sinon.stub()
+    Service.fetch(callback, {squelchErrors: true});
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(notification.notify.callCount).toBe(0);
+
+    expect(callback.args[0][0]).toBeTruthy();
+  });
+
 });

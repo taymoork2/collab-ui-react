@@ -91,14 +91,15 @@
       <div class="row">
         <!-- TODO: To be removed when monitoring service is refactored-->
         <section class="monitoring-panel col-sm-4 col-md-12">
-          <a ng-href="{{statusPageUrl}}" target="_blank">
-            <h4 class="monitoring-section" translate="homePage.monitoring"></h4>
-            <div ng-repeat="health in healthMetrics">
+          <h4 class="monitoring-section" translate="homePage.monitoring"></h4>
+          <div ng-repeat="health in healthMetrics">
+            <a ng-href="{{statusPageUrl}}" target="_blank">
               <div ng-class="{true:'green', false:'red'}[health.status==='operational']" class="monitoring-cell" id="{{health.name}}">
                 <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>{{health.name}}</span>
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
+          <hercules-status></hercules-status>
         </section>
 
         <!-- TODO: Replacement for when monitoring service is refactored
