@@ -8,7 +8,7 @@ var admintestuser= {
   password: 'C1sco123!'
 };
 
-xdescribe('Squared UC Add User flow', function() {
+describe('Squared UC Add User flow', function() {
   var currentUser;
   describe('Add and Entitle User Flows', function() {
     var inputEmail = utils.randomTestGmail();

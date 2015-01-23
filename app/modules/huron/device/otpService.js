@@ -12,6 +12,7 @@
       loadOtps: loadOtps,
       hyphenateOtp: hyphenateOtp,
       generateOtp: generateOtp,
+      convertExpiryTime: convertExpiryTime,
       getQrCodeUrl: getQrCodeUrl
     };
 

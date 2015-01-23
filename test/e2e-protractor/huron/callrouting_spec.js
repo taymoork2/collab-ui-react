@@ -7,7 +7,7 @@ var testuser = {
 
 var pattern = Math.ceil(Math.random()*Math.pow(10,4)).toString();
 
-xdescribe('Huron Call Routing', function() {
+describe('Huron Call Routing', function() {
   it('should login', function(){
     login.login(testuser.username,testuser.password);
   });
