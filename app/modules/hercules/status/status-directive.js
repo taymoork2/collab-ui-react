@@ -21,7 +21,9 @@
         } else {
           $scope.color = 'green';
         }
-      }, {squelchErrors: true});
+      }, {
+        squelchErrors: true
+      });
 
     }])
     .directive('herculesStatus',

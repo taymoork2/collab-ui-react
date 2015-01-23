@@ -30,9 +30,9 @@ angular.module('Hercules')
           return callback(null, []);
         }
 
-        var errorCallback = (function() {
+        var errorCallback = (function () {
           if (opts && opts.squelchErrors) {
-            return function() {
+            return function () {
               callback(arguments);
             }
             return callback;

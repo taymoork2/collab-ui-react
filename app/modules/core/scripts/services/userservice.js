@@ -273,6 +273,32 @@ angular.module('Core')
               callback(data, status);
               Auth.handleStatus(status);
             });
+        },
+
+        migrateUsers: function (users, callback) {
+
+          var requestBody = {
+            'users': []
+          };
+
+          for (var x in users) {
+            var user = {
+              'email': users[x].userName
+            };
+            requestBody.users.push(user);
+          }
+
+          $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody)
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
         }
       };
     }

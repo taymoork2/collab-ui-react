@@ -41,6 +41,7 @@ var LandingPage = function() {
   this.convertModalClose = element(by.id('convertModalClose'));
   this.convertCancelButton = element(by.id('convertModalClose'));
   this.convertActionButton = element(by.id('convertActionButton'));
+  this.unlicensedUserRow = element(by.css('.ngRow'));
 };
 
 module.exports = LandingPage;

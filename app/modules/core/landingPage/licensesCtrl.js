@@ -3,8 +3,8 @@
 
 angular.module('Core')
 
-.controller('LicensesCtrl', ['$scope', 'Authinfo', 'PartnerService', 'Orgservice', 'Log', 'Notification', '$modal', '$filter', '$translate',
-  function ($scope, Authinfo, PartnerService, Orgservice, Log, Notification, $modal, $filter, $translate) {
+.controller('LicensesCtrl', ['$scope', 'Authinfo', 'PartnerService', 'Orgservice', 'Log', 'Notification', '$modal', '$filter', '$translate', 'Userservice',
+  function ($scope, Authinfo, PartnerService, Orgservice, Log, Notification, $modal, $filter, $translate, Userservice) {
 
     $scope.packageInfo = {
       name: '&nbsp;',
@@ -125,13 +125,24 @@ angular.module('Core')
     };
 
     $scope.convertUsers = function () {
-      Log.debug('selected items : ' + $scope.gridOptions.$gridScope.selectedItems);
+      console.log($scope.gridOptions.$gridScope.selectedItems);
+      Userservice.migrateUsers($scope.gridOptions.$gridScope.selectedItems, function (data, status) {
+        if (data.success) {
+          var successMessage = [];
+          successMessage.push('Users successfully converted.');
+          Notification.notify(successMessage, 'success');
+        } else {
+          var errorMessage = ['Converting users failed. Status: ' + status];
+          errorMessage.push();
+          Notification.notify(errorMessage, 'error');
+        }
+      });
       $scope.convertModalInstance.close();
     };
 
     $scope.getName = function (user) {
       if (user.name === undefined && user.displayName === undefined) {
-        return "";
+        return '';
       }
       if (user.displayName !== undefined) {
         return user.displayName;
