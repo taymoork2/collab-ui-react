@@ -6,7 +6,6 @@
     .factory('HuronAssignedLine', ['Authinfo', 'InternalNumberPoolService', 'DirectoryNumberCopyService',
       function (Authinfo, InternalNumberPoolService, DirectoryNumberCopyService) {
         var lineTemplate;
-        var assignedLine;
 
         return {
           assignDirectoryNumber: function (userUuid, dnUsage, dnPattern) {
@@ -20,6 +19,8 @@
             }
           },
           autoAssignDn: function (userUuid, dnUsage) {
+            var assignedLine;
+
             return DirectoryNumberCopyService.query({
                 customerId: Authinfo.getOrgId()
               }).$promise
@@ -69,7 +70,8 @@
               }).$promise
               .then(function (directoryNumbers) {
                 if (angular.isArray(directoryNumbers) && directoryNumbers.length > 0) {
-                  return directoryNumbers[0];
+                  var randomIndex = Math.floor(Math.random() * (directoryNumbers.length - 0 + 1) + 0);
+                  return directoryNumbers[randomIndex];
                 }
               });
           },
