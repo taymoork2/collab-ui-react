@@ -59,7 +59,7 @@ angular.module('Squared')
               }
             }
             $scope.saveDisabled = false;
-          } else if (!$scope.entitlements.webExSquared && !oldEntitlements[changedKey] && changedKey !== 'webExSquared') {
+          } else if (!$scope.entitlements.webExSquared && !oldEntitlements[changedKey] && changedKey !== 'webExSquared' && Utils.areEntitlementsActive($scope.entitlements)) {
             $scope.entitlements.webExSquared = true;
             $scope.saveDisabled = false;
           } else if (newEntitlements !== oldEntitlements) {
@@ -68,10 +68,12 @@ angular.module('Squared')
         });
 
         $scope.$watch('currentUser', function (newUser, oldUser) {
-          if (newUser.id !== oldUser.id) {
-            $timeout(function () {
-              $scope.saveDisabled = true;
-            }, 10);
+          if (newUser && oldUser) {
+            if (newUser.id !== oldUser.id) {
+              $timeout(function () {
+                $scope.saveDisabled = true;
+              }, 10);
+            }
           }
         });
       };
