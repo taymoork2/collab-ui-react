@@ -5,7 +5,7 @@ var testuser = {
   password: 'C1sco123!'
 };
 
-xdescribe('Telephony Info', function() {
+describe('Telephony Info', function() {
   var currentUser;
   var user = utils.randomTestGmail();
   var dropdownVariables = {
@@ -114,6 +114,7 @@ xdescribe('Telephony Info', function() {
 
       telephony.selectOption(telephony.forwardBusy, dropdownVariables.addNew);
       telephony.setNumber(telephony.forwardBusy, snrLine);
+      telephony.forwardBusyAwayRadio.click();
       telephony.selectOption(telephony.forwardAway, dropdownVariables.voicemail);
       telephony.saveButton.click();
       notifications.assertSuccess('Line configuration saved successfully');
@@ -214,6 +215,7 @@ xdescribe('Telephony Info', function() {
       telephony.verifyNewNumber().then(function(number){
         telephony.selectOption(telephony.forwardBusy, dropdownVariables.addNew);
         telephony.setNumber(telephony.forwardBusy, snrLine);
+        telephony.forwardBusyAwayRadio.click();
         telephony.selectOption(telephony.forwardAway, dropdownVariables.addNew);
         telephony.setNumber(telephony.forwardAway, snrLine);
         telephony.saveButton.click();
