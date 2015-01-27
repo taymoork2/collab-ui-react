@@ -59,11 +59,6 @@
 
     init();
 
-    $scope.$on('nextTab', nextTab);
-    $scope.$on('setSubTab', function (event, args) {
-      setSubTab(args);
-    });
-
     function init() {
       vm.current.tab = getTabs()[0];
       vm.current.step = getSteps()[0];

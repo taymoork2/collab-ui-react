@@ -16,7 +16,7 @@ angular.module('Hercules')
         });
       }
 
-      var getAvailableSoftwareUpgradeForService = function(service, cluster) {
+      var getAvailableSoftwareUpgradeForService = function (service, cluster) {
         if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
           return _.find(cluster.provisioning_data.not_approved_packages, function (pkg) {
             return pkg.service.service_type == service.service_type;

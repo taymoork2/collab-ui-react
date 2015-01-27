@@ -71,8 +71,17 @@
           };
 
           $scope.directoryNumber = dn;
-          $scope.internalNumberPool.push(internalNumber);
           $scope.assignedInternalNumber = internalNumber;
+
+          $scope.internalNumberPool = TelephonyInfoService.getInternalNumberPool();
+          if ($scope.internalNumberPool.length === 0) {
+            TelephonyInfoService.loadInternalNumberPool().then(function (internalNumberPool) {
+              $scope.internalNumberPool = internalNumberPool;
+              $scope.internalNumberPool.push(internalNumber);
+            });
+          } else {
+            $scope.internalNumberPool.push(internalNumber);
+          }
 
           initCallForward();
           initCallerId();
@@ -80,7 +89,15 @@
 
         if (typeof $scope.telephonyInfo.alternateDirectoryNumber.uuid !== 'undefined' && $scope.telephonyInfo.alternateDirectoryNumber.uuid !== '') {
           $scope.assignedExternalNumber = $scope.telephonyInfo.alternateDirectoryNumber;
-          $scope.externalNumberPool.push($scope.telephonyInfo.alternateDirectoryNumber);
+
+          if ($scope.externalNumberPool.length === 0) {
+            TelephonyInfoService.loadExternalNumberPool().then(function (externalNumberPool) {
+              $scope.externalNumberPool = externalNumberPool;
+              $scope.externalNumberPool.push($scope.telephonyInfo.alternateDirectoryNumber);
+            });
+          } else {
+            $scope.externalNumberPool.push($scope.telephonyInfo.alternateDirectoryNumber);
+          }
         }
 
       } else { // add new dn case
