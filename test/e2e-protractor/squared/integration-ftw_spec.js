@@ -55,15 +55,17 @@ describe('First Time Wizard', function() {
   it('should complete simple invite users flow', function() {
     wizard.clickAddUsers();
     wizard.radiobuttons.get(0).click();
+    browser.sleep(1000);
     wizard.nextBtn.click();
     expect(wizard.usersfield.isDisplayed()).toBeTruthy();
+    browser.sleep(1000);
     wizard.finishBtn.click();
 
     expect(wizard.fusionIntro.isDisplayed()).toBeTruthy();
     wizard.nextBtn.click();
     expect(wizard.fusionFuse.isDisplayed()).toBeTruthy();
     wizard.finishBtn.click();
-  });
+  }, 60000);
 
   it('should reopen the wizard', function() {
     element(by.css('body')).sendKeys(protractor.Key.ESCAPE);

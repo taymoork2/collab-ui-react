@@ -27,19 +27,18 @@ describe('Squared UC Add User flow', function() {
         navigation.expectCurrentUrl('/users');
         expect(users.manageDialog.isDisplayed()).toBeTruthy();
       });
-
-      it('should display only invite and add button', function() {
-        expect(users.inviteButton.isDisplayed()).toBeTruthy();
-        expect(users.addButton.isDisplayed()).toBeTruthy();
-        users.assertEntitlementListSize(4);
-      });
     });
 
     describe('Add a new Squared UC user', function() {
       it('should display input user email in results with success message', function() {
         users.addUsersField.sendKeys(inputEmail);
+        users.collabRadio1.click();
+        users.inviteRadio2.click();
+        browser.sleep(1000);
+        expect(users.onboardButton.isDisplayed()).toBeTruthy();
+        users.assertEntitlementListSize(5);
         users.squaredUCCheckBox.click();
-        users.addButton.click();
+        users.onboardButton.click();
         notifications.assertSuccess(inputEmail, 'added successfully');
         users.closeAddUsers.click();
         browser.sleep(3000);

@@ -25,18 +25,16 @@ describe('Add/Invite/Entitle User flow', function() {
       users.addUsers.click();
       browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
       expect(users.manageDialog.isDisplayed()).toBeTruthy();
-      expect(users.inviteButton.isDisplayed()).toBeTruthy();
-      expect(users.entitleButton.isPresent()).toBeFalsy();
-      expect(users.addButton.isPresent()).toBeFalsy();
+      expect(users.onboardButton.isDisplayed()).toBeTruthy();
     });
 
     describe('Invite users', function() {
       it('should invite users successfully', function() {
         inviteEmail = utils.randomTestGmail();
-        users.clearButton.click();
+        //users.clearButton.click();
         users.addUsersField.sendKeys(inviteEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.inviteButton.click();
+        users.onboardButton.click();
         notifications.assertSuccess('sent successfully');
       });
 

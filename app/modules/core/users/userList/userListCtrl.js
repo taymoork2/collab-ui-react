@@ -26,7 +26,6 @@ angular.module('Core')
 
       var init = function () {
         if ($state.params.showAddUsers === 'add') {
-          $scope.setupTokenfield();
           $('#addUsersDialog').modal('show');
         }
       };

@@ -23,8 +23,11 @@ describe('Telephony Info', function() {
     users.addUsers.click();
     browser.sleep(1000);
     users.addUsersField.sendKeys(user);
+    users.collabRadio1.click();
+    users.inviteRadio2.click();
+    browser.sleep(1000);
     users.squaredUCCheckBox.click();
-    users.addButton.click();
+    users.onboardButton.click();
     notifications.assertSuccess(user, 'added successfully');
     users.closeAddUsers.click();
     browser.sleep(3000);
