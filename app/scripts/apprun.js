@@ -10,7 +10,7 @@ angular
       $rootScope.exporting = false;
 
       //Enable logging
-      $rootScope.debug = true;
+      $rootScope.debug = false;
 
       var storedState = 'storedState';
       var storedParams = 'storedParams';
