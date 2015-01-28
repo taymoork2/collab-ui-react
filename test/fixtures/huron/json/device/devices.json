@@ -1,0 +1,20 @@
+[
+  {
+    "associationType": "Cti Control In",
+    "uuid": "6ebbf00f-2447-4a68-a85b-e67db13ffd6a",
+    "defaultProfile": "false",
+    "endpoint": {
+      "name": "SEPF09E630F0528",
+      "uuid": "7a94bbdf-6df5-4240-ae68-b5fa9d25df51"
+    }
+  },
+  {
+    "associationType": "Cti Control In",
+    "uuid": "fc000077-b71b-4e24-aae7-d3d822716904",
+    "defaultProfile": "false",
+    "endpoint": {
+      "name": "SEP1C6A7AE0628D",
+      "uuid": "a61d770c-0f00-4251-b599-a10d49399ddb"
+    }
+  }
+]

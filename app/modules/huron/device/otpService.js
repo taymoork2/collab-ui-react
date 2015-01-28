@@ -27,15 +27,17 @@
         .then(function (otps) {
           var otpList = [];
           for (var i = 0; i < otps.length; i++) {
-            var otp = {
-              code: otps[i].activationCode,
-              friendlyCode: hyphenateOtp(otps[i].activationCode),
-              expiresOn: otps[i].expires.time,
-              friendlyExpiresOn: convertExpiryTime(otps[i].expires.time, 'America/Los_Angeles'),
-              valid: otps[i].expires.valid
-            };
+            if (otps[i].expires.status === "valid") {
+              var otp = {
+                code: otps[i].activationCode,
+                friendlyCode: hyphenateOtp(otps[i].activationCode),
+                expiresOn: otps[i].expires.time,
+                friendlyExpiresOn: convertExpiryTime(otps[i].expires.time, 'America/Los_Angeles'),
+                valid: otps[i].expires.status
+              };
 
-            otpList.push(otp);
+              otpList.push(otp);
+            }
           }
           return otpList;
         });

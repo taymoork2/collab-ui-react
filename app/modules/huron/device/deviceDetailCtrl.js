@@ -6,7 +6,7 @@
     .controller('DeviceDetailCtrl', DeviceDetailCtrl);
 
   /* @ngInject */
-  function DeviceDetailCtrl($rootScope, $scope, $filter, $modal, $state, Log, DeviceService, Notification) {
+  function DeviceDetailCtrl($rootScope, $scope, $translate, $modal, $state, Log, DeviceService, Notification) {
     var vm = this;
     vm.device = {};
     vm.title = '';
@@ -26,11 +26,11 @@
     function save() {
       DeviceService.updateDevice(vm.device)
         .then(function (response) {
-          Notification.notify([$filter('translate')('deviceDetailPage.success')], 'success');
+          Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
         })
         .catch(function (response) {
           Log.debug('updateDevice failed.  Status: ' + response.status + ' Response: ' + response.data);
-          Notification.notify([$filter('translate')('deviceDetailPage.error')], 'error');
+          Notification.notify([$translate.instant('deviceDetailPage.error')], 'error');
         });
     }
 
@@ -43,12 +43,12 @@
         DeviceService.deleteDevice(vm.device)
           .then(function (response) {
             $rootScope.$broadcast("deviceDeactivated");
-            Notification.notify([$filter('translate')('deviceDetailPage.success')], 'success');
+            Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
             $state.go('users.list.preview');
           })
           .catch(function (response) {
             Log.debug('deleteDevice failed.  Status: ' + response.status + ' Response: ' + response.data);
-            Notification.notify([$filter('translate')('deviceDetailPage.error')], 'error');
+            Notification.notify([$translate.instant('deviceDetailPage.error')], 'error');
           });
       });
     }

@@ -40,6 +40,7 @@ module.exports = {
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
       'bower_components/sinon-ng/sinon-ng.js',
+      'bower_components/es5-shim/es5-shim.js',
       '**/*.json'
     ]
   },
