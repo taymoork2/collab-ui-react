@@ -43,7 +43,7 @@
 
                   <span>{{cluster.name || 'Unknown Cluster Name'}}</span>
 
-                  <span ng-show="{{!cluster.needs_attention && cluster.provisioning_data.not_approved_packages.length}}" style="float: right; color: #00B29D;">
+                  <span ng-show="{{!cluster.needs_attention && cluster.software_upgrade_available}}" style="float: right; color: #00B29D;">
                     <span class="hidden-xs">Software Upgrades Available</span>
                     <span class="visible-xs"><i class="fa fa-cloud-download"></i></span>
                   </span>
@@ -157,13 +157,13 @@
                       </div>
 
                       <!-- sw upgrade -->
-                      <div class="connector-info-item" ng-show="service.not_approved_package">
+                      <div class="connector-info-item" ng-show="service.software_upgrade_available">
                         <div style="padding-bottom: 5px" class="clearfix">
                           <span>A software update is avalable.</span>
                           <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
                           <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
                         </div>
-                        <div style="padding-bottom: 5px" ng-show="service.not_approved_package">
+                        <div style="padding-bottom: 5px">
                           <hercules-upgrade-button
                             cluster-id="{{cluster.id}}"
                             service-type="{{service.service_type}}"

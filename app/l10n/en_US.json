@@ -429,7 +429,9 @@
       "not_installed": "has not installed the service.",
       "stopped": "reports the service as stopped.",
       "offline": "has not posted status in a while and could be offline.",
-      "registered": "is registered but has not yet posted status."
+      "registered": "is registered but has not yet posted status.",
+      "downloading": "is downloading the service software.",
+      "uninstalling": "is uninstalling the service."
     },
     "setup": {
         "label": "About UC APP Fusion Services",

@@ -94,6 +94,7 @@ describe('ConverterService', function () {
       }]
     }];
     var converted = Service.convertClusters(mockData);
+    expect(converted[0].running_hosts).toBeTruthy();
     expect(converted[0].services[0].running_hosts).toBe(2);
     expect(!!converted[0].services[0].is_disabled).toBe(false);
     expect(!!converted[0].services[0].needs_attention).toBe(false);
@@ -105,10 +106,7 @@ describe('ConverterService', function () {
       "provisioning_data": {
         "not_approved_packages": [
           {
-            "service": {
-              "service_type": "c_cal",
-              "display_name": "Calendar Service"
-            },
+            "service": { "service_type": "c_cal" },
             "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
             "version": "8.2-2.1"
           }
@@ -117,7 +115,6 @@ describe('ConverterService', function () {
       "services": [
         {
           "service_type": "c_cal",
-          "display_name": "Calendar Service",
           "connectors": [
             { "state": "running", version: 'bar_version', host: {host_name: 'bar_host_name'} }
           ]
@@ -127,20 +124,18 @@ describe('ConverterService', function () {
 
     var converted = Service.convertClusters(mockData);
     expect(converted[0].services[0].not_approved_package).not.toBe(null);
+    expect(converted[0].services[0].software_upgrade_available).toBe(true);
     expect(converted[0].services[0].not_approved_package.service.service_type).toBe('c_cal');
   });
 
-  it('should not show sw update details if service is disabled', function() {
+  it('should not show sw update details if services are disabled', function() {
     var mockData = [{
       "provisioning_data": {
         "not_approved_packages": [
           {
-            "service": {
-              "service_type": "c_cal",
-              "display_name": "Calendar Service"
-            },
-            "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
-            "version": "8.2-2.1"
+            "service": { "service_type": "c_cal" },
+            "tlp_url": "foo",
+            "version": "1"
           }
         ]
       },
@@ -151,13 +146,20 @@ describe('ConverterService', function () {
           "connectors": [
             { "state": "disabled", version: 'bar_version', host: {host_name: 'bar_host_name'} }
           ]
+        },
+        {
+          "service_type": "c_mgmt",
+          "connectors": [
+            { "state": "running", version: '1', host: {host_name: 'bar_host_name'} }
+          ]
         }
       ]
     }];
 
     var converted = Service.convertClusters(mockData);
-    expect(converted[0].services[0].not_approved_package).toBeFalsy();
-    expect(converted[0].provisioning_data.not_approved_packages).toBeFalsy();
+    expect(converted[0].services[0].software_upgrade_available).toBeFalsy();
+    expect(converted[0].services[1].software_upgrade_available).toBeFalsy();
+    expect(converted[0].software_upgrade_available).toBeFalsy();
   });
 
   it('should not show sw update details if service is offline', function() {
@@ -183,8 +185,8 @@ describe('ConverterService', function () {
     }];
 
     var converted = Service.convertClusters(mockData);
-    expect(converted[0].services[0].not_approved_package).toBeFalsy();
-    expect(converted[0].provisioning_data.not_approved_packages).toBeFalsy();
+    expect(converted[0].services[0].software_upgrade_available).toBeFalsy();
+    expect(converted[0].software_upgrade_available).toBeFalsy();
   });
 
   it('should show sw update details if one service is running', function() {
@@ -211,9 +213,12 @@ describe('ConverterService', function () {
       ]
     }];
 
+
+
     var converted = Service.convertClusters(mockData);
     expect(converted[0].services[0].not_approved_package).toBeTruthy();
-    expect(converted[0].provisioning_data.not_approved_packages).toBeTruthy();
+    expect(converted[0].services[0].software_upgrade_available).toBeTruthy();
+    expect(converted[0].software_upgrade_available).toBeTruthy();
   });
 
   it('a cluster with all hosts disabled isnt running', function() {

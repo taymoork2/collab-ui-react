@@ -5,22 +5,22 @@ angular.module('Hercules')
     function ConverterService() {
 
       var allConnectorsOffline = function (service) {
-        return _.reduce(service.connectors, function (offline, connector) {
-          return offline && connector.state == 'offline';
-        }, true);
+        return !_.find(service.connectors, function (connector) {
+          return connector.state != 'offline';
+        });
+      };
+
+      var allConnectorsOfflineOrDisabled = function (service) {
+        return !_.find(service.connectors, function (connector) {
+          return connector.state != 'offline' && connector.state != 'disabled';
+        });
       }
 
-      var updateNotApprovedPackageForService = function (service, cluster) {
-        if (service.is_disabled || allConnectorsOffline(service)) {
-          return;
-        }
+      var getAvailableSoftwareUpgradeForService = function(service, cluster) {
         if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
-          var not_approved_package = _.find(cluster.provisioning_data.not_approved_packages, function (pkg) {
+          return _.find(cluster.provisioning_data.not_approved_packages, function (pkg) {
             return pkg.service.service_type == service.service_type;
           });
-          if (not_approved_package) {
-            service.not_approved_package = not_approved_package;
-          }
         }
       };
 
@@ -59,6 +59,9 @@ angular.module('Hercules')
             service.running_hosts = ++service.running_hosts;
           }
         });
+        if (service.running_hosts) {
+          cluster.running_hosts = true;
+        }
       };
 
       var serviceAndClusterNeedsAttention = function (service, cluster) {
@@ -66,13 +69,15 @@ angular.module('Hercules')
         service.needs_attention = true;
       };
 
-      var stripAvailablePackagesIfServicesDisabledOrOffline = function (cluster) {
+      var updateSoftwareUpgradeAvailableDetails = function (service, cluster) {
         if (cluster.provisioning_data) {
-          var servicesDisabledOrOffline = _.reduce(cluster.services, function (disabledOrOffline, service) {
-            return disabledOrOffline && (service.is_disabled || allConnectorsOffline(service));
-          }, true);
-          if (servicesDisabledOrOffline) {
-            delete cluster.provisioning_data.not_approved_packages;
+          var not_approved_package = getAvailableSoftwareUpgradeForService(service, cluster);
+          if (not_approved_package) {
+            if (!allConnectorsOfflineOrDisabled(service)) {
+              service.not_approved_package = not_approved_package;
+              service.software_upgrade_available = true;
+              cluster.software_upgrade_available = true;
+            }
           }
         }
       };
@@ -120,10 +125,9 @@ angular.module('Hercules')
           var cluster = _.cloneDeep(origCluster);
           _.each(cluster.services, function (service) {
             updateServiceStatus(service, cluster);
-            updateNotApprovedPackageForService(service, cluster);
+            updateSoftwareUpgradeAvailableDetails(service, cluster);
             deduceAlarmsForService(service, cluster);
           });
-          stripAvailablePackagesIfServicesDisabledOrOffline(cluster);
           updateClusterNameIfNotSet(cluster);
           updateHostStatus(cluster);
           cluster.services = _.sortBy(cluster.services, function (obj) {
