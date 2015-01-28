@@ -22,7 +22,7 @@
     "statusHeader": "STATUS/TOOLS",
     "modify": "Modify",
     "existingUsers": "Existing Users",
-    "userInput": "Enter one or more email addresses separated by commas",
+    "userInput": "Enter one or more email addresses separated by commas.",
     "active": "Active",
     "inactive": "",
     "validEmailInput": "Please enter valid user email(s).",
