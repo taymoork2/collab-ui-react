@@ -1,36 +1,39 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Huron')
-  .controller('CallParkDetailCtrl', ['$scope', '$modalInstance', 'CallPark',
-    function ($scope, $modalInstance, CallPark) {
+  angular
+    .module('uc.callpark')
+    .controller('CallParkDetailCtrl', CallParkDetailCtrl);
 
-      $scope.callPark = {
-        'retrievalPrefix': '*'
-      };
-      $scope.options = {
-        pattern: 'range',
-        reversionPattern: 'owner'
-      };
+  /* @ngInject */
+  function CallParkDetailCtrl($scope, $modalInstance, CallPark) {
+    var vm = this;
+    vm.callPark = {
+      'retrievalPrefix': '*'
+    };
+    vm.options = {
+      pattern: 'range',
+      reversionPattern: 'owner'
+    };
 
-      $scope.addCallParkByRange = function (callPark, rangeMin, rangeMax) {
-        CallPark.createByRange(callPark, rangeMin, rangeMax)
-          .then(function () {
-            $modalInstance.close();
-          })
-          .catch(function () {
-            $modalInstance.dismiss();
-          });
-      };
+    $scope.addCallParkByRange = function (callPark, rangeMin, rangeMax) {
+      CallPark.createByRange(callPark, rangeMin, rangeMax)
+        .then(function () {
+          $modalInstance.close();
+        })
+        .catch(function () {
+          $modalInstance.dismiss();
+        });
+    };
 
-      $scope.addCallPark = function (callPark) {
-        CallPark.create(callPark)
-          .then(function () {
-            $modalInstance.close();
-          })
-          .catch(function () {
-            $modalInstance.dismiss();
-          });
-      };
-    }
-
-  ]);
+    $scope.addCallPark = function (callPark) {
+      CallPark.create(callPark)
+        .then(function () {
+          $modalInstance.close();
+        })
+        .catch(function () {
+          $modalInstance.dismiss();
+        });
+    };
+  }
+})();

@@ -17,15 +17,22 @@
 
     .callrouting-nav {
       width: 218px;
-      margin-top: 33px;
+      margin-top: 29px;
 
       .callrouting-nav-menuitem {
-        margin: 4px 20px 4px 15px;
-        padding: 5px 20px 5px 15px;
+        margin: 4px 40px 5px 30px;
+        padding: 4px 0px 5px 0px;
+        font-family: @brand-font-cisco-TT-Light;
+        font-size: 15px;
+        .count {
+          float: right;
+        }
       }
     }
 
     .callrouting-main {
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       overflow-y: auto;
       flex: 1;
@@ -62,6 +69,7 @@
       }
 
       .callrouting-main-content {
+        flex: 1;
       }
     }
   }

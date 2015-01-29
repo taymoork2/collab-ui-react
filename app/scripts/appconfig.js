@@ -361,15 +361,35 @@ angular
             }
           }
         })
+        .state('autoattendant', {
+          url: '/autoattendant',
+          parent: 'callrouting',
+          template: '<div></div>'
+        })
         .state('callpark', {
           url: '/callpark',
           parent: 'callrouting',
           templateUrl: 'modules/huron/callRouting/callPark/callPark.tpl.html',
           controller: 'CallParkCtrl',
-          controllerAs: 'callPark'
+          controllerAs: 'cp'
         })
-        .state('underconstruction', {
-          url: '/underconstruction',
+        .state('callpickup', {
+          url: '/callpickup',
+          parent: 'callrouting',
+          template: '<div></div>'
+        })
+        .state('intercomgroups', {
+          url: '/intercomgroups',
+          parent: 'callrouting',
+          template: '<div></div>'
+        })
+        .state('paginggroups', {
+          url: '/paginggroups',
+          parent: 'callrouting',
+          template: '<div></div>'
+        })
+        .state('huntgroups', {
+          url: '/huntgroups',
           parent: 'callrouting',
           template: '<div></div>'
         })
