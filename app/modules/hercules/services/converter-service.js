@@ -4,12 +4,6 @@ angular.module('Hercules')
   .service('ConverterService', [
     function ConverterService() {
 
-      var allConnectorsOffline = function (service) {
-        return !_.find(service.connectors, function (connector) {
-          return connector.state != 'offline';
-        });
-      };
-
       var allConnectorsOfflineOrDisabled = function (service) {
         return !_.find(service.connectors, function (connector) {
           return connector.state != 'offline' && connector.state != 'disabled';
@@ -65,7 +59,7 @@ angular.module('Hercules')
       };
 
       var serviceAndClusterNeedsAttention = function (service, cluster) {
-        cluster.needs_attention = cluster.initially_open = true;
+        cluster.needs_attention = true;
         service.needs_attention = true;
       };
 
