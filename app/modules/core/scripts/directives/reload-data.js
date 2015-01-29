@@ -12,8 +12,6 @@ angular.module('Squared')
 
         scope.currentTime = scope.lastUpdatedTime;
 
-        console.log(scope.currentTime);
-
         scope.$watch('lastUpdatedTime', function (newVal, oldVal) {
           if (newVal) {
             scope.currentTime = newVal;

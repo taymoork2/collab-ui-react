@@ -194,6 +194,13 @@ angular.module('Core')
           inactive: 'INACTIVE'
         },
 
+        chartColors: {
+          blue: '#1EA7D1',
+          red: '#F46315',
+          yellow: '#EBC31C',
+          green: '#50D71D'
+        },
+
         batchSize: 20,
 
         isDev: function () {

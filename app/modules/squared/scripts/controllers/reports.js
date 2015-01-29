@@ -108,49 +108,44 @@ angular.module('Squared')
         checkAllValues();
       };
 
-      var blue = '#1EA7D1';
-      var red = '#F46315';
-      var yellow = '#EBC31C';
-      var green = '#50D71D';
-
       $scope.$on('entitlementsLoaded', function (event, response) {
-        getCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Users Onboarded', blue, 'sum');
+        getCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Users Onboarded', Config.chartColors.blue, 'sum');
       });
 
       $scope.$on('avgCallsPerUserLoaded', function (event, response) {
-        getCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Avg Calls Per User', red, 'average');
+        getCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Avg Calls Per User', Config.chartColors.red, 'average');
       });
 
       $scope.$on('avgConversationsLoaded', function (event, response) {
-        getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Avg Rooms Per User', yellow, 'average');
+        getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Avg Rooms Per User', Config.chartColors.yellow, 'average');
       });
 
       $scope.$on('activeUsersLoaded', function (event, response) {
-        getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', green, 'sum');
+        getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', Config.chartColors.green, 'sum');
       });
 
       $scope.$on('convOneOnOneLoaded', function (event, response) {
-        getCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', 'One On One Rooms', blue, 'sum');
+        getCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', 'One On One Rooms', Config.chartColors.blue, 'sum');
       });
 
       $scope.$on('convGroupLoaded', function (event, response) {
-        getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', 'Group Rooms', red, 'sum');
+        getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', 'Group Rooms', Config.chartColors.red, 'sum');
       });
 
       $scope.$on('callsLoaded', function (event, response) {
-        getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', 'Video Calls', yellow, 'sum');
+        getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', 'Video Calls', Config.chartColors.yellow, 'sum');
       });
 
       $scope.$on('callsAvgDurationLoaded', function (event, response) {
-        getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', 'Avg Duration of Calls', green, 'average');
+        getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', 'Avg Duration of Calls', Config.chartColors.green, 'average');
       });
 
       $scope.$on('contentSharedLoaded', function (event, response) {
-        getCharts(response, 'contentShared', 'contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', 'Content Shared', blue, 'sum');
+        getCharts(response, 'contentShared', 'contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', 'Content Shared', Config.chartColors.blue, 'sum');
       });
 
       $scope.$on('contentShareSizesLoaded', function (event, response) {
-        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', 'Amount of Content Shared', red, 'sum');
+        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', 'Amount of Content Shared', Config.chartColors.red, 'sum');
       });
 
       $scope.$on('onboardingFunnelLoaded', function (event, response) {

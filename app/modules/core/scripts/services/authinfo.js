@@ -1,237 +1,237 @@
-'use strict';
+ 'use strict';
 
-angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', '$filter',
-    function Authinfo($rootScope, $location, Utils, Config, $filter) {
-      // AngularJS will instantiate a singleton by calling "new" on this function
-      var authData = {
-        'username': null,
-        'orgname': null,
-        'orgid': null,
-        'addUserEnabled': null,
-        'entitleUserEnabled': null,
-        'entitlements': null,
-        'services': null,
-        'roles': null,
-        'tabs': [],
-        'isInitialized': false,
-        'setupDone': false
-      };
+ angular.module('Core')
+   .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', '$filter',
+     function Authinfo($rootScope, $location, Utils, Config, $filter) {
+       // AngularJS will instantiate a singleton by calling "new" on this function
+       var authData = {
+         'username': null,
+         'orgname': null,
+         'orgid': null,
+         'addUserEnabled': null,
+         'entitleUserEnabled': null,
+         'entitlements': null,
+         'services': null,
+         'roles': null,
+         'tabs': [],
+         'isInitialized': false,
+         'setupDone': false
+       };
 
-      var getTabTitle = function (title) {
-        return $filter('translate')(title);
-      };
+       var getTabTitle = function (title) {
+         return $filter('translate')(title);
+       };
 
-      var isAllowedState = function (state) {
-        if (state) {
-          // if nested state only check parent state
-          var parentState = state.split('.');
-          if (Config.allowedStates && Config.allowedStates.indexOf(parentState[0]) !== -1) {
-            return true;
-          }
-          var roles = authData.roles;
-          if (roles) {
-            for (var i in roles) {
-              var role = roles[i];
-              if (role && Config.roleStates[role] && Config.roleStates[role].indexOf(parentState[0]) !== -1) {
-                return true;
-              }
-            }
-          }
-          var services = authData.services;
-          if (services) {
-            for (var j in services) {
-              var service = services[j];
-              if (service && Config.serviceStates[service.ciService] && Config.serviceStates[service.ciService].indexOf(parentState[0]) !== -1) {
-                return true;
-              }
-            }
-          }
-        }
-        return false;
-      };
+       var isAllowedState = function (state) {
+         if (state) {
+           // if nested state only check parent state
+           var parentState = state.split('.');
+           if (Config.allowedStates && Config.allowedStates.indexOf(parentState[0]) !== -1) {
+             return true;
+           }
+           var roles = authData.roles;
+           if (roles) {
+             for (var i in roles) {
+               var role = roles[i];
+               if (role && Config.roleStates[role] && Config.roleStates[role].indexOf(parentState[0]) !== -1) {
+                 return true;
+               }
+             }
+           }
+           var services = authData.services;
+           if (services) {
+             for (var j in services) {
+               var service = services[j];
+               if (service && Config.serviceStates[service.ciService] && Config.serviceStates[service.ciService].indexOf(parentState[0]) !== -1) {
+                 return true;
+               }
+             }
+           }
+         }
+         return false;
+       };
 
-      //update the tabs when Authinfo data has been populated.
-      var initializeTabs = function () {
-        var tabs = angular.copy(Config.tabs);
+       //update the tabs when Authinfo data has been populated.
+       var initializeTabs = function () {
+         var tabs = angular.copy(Config.tabs);
 
-        // Remove states out of tab structure that are not allowed or had all their subPages removed
-        for (var i = 0; i < tabs.length; i++) {
-          if (tabs[i] && tabs[i].subPages) {
-            for (var j = 0; j < tabs[i].subPages.length; j++) {
-              if (tabs[i].subPages[j] && !isAllowedState(tabs[i].subPages[j].state)) {
-                tabs[i].subPages.splice(j--, 1);
-              }
-            }
-            if (tabs[i].subPages.length === 0) {
-              tabs.splice(i--, 1);
-            }
-          } else if (tabs[i] && !isAllowedState(tabs[i].state)) {
-            tabs.splice(i--, 1);
-          }
-        }
+         // Remove states out of tab structure that are not allowed or had all their subPages removed
+         for (var i = 0; i < tabs.length; i++) {
+           if (tabs[i] && tabs[i].subPages) {
+             for (var j = 0; j < tabs[i].subPages.length; j++) {
+               if (tabs[i].subPages[j] && !isAllowedState(tabs[i].subPages[j].state)) {
+                 tabs[i].subPages.splice(j--, 1);
+               }
+             }
+             if (tabs[i].subPages.length === 0) {
+               tabs.splice(i--, 1);
+             }
+           } else if (tabs[i] && !isAllowedState(tabs[i].state)) {
+             tabs.splice(i--, 1);
+           }
+         }
 
-        //Localize tabs
-        for (var index in tabs) {
-          tabs[index].title = getTabTitle(tabs[index].title);
-          if (tabs[index].subPages) {
-            for (var k in tabs[index].subPages) {
-              tabs[index].subPages[k].title = $filter('translate')(tabs[index].subPages[k].title);
-              tabs[index].subPages[k].desc = $filter('translate')(tabs[index].subPages[k].desc);
-            }
-          }
-        }
+         //Localize tabs
+         for (var index in tabs) {
+           tabs[index].title = getTabTitle(tabs[index].title);
+           if (tabs[index].subPages) {
+             for (var k in tabs[index].subPages) {
+               tabs[index].subPages[k].title = $filter('translate')(tabs[index].subPages[k].title);
+               tabs[index].subPages[k].desc = $filter('translate')(tabs[index].subPages[k].desc);
+             }
+           }
+         }
 
-        return tabs;
-      };
+         return tabs;
+       };
 
-      var isEntitled = function (entitlement) {
-        var services = authData.services;
-        if (services) {
-          for (var i = 0; i < services.length; i++) {
-            var service = services[i];
-            if (service && service.ciService === entitlement) {
-              return true;
-            }
-          }
-        }
-        return false;
-      };
+       var isEntitled = function (entitlement) {
+         var services = authData.services;
+         if (services) {
+           for (var i = 0; i < services.length; i++) {
+             var service = services[i];
+             if (service && service.ciService === entitlement) {
+               return true;
+             }
+           }
+         }
+         return false;
+       };
 
-      return {
-        initialize: function (data) {
-          authData.username = data.name;
-          authData.orgname = data.orgName;
-          authData.orgid = data.orgId;
-          authData.addUserEnabled = data.addUserEnabled;
-          authData.entitleUserEnabled = data.entitleUserEnabled;
-          authData.entitlements = data.entitlements;
-          authData.services = data.services;
-          authData.roles = data.roles;
-          authData.tabs = initializeTabs();
-          // TODO remove this from rootScope
-          $rootScope.services = data.services;
-          authData.isInitialized = true;
-          $rootScope.$broadcast('AuthinfoUpdated');
-          authData.setupDone = data.setupDone;
-        },
+       return {
+         initialize: function (data) {
+           authData.username = data.name;
+           authData.orgname = data.orgName;
+           authData.orgid = data.orgId;
+           authData.addUserEnabled = data.addUserEnabled;
+           authData.entitleUserEnabled = data.entitleUserEnabled;
+           authData.entitlements = data.entitlements;
+           authData.services = data.services;
+           authData.roles = data.roles;
+           authData.tabs = initializeTabs();
+           // TODO remove this from rootScope
+           $rootScope.services = data.services;
+           authData.isInitialized = true;
+           $rootScope.$broadcast('AuthinfoUpdated');
+           authData.setupDone = data.setupDone;
+         },
 
-        clear: function () {
-          authData.username = null;
-          authData.orgname = null;
-          authData.orgid = null;
-          authData.addUserEnabled = null;
-          authData.entitleUserEnabled = null;
-          authData.entitlements = null;
-          authData.services = null;
-          authData.tabs = [];
-          authData.roles = null;
-          authData.isInitialized = false;
-          authData.setupDone = null;
-        },
+         clear: function () {
+           authData.username = null;
+           authData.orgname = null;
+           authData.orgid = null;
+           authData.addUserEnabled = null;
+           authData.entitleUserEnabled = null;
+           authData.entitlements = null;
+           authData.services = null;
+           authData.tabs = [];
+           authData.roles = null;
+           authData.isInitialized = false;
+           authData.setupDone = null;
+         },
 
-        getOrgName: function () {
-          return authData.orgname;
-        },
+         getOrgName: function () {
+           return authData.orgname;
+         },
 
-        getOrgId: function () {
-          return authData.orgid;
-        },
+         getOrgId: function () {
+           return authData.orgid;
+         },
 
-        getUserName: function () {
-          return authData.username;
-        },
+         getUserName: function () {
+           return authData.username;
+         },
 
-        getUserEntitlements: function () {
-          return authData.entitlements;
-        },
+         getUserEntitlements: function () {
+           return authData.entitlements;
+         },
 
-        isAddUserEnabled: function () {
-          return authData.addUserEnabled;
-        },
+         isAddUserEnabled: function () {
+           return authData.addUserEnabled;
+         },
 
-        isEntitleUserEnabled: function () {
-          return authData.entitleUserEnabled;
-        },
+         isEntitleUserEnabled: function () {
+           return authData.entitleUserEnabled;
+         },
 
-        getServices: function () {
-          return authData.services;
-        },
+         getServices: function () {
+           return authData.services;
+         },
 
-        getRoles: function () {
-          return authData.roles;
-        },
+         getRoles: function () {
+           return authData.roles;
+         },
 
-        isSetupDone: function () {
-          return authData.setupDone;
-        },
+         isSetupDone: function () {
+           return authData.setupDone;
+         },
 
-        setSetupDone: function (setupDone) {
-          authData.setupDone = setupDone;
-        },
+         setSetupDone: function (setupDone) {
+           authData.setupDone = setupDone;
+         },
 
-        getTabs: function () {
-          return authData.tabs;
-        },
+         getTabs: function () {
+           return authData.tabs;
+         },
 
-        isAllowedState: function (state) {
-          return isAllowedState(state);
-        },
+         isAllowedState: function (state) {
+           return isAllowedState(state);
+         },
 
-        isInitialized: function () {
-          return authData.isInitialized;
-        },
+         isInitialized: function () {
+           return authData.isInitialized;
+         },
 
-        isAdmin: function () {
-          var roles = this.getRoles();
-          return roles.indexOf('Full_Admin') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
-        },
+         isAdmin: function () {
+           var roles = this.getRoles();
+           return roles.indexOf('Full_Admin') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
+         },
 
-        isCustomerAdmin: function () {
-          var roles = this.getRoles();
-          return roles.indexOf('Full_Admin') > -1;
-        },
+         isCustomerAdmin: function () {
+           var roles = this.getRoles();
+           return roles.indexOf('Full_Admin') > -1;
+         },
 
-        isPartner: function () {
-          var roles = this.getRoles();
-          if (roles) {
-            return roles.indexOf('PARTNER_USER') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
-          } else {
-            return false;
-          }
+         isPartner: function () {
+           var roles = this.getRoles();
+           if (roles) {
+             return roles.indexOf('PARTNER_USER') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
+           } else {
+             return false;
+           }
 
-        },
+         },
 
-        isSquaredTeamMember: function () {
-          var roles = this.getRoles();
-          return roles.indexOf('WX2_User') > -1;
-        },
+         isSquaredTeamMember: function () {
+           var roles = this.getRoles();
+           return roles.indexOf('WX2_User') > -1;
+         },
 
-        isSquaredInviter: function () {
-          var roles = this.getRoles();
-          if (roles !== null && roles.length > 0) {
-            return roles.indexOf('WX2_SquaredInviter') > -1;
-          } else {
-            return null;
-          }
-        },
+         isSquaredInviter: function () {
+           var roles = this.getRoles();
+           if (roles !== null && roles.length > 0) {
+             return roles.indexOf('WX2_SquaredInviter') > -1;
+           } else {
+             return null;
+           }
+         },
 
-        isServiceAllowed: function (service) {
-          if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {
-            return false;
-          } else {
-            return true;
-          }
-        },
+         isServiceAllowed: function (service) {
+           if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {
+             return false;
+           } else {
+             return true;
+           }
+         },
 
-        isSquaredUC: function () {
-          return isEntitled(Config.entitlements.huron);
-        },
+         isSquaredUC: function () {
+           return isEntitled(Config.entitlements.huron);
+         },
 
-        isFusion: function () {
-          return isEntitled(Config.entitlements.fusion_uc) || isEntitled(Config.entitlements.fusion_cal);
-        }
+         isFusion: function () {
+           return isEntitled(Config.entitlements.fusion_uc) || isEntitled(Config.entitlements.fusion_cal);
+         }
 
-      };
-    }
-  ]);
+       };
+     }
+   ]);

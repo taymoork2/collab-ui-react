@@ -18,11 +18,11 @@
   <div class="row">
     <div class ="all-reports col-sm-6">
       <div id="avgConversationsdiv" class="timechartDiv"></div>
-      <div id="avg-conversations-refresh" class="metrics-refresh" ng-show="showAvgConversationsRefresh"><i class='icon icon-spinner icon-2x'/></div>
+      <div id="avg-conversations-refresh" class="metrics-refresh" ng-show="isRefresh('avgConversations')"><i class='icon icon-spinner icon-2x'/></div>
     </div>
     <div class ="all-reports col-sm-6">
       <div id="activeUsersdiv" class="timechartDiv"></div>
-      <div id="active-users-refresh" class="metrics-refresh" ng-show="isRefresh('activeUsers')"><i class='icon icon-spinner icon-2x'/></div>
+      <div id="active-users-refresh" class="metrics-refresh" ng-show="isRefresh('activeUsers')"><i ng-show="isRefresh('activeUsers')" class='icon icon-spinner icon-2x'/></div>
     </div>
   </div>
   <div class="row">
@@ -42,13 +42,13 @@
     </div>
     <div class ="all-reports col-sm-6">
       <div id="callsAvgDurationdiv" class="timechartDiv"></div>
-      <div id="calls-avg-duration-refresh" class="metrics-refresh" ng-show="isRefresh('avgCalls')"><i class='icon icon-spinner icon-2x'/></div>
+      <div id="calls-avg-duration-refresh" class="metrics-refresh" ng-show="isRefresh('callsAvgDuration')"><i class='icon icon-spinner icon-2x'/></div>
     </div>
   </div>
   <div class="row">
     <div class ="all-reports col-sm-6">
       <div id="contentShareddiv" class="timechartDiv"></div>
-      <div id="content-shared-refresh" class="metrics-refresh" ng-show="isRefresh('contentShare')"><i class='icon icon-spinner icon-2x'/></div>
+      <div id="content-shared-refresh" class="metrics-refresh" ng-show="isRefresh('contentShared')"><i class='icon icon-spinner icon-2x'/></div>
     </div>
     <div class ="all-reports col-sm-6">
       <div id="contentShareSizesdiv" class="timechartDiv"></div>
