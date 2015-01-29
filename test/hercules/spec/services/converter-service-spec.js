@@ -24,7 +24,6 @@ describe('ConverterService', function () {
     }];
     var converted = Service.convertClusters(mockData);
     expect(converted[0].needs_attention).toBeFalsy();
-    expect(converted[0].initially_open).toBeFalsy();
   });
 
   it('should aggregate cluster status from hosts in cluster where one connector is not running', function () {
@@ -38,7 +37,6 @@ describe('ConverterService', function () {
     }];
     var converted = Service.convertClusters(mockData);
     expect(converted[0].needs_attention).toBe(true);
-    expect(converted[0].initially_open).toBe(true);
   });
 
   it('should aggregate cluster status from hosts in cluster where one connector has alarms', function () {
@@ -52,7 +50,6 @@ describe('ConverterService', function () {
     }];
     var converted = Service.convertClusters(mockData);
     expect(converted[0].needs_attention).toBe(true);
-    expect(converted[0].initially_open).toBe(true);
   });
 
   it('should aggregate service status from hosts in cluster where one connector has alarms', function () {

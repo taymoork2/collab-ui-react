@@ -4,19 +4,13 @@ angular.module('Hercules')
   .service('ConverterService', [
     function ConverterService() {
 
-      var allConnectorsOffline = function (service) {
-        return !_.find(service.connectors, function (connector) {
-          return connector.state != 'offline';
-        });
-      };
-
       var allConnectorsOfflineOrDisabled = function (service) {
         return !_.find(service.connectors, function (connector) {
           return connector.state != 'offline' && connector.state != 'disabled';
         });
       }
 
-      var getAvailableSoftwareUpgradeForService = function(service, cluster) {
+      var getAvailableSoftwareUpgradeForService = function (service, cluster) {
         if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
           return _.find(cluster.provisioning_data.not_approved_packages, function (pkg) {
             return pkg.service.service_type == service.service_type;
@@ -65,7 +59,7 @@ angular.module('Hercules')
       };
 
       var serviceAndClusterNeedsAttention = function (service, cluster) {
-        cluster.needs_attention = cluster.initially_open = true;
+        cluster.needs_attention = true;
         service.needs_attention = true;
       };
 

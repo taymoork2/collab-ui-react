@@ -34,7 +34,7 @@
         <div ng-show="clusters.length != 0" class="col-md-12">
 
           <accordion close-others="{{false}}">
-            <accordion-group ng-repeat="cluster in clusters" is-open="cluster.initially_open">
+            <accordion-group ng-repeat="cluster in clusters" is-open="true">
               <accordion-heading>
                 <h4>
                   <span class="{{cluster.needs_attention ? 'red' : cluster.running_hosts ? 'green' : ''}}" style="padding-right: 10px;">
