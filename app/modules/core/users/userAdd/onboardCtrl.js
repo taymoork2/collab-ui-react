@@ -520,6 +520,7 @@ angular.module('Core')
             $scope.entitlements[svc] = true;
           }
         }
+        $scope.entitlementsKeys = Object.keys($scope.entitlements).sort().reverse();
       };
 
       $scope.getEntitlementList = function () {

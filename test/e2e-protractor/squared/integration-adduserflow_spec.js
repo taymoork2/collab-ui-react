@@ -135,78 +135,87 @@ describe('Add/Invite/Entitle User flow', function() {
       notifications.clearNotifications();
     });
 
-    // describe('Add an existing user', function() {
-    //   it('should display input user email in results with already exists message', function() {
-    //     users.clearButton.click();
-    //     users.addUsersField.sendKeys(testuser.username);
-    //     users.addUsersField.sendKeys(protractor.Key.ENTER);
-    //     users.collabRadio1.click();
-    //     users.inviteRadio2.click();
-    //     browser.sleep(1000);
-    //     users.onboardButton.click();
-    //     notifications.assertError('already exists');
-    //   });
-    // });
-
-    // describe('Add a new user', function() {
-    //   it('should display input user email in results with success message', function() {
-    //     users.clearButton.click();
-    //     users.addUsersField.sendKeys(inputEmail);
-    //     users.addUsersField.sendKeys(protractor.Key.ENTER);
-    //     users.collabRadio1.click();
-    //     users.inviteRadio2.click();
-    //     browser.sleep(1000);
-    //     users.onboardButton.click();
-    //     notifications.assertSuccess(inputEmail, 'added successfully');
-    //   });
-    // });
-
-    // describe('Entitle an existing user with call-initiation', function() {
-    //   it('should display input user email in results with success message', function() {
-    //     users.clearButton.click();
-    //     users.addUsersField.sendKeys(inputEmail);
-    //     users.addUsersField.sendKeys(protractor.Key.ENTER);
-    //     users.collabRadio1.click();
-    //     users.inviteRadio2.click();
-    //     browser.sleep(1000);
-    //     users.manageCallInitiation.click();
-    //     users.onboardButton.click();
-    //     notifications.assertSuccess(inputEmail, 'entitled successfully');
-    //   });
-    // });
-
-    describe('Attempt to un-entitle call-initiation', function() {
-      it('should display input user email in results with entitlement previously updated message', function() {
+    describe('Add an existing user', function() {
+      it('should display input user email in results with already exists message', function() {
         users.clearButton.click();
-        // users.addUsersField.sendKeys(inputEmail);
-        // users.addUsersField.sendKeys(protractor.Key.ENTER);
-        // users.collabRadio1.click();
-        // users.inviteRadio2.click();
-        // browser.sleep(1000);
-        // users.manageCallInitiation.click();
-        // users.onboardButton.click();
-        // notifications.assertError(inputEmail, 'entitlement previously updated');
-        users.closeAddUsers.click();
-        browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
+        users.addUsersField.sendKeys(testuser.username);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        users.collabRadio1.click();
+        users.inviteRadio2.click();
+        browser.sleep(1000);
+        users.onboardButton.click();
+        notifications.assertSuccess('added successfully');
+        notifications.clearNotifications();
       });
     });
 
-    // describe('Verify call-initiation entitlement exists for user and un-entitle', function() {
-    //   it('should show call-initiation entitlement for the user', function() {
-    //     users.search(inputEmail);
-    //     browser.driver.manage().window().maximize();
-    //     users.userListEnts.then(function(cell) {
-    //       expect(cell[0].getText()).toContain(inputEmail);
-    //       users.gridCell.click();
-    //     });
-    //     browser.sleep(3000);  //TODO fix this - animation should be resolved by angular
-    //     expect(users.callInitiationCheckbox.isDisplayed()).toBeTruthy();
-    //     users.callInitiationCheckbox.click();
-    //     browser.sleep(100);
-    //     users.saveButton.click();
-    //     notifications.assertSuccess(inputEmail, 'updated successfully');
-    //   });
-    // });
+    describe('Add a new user', function() {
+      it('should display input user email in results with success message', function() {
+        users.clearButton.click();
+        users.addUsersField.sendKeys(inputEmail);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        users.collabRadio1.click();
+        users.inviteRadio2.click();
+        browser.sleep(1000);
+        users.onboardButton.click();
+        notifications.assertSuccess(inputEmail, 'added successfully');
+        notifications.clearNotifications();
+      });
+    });
+
+    describe('Entitle an existing user with call-initiation', function() {
+      it('should display input user email in results with success message', function() {
+        users.clearButton.click();
+        users.addUsersField.sendKeys(inputEmail);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        users.collabRadio1.click();
+        users.inviteRadio2.click();
+        browser.sleep(1000);
+        users.manageCallInitiation.click();
+        users.onboardButton.click();
+        notifications.assertSuccess(inputEmail, 'added successfully');
+        notifications.clearNotifications();
+      });
+    });
+
+    describe('Attempt to un-entitle call-initiation', function() {
+      it('should display input user email in results with entitlement updated message', function() {
+        users.clearButton.click();
+        users.addUsersField.sendKeys(inputEmail);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        users.collabRadio1.click();
+        users.inviteRadio2.click();
+        browser.sleep(1000);
+        users.manageCallInitiation.click();
+        users.onboardButton.click();
+        notifications.assertSuccess(inputEmail, 'added successfully');
+        notifications.clearNotifications();
+      });
+
+      it('clicking on cancel button should close the modal', function() {
+        users.closeAddUsers.click();
+        browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
+        expect(users.manageDialog.isDisplayed()).toBeFalsy();
+      });
+    });
+
+    describe('Verify call-initiation entitlement does not exist for user and re-entitle', function() {
+      it('should show call-initiation entitlement for the user', function() {
+        users.search(inputEmail);
+        browser.driver.manage().window().maximize();
+        users.userListEnts.then(function(cell) {
+          expect(cell[0].getText()).toContain(inputEmail);
+          users.gridCell.click();
+        });
+        browser.sleep(3000);  //TODO fix this - animation should be resolved by angular
+        expect(users.callInitiationCheckbox.isDisplayed()).toBeTruthy();
+        users.callInitiationCheckbox.click();
+        browser.sleep(100);
+        users.saveButton.click();
+        notifications.assertSuccess(inputEmail, 'updated successfully');
+        notifications.clearNotifications();
+      });
+    });
 
     describe('Delete user used for entitle test', function() {
       it('should delete added user', function() {

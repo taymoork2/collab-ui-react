@@ -20,8 +20,8 @@
             <cs-radio label="collabRadio1.label" value="collabRadio1.value" name="collabRadio" id="collabRadio1" ng-model="collabRadio" isdisabled="collabRadio1.isDisabled"></cs-radio>
 
             <div class="manage-entitlements" ng-if="(isEntitleEnabled() || isAddEnabled()) &&collabRadio === 1">
-              <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements" ng-if="isServiceAllowed(service)">
-                <cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(service,'webExSquared')}" id="{{'chk_'+service}}" ng-model="entitlements[service]" cklabel="{{getServiceName(service)}}"></cs-checkbox>
+              <div class="entitle-check-grp" ng-repeat="key in entitlementsKeys" ng-if="isServiceAllowed(key)">
+                <cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared')}" id="{{'chk_'+key}}" ng-model="entitlements[key]" cklabel="{{getServiceName(key)}}"></cs-checkbox>
               </div>
             </div>
 

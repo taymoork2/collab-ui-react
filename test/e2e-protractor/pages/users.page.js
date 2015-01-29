@@ -154,7 +154,7 @@ var UsersPage = function() {
   };
 
   this.assertEntitlementListSize = function(size) {
-    element.all(by.repeater('(service, val) in entitlements')).then(function(items) {
+    element.all(by.repeater('key in entitlementsKeys')).then(function(items) {
       expect(items.length).toBe(size);
     });
   };

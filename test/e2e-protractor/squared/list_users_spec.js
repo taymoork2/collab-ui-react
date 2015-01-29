@@ -161,7 +161,7 @@ describe('List users flow', function () {
       });
 
       browser.driver.manage().window().maximize();
-    });
+    }, 20000);
   });
 
   describe('logout', function () {
