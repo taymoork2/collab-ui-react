@@ -23,6 +23,9 @@ var SupportPage = function(){
   this.callInfoIcon = element(by.id('callInfo-icon'));
   this.downloadCallflowChartsIcon = element(by.id('download-callflowCharts-icon'));
   this.closeCallInfo = element(by.id('closeCallInfo'));
+  this.closeCallFlow = element(by.id('closeCallFlow'));
+
+  this.locusIdSort = element(by.css('.colt1'));
 
   this.getRowCount = function() {
     return this.rowCount.then(function(rows){

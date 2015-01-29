@@ -196,6 +196,11 @@ angular.module('Core')
               $scope.activeCount = $scope.activeList.length;
               $scope.trialsList = $scope.totalTrialsData;
               $scope.totalTrials = $scope.trialsList.length;
+              if ($scope.activeFilter === 'all') {
+                $scope.gridData = $scope.managedOrgsList;
+              } else {
+                $scope.gridData = $scope.trialsList;
+              }
             } else {
               $scope.getPending = false;
               Log.debug('No trial records found');

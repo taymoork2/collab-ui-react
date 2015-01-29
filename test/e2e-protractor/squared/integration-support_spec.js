@@ -65,6 +65,8 @@ describe('Support flow', function() {
       support.assertResultsLength(0);
       expect(support.supportTable.isDisplayed()).toBeTruthy();
       expect(support.emailAddress.getText()).toBe(testuser.searchValidEmail);
+      support.locusIdSort.click();
+      support.locusIdSort.click();
       testuser.searchValidLocusid = support.locusId.getText();
     });
 

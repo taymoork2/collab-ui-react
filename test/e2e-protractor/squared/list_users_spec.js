@@ -77,7 +77,7 @@ describe('List users flow', function () {
   describe('Display user profile page', function(){
     it('display user profile page when clicking on a user name', function(){
       users.clickOnUser();
-      expect(users.previewPanel.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(users.userLink);
     });
   });
 
