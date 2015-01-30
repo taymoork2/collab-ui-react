@@ -5,6 +5,10 @@
       Cluster Status
     </h4>
     <p>
+      <div class="header-stat">
+        {{serviceAggregates.running}}
+      </div>
+
       <div>
         <div ng-show="serviceAggregates.running == 1">
           {{serviceAggregates.running}} cluster OK
@@ -31,6 +35,10 @@
       {{service.name}}
     </h4>
     <p>
+      <div class="header-stat">
+        {{service.running}}
+      </div>
+
       <div>
         <span ng-show="service.running == 1">
           Running on {{service.running}} cluster
