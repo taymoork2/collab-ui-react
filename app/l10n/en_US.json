@@ -434,8 +434,8 @@
       "uninstalling": "is uninstalling the service."
     },
     "setup": {
-        "label": "About UC APP Fusion Services",
-        "title": "About UC APP Fusion Services",
+        "label": "UC APP Fusion Services",
+        "title": "UC APP Fusion Services",
         "desc": "Leverage your services on-premise"
     }
   },

@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <div ng-show="serviceAggregates.needs_attention" class="text-danger">
+      <div ng-show="serviceAggregates.needs_attention > 0" class="text-danger">
         <span ng-show="serviceAggregates.needs_attention == 1">
           {{serviceAggregates.needs_attention}} cluster needs attention
         </span>
@@ -47,16 +47,14 @@
           Running on {{service.running}} clusters
         </span>
       </div>
-      <div class="text-danger">
-        <span ng-show="service.needs_attention">
-          <span ng-show="service.needs_attention == 1">
-            {{service.needs_attention}} cluster needs attention
-          </span>
-          <span ng-hide="service.needs_attention == 1">
-            {{service.needs_attention}} clusters need attention
-          </span>
+
+      <div class="text-danger" ng-show="service.needs_attention">
+        <span ng-show="service.needs_attention == 1">
+          {{service.needs_attention}} cluster needs attention
         </span>
-        &nbsp;
+        <span ng-hide="service.needs_attention == 1">
+          {{service.needs_attention}} clusters need attention
+        </span>
       </div>
     </p>
   </div>
