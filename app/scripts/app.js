@@ -13,7 +13,7 @@ angular.module('Core', ['pascalprecht.translate']);
 
 angular.module('Squared', ['Core']);
 
-angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting']);
+angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd']);
 
 angular.module('Hercules', ['Core']);
 

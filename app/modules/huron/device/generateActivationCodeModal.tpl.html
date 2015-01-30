@@ -16,8 +16,7 @@
         <div class="activation-code">
           {{vm.otp.friendlyCode}}
         </div>
-        <div class="expiration">
-          {{'generateActivationCodeModal.expires' | translate}}:  {{vm.otp.friendlyExpiresOn}} <strong>({{vm.timeLeft}} {{'generateActivationCodeModal.fromNow' | translate}})</strong>
+        <div class="expiration" translate="generateActivationCodeModal.expires" translate-values="{date: vm.otp.friendlyExpiresOn, timeLeft: vm.timeLeft}">
         </div>
       </div>
     </div>

@@ -3,13 +3,16 @@
 
   angular
     .module('Huron')
-    .directive('hnCallForward', [
-      function () {
-        return {
-          restrict: 'EA',
-          scope: false,
-          templateUrl: 'modules/huron/callForward/callForward.tpl.html'
-        };
-      }
-    ]);
+    .directive('ucCallForward', ucCallForward);
+
+  function ucCallForward() {
+    var directive = {
+      restrict: 'EA',
+      scope: false,
+      templateUrl: 'modules/huron/callForward/callForward.tpl.html'
+    };
+
+    return directive;
+  };
+
 })();

@@ -36,7 +36,10 @@ module.exports = function (config) {
 
     coverageReporter: {
       dir: 'coverage/unit',
-      type: 'cobertura'
+      reporters: [
+        {type: 'cobertura'},
+        {type: 'html', subdir: 'report-html'}
+      ]
     },
 
     // list of files / patterns to exclude
@@ -70,7 +73,8 @@ module.exports = function (config) {
       'karma-chrome-launcher',
       'karma-jasmine',
       'karma-sinon',
-      'karma-junit-reporter'
+      'karma-junit-reporter',
+      'karma-htmlfile-reporter'
     ],
 
     // Continuous Integration mode
@@ -79,11 +83,15 @@ module.exports = function (config) {
 
     colors: true,
 
-    reporters: ['dots', 'junit', 'coverage'],
+    reporters: ['dots', 'junit', 'coverage', 'html'],
 
     junitReporter: {
       outputFile: 'test/unit-test-results.xml',
       suite: ''
+    },
+
+    htmlReporter: {
+      outputFile: 'test/unit-test-results.html'
     }
   });
 };

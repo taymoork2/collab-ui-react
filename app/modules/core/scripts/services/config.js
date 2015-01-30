@@ -337,6 +337,7 @@ angular.module('Core')
           'intercomgroups',
           'paginggroups',
           'huntgroups',
+          'didadd',
           'underconstruction'
         ],
         'squared-fusion-uc': ['fusion'],

@@ -46,7 +46,7 @@ describe('Controller: DevicesCtrl', function () {
       expect(controller).toBeDefined;
     });
 
-    it('should call activate()', function () {
+    beforeEach(function () {
       //devices requests
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/a61d770c-0f00-4251-b599-a10d49399ddb').respond(200, getJSONFixture('huron/json/device/devices/a61d770c-0f00-4251-b599-a10d49399ddb.json'));
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/7a94bbdf-6df5-4240-ae68-b5fa9d25df51').respond(200, getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51.json'));
@@ -58,14 +58,14 @@ describe('Controller: DevicesCtrl', function () {
       $scope.currentUser = getJSONFixture('huron/json/user/users/0515b4c0-c12f-45ac-8fbe-483f1c07956c.json');
       $scope.$digest();
       $httpBackend.flush();
+    });
 
-      it('should populate vm.otps with 1 otp', function () {
-        expect(controller.otps.length).toEqual(1);
-      });
+    it('should populate vm.otps with 1 otp', function () {
+      expect(controller.otps.length).toEqual(1);
+    });
 
-      it('should populate vm.devices with 2 devices', function () {
-        expect(controller.devices.length).toEqual(2);
-      });
+    it('should populate vm.devices with 2 devices', function () {
+      expect(controller.devices.length).toEqual(2);
     });
 
     describe('after activate', function () {

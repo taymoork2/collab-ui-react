@@ -3,15 +3,17 @@
 
   angular
     .module('Huron')
-    .directive('voicemailInfo', [
+    .directive('ucVoicemail', ucVoicemail);
 
-      function () {
-        return {
-          controller: 'VoicemailInfoCtrl',
-          restrict: 'EA',
-          scope: false,
-          templateUrl: 'modules/huron/voicemail/voicemail.tpl.html'
-        };
-      }
-    ]);
+  function ucVoicemail() {
+    var directive = {
+      controller: 'VoicemailInfoCtrl',
+      restrict: 'EA',
+      scope: false,
+      templateUrl: 'modules/huron/voicemail/voicemail.tpl.html'
+    };
+
+    return directive;
+  };
+
 })();

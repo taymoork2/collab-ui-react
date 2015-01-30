@@ -167,10 +167,10 @@ angular
           }
         })
         .state('users.list.preview.voicemail', {
-          template: '<div voicemail-info></div>'
+          template: '<div uc-voicemail></div>'
         })
         .state('users.list.preview.snr', {
-          template: '<div single-number-reach-info></div>'
+          template: '<div uc-single-number-reach></div>'
         })
         .state('users.list.preview.device', {
           templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
@@ -415,6 +415,17 @@ angular
             'modal@': {
               templateUrl: 'modules/huron/device/generateActivationCodeModal.tpl.html',
               controller: 'GenerateActivationCodeCtrl',
+              controllerAs: 'vm'
+            }
+          }
+        })
+        .state('didadd', {
+          parent: 'modal',
+          url: '/didadd',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/huron/didAdd/didAdd.tpl.html',
+              controller: 'DidAddCtrl',
               controllerAs: 'vm'
             }
           }

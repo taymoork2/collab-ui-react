@@ -491,19 +491,6 @@ angular.module('Core')
         $scope.trialsList = filterBy === 'ALL' ? $scope.totalTrialsData : $scope.activeList;
       };
 
-      $scope.openModal = function () {
-        console.log("open");
-        $modal.open({
-          templateUrl: 'modules/huron/didAdd/didAdd.tpl.html',
-          controller: 'DidAddCtrl'
-        });
-      };
-
-      $scope.deleteDIDs = function () {
-        console.log("delete");
-        ExternalNumberPool.deleteAll();
-      };
-
       $scope.setFilter = function (filter) {
         $scope.activeFilter = filter;
         if (filter === 'trials') {
