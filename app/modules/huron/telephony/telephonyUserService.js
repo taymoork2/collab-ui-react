@@ -9,10 +9,9 @@
   function HuronUser(Authinfo, UserServiceCommon, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService) {
     var userProfile = Authinfo.getOrgId() + '_000001_UCUP';
     var userPayload = {
-      'userId': null,
+      'userName': null,
       'firstName': null,
       'lastName': null,
-      'email': null,
       'voice': {
         'userProfile': userProfile
       },
@@ -46,8 +45,7 @@
 
     function create(uuid, data) {
       var user = angular.copy(userPayload);
-      user.email = data.email;
-      user.userId = data.email;
+      user.userName = data.email;
 
       if (data.familyName) {
         user.lastName = data.familyName;
@@ -64,7 +62,7 @@
       }
 
       var emailInfo = {
-        'email': user.email,
+        'email': user.userName,
         'firstName': user.lastName,
         'phoneNumber': null,
         'oneTimePassword': null,
@@ -88,7 +86,7 @@
             userId: uuid
           }, user).$promise;
         }).then(function () {
-          return acquireOTP(user.userId);
+          return acquireOTP(user.userName);
         }).then(function (otpInfo) {
           emailInfo.oneTimePassword = otpInfo.password;
           emailInfo.expiresOn = otpInfo.expiresOn;

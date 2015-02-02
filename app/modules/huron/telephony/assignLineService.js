@@ -91,9 +91,6 @@
     function copyFromUlt(directoryNumber, dnUsage, userUuid) {
       var copyFromUlt = {
         'pattern': directoryNumber.pattern,
-        'customer': {
-          'uuid': Authinfo.getOrgId()
-        },
         'user': {
           'uuid': userUuid
         },
