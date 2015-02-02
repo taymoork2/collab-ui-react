@@ -84,10 +84,6 @@ module.exports = function (config) {
     junitReporter: {
       outputFile: 'test/unit-test-results.xml',
       suite: ''
-    },
-
-    // Increasing timeout to fix issues seen in the Oslo Jenkins
-    // Related? https://github.com/karma-runner/karma/issues/598
-    browserNoActivityTimeout: 60000
+    }
   });
 };
