@@ -10,6 +10,7 @@
     var service = {
       addNewLine: addNewLine,
       changeInternalLine: changeInternalLine,
+      disassociateInternalLine: disassociateInternalLine,
       addExternalLine: addExternalLine,
       changeExternalLine: changeExternalLine,
       deleteExternalLine: deleteExternalLine,
@@ -29,7 +30,7 @@
 
       return HuronAssignedLine.assignDirectoryNumber(userUuid, dnUsage, pattern)
         .then(function (dn) {
-          TelephonyInfoService.updateCurrentDirectoryNumber(dn.uuid, dn.pattern, dnUsage, false);
+          TelephonyInfoService.updateCurrentDirectoryNumber(dn.uuid, dn.pattern, dnUsage, null, false);
           return DirectoryNumber.updateDirectoryNumber(dn.uuid, dnSettings);
         })
         .then(function () {
@@ -55,9 +56,15 @@
 
       return DirectoryNumber.updateDirectoryNumber(dnUuid, dnSettings)
         .then(function (dn) {
-          TelephonyInfoService.updateCurrentDirectoryNumber(dnUuid, dn.pattern, dnUsage, false);
+          TelephonyInfoService.updateCurrentDirectoryNumber(dnUuid, dn.pattern, dnUsage, null, false);
           return TelephonyInfoService.loadInternalNumberPool();
         });
+    }
+
+    function disassociateInternalLine(_userUuid, _dnUuid) {
+      var userUuid = _userUuid;
+      var dnUuid = _dnUuid;
+      return DirectoryNumber.disassociateDirectoryNumber(userUuid, dnUuid);
     }
 
     function addExternalLine(_dnUuid, _pattern) {

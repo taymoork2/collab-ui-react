@@ -14,7 +14,10 @@
       scope: {
         save: '&onSave',
         close: '&close',
-        title: '@title'
+        title: '@title',
+        remove: '&onRemove',
+        removeButtonText: '@removebuttontext',
+        isRemove: '@isremove'
       },
       link: link,
       controller: DetailsBodyController,

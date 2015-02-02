@@ -5,9 +5,9 @@
     .module('Huron')
     .factory('DirectoryNumber', DirectoryNumber);
 
-  DirectoryNumber.$inject = ['Authinfo', 'TelephonyInfoService', 'DirectoryNumberService', 'AlternateNumberService', 'HuronAssignedLine'];
+  DirectoryNumber.$inject = ['Authinfo', 'TelephonyInfoService', 'UserDirectoryNumberService', 'DirectoryNumberService', 'AlternateNumberService', 'HuronAssignedLine', 'UserDirectoryNumberService'];
 
-  function DirectoryNumber(Authinfo, TelephonyInfoService, DirectoryNumberService, AlternateNumberService, HuronAssignedLine) {
+  function DirectoryNumber(Authinfo, TelephonyInfoService, UserDirectoryNumberService, DirectoryNumberService, AlternateNumberService, HuronAssignedLine) {
     var directoryNumberPayload = {
       uuid: '',
       pattern: '',
@@ -40,6 +40,7 @@
       getNewDirectoryNumber: getNewDirectoryNumber,
       getDirectoryNumber: getDirectoryNumber,
       deleteDirectoryNumber: deleteDirectoryNumber,
+      disassociateDirectoryNumber: disassociateDirectoryNumber,
       updateDirectoryNumber: updateDirectoryNumber,
       changeInternalNumber: changeInternalNumber,
       getAlternateNumber: getAlternateNumber,
@@ -104,6 +105,14 @@
       return DirectoryNumberService.delete({
         customerId: Authinfo.getOrgId(),
         directoryNumberId: uuid
+      }).$promise;
+    }
+
+    function disassociateDirectoryNumber(userUuid, dnUuid) {
+      return UserDirectoryNumberService.delete({
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid,
+        directoryNumberId: dnUuid
       }).$promise;
     }
 

@@ -547,7 +547,11 @@
     "externalNumberLabel": "External Number",
     "chooseNumber": "Choose a Number",
     "addNewNumber": "Add a New Number",
-    "none": "None"
+    "removeNumber": "Remove Line",
+    "none": "None",
+    "deleteConfirmation": "This action cannot be undone.  Are you sure you want to unassign {{line}} from {{user}}?",
+    "deleteLineTitle": "Remove Line",
+    "disassociationSuccess": "Line successfully unassigned from user."
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
@@ -737,7 +741,7 @@
     "enterprise": "Enterprise",
     "mediaFusion": "Media Fusion",
     "cloud":"Cloud"
-  }, 
+  },
   "vtsPage": {
     "enterpriseResources": "Enterprise Resources",
     "name" : "Name",

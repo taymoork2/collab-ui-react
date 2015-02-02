@@ -15,7 +15,8 @@
       currentDirectoryNumber: {
         uuid: 'none',
         pattern: '',
-        dnUsage: 'Undefined'
+        dnUsage: 'Undefined',
+        userDnUuid: 'none'
       },
       alternateDirectoryNumber: {
         uuid: 'none',
@@ -37,6 +38,7 @@
     var telephonyInfoService = {
       getTelephonyInfo: getTelephonyInfo,
       resetTelephonyInfo: resetTelephonyInfo,
+      resetCurrentUser: resetCurrentUser,
       updateDirectoryNumbers: updateDirectoryNumbers,
       updateUserServices: updateUserServices,
       updateSnr: updateSnr,
@@ -70,7 +72,8 @@
       telephonyInfo.currentDirectoryNumber = {
         uuid: 'none',
         pattern: '',
-        dnUsage: 'Undefined'
+        dnUsage: 'Undefined',
+        userDnUuid: 'none'
       };
       telephonyInfo.alternateDirectoryNumber = {
         uuid: 'none',
@@ -84,6 +87,20 @@
         remoteDestinations: null,
         singleNumberReachEnabled: false
       };
+    }
+
+    /**
+      Function to reset the current user in the case that a newly
+      created line would not have userDnUuid set.
+    **/
+    function resetCurrentUser(uuid) {
+      for (var num in telephonyInfo.directoryNumbers) {
+        var dn = telephonyInfo.directoryNumbers[num];
+        if (dn.uuid === uuid) {
+          updateCurrentDirectoryNumber(dn.uuid, dn.pattern, dn.dnUsage, dn.userDnUuid);
+          break;
+        }
+      }
     }
 
     function updateDirectoryNumbers(directoryNumbers) {
@@ -113,11 +130,16 @@
       $rootScope.$broadcast(broadcastEvent);
     }
 
-    function updateCurrentDirectoryNumber(dnUuid, pattern, dnUsage, broadcast) {
+    function updateCurrentDirectoryNumber(dnUuid, pattern, dnUsage, userDnUuid, broadcast) {
       broadcast = typeof broadcast !== 'undefined' ? broadcast : true;
       telephonyInfo.currentDirectoryNumber.uuid = dnUuid;
       telephonyInfo.currentDirectoryNumber.pattern = pattern;
       telephonyInfo.currentDirectoryNumber.dnUsage = dnUsage;
+      if (userDnUuid) {
+        telephonyInfo.currentDirectoryNumber.userDnUuid = userDnUuid;
+      } else {
+        telephonyInfo.currentDirectoryNumber.userDnUuid = "none";
+      }
       if (broadcast) {
         $rootScope.$broadcast("currentLineChanged");
       }
@@ -151,7 +173,7 @@
     }
 
     function getUserDnInfo(userUuid) {
-      UserDirectoryNumberService.query({
+      return UserDirectoryNumberService.query({
           customerId: Authinfo.getOrgId(),
           userId: userUuid
         }).$promise
@@ -163,6 +185,7 @@
                 'dnUsage': getDnType(userDnInfo[i].dnUsage),
                 'uuid': userDnInfo[i].directoryNumber.uuid,
                 'pattern': userDnInfo[i].directoryNumber.pattern,
+                'userDnUuid': userDnInfo[i].uuid,
                 'altDnUuid': '',
                 'altDnPattern': ''
               };
@@ -191,7 +214,7 @@
           } else {
             updateDirectoryNumbers(null);
           }
-        })
+        });
     }
 
     function getTelephonyUserInfo(userUuid) {

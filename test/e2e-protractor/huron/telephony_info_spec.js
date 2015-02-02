@@ -5,8 +5,6 @@ var testuser = {
   password: 'C1sco123!'
 };
 
-//Comment this entire test out for now until the service is fixed
-// Feb 2 2015 - Nabeel Kamboh
 describe('Telephony Info', function() {
   var currentUser;
   var user = utils.randomTestGmail();
@@ -62,7 +60,11 @@ describe('Telephony Info', function() {
 
     it('should show directory number select', function(){
       telephony.directoryNumbers.first().all(by.css('span')).first().click();
-      expect(telephony.directoryNumberSelect.isDisplayed).toBeTruthy();
+      expect(telephony.internalNumber.isDisplayed()).toBeTruthy();
+    });
+
+    it('should not display remove button for primary line', function(){
+      expect(telephony.removeButton.isDisplayed()).toBeFalsy();
     });
 
     it('should save call forward all to voicemail', function(){
@@ -202,11 +204,11 @@ describe('Telephony Info', function() {
       telephony.threeDotButton.click();
       expect(telephony.addNewLine.isDisplayed()).toBeTruthy();
       telephony.addNewLine.click();
-      expect(telephony.directoryNumberSelect.isDisplayed).toBeTruthy();
+      expect(telephony.internalNumber.isDisplayed).toBeTruthy();
       var number = telephony.verifyNewNumber();
-      telephony.directoryNumbers.first().click();
-      var primary = telephony.verifyExistingNumber();
-      expect(number).not.toEqual(primary);
+      telephony.primary.click();
+      var primaryNum = telephony.verifyExistingNumber();
+      expect(number).not.toEqual(primaryNum);
       expect(element(by.cssContainingText('span', number)).isPresent()).toBeFalsy();
     });
 
@@ -215,7 +217,7 @@ describe('Telephony Info', function() {
       telephony.threeDotButton.click();
       expect(telephony.addNewLine.isDisplayed()).toBeTruthy();
       telephony.addNewLine.click();
-      expect(telephony.directoryNumberSelect.isDisplayed).toBeTruthy();
+      expect(telephony.internalNumber.isDisplayed).toBeTruthy();
       telephony.internalNumber.click();
       telephony.verifyNewNumber().then(function(number){
         telephony.selectOption(telephony.forwardBusy, dropdownVariables.addNew);
@@ -223,6 +225,7 @@ describe('Telephony Info', function() {
         telephony.forwardBusyAwayRadio.click();
         telephony.selectOption(telephony.forwardAway, dropdownVariables.addNew);
         telephony.setNumber(telephony.forwardAway, snrLine);
+        expect(telephony.removeButton.isDisplayed()).toBeFalsy();
         telephony.saveButton.click();
         notifications.assertSuccess('Line configuration saved successfully');
 
@@ -232,6 +235,7 @@ describe('Telephony Info', function() {
             return count > 0;
           });
         });
+        expect(telephony.removeButton.isDisplayed()).toBeTruthy();
         expect(numberElement.first().isDisplayed()).toBeTruthy();
         telephony.directoryNumbers.get(1).click();
         telephony.verifyExistingNumber().then(function(verificationNumber){
@@ -267,12 +271,44 @@ describe('Telephony Info', function() {
       telephony.saveButton.click();
       notifications.assertSuccess('Line configuration saved successfully');
 
-      telephony.directoryNumbers.get(1).click();
+      telephony.verifyExistingNumber().then(function(number){
+        telephony.primary.click();
+        element.all(by.cssContainingText('span', number)).first().click();
+      });
       var verifyNumber = '';
       telephony.externalNumber.element(by.css('option:checked')).getText().then(function(text){
         verifyNumber = text;
       });
       expect(extNumber).toEqual(verifyNumber);
+    });
+
+    it('should cancel deleting the non-primary number', function() {
+      expect(telephony.removeButton.isDisplayed()).toBeTruthy();
+      telephony.removeButton.click();
+      telephony.cancelDisassociation.click();
+
+      telephony.verifyExistingNumber().then(function(number) {
+        var numberElement = element.all(by.cssContainingText('span', number));
+        browser.wait(function() {
+          return numberElement.count().then(function(count) {
+            return count > 0;
+          });
+        });
+        telephony.primary.click();
+        numberElement.first().click();
+      });
+      expect(telephony.removeButton.isDisplayed()).toBeTruthy();
+    });
+
+    it('should delete the non-primary number', function() {
+      expect(telephony.removeButton.isDisplayed()).toBeTruthy();
+      telephony.removeButton.click();
+      telephony.disassociateLine.click();
+      notifications.assertSuccess('Line successfully unassigned from user');
+
+      browser.sleep(2000);
+      expect(telephony.telephonyPanel.isDisplayed()).toBeTruthy();
+      expect(telephony.directoryNumbers.count()).toBe(1);
     });
   });
 

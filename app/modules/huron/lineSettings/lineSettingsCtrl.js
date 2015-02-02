@@ -6,8 +6,10 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine) {
+  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine) {
     $scope.cbAddText = $translate.instant('callForwardPanel.addNew');
+    $scope.title = $translate.instant('directoryNumberPanel.title');
+    $scope.removeNumber = $translate.instant('directoryNumberPanel.removeNumber');
     $scope.forward = 'busy';
     $scope.forwardAllCalls = '';
     $scope.forwardBusyCalls = '';
@@ -33,6 +35,7 @@
     };
 
     $scope.saveLineSettings = saveLineSettings;
+    $scope.deleteLineSettings = deleteLineSettings;
 
     init();
 
@@ -113,6 +116,15 @@
         initCallForward();
         initCallerId();
       }
+
+      if (($scope.telephonyInfo.currentDirectoryNumber.dnUsage !== 'Primary') && ($scope.telephonyInfo.currentDirectoryNumber.uuid !== 'new')) {
+        $scope.isRemove = true;
+
+        if ($scope.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
+          TelephonyInfoService.resetCurrentUser($scope.telephonyInfo.currentDirectoryNumber.uuid);
+          $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+        }
+      }
     }
 
     function saveLineSettings() {
@@ -160,7 +172,13 @@
 
           $q.all(promises)
             .then(function () {
-              TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
+              TelephonyInfoService.getUserDnInfo($scope.currentUser.id)
+                .then(function () {
+                  if ($scope.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
+                    TelephonyInfoService.resetCurrentUser($scope.telephonyInfo.currentDirectoryNumber.uuid);
+                    $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+                  }
+                });
               Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
             })
             .catch(function (response) {
@@ -171,14 +189,16 @@
         } else { // new line
           LineSettings.addNewLine($scope.currentUser.id, getDnUsage(), $scope.assignedInternalNumber.pattern, $scope.directoryNumber, $scope.assignedExternalNumber)
             .then(function (response) {
-              $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-              $scope.directoryNumber.uuid = $scope.telephonyInfo.currentDirectoryNumber.uuid;
-              $scope.directoryNumber.pattern = $scope.telephonyInfo.currentDirectoryNumber.pattern;
-              TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
-              Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
-              $state.go('users.list.preview.directorynumber', {
-                directoryNumber: $scope.directoryNumber.uuid
-              });
+              return TelephonyInfoService.getUserDnInfo($scope.currentUser.id)
+                .then(function () {
+                  $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+                  $scope.directoryNumber.uuid = $scope.telephonyInfo.currentDirectoryNumber.uuid;
+                  $scope.directoryNumber.pattern = $scope.telephonyInfo.currentDirectoryNumber.pattern;
+                  Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+                  $state.go('users.list.preview.directorynumber', {
+                    directoryNumber: $scope.directoryNumber.uuid
+                  });
+                });
             })
             .catch(function (response) {
               Log.debug('addNewLine failed.  Status: ' + response.status + ' Response: ' + response.data);
@@ -186,6 +206,31 @@
             });
         }
       }
+    };
+
+    function deleteLineSettings() {
+      // fill in the {{line}} and {{user}} for directoryNumberPanel.deleteConfirmation
+      $scope.confirmationDialogue = $translate.instant('directoryNumberPanel.deleteConfirmation', {
+        line: $scope.telephonyInfo.currentDirectoryNumber.pattern,
+        user: $scope.callerIdInfo.default
+      });
+
+      $modal.open({
+        templateUrl: 'modules/huron/lineSettings/deleteConfirmation.tpl.html',
+        scope: $scope
+      }).result.then(function () {
+        return LineSettings.disassociateInternalLine($scope.currentUser.id, $scope.telephonyInfo.currentDirectoryNumber.userDnUuid)
+          .then(function (response) {
+            TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
+            $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+            Notification.notify([$translate.instant('directoryNumberPanel.disassociationSuccess')], 'success');
+            $state.go('users.list.preview');
+          })
+          .catch(function (response) {
+            Log.debug('disassociateInternalLine failed.  Status: ' + response.status + ' Response: ' + response.data);
+            Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
+          });
+      });
     };
 
     // this is used to determine dnUsage for new internal lines
