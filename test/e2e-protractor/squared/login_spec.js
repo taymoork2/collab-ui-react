@@ -34,6 +34,7 @@ describe('Login Page', function() {
   });
 
   it('should login to the requested users page', function() {
+    login.setLoginUsername(testuser.username);
     login.setLoginPassword(testuser.password);
     login.clickLoginSubmit();
     navigation.expectCurrentUrl('/users');
