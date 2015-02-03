@@ -3,8 +3,8 @@
 /* global _ */
 
 angular.module('Hercules')
-  .controller('DashboardController', ['$scope', '$rootScope', '$http', 'ConnectorService', 'Notification',
-    function ($scope, $rootScope, $http, service, notif) {
+  .controller('DashboardController', ['$scope', '$rootScope', '$http', '$modal', 'ConnectorService', 'Notification',
+    function ($scope, $rootScope, $http, $modal, service, notif) {
       $scope.loading = true;
       $scope.inflight = false;
       $scope.visibleAlarm = {};
@@ -57,6 +57,14 @@ angular.module('Hercules')
             hostName: hostName
           };
         }
+      };
+
+      $scope.showNotificationConfigDialog = function () {
+        $scope.modal = $modal.open({
+          scope: $scope,
+          controller: 'NotificationConfigController',
+          templateUrl: 'modules/hercules/notification-config/notification-config.html',
+        });
       };
 
       $scope.reload();

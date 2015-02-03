@@ -1,12 +1,9 @@
 describe('DashboardController', function() {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $scope, controller, notification, service;
+  var $scope, controller, service;
 
   beforeEach(inject(function(_$controller_){
-    notification = {
-      notify: sinon.stub()
-    }
     service = {
       fetch: sinon.stub(),
       services: sinon.stub(),
@@ -15,8 +12,7 @@ describe('DashboardController', function() {
     $scope = {}
     controller = _$controller_('DashboardController', {
       $scope: $scope,
-      ConnectorService: service,
-      Notification: notification
+      ConnectorService: service
     });
   }));
 
@@ -27,7 +23,6 @@ describe('DashboardController', function() {
     service.fetch.callArgWith(0, null, 'clusterdata');
     expect($scope.loading).toEqual(false);
     expect($scope.clusters).toBe('clusterdata');
-    expect(notification.notify.callCount).toEqual(0);
   });
 
   it('returns empty array on fubar data from backend', function() {
@@ -123,6 +118,12 @@ describe('DashboardController', function() {
 
     $scope.toggleAlarms('clid', 'srv', 'host2');
     expect(_.size($scope.visibleAlarm)).toBe(0);
+  });
+
+  it('shows modal', function(){
+    expect($scope.modal).toBeFalsy()
+    $scope.showNotificationConfigDialog();
+    expect($scope.modal).toBeTruthy()
   });
 
 });

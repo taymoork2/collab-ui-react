@@ -4,8 +4,14 @@
     <div>
       <h2 class="page-title">
         <span translate="hercules.page_title" />
-        <div style="float: right">
-          <button ng-disabled="inflight" class="btn btn-info" ng-click="reload()" style="position: fixed; z-index: 10; right: 10px;">
+        <div style="float: right; white-space: nowrap">
+          <button class="btn btn-info" style="margin-right: 60px;" ng-click="showNotificationConfigDialog()">
+            <span>
+              <i class="fa fa-bell" />
+            </span>
+          </button>
+
+          <button ng-disabled="inflight" class="btn btn-info" ng-click="reload()" style="position: fixed; z-index: 10; right: 10px; top: 79px;">
             <span ng-hide="inflight">
               <i class="icon icon-refresh" />
             </span>
