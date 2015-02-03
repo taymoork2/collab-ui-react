@@ -91,6 +91,7 @@
     function copyFromUlt(directoryNumber, dnUsage, userUuid) {
       var copyFromUlt = {
         'pattern': directoryNumber.pattern,
+        'hasVoicemail': true,
         'user': {
           'uuid': userUuid
         },
