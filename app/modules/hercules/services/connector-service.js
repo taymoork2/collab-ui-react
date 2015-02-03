@@ -3,26 +3,11 @@
 /* global _ */
 
 angular.module('Hercules')
-  .service('ConnectorService', ['$http', '$window', 'ConnectorMock', 'ConverterService', 'Notification',
-    function ConnectorService($http, $window, mock, converter, notification) {
+  .service('ConnectorService', ['$http', '$window', 'ConnectorMock', 'ConverterService', 'ConfigService', 'Notification',
+    function ConnectorService($http, $window, mock, converter, config, notification) {
       var lastClusterResponse = [];
 
-      var getUrl = function () {
-        var regex = new RegExp("hercules-url=([^&]*)");
-        var match = $window.location.search.match(regex);
-        if (match && match.length == 2) {
-          return decodeURIComponent(match[1]);
-        } else {
-          return 'https://hercules.hitest.huron-dev.com/v1/clusters';
-        }
-      };
-
       var fetch = function (callback, opts) {
-        if ($window.location.search.match(/hercules-backend=error/)) {
-          getUrl = function () {
-            return 'https://hercules.hitest.huron-dev.com/fubar';
-          };
-        }
         if ($window.location.search.match(/hercules-backend=mock/)) {
           return callback(null, converter.convertClusters(mock.mockData()));
         }
@@ -41,7 +26,7 @@ angular.module('Hercules')
         }());
 
         $http
-          .get(getUrl())
+          .get(config.getUrl() + '/clusters')
           .success(function (data) {
             var converted = converter.convertClusters(data);
             lastClusterResponse = converted;
@@ -52,23 +37,26 @@ angular.module('Hercules')
         return lastClusterResponse;
       };
 
-      var upgradeSoftware = function (opts) {
-        var url = getUrl() + '/' + opts.clusterId + '/services/' + opts.serviceType + '/upgrade';
-        var data = JSON.stringify({
-          tlp: opts.tlpUrl
-        });
+      var upgradeSoftware = function (clusterId, serviceType, callback) {
+        var url = config.getUrl() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
         $http
-          .post(url, data)
-          .success(opts.callback)
-          .error(createErrorHandler('Unable to upgrade software', opts.callback));
+          .post(url, '{}')
+          .success(createSuccessCallback(callback))
+          .error(createErrorHandler('Unable to upgrade software', callback));
       };
 
       var deleteHost = function (clusterId, serial, callback) {
-        var url = getUrl() + '/' + clusterId + '/hosts/' + serial;
+        var url = config.getUrl() + '/clusters/' + clusterId + '/hosts/' + serial;
         $http
           .delete(url)
           .success(callback)
           .error(createErrorHandler('Unable to delete host', callback));
+      };
+
+      var createSuccessCallback = function (callback) {
+        return function (data) {
+          callback(null, data);
+        };
       };
 
       var createErrorHandler = function (message, callback) {

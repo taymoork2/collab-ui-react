@@ -56,8 +56,8 @@ describe('DashboardController', function() {
     $scope.upgradeSoftware('clusterid', 'servicetype', sinon.stub());
 
     expect(service.upgradeSoftware.calledOnce).toBe(true);
-    expect(service.upgradeSoftware.args[0][0].clusterId).toBe('clusterid');
-    expect(service.upgradeSoftware.args[0][0].serviceType).toBe('servicetype');
+    expect(service.upgradeSoftware.args[0][0]).toBe('clusterid');
+    expect(service.upgradeSoftware.args[0][1]).toBe('servicetype');
   });
 
   it('triggers callback on software upgrade', function() {
@@ -68,7 +68,7 @@ describe('DashboardController', function() {
     expect(callback.callCount).toBe(0);
     expect($scope.reload.callCount).toBe(0);
 
-    service.upgradeSoftware.args[0][0].callback()
+    service.upgradeSoftware.args[0][2]()
     expect($scope.reload.callCount).toBe(1);
 
     $scope.reload.callArgWith(0, null);

@@ -43,11 +43,14 @@ describe('Service: ConnectorService', function () {
 
     converter.convertClusters.returns('foo');
 
-    Service.fetch(function(err, data) {
-      expect(data).toBe('foo');
-    });
-
+    var callback = sinon.stub();
+    Service.fetch(callback);
     $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBe(null);
+    expect(callback.args[0][1]).toBe('foo');
+
   });
 
   it('should upgrade software using the correct backend', function () {
@@ -55,20 +58,17 @@ describe('Service: ConnectorService', function () {
       .when(
         'POST',
         'https://hercules.hitest.huron-dev.com/v1/clusters/foo/services/bar/upgrade',
-        {tlp: 'yolo'}
+        {}
       )
       .respond({foo: 'bar'});
 
-    Service.upgradeSoftware({
-      tlpUrl: 'yolo',
-      clusterId: 'foo',
-      serviceType: 'bar',
-      callback: function(data) {
-        expect(data.foo).toBe('bar');
-      }
-    });
-
+    var callback = sinon.stub();
+    Service.upgradeSoftware('foo', 'bar', callback);
     $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBe(null);
+    expect(callback.args[0][1].foo).toBe('bar');
   });
 
   it('sw upgrade should log on 500 errors', function () {
@@ -76,20 +76,19 @@ describe('Service: ConnectorService', function () {
       .when(
         'POST',
         'https://hercules.hitest.huron-dev.com/v1/clusters/foo/services/bar/upgrade',
-        {tlp: 'yolo'}
+        {}
       )
       .respond(500, {foo: 'bar'});
 
     expect(notification.notify.callCount).toBe(0);
 
-    Service.upgradeSoftware({
-      tlpUrl: 'yolo',
-      clusterId: 'foo',
-      serviceType: 'bar',
-      callback: function() {}
-    });
-
+    var callback = sinon.stub();
+    Service.upgradeSoftware('foo', 'bar', callback);
     $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).not.toBe(null);
+    expect(callback.args[0][1]).toBeFalsy();
 
     expect(notification.notify.callCount).toBe(1);
   });
@@ -101,55 +100,43 @@ describe('Service: ConnectorService', function () {
 
     expect(notification.notify.callCount).toBe(0);
 
-    Service.fetch(function(err, data) {});
-
+    var callback = sinon.stub();
+    Service.fetch(callback);
     $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).not.toBe(null);
+    expect(callback.args[0][1]).toBeFalsy();
 
     expect(notification.notify.callCount).toBe(1);
   });
 
-  it('should be possible to override url', function() {
-    win.location.search = 'hercules-url=fake-url'
-
-    $httpBackend
-      .when('GET', 'fake-url')
-      .respond({});
-
-    Service.fetch(function() {});
-
-    $httpBackend.flush();
-  });
-
-  it('should be possible to set error url', function() {
-    win.location.search = 'hercules-backend=error'
-
-    $httpBackend
-      .when('GET', 'https://hercules.hitest.huron-dev.com/fubar')
-      .respond({});
-
-    Service.fetch(function() {});
-
-    $httpBackend.flush();
-  });
-
   it('should be possible to set mock backend', function() {
     win.location.search = 'hercules-backend=mock'
+    converter.convertClusters.returns('foo');
 
-    Service.fetch(function(err, data) {
-      // assume all is good if no XHR's
-    });
-
+    var callback = sinon.stub();
+    Service.fetch(callback);
     $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBeFalsy();
+    expect(callback.args[0][1]).toBe('foo');
+
+    expect(converter.convertClusters.callCount).toBe(1);
+    expect(converter.convertClusters.args[0][0].length).toBe(5);
   });
 
   it('should be possible to set empty backend', function() {
     win.location.search = 'hercules-backend=nodata'
 
-    Service.fetch(function(err, data) {
-      expect(data.length).toBe(0);
-    });
-
+    var callback = sinon.stub();
+    Service.fetch(callback);
     $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBeFalsy();
+    expect(callback.args[0][1].length).toBe(0);
   });
 
   it('should delete a host', function () {
@@ -161,9 +148,7 @@ describe('Service: ConnectorService', function () {
       .respond(200);
 
     var callback = sinon.stub();
-
     Service.deleteHost('clusterid', 'serial', callback);
-
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
