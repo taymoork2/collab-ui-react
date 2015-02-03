@@ -147,9 +147,6 @@
       // TODO: remove directory number once CMI has been fixed
       var alternateNumber = {
         'alternateNumberType': '+E.164 Number',
-        'directoryNumber': {
-          'uuid': dnUuid
-        },
         'numMask': pattern,
         'routePartition': {
           'name': routePartition

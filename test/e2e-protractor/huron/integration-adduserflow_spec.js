@@ -10,11 +10,11 @@ var admintestuser= {
 
 //Comment this entire test out for now until the service is fixed
 // Feb 2 2015 - Nabeel Kamboh
-xdescribe('Squared UC Add User flow', function() {
+describe('Squared UC Add User flow', function() {
   var currentUser;
   describe('Add and Entitle User Flows', function() {
     var inputEmail = utils.randomTestGmail();
-    xdescribe('Login as testuser admin and launch add users modal', function() {
+    describe('Login as testuser admin and launch add users modal', function() {
       it('should login as testuser admin', function(){
         login.login(admintestuser.username, admintestuser.password);
       });
@@ -31,7 +31,7 @@ xdescribe('Squared UC Add User flow', function() {
       });
     });
 
-    xdescribe('Add a new Squared UC user', function() {
+    describe('Add a new Squared UC user', function() {
       it('should display input user email in results with success message', function() {
         users.addUsersField.sendKeys(inputEmail);
         users.collabRadio1.click();
@@ -47,7 +47,7 @@ xdescribe('Squared UC Add User flow', function() {
       });
     });
 
-    xdescribe('Verify the created user', function() {
+    describe('Verify the created user', function() {
       it('should show the Telephony panel', function() {
         users.search(inputEmail);
         users.returnUser(inputEmail).click();
@@ -71,7 +71,7 @@ xdescribe('Squared UC Add User flow', function() {
 
     //Comment this out for now until the service is fixed
     // Feb 2 2015 - Nabeel Kamboh
-    xdescribe('To remove Squared UC from the user', function() {
+    describe('To remove Squared UC from the user', function() {
       it('should show the Telephony panel', function() {
         users.search(inputEmail);
         users.userListEnts.then(function(cell) {
@@ -95,7 +95,7 @@ xdescribe('Squared UC Add User flow', function() {
 
     //Comment this out for now until the service is fixed
     // Feb 2 2015 - Nabeel Kamboh
-    xdescribe('To entitle Squared UC to the user again', function() {
+    describe('To entitle Squared UC to the user again', function() {
       it('should show the Telephony panel', function() {
         users.search(inputEmail);
         users.userListEnts.then(function(cell) {
@@ -126,7 +126,7 @@ xdescribe('Squared UC Add User flow', function() {
       });
     });
 
-    xdescribe('Delete user used for add test', function() {
+    describe('Delete user used for add test', function() {
       it('should delete added user', function() {
         expect(deleteUtils.deleteSquaredUCUser(currentUser.meta.organizationID, currentUser.id, currentUser.userName)).toEqual(204);
         expect(deleteUtils.deleteUser(inputEmail)).toEqual(200);

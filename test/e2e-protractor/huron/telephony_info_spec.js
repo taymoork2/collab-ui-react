@@ -7,7 +7,7 @@ var testuser = {
 
 //Comment this entire test out for now until the service is fixed
 // Feb 2 2015 - Nabeel Kamboh
-xdescribe('Telephony Info', function() {
+describe('Telephony Info', function() {
   var currentUser;
   var user = utils.randomTestGmail();
   var dropdownVariables = {

@@ -48,7 +48,7 @@
                   $scope.voicemailPayload.voicemail = {
                     'dtmfAccessId': $scope.telephonyInfo.directoryNumbers[i].pattern
                   };
-                  $scope.voicemailPayload.userId = $scope.currentUser.userName;
+                  $scope.voicemailPayload.userName = $scope.currentUser.userName;
                 }
               }
             } else {
