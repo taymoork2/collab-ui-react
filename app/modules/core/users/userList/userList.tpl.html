@@ -1,6 +1,6 @@
 <div class="user-list">
   <div class="row page-header">
-    <div class="page-title col-xs-12 col-sm-7 col-md-6">
+    <div class="page-title col-xs-12 col-sm-7 col-md-7">
       <span class="title">{{'usersPage.manageUsers' | translate}}</span>
       <div dropdown class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" ng-show="Utils.isAdminPage() && userTabActive">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
@@ -15,16 +15,22 @@
               <span class="count">{{filterTotals.all.number}}</span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : activeFilter === 'active'}" ng-click="setFilter('active')">
+          <li class="filter" ng-class="{'active' : activeFilter === 'admin'}" ng-click="setFilter('admin')">
             <a href="">
               <span class="name">{{'usersPage.administrators' | translate}}</span>
-              <span class="count">...</span>
+              <span class="count">0</span>
+            </a>
+          </li>
+           <li class="filter" ng-class="{'active' : activeFilter === 'partner'}" ng-click="setFilter('partner')" ng-show="false">
+            <a href="">
+              <span class="name">{{'usersPage.partners' | translate}}</span>
+              <span class="count">{{filterTotals.partner.number}}</span>
             </a>
           </li>
         </ul>
       </div>
     </div>
-    <div class="col-xs-12 col-sm-5 col-md-6" ng-show="Utils.isAdminPage() && userTabActive">
+    <div class="col-xs-12 col-sm-5 col-md-5" ng-show="Utils.isAdminPage() && userTabActive">
       <div class="page-option-buttons">
         <button id="addUsers" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addUsersDialog" translate="usersPage.inviteUsers" ng-click="setupTokenfield();resetEntitlements();">
         </button>

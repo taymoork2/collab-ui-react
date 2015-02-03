@@ -5,19 +5,27 @@ angular.module('Core')
   .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils', '$q', '$filter', '$compile', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
-      var searchfilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
+      var baseFilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
       var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
 
       var userlistservice = {
 
-        listUsers: function (startIndex, count, sortBy, sortOrder, callback, entitlement) {
+        listUsers: function (startIndex, count, sortBy, sortOrder, callback, getAdmins) {
 
           var listUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
           var searchStr;
           var filter;
           var scimSearchUrl = null;
           var encodedSearchStr = '';
+          var adminFilter = '%20and%20roles%20eq%20%22full_admin%22';
+          var searchfilter = baseFilter;
+
+          if (getAdmins && searchfilter.indexOf(adminFilter) === -1) {
+            searchfilter = baseFilter + adminFilter;
+          }
+
+          console.log(searchfilter);
 
           if (typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             //It seems CI does not support 'ANDing' filters in this situation.
@@ -53,6 +61,8 @@ angular.module('Core')
           if (sortOrder && sortOrder.length > 0) {
             listUrl = listUrl + '&sortOrder=' + sortOrder;
           }
+
+          console.log(listUrl);
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(listUrl)

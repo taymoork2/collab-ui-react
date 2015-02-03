@@ -218,7 +218,7 @@ describe('ConverterService', function () {
     expect(converted[0].software_upgrade_available).toBeTruthy();
   });
 
-  it('a cluster with all hosts disabled isnt running', function() {
+  it('a cluster with all hosts disabled is not running', function() {
     var mockData = [{
       "services": [
         {

@@ -40,7 +40,8 @@
     "pending": "Invite Pending",
     "all": "All",
     "administrators" : "Administrators",
-    "inviteUsers": "Invite Users"
+    "inviteUsers": "Invite Users",
+    "partners": "Partner Administrators"
   },
   "onboardModal": {
     "onboardUsers": "Onboard Users",

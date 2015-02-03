@@ -1,2 +1,41 @@
 <div class="hercules-notification-config">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button id="convertModalClose" type="button" class="close" ng-click="$parent.modal.close()">
+        <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+      </button>
+      <h3 class="modal-title">
+        <span>Error Notifications</span>
+      </h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        When shit hits the fan, who we gonna notify?
+      </p>
+      <div class="form-group">
+        <textarea placeholder="A list of comma-seprated email addresses, eg. foo@example.com, bar@example.com, ..." class="form-control" id="wx2_users" type="text" ng-bind="config.wx2users"></textarea>
+      </div>
+
+      <p>
+        And we need a service user who can post to WX2:
+      </p>
+      <div class="form-group">
+        <label for="wx2_username">Username:</label>
+        <input class="form-control" id="wx2_username" type="text" ng-bind="config.username" placeholder="foo@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="wx2_password">Password:</label>
+        <input class="form-control" id="wx2_password" type="password" ng-bind="config.password" />
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button id="convertActionButton" class="btn btn-primary pull-right" ng-click="writeConfig()">
+        <span>Save</span>
+      </button>
+      <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
+        <span>Cancel</span>
+      </button>
+    </div>
+  </div>
 </div>
