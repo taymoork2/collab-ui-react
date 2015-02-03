@@ -15,6 +15,12 @@ angular.module('Core')
       $scope.filterTotals = {
         all: {
           number: 0
+        },
+        admin: {
+          number: 0
+        },
+        partner: {
+          number: 0
         }
       };
       $scope.currentUser = null;
@@ -57,9 +63,34 @@ angular.module('Core')
       };
 
       var getUserList = function (startAt) {
+
+        //clear currentUser if a new search begins
+        var startIndex = startAt || 0;
+        UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
+          if (data.success) {
+            $timeout(function () {
+              $scope.load = true;
+            });
+            if ($rootScope.searchStr === searchStr) {
+              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+              Log.debug('Returned data.', data.Resources);
+              $scope.filterTotals.admin.number = data.totalResults;
+              if (startIndex === 0) {
+                $scope.queryAdminList = data.Resources;
+              } else {
+                $scope.queryAdminList = $scope.queryuserslist.concat(data.Resources);
+              }
+            } else {
+              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+            }
+          } else {
+            Log.debug('Query existing users failed. Status: ' + status);
+          }
+        }, true);
+
         //clear currentUser if a new search begins
         $scope.currentUser = null;
-        var startIndex = startAt || 0;
+        startIndex = startAt || 0;
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
           if (data.success) {
             $timeout(function () {

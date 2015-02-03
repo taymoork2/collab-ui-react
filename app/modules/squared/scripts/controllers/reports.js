@@ -266,7 +266,7 @@ angular.module('Squared')
           'backgroundColor': '#ffffff',
           'backgroundAlpha': 1,
           'dataProvider': sdata,
-          'colors': [yellow, '#FFA500', red],
+          'colors': [Config.chartColors.yellow, '#FFA500', Config.chartColors.red],
           'titleField': 'title',
           'plotAreaBorderAlpha': 0,
           'plotAreaBorderColor': '#DDDDDD',
