@@ -662,12 +662,15 @@
   "meetingsPage": {
     "manageMeetings": "Meetings",
     "status": "Status",
-    "subject" : "Subject",
+    "webexMeetingId" : "Webex Meeting Id",
     "date" : "Date",
     "start" : "Start",
     "resource" : "Resource",
     "webexSite" : "Webex Site",
     "active": "Active",
-    "pending": "Invite Pending"
+    "pending": "Invite Pending",
+    "enterprise": "Enterprise",
+    "mediaFusion": "Media Fusion",
+    "cloud":"Cloud"
   }
 }

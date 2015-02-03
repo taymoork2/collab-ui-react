@@ -1,5 +1,6 @@
 {
 	"success" : true,
+	"searchString" : "SearchKey",
 	"meetings" :
 	[{	"status": "Active", 
 		"subject": "Test1",

@@ -7,27 +7,29 @@ describe('Controller: ListMeetingsCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   //Initialize variables
-  var MeetingsCtrl,scope,httpBackend,meetinglistData;
+  var MeetingsCtrl,scope,httpBackend,meetinglistData,meetingLdrBrdData;
 
    /* Initialize the controller and a mock scope
   * Reading the json data to application variable.
   * Making a fake call to return json data to make unit test cases to be passed.
   */
-  beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
+  beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
 
     meetinglistData = getJSONFixture('mediafusion/json/meetings/meetingListData.json');
-    httpBackend = $httpBackend;
-
-    //Making a fake call to return json data to make unit test cases to be passed.
-    httpBackend.when('GET', 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getallminmeeting')
-               .respond(200, meetinglistData);
+    meetingLdrBrdData = getJSONFixture('mediafusion/json/meetings/meetingLeaderBoardData.json');
 
     MeetingsCtrl = $controller('ListMeetingsCtrl', {
       $scope: scope
     });
 
-    scope.querymeetingslist = meetinglistData.meetings;
+    scope.queryMeetingsList = meetinglistData.meetings;
+    scope.searchString = meetinglistData.searchString;
+    scope.totalEnterpriseMeetings = meetingLdrBrdData.totalEnterpriseMeetings;
+    scope.totalEnterpriseParticipants = meetingLdrBrdData.totalEnterpriseParticipants;
+    scope.totalCloudMeetings = meetingLdrBrdData.totalCloudMeetings;
+    scope.totalCloudParticipants = meetingLdrBrdData.totalCloudParticipants;
+
   }));
 
   //Test Specs
@@ -53,11 +55,39 @@ describe('Controller: ListMeetingsCtrl', function () {
   });
 
   it('querymeetingslist should be defined', function () {
-    expect(scope.querymeetingslist).toBeDefined();
+    expect(scope.queryMeetingsList).toBeDefined();
   });
 
   it('Should have meeting data of size 5', function () {
-    expect(scope.querymeetingslist.length).toBe(5);
+    expect(scope.queryMeetingsList.length).toBe(5);
+  });
+
+  it('searchMeetingList() should be defined', function () {
+    expect(scope.searchMeetingList).toBeDefined();
+  });
+
+  it('Search String should be SearchKey', function () {
+    expect(scope.searchString).toBe("SearchKey");
+  });
+
+  it('getEnterpriseAndCloudMeetings() should be defined', function () {
+    expect(scope.getEnterpriseAndCloudMeetings).toBeDefined();
+  });
+
+  it('Total EnterpriseMeetings should be 5000', function () {
+    expect(scope.totalEnterpriseMeetings).toBe(5000);
+  });
+
+  it('Total EnterpriseParticipants should be 6000', function () {
+    expect(scope.totalEnterpriseParticipants).toBe(6000);
+  });
+
+  it('Total CloudMeetings should be 7000', function () {
+    expect(scope.totalCloudMeetings).toBe(7000);
+  });
+
+  it('Total CloudParticipants should be 8000', function () {
+    expect(scope.totalCloudParticipants).toBe(8000);
   });
 
 });

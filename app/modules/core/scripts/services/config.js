@@ -24,9 +24,9 @@ angular.module('Core')
         },
 
         meetingServiceUrl: {
-          dev: 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1',
-          integration: 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1',
-          prod: 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1'
+          dev: 'http://multimediafusion-disr.mb-lab.huron.uno/admin/api/v1',
+          integration: 'http://multimediafusion-disr.mb-lab.huron.uno/admin/api/v1',
+          prod: 'http://multimediafusion-disr.mb-lab.huron.uno/admin/api/v1'
         },
 
         oauthClientRegistration: {
