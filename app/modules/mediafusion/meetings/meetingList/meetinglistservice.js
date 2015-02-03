@@ -6,18 +6,60 @@ angular.module('Core')
     function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
 
       //Fetching the Base url form config.js file.
-      var meetingUrl = Config.getMeetingServiceUrl();
+      var searchfilter = 'filter=%s';
+      var baseUrl = Config.getMeetingServiceUrl();
+
       var meetinglistservice = {
 
-        //listMeetings will actually perfomr a rest call and fetches the data from the server and return back to controller.
+        //listMeetings will actually perform a rest call and fetches the data from the server and return back to controller.
 
         listMeetings: function (callback) {
 
-          var listUrl = Utils.sprintf(meetingUrl + '/meeting/getallminmeeting', [Authinfo.getOrgId()]);
+          var meetingListUrl = Utils.sprintf(baseUrl + '/meeting/getallminmeeting', [Authinfo.getOrgId()]);
+          var searchString;
+          var meetingSearchUrl = null;
+          var encodedSearchStr = '';
+
+          if ($rootScope.searchString !== '' && typeof ($rootScope.searchString) !== 'undefined') {
+            meetingSearchUrl = meetingListUrl + '?' + searchfilter;
+            encodedSearchStr = window.encodeURIComponent($rootScope.searchString);
+            meetingListUrl = Utils.sprintf(meetingSearchUrl, [encodedSearchStr]);
+            searchString = $rootScope.searchString;
+          }
+
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           //Actual rest call to get meeting info from server and also error case is handeled.
-          $http.get(listUrl)
+          $http.get(meetingListUrl)
+            .success(function (data, status) {
+              data.success = true;
+              data.status = status;
+              callback(data, status, searchString);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status, searchString);
+              var description = null;
+              var errors = data.Errors;
+              if (errors) {
+                description = errors[0].description;
+              }
+              Auth.handleStatus(status, description);
+            });
+        },
+
+        /**
+         * Fetching the Number of Enterprise and Cloud meetings and its respective participants.
+         *
+         */
+        getMeetingsAndParticipants: function (callback) {
+
+          var entAndCloudMeetingsUrl = Utils.sprintf(baseUrl + '/meeting/getEnterpriseAndCloudMeetings', [Authinfo.getOrgId()]);
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
+          //Actual rest call to get meeting info from server and also error case is handeled.
+          $http.get(entAndCloudMeetingsUrl)
             .success(function (data, status) {
               data.success = true;
               data.status = status;
