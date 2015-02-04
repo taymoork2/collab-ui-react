@@ -17,7 +17,7 @@ describe('Service: ConnectorService', function () {
         location: { search: '' }
       };
       $provide.value('ConverterService', converter);
-      $provide.value('Notification', notification);
+      $provide.value('XhrNotificationService', notification);
       $provide.value('$window', win);
     });
   });
