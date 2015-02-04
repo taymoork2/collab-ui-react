@@ -109,7 +109,9 @@
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold Development Example",
     "meetingDetailsTab": "Meetings",
-    "meetingDetailsTabDesc": "Meetings Management"
+    "meetingDetailsTabDesc": "Meetings Management",
+    "vtsDetailsTab": "Enterprise Resources",
+    "vtsDetailsTabDesc": "Enterprise Resource Management"
   },
   "index": {
     "welcome": "Welcome!",
@@ -735,5 +737,12 @@
     "enterprise": "Enterprise",
     "mediaFusion": "Media Fusion",
     "cloud":"Cloud"
+  }, 
+  "vtsPage": {
+    "enterpriseResources": "Enterprise Resources",
+    "name" : "Name",
+    "status": "Status",
+    "delete": "Delete",
+    "actionsHeader": "Actions"
   }
 }

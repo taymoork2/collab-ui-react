@@ -172,6 +172,11 @@ angular.module('Core')
             desc: 'tabs.meetingDetailsTabDesc',
             state: 'meetings',
             link: '#meetings'
+          }, {
+            title: 'tabs.vtsDetailsTab',
+            desc: 'tabs.vtsDetailsTabDesc',
+            state: 'vts',
+            link: '#vts'
           }]
         }],
 
@@ -339,7 +344,7 @@ angular.module('Core')
 
       config.roleStates = {
         Full_Admin: [
-          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard', 'meetings'
+          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard', 'meetings', 'vts'
         ],
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
@@ -365,7 +370,7 @@ angular.module('Core')
         ],
         'squared-fusion-uc': ['fusion'],
         'squared-team-member': ['organization'],
-        'squared-fusion-media': ['meetings']
+        'squared-fusion-media': ['meetings', 'vts']
       };
 
       // These states do not require a role/service check

@@ -458,6 +458,19 @@ angular
           controller: 'ListMeetingsCtrl',
           parent: 'main'
         });
-
+		 .state('vts', {
+          abstract: true,
+          template: '<div ui-view></div>',
+          parent: 'main'
+        })
+        .state('vts.list', {
+          url: '/vts',
+          templateUrl: 'modules/mediafusion/enterpriseResource/enterpriseResourceList/enterpriseResourceList.tpl.html',
+          controller: 'ListVtsCtrl'
+        })
+        .state('vts.list.preview', {
+          templateUrl: 'modules/mediafusion/enterpriseResource/enterpriseResourcePreview/enterpriseResourcePreview.tpl.html',
+          controller: 'VtsPreviewCtrl'
+        });
     }
   ]);
