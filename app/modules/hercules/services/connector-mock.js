@@ -2,10 +2,15 @@
 
 /* global _ */
 
+var rnd = function (max) {
+  max = max || 10000000000;
+  return Math.floor(Math.random() * max).toString(16);
+};
+
 var createHost = function (name) {
   return {
     "host_name": name,
-    "serial": new Date().getTime().toString(16)
+    "serial": rnd()
   };
 };
 
@@ -14,7 +19,7 @@ var createService = function (serviceName, serviceType, hosts) {
     var connector = {
       "host": createHost(host.hostName),
       "state": serviceType == 'yolo' ? 'running' : host.hostState,
-      "version": "1.0.0.1-Alpha1"
+      "version": '0.' + Math.floor(Math.random() * 10) + '.1.2'
     };
     if (Math.floor((Math.random() * 10) % 9) == 0) {
       connector.alarms = [createAlarm({
@@ -28,6 +33,9 @@ var createService = function (serviceName, serviceType, hosts) {
           description: "It's really bad man. I can't do any more work here. This cloud is just too confusing."
         })
       ];
+      connector.connector_status = createConnectorStatus(serviceType, false)
+    } else {
+      connector.connector_status = createConnectorStatus(serviceType, true)
     }
     return connector;
   });
@@ -40,7 +48,7 @@ var createService = function (serviceName, serviceType, hosts) {
 
 var createCluster = function (opts) {
   return {
-    "id": new Date().getTime().toString(16),
+    "id": rnd(),
     "name": opts.clusterName,
     "provisioning_data": {
       "approved_packages": _.map(opts.approved, function (pkg) {
@@ -61,12 +69,47 @@ var createCluster = function (opts) {
 
 var createAlarm = function (opts) {
   return {
-    "id": new Date().getTime().toString(16),
+    "id": rnd(),
     "first_reported": new Date(),
     "last_reported": new Date(),
     "title": opts.title,
     "severity": opts.severity,
     "description": opts.description
+  }
+}
+
+var createConnectorStatus = function (connectorType, statusOk) {
+  if (connectorType == "c_mgmt") {
+    return null
+  }
+  var cloudServiceType = "common_identity"
+  var premServiceType = ""
+  switch (connectorType) {
+  case "c_cal":
+    cloudServiceType = "cal_service"
+    premServiceType = "exchange"
+    break;
+  case "c_ucmc":
+    cloudServiceType = "uc_service"
+    premServiceType = "ucm_axl"
+    break;
+  }
+  return {
+    "operational": true,
+    "services": {
+      "cloud": [{
+        "address": "11.11.11.11",
+        "type": cloudServiceType,
+        "state": statusOk ? "ok" : "error",
+        "stateDescription": statusOk ? "" : "Unable to connect..."
+      }],
+      "onprem": [{
+        "address": "10.10.10.10",
+        "type": premServiceType,
+        "state": statusOk ? "ok" : "error",
+        "stateDescription": statusOk ? "" : "Unable to connect..."
+      }]
+    }
   }
 }
 
@@ -79,6 +122,15 @@ var calPkg = {
   "version": "8.2-2.1"
 };
 
+var calPkgApp = {
+  "service": {
+    "service_type": "c_cal",
+    "display_name": "Calendar Service"
+  },
+  "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
+  "version": '1.' + Math.floor(Math.random() * 10) + '.0'
+};
+
 var services = [{
   serviceName: 'Calendar Service',
   serviceType: 'c_cal'
@@ -87,7 +139,7 @@ var services = [{
   serviceType: 'c_ucmc'
 }, {
   serviceName: 'Yolo Service',
-  serviceType: 'yolo'
+  serviceType: 'c_mgmt'
 }];
 
 var mockData = function () {
@@ -108,7 +160,8 @@ var mockData = function () {
         hostName: 'rdcn.delta.cisco.com',
         hostState: 'running'
       }],
-      napproved: [calPkg]
+      napproved: [calPkg],
+      approved: [calPkgApp]
     }),
     createCluster({
       clusterName: "Richardsson Cluster 002",
@@ -120,7 +173,8 @@ var mockData = function () {
         hostName: 'rdcn.dos.cisco.com',
         hostState: 'installing'
       }],
-      napproved: [calPkg]
+      napproved: [calPkg],
+      approved: [calPkgApp]
     }),
     createCluster({
       clusterName: "Oslo Cluster",
@@ -132,16 +186,17 @@ var mockData = function () {
         hostName: 'lys.001.cisco.com',
         hostState: 'running'
       }],
-      napproved: [calPkg]
+      napproved: [calPkg],
+      approved: [calPkgApp]
     }),
     createCluster({
       clusterName: "Shanghai Cluster",
       services: services,
       hosts: [{
-        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostName: rnd() + '.cisco.com',
         hostState: 'running'
       }, {
-        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostName: rnd() + '.cisco.com',
         hostState: 'running'
       }]
     }),
@@ -149,10 +204,10 @@ var mockData = function () {
       clusterName: "Sydney Cluster",
       services: services,
       hosts: [{
-        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostName: rnd() + '.cisco.com',
         hostState: 'disabled'
       }, {
-        hostName: new Date().getTime().toString(16) + '.cisco.com',
+        hostName: rnd() + '.cisco.com',
         hostState: 'disabled'
       }]
     })

@@ -5,32 +5,40 @@ angular.module('Core')
   .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils', '$q', '$filter', '$compile', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
-      var searchfilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20userStatus%20sw%20%22%s%22';
+      var baseFilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
       var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
 
       var userlistservice = {
 
-        listUsers: function (startIndex, count, sortBy, sortOrder, callback, entitlement) {
+        listUsers: function (startIndex, count, sortBy, sortOrder, callback, getAdmins) {
 
           var listUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
           var searchStr;
           var filter;
           var scimSearchUrl = null;
           var encodedSearchStr = '';
+          var adminFilter = '%20and%20roles%20eq%20%22full_admin%22';
+          var searchfilter = baseFilter;
+
+          if (getAdmins && searchfilter.indexOf(adminFilter) === -1) {
+            searchfilter = baseFilter + adminFilter;
+          }
+
+          console.log(searchfilter);
 
           if (typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             //It seems CI does not support 'ANDing' filters in this situation.
             filter = searchfilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
             scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
-            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
           } else if ($rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             filter = searchfilter;
             scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
-            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
           } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
             filter = 'filter=entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
@@ -53,6 +61,8 @@ angular.module('Core')
           if (sortOrder && sortOrder.length > 0) {
             listUrl = listUrl + '&sortOrder=' + sortOrder;
           }
+
+          console.log(listUrl);
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(listUrl)
@@ -134,6 +144,30 @@ angular.module('Core')
 
           getUsersBatch(1);
           return deferred.promise;
+        },
+
+        listAdmins: function (partnerOrgId, callback) {
+
+          var adminUrl = Utils.sprintf(Config.scimUrl, [partnerOrgId]);
+          adminUrl = adminUrl + '?filter=managedOrgs%5BorgId%20eq%20%22' + Authinfo.getOrgId() + '%22%5D';
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http.get(adminUrl)
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              var description = null;
+              var errors = data.Errors;
+              if (errors) {
+                description = errors[0].description;
+              }
+              Auth.handleStatus(status, description);
+            });
         },
 
         getUser: function (searchinput, callback) {

@@ -4,18 +4,20 @@ angular.module('Hercules')
   .directive('herculesPopover', function () {
     return {
       restrict: 'A',
-      link: function (scope, element, attrs) {
+      link: function (scope, element) {
+        scope.getTitle = function () {
+          return element.find('.popover-title').html();
+        };
+        scope.getContent = function () {
+          return element.find('.popover-content').html();
+        };
         element.find('.popover-trigger').popover({
           html: true,
-          container: "body",
-          trigger: "focus",
+          trigger: "focus", // https://github.com/twbs/bootstrap/issues/11788
           placement: "auto",
-          title: function () {
-            return element.find('.popover-title').html();
-          },
-          content: function () {
-            return element.find('.popover-content').html();
-          }
+          container: 'body',
+          title: scope.getTitle,
+          content: scope.getContent
         });
       }
     };

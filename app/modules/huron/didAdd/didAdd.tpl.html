@@ -1,35 +1,35 @@
 <div class="add-did-numbers-modal">
     <div class="modal-header">
-        <button type="button" class="close" ng-click="cancel()" ng-show="addNumbers || addSuccess"><i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">{{'common.close' | translate}}</span></button>
-        <h3 class="modal-title">{{'didAddModal.title' | translate}}</h3>
+        <button type="button" class="close" ng-click="$dismiss()" ng-show="vm.addNumbers || vm.addSuccess"><i class="icon icon-close" aria-hidden="true"></i><span class="sr-only" translate="common.close"></span></button>
+        <h3 class="modal-title" translate="didAddModal.title"></h3>
     </div>
-    <div class="add-numbers" ng-show="addNumbers">
+    <div class="add-numbers" ng-show="vm.addNumbers">
         <div class="modal-body">
-            <p>{{'didAddModal.instructionsText' | translate}}</p>
-            <cs-token-field tokens="tokens" tokenfieldid="tokenfieldid" tokenplacehoder="tokenplacehoder" tokenoptions="tokenoptions" tokenmethods="tokenmethods"></cs-token-field>
+            <p translate="didAddModal.instructionsText"></p>
+            <cs-token-field tokens="vm.tokens" tokenfieldid="vm.tokenfieldid" tokenplacehoder="vm.tokenplacehoder" tokenoptions="vm.tokenoptions" tokenmethods="vm.tokenmethods"></cs-token-field>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-default btn-lg" ng-click="cancel()">{{'common.cancel' | translate}}</button>
-            <button class="btn btn-primary btn-lg" ng-class="{'disabled': !submitBtnStatus}" ng-click="submit()">{{'common.next' | translate}}</button>
+            <button class="btn btn-default btn-lg" ng-click="$dismiss()" translate="common.cancel"></button>
+            <button class="btn btn-primary btn-lg" ng-class="{'disabled': !vm.submitBtnStatus}" ng-click="vm.submit()" translate="common.next"></button>
         </div>
     </div>
-    <div class="adding-numbers" ng-show="addingNumbers">
+    <div class="adding-numbers" ng-show="vm.addingNumbers">
         <div class="modal-body">
             <i class='icon icon-spinner'></i>
-            <p>{{'didAddModal.processingText' | translate}}</p>
+            <p translate="didAddModal.processingText"></p>
         </div>
         <div class="modal-footer">
         </div>
     </div>
-    <div class="add-success" ng-show="addSuccess">
+    <div class="add-success" ng-show="vm.addSuccess">
         <div class="modal-body">
             <i class="icon icon-check-mark-success"></i>
-            <p ng-if="successCount">{{successCount}} {{'didAddModal.successText' | translate}}</p>
-            <p ng-if="failCount">{{failCount}} {{'didAddModal.failText' | translate}}</p>
-            <button class="btn btn-info btn-lg" ng-click="sendEmail()">{{'didAddModal.sendEmail' | translate}}</button>
+            <p ng-if="vm.successCount" translate="didAddModal.successText" translate-values="{count: vm.successCount}"></p>
+            <p ng-if="vm.failCount" translate="didAddModal.failText" translate-values="{count: vm.failCount}"></p>
+            <button class="btn btn-info btn-lg" ng-click="vm.sendEmail()" translate="didAddModal.sendEmail"></button>
         </div>
         <div class="modal-footer">
-            <a href ng-click="cancel()">{{'didAddModal.notifyCustLater' | translate}}</a>
+            <a href ng-click="$dismiss()" translate="didAddModal.notifyCustLater"></a>
         </div>
     </div>
 </div>

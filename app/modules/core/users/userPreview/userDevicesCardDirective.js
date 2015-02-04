@@ -9,7 +9,9 @@
     var directive = {
       restrict: 'EA',
       transclude: true,
-      templateUrl: 'modules/core/users/userPreview/userDevicesCard.tpl.html'
+      templateUrl: 'modules/core/users/userPreview/userDevicesCard.tpl.html',
+      controller: 'UserDevicesCardCtrl',
+      controllerAs: 'userDevicesCard'
     };
 
     return directive;

@@ -9,8 +9,19 @@
     return $resource(HuronConfig.getEmailUrl() + '/email/userwelcome', {}, {});
   })
 
+  .factory('ActivationCodeEmailService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getEmailUrl() + '/email/activationcode', {}, {});
+  })
+
   .factory('IdentityOTPService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
+  })
+
+  .factory('UserOTPService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId/otp', {
+      customerId: '@customerId',
+      userId: "@userId"
+    }, {});
   })
 
   .factory('LineService', function ($resource, HuronConfig) {
@@ -129,8 +140,9 @@
   })
 
   .factory('SiteService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites', {
-      customerId: '@customerId'
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId', {
+      customerId: '@customerId',
+      siteId: '@siteId'
     });
   })
 

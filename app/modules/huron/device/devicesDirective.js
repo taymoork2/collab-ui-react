@@ -2,10 +2,10 @@
   'use strict';
 
   angular
-    .module('Huron')
-    .directive('hnDevices', hnDevices);
+    .module('uc.device')
+    .directive('ucDevices', ucDevices);
 
-  function hnDevices() {
+  function ucDevices() {
     var directive = {
       restrict: 'EA',
       templateUrl: 'modules/huron/device/devices.tpl.html',

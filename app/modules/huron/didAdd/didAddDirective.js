@@ -1,11 +1,19 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Huron')
+  angular
+    .module('uc.didadd')
+    .directive('ucDidAdd', ucDidAdd);
 
-.directive('hnDidAdd', function () {
-  return {
-    restrict: 'EA',
-    templateUrl: 'modules/core/users/userAdd/add-users.html',
-    controller: 'UsersCtrl'
-  };
-});
+  function ucDidAdd() {
+    var directive = {
+      restrict: 'EA',
+      templateUrl: 'modules/core/users/userAdd/add-users.html',
+      controller: 'UsersCtrl',
+      controllerAs: 'vm'
+    };
+
+    return directive;
+  }
+
+})();

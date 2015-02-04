@@ -35,7 +35,12 @@ angular.module('Core')
                 // Discussions are ongoing concerning how these common functions should be
                 // integrated.
                 if (data.userResponse[0].entitled && data.userResponse[0].entitled.indexOf(Config.entitlements.huron) !== -1) {
-                  HuronUser.create(data.userResponse[0].email, data.userResponse[0].uuid)
+                  var userData = {
+                    'email': data.userResponse[0].email,
+                    'familyName': usersDataArray[0].familyName,
+                    'givenName': usersDataArray[0].givenName
+                  };
+                  HuronUser.create(data.userResponse[0].uuid, userData)
                     .then(function (success) {
                       data.success = true;
                       callback(data, status);
@@ -107,6 +112,7 @@ angular.module('Core')
               .error(function (data, status) {
                 data.success = false;
                 data.status = status;
+
                 callback(data, status);
                 Auth.handleStatus(status);
               });
@@ -144,8 +150,23 @@ angular.module('Core')
                 data: userData
               })
               .success(function (data, status) {
-                data.success = true;
-                callback(data, status);
+                // This code is being added temporarily to update users on Squared UC
+                // Discussions are ongoing concerning how these common functions should be
+                // integrated.
+                if (data.entitlements && data.entitlements.indexOf(Config.entitlements.huron) !== -1) {
+                  HuronUser.update(data.id, data)
+                    .then(function (success) {
+                      data.success = true;
+                      callback(data, status);
+                    }).catch(function (error) {
+                      Log.error('Squared UC user update unsuccessful: ' + error);
+                      data.success = false;
+                      callback(data, status);
+                    });
+                } else {
+                  data.success = true;
+                  callback(data, status);
+                }
               })
               .error(function (data, status) {
                 data.success = false;
@@ -221,8 +242,64 @@ angular.module('Core')
               data.status = status;
               callback(data, status);
             });
-        }
+        },
 
+        patchUserRoles: function (email, name, roles, orgId, callback) {
+          var patchUrl = userUrl + '/organization/' + orgId + '/users/roles';
+
+          var requestBody = {
+            'users': [{
+              'userRoles': roles,
+              'email': email,
+              'name': name
+            }]
+          };
+
+          console.log(requestBody);
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http({
+              method: 'PATCH',
+              url: patchUrl,
+              data: requestBody
+            })
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
+        },
+
+        migrateUsers: function (users, callback) {
+
+          var requestBody = {
+            'users': []
+          };
+
+          for (var x in users) {
+            var user = {
+              'email': users[x].userName
+            };
+            requestBody.users.push(user);
+          }
+
+          $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody)
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
+        }
       };
     }
   ]);

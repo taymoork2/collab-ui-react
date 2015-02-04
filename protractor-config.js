@@ -46,6 +46,7 @@ exports.config = {
     var PartnerPage = require('./test/e2e-protractor/pages/partner.page.js');
     var FirstTimeWizard = require('./test/e2e-protractor/pages/wizard.page.js');
     var ServiceSetup = require('./test/e2e-protractor/pages/servicesetup.page.js');
+    var RolesPage = require('./test/e2e-protractor/pages/roles.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -67,6 +68,7 @@ exports.config = {
     global.partner = new PartnerPage();
     global.wizard = new FirstTimeWizard();
     global.servicesetup = new ServiceSetup();
+    global.roles = new RolesPage();
 
     /*
     var ScreenShotReporter = require('protractor-screenshot-reporter');

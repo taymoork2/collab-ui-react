@@ -80,7 +80,7 @@ describe('App flow', function() {
     it('clicking on system health panel should open to status page in a new tab', function() {
       navigation.clickHome();
       var appWindow = browser.getWindowHandle();
-      landing.monitoring.click();
+      landing.monitoringRows.first().click();
       browser.getAllWindowHandles().then(function(handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);

@@ -7,9 +7,9 @@
           <button class="actions-button btn-none dropdown-toggle">
             <i class="icon icon-three-dots"></i>
           </button>
-          <!-- <ul class="dropdown-menu dropdown-primary actions-services">
-            <li><a>{{'usersPreview.activateNewDevice' | translate}}</a></li>
-          </ul> -->
+          <ul class="dropdown-menu dropdown-primary actions-services">
+            <li ng-repeat="item in userDevicesCard.dropDownItems"><a ui-sref="{{item.state}}">{{item.text}}</a></li>
+          </ul>
         </div>
       </div>
     </div>

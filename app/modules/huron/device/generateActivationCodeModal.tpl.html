@@ -1,0 +1,56 @@
+<div  id="printActivationCode" class="generate-activation-code">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()"><i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">close</span></button>
+    <h3 class="modal-title" translate="generateActivationCodeModal.title"></h3>
+  </div>
+  <div class="loading" ng-if="!vm.otp.code">
+    <i class="icon icon-spinner"></i>
+  </div>
+  <div class="modal-body" ng-if="vm.otp.code">
+    <div translate="generateActivationCodeModal.activateBody"></div>
+    <div class="row">
+      <div class="col-sm-5">
+        <img ng-src="{{vm.qrCodeUrl}}">
+      </div>
+      <div class="col-sm-7">
+        <div class="activation-code">
+          {{vm.otp.friendlyCode}}
+        </div>
+        <div class="expiration" translate="generateActivationCodeModal.expires" translate-values="{date: vm.otp.friendlyExpiresOn, timeLeft: vm.timeLeft}">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer" ng-if="vm.otp.code">
+    <button class="btn btn-default btn-lg" ng-disabled="vm.showEmail" ng-click="vm.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
+    <button class="btn btn-default btn-lg" clip-copy="vm.otp.friendlyCode" clip-click-fallback="vm.clipboardFallback(copy)">{{'generateActivationCodeModal.copyToClipboard' | translate}}</button>
+    <button class="btn btn-default btn-lg" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
+  </div>
+  <div ng-show="vm.showEmail">
+
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label for="to" class="col-sm-1 control-label" translate="generateActivationCodeModal.to"></label>
+          <div class="col-sm-6">
+            <input type="email" id="to" class="form-control" ng-model="vm.email.to">
+          </div>
+        </div> 
+        <!-- <div class="form-group">
+          <label class="col-sm-2 control-label" translate="generateActivationCodeModal.subject"></label>
+          <div class="col-sm-9">
+            <p class="form-control-static">{{vm.email.subject}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message" class="col-sm-2 control-label" translate="generateActivationCodeModal.message"></label>
+          <div class="col-sm-10">
+            <textarea class="form-control" id="message" rows="3" ng-model="vm.email.message"></textarea>
+          </div>
+        </div> -->
+      </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-primary btn-lg" ng-click="vm.sendActivationCodeEmail()" translate="generateActivationCodeModal.send"></button>
+    </div>
+  </div>
+</div>

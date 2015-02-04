@@ -6,8 +6,8 @@ angular.module('Core')
 
       $scope.initNext = function () {
         var deferred = $q.defer();
-        if (angular.isFunction($scope.getRequiredTabs)) {
-          var required = $scope.getRequiredTabs();
+        if (angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.getRequiredTabs)) {
+          var required = $scope.wizard.getRequiredTabs();
           if (angular.isArray(required) && required.length > 0) {
             var errors = [];
             for (var i = 0; i < required.length; i++) {

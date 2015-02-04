@@ -5,6 +5,7 @@ angular.module('Core')
   .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', '$modal', 'ExternalNumberPool',
 
     function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, $modal, ExternalNumberPool) {
+
       $scope.load = true;
       $scope.currentDataPosition = 0;
       $scope.trialPreviewActive = false;
@@ -195,6 +196,11 @@ angular.module('Core')
               $scope.activeCount = $scope.activeList.length;
               $scope.trialsList = $scope.totalTrialsData;
               $scope.totalTrials = $scope.trialsList.length;
+              if ($scope.activeFilter === 'all') {
+                $scope.gridData = $scope.managedOrgsList;
+              } else {
+                $scope.gridData = $scope.trialsList;
+              }
             } else {
               $scope.getPending = false;
               Log.debug('No trial records found');
@@ -483,19 +489,6 @@ angular.module('Core')
       $scope.filterList = function (filterBy) {
         $scope.filter = filterBy;
         $scope.trialsList = filterBy === 'ALL' ? $scope.totalTrialsData : $scope.activeList;
-      };
-
-      $scope.openModal = function () {
-        console.log("open");
-        $modal.open({
-          templateUrl: 'modules/huron/didAdd/didAdd.tpl.html',
-          controller: 'DidAddCtrl'
-        });
-      };
-
-      $scope.deleteDIDs = function () {
-        console.log("delete");
-        ExternalNumberPool.deleteAll();
       };
 
       $scope.setFilter = function (filter) {

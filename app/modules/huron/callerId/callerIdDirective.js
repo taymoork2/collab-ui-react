@@ -3,13 +3,16 @@
 
   angular
     .module('Huron')
-    .directive('hnCallerId', [
-      function () {
-        return {
-          restrict: 'EA',
-          scope: false,
-          templateUrl: 'modules/huron/callerId/callerId.tpl.html'
-        };
-      }
-    ]);
+    .directive('ucCallerId', ucCallerId);
+
+  function ucCallerId() {
+    var directive = {
+      restrict: 'EA',
+      scope: false,
+      templateUrl: 'modules/huron/callerId/callerId.tpl.html'
+    };
+
+    return directive;
+  };
+
 })();

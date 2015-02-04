@@ -13,12 +13,12 @@
 }
 
 .wizard-side-item {
-  height: 80px;
   margin-right: 5px;
   margin-left: 0px;
-  padding-left: 20px;
   background-color: @text-color;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 
   & + .wizard-side-item {
     margin-top: 5px;
@@ -34,6 +34,7 @@
     .help-link {
       position: absolute;
       bottom: 30px;
+      left: 20px;
       color: @brand-white;
       cursor: pointer;
       font-family: @brand-font-cisco-TT-Regular;
@@ -50,10 +51,9 @@
   flex-direction: column;
 
   .wizard-menu-text {
-    float: left;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    flex: 1;
+    padding: 18px 0 18px 20px;
+    line-height: 1;
   }
 
   .wizard-menu-title {
@@ -70,10 +70,8 @@
   }
 
   .icon {
-    float: right;
     margin-right: 40px;
-    top: 50%;
-    transform: translate(50%,-50%);
+    transform: translateX(50%);
     font-size: 28px;
     line-height: 28px;
     color: @gray-light;
@@ -103,6 +101,8 @@
     height: 50px;
     padding: 11px 0;
     text-align: center;
+    margin-right: 15px;
+    transform: none;
   }
 }
 

@@ -2,8 +2,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification',
-    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, Userservice, UserListService, Log, Storage, Config, Notification) {
+  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification', 'Orgservice', 'Authinfo',
+    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo) {
 
       //Initialize variables
       $scope.load = true;
@@ -11,19 +11,27 @@ angular.module('Core')
       $scope.status = null;
       $scope.currentDataPosition = 0;
       $scope.queryuserslist = [];
+      $scope.activeFilter = 'all';
       $scope.filterTotals = {
         all: {
+          number: 0
+        },
+        admin: {
+          number: 0
+        },
+        partner: {
           number: 0
         }
       };
       $scope.currentUser = null;
+      $scope.popup = Notification.popup;
+      $scope.filterByAdmin = false;
 
       $scope.userPreviewActive = false;
       $scope.userDetailsActive = false;
 
       var init = function () {
         if ($state.params.showAddUsers === 'add') {
-          $scope.setupTokenfield();
           $('#addUsersDialog').modal('show');
         }
       };
@@ -55,9 +63,34 @@ angular.module('Core')
       };
 
       var getUserList = function (startAt) {
+
+        //clear currentUser if a new search begins
+        var startIndex = startAt || 0;
+        UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
+          if (data.success) {
+            $timeout(function () {
+              $scope.load = true;
+            });
+            if ($rootScope.searchStr === searchStr) {
+              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+              Log.debug('Returned data.', data.Resources);
+              $scope.filterTotals.admin.number = data.totalResults;
+              if (startIndex === 0) {
+                $scope.queryAdminList = data.Resources;
+              } else {
+                $scope.queryAdminList = $scope.queryuserslist.concat(data.Resources);
+              }
+            } else {
+              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+            }
+          } else {
+            Log.debug('Query existing users failed. Status: ' + status);
+          }
+        }, true);
+
         //clear currentUser if a new search begins
         $scope.currentUser = null;
-        var startIndex = startAt || 0;
+        startIndex = startAt || 0;
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
           if (data.success) {
             $timeout(function () {
@@ -174,7 +207,10 @@ angular.module('Core')
       });
 
       $rootScope.$on('$stateChangeSuccess', function () {
-        if ($state.includes('users.list.preview.*')) {
+        if ($state.includes('generateauthcode')) {
+          $scope.userPreviewActive = true;
+          $scope.userDetailsActive = false;
+        } else if ($state.includes('users.list.preview.*')) {
           $scope.userPreviewActive = true;
           $scope.userDetailsActive = true;
         } else if ($state.includes('users.list.preview')) {
@@ -193,7 +229,7 @@ angular.module('Core')
 
       $scope.$watch('sortInfo', function (newValue, oldValue) {
         // if newValue === oldValue then page is initializing, so ignore event,
-        // otherwise getUserList() is called multiple times.
+        // otherwise $scope.getUserList() is called multiple times.
         if (newValue !== oldValue) {
           if ($scope.sortInfo) {
             switch ($scope.sortInfo.fields[0]) {
@@ -218,20 +254,24 @@ angular.module('Core')
 
       $scope.showUserDetails = function (user) {
         //Service profile
-        $scope.entitlements = {};
-        for (var i = $rootScope.services.length - 1; i >= 0; i--) {
-          var service = $rootScope.services[i].sqService;
-          var ciService = $rootScope.services[i].ciService;
-          if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
-            $scope.entitlements[service] = true;
-          } else {
-            $scope.entitlements[service] = false;
+        if (($scope.currentUser && $scope.currentUser.id !== user.id) || $scope.currentUser === null) {
+          $scope.entitlements = {};
+          for (var i = $rootScope.services.length - 1; i >= 0; i--) {
+            var service = $rootScope.services[i].sqService;
+            var ciService = $rootScope.services[i].ciService;
+            if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
+              $scope.entitlements[service] = true;
+              $scope.entitlements['webExSquared'] = true;
+            } else {
+              $scope.entitlements[service] = false;
+            }
           }
+          $scope.currentUser = user;
+          $scope.roles = user.roles;
+          $state.go('users.list.preview');
+        } else {
+          $state.go('users.list.preview');
         }
-        $scope.currentUser = user;
-        $scope.roles = user.roles;
-
-        $state.go('users.list.preview');
       };
 
       $scope.getUserPhoto = function (user) {
@@ -331,6 +371,10 @@ angular.module('Core')
         search: 'pending',
         count: $scope.filterTotals.all
       }];
+
+      $scope.setFilter = function (filter) {
+        $scope.activeFilter = filter;
+      };
 
       // On click, filter user list and set active filter
       $scope.filterList = function (str) {

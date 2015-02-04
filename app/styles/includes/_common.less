@@ -30,7 +30,7 @@ body {
 }
 
 .page-title {
-  font-family: @brand-font-cisco-TT-Extra-Light;
+  font-family: @brand-font-cisco-TT-Thin;
   margin: 0;
   padding: 28px 0 28px 30px;
 
@@ -95,3 +95,25 @@ div[gridscrollbar] {
   }
 }
 
+@media screen {
+  #printSection {
+    display: none;
+  }
+}
+@media print {
+  body * {
+    display:none;
+  }
+  #printSection, #printSection * {
+    display:block;
+  }
+  #printSection {
+    position:absolute;
+    left:0;
+    top:0;
+  }
+  .modal {
+    overflow: hidden;
+    background: none;
+  }
+}

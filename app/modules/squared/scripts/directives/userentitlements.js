@@ -59,7 +59,7 @@ angular.module('Squared')
               }
             }
             $scope.saveDisabled = false;
-          } else if (!$scope.entitlements.webExSquared && !oldEntitlements[changedKey] && changedKey !== 'webExSquared') {
+          } else if (!$scope.entitlements.webExSquared && !oldEntitlements[changedKey] && changedKey !== 'webExSquared' && Utils.areEntitlementsActive($scope.entitlements)) {
             $scope.entitlements.webExSquared = true;
             $scope.saveDisabled = false;
           } else if (newEntitlements !== oldEntitlements) {
@@ -68,10 +68,12 @@ angular.module('Squared')
         });
 
         $scope.$watch('currentUser', function (newUser, oldUser) {
-          if (newUser.id !== oldUser.id) {
-            $timeout(function () {
-              $scope.saveDisabled = true;
-            }, 10);
+          if (newUser && oldUser) {
+            if (newUser.id !== oldUser.id) {
+              $timeout(function () {
+                $scope.saveDisabled = true;
+              }, 10);
+            }
           }
         });
       };
@@ -79,8 +81,16 @@ angular.module('Squared')
       $scope.changeEntitlement = function (user) {
         Log.debug('Entitling user.', user);
         angular.element('#btn-save').button('loading');
+        var givenName = null;
+        var familyName = null;
+        if (user.name !== undefined && user.name !== null) {
+          givenName = user.name.givenName;
+          familyName = user.name.familyName;
+        }
         Userservice.updateUsers([{
-          'address': user.userName
+          'address': user.userName,
+          'givenName': givenName,
+          'familyName': familyName
         }], getUserEntitlementList($scope.entitlements), function (data) {
           var entitleResult = {
             msg: null,

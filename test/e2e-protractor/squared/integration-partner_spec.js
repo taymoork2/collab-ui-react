@@ -179,8 +179,13 @@ describe('Partner flow', function() {
 
     it('should delete an exisiting org thus deleting trial', function(done){
       navigation.clickHome();
+      browser.executeScript('console.warn(window.localStorage.accessToken)');
+      var token = '';
+      browser.manage().logs().get('browser').then(function(browserLog) {
+        token = browserLog[browserLog.length-1].message.split(' ')[2];
+      });
       partner.newTrialRow.getAttribute('orgId').then(function(attr){
-        deleteTrialUtils.deleteOrg(attr).then(function(message) {
+        deleteTrialUtils.deleteOrg(attr, token).then(function(message) {
           expect(message).toEqual(200);
           done();
         }, function(data) {
@@ -225,18 +230,10 @@ describe('Partner flow', function() {
 
   describe('Reports Page data refresh', function() {
 
-    it('should load refresh directive template', function() {
-      navigation.clickReports();
-      expect(reports.refreshData.isDisplayed()).toBeTruthy();
-      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
-    });
-
     it('should load cached values into directive when switching tabs', function() {
-      navigation.clickHome();
       navigation.clickReports();
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(reports.entitlements.isDisplayed()).toBeTruthy();
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();
@@ -252,7 +249,6 @@ describe('Partner flow', function() {
       reports.refreshButton.click();
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(reports.entitlements.isDisplayed()).toBeTruthy();
       expect(reports.calls.isDisplayed()).toBeTruthy();
       expect(reports.conversations.isDisplayed()).toBeTruthy();
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();

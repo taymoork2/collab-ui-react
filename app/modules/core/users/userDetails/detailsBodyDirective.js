@@ -28,14 +28,15 @@
     }
   }
 
-  DetailsBodyController.$inject = ['$state'];
+  DetailsBodyController.$inject = ['$state', '$rootScope'];
 
-  function DetailsBodyController($state) {
+  function DetailsBodyController($state, $rootScope) {
     var vm = this;
     vm.closeDetails = closeDetails;
 
     function closeDetails() {
       $state.go('users.list');
+      $rootScope.$broadcast('USER_LIST_UPDATED');
     }
   }
 })();

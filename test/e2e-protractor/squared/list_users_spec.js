@@ -64,24 +64,20 @@ describe('List users flow', function () {
     });
 
     it('display user admin settings panel when clicking on next arrow', function () {
-      utils.expectIsDisplayed(users.nextButton);
-      users.nextButton.click();
+      utils.click(users.rolesChevron);
 
-      utils.expectIsDisplayed(users.rolesPanel);
       utils.expectIsDisplayed(users.previewPanel);
-      utils.expectIsDisplayed(users.closeRolesPanel);
+      utils.expectIsDisplayed(roles.closeButton);
+      utils.expectIsDisplayed(roles.rolesDetailsPanel);
 
-      expect(users.closeRolesPanel.isDisplayed()).toBeTruthy();
-
-      users.closeRolesPanel.click();
+      utils.click(roles.closeButton);
     });
   });
 
   describe('Display user profile page', function(){
     it('display user profile page when clicking on a user name', function(){
       users.clickOnUser();
-      expect(users.previewPanel.isDisplayed()).toBeTruthy();
-
+      utils.expectIsDisplayed(users.userLink);
     });
   });
 
@@ -165,7 +161,7 @@ describe('List users flow', function () {
       });
 
       browser.driver.manage().window().maximize();
-    });
+    }, 20000);
   });
 
   describe('logout', function () {

@@ -28,6 +28,20 @@ module.exports = function (config) {
       }
     ],
 
+    preprocessors: {
+      'build/scripts/**/*.js': ['coverage'],
+      'build/templates-app.js': ['coverage'],
+      'build/modules/**/*.js': ['coverage']
+    },
+
+    coverageReporter: {
+      dir: 'coverage/unit',
+      reporters: [
+        {type: 'cobertura'},
+        {type: 'html', subdir: 'report-html'}
+      ]
+    },
+
     // list of files / patterns to exclude
     exclude: [],
 
@@ -49,16 +63,18 @@ module.exports = function (config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['PhantomJS'],
+    browsers: [process.env.atlas_karma_browser || 'PhantomJS'],
     // browsers: ['Chrome'],
 
     // Which plugins to enable
     plugins: [
+      'karma-coverage',
       'karma-phantomjs-launcher',
-      // 'karma-chrome-launcher',
+      'karma-chrome-launcher',
       'karma-jasmine',
       'karma-sinon',
-      'karma-junit-reporter'
+      'karma-junit-reporter',
+      'karma-htmlfile-reporter'
     ],
 
     // Continuous Integration mode
@@ -67,11 +83,15 @@ module.exports = function (config) {
 
     colors: true,
 
-    reporters: ['dots', 'junit'],
+    reporters: ['dots', 'junit', 'coverage', 'html'],
 
     junitReporter: {
       outputFile: 'test/unit-test-results.xml',
       suite: ''
+    },
+
+    htmlReporter: {
+      outputFile: 'test/unit-test-results.html'
     }
   });
 };

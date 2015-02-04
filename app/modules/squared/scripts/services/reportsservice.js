@@ -10,9 +10,15 @@ angular.module('Squared')
       var activeUsersUrl = apiUrl + 'reports/counts/activeUsers';
       var callsUrl = apiUrl + 'reports/counts/calls';
       var conversationsUrl = apiUrl + 'reports/counts/conversations';
-      var timeChartUrl = apiUrl + 'reports/timeCharts/';
-      var logInfoBaseUrl = apiUrl + 'reports/tables/calls/';
 
+      var timeChartUrl;
+      if (Authinfo.isPartner()) {
+        timeChartUrl = apiUrl + 'reports/timeCharts/managedOrgs/';
+      } else {
+        timeChartUrl = apiUrl + 'reports/timeCharts/';
+      }
+
+      var logInfoBaseUrl = apiUrl + 'reports/tables/calls/';
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
       var averageCallCount = apiUrl + 'reports/counts/avgCallsPerUser';
       var entitlementCount = apiUrl + 'reports/counts/entitlements';
@@ -55,6 +61,9 @@ angular.module('Squared')
         }
         if (params.cache) {
           metricUrl += '&cache=' + params.cache;
+        }
+        if (params.isCustomerView) {
+          metricUrl += '&isCustomerView=' + params.isCustomerView;
         }
 
         return metricUrl;
@@ -101,7 +110,8 @@ angular.module('Squared')
             'intervalType': 'week',
             'spanCount': 1,
             'spanType': 'day',
-            'cache': useCache
+            'cache': useCache,
+            'isCustomerView': false
           };
 
           var partnerCharts = ['activeUsers', 'avgCallsPerUser', 'entitlements', 'contentShared',
@@ -129,7 +139,8 @@ angular.module('Squared')
           var params = {
             'intervalCount': 1,
             'intervalType': 'month',
-            'cache': useCache
+            'cache': useCache,
+            'isCustomerView': true
           };
 
           var customerCounts = ['callsCount', 'conversationsCount', 'contentSharedCount'];
@@ -142,7 +153,8 @@ angular.module('Squared')
             'intervalType': 'month',
             'spanCount': 1,
             'spanType': 'week',
-            'cache': useCache
+            'cache': useCache,
+            'isCustomerView': true
           };
 
           var customerCharts = ['calls', 'conversations', 'contentShareSizes', 'contentShared',

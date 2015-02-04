@@ -8,7 +8,7 @@ angular.module('Hercules')
 
       var mockServicesData = function () {
         return [{
-          name: 'Fusion Management Service',
+          name: 'Fusion Management',
           icon: 'fa fa-tachometer',
           type: 'c_mgmt'
         }, {
@@ -16,16 +16,14 @@ angular.module('Hercules')
           icon: 'fa fa-phone',
           type: 'c_ucmc',
           descs: [
-            'Zero touch meetings, move calls between desk phones and soft clients.',
-            'Reuse your enterprise phone number.'
+            'Zero touch meetings, move calls between desk phones and soft clients, and reuse your enterprise phone number.'
           ]
         }, {
           name: 'Calendar Service',
           icon: 'fa fa-calendar',
           type: 'c_cal',
           descs: [
-            'Calendar sync for consistent meeting times.',
-            'In-app scheduling connected to Microsoft Exchange.'
+            'Calendar sync for consistent meeting times and In-app scheduling connected to Exchange.'
           ]
         }];
       };

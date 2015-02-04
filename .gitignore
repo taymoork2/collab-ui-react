@@ -1,6 +1,8 @@
 node_modules
 dist
 build
+coverage
+.sonar
 .tmp
 bower_components
 .DS_Store
@@ -14,3 +16,4 @@ test/e2e-protractor/reports
 test/karma-unit.js
 *.sublime*
 test/unit-test-results.xml
+test/unit-test-results.html

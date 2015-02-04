@@ -28,12 +28,15 @@
     "grunt-google-cdn": "~0.4.3",
     "grunt-html-angular-validate": "^0.4.0",
     "grunt-html2js": "^0.2.9",
+    "grunt-istanbul": "~0.2.4",
     "grunt-jsbeautifier": "^0.2.7",
     "grunt-karma": "^0.10.1",
     "grunt-newer": "~0.8.0",
     "grunt-ng-annotate": "^0.8.0",
+    "grunt-protractor-coverage": "~0.2.9",
     "grunt-protractor-runner": "^1.1.4",
     "grunt-rev": "~0.1.0",
+    "grunt-sonar-runner": "~2.4.1",
     "grunt-svgmin": "~2.0.0",
     "grunt-usemin": "~3.0.0",
     "jasmine-reporters": "1.0.1",
@@ -41,8 +44,10 @@
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.1.7",
     "karma-coffee-preprocessor": "~0.2.1",
+    "karma-coverage": "~0.2.7",
     "karma-firefox-launcher": "~0.1.3",
     "karma-html2js-preprocessor": "~0.1.0",
+    "karma-htmlfile-reporter": "^0.1.2",
     "karma-jasmine": "~0.3.2",
     "karma-junit-reporter": "^0.2.2",
     "karma-ng-html2js-preprocessor": "^0.1.2",
@@ -64,6 +69,6 @@
   },
   "scripts": {
     "test": "grunt test",
-    "install": "./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
+    "postinstall": "cd node_modules/grunt-protractor-coverage && npm install && cd - && ./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update && ./node_modules/grunt-protractor-coverage/node_modules/protractor/bin/webdriver-manager update"
   }
 }

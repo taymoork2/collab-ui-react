@@ -1,17 +1,21 @@
 <div id="fuse-setup-fuse">
   <h3>
-    Setup your expressways to enable the services
+    Registering your Expressway Clusters with Fusion to enable Cloud Fusion services:
   </h3>
+
+  <ol>
+    <li>In a new browser window,  go to the web interface of the Expressway Cluster you want to fuse.</li>
+    <li>Ensure all Expressways in the cluster are running the latest software version.</li>
+    <li>On the Expressway Cluster, enable and configure the Cloud Fusion Services you want to use.</li>
+    <li>Return to this page to confirm registration and continue with the Setup Wizard.</li>
+  </ol>
+
   <p>
-    Go to your expressways, upgrade the software if needed, and configure the services you want.
-    You will be able to see the expressway clusters appear in this page as they are registered
-    for the fusion sercvices (done from the expressway ui).
-    If you wish to move on with this wizard to setup something else, you can always setup the
-    expressway services later.
+    Each Expressway Cluster will appear in the list below once it is registered for Cloud Fusion, displaying the status of each configured service.
   </p>
 
   <h3 style="padding-top: 20px;">
-    Connected clusters: {{clusters.length}}
+    Results: {{clusters.length || 0}} registered Expressway clusters
   </h3>
 
 </div>

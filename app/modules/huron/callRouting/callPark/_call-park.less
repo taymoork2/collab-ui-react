@@ -1,0 +1,56 @@
+.tile() {
+  width: 222px;
+  height: 122px;
+  padding: 20px 15px;
+  border: 1px solid @gray-lighter;
+  margin: 0px 10px 10px 0px;
+  display: inline-block;
+  vertical-align: top;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: @gray-lightest;
+  }
+  .delete-btn {
+    float: right;
+    .delete-icon {
+      .icon;
+      .icon-close;
+      font-size: 21px;
+      &:hover {
+        cursor: pointer;
+        color: @brand-primary;
+      }
+    }
+  }
+}
+
+.callpark-tile {
+  .tile;
+  .callpark-name {
+    font-family: @brand-font-cisco-TT-Light;
+    font-size: 16px;
+    color: @brand-primary;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .callpark-pattern {
+    font-family: @brand-font-cisco-TT-Extra-Light;
+    font-size: 24px;
+    color: @gray-darker;
+    margin-top: 3px;
+  }
+}
+
+.callpark-confirmation-body {
+  .warning-icon {
+    .icon;
+    .icon-warning;
+    font-size: 30px;
+    color: @brand-warning;
+    float: left;
+  }
+  .callpark-confirmation-message {
+    margin-top: 7px;
+    margin-left: 40px;
+  }
+}

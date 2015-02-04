@@ -6,49 +6,58 @@ angular.module('Hercules')
   .service('DashboardAggregator', [
     function DashboardAggregator() {
 
-      var aggregateServices = function (services, clusters) {
-        var hosts = 0;
-        _.each(clusters, function (cluster) {
-          hosts += cluster.hosts.length;
-        });
-        var aggregatedServices = _.cloneDeep(services);
-        _.each(aggregatedServices, function (globalService) {
-          globalService.activatedClusters = 0;
-          globalService.activatedHosts = 0;
-          globalService.needs_attention = false;
-          globalService.software_upgrades_available = false;
-          _.each(clusters, function (cluster) {
-            _.each(cluster.services, function (serviceInCluster) {
-              if (globalService.type == serviceInCluster.service_type) {
-                if (serviceInCluster.needs_attention) {
-                  globalService.needs_attention = true;
-                }
-                if (cluster.provisioning_data) {
-                  _.each(cluster.provisioning_data.not_approved_packages, function (not_approved_package) {
-                    if (not_approved_package.service.service_type == globalService.type) {
-                      globalService.software_upgrades_available = true;
-                    }
-                  });
-                }
-                globalService.activatedClusters += 1;
-                _.each(serviceInCluster.connectors, function (connector) {
-                  if (connector.state != 'disabled') {
-                    globalService.activatedHosts += 1;
-                  }
-                });
-              }
-            });
-          });
-        });
+      var createEmptyAggregate = function (services) {
         return {
-          activatedHosts: hosts,
-          activatedClusters: clusters.length,
-          aggregatedServices: aggregatedServices
-        };
+          running: 0,
+          needs_attention: 0,
+          services: createEmptyServicesAggregate(services)
+        }
+      };
+
+      var createEmptyServicesAggregate = function (services) {
+        return _.reduce(services, function (serviceAggregate, service) {
+          serviceAggregate[service.type] = {
+            name: service.name,
+            icon: service.icon,
+            running: 0,
+            needs_attention: 0,
+            software_upgrades: 0
+          };
+          return serviceAggregate;
+        }, {});
+      };
+
+      var aggregateServiceStatus = function (clusterAggregate, cluster) {
+        _.each(cluster.services, function (service) {
+          var allConnecorsDisabled = _.reduce(service.connectors, function (aggregateStatus, connector) {
+            return aggregateStatus && connector.state == 'disabled';
+          }, true);
+          if (!allConnecorsDisabled) {
+            if (service.needs_attention) {
+              clusterAggregate.services[service.service_type].needs_attention++;
+            } else {
+              clusterAggregate.services[service.service_type].running++;
+            }
+            if (service.not_approved_package) {
+              clusterAggregate.services[service.service_type].software_upgrades++;
+            }
+          }
+        });
+        var allServicesDisabled = _.reduce(cluster.services, function (aggregateStatus, service) {
+          return aggregateStatus && !service.running_hosts;
+        }, true);
+        if (cluster.needs_attention) {
+          clusterAggregate.needs_attention++;
+        } else if (!allServicesDisabled) {
+          clusterAggregate.running++;
+        }
+        return clusterAggregate;
       };
 
       return {
-        aggregateServices: aggregateServices
+        aggregateServices: function (services, clusters) {
+          return _.reduce(clusters, aggregateServiceStatus, createEmptyAggregate(services));
+        }
       };
     }
   ]);

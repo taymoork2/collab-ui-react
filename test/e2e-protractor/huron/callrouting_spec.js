@@ -5,28 +5,32 @@ var testuser = {
   password: 'C1sco123!'
 };
 
-var pattern = Math.ceil(Math.random()*10000);
+var pattern = Math.ceil(Math.random()*Math.pow(10,4)).toString();
 
 describe('Huron Call Routing', function() {
   it('should login', function(){
     login.login(testuser.username,testuser.password);
   });
 
-  it('should navigate to the page', function(){
+  it('should navigate to the Call Park page', function(){
     navigation.clickCallRouting();
+    browser.sleep(1000);
+    expect(callrouting.callParkCount.isDisplayed()).toBe(true);
+    callrouting.callParkSelect.click();
   });
 
   describe('Call Park feature', function(){
     it('should cancel creating a new call park', function(){
       callrouting.addCallParkButton.click();
+      browser.sleep(1000);
       callrouting.cancelButton.click();
+      browser.sleep(1000);
       expect(callrouting.name.isPresent()).toBeFalsey;
-      expect(callrouting.callParks.count()).toBe(0);
     });
 
     it('should create a new call park with single number', function(){
-      expect(callrouting.callParks.count()).toBe(0);
       callrouting.addCallParkButton.click();
+      browser.sleep(1000);
       expect(callrouting.name.isDisplayed()).toBeTruthy;
       callrouting.name.sendKeys(pattern);
       callrouting.singleNumber.click();
@@ -34,13 +38,13 @@ describe('Huron Call Routing', function() {
       callrouting.retrievalPrefix.sendKeys(pattern);
       callrouting.reversionPattern.sendKeys(pattern);
       callrouting.createButton.click();
+      browser.sleep(1000);
       notifications.assertSuccess(pattern + ' added successfully');
-      expect(callrouting.callParks.count()).toBe(1);
     });
 
     it('should create a new call park with range', function(){
-      expect(callrouting.callParks.count()).toBe(1);
       callrouting.addCallParkButton.click();
+      browser.sleep(1000);
       expect(callrouting.name.isDisplayed()).toBeTruthy;
       callrouting.name.sendKeys((pattern + 1) + " through " + (pattern + 2));
       callrouting.rangeMin.sendKeys((pattern + 1));
@@ -48,18 +52,37 @@ describe('Huron Call Routing', function() {
       callrouting.retrievalPrefix.sendKeys(pattern);
       callrouting.reversionPattern.sendKeys(pattern);
       callrouting.createButton.click();
+      browser.sleep(1000);
       notifications.assertSuccess((pattern + 1) + ' added successfully', (pattern + 2) + ' added successfully');
-      expect(callrouting.callParks.count()).toBe(3);
     });
 
-    it('should delete all call parks', function(){
-      callrouting.callParks.count().then(function(count){
-        while(count > 0){
-          count = count - 1;
-          callrouting.callParks.get(count).element(by.css('button')).click();
-        }
-      });
-      expect(callrouting.callParks.count()).toBe(0);
+    it('should only display info message when info icon is active', function() {
+      // info message should have been automatically turned off
+      expect(callrouting.callParkInfoTextOne.isDisplayed()).toBe(false);
+      expect(callrouting.callParkInfoTextTwo.isDisplayed()).toBe(false);
+
+      // Turn info message on
+      callrouting.callParkInfo.click();
+      expect(callrouting.callParkInfoTextOne.isDisplayed()).toBe(true);
+      expect(callrouting.callParkInfoTextTwo.isDisplayed()).toBe(true);
+
+      // Turn info message back off
+      callrouting.callParkInfo.click();
+      expect(callrouting.callParkInfoTextOne.isDisplayed()).toBe(false);
+      expect(callrouting.callParkInfoTextTwo.isDisplayed()).toBe(false);
+    });
+
+    it('should cancel a delete', function(){
+      callrouting.callParks.get(0).element(by.css('.delete-icon')).click();
+      expect(callrouting.cancelButton.isDisplayed()).toBeTruthy;
+      callrouting.cancelButton.click();
+      expect(callrouting.cancelButton.isPresent()).toBe(false);
+    });
+
+    it('should delete the previously created call parks', function(){
+      callrouting.deleteCallPark(pattern);
+      callrouting.deleteCallPark(pattern + 1);
+      callrouting.deleteCallPark(pattern + 2);
     });
   });
 

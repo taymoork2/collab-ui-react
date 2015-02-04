@@ -176,14 +176,42 @@ angular.module('Core')
         }],
 
         entitlements: {
-          squared: 'webex-squared',
           huron: 'ciscouc',
           fusion: 'squared-fusion-uc',
-          mediafusion: 'squared-fusion-media'
+          mediafusion: 'squared-fusion-media',
+          squared: 'webex-squared',
+          fusion_uc: 'squared-fusion-uc',
+          fusion_cal: 'squared-fusion-cal'
+        },
+
+        backend_roles: { // as stored in the backend
+          full_admin: 'id_full_admin',
+          all: 'atlas-portal.all',
+          billing: 'atlas-portal.billing',
+          support: 'atlas-portal.support',
+          application: 'atlas-portal.application',
+          reports: 'atlas-portal.reports'
         },
 
         roles: {
-          full_admin: 'id_full_admin'
+          full_admin: 'Full_Admin',
+          all: 'All',
+          billing: 'Billing',
+          support: 'Support',
+          application: 'Application',
+          reports: 'Reports'
+        },
+
+        roleState: {
+          active: 'ACTIVE',
+          inactive: 'INACTIVE'
+        },
+
+        chartColors: {
+          blue: '#1EA7D1',
+          red: '#F46315',
+          yellow: '#EBC31C',
+          green: '#50D71D'
         },
 
         batchSize: 20,
@@ -322,7 +350,19 @@ angular.module('Core')
       };
 
       config.serviceStates = {
-        'ciscouc': ['callrouting', 'mediaonhold'],
+        'ciscouc': [
+          'callrouting',
+          'mediaonhold',
+          'generateauthcode',
+          'autoattendant',
+          'callpark',
+          'callpickup',
+          'intercomgroups',
+          'paginggroups',
+          'huntgroups',
+          'didadd',
+          'underconstruction'
+        ],
         'squared-fusion-uc': ['fusion'],
         'squared-team-member': ['organization'],
         'squared-fusion-media': ['meetings']

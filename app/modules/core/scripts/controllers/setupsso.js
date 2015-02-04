@@ -29,9 +29,9 @@ angular.module('Core')
 
       $scope.initNext = function () {
         var deferred = $q.defer();
-        if ($scope.options.configureSSO == 0) {
+        if ($scope.options.configureSSO == 0 && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.nextTab)) {
           deferred.reject();
-          $scope.$emit('nextTab');
+          $scope.wizard.nextTab();
         } else {
           deferred.resolve();
         }

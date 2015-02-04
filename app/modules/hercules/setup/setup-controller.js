@@ -5,24 +5,24 @@
 angular.module('Hercules')
   .controller('FusionSetupCtrl', ['$scope', '$interval', 'ConnectorService',
     function ($scope, $interval, service) {
-      var promise = true;
+      $scope._promise = true;
 
-      var poll = function () {
-        if (promise) {
-          promise = $interval(fetch, 5000, 1);
+      $scope._poll = function () {
+        if ($scope._promise) {
+          $scope._promise = $interval(fetch, 5000, 1);
         }
       };
 
       var fetch = function () {
         $scope.clusters = service.fetch(function (err, clusters) {
           $scope.clusters = clusters || [];
-          poll();
+          $scope._poll();
         });
       };
 
       $scope.$on('$destroy', function () {
-        promise = null;
-        $interval.cancel(promise);
+        $scope._promise = null;
+        $interval.cancel($scope._promise);
       });
 
       fetch();

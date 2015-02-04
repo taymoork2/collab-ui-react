@@ -2,12 +2,11 @@
   'use strict';
 
   angular
-    .module('Huron')
+    .module('uc.device')
     .factory('DeviceService', DeviceService);
 
-  DeviceService.$inject = ['$rootScope', 'Authinfo', 'UserEndpointService', 'SipEndpointService'];
-
-  function DeviceService($rootScope, Authinfo, UserEndpointService, SipEndpointService) {
+  /* @ngInject */
+  function DeviceService($rootScope, $http, Authinfo, UserEndpointService, SipEndpointService) {
     var currentDevice = {};
 
     var service = {

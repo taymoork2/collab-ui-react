@@ -3,6 +3,7 @@
 var TelephonyPage = function(){
   this.telephonyPanel = element(by.id('huronPanel'));
   this.directoryNumbers = element.all(by.repeater('directoryNumber in vm.telephonyInfo.directoryNumbers track by directoryNumber.uuid'));
+  this.primary = element(by.cssContainingText('span', 'Primary'));
   this.voicemailFeature = element(by.cssContainingText('.sub-service','Voicemail'))
     .element(by.cssContainingText('span', 'Voicemail'));
   this.snrFeature = element(by.cssContainingText('.sub-service','Single Number Reach'))
@@ -11,6 +12,7 @@ var TelephonyPage = function(){
   this.squaredUCCheckBox = element(by.id('chk_ciscoUC'));
 
   this.saveButton = element(by.css('.ent-detail-panel')).element(by.id("btn-save"));
+  this.saveEntitlements = element(by.css('.user-entitlements-body')).element(by.id("btn-save"));
 
   this.directoryNumberSelect = element(by.model('assignedInternalNumber.id'));
 
@@ -25,7 +27,6 @@ var TelephonyPage = function(){
 
   this.voicemailSwitch = element(by.model('voicemailEnabled')).element(by.css('input'));
   this.voicemailStatus = element(by.id('voicemailStatus'));
-  this.saveVoicemail = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
 
   this.snrSwitch = element(by.model('telephonyInfo.snrInfo.singleNumberReachEnabled')).element(by.css('input'));
   this.snrNumber = element(by.id('number'));

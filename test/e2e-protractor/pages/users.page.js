@@ -38,6 +38,7 @@ var UsersPage = function() {
   this.subTitleAdd = element(by.id('subTitleAdd'));
   this.subTitleEnable = element(by.id('subTitleEnable'));
 
+  this.onboardButton = element(by.id('btnOnboard'));
   this.inviteButton = element(by.id('btnInvite'));
   this.entitleButton = element(by.id('btnEntitle'));
   this.addButton = element(by.id('btnAdd'));
@@ -75,6 +76,13 @@ var UsersPage = function() {
   this.orgField = element(by.id('orgField'));
   this.titleField = element(by.id('titleField'));
   this.userTab = element(by.id('usertab'));
+
+  this.collabRadio1 = element(by.id('collabRadio1'));
+  this.collabRadio2 = element(by.id('collabRadio2'));
+  this.inviteRadio1 = element(by.id('inviteRadio1'));
+  this.inviteRadio2 = element(by.id('inviteRadio2'));
+
+  this.rolesChevron = element(by.id('rolesChevron'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
@@ -146,7 +154,7 @@ var UsersPage = function() {
   };
 
   this.assertEntitlementListSize = function(size) {
-    element.all(by.repeater('(service, val) in entitlements')).then(function(items) {
+    element.all(by.repeater('key in entitlementsKeys')).then(function(items) {
       expect(items.length).toBe(size);
     });
   };

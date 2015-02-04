@@ -167,10 +167,10 @@ angular
           }
         })
         .state('users.list.preview.voicemail', {
-          template: '<div voicemail-info></div>'
+          template: '<div uc-voicemail></div>'
         })
         .state('users.list.preview.snr', {
-          template: '<div single-number-reach-info></div>'
+          template: '<div uc-single-number-reach></div>'
         })
         .state('users.list.preview.device', {
           templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
@@ -226,7 +226,7 @@ angular
           parent: 'partner',
           url: '/reports',
           templateUrl: 'modules/squared/views/partnerreports.html',
-          controller: 'ReportsCtrl'
+          controller: 'PartnerReportsCtrl'
         })
         .state('login_swap', {
           url: '/login/:customerOrgId/:customerOrgName',
@@ -339,11 +339,59 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('callroutingBase', {
+          abstract: true,
+          parent: 'main',
+          templateUrl: 'modules/huron/callRouting/callRouting.tpl.html'
+        })
         .state('callrouting', {
           url: '/callrouting',
-          templateUrl: 'modules/huron/views/callrouting.html',
-          controller: 'CallRoutingCtrl',
-          parent: 'main'
+          parent: 'callroutingBase',
+          views: {
+            'header': {
+              templateUrl: 'modules/huron/callRouting/callRoutingHeader.tpl.html'
+            },
+            'nav': {
+              templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
+              controller: 'CallRoutingNavCtrl',
+              controllerAs: 'nav'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('autoattendant', {
+          url: '/autoattendant',
+          parent: 'callrouting',
+          template: '<div></div>'
+        })
+        .state('callpark', {
+          url: '/callpark',
+          parent: 'callrouting',
+          templateUrl: 'modules/huron/callRouting/callPark/callPark.tpl.html',
+          controller: 'CallParkCtrl',
+          controllerAs: 'cp'
+        })
+        .state('callpickup', {
+          url: '/callpickup',
+          parent: 'callrouting',
+          template: '<div></div>'
+        })
+        .state('intercomgroups', {
+          url: '/intercomgroups',
+          parent: 'callrouting',
+          template: '<div></div>'
+        })
+        .state('paginggroups', {
+          url: '/paginggroups',
+          parent: 'callrouting',
+          template: '<div></div>'
+        })
+        .state('huntgroups', {
+          url: '/huntgroups',
+          parent: 'callrouting',
+          template: '<div></div>'
         })
         .state('mediaonhold', {
           parent: 'modalLarge',
@@ -353,6 +401,32 @@ angular
               templateUrl: 'modules/huron/moh/moh.tpl.html',
               controller: 'MohCtrl',
               controllerAs: 'moh'
+            }
+          }
+        })
+        .state('generateauthcode', {
+          parent: 'modal',
+          url: '/generateauthcode',
+          params: {
+            currentUser: {},
+            activationCode: {}
+          },
+          views: {
+            'modal@': {
+              templateUrl: 'modules/huron/device/generateActivationCodeModal.tpl.html',
+              controller: 'GenerateActivationCodeCtrl',
+              controllerAs: 'vm'
+            }
+          }
+        })
+        .state('didadd', {
+          parent: 'modal',
+          url: '/didadd',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/huron/didAdd/didAdd.tpl.html',
+              controller: 'DidAddCtrl',
+              controllerAs: 'vm'
             }
           }
         });

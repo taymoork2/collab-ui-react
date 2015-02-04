@@ -4,6 +4,7 @@
 module.exports = {
 
   build_dir: 'build',
+  coverage_dir: 'coverage',
   compile_dir: 'dist',
   test_dir: 'test',
   e2e_dir: 'test/e2e-protractor',
@@ -38,6 +39,8 @@ module.exports = {
     js: [
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+      'bower_components/sinon-ng/sinon-ng.js',
+      'bower_components/es5-shim/es5-shim.js',
       '**/*.json'
     ]
   },
@@ -84,7 +87,10 @@ module.exports = {
       'bower_components/bootstrap-cisco-ng/dist/cisco-ui-tpls.js',
       'bower_components/angular-wizard/dist/angular-wizard.js',
       'bower_components/ng-grid/build/ng-grid.js',
-      'bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js'
+      'bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
+      'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+      'bower_components/ng-clip/src/ngClip.js',
+      'bower_components/zeroclipboard/dist/ZeroClipboard.js'
     ],
     css: [
       'bower_components/alertify.js/themes/alertify.core.css',

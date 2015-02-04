@@ -4,10 +4,20 @@
     <div>
       <h2 class="page-title">
         <span translate="hercules.page_title" />
-        <div style="float: right">
-          <button class="btn btn-info" ng-click="reload()" style="margin-right: 15px;">
-            <i class="icon icon-refresh hidden-sm hidden-md hidden-lg" />
-            <span class="hidden-xs">Reload</span>
+        <div style="float: right; white-space: nowrap">
+          <button class="btn btn-info" style="margin-right: 60px;" ng-click="showNotificationConfigDialog()">
+            <span>
+              <i class="fa fa-bell" />
+            </span>
+          </button>
+
+          <button ng-disabled="inflight" class="btn btn-info" ng-click="reload()" style="position: fixed; z-index: 10; right: 10px; top: 79px;">
+            <span ng-hide="inflight">
+              <i class="icon icon-refresh" />
+            </span>
+            <span ng-show="inflight">
+              <i class="icon icon-spinner icon-spin" />
+            </span>
           </button>
         </div>
       </h2>
@@ -30,16 +40,16 @@
         <div ng-show="clusters.length != 0" class="col-md-12">
 
           <accordion close-others="{{false}}">
-            <accordion-group ng-repeat="cluster in clusters" is-open="cluster.initially_open">
+            <accordion-group ng-repeat="cluster in clusters" is-open="true">
               <accordion-heading>
                 <h4>
-                  <span class="{{cluster.needs_attention ? 'red' : 'green'}}" style="padding-right: 10px;">
+                  <span class="{{cluster.needs_attention ? 'red' : cluster.running_hosts ? 'green' : ''}}" style="padding-right: 10px;">
                     <i class="fa fa-circle-o" />
                   </span>
 
                   <span>{{cluster.name || 'Unknown Cluster Name'}}</span>
 
-                  <span ng-show="{{!cluster.needs_attention && cluster.provisioning_data.not_approved_packages.length}}" style="float: right; color: #00B29D;">
+                  <span ng-show="{{!cluster.needs_attention && cluster.software_upgrade_available}}" style="float: right; color: #00B29D;">
                     <span class="hidden-xs">Software Upgrades Available</span>
                     <span class="visible-xs"><i class="fa fa-cloud-download"></i></span>
                   </span>
@@ -54,7 +64,7 @@
               <div class="connector-body">
 
                 <!-- host list -->
-                <div class="md-col-12 clearfix" style="padding-left: 15px; padding-bottom: 15px">
+                <div class="md-col-12 clearfix" style="padding-left: 15px;">
                   <span style="font-size: xs; opacity: 0.5">
                     <span>This cluster consists of {{cluster.hosts.length}} {{cluster.hosts.length == 1 ? 'host' : 'hosts'}}:</span>
                     <span ng-repeat="host in cluster.hosts">
@@ -64,67 +74,108 @@
                       <span ng-hide="$last">|</span>
                     </span>
                   </span>
+
+                  <div style="padding-top: 5px" class="clearfix connector-info-item" ng-repeat="host in cluster.hosts | filter: { offline: true }">
+                    <span style="color: #f05d3b">{{host.host_name}}</span>
+                    <span translate="{{'hercules.status.offline'}}" />
+                    <a href>
+                      <i class="icon icon-close" ng-click="toggleEdit(host.host_name)" />
+                    </a>
+                    <div style="margin-top: 5px" ng-show="host.host_name == editingHost">
+                      <button ng-disabled="deleteHostInflight" class="btn btn-danger btn-sm" ng-click="deleteHost(cluster.id, host.serial)">
+                        <span ng-hide="deleteHostInflight">
+                          Delete {{host.host_name}}?
+                        </span>
+                        <span ng-show="deleteHostInflight">
+                          <i class="icon icon-spinner icon-spin" />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
                 </div>
 
                 <!-- services -->
                 <div class="sw-upgrade">
-                  <div class="clearfix" ng-repeat="service in cluster.services">
+                  <div ng-repeat="service in cluster.services">
                     <div class="col-md-12 clearfix">
-                      <h4 style="float: left">
-                        <span ng-show="{{service.needs_attention}}">
-                          {{service.display_name}} needs attention:
+                      <h4 class="header pull-left">
+                        <span class="clearfix" ng-show="{{service.needs_attention && service.running_hosts}}">
+                          {{service.display_name}} needs attention
+                        </span>
+                        <span class="clearfix" ng-show="{{service.needs_attention && !service.running_hosts}}">
+                          {{service.display_name}} is not running
                         </span>
                         <span ng-show="{{!service.needs_attention}}">
-                          <span ng-show="{{!service.is_disabled}}">
+                          <span class="clearfix" ng-show="{{!service.is_disabled}}">
                             {{service.display_name}} is running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}
                           </span>
-                          <span ng-show="{{service.is_disabled}}" style="opacity: 0.5">
+                          <span class="clearfix" ng-show="{{service.is_disabled}}" style="opacity: 0.5">
                             {{service.display_name}} is disabled
                           </span>
                         </span>
                       </h4>
-                      <button ng-show="service.not_approved_package" style="float: right; margin-top: 10px;" class="btn btn-info btn-sm hidden-xs" ng-click="upgradeSoftware(cluster.id, service.service_type)">
-                        Upgrade Now
-                      </button>
                     </div>
+
                     <div class="col-md-12">
 
                       <!-- connectors -->
                       <div class="connector-info-item" ng-repeat="connector in service.connectors">
-                        <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.state != 'running' && connector.state != 'disabled'}}">
+                        <!-- connector status -->
+                        <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.state != 'running' && connector.state != 'disabled' && connector.state != 'offline'}}">
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
                           <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}" />
                         </div>
-                        <div hercules-popover style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.alarms.length}}">
+
+                        <!-- connector deduced error -->
+                        <div style="padding-bottom: 5px" class="clearfix" ng-repeat="alarm in connector.deduced_alarms">
                           <span style="color: #f05d3b">{{connector.host.host_name}}</span>
-                          has reported <a href="#" onclick="return false" class="popover-trigger">{{connector.alarms.length}} alarms.</a>
-                            <div class="popover-title hide">
-                              <i class="fa fa-exclamation-triangle" style="color: #f05d3b"></i> {{service.display_name}} Alarms
+                          <span>is pending software upgrade from {{connector.version}} to {{alarm.expected_version}}.</span>
+                        </div>
+
+                        <!-- connector alarms -->
+                        <div ng-show="{{connector.alarms.length}}">
+                          <div class="clearfix" style="padding-bottom: 5px">
+                            <span style="color: #f05d3b">{{connector.host.host_name}}</span>
+                            <span ng-show="connector.alarms.length == 1">has reported {{connector.alarms.length}} alarm</span>
+                            <span ng-hide="connector.alarms.length == 1">has reported {{connector.alarms.length}} alarms</span>
+                            <a href ng-click="toggleAlarms(cluster.id, service.service_type, connector.host.host_name)">
+                              <span ng-show="visibleAlarm.clusterId == cluster.id && visibleAlarm.serviceType == service.service_type && visibleAlarm.hostName == connector.host.host_name">
+                                <i class="icon icon-chevron-up" />
+                              </span>
+                              <span ng-hide="visibleAlarm.clusterId == cluster.id && visibleAlarm.serviceType == service.service_type">
+                                <i class="icon icon-chevron-down" />
+                              </span>
+                            </a>
+                          </div>
+
+                          <div style="padding-left: 20px"  ng-show="visibleAlarm.clusterId == cluster.id && visibleAlarm.serviceType == service.service_type && visibleAlarm.hostName == connector.host.host_name">
+                            <div ng-repeat="alarm in connector.alarms" style="padding-bottom: 5px;" class="clearfix">
+                              <span style="color: #f05d3b; text-transform: capitalize;">{{alarm.severity}}:</span>
+                              <span>{{alarm.title}}.</span>
+                              <span>{{alarm.description}}</span>
                             </div>
-                            <div class="popover-content hide">
-                              <div ng-repeat="alarm in connector.alarms">
-                                <span style="color: #f05d3b">{{alarm.title}} ({{alarm.severity}})</span>
-                                <p>{{alarm.description}}</p>
-                              </div>
-                              <p>
-                                Go to the <a href="https://{{connector.host.host_name}}/alarms" target="_blank">Expressway alarms page</a>.
-                              </p>
+                            <div style="padding-bottom: 5px">
+                              Manage the alarms in the <a href="https://{{connector.host.host_name}}/alarms" target="_blank">alarms page</a>.
                             </div>
+                          </div>
                         </div>
                       </div>
 
                       <!-- sw upgrade -->
-                      <div class="connector-info-item" ng-show="service.not_approved_package">
+                      <div class="connector-info-item" ng-show="service.software_upgrade_available">
                         <div style="padding-bottom: 5px" class="clearfix">
                           <span>A software update is avalable.</span>
                           <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
                           <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
                         </div>
+                        <div style="padding-bottom: 5px">
+                          <hercules-upgrade-button
+                            cluster-id="{{cluster.id}}"
+                            service-type="{{service.service_type}}"
+                          />
+                        </div>
                       </div>
-
-                      <button ng-show="service.not_approved_package" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-info btn-sm hidden-sm hidden-md hidden-lg" ng-click="upgradeSoftware(cluster.id, service.service_type)">
-                        Upgrade Now
-                      </button>
 
                     </div>
                   </div>

@@ -18,36 +18,39 @@ exports.randomTestRoom = function() {
 };
 
 exports.randomTestGmail = function() {
-  return 'collabctg+' + this.randomId() + '@gmail.com';
+  var email = 'collabctg+' + this.randomId() + '@gmail.com';
+  console.log('randomTestGmail: ' + email);
+  return email;
 };
 
 exports.sendRequest = function(options) {
-  var defer = protractor.promise.defer();
+  var flow = protractor.promise.controlFlow();
+  return flow.execute(function() {
+    var defer = protractor.promise.defer();
+    console.log('\nSending Request...', options);
 
-  console.log('\nSending Request...', options);
+    request(options, function(error, response, message) {
+      console.log('\nResponse Received...', options.url);
+      console.log('--error: ' + error);
+      console.log('--status code: ' + response.statusCode);
+      console.log('--message: ' + message);
 
-  request(options, function(error, response, message) {
-    console.log('\nResponse Received...', options.url);
-    console.log('--error: ' + error);
-    console.log('--status code: ' + response.statusCode);
-    console.log('--message: ' + message);
+      if (error || response.statusCode >= 400) {
+        defer.reject({
+          status: response.statusCode,
+          error: error,
+          message: message
+        });
+      } else {
+        defer.fulfill(message);
+      }
+    });
 
-    if (error || response.statusCode >= 400) {
-      defer.reject({
-        status: response.statusCode,
-        error: error,
-        message: message
-      });
-    } else {
-      defer.fulfill(message);
-    }
+    return defer.promise;
   });
-  return defer.promise;
 };
 
 exports.getToken = function() {
-  var defer = protractor.promise.defer();
-
   console.log('getting token');
   var options = {
     method: 'post',
@@ -63,17 +66,11 @@ exports.getToken = function() {
     body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope
   };
 
-  this.sendRequest(options).then(function(data) {
+  return this.sendRequest(options).then(function(data) {
     var resp = JSON.parse(data);
     console.log('access token', resp.access_token);
-    //token = resp.access_token;
-    defer.fulfill(resp.access_token);
-  }, function() {
-    defer.reject();
+    return resp.access_token;
   });
-
-  return defer.promise;
-
 };
 
 exports.scrollTop = function() {
@@ -116,11 +113,7 @@ exports.click = function(elem) {
 };
 
 exports.getSwitchState = function(elem) {
-  return elem.getAttribute('ng-model').then(function(model) {
-    return elem.evaluate(model).then(function(value) {
-      return value;
-    });
-  });
+  return elem.evaluate('buttonValue');
 };
 
 exports.toggleSwitch = function(elem, toggle) {
