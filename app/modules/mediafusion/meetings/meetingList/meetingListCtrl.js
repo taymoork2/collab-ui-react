@@ -1,7 +1,7 @@
 'use strict';
 
 //Defining a controller for Meeting List with required dependencies.
-angular.module('Core')
+angular.module('Mediafusion')
   .controller('ListMeetingsCtrl', ['$scope', '$rootScope', '$filter', 'Log', 'MeetingListService',
     function ($scope, $rootScope, $filter, Log, MeetingListService) {
 

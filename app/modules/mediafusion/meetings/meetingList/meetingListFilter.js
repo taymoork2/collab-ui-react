@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('Core').filter('meetingListFilter', function ($filter) {
+angular.module('Mediafusion').filter('meetingListFilter', function ($filter) {
 
   /* Returning the Actual status based on the status value retrieved from backend. 
    *
