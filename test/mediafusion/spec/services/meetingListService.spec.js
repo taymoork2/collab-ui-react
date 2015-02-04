@@ -23,7 +23,7 @@ describe('Service: MeetingListService', function () {
                .respond(200, meetinglistData);
 
     //Making a fake call to return json data to make unit test cases to be passed for leader board UI.
-    httpBackend.when('GET', 'http://multimediafusion-disr.mb-lab.huron.uno/admin/api/v1/meeting/getEnterpriseAndCloudMeetings')
+    httpBackend.when('GET', 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getEnterpriseAndCloudMeetings')
                .respond(200, meetingLdrBrdData);
     
     MeetingListService = _MeetingListService_;

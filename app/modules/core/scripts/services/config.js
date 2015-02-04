@@ -24,9 +24,9 @@ angular.module('Core')
         },
 
         meetingServiceUrl: {
-          dev: 'http://multimediafusion-disr.mb-lab.huron.uno/admin/api/v1',
-          integration: 'http://multimediafusion-disr.mb-lab.huron.uno/admin/api/v1',
-          prod: 'http://multimediafusion-disr.mb-lab.huron.uno/admin/api/v1'
+          dev: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1',
+          integration: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1',
+          prod: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1'
         },
 
         oauthClientRegistration: {
@@ -178,7 +178,8 @@ angular.module('Core')
         entitlements: {
           squared: 'webex-squared',
           huron: 'ciscouc',
-          fusion: 'squared-fusion-uc'
+          fusion: 'squared-fusion-uc',
+          mediafusion: 'squared-fusion-media'
         },
 
         roles: {
@@ -323,7 +324,8 @@ angular.module('Core')
       config.serviceStates = {
         'ciscouc': ['callrouting', 'mediaonhold'],
         'squared-fusion-uc': ['fusion'],
-        'squared-team-member': ['organization']
+        'squared-team-member': ['organization'],
+        'squared-fusion-media': ['meetings']
       };
 
       // These states do not require a role/service check
