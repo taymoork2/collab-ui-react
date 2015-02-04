@@ -21,7 +21,7 @@ angular.module('Hercules')
 
       var write = function (data, callback) {
         $http
-          .post(url, data)
+          .put(url, data)
           .success(function (data) {
             callback(null, data);
           })
