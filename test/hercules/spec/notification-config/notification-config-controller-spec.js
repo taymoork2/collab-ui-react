@@ -16,7 +16,7 @@ describe('NotificationConfigController', function() {
     }
     controller = _$controller_('NotificationConfigController', {
       $scope: $scope,
-      Notification: notification,
+      XhrNotificationService: notification,
       NotificationConfigService: service,
     });
   }));
@@ -35,16 +35,12 @@ describe('NotificationConfigController', function() {
     service.read.callArgWith(0, ['fails'], null);
     expect($scope.loading).toBe(false);
     expect(notification.notify.callCount).toBe(1);
-    expect(notification.notify.args[0][0].length).toBe(1);
-    expect(notification.notify.args[0][0][0]).toBe('fails');
-    expect(notification.notify.args[0][1]).toBe('error');
   });
 
   it('notifies when read fails with default msg', function() {
     expect(service.read.callCount).toBe(1);
     service.read.callArgWith(0, [null, 123], null);
     expect(notification.notify.callCount).toBe(1);
-    expect(notification.notify.args[0][0][0]).toBe('Request failed with status 123');
   });
 
   it('writes data', function() {

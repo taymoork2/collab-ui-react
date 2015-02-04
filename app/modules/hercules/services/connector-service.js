@@ -3,7 +3,7 @@
 /* global _ */
 
 angular.module('Hercules')
-  .service('ConnectorService', ['$http', '$window', 'ConnectorMock', 'ConverterService', 'ConfigService', 'Notification',
+  .service('ConnectorService', ['$http', '$window', 'ConnectorMock', 'ConverterService', 'ConfigService', 'XhrNotificationService',
     function ConnectorService($http, $window, mock, converter, config, notification) {
       var lastClusterResponse = [];
 
@@ -60,11 +60,8 @@ angular.module('Hercules')
       };
 
       var createErrorHandler = function (message, callback) {
-        var messages = [message];
         return function (data, status, headers, config) {
-          messages.push('Request failed with status ' + status);
-          messages.push('Check the browser console for details');
-          notification.notify(messages, 'error');
+          notification.notify(message, arguments);
           callback(arguments);
         };
       };
