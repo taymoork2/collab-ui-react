@@ -17,7 +17,7 @@
           When shit hits the fan, who we gonna notify?
         </p>
         <div class="form-group">
-          <textarea ng-disabled="saving" placeholder="A list of comma-seprated email addresses, eg. foo@example.com, bar@example.com, ..." class="form-control" id="wx2_users" type="text" ng-bind="config.wx2users"></textarea>
+          <textarea ng-disabled="saving" placeholder="A list of comma-seprated email addresses, eg. foo@example.com, bar@example.com, ..." class="form-control" id="wx2_users" type="text" ng-model="config.wx2users"></textarea>
         </div>
 
         <p>
@@ -25,11 +25,11 @@
         </p>
         <div class="form-group">
           <label for="wx2_username">Username:</label>
-          <input ng-disabled="saving" class="form-control" id="wx2_username" type="text" ng-bind="config.username" placeholder="foo@example.com" />
+          <input ng-disabled="saving" class="form-control" id="wx2_username" type="text" ng-model="config.username" placeholder="foo@example.com" />
         </div>
         <div class="form-group">
           <label for="wx2_password">Password:</label>
-          <input ng-disabled="saving" class="form-control" id="wx2_password" type="password" ng-bind="config.password" />
+          <input ng-disabled="saving" class="form-control" id="wx2_password" type="password" ng-model="config.password" />
         </div>
       </div>
 
