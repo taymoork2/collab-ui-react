@@ -4,7 +4,7 @@ angular
     function ($scope, service, notification) {
 
       var notify = function (data, status, headers, config) {
-        messages = [data || 'Request failed with status ' + status];
+        var messages = [data || 'Request failed with status ' + status];
         notification.notify(messages, 'error');
       };
 
@@ -13,8 +13,8 @@ angular
         $scope.config = config;
       });
 
-      $scope.writeConfig = function() {
-        service.write($scope.config, function(err) {
+      $scope.writeConfig = function () {
+        service.write($scope.config, function (err) {
           if (err) return notify.apply(null, err);
           $scope.$parent.modal.close()
         });
