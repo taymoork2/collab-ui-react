@@ -6,7 +6,7 @@
     .controller('DevicesCtrl', DevicesCtrl);
 
   /* @ngInject */
-  function DevicesCtrl($scope, $q, DeviceService, OtpService, Config) {
+  function DevicesCtrl($scope, $q, DeviceService, OtpService, Config, HttpUtils) {
     var vm = this;
     vm.devices = [];
     vm.otps = [];
@@ -16,33 +16,35 @@
     ////////////
 
     function activate() {
-      var promises = [];
+      HttpUtils.setTrackingID().then(function () {
+        var promises = [];
 
-      // reset to false when loaded
-      vm.showGenerateOtpButton = false;
+        // reset to false when loaded
+        vm.showGenerateOtpButton = false;
 
-      var devicePromise = DeviceService.loadDevices($scope.currentUser.id).then(function (deviceList) {
-        vm.devices = deviceList;
-      });
-      promises.push(devicePromise);
-
-      var otpPromise = OtpService.loadOtps($scope.currentUser.id).then(function (otpList) {
-        vm.otps = otpList;
-      });
-      promises.push(otpPromise);
-
-      return $q.all(promises)
-        .then(function () {
-          if (vm.devices.length === 0 && vm.otps.length === 0) {
-            vm.showGenerateOtpButton = true;
-          }
-
-          if (vm.devices.length > 0 && vm.otps.length === 0) {
-            $scope.$parent.userDevicesCard.addGenerateAuthCodeLink();
-          } else {
-            $scope.$parent.userDevicesCard.removeGenerateAuthCodeLink();
-          }
+        var devicePromise = DeviceService.loadDevices($scope.currentUser.id).then(function (deviceList) {
+          vm.devices = deviceList;
         });
+        promises.push(devicePromise);
+
+        var otpPromise = OtpService.loadOtps($scope.currentUser.id).then(function (otpList) {
+          vm.otps = otpList;
+        });
+        promises.push(otpPromise);
+
+        return $q.all(promises)
+          .then(function () {
+            if (vm.devices.length === 0 && vm.otps.length === 0) {
+              vm.showGenerateOtpButton = true;
+            }
+
+            if (vm.devices.length > 0 && vm.otps.length === 0) {
+              $scope.$parent.userDevicesCard.addGenerateAuthCodeLink();
+            } else {
+              $scope.$parent.userDevicesCard.removeGenerateAuthCodeLink();
+            }
+          });
+      });
     }
 
     function showDeviceDetailPanel(device) {

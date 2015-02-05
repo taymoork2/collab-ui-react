@@ -36,6 +36,7 @@ angular
           parent: 'main'
         });
 
+      $httpProvider.interceptors.push('TrackingIDInterceptor');
       $httpProvider.responseInterceptors.push('ResponseInterceptor');
 
       $translateProvider.useStaticFilesLoader({

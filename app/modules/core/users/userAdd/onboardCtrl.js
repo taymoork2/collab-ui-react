@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$location', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
-    function ($scope, $state, $location, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$location', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'HttpUtils',
+    function ($scope, $state, $location, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, HttpUtils) {
 
       $scope.groups = [];
       GroupService.getGroupList(function (data, status) {
@@ -70,19 +70,21 @@ angular.module('Core')
       $scope.inviteRadio = 1;
 
       $scope.onboardUsers = function () {
-        if ($scope.inviteRadio === 1) {
-          inviteUsers();
-        } else if ($scope.inviteRadio === 2) {
-          if ($scope.isAddEnabled()) {
-            addUsers();
-          } else if ($scope.isEntitleEnabled()) {
-            entitleUsers();
-          } else {
-            var error = [];
-            error.push()
-            Notification.notify(error, 'error');
+        HttpUtils.setTrackingID().then(function () {
+          if ($scope.inviteRadio === 1) {
+            inviteUsers();
+          } else if ($scope.inviteRadio === 2) {
+            if ($scope.isAddEnabled()) {
+              addUsers();
+            } else if ($scope.isEntitleEnabled()) {
+              entitleUsers();
+            } else {
+              var error = [];
+              error.push()
+              Notification.notify(error, 'error');
+            }
           }
-        }
+        });
       };
 
       //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
