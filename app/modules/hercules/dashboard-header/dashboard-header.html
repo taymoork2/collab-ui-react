@@ -48,11 +48,14 @@
         </span>
       </div>
 
-      <div class="text-danger" ng-show="service.needs_attention">
+      <div class="text-danger">
+        <span ng-show="service.needs_attention == 0">
+          &nbsp;
+        </span>
         <span ng-show="service.needs_attention == 1">
           {{service.needs_attention}} cluster needs attention
         </span>
-        <span ng-hide="service.needs_attention == 1">
+        <span ng-show="service.needs_attention > 1">
           {{service.needs_attention}} clusters need attention
         </span>
       </div>
