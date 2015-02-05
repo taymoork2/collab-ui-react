@@ -9,8 +9,8 @@
 /* global element */
 
 var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!'
+  username: 'super-admin@mfusion1webex.com',
+  password: 'Mc23267!'
 };
 
 
@@ -35,7 +35,7 @@ describe('List meetings flow', function () {
     utils.scrollTop();
   });
 
-  it('should login as non-sso admin user', function () {
+  it('should login as test user', function () {
     login.login(testuser.username, testuser.password);
   });
 
