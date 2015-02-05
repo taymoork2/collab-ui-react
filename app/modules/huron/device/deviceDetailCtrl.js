@@ -12,8 +12,12 @@
     vm.title = '';
     vm.deviceIcon = '';
     vm.save = save;
-    vm.deactivate = deactivate;
-
+    vm.additionalBtnClick = deactivate;
+    vm.additionalBtn = {
+      label: 'deviceDetailPage.deactivate',
+      btnclass: 'btn btn-default',
+      id: 'btn-deactivate'
+    };
     activate();
     ////////////
 

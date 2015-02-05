@@ -1,5 +1,5 @@
 <form name="deviceDetailForm" class="form-horizontal" role="form">
-  <cr-details-body title="{{vm.device.model}}" on-save="vm.save()">
+  <cr-details-body title="{{vm.device.model}}" on-save="vm.save()" additional-btn="vm.additionalBtn" on-additionalbtn="vm.additionalBtnClick()" >
     <div class="device-details-body">
       <div class="row">
         <div class="col-sm-4">
@@ -20,7 +20,6 @@
           </div>
         </div>
       </div>
-      <button id="btn-deactivate" class="btn btn-default" ng-click="vm.deactivate()"><span translate="deviceDetailPage.deactivate"></span></button>
     </div>
   </cr-details-body>
 </form>

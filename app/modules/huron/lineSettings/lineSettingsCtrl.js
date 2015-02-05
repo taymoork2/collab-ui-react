@@ -35,8 +35,12 @@
     };
 
     $scope.saveLineSettings = saveLineSettings;
-    $scope.deleteLineSettings = deleteLineSettings;
-
+    $scope.additionalBtnClick = deleteLineSettings;
+    $scope.additionalBtn = {
+      label: 'directoryNumberPanel.removeNumber',
+      btnclass: 'btn btn-default btn-remove',
+      id: 'btn-remove'
+    };
     init();
 
     function init() {

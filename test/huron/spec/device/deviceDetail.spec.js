@@ -80,12 +80,12 @@ describe('Controller: DeviceDetailCtrl', function () {
 
       describe('deactivate function', function () {
         it('should exist', function () {
-          expect(controller.deactivate).toBeDefined;
+          expect(controller.additionalBtnClick).toBeDefined;
         });
 
         it('should popup a modal when called', function () {
           $httpBackend.whenGET('modules/huron/device/deactivateDeviceModal.tpl.html').respond({});
-          controller.deactivate();
+          controller.additionalBtnClick();
           expect($modal.open.calledOnce).toBe(true);
           modalInstance = $modal.open.getCall(0).returnValue;
           modalInstance.dismiss();
