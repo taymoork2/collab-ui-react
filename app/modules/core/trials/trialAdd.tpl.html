@@ -1,0 +1,64 @@
+<!-- Add Trial Modal -->
+<form name="trialForm" class="form-horizontal trial-modal">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+      <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only" translate="common.close"></span>
+    </button>
+    <h3 class="modal-title" translate="partnerHomePage.dialogTitle"></h3>
+  </div>
+  <div class="modal-body">
+    <h4 class="section-title" translate="partnerHomePage.customerInformation"></h4>
+    <div class="form-group">
+      <label for="customerNameInput" class="col-xs-4 control-label" translate="partnerHomePage.customerName"></label>
+      <div class="col-xs-7">
+        <div id="customerNameForm" ng-class="{ 'has-error': (trialForm.customerName.$invalid && trialForm.customerName.$dirty) || (trial.nameError && !trialForm.customerName.$dirty) }">
+          <input id="customerNameInput" class="form-control" name="customerName" ng-model="trial.customerName" type="text" required>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="customerEmailInput" class="col-xs-4 control-label" translate="partnerHomePage.customerEmail"></label>
+      <div class="col-xs-7">
+        <div id="customerEmailForm" ng-class="{ 'has-error': (trialForm.customerEmail.$invalid && trialForm.customerEmail.$dirty) || (trial.emailError && !trialForm.customerEmail.$dirty)}">
+          <input id="customerEmailInput" type="email" class="form-control" name="customerEmail" ng-model="trial.customerEmail" required>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <h4 class="section-title" translate="partnerHomePage.termsOfTrial"></h4>
+    <div class="row">
+      <div class="col-xs-8 col-xs-offset-4">
+        <cs-checkbox id="squaredTrial" ng-model="trial.offers['COLLAB']" cklabel="{{'trials.collab' | translate}}" ng-disabled="trial.isSquaredUCEnabled()"></cs-checkbox>
+      </div>
+    </div>
+    <div class="row" ng-if="trial.isSquaredUC()">
+      <div class="col-xs-8 col-xs-offset-4">
+        <cs-checkbox id="squaredUCTrial" ng-model="trial.offers['SQUAREDUC']" cklabel="{{'trials.squaredUC' | translate}}"></cs-checkbox>
+      </div>
+    </div>
+    <div class="form-group">
+      <fieldset>
+      <legend class="col-xs-4 control-label" translate="partnerHomePage.duration"></legend>
+      <div class="col-xs-8">
+        <cs-radiolist ng-model="trial.licenseDuration" options="trial.licenseDurationOptions" horizontal="true"></cs-radiolist>
+      </div>
+      </fieldset>
+    </div>
+    <div class="form-group">
+      <label for="customerLicenseInput" class="col-xs-4 control-label" translate="partnerHomePage.numberOfLicenses"></label>
+      <div class="col-xs-3" ng-class="{'has-error': trialForm.customerLicenseInput.$invalid}">
+        <input id="customerLicenseInput" name="customerLicenseInput" type="number" ng-pattern="/^[1-9][0-9]{0,2}$/" class="form-control" ng-model="trial.licenseCount" required>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button id="cancelNewTrialButton" class="btn btn-default" ng-click="$dismiss()">
+      <span translate="partnerHomePage.cancel"></span>
+    </button>
+    <button type="button" id="startTrialButton" class="btn btn-primary" ng-click="trialForm.$setPristine(true); trial.isSquaredUCEnabled() ? trial.gotoAddNumber() : trial.startTrial();" ng-disabled="trialForm.$invalid || trial.isOffersEmpty()" data-loading-text="<i class='icon icon-spinner'></i>">
+      <span ng-hide="trial.isSquaredUCEnabled()" translate="partnerHomePage.startTrial"></span>
+      <span ng-show="trial.isSquaredUCEnabled()" translate="common.next"></span>
+    </button>
+  </div>
+</form>

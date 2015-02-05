@@ -67,6 +67,10 @@
     });
   })
 
+  .factory('CustomerCommonService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId');
+  })
+
   .factory('UserServiceCommon', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId', {}, {
       update: {

@@ -42,30 +42,11 @@
             <cs-radio label="inviteRadio1.label" value="inviteRadio1.value" name="inviteRadio" id="inviteRadio1" ng-model="inviteRadio" isdisabled="inviteRadio1.isDisabled"></cs-radio>
             <cs-radio label="inviteRadio2.label" value="inviteRadio2.value" name="inviteRadio" id="inviteRadio2" ng-model="inviteRadio" isdisabled="inviteRadio2.isDisabled"></cs-radio>
           </div>
-
-          <!-- <div class="adduser-importlink">
-            <a>Import CSV</a>
-          </div> -->
         </div>
 
         <div class="modal-footer">
-
-          <!-- <button type="button" id="btnAdd" class="btn btn-primary btn-lg pull-right adduser-btn" ng-if="isAddEnabled()" ng-click="addUsers()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="usersPage.add"></span>
-          </button>
-
-          <button type="button" id="btnEntitle" class="btn btn-primary btn-lg pull-right adduser-btn" ng-if="isEntitleEnabled()" ng-click="entitleUsers()" data-loading-text="<i class='icon icon-spinner'></i>">
-            <span translate="usersPage.entitle"></span>
-          </button> -->
-
-          <button type="button" id="btnOnboard" class="btn btn-primary btn-lg pull-right adduser-btn" ng-click="onboardUsers()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="onboardModal.onboardBtn"></span></button>
-
-         <button type="button" id="btnCancel" class="btn btn-default btn-lg pull-right adduser-btn" ng-click="clearPanel()"><span translate="usersPage.clear"></span>
-          </button>
-
-          <!-- <button type="button" id="cancelAddUsersButton" class="btn btn-default btn-lg pull-right adduser-btn" data-dismiss="modal">
-            <span translate="usersPage.cancel"></span>
-          </button> -->
-
+          <button type="button" id="btnCancel" class="btn btn-default" ng-click="clearPanel()" translate="usersPage.clear"></button>
+          <button type="button" id="btnOnboard" class="btn btn-primary" ng-click="onboardUsers()" data-loading-text="<i class='icon icon-spinner'></i>" translate="onboardModal.onboardBtn"></button>
         </div>
         </div>
       </div>

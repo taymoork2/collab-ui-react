@@ -212,6 +212,11 @@ angular.module('Core')
           fusion_cal: 'squared-fusion-cal'
         },
 
+        trials: {
+          collab: 'COLLAB',
+          squaredUC: 'SQUAREDUC'
+        },
+
         backend_roles: { // as stored in the backend
           full_admin: 'id_full_admin',
           all: 'atlas-portal.all',
@@ -388,7 +393,7 @@ angular.module('Core')
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         User: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports'],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit'],
         PARTNER_USER: ['partneroverview', 'partnerreports']
       };
 

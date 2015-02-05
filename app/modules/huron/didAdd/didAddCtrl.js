@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($state, $stateParams, $translate, ExternalNumberPool, StorefrontEmailService, Notification) {
+  function DidAddCtrl($scope, $state, $stateParams, $q, $translate, ExternalNumberPool, StorefrontEmailService, Notification) {
     var vm = this;
     vm.invalidcount = 0;
     vm.submitBtnStatus = false;
@@ -64,6 +64,7 @@
     };
     vm.checkForInvalidTokens = checkForInvalidTokens;
     vm.submit = submit;
+    vm.startTrial = startTrial;
     vm.sendEmail = sendEmail;
     vm.currentOrg = $stateParams.currentOrg;
 
@@ -89,17 +90,31 @@
       return didList;
     };
 
-    function submit() {
+    function submit(customerId) {
       var didList = getDIDList();
-      ExternalNumberPool.create(vm.currentOrg.customerOrgId, didList).then(function (results) {
+      vm.addNumbers = false;
+      vm.addingNumbers = true;
+
+      return ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, didList).then(function (results) {
         vm.successCount = results.successes.length;
         vm.failCount = results.failures.length;
 
         vm.addingNumbers = false;
         vm.addSuccess = true;
       });
-      vm.addNumbers = false;
-      vm.addingNumbers = true;
+    };
+
+    function startTrial() {
+      if ($scope.trial && angular.isFunction($scope.trial.startTrial)) {
+        angular.element('#startTrial').button('loading');
+        $q.when($scope.trial.startTrial(true)).then(function (customerId) {
+          return submit(customerId);
+        }).then(function () {
+          return $state.go('trialAdd.nextSteps');
+        }).catch(function () {
+          angular.element('#startTrial').button('reset');
+        });
+      }
     };
 
     function sendEmail() {

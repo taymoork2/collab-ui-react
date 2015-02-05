@@ -59,6 +59,8 @@ var PartnerHomePage = function(){
   this.exitPreviewButton = element(by.id('exitPreviewButton'));
   this.partnerFilter = element(by.id('partnerFilter'));
   this.partnerEmail = element.all(by.binding('userName'));
+  this.squaredTrialCheckbox = element(by.id('squaredTrial'));
+  this.squaredUCTrialCheckbox = element(by.id('squaredUCTrial'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));

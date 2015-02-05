@@ -1,0 +1,104 @@
+<!-- Edit Trial Modal -->
+<form name="trialForm" class="form-horizontal">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+      <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only" translate="common.close"></span>
+    </button>
+    <h3 class="modal-title modal-title-wrap">{{trial.currentTrial.customerName}}</h3>
+  </div>
+  <div class="modal-body modal-body-white">
+    <div class="col-xs-9">
+      <div class="progress">
+        <div class="progress-bar" ng-class="{'danger-bar': trial.currentTrial.daysLeft <= 5, 'warning-bar': (trial.currentTrial.daysLeft < trial.currentTrial.duration/2), 'success-bar': (trial.currentTrial.daysLeft >= trial.currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{trial.currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{trial.currentTrial.duration}}" style="width: {{trial.currentTrial.percentUsed}}%;">
+        </div>
+        <!-- TO DO: Why does this not work in the modal? -->
+        <!-- <div class="modal-bar">
+          <progressbar max="currentTrial.duration" value="currentTrial.daysUsed" type="{{getProgressStatus(currentTrial)}}"></progressbar>
+        </div> -->
+        <div class="days-left-trial">
+          <span translate="partnerHomePage.trialsEndDate"></span>
+        </div>
+        <div class="days-left-edit-modal">
+          <span ng-class="{'trial-danger-text': trial.currentTrial.daysLeft <= 5}">{{trial.getDaysLeft(trial.currentTrial.daysLeft)}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-3">
+        <span class="users-edit-modal trialHeading" translate="partnerHomePage.trialsNumUsers"></span>
+        <div class="license-count-modal">
+          <span >{{trial.currentTrial.usage}}/{{trial.currentTrial.licenses}}</span>
+        </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <h4 class="section-title" translate="partnerHomePage.customerInformation"></h4>
+    <div class="form-group">
+      <label class="col-xs-4 control-label" translate="partnerHomePage.name"></label>
+      <div class="col-xs-8">
+        <p class="form-control-static">{{trial.currentTrial.customerName}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-xs-4 control-label" translate="partnerHomePage.customerEmail"></label>
+      <div class="col-xs-8">
+        <p class="form-control-static">{{trial.currentTrial.customerEmail}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="pull-right" ng-show="trial.editTerms && !trial.showPartnerEdit">
+      <button id="editTrialButton" class="btn btn-primary" ng-click="trial.editTerms = false" translate="partnerHomePage.edit"></button>
+    </div>
+    <h4 class="section-title" translate="partnerHomePage.termsOfTrial"></h4>
+    <div class="row">
+      <div class="col-xs-8 col-xs-offset-4">
+        <cs-checkbox id="squaredTrial" ng-model="trial.offers['COLLAB']" cklabel="{{'trials.collab' | translate}}" ng-disabled="true"></cs-checkbox>
+      </div>
+    </div>
+    <div class="row" ng-if="trial.isSquaredUC()">
+      <div class="col-xs-8 col-xs-offset-4">
+        <cs-checkbox id="squaredUCTrial" ng-model="trial.offers['SQUAREDUC']" cklabel="{{'trials.squaredUC' | translate}}" ng-disabled="true"></cs-checkbox>
+      </div>
+    </div>
+    <div ng-show="trial.editTerms && !trial.showPartnerEdit">
+      <div class="form-group">
+        <label class="col-xs-4 control-label" translate="partnerHomePage.duration"></label>
+        <div class="col-xs-8">
+          <p class="form-control-static">{{trial.currentTrial.duration}} Days</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-xs-4 control-label" translate="partnerHomePage.numberOfLicenses"></label>
+        <div class="col-xs-8">
+          <p class="form-control-static">{{trial.currentTrial.licenses}}</p>
+        </div>
+      </div>
+    </div>
+    <div ng-show="!trial.editTerms || trial.showPartnerEdit">
+      <div class="form-group">
+        <fieldset>
+          <legend class="col-xs-4 control-label" translate="partnerHomePage.duration"></legend>
+          <div class="col-xs-8">
+            <cs-radiolist ng-model="trial.currentTrial.duration" options="trial.licenseDurationOptions" horizontal="true"></cs-radiolist>
+          </div>
+        </fieldset>
+      </div>
+      <div class="form-group">
+        <label for="editLicensesSelect" class="col-xs-4 control-label" translate="partnerHomePage.numberOfLicenses"></label>
+        <div class="col-xs-3" ng-class="{'has-error': trialForm.editLicensesSelect.$invalid}">
+          <input id="editLicensesSelect" name="editLicensesSelect" type="number" ng-pattern="/^[1-9][0-9]{0,2}$/" class="form-control" ng-model="trial.currentTrial.licenses" required>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div ng-show="!trial.editTerms || trial.showPartnerEdit">
+      <button id="cancelTrialButton" class="btn btn-default" ng-click="$dismiss()">
+        <span translate="partnerHomePage.cancel"></span>
+      </button>
+      <button id="saveSendButton" class="btn btn-primary" ng-click="trial.editTrial()" ng-disabled="trialForm.$invalid" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
+        <span translate="partnerHomePage.saveSendReminder"></span>
+      </button>
+    </div>
+  </div>
+</form>

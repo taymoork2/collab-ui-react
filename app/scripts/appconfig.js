@@ -266,7 +266,7 @@ angular
           templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
           controller: 'PartnerHomeCtrl',
           params: {
-            filter: {}
+            filter: null
           }
         })
         .state('partnercustomers.list.preview', {
@@ -409,6 +409,42 @@ angular
               templateUrl: 'modules/huron/moh/moh.tpl.html',
               controller: 'MohCtrl',
               controllerAs: 'moh'
+            }
+          }
+        })
+        .state('trialAdd', {
+          abstract: true,
+          parent: 'modal',
+          views: {
+            'modal@': {
+              template: '<div ui-view></div>',
+              controller: 'TrialAddCtrl',
+              controllerAs: 'trial'
+            }
+          }
+        })
+        .state('trialAdd.info', {
+          templateUrl: 'modules/core/trials/trialAdd.tpl.html'
+        })
+        .state('trialAdd.addNumbers', {
+          templateUrl: 'modules/core/trials/addNumbers.tpl.html',
+          controller: 'DidAddCtrl',
+          controllerAs: 'didAdd'
+        })
+        .state('trialAdd.nextSteps', {
+          templateUrl: 'modules/core/trials/nextStep.tpl.html'
+        })
+        .state('trialEdit', {
+          parent: 'modal',
+          params: {
+            currentTrial: null,
+            showPartnerEdit: false
+          },
+          views: {
+            'modal@': {
+              controller: 'TrialEditCtrl',
+              controllerAs: 'trial',
+              templateUrl: 'modules/core/trials/trialEdit.tpl.html'
             }
           }
         })

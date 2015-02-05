@@ -608,12 +608,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Duration",
+    "duration": "Trial Duration (days)",
     "thirtyDays": "30 Days",
     "sixtyDays": "60 Days",
-    "ninetyDays": "90 Days",
-    "onehundredtwentyDays": "120 Days",
-    "onehundredeightyDays": "180 Days",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "Cancel",
     "startTrial": "Start Trial",
     "customerInformation": "Customer Information",
@@ -632,6 +632,22 @@
     "activeUsersTitle": "Daily Active Users",
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Total Content Shared"
+  },
+  "trialModal": {
+    "trialSuccess": "You have set up your trial successfully.",
+    "nextStep": "Next Step",
+    "sendWelcome": "Send Welcome Message",
+    "sendWelcomePrompt": "If you want the customer to set up the service:",
+    "launchPortal": "Launch Company Portal",
+    "launchPortalPrompt": "If you want to set up the service for the customer:",
+    "or": "or",
+    "squareducError": "Created trial, but unable to provision Squared UC.",
+    "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
+    "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
+  },
+  "trials": {
+    "collab": "Standard Team Rooms + 8-party Sync Up",
+    "squaredUC": "Advanced Communications"
   },
   "status": {
     "noResults": "No results available.",
@@ -682,7 +698,7 @@
     "notifyCustLater": "Notify Customer Later",
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
-    "inputPlacehoder": "Input Phone Numbers"
+    "inputPlacehoder": "Enter phone numbers separated by commas"
   },
   "deviceDetailPage": {
     "deviceStatus": "Device Status",

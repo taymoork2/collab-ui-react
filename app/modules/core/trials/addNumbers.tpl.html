@@ -1,0 +1,16 @@
+<div class="add-did-numbers-modal">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="$dimiss()"><i class="icon icon-close" aria-hidden="true"></i><span class="sr-only" translate='common.close'></span></button>
+        <h3 class="modal-title" translate="partnerHomePage.dialogTitle"></h3>
+    </div>
+    <div class="add-numbers">
+        <div class="modal-body">
+            <h4 class="section-title" translate="didAddModal.title"></h4>
+            <cs-token-field tokens="didAdd.tokens" tokenfieldid="didAdd.tokenfieldid" tokenplacehoder="didAdd.tokenplacehoder" tokenoptions="didAdd.tokenoptions" tokenmethods="didAdd.tokenmethods"></cs-token-field>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ui-sref="trialAdd.info" translate="common.back"></button>
+            <button class="btn btn-primary" id="startTrial" ng-class="{'disabled': !didAdd.submitBtnStatus}" ng-click="didAdd.startTrial()" data-loading-text="<i class='icon icon-spinner'></i>" translate="partnerHomePage.startTrial"></button>
+        </div>
+    </div>
+</div>

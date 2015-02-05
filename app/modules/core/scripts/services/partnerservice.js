@@ -9,66 +9,54 @@ angular.module('Squared')
 
       return {
 
-        editTrial: function (trialPeriod, id, licenseCount, usageCount, corgId, callback) {
+        editTrial: function (trialPeriod, id, licenseCount, usageCount, corgId, offersList) {
           var editTrialData = {
             'trialPeriod': trialPeriod,
             'customerOrgId': corgId,
-            'offers': [{
-              'id': 'COLLAB',
-              'licenseCount': licenseCount
-            }]
+            'offers': []
           };
 
-          if (true) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-            var editTrialUrl = trialsUrl + '/' + id;
-            $http({
-                method: 'PATCH',
-                url: editTrialUrl,
-                data: editTrialData
-              })
-              .success(function (data, status) {
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                callback(data, status);
-                Auth.handleStatus(status);
-              });
-          } else {
-            callback('Edit trial not valid - empty request.');
+          for (var i in offersList) {
+            editTrialData.offers.push({
+              'id': offersList[i],
+              'licenseCount': licenseCount
+            });
           }
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          var editTrialUrl = trialsUrl + '/' + id;
+          return $http({
+              method: 'PATCH',
+              url: editTrialUrl,
+              data: editTrialData
+            })
+            .error(function (data, status) {
+              Auth.handleStatus(status);
+            });
         },
 
-        startTrial: function (customerName, customerEmail, name, count, trialPeriod, startDate, callback) {
+        startTrial: function (customerName, customerEmail, offersList, count, trialPeriod, startDate) {
           var trialData = {
             'customerName': customerName,
             'customerEmail': customerEmail,
-            'offers': [{
-              'id': name,
-              'licenseCount': count
-            }],
+            'offers': [],
             'trialPeriod': trialPeriod,
             'startDate': startDate
           };
 
-          if (trialData.customerName.length > 0 && trialData.customerEmail.length > 0) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
-            $http.post(trialsUrl, trialData)
-              .success(function (data, status) {
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                data.success = false;
-                data.status = status;
-                callback(data, status);
-                Auth.handleStatus(status);
-              });
-          } else {
-            callback('Trial not valid - empty request.');
+          for (var i in offersList) {
+            trialData.offers.push({
+              'id': offersList[i],
+              'licenseCount': count
+            });
           }
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
+          return $http.post(trialsUrl, trialData)
+            .error(function (data, status) {
+              Auth.handleStatus(status);
+            });
         },
 
         getTrialsList: function (callback) {

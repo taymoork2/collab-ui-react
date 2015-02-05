@@ -18,93 +18,27 @@ angular.module('Core')
       $scope.daysExpired = 5;
       $scope.displayRows = 10;
       $scope.expiredRows = 3;
-      $scope.startDate = new Date();
-      $scope.customerName = null;
-      $scope.customerEmail = null;
-      $scope.licenseDuration = 90;
-      $scope.licenseCount = 100;
-      $scope.showAddTrial = true;
-      $scope.editTerms = true;
       $scope.currentTrial = null;
       $scope.showTrialsRefresh = true;
-      $scope.nameError = false;
-      $scope.emailError = false;
       $scope.filter = 'ALL';
-      $scope.addTrialModalInstance = null;
-      $scope.editTrialModalInstance = null;
-      $scope.showPartnerEdit = false;
-
-      $scope.formReset = function () {
-        $scope.customerName = null;
-        $scope.customerEmail = null;
-        $scope.licenseDuration = 90;
-        $scope.licenseCount = 100;
-        $scope.showAddTrial = true;
-        $scope.editTerms = true;
-        $scope.currentTrial = null;
-        $scope.nameError = false;
-        $scope.emailError = false;
-        $scope.totalTrialsData = [];
-        $scope.currentCustomer = null;
-      };
 
       $scope.openAddTrialModal = function () {
-        $scope.addTrialModalInstance = $modal.open({
-          templateUrl: 'modules/core/views/addTrialModal.tpl.html',
-          controller: 'PartnerHomeCtrl',
-          windowClass: 'modal-addtrial-dialog',
-          scope: $scope
+        $state.go('trialAdd.info').then(function () {
+          $state.modal.result.then(function () {
+            getTrialsList();
+            getManagedOrgsList();
+          })
         });
       };
 
       $scope.openEditTrialModal = function () {
-        $scope.editTrialModalInstance = $modal.open({
-          templateUrl: 'modules/core/views/editTrialModal.tpl.html',
-          controller: 'PartnerHomeCtrl',
-          scope: $scope
-        });
-      };
-
-      $scope.startTrial = function () {
-        var createdDate = new Date();
-        $scope.nameError = false;
-        $scope.emailError = false;
-        angular.element('#startTrialButton').button('loading');
-        PartnerService.startTrial($scope.customerName, $scope.customerEmail, 'COLLAB', $scope.licenseCount, $scope.licenseDuration, $scope.startDate, function (data, status) {
-          angular.element('#startTrialButton').button('reset');
-          if (data.success === true) {
-            $scope.addTrialModalInstance.close();
-            var successMessage = ['A trial was successfully started for ' + $scope.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
-            Notification.notify(successMessage, 'success');
-            setTimeout(function () {
-              getTrialsList();
-            }, 1000);
-          } else {
-            Notification.notify([data.message], 'error');
-            if ((data.message).indexOf('Org') > -1) {
-              $scope.nameError = true;
-            } else if ((data.message).indexOf('Admin User') > -1) {
-              $scope.emailError = true;
-            }
-          }
-        });
-      };
-
-      $scope.editTrial = function () {
-        var createdDate = new Date();
-        angular.element('#saveSendButton').button('loading');
-        PartnerService.editTrial($scope.licenseDuration, $scope.currentTrial.trialId, $scope.licenseCount, $scope.currentTrial.usage, $scope.currentTrial.customerOrgId, function (data, status) {
-          angular.element('#saveSendButton').button('reset');
-          if (data.success === true) {
-            $scope.editTrialModalInstance.close();
-            var successMessage = ['You have successfully edited a trial for ' + $scope.currentTrial.customerName + ' with ' + $scope.licenseCount + ' licenses ' + ' for ' + $scope.licenseDuration + ' days.'];
-            Notification.notify(successMessage, 'success');
-            setTimeout(function () {
-              getTrialsList();
-            }, 1000);
-          } else {
-            Notification.notify([data.message], 'error');
-          }
+        $state.go('trialEdit', {
+          currentTrial: $scope.currentTrial
+        }).then(function () {
+          $state.modal.result.then(function () {
+            getTrialsList();
+            getManagedOrgsList();
+          })
         });
       };
 
@@ -160,16 +94,26 @@ angular.module('Core')
                 };
 
                 if (trial.offers) {
+                  trialObj.offers = trial.offers;
+                  var offerNames = [];
                   for (var cnt in trial.offers) {
                     var offer = trial.offers[cnt];
-                    if (offer && offer.id === 'COLLAB') {
-                      trialObj.offer = offer.id;
-                      trialObj.usage = offer.usageCount;
-                      trialObj.licenses = offer.licenseCount;
-                    } else if (offer && offer.id === 'SQUAREDUC') {
-                      trialObj.isSquaredUcOffer = true;
+                    if (!offer) {
+                      continue;
                     }
+                    switch (offer.id) {
+                    case Config.trials.collab:
+                      offerNames.push($translate.instant('trials.collab'));
+                      break;
+                    case Config.trials.squaredUC:
+                      trialObj.isSquaredUcOffer = true;
+                      offerNames.push($translate.instant('trials.squaredUC'));
+                      break;
+                    }
+                    trialObj.usage = offer.usageCount;
+                    trialObj.licenses = offer.licenseCount;
                   }
+                  trialObj.offer = offerNames.join(', ');
                 }
 
                 var now = moment().format('MMM D, YYYY');
@@ -251,16 +195,26 @@ angular.module('Core')
                 };
 
                 if (org.offers) {
+                  orgObj.offers = org.offers;
+                  var offerNames = [];
                   for (var cnt in org.offers) {
                     var offer = org.offers[cnt];
-                    if (offer && offer.id === 'COLLAB') {
-                      orgObj.offer = offer.id;
-                      orgObj.usage = offer.usageCount;
-                      orgObj.licenses = offer.licenseCount;
-                    } else if (offer && offer.id === 'SQUAREDUC') {
-                      orgObj.isSquaredUcOffer = true;
+                    if (!offer) {
+                      continue;
                     }
+                    switch (offer.id) {
+                    case Config.trials.collab:
+                      offerNames.push($translate.instant('trials.collab'));
+                      break;
+                    case Config.trials.squaredUC:
+                      orgObj.isSquaredUcOffer = true;
+                      offerNames.push($translate.instant('trials.squaredUC'));
+                      break;
+                    }
+                    orgObj.usage = offer.usageCount;
+                    orgObj.licenses = offer.licenseCount;
                   }
+                  orgObj.offer = offerNames.join(', ');
                 }
 
                 var now = moment().format('MMM D, YYYY');

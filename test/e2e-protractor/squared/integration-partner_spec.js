@@ -43,8 +43,12 @@ describe('Partner flow', function() {
       partner.customerEmailInput.clear();
       partner.assertDisabled('startTrialButton');
 
+      expect(partner.squaredTrialCheckbox.isPresent()).toBeTruthy();
+      expect(partner.squaredUCTrialCheckbox.isPresent()).toBeFalsy();
+
       partner.customerNameInput.sendKeys(partner.newTrial.customerName);
       partner.customerEmailInput.sendKeys(partner.newTrial.customerEmail);
+      partner.squaredTrialCheckbox.click();
 
       partner.startTrialButton.click();
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
@@ -61,6 +65,7 @@ describe('Partner flow', function() {
 
       partner.customerNameInput.sendKeys(partner.newTrial.customerName);
       partner.customerEmailInput.sendKeys(partner.differentTrial.customerEmail);
+      partner.squaredTrialCheckbox.click();
 
       partner.startTrialButton.click();
 
@@ -87,6 +92,7 @@ describe('Partner flow', function() {
       utils.expectIsDisplayed(partner.editTrialButton);
       partner.editTrialButton.click();
 
+      expect(partner.squaredTrialCheckbox.getAttribute('disabled')).toBeTruthy();
       expect(partner.saveSendButton.isDisplayed()).toBeTruthy();
       partner.saveSendButton.click();
 
