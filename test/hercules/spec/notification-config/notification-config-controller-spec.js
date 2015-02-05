@@ -72,4 +72,18 @@ describe('NotificationConfigController', function() {
     expect($scope.saving).toBe(false);
   });
 
+  it('errors on bad email', function() {
+    expect($scope.error).toBeFalsy();
+    $scope.config = { wx2users: 'bar' };
+    $scope.writeConfig();
+    expect($scope.error).toBeTruthy();
+  });
+
+  it('works on good email', function() {
+    expect($scope.error).toBeFalsy();
+    $scope.config = { wx2users: 'foo@bar.com' };
+    $scope.writeConfig();
+    expect($scope.error).toBeFalsy();
+  });
+
 });
