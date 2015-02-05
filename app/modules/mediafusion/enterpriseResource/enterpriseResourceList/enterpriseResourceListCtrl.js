@@ -7,14 +7,14 @@ angular.module('Mediafusion')
 
       $scope.vtsPreviewActive = false;
       $scope.currentVts = null;
-	  $scope.totalResults = 0;
+      $scope.totalResults = 0;
 
       var getVtsList = function () {
         $scope.vtsPreview = false;
         console.log("Calling service ");
         vtslistservice.listVts(function (data, status) {
           $scope.queryvtslist = data;
-		  $scope.totalResults = data.length;
+          $scope.totalResults = data.length;
           /*if (data.success) {
 			console.log("callback listMFC data " +data);
 			$scope.querymfclist = data.devices;
@@ -72,8 +72,8 @@ angular.module('Mediafusion')
 
       };
 
-	  $scope.setDeleteDevice = function (deviceId) {
-		  console.log("inside setDeleteDevice");
+      $scope.setDeleteDevice = function (deviceId) {
+        console.log("inside setDeleteDevice");
 
       };
 
@@ -91,7 +91,7 @@ angular.module('Mediafusion')
         '</ul>' +
         '</span>';
 
-	  var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'ENABLED\', \'device-status-red\': row.getProperty(col.field) !== \'ENABLED\'}"></i>' +
+      var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'ENABLED\', \'device-status-red\': row.getProperty(col.field) !== \'ENABLED\'}"></i>' +
         '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|statusFilter}}</p></div>';
 
       $scope.gridOptions = {
@@ -104,20 +104,22 @@ angular.module('Mediafusion')
         useExternalSorting: false,
 
         columnDefs: [{
-          field: 'name',
-          displayName: $filter('translate')('vtsPage.name')
-        },{
-          field: 'opState',
-		  cellTemplate: statusTemplate,
-		  cellFilter: 'statusFilter',
-          displayName: $filter('translate')('vtsPage.status')
-        }/*, {
-          field: 'action',
-          displayName: $filter('translate')('spacesPage.actionsHeader'),
-          sortable: false,
-          cellTemplate: actionsTemplate,
-		  width: 90
-        }*/]
+            field: 'name',
+            displayName: $filter('translate')('vtsPage.name')
+          }, {
+            field: 'opState',
+            cellTemplate: statusTemplate,
+            cellFilter: 'statusFilter',
+            displayName: $filter('translate')('vtsPage.status')
+          }
+          /*, {
+                    field: 'action',
+                    displayName: $filter('translate')('spacesPage.actionsHeader'),
+                    sortable: false,
+                    cellTemplate: actionsTemplate,
+          		  width: 90
+                  }*/
+        ]
       };
       getVtsList();
 

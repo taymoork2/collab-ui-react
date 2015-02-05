@@ -458,7 +458,7 @@ angular
           controller: 'ListMeetingsCtrl',
           parent: 'main'
         })
-		.state('vts', {
+        .state('vts', {
           abstract: true,
           template: '<div ui-view></div>',
           parent: 'main'

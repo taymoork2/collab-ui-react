@@ -10,7 +10,7 @@ var admintestuser= {
 
 //Comment this entire test out for now until the service is fixed
 // Feb 2 2015 - Nabeel Kamboh
-describe('Squared UC Add User flow', function() {
+xdescribe('Squared UC Add User flow', function() {
   var currentUser;
   describe('Add and Entitle User Flows', function() {
     var inputEmail = utils.randomTestGmail();

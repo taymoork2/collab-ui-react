@@ -5,6 +5,7 @@
 
 # Build
 grunt clean || exit $?
+grunt js_verify || exit $?
 grunt build || exit $?
 
 # Check build number
