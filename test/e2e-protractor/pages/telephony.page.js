@@ -44,6 +44,12 @@ var TelephonyPage = function(){
 
   this.voicemail = element(by.id('voicemailStatus'));
 
+  this.primaryNumber = element.all(by.repeater('directoryNumber in vm.telephonyInfo.directoryNumbers')).first().element(by.css('a'));
+  this.lineConfigPanel = element(by.css('.ent-detail-panel'));
+  this.forwardBusyInput = element(by.css('.ent-detail-panel')).element(by.id('cfb')).element(by.css('input'));
+  this.forwardNoAnswerInput = element(by.css('.ent-detail-panel')).element(by.id('cfna')).element(by.css('input'));
+  this.closeLineConfig = element(by.id('exit-details-btn'));
+
   this.verifyNewNumber = function(){
     expect(this.internalNumber.isDisplayed()).toBeTruthy();
     var dNumbers = this.directoryNumbers;
