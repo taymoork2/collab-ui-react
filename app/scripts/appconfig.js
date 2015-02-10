@@ -129,6 +129,13 @@ angular
           parent: 'main',
           authenticate: false
         })
+        .state('processorder', {
+          url: '/processorder',
+          templateUrl: 'modules/squared/views/processorder.html',
+          controller: 'ProcessorderCtrl',
+          parent: 'main',
+          authenticate: false
+        })
         .state('overview', {
           url: '/overview',
           templateUrl: 'modules/core/landingPage/landingPage.tpl.html',

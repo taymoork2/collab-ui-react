@@ -76,6 +76,27 @@ angular.module('Core')
             method: 'PATCH',
             url: adminUrl
           });
+        },
+
+        createOrg: function (accountId, emailAddress, callback) {
+          var orgUrl = Config.getAdminServiceUrl() + 'organizations';
+          var orgRequest = {
+            'accountId': accountId,
+            'adminEmail': emailAddress
+          };
+          Auth.getAccessToken().then(function (token) {
+            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+            $http.post(orgUrl, orgRequest)
+              .success(function (data, status) {
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function (data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          });
         }
 
       };

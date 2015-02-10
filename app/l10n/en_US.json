@@ -139,6 +139,10 @@
     "redirect": "Redirecting...",
     "launch": "Launching App..."
   },
+  "createOrgPage": {
+    "addAdminEmailText": "Admin email address: ",
+    "create": "Process Order"
+  },
   "orgsPage": {
     "title": "MANAGE ORGANIZATIONS",
     "subTitleOrgs": "Organizations Tools",
