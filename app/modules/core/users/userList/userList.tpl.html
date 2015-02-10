@@ -12,19 +12,19 @@
           <li class="filter" ng-class="{'active' : activeFilter === 'all'}" ng-click="setFilter('all')">
             <a href="">
               <span class="name">{{'usersPage.all' | translate}}</span>
-              <span class="count">{{filterTotals.all.number}}</span>
+              <span class="count">{{filterTotals.all}}</span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : activeFilter === 'admin'}" ng-click="setFilter('admin')">
+          <li class="filter" ng-class="{'active' : activeFilter === 'administrators'}" ng-click="setFilter('administrators')">
             <a href="">
               <span class="name">{{'usersPage.administrators' | translate}}</span>
-              <span class="count">0</span>
+              <span class="count">...</span>
             </a>
           </li>
-           <li class="filter" ng-class="{'active' : activeFilter === 'partner'}" ng-click="setFilter('partner')" ng-show="false">
-            <a href="">
+           <li class="filter" ng-class="{'active' : activeFilter === 'partners'}" ng-click="setFilter('partners')">
+            <a href="" id="partnerFilter">
               <span class="name">{{'usersPage.partners' | translate}}</span>
-              <span class="count">{{filterTotals.partner.number}}</span>
+              <span class="count">{{filterTotals.partner}}</span>
             </a>
           </li>
         </ul>

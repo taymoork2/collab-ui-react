@@ -57,6 +57,8 @@ var PartnerHomePage = function(){
   this.launchCustomerButton = element(by.id(this.newTrial.customerName + 'LaunchCustomerButton'));
   this.launchCustomerPanelButton = element(by.id('launchCustomer'));
   this.exitPreviewButton = element(by.id('exitPreviewButton'));
+  this.partnerFilter = element(by.id('partnerFilter'));
+  this.partnerEmail = element.all(by.binding('userName'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));

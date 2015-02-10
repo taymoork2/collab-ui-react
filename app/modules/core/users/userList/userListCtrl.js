@@ -10,18 +10,19 @@ angular.module('Core')
       $scope.page = 1;
       $scope.status = null;
       $scope.currentDataPosition = 0;
-      $scope.queryuserslist = [];
+
       $scope.activeFilter = 'all';
+
+      $scope.userList = {
+        allUsers: [],
+        adminUsers: [],
+        partnerUsers: []
+      };
+
       $scope.filterTotals = {
-        all: {
-          number: 0
-        },
-        admin: {
-          number: 0
-        },
-        partner: {
-          number: 0
-        }
+        all: 0,
+        admin: 0,
+        partner: 0
       };
       $scope.currentUser = null;
       $scope.popup = Notification.popup;
@@ -50,6 +51,17 @@ angular.module('Core')
         return isEntitled(Config.entitlements.huron);
       };
 
+      $scope.setFilter = function (filter) {
+        $scope.activeFilter = filter;
+        if (filter === 'all') {
+          $scope.gridData = $scope.userList.allUsers;
+        } else if (filter === 'administrators') {
+          $scope.gridData = $scope.userList.adminUsers;
+        } else if (filter === 'partners') {
+          $scope.gridData = $scope.userList.partnerUsers;
+        }
+      };
+
       var isEntitled = function (ent) {
         if ($scope.currentUser && $scope.currentUser.entitlements) {
           for (var i = 0; i < $scope.currentUser.entitlements.length; i++) {
@@ -66,6 +78,8 @@ angular.module('Core')
 
         //clear currentUser if a new search begins
         var startIndex = startAt || 0;
+        $scope.currentUser = null;
+
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
           if (data.success) {
             $timeout(function () {
@@ -74,12 +88,13 @@ angular.module('Core')
             if ($rootScope.searchStr === searchStr) {
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
               Log.debug('Returned data.', data.Resources);
-              $scope.filterTotals.admin.number = data.totalResults;
+              $scope.filterTotals.admin = data.totalResults;
               if (startIndex === 0) {
-                $scope.queryAdminList = data.Resources;
+                $scope.userList.adminUsers = data.Resources;
               } else {
-                $scope.queryAdminList = $scope.queryuserslist.concat(data.Resources);
+                $scope.userList.adminUsers = $scope.userList.adminUsers.concat(data.Resources);
               }
+              $scope.setFilter($scope.activeFilter);
             } else {
               Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
             }
@@ -88,9 +103,6 @@ angular.module('Core')
           }
         }, true);
 
-        //clear currentUser if a new search begins
-        $scope.currentUser = null;
-        startIndex = startAt || 0;
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
           if (data.success) {
             $timeout(function () {
@@ -100,12 +112,37 @@ angular.module('Core')
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
               Log.debug('Returned data.', data.Resources);
               // data.resources = getUserStatus(data.Resources);
-              $scope.filterTotals.all.number = data.totalResults;
+              $scope.filterTotals.all = data.totalResults;
               if (startIndex === 0) {
-                $scope.queryuserslist = data.Resources;
+                $scope.userList.allUsers = data.Resources;
               } else {
-                $scope.queryuserslist = $scope.queryuserslist.concat(data.Resources);
+                $scope.userList.allUsers = $scope.userList.allUsers.concat(data.Resources);
               }
+              $scope.setFilter($scope.activeFilter);
+            } else {
+              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+            }
+          } else {
+            Log.debug('Query existing users failed. Status: ' + status);
+          }
+        });
+
+        UserListService.listPartners(Authinfo.getOrgId(), function (data, status, searchStr) {
+          if (data.success) {
+            $timeout(function () {
+              $scope.load = true;
+            });
+            if ($rootScope.searchStr === searchStr) {
+              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+              Log.debug('Returned data.', data.Resources);
+              // data.resources = getUserStatus(data.Resources);
+              $scope.filterTotals.partner = data.partners.length;
+              if (startIndex === 0) {
+                $scope.userList.partnerUsers = data.partners;
+              } else {
+                $scope.userList.partnerUsers = $scope.userList.partnerUsers.concat(data.Resources);
+              }
+              $scope.setFilter($scope.activeFilter);
             } else {
               Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
             }
@@ -156,7 +193,7 @@ angular.module('Core')
         '</span>';
 
       $scope.gridOptions = {
-        data: 'queryuserslist',
+        data: 'gridData',
         multiSelect: false,
         showFilter: false,
         rowHeight: 44,
@@ -371,10 +408,6 @@ angular.module('Core')
         search: 'pending',
         count: $scope.filterTotals.all
       }];
-
-      $scope.setFilter = function (filter) {
-        $scope.activeFilter = filter;
-      };
 
       // On click, filter user list and set active filter
       $scope.filterList = function (str) {

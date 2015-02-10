@@ -174,7 +174,6 @@ angular.module('Squared')
               };
 
               Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
-              Log.debug(userData);
 
               Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
                 if (data.success) {

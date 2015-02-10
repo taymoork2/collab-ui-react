@@ -255,7 +255,7 @@ angular.module('Core')
             }]
           };
 
-          console.log(requestBody);
+          console.log(JSON.stringify(requestBody));
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http({

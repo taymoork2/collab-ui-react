@@ -132,7 +132,7 @@ describe('Partner flow', function() {
       });
     });
 
-    it('Launch customer portal via dropdown',function(){
+    it('Launch customer portal via dropdown and display partner managing org in partner filter',function(){
       var appWindow = browser.getWindowHandle();
 
       utils.click(partner.exitPreviewButton);
@@ -147,6 +147,15 @@ describe('Partner flow', function() {
         navigation.expectDriverCurrentUrl('login');
         navigation.expectDriverCurrentUrl(partner.newTrial.customerName);
         expect(navigation.tabs.isDisplayed()).toBeTruthy();
+
+        navigation.clickUsers();
+        utils.click(partner.partnerFilter);
+        utils.expectIsDisplayed(partner.partnerEmail);
+        users.assertResultsLength(0);
+        partner.partnerEmail.then(function (cell) {
+          expect(cell[0].getText()).toContain(partner.testuser.username);
+        });
+
         browser.driver.close();
         browser.switchTo().window(appWindow);
       });

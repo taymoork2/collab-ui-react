@@ -25,8 +25,6 @@ angular.module('Core')
             searchfilter = baseFilter + adminFilter;
           }
 
-          console.log(searchfilter);
-
           if (typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             //It seems CI does not support 'ANDing' filters in this situation.
             filter = searchfilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
@@ -61,8 +59,6 @@ angular.module('Core')
           if (sortOrder && sortOrder.length > 0) {
             listUrl = listUrl + '&sortOrder=' + sortOrder;
           }
-
-          console.log(listUrl);
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(listUrl)
@@ -146,10 +142,9 @@ angular.module('Core')
           return deferred.promise;
         },
 
-        listAdmins: function (partnerOrgId, callback) {
+        listPartners: function (orgId, callback) {
 
-          var adminUrl = Utils.sprintf(Config.scimUrl, [partnerOrgId]);
-          adminUrl = adminUrl + '?filter=managedOrgs%5BorgId%20eq%20%22' + Authinfo.getOrgId() + '%22%5D';
+          var adminUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(adminUrl)
