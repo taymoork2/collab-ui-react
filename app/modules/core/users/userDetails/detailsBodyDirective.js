@@ -15,9 +15,8 @@
         save: '&onSave',
         close: '&close',
         title: '@title',
-        remove: '&onRemove',
-        removeButtonText: '@removebuttontext',
-        isRemove: '@isremove'
+        additionalBtnClick: '&onAdditionalbtn',
+        additionalBtn: '=additionalBtn'
       },
       link: link,
       controller: DetailsBodyController,

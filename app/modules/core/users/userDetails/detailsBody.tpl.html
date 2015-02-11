@@ -7,7 +7,7 @@
     <div class="col-md-12">
       <h3 class="h2">{{title}}</h3>
       <button id="btn-save" class="btn btn-info btn-save" data-loading-text="<i class='icon icon-spinner'></i>" ng-click="save()"><span translate="common.save"></span></button>
-      <button ng-show="{{isRemove}}" id="btn-remove" class="btn btn-default btn-remove" data-loading-text="<i class='icon icon-spinner'></i>" ng-click="remove()"><span >{{removeButtonText}}</span></button>
+      <button ng-if = "additionalBtn" id={{additionalBtn.id}} class={{additionalBtn.btnclass}} ng-click="additionalBtnClick()"> <span translate={{additionalBtn.label}}></span></button>
     </div>
   </div>
   <div ng-transclude></div>

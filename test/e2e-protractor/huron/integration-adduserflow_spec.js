@@ -64,9 +64,25 @@ xdescribe('Squared UC Add User flow', function() {
         expect(telephony.voicemailFeature.isDisplayed()).toBeTruthy();
         expect(telephony.voicemailStatus.getText()).toEqual('On');
       });
-      it('should close the preview panel', function() {
-        telephony.close.click();
+
+      describe('Verify call forwarding defaults', function() {
+        it('should show the Line Configuration panel', function() {
+          telephony.primaryNumber.click();
+          browser.wait(function() {
+            return telephony.lineConfigPanel.isPresent().then(function(present) {
+              return present;
+            })
+          });
+        });
+        it('should have call forwarding default to voicemail', function() {
+          expect(telephony.forwardBusyInput.getAttribute('value')).toEqual('Voicemail');
+          expect(telephony.forwardNoAnswerInput.getAttribute('value')).toEqual('Voicemail');
+        });
+        it('should close the Line Configuration panel', function() {
+          telephony.closeLineConfig.click();
+        });
       });
+
     });
 
     //Comment this out for now until the service is fixed
