@@ -136,17 +136,17 @@ describe('App flow', function() {
       expect(landing.callsChart.isDisplayed()).toBeTruthy();
     });
 
-    it('should load new values and update time when clicking refresh', function() {
-      landing.refreshButton.click();
-      expect(landing.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(landing.refreshData.isDisplayed()).toBeTruthy();
-      // expect(landing.activeUsers.isDisplayed()).toBeTruthy();
-      // expect(landing.calls.isDisplayed()).toBeTruthy();
-      // expect(landing.conversations.isDisplayed()).toBeTruthy();
-      // expect(landing.contentShare.isDisplayed()).toBeTruthy();
-      // expect(landing.homeSetup.isDisplayed()).toBeTruthy();
-      expect(landing.callsChart.isDisplayed()).toBeTruthy();
-    });
+    // it('should load new values and update time when clicking refresh', function() {
+    //   landing.refreshButton.click();
+    //   expect(landing.reloadedTime.isDisplayed()).toBeTruthy();
+    //   expect(landing.refreshData.isDisplayed()).toBeTruthy();
+    //   // expect(landing.activeUsers.isDisplayed()).toBeTruthy();
+    //   // expect(landing.calls.isDisplayed()).toBeTruthy();
+    //   // expect(landing.conversations.isDisplayed()).toBeTruthy();
+    //   // expect(landing.contentShare.isDisplayed()).toBeTruthy();
+    //   // expect(landing.homeSetup.isDisplayed()).toBeTruthy();
+    //   expect(landing.callsChart.isDisplayed()).toBeTruthy();
+    // });
   });
 
   describe('Reports data refresh', function() {

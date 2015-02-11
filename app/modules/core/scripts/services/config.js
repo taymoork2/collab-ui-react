@@ -346,7 +346,7 @@ angular.module('Core')
         Full_Admin: [
           'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard', 'meetings', 'vts'
         ],
-        //Support: ['overview', 'reports', 'support'],
+        Support: ['overview', 'reports', 'support'],
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
