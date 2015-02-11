@@ -21,7 +21,7 @@ describe('NotificationConfigService', function () {
 
   it('should read all the data', function() {
     $httpBackend
-      .when('GET', 'https://hercules.hitest.huron-dev.com/v1/notification_config')
+      .when('GET', 'https://hercules-integration.wbx2.com/v1/notification_config')
       .respond('notification_config_yay');
 
     var callback = sinon.stub();
@@ -35,7 +35,7 @@ describe('NotificationConfigService', function () {
 
   it('should callback when read fails', function() {
     $httpBackend
-      .when('GET', 'https://hercules.hitest.huron-dev.com/v1/notification_config')
+      .when('GET', 'https://hercules-integration.wbx2.com/v1/notification_config')
       .respond(500, 'notification_config_yay');
 
     var callback = sinon.stub();
@@ -50,7 +50,7 @@ describe('NotificationConfigService', function () {
   it('should post all the data', function() {
     var data = {username: 'foo', password: 'bar', wx2users: 'yo,lo'}
     $httpBackend
-      .when('PUT', 'https://hercules.hitest.huron-dev.com/v1/notification_config', data)
+      .when('PUT', 'https://hercules-integration.wbx2.com/v1/notification_config', data)
       .respond('nc');
 
     var callback = sinon.stub();
@@ -65,7 +65,7 @@ describe('NotificationConfigService', function () {
   it('should callback when post fails', function() {
     var data = {username: 'foo', password: 'bar', wx2users: 'yo,lo'}
     $httpBackend
-      .when('PUT', 'https://hercules.hitest.huron-dev.com/v1/notification_config', data)
+      .when('PUT', 'https://hercules-integration.wbx2.com/v1/notification_config', data)
       .respond(500);
 
     var callback = sinon.stub();

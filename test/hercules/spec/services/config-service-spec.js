@@ -19,12 +19,12 @@ describe('ConfigService', function () {
   }));
 
   it('should return the correct url', function() {
-    expect(Service.getUrl()).toBe('https://hercules.hitest.huron-dev.com/v1');
+    expect(Service.getUrl()).toBe('https://hercules-integration.wbx2.com/v1');
   });
 
   it('should be possible to set error url', function() {
     win.location.search = 'hercules-backend=error'
-    expect(Service.getUrl()).toBe('https://hercules.hitest.huron-dev.com/fubar');
+    expect(Service.getUrl()).toBe('https://hercules-integration.wbx2.com/fubar');
   });
 
   it('should be possible to override url', function() {

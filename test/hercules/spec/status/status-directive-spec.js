@@ -7,7 +7,7 @@ describe('StatusDirective', function() {
     $rootScope = _$rootScope_;
     httpBackend = $injector.get('$httpBackend');
     httpBackend.when('GET', 'l10n/en_US.json').respond({});
-    httpBackend.when('GET', 'https://hercules.hitest.huron-dev.com/v1/clusters').respond({});
+    httpBackend.when('GET', 'https://hercules-integration.wbx2.com/v1/clusters').respond({});
   }));
 
   it('replaces the element with the appropriate content', function() {
