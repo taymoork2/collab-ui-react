@@ -2,8 +2,14 @@
   'use strict';
   angular
     .module('Hercules')
-    .controller('StatusController', ['$scope', 'ConnectorService', function ($scope, service) {
+    .controller('StatusController', ['$scope', 'ConnectorService', 'Authinfo', function ($scope, service, auth) {
+      if (!auth.isFusion()) {
+        $scope.isEnabled = false;
+        return;
+      }
+
       $scope.color = 'gray';
+      $scope.isEnabled = true;
       $scope.className = 'fa fa-gear fa-spin';
 
       service.fetch(function (err, clusters) {
