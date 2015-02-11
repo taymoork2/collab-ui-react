@@ -5,6 +5,14 @@ var testuser = {
 
 describe('Login Page', function() {
 
+  beforeEach(function() {
+    browser.ignoreSynchronization = true;
+  });
+
+  afterEach(function() {
+    browser.ignoreSynchronization = false;
+  });
+
   it('should open the login page', function() {
     browser.get('#/login');
     expect(login.loginButton.isDisplayed()).toBeTruthy();
