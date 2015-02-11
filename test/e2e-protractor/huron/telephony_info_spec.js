@@ -64,7 +64,7 @@ xdescribe('Telephony Info', function() {
     });
 
     it('should not display remove button for primary line', function(){
-      expect(telephony.removeButton.isDisplayed()).toBeFalsy();
+      expect(telephony.removeButton.isPresent()).toBeFalsy();
     });
 
     it('should save call forward all to voicemail', function(){
@@ -225,7 +225,7 @@ xdescribe('Telephony Info', function() {
         telephony.forwardBusyAwayRadio.click();
         telephony.selectOption(telephony.forwardAway, dropdownVariables.addNew);
         telephony.setNumber(telephony.forwardAway, snrLine);
-        expect(telephony.removeButton.isDisplayed()).toBeFalsy();
+        expect(telephony.removeButton.isPresent()).toBeFalsy();
         telephony.saveButton.click();
         notifications.assertSuccess('Line configuration saved successfully');
 
@@ -235,7 +235,7 @@ xdescribe('Telephony Info', function() {
             return count > 0;
           });
         });
-        expect(telephony.removeButton.isDisplayed()).toBeTruthy();
+        expect(telephony.removeButton.isPresent()).toBeTruthy();
         expect(numberElement.first().isDisplayed()).toBeTruthy();
         telephony.directoryNumbers.get(1).click();
         telephony.verifyExistingNumber().then(function(verificationNumber){
@@ -283,7 +283,7 @@ xdescribe('Telephony Info', function() {
     });
 
     it('should cancel deleting the non-primary number', function() {
-      expect(telephony.removeButton.isDisplayed()).toBeTruthy();
+      expect(telephony.removeButton.isPresent()).toBeTruthy();
       telephony.removeButton.click();
       telephony.cancelDisassociation.click();
 
@@ -297,11 +297,11 @@ xdescribe('Telephony Info', function() {
         telephony.primary.click();
         numberElement.first().click();
       });
-      expect(telephony.removeButton.isDisplayed()).toBeTruthy();
+      expect(telephony.removeButton.isPresent()).toBeTruthy();
     });
 
     it('should delete the non-primary number', function() {
-      expect(telephony.removeButton.isDisplayed()).toBeTruthy();
+      expect(telephony.removeButton.isPresent()).toBeTruthy();
       telephony.removeButton.click();
       telephony.disassociateLine.click();
       notifications.assertSuccess('Line successfully unassigned from user');

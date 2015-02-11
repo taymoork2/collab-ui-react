@@ -17,15 +17,23 @@ describe('Controller: DidAddCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
+  beforeEach(inject(function(Notification) {
+    sinon.spy(Notification, "notify");
+  }));
+
   var state = {
     modal: {
       close: sinon.stub()
     },
   };
 
-  beforeEach(inject(function(Notification) {
-    sinon.spy(Notification, "notify");
-  }));
+  var stateParams = {
+    currentOrg: {
+      customerOrgId: '1',
+      customerName: 'JEFFCO',
+      customerEmail: 'jeffcoiscoolio@jeffco.com'
+    }
+  };
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_) {
     $scope = $rootScope.$new();
@@ -35,7 +43,8 @@ describe('Controller: DidAddCtrl', function () {
     Notification = _Notification_;
     controller = $controller('DidAddCtrl', {
       $scope: $scope,
-      $state: $state
+      $state: $state,
+      $stateParams: stateParams
     });
     controller.tokens = '+9999999999,+8888888888,+7777777777,+6666666666,+5555555555';
     controller.successCount = 0;

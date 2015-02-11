@@ -20,7 +20,7 @@
       },
       link: link,
       controller: DetailsBodyController,
-      controllerAs: 'vm'
+      controllerAs: 'crDetailsBody'
     };
 
     return directive;
@@ -32,7 +32,7 @@
 
   DetailsBodyController.$inject = ['$state', '$rootScope'];
 
-  function DetailsBodyController($state, $rootScope) {
+  function DetailsBodyController($state, $rootScope, $scope) {
     var vm = this;
     vm.closeDetails = closeDetails;
 

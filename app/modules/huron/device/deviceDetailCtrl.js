@@ -15,7 +15,7 @@
     vm.additionalBtnClick = deactivate;
     vm.additionalBtn = {
       label: 'deviceDetailPage.deactivate',
-      btnclass: 'btn btn-default',
+      btnclass: 'btn btn-default btn-remove',
       id: 'btn-deactivate'
     };
     activate();

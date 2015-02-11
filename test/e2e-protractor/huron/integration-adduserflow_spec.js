@@ -8,8 +8,6 @@ var admintestuser= {
   password: 'C1sco123!'
 };
 
-//Comment this entire test out for now until the service is fixed
-// Feb 2 2015 - Nabeel Kamboh
 xdescribe('Squared UC Add User flow', function() {
   var currentUser;
   describe('Add and Entitle User Flows', function() {
@@ -85,8 +83,6 @@ xdescribe('Squared UC Add User flow', function() {
 
     });
 
-    //Comment this out for now until the service is fixed
-    // Feb 2 2015 - Nabeel Kamboh
     describe('To remove Squared UC from the user', function() {
       it('should show the Telephony panel', function() {
         users.search(inputEmail);
@@ -109,8 +105,6 @@ xdescribe('Squared UC Add User flow', function() {
       });
     });
 
-    //Comment this out for now until the service is fixed
-    // Feb 2 2015 - Nabeel Kamboh
     describe('To entitle Squared UC to the user again', function() {
       it('should show the Telephony panel', function() {
         users.search(inputEmail);

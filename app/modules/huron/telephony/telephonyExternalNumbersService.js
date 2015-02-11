@@ -6,7 +6,7 @@
       .factory('ExternalNumberPool', ExternalNumberPool)
 
     /* @ngInject */
-    function ExternalNumberPool($q, Authinfo, ExternalNumberPoolService) {
+    function ExternalNumberPool($q, ExternalNumberPoolService) {
 
       var service = {
         create: create,
@@ -17,11 +17,12 @@
       return service;
       /////////////////////
 
-      function create(didList) {
+      function create(_customerId, didList) {
         var results = {
           successes: [],
           failures: []
         };
+        var customerId = _customerId;
         var didCount = didList.length;
         var deferred = $q.defer();
 
@@ -30,7 +31,7 @@
             'pattern': didList[i]
           };
           ExternalNumberPoolService.save({
-            customerId: Authinfo.getOrgId()
+            customerId: customerId
           }, externalNumber, function (data) {
             results.successes.push(data.pattern);
             didCount--;
@@ -50,16 +51,18 @@
         return deferred.promise;
       }
 
-      function deletePool(externalNumberUuid) {
+      function deletePool(_customerId, externalNumberUuid) {
+        var customerId = _customerId;
         return ExternalNumberPoolService.delete({
-          customerId: Authinfo.getOrgId(),
+          customerId: customerId,
           externalNumberId: externalNumberUuid
         }).$promise;
       }
 
-      function deleteAll() {
+      function deleteAll(_customerId) {
+        var customerId = _customerId;
         return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId()
+          customerId: customerId
         }, function (data) {
 
           var promises = [];
@@ -70,7 +73,7 @@
               'pattern': data[i]
             };
             var promise = ExternalNumberPoolService.delete({
-              customerId: Authinfo.getOrgId(),
+              customerId: customerId,
               externalNumberId: data[i].uuid
             });
 

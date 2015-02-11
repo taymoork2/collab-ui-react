@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($state, $translate, ExternalNumberPool, StorefrontEmailService, Notification) {
+  function DidAddCtrl($state, $stateParams, $translate, ExternalNumberPool, StorefrontEmailService, Notification) {
     var vm = this;
     vm.invalidcount = 0;
     vm.submitBtnStatus = false;
@@ -65,6 +65,7 @@
     vm.checkForInvalidTokens = checkForInvalidTokens;
     vm.submit = submit;
     vm.sendEmail = sendEmail;
+    vm.currentOrg = $stateParams.currentOrg;
 
     ////////////
 
@@ -90,7 +91,7 @@
 
     function submit() {
       var didList = getDIDList();
-      ExternalNumberPool.create(didList).then(function (results) {
+      ExternalNumberPool.create(vm.currentOrg.customerOrgId, didList).then(function (results) {
         vm.successCount = results.successes.length;
         vm.failCount = results.failures.length;
 
@@ -106,8 +107,8 @@
         recipient: 'customer'
       };
       var custInfo = {
-        'customerName': 'Inigo Montoya',
-        'customerEmail': 'pajeter@cisco.com',
+        'customerName': vm.currentOrg.customerName,
+        'customerEmail': vm.currentOrg.customerEmail,
         'orderNumber': '123abc789xyz',
         'orderPackageInfo': 'Standard Package',
         'numberOfDids': vm.successCount,

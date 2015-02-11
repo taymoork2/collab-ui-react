@@ -122,7 +122,8 @@
       }
 
       if (($scope.telephonyInfo.currentDirectoryNumber.dnUsage !== 'Primary') && ($scope.telephonyInfo.currentDirectoryNumber.uuid !== 'new')) {
-        $scope.isRemove = true;
+        // Can't remove primary line
+        $scope.additionalBtn.show = true;
 
         if ($scope.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
           TelephonyInfoService.resetCurrentUser($scope.telephonyInfo.currentDirectoryNumber.uuid);

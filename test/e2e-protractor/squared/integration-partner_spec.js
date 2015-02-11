@@ -227,14 +227,6 @@ describe('Partner flow', function() {
       expect(partner.contentSharedChart.isDisplayed()).toBeTruthy();
       expect(partner.contentSharedCount.getText()).toBeTruthy();
     });
-
-    it('should refresh reports', function(){
-      browser.executeScript('window.scrollTo(0,0);').then(function () {
-        partner.refreshButton.click();
-      });
-      expect(partner.noResultsAvailable.isPresent()).toBeFalsy();
-      expect(partner.errorProcessing.isPresent()).toBeFalsy();
-    });
   });
 
   describe('Reports Page data refresh', function() {

@@ -182,7 +182,7 @@ angular
         })
         .state('users.list.preview.device', {
           templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-          controller: 'DeviceDetailCtrl as vm',
+          controller: 'DeviceDetailCtrl as ucDeviceDetail',
           params: {
             showAddUsers: {},
             device: {}
@@ -423,18 +423,21 @@ angular
             'modal@': {
               templateUrl: 'modules/huron/device/generateActivationCodeModal.tpl.html',
               controller: 'GenerateActivationCodeCtrl',
-              controllerAs: 'vm'
+              controllerAs: 'genAuthCode'
             }
           }
         })
         .state('didadd', {
           parent: 'modal',
           url: '/didadd',
+          params: {
+            currentOrg: {}
+          },
           views: {
             'modal@': {
               templateUrl: 'modules/huron/didAdd/didAdd.tpl.html',
               controller: 'DidAddCtrl',
-              controllerAs: 'vm'
+              controllerAs: 'didAdd'
             }
           }
         });

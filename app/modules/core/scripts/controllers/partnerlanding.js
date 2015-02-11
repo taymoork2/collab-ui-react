@@ -155,7 +155,8 @@ angular.module('Core')
                   duration: trial.trialPeriod,
                   offer: '',
                   status: null,
-                  isAllowedToManage: true
+                  isAllowedToManage: true,
+                  isSquaredUcOffer: false
                 };
 
                 if (trial.offers) {
@@ -165,7 +166,8 @@ angular.module('Core')
                       trialObj.offer = offer.id;
                       trialObj.usage = offer.usageCount;
                       trialObj.licenses = offer.licenseCount;
-                      break;
+                    } else if (offer && offer.id === 'SQUAREDUC') {
+                      trialObj.isSquaredUcOffer = true;
                     }
                   }
                 }
@@ -244,7 +246,8 @@ angular.module('Core')
                   offer: '',
                   status: null,
                   isAllowedToManage: org.isAllowedToManage,
-                  state: org.state
+                  state: org.state,
+                  isSquaredUcOffer: false
                 };
 
                 if (org.offers) {
@@ -254,7 +257,8 @@ angular.module('Core')
                       orgObj.offer = offer.id;
                       orgObj.usage = offer.usageCount;
                       orgObj.licenses = offer.licenseCount;
-                      break;
+                    } else if (offer && offer.id === 'SQUAREDUC') {
+                      orgObj.isSquaredUcOffer = true;
                     }
                   }
                 }
@@ -374,6 +378,7 @@ angular.module('Core')
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
         '<li ng-show="row.entity.isAllowedToManage" id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span></a></li>' +
+        '<li ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}UploadNumbers"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})"><span translate="customerPage.uploadNumbers"></span></a></li>' +
         '</ul>' +
         '</span>';
 

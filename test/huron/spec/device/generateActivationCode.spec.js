@@ -26,7 +26,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
     sinon.spy(Notification, "notify");
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, $stateParams, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
@@ -66,13 +66,13 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
           expect(controller.showEmail).toEqual(true);
         });
       });
-      
+
       describe('clipboardFallback function', function () {
         it('should exist', function () {
           expect(controller.clipboardFallback).toBeDefined;
         });
       });
-      
+
       describe('sendActivationCodeEmail function', function () {
         it('should exist', function () {
           expect(controller.sendActivationCodeEmail).toBeDefined;

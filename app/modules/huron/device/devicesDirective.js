@@ -10,7 +10,7 @@
       restrict: 'EA',
       templateUrl: 'modules/huron/device/devices.tpl.html',
       controller: 'DevicesCtrl',
-      controllerAs: 'vm'
+      controllerAs: 'ucDevices'
     };
 
     return directive;
