@@ -3,6 +3,11 @@
 angular.module('Core')
   .factory('Config', ['$window', 'Utils',
     function ($window, Utils) {
+
+      var getCurrentHostname = function () {
+        return $window.location.hostname || '';
+      };
+
       var config = {
 
         adminClientUrl: {
@@ -88,7 +93,16 @@ angular.module('Core')
           prod: 'https://projectsquared.statuspage.io/index.json'
         },
 
-        scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
+        herculesUrl: {
+          dev: 'https://hercules-integration.wbx2.com/',
+          integration: 'https://hercules-integration.wbx2.com/',
+          prod: 'https://hercules-integration.wbx2.com/'
+        },
+
+        scimSchemas: [
+          'urn:scim:schemas:core:1.0',
+          'urn:scim:schemas:extension:cisco:commonidentity:1.0'
+        ],
 
         usersperpage: 100,
         meetingsperpage: 20,
@@ -231,15 +245,16 @@ angular.module('Core')
         batchSize: 20,
 
         isDev: function () {
-          return document.URL.indexOf('127.0.0.1') !== -1 || document.URL.indexOf('0.0.0.0') !== -1 || document.URL.indexOf('localhost') !== -1;
+          var currentHostname = getCurrentHostname();
+          return currentHostname == '127.0.0.1' || currentHostname == '0.0.0.0' || currentHostname == 'localhost';
         },
 
         isIntegration: function () {
-          return document.URL.indexOf('int-admin.projectsquared.com') !== -1;
+          return getCurrentHostname() == 'int-admin.projectsquared.com';
         },
 
         isProd: function () {
-          return document.URL.indexOf('admin.projectsquared.com') !== -1;
+          return getCurrentHostname() == 'admin.projectsquared.com';
         },
 
         getEnv: function () {
@@ -250,7 +265,6 @@ angular.module('Core')
           } else {
             return 'prod';
           }
-
         },
 
         getAdminServiceUrl: function () {
@@ -357,6 +371,10 @@ angular.module('Core')
 
         getWebClientUrl: function () {
           return this.appinfo.webClientURL;
+        },
+
+        getHerculesUrl: function() {
+          return this.herculesUrl[this.getEnv()];
         }
 
       };

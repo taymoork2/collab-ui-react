@@ -3,19 +3,21 @@
 /* global _ */
 
 angular.module('Hercules')
-  .service('ConfigService', ['$window',
-    function ConfigService($window) {
+  .service('ConfigService', ['$window', 'Config',
+    function ConfigService($window, Config) {
+
+      var baseUrl = Config.getHerculesUrl();
 
       var getUrl = function () {
         if ($window.location.search.match(/hercules-backend=error/)) {
-          return 'https://hercules-integration.wbx2.com/fubar';
+          return baseUrl + 'fubar';
         } else {
           var regex = new RegExp("hercules-url=([^&]*)");
           var match = $window.location.search.match(regex);
           if (match && match.length == 2) {
             return decodeURIComponent(match[1]);
           } else {
-            return 'https://hercules-integration.wbx2.com/v1';
+            return baseUrl + 'v1';
           }
         }
       };
