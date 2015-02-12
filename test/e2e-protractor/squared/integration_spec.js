@@ -26,6 +26,14 @@ var notsqinviteruser = {
 
 describe('App flow', function() {
 
+  beforeEach(function() {
+    browser.ignoreSynchronization = true;
+  });
+
+  afterEach(function() {
+    browser.ignoreSynchronization = false;
+  });
+
   it('should just login', function() {
     login.login(testuser.username, testuser.password);
   });
