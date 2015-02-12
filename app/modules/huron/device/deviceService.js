@@ -32,7 +32,13 @@
               uuid: devices[i].endpoint.uuid,
               name: devices[i].endpoint.name,
               model: '',
-              description: ''
+              description: '',
+              deviceStatus: {
+                status: '',
+                ipAddress: '',
+                progressStatus: false,
+                isValid: true
+              }
             };
 
             deviceList.push(device);
@@ -43,7 +49,32 @@
             }, function (endpoint) {
               this.model = endpoint.model;
               this.description = endpoint.description;
-            }.bind(device))
+            }.bind(device));
+
+            device.deviceStatus.progressStatus = true;
+
+            SipEndpointService.query({
+              customerId: Authinfo.getOrgId(),
+              sipEndpointId: device.uuid,
+              status: true
+            }).$promise.then(function (endpoint) {
+              if (angular.isDefined(endpoint.registrationStatus) && endpoint.registrationStatus === 'registered') {
+                this.deviceStatus.status = 'Online';
+              } else {
+                this.deviceStatus.status = 'Offline';
+              }
+
+              if (angular.isDefined(endpoint.ipAddress) && endpoint.ipAddress != null) {
+                this.deviceStatus.ipAddress = endpoint.ipAddress;
+              } else {
+                this.deviceStatus.ipAddress = 'unknown';
+              }
+              this.deviceStatus.progressStatus = false;
+            }.bind(device), function (response) {
+              this.deviceStatus.progressStatus = false;
+              this.deviceStatus.isValid = false;
+            }.bind(device));
+
           }
           return deviceList;
         });

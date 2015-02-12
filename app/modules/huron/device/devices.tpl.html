@@ -18,6 +18,8 @@
     <div ng-if="ucDevices.devices[0]" class="device-list-divider">
       <div ng-repeat="device in ucDevices.devices track by device.uuid" class="dir-number sub-service">
         <a href id="{{device.uuid}}" ui-sref-active="selected" ui-sref="users.list.preview.device({device: device.uuid})" ng-click="ucDevices.showDeviceDetailPanel(device)">
+          <span class="icon icon-spinner" ng-if="device.deviceStatus.progressStatus"></span>
+          <span class="default-status" ng-class="{'online-status': device.deviceStatus.status == 'Online'}" ng-if="!device.deviceStatus.progressStatus"></span>
           <span class="number sub-service-title">{{device.model}}</span>
           <i class="icon icon-arrow-next pull-right"></i>
         </a>

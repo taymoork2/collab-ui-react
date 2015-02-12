@@ -20,6 +20,24 @@
   margin-top: 10px;  
 }
 
+.default-status::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  background-color: @brand-default;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.online-status::before {
+  background-color: @brand-success;
+}
+
+.failure-status {
+  color:@brand-danger;
+}
+
 .generate-activation-code {
 
   .form-group {

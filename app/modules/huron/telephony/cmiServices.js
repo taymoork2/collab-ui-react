@@ -166,6 +166,10 @@
       customerId: '@customerId',
       sipEndpointId: '@sipEndpointId'
     }, {
+      query: {
+        method: 'GET',
+        isArray: false
+      },
       update: {
         method: 'PUT'
       }
