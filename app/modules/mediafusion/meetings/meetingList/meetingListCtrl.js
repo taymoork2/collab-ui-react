@@ -2,10 +2,10 @@
 
 //Defining a controller for Meeting List with required dependencies.
 angular.module('Mediafusion')
-  .controller('ListMeetingsCtrl', ['$scope', '$rootScope', '$filter', 'Log', 'MeetingListService',
-    function ($scope, $rootScope, $filter, Log, MeetingListService) {
+  .controller('ListMeetingsCtrl', ['$scope', '$rootScope', '$filter', '$state', '$timeout', 'Log', 'Config', 'MeetingListService',
+    function ($scope, $rootScope, $filter, $state, $timeout, Log, Config, MeetingListService) {
 
-      var searchString;
+      //var searchString;
       $scope.queryMeetingsList = [];
 
       // Meeting List leader bar placeholders.
@@ -13,16 +13,75 @@ angular.module('Mediafusion')
       $scope.totalEnterpriseParticipants;
       $scope.totalCloudMeetings;
       $scope.totalCloudParticipants;
+      $scope.meeting = null;
+      $scope.currentMeetings = null;
+      $scope.querymeetingslistinfo = [];
+      $scope.queryparticipantlistinfo = [];
+      $rootScope.meetingid = null;
+      $scope.iconClass = {
+        "PHONE": "icon icon-calls",
+        "MOBILE": "icon icon-transfer-to-mobile",
+        "ROOM": "icon icon-voicemail"
+      };
+
+      $scope.searchString = '';
+      $scope.load = true;
+      $scope.currentDataPosition = 1;
+      $scope.lastScrollPosition = 0;
+      $scope.startTimeStamp = "02/10/2015 12:00:00 %2B0530"; //mm/dd/yyyy
+      $scope.endTimeStamp = "02/12/2015 12:00:00 %2B0530"; //date:'yyyy-MM-dd HH:mm:ss Z'}}: 2010-10-29 09:10:23 +0530
+      $scope.sort = {
+        by: 'name',
+        order: 'ascending'
+      };
 
       /**
        * getMeetingList function will fetch and populate Meeting list table with the meetings info from its
        * repective MeetingListService.
        * queryMeetingsList should be populated.
        */
-      var getMeetingList = function () {
-        MeetingListService.listMeetings(function (data, status, searchString) {
+      var getMeetingList = function (startAt) {
+
+        var pageNo = startAt || 1;
+        MeetingListService.listMeetings($scope.startTimeStamp, $scope.endTimeStamp, pageNo, Config.meetingsperpage, $scope.searchString, function (data, status, searchString) {
+
+          //MeetingListService.listMeetings(function (data, status, searchString) {
+
           if (data.success) {
-            $scope.queryMeetingsList = data.meetings;
+            $timeout(function () {
+              $scope.load = true;
+            });
+
+            if (pageNo === 1) {
+              $scope.queryMeetingsList = data.meetings;
+            } else {
+              $scope.queryMeetingsList = $scope.queryMeetingsList.concat(data.meetings);
+            }
+          } else {
+            Log.debug('Query existing users failed. Status: ' + status);
+          }
+
+        });
+      };
+
+      /* getMeetingListinfo will fetch additional details about the meetings */
+      var getMeetingListinfo = function () {
+
+        MeetingListService.listMeetingsinfo(function (data, status, meetingid) {
+          if (data.success) {
+            $scope.querymeetingslistinfo = data.meetings;
+          } else {
+            Log.debug('Query existing meetings failed. Status: ' + status);
+          }
+        });
+      };
+
+      /* getParticipantListinfo will fetch details about the participants of the meetings */
+      var getParticipantListinfo = function () {
+
+        MeetingListService.listParticipantinfo(function (data, status, meetingid) {
+          if (data.success) {
+            $scope.queryparticipantlistinfo = data.partDetails;
           } else {
             Log.debug('Query existing meetings failed. Status: ' + status);
           }
@@ -34,13 +93,18 @@ angular.module('Mediafusion')
        */
       $scope.searchMeetingList = function () {
         if ($scope.searchString && $scope.searchString != null) {
-          searchString = $scope.searchString;
-        } else {
-          searchString = "";
+          //searchString = $scope.searchString;
+          //$scope.searchString = searchString;
+          $scope.currentDataPosition = 1
+          getMeetingList($scope.currentDataPosition);
         }
+        //else {
+        //searchString = "";
+        //}
 
-        $rootScope.searchString = searchString;
-        getMeetingList();
+        //$rootScope.searchString = searchString;
+        //$scope.searchString = searchString;
+        //getMeetingList(1);
       };
 
       /**
@@ -59,6 +123,10 @@ angular.module('Mediafusion')
         });
       };
 
+      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showMeetingsDetails(row.entity)">' +
+        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
+        '<div ng-cell></div>' +
+        '</div>';
       //Gridoptions describes about table structure and behaviour.
 
       $scope.gridOptions = {
@@ -66,17 +134,17 @@ angular.module('Mediafusion')
         multiSelect: false,
         showFilter: true,
         rowHeight: 44,
+        rowTemplate: rowTemplate,
         headerRowHeight: 40,
         useExternalSorting: false,
 
         columnDefs: [{
-          field: 'status',
-          cellFilter: 'meetingListFilter',
-          sortable: false,
-          displayName: $filter('translate')('meetingsPage.status')
-        }, {
           field: 'webexMeetingId',
           displayName: $filter('translate')('meetingsPage.webexMeetingId')
+        }, {
+          field: 'host',
+          sortable: false,
+          displayName: $filter('translate')('meetingsPage.host')
         }, {
           field: 'date',
           sortable: false,
@@ -84,7 +152,11 @@ angular.module('Mediafusion')
         }, {
           field: 'startTime',
           sortable: false,
-          displayName: $filter('translate')('meetingsPage.start')
+          displayName: $filter('translate')('meetingsPage.startTime')
+        }, {
+          field: 'endTime',
+          sortable: false,
+          displayName: $filter('translate')('meetingsPage.endTime')
         }, {
           field: 'resource',
           displayName: $filter('translate')('meetingsPage.resource')
@@ -96,6 +168,53 @@ angular.module('Mediafusion')
 
       $scope.getEnterpriseAndCloudMeetings();
       getMeetingList();
+
+      $scope.showMeetingsDetails = function (meeting) {
+        $scope.currentMeetings = meeting;
+        $rootScope.meetingid = meeting.id;
+        getMeetingListinfo();
+        getParticipantListinfo();
+        $rootScope.meeting = meeting;
+        $state.go('meetings.list.preview');
+      };
+
+      $rootScope.$on('$stateChangeSuccess', function () {
+        console.log("entering success");
+        if ($state.includes('meetings.list.preview')) {
+          console.log("entering preview");
+          $scope.meetingsPreviewActive = true;
+          console.log("meetingsPreviewActive : " + $scope.meetingsPreviewActive);
+        } else {
+          $scope.meetingsPreviewActive = false;
+          console.log("meetingsPreviewActive : " + $scope.meetingsPreviewActive);
+        }
+      });
+
+      $scope.$on('ngGridEventScroll', function () {
+        if ($scope.load) {
+          $scope.load = false;
+          var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
+          var scrollTop = ngGridView.scrollTop;
+          var scrollOffsetHeight = ngGridView.offsetHeight;
+          var currentScroll = scrollTop + scrollOffsetHeight;
+          var scrollHeight = ngGridView.scrollHeight;
+          console.log(scrollTop);
+          console.log(scrollHeight);
+          $scope.currentDataPosition++;
+          //$scope.GetMoreData($scope.currentDataPosition);
+          getMeetingList($scope.currentDataPosition);
+          console.log('Scrolled .. ');
+        }
+      });
+
+      /*
+       $scope.GetMoreData = function (position) {
+        console.log('In GetMoreData .. ');
+        if (typeof (position) == 'undefined') {
+          position = 1;
+        }
+        getMeetingList(position);
+      } */
 
     }
   ]);

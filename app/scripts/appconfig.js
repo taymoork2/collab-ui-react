@@ -460,10 +460,24 @@ angular
     function ($stateProvider) {
       $stateProvider
         .state('meetings', {
+          abstract: true,
+          template: '<div ui-view></div>',
+          //url: '/meetings',
+          //templateUrl: 'modules/mediafusion/meetings/meetingList/meetingList.tpl.html',
+          //controller: 'ListMeetingsCtrl',
+          parent: 'main'
+        })
+        .state('meetings.list', {
           url: '/meetings',
           templateUrl: 'modules/mediafusion/meetings/meetingList/meetingList.tpl.html',
           controller: 'ListMeetingsCtrl',
-          parent: 'main'
+          params: {
+            showAddUsers: {}
+          }
+        })
+        .state('meetings.list.preview', {
+          templateUrl: 'modules/mediafusion/meetings/meetingPreview/meetingPreview.tpl.html',
+          controller: 'MeetingPreviewCtrl'
         })
         .state('vts', {
           abstract: true,

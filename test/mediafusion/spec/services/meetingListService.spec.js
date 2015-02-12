@@ -7,7 +7,7 @@ describe('Service: MeetingListService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   //Initialize variables
-  var MeetingListService,httpBackend,meetinglistData,meetingLdrBrdData;
+  var MeetingListService,httpBackend,meetinglistData,meetingLdrBrdData,meetinglistinfoData,participantlistData;
 
   /* Instantiate service.
   * Reading the json data to application variable.
@@ -16,6 +16,8 @@ describe('Service: MeetingListService', function () {
   beforeEach(inject(function ($httpBackend,_MeetingListService_) {
     meetinglistData = getJSONFixture('mediafusion/json/meetings/meetingListData.json');
     meetingLdrBrdData = getJSONFixture('mediafusion/json/meetings/meetingLeaderBoardData.json');
+    meetinglistinfoData = getJSONFixture('mediafusion/json/meetings/meetingListinfoData.json');
+    participantlistData = getJSONFixture('mediafusion/json/meetings/participantListData.json');
     httpBackend = $httpBackend;
 
     //Making a fake call to return json data to make unit test cases to be passed for Meetings table.
@@ -25,6 +27,14 @@ describe('Service: MeetingListService', function () {
     //Making a fake call to return json data to make unit test cases to be passed for leader board UI.
     httpBackend.when('GET', 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getEnterpriseAndCloudMeetings')
                .respond(200, meetingLdrBrdData);
+
+    //Making a fake call to return json data to make unit test cases to be passed for Meetings table to show additional info.
+    httpBackend.when('GET', 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getaddninfo?id='+meetinglistinfoData.meetings.id)
+               .respond(200, meetinglistinfoData);
+
+    //Making a fake call to return json data to make unit test cases to be passed for Participants table.
+    httpBackend.when('GET', 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getaddinfo?id='+meetinglistinfoData.meetings.id)
+               .respond(200, participantlistData);
     
     MeetingListService = _MeetingListService_;
 
@@ -39,6 +49,12 @@ describe('Service: MeetingListService', function () {
   it("MeetingListService.listMeetings should be defined", function(){
       expect(MeetingListService.listMeetings).toBeDefined();
   });
+   it("MeetingListService.listMeetingsinfo should be defined", function(){
+      expect(MeetingListService.listMeetingsinfo).toBeDefined();
+  });
+it("MeetingListService.listParticipantsinfo should be defined", function(){
+      expect(MeetingListService.listParticipantinfo).toBeDefined();
+  });
 
   it("Root Scope should not be null", function(){
       expect(MeetingListService.$rootScope).not.toBeNull();
@@ -51,7 +67,10 @@ describe('Service: MeetingListService', function () {
   it("Final MeetingList URL should not be null", function(){
       expect(MeetingListService.meetingListUrl).not.toBeNull();
   });
-
+  
+  it("Final Meetinginfo URL should not be null", function(){
+      expect(MeetingListService.meetinginfolistUrl).not.toBeNull();
+  });
   it("HTTP should not be null", function(){
       expect(MeetingListService.$http).not.toBeNull();
   });

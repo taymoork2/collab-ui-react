@@ -230,15 +230,14 @@ angular.module('Core')
       };
 
       $scope.$on('ngGridEventScroll', function () {
-        var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
-        var scrollTop = ngGridView.scrollTop;
-        var scrollOffsetHeight = ngGridView.offsetHeight;
-        var currentScroll = scrollTop + scrollOffsetHeight;
-        var scrollHeight = ngGridView.scrollHeight;
-
         if ($scope.load) {
-          $scope.currentDataPosition++;
           $scope.load = false;
+          var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
+          var scrollTop = ngGridView.scrollTop;
+          var scrollOffsetHeight = ngGridView.offsetHeight;
+          var currentScroll = scrollTop + scrollOffsetHeight;
+          var scrollHeight = ngGridView.scrollHeight;
+          $scope.currentDataPosition++;
           getUserList($scope.currentDataPosition * Config.usersperpage + 1);
         }
       });

@@ -734,10 +734,11 @@
   },
   "meetingsPage": {
     "manageMeetings": "Meetings",
-    "status": "Status",
     "webexMeetingId" : "Webex Meeting Id",
+    "host": "Host",
     "date" : "Date",
-    "start" : "Start",
+    "startTime" : "Start Time",
+    "endTime" : "End Time",
     "resource" : "Resource",
     "webexSite" : "Webex Site",
     "active": "Active",

@@ -24,7 +24,15 @@ angular.module('Core')
         },
 
         meetingServiceUrl: {
-          dev: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1',
+          //dev: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1', 
+          dev: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
+          integration: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1',
+          prod: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1'
+        },
+
+        MeetinginfoserviceUrl: {
+          //dev: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1',
+          dev: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
           integration: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1',
           prod: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1'
         },
@@ -83,6 +91,7 @@ angular.module('Core')
         scimSchemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
 
         usersperpage: 100,
+        meetingsperpage: 20,
 
         logConfig: {
           linesToAttach: 100,
@@ -268,6 +277,16 @@ angular.module('Core')
           }
         },
 
+        getMeetinginfoserviceUrl: function () {
+          if (this.isDev()) {
+            return this.MeetinginfoserviceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.MeetinginfoserviceUrl.integration;
+          } else {
+            return this.MeetinginfoserviceUrl.prod;
+          }
+        },
+
         getOauthLoginUrl: function () {
           var params = [this.oauthUrl.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()])];
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
@@ -369,7 +388,7 @@ angular.module('Core')
           'didadd',
           'underconstruction'
         ],
-        'squared-fusion-uc': ['fusion'],
+        'squared-fusion-uc': ['fusion', 'meetings'],
         'squared-team-member': ['organization'],
         'squared-fusion-media': ['meetings', 'vts']
       };

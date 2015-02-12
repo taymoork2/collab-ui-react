@@ -740,16 +740,6 @@ module.exports = function (grunt) {
             ]
           }
         }
-      },
-      mediafusion: {
-        options: {
-          args: {
-            specs: [
-              'test/e2e-protractor/mediafusion/*_spec.js'
-
-            ]
-          }
-        }
       }
     },
 
@@ -968,20 +958,13 @@ module.exports = function (grunt) {
     'protractor:hercules'
   ]);
 
-  grunt.registerTask('test-mediafusion', [
-    'test-setup',
-    'protractor:mediafusion'
-  ]);
-
   grunt.registerTask('test', function (target) {
     if (target === 'build') {
       return grunt.task.run([
         'test-setup:build',
         'protractor:squared',
         'protractor:huron',
-        'protractor:hercules',
-        'protractor:mediafusion'
-
+        'protractor:hercules'
       ]);
     } else if (target === 'coverage') {
       return grunt.task.run([
@@ -995,8 +978,7 @@ module.exports = function (grunt) {
       'test-setup:dist',
       'protractor:squared',
       'protractor:huron',
-      'protractor:hercules',
-      'protractor:mediafusion'
+      'protractor:hercules'
     ]);
   });
 

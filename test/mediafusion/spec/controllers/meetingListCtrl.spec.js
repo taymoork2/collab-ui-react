@@ -7,7 +7,7 @@ describe('Controller: ListMeetingsCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   //Initialize variables
-  var MeetingsCtrl,scope,httpBackend,meetinglistData,meetingLdrBrdData;
+  var MeetingsCtrl,scope,httpBackend,meetinglistData,meetingLdrBrdData,meetinglistinfoData,participantlistData;
 
    /* Initialize the controller and a mock scope
   * Reading the json data to application variable.
@@ -18,12 +18,16 @@ describe('Controller: ListMeetingsCtrl', function () {
 
     meetinglistData = getJSONFixture('mediafusion/json/meetings/meetingListData.json');
     meetingLdrBrdData = getJSONFixture('mediafusion/json/meetings/meetingLeaderBoardData.json');
+    meetinglistinfoData = getJSONFixture('mediafusion/json/meetings/meetingListinfoData.json');
+    participantlistData = getJSONFixture('mediafusion/json/meetings/participantListData.json');
 
     MeetingsCtrl = $controller('ListMeetingsCtrl', {
       $scope: scope
     });
 
     scope.queryMeetingsList = meetinglistData.meetings;
+    scope.querymeetingslistinfo = meetinglistinfoData.meetings;
+    scope.queryparticipantlistinfo = participantlistData.partDetails;
     scope.searchString = meetinglistData.searchString;
     scope.totalEnterpriseMeetings = meetingLdrBrdData.totalEnterpriseMeetings;
     scope.totalEnterpriseParticipants = meetingLdrBrdData.totalEnterpriseParticipants;
@@ -53,10 +57,26 @@ describe('Controller: ListMeetingsCtrl', function () {
   it('response status should be success', function () {
     expect(meetinglistData.success).toBe(true);
   });
+  
+   it('response status should be success', function () {
+    expect(meetinglistinfoData.success).toBe(true);
+  });
+
+    it('response status should be success', function () {
+    expect(participantlistData.success).toBe(true);
+  });
 
   it('querymeetingslist should be defined', function () {
     expect(scope.queryMeetingsList).toBeDefined();
   });
+  
+  it('querymeetingslistinfo should be defined', function () {
+    expect(scope.querymeetingslistinfo).toBeDefined();
+  });
+
+  it('queryParticipantlistinfo should be defined', function () {
+    expect(scope.queryparticipantlistinfo).toBeDefined();
+  })
 
   it('Should have meeting data of size 5', function () {
     expect(scope.queryMeetingsList.length).toBe(5);
