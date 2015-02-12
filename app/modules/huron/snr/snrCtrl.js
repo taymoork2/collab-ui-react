@@ -3,8 +3,8 @@
 
   angular
     .module('Huron')
-    .controller('SingleNumberReachInfoCtrl', ['$scope', '$q', 'RemoteDestinationService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter',
-      function ($scope, $q, RemoteDestinationService, TelephonyInfoService, Log, Config, Notification, $filter) {
+    .controller('SingleNumberReachInfoCtrl', ['$scope', '$q', 'RemoteDestinationService', 'TelephonyInfoService', 'Log', 'Config', 'Notification', '$filter', 'HttpUtils',
+      function ($scope, $q, RemoteDestinationService, TelephonyInfoService, Log, Config, Notification, $filter, HttpUtils) {
 
         $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
         $scope.snrOptions = [{
@@ -121,24 +121,26 @@
         };
 
         $scope.saveSingleNumberReach = function () {
-          if ($scope.telephonyInfo.snrInfo.remoteDestinations !== null && $scope.telephonyInfo.snrInfo.remoteDestinations !== undefined && $scope.telephonyInfo.snrInfo.remoteDestinations.length > 0) {
-            if (!$scope.telephonyInfo.snrInfo.singleNumberReachEnabled) {
-              $scope.deleteRemoteDestinationInfo($scope.currentUser);
+          HttpUtils.setTrackingID().then(function () {
+            if ($scope.telephonyInfo.snrInfo.remoteDestinations !== null && $scope.telephonyInfo.snrInfo.remoteDestinations !== undefined && $scope.telephonyInfo.snrInfo.remoteDestinations.length > 0) {
+              if (!$scope.telephonyInfo.snrInfo.singleNumberReachEnabled) {
+                $scope.deleteRemoteDestinationInfo($scope.currentUser);
+              } else {
+                $scope.updateRemoteDestinationInfo($scope.currentUser, $scope.telephonyInfo.snrInfo.destination);
+              }
             } else {
-              $scope.updateRemoteDestinationInfo($scope.currentUser, $scope.telephonyInfo.snrInfo.destination);
+              $scope.createRemoteDestinationInfo($scope.currentUser, $scope.telephonyInfo.snrInfo.destination, $scope.singleNumberReach)
+                .then(function (response) {
+                  $scope.processCreateRemoteDestionInfo(response);
+                })
+                .then(function (response) {
+                  TelephonyInfoService.getRemoteDestinationInfo($scope.currentUser.id);
+                })
+                .catch(function (response) {
+                  $scope.processCreateRemoteDestionInfo(null);
+                });
             }
-          } else {
-            $scope.createRemoteDestinationInfo($scope.currentUser, $scope.telephonyInfo.snrInfo.destination, $scope.singleNumberReach)
-              .then(function (response) {
-                $scope.processCreateRemoteDestionInfo(response);
-              })
-              .then(function (response) {
-                TelephonyInfoService.getRemoteDestinationInfo($scope.currentUser.id);
-              })
-              .catch(function (response) {
-                $scope.processCreateRemoteDestionInfo(null);
-              });
-          }
+          });
         };
 
         var getRandomString = function () {

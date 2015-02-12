@@ -403,8 +403,7 @@ angular.module('Core')
           'intercomgroups',
           'paginggroups',
           'huntgroups',
-          'didadd',
-          'underconstruction'
+          'didadd'
         ],
         'squared-fusion-uc': ['fusion', 'meetings'],
         'squared-team-member': ['organization'],
