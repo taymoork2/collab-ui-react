@@ -49,8 +49,6 @@ angular.module('Core')
             meetingListUrl = meetingListUrl + '&pgSize=' + pgSize;
           }
 
-          console.log(meetingListUrl);
-
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           //Actual rest call to get meeting info from server and also error case is handeled.

@@ -29,7 +29,7 @@ angular.module('Core')
         },
 
         meetingServiceUrl: {
-          //dev: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1', 
+          //dev: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1',
           dev: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
           integration: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1',
           prod: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1'
@@ -96,7 +96,7 @@ angular.module('Core')
         herculesUrl: {
           dev: 'https://hercules-integration.wbx2.com/',
           integration: 'https://hercules-integration.wbx2.com/',
-          prod: 'https://hercules-integration.wbx2.com/'
+          prod: 'https://hercules-a.wbx2.com/'
         },
 
         scimSchemas: [

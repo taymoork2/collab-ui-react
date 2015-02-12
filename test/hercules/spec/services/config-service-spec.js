@@ -4,6 +4,7 @@ describe('ConfigService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $httpBackend, Service, win;
+  var rootPath = 'https://hercules-a.wbx2.com';
 
   beforeEach(function() {
     module(function ($provide) {
@@ -19,12 +20,12 @@ describe('ConfigService', function () {
   }));
 
   it('should return the correct url', function() {
-    expect(Service.getUrl()).toBe('https://hercules-integration.wbx2.com/v1');
+    expect(Service.getUrl()).toBe(rootPath + '/v1');
   });
 
   it('should be possible to set error url', function() {
     win.location.search = 'hercules-backend=error'
-    expect(Service.getUrl()).toBe('https://hercules-integration.wbx2.com/fubar');
+    expect(Service.getUrl()).toBe(rootPath + '/fubar');
   });
 
   it('should be possible to override url', function() {

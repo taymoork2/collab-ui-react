@@ -4,6 +4,7 @@ describe('Service: ConnectorService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $httpBackend, Service, converter, notification, win;
+  var rootPath = 'https://hercules-a.wbx2.com/v1';
 
   beforeEach(function() {
     module(function ($provide) {
@@ -24,7 +25,6 @@ describe('Service: ConnectorService', function () {
 
   beforeEach(inject(function ($injector, _ConnectorService_) {
     Service = _ConnectorService_;
-
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend
       .when('GET', 'l10n/en_US.json')
@@ -38,7 +38,7 @@ describe('Service: ConnectorService', function () {
 
   it('should fetch and return data from the correct backend', function () {
     $httpBackend
-      .when('GET', 'https://hercules-integration.wbx2.com/v1/clusters')
+      .when('GET', rootPath + '/clusters')
       .respond({});
 
     converter.convertClusters.returns('foo');
@@ -57,7 +57,7 @@ describe('Service: ConnectorService', function () {
     $httpBackend
       .when(
         'POST',
-        'https://hercules-integration.wbx2.com/v1/clusters/foo/services/bar/upgrade',
+        rootPath + '/clusters/foo/services/bar/upgrade',
         {}
       )
       .respond({foo: 'bar'});
@@ -75,7 +75,7 @@ describe('Service: ConnectorService', function () {
     $httpBackend
       .when(
         'POST',
-        'https://hercules-integration.wbx2.com/v1/clusters/foo/services/bar/upgrade',
+        rootPath + '/clusters/foo/services/bar/upgrade',
         {}
       )
       .respond(500, {foo: 'bar'});
@@ -95,7 +95,7 @@ describe('Service: ConnectorService', function () {
 
   it('should log when fetch fails', function () {
     $httpBackend
-      .when('GET', 'https://hercules-integration.wbx2.com/v1/clusters')
+      .when('GET', rootPath + '/clusters')
       .respond(500, {});
 
     expect(notification.notify.callCount).toBe(0);
@@ -143,7 +143,7 @@ describe('Service: ConnectorService', function () {
     $httpBackend
       .when(
         'DELETE',
-        'https://hercules-integration.wbx2.com/v1/clusters/clusterid/hosts/serial'
+        rootPath + '/clusters/clusterid/hosts/serial'
       )
       .respond(200);
 
@@ -158,7 +158,7 @@ describe('Service: ConnectorService', function () {
     $httpBackend
       .when(
         'DELETE',
-        'https://hercules-integration.wbx2.com/v1/clusters/clusterid/hosts/serial'
+        rootPath + '/clusters/clusterid/hosts/serial'
       )
       .respond(500);
 
@@ -174,7 +174,7 @@ describe('Service: ConnectorService', function () {
 
   it('should be possible to squelch errors when fetch fails', function () {
     $httpBackend
-      .when('GET', 'https://hercules-integration.wbx2.com/v1/clusters')
+      .when('GET', rootPath + '/clusters')
       .respond(500, null);
     expect(notification.notify.callCount).toBe(0);
 

@@ -127,6 +127,14 @@ describe('Config', function () {
     });
   });
 
+  it('should return correct meeting service url', function () {
+    whenCalling('getMeetinginfoserviceUrl').expectUrlToBe({
+      development: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
+      integration: 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1',
+      production:  'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1'
+    });
+  });
+
   it('should return correct oauth login url', function () {
     whenCalling('getOauthLoginUrl').expectUrlToBe({
       development: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=webex-squared',
@@ -260,7 +268,7 @@ describe('Config', function () {
     whenCalling('getHerculesUrl').expectUrlToBe({
       development: 'https://hercules-integration.wbx2.com/',
       integration: 'https://hercules-integration.wbx2.com/',
-      production:  'https://hercules-integration.wbx2.com/'
+      production:  'https://hercules-a.wbx2.com/'
     });
   });
 
