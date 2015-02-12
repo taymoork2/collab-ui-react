@@ -373,7 +373,7 @@ angular.module('Core')
           return this.appinfo.webClientURL;
         },
 
-        getHerculesUrl: function() {
+        getHerculesUrl: function () {
           return this.herculesUrl[this.getEnv()];
         }
 
