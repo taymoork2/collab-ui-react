@@ -105,7 +105,7 @@ angular.module('Core')
         ],
 
         usersperpage: 100,
-        meetingsperpage: 20,
+        meetingsPerPage: 50,
 
         logConfig: {
           linesToAttach: 100,

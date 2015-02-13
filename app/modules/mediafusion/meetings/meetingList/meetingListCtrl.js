@@ -38,7 +38,7 @@ angular.module('Mediafusion')
       var getMeetingList = function (startAt) {
 
         var pageNo = startAt || 1;
-        MeetingListService.listMeetings($scope.startTimeStamp, $scope.endTimeStamp, pageNo, Config.meetingsperpage, $scope.searchString, function (data, status, searchString) {
+        MeetingListService.listMeetings($scope.startTimeStamp, $scope.endTimeStamp, pageNo, $scope.searchString, function (data, status, searchString) {
 
           if (data.success) {
             $timeout(function () {

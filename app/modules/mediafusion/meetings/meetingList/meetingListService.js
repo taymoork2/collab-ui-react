@@ -14,12 +14,12 @@ angular.module('Mediafusion')
 
         //listMeetings will actually perform a rest call and fetches the data from the server and return back to controller.
 
-        listMeetings: function (startTimeStamp, endTimeStamp, pgNo, pgSize, searchString, callback) {
+        listMeetings: function (startTimeStamp, endTimeStamp, pgNo, searchString, callback) {
 
           var meetingListUrl = Utils.sprintf(baseUrl + '/meeting/getallminmeeting', [Authinfo.getOrgId()]);
           var meetingSearchUrl = null;
           var encodedSearchStr = '';
-          var queryParams = "startTimeStamp=" + startTimeStamp + "&endTimeStamp=" + endTimeStamp + '&pgNo=' + pgNo + '&pgSize=' + pgSize;
+          var queryParams = "startTimeStamp=" + startTimeStamp + "&endTimeStamp=" + endTimeStamp + '&pgNo=' + pgNo + '&pgSize=' + Config.meetingsPerPage;
 
           if (searchString !== '' && typeof (searchString) !== 'undefined') {
             meetingSearchUrl = meetingListUrl + '?' + searchfilter;
