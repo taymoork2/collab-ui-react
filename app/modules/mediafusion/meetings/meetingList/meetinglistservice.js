@@ -1,7 +1,7 @@
 'use strict';
 
 //Defining a MeetingListService.
-angular.module('Core')
+angular.module('Mediafusion')
   .service('MeetingListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth',
     function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
 
@@ -21,18 +21,21 @@ angular.module('Core')
           //var searchString;
           var meetingSearchUrl = null;
           var encodedSearchStr = '';
+          var queryParams = "startTimeStamp=" + startTimeStamp + "&endTimeStamp=" + endTimeStamp + '&pgNo=' + pgNo + '&pgSize=' + pgSize;
 
           if (searchString !== '' && typeof (searchString) !== 'undefined') {
             meetingSearchUrl = meetingListUrl + '?' + searchfilter;
             encodedSearchStr = window.encodeURIComponent(searchString);
             meetingListUrl = Utils.sprintf(meetingSearchUrl, [encodedSearchStr]);
-            //searchString = $rootScope.searchString;
-          } else {
-            meetingSearchUrl = meetingListUrl + '?' + searchfilter + '';
+
+            meetingSearchUrl = meetingListUrl + '?' + searchfilter + "&" + queryParams;
+            encodedSearchStr = window.encodeURIComponent(searchString);
             meetingListUrl = Utils.sprintf(meetingSearchUrl, [encodedSearchStr]);
-            //searchString = $rootScope.searchString;
+          } else {
+            meetingListUrl = meetingListUrl + '?' + queryParams;
           }
 
+          /*
           if (startTimeStamp !== '' && typeof (startTimeStamp) !== 'undefined') {
             meetingListUrl = meetingListUrl + '&startTimeStamp=' + startTimeStamp;
           }
@@ -47,7 +50,7 @@ angular.module('Core')
 
           if (pgSize && pgSize > 0) {
             meetingListUrl = meetingListUrl + '&pgSize=' + pgSize;
-          }
+          } */
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
