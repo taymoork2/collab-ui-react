@@ -17,6 +17,7 @@ angular.module('Mediafusion')
       $scope.querymeetingslistinfo = [];
       $scope.queryparticipantlistinfo = [];
       $rootScope.meetingid = null;
+      $scope.startDateTime = null;
       $scope.iconClass = {
         "PHONE": "icon icon-calls",
         "MOBILE": "icon icon-transfer-to-mobile",
@@ -58,9 +59,9 @@ angular.module('Mediafusion')
       };
 
       /* getMeetingListinfo will fetch additional details about the meetings */
-      var getMeetingListinfo = function () {
+      var getMeetingListinfo = function (startDateTime) {
 
-        MeetingListService.listMeetingsinfo(function (data, status, meetingid) {
+        MeetingListService.listMeetingsinfo(startDateTime, function (data, status, meetingid) {
           if (data.success) {
             $scope.querymeetingslistinfo = data.meetings;
           } else {
@@ -156,7 +157,8 @@ angular.module('Mediafusion')
       $scope.showMeetingsDetails = function (meeting) {
         $scope.currentMeetings = meeting;
         $rootScope.meetingid = meeting.id;
-        getMeetingListinfo();
+        $scope.startDateTime = meeting.startDateTime;
+        getMeetingListinfo($scope.startDateTime);
         getParticipantListinfo();
         $rootScope.meeting = meeting;
         $state.go('meetings.list.preview');

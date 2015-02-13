@@ -84,8 +84,10 @@ angular.module('Mediafusion')
             });
         },
 
-        listMeetingsinfo: function (callback) {
+        listMeetingsinfo: function (startDateTime, callback) {
           var meetinginfolistUrl = Utils.sprintf(meetinginfoUrl + '/meeting/getaddninfo?id=' + $rootScope.meetingid, [Authinfo.getOrgId()]);
+          meetinginfolistUrl = meetinginfolistUrl + "&startDateTime=" + startDateTime;
+
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           //Actual rest call to get additional meeting info from server and also error case is handeled.
