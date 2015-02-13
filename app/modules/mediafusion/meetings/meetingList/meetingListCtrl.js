@@ -5,7 +5,6 @@ angular.module('Mediafusion')
   .controller('ListMeetingsCtrl', ['$scope', '$rootScope', '$filter', '$state', '$timeout', 'Log', 'Config', 'MeetingListService',
     function ($scope, $rootScope, $filter, $state, $timeout, Log, Config, MeetingListService) {
 
-      //var searchString;
       $scope.queryMeetingsList = [];
 
       // Meeting List leader bar placeholders.
@@ -28,12 +27,8 @@ angular.module('Mediafusion')
       $scope.load = true;
       $scope.currentDataPosition = 1;
       $scope.lastScrollPosition = 0;
-      $scope.startTimeStamp = "02/10/2015 12:00:00 %2B0530"; //mm/dd/yyyy
-      $scope.endTimeStamp = "02/12/2015 12:00:00 %2B0530"; //date:'yyyy-MM-dd HH:mm:ss Z'}}: 2010-10-29 09:10:23 +0530
-      $scope.sort = {
-        by: 'name',
-        order: 'ascending'
-      };
+      $scope.startTimeStamp = "02/10/2015 12:00:00 %2B0530"; //format : mm/dd/yyyy HH:mm:ss Z
+      $scope.endTimeStamp = "02/12/2015 12:00:00 %2B0530";
 
       /**
        * getMeetingList function will fetch and populate Meeting list table with the meetings info from its
@@ -44,8 +39,6 @@ angular.module('Mediafusion')
 
         var pageNo = startAt || 1;
         MeetingListService.listMeetings($scope.startTimeStamp, $scope.endTimeStamp, pageNo, Config.meetingsperpage, $scope.searchString, function (data, status, searchString) {
-
-          //MeetingListService.listMeetings(function (data, status, searchString) {
 
           if (data.success) {
             $timeout(function () {
@@ -93,18 +86,9 @@ angular.module('Mediafusion')
        */
       $scope.searchMeetingList = function () {
         if ($scope.searchString && $scope.searchString != null) {
-          //searchString = $scope.searchString;
-          //$scope.searchString = searchString;
           $scope.currentDataPosition = 1
           getMeetingList($scope.currentDataPosition);
         }
-        //else {
-        //searchString = "";
-        //}
-
-        //$rootScope.searchString = searchString;
-        //$scope.searchString = searchString;
-        //getMeetingList(1);
       };
 
       /**
@@ -201,20 +185,10 @@ angular.module('Mediafusion')
           console.log(scrollTop);
           console.log(scrollHeight);
           $scope.currentDataPosition++;
-          //$scope.GetMoreData($scope.currentDataPosition);
           getMeetingList($scope.currentDataPosition);
           console.log('Scrolled .. ');
         }
       });
-
-      /*
-       $scope.GetMoreData = function (position) {
-        console.log('In GetMoreData .. ');
-        if (typeof (position) == 'undefined') {
-          position = 1;
-        }
-        getMeetingList(position);
-      } */
 
     }
   ]);
