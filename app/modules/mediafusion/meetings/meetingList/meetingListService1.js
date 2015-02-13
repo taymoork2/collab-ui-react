@@ -34,7 +34,6 @@ angular.module('Mediafusion')
           } else {
             meetingListUrl = meetingListUrl + '?' + queryParams;
           }
-
           /*
           if (startTimeStamp !== '' && typeof (startTimeStamp) !== 'undefined') {
             meetingListUrl = meetingListUrl + '&startTimeStamp=' + startTimeStamp;
