@@ -18,12 +18,18 @@ var testuser = {
 // Logging in. Write your tests after the login flow is complete.
 describe('Add/Invite/Entitle User flow', function() {
   describe('Page initialization', function() {
+
     it('should login as pbr org admin', function(){
       login.login(invitetestuser.username, invitetestuser.password);
     });
 
-    it('clicking on users tab should change the view', function() {
-      navigation.clickUsers();
+    describe('without sync', function () {
+      beforeEach(function() { browser.ignoreSynchronization = true; });
+      afterEach(function() { browser.ignoreSynchronization = false; });
+
+      it('clicking on users tab should change the view', function() {
+        navigation.clickUsers();
+      });
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function() {

@@ -142,6 +142,10 @@ describe('List users flow', function () {
   });
 
   describe('launch feedback page', function () {
+
+    beforeEach(function() { browser.ignoreSynchronization = true; });
+    afterEach(function() { browser.ignoreSynchronization = false; });
+
     it('click feedback and launch form page', function () {
       browser.driver.manage().window().setSize(1195, 569);
 
