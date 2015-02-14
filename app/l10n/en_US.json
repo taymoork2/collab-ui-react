@@ -678,7 +678,7 @@
     "processingText": "Adding Phone Numbers...",
     "successText": "{{count}} new phone number(s) successfully added.",
     "failText": "{{count}} phone number(s) already in the system.",
-    "sendEmail": "Send Welcome Email",
+    "sendEmail": "Notify Customer",
     "notifyCustLater": "Notify Customer Later",
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
