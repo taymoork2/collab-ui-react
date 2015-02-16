@@ -19,8 +19,13 @@ describe('Org Entitlement flow', function () {
     login.login(testuser.username, testuser.password);
   });
 
-  it('clicking on users tab should change the view', function () {
-    navigation.clickUsers();
+  describe('without sync', function () {
+    beforeEach(function() { browser.ignoreSynchronization = true; });
+    afterEach(function() { browser.ignoreSynchronization = false; });
+
+    it('clicking on users tab should change the view', function () {
+      navigation.clickUsers();
+    });
   });
 
   it('should display conversations panel for test user', function () {
