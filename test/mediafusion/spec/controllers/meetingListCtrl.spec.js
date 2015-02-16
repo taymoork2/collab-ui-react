@@ -110,4 +110,18 @@ describe('Controller: ListMeetingsCtrl', function () {
     expect(scope.totalCloudParticipants).toBe(8000);
   });
 
+  it('In the scope, the initial value for currentDataPosition=1', function() {
+    expect(scope.currentDataPosition).toBe(1);
+  });
+
+  it('In the scope, the initial value for lastScrollPosition=0', function() {
+    expect(scope.lastScrollPosition).toBe(0);
+  });
+
+  it('In the scope, the initial value for load=true', function() {
+    expect(scope.load).toBe(true);
+  });
+
+
+
 });
