@@ -84,14 +84,12 @@ describe('Controller: DeviceDetailCtrl', function () {
         });
 
         it('should popup a modal when called', function () {
-          $httpBackend.whenGET('modules/huron/device/deactivateDeviceModal.tpl.html').respond({});
           controller.additionalBtnClick();
           expect($modal.open.calledOnce).toBe(true);
           modalInstance = $modal.open.getCall(0).returnValue;
           modalInstance.dismiss();
-          $httpBackend.flush();
         });
-      }); 
+      });
     });
 
   });

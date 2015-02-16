@@ -1,56 +1,99 @@
 'use strict';
 
 describe('Controller: TrialEditCtrl', function () {
-  var controller, $scope, $httpBackend, $translate, $modal, modalInstance, Notification, partnerService;
+  var controller, $scope, $state, $q, $translate, Notification, PartnerService;
 
-  beforeEach(module('ui.bootstrap'));
-  beforeEach(module('dialogs'));
-  beforeEach(module('ngResource'));
-  beforeEach(module('ui.router'));
   beforeEach(module('Squared'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  var authInfo = {
-    getOrgId: sinon.stub().returns('1')
+  var stateParams = {
+    currentTrial: {
+      offers: [{
+        id: 'COLLAB'
+      }, {
+        id: 'SQUAREDUC'
+      }]
+    }
   };
 
-  beforeEach(module(function($provide) {
-    $provide.value("Authinfo", authInfo);
-  }));
-
-  beforeEach(inject(function($modal) {
-    sinon.spy($modal, 'open');
-  }));
-
-  beforeEach(inject(function(Notification) {
-    sinon.spy(Notification, "notify");
-  }));
-  beforeEach(inject(function ($rootScope, $controller, _$translate_, _$modal_, _$httpBackend_, _Notification_, _PartnerService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Notification_, _PartnerService_) {
     $scope = $rootScope.$new();
+    $state = _$state_;
+    $q = _$q_;
     $translate = _$translate_;
-    $modal = _$modal_;
-    $httpBackend = _$httpBackend_;
     Notification = _Notification_;
-    partnerService = _PartnerService_;
+    PartnerService = _PartnerService_;
+
+    spyOn(Notification, 'notify');
+    $state.modal = jasmine.createSpyObj('modal', ['close']);
+
     controller = $controller('TrialEditCtrl', {
       $scope: $scope,
       $translate: $translate,
-      $modal: $modal,
-      PartnerService: partnerService,
+      $stateParams: stateParams,
+      PartnerService: PartnerService,
       Notification: Notification
     });
-     $rootScope.$apply();
+     $scope.$apply();
   }));
-
-  afterEach(function () {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
 
   describe('TrialEditCtrl controller', function () {
     it('should be created successfully', function () {
       expect(controller).toBeDefined;
     });
+
+    describe('getDaysLeft', function () {
+      it('should return expired', function () {
+        expect(controller.getDaysLeft(-1)).toEqual('customerPage.expired');
+      });
+
+      it('should return expires today', function () {
+        expect(controller.getDaysLeft(0)).toEqual('customerPage.expiresToday');
+      });
+
+      it('should return days left', function () {
+        expect(controller.getDaysLeft(1)).toEqual(1);
+      });
+    });
+
+    describe('Edit a trial', function () {
+      beforeEach(function () {
+        spyOn(PartnerService, "editTrial").and.returnValue($q.when({
+          data: {}
+        }));
+        controller.editTrial();
+        $scope.$apply();
+      });
+
+      it('should notify success', function () {
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      });
+
+      it('should close the modal', function() {
+        expect($state.modal.close).toHaveBeenCalled();
+      });
+    });
+
+    describe('Edit a trial with error', function () {
+      beforeEach(function () {
+        spyOn(PartnerService, "editTrial").and.returnValue($q.reject({
+          data: {
+            message: 'An error occurred'
+          }
+        }));
+        controller.editTrial();
+        $scope.$apply();
+      });
+
+      it('should notify error', function () {
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      it('should not close the modal', function() {
+        expect($state.modal.close).not.toHaveBeenCalled();
+      });
+    });
+
   });
 });
