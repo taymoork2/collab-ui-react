@@ -122,16 +122,16 @@ describe('Config', function () {
   it('should return correct meeting service url', function () {
     whenCalling('getMeetingServiceUrl').expectUrlToBe({
       development: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-      integration: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-      production:  'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1'
+      integration: 'https://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
+      production:  'https://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
   it('should return correct meeting service url', function () {
     whenCalling('getMeetinginfoserviceUrl').expectUrlToBe({
       development: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-      integration: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-      production:  'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1'
+      integration: 'https://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
+      production:  'https://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
