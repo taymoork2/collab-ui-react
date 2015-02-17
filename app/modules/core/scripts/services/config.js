@@ -410,7 +410,7 @@ angular.module('Core')
           'huntgroups',
           'didadd'
         ],
-        'squared-fusion-uc': ['fusion', 'meetings'],
+        'squared-fusion-uc': ['fusion'],
         'squared-team-member': ['organization'],
         'squared-fusion-media': ['meetings', 'vts']
       };
