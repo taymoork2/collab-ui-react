@@ -16,16 +16,12 @@ angular.module('Mediafusion')
 
         listMeetings: function (startTimeStamp, endTimeStamp, pgNo, searchString, callback) {
 
-          var meetingListUrl = Utils.sprintf(baseUrl + '/meeting/getallminmeeting', [Authinfo.getOrgId()]);
+          var meetingListUrl = Utils.sprintf(baseUrl + '/meeting/getAllMinMeeting', [Authinfo.getOrgId()]);
           var meetingSearchUrl = null;
           var encodedSearchStr = '';
           var queryParams = "startTimeStamp=" + startTimeStamp + "&endTimeStamp=" + endTimeStamp + '&pgNo=' + pgNo + '&pgSize=' + Config.meetingsPerPage;
 
           if (searchString !== '' && typeof (searchString) !== 'undefined') {
-            meetingSearchUrl = meetingListUrl + '?' + searchfilter;
-            encodedSearchStr = window.encodeURIComponent(searchString);
-            meetingListUrl = Utils.sprintf(meetingSearchUrl, [encodedSearchStr]);
-
             meetingSearchUrl = meetingListUrl + '?' + searchfilter + "&" + queryParams;
             encodedSearchStr = window.encodeURIComponent(searchString);
             meetingListUrl = Utils.sprintf(meetingSearchUrl, [encodedSearchStr]);
@@ -40,12 +36,12 @@ angular.module('Mediafusion')
             .success(function (data, status) {
               data.success = true;
               data.status = status;
-              callback(data, status, searchString);
+              callback(data, status);
             })
             .error(function (data, status) {
               data.success = false;
               data.status = status;
-              callback(data, status, searchString);
+              callback(data, status);
               var description = null;
               var errors = data.Errors;
               if (errors) {
@@ -57,7 +53,7 @@ angular.module('Mediafusion')
 
         /**
          * Fetching the Number of Enterprise and Cloud meetings and its respective participants.
-         *
+         * This method can be removed as its handled in another method meetingChartInfo
          */
         getMeetingsAndParticipants: function (callback) {
 
@@ -85,7 +81,7 @@ angular.module('Mediafusion')
         },
 
         listMeetingsinfo: function (startDateTime, callback) {
-          var meetinginfolistUrl = Utils.sprintf(meetinginfoUrl + '/meeting/getaddninfo?id=' + $rootScope.meetingid, [Authinfo.getOrgId()]);
+          var meetinginfolistUrl = Utils.sprintf(meetinginfoUrl + '/meeting/getAddnInfo?id=' + $rootScope.meetingid, [Authinfo.getOrgId()]);
           meetinginfolistUrl = meetinginfolistUrl + "&startDateTime=" + startDateTime;
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
@@ -111,7 +107,7 @@ angular.module('Mediafusion')
 
         },
         listParticipantinfo: function (callback) {
-          var participantlistUrl = Utils.sprintf(meetinginfoUrl + '/participant/getpartinfo?id=' + $rootScope.meetingid, [Authinfo.getOrgId()]);
+          var participantlistUrl = Utils.sprintf(meetinginfoUrl + '/participant/getPartInfo?id=' + $rootScope.meetingid, [Authinfo.getOrgId()]);
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           //Actual rest call to get participant info from server and also error case is handeled.
@@ -132,7 +128,38 @@ angular.module('Mediafusion')
               }
               Auth.handleStatus(status, description);
             });
+        },
+
+        /**
+         * Fetching the Number of Enterprise and Cloud meetings chart data .
+         *
+         */
+        meetingChartInfo: function (numberOfDays, durationType, latestDate, callback) {
+          var meetingChartUrl = Utils.sprintf(baseUrl + '/meeting/getMeetingGraphData', [Authinfo.getOrgId()]);
+          var queryParams = "day=" + numberOfDays + "&type=" + durationType + "&latestdate=" + latestDate;
+          meetingChartUrl = meetingChartUrl + '?' + queryParams;
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
+          //Actual rest call to get meeting chart info from server and also error case is handeled.
+          $http.get(meetingChartUrl)
+            .success(function (data, status) {
+              data.success = true;
+              data.status = status;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              var description = null;
+              var errors = data.Errors;
+              if (errors) {
+                description = errors[0].description;
+              }
+              Auth.handleStatus(status, description);
+            });
         }
+
       };
 
       return meetinglistservice;
