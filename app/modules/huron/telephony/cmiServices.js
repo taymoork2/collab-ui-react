@@ -6,11 +6,15 @@
 
   // Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
   .factory('HuronEmailService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getEmailUrl() + '/email/userwelcome', {}, {});
+    return $resource(HuronConfig.getEmailUrl() + '/api/v1/email/userwelcome', {}, {});
   })
 
   .factory('ActivationCodeEmailService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getEmailUrl() + '/email/activationcode', {}, {});
+    return $resource(HuronConfig.getEmailUrl() + '/api/v1/email/activationcode', {}, {});
+  })
+
+  .factory('DidAddEmailService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getEmailUrl() + '/api/v1/email/didadd', {}, {});
   })
 
   .factory('IdentityOTPService', function ($resource, HuronConfig) {

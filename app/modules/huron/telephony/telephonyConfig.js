@@ -25,12 +25,6 @@
             prod: 'https://hermes.huron-dev.com'
           },
 
-          storefrontUrl: {
-            dev: 'https://storefront.hitest.huron-dev.com',
-            integration: 'https://storefront.hitest.huron-dev.com',
-            prod: 'https://storefront.huron-dev.com'
-          },
-
           getCmiUrl: function () {
             if (Config.isDev()) {
               return this.cmiUrl.dev;
@@ -58,16 +52,6 @@
               return this.ocelotUrl.integration;
             } else {
               return this.ocelotUrl.prod;
-            }
-          },
-
-          getStorefrontUrl: function () {
-            if (Config.isDev()) {
-              return this.storefrontUrl.dev;
-            } else if (Config.isIntegration()) {
-              return this.storefrontUrl.integration;
-            } else {
-              return this.storefrontUrl.prod;
             }
           }
 

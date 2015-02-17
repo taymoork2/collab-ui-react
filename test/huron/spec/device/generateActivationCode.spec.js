@@ -79,14 +79,14 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
         });
 
         it('should send email and notify success', function () {
-          $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/activationcode').respond(200);
+          $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/api/v1/email/activationcode').respond(200);
           controller.sendActivationCodeEmail();
           $httpBackend.flush();
           expect(Notification.notify.calledWith(['generateActivationCodeModal.emailSuccess'], 'success')).toBe(true);
         });
 
         it('should try to send email and notify error', function () {
-          $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/activationcode').respond(500);
+          $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/api/v1/email/activationcode').respond(500);
           controller.sendActivationCodeEmail();
           $httpBackend.flush();
           expect(Notification.notify.calledOnce).toBe(true);

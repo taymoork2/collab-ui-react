@@ -10,7 +10,8 @@ describe('Controller: DidAddCtrl', function () {
   beforeEach(module('uc.didadd'));
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('1')
+    getOrgId: sinon.stub().returns('1'),
+    getOrgName: sinon.stub().returns('awesomeco')
   };
 
   beforeEach(module(function($provide) {
@@ -187,14 +188,14 @@ describe('Controller: DidAddCtrl', function () {
         });
 
         it('should send email and report success notification', function() {
-          $httpBackend.whenPOST(HuronConfig.getStorefrontUrl() + '/email/customer').respond(200);
+          $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/api/v1/email/didadd').respond(200);
           controller.sendEmail();
           $httpBackend.flush();
           expect(Notification.notify.calledOnce).toBe(true);
         });
 
         it('should report error notification when email cannot be sent', function() {
-          $httpBackend.whenPOST(HuronConfig.getStorefrontUrl() + '/email/customer').respond(500);
+          $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/api/v1/email/didadd').respond(500);
           controller.sendEmail();
           $httpBackend.flush();
           expect(Notification.notify.calledOnce).toBe(true);

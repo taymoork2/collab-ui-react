@@ -26,7 +26,7 @@
             <i class="icon icon-check-mark-success"></i>
             <p ng-if="didAdd.successCount" translate="didAddModal.successText" translate-values="{count: didAdd.successCount}"></p>
             <p ng-if="didAdd.failCount" translate="didAddModal.failText" translate-values="{count: didAdd.failCount}"></p>
-            <button ng-disabled="true" class="btn btn-info btn-lg" ng-click="didAdd.sendEmail()" translate="didAddModal.sendEmail"></button>
+            <button class="btn btn-info btn-lg" ng-click="didAdd.sendEmail()" translate="didAddModal.sendEmail"></button>
         </div>
         <div class="modal-footer">
             <a href ng-click="$dismiss()" translate="didAddModal.notifyCustLater"></a>

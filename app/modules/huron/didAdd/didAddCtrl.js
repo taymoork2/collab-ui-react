@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($scope, $state, $stateParams, $q, $translate, ExternalNumberPool, StorefrontEmailService, Notification) {
+  function DidAddCtrl($scope, $state, $stateParams, $q, $translate, ExternalNumberPool, DidAddEmailService, Notification, Authinfo) {
     var vm = this;
     vm.invalidcount = 0;
     vm.submitBtnStatus = false;
@@ -118,18 +118,12 @@
     };
 
     function sendEmail() {
-      var recipient = {
-        recipient: 'customer'
-      };
-      var custInfo = {
+      var emailInfo = {
+        'email': vm.currentOrg.customerEmail,
         'customerName': vm.currentOrg.customerName,
-        'customerEmail': vm.currentOrg.customerEmail,
-        'orderNumber': '123abc789xyz',
-        'orderPackageInfo': 'Standard Package',
-        'numberOfDids': vm.successCount,
-        'pstnCompany': 'Verizon'
+        'partnerName': Authinfo.getOrgName()
       };
-      StorefrontEmailService.save(recipient, custInfo, function (data) {
+      DidAddEmailService.save({}, emailInfo, function (data) {
         var successMsg = [$translate.instant('didAddModal.emailSuccessText')];
         Notification.notify(successMsg, 'success');
       }, function (err) {
