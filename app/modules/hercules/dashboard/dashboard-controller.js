@@ -3,13 +3,26 @@
 /* global _ */
 
 angular.module('Hercules')
-  .controller('DashboardController', ['$scope', '$rootScope', '$http', '$modal', 'ConnectorService', 'Notification',
-    function ($scope, $rootScope, $http, $modal, service, notif) {
+  .controller('DashboardController', ['$scope', '$interval', '$http', '$modal', 'ConnectorService', 'Notification',
+    function ($scope, $interval, $http, $modal, service, notif) {
       $scope.loading = true;
       $scope.inflight = false;
+      $scope._promise = true;
       $scope.panelStates = {};
       $scope.visibleAlarm = {};
+      $scope.pollHasFailed = false;
       $scope.deleteHostInflight = false;
+
+      $scope._poll = function () {
+        if ($scope._promise) {
+          $scope._promise = $interval($scope.reload, 2000, 1);
+        }
+      };
+
+      $scope.$on('$destroy', function () {
+        $scope._promise = null;
+        $interval.cancel($scope._promise);
+      });
 
       $scope.reload = function (callback) {
         $scope.inflight = true;
@@ -24,6 +37,9 @@ angular.module('Hercules')
             }
           });
           callback();
+          if (err) return $scope.pollHasFailed = true;
+          $scope.pollHasFailed = false;
+          $scope._poll();
         });
       };
 

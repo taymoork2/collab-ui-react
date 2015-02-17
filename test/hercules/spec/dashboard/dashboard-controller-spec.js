@@ -1,7 +1,7 @@
 describe('DashboardController', function() {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $scope, controller, service;
+  var $scope, $interval, controller, service;
 
   beforeEach(inject(function(_$controller_){
     service = {
@@ -9,12 +9,58 @@ describe('DashboardController', function() {
       services: sinon.stub(),
       upgradeSoftware: sinon.stub()
     }
-    $scope = {}
+    $scope = {
+      $on: sinon.stub()
+    }
+    $interval = sinon.stub();
+    $interval.cancel = sinon.stub();
     controller = _$controller_('DashboardController', {
       $scope: $scope,
+      $interval: $interval,
       ConnectorService: service
     });
   }));
+
+  it('calls poll after fetch success', function() {
+    $scope._poll = sinon.stub();
+    service.fetch.callArgWith(0, null, 'clusterdata');
+    expect($scope._poll.callCount).toBe(1);
+  });
+
+  it('resets poll has failed after success', function() {
+    $scope.pollHasFailed = true;
+    service.fetch.callArgWith(0, null, 'clusterdata');
+    expect($scope.pollHasFailed).toBe(false);
+  });
+
+  it('does not poll after fetch fail, but shows button', function() {
+    $scope._poll = sinon.stub();
+    expect($scope.pollHasFailed).toBe(false);
+    service.fetch.callArgWith(0, 'err', 'clusterdata');
+    expect($scope._poll.callCount).toBe(0);
+    expect($scope.pollHasFailed).toBe(true);
+  });
+
+  it('polls until interval is nulled', function() {
+    $interval.returns(true);
+    expect($interval.callCount).toBe(0);
+    $scope._poll();
+    expect($interval.callCount).toBe(1);
+    $scope._poll();
+    expect($interval.callCount).toBe(2);
+    $scope._promise = null;
+    $scope._poll();
+    expect($interval.callCount).toBe(2);
+  });
+
+  it('clears interval on destroy', function() {
+    expect($scope.$on.calledOnce).toEqual(true);
+    expect($interval.cancel.callCount).toEqual(0);
+    expect($scope._promise).not.toBe(null);
+    $scope.$on.callArg(1);
+    expect($interval.cancel.callCount).toEqual(1);
+    expect($scope._promise).toBe(null);
+  });
 
   it('initializes scope.loading and fetches initial data', function() {
     expect($scope.loading).toEqual(true);
