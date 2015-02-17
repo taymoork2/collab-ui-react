@@ -9,7 +9,7 @@ angular
       service.read(function (err, config) {
         $scope.loading = false;
         if (err) return notification.notify(err);
-        $scope.config = config;
+        $scope.config = config || {};
       });
 
       $scope.writeConfig = function () {

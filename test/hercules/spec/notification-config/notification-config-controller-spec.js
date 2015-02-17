@@ -29,6 +29,12 @@ describe('NotificationConfigController', function() {
     expect($scope.config.foo).toBe('bar');
   });
 
+  it('inits to default object when fetch returns null', function() {
+    service.read.callArgWith(0, null, null);
+    expect($scope.config).not.toBe(null);
+    expect(_.size($scope.config)).toBe(0);
+  });
+
   it('notifies when read fails', function() {
     expect($scope.loading).toBe(true);
     expect(service.read.callCount).toBe(1);
