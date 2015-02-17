@@ -28,6 +28,12 @@ describe('Hercules: SetupController', function() {
     expect($interval.calledOnce).toEqual(true);
   });
 
+  it('stops polling on error', function() {
+    $scope._poll = sinon.stub()
+    service.fetch.callArgWith(0, 'err', 'foo');
+    expect($scope._poll.callCount).toEqual(0);
+  });
+
   it('clears interval on destroy', function() {
     expect($scope.$on.calledOnce).toEqual(true);
     expect($interval.cancel.callCount).toEqual(0);

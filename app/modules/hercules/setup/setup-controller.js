@@ -16,7 +16,7 @@ angular.module('Hercules')
       var fetch = function () {
         $scope.clusters = service.fetch(function (err, clusters) {
           $scope.clusters = clusters || [];
-          $scope._poll();
+          if (!err) $scope._poll();
         });
       };
 
