@@ -384,7 +384,7 @@ angular.module('Core')
 
       config.roleStates = {
         Full_Admin: [
-          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard', 'meetings', 'vts', 'groups'
+          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard', 'groups'
         ],
         Support: ['overview', 'reports', 'support'],
         WX2_User: ['overview', 'reports', 'support'],
