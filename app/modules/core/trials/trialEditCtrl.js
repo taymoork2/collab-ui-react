@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($state, $stateParams, $translate, Authinfo, PartnerService, Notification) {
+  function TrialEditCtrl($state, $stateParams, $translate, Authinfo, TrialService, Notification) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -69,7 +69,7 @@
         }
       }
       angular.element('#saveSendButton').button('loading');
-      return PartnerService.editTrial(vm.currentTrial.duration, vm.currentTrial.trialId, vm.currentTrial.licenses, vm.currentTrial.usage, vm.currentTrial.customerOrgId, offersList)
+      return TrialService.editTrial(vm.currentTrial.trialId, vm.currentTrial.duration, vm.currentTrial.licenses, vm.currentTrial.usage, vm.currentTrial.customerOrgId, offersList)
         .then(function (data, status) {
           angular.element('#saveSendButton').button('reset');
           angular.extend($stateParams.currentTrial, vm.currentTrial);

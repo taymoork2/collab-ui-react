@@ -1,19 +1,18 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, Notification, PartnerService, HuronCustomer;
+  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer;
 
-  beforeEach(module('Squared'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _PartnerService_, _HuronCustomer_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
     $state = _$state_;
     Notification = _Notification_;
-    PartnerService = _PartnerService_;
+    TrialService = _TrialService_;
     HuronCustomer = _HuronCustomer_;
 
     spyOn(Notification, 'notify');
@@ -24,7 +23,7 @@ describe('Controller: TrialAddCtrl', function () {
       $scope: $scope,
       $translate: $translate,
       $state: $state,
-      PartnerService: PartnerService,
+      TrialService: TrialService,
       HuronCustomer: HuronCustomer,
       Notification: Notification
     });
@@ -46,13 +45,7 @@ describe('Controller: TrialAddCtrl', function () {
 
   describe('Start a new trial', function () {
     beforeEach(function () {
-      spyOn(PartnerService, "startTrial").and.returnValue($q.when({
-        data: {
-          customerOrgId: '123',
-          customerName: 'My Test Trial',
-          customerEmail: 'myTestTrial@gmail.com'
-        }
-      }));
+      spyOn(TrialService, "startTrial").and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
     });
 
     describe('With optional flag', function () {
@@ -122,7 +115,7 @@ describe('Controller: TrialAddCtrl', function () {
   describe('Start a new trial with error', function () {
     var startTrialSpy;
     beforeEach(function () {
-      startTrialSpy = spyOn(PartnerService, "startTrial").and.returnValue($q.reject({
+      startTrialSpy = spyOn(TrialService, "startTrial").and.returnValue($q.reject({
         data: {
           message: 'An error occurred'
         }

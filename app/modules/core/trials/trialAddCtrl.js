@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, PartnerService, HuronCustomer, Notification, Config) {
+  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config) {
     var vm = this;
 
     vm.customerOrgId = null;
@@ -72,7 +72,7 @@
         }
       }
 
-      return PartnerService.startTrial(vm.customerName, vm.customerEmail, offersList, vm.licenseCount, vm.licenseDuration, vm.startDate)
+      return TrialService.startTrial(vm.customerName, vm.customerEmail, vm.licenseDuration, vm.licenseCount, vm.startDate, offersList)
         .catch(function (response) {
           angular.element('#startTrialButton').button('reset');
           Notification.notify([response.data.message], 'error');

@@ -1,10 +1,8 @@
 'use strict';
 
 describe('Controller: TrialEditCtrl', function () {
-  var controller, $scope, $state, $q, $translate, Notification, PartnerService;
+  var controller, $scope, $state, $q, $translate, Notification, TrialService;
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
   var stateParams = {
@@ -17,13 +15,13 @@ describe('Controller: TrialEditCtrl', function () {
     }
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Notification_, _PartnerService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Notification_, _TrialService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
     Notification = _Notification_;
-    PartnerService = _PartnerService_;
+    TrialService = _TrialService_;
 
     spyOn(Notification, 'notify');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
@@ -32,7 +30,7 @@ describe('Controller: TrialEditCtrl', function () {
       $scope: $scope,
       $translate: $translate,
       $stateParams: stateParams,
-      PartnerService: PartnerService,
+      TrialService: TrialService,
       Notification: Notification
     });
      $scope.$apply();
@@ -59,9 +57,7 @@ describe('Controller: TrialEditCtrl', function () {
 
     describe('Edit a trial', function () {
       beforeEach(function () {
-        spyOn(PartnerService, "editTrial").and.returnValue($q.when({
-          data: {}
-        }));
+        spyOn(TrialService, "editTrial").and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
         controller.editTrial();
         $scope.$apply();
       });
@@ -77,7 +73,7 @@ describe('Controller: TrialEditCtrl', function () {
 
     describe('Edit a trial with error', function () {
       beforeEach(function () {
-        spyOn(PartnerService, "editTrial").and.returnValue($q.reject({
+        spyOn(TrialService, "editTrial").and.returnValue($q.reject({
           data: {
             message: 'An error occurred'
           }
