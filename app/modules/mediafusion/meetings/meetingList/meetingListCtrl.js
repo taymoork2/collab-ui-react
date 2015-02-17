@@ -25,7 +25,7 @@ angular.module('Mediafusion')
         "ROOM": "icon icon-voicemail"
       };
 
-      $scope.searchString = '';
+      $scope.searchString = "";
       $scope.load = true;
       $scope.currentDataPosition = 1;
       $scope.lastScrollPosition = 0;
@@ -209,7 +209,7 @@ angular.module('Mediafusion')
        * searchMeetingList will search in meeting table data. Its a search happens in DB.
        */
       $scope.searchMeetingList = function () {
-        if ($scope.searchString && $scope.searchString != null) {
+        if ($scope.searchString != null) {
           $scope.currentDataPosition = 1
           getMeetingList($scope.currentDataPosition);
         }
