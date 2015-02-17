@@ -25,6 +25,16 @@ describe('DashboardController', function() {
     expect($scope.clusters).toBe('clusterdata');
   });
 
+  it('expands all panels except the ones that have been collapsed', function() {
+    $scope.panelStates['foo'] = false;
+    $scope.panelStates['bar'] = null;
+
+    service.fetch.callArgWith(0, null, [{id: 'foo'},{id: 'bar'},{id: 'baz'}]);
+    expect($scope.panelStates['foo']).toBe(false);
+    expect($scope.panelStates['bar']).toBe(true);
+    expect($scope.panelStates['baz']).toBe(true);
+  });
+
   it('returns empty array on fubar data from backend', function() {
     service.fetch.callArgWith(0, null, null);
     expect($scope.clusters).toEqual([]);

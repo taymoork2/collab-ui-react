@@ -7,6 +7,7 @@ angular.module('Hercules')
     function ($scope, $rootScope, $http, $modal, service, notif) {
       $scope.loading = true;
       $scope.inflight = false;
+      $scope.panelStates = {};
       $scope.visibleAlarm = {};
       $scope.deleteHostInflight = false;
 
@@ -17,6 +18,11 @@ angular.module('Hercules')
           $scope.clusters = data || [];
           $scope.loading = false;
           $scope.inflight = false;
+          _.each($scope.clusters, function (c) {
+            if ($scope.panelStates[c.id] !== false) {
+              $scope.panelStates[c.id] = true;
+            }
+          });
           callback();
         });
       };
