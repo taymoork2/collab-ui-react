@@ -14,7 +14,7 @@ Technology
 * Styling the application is done using LESS:
   http://webdesign.tutsplus.com/articles/get-into-less-the-programmable-stylesheet-language--webdesign-5216
 * Styling is based on Bootstrap CSS, a custom Cisco Bootstrap CSS is used for the portal:
-  http://10.89.58.222/collab-library/build/#/overview
+  http://collab-lib.cisco.com/dist/#/overview
 * Localization is done using angular translation
 * Unit testing is written using Karma
 * End to end testing is based on the JS Selenium framework: Protractor
