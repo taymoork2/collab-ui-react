@@ -43,6 +43,12 @@
     "inviteUsers": "Invite Users",
     "partners": "Partner Administrators"
   },
+  "groupsPage": {
+    "manageGroups": "Groups",
+    "all": "All",
+    "groupNameHeader" : "Group name",
+    "membersCountHeader" : "Members"
+    },
   "onboardModal": {
     "onboardUsers": "Onboard Users",
     "cancel": "Cancel",

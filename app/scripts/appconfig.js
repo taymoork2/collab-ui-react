@@ -188,6 +188,20 @@ angular
             device: {}
           }
         })
+        .state('groups', {
+          abstract: true,
+          template: '<div ui-view></div>',
+          parent: 'main'
+        })
+        .state('groups.list', {
+          url: '/groups',
+          templateUrl: 'modules/core/groups/groupList/groupList.tpl.html',
+          controller: 'ListGroupsCtrl'
+        })
+        .state('groups.list.preview', {
+          templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
+          controller: 'GroupPreviewCtrl'
+        })
         .state('organization', {
           url: '/organization',
           templateUrl: 'modules/core/views/organizations.html',
