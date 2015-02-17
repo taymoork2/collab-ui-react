@@ -10,7 +10,8 @@
 
 var testuser = {
   username: 'super-admin@mfusion1webex.com',
-  password: 'Mc23267!'
+  password: 'Mc23267!',
+  searchStr: 'fake'
 };
 
 
@@ -39,24 +40,52 @@ describe('List meetings flow', function () {
     login.login(testuser.username, testuser.password);
   });
 
-  // Asserting listing meetings.
+  // Asserting listing meetings and pagination.
   describe('Listing meetings on page load', function () {
     it('clicking on meetings tab should change the view', function () {
       navigation.clickMeetings();
     });
 
-    /*
-    // If pagination is implemented
-    it('should show first page of meetings', function () {
-      meetings.assertPage('1');
-    });
-     */
-
     it('should list more than 0 meetings', function () {
       meetings.assertResultsLength(0);
     });
+
+    it('should list less than or equal to 50 meetings', function () {
+      meetings.assertResultsLength(50);
+    });
+
   });
 
+  // Asserting meetings preview.
+  describe('Display meeting information', function () {
+    it('display meeting preview panel when clicking on a meeting', function () {
+      meetings.clickOnMeeting();
+      expect(meetings.meetingPreviewLink.isDisplayed()).toBeTruthy();
+    });
+  });
+
+  // Asserting search users.
+  describe('search users on page', function () {
+    it('should show first page of users based on search string', function () {
+      meetings.search(testuser.searchStr);
+    });
+
+    it('should show first page of users for empty search string', function () {
+      meetings.searchEmpty('');
+    });
+
+  });
+
+  // Asserting pagination - page scroll to bottom and count meetings
+  describe('page scroll to bottom and count meetings', function () {
+    it('should scroll to bottom and list more than 50 meetings', function () {
+      browser.executeScript('window.scrollTo(0,10000);').then(function () {
+        meetings.assertResultsLength(51);
+      });
+    });
+  });  
+
+  
   describe('launch feedback page', function () {
     it('click feedback and launch form page', function () {
       browser.driver.manage().window().setSize(1195, 569);
