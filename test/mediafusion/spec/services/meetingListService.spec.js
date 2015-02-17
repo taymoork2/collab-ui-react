@@ -7,7 +7,7 @@ describe('Service: MeetingListService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   //Initialize variables
-  var MeetingListService,httpBackend,meetinglistData,meetingLdrBrdData,meetinglistinfoData,participantlistData;
+  var MeetingListService,httpBackend,meetinglistData,meetinglistinfoData,participantlistData;
 
   /* Instantiate service.
   * Reading the json data to application variable.
@@ -15,7 +15,6 @@ describe('Service: MeetingListService', function () {
   */
   beforeEach(inject(function ($httpBackend,_MeetingListService_) {
     meetinglistData = getJSONFixture('mediafusion/json/meetings/meetingListData.json');
-    meetingLdrBrdData = getJSONFixture('mediafusion/json/meetings/meetingLeaderBoardData.json');
     meetinglistinfoData = getJSONFixture('mediafusion/json/meetings/meetingListinfoData.json');
     participantlistData = getJSONFixture('mediafusion/json/meetings/participantListData.json');
     httpBackend = $httpBackend;
@@ -23,10 +22,6 @@ describe('Service: MeetingListService', function () {
     //Making a fake call to return json data to make unit test cases to be passed for Meetings table.
     httpBackend.when('GET', 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getallminmeeting')
                .respond(200, meetinglistData);
-
-    //Making a fake call to return json data to make unit test cases to be passed for leader board UI.
-    httpBackend.when('GET', 'http://multimediafusion-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getEnterpriseAndCloudMeetings')
-               .respond(200, meetingLdrBrdData);
 
     //Making a fake call to return json data to make unit test cases to be passed for Meetings table to show additional info.
     httpBackend.when('GET', 'http://multimediafusion-cf-krishna.mb-lab.huron.uno/admin/api/v1/meeting/getaddninfo?id='+meetinglistinfoData.meetings.id)
@@ -87,24 +82,20 @@ it("MeetingListService.listParticipantsinfo should be defined", function(){
     expect(MeetingListService.searchfilter).not.toBeNull();
   });
 
-  it("MeetingListService.getMeetingsAndParticipants should be defined", function(){
-      expect(MeetingListService.getMeetingsAndParticipants).toBeDefined();
-  });
-
   it('Total EnterpriseMeetings should be 5000', function () {
-    expect(meetingLdrBrdData.totalEnterpriseMeetings).toBe(5000);
+    expect(meetinglistData.totalEnterpriseMeetings).toBe(5000);
   });
 
   it('Total EnterpriseParticipants should be 6000', function () {
-    expect(meetingLdrBrdData.totalEnterpriseParticipants).toBe(6000);
+    expect(meetinglistData.totalEnterpriseParticipants).toBe(6000);
   });
 
   it('Total CloudMeetings should be 7000', function () {
-    expect(meetingLdrBrdData.totalCloudMeetings).toBe(7000);
+    expect(meetinglistData.totalCloudMeetings).toBe(7000);
   });
 
   it('Total CloudParticipants should be 8000', function () {
-    expect(meetingLdrBrdData.totalCloudParticipants).toBe(8000);
+    expect(meetinglistData.totalCloudParticipants).toBe(8000);
   });
 
 });

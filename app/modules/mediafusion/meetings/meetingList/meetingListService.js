@@ -51,35 +51,6 @@ angular.module('Mediafusion')
             });
         },
 
-        /**
-         * Fetching the Number of Enterprise and Cloud meetings and its respective participants.
-         * This method can be removed as its handled in another method meetingChartInfo
-         */
-        getMeetingsAndParticipants: function (callback) {
-
-          var entAndCloudMeetingsUrl = Utils.sprintf(baseUrl + '/meeting/getEnterpriseAndCloudMeetings', [Authinfo.getOrgId()]);
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
-          //Actual rest call to get meeting info from server and also error case is handeled.
-          $http.get(entAndCloudMeetingsUrl)
-            .success(function (data, status) {
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-              Auth.handleStatus(status, description);
-            });
-        },
-
         listMeetingsinfo: function (startDateTime, callback) {
           var meetinginfolistUrl = Utils.sprintf(meetinginfoUrl + '/meeting/getAddnInfo?id=' + $rootScope.meetingid, [Authinfo.getOrgId()]);
           meetinginfolistUrl = meetinginfolistUrl + "&startDateTime=" + startDateTime;
