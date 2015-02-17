@@ -7,7 +7,7 @@ describe('Controller: ListMeetingsCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   //Initialize variables
-  var MeetingsCtrl,scope,httpBackend,meetinglistData,meetingLdrBrdData,meetinglistinfoData,participantlistData;
+  var MeetingsCtrl,scope,httpBackend,meetinglistData,meetinglistinfoData,participantlistData;
 
    /* Initialize the controller and a mock scope
   * Reading the json data to application variable.
@@ -17,7 +17,6 @@ describe('Controller: ListMeetingsCtrl', function () {
     scope = $rootScope.$new();
 
     meetinglistData = getJSONFixture('mediafusion/json/meetings/meetingListData.json');
-    meetingLdrBrdData = getJSONFixture('mediafusion/json/meetings/meetingLeaderBoardData.json');
     meetinglistinfoData = getJSONFixture('mediafusion/json/meetings/meetingListinfoData.json');
     participantlistData = getJSONFixture('mediafusion/json/meetings/participantListData.json');
 
@@ -29,10 +28,10 @@ describe('Controller: ListMeetingsCtrl', function () {
     scope.querymeetingslistinfo = meetinglistinfoData.meetings;
     scope.queryparticipantlistinfo = participantlistData.partDetails;
     scope.searchString = meetinglistData.searchString;
-    scope.totalEnterpriseMeetings = meetingLdrBrdData.totalEnterpriseMeetings;
-    scope.totalEnterpriseParticipants = meetingLdrBrdData.totalEnterpriseParticipants;
-    scope.totalCloudMeetings = meetingLdrBrdData.totalCloudMeetings;
-    scope.totalCloudParticipants = meetingLdrBrdData.totalCloudParticipants;
+    scope.totalEnterpriseMeetings = meetinglistData.totalEnterpriseMeetings;
+    scope.totalEnterpriseParticipants = meetinglistData.totalEnterpriseParticipants;
+    scope.totalCloudMeetings = meetinglistData.totalCloudMeetings;
+    scope.totalCloudParticipants = meetinglistData.totalCloudParticipants;
 
   }));
 
@@ -88,10 +87,6 @@ describe('Controller: ListMeetingsCtrl', function () {
 
   it('Search String should be SearchKey', function () {
     expect(scope.searchString).toBe("SearchKey");
-  });
-
-  it('getEnterpriseAndCloudMeetings() should be defined', function () {
-    expect(scope.getEnterpriseAndCloudMeetings).toBeDefined();
   });
 
   it('Total EnterpriseMeetings should be 5000', function () {

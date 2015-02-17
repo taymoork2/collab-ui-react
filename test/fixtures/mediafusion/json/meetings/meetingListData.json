@@ -1,6 +1,10 @@
 {
 	"success" : true,
 	"searchString" : "SearchKey",
+	"totalEnterpriseMeetings" : 5000,
+	"totalEnterpriseParticipants" : 6000,
+	"totalCloudMeetings" : 7000,
+	"totalCloudParticipants" : 8000,
 	"meetings" :
 	[{	"status": "Active", 
 		"subject": "Test1",

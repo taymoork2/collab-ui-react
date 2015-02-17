@@ -81,6 +81,9 @@ angular.module('Mediafusion')
         }]
       };
 
+      /**
+       * Creating Meeting Chart Graph.
+       */
       var createMeetingChart = function () {
 
         var meetingChart = AmCharts.makeChart("meetingChartDiv", {
@@ -213,24 +216,8 @@ angular.module('Mediafusion')
       };
 
       /**
-       * Method is to fetch Enterprise and Cloud meetings and its respective participants count.
-       * We can remove this function as we are not using it currently.ITs handled in populateLeaderBoard method
-       */
-      $scope.getEnterpriseAndCloudMeetings = function () {
-        MeetingListService.getMeetingsAndParticipants(function (data, status) {
-          if (data.success) {
-            $scope.totalEnterpriseMeetings = data.totalEnterpriseMeetings;
-            $scope.totalEnterpriseParticipants = data.totalEnterpriseParticipants;
-            $scope.totalCloudMeetings = data.totalCloudMeetings;
-            $scope.totalCloudParticipants = data.totalCloudParticipants;
-          } else {
-            Log.debug('Query existing meetings failed. Status: ' + status);
-          }
-        });
-      };
-
-      /**
        * Handling graphItemOnClick to load meeting and leaderboard data.
+       * Here We are actually parsing the time from X-Axis and sending the time to createTimeStamp.
        */
 
       function handleMeetingChartItemClick(event) {
@@ -265,7 +252,7 @@ angular.module('Mediafusion')
       };
 
       /**
-       * Incrementing the dates.
+       * Incrementing the dates accroding to calendar.
        */
       $scope.incrementDay = function (duraType) {
         var currentDate = new Date();
@@ -281,7 +268,7 @@ angular.module('Mediafusion')
       };
 
       /**
-       * Decrementing the dates.
+       * Decrementing the dates accroding to calendar.
        */
       $scope.decrementDay = function (duraType) {
         var currentDate = new Date();
