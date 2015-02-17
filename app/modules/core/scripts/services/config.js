@@ -30,14 +30,14 @@ angular.module('Core')
 
         meetingServiceUrl: {
           dev: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-          integration: 'https://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-          prod: 'https://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1'
+          integration: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
+          prod: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1'
         },
 
         MeetinginfoserviceUrl: {
           dev: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-          integration: 'https://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-          prod: 'https://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1'
+          integration: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
+          prod: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1'
         },
 
         oauthClientRegistration: {
