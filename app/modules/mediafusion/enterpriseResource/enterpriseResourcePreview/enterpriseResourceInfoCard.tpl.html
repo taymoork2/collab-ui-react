@@ -1,7 +1,7 @@
 <div class="user-info-card standard-card row">
 	<div class="info-card-name">
 		<div class="info-card-image col-xs-10">
-			<h2 class="user-title">{{currentVts.name}}</h2>
+			<h2 class="user-title-bold">{{currentVts.ipAddress}}</h2>
 		</div>
 		<div class="cancel cancel-btn info-card-image col-xs-2 icon icon-close" ng-click="closePreview()" id="exitPreviewButton">
 		</div>
@@ -10,9 +10,9 @@
 		<div class="info-card-image col-xs-2">
 		</div>
 		<div class="info-card-image col-xs-10">
-			<div class="user-title">Type: {{currentVts.kind}}</div>
-			<div class="user-title">IP Address: {{currentVts.host}}</div>
-			<div class="user-title">Description: {{currentVts.description}}</div>
+			<div class="user-title">Type: VTS</div>
+			<div class="user-title">IP Address: {{currentVts.ipAddress}}</div>
+			<div class="user-title">softwareVersion: 8.2.1</div>
 		</div>
 	</div>
 </div>

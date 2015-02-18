@@ -778,7 +778,14 @@
     "enterpriseResources": "Enterprise Resources",
     "name" : "Name",
     "status": "Status",
-    "delete": "Delete",
-    "actionsHeader": "Actions"
+    "delete": "Decomission",
+    "takeOffline": "Take offline",
+    "bringOnline": "Bring online",
+    "actionsHeader": "Actions",
+    "deleteResource": "Decomission Resource",
+    "deleteResourceConfText1": "Are you sure you want to decomission this resource?",
+    "deleteResourceConfText2": "It will be disconnected from the cloud and taken offline.",
+    "cancel": "Cancel",
+    "deleteResource": "Decomission Resource"
   }
 }

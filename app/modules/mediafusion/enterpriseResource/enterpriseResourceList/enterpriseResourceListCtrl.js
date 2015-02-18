@@ -8,7 +8,10 @@ angular.module('Mediafusion')
       $scope.vtsPreviewActive = false;
       $scope.currentVts = null;
       $scope.totalResults = 0;
+      $scope.deleteResourceId = null;
+      $scope.showPreview = true;
 
+      /*getVtsList function to populate list of enterprise resource*/
       var getVtsList = function () {
         $scope.vtsPreview = false;
         console.log("Calling service ");
@@ -37,36 +40,64 @@ angular.module('Mediafusion')
         $state.go('vts.list');
       };
 
-      $scope.remove = function () {
-        vtslistservice.remove($scope.currentVts.id, function (data, status) {
-          console.log("callback remove");
-          if (data) {
-            console.log("callback remove data " + data);
-            var success = [$filter('translate')('Enterprse resource, ' + $scope.currentVts.name + ' removed successfully.')];
+      /*setState used for suspend/resume operation*/
+      $scope.setState = function (resourceId, currentState) {
+        console.log("inside setState resourceId = " + resourceId + " currentState = " + currentState);
+        $scope.showPreview = false;
+        vtslistservice.changeState(resourceId, currentState, function (data, status) {
+          console.log("callback changeState data.success = " + data.success);
+          if (status == 204) {
+            console.log("callback changeState data " + data);
+            console.log("callback changeState status " + status);
+            var success = [$filter('translate')('Enterprse resource state changed successfully.')];
             Notification.notify(success, 'success');
-            $state.go('vts.list');
-            //$window.location.reload()
+            setTimeout(function () {
+              getVtsList();
+            }, 1000);
           } else {
-            var error = [$filter('translate')('Error while removing enterprise resource, ' + $scope.currentVts.name)];
+            console.log("callback changeState data " + data);
+            console.log("callback changeState status " + status);
+            var error = [$filter('translate')('Error while changing state.')];
             Notification.notify(error, 'error');
+            setTimeout(function () {
+              getVtsList();
+            }, 1000);
           }
         });
+      };
+
+      $scope.setDeleteResource = function (resourceId) {
+        console.log("inside setDeleteResource resourceId = " + resourceId);
+        $scope.deleteResourceId = resourceId;
+        $scope.showPreview = false;
 
       };
 
-      var setState = function () {
+      $scope.cancelDelete = function () {
+        $scope.deleteResourceId = null;
+        //$scope.showPreview = true;
+        $state.go('vts.list');
+      };
 
-        vtslistservice.changeState($scope.currentVts, function (data, status) {
+      /*deleteResource is to decomission a resource*/
+      $scope.deleteResource = function (deleteResourceId) {
+        console.log("inside deleteResource deleteResourceId = " + deleteResourceId);
+        vtslistservice.remove($scope.deleteResourceId, function (data, status) {
           console.log("callback remove");
-          if (data) {
+          if (status == 204) {
             console.log("callback remove data " + data);
-            var success = [$filter('translate')('Enterprse resource, ' + $scope.currentVts.name + ' removed successfully.')];
+            var success = [$filter('translate')('Enterprse resource decomissioned successfully.')];
             Notification.notify(success, 'success');
-            $state.go('vts.list');
+            setTimeout(function () {
+              getVtsList();
+            }, 1000);
             //$window.location.reload()
           } else {
-            var error = [$filter('translate')('Error while removing enterprise resource, ' + $scope.currentVts.name)];
+            var error = [$filter('translate')('Error while decomissioning enterprise resource.')];
             Notification.notify(error, 'error');
+            setTimeout(function () {
+              getVtsList();
+            }, 1000);
           }
         });
 
@@ -82,12 +113,18 @@ angular.module('Mediafusion')
         '<div ng-cell></div>' +
         '</div>';
 
+      var nameTemplate = '<div class="ngCellText"><div class="device-name-desc">{{row.getProperty(col.field)}}</div></div>';
+
+      var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
+        '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|status}}</p></div>';
+
       var actionsTemplate = '<span dropdown class="device-align-ellipses">' +
         '<button id="actionlink" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
-        '<li id="deleteDeviceAction"><a data-toggle="modal" data-target="#deleteDeviceModal" ng-click=""><span translate="spacesPage.delete"></span></a></li>' +
+        '<li id="setStateAction"><a ng-click="setState(row.entity.id,row.entity.mgmtStatus)"><span translate="{{row.entity.mgmtStatus|suspendResume}}"></span></a></li>' +
+        '<li id="deleteDeviceAction"><a data-toggle="modal" data-target="#deleteDeviceModal" ng-click="setDeleteResource(row.entity.id)"><span translate="vtsPage.delete"></span></a></li>' +
         '</ul>' +
         '</span>';
 
@@ -104,32 +141,36 @@ angular.module('Mediafusion')
         useExternalSorting: false,
 
         columnDefs: [{
-            field: 'name',
-            displayName: $filter('translate')('vtsPage.name')
-          }, {
-            field: 'opState',
-            cellTemplate: statusTemplate,
-            cellFilter: 'statusFilter',
-            displayName: $filter('translate')('vtsPage.status')
-          }
-          /*, {
-                    field: 'action',
-                    displayName: $filter('translate')('spacesPage.actionsHeader'),
-                    sortable: false,
-                    cellTemplate: actionsTemplate,
-          		  width: 90
-                  }*/
-        ]
+          field: 'ipAddress',
+          displayName: $filter('translate')('vtsPage.name'),
+          cellTemplate: nameTemplate
+        }, {
+          field: 'mgmtStatus',
+          cellTemplate: statusTemplate,
+          cellFilter: 'statusFilter',
+          displayName: $filter('translate')('vtsPage.status')
+        }, {
+          field: 'action',
+          displayName: $filter('translate')('vtsPage.actionsHeader'),
+          sortable: false,
+          cellTemplate: actionsTemplate,
+          width: 90
+        }]
       };
       getVtsList();
 
+      /*show preview by setting the current vts object*/
       $scope.showVtsDetails = function (vts) {
         console.log("Inside showVtsDetails");
         $scope.currentVts = vts;
-        $state.go('vts.list.preview');
+        if ($scope.showPreview) {
+          $state.go('vts.list.preview');
+        }
+        $scope.showPreview = true;
       };
 
       $rootScope.$on('$stateChangeSuccess', function () {
+        console.log("Inside $stateChangeSuccess");
         if ($state.includes('vts.list.preview')) {
           $scope.vtsPreviewActive = true;
         } else {
