@@ -54,4 +54,13 @@ describe('ActivationStatusController', function() {
     expect(service.getStatusesForUser.args[1][0]).toBe("456");
   });
 
+  it('sets and clears error flag when api derps', function(){
+    expect($scope.lastRequestFailed).toBeFalsy();
+    $scope.$digest();
+    service.getStatusesForUser.callArgWith(1, true);
+    expect($scope.lastRequestFailed).toBeTruthy();
+    service.getStatusesForUser.callArgWith(1, null);
+    expect($scope.lastRequestFailed).toBeFalsy();
+  });
+
 });

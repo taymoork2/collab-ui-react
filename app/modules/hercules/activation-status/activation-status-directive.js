@@ -6,6 +6,7 @@
       $scope.$watch('currentUser', function (newUser, oldUser) {
         if (!newUser || !newUser.id) return $scope.activationStatus = null;
         ussService.getStatusesForUser(newUser.id, function (err, data) {
+          $scope.lastRequestFailed = err;
           $scope.activationStatus = data;
         });
       });
