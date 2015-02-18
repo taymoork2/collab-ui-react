@@ -1,14 +1,14 @@
-<div class="standard-card services-card row" ng-show="isEnabled">
+<div class="hercules-activation-status standard-card services-card row" ng-show="isEnabled">
   <div class="col-md-12">
     <div class="title-row row">
       <div class="col-md-12">
         <div class="title pull-left">Fusion Activation Status</div>
-        <button ng-disabled="inflight" class="btn btn-info btn-sm pull-right" ng-click="reload()" style="transition: all 0 ease 0; padding-top: 4px; min-width: 0;">
+        <button ng-disabled="inflight" class="btn btn-info btn-sm pull-right" ng-click="reload()" style="padding-top: 3px;">
           <span ng-hide="inflight">
-            <i class="icon icon-refresh" />
+            Reload
           </span>
           <span ng-show="inflight">
-            <i class="icon icon-refresh icon-spin" />
+            <i class="icon icon-spinner" />
           </span>
         </button>
       </div>

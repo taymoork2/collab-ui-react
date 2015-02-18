@@ -5,7 +5,12 @@ describe('ControllerWireing', function() {
     'FusionSetupCtrl',
     'DashboardController',
     'DashboardHeaderController',
-    'EntitledServicesController'
+    'EntitledServicesController',
+    'ActivationStatusController',
+    'UpgradeButtonController',
+    'NotificationConfigController',
+    'FusionSetupCtrl',
+    'StatusController'
   ];
 
   var $scope, aggregator;
@@ -21,7 +26,8 @@ describe('ControllerWireing', function() {
           $scope: {
             $on: sinon.stub(),
             $watch: sinon.stub()
-          }
+          },
+          $attrs: {}
         });
       } catch (e) {
         throw new Error("Failed to create " + controllerName + ". Error: " + e);

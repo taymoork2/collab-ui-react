@@ -1,4 +1,4 @@
-describe('Hercules: SetupController', function() {
+describe('FusionSetupCtrl', function() {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $scope, $interval, controller, service;
