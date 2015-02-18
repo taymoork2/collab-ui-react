@@ -1,0 +1,26 @@
+<div class="standard-card services-card row">
+  <div class="col-md-12">
+    <div class="title-row row">
+      <div class="col-md-12">
+        <div class="title pull-left">Fusion Activation Status</div>
+      </div>
+    </div>
+    <div class="services-row row">
+      <div class="col-md-12">
+        <div ng-hide="lastRequestFailed">
+          <ul ng-show="activationStatus.userStatuses">
+            <li ng-repeat="status in activationStatus.userStatuses">
+              <span translate="hercules.serviceNames.{{status.serviceId}}"></span>: <span translate="hercules.activationStatus.{{status.state}}"></span> {{status.description}}
+            </li>
+          </ul>
+          <ul ng-hide="activationStatus.userStatuses">
+            <li>No services activated</li>
+          </ul>
+        </div>
+        <ul ng-show="lastRequestFailed">
+          <li>Unable to get status</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

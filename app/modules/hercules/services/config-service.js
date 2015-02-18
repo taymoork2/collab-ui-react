@@ -8,22 +8,32 @@ angular.module('Hercules')
 
       var baseUrl = Config.getHerculesUrl();
 
-      var getUrl = function () {
-        if ($window.location.search.match(/hercules-backend=error/)) {
-          return baseUrl + 'fubar';
-        } else {
-          var regex = new RegExp("hercules-url=([^&]*)");
-          var match = $window.location.search.match(regex);
-          if (match && match.length == 2) {
-            return decodeURIComponent(match[1]);
-          } else {
-            return baseUrl + 'v1';
-          }
+      var getOverriddenUrl = function (queryParam) {
+        var regex = new RegExp(queryParam + "=([^&]*)");
+        var match = $window.location.search.match(regex);
+        if (match && match.length == 2) {
+          return decodeURIComponent(match[1]);
         }
       };
-
+      var getUrl = function () {
+        var overriddenUrl = getOverriddenUrl("hercules-url");
+        if (overriddenUrl) {
+          return overriddenUrl;
+        } else {
+          return baseUrl + 'v1';
+        }
+      };
+      var getUSSUrl = function () {
+        var overriddenUrl = getOverriddenUrl("hercules-uss-url");
+        if (overriddenUrl) {
+          return overriddenUrl;
+        } else {
+          return baseUrl + 'uss/api/v1';
+        }
+      };
       return {
-        getUrl: getUrl
+        getUrl: getUrl,
+        getUSSUrl: getUSSUrl
       };
     }
   ]);
