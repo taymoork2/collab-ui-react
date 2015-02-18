@@ -9,9 +9,9 @@
 /* global element */
 
 var testuser = {
-  username: 'super-admin@mfusion1webex.com',
-  password: 'Mc23267!',
-  searchStr: 'Narender'
+  superUser: 'super-admin@mfusion1webex.com',
+  superUserPasswd: 'Mc23267!',
+  searchStr: 'Cloud'
   //searchStr: 'Fake'
 };
 
@@ -37,58 +37,82 @@ describe('List meetings flow', function () {
     utils.scrollTop();
   });
 
-  it('should login as test user', function () {
-    login.login(testuser.username, testuser.password);
+  it('Should login as super admin', function () {
+    login.login(testuser.superUser, testuser.superUserPasswd);
   });
 
   // Asserting listing meetings and pagination.
   describe('Listing meetings on page load', function () {
-    it('clicking on meetings tab should change the view', function () {
+    it('Clicking on meetings tab should change the view', function () {
       navigation.clickMeetings();
     });
 
-    it('should list more than 0 meetings', function () {
+    it('Should list more than 0 meetings', function () {
       meetings.assertResultsLength(0);
     });
 
-    it('should list less than or equal to 50 meetings', function () {
+    it('Should list less than or equal to 50 meetings', function () {
       meetings.assertResultsLength(50);
+    });
+
+  });
+
+  // Asserting filtering of meetings
+  describe('Filter meetings on page', function () { 
+
+    it('Click on Meetings filter icon',function() {
+      meetings.clickOnFilter();
+    });
+
+    it('Provide filter values', function() {
+      meetings.provideFilterValues('Cloud');
+    });
+    
+    it('Should list filtered meetings', function () {
+        meetings.assertResultsLength(0);
+    });
+
+    it('Clear the values of filter',function() {
+      meetings.clearFilterValues();
+    });
+
+    it('Should list all meetings', function () {
+        meetings.assertResultsLength(0);
+    });
+  });
+
+  // Asserting search meetings and empty search
+  describe('Search meetings on page', function () {
+    it('Should show first page of meetings based on search string', function () {
+      meetings.search(testuser.searchStr);
+    });
+
+    it('Should show first page of meetings for empty search string', function () {
+      meetings.searchEmpty("");
     });
 
   });
 
   // Asserting meetings preview.
   describe('Display meeting information', function () {
-    it('display meeting preview panel when clicking on a meeting', function () {
+    it('Display meeting preview panel when clicking on a meeting', function () {
       meetings.clickOnMeeting();
       expect(meetings.meetingPreviewLink.isDisplayed()).toBeTruthy();
     });
-  });
-
-  // Asserting search users.
-  describe('search users on page', function () {
-    it('should show first page of users based on search string', function () {
-      meetings.search(testuser.searchStr);
-    });
-
-    it('should show first page of users for empty search string', function () {
-      meetings.searchEmpty('');
-    });
-
-  });
+  }); 
 
   // Asserting pagination - page scroll to bottom and count meetings
-  describe('page scroll to bottom and count meetings', function () {
-    it('should scroll to bottom and list more than 50 meetings', function () {
+  describe('Page scroll to bottom and count meetings', function () {
+    it('Should scroll to bottom and list more than 50 meetings', function () {
       browser.executeScript('window.scrollTo(0,10000);').then(function () {
         meetings.assertResultsLength(51);
       });
     });
-  });  
-
+  }); 
   
-  describe('launch feedback page', function () {
-    it('click feedback and launch form page', function () {
+  // Asserting feedback page launch
+  describe('Launch feedback page', function () {
+    it('Click feedback and launch form page', function () {
       browser.driver.manage().window().setSize(1195, 569);
 
       //Store the current window handle
@@ -110,8 +134,9 @@ describe('List meetings flow', function () {
     });
   });
 
-  describe('logout', function () {
-    it('should log out', function () {
+  // Logout super admin user
+  describe('Logout', function () {
+    it('Should log out', function () {
       navigation.logout();
     });
   });

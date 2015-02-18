@@ -5,6 +5,7 @@ var MeetingsPage = function() {
   this.meetingPreviewLink = element(by.id('details-panel'));
   this.searchButton = element( by.css('[ng-click="searchMeetingList()"]'));
   this.searchField = element(by.model('searchString'));
+  this.filterButtonArrow = element(by.css('.ngHeaderButtonArrow'));
 
 
   this.assertPage = function (page) {
@@ -27,6 +28,18 @@ var MeetingsPage = function() {
 
   this.clickOnMeeting = function () {
     element.all(by.repeater('row in renderedRows')).get(0).click();
+  };
+
+  this.clickOnFilter = function(){
+    element(by.css('.ngHeaderButtonArrow')).click();
+  };
+
+  this.provideFilterValues = function(valueToFilter) {
+    element(by.model('filterText')).sendKeys(valueToFilter);
+  };
+
+  this.clearFilterValues = function() {
+    element(by.model('filterText')).clear();
   };
 
   this.search = function (query) {
@@ -60,7 +73,6 @@ var MeetingsPage = function() {
   this.scrollToBottom = function() {
     browser.executeScript('window.scrollTo(0,1000);');
   };
-
 
 };
 
