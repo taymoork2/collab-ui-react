@@ -24,7 +24,7 @@ angular.module('Hercules')
         $interval.cancel($scope._promise);
       });
 
-      $scope.reload = function (callback) {
+      $scope.reload = function (callback, skipPoll) {
         $scope.inflight = true;
         callback = callback || function () {};
         service.fetch(function (err, data) {
@@ -39,7 +39,7 @@ angular.module('Hercules')
           callback();
           if (err) return $scope.pollHasFailed = true;
           $scope.pollHasFailed = false;
-          $scope._poll();
+          if (!skipPoll) $scope._poll();
         });
       };
 
@@ -47,7 +47,7 @@ angular.module('Hercules')
         service.upgradeSoftware(clusterId, serviceType, function () {
           $scope.reload(function () {
             callback();
-          });
+          }, true);
         });
         return false;
       };
@@ -65,7 +65,7 @@ angular.module('Hercules')
         service.deleteHost(clusterId, serial, function () {
           $scope.reload(function () {
             $scope.deleteHostInflight = false;
-          });
+          }, true);
         });
       };
 

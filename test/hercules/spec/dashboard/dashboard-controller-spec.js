@@ -3,16 +3,15 @@ describe('DashboardController', function() {
 
   var $scope, $interval, controller, service;
 
-  beforeEach(inject(function(_$controller_){
+  beforeEach(inject(function(_$controller_, $rootScope){
     service = {
       fetch: sinon.stub(),
       services: sinon.stub(),
       upgradeSoftware: sinon.stub()
     }
-    $scope = {
-      $on: sinon.stub()
-    }
     $interval = sinon.stub();
+    $scope = $rootScope.$new();
+    $scope.$on = sinon.stub();
     $interval.cancel = sinon.stub();
     controller = _$controller_('DashboardController', {
       $scope: $scope,
@@ -113,17 +112,16 @@ describe('DashboardController', function() {
 
   it('triggers callback on software upgrade', function() {
     var callback = sinon.stub();
-    $scope.reload = sinon.stub()
+    $scope._poll = sinon.stub()
 
     $scope.upgradeSoftware('clusterid', 'servicetype', callback);
     expect(callback.callCount).toBe(0);
-    expect($scope.reload.callCount).toBe(0);
 
     service.upgradeSoftware.args[0][2]()
-    expect($scope.reload.callCount).toBe(1);
+    service.fetch.callArgWith(0, null, []);
 
-    $scope.reload.callArgWith(0, null);
     expect(callback.callCount).toBe(1);
+    expect($scope._poll.callCount).toBe(1);
   });
 
   it('updates state on toggle edit', function() {
@@ -140,6 +138,7 @@ describe('DashboardController', function() {
   });
 
   it('deletes host', function() {
+    $scope._poll = sinon.stub()
     service.deleteHost = sinon.stub();
     expect($scope.deleteHostInflight).toBeFalsy();
 
@@ -149,12 +148,11 @@ describe('DashboardController', function() {
     expect(service.deleteHost.args[0][0]).toBe('clusterId');
     expect(service.deleteHost.args[0][1]).toBe('serial#');
 
-    $scope.reload = sinon.stub()
     service.deleteHost.callArgWith(2, null);
-    expect($scope.reload.callCount).toBe(1);
+    service.fetch.callArgWith(0, null, []);
 
-    $scope.reload.callArgWith(0, null);
     expect($scope.deleteHostInflight).toBe(false);
+    expect($scope._poll.callCount).toBe(1);
   });
 
   it('updates state on toggle alarms', function() {
