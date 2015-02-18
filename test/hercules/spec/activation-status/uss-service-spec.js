@@ -55,4 +55,32 @@ describe('Service: USSService', function () {
     expect(callback.args[0][0]).toBeTruthy();
   });
 
+  it('should refresh CI status for user', function () {
+    $httpBackend
+      .when('POST', rootPath + 'pollCI/123')
+      .respond({});
+
+    var callback = sinon.stub();
+    Service.pollCIForUser('123', callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBeFalsy();
+    expect(callback.args[0][1]).toBeTruthy();
+  });
+
+  it('should set error when CI refresh fails', function () {
+    $httpBackend
+      .when('POST', rootPath + 'pollCI/123')
+      .respond(500);
+
+    var callback = sinon.stub();
+    Service.pollCIForUser('123', callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBeTruthy();
+    expect(callback.args[0][1]).toBeFalsy();
+  });
+
 });

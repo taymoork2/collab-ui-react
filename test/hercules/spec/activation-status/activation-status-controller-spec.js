@@ -11,7 +11,8 @@ describe('ActivationStatusController', function() {
       .respond({});
 
       service = {
-        getStatusesForUser: sinon.stub()
+        getStatusesForUser: sinon.stub(),
+        pollCIForUser: sinon.stub()
       };
       var authinfo = {
         isFusion: function() {
@@ -19,8 +20,8 @@ describe('ActivationStatusController', function() {
         }
       };
       $scope = $rootScope.$new();
-      $scope.currentUser = { 
-        id: '123' 
+      $scope.currentUser = {
+        id: '123'
       };
       controller = _$controller_('ActivationStatusController', {
         $scope: $scope,
@@ -74,6 +75,29 @@ describe('ActivationStatusController', function() {
       service.getStatusesForUser.callArgWith(1, null);
       expect($scope.lastRequestFailed).toBeFalsy();
     });
+
+    it('polls CI and reloads data for a user', function() {
+      expect($scope.inflight).toBeFalsy();
+      expect(service.pollCIForUser.callCount).toBe(0);
+
+      $scope.reload();
+
+      expect($scope.inflight).toBeTruthy();
+      expect(service.pollCIForUser.callCount).toBe(1);
+      expect(service.pollCIForUser.args[0][0]).toBe("123");
+      expect(service.getStatusesForUser.callCount).toBe(0);
+
+      service.pollCIForUser.callArgWith(1, null, {});
+
+      expect($scope.inflight).toBeTruthy();
+      expect(service.getStatusesForUser.callCount).toBe(1);
+      expect(service.getStatusesForUser.args[0][0]).toBe("123");
+
+      service.getStatusesForUser.callArgWith(1, null, {});
+
+      expect($scope.inflight).toBeFalsy();
+    });
+
   });
 
   describe('when fusion is disenabled', function() {
@@ -94,8 +118,8 @@ describe('ActivationStatusController', function() {
         }
       };
       $scope = $rootScope.$new();
-      $scope.currentUser = { 
-        id: '123' 
+      $scope.currentUser = {
+        id: '123'
       };
       controller = _$controller_('ActivationStatusController', {
         $scope: $scope,

@@ -13,6 +13,16 @@ angular.module('Hercules')
             .error(function () {
               callback(true, null);
             });
+        },
+        pollCIForUser: function (userId, callback) {
+          $http
+            .post(ConfigService.getUSSUrl() + '/pollCI/' + userId)
+            .success(function (data) {
+              callback(null, data);
+            })
+            .error(function () {
+              callback(true, null);
+            });
         }
       }
     }
