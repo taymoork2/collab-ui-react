@@ -10,6 +10,7 @@ angular.module('Core')
       $scope.page = 1;
       $scope.status = null;
       $scope.currentDataPosition = 0;
+      $scope.queryuserslist = [];
 
       $scope.activeFilter = 'all';
 
@@ -306,6 +307,7 @@ angular.module('Core')
           }
           $scope.currentUser = user;
           $scope.roles = user.roles;
+          $scope.queryuserslist = $scope.gridData;
           $state.go('users.list.preview');
         } else {
           $state.go('users.list.preview');
