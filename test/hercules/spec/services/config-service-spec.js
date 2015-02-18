@@ -23,14 +23,17 @@ describe('ConfigService', function () {
     expect(Service.getUrl()).toBe(rootPath + '/v1');
   });
 
-  it('should be possible to set error url', function() {
-    win.location.search = 'hercules-backend=error'
-    expect(Service.getUrl()).toBe(rootPath + '/fubar');
-  });
-
   it('should be possible to override url', function() {
     win.location.search = 'hercules-url=fake-url'
     expect(Service.getUrl()).toBe('fake-url');
   });
 
+  it('should return uss url', function() {
+    expect(Service.getUSSUrl()).toBe('https://hercules-a.wbx2.com/uss/api/v1');
+  });
+
+  it('should be possible to override USS url', function() {
+    win.location.search = 'hercules-uss-url=fake-url'
+    expect(Service.getUSSUrl()).toBe('fake-url');
+  });
 });
