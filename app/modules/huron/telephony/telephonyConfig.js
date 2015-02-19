@@ -7,22 +7,22 @@
       function (Config) {
         var config = {
           cmiUrl: {
-            dev: 'https://cmi.hitest.huron-dev.com',
-            integration: 'https://cmi.hitest.huron-dev.com',
-            prod: 'https://cmi.huron-dev.com'
+            dev: 'https://cmi.hitest.huron-dev.com/api/v1',
+            integration: 'https://cmi.hitest.huron-dev.com/api/v1',
+            prod: 'https://cmi.huron-dev.com/api/v1'
           },
 
           emailUrl: {
-            dev: 'https://hermes.hitest.huron-dev.com',
-            integration: 'https://hermes.hitest.huron-dev.com',
-            prod: 'https://hermes.huron-dev.com'
+            dev: 'https://hermes.hitest.huron-dev.com/api/v1',
+            integration: 'https://hermes.hitest.huron-dev.com/api/v1',
+            prod: 'https://hermes.huron-dev.com/api/v1'
           },
 
           // TODO: Point to Ocelot micro service when it's ready.
           ocelotUrl: {
-            dev: 'https://hermes.hitest.huron-dev.com',
-            integration: 'https://hermes.hitest.huron-dev.com',
-            prod: 'https://hermes.huron-dev.com'
+            dev: 'https://hermes.hitest.huron-dev.com/api/v1',
+            integration: 'https://hermes.hitest.huron-dev.com/api/v1',
+            prod: 'https://hermes.huron-dev.com/api/v1'
           },
 
           getCmiUrl: function () {
