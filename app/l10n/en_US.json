@@ -576,6 +576,7 @@
     "title": "Call Forwarding",
     "success": "Call Forward configuration saved successfully",
     "error": "Call Forward configuration failed",
+    "forwardNoCalls": "Do not forward calls",
     "forwardAllCalls": "Forward all calls",
     "forwardBusyNoAnswer": "Forward calls when line is busy or away",
     "internalAndExternal": "For internal and external calls",

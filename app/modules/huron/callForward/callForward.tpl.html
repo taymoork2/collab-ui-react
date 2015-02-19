@@ -1,11 +1,15 @@
 <h4>{{'callForwardPanel.title' | translate}}</h4>
 <div class="form-group">
+  <label class="cs-radio" for="forwardNoCalls">
+    <input type="radio" ng-model="$parent.forward" value="none" name="rdo_callforward" id="forwardNoCalls">
+    <span>{{'callForwardPanel.forwardNoCalls' | translate}}</span>
+  </label>
   <label class="cs-radio" for="forwardAllCalls">
     <input type="radio" ng-model="$parent.forward" value="all" name="rdo_callforward" id="forwardAllCalls">
     <span>{{'callForwardPanel.forwardAllCalls' | translate}}</span>
   </label>
   <div ng-show="$parent.forward === 'all'" class="call-forward-all">
-    <cs-combobox id="cfa" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardAllCalls" required="true"></cs-combobox>
+    <cs-combobox id="cfa" placeholder="Voicemail" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardAllCalls" required="true"></cs-combobox>
   </div>
   <label class="cs-radio" for="forwardBusyNoAnswer">
     <input type="radio" ng-model="$parent.forward" value="busy" name="rdo_callforward" id="forwardBusyNoAnswer">
@@ -14,23 +18,12 @@
   <div ng-show="$parent.forward === 'busy'">
     <span ng-show="!$parent.forwardExternalCalls">{{'callForwardPanel.internalAndExternal' | translate}}<br></span>
     <span ng-show="$parent.forwardExternalCalls">{{'callForwardPanel.internalOnly' | translate}}<br></span>
-    {{'callForwardPanel.forwardBusy' | translate}}
-    <br>
-    <cs-combobox id="cfb" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardBusyCalls" required="true"></cs-combobox>
-    <br>
-    {{'callForwardPanel.forwardNoAnswer' | translate}}<br>
-    <cs-combobox id="cfna" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardNoAnswerCalls" required="true"></cs-combobox>
+    <cs-combobox id="cfbna" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardNABCalls" palceholder="Voicemail" required="true"></cs-combobox>
     <br>
     <cs-checkbox id="ckForwardExternalCalls" ng-model="$parent.forwardExternalCalls" cklabel="{{'callForwardPanel.forwardExternal' | translate}}"></cs-checkbox>
     <br>
     <div ng-show="$parent.forwardExternalCalls">
-      {{'callForwardPanel.forwardBusy' | translate}}
-      <br>
-      <cs-combobox id="cfbExternal" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardExternalBusyCalls" required="true"></cs-combobox>
-      <br>
-      {{'callForwardPanel.forwardNoAnswer' | translate}}
-      <br>
-      <cs-combobox id="cfnaExternal" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardExternalNoAnswerCalls" required="true"></cs-combobox>
+      <cs-combobox id="cfbnaExternal" list="validForwardOptions" addtext="cbAddText" value="$parent.forwardExternalNABCalls" required="true"></cs-combobox>
       <br>
     </div>
   </div>

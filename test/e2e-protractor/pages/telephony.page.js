@@ -17,14 +17,13 @@ var TelephonyPage = function(){
   this.cancelDisassociation = element(by.css('.modal-template')).element(by.css('.btn-default'));
   this.disassociateLine = element(by.css('.modal-template')).element(by.css('.btn-danger'));
 
+  this.forowardNoneRadio = element(by.cssContainingText("span","Do not forward calls"));
   this.forwardAllRadio = element(by.cssContainingText("span","Forward all calls"));
-  this.forwardBusyAwayRadio = element(by.cssContainingText("span","Forward calls when line is busy or away"));
+  this.forwardBusyNoAnswerRadio = element(by.cssContainingText("span","Forward calls when line is busy or away"));
   this.forwardAll = element(by.id('cfa'));
-  this.forwardBusy = element(by.id('cfb'));
-  this.forwardAway = element(by.id('cfna'));
+  this.forwardBusyNoAnswer = element(by.id('cfbna'));
   this.forwardExternalCalls = element(by.id('ckForwardExternalCalls'));
-  this.forwardExternalBusy = element(by.id('cfbExternal'));
-  this.forwardExternalAway = element(by.id('cfnaExternal'));
+  this.forwardExternalBusyNoAnswer = element(by.id('cfbnaExternal'));
 
   this.voicemailSwitch = element(by.model('voicemailEnabled')).element(by.css('input'));
   this.voicemailStatus = element(by.id('voicemailStatus'));
@@ -46,8 +45,7 @@ var TelephonyPage = function(){
 
   this.primaryNumber = element.all(by.repeater('directoryNumber in vm.telephonyInfo.directoryNumbers')).first().element(by.css('a'));
   this.lineConfigPanel = element(by.css('.ent-detail-panel'));
-  this.forwardBusyInput = element(by.css('.ent-detail-panel')).element(by.id('cfb')).element(by.css('input'));
-  this.forwardNoAnswerInput = element(by.css('.ent-detail-panel')).element(by.id('cfna')).element(by.css('input'));
+  this.forwardBusyNoAnswerInput = element(by.css('.ent-detail-panel')).element(by.id('cfb')).element(by.css('input'));
   this.closeLineConfig = element(by.id('exit-details-btn'));
 
   this.verifyNewNumber = function(){

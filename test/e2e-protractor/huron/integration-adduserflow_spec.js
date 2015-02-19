@@ -73,8 +73,7 @@ xdescribe('Squared UC Add User flow', function() {
           });
         });
         it('should have call forwarding default to voicemail', function() {
-          expect(telephony.forwardBusyInput.getAttribute('value')).toEqual('Voicemail');
-          expect(telephony.forwardNoAnswerInput.getAttribute('value')).toEqual('Voicemail');
+          expect(telephony.forwardBusyNoAnswerInput.getAttribute('value')).toEqual('Voicemail');
         });
         it('should close the Line Configuration panel', function() {
           telephony.closeLineConfig.click();
