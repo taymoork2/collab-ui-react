@@ -29,15 +29,15 @@ angular.module('Core')
         },
 
         meetingServiceUrl: {
-          dev: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-          integration: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-          prod: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1'
+          dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          integration: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          prod: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
 
         MeetinginfoserviceUrl: {
-          dev: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-          integration: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1',
-          prod: 'http://multimediafusion-dummy.mb-lab.huron.uno/admin/api/v1'
+          dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          integration: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          prod: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
 
         oauthClientRegistration: {

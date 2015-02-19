@@ -106,7 +106,7 @@ angular.module('Mediafusion')
          *
          */
         meetingChartInfo: function (numberOfDays, durationType, latestDate, callback) {
-          var meetingChartUrl = Utils.sprintf(baseUrl + '/meeting/getMeetingGraphData', [Authinfo.getOrgId()]);
+          var meetingChartUrl = Utils.sprintf(baseUrl + '/meeting/meetingGraphData', [Authinfo.getOrgId()]);
           var queryParams = "day=" + numberOfDays + "&type=" + durationType + "&latestdate=" + latestDate;
           meetingChartUrl = meetingChartUrl + '?' + queryParams;
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;

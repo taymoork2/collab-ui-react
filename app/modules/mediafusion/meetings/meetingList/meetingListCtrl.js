@@ -22,7 +22,7 @@ angular.module('Mediafusion')
       $scope.iconClass = {
         "PHONE": "icon icon-calls",
         "MOBILE": "icon icon-transfer-to-mobile",
-        "ROOM": "icon icon-voicemail"
+        "Telepresence Room": "icon icon-voicemail"
       };
 
       $scope.searchString = "";
