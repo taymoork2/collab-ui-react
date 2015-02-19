@@ -796,5 +796,9 @@
     "deleteResourceConfText2": "It will be disconnected from the cloud and taken offline.",
     "cancel": "Cancel",
     "deleteResource": "Decomission Resource"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx Proto"
   }
 }
+
