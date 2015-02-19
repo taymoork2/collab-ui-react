@@ -1,17 +1,13 @@
 'use strict';
-
 angular.module('Core')
-  .factory('Auth', ['$http', '$filter', '$location', '$timeout', '$window', '$q', 'Log', 'Config', 'SessionStorage', 'Authinfo', 'Utils', 'Storage', '$rootScope', '$dialogs',
-    function ($http, $filter, $location, $timeout, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, $rootScope, $dialogs) {
-
+  .factory('Auth', ['$http', '$filter', '$location', '$timeout', '$window', '$q', 'Log', 'Config', 'SessionStorage', 'Authinfo', 'Utils', 'Storage', '$rootScope', '$dialogs', 'AccountService',
+    function ($http, $filter, $location, $timeout, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, $rootScope, $dialogs, AccountService) {
       var progress = 0;
       var auth = {
         authorizeUrl: Config.getAdminServiceUrl(),
         oauthUrl: Config.oauthUrl.oauth2Url
       };
-
       var ciErrorMsg = 'Sorry, you don\'t have sufficient privileges';
-
       auth.isLoggedIn = function () {
         if (Storage.get('accessToken')) {
           return true;
@@ -26,19 +22,27 @@ angular.module('Core')
         $http.defaults.headers.common.Authorization = 'Bearer ' + token;
         var currentOrgId = SessionStorage.get('customerOrgId');
         var partnerOrgId = SessionStorage.get('partnerOrgId');
-
+        var orgId = null;
         if (currentOrgId) {
           authUrl = auth.authorizeUrl + 'organization/' + currentOrgId + '/userauthinfo';
+          orgId = currentOrgId;
         } else if (partnerOrgId) {
           authUrl = auth.authorizeUrl + 'organization/' + partnerOrgId + '/userauthinfo?launchpartnerorg=true';
+          orgId = partnerOrgId;
         } else {
           authUrl = auth.authorizeUrl + 'userauthinfo';
         }
-
         $http.get(authUrl)
           .success(function (data) {
             Authinfo.initialize(data);
-            deferred.resolve();
+            //get Account services for org
+            AccountService.getAccount(Authinfo.getOrgId(), function (data, status) {
+              if (data.success) {
+                console.log('Returned from account service call....');
+                Authinfo.updateAccountInfo(data, status);
+                deferred.resolve();
+              }
+            });
           })
           .error(function (data, status) {
             Authinfo.clear();
@@ -52,11 +56,8 @@ angular.module('Core')
             }
             deferred.reject(error);
           });
-
         return deferred.promise;
-
       };
-
       auth.getFromGetParams = function (url) {
         var result = {};
         var cleanUrlA = url.split('#');
@@ -71,7 +72,6 @@ angular.module('Core')
         }
         return result;
       };
-
       auth.getFromStandardGetParams = function (url) {
         var result = {};
         var cleanUrlA = url.split('?');
@@ -83,12 +83,10 @@ angular.module('Core')
         }
         return result;
       };
-
       auth.getAccessToken = function () {
         var deferred = $q.defer();
         var token = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
         var data = Config.oauthUrl.oauth2ClientUrlPattern + Config.oauthClientRegistration.scope;
-
         $http({
             method: 'POST',
             url: auth.oauthUrl + 'access_token',
@@ -106,10 +104,8 @@ angular.module('Core')
             Log.error('Failed to obtain oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
             deferred.reject('Token request failed: ' + data.error_description);
           });
-
         return deferred.promise;
       };
-
       auth.getNewAccessToken = function (code) {
         var deferred = $q.defer();
         var token = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
@@ -130,15 +126,12 @@ angular.module('Core')
             Log.error('Failed to obtain new oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
             deferred.reject('Token request failed: ' + data.error_description);
           });
-
         return deferred.promise;
       };
-
       auth.RefreshAccessToken = function (refresh_tok) {
         var deferred = $q.defer();
         var cred = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
         var data = Config.getOauthAccessCodeUrl(refresh_tok) + Config.oauthClientRegistration.scope;
-
         $http({
             method: 'POST',
             url: auth.oauthUrl + 'access_token',
@@ -155,16 +148,13 @@ angular.module('Core')
             Log.error('Failed to refresh oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
             deferred.reject('Token request failed: ' + data.error_description);
           });
-
         return deferred.promise;
       };
-
       auth.logout = function () {
         Storage.clear();
         Log.debug('Redirecting to logout url.');
         $window.location.href = Config.getLogoutUrl();
       };
-
       auth.isUserAdmin = function () {
         if (Authinfo.getRoles().indexOf('Full_Admin') > -1) {
           return true;
@@ -172,7 +162,6 @@ angular.module('Core')
           return false;
         }
       };
-
       auth.handleStatus = function (status, description) {
         if ((status === 401 && description !== ciErrorMsg) || status === 403) {
           console.log('Token is not authorized or invalid. Logging user out.');
@@ -180,7 +169,6 @@ angular.module('Core')
           // this.delayedLogout();
         }
       };
-
       auth.delayedLogout = function () {
         $timeout(function () {
           if (progress < 100) {
@@ -196,14 +184,11 @@ angular.module('Core')
           }
         }, 1000);
       };
-
       auth.redirectToLogin = function () {
         var oauth2LoginUrl = Config.getOauthLoginUrl();
         console.log('No accessToken.');
         $window.location.href = oauth2LoginUrl;
       };
-
       return auth;
-
     }
   ]);
