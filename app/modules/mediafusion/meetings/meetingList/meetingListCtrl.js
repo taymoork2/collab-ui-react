@@ -222,6 +222,7 @@ angular.module('Mediafusion')
 
       function handleMeetingChartItemClick(event) {
         console.log("Got the click event : " + event.index);
+        $scope.searchString = "";
         var index = event.index;
         populateLeaderBoardInfo(index);
         var startTempTime = $scope.meetingChartInfo[index].hour;
@@ -247,6 +248,9 @@ angular.module('Mediafusion')
         }
 
         createTimeStamp($scope.latestDate, startTempTime, endTempTime);
+        var startTime = (startTempTime.indexOf("am") != -1) ? startTempTime.replace("am", ":00am") : startTempTime.replace("pm", ":00pm");
+        var endTime = (endTempTime.indexOf("am") != -1) ? endTempTime.replace("am", ":00am") : endTempTime.replace("pm", ":00pm");
+        $scope.latestMeetingChartTime = startTime + "-" + endTime;
         getMeetingList();
 
       };
