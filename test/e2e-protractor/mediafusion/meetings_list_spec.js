@@ -57,6 +57,19 @@ describe('List meetings flow', function () {
 
   });
 
+   // Asserting Day decrement
+  describe('Decrement day and checking meeting chart info, leader board and Meeting Table', function () {
+    it('Should decrement the day and populate the Meeting chart, Leader board and Meeting table data.', function () {
+      meetings.decrementDay();
+      browser.sleep(2000);
+    });
+
+    it('Should increment the day and populate the Meeting chart, Leader board and Meeting table data.', function () {
+      meetings.incrementDay();
+      browser.sleep(2000);
+    });
+  });
+
   // Asserting filtering of meetings
   describe('Filter meetings on page', function () { 
 
