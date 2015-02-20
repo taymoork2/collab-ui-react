@@ -1,4 +1,4 @@
-{    
+{
   "loginPage": {
     "title": "Cisco Collaboration Management",
     "login": "Login",
@@ -799,7 +799,8 @@
     "deleteResource": "Decomission Resource"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx Proto"
+    "webexUserSettingsTab": "WebEx Proto",
+    "testTab": "Ignore"
   }
 }
 
