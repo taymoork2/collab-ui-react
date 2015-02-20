@@ -549,3 +549,17 @@ angular
         });
     }
   ]);
+
+angular
+  .module('WebExUserSettings')
+  .config(['$stateProvider',
+    function ($stateProvider) {
+      $stateProvider
+        .state('webexUserSettings', {
+          url: '/webexUserSettings',
+          templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
+          controller: 'WebExUserSettingsCtrl',
+          parent: 'main'
+        });
+    }
+  ]);

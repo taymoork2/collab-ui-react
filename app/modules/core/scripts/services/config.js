@@ -165,6 +165,14 @@ angular.module('Core')
           state: 'support',
           link: '/support'
         }, {
+          /*
+          tab: 'webexUserSettingsTab',
+          icon: 'icon-support',
+          title: 'webexUserSettings.webexUserSettingsTab',
+          state: 'webexUserSettings',
+          link: '/webexUserSettings'
+          */
+        }, {
           tab: 'developmentTab',
           icon: 'icon-tools',
           title: 'tabs.developmentTab',
@@ -384,10 +392,23 @@ angular.module('Core')
 
       config.roleStates = {
         Full_Admin: [
-          'overview', 'users', 'userprofile', 'devices', 'reports', 'setupwizardmodal', 'firsttimewizard', 'groups'
+          // 'webexUserSettings',
+          'overview',
+          'users',
+          'userprofile',
+          'devices',
+          'reports',
+          'setupwizardmodal',
+          'firsttimewizard',
+          'groups'
         ],
         Support: ['overview', 'reports', 'support'],
-        WX2_User: ['overview', 'reports', 'support'],
+        WX2_User: [
+          // 'webexUserSettings',
+          'overview',
+          'reports',
+          'support'
+        ],
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         User: [],

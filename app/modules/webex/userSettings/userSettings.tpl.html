@@ -1,0 +1,379 @@
+<div ng-controller="WebExUserSettingsCtrl as WebExUserSettings">
+  <!--Start of Service section -->
+  <table>
+    <tr>
+      <td>
+        <b>{{WebExUserSettings.userPrivileges.label}}</b><br>
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        &nbsp;
+      </td>
+    </tr>
+    
+    <tr ng-repeat="service in WebExUserSettings.userPrivileges.webexCenters">
+      <td>
+        <table>
+          <tr>
+            <td width="15">
+              &nbsp;
+            </td>
+            
+            <td>
+              {{service.centerName}}:
+            </td>
+          </tr>
+            
+          <tr>
+            <td colspan=2>
+              &nbsp;
+            </td>
+          </tr>
+            
+          <tr ng-repeat="sessionType in service.sessionTypes">
+            <td colspan=2>
+              <cs-checkbox id="meetingCenterPro"
+                           name="meetingCenterPro"
+                           align="left"
+                           ng-model="sessionType.sessionEnabled"
+                           cklabel={{sessionType.sessionName}}:&nbsp;>
+              </cs-checkbox>
+              
+              <u>{{sessionType.sessionDescription}}</u> <!-- TODO: hyperlink -->
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <!-- End of Service section -->
+  
+  <hr />
+  
+  <!-- Start of General section -->
+  <table>
+    <tr>
+      <td colspan=2>
+        <b>{{WebExUserSettings.userPrivileges.general.label}}</b>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=2>
+        &nbsp;
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=2>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.general.recordingEditor.id}}
+                     name={{WebExUserSettings.userPrivileges.general.recordingEditor.id}}
+                     ng-model="WebExUserSettings.userPrivileges.general.recordingEditor.value"
+                     cklabel={{WebExUserSettings.userPrivileges.general.recordingEditor.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=2>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.general.assist.id}}
+                     name={{WebExUserSettings.userPrivileges.general.assist.id}}
+                     ng-model="WebExUserSettings.userPrivileges.general.assist.value"
+                     cklabel={{WebExUserSettings.userPrivileges.general.assist.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=2>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.general.hiQualVideo.id}}
+                     name={{WebExUserSettings.userPrivileges.general.hiQualVideo.id}}
+                     ng-model="WebExUserSettings.userPrivileges.general.hiQualVideo.value"
+                     cklabel={{WebExUserSettings.userPrivileges.general.hiQualVideo.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td width="30">
+        &nbsp;
+      </td>
+      
+      <td colspan=1>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.general.hiDefVideo.id}}
+                     name={{WebExUserSettings.userPrivileges.general.hiDefVideo.id}}
+                     ng-model="WebExUserSettings.userPrivileges.general.hiDefVideo.value"
+                     cklabel={{WebExUserSettings.userPrivileges.general.hiDefVideo.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=2>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.general.personalRoom.id}}
+                     name={{WebExUserSettings.userPrivileges.general.personalRoom.id}}
+                     ng-model="WebExUserSettings.userPrivileges.general.personalRoom.value"
+                     cklabel={{WebExUserSettings.userPrivileges.general.personalRoom.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=2>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.general.collabRoom.id}}
+                     name={{WebExUserSettings.userPrivileges.general.collabRoom.id}}
+                     ng-model="WebExUserSettings.userPrivileges.general.collabRoom.value"
+                     cklabel={{WebExUserSettings.userPrivileges.general.collabRoom.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+  </table>
+  <!-- END of General section -->
+
+  <hr />
+
+  <!-- Start of Training Center section -->
+  <table>
+    <tr>
+      <td colspan=3>
+        <b>{{WebExUserSettings.userPrivileges.trainingCenter.label}}</b>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=3>
+        &nbsp;
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan=1>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.trainingCenter.handsOnLabAdmin.id}}
+                     name={{WebExUserSettings.userPrivileges.trainingCenter.handsOnLabAdmin.id}}
+                     ng-model="WebExUserSettings.userPrivileges.trainingCenter.handsOnLabAdmin.value"
+                     cklabel={{WebExUserSettings.userPrivileges.trainingCenter.handsOnLabAdmin.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+  </table>
+  <!-- End of Training Center section -->
+  
+  <hr />
+
+  <!-- Start of Event Center section -->
+  <table>
+    <tr>
+      <td colspan=3>
+        <b>{{WebExUserSettings.userPrivileges.eventCenter.label}}</b>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=3>
+        &nbsp;
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan=1>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.eventCenter.optimizeBandwidthUsage.id}}
+                     name={{WebExUserSettings.userPrivileges.eventCenter.optimizeBandwidthUsage.id}}
+                     ng-model="WebExUserSettings.userPrivileges.eventCenter.optimizeBandwidthUsage.value"
+                     cklabel={{WebExUserSettings.userPrivileges.eventCenter.optimizeBandwidthUsage.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+  </table>
+  <!-- End of Event Center section -->
+  
+  <hr />
+
+  <!-- Start of Telephony Privilege section -->
+  <table>
+    <tr>
+      <td colspan=3>
+        <b>{{WebExUserSettings.userPrivileges.telephonyPriviledge.label}}</b>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=3>
+        &nbsp;
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan=3>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.id}}
+                     name={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.id}}
+                     ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.value"
+                     cklabel={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td width="25">
+        &nbsp;
+      </td>
+
+      <td width="15">
+        &nbsp;
+      </td>
+      
+      <td colspan=1>
+        <cs-radiolist ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.currCallInTollType"
+                      options="WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.callInTollTypes">
+        </cs-radiolist>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=3>
+        &nbsp;
+      </td>
+    </tr>
+    
+    <tr>
+      <td width="25">
+        &nbsp;
+      </td>
+
+      <td colspan=2>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
+                     name={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
+                     ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value"
+                     cklabel={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td width="25">
+        &nbsp;
+      </td>
+
+      <td colspan=2>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.cliAuth.id}}
+                     name={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.cliAuth.id}}
+                     ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.cliAuth.value"
+                     cklabel={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.cliAuth.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td width="25">
+        &nbsp;
+      </td>
+      
+      <td colspan=2>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.pinEnabled.id}}
+                     name={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.pinEnabled.id}}
+                     ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.pinEnabled.value"
+                     cklabel={{WebExUserSettings.userPrivileges.telephonyPriviledge.callInTeleconf.pinEnabled.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=4>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.telephonyPriviledge.callBackTeleconf.id}}
+                     name={{WebExUserSettings.userPrivileges.telephonyPriviledge.callBackTeleconf.id}}
+                     ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.callBackTeleconf.value"
+                     cklabel={{WebExUserSettings.userPrivileges.telephonyPriviledge.callBackTeleconf.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+
+    <tr>
+      <td width="30">
+        &nbsp;
+      </td>
+
+      <td colspan=3>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.telephonyPriviledge.globalCallBackTeleconf.id}}
+                     name={{WebExUserSettings.userPrivileges.telephonyPriviledge.globalCallBackTeleconf.id}}
+                     ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.globalCallBackTeleconf.value"
+                     cklabel={{WebExUserSettings.userPrivileges.telephonyPriviledge.globalCallBackTeleconf.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=4>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.telephonyPriviledge.otherTeleconfServices.id}}
+                     name={{WebExUserSettings.userPrivileges.telephonyPriviledge.otherTeleconfServices.id}}
+                     ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.otherTeleconfServices.value"
+                     cklabel={{WebExUserSettings.userPrivileges.telephonyPriviledge.otherTeleconfServices.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=4>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.telephonyPriviledge.integratedVoIP.id}}
+                     name={{WebExUserSettings.userPrivileges.telephonyPriviledge.integratedVoIP.id}}
+                     ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.integratedVoIP.value"
+                     cklabel={{WebExUserSettings.userPrivileges.telephonyPriviledge.integratedVoIP.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan=4>
+        <cs-checkbox id={{WebExUserSettings.userPrivileges.telephonyPriviledge.selectTeleconfLocation.id}}
+                     name={{WebExUserSettings.userPrivileges.telephonyPriviledge.selectTeleconfLocation.id}}
+                     ng-model="WebExUserSettings.userPrivileges.telephonyPriviledge.selectTeleconfLocation.value"
+                     cklabel={{WebExUserSettings.userPrivileges.telephonyPriviledge.selectTeleconfLocation.label}}>
+        </cs-checkbox>
+      </td>
+    </tr>
+    
+    <tr>
+      <td width="25">
+        &nbsp;
+      </td>
+
+      <td colspan=2>
+        <div class="col-sm-4 combobox-example">
+          Default location:&nbsp;&nbsp;
+        
+          <cs-combobox value="WebExUserSettings.userPrivileges.telephonyPriviledge.selectTeleconfLocation.defaultTeleconfLocation"
+                       list="WebExUserSettings.userPrivileges.telephonyPriviledge.selectTeleconfLocation.teleconfLocations">
+          </cs-combobox>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <!-- End  of Telephony Privilege section -->
+
+  <hr />
+
+  <!-- ACTION BUTTONS -->
+  <span>
+    <p align="right">
+      <button id="btnUpdate"
+              name="btnUpdate"
+              type="button"
+              class="btn btn-primary"
+              ng-click="WebExUserSettings.updateUserSettings()">
+       Update
+      </button>
+  
+      <button type="button" class="btn btn-danger">
+        Deactivate
+      </button>
+      
+      <button type="button" class="btn btn-warning">
+        Cancel
+      </button>
+      
+      <button type="button" class="btn btn-default">
+        Back
+      </button>
+    </p>
+  </span>
+</div>

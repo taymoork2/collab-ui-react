@@ -37,10 +37,13 @@ angular.module('Hercules', ['Core']);
 
 angular.module('Mediafusion', ['Core']);
 
+angular.module('WebExUserSettings', ['Core']);
+
 angular.module('wx2AdminWebClientApp', [
   'Core',
   'Squared',
   'Huron',
   'Hercules',
-  'Mediafusion'
+  'Mediafusion',
+  'WebExUserSettings'
 ]);
