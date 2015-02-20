@@ -6,7 +6,8 @@ var MeetingsPage = function() {
   this.searchButton = element( by.css('[ng-click="searchMeetingList()"]'));
   this.searchField = element(by.model('searchString'));
   this.filterButtonArrow = element(by.css('.ngHeaderButtonArrow'));
-
+  this.decrementDayButton = element( by.css('[ng-click="decrementDay()"]'));
+  this.incrementDayButton = element( by.css('[ng-click="incrementDay()"]'));
 
   this.assertPage = function (page) {
     expect(this.currentPage.getText()).toBe(page);
@@ -72,6 +73,14 @@ var MeetingsPage = function() {
 
   this.scrollToBottom = function() {
     browser.executeScript('window.scrollTo(0,1000);');
+  };
+
+  this.decrementDay = function(){
+    this.decrementDayButton.click();
+  };
+
+  this.incrementDay = function(){
+    this.incrementDayButton.click();
   };
 
 };

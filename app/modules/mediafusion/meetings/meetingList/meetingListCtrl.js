@@ -258,7 +258,7 @@ angular.module('Mediafusion')
       /**
        * Incrementing the dates accroding to calendar.
        */
-      $scope.incrementDay = function (duraType) {
+      $scope.incrementDay = function () {
         var currentDate = new Date();
         var changedDate = new Date($scope.latestDate);
         changedDate = updateDate(changedDate, 1);
@@ -274,7 +274,7 @@ angular.module('Mediafusion')
       /**
        * Decrementing the dates accroding to calendar.
        */
-      $scope.decrementDay = function (duraType) {
+      $scope.decrementDay = function () {
         var currentDate = new Date();
         var changedDate = new Date($scope.latestDate);
         changedDate = updateDate(changedDate, -1);
