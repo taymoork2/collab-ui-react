@@ -271,13 +271,13 @@
     function initCallForward() {
       if ($scope.directoryNumber.callForwardAll.voicemailEnabled === 'true' || $scope.directoryNumber.callForwardAll.destination !== null) {
         $scope.forward = 'all';
-      } else if (($scope.directoryNumber.callForwardNoAnswer.voicemailEnabled === true || $scope.directoryNumber.callForwardNoAnswer.destination !== null) || ($scope.directoryNumber.callForwardNoAnswer.intVoicemailEnabled === true || $scope.directoryNumber.callForwardNoAnswer.intDestination !== null) || ($scope.directoryNumber.callForwardBusy.voicemailEnabled === true || $scope.directoryNumber.callForwardBusy.destination !== null) || ($scope.directoryNumber.callForwardBusy.intVoicemailEnabled === true || $scope.directoryNumber.callForwardBusy.intDestination !== null)) {
+      } else if ($scope.directoryNumber.callForwardAll.voicemailEnabled === 'false' && $scope.directoryNumber.callForwardAll.destination === null && $scope.directoryNumber.callForwardBusy.voicemailEnabled === 'false' && $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'false' && $scope.directoryNumber.callForwardBusy.destination === null && $scope.directoryNumber.callForwardBusy.intDestination === null && $scope.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'false' && $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'false' && $scope.directoryNumber.callForwardNoAnswer.destination === null && $scope.directoryNumber.callForwardNoAnswer.intDestination === null) {
+        $scope.forward = 'none';
+      } else {
         $scope.forward = 'busy';
         if ((($scope.directoryNumber.callForwardBusy.voicemailEnabled !== $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled) || ($scope.directoryNumber.callForwardNoAnswer.voicemailEnabled !== $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled)) && (($scope.directoryNumber.callForwardBusy.destination !== $scope.directoryNumber.callForwardBusy.intDestination) || ($scope.directoryNumber.callForwardNoAnswer.destination !== $scope.directoryNumber.callForwardNoAnswer.intDestination))) {
           $scope.forwardExternalCalls = true;
         }
-      } else {
-        $scope.forward = 'none';
       }
 
       if (($scope.telephonyInfo.voicemail === 'On') && ($scope.directoryNumber.callForwardAll.voicemailEnabled === 'true')) {
@@ -346,8 +346,11 @@
 
           if ($scope.forwardNABCalls === 'Voicemail') {
             $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled = true;
+            $scope.directoryNumber.callForwardBusy.intDestination = '';
             $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled = true;
+            $scope.directoryNumber.callForwardNoAnswer.intDestination = '';
             $scope.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = true;
+            $scope.directoryNumber.callForwardNotRegistered.intDestination = '';
           } else if ($scope.forwardNABCalls !== '') {
             $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled = false;
             $scope.directoryNumber.callForwardBusy.intDestination = $scope.forwardNABCalls;
@@ -361,8 +364,11 @@
 
           if ($scope.forwardExternalNABCalls === 'Voicemail') {
             $scope.directoryNumber.callForwardBusy.voicemailEnabled = true;
+            $scope.directoryNumber.callForwardBusy.destination = '';
             $scope.directoryNumber.callForwardNoAnswer.voicemailEnabled = true;
+            $scope.directoryNumber.callForwardNoAnswer.destination = '';
             $scope.directoryNumber.callForwardNotRegistered.voicemailEnabled = true;
+            $scope.directoryNumber.callForwardNotRegistered.destination = '';
           } else if ($scope.forwardExternalNABCalls !== '') {
             $scope.directoryNumber.callForwardBusy.voicemailEnabled = false;
             $scope.directoryNumber.callForwardBusy.destination = $scope.forwardExternalNABCalls;
@@ -376,11 +382,17 @@
         } else {
           if ($scope.forwardNABCalls === 'Voicemail') {
             $scope.directoryNumber.callForwardBusy.voicemailEnabled = true;
+            $scope.directoryNumber.callForwardBusy.destination = '';
             $scope.directoryNumber.callForwardBusy.intVoiceMailEnabled = true;
+            $scope.directoryNumber.callForwardBusy.intDestination = '';
             $scope.directoryNumber.callForwardNoAnswer.voicemailEnabled = true;
+            $scope.directoryNumber.callForwardNoAnswer.destination = '';
             $scope.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled = true;
+            $scope.directoryNumber.callForwardNoAnswer.intDestination = '';
             $scope.directoryNumber.callForwardNotRegistered.voicemailEnabled = true;
+            $scope.directoryNumber.callForwardNotRegistered.destination = '';
             $scope.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = true;
+            $scope.directoryNumber.callForwardNotRegistered.intDestination = '';
           } else if ($scope.forwardNABCalls !== '') {
             $scope.directoryNumber.callForwardBusy.voicemailEnabled = false;
             $scope.directoryNumber.callForwardBusy.destination = $scope.forwardNABCalls;
