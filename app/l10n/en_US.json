@@ -799,8 +799,7 @@
     "deleteResource": "Decomission Resource"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx Proto",
-    "testTab": "Ignore"
+    "webexUserSettingsTab": "WebEx Proto"
   }
 }
 
