@@ -5,7 +5,7 @@ angular.module('Core')
   .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils', '$q', '$filter', '$compile', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
-      var baseFilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
+      var searchFilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
       var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
 
@@ -18,22 +18,21 @@ angular.module('Core')
           var filter;
           var scimSearchUrl = null;
           var encodedSearchStr = '';
-          var adminFilter = '%20and%20roles%20eq%20%22full_admin%22';
-          var searchfilter = baseFilter;
+          var adminFilter = '&filter=roles%20eq%20%22id_full_admin%22';
 
-          if (getAdmins && searchfilter.indexOf(adminFilter) === -1) {
-            searchfilter = baseFilter + adminFilter;
+          if (getAdmins && listUrl.indexOf(adminFilter) === -1) {
+            listUrl = listUrl + adminFilter;
           }
 
           if (typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             //It seems CI does not support 'ANDing' filters in this situation.
-            filter = searchfilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
+            filter = searchFilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
             scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
             listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
           } else if ($rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
-            filter = searchfilter;
+            filter = searchFilter;
             scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
             listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);

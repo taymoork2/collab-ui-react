@@ -400,7 +400,9 @@ angular.module('Core')
           'reports',
           'setupwizardmodal',
           'firsttimewizard',
-          'groups'
+          'groups',
+          'partnerprofile',
+          'support'
         ],
         Support: ['overview', 'reports', 'support'],
         WX2_User: [
