@@ -6,6 +6,7 @@ var Navigation = function(){
   this.tabCount = element.all(by.repeater('page in pages'));
   this.homeTab = element(by.css('li.overviewTab > a'));
   this.usersTab = element(by.css('li.userTab > a'));
+  this.listUsersTab = element(by.css('a[href="#users"]'));
   this.orgTab = element(by.css('a[href="#organization"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
@@ -52,8 +53,14 @@ var Navigation = function(){
   };
 
   this.clickUsers = function() {
-    this.usersTab.click();
+    this.clickUsersTab();
+    this.listUsersTab.click();
     this.expectCurrentUrl('/users');
+  };
+
+  this.clickUsersTab = function() {
+    this.usersTab.click();
+    browser.sleep(500);
   };
 
   this.clickDevices = function() {

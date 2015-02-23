@@ -117,7 +117,11 @@
     "meetingDetailsTab": "Meetings",
     "meetingDetailsTabDesc": "Meetings Management",
     "vtsDetailsTab": "Enterprise Resources",
-    "vtsDetailsTabDesc": "Enterprise Resource Management"
+    "vtsDetailsTabDesc": "Enterprise Resource Management",
+    "listUserTab": "List Users",
+    "listUserTabDesc": "Manage Users And Their Features.",
+    "groupTab": "Groups",
+    "groupTabDesc": "Create And Manage Groups."
   },
   "index": {
     "welcome": "Welcome!",

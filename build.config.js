@@ -90,7 +90,8 @@ module.exports = {
       'bower_components/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
       'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
       'bower_components/ng-clip/src/ngClip.js',
-      'bower_components/zeroclipboard/dist/ZeroClipboard.js'
+      'bower_components/zeroclipboard/dist/ZeroClipboard.js',
+      'bower_components/d3/d3.min.js'
     ],
     css: [
       'bower_components/alertify.js/themes/alertify.core.css',

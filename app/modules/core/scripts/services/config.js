@@ -139,7 +139,17 @@ angular.module('Core')
           icon: 'icon-user',
           title: 'tabs.userTab',
           state: 'users',
-          link: '/users'
+          subPages: [{
+            title: 'tabs.listUserTab',
+            desc: 'tabs.listUserTabDesc',
+            state: 'users.list',
+            link: '#users'
+          }, {
+            title: 'tabs.groupTab',
+            desc: 'tabs.groupTabDesc',
+            state: 'groups',
+            link: '#groups'
+          }]
         }, {
           tab: 'deviceTab',
           icon: 'icon-devices',
