@@ -4,8 +4,9 @@
   angular
     .module('WebExUserSettings')
     .controller('WebExUserSettingsCtrl', [
-      '$scope',
-      function ($scope) {
+      '$scope', '$http',
+      function ($scope, $http) {
+        this.getUserSettings
         this.getUserPrivileges = function () {
             // alert("getUserPrivileges(): START");
             console.log("getUserPrivileges(): START");
@@ -182,9 +183,68 @@
 
             console.log("getUserPrivileges(): END");
 
+            this.getUserPrivileges2();
+
             return userPrivileges;
           }, // getUserPrivileges()
+          this.getUserPrivileges2 = function () {
+            var xmlServerURL = "http://172.24.93.53/xml9.0.0/XMLService";
+            var reqXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
+            var siteID = "4272"; // Site ID
+            var partnerID = "4272"; // Partner ID
+            var webExID = "jpallapa"; // Host username
+            var password = "C!sco123"; // Host password
+
+            reqXML += "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
+              "    <header>" +
+              "        <securityContext>" +
+              "            <webExID>" + webExID + "</webExID>" +
+              "            <password>" + password + "</password>" +
+              "            <siteID>" + siteID + "</siteID>" +
+              "            <partnerID>" + partnerID + "</partnerID>" +
+              "        </securityContext>" +
+              "    </header>" +
+              "    <body>" +
+              "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.GetUser\">" +
+              "            <webExId>jpallapa</webExId>" +
+              "        </bodyContent>" +
+              "    </body>" +
+              "</serv:message>";
+
+            $http({
+                url: xmlServerURL,
+                method: "POST",
+                data: reqXML,
+                headers: {
+                  'Content-Type': 'application/x-www-rform-urlencoded'
+                }
+              })
+              .success(function (data) {
+                // alert("Success: " + data);
+                var xmlDoc = $(data);
+                var firstName = xmlDoc.find("use\\:firstName").text();
+                var lastName = xmlDoc.find("use\\:lastName").text();
+                var meetingTypes = [];
+
+                xmlDoc.find("use\\:meetingType").each(function () {
+                  var marker = $(this);
+                  meetingTypes.push(marker.text());
+                });
+
+                console.log("User name: " + firstName + " " + lastName);
+                console.log("Meeting Types: " + meetingTypes);
+                // .each(function () {
+                //     var marker = $(this);
+                //     alert("First name: " + marker.text());
+                //   });
+              })
+              .error(function (data) {
+                // alert("Error: " + data);
+              });
+
+            return userPrivileges;
+          },
           this.updateUserSettings = function () {
             alert("updateUserSettings(): START");
 
