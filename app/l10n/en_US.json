@@ -706,7 +706,8 @@
     "expired": "Expired Trial",
     "expiresToday": "Expires Today",
     "unused": "unused licenses",
-    "uploadNumbers": "Upload Numbers"
+    "uploadNumbers": "Upload Numbers",
+    "overPlan" : "over plan limit"
   },
   "didAddModal": {
     "title": "Add Phone Numbers",

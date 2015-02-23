@@ -52,38 +52,38 @@
 
 
       <section class="tab-reports background-white">
-        <tabset justified="true" class="largetabs">
-          <tab select="resizeCallsChart()">
-            <tab-heading>
+        <cs-tabset justified="true" class="largetabs">
+          <cs-tab select="resizeCallsChart()">
+            <cs-tab-heading>
               <span translate="homePage.calls"></span>
               <div class="total">{{counts.calls}}</div>
-            </tab-heading>
+            </cs-tab-heading>
             <div id="callsChart" class="tab-report"></div>
             <div id="callsRefreshDiv" class="report-status">
               <i class='icon icon-spinner icon-2x' ng-show="isRefresh('calls')"></i>
             </div>
-          </tab>
-          <tab select="resizeConversationsChart()">
-            <tab-heading>
+          </cs-tab>
+          <cs-tab select="resizeConversationsChart()">
+            <cs-tab-heading>
               <span translate="homePage.conversations"></span>
               <div class="total">{{counts.conversations}}</div>
-            </tab-heading>
+            </cs-tab-heading>
             <div id="conversationsChart" class="tab-report"></div>
             <div id="convRefreshDiv" class="report-status">
               <i class='icon icon-spinner icon-2x' ng-if="isRefresh('conversations')"></i>
             </div>
-          </tab>
-          <tab select="resizeContentSharedChart()">
-            <tab-heading>
+          </cs-tab>
+          <cs-tab select="resizeContentSharedChart()">
+            <cs-tab-heading>
               <span translate="homePage.contentShared"></span>
               <div class="total">{{counts.contentShared}}</div>
-            </tab-heading>
+            </cs-tab-heading>
             <div id="contentSharedChart" class="tab-report"></div>
             <div id="contentRefreshDiv" class="report-status">
               <i class='icon icon-spinner icon-2x' ng-if="isRefresh('contentShared')"></i>
             </div>
-          </tab>
-        </tabset>
+          </cs-tab>
+        </cs-tabset>
       </section>
     </section>
 

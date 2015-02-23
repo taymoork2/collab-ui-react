@@ -19,44 +19,44 @@
         </div>
       </section>
       <section class="tab-reports" id="tab-reports">
-        <tabset justified="true" class="largetabs">
-          <tab select="resizeActiveUsersChart()">
-            <tab-heading>
+        <cs-tabset justified="true" class="largetabs">
+          <cs-tab select="resizeActiveUsersChart()">
+            <cs-tab-heading>
               <span translate="partnerHomePage.activeUsersTitle"></span>
               <div class="total">{{counts.activeUsers}}</div>
-            </tab-heading>
+            </cs-tab-heading>
             <div id="activeUsersdiv" class="tab-report"></div>
             <div id='active-users-refresh' class="report-status-partner">
               <i class='icon icon-spinner icon-2x' ng-if="isRefresh('activeUsers')"></i>
               <span translate="status.noResults" ng-if="isEmpty('activeUsers')"></span>
               <span translate="status.errorProcessing" ng-if="hasError('activeUsers')"></span>
             </div>
-          </tab>
-          <tab select="resizeAverageCallsChart()">
-            <tab-heading>
+          </cs-tab>
+          <cs-tab select="resizeAverageCallsChart()">
+            <cs-tab-heading>
               <span translate="partnerHomePage.averageCallsTitle"></span>
               <div class="total">{{counts.averageCalls}}</div>
-            </tab-heading>
+            </cs-tab-heading>
             <div id="avgCallsdiv" class="tab-report"></div>
             <div id="calls-refresh" class="report-status-partner">
               <i class='icon icon-spinner icon-2x' ng-if="isRefresh('avgCalls')"></i>
               <span translate="status.noResults" ng-if="isEmpty('avgCalls')"></span>
               <span translate="status.errorProcessing" ng-if="hasError('avgCalls')"></span>
             </div>
-          </tab>
-          <tab select="resizeContentSharedChart()">
-            <tab-heading>
+          </cs-tab>
+          <cs-tab select="resizeContentSharedChart()">
+            <cs-tab-heading>
               <span translate="partnerHomePage.contentSharedTitle"></span>
               <div class="total">{{counts.contentShared}}</div>
-            </tab-heading>
+            </cs-tab-heading>
             <div id="contentShareddiv" class="tab-report"></div>
             <div id="content-shared-refresh" class="report-status-partner">
               <i class='icon icon-spinner icon-2x' ng-if="isRefresh('contentShared')"></i>
               <span translate="status.noResults" ng-if="isEmpty('contentShared')"></span>
               <span translate="status.errorProcessing" ng-if="hasError('contentShared')"></span>
             </div>
-          </tab>
-        </tabset>
+          </cs-tab>
+        </cs-tabset>
       </section>
       <!-- end -->
     </section>
