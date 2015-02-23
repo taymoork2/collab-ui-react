@@ -6,7 +6,6 @@
     .controller('WebExUserSettingsCtrl', [
       '$scope', '$http',
       function ($scope, $http) {
-        this.getUserSettings
         this.getUserPrivileges = function () {
             // alert("getUserPrivileges(): START");
             console.log("getUserPrivileges(): START");
