@@ -80,7 +80,7 @@ describe('Customer Admin Landing Page License Info', function() {
     it('should display the right quick links', function() {
       expect(landing.addUserQuickLink.isDisplayed()).toBeTruthy();
       expect(landing.installDeviceSharedSpaceQuickLink.isDisplayed()).toBeTruthy();
-      expect(landing.deviceLogsQuickLink.isPresent()).toBeFalsy();
+      expect(landing.deviceLogsQuickLink.isPresent()).toBeTruthy();
       expect(landing.installDeviceQuickLink.isPresent()).toBeFalsy();
       expect(landing.autoAttendantQuickLink.isPresent()).toBeFalsy();
     });
