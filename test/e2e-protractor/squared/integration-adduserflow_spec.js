@@ -20,7 +20,7 @@ var hurontestuser = {
 };
 
 var accounttestuser = {
-  username: 'nkamboh+acc1@gmail.com',
+  username: 'nkamboh+acc2@gmail.com',
   password: 'C1sc0123!',
 };
 
