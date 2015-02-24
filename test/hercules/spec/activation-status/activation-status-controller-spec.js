@@ -12,7 +12,8 @@ describe('ActivationStatusController', function() {
 
       service = {
         getStatusesForUser: sinon.stub(),
-        pollCIForUser: sinon.stub()
+        pollCIForUser: sinon.stub(),
+        decorateWithStatus: sinon.stub()
       };
       var authinfo = {
         isFusion: function() {
@@ -29,6 +30,15 @@ describe('ActivationStatusController', function() {
         Authinfo: authinfo
       });
     }));
+
+    it('calls service on getStatus', function() {
+      expect(service.decorateWithStatus.callCount).toBe(0);
+
+      $scope.getStatus('yolo');
+
+      expect(service.decorateWithStatus.callCount).toBe(1);
+      expect(service.decorateWithStatus.args[0][0]).toBe('yolo');
+    });
 
     it('shows enabled flag', function() {
       $scope.$digest();

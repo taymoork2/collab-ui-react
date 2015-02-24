@@ -27,6 +27,10 @@
         });
       };
 
+      $scope.getStatus = function (status) {
+        return ussService.decorateWithStatus(status);
+      };
+
     }])
     .directive('herculesActivationStatus', [
       function () {

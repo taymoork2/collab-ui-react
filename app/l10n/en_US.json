@@ -466,8 +466,10 @@
         "desc": "Leverage your services on-premise"
     },
     "activationStatus": {
+        "not_entitled": "Not entitled",
+        "pending_deactivation": "Pending Deactivation",
+        "pending_activation": "Pending Activation",
         "activated": "Activated",
-        "notActivated": "Not Activated",
         "error": "Error"
     },
     "serviceNames": {

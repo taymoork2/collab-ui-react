@@ -2,8 +2,8 @@
   <div class="col-md-12">
     <div class="title-row row">
       <div class="col-md-12">
-        <div class="title pull-left">Fusion Activation Status</div>
-        <button ng-disabled="inflight" class="btn btn-info btn-sm pull-right" ng-click="reload()" style="padding-top: 3px;">
+        <div class="title pull-left">Fusion Services</div>
+        <button ng-disabled="inflight" class="btn btn-info btn-sm pull-right" ng-click="reload()" style="padding-top: 3px; margin-top: -5px;">
           <span ng-hide="inflight">
             Reload
           </span>
@@ -18,17 +18,20 @@
         <div ng-hide="lastRequestFailed">
           <ul ng-show="activationStatus.userStatuses">
             <li ng-repeat="status in activationStatus.userStatuses">
-              <span translate="hercules.serviceNames.{{status.serviceId}}"></span>: <span translate="hercules.activationStatus.{{status.state}}"></span> {{status.description}}
+              <span translate="hercules.serviceNames.{{status.serviceId}}"></span>:
+              <span translate="hercules.activationStatus.{{getStatus(status)}}"></span>
+              <span>{{status.description}}</span>
             </li>
           </ul>
           <ul ng-hide="activationStatus.userStatuses">
-            <li>No services activated</li>
+            <li>Not entitled to any services</li>
           </ul>
         </div>
         <ul ng-show="lastRequestFailed">
-          <li>Unable to get status</li>
+          <li>Unable to fetch service status</li>
         </ul>
       </div>
     </div>
   </div>
 </div>
+

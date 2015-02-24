@@ -23,6 +23,31 @@ angular.module('Hercules')
             .error(function () {
               callback(true, null);
             });
+        },
+        decorateWithStatus: function (status) {
+          switch (status.entitled) {
+          case false:
+            switch (status.state) {
+            case 'error':
+            case 'deactivated':
+            case 'notActivated':
+              return 'not_entitled';
+            case 'activated':
+              return 'pending_deactivation';
+            }
+          case true:
+            switch (status.state) {
+            case 'error':
+              return 'error';
+            case 'deactivated':
+            case 'notActivated':
+              return 'pending_activation';
+            case 'activated':
+              return 'activated';
+            }
+          default:
+            return 'unknown';
+          }
         }
       }
     }
