@@ -1,0 +1,26 @@
+<div class="leader-board">
+  <div class="title-section">
+    <span class="leader-board-title" translate="leaderBoard.licenseUsage">License Usage</span>
+    <span class="leader-board-time" translate="leaderBoard.lastSynced"><span>
+  </div>
+  <div class="bucket" ng-repeat="bucket in buckets">
+    <div class="header-section">
+      <span class="bucket-header">{{bucket.title | translate}}</span>
+    </div>
+    <div class="donut"></div>
+    <div class="bucket-info">
+        <h4 class="total-count">{{bucket.totalCount}}</h4>
+        <h5 class="bucket-subtitle">{{bucket.subtitle | translate}}</h5>
+        <span class="bucket-description">{{bucket.description | translate}}</span>
+        <a href="">
+          <span class="bucket-actions" translate="leaderBoard.actions"></span>
+        </a>
+        <div class="vertical-divider"></div>
+        <a href="">
+          <span class="bucket-actions" translate="leaderBoard.actions"></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+

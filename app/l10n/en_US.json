@@ -805,6 +805,30 @@
   },
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx Proto"
+  },
+  "leaderBoard": {
+    "actions": "Actions",
+    "licenseUsage": "License Usage",
+    "lastSynced": "Last Synced:"
+  },
+  "partnerProfile": {
+    "link": "Partner Profile",
+    "title": "Account",
+    "name": "Company Name",
+    "address": "Address",
+    "id": "BEGEOID",
+    "phone": "Phone Number",
+    "ciscoRep": "Your Cisco Representative",
+    "supportSetup": "Support Setup",
+    "save": "Save",
+    "supportInfo": "Specify how you would like to handle Squared support for your customers' end-users. If you choose not to provide support, the default Cisco support will be provided. These will show up under support options in the Squared application.",
+    "supportOptions": "Cisco Support Options",
+    "yourSupportOptions": "Your Support Options",
+    "urlFaq": "URL for help site and FAQs",
+    "urlFaqEx":"http://[url of Cisco help site and FAQs]",
+    "urlReport":"URL for reporting trouble tickets or opening cases",
+    "urlReportEx":"http://[url of Cisco problem reporting]"
   }
+
 }
 
