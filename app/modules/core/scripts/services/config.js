@@ -263,19 +263,21 @@ angular.module('Core')
           green: '#50D71D'
         },
 
+        defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
+
         batchSize: 20,
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
-          return currentHostname == '127.0.0.1' || currentHostname == '0.0.0.0' || currentHostname == 'localhost';
+          return currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost';
         },
 
         isIntegration: function () {
-          return getCurrentHostname() == 'int-admin.projectsquared.com';
+          return getCurrentHostname() === 'int-admin.projectsquared.com';
         },
 
         isProd: function () {
-          return getCurrentHostname() == 'admin.projectsquared.com';
+          return getCurrentHostname() === 'admin.projectsquared.com';
         },
 
         getEnv: function () {
@@ -396,6 +398,10 @@ angular.module('Core')
 
         getHerculesUrl: function () {
           return this.herculesUrl[this.getEnv()];
+        },
+
+        getDefaultEntitlements: function () {
+          return this.defaultEntitlements;
         }
 
       };

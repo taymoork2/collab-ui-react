@@ -7,48 +7,11 @@
           </button>
           <h3 class="modal-title" translate="onboardModal.onboardUsers"></h3>
         </div>
-        <div class="modal-body">
-          <div>
-            <span>1. </span><span translate="onboardModal.addUserText" class="adduser-desc"></span>
-            <hr class="hr-style">
-            <input class="form-control useradd-textbox" type="text" id="usersfield" placeholder="Enter email addresses or group mailers separated by commas..."/>
-          </div>
 
-          <div class="onboard-block">
-            <span>2. </span><span translate="onboardModal.addServiceText" class="adduser-desc"></span>
-            <hr class="hr-style">
-            <cs-radio label="collabRadio1.label" value="collabRadio1.value" name="collabRadio" id="collabRadio1" ng-model="collabRadio" isdisabled="collabRadio1.isDisabled"></cs-radio>
-
-            <div class="manage-entitlements" ng-if="(isEntitleEnabled() || isAddEnabled()) &&collabRadio === 1">
-              <div class="entitle-check-grp" ng-repeat="key in entitlementsKeys" ng-if="isServiceAllowed(key)">
-                <cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared')}" id="{{'chk_'+key}}" ng-model="entitlements[key]" cklabel="{{getServiceName(key)}}"></cs-checkbox>
-              </div>
-            </div>
-
-            <cs-radio label="collabRadio2.label" value="collabRadio2.value" name="collabRadio" id="collabRadio2" ng-model="collabRadio" isdisabled="collabRadio2.isDisabled"></cs-radio>
-
-            <div class="manage-group" ng-if="collabRadio === 2">
-              <span translate="onboardModal.addUsersSelect"></span>
-              <select ng-model="selectedGroup"
-                ng-options="group as group.displayName for group in groups">
-              </select>
-              <button type="button" id="btnManage" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#manageGroupsDialog" translate="onboardModal.manageBtn"></button>
-            </div>
-          </div>
-
-          <div class="onboard-block">
-            <span>3. </span><span translate="onboardModal.howToInvite" class="adduser-desc"></span>
-            <hr class="hr-style">
-            <cs-radio label="inviteRadio1.label" value="inviteRadio1.value" name="inviteRadio" id="inviteRadio1" ng-model="inviteRadio" isdisabled="inviteRadio1.isDisabled"></cs-radio>
-            <cs-radio label="inviteRadio2.label" value="inviteRadio2.value" name="inviteRadio" id="inviteRadio2" ng-model="inviteRadio" isdisabled="inviteRadio2.isDisabled"></cs-radio>
-          </div>
+        <div class="modal-panel">
+          <cr-onboard-users></cr-onboard-users>
         </div>
 
-        <div class="modal-footer">
-          <button type="button" id="btnCancel" class="btn btn-default" ng-click="clearPanel()" translate="usersPage.clear"></button>
-          <button type="button" id="btnOnboard" class="btn btn-primary" ng-click="onboardUsers()" data-loading-text="<i class='icon icon-spinner'></i>" translate="onboardModal.onboardBtn"></button>
-        </div>
-        </div>
       </div>
   </div>
 </div>

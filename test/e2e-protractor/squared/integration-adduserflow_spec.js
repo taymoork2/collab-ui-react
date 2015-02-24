@@ -14,6 +14,15 @@ var testuser = {
   password: 'C1sc0123!',
 };
 
+var hurontestuser = {
+  username: 'admin@int1.huron-alpha.com',
+  password: 'Cisco123!',
+};
+
+var accounttestuser = {
+  username: 'nkamboh+acc1@gmail.com',
+  password: 'C1sc0123!',
+};
 
 // Logging in. Write your tests after the login flow is complete.
 describe('Add/Invite/Entitle User flow', function() {
@@ -147,10 +156,9 @@ describe('Add/Invite/Entitle User flow', function() {
         users.addUsersField.sendKeys(testuser.username);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.collabRadio1.click();
-        users.inviteRadio2.click();
         browser.sleep(1000);
         users.onboardButton.click();
-        notifications.assertSuccess('added successfully');
+        notifications.assertError('already entitled');
         notifications.clearNotifications();
       });
     });
@@ -161,10 +169,9 @@ describe('Add/Invite/Entitle User flow', function() {
         users.addUsersField.sendKeys(inputEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.collabRadio1.click();
-        users.inviteRadio2.click();
         browser.sleep(1000);
         users.onboardButton.click();
-        notifications.assertSuccess(inputEmail, 'added successfully');
+        notifications.assertSuccess(inputEmail, 'sent successfully');
         notifications.clearNotifications();
       });
     });
@@ -175,11 +182,10 @@ describe('Add/Invite/Entitle User flow', function() {
         users.addUsersField.sendKeys(inputEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.collabRadio1.click();
-        users.inviteRadio2.click();
         browser.sleep(1000);
         users.manageCallInitiation.click();
         users.onboardButton.click();
-        notifications.assertSuccess(inputEmail, 'added successfully');
+        notifications.assertSuccess(inputEmail, 'sent successfully');
         notifications.clearNotifications();
       });
     });
@@ -190,11 +196,10 @@ describe('Add/Invite/Entitle User flow', function() {
         users.addUsersField.sendKeys(inputEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         users.collabRadio1.click();
-        users.inviteRadio2.click();
         browser.sleep(1000);
         users.manageCallInitiation.click();
         users.onboardButton.click();
-        notifications.assertSuccess(inputEmail, 'added successfully');
+        notifications.assertSuccess(inputEmail, 'sent successfully');
         notifications.clearNotifications();
       });
 
@@ -235,5 +240,138 @@ describe('Add/Invite/Entitle User flow', function() {
 
   });
 
+  //log in as huron user
+  describe('Page initialization', function() {
+    var addEmail = utils.randomTestGmail();
+
+    it('should login as huron admin', function(){
+      login.login(hurontestuser.username, hurontestuser.password);
+    });
+
+    describe('without sync', function () {
+      beforeEach(function() { browser.ignoreSynchronization = true; });
+      afterEach(function() { browser.ignoreSynchronization = false; });
+
+      it('clicking on users tab should change the view', function() {
+        navigation.clickUsers();
+      });
+    });
+
+    it('click on add button should pop up the adduser modal and display only invite button', function() {
+      users.addUsers.click();
+      browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
+      expect(users.manageDialog.isDisplayed()).toBeTruthy();
+      expect(users.onboardButton.isDisplayed()).toBeTruthy();
+      expect(users.entitleButton.isPresent()).toBeFalsy();
+      expect(users.addButton.isPresent()).toBeFalsy();
+    });
+
+    describe('Clear', function() {
+      it('should clear user input field and error message', function() {
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        users.clearButton.click();
+        expect(users.addUsersField.getText()).toBe('');
+      });
+    });
+
+    describe('Add users', function() {
+      it('should add users successfully', function() {
+        users.clearButton.click();
+        users.addUsersField.sendKeys(addEmail);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        users.collabRadio1.click();
+        browser.sleep(1000);
+        users.squaredUCCheckBox.click();
+        users.onboardButton.click();
+        notifications.assertSuccess(addEmail, 'added successfully');
+        notifications.clearNotifications();
+      });
+      it('clicking on cancel button should close the modal', function() {
+        users.closeAddUsers.click();
+        browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
+        expect(users.manageDialog.isDisplayed()).toBeFalsy();
+      });
+    });
+
+    describe('Delete user used for entitle test', function() {
+      it('should delete added user', function() {
+        expect(deleteUtils.deleteUser(addEmail)).toEqual(200);
+      });
+    });
+
+    it('should log out', function() {
+      navigation.logout();
+    });
+  });
+
+  //log in as admin with an account
+  describe('Page initialization', function() {
+    var addEmail = utils.randomTestGmail();
+
+    it('should login as huron admin', function(){
+      login.login(accounttestuser.username, accounttestuser.password);
+    });
+
+    describe('without sync', function () {
+      beforeEach(function() { browser.ignoreSynchronization = true; });
+      afterEach(function() { browser.ignoreSynchronization = false; });
+
+      it('clicking on users tab should change the view', function() {
+        navigation.clickUsers();
+      });
+    });
+
+    it('click on add button should pop up the adduser modal and display only invite button', function() {
+      users.addUsers.click();
+      browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
+      expect(users.manageDialog.isDisplayed()).toBeTruthy();
+      expect(users.onboardButton.isDisplayed()).toBeTruthy();
+      expect(users.entitleButton.isPresent()).toBeFalsy();
+      expect(users.addButton.isPresent()).toBeFalsy();
+    });
+
+    describe('check account buckets', function() {
+      it('should clear user input field and error message', function() {
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        users.clearButton.click();
+        expect(users.addUsersField.getText()).toBe('');
+      });
+
+      it('click on enable services individually', function() {
+        users.collabRadio1.click();
+        expect(users.messageLicenses.isDisplayed()).toBeTruthy();
+        expect(users.conferenceLicenses.isDisplayed()).toBeTruthy();
+        expect(users.communicationLicenses.isDisplayed()).toBeTruthy();
+      });
+    });
+
+    describe('Add users', function() {
+      it('should add users successfully', function() {
+        users.clearButton.click();
+        users.addUsersField.sendKeys(addEmail);
+        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        users.collabRadio1.click();
+        browser.sleep(1000);
+        users.onboardButton.click();
+        notifications.assertSuccess(addEmail, 'sent successfully');
+        notifications.clearNotifications();
+      });
+      it('clicking on cancel button should close the modal', function() {
+        users.closeAddUsers.click();
+        browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
+        expect(users.manageDialog.isDisplayed()).toBeFalsy();
+      });
+    });
+
+    describe('Delete user used for entitle test', function() {
+      it('should delete added user', function() {
+        expect(deleteUtils.deleteUser(addEmail)).toEqual(200);
+      });
+    });
+
+    it('should log out', function() {
+      navigation.logout();
+    });
+  });
 });
 

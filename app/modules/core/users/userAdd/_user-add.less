@@ -1,9 +1,13 @@
 .modal-useradd-dialog {
-	width: 700px;
+	width: 900px;
+}
+
+.modal-panel {
+  width: 830px;
 }
 
 .modal-manageGrp-dialog {
-  width: 750px;
+  width: 800px;
 }
 
 .modal-useradd-header {
@@ -42,6 +46,7 @@
 	line-height: 24px;
 	color: @gray-darkest;
 	text-align: left;
+  margin-bottom: 15px;
 }
 
  #usersfield-tokenfield {
@@ -73,17 +78,45 @@
 }
 
 .onboard-block {
-  padding-top: 20px;
+  margin-top: 5px;
+  margin-left: 30px;
+  width: 100%;
+}
+
+.license-block {
+  position: inherit;
+}
+
+.service-block {
+  margin-top: 5px;
+  width: 30%;
+  height: 300px;
+  padding-top: 10px;
+}
+
+.absolute {
+  position: absolute;
+  width: 30%;
+  margin: 0px;
+}
+
+.shift-middle {
+  position: absolute;
+  left: 33%;
+  width: 30%;
+  margin: 0px;
+}
+
+.shift-right {
+  position: relative;
+  left: 66%;
+  width: 33%;
+  margin: 0px;
 }
 
 .manage-group {
   position: relative;
   left: 65px;
-}
-
-.manage-entitlements {
-  position: relative;
-  left: 45px;
 }
 
 #manageGroupsDialog {
@@ -104,4 +137,57 @@
     background: transparent;
     border: none !important;
     font-size:0;
+}
+
+.select-grp {
+  position: absolute;
+  top: 55px;
+  left: 430px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.service-title {
+  margin-bottom: 15px
+}
+
+.onboard-radio {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.license-block {
+  margin-top: 20px;
+}
+
+.onboard-divider {
+  width: 205px;
+  margin: 5px 0px 0px -5px;
+}
+
+.onboard-check {
+  color: @brand-success;
+  margin-top: 10px;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.footer {
+  padding-right: 0px;
+}
+
+.manage-groups {
+  margin-left: 5px;
+}
+
+.service-label {
+  display: inline-block;
+  width: 80%;
+}
+
+.service-check {
+  display: inline-block;
+  vertical-align: top;
 }

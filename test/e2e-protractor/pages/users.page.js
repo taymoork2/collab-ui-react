@@ -77,12 +77,14 @@ var UsersPage = function() {
   this.titleField = element(by.id('titleField'));
   this.userTab = element(by.id('usertab'));
 
-  this.collabRadio1 = element(by.id('collabRadio1'));
-  this.collabRadio2 = element(by.id('collabRadio2'));
-  this.inviteRadio1 = element(by.id('inviteRadio1'));
-  this.inviteRadio2 = element(by.id('inviteRadio2'));
+  this.collabRadio1 = element(by.id('collabRadioLabel1'));
+  this.collabRadio2 = element(by.id('collabRadioLabel2'));
 
   this.rolesChevron = element(by.id('rolesChevron'));
+
+  this.messageLicenses = element(by.id('messaging'));
+  this.conferenceLicenses = element(by.id('conference'));
+  this.communicationLicenses = element(by.id('communication'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {

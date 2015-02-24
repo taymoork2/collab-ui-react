@@ -22,7 +22,7 @@ var Wizard = function () {
   this.toEnableSSOBtn = element(by.css('[ng-click="changeStep(\'enableSSO\')"]'));
   this.enableSSOBtn = element(by.css('[ng-click="enableSSO()"]'));
   this.auEvaluateBtn = element(by.css('[ng-click="evaluateStep(\'initial\', \'addUsers\')"]'));
-  this.usersfield = element(by.id('usersfield-wiz'));
+  this.usersfield = element(by.id('usersfield'));
   this.dirDomainInput = element(by.id('dirDomainText'));
   this.toInstallConnectorBtn = element.all(by.css('[ng-click="changeStep(\'installConnector\')"]'));
   this.toSyncStatusBtn = element.all(by.css('[ng-click="changeStep(\'syncStatus\')"]'));

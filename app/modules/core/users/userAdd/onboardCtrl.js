@@ -1,13 +1,52 @@
 'use strict';
 
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$location', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'HttpUtils',
-    function ($scope, $state, $location, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, HttpUtils) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$location', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
+    function ($scope, $state, $location, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
+
+      $scope.hasAccount = Authinfo.hasAccount();
+
+      function ServiceFeature(label, value, name, id, entitlements) {
+        this.label = label;
+        this.value = value;
+        this.name = name;
+        this.id = id;
+        this.entitlements = entitlements;
+      }
+
+      $scope.messageFeatures = [];
+      $scope.conferenceFeatures = [];
+      $scope.communicationFeatures = [];
+      $scope.messageFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeMsg'), 0, 'msgRadio', 'freeTeamRoom', Config.getDefaultEntitlements()));
+      $scope.conferenceFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeConf'), 0, 'confRadio', 'freeConferencing', Config.getDefaultEntitlements()));
+      $scope.communicationFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeComm'), 0, 'commRadio', 'advancedCommunication', Config.getDefaultEntitlements()));
+
+      var getAccountServices = function () {
+        if (Authinfo.getMessageServices()) {
+          $scope.messageFeatures = $scope.messageFeatures.concat(Authinfo.getMessageServices());
+        }
+        if (Authinfo.getConferenceServices()) {
+          $scope.conferenceFeatures = $scope.conferenceFeatures.concat(Authinfo.getConferenceServices());
+        }
+        if (Authinfo.getCommunicationServices()) {
+          $scope.communicationFeatures = $scope.communicationFeatures.concat(Authinfo.getCommunicationServices());
+        }
+      };
+
+      if (Authinfo.isInitialized()) {
+        getAccountServices();
+      }
 
       $scope.groups = [];
       GroupService.getGroupList(function (data, status) {
         if (data.success === true) {
           $scope.groups = data.groups;
+          if (data.groups && data.groups.length === 0) {
+            var defaultGroup = {
+              displayName: 'Default License Group'
+            };
+            data.groups.push(defaultGroup);
+          }
           $scope.selectedGroup = $scope.groups[0];
         } else {
           Log.debug('Failed to retrieve group list. Status: ' + status);
@@ -21,32 +60,14 @@ angular.module('Core')
         label: $filter('translate')('onboardModal.enableCollab'),
         value: 1,
         name: 'collabRadio',
-        id: 'collabRadio1',
-        isDisabled: false
+        id: 'collabRadio1'
       };
 
       $scope.collabRadio2 = {
         label: $filter('translate')('onboardModal.enableCollabGroup'),
         value: 2,
         name: 'collabRadio',
-        id: 'collabRadio2',
-        isDisabled: false
-      };
-
-      $scope.inviteRadio1 = {
-        label: $filter('translate')('onboardModal.waitInvitation'),
-        value: 1,
-        name: 'inviteRadio',
-        id: 'inviteRadio1',
-        isDisabled: false
-      };
-
-      $scope.inviteRadio2 = {
-        label: $filter('translate')('onboardModal.sendImmediate'),
-        value: 2,
-        name: 'inviteRadio',
-        id: 'inviteRadio2',
-        isDisabled: false
+        id: 'collabRadio2'
       };
 
       $scope.gridOptions = {
@@ -66,25 +87,58 @@ angular.module('Core')
         }]
       };
 
-      $scope.collabRadio = 2;
-      $scope.inviteRadio = 1;
+      $scope.collabRadio = {
+        value: 2
+      };
+      $scope.msgRadio = {
+        value: 0
+      };
+      $scope.confRadio = {
+        value: 0
+      };
+      $scope.commRadio = {
+        value: 0
+      };
+
+      $scope.setRadio = function (val) {
+        $scope.collabRadio.value = val;
+      };
+      $scope.setMsgRadio = function (val) {
+        $scope.msgRadio.value = val;
+      };
+      $scope.setConfRadio = function (val) {
+        $scope.confRadio.value = val;
+      };
+      $scope.setCommRadio = function (val) {
+        $scope.commRadio.value = val;
+      };
+
+      var isUCSelected = function (list) {
+        for (var x = 0; x < list.length; x++) {
+          var ent = list[x];
+          if (ent.entitlementName === 'ciscoUC' &&
+            ent.entitlementState === 'ACTIVE') {
+            return true;
+          }
+        }
+        return false;
+      };
 
       $scope.onboardUsers = function () {
-        HttpUtils.setTrackingID().then(function () {
-          if ($scope.inviteRadio === 1) {
-            inviteUsers();
-          } else if ($scope.inviteRadio === 2) {
-            if ($scope.isAddEnabled()) {
-              addUsers();
-            } else if ($scope.isEntitleEnabled()) {
-              entitleUsers();
-            } else {
-              var error = [];
-              error.push()
-              Notification.notify(error, 'error');
-            }
+        var entList = getEntitlements('add');
+        if (entList.length > 0 && !isUCSelected(entList)) {
+          inviteUsers();
+        } else {
+          if ($scope.isAddEnabled()) {
+            addUsers();
+          } else if ($scope.isEntitleEnabled()) {
+            entitleUsers();
+          } else {
+            var error = [];
+            error.push();
+            Notification.notify(error, 'error');
           }
-        });
+        }
       };
 
       //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -203,13 +257,33 @@ angular.module('Core')
         $scope.results = null;
       };
 
+      var getServiceEntitlements = function (list, service) {
+        if (service.entitlements) {
+          var features = service.entitlements;
+          for (var f = 0; f < features.length; f++) {
+            list.push(new Feature(features[f], 'ACTIVE'));
+          }
+        }
+        return list;
+      };
+
       var getEntitlements = function (action) {
         var entitleList = [];
-        var state = null;
-        for (var key in $scope.entitlements) {
-          state = $scope.entitlements[key];
-          if (action === 'add' || (action === 'entitle' && state)) {
-            entitleList.push(new Feature(key, state));
+        if (Authinfo.hasAccount() && $scope.collabRadio.value === 1) {
+          var selMsgService = $scope.messageFeatures[$scope.msgRadio.value];
+          var selConfService = $scope.conferenceFeatures[$scope.confRadio.value];
+          var selCommService = $scope.communicationFeatures[$scope.commRadio.value];
+
+          entitleList = getServiceEntitlements(entitleList, selMsgService);
+          entitleList = getServiceEntitlements(entitleList, selConfService);
+          entitleList = getServiceEntitlements(entitleList, selCommService);
+        } else {
+          var state = null;
+          for (var key in $scope.entitlements) {
+            state = $scope.entitlements[key];
+            if (action === 'add' || (action === 'entitle' && state)) {
+              entitleList.push(new Feature(key, state));
+            }
           }
         }
         Log.debug(entitleList);
@@ -523,14 +597,6 @@ angular.module('Core')
           }
         }
         $scope.entitlementsKeys = Object.keys($scope.entitlements).sort().reverse();
-      };
-
-      $scope.getEntitlementList = function () {
-        var list = [];
-        for (var i = 0; i < $scope.entitlements; i++) {
-
-        }
-        return list;
       };
 
       $scope.$on('AuthinfoUpdated', function () {

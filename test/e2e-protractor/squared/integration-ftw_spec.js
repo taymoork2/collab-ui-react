@@ -57,7 +57,8 @@ describe('First Time Wizard', function() {
     wizard.radiobuttons.get(0).click();
     browser.sleep(1000);
     wizard.nextBtn.click();
-    expect(wizard.usersfield.isDisplayed()).toBeTruthy();
+    browser.sleep(1000);
+    expect(users.addUsersField.isDisplayed()).toBeTruthy();
     browser.sleep(1000);
     wizard.finishBtn.click();
 

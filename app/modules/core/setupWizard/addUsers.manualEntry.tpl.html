@@ -1,14 +1,8 @@
-<div class="wizard-container">
-  <p translate="firstTimeWizard.manualInvite"></p>
-  <form role="form">
-    <div class="form-group wizard-form">
-      <!-- <label for="inputEmail3" translate="usersPage.email"></label> -->
-      <input class="form-control" type="text" id="usersfield-wiz" placeholder="Enter email addresses separated by commas or semi-colons" ng-focus="setupTokenfield()" />
-    </div>
-    <div class="wizard-btn-action-row">
-      <button id="btnInvite" type="button" class="btn btn-info btn-lg" ng-click="inviteUsers()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>">
-        <span translate="usersPage.invite"></span>
-      </button>
-    </div>
-  </form>
+<div class="wizard-onboard-container">
+  <p class="onboard-label" translate="firstTimeWizard.manualInvite"></p>
+
+  <div class="onboard-panel">
+    <cr-onboard-users class="onboard-users-panel"></cr-onboard-users>
+  </div>
+
 </div>

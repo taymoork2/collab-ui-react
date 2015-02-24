@@ -116,7 +116,6 @@ angular.module('Core')
           $rootScope.services = data.services;
           authData.isInitialized = true;
           authData.setupDone = data.setupDone;
-          authData.hasAccount = 'yes';
           $rootScope.$broadcast('AuthinfoUpdated');
         },
         clear: function () {
@@ -148,15 +147,15 @@ angular.module('Core')
                 var service = null;
                 switch (license.offerName) {
                 case 'CF':
-                  service = new ServiceFeature(license.offerName, x + 1, 'confRadio', license.offerName, license.features);
+                  service = new ServiceFeature($filter('translate')('onboardModal.paidConf'), x + 1, 'confRadio', license.offerName, license.features);
                   confLicenses.push(service);
                   break;
                 case 'MS':
-                  service = new ServiceFeature(license.offerName, x + 1, 'msgRadio', license.offerName, license.features);
+                  service = new ServiceFeature($filter('translate')('onboardModal.paidMsg'), x + 1, 'msgRadio', license.offerName, license.features);
                   msgLicenses.push(service);
                   break;
                 case 'CM':
-                  service = new ServiceFeature(license.offerName, x + 1, 'commRadio', license.offerName, license.features);
+                  service = new ServiceFeature($filter('translate')('onboardModal.paidComm'), x + 1, 'commRadio', license.offerName, license.features);
                   commLicenses.push(service);
                   break;
                 }
