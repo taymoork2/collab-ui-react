@@ -41,7 +41,13 @@ describe('XhrNotificationService', function () {
   it('should handle generic errors', function () {
     Service.notify([null, 404])
     expect(notification.notify.callCount).toBe(1);
-    expect(notification.notify.args[0][0][0]).toBe('Backend responded with status 404. Please see the browser error console for details.');
+    expect(notification.notify.args[0][0][0]).toBe('Backend responded with status 404.');
+  });
+
+  it('should handle generic errors with null status', function () {
+    Service.notify([null, 0])
+    expect(notification.notify.callCount).toBe(1);
+    expect(notification.notify.args[0][0][0]).toBe('Backend responded with an unknown status.');
   });
 
   it('should handle custom messages', function () {

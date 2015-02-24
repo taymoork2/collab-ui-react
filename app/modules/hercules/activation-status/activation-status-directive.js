@@ -2,14 +2,14 @@
   'use strict';
   angular
     .module('Hercules')
-    .controller('ActivationStatusController', ['$scope', 'USSService', 'Authinfo', function ($scope, ussService, Authinfo) {
+    .controller('ActivationStatusController', ['$scope', 'USSService', 'Authinfo', 'XhrNotificationService', function ($scope, ussService, Authinfo, xhrNotificationService) {
       $scope.isEnabled = Authinfo.isFusion();
       if (!$scope.isEnabled) return;
 
       var updateStatusForUser = function (id) {
         $scope.inflight = true;
         ussService.getStatusesForUser(id, function (err, data) {
-          $scope.lastRequestFailed = err;
+          $scope.lastRequestFailed = !err ? null : xhrNotificationService.getMessages(err);
           $scope.activationStatus = data;
           $scope.inflight = false;
         });

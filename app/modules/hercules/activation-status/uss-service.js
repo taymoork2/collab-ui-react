@@ -11,7 +11,7 @@ angular.module('Hercules')
               callback(null, data);
             })
             .error(function () {
-              callback(true, null);
+              callback(arguments, null);
             });
         },
         pollCIForUser: function (userId, callback) {
@@ -21,7 +21,7 @@ angular.module('Hercules')
               callback(null, data);
             })
             .error(function () {
-              callback(true, null);
+              callback(arguments, null);
             });
         },
         decorateWithStatus: function (status) {

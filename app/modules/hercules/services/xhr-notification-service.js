@@ -30,7 +30,7 @@ angular.module('Hercules')
         if (data && data.error && data.error.message) {
           return findMessages(data);
         } else {
-          return ['Backend responded with status ' + status + '. Please see the browser error console for details.'];
+          return [status ? 'Backend responded with status ' + status + '.' : 'Backend responded with an unknown status.'];
         }
       };
 
@@ -38,12 +38,15 @@ angular.module('Hercules')
         notify: function (messageOrArgs, args) {
           var messages;
           if (args) {
-            messages = getMessages.apply(null, args);
+            messages = this.getMessages(args);
             messages.unshift(messageOrArgs);
           } else {
-            messages = getMessages.apply(null, messageOrArgs);
+            messages = this.getMessages(messageOrArgs);
           }
           return notification.notify(messages, 'error');
+        },
+        getMessages: function (args) {
+          return getMessages.apply(null, args);
         }
       };
     }

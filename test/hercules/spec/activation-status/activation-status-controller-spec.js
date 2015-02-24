@@ -80,7 +80,7 @@ describe('ActivationStatusController', function() {
     it('sets and clears error flag when api derps', function(){
       expect($scope.lastRequestFailed).toBeFalsy();
       $scope.$digest();
-      service.getStatusesForUser.callArgWith(1, true);
+      service.getStatusesForUser.callArgWith(1, [true]);
       expect($scope.lastRequestFailed).toBeTruthy();
       service.getStatusesForUser.callArgWith(1, null);
       expect($scope.lastRequestFailed).toBeFalsy();
