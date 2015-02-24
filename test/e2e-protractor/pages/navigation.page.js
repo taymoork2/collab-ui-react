@@ -10,7 +10,7 @@ var Navigation = function(){
   this.orgTab = element(by.css('a[href="#organization"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
-  this.reportsTab = element(by.css('li.reportTab > a'));
+  this.reportsTab = element(by.css('.reportTab'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));

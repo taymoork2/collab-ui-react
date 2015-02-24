@@ -1,0 +1,27 @@
+<div class="reports">
+	<div class="reports-header row page-header">
+		<div class="page-title col-md-3">
+		  <span class="title" translate="reports.title"/>
+		</div>
+		<div class="page-title col-md-9 report-filters-container">
+		    <select class="report-filter report-filter-one" id="serviceFilter" ng-options="option.label for option in nav.serviceOptions track by option.id" ng-model="nav.serviceSelected"></select>
+		    <select class="report-filter report-filter-two" id="customerFilter" ng-options="option.label for option in nav.customerOptions track by option.id" ng-model="nav.customerSelected"></select>
+		    <select class="report-filter report-filter-one" id="timeFilter" ng-options="option.label for option in nav.timeOptions track by option.id" ng-model="nav.timeSelected"></select>
+		</div>
+	</div>
+	<div class="report-tabs-container">
+		<section class="tab-reports background-white">
+		    <cs-tabset justified="true" class="largetabs">
+			    <cs-tab ng-repeat="tab in nav.tabs"  ui-sref-active="current">
+			        <cs-tab-heading>
+			        	<h4 translate="{{tab.title}}"></h4>
+			        </cs-tab-heading>
+			        <div id="{{tab.name}}Report" class="tab-report" ng-hide="nav.isRefresh(tab)"></div>
+			        <div id="{{tab.name}}RefreshDiv" class="report-status" ng-show="nav.isRefresh(tab)">
+			        	<i class='icon icon-spinner icon-2x'></i>
+			        </div>
+			    </cs-tab>
+		    </cs-tabset>
+		</section>
+	</div>
+</div>

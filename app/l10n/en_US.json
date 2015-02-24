@@ -532,6 +532,22 @@
     "finishSub": "Complete your setup",
     "completeRequired": "{{name}} must be completed."
   },
+  "reports": {
+    "title": "Reports",
+    "engagementTab": "Engagement",
+    "qualityTab": "Quality",
+    "opportunitiesTab": "Opportunities",
+    "time": "All Time",
+    "week": "Previous Week",
+    "month": "Previous Month",
+    "threeMonths": "Last Three Months",
+    "customers": "All Customers",
+    "mostEngaged": "5 Most Engaged",
+    "leastEngaged": "5 Least Engaged",
+    "highQuality": "5 Highest Quality",
+    "leastQuality": "5 Lowest Quality",
+    "services": "All Services"
+  },
   "callRouting": {
     "title": "Call Routing",
     "autoAttendantTitle": "Auto Attendant",
