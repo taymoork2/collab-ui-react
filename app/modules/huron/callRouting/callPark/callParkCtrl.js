@@ -6,7 +6,7 @@
     .controller('CallParkCtrl', CallParkCtrl);
 
   /* @ngInject */
-  function CallParkCtrl($rootScope, $scope, CallPark, $modal) {
+  function CallParkCtrl($rootScope, CallPark, $modal) {
     var vm = this;
     vm.callParks = [];
     vm.showInformation = true;

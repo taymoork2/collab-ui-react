@@ -3,91 +3,90 @@
 
   angular
     .module('Huron')
-    .controller('VoicemailInfoCtrl', ['$scope', '$q', 'UserServiceCommon', 'TelephonyInfoService', 'Log', 'Config', '$filter', 'Notification', 'HttpUtils',
-      function ($scope, $q, UserServiceCommon, TelephonyInfoService, Log, Config, $filter, Notification, HttpUtils) {
-        $scope.voicemailEnabled = false;
-        $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+    .controller('VoicemailInfoCtrl', VoicemailInfoCtrl);
 
-        $scope.voicemailPayload = {
-          'services': [],
-          'voicemail': {}
+  /* @ngInject */
+  function VoicemailInfoCtrl($scope, $translate, UserServiceCommon, TelephonyInfoService, Notification, HttpUtils) {
+    var vm = this;
+    vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+    vm.enableVoicemail = isVoicemailEnabled();
+    vm.saveVoicemail = saveVoicemail;
+
+    $scope.$on('telephonyInfoUpdated', function () {
+      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+    });
+
+    function isVoicemailEnabled() {
+      var voicemailEnabled = false;
+      if (vm.telephonyInfo.services !== null && vm.telephonyInfo.services.length > 0) {
+        for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
+          if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
+            voicemailEnabled = true
+          }
+        }
+      }
+      return voicemailEnabled;
+    }
+
+    function saveVoicemail() {
+      var voicemailPayload = {
+        'services': [],
+        'voicemail': {}
+      };
+      HttpUtils.setTrackingID().then(function () {
+        var result = {
+          msg: null,
+          type: 'null'
         };
 
-        $scope.$on('telephonyInfoUpdated', function () {
-          $scope.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-        });
+        angular.element('#btnSaveVoicemail').button('loading');
+        if (vm.enableVoicemail) {
+          if (!isVoicemailEnabled()) {
+            vm.telephonyInfo.services.push('VOICEMAIL');
+          }
 
-        $scope.isVoicemailEnabled = function () {
-          var voicemailEnabled = false;
-          if ($scope.telephonyInfo.services !== null && $scope.telephonyInfo.services.length > 0) {
-            for (var j = 0; j < $scope.telephonyInfo.services.length; j++) {
-              if ($scope.telephonyInfo.services[j] === 'VOICEMAIL') {
-                voicemailEnabled = true
+          if (typeof $scope.directoryNumber === 'undefined') {
+            for (var i = 0; i < vm.telephonyInfo.directoryNumbers.length; i++) {
+              if (vm.telephonyInfo.directoryNumbers[i].dnUsage === 'Primary') {
+                voicemailPayload.voicemail = {
+                  'dtmfAccessId': vm.telephonyInfo.directoryNumbers[i].pattern
+                };
+                voicemailPayload.userName = $scope.currentUser.userName;
               }
+            }
+          } else {
+            voicemailPayload.voicemail = {
+              'dtmfAccessId': $scope.directoryNumber.pattern
+            };
+          }
+        } else {
+          for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
+            if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
+              vm.telephonyInfo.services.splice(j, 1);
             }
           }
-          return voicemailEnabled;
-        };
-
-        $scope.voicemailEnabled = $scope.isVoicemailEnabled();
-
-        $scope.saveVoicemail = function () {
-          HttpUtils.setTrackingID().then(function () {
-            var deferred = $q.defer();
-            var result = {
-              msg: null,
-              type: 'null'
-            };
-
-            angular.element('#btnSaveVoicemail').button('loading');
-            if (!$scope.isVoicemailEnabled()) {
-              $scope.telephonyInfo.services.push('VOICEMAIL');
-
-              if (typeof $scope.directoryNumber === 'undefined') {
-                for (var i = 0; i < $scope.telephonyInfo.directoryNumbers.length; i++) {
-                  if ($scope.telephonyInfo.directoryNumbers[i].dnUsage === 'Primary') {
-                    $scope.voicemailPayload.voicemail = {
-                      'dtmfAccessId': $scope.telephonyInfo.directoryNumbers[i].pattern
-                    };
-                    $scope.voicemailPayload.userName = $scope.currentUser.userName;
-                  }
-                }
-              } else {
-                $scope.voicemailPayload.voicemail = {
-                  'dtmfAccessId': $scope.directoryNumber.pattern
-                };
-              }
-            } else {
-              for (var j = 0; j < $scope.telephonyInfo.services.length; j++) {
-                if ($scope.telephonyInfo.services[j] === 'VOICEMAIL') {
-                  $scope.telephonyInfo.services.splice(j, 1);
-                }
-              }
-            }
-            $scope.voicemailPayload.services = $scope.telephonyInfo.services;
-            UserServiceCommon.update({
-                customerId: $scope.currentUser.meta.organizationID,
-                userId: $scope.currentUser.id
-              }, $scope.voicemailPayload,
-              function (data) {
-                deferred.resolve(data);
-                angular.element('#btnSaveVoicemail').button('reset');
-                result.msg = $filter('translate')('voicemailPanel.success');
-                result.type = 'success';
-                Notification.notify([result.msg], result.type);
-                TelephonyInfoService.updateUserServices($scope.telephonyInfo.services);
-              },
-              function (error) {
-                Log.debug('getDirectoryNumberDetails failed.  Status: ' + error.status + ' Response: ' + error.data);
-                result.msg = $filter('translate')('voicemailPanel.error') + error.data;
-                result.type = 'error';
-                Notification.notify([result.msg], result.type);
-                deferred.reject(error);
-                angular.element('#btnSaveVoicemail').button('reset');
-              }
-            );
-          });
-        };
-      }
-    ]);
+        }
+        voicemailPayload.services = vm.telephonyInfo.services;
+        UserServiceCommon.update({
+            customerId: $scope.currentUser.meta.organizationID,
+            userId: $scope.currentUser.id
+          },
+          voicemailPayload,
+          function () {
+            angular.element('#btnSaveVoicemail').button('reset');
+            result.msg = $translate.instant('voicemailPanel.success');
+            result.type = 'success';
+            Notification.notify([result.msg], result.type);
+            TelephonyInfoService.updateUserServices(vm.telephonyInfo.services);
+          },
+          function (response) {
+            result.msg = $translate.instant('voicemailPanel.error') + response.data;
+            result.type = 'error';
+            Notification.notify([result.msg], result.type);
+            angular.element('#btnSaveVoicemail').button('reset');
+          }
+        );
+      });
+    }
+  }
 })();

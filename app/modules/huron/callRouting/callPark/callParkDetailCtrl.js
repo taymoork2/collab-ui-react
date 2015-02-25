@@ -6,7 +6,7 @@
     .controller('CallParkDetailCtrl', CallParkDetailCtrl);
 
   /* @ngInject */
-  function CallParkDetailCtrl($scope, $modalInstance, CallPark) {
+  function CallParkDetailCtrl($modalInstance, CallPark) {
     var vm = this;
     vm.callPark = {
       'retrievalPrefix': '*'
@@ -15,8 +15,10 @@
       pattern: 'range',
       reversionPattern: 'owner'
     };
+    vm.addCallPark = addCallPark;
+    vm.addCallParkByRange = addCallParkByRange;
 
-    $scope.addCallParkByRange = function (callPark, rangeMin, rangeMax) {
+    function addCallParkByRange(callPark, rangeMin, rangeMax) {
       CallPark.createByRange(callPark, rangeMin, rangeMax)
         .then(function () {
           $modalInstance.close();
@@ -24,9 +26,9 @@
         .catch(function () {
           $modalInstance.dismiss();
         });
-    };
+    }
 
-    $scope.addCallPark = function (callPark) {
+    function addCallPark(callPark) {
       CallPark.create(callPark)
         .then(function () {
           $modalInstance.close();
@@ -34,6 +36,6 @@
         .catch(function () {
           $modalInstance.dismiss();
         });
-    };
+    }
   }
 })();

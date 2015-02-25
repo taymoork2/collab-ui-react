@@ -60,6 +60,6 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-primary" ng-click="cpd.options.pattern === 'range' ? addCallParkByRange(cpd.callPark, cpd.options.rangeMin, cpd.options.rangeMax) : addCallPark(cpd.callPark)">{{'callPark.createButton' | translate}}</button>
+  <button type="button" class="btn btn-primary" ng-click="cpd.options.pattern === 'range' ? cpd.addCallParkByRange(cpd.callPark, cpd.options.rangeMin, cpd.options.rangeMax) : cpd.addCallPark(cpd.callPark)">{{'callPark.createButton' | translate}}</button>
   <button type="button" class="btn btn-primary" ng-click="$dismiss()">{{'common.cancel' | translate}}</button>
 </div>

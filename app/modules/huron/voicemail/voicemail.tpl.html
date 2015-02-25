@@ -1,10 +1,10 @@
 <form name="voicemailForm" role="form">
-  <cr-details-body title="{{'voicemailPanel.title' | translate}}" on-save="saveVoicemail()">
+  <cr-details-body title="{{'voicemailPanel.title' | translate}}" on-save="voicemail.saveVoicemail()">
     <div class="details-body">
-      {{'voicemailPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="voicemailEnabled"></cs-switchbutton>
+      <span translate='voicemailPanel.toggle'></span>&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="voicemail.enableVoicemail"></cs-switchbutton>
       <br>
       <br>
-      <p><small>{{'voicemailPanel.voicemailNote' | translate}}</small></p>
+      <p><small translate='voicemailPanel.voicemailNote'></small></p>
     </div>
   </cr-details-body>
 </form>
