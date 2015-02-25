@@ -34,7 +34,7 @@ describe('invite page with user param', function() {
   });
 
   it('should forward to squared app with page param', function() {
-    browser.get('#/invite?user=' + encryptedQueryParam);
+    browser.get('#/invite?user=' + encodeURIComponent(encryptedQueryParam));
 
     browser.driver.wait(function() {
       return browser.driver.isElementPresent(by.id(loginBtnId));

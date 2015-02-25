@@ -37,7 +37,7 @@ angular
         });
 
       $httpProvider.interceptors.push('TrackingIDInterceptor');
-      $httpProvider.responseInterceptors.push('ResponseInterceptor');
+      $httpProvider.interceptors.push('ResponseInterceptor');
 
       $translateProvider.useStaticFilesLoader({
         prefix: 'l10n/',
@@ -169,6 +169,7 @@ angular
         .state('users.list.preview.directorynumber', {
           templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
           controller: 'LineSettingsCtrl',
+          controllerAs: 'lineSettings',
           params: {
             showAddUsers: {},
             directoryNumber: {}
@@ -182,7 +183,8 @@ angular
         })
         .state('users.list.preview.device', {
           templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-          controller: 'DeviceDetailCtrl as ucDeviceDetail',
+          controller: 'DeviceDetailCtrl',
+          controllerAs: 'ucDeviceDetail',
           params: {
             showAddUsers: {},
             device: {}

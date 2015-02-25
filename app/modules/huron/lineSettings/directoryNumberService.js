@@ -5,8 +5,7 @@
     .module('Huron')
     .factory('DirectoryNumber', DirectoryNumber);
 
-  DirectoryNumber.$inject = ['Authinfo', 'TelephonyInfoService', 'UserDirectoryNumberService', 'DirectoryNumberService', 'AlternateNumberService', 'HuronAssignedLine', 'UserDirectoryNumberService'];
-
+  /* @ngInject */
   function DirectoryNumber(Authinfo, TelephonyInfoService, UserDirectoryNumberService, DirectoryNumberService, AlternateNumberService, HuronAssignedLine) {
     var directoryNumberPayload = {
       uuid: '',

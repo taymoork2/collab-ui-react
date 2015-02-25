@@ -32,10 +32,10 @@
       </div>
     </div>
     <div class="col-xs-12 col-sm-5 col-md-5" ng-show="Utils.isAdminPage() && userTabActive">
-      <div class="page-option-buttons">
+      <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
         <button id="addUsers" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addUsersDialog" translate="usersPage.inviteUsers" ng-click="setupTokenfield();resetEntitlements();">
         </button>
-        <a ng-controller="ExportUsersCtrl" id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
+        <a id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
           <span id="export-icon"><i class="icon icon-content-share"></i></span>
         </a>
       </div>

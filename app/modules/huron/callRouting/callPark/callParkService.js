@@ -46,9 +46,9 @@
       for (var pattern = rangeMin; pattern <= rangeMax; pattern++) {
         var data = angular.copy(callPark);
         data.pattern = pattern;
-        deferreds.push(angular.copy(CallParkService.save({
+        deferreds.push(CallParkService.save({
           customerId: Authinfo.getOrgId()
-        }, data, saveSuccess, saveError).$promise));
+        }, data, saveSuccess, saveError).$promise);
       }
       return $q.all(deferreds).finally(function () {
         Notification.notify(success, 'success');

@@ -1,8 +1,8 @@
 'use strict';
 
 var testuser = {
-  username: 'admin@uc.e2e.huron-alpha.com',
-  password: 'C1sco123!'
+  username: 'admin@int2.huron-alpha.com',
+  password: 'Cisco123!'
 };
 
 xdescribe('Telephony Info', function() {
@@ -13,19 +13,37 @@ xdescribe('Telephony Info', function() {
     addNew: 'Add New'
   };
   var snrLine = Math.ceil(Math.random()*Math.pow(10,10)).toString();
+  var externalCFLine = Math.ceil(Math.random()*Math.pow(10,10)).toString();
 
   it('should login', function(){
     login.login(testuser.username,testuser.password);
   });
 
-  it('should create user', function() {
+  it('clicking on users tab should change the view', function() {
     navigation.clickUsers();
+  });
+
+  it('should create user', function() {
     users.addUsers.click();
-    browser.sleep(1000);
+    browser.wait(function(){
+      return users.addUsersField.isPresent().then(function(present){
+        return present;
+      });
+    });
+
+    users.addUsersField.clear();
+    users.addUsersField.click();
     users.addUsersField.sendKeys(user);
+    users.addUsersField.sendKeys(protractor.Key.ENTER);
+
     users.collabRadio1.click();
-    users.inviteRadio2.click();
-    browser.sleep(1000);
+
+    browser.wait(function(){
+      return users.squaredUCCheckBox.isPresent().then(function(present){
+        return present;
+      });
+    });
+
     users.squaredUCCheckBox.click();
     users.onboardButton.click();
     notifications.assertSuccess(user, 'added successfully');
@@ -204,12 +222,9 @@ xdescribe('Telephony Info', function() {
     });
 
     it('should save external call forwarding to an outside number', function(){
-      expect(telephony.forwardExternalBusy.isDisplayed()).toBeFalsy();
-      telephony.forwardExternalCalls.click();
-
-      expect(telephony.forwardExternalBusy.isDisplayed()).toBeTruthy();
-      telephony.selectOption(telephony.forwardExternalAway, dropdownVariables.addNew);
-      telephony.setNumber(telephony.forwardExternalBusyNoAnswer, snrLine);
+      expect(telephony.forwardExternalBusyNoAnswer.isDisplayed()).toBeTruthy();
+      telephony.selectOption(telephony.forwardExternalBusyNoAnswer, dropdownVariables.addNew);
+      telephony.setNumber(telephony.forwardExternalBusyNoAnswer, externalCFLine);
       telephony.saveButton.click();
       notifications.assertSuccess('Line configuration saved successfully');
 
@@ -221,7 +236,7 @@ xdescribe('Telephony Info', function() {
         });
       });
       expect(telephony.forwardExternalBusyNoAnswer.isDisplayed()).toBeTruthy();
-      expect(telephony.forwardExternalBusyNoAnswer.element(by.css('input')).getAttribute('value')).toEqual(snrLine);
+      expect(telephony.forwardExternalBusyNoAnswer.element(by.css('input')).getAttribute('value')).toEqual(externalCFLine);
     });
 
     it('should change caller id to custom display', function(){
@@ -277,6 +292,7 @@ xdescribe('Telephony Info', function() {
       expect(telephony.internalNumber.isDisplayed).toBeTruthy();
       telephony.internalNumber.click();
       telephony.verifyNewNumber().then(function(number){
+        telephony.forwardBusyNoAnswerRadio.click();
         telephony.selectOption(telephony.forwardBusyNoAnswer, dropdownVariables.addNew);
         telephony.setNumber(telephony.forwardBusyNoAnswer, snrLine);
         expect(telephony.removeButton.isPresent()).toBeFalsy();

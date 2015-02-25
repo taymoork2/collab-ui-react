@@ -4,8 +4,8 @@
 /* global it */
 
 var admintestuser= {
-  username: 'admin@uc.e2e.huron-alpha.com',
-  password: 'C1sco123!'
+  username: 'admin@int1.huron-alpha.com',
+  password: 'Cisco123!'
 };
 
 xdescribe('Squared UC Add User flow', function() {
@@ -33,7 +33,7 @@ xdescribe('Squared UC Add User flow', function() {
       it('should display input user email in results with success message', function() {
         users.addUsersField.sendKeys(inputEmail);
         users.collabRadio1.click();
-        users.inviteRadio2.click();
+        // users.inviteRadio2.click();
         browser.sleep(1000);
         expect(users.onboardButton.isDisplayed()).toBeTruthy();
         users.assertEntitlementListSize(5);

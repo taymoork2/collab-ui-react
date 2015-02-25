@@ -1,8 +1,8 @@
 'use strict';
 
 var testuser = {
-  username: 'admin@uc.e2e.huron-alpha.com',
-  password: 'C1sco123!'
+  username: 'admin@int2.huron-alpha.com',
+  password: 'Cisco123!'
 };
 
 var pattern = Math.ceil(Math.random()*Math.pow(10,5)).toString();

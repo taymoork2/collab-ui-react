@@ -19,7 +19,7 @@ var emailParams = '&forward=YWRtaW5UZXN0VXNlckB3eDIuZXhhbXBsZS5jb20&pwdResetSucc
 describe('Downloads Page with email parameter and reset/admin email params', function() {
 
   it('should display email account', function() {
-    browser.get('#/downloads?email=' + testuser + emailParams);
+    browser.get('#/downloads?email=' + encodeURIComponent(testuser) + emailParams);
     expect(download.account.getText()).toContain(testuser);
   });
 
@@ -47,7 +47,7 @@ describe('Downloads Page with email parameter and reset/admin email params', fun
 describe('Downloads Page with email parameter only', function() {
 
   it('should display email account', function() {
-    browser.get('#/downloads?email=' + testuser);
+    browser.get('#/downloads?email=' + encodeURIComponent(testuser));
     expect(download.account.getText()).toContain(testuser);
   });
 

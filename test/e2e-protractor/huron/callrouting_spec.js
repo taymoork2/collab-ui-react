@@ -1,8 +1,8 @@
 'use strict';
 
 var testuser = {
-  username: 'admin@uc.e2e.huron-alpha.com',
-  password: 'C1sco123!'
+  username: 'admin@int2.huron-alpha.com',
+  password: 'Cisco123!'
 };
 
 var pattern = Math.ceil(Math.random()*Math.pow(10,4)).toString();
@@ -47,9 +47,13 @@ xdescribe('Huron Call Routing', function() {
       browser.sleep(1000);
       expect(callrouting.name.isDisplayed()).toBeTruthy;
       callrouting.name.sendKeys((pattern + 1) + " through " + (pattern + 2));
+      callrouting.rangeMin.click();
       callrouting.rangeMin.sendKeys((pattern + 1));
+      callrouting.rangeMax.click();
       callrouting.rangeMax.sendKeys((pattern + 2));
+      callrouting.retrievalPrefix.click();
       callrouting.retrievalPrefix.sendKeys(pattern);
+      callrouting.reversionPattern.click();
       callrouting.reversionPattern.sendKeys(pattern);
       callrouting.createButton.click();
       browser.sleep(1000);

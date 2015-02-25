@@ -4,13 +4,11 @@
     {{'directoryNumberPanel.internalNumberLabel' | translate}}<br>
     {{'directoryNumberPanel.internalNumberExtension' | translate}}<span class="asterix">*</span>
   </label>
-  <select ng-model="$parent.assignedInternalNumber" class="form-control" id="internalNumber" ng-options="directoryNumber.pattern for directoryNumber in internalNumberPool track by directoryNumber.uuid">
+  <select ng-model="lineSettings.assignedInternalNumber" class="form-control" id="internalNumber" ng-options="directoryNumber.pattern for directoryNumber in lineSettings.internalNumberPool track by directoryNumber.uuid">
   </select>
 </div>
 <div class="form-group">
-  <label for="externalNumber">
-    {{'directoryNumberPanel.externalNumberLabel' | translate}}
-  </label>
-  <select ng-model="$parent.assignedExternalNumber" class="form-control" id="externalNumber" ng-options="directoryNumber.pattern for directoryNumber in externalNumberPool track by directoryNumber.uuid">
+  <label for="externalNumber" translate="directoryNumberPanel.externalNumberLabel"></label>
+  <select ng-model="lineSettings.assignedExternalNumber" class="form-control" id="externalNumber" ng-options="directoryNumber.pattern for directoryNumber in lineSettings.externalNumberPool track by directoryNumber.uuid">
   </select>
 </div>

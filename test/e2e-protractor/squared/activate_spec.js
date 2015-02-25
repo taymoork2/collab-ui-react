@@ -86,7 +86,7 @@ describe('Self Registration Activation Page', function() {
 
       expect(encryptedQueryParam).not.toBe(null);
 
-      browser.get('#/activate?eqp=' + encryptedQueryParam);
+      browser.get('#/activate?eqp=' + encodeURIComponent(encryptedQueryParam));
 
       navigation.expectAdminSettingsDisplayed(false);
     });
@@ -106,7 +106,7 @@ describe('Self Registration Activation Page', function() {
   describe('Desktop activation for android device', function() {
 
     it('should display without admin controls on navigation bar', function() {
-      browser.get('#/activate?eqp=' + encryptedQueryParam);
+      browser.get('#/activate?eqp=' + encodeURIComponent(encryptedQueryParam));
 
       navigation.expectAdminSettingsDisplayed(false);
 
@@ -125,7 +125,7 @@ describe('Self Registration Activation Page', function() {
   describe('Desktop activation after code is invalidated', function() {
 
     it('should display without admin controls on navigation bar', function() {
-      browser.get('#/activate?eqp=' + invalidatedParam);
+      browser.get('#/activate?eqp=' + encodeURIComponent(invalidatedParam));
 
       navigation.expectAdminSettingsDisplayed(false);
     });

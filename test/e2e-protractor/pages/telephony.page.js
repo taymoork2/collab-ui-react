@@ -17,7 +17,7 @@ var TelephonyPage = function(){
   this.cancelDisassociation = element(by.css('.modal-template')).element(by.css('.btn-default'));
   this.disassociateLine = element(by.css('.modal-template')).element(by.css('.btn-danger'));
 
-  this.forowardNoneRadio = element(by.cssContainingText("span","Do not forward calls"));
+  this.forwardNoneRadio = element(by.cssContainingText("span","Do not forward calls"));
   this.forwardAllRadio = element(by.cssContainingText("span","Forward all calls"));
   this.forwardBusyNoAnswerRadio = element(by.cssContainingText("span","Forward calls when line is busy or away"));
   this.forwardAll = element(by.id('cfa'));
@@ -45,7 +45,7 @@ var TelephonyPage = function(){
 
   this.primaryNumber = element.all(by.repeater('directoryNumber in vm.telephonyInfo.directoryNumbers')).first().element(by.css('a'));
   this.lineConfigPanel = element(by.css('.ent-detail-panel'));
-  this.forwardBusyNoAnswerInput = element(by.css('.ent-detail-panel')).element(by.id('cfb')).element(by.css('input'));
+  this.forwardBusyNoAnswerInput = element(by.css('.ent-detail-panel')).element(by.id('cfbna')).element(by.css('input'));
   this.closeLineConfig = element(by.id('exit-details-btn'));
 
   this.verifyNewNumber = function(){

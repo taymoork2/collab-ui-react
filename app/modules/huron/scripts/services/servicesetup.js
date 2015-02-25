@@ -48,9 +48,9 @@
           } else { // insert
             Log.debug("Inserting " + data.name);
             data.patternUsage = "Device";
-            deferreds.push(angular.copy(InternalNumberRangeService.save({
+            deferreds.push(InternalNumberRangeService.save({
               customerId: Authinfo.getOrgId()
-            }, data, saveSuccess, saveError).$promise));
+            }, data, saveSuccess, saveError).$promise);
           }
         }
         return $q.all(deferreds).finally(function () {

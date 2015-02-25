@@ -1,5 +1,5 @@
 <form name="lineSettingsForm" role="form">
-  <cr-details-body title="{{title}}" on-save="saveLineSettings()" additional-btn="additionalBtn" on-additionalbtn="additionalBtnClick()">
+  <cr-details-body title="{{lineSettings.title}}" on-save="lineSettings.saveLineSettings()" additional-btn="lineSettings.additionalBtn" on-additionalbtn="lineSettings.deleteLineSettings()">
     <div class="details-body">
         <uc-directory-number></uc-directory-number>
         <uc-call-forward></uc-call-forward>

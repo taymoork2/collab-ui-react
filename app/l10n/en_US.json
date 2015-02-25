@@ -608,8 +608,8 @@
     "forwardNoCalls": "Do not forward calls",
     "forwardAllCalls": "Forward all calls",
     "forwardBusyNoAnswer": "Forward calls when line is busy or away",
-    "internalAndExternal": "For internal and external calls",
-    "internalOnly": "Only for internal calls",
+    "internalAndExternal": "For internal and external calls<br>",
+    "internalOnly": "Only for internal calls<br>",
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
@@ -617,7 +617,7 @@
   },
   "callerIdPanel": {
     "title": "Caller ID",
-    "description": "Change the display name for calls from this line"
+    "description": "<small>Change the display name for calls from this line</small>"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",

@@ -9,7 +9,7 @@ exports.config = {
       'args': ['--disable-extensions', '--start-fullscreen']
     },
     shardTestFiles: true,
-    maxInstances: 3
+    maxInstances: 1
   },
 
   // A base URL for your application under test. Calls to protractor.get()
