@@ -216,6 +216,11 @@ angular.module('Core')
             desc: 'tabs.vtsDetailsTabDesc',
             state: 'vts',
             link: '#vts'
+          }, {
+            title: 'tabs.reportTab',
+            desc: 'New Reports',
+            state: 'newpartnerreports',
+            link: '#partner/newreports'
           }]
         }],
 
@@ -445,7 +450,8 @@ angular.module('Core')
           'intercomgroups',
           'paginggroups',
           'huntgroups',
-          'didadd'
+          'didadd',
+          'newpartnerreports'
         ],
         'squared-fusion-uc': ['fusion'],
         'squared-team-member': ['organization'],

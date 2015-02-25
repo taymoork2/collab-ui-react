@@ -250,6 +250,13 @@ angular
           templateUrl: 'modules/squared/views/partnerreports.html',
           controller: 'PartnerReportsCtrl'
         })
+        .state('newpartnerreports', {
+          parent: 'partner',
+          url: '/newreports',
+          templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
+          controller: 'PartnerReportCtrl',
+          controllerAs: 'nav'
+        })
         .state('login_swap', {
           url: '/login/:customerOrgId/:customerOrgName',
           views: {

@@ -40,7 +40,7 @@
       id: 3,
       label: $translate.instant('reports.threeMonths')
     }];
-    vm.timeSelected = vm.timeOptions[0];
+    vm.timeSelected = vm.timeOptions[3];
 
     vm.serviceOptions = [{
       id: 0,
@@ -48,11 +48,8 @@
     }];
     vm.serviceSelected = vm.serviceOptions[0];
 
-    vm.customerOptions = [{
-      id: 0,
-      label: $translate.instant('reports.customers')
-    }];
-    vm.customerSelected = vm.customerOptions[0];
+    vm.customerOptions = [];
+    vm.customerSelected;
 
     init();
 
@@ -101,6 +98,8 @@
           label: vm.orgsData[orgNum].customerName
         });
       }
+
+      vm.customerSelected = vm.customerOptions[0];
     };
 
     function setReports() {
