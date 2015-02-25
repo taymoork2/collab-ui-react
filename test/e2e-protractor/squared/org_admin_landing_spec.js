@@ -152,7 +152,7 @@ describe('Customer Admin Landing Page License Info', function() {
       landing.convertActionButton.click();
       browser.sleep(1000);
       expect(landing.convertDialog.isPresent()).toBeFalsy();
-      notifications.assertSuccess('Users successfully converted.');
+      //notifications.assertSuccess('Users successfully converted.');
     });
 
     it('should log out', function() {
