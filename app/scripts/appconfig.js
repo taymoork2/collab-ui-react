@@ -558,7 +558,7 @@ angular
         .state('webexUserSettings', {
           url: '/webexUserSettings',
           templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
-          controller: 'WebExUserSettingsCtrl',
+          // controller: 'WebExUserSettingsCtrl',
           parent: 'main'
         });
     }
