@@ -123,9 +123,8 @@
         }).success(function (data) {
           currView.userDataXml = $(data);
 
-          // TODO: add code to
-          // validate
-          // currView.userDataXml
+          // TODO:
+          // 	add code to validate currView.userDataXml
 
           currView.userDataJson = currView.xml2JsonConvert("User Data", data, "<use:", "</serv:bodyContent>");
           currView.updateUserPrivileges();
@@ -166,9 +165,8 @@
         }).success(function (data) {
           currView.siteInfoXml = $(data);
 
-          // TODO: add code to
-          // validate
-          // currView.siteInfoXml
+          // TODO:
+          // 	add code tovalidate currView.siteInfoXml
 
           currView.siteInfoJson = currView.xml2JsonConvert("Site Info", data, "<ns1:", "</serv:bodyContent>");
           currView.initUserPrivilegesTemplate();
