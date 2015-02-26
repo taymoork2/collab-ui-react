@@ -1,256 +1,333 @@
 (function () {
   'use strict';
 
-  angular
-    .module('WebExUserSettings')
-    .controller('WebExUserSettingsCtrl', [
-      '$scope', '$http',
-      function ($scope, $http) {
-        this.getUserPrivileges = function () {
-            // alert("getUserPrivileges(): START");
-            console.log("getUserPrivileges(): START");
+  angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', ['$scope', '$http', function ($scope, $http) {
+      this.xml2JsonConvert = function (xmlDataText, startOfBodyStr, endOfBodyStr) {
+          console.log("xml2JsonConvert: xmlDataText=\n" + xmlDataText);
 
-            var userPrivileges = {
-              label: "Service",
+          // alert("xml2JsonConvert(): " + "startOfBodyStr=" + startOfBodyStr + " ; endOfBodyStr=" + endOfBodyStr);
+          console.log("xml2JsonConvert(): " + "startOfBodyStr=" + startOfBodyStr + " ; endOfBodyStr=" + endOfBodyStr);
 
-              general: {
-                label: "General",
+          var startOfBodyIndex = xmlDataText.indexOf(startOfBodyStr);
+          var endOfBodyIndex = ( null == endOfBodyStr )
+          							? 0
+          							: xmlDataText.indexOf(endOfBodyStr);
 
-                recordingEditor: {
-                  id: "recordingEditor",
-                  label: "Recording Editor",
-                  value: true
-                },
+          // alert("xml2JsonConvert(): startOfBodyStr=" + "startOfBodyIndex=" + startOfBodyIndex + "; endOfBodyIndex=" + endOfBodyIndex);
+          console.log("xml2JsonConvert(): startOfBodyStr=" + "startOfBodyIndex=" + startOfBodyIndex + "; endOfBodyIndex=" + endOfBodyIndex);
 
-                personalRoom: {
-                  id: "personalRoom",
-                  label: "Personal Room",
-                  value: true
-                },
+          var regExp = null;
+          var bodySlice = ( startOfBodyIndex < endOfBodyIndex )
+	          					? xmlDataText.slice(startOfBodyIndex, endOfBodyIndex)
+	          					: xmlDataText.slice(startOfBodyIndex);
 
-                collabRoom: {
-                  id: "collabRoom",
-                  label: "Collabration Room",
-                  value: true
-                },
+          regExp = /use:/g;
+          bodySlice = bodySlice.replace(regExp, "use_");
 
-                hiQualVideo: {
-                  id: "hiQualVideo",
-                  label: "Turn on high-quality video (360p)",
-                  value: true
-                },
+          regExp = /com:/g;
+          bodySlice = bodySlice.replace(regExp, "com_");
 
-                hiDefVideo: {
-                  id: "hiDefVideo",
-                  label: "Turn on high-definition video video (720p)",
-                  value: true
-                },
+          bodySlice = "<body>" + bodySlice + "</body>";
 
-                assist: {
-                  id: "assist",
-                  label: "Assist",
-                  value: true
-                }
-              }, // general
+          console.log("xml2JsonConvert: bodySlice=\n" + bodySlice);
 
-              trainingCenter: {
-                label: "Training Center",
+          var x2js = new X2JS();
+          var bodyJson = x2js.xml_str2json(bodySlice);
 
-                handsOnLabAdmin: {
-                  id: "handsOnLabAdmin",
-                  label: "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
-                  value: true
-                }
-              }, // trainingCenter
+          console.log("xml2JsonConvert: bodyJson=\n" + JSON.stringify(bodyJson));
+          return bodyJson;
+      }; // xml2JsonConvert()
 
-              eventCenter: {
-                label: "Event Center",
+      this.updateUserPrivileges = function () {
+          // alert("updateUserPrivileges()");
 
-                optimizeBandwidthUsage: {
-                  id: "optimizeBandwidthUsage",
-                  label: "Optimized bandwidth usage for attendees within the same network",
-                  value: true
-                }
-              }, // trainingCenter
+          var currView = this;
+          var userPrivileges = currView.userPrivileges;
+          var userDataXml = currView.userDataXml;
+          var userDataJson = currView.userDataJson;
 
-              telephonyPriviledge: {
-                label: "Telephony Privilege",
+          // alert("updateUserPrivileges(): userDataJson=\n" + userDataJson);
+          console.log("updateUserPrivileges(): userDataJson=\n" + JSON.stringify(userDataJson));
 
-                callInTeleconf: {
-                  id: "callInTeleconf",
-                  label: "Call-in teleconferencing",
-                  value: true,
-                  currCallInTollType: 2,
+          // var firstName = userDataXml.find("use\\:firstName").text();
+          // var lastName = userDataXml.find("use\\:lastName").text();
+          var firstName = userDataJson.body.use_firstName;
+          var lastName = userDataJson.body.use_lastName;
 
-                  callInTollTypes: [{
-                    id: "toll",
-                    label: "Toll",
-                    value: 0
-                  }, {
-                    id: "tollFree",
-                    label: "Toll free",
-                    value: 1
-                  }, {
-                    id: "tollAndTollFree",
-                    label: "Toll and Toll free",
-                    value: 2
-                  }],
+          // alert("User name=" + "[" + firstName + " " + lastName + "]");
+          console.log("User name: " + firstName + " " + lastName);
 
-                  teleconfViaGlobalCallin: {
-                    id: "teleconfViaGlobalCallin",
-                    label: "Allow access to teleconference via global call-in numbers",
-                    value: true
-                  },
+          /*
+          var meetingTypes = [];
 
-                  cliAuth: {
-                    id: "cliAuth",
-                    label: "Enable teleconferencing CLI authentication",
-                    value: true
-                  },
+          userDataXml.find("use\\:meetingType").each(function () {
+            var marker = $(this);
+            meetingTypes.push(marker.text());
+          })
+          */
+          var meetingTypes = userDataJson.body.use_meetingTypes.use_meetingType;          
 
-                  pinEnabled: {
-                    id: "pinEnabled",
-                    label: "Host and attendees must have PIN enabled",
-                    value: true
-                  }
-                },
+          // alert("Meeting Types: " + meetingTypes);
+          console.log("Meeting Types: " + meetingTypes);
 
-                callBackTeleconf: {
-                  id: "callBackTeleconf",
-                  label: "Call-back teleconferencing",
-                  value: true
-                },
+          userPrivileges.label = "Services";
+          $("#webexUserSettingsPage").removeClass("hidden");
 
-                globalCallBackTeleconf: {
-                  id: "globalCallBackTeleconf",
-                  label: "Global call-back teleconferencing",
-                  value: true
-                },
+          // alert("updateUserPrivileges(): DONE");
+      }; // updateUserPrivileges()
 
-                otherTeleconfServices: {
-                  id: "otherTeleconfServices",
-                  label: "Other teleconference services",
-                  value: true
-                },
+      this.getUserData = function () {
+          // alert("getUserData()");
 
-                integratedVoIP: {
-                  id: "integratedVoIP",
-                  label: "Integrated VoIP",
-                  value: true
-                },
+          var currView = this;
+          var xmlServerURL = "http://172.24.93.53/xml9.0.0/XMLService";
+          var webExID = "jpallapa"; // Host username
+          var password = "C!sco123"; // Host password
+          var siteID = "4272"; // Site ID
+          var partnerID = "4272"; // Partner ID
 
-                selectTeleconfLocation: {
-                  id: "selectTeleconfLocation",
-                  label: "Select teleconferencing location",
-                  value: true,
-                  defaultTeleconfLocation: "Asia",
+          var reqXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+            "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
+            "    <header>" +
+            "        <securityContext>" +
+            "            <webExID>" + webExID + "</webExID>" +
+            "            <password>" + password + "</password>" +
+            "            <siteID>" + siteID + "</siteID>" +
+            "            <partnerID>" + partnerID + "</partnerID>" +
+            "        </securityContext>" +
+            "    </header>" +
+            "    <body>" +
+            "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.GetUser\">" +
+            "            <webExId>jpallapa</webExId>" +
+            "        </bodyContent>" +
+            "    </body>" +
+            "</serv:message>";
 
-                  teleconfLocations: [
-                    "North America",
-                    "South America",
-                    "Asia",
-                    "Africa",
-                    "Australia"
-                  ]
-                }
-              }, // telephonyPriviledges
+          $http({
+            url: xmlServerURL,
+            method: "POST",
+            data: reqXML,
+            headers: {
+              'Content-Type': 'application/x-www-rform-urlencoded'
+            }
+          }).success(function (data) {
+            currView.userDataXml = $(data);
 
-              webexCenters: [{
-                centerName: "Meeting Center",
-                sessionTypes: [{
-                  sessionName: "STD",
-                  sessionEnabled: true,
-                  sessionDescription: "Meeting Center Standard"
-                }, {
-                  sessionName: "PRO",
-                  sessionEnabled: false,
-                  sessionDescription: "Meeting Center Pro"
-                }]
+            // TODO: add code to validate currView.userDataXml
+
+            currView.userDataJson = currView.xml2JsonConvert(data, "<use:", "</serv:bodyContent>");
+            // currView.userDataJson = currView.xml2JsonConvert(data, "<serv:", null);
+            currView.updateUserPrivileges();
+          }).error(function (data) {
+            alert("error()");
+          });
+        }; // getUserData()
+
+        this.initUserPrivileges = function () {
+          // alert("initUserPrivileges(): START");
+          console.log("initUserPrivileges(): START");
+
+          var userPrivileges = {
+            webexCenters: [{
+              centerName: "Meeting Center",
+
+              sessionTypes: [{
+                sessionName: "STD",
+                sessionEnabled: false,
+                sessionDescription: "Meeting Center Standard"
               }, {
-                centerName: "Event Center",
-                sessionTypes: [{
-                  sessionName: "STD",
-                  sessionEnabled: false,
-                  sessionDescription: "Event Center Standard"
-                }, {
-                  sessionName: "PRO",
-                  sessionEnabled: true,
-                  sessionDescription: "Event Center Pro"
-                }]
+                sessionName: "PRO",
+                sessionEnabled: false,
+                sessionDescription: "Meeting Center Pro"
               }]
-            };
+            }, {
+              centerName: "Event Center",
 
-            console.log("getUserPrivileges(): END");
+              sessionTypes: [{
+                sessionName: "STD",
+                sessionEnabled: false,
+                sessionDescription: "Event Center Standard"
+              }, {
+                sessionName: "PRO",
+                sessionEnabled: false,
+                sessionDescription: "Event Center Pro"
+              }]
+            }, {
+              centerName: "Training Center",
 
-            this.getUserPrivileges2();
+              sessionTypes: [{
+                sessionName: "STD",
+                sessionEnabled: false,
+                sessionDescription: "Training Center Standard"
+              }, {
+                sessionName: "PRO",
+                sessionEnabled: false,
+                sessionDescription: "Training Center Pro"
+              }]
+            }], // webexCenters
 
-            return userPrivileges;
-          }, // getUserPrivileges()
-          this.getUserPrivileges2 = function () {
-            var xmlServerURL = "http://172.24.93.53/xml9.0.0/XMLService";
-            var reqXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            /* cut it out
+            general: {
+              label: "General",
+              
+              recordingEditor: {
+                id: "recordingEditor",
+                label: "Recording Editor",
+                value: true
+           	  },
 
-            var siteID = "4272"; // Site ID
-            var partnerID = "4272"; // Partner ID
-            var webExID = "jpallapa"; // Host username
-            var password = "C!sco123"; // Host password
+              personalRoom: {
+                id: "personalRoom",
+                label: "Personal Room",
+                value: true
+              },
 
-            reqXML += "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
-              "    <header>" +
-              "        <securityContext>" +
-              "            <webExID>" + webExID + "</webExID>" +
-              "            <password>" + password + "</password>" +
-              "            <siteID>" + siteID + "</siteID>" +
-              "            <partnerID>" + partnerID + "</partnerID>" +
-              "        </securityContext>" +
-              "    </header>" +
-              "    <body>" +
-              "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.GetUser\">" +
-              "            <webExId>jpallapa</webExId>" +
-              "        </bodyContent>" +
-              "    </body>" +
-              "</serv:message>";
+              collabRoom: {
+                id: "collabRoom",
+                label: "Collabration Room",
+                value: true
+              },
 
-            $http({
-                url: xmlServerURL,
-                method: "POST",
-                data: reqXML,
-                headers: {
-                  'Content-Type': 'application/x-www-rform-urlencoded'
-                }
-              })
-              .success(function (data) {
-                // alert("Success: " + data);
-                var xmlDoc = $(data);
-                var firstName = xmlDoc.find("use\\:firstName").text();
-                var lastName = xmlDoc.find("use\\:lastName").text();
-                var meetingTypes = [];
+              hiQualVideo: {
+            		id: "hiQualVideo",
+            		label: "Turn on high-quality video (360p)",
+            		value: true
+              },
 
-                xmlDoc.find("use\\:meetingType").each(function () {
-                  var marker = $(this);
-                  meetingTypes.push(marker.text());
-                });
+              hiDefVideo: {
+	              id: "hiDefVideo",
+	              label: "Turn on high-definition video video (720p)",
+	              value: true
+              },
 
-                console.log("User name: " + firstName + " " + lastName);
-                console.log("Meeting Types: " + meetingTypes);
-                // .each(function () {
-                //     var marker = $(this);
-                //     alert("First name: " + marker.text());
-                //   });
-              })
-              .error(function (data) {
-                // alert("Error: " + data);
-              });
+              assist: {
+	              id: "assist",
+	              label: "Assist",
+	              value: true
+              }
+          }, // general
 
-            return userPrivileges;
-          },
-          this.updateUserSettings = function () {
-            alert("updateUserSettings(): START");
+          trainingCenter: {
+            label: "Training Center",
+            
+            handsOnLabAdmin: {
+              id: "handsOnLabAdmin",
+              label: "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
+              value: true
+	    	}
+          }, // trainingCenter
 
-            alert("updateUserSettings(): END");
-          } // updateUserSettings()
+          eventCenter: {
+            label: "Event Center",
+              
+            optimizeBandwidthUsage: {
+              id: "optimizeBandwidthUsage",
+              label: "Optimized bandwidth usage for attendees within the same network",
+              value: true
+			}
+          }, // eventCenter
 
-        this.userPrivileges = this.getUserPrivileges();
-      } // WebExUserSettingsCtrl()
-    ])
+		  telephonyPriviledge: {
+			  label: "Telephony Privilege",
+
+			  callInTeleconf: {
+				id: "callInTeleconf",
+				label: "Call-in teleconferencing",
+				value: true,
+				currCallInTollType: 2,
+
+				callInTollTypes: [ {
+				  id: "toll",
+				  label: "Toll",
+				  value: 0
+				}, {
+				  id: "tollFree",
+				  label: "Toll free",
+				  value: 1
+				}, {
+				  id: "tollAndTollFree",
+				  label: "Toll and Toll free",
+				  value: 2
+				} ],
+
+				teleconfViaGlobalCallin: {
+				  id: "teleconfViaGlobalCallin",
+				  label: "Allow access to teleconference via global call-in numbers",
+				  value: true
+				},
+
+				cliAuth: {
+				  id: "cliAuth",
+				  label: "Enable teleconferencing CLI authentication",
+				  value: true
+				},
+
+				pinEnabled: {
+				  id: "pinEnabled",
+				  label: "Host and attendees must have PIN enabled",
+				  value: true
+				}
+			  }, // callInTeleconf
+
+			  callBackTeleconf: {
+			    id: "callBackTeleconf",
+			    label: "Call-back teleconferencing",
+			    value: true
+			  },
+
+			  globalCallBackTeleconf: {
+			    id: "globalCallBackTeleconf",
+			    label: "Global call-back teleconferencing",
+			    value: true
+              },
+
+              otherTeleconfServices: {
+                id: "otherTeleconfServices",
+                label: "Other teleconference services",
+                value: true
+              },
+
+              integratedVoIP: {
+                id: "integratedVoIP",
+                label: "Integrated VoIP",
+                value: true
+              },
+
+              selectTeleconfLocation: {
+			    id: "selectTeleconfLocation",
+                label: "Select teleconferencing location",
+                value: true,
+                defaultTeleconfLocation: "Asia",
+
+                teleconfLocations: ["North America",
+                                    "South America",
+                                    "Asia",
+                                    "Africa",
+                                    "Australia"]
+              } // selectTeleconfLocation
+		  }, // telephonyPriviledges
+          /* end of cut it out*/
+
+            label: null
+          }; // userPrivileges
+
+          // alert("initUserPrivileges(): END");
+          console.log("initUserPrivileges(): END");
+
+          this.userPrivileges = userPrivileges;
+      }; // initUserPrivileges()
+
+      this.updateUserSettings = function () {
+    	  alert("updateUserSettings(): START");
+    	  alert("updateUserSettings(): END");
+      }; // updateUserSettings()
+
+      this.userPrivileges = null;
+      this.userDataXml = null;
+      this.userDataJson = null;
+
+      this.initUserPrivileges();
+      this.getUserData();
+    } // WebExUserSettingsCtrl()
+  ]);
 })();
