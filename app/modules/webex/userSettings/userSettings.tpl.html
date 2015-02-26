@@ -1,4 +1,7 @@
-<div ng-controller="WebExUserSettingsCtrl as WebExUserSettings">
+<div ng-controller="WebExUserSettingsCtrl as WebExUserSettings"
+     id="webexUserSettingsPage"
+     class="hidden" >
+     
   <!--Start of Service section -->
   <table>
     <tr>
@@ -33,7 +36,11 @@
           </tr>
             
           <tr ng-repeat="sessionType in service.sessionTypes">
-            <td colspan=2>
+            <td width="15">
+              &nbsp;
+            </td>
+            
+            <td>
               <cs-checkbox id="meetingCenterPro"
                            name="meetingCenterPro"
                            align="left"
@@ -41,18 +48,19 @@
                            cklabel={{sessionType.sessionName}}:&nbsp;>
               </cs-checkbox>
               
-              <u>{{sessionType.sessionDescription}}</u> <!-- TODO: hyperlink -->
+              <u>{{sessionType.sessionDescription}}</u>
             </td>
           </tr>
         </table>
       </td>
     </tr>
   </table>
-  <!-- End of Service section -->
   
   <hr />
+  <!-- End of Service section -->
   
   <!-- Start of General section -->
+  <!--
   <table>
     <tr>
       <td colspan=2>
@@ -130,11 +138,13 @@
       </td>
     </tr>
   </table>
+  
+  <hr />
+  -->
   <!-- END of General section -->
 
-  <hr />
-
   <!-- Start of Training Center section -->
+  <!--
   <table>
     <tr>
       <td colspan=3>
@@ -158,11 +168,13 @@
       </td>
     </tr>
   </table>
-  <!-- End of Training Center section -->
   
   <hr />
+  -->
+  <!-- End of Training Center section -->
 
   <!-- Start of Event Center section -->
+  <!--
   <table>
     <tr>
       <td colspan=3>
@@ -186,11 +198,13 @@
       </td>
     </tr>
   </table>
-  <!-- End of Event Center section -->
   
   <hr />
-
+  -->
+  <!-- End of Event Center section -->
+  
   <!-- Start of Telephony Privilege section -->
+  <!--
   <table>
     <tr>
       <td colspan=3>
@@ -348,9 +362,10 @@
       </td>
     </tr>
   </table>
-  <!-- End  of Telephony Privilege section -->
 
   <hr />
+  -->
+  <!-- End  of Telephony Privilege section -->
 
   <!-- ACTION BUTTONS -->
   <span>
@@ -360,19 +375,8 @@
               type="button"
               class="btn btn-primary"
               ng-click="WebExUserSettings.updateUserSettings()">
-       Update
-      </button>
-  
-      <button type="button" class="btn btn-danger">
-        Deactivate
-      </button>
-      
-      <button type="button" class="btn btn-warning">
-        Cancel
-      </button>
-      
-      <button type="button" class="btn btn-default">
-        Back
+              
+        Update
       </button>
     </p>
   </span>
