@@ -154,7 +154,7 @@ angular.module('Core')
                   service = new ServiceFeature($filter('translate')('onboardModal.paidMsg'), x + 1, 'msgRadio', license.offerName, license.features);
                   msgLicenses.push(service);
                   break;
-                case 'CM':
+                case 'CO':
                   service = new ServiceFeature($filter('translate')('onboardModal.paidComm'), x + 1, 'commRadio', license.offerName, license.features);
                   commLicenses.push(service);
                   break;
