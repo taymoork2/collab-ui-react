@@ -324,12 +324,12 @@ angular.module('Squared')
         });
       };
 
-      $scope.getCallflowCharts = function (orgId, userId, filename, id) {
+      $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, id) {
         angular.element('#' + id).button('loading');
         var output = $filter('translate')('supportPage.downloading');
         var downloadDialog = window.confirm(output);
         if (downloadDialog === true) {
-          CallflowService.getCallflowCharts(orgId, userId, filename, function (data, status) {
+          CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, function (data, status) {
             angular.element('#' + id).button('reset');
             if (data.success) {
               window.location.assign(data.resultsUrl);
@@ -395,7 +395,7 @@ angular.module('Squared')
 
       var clientLogTemplate = '<div class="ngCellText"><a ng-click="downloadLog(row.entity.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></div>';
 
-      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.fullFilename, getRowIndex(row.entity))" id="{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
+      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, getRowIndex(row.entity))" id="{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
 
       var callInfoTemplate = '<div class="ngCellText"><a ng-click="showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></span></a></div>';
 
