@@ -30,14 +30,14 @@ angular.module('Core')
 
         meetingServiceUrl: {
           dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-          integration: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-          prod: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+          integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
 
         MeetinginfoserviceUrl: {
           dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-          integration: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-          prod: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+          integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
 
         oauthClientRegistration: {

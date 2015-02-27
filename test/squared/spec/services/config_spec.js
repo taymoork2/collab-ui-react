@@ -122,16 +122,16 @@ describe('Config', function () {
   it('should return correct meeting service url', function () {
     whenCalling('getMeetingServiceUrl').expectUrlToBe({
       development: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      integration: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      production:  'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      production:  'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
   it('should return correct meeting service url', function () {
     whenCalling('getMeetinginfoserviceUrl').expectUrlToBe({
       development: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      integration: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      production:  'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      production:  'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
