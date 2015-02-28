@@ -8,6 +8,7 @@
   function ucSingleNumberReach() {
     var directive = {
       controller: 'SingleNumberReachInfoCtrl',
+      controllerAs: 'snr',
       restrict: 'EA',
       scope: false,
       templateUrl: 'modules/huron/snr/snr.tpl.html'

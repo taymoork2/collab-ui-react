@@ -1,0 +1,10 @@
+{
+  "snrInfo": {
+    "singleNumberReachEnabled": true,
+    "destination": "555",
+    "remoteDestinations": [{
+      "uuid": "123456",
+      "pattern": "555"
+    }]
+  }
+}

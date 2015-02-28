@@ -1,20 +1,20 @@
 <form name="singleNumberReachForm" role="form">
-  <cr-details-body title="{{'singleNumberReachPanel.title' | translate}}" on-save="saveSingleNumberReach()">
+  <cr-details-body title="{{'singleNumberReachPanel.title' | translate}}" on-save="snr.saveSingleNumberReach()">
       <div class="details-body">
-        <p><small>{{'singleNumberReachPanel.description' | translate}}</small></p>
+        <p><small translate='singleNumberReachPanel.description'></small></p>
         <div>
-          {{'singleNumberReachPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="telephonyInfo.snrInfo.singleNumberReachEnabled"></cs-switchbutton><br><br>
-          <div class="form-group" ng-show="telephonyInfo.snrInfo.singleNumberReachEnabled">
+          <span translate='singleNumberReachPanel.toggle'></span>&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="snr.telephonyInfo.snrInfo.singleNumberReachEnabled"></cs-switchbutton><br><br>
+          <div class="form-group" ng-show="snr.telephonyInfo.snrInfo.singleNumberReachEnabled">
               <div class="col-sm-8">
-                <input type="text" class="form-control" id="number" ng-model="telephonyInfo.snrInfo.destination" ng-disabled="!telephonyInfo.snrInfo.singleNumberReachEnabled" placeholder="{{'singleNumberReachPanel.placeholder' | translate}}">
+                <input type="text" class="form-control" id="number" ng-model="snr.telephonyInfo.snrInfo.destination" ng-disabled="!snr.telephonyInfo.snrInfo.singleNumberReachEnabled" placeholder="{{'singleNumberReachPanel.placeholder' | translate}}">
               </div>
               <span class="asterix">*</span>
             </div>
           <div ng-show="false">
-            <p class="text-muted">{{'singleNumberReachPanel.snrNote' | translate}}</p>
+            <p class="text-muted" translate='singleNumberReachPanel.snrNote'></p>
             <br>
-            <cs-radiobutton choice="snrLineOption" options="snrOptions" label="label" value="line"></cs-radiobutton><br>
-            <div ng-show="snrLineOption !== 'all'">
+            <cs-radiobutton choice="snr.snrLineOption" options="snr.snrOptions" label="label" value="line"></cs-radiobutton><br>
+            <div ng-show="snr.snrLineOption !== 'all'">
             </div>
           </div>
         </div>
