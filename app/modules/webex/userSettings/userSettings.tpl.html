@@ -58,12 +58,126 @@
     <!-- End of Meeting Center -->
     
     <!-- Start of Event Center -->
+    <tr ng-show="WebExUserSettings.userPrivilegesModel.eventCenter.isEnabled">
+      <td>
+        <table>
+          <tr>
+            <td width="15">
+              &nbsp;
+            </td>
+            
+            <td>
+              {{WebExUserSettings.userPrivilegesModel.eventCenter.name}}:
+            </td>
+          </tr>
+            
+          <tr>
+            <td colspan=2>
+              &nbsp;
+            </td>
+          </tr>
+            
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.eventCenter.sessionTypes">
+            <td width="15">
+              &nbsp;
+            </td>
+            
+            <td>
+              <cs-checkbox id={{sessionType.id}}
+                           name={{sessionType.id}}
+                           align="left"
+                           ng-model="sessionType.sessionEnabled"
+                           cklabel={{sessionType.sessionName}}:&nbsp;>
+              </cs-checkbox>
+              
+              <u>{{sessionType.sessionDescription}}</u>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
     <!-- End of Event Center -->
     
     <!-- Start of Support Center -->
+    <tr ng-show="WebExUserSettings.userPrivilegesModel.supportCenter.isEnabled">
+      <td>
+        <table>
+          <tr>
+            <td width="15">
+              &nbsp;
+            </td>
+            
+            <td>
+              {{WebExUserSettings.userPrivilegesModel.supportCenter.name}}:
+            </td>
+          </tr>
+            
+          <tr>
+            <td colspan=2>
+              &nbsp;
+            </td>
+          </tr>
+            
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.supportCenter.sessionTypes">
+            <td width="15">
+              &nbsp;
+            </td>
+            
+            <td>
+              <cs-checkbox id={{sessionType.id}}
+                           name={{sessionType.id}}
+                           align="left"
+                           ng-model="sessionType.sessionEnabled"
+                           cklabel={{sessionType.sessionName}}:&nbsp;>
+              </cs-checkbox>
+              
+              <u>{{sessionType.sessionDescription}}</u>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
     <!-- End of Support Center -->
     
     <!-- Start of Training Center -->
+    <tr ng-show="WebExUserSettings.userPrivilegesModel.trainingCenter.isEnabled">
+      <td>
+        <table>
+          <tr>
+            <td width="15">
+              &nbsp;
+            </td>
+            
+            <td>
+              {{WebExUserSettings.userPrivilegesModel.trainingCenter.name}}:
+            </td>
+          </tr>
+            
+          <tr>
+            <td colspan=2>
+              &nbsp;
+            </td>
+          </tr>
+            
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.trainingCenter.sessionTypes">
+            <td width="15">
+              &nbsp;
+            </td>
+            
+            <td>
+              <cs-checkbox id={{sessionType.id}}
+                           name={{sessionType.id}}
+                           align="left"
+                           ng-model="sessionType.sessionEnabled"
+                           cklabel={{sessionType.sessionName}}:&nbsp;>
+              </cs-checkbox>
+              
+              <u>{{sessionType.sessionDescription}}</u>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
     <!-- End of Training Center -->
     
     <hr />
