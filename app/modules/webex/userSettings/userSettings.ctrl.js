@@ -11,11 +11,6 @@
         console.log(logMsg);
         // alert(logMsg);
 
-        // logMsg = funcName + ": " + commentText +
-        // "\n" +
-        // "xmlDataText=" + xmlDataText;
-        // console.log(logMsg);
-
         var startOfBodyIndex = xmlDataText.indexOf(startOfBodyStr);
         var endOfBodyIndex = (null == endOfBodyStr) ? 0 : xmlDataText.indexOf(endOfBodyStr);
 
@@ -70,8 +65,8 @@
         return bodyJson;
       }; // xml2JsonConvert()
 
-      this.getUserData = function () {
-        var funcName = "getUserData()";
+      this.loadUserData = function () {
+        var funcName = "loadUserData()";
         var logMsg = "";
         var currView = this;
 
@@ -114,15 +109,16 @@
           //   add code to validate currView.userDataXml
 
           currView.userDataJson = currView.xml2JsonConvert("User Data", data, "<use:", "</serv:bodyContent>");
-          currView.updateUserPrivilegesModel();
+          currView.userDataLoaded = true;
+          currView.processData();
         }).error(function (data) {
           logMsg = funcName + ".error()" + ": " + "\n" + "data=" + data;
           alert(logMsg);
         });
-      }; // getUserData()
+      }; // loadUserData()
 
-      this.getMeetingTypesInfo = function () {
-        var funcName = "getMeetingTypesInfo()";
+      this.loadMeetingTypesInfo = function () {
+        var funcName = "loadMeetingTypesInfo()";
         var logMsg = "";
         var currView = this;
 
@@ -165,16 +161,16 @@
             //   add code to validate currView.meetingTypesInfoXml
 
             currView.meetingTypesInfoJson = currView.xml2JsonConvert("Meeting Types Info", data, "<mtgtype:", "</serv:bodyContent>");
-            currView.initUserPrivilegesModel();
-            currView.getUserData();
+            currView.meetingTypesInfoLoaded = true;
+            currView.processData();
           })
           .error(function () {
             alert("Error " + data);
           });
-      }; // getMeetingTypesInfo()
+      }; // loadMeetingTypesInfo()
 
-      this.getSiteInfo = function () {
-        var funcName = "getSiteInfo()";
+      this.loadSiteInfo = function () {
+        var funcName = "loadSiteInfo()";
         var logMsg = "";
         var currView = this;
 
@@ -216,13 +212,13 @@
           //   add code to validate currView.siteInfoXml
 
           currView.siteInfoJson = currView.xml2JsonConvert("Site Info", data, "<ns1:", "</serv:bodyContent>");
-
-          currView.getMeetingTypesInfo();
+          currView.siteInfoLoaded = true;
+          currView.processData();
         }).error(function () {
           logMsg = funcName + ".error()" + ": " + "\n" + "data=" + data;
           alert(logMsg);
         });
-      }; // getSiteInfo()
+      }; // loadSiteInfo()
 
       this.initUserPrivilegesModel = function () {
         function initSessionType(centerObj) {
@@ -518,7 +514,7 @@
                 "enabledSessionTypeID=" + enabledSessionTypeID + "\n" +
                 "sessionTypeID=" + sessionTypeID;
               console.log(logMsg);
-              alert(logMsg);
+              // alert(logMsg);
 
               if (enabledSessionTypeID == sessionTypeID) {
                 sessionType.sessionEnabled = true;
@@ -558,6 +554,31 @@
         alert("updateUserSettings(): END");
       }; // updateUserSettings()
 
+      this.processData = function () {
+        var funcName = "processData()";
+        var logMsg = "";
+
+        logMsg = funcName + ": " + "\n" +
+          "processDataNeeded=" + this.processDataNeeded + "\n" +
+          "userDataLoaded=" + this.userDataLoaded + "\n" +
+          "siteInfoLoaded=" + this.siteInfoLoaded + "\n" +
+          "meetingTypesInfoLoaded=" + this.meetingTypesInfoLoaded;
+        console.log(logMsg);
+        // alert(logMsg);
+
+        if (
+          (this.processDataNeeded) &&
+          (this.userDataLoaded) &&
+          (this.siteInfoLoaded) &&
+          (this.meetingTypesInfoLoaded)
+        ) {
+
+          this.processDataNeeded = false;
+          this.initUserPrivilegesModel();
+          this.updateUserPrivilegesModel();
+        }
+      }; // processData()
+
       /*----------------------------------------------------------------------*/
 
       this.userPrivilegesModel = null;
@@ -567,8 +588,14 @@
       this.siteInfoJson = null;
       this.meetingTypesInfoXml = null;
       this.meetingTypesInfoJson = null;
+      this.siteInfoLoaded = false;
+      this.meetingTypesInfoLoaded = false;
+      this.userDataLoaded = false;
+      this.processDataNeeded = true;
 
-      this.getSiteInfo();
+      this.loadSiteInfo();
+      this.loadMeetingTypesInfo();
+      this.loadUserData();
     } // WebExUserSettingsCtrl()
   ]);
 })();
