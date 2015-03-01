@@ -287,6 +287,7 @@
             var siteMtgProductCodePrefix = siteMeetingType.mtgtype_productCodePrefix;
             var siteMtgDisplayName = siteMeetingType.mtgtype_displayName;
             var siteMtgServiceTypes = [].concat(siteMeetingType.mtgtype_serviceTypes.mtgtype_serviceType);
+            var siteMtgServiceTypesIsMultiCenter = (siteMtgServiceTypes.length > 1) ? true : false;
 
             logMsg = funcName + ": " + "\n" +
               "targetCenterName=" + targetCenterName + "\n" +
@@ -294,7 +295,8 @@
               "siteMtgServiceTypeID=" + siteMtgServiceTypeID + "\n" +
               "siteMtgProductCodePrefix=" + siteMtgProductCodePrefix + "\n" +
               "siteMtgDisplayName=" + siteMtgDisplayName + "\n" +
-              "siteMtgServiceTypes=" + siteMtgServiceTypes;
+              "siteMtgServiceTypes=" + siteMtgServiceTypes + "\n" +
+              "siteMtgServiceTypesIsMultiCenter=" + siteMtgServiceTypesIsMultiCenter;
             console.log(logMsg);
             // alert(logMsg);
 
@@ -305,6 +307,7 @@
                   sessionTypeID: siteMtgServiceTypeID,
                   sessionName: siteMtgProductCodePrefix,
                   sessionDescription: siteMtgDisplayName,
+                  sessionIsMultiCenter: siteMtgServiceTypesIsMultiCenter,
                   sessionEnabled: false
                 };
 
@@ -492,7 +495,15 @@
               id: "handsOnLabAdmin",
               label: "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
               value: false
+            },
+
+            /*
+            handsOnLabAdmin: {
+              id: "handsOnLabAdmin",
+              label: "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
+              value: true
             }
+            */
           }, // trainingCenter
 
           eventCenter: {
@@ -505,7 +516,15 @@
               id: "optimizeBandwidthUsage",
               label: "Optimized bandwidth usage for attendees within the same network",
               value: false
+            },
+
+            /*
+            optimizeBandwidthUsage: {
+              id: "optimizeBandwidthUsage",
+              label: "Optimized bandwidth usage for attendees within the same network",
+              value: true
             }
+            */
           }, // eventCenter
 
           supportCenter: {
