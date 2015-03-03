@@ -471,7 +471,8 @@ angular.module('Core')
           'groups',
           'profile',
           'customerprofile',
-          'support'
+          'support',
+          'editService'
         ],
         Support: ['overview', 'reports', 'support'],
         WX2_User: [

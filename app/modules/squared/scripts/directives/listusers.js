@@ -226,7 +226,6 @@ angular.module('ListUsers', [])
             Log.debug('Get existing user failed. Status: ' + status);
           }
         });
-
       };
 
       $scope.updateUser = function () {

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: ucDevices', function () {
+xdescribe('Directive: ucDevices', function () {
   var $compile, $rootScope;
 
   beforeEach(module('wx2AdminWebClientApp'));

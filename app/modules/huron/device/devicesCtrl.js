@@ -14,9 +14,6 @@
     vm.showGenerateOtpButton = false;
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
 
-    activate();
-    ////////////
-
     function activate() {
       HttpUtils.setTrackingID().then(function () {
         var promises = [];
@@ -95,6 +92,8 @@
         activate();
       }
     });
+
+    activate();
 
   }
 })();

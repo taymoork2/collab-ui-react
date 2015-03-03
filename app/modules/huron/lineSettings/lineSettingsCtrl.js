@@ -209,7 +209,7 @@
 
           } else { // new line
             LineSettings.addNewLine(vm.currentUser.id, getDnUsage(), vm.assignedInternalNumber.pattern, vm.directoryNumber, vm.assignedExternalNumber)
-              .then(function (response) {
+              .then(function () {
                 return TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
                   .then(function () {
                     vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
@@ -243,7 +243,7 @@
           scope: $scope
         }).result.then(function () {
           return LineSettings.disassociateInternalLine(vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.userDnUuid)
-            .then(function (response) {
+            .then(function () {
               TelephonyInfoService.getUserDnInfo(vm.currentUser.id);
               vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
               Notification.notify([$translate.instant('directoryNumberPanel.disassociationSuccess')], 'success');

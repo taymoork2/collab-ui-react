@@ -98,7 +98,9 @@
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an Activation Code to enable a new device for this user.",
     "activationCodeTitle": "Activation Code for New Device",
-    "expires": "Expires"
+    "expires": "Expires",
+    "editServices": "Edit services",
+    "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Messaging"

@@ -15,6 +15,8 @@ var UsersPage = function () {
   this.nextButton = element(by.id('next-button'));
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
+  this.closeSidePanel = element(by.css('.panel-close'));
+  this.messagingService = element(by.id('Messaging'));
 
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield-tokenfield'));

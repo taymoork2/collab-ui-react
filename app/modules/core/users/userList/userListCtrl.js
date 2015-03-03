@@ -286,7 +286,9 @@ angular.module('Core')
           $scope.roles = user.roles;
           $scope.queryuserslist = $scope.gridData;
           $state.go('user-overview', {
-            currentUser: $scope.currentUser
+            currentUser: $scope.currentUser,
+            entitlements: $scope.entitlements,
+            queryuserslist: $scope.queryuserslist
           });
         } else {
           $state.go('user-overview', {

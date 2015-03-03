@@ -11,8 +11,6 @@
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
 
-    activate();
-
     function activate() {
       // TODO: Change TelephonyInfoService to return directly from this instead of having
       // to call into service twice.
@@ -23,6 +21,8 @@
       TelephonyInfoService.loadExternalNumberPool();
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
     }
+
+    activate();
 
   }
 })();

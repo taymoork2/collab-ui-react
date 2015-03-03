@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$location', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
-    function ($scope, $state, $location, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$location', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
+    function ($scope, $state, $stateParams, $location, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
 
       $scope.hasAccount = Authinfo.hasAccount();
 
@@ -14,12 +14,17 @@ angular.module('Core')
         this.entitlements = entitlements;
       }
 
+      var userEnts = null;
       $scope.messageFeatures = [];
       $scope.conferenceFeatures = [];
       $scope.communicationFeatures = [];
       $scope.messageFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeMsg'), 0, 'msgRadio', 'freeTeamRoom', Config.getDefaultEntitlements()));
       $scope.conferenceFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeConf'), 0, 'confRadio', 'freeConferencing', Config.getDefaultEntitlements()));
       $scope.communicationFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeComm'), 0, 'commRadio', 'advancedCommunication', Config.getDefaultEntitlements()));
+      $scope.currentUser = $stateParams.currentUser;
+      if ($scope.currentUser) {
+        userEnts = $scope.currentUser.entitlements;
+      }
 
       var getAccountServices = function () {
         if (Authinfo.getMessageServices()) {
@@ -87,30 +92,36 @@ angular.module('Core')
         }]
       };
 
-      $scope.collabRadio = {
-        value: 2
-      };
-      $scope.msgRadio = {
-        value: 0
-      };
-      $scope.confRadio = {
-        value: 0
-      };
-      $scope.commRadio = {
-        value: 0
+      $scope.collabRadio = 2;
+      $scope.radioStates = {
+        msgRadio: 0,
+        confRadio: 0,
+        commRadio: 0
       };
 
+      if (userEnts) {
+        for (var x = 0; x < userEnts.length; x++) {
+          if (userEnts[x] === 'ciscouc') {
+            $scope.radioStates.commRadio = 1;
+          } else if (userEnts[x] === 'squared-syncup') {
+            $scope.radioStates.confRadio = 1;
+          } else if (userEnts[x] === 'squared-room-moderation') {
+            $scope.radioStates.msgRadio = 1;
+          }
+        }
+      }
+
       $scope.setRadio = function (val) {
-        $scope.collabRadio.value = val;
+        $scope.collabRadio = val;
       };
       $scope.setMsgRadio = function (val) {
-        $scope.msgRadio.value = val;
+        $scope.radioStates.msgRadio = val;
       };
       $scope.setConfRadio = function (val) {
-        $scope.confRadio.value = val;
+        $scope.radioStates.confRadio = val;
       };
       $scope.setCommRadio = function (val) {
-        $scope.commRadio.value = val;
+        $scope.radioStates.commRadio = val;
       };
 
       var isUCSelected = function (list) {
@@ -139,6 +150,101 @@ angular.module('Core')
             Notification.notify(error, 'error');
           }
         }
+      };
+
+      var usersList = [];
+
+      var getServiceEntitlements = function (list, service) {
+        if (service.entitlements) {
+          var features = service.entitlements;
+          for (var f = 0; f < features.length; f++) {
+            list.push(new Feature(getSqEntitlement(features[f]), 'ACTIVE'));
+          }
+        }
+        return list;
+      };
+
+      var getSqEntitlement = function (key) {
+        var sqEnt = null;
+        var orgServices = Authinfo.getServices();
+        for (var n = 0; n < orgServices.length; n++) {
+          var service = orgServices[n];
+          if (key === service.ciService) {
+            return service.sqService;
+          }
+        }
+        return sqEnt;
+      };
+
+      var getAccountEntitlements = function () {
+        var entitleList = [];
+        if (Authinfo.hasAccount()) {
+          var selMsgService = $scope.messageFeatures[$scope.radioStates.msgRadio];
+          var selConfService = $scope.conferenceFeatures[$scope.radioStates.confRadio];
+          var selCommService = $scope.communicationFeatures[$scope.radioStates.commRadio];
+
+          entitleList = getServiceEntitlements(entitleList, selMsgService);
+          entitleList = getServiceEntitlements(entitleList, selConfService);
+          entitleList = getServiceEntitlements(entitleList, selCommService);
+        }
+        return entitleList;
+      };
+
+      var getEntitlements = function (action) {
+        var entitleList = [];
+        if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+          entitleList = getAccountEntitlements();
+        } else {
+          var state = null;
+          for (var key in $scope.entitlements) {
+            state = $scope.entitlements[key];
+            if (action === 'add' || (action === 'entitle' && state)) {
+              entitleList.push(new Feature(key, state));
+            }
+          }
+        }
+        Log.debug(entitleList);
+        return entitleList;
+      };
+
+      var getEntitlementStrings = function (entList) {
+        var entStrings = [];
+        for (var e = 0; e < entList.length; e++) {
+          if (entList[e].entitlementName) {
+            entStrings.push(entList[e].entitlementName);
+          }
+        }
+        return entStrings;
+      };
+
+      $scope.updateUserLicense = function () {
+        console.log('saving user license ' + $scope.currentUser.displayName);
+        var entitleList = [];
+        var entStrings = getEntitlementStrings(getAccountEntitlements());
+
+        var orgServices = Authinfo.getServices();
+        for (var n = 0; n < orgServices.length; n++) {
+          var service = orgServices[n];
+          if (entStrings.indexOf(service.sqService) !== -1) {
+            entitleList.push(new Feature(service.sqService, true));
+          } else {
+            entitleList.push(new Feature(service.sqService, false));
+          }
+        }
+
+        var user = [];
+        if ($scope.currentUser) {
+          usersList = [];
+          var userObj = {
+            'address': $scope.currentUser.userName,
+            'name': ''
+          };
+          user.push(userObj);
+          usersList.push(user);
+        }
+        angular.element('#btnSaveEnt').button('loading');
+
+        Userservice.updateUsers(user, entitleList, entitleUserCallback);
       };
 
       //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -257,45 +363,12 @@ angular.module('Core')
         $scope.results = null;
       };
 
-      var getServiceEntitlements = function (list, service) {
-        if (service.entitlements) {
-          var features = service.entitlements;
-          for (var f = 0; f < features.length; f++) {
-            list.push(new Feature(features[f], 'ACTIVE'));
-          }
-        }
-        return list;
-      };
-
-      var getEntitlements = function (action) {
-        var entitleList = [];
-        if (Authinfo.hasAccount() && $scope.collabRadio.value === 1) {
-          var selMsgService = $scope.messageFeatures[$scope.msgRadio.value];
-          var selConfService = $scope.conferenceFeatures[$scope.confRadio.value];
-          var selCommService = $scope.communicationFeatures[$scope.commRadio.value];
-
-          entitleList = getServiceEntitlements(entitleList, selMsgService);
-          entitleList = getServiceEntitlements(entitleList, selConfService);
-          entitleList = getServiceEntitlements(entitleList, selCommService);
-        } else {
-          var state = null;
-          for (var key in $scope.entitlements) {
-            state = $scope.entitlements[key];
-            if (action === 'add' || (action === 'entitle' && state)) {
-              entitleList.push(new Feature(key, state));
-            }
-          }
-        }
-        Log.debug(entitleList);
-        return entitleList;
-      };
-
       var addUsers = function () {
         $scope.results = {
           resultList: []
         };
         var isComplete = true;
-        var usersList = getUsersList();
+        usersList = getUsersList();
         Log.debug('Entitlements: ', usersList);
         var callback = function (data, status) {
           if (data.success) {
@@ -389,87 +462,91 @@ angular.module('Core')
 
       };
 
-      var entitleUsers = function () {
-        var usersList = getUsersList();
-        Log.debug('Entitlements: ', usersList);
+      var entitleUserCallback = function (data, status) {
         $scope.results = {
           resultList: []
         };
         var isComplete = true;
-        var callback = function (data, status) {
-          if (data.success) {
-            Log.info('User successfully updated', data);
-            $rootScope.$broadcast('USER_LIST_UPDATED');
 
-            for (var i = 0; i < data.userResponse.length; i++) {
+        if (data.success) {
+          Log.info('User successfully updated', data);
+          $rootScope.$broadcast('USER_LIST_UPDATED');
 
-              var userResult = {
-                email: data.userResponse[i].email,
-                alertType: null
-              };
+          for (var i = 0; i < data.userResponse.length; i++) {
 
-              var userStatus = data.userResponse[i].status;
+            var userResult = {
+              email: data.userResponse[i].email,
+              alertType: null
+            };
 
-              if (userStatus === 200) {
-                userResult.message = 'entitled successfully';
-                userResult.alertType = 'success';
-              } else if (userStatus === 404) {
-                userResult.message = 'does not exist';
-                userResult.alertType = 'danger';
-                isComplete = false;
-              } else if (userStatus === 409) {
-                userResult.message = 'entitlement previously updated';
-                userResult.alertType = 'danger';
-                isComplete = false;
-              } else {
-                userResult.message = 'not entitled, status: ' + userStatus;
-                userResult.alertType = 'danger';
-                isComplete = false;
-              }
-              $scope.results.resultList.push(userResult);
-            }
+            var userStatus = data.userResponse[i].status;
 
-            //concatenating the results in an array of strings for notify function
-            var successes = [];
-            var errors = [];
-            var count_s = 0;
-            var count_e = 0;
-            for (var idx in $scope.results.resultList) {
-              if ($scope.results.resultList[idx].alertType === 'success') {
-                successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
-                count_s++;
-              } else {
-                errors[count_e] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
-                count_e++;
-              }
-            }
-
-            //Displaying notifications
-            if (successes.length + errors.length === usersList.length) {
-              angular.element('#btnOnboard').button('reset');
-              Notification.notify(successes, 'success');
-              Notification.notify(errors, 'error');
-            }
-
-          } else {
-            Log.warn('Could not entitle the user', data);
-            var error = null;
-            if (status) {
-              error = ['Request failed with status: ' + status + '. Message: ' + data];
-              Notification.notify(error, 'error');
+            if (userStatus === 200) {
+              userResult.message = 'entitled successfully';
+              userResult.alertType = 'success';
+            } else if (userStatus === 404) {
+              userResult.message = 'does not exist';
+              userResult.alertType = 'danger';
+              isComplete = false;
+            } else if (userStatus === 409) {
+              userResult.message = 'entitlement previously updated';
+              userResult.alertType = 'danger';
+              isComplete = false;
             } else {
-              error = ['Request failed: ' + data];
-              Notification.notify(error, 'error');
+              userResult.message = 'not entitled, status: ' + userStatus;
+              userResult.alertType = 'danger';
+              isComplete = false;
             }
-            isComplete = false;
+            $scope.results.resultList.push(userResult);
+          }
+
+          //concatenating the results in an array of strings for notify function
+          var successes = [];
+          var errors = [];
+          var count_s = 0;
+          var count_e = 0;
+          for (var idx in $scope.results.resultList) {
+            if ($scope.results.resultList[idx].alertType === 'success') {
+              successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
+              count_s++;
+            } else {
+              errors[count_e] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
+              count_e++;
+            }
+          }
+
+          //Displaying notifications
+          if (successes.length + errors.length === usersList.length) {
             angular.element('#btnOnboard').button('reset');
+            angular.element('#btnSaveEnt').button('reset');
+            Notification.notify(successes, 'success');
+            Notification.notify(errors, 'error');
           }
 
-          if (isComplete) {
-            resetUsersfield();
+        } else {
+          Log.warn('Could not entitle the user', data);
+          var error = null;
+          if (status) {
+            error = ['Request failed with status: ' + status + '. Message: ' + data];
+            Notification.notify(error, 'error');
+          } else {
+            error = ['Request failed: ' + data];
+            Notification.notify(error, 'error');
           }
+          isComplete = false;
+          angular.element('#btnOnboard').button('reset');
+          angular.element('#btnSaveEnt').button('reset');
+        }
 
-        };
+        if (isComplete) {
+          resetUsersfield();
+        }
+
+      };
+
+      var entitleUsers = function () {
+        usersList = getUsersList();
+        Log.debug('Entitlements: ', usersList);
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
           angular.element('#btnOnboard').button('loading');
@@ -478,7 +555,7 @@ angular.module('Core')
           for (i = 0; i < usersList.length; i += chunk) {
             temparray = usersList.slice(i, i + chunk);
             //update entitlements
-            Userservice.updateUsers(temparray, getEntitlements('entitle'), callback);
+            Userservice.updateUsers(temparray, getEntitlements('entitle'), entitleUserCallback);
           }
 
         } else {
@@ -490,7 +567,7 @@ angular.module('Core')
       };
 
       var inviteUsers = function () {
-        var usersList = getUsersList();
+        usersList = getUsersList();
         Log.debug('Invite: ', usersList);
         $scope.results = {
           resultList: []

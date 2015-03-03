@@ -1,0 +1,24 @@
+
+<div class="modal-content" id="modalContent">
+  <div class="modal-header">
+    <button type="button" class="close" id="closeEditServices" ng-click="$dismiss()">
+      <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="usersPreview.editServiceTitle" translate-values="{ firstName: currentUser.name.givenName, lastName: currentUser.name.familyName }"></h3>
+  </div>
+
+  <div class="modal-panel">
+    <div class="modal-body userService" ng-if="hasAccount">
+      <cr-services-panels radioStates="radioStates"></cr-services-panels>
+    </div>
+
+    <div id="buttonBlock" class="onboard-block">
+      <div class="modal-footer footer">
+        <button type="button" id="btnCancel" class="btn btn-default" ng-click="$dismiss()"><span translate="common.cancel"></span>
+        </button>
+        <button type="button" id="btnSaveEnt" class="btn btn-primary" ng-click="updateUserLicense()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="common.save"></span></button>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -199,6 +199,18 @@ angular
             showAddUsers: {}
           }
         })
+        .state('editService', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              controller: 'OnboardCtrl',
+              templateUrl: 'modules/core/users/userPreview/editServices.tpl.html'
+            }
+          },
+          params: {
+            currentUser: {}
+          }
+        })
         .state('user-overview', {
           parent: 'sidepanel',
           views: {
@@ -209,7 +221,9 @@ angular
             }
           },
           params: {
-            currentUser: {}
+            currentUser: {},
+            entitlements: {},
+            queryuserslist: {}
           },
           data: {
             displayName: 'Overview'
@@ -255,6 +269,20 @@ angular
           template: '<div uc-single-number-reach></div>',
           data: {
             displayName: 'Single Number Reach'
+          }
+        })
+        .state('user-overview.messaging', {
+          templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
+          controller: 'UserPreviewCtrl',
+          data: {
+            displayName: 'Entitlements'
+          }
+        })
+        .state('user-overview.userProfile', {
+          templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
+          controller: 'UserRolesCtrl',
+          data: {
+            displayName: 'Roles'
           }
         })
         // .state('users.list.preview', {

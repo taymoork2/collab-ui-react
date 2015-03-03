@@ -7,11 +7,19 @@
   </div>
   <div class="header-info">
     <div class="header-info-wrap">
-      <div class="header-title" title="">{{userOverview.currentUser.userName}}</div>
-      <div ng-if="userOverview.currentUser.title || userOverview.currentUser.addresses" class="header-sub-info">
-        <span class="user-info-1" ng-if="userOverview.currentUser.title">{{userOverview.currentUser.title}}</span>
-        <span class="user-info-2" ng-if="userOverview.currentUser.addresses"><span ng-if="userOverview.currentUser.title && userOverview.currentUser.addresses">,&nbsp;</span>{{userOverview.currentUser.addresses[0].locality}}</span>
-      </div>
+      <a id="rolesChevron" ui-sref="user-overview.userProfile(
+          {currentUser:userOverview.currentUser,
+          roles:userOverview.currentUser.roles})">
+
+        <div class="header-title" title="">{{userOverview.currentUser.userName}}</div>
+        <div ng-if="userOverview.currentUser.title || userOverview.currentUser.addresses" class="header-sub-info">
+          <span class="user-info-1" ng-if="userOverview.currentUser.title">{{userOverview.currentUser.title}}</span>
+          <span class="user-info-2" ng-if="userOverview.currentUser.addresses"><span ng-if="userOverview.currentUser.title && userOverview.currentUser.addresses">,&nbsp;</span>{{userOverview.currentUser.addresses[0].locality}}</span>
+        </div>
+
+        <i class="feature-arrow"></i>
+
+      </a>
     </div>
   </div>
 </cs-sp-header>
@@ -19,11 +27,19 @@
   <cs-sp-section>
     <div class="section-title-row">
       <span class="section-name" translate="usersPreview.servicesPreview"></span>
+      <span class="actions-menu dropdown pull-right" ng-if="userOverview.hasAccount">
+        <button class="actions-button btn-none dropdown-toggle">
+          <i class="icon icon-three-dots"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-primary actions-services">
+          <li><a ui-sref="editService({currentUser:userOverview.currentUser})">{{'usersPreview.editServices' | translate}}</a></li>
+        </ul>
+      </span>
     </div>
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="service in userOverview.services">
-          <a ui-sref="{{service.state}}">
+          <a id="{{service.name}}" ui-sref="{{service.state}}">
             <span class="feature-name">{{service.name}}</span>
             <i class="feature-arrow"></i>
           </a>
