@@ -35,21 +35,22 @@
               &nbsp;
             </td>
           </tr>
-            
-          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.meetingCenter.sessionTypes">
+          
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+              ng-show="sessionType.meetingCenterApplicable">
+              
             <td width="15">
               &nbsp;
             </td>
             
-            <td>
+            <td>              
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
                            align="left"
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}:&nbsp;>
-              </cs-checkbox>
-              
-              <u>{{sessionType.sessionDescription}}</u>
+                           ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
+                           cklabel={{sessionType.sessionName}}>
+              </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
@@ -76,21 +77,22 @@
               &nbsp;
             </td>
           </tr>
-            
-          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.eventCenter.sessionTypes">
+          
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+              ng-show="sessionType.eventCenterApplicable">
+              
             <td width="15">
               &nbsp;
             </td>
             
-            <td>
+            <td>              
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
                            align="left"
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}:&nbsp;>
-              </cs-checkbox>
-              
-              <u>{{sessionType.sessionDescription}}</u>
+                           ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
+                           cklabel={{sessionType.sessionName}}>
+              </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
@@ -117,21 +119,22 @@
               &nbsp;
             </td>
           </tr>
-            
-          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.supportCenter.sessionTypes">
+          
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+              ng-show="sessionType.supportCenterApplicable">
+              
             <td width="15">
               &nbsp;
             </td>
             
-            <td>
+            <td>              
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
                            align="left"
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}:&nbsp;>
-              </cs-checkbox>
-              
-              <u>{{sessionType.sessionDescription}}</u>
+                           ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
+                           cklabel={{sessionType.sessionName}}>
+              </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
@@ -158,32 +161,33 @@
               &nbsp;
             </td>
           </tr>
-            
-          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.trainingCenter.sessionTypes">
+          
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+              ng-show="sessionType.trainingCenterApplicable">
+              
             <td width="15">
               &nbsp;
             </td>
             
-            <td>
+            <td>              
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
                            align="left"
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}:&nbsp;>
-              </cs-checkbox>
-              
-              <u>{{sessionType.sessionDescription}}</u>
+                           ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
+                           cklabel={{sessionType.sessionName}}>
+              </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
       </td>
     </tr>
     <!-- End of Training Center -->
-    
-    <hr />
   </table>
-  <!-- End of Service section -->
   
+  <hr />
+  <!-- End of Service section -->
+    
   <!-- Start of General section -->
   <!--
   <table>
