@@ -143,6 +143,7 @@ var Navigation = function(){
 
   this.logout = function() {
     this.userInfoButton.click();
+    browser.sleep(500);
     this.logoutButton.click();
   };
 

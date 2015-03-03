@@ -45,6 +45,11 @@ var LoginPage = function(){
     browser.get('#/login');
   };
 
+  this.loginTo = function(url, username, password) {
+    browser.get(url);
+    this.login(username, password, url);
+  };
+
   this.login = function(username,password,expectedUrl) {
     this.get();
     this.loginButton.click();

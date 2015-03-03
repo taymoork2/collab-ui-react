@@ -150,9 +150,7 @@ describe('Partner flow', function() {
       browser.getAllWindowHandles().then(function(handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
-        navigation.expectDriverCurrentUrl('login');
-        navigation.expectDriverCurrentUrl(partner.newTrial.customerName);
-        expect(navigation.tabs.isDisplayed()).toBeTruthy();
+        utils.expectIsDisplayed(navigation.tabs);
 
         navigation.clickUsers();
         utils.click(partner.partnerFilter);

@@ -28,7 +28,7 @@ describe('Support flow', function() {
 
   describe('Support tab', function() {
     it('should login as non-sso admin user', function(){
-      login.login(testuser.username, testuser.password);
+      login.loginTo('#/support', testuser.username, testuser.password);
     });
 
     it('should display correct tabs for user based on role', function() {
@@ -39,14 +39,6 @@ describe('Support flow', function() {
       expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
       expect(navigation.supportTab.isDisplayed()).toBeTruthy();
       expect(navigation.developmentTab.isDisplayed()).toBeTruthy();
-    });
-    //Test if Support tab is present
-    it('should display correct tabs for user based on role', function() {
-      expect(navigation.supportTab.isDisplayed()).toBeTruthy();
-    });
-
-    it('clicking on support tab should change the view', function() {
-      navigation.clickSupport();
     });
 
     it('should not display results panel initially', function() {
@@ -213,7 +205,7 @@ describe('Support flow', function() {
 
   describe('Non-admin Squared Support Role', function() {
     it('should login as squared support user', function(){
-      login.login(supportuser.username, supportuser.password);
+      login.loginTo('#/support', supportuser.username, supportuser.password);
     });
 
     it('should display correct tabs for user based on role', function() {

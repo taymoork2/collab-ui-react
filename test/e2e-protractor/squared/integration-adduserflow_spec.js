@@ -242,7 +242,7 @@ describe('Add/Invite/Entitle User flow', function() {
   });
 
   //log in as huron user
-  describe('Page initialization', function() {
+  xdescribe('Page initialization', function() {
     var addEmail = utils.randomTestGmail();
 
     it('should login as huron admin', function(){
