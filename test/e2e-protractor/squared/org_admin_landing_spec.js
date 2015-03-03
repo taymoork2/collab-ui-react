@@ -116,44 +116,30 @@ describe('Customer Admin Landing Page License Info', function() {
     });
   });
 
-  describe('Convert Users Flows', function() {
+  xdescribe('Convert Users Flows', function() {
     it('login as admin user', function(){
       login.login(convertAdmin.username, convertAdmin.password);
     });
 
     it('should close convert users flow', function() {
-      utils.expectIsDisplayed(landing.convertButton);
-      landing.convertButton.click();
+      utils.click(landing.convertButton);
       utils.expectIsDisplayed(landing.convertDialog);
-      utils.expectIsDisplayed(landing.convertModalClose);
-      landing.convertModalClose.click();
-      browser.sleep(1000);
-      expect(landing.convertDialog.isPresent()).toBeFalsy();
+      utils.click(landing.convertModalClose);
+      utils.expectIsNotDisplayed(landing.convertDialog);
     });
 
     it('should cancel convert users flow', function() {
-      utils.expectIsDisplayed(landing.convertButton);
-      landing.convertButton.click();
+      utils.click(landing.convertButton);
       utils.expectIsDisplayed(landing.convertDialog);
-      utils.expectIsDisplayed(landing.convertCancelButton);
-      landing.convertCancelButton.click();
-      browser.sleep(1000);
-      expect(landing.convertDialog.isPresent()).toBeFalsy();
+      utils.click(landing.convertCancelButton);
+      utils.expectIsNotDisplayed(landing.convertDialog);
     });
 
-    // for now just click on the convert button and verify that modal is closed
-    // WARNING : unless there is a way to create consumer user that matches as
-    // unlicensed user, do not select any users for this test.
     it('should convert users', function() {
-      utils.expectIsDisplayed(landing.convertButton);
-      landing.convertButton.click();
+      utils.click(landing.convertButton);
       utils.expectIsDisplayed(landing.convertDialog);
-      utils.expectIsDisplayed(landing.convertActionButton);
-      //landing.unlicensedUserRow.click();
-      landing.convertActionButton.click();
-      browser.sleep(1000);
-      expect(landing.convertDialog.isPresent()).toBeFalsy();
-      //notifications.assertSuccess('Users successfully converted.');
+      utils.click(landing.convertActionButton);
+      utils.expectIsNotDisplayed(landing.convertDialog);
     });
 
     it('should log out', function() {

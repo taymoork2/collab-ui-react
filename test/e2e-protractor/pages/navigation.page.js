@@ -53,14 +53,9 @@ var Navigation = function(){
   };
 
   this.clickUsers = function() {
-    this.clickUsersTab();
-    this.listUsersTab.click();
+    utils.click(this.usersTab);
+    utils.click(this.listUsersTab);
     this.expectCurrentUrl('/users');
-  };
-
-  this.clickUsersTab = function() {
-    this.usersTab.click();
-    browser.sleep(500);
   };
 
   this.clickDevices = function() {
@@ -142,18 +137,18 @@ var Navigation = function(){
   };
 
   this.logout = function() {
-    this.userInfoButton.click();
-    this.logoutButton.click();
+    utils.click(this.userInfoButton);
+    utils.click(this.logoutButton);
   };
 
   this.sendFeedback = function() {
-    this.userInfoButton.click();
-    this.feedbackButton.click();
+    utils.click(this.userInfoButton);
+    utils.click(this.feedbackButton);
   };
 
   this.launchPartnerOrgPortal = function(){
-    this.userInfoButton.click();
-    this.launchPartnerButton.click();
+    utils.click(this.userInfoButton);
+    utils.click(this.launchPartnerButton);
   };
 };
 
