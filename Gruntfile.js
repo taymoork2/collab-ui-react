@@ -734,6 +734,17 @@ module.exports = function (grunt) {
             ]
           }
         }
+      },
+      webex: {
+        options: {
+          // Don't fail on error                                                                                                                                                                         
+          keepAlive: true,
+          args: {
+            specs: [
+              'test/e2e-protractor/webex/*_spec.js'
+            ]
+          }
+        }
       }
     },
 
@@ -951,6 +962,13 @@ module.exports = function (grunt) {
     'test-setup',
     'protractor:hercules'
   ]);
+
+  /**  
+    grunt.registerTask('test-webex', [
+      'test-setup',
+      'protractor:webex'
+    ]);
+  **/
 
   grunt.registerTask('test', function (target) {
     if (target === 'build') {
