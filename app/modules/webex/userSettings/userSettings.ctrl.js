@@ -497,12 +497,20 @@
             siteMtgServiceTypes.forEach(function (siteMtgServiceType) {
               if (userPrivilegesModel.meetingCenter.serviceType == siteMtgServiceType) {
                 meetingCenterApplicable = true;
-              } else if ("AUO" != siteMtgProductCodePrefix) {
-                if (userPrivilegesModel.eventCenter.serviceType == siteMtgServiceType) {
+              } else if (userPrivilegesModel.eventCenter.serviceType == siteMtgServiceType) {
+                if ("AUO" != siteMtgProductCodePrefix) {
                   eventCenterApplicable = true;
-                } else if (userPrivilegesModel.trainingCenter.serviceType == siteMtgServiceType) {
+                }
+              } else if (userPrivilegesModel.trainingCenter.serviceType == siteMtgServiceType) {
+                if ("AUO" != siteMtgProductCodePrefix) {
                   trainingCenterApplicable = true;
-                } else if (userPrivilegesModel.supportCenter.serviceType == siteMtgServiceType) {
+                }
+              } else if (userPrivilegesModel.supportCenter.serviceType == siteMtgServiceType) {
+                if (
+                  ("SMT" != siteMtgProductCodePrefix) &&
+                  ("AUO" != siteMtgProductCodePrefix)
+                ) {
+                  
                   supportCenterApplicable = true;
                 }
               }
