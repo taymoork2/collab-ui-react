@@ -29,7 +29,8 @@ angular.module('Core')
             schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
             metadataXml: metadataXmlContent,
             attributeMapping: ['uid=uid', 'mail=mail'],
-            autofedAttribute: 'uid'
+            autofedAttribute: 'uid',
+            ssoEnabled: true
           };
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
@@ -50,7 +51,8 @@ angular.module('Core')
         patchRemoteIdp: function (metaUrl, metadataXmlContent, callback) {
           var payload = {
             schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
-            metadataXml: metadataXmlContent
+            metadataXml: metadataXmlContent,
+            ssoEnabled: true
           };
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
@@ -72,12 +74,20 @@ angular.module('Core')
             });
         },
 
-        deleteMeta: function (metaUrl, callback) {
+        patchDisableSSO: function (metaUrl, callback) {
+          var payload = {
+            schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
+            ssoEnabled: false
+          };
+
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-          $http.delete(metaUrl)
+          $http({
+              method: 'PATCH',
+              url: metaUrl,
+              data: payload
+            })
             .success(function (data, status) {
               data.success = true;
-              Log.debug('Successfully deleted resource: ' + metaUrl);
               callback(data, status);
             })
             .error(function (data, status) {
@@ -85,6 +95,21 @@ angular.module('Core')
               data.success = false;
               data.status = status;
               callback(data, status);
+            });
+        },
+
+        deleteMeta: function (metaUrl, callback) {
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http.delete(metaUrl)
+            .success(function (data, status) {
+              if (status === 204) {
+                Log.debug('Successfully deleted resource: ' + metaUrl);
+                callback(status);
+              }
+            })
+            .error(function (data, status) {
+              Auth.handleStatus(status);
+              callback(status);
             });
         },
 

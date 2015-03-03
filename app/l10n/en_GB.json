@@ -284,8 +284,8 @@
   "ssoModal": {
     "btnTitle": "Setup SSO",
     "title": "Setup SSO",
-    "enableSSO": "Yes, I have a custom SSO provider.",
-    "disableSSO": "No, I don't have an SSO provider.",
+    "enableSSO": "Integrate a 3rd-party identity provider. (Advanced)",
+    "disableSSO": "Use the built-in identity service for user authentication. (Simple)",
     "importMetadataTitle": "Import IdP metadata",
     "exportMetadataTitle": "Export cloud metadata",
     "testSSOSetupTitle": "Test SSO setup",
@@ -303,7 +303,7 @@
     "backBtn": "Back",
     "nextBtn": "Next",
     "downloadMetadataBtn": "Download metadata file",
-    "launchSSOTestBtn": "Launch an SSO test",
+    "launchSSOTestBtn": "Test SSO Connection",
     "finishBtn": "Finish",
     "importFailed": "Failed to import IdP metadata file",
     "invalidFile": "Invalid IdP metadata file",
@@ -311,7 +311,12 @@
     "retrieveEntityIdFailed": "SSO configuration not successful",
     "readFileFailed": "Could not read IdP metadata file",
     "importSuccess": "Successfully imported IdP metadata file",
-    "enableSSOSuccess": "Single Sign-On (SSO) successfully enabled for all users"
+    "enableSSOSuccess": "Single Sign-On (SSO) successfully enabled for all users",
+    "finalEnableSSO": "The test was successful. Enable Single Sign On.",
+    "finalDisableSSO": "The test was unsuccessful. Disable Single Sign On.",
+    "disableFailed": "Failed to disable Single Sign On",
+    "diableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
+    "enableSSOFailure" : "Failed to diable Single Sign-On (SSO)."
   },
   "serviceSetupModal": {
     "timeZone": "Time zone",
@@ -483,7 +488,7 @@
     "nextSteps": "Press the Next button when you're ready to verify that identity information is being synchronised.",
     "results": "Results",
     "syncAgreementText": "users in sync agreement",
-    "setupSSOSub": "Setup Single Sign-On",
+    "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the e-mail addresses of persons in your company who will receive Collaboration Services. They will receive an e-mail invitation to sign up.",
     "domainEntry": "Domain entry",

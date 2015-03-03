@@ -627,8 +627,13 @@ td a {
   font-weight: bold;
 }
 
-.ssoDesc:after, #importFileDiv:after, #ssoFooter:after {
+.ssoDesc:after, #importFileDiv:after, #ssoFooter:after, .finalSSO:before {
   content: '\000A\000A';
+  white-space: pre-wrap;
+}
+
+.ftwConfigSSO:before {
+  content: '\000A';
   white-space: pre-wrap;
 }
 
