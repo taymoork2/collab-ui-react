@@ -36,7 +36,25 @@ angular.module('Mediafusion')
       $scope.endTimeStamp = "";
       $scope.latestDate = "";
       $scope.numberOfDays = 0;
-      $scope.durationType = "Day";
+      $scope.durationType = "Week";
+      $scope.firstDate = "";
+      $scope.chartToDisplay = "allMeetings";
+      $scope.meetingChartSettings = null;
+      $scope.meetingIndex;
+      $scope.defaultDate = "";
+
+      $scope.prevMonthCheck = true;
+      $scope.nextMonthCheck = true;
+
+      $scope.prevWeekhCheck = false;
+      $scope.nextWeekCheck = true;
+
+      $scope.prevDayCheck = true;
+      $scope.nextDayCheck = true;
+
+      $scope.hoverMonth = false;
+      $scope.hoverDay = false;
+      $scope.hoverWeek = true;
 
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showMeetingsDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
@@ -85,8 +103,7 @@ angular.module('Mediafusion')
        * Creating Meeting Chart Graph.
        */
       var createMeetingChart = function () {
-
-        var meetingChart = AmCharts.makeChart("meetingChartDiv", {
+        $scope.meetingChartSettings = {
           "type": "serial",
           "theme": "none",
           "fontFamily": "CiscoSansTT Thin",
@@ -145,7 +162,52 @@ angular.module('Mediafusion')
             "gridPosition": "middle",
             "tickPosition": "start",
           }
-        });
+        };
+
+        if ($scope.chartToDisplay == "enterpriseMeetings") {
+          var enterprise = [{
+            "balloonText": "[[category]]<br><b><span style='font-size:14px;'>[[enterpriseMeetings]]</span></b>",
+            "bullet": "round",
+            "bulletSize": 4,
+            "lineColor": "#999",
+            "lineThickness": 2,
+            "negativeLineColor": "#999",
+            "type": "smoothedLine",
+            "valueField": "enterpriseMeetings"
+          }];
+          $scope.meetingChartSettings = angular.extend({}, $scope.meetingChartSettings, {
+            "graphs": enterprise
+          });
+        } else if ($scope.chartToDisplay == "cloudMeetings") {
+          var cloud = [{
+            "balloonText": "[[category]]<br><b><span style='font-size:14px;'>[[cloudMeetings]]</span></b>",
+            "bullet": "round",
+            "bulletSize": 4,
+            "lineColor": "#7C71AD",
+            "lineThickness": 2,
+            "negativeLineColor": "#7C71AD",
+            "type": "smoothedLine",
+            "valueField": "cloudMeetings"
+          }];
+          $scope.meetingChartSettings = angular.extend({}, $scope.meetingChartSettings, {
+            "graphs": cloud
+          });
+        }
+
+        if ($scope.durationType == "Week") {
+          var weekCatAxis = {
+            "minorGridAlpha": 20,
+            "minorGridEnabled": false,
+            "gridPosition": "middle",
+            "tickPosition": "start",
+            "gridCount": 7,
+            "autoGridCount": false
+          };
+          $scope.meetingChartSettings = angular.extend({}, $scope.meetingChartSettings, {
+            "categoryAxis": weekCatAxis
+          });
+        }
+        var meetingChart = AmCharts.makeChart("meetingChartDiv", $scope.meetingChartSettings);
 
         /**
          * Created a listener for graphItemOnClick to load meeting and leaderboard data.
@@ -225,32 +287,44 @@ angular.module('Mediafusion')
         $scope.searchString = "";
         var index = event.index;
         populateLeaderBoardInfo(index);
-        var startTempTime = $scope.meetingChartInfo[index].hour;
-        var endTempTime = $scope.meetingChartInfo[index].hour;
-        startTempTime = parseInt(startTempTime.substring(0, startTempTime.length - 2));
-
-        if ($scope.meetingChartInfo[index].hour.indexOf("pm") != -1) {
-          if (startTempTime == 1) {
-            startTempTime = 12 + "pm";
-          } else if (startTempTime == 12) {
-            startTempTime = 11 + "am";
-          } else {
-            startTempTime = (startTempTime - 1) + "pm";
-          }
-        } else {
-          if (startTempTime == 1) {
-            startTempTime = 12 + "am";
-          } else if (startTempTime == 12) {
-            startTempTime = 11 + "pm";
-          } else {
-            startTempTime = (startTempTime - 1) + "am";
-          }
+        if ($scope.durationType == "Month") {
+          createTimeStampForMonth($scope.meetingChartInfo[index].date);
+          $scope.latestMeetingChartDate = new Date($scope.meetingChartInfo[index].date).toDateString();
+          $scope.latestMeetingChartTime = "";
         }
+        if ($scope.durationType == "Week") {
+          $scope.latestMeetingChartDate = new Date($scope.meetingChartInfo[index].date).toDateString();
+          $scope.latestMeetingChartTime = $scope.meetingChartInfo[index].range;
+          var timeRange = $scope.meetingChartInfo[index].range.split("-");
+          createTimeStamp($scope.meetingChartInfo[index].date, timeRange[0], timeRange[1]);
+        } else if ($scope.durationType == "Day") {
+          var startTempTime = $scope.meetingChartInfo[index].hour;
+          var endTempTime = $scope.meetingChartInfo[index].hour;
+          startTempTime = parseInt(startTempTime.substring(0, startTempTime.length - 2));
 
-        createTimeStamp($scope.latestDate, startTempTime, endTempTime);
-        var startTime = (startTempTime.indexOf("am") != -1) ? startTempTime.replace("am", ":00am") : startTempTime.replace("pm", ":00pm");
-        var endTime = (endTempTime.indexOf("am") != -1) ? endTempTime.replace("am", ":00am") : endTempTime.replace("pm", ":00pm");
-        $scope.latestMeetingChartTime = startTime + "-" + endTime;
+          if ($scope.meetingChartInfo[index].hour.indexOf("pm") != -1) {
+            if (startTempTime == 1) {
+              startTempTime = 12 + "pm";
+            } else if (startTempTime == 12) {
+              startTempTime = 11 + "am";
+            } else {
+              startTempTime = (startTempTime - 1) + "pm";
+            }
+          } else {
+            if (startTempTime == 1) {
+              startTempTime = 12 + "am";
+            } else if (startTempTime == 12) {
+              startTempTime = 11 + "pm";
+            } else {
+              startTempTime = (startTempTime - 1) + "am";
+            }
+          }
+
+          createTimeStamp($scope.latestDate, startTempTime, endTempTime);
+          var startTime = (startTempTime.indexOf("am") != -1) ? startTempTime.replace("am", ":00am") : startTempTime.replace("pm", ":00pm");
+          var endTime = (endTempTime.indexOf("am") != -1) ? endTempTime.replace("am", ":00am") : endTempTime.replace("pm", ":00pm");
+          $scope.latestMeetingChartTime = startTime + "-" + endTime;
+        }
         getMeetingList();
 
       };
@@ -258,25 +332,31 @@ angular.module('Mediafusion')
       /**
        * Incrementing the dates accroding to calendar.
        */
-      $scope.incrementDay = function () {
+      $scope.increment = function () {
         var currentDate = new Date();
         var changedDate = new Date($scope.latestDate);
         changedDate = updateDate(changedDate, 1);
-
+        console.log("Print Date !!" + $scope.latestDate + ", Next " + changedDate);
+        //$scope.clickCount = $scope.clickCount + 1;
         if (changedDate < currentDate) {
           $scope.numberOfDays = 1;
           getMeetingChartInfo();
         } else {
-          console.log("Provided date is greaterthan current Date !!");
+          console.log("Provided date is greaterthan current Date !!" + $scope.latestDate + ", Next " + changedDate);
         }
       };
 
       /**
        * Decrementing the dates accroding to calendar.
        */
-      $scope.decrementDay = function () {
+      $scope.decrement = function () {
         var currentDate = new Date();
         var changedDate = new Date($scope.latestDate);
+        //$scope.clickCount = $scope.clickCount - 1;
+        if ($scope.durationType == "Month" || $scope.durationType == "Week") {
+          changedDate = new Date($scope.firstDate);
+        }
+
         changedDate = updateDate(changedDate, -1);
 
         if (daysBetweenDates(changedDate, currentDate) <= 30) {
@@ -297,15 +377,97 @@ angular.module('Mediafusion')
           if (data.success && data.meetingCounts.length > 0) {
             $scope.meetingChartInfo = data.meetingCounts;
             $scope.latestDate = data.latestDate;
-            $scope.latestMeetingChartDate = new Date($scope.latestDate).toDateString();
-            $scope.latestMeetingChartTime = data.latesTimeRange[0] + "-" + data.latesTimeRange[1];
-
-            createTimeStamp($scope.latestDate, data.latesTimeRange[0], data.latesTimeRange[1]);
-            createMeetingChart();
+            if ($scope.numberOfDays == 0) {
+              $scope.defaultDate = $scope.latestDate;
+            } else {
+              var dDay = new Date($scope.defaultDate);
+              var lDay = new Date($scope.latestDate);
+              if (dDay < lDay) {
+                $scope.defaultDate = $scope.latestDate;
+              }
+            }
 
             var index;
+            var currentDate = new Date();
+            if ($scope.durationType == "Month") {
+              if ($scope.numberOfDays == 0 || $scope.defaultDate == $scope.latestDate) {
+                $scope.nextMonthCheck = true;
+              } else {
+                $scope.nextMonthCheck = false;
+              }
+              $scope.firstDate = "";
+              for (index = 0; index < $scope.meetingChartInfo.length; index++) {
+                if ($scope.meetingChartInfo[index].date != null) {
+                  $scope.firstDate = $scope.meetingChartInfo[index].date;
+                  break;
+                }
+              }
+              if ($scope.firstDate != "") {
+                var changedDate = new Date($scope.firstDate);
+                changedDate = updateDate(changedDate, -1);
+                if (daysBetweenDates(changedDate, currentDate) > 30) {
+                  $scope.prevMonthCheck = true;
+                } else {
+                  $scope.prevMonthCheck = false;
+                }
+              } else {
+                $scope.prevMonthCheck = true;
+              }
+
+              $scope.latestMeetingChartDate = new Date($scope.latestDate).toDateString();
+              $scope.latestMeetingChartTime = "";
+              createTimeStampForMonth($scope.latestDate);
+            }
+            if ($scope.durationType == "Week") {
+              $scope.latestMeetingChartDate = new Date($scope.latestDate).toDateString();
+              $scope.latestMeetingChartTime = data.latesTimeRange[0] + "-" + data.latesTimeRange[1];
+              createTimeStamp($scope.latestDate, data.latesTimeRange[0], data.latesTimeRange[1]);
+
+              if ($scope.numberOfDays == 0 || $scope.defaultDate == $scope.latestDate) {
+                $scope.nextWeekCheck = true;
+              } else {
+                $scope.nextWeekCheck = false;
+              }
+              $scope.firstDate = "";
+              for (index = 0; index < $scope.meetingChartInfo.length; index++) {
+                if ($scope.meetingChartInfo[index].date != null) {
+                  $scope.firstDate = $scope.meetingChartInfo[index].date;
+                  break;
+                }
+              }
+              if ($scope.firstDate != "") {
+                var changedDate = new Date($scope.firstDate);
+                changedDate = updateDate(changedDate, -1);
+                if (daysBetweenDates(changedDate, currentDate) > 30) {
+                  $scope.prevWeekCheck = true;
+                } else {
+                  $scope.prevWeekCheck = false;
+                }
+              } else {
+                $scope.prevWeekCheck = true;
+              }
+            } else if ($scope.durationType == "Day") {
+              $scope.latestMeetingChartDate = new Date($scope.latestDate).toDateString();
+              $scope.latestMeetingChartTime = data.latesTimeRange[0] + "-" + data.latesTimeRange[1];
+              createTimeStamp($scope.latestDate, data.latesTimeRange[0], data.latesTimeRange[1]);
+              if ($scope.numberOfDays == 0 || $scope.defaultDate == $scope.latestDate) {
+                $scope.nextDayCheck = true;
+              } else {
+                $scope.nextDayCheck = false;
+              }
+              var changedDate = new Date($scope.latestDate);
+              changedDate = updateDate(changedDate, -1);
+              if (daysBetweenDates(changedDate, currentDate) > 30) {
+                $scope.prevDayCheck = true;
+              } else {
+                $scope.prevDayCheck = false;
+              }
+            }
+            createMeetingChart();
+            $scope.meetingIndex = index;
             for (index = $scope.meetingChartInfo.length - 1; index >= 0; index--) {
               if ($scope.meetingChartInfo[index].enterpriseMeetings != null) {
+                $scope.meetingIndex = index;
                 break;
               }
             }
@@ -317,6 +479,23 @@ angular.module('Mediafusion')
         });
       };
 
+      /**
+       * Utility method to create Day Start Time Stamp in 24 hours format for the input of MM/dd/yyyy
+       */
+      var createTimeStampForMonth = function (date) {
+        var startDate = date;
+        var endDate = date;
+
+        var modifiedDate = new Date(date);
+        startDate = modifiedDate.getMonth() + 1 + "/" + modifiedDate.getDate() + "/" + modifiedDate.getFullYear();
+        $scope.startTimeStamp = startDate + " ";
+        $scope.startTimeStamp = $scope.startTimeStamp + "00:00:00 %2B0000";
+
+        modifiedDate = updateDate(modifiedDate, 1);
+        endDate = modifiedDate.getMonth() + 1 + "/" + modifiedDate.getDate() + "/" + modifiedDate.getFullYear();
+        $scope.endTimeStamp = endDate + " ";
+        $scope.endTimeStamp = $scope.endTimeStamp + "00:00:00 %2B0000";
+      };
       /**
        * Utility method to create Time Stamp in 24 hours format for 2 types of inputs like 11am or 11:00am.
        */
@@ -358,48 +537,26 @@ angular.module('Mediafusion')
       };
 
       /**
-       * Updates date.
+       * Updates day in Date.
        */
       var updateDate = function (dateToBeUpdated, updateType) {
-        var daysInMonthCalender = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        var month = dateToBeUpdated.getMonth();
-
-        if (updateType == 1) {
-          if (month == 11 && dateToBeUpdated.getDate() == daysInMonthCalender[month]) {
-            dateToBeUpdated.setFullYear(dateToBeUpdated.getFullYear + 1);
-            dateToBeUpdated.setMonth(0);
-            dateToBeUpdated.setDate(1);
-          } else if (month != 11 && dateToBeUpdated.getDate() == daysInMonthCalender[month]) {
-            dateToBeUpdated.setMonth(dateToBeUpdated.getMonth() + 1);
-            dateToBeUpdated.setDate(1);
-          } else {
-            dateToBeUpdated.setDate(dateToBeUpdated.getDate() + 1);
-          }
-        } else {
-          if (month == 0 && dateToBeUpdated.getDate() == 1) {
-            dateToBeUpdated.setFullYear(dateToBeUpdated.getFullYear - 1);
-            dateToBeUpdated.setMonth(11);
-            dateToBeUpdated.setDate(31);
-          } else if (month != 0 && dateToBeUpdated.getDate() == 1) {
-            dateToBeUpdated.setMonth(dateToBeUpdated.getMonth() - 1);
-            dateToBeUpdated.setDate(daysInMonthCalender[dateToBeUpdated.getMonth()]);
-          } else {
-            dateToBeUpdated.setDate(dateToBeUpdated.getDate() - 1);
-          }
-        }
-
+        dateToBeUpdated.setDate(dateToBeUpdated.getDate() + updateType);
         return dateToBeUpdated;
-      };
+      }
 
       /**
        * Populating Leader board data.
        */
       var populateLeaderBoardInfo = function (index) {
         if ($scope.meetingChartInfo && $scope.meetingChartInfo.length > 0 && index >= 0 && $scope.meetingChartInfo[index].enterpriseMeetings != null) {
-          $scope.totalEnterpriseMeetings = $scope.meetingChartInfo[index].enterpriseMeetings;
-          $scope.totalEnterpriseParticipants = $scope.meetingChartInfo[index].enterpriseParticipants;
-          $scope.totalCloudMeetings = $scope.meetingChartInfo[index].cloudMeetings;
-          $scope.totalCloudParticipants = $scope.meetingChartInfo[index].cloudParticipants;
+          if ($scope.chartToDisplay == "enterpriseMeetings" || $scope.chartToDisplay == "allMeetings") {
+            $scope.totalEnterpriseMeetings = $scope.meetingChartInfo[index].enterpriseMeetings;
+            $scope.totalEnterpriseParticipants = $scope.meetingChartInfo[index].enterpriseParticipants;
+          }
+          if ($scope.chartToDisplay == "cloudMeetings" || $scope.chartToDisplay == "allMeetings") {
+            $scope.totalCloudMeetings = $scope.meetingChartInfo[index].cloudMeetings;
+            $scope.totalCloudParticipants = $scope.meetingChartInfo[index].cloudParticipants;
+          }
         } else {
           $scope.totalEnterpriseMeetings = "";
           $scope.totalEnterpriseParticipants = "";
@@ -460,5 +617,129 @@ angular.module('Mediafusion')
         }
       });
 
+      /**
+       * Load Graph when directly click on Day
+       */
+      $scope.defaultDay = function () {
+        console.log("default Day Graph load !!");
+        $scope.durationType = "Day";
+        $scope.numberOfDays = 0;
+        $scope.latestDate = "";
+        $scope.firstDate = "";
+        //$scope.clickCount = 0;
+        $scope.prevMonthCheck = true;
+        $scope.nextMonthCheck = true;
+
+        $scope.prevWeekCheck = true;
+        $scope.nextWeekCheck = true;
+
+        $scope.prevDayCheck = false;
+        $scope.nextDayCheck = true;
+
+        $scope.hoverDay = true;
+        $scope.hoverMonth = false;
+        $scope.hoverWeek = false;
+
+        getMeetingChartInfo();
+      };
+
+      /**
+       * Load Graph when directly click on Month
+       */
+      $scope.defaultMonth = function () {
+        console.log("default Month Graph load !!");
+        $scope.durationType = "Month";
+        $scope.numberOfDays = 0;
+        $scope.latestDate = "";
+        $scope.firstDate = "";
+        //$scope.clickCount = 0;
+        $scope.prevMonthCheck = false;
+        $scope.nextMonthCheck = true;
+
+        $scope.prevDayCheck = true;
+        $scope.nextDayCheck = true;
+
+        $scope.prevWeekCheck = true;
+        $scope.nextWeekCheck = true;
+
+        $scope.hoverDay = false;
+        $scope.hoverWeek = false;
+        $scope.hoverMonth = true;
+
+        getMeetingChartInfo();
+      };
+
+      /**
+       * Load Graph when directly click on Week
+       */
+      $scope.defaultWeek = function () {
+        console.log("default Week Graph load !!");
+        $scope.durationType = "Week";
+        $scope.numberOfDays = 0;
+        $scope.latestDate = "";
+        $scope.firstDate = "";
+        //$scope.clickCount = 0;
+        $scope.prevMonthCheck = true;
+        $scope.nextMonthCheck = true;
+        $scope.prevDayCheck = true;
+        $scope.nextDayCheck = true;
+
+        $scope.prevWeekCheck = false;
+        $scope.nextWeekCheck = true;
+
+        $scope.hoverDay = false;
+        $scope.hoverMonth = false;
+        $scope.hoverWeek = true;
+
+        getMeetingChartInfo();
+      };
+
+      /**
+       * Show Meetings Dropdown Change Listner
+       */
+      $scope.changeChart = function () {
+        createMeetingChart();
+        $scope.totalEnterpriseMeetings = "";
+        $scope.totalEnterpriseParticipants = "";
+        $scope.totalCloudMeetings = "";
+        $scope.totalCloudParticipants = "";
+        populateLeaderBoardInfo($scope.meetingIndex);
+      };
+
+      $scope.hoverInDay = function () {
+        if ($scope.durationType != "Day") {
+          $scope.hoverDay = true;
+        }
+      };
+
+      $scope.hoverOutDay = function () {
+        if ($scope.durationType != "Day") {
+          $scope.hoverDay = false;
+        }
+      };
+
+      $scope.hoverInMonth = function () {
+        if ($scope.durationType != "Month") {
+          $scope.hoverMonth = true;
+        }
+      };
+
+      $scope.hoverOutMonth = function () {
+        if ($scope.durationType != "Month") {
+          $scope.hoverMonth = false;
+        }
+      };
+
+      $scope.hoverInWeek = function () {
+        if ($scope.durationType != "Week") {
+          $scope.hoverWeek = true;
+        }
+      };
+
+      $scope.hoverOutWeek = function () {
+        if ($scope.durationType != "Week") {
+          $scope.hoverWeek = false;
+        }
+      };
     }
   ]);

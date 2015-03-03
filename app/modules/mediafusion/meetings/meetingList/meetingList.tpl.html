@@ -23,28 +23,28 @@
       <div class="row page-header meeting-chart-title-bar">
         <div class="col-md-5">      
             <div class="col-md-1 btn-group meeting-chart-btn-grp">
-              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-left" ng-click="decrementDay()"></button>
-              <button type="button" class="btn meeting-chart-cal-nav meeting-chart-cal-nav-btn-label" ng-disabled=true><b class="meeting-chart-default-duration">Day</b></button>
-              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-right" ng-click="incrementDay()"></button>
+              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-left" ng-disabled="prevDayCheck" ng-click="decrement()"></button>
+              <button type="button" class="btn meeting-chart-cal-nav meeting-chart-cal-nav-btn-label" ng-click="defaultDay()" ng-mouseover="hoverInDay()" ng-mouseleave="hoverOutDay()"><span ng-class="{highlet: hoverDay}">Day</span></button>
+              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-right" ng-disabled="nextDayCheck" ng-click="increment()"></button>
             </div>
             <div class="col-md-1 btn-group meeting-chart-btn-blank-grp"></div>
             <div class="col-md-1 btn-group meeting-chart-btn-grp">
-              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-left"></button>
-              <button type="button" class="btn meeting-chart-cal-nav meeting-chart-cal-nav-btn-label" ng-disabled=true>Week</button>
-              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-right"></button>
+              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-left" ng-disabled="prevWeekCheck" ng-click="decrement()"></button>
+              <button type="button" class="btn meeting-chart-cal-nav meeting-chart-cal-nav-btn-label" ng-click="defaultWeek()" ng-mouseover="hoverInWeek()" ng-mouseleave="hoverOutWeek()"><span ng-class="{highlet: hoverWeek}">Week</span></button>
+              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-right" ng-disabled="nextWeekCheck" ng-click="increment()"></button>
             </div>
             <div class="col-md-1 btn-group meeting-chart-btn-blank-grp"></div>
             <div class="col-md-1 btn-group meeting-chart-btn-grp">
-              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-left"></button>
-              <button type="button" class="btn meeting-chart-cal-nav meeting-chart-cal-nav-btn-label" ng-disabled=true>Month</button>
-              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-right"></button>
+              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-left" ng-disabled="prevMonthCheck" ng-click="decrement()"></button>
+              <button type="button" class="btn meeting-chart-cal-nav meeting-chart-cal-nav-btn-label" ng-click="defaultMonth()" ng-mouseover="hoverInMonth()" ng-mouseleave="hoverOutMonth()"><span ng-class="{highlet: hoverMonth}">Month</span></button>
+              <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-right" ng-disabled="nextMonthCheck" ng-click="increment()"></button>
             </div>
         </div>
 
         <div class="label col-md-5 meeting-chart-date"><h4 class="h4 pull-left">{{latestMeetingChartDate}} {{latestMeetingChartTime}}<h4></div>
         <div class="col-md-2 text-right">
-          <select class="meeting-chart-dropdown">
-            <option id="allMeetings" value="allMeetings" ng-selected="selected">All Meetings</option>
+          <select class="meeting-chart-dropdown" ng-model="chartToDisplay" ng-change="changeChart()">
+            <option id="allMeetings" value="allMeetings">All Meetings</option>
             <option id="enterpriseMeetings" value="enterpriseMeetings">Enterprise Meetings</option>
             <option id="cloudMeetings" value="cloudMeetings">Cloud Meetings</option>
           </select>
