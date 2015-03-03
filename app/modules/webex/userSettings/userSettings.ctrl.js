@@ -395,19 +395,21 @@
           meetingCenter: {
             name: "Meeting Center",
             serviceType: "MeetingCenter",
-            isEnabled: false
+            isEnabled: false,
+
+            /*
+            cmr: {
+              id: "cmr",
+              label: "Collabration Room",
+              value: true
+            },
+            */
           }, // meetingCenter
 
           trainingCenter: {
             name: "Training Center",
             serviceType: "TrainingCenter",
             isEnabled: false,
-
-            handsOnLabAdmin: {
-              id: "handsOnLabAdmin",
-              label: "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
-              value: false
-            },
 
             /*
             handsOnLabAdmin: {
@@ -422,12 +424,6 @@
             name: "Event Center",
             serviceType: "EventCenter",
             isEnabled: false,
-
-            optimizeBandwidthUsage: {
-              id: "optimizeBandwidthUsage",
-              label: "Optimized bandwidth usage for attendees within the same network",
-              value: false
-            },
 
             /*
             optimizeBandwidthUsage: {
