@@ -4,6 +4,7 @@
     .module('Hercules')
     .controller('UpgradeButtonController', ['$scope', '$attrs', function ($scope, $attrs) {
       $scope.inflight = false;
+      $scope.buttonText = $attrs.buttonText;
       $scope.upgradeClicked = function () {
         $scope.inflight = true;
         $scope.upgradeSoftware($attrs.clusterId, $attrs.serviceType, function () {

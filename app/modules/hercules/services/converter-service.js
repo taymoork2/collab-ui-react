@@ -18,6 +18,15 @@ angular.module('Hercules')
         }
       };
 
+      var anyApprovedPackagesForService = function (service, cluster) {
+        if (cluster.provisioning_data && cluster.provisioning_data.approved_packages) {
+          return _.find(cluster.provisioning_data.approved_packages, function (pkg) {
+            return pkg.service.service_type == service.service_type;
+          });
+        }
+        return false;
+      };
+
       var deduceAlarmsForService = function (service, cluster) {
         if (cluster.provisioning_data && cluster.provisioning_data.approved_packages) {
           var expected_package = _.find(cluster.provisioning_data.approved_packages, function (pkg) {
@@ -65,9 +74,15 @@ angular.module('Hercules')
 
       var updateSoftwareUpgradeAvailableDetails = function (service, cluster) {
         if (cluster.provisioning_data) {
+          service.installed = service.connectors.length > 0;
           var not_approved_package = getAvailableSoftwareUpgradeForService(service, cluster);
           if (not_approved_package) {
             if (!allConnectorsOfflineOrDisabled(service)) {
+              service.not_approved_package = not_approved_package;
+              service.software_upgrade_available = true;
+              cluster.software_upgrade_available = true;
+            } else if (!service.installed && !anyApprovedPackagesForService(service, cluster)) {
+              service.install_available = true;
               service.not_approved_package = not_approved_package;
               service.software_upgrade_available = true;
               cluster.software_upgrade_available = true;

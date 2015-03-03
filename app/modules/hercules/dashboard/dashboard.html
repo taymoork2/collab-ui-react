@@ -107,8 +107,14 @@
                           {{service.display_name}} is not running
                         </span>
                         <span ng-show="{{!service.needs_attention}}">
-                          <span class="clearfix" ng-show="{{!service.is_disabled}}">
+                          <span class="clearfix" ng-show="{{!service.is_disabled && service.installed}}">
                             {{service.display_name}} is running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}
+                          </span>
+                          <span class="clearfix" ng-show="{{!service.is_disabled && !service.installed && !service.install_available}}">
+                            {{service.display_name}} is pending installation
+                          </span>
+                          <span class="clearfix" ng-show="{{!service.is_disabled && !service.installed && service.install_available}}">
+                            {{service.display_name}} is not installed
                           </span>
                           <span class="clearfix" ng-show="{{service.is_disabled}}" style="opacity: 0.5">
                             {{service.display_name}} is disabled
@@ -164,17 +170,33 @@
 
                       <!-- sw upgrade -->
                       <div class="connector-info-item" ng-show="service.software_upgrade_available">
-                        <div style="padding-bottom: 5px" class="clearfix">
-                          <span>A software update is avalable.</span>
-                          <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
-                          <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
+                        <div ng-show="service.installed">
+                          <!-- sw update for existing service -->
+                            <div style="padding-bottom: 5px" class="clearfix">
+                              <span>A software update is available.</span>
+                              <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
+                              <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
+                            </div>
+                            <div style="padding-bottom: 5px">
+                              <hercules-upgrade-button
+                                cluster-id="{{cluster.id}}"
+                                service-type="{{service.service_type}}",
+                                button-text="Upgrade Now"
+                                />
+                            </div>
                         </div>
-                        <div style="padding-bottom: 5px">
-                          <hercules-upgrade-button
-                            cluster-id="{{cluster.id}}"
-                            service-type="{{service.service_type}}"
-                          />
+
+                        <div ng-show="!service.installed && service.install_available">
+                          <!-- install the new service -->
+                          <div style="padding-bottom: 5px">
+                            <hercules-upgrade-button
+                              cluster-id="{{cluster.id}}"
+                              service-type="{{service.service_type}}",
+                              button-text="Install Now"
+                              />
+                          </div>
                         </div>
+
                       </div>
 
                     </div>
