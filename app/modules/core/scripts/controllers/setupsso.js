@@ -1,35 +1,60 @@
 'use strict';
 
 angular.module('Core')
-  .controller('setupSSODialogCtrl', ['$scope', '$q', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
-    function ($scope, $q, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
+  .controller('setupSSODialogCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
+    function ($scope, $rootScope, $q, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
 
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
       var strEntityIdEnd = '">';
-
+      var oldSSOValue = 1;
+      $scope.showFinalSSOConfirmation = false;
       $scope.options = {
-        configureSSO: 1
+        configureSSO: 1,
+        enableSSO: 1
       };
+
       $scope.configureSSOOptions = [{
-        label: $translate.instant('ssoModal.enableSSO'),
+        label: $translate.instant('ssoModal.disableSSO'),
         value: 1,
         name: 'ssoOptions',
-        id: 'ssoProvider'
+        id: 'ssoNoProvider'
       }, {
-        label: $translate.instant('ssoModal.disableSSO'),
+        label: $translate.instant('ssoModal.enableSSO'),
         value: 0,
         name: 'ssoOptions',
-        id: 'ssoNoProvider'
+        id: 'ssoProvider'
       }];
 
-      $scope.enableSSONext = function () {
-        //need to set enableSSO flag in CI
-      };
+      $scope.enableSSOOptions = [{
+        label: $translate.instant('ssoModal.finalEnableSSO'),
+        value: 1,
+        name: 'finalssoOptions',
+        id: 'finalSsoProvider'
+      }, {
+        label: $translate.instant('ssoModal.finalDisableSSO'),
+        value: 0,
+        name: 'finalssoOptions',
+        id: 'finalSsoNoProvider'
+      }];
+
+      $scope.$watch('options.enableSSO', function () {
+        var ssoValue = $scope.options.enableSSO;
+        if (ssoValue === oldSSOValue) {
+          // do nothing
+        } else {
+          if (ssoValue === 0) {
+            deleteSSO();
+          } else if (ssoValue === 1) {
+            reEnableSSO();
+          }
+        }
+        oldSSOValue = ssoValue;
+      });
 
       $scope.initNext = function () {
         var deferred = $q.defer();
-        if ($scope.options.configureSSO == 0 && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.nextTab)) {
+        if ($scope.options.configureSSO === 1 && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.nextTab)) {
           deferred.reject();
           $scope.wizard.nextTab();
         } else {
@@ -48,7 +73,7 @@ angular.module('Core')
           var r = new FileReader();
           r.onload = (function () {
             return function (e) {
-              $scope.fileContents = e.target.result;
+              $rootScope.fileContents = e.target.result;
             };
           })($scope.file);
           r.readAsText($scope.file);
@@ -64,10 +89,10 @@ angular.module('Core')
           if (data.success) {
             if (data.data.length > 0) {
               //check if data already exists for this entityId
-              var start = $scope.fileContents.indexOf(strEntityDesc);
-              start = $scope.fileContents.indexOf(strEntityId, start) + 10;
-              var end = $scope.fileContents.indexOf(strEntityIdEnd, start);
-              var newEntityId = $scope.fileContents.substring(start, end);
+              var start = $rootScope.fileContents.indexOf(strEntityDesc);
+              start = $rootScope.fileContents.indexOf(strEntityId, start) + 10;
+              var end = $rootScope.fileContents.indexOf(strEntityIdEnd, start);
+              var newEntityId = $rootScope.fileContents.substring(start, end);
               if (newEntityId.substring(0, 4) === 'http') {
                 for (var datum in data.data) {
                   if (data.data[datum].entityId === newEntityId) {
@@ -96,8 +121,61 @@ angular.module('Core')
         });
       };
 
+      var deleteSSO = function () {
+        var metaUrls = [];
+        var metaUrl = null;
+        var success = true;
+        SSOService.getMetaInfo(function (data, status) {
+          if (data.success && data.data.length > 0) {
+            for (var datum in data.data) {
+              metaUrls.push(data.data[datum].url);
+            }
+            for (var num in metaUrls) {
+              metaUrl = metaUrls[num];
+              SSOService.deleteMeta(metaUrl, function (status) {
+                if (status !== 204) {
+                  success = false;
+                }
+              });
+            }
+            if (success === true) {
+              Log.debug('Single Sign-On (SSO) successfully disabled for all users');
+              Notification.notify([$translate.instant('ssoModal.diableSuccess', {
+                status: status
+              })], 'success');
+            } else {
+              Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
+              Notification.notify([$translate.instant('ssoModal.disableFailed', {
+                status: status
+              })], 'error');
+            }
+          } else {
+            Log.debug('Failed to retrieve meta url. Status: ' + status);
+            Notification.notify([$translate.instant('ssoModal.disableFailed', {
+              status: status
+            })], 'error');
+          }
+        });
+      };
+
+      var reEnableSSO = function () {
+        SSOService.importRemoteIdp($rootScope.fileContents, function (data, status) {
+          if (data.success) {
+            Log.debug('Single Sign-On (SSO) successfully enabled for all users');
+            Notification.notify([$translate.instant('ssoModal.enableSSOSuccess', {
+              status: status
+            })], 'success');
+          } else {
+            Log.debug('Failed to diable Single Sign-On (SSO). Status: ' + status);
+            Notification.notify([$translate.instant('ssoModal.enableSSOFailure', {
+              status: status
+            })], 'error');
+          }
+        });
+      };
+
       var postRemoteIdp = function () {
-        SSOService.importRemoteIdp($scope.fileContents, function (data, status) {
+        SSOService.importRemoteIdp($rootScope.fileContents, function (data, status) {
           if (data.success) {
             Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
             Notification.notify([$translate.instant('ssoModal.importSuccess', {
@@ -113,7 +191,7 @@ angular.module('Core')
       };
 
       var patchRemoteIdp = function (metaUrl) {
-        SSOService.patchRemoteIdp(metaUrl, $scope.fileContents, function (data, status) {
+        SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, function (data, status) {
           if (data.success) {
             Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
             Notification.notify([$translate.instant('ssoModal.importSuccess', {
@@ -151,6 +229,7 @@ angular.module('Core')
             })], 'error');
           }
         });
+        $scope.showFinalSSOConfirmation = true;
 
       };
 
