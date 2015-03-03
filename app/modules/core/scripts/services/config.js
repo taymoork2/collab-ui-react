@@ -463,6 +463,7 @@ angular.module('Core')
           // 'webexUserSettings',
           'overview',
           'users',
+          'user-overview',
           'userprofile',
           'reports',
           'setupwizardmodal',
