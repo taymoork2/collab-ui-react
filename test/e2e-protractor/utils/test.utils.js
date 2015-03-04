@@ -112,6 +112,11 @@ exports.click = function(elem) {
   elem.click();
 };
 
+exports.expectText = function(elem, value) {
+  this.expectIsDisplayed(elem);
+  expect(elem.getText()).toEqual(value);
+};
+
 exports.getSwitchState = function(elem) {
   return elem.evaluate('buttonValue');
 };

@@ -31,19 +31,19 @@ var Wizard = function () {
   this.fusionFuse = element(by.id('fuse-setup-fuse'));
 
   this.clickPlanReview = function () {
-    this.reviewTab.click();
+    utils.click(this.reviewTab);
   };
 
   this.clickServiceSetup = function () {
-    this.serviceSetupTab.click();
+    utils.click(this.serviceSetupTab);
   };
 
   this.clickEnterpriseSettings = function () {
-    this.enterpriseTab.click();
+    utils.click(this.enterpriseTab);
   };
 
   this.clickAddUsers = function () {
-    this.addusersTab.click();
+    utils.click(this.addusersTab);
   };
 };
 

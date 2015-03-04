@@ -27,43 +27,40 @@ describe('First Time Wizard', function() {
 
   it('should load views according to left navigation clicks', function() {
     wizard.clickPlanReview();
-    expect(wizard.mainviewTitle.getText()).toEqual('Plan Review');
+    utils.expectText(wizard.mainviewTitle, 'Plan Review');
     wizard.clickEnterpriseSettings();
-    expect(wizard.mainviewTitle.getText()).toEqual('Enterprise Settings');
+    utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
     wizard.clickAddUsers();
-    expect(wizard.mainviewTitle.getText()).toContain('Add Users');
+    utils.expectText(wizard.mainviewTitle, 'Add Users');
   });
 
   it('should complete custom sso provider flow', function(){
     wizard.clickPlanReview();
-    wizard.beginBtn.click();
-    expect(wizard.mainviewTitle.getText()).toEqual('Enterprise Settings');
-    expect(wizard.mainviewSubtitle.getText()).toEqual('Single Sign-On');
-    wizard.radiobuttons.get(1).click();
+    utils.click(wizard.beginBtn);
+    utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
+    utils.expectText(wizard.mainviewSubtitle, 'Single Sign-On');
+    utils.click(wizard.radiobuttons.last());
     utils.click(wizard.nextBtn);
-    expect(wizard.mainviewSubtitle.getText()).toEqual('Import IdP Metadata');
-    wizard.nextBtn.click();
-    expect(wizard.mainviewSubtitle.getText()).toEqual('Export Cloud Metadata');
-    wizard.nextBtn.click();
-    expect(wizard.mainviewSubtitle.getText()).toEqual('Test SSO Setup');
-    wizard.finishBtn.click();
-    expect(wizard.mainviewTitle.isDisplayed()).toBeTruthy();
+    utils.expectText(wizard.mainviewSubtitle, 'Import IdP Metadata');
+    utils.click(wizard.nextBtn);
+    utils.expectText(wizard.mainviewSubtitle, 'Export Cloud Metadata');
+    utils.click(wizard.nextBtn);
+    utils.expectText(wizard.mainviewSubtitle, 'Test SSO Setup');
+    utils.click(wizard.finishBtn);
+    utils.expectIsDisplayed(wizard.mainviewTitle);
   });
 
   it('should complete simple invite users flow', function() {
     wizard.clickAddUsers();
-    wizard.radiobuttons.get(0).click();
-    browser.sleep(1000);
-    wizard.nextBtn.click();
-    browser.sleep(1000);
-    expect(users.addUsersField.isDisplayed()).toBeTruthy();
-    browser.sleep(1000);
-    wizard.finishBtn.click();
+    utils.click(wizard.radiobuttons.first());
+    utils.click(wizard.nextBtn);
+    utils.expectIsDisplayed(users.addUsersField);
+    utils.click(wizard.finishBtn);
 
-    expect(wizard.fusionIntro.isDisplayed()).toBeTruthy();
-    wizard.nextBtn.click();
-    expect(wizard.fusionFuse.isDisplayed()).toBeTruthy();
-    wizard.finishBtn.click();
+    utils.expectIsDisplayed(wizard.fusionIntro);
+    utils.click(wizard.nextBtn);
+    utils.expectIsDisplayed(wizard.fusionFuse);
+    utils.click(wizard.finishBtn);
   }, 60000);
 
   it('should reopen the wizard', function() {
@@ -76,17 +73,14 @@ describe('First Time Wizard', function() {
 
   it('should complete AD sync flow', function() {
     wizard.clickAddUsers();
-    wizard.radiobuttons.get(1).click();
-    wizard.nextBtn.click();
-    expect(wizard.mainviewSubtitle.getText()).toEqual('Domain Entry');
-    expect(wizard.mainviewSubtitle.isDisplayed()).toBeTruthy();
+    utils.click(wizard.radiobuttons.last());
+    utils.click(wizard.nextBtn);
+    utils.expectText(wizard.mainviewSubtitle, 'Domain Entry');
     wizard.dirDomainInput.sendKeys('test_domain');
-    wizard.nextBtn.click();
-    expect(wizard.mainviewSubtitle.getText()).toEqual('Install Cloud Connector');
-    expect(wizard.mainviewSubtitle.isDisplayed()).toBeTruthy();
-    wizard.nextBtn.click();
-    expect(wizard.mainviewSubtitle.getText()).toEqual('Sync Status');
-    expect(wizard.mainviewSubtitle.isDisplayed()).toBeTruthy();
+    utils.click(wizard.nextBtn);
+    utils.expectText(wizard.mainviewSubtitle, 'Install Cloud Connector');
+    utils.click(wizard.nextBtn);
+    utils.expectText(wizard.mainviewSubtitle, 'Sync Status');
     utils.click(wizard.finishBtn);
   });
 
@@ -100,7 +94,6 @@ describe('First Time Wizard', function() {
 
   it('should close the first time wizard and log out', function() {
     element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
-    browser.sleep(1000);
     navigation.logout();
   });
 });

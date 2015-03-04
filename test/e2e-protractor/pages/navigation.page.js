@@ -93,7 +93,7 @@ var Navigation = function(){
 
   this.clickFirstTimeWizard = function() {
     utils.click(this.settingsMenu);
-    this.dropdownItems.first().click();
+    utils.click(this.dropdownItems.first());
   };
 
   this.getTabCount = function() {
