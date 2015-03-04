@@ -24,102 +24,86 @@ var accounttestuser = {
   password: 'C1sc0123!',
 };
 
-// Logging in. Write your tests after the login flow is complete.
 describe('Add/Invite/Entitle User flow', function() {
+  beforeEach(function() { browser.ignoreSynchronization = true; });
+  afterEach(function() { browser.ignoreSynchronization = false; });
+
   describe('Page initialization', function() {
 
     it('should login as pbr org admin', function(){
       login.login(invitetestuser.username, invitetestuser.password);
     });
 
-    describe('without sync', function () {
-      beforeEach(function() { browser.ignoreSynchronization = true; });
-      afterEach(function() { browser.ignoreSynchronization = false; });
-
-      it('clicking on users tab should change the view', function() {
-        navigation.clickUsers();
-      });
+    it('clicking on users tab should change the view', function() {
+      navigation.clickUsers();
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function() {
-      users.addUsers.click();
-      browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
-      expect(users.manageDialog.isDisplayed()).toBeTruthy();
-      expect(users.onboardButton.isDisplayed()).toBeTruthy();
-      expect(users.entitleButton.isPresent()).toBeFalsy();
-      expect(users.addButton.isPresent()).toBeFalsy();
+      utils.click(users.addUsers);
+      utils.expectIsDisplayed(users.manageDialog);
+      utils.expectIsDisplayed(users.onboardButton);
+      utils.expectIsNotDisplayed(users.entitleButton);
+      utils.expectIsNotDisplayed(users.addButton);
     });
 
     describe('Cancel', function() {
       it('should clear user input field and error message', function() {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.clearButton.click();
-        expect(users.addUsersField.getText()).toBe('');
+        utils.click(users.clearButton);
+        utils.expectText(users.addUsersField, '');
       });
-    });
-
-    describe('Input validation', function() {
-      var validinputs = ['user@projectsquared.com', '<user@user.projectsquared>', '"user@user.projectsquared"'];
-      var invalidinputs = ['user', '<user@user.com', 'user@user.com>', '"user@user.com', 'user@user.com"'];
-      it('should invalidate token with invalid inputs and disable button', function() {
-        for (var i = 0; i < invalidinputs.length; i++) {
-          users.addUsersField.sendKeys(invalidinputs[i]);
-          users.addUsersField.sendKeys(protractor.Key.ENTER);
-          expect(users.invalid.isPresent()).toBeTruthy();
-          expect(users.onboardButton.isEnabled()).toBeFalsy();
-          users.clearButton.click();
-        }
-      });
-      it('should tokenize a valid input and activate button', function() {
-        for (var i = 0; i < validinputs.length; i++) {
-          users.addUsersField.sendKeys(validinputs[i]);
-          users.addUsersField.sendKeys(protractor.Key.ENTER);
-          expect(users.invalid.isPresent()).toBeFalsy();
-          expect(users.onboardButton.isEnabled()).toBeTruthy();
-          users.clearButton.click();
-        }
-      }, 45000);
-
     });
 
     it('should display error if no user is entered on invite', function() {
-      users.onboardButton.click();
+      utils.click(users.onboardButton);
       notifications.assertError('Please enter valid user email(s).');
     });
 
     describe('Invite users', function() {
+      var inviteEmail;
       it('should invite users successfully', function() {
-        var inviteEmail = utils.randomTestGmail();
-        users.clearButton.click();
+        inviteEmail = utils.randomTestGmail();
+        utils.click(users.clearButton);
         users.addUsersField.sendKeys(inviteEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.onboardButton.click();
+        utils.click(users.onboardButton);
         notifications.assertSuccess('sent successfully');
+        deleteUtils.deleteUser(inviteEmail);
       });
 
       it('should not invite users successfully if they are already entitled', function() {
-        var inviteEmail = invitetestuser.username;
-        users.clearButton.click();
+        inviteEmail = invitetestuser.username;
+        utils.click(users.clearButton);
         users.addUsersField.sendKeys(inviteEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.onboardButton.click();
+        utils.click(users.onboardButton);
         notifications.assertError('already entitled');
       });
 
       it('should invite users successfully from org which has autoentitlement flag disabled', function() {
-        var inviteEmail = invitetestuser.usernameWithNoEntitlements;
-        users.clearButton.click();
+        inviteEmail = invitetestuser.usernameWithNoEntitlements;
+        utils.click(users.clearButton);
         users.addUsersField.sendKeys(inviteEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.onboardButton.click();
+        utils.click(users.onboardButton);
         notifications.assertSuccess('sent successfully');
       });
-    });
 
-    it('clicking on cancel button should close the modal', function() {
-      users.closeAddUsers.click();
-      browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
-      expect(users.manageDialog.isDisplayed()).toBeFalsy();
+      it('clicking on cancel button should close the modal', function() {
+        utils.click(users.closeAddUsers);
+        utils.expectIsNotDisplayed(users.manageDialog);
+      });
+
+      it('should show active status on new user', function(){
+        users.search(inviteEmail);
+        utils.expectText(users.userListStatus.first(), 'Invite Pending');
+      });
+
+      it('should resend user invitation to pending user', function(){
+        utils.click(users.userListAction);
+        utils.click(users.resendInviteOption);
+        notifications.assertSuccess('Successfully resent invitation');
+      });
     });
 
     it('should log out', function() {
@@ -136,28 +120,25 @@ describe('Add/Invite/Entitle User flow', function() {
       });
 
       it('should open add user modal in users page while clicking on the quick link', function() {
-        landing.addUserQuickLink.click();
+        utils.click(landing.addUserQuickLink);
         navigation.expectCurrentUrl('/users');
-        expect(users.manageDialog.isDisplayed()).toBeTruthy();
+        utils.expectIsDisplayed(users.manageDialog);
       });
-
     });
 
     it('should display error if no user is entered on entitle', function() {
-      users.onboardButton.click();
-      browser.sleep(1000);
+      utils.click(users.onboardButton);
       notifications.assertError('Please enter valid user email(s).');
       notifications.clearNotifications();
     });
 
     describe('Add an existing user', function() {
       it('should display input user email in results with already exists message', function() {
-        users.clearButton.click();
+        utils.click(users.clearButton);
         users.addUsersField.sendKeys(testuser.username);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.collabRadio1.click();
-        browser.sleep(1000);
-        users.onboardButton.click();
+        utils.click(users.collabRadio1);
+        utils.click(users.onboardButton);
         notifications.assertError('already entitled');
         notifications.clearNotifications();
       });
@@ -165,12 +146,11 @@ describe('Add/Invite/Entitle User flow', function() {
 
     describe('Add a new user', function() {
       it('should display input user email in results with success message', function() {
-        users.clearButton.click();
+        utils.click(users.clearButton);
         users.addUsersField.sendKeys(inputEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.collabRadio1.click();
-        browser.sleep(1000);
-        users.onboardButton.click();
+        utils.click(users.collabRadio1);
+        utils.click(users.onboardButton);
         notifications.assertSuccess(inputEmail, 'sent successfully');
         notifications.clearNotifications();
       });
@@ -205,25 +185,19 @@ describe('Add/Invite/Entitle User flow', function() {
     //   });
 
       it('clicking on cancel button should close the modal', function() {
-        users.closeAddUsers.click();
-        browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
-        expect(users.manageDialog.isDisplayed()).toBeFalsy();
+        utils.click(users.closeAddUsers);
+        utils.expectIsNotDisplayed(users.manageDialog);
       });
     });
 
     describe('Verify call-initiation entitlement does not exist for user and re-entitle', function() {
       it('should show call-initiation entitlement for the user', function() {
         users.search(inputEmail);
-        browser.driver.manage().window().maximize();
-        users.userListEnts.then(function(cell) {
-          expect(cell[0].getText()).toContain(inputEmail);
-          users.gridCell.click();
-        });
-        browser.sleep(3000);  //TODO fix this - animation should be resolved by angular
-        expect(users.callInitiationCheckbox.isDisplayed()).toBeTruthy();
-        users.callInitiationCheckbox.click();
-        browser.sleep(100);
-        users.saveButton.click();
+        utils.expectText(users.userListEnts.first(), inputEmail);
+        utils.click(users.gridCell);
+        utils.expectIsDisplayed(users.callInitiationCheckbox);
+        utils.click(users.callInitiationCheckbox);
+        utils.click(users.saveButton);
         notifications.assertSuccess(inputEmail, 'updated successfully');
         notifications.clearNotifications();
       });
@@ -231,7 +205,7 @@ describe('Add/Invite/Entitle User flow', function() {
 
     describe('Delete user used for entitle test', function() {
       it('should delete added user', function() {
-        expect(deleteUtils.deleteUser(inputEmail)).toEqual(200);
+        deleteUtils.deleteUser(inputEmail);
       });
     });
 
@@ -249,48 +223,40 @@ describe('Add/Invite/Entitle User flow', function() {
       login.login(hurontestuser.username, hurontestuser.password);
     });
 
-    describe('without sync', function () {
-      beforeEach(function() { browser.ignoreSynchronization = true; });
-      afterEach(function() { browser.ignoreSynchronization = false; });
-
-      it('clicking on users tab should change the view', function() {
-        navigation.clickUsers();
-      });
+    it('clicking on users tab should change the view', function() {
+      navigation.clickUsers();
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function() {
-      users.addUsers.click();
-      browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
-      expect(users.manageDialog.isDisplayed()).toBeTruthy();
-      expect(users.onboardButton.isDisplayed()).toBeTruthy();
-      expect(users.entitleButton.isPresent()).toBeFalsy();
-      expect(users.addButton.isPresent()).toBeFalsy();
+      utils.click(users.addUsers);
+      utils.expectIsDisplayed(users.manageDialog);
+      utils.expectIsDisplayed(users.onboardButton);
+      utils.expectIsNotDisplayed(users.entitleButton);
+      utils.expectIsNotDisplayed(users.addButton);
     });
 
     describe('Clear', function() {
       it('should clear user input field and error message', function() {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.clearButton.click();
-        expect(users.addUsersField.getText()).toBe('');
+        utils.click(users.clearButton);
+        utils.expectText(users.addUsersField, '');
       });
     });
 
     describe('Add users', function() {
       it('should add users successfully', function() {
-        users.clearButton.click();
+        utils.click(users.clearButton);
         users.addUsersField.sendKeys(addEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.collabRadio1.click();
-        browser.sleep(1000);
-        users.squaredUCCheckBox.click();
-        users.onboardButton.click();
+        utils.click(users.collabRadio1);
+        utils.click(users.squaredUCCheckBox);
+        utils.click(users.onboardButton);
         notifications.assertSuccess(addEmail, 'added successfully');
         notifications.clearNotifications();
       });
       it('clicking on cancel button should close the modal', function() {
-        users.closeAddUsers.click();
-        browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
-        expect(users.manageDialog.isDisplayed()).toBeFalsy();
+        utils.click(users.closeAddUsers);
+        utils.expectIsNotDisplayed(users.manageDialog);
       });
     });
 
@@ -313,60 +279,49 @@ describe('Add/Invite/Entitle User flow', function() {
       login.login(accounttestuser.username, accounttestuser.password);
     });
 
-    describe('without sync', function () {
-      beforeEach(function() { browser.ignoreSynchronization = true; });
-      afterEach(function() { browser.ignoreSynchronization = false; });
-
-      it('clicking on users tab should change the view', function() {
-        navigation.clickUsers();
-      });
+    it('clicking on users tab should change the view', function() {
+      navigation.clickUsers();
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function() {
-      users.addUsers.click();
-      browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
-      expect(users.manageDialog.isDisplayed()).toBeTruthy();
-      expect(users.onboardButton.isDisplayed()).toBeTruthy();
-      expect(users.entitleButton.isPresent()).toBeFalsy();
-      expect(users.addButton.isPresent()).toBeFalsy();
+      utils.click(users.addUsers);
+      utils.expectIsDisplayed(users.manageDialog);
     });
 
     describe('check account buckets', function() {
       it('should clear user input field and error message', function() {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.clearButton.click();
-        expect(users.addUsersField.getText()).toBe('');
+        utils.click(users.clearButton);
+        utils.expectText(users.addUsersField, '');
       });
 
       it('click on enable services individually', function() {
-        users.collabRadio1.click();
-        expect(users.messageLicenses.isDisplayed()).toBeTruthy();
-        expect(users.conferenceLicenses.isDisplayed()).toBeTruthy();
-        expect(users.communicationLicenses.isDisplayed()).toBeTruthy();
+        utils.click(users.collabRadio1);
+        utils.expectIsDisplayed(users.messageLicenses);
+        utils.expectIsDisplayed(users.conferenceLicenses);
+        utils.expectIsDisplayed(users.communicationLicenses);
       });
     });
 
     describe('Add users', function() {
       it('should add users successfully', function() {
-        users.clearButton.click();
+        utils.click(users.clearButton);
         users.addUsersField.sendKeys(addEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
-        users.collabRadio1.click();
-        browser.sleep(1000);
-        users.onboardButton.click();
+        utils.click(users.collabRadio1);
+        utils.click(users.onboardButton);
         notifications.assertSuccess(addEmail, 'sent successfully');
         notifications.clearNotifications();
       });
       it('clicking on cancel button should close the modal', function() {
-        users.closeAddUsers.click();
-        browser.sleep(1000);  //TODO fix this - animation should be resolved by angular
-        expect(users.manageDialog.isDisplayed()).toBeFalsy();
+        utils.click(users.closeAddUsers);
+        utils.expectIsNotDisplayed(users.manageDialog);
       });
     });
 
     describe('Delete user used for entitle test', function() {
       it('should delete added user', function() {
-        expect(deleteUtils.deleteUser(addEmail)).toEqual(200);
+        deleteUtils.deleteUser(addEmail);
       });
     });
 

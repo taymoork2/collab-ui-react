@@ -74,18 +74,18 @@ exports.config = {
     global.roles = new RolesPage();
     global.meetings = new MeetingsPage();
     global.usersettings = new BasicSettigsPage();
-    
-    /*
+
+
     var ScreenShotReporter = require('protractor-screenshot-reporter');
     var path = require('path');
     jasmine.getEnv().addReporter(new ScreenShotReporter({
-      baseDirectory: '/tmp/screenshots',
+      baseDirectory: './screenshots',
       takeScreenShotsOnlyForFailedSpecs: true,
       pathBuilder: function(spec, descriptions, results, capabilities) {
         return path.join(capabilities.caps_.browserName, descriptions.join('-'));
       }
     }));
-*/
+
   },
 
   jasmineNodeOpts: {

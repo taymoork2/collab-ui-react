@@ -55,6 +55,7 @@ module.exports = function (grunt) {
       build: '<%= build_dir %>',
       coverage: 'coverage',
       dist: '<%= compile_dir %>',
+      screenshots: 'screenshots',
       test: '<%= e2e_dir %>/reports'
     },
 

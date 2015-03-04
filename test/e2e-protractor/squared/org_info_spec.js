@@ -14,18 +14,21 @@ var testuser = {
 };
 
 describe('Org Info flow', function() {
+  beforeEach(function() { browser.ignoreSynchronization = true; });
+  afterEach(function() { browser.ignoreSynchronization = false; });
+
   it('should login as squared team member admin user', function(){
     login.login(testuser.username, testuser.password);
   });
 
   it('clicking on orgs tab should show the org info', function() {
     navigation.clickOrganization();
-    expect(manage.displayName.isDisplayed()).toBeTruthy();
-    expect(manage.estimatedSize.isDisplayed()).toBeTruthy();
-    expect(manage.totalUsers.isDisplayed()).toBeTruthy();
-    expect(manage.enableSSO.isDisplayed()).toBeTruthy();
-    expect(manage.saveButton.isDisplayed()).toBeFalsy();
-    expect(manage.refreshButton.isDisplayed()).toBeTruthy();
+    utils.expectIsDisplayed(manage.displayName);
+    utils.expectIsDisplayed(manage.estimatedSize);
+    utils.expectIsDisplayed(manage.totalUsers);
+    utils.expectIsDisplayed(manage.enableSSO);
+    utils.expectIsNotDisplayed(manage.saveButton);
+    utils.expectIsDisplayed(manage.refreshButton);
   });
 
   it('should log out', function() {

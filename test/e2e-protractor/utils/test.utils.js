@@ -79,14 +79,19 @@ exports.scrollTop = function() {
 
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action
-exports.expectIsDisplayed = function(elem) {
-  browser.wait(function(){
+exports.wait = function(elem) {
+  browser.wait(function () {
     return elem.isDisplayed().then(function(isDisplayed){
       return isDisplayed;
     }, function(){
       return false;
     });
-  }, 40000, 'waiting for ' + elem.locator());
+  }, 30000, 'Waiting for: ' + elem.locator());
+};
+
+exports.expectIsDisplayed = function(elem) {
+  this.wait(elem);
+  expect(elem.isDisplayed()).toBeTruthy();
 };
 
 exports.expectIsNotDisplayed = function(elem) {
@@ -95,23 +100,28 @@ exports.expectIsNotDisplayed = function(elem) {
       return !isDisplayed;
     }, function(){
       return true;
-    });
-  }, 40000, 'waiting for ' + elem.locator());
+    }, 30000, 'Waiting for: ' + elem.locator());
+  });
 };
 
-exports.click = function(elem) {
-  browser.wait(function(){
-    return elem.isDisplayed().then(function(isDisplayed){
-      return isDisplayed;
-    }, function(){
-      return false;
+exports.click = function(elem, maxRetry) {
+  this.wait(elem);
+  if (typeof maxRetry === 'undefined') {
+    maxRetry = 10;
+  }
+  if (maxRetry === 0) {
+    console.error('Could not click: ' + elem.locator());
+    elem.click();
+  } else {
+    elem.click().then(function () {
+    }, function () {
+      exports.click(elem, --maxRetry);
     });
-  });
-  elem.click();
+  }
 };
 
 exports.expectText = function(elem, value) {
-  this.expectIsDisplayed(elem);
+  this.wait(elem);
   expect(elem.getText()).toEqual(value);
 };
 

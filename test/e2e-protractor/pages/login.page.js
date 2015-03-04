@@ -52,7 +52,7 @@ var LoginPage = function(){
 
   this.login = function(username,password,expectedUrl) {
     this.get();
-    this.loginButton.click();
+    utils.click(this.loginButton);
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();
