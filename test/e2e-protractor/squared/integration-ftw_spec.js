@@ -68,7 +68,6 @@ describe('First Time Wizard', function() {
 
   it('should reopen the wizard', function() {
     element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
-    browser.sleep(1000);
     navigation.clickFirstTimeWizard();
     utils.expectIsDisplayed(wizard.wizard);
     utils.expectIsDisplayed(wizard.leftNav);
@@ -93,7 +92,6 @@ describe('First Time Wizard', function() {
 
   it('should reopen the wizard', function() {
     element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
-    browser.sleep(1000);
     navigation.clickFirstTimeWizard();
     utils.expectIsDisplayed(wizard.wizard);
     utils.expectIsDisplayed(wizard.leftNav);

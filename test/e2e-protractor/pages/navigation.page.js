@@ -32,8 +32,7 @@ var Navigation = function(){
   this.launchPartnerButton = element(by.id('launch-partner-btn'));
 
   this.clickDevelopmentTab = function() {
-    this.developmentTab.click();
-    browser.sleep(500);
+    utils.click(this.developmentTab);
   };
 
   this.clickHome = function() {
@@ -53,14 +52,9 @@ var Navigation = function(){
   };
 
   this.clickUsers = function() {
-    this.clickUsersTab();
-    this.listUsersTab.click();
+    utils.click(this.usersTab);
+    utils.click(this.listUsersTab);
     this.expectCurrentUrl('/users');
-  };
-
-  this.clickUsersTab = function() {
-    this.usersTab.click();
-    browser.sleep(500);
   };
 
   this.clickDevices = function() {
@@ -98,10 +92,8 @@ var Navigation = function(){
   };
 
   this.clickFirstTimeWizard = function() {
-    this.settingsMenu.click();
-    this.dropdownItems.then(function(rows){
-      rows[0].click();
-    });
+    utils.click(this.settingsMenu);
+    this.dropdownItems.first().click();
   };
 
   this.getTabCount = function() {
@@ -142,19 +134,18 @@ var Navigation = function(){
   };
 
   this.logout = function() {
-    this.userInfoButton.click();
-    browser.sleep(500);
-    this.logoutButton.click();
+    utils.click(this.userInfoButton);
+    utils.click(this.logoutButton);
   };
 
   this.sendFeedback = function() {
-    this.userInfoButton.click();
-    this.feedbackButton.click();
+    utils.click(this.userInfoButton);
+    utils.click(this.feedbackButton);
   };
 
   this.launchPartnerOrgPortal = function(){
-    this.userInfoButton.click();
-    this.launchPartnerButton.click();
+    utils.click(this.userInfoButton);
+    utils.click(this.launchPartnerButton);
   };
 };
 

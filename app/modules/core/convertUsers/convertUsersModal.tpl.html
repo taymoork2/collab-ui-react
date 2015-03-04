@@ -1,11 +1,11 @@
 <div id="convertDialog" class="convert-users">
   <div class="modal-content">
     <div class="modal-header">
-      <button id="convertModalClose" type="button" class="close" ng-click="$parent.convertModalInstance.close()">
+      <button id="convertModalClose" type="button" class="close" ng-click="$dismiss()">
         <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
       </button>
       <h3 class="modal-title">
-          <span translate="homePage.convertUsers"></span>
+        <span translate="homePage.convertUsers"></span>
       </h3>
     </div>
     <div class="modal-body">
@@ -20,7 +20,7 @@
       <button id="convertActionButton" class="btn btn-lg btn-primary pull-right" ng-click="convertUsers()">
         <span translate="homePage.convert"></span>
       </button>
-      <button id="convertCancelButton" class="btn btn-lg btn-default pull-right" ng-click="$parent.convertModalInstance.close()">
+      <button id="convertCancelButton" class="btn btn-lg btn-default pull-right" ng-click="$dismiss()">
         <span translate="homePage.cancel"></span>
       </button>
     </div>
