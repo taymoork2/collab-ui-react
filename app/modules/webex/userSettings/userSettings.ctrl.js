@@ -225,20 +225,20 @@
             currView.userDataXml = result[0];
             currView.siteInfoXml = result[1];
             currView.meetingTypesInfoXml = result[2];
-            
+
             var validResult = true;
             // TODO:
             //   add code to validate the returned data
 
-            if ( validResult ) {
+            if (validResult) {
               currView.userDataJson = currView.xml2JsonConvert("User Data", result[0], "<use:", "</serv:bodyContent>");
               currView.siteInfoJson = currView.xml2JsonConvert("Site Info", result[1], "<ns1:", "</serv:bodyContent>");
               currView.meetingTypesInfoJson = currView.xml2JsonConvert("Meeting Types Info", result[2], "<mtgtype:", "</serv:bodyContent>");
-  
+
               currView.updateUserPrivilegesModel();
             }
           }, // loadUserSettingsInfoSuccess()
-          
+
           function loadUserSettingsInfoError(result) {
             var funcName = "loadUserSettingsInfoError()";
             var logMsg = "";
@@ -248,12 +248,12 @@
           } // loadUserSettingsInfoError()
         ); // WebExUserSettingsSvc.loadUserSettingsInfo()
       }; // loadUserSettingsInfo()
-        
+
       this.updateUserPrivilegesModel = function () {
         var funcName = "updateUserPrivilegesModel()";
         var logMsg = null;
         // alert(funcName);
-        
+
         var currView = this;
         var userPrivilegesModel = currView.userPrivilegesModel;
         var userDataJson = currView.userDataJson;
@@ -264,117 +264,115 @@
         console.log(logMsg);
         // alert(logMsg);
 
-        updateCenterStatus();
-        updateSessionTypes();
+        /* start of center status update */
+        var funcName = "updateCenterStatus()";
+        var logMsg = "";
+        var siteServiceTypes = [].concat(siteInfoJson.body.ns1_siteInstance.ns1_metaData.ns1_serviceType);
+
+        siteServiceTypes.forEach(function (siteServiceType) {
+          if (siteServiceType == userPrivilegesModel.meetingCenter.name) {
+            userPrivilegesModel.meetingCenter.isEnabled = true;
+          } else if (siteServiceType == userPrivilegesModel.eventCenter.name) {
+            userPrivilegesModel.eventCenter.isEnabled = true;
+          } else if (siteServiceType == userPrivilegesModel.trainingCenter.name) {
+            userPrivilegesModel.trainingCenter.isEnabled = true;
+          } else if (siteServiceType == userPrivilegesModel.supportCenter.name) {
+            userPrivilegesModel.supportCenter.isEnabled = true;
+          }
+        }); // siteServiceTypes.forEach()
+        /* end of center status update */
+
+        /* start of session types update */
+        var funcName = "updateSessionTypes()";
+        var logMsg = null;
+
+        var siteMeetingTypes = meetingTypesInfoJson.mtgtype_meetingType;
+        var sessionTypes = new Array;
+
+        siteMeetingTypes.forEach(function (siteMeetingType) {
+          var siteMtgServiceTypeID = siteMeetingType.mtgtype_meetingTypeID;
+          var siteMtgProductCodePrefix = siteMeetingType.mtgtype_productCodePrefix;
+          var siteMtgDisplayName = siteMeetingType.mtgtype_displayName;
+          var siteMtgServiceTypes = [].concat(siteMeetingType.mtgtype_serviceTypes.mtgtype_serviceType);
+
+          if (1 < siteMtgServiceTypes.length) {
+            logMsg = funcName + ": " + "\n" +
+              "siteMtgServiceTypeID=" + siteMtgServiceTypeID + "\n" +
+              "siteMtgProductCodePrefix=" + siteMtgProductCodePrefix + "\n" +
+              "siteMtgServiceTypes=" + siteMtgServiceTypes;
+            console.log(logMsg);
+            // alert(logMsg);
+          }
+
+          var meetingCenterApplicable = false;
+          var trainingCenterApplicable = false;
+          var eventCenterApplicable = false;
+          var supportCenterApplicable = false;
+
+          siteMtgServiceTypes.forEach(function (siteMtgServiceType) {
+            if (userPrivilegesModel.meetingCenter.serviceType == siteMtgServiceType) {
+              meetingCenterApplicable = true;
+            } else if (userPrivilegesModel.eventCenter.serviceType == siteMtgServiceType) {
+              if ("AUO" != siteMtgProductCodePrefix) {
+                eventCenterApplicable = true;
+              }
+            } else if (userPrivilegesModel.trainingCenter.serviceType == siteMtgServiceType) {
+              if ("AUO" != siteMtgProductCodePrefix) {
+                trainingCenterApplicable = true;
+              }
+            } else if (userPrivilegesModel.supportCenter.serviceType == siteMtgServiceType) {
+              if (
+                ("SMT" != siteMtgProductCodePrefix) &&
+                ("AUO" != siteMtgProductCodePrefix)
+              ) {
+
+                supportCenterApplicable = true;
+              }
+            }
+          }); // siteMtgServiceTypes.forEach()
+
+          var sessionType = {
+            id: "sessionType-" + siteMtgServiceTypeID,
+            sessionTypeId: siteMtgServiceTypeID,
+            sessionName: siteMtgProductCodePrefix,
+            sessionDescription: siteMtgDisplayName,
+            meetingCenterApplicable: meetingCenterApplicable,
+            trainingCenterApplicable: trainingCenterApplicable,
+            eventCenterApplicable: eventCenterApplicable,
+            supportCenterApplicable: supportCenterApplicable,
+            sessionEnabled: false
+          };
+
+          sessionTypes.push(sessionType);
+        });
+
+        userPrivilegesModel.sessionTypes = sessionTypes;
+
+        var enabledSessionTypesIDs = [].concat(userDataJson.body.use_meetingTypes.use_meetingType);
+
+        logMsg = funcName + ": " + "\n" +
+          "enabledSessionTypesIDs=" + enabledSessionTypesIDs;
+        console.log(logMsg);
+        // alert(logMsg);
+
+        enabledSessionTypesIDs.forEach(function (enabledSessionTypeID) { // loop through user's enabled session type
+          userPrivilegesModel.sessionTypes.forEach(function (sessionType) {
+            var sessionTypeId = sessionType.sessionTypeId;
+
+            logMsg = funcName + ": " + "\n" +
+              "enabledSessionTypeID=" + enabledSessionTypeID + "\n" +
+              "sessionTypeId=" + sessionTypeId;
+            console.log(logMsg);
+            // alert(logMsg);
+
+            if (sessionType.sessionTypeId == enabledSessionTypeID) {
+              sessionType.sessionEnabled = true;
+            }
+          }); // userPrivilegesModel.sessionTypes.forEach()
+        }); // enabledSessionTypesIDs.forEach()
+        /* end of session types update */
+
         $("#webexUserSettingsPage").removeClass("hidden");
-
-        function updateCenterStatus() {
-          var funcName = "updateCenterStatus()";
-          var logMsg = "";
-          var siteServiceTypes = [].concat(siteInfoJson.body.ns1_siteInstance.ns1_metaData.ns1_serviceType);
-
-          siteServiceTypes.forEach(function (siteServiceType) {
-            if (siteServiceType == userPrivilegesModel.meetingCenter.name) {
-              userPrivilegesModel.meetingCenter.isEnabled = true;
-            } else if (siteServiceType == userPrivilegesModel.eventCenter.name) {
-              userPrivilegesModel.eventCenter.isEnabled = true;
-            } else if (siteServiceType == userPrivilegesModel.trainingCenter.name) {
-              userPrivilegesModel.trainingCenter.isEnabled = true;
-            } else if (siteServiceType == userPrivilegesModel.supportCenter.name) {
-              userPrivilegesModel.supportCenter.isEnabled = true;
-            }
-          }); // siteServiceTypes.forEach()
-        }; // updateCenterStatus()
-
-        function updateSessionTypes() {
-          var funcName = "updateSessionTypes()";
-          var logMsg = null;
-
-          var siteMeetingTypes = meetingTypesInfoJson.mtgtype_meetingType;
-          var sessionTypes = new Array;
-
-          siteMeetingTypes.forEach(function (siteMeetingType) {
-            var siteMtgServiceTypeID = siteMeetingType.mtgtype_meetingTypeID;
-            var siteMtgProductCodePrefix = siteMeetingType.mtgtype_productCodePrefix;
-            var siteMtgDisplayName = siteMeetingType.mtgtype_displayName;
-            var siteMtgServiceTypes = [].concat(siteMeetingType.mtgtype_serviceTypes.mtgtype_serviceType);
-
-            if (1 < siteMtgServiceTypes.length) {
-              logMsg = funcName + ": " + "\n" +
-                "siteMtgServiceTypeID=" + siteMtgServiceTypeID + "\n" +
-                "siteMtgProductCodePrefix=" + siteMtgProductCodePrefix + "\n" +
-                "siteMtgServiceTypes=" + siteMtgServiceTypes;
-              console.log(logMsg);
-              // alert(logMsg);
-            }
-
-            var meetingCenterApplicable = false;
-            var trainingCenterApplicable = false;
-            var eventCenterApplicable = false;
-            var supportCenterApplicable = false;
-
-            siteMtgServiceTypes.forEach(function (siteMtgServiceType) {
-              if (userPrivilegesModel.meetingCenter.serviceType == siteMtgServiceType) {
-                meetingCenterApplicable = true;
-              } else if (userPrivilegesModel.eventCenter.serviceType == siteMtgServiceType) {
-                if ("AUO" != siteMtgProductCodePrefix) {
-                  eventCenterApplicable = true;
-                }
-              } else if (userPrivilegesModel.trainingCenter.serviceType == siteMtgServiceType) {
-                if ("AUO" != siteMtgProductCodePrefix) {
-                  trainingCenterApplicable = true;
-                }
-              } else if (userPrivilegesModel.supportCenter.serviceType == siteMtgServiceType) {
-                if (
-                  ("SMT" != siteMtgProductCodePrefix) &&
-                  ("AUO" != siteMtgProductCodePrefix)
-                ) {
-
-                  supportCenterApplicable = true;
-                }
-              }
-            }); // siteMtgServiceTypes.forEach()
-
-            var sessionType = {
-              id: "sessionType-" + siteMtgServiceTypeID,
-              sessionTypeId: siteMtgServiceTypeID,
-              sessionName: siteMtgProductCodePrefix,
-              sessionDescription: siteMtgDisplayName,
-              meetingCenterApplicable: meetingCenterApplicable,
-              trainingCenterApplicable: trainingCenterApplicable,
-              eventCenterApplicable: eventCenterApplicable,
-              supportCenterApplicable: supportCenterApplicable,
-              sessionEnabled: false
-            };
-
-            sessionTypes.push(sessionType);
-          });
-
-          userPrivilegesModel.sessionTypes = sessionTypes;
-
-          var enabledSessionTypesIDs = [].concat(userDataJson.body.use_meetingTypes.use_meetingType);
-
-          logMsg = funcName + ": " + "\n" +
-            "enabledSessionTypesIDs=" + enabledSessionTypesIDs;
-          console.log(logMsg);
-          // alert(logMsg);
-
-          enabledSessionTypesIDs.forEach(function (enabledSessionTypeID) { // loop through user's enabled session type
-            userPrivilegesModel.sessionTypes.forEach(function (sessionType) {
-              var sessionTypeId = sessionType.sessionTypeId;
-
-              logMsg = funcName + ": " + "\n" +
-                "enabledSessionTypeID=" + enabledSessionTypeID + "\n" +
-                "sessionTypeId=" + sessionTypeId;
-              console.log(logMsg);
-              // alert(logMsg);
-
-              if (sessionType.sessionTypeId == enabledSessionTypeID) {
-                sessionType.sessionEnabled = true;
-              }
-            }); // userPrivilegesModel.sessionTypes.forEach()
-          }); // enabledSessionTypesIDs.forEach()
-        } // updateSessionTypes()
       }; // updateUserPrivilegesModel()
 
       this.updateUserSettings = function () {
