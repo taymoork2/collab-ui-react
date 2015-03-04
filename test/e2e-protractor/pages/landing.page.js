@@ -36,7 +36,7 @@ var LandingPage = function() {
   this.autoAttendantQuickLink = element(by.id('autoAttendantQuickLink'));
   this.deviceLogsQuickLink = element(by.id('deviceLogsQuickLink'));
 
-  this.convertButton = element(by.id('convertButton'));
+  this.convertButton = element(by.css('#convertButton:not(:disabled)'));
   this.convertDialog = element(by.id('convertDialog'));
   this.convertModalClose = element(by.id('convertModalClose'));
   this.convertCancelButton = element(by.id('convertModalClose'));
