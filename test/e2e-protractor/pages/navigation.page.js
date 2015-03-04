@@ -32,8 +32,7 @@ var Navigation = function(){
   this.launchPartnerButton = element(by.id('launch-partner-btn'));
 
   this.clickDevelopmentTab = function() {
-    this.developmentTab.click();
-    browser.sleep(500);
+    utils.click(this.developmentTab);
   };
 
   this.clickHome = function() {
@@ -93,10 +92,8 @@ var Navigation = function(){
   };
 
   this.clickFirstTimeWizard = function() {
-    this.settingsMenu.click();
-    this.dropdownItems.then(function(rows){
-      rows[0].click();
-    });
+    utils.click(this.settingsMenu);
+    this.dropdownItems.first().click();
   };
 
   this.getTabCount = function() {
