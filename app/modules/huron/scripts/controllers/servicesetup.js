@@ -40,7 +40,8 @@
     $scope.site = {
       timeZone: DEFAULT_TZ,
       steeringDigit: null,
-      siteIndex: '000001'
+      siteIndex: '000001',
+      siteCode: '100'
     };
     $scope.globalMOH = DEFAULT_MOH;
     $scope.maxExtLength = DEFAULT_EXTENTION_LENGTH;
