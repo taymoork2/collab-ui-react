@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', ['$scope', '$http', 'WebExUserSettingsSvc',
-    function ($scope, $http, WebExUserSettingsSvc) {
+  angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', ['$scope', '$http', '$log', 'WebExUserSettingsSvc',
+    function ($scope, $http, $log, WebExUserSettingsSvc) {
       this.createUserPrivilegesModel = function () {
         var funcName = "createUserPrivilegesModel()";
         var logMsg = "";
@@ -49,26 +49,6 @@
               value: true
             }
           }, // general
-
-          trainingCenter: {
-            label: "Training Center",
-
-            handsOnLabAdmin: {
-              id: "handsOnLabAdmin",
-              label: "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
-              value: true
-            }
-          }, //trainingCenter
-
-          eventCenter: {
-            label: "Event Center",
-
-            optimizeBandwidthUsage: {
-              id: "optimizeBandwidthUsage",
-              label: "Optimized bandwidth usage for attendees within the same network",
-              value: true
-            }
-          }, // eventCenter
 
           telephonyPriviledge: {
             label: "Telephony Privilege",
@@ -159,14 +139,6 @@
             name: "Meeting Center",
             serviceType: "MeetingCenter",
             isEnabled: false,
-
-            /*
-            cmr: {
-              id: "cmr",
-              label: "Collabration Room",
-              value: true
-            },
-            */
           }, // meetingCenter
 
           trainingCenter: {
@@ -261,10 +233,10 @@
         var meetingTypesInfoJson = currView.meetingTypesInfoJson.body;
 
         logMsg = funcName + ": " + "\n" + "userDataJson=\n" + JSON.stringify(userDataJson);
-        console.log(logMsg);
+        $log.log(logMsg);
         // alert(logMsg);
 
-        /* start of center status update */
+        //---------------- start of center status update ----------------//
         var funcName = "updateCenterStatus()";
         var logMsg = "";
         var siteServiceTypes = [].concat(siteInfoJson.body.ns1_siteInstance.ns1_metaData.ns1_serviceType);
@@ -280,9 +252,9 @@
             userPrivilegesModel.supportCenter.isEnabled = true;
           }
         }); // siteServiceTypes.forEach()
-        /* end of center status update */
+        //---------------- end of center status update ----------------//
 
-        /* start of session types update */
+        //---------------- start of session types update update ----------------//
         var funcName = "updateSessionTypes()";
         var logMsg = null;
 
@@ -300,7 +272,7 @@
               "siteMtgServiceTypeID=" + siteMtgServiceTypeID + "\n" +
               "siteMtgProductCodePrefix=" + siteMtgProductCodePrefix + "\n" +
               "siteMtgServiceTypes=" + siteMtgServiceTypes;
-            console.log(logMsg);
+            $log.log(logMsg);
             // alert(logMsg);
           }
 
@@ -341,18 +313,17 @@
             eventCenterApplicable: eventCenterApplicable,
             supportCenterApplicable: supportCenterApplicable,
             sessionEnabled: false
-          };
+          }; // sessionType
 
           sessionTypes.push(sessionType);
-        });
+        }); // siteMeetingTypes.forEach()
 
         userPrivilegesModel.sessionTypes = sessionTypes;
-
         var enabledSessionTypesIDs = [].concat(userDataJson.body.use_meetingTypes.use_meetingType);
 
         logMsg = funcName + ": " + "\n" +
           "enabledSessionTypesIDs=" + enabledSessionTypesIDs;
-        console.log(logMsg);
+        $log.log(logMsg);
         // alert(logMsg);
 
         enabledSessionTypesIDs.forEach(function (enabledSessionTypeID) { // loop through user's enabled session type
@@ -362,7 +333,7 @@
             logMsg = funcName + ": " + "\n" +
               "enabledSessionTypeID=" + enabledSessionTypeID + "\n" +
               "sessionTypeId=" + sessionTypeId;
-            console.log(logMsg);
+            $log.log(logMsg);
             // alert(logMsg);
 
             if (sessionType.sessionTypeId == enabledSessionTypeID) {
@@ -370,7 +341,7 @@
             }
           }); // userPrivilegesModel.sessionTypes.forEach()
         }); // enabledSessionTypesIDs.forEach()
-        /* end of session types update */
+        //---------------- start of session types update update ----------------//
 
         $("#webexUserSettingsPage").removeClass("hidden");
       }; // updateUserPrivilegesModel()
@@ -381,7 +352,7 @@
       }; // updateUserSettings()
 
       /*----------------------------------------------------------------------*/
-
+     
       this.xml2JsonConvert = WebExUserSettingsSvc.xml2JsonConvert;
 
       this.userDataXml = null;
@@ -394,12 +365,6 @@
       this.meetingTypesInfoJson = null;
 
       this.createUserPrivilegesModel();
-
-      /*
-      this.loadSiteInfo();
-      this.loadMeetingTypesInfo();
-      this.loadUserData();
-      */
       this.loadUserSettingsInfo();
     } // WebExUserSettingsCtrl()
   ]);
