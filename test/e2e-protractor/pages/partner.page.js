@@ -20,7 +20,7 @@ var PartnerHomePage = function(){
   };
 
   this.trialsPanel = element(by.id('trialsPanel'));
-  this.addButton = element(by.id('trialAddButton'));
+  this.addButton = element(by.id('addTrial'));
   this.startTrialButton = element(by.id('startTrialButton'));
   this.customerNameInput = element(by.id('customerNameInput'));
   this.customerEmailInput = element(by.id('customerEmailInput'));

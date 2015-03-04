@@ -23,13 +23,13 @@ var Notifications = function(){
     utils.expectIsDisplayed(this.successAlert);
     this.successAlert.click();
     if (msg1){
-      expect(element.all(by.cssContainingText('.panel-success-body', msg1)).first().isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(element.all(by.cssContainingText('.panel-success-body', msg1)).first());
     }
     if (msg2) {
-      expect(element.all(by.cssContainingText('.panel-success-body', msg2)).first().isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(element.all(by.cssContainingText('.panel-success-body', msg2)).first());
     }
     if (msg1 || msg2){
-      this.notificationCancel.click();
+      utils.click(this.notificationCancel);
     }
   };
 

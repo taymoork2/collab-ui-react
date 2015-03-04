@@ -9,7 +9,8 @@
 /* global notifications */
 /* global deleteTrialUtils */
 
-xdescribe('Partner flow', function() {
+describe('Partner flow', function() {
+
   // Logging in. Write your tests after the login flow is complete.
   describe('Login as partner admin user', function() {
 
@@ -18,99 +19,59 @@ xdescribe('Partner flow', function() {
     });
 
     it('should display correct tabs for user based on role', function() {
+      utils.expectIsDisplayed(navigation.homeTab);
+      utils.expectIsDisplayed(navigation.customersTab);
+      utils.expectIsDisplayed(navigation.reportsTab);
       expect(navigation.getTabCount()).toBe(3);
-      expect(navigation.homeTab.isDisplayed()).toBeTruthy();
-      expect(navigation.customersTab.isDisplayed()).toBeTruthy();
-      expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
-    });
-    it('should display trials list', function() {
-      expect(partner.trialsPanel.isDisplayed()).toBeTruthy();
     });
 
+    it('should display trials list', function() {
+      utils.expectIsDisplayed(partner.trialsPanel);
+    });
   }); //State is logged-in
 
-  describe('Add Partner Trial', function() {
+  ddescribe('Add Partner Trial', function() {
+
+    it('should view all trials', function() {
+      utils.click(partner.viewAllLink);
+      navigation.expectCurrentUrl('/customers');
+
+      utils.expectIsDisplayed(partner.customerList);
+    });
 
     it('should add a new trial', function(){
-      partner.addButton.click();
+      utils.click(partner.addButton);
+      utils.expectIsDisplayed(partner.addTrialModal);
+
       partner.assertDisabled('startTrialButton');
 
-      partner.customerNameInput.sendKeys(partner.newTrial.customerName);
-      partner.customerNameInput.clear();
-      partner.assertDisabled('startTrialButton');
-
-      partner.customerEmailInput.sendKeys(partner.newTrial.customerEmail);
-      partner.customerEmailInput.clear();
-      partner.assertDisabled('startTrialButton');
-
-      expect(partner.squaredTrialCheckbox.isPresent()).toBeTruthy();
-      expect(partner.squaredUCTrialCheckbox.isPresent()).toBeFalsy();
+      utils.expectIsDisplayed(partner.squaredTrialCheckbox);
+      utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
 
       partner.customerNameInput.sendKeys(partner.newTrial.customerName);
       partner.customerEmailInput.sendKeys(partner.newTrial.customerEmail);
-      partner.squaredTrialCheckbox.click();
+      utils.click(partner.squaredTrialCheckbox);
 
-      partner.startTrialButton.click();
+      utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
 
       utils.expectIsDisplayed(partner.newTrialRow);
     }, 60000);
 
-    it('should send error and highlight incorrect field when adding an existing trial', function(){
-      partner.addButton.click();
-      partner.assertDisabled('startTrialButton');
-
-      partner.customerNameInput.clear();
-      partner.customerEmailInput.clear();
-
-      partner.customerNameInput.sendKeys(partner.newTrial.customerName);
-      partner.customerEmailInput.sendKeys(partner.differentTrial.customerEmail);
-      partner.squaredTrialCheckbox.click();
-
-      partner.startTrialButton.click();
-
-      notifications.assertError(partner.newTrial.customerName, 'already exists');
-      expect(navigation.hasClass(partner.customerNameForm, 'has-error')).toBe(true);
-
-      partner.customerNameInput.clear();
-      partner.customerEmailInput.clear();
-
-      partner.customerNameInput.sendKeys(partner.differentTrial.customerName);
-      partner.customerEmailInput.sendKeys(partner.newTrial.customerEmail);
-
-      partner.startTrialButton.click();
-
-      notifications.assertError(partner.newTrial.customerEmail, 'already exists');
-      expect(navigation.hasClass(partner.customerEmailForm, 'has-error')).toBe(true);
-
-      partner.cancelTrialButton.click();
-    }, 60000);
-
     it('should edit an exisiting trial', function(){
-
       utils.click(partner.newTrialRow);
-      utils.expectIsDisplayed(partner.editTrialButton);
-      partner.editTrialButton.click();
+      utils.click(partner.editTrialModal);
+      utils.expectIsDisplayed(partner.addTrialModal);
 
       expect(partner.squaredTrialCheckbox.getAttribute('disabled')).toBeTruthy();
-      expect(partner.saveSendButton.isDisplayed()).toBeTruthy();
-      partner.saveSendButton.click();
+      utils.expectIsDisplayed(partner.saveSendButton);
+      utils.click(partner.saveSendButton);
 
       notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
 
       utils.expectIsDisplayed(partner.newTrialRow);
     }, 60000);
 
-    it('should view all trials', function() {
-      partner.viewAllLink.click();
-      navigation.expectCurrentUrl('/customers');
-      expect(partner.customerList.isPresent()).toBeTruthy();
-      partner.assertResultsLength();
-      partner.newTrialRow.click();
-      utils.expectIsDisplayed(partner.previewPanel);
-      expect(partner.customerInfo.isDisplayed()).toBeTruthy();
-      expect(partner.trialInfo.isDisplayed()).toBeTruthy();
-    });
   });
 
   describe('Partner launches customer portal', function(){
