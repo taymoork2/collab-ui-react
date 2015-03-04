@@ -142,9 +142,7 @@ xdescribe('Partner flow', function() {
       var appWindow = browser.getWindowHandle();
 
       utils.click(partner.exitPreviewButton);
-      browser.sleep(2000);
-
-      utils.click(partner.actionsButton.click();
+      utils.click(partner.actionsButton);
       utils.click(partner.launchCustomerButton);
 
       browser.getAllWindowHandles().then(function(handles) {
