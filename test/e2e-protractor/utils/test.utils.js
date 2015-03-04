@@ -86,8 +86,7 @@ exports.expectIsDisplayed = function(elem) {
     }, function(){
       return false;
     });
-  });
-  expect(elem.isDisplayed()).toBeTruthy();
+  }, 40000, 'waiting for ' + elem.locator());
 };
 
 exports.expectIsNotDisplayed = function(elem) {
@@ -95,10 +94,9 @@ exports.expectIsNotDisplayed = function(elem) {
     return elem.isDisplayed().then(function(isDisplayed){
       return !isDisplayed;
     }, function(){
-      return false;
+      return true;
     });
-  });
-  expect(elem.isDisplayed()).toBeFalsy();
+  }, 40000, 'waiting for ' + elem.locator());
 };
 
 exports.click = function(elem) {

@@ -336,7 +336,7 @@ angular.module('Core')
         '</ul>' +
         '</span>';
 
-      var rowTemplate = '<div id="{{row.entity.customerName}}" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
+      var rowTemplate = '<div id="{{row.entity.customerName}}" orgId="{{row.entity.customerOrgId}}" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
         '<div ng-cell></div>' +
         '</div>';

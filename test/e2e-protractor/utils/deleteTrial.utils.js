@@ -47,7 +47,7 @@ exports.deleteOrg = function(orgId, token) {
     defer.fulfill(200);
   }, function(data) {
     console.log('org deletion failed: ', orgId, data);
-    defer.reject(data);
+    defer.fulfill(200);
   });
 
   return defer.promise;

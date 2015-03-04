@@ -10,15 +10,27 @@
 /* global deleteTrialUtils */
 
 describe('Partner flow', function() {
+  var orgId;
+  var accessToken;
+
+  beforeEach(function() { browser.ignoreSynchronization = true; });
+  afterEach(function() { browser.ignoreSynchronization = false; });
 
   // Logging in. Write your tests after the login flow is complete.
   describe('Login as partner admin user', function() {
 
-    it('should login', function(){
+    it('should login', function(done){
       login.partnerlogin(partner.testuser.username, partner.testuser.password);
+
+      element(by.tagName('body')).evaluate('token').then(function(token){
+        accessToken = token;
+        expect(accessToken).not.toBeNull();
+        done();
+      });
     });
 
     it('should display correct tabs for user based on role', function() {
+
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
       utils.expectIsDisplayed(navigation.reportsTab);
@@ -30,7 +42,7 @@ describe('Partner flow', function() {
     });
   }); //State is logged-in
 
-  ddescribe('Add Partner Trial', function() {
+  describe('Add Partner Trial', function() {
 
     it('should view all trials', function() {
       utils.click(partner.viewAllLink);
@@ -39,9 +51,9 @@ describe('Partner flow', function() {
       utils.expectIsDisplayed(partner.customerList);
     });
 
-    it('should add a new trial', function(){
+    it('should add a new trial', function(done){
       utils.click(partner.addButton);
-      utils.expectIsDisplayed(partner.addTrialModal);
+      utils.expectIsDisplayed(partner.addTrialForm);
 
       partner.assertDisabled('startTrialButton');
 
@@ -56,12 +68,21 @@ describe('Partner flow', function() {
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
 
       utils.expectIsDisplayed(partner.newTrialRow);
+
+      partner.newTrialRow.getAttribute('orgId').then(function(attr){
+        orgId = attr;
+        expect(orgId).not.toBeNull();
+        done();
+      });
     }, 60000);
 
     it('should edit an exisiting trial', function(){
       utils.click(partner.newTrialRow);
-      utils.click(partner.editTrialModal);
-      utils.expectIsDisplayed(partner.addTrialModal);
+
+      utils.expectIsDisplayed(partner.previewPanel);
+      utils.click(partner.editLink);
+
+      utils.expectIsDisplayed(partner.editTrialForm);
 
       expect(partner.squaredTrialCheckbox.getAttribute('disabled')).toBeTruthy();
       utils.expectIsDisplayed(partner.saveSendButton);
@@ -79,21 +100,23 @@ describe('Partner flow', function() {
     it('Launch customer portal via preview panel and display first time wizard',function(){
       var appWindow = browser.getWindowHandle();
 
-      expect(partner.launchCustomerPanelButton.isDisplayed()).toBeTruthy();
-      partner.launchCustomerPanelButton.click();
+      utils.click(partner.launchCustomerPanelButton);
 
       browser.getAllWindowHandles().then(function(handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
+
         utils.expectIsDisplayed(wizard.wizard);
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
-        wizard.finishTab.click();
+        utils.click(wizard.finishTab);
+
         expect(wizard.mainviewTitle.getText()).toEqual('Get Started');
-        expect(wizard.mainviewTitle.isDisplayed()).toBeTruthy();
-        wizard.finishBtn.click();
+        utils.expectIsDisplayed(wizard.mainviewTitle);
+        utils.click(wizard.finishBtn);
         navigation.expectDriverCurrentUrl('overview');
-        expect(navigation.tabs.isDisplayed()).toBeTruthy();
+        utils.expectIsDisplayed(navigation.tabs);
+
         browser.driver.close();
         browser.switchTo().window(appWindow);
       });
@@ -103,6 +126,8 @@ describe('Partner flow', function() {
       var appWindow = browser.getWindowHandle();
 
       utils.click(partner.exitPreviewButton);
+      utils.expectIsNotDisplayed(partner.previewPanel);
+
       utils.click(partner.actionsButton);
       utils.click(partner.launchCustomerButton);
 
@@ -131,14 +156,15 @@ describe('Partner flow', function() {
       it('should launch partners org view',function(){
         var appWindow = browser.getWindowHandle();
 
-        expect(navigation.userInfoButton.isDisplayed()).toBeTruthy();
+        utils.expectIsDisplayed(navigation.userInfoButton);
         navigation.launchPartnerOrgPortal();
 
         browser.getAllWindowHandles().then(function(handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
         navigation.expectDriverCurrentUrl('true');
-        expect(navigation.tabs.isDisplayed()).toBeTruthy();
+        utils.expectIsDisplayed(navigation.tabs);
+
         navigation.expectDriverCurrentUrl('overview');
         browser.driver.close();
         browser.switchTo().window(appWindow);
@@ -150,72 +176,49 @@ describe('Partner flow', function() {
   describe('Partner landing page reports', function(){
 
     it('should delete an exisiting org thus deleting trial', function(){
-      navigation.clickHome();
-      browser.executeScript('console.warn(window.localStorage.accessToken)');
-      var token = '';
-      browser.manage().logs().get('browser').then(function(browserLog) {
-        token = browserLog[browserLog.length-1].message.split(' ')[2];
-      });
-      partner.newTrialRow.getAttribute('orgId').then(function(attr){
-        deleteTrialUtils.deleteOrg(attr, token);
-      });
+      expect(deleteTrialUtils.deleteOrg(orgId, accessToken)).toEqual(200);
     });
 
     it('should show the reports',function(){
       navigation.clickHome();
-      expect(partner.entitlementsChart.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(partner.entitlementsChart);
       expect(partner.entitlementsCount.getText()).toBeTruthy();
     });
 
     it('should show active users chart',function(){
       partner.activeUsersTab.click();
-      expect(partner.activeUsersChart.isDisplayed()).toBeTruthy();
-      expect(partner.activeUsersCount.getText()).toBeTruthy();
+      utils.expectIsDisplayed(partner.activeUsersChart);
+      utils.expectIsDisplayed(partner.activeUsersCount.getText());
     });
 
     it('should show average calls chart',function(){
       partner.averageCallsTab.click();
-      expect(partner.averageCallsChart.isDisplayed()).toBeTruthy();
-      expect(partner.averageCallsCount.getText()).toBeTruthy();
+      utils.expectIsDisplayed(partner.averageCallsChart);
+      utils.expectIsDisplayed(partner.averageCallsCount.getText());
     });
 
     it('should show content shared chart',function(){
       partner.contentSharedTab.click();
-      expect(partner.contentSharedChart.isDisplayed()).toBeTruthy();
-      expect(partner.contentSharedCount.getText()).toBeTruthy();
+      utils.expectIsDisplayed(partner.contentSharedChart);
+      utils.expectIsDisplayed(partner.contentSharedCount.getText());
     });
   });
 
-  describe('Reports Page data refresh', function() {
+  describe('Reports Page', function() {
 
     it('should load cached values into directive when switching tabs', function() {
       navigation.clickReports();
-      expect(reports.refreshData.isDisplayed()).toBeTruthy();
-      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(reports.calls.isDisplayed()).toBeTruthy();
-      expect(reports.conversations.isDisplayed()).toBeTruthy();
-      expect(reports.activeUsers.isDisplayed()).toBeTruthy();
-      expect(reports.convOneOnOne.isDisplayed()).toBeTruthy();
-      expect(reports.convGroup.isDisplayed()).toBeTruthy();
-      expect(reports.calls.isDisplayed()).toBeTruthy();
-      expect(reports.callsAvgDuration.isDisplayed()).toBeTruthy();
-      expect(reports.contentShared.isDisplayed()).toBeTruthy();
-      expect(reports.contentShareSizes.isDisplayed()).toBeTruthy();
-    });
-
-    xit('should load new values and update time when clicking refresh', function() {
-      reports.refreshButton.click();
-      expect(reports.refreshData.isDisplayed()).toBeTruthy();
-      expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
-      expect(reports.calls.isDisplayed()).toBeTruthy();
-      expect(reports.conversations.isDisplayed()).toBeTruthy();
-      expect(reports.activeUsers.isDisplayed()).toBeTruthy();
-      expect(reports.convOneOnOne.isDisplayed()).toBeTruthy();
-      expect(reports.convGroup.isDisplayed()).toBeTruthy();
-      expect(reports.calls.isDisplayed()).toBeTruthy();
-      expect(reports.callsAvgDuration.isDisplayed()).toBeTruthy();
-      expect(reports.contentShared.isDisplayed()).toBeTruthy();
-      expect(reports.contentShareSizes.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(reports.refreshData);
+      utils.expectIsDisplayed(reports.reloadedTime);
+      utils.expectIsDisplayed(reports.calls);
+      utils.expectIsDisplayed(reports.conversations);
+      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.convOneOnOne);
+      utils.expectIsDisplayed(reports.convGroup);
+      utils.expectIsDisplayed(reports.calls);
+      utils.expectIsDisplayed(reports.callsAvgDuration);
+      utils.expectIsDisplayed(reports.contentShared);
+      utils.expectIsDisplayed(reports.contentShareSizes);
     });
   });
 
