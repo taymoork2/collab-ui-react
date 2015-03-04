@@ -208,6 +208,7 @@
               currView.meetingTypesInfoJson = currView.xml2JsonConvert("Meeting Types Info", result[2], "<mtgtype:", "</serv:bodyContent>");
 
               currView.updateUserPrivilegesModel();
+              $("#webexUserSettingsPage").removeClass("hidden");
             }
           }, // loadUserSettingsInfoSuccess()
 
@@ -237,8 +238,6 @@
         // alert(logMsg);
 
         //---------------- start of center status update ----------------//
-        var funcName = "updateCenterStatus()";
-        var logMsg = "";
         var siteServiceTypes = [].concat(siteInfoJson.body.ns1_siteInstance.ns1_metaData.ns1_serviceType);
 
         siteServiceTypes.forEach(function (siteServiceType) {
@@ -255,9 +254,6 @@
         //---------------- end of center status update ----------------//
 
         //---------------- start of session types update update ----------------//
-        var funcName = "updateSessionTypes()";
-        var logMsg = null;
-
         var siteMeetingTypes = meetingTypesInfoJson.mtgtype_meetingType;
         var sessionTypes = new Array;
 
@@ -342,8 +338,6 @@
           }); // userPrivilegesModel.sessionTypes.forEach()
         }); // enabledSessionTypesIDs.forEach()
         //---------------- start of session types update update ----------------//
-
-        $("#webexUserSettingsPage").removeClass("hidden");
       }; // updateUserPrivilegesModel()
 
       this.updateUserSettings = function () {
@@ -351,8 +345,8 @@
         alert("updateUserSettings(): END");
       }; // updateUserSettings()
 
-      /*----------------------------------------------------------------------*/
-     
+      //----------------------------------------------------------------------//
+
       this.xml2JsonConvert = WebExUserSettingsSvc.xml2JsonConvert;
 
       this.userDataXml = null;
