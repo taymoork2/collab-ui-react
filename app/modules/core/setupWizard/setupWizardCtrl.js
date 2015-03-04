@@ -33,9 +33,6 @@ angular.module('Core')
         }, {
           name: 'testSSO',
           template: 'modules/core/setupWizard/enterprise.testSSO.tpl.html'
-        }, {
-          name: 'enableSSO',
-          template: 'modules/core/setupWizard/enterprise.enableSSO.tpl.html'
         }]
       }, {
         name: 'addUsers',

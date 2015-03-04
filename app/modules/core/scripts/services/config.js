@@ -422,7 +422,8 @@ angular.module('Core')
           'setupwizardmodal',
           'firsttimewizard',
           'groups',
-          'partnerprofile',
+          'profile',
+          'customerprofile',
           'support'
         ],
         Support: ['overview', 'reports', 'support'],

@@ -8,6 +8,7 @@ angular.module('Core')
       var searchFilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
       var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
+      var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
 
       var userlistservice = {
 
@@ -77,6 +78,30 @@ angular.module('Core')
               }
               Auth.handleStatus(status, description);
             });
+        },
+
+        getCiscoRep: function (callback) {
+          var ciscoRepUrl = Utils.sprintf(Config.scimUrl, [ciscoOrgId]);
+          ciscoRepUrl = ciscoRepUrl + '?filter=managedOrgs%5BorgId%20eq%20%22' + Authinfo.getOrgId() + '%22%5D';
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http.get(ciscoRepUrl)
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              var description = null;
+              var errors = data.Errors;
+              if (errors) {
+                description = errors[0].description;
+              }
+              Auth.handleStatus(status, description);
+            });
+
         },
 
         exportCSV: function (scope) {

@@ -38,16 +38,14 @@ describe('First Time Wizard', function() {
     wizard.clickPlanReview();
     wizard.beginBtn.click();
     expect(wizard.mainviewTitle.getText()).toEqual('Enterprise Settings');
-    expect(wizard.mainviewSubtitle.getText()).toEqual('Setup Single Sign-On');
-    wizard.radiobuttons.get(0).click();
+    expect(wizard.mainviewSubtitle.getText()).toEqual('Single Sign-On');
+    wizard.radiobuttons.get(1).click();
     utils.click(wizard.nextBtn);
     expect(wizard.mainviewSubtitle.getText()).toEqual('Import IdP Metadata');
     wizard.nextBtn.click();
     expect(wizard.mainviewSubtitle.getText()).toEqual('Export Cloud Metadata');
     wizard.nextBtn.click();
     expect(wizard.mainviewSubtitle.getText()).toEqual('Test SSO Setup');
-    wizard.nextBtn.click();
-    expect(wizard.mainviewSubtitle.getText()).toEqual('Enable SSO');
     wizard.finishBtn.click();
     expect(wizard.mainviewTitle.isDisplayed()).toBeTruthy();
   });

@@ -17,7 +17,7 @@
     </tr>
     
     <!-- Start of Meeting Center -->
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.meetingCenter.isEnabled">
+    <tr ng-show="WebExUserSettings.userPrivilegesModel.meetingCenter.isEnabled" id="MC">
       <td>
         <table>
           <tr>
@@ -35,21 +35,22 @@
               &nbsp;
             </td>
           </tr>
-            
-          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.meetingCenter.sessionTypes">
+          
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+              ng-show="sessionType.meetingCenterApplicable">
+              
             <td width="15">
               &nbsp;
             </td>
             
-            <td>
+            <td>              
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
                            align="left"
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}:&nbsp;>
-              </cs-checkbox>
-              
-              <u>{{sessionType.sessionDescription}}</u>
+                           ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
+                           cklabel={{sessionType.sessionName}}>
+              </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
@@ -58,7 +59,7 @@
     <!-- End of Meeting Center -->
     
     <!-- Start of Event Center -->
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.eventCenter.isEnabled">
+    <tr ng-show="WebExUserSettings.userPrivilegesModel.eventCenter.isEnabled" id="EC">
       <td>
         <table>
           <tr>
@@ -76,21 +77,22 @@
               &nbsp;
             </td>
           </tr>
-            
-          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.eventCenter.sessionTypes">
+          
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+              ng-show="sessionType.eventCenterApplicable">
+              
             <td width="15">
               &nbsp;
             </td>
             
-            <td>
+            <td>              
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
                            align="left"
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}:&nbsp;>
-              </cs-checkbox>
-              
-              <u>{{sessionType.sessionDescription}}</u>
+                           ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
+                           cklabel={{sessionType.sessionName}}>
+              </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
@@ -99,7 +101,7 @@
     <!-- End of Event Center -->
     
     <!-- Start of Support Center -->
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.supportCenter.isEnabled">
+    <tr ng-show="WebExUserSettings.userPrivilegesModel.supportCenter.isEnabled" id="SC">
       <td>
         <table>
           <tr>
@@ -117,21 +119,22 @@
               &nbsp;
             </td>
           </tr>
-            
-          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.supportCenter.sessionTypes">
+          
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+              ng-show="sessionType.supportCenterApplicable">
+              
             <td width="15">
               &nbsp;
             </td>
             
-            <td>
+            <td>              
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
                            align="left"
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}:&nbsp;>
-              </cs-checkbox>
-              
-              <u>{{sessionType.sessionDescription}}</u>
+                           ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
+                           cklabel={{sessionType.sessionName}}>
+              </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
@@ -140,7 +143,7 @@
     <!-- End of Support Center -->
     
     <!-- Start of Training Center -->
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.trainingCenter.isEnabled">
+    <tr ng-show="WebExUserSettings.userPrivilegesModel.trainingCenter.isEnabled" id="TC">
       <td>
         <table>
           <tr>
@@ -158,32 +161,33 @@
               &nbsp;
             </td>
           </tr>
-            
-          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.trainingCenter.sessionTypes">
+          
+          <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+              ng-show="sessionType.trainingCenterApplicable">
+              
             <td width="15">
               &nbsp;
             </td>
             
-            <td>
+            <td>              
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
                            align="left"
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}:&nbsp;>
-              </cs-checkbox>
-              
-              <u>{{sessionType.sessionDescription}}</u>
+                           ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
+                           cklabel={{sessionType.sessionName}}>
+              </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
       </td>
     </tr>
     <!-- End of Training Center -->
-    
-    <hr />
   </table>
-  <!-- End of Service section -->
   
+  <hr />
+  <!-- End of Service section -->
+    
   <!-- Start of General section -->
   <!--
   <table>

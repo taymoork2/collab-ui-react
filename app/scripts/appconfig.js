@@ -102,6 +102,18 @@ angular
           parent: 'main',
           authenticate: false
         })
+        .state('profile', {
+          url: '/profile/:isPartner',
+          templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
+          controller: 'PartnerProfileCtrl',
+          parent: 'main'
+        })
+        .state('customerprofile', {
+          url: '/customerprofile',
+          templateUrl: 'modules/core/customerProfile/partnerProfile.tpl.html',
+          controller: 'PartnerProfileCtrl',
+          parent: 'main'
+        })
         .state('invite', {
           url: '/invite',
           templateUrl: 'modules/squared/views/invite.html',

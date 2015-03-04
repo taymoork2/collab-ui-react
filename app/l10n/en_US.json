@@ -310,8 +310,8 @@
   "ssoModal": {
     "btnTitle": "Setup SSO",
     "title": "Setup SSO",
-    "enableSSO": "Yes, I have a custom SSO provider.",
-    "disableSSO": "No, I don't have a SSO provider.",
+    "enableSSO": "Integrate a 3rd-party identity provider. (Advanced)",
+    "disableSSO": "Use the built-in identity service for user authentication. (Simple)",
     "importMetadataTitle": "Import IdP Metadata",
     "exportMetadataTitle": "Export Cloud Metadata",
     "testSSOSetupTitle": "Test SSO Setup",
@@ -329,7 +329,7 @@
     "backBtn": "Back",
     "nextBtn": "Next",
     "downloadMetadataBtn": "Download Metadata File",
-    "launchSSOTestBtn": "Launch SSO Test",
+    "launchSSOTestBtn": "Test SSO Connection",
     "finishBtn": "Finish",
     "importFailed": "Failed to import IdP Metadata File",
     "invalidFile": "Invalid IdP metadata file",
@@ -337,7 +337,12 @@
     "retrieveEntityIdFailed": "SSO configuration not successful",
     "readFileFailed": "Could not read IdP Metadata file",
     "importSuccess": "Successfully imported IdP metadata file",
-    "enableSSOSuccess": "Single Sign-On (SSO) successfully enabled for all users"
+    "enableSSOSuccess": "Single Sign-On (SSO) successfully enabled for all users",
+    "finalEnableSSO": "The test was successful. Enable Single Sign On.",
+    "finalDisableSSO": "The test was unsuccessful. Disable Single Sign On.",
+    "disableFailed": "Failed to disable Single Sign On",
+    "diableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
+    "enableSSOFailure" : "Failed to diable Single Sign-On (SSO)."
   },
   "serviceSetupModal": {
     "timeZone": "Time Zone",
@@ -520,7 +525,7 @@
     "nextSteps": "Press the Next button when you're ready to verify that identity information is being synchronized.",
     "results": "Results",
     "syncAgreementText": "users in sync agreement",
-    "setupSSOSub": "Setup Single Sign-On",
+    "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invatation to sign up.",
     "domainEntry": "Domain Entry",
@@ -838,22 +843,40 @@
   },
   "partnerProfile": {
     "link": "Partner Profile",
+    "customerLink": "Customer Profile",
     "title": "Account",
     "name": "Company Name",
-    "address": "Address",
-    "id": "BEGEOID",
-    "phone": "Phone Number",
-    "ciscoRep": "Your Cisco Representative",
-    "supportSetup": "Support Setup",
+    "id": "Account Number",
+    "ciscoRep": "Cisco Representative",
+    "supportSetup": "Trouble Ticket / Reporting Location",
     "save": "Save",
-    "supportInfo": "Specify how you would like to handle Squared support for your customers' end-users. If you choose not to provide support, the default Cisco support will be provided. These will show up under support options in the Squared application.",
+    "supportInfo": "If you are providing support for your customers' users, enter your support paramters below. These paramaters will be displayed under Support Options in the Squared applications;",
+    "lifeCycle": "Lifecycle partners are required to provide both types of support shown below.",
     "supportOptions": "Cisco Support Options",
+    "seeExample": "see an example.",
     "yourSupportOptions": "Your Support Options",
     "urlFaq": "URL for help site and FAQs",
     "urlFaqEx":"http://[url of Cisco help site and FAQs]",
     "urlReport":"URL for reporting trouble tickets or opening cases",
-    "urlReportEx":"http://[url of Cisco problem reporting]"
+    "urlReportEx":"http://[url of Cisco problem reporting]",
+    "helpFaq": "Help & FAQ Location",
+    "matchingTix": "Matching Trouble Tickets",
+    "matchingDescr": "To match trouble tickets with the logs that are uploaded to the Cisco Collaboration Management tool when reports are created, append your support URL with your logID parameter as \"%%logID%%\" (no quotes).",
+    "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "Support Setup",
+    "companyInfo": "Company Information",
+    "cancel": "Cancel",
+    "partnerProblem": "Partner problem reporting site",
+    "partnerHelp": "Partner help site",
+    "ciscoProblem": "Problem reporting will be sent to Cisco Technical Support",
+    "ciscoHelp": "Cisco help site",
+    "enterHelp": "Enter the location of your help content.",
+    "enterReports": "Problem Reports: enter the location of your problem reporting tool."
+  },
+  "customerProfile": {
+    "supportContacts": "Support Contacts",
+    "partnerAdmin": "Partner Administrators",
+    "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Squared application;"
   }
-
 }
 

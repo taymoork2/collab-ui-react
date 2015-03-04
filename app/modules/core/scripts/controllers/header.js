@@ -84,8 +84,16 @@ angular.module('Core')
 .controller('SettingsMenuCtrl', ['$scope', '$location', '$state', '$translate', 'Authinfo', 'Utils',
   function ($scope, $location, $state, $translate, Authinfo, Utils) {
 
-    $scope.menuItems = [];
-    var initialSetupText = $translate.instant('settings.initialSetup')
+    // UNCOMMENT TO ADD LINKS TO ACCOUNT PAGES
+
+    $scope.menuItems = [
+      //   {link: '/profile/true',
+      //   title: $translate.instant('partnerProfile.link')
+      // }, {
+      //   link: '/profile/false',
+      //   title: $translate.instant('partnerProfile.customerLink')}
+    ];
+    var initialSetupText = $translate.instant('settings.initialSetup');
 
     var getAuthinfoData = function () {
       var found = false;
