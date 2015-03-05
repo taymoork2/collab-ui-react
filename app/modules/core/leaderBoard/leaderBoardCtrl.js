@@ -8,8 +8,8 @@ angular.module('Core')
         messaging: {
           title: 'Messaging',
           subtitle: 'Standard Team Rooms',
-          currentCount: 0,
-          totalCount: 0,
+          currentCount: 567,
+          totalCount: 1000,
           description: 'Messing licenses.',
           visible: false,
           unlimited: false
@@ -21,13 +21,13 @@ angular.module('Core')
           totalCount: 0,
           description: 'Cisco Unified Communication licenses.',
           visible: false,
-          unlimited: false
+          unlimited: true
         },
         conferencing: {
           title: 'Conferencing',
           subtitle: 'Meeting Center',
-          currentCount: 0,
-          totalCount: 0,
+          currentCount: 156,
+          totalCount: 100,
           description: 'Cisco Meeting Center and Conferencing licenses.',
           visible: false,
           unlimited: false
