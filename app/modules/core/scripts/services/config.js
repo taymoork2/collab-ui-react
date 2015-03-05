@@ -60,6 +60,12 @@ angular.module('Core')
           subject: 'Squared%20Admin%20Feedback'
         },
 
+        utilizationServiceUrl: {
+          dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+        },
+
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
         ssoSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
@@ -221,6 +227,11 @@ angular.module('Core')
             desc: 'New Reports',
             state: 'newpartnerreports',
             link: '#partner/newreports'
+          }, {
+            title: 'tabs.entResUtilizationTab',
+            desc: 'tabs.entResUtilizationTabDesc',
+            state: 'utilization',
+            link: '#utilization'
           }]
         }],
 
@@ -407,6 +418,16 @@ angular.module('Core')
 
         getDefaultEntitlements: function () {
           return this.defaultEntitlements;
+        },
+
+        getUtilizationServiceUrl: function () {
+          if (this.isDev()) {
+            return this.utilizationServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.utilizationServiceUrl.integration;
+          } else {
+            return this.utilizationServiceUrl.prod;
+          }
         }
 
       };
@@ -456,7 +477,7 @@ angular.module('Core')
         ],
         'squared-fusion-uc': ['fusion'],
         'squared-team-member': ['organization'],
-        'squared-fusion-media': ['meetings', 'vts']
+        'squared-fusion-media': ['meetings', 'vts', 'utilization']
       };
 
       // These states do not require a role/service check

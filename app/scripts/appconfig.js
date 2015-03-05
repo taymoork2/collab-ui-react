@@ -567,6 +567,12 @@ angular
         .state('vts.list.preview', {
           templateUrl: 'modules/mediafusion/enterpriseResource/enterpriseResourcePreview/enterpriseResourcePreview.tpl.html',
           controller: 'VtsPreviewCtrl'
+        })
+        .state('utilization', {
+          url: '/utilization',
+          templateUrl: 'modules/mediafusion/utilization/overAllUtilization.tpl.html',
+          controller: 'UtilizationCtrl',
+          parent: 'main'
         });
     }
   ]);
