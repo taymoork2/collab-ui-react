@@ -36,7 +36,7 @@ var Navigation = function(){
   };
 
   this.clickHome = function() {
-    this.homeTab.click();
+    utils.click(this.homeTab);
     this.expectCurrentUrl('/overview');
   };
 
@@ -47,7 +47,7 @@ var Navigation = function(){
   };
 
   this.clickCustomers = function() {
-    this.customersTab.click();
+    utils.click(this.customersTab);
     this.expectCurrentUrl('/customers');
   };
 
@@ -58,23 +58,23 @@ var Navigation = function(){
   };
 
   this.clickDevices = function() {
-    this.devicesTab.click();
+    utils.click(this.devicesTab);
     this.expectCurrentUrl('/devices');
   };
 
   this.clickCallRouting = function() {
     this.clickDevelopmentTab();
-    this.callRoutingTab.click();
+    utils.click(this.callRoutingTab);
     this.expectCurrentUrl('/callrouting');
   };
 
   this.clickReports = function() {
-    this.reportsTab.click();
+    utils.click(this.reportsTab);
     this.expectCurrentUrl('/reports');
   };
 
   this.clickSupport = function() {
-    this.supportTab.click();
+    utils.click(this.supportTab);
     this.expectCurrentUrl('/support');
   };
 
@@ -87,7 +87,7 @@ var Navigation = function(){
 
    this.clickMeetings = function() {
     this.clickDevelopmentTab();
-    this.meetingsTab.click();
+    utils.click(this.meetingsTab);
     this.expectCurrentUrl('/meetings');
   };
 

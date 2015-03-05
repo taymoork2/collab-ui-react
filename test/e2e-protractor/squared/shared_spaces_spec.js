@@ -8,19 +8,26 @@ var testuser = {
   password: 'C1sc0123!',
 };
 
-describe('Shared spaces flow', function() {
+describe('Devices flow', function() {
+  beforeEach(function() {
+    browser.ignoreSynchronization = true;
+  });
+
+  afterEach(function() {
+    browser.ignoreSynchronization = false;
+  });
+
   it('should login as squared team member admin user', function() {
     login.login(testuser.username, testuser.password);
   });
 
   it('clicking on devices tab should show the list of rooms', function() {
     navigation.clickDevices();
-    expect(spaces.roomsList.isDisplayed()).toBeTruthy();
-    expect(spaces.addButton.isDisplayed()).toBeTruthy();
+    utils.expectIsDisplayed(spaces.roomsList);
   });
 
   it('clicking on add room button should be successful', function() {
-    spaces.addButton.click();
+    utils.click(spaces.addButton);
     utils.expectIsDisplayed(spaces.addRoomDialog);
     utils.expectIsDisplayed(spaces.addRoomButton);
   });
@@ -29,35 +36,20 @@ describe('Shared spaces flow', function() {
     var testRoom = utils.randomTestRoom();
     spaces.newRoomField.clear();
     spaces.newRoomField.sendKeys(testRoom);
-    spaces.addRoomButton.click();
+    utils.click(spaces.addRoomButton);
     utils.expectIsDisplayed(spaces.deviceCard);
-    expect(spaces.confirmDeviceName.getText()).toContain(testRoom);
     notifications.assertSuccess('added successfully');
-    spaces.deviceModalClose.click();
-    browser.sleep(1000);
+    utils.click(spaces.deviceModalClose);
+    utils.expectIsNotDisplayed(spaces.addRoomDialog);
   });
 
-  it('cancel delete device', function() {
-      utils.expectIsDisplayed(spaces.actionLink);
-      spaces.actionLink.click();
-      utils.expectIsDisplayed(spaces.deleteDeviceAction);
-      spaces.deleteDeviceAction.click();
-      utils.expectIsDisplayed(spaces.deleteDeviceModal);
-      utils.expectIsDisplayed(spaces.cancelButton);
-      spaces.cancelButton.click();
-      browser.sleep(1000);
-    });
-
   it('should delete device', function() {
-      utils.expectIsDisplayed(spaces.actionLink);
-      spaces.actionLink.click();
-      utils.expectIsDisplayed(spaces.deleteDeviceAction);
-      spaces.deleteDeviceAction.click();
-      utils.expectIsDisplayed(spaces.deleteDeviceModal);
-      utils.expectIsDisplayed(spaces.deleteButton);
-      spaces.deleteButton.click();
-      notifications.assertSuccess('deleted successfully');
-    });
+    utils.click(spaces.actionLink);
+    utils.click(spaces.deleteDeviceAction);
+    utils.expectIsDisplayed(spaces.deleteDeviceModal);
+    utils.click(spaces.deleteButton);
+    notifications.assertSuccess('deleted successfully');
+  });
 
   it('should log out', function() {
     navigation.logout();
