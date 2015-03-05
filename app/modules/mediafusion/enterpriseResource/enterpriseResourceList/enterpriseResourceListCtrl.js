@@ -128,8 +128,8 @@ angular.module('Mediafusion')
         '</ul>' +
         '</span>';
 
-      var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'ENABLED\', \'device-status-red\': row.getProperty(col.field) !== \'ENABLED\'}"></i>' +
-        '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|statusFilter}}</p></div>';
+      var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
+        '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|status}}</p></div>';
 
       $scope.gridOptions = {
         data: 'queryvtslist',
@@ -147,7 +147,7 @@ angular.module('Mediafusion')
         }, {
           field: 'mgmtStatus',
           cellTemplate: statusTemplate,
-          cellFilter: 'statusFilter',
+          cellFilter: 'status',
           displayName: $filter('translate')('vtsPage.status')
         }, {
           field: 'action',
