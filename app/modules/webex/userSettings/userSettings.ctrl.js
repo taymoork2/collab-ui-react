@@ -167,16 +167,24 @@
         this.userPrivilegesModel = userPrivilegesModel;
       }; // createUserPrivilegesModel()
 
-      this.loadUserSettingsInfo = function () {
-        var funcName = "loadUserSettingsInfo()";
+      this.getUserSettingsInfo = function () {
+        var funcName = "getUserSettingsInfo()";
         var logMsg = "";
         // alert(funcName);
 
         var currView = this;
+        var xmlApiAccessInfo = {
+          webexAdminID: "jpallapa",
+          webexAdminPswd: "C!sco123",
+          siteID: "4272",
+          PartnerID: "4272",
+          webexSessionTicket: null,
+          webexUserId: "jpallapa"
+        };
 
-        WebExUserSettingsSvc.loadUserSettingsInfo().then(
-          function loadUserSettingsInfoSuccess(result) {
-            var funcName = "loadUserSettingsInfoSuccess()";
+        WebExUserSettingsSvc.getUserSettingsInfo(xmlApiAccessInfo).then(
+          function getUserSettingsInfoSuccess(result) {
+            var funcName = "getUserSettingsInfoSuccess()";
             var logMsg = "";
             // alert(funcName);
 
@@ -196,17 +204,17 @@
               currView.updateUserPrivilegesModel();
               $("#webexUserSettingsPage").removeClass("hidden");
             }
-          }, // loadUserSettingsInfoSuccess()
+          }, // getUserSettingsInfoSuccess()
 
-          function loadUserSettingsInfoError(result) {
-            var funcName = "loadUserSettingsInfoError()";
+          function getUserSettingsInfoError(result) {
+            var funcName = "getUserSettingsInfoError()";
             var logMsg = "";
 
             logMsg = funcName + ": " + "result=" + JSON.stringify(result);
             alert(logMsg);
-          } // loadUserSettingsInfoError()
-        ); // WebExUserSettingsSvc.loadUserSettingsInfo()
-      }; // loadUserSettingsInfo()
+          } // getUserSettingsInfoError()
+        ); // WebExUserSettingsSvc.getUserSettingsInfo()
+      }; // getUserSettingsInfo()
 
       this.updateUserPrivilegesModel = function () {
         var funcName = "updateUserPrivilegesModel()";
@@ -215,16 +223,12 @@
 
         var currView = this;
         var userPrivilegesModel = currView.userPrivilegesModel;
-        var userInfoJson = currView.userInfoJson;
-        var siteInfoJson = currView.siteInfoJson;
+        var userInfoJson = currView.userInfoJson.body;
+        var siteInfoJson = currView.siteInfoJson.body;
         var meetingTypesInfoJson = currView.meetingTypesInfoJson.body;
 
-        logMsg = funcName + ": " + "\n" + "userInfoJson=\n" + JSON.stringify(userInfoJson);
-        $log.log(logMsg);
-        // alert(logMsg);
-
         //---------------- start of center status update ----------------//
-        var siteServiceTypes = [].concat(siteInfoJson.body.ns1_siteInstance.ns1_metaData.ns1_serviceType);
+        var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
 
         siteServiceTypes.forEach(function (siteServiceType) {
           if (siteServiceType == userPrivilegesModel.meetingCenter.name) {
@@ -300,7 +304,7 @@
         }); // siteMeetingTypes.forEach()
 
         userPrivilegesModel.sessionTypes = sessionTypes;
-        var enabledSessionTypesIDs = [].concat(userInfoJson.body.use_meetingTypes.use_meetingType);
+        var enabledSessionTypesIDs = [].concat(userInfoJson.use_meetingTypes.use_meetingType);
 
         logMsg = funcName + ": " + "\n" +
           "enabledSessionTypesIDs=" + enabledSessionTypesIDs;
@@ -344,7 +348,7 @@
       this.meetingTypesInfoJson = null;
 
       this.createUserPrivilegesModel();
-      this.loadUserSettingsInfo();
+      this.getUserSettingsInfo();
     } // WebExUserSettingsCtrl()
   ]);
 })();
