@@ -3,6 +3,21 @@
 /* global by, $ */
 
 var LandingPage = function() {
+  this.nontrialadmin = {
+    username: 'pbr-test-admin@squared2webex.com',
+    password: 'C1sc0123!',
+  };
+
+  this.trialadmin = {
+    username: 'atlasmapservice+ll1@gmail.com',
+    password: 'C1sc0123!',
+  };
+
+  this.nonadmin = {
+    username: 'pbr-invite-user@squared2webex.com',
+    password: 'C1sc0123!',
+  };
+
   this.packages = element(by.css('.packages'));
   this.packagesName = element(by.css('.packages-name'));
   this.packagesDaysLeft = element(by.css('.packages-days-left'));
@@ -15,7 +30,7 @@ var LandingPage = function() {
   this.licensesLeft = element(by.css('.licenses-left'));
   this.licensesUsed = element(by.css('.licenses-used'));
 
-  this.unlicencedUsers = element(by.css('.unlicensed-users'));
+  this.unlicensedUsers = element(by.css('.unlicensed-users'));
   this.callsChart = element(by.id('callsChart'));
 
   this.monitoringRows = element.all(by.repeater('health in healthMetrics'));

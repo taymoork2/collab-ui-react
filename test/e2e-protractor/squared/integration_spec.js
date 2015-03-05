@@ -74,7 +74,7 @@ describe('App flow', function() {
       expect(landing.packages.isDisplayed()).toBeTruthy();
       expect(landing.devices.isDisplayed()).toBeTruthy();
       expect(landing.licenses.isDisplayed()).toBeTruthy();
-      expect(landing.unlicencedUsers.isDisplayed()).toBeTruthy();
+      expect(landing.unlicensedUsers.isDisplayed()).toBeTruthy();
       expect(landing.callsChart.isDisplayed()).toBeTruthy();
     });
 
