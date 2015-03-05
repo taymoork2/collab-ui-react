@@ -11,7 +11,6 @@ var RolesPage = function(){
   this.editLastName = function (){
     utils.expectIsDisplayed(this.lastNameInput);
     this.lastNameInput.clear();
-    browser.sleep(1000);
     this.lastNameInput.sendKeys(randomId);
   };
 

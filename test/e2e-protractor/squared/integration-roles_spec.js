@@ -15,14 +15,14 @@ var testuser = {
 };
 
 describe('Org Entitlement flow', function () {
+  beforeEach(function() { browser.ignoreSynchronization = true; });
+  afterEach(function() { browser.ignoreSynchronization = false; });
+
   it('should login as non-sso admin user', function () {
     login.login(testuser.username, testuser.password);
   });
 
   describe('without sync', function () {
-    beforeEach(function() { browser.ignoreSynchronization = true; });
-    afterEach(function() { browser.ignoreSynchronization = false; });
-
     it('clicking on users tab should change the view', function () {
       navigation.clickUsers();
     });
@@ -30,10 +30,7 @@ describe('Org Entitlement flow', function () {
 
   it('should display conversations panel for test user', function () {
     users.search(testuser.searchStr);
-    users.userListEnts.then(function (cell) {
-      expect(cell[0].getText()).toContain(testuser.searchStr);
-      utils.click(cell[0]);
-    });
+    utils.click(users.userListEnts.first());
   });
 
   it('should display subdetails panel', function () {
