@@ -1,78 +1,89 @@
 (function () {
   'use strict';
-  angular.module('WebExUserSettings').factory('WebExUserSettingsSvc', ['$q', 'WebExUserSettingsXmlSvc', function ($q, WebExUserSettingsXmlSvc) {
-    return {
-      loadUserSettingsInfo: function () {
-        $q.all([]);
 
-        var p1 = WebExUserSettingsXmlSvc.loadUserInfo();
-        var p2 = WebExUserSettingsXmlSvc.loadSiteInfo();
-        var p3 = WebExUserSettingsXmlSvc.loadMeetingTypeInfo();
+  angular.module('WebExUserSettings').factory('WebExUserSettingsSvc', [
+    '$q',
+    '$log',
+    'XmlApiSvc',
+    function (
+      $q,
+      $log,
+      XmlApiSvc
+    ) {
+      return {
+        loadUserSettingsInfo: function () {
+          $q.all([]);
 
-        return $q.all([p1, p2, p3]);
-      }, // loadUserSettingsInfo()
+          var userInfoXml = XmlApiSvc.loadUserInfo();
+          var siteInfoXml = XmlApiSvc.loadSiteInfo();
+          var meetingTypeXml = XmlApiSvc.loadMeetingTypeInfo();
 
-      xml2JsonConvert: function (commentText, xmlDataText, startOfBodyStr, endOfBodyStr) {
-        var funcName = "xml2JsonConvert()";
-        var logMsg = "";
+          return $q.all([userInfoXml, siteInfoXml, meetingTypeXml]);
+        }, // loadUserSettingsInfo()
 
-        logMsg = funcName + ": " + commentText + "\n" + "startOfBodyStr=" + startOfBodyStr + "\n" + "endOfBodyStr=" + endOfBodyStr;
-        console.log(logMsg);
-        // alert(logMsg);
+        xml2JsonConvert: function (commentText, xmlDataText, startOfBodyStr, endOfBodyStr) {
+          var funcName = "xml2JsonConvert()";
+          var logMsg = "";
 
-        var startOfBodyIndex = xmlDataText.indexOf(startOfBodyStr);
-        var endOfBodyIndex = (null == endOfBodyStr) ? 0 : xmlDataText.indexOf(endOfBodyStr);
+          logMsg = funcName + ": " + commentText + "\n" + "startOfBodyStr=" + startOfBodyStr + "\n" + "endOfBodyStr=" + endOfBodyStr;
+          $log.log(logMsg);
+          // alert(logMsg);
 
-        logMsg = funcName + ": " + commentText + "\n" + "startOfBodyIndex=" + startOfBodyIndex + "\n" + "endOfBodyIndex=" + endOfBodyIndex;
-        console.log(logMsg);
-        // alert(logMsg);
+          var startOfBodyIndex = xmlDataText.indexOf(startOfBodyStr);
+          var endOfBodyIndex = (null == endOfBodyStr) ? 0 : xmlDataText.indexOf(endOfBodyStr);
 
-        var regExp = null;
-        var bodySlice = (startOfBodyIndex < endOfBodyIndex) ? xmlDataText.slice(startOfBodyIndex, endOfBodyIndex) : xmlDataText.slice(startOfBodyIndex);
+          logMsg = funcName + ": " + commentText + "\n" + "startOfBodyIndex=" + startOfBodyIndex + "\n" + "endOfBodyIndex=" + endOfBodyIndex;
+          $log.log(logMsg);
+          // alert(logMsg);
 
-        regExp = /<ns1:/g;
-        bodySlice = bodySlice.replace(regExp, "<ns1_");
+          var regExp = null;
+          var bodySlice = (startOfBodyIndex < endOfBodyIndex) ? xmlDataText.slice(startOfBodyIndex, endOfBodyIndex) : xmlDataText.slice(startOfBodyIndex);
 
-        regExp = /<\/ns1:/g;
-        bodySlice = bodySlice.replace(regExp, "</ns1_");
+          regExp = /<ns1:/g;
+          bodySlice = bodySlice.replace(regExp, "<ns1_");
 
-        regExp = /<serv:/g;
-        bodySlice = bodySlice.replace(regExp, "<serv_");
+          regExp = /<\/ns1:/g;
+          bodySlice = bodySlice.replace(regExp, "</ns1_");
 
-        regExp = /<\/serv:/g;
-        bodySlice = bodySlice.replace(regExp, "</serv_");
+          regExp = /<serv:/g;
+          bodySlice = bodySlice.replace(regExp, "<serv_");
 
-        regExp = /<use:/g;
-        bodySlice = bodySlice.replace(regExp, "<use_");
+          regExp = /<\/serv:/g;
+          bodySlice = bodySlice.replace(regExp, "</serv_");
 
-        regExp = /<\/use:/g;
-        bodySlice = bodySlice.replace(regExp, "</use_");
+          regExp = /<use:/g;
+          bodySlice = bodySlice.replace(regExp, "<use_");
 
-        regExp = /<com:/g;
-        bodySlice = bodySlice.replace(regExp, "<com_");
+          regExp = /<\/use:/g;
+          bodySlice = bodySlice.replace(regExp, "</use_");
 
-        regExp = /<\/com:/g;
-        bodySlice = bodySlice.replace(regExp, "</com_");
+          regExp = /<com:/g;
+          bodySlice = bodySlice.replace(regExp, "<com_");
 
-        regExp = /<mtgtype:/g;
-        bodySlice = bodySlice.replace(regExp, "<mtgtype_");
+          regExp = /<\/com:/g;
+          bodySlice = bodySlice.replace(regExp, "</com_");
 
-        regExp = /<\/mtgtype:/g;
-        bodySlice = bodySlice.replace(regExp, "</mtgtype_");
+          regExp = /<mtgtype:/g;
+          bodySlice = bodySlice.replace(regExp, "<mtgtype_");
 
-        bodySlice = "<body>" + bodySlice + "</body>";
+          regExp = /<\/mtgtype:/g;
+          bodySlice = bodySlice.replace(regExp, "</mtgtype_");
 
-        logMsg = funcName + ": " + commentText + "\n" + "bodySlice=\n" + bodySlice;
-        console.log(logMsg);
+          bodySlice = "<body>" + bodySlice + "</body>";
 
-        var x2js = new X2JS();
-        var bodyJson = x2js.xml_str2json(bodySlice);
+          logMsg = funcName + ": " + commentText + "\n" + "bodySlice=\n" + bodySlice;
+          $log.log(logMsg);
 
-        logMsg = funcName + ": " + commentText + "\n" + "bodyJson=\n" + JSON.stringify(bodyJson);
-        console.log(logMsg);
+          var x2js = new X2JS();
+          var bodyJson = x2js.xml_str2json(bodySlice);
 
-        return bodyJson;
-      }, // xml2JsonConvert()
-    }; // return
-  }]); //WebExUserSettingsSvc
+          logMsg = funcName + ": " + commentText + "\n" + "bodyJson=\n" + JSON.stringify(bodyJson);
+          $log.log(logMsg);
+          // alert(logMsg);
+
+          return bodyJson;
+        }, // xml2JsonConvert()
+      }; // return
+    } //WebExUserSettingsSvc
+  ]);
 })();

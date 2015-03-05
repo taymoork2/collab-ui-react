@@ -1,8 +1,15 @@
 (function () {
   'use strict';
 
-  angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', ['$scope', '$http', '$log', 'WebExUserSettingsSvc',
-    function ($scope, $http, $log, WebExUserSettingsSvc) {
+  angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', [
+    '$scope',
+    '$log',
+    'WebExUserSettingsSvc',
+    function (
+      $scope,
+      $log,
+      WebExUserSettingsSvc
+    ) {
       this.createUserPrivilegesModel = function () {
         var funcName = "createUserPrivilegesModel()";
         var logMsg = "";
@@ -173,7 +180,7 @@
             var logMsg = "";
             // alert(funcName);
 
-            currView.userDataXml = result[0];
+            currView.userInfoXml = result[0];
             currView.siteInfoXml = result[1];
             currView.meetingTypesInfoXml = result[2];
 
@@ -182,7 +189,7 @@
             //   add code to validate the returned data
 
             if (validResult) {
-              currView.userDataJson = currView.xml2JsonConvert("User Data", result[0], "<use:", "</serv:bodyContent>");
+              currView.userInfoJson = currView.xml2JsonConvert("User Data", result[0], "<use:", "</serv:bodyContent>");
               currView.siteInfoJson = currView.xml2JsonConvert("Site Info", result[1], "<ns1:", "</serv:bodyContent>");
               currView.meetingTypesInfoJson = currView.xml2JsonConvert("Meeting Types Info", result[2], "<mtgtype:", "</serv:bodyContent>");
 
@@ -208,11 +215,11 @@
 
         var currView = this;
         var userPrivilegesModel = currView.userPrivilegesModel;
-        var userDataJson = currView.userDataJson;
+        var userInfoJson = currView.userInfoJson;
         var siteInfoJson = currView.siteInfoJson;
         var meetingTypesInfoJson = currView.meetingTypesInfoJson.body;
 
-        logMsg = funcName + ": " + "\n" + "userDataJson=\n" + JSON.stringify(userDataJson);
+        logMsg = funcName + ": " + "\n" + "userInfoJson=\n" + JSON.stringify(userInfoJson);
         $log.log(logMsg);
         // alert(logMsg);
 
@@ -293,7 +300,7 @@
         }); // siteMeetingTypes.forEach()
 
         userPrivilegesModel.sessionTypes = sessionTypes;
-        var enabledSessionTypesIDs = [].concat(userDataJson.body.use_meetingTypes.use_meetingType);
+        var enabledSessionTypesIDs = [].concat(userInfoJson.body.use_meetingTypes.use_meetingType);
 
         logMsg = funcName + ": " + "\n" +
           "enabledSessionTypesIDs=" + enabledSessionTypesIDs;
@@ -315,7 +322,7 @@
             }
           }); // userPrivilegesModel.sessionTypes.forEach()
         }); // enabledSessionTypesIDs.forEach()
-        //---------------- start of session types update update ----------------//
+        //---------------- end of session types update update ----------------//
       }; // updateUserPrivilegesModel()
 
       this.updateUserSettings = function () {
@@ -327,8 +334,8 @@
 
       this.xml2JsonConvert = WebExUserSettingsSvc.xml2JsonConvert;
 
-      this.userDataXml = null;
-      this.userDataJson = null;
+      this.userInfoXml = null;
+      this.userInfoJson = null;
 
       this.siteInfoXml = null;
       this.siteInfoJson = null;
