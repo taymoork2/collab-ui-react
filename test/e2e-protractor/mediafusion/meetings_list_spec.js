@@ -79,7 +79,7 @@ describe('List meetings flow', function () {
   });
 
   // Asserting filtering of meetings
-  describe('Filter meetings on page', function () { 
+  describe('Filter meetings on page', function () {
 
     it('Click on Meetings filter icon',function() {
       meetings.clickOnFilter();
@@ -88,7 +88,7 @@ describe('List meetings flow', function () {
     it('Provide filter values', function() {
       meetings.provideFilterValues('Cloud');
     });
-    
+
     it('Should list filtered meetings', function () {
         meetings.assertResultsLength(0);
     });
@@ -109,9 +109,8 @@ describe('List meetings flow', function () {
     });
 
     it('Should show first page of meetings for empty search string', function () {
-      meetings.searchEmpty("");
+      utils.search();
     });
-
   });
 
   // Asserting meetings preview.
@@ -120,7 +119,7 @@ describe('List meetings flow', function () {
       meetings.clickOnMeeting();
       expect(meetings.meetingPreviewLink.isDisplayed()).toBeTruthy();
     });
-  }); 
+  });
 
   // Asserting pagination - page scroll to bottom and count meetings
   describe('Page scroll to bottom and count meetings', function () {
@@ -129,8 +128,8 @@ describe('List meetings flow', function () {
         meetings.assertResultsLength(51);
       });
     });
-  }); 
-  
+  });
+
   // Asserting feedback page launch
   describe('Launch feedback page', function () {
     it('Click feedback and launch form page', function () {

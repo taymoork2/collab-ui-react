@@ -95,7 +95,7 @@ describe('Add/Invite/Entitle User flow', function() {
       });
 
       it('should show active status on new user', function(){
-        users.search(inviteEmail);
+        utils.search(inviteEmail);
         utils.expectText(users.userListStatus.first(), 'Invite Pending');
       });
 
@@ -192,7 +192,7 @@ describe('Add/Invite/Entitle User flow', function() {
 
     describe('Verify call-initiation entitlement does not exist for user and re-entitle', function() {
       it('should show call-initiation entitlement for the user', function() {
-        users.search(inputEmail);
+        utils.search(inputEmail);
         utils.expectText(users.userListEnts.first(), inputEmail);
         utils.click(users.gridCell);
         utils.expectIsDisplayed(users.callInitiationCheckbox);

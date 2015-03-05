@@ -9,6 +9,10 @@ var request = require('request');
 //   jar: jar
 // });
 
+exports.searchButton = element(by.css('.header-search-toggle'));
+
+exports.searchField = element(by.css('.search-form input'));
+
 exports.randomId = function() {
   return (Math.random() + 1).toString(36).slice(2);
 };
@@ -164,4 +168,19 @@ exports.findDirectoryNumber = function (message, lineNumber) {
     }
   }
   return null;
+};
+
+exports.search = function (query) {
+  this.searchButton.click();
+  utils.expectIsDisplayed(this.searchField);
+  this.searchField.clear();
+  if (query) {
+    this.searchField.sendKeys(query);
+    utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  }
+};
+
+exports.searchAndClick = function(query) {
+  this.search(query);
+  utils.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
 };

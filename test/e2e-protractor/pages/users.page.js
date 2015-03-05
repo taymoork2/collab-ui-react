@@ -2,9 +2,6 @@
 
 // TODO - break up into UserList/UserAdd/UserPreview
 var UsersPage = function() {
-  this.searchButton = element(by.css('.header-search-toggle'));
-  this.searchField = element(by.css('.search-form input'));
-
   this.listPanel = element(by.id('userslistpanel'));
   this.manageDialog = element(by.id('modalContent'));
   this.squaredPanel = element(by.id('conversations-link'));
@@ -124,16 +121,6 @@ var UsersPage = function() {
         expect(rows.length).toBe(results);
       }
     });
-  };
-
-  this.search = function (query) {
-    this.searchButton.click();
-    utils.expectIsDisplayed(this.searchField);
-    this.searchField.clear();
-    if (query) {
-      this.searchField.sendKeys(query);
-      utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
-    }
   };
 
   this.returnUser = function(userEmail) {

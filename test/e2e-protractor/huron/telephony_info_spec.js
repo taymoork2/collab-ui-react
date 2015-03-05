@@ -52,7 +52,7 @@ xdescribe('Telephony Info', function() {
   });
 
   it('should verify added user', function() {
-    users.search(user);
+    utils.search(user);
     users.returnUser(user).click();
     element(by.binding('currentUser.userName')).evaluate('currentUser').then(function(_currentUser){
       currentUser = _currentUser;

@@ -29,8 +29,7 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should display conversations panel for test user', function () {
-    users.search(testuser.searchStr);
-    utils.click(users.userListEnts.first());
+    utils.searchAndClick(testuser.searchStr);
   });
 
   it('should display subdetails panel', function () {

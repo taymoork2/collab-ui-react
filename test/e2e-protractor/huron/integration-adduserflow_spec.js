@@ -47,7 +47,7 @@ xdescribe('Squared UC Add User flow', function() {
 
     describe('Verify the created user', function() {
       it('should show the Telephony panel', function() {
-        users.search(inputEmail);
+        utils.search(inputEmail);
         users.returnUser(inputEmail).click();
         element(by.binding('currentUser.userName')).evaluate('currentUser').then(function(_currentUser){
           currentUser = _currentUser;
@@ -84,7 +84,7 @@ xdescribe('Squared UC Add User flow', function() {
 
     describe('To remove Squared UC from the user', function() {
       it('should show the Telephony panel', function() {
-        users.search(inputEmail);
+        utils.search(inputEmail);
         users.userListEnts.then(function(cell) {
           expect(cell[0].getText()).toContain(inputEmail);
           users.gridCell.click();
@@ -106,7 +106,7 @@ xdescribe('Squared UC Add User flow', function() {
 
     describe('To entitle Squared UC to the user again', function() {
       it('should show the Telephony panel', function() {
-        users.search(inputEmail);
+        utils.search(inputEmail);
         users.userListEnts.then(function(cell) {
           expect(cell[0].getText()).toContain(inputEmail);
           users.gridCell.click();
@@ -119,7 +119,7 @@ xdescribe('Squared UC Add User flow', function() {
         telephony.close.click();
       });
       it('should show the Telephony panel', function() {
-        users.search(inputEmail);
+        utils.search(inputEmail);
         users.userListEnts.then(function(cell) {
           expect(cell[0].getText()).toContain(inputEmail);
           users.gridCell.click();

@@ -81,7 +81,7 @@ describe('List users flow', function () {
       users.prevPage.click();
       users.assertPage('1');
       users.assertResultsLength(20);
-      users.search();
+      utils.search();
     });
   });
 
@@ -99,7 +99,7 @@ describe('List users flow', function () {
   // Asserting search users.
   describe('search users on page', function () {
     it('should show first page of users based on search string', function () {
-      users.search(testuser.searchStr);
+      utils.search(testuser.searchStr);
     });
   });
 

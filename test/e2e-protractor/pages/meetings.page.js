@@ -1,10 +1,8 @@
 'use strict'
 
 var MeetingsPage = function() {
-  
+
   this.meetingPreviewLink = element(by.id('details-panel'));
-  this.searchButton = element( by.css('[ng-click="searchMeetingList()"]'));
-  this.searchField = element(by.model('searchString'));
   this.filterButtonArrow = element(by.css('.ngHeaderButtonArrow'));
   this.decrementDayButton = element( by.css('[ng-click="decrementDay()"]'));
   this.incrementDayButton = element( by.css('[ng-click="incrementDay()"]'));
@@ -41,34 +39,6 @@ var MeetingsPage = function() {
 
   this.clearFilterValues = function() {
     element(by.model('filterText')).clear();
-  };
-
-  this.search = function (query) {
-    this.searchButton.click();
-    utils.expectIsDisplayed(this.searchField);
-    this.searchField.clear();
-    browser.sleep(1000);
-    if (query) {
-      this.searchField.sendKeys(query);
-      browser.sleep(1000);
-      element.all(by.repeater('row in renderedRows')).then(function (rows) {
-        expect(rows.length).toBeGreaterThan(0);
-      });
-    }
-  };
-
-  this.searchEmpty = function (query) {
-    this.searchButton.click();
-    utils.expectIsDisplayed(this.searchField);
-    this.searchField.clear();
-    browser.sleep(1000);
-    if (typeof query == 'string' || query instanceof String) {
-      this.searchField.sendKeys(query);
-      browser.sleep(1000);
-      element.all(by.repeater('row in renderedRows')).then(function (rows) {
-        expect(rows.length).toBeGreaterThan(0);
-      });
-    }
   };
 
   this.scrollToBottom = function() {
