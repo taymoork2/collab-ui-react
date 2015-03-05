@@ -9,136 +9,13 @@
         // alert(funcName);
 
         var userPrivilegesModel = {
-          /*
-          general: {
-            label: "General",
-
-            recordingEditor: {
-              id: "recordingEditor",
-              label: "Recording Editor",
-              value: true
-            },
-
-            personalRoom: {
-              id: "personalRoom",
-              label: "Personal Room",
-              value: true
-            },
-
-            collabRoom: {
-              id: "collabRoom",
-              label: "Collabration Room",
-              value: true
-            },
-
-            hiQualVideo: {
-              id: "hiQualVideo",
-              label: "Turn on high-quality video (360p)",
-              value: true
-            },
-
-            hiDefVideo: {
-              id: "hiDefVideo",
-              label: "Turn on high-definition video video (720p)",
-              value: true
-            },
-
-            assist: {
-              id: "assist",
-              label: "Assist",
-              value: true
-            }
-          }, // general
-
-          telephonyPriviledge: {
-            label: "Telephony Privilege",
-
-            callInTeleconf: {
-              id: "callInTeleconf",
-              label: "Call-in teleconferencing",
-              value: true,
-              currCallInTollType: 2,
-
-              callInTollTypes: [{
-                id: "toll",
-                label: "Toll",
-                value: 0
-              }, {
-                id: "tollFree",
-                label: "Toll free",
-                value: 1
-              }, {
-                id: "tollAndTollFree",
-                label: "Toll and Toll free",
-                value: 2
-              }],
-
-              teleconfViaGlobalCallin: {
-                id: "teleconfViaGlobalCallin",
-                label: "Allow access to teleconference via global call-in numbers",
-                value: true
-              },
-
-              cliAuth: {
-                id: "cliAuth",
-                label: "Enable teleconferencing CLI authentication",
-                value: true
-              },
-
-              pinEnabled: {
-                id: "pinEnabled",
-                label: "Host and attendees must have PIN enabled",
-                value: true
-              }
-            }, // callInTeleconf
-
-            callBackTeleconf: {
-              id: "callBackTeleconf",
-              label: "Call-back teleconferencing",
-              value: true
-            },
-
-            globalCallBackTeleconf: {
-              id: "globalCallBackTeleconf",
-              label: "Global call-back teleconferencing",
-              value: true
-            },
-
-            otherTeleconfServices: {
-              id: "otherTeleconfServices",
-              label: "Other teleconference services",
-              value: true
-            },
-
-            integratedVoIP: {
-              id: "integratedVoIP",
-              label: "Integrated VoIP",
-              value: true
-            },
-
-            selectTeleconfLocation: {
-              id: "selectTeleconfLocation",
-              label: "Select teleconferencing location",
-              value: true,
-              defaultTeleconfLocation: "Asia",
-
-              teleconfLocations: ["North America",
-                "South America",
-                "Asia",
-                "Africa",
-                "Australia"
-              ]
-            } //selectTeleconfLocation
-          }, // telephonyPriviledges
-          */
-
           label: "Services",
-          webexCenters: new Array,
+          sessionTypes: null,
 
           meetingCenter: {
             name: "Meeting Center",
             serviceType: "MeetingCenter",
-            isEnabled: false,
+            isEnabled: false
           }, // meetingCenter
 
           trainingCenter: {
@@ -174,8 +51,110 @@
             serviceType: "SupportCenter",
             isEnabled: false
           }, // supportCenter
+          
+          /*
+          collabRoom: {
+            id: "collabRoom",
+            label: "Collabration Room",
+            value: true
+          }, // collabRoom
+          */
 
-          sessionTypes: null
+          /*
+          general: {
+            label: "General",
+
+            hiQualVideo: {
+              id: "hiQualVideo",
+              label: "Turn on high-quality video (360p)",
+              value: true
+            },
+
+            hiDefVideo: {
+              id: "hiDefVideo",
+              label: "Turn on high-definition video video (720p)",
+              value: true
+            },
+            
+          }, // general
+          */
+
+          /*
+          telephonyPriviledge: {
+            label: "Telephony Privilege",
+
+            callInTeleconf: {
+              id: "callInTeleconf",
+              label: "Call-in teleconferencing",
+              value: true,
+              currCallInTollType: 2,
+
+              callInTollTypes: [{
+                id: "toll",
+                label: "Toll",
+                value: 0
+              }, {
+                id: "tollFree",
+                label: "Toll free",
+                value: 1
+              }, {
+                id: "tollAndTollFree",
+                label: "Toll and Toll free",
+                value: 2
+              }],
+
+              teleconfViaGlobalCallin: {
+                id: "teleconfViaGlobalCallin",
+                label: "Allow access to teleconference via global call-in numbers",
+                value: true
+              },
+
+              cliAuth: {
+                id: "cliAuth",
+                label: "Enable teleconferencing CLI authentication",
+                value: true
+              }
+            }, // callInTeleconf
+
+            callBackTeleconf: {
+              id: "callBackTeleconf",
+              label: "Call-back teleconferencing",
+              value: true,
+              
+              globalCallBackTeleconf: {
+                id: "globalCallBackTeleconf",
+                label: "Global call-back teleconferencing",
+                value: true
+              },
+            },
+
+            otherTeleconfServices: {
+              id: "otherTeleconfServices",
+              label: "Other teleconference services",
+              value: true
+            },
+
+            integratedVoIP: {
+              id: "integratedVoIP",
+              label: "Integrated VoIP",
+              value: true
+            },
+
+            selectTeleconfLocation: {
+              id: "selectTeleconfLocation",
+              label: "Select teleconferencing location",
+              value: true,
+              defaultTeleconfLocation: "Asia",
+
+              teleconfLocations: ["North America",
+                "South America",
+                "Asia",
+                "Africa",
+                "Australia"
+              ]
+            } //selectTeleconfLocation
+          }, // telephonyPriviledges
+          */
         }; // userPrivilegesModel
 
         this.userPrivilegesModel = userPrivilegesModel;
