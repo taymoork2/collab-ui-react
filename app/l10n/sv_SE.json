@@ -39,7 +39,7 @@
     "status": "Status",
     "pending": "Avvaktande inbjudan",
     "all": "Alla",
-    "administrators" : "Administratörer",
+    "administrators": "Administratörer",
     "inviteUsers": "Bjud in användare",
     "partners": "Partneradministratörer"
   },
@@ -270,7 +270,7 @@
     "convert": "Omvandla",
     "convertUsers": "Omvandla olicensierade användare",
     "convertUsersText": "Medarbetare i din organisation som på egen hand har registrerat sig för Project Squared med en företagsknuten e-postadress kan omvandlas till licensierade användare. Licensierade användare får tillgång till ytterligare företagsfunktioner och lyder under din organisations policyer och administrationsrutiner.<br><br>Utvalda användare får en inbjudan om att omvandla eller ändra sina e-postadresser till en företagsoberoende e-postadress.",
-    "cancel":"Avbryt",
+    "cancel": "Avbryt",
     "emailAddress": "E-postadress",
     "name": "Namn",
     "errGetTrialsQuery": "Kunde inte hämta provperioder. Status: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "avinstallerar tjänsten."
     },
     "setup": {
-        "label": "UC APP Fusion Services",
-        "title": "UC APP Fusion Services",
-        "desc": "Dra nytta av dina tjänster på plats"
+      "label": "UC APP Fusion Services",
+      "title": "UC APP Fusion Services",
+      "desc": "Dra nytta av dina tjänster på plats"
     }
   },
   "firstTimeWizard": {

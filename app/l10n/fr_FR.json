@@ -39,7 +39,7 @@
     "status": "Statut",
     "pending": "Invitation en attente",
     "all": "Tous",
-    "administrators" : "Administrateurs",
+    "administrators": "Administrateurs",
     "inviteUsers": "Inviter des utilisateurs",
     "partners": "Administrateurs partenaires"
   },
@@ -270,7 +270,7 @@
     "convert": "Convertir",
     "convertUsers": "Convertir les utilisateurs sans licence",
     "convertUsersText": "Convertissez les employés de votre organisation qui se sont inscrits eux-mêmes à Project Squared avec l'adresse électronique d'un utilisateur possédant une licence. Les utilisateurs avec licence reçoivent des fonctionnalités professionnelles supplémentaires et doivent respecter les politiques et règles administratives de votre organisation.<br><br>Les utilisateurs sélectionnés recevront une invitation à convertir ou remplacer leur adresse électronique par une adresse électronique non professionnelle.",
-    "cancel":"Annuler",
+    "cancel": "Annuler",
     "emailAddress": "Adresse électronique",
     "name": "Nom",
     "errGetTrialsQuery": "Impossible de retrouver les essais. Statut : {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "désinstalle le service."
     },
     "setup": {
-        "label": "Services de Fusion UC APP",
-        "title": "Services de Fuison UC APP",
-        "desc": "Tirez profit de vos services sur site"
+      "label": "Services de Fusion UC APP",
+      "title": "Services de Fuison UC APP",
+      "desc": "Tirez profit de vos services sur site"
     }
   },
   "firstTimeWizard": {

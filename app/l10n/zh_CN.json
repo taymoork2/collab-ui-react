@@ -39,7 +39,7 @@
     "status": "状态",
     "pending": "邀请暂挂",
     "all": "全部",
-    "administrators" : "管理员",
+    "administrators": "管理员",
     "inviteUsers": "邀请用户",
     "partners": "合作伙伴管理员"
   },
@@ -270,7 +270,7 @@
     "convert": "转换",
     "convertUsers": "转换未授权的用户",
     "convertUsersText": "将已使用公司电子邮件地址来单独注册 Project Squared 的组织员工转换为授权用户。授权用户可收到其他企业功能，并且受组织政策和管理的限制。<br><br>所选用户将收到邀请，让他们将其电子邮件地址转换或更改为非公司电子邮件地址。",
-    "cancel":"取消",
+    "cancel": "取消",
     "emailAddress": "电子邮件地址",
     "name": "名称",
     "errGetTrialsQuery": "检索试用失败。状态：{{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "正在卸载服务。"
     },
     "setup": {
-        "label": "UC APP Fusion 服务",
-        "title": "UC APP Fusion 服务",
-        "desc": "运用内建服务"
+      "label": "UC APP Fusion 服务",
+      "title": "UC APP Fusion 服务",
+      "desc": "运用内建服务"
     }
   },
   "firstTimeWizard": {

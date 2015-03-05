@@ -39,7 +39,7 @@
     "status": "Estado",
     "pending": "Invitación pendiente",
     "all": "Todos",
-    "administrators" : "Administradores",
+    "administrators": "Administradores",
     "inviteUsers": "Invitar usuarios",
     "partners": "Administradores de socios"
   },
@@ -270,7 +270,7 @@
     "convert": "Convertir",
     "convertUsers": "Convertir usuarios sin licencia",
     "convertUsersText": "Convierta a los empleados de su organización que se inscribieron en Project Squared por cuenta propia con una dirección de correo electrónico de la empresa en usuarios con licencia. Los usuarios con licencia reciben características empresariales adicionales, y están sujetos a la administración y a las políticas de su organización.<br><br>Los usuarios seleccionados recibirán una invitación para convertir o cambiar su dirección de correo electrónico a una dirección de correo electrónico no relacionada con la empresa.",
-    "cancel":"Cancelar",
+    "cancel": "Cancelar",
     "emailAddress": "Dirección de correo electrónico",
     "name": "Nombre",
     "errGetTrialsQuery": "Error al recuperar las pruebas. Estado: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "está desinstalando el servicio."
     },
     "setup": {
-        "label": "Servicios de fusión APP UC",
-        "title": "Servicios de fusión APP UC",
-        "desc": "Aprovechar sus servicios en las instalaciones"
+      "label": "Servicios de fusión APP UC",
+      "title": "Servicios de fusión APP UC",
+      "desc": "Aprovechar sus servicios en las instalaciones"
     }
   },
   "firstTimeWizard": {

@@ -39,7 +39,7 @@
     "status": "Stan",
     "pending": "Oczekujące zaproszenie",
     "all": "Wszystkie",
-    "administrators" : "Administratorzy",
+    "administrators": "Administratorzy",
     "inviteUsers": "Zaproś użytkowników",
     "partners": "Administratorzy partnera"
   },
@@ -270,7 +270,7 @@
     "convert": "Przekonwertuj",
     "convertUsers": "Przekonwertuj użytkowników bez licencji",
     "convertUsersText": "Przekonwertuj na licencjonowanych użytkowników tych pracowników, którzy samodzielnie zarejestrowali się w Project Squared, używając swojego firmowego adresu e-mail. Licencjonowani użytkownicy mają dostęp do dodatkowych funkcji firmowych oraz podlegają zasadom i administracji w firmie.<br><br>Wybrani użytkownicy otrzymają zaproszenie do przekonwertowania lub zmiany swoich adresów e-mail na adresy spoza firmy.",
-    "cancel":"Anuluj",
+    "cancel": "Anuluj",
     "emailAddress": "Adres e-mail",
     "name": "Nazwa",
     "errGetTrialsQuery": "Nie udało się uzyskać wersji próbnych. Stan: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "odinstalowuje usługę."
     },
     "setup": {
-        "label": "Usługi UC APP Fusion",
-        "title": "Usługi UC APP Fusion",
-        "desc": "Użyj swoich usług lokalnych"
+      "label": "Usługi UC APP Fusion",
+      "title": "Usługi UC APP Fusion",
+      "desc": "Użyj swoich usług lokalnych"
     }
   },
   "firstTimeWizard": {

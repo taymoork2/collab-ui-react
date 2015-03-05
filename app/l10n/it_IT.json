@@ -39,7 +39,7 @@
     "status": "Stato",
     "pending": "Invito in sospeso",
     "all": "Tutti",
-    "administrators" : "Amministratori",
+    "administrators": "Amministratori",
     "inviteUsers": "Invita utenti",
     "partners": "Amministratori partner"
   },
@@ -270,7 +270,7 @@
     "convert": "Converti",
     "convertUsers": "Converti utenti senza licenza",
     "convertUsersText": "Converte dipendenti dell'organizzazione che hanno eseguito la registrazione a Project Squared personalmente con un indirizzo e-mail aziendale in un utente con licenza. Gli utenti con licenza ricevono ulteriori funzioni per le attività aziendali e sono soggeti alle politiche e all'amministrazione dell'azienda.<br><br>Alcuni utenti selezionati riceveranno un invito per convertire o modificare l'indirizzo e-mail in un indirizzo e-mail non aziendale.",
-    "cancel":"Annulla",
+    "cancel": "Annulla",
     "emailAddress": "Indirizzo e-mail",
     "name": "Nome",
     "errGetTrialsQuery": "Impossibile recuperare prove. Stato: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "sta disinstallando il servzio."
     },
     "setup": {
-        "label": "UC APP Fusion Services",
-        "title": "UC APP Fusion Services",
-        "desc": "Sfrutta i servizi interni"
+      "label": "UC APP Fusion Services",
+      "title": "UC APP Fusion Services",
+      "desc": "Sfrutta i servizi interni"
     }
   },
   "firstTimeWizard": {

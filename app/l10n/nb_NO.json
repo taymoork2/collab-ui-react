@@ -39,7 +39,7 @@
     "status": "Status",
     "pending": "Invitasjon ventende",
     "all": "Alle",
-    "administrators" : "Administratorer",
+    "administrators": "Administratorer",
     "inviteUsers": "Inviter brukere",
     "partners": "Partneradministratorer"
   },
@@ -270,7 +270,7 @@
     "convert": "Konverter",
     "convertUsers": "Konverter ulisensierte brukere",
     "convertUsersText": "Konverter ansatte i organisasjonen som har registrert seg på Project Squared på egenhånd med en jobb-e-postadresse til en lisensiert bruker. Lisensierte brukere mottar flere bedriftsfunksjoner, og er underlagt retningslinjene og administrasjonen for organisasjonen din.<br><br>Valgte brukere vil mottar en invitasjon til å konvertere eller endre sin e-postadresse til en e-postadresse utenfor selskapet.",
-    "cancel":"Avbryt",
+    "cancel": "Avbryt",
     "emailAddress": "E-postadresse",
     "name": "Navn",
     "errGetTrialsQuery": "Kunne ikke hente prøveversjoner. Status: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "avinstallerer tjenesten."
     },
     "setup": {
-        "label": "UC-APP-tjenester for fusjon",
-        "title": "UC-APP-tjenester for fusjon",
-        "desc": "Utnytt dine tjenester innenfor området"
+      "label": "UC-APP-tjenester for fusjon",
+      "title": "UC-APP-tjenester for fusjon",
+      "desc": "Utnytt dine tjenester innenfor området"
     }
   },
   "firstTimeWizard": {

@@ -39,7 +39,7 @@
     "status": "Status",
     "pending": "Convite pendente",
     "all": "Todos",
-    "administrators" : "Administradores",
+    "administrators": "Administradores",
     "inviteUsers": "Convidar usuários",
     "partners": "Administradores parceiros"
   },
@@ -270,7 +270,7 @@
     "convert": "Converter",
     "convertUsers": "Converter usuários sem licença",
     "convertUsersText": "Converter funcionários de sua organização que assinaram o Project Squared por conta própria com um endereço de e-mail da empresa para um usuário licenciado. Os usuários licenciados recebem recursos corporativos adicionais e estão sujeitos às políticas e administração de sua organização.<br><br>Os usuários selecionados receberão um convite para converter ou alterar o seu endereço de e-mail para um que não seja corporativo.",
-    "cancel":"Cancelar",
+    "cancel": "Cancelar",
     "emailAddress": "Endereço de e-mail",
     "name": "Nome",
     "errGetTrialsQuery": "Falha ao recuperar avaliações. Status: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "está desinstalando o serviço."
     },
     "setup": {
-        "label": "Serviços de fusão UC APP",
-        "title": "Serviços de fusão UC APP",
-        "desc": "Aprimora seus serviços no local"
+      "label": "Serviços de fusão UC APP",
+      "title": "Serviços de fusão UC APP",
+      "desc": "Aprimora seus serviços no local"
     }
   },
   "firstTimeWizard": {

@@ -39,7 +39,7 @@
     "status": "Durum",
     "pending": "Davet Bekliyor",
     "all": "Tümü",
-    "administrators" : "Yöneticiler",
+    "administrators": "Yöneticiler",
     "inviteUsers": "Kullanıcıları Davet Et",
     "partners": "İş Ortağı Yöneticileri"
   },
@@ -270,7 +270,7 @@
     "convert": "Dönüştür",
     "convertUsers": "Lisanssız Kullanıcıları Dönüştür",
     "convertUsersText": "Kuruluşunuzda şirket e-posta adresiyle Project Squared için kendi başlarına kaydolan çalışanlarınızı lisanslı kullanıcıya dönüştürün. Lisanslı kullanıcılar ek kurumsal özellikler elde eder ve kuruluşunuzun ilkelerine ve yönetimine tabi olur.<br><br>Seçilen kullanıcılar, dönüşüm için davet edilecek veya e-posta adreslerini şirket dışı bir e-posta adresiyle değiştirmeleri istenecektir.",
-    "cancel":"İptal",
+    "cancel": "İptal",
     "emailAddress": "E-posta Adresi",
     "name": "Ad",
     "errGetTrialsQuery": "Deneme sürümleri alınamadı. Durum: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "hizmeti kaldırıyor."
     },
     "setup": {
-        "label": "UC APP Fusion Hizmetleri",
-        "title": "UC APP Fusion Hizmetleri",
-        "desc": "Hizmetlerinizi şirket içinde kullanın"
+      "label": "UC APP Fusion Hizmetleri",
+      "title": "UC APP Fusion Hizmetleri",
+      "desc": "Hizmetlerinizi şirket içinde kullanın"
     }
   },
   "firstTimeWizard": {

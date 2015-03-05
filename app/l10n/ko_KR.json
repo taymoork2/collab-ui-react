@@ -39,7 +39,7 @@
     "status": "상태",
     "pending": "초대 보류 중",
     "all": "모두",
-    "administrators" : "관리자",
+    "administrators": "관리자",
     "inviteUsers": "사용자 초대",
     "partners": "파트너 관리자"
   },
@@ -270,7 +270,7 @@
     "convert": "변환",
     "convertUsers": "라이센스 없는 사용자 변환",
     "convertUsersText": "기업 이메일 주소로 스스로 Project Squared에 등록한 조직의 직원을 라이센스가 있는 사용자로 변환합니다. 라이센스가 있는 사용자는 추가 엔터프라이즈 기능을 수신하고 조직의 정책 및 관리에 의해 변경될 수도 있습니다.<br><br>선택한 사용자는 변환 또는 이메일 주소를 기업 이메일 주소가 아닌 것으로 변경할 수 있는 초대장을 수신하게 됩니다.",
-    "cancel":"취소",
+    "cancel": "취소",
     "emailAddress": "이메일 주소",
     "name": "이름",
     "errGetTrialsQuery": "평가판 검색 실패함. 상태: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "서비스를 제거하고 있습니다."
     },
     "setup": {
-        "label": "UC APP Fusion 서비스",
-        "title": "UC APP Fusion 서비스",
-        "desc": "온-프레미스로 서비스 활용"
+      "label": "UC APP Fusion 서비스",
+      "title": "UC APP Fusion 서비스",
+      "desc": "온-프레미스로 서비스 활용"
     }
   },
   "firstTimeWizard": {
