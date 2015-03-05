@@ -51,7 +51,7 @@
             serviceType: "SupportCenter",
             isEnabled: false
           }, // supportCenter
-          
+
           /*
           collabRoom: {
             id: "collabRoom",
@@ -272,7 +272,6 @@
                 ("SMT" != siteMtgProductCodePrefix) &&
                 ("AUO" != siteMtgProductCodePrefix)
               ) {
-
                 supportCenterApplicable = true;
               }
             }
