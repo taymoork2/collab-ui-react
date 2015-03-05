@@ -22,21 +22,6 @@ var inputEmail;
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 describe('List users flow', function () {
-  beforeEach(function () {
-    this.addMatchers({
-      toBeLessThanOrEqualTo: function () {
-        return {
-          compare: function (actual, expected) {
-            return {
-              pass: actual < expected || actual === expected,
-              message: 'Expected ' + actual + 'to be less than or equal to ' + expected
-            };
-          }
-        };
-      }
-    });
-    utils.scrollTop();
-  });
 
   it('should login as non-sso admin user', function () {
     login.login(testuser.username, testuser.password);
@@ -60,7 +45,7 @@ describe('List users flow', function () {
   describe('Display user information', function () {
     it('display user preview panel when clicking on a user', function () {
       users.clickOnUser();
-      expect(users.userLink.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(users.userLink);
     });
 
     it('display user admin settings panel when clicking on next arrow', function () {
@@ -121,48 +106,24 @@ describe('List users flow', function () {
   describe('Display user profile', function(){
     it('display user profile page when clicking on the user link', function(){
       users.clickOnUser();
-      expect(users.userLink.isDisplayed()).toBeTruthy();
-      users.userLink.click();
+      utils.click(users.userLink);
+
       navigation.expectCurrentUrl('/userprofile');
-      expect(users.fnameField.isDisplayed()).toBeTruthy();
-      expect(users.lnameField.isDisplayed()).toBeTruthy();
-      expect(users.displayField.isDisplayed()).toBeTruthy();
-      expect(users.emailField.isDisplayed()).toBeTruthy();
-      expect(users.orgField.isDisplayed()).toBeTruthy();
-      expect(users.titleField.isDisplayed()).toBeTruthy();
-      users.userTab.click();
-      users.clickOnUser();
+      utils.expectIsDisplayed(users.fnameField);
+      utils.expectIsDisplayed(users.lnameField);
+      utils.expectIsDisplayed(users.displayField);
+      utils.expectIsDisplayed(users.emailField);
+      utils.expectIsDisplayed(users.orgField);
+      utils.expectIsDisplayed(users.titleField);
     });
   });
 
   describe('Exporting to CSV', function () {
     it('should display the CSV export button', function () {
-      expect(users.exportButton.isDisplayed()).toBeTruthy();
+      users.userTab.click();
+      users.clickOnUser();
+      utils.expectIsDisplayed(users.exportButton);
     });
-  });
-
-  describe('launch feedback page', function () {
-
-    it('click feedback and launch form page', function () {
-      // browser.driver.manage().window().setSize(1195, 569);
-
-      //Store the current window handle
-      var winHandleBefore = browser.getWindowHandle();
-
-      navigation.userInfoButton.click();
-      utils.click(navigation.feedbackLink);
-      browser.sleep(4000);
-
-      browser.getAllWindowHandles().then(function (handles) {
-        expect(handles.length).toEqual(2);
-        var newWindowHandle = handles[1];
-        browser.switchTo().window(newWindowHandle);
-        browser.driver.close();
-        browser.switchTo().window(winHandleBefore);
-      });
-
-      // browser.driver.manage().window().maximize();
-    }, 20000);
   });
 
   describe('logout', function () {

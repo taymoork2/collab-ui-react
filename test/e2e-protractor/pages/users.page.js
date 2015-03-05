@@ -130,24 +130,9 @@ var UsersPage = function() {
     this.searchButton.click();
     utils.expectIsDisplayed(this.searchField);
     this.searchField.clear();
-    browser.sleep(1000);
     if (query) {
       this.searchField.sendKeys(query);
-      browser.sleep(1000);
-      element.all(by.repeater('row in renderedRows')).then(function (rows) {
-        expect(rows.length).toBeGreaterThan(0);
-      });
-    }
-  };
-
-  this.searchEmpty = function (query) {
-    this.searchButton.click();
-    utils.expectIsDisplayed(this.searchField);
-    this.searchField.clear();
-    browser.sleep(1000);
-    if (typeof query == 'string' || query instanceof String) {
-      this.searchField.sendKeys(query);
-      browser.sleep(1000);
+      utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
     }
   };
 

@@ -79,10 +79,11 @@ exports.scrollTop = function() {
 
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action
-exports.wait = function(elem) {
+exports.wait = function(elem, type) {
+  type || (type = 'isDisplayed');
   browser.wait(function () {
-    return elem.isDisplayed().then(function(isDisplayed){
-      return isDisplayed;
+    return elem[type]().then(function(res){
+      return res;
     }, function(){
       return false;
     });
@@ -91,6 +92,11 @@ exports.wait = function(elem) {
 
 exports.expectIsDisplayed = function(elem) {
   this.wait(elem);
+  expect(elem.isDisplayed()).toBeTruthy();
+};
+
+exports.expectIsPresent = function(elem) {
+  this.wait(elem, 'isPresent');
   expect(elem.isDisplayed()).toBeTruthy();
 };
 
