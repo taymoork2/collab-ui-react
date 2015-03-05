@@ -39,7 +39,7 @@
     "status": "状況",
     "pending": "招待保留中",
     "all": "すべて",
-    "administrators" : "管理者",
+    "administrators": "管理者",
     "inviteUsers": "ユーザーを招待する",
     "partners": "パートナー管理者"
   },
@@ -270,7 +270,7 @@
     "convert": "転換",
     "convertUsers": "未ライセンスのユーザーを転換",
     "convertUsersText": "組織内の、自分自身では会社のメールアドレスで Project Squared にサインアップしていない従業員をライセンス済みユーザーに転換します。ライセンス済みユーザーは追加のエンタープライズ機能を利用でき、組織のポリシーと管理の対象になります。<br><br>選ばれたユーザーは、自分のメールアドレスを会社以外のメールアドレスに転換または変更するようにとの招待を受け取ります。",
-    "cancel":"キャンセル",
+    "cancel": "キャンセル",
     "emailAddress": "メールアドレス",
     "name": "名前",
     "errGetTrialsQuery": "トライアルの取得に失敗しました。状況： {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "はサービスをアンインストールしています。"
     },
     "setup": {
-        "label": "UC APP フュージョンサービス",
-        "title": "UC APP フュージョンサービス",
-        "desc": "サービスをオンプレミスで強化します"
+      "label": "UC APP フュージョンサービス",
+      "title": "UC APP フュージョンサービス",
+      "desc": "サービスをオンプレミスで強化します"
     }
   },
   "firstTimeWizard": {

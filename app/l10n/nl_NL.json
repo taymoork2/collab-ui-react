@@ -39,7 +39,7 @@
     "status": "Status",
     "pending": "Uitnodiging in behandeling",
     "all": "Alles",
-    "administrators" : "Beheerders",
+    "administrators": "Beheerders",
     "inviteUsers": "Gebruikers uitnodigen",
     "partners": "Partnerbeheerders"
   },
@@ -270,7 +270,7 @@
     "convert": "Omzetten",
     "convertUsers": "Gebruikers zonder licentie omzetten",
     "convertUsersText": "Zet gebruikers binnen uw organisatie die zich met een zakelijk e-mailadres hebben aangemeld voor Project Squared om in gelicentieerde gebruikers. Gebruikers met een licentie krijgen toegang tot extra zakelijke functies en kunnen worden beheerd via het beleid en de beheermogelijkheden van uw organisatie.<br><br>De geselecteerde gebruikers krijgen een uitnodiging waarmee ze hun account kunnen omzetten of waarmee ze hun zakelijke e-mailadres kunnen wijzigen in een niet-zakelijk e-mailadres.",
-    "cancel":"Annuleren",
+    "cancel": "Annuleren",
     "emailAddress": "E-mailadres",
     "name": "Naam",
     "errGetTrialsQuery": "De informatie over de proefperioden kon niet worden opgehaald. Status: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "is bezig met de installatie van de service ongedaan te maken."
     },
     "setup": {
-        "label": "UC APP-fusieservices",
-        "title": "UC APP-fusieservices",
-        "desc": "Benut de aanwezige services op locatie"
+      "label": "UC APP-fusieservices",
+      "title": "UC APP-fusieservices",
+      "desc": "Benut de aanwezige services op locatie"
     }
   },
   "firstTimeWizard": {

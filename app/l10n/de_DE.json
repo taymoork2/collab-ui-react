@@ -39,7 +39,7 @@
     "status": "Status",
     "pending": "Ausstehende Einladung",
     "all": "Alle",
-    "administrators" : "Administratoren",
+    "administrators": "Administratoren",
     "inviteUsers": "Benutzer einladen",
     "partners": "Partner-Administratoren"
   },
@@ -270,7 +270,7 @@
     "convert": "Konvertieren",
     "convertUsers": "Benutzer ohne Lizenz konvertieren",
     "convertUsersText": "Konvertieren Sie Benutzer aus Ihrer Organisation, die sich bei Project Squared selbst oder mit der Unternehmens-E-Mail-Adresse eines lizenzierten Benutzers angemeldet haben. Lizenzierte Benutzer erhalten zusätzliche Enterprise-Funktionen und unterliegen den Richtlinien und der Verwaltung Ihrer Organisation.<br><br>Ausgewählte Benutzer erhalten eine Einladung, eine unternehmensexterne E-Mail-Adresse anzugeben bzw. auf diese umzustellen.",
-    "cancel":"Abbrechen",
+    "cancel": "Abbrechen",
     "emailAddress": "E-Mail-Adresse",
     "name": "Name",
     "errGetTrialsQuery": "Tests wurden nicht abgerufen. Status: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "deinstalliert den Dienst."
     },
     "setup": {
-        "label": "UC APP-Fusionsdienste",
-        "title": "UC APP-Fusionsdienste",
-        "desc": "Dienste vor Ort nutzen"
+      "label": "UC APP-Fusionsdienste",
+      "title": "UC APP-Fusionsdienste",
+      "desc": "Dienste vor Ort nutzen"
     }
   },
   "firstTimeWizard": {

@@ -39,7 +39,7 @@
     "status": "Status",
     "pending": "Undangan Ditunda",
     "all": "Semua",
-    "administrators" : "Administrator",
+    "administrators": "Administrator",
     "inviteUsers": "Undang Pengguna",
     "partners": "Administrator Mitra"
   },
@@ -270,7 +270,7 @@
     "convert": "Konversi",
     "convertUsers": "Konversi Pengguna Tidak Berlisensi",
     "convertUsersText": "Mengonversi karyawan di organisasi Anda yang telah mendaftar ke Squared dengan alamat email perusahaan menjadi pengguna berlisensi. Pengguna berlisensi akan mendapatkan fitur perusahaan tambahan, dan tunduk pada kebijakan dan administrasi perusahaan.<br><br>Pengguna yang dipilih akan menerima undangan untuk mengonversi atau mengubah alamat email mereka ke alamat email non-perusahaan.",
-    "cancel":"Batalkan",
+    "cancel": "Batalkan",
     "emailAddress": "Alamat Email",
     "name": "Nama",
     "errGetTrialsQuery": "Gagal membuka percobaan. Status: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "sedang menghapus instal layanan."
     },
     "setup": {
-        "label": "Layanan Penggabungan APP UC",
-        "title": "Layanan Penggabungan APP UC",
-        "desc": "Tingkatkan layanan Anda di lokasi"
+      "label": "Layanan Penggabungan APP UC",
+      "title": "Layanan Penggabungan APP UC",
+      "desc": "Tingkatkan layanan Anda di lokasi"
     }
   },
   "firstTimeWizard": {

@@ -39,7 +39,7 @@
     "status": "Status",
     "pending": "Invite pending",
     "all": "All",
-    "administrators" : "Administrators",
+    "administrators": "Administrators",
     "inviteUsers": "Invite users",
     "partners": "Partner administrators"
   },
@@ -270,7 +270,7 @@
     "convert": "Convert",
     "convertUsers": "Convert unlicenced users",
     "convertUsersText": "Convert employees of your organisation who have signed up for Project Squared on their own with a company e-mail address to a licenced user. Licenced users receive additional enterprise features and are subject to your organisation's policies and administration.<br><br>Selected users will receive an invitation to convert or change their e-mail address to a non-company e-mail address.",
-    "cancel":"Cancel",
+    "cancel": "Cancel",
     "emailAddress": "E-mail address",
     "name": "Name",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}"
@@ -316,7 +316,7 @@
     "finalDisableSSO": "The test was unsuccessful. Disable Single Sign On.",
     "disableFailed": "Failed to disable Single Sign On",
     "diableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
-    "enableSSOFailure" : "Failed to diable Single Sign-On (SSO)."
+    "enableSSOFailure": "Failed to diable Single Sign-On (SSO)."
   },
   "serviceSetupModal": {
     "timeZone": "Time zone",
@@ -440,9 +440,9 @@
       "uninstalling": "is uninstalling the service."
     },
     "setup": {
-        "label": "UC APP Fusion Services",
-        "title": "UC APP Fusion Services",
-        "desc": "Leverage your services on-premise"
+      "label": "UC APP Fusion Services",
+      "title": "UC APP Fusion Services",
+      "desc": "Leverage your services on-premise"
     }
   },
   "firstTimeWizard": {

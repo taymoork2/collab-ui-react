@@ -39,7 +39,7 @@
     "status": "狀態",
     "pending": "邀請擱置中",
     "all": "全部",
-    "administrators" : "管理員",
+    "administrators": "管理員",
     "inviteUsers": "邀請使用者",
     "partners": "夥伴管理員"
   },
@@ -270,7 +270,7 @@
     "convert": "轉換",
     "convertUsers": "轉換未授權使用者",
     "convertUsersText": "將已使用公司電子郵件地址來單獨註冊 Project Squared 的組織員工轉換為授權使用者。授權使用者會收到其他企業功能，並且受組織原則和管理的限制。<br><br>所選使用者將收到邀請，讓他們將其電子郵件地址轉換或變更為非公司電子郵件地址。",
-    "cancel":"取消",
+    "cancel": "取消",
     "emailAddress": "電子郵件地址",
     "name": "名稱",
     "errGetTrialsQuery": "無法擷取試用客戶。狀態：{{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "正在解除安裝服務。"
     },
     "setup": {
-        "label": "UC APP Fusion 服務",
-        "title": "UC APP Fusion 服務",
-        "desc": "運用內部部署服務"
+      "label": "UC APP Fusion 服務",
+      "title": "UC APP Fusion 服務",
+      "desc": "運用內部部署服務"
     }
   },
   "firstTimeWizard": {

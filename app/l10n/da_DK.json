@@ -39,7 +39,7 @@
     "status": "Status",
     "pending": "Inviter afventende",
     "all": "Alle",
-    "administrators" : "Administratorer",
+    "administrators": "Administratorer",
     "inviteUsers": "Inviter brugere",
     "partners": "Partner-administratorer"
   },
@@ -270,7 +270,7 @@
     "convert": "Konverter",
     "convertUsers": "Konverter ikke-licenserede brugere",
     "convertUsersText": "Konverter ansatte i din organisation, som på egen hånd har tilmeldt sig Project Squared med en firma-e-mailadresse til en licenseret bruger. Licenserede brugere modtager yderligere virksomhedsfunktioner og er underlagt din organisations politikker og administration.<br><br>Valgte brugere vil modtage en invitation til at konvertere eller ændre deres e-mailadresse til en e-mailadresse uden for virksomheden.",
-    "cancel":"Annuller",
+    "cancel": "Annuller",
     "emailAddress": "E-mailadresse",
     "name": "Navn",
     "errGetTrialsQuery": "Kunne ikke hente prøveversion. Status: {{status}}"
@@ -435,9 +435,9 @@
       "uninstalling": "afinstallerer tjenesten."
     },
     "setup": {
-        "label": "UC APP Fusion Services",
-        "title": "UC APP Fusion Services",
-        "desc": "Løft din tjeneste på området"
+      "label": "UC APP Fusion Services",
+      "title": "UC APP Fusion Services",
+      "desc": "Løft din tjeneste på området"
     }
   },
   "firstTimeWizard": {
