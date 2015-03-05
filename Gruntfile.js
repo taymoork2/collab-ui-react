@@ -737,7 +737,7 @@ module.exports = function (grunt) {
       },
       webex: {
         options: {
-          // Don't fail on error                                                                                                                                                                         
+          // Don't fail on error
           keepAlive: true,
           args: {
             specs: [
@@ -963,7 +963,7 @@ module.exports = function (grunt) {
     'protractor:hercules'
   ]);
 
-  /**  
+  /**
     grunt.registerTask('test-webex', [
       'test-setup',
       'protractor:webex'

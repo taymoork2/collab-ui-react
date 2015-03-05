@@ -20,7 +20,7 @@ var PartnerHomePage = function(){
   };
 
   this.trialsPanel = element(by.id('trialsPanel'));
-  this.addButton = element(by.id('trialAddButton'));
+  this.addButton = element(by.id('addTrial'));
   this.startTrialButton = element(by.id('startTrialButton'));
   this.customerNameInput = element(by.id('customerNameInput'));
   this.customerEmailInput = element(by.id('customerEmailInput'));
@@ -30,8 +30,9 @@ var PartnerHomePage = function(){
   this.newTrialName = element(by.binding('trial.'));
   this.saveSendButton = element(by.id('saveSendButton'));
   this.newTrialRow = element(by.id(this.newTrial.customerName));
-  this.editTrialModal = element(by.id('editTrialDialog'));
-  this.addTrialModal = element(by.id('addTrialDialog'));
+  this.editTrialForm = element(by.id('editTrialForm'));
+  this.editLink = element(by.id('editLink'));
+  this.addTrialForm = element(by.id('addTrialForm'));
   this.cancelTrialButton = element(by.id('cancelNewTrialButton'));
   this.customerNameForm =  element(by.id('customerNameForm'));
   this.customerEmailForm =  element(by.id('customerEmailForm'));
@@ -50,7 +51,7 @@ var PartnerHomePage = function(){
   this.noResultsAvailable = element(by.cssContainingText('span','No results available'));
   this.errorProcessing = element(by.cssContainingText('span','Error processing request'));
   this.selectRow = element(by.binding('row.entity'));
-  this.previewPanel = element(by.id('preview-panel'));
+  this.previewPanel = element(by.id('entire-slide'));
   this.customerInfo = element(by.id('customer-info'));
   this.trialInfo = element(by.id('trial-info'));
   this.actionsButton = element(by.id(this.newTrial.customerName + 'ActionsButton'));
@@ -61,6 +62,7 @@ var PartnerHomePage = function(){
   this.partnerEmail = element.all(by.binding('userName'));
   this.squaredTrialCheckbox = element(by.id('squaredTrial'));
   this.squaredUCTrialCheckbox = element(by.id('squaredUCTrial'));
+
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
