@@ -82,50 +82,58 @@ angular.module('Core')
 ])
 
 .controller('SettingsMenuCtrl', ['$scope', '$location', '$state', '$translate', 'Authinfo', 'Utils',
-  function ($scope, $location, $state, $translate, Authinfo, Utils) {
+    function ($scope, $location, $state, $translate, Authinfo, Utils) {
 
-    // UNCOMMENT TO ADD LINKS TO ACCOUNT PAGES
+      // UNCOMMENT TO ADD LINKS TO ACCOUNT PAGES
 
-    $scope.menuItems = [
-      //   {link: '/profile/true',
-      //   title: $translate.instant('partnerProfile.link')
-      // }, {
-      //   link: '/profile/false',
-      //   title: $translate.instant('partnerProfile.customerLink')}
-    ];
-    var initialSetupText = $translate.instant('settings.initialSetup');
+      $scope.menuItems = [
+        //   {link: '/profile/true',
+        //   title: $translate.instant('partnerProfile.link')
+        // }, {
+        //   link: '/profile/false',
+        //   title: $translate.instant('partnerProfile.customerLink')}
+      ];
+      var initialSetupText = $translate.instant('settings.initialSetup');
 
-    var getAuthinfoData = function () {
-      var found = false;
-      if (Authinfo.isCustomerAdmin()) {
-        for (var i = 0, l = $scope.menuItems.length; i < l; i++) {
-          if ($scope.menuItems[i].title === initialSetupText) {
-            found = true;
+      var getAuthinfoData = function () {
+        var found = false;
+        if (Authinfo.isCustomerAdmin()) {
+          for (var i = 0, l = $scope.menuItems.length; i < l; i++) {
+            if ($scope.menuItems[i].title === initialSetupText) {
+              found = true;
+            }
+          }
+          if (!found) {
+            $scope.menuItems.push({
+              link: '/initialsetup',
+              title: initialSetupText
+            });
           }
         }
-        if (!found) {
-          $scope.menuItems.push({
-            link: '/initialsetup',
-            title: initialSetupText
-          });
+      };
+      if (Utils.isAdminPage()) {
+        getAuthinfoData();
+      }
+      //update the scope when Authinfo data has been populated.
+      $scope.$on('AuthinfoUpdated', function () {
+        getAuthinfoData();
+      });
+
+      $scope.doAction = function (path) {
+        if (path === '/initialsetup') {
+          $state.go('setupwizardmodal');
+        } else {
+          $location.path(path);
         }
-      }
-    };
-    if (Utils.isAdminPage()) {
-      getAuthinfoData();
+      };
     }
-    //update the scope when Authinfo data has been populated.
-    $scope.$on('AuthinfoUpdated', function () {
-      getAuthinfoData();
-    });
 
-    $scope.doAction = function (path) {
-      if (path === '/initialsetup') {
-        $state.go('setupwizardmodal');
-      } else {
-        $location.path(path);
-      }
-    };
-  }
+  ])
+  .controller('HeaderPushCtrl', ['$scope', '$translate',
+    function ($scope, $translate) {
+      $scope.label = 'License Usage';
+      $scope.state = 'normal';
+      $scope.icon = 'icon-star';
+    }
 
-]);
+  ]);

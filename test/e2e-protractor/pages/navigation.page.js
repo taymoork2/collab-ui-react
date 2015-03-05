@@ -81,7 +81,7 @@ var Navigation = function(){
 
   this.clickFusion = function() {
     this.clickDevelopmentTab();
-    this.fusionTab.click();
+    utils.click(this.fusionTab);
     this.expectCurrentUrl('/fusion');
   };
 

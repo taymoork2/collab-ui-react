@@ -7,7 +7,7 @@
     <div class="header-section">
       <span class="bucket-header">{{bucket.title | translate}}</span>
     </div>
-    <div class="donut"></div>
+    <cs-donut value="bucket.currentCount" max="bucket.totalCount" unlimited="bucket.unlimited"></cs-donut>
     <div class="bucket-info">
         <h4 class="total-count">{{bucket.totalCount}}</h4>
         <h5 class="bucket-subtitle">{{bucket.subtitle | translate}}</h5>

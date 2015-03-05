@@ -1,20 +1,20 @@
 <div class="landing-page">
   <div class="cta row" ng-controller="LicensesCtrl" ng-show="isAdmin()">
-    <section class="packages col-sm-6 col-md-3">
+    <section class="packages col-sm-6 col-md-4">
       <h3 class="packages-name" ng-bind-html="packageInfo.name"></h3>
       <progressbar ng-if="packageInfo.termMax>0" max="packageInfo.termMax" value="packageInfo.termUsed" type="{{getTrialProgress(packageInfo)}}"></progressbar>
       <p class="packages-days-left" ng-if="packageInfo.termRemaining>0 && isOnTrial()">{{packageInfo.termRemaining}} {{packageInfo.termUnits}} left in your trial</p>
       <p class="packages-unlimited" ng-if="packageInfo.termRemaining===0 && isOnTrial()===false">Unlimited use</p>
       <button class="btn btn-sm btn-default fix-btn-pos">Buy / Upgrade</button>
     </section>
-    <section class="devices col-sm-6 col-md-3" ng-controller="DevicesCtrl">
+    <section class="devices col-sm-6 col-md-4" ng-controller="DevicesCtrl">
       <h3>Devices</h3>
       <ul class="device-list">
         <li ng-repeat="device in devices" class="device-item"><span class="number">{{device.qty}}</span><span class="model">{{device.model}}</span></li>
       </ul>
       <button class="btn btn-sm btn-default fix-btn-pos">Order More</button>
     </section>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="row">
         <section class="licenses col-sm-6">
           <h3 class="licenses-bought" ng-if="licenses.total!==0">{{licenses.total}} Licenses</h3>
@@ -24,7 +24,7 @@
           <button class="btn btn-sm btn-default fix-btn-pos">Remind</button>
           <button class="btn btn-sm btn-default fix-btn-pos">Buy More</button>
         </section>
-        <section class="unlicensed-users col-sm-6">
+        <!-- <section class="unlicensed-users col-sm-6">
           <div ng-if="isDomainClaimed()">
             <div class="users-info">
               <span class="number">{{licenses.unlicensed}}</span>
@@ -37,7 +37,7 @@
             <p>View and convert users currently using the free version</p>
           </div>
           <button id="convertButton" class="btn btn-sm btn-default fix-btn-pos" translate="homePage.convert" ng-click="openConvertModal()" ng-disabled="licenses.unlicensed === 0"></button>
-        </section>
+        </section> -->
       </div>
     </div>
   </div>
@@ -135,6 +135,20 @@
             <a id="autoAttendantQuickLink" ng-if="false" class="list-group-item">Configure an Auto Attendant</a>
             <a id="deviceLogsQuickLink" ui-sref="support" ng-if="isPageActive('support')" class="list-group-item">Search device logs</a>
           </div>
+        </section>
+        <section class="unlicensed-users col-md-12 col-sm-4" ng-controller="LicensesCtrl" ng-show="isAdmin()">
+          <div ng-if="isDomainClaimed()">
+            <div class="users-info">
+              <span class="number">{{licenses.unlicensed}}</span>
+              <span class="text">unlicensed users registered on</span>
+            </div>
+            <h4>{{licenses.domain}}</h4>
+          </div>
+          <div class="unlicensed-users-unclaimeddomain" ng-if="isDomainClaimed()===false">
+            <h4>{{licenses.unlicensed}} Unlicensed Users</h4>
+            <p class="no-cases">View and convert users currently using the free version</p>
+          </div>
+          <button id="convertButton" class="btn btn-sm btn-default" translate="homePage.convert" ng-click="openConvertModal()" ng-disabled="licenses.unlicensed === 0"></button>
         </section>
       </div>
     </div>

@@ -27,7 +27,7 @@ angular.module('Core', [
   'mgo-angular-wizard',
   'ngClipboard',
   'cisco.ui',
-  'ciscoDonut'
+  'csDonut'
 ]);
 
 angular.module('Squared', ['Core']);
