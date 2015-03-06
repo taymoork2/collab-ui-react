@@ -14,32 +14,24 @@
 
       return {
         getUserInfo: function (xmlApiAccessInfo) {
-          $q.all();
-
           var xmlData = XmlApiSvc.getUserInfo(xmlApiAccessInfo);
 
           return $q.all(xmlData);
         }, // getUserInfo()
 
         getSiteInfo: function (xmlApiAccessInfo) {
-          $q.all();
-
           var xmlData = XmlApiSvc.getSiteInfo(xmlApiAccessInfo);
 
           return $q.all(xmlData);
         }, // getSiteInfo()
 
         getMeetingTypeInfo: function (xmlApiAccessInfo) {
-          $q.all();
-
           var xmlData = XmlApiSvc.getMeetingTypeInfo(xmlApiAccessInfo);
 
           return $q.all(xmlData);
         }, // getMeetingTypeInfo()
 
         getUserSettingsInfo: function (xmlApiAccessInfo) {
-          $q.all([]);
-
           var userInfoXml = XmlApiSvc.getUserInfo(xmlApiAccessInfo);
           var siteInfoXml = XmlApiSvc.getSiteInfo(xmlApiAccessInfo);
           var meetingTypeXml = XmlApiSvc.getMeetingTypeInfo(xmlApiAccessInfo);;
