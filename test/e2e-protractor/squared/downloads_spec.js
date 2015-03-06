@@ -35,7 +35,7 @@ describe('Downloads Page with email parameter and reset/admin email params', fun
   });
 
   it('should not display logged in user, logout link, search field, and tabs', function() {
-    navigation.expectAdminSettingsDisplayed(false);
+    navigation.expectAdminSettingsNotDisplayed();
   });
   it('should have invoked send email api', function() {
     download.sendStatus.getAttribute('mailStatus').then(function(value) {

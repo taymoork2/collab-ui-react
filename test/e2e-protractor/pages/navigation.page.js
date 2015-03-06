@@ -120,11 +120,11 @@ var Navigation = function(){
     expect(browser.driver.getCurrentUrl()).toContain(url);
   };
 
-  this.expectAdminSettingsDisplayed = function(expectation) {
-    expect(this.headerSearch.isDisplayed()).toBe(expectation);
-    expect(this.settingsMenu.isDisplayed()).toBe(expectation);
-    expect(this.userInfo.isDisplayed()).toBe(expectation);
-    expect(this.tabs.isDisplayed()).toBe(expectation);
+  this.expectAdminSettingsNotDisplayed = function() {
+    utils.expectIsNotDisplayed(this.tabs);
+    utils.expectIsNotDisplayed(this.userInfo);
+    utils.expectIsNotDisplayed(this.headerSearch);
+    utils.expectIsNotDisplayed(this.settingsMenu);
   };
 
   this.hasClass = function (element, cls) {

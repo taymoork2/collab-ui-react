@@ -31,13 +31,13 @@ exports.sendRequest = function(options) {
   var flow = protractor.promise.controlFlow();
   return flow.execute(function() {
     var defer = protractor.promise.defer();
-    console.log('\nSending Request...', options);
+    // console.log('\nSending Request...', options);
 
     request(options, function(error, response, message) {
-      console.log('\nResponse Received...', options.url);
-      console.log('--error: ' + error);
-      console.log('--status code: ' + response.statusCode);
-      console.log('--message: ' + message);
+      // console.log('\nResponse Received...', options.url);
+      // console.log('--error: ' + error);
+      // console.log('--status code: ' + response.statusCode);
+      // console.log('--message: ' + message);
 
       if (error || response.statusCode >= 400) {
         defer.reject({

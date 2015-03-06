@@ -12,21 +12,17 @@
 // - State is conserved between each describe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
-var token = null;
-var testEmail = utils.randomTestGmail();
-var deviceUserAgent = config.deviceUserAgent.iPhone;
-var encryptedQueryParam = null;
-var resentEqp = null;
-
-var testBody = {
-  'email': testEmail,
-  'pushId': utils.randomId(),
-  'deviceName': utils.randomId(),
-  'deviceId': utils.randomId()
+var getTestBody = function() {
+  return {
+    'email': utils.randomTestGmail(),
+    'pushId': utils.randomId(),
+    'deviceName': utils.randomId(),
+    'deviceId': utils.randomId()
+  }
 };
 
-function getToken() {
-  console.log('getting token');
+function getToken(obj) {
+  // console.log('getting token');
   var options = {
     method: 'post',
     url: config.oauth2Url + 'access_token',
@@ -43,120 +39,112 @@ function getToken() {
 
   return utils.sendRequest(options).then(function(data) {
     var resp = JSON.parse(data);
-    console.log('access token', resp.access_token);
-    token = resp.access_token;
+    // console.log('access token', resp.access_token);
+    obj.token = resp.access_token;
   });
 }
 
-function verifyEmail() {
+function verifyEmail(obj) {
   var options = {
     method: 'post',
     url: config.adminServiceUrl.integration + 'users/email/verify',
     headers: {
-      'User-Agent': deviceUserAgent,
+      'User-Agent': obj.deviceUA,
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token
+      Authorization: 'Bearer ' + obj.token
     },
-    body: JSON.stringify(testBody)
+    body: JSON.stringify(obj.body)
   };
 
   return utils.sendRequest(options).then(function(data) {
     var resp = JSON.parse(data);
-    console.log('encrypted param', resp.eqp);
-    encryptedQueryParam = resp.eqp;
+    // console.log('encrypted param', resp.eqp);
+    obj.encryptedQueryParam = resp.eqp;
   });
 }
 
-function setup(deviceUA) {
-  deviceUserAgent = deviceUA;
+function setup(obj) {
   var flow = protractor.promise.controlFlow();
-  flow.execute(getToken);
-  flow.execute(verifyEmail);
+  flow.execute(getToken.bind(null, obj));
+  flow.execute(verifyEmail.bind(null, obj));
 }
-
-setup(config.deviceUserAgent.iPhone);
 
 describe('Self Registration Activation Page', function() {
 
-  var invalidatedParam;
+  describe('iOS', function() {
+    var obj = {
+      body: getTestBody(),
+      deviceUA: config.deviceUserAgent.iPhone
+    };
+    setup(obj);
 
-  describe('Desktop activation for iOS device', function() {
+    describe('Desktop activation for iOS device', function() {
+      it('should display without admin controls on navigation bar', function() {
+        expect(obj.encryptedQueryParam).not.toBe(null);
+        browser.get('#/activate?eqp=' + encodeURIComponent(obj.encryptedQueryParam));
+        navigation.expectAdminSettingsNotDisplayed();
+      });
 
-    it('should display without admin controls on navigation bar', function() {
+      it('should activate user and display success info', function() {
+        utils.expectIsDisplayed(activate.provisionSuccess);
+        utils.expectIsNotDisplayed(activate.codeExpired);
+        utils.expectIsNotDisplayed(activate.resendSuccess);
+      });
 
-      expect(encryptedQueryParam).not.toBe(null);
-
-      browser.get('#/activate?eqp=' + encodeURIComponent(encryptedQueryParam));
-
-      navigation.expectAdminSettingsDisplayed(false);
-    });
-
-    it('should activate user and display success info', function() {
-      expect(activate.provisionSuccess.isDisplayed()).toBeTruthy();
-      expect(activate.codeExpired.isDisplayed()).toBeFalsy();
-      expect(activate.resendSuccess.isDisplayed()).toBeFalsy();
-
-      invalidatedParam = encryptedQueryParam;
-      // setting up next test
-      invalidatedParam = encryptedQueryParam;
-      setup(config.deviceUserAgent.android);
-    });
-  });
-
-  describe('Desktop activation for android device', function() {
-
-    it('should display without admin controls on navigation bar', function() {
-      browser.get('#/activate?eqp=' + encodeURIComponent(encryptedQueryParam));
-
-      navigation.expectAdminSettingsDisplayed(false);
-
-      // run = false;
-    });
-
-    it('should activate user and display success info', function() {
-      expect(activate.provisionSuccess.isDisplayed()).toBeTruthy();
-      expect(activate.codeExpired.isDisplayed()).toBeFalsy();
-      expect(activate.resendSuccess.isDisplayed()).toBeFalsy();
-
-      // run = false;
+      it('should delete added user', function() {
+        deleteUtils.deleteUser(obj.body.email);
+      });
     });
   });
 
-  describe('Desktop activation after code is invalidated', function() {
+  describe('android', function() {
+    var obj = {
+      body: getTestBody(),
+      deviceUA: config.deviceUserAgent.android
+    };
+    setup(obj);
 
-    it('should display without admin controls on navigation bar', function() {
-      browser.get('#/activate?eqp=' + encodeURIComponent(invalidatedParam));
+    describe('Desktop activation for android device', function() {
+      it('should display without admin controls on navigation bar', function() {
+        browser.get('#/activate?eqp=' + encodeURIComponent(obj.encryptedQueryParam));
+        navigation.expectAdminSettingsNotDisplayed();
+      });
 
-      navigation.expectAdminSettingsDisplayed(false);
-    });
-
-
-    it('should display code expired with user email', function() {
-      expect(activate.provisionSuccess.isDisplayed()).toBeFalsy();
-      expect(activate.codeExpired.isDisplayed()).toBeTruthy();
-      expect(activate.resendSuccess.isDisplayed()).toBeFalsy();
-      expect(activate.userEmail.getText()).toContain(testEmail);
-    });
-
-    it('should request new code when link is clicked', function() {
-      activate.sendCodeLink.click();
-      expect(activate.provisionSuccess.isDisplayed()).toBeFalsy();
-      expect(activate.codeExpired.isDisplayed()).toBeFalsy();
-      expect(activate.resendSuccess.isDisplayed()).toBeTruthy();
-        activate.testData.getAttribute('eqp').then(function(eqp) {
-          expect(eqp).not.toBe(null);
-          resentEqp = eqp;
-        });
-    });
-
-    it('should delete added user', function() {
-      deleteUtils.deleteUser(testEmail).then(function(message) {
-        expect(message).toEqual(200);
-      }, function(data) {
-        expect(data.status).toEqual(200);
+      it('should activate user and display success info', function() {
+        utils.expectIsDisplayed(activate.provisionSuccess);
+        utils.expectIsNotDisplayed(activate.codeExpired);
+        utils.expectIsNotDisplayed(activate.resendSuccess);
       });
     });
 
-  });
+    describe('Desktop activation after code is invalidated', function() {
 
+      it('should display without admin controls on navigation bar', function() {
+        browser.get('#/activate?eqp=' + encodeURIComponent(obj.encryptedQueryParam));
+        navigation.expectAdminSettingsNotDisplayed();
+      });
+
+      it('should display code expired with user email', function() {
+        utils.expectIsNotDisplayed(activate.provisionSuccess);
+        utils.expectIsDisplayed(activate.codeExpired);
+        utils.expectIsNotDisplayed(activate.resendSuccess);
+        expect(activate.userEmail.getText()).toContain(obj.body.email);
+      });
+
+      it('should request new code when link is clicked', function() {
+        utils.click(activate.sendCodeLink);
+        utils.expectIsNotDisplayed(activate.provisionSuccess);
+        utils.expectIsNotDisplayed(activate.codeExpired);
+        utils.expectIsDisplayed(activate.resendSuccess);
+
+        activate.testData.getAttribute('eqp').then(function(eqp) {
+          expect(eqp).not.toBe(null);
+        });
+      });
+
+      it('should delete added user', function() {
+        deleteUtils.deleteUser(obj.body.email);
+      });
+    });
+  });
 });
