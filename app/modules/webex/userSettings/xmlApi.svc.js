@@ -13,14 +13,12 @@
       $q
     ) {
       var _self = this;
+      var x2js = new X2JS();
+      var xmlServerURL = "http://172.24.93.53/xml9.0.0/XMLService";
 
-      var constants = {
-        xmlServerURL: "http://172.24.93.53/xml9.0.0/XMLService",
-      }; // constants
-
-      this.getXMLApi = function (xmlRequest, resolve, reject) {
+      this.getXMLApi = function (xmlServerURL, xmlRequest, resolve, reject) {
         $http({
-          url: constants.xmlServerURL,
+          url: xmlServerURL,
           method: "POST",
           data: xmlRequest,
           headers: {
@@ -35,72 +33,62 @@
 
       return {
         getSiteInfo: function (xmlApiAccessInfo) {
-          var xmlApiRequest =
-            "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
-            "    <header>" +
-            "        <securityContext>" +
-            "            <webExID>{{webexAdminID}}</webExID>" +
-            "            <password>{{webexAdminPswd}}</password>" +
-            "            <siteID>{{siteID}}</siteID>" +
-            "            <partnerID>{{partnerID}}</partnerID>" +
-            "        </securityContext>" +
-            "    </header>" +
-            "    <body>" +
-            "        <bodyContent xsi:type=\"java:com.webex.service.binding.site.GetSite\" />" +
-            "    </body>" +
-            "</serv:message>";
-
           return $q(function (resolve, reject) {
-            var xmlRequest = $interpolate(xmlApiRequest)(xmlApiAccessInfo);
-            _self.getXMLApi(xmlRequest, resolve, reject);
+            var xmlRequest = $interpolate(constants.siteInfoRequest)(xmlApiAccessInfo);
+            _self.getXMLApi(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSiteInfo()
 
         getUserInfo: function (xmlApiAccessInfo) {
-          var xmlApiRequest =
-            "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
-            "    <header>" +
-            "        <securityContext>" +
-            "            <webExID>{{webexAdminID}}</webExID>" +
-            "            <password>{{webexAdminPswd}}</password>" +
-            "            <siteID>{{siteID}}</siteID>" +
-            "            <partnerID>{{partnerID}}</partnerID>" +
-            "        </securityContext>" +
-            "    </header>" +
-            "    <body>" +
-            "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.GetUser\">" +
-            "            <webExId>{{webexUserId}}</webExId>" +
-            "        </bodyContent>" +
-            "    </body>" +
-            "</serv:message>";
-
           return $q(function (resolve, reject) {
-            var xmlRequest = $interpolate(xmlApiRequest)(xmlApiAccessInfo);
-            _self.getXMLApi(xmlRequest, resolve, reject);
+            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlRequest = $interpolate(constants.userInfoRequest)(xmlApiAccessInfo);
+            _self.getXMLApi(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getUserInfo()
 
         getMeetingTypeInfo: function (xmlApiAccessInfo) {
-          var xmlApiRequest =
-            "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
-            "    <header>" +
-            "        <securityContext>" +
-            "            <webExID>{{webexAdminID}}</webExID>" +
-            "            <password>{{webexAdminPswd}}</password>" +
-            "            <siteID>{{siteID}}</siteID>" +
-            "            <partnerID>{{partnerID}}</partnerID>" +
-            "        </securityContext>" +
-            "    </header>" +
-            "    <body>" +
-            "        <bodyContent xsi:type=\"java:com.webex.service.binding.meetingtype.LstMeetingType\" />" +
-            "    </body>" +
-            "</serv:message>";
-
           return $q(function (resolve, reject) {
-            var xmlRequest = $interpolate(xmlApiRequest)(xmlApiAccessInfo);
-            _self.getXMLApi(xmlRequest, resolve, reject);
+            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlRequest = $interpolate(constants.meetingTypeInfoRequest)(xmlApiAccessInfo);
+            _self.getXMLApi(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getMeetingTypeInfo()
+
+        xml2JsonConvert: function (commentText, xmlDataText, startOfBodyStr, endOfBodyStr) {
+          var funcName = "xml2JsonConvert()";
+          var logMsg = "";
+
+          logMsg = funcName + ": " + commentText + "\n" + "startOfBodyStr=" + startOfBodyStr + "\n" + "endOfBodyStr=" + endOfBodyStr;
+          $log.log(logMsg);
+          // alert(logMsg);
+
+          var startOfBodyIndex = xmlDataText.indexOf(startOfBodyStr);
+          var endOfBodyIndex = (null == endOfBodyStr) ? 0 : xmlDataText.indexOf(endOfBodyStr);
+
+          logMsg = funcName + ": " + commentText + "\n" + "startOfBodyIndex=" + startOfBodyIndex + "\n" + "endOfBodyIndex=" + endOfBodyIndex;
+          $log.log(logMsg);
+          // alert(logMsg);
+
+          var bodySlice = (startOfBodyIndex < endOfBodyIndex) ? xmlDataText.slice(startOfBodyIndex, endOfBodyIndex) : xmlDataText.slice(startOfBodyIndex);
+          constants.replaceSets.forEach(function (replaceSet) {
+            bodySlice = bodySlice.replace(replaceSet.replaceThis, replaceSet.withThis);
+          });
+
+          bodySlice = "<body>" + bodySlice + "</body>";
+
+          logMsg = funcName + ": " + commentText + "\n" + "bodySlice=\n" + bodySlice;
+          $log.log(logMsg);
+          // alert(logMsg);
+
+          var bodyJson = x2js.xml_str2json(bodySlice);
+
+          logMsg = funcName + ": " + commentText + "\n" + "bodyJson=\n" + JSON.stringify(bodyJson);
+          $log.log(logMsg);
+          // alert(logMsg);
+
+          return bodyJson;
+        }, // xml2JsonConvert()
       }; // return
     } //WebExUserSettingsSvc()
   ]);

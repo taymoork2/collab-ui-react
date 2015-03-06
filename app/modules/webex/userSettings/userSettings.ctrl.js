@@ -86,7 +86,6 @@
           }, // general
           */
 
-          /*
           telephonyPriviledge: {
             label: "Telephony Privilege",
 
@@ -94,21 +93,29 @@
               id: "callInTeleconf",
               label: "Call-in teleconferencing",
               value: true,
-              currCallInTollType: 2,
+              isSiteEnabled: false,
+              selectedCallInTollType: 0,
 
-              callInTollTypes: [{
-                id: "toll",
+              callInTollOnly: {
+                id: "tollOnly",
                 label: "Toll",
-                value: 0
-              }, {
-                id: "tollFree",
-                label: "Toll free",
+                isSiteEnabled: true,
                 value: 1
-              }, {
-                id: "tollAndTollFree",
-                label: "Toll and Toll free",
+              },
+
+              callInTollFreeOnly: {
+                id: "tollFreeOnly",
+                label: "Toll free",
+                isSiteEnabled: true,
                 value: 2
-              }],
+              },
+
+              callInTollAndTollFree: {
+                id: "tollAndTollFree",
+                label: "Toll & Toll free",
+                isSiteEnabled: true,
+                value: 3
+              },
 
               teleconfViaGlobalCallin: {
                 id: "teleconfViaGlobalCallin",
@@ -127,7 +134,7 @@
               id: "callBackTeleconf",
               label: "Call-back teleconferencing",
               value: true,
-              
+
               globalCallBackTeleconf: {
                 id: "globalCallBackTeleconf",
                 label: "Global call-back teleconferencing",
@@ -161,7 +168,6 @@
               ]
             } //selectTeleconfLocation
           }, // telephonyPriviledges
-          */
         }; // userPrivilegesModel
 
         this.userPrivilegesModel = userPrivilegesModel;
@@ -174,6 +180,7 @@
 
         var currView = this;
         var xmlApiAccessInfo = {
+          xmlServerURL: "http://172.24.93.53/xml9.0.0/XMLService",
           webexAdminID: "jpallapa",
           webexAdminPswd: "C!sco123",
           siteID: "4272",
@@ -329,9 +336,48 @@
         //---------------- end of session types update ----------------//
 
         //---------------- start of user privileges update -----------------//
+        if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing) {
+          userPrivilegesModel.telephonyPriviledge.callInTeleconf.isSiteEnabled = true;
+        }
 
-        userPrivilegesModel.trainingCenter.handsOnLabAdmin.isSiteEnabled = ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab) ? true : false;
-        userPrivilegesModel.trainingCenter.handsOnLabAdmin.value = ("true" == userInfoJson.use_privilege.use_labAdmin) ? true : false;
+        if (userPrivilegesModel.telephonyPriviledge.callInTeleconf.isSiteEnabled) {
+          if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference) {
+            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled = true;
+            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
+            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled = true;
+          } else if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference) {
+            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
+            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled = true;
+          } else if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing) {
+            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
+          } else {
+            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled = true;
+          }
+        }
+
+        if (
+          ("true" == userInfoJson.use_privilege.use_teleConfCallIn) &&
+          ("true" == userInfoJson.use_privilege.use_teleConfTollFreeCallIn)
+        ) {
+          userPrivilegesModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 3;
+        } else if ("true" == userInfoJson.use_privilege.use_teleConfTollFreeCallIn) {
+          userPrivilegesModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 2;
+        } else {
+          userPrivilegesModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 1;
+        }
+
+        // TODO:
+        //   add code to update:
+        //     userPrivilegesModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled
+        //     userPrivilegesModel.eventCenter.optimizeBandwidthUsage.value
+
+        if ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab) {
+          userPrivilegesModel.trainingCenter.handsOnLabAdmin.isSiteEnabled = true;
+        }
+
+        if ("true" == userInfoJson.use_privilege.use_labAdmin) {
+          userPrivilegesModel.trainingCenter.handsOnLabAdmin.value = true;
+        }
         //---------------- start of user privileges update -----------------//
       }; // updateUserPrivilegesModel()
 
