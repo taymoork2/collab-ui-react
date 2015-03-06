@@ -1,0 +1,27 @@
+<div class="process-order-div" ng-if="isProcessing">
+	<i class='icon icon-spinner icon-2x'></i>
+	<p class="processorder-text"><span translate="processOrderPage.wait"></span></p>
+</div>
+
+<div class="modal fade" id="processOrderErrorModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" modal-transclude="">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+        </button>
+        <h3 class="modal-title">
+            <span translate="processOrderPage.info"></span>
+        </h3>
+      </div>
+      <div class="modal-body">
+        <p>{{message}}</p>
+      </div>
+      <div class="modal-footer">
+        <button id="deleteButton" class="btn btn-primary" data-dismiss="modal">
+          <span translate="common.ok"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

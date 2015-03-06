@@ -16,24 +16,28 @@ angular.module('Squared')
       $scope.isPartner = $location.search().isPartner;
       $scope.orderId = $location.search().orderId;
       var redirectUrl;
+      $scope.isProcessing = true;
 
       Orgservice.createOrg($scope.accountId, $scope.adminEmail, function (data, status) {
+        $scope.isProcessing = false;
         if (data.success === true) {
-          if ($scope.isPartner) {
+          if ($scope.isPartner === 'true') {
             redirectUrl = Config.getAdminPortalUrl();
           } else {
             redirectUrl = data.passwordResetUrl;
           }
+          $window.location.href = redirectUrl;
         } else {
           if (status === 409) {
             redirectUrl = Config.getAdminPortalUrl();
+            $window.location.href = redirectUrl;
           } else {
-            Notification.notify([$translate.instant('processOrderPage.errOrgCreation', {
+            $scope.message = $translate.instant('processOrderPage.errOrgCreation', {
               orderId: $scope.orderId
-            })], 'error');
+            });
+            $('#processOrderErrorModal').modal('show');
           }
         }
-        $window.location.href = redirectUrl;
       });
     }
 
