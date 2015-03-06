@@ -22,6 +22,8 @@ var inputEmail;
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 describe('List users flow', function () {
+  beforeEach(function() { browser.ignoreSynchronization = true; });
+  afterEach(function() { browser.ignoreSynchronization = false; });
 
   it('should login as non-sso admin user', function () {
     login.login(testuser.username, testuser.password);
@@ -31,14 +33,6 @@ describe('List users flow', function () {
   describe('Listing users on page load', function () {
     it('clicking on users tab should change the view', function () {
       navigation.clickUsers();
-    });
-
-    xit('should show first page of users', function () {
-      users.assertPage('1');
-    });
-
-    it('should list more than 0 users', function () {
-      users.assertResultsLength(0);
     });
   });
 
@@ -56,43 +50,7 @@ describe('List users flow', function () {
       utils.expectIsDisplayed(roles.rolesDetailsPanel);
 
       utils.click(roles.closeButton);
-    });
-  });
-
-  describe('Display user profile page', function(){
-    it('display user profile page when clicking on a user name', function(){
-      users.clickOnUser();
-      utils.expectIsDisplayed(users.userLink);
-    });
-  });
-
-  // Asserting pagination of users.
-  xdescribe('Paginating users returned', function () {
-    it('should paginate the total number of users', function () {
-      //pagination is only relevant if total matches exceeds 20
-      //Initial page
-      users.assertPage('1');
-      users.assertResultsLength(20);
-      //next page
-      users.nextPage.click();
-      users.assertPage('2');
-      users.assertResultsLength(0);
-      //previous page
-      users.prevPage.click();
-      users.assertPage('1');
-      users.assertResultsLength(20);
-      utils.search();
-    });
-  });
-
-  // Asserting sorting of users.
-  xdescribe('Sorting users', function () {
-    it('should sort users by name', function () {
-      users.assertSorting('name-sort');
-    });
-
-    it('should sort users by username', function () {
-      users.assertSorting('username-sort');
+      utils.expectIsNotDisplayed(users.userLink);
     });
   });
 
