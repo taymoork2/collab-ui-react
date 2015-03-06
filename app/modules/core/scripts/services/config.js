@@ -13,7 +13,9 @@ angular.module('Core')
         adminClientUrl: {
           dev: 'http://127.0.0.1:8000',
           integration: 'https://int-admin.projectsquared.com/',
-          prod: 'https://admin.projectsquared.com/'
+          prod: 'https://admin.projectsquared.com/',
+          sparkprod: 'https://admin.ciscospark.com/',
+          sparkint: 'https://int-admin.ciscospark.com/'
         },
 
         adminServiceUrl: {
@@ -49,7 +51,7 @@ angular.module('Core')
         oauthUrl: {
           ciRedirectUrl: 'redirect_uri=%s',
           oauth2Url: 'https://idbroker.webex.com/idb/oauth2/v1/',
-          oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=webex-squared',
+          oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s',
           oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
           oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
           oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope='
@@ -296,8 +298,20 @@ angular.module('Core')
           return getCurrentHostname() === 'admin.projectsquared.com';
         },
 
+        isSparkProd: function () {
+          return getCurrentHostname() === 'admin.ciscospark.com';
+        },
+
+        isSparkInt: function () {
+          return getCurrentHostname() === 'int-admin.ciscospark.com';
+        },
+
         getEnv: function () {
-          if (this.isDev()) {
+          if (this.isSparkInt()) {
+            return 'sparkint';
+          } else if (this.isSparkProd()) {
+            return 'sparkprod';
+          } else if (this.isDev()) {
             return 'dev';
           } else if (this.isIntegration()) {
             return 'integration';
@@ -341,7 +355,7 @@ angular.module('Core')
         },
 
         getOauthLoginUrl: function () {
-          var params = [this.oauthUrl.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()])];
+          var params = [this.oauthUrl.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()]), this.getOauthServiceType()];
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
@@ -358,6 +372,14 @@ angular.module('Core')
         getOauthAccessCodeUrl: function (refresh) {
           var params = [refresh];
           return Utils.sprintf(this.oauthUrl.oauth2AccessCodeUrlPattern, params);
+        },
+
+        getOauthServiceType: function () {
+          if (this.getEnv() === 'sparkint' || this.getEnv() === 'sparkprod') {
+            return 'spark';
+          } else {
+            return 'webex-squared';
+          }
         },
 
         getLogoutUrl: function () {
