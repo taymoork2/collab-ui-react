@@ -103,7 +103,7 @@ var UsersPage = function() {
   };
 
   this.clickOnUser = function () {
-    element.all(by.repeater('row in renderedRows')).get(0).click();
+    utils.click(element.all(by.repeater('row in renderedRows')).first());
   };
 
   this.assertPage = function (page) {

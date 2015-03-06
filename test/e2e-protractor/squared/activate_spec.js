@@ -76,6 +76,7 @@ function setup(deviceUA) {
 
 describe('Self Registration Activation Page', function() {
 
+
   var iosData = setup(config.deviceUserAgent.iPhone);
   var androidData = setup(config.deviceUserAgent.android);
 
@@ -98,6 +99,13 @@ describe('Self Registration Activation Page', function() {
 
     it('should display without admin controls on navigation bar', function() {
       browser.get('#/activate?eqp=' + encodeURIComponent(iosData.encryptedQueryParam));
+      navigation.expectAdminSettingsNotDisplayed();
+    });
+
+    it('should display without admin controls on navigation bar', function() {
+      var url = '#/activate?eqp=' + encodeURIComponent(iosData.encryptedQueryParam);
+      browser.get(url);
+      navigation.expectCurrentUrl(url);
       navigation.expectAdminSettingsNotDisplayed();
     });
 
