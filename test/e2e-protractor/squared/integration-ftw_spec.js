@@ -14,6 +14,9 @@ var testuser = {
 
 describe('First Time Wizard', function() {
 
+  beforeEach(function() { browser.ignoreSynchronization = true; });
+  afterEach(function() { browser.ignoreSynchronization = false; });
+
   it('should login as an admin user', function(){
     login.login(testuser.username, testuser.password);
   });

@@ -35,10 +35,8 @@ angular.module('Core')
         $http.get(authUrl)
           .success(function (data) {
             Authinfo.initialize(data);
-            //get Account services for org
             AccountService.getAccount(Authinfo.getOrgId(), function (data, status) {
               if (data.success) {
-                console.log('Returned from account service call....');
                 Authinfo.updateAccountInfo(data, status);
                 deferred.resolve();
               }

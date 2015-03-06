@@ -34,11 +34,17 @@ var SupportPage = function(){
   };
 
   this.assertResultsLength = function(size) {
-    //utils.expectIsDisplayed(element(by.binding('row.entity')));
     element.all(by.repeater('row in renderedRows')).then(function(rows) {
-      console.log(rows.length);
       expect(rows.length).toBeGreaterThan(size);
     });
+  };
+
+  this.searchAndVerifyResult = function (query, assertion) {
+    assertion || (assertion = query);
+    this.logSearchField.clear();
+    this.logSearchField.sendKeys(query);
+    utils.click(support.logSearchBtn);
+    utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', assertion)));
   };
 
 };
