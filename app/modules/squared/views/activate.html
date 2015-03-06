@@ -1,34 +1,22 @@
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<br/>
 <div id="webDiv" ng-show="Utils.isWeb()">
+	<div id="provisionSuccess" ng-show="result.provisionSuccess">
+		<p>Thank you for verifying your account. You can now return to the Project Squared app on your mobile device and complete the registration.</p>
+	</div>
 
-<div id="provisionSuccess" ng-show="result.provisionSuccess">
-	<p>Thank you for verifying your account. You can now return to the Project Squared app on your mobile device and complete the registration.</p>
+	<div id="codeExpired" ng-show="result.codeExpired">
+		<p class="activate-error">The link/code to activate {{deviceName}} to Squared has expired!</p>
+		<p>You can request a new code to activate Squared on {{deviceName}} for {{userEmail}} account by clicking on the link below:</p>
+		<div id="sendCodeLink" class="btn-link pull-left" ng-click="resendCode()">Send me a new activation code</div>
+	</div>
 
-</div>
+	<div id="resendSuccess" ng-show="result.resendSuccess">
+		<p>A new confirmation code has been sent to your work email address: {{userEmail}}</p>
+		<p>Please use this last code we sent you to activate Squared.</p>
+		<div id="testdata" eqp={{eqp}}>
+	</div>
 
-<div id="codeExpired" ng-show="result.codeExpired">
-	<p class="activate-error">The link/code to activate {{deviceName}} to Squared has expired!</p>
-
-	<p>You can request a new code to activate Squared on {{deviceName}} for {{userEmail}} account by clicking on the link below:</p>
-
-	<div id="sendCodeLink" class="btn-link pull-left" ng-click="resendCode()">Send me a new activation code</div>
-
-</div>
-
-<div id="resendSuccess" ng-show="result.resendSuccess">
-	<p>A new confirmation code has been sent to your work email address: {{userEmail}}</p>
-	<p>Please use this last code we sent you to activate Squared.</p>
-
-	<div id="testdata" eqp={{eqp}}>
-
-</div>
-
-<div id="exception" ng-show="result.errmsg">
-  <br>
-	<p>Unexpected error processing request. {{result.errmsg}}</p>
-</div>
-
+	<div id="exception" ng-show="result.errmsg">
+	  <br>
+		<p>Unexpected error processing request. {{result.errmsg}}</p>
+	</div>
 </div>
