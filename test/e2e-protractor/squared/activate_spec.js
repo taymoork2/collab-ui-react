@@ -85,7 +85,6 @@ describe('Self Registration Activation Page', function() {
       browser.get('#/activate?eqp=' + encodeURIComponent(iosData.encryptedQueryParam));
       navigation.expectAdminSettingsNotDisplayed();
     });
-
     it('should activate user and display success info', function() {
       utils.expectIsDisplayed(activate.provisionSuccess);
       utils.expectIsNotDisplayed(activate.codeExpired);
@@ -142,5 +141,4 @@ describe('Self Registration Activation Page', function() {
       deleteUtils.deleteUser(androidData.body.email);
     });
   });
-
 });
