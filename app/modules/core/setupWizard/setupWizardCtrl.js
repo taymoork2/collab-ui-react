@@ -25,11 +25,11 @@ angular.module('Core')
           name: 'init',
           template: 'modules/core/setupWizard/enterprise.init.tpl.html'
         }, {
-          name: 'importIdp',
-          template: 'modules/core/setupWizard/enterprise.importIdp.tpl.html'
-        }, {
           name: 'exportMetadata',
           template: 'modules/core/setupWizard/enterprise.exportMetadata.tpl.html'
+        }, {
+          name: 'importIdp',
+          template: 'modules/core/setupWizard/enterprise.importIdp.tpl.html'
         }, {
           name: 'testSSO',
           template: 'modules/core/setupWizard/enterprise.testSSO.tpl.html'

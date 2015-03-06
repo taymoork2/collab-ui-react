@@ -885,5 +885,8 @@
     "overAllUtil": "Overall Utilization",
     "average": "Average",
     "bridgeUtilization": "Bridge By Bridge Utilization"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours."
   }
 }

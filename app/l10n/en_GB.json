@@ -183,6 +183,9 @@
     "success": "User successfully updated.",
     "error": "User update failed."
   },
+  "processOrderPage": {
+    "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours."
+  },
   "supportPage": {
     "subtitleLogs": "Search for logs",
     "listlogsbtn": "Search",

@@ -386,6 +386,10 @@ angular.module('Core')
           return this.logoutUrl + encodeURIComponent(this.adminClientUrl[this.getEnv()]);
         },
 
+        getAdminPortalUrl: function () {
+          return this.adminClientUrl[this.getEnv()];
+        },
+
         getSSOSetupUrl: function () {
           return this.ssoSetupUrl;
         },

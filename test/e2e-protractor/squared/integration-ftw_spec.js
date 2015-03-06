@@ -44,9 +44,9 @@ describe('First Time Wizard', function() {
     utils.expectText(wizard.mainviewSubtitle, 'Single Sign-On');
     utils.click(wizard.radiobuttons.last());
     utils.click(wizard.nextBtn);
-    utils.expectText(wizard.mainviewSubtitle, 'Import IdP Metadata');
-    utils.click(wizard.nextBtn);
     utils.expectText(wizard.mainviewSubtitle, 'Export Cloud Metadata');
+    utils.click(wizard.nextBtn);
+    utils.expectText(wizard.mainviewSubtitle, 'Import IdP Metadata');
     utils.click(wizard.nextBtn);
     utils.expectText(wizard.mainviewSubtitle, 'Test SSO Setup');
     utils.click(wizard.finishBtn);
