@@ -2,11 +2,15 @@
      id="webexUserSettingsPage"
      class="hidden" >
      
-  <!--Start of Service section -->
+  <!--Start of Session Enablement section -->
   <table>
     <tr>
+      <td width="15">
+        &nbsp;
+      </td>
+      
       <td>
-        <b>{{WebExUserSettings.userPrivilegesModel.label}}</b><br>
+        <b>{{WebExUserSettings.userPrivilegesModel.sessionEnablementTitle}}</b><br>
       </td>
     </tr>
     
@@ -15,10 +19,12 @@
         &nbsp;
       </td>
     </tr>
-    
-    <!-- Start of Meeting Center -->
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.meetingCenter.isEnabled" id="MC">
-      <td>
+  </table>
+  
+  <!-- Start of Meeting Center -->
+  <table ng-show="WebExUserSettings.userPrivilegesModel.meetingCenter.isSiteEnabled">
+   <tr id="MC">
+      <td colspan="2">
         <table>
           <tr>
             <td width="15">
@@ -26,7 +32,7 @@
             </td>
             
             <td>
-              {{WebExUserSettings.userPrivilegesModel.meetingCenter.name}}:
+              {{WebExUserSettings.userPrivilegesModel.meetingCenter.label}}:
             </td>
           </tr>
             
@@ -56,21 +62,25 @@
         </table>
       </td>
     </tr>
-    <!-- End of Meeting Center -->
+  </table>
+  <!-- End of Meeting Center -->
     
-    <!-- Start of Collab Room Meeting -->
-    <!--
+  <!-- Start of Collab Room Meeting -->
+  <!--
+  <table>
     <tr>
       <td colspan=2>
         &nbsp;
       </td>
     </tr>
-    -->
-    <!-- End of Collab Room Meeting -->
+  </table>
+  -->
+  <!-- End of Collab Room Meeting -->
     
-    <!-- Start of Event Center -->
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.eventCenter.isEnabled" id="EC">
-      <td>
+  <!-- Start of Event Center -->
+  <table ng-show="WebExUserSettings.userPrivilegesModel.eventCenter.isSiteEnabled">
+    <tr id="EC">
+      <td colspan="2">
         <table>
           <tr>
             <td width="15">
@@ -78,7 +88,7 @@
             </td>
             
             <td>
-              {{WebExUserSettings.userPrivilegesModel.eventCenter.name}}:
+              {{WebExUserSettings.userPrivilegesModel.eventCenter.label}}:
             </td>
           </tr>
             
@@ -108,11 +118,13 @@
         </table>
       </td>
     </tr>
-    <!-- End of Event Center -->
+  </table>
+  <!-- End of Event Center -->
     
-    <!-- Start of Support Center -->
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.supportCenter.isEnabled" id="SC">
-      <td>
+  <!-- Start of Support Center -->
+  <table ng-show="WebExUserSettings.userPrivilegesModel.supportCenter.isSiteEnabled">
+    <tr id="SC">
+      <td colspan="2">
         <table>
           <tr>
             <td width="15">
@@ -120,7 +132,7 @@
             </td>
             
             <td>
-              {{WebExUserSettings.userPrivilegesModel.supportCenter.name}}:
+              {{WebExUserSettings.userPrivilegesModel.supportCenter.label}}:
             </td>
           </tr>
             
@@ -150,11 +162,13 @@
         </table>
       </td>
     </tr>
-    <!-- End of Support Center -->
+  </table>
+  <!-- End of Support Center -->
     
-    <!-- Start of Training Center -->
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.trainingCenter.isEnabled" id="TC">
-      <td>
+  <!-- Start of Training Center -->
+  <table ng-show="WebExUserSettings.userPrivilegesModel.trainingCenter.isSiteEnabled">
+    <tr id="TC">
+      <td colspan="2">
         <table>
           <tr>
             <td width="15">
@@ -162,7 +176,7 @@
             </td>
             
             <td>
-              {{WebExUserSettings.userPrivilegesModel.trainingCenter.name}}:
+              {{WebExUserSettings.userPrivilegesModel.trainingCenter.label}}:
             </td>
           </tr>
             
@@ -192,13 +206,34 @@
         </table>
       </td>
     </tr>
-    <!-- End of Training Center -->
   </table>
+  <!-- End of Training Center -->
   
   <hr />
-  <!-- End of Service section -->
+  <!-- End of Session Enablement section -->
+  
+  <!-- Begin of User Privileges section -->
+  <!--
+  <table>
+    <tr>
+      <td width="15">
+        &nbsp;
+      </td>
+      
+      <td>
+        <b>{{WebExUserSettings.userPrivilegesModel.userPrivilegesTitle}}</b><br>
+      </td>
+    </tr>
     
-  <!-- Start of General section -->
+    <tr>
+      <td>
+        &nbsp;
+      </td>
+    </tr>
+  </table>
+  -->
+    
+  <!-- Start of Privilege - General section -->
   <!--
   <table>
     <tr>
@@ -252,9 +287,9 @@
   
   <hr />
   -->
-  <!-- END of General section -->
+  <!-- END of Privilege - General section -->
 
-  <!-- Start of Telephony Privilege section -->
+  <!-- Start of Privilege - Telephony Privilege section -->
   <!--
   <table>
     <tr>
@@ -398,39 +433,9 @@
 
   <hr />
   -->
-  <!-- End  of Telephony Privilege section -->
+  <!-- End  of Privilege - Telephony Privilege section -->
 
-  <!-- Start of Training Center section -->
-  <!--
-  <table>
-    <tr>
-      <td colspan=3>
-        <b>{{WebExUserSettings.userPrivilegesModel.trainingCenter.label}}</b>
-      </td>
-    </tr>
-    
-    <tr>
-      <td colspan=3>
-        &nbsp;
-      </td>
-    </tr>
-
-    <tr>
-      <td colspan=1>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.label}}>
-        </cs-checkbox>
-      </td>
-    </tr>
-  </table>
-  
-  <hr />
-  -->
-  <!-- End of Training Center section -->
-
-  <!-- Start of Event Center section -->
+  <!-- Start of Privilege - Event Center section -->
   <!--
   <table>
     <tr>
@@ -458,8 +463,51 @@
   
   <hr />
   -->
-  <!-- End of Event Center section -->
+  <!-- End of Privilege - Event Center section -->
   
+  <!-- Start of Privilege - Training Center section -->
+  <!--
+  <span ng-show="WebExUserSettings.userPrivilegesModel.trainingCenter.isSiteEnabled">
+    <table>
+      <tr>
+        <td width="15">
+          &nbsp;
+        </td>
+        
+        <td>
+          {{WebExUserSettings.userPrivilegesModel.trainingCenter.label}}
+        </td>
+      </tr>
+      
+      <tr>
+        <td colspan=2>
+          &nbsp;
+        </td>
+      </tr>
+  
+      <tr>
+        <td width="15">
+          &nbsp;
+        </td>
+
+        <td>
+          <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.id}}
+                       name={{WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.id}}
+                       ng-model="WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.value"
+                       ng-disabled="!WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.isSiteEnabled"
+                       cklabel={{WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.label}}>
+          </cs-checkbox>
+        </td>
+      </tr>
+    </table>
+    
+    <hr />
+  </span>
+  -->
+  <!-- End of Privilege - Training Center section -->
+  <!-- End of User Privileges section -->
+
+
   <!-- ACTION BUTTONS -->
   <span>
     <p align="right">

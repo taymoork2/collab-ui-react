@@ -16,47 +16,47 @@
         // alert(funcName);
 
         var userPrivilegesModel = {
-          label: "Services",
+          sessionEnablementTitle: "Session Enablement",
+          userPrivilegesTitle: "User Privileges",
+
           sessionTypes: null,
 
           meetingCenter: {
-            name: "Meeting Center",
+            label: "Meeting Center",
             serviceType: "MeetingCenter",
-            isEnabled: false
+            isSiteEnabled: false
           }, // meetingCenter
 
           trainingCenter: {
-            name: "Training Center",
+            label: "Training Center",
             serviceType: "TrainingCenter",
-            isEnabled: false,
+            isSiteEnabled: false,
 
-            /*
             handsOnLabAdmin: {
               id: "handsOnLabAdmin",
               label: "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
-              value: true
+              value: false,
+              isSiteEnabled: false
             }
-            */
           }, // trainingCenter
 
           eventCenter: {
-            name: "Event Center",
+            label: "Event Center",
             serviceType: "EventCenter",
-            isEnabled: false,
+            isSiteEnabled: false,
 
-            /*
             optimizeBandwidthUsage: {
               id: "optimizeBandwidthUsage",
               label: "Optimized bandwidth usage for attendees within the same network",
-              value: true
+              value: false,
+              isSiteEnabled: false
             }
-            */
           }, // eventCenter
 
           supportCenter: {
-            name: "Support Center",
+            label: "Support Center",
             serviceType: "SupportCenter",
-            isEnabled: false
+            isSiteEnabled: false
           }, // supportCenter
 
           /*
@@ -231,19 +231,19 @@
         var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
 
         siteServiceTypes.forEach(function (siteServiceType) {
-          if (siteServiceType == userPrivilegesModel.meetingCenter.name) {
-            userPrivilegesModel.meetingCenter.isEnabled = true;
-          } else if (siteServiceType == userPrivilegesModel.eventCenter.name) {
-            userPrivilegesModel.eventCenter.isEnabled = true;
-          } else if (siteServiceType == userPrivilegesModel.trainingCenter.name) {
-            userPrivilegesModel.trainingCenter.isEnabled = true;
-          } else if (siteServiceType == userPrivilegesModel.supportCenter.name) {
-            userPrivilegesModel.supportCenter.isEnabled = true;
+          if (siteServiceType == userPrivilegesModel.meetingCenter.label) {
+            userPrivilegesModel.meetingCenter.isSiteEnabled = true;
+          } else if (siteServiceType == userPrivilegesModel.eventCenter.label) {
+            userPrivilegesModel.eventCenter.isSiteEnabled = true;
+          } else if (siteServiceType == userPrivilegesModel.trainingCenter.label) {
+            userPrivilegesModel.trainingCenter.isSiteEnabled = true;
+          } else if (siteServiceType == userPrivilegesModel.supportCenter.label) {
+            userPrivilegesModel.supportCenter.isSiteEnabled = true;
           }
         }); // siteServiceTypes.forEach()
         //---------------- end of center status update ----------------//
 
-        //---------------- start of session types update update ----------------//
+        //---------------- start of session types update ----------------//
         var siteMeetingTypes = meetingTypesInfoJson.mtgtype_meetingType;
         var sessionTypes = new Array;
 
@@ -326,7 +326,13 @@
             }
           }); // userPrivilegesModel.sessionTypes.forEach()
         }); // enabledSessionTypesIDs.forEach()
-        //---------------- end of session types update update ----------------//
+        //---------------- end of session types update ----------------//
+
+        //---------------- start of user privileges update -----------------//
+
+        userPrivilegesModel.trainingCenter.handsOnLabAdmin.isSiteEnabled = ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab) ? true : false;
+        userPrivilegesModel.trainingCenter.handsOnLabAdmin.value = ("true" == userInfoJson.use_privilege.use_labAdmin) ? true : false;
+        //---------------- start of user privileges update -----------------//
       }; // updateUserPrivilegesModel()
 
       this.updateUserSettings = function () {
