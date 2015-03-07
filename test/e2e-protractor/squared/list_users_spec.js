@@ -61,15 +61,10 @@ describe('List users flow', function () {
   // Asserting search users.
   describe('search users on page', function () {
     it('should show first page of users based on search string', function () {
-      utils.search(testuser.searchStr);
+      utils.searchAndClick(testuser.searchStr);
     });
-  });
-
-  describe('Display user profile', function () {
     it('display user profile page when clicking on the user link', function () {
-      users.clickOnUser();
       utils.click(users.userLink);
-
       navigation.expectCurrentUrl('/userprofile');
       utils.expectIsDisplayed(users.fnameField);
       utils.expectIsDisplayed(users.lnameField);
