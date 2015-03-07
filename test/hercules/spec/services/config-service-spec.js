@@ -6,10 +6,12 @@ describe('ConfigService', function () {
   var $httpBackend, Service, win;
   var rootPath = 'https://hercules-a.wbx2.com';
 
-  beforeEach(function() {
+  beforeEach(function () {
     module(function ($provide) {
       win = {
-        location: { search: '' }
+        location: {
+          search: ''
+        }
       };
       $provide.value('$window', win);
     });
@@ -19,20 +21,20 @@ describe('ConfigService', function () {
     Service = _ConfigService_;
   }));
 
-  it('should return the correct url', function() {
+  it('should return the correct url', function () {
     expect(Service.getUrl()).toBe(rootPath + '/v1');
   });
 
-  it('should be possible to override url', function() {
+  it('should be possible to override url', function () {
     win.location.search = 'hercules-url=fake-url'
     expect(Service.getUrl()).toBe('fake-url');
   });
 
-  it('should return uss url', function() {
+  it('should return uss url', function () {
     expect(Service.getUSSUrl()).toBe('https://hercules-a.wbx2.com/uss/api/v1');
   });
 
-  it('should be possible to override USS url', function() {
+  it('should be possible to override USS url', function () {
     win.location.search = 'hercules-uss-url=fake-url'
     expect(Service.getUSSUrl()).toBe('fake-url');
   });

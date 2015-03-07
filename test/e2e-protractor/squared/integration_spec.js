@@ -24,24 +24,24 @@ var notsqinviteruser = {
 // - State is conserved between each describe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
-describe('App flow', function() {
+describe('App flow', function () {
 
-  beforeEach(function() {
+  beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     browser.ignoreSynchronization = false;
   });
 
-  it('should just login', function() {
+  it('should just login', function () {
     login.login(testuser.username, testuser.password);
   });
 
   // Navigation bar
-  describe('Navigation Bar', function() {
+  describe('Navigation Bar', function () {
 
-    it('should display correct tabs for user based on role', function() {
+    it('should display correct tabs for user based on role', function () {
       expect(navigation.getTabCount()).toBe(6);
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
       expect(navigation.usersTab.isDisplayed()).toBeTruthy();
@@ -51,25 +51,25 @@ describe('App flow', function() {
       expect(navigation.developmentTab.isDisplayed()).toBeTruthy();
     });
 
-    it('clicking on users tab should change the view', function() {
+    it('clicking on users tab should change the view', function () {
       navigation.clickUsers();
     });
 
-    xit('should still be logged in', function() {
+    xit('should still be logged in', function () {
       expect(navigation.settings.isPresent()).toBeTruthy();
       expect(navigation.feedbackButton.isPresent()).toBeTruthy();
     });
 
-    xit('should display the username and the orgname', function() {
+    xit('should display the username and the orgname', function () {
       expect(navigation.username.getText()).toContain(testuser.username);
       expect(navigation.orgname.getText()).toContain(testuser.orgname);
     });
 
   });
 
-  describe('Switching tabs', function() {
+  describe('Switching tabs', function () {
 
-    it('clicking on home tab should change the view', function() {
+    it('clicking on home tab should change the view', function () {
       navigation.clickHome();
       expect(landing.packages.isDisplayed()).toBeTruthy();
       expect(landing.devices.isDisplayed()).toBeTruthy();
@@ -85,11 +85,11 @@ describe('App flow', function() {
     //   navigation.expectCurrentUrl('/users');
     // });
 
-    it('clicking on system health panel should open to status page in a new tab', function() {
+    it('clicking on system health panel should open to status page in a new tab', function () {
       navigation.clickHome();
       var appWindow = browser.getWindowHandle();
       landing.monitoringRows.first().click();
-      browser.getAllWindowHandles().then(function(handles) {
+      browser.getAllWindowHandles().then(function (handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
         navigation.expectDriverCurrentUrl('status.projectsquared.com/');
@@ -98,7 +98,7 @@ describe('App flow', function() {
       });
     });
 
-    it('clicking on orgs tab should change the view', function() {
+    it('clicking on orgs tab should change the view', function () {
       navigation.clickOrganization();
       expect(manage.displayName.isDisplayed()).toBeTruthy();
       expect(manage.estimatedSize.isDisplayed()).toBeTruthy();
@@ -108,7 +108,7 @@ describe('App flow', function() {
       expect(manage.refreshButton.isDisplayed()).toBeTruthy();
     });
 
-    it('clicking on reports tab should change the view', function() {
+    it('clicking on reports tab should change the view', function () {
       navigation.clickReports();
       //expect(reports.entitlements.isDisplayed()).toBeTruthy();
       expect(reports.onboarding.isDisplayed()).toBeTruthy();
@@ -117,20 +117,20 @@ describe('App flow', function() {
       expect(reports.activeUsers.isDisplayed()).toBeTruthy();
     });
 
-    it('clicking on users tab should change the view', function() {
+    it('clicking on users tab should change the view', function () {
       navigation.clickUsers();
     });
   });
 
-  describe('Home data refresh', function() {
+  describe('Home data refresh', function () {
 
-    it('should load refresh directive template', function() {
+    it('should load refresh directive template', function () {
       navigation.clickHome();
       expect(landing.reloadedTime.isDisplayed()).toBeTruthy();
       expect(landing.refreshData.isDisplayed()).toBeTruthy();
     });
 
-    it('should load cached values into directive when switching tabs', function() {
+    it('should load cached values into directive when switching tabs', function () {
       navigation.clickUsers();
       navigation.clickHome();
 
@@ -157,15 +157,15 @@ describe('App flow', function() {
     // });
   });
 
-  describe('Reports data refresh', function() {
+  describe('Reports data refresh', function () {
 
-    it('should load refresh directive template', function() {
+    it('should load refresh directive template', function () {
       navigation.clickReports();
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
     });
 
-    it('should load cached values into directive when switching tabs', function() {
+    it('should load cached values into directive when switching tabs', function () {
       navigation.clickUsers();
       navigation.clickReports();
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
@@ -183,7 +183,7 @@ describe('App flow', function() {
       expect(reports.onboarding.isDisplayed()).toBeTruthy();
     });
 
-    it('should load new values and update time when clicking refresh', function() {
+    it('should load new values and update time when clicking refresh', function () {
       reports.refreshButton.click();
       expect(reports.refreshData.isDisplayed()).toBeTruthy();
       expect(reports.reloadedTime.isDisplayed()).toBeTruthy();
@@ -202,40 +202,40 @@ describe('App flow', function() {
   });
 
   // Log Out
-  describe('Log Out', function() {
-    it('should log out', function() {
+  describe('Log Out', function () {
+    it('should log out', function () {
       navigation.logout();
     });
   });
 
   //Log in with a user with no SquaredInviter Entitlement
-  xdescribe('No SquaredInviter Entitlement', function() {
+  xdescribe('No SquaredInviter Entitlement', function () {
     // Logging in. Write your tests after the login flow is complete.
-    describe('Login as sqtest-admin user', function() {
+    describe('Login as sqtest-admin user', function () {
 
-      it('should login', function() {
+      it('should login', function () {
         login.login(notsqinviteruser.username, notsqinviteruser.password);
       });
 
-      it('should display correct tabs for user based on role', function() {
+      it('should display correct tabs for user based on role', function () {
         expect(navigation.getTabCount()).toBe(5);
         expect(navigation.homeTab.isDisplayed()).toBeTruthy();
         expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
         expect(navigation.manageTab.isDisplayed()).toBeTruthy();
       });
 
-      it('clicking on users tab should change the view', function() {
+      it('clicking on users tab should change the view', function () {
         navigation.clickUsers();
         navigation.expectCurrentUrl('/users');
       });
 
-      it('click on invite subtab should show add users', function() {
+      it('click on invite subtab should show add users', function () {
         users.addUsers.click();
         expect(users.listPanel.isDisplayed()).toBeFalsy();
         expect(users.managePanel.isDisplayed()).toBeTruthy();
       });
 
-      it('should initialize users page for add/entitle/invite users with disabled invite button', function() {
+      it('should initialize users page for add/entitle/invite users with disabled invite button', function () {
         expect(users.subTitleAdd.isDisplayed()).toBeTruthy();
         expect(users.subTitleEnable.isDisplayed()).toBeFalsy();
         expect(users.subTitleAdd.getText()).toBe('Manage users');
@@ -244,7 +244,7 @@ describe('App flow', function() {
         expect(users.inviteButton.isEnabled()).toBeFalsy();
       });
 
-      it('should log out', function() {
+      it('should log out', function () {
         navigation.logout();
       });
     });

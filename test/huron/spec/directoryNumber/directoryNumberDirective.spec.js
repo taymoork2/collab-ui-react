@@ -1,17 +1,17 @@
 'use strict';
 
-describe('Directive: ucDirectoryNumber', function() {
+describe('Directive: ucDirectoryNumber', function () {
   var $compile, $rootScope;
 
   beforeEach(module('wx2AdminWebClientApp'));
 
-  beforeEach(inject(function($injector, _$compile_, _$rootScope_){
+  beforeEach(inject(function ($injector, _$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $injector.get('$httpBackend').when('GET', 'l10n/en_US.json').respond({});
   }));
 
-  it('replaces the element with the appropriate content', function() {
+  it('replaces the element with the appropriate content', function () {
     var element = $compile("<uc-directory-number/>")($rootScope);
     $rootScope.$digest();
 

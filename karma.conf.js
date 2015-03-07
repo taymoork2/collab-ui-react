@@ -36,10 +36,12 @@ module.exports = function (config) {
 
     coverageReporter: {
       dir: 'coverage/unit',
-      reporters: [
-        {type: 'cobertura'},
-        {type: 'html', subdir: 'report-html'}
-      ]
+      reporters: [{
+        type: 'cobertura'
+      }, {
+        type: 'html',
+        subdir: 'report-html'
+      }]
     },
 
     // list of files / patterns to exclude

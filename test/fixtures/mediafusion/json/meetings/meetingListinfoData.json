@@ -1,40 +1,44 @@
 {
-	"success" : true,
-	"meetings" :
-	[{	"host": "Krishna", 
-		"meetingSubject": "Krishna Meeting",
-		"startDate": "Wed Jan 21 01:12:00 UTC 2015",
-		"meetingTime": "1 hr",
-		"resources": "Cloud",
-		"site": "www.webex.cisco.com",
-		"id" :"1"
-	},{ "host": "Naveen", 
-		"meetingSubject": "Krishna Meeting",
-		"startDate": "Wed Jan 21 01:12:00 UTC 2015",
-		"meetingTime": "1 hr",
-		"resources": "Cloud",
-		"site": "www.webex.cisco.com",
-		"id" :"2"
-	},{ "host": "Krishna", 
-		"meetingSubject": "Krishna Meeting",
-		"startDate": "Wed Jan 21 01:12:00 UTC 2015",
-		"meetingTime": "1 hr",
-		"resources": "Cloud",
-		"site": "www.webex.cisco.com",
-		"id" :"3"
-	},{ "host": "Krishna", 
-		"meetingSubject": "Krishna Meeting",
-		"startDate": "Wed Jan 21 01:12:00 UTC 2015",
-		"meetingTime": "1 hr",
-		"resources": "Cloud",
-		"site": "www.webex.cisco.com",
-		"id" :"4"
-	},{ "host": "Krishna", 
-		"meetingSubject": "Krishna Meeting",
-		"startDate": "Wed Jan 21 01:12:00 UTC 2015",
-		"meetingTime": "1 hr",
-		"resources": "Cloud",
-		"site": "www.webex.cisco.com",
-		"id" :"5"
-	}]
+  "success": true,
+  "meetings": [{
+    "host": "Krishna",
+    "meetingSubject": "Krishna Meeting",
+    "startDate": "Wed Jan 21 01:12:00 UTC 2015",
+    "meetingTime": "1 hr",
+    "resources": "Cloud",
+    "site": "www.webex.cisco.com",
+    "id": "1"
+  }, {
+    "host": "Naveen",
+    "meetingSubject": "Krishna Meeting",
+    "startDate": "Wed Jan 21 01:12:00 UTC 2015",
+    "meetingTime": "1 hr",
+    "resources": "Cloud",
+    "site": "www.webex.cisco.com",
+    "id": "2"
+  }, {
+    "host": "Krishna",
+    "meetingSubject": "Krishna Meeting",
+    "startDate": "Wed Jan 21 01:12:00 UTC 2015",
+    "meetingTime": "1 hr",
+    "resources": "Cloud",
+    "site": "www.webex.cisco.com",
+    "id": "3"
+  }, {
+    "host": "Krishna",
+    "meetingSubject": "Krishna Meeting",
+    "startDate": "Wed Jan 21 01:12:00 UTC 2015",
+    "meetingTime": "1 hr",
+    "resources": "Cloud",
+    "site": "www.webex.cisco.com",
+    "id": "4"
+  }, {
+    "host": "Krishna",
+    "meetingSubject": "Krishna Meeting",
+    "startDate": "Wed Jan 21 01:12:00 UTC 2015",
+    "meetingTime": "1 hr",
+    "resources": "Cloud",
+    "site": "www.webex.cisco.com",
+    "id": "5"
+  }]
 }

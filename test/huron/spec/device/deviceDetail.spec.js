@@ -14,15 +14,15 @@ describe('Controller: DeviceDetailCtrl', function () {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function($provide) {
+  beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function($modal) {
+  beforeEach(inject(function ($modal) {
     sinon.spy($modal, 'open');
   }));
 
-  beforeEach(inject(function(Notification) {
+  beforeEach(inject(function (Notification) {
     sinon.spy(Notification, "notify");
   }));
 
@@ -39,7 +39,7 @@ describe('Controller: DeviceDetailCtrl', function () {
       $scope: $scope,
       $modal: $modal
     });
-     $rootScope.$apply();
+    $rootScope.$apply();
   }));
 
   afterEach(function () {

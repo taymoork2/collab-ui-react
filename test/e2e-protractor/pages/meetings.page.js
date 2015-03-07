@@ -1,11 +1,11 @@
 'use strict'
 
-var MeetingsPage = function() {
+var MeetingsPage = function () {
 
   this.meetingPreviewLink = element(by.id('details-panel'));
   this.filterButtonArrow = element(by.css('.ngHeaderButtonArrow'));
-  this.decrementDayButton = element( by.css('[ng-click="decrementDay()"]'));
-  this.incrementDayButton = element( by.css('[ng-click="incrementDay()"]'));
+  this.decrementDayButton = element(by.css('[ng-click="decrementDay()"]'));
+  this.incrementDayButton = element(by.css('[ng-click="incrementDay()"]'));
 
   this.assertPage = function (page) {
     expect(this.currentPage.getText()).toBe(page);
@@ -17,7 +17,7 @@ var MeetingsPage = function() {
         expect(rows.length).toBeLessThanOrEqualTo(results);
       } else if (results === 0) {
         return expect(rows.length).toBeGreaterThan(results);
-      } else if (results > 50 ) {
+      } else if (results > 50) {
         return expect(rows.length).toBeGreaterThan(results);
       } else {
         expect(rows.length).toBe(results);
@@ -29,27 +29,27 @@ var MeetingsPage = function() {
     element.all(by.repeater('row in renderedRows')).get(0).click();
   };
 
-  this.clickOnFilter = function(){
+  this.clickOnFilter = function () {
     element(by.css('.ngHeaderButtonArrow')).click();
   };
 
-  this.provideFilterValues = function(valueToFilter) {
+  this.provideFilterValues = function (valueToFilter) {
     element(by.model('filterText')).sendKeys(valueToFilter);
   };
 
-  this.clearFilterValues = function() {
+  this.clearFilterValues = function () {
     element(by.model('filterText')).clear();
   };
 
-  this.scrollToBottom = function() {
+  this.scrollToBottom = function () {
     browser.executeScript('window.scrollTo(0,1000);');
   };
 
-  this.decrementDay = function(){
+  this.decrementDay = function () {
     this.decrementDayButton.click();
   };
 
-  this.incrementDay = function(){
+  this.incrementDay = function () {
     this.incrementDayButton.click();
   };
 

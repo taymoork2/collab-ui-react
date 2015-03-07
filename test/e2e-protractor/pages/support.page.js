@@ -1,6 +1,6 @@
 'use strict'
 
-var SupportPage = function(){
+var SupportPage = function () {
 
   this.logSearchField = element(by.id('logsearchfield'));
   this.logSearchBtn = element(by.id('logSearchBtn'));
@@ -27,14 +27,14 @@ var SupportPage = function(){
 
   this.locusIdSort = element(by.css('.colt1'));
 
-  this.getRowCount = function() {
-    return this.rowCount.then(function(rows){
+  this.getRowCount = function () {
+    return this.rowCount.then(function (rows) {
       return rows.length;
     });
   };
 
-  this.assertResultsLength = function(size) {
-    element.all(by.repeater('row in renderedRows')).then(function(rows) {
+  this.assertResultsLength = function (size) {
+    element.all(by.repeater('row in renderedRows')).then(function (rows) {
       expect(rows.length).toBeGreaterThan(size);
     });
   };

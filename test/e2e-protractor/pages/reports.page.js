@@ -1,6 +1,6 @@
 'use strict'
 
-var ReportsPage = function(){
+var ReportsPage = function () {
   // customer reports
   this.entitlements = element(by.id('avgEntitlementsdiv'));
   this.calls = element(by.id('avgCallsdiv'));
@@ -30,19 +30,19 @@ var ReportsPage = function(){
   this.customerSelect = element(by.id('customerFilter'));
   this.engagementRefreshDiv = element(by.id('engagementRefreshDiv'));
 
-  this.verifyReportTab = function(tabName) {
+  this.verifyReportTab = function (tabName) {
     expect(element(by.cssContainingText('h4', tabName)).isDisplayed()).toBeTruthy();
     expect(element(by.id(tabName.toLowerCase() + "Report")).isPresent()).toBeTruthy();
     expect(element(by.id(tabName.toLowerCase() + "RefreshDiv")).isPresent()).toBeTruthy();
   };
 
-  this.verifyOption = function(dropdown, option) {
+  this.verifyOption = function (dropdown, option) {
     var opt = dropdown.all(by.cssContainingText('option', option)).first();
     expect(opt.isPresent()).toBeTruthy();
     expect(opt.isDisplayed()).toBeTruthy();
   };
 
-  this.numOptions = function(dropdown) {
+  this.numOptions = function (dropdown) {
     return dropdown.all(by.css('option')).count();
   };
 }

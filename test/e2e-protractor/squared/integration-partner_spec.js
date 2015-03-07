@@ -9,27 +9,31 @@
 /* global notifications */
 /* global deleteTrialUtils */
 
-describe('Partner flow', function() {
+describe('Partner flow', function () {
   var orgId;
   var accessToken;
 
-  beforeEach(function() { browser.ignoreSynchronization = true; });
-  afterEach(function() { browser.ignoreSynchronization = false; });
+  beforeEach(function () {
+    browser.ignoreSynchronization = true;
+  });
+  afterEach(function () {
+    browser.ignoreSynchronization = false;
+  });
 
   // Logging in. Write your tests after the login flow is complete.
-  describe('Login as partner admin user', function() {
+  describe('Login as partner admin user', function () {
 
-    it('should login', function(done){
+    it('should login', function (done) {
       login.partnerlogin(partner.testuser.username, partner.testuser.password);
 
-      element(by.tagName('body')).evaluate('token').then(function(token){
+      element(by.tagName('body')).evaluate('token').then(function (token) {
         accessToken = token;
         expect(accessToken).not.toBeNull();
         done();
       });
     });
 
-    it('should display correct tabs for user based on role', function() {
+    it('should display correct tabs for user based on role', function () {
 
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
@@ -37,21 +41,21 @@ describe('Partner flow', function() {
       expect(navigation.getTabCount()).toBe(3);
     });
 
-    it('should display trials list', function() {
+    it('should display trials list', function () {
       utils.expectIsDisplayed(partner.trialsPanel);
     });
   }); //State is logged-in
 
-  describe('Add Partner Trial', function() {
+  describe('Add Partner Trial', function () {
 
-    it('should view all trials', function() {
+    it('should view all trials', function () {
       utils.click(partner.viewAllLink);
       navigation.expectCurrentUrl('/customers');
 
       utils.expectIsDisplayed(partner.customerList);
     });
 
-    it('should add a new trial', function(done){
+    it('should add a new trial', function (done) {
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
 
@@ -69,14 +73,14 @@ describe('Partner flow', function() {
 
       utils.expectIsDisplayed(partner.newTrialRow);
 
-      partner.newTrialRow.getAttribute('orgId').then(function(attr){
+      partner.newTrialRow.getAttribute('orgId').then(function (attr) {
         orgId = attr;
         expect(orgId).not.toBeNull();
         done();
       });
     }, 60000);
 
-    it('should edit an exisiting trial', function(){
+    it('should edit an exisiting trial', function () {
       utils.click(partner.newTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
@@ -95,14 +99,14 @@ describe('Partner flow', function() {
 
   });
 
-  describe('Partner launches customer portal', function(){
+  describe('Partner launches customer portal', function () {
 
-    it('Launch customer portal via preview panel and display first time wizard',function(){
+    it('Launch customer portal via preview panel and display first time wizard', function () {
       var appWindow = browser.getWindowHandle();
 
       utils.click(partner.launchCustomerPanelButton);
 
-      browser.getAllWindowHandles().then(function(handles) {
+      browser.getAllWindowHandles().then(function (handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
 
@@ -122,7 +126,7 @@ describe('Partner flow', function() {
       });
     });
 
-    it('Launch customer portal via dropdown and display partner managing org in partner filter',function(){
+    it('Launch customer portal via dropdown and display partner managing org in partner filter', function () {
       var appWindow = browser.getWindowHandle();
 
       utils.click(partner.exitPreviewButton);
@@ -131,7 +135,7 @@ describe('Partner flow', function() {
       utils.click(partner.actionsButton);
       utils.click(partner.launchCustomerButton);
 
-      browser.getAllWindowHandles().then(function(handles) {
+      browser.getAllWindowHandles().then(function (handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
         utils.expectIsDisplayed(navigation.tabs);
@@ -151,15 +155,15 @@ describe('Partner flow', function() {
 
   });
 
-  describe('Partner launches its orgs portal', function(){
+  describe('Partner launches its orgs portal', function () {
 
-      it('should launch partners org view',function(){
-        var appWindow = browser.getWindowHandle();
+    it('should launch partners org view', function () {
+      var appWindow = browser.getWindowHandle();
 
-        utils.expectIsDisplayed(navigation.userInfoButton);
-        navigation.launchPartnerOrgPortal();
+      utils.expectIsDisplayed(navigation.userInfoButton);
+      navigation.launchPartnerOrgPortal();
 
-        browser.getAllWindowHandles().then(function(handles) {
+      browser.getAllWindowHandles().then(function (handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
         navigation.expectDriverCurrentUrl('true');
@@ -168,45 +172,45 @@ describe('Partner flow', function() {
         navigation.expectDriverCurrentUrl('overview');
         browser.driver.close();
         browser.switchTo().window(appWindow);
-        });
       });
-
     });
 
-  describe('Partner landing page reports', function(){
+  });
 
-    it('should delete an exisiting org thus deleting trial', function(){
+  describe('Partner landing page reports', function () {
+
+    it('should delete an exisiting org thus deleting trial', function () {
       expect(deleteTrialUtils.deleteOrg(orgId, accessToken)).toEqual(200);
     });
 
-    it('should show the reports',function(){
+    it('should show the reports', function () {
       navigation.clickHome();
       utils.expectIsDisplayed(partner.entitlementsChart);
       expect(partner.entitlementsCount.getText()).toBeTruthy();
     });
 
-    it('should show active users chart',function(){
+    it('should show active users chart', function () {
       partner.activeUsersTab.click();
       utils.expectIsDisplayed(partner.activeUsersChart);
       utils.expectIsDisplayed(partner.activeUsersCount.getText());
     });
 
-    it('should show average calls chart',function(){
+    it('should show average calls chart', function () {
       partner.averageCallsTab.click();
       utils.expectIsDisplayed(partner.averageCallsChart);
       utils.expectIsDisplayed(partner.averageCallsCount.getText());
     });
 
-    it('should show content shared chart',function(){
+    it('should show content shared chart', function () {
       partner.contentSharedTab.click();
       utils.expectIsDisplayed(partner.contentSharedChart);
       utils.expectIsDisplayed(partner.contentSharedCount.getText());
     });
   });
 
-  describe('Reports Page', function() {
+  describe('Reports Page', function () {
 
-    it('should load cached values into directive when switching tabs', function() {
+    it('should load cached values into directive when switching tabs', function () {
       navigation.clickReports();
       utils.expectIsDisplayed(reports.refreshData);
       utils.expectIsDisplayed(reports.reloadedTime);
@@ -223,8 +227,8 @@ describe('Partner flow', function() {
   });
 
   // Log Out
-  describe('Log Out', function() {
-    it('should log out', function() {
+  describe('Log Out', function () {
+    it('should log out', function () {
       navigation.logout();
     });
   });

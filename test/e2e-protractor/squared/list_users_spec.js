@@ -22,8 +22,12 @@ var inputEmail;
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 describe('List users flow', function () {
-  beforeEach(function() { browser.ignoreSynchronization = true; });
-  afterEach(function() { browser.ignoreSynchronization = false; });
+  beforeEach(function () {
+    browser.ignoreSynchronization = true;
+  });
+  afterEach(function () {
+    browser.ignoreSynchronization = false;
+  });
 
   it('should login as non-sso admin user', function () {
     login.login(testuser.username, testuser.password);
@@ -61,8 +65,8 @@ describe('List users flow', function () {
     });
   });
 
-  describe('Display user profile', function(){
-    it('display user profile page when clicking on the user link', function(){
+  describe('Display user profile', function () {
+    it('display user profile page when clicking on the user link', function () {
       users.clickOnUser();
       utils.click(users.userLink);
 

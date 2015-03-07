@@ -24,21 +24,25 @@ var accounttestuser = {
   password: 'C1sc0123!',
 };
 
-describe('Add/Invite/Entitle User flow', function() {
-  beforeEach(function() { browser.ignoreSynchronization = true; });
-  afterEach(function() { browser.ignoreSynchronization = false; });
+describe('Add/Invite/Entitle User flow', function () {
+  beforeEach(function () {
+    browser.ignoreSynchronization = true;
+  });
+  afterEach(function () {
+    browser.ignoreSynchronization = false;
+  });
 
-  describe('Page initialization', function() {
+  describe('Page initialization', function () {
 
-    it('should login as pbr org admin', function(){
+    it('should login as pbr org admin', function () {
       login.login(invitetestuser.username, invitetestuser.password);
     });
 
-    it('clicking on users tab should change the view', function() {
+    it('clicking on users tab should change the view', function () {
       navigation.clickUsers();
     });
 
-    it('click on add button should pop up the adduser modal and display only invite button', function() {
+    it('click on add button should pop up the adduser modal and display only invite button', function () {
       utils.click(users.addUsers);
       utils.expectIsDisplayed(users.manageDialog);
       utils.expectIsDisplayed(users.onboardButton);
@@ -46,22 +50,22 @@ describe('Add/Invite/Entitle User flow', function() {
       utils.expectIsNotDisplayed(users.addButton);
     });
 
-    describe('Cancel', function() {
-      it('should clear user input field and error message', function() {
+    describe('Cancel', function () {
+      it('should clear user input field and error message', function () {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         utils.click(users.clearButton);
         utils.expectText(users.addUsersField, '');
       });
     });
 
-    it('should display error if no user is entered on invite', function() {
+    it('should display error if no user is entered on invite', function () {
       utils.click(users.onboardButton);
       notifications.assertError('Please enter valid user email(s).');
     });
 
-    describe('Invite users', function() {
+    describe('Invite users', function () {
       var inviteEmail;
-      it('should invite users successfully', function() {
+      it('should invite users successfully', function () {
         inviteEmail = utils.randomTestGmail();
         utils.click(users.clearButton);
         users.addUsersField.sendKeys(inviteEmail);
@@ -71,7 +75,7 @@ describe('Add/Invite/Entitle User flow', function() {
         deleteUtils.deleteUser(inviteEmail);
       });
 
-      it('should not invite users successfully if they are already entitled', function() {
+      it('should not invite users successfully if they are already entitled', function () {
         inviteEmail = invitetestuser.username;
         utils.click(users.clearButton);
         users.addUsersField.sendKeys(inviteEmail);
@@ -80,7 +84,7 @@ describe('Add/Invite/Entitle User flow', function() {
         notifications.assertError('already entitled');
       });
 
-      it('should invite users successfully from org which has autoentitlement flag disabled', function() {
+      it('should invite users successfully from org which has autoentitlement flag disabled', function () {
         inviteEmail = invitetestuser.usernameWithNoEntitlements;
         utils.click(users.clearButton);
         users.addUsersField.sendKeys(inviteEmail);
@@ -89,51 +93,51 @@ describe('Add/Invite/Entitle User flow', function() {
         notifications.assertSuccess('sent successfully');
       });
 
-      it('clicking on cancel button should close the modal', function() {
+      it('clicking on cancel button should close the modal', function () {
         utils.click(users.closeAddUsers);
         utils.expectIsNotDisplayed(users.manageDialog);
       });
 
-      it('should show active status on new user', function(){
+      it('should show active status on new user', function () {
         utils.search(inviteEmail);
         utils.expectText(users.userListStatus.first(), 'Invite Pending');
       });
 
-      it('should resend user invitation to pending user', function(){
+      it('should resend user invitation to pending user', function () {
         utils.click(users.userListAction);
         utils.click(users.resendInviteOption);
         notifications.assertSuccess('Successfully resent invitation');
       });
     });
 
-    it('should log out', function() {
+    it('should log out', function () {
       navigation.logout();
     });
   });
 
   //Add and Entitle User Flows
-  describe('Add and Entitle User Flows', function() {
+  describe('Add and Entitle User Flows', function () {
     var inputEmail = utils.randomTestGmail();
-    describe('Login as testuser admin and launch add users modal', function() {
-      it('should login as testuser admin', function(){
+    describe('Login as testuser admin and launch add users modal', function () {
+      it('should login as testuser admin', function () {
         login.login(testuser.username, testuser.password);
       });
 
-      it('should open add user modal in users page while clicking on the quick link', function() {
+      it('should open add user modal in users page while clicking on the quick link', function () {
         utils.click(landing.addUserQuickLink);
         navigation.expectCurrentUrl('/users');
         utils.expectIsDisplayed(users.manageDialog);
       });
     });
 
-    it('should display error if no user is entered on entitle', function() {
+    it('should display error if no user is entered on entitle', function () {
       utils.click(users.onboardButton);
       notifications.assertError('Please enter valid user email(s).');
       notifications.clearNotifications();
     });
 
-    describe('Add an existing user', function() {
-      it('should display input user email in results with already exists message', function() {
+    describe('Add an existing user', function () {
+      it('should display input user email in results with already exists message', function () {
         utils.click(users.clearButton);
         users.addUsersField.sendKeys(testuser.username);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
@@ -144,8 +148,8 @@ describe('Add/Invite/Entitle User flow', function() {
       });
     });
 
-    describe('Add a new user', function() {
-      it('should display input user email in results with success message', function() {
+    describe('Add a new user', function () {
+      it('should display input user email in results with success message', function () {
         utils.click(users.clearButton);
         users.addUsersField.sendKeys(inputEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
@@ -171,27 +175,27 @@ describe('Add/Invite/Entitle User flow', function() {
     //   });
     // });
 
-    describe('Attempt to un-entitle call-initiation', function() {
-    //   it('should display input user email in results with entitlement updated message', function() {
-    //     users.clearButton.click();
-    //     users.addUsersField.sendKeys(inputEmail);
-    //     users.addUsersField.sendKeys(protractor.Key.ENTER);
-    //     users.collabRadio1.click();
-    //     browser.sleep(1000);
-    //     users.manageCallInitiation.click();
-    //     users.onboardButton.click();
-    //     notifications.assertSuccess(inputEmail, 'sent successfully');
-    //     notifications.clearNotifications();
-    //   });
+    describe('Attempt to un-entitle call-initiation', function () {
+      //   it('should display input user email in results with entitlement updated message', function() {
+      //     users.clearButton.click();
+      //     users.addUsersField.sendKeys(inputEmail);
+      //     users.addUsersField.sendKeys(protractor.Key.ENTER);
+      //     users.collabRadio1.click();
+      //     browser.sleep(1000);
+      //     users.manageCallInitiation.click();
+      //     users.onboardButton.click();
+      //     notifications.assertSuccess(inputEmail, 'sent successfully');
+      //     notifications.clearNotifications();
+      //   });
 
-      it('clicking on cancel button should close the modal', function() {
+      it('clicking on cancel button should close the modal', function () {
         utils.click(users.closeAddUsers);
         utils.expectIsNotDisplayed(users.manageDialog);
       });
     });
 
-    describe('Verify call-initiation entitlement does not exist for user and re-entitle', function() {
-      it('should show call-initiation entitlement for the user', function() {
+    describe('Verify call-initiation entitlement does not exist for user and re-entitle', function () {
+      it('should show call-initiation entitlement for the user', function () {
         utils.search(inputEmail);
         utils.expectText(users.userListEnts.first(), inputEmail);
         utils.click(users.gridCell);
@@ -203,31 +207,31 @@ describe('Add/Invite/Entitle User flow', function() {
       });
     });
 
-    describe('Delete user used for entitle test', function() {
-      it('should delete added user', function() {
+    describe('Delete user used for entitle test', function () {
+      it('should delete added user', function () {
         deleteUtils.deleteUser(inputEmail);
       });
     });
 
-    it('should log out', function() {
+    it('should log out', function () {
       navigation.logout();
     });
 
   });
 
   //log in as huron user
-  xdescribe('Page initialization', function() {
+  xdescribe('Page initialization', function () {
     var addEmail = utils.randomTestGmail();
 
-    it('should login as huron admin', function(){
+    it('should login as huron admin', function () {
       login.login(hurontestuser.username, hurontestuser.password);
     });
 
-    it('clicking on users tab should change the view', function() {
+    it('clicking on users tab should change the view', function () {
       navigation.clickUsers();
     });
 
-    it('click on add button should pop up the adduser modal and display only invite button', function() {
+    it('click on add button should pop up the adduser modal and display only invite button', function () {
       utils.click(users.addUsers);
       utils.expectIsDisplayed(users.manageDialog);
       utils.expectIsDisplayed(users.onboardButton);
@@ -235,16 +239,16 @@ describe('Add/Invite/Entitle User flow', function() {
       utils.expectIsNotDisplayed(users.addButton);
     });
 
-    describe('Clear', function() {
-      it('should clear user input field and error message', function() {
+    describe('Clear', function () {
+      it('should clear user input field and error message', function () {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         utils.click(users.clearButton);
         utils.expectText(users.addUsersField, '');
       });
     });
 
-    describe('Add users', function() {
-      it('should add users successfully', function() {
+    describe('Add users', function () {
+      it('should add users successfully', function () {
         utils.click(users.clearButton);
         users.addUsersField.sendKeys(addEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
@@ -254,48 +258,48 @@ describe('Add/Invite/Entitle User flow', function() {
         notifications.assertSuccess(addEmail, 'added successfully');
         notifications.clearNotifications();
       });
-      it('clicking on cancel button should close the modal', function() {
+      it('clicking on cancel button should close the modal', function () {
         utils.click(users.closeAddUsers);
         utils.expectIsNotDisplayed(users.manageDialog);
       });
     });
 
-    describe('Delete user used for entitle test', function() {
-      it('should delete added user', function() {
+    describe('Delete user used for entitle test', function () {
+      it('should delete added user', function () {
         expect(deleteUtils.deleteUser(addEmail)).toEqual(200);
       });
     });
 
-    it('should log out', function() {
+    it('should log out', function () {
       navigation.logout();
     });
   });
 
   //log in as admin with an account
-  describe('Page initialization', function() {
+  describe('Page initialization', function () {
     var addEmail = utils.randomTestGmail();
 
-    it('should login as huron admin', function(){
+    it('should login as huron admin', function () {
       login.login(accounttestuser.username, accounttestuser.password);
     });
 
-    it('clicking on users tab should change the view', function() {
+    it('clicking on users tab should change the view', function () {
       navigation.clickUsers();
     });
 
-    it('click on add button should pop up the adduser modal and display only invite button', function() {
+    it('click on add button should pop up the adduser modal and display only invite button', function () {
       utils.click(users.addUsers);
       utils.expectIsDisplayed(users.manageDialog);
     });
 
-    describe('check account buckets', function() {
-      it('should clear user input field and error message', function() {
+    describe('check account buckets', function () {
+      it('should clear user input field and error message', function () {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         utils.click(users.clearButton);
         utils.expectText(users.addUsersField, '');
       });
 
-      it('click on enable services individually', function() {
+      it('click on enable services individually', function () {
         utils.click(users.collabRadio1);
         utils.expectIsDisplayed(users.messageLicenses);
         utils.expectIsDisplayed(users.conferenceLicenses);
@@ -303,8 +307,8 @@ describe('Add/Invite/Entitle User flow', function() {
       });
     });
 
-    describe('Add users', function() {
-      it('should add users successfully', function() {
+    describe('Add users', function () {
+      it('should add users successfully', function () {
         utils.click(users.clearButton);
         users.addUsersField.sendKeys(addEmail);
         users.addUsersField.sendKeys(protractor.Key.ENTER);
@@ -313,21 +317,20 @@ describe('Add/Invite/Entitle User flow', function() {
         notifications.assertSuccess(addEmail, 'sent successfully');
         notifications.clearNotifications();
       });
-      it('clicking on cancel button should close the modal', function() {
+      it('clicking on cancel button should close the modal', function () {
         utils.click(users.closeAddUsers);
         utils.expectIsNotDisplayed(users.manageDialog);
       });
     });
 
-    describe('Delete user used for entitle test', function() {
-      it('should delete added user', function() {
+    describe('Delete user used for entitle test', function () {
+      it('should delete added user', function () {
         deleteUtils.deleteUser(addEmail);
       });
     });
 
-    it('should log out', function() {
+    it('should log out', function () {
       navigation.logout();
     });
   });
 });
-

@@ -26,27 +26,39 @@ describe('DashboardAggregator', function () {
     type: 'c_mgmt'
   }];
 
-
   it('should not count disabled services', function () {
-    var mockClusterData = [
-      {
-        "id": "717edf8f-8f3b-11e4-9443-005056001397",
-        "name": "Test Cluster A",
-        "provisioning_data": {
-          "not_approved_packages": [ { "service": { "service_type": "c_cal" }, "tlp_url": "tlp", "version": "8.6-1.0.525" } ]
-        },
-        "services": [
-          {
-            "service_type": "c_cal",
-            "connectors": [
-              { "host": { "host_name": "gwydlvm1397" }, "state": "disabled", "alarms": [] },
-              { "host": { "host_name": "gwydlvm1397" }, "state": "disabled", "alarms": [] }
-            ]
-          }
-        ],
-        "hosts": [ { "host_name": "gwydlvm1397" } ]
-      }
-    ];
+    var mockClusterData = [{
+      "id": "717edf8f-8f3b-11e4-9443-005056001397",
+      "name": "Test Cluster A",
+      "provisioning_data": {
+        "not_approved_packages": [{
+          "service": {
+            "service_type": "c_cal"
+          },
+          "tlp_url": "tlp",
+          "version": "8.6-1.0.525"
+        }]
+      },
+      "services": [{
+        "service_type": "c_cal",
+        "connectors": [{
+          "host": {
+            "host_name": "gwydlvm1397"
+          },
+          "state": "disabled",
+          "alarms": []
+        }, {
+          "host": {
+            "host_name": "gwydlvm1397"
+          },
+          "state": "disabled",
+          "alarms": []
+        }]
+      }],
+      "hosts": [{
+        "host_name": "gwydlvm1397"
+      }]
+    }];
     // console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
 
     var aggregate = Service.aggregateServices(mockServiceData, Converter.convertClusters(mockClusterData));
@@ -59,47 +71,79 @@ describe('DashboardAggregator', function () {
     expect(calService.software_upgrades).toBe(0);
   });
 
-
   it('should aggregate global service status correctly', function () {
-    var mockClusterData = [
-      {
-        "id": "717edf8f-8f3b-11e4-9443-005056001397",
-        "name": "Test Cluster A",
-        "services": [
-          {
-            "service_type": "c_cal",
-            "connectors": [ { "host": { "host_name": "gwydlvm1397" }, "state": "running", "alarms": [] } ]
+    var mockClusterData = [{
+      "id": "717edf8f-8f3b-11e4-9443-005056001397",
+      "name": "Test Cluster A",
+      "services": [{
+        "service_type": "c_cal",
+        "connectors": [{
+          "host": {
+            "host_name": "gwydlvm1397"
           },
-          {
-            "service_type": "c_mgmt",
-            "connectors": [ { "host": { "host_name": "gwydlvm1397", "serial": "080716C6" }, "state": "running", "alarms": [] } ]
-          }
-        ],
-        "hosts": [ { "host_name": "gwydlvm1397" } ]
+          "state": "running",
+          "alarms": []
+        }]
+      }, {
+        "service_type": "c_mgmt",
+        "connectors": [{
+          "host": {
+            "host_name": "gwydlvm1397",
+            "serial": "080716C6"
+          },
+          "state": "running",
+          "alarms": []
+        }]
+      }],
+      "hosts": [{
+        "host_name": "gwydlvm1397"
+      }]
+    }, {
+      "id": "9e4ef7d7-89f5-11e4-ba43-005056000340",
+      "name": "Test Cluster B",
+      "provisioning_data": {
+        "not_approved_packages": [{
+          "service": {
+            "service_type": "c_cal"
+          },
+          "tlp_url": "525.tlp",
+          "version": "8.6-1.0.525"
+        }]
       },
-      {
-        "id": "9e4ef7d7-89f5-11e4-ba43-005056000340",
-        "name": "Test Cluster B",
-        "provisioning_data": {
-          "not_approved_packages": [ { "service": { "service_type": "c_cal" }, "tlp_url": "525.tlp", "version": "8.6-1.0.525" } ]
-        },
-        "services": [
-          {
-            "service_type": "c_cal",
-            "connectors": [ { "host": { "host_name": "gwydlvm340" }, "state": "running", "alarms": [] } ]
+      "services": [{
+        "service_type": "c_cal",
+        "connectors": [{
+          "host": {
+            "host_name": "gwydlvm340"
           },
-          {
-            "service_type": "c_ucmc",
-            "connectors": [ { "host": { "host_name": "gwydlvm340" }, "state": "offline", "alarms": [] } ]
+          "state": "running",
+          "alarms": []
+        }]
+      }, {
+        "service_type": "c_ucmc",
+        "connectors": [{
+          "host": {
+            "host_name": "gwydlvm340"
           },
-          {
-            "service_type": "c_mgmt",
-            "connectors": [ { "host": { "host_name": "gwydlvm340" }, "state": "running", "alarms": [{"error": "we are phuket"}] } ]
-          }
-        ],
-        "hosts": [ { "host_name": "gwydlvm340" } ]
-      }
-    ];
+          "state": "offline",
+          "alarms": []
+        }]
+      }, {
+        "service_type": "c_mgmt",
+        "connectors": [{
+          "host": {
+            "host_name": "gwydlvm340"
+          },
+          "state": "running",
+          "alarms": [{
+            "error": "we are phuket"
+          }]
+        }]
+      }],
+      "hosts": [{
+        "host_name": "gwydlvm340"
+      }]
+    }];
     // console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
 
     var aggregate = Service.aggregateServices(mockServiceData, Converter.convertClusters(mockClusterData));

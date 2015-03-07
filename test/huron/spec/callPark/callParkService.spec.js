@@ -7,12 +7,16 @@ describe('Service: CallPark', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  var callParks = [{pattern: '111'},{pattern: '222'}];
+  var callParks = [{
+    pattern: '111'
+  }, {
+    pattern: '222'
+  }];
 
   beforeEach(module('uc.callpark'));
   beforeEach(module('Huron'));
 
-  beforeEach(module(function($provide) {
+  beforeEach(module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
@@ -22,7 +26,7 @@ describe('Service: CallPark', function () {
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
 
-    url =  HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directedcallparks'
+    url = HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directedcallparks'
 
     spyOn(Notification, 'notify');
   }));
@@ -35,8 +39,8 @@ describe('Service: CallPark', function () {
   describe('list', function () {
     it('should list call parks', function () {
       $httpBackend.whenGET(url).respond(callParks);
-      CallPark.list().then(function(_callParks){
-        expect(angular.equals(_callParks,callParks)).toBe(true);
+      CallPark.list().then(function (_callParks) {
+        expect(angular.equals(_callParks, callParks)).toBe(true);
       });
       $httpBackend.flush();
     });
@@ -60,7 +64,7 @@ describe('Service: CallPark', function () {
 
   describe('createByRange', function () {
     it('should notify success and errors', function () {
-      $httpBackend.whenPOST(url, function(callPark){
+      $httpBackend.whenPOST(url, function (callPark) {
         return angular.fromJson(callPark).pattern == 105;
       }).respond(500);
       $httpBackend.whenPOST(url).respond(201);

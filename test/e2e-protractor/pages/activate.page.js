@@ -1,6 +1,6 @@
 'use strict'
 
-var ActivatePage = function(){
+var ActivatePage = function () {
   this.provisionSuccess = element(by.id('provisionSuccess'));
   this.codeExpired = element(by.id('codeExpired'));
   this.resendSuccess = element(by.id('resendSuccess'));

@@ -12,23 +12,27 @@ var testuser = {
   password: 'C1sc0123!'
 };
 
-describe('First Time Wizard', function() {
+describe('First Time Wizard', function () {
 
-  beforeEach(function() { browser.ignoreSynchronization = true; });
-  afterEach(function() { browser.ignoreSynchronization = false; });
+  beforeEach(function () {
+    browser.ignoreSynchronization = true;
+  });
+  afterEach(function () {
+    browser.ignoreSynchronization = false;
+  });
 
-  it('should login as an admin user', function(){
+  it('should login as an admin user', function () {
     login.login(testuser.username, testuser.password);
   });
 
-  it('clicking on gear icon should open first time wizard', function() {
+  it('clicking on gear icon should open first time wizard', function () {
     navigation.clickFirstTimeWizard();
     utils.expectIsDisplayed(wizard.wizard);
     utils.expectIsDisplayed(wizard.leftNav);
     utils.expectIsDisplayed(wizard.mainView);
   });
 
-  it('should load views according to left navigation clicks', function() {
+  it('should load views according to left navigation clicks', function () {
     wizard.clickPlanReview();
     utils.expectText(wizard.mainviewTitle, 'Plan Review');
     wizard.clickEnterpriseSettings();
@@ -37,7 +41,7 @@ describe('First Time Wizard', function() {
     utils.expectText(wizard.mainviewTitle, 'Add Users');
   });
 
-  it('should complete custom sso provider flow', function(){
+  it('should complete custom sso provider flow', function () {
     wizard.clickPlanReview();
     utils.click(wizard.beginBtn);
     utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
@@ -53,7 +57,7 @@ describe('First Time Wizard', function() {
     utils.expectIsDisplayed(wizard.mainviewTitle);
   });
 
-  it('should complete simple invite users flow', function() {
+  it('should complete simple invite users flow', function () {
     wizard.clickAddUsers();
     utils.click(wizard.radiobuttons.first());
     utils.click(wizard.nextBtn);
@@ -66,7 +70,7 @@ describe('First Time Wizard', function() {
     utils.click(wizard.finishBtn);
   }, 60000);
 
-  it('should reopen the wizard', function() {
+  it('should reopen the wizard', function () {
     element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
     navigation.clickFirstTimeWizard();
     utils.expectIsDisplayed(wizard.wizard);
@@ -74,7 +78,7 @@ describe('First Time Wizard', function() {
     utils.expectIsDisplayed(wizard.mainView);
   });
 
-  it('should complete AD sync flow', function() {
+  it('should complete AD sync flow', function () {
     wizard.clickAddUsers();
     utils.click(wizard.radiobuttons.last());
     utils.click(wizard.nextBtn);
@@ -87,7 +91,7 @@ describe('First Time Wizard', function() {
     utils.click(wizard.finishBtn);
   });
 
-  it('should reopen the wizard', function() {
+  it('should reopen the wizard', function () {
     element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
     navigation.clickFirstTimeWizard();
     utils.expectIsDisplayed(wizard.wizard);
@@ -95,7 +99,7 @@ describe('First Time Wizard', function() {
     utils.expectIsDisplayed(wizard.mainView);
   });
 
-  it('should close the first time wizard and log out', function() {
+  it('should close the first time wizard and log out', function () {
     element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
     navigation.logout();
   });

@@ -6,7 +6,7 @@ describe('XhrNotificationService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var notification;
-  beforeEach(function() {
+  beforeEach(function () {
     module(function ($provide) {
       notification = {
         notify: sinon.stub()
@@ -21,19 +21,40 @@ describe('XhrNotificationService', function () {
   }));
 
   it('should handle json error arrays', function () {
-    Service.notify([{"error":{"key":500,"message":["foo"]}}])
+    Service.notify([{
+      "error": {
+        "key": 500,
+        "message": ["foo"]
+      }
+    }])
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('foo');
   });
 
   it('should handle complex json error arrays', function () {
-    Service.notify([{"error":{"key":"404","message":[{"description":{"key":404,"message":"Resource not found"},"code":"404"}]}}])
+    Service.notify([{
+      "error": {
+        "key": "404",
+        "message": [{
+          "description": {
+            "key": 404,
+            "message": "Resource not found"
+          },
+          "code": "404"
+        }]
+      }
+    }])
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('Resource not found');
   });
 
   it('should handle json error strings', function () {
-    Service.notify([{"error":{"key":500,"message":"foo"}}])
+    Service.notify([{
+      "error": {
+        "key": 500,
+        "message": "foo"
+      }
+    }])
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('foo');
   });

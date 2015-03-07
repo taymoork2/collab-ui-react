@@ -1,8 +1,8 @@
-describe('UserInfoDirective', function() {
+describe('UserInfoDirective', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $compile, $rootScope;
-  beforeEach(inject(function($httpBackend, _$compile_, _$rootScope_){
+  beforeEach(inject(function ($httpBackend, _$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
@@ -10,7 +10,7 @@ describe('UserInfoDirective', function() {
     $httpBackend.when('POST', 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl').respond({});
   }));
 
-  it('replaces the element with the appropriate content', function() {
+  it('replaces the element with the appropriate content', function () {
     var element = $compile("<cr-user-info/>")($rootScope);
     $rootScope.$digest();
 

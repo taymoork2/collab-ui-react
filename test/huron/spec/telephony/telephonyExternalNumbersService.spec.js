@@ -12,7 +12,7 @@ describe('Service: ExternalNumberPool', function () {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function($provide) {
+  beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -40,7 +40,7 @@ describe('Service: ExternalNumberPool', function () {
 
     it('should create 5 DIDs', function () {
       $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(201);
-      ExternalNumberPool.create('1', didList).then(function(results) {
+      ExternalNumberPool.create('1', didList).then(function (results) {
         expect(results.successes.length).toEqual(5);
       });
       $httpBackend.flush();
@@ -48,7 +48,7 @@ describe('Service: ExternalNumberPool', function () {
 
     it('should fail to create 5 DIDs', function () {
       $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(500);
-      ExternalNumberPool.create('1', didList).then(function(results) {
+      ExternalNumberPool.create('1', didList).then(function (results) {
         expect(results.failures.length).toEqual(5);
       });
       $httpBackend.flush();
@@ -62,7 +62,7 @@ describe('Service: ExternalNumberPool', function () {
 
     it('should remove DID', function () {
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/1').respond(204);
-      ExternalNumberPool.deletePool('1', '1').then(function(result) {
+      ExternalNumberPool.deletePool('1', '1').then(function (result) {
 
       });
       $httpBackend.flush();
@@ -81,7 +81,7 @@ describe('Service: ExternalNumberPool', function () {
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/45973447-eab3-480f-9d33-26e41616b97c').respond(204);
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/f74e8480-d913-4879-a4e8-bb17602c99fc').respond(204);
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/93e2f24e-bf2c-4410-a0fc-1c0e5a88459b').respond(204);
-      ExternalNumberPool.deleteAll('1').then(function(results) {
+      ExternalNumberPool.deleteAll('1').then(function (results) {
         expect(results.length).toEqual(5);
       });
       $httpBackend.flush();
@@ -94,7 +94,7 @@ describe('Service: ExternalNumberPool', function () {
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/45973447-eab3-480f-9d33-26e41616b97c').respond(204);
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/f74e8480-d913-4879-a4e8-bb17602c99fc').respond(500);
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/93e2f24e-bf2c-4410-a0fc-1c0e5a88459b').respond(404);
-      ExternalNumberPool.deleteAll('1').then(function(results) {
+      ExternalNumberPool.deleteAll('1').then(function (results) {
         expect(results.length).toEqual(5);
       });
       $httpBackend.flush();

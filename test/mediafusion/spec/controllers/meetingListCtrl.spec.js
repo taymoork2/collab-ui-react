@@ -7,12 +7,12 @@ describe('Controller: ListMeetingsCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   //Initialize variables
-  var MeetingsCtrl,scope,httpBackend,meetinglistData,meetinglistinfoData,participantlistData;
+  var MeetingsCtrl, scope, httpBackend, meetinglistData, meetinglistinfoData, participantlistData;
 
-   /* Initialize the controller and a mock scope
-  * Reading the json data to application variable.
-  * Making a fake call to return json data to make unit test cases to be passed.
-  */
+  /* Initialize the controller and a mock scope
+   * Reading the json data to application variable.
+   * Making a fake call to return json data to make unit test cases to be passed.
+   */
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
 
@@ -56,19 +56,19 @@ describe('Controller: ListMeetingsCtrl', function () {
   it('response status should be success', function () {
     expect(meetinglistData.success).toBe(true);
   });
-  
-   it('response status should be success', function () {
+
+  it('response status should be success', function () {
     expect(meetinglistinfoData.success).toBe(true);
   });
 
-    it('response status should be success', function () {
+  it('response status should be success', function () {
     expect(participantlistData.success).toBe(true);
   });
 
   it('querymeetingslist should be defined', function () {
     expect(scope.queryMeetingsList).toBeDefined();
   });
-  
+
   it('querymeetingslistinfo should be defined', function () {
     expect(scope.querymeetingslistinfo).toBeDefined();
   });
@@ -105,18 +105,16 @@ describe('Controller: ListMeetingsCtrl', function () {
     expect(scope.totalCloudParticipants).toBe(8000);
   });
 
-  it('In the scope, the initial value for currentDataPosition=1', function() {
+  it('In the scope, the initial value for currentDataPosition=1', function () {
     expect(scope.currentDataPosition).toBe(1);
   });
 
-  it('In the scope, the initial value for lastScrollPosition=0', function() {
+  it('In the scope, the initial value for lastScrollPosition=0', function () {
     expect(scope.lastScrollPosition).toBe(0);
   });
 
-  it('In the scope, the initial value for load=true', function() {
+  it('In the scope, the initial value for load=true', function () {
     expect(scope.load).toBe(true);
   });
-
-
 
 });

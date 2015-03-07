@@ -1,6 +1,6 @@
 'use strict'
 
-var DownloadPage = function(){
+var DownloadPage = function () {
   this.sendStatus = element(by.id('sendStatus'));
   this.account = element(by.id('account'));
   this.tabs = element(by.id('tabs'));

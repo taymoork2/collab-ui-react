@@ -5,7 +5,7 @@ describe('Config', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var win;
-  beforeEach(function() {
+  beforeEach(function () {
     module(function ($provide) {
       win = {
         location: {
@@ -25,19 +25,19 @@ describe('Config', function () {
   var prodHost = 'admin.projectsquared.com';
   var intHost = 'int-admin.projectsquared.com';
 
-  var assertFnReturnsCorrectUrl = function(fn, env, expected) {
+  var assertFnReturnsCorrectUrl = function (fn, env, expected) {
     win.location.hostname = 'wbx2.com/bla'
   };
 
-  var whenCalling = function(fn, arg) {
+  var whenCalling = function (fn, arg) {
     var hosts = {
       development: devHost,
       integration: intHost,
       production: prodHost
     };
     return {
-      expectUrlToBe: function(obj) {
-        _.each(obj, function(expected, env) {
+      expectUrlToBe: function (obj) {
+        _.each(obj, function (expected, env) {
           var host = hosts[env];
           if (!host) {
             throw new Error("Unknown environment " + env);
@@ -107,7 +107,7 @@ describe('Config', function () {
     whenCalling('getAdminServiceUrl').expectUrlToBe({
       development: 'https://atlas-integration.wbx2.com/admin/api/v1/',
       integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      production:  'https://atlas-a.wbx2.com/admin/api/v1/'
+      production: 'https://atlas-a.wbx2.com/admin/api/v1/'
     });
   });
 
@@ -115,7 +115,7 @@ describe('Config', function () {
     whenCalling('getLocusServiceUrl').expectUrlToBe({
       development: 'https://admin-portal-test-public.wbx2.com/locus',
       integration: 'https://admin-portal-test-public.wbx2.com/locus',
-      production:  'https://admin-portal-test-public.wbx2.com/locus'
+      production: 'https://admin-portal-test-public.wbx2.com/locus'
     });
   });
 
@@ -123,7 +123,7 @@ describe('Config', function () {
     whenCalling('getMeetingServiceUrl').expectUrlToBe({
       development: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      production:  'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+      production: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
@@ -131,7 +131,7 @@ describe('Config', function () {
     whenCalling('getMeetinginfoserviceUrl').expectUrlToBe({
       development: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      production:  'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+      production: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
@@ -139,7 +139,7 @@ describe('Config', function () {
     whenCalling('getOauthLoginUrl').expectUrlToBe({
       development: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=webex-squared',
       integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fint-admin.projectsquared.com%2F&state=random-string&service=webex-squared',
-      production:  'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fadmin.projectsquared.com%2F&state=random-string&service=webex-squared'
+      production: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fadmin.projectsquared.com%2F&state=random-string&service=webex-squared'
     });
   });
 
@@ -147,16 +147,15 @@ describe('Config', function () {
     whenCalling('getRedirectUrl').expectUrlToBe({
       development: 'redirect_uri=http%3A%2F%2F127.0.0.1%3A8000',
       integration: 'redirect_uri=https%3A%2F%2Fint-admin.projectsquared.com%2F',
-      production:  'redirect_uri=https%3A%2F%2Fadmin.projectsquared.com%2F'
+      production: 'redirect_uri=https%3A%2F%2Fadmin.projectsquared.com%2F'
     });
   });
-
 
   it('should return correct oauth code url', function () {
     whenCalling('getOauthCodeUrl', 'foo').expectUrlToBe({
       development: 'grant_type=authorization_code&code=foo&scope=',
       integration: 'grant_type=authorization_code&code=foo&scope=',
-      production:  'grant_type=authorization_code&code=foo&scope='
+      production: 'grant_type=authorization_code&code=foo&scope='
     });
   });
 
@@ -164,7 +163,7 @@ describe('Config', function () {
     whenCalling('getOauthAccessCodeUrl', 'foo').expectUrlToBe({
       development: 'grant_type=refresh_token&refresh_token=foo&scope=',
       integration: 'grant_type=refresh_token&refresh_token=foo&scope=',
-      production:  'grant_type=refresh_token&refresh_token=foo&scope='
+      production: 'grant_type=refresh_token&refresh_token=foo&scope='
     });
   });
 
@@ -172,7 +171,7 @@ describe('Config', function () {
     whenCalling('getLogoutUrl').expectUrlToBe({
       development: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=http%3A%2F%2F127.0.0.1%3A8000',
       integration: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fint-admin.projectsquared.com%2F',
-      production:  'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fadmin.projectsquared.com%2F'
+      production: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fadmin.projectsquared.com%2F'
     });
   });
 
@@ -180,7 +179,7 @@ describe('Config', function () {
     whenCalling('getSSOSetupUrl').expectUrlToBe({
       development: 'https://idbroker.webex.com/idb/idbconfig/',
       integration: 'https://idbroker.webex.com/idb/idbconfig/',
-      production:  'https://idbroker.webex.com/idb/idbconfig/'
+      production: 'https://idbroker.webex.com/idb/idbconfig/'
     });
   });
 
@@ -188,7 +187,7 @@ describe('Config', function () {
     whenCalling('getSSOTestUrl').expectUrlToBe({
       development: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
       integration: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-      production:  'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp'
+      production: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp'
     });
   });
 
@@ -196,7 +195,7 @@ describe('Config', function () {
     whenCalling('getHealthCheckUrlServiceUrl').expectUrlToBe({
       development: 'https://projectsquared.statuspage.io/index.json',
       integration: 'https://projectsquared.statuspage.io/index.json',
-      production:  'https://projectsquared.statuspage.io/index.json'
+      production: 'https://projectsquared.statuspage.io/index.json'
     });
   });
 
@@ -204,7 +203,7 @@ describe('Config', function () {
     whenCalling('getLogMetricsUrl').expectUrlToBe({
       development: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
       integration: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
-      production:  'https://metrics-a.wbx2.com/metrics/api/v1/metrics'
+      production: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics'
     });
   });
 
@@ -212,7 +211,7 @@ describe('Config', function () {
     whenCalling('getCallflowServiceUrl').expectUrlToBe({
       development: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
       integration: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
-      production:  'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/'
+      production: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/'
     });
   });
 
@@ -220,7 +219,7 @@ describe('Config', function () {
     whenCalling('getStatusPageUrl').expectUrlToBe({
       development: 'http://status.projectsquared.com/',
       integration: 'http://status.projectsquared.com/',
-      production:  'http://status.projectsquared.com/'
+      production: 'http://status.projectsquared.com/'
     });
   });
 
@@ -228,7 +227,7 @@ describe('Config', function () {
     whenCalling('getSquaredAppUrl').expectUrlToBe({
       development: 'squared://',
       integration: 'squared://',
-      production:  'squared://'
+      production: 'squared://'
     });
   });
 
@@ -236,7 +235,7 @@ describe('Config', function () {
     whenCalling('getItunesStoreUrl').expectUrlToBe({
       development: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',
       integration: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',
-      production:  'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8'
+      production: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8'
     });
   });
 
@@ -244,7 +243,7 @@ describe('Config', function () {
     whenCalling('getAndroidStoreUrl').expectUrlToBe({
       development: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android',
       integration: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android',
-      production:  'https://play.google.com/store/apps/details?id=com.cisco.wx2.android'
+      production: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android'
     });
   });
 
@@ -252,7 +251,7 @@ describe('Config', function () {
     whenCalling('getAndroidAppIntent').expectUrlToBe({
       development: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
       integration: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
-      production:  'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;'
+      production: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;'
     });
   });
 
@@ -260,7 +259,7 @@ describe('Config', function () {
     whenCalling('getWebClientUrl').expectUrlToBe({
       development: 'https://web.projectsquared.com/',
       integration: 'https://web.projectsquared.com/',
-      production:  'https://web.projectsquared.com/'
+      production: 'https://web.projectsquared.com/'
     });
   });
 
@@ -268,7 +267,7 @@ describe('Config', function () {
     whenCalling('getHerculesUrl').expectUrlToBe({
       development: 'https://hercules-integration.wbx2.com/',
       integration: 'https://hercules-integration.wbx2.com/',
-      production:  'https://hercules-a.wbx2.com/'
+      production: 'https://hercules-a.wbx2.com/'
     });
   });
 

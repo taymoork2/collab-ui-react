@@ -12,9 +12,8 @@ var testuser = {
   superUser: 'super-admin@mfusion1webex.com',
   superUserPasswd: 'Mc23267!',
   searchStr: 'Cloud'
-  //searchStr: 'Fake'
+    //searchStr: 'Fake'
 };
-
 
 // Notes:
 // - State is conserved between each despribe and it blocks.
@@ -57,7 +56,7 @@ describe('List meetings flow', function () {
 
   });
 
-   // Asserting Day decrement
+  // Asserting Day decrement
   describe('Decrement day and checking meeting chart info, leader board and Meeting Table', function () {
     it('Should decrement the day and populate the Meeting chart, Leader board and Meeting table data.', function () {
       meetings.decrementDay();
@@ -73,7 +72,7 @@ describe('List meetings flow', function () {
       browser.sleep(1000);
     });
 
-     it('Should list more than zero latest meetings on the day after incremented', function () {
+    it('Should list more than zero latest meetings on the day after incremented', function () {
       meetings.assertResultsLength(0);
     });
   });
@@ -81,24 +80,24 @@ describe('List meetings flow', function () {
   // Asserting filtering of meetings
   describe('Filter meetings on page', function () {
 
-    it('Click on Meetings filter icon',function() {
+    it('Click on Meetings filter icon', function () {
       meetings.clickOnFilter();
     });
 
-    it('Provide filter values', function() {
+    it('Provide filter values', function () {
       meetings.provideFilterValues('Cloud');
     });
 
     it('Should list filtered meetings', function () {
-        meetings.assertResultsLength(0);
+      meetings.assertResultsLength(0);
     });
 
-    it('Clear the values of filter',function() {
+    it('Clear the values of filter', function () {
       meetings.clearFilterValues();
     });
 
     it('Should list all meetings', function () {
-        meetings.assertResultsLength(0);
+      meetings.assertResultsLength(0);
     });
   });
 

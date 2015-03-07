@@ -2,7 +2,7 @@
 
 /* global element, by */
 
-var SpacesPage = function() {
+var SpacesPage = function () {
   this.roomsList = element(by.id('roomsListPanel'));
   this.estimatedSize = element(by.id('estimatedSize'));
   this.moreOptions = element(by.id('userMoreOptions'));

@@ -1,6 +1,6 @@
 'use strict'
 
-var ManagePage = function() {
+var ManagePage = function () {
   this.displayName = element(by.id('displayName'));
   this.estimatedSize = element(by.id('estimatedSize'));
   this.totalUsers = element(by.id('totalUsers'));

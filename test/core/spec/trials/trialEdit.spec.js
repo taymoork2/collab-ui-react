@@ -33,7 +33,7 @@ describe('Controller: TrialEditCtrl', function () {
       TrialService: TrialService,
       Notification: Notification
     });
-     $scope.$apply();
+    $scope.$apply();
   }));
 
   describe('TrialEditCtrl controller', function () {
@@ -66,7 +66,7 @@ describe('Controller: TrialEditCtrl', function () {
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
-      it('should close the modal', function() {
+      it('should close the modal', function () {
         expect($state.modal.close).toHaveBeenCalled();
       });
     });
@@ -86,7 +86,7 @@ describe('Controller: TrialEditCtrl', function () {
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
 
-      it('should not close the modal', function() {
+      it('should not close the modal', function () {
         expect($state.modal.close).not.toHaveBeenCalled();
       });
     });

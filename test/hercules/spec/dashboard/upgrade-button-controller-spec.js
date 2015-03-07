@@ -1,9 +1,9 @@
-describe('UpgradeButtonController', function() {
+describe('UpgradeButtonController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $scope, $attrs, controller;
 
-  beforeEach(inject(function(_$controller_){
+  beforeEach(inject(function (_$controller_) {
     $scope = {
       $on: sinon.stub()
     };
@@ -14,7 +14,7 @@ describe('UpgradeButtonController', function() {
     });
   }));
 
-  it('upgrades software with inflight status set', function() {
+  it('upgrades software with inflight status set', function () {
     $attrs.clusterId = 'cl_id';
     $attrs.serviceType = 'srv_type';
     $scope.upgradeSoftware = sinon.stub();

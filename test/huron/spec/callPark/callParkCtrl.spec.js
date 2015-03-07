@@ -3,7 +3,11 @@
 describe('Controller: CallParkCtrl', function () {
   var controller, $rootScope, $scope, $modal, $q, CallPark, modalDefer;
 
-  var callParks = [{pattern: '111'},{pattern: '222'}];
+  var callParks = [{
+    pattern: '111'
+  }, {
+    pattern: '222'
+  }];
 
   beforeEach(module('uc.callpark'));
   beforeEach(module('Huron'));
@@ -18,7 +22,9 @@ describe('Controller: CallParkCtrl', function () {
 
     spyOn(CallPark, 'list').and.returnValue($q.when([]));
     spyOn(CallPark, 'remove').and.returnValue($q.when());
-    spyOn($modal, 'open').and.returnValue({result: modalDefer.promise});
+    spyOn($modal, 'open').and.returnValue({
+      result: modalDefer.promise
+    });
     spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('CallParkCtrl', {

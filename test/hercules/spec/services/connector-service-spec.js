@@ -6,7 +6,7 @@ describe('Service: ConnectorService', function () {
   var $httpBackend, Service, converter, notification, win;
   var rootPath = 'https://hercules-a.wbx2.com/v1';
 
-  beforeEach(function() {
+  beforeEach(function () {
     module(function ($provide) {
       converter = {
         convertClusters: sinon.stub()
@@ -15,7 +15,9 @@ describe('Service: ConnectorService', function () {
         notify: sinon.stub()
       };
       win = {
-        location: { search: '' }
+        location: {
+          search: ''
+        }
       };
       $provide.value('ConverterService', converter);
       $provide.value('XhrNotificationService', notification);
@@ -31,7 +33,7 @@ describe('Service: ConnectorService', function () {
       .respond({});
   }));
 
-  afterEach(function() {
+  afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
@@ -57,10 +59,11 @@ describe('Service: ConnectorService', function () {
     $httpBackend
       .when(
         'POST',
-        rootPath + '/clusters/foo/services/bar/upgrade',
-        {}
+        rootPath + '/clusters/foo/services/bar/upgrade', {}
       )
-      .respond({foo: 'bar'});
+      .respond({
+        foo: 'bar'
+      });
 
     var callback = sinon.stub();
     Service.upgradeSoftware('foo', 'bar', callback);
@@ -75,10 +78,11 @@ describe('Service: ConnectorService', function () {
     $httpBackend
       .when(
         'POST',
-        rootPath + '/clusters/foo/services/bar/upgrade',
-        {}
+        rootPath + '/clusters/foo/services/bar/upgrade', {}
       )
-      .respond(500, {foo: 'bar'});
+      .respond(500, {
+        foo: 'bar'
+      });
 
     expect(notification.notify.callCount).toBe(0);
 
@@ -111,7 +115,7 @@ describe('Service: ConnectorService', function () {
     expect(notification.notify.callCount).toBe(1);
   });
 
-  it('should be possible to set mock backend', function() {
+  it('should be possible to set mock backend', function () {
     win.location.search = 'hercules-backend=mock'
     converter.convertClusters.returns('foo');
 
@@ -127,7 +131,7 @@ describe('Service: ConnectorService', function () {
     expect(converter.convertClusters.args[0][0].length).toBe(5);
   });
 
-  it('should be possible to set empty backend', function() {
+  it('should be possible to set empty backend', function () {
     win.location.search = 'hercules-backend=nodata'
 
     var callback = sinon.stub();
@@ -179,7 +183,9 @@ describe('Service: ConnectorService', function () {
     expect(notification.notify.callCount).toBe(0);
 
     var callback = sinon.stub()
-    Service.fetch(callback, {squelchErrors: true});
+    Service.fetch(callback, {
+      squelchErrors: true
+    });
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);

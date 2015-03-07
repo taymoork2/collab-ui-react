@@ -1,6 +1,6 @@
 'use strict'
 
-var Navigation = function(){
+var Navigation = function () {
 
   this.tabs = element(by.css('cs-left-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
@@ -31,96 +31,95 @@ var Navigation = function(){
   this.dropdownItems = element.all(by.repeater('item in menuItems'));
   this.launchPartnerButton = element(by.id('launch-partner-btn'));
 
-  this.clickDevelopmentTab = function() {
+  this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
   };
 
-  this.clickHome = function() {
+  this.clickHome = function () {
     utils.click(this.homeTab);
     this.expectCurrentUrl('/overview');
   };
 
-  this.clickOrganization = function() {
+  this.clickOrganization = function () {
     this.clickDevelopmentTab();
     utils.click(this.orgTab);
     this.expectCurrentUrl('/organization');
   };
 
-  this.clickCustomers = function() {
+  this.clickCustomers = function () {
     utils.click(this.customersTab);
     this.expectCurrentUrl('/customers');
   };
 
-  this.clickUsers = function() {
+  this.clickUsers = function () {
     utils.click(this.usersTab);
     utils.click(this.listUsersTab);
     this.expectCurrentUrl('/users');
   };
 
-  this.clickDevices = function() {
+  this.clickDevices = function () {
     utils.click(this.devicesTab);
     this.expectCurrentUrl('/devices');
   };
 
-  this.clickCallRouting = function() {
+  this.clickCallRouting = function () {
     this.clickDevelopmentTab();
     utils.click(this.callRoutingTab);
     this.expectCurrentUrl('/callrouting');
   };
 
-  this.clickReports = function() {
+  this.clickReports = function () {
     utils.click(this.reportsTab);
     this.expectCurrentUrl('/reports');
   };
 
-  this.clickSupport = function() {
+  this.clickSupport = function () {
     utils.click(this.supportTab);
     this.expectCurrentUrl('/support');
   };
 
-
-  this.clickFusion = function() {
+  this.clickFusion = function () {
     this.clickDevelopmentTab();
     utils.click(this.fusionTab);
     this.expectCurrentUrl('/fusion');
   };
 
-   this.clickMeetings = function() {
+  this.clickMeetings = function () {
     this.clickDevelopmentTab();
     utils.click(this.meetingsTab);
     this.expectCurrentUrl('/meetings');
   };
 
-  this.clickFirstTimeWizard = function() {
+  this.clickFirstTimeWizard = function () {
     utils.click(this.settingsMenu);
     utils.click(this.dropdownItems.first());
   };
 
-  this.getTabCount = function() {
-    return this.tabCount.then(function(tabs){
+  this.getTabCount = function () {
+    return this.tabCount.then(function (tabs) {
       return tabs.length;
     });
   };
 
-  this.expectCurrentUrl = function(url) {
-    browser.wait(function(){
-      return browser.getCurrentUrl().then(function(currentUrl){
+  this.expectCurrentUrl = function (url) {
+    browser.wait(function () {
+      return browser.getCurrentUrl().then(function (currentUrl) {
         return currentUrl.indexOf(url) !== -1;
       });
     });
     expect(browser.getCurrentUrl()).toContain(url);
   };
 
-  this.expectDriverCurrentUrl = function(url) {
-    browser.wait(function(){
-      return browser.driver.getCurrentUrl().then(function(currentUrl){
+  this.expectDriverCurrentUrl = function (url) {
+    browser.wait(function () {
+      return browser.driver.getCurrentUrl().then(function (currentUrl) {
         return currentUrl.indexOf(url) !== -1;
       });
     });
     expect(browser.driver.getCurrentUrl()).toContain(url);
   };
 
-  this.expectAdminSettingsNotDisplayed = function() {
+  this.expectAdminSettingsNotDisplayed = function () {
     utils.expectIsNotDisplayed(this.tabs);
     utils.expectIsNotDisplayed(this.userInfo);
     utils.expectIsNotDisplayed(this.headerSearch);
@@ -129,21 +128,21 @@ var Navigation = function(){
 
   this.hasClass = function (element, cls) {
     return element.getAttribute('class').then(function (classes) {
-        return classes.split(' ').indexOf(cls) !== -1;
+      return classes.split(' ').indexOf(cls) !== -1;
     });
   };
 
-  this.logout = function() {
+  this.logout = function () {
     utils.click(this.userInfoButton);
     utils.click(this.logoutButton);
   };
 
-  this.sendFeedback = function() {
+  this.sendFeedback = function () {
     utils.click(this.userInfoButton);
     utils.click(this.feedbackButton);
   };
 
-  this.launchPartnerOrgPortal = function(){
+  this.launchPartnerOrgPortal = function () {
     utils.click(this.userInfoButton);
     utils.click(this.launchPartnerButton);
   };

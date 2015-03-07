@@ -1,6 +1,6 @@
 'use strict'
 
-var CallRoutingPage = function(){
+var CallRoutingPage = function () {
   this.callParkSelect = element(by.css('.callrouting-nav')).element(by.cssContainingText('a', 'Call Park'));
 
   this.addCallParkButton = element(by.buttonText('New Call Park'));
@@ -20,9 +20,9 @@ var CallRoutingPage = function(){
   this.cancelButton = element(by.buttonText('Cancel'));
   this.callParkCount = element(by.cssContainingText('.callrouting-nav-menuitem', 'Park')).element(by.css('.count'));
 
-  this.deleteCallPark = function(pattern) {
-    this.callParks.filter(function(elem){
-      return elem.evaluate('callPark.pattern').then(function(value) {
+  this.deleteCallPark = function (pattern) {
+    this.callParks.filter(function (elem) {
+      return elem.evaluate('callPark.pattern').then(function (value) {
         return value === pattern;
       });
     }).first().element(by.css('.delete-icon')).click();

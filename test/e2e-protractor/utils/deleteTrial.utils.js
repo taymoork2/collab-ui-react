@@ -30,7 +30,7 @@ var utils = require('./test.utils.js');
 //   return defer.promise;
 // };
 
-exports.deleteOrg = function(orgId, token) {
+exports.deleteOrg = function (orgId, token) {
   var defer = protractor.promise.defer();
 
   var options = {
@@ -42,10 +42,10 @@ exports.deleteOrg = function(orgId, token) {
     },
   };
 
-  utils.sendRequest(options).then(function() {
+  utils.sendRequest(options).then(function () {
     console.log('org deleted successfully: ', orgId);
     defer.fulfill(200);
-  }, function(data) {
+  }, function (data) {
     console.log('org deletion failed: ', orgId, data);
     defer.fulfill(200);
   });

@@ -1,4 +1,4 @@
-describe('ControllerWireing', function() {
+describe('ControllerWireing', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var controllersToTest = [
@@ -15,12 +15,12 @@ describe('ControllerWireing', function() {
 
   var $scope, aggregator;
 
-  beforeEach(inject(function($injector){
+  beforeEach(inject(function ($injector) {
     var $httpBackend = $injector.get('$httpBackend');
 
     var $controller = $injector.get('$controller');
 
-    controllersToTest.forEach(function(controllerName) {
+    controllersToTest.forEach(function (controllerName) {
       try {
         $controller(controllerName, {
           $scope: {
@@ -35,7 +35,7 @@ describe('ControllerWireing', function() {
     });
   }));
 
-  it('can create and wire controllers', function() {
+  it('can create and wire controllers', function () {
     expect(true).toEqual(true); // test happens in beforeEach
   });
 

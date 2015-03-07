@@ -12,7 +12,7 @@ describe('Service: OtpService', function () {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function($provide) {
+  beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -41,7 +41,7 @@ describe('Service: OtpService', function () {
 
     it('should return 1 OTP', function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/common/customers/1/users/1/otp').respond(200, getJSONFixture('huron/json/device/otps.json'));
-      OtpService.loadOtps('1').then(function(data) {
+      OtpService.loadOtps('1').then(function (data) {
         expect(data.length).toEqual(1);
       });
       $httpBackend.flush();
@@ -49,7 +49,7 @@ describe('Service: OtpService', function () {
 
     it('should not return invalid OTPs', function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/common/customers/1/users/1/otp').respond(200, getJSONFixture('huron/json/device/invalidOtps.json'));
-      OtpService.loadOtps('1').then(function(data) {
+      OtpService.loadOtps('1').then(function (data) {
         expect(data.length).toEqual(0);
       });
       $httpBackend.flush();
@@ -62,8 +62,10 @@ describe('Service: OtpService', function () {
     });
 
     it('should generate an OTP', function () {
-      $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/identity/users/otp', {'userName': 'someUser'}).respond(200, getJSONFixture('huron/json/device/otps/0001000200030004.json'));
-      OtpService.generateOtp('someUser').then(function(data) {
+      $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/identity/users/otp', {
+        'userName': 'someUser'
+      }).respond(200, getJSONFixture('huron/json/device/otps/0001000200030004.json'));
+      OtpService.generateOtp('someUser').then(function (data) {
         expect(data.code).toEqual('0001000200030004');
         expect(data.friendlyCode).toEqual('0001-0002-0003-0004');
       });
@@ -95,7 +97,7 @@ describe('Service: OtpService', function () {
       expect(OtpService.convertExpiryTime('2015-01-23 03:16:43.327', 'America/Los_Angeles')).toEqual('01/23/15 3:16AM');
     });
   });
-  
+
   describe('getQrCodeUrl function', function () {
     it('should exist', function () {
       expect(OtpService.getQrCodeUrl).toBeDefined;

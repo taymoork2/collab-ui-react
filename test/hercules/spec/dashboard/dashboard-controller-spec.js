@@ -1,9 +1,9 @@
-describe('DashboardController', function() {
+describe('DashboardController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $scope, $interval, controller, service;
 
-  beforeEach(inject(function(_$controller_, $rootScope){
+  beforeEach(inject(function (_$controller_, $rootScope) {
     service = {
       fetch: sinon.stub(),
       services: sinon.stub(),
@@ -20,19 +20,19 @@ describe('DashboardController', function() {
     });
   }));
 
-  it('calls poll after fetch success', function() {
+  it('calls poll after fetch success', function () {
     $scope._poll = sinon.stub();
     service.fetch.callArgWith(0, null, 'clusterdata');
     expect($scope._poll.callCount).toBe(1);
   });
 
-  it('resets poll has failed after success', function() {
+  it('resets poll has failed after success', function () {
     $scope.pollHasFailed = true;
     service.fetch.callArgWith(0, null, 'clusterdata');
     expect($scope.pollHasFailed).toBe(false);
   });
 
-  it('does not poll after fetch fail, but shows button', function() {
+  it('does not poll after fetch fail, but shows button', function () {
     $scope._poll = sinon.stub();
     expect($scope.pollHasFailed).toBe(false);
     service.fetch.callArgWith(0, 'err', 'clusterdata');
@@ -40,7 +40,7 @@ describe('DashboardController', function() {
     expect($scope.pollHasFailed).toBe(true);
   });
 
-  it('polls until interval is nulled', function() {
+  it('polls until interval is nulled', function () {
     $interval.returns(true);
     expect($interval.callCount).toBe(0);
     $scope._poll();
@@ -52,7 +52,7 @@ describe('DashboardController', function() {
     expect($interval.callCount).toBe(2);
   });
 
-  it('clears interval on destroy', function() {
+  it('clears interval on destroy', function () {
     expect($scope.$on.calledOnce).toEqual(true);
     expect($interval.cancel.callCount).toEqual(0);
     expect($scope._promise).not.toBe(null);
@@ -61,7 +61,7 @@ describe('DashboardController', function() {
     expect($scope._promise).toBe(null);
   });
 
-  it('initializes scope.loading and fetches initial data', function() {
+  it('initializes scope.loading and fetches initial data', function () {
     expect($scope.loading).toEqual(true);
     expect(service.fetch.calledOnce).toEqual(true);
 
@@ -70,22 +70,28 @@ describe('DashboardController', function() {
     expect($scope.clusters).toBe('clusterdata');
   });
 
-  it('expands all panels except the ones that have been collapsed', function() {
+  it('expands all panels except the ones that have been collapsed', function () {
     $scope.panelStates['foo'] = false;
     $scope.panelStates['bar'] = null;
 
-    service.fetch.callArgWith(0, null, [{id: 'foo'},{id: 'bar'},{id: 'baz'}]);
+    service.fetch.callArgWith(0, null, [{
+      id: 'foo'
+    }, {
+      id: 'bar'
+    }, {
+      id: 'baz'
+    }]);
     expect($scope.panelStates['foo']).toBe(false);
     expect($scope.panelStates['bar']).toBe(true);
     expect($scope.panelStates['baz']).toBe(true);
   });
 
-  it('returns empty array on fubar data from backend', function() {
+  it('returns empty array on fubar data from backend', function () {
     service.fetch.callArgWith(0, null, null);
     expect($scope.clusters).toEqual([]);
   });
 
-  it('reloads data on reload', function() {
+  it('reloads data on reload', function () {
     expect($scope.loading).toEqual(true);
     expect($scope.inflight).toEqual(true);
 
@@ -100,7 +106,7 @@ describe('DashboardController', function() {
     expect(service.fetch.calledTwice).toBe(true);
   });
 
-  it('upgrades software', function() {
+  it('upgrades software', function () {
     expect(service.upgradeSoftware.callCount).toBe(0);
 
     $scope.upgradeSoftware('clusterid', 'servicetype', sinon.stub());
@@ -110,7 +116,7 @@ describe('DashboardController', function() {
     expect(service.upgradeSoftware.args[0][1]).toBe('servicetype');
   });
 
-  it('triggers callback on software upgrade', function() {
+  it('triggers callback on software upgrade', function () {
     var callback = sinon.stub();
     $scope._poll = sinon.stub()
 
@@ -124,7 +130,7 @@ describe('DashboardController', function() {
     expect($scope._poll.callCount).toBe(1);
   });
 
-  it('updates state on toggle edit', function() {
+  it('updates state on toggle edit', function () {
     expect($scope.editingHost).toBeFalsy();
 
     $scope.toggleEdit('foo');
@@ -137,7 +143,7 @@ describe('DashboardController', function() {
     expect($scope.editingHost).toBeFalsy();
   });
 
-  it('deletes host', function() {
+  it('deletes host', function () {
     $scope._poll = sinon.stub()
     service.deleteHost = sinon.stub();
     expect($scope.deleteHostInflight).toBeFalsy();
@@ -155,7 +161,7 @@ describe('DashboardController', function() {
     expect($scope._poll.callCount).toBe(1);
   });
 
-  it('updates state on toggle alarms', function() {
+  it('updates state on toggle alarms', function () {
     expect(_.size($scope.visibleAlarm)).toBe(0);
 
     $scope.toggleAlarms('clid', 'srv', 'host');
@@ -174,7 +180,7 @@ describe('DashboardController', function() {
     expect(_.size($scope.visibleAlarm)).toBe(0);
   });
 
-  it('shows modal', function(){
+  it('shows modal', function () {
     expect($scope.modal).toBeFalsy()
     $scope.showNotificationConfigDialog();
     expect($scope.modal).toBeTruthy()

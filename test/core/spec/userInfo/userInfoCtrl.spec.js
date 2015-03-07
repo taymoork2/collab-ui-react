@@ -5,7 +5,7 @@ describe('UserInfoController', function () {
 
   var controller, $window, $scope, $translate, Log, FeedbackService, Userservice, Utils;
 
-  beforeEach(inject(function($rootScope, $controller, _$translate_){
+  beforeEach(inject(function ($rootScope, $controller, _$translate_) {
     $translate = _$translate_;
     $scope = $rootScope.$new();
     Log = {
@@ -22,7 +22,9 @@ describe('UserInfoController', function () {
     };
     $window = {
       open: sinon.stub(),
-      navigator: { userAgent: sinon.stub() }
+      navigator: {
+        userAgent: sinon.stub()
+      }
     }
     controller = $controller('UserInfoController', {
       $scope: $scope,
@@ -37,9 +39,11 @@ describe('UserInfoController', function () {
 
   describe('sendFeedback', function () {
 
-    it('fetches url and opens new window', function() {
+    it('fetches url and opens new window', function () {
       $window.navigator.userAgent = 'some useragent';
-      Utils.getUUID = function() { return 'awesome uuid'; };
+      Utils.getUUID = function () {
+        return 'awesome uuid';
+      };
 
       $scope.sendFeedback();
 
@@ -47,7 +51,10 @@ describe('UserInfoController', function () {
       expect(FeedbackService.getFeedbackUrl.args[0][0]).toBe('Atlas_some useragent');
       expect(FeedbackService.getFeedbackUrl.args[0][1]).toBe('awesome uuid');
 
-      FeedbackService.getFeedbackUrl.callArgWith(2, {success: true, url: 'some url'}, 'some status');
+      FeedbackService.getFeedbackUrl.callArgWith(2, {
+        success: true,
+        url: 'some url'
+      }, 'some status');
 
       expect(Log.debug.callCount).toBe(1);
       expect(Log.debug.args[0][0]).toBe('feedback status: some status');
@@ -56,10 +63,12 @@ describe('UserInfoController', function () {
       expect($window.open.args[0][1]).toBe('_blank');
     });
 
-    it('logs if FeedbackService fails', function() {
+    it('logs if FeedbackService fails', function () {
       $scope.sendFeedback();
 
-      FeedbackService.getFeedbackUrl.callArgWith(2, { success: false }, 'another status');
+      FeedbackService.getFeedbackUrl.callArgWith(2, {
+        success: false
+      }, 'another status');
 
       expect(Log.debug.callCount).toBe(2);
       expect(Log.debug.args[1][0]).toBe('Cannot load feedback url: another status');

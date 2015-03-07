@@ -5,22 +5,22 @@ var testuser = {
   password: 'Cisco123!'
 };
 
-var pattern = Math.ceil(Math.random()*Math.pow(10,4)).toString();
+var pattern = Math.ceil(Math.random() * Math.pow(10, 4)).toString();
 
-xdescribe('Huron Call Routing', function() {
-  it('should login', function(){
-    login.login(testuser.username,testuser.password);
+xdescribe('Huron Call Routing', function () {
+  it('should login', function () {
+    login.login(testuser.username, testuser.password);
   });
 
-  it('should navigate to the Call Park page', function(){
+  it('should navigate to the Call Park page', function () {
     navigation.clickCallRouting();
     browser.sleep(1000);
     expect(callrouting.callParkCount.isDisplayed()).toBe(true);
     callrouting.callParkSelect.click();
   });
 
-  describe('Call Park feature', function(){
-    it('should cancel creating a new call park', function(){
+  describe('Call Park feature', function () {
+    it('should cancel creating a new call park', function () {
       callrouting.addCallParkButton.click();
       browser.sleep(1000);
       callrouting.cancelButton.click();
@@ -28,7 +28,7 @@ xdescribe('Huron Call Routing', function() {
       expect(callrouting.name.isPresent()).toBeFalsey;
     });
 
-    it('should create a new call park with single number', function(){
+    it('should create a new call park with single number', function () {
       callrouting.addCallParkButton.click();
       browser.sleep(1000);
       expect(callrouting.name.isDisplayed()).toBeTruthy;
@@ -42,7 +42,7 @@ xdescribe('Huron Call Routing', function() {
       notifications.assertSuccess(pattern + ' added successfully');
     });
 
-    it('should create a new call park with range', function(){
+    it('should create a new call park with range', function () {
       callrouting.addCallParkButton.click();
       browser.sleep(1000);
       expect(callrouting.name.isDisplayed()).toBeTruthy;
@@ -60,7 +60,7 @@ xdescribe('Huron Call Routing', function() {
       notifications.assertSuccess((pattern + 1) + ' added successfully', (pattern + 2) + ' added successfully');
     });
 
-    it('should only display info message when info icon is active', function() {
+    it('should only display info message when info icon is active', function () {
       // info message should have been automatically turned off
       expect(callrouting.callParkInfoTextOne.isDisplayed()).toBe(false);
       expect(callrouting.callParkInfoTextTwo.isDisplayed()).toBe(false);
@@ -76,22 +76,22 @@ xdescribe('Huron Call Routing', function() {
       expect(callrouting.callParkInfoTextTwo.isDisplayed()).toBe(false);
     });
 
-    it('should cancel a delete', function(){
+    it('should cancel a delete', function () {
       callrouting.callParks.get(0).element(by.css('.delete-icon')).click();
       expect(callrouting.cancelButton.isDisplayed()).toBeTruthy;
       callrouting.cancelButton.click();
       expect(callrouting.cancelButton.isPresent()).toBe(false);
     });
 
-    it('should delete the previously created call parks', function(){
+    it('should delete the previously created call parks', function () {
       callrouting.deleteCallPark(pattern);
       callrouting.deleteCallPark(pattern + 1);
       callrouting.deleteCallPark(pattern + 2);
     });
   });
 
-// Log Out
-  it('should log out', function() {
+  // Log Out
+  it('should log out', function () {
     navigation.logout();
   });
 });

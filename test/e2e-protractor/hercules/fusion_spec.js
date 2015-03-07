@@ -12,25 +12,25 @@ var testuser = {
   password: 'C1sc0123!',
 };
 
-describe('Fusion Page', function() {
-  beforeEach(function() {
+describe('Fusion Page', function () {
+  beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     browser.ignoreSynchronization = false;
   });
 
-  it('should log in as admin', function(){
+  it('should log in as admin', function () {
     login.login(testuser.username, testuser.password);
   });
 
-  it('should navigate to the fusion page and display something', function() {
+  it('should navigate to the fusion page and display something', function () {
     navigation.clickFusion();
     utils.expectIsDisplayed(element(by.id('fusion-root')));
   });
 
-  it('should log out', function() {
-   navigation.logout();
+  it('should log out', function () {
+    navigation.logout();
   });
 });

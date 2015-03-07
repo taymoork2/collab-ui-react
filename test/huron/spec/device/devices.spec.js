@@ -19,7 +19,7 @@ describe('Controller: DevicesCtrl', function () {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function($provide) {
+  beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -80,7 +80,6 @@ describe('Controller: DevicesCtrl', function () {
       it('should have showDeviceDetailPanel method defined', function () {
         expect(controller.showDeviceDetailPanel).toBeDefined;
       });
-
 
     });
   });

@@ -13,15 +13,19 @@ var testuser = {
   password: 'C1sc0123!',
 };
 
-describe('Org Info flow', function() {
-  beforeEach(function() { browser.ignoreSynchronization = true; });
-  afterEach(function() { browser.ignoreSynchronization = false; });
+describe('Org Info flow', function () {
+  beforeEach(function () {
+    browser.ignoreSynchronization = true;
+  });
+  afterEach(function () {
+    browser.ignoreSynchronization = false;
+  });
 
-  it('should login as squared team member admin user', function(){
+  it('should login as squared team member admin user', function () {
     login.login(testuser.username, testuser.password);
   });
 
-  it('clicking on orgs tab should show the org info', function() {
+  it('clicking on orgs tab should show the org info', function () {
     navigation.clickOrganization();
     utils.expectIsDisplayed(manage.displayName);
     utils.expectIsDisplayed(manage.estimatedSize);
@@ -31,7 +35,7 @@ describe('Org Info flow', function() {
     utils.expectIsDisplayed(manage.refreshButton);
   });
 
-  it('should log out', function() {
+  it('should log out', function () {
     navigation.logout();
   });
 });

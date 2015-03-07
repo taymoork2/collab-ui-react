@@ -2,7 +2,7 @@
 /* global element */
 /* global by, $ */
 
-var LandingPage = function() {
+var LandingPage = function () {
   this.nontrialadmin = {
     username: 'pbr-test-admin@squared2webex.com',
     password: 'C1sc0123!',

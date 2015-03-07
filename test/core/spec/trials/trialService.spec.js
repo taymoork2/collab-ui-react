@@ -14,7 +14,7 @@ describe('Service: Trial Service', function () {
 
   var Auth = jasmine.createSpyObj('Auth', ['handleStatus']);
 
-  beforeEach(module(function($provide) {
+  beforeEach(module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
     $provide.value("Auth", Auth);
   }));
@@ -38,7 +38,7 @@ describe('Service: Trial Service', function () {
 
     it('should start a new trial', function () {
       $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(trialAddResponse);
-      TrialService.startTrial('','','','','',['COLLAB']).then(function(response){
+      TrialService.startTrial('', '', '', '', '', ['COLLAB']).then(function (response) {
         expect(response.data).toEqual(trialAddResponse);
       });
       $httpBackend.flush();
@@ -46,7 +46,7 @@ describe('Service: Trial Service', function () {
 
     it('should handle an error', function () {
       $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(500);
-      TrialService.startTrial('','','','','',['COLLAB']);
+      TrialService.startTrial('', '', '', '', '', ['COLLAB']);
       $httpBackend.flush();
       expect(Auth.handleStatus).toHaveBeenCalled();
     });
@@ -57,7 +57,7 @@ describe('Service: Trial Service', function () {
 
     it('should edit a trial', function () {
       $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/444').respond(trialEditResponse);
-      TrialService.editTrial('444','','','','',['COLLAB']).then(function(response){
+      TrialService.editTrial('444', '', '', '', '', ['COLLAB']).then(function (response) {
         expect(response.data).toEqual(trialEditResponse);
       });
       $httpBackend.flush();
@@ -65,7 +65,7 @@ describe('Service: Trial Service', function () {
 
     it('should handle an error', function () {
       $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/444').respond(500);
-      TrialService.editTrial('444','','','','',['COLLAB']);
+      TrialService.editTrial('444', '', '', '', '', ['COLLAB']);
       $httpBackend.flush();
       expect(Auth.handleStatus).toHaveBeenCalled();
     });

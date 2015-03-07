@@ -27,7 +27,7 @@ describe('Controller: TrialAddCtrl', function () {
       HuronCustomer: HuronCustomer,
       Notification: Notification
     });
-     $scope.$apply();
+    $scope.$apply();
   }));
 
   it('should be created successfully', function () {
@@ -58,7 +58,7 @@ describe('Controller: TrialAddCtrl', function () {
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
-      it('should not have closed the modal', function() {
+      it('should not have closed the modal', function () {
         expect($state.modal.close).not.toHaveBeenCalled();
       });
     });
@@ -73,7 +73,7 @@ describe('Controller: TrialAddCtrl', function () {
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
-      it('should close the modal', function() {
+      it('should close the modal', function () {
         expect($state.modal.close).toHaveBeenCalled();
       });
     });
@@ -86,11 +86,11 @@ describe('Controller: TrialAddCtrl', function () {
         }
       });
 
-      it('should not have empty offers', function() {
+      it('should not have empty offers', function () {
         expect(controller.isOffersEmpty()).toBeFalsy();
       });
 
-      it('should have Squared UC offer', function() {
+      it('should have Squared UC offer', function () {
         expect(controller.isSquaredUCEnabled()).toBeTruthy();
       });
 
@@ -128,7 +128,7 @@ describe('Controller: TrialAddCtrl', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
-    it('should not have closed the modal', function() {
+    it('should not have closed the modal', function () {
       expect($state.modal.close).not.toHaveBeenCalled();
     });
 

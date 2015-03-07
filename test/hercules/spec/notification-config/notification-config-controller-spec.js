@@ -1,9 +1,9 @@
-describe('NotificationConfigController', function() {
+describe('NotificationConfigController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var service, controller, $scope, notification;
 
-  beforeEach(inject(function(_$controller_){
+  beforeEach(inject(function (_$controller_) {
     $scope = {
       $watch: sinon.stub()
     };
@@ -21,21 +21,23 @@ describe('NotificationConfigController', function() {
     });
   }));
 
-  it('reads data and updates scope', function() {
+  it('reads data and updates scope', function () {
     expect($scope.loading).toBe(true);
     expect(service.read.callCount).toBe(1);
-    service.read.callArgWith(0, null, { foo: 'bar' });
+    service.read.callArgWith(0, null, {
+      foo: 'bar'
+    });
     expect($scope.loading).toBe(false);
     expect($scope.config.foo).toBe('bar');
   });
 
-  it('inits to default object when fetch returns null', function() {
+  it('inits to default object when fetch returns null', function () {
     service.read.callArgWith(0, null, null);
     expect($scope.config).not.toBe(null);
     expect(_.size($scope.config)).toBe(0);
   });
 
-  it('notifies when read fails', function() {
+  it('notifies when read fails', function () {
     expect($scope.loading).toBe(true);
     expect(service.read.callCount).toBe(1);
     service.read.callArgWith(0, ['fails'], null);
@@ -43,15 +45,21 @@ describe('NotificationConfigController', function() {
     expect(notification.notify.callCount).toBe(1);
   });
 
-  it('notifies when read fails with default msg', function() {
+  it('notifies when read fails with default msg', function () {
     expect(service.read.callCount).toBe(1);
     service.read.callArgWith(0, [null, 123], null);
     expect(notification.notify.callCount).toBe(1);
   });
 
-  it('writes data', function() {
-    $scope.config = { foo: 'bar' };
-    $scope.$parent = { modal: { close: sinon.stub() } };
+  it('writes data', function () {
+    $scope.config = {
+      foo: 'bar'
+    };
+    $scope.$parent = {
+      modal: {
+        close: sinon.stub()
+      }
+    };
     expect(service.write.callCount).toBe(0);
     expect($scope.saving).toBe(false);
 
@@ -66,8 +74,10 @@ describe('NotificationConfigController', function() {
     expect($scope.$parent.modal.close.callCount).toBe(1);
   });
 
-  it('notifies when write fails', function() {
-    $scope.config = { foo: 'bar' };
+  it('notifies when write fails', function () {
+    $scope.config = {
+      foo: 'bar'
+    };
     $scope.writeConfig();
     expect(service.write.callCount).toBe(1);
     expect(service.write.args[0][0].foo).toBe('bar');
@@ -78,16 +88,20 @@ describe('NotificationConfigController', function() {
     expect($scope.saving).toBe(false);
   });
 
-  it('errors on bad email', function() {
+  it('errors on bad email', function () {
     expect($scope.error).toBeFalsy();
-    $scope.config = { wx2users: 'bar' };
+    $scope.config = {
+      wx2users: 'bar'
+    };
     $scope.writeConfig();
     expect($scope.error).toBeTruthy();
   });
 
-  it('works on good email', function() {
+  it('works on good email', function () {
     expect($scope.error).toBeFalsy();
-    $scope.config = { wx2users: 'foo@bar.com' };
+    $scope.config = {
+      wx2users: 'foo@bar.com'
+    };
     $scope.writeConfig();
     expect($scope.error).toBeFalsy();
   });

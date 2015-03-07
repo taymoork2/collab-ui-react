@@ -1,8 +1,8 @@
-describe('DashboardHeaderDirective', function() {
+describe('DashboardHeaderDirective', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $compile, $rootScope, popoverScope, element;
-  beforeEach(inject(function($injector, _$compile_, _$rootScope_){
+  beforeEach(inject(function ($injector, _$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $injector.get('$httpBackend').when('GET', 'l10n/en_US.json').respond({});
@@ -22,16 +22,16 @@ describe('DashboardHeaderDirective', function() {
     $rootScope.$digest();
   }));
 
-  it('replaces the element with the appropriate content', function() {
+  it('replaces the element with the appropriate content', function () {
     // todo: not really sure how to test this properly
     expect(element.popover().html()).toContain("popover-title");
   });
 
-  it('should get title', function() {
+  it('should get title', function () {
     expect($rootScope.getTitle()).toBe("bar");
   });
 
-  it('should get content', function() {
+  it('should get content', function () {
     expect($rootScope.getContent()).toBe("foo");
   });
 

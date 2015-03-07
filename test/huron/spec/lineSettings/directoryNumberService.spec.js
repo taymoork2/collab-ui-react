@@ -10,7 +10,7 @@ describe('Service: DirectoryNumber', function () {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function($provide) {
+  beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 

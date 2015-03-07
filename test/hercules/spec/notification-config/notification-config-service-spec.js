@@ -14,12 +14,12 @@ describe('NotificationConfigService', function () {
       .respond({});
   }));
 
-  afterEach(function() {
+  afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should read all the data', function() {
+  it('should read all the data', function () {
     $httpBackend
       .when('GET', 'https://hercules-integration.wbx2.com/v1/notification_config')
       .respond('notification_config_yay');
@@ -33,7 +33,7 @@ describe('NotificationConfigService', function () {
     expect(callback.args[0][1]).toBe('notification_config_yay');
   });
 
-  it('should callback when read fails', function() {
+  it('should callback when read fails', function () {
     $httpBackend
       .when('GET', 'https://hercules-integration.wbx2.com/v1/notification_config')
       .respond(500, 'notification_config_yay');
@@ -47,8 +47,12 @@ describe('NotificationConfigService', function () {
     expect(callback.args[0][1]).toBeFalsy();
   });
 
-  it('should post all the data', function() {
-    var data = {username: 'foo', password: 'bar', wx2users: 'yo,lo'}
+  it('should post all the data', function () {
+    var data = {
+      username: 'foo',
+      password: 'bar',
+      wx2users: 'yo,lo'
+    }
     $httpBackend
       .when('PUT', 'https://hercules-integration.wbx2.com/v1/notification_config', data)
       .respond('nc');
@@ -62,8 +66,12 @@ describe('NotificationConfigService', function () {
     expect(callback.args[0][1]).toBe('nc');
   });
 
-  it('should callback when post fails', function() {
-    var data = {username: 'foo', password: 'bar', wx2users: 'yo,lo'}
+  it('should callback when post fails', function () {
+    var data = {
+      username: 'foo',
+      password: 'bar',
+      wx2users: 'yo,lo'
+    }
     $httpBackend
       .when('PUT', 'https://hercules-integration.wbx2.com/v1/notification_config', data)
       .respond(500);
@@ -76,6 +84,5 @@ describe('NotificationConfigService', function () {
     expect(callback.args[0][0]).toBeTruthy();
     expect(callback.args[0][1]).toBe(null);
   });
-
 
 });

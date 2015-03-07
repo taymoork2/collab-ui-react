@@ -1,7 +1,7 @@
 {
-	"success" : true,
-	"totalEnterpriseMeetings" : 5000,
-	"totalEnterpriseParticipants" : 6000,
-	"totalCloudMeetings" : 7000,
-	"totalCloudParticipants" : 8000
+  "success": true,
+  "totalEnterpriseMeetings": 5000,
+  "totalEnterpriseParticipants": 6000,
+  "totalCloudMeetings": 7000,
+  "totalCloudParticipants": 8000
 }

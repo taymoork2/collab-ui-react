@@ -1,6 +1,6 @@
 'use strict'
 
-var InvitePage = function(){
+var InvitePage = function () {
   this.inviteLauncher = element(by.id('invitelauncher'));
 }
 

@@ -1,7 +1,7 @@
 'use strict'
 
 // TODO - break up into UserList/UserAdd/UserPreview
-var UsersPage = function() {
+var UsersPage = function () {
   this.listPanel = element(by.id('userslistpanel'));
   this.manageDialog = element(by.id('modalContent'));
   this.squaredPanel = element(by.id('conversations-link'));
@@ -123,12 +123,12 @@ var UsersPage = function() {
     });
   };
 
-  this.returnUser = function(userEmail) {
+  this.returnUser = function (userEmail) {
     return element.all(by.cssContainingText('.col3', userEmail)).first();
   };
 
-  this.assertEntitlementListSize = function(size) {
-    element.all(by.repeater('key in entitlementsKeys')).then(function(items) {
+  this.assertEntitlementListSize = function (size) {
+    element.all(by.repeater('key in entitlementsKeys')).then(function (items) {
       expect(items.length).toBe(size);
     });
   };

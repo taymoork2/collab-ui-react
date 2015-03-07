@@ -22,7 +22,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
     activationCode: 'new'
   };
 
-  beforeEach(inject(function(Notification) {
+  beforeEach(inject(function (Notification) {
     sinon.spy(Notification, "notify");
   }));
 
@@ -51,7 +51,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
       expect(controller).toBeDefined;
     });
 
-    describe('after activate', function() {
+    describe('after activate', function () {
       it('should have an otp object defined', function () {
         expect(controller.otp).toBeDefined;
       })

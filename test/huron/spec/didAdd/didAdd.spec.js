@@ -14,11 +14,11 @@ describe('Controller: DidAddCtrl', function () {
     getOrgName: sinon.stub().returns('awesomeco')
   };
 
-  beforeEach(module(function($provide) {
+  beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function(Notification) {
+  beforeEach(inject(function (Notification) {
     sinon.spy(Notification, "notify");
   }));
 
@@ -65,7 +65,7 @@ describe('Controller: DidAddCtrl', function () {
       expect(controller).toBeDefined;
     });
 
-    describe('after initialization', function() {
+    describe('after initialization', function () {
       it('should have checkForInvalidTokens method', function () {
         expect(controller.checkForInvalidTokens).toBeDefined;
       });
@@ -163,11 +163,21 @@ describe('Controller: DidAddCtrl', function () {
 
         describe('submit DIDs', function () {
           beforeEach(function () {
-            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {'pattern': '+9999999999'}).respond(201);
-            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {'pattern': '+8888888888'}).respond(201);
-            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {'pattern': '+7777777777'}).respond(201);
-            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {'pattern': '+6666666666'}).respond(201);
-            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {'pattern': '+5555555555'}).respond(500);
+            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
+              'pattern': '+9999999999'
+            }).respond(201);
+            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
+              'pattern': '+8888888888'
+            }).respond(201);
+            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
+              'pattern': '+7777777777'
+            }).respond(201);
+            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
+              'pattern': '+6666666666'
+            }).respond(201);
+            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
+              'pattern': '+5555555555'
+            }).respond(500);
             controller.submit();
             $httpBackend.flush();
           });
@@ -187,14 +197,14 @@ describe('Controller: DidAddCtrl', function () {
           expect(controller.sendEmail).toBeDefined;
         });
 
-        it('should send email and report success notification', function() {
+        it('should send email and report success notification', function () {
           $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/didadd').respond(200);
           controller.sendEmail();
           $httpBackend.flush();
           expect(Notification.notify.calledOnce).toBe(true);
         });
 
-        it('should report error notification when email cannot be sent', function() {
+        it('should report error notification when email cannot be sent', function () {
           $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/didadd').respond(500);
           controller.sendEmail();
           $httpBackend.flush();

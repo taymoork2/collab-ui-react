@@ -9,7 +9,7 @@ describe('Service: Huron Customer', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module(function($provide) {
+  beforeEach(module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
@@ -32,7 +32,7 @@ describe('Service: Huron Customer', function () {
 
     it('should start a new trial', function () {
       $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);
-      HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').then(function(response){
+      HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').then(function (response) {
         expect(response['$resolved']).toEqual(true);
       });
       $httpBackend.flush();
@@ -40,7 +40,7 @@ describe('Service: Huron Customer', function () {
 
     it('should handle an error', function () {
       $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(500);
-      HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').catch(function(response){
+      HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').catch(function (response) {
         expect(response.status).toEqual(500);
       });
       $httpBackend.flush();

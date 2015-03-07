@@ -12,7 +12,7 @@ describe('ServiceDescriptor', function () {
   }));
 
   it('should fetch services', function () {
-    Service.services(function(services) {
+    Service.services(function (services) {
       expect(services.length).toEqual(3);
     });
   });

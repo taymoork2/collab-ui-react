@@ -1,9 +1,9 @@
-describe('DashboardHeaderController', function() {
+describe('DashboardHeaderController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $scope, aggregator;
 
-  beforeEach(inject(function(_$controller_){
+  beforeEach(inject(function (_$controller_) {
     $scope = {
       $watch: sinon.stub()
     };
@@ -20,7 +20,7 @@ describe('DashboardHeaderController', function() {
     });
   }));
 
-  it('does its magic', function() {
+  it('does its magic', function () {
     expect(service.services.calledOnce).toEqual(true);
     service.services.callArgWith(0, 'foo');
     expect($scope.services).toEqual('foo');

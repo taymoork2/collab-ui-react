@@ -8,31 +8,31 @@ var testuser = {
   password: 'C1sc0123!',
 };
 
-describe('Devices flow', function() {
-  beforeEach(function() {
+describe('Devices flow', function () {
+  beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     browser.ignoreSynchronization = false;
   });
 
-  it('should login as squared team member admin user', function() {
+  it('should login as squared team member admin user', function () {
     login.login(testuser.username, testuser.password);
   });
 
-  it('clicking on devices tab should show the list of rooms', function() {
+  it('clicking on devices tab should show the list of rooms', function () {
     navigation.clickDevices();
     utils.expectIsDisplayed(spaces.roomsList);
   });
 
-  it('clicking on add room button should be successful', function() {
+  it('clicking on add room button should be successful', function () {
     utils.click(spaces.addButton);
     utils.expectIsDisplayed(spaces.addRoomDialog);
     utils.expectIsDisplayed(spaces.addRoomButton);
   });
 
-  it('entering a new room should add the room successfully', function() {
+  it('entering a new room should add the room successfully', function () {
     var testRoom = utils.randomTestRoom();
     spaces.newRoomField.clear();
     spaces.newRoomField.sendKeys(testRoom);
@@ -43,7 +43,7 @@ describe('Devices flow', function() {
     utils.expectIsNotDisplayed(spaces.addRoomDialog);
   });
 
-  it('should delete device', function() {
+  it('should delete device', function () {
     utils.click(spaces.actionLink);
     utils.click(spaces.deleteDeviceAction);
     utils.expectIsDisplayed(spaces.deleteDeviceModal);
@@ -51,7 +51,7 @@ describe('Devices flow', function() {
     notifications.assertSuccess('deleted successfully');
   });
 
-  it('should log out', function() {
+  it('should log out', function () {
     navigation.logout();
   });
 });

@@ -24,22 +24,22 @@ var supportuser = {
   password: 'C1sc0123!',
 };
 
-describe('Support flow', function() {
+describe('Support flow', function () {
 
-  beforeEach(function() {
+  beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     browser.ignoreSynchronization = false;
   });
 
-  describe('Support tab', function() {
-    it('should login as non-sso admin user', function(){
+  describe('Support tab', function () {
+    it('should login as non-sso admin user', function () {
       login.loginTo('#/support', testuser.username, testuser.password);
     });
 
-    it('should display correct tabs for user based on role', function() {
+    it('should display correct tabs for user based on role', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.usersTab);
       utils.expectIsDisplayed(navigation.devicesTab);
@@ -49,16 +49,16 @@ describe('Support flow', function() {
       expect(navigation.getTabCount()).toBe(6);
     });
 
-    it('should not display results panel initially', function() {
+    it('should not display results panel initially', function () {
       utils.expectIsNotDisplayed(support.logsPanel);
     });
 
-    it('should display error for empty input', function() {
+    it('should display error for empty input', function () {
       utils.click(support.logSearchBtn);
       notifications.assertError('Search input cannot be empty.');
     });
 
-    it('should search for logs by valid email address', function() {
+    it('should search for logs by valid email address', function () {
       support.searchAndVerifyResult(testuser.searchValidEmail);
 
       utils.expectIsDisplayed(support.supportTable);
@@ -70,7 +70,7 @@ describe('Support flow', function() {
       testuser.searchValidLocusid = support.locusId.getText();
     });
 
-    it('should search for logs by valid uuid', function() {
+    it('should search for logs by valid uuid', function () {
       support.searchAndVerifyResult(testuser.searchValidUuid, testuser.searchValidEmail);
 
       utils.expectIsDisplayed(support.supportTable);
@@ -78,7 +78,7 @@ describe('Support flow', function() {
       expect(support.emailAddress.getText()).toBe(testuser.searchValidEmail);
     });
 
-    xit('should search for logs by valid locusId', function() {
+    xit('should search for logs by valid locusId', function () {
       support.searchAndVerifyResult(testuser.searchValidLocusid, testuser.searchValidEmail);
       utils.expectIsDisplayed(support.supportTable);
 
@@ -87,18 +87,18 @@ describe('Support flow', function() {
       expect(support.callStart.getText()).not.toBe('-NA-');
     });
 
-    xit('should display call-info panel for the log', function() {
+    xit('should display call-info panel for the log', function () {
       utils.click(support.callInfoIcon);
       utils.expectIsDisplayed(support.closeCallInfo);
     });
 
-    it('should display log-list panel on search', function() {
+    it('should display log-list panel on search', function () {
       utils.click(support.logSearchBtn);
       utils.expectIsNotDisplayed(support.closeCallInfo);
       utils.expectIsDisplayed(support.supportTable);
     });
 
-    it('should search for logs by valid email address and display log info', function() {
+    it('should search for logs by valid email address and display log info', function () {
       support.searchAndVerifyResult(testuser.searchValidEmail);
 
       utils.click(support.callInfoIcon);
@@ -111,24 +111,24 @@ describe('Support flow', function() {
       utils.expectIsDisplayed(support.logsPanel);
     });
 
-    it('should log out', function() {
+    it('should log out', function () {
       navigation.logout();
     });
   });
 
-  describe('Non-admin Squared Support Role', function() {
-    it('should login as squared support user', function(){
+  describe('Non-admin Squared Support Role', function () {
+    it('should login as squared support user', function () {
       login.loginTo('#/support', supportuser.username, supportuser.password);
     });
 
-    it('should display correct tabs for user based on role', function() {
+    it('should display correct tabs for user based on role', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.reportsTab);
       utils.expectIsDisplayed(navigation.supportTab);
       expect(navigation.getTabCount()).toBe(3);
     });
 
-    it('should log out', function() {
+    it('should log out', function () {
       navigation.logout();
     });
   });

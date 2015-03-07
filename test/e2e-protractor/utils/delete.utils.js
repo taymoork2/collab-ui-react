@@ -5,8 +5,8 @@
 var config = require('./test.config.js');
 var utils = require('./test.utils.js');
 
-exports.deleteUser = function(email) {
-  return utils.getToken().then(function(token) {
+exports.deleteUser = function (email) {
+  return utils.getToken().then(function (token) {
     var options = {
       method: 'delete',
       url: config.adminServiceUrl.integration + 'user?email=' + encodeURIComponent(email),
@@ -16,14 +16,14 @@ exports.deleteUser = function(email) {
       },
     };
 
-    return utils.sendRequest(options).then(function() {
+    return utils.sendRequest(options).then(function () {
       return 200;
     });
   });
 };
 
-exports.deleteSquaredUCUser = function(customerUuid,userUuid,email) {
-  return utils.getToken().then(function(token) {
+exports.deleteSquaredUCUser = function (customerUuid, userUuid, email) {
+  return utils.getToken().then(function (token) {
     var options = {
       method: 'delete',
       url: config.squaredUCServiceUrl.integration + 'common/customers/' + customerUuid + '/users/' + userUuid,
@@ -33,7 +33,7 @@ exports.deleteSquaredUCUser = function(customerUuid,userUuid,email) {
       }
     };
 
-    return utils.sendRequest(options).then(function() {
+    return utils.sendRequest(options).then(function () {
       return 204;
     });
   });

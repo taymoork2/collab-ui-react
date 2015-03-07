@@ -13,27 +13,27 @@ exports.searchButton = element(by.css('.header-search-toggle'));
 
 exports.searchField = element(by.css('.search-form input'));
 
-exports.randomId = function() {
+exports.randomId = function () {
   return (Math.random() + 1).toString(36).slice(2);
 };
 
-exports.randomTestRoom = function() {
+exports.randomTestRoom = function () {
   return 'atlas-' + this.randomId();
 };
 
-exports.randomTestGmail = function() {
+exports.randomTestGmail = function () {
   var email = 'collabctg+' + this.randomId() + '@gmail.com';
   console.log('randomTestGmail: ' + email);
   return email;
 };
 
-exports.sendRequest = function(options) {
+exports.sendRequest = function (options) {
   var flow = protractor.promise.controlFlow();
-  return flow.execute(function() {
+  return flow.execute(function () {
     var defer = protractor.promise.defer();
     // console.log('\nSending Request...', options);
 
-    request(options, function(error, response, message) {
+    request(options, function (error, response, message) {
       // console.log('\nResponse Received...', options.url);
       // console.log('--error: ' + error);
       // console.log('--status code: ' + response.statusCode);
@@ -54,7 +54,7 @@ exports.sendRequest = function(options) {
   });
 };
 
-exports.getToken = function() {
+exports.getToken = function () {
   console.log('getting token');
   var options = {
     method: 'post',
@@ -70,45 +70,45 @@ exports.getToken = function() {
     body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope
   };
 
-  return this.sendRequest(options).then(function(data) {
+  return this.sendRequest(options).then(function (data) {
     var resp = JSON.parse(data);
     console.log('access token', resp.access_token);
     return resp.access_token;
   });
 };
 
-exports.scrollTop = function() {
+exports.scrollTop = function () {
   browser.executeScript('window.scrollTo(0,0);');
 };
 
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action
-exports.wait = function(elem) {
+exports.wait = function (elem) {
   browser.wait(function () {
-    return elem.isDisplayed().then(function(isDisplayed){
+    return elem.isDisplayed().then(function (isDisplayed) {
       return isDisplayed;
-    }, function(){
+    }, function () {
       return false;
     });
   }, 30000, 'Waiting for: ' + elem.locator());
 };
 
-exports.expectIsDisplayed = function(elem) {
+exports.expectIsDisplayed = function (elem) {
   this.wait(elem);
   expect(elem.isDisplayed()).toBeTruthy();
 };
 
-exports.expectIsNotDisplayed = function(elem) {
-  browser.wait(function(){
-    return elem.isDisplayed().then(function(isDisplayed){
+exports.expectIsNotDisplayed = function (elem) {
+  browser.wait(function () {
+    return elem.isDisplayed().then(function (isDisplayed) {
       return !isDisplayed;
-    }, function(){
+    }, function () {
       return true;
     }, 30000, 'Waiting for: ' + elem.locator());
   });
 };
 
-exports.click = function(elem, maxRetry) {
+exports.click = function (elem, maxRetry) {
   this.wait(elem);
   if (typeof maxRetry === 'undefined') {
     maxRetry = 10;
@@ -117,53 +117,52 @@ exports.click = function(elem, maxRetry) {
     console.error('Could not click: ' + elem.locator());
     elem.click();
   } else {
-    elem.click().then(function () {
-    }, function () {
+    elem.click().then(function () {}, function () {
       exports.click(elem, --maxRetry);
     });
   }
 };
 
-exports.expectText = function(elem, value) {
+exports.expectText = function (elem, value) {
   this.wait(elem);
   expect(elem.getText()).toEqual(value);
 };
 
-exports.getSwitchState = function(elem) {
+exports.getSwitchState = function (elem) {
   return elem.evaluate('buttonValue');
 };
 
-exports.toggleSwitch = function(elem, toggle) {
-  this.getSwitchState(elem).then(function(value){
+exports.toggleSwitch = function (elem, toggle) {
+  this.getSwitchState(elem).then(function (value) {
     if (value !== toggle) {
       elem.element(by.css('input'))
-        .then(function(input){
+        .then(function (input) {
           input.click();
-        },function(){
+        }, function () {
           elem.click();
         });
     }
   });
 };
 
-exports.enableSwitch = function(elem) {
-  this.toggleSwitch(elem,true);
+exports.enableSwitch = function (elem) {
+  this.toggleSwitch(elem, true);
 };
 
-exports.disableSwitch = function(elem) {
-  this.toggleSwitch(elem,false);
+exports.disableSwitch = function (elem) {
+  this.toggleSwitch(elem, false);
 };
 
 exports.hasClass = function (element, cls) {
   return element.getAttribute('class').then(function (classes) {
-      return classes.split(' ').indexOf(cls) !== -1;
+    return classes.split(' ').indexOf(cls) !== -1;
   });
 };
 
 exports.findDirectoryNumber = function (message, lineNumber) {
   for (var i = 0; i < message.length; i++) {
     var line = message[i];
-    if (line.directoryNumber.pattern === lineNumber){
+    if (line.directoryNumber.pattern === lineNumber) {
       return line.uuid;
     }
   }
@@ -180,7 +179,7 @@ exports.search = function (query) {
   }
 };
 
-exports.searchAndClick = function(query) {
+exports.searchAndClick = function (query) {
   this.search(query);
   utils.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
 };

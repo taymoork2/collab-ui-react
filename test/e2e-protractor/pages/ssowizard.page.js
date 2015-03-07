@@ -1,6 +1,6 @@
 'use strict'
 
-var SSOWizardPage = function(){
+var SSOWizardPage = function () {
 
   this.btnSSO = element(by.id('btnSSO'));
   this.ssoModalHeader = element(by.id('ssoModalHeader'));

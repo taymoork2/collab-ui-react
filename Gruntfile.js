@@ -422,6 +422,10 @@ module.exports = function (grunt) {
         src: [
           '<%= app_dir %>/**/*.js',
           '<%= app_dir %>/**/*.json',
+          '<%= test_dir %>/**/*.js',
+          '<%= test_dir %>/**/*.json',
+          '!test/karma-unit.js',
+          'karma.conf.js',
           'Gruntfile.js'
         ],
         options: {
@@ -432,6 +436,10 @@ module.exports = function (grunt) {
         src: [
           '<%= app_dir %>/**/*.js',
           '<%= app_dir %>/**/*.json',
+          '<%= test_dir %>/**/*.js',
+          '<%= test_dir %>/**/*.json',
+          '!test/karma-unit.js',
+          'karma.conf.js',
           'Gruntfile.js'
         ],
         options: {
