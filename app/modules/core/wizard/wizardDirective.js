@@ -131,8 +131,8 @@
 
     function getController($scope) {
       var tab = getTab();
-      if (tab && tab['controller']) {
-        return $controller(tab['controller'], {
+      if (tab && tab.controller) {
+        return $controller(tab.controller, {
           $scope: $scope
         });
       }

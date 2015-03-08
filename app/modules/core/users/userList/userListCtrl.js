@@ -300,7 +300,7 @@ angular.module('Core')
             var ciService = $rootScope.services[i].ciService;
             if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
               $scope.entitlements[service] = true;
-              $scope.entitlements['webExSquared'] = true;
+              $scope.entitlements.webExSquared = true;
             } else {
               $scope.entitlements[service] = false;
             }

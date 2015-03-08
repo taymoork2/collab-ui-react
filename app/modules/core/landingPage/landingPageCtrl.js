@@ -39,9 +39,9 @@ angular.module('Core')
       };
 
       $scope.reloadReports = function (useCache) {
-        $scope.reportStatus['calls'] = 'refresh';
-        $scope.reportStatus['conversations'] = 'refresh';
-        $scope.reportStatus['contentShared'] = 'refresh';
+        $scope.reportStatus.calls = 'refresh';
+        $scope.reportStatus.conversations = 'refresh';
+        $scope.reportStatus.contentShared = 'refresh';
         ReportsService.getAllMetrics(useCache);
       };
 

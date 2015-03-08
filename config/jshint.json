@@ -3,10 +3,8 @@
 
   "node": true,
   "browser": true,
-
   "-W083": true,
 
-  "-W069": false,
   "esnext": false,
   "bitwise": false,
   "camelcase": false,

@@ -82,7 +82,7 @@ angular.module('Core')
         if (orgCount > 5) {
           for (var i = 0; i < data.length; i++) {
             var obj = data[i];
-            var date = obj['date'];
+            var date = obj.date;
             var sum = 0;
             Object.keys(obj).forEach(function (k) {
               if (k.indexOf('count') > -1) {
@@ -90,8 +90,8 @@ angular.module('Core')
               }
             });
             var dataSection = {};
-            dataSection['date'] = date;
-            dataSection['count'] = sum;
+            dataSection.date = date;
+            dataSection.count = sum;
             aggregatedData.push(dataSection);
           }
           data = aggregatedData;
@@ -164,7 +164,7 @@ angular.module('Core')
         if (orgCount < 5) {
           for (var j = 0; j < orgCount; j++) {
             var orgName = orgNameMap['customerName' + j];
-            chartObject['graphs'].push({
+            chartObject.graphs.push({
               'type': 'column',
               'fillAlphas': 1,
               'lineAlpha': 0,
@@ -175,7 +175,7 @@ angular.module('Core')
             });
           }
         } else {
-          chartObject['graphs'].push({
+          chartObject.graphs.push({
             'type': 'column',
             'fillAlphas': 1,
             'lineAlpha': 0,
