@@ -119,7 +119,7 @@
           var currView = this;
 
           var xmlApiAccessInfo = {
-            xmlServerURL: "https://" + wbxSiteUrl + "/WBXService/XMLService";
+            xmlServerURL: "https://" + wbxSiteUrl + "/WBXService/XMLService",
             wbxSiteName: wbxSiteName,
             webexAdminID: Authinfo.getUserName(),
             accessToken: $rootScope.token
