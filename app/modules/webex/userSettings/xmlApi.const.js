@@ -43,6 +43,20 @@ const constants = {
     "    </body>" +
     "</serv:message>",
 
+  sessionTicketRequest: "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
+    "    <header>" +
+    "        <securityContext>" +
+    "				<siteName>{{wbxSiteName}}</siteName> " +
+    "            	<webExID>{{webexAdminID}}</webExID>" +
+    "        </securityContext>" +
+    "    </header>" +
+    "    <body>" +
+    "			<bodyContent xsi:type=\"java:com.webex.service.binding.user.AuthenticateUser\">" +
+    "				<accessToken>{{accessToken}}</accessToken>" +
+    "			</bodyContent>" +
+    "    </body>" +
+    "</serv:message>",
+
   replaceSets: [{
       replaceThis: /<ns1:/g,
       withThis: "<ns1_"

@@ -26,12 +26,12 @@
         var currView = this;
         var xmlApiAccessInfo = {
           xmlServerURL: "http://172.24.93.53/xml9.0.0/XMLService",
-          webexAdminID: "jpallapa",
-          webexAdminPswd: "C!sco123",
+          webexAdminID: "",
+          webexAdminPswd: "",
           siteID: "4272",
           PartnerID: "4272",
           webexSessionTicket: null,
-          webexUserId: "jpallapa"
+          webexUserId: ""
         };
 
         WebExUserSettingsSvc.getUserSettingsInfo(xmlApiAccessInfo).then(
@@ -232,6 +232,9 @@
       }; // updateUserSettings()
 
       //----------------------------------------------------------------------//
+
+      this.xml2JsonConvert = WebExUserSettingsSvc.xml2JsonConvert;
+      this.getSessionTicket = WebExUserSettingsSvc.getSessionTicket;
 
       this.userInfoXml = null;
       this.userInfoJson = null;

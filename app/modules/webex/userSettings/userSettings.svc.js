@@ -42,6 +42,10 @@
         xml2JsonConvert: function (commentText, xmlDataText, startOfBodyStr, endOfBodyStr) {
           return XmlApiSvc.xml2JsonConvert(commentText, xmlDataText, startOfBodyStr, endOfBodyStr);
         }, // xml2JsonConvert()
+
+        getSessionTicket: function (wbxSiteUrl) {
+          return XmlApiSvc.getSessionTicket(wbxSiteUrl);
+        }, //getSessionTicket()
       }; // return
     } //WebExUserSettingsSvc
   ]); // angular
