@@ -6,7 +6,7 @@ angular.module('Hercules')
   .service('NotificationConfigService', ['$http', 'Notification', 'ConfigService',
     function NotificationConfigService($http, notification, config) {
 
-      var url = config.getUrl() + '/notification_config'
+      var url = config.getUrl() + '/notification_config';
 
       var read = function (callback) {
         $http

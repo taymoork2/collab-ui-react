@@ -85,6 +85,6 @@
           angular.element('#saveSendButton').button('reset');
           Notification.notify([response.data.message], 'error');
         });
-    };
+    }
   }
 })();

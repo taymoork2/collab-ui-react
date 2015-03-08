@@ -69,7 +69,7 @@
           return a.beginNumber - b.beginNumber;
         });
 
-        if ($scope.internalNumberRanges.length == 0) {
+        if ($scope.internalNumberRanges.length === 0) {
           // Add a default internalNumberRange
           $scope.internalNumberRanges.push({
             beginNumber: DEFAULT_FROM,
@@ -91,7 +91,7 @@
         ServiceSetup.deleteInternalNumberRange(internalNumberRange)
           .then(function () {
             $scope.internalNumberRanges.splice(index, 1);
-            if ($scope.internalNumberRanges.length == 0) {
+            if ($scope.internalNumberRanges.length === 0) {
               $scope.internalNumberRanges.push({
                 beginNumber: DEFAULT_FROM,
                 endNumber: DEFAULT_TO

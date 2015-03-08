@@ -16,8 +16,11 @@
       };
 
       $scope.$watch('currentUser', function (newUser, oldUser) {
-        if (!newUser || !newUser.id) return $scope.activationStatus = null;
-        updateStatusForUser(newUser.id);
+        if (!newUser || !newUser.id) {
+          $scope.activationStatus = null;
+        } else {
+          updateStatusForUser(newUser.id);
+        }
       });
 
       $scope.reload = function () {

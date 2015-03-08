@@ -75,9 +75,9 @@
           var index = wbxSiteUrl.indexOf(".");
           var wbxSiteName = wbxSiteUrl.slice(0, index);
 
-          if ($rootScope.sessionTickets == null) {
+          if ($rootScope.sessionTickets === null) {
             var storedSessionTicketsJson = Storage.get('sessionTickets');
-            if (storedSessionTicketsJson != null) {
+            if (storedSessionTicketsJson !== null) {
               $rootScope.sessionTickets = JSON.parse(storedSessionTicketsJson);
               $log.log("Storage.sessionTickets = " + $rootScope.sessionTickets);
             } else {
@@ -89,7 +89,7 @@
             }
           }
           var ticket = $rootScope.sessionTickets[wbxSiteName];
-          if (ticket == null) {
+          if (ticket === null) {
             logMsg = funcName + ": " + "No Session ticket for Site= " + wbxSiteName + " will create new one for this site";
             $log.log(logMsg);
             return this.getNewSessionTicket(wbxSiteName, wbxSiteUrl);
@@ -137,7 +137,7 @@
               var JsonData = currView.xml2JsonConvert("User Data", result, "<serv:message", "<//serv:message>");
               logMsg = funcName + ".success()" + ": " + "\n" + "JsonData=" + JSON.stringify(JsonData);
               $log.log(logMsg);
-              var result = JsonData.body.serv_message.serv_header.serv_response.serv_result;
+              result = JsonData.body.serv_message.serv_header.serv_response.serv_result;
               if (result != "SUCCESS") {
                 logMsg = funcName + ".error()" + ": " + "\n" + "JsonData=" + JSON.stringify(JsonData) + " , result=" + result;
                 $log.log(logMsg);
@@ -147,13 +147,13 @@
               var createTime = JsonData.body.serv_message.serv_body.serv_bodyContent.use_createTime;
               var ttl = JsonData.body.serv_message.serv_body.serv_bodyContent.use_timeToLive;
               var ttlMSec = (parseInt(ttl) - 100) * 1000;
-              if (sessionTicket != null) {
+              if (sessionTicket !== null) {
                 var ticket = {}; //new object
                 ticket.site = wbxSiteName;
                 ticket.sessionTik = sessionTicket;
                 ticket.validUntil = parseInt(createTime) + ttlMSec;
                 $log.log(ticket.validUntil);
-                if ($rootScope.sessionTickets == null) {
+                if ($rootScope.sessionTickets === null) {
                   $rootScope.sessionTickets = {};
                 }
                 $rootScope.sessionTickets[wbxSiteName] = ticket;
@@ -178,7 +178,7 @@
           // alert(logMsg);
 
           var startOfBodyIndex = xmlDataText.indexOf(startOfBodyStr);
-          var endOfBodyIndex = (null == endOfBodyStr) ? 0 : xmlDataText.indexOf(endOfBodyStr);
+          var endOfBodyIndex = (null === endOfBodyStr) ? 0 : xmlDataText.indexOf(endOfBodyStr);
 
           logMsg = funcName + ": " + commentText + "\n" + "startOfBodyIndex=" + startOfBodyIndex + "\n" + "endOfBodyIndex=" + endOfBodyIndex;
           $log.log(logMsg);

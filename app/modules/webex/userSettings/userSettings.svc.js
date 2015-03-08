@@ -34,7 +34,7 @@
         getUserSettingsInfo: function (xmlApiAccessInfo) {
           var userInfoXml = XmlApiSvc.getUserInfo(xmlApiAccessInfo);
           var siteInfoXml = XmlApiSvc.getSiteInfo(xmlApiAccessInfo);
-          var meetingTypeXml = XmlApiSvc.getMeetingTypeInfo(xmlApiAccessInfo);;
+          var meetingTypeXml = XmlApiSvc.getMeetingTypeInfo(xmlApiAccessInfo);
 
           return $q.all([userInfoXml, siteInfoXml, meetingTypeXml]);
         }, // getUserSettingsInfo()

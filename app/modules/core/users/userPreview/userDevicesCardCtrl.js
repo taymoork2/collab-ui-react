@@ -26,7 +26,7 @@
         if (userDevicesCard.dropDownItems[i].name === 'generateAuthCode') {
           foundLink = true;
         }
-      };
+      }
 
       if (!foundLink) {
         userDevicesCard.dropDownItems.push(generateOtpLink);
@@ -38,7 +38,7 @@
         if (userDevicesCard.dropDownItems[i].name === 'generateAuthCode') {
           userDevicesCard.dropDownItems.splice(i, 1);
         }
-      };
+      }
     }
 
   }

@@ -37,9 +37,12 @@ angular.module('Hercules')
             }
           });
           callback();
-          if (err) return $scope.pollHasFailed = true;
-          $scope.pollHasFailed = false;
-          if (!skipPoll) $scope._poll();
+          if (err) {
+            $scope.pollHasFailed = true;
+          } else {
+            $scope.pollHasFailed = false;
+            if (!skipPoll) $scope._poll();
+          }
         });
       };
 

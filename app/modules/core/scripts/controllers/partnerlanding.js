@@ -27,7 +27,7 @@ angular.module('Core')
           $state.modal.result.then(function () {
             getTrialsList();
             getManagedOrgsList();
-          })
+          });
         });
       };
 
@@ -38,7 +38,7 @@ angular.module('Core')
           $state.modal.result.then(function () {
             getTrialsList();
             getManagedOrgsList();
-          })
+          });
         });
       };
 
@@ -122,7 +122,7 @@ angular.module('Core')
 
                 var daysDone = moment(now).diff(start, 'days');
                 trialObj.daysUsed = daysDone;
-                trialObj.percentUsed = eval(Math.round((daysDone / trial.trialPeriod) * 100));
+                trialObj.percentUsed = Math.round((daysDone / trial.trialPeriod) * 100);
 
                 var daysLeft = moment(then).diff(now, 'days');
                 trialObj.daysLeft = daysLeft;
@@ -223,7 +223,7 @@ angular.module('Core')
 
                 var daysDone = moment(now).diff(start, 'days');
                 orgObj.daysUsed = daysDone;
-                orgObj.percentUsed = eval(Math.round((daysDone / org.trialPeriod) * 100));
+                orgObj.percentUsed = Math.round((daysDone / org.trialPeriod) * 100);
 
                 var daysLeft = moment(then).diff(now, 'days');
                 orgObj.daysLeft = daysLeft;

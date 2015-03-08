@@ -162,14 +162,14 @@ angular.module('Core')
         }
 
         if (orgCount < 5) {
-          for (var i = 0; i < orgCount; i++) {
-            var orgName = orgNameMap['customerName' + i];
+          for (var j = 0; j < orgCount; j++) {
+            var orgName = orgNameMap['customerName' + j];
             chartObject['graphs'].push({
               'type': 'column',
               'fillAlphas': 1,
               'lineAlpha': 0,
               'hidden': false,
-              'valueField': 'count' + i,
+              'valueField': 'count' + j,
               'title': orgName,
               'balloonText': orgName + ': [[value]]'
             });

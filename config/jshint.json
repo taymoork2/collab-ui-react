@@ -1,0 +1,33 @@
+{
+  "indent": 2,
+
+  "node": true,
+  "browser": true,
+
+  "-W083": true,
+
+  "-W069": false,
+  "esnext": false,
+  "bitwise": false,
+  "camelcase": false,
+  "curly": false,
+  "eqeqeq": false,
+  "immed": false,
+  "latedef": false,
+  "newcap": false,
+  "noarg": false,
+  "quotmark": false,
+  "regexp": false,
+  "undef": false,
+  "unused": false,
+  "strict": false,
+  "trailing": false,
+  "smarttabs": false,
+  "globals": {
+    "$": true,
+    "_": true,
+    "moment": true,
+    "angular": true,
+    "AmCharts": true
+  }
+}

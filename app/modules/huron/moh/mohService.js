@@ -28,8 +28,7 @@
 
     function getPlaylist(uuid) {
       var playlist = [];
-      var uuid = uuid;
-      var playlistUrl = '/modules/huron/moh/mohData/playlists/' + uuid + '.json'
+      var playlistUrl = '/modules/huron/moh/mohData/playlists/' + uuid + '.json';
 
       return $http.get(playlistUrl)
         .then(getPlaylistComplete);

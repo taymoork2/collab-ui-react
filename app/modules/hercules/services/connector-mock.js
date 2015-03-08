@@ -21,7 +21,7 @@ var createService = function (serviceName, serviceType, hosts) {
       "state": serviceType == 'yolo' ? 'running' : host.hostState,
       "version": '0.' + Math.floor(Math.random() * 10) + '.1.2'
     };
-    if (Math.floor((Math.random() * 10) % 9) == 0) {
+    if (Math.floor((Math.random() * 10) % 9) === 0) {
       connector.alarms = [createAlarm({
           title: "Unable to connect",
           severity: "error",
@@ -33,9 +33,9 @@ var createService = function (serviceName, serviceType, hosts) {
           description: "It's really bad man. I can't do any more work here. This cloud is just too confusing."
         })
       ];
-      connector.connector_status = createConnectorStatus(serviceType, false)
+      connector.connector_status = createConnectorStatus(serviceType, false);
     } else {
-      connector.connector_status = createConnectorStatus(serviceType, true)
+      connector.connector_status = createConnectorStatus(serviceType, true);
     }
     return connector;
   });
@@ -44,7 +44,7 @@ var createService = function (serviceName, serviceType, hosts) {
     "display_name": serviceName,
     "connectors": connectors
   };
-}
+};
 
 var createCluster = function (opts) {
   return {
@@ -52,20 +52,20 @@ var createCluster = function (opts) {
     "name": opts.clusterName,
     "provisioning_data": {
       "approved_packages": _.map(opts.approved, function (pkg) {
-        return pkg
+        return pkg;
       }),
       "not_approved_packages": _.map(opts.napproved, function (pkg) {
-        return pkg
+        return pkg;
       })
     },
     "services": _.map(opts.services, function (service) {
-      return createService(service.serviceName, service.serviceType, opts.hosts)
+      return createService(service.serviceName, service.serviceType, opts.hosts);
     }),
     "hosts": _.map(opts.hosts, function (host) {
-      return createHost(host.hostName)
+      return createHost(host.hostName);
     })
-  }
-}
+  };
+};
 
 var createAlarm = function (opts) {
   return {
@@ -75,23 +75,23 @@ var createAlarm = function (opts) {
     "title": opts.title,
     "severity": opts.severity,
     "description": opts.description
-  }
-}
+  };
+};
 
 var createConnectorStatus = function (connectorType, statusOk) {
   if (connectorType == "c_mgmt") {
-    return null
+    return null;
   }
-  var cloudServiceType = "common_identity"
-  var premServiceType = ""
+  var cloudServiceType = "common_identity";
+  var premServiceType = "";
   switch (connectorType) {
   case "c_cal":
-    cloudServiceType = "cal_service"
-    premServiceType = "exchange"
+    cloudServiceType = "cal_service";
+    premServiceType = "exchange";
     break;
   case "c_ucmc":
-    cloudServiceType = "uc_service"
-    premServiceType = "ucm_axl"
+    cloudServiceType = "uc_service";
+    premServiceType = "ucm_axl";
     break;
   }
   return {
@@ -110,8 +110,8 @@ var createConnectorStatus = function (connectorType, statusOk) {
         "stateDescription": statusOk ? "" : "Unable to connect..."
       }]
     }
-  }
-}
+  };
+};
 
 var calPkg = {
   "service": {

@@ -20,7 +20,7 @@
     function listCallParks() {
       CallPark.list().then(function (callParks) {
         vm.callParks = callParks;
-        vm.showInformation = vm.callParks.length == 0 ? true : false;
+        vm.showInformation = vm.callParks.length === 0 ? true : false;
         $rootScope.$broadcast('callrouting-update', {
           state: 'callpark',
           count: vm.callParks.length

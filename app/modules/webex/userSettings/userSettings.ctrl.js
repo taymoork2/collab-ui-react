@@ -97,7 +97,7 @@
 
         //---------------- start of session types update ----------------//
         var siteMeetingTypes = meetingTypesInfoJson.mtgtype_meetingType;
-        var sessionTypes = new Array;
+        var sessionTypes = [];
 
         siteMeetingTypes.forEach(function (siteMeetingType) {
           var siteMtgServiceTypeID = siteMeetingType.mtgtype_meetingTypeID;

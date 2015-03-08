@@ -72,8 +72,8 @@ angular
               return $previousState.go(modalMemo);
             }
           });
-        }
-      };
+        };
+      }
 
       modalOnExit.$inject = ['$state', '$previousState'];
 
@@ -82,7 +82,7 @@ angular
           $previousState.forget(modalMemo);
           $state.modal.close();
         }
-      };
+      }
 
       var modalMemo = 'modalMemo';
       var wizardmodalMemo = 'wizardmodalMemo';

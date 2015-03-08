@@ -181,7 +181,7 @@
           }
 
           if (scope.strokeWidth) {
-            path.attr('stroke-width', scope.strokeWidth)
+            path.attr('stroke-width', scope.strokeWidth);
           }
 
         };

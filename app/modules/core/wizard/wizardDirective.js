@@ -29,7 +29,7 @@
       })(scope.$$childHead);
 
       return $q.all(promises);
-    };
+    }
   }
 
   /* @ngInject */
@@ -283,7 +283,7 @@
             element.replaceWith($compile(element)(parentScope));
           });
         }
-      };
+      }
     }
   }
 })();

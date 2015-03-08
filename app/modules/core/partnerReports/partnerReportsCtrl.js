@@ -49,7 +49,7 @@
     vm.serviceSelected = vm.serviceOptions[0];
 
     vm.customerOptions = [];
-    vm.customerSelected;
+    // vm.customerSelected;
 
     init();
 
@@ -64,11 +64,11 @@
         updateCustomerOptions();
         setReports();
       });
-    };
+    }
 
     function isRefresh(tab) {
       return tab.status === 'refresh';
-    };
+    }
 
     function updateCustomerOptions() {
       // if there are fewer than 5 orgs, then these options are unnecessary
@@ -100,12 +100,12 @@
       }
 
       vm.customerSelected = vm.customerOptions[0];
-    };
+    }
 
     function setReports() {
       for (var tab in vm.tabs) {
         vm.tabs[tab].status = "set";
       }
-    };
+    }
   }
 })();

@@ -35,6 +35,7 @@ angular.module('Hercules')
             case 'activated':
               return 'pending_deactivation';
             }
+            /* falls through */
           case true:
             switch (status.state) {
             case 'error':
@@ -45,10 +46,11 @@ angular.module('Hercules')
             case 'activated':
               return 'activated';
             }
+            /* falls through */
           default:
             return 'unknown';
           }
         }
-      }
+      };
     }
   ]);

@@ -10,8 +10,8 @@
     var vm = this;
     vm.invalidcount = 0;
     vm.submitBtnStatus = false;
-    vm.successCount;
-    vm.failCount;
+    // vm.successCount;
+    // vm.failCount;
     vm.addNumbers = true;
     vm.addingNumbers = false;
     vm.addSuccess = false;
@@ -77,18 +77,18 @@
         valid = true;
       }
       return valid;
-    };
+    }
 
     function checkForInvalidTokens() {
       return vm.invalidcount > 0 ? false : true;
-    };
+    }
 
     function getDIDList() {
       var tokens = vm.tokens;
       var didList = tokens.split(',');
 
       return didList;
-    };
+    }
 
     function submit(customerId) {
       var didList = getDIDList();
@@ -102,7 +102,7 @@
         vm.addingNumbers = false;
         vm.addSuccess = true;
       });
-    };
+    }
 
     function startTrial() {
       if ($scope.trial && angular.isFunction($scope.trial.startTrial)) {
@@ -115,7 +115,7 @@
           angular.element('#startTrial').button('reset');
         });
       }
-    };
+    }
 
     function sendEmail() {
       var emailInfo = {
@@ -131,7 +131,7 @@
         Notification.notify(errorMsg, 'error');
       });
       $state.modal.close();
-    };
+    }
 
   }
 })();

@@ -26,7 +26,7 @@
       vm.device = DeviceService.getCurrentDevice();
       vm.title = vm.device.model;
       vm.deviceIcon = (vm.device.model.trim().replace(/ /g, '_') + '.svg').toLowerCase();
-    };
+    }
 
     function save() {
       HttpUtils.setTrackingID().then(function () {
@@ -39,7 +39,7 @@
             Notification.notify([$translate.instant('deviceDetailPage.error')], 'error');
           });
       });
-    };
+    }
 
     function deactivate() {
       var modalInstance = $modal.open({
@@ -60,7 +60,6 @@
             });
         });
       });
-    };
-
+    }
   }
 })();

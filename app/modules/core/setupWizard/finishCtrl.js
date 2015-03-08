@@ -21,6 +21,6 @@ angular.module('Core')
         }
         deferred.resolve();
         return deferred.promise;
-      }
+      };
     }
   ]);

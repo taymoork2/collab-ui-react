@@ -9,7 +9,6 @@
     var vm = this;
 
     vm.notifications = [];
-    vm.close = close;
 
     $rootScope.$on('notification-new', create);
 
@@ -22,5 +21,7 @@
         vm.notifications.splice(index, 1);
       }
     }
+
+    vm.close = close;
   }
 })();

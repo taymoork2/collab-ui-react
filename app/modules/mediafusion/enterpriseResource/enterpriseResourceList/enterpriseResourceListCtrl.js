@@ -128,7 +128,7 @@ angular.module('Mediafusion')
         '</ul>' +
         '</span>';
 
-      var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
+      statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
         '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|status}}</p></div>';
 
       $scope.gridOptions = {

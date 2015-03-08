@@ -3,7 +3,7 @@
 
     angular
       .module('Huron')
-      .factory('ExternalNumberPool', ExternalNumberPool)
+      .factory('ExternalNumberPool', ExternalNumberPool);
 
     /* @ngInject */
     function ExternalNumberPool($q, ExternalNumberPoolService) {
@@ -36,17 +36,17 @@
             results.successes.push(data.pattern);
             didCount--;
             if (didCount === 0) {
-              deferred.resolve(results)
+              deferred.resolve(results);
             }
           }, function (err) {
             results.failures.push(err.config.data.pattern);
             didCount--;
             if (didCount === 0) {
-              deferred.resolve(results)
+              deferred.resolve(results);
             }
 
           });
-        };
+        }
 
         return deferred.promise;
       }
@@ -78,7 +78,7 @@
             });
 
             promises.push(promise);
-          };
+          }
 
           return $q.all(promises);
         }).$promise;

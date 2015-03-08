@@ -11,7 +11,7 @@ angular.module('Hercules')
           running: 0,
           needs_attention: 0,
           services: createEmptyServicesAggregate(services)
-        }
+        };
       };
 
       var createEmptyServicesAggregate = function (services) {

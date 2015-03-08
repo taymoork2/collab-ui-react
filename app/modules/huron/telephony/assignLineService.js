@@ -3,7 +3,7 @@
 
   angular
     .module('Huron')
-    .factory('HuronAssignedLine', HuronAssignedLine)
+    .factory('HuronAssignedLine', HuronAssignedLine);
 
   /* @ngInject */
   function HuronAssignedLine(Authinfo, InternalNumberPoolService, DirectoryNumberCopyService) {
@@ -35,7 +35,7 @@
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (lineTemplates) {
-          var siteId = Authinfo.getOrgId() + '_000001_ULT'
+          var siteId = Authinfo.getOrgId() + '_000001_ULT';
           if (angular.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
             angular.forEach(lineTemplates.choice, function (dataset) {
               if (siteId === dataset.value) {
@@ -47,7 +47,7 @@
         })
         .then(function (directoryNumber) {
           assignedLine = directoryNumber;
-          return copyFromUlt(directoryNumber, dnUsage, userUuid)
+          return copyFromUlt(directoryNumber, dnUsage, userUuid);
         })
         .then(function () {
           return assignedLine;
@@ -59,7 +59,7 @@
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (lineTemplates) {
-          var siteId = Authinfo.getOrgId() + '_000001_ULT'
+          var siteId = Authinfo.getOrgId() + '_000001_ULT';
           if (angular.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
             for (var i = 0; i < lineTemplates.choice.length; i++) {
               if (siteId === lineTemplates.choice[i].value) {
@@ -71,7 +71,7 @@
           var directoryNumber = {
             'pattern': dnPattern
           };
-          return copyFromUlt(directoryNumber, dnUsage, userUuid)
+          return copyFromUlt(directoryNumber, dnUsage, userUuid);
         });
     }
 
@@ -89,7 +89,7 @@
     }
 
     function copyFromUlt(directoryNumber, dnUsage, userUuid) {
-      var copyFromUlt = {
+      var copyFromUltData = {
         'pattern': directoryNumber.pattern,
         'hasVoicemail': true,
         'user': {
@@ -101,7 +101,7 @@
       return DirectoryNumberCopyService.save({
         customerId: Authinfo.getOrgId(),
         ultId: lineTemplate.uuid
-      }, copyFromUlt, function (data, headers) {
+      }, copyFromUltData, function (data, headers) {
         data.uuid = headers('location').split("/").pop();
         return data;
       }).$promise;

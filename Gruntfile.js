@@ -452,20 +452,23 @@ module.exports = function (grunt) {
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       app: [
-        '<%= app_dir %>/<%= app_files.js %>',
-        '<%= app_dir %>/<%= app_files.json %>'
+        '<%= app_dir %>/scripts/**/*.js',
+        '<%= app_dir %>/modules/**/*.js',
+        // '<%= app_dir %>/**/*.json',
+        // '<%= test_dir %>/**/*.js',
+        // '<%= test_dir %>/**/*.json',
       ],
       unsupported_app: [
-        '<%= unsupported_app_dir %>/<%= app_files.js %>'
+        // '<%= unsupported_app_dir %>/**/*.js'
       ],
       test: [
-        '<%= app_dir %>/<%= app_files.jsunit %>'
+        // '<%= app_dir %>//**/*.js'
       ],
       gruntfile: [
         'Gruntfile.js'
       ],
       options: {
-        jshintrc: '.jshintrc',
+        jshintrc: 'config/jshint.json',
         reporter: require('jshint-stylish')
       },
       globals: {}

@@ -12,12 +12,11 @@
     vm.title = 'Media on Hold';
     vm.playlists = [];
     vm.tracks = [];
-    vm.selectedUuid;
+    // vm.selectedUuid;
     vm.selectedList = {};
     vm.tracks = [];
-    vm.tracksCount;
+    // vm.tracksCount;
     vm.selectPlaylist = selectPlaylist;
-    vm.close = close;
 
     activate();
 
@@ -76,6 +75,8 @@
     function close() {
       $state.modal.close();
     }
+
+    vm.close = close;
 
   }
 })();

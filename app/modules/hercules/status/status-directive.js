@@ -22,7 +22,7 @@
           return needs_attention;
         }, 0);
 
-        if ($scope.needs_attention != 0 || err) {
+        if ($scope.needs_attention !== 0 || err) {
           $scope.color = 'red';
         } else {
           $scope.color = 'green';

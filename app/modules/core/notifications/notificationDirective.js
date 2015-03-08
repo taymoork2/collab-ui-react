@@ -24,11 +24,10 @@
         switch (scope.type) {
         case 'danger':
           return 'notifications.error';
-          break;
         default:
           return 'notifications.success';
         }
-      }
+      };
     }
   }
 })();

@@ -61,7 +61,7 @@
     **/
     function getDnType(dnUsage) {
       return (dnUsage === 'Primary') ? 'Primary' : '';
-    };
+    }
 
     function getTelephonyInfo() {
       return telephonyInfo;
@@ -116,7 +116,7 @@
       if (telephonyInfo.services !== null && telephonyInfo.services.length > 0) {
         for (var j = 0; j < telephonyInfo.services.length; j++) {
           if (telephonyInfo.services[j] === 'VOICEMAIL') {
-            voicemailEnabled = true
+            voicemailEnabled = true;
           }
         }
       }
@@ -208,7 +208,7 @@
                   this.altDnUuid = altNumList[0].uuid;
                   this.altDnPattern = altNumList[0].numMask;
                 }
-              }.bind(userLine))
+              }.bind(userLine));
             }
             updateDirectoryNumbers(userDnList);
           } else {

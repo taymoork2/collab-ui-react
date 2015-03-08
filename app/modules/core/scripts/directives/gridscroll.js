@@ -10,7 +10,7 @@ angular.module('Core')
       link: function (scope, elem, attrs) {
         $timeout(function () {
           $('.ngViewport').niceScroll({
-            cursoropacitymax: .5,
+            cursoropacitymax: 0.5,
             cursorwidth: 10,
           });
         });

@@ -19,7 +19,7 @@ angular.module('Hercules')
           if (opts && opts.squelchErrors) {
             return function () {
               callback(arguments);
-            }
+            };
           } else {
             return createErrorHandler('Unable to fetch data from UC fusion backend', callback);
           }

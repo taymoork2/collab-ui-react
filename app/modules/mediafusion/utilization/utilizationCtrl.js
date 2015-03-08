@@ -45,14 +45,14 @@ angular.module('Mediafusion')
 
             $scope.utilizations = data.utilizations;
             //data will be in below format. For testing purpose if rest call is not working, uncomment below line
-            //$scope.utilizations=[{"resource":"Resource 1","utilization":"13.46"},{"resource":"Resource 2","utilization":"26.92"},{"resource":"Resource 3","utilization":"40.38"},{"resource":"Resource 4","utilization":"80.0"}];  
+            //$scope.utilizations=[{"resource":"Resource 1","utilization":"13.46"},{"resource":"Resource 2","utilization":"26.92"},{"resource":"Resource 3","utilization":"40.38"},{"resource":"Resource 4","utilization":"80.0"}];
           } else {
             Log.debug('Query overallUtilization failed. Status: ' + status);
           }
 
         });
 
-      }
+      };
 
       console.log("Getting Real Time bridge by bridge utilization through rest call");
       getRealTimeBridgeUtilization();

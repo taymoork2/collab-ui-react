@@ -64,7 +64,7 @@
                 this.deviceStatus.status = 'Offline';
               }
 
-              if (angular.isDefined(endpoint.ipAddress) && endpoint.ipAddress != null) {
+              if (angular.isDefined(endpoint.ipAddress) && endpoint.ipAddress !== null) {
                 this.deviceStatus.ipAddress = endpoint.ipAddress;
               } else {
                 this.deviceStatus.ipAddress = 'unknown';
@@ -83,7 +83,7 @@
     function updateDevice(device) {
       var payload = {
         description: device.description
-      }
+      };
       return SipEndpointService.update({
         customerId: Authinfo.getOrgId(),
         sipEndpointId: device.uuid

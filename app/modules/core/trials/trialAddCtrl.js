@@ -33,7 +33,7 @@
     }];
 
     $scope.$watch(function () {
-      return vm.offers[Config.trials.squaredUC]
+      return vm.offers[Config.trials.squaredUC];
     }, function (newValue) {
       if (newValue) {
         vm.offers[Config.trials.collab] = true;
@@ -105,6 +105,6 @@
           Notification.notify(successMessage, 'success');
           return vm.customerOrgId;
         });
-    };
+    }
   }
 })();

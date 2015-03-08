@@ -42,12 +42,12 @@ angular.module('Core')
         // get messaging licenses
         Orgservice.getAdminOrg(function (data, status) {
           if (data.success) {
-            console.log(data);
+            // console.log(data);
             if (data.squaredUsageCount) {
               $scope.buckets.messaging.currentCount = data.squaredUsageCount;
             }
           } else {
-            Log.debug('Get existing admin org failed. Status: ' + status);
+            // Log.debug('Get existing admin org failed. Status: ' + status);
           }
         });
       };

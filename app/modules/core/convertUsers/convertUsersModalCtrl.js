@@ -2,8 +2,8 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('ConvertUsersModalCtrl', ['$scope',
-    function ($scope) {
+  .controller('ConvertUsersModalCtrl', ['$scope', '$filter', 'Userservice', 'Notification',
+    function ($scope, $filter, Userservice, Notification) {
 
       $scope.convertUsers = function () {
         Userservice.migrateUsers($scope.gridOptions.$gridScope.selectedItems, function (data, status) {

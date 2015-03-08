@@ -18,11 +18,9 @@
       popup: popup
     };
 
-    return service;
-
     function notify(notifications, type) { //notifications must be an array. Type is 'success' or 'error'
       if (!_scope.popup) {
-        _scope.popup = this.popup;
+        _scope.popup = service.popup;
       }
       var icon = null;
       if (type === 'success') {
@@ -73,6 +71,8 @@
         notificationMessage.success(output);
       }
     }
+
+    return service;
   }
 
 })();

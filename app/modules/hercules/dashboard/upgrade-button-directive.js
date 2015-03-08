@@ -10,7 +10,7 @@
         $scope.upgradeSoftware($attrs.clusterId, $attrs.serviceType, function () {
           $scope.inflight = false;
         });
-      }
+      };
     }])
     .directive('herculesUpgradeButton', [
       function () {

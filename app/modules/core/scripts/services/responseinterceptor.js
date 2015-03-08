@@ -47,7 +47,7 @@
           return $q.reject(response);
         }
       }
-    }
+    };
 
     function refreshAccessToken(refresh_tok) {
       var deferred = $q.defer();
@@ -73,13 +73,13 @@
         });
 
       return deferred.promise;
-    };
+    }
 
     function logout() {
       Storage.clear();
       Log.debug('Redirecting to logout url.');
       $window.location.href = Config.getLogoutUrl();
-    };
+    }
 
   }
 })();

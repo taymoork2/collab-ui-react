@@ -17,6 +17,7 @@ angular.module('Core')
           var listUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
           var searchStr;
           var filter;
+          var entitlement;
           var scimSearchUrl = null;
           var encodedSearchStr = '';
           var adminFilter = '&filter=roles%20eq%20%22id_full_admin%22';

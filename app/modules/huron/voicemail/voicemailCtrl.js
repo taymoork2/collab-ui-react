@@ -21,7 +21,7 @@
       if (vm.telephonyInfo.services !== null && vm.telephonyInfo.services.length > 0) {
         for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
           if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
-            voicemailEnabled = true
+            voicemailEnabled = true;
           }
         }
       }

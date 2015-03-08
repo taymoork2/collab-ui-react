@@ -8,7 +8,7 @@ angular.module('Hercules')
         return !_.find(service.connectors, function (connector) {
           return connector.state != 'offline' && connector.state != 'disabled';
         });
-      }
+      };
 
       var getAvailableSoftwareUpgradeForService = function (service, cluster) {
         if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
@@ -32,7 +32,8 @@ angular.module('Hercules')
           var expected_package = _.find(cluster.provisioning_data.approved_packages, function (pkg) {
             return pkg.service.service_type == service.service_type;
           });
-          var expected_version = (expected_package == null) ? null : expected_package.version;
+
+          var expected_version = !expected_package ? null : expected_package.version;
 
           _.each(service.connectors, function (connector) {
             connector.deduced_alarms = connector.deduced_alarms || [];
@@ -54,7 +55,7 @@ angular.module('Hercules')
             serviceAndClusterNeedsAttention(service, cluster);
             service.is_disabled = false;
           }
-          if (connector.state == 'disabled' && service.running_hosts == 0) {
+          if (connector.state == 'disabled' && service.running_hosts === 0) {
             service.is_disabled = true;
           }
           if (connector.state == 'running') {
@@ -110,7 +111,7 @@ angular.module('Hercules')
             return service.connectors;
           })
           .flatten()
-          .value()
+          .value();
 
         var map = _.reduce(connectors, function (map, connector) {
           var host = connector.host ? connector.host.host_name : 'null';

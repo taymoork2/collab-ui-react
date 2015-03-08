@@ -21,7 +21,7 @@ angular
           service.write($scope.config, function (err) {
             $scope.saving = false;
             if (err) return notification.notify(err);
-            $scope.$parent.modal.close()
+            $scope.$parent.modal.close();
           });
         }
       };

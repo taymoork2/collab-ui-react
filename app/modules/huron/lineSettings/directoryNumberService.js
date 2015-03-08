@@ -125,10 +125,7 @@
     }
 
     function changeInternalNumber(oldDnId, newDnId) {
-      return this.deleteDirectoryNumber(oldDnId)
-        .then(function () {
-
-        }).$promise;
+      return service.deleteDirectoryNumber(oldDnId).then(function () {}).$promise;
     }
 
     function getAlternateNumber(dnUuid) {
@@ -150,7 +147,7 @@
 
     function addAlternateNumber(dnUuid, pattern) {
       // TODO: remove hardcoding when multi-site requirements are figured out
-      var routePartition = Authinfo.getOrgId() + '_000000_E164_RP'
+      var routePartition = Authinfo.getOrgId() + '_000000_E164_RP';
 
       // TODO: remove directory number once CMI has been fixed
       var alternateNumber = {

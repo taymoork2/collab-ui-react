@@ -9,10 +9,10 @@ angular.module('Mediafusion')
       $scope.meetingChartInfo = [];
 
       // Meeting List leader bar placeholders.
-      $scope.totalEnterpriseMeetings;
-      $scope.totalEnterpriseParticipants;
-      $scope.totalCloudMeetings;
-      $scope.totalCloudParticipants;
+      // $scope.totalEnterpriseMeetings;
+      // $scope.totalEnterpriseParticipants;
+      // $scope.totalCloudMeetings;
+      // $scope.totalCloudParticipants;
       $scope.meeting = null;
       $scope.currentMeetings = null;
       $scope.querymeetingslistinfo = [];
@@ -40,7 +40,7 @@ angular.module('Mediafusion')
       $scope.firstDate = "";
       $scope.chartToDisplay = "allMeetings";
       $scope.meetingChartSettings = null;
-      $scope.meetingIndex;
+      // $scope.meetingIndex;
       $scope.defaultDate = "";
 
       $scope.prevMonthCheck = true;
@@ -271,8 +271,8 @@ angular.module('Mediafusion')
        * searchMeetingList will search in meeting table data. Its a search happens in DB.
        */
       $scope.searchMeetingList = function () {
-        if ($scope.searchString != null) {
-          $scope.currentDataPosition = 1
+        if ($scope.searchString !== null) {
+          $scope.currentDataPosition = 1;
           getMeetingList($scope.currentDataPosition);
         }
       };
@@ -327,7 +327,7 @@ angular.module('Mediafusion')
         }
         getMeetingList();
 
-      };
+      }
 
       /**
        * Incrementing the dates accroding to calendar.
@@ -377,7 +377,7 @@ angular.module('Mediafusion')
           if (data.success && data.meetingCounts.length > 0) {
             $scope.meetingChartInfo = data.meetingCounts;
             $scope.latestDate = data.latestDate;
-            if ($scope.numberOfDays == 0) {
+            if ($scope.numberOfDays === 0) {
               $scope.defaultDate = $scope.latestDate;
             } else {
               var dDay = new Date($scope.defaultDate);
@@ -387,23 +387,23 @@ angular.module('Mediafusion')
               }
             }
 
-            var index;
+            var index, changedDate;
             var currentDate = new Date();
             if ($scope.durationType == "Month") {
-              if ($scope.numberOfDays == 0 || $scope.defaultDate == $scope.latestDate) {
+              if ($scope.numberOfDays === 0 || $scope.defaultDate == $scope.latestDate) {
                 $scope.nextMonthCheck = true;
               } else {
                 $scope.nextMonthCheck = false;
               }
               $scope.firstDate = "";
               for (index = 0; index < $scope.meetingChartInfo.length; index++) {
-                if ($scope.meetingChartInfo[index].date != null) {
+                if ($scope.meetingChartInfo[index].date !== null) {
                   $scope.firstDate = $scope.meetingChartInfo[index].date;
                   break;
                 }
               }
-              if ($scope.firstDate != "") {
-                var changedDate = new Date($scope.firstDate);
+              if ($scope.firstDate !== "") {
+                changedDate = new Date($scope.firstDate);
                 changedDate = updateDate(changedDate, -1);
                 if (daysBetweenDates(changedDate, currentDate) > 30) {
                   $scope.prevMonthCheck = true;
@@ -423,20 +423,20 @@ angular.module('Mediafusion')
               $scope.latestMeetingChartTime = data.latesTimeRange[0] + "-" + data.latesTimeRange[1];
               createTimeStamp($scope.latestDate, data.latesTimeRange[0], data.latesTimeRange[1]);
 
-              if ($scope.numberOfDays == 0 || $scope.defaultDate == $scope.latestDate) {
+              if ($scope.numberOfDays === 0 || $scope.defaultDate == $scope.latestDate) {
                 $scope.nextWeekCheck = true;
               } else {
                 $scope.nextWeekCheck = false;
               }
               $scope.firstDate = "";
               for (index = 0; index < $scope.meetingChartInfo.length; index++) {
-                if ($scope.meetingChartInfo[index].date != null) {
+                if ($scope.meetingChartInfo[index].date !== null) {
                   $scope.firstDate = $scope.meetingChartInfo[index].date;
                   break;
                 }
               }
-              if ($scope.firstDate != "") {
-                var changedDate = new Date($scope.firstDate);
+              if ($scope.firstDate !== "") {
+                changedDate = new Date($scope.firstDate);
                 changedDate = updateDate(changedDate, -1);
                 if (daysBetweenDates(changedDate, currentDate) > 30) {
                   $scope.prevWeekCheck = true;
@@ -450,12 +450,12 @@ angular.module('Mediafusion')
               $scope.latestMeetingChartDate = new Date($scope.latestDate).toDateString();
               $scope.latestMeetingChartTime = data.latesTimeRange[0] + "-" + data.latesTimeRange[1];
               createTimeStamp($scope.latestDate, data.latesTimeRange[0], data.latesTimeRange[1]);
-              if ($scope.numberOfDays == 0 || $scope.defaultDate == $scope.latestDate) {
+              if ($scope.numberOfDays === 0 || $scope.defaultDate == $scope.latestDate) {
                 $scope.nextDayCheck = true;
               } else {
                 $scope.nextDayCheck = false;
               }
-              var changedDate = new Date($scope.latestDate);
+              changedDate = new Date($scope.latestDate);
               changedDate = updateDate(changedDate, -1);
               if (daysBetweenDates(changedDate, currentDate) > 30) {
                 $scope.prevDayCheck = true;
@@ -466,7 +466,7 @@ angular.module('Mediafusion')
             createMeetingChart();
             $scope.meetingIndex = index;
             for (index = $scope.meetingChartInfo.length - 1; index >= 0; index--) {
-              if ($scope.meetingChartInfo[index].enterpriseMeetings != null) {
+              if ($scope.meetingChartInfo[index].enterpriseMeetings !== null) {
                 $scope.meetingIndex = index;
                 break;
               }
@@ -500,14 +500,14 @@ angular.module('Mediafusion')
        * Utility method to create Time Stamp in 24 hours format for 2 types of inputs like 11am or 11:00am.
        */
       var createTimeStamp = function (date, startTime, endTime) {
-
+        var modifiedDate;
         var startDateFallsOnNext = date;
         var endDateFallsOnNext = date;
         if (startTime.indexOf("pm") != -1) {
           startTime = (startTime.length > 4) ? startTime.substring(0, startTime.length - 5) : startTime.substring(0, startTime.length - 2);
           startTime = (parseInt(startTime) == 12 ? 12 : parseInt(startTime) + 12);
         } else if (startTime.indexOf("12") != -1 && startTime.indexOf("am") != -1) {
-          var modifiedDate = new Date(date);
+          modifiedDate = new Date(date);
           modifiedDate = (startTime.length > 4) ? updateDate(modifiedDate, 1) : modifiedDate;
           startDateFallsOnNext = modifiedDate.getMonth() + 1 + "/" + modifiedDate.getDate() + "/" + modifiedDate.getFullYear();
           startTime = "00";
@@ -519,7 +519,7 @@ angular.module('Mediafusion')
           endTime = (endTime.length > 4) ? endTime.substring(0, endTime.length - 5) : endTime.substring(0, endTime.length - 2);
           endTime = (parseInt(endTime) == 12 ? 12 : parseInt(endTime) + 12);
         } else if (endTime.indexOf("12") != -1 && endTime.indexOf("am") != -1) {
-          var modifiedDate = new Date(date);
+          modifiedDate = new Date(date);
           modifiedDate = updateDate(modifiedDate, 1);
           endDateFallsOnNext = modifiedDate.getMonth() + 1 + "/" + modifiedDate.getDate() + "/" + modifiedDate.getFullYear();
           endTime = "00";
@@ -542,13 +542,13 @@ angular.module('Mediafusion')
       var updateDate = function (dateToBeUpdated, updateType) {
         dateToBeUpdated.setDate(dateToBeUpdated.getDate() + updateType);
         return dateToBeUpdated;
-      }
+      };
 
       /**
        * Populating Leader board data.
        */
       var populateLeaderBoardInfo = function (index) {
-        if ($scope.meetingChartInfo && $scope.meetingChartInfo.length > 0 && index >= 0 && $scope.meetingChartInfo[index].enterpriseMeetings != null) {
+        if ($scope.meetingChartInfo && $scope.meetingChartInfo.length > 0 && index >= 0 && $scope.meetingChartInfo[index].enterpriseMeetings !== null) {
           if ($scope.chartToDisplay == "enterpriseMeetings" || $scope.chartToDisplay == "allMeetings") {
             $scope.totalEnterpriseMeetings = $scope.meetingChartInfo[index].enterpriseMeetings;
             $scope.totalEnterpriseParticipants = $scope.meetingChartInfo[index].enterpriseParticipants;

@@ -71,7 +71,7 @@
     }
 
     function getQrCodeUrl(activationCode) {
-      return HuronConfig.getOcelotUrl() + '/getqrimage?oneTimePassword=' + activationCode
+      return HuronConfig.getOcelotUrl() + '/getqrimage?oneTimePassword=' + activationCode;
     }
 
   }
