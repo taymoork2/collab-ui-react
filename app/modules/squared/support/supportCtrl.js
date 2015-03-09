@@ -2,8 +2,8 @@
 /* global $, Bloodhound, moment */
 
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice',
-    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice) {
+  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'ConnectorService',
+    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, ConnectorService) {
 
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
@@ -41,14 +41,27 @@ angular.module('Squared')
       var getHealthMetrics = function () {
         ReportsService.healthMonitor(function (data, status) {
           if (data.success) {
-            $scope.healthMetrics = data.components;
-            $scope.healthyStatus = true;
+            ConnectorService.fetch(function (err, clusters) {
+              $scope.healthMetrics = data.components;
+              $scope.healthyStatus = true;
 
-            for (var health in $scope.healthMetrics) {
-              if ($scope.healthMetrics[health].status !== 'operational') {
-                $scope.healthyStatus = false;
+              // check Hercules for error
+              for (var cluster in clusters) {
+                if (clusters[cluster].needs_attention === true || err) {
+                  $scope.healthyStatus = false;
+                  return;
+                }
               }
-            }
+
+              // check Squared for error
+              for (var health in $scope.healthMetrics) {
+                if ($scope.healthMetrics[health].status !== 'operational') {
+                  $scope.healthyStatus = false;
+                  return;
+                }
+              }
+            });
+
           } else {
             Log.debug('Get health metrics failed. Status: ' + status);
           }
