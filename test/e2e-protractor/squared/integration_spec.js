@@ -68,10 +68,10 @@ describe('App flow', function () {
 
     it('clicking on home tab should change the view', function () {
       navigation.clickHome();
-      expect(landing.packages.isDisplayed()).toBeTruthy();
-      expect(landing.devices.isDisplayed()).toBeTruthy();
-      expect(landing.licenses.isDisplayed()).toBeTruthy();
-      expect(landing.unlicensedUsers.isDisplayed()).toBeTruthy();
+      // expect(landing.packages.isDisplayed()).toBeTruthy();
+      // expect(landing.devices.isDisplayed()).toBeTruthy();
+      // expect(landing.licenses.isDisplayed()).toBeTruthy();
+      // expect(landing.unlicensedUsers.isDisplayed()).toBeTruthy();
       expect(landing.callsChart.isDisplayed()).toBeTruthy();
     });
 

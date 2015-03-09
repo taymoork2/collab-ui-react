@@ -61,20 +61,23 @@
 
         $scope.computeDataset = function (value, max, unlimited) {
           if (typeof unlimited !== 'undefined' && unlimited === true) {
-            $scope.dataset = [1];
             $scope.text.content = 'unlimited';
-          } else if (typeof value === 'undefined' || typeof max === 'undefined' || value > 9999 || max > 9999 || value < 0 || max < 0) {
-            $scope.dataset = [0, 1];
+            $scope.colours = ['#3CA8E8'];
+            $scope.text.color = '#3CA8E8';
+            $scope.dataset = [1];
+          } else if (typeof value === 'undefined' || typeof max === 'undefined' || value > 9999 || max > 9999 || value <= 0 || max <= 0) {
             $scope.text.content = 0;
             $scope.text.color = 'lightgray';
+            $scope.dataset = [0, 1];
           } else {
             var fillValue = max - value;
-            $scope.dataset = [value, fillValue];
             $scope.text.content = value;
+            $scope.text.color = '#3CA8E8';
+            $scope.dataset = [value, fillValue];
             if (value > max) {
-              $scope.dataset = [1];
               $scope.colours = ['#f05d3b'];
               $scope.text.color = '#f05d3b';
+              $scope.dataset = [1];
             }
           }
         };
@@ -206,9 +209,9 @@
         };
 
         //Listen for changes in the directive attributes
-        scope.$watch('value', function () {
-          scope.computeDataset(scope.value, scope.max, scope.unlimited);
+        scope.$watchGroup(['value', 'max', 'unlimited'], function () {
           scope.computeTextProperties(scope.value, scope.unlimited);
+          scope.computeDataset(scope.value, scope.max, scope.unlimited);
         });
 
         // Listen for any changes to the dataset...
@@ -224,7 +227,12 @@
           // Otherwise it's an update as we have an existing donut.
           path.data(pie(scope.clean(scope.dataset)));
           path.transition().duration(750).attrTween('d', scope.tweenArc).each('end', function () {
-            text.text(scope.text.content);
+            text.text(scope.text.content)
+              .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px;')
+              .attr('y', scope.text.y);
+            path.attr('fill', function (d, i) {
+              return scope.getColour(i);
+            });
           });
 
         }, true);
