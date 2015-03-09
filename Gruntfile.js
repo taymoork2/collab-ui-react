@@ -723,7 +723,10 @@ module.exports = function (grunt) {
           args: {
             specs: [
               'test/e2e-protractor/squared/*_spec.js'
-            ]
+            ],
+            capabilities: {
+              maxInstances: 3
+            }
           }
         }
       },

@@ -28,86 +28,46 @@ describe('List users flow', function () {
     login.login(testuser.username, testuser.password);
   });
 
-  // Asserting listing users.
-  describe('Listing users on page load', function () {
-    it('clicking on users tab should change the view', function () {
-      navigation.clickUsers();
-    });
+  it('clicking on users tab should change the view', function () {
+    navigation.clickUsers();
   });
 
-  describe('Display user information', function () {
-    it('display user admin settings panel when clicking on next arrow', function () {
-      users.clickOnUser();
-      utils.click(users.rolesChevron);
-
-      utils.expectIsDisplayed(users.closeSidePanel);
-      utils.expectIsDisplayed(roles.rolesDetailsPanel);
-
-      utils.click(users.closeSidePanel);
-    });
+  it('should search and click on user', function () {
+    utils.searchAndClick(testuser.username);
   });
 
-  // Asserting pagination of users.
-  xdescribe('Paginating users returned', function () {
-    it('should paginate the total number of users', function () {
-      //pagination is only relevant if total matches exceeds 20
-      //Initial page
-      users.assertPage('1');
-      users.assertResultsLength(20);
-      //next page
-      users.nextPage.click();
-      users.assertPage('2');
-      users.assertResultsLength(0);
-      //previous page
-      users.prevPage.click();
-      users.assertPage('1');
-      users.assertResultsLength(20);
-      utils.search();
-    });
-  });
+  it('should display user admin settings panel when clicking on next arrow', function () {
+    utils.click(users.rolesChevron);
 
-  // Asserting sorting of users.
-  xdescribe('Sorting users', function () {
-    it('should sort users by name', function () {
-      users.assertSorting('name-sort');
-    });
+    utils.expectIsDisplayed(roles.rolesDetailsPanel);
 
-    it('should sort users by username', function () {
-      users.assertSorting('username-sort');
-    });
-  });
-
-  // Asserting search users.
-  describe('search users on page', function () {
-    it('should show first page of users based on search string', function () {
-      utils.searchAndClick(testuser.username);
-    });
+    utils.click(users.closeSidePanel);
   });
 
   //TODO Comment out until we decide what to do with the profile page
-  // describe('Display user profile', function(){
-  //   it('display user profile page when clicking on the user link', function(){
-  //     users.clickOnUser();
-  //     utils.click(users.userLink);
+  xdescribe('Display user profile', function () {
+    it('display user profile page when clicking on the user link', function () {
+      users.clickOnUser();
+      utils.click(users.userLink);
 
-  //     navigation.expectCurrentUrl('/userprofile');
-  //     utils.expectIsDisplayed(users.fnameField);
-  //     utils.expectIsDisplayed(users.lnameField);
-  //     utils.expectIsDisplayed(users.displayField);
-  //     utils.expectIsDisplayed(users.emailField);
-  //     utils.expectIsDisplayed(users.orgField);
-  //     utils.expectIsDisplayed(users.titleField);
-  //   });
-  // });
+      navigation.expectCurrentUrl('/userprofile');
+      utils.expectIsDisplayed(users.fnameField);
+      utils.expectIsDisplayed(users.lnameField);
+      utils.expectIsDisplayed(users.displayField);
+      utils.expectIsDisplayed(users.emailField);
+      utils.expectIsDisplayed(users.orgField);
+      utils.expectIsDisplayed(users.titleField);
+    });
+  });
 
   //TODO What does this test even do?
-  // describe('Exporting to CSV', function () {
-  //   it('should display the CSV export button', function () {
-  //     users.userTab.click();
-  //     users.clickOnUser();
-  //     utils.expectIsDisplayed(users.exportButton);
-  //   });
-  // });
+  xdescribe('Exporting to CSV', function () {
+    it('should display the CSV export button', function () {
+      users.userTab.click();
+      users.clickOnUser();
+      utils.expectIsDisplayed(users.exportButton);
+    });
+  });
 
   describe('logout', function () {
     it('should log out', function () {

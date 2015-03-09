@@ -17,8 +17,7 @@ xdescribe('Directory Sync flow', function () {
   });
 
   it('should display dirsync button and clicking it should launch the wizard', function () {
-    utils.expectIsDisplayed(disyncwizard.btnDirSync);
-    disyncwizard.btnDirSync.click();
+    utils.click(disyncwizard.btnDirSync);
     utils.expectIsDisplayed(disyncwizard.ssoModalHeader);
   });
 
@@ -29,32 +28,32 @@ xdescribe('Directory Sync flow', function () {
   });
 
   it('should close the wizard when Cancel button is clicked', function () {
-    disyncwizard.domainCancelBtn.click();
-    utils.expectIsDisplayed(disyncwizard.btnDirSync);
+    utils.click(disyncwizard.domainCancelBtn);
+    utils.expectIsNotDisplayed(disyncwizard.ssoModalHeader);
   });
 
   it('should navigate steps by clicking on Next and Previous buttons', function () {
-    disyncwizard.btnDirSync.click();
+    utils.click(disyncwizard.btnDirSync);
     utils.expectIsDisplayed(disyncwizard.ssoModalHeader);
 
-    disyncwizard.domainNextBtn.click();
+    utils.click(disyncwizard.domainNextBtn);
     utils.expectIsDisplayed(disyncwizard.syncNowBtn);
     utils.expectIsDisplayed(disyncwizard.installCancelBtn);
     utils.expectIsDisplayed(disyncwizard.installBackBtn);
     utils.expectIsDisplayed(disyncwizard.installNextBtn);
 
-    disyncwizard.installNextBtn.click();
+    utils.click(disyncwizard.installNextBtn);
     utils.expectIsDisplayed(disyncwizard.synchCancelBtn);
     utils.expectIsDisplayed(disyncwizard.synchBackBtn);
     utils.expectIsDisplayed(disyncwizard.synchFinishBtn);
 
-    disyncwizard.synchBackBtn.click();
+    utils.click(disyncwizard.synchBackBtn);
     utils.expectIsDisplayed(disyncwizard.syncNowBtn);
     utils.expectIsDisplayed(disyncwizard.installCancelBtn);
     utils.expectIsDisplayed(disyncwizard.installBackBtn);
     utils.expectIsDisplayed(disyncwizard.installNextBtn);
 
-    disyncwizard.installBackBtn.click();
+    utils.click(disyncwizard.installBackBtn);
     utils.expectIsDisplayed(disyncwizard.domainCancelBtn);
     utils.expectIsDisplayed(disyncwizard.domainNextBtn);
     utils.expectIsDisplayed(disyncwizard.dirDomainText);
@@ -62,15 +61,14 @@ xdescribe('Directory Sync flow', function () {
   });
 
   it('should successfully start directory sync on clicking Sync now button', function () {
-    disyncwizard.domainNextBtn.click();
-    utils.expectIsDisplayed(disyncwizard.syncNowBtn);
-    disyncwizard.syncNowBtn.click();
+    utils.click(disyncwizard.domainNextBtn);
+    utils.click(disyncwizard.syncNowBtn);
     notifications.assertSuccess('Directory Sync In Progress');
   });
 
   it('should close the wizard when clicking on the X mark', function () {
-    disyncwizard.closeSSOModal.click();
-    utils.expectIsDisplayed(disyncwizard.btnDirSync);
+    utils.click(disyncwizard.closeSSOModal);
+    utils.expectIsNotDisplayed(disyncwizard.ssoModalHeader);
   });
 
   it('should log out', function () {

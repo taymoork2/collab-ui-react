@@ -125,7 +125,7 @@ exports.click = function (elem, maxRetry) {
 
 exports.expectText = function (elem, value) {
   this.wait(elem);
-  expect(elem.getText()).toEqual(value);
+  expect(elem.getText()).toContain(value);
 };
 
 exports.getSwitchState = function (elem) {

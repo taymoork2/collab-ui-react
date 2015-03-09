@@ -7,9 +7,7 @@
   </div>
   <div class="header-info">
     <div class="header-info-wrap">
-      <a id="rolesChevron" ui-sref="user-overview.userProfile(
-          {currentUser:userOverview.currentUser,
-          roles:userOverview.currentUser.roles})">
+      <a id="rolesChevron" ui-sref="user-overview.userProfile">
 
         <div class="header-title" title="">{{userOverview.currentUser.userName}}</div>
         <div ng-if="userOverview.currentUser.title || userOverview.currentUser.addresses" class="header-sub-info">

@@ -56,16 +56,19 @@ describe('Support flow', function () {
       notifications.assertError('Search input cannot be empty.');
     });
 
-    it('should search for logs by valid email address', function () {
+    it('should search for logs by valid email address', function (done) {
       support.searchAndVerifyResult(testuser.searchValidEmail);
 
       utils.expectIsDisplayed(support.supportTable);
       utils.expectIsDisplayed(support.emailAddress);
-      expect(support.emailAddress.getText()).toBe(testuser.searchValidEmail);
+      utils.expectText(support.emailAddress, testuser.searchValidEmail);
 
-      support.locusIdSort.click();
-      support.locusIdSort.click();
-      testuser.searchValidLocusid = support.locusId.getText();
+      utils.click(support.locusIdSort);
+      utils.click(support.locusIdSort);
+      support.locusId.getText().then(function (locusId) {
+        testuser.searchValidLocusid = locusId;
+        done();
+      });
     });
 
     it('should search for logs by valid uuid', function () {
@@ -73,7 +76,7 @@ describe('Support flow', function () {
 
       utils.expectIsDisplayed(support.supportTable);
       utils.expectIsDisplayed(support.emailAddress);
-      expect(support.emailAddress.getText()).toBe(testuser.searchValidEmail);
+      utils.expectText(support.emailAddress.getText(), testuser.searchValidEmail);
     });
 
     xit('should search for logs by valid locusId', function () {
@@ -81,7 +84,7 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(support.supportTable);
 
       utils.expectIsDisplayed(support.locusId);
-      expect(support.locusId.getText()).toBe(testuser.searchValidLocusid);
+      utils.expectText(support.locusId.getText(), testuser.searchValidLocusid);
       expect(support.callStart.getText()).not.toBe('-NA-');
     });
 

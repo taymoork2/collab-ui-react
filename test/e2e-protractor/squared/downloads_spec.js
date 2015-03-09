@@ -16,7 +16,7 @@ describe('Downloads page', function () {
   describe('with email parameter and reset/admin email params', function () {
     it('should display email account', function () {
       browser.get('#/downloads?email=' + encodeURIComponent(testuser) + emailParams);
-      expect(download.account.getText()).toContain(testuser);
+      utils.expectText(download.account, testuser);
     });
 
     it('should display message only for non-mobile device', function () {
@@ -33,7 +33,7 @@ describe('Downloads page', function () {
   describe('with email parameter only', function () {
     it('should display email account', function () {
       browser.get('#/downloads?email=' + encodeURIComponent(testuser));
-      expect(download.account.getText()).toContain(testuser);
+      utils.expectText(download.account, testuser);
     });
   });
 });
