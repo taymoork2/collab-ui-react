@@ -57,7 +57,7 @@
       updateTelephonyInfo($scope.currentUser);
     });
 
-    $scope.$watch('currentUser', function (newUser, oldUser) {
+    $scope.$watch('currentUser', function (newUser) {
       if (newUser) {
         updateTelephonyInfo(newUser);
       }

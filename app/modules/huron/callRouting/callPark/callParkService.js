@@ -60,9 +60,9 @@
       return CallParkService.remove({
         customerId: Authinfo.getOrgId(),
         callParkId: callPark.uuid
-      }, function (response) {
+      }, function () {
         Notification.notify([callPark.pattern + ' deleted successfully'], 'success');
-      }, function (response) {
+      }, function () {
         Notification.notify([callPark.pattern + ' not deleted correctly'], 'error');
       }).$promise;
     }

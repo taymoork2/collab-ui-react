@@ -72,7 +72,7 @@ angular
       }
 
       var refreshToken = function () {
-        var refreshTimer = $interval(function () {
+        $interval(function () {
           Auth.RefreshAccessToken(Storage.get('refreshToken'))
             .then(function (adata) {
               Storage.put('accessToken', adata.access_token);

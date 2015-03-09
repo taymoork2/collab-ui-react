@@ -2,12 +2,8 @@
 /* global moment, $ */
 
 angular.module('Squared')
-  .controller('SpacesCtrl', ['$scope', '$location', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Notification', 'Config',
-    function ($scope, $location, Storage, Log, Utils, $filter, SpacesService, Notification, Config) {
-
-      //Populating authinfo data if empty.
-
-      var token = Storage.get('accessToken');
+  .controller('SpacesCtrl', ['$scope', '$location', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Notification',
+    function ($scope, $location, Storage, Log, Utils, $filter, SpacesService, Notification) {
       $scope.totalResults = null;
       $scope.showAdd = true;
       $scope.emptyDevices = true;

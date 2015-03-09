@@ -13,11 +13,7 @@ describe('ControllerWireing', function () {
     'StatusController'
   ];
 
-  var $scope, aggregator;
-
   beforeEach(inject(function ($injector) {
-    var $httpBackend = $injector.get('$httpBackend');
-
     var $controller = $injector.get('$controller');
 
     controllersToTest.forEach(function (controllerName) {

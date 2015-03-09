@@ -1,7 +1,5 @@
 'use strict';
 
-/* global _ */
-
 angular.module('Hercules')
   .service('ServiceDescriptor', [
     function ServiceDescriptor() {

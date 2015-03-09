@@ -1,7 +1,7 @@
 'use strict';
 /*jshint loopfunc: true */
 
-/* global describe, it, browser, expect, login, spaces, navigation, utils, notifications */
+/* global describe, it, browser, login, spaces, navigation, utils, notifications */
 
 var testuser = {
   username: 'pbr-org-admin@squared2webex.com',

@@ -63,9 +63,9 @@
         return InternalNumberRangeService.delete({
           customerId: Authinfo.getOrgId(),
           internalNumberRangeId: internalNumberRange.uuid
-        }, function (response) {
+        }, function () {
           Notification.notify([internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber + ' deleted successfully'], 'success');
-        }, function (response) {
+        }, function () {
           Notification.notify([internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber + ' not deleted. Some numbers might have been assigned.'], 'error');
         }).$promise;
       },

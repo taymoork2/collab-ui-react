@@ -2,8 +2,8 @@
 
 angular
   .module('Core')
-  .controller('HeaderPushCtrl', ['$scope', '$translate',
-    function ($scope, $translate) {
+  .controller('HeaderPushCtrl', ['$scope',
+    function ($scope) {
       $scope.label = 'License Usage';
       $scope.state = 'normal';
       $scope.icon = 'icon-star';

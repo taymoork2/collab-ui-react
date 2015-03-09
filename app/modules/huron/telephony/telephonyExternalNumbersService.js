@@ -64,14 +64,8 @@
         return ExternalNumberPoolService.query({
           customerId: customerId
         }, function (data) {
-
           var promises = [];
-
           for (var i = 0; i < data.length; i++) {
-
-            var externalNumber = {
-              'pattern': data[i]
-            };
             var promise = ExternalNumberPoolService.delete({
               customerId: customerId,
               externalNumberId: data[i].uuid
@@ -79,10 +73,8 @@
 
             promises.push(promise);
           }
-
           return $q.all(promises);
         }).$promise;
       }
-
     }
   })();

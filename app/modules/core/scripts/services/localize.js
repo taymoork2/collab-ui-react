@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .factory('Localize', ['$location', '$filter', 'Utils', 'SessionStorage', 'Authinfo',
-    function ($location, $filter, Utils, SessionStorage, Authinfo) {
+  .factory('Localize', ['$location', '$filter', 'Utils', 'SessionStorage',
+    function ($location, $filter, Utils, SessionStorage) {
       return {
         varTitle: function () {
           var currentOrgName = SessionStorage.get('customerOrgName');

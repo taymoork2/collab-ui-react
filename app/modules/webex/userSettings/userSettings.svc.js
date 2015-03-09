@@ -10,7 +10,6 @@
       $log,
       XmlApiSvc
     ) {
-      var _self = this;
 
       return {
         getUserInfo: function (xmlApiAccessInfo) {

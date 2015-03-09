@@ -2,7 +2,6 @@
 
 /* global it */
 /* global by */
-/* global expect */
 /* global browser */
 /* global element */
 /* global describe */

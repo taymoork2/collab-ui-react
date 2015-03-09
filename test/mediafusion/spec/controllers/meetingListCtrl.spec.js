@@ -7,7 +7,7 @@ describe('Controller: ListMeetingsCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   //Initialize variables
-  var MeetingsCtrl, scope, httpBackend, meetinglistData, meetinglistinfoData, participantlistData;
+  var MeetingsCtrl, scope, meetinglistData, meetinglistinfoData, participantlistData;
 
   /* Initialize the controller and a mock scope
    * Reading the json data to application variable.

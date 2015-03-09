@@ -26,7 +26,7 @@ angular.module('Hercules')
         return messages;
       };
 
-      var getMessages = function (data, status, headers, config) {
+      var getMessages = function (data, status) {
         if (data && data.error && data.error.message) {
           return findMessages(data);
         } else {

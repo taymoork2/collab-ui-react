@@ -2,7 +2,6 @@
   'use strict';
 
   /* global X2JS */
-  /* global constants */
 
   angular.module('WebExUserSettings').factory('XmlApiSvc', [
     '$http',
@@ -12,6 +11,7 @@
     '$rootScope',
     'Authinfo',
     'Storage',
+    'WebExUserSettingsConstants',
     function (
       $http,
       $log,
@@ -19,7 +19,8 @@
       $q,
       $rootScope,
       Authinfo,
-      Storage
+      Storage,
+      constants
     ) {
       var _self = this;
       var x2js = new X2JS();
@@ -117,8 +118,6 @@
         }, //getSessionTicket()
 
         getNewSessionTicket: function (wbxSiteName, wbxSiteUrl) {
-          var funcName = "getSessionTicket()";
-          var logMsg = "";
           var currView = this;
 
           var xmlApiAccessInfo = {

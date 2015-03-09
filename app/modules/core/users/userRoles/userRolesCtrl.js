@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo',
-    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
+  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter',
+    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter) {
       var inArray = function (array, el) {
         for (var i = array.length; i--;) {
           if (array[i] === el) {
@@ -75,7 +75,7 @@ angular.module('Squared')
         id: 'partialAdmin'
       };
 
-      var checkPartialRoles = function (roleEnabled, roleSecondary) {
+      var checkPartialRoles = function (roleEnabled) {
         if (roleEnabled) {
           return Config.roleState.active;
         } else {

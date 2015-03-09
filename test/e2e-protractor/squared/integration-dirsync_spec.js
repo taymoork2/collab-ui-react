@@ -1,11 +1,6 @@
 'use strict';
 
-/* global describe */
 /* global it */
-/* global browser */
-/* global by */
-/* global expect */
-/* global element */
 
 var testuser = {
   username: 'pbr-sso-org-admin@squared2webex.com',

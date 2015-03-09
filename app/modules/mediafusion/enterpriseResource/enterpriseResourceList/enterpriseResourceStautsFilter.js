@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('Mediafusion').filter('status', function ($filter) {
+angular.module('Mediafusion').filter('status', function () {
   return function (mgmtStatus) {
     //console.log("statusFilter mgmtStatus = " + mgmtStatus);
     return (mgmtStatus === null || mgmtStatus === 'MANAGED') ? 'Active' : 'Deactivated';

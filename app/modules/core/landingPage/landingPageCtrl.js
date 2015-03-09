@@ -1,13 +1,12 @@
 'use strict';
 
-/* global AmCharts, $ */
+/* global AmCharts */
 
 angular.module('Core')
   .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate',
     function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate) {
 
       $scope.isAdmin = false;
-      var responseTime;
       var callsChart, conversationsChart, contentSharedChart;
 
       $scope.counts = {};
@@ -83,7 +82,7 @@ angular.module('Core')
         });
       };
 
-      var buildChart = function (id, data) {
+      var buildChart = function (id) {
         return makeChart(id, ['#FF5F44']);
       };
 

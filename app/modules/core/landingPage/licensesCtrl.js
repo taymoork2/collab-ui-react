@@ -3,8 +3,8 @@
 
 angular.module('Core')
 
-.controller('LicensesCtrl', ['$scope', 'Authinfo', 'PartnerService', 'Orgservice', 'Log', 'Notification', '$modal', '$filter', '$translate', 'Userservice',
-  function ($scope, Authinfo, PartnerService, Orgservice, Log, Notification, $modal, $filter, $translate, Userservice) {
+.controller('LicensesCtrl', ['$scope', 'Authinfo', 'PartnerService', 'Orgservice', 'Log', 'Notification', '$modal',
+  function ($scope, Authinfo, PartnerService, Orgservice, Log, Notification, $modal) {
 
     $scope.packageInfo = {
       name: '&nbsp;',
@@ -112,7 +112,7 @@ angular.module('Core')
     };
 
     var getUnlicensedUsers = function () {
-      Orgservice.getUnlicensedUsers(function (data, status) {
+      Orgservice.getUnlicensedUsers(function (data) {
         $scope.licenses.unlicensed = 0;
         $scope.licenses.unlicensedUsersList = null;
         if (data.success) {

@@ -144,7 +144,7 @@
             var promises = [];
             if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line
               promise = LineSettings.changeInternalLine(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.telephonyInfo.currentDirectoryNumber.dnUsage, vm.assignedInternalNumber.pattern, vm.directoryNumber)
-                .then(function (response) {
+                .then(function () {
                   vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
                   vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
                   vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
@@ -159,19 +159,19 @@
             if (vm.telephonyInfo.alternateDirectoryNumber.uuid !== vm.assignedExternalNumber.uuid) { // external line
               if ((vm.telephonyInfo.alternateDirectoryNumber.uuid === '' || vm.telephonyInfo.alternateDirectoryNumber.uuid === 'none') && vm.assignedExternalNumber.uuid !== 'none') { // no existing external line, add external line
                 promise = LineSettings.addExternalLine(vm.directoryNumber.uuid, vm.assignedExternalNumber.pattern)
-                  .then(function (response) {
+                  .then(function () {
                     processExternalNumberList();
                   });
                 promises.push(promise);
               } else if ((vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' || vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') && vm.assignedExternalNumber.uuid !== 'none') { // changing external line
                 promise = LineSettings.changeExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid, vm.assignedExternalNumber.pattern)
-                  .then(function (response) {
+                  .then(function () {
                     processExternalNumberList();
                   });
                 promises.push(promise);
               } else if (vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.assignedExternalNumber.uuid === 'none') {
                 promise = LineSettings.deleteExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid)
-                  .then(function (response) {
+                  .then(function () {
                     processExternalNumberList();
                   });
                 promises.push(promise);
@@ -196,7 +196,7 @@
 
           } else { // new line
             LineSettings.addNewLine($scope.currentUser.id, getDnUsage(), vm.assignedInternalNumber.pattern, vm.directoryNumber, vm.assignedExternalNumber)
-              .then(function (response) {
+              .then(function () {
                 return TelephonyInfoService.getUserDnInfo($scope.currentUser.id)
                   .then(function () {
                     vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
@@ -230,7 +230,7 @@
           scope: $scope
         }).result.then(function () {
           return LineSettings.disassociateInternalLine($scope.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.userDnUuid)
-            .then(function (response) {
+            .then(function () {
               TelephonyInfoService.getUserDnInfo($scope.currentUser.id);
               vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
               Notification.notify([$translate.instant('directoryNumberPanel.disassociationSuccess')], 'success');

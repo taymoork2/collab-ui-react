@@ -159,7 +159,7 @@ angular.module('Core')
           'name': userName
         }];
 
-        Userservice.inviteUsers(userData, true, function (data, success) {
+        Userservice.inviteUsers(userData, true, function (data) {
 
           if (data.success) {
             Notification.notify(['Successfully resent invitation.'], 'success');
@@ -231,18 +231,11 @@ angular.module('Core')
       };
 
       $scope.$on('ngGridEventScroll', function () {
-
-        var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
-        var scrollTop = ngGridView.scrollTop;
-        var scrollOffsetHeight = ngGridView.offsetHeight;
-        var currentScroll = scrollTop + scrollOffsetHeight;
-        var scrollHeight = ngGridView.scrollHeight;
         if ($scope.load) {
           $scope.currentDataPosition++;
           $scope.load = false;
           getUserList($scope.currentDataPosition * Config.usersperpage + 1);
         }
-
       });
 
       $rootScope.$on('$stateChangeSuccess', function () {

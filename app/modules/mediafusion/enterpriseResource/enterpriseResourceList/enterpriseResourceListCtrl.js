@@ -1,5 +1,4 @@
 'use strict';
-/* global $ */
 
 angular.module('Mediafusion')
   .controller('ListVtsCtrl', ['$scope', '$rootScope', '$filter', '$state', 'vtslistservice', 'Notification',
@@ -15,7 +14,7 @@ angular.module('Mediafusion')
       var getVtsList = function () {
         $scope.vtsPreview = false;
         console.log("Calling service ");
-        vtslistservice.listVts(function (data, status) {
+        vtslistservice.listVts(function (data) {
           $scope.queryvtslist = data;
           $scope.totalResults = data.length;
           /*if (data.success) {
@@ -103,7 +102,7 @@ angular.module('Mediafusion')
 
       };
 
-      $scope.setDeleteDevice = function (deviceId) {
+      $scope.setDeleteDevice = function () {
         console.log("inside setDeleteDevice");
 
       };

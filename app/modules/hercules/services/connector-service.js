@@ -1,7 +1,5 @@
 'use strict';
 
-/* global _ */
-
 angular.module('Hercules')
   .service('ConnectorService', ['$http', '$window', 'ConnectorMock', 'ConverterService', 'ConfigService', 'XhrNotificationService',
     function ConnectorService($http, $window, mock, converter, config, notification) {
@@ -60,7 +58,7 @@ angular.module('Hercules')
       };
 
       var createErrorHandler = function (message, callback) {
-        return function (data, status, headers, config) {
+        return function () {
           notification.notify(message, arguments);
           callback(arguments);
         };

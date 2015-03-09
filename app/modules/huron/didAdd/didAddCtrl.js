@@ -123,10 +123,10 @@
         'customerName': vm.currentOrg.customerName,
         'partnerName': Authinfo.getOrgName()
       };
-      DidAddEmailService.save({}, emailInfo, function (data) {
+      DidAddEmailService.save({}, emailInfo, function () {
         var successMsg = [$translate.instant('didAddModal.emailSuccessText')];
         Notification.notify(successMsg, 'success');
-      }, function (err) {
+      }, function () {
         var errorMsg = [$translate.instant('didAddModal.emailFailText')];
         Notification.notify(errorMsg, 'error');
       });

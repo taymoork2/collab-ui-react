@@ -1,9 +1,8 @@
 'use strict';
-/* global $ */
 
 angular.module('Core')
-  .controller('ListGroupsCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'GroupService', 'Log', 'Storage', 'Config', 'Notification', 'Orgservice', 'Authinfo',
-    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, GroupService, Log, Storage, Config, Notification, Orgservice, Authinfo) {
+  .controller('ListGroupsCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'GroupService', 'Log',
+    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, GroupService, Log) {
 
       //Initialize variables
       $scope.load = true;

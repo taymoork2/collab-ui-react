@@ -62,9 +62,7 @@ describe('Service: ExternalNumberPool', function () {
 
     it('should remove DID', function () {
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/1').respond(204);
-      ExternalNumberPool.deletePool('1', '1').then(function (result) {
-
-      });
+      ExternalNumberPool.deletePool('1', '1').then(function () {});
       $httpBackend.flush();
     });
   });

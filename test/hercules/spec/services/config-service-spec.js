@@ -3,7 +3,7 @@
 describe('ConfigService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $httpBackend, Service, win;
+  var Service, win;
   var rootPath = 'https://hercules-a.wbx2.com';
 
   beforeEach(function () {

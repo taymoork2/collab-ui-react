@@ -301,8 +301,6 @@ angular.module('ListUsers', [])
     return {
       restrict: 'A',
       templateUrl: 'modules/squared/scripts/directives/views/listusers.html',
-      link: function (scope, elem, attrs) {
-
-      }
+      link: function () {}
     };
   });

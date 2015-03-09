@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('leaderBoardCtrl', ['$scope', 'Orgservice',
-    function ($scope, Orgservice) {
+  .controller('leaderBoardCtrl', ['$scope',
+    function ($scope) {
 
       $scope.buckets = {
         messaging: {
@@ -34,23 +34,23 @@ angular.module('Core')
         }
       };
 
-      var getLicenses = function () {
-        // get communication licenses
+      // var getLicenses = function () {
+      //   // get communication licenses
 
-        // get conferencing licenses
+      //   // get conferencing licenses
 
-        // get messaging licenses
-        Orgservice.getAdminOrg(function (data, status) {
-          if (data.success) {
-            // console.log(data);
-            if (data.squaredUsageCount) {
-              $scope.buckets.messaging.currentCount = data.squaredUsageCount;
-            }
-          } else {
-            // Log.debug('Get existing admin org failed. Status: ' + status);
-          }
-        });
-      };
+      //   // get messaging licenses
+      //   Orgservice.getAdminOrg(function (data, status) {
+      //     if (data.success) {
+      //       // console.log(data);
+      //       if (data.squaredUsageCount) {
+      //         $scope.buckets.messaging.currentCount = data.squaredUsageCount;
+      //       }
+      //     } else {
+      //       // Log.debug('Get existing admin org failed. Status: ' + status);
+      //     }
+      //   });
+      // };
 
       var init = function () {
         //getBuckets();

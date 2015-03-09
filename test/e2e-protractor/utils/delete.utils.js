@@ -1,7 +1,5 @@
 'use strict';
 
-/* global protractor */
-
 var config = require('./test.config.js');
 var utils = require('./test.utils.js');
 
@@ -22,7 +20,7 @@ exports.deleteUser = function (email) {
   });
 };
 
-exports.deleteSquaredUCUser = function (customerUuid, userUuid, email) {
+exports.deleteSquaredUCUser = function (customerUuid, userUuid) {
   return utils.getToken().then(function (token) {
     var options = {
       method: 'delete',

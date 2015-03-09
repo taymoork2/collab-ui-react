@@ -6,7 +6,6 @@ angular.module('Mediafusion')
     function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
 
       //Fetching the Base url form config.js file.
-      var searchfilter = 'filter=%s';
       var baseUrl = Config.getUtilizationServiceUrl();
 
       var utilizationservice = {

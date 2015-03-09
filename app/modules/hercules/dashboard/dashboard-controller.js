@@ -3,8 +3,8 @@
 /* global _ */
 
 angular.module('Hercules')
-  .controller('DashboardController', ['$scope', '$interval', '$http', '$modal', 'ConnectorService', 'Notification',
-    function ($scope, $interval, $http, $modal, service, notif) {
+  .controller('DashboardController', ['$scope', '$interval', '$http', '$modal', 'ConnectorService',
+    function ($scope, $interval, $http, $modal, service) {
       $scope.loading = true;
       $scope.inflight = false;
       $scope._promise = true;

@@ -3,10 +3,7 @@
 /* global describe */
 /* global it */
 /* global browser */
-/* global by */
 /* global expect */
-/* global element */
-/* global protractor */
 
 var testuser = {
   username: 'pbr-org-admin@squared2webex.com',

@@ -11,7 +11,7 @@
           $scope.services = services;
         });
 
-        $scope.$watch('clusters', function (newClusters, oldClusters) {
+        $scope.$watch('clusters', function (newClusters) {
           $scope.serviceAggregates = aggregator.aggregateServices($scope.services, newClusters);
         });
       }

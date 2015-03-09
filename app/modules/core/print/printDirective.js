@@ -47,10 +47,6 @@
       window.onafterprint = afterPrint;
     }
 
-    function beforePrint() {
-
-    }
-
     function afterPrint() {
       // clean the print section before adding new content
       printSection.innerHTML = '';

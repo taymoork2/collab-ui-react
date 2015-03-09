@@ -4,9 +4,6 @@
 /* global describe */
 /* global it */
 /* global browser */
-/* global by */
-/* global expect */
-/* global element */
 
 var testuser = {
   username: 'pbr-org-admin@squared2webex.com',

@@ -3,8 +3,7 @@
 
 /* global describe */
 /* global it */
-/* global expect */
-/* global navigation, users */
+/* global navigation */
 /* global login */
 /* global landing */
 /* global utils */

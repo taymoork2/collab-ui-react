@@ -174,7 +174,7 @@
     }
 
     function nextStep() {
-      new PromiseHook($scope, getStepName() + 'Next').then(function (value) {
+      new PromiseHook($scope, getStepName() + 'Next').then(function () {
         var steps = getSteps();
         if (angular.isArray(steps)) {
           var index = steps.indexOf(getStep());
@@ -268,7 +268,7 @@
 
     return directive;
 
-    function link(scope, element, attrs, wizardCtrl) {
+    function link(scope, element) {
 
       var cancelTabWatch = scope.$watch('wizard.current.tab', recompile);
       var cancelStepWatch = scope.$watch('wizard.current.step', recompile);

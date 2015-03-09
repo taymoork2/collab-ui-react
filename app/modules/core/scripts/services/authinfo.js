@@ -131,7 +131,7 @@ angular.module('Core')
           authData.isInitialized = false;
           authData.setupDone = null;
         },
-        updateAccountInfo: function (data, status) {
+        updateAccountInfo: function (data) {
           if (data.success) {
             var msgLicenses = [];
             var confLicenses = [];

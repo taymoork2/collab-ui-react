@@ -1,7 +1,5 @@
 'use strict';
 
-/* global _ */
-
 angular.module('Hercules')
   .controller('FusionSetupCtrl', ['$scope', '$interval', 'ConnectorService',
     function ($scope, $interval, service) {

@@ -32,7 +32,7 @@
 
   DetailsBodyController.$inject = ['$state', '$rootScope'];
 
-  function DetailsBodyController($state, $rootScope, $scope) {
+  function DetailsBodyController($state, $rootScope) {
     var vm = this;
     vm.closeDetails = closeDetails;
 

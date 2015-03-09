@@ -1,7 +1,7 @@
 describe('DashboardHeaderController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $scope, aggregator, service;
+  var $scope, service;
 
   beforeEach(inject(function (_$controller_) {
     $scope = {

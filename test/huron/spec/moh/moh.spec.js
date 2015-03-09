@@ -1,14 +1,14 @@
 'use strict';
 
 describe('Controller: MohCtrl', function () {
-  var controller, scope, createController, httpBackend, playlistsData, tracksData, playlistData1;
+  var controller, scope, httpBackend, playlistsData, playlistData1;
 
   beforeEach(module('uc.moh'));
   beforeEach(module('ui.router'));
 
   beforeEach(
     inject(
-      function ($rootScope, $controller, $httpBackend, _mohService_) {
+      function ($rootScope, $controller, $httpBackend) {
         scope = $rootScope.$new();
         playlistsData = getJSONFixture('huron/json/moh/playlists.json');
         playlistData1 = getJSONFixture('huron/json/moh/playlists/BBD5656B-E92B-12F5-10EF-1B01CB23A7C0.json');

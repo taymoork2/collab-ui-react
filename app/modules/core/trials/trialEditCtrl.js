@@ -61,7 +61,6 @@
     }
 
     function editTrial() {
-      var createdDate = new Date();
       var offersList = [];
       for (var i in vm.offers) {
         if (vm.offers[i]) {
@@ -70,7 +69,7 @@
       }
       angular.element('#saveSendButton').button('loading');
       return TrialService.editTrial(vm.currentTrial.trialId, vm.currentTrial.duration, vm.currentTrial.licenses, vm.currentTrial.usage, vm.currentTrial.customerOrgId, offersList)
-        .then(function (data, status) {
+        .then(function () {
           angular.element('#saveSendButton').button('reset');
           angular.extend($stateParams.currentTrial, vm.currentTrial);
           var successMessage = [$translate.instant('trialModal.editSuccess', {

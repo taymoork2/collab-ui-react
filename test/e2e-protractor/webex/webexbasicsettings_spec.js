@@ -1,6 +1,6 @@
 'use strict';
 
-/* global describe, it, browser, expect, login, spaces, navigation, utils, notifications */
+/* global describe, it, expect, login */
 
 var testuser = {
   username: 'pbr-org-admin@squared2webex.com',
@@ -30,9 +30,9 @@ describe('WebEx user settings', function () {
     expect(usersettings.mcProCheckbox.getAttribute('class')).not.toContain('checked');
   });
 
-  /**  
+  /**
     it ('shout allow to save', function () {
-  	  usersettings.save();  
+  	  usersettings.save();
     });
 
     it('should contain correct General settings', function () {
@@ -43,32 +43,32 @@ describe('WebEx user settings', function () {
         expect(usersettings.personalRoom.isDisplayed()).toBeTruthy();
         expect(usersettings.collabRoom.isDisplayed()).toBeTruthy();
     });
-    
+
     it('should allow to click Recording Editor check box', function () {
   	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).toContain('checked');
   	  usersettings.clickRecordingEditor();
   	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).not.toContain('checked');
     });
-    
+
     it('should allow to select Recording Editor check box', function () {
   	  usersettings.selectRecordingEditor();
   	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).toContain('checked');
     });
-    
+
     it('should allow to un select Recording Editor check box', function () {
   	  usersettings.unSelectRecordingEditor();
   	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).not.toContain('checked');
   	  usersettings.unSelectRecordingEditor();
   	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).not.toContain('checked');
     });
-    
+
     it('should allow to un select other check boxes', function () {
   	  usersettings.unSelectAssist();
   	  expect(usersettings.assistCheckbox.getAttribute('class')).not.toContain('checked');
   	  usersettings.unSelectHiQualVideo();
-  	  expect(usersettings.hiQualVideoCheckbox.getAttribute('class')).not.toContain('checked');	
+  	  expect(usersettings.hiQualVideoCheckbox.getAttribute('class')).not.toContain('checked');
   	  usersettings.unSelectHiDefVideo();
-  	  expect(usersettings.hiDefVideoCheckbox.getAttribute('class')).not.toContain('checked');	
+  	  expect(usersettings.hiDefVideoCheckbox.getAttribute('class')).not.toContain('checked');
   	  usersettings.unSelectPersonalRoom();
   	  expect(usersettings.personalRoomCheckbox.getAttribute('class')).not.toContain('checked');
   	  usersettings.unSelectCollabRoom();

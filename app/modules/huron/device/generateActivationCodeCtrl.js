@@ -54,7 +54,7 @@
         'expiresOn': vm.otp.expiresOn
       };
 
-      ActivationCodeEmailService.save({}, emailInfo, function (response) {
+      ActivationCodeEmailService.save({}, emailInfo, function () {
         entitleResult = {
           msg: $translate.instant('generateActivationCodeModal.emailSuccess'),
           type: 'success'

@@ -19,15 +19,6 @@
       'voicemail': {}
     };
 
-    var factory = {
-      delete: deleteUser,
-      acquireOTP: acquireOTP,
-      create: create,
-      update: update
-    };
-
-    return factory;
-
     function deleteUser(uuid) {
       return UserServiceCommon.remove({
         customerId: Authinfo.getOrgId(),
@@ -110,5 +101,13 @@
         userId: uuid
       }, user).$promise;
     }
+
+    return {
+      delete: deleteUser,
+      acquireOTP: acquireOTP,
+      create: create,
+      update: update
+    };
+
   }
 })();

@@ -15,7 +15,7 @@ angular.module('FundooDirectiveTutorial', [])
         readonly: '@',
         onRatingSelected: '&'
       },
-      link: function (scope, elem, attrs) {
+      link: function (scope) {
 
         var updateStars = function () {
           scope.stars = [];

@@ -1,7 +1,5 @@
 'use strict';
 
-/* global _ */
-
 angular.module('Hercules')
   .service('NotificationConfigService', ['$http', 'Notification', 'ConfigService',
     function NotificationConfigService($http, notification, config) {

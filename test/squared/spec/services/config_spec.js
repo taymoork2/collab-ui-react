@@ -25,10 +25,6 @@ describe('Config', function () {
   var prodHost = 'admin.projectsquared.com';
   var intHost = 'int-admin.projectsquared.com';
 
-  var assertFnReturnsCorrectUrl = function (fn, env, expected) {
-    win.location.hostname = 'wbx2.com/bla';
-  };
-
   var whenCalling = function (fn, arg) {
     var hosts = {
       development: devHost,

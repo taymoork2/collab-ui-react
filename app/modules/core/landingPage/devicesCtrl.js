@@ -2,8 +2,8 @@
 
 angular.module('Core')
 
-.controller('DevicesCtrl', ['$scope', 'SpacesService', 'Log', 'Notification', '$translate',
-  function ($scope, SpacesService, Log, Notification, $translate) {
+.controller('DevicesCtrl', ['$scope', 'SpacesService', 'Log',
+  function ($scope, SpacesService, Log) {
 
     $scope.devices = [{
       model: 'Activated',
@@ -18,11 +18,9 @@ angular.module('Core')
         if (data.success === true) {
           var activated = 0;
           var pending = 0;
-          var devices = [];
           if (data.devices) {
             for (var i = 0; i < data.devices.length; i++) {
               var device = data.devices[i];
-              var adate = device.activationTime;
               if (device.status === 'CLAIMED') {
                 activated++;
               } else if (device.status === 'UNCLAIMED') {

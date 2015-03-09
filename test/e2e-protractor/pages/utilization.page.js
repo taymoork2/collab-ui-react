@@ -8,25 +8,25 @@ var UtilizationPage = function () {
     expect(this.currentPage.getText()).toBe(page);
   };
 
-  this.assertAtleastOneResource = function (results) {
+  this.assertAtleastOneResource = function () {
     element.all(by.repeater('utilization in utilizations')).then(function (rows) {
       expect(rows.length).toBeLessThanOrEqualTo(1);
     });
   };
 
-  this.assertResourceUtilizationGtZero = function (results) {
+  this.assertResourceUtilizationGtZero = function () {
     expect(element(by.repeater('utilization in utilizations').row(0).column('utilization'))).toBeGreaterThanOrEqualTo(0);
   };
 
-  this.assertResourceUtilizationLsHundred = function (results) {
+  this.assertResourceUtilizationLsHundred = function () {
     expect(element(by.repeater('utilization in utilizations').row(0).column('utilization'))).toBeLessThanOrEqualTo(100);
   };
 
-  this.assertAvgResourceUtilizationGtZero = function (results) {
+  this.assertAvgResourceUtilizationGtZero = function () {
     expect(this.overAllUtilization).toBeGreaterThanOrEqualTo(0);
   };
 
-  this.assertAvgResourceUtilizationLsHundred = function (results) {
+  this.assertAvgResourceUtilizationLsHundred = function () {
     expect(this.overAllUtilization).toBeLessThanOrEqualTo(100);
   };
 

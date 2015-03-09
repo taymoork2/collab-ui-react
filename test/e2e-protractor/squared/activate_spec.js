@@ -3,9 +3,7 @@
 /* global describe */
 /* global it */
 /* global browser */
-/* global by */
 /* global expect */
-/* global element */
 /* global protractor */
 
 // Notes:

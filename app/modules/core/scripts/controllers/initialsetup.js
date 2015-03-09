@@ -2,8 +2,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('InitialSetupCtrl', ['$scope', '$location', 'Storage', 'Log',
-    function ($scope, $location, Storage, Log) {
+  .controller('InitialSetupCtrl', ['$scope', '$location',
+    function ($scope, $location) {
 
       var allNavs = ['accountreview', 'adduser'];
 

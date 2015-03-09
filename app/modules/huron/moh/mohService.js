@@ -18,7 +18,7 @@
       return $http.get('/modules/huron/moh/mohData/playlists.json')
         .then(getPlaylistsComplete);
 
-      function getPlaylistsComplete(data, status, headers, config) {
+      function getPlaylistsComplete(data) {
         return $timeout(
           function () {
             return data.data;
@@ -27,13 +27,12 @@
     }
 
     function getPlaylist(uuid) {
-      var playlist = [];
       var playlistUrl = '/modules/huron/moh/mohData/playlists/' + uuid + '.json';
 
       return $http.get(playlistUrl)
         .then(getPlaylistComplete);
 
-      function getPlaylistComplete(data, status, headers, config) {
+      function getPlaylistComplete(data) {
         return $timeout(
           function () {
             return data.data;

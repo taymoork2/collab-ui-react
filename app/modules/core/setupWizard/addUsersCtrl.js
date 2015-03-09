@@ -276,7 +276,7 @@ angular.module('Core')
           }
         });
 
-        UserListService.listUsers(null, null, null, null, function (data, status, searchStr) {
+        UserListService.listUsers(null, null, null, null, function (data, status) {
           if (data.success) {
             Log.debug('Retrieved user list successfully. Status: ' + status);
             if (data) {
@@ -332,11 +332,6 @@ angular.module('Core')
       };
 
       var invalidcount = 0;
-
-      function Feature(name, state) {
-        this.entitlementName = name;
-        this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
-      }
 
       //email validation logic
       var validateEmail = function (input) {

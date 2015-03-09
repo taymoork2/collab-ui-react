@@ -190,25 +190,7 @@ angular.module('Core')
       }
     };
 
-    var buildChart = function (id, data) {
-      return makeChart(id, ['#FF5F44'], data);
-    };
-
-    var formatDates = function (dataList) {
-      if (angular.isArray(dataList)) {
-        for (var i = 0; i < dataList.length; i++) {
-          var currentObj = dataList[i].data;
-          for (var j = 0; j < currentObj.length; j++) {
-            var dateVal = new Date(currentObj[j].date);
-            dateVal = dateVal.toDateString();
-            dataList[j].date = dateVal.substring(dateVal.indexOf(' ') + 1);
-          }
-        }
-      }
-      formatMultipleOrgData(dataList);
-    };
-
-    var formatMultipleOrgData = function (data, callback) {
+    var formatMultipleOrgData = function (data) {
       var formmatedData = [];
       var dateMap = {};
 

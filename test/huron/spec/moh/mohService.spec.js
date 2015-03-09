@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: MohService', function () {
-  var mohService, httpBackend, playlistsData, playlistData1, playlists;
+  var mohService, httpBackend, playlistsData, playlistData1;
 
   beforeEach(module('uc.moh'));
 

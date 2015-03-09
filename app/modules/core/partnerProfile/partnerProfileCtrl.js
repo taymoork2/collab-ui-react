@@ -29,7 +29,7 @@ angular.module('Core')
       $scope.partnerProvidedText = 'Text provided by the partner.';
 
       // ci api calls will go in here
-      $scope.init = function (reset) {
+      $scope.init = function () {
         $scope.rep = {
           name: 'Kevin Perlas',
           phone: '555-444-555',
@@ -46,7 +46,7 @@ angular.module('Core')
         $scope.helpUrl = '';
 
         if (!$scope.isPartner) {
-          UserListService.listPartners(Authinfo.getOrgId(), function (data, status) {
+          UserListService.listPartners(Authinfo.getOrgId(), function (data) {
             $scope.partner = data.partners[0];
           });
         }

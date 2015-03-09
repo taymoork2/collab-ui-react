@@ -255,11 +255,9 @@ angular.module('Squared')
         }
       };
 
-      var makeFunnelChart = function (sdata, divName, metricName, title, color, operation, shouldShowCursor) {
-
+      var makeFunnelChart = function (sdata, divName, metricName, title, color, operation) {
         formatData(sdata);
-
-        var funnelChart = AmCharts.makeChart(divName, {
+        AmCharts.makeChart(divName, {
           'type': 'funnel',
           'theme': 'none',
           'fontFamily': 'CiscoSansTT Thin',
@@ -310,13 +308,11 @@ angular.module('Squared')
       };
 
       var makeTimeChart = function (sdata, divName, metricName, title, color, operation, shouldShowCursor) {
-
         if (sdata.length === 0) {
           formatDates(dummyChartVals);
           sdata = dummyChartVals;
         }
-
-        var homeChart = AmCharts.makeChart(divName, {
+        AmCharts.makeChart(divName, {
           'type': 'serial',
           'theme': 'none',
           'fontFamily': 'CiscoSansTT Thin',

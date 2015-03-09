@@ -79,7 +79,7 @@ angular.module('Squared')
 
       return {
 
-        getUsageMetrics: function (metricType, params, callback) {
+        getUsageMetrics: function (metricType, params) {
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           var metricUrl = buildUrl(metricType, params);
@@ -100,11 +100,6 @@ angular.module('Squared')
         },
 
         getPartnerMetrics: function (useCache) {
-          var countParam = {
-            'intervalCount': 1,
-            'intervalType': 'week',
-            'cache': useCache
-          };
           var chartParams = {
             'intervalCount': 1,
             'intervalType': 'week',

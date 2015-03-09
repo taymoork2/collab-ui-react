@@ -6,7 +6,7 @@
     .factory('DirectoryNumber', DirectoryNumber);
 
   /* @ngInject */
-  function DirectoryNumber(Authinfo, TelephonyInfoService, UserDirectoryNumberService, DirectoryNumberService, AlternateNumberService, HuronAssignedLine) {
+  function DirectoryNumber(Authinfo, TelephonyInfoService, UserDirectoryNumberService, DirectoryNumberService, AlternateNumberService) {
     var directoryNumberPayload = {
       uuid: '',
       pattern: '',
@@ -124,7 +124,7 @@
       }, dnPayload).$promise;
     }
 
-    function changeInternalNumber(oldDnId, newDnId) {
+    function changeInternalNumber(oldDnId) {
       return service.deleteDirectoryNumber(oldDnId).then(function () {}).$promise;
     }
 
@@ -177,7 +177,7 @@
         customerId: Authinfo.getOrgId(),
         directoryNumberId: dnUuid,
         alternateNumberId: altNumUuid
-      }, alternateNumber, function (data, headers) {
+      }, alternateNumber, function (data) {
         data.uuid = altNumUuid;
         return data;
       }).$promise;

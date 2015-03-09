@@ -9,11 +9,11 @@ module.exports = function (grunt) {
 
   var appConfig = require('./build.config.js');
 
-  var connectConfig = {
-    app: require('./bower.json').appPath || 'app',
-    build: require('./bower.json').appPath || 'build',
-    dist: 'dist'
-  };
+  // var connectConfig = {
+  //   app: require('./bower.json').appPath || 'app',
+  //   build: require('./bower.json').appPath || 'build',
+  //   dist: 'dist'
+  // };
 
   var taskConfig = {
 
@@ -1039,7 +1039,7 @@ module.exports = function (grunt) {
     });
 
     grunt.file.copy(this.data.dir + '/' + this.data.file, this.data.dir + '/' + this.data.file, {
-      process: function (contents, path) {
+      process: function (contents) {
         return grunt.template.process(contents, {
           data: {
             scripts: jsFiles,
@@ -1060,7 +1060,7 @@ module.exports = function (grunt) {
     var jsFiles = filterForJS(this.filesSrc);
 
     grunt.file.copy('karma.conf.js', grunt.config('test_dir') + '/karma-unit.js', {
-      process: function (contents, path) {
+      process: function (contents) {
         return grunt.template.process(contents, {
           data: {
             scripts: jsFiles

@@ -3,9 +3,7 @@
 /* global describe */
 /* global it */
 /* global browser */
-/* global by */
 /* global expect */
-/* global element */
 
 //test link: http://127.0.0.1:8000/#/login?pp=support_search:5354d535-9aaf-5e22-a091-34de878d2200
 

@@ -13,14 +13,14 @@
 
     return factory;
 
-    function error(msg, scope) {
+    function error(msg) {
       $rootScope.$emit('notification-new', {
         type: 'danger',
         msg: msg
       });
     }
 
-    function success(msg, scope) {
+    function success(msg) {
       $rootScope.$emit('notification-new', {
         type: 'success',
         msg: msg

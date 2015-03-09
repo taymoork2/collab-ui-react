@@ -1,7 +1,7 @@
 describe('DashboardHeaderDirective', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $compile, $rootScope, popoverScope, element;
+  var $compile, $rootScope, element;
   beforeEach(inject(function ($injector, _$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;

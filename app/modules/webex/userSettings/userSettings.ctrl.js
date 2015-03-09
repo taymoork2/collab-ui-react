@@ -5,26 +5,19 @@
     '$scope',
     '$log',
     'WebExUserSettingsSvc',
+    'WebexUserPrivilegesModel',
     function (
       $scope,
       $log,
-      WebExUserSettingsSvc
+      WebExUserSettingsSvc,
+      userPrivilegesModel
     ) {
-      var userPrivilegesModel;
 
-      this.createUserPrivilegesModel = function () {
-        var funcName = "createUserPrivilegesModel()";
-        var logMsg = "";
-        // alert(funcName);
-
-        this.userPrivilegesModel = userPrivilegesModel;
-      }; // createUserPrivilegesModel()
+      // this.createUserPrivilegesModel = function () {
+      //   this.userPrivilegesModel = userPrivilegesModel;
+      // };
 
       this.getUserSettingsInfo = function () {
-        var funcName = "getUserSettingsInfo()";
-        var logMsg = "";
-        // alert(funcName);
-
         var currView = this;
         var xmlApiAccessInfo = {
           xmlServerURL: "http://172.24.93.53/xml9.0.0/XMLService",
@@ -38,10 +31,6 @@
 
         WebExUserSettingsSvc.getUserSettingsInfo(xmlApiAccessInfo).then(
           function getUserSettingsInfoSuccess(result) {
-            var funcName = "getUserSettingsInfoSuccess()";
-            var logMsg = "";
-            // alert(funcName);
-
             currView.userInfoXml = result[0];
             currView.siteInfoXml = result[1];
             currView.meetingTypesInfoXml = result[2];

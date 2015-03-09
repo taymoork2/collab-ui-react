@@ -60,7 +60,6 @@
     }
 
     function startTrial(keepModal) {
-      var createdDate = new Date();
       vm.nameError = false;
       vm.emailError = false;
       angular.element('#startTrialButton').button('loading');
@@ -86,13 +85,13 @@
           vm.customerOrgId = response.data.customerOrgId;
           if (offersList.indexOf(Config.trials.squaredUC) !== -1) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
-              .catch(function (response) {
+              .catch(function () {
                 angular.element('#startTrialButton').button('reset');
                 Notification.notify([$translate.instant('trialModal.squareducError')], 'error');
                 return $q.reject();
               });
           }
-        }).then(function (response) {
+        }).then(function () {
           angular.element('#startTrialButton').button('reset');
           if (!keepModal) {
             $state.modal.close();

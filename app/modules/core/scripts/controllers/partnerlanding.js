@@ -2,9 +2,9 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', '$modal', 'ExternalNumberPool',
+  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state',
 
-    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, $modal, ExternalNumberPool) {
+    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -420,12 +420,6 @@ angular.module('Core')
       };
 
       $scope.$on('ngGridEventScroll', function () {
-        var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
-        var scrollTop = ngGridView.scrollTop;
-        var scrollOffsetHeight = ngGridView.offsetHeight;
-        var currentScroll = scrollTop + scrollOffsetHeight;
-        var scrollHeight = ngGridView.scrollHeight;
-
         if ($scope.load) {
           $scope.currentDataPosition++;
           console.log($scope.currentDataPosition * Config.usersperpage + 1);

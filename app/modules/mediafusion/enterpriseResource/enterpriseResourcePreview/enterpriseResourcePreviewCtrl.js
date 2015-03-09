@@ -1,13 +1,8 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Mediafusion')
-  .controller('VtsPreviewCtrl', ['$scope', '$state',
-    function ($scope, $state) {
-      /*& $scope.closePreview = function () {
-         $state.go('vts.list');
-       };*/
+  .controller('VtsPreviewCtrl', ['$scope',
+    function ($scope) {
       var $currentVts;
       $scope.changeOpState = function () {
         console.log("inside changeOpState");

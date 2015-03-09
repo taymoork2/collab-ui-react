@@ -1,10 +1,8 @@
 'use strict';
 
-/* global moment */
-
 angular.module('Core')
-  .controller('UsersCtrl', ['$scope', '$state', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config',
-    function ($scope, $state, $location, $window, Userservice, UserListService, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config) {
+  .controller('UsersCtrl', ['$scope', '$state', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Authinfo', 'Storage', '$rootScope',
+    function ($scope, $state, $location, $window, Userservice, UserListService, Log, Authinfo, Storage, $rootScope) {
 
       $scope.isSquaredInviter = function () {
         return Authinfo.isSquaredInviter();
@@ -47,19 +45,6 @@ angular.module('Core')
             return svc.displayName;
           }
         }
-      };
-
-      var isEntitled = function (ent) {
-        if ($rootScope.services) {
-          for (var i = 0; i < $rootScope.services.length; i++) {
-            var svc = $rootScope.services[i].ciService;
-
-            if (svc === ent) {
-              return true;
-            }
-          }
-        }
-        return false;
       };
 
       $scope.isServiceAllowed = function (service) {

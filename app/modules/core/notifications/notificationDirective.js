@@ -19,7 +19,7 @@
 
     return directive;
 
-    function link(scope, element, attributes) {
+    function link(scope) {
       scope.getTitle = function () {
         switch (scope.type) {
         case 'danger':

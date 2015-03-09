@@ -4,9 +4,7 @@
 /* global describe */
 /* global it */
 /* global browser */
-/* global by */
 /* global expect */
-/* global element */
 
 var testuser = {
   superUser: 'super-admin@mfusion1webex.com',

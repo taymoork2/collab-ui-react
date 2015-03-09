@@ -1,7 +1,5 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Core')
   .controller('CustomerPreviewCtrl', ['$scope', '$state',
     function ($scope, $state) {

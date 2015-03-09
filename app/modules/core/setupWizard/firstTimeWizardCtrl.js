@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('FirstTimeWizardCtrl', ['$scope', '$translate', 'Authinfo', '$state', 'Orgservice', 'Log',
-    function ($scope, $translate, Authinfo, $state, Orgservice, Log) {
+  .controller('FirstTimeWizardCtrl', ['$scope', '$translate', 'Authinfo', '$state', 'Orgservice',
+    function ($scope, $translate, Authinfo, $state, Orgservice) {
       $scope.greeting = $translate.instant('index.greeting', {
         name: Authinfo.getUserName()
       });

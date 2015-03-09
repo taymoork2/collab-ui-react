@@ -41,7 +41,7 @@ angular.module('Core')
                     'givenName': usersDataArray[0].givenName
                   };
                   HuronUser.create(data.userResponse[0].uuid, userData)
-                    .then(function (success) {
+                    .then(function () {
                       data.success = true;
                       callback(data, status);
                     }).catch(function (error) {
@@ -52,7 +52,7 @@ angular.module('Core')
                 } else {
                   if (data.userResponse[0].unentitled && data.userResponse[0].unentitled.indexOf(Config.entitlements.huron) !== -1) {
                     HuronUser.delete(data.userResponse[0].uuid)
-                      .then(function (success) {
+                      .then(function () {
                         data.success = true;
                         callback(data, status);
                       }, function (error) {
@@ -155,7 +155,7 @@ angular.module('Core')
                 // integrated.
                 if (data.entitlements && data.entitlements.indexOf(Config.entitlements.huron) !== -1) {
                   HuronUser.update(data.id, data)
-                    .then(function (success) {
+                    .then(function () {
                       data.success = true;
                       callback(data, status);
                     }).catch(function (error) {

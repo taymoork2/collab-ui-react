@@ -4,7 +4,6 @@
 /* global it */
 /* global browser */
 /* global by */
-/* global expect */
 /* global element */
 
 var testuser = {

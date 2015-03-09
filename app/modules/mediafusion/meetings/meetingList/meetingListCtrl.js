@@ -246,7 +246,7 @@ angular.module('Mediafusion')
       /* getMeetingListinfo will fetch additional details about the meetings */
       var getMeetingListinfo = function (startDateTime) {
 
-        MeetingListService.listMeetingsinfo(startDateTime, function (data, status, meetingid) {
+        MeetingListService.listMeetingsinfo(startDateTime, function (data, status) {
           if (data.success) {
             $scope.querymeetingslistinfo = data.meetings;
           } else {
@@ -258,7 +258,7 @@ angular.module('Mediafusion')
       /* getParticipantListinfo will fetch details about the participants of the meetings */
       var getParticipantListinfo = function () {
 
-        MeetingListService.listParticipantinfo(function (data, status, meetingid) {
+        MeetingListService.listParticipantinfo(function (data, status) {
           if (data.success) {
             $scope.queryparticipantlistinfo = data.partDetails;
           } else {
@@ -606,8 +606,6 @@ angular.module('Mediafusion')
           $scope.load = false;
           var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
           var scrollTop = ngGridView.scrollTop;
-          var scrollOffsetHeight = ngGridView.offsetHeight;
-          var currentScroll = scrollTop + scrollOffsetHeight;
           var scrollHeight = ngGridView.scrollHeight;
           console.log(scrollTop);
           console.log(scrollHeight);

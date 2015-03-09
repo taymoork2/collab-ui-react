@@ -15,7 +15,7 @@
         });
       };
 
-      $scope.$watch('currentUser', function (newUser, oldUser) {
+      $scope.$watch('currentUser', function (newUser) {
         if (!newUser || !newUser.id) {
           $scope.activationStatus = null;
         } else {
@@ -25,7 +25,7 @@
 
       $scope.reload = function () {
         $scope.inflight = true;
-        ussService.pollCIForUser($scope.currentUser.id, function (err, data) {
+        ussService.pollCIForUser($scope.currentUser.id, function () {
           updateStatusForUser($scope.currentUser.id);
         });
       };

@@ -10,9 +10,9 @@
   "newcap": true,
   "noarg": true,
   "regexp": true,
-
   "undef": true,
-  "unused": false,
+
+  "unused": true,
   "strict": false,
   "trailing": false,
   "smarttabs": false,

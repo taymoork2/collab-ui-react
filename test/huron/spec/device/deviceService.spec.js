@@ -61,7 +61,7 @@ describe('Service: DeviceService', function () {
 
     it('should update the device', function () {
       $httpBackend.whenPUT(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/54d6041e-8a67-4437-a600-6307adc6fb64').respond(200);
-      DeviceService.updateDevice(getJSONFixture('huron/json/device/devices/54d6041e-8a67-4437-a600-6307adc6fb64.json')).then(function (data) {
+      DeviceService.updateDevice(getJSONFixture('huron/json/device/devices/54d6041e-8a67-4437-a600-6307adc6fb64.json')).then(function () {
         // not sure what to expect here.  Just want to exercise code path.
       });
       $httpBackend.flush();
@@ -75,7 +75,7 @@ describe('Service: DeviceService', function () {
 
     it('should delete the device', function () {
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/54d6041e-8a67-4437-a600-6307adc6fb64').respond(204);
-      DeviceService.deleteDevice(getJSONFixture('huron/json/device/devices/54d6041e-8a67-4437-a600-6307adc6fb64.json')).then(function (data) {
+      DeviceService.deleteDevice(getJSONFixture('huron/json/device/devices/54d6041e-8a67-4437-a600-6307adc6fb64.json')).then(function () {
         // not sure what to expect here.  Just want to exercise code path.
       });
       $httpBackend.flush();

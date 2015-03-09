@@ -29,7 +29,7 @@
     function save() {
       HttpUtils.setTrackingID().then(function () {
         DeviceService.updateDevice(vm.device)
-          .then(function (response) {
+          .then(function () {
             Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
           })
           .catch(function (response) {
@@ -45,9 +45,9 @@
       });
 
       HttpUtils.setTrackingID().then(function () {
-        modalInstance.result.then(function (reason) {
+        modalInstance.result.then(function () {
           DeviceService.deleteDevice(vm.device)
-            .then(function (response) {
+            .then(function () {
               $rootScope.$broadcast("deviceDeactivated");
               Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
               $state.go('users.list.preview');

@@ -37,7 +37,7 @@
           customerId: user.meta.organizationID,
           userId: user.id
         }, rdBean,
-        function (data) {
+        function () {
           result.msg = $translate.instant('singleNumberReachPanel.success');
           result.type = 'success';
           Notification.notify([result.msg], result.type);
@@ -65,7 +65,7 @@
           userId: user.id,
           remoteDestId: vm.telephonyInfo.snrInfo.remoteDestinations[0].uuid
         },
-        function (data) {
+        function () {
           vm.telephonyInfo.snrInfo.destination = null;
           vm.telephonyInfo.snrInfo.remoteDestinations = null;
           TelephonyInfoService.updateSnr(vm.telephonyInfo.snrInfo);
@@ -95,7 +95,7 @@
           userId: user.id,
           remoteDestId: vm.telephonyInfo.snrInfo.remoteDestinations[0].uuid
         }, rdBean,
-        function (data) {
+        function () {
           result.msg = $translate.instant('singleNumberReachPanel.success');
           result.type = 'success';
           Notification.notify([result.msg], result.type);
@@ -120,10 +120,10 @@
             .then(function (response) {
               processCreateRemoteDestionInfo(response);
             })
-            .then(function (response) {
+            .then(function () {
               TelephonyInfoService.getRemoteDestinationInfo($scope.currentUser.id);
             })
-            .catch(function (response) {
+            .catch(function () {
               processCreateRemoteDestionInfo(null);
             });
         }

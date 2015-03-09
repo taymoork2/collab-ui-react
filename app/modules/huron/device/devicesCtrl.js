@@ -67,7 +67,7 @@
       return false;
     }
 
-    $scope.$watch('currentUser', function (newUser, oldUser) {
+    $scope.$watch('currentUser', function (newUser) {
       if (newUser) {
         vm.showGenerateOtpButton = false;
         if (isHuronEnabled()) {

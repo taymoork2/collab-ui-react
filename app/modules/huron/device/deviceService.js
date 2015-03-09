@@ -70,7 +70,7 @@
                 this.deviceStatus.ipAddress = 'unknown';
               }
               this.deviceStatus.progressStatus = false;
-            }.bind(device), function (response) {
+            }.bind(device), function () {
               this.deviceStatus.progressStatus = false;
               this.deviceStatus.isValid = false;
             }.bind(device));
