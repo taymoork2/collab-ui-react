@@ -79,22 +79,24 @@
           var index = wbxSiteUrl.indexOf(".");
           var wbxSiteName = wbxSiteUrl.slice(0, index);
 
-          if ($rootScope.sessionTickets === null) {
+          if (!$rootScope.sessionTickets) {
+            console.log("No Session tickets in $rootScope, will check Storage");
             var storedSessionTicketsJson = Storage.get('sessionTickets');
             if (storedSessionTicketsJson !== null) {
               $rootScope.sessionTickets = JSON.parse(storedSessionTicketsJson);
-              $log.log("Storage.sessionTickets = " + $rootScope.sessionTickets);
+              console.log("Found some session tickets in Storage.sessionTickets = " + $rootScope.sessionTickets);
             } else {
               $log.log("No Storage.sessionTickets");
               $rootScope.sessionTickets = {};
-              logMsg = funcName + ": " + "No Session tickets in scope, will create new one. Site= " + wbxSiteName;
-              $log.log(logMsg);
+              logMsg = funcName + ": " + "No Session tickets in scope or Storage, will create new one for site= " + wbxSiteName;
+              console.log(logMsg);
               return this.getNewSessionTicket(wbxSiteName, wbxSiteUrl);
             }
           }
+
           var ticket = $rootScope.sessionTickets[wbxSiteName];
-          if (ticket === null) {
-            logMsg = funcName + ": " + "No Session ticket for Site= " + wbxSiteName + " will create new one for this site";
+          if ((typeof ticket === "undefined") || (ticket === null)) {
+            logMsg = funcName + ": " + "No Session ticket in scope for Site= " + wbxSiteName + " will create new one for this site";
             $log.log(logMsg);
             return this.getNewSessionTicket(wbxSiteName, wbxSiteUrl);
           } else {
