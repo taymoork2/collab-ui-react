@@ -655,7 +655,8 @@ module.exports = function (grunt) {
       less: {
         files: [
           '<%= app_dir %>/<%= app_files.less %>',
-          '<%= app_dir %>/**/*.less'
+          '<%= app_dir %>/**/*.less',
+          '**/*.less'
         ],
         tasks: [
           'less:build',
