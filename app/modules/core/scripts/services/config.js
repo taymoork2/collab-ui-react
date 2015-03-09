@@ -464,7 +464,6 @@ angular.module('Core')
           'overview',
           'users',
           'userprofile',
-          'devices',
           'reports',
           'setupwizardmodal',
           'firsttimewizard',
@@ -501,7 +500,7 @@ angular.module('Core')
           'didadd',
           'newpartnerreports'
         ],
-        'squared-fusion-uc': ['fusion'],
+        'squared-fusion-uc': ['fusion', 'devices'],
         'squared-team-member': ['organization'],
         'squared-fusion-media': ['meetings', 'vts', 'utilization']
       };

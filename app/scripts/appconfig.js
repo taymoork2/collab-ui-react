@@ -242,7 +242,7 @@ angular
         })
         .state('support', {
           url: '/support?search',
-          templateUrl: 'modules/squared/views/support.html',
+          templateUrl: 'modules/squared/support/support.tpl.html',
           controller: 'SupportCtrl',
           parent: 'main'
         })

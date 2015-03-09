@@ -4,30 +4,67 @@
   </div>
 </div>
 <div class="row support-row">
-  <div class="panel panel-default col-xs-6">
-    <div class="panel-heading panel-heading-default">
+  <div class="search-panel col-xs-12 col-md-8">
       <div id="listLogs">
-        <h3 class="panel-title panel-title-default">
-          <strong id="subtitleLogs" translate="supportPage.subtitleLogs"></strong>
-        </h3>
+        <span class="search-title" id="subtitleLogs" translate="supportPage.subtitleLogs">
+        </span>
       </div>
-    </div>
-
-    <div class="panel-body">
+    <div class="search-panel-input">
       <form role="form">
         <div class="form-group">
-          <br/>
           <input class="form-control support_input" type="text" id="logsearchfield" ng-model="input.search" placeholder=''/>
-          <br>
         </div>
 
-        <div class="form-group">
+        <div class="form-group search-button-log">
           <button id="logSearchBtn" class="btn btn-primary pull-right" ng-click="getLogs()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="supportPage.listlogsbtn"></span></button>
         </div>
       </form>
     </div>
   </div>
-  <div class="col-xs-6">
+  <div class="col-xs-12 col-md-4">
+    <div class="row support-row">
+      <div class="col-xs-12 support-card">
+        <div class="health-card" ng-show="healthyStatus" ng-click="toggleSystem()">
+          <span class="icon icon-check healthy-check"></span>
+          <span class="healthy" translate="supportPage.operational"></span>
+        </div>
+        <div class="health-card" ng-show="!healthyStatus" ng-click="toggleSystem()">
+          <span class="icon icon-close error-check"></span>
+          <span class="error-msg" translate="supportPage.error"></span>
+        </div>
+        <section class="monitoring-panel systems-detail" ng-show="showSystemDetails">
+          <div ng-repeat="health in healthMetrics">
+            <a ng-href="{{statusPageUrl}}" target="_blank">
+              <div ng-class="{true:'green', false:'red'}[health.status==='operational']" class="monitoring-cell" id="{{health.name}}">
+                <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>{{health.name}}</span>
+              </div>
+            </a>
+          </div>
+          <hercules-status></hercules-status>
+        </section>
+      </div>
+    </div>
+    <div class="row support-row">
+      <div class="col-xs-12 support-card">
+        <span class="support-info" translate="supportPage.supportResources"></span>
+        <div class="display-link" ng-click="toggleSupport()" ng-show="showSupportDetails === false" href="">
+          <span translate="supportPage.showDetails"></span>
+        </div>
+        <div class="display-link" ng-click="toggleSupport()" ng-show="showSupportDetails === true" href="">
+          <span translate="supportPage.hideDetails"></span>
+        </div>
+        <div ng-show="showSupportDetails === true">
+          <p class="bucket-header support-header header-section" translate="supportPage.problemReports"></p>
+          <p class="support-dsc">{{problemContent | translate}} {{problemHandler | translate}}.</p>
+          <span class="support-dsc" translate="supportPage.reportingUrl"></span>
+          <a href="" translate="supportPage.sendFeedback" ng-click="sendFeedback()"></a>
+          <p class="bucket-header support-header-help header-section" translate="supportPage.helpFaq"></p>
+          <p class="support-dsc">{{helpContent | translate }} {{helpHandler | translate}}.</p>
+          <span class="support-dsc" translate="supportPage.helpUrl"></span>
+          <a href="{{helpUrl}}">{{helpUrl}}</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

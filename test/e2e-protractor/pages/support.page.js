@@ -20,7 +20,7 @@ var SupportPage = function () {
   this.locusId = element(by.binding('locusId'));
   this.callStart = element(by.binding('callStart'));
 
-  this.callInfoIcon = element(by.id('callInfo-icon'));
+  this.callInfoIcon = element.all(by.repeater('row in renderedRows')).first().element(by.id('callInfo-icon'));
   this.downloadCallflowChartsIcon = element(by.id('download-callflowCharts-icon'));
   this.closeCallInfo = element(by.id('closeCallInfo'));
   this.closeCallFlow = element(by.id('closeCallFlow'));

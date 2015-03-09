@@ -2,8 +2,60 @@
 /* global $, Bloodhound, moment */
 
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams',
-    function ($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams) {
+  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window',
+    function ($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window) {
+
+      $scope.showSupportDetails = false;
+      $scope.showSystemDetails = false;
+      $scope.problemHandler = 'Cisco';
+      $scope.helpHandler = 'Cisco';
+      $scope.reportingUrl = '';
+      $scope.helpUrl = 'https://support.projectsquared.com';
+      $scope.statusPageUrl = Config.getStatusPageUrl();
+
+      $scope.problemContent = 'Problem reports are being handled by';
+      $scope.helpContent = 'Help content is provided by';
+
+      $scope.toggleSystem = function () {
+        $scope.showSystemDetails = !$scope.showSystemDetails;
+      };
+
+      $scope.toggleSupport = function () {
+        $scope.showSupportDetails = !$scope.showSupportDetails;
+      };
+
+      $scope.sendFeedback = function () {
+        var appType = 'Atlas_' + $window.navigator.userAgent;
+        var feedbackId = Utils.getUUID();
+
+        FeedbackService.getFeedbackUrl(appType, feedbackId, function (data, status) {
+          Log.debug('feedback status: ' + status);
+          if (data.success) {
+            $window.open(data.url, '_blank');
+          } else {
+            Log.debug('Cannot load feedback url: ' + status);
+          }
+        });
+      };
+
+      var getHealthMetrics = function () {
+        ReportsService.healthMonitor(function (data, status) {
+          if (data.success) {
+            $scope.healthMetrics = data.components;
+            $scope.healthyStatus = true;
+
+            for (var health in $scope.healthMetrics) {
+              if (health.status !== 'operational') {
+                $scope.healthyStatus = false;
+              }
+            }
+          } else {
+            Log.debug('Query active users metrics failed. Status: ' + status);
+          }
+        });
+      };
+
+      getHealthMetrics();
 
       $('#logs-panel').hide();
 

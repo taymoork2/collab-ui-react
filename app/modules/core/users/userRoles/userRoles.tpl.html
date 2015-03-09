@@ -60,7 +60,7 @@
           <cs-checkbox class="indented-checkbox" cklabel="{{'rolesPanel.userAdmin' | translate}}" ng-model="userAdminValue" ng-disabled="false"></cs-checkbox>
           <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
         </div>
-        <div class="admin-options">
+        <div class="admin-options" ng-show='false'>
           <cs-checkbox class="indented-checkbox" cklabel="{{'rolesPanel.billingAdmin' | translate}}" ng-model="billingAdminValue" ng-disabled="false"></cs-checkbox>
           <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i class='icon icon-remove'></i>Analytics & Reports</li><li><i class='icon icon-remove'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
         </div>
@@ -69,7 +69,7 @@
           <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-remove'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
         </div>
       </div>
-    <span class="description" translate="rolesPanel.cloudOpDescription"></span>
-    <cs-checkbox class="cloudChkBox"cklabel="{{'rolesPanel.cloudOpAdmin' | translate}}" ng-model="cloudAdminValue" ng-disabled="false"></cs-checkbox>
+    <span ng-show="false" class="description" translate="rolesPanel.cloudOpDescription"></span>
+    <cs-checkbox ng-show="false" class="cloudChkBox"cklabel="{{'rolesPanel.cloudOpAdmin' | translate}}" ng-model="cloudAdminValue" ng-disabled="false"></cs-checkbox>
   </div>
 </div>

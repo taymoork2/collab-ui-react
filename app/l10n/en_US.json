@@ -212,6 +212,7 @@
     "error": "Update user failed."
   },
   "supportPage": {
+    "title": "Support",
     "subtitleLogs": "Search for logs",
     "listlogsbtn": "Search",
     "noResults": "No Results.",
@@ -256,7 +257,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "Failed to retrieve call info. Status: {{status}}",
     "subTitleCallFlow": "Call Flow",
-    "downloading": "This download might take up to 5 minutes. Please be patient..."
+    "downloading": "This download might take up to 5 minutes. Please be patient...",
+    "operational": "All systems operational",
+    "error": "Error in system",
+    "supportResources": "Support Resources",
+    "showDetails": "Show Details",
+    "hideDetails": "Hide Details",
+    "problemReports": "Problem Reports",
+    "reportingUrl": "Reporting URL:",
+    "helpFaq": "Help and FAQs",
+    "helpUrl": "Help URL:",
+    "sendFeedback": "Cisco Feedback"
   },
   "common": {
     "delete": "Delete",

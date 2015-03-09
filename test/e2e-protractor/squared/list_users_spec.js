@@ -61,7 +61,7 @@ describe('List users flow', function () {
   // Asserting search users.
   describe('search users on page', function () {
     it('should show first page of users based on search string', function () {
-      utils.searchAndClick(testuser.searchStr);
+      utils.searchAndClick(testuser.username);
     });
     it('display user profile page when clicking on the user link', function () {
       utils.click(users.userLink);
