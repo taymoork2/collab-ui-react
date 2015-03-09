@@ -1,3 +1,5 @@
+'use strict';
+
 describe('NothingFusedDirective', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

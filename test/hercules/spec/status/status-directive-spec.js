@@ -1,3 +1,5 @@
+'use strict';
+
 describe('StatusDirective', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

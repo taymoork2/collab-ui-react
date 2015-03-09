@@ -1,3 +1,5 @@
+'use strict';
+
 var testuser = {
   username: 'pbr-org-admin@squared2webex.com',
   password: 'C1sc0123!',

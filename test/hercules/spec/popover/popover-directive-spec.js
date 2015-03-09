@@ -1,3 +1,5 @@
+'use strict';
+
 describe('DashboardHeaderDirective', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

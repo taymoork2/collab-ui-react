@@ -40,9 +40,7 @@ angular.module('Core')
 
       $scope.$watch('options.enableSSO', function () {
         var ssoValue = $scope.options.enableSSO;
-        if (ssoValue === oldSSOValue) {
-          // do nothing
-        } else {
+        if (ssoValue !== oldSSOValue) {
           if (ssoValue === 0) {
             deleteSSO();
           } else if (ssoValue === 1) {

@@ -1,3 +1,5 @@
+'use strict';
+
 describe('NotificationConfigController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

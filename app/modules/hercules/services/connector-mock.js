@@ -14,6 +14,52 @@ var createHost = function (name) {
   };
 };
 
+var createAlarm = function (opts) {
+  return {
+    "id": rnd(),
+    "first_reported": new Date(),
+    "last_reported": new Date(),
+    "title": opts.title,
+    "severity": opts.severity,
+    "description": opts.description
+  };
+};
+
+var createConnectorStatus = function (connectorType, statusOk) {
+  if (connectorType == "c_mgmt") {
+    return null;
+  }
+  var cloudServiceType = "common_identity";
+  var premServiceType = "";
+  switch (connectorType) {
+  case "c_cal":
+    cloudServiceType = "cal_service";
+    premServiceType = "exchange";
+    break;
+  case "c_ucmc":
+    cloudServiceType = "uc_service";
+    premServiceType = "ucm_axl";
+    break;
+  }
+  return {
+    "operational": true,
+    "services": {
+      "cloud": [{
+        "address": "11.11.11.11",
+        "type": cloudServiceType,
+        "state": statusOk ? "ok" : "error",
+        "stateDescription": statusOk ? "" : "Unable to connect..."
+      }],
+      "onprem": [{
+        "address": "10.10.10.10",
+        "type": premServiceType,
+        "state": statusOk ? "ok" : "error",
+        "stateDescription": statusOk ? "" : "Unable to connect..."
+      }]
+    }
+  };
+};
+
 var createService = function (serviceName, serviceType, hosts) {
   var connectors = _.map(hosts, function (host) {
     var connector = {
@@ -64,52 +110,6 @@ var createCluster = function (opts) {
     "hosts": _.map(opts.hosts, function (host) {
       return createHost(host.hostName);
     })
-  };
-};
-
-var createAlarm = function (opts) {
-  return {
-    "id": rnd(),
-    "first_reported": new Date(),
-    "last_reported": new Date(),
-    "title": opts.title,
-    "severity": opts.severity,
-    "description": opts.description
-  };
-};
-
-var createConnectorStatus = function (connectorType, statusOk) {
-  if (connectorType == "c_mgmt") {
-    return null;
-  }
-  var cloudServiceType = "common_identity";
-  var premServiceType = "";
-  switch (connectorType) {
-  case "c_cal":
-    cloudServiceType = "cal_service";
-    premServiceType = "exchange";
-    break;
-  case "c_ucmc":
-    cloudServiceType = "uc_service";
-    premServiceType = "ucm_axl";
-    break;
-  }
-  return {
-    "operational": true,
-    "services": {
-      "cloud": [{
-        "address": "11.11.11.11",
-        "type": cloudServiceType,
-        "state": statusOk ? "ok" : "error",
-        "stateDescription": statusOk ? "" : "Unable to connect..."
-      }],
-      "onprem": [{
-        "address": "10.10.10.10",
-        "type": premServiceType,
-        "state": statusOk ? "ok" : "error",
-        "stateDescription": statusOk ? "" : "Unable to connect..."
-      }]
-    }
   };
 };
 

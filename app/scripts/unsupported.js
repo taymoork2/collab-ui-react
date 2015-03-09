@@ -1,3 +1,5 @@
+'use strict';
+
 var supportedIE = 11;
 var ieRegex = /msie/i;
 var ieVersionRegex = /(?:msie |rv:)(\d+(\.\d+)?)/i;

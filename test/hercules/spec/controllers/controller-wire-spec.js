@@ -1,3 +1,5 @@
+'use strict';
+
 describe('ControllerWireing', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

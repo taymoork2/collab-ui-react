@@ -1,3 +1,5 @@
+'use strict';
+
 describe('UpgradeButtonController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

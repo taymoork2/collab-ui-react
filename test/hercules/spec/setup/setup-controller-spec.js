@@ -1,3 +1,5 @@
+'use strict';
+
 describe('FusionSetupCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

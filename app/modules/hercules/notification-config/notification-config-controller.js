@@ -1,3 +1,5 @@
+'use strict';
+
 angular
   .module('Hercules').controller('NotificationConfigController', [
     '$scope', 'NotificationConfigService', 'XhrNotificationService', 'MailValidatorService',

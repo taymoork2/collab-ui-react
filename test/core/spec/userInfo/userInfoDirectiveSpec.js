@@ -1,3 +1,5 @@
+'use strict';
+
 describe('UserInfoDirective', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

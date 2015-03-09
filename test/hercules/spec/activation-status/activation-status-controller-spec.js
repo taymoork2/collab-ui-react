@@ -1,3 +1,5 @@
+'use strict';
+
 describe('ActivationStatusController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

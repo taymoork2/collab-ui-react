@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('Mediafusion')
 
 .service('vtslistservice', ['$http', '$rootScope', 'Storage', 'Authinfo', 'Utils', 'Auth',

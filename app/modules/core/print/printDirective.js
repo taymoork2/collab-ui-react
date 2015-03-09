@@ -33,9 +33,7 @@
       if (window.matchMedia) {
         var mediaQueryList = window.matchMedia('print');
         mediaQueryList.addListener(function (mql) {
-          if (mql.matches) {
-
-          } else {
+          if (!mql.matches) {
             afterPrint();
           }
         });

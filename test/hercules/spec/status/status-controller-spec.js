@@ -1,3 +1,5 @@
+'use strict';
+
 describe('StatusController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

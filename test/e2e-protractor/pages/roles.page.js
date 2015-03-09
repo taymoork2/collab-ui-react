@@ -1,3 +1,5 @@
+'use strict';
+
 var RolesPage = function () {
   var randomId = utils.randomId();
 

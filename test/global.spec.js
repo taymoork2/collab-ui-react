@@ -1,4 +1,4 @@
-'use-strict';
+'use strict';
 
 describe('Global Unit Test Config', function () {
   // NOTE: fixturesPath is a singleton.  Changing this path changes it

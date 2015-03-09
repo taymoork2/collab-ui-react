@@ -1,3 +1,5 @@
+'use strict';
+
 describe('LandingPageView', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 

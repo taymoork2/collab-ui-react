@@ -1,3 +1,5 @@
+'use strict';
+
 describe('DashboardController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
