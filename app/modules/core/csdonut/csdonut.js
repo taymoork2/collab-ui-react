@@ -1,6 +1,7 @@
 (function main($angular, $d3) {
-
   'use strict';
+
+  /* global d3 */
 
   var throwException = function throwException(message) {
     throw 'csDonut: ' + message;
@@ -26,7 +27,7 @@
 
       controller: ['$scope', function controller($scope) {
 
-        //Unique donut id 
+        //Unique donut id
         $scope.donutId = 'csDonut_' + (Math.floor(Math.random() * 100)).toString();
         //Settings defaults
         $scope.colours = ['#3CA8E8', 'lightgray'];

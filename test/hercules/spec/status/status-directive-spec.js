@@ -5,7 +5,7 @@ describe('StatusDirective', function () {
   beforeEach(inject(function ($injector, _$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
-    httpBackend = $injector.get('$httpBackend');
+    var httpBackend = $injector.get('$httpBackend');
     httpBackend.when('GET', 'l10n/en_US.json').respond({});
     httpBackend.when('GET', 'https://hercules-integration.wbx2.com/v1/clusters').respond({});
   }));

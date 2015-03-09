@@ -41,7 +41,7 @@
           return promiseUpdate;
         } else if (Storage.get('refreshToken') && response.status === 400 && response.data &&
           response.data.error_description && response.data.error_description.indexOf('The refresh token provided is expired') !== -1) {
-          alert('session expired, you will be forced to login again.');
+          // alert('session expired, you will be forced to login again.');
           logout();
         } else {
           return $q.reject(response);

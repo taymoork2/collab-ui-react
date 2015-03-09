@@ -1,7 +1,7 @@
 describe('DashboardHeaderController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $scope, aggregator;
+  var $scope, aggregator, service;
 
   beforeEach(inject(function (_$controller_) {
     $scope = {
@@ -13,7 +13,7 @@ describe('DashboardHeaderController', function () {
     aggregator = {
       aggregateServices: sinon.stub()
     };
-    controller = _$controller_('DashboardHeaderController', {
+    _$controller_('DashboardHeaderController', {
       $scope: $scope,
       ServiceDescriptor: service,
       DashboardAggregator: aggregator

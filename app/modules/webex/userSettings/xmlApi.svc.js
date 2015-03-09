@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  /* global X2JS */
+  /* global constants */
+
   angular.module('WebExUserSettings').factory('XmlApiSvc', [
     '$http',
     '$log',

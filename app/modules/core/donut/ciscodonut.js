@@ -1,6 +1,7 @@
 (function main($angular, $d3) {
-
   'use strict';
+
+  /* global d3 */
 
   var throwException = function throwException(message) {
     throw 'ciscoDonut: ' + message;

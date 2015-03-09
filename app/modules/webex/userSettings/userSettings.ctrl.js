@@ -10,6 +10,8 @@
       $log,
       WebExUserSettingsSvc
     ) {
+      var userPrivilegesModel;
+
       this.createUserPrivilegesModel = function () {
         var funcName = "createUserPrivilegesModel()";
         var logMsg = "";
@@ -63,7 +65,7 @@
             var logMsg = "";
 
             logMsg = funcName + ": " + "result=" + JSON.stringify(result);
-            alert(logMsg);
+            // alert(logMsg);
           } // getUserSettingsInfoError()
         ); // WebExUserSettingsSvc.getUserSettingsInfo()
       }; // getUserSettingsInfo()
@@ -227,8 +229,8 @@
       }; // updateUserPrivilegesModel()
 
       this.updateUserSettings = function () {
-        alert("updateUserSettings(): START");
-        alert("updateUserSettings(): END");
+        // alert("updateUserSettings(): START");
+        // alert("updateUserSettings(): END");
       }; // updateUserSettings()
 
       //----------------------------------------------------------------------//
