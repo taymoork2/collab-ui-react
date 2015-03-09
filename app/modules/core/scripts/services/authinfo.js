@@ -264,6 +264,9 @@ angular.module('Core')
         },
         hasAccount: function () {
           return authData.hasAccount;
+        },
+        isCisco: function () {
+          return authData.orgid === '1eb65fdf-9643-417f-9974-ad72cae0e10f';
         }
       };
     }

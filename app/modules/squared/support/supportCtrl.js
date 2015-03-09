@@ -2,19 +2,19 @@
 /* global $, Bloodhound, moment */
 
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$q', '$location', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window',
-    function ($scope, $q, $location, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window) {
+  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice',
+    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice) {
 
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
-      $scope.problemHandler = 'Cisco';
-      $scope.helpHandler = 'Cisco';
-      $scope.reportingUrl = '';
+      $scope.problemHandler = ' by Cisco';
+      $scope.helpHandler = 'by Cisco';
+      $scope.reportingUrl = null;
       $scope.helpUrl = 'https://support.projectsquared.com';
       $scope.statusPageUrl = Config.getStatusPageUrl();
 
-      $scope.problemContent = 'Problem reports are being handled by';
-      $scope.helpContent = 'Help content is provided by';
+      $scope.problemContent = 'Problem reports are being handled';
+      $scope.helpContent = 'Help content is provided';
 
       $scope.toggleSystem = function () {
         $scope.showSystemDetails = !$scope.showSystemDetails;
@@ -45,17 +45,43 @@ angular.module('Squared')
             $scope.healthyStatus = true;
 
             for (var health in $scope.healthMetrics) {
-              if (health.status !== 'operational') {
+              if ($scope.healthMetrics[health].status !== 'operational') {
                 $scope.healthyStatus = false;
               }
             }
           } else {
-            Log.debug('Query active users metrics failed. Status: ' + status);
+            Log.debug('Get health metrics failed. Status: ' + status);
           }
         });
       };
 
-      getHealthMetrics();
+      var getOrg = function () {
+        Orgservice.getOrg(function (data, status) {
+          if (data.success) {
+            if (data.orgSettings) {
+              for (var url in data.orgSettings) {
+                if (data.orgSettings[url].indexOf('reportingSiteUrl=') > -1) {
+                  $scope.reportingUrl = data.orgSettings[url].split("reportingSiteUrl=").pop();
+                  $scope.problemHandler = 'externally';
+                } else if (data.orgSettings[url].indexOf('helpUrl=') > -1) {
+                  $scope.helpUrl = data.orgSettings[url].split("helpUrl=").pop();
+                  $scope.helpHandler = 'externally';
+                }
+              }
+
+            }
+          } else {
+            Log.debug('Get org failed. Status: ' + status);
+          }
+        });
+      };
+
+      var init = function () {
+        getHealthMetrics();
+        getOrg();
+      };
+
+      init();
 
       $('#logs-panel').hide();
 
@@ -489,12 +515,14 @@ angular.module('Squared')
           field: 'callFlow',
           displayName: $filter('translate')('supportPage.callflowAction'),
           sortable: false,
-          cellTemplate: callFlowTemplate
+          cellTemplate: callFlowTemplate,
+          visible: Authinfo.isCisco()
         }, {
           field: 'callInfo',
           displayName: $filter('translate')('supportPage.callAction'),
           sortable: false,
-          cellTemplate: callInfoTemplate
+          cellTemplate: callInfoTemplate,
+          visible: Authinfo.isCisco()
         }]
       };
 
