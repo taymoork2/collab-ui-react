@@ -23,7 +23,7 @@ describe('Customer Admin Landing Page License Info', function () {
       login.login(landing.nontrialadmin.username, landing.nontrialadmin.password);
     });
 
-    it('Should display default license info', function () {
+    xit('Should display default license info', function () {
       utils.expectIsDisplayed(landing.packages);
       utils.expectIsDisplayed(landing.packagesUnlimited);
       utils.expectIsDisplayed(landing.devices);
@@ -50,7 +50,7 @@ describe('Customer Admin Landing Page License Info', function () {
       login.login(landing.trialadmin.username, landing.trialadmin.password);
     });
 
-    it('Should display trial license info', function () {
+    xit('Should display trial license info', function () {
       utils.expectIsDisplayed(landing.packages);
       utils.expectIsDisplayed(landing.devices);
       utils.expectIsDisplayed(landing.licenses);

@@ -97,7 +97,9 @@ angular
         HttpUtils.setTrackingID();
       });
 
+      console.log('Loding environment: ' + Config.getEnv());
       if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
+        console.log('Detected Spark');
         $translate.use('en_spark');
       }
 
