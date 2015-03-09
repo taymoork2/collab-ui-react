@@ -1,12 +1,7 @@
-<div class="ent-detail-panel">
-  <div id="exit-details-btn" class="close-row" ng-click="crDetailsBody.closeDetails()">
-    <span translate="common.close"></span>
-    <i class="icon icon-close"></i>
-  </div>
+<div class="ent-detail-panel btn-bar">
   <div class="header-row row">
     <div class="col-md-12">
-      <h3 class="h2">{{title}}</h3>
-      <button id="btn-save" class="btn btn-info btn-save" data-loading-text="<i class='icon icon-spinner'></i>" ng-click="save()"><span translate="common.save"></span></button>
+      <button id="btn-save" class="btn btn-info" data-loading-text="<i class='icon icon-spinner'></i>" ng-click="save()"><span translate="common.save"></span></button>
       <button ng-if = "additionalBtn.show" id="{{additionalBtn.id}}" class="{{additionalBtn.btnclass}}" ng-click="additionalBtnClick()"> <span translate="{{additionalBtn.label}}"></span></button>{{crDetailsBody.showAdditionalBtn}}
     </div>
   </div>

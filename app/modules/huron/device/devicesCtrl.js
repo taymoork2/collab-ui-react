@@ -6,14 +6,13 @@
     .controller('DevicesCtrl', DevicesCtrl);
 
   /* @ngInject */
-  function DevicesCtrl($scope, $q, DeviceService, OtpService, Config, HttpUtils) {
+  function DevicesCtrl($scope, $q, $stateParams, DeviceService, OtpService, Config, HttpUtils) {
     var vm = this;
     vm.devices = [];
     vm.otps = [];
+    vm.currentUser = $stateParams.currentUser;
     vm.showGenerateOtpButton = false;
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
-
-    ////////////
 
     function activate() {
       HttpUtils.setTrackingID().then(function () {
@@ -22,12 +21,12 @@
         // reset to false when loaded
         vm.showGenerateOtpButton = false;
 
-        var devicePromise = DeviceService.loadDevices($scope.currentUser.id).then(function (deviceList) {
+        var devicePromise = DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
           vm.devices = deviceList;
         });
         promises.push(devicePromise);
 
-        var otpPromise = OtpService.loadOtps($scope.currentUser.id).then(function (otpList) {
+        var otpPromise = OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
           vm.otps = otpList;
         });
         promises.push(otpPromise);
@@ -39,9 +38,9 @@
             }
 
             if (vm.devices.length > 0 && vm.otps.length === 0) {
-              $scope.$parent.userDevicesCard.addGenerateAuthCodeLink();
+              $scope.$parent.userOverview.addGenerateAuthCodeLink();
             } else {
-              $scope.$parent.userDevicesCard.removeGenerateAuthCodeLink();
+              $scope.$parent.userOverview.removeGenerateAuthCodeLink();
             }
           });
       });
@@ -56,9 +55,9 @@
     }
 
     function isEntitled(ent) {
-      if ($scope.currentUser && $scope.currentUser.entitlements) {
-        for (var i = 0; i < $scope.currentUser.entitlements.length; i++) {
-          var svc = $scope.currentUser.entitlements[i];
+      if (vm.currentUser && vm.currentUser.entitlements) {
+        for (var i = 0; i < vm.currentUser.entitlements.length; i++) {
+          var svc = vm.currentUser.entitlements[i];
           if (svc === ent) {
             return true;
           }
@@ -93,6 +92,8 @@
         activate();
       }
     });
+
+    activate();
 
   }
 })();

@@ -53,7 +53,7 @@ describe('Org Entitlement flow', function () {
 
     notifications.assertSuccess('User successfully updated.');
 
-    utils.click(roles.closeButton);
+    utils.click(users.closeSidePanel);
   });
 
   it('should log out', function () {

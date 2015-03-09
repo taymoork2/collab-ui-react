@@ -3,6 +3,8 @@ angular
   .module('wx2AdminWebClientApp')
   .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider',
     function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
+      var sidepanelMemo = 'sidepanelMemo';
+
       $urlRouterProvider.otherwise('login');
       $stateProvider
         .state('login', {
@@ -34,6 +36,35 @@ angular
           url: '/unauthorized',
           templateUrl: 'modules/squared/views/unauthorized.html',
           parent: 'main'
+        })
+        .state('sidepanel', {
+          abstract: true,
+          onEnter: ['$modal', '$state', '$previousState',
+            function ($modal, $state, $previousState) {
+              $previousState.memo(sidepanelMemo);
+              $state.modal = $modal.open({
+                template: '<cs-sidepanel></cs-sidepanel>',
+                windowTemplateUrl: 'src/sidepanel/sidepanel-modal.tpl.html',
+                backdrop: false,
+                keyboard: false
+              });
+              $state.modal.result.finally(function () {
+                $state.modal = null;
+                var previousState = $previousState.get(sidepanelMemo);
+                if (previousState) {
+                  return $previousState.go(sidepanelMemo);
+                }
+              });
+            }
+          ],
+          onExit: ['$state', '$previousState',
+            function ($state, $previousState) {
+              if ($state.modal) {
+                $previousState.forget(sidepanelMemo);
+                $state.modal.close();
+              }
+            }
+          ]
         });
 
       $httpProvider.interceptors.push('TrackingIDInterceptor');
@@ -168,40 +199,126 @@ angular
             showAddUsers: {}
           }
         })
-        .state('users.list.preview', {
-          templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
-          controller: 'UserPreviewCtrl'
-        })
-        .state('users.list.preview.conversations', {
-          template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
-        })
-        .state('users.list.preview.roles', {
-          template: '<div class="sub-details-full" user-roles current-user="currentUser" entitlements="entitlements" roles="roles" queryuserslist="queryuserslist"></div>'
-        })
-        .state('users.list.preview.directorynumber', {
-          templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-          controller: 'LineSettingsCtrl',
-          controllerAs: 'lineSettings',
+        .state('editService', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              controller: 'OnboardCtrl',
+              templateUrl: 'modules/core/users/userPreview/editServices.tpl.html'
+            }
+          },
           params: {
-            showAddUsers: {},
-            directoryNumber: {}
+            currentUser: {}
           }
         })
-        .state('users.list.preview.voicemail', {
-          template: '<div uc-voicemail></div>'
+        .state('user-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'UserOverviewCtrl',
+              controllerAs: 'userOverview',
+              templateUrl: 'modules/core/users/userOverview/userOverview.tpl.html'
+            }
+          },
+          params: {
+            currentUser: {},
+            entitlements: {},
+            queryuserslist: {}
+          },
+          data: {
+            displayName: 'Overview'
+          }
         })
-        .state('users.list.preview.snr', {
-          template: '<div uc-single-number-reach></div>'
+        .state('user-overview.communication', {
+          templateUrl: 'modules/huron/overview/telephonyOverview.tpl.html',
+          controller: 'TelephonyOverviewCtrl',
+          controllerAs: 'telephonyOverview',
+          data: {
+            displayName: 'Communication'
+          }
         })
-        .state('users.list.preview.device', {
+        .state('user-overview.communication.directorynumber', {
+          templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
+          controller: 'LineSettingsCtrl',
+          controllerAs: 'ucLineSettings',
+          params: {
+            directoryNumber: {}
+          },
+          data: {
+            displayName: 'Line Configuration'
+          }
+        })
+        .state('user-overview.communication.device', {
           templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
           controller: 'DeviceDetailCtrl',
           controllerAs: 'ucDeviceDetail',
           params: {
-            showAddUsers: {},
             device: {}
+          },
+          data: {
+            displayName: 'Device Configuration'
           }
         })
+        .state('user-overview.communication.voicemail', {
+          template: '<div uc-voicemail></div>',
+          data: {
+            displayName: 'Voicemail'
+          }
+        })
+        .state('user-overview.communication.snr', {
+          template: '<div uc-single-number-reach></div>',
+          data: {
+            displayName: 'Single Number Reach'
+          }
+        })
+        .state('user-overview.messaging', {
+          templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
+          controller: 'UserPreviewCtrl',
+          data: {
+            displayName: 'Entitlements'
+          }
+        })
+        .state('user-overview.userProfile', {
+          templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
+          controller: 'UserRolesCtrl',
+          data: {
+            displayName: 'Roles'
+          }
+        })
+        // .state('users.list.preview', {
+        //     templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
+        //     controller: 'UserPreviewCtrl'
+        //   })
+        //   .state('users.list.preview.conversations', {
+        //     template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
+        //   })
+        //   .state('users.list.preview.roles', {
+        //     template: '<div class="sub-details-full" user-roles current-user="currentUser" entitlements="entitlements" roles="roles" queryuserslist="queryuserslist"></div>'
+        //   })
+        //   .state('users.list.preview.directorynumber', {
+        //     templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
+        //     controller: 'LineSettingsCtrl',
+        //     controllerAs: 'lineSettings',
+        //     params: {
+        //       showAddUsers: {},
+        //       directoryNumber: {}
+        //     }
+        //   })
+        //   .state('users.list.preview.voicemail', {
+        //     template: '<div uc-voicemail></div>'
+        //   })
+        //   .state('users.list.preview.snr', {
+        //     template: '<div uc-single-number-reach></div>'
+        //   })
+        //   .state('users.list.preview.device', {
+        //     templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
+        //     controller: 'DeviceDetailCtrl',
+        //     controllerAs: 'ucDeviceDetail',
+        //     params: {
+        //       showAddUsers: {},
+        //       device: {}
+        //     }
+        //   })
         .state('groups', {
           abstract: true,
           template: '<div ui-view></div>',

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: DevicesCtrl', function () {
+xdescribe('Controller: DevicesCtrl', function () {
 
   var $scope, controller, $httpBackend, userEndpointService, HuronConfig;
 

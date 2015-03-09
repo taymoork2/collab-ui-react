@@ -1,9 +1,21 @@
 <form name="lineSettingsForm" role="form">
-  <cr-details-body title="{{lineSettings.title}}" on-save="lineSettings.saveLineSettings()" additional-btn="lineSettings.additionalBtn" on-additionalbtn="lineSettings.deleteLineSettings()">
-    <div class="details-body">
-        <uc-directory-number></uc-directory-number>
-        <uc-call-forward></uc-call-forward>
-        <uc-caller-id></uc-caller-id>
-    </div>
-  </cr-details-body>
+  <cs-sp-buttons ng-show="lineSettingsForm.$dirty">
+    <button class="btn-primary" translate="common.save" ng-click="lineSettings.saveLineSettings()"></button>
+    <button class="btn-danger" translate="directoryNumberPanel.removeNumber" ng-click="lineSettings.deleteLineSettings()"></button>
+    <button class="btn-default" translate="common.cancel"></button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="directoryNumberPanel.title"></span>
+      </div>
+      <uc-directory-number></uc-directory-number>
+    </cs-sp-section>
+    <cs-sp-section>
+      <uc-call-forward></uc-call-forward>
+    </cs-sp-section>
+    <cs-sp-section>
+      <uc-caller-id></uc-caller-id>
+    </cs-sp-section>
+  </cs-sp-container>
 </form>

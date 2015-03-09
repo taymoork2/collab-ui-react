@@ -36,20 +36,44 @@ describe('List users flow', function () {
   });
 
   describe('Display user information', function () {
-    it('display user preview panel when clicking on a user', function () {
-      users.clickOnUser();
-      utils.expectIsDisplayed(users.userLink);
-    });
-
     it('display user admin settings panel when clicking on next arrow', function () {
+      users.clickOnUser();
       utils.click(users.rolesChevron);
 
-      utils.expectIsDisplayed(users.previewPanel);
-      utils.expectIsDisplayed(roles.closeButton);
+      utils.expectIsDisplayed(users.closeSidePanel);
       utils.expectIsDisplayed(roles.rolesDetailsPanel);
 
-      utils.click(roles.closeButton);
-      utils.expectIsNotDisplayed(users.userLink);
+      utils.click(users.closeSidePanel);
+    });
+  });
+
+  // Asserting pagination of users.
+  xdescribe('Paginating users returned', function () {
+    it('should paginate the total number of users', function () {
+      //pagination is only relevant if total matches exceeds 20
+      //Initial page
+      users.assertPage('1');
+      users.assertResultsLength(20);
+      //next page
+      users.nextPage.click();
+      users.assertPage('2');
+      users.assertResultsLength(0);
+      //previous page
+      users.prevPage.click();
+      users.assertPage('1');
+      users.assertResultsLength(20);
+      utils.search();
+    });
+  });
+
+  // Asserting sorting of users.
+  xdescribe('Sorting users', function () {
+    it('should sort users by name', function () {
+      users.assertSorting('name-sort');
+    });
+
+    it('should sort users by username', function () {
+      users.assertSorting('username-sort');
     });
   });
 
@@ -58,25 +82,32 @@ describe('List users flow', function () {
     it('should show first page of users based on search string', function () {
       utils.searchAndClick(testuser.username);
     });
-    it('display user profile page when clicking on the user link', function () {
-      utils.click(users.userLink);
-      navigation.expectCurrentUrl('/userprofile');
-      utils.expectIsDisplayed(users.fnameField);
-      utils.expectIsDisplayed(users.lnameField);
-      utils.expectIsDisplayed(users.displayField);
-      utils.expectIsDisplayed(users.emailField);
-      utils.expectIsDisplayed(users.orgField);
-      utils.expectIsDisplayed(users.titleField);
-    });
   });
 
-  describe('Exporting to CSV', function () {
-    it('should display the CSV export button', function () {
-      users.userTab.click();
-      users.clickOnUser();
-      utils.expectIsDisplayed(users.exportButton);
-    });
-  });
+  //TODO Comment out until we decide what to do with the profile page
+  // describe('Display user profile', function(){
+  //   it('display user profile page when clicking on the user link', function(){
+  //     users.clickOnUser();
+  //     utils.click(users.userLink);
+
+  //     navigation.expectCurrentUrl('/userprofile');
+  //     utils.expectIsDisplayed(users.fnameField);
+  //     utils.expectIsDisplayed(users.lnameField);
+  //     utils.expectIsDisplayed(users.displayField);
+  //     utils.expectIsDisplayed(users.emailField);
+  //     utils.expectIsDisplayed(users.orgField);
+  //     utils.expectIsDisplayed(users.titleField);
+  //   });
+  // });
+
+  //TODO What does this test even do?
+  // describe('Exporting to CSV', function () {
+  //   it('should display the CSV export button', function () {
+  //     users.userTab.click();
+  //     users.clickOnUser();
+  //     utils.expectIsDisplayed(users.exportButton);
+  //   });
+  // });
 
   describe('logout', function () {
     it('should log out', function () {

@@ -1,0 +1,77 @@
+<div id="servicesPanels">
+  <div id="licenseBlock" class="onboard-block license-block">
+    <div class="absolute" id="messaging">
+      <div class="bold">
+        <span translate="onboardModal.messaging"></span>
+        <hr class="onboard-divider"/>
+      </div>
+
+      <div>
+        <div class="entitle-check-grp onboard-radio" ng-repeat="msgFeature in messageFeatures">
+          <div ng-if="messageFeatures.length > 1">
+            <input type="radio" name="{{msgFeature.name}}" id="{{msgFeature.id}}" value="{{msgFeature.value}}" ng-model="radioStates.msgRadio">
+            <span ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
+          </div>
+          <div ng-if="messageFeatures.length === 1">
+            <div class="service-check">
+              <span class="icon icon-check onboard-check"></span>
+            </div>
+            <div class="service-label">
+              <span ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shift-middle" id="conference">
+      <div class="bold">
+        <span translate="onboardModal.conferencing"></span>
+        <hr class="onboard-divider"/>
+      </div>
+
+      <div>
+        <div class="entitle-check-grp onboard-radio" ng-repeat="confFeature in conferenceFeatures">
+          <div ng-if="conferenceFeatures.length > 1">
+            <input type="radio" name="{{confFeature.name}}" id="{{confFeature.id}}" value="{{confFeature.value}}" ng-model="radioStates.confRadio">
+            <span ng-click="setConfRadio(confFeature.value)">{{confFeature.label}}</span>
+          </div>
+          <div ng-if="conferenceFeatures.length === 1">
+            <div class="service-check">
+              <span class="icon icon-check onboard-check"></span>
+            </div>
+            <div class="service-label">
+              <span ng-click="setConfRadio(confFeature.value)">{{confFeature.label}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shift-right" id="communication">
+      <div class="bold">
+        <span translate="onboardModal.communications"></span>
+        <hr class="onboard-divider"/>
+      </div>
+
+      <div>
+        <div class="entitle-check-grp onboard-radio" ng-repeat="commFeature in communicationFeatures">
+          <div ng-if="communicationFeatures.length > 1">
+            <input type="radio" name="{{commFeature.name}}" id="{{commFeature.id}}" value="{{commFeature.value}}" ng-model="radioStates.commRadio">
+            <span ng-click="setCommRadio(commFeature.value)">{{commFeature.label}}</span>
+          </div>
+          <div ng-if="communicationFeatures.length === 1">
+            <div class="service-check">
+              <span class="icon icon-check onboard-check"></span>
+            </div>
+            <div class="service-label">
+              <span ng-click="setCommRadio(commFeature.value)">{{commFeature.label}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

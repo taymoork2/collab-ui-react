@@ -96,9 +96,11 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(support.supportTable);
     });
 
-    it('should search for logs by valid email address and display log info', function () {
+    it('should search for logs by valid email address', function () {
       support.searchAndVerifyResult(testuser.searchValidEmail);
+    });
 
+    it('should display log info', function () {
       utils.click(support.callInfoIcon);
       utils.expectIsDisplayed(support.closeCallInfo);
 

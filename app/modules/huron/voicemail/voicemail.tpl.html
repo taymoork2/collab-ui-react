@@ -1,10 +1,17 @@
-<form name="voicemailForm" role="form">
-  <cr-details-body title="{{'voicemailPanel.title' | translate}}" on-save="voicemail.saveVoicemail()">
-    <div class="details-body">
+<form name="voicemailForm" novalidate role="form">
+  <cs-sp-buttons ng-show="voicemailForm.$dirty">
+    <button class="btn-primary" translate="common.save" ng-click="voicemail.saveVoicemail()"></button>
+    <button class="btn-default" translate="common.cancel"></button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="voicemailPanel.title"></span>
+      </div>
       <span translate='voicemailPanel.toggle'></span>&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="voicemail.enableVoicemail"></cs-switchbutton>
       <br>
       <br>
       <p><small translate='voicemailPanel.voicemailNote'></small></p>
-    </div>
-  </cr-details-body>
+    </cs-sp-section>
+  </cs-sp-container>
 </form>

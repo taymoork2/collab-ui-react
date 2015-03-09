@@ -8,7 +8,7 @@
   function ucDevices() {
     var directive = {
       restrict: 'EA',
-      templateUrl: 'modules/huron/device/devices.tpl.html',
+      templateUrl: 'modules/huron/device/devicesOverview.tpl.html',
       controller: 'DevicesCtrl',
       controllerAs: 'ucDevices'
     };

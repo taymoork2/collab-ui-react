@@ -1,23 +1,30 @@
-<form name="singleNumberReachForm" role="form">
-  <cr-details-body title="{{'singleNumberReachPanel.title' | translate}}" on-save="snr.saveSingleNumberReach()">
-      <div class="details-body">
-        <p><small translate='singleNumberReachPanel.description'></small></p>
-        <div>
-          <span translate='singleNumberReachPanel.toggle'></span>&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="snr.telephonyInfo.snrInfo.singleNumberReachEnabled"></cs-switchbutton><br><br>
-          <div class="form-group" ng-show="snr.telephonyInfo.snrInfo.singleNumberReachEnabled">
-              <div class="col-sm-8">
-                <input type="text" class="form-control" id="number" ng-model="snr.telephonyInfo.snrInfo.destination" ng-disabled="!snr.telephonyInfo.snrInfo.singleNumberReachEnabled" placeholder="{{'singleNumberReachPanel.placeholder' | translate}}">
-              </div>
-              <span class="asterix">*</span>
-            </div>
-          <div ng-show="false">
-            <p class="text-muted" translate='singleNumberReachPanel.snrNote'></p>
-            <br>
-            <cs-radiobutton choice="snr.snrLineOption" options="snr.snrOptions" label="label" value="line"></cs-radiobutton><br>
-            <div ng-show="snr.snrLineOption !== 'all'">
-            </div>
+<form name="singleNumberReachForm" novalidate role="form">
+  <cs-sp-buttons ng-show="singleNumberReachForm.$dirty">
+    <button class="btn-primary" translate="common.save" ng-click="saveSingleNumberReach()"></button>
+    <button class="btn-default" translate="common.cancel"></button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="singleNumberReachPanel.title"></span>
+      </div>
+      <p translate="singleNumberReachPanel.description"></p>
+      <div>
+        {{'singleNumberReachPanel.toggle' | translate}}&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="telephonyInfo.snrInfo.singleNumberReachEnabled"></cs-switchbutton><br><br>
+        <div class="form-group" ng-show="telephonyInfo.snrInfo.singleNumberReachEnabled">
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="number" ng-model="telephonyInfo.snrInfo.destination" ng-disabled="!telephonyInfo.snrInfo.singleNumberReachEnabled" placeholder="{{'singleNumberReachPanel.placeholder' | translate}}">
+          </div>
+          <span class="asterix">*</span>
+        </div>
+        <div ng-show="false">
+          <p class="text-muted" translate="singleNumberReachPanel.snrNote"></p>
+          <br>
+          <cs-radiobutton choice="snrLineOption" options="snrOptions" label="label" value="line"></cs-radiobutton><br>
+          <div ng-show="snrLineOption !== 'all'">
           </div>
         </div>
       </div>
-  </cr-details-body>
+    </cs-sp-section>
+  </cs-sp-container>
 </form>

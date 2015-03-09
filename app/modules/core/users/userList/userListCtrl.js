@@ -238,22 +238,6 @@ angular.module('Core')
         }
       });
 
-      $rootScope.$on('$stateChangeSuccess', function () {
-        if ($state.includes('generateauthcode')) {
-          $scope.userPreviewActive = true;
-          $scope.userDetailsActive = false;
-        } else if ($state.includes('users.list.preview.*')) {
-          $scope.userPreviewActive = true;
-          $scope.userDetailsActive = true;
-        } else if ($state.includes('users.list.preview')) {
-          $scope.userPreviewActive = true;
-          $scope.userDetailsActive = false;
-        } else {
-          $scope.userPreviewActive = false;
-          $scope.userDetailsActive = false;
-        }
-      });
-
       // this event fires 3x when sorting is done, so watch for sortInfo change
       $scope.$on('ngGridEventSorted', function (event, sortInfo) {
         $scope.sortInfo = sortInfo;
@@ -301,9 +285,15 @@ angular.module('Core')
           $scope.currentUser = user;
           $scope.roles = user.roles;
           $scope.queryuserslist = $scope.gridData;
-          $state.go('users.list.preview');
+          $state.go('user-overview', {
+            currentUser: $scope.currentUser,
+            entitlements: $scope.entitlements,
+            queryuserslist: $scope.queryuserslist
+          });
         } else {
-          $state.go('users.list.preview');
+          $state.go('user-overview', {
+            currentUser: $scope.currentUser
+          });
         }
       };
 

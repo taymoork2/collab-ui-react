@@ -63,8 +63,8 @@ describe('Add/Invite/Entitle User flow', function () {
       notifications.assertError('Please enter valid user email(s).');
     });
 
+    var inviteEmail;
     describe('Invite users', function () {
-      var inviteEmail;
       it('should invite users successfully', function () {
         inviteEmail = utils.randomTestGmail();
         utils.click(users.clearButton);
@@ -72,7 +72,33 @@ describe('Add/Invite/Entitle User flow', function () {
         users.addUsersField.sendKeys(protractor.Key.ENTER);
         utils.click(users.onboardButton);
         notifications.assertSuccess('sent successfully');
+      });
+
+      it('clicking on cancel button should close the modal', function () {
+        utils.click(users.closeAddUsers);
+        utils.expectIsNotDisplayed(users.manageDialog);
+      });
+
+      it('should show call-initiation entitlement for the user', function () {
+        utils.search(inviteEmail);
+        utils.expectText(users.userListEnts.first(), inviteEmail);
+        utils.click(users.gridCell);
+        utils.expectIsDisplayed(users.messagingService);
+        utils.click(users.messagingService);
+        utils.expectIsDisplayed(users.callInitiationCheckbox);
+        utils.click(users.callInitiationCheckbox);
+        utils.click(users.saveButton);
+        notifications.assertSuccess(inviteEmail, 'updated successfully');
+        utils.click(users.closeSidePanel);
+      });
+
+      it('should delete randon user', function () {
         deleteUtils.deleteUser(inviteEmail);
+      });
+
+      it('click on add button should pop up the adduser modal and display only invite button', function () {
+        utils.click(users.addUsers);
+        utils.expectIsDisplayed(users.manageDialog);
       });
 
       it('should not invite users successfully if they are already entitled', function () {
@@ -108,6 +134,9 @@ describe('Add/Invite/Entitle User flow', function () {
         utils.click(users.resendInviteOption);
         notifications.assertSuccess('Successfully resent invitation');
       });
+      it('should clear all notifications', function () {
+        notifications.clearNotifications();
+      });
     });
 
     it('should log out', function () {
@@ -128,12 +157,6 @@ describe('Add/Invite/Entitle User flow', function () {
         navigation.expectCurrentUrl('/users');
         utils.expectIsDisplayed(users.manageDialog);
       });
-    });
-
-    it('should display error if no user is entered on entitle', function () {
-      utils.click(users.onboardButton);
-      notifications.assertError('Please enter valid user email(s).');
-      notifications.clearNotifications();
     });
 
     describe('Add an existing user', function () {
@@ -191,19 +214,6 @@ describe('Add/Invite/Entitle User flow', function () {
       it('clicking on cancel button should close the modal', function () {
         utils.click(users.closeAddUsers);
         utils.expectIsNotDisplayed(users.manageDialog);
-      });
-    });
-
-    describe('Verify call-initiation entitlement does not exist for user and re-entitle', function () {
-      it('should show call-initiation entitlement for the user', function () {
-        utils.search(inputEmail);
-        utils.expectText(users.userListEnts.first(), inputEmail);
-        utils.click(users.gridCell);
-        utils.expectIsDisplayed(users.callInitiationCheckbox);
-        utils.click(users.callInitiationCheckbox);
-        utils.click(users.saveButton);
-        notifications.assertSuccess(inputEmail, 'updated successfully');
-        notifications.clearNotifications();
       });
     });
 

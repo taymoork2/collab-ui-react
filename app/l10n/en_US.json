@@ -92,13 +92,15 @@
     "entitlementsPreview": "Entitlements",
     "addNewLinePreview": "Add a New Line",
     "newLine": "New Line",
-    "devicesPreview": "Devices",
+    "devicesPreview": "Devices & Software",
     "activateNewDevice": "Activate New Device",
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an Activation Code to enable a new device for this user.",
     "activationCodeTitle": "Activation Code for New Device",
-    "expires": "Expires"
+    "expires": "Expires",
+    "editServices": "Edit services",
+    "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Messaging"
@@ -599,6 +601,7 @@
     "createButton": "Create Call Park"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -639,7 +642,7 @@
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "Enables users to answer incoming calls to their extension to another number",
+    "description": "<small>Enables users to answer incoming calls to their extension to another number</small>",
     "toggle": "Single Number Reach",
     "snrNote": "SNR can cover all the user's lines or limited to specific lines",
     "success": "Single Number Reach configuration saved successfully",

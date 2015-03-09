@@ -1,15 +1,13 @@
 'use strict';
 
 angular.module('Squared')
+  .directive('sqUserEntitlementsCard', [
 
-.directive('sqUserEntitlementsCard', [
-
-  function () {
-    return {
-      restrict: 'AE',
-      transclude: true,
-      replace: true,
-      templateUrl: 'modules/squared/scripts/directives/views/userEntitlementsCard.tpl.html'
-    };
-  }
-]);
+    function () {
+      return {
+        restrict: 'AE',
+        templateUrl: 'modules/squared/scripts/directives/views/userEntitlementsCard.tpl.html',
+        controller: 'ListUsersCtrl'
+      };
+    }
+  ]);

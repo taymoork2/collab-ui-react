@@ -1,8 +1,15 @@
 'use strict';
-
 angular.module('Squared')
-  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter',
-    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter) {
+  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams',
+    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams) {
+
+      $scope.currentUser = $stateParams.currentUser;
+      if ($scope.currentUser) {
+        $scope.roles = $scope.currentUser.roles;
+      }
+
+      $scope.rolesObj = {};
+
       var inArray = function (array, el) {
         for (var i = array.length; i--;) {
           if (array[i] === el) {
@@ -48,11 +55,11 @@ angular.module('Squared')
         }
       };
 
-      $scope.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
+      $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
       //$scope.userAdminValue = checkSubRoles(Config.backend_roles.full_admin, Config.backend_roles.all);
-      $scope.billingAdminValue = checkSubRoles(Config.backend_roles.billing);
-      $scope.supportAdminValue = checkSubRoles(Config.backend_roles.support);
-      $scope.cloudAdminValue = checkSubRoles(Config.backend_roles.application);
+      $scope.rolesObj.billingAdminValue = checkSubRoles(Config.backend_roles.billing);
+      $scope.rolesObj.supportAdminValue = checkSubRoles(Config.backend_roles.support);
+      $scope.rolesObj.cloudAdminValue = checkSubRoles(Config.backend_roles.application);
 
       $scope.noAdmin = {
         label: 'No administrator privileges',
@@ -88,7 +95,7 @@ angular.module('Squared')
         var roles = [];
         var roleState = null;
 
-        if ($scope.adminRadioValue === 0) {
+        if ($scope.rolesObj.adminRadioValue === 0) {
           for (var roleNames in Config.roles) {
             var inactiveRoleState = {
               'roleName': Config.roles[roleNames],
@@ -100,7 +107,7 @@ angular.module('Squared')
         } else {
 
           roles.push(roleState);
-          if ($scope.adminRadioValue === 1) {
+          if ($scope.rolesObj.adminRadioValue === 1) {
             roleState = {
               'roleName': Config.roles.full_admin,
               'roleState': Config.roleState.active
@@ -132,28 +139,28 @@ angular.module('Squared')
 
           roleState = {
             'roleName': Config.roles.billing,
-            'roleState': checkPartialRoles($scope.billingAdminValue)
+            'roleState': checkPartialRoles($scope.rolesObj.billingAdminValue)
           };
 
           roles.push(roleState);
 
           roleState = {
             'roleName': Config.roles.support,
-            'roleState': checkPartialRoles($scope.supportAdminValue)
+            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
           };
 
           roles.push(roleState);
 
           roleState = {
             'roleName': Config.roles.reports,
-            'roleState': checkPartialRoles($scope.supportAdminValue)
+            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
           };
 
           roles.push(roleState);
 
           roleState = {
             'roleName': Config.roles.application,
-            'roleState': checkPartialRoles($scope.cloudAdminValue)
+            'roleState': checkPartialRoles($scope.rolesObj.cloudAdminValue)
           };
 
           roles.push(roleState);
@@ -162,7 +169,7 @@ angular.module('Squared')
 
         Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, $scope.currentUser.id, function (data, status) {
           if (data.success) {
-            if ($scope.nameForm.firstName.$dirty || $scope.nameForm.lastName.$dirty || $scope.nameForm.customerEmail.$dirty) {
+            if ($scope.rolesObj.form.firstName.$dirty || $scope.rolesObj.form.lastName.$dirty || $scope.rolesObj.form.customerEmail.$dirty) {
               var userData = {
                 'schemas': Config.scimSchemas,
                 'title': $scope.currentUser.title,
@@ -181,6 +188,7 @@ angular.module('Squared')
                   successMessage.push($filter('translate')('profilePage.success'));
                   Notification.notify(successMessage, 'success');
                   $scope.user = data;
+                  $rootScope.$broadcast('USER_LIST_UPDATED');
                 } else {
                   Log.debug('Update existing user failed. Status: ' + status);
                   var errorMessage = [];
@@ -189,6 +197,7 @@ angular.module('Squared')
                 }
               });
             } else {
+              $rootScope.$broadcast('USER_LIST_UPDATED');
               Notification.notify(['Successfully updated user\'s roles.'], 'success');
             }
           } else {
@@ -199,30 +208,15 @@ angular.module('Squared')
       };
 
       $scope.clearCheckboxes = function () {
-        if ($scope.adminRadioValue === 0 || $scope.adminRadioValue === 1) {
-          $scope.userAdminValue = false;
-          $scope.billingAdminValue = false;
-          $scope.supportAdminValue = false;
-        }
+        $scope.rolesObj.userAdminValue = false;
+        $scope.rolesObj.billingAdminValue = false;
+        $scope.rolesObj.supportAdminValue = false;
       };
 
       $scope.radioHandler = function () {
-        if ($scope.adminRadioValue === 0 || $scope.adminRadioValue === 1) {
-          $scope.adminRadioValue = 2;
+        if ($scope.rolesObj.adminRadioValue === 0 || $scope.rolesObj.adminRadioValue === 1) {
+          $scope.rolesObj.adminRadioValue = 2;
         }
       };
     }
-  ])
-  .directive('userRoles', function () {
-    return {
-      restrict: 'A',
-      controller: 'UserRolesCtrl',
-      scope: {
-        currentUser: '=',
-        entitlements: '=',
-        queryuserslist: '=',
-        roles: '='
-      },
-      templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html'
-    };
-  });
+  ]);

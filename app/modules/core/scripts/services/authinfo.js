@@ -145,17 +145,17 @@ angular.module('Core')
               for (var l = 0; l < account.licenses.length; l++) {
                 var license = account.licenses[l];
                 var service = null;
-                switch (license.offerName) {
-                case 'CF':
-                  service = new ServiceFeature($filter('translate')('onboardModal.paidConf'), x + 1, 'confRadio', license.offerName, license.features);
+                switch (license.licenseType) {
+                case 'CONFERENCING':
+                  service = new ServiceFeature($filter('translate')('onboardModal.paidConf'), x + 1, 'confRadio', license.licenseType, license.features);
                   confLicenses.push(service);
                   break;
-                case 'MS':
-                  service = new ServiceFeature($filter('translate')('onboardModal.paidMsg'), x + 1, 'msgRadio', license.offerName, license.features);
+                case 'MESSAGING':
+                  service = new ServiceFeature($filter('translate')('onboardModal.paidMsg'), x + 1, 'msgRadio', license.licenseType, license.features);
                   msgLicenses.push(service);
                   break;
-                case 'CO':
-                  service = new ServiceFeature($filter('translate')('onboardModal.paidComm'), x + 1, 'commRadio', license.offerName, license.features);
+                case 'COMMUNICATION':
+                  service = new ServiceFeature($filter('translate')('onboardModal.paidComm'), x + 1, 'commRadio', license.licenseType, license.features);
                   commLicenses.push(service);
                   break;
                 }
