@@ -259,7 +259,7 @@ xdescribe('Telephony Info', function () {
     it('should change caller id to default display', function () {
       expect(telephony.callerIdDefault.isDisplayed()).toBeTruthy();
       expect(telephony.callerIdCustom.isDisplayed()).toBeTruthy();
-      expect(telephony.callerId.isEnabled()).toBeTruthy()
+      expect(telephony.callerId.isEnabled()).toBeTruthy();
 
       // use mousemove to force clicking the radio button regardless of overlaid <span>
       browser.actions().mouseMove(telephony.callerIdDefault, 50, 50).click().perform();

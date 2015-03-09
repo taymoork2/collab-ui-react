@@ -18,8 +18,6 @@
     // vm.tracksCount;
     vm.selectPlaylist = selectPlaylist;
 
-    activate();
-
     function activate() {
       getPlaylists().then(function () {
         getTracks();
@@ -77,6 +75,6 @@
     }
 
     vm.close = close;
-
+    activate();
   }
 })();

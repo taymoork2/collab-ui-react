@@ -31,7 +31,7 @@ describe('Controller: TrialAddCtrl', function () {
   }));
 
   it('should be created successfully', function () {
-    expect(controller).toBeDefined;
+    expect(controller).toBeDefined();
   });
 
   it('should have empty offers', function () {
@@ -83,7 +83,7 @@ describe('Controller: TrialAddCtrl', function () {
         controller.offers = {
           COLLAB: true,
           SQUAREDUC: true
-        }
+        };
       });
 
       it('should not have empty offers', function () {

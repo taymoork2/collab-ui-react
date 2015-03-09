@@ -18,7 +18,7 @@ var getTestBody = function () {
     'pushId': utils.randomId(),
     'deviceName': utils.randomId(),
     'deviceId': utils.randomId()
-  }
+  };
 };
 
 function getToken(obj) {

@@ -31,12 +31,12 @@ describe('Service: DeviceService', function () {
   });
 
   it('should be registered', function () {
-    expect(DeviceService).toBeDefined;
+    expect(DeviceService).toBeDefined();
   });
 
   describe('loadDevices function', function () {
     it('should exist', function () {
-      expect(DeviceService.loadDevices).toBeDefined;
+      expect(DeviceService.loadDevices).toBeDefined();
     });
 
     it('should return 2 devices', function () {
@@ -56,7 +56,7 @@ describe('Service: DeviceService', function () {
 
   describe('updateDevice function', function () {
     it('should exist', function () {
-      expect(DeviceService.updateDevice).toBeDefined;
+      expect(DeviceService.updateDevice).toBeDefined();
     });
 
     it('should update the device', function () {
@@ -70,7 +70,7 @@ describe('Service: DeviceService', function () {
 
   describe('deleteDevice function', function () {
     it('should exist', function () {
-      expect(DeviceService.deleteDevice).toBeDefined;
+      expect(DeviceService.deleteDevice).toBeDefined();
     });
 
     it('should delete the device', function () {
@@ -84,13 +84,13 @@ describe('Service: DeviceService', function () {
 
   describe('getCurrentDevice function', function () {
     it('should exist', function () {
-      expect(DeviceService.getCurrentDevice).toBeDefined;
+      expect(DeviceService.getCurrentDevice).toBeDefined();
     });
   });
 
   describe('setCurrentDevice function', function () {
     it('should exist', function () {
-      expect(DeviceService.setCurrentDevice).toBeDefined;
+      expect(DeviceService.setCurrentDevice).toBeDefined();
     });
 
     it('should set currentDevice and retrieve the same object when calling getCurrentDevice()', function () {

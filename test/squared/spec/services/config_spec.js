@@ -21,12 +21,12 @@ describe('Config', function () {
     Config = _Config_;
   }));
 
-  var devHost = 'localhost'
+  var devHost = 'localhost';
   var prodHost = 'admin.projectsquared.com';
   var intHost = 'int-admin.projectsquared.com';
 
   var assertFnReturnsCorrectUrl = function (fn, env, expected) {
-    win.location.hostname = 'wbx2.com/bla'
+    win.location.hostname = 'wbx2.com/bla';
   };
 
   var whenCalling = function (fn, arg) {
@@ -53,23 +53,23 @@ describe('Config', function () {
           }
         });
       }
-    }
+    };
   };
 
   it('should detect dev environment', function () {
-    win.location.hostname = 'wbx2.com/bla'
+    win.location.hostname = 'wbx2.com/bla';
     expect(Config.isDev()).toBe(false);
 
-    win.location.hostname = '127.0.0.1'
+    win.location.hostname = '127.0.0.1';
     expect(Config.isDev()).toBe(true);
 
-    win.location.hostname = '0.0.0.0'
+    win.location.hostname = '0.0.0.0';
     expect(Config.isDev()).toBe(true);
 
-    win.location.hostname = 'localhost'
+    win.location.hostname = 'localhost';
     expect(Config.isDev()).toBe(true);
 
-    win.location.hostname = '10.12.32.12'
+    win.location.hostname = '10.12.32.12';
     expect(Config.isDev()).toBe(false);
   });
 

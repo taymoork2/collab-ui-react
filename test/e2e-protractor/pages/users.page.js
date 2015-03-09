@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 // TODO - break up into UserList/UserAdd/UserPreview
 var UsersPage = function () {

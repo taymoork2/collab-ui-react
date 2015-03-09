@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var Notifications = function () {
   this.errorAlert = element(by.css('.alertify-log-error'));

@@ -454,8 +454,8 @@ module.exports = function (grunt) {
       app: [
         '<%= app_dir %>/scripts/**/*.js',
         '<%= app_dir %>/modules/**/*.js',
+        '<%= test_dir %>/**/*.js',
         // '<%= app_dir %>/**/*.json',
-        // '<%= test_dir %>/**/*.js',
         // '<%= test_dir %>/**/*.json',
       ],
       unsupported_app: [

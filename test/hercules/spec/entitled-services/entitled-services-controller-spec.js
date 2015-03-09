@@ -9,7 +9,7 @@ describe('DashboardHeaderController', function () {
     };
     service = {
       services: sinon.stub()
-    }
+    };
     controller = _$controller_('EntitledServicesController', {
       $scope: $scope,
       ServiceDescriptor: service

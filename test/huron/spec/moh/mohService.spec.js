@@ -27,15 +27,15 @@ describe('Service: MohService', function () {
   });
 
   it('should be definded', function () {
-    expect(mohService).toBeDefined;
+    expect(mohService).toBeDefined();
   });
 
   it('should have method getPlaylists', function () {
-    expect(mohService.getPlaylists).toBeDefined;
+    expect(mohService.getPlaylists).toBeDefined();
   });
 
   it('should have method getPlaylist', function () {
-    expect(mohService.getPlaylist).toBeDefined;
+    expect(mohService.getPlaylist).toBeDefined();
   });
 
 });

@@ -10,10 +10,10 @@ describe('NotificationConfigController', function () {
     service = {
       read: sinon.stub(),
       write: sinon.stub()
-    }
+    };
     notification = {
       notify: sinon.stub()
-    }
+    };
     controller = _$controller_('NotificationConfigController', {
       $scope: $scope,
       XhrNotificationService: notification,

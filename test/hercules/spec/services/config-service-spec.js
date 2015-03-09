@@ -26,7 +26,7 @@ describe('ConfigService', function () {
   });
 
   it('should be possible to override url', function () {
-    win.location.search = 'hercules-url=fake-url'
+    win.location.search = 'hercules-url=fake-url';
     expect(Service.getUrl()).toBe('fake-url');
   });
 
@@ -35,7 +35,7 @@ describe('ConfigService', function () {
   });
 
   it('should be possible to override USS url', function () {
-    win.location.search = 'hercules-uss-url=fake-url'
+    win.location.search = 'hercules-uss-url=fake-url';
     expect(Service.getUSSUrl()).toBe('fake-url');
   });
 });

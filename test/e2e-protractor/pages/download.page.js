@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var DownloadPage = function () {
   this.sendStatus = element(by.id('sendStatus'));
@@ -10,6 +10,6 @@ var DownloadPage = function () {
   this.iconSearch = element(by.id('icon-search'));
   this.searchInput = element(by.id('search-input'));
   this.settingBar = element(by.id('setting-bar'));
-}
+};
 
 module.exports = DownloadPage;

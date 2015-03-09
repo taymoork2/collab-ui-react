@@ -11,12 +11,12 @@ describe('StatusController', function () {
       };
       service = {
         fetch: sinon.stub()
-      }
+      };
       auth = {
         isFusion: function () {
           return true;
         }
-      }
+      };
       _$controller_('StatusController', {
         $scope: $scope,
         ConnectorService: service,
@@ -83,12 +83,12 @@ describe('StatusController', function () {
       };
       service = {
         fetch: sinon.stub()
-      }
+      };
       auth = {
         isFusion: function () {
           return false;
         }
-      }
+      };
       _$controller_('StatusController', {
         $scope: $scope,
         ConnectorService: service,

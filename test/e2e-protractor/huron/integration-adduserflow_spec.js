@@ -69,7 +69,7 @@ xdescribe('Squared UC Add User flow', function () {
           browser.wait(function () {
             return telephony.lineConfigPanel.isPresent().then(function (present) {
               return present;
-            })
+            });
           });
         });
         it('should have call forwarding default to voicemail', function () {

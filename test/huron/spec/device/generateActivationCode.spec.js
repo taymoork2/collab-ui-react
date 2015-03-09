@@ -13,7 +13,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
   var OtpService = {
     getQrCodeUrl: sinon.stub(),
     generateOtp: sinon.stub().fulfills(getJSONFixture('huron/json/device/otps/0001000200030004.json'))
-  }
+  };
 
   var stateParams = {
     currentUser: {
@@ -48,17 +48,17 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
 
   describe('GenerateActivationCodeCtrl controller', function () {
     it('should be created successfully', function () {
-      expect(controller).toBeDefined;
+      expect(controller).toBeDefined();
     });
 
     describe('after activate', function () {
       it('should have an otp object defined', function () {
-        expect(controller.otp).toBeDefined;
-      })
+        expect(controller.otp).toBeDefined();
+      });
 
       describe('activateEmail function', function () {
         it('should exist', function () {
-          expect(controller.activateEmail).toBeDefined;
+          expect(controller.activateEmail).toBeDefined();
         });
 
         it('should set vm.showEmail = true when called', function () {
@@ -69,13 +69,13 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
 
       describe('clipboardFallback function', function () {
         it('should exist', function () {
-          expect(controller.clipboardFallback).toBeDefined;
+          expect(controller.clipboardFallback).toBeDefined();
         });
       });
 
       describe('sendActivationCodeEmail function', function () {
         it('should exist', function () {
-          expect(controller.sendActivationCodeEmail).toBeDefined;
+          expect(controller.sendActivationCodeEmail).toBeDefined();
         });
 
         it('should send email and notify success', function () {

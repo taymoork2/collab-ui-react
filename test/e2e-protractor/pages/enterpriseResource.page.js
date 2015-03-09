@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var EnterpriseResourcePage = function () {
   //details-panel
   this.enterpriseResourceLink = element(by.id('entire-slide'));

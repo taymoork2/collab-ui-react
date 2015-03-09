@@ -57,12 +57,12 @@ describe('Service: DirectoryNumber', function () {
   });
 
   it('should be registered', function () {
-    expect(DirectoryNumber).toBeDefined;
+    expect(DirectoryNumber).toBeDefined();
   });
 
   describe('getNewDirectoryNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.getNewDirectoryNumber).toBeDefined;
+      expect(DirectoryNumber.getNewDirectoryNumber).toBeDefined();
     });
 
     it('should return a copy of directoryNumber object', function () {
@@ -72,55 +72,55 @@ describe('Service: DirectoryNumber', function () {
 
   describe('getDirectoryNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.getDirectoryNumber).toBeDefined;
+      expect(DirectoryNumber.getDirectoryNumber).toBeDefined();
     });
   });
 
   describe('deleteDirectoryNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.deleteDirectoryNumber).toBeDefined;
+      expect(DirectoryNumber.deleteDirectoryNumber).toBeDefined();
     });
   });
 
   describe('disassociateDirectoryNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.disassociateDirectoryNumber).toBeDefined;
+      expect(DirectoryNumber.disassociateDirectoryNumber).toBeDefined();
     });
   });
 
   describe('updateDirectoryNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.updateDirectoryNumber).toBeDefined;
+      expect(DirectoryNumber.updateDirectoryNumber).toBeDefined();
     });
   });
 
   describe('changeInternalNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.changeInternalNumber).toBeDefined;
+      expect(DirectoryNumber.changeInternalNumber).toBeDefined();
     });
   });
 
   describe('getAlternateNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.getAlternateNumber).toBeDefined;
+      expect(DirectoryNumber.getAlternateNumber).toBeDefined();
     });
   });
 
   describe('addAlternateNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.addAlternateNumber).toBeDefined;
+      expect(DirectoryNumber.addAlternateNumber).toBeDefined();
     });
   });
 
   describe('updateAlternateNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.updateAlternateNumber).toBeDefined;
+      expect(DirectoryNumber.updateAlternateNumber).toBeDefined();
     });
   });
 
   describe('deleteAlternateNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.deleteAlternateNumber).toBeDefined;
+      expect(DirectoryNumber.deleteAlternateNumber).toBeDefined();
     });
   });
 });

@@ -65,7 +65,7 @@ describe('DashboardAggregator', function () {
     expect(aggregate.running).toBe(0);
     expect(aggregate.needs_attention).toBe(0);
 
-    var calService = aggregate.services['c_cal'];
+    var calService = aggregate.services.c_cal;
     expect(calService.running).toBe(0);
     expect(calService.needs_attention).toBe(0);
     expect(calService.software_upgrades).toBe(0);
@@ -150,21 +150,21 @@ describe('DashboardAggregator', function () {
     expect(aggregate.running).toBe(1);
     expect(aggregate.needs_attention).toBe(1);
 
-    var ucmService = aggregate.services['c_ucmc'];
+    var ucmService = aggregate.services.c_ucmc;
     expect(ucmService.name).toBe('UCM Service');
     expect(ucmService.icon).toBe('UCM');
     expect(ucmService.running).toBe(0);
     expect(ucmService.needs_attention).toBe(1);
     expect(ucmService.software_upgrades).toBe(0);
 
-    var calService = aggregate.services['c_cal'];
+    var calService = aggregate.services.c_cal;
     expect(calService.name).toBe('Calendar Service');
     expect(calService.icon).toBe('Calendar');
     expect(calService.running).toBe(2);
     expect(calService.needs_attention).toBe(0);
     expect(calService.software_upgrades).toBe(1);
 
-    var mgmtService = aggregate.services['c_mgmt'];
+    var mgmtService = aggregate.services.c_mgmt;
     expect(mgmtService.name).toBe('Fusion Management Service');
     expect(mgmtService.icon).toBe('Management');
     expect(mgmtService.running).toBe(1);

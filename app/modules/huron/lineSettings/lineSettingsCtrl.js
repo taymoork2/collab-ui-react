@@ -42,7 +42,6 @@
     vm.saveLineSettings = saveLineSettings;
     vm.deleteLineSettings = deleteLineSettings;
 
-    activate();
     ////////////
 
     function activate() {
@@ -473,5 +472,7 @@
       vm.assignedExternalNumber = externalNumber;
       vm.externalNumberPool = extNumPool;
     }
+
+    activate();
   }
 })();

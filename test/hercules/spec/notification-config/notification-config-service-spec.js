@@ -52,7 +52,7 @@ describe('NotificationConfigService', function () {
       username: 'foo',
       password: 'bar',
       wx2users: 'yo,lo'
-    }
+    };
     $httpBackend
       .when('PUT', 'https://hercules-integration.wbx2.com/v1/notification_config', data)
       .respond('nc');
@@ -71,7 +71,7 @@ describe('NotificationConfigService', function () {
       username: 'foo',
       password: 'bar',
       wx2users: 'yo,lo'
-    }
+    };
     $httpBackend
       .when('PUT', 'https://hercules-integration.wbx2.com/v1/notification_config', data)
       .respond(500);

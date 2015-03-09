@@ -75,7 +75,7 @@ describe('Controller: ListMeetingsCtrl', function () {
 
   it('queryParticipantlistinfo should be defined', function () {
     expect(scope.queryparticipantlistinfo).toBeDefined();
-  })
+  });
 
   it('Should have meeting data of size 5', function () {
     expect(scope.queryMeetingsList.length).toBe(5);

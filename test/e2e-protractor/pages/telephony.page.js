@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var TelephonyPage = function () {
   this.telephonyPanel = element(by.id('huronPanel'));
@@ -92,6 +92,6 @@ var TelephonyPage = function () {
     input.click();
     input.sendKeys(number);
   };
-}
+};
 
 module.exports = TelephonyPage;

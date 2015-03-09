@@ -25,13 +25,13 @@ xdescribe('Huron Call Routing', function () {
       browser.sleep(1000);
       callrouting.cancelButton.click();
       browser.sleep(1000);
-      expect(callrouting.name.isPresent()).toBeFalsey;
+      expect(callrouting.name.isPresent()).toBeFalsy();
     });
 
     it('should create a new call park with single number', function () {
       callrouting.addCallParkButton.click();
       browser.sleep(1000);
-      expect(callrouting.name.isDisplayed()).toBeTruthy;
+      expect(callrouting.name.isDisplayed()).toBeTruthy();
       callrouting.name.sendKeys(pattern);
       callrouting.singleNumber.click();
       callrouting.pattern.sendKeys(pattern);
@@ -45,7 +45,7 @@ xdescribe('Huron Call Routing', function () {
     it('should create a new call park with range', function () {
       callrouting.addCallParkButton.click();
       browser.sleep(1000);
-      expect(callrouting.name.isDisplayed()).toBeTruthy;
+      expect(callrouting.name.isDisplayed()).toBeTruthy();
       callrouting.name.sendKeys((pattern + 1) + " through " + (pattern + 2));
       callrouting.rangeMin.click();
       callrouting.rangeMin.sendKeys((pattern + 1));
@@ -78,7 +78,7 @@ xdescribe('Huron Call Routing', function () {
 
     it('should cancel a delete', function () {
       callrouting.callParks.get(0).element(by.css('.delete-icon')).click();
-      expect(callrouting.cancelButton.isDisplayed()).toBeTruthy;
+      expect(callrouting.cancelButton.isDisplayed()).toBeTruthy();
       callrouting.cancelButton.click();
       expect(callrouting.cancelButton.isPresent()).toBe(false);
     });
