@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: VoicemailInfoCtrl', function () {
-  var controller, $scope, $httpBackend, TelephonyInfoService, Notification, HuronConfig;
+  var controller, $scope, $stateParams, $httpBackend, TelephonyInfoService, Notification, HuronConfig;
 
   var currentUser = getJSONFixture('core/json/currentUser.json');
   var telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
@@ -16,7 +16,9 @@ describe('Controller: VoicemailInfoCtrl', function () {
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
 
-    $scope.currentUser = currentUser;
+    $stateParams = {
+      currentUser: currentUser
+    };
     url = HuronConfig.getCmiUrl() + '/common/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id;
 
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.callThrough();
@@ -24,6 +26,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
 
     controller = $controller('VoicemailInfoCtrl', {
       $scope: $scope,
+      $stateParams: $stateParams,
       TelephonyInfoService: TelephonyInfoService,
       Notification: Notification
     });

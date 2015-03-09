@@ -5,10 +5,12 @@
     .module('Huron')
     .controller('SingleNumberReachInfoCtrl', SingleNumberReachInfoCtrl);
 
-  function SingleNumberReachInfoCtrl($scope, RemoteDestinationService, TelephonyInfoService, Notification, $translate, HttpUtils) {
+  function SingleNumberReachInfoCtrl($scope, $stateParams, RemoteDestinationService, TelephonyInfoService, Notification, $translate, HttpUtils) {
     var vm = this;
+    vm.currentUser = $stateParams.currentUser;
     vm.saveSingleNumberReach = saveSingleNumberReach;
-    vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+    vm.reset = reset;
+
     vm.snrOptions = [{
       label: 'All Lines',
       line: 'all'
@@ -18,9 +20,27 @@
     }];
     vm.snrLineOption = vm.snrOptions[0];
 
+    init();
+
     $scope.$on('telephonyInfoUpdated', function () {
-      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+      init();
     });
+
+    function init() {
+      vm.telephonyInfo = angular.copy(TelephonyInfoService.getTelephonyInfo());
+    }
+
+    function resetForm() {
+      if (vm.form) {
+        vm.form.$setPristine();
+        vm.form.$setUntouched();
+      }
+    }
+
+    function reset(form) {
+      resetForm();
+      init();
+    }
 
     function createRemoteDestinationInfo(user, destination) {
       var rdBean = {
@@ -60,7 +80,8 @@
         msg: null,
         type: 'null'
       };
-      RemoteDestinationService.delete({
+
+      return RemoteDestinationService.delete({
           customerId: user.meta.organizationID,
           userId: user.id,
           remoteDestId: vm.telephonyInfo.snrInfo.remoteDestinations[0].uuid
@@ -78,7 +99,7 @@
           result.msg = $translate.instant('singleNumberReachPanel.error') + response.data.errorMessage;
           result.type = 'error';
           Notification.notify([result.msg], result.type);
-        });
+        }).$promise;
     }
 
     function updateRemoteDestinationInfo(user, destination) {
@@ -96,6 +117,8 @@
           remoteDestId: vm.telephonyInfo.snrInfo.remoteDestinations[0].uuid
         }, rdBean,
         function () {
+          TelephonyInfoService.updateSnr(vm.telephonyInfo.snrInfo);
+
           result.msg = $translate.instant('singleNumberReachPanel.success');
           result.type = 'success';
           Notification.notify([result.msg], result.type);
@@ -111,17 +134,20 @@
       HttpUtils.setTrackingID().then(function () {
         if (vm.telephonyInfo.snrInfo.remoteDestinations !== null && vm.telephonyInfo.snrInfo.remoteDestinations !== undefined && vm.telephonyInfo.snrInfo.remoteDestinations.length > 0) {
           if (!vm.telephonyInfo.snrInfo.singleNumberReachEnabled) {
-            deleteRemoteDestinationInfo($scope.currentUser);
+            deleteRemoteDestinationInfo(vm.currentUser).then(function () {
+              resetForm();
+            });
           } else {
-            updateRemoteDestinationInfo($scope.currentUser, vm.telephonyInfo.snrInfo.destination);
+            updateRemoteDestinationInfo(vm.currentUser, vm.telephonyInfo.snrInfo.destination).then(function () {
+              resetForm();
+            });
           }
         } else {
-          createRemoteDestinationInfo($scope.currentUser, vm.telephonyInfo.snrInfo.destination, $scope.singleNumberReach)
+          createRemoteDestinationInfo(vm.currentUser, vm.telephonyInfo.snrInfo.destination)
             .then(function (response) {
               processCreateRemoteDestionInfo(response);
-            })
-            .then(function () {
-              TelephonyInfoService.getRemoteDestinationInfo($scope.currentUser.id);
+              TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
+              resetForm();
             })
             .catch(function () {
               processCreateRemoteDestionInfo(null);

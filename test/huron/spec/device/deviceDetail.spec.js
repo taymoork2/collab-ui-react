@@ -3,6 +3,10 @@
 describe('Controller: DeviceDetailCtrl', function () {
   var controller, $scope, $httpBackend, $modal, modalInstance, HuronConfig, Notification, DeviceService, UserEndpointService;
 
+  var $stateParams = {
+    device: getJSONFixture('huron/json/device/devices/54d6041e-8a67-4437-a600-6307adc6fb64.json')
+  };
+
   beforeEach(module('uc.device'));
   beforeEach(module('ui.bootstrap'));
   beforeEach(module('ui.router'));
@@ -33,11 +37,11 @@ describe('Controller: DeviceDetailCtrl', function () {
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
     DeviceService = _DeviceService_;
-    DeviceService.getCurrentDevice = sinon.stub().returns(getJSONFixture('huron/json/device/devices/54d6041e-8a67-4437-a600-6307adc6fb64.json'));
     UserEndpointService = _UserEndpointService_;
     controller = $controller('DeviceDetailCtrl', {
       $scope: $scope,
-      $modal: $modal
+      $modal: $modal,
+      $stateParams: $stateParams
     });
     $rootScope.$apply();
   }));
@@ -53,10 +57,6 @@ describe('Controller: DeviceDetailCtrl', function () {
     });
 
     describe('after activate', function () {
-      it('should derive device icon name correctly from device model', function () {
-        // model: Cisco DX650 should derive to cisco_dx650.svg
-        expect(controller.deviceIcon).toEqual('cisco_dx650.svg');
-      });
 
       describe('save function', function () {
         it('should exist', function () {
@@ -79,12 +79,8 @@ describe('Controller: DeviceDetailCtrl', function () {
       });
 
       describe('deactivate function', function () {
-        it('should exist', function () {
-          expect(controller.additionalBtnClick).toBeDefined();
-        });
-
         it('should popup a modal when called', function () {
-          controller.additionalBtnClick();
+          controller.deactivate();
           expect($modal.open.calledOnce).toBe(true);
           modalInstance = $modal.open.getCall(0).returnValue;
           modalInstance.dismiss();

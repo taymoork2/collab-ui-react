@@ -768,6 +768,7 @@
     "inputPlacehoder": "Enter phone numbers separated by commas"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Device Configuration",
     "deviceStatus": "Device Status",
     "description": "Description",
     "id": "ID",

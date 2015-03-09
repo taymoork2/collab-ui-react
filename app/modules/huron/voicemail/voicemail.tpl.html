@@ -1,14 +1,14 @@
-<form name="voicemailForm" novalidate role="form">
-  <cs-sp-buttons ng-show="voicemailForm.$dirty">
-    <button class="btn-primary" translate="common.save" ng-click="voicemail.saveVoicemail()"></button>
-    <button class="btn-default" translate="common.cancel"></button>
+<form name="voicemail.form" novalidate role="form">
+  <cs-sp-buttons ng-show="voicemail.form.$dirty">
+    <button class="btn-primary" translate="common.save" ng-click="voicemail.saveVoicemail()" type="submit"></button>
+    <button class="btn-default" translate="common.cancel" ng-click="voicemail.reset()"></button>
   </cs-sp-buttons>
   <cs-sp-container>
     <cs-sp-section>
       <div class="section-title-row">
         <span class="section-name" translate="voicemailPanel.title"></span>
       </div>
-      <span translate='voicemailPanel.toggle'></span>&nbsp;&nbsp;&nbsp;<cs-switchbutton ng-model="voicemail.enableVoicemail"></cs-switchbutton>
+      <cs-toggle-switch ng-model="voicemail.enableVoicemail" toggle-id="enableVoicemail" name="enableVoicemail" size="small"></cs-toggle-switch>
       <br>
       <br>
       <p><small translate='voicemailPanel.voicemailNote'></small></p>

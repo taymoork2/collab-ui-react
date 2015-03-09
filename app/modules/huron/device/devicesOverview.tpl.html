@@ -20,7 +20,7 @@
 <div class="feature-list">
   <ul>
     <li class="feature" ng-repeat="device in ucDevices.devices track by device.uuid">
-      <a ui-sref="user-overview.communication.device({device: device.uuid})">
+      <a ui-sref="user-overview.device({device: device})">
         <span class="icon icon-spinner" ng-if="device.deviceStatus.progressStatus"></span>
         <span class="default-status" ng-class="{'online-status': device.deviceStatus.status == 'Online'}" ng-if="!device.deviceStatus.progressStatus"></span>
         <span class="feature-name">{{device.model}}</span>

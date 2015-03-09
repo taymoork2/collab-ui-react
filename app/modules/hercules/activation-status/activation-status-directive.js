@@ -2,9 +2,9 @@
   'use strict';
   angular
     .module('Hercules')
-    .controller('ActivationStatusController', ['$scope', 'USSService', 'Authinfo', 'XhrNotificationService', function ($scope, ussService, Authinfo, xhrNotificationService) {
+    .controller('ActivationStatusController', ['$scope', '$stateParams', 'USSService', 'Authinfo', 'XhrNotificationService', function ($scope, $stateParams, ussService, Authinfo, xhrNotificationService) {
       $scope.isEnabled = Authinfo.isFusion();
-      if (!$scope.isEnabled) return;
+      if (!$scope.isEnabled || !$stateParams.currentUser) return;
 
       var updateStatusForUser = function (id) {
         $scope.inflight = true;
@@ -15,18 +15,12 @@
         });
       };
 
-      $scope.$watch('currentUser', function (newUser) {
-        if (!newUser || !newUser.id) {
-          $scope.activationStatus = null;
-        } else {
-          updateStatusForUser(newUser.id);
-        }
-      });
+      updateStatusForUser($stateParams.currentUser.id);
 
       $scope.reload = function () {
         $scope.inflight = true;
-        ussService.pollCIForUser($scope.currentUser.id, function () {
-          updateStatusForUser($scope.currentUser.id);
+        ussService.pollCIForUser($stateParams.currentUser.id, function () {
+          updateStatusForUser($stateParams.currentUser.id);
         });
       };
 

@@ -6,6 +6,10 @@ describe('ActivationStatusController', function () {
   describe('when fusion is enabled', function () {
     var $scope, controller, service, $httpBackend;
 
+    var $stateParams = {
+      currentUser: getJSONFixture('core/json/currentUser.json')
+    };
+
     beforeEach(inject(function (_$controller_, $rootScope, $injector) {
       $httpBackend = $injector.get('$httpBackend');
       $httpBackend
@@ -23,11 +27,10 @@ describe('ActivationStatusController', function () {
         }
       };
       $scope = $rootScope.$new();
-      $scope.currentUser = {
-        id: '123'
-      };
+
       controller = _$controller_('ActivationStatusController', {
         $scope: $scope,
+        $stateParams: $stateParams,
         USSService: service,
         Authinfo: authinfo
       });
@@ -51,7 +54,6 @@ describe('ActivationStatusController', function () {
       $scope.$digest();
       expect(service.getStatusesForUser.callCount).toBe(1);
 
-      $scope.currentUser = {};
       $scope.$digest();
 
       expect(service.getStatusesForUser.callCount).toBe(1);
@@ -62,23 +64,10 @@ describe('ActivationStatusController', function () {
       $scope.$digest();
       expect(service.getStatusesForUser.callCount).toBe(1);
       expect($scope.activationStatus).toBeFalsy();
-      expect(service.getStatusesForUser.args[0][0]).toBe("123");
+      expect(service.getStatusesForUser.args[0][0]).toBe($stateParams.currentUser.id);
 
       service.getStatusesForUser.callArgWith(1, null, "data");
       expect($scope.activationStatus).toBe("data");
-    });
-
-    it('updates activation status when current user changes', function () {
-      $scope.$digest();
-      expect(service.getStatusesForUser.callCount).toBe(1);
-      expect(service.getStatusesForUser.args[0][0]).toBe("123");
-
-      $scope.currentUser = {
-        id: '456'
-      };
-      $scope.$digest();
-      expect(service.getStatusesForUser.callCount).toBe(2);
-      expect(service.getStatusesForUser.args[1][0]).toBe("456");
     });
 
     it('sets and clears error flag when api derps', function () {
@@ -91,21 +80,21 @@ describe('ActivationStatusController', function () {
     });
 
     it('polls CI and reloads data for a user', function () {
-      expect($scope.inflight).toBeFalsy();
+      expect($scope.inflight).toBeTruthy();
       expect(service.pollCIForUser.callCount).toBe(0);
 
       $scope.reload();
 
       expect($scope.inflight).toBeTruthy();
       expect(service.pollCIForUser.callCount).toBe(1);
-      expect(service.pollCIForUser.args[0][0]).toBe("123");
-      expect(service.getStatusesForUser.callCount).toBe(0);
+      expect(service.pollCIForUser.args[0][0]).toBe($stateParams.currentUser.id);
+      expect(service.getStatusesForUser.callCount).toBe(1);
 
       service.pollCIForUser.callArgWith(1, null, {});
 
       expect($scope.inflight).toBeTruthy();
-      expect(service.getStatusesForUser.callCount).toBe(1);
-      expect(service.getStatusesForUser.args[0][0]).toBe("123");
+      expect(service.getStatusesForUser.callCount).toBe(2);
+      expect(service.getStatusesForUser.args[0][0]).toBe($stateParams.currentUser.id);
 
       service.getStatusesForUser.callArgWith(1, null, {});
 
@@ -132,9 +121,6 @@ describe('ActivationStatusController', function () {
         }
       };
       $scope = $rootScope.$new();
-      $scope.currentUser = {
-        id: '123'
-      };
       controller = _$controller_('ActivationStatusController', {
         $scope: $scope,
         USSService: service,

@@ -15,6 +15,10 @@
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
 
     function activate() {
+      if (!vm.currentUser) {
+        return;
+      }
+
       HttpUtils.setTrackingID().then(function () {
         var promises = [];
 

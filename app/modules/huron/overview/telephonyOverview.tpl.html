@@ -14,7 +14,7 @@
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="directoryNumber in telephonyOverview.telephonyInfo.directoryNumbers track by directoryNumber.uuid">
-          <a id="{{directoryNumber.uuid}}" ui-sref="user-overview.communication.directorynumber({directoryNumber: directoryNumber.uuid})" ng-click="telephonyOverview.initDirectoryNumber(directoryNumber)">
+          <a id="{{directoryNumber.uuid}}" ui-sref="user-overview.communication.directorynumber({directoryNumber: directoryNumber})">
             <span class="feature-name">{{directoryNumber.pattern}}</span>
             <span class="feature-name" ng-if="directoryNumber.altDnPattern !== ''"> {{'telephonyPreview.or' | translate}} {{directoryNumber.altDnPattern}}</span>
             <span class="feature-details">{{directoryNumber.dnUsage}}</span>

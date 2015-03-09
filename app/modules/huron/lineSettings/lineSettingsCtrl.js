@@ -42,8 +42,30 @@
 
     vm.saveLineSettings = saveLineSettings;
     vm.deleteLineSettings = deleteLineSettings;
+    vm.resetLineSettings = resetLineSettings;
+    vm.initNewForm = initNewForm;
 
     ////////////
+
+    function initNewForm() {
+      if ($stateParams.directoryNumber === 'new' && vm.form) {
+        vm.form.$setDirty();
+      }
+    }
+
+    function resetForm() {
+      if ($stateParams.directoryNumber === 'new') {
+        $state.go('user-overview.communication');
+      } else if (vm.form) {
+        vm.form.$setPristine();
+        vm.form.$setUntouched();
+      }
+    }
+
+    function resetLineSettings() {
+      activate();
+      resetForm();
+    }
 
     function activate() {
       var directoryNumber = $stateParams.directoryNumber;
@@ -201,6 +223,7 @@
                     }
                   });
                 Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+                resetForm();
               })
               .catch(function (response) {
                 Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
@@ -216,8 +239,8 @@
                     vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
                     vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
                     Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
-                    $state.go('users.list.preview.directorynumber', {
-                      directoryNumber: vm.directoryNumber.uuid
+                    $state.go('user-overview.communication.directorynumber', {
+                      directoryNumber: vm.directoryNumber
                     });
                   });
               })
@@ -247,7 +270,7 @@
               TelephonyInfoService.getUserDnInfo(vm.currentUser.id);
               vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
               Notification.notify([$translate.instant('directoryNumberPanel.disassociationSuccess')], 'success');
-              $state.go('users.list.preview');
+              $state.go('user-overview.communication');
             })
             .catch(function (response) {
               Log.debug('disassociateInternalLine failed.  Status: ' + response.status + ' Response: ' + response.data);

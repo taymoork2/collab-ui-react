@@ -42,14 +42,14 @@ angular
           onEnter: ['$modal', '$state', '$previousState',
             function ($modal, $state, $previousState) {
               $previousState.memo(sidepanelMemo);
-              $state.modal = $modal.open({
+              $state.sidepanel = $modal.open({
                 template: '<cs-sidepanel></cs-sidepanel>',
                 windowTemplateUrl: 'src/sidepanel/sidepanel-modal.tpl.html',
                 backdrop: false,
                 keyboard: false
               });
-              $state.modal.result.finally(function () {
-                $state.modal = null;
+              $state.sidepanel.result.finally(function () {
+                $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
                   return $previousState.go(sidepanelMemo);
@@ -59,9 +59,9 @@ angular
           ],
           onExit: ['$state', '$previousState',
             function ($state, $previousState) {
-              if ($state.modal) {
+              if ($state.sidepanel) {
                 $previousState.forget(sidepanelMemo);
-                $state.modal.close();
+                $state.sidepanel.close();
               }
             }
           ]
@@ -218,6 +218,9 @@ angular
               controller: 'UserOverviewCtrl',
               controllerAs: 'userOverview',
               templateUrl: 'modules/core/users/userOverview/userOverview.tpl.html'
+            },
+            'header@user-overview': {
+              templateUrl: 'modules/core/users/userOverview/userHeader.tpl.html'
             }
           },
           params: {
@@ -240,7 +243,7 @@ angular
         .state('user-overview.communication.directorynumber', {
           templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
           controller: 'LineSettingsCtrl',
-          controllerAs: 'ucLineSettings',
+          controllerAs: 'lineSettings',
           params: {
             directoryNumber: {}
           },
@@ -248,15 +251,24 @@ angular
             displayName: 'Line Configuration'
           }
         })
-        .state('user-overview.communication.device', {
-          templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-          controller: 'DeviceDetailCtrl',
-          controllerAs: 'ucDeviceDetail',
+        .state('user-overview.device', {
           params: {
             device: {}
           },
           data: {
             displayName: 'Device Configuration'
+          },
+          views: {
+            'header@user-overview': {
+              templateUrl: 'modules/huron/device/deviceHeader.tpl.html',
+              controller: 'DeviceHeaderCtrl',
+              controllerAs: 'device'
+            },
+            '': {
+              templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
+              controller: 'DeviceDetailCtrl',
+              controllerAs: 'ucDeviceDetail',
+            }
           }
         })
         .state('user-overview.communication.voicemail', {

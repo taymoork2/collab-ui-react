@@ -14,6 +14,6 @@ describe('Directive: ucVoicemail', function () {
     var element = $compile("<uc-voicemail/>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("voicemailForm");
+    expect(element.html()).toContain("voicemail.form");
   });
 });

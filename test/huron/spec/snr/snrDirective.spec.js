@@ -15,6 +15,6 @@ describe('Directive: ucSingleNumberReach', function () {
     var element = $compile("<uc-single-number-reach/>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("singleNumberReachForm");
+    expect(element.html()).toContain("snr.form");
   });
 });

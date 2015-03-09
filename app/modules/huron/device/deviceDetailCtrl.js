@@ -6,30 +6,37 @@
     .controller('DeviceDetailCtrl', DeviceDetailCtrl);
 
   /* @ngInject */
-  function DeviceDetailCtrl($rootScope, $scope, $translate, $modal, $state, Log, DeviceService, Notification, HttpUtils) {
+  function DeviceDetailCtrl($rootScope, $scope, $stateParams, $translate, $modal, $state, Log, DeviceService, Notification, HttpUtils) {
     var vm = this;
     vm.device = {};
-    vm.title = '';
-    vm.deviceIcon = '';
+    vm.reset = reset;
     vm.save = save;
-    vm.additionalBtnClick = deactivate;
-    vm.additionalBtn = {
-      label: 'deviceDetailPage.deactivate',
-      btnclass: 'btn btn-default btn-remove',
-      id: 'btn-deactivate',
-      show: true
-    };
+    vm.deactivate = deactivate;
 
     function activate() {
-      vm.device = DeviceService.getCurrentDevice();
-      vm.title = vm.device.model;
-      vm.deviceIcon = (vm.device.model.trim().replace(/ /g, '_') + '.svg').toLowerCase();
+      vm.device = angular.copy($stateParams.device);
+    }
+
+    activate();
+    ////////////
+
+    function resetForm() {
+      if (vm.form) {
+        vm.form.$setPristine();
+        vm.form.$setUntouched();
+      }
+    }
+
+    function reset() {
+      activate();
+      resetForm();
     }
 
     function save() {
       HttpUtils.setTrackingID().then(function () {
         DeviceService.updateDevice(vm.device)
           .then(function () {
+            resetForm();
             Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
           })
           .catch(function (response) {
@@ -50,7 +57,7 @@
             .then(function () {
               $rootScope.$broadcast("deviceDeactivated");
               Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
-              $state.go('users.list.preview');
+              $state.go('user-overview');
             })
             .catch(function (response) {
               Log.debug('deleteDevice failed.  Status: ' + response.status + ' Response: ' + response.data);

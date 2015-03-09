@@ -6,6 +6,10 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
   var currentUser = getJSONFixture('core/json/currentUser.json');
   var telephonyInfoWithSnr = getJSONFixture('huron/json/telephonyInfo/snrEnabled.json');
 
+  var $stateParams = {
+    currentUser: currentUser
+  };
+
   beforeEach(module('Huron'));
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _TelephonyInfoService_, _Notification_, _HuronConfig_) {
@@ -14,8 +18,6 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
     TelephonyInfoService = _TelephonyInfoService_;
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
-
-    $scope.currentUser = currentUser;
 
     url = HuronConfig.getCmiUrl() + '/voice/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id + '/remotedestinations';
 
@@ -29,6 +31,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
 
     controller = $controller('SingleNumberReachInfoCtrl', {
       $scope: $scope,
+      $stateParams: $stateParams,
       TelephonyInfoService: TelephonyInfoService,
       Notification: Notification
     });

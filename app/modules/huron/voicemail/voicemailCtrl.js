@@ -6,15 +6,34 @@
     .controller('VoicemailInfoCtrl', VoicemailInfoCtrl);
 
   /* @ngInject */
-  function VoicemailInfoCtrl($scope, $translate, UserServiceCommon, TelephonyInfoService, Notification, HttpUtils) {
+  function VoicemailInfoCtrl($scope, $stateParams, $translate, UserServiceCommon, TelephonyInfoService, Notification, HttpUtils) {
     var vm = this;
-    vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-    vm.enableVoicemail = isVoicemailEnabled();
+    vm.currentUser = $stateParams.currentUser;
     vm.saveVoicemail = saveVoicemail;
+    vm.reset = reset;
+
+    init();
 
     $scope.$on('telephonyInfoUpdated', function () {
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
     });
+
+    function init() {
+      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+      vm.enableVoicemail = isVoicemailEnabled();
+    }
+
+    function resetForm() {
+      if (vm.form) {
+        vm.form.$setPristine();
+        vm.form.$setUntouched();
+      }
+    }
+
+    function reset() {
+      resetForm();
+      init();
+    }
 
     function isVoicemailEnabled() {
       var voicemailEnabled = false;
@@ -51,7 +70,7 @@
                 voicemailPayload.voicemail = {
                   'dtmfAccessId': vm.telephonyInfo.directoryNumbers[i].pattern
                 };
-                voicemailPayload.userName = $scope.currentUser.userName;
+                voicemailPayload.userName = vm.currentUser.userName;
               }
             }
           } else {
@@ -68,12 +87,13 @@
         }
         voicemailPayload.services = vm.telephonyInfo.services;
         UserServiceCommon.update({
-            customerId: $scope.currentUser.meta.organizationID,
-            userId: $scope.currentUser.id
+            customerId: vm.currentUser.meta.organizationID,
+            userId: vm.currentUser.id
           },
           voicemailPayload,
           function () {
             angular.element('#btnSaveVoicemail').button('reset');
+            resetForm();
             result.msg = $translate.instant('voicemailPanel.success');
             result.type = 'success';
             Notification.notify([result.msg], result.type);
