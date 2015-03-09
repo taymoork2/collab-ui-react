@@ -8,7 +8,7 @@ describe('DashboardController', function () {
       fetch: sinon.stub(),
       services: sinon.stub(),
       upgradeSoftware: sinon.stub()
-    }
+    };
     $interval = sinon.stub();
     $scope = $rootScope.$new();
     $scope.$on = sinon.stub();
@@ -71,8 +71,8 @@ describe('DashboardController', function () {
   });
 
   it('expands all panels except the ones that have been collapsed', function () {
-    $scope.panelStates['foo'] = false;
-    $scope.panelStates['bar'] = null;
+    $scope.panelStates.foo = false;
+    $scope.panelStates.bar = null;
 
     service.fetch.callArgWith(0, null, [{
       id: 'foo'
@@ -81,9 +81,9 @@ describe('DashboardController', function () {
     }, {
       id: 'baz'
     }]);
-    expect($scope.panelStates['foo']).toBe(false);
-    expect($scope.panelStates['bar']).toBe(true);
-    expect($scope.panelStates['baz']).toBe(true);
+    expect($scope.panelStates.foo).toBe(false);
+    expect($scope.panelStates.bar).toBe(true);
+    expect($scope.panelStates.baz).toBe(true);
   });
 
   it('returns empty array on fubar data from backend', function () {
@@ -118,12 +118,12 @@ describe('DashboardController', function () {
 
   it('triggers callback on software upgrade', function () {
     var callback = sinon.stub();
-    $scope._poll = sinon.stub()
+    $scope._poll = sinon.stub();
 
     $scope.upgradeSoftware('clusterid', 'servicetype', callback);
     expect(callback.callCount).toBe(0);
 
-    service.upgradeSoftware.args[0][2]()
+    service.upgradeSoftware.args[0][2]();
     service.fetch.callArgWith(0, null, []);
 
     expect(callback.callCount).toBe(1);
@@ -144,7 +144,7 @@ describe('DashboardController', function () {
   });
 
   it('deletes host', function () {
-    $scope._poll = sinon.stub()
+    $scope._poll = sinon.stub();
     service.deleteHost = sinon.stub();
     expect($scope.deleteHostInflight).toBeFalsy();
 
@@ -181,9 +181,9 @@ describe('DashboardController', function () {
   });
 
   it('shows modal', function () {
-    expect($scope.modal).toBeFalsy()
+    expect($scope.modal).toBeFalsy();
     $scope.showNotificationConfigDialog();
-    expect($scope.modal).toBeTruthy()
+    expect($scope.modal).toBeTruthy();
   });
 
 });

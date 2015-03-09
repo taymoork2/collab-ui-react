@@ -43,7 +43,7 @@ describe('Controller: DevicesCtrl', function () {
 
   describe('DevicesCtrl controller', function () {
     it('should be created successfully', function () {
-      expect(controller).toBeDefined;
+      expect(controller).toBeDefined();
     });
 
     beforeEach(function () {
@@ -78,7 +78,7 @@ describe('Controller: DevicesCtrl', function () {
 
     describe('after activate', function () {
       it('should have showDeviceDetailPanel method defined', function () {
-        expect(controller.showDeviceDetailPanel).toBeDefined;
+        expect(controller.showDeviceDetailPanel).toBeDefined();
       });
 
     });

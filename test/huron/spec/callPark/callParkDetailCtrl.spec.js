@@ -11,7 +11,7 @@ describe('Controller: CallParkDetailCtrl', function () {
     $q = _$q_;
     CallPark = _CallPark_;
 
-    $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss'])
+    $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
     spyOn(CallPark, 'create').and.returnValue($q.when());
     spyOn(CallPark, 'createByRange').and.returnValue($q.when());
 

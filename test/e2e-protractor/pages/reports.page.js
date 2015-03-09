@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var ReportsPage = function () {
   // customer reports
@@ -45,6 +45,6 @@ var ReportsPage = function () {
   this.numOptions = function (dropdown) {
     return dropdown.all(by.css('option')).count();
   };
-}
+};
 
 module.exports = ReportsPage;

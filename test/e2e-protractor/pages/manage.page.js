@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var ManagePage = function () {
   this.displayName = element(by.id('displayName'));
@@ -7,7 +7,6 @@ var ManagePage = function () {
   this.enableSSO = element(by.id('sso'));
   this.saveButton = element(by.id('btn-save'));
   this.refreshButton = element(by.id('btnReset'));
-
-}
+};
 
 module.exports = ManagePage;

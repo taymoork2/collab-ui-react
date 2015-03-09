@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var ActivatePage = function () {
   this.provisionSuccess = element(by.id('provisionSuccess'));

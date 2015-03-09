@@ -3,7 +3,7 @@
 describe('Controller: VoicemailInfoCtrl', function () {
   var controller, $scope, $httpBackend, TelephonyInfoService, Notification, HuronConfig;
 
-  var currentUser = getJSONFixture('core/json/currentUser.json')
+  var currentUser = getJSONFixture('core/json/currentUser.json');
   var telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
   var url;
 

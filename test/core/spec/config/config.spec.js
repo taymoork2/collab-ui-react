@@ -38,7 +38,7 @@ describe('App Configuration', function () {
       }
       return devStates;
     }
-    var adminStates = Config.roleStates['Full_Admin'] || [];
+    var adminStates = Config.roleStates.Full_Admin || [];
     var developmentStates = getDevelopmentStates();
     for (var i = 0; i < adminStates.length; i++) {
       expect(developmentStates).not.toContain(adminStates[i]);

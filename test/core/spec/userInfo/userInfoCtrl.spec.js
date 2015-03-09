@@ -25,7 +25,7 @@ describe('UserInfoController', function () {
       navigator: {
         userAgent: sinon.stub()
       }
-    }
+    };
     controller = $controller('UserInfoController', {
       $scope: $scope,
       $window: $window,

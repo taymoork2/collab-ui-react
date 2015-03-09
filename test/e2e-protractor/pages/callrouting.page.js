@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var CallRoutingPage = function () {
   this.callParkSelect = element(by.css('.callrouting-nav')).element(by.cssContainingText('a', 'Call Park'));
@@ -27,11 +27,11 @@ var CallRoutingPage = function () {
       });
     }).first().element(by.css('.delete-icon')).click();
     browser.sleep(1000);
-    expect(element(by.buttonText('Delete')).isDisplayed()).toBeTruthy;
+    expect(element(by.buttonText('Delete')).isDisplayed()).toBeTruthy();
     element(by.buttonText('Delete')).click();
     notifications.assertSuccess('deleted successfully');
     browser.sleep(1000);
   };
-}
+};
 
 module.exports = CallRoutingPage;

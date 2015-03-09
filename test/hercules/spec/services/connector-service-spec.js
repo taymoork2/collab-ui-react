@@ -116,7 +116,7 @@ describe('Service: ConnectorService', function () {
   });
 
   it('should be possible to set mock backend', function () {
-    win.location.search = 'hercules-backend=mock'
+    win.location.search = 'hercules-backend=mock';
     converter.convertClusters.returns('foo');
 
     var callback = sinon.stub();
@@ -132,7 +132,7 @@ describe('Service: ConnectorService', function () {
   });
 
   it('should be possible to set empty backend', function () {
-    win.location.search = 'hercules-backend=nodata'
+    win.location.search = 'hercules-backend=nodata';
 
     var callback = sinon.stub();
     Service.fetch(callback);
@@ -182,7 +182,7 @@ describe('Service: ConnectorService', function () {
       .respond(500, null);
     expect(notification.notify.callCount).toBe(0);
 
-    var callback = sinon.stub()
+    var callback = sinon.stub();
     Service.fetch(callback, {
       squelchErrors: true
     });

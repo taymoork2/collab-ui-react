@@ -26,7 +26,7 @@ describe('Service: CallPark', function () {
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
 
-    url = HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directedcallparks'
+    url = HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directedcallparks';
 
     spyOn(Notification, 'notify');
   }));

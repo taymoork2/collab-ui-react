@@ -49,7 +49,7 @@ describe('Controller: DeviceDetailCtrl', function () {
 
   describe('DeviceDetailCtrl controller', function () {
     it('should be created successfully', function () {
-      expect(controller).toBeDefined;
+      expect(controller).toBeDefined();
     });
 
     describe('after activate', function () {
@@ -60,7 +60,7 @@ describe('Controller: DeviceDetailCtrl', function () {
 
       describe('save function', function () {
         it('should exist', function () {
-          expect(controller.save).toBeDefined;
+          expect(controller.save).toBeDefined();
         });
 
         it('should successfully save and notify', function () {
@@ -80,7 +80,7 @@ describe('Controller: DeviceDetailCtrl', function () {
 
       describe('deactivate function', function () {
         it('should exist', function () {
-          expect(controller.additionalBtnClick).toBeDefined;
+          expect(controller.additionalBtnClick).toBeDefined();
         });
 
         it('should popup a modal when called', function () {

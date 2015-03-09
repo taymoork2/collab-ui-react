@@ -26,7 +26,7 @@ describe('XhrNotificationService', function () {
         "key": 500,
         "message": ["foo"]
       }
-    }])
+    }]);
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('foo');
   });
@@ -43,7 +43,7 @@ describe('XhrNotificationService', function () {
           "code": "404"
         }]
       }
-    }])
+    }]);
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('Resource not found');
   });
@@ -54,25 +54,25 @@ describe('XhrNotificationService', function () {
         "key": 500,
         "message": "foo"
       }
-    }])
+    }]);
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('foo');
   });
 
   it('should handle generic errors', function () {
-    Service.notify([null, 404])
+    Service.notify([null, 404]);
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('Backend responded with status 404.');
   });
 
   it('should handle generic errors with null status', function () {
-    Service.notify([null, 0])
+    Service.notify([null, 0]);
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('Backend responded with an unknown status.');
   });
 
   it('should handle custom messages', function () {
-    Service.notify('msg', [null, 404])
+    Service.notify('msg', [null, 404]);
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('msg');
     expect(notification.notify.args[0][0][1]).toBeTruthy();

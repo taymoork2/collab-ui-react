@@ -13,7 +13,7 @@ describe('FusionSetupCtrl', function () {
       fetch: sinon.stub(),
       services: sinon.stub(),
       upgradeSoftware: sinon.stub()
-    }
+    };
     controller = _$controller_('FusionSetupCtrl', {
       $scope: $scope,
       $interval: $interval,
@@ -29,7 +29,7 @@ describe('FusionSetupCtrl', function () {
   });
 
   it('stops polling on error', function () {
-    $scope._poll = sinon.stub()
+    $scope._poll = sinon.stub();
     service.fetch.callArgWith(0, 'err', 'foo');
     expect($scope._poll.callCount).toEqual(0);
   });

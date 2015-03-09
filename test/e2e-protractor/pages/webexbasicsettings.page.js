@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var BasicSettigsPage = function () {
   this.protoTab = element(by.css('li.webexUserSettingsTab > a'));

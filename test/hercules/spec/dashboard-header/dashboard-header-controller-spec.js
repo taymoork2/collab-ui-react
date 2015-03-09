@@ -9,10 +9,10 @@ describe('DashboardHeaderController', function () {
     };
     service = {
       services: sinon.stub()
-    }
+    };
     aggregator = {
       aggregateServices: sinon.stub()
-    }
+    };
     controller = _$controller_('DashboardHeaderController', {
       $scope: $scope,
       ServiceDescriptor: service,

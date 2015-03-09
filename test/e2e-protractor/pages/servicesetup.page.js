@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var ServiceSetup = function () {
   this.timeZone = element(by.id('timeZone'));

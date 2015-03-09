@@ -28,17 +28,17 @@ describe('Controller: MohCtrl', function () {
   });
 
   it('should be created successfully', function () {
-    expect(controller).toBeDefined;
+    expect(controller).toBeDefined();
   });
 
   describe('after activate', function () {
 
     it('should have close method', function () {
-      expect(controller.close).toBeDefined;
+      expect(controller.close).toBeDefined();
     });
 
     it('should have selectPlaylist method', function () {
-      expect(controller.selectPlaylist).toBeDefined;
+      expect(controller.selectPlaylist).toBeDefined();
     });
   });
 

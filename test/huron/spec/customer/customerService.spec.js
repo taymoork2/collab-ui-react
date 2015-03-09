@@ -33,7 +33,7 @@ describe('Service: Huron Customer', function () {
     it('should start a new trial', function () {
       $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/common/customers').respond(201);
       HuronCustomer.create('123', 'My Customer', 'myCustomer@cisco.com').then(function (response) {
-        expect(response['$resolved']).toEqual(true);
+        expect(response.$resolved).toEqual(true);
       });
       $httpBackend.flush();
     });

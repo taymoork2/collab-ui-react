@@ -22,9 +22,6 @@
     vm.sendActivationCodeEmail = sendActivationCodeEmail;
     vm.clipboardFallback = clipboardFallback;
 
-    activate();
-    ////////////
-
     function activate() {
       HttpUtils.setTrackingID().then(function () {
         if (vm.otp === 'new') {
@@ -73,5 +70,7 @@
         Notification.notify([entitleResult.msg], entitleResult.type);
       });
     }
+
+    activate();
   }
 })();

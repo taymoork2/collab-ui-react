@@ -10,7 +10,7 @@ describe('ConnectorMock', function () {
   }));
 
   it('should create mock data', function () {
-    var mock = Service.mockData()
+    var mock = Service.mockData();
     expect(mock.length).toBe(5);
   });
 

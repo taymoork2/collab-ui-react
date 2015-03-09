@@ -19,8 +19,6 @@
       id: 'btn-deactivate',
       show: true
     };
-    activate();
-    ////////////
 
     function activate() {
       vm.device = DeviceService.getCurrentDevice();
@@ -61,5 +59,7 @@
         });
       });
     }
+
+    activate();
   }
 })();

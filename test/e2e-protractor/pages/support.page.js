@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var SupportPage = function () {
 
@@ -40,7 +40,7 @@ var SupportPage = function () {
   };
 
   this.searchAndVerifyResult = function (query, assertion) {
-    assertion || (assertion = query);
+    assertion = assertion || query;
     this.logSearchField.clear();
     this.logSearchField.sendKeys(query);
     utils.click(support.logSearchBtn);

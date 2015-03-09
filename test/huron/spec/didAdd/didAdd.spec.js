@@ -62,21 +62,21 @@ describe('Controller: DidAddCtrl', function () {
 
   describe('DidAddCtrl controller', function () {
     it('should be created successfully', function () {
-      expect(controller).toBeDefined;
+      expect(controller).toBeDefined();
     });
 
     describe('after initialization', function () {
       it('should have checkForInvalidTokens method', function () {
-        expect(controller.checkForInvalidTokens).toBeDefined;
+        expect(controller.checkForInvalidTokens).toBeDefined();
       });
 
       it('should have tokenmethods object', function () {
-        expect(controller.tokenmethods).toBeDefined;
+        expect(controller.tokenmethods).toBeDefined();
       });
 
       describe('tokenmethods.createtoken function', function () {
         it('should exist', function () {
-          expect(controller.tokenmethods.createtoken).toBeDefined;
+          expect(controller.tokenmethods.createtoken).toBeDefined();
         });
 
         it('should format the token properly and add a +1 to the number +1 (123) 456-7890', function () {
@@ -86,7 +86,7 @@ describe('Controller: DidAddCtrl', function () {
               label: ''
             }
           };
-          controller.tokenmethods.createtoken(element)
+          controller.tokenmethods.createtoken(element);
           expect(element.attrs.value).toEqual('+11234567890');
           expect(element.attrs.label).toEqual('1 (123) 456-7890');
         });
@@ -98,7 +98,7 @@ describe('Controller: DidAddCtrl', function () {
               label: ''
             }
           };
-          controller.tokenmethods.createtoken(element)
+          controller.tokenmethods.createtoken(element);
           expect(element.attrs.value).toEqual('+51234567890');
           expect(element.attrs.label).toEqual('5 (123) 456-7890');
         });
@@ -106,7 +106,7 @@ describe('Controller: DidAddCtrl', function () {
 
       describe('tokenmethods.createdtoken function', function () {
         it('should exist', function () {
-          expect(controller.tokenmethods.createdtoken).toBeDefined;
+          expect(controller.tokenmethods.createdtoken).toBeDefined();
         });
 
         it('should increment invalidcount when an invalid DID is passed in', function () {
@@ -122,7 +122,7 @@ describe('Controller: DidAddCtrl', function () {
 
       describe('tokenmethods.removedtoken function', function () {
         it('should exist', function () {
-          expect(controller.tokenmethods.removedtoken).toBeDefined;
+          expect(controller.tokenmethods.removedtoken).toBeDefined();
         });
 
         it('submit button should be enabled when token count is > 1', function () {
@@ -132,13 +132,13 @@ describe('Controller: DidAddCtrl', function () {
             }
           };
           controller.tokenmethods.removedtoken(element);
-          expect(controller.submitBtnStatus).toBeTruthy;
+          expect(controller.submitBtnStatus).toBeTruthy();
         });
       });
 
       describe('tokenmethods.editedtoken function', function () {
         it('should exist', function () {
-          expect(controller.tokenmethods.editedtoken).toBeDefined;
+          expect(controller.tokenmethods.editedtoken).toBeDefined();
         });
 
         it('should update the invalidcount when editedtoken is called', function () {
@@ -147,7 +147,7 @@ describe('Controller: DidAddCtrl', function () {
               value: '+44444DUDE44444'
             }
           };
-          controller.tokenmethods.createdtoken(element)
+          controller.tokenmethods.createdtoken(element);
           expect(controller.invalidcount).toEqual(1);
 
           element.attrs.value = '4444444444';
@@ -158,7 +158,7 @@ describe('Controller: DidAddCtrl', function () {
 
       describe('submit function', function () {
         it('should exist', function () {
-          expect(controller.submit).toBeDefined;
+          expect(controller.submit).toBeDefined();
         });
 
         describe('submit DIDs', function () {
@@ -194,7 +194,7 @@ describe('Controller: DidAddCtrl', function () {
 
       describe('sendEmail function', function () {
         it('should exist', function () {
-          expect(controller.sendEmail).toBeDefined;
+          expect(controller.sendEmail).toBeDefined();
         });
 
         it('should send email and report success notification', function () {

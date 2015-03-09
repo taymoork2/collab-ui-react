@@ -31,12 +31,12 @@ describe('Service: OtpService', function () {
   });
 
   it('should be registered', function () {
-    expect(OtpService).toBeDefined;
+    expect(OtpService).toBeDefined();
   });
 
   describe('loadOtps function', function () {
     it('should exist', function () {
-      expect(OtpService.loadOtps).toBeDefined;
+      expect(OtpService.loadOtps).toBeDefined();
     });
 
     it('should return 1 OTP', function () {
@@ -58,7 +58,7 @@ describe('Service: OtpService', function () {
 
   describe('generateOtp function', function () {
     it('should exist', function () {
-      expect(OtpService.generateOtp).toBeDefined;
+      expect(OtpService.generateOtp).toBeDefined();
     });
 
     it('should generate an OTP', function () {
@@ -75,7 +75,7 @@ describe('Service: OtpService', function () {
 
   describe('hyphenateOtp function', function () {
     it('should exist', function () {
-      expect(OtpService.hyphenateOtp).toBeDefined;
+      expect(OtpService.hyphenateOtp).toBeDefined();
     });
 
     it('should return a hyphenated OTP', function () {
@@ -90,7 +90,7 @@ describe('Service: OtpService', function () {
 
   describe('convertExpiryTime function', function () {
     it('should exist', function () {
-      expect(OtpService.convertExpiryTime).toBeDefined;
+      expect(OtpService.convertExpiryTime).toBeDefined();
     });
 
     it('should return the correct time zone conversion (America/Los_Angeles)', function () {
@@ -100,7 +100,7 @@ describe('Service: OtpService', function () {
 
   describe('getQrCodeUrl function', function () {
     it('should exist', function () {
-      expect(OtpService.getQrCodeUrl).toBeDefined;
+      expect(OtpService.getQrCodeUrl).toBeDefined();
     });
 
     it('should return the correct url', function () {

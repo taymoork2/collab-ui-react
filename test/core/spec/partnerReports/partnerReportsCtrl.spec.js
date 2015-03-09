@@ -31,7 +31,7 @@ describe('Controller: Partner Reports', function () {
 
   describe('PartnerReportCtrl controller', function () {
     it('should be created successfully', function () {
-      expect(controller).toBeDefined;
+      expect(controller).toBeDefined();
     });
 
     describe('isRefresh', function () {
