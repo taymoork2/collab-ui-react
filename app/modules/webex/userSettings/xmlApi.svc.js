@@ -80,16 +80,16 @@
           var wbxSiteName = wbxSiteUrl.slice(0, index);
 
           if (!$rootScope.sessionTickets) {
-            //console.log("No Session tickets in $rootScope, will check Storage");
+            $log.log("No Session tickets in $rootScope, will check Storage");
             var storedSessionTicketsJson = Storage.get('sessionTickets');
             if (storedSessionTicketsJson !== null) {
               $rootScope.sessionTickets = JSON.parse(storedSessionTicketsJson);
-              //console.log("Found some session tickets in Storage.sessionTickets = " + $rootScope.sessionTickets);
+              $log.log("Found some session tickets in Storage.sessionTickets = " + $rootScope.sessionTickets);
             } else {
               $log.log("No Storage.sessionTickets");
               $rootScope.sessionTickets = {};
               logMsg = funcName + ": " + "No Session tickets in scope or Storage, will create new one for site= " + wbxSiteName;
-              //console.log(logMsg);
+              $log.log(logMsg);
               return this.getNewSessionTicket(wbxSiteName, wbxSiteUrl);
             }
           }
