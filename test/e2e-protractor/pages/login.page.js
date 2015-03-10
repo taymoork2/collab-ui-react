@@ -41,17 +41,24 @@ var LoginPage = function () {
 
   this.loginButton = element(by.cssContainingText('span[role="button"]', 'Login'));
 
-  this.get = function () {
-    browser.get('#/login');
+  this.login = function (username, expectedUrl) {
+    var bearer;
+    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
+    navigation.expectDriverCurrentUrl('login');
+    helper.getBearerToken(username, function (_bearer) {
+      bearer = _bearer;
+      expect(bearer).not.toBeNull();
+      browser.executeScript("localStorage.accessToken='" + bearer + "'");
+      browser.refresh();
+      navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+    });
+    browser.wait(function () {
+      return bearer;
+    }, 10000, 'Could not retrieve bearer token to login');
   };
 
-  this.loginTo = function (url, username, password) {
-    browser.get(url);
-    this.login(username, password, url);
-  };
-
-  this.login = function (username, password, expectedUrl) {
-    this.get();
+  this.loginThroughGui = function (username, password, expectedUrl) {
+    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
     utils.click(this.loginButton);
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
@@ -60,35 +67,6 @@ var LoginPage = function () {
     this.setLoginPassword(password);
     this.clickLoginSubmit();
     navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
-    browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
-  };
-
-  this.partnerlogin = function (username, password) {
-    this.login(username, password, '/partner/overview');
-  };
-
-  this.loginSSO = function (username, password) {
-    this.get();
-    utils.click(this.loginButton);
-    browser.driver.wait(this.isLoginUsernamePresent);
-    this.setLoginUsername(username);
-    this.clickLoginNext();
-    browser.driver.wait(this.isLoginSSOPresent);
-    this.setSSOUsername(username);
-    this.setSSOPassword(password);
-    this.clickSSOSubmit();
-    navigation.expectCurrentUrl('/overview');
-    browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
-  };
-
-  this.loginSSOSecondTime = function (username) {
-    this.get();
-    utils.click(this.loginButton);
-    browser.driver.wait(this.isLoginUsernamePresent);
-    this.setLoginUsername(username);
-    this.clickLoginNext();
-    navigation.expectDriverCurrentUrl('/overview');
-    browser.executeScript('$.fx.off = true;'); // Disable jQuery animations
   };
 };
 

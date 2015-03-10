@@ -5,20 +5,6 @@
 /* global browser */
 /* global expect */
 
-var csadmin = {
-  username: 'admin@csreptestdom.collaborate.com',
-  password: 'C1sc0123!'
-};
-
-var csuser = {
-  username: 'regUser1@csreptestdom.collaborate.com',
-  password: 'P@ssword123',
-};
-
-// Notes:
-// - State is conserved between each describe and it blocks.
-// - When a page is being loaded, use wait() to check if elements are there before asserting.
-
 describe('CS Admin flow', function () {
 
   beforeEach(function () {
@@ -30,19 +16,19 @@ describe('CS Admin flow', function () {
   });
 
   it('should just login', function () {
-    login.login(csadmin.username, csadmin.password);
+    login.login('customer-support-admin');
   });
 
   // Navigation bar
   describe('Navigation Bar', function () {
 
     it('should display correct tabs for user based on role', function () {
+      utils.expectIsDisplayed(navigation.homeTab);
+      utils.expectIsDisplayed(navigation.customersTab);
+      utils.expectIsDisplayed(navigation.usersTab);
+      utils.expectIsDisplayed(navigation.reportsTab);
+      utils.expectIsDisplayed(navigation.supportTab);
       expect(navigation.getTabCount()).toBe(6);
-      expect(navigation.homeTab.isDisplayed()).toBeTruthy();
-      expect(navigation.customersTab.isDisplayed()).toBeTruthy();
-      expect(navigation.usersTab.isDisplayed()).toBeTruthy();
-      expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
-      expect(navigation.supportTab.isDisplayed()).toBeTruthy();
     });
 
     it('clicking on customers tab should change the view', function () {
@@ -55,8 +41,10 @@ describe('CS Admin flow', function () {
 
     it('clicking on customers should enable/disable ability to launch appropriately', function () {
       utils.click(partner.adminCustomerOrgId);
+      utils.expectIsDisplayed(partner.launchCustomerPanelButton);
       expect(partner.launchCustomerPanelButton.isEnabled()).toBeTruthy();
       utils.click(partner.regularCustomerOrgId);
+      utils.expectIsDisplayed(partner.launchCustomerPanelButton);
       expect(partner.launchCustomerPanelButton.isEnabled()).toBeFalsy();
     });
 
@@ -82,18 +70,18 @@ describe('CS User flow', function () {
   });
 
   it('should just login', function () {
-    login.login(csuser.username, csuser.password);
+    login.login('customer-support-user');
   });
 
   // Navigation bar
   describe('Navigation Bar', function () {
 
     it('should display correct tabs for user based on role', function () {
+      utils.expectIsDisplayed(navigation.homeTab);
+      utils.expectIsDisplayed(navigation.customersTab);
+      utils.expectIsDisplayed(navigation.reportsTab);
+      utils.expectIsDisplayed(navigation.supportTab);
       expect(navigation.getTabCount()).toBe(4);
-      expect(navigation.homeTab.isDisplayed()).toBeTruthy();
-      expect(navigation.customersTab.isDisplayed()).toBeTruthy();
-      expect(navigation.reportsTab.isDisplayed()).toBeTruthy();
-      expect(navigation.supportTab.isDisplayed()).toBeTruthy();
     });
 
     it('clicking on customers tab should change the view', function () {
@@ -106,8 +94,10 @@ describe('CS User flow', function () {
 
     it('clicking on customers should enable/disable ability to launch appropriately', function () {
       utils.click(partner.regularCustomerOrgId);
+      utils.expectIsDisplayed(partner.launchCustomerPanelButton);
       expect(partner.launchCustomerPanelButton.isEnabled()).toBeTruthy();
       utils.click(partner.adminCustomerOrgId);
+      utils.expectIsDisplayed(partner.launchCustomerPanelButton);
       expect(partner.launchCustomerPanelButton.isEnabled()).toBeFalsy();
     });
 

@@ -5,18 +5,6 @@
 /* global browser */
 /* global expect */
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-  orgname: 'SquaredAdminTool',
-  usernameWithNoEntitlements: 'doNotDeleteTestUser@wx2.example.com'
-};
-
-var notsqinviteruser = {
-  username: 'sqtest-admin@squared.example.com',
-  password: 'C1sc0123!',
-};
-
 describe('App flow', function () {
 
   beforeEach(function () {
@@ -29,7 +17,7 @@ describe('App flow', function () {
   });
 
   it('should just login', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   describe('Switching tabs', function () {

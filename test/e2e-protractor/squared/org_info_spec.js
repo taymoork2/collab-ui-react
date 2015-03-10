@@ -5,11 +5,6 @@
 /* global it */
 /* global browser */
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-};
-
 describe('Org Info flow', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -21,7 +16,7 @@ describe('Org Info flow', function () {
   });
 
   it('should login as squared team member admin user', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   it('clicking on orgs tab should show the org info', function () {

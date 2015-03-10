@@ -6,10 +6,6 @@
 /* global expect */
 /* global protractor */
 
-// Notes:
-// - State is conserved between each describe and it blocks.
-// - When a page is being loaded, use wait() to check if elements are there before asserting.
-
 var getTestBody = function () {
   return {
     'email': utils.randomTestGmail(),

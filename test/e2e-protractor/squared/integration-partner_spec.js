@@ -25,9 +25,18 @@ describe('Partner flow', function () {
   // Logging in. Write your tests after the login flow is complete.
   describe('Login as partner admin user', function () {
 
-    it('should login', function (done) {
-      login.partnerlogin(partner.testuser.username, partner.testuser.password);
+    it('should login', function () {
+      login.login('partner-admin', '#/partner/overview');
+    });
 
+    it('should display correct tabs for user based on role', function () {
+      utils.expectIsDisplayed(navigation.homeTab);
+      utils.expectIsDisplayed(navigation.customersTab);
+      utils.expectIsDisplayed(navigation.reportsTab);
+      expect(navigation.getTabCount()).toBe(4);
+    });
+
+    it('should have a partner token', function (done) {
       element(by.tagName('body')).evaluate('token').then(function (token) {
         accessToken = token;
         expect(accessToken).not.toBeNull();
@@ -35,29 +44,20 @@ describe('Partner flow', function () {
       });
     });
 
-    it('should display correct tabs for user based on role', function () {
-
-      utils.expectIsDisplayed(navigation.homeTab);
-      utils.expectIsDisplayed(navigation.customersTab);
-      utils.expectIsDisplayed(navigation.reportsTab);
-      expect(navigation.getTabCount()).toBe(4);
-    });
-
     it('should display trials list', function () {
       utils.expectIsDisplayed(partner.trialsPanel);
+      utils.expectIsDisplayed(partner.viewAllLink);
     });
   }); //State is logged-in
 
   describe('Add Partner Trial', function () {
 
     it('should view all trials', function () {
-      utils.click(partner.viewAllLink);
-      navigation.expectCurrentUrl('/customers');
-
-      utils.expectIsDisplayed(partner.customerList);
+      navigation.clickCustomers();
     });
 
     it('should add a new trial', function (done) {
+      utils.click(partner.trialFilter);
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
 
@@ -146,9 +146,7 @@ describe('Partner flow', function () {
         utils.click(partner.partnerFilter);
         utils.expectIsDisplayed(partner.partnerEmail);
         users.assertResultsLength(0);
-        partner.partnerEmail.then(function (cell) {
-          expect(cell[0].getText()).toContain(partner.testuser.username);
-        });
+        utils.expectText(partner.partnerEmail.first(), partner.testuser.username);
 
         browser.driver.close();
         browser.switchTo().window(appWindow);

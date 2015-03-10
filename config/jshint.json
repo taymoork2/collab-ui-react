@@ -86,6 +86,7 @@
     "users": true,
     "roles": true,
     "utils": true,
+    "helper": true,
     "config": true,
     "manage": true,
     "invite": true,

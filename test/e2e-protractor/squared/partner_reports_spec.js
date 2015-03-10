@@ -4,7 +4,7 @@
 xdescribe('Partner Reports', function () {
   describe('Log In', function () {
     it('should login', function () {
-      login.partnerlogin(partner.testuser.username, partner.testuser.password);
+      login.login('partner-admin', '#/partner/overview');
     });
   });
 

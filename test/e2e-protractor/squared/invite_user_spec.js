@@ -19,7 +19,7 @@ describe('Squared Invite User Flow', function () {
 
   describe('Display invite dialog', function () {
     it('should login as pbr org admin', function () {
-      login.login(users.inviteTestUser.username, users.inviteTestUser.password);
+      login.login('pbr-admin');
     });
 
     it('clicking on users tab should change the view', function () {

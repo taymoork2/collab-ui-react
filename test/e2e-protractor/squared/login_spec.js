@@ -1,10 +1,5 @@
 'use strict';
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-};
-
 describe('Login Page', function () {
 
   beforeEach(function () {
@@ -17,7 +12,7 @@ describe('Login Page', function () {
   });
 
   it('should login and redirect to the requested users page', function () {
-    login.loginTo('#/users', testuser.username, testuser.password);
+    login.loginThroughGui(helper.auth['pbr-admin'].user, helper.auth['pbr-admin'].pass, '#/users');
   });
 
   it('should logout', function () {

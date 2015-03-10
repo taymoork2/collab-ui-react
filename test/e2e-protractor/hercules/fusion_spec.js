@@ -6,11 +6,6 @@
 /* global element */
 /* global describe */
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-};
-
 describe('Fusion Page', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -22,7 +17,7 @@ describe('Fusion Page', function () {
   });
 
   it('should log in as admin', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   it('should navigate to the fusion page and display something', function () {

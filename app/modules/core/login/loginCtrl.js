@@ -9,6 +9,8 @@ angular.module('Core')
       var storedState = 'storedState';
       var storedParams = 'storedParams';
 
+      $rootScope.token = Storage.get('accessToken');
+
       var pageParam = $location.search().pp;
       if (pageParam) {
         PageParam.set(pageParam);
@@ -26,44 +28,45 @@ angular.module('Core')
         $scope.loading = true;
         $scope.loginText = 'loginPage.loading';
 
-        Auth.authorize($rootScope.token).then(function () {
-          if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
-            $state.go('firsttimewizard');
-          } else {
-            var state = 'overview';
-            var params;
-            if (PageParam.getRoute()) {
-              state = PageParam.getRoute();
-            } else if (SessionStorage.get(storedState)) {
-              state = SessionStorage.pop(storedState);
-              params = SessionStorage.popObject(storedParams);
-            } else if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
-              state = 'partneroverview';
-            }
-            $rootScope.services = Authinfo.getServices();
+        Auth.authorize($rootScope.token)
+          .then(function () {
+            if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
+              $state.go('firsttimewizard');
+            } else {
+              var state = 'overview';
+              var params;
+              if (PageParam.getRoute()) {
+                state = PageParam.getRoute();
+              } else if (SessionStorage.get(storedState)) {
+                state = SessionStorage.pop(storedState);
+                params = SessionStorage.popObject(storedParams);
+              } else if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
+                state = 'partneroverview';
+              }
+              $rootScope.services = Authinfo.getServices();
 
-            $timeout(function () {
-              angular.element('html').css('background', 'none');
-              $state.go(state, params);
-            }, loadingDelay);
-          }
-        }).catch(function (error) {
-          if (error) {
-            $timeout(function () {
-              $scope.result = error;
+              $timeout(function () {
+                angular.element('html').css('background', 'none');
+                $state.go(state, params);
+              }, loadingDelay);
+            }
+          }).catch(function (error) {
+            if (error) {
+              $timeout(function () {
+                $scope.result = error;
+                $timeout(Auth.logout, logoutDelay);
+              }, loadingDelay);
+            } else {
               $timeout(Auth.logout, logoutDelay);
-            }, loadingDelay);
-          } else {
-            $timeout(Auth.logout, logoutDelay);
-          }
-        });
+            }
+          });
       };
 
-      $scope.$on('ACCESS_TOKEN_REVIEVED', function () {
+      $scope.$on('ACCESS_TOKEN_RETRIEVED', function () {
         authorizeUser();
       });
 
-      if ($rootScope.token || Storage.get('accessToken')) {
+      if ($rootScope.token) {
         authorizeUser();
       }
 
@@ -71,7 +74,7 @@ angular.module('Core')
         Auth.redirectToLogin();
       };
 
-      //Branding dependent changes. To be removed later. 
+      //Branding dependent changes. To be removed later.
       $scope.loginText = 'loginPage.login';
 
       $scope.isSpark = function () {

@@ -1,10 +1,5 @@
 'use strict';
 
-var testuser = {
-  username: 'admin@int1.huron-alpha.com',
-  password: 'Cisco123!'
-};
-
 var pattern = Math.ceil(Math.random() * Math.pow(10, 5)).toString();
 
 xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
@@ -17,7 +12,7 @@ xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
   });
 
   it('should login as an admin user', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('huron-int1');
   });
 
   it('clicking on gear icon should open first time wizard', function () {

@@ -7,21 +7,6 @@
 
 //test link: http://127.0.0.1:8000/#/login?pp=support_search:5354d535-9aaf-5e22-a091-34de878d2200
 
-var testuser = {
-  username: 'pbr-org-admin-test@wx2.example.com',
-  password: 'C1sc0123!',
-  orgname: 'SquaredAdminTool',
-  searchValidEmail: 'pbr-org-admin@squared2webex.com',
-  searchValidUuid: '8d1ce3eb-a125-405c-9dfb-7bc7d2c54153',
-  searchValidLocusid: '',
-  searchNonexistentMetadata: 'qqt7y812twuiy900909-2jijeqbd,,.mjmj123qwsah77&89%$3wesa@54a'
-};
-
-var supportuser = {
-  username: 'sqtest-admin-support@squared.example.com',
-  password: 'C1sc0123!',
-};
-
 describe('Support flow', function () {
 
   beforeEach(function () {
@@ -35,7 +20,7 @@ describe('Support flow', function () {
 
   describe('Support tab', function () {
     it('should login as non-sso admin user', function () {
-      login.loginTo('#/support', testuser.username, testuser.password);
+      login.login('pbr-admin-test', '#/support');
     });
 
     it('should display correct tabs for user based on role', function () {
@@ -58,34 +43,34 @@ describe('Support flow', function () {
     });
 
     it('should search for logs by valid email address', function (done) {
-      support.searchAndVerifyResult(testuser.searchValidEmail);
+      support.searchAndVerifyResult(support.searchValidEmail);
 
       utils.expectIsDisplayed(support.supportTable);
       utils.expectIsDisplayed(support.emailAddress);
-      utils.expectText(support.emailAddress, testuser.searchValidEmail);
+      utils.expectText(support.emailAddress, support.searchValidEmail);
 
       utils.click(support.locusIdSort);
       utils.click(support.locusIdSort);
       support.locusId.getText().then(function (locusId) {
-        testuser.searchValidLocusid = locusId;
+        support.searchValidLocusid = locusId;
         done();
       });
     });
 
     it('should search for logs by valid uuid', function () {
-      support.searchAndVerifyResult(testuser.searchValidUuid, testuser.searchValidEmail);
+      support.searchAndVerifyResult(support.searchValidUuid, support.searchValidEmail);
 
       utils.expectIsDisplayed(support.supportTable);
       utils.expectIsDisplayed(support.emailAddress);
-      utils.expectText(support.emailAddress.getText(), testuser.searchValidEmail);
+      utils.expectText(support.emailAddress.getText(), support.searchValidEmail);
     });
 
     xit('should search for logs by valid locusId', function () {
-      support.searchAndVerifyResult(testuser.searchValidLocusid, testuser.searchValidEmail);
+      support.searchAndVerifyResult(support.searchValidLocusid, support.searchValidEmail);
       utils.expectIsDisplayed(support.supportTable);
 
       utils.expectIsDisplayed(support.locusId);
-      utils.expectText(support.locusId.getText(), testuser.searchValidLocusid);
+      utils.expectText(support.locusId.getText(), support.searchValidLocusid);
       expect(support.callStart.getText()).not.toBe('-NA-');
     });
 
@@ -101,7 +86,7 @@ describe('Support flow', function () {
     });
 
     xit('should search for logs by valid email address and display log info', function () {
-      support.searchAndVerifyResult(testuser.searchValidEmail);
+      support.searchAndVerifyResult(support.searchValidEmail);
     });
 
     xit('should display log info', function () {
@@ -122,7 +107,7 @@ describe('Support flow', function () {
 
   describe('Non-admin Squared Support Role', function () {
     it('should login as squared support user', function () {
-      login.loginTo('#/support', supportuser.username, supportuser.password);
+      login.login('support-admin', '#/support');
     });
 
     it('should display correct tabs for user based on role', function () {

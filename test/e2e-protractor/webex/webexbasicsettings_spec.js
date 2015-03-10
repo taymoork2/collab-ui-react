@@ -2,15 +2,10 @@
 
 /* global describe, it, expect, login */
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-};
-
 describe('WebEx user settings', function () {
 
   it('should allow login as admin user', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   it('should should show the user settings page when clicking the prototype button', function () {

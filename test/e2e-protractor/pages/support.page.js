@@ -2,6 +2,11 @@
 
 var SupportPage = function () {
 
+  this.searchValidEmail = 'pbr-org-admin@squared2webex.com';
+  this.searchValidUuid = '8d1ce3eb-a125-405c-9dfb-7bc7d2c54153';
+  this.searchValidLocusid = '';
+  this.searchNonexistentMetadata = 'qqt7y812twuiy900909-2jijeqbd,,.mjmj123qwsah77&89%$3wesa@54a';
+
   this.logSearchField = element(by.id('logsearchfield'));
   this.logSearchBtn = element(by.id('logSearchBtn'));
   this.logsPanel = element(by.id('logs-panel'));

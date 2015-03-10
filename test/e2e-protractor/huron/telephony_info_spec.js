@@ -1,10 +1,5 @@
 'use strict';
 
-var testuser = {
-  username: 'admin@int1.huron-alpha.com',
-  password: 'Cisco123!'
-};
-
 xdescribe('Telephony Info', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -24,7 +19,7 @@ xdescribe('Telephony Info', function () {
   var externalCFLine = Math.ceil(Math.random() * Math.pow(10, 10)).toString();
 
   it('should login', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('huron-int1');
   });
 
   it('clicking on users tab should change the view', function () {
@@ -33,24 +28,11 @@ xdescribe('Telephony Info', function () {
 
   it('should create user', function () {
     utils.click(users.addUsers);
-    browser.wait(function () {
-      return users.addUsersField.isPresent().then(function (present) {
-        return present;
-      });
-    });
-
-    users.addUsersField.clear();
     utils.click(users.addUsersField);
     users.addUsersField.sendKeys(user);
     users.addUsersField.sendKeys(protractor.Key.ENTER);
 
     utils.click(users.collabRadio1);
-
-    browser.wait(function () {
-      return users.squaredUCCheckBox.isPresent().then(function (present) {
-        return present;
-      });
-    });
 
     utils.click(users.squaredUCCheckBox);
     utils.click(users.onboardButton);
@@ -59,12 +41,12 @@ xdescribe('Telephony Info', function () {
 
   });
 
-  it('should verify added user', function () {
-    utils.search(user);
-    users.returnUser(user).click();
+  it('should verify added user', function (done) {
+    utils.searchAndClick(user);
     element(by.binding('currentUser.userName')).evaluate('currentUser').then(function (_currentUser) {
       currentUser = _currentUser;
       expect(currentUser).not.toBeNull();
+      done();
     });
   });
 
@@ -73,10 +55,8 @@ xdescribe('Telephony Info', function () {
       telephony.directoryNumbers.count().then(function (count) {
         if (count > 1) {
           utils.click(telephony.close);
-          users.returnUser(user).click();
-          browser.sleep(2000).then(function () {
-            utils.expectIsDisplayed(telephony.telephonyPanel);
-          });
+          utils.click(users.returnUser(user));
+          utils.expectIsDisplayed(telephony.telephonyPanel);
           expect(telephony.directoryNumbers.count()).toBe(1);
         } else {
           expect(count).toBe(1);

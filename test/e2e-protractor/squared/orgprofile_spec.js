@@ -1,10 +1,5 @@
 'use strict';
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-};
-
 describe('Customer Profile Page', function () {
 
   beforeEach(function () {
@@ -16,7 +11,7 @@ describe('Customer Profile Page', function () {
   });
 
   it('should login as squared team member admin user', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   it('should display customer profile page', function () {

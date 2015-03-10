@@ -112,7 +112,6 @@ var Navigation = function () {
         return currentUrl.indexOf(url) !== -1;
       });
     });
-    expect(browser.getCurrentUrl()).toContain(url);
   };
 
   this.expectDriverCurrentUrl = function (url) {
@@ -121,7 +120,6 @@ var Navigation = function () {
         return currentUrl.indexOf(url) !== -1;
       });
     });
-    expect(browser.driver.getCurrentUrl()).toContain(url);
   };
 
   this.expectAdminSettingsNotDisplayed = function () {
@@ -140,6 +138,7 @@ var Navigation = function () {
   this.logout = function () {
     utils.click(this.userInfoButton);
     utils.click(this.logoutButton);
+    this.expectDriverCurrentUrl('idbroker.webex.com');
   };
 
   this.sendFeedback = function () {

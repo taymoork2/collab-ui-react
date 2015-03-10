@@ -26,6 +26,8 @@ exports.config = {
     global.config = require('./test/e2e-protractor/utils/test.config.js');
     global.deleteTrialUtils = require('./test/e2e-protractor/utils/deleteTrial.utils.js');
 
+    global.helper = require('./test/api_sanity/test_helper');
+
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');
     var Notifications = require('./test/e2e-protractor/pages/notifications.page.js');
     var UsersPage = require('./test/e2e-protractor/pages/users.page.js');

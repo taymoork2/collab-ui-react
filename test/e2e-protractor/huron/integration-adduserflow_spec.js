@@ -3,11 +3,6 @@
 /* global describe */
 /* global it */
 
-var admintestuser = {
-  username: 'admin@int1.huron-alpha.com',
-  password: 'Cisco123!'
-};
-
 xdescribe('Squared UC Add User flow', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -22,7 +17,7 @@ xdescribe('Squared UC Add User flow', function () {
     var inputEmail = utils.randomTestGmail();
     describe('Login as testuser admin and launch add users modal', function () {
       it('should login as testuser admin', function () {
-        login.login(admintestuser.username, admintestuser.password);
+        login.login('huron-int1');
       });
 
       it('clicking on users tab should change the view', function () {

@@ -6,18 +6,8 @@
 /* global browser */
 /* global expect */
 
-var testuser = {
-  superUser: 'super-admin@mfusion1webex.com',
-  superUserPasswd: 'Mc23267!',
-  searchStr: 'Cloud'
-    //searchStr: 'Fake'
-};
-
-// Notes:
-// - State is conserved between each despribe and it blocks.
-// - When a page is being loaded, use wait() to check if elements are there before asserting.
-
 describe('List meetings flow', function () {
+  var searchStr = 'Cloud';
   beforeEach(function () {
     this.addMatchers({
       toBeLessThanOrEqualTo: function () {
@@ -35,7 +25,7 @@ describe('List meetings flow', function () {
   });
 
   it('Should login as super admin', function () {
-    login.login(testuser.superUser, testuser.superUserPasswd);
+    login.login('media-super-admin');
   });
 
   // Asserting listing meetings and pagination.
@@ -102,7 +92,7 @@ describe('List meetings flow', function () {
   // Asserting search meetings and empty search
   describe('Search meetings on page', function () {
     it('Should show first page of meetings based on search string', function () {
-      meetings.search(testuser.searchStr);
+      meetings.search(searchStr);
     });
 
     it('Should show first page of meetings for empty search string', function () {

@@ -8,7 +8,6 @@
 /* global landing */
 /* global utils */
 
-// Logging in. Write your tests after the login flow is complete.
 describe('Customer Admin Landing Page License Info', function () {
 
   beforeEach(function () {
@@ -21,7 +20,7 @@ describe('Customer Admin Landing Page License Info', function () {
 
   describe('Organization not on trials', function () {
     it('login as admin user', function () {
-      login.login(landing.nontrialadmin.username, landing.nontrialadmin.password);
+      login.login('non-trial-admin');
     });
 
     xit('Should display default license info', function () {
@@ -48,7 +47,7 @@ describe('Customer Admin Landing Page License Info', function () {
 
   describe('Oranization on trial', function () {
     it('should login as non squared team member admin user', function () {
-      login.login(landing.trialadmin.username, landing.trialadmin.password);
+      login.login('test-user');
     });
 
     xit('Should display trial license info', function () {
@@ -74,7 +73,7 @@ describe('Customer Admin Landing Page License Info', function () {
 
   describe('Non admin user, no license info', function () {
     it('should login as non-admin user', function () {
-      login.login(landing.nonadmin.username, landing.nonadmin.password);
+      login.login('invite-admin');
     });
 
     it('Should not display license info', function () {

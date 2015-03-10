@@ -5,13 +5,9 @@
 /* global it */
 /* global browser */
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-  searchStr: 'joshkuiros@gmail.com'
-};
-
 describe('Org Entitlement flow', function () {
+  var searchStr = 'joshkuiros@gmail.com';
+
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
@@ -22,7 +18,7 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should login as non-sso admin user', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   describe('without sync', function () {
@@ -32,7 +28,7 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should display conversations panel for test user', function () {
-    utils.searchAndClick(testuser.searchStr);
+    utils.searchAndClick(searchStr);
   });
 
   it('should display subdetails panel', function () {

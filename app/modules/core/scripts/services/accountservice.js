@@ -11,16 +11,7 @@ angular.module('Core')
         getAccount: function (org, callback) {
           var url = accountUrl + 'organization/' + org + '/accounts';
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-          $http.get(url)
-            .success(function (data, status) {
-              data.success = true;
-              Log.debug('Retrieved account info');
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data.success = false;
-              callback(data, status);
-            });
+          return $http.get(url);
         }
 
       };

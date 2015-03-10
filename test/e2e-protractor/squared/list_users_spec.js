@@ -5,18 +5,8 @@
 /* global it */
 /* global browser */
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-  orgname: 'SquaredAdminTool',
-  searchStr: 'fake'
-};
-
-// Notes:
-// - State is conserved between each despribe and it blocks.
-// - When a page is being loaded, use wait() to check if elements are there before asserting.
-
 describe('List users flow', function () {
+
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
@@ -25,7 +15,7 @@ describe('List users flow', function () {
   });
 
   it('should login as non-sso admin user', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   it('clicking on users tab should change the view', function () {
@@ -33,7 +23,7 @@ describe('List users flow', function () {
   });
 
   it('should search and click on user', function () {
-    utils.searchAndClick(testuser.username);
+    utils.searchAndClick(users.inviteTestUser.username);
   });
 
   it('should display user admin settings panel when clicking on next arrow', function () {
@@ -69,7 +59,7 @@ describe('List users flow', function () {
     });
   });
 
-  describe('logout', function () {
+  xdescribe('logout', function () {
     it('should log out', function () {
       navigation.logout();
     });

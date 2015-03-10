@@ -6,11 +6,6 @@
 /* global by */
 /* global element */
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!'
-};
-
 describe('First Time Wizard', function () {
 
   beforeEach(function () {
@@ -23,7 +18,7 @@ describe('First Time Wizard', function () {
   });
 
   it('should login as an admin user', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   it('clicking on gear icon should open first time wizard', function () {

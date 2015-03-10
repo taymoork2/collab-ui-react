@@ -19,7 +19,7 @@ describe('Squared Add & Entitle User Flows', function () {
 
   describe('Login as users.testUser admin and launch add users modal', function () {
     it('should login as users.testUser admin', function () {
-      login.login(users.testUser.username, users.testUser.password);
+      login.login('test-user');
     });
 
     it('should open add user modal in users page while clicking on the quick link', function () {

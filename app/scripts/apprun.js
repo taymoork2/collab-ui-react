@@ -43,26 +43,26 @@ angular
         }
       });
 
-      var data = null;
       $rootScope.status = 'init';
 
       if (!Storage.get('accessToken')) {
+        var params;
         if (document.URL.indexOf('access_token') !== -1) {
-          data = Auth.getFromGetParams(document.URL);
+          params = Auth.getFromGetParams(document.URL);
           $rootScope.status = 'loaded';
-          Storage.put('accessToken', data.access_token);
-          $rootScope.token = data.access_token;
+          Storage.put('accessToken', params.access_token);
+          $rootScope.token = params.access_token;
 
         } else if (document.URL.indexOf('code') !== -1) {
-          data = Auth.getFromStandardGetParams(document.URL);
+          params = Auth.getFromStandardGetParams(document.URL);
           $rootScope.status = 'loading';
-          Auth.getNewAccessToken(data.code)
-            .then(function (adata) {
+          Auth.getNewAccessToken(params.code)
+            .then(function (data) {
               $rootScope.status = 'loaded';
-              Storage.put('accessToken', adata.access_token);
-              Storage.put('refreshToken', adata.refresh_token);
+              Storage.put('accessToken', data.access_token);
+              Storage.put('refreshToken', data.refresh_token);
               $rootScope.token = data.access_token;
-              $rootScope.$broadcast('ACCESS_TOKEN_REVIEVED');
+              $rootScope.$broadcast('ACCESS_TOKEN_RETRIEVED');
             }, function () {
               Auth.redirectToLogin();
             });
@@ -74,8 +74,8 @@ angular
       var refreshToken = function () {
         $interval(function () {
           Auth.RefreshAccessToken(Storage.get('refreshToken'))
-            .then(function (adata) {
-              Storage.put('accessToken', adata.access_token);
+            .then(function (data) {
+              Storage.put('accessToken', data.access_token);
               $rootScope.token = data.access_token;
             });
         }, Config.tokenTimers.refreshTimer); //11 hours

@@ -21,7 +21,13 @@ var encryptedQueryParam = 'bnlA6k3ZerWIccYYY2RndVEeMjFu914UOsnFVyYNQoOtS2WBXdmPi
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
 describe('invite spec', function () {
+
+  beforeEach(function () {
+    browser.ignoreSynchronization = true;
+  });
+
   afterEach(function () {
+    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors(this.getFullName());
   });
 

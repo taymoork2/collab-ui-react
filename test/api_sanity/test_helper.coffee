@@ -5,14 +5,66 @@ auth =
     user: 'sqtest-admin@squared.example.com'
     pass: 'C1sc0123!'
     org:  '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
+
   'pbr-admin':
     user: 'pbr-org-admin@squared2webex.com'
     pass: 'C1sc0123!'
     org:  '4214d345-7caf-4e32-b015-34de878d1158'
+
   'partner-admin':
     user: 'atlaspartneradmin@atlas.test.com'
     pass: 'C1sc0123!'
     org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
+
+  'pbr-admin-test':
+    user: 'pbr-org-admin-test@wx2.example.com'
+    pass: 'C1sc0123!'
+    org:  '4214d345-7caf-4e32-b015-34de878d1158'
+
+  'test-user':
+    user: 'atlasmapservice+ll1@gmail.com'
+    pass: 'C1sc0123!'
+    org:  '75653d2f-1675-415c-aa5d-c027233f68fe'
+
+  'huron-int1':
+    user: 'admin@int1.huron-alpha.com'
+    pass: 'Cisco123!'
+    org:  '6662df48-b367-4c1e-9c3c-aa408aaa79a1'
+
+  'account-admin':
+    user: 'nkamboh+acc2@gmail.com'
+    pass: 'C1sc0123!'
+    org:  '58f01b76-2b3f-4c91-ad8a-e2af626fc7a5'
+
+  'non-trial-admin':
+    user: 'pbr-test-admin@squared2webex.com'
+    pass: 'C1sc0123!'
+    org:  '4214d345-7caf-4e32-b015-34de878d1158'
+
+  'invite-admin':
+    user: 'pbr-invite-user@squared2webex.com'
+    pass: 'C1sc0123!'
+    org:  '4214d345-7caf-4e32-b015-34de878d1158'
+
+  'support-admin':
+    user: 'sqtest-admin-support@squared.example.com'
+    pass: 'C1sc0123!'
+    org:  '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
+
+  'media-super-admin':
+    user: 'super-admin@mfusion1webex.com'
+    pass: 'Mc23267!'
+    org:  'baab1ece-498c-452b-aea8-1a727413c818'
+
+  'customer-support-admin':
+    user: 'admin@csreptestdom.collaborate.com'
+    pass: 'C1sc0123!'
+    org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
+
+  'customer-support-user':
+    user: 'regUser1@csreptestdom.collaborate.com'
+    pass: 'P@ssword123'
+    org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
 clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec'
 clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857'
@@ -110,3 +162,4 @@ module.exports =
     catch
       throw new Error 'Unable to parse JSON: ' + data
 
+  auth: auth

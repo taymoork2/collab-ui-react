@@ -1,15 +1,5 @@
 'use strict';
 
-// Test data
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-  userOrgId: '4214d345-7caf-4e32-b015-34de878d1158',
-  superUser: 'super-admin@mfusion1webex.com',
-  superUserPasswd: 'Mc23267!',
-  superUserOrgId: 'baab1ece-498c-452b-aea8-1a727413c818'
-};
-
 describe('List Resources Flow', function () {
   beforeEach(function () {
     this.addMatchers({
@@ -30,7 +20,7 @@ describe('List Resources Flow', function () {
   //////////////////// Login as super admin user test cases starts //////////////////////
 
   it('Login as super admin', function () {
-    login.login(testuser.superUser, testuser.superUserPasswd);
+    login.login('media-super-admin');
   });
 
   it('Click on Enterprise Reource tab', function () {
@@ -75,7 +65,7 @@ describe('List Resources Flow', function () {
   //////////////////// Login with non-sso user test cases starts //////////////////////
 
   it('Login as non-sso admin', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   it('Click on Enterprise Reource tab', function () {

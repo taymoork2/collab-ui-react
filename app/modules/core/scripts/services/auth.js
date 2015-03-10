@@ -1,7 +1,7 @@
 'use strict';
 angular.module('Core')
-  .factory('Auth', ['$http', '$filter', '$location', '$timeout', '$window', '$q', 'Log', 'Config', 'SessionStorage', 'Authinfo', 'Utils', 'Storage', '$rootScope', '$dialogs', 'AccountService',
-    function ($http, $filter, $location, $timeout, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, $rootScope, $dialogs, AccountService) {
+  .factory('Auth', ['$http', '$translate', '$location', '$timeout', '$window', '$q', 'Log', 'Config', 'SessionStorage', 'Authinfo', 'Utils', 'Storage', '$rootScope', '$dialogs', 'AccountService',
+    function ($http, $translate, $location, $timeout, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, $rootScope, $dialogs, AccountService) {
       var progress = 0;
       var auth = {
         authorizeUrl: Config.getAdminServiceUrl(),
@@ -17,7 +17,6 @@ angular.module('Core')
       };
 
       auth.authorize = function (token) {
-        var deferred = $q.defer();
         var authUrl = null;
         $http.defaults.headers.common.Authorization = 'Bearer ' + token;
         var currentOrgId = SessionStorage.get('customerOrgId');
@@ -32,29 +31,26 @@ angular.module('Core')
         } else {
           authUrl = auth.authorizeUrl + 'userauthinfo';
         }
-        $http.get(authUrl)
-          .success(function (data) {
-            Authinfo.initialize(data);
-            AccountService.getAccount(Authinfo.getOrgId(), function (data, status) {
-              if (data.success) {
+        return $http.get(authUrl)
+          .then(function (response) {
+            Authinfo.initialize(response.data);
+            return AccountService.getAccount(Authinfo.getOrgId())
+              .success(function (data, status) {
                 Authinfo.updateAccountInfo(data, status);
-                deferred.resolve();
-              }
-            });
+              });
           })
-          .error(function (data, status) {
+          .catch(function (response) {
             Authinfo.clear();
-            var error;
-            if (status === 403) {
-              error = $filter('translate')('errors.status403');
-            } else if (status === 401) {
-              error = $filter('translate')('errors.status401');
-            } else {
-              error = $filter('translate')('errors.serverDown');
+            var error = $translate.instant('errors.serverDown');
+            if (response) {
+              if (response.status === 403) {
+                error = $translate.instant('errors.status403');
+              } else if (response.status === 401) {
+                error = $translate.instant('errors.status401');
+              }
             }
-            deferred.reject(error);
+            return $q.reject(error);
           });
-        return deferred.promise;
       };
       auth.getFromGetParams = function (url) {
         var result = {};

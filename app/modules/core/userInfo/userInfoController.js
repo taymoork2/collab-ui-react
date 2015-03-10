@@ -60,7 +60,7 @@ angular.module('Core')
         $scope.loggedIn = false;
       }
 
-      $scope.$on('ACCESS_TOKEN_REVIEVED', function () {
+      $scope.$on('ACCESS_TOKEN_RETRIEVED', function () {
         if (Auth.isLoggedIn()) {
           $scope.loggedIn = true;
         }

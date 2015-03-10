@@ -3,11 +3,6 @@
 
 /* global describe, it, browser, login, spaces, navigation, utils, notifications */
 
-var testuser = {
-  username: 'pbr-org-admin@squared2webex.com',
-  password: 'C1sc0123!',
-};
-
 describe('Devices flow', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -19,7 +14,7 @@ describe('Devices flow', function () {
   });
 
   it('should login as squared team member admin user', function () {
-    login.login(testuser.username, testuser.password);
+    login.login('pbr-admin');
   });
 
   it('clicking on devices tab should show the list of rooms', function () {
