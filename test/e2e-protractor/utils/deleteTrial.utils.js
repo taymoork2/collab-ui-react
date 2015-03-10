@@ -19,10 +19,10 @@ var utils = require('./test.utils.js');
 //     };
 
 //     utils.sendRequest(options).then(function() {
-//       console.log('trial deleted successfully: ', trialId);
+//       //console.log('trial deleted successfully: ', trialId);
 //       defer.fulfill(200);
 //     }, function(data) {
-//       console.log('trial deletion failed: ', trialId, data);
+//       //console.log('trial deletion failed: ', trialId, data);
 //       defer.reject(data);
 //     });
 
@@ -43,10 +43,10 @@ exports.deleteOrg = function (orgId, token) {
   };
 
   utils.sendRequest(options).then(function () {
-    console.log('org deleted successfully: ', orgId);
+    //console.log('org deleted successfully: ', orgId);
     defer.fulfill(200);
   }, function (data) {
-    console.log('org deletion failed: ', orgId, data);
+    //console.log('org deletion failed: ', orgId, data);
     defer.fulfill(200);
   });
 

@@ -5,7 +5,7 @@ angular.module('Mediafusion')
     function ($scope) {
       var $currentVts;
       $scope.changeOpState = function () {
-        console.log("inside changeOpState");
+        //console.log("inside changeOpState");
         if ($currentVts.status === 'Active') {
           $currentVts.status = 'Down';
         } else {

@@ -283,7 +283,7 @@ angular.module('Mediafusion')
        */
 
       function handleMeetingChartItemClick(event) {
-        console.log("Got the click event : " + event.index);
+        //console.log("Got the click event : " + event.index);
         $scope.searchString = "";
         var index = event.index;
         populateLeaderBoardInfo(index);
@@ -336,14 +336,15 @@ angular.module('Mediafusion')
         var currentDate = new Date();
         var changedDate = new Date($scope.latestDate);
         changedDate = updateDate(changedDate, 1);
-        console.log("Print Date !!" + $scope.latestDate + ", Next " + changedDate);
+        //console.log("Print Date !!" + $scope.latestDate + ", Next " + changedDate);
         //$scope.clickCount = $scope.clickCount + 1;
         if (changedDate < currentDate) {
           $scope.numberOfDays = 1;
           getMeetingChartInfo();
-        } else {
-          console.log("Provided date is greaterthan current Date !!" + $scope.latestDate + ", Next " + changedDate);
         }
+        //  else {
+        //   //console.log("Provided date is greaterthan current Date !!" + $scope.latestDate + ", Next " + changedDate);
+        // }
       };
 
       /**
@@ -362,9 +363,10 @@ angular.module('Mediafusion')
         if (daysBetweenDates(changedDate, currentDate) <= 30) {
           $scope.numberOfDays = -1;
           getMeetingChartInfo();
-        } else {
-          console.log("Provided date is olderthan 30 days !!");
         }
+        // else {
+        //   //console.log("Provided date is olderthan 30 days !!");
+        // }
       };
 
       /**
@@ -532,8 +534,8 @@ angular.module('Mediafusion')
         $scope.startTimeStamp = $scope.startTimeStamp + startTime + ":00:00 %2B0000";
         $scope.endTimeStamp = $scope.endTimeStamp + endTime + ":00:00 %2B0000";
 
-        console.log("StartTimeStamp is : " + $scope.startTimeStamp);
-        console.log("EndTimeStamp is : " + $scope.endTimeStamp);
+        //console.log("StartTimeStamp is : " + $scope.startTimeStamp);
+        //console.log("EndTimeStamp is : " + $scope.endTimeStamp);
       };
 
       /**
@@ -590,14 +592,14 @@ angular.module('Mediafusion')
       };
 
       $rootScope.$on('$stateChangeSuccess', function () {
-        console.log("entering success");
+        //console.log("entering success");
         if ($state.includes('meetings.list.preview')) {
-          console.log("entering preview");
+          //console.log("entering preview");
           $scope.meetingsPreviewActive = true;
-          console.log("meetingsPreviewActive : " + $scope.meetingsPreviewActive);
+          //console.log("meetingsPreviewActive : " + $scope.meetingsPreviewActive);
         } else {
           $scope.meetingsPreviewActive = false;
-          console.log("meetingsPreviewActive : " + $scope.meetingsPreviewActive);
+          //console.log("meetingsPreviewActive : " + $scope.meetingsPreviewActive);
         }
       });
 
@@ -607,11 +609,11 @@ angular.module('Mediafusion')
           var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
           var scrollTop = ngGridView.scrollTop;
           var scrollHeight = ngGridView.scrollHeight;
-          console.log(scrollTop);
-          console.log(scrollHeight);
+          //console.log(scrollTop);
+          //console.log(scrollHeight);
           $scope.currentDataPosition++;
           getMeetingList($scope.currentDataPosition);
-          console.log('Scrolled .. ');
+          //console.log('Scrolled .. ');
         }
       });
 
@@ -619,7 +621,7 @@ angular.module('Mediafusion')
        * Load Graph when directly click on Day
        */
       $scope.defaultDay = function () {
-        console.log("default Day Graph load !!");
+        //console.log("default Day Graph load !!");
         $scope.durationType = "Day";
         $scope.numberOfDays = 0;
         $scope.latestDate = "";
@@ -645,7 +647,7 @@ angular.module('Mediafusion')
        * Load Graph when directly click on Month
        */
       $scope.defaultMonth = function () {
-        console.log("default Month Graph load !!");
+        //console.log("default Month Graph load !!");
         $scope.durationType = "Month";
         $scope.numberOfDays = 0;
         $scope.latestDate = "";
@@ -671,7 +673,7 @@ angular.module('Mediafusion')
        * Load Graph when directly click on Week
        */
       $scope.defaultWeek = function () {
-        console.log("default Week Graph load !!");
+        //console.log("default Week Graph load !!");
         $scope.durationType = "Week";
         $scope.numberOfDays = 0;
         $scope.latestDate = "";

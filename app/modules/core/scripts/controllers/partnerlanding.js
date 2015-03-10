@@ -422,10 +422,10 @@ angular.module('Core')
       $scope.$on('ngGridEventScroll', function () {
         if ($scope.load) {
           $scope.currentDataPosition++;
-          console.log($scope.currentDataPosition * Config.usersperpage + 1);
+          //console.log($scope.currentDataPosition * Config.usersperpage + 1);
           $scope.load = false;
           getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
-          console.log('Scrolled .. ');
+          //console.log('Scrolled .. ');
         }
       });
 

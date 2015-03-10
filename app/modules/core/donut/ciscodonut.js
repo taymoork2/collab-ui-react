@@ -45,7 +45,7 @@
         $scope.currentAngles = {};
 
         $scope.computeTextProperties = function (value, unlimited) {
-          console.log(value);
+          //console.log(value);
           if (typeof unlimited !== 'undefined' && unlimited === true) {
             $scope.text.size = 18;
             $scope.text.y = 6;

@@ -161,11 +161,11 @@ angular.module('Core')
         }
       };
       auth.handleStatus = function (status, description) {
-        if ((status === 401 && description !== ciErrorMsg) || status === 403) {
-          console.log('Token is not authorized or invalid. Logging user out.');
-          // $dialogs.wait(undefined, $filter('translate')('errors.expired') , progress);
-          // this.delayedLogout();
-        }
+        // if ((status === 401 && description !== ciErrorMsg) || status === 403) {
+        //console.log('Token is not authorized or invalid. Logging user out.');
+        // $dialogs.wait(undefined, $filter('translate')('errors.expired') , progress);
+        // this.delayedLogout();
+        // }
       };
       auth.delayedLogout = function () {
         $timeout(function () {
@@ -184,7 +184,7 @@ angular.module('Core')
       };
       auth.redirectToLogin = function () {
         var oauth2LoginUrl = Config.getOauthLoginUrl();
-        console.log('No accessToken.');
+        //console.log('No accessToken.');
         $window.location.href = oauth2LoginUrl;
       };
       return auth;

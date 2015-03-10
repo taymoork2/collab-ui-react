@@ -42,7 +42,7 @@ angular.module('Mediafusion')
 
         realTimeBridgeUtilization: function (callback) {
 
-          console.log("inside realTimeBridgeUtilization of utilizationservice");
+          //console.log("inside realTimeBridgeUtilization of utilizationservice");
           var realTimeBridgeUtilizationUrl = Utils.sprintf(baseUrl + '/utilization/realTimeUtilization');
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;

@@ -17,8 +17,8 @@ angular.module('Squared')
         var cookieName = 'invdata';
         var inviteCookie = ipCookie(cookieName);
 
-        console.log('cookie:');
-        console.log(inviteCookie);
+        //console.log('cookie:');
+        //console.log(inviteCookie);
 
         // launch app with URL: squared://invitee/?invdata=inviteCookie
         var redirectUrl = Config.getSquaredAppUrl() + 'invitee/?invdata=' + JSON.stringify(inviteCookie);

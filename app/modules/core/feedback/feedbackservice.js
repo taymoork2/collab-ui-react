@@ -34,7 +34,7 @@ angular.module('Core')
           } else {
             callback('get feedback url not valid - empty request.');
           }
-          console.log(feedbackData);
+          //console.log(feedbackData);
         },
 
         getUrlTemplate: function (url, callback) {

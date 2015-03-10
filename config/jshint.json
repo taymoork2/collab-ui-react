@@ -1,4 +1,5 @@
 {
+  "-W097": false,
   "bitwise": true,
   "camelcase": false,
   "curly": false,
@@ -18,7 +19,7 @@
   "quotmark": false,
   "undef": true,
   "unused": false,
-  "strict": false,
+  "strict": true,
   "maxparams": 20,
   "maxdepth": 6,
   "maxstatements": 91,
@@ -52,7 +53,7 @@
   "noyield": false,
 
   "browser": true,
-  "node": true,
+  "node": false,
 
   "globals": {
     "$": true,
@@ -60,6 +61,10 @@
     "moment": true,
     "angular": true,
     "AmCharts": true,
+    "module": true,
+    "process": true,
+    "require": true,
+    "exports": true,
 
     "by": true,
     "browser": true,

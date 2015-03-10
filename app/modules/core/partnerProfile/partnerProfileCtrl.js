@@ -54,11 +54,11 @@ angular.module('Core')
         /* UNCOMMENT ONCE CISCO IS A PARTNER */
         // UserListService.getCiscoRep(function(data, status){
         //   if(data.success){
-        //     console.log('success');
-        //     console.log(data);
+        //     //console.log('success');
+        //     //console.log(data);
         //   } else{
-        //     console.log('error');
-        //     console.log(data);
+        //     //console.log('error');
+        //     //console.log(data);
         //   }
         // });
       };

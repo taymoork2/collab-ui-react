@@ -218,7 +218,7 @@ angular.module('Core')
       };
 
       $scope.updateUserLicense = function () {
-        console.log('saving user license ' + $scope.currentUser.displayName);
+        //console.log('saving user license ' + $scope.currentUser.displayName);
         var entitleList = [];
         var entStrings = getEntitlementStrings(getAccountEntitlements());
 

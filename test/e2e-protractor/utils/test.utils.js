@@ -23,7 +23,7 @@ exports.randomTestRoom = function () {
 
 exports.randomTestGmail = function () {
   var email = 'collabctg+' + this.randomId() + '@gmail.com';
-  console.log('randomTestGmail: ' + email);
+  //console.log('randomTestGmail: ' + email);
   return email;
 };
 
@@ -31,13 +31,13 @@ exports.sendRequest = function (options) {
   var flow = protractor.promise.controlFlow();
   return flow.execute(function () {
     var defer = protractor.promise.defer();
-    // console.log('\nSending Request...', options);
+    // //console.log('\nSending Request...', options);
 
     request(options, function (error, response, message) {
-      // console.log('\nResponse Received...', options.url);
-      // console.log('--error: ' + error);
-      // console.log('--status code: ' + response.statusCode);
-      // console.log('--message: ' + message);
+      // //console.log('\nResponse Received...', options.url);
+      // //console.log('--error: ' + error);
+      // //console.log('--status code: ' + response.statusCode);
+      // //console.log('--message: ' + message);
 
       if (error || response.statusCode >= 400) {
         defer.reject({
@@ -55,7 +55,7 @@ exports.sendRequest = function (options) {
 };
 
 exports.getToken = function () {
-  console.log('getting token');
+  //console.log('getting token');
   var options = {
     method: 'post',
     url: config.oauth2Url + 'access_token',
@@ -72,7 +72,7 @@ exports.getToken = function () {
 
   return this.sendRequest(options).then(function (data) {
     var resp = JSON.parse(data);
-    console.log('access token', resp.access_token);
+    //console.log('access token', resp.access_token);
     return resp.access_token;
   });
 };
@@ -114,7 +114,7 @@ exports.click = function (elem, maxRetry) {
     maxRetry = 10;
   }
   if (maxRetry === 0) {
-    console.error('Could not click: ' + elem.locator());
+    //console.error('Could not click: ' + elem.locator());
     elem.click();
   } else {
     elem.click().then(function () {}, function () {

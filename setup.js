@@ -6,8 +6,8 @@ var args = process.argv;
 var writePath = args[3];
 var jsonFile = args[2];
 
-console.log('reading json file: ' + jsonFile);
-console.log('writing files to: ' + writePath);
+//console.log('reading json file: ' + jsonFile);
+//console.log('writing files to: ' + writePath);
 
 function createAppJS(modules) {
 	var appContent = "'use strict';\n";
@@ -20,14 +20,14 @@ function createAppJS(modules) {
 		appContent += "    '" + modules[modules.length-1] + "'\n";
 	}
 	appContent += '  ]);\n';
-	
-	console.log('app.js content: ' + appContent);
+
+	//console.log('app.js content: ' + appContent);
 
 	fs.writeFile(writePath + '/app.js', appContent, function(err) {
 	  if(err) {
-	    console.log(err);
+	    //console.log(err);
 	  } else {
-	    console.log('Created app.js file.');
+	    //console.log('Created app.js file.');
 	  }
 	});
 }
@@ -44,7 +44,7 @@ function createAppConfigJS(routes) {
 		for (var i = 0; i < paths.length; i++) {
 			configContent += "      .when('" + paths[i].path + "', {\n";
 			if (paths[i].templateUrl) {
-				configContent += "        templateUrl: '" + paths[i].templateUrl + "'";	
+				configContent += "        templateUrl: '" + paths[i].templateUrl + "'";
 			}
 			if (paths[i].controller){
 				configContent += ",\n"
@@ -62,7 +62,7 @@ function createAppConfigJS(routes) {
 		configContent += '      });\n';
 	}
 	configContent += '\n';
-	
+
 	configContent += '$translateProvider.useStaticFilesLoader({\n';
 	configContent += "   prefix: 'l10n/',\n";
 	configContent += "   suffix: '.json'\n";
@@ -73,25 +73,25 @@ function createAppConfigJS(routes) {
 
 	configContent += '  }]);\n';
 
-	console.log('appconfig.js content: ' + configContent);
+	//console.log('appconfig.js content: ' + configContent);
 
 	fs.writeFile(writePath + '/appconfig.js', configContent, function(err) {
 	  if(err) {
-	    console.log(err);
+	    //console.log(err);
 	  } else {
-	    console.log('Created appconfig.js file.');
+	    //console.log('Created appconfig.js file.');
 	  }
 	});
 }
 
 fs.readFile(jsonFile, 'utf8', function (err, data) {
   if (err) {
-    console.log('Error reading JSON file: ' + err);
+    //console.log('Error reading JSON file: ' + err);
     return;
   }
- 
+
   data = JSON.parse(data);
-  console.dir(data);
+  //console.dir(data);
 
   if (data.modules){
 		createAppJS(data.modules);

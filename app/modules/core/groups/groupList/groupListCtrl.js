@@ -25,7 +25,7 @@ angular.module('Core')
             });
             $scope.groupListData = data.groups;
             $scope.filterTotals.all = data.totalResults;
-            console.log(data);
+            //console.log(data);
           } else {
             Log.debug('Query groups failed. Status: ' + status);
           }

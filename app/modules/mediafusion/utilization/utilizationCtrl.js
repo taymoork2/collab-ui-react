@@ -11,10 +11,10 @@ angular.module('Mediafusion')
        */
       var getOverallUtilization = function () {
 
-        console.log("inside getOverallUtilization ");
+        //console.log("inside getOverallUtilization ");
         utilizationService.overallUtilization(function (data, status) {
-          console.log(data);
-          console.log("overall utilization is" + data.overallutilization.utilization);
+          //console.log(data);
+          //console.log("overall utilization is" + data.overallutilization.utilization);
 
           if (data.success) {
             $scope.average = data.overallutilization.utilization;
@@ -26,7 +26,7 @@ angular.module('Mediafusion')
         });
       };
 
-      console.log("Getting Overall Utilization through Rest Call");
+      //console.log("Getting Overall Utilization through Rest Call");
       getOverallUtilization();
 
       /**
@@ -34,12 +34,12 @@ angular.module('Mediafusion')
        */
       var getRealTimeBridgeUtilization = function () {
 
-        console.log("inside getRealTimeBridgeUtilization ");
+        //console.log("inside getRealTimeBridgeUtilization ");
 
         //$scope.utilizations='[{"resource":"Resource 1","utilization":"13.46"},{"resource":"Resource 2","utilization":"26.92"},{"resource":"Resource 3","utilization":"40.38"},{"resource":"Resource 4","utilization":"53.84"}]';
         utilizationService.realTimeBridgeUtilization(function (data, status) {
-          console.log(data);
-          console.log("overall utilization is" + data.utilizations);
+          //console.log(data);
+          //console.log("overall utilization is" + data.utilizations);
 
           if (data.success) {
 
@@ -54,7 +54,7 @@ angular.module('Mediafusion')
 
       };
 
-      console.log("Getting Real Time bridge by bridge utilization through rest call");
+      //console.log("Getting Real Time bridge by bridge utilization through rest call");
       getRealTimeBridgeUtilization();
 
     }

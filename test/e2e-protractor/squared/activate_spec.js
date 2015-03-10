@@ -20,7 +20,7 @@ var getTestBody = function () {
 };
 
 function getToken(obj) {
-  // console.log('getting token');
+  // //console.log('getting token');
   var options = {
     method: 'post',
     url: config.oauth2Url + 'access_token',
@@ -37,7 +37,7 @@ function getToken(obj) {
 
   return utils.sendRequest(options).then(function (data) {
     var resp = JSON.parse(data);
-    // console.log('access token', resp.access_token);
+    // //console.log('access token', resp.access_token);
     obj.token = resp.access_token;
   });
 }
@@ -56,7 +56,7 @@ function verifyEmail(obj) {
 
   return utils.sendRequest(options).then(function (data) {
     var resp = JSON.parse(data);
-    // console.log('encrypted param', resp.eqp);
+    // //console.log('encrypted param', resp.eqp);
     obj.encryptedQueryParam = resp.eqp;
   });
 }

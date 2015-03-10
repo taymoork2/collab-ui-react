@@ -59,7 +59,7 @@ describe('DashboardAggregator', function () {
         "host_name": "gwydlvm1397"
       }]
     }];
-    // console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
+    // //console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
 
     var aggregate = Service.aggregateServices(mockServiceData, Converter.convertClusters(mockClusterData));
     expect(aggregate.running).toBe(0);
@@ -144,7 +144,7 @@ describe('DashboardAggregator', function () {
         "host_name": "gwydlvm340"
       }]
     }];
-    // console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
+    // //console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
 
     var aggregate = Service.aggregateServices(mockServiceData, Converter.convertClusters(mockClusterData));
     expect(aggregate.running).toBe(1);

@@ -13,21 +13,21 @@ angular.module('Mediafusion')
       /*getVtsList function to populate list of enterprise resource*/
       var getVtsList = function () {
         $scope.vtsPreview = false;
-        console.log("Calling service ");
+        //console.log("Calling service ");
         vtslistservice.listVts(function (data) {
           $scope.queryvtslist = data;
           $scope.totalResults = data.length;
           /*if (data.success) {
-			console.log("callback listMFC data " +data);
+			//console.log("callback listMFC data " +data);
 			$scope.querymfclist = data.devices;
 			} else {
-			console.log("Query existing MFC failed. Status: " + status);
+			//console.log("Query existing MFC failed. Status: " + status);
 			}*/
         });
       };
 
       $scope.changeOpState = function () {
-        console.log("inside changeOpState");
+        //console.log("inside changeOpState");
         if ($scope.currentVts.status === 'Active') {
           $scope.currentVts.status = 'Down';
         } else {
@@ -41,21 +41,21 @@ angular.module('Mediafusion')
 
       /*setState used for suspend/resume operation*/
       $scope.setState = function (resourceId, currentState) {
-        console.log("inside setState resourceId = " + resourceId + " currentState = " + currentState);
+        //console.log("inside setState resourceId = " + resourceId + " currentState = " + currentState);
         $scope.showPreview = false;
         vtslistservice.changeState(resourceId, currentState, function (data, status) {
-          console.log("callback changeState data.success = " + data.success);
+          //console.log("callback changeState data.success = " + data.success);
           if (status == 204) {
-            console.log("callback changeState data " + data);
-            console.log("callback changeState status " + status);
+            //console.log("callback changeState data " + data);
+            //console.log("callback changeState status " + status);
             var success = [$filter('translate')('Enterprse resource state changed successfully.')];
             Notification.notify(success, 'success');
             setTimeout(function () {
               getVtsList();
             }, 1000);
           } else {
-            console.log("callback changeState data " + data);
-            console.log("callback changeState status " + status);
+            //console.log("callback changeState data " + data);
+            //console.log("callback changeState status " + status);
             var error = [$filter('translate')('Error while changing state.')];
             Notification.notify(error, 'error');
             setTimeout(function () {
@@ -66,7 +66,7 @@ angular.module('Mediafusion')
       };
 
       $scope.setDeleteResource = function (resourceId) {
-        console.log("inside setDeleteResource resourceId = " + resourceId);
+        //console.log("inside setDeleteResource resourceId = " + resourceId);
         $scope.deleteResourceId = resourceId;
         $scope.showPreview = false;
 
@@ -80,11 +80,11 @@ angular.module('Mediafusion')
 
       /*deleteResource is to decomission a resource*/
       $scope.deleteResource = function (deleteResourceId) {
-        console.log("inside deleteResource deleteResourceId = " + deleteResourceId);
+        //console.log("inside deleteResource deleteResourceId = " + deleteResourceId);
         vtslistservice.remove($scope.deleteResourceId, function (data, status) {
-          console.log("callback remove");
+          //console.log("callback remove");
           if (status == 204) {
-            console.log("callback remove data " + data);
+            //console.log("callback remove data " + data);
             var success = [$filter('translate')('Enterprse resource decomissioned successfully.')];
             Notification.notify(success, 'success');
             setTimeout(function () {
@@ -103,7 +103,7 @@ angular.module('Mediafusion')
       };
 
       $scope.setDeleteDevice = function () {
-        console.log("inside setDeleteDevice");
+        //console.log("inside setDeleteDevice");
 
       };
 
@@ -160,7 +160,7 @@ angular.module('Mediafusion')
 
       /*show preview by setting the current vts object*/
       $scope.showVtsDetails = function (vts) {
-        console.log("Inside showVtsDetails");
+        //console.log("Inside showVtsDetails");
         $scope.currentVts = vts;
         if ($scope.showPreview) {
           $state.go('vts.list.preview');
@@ -169,7 +169,7 @@ angular.module('Mediafusion')
       };
 
       $rootScope.$on('$stateChangeSuccess', function () {
-        console.log("Inside $stateChangeSuccess");
+        //console.log("Inside $stateChangeSuccess");
         if ($state.includes('vts.list.preview')) {
           $scope.vtsPreviewActive = true;
         } else {
