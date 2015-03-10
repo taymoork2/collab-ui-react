@@ -25,9 +25,8 @@
             .then(function (adata) {
               Storage.put('accessToken', adata.access_token);
               defer.resolve();
-            }, function () {
-              // error
-              defer.reject();
+            }, function (response) {
+              defer.reject(response);
             });
 
           // and chain request
@@ -69,7 +68,7 @@
         })
         .error(function (data, status) {
           Log.error('Failed to refresh oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
-          deferred.reject('Token request failed: ' + data.error_description);
+          deferred.reject(data);
         });
 
       return deferred.promise;
