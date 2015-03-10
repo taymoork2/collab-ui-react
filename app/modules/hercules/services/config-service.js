@@ -4,7 +4,8 @@ angular.module('Hercules')
   .service('ConfigService', ['$window', 'Config',
     function ConfigService($window, Config) {
 
-      var baseUrl = Config.getHerculesUrl();
+      var baseHerculesUrl = Config.getHerculesUrl();
+      var baseUssUrl = Config.getUssUrl();
 
       var getOverriddenUrl = function (queryParam) {
         var regex = new RegExp(queryParam + "=([^&]*)");
@@ -18,15 +19,15 @@ angular.module('Hercules')
         if (overriddenUrl) {
           return overriddenUrl;
         } else {
-          return baseUrl + 'v1';
+          return baseHerculesUrl + 'v1';
         }
       };
       var getUSSUrl = function () {
-        var overriddenUrl = getOverriddenUrl("hercules-uss-url");
+        var overriddenUrl = getOverriddenUrl("uss-url");
         if (overriddenUrl) {
           return overriddenUrl;
         } else {
-          return baseUrl + 'uss/api/v1';
+          return baseUssUrl + 'uss/api/v1';
         }
       };
       return {
