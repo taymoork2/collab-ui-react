@@ -2,6 +2,27 @@
 
 // TODO - break up into UserList/UserAdd/UserPreview
 var UsersPage = function () {
+  this.inviteTestUser = {
+    username: 'pbr-org-admin@squared2webex.com',
+    password: 'C1sc0123!',
+    usernameWithNoEntitlements: 'collabctg+doNotDeleteTestUser@gmail.com'
+  };
+
+  this.testUser = {
+    username: 'atlasmapservice+ll1@gmail.com',
+    password: 'C1sc0123!',
+  };
+
+  this.huronTestUser = {
+    username: 'admin@int1.huron-alpha.com',
+    password: 'Cisco123!',
+  };
+
+  this.accountTestUser = {
+    username: 'nkamboh+acc2@gmail.com',
+    password: 'C1sc0123!',
+  };
+
   this.listPanel = element(by.id('userslistpanel'));
   this.manageDialog = element(by.id('modalContent'));
   this.squaredPanel = element(by.id('conversations-link'));

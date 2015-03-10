@@ -19,7 +19,10 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         url: 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/4214d345-7caf-4e32-b015-34de878d1158/unlicensedUsers'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
-        data = helper.parseJSON(body)
+        data = try
+          JSON.parse(body)
+        catch
+          throw new Error 'Unable to parse JSON ' + body
         assert _.isObject(data)
         assert.equal 200, res.statusCode
         done()
