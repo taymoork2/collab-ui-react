@@ -27,11 +27,11 @@ var BasicSettigsPage = function () {
   this.saveButton = element(by.id('btnUpdate'));
 
   this.save = function () {
-    this.saveButton.click();
+    utils.click(this.saveButton);
   };
 
   this.clickUserSettings = function () {
-    this.protoTab.click();
+    utils.click(this.protoTab);
     navigation.expectCurrentUrl('/webexUserSettings');
   };
 
@@ -54,7 +54,7 @@ var BasicSettigsPage = function () {
   };
 
   this.clickRecordingEditor = function () {
-    this.recordingEditor.click();
+    utils.click(this.recordingEditor);
   };
 
   this.selectRecordingEditor = function () {

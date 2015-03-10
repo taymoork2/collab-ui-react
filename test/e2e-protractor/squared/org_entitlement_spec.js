@@ -29,9 +29,9 @@
 //       expect(cell[0].getText()).toContain(testuser.searchStr);
 //       cell[0].click();
 //     });
-//     expect(users.huronPanel.isDisplayed()).toBeFalsy();
-//     expect(users.conferencePanel.isDisplayed()).toBeFalsy();
-//     expect(users.endpointPanel.isDisplayed()).toBeFalsy();
+//     utils.expectIsNotDisplayed(users.huronPanel);
+//     utils.expectIsNotDisplayed(users.conferencePanel);
+//     utils.expectIsNotDisplayed(users.endpointPanel);
 //   });
 
 //   it('should log out', function () {

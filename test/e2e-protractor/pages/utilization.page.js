@@ -5,7 +5,7 @@ var UtilizationPage = function () {
   this.overAllUtilization = element(by.model('average'));
 
   this.assertPage = function (page) {
-    expect(this.currentPage.getText()).toBe(page);
+    utils.expectText(this.currentPage, page);
   };
 
   this.assertAtleastOneResource = function () {

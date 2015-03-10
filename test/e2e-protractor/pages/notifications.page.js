@@ -9,19 +9,19 @@ var Notifications = function () {
 
   this.assertError = function (msg1, msg2) {
     utils.expectIsDisplayed(this.errorAlert);
-    this.errorAlert.click();
+    utils.click(this.errorAlert);
     if (msg1) {
       expect(element.all(by.cssContainingText('.panel-danger-body', msg1)).first().isDisplayed()).toBeTruthy();
     }
     if (msg2) {
       expect(element.all(by.cssContainingText('.panel-danger-body', msg2)).first().isDisplayed()).toBeTruthy();
     }
-    this.notificationCancel.click();
+    utils.click(this.notificationCancel);
   };
 
   this.assertSuccess = function (msg1, msg2) {
     utils.expectIsDisplayed(this.successAlert);
-    this.successAlert.click();
+    utils.click(this.successAlert);
     if (msg1) {
       utils.expectIsDisplayed(element.all(by.cssContainingText('.panel-success-body', msg1)).first());
     }

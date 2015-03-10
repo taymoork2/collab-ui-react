@@ -74,7 +74,7 @@ describe('utilization flow', function () {
       //Store the current window handle
       var winHandleBefore = browser.getWindowHandle();
 
-      navigation.userInfoButton.click();
+      utils.click(navigation.userInfoButton);
       utils.click(navigation.feedbackLink);
       browser.sleep(2000);
 

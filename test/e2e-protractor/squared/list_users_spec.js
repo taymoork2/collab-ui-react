@@ -63,7 +63,7 @@ describe('List users flow', function () {
   //TODO What does this test even do?
   xdescribe('Exporting to CSV', function () {
     it('should display the CSV export button', function () {
-      users.userTab.click();
+      utils.click(users.userTab);
       users.clickOnUser();
       utils.expectIsDisplayed(users.exportButton);
     });

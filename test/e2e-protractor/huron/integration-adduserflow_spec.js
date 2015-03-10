@@ -9,6 +9,14 @@ var admintestuser = {
 };
 
 xdescribe('Squared UC Add User flow', function () {
+  beforeEach(function () {
+    browser.ignoreSynchronization = true;
+  });
+
+  afterEach(function () {
+    browser.ignoreSynchronization = false;
+  });
+
   var currentUser;
   describe('Add and Entitle User Flows', function () {
     var inputEmail = utils.randomTestGmail();
@@ -22,50 +30,49 @@ xdescribe('Squared UC Add User flow', function () {
       });
 
       it('click on add button should pop up the adduser modal', function () {
-        users.addUsers.click();
-        browser.sleep(1000);
+        utils.click(users.addUsers);
+
         navigation.expectCurrentUrl('/users');
-        expect(users.manageDialog.isDisplayed()).toBeTruthy();
+        utils.expectIsDisplayed(users.manageDialog);
       });
     });
 
     describe('Add a new Squared UC user', function () {
       it('should display input user email in results with success message', function () {
         users.addUsersField.sendKeys(inputEmail);
-        users.collabRadio1.click();
-        // users.inviteRadio2.click();
-        browser.sleep(1000);
-        expect(users.onboardButton.isDisplayed()).toBeTruthy();
+        utils.click(users.collabRadio1);
+        // utils.click(users.inviteRadio2);
+
+        utils.expectIsDisplayed(users.onboardButton);
         users.assertEntitlementListSize(5);
-        users.squaredUCCheckBox.click();
-        users.onboardButton.click();
+        utils.click(users.squaredUCCheckBox);
+        utils.click(users.onboardButton);
         notifications.assertSuccess(inputEmail, 'added successfully');
-        users.closeAddUsers.click();
-        browser.sleep(3000);
+        utils.click(users.closeAddUsers);
+
       });
     });
 
     describe('Verify the created user', function () {
       it('should show the Telephony panel', function () {
-        utils.search(inputEmail);
-        users.returnUser(inputEmail).click();
+        utils.searchAndClick(inputEmail);
         element(by.binding('currentUser.userName')).evaluate('currentUser').then(function (_currentUser) {
           currentUser = _currentUser;
           expect(currentUser).not.toBeNull();
         });
       });
       it('should have a line/directory number', function () {
-        expect(telephony.telephonyPanel.isDisplayed()).toBeTruthy();
+        utils.expectIsDisplayed(telephony.telephonyPanel);
         expect(telephony.directoryNumbers.count()).toBe(1);
       });
       it('should have voicemail on', function () {
-        expect(telephony.voicemailFeature.isDisplayed()).toBeTruthy();
-        expect(telephony.voicemailStatus.getText()).toEqual('On');
+        utils.expectIsDisplayed(telephony.voicemailFeature);
+        utils.expectText(telephony.voicemailStatus, 'On');
       });
 
       describe('Verify call forwarding defaults', function () {
         it('should show the Line Configuration panel', function () {
-          telephony.primaryNumber.click();
+          utils.click(telephony.primaryNumber);
           browser.wait(function () {
             return telephony.lineConfigPanel.isPresent().then(function (present) {
               return present;
@@ -76,7 +83,7 @@ xdescribe('Squared UC Add User flow', function () {
           expect(telephony.forwardBusyNoAnswerInput.getAttribute('value')).toEqual('Voicemail');
         });
         it('should close the Line Configuration panel', function () {
-          telephony.closeLineConfig.click();
+          utils.click(telephony.closeLineConfig);
         });
       });
 
@@ -87,20 +94,20 @@ xdescribe('Squared UC Add User flow', function () {
         utils.search(inputEmail);
         users.userListEnts.then(function (cell) {
           expect(cell[0].getText()).toContain(inputEmail);
-          users.gridCell.click();
+          utils.click(users.gridCell);
         });
       });
       it('should uncheck Squared UC checkbox', function () {
-        telephony.squaredUCCheckBox.click();
-        telephony.saveEntitlements.click();
+        utils.click(telephony.squaredUCCheckBox);
+        utils.click(telephony.saveEntitlements);
         notifications.assertSuccess('entitlements were updated successfully');
       });
       it('should not have line or voicemail visible', function () {
-        expect(telephony.telephonyPanel.isDisplayed()).toBeFalsy();
-        expect(telephony.voicemailFeature.isDisplayed()).toBeFalsy();
+        utils.expectIsNotDisplayed(telephony.telephonyPanel);
+        utils.expectIsNotDisplayed(telephony.voicemailFeature);
       });
       it('should close the preview panel', function () {
-        telephony.close.click();
+        utils.click(telephony.close);
       });
     });
 
@@ -109,29 +116,29 @@ xdescribe('Squared UC Add User flow', function () {
         utils.search(inputEmail);
         users.userListEnts.then(function (cell) {
           expect(cell[0].getText()).toContain(inputEmail);
-          users.gridCell.click();
+          utils.click(users.gridCell);
         });
       });
       it('should check Squared UC checkbox and close the preview panel', function () {
-        telephony.squaredUCCheckBox.click();
-        telephony.saveEntitlements.click();
+        utils.click(telephony.squaredUCCheckBox);
+        utils.click(telephony.saveEntitlements);
         notifications.assertSuccess('entitlements were updated successfully');
-        telephony.close.click();
+        utils.click(telephony.close);
       });
       it('should show the Telephony panel', function () {
         utils.search(inputEmail);
         users.userListEnts.then(function (cell) {
           expect(cell[0].getText()).toContain(inputEmail);
-          users.gridCell.click();
+          utils.click(users.gridCell);
         });
       });
       it('should have a line/directory number again', function () {
-        expect(telephony.telephonyPanel.isDisplayed()).toBeTruthy();
+        utils.expectIsDisplayed(telephony.telephonyPanel);
         expect(telephony.directoryNumbers.count()).toBe(1);
       });
       it('should have voicemail on', function () {
-        expect(telephony.voicemailFeature.isDisplayed()).toBeTruthy();
-        expect(telephony.voicemailStatus.getText()).toEqual('On');
+        utils.expectIsDisplayed(telephony.voicemailFeature);
+        utils.expectText(telephony.voicemailStatus, 'On');
       });
     });
 

@@ -9,11 +9,11 @@ var ServiceSetup = function () {
   this.save = element(by.buttonText('Save'));
 
   this.deleteNumberRange = function (testBeginNumber) {
-    this.numberRanges.filter(function (elem) {
+    utils.click(this.numberRanges.filter(function (elem) {
       return elem.evaluate('internalNumberRange.beginNumber').then(function (value) {
         return value === testBeginNumber;
       });
-    }).first().element(by.linkText('Delete')).click();
+    }).first().element(by.linkText('Delete')));
   };
 };
 

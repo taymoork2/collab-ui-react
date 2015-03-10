@@ -21,7 +21,7 @@ xdescribe('Partner Reports', function () {
     });
 
     it('should verify time dropdown', function () {
-      reports.timeSelect.click();
+      utils.click(reports.timeSelect);
       reports.verifyOption(reports.timeSelect, 'All Time');
       reports.verifyOption(reports.timeSelect, 'Previous Week');
       reports.verifyOption(reports.timeSelect, 'Previous Month');
@@ -29,12 +29,12 @@ xdescribe('Partner Reports', function () {
     });
 
     it('should verify service dropdown', function () {
-      reports.serviceSelect.click();
+      utils.click(reports.serviceSelect);
       reports.verifyOption(reports.serviceSelect, 'All Services');
     });
 
     it('should verify service dropdown', function () {
-      reports.customerSelect.click();
+      utils.click(reports.customerSelect);
       reports.verifyOption(reports.customerSelect, 'All Customers');
       browser.wait(function () {
         return reports.engagementRefreshDiv.isDisplayed().then(function (value) {
