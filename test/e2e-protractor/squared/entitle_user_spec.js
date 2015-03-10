@@ -93,9 +93,9 @@
 //         element(by.id('btnEntitle')).click();
 //         //Temporary while fixing error messaging.
 //         element(by.css('.alertify-log-error')).click().then(function() {
-//           browser.sleep(500);
+//
 //           expect(element(by.css('.panel-danger-body p')).getText()).toBe('Please enter valid user email(s).');
-//           browser.sleep(500);
+//
 //           element(by.css('.fa-times')).click();
 //         });
 //       });
@@ -108,13 +108,13 @@
 //           //entitle for call initiation
 //           element(by.css('.iCheck-helper')).click().then(function() {
 //             element(by.id('btnEntitle')).click();
-//             browser.sleep(500);
+//
 //             element(by.css('.alertify-log-success')).click();
 //             element.all(by.css('.panel-success-body p')).then(function(rows) {
 //               expect(rows.length).toBe(1);
 //               expect(rows[0].getText()).toContain(testuser.username);
 //               expect(rows[0].getText()).toContain('updated successfully');
-//               browser.sleep(500);
+//
 //               element(by.css('.fa-times')).click();
 //             });
 //           });
@@ -128,14 +128,14 @@
 //         element(by.id('usersfield')).sendKeys(testuser.username).then(function() {
 //           element(by.css('.iCheck-helper')).click().then(function() {
 //             element(by.id('btnEntitle')).click();
-//             browser.sleep(500); //for the animation
+//              //for the animation
 //             element(by.css('.alertify-log-success')).click();
-//             browser.sleep(500); //for the animation
+//              //for the animation
 //             element.all(by.css('.panel-success-body p')).then(function(rows) {
 //               expect(rows.length).toBe(1);
 //               expect(rows[0].getText()).toContain(testuser.username);
 //               expect(rows[0].getText()).toContain('updated successfully');
-//               browser.sleep(500);
+//
 //               element(by.css('.fa-times')).click();
 //             });
 //           });
@@ -149,14 +149,14 @@
 //         element(by.id('usersfield')).clear();
 //         element(by.id('usersfield')).sendKeys(inputEmail);
 //         element(by.id('btnEntitle')).click();
-//         browser.sleep(500); //for the animation
+//          //for the animation
 //         element(by.css('.alertify-log-error')).click();
-//         browser.sleep(500); //for the animation
+//          //for the animation
 //         element.all(by.css('.panel-danger-body p')).then(function(rows) {
 //           expect(rows.length).toBe(1);
 //           expect(rows[0].getText()).toContain(inputEmail);
 //           expect(rows[0].getText()).toContain('does not exist');
-//           browser.sleep(500);
+//
 //           element(by.css('.fa-times')).click();
 //         });
 //       });

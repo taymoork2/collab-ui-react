@@ -93,7 +93,7 @@ describe('List Resources Flow', function () {
         //browser.driver.manage().window().setSize(1195, 569);
         //Store the current window handle
         var winHandleBefore = browser.getWindowHandle();
-        navigation.userInfoButton.click();
+        utils.click(navigation.userInfoButton);
         utils.click(navigation.feedbackLink);
         browser.sleep(2000);
         browser.getAllWindowHandles().then(function (handles) {

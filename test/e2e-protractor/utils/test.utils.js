@@ -90,7 +90,7 @@ exports.wait = function (elem) {
     }, function () {
       return false;
     });
-  }, 30000, 'Waiting for: ' + elem.locator());
+  }, 40000, 'Waiting for: ' + elem.locator());
 };
 
 exports.expectIsDisplayed = function (elem) {
@@ -104,7 +104,7 @@ exports.expectIsNotDisplayed = function (elem) {
       return !isDisplayed;
     }, function () {
       return true;
-    }, 30000, 'Waiting for: ' + elem.locator());
+    }, 40000, 'Waiting for: ' + elem.locator());
   });
 };
 

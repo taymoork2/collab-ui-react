@@ -25,7 +25,7 @@
 
 //   it('should display setup SSO button and clicking it should launch the wizard', function() {
 //     utils.expectIsDisplayed(ssowizard.btnSSO);
-//     ssowizard.btnSSO.click();
+//     utils.click(ssowizard.btnSSO);
 //     utils.expectIsDisplayed(ssowizard.ssoModalHeader);
 //   });
 
@@ -39,47 +39,47 @@
 //   });
 
 //   it('should close the wizard when Cancel button is clicked', function() {
-//     ssowizard.importCancelBtn.click();
+//     utils.click(ssowizard.importCancelBtn);
 //     utils.expectIsDisplayed(ssowizard.btnSSO);
 //   });
 
 //   it('should navigate steps by clicking on Next and Previous buttons', function() {
-//     ssowizard.btnSSO.click();
+//     utils.click(ssowizard.btnSSO);
 //     utils.expectIsDisplayed(ssowizard.ssoModalHeader);
 
-//     ssowizard.importNextBtn.click();
+//     utils.click(ssowizard.importNextBtn);
 //     utils.expectIsDisplayed(ssowizard.downloadMeta);
 //     utils.expectIsDisplayed(ssowizard.exportCancelBtn);
 //     utils.expectIsDisplayed(ssowizard.exportBackBtn);
 //     utils.expectIsDisplayed(ssowizard.ssoModalHeader);
 
-//     ssowizard.exportNextBtn.click();
+//     utils.click(ssowizard.exportNextBtn);
 //     utils.expectIsDisplayed(ssowizard.ssoTestBtn);
 //     utils.expectIsDisplayed(ssowizard.testssoCancelBtn);
 //     utils.expectIsDisplayed(ssowizard.testssoBackBtn);
 //     utils.expectIsDisplayed(ssowizard.testssoNextBtn);
 //     utils.expectIsDisplayed(ssowizard.ssoModalHeader);
 
-//     ssowizard.testssoNextBtn.click();
+//     utils.click(ssowizard.testssoNextBtn);
 //     utils.expectIsDisplayed(ssowizard.enablessoCancelBtn);
 //     utils.expectIsDisplayed(ssowizard.enablessoBackBtn);
 //     utils.expectIsDisplayed(ssowizard.enablessoFinishBtn);
 //     utils.expectIsDisplayed(ssowizard.ssoModalHeader);
 
-//     ssowizard.enablessoBackBtn.click();
+//     utils.click(ssowizard.enablessoBackBtn);
 //     utils.expectIsDisplayed(ssowizard.ssoTestBtn);
 //     utils.expectIsDisplayed(ssowizard.testssoCancelBtn);
 //     utils.expectIsDisplayed(ssowizard.testssoBackBtn);
 //     utils.expectIsDisplayed(ssowizard.testssoNextBtn);
 //     utils.expectIsDisplayed(ssowizard.ssoModalHeader);
 
-//     ssowizard.testssoBackBtn.click();
+//     utils.click(ssowizard.testssoBackBtn);
 //     utils.expectIsDisplayed(ssowizard.downloadMeta);
 //     utils.expectIsDisplayed(ssowizard.exportCancelBtn);
 //     utils.expectIsDisplayed(ssowizard.exportBackBtn);
 //     utils.expectIsDisplayed(ssowizard.ssoModalHeader);
 
-//     ssowizard.exportBackBtn.click();
+//     utils.click(ssowizard.exportBackBtn);
 //     utils.expectIsDisplayed(ssowizard.fileToUploadText);
 //     utils.expectIsDisplayed(ssowizard.fileToUploadBtn);
 //     utils.expectIsNotDisplayed(ssowizard.fileToUploadTextHolder);
@@ -89,7 +89,7 @@
 //   });
 
 //   it('should close the wizard when clicking on the X mark', function() {
-//     ssowizard.closeSSOModal.click();
+//     utils.click(ssowizard.closeSSOModal);
 //     utils.expectIsDisplayed(ssowizard.btnSSO);
 //   });
 

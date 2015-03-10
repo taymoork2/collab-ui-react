@@ -8,7 +8,7 @@ var MeetingsPage = function () {
   this.incrementDayButton = element(by.css('[ng-click="incrementDay()"]'));
 
   this.assertPage = function (page) {
-    expect(this.currentPage.getText()).toBe(page);
+    utils.expectText(this.currentPage, page);
   };
 
   this.assertResultsLength = function (results) {
@@ -46,11 +46,11 @@ var MeetingsPage = function () {
   };
 
   this.decrementDay = function () {
-    this.decrementDayButton.click();
+    utils.click(this.decrementDayButton);
   };
 
   this.incrementDay = function () {
-    this.incrementDayButton.click();
+    utils.click(this.incrementDayButton);
   };
 
 };

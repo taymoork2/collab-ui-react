@@ -188,13 +188,13 @@ describe('Add/Invite/Entitle User flow', function () {
     // TODO: Needs to be fixed.
     // describe('Entitle an existing user with call-initiation', function() {
     //   it('should display input user email in results with success message', function() {
-    //     users.clearButton.click();
+    //     utils.click(users.clearButton);
     //     users.addUsersField.sendKeys(inputEmail);
     //     users.addUsersField.sendKeys(protractor.Key.ENTER);
-    //     users.collabRadio1.click();
-    //     browser.sleep(1000);
-    //     users.manageCallInitiation.click();
-    //     users.onboardButton.click();
+    //     utils.click(users.collabRadio1);
+    //
+    //     utils.click(users.manageCallInitiation);
+    //     utils.click(users.onboardButton);
     //     notifications.assertSuccess(inputEmail, 'sent successfully');
     //     notifications.clearNotifications();
     //   });
@@ -202,13 +202,13 @@ describe('Add/Invite/Entitle User flow', function () {
 
     describe('Attempt to un-entitle call-initiation', function () {
       //   it('should display input user email in results with entitlement updated message', function() {
-      //     users.clearButton.click();
+      //     utils.click(users.clearButton);
       //     users.addUsersField.sendKeys(inputEmail);
       //     users.addUsersField.sendKeys(protractor.Key.ENTER);
-      //     users.collabRadio1.click();
-      //     browser.sleep(1000);
-      //     users.manageCallInitiation.click();
-      //     users.onboardButton.click();
+      //     utils.click(users.collabRadio1);
+      //
+      //     utils.click(users.manageCallInitiation);
+      //     utils.click(users.onboardButton);
       //     notifications.assertSuccess(inputEmail, 'sent successfully');
       //     notifications.clearNotifications();
       //   });

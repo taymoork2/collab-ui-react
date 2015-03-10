@@ -190,19 +190,19 @@ describe('Partner flow', function () {
     });
 
     it('should show active users chart', function () {
-      partner.activeUsersTab.click();
+      utils.click(partner.activeUsersTab);
       utils.expectIsDisplayed(partner.activeUsersChart);
       utils.expectIsDisplayed(partner.activeUsersCount.getText());
     });
 
     it('should show average calls chart', function () {
-      partner.averageCallsTab.click();
+      utils.click(partner.averageCallsTab);
       utils.expectIsDisplayed(partner.averageCallsChart);
       utils.expectIsDisplayed(partner.averageCallsCount.getText());
     });
 
     it('should show content shared chart', function () {
-      partner.contentSharedTab.click();
+      utils.click(partner.contentSharedTab);
       utils.expectIsDisplayed(partner.contentSharedChart);
       utils.expectIsDisplayed(partner.contentSharedCount.getText());
     });

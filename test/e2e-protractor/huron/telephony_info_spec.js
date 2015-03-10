@@ -1,11 +1,19 @@
 'use strict';
 
 var testuser = {
-  username: 'admin@int2.huron-alpha.com',
+  username: 'admin@int1.huron-alpha.com',
   password: 'Cisco123!'
 };
 
 xdescribe('Telephony Info', function () {
+  beforeEach(function () {
+    browser.ignoreSynchronization = true;
+  });
+
+  afterEach(function () {
+    browser.ignoreSynchronization = false;
+  });
+
   var currentUser;
   var user = utils.randomTestGmail();
   var dropdownVariables = {
@@ -24,7 +32,7 @@ xdescribe('Telephony Info', function () {
   });
 
   it('should create user', function () {
-    users.addUsers.click();
+    utils.click(users.addUsers);
     browser.wait(function () {
       return users.addUsersField.isPresent().then(function (present) {
         return present;
@@ -32,11 +40,11 @@ xdescribe('Telephony Info', function () {
     });
 
     users.addUsersField.clear();
-    users.addUsersField.click();
+    utils.click(users.addUsersField);
     users.addUsersField.sendKeys(user);
     users.addUsersField.sendKeys(protractor.Key.ENTER);
 
-    users.collabRadio1.click();
+    utils.click(users.collabRadio1);
 
     browser.wait(function () {
       return users.squaredUCCheckBox.isPresent().then(function (present) {
@@ -44,11 +52,11 @@ xdescribe('Telephony Info', function () {
       });
     });
 
-    users.squaredUCCheckBox.click();
-    users.onboardButton.click();
+    utils.click(users.squaredUCCheckBox);
+    utils.click(users.onboardButton);
     notifications.assertSuccess(user, 'added successfully');
-    users.closeAddUsers.click();
-    browser.sleep(3000);
+    utils.click(users.closeAddUsers);
+
   });
 
   it('should verify added user', function () {
@@ -64,10 +72,10 @@ xdescribe('Telephony Info', function () {
     it('should have a primary directory number', function () {
       telephony.directoryNumbers.count().then(function (count) {
         if (count > 1) {
-          telephony.close.click();
+          utils.click(telephony.close);
           users.returnUser(user).click();
           browser.sleep(2000).then(function () {
-            expect(telephony.telephonyPanel.isDisplayed()).toBeTruthy();
+            utils.expectIsDisplayed(telephony.telephonyPanel);
           });
           expect(telephony.directoryNumbers.count()).toBe(1);
         } else {
@@ -78,7 +86,7 @@ xdescribe('Telephony Info', function () {
 
     it('should show directory number select', function () {
       telephony.directoryNumbers.first().all(by.css('span')).first().click();
-      expect(telephony.internalNumber.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(telephony.internalNumber);
     });
 
     it('should not display remove button for primary line', function () {
@@ -91,23 +99,23 @@ xdescribe('Telephony Info', function () {
           return present;
         });
       });
-      telephony.forwardNoneRadio.click();
-      expect(telephony.forwardAll.isDisplayed()).toBeFalsy();
-      expect(telephony.forwardBusyNoAnswer.isDisplayed()).toBeFalsy();
-      expect(telephony.forwardExternalCalls.isDisplayed()).toBeFalsy();
-      telephony.saveButton.click();
+      utils.click(telephony.forwardNoneRadio);
+      utils.expectIsNotDisplayed(telephony.forwardAll);
+      utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
+      utils.expectIsNotDisplayed(telephony.forwardExternalCalls);
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
-      telephony.voicemailFeature.click();
-      telephony.primary.click();
+      utils.click(telephony.voicemailFeature);
+      utils.click(telephony.primary);
       browser.wait(function () {
         return telephony.forwardNoneRadio.isPresent().then(function (present) {
           return present;
         });
       });
-      expect(telephony.forwardAll.isDisplayed()).toBeFalsy();
-      expect(telephony.forwardBusyNoAnswer.isDisplayed()).toBeFalsy();
-      expect(telephony.forwardExternalCalls.isDisplayed()).toBeFalsy();
+      utils.expectIsNotDisplayed(telephony.forwardAll);
+      utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
+      utils.expectIsNotDisplayed(telephony.forwardExternalCalls);
     });
 
     it('should save call forward all to voicemail', function () {
@@ -116,34 +124,34 @@ xdescribe('Telephony Info', function () {
           return present;
         });
       });
-      telephony.forwardAllRadio.click();
-      expect(telephony.forwardAll.isDisplayed()).toBeTruthy();
-      expect(telephony.forwardBusyNoAnswer.isDisplayed()).toBeFalsy();
-      expect(telephony.forwardExternalCalls.isDisplayed()).toBeFalsy();
+      utils.click(telephony.forwardAllRadio);
+      utils.expectIsDisplayed(telephony.forwardAll);
+      utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
+      utils.expectIsNotDisplayed(telephony.forwardExternalCalls);
       telephony.selectOption(telephony.forwardAll, dropdownVariables.voicemail);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
-      telephony.voicemailFeature.click();
-      telephony.primary.click();
+      utils.click(telephony.voicemailFeature);
+      utils.click(telephony.primary);
       browser.wait(function () {
         return telephony.forwardAllRadio.isPresent().then(function (present) {
           return present;
         });
       });
-      expect(telephony.forwardAll.isDisplayed()).toBeTruthy();
-      expect(telephony.forwardBusyNoAnswer.isDisplayed()).toBeFalsy();
+      utils.expectIsDisplayed(telephony.forwardAll);
+      utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
       expect(telephony.forwardAll.element(by.css('input')).getAttribute('value')).toEqual(dropdownVariables.voicemail);
     });
 
     it('should save call forward all to an outside number', function () {
       telephony.selectOption(telephony.forwardAll, dropdownVariables.addNew);
       telephony.setNumber(telephony.forwardAll, snrLine);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
-      telephony.voicemailFeature.click();
-      telephony.primary.click();
+      utils.click(telephony.voicemailFeature);
+      utils.click(telephony.primary);
       browser.wait(function () {
         return telephony.forwardAllRadio.isPresent().then(function (present) {
           return present;
@@ -154,101 +162,101 @@ xdescribe('Telephony Info', function () {
 
     it('should save call forward busy/no answer to voicemail', function () {
       telephony.directoryNumbers.first().click();
-      telephony.forwardBusyNoAnswerRadio.click();
-      expect(telephony.forwardAll.isDisplayed()).toBeFalsy();
-      expect(telephony.forwardBusyNoAnswer.isDisplayed()).toBeTruthy();
-      expect(telephony.forwardExternalCalls.isDisplayed()).toBeTruthy();
+      utils.click(telephony.forwardBusyNoAnswerRadio);
+      utils.expectIsNotDisplayed(telephony.forwardAll);
+      utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
+      utils.expectIsDisplayed(telephony.forwardExternalCalls);
 
       telephony.selectOption(telephony.forwardBusyNoAnswer, dropdownVariables.voicemail);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
-      telephony.voicemailFeature.click();
-      telephony.primary.click();
+      utils.click(telephony.voicemailFeature);
+      utils.click(telephony.primary);
       browser.wait(function () {
         return telephony.forwardBusyNoAnswerRadio.isPresent().then(function (present) {
           return present;
         });
       });
-      expect(telephony.forwardAll.isDisplayed()).toBeFalsy();
-      expect(telephony.forwardBusyNoAnswer.isDisplayed()).toBeTruthy();
-      expect(telephony.forwardExternalCalls.isDisplayed()).toBeTruthy();
+      utils.expectIsNotDisplayed(telephony.forwardAll);
+      utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
+      utils.expectIsDisplayed(telephony.forwardExternalCalls);
       expect(telephony.forwardBusyNoAnswer.element(by.css('input')).getAttribute('value')).toEqual(dropdownVariables.voicemail);
     });
 
     it('should save call forward busy/no answer to an outside number', function () {
       telephony.directoryNumbers.first().click();
-      telephony.forwardBusyNoAnswerRadio.click();
-      expect(telephony.forwardAll.isDisplayed()).toBeFalsy();
-      expect(telephony.forwardBusyNoAnswer.isDisplayed()).toBeTruthy();
-      expect(telephony.forwardExternalCalls.isDisplayed()).toBeTruthy();
+      utils.click(telephony.forwardBusyNoAnswerRadio);
+      utils.expectIsNotDisplayed(telephony.forwardAll);
+      utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
+      utils.expectIsDisplayed(telephony.forwardExternalCalls);
 
       telephony.selectOption(telephony.forwardBusyNoAnswer, dropdownVariables.addNew);
       telephony.setNumber(telephony.forwardBusyNoAnswer, snrLine);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
-      telephony.voicemailFeature.click();
-      telephony.primary.click();
+      utils.click(telephony.voicemailFeature);
+      utils.click(telephony.primary);
       browser.wait(function () {
         return telephony.forwardBusyNoAnswerRadio.isPresent().then(function (present) {
           return present;
         });
       });
-      expect(telephony.forwardAll.isDisplayed()).toBeFalsy();
-      expect(telephony.forwardBusyNoAnswer.isDisplayed()).toBeTruthy();
-      expect(telephony.forwardExternalCalls.isDisplayed()).toBeTruthy();
+      utils.expectIsNotDisplayed(telephony.forwardAll);
+      utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
+      utils.expectIsDisplayed(telephony.forwardExternalCalls);
       expect(telephony.forwardBusyNoAnswer.element(by.css('input')).getAttribute('value')).toEqual(snrLine);
     });
 
     it('should save external call forwarding to voicemail', function () {
-      expect(telephony.forwardExternalBusyNoAnswer.isDisplayed()).toBeFalsy();
-      telephony.forwardExternalCalls.click();
+      utils.expectIsNotDisplayed(telephony.forwardExternalBusyNoAnswer);
+      utils.click(telephony.forwardExternalCalls);
 
-      expect(telephony.forwardExternalBusyNoAnswer.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(telephony.forwardExternalBusyNoAnswer);
       telephony.selectOption(telephony.forwardExternalBusyNoAnswer, dropdownVariables.voicemail);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
-      telephony.voicemailFeature.click();
-      telephony.primary.click();
+      utils.click(telephony.voicemailFeature);
+      utils.click(telephony.primary);
       browser.wait(function () {
         return telephony.forwardBusyNoAnswerRadio.isPresent().then(function (present) {
           return present;
         });
       });
-      expect(telephony.forwardExternalBusyNoAnswer.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(telephony.forwardExternalBusyNoAnswer);
       expect(telephony.forwardExternalBusyNoAnswer.element(by.css('input')).getAttribute('value')).toEqual(dropdownVariables.voicemail);
     });
 
     it('should save external call forwarding to an outside number', function () {
-      expect(telephony.forwardExternalBusyNoAnswer.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(telephony.forwardExternalBusyNoAnswer);
       telephony.selectOption(telephony.forwardExternalBusyNoAnswer, dropdownVariables.addNew);
       telephony.setNumber(telephony.forwardExternalBusyNoAnswer, externalCFLine);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
-      telephony.voicemailFeature.click();
-      telephony.primary.click();
+      utils.click(telephony.voicemailFeature);
+      utils.click(telephony.primary);
       browser.wait(function () {
         return telephony.forwardBusyNoAnswerRadio.isPresent().then(function (present) {
           return present;
         });
       });
-      expect(telephony.forwardExternalBusyNoAnswer.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(telephony.forwardExternalBusyNoAnswer);
       expect(telephony.forwardExternalBusyNoAnswer.element(by.css('input')).getAttribute('value')).toEqual(externalCFLine);
     });
 
     it('should change caller id to custom display', function () {
-      expect(telephony.callerIdDefault.isDisplayed()).toBeTruthy();
-      expect(telephony.callerIdCustom.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(telephony.callerIdDefault);
+      utils.expectIsDisplayed(telephony.callerIdCustom);
       expect(telephony.callerId.isEnabled()).toBeFalsy();
 
       // use mousemove to force clicking the radio button regardless of overlaid <span>
       browser.actions().mouseMove(telephony.callerIdCustom, 50, 50).click().perform();
       expect(telephony.callerId.isEnabled()).toBeTruthy();
       telephony.callerId.sendKeys(user);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
       telephony.directoryNumbers.first().click();
@@ -257,14 +265,14 @@ xdescribe('Telephony Info', function () {
     });
 
     it('should change caller id to default display', function () {
-      expect(telephony.callerIdDefault.isDisplayed()).toBeTruthy();
-      expect(telephony.callerIdCustom.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(telephony.callerIdDefault);
+      utils.expectIsDisplayed(telephony.callerIdCustom);
       expect(telephony.callerId.isEnabled()).toBeTruthy();
 
       // use mousemove to force clicking the radio button regardless of overlaid <span>
       browser.actions().mouseMove(telephony.callerIdDefault, 50, 50).click().perform();
       expect(telephony.callerId.isEnabled()).toBeFalsy();
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
       telephony.directoryNumbers.first().click();
@@ -272,31 +280,31 @@ xdescribe('Telephony Info', function () {
     });
 
     it('should cancel a new directory number add', function () {
-      expect(telephony.threeDotButton.isDisplayed()).toBeTruthy();
-      telephony.threeDotButton.click();
-      expect(telephony.addNewLine.isDisplayed()).toBeTruthy();
-      telephony.addNewLine.click();
+      utils.expectIsDisplayed(telephony.threeDotButton);
+      utils.click(telephony.threeDotButton);
+      utils.expectIsDisplayed(telephony.addNewLine);
+      utils.click(telephony.addNewLine);
       expect(telephony.internalNumber.isDisplayed).toBeTruthy();
       var number = telephony.verifyNewNumber();
-      telephony.primary.click();
+      utils.click(telephony.primary);
       var primaryNum = telephony.verifyExistingNumber();
       expect(number).not.toEqual(primaryNum);
       expect(element(by.cssContainingText('span', number)).isPresent()).toBeFalsy();
     });
 
     it('should add a new directory number', function () {
-      expect(telephony.threeDotButton.isDisplayed()).toBeTruthy();
-      telephony.threeDotButton.click();
-      expect(telephony.addNewLine.isDisplayed()).toBeTruthy();
-      telephony.addNewLine.click();
+      utils.expectIsDisplayed(telephony.threeDotButton);
+      utils.click(telephony.threeDotButton);
+      utils.expectIsDisplayed(telephony.addNewLine);
+      utils.click(telephony.addNewLine);
       expect(telephony.internalNumber.isDisplayed).toBeTruthy();
-      telephony.internalNumber.click();
+      utils.click(telephony.internalNumber);
       telephony.verifyNewNumber().then(function (number) {
-        telephony.forwardBusyNoAnswerRadio.click();
+        utils.click(telephony.forwardBusyNoAnswerRadio);
         telephony.selectOption(telephony.forwardBusyNoAnswer, dropdownVariables.addNew);
         telephony.setNumber(telephony.forwardBusyNoAnswer, snrLine);
         expect(telephony.removeButton.isPresent()).toBeFalsy();
-        telephony.saveButton.click();
+        utils.click(telephony.saveButton);
         notifications.assertSuccess('Line configuration saved successfully');
 
         var numberElement = element.all(by.cssContainingText('span', number));
@@ -317,9 +325,9 @@ xdescribe('Telephony Info', function () {
 
     it('should update directory number', function () {
       telephony.verifyExistingNumber().then(function (number) {
-        telephony.internalNumber.click();
+        utils.click(telephony.internalNumber);
         telephony.internalNumber.all(by.css('option')).get(1).click();
-        telephony.saveButton.click();
+        utils.click(telephony.saveButton);
         notifications.assertSuccess('Line configuration saved successfully');
 
         telephony.directoryNumbers.get(1).click();
@@ -332,17 +340,17 @@ xdescribe('Telephony Info', function () {
     });
 
     it('should save adding an external number', function () {
-      telephony.externalNumber.click();
+      utils.click(telephony.externalNumber);
       telephony.externalNumber.all(by.css('option')).get(1).click();
       var extNumber = '';
       telephony.externalNumber.element(by.css('option:checked')).getText().then(function (text) {
         extNumber = text;
       });
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Line configuration saved successfully');
 
       telephony.verifyExistingNumber().then(function (number) {
-        telephony.primary.click();
+        utils.click(telephony.primary);
         element.all(by.cssContainingText('span', number)).first().click();
       });
       var verifyNumber = '';
@@ -354,8 +362,8 @@ xdescribe('Telephony Info', function () {
 
     it('should cancel deleting the non-primary number', function () {
       expect(telephony.removeButton.isPresent()).toBeTruthy();
-      telephony.removeButton.click();
-      telephony.cancelDisassociation.click();
+      utils.click(telephony.removeButton);
+      utils.click(telephony.cancelDisassociation);
 
       telephony.verifyExistingNumber().then(function (number) {
         var numberElement = element.all(by.cssContainingText('span', number));
@@ -364,7 +372,7 @@ xdescribe('Telephony Info', function () {
             return count > 0;
           });
         });
-        telephony.primary.click();
+        utils.click(telephony.primary);
         numberElement.first().click();
       });
       expect(telephony.removeButton.isPresent()).toBeTruthy();
@@ -372,12 +380,11 @@ xdescribe('Telephony Info', function () {
 
     it('should delete the non-primary number', function () {
       expect(telephony.removeButton.isPresent()).toBeTruthy();
-      telephony.removeButton.click();
-      telephony.disassociateLine.click();
+      utils.click(telephony.removeButton);
+      utils.click(telephony.disassociateLine);
       notifications.assertSuccess('Line successfully unassigned from user');
 
-      browser.sleep(2000);
-      expect(telephony.telephonyPanel.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(telephony.telephonyPanel);
       expect(telephony.directoryNumbers.count()).toBe(1);
     });
   });
@@ -385,30 +392,30 @@ xdescribe('Telephony Info', function () {
   describe('Voicemail', function () {
 
     it('should save the disabled state', function () {
-      telephony.voicemailFeature.click();
+      utils.click(telephony.voicemailFeature);
 
-      expect(telephony.voicemailStatus.getText()).toEqual('On');
+      utils.expectText(telephony.voicemailStatus, 'On');
       expect(utils.getSwitchState(telephony.voicemailSwitch)).toBeTruthy();
 
       utils.disableSwitch(telephony.voicemailSwitch);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Voicemail configuration saved successfully');
 
-      expect(telephony.voicemailStatus.getText()).toEqual('Off');
+      utils.expectText(telephony.voicemailStatus, 'Off');
       expect(utils.getSwitchState(telephony.voicemailSwitch)).toBeFalsy();
     });
 
     it('should save the enabled state', function () {
-      telephony.voicemailFeature.click();
+      utils.click(telephony.voicemailFeature);
 
-      expect(telephony.voicemailStatus.getText()).toEqual('Off');
+      utils.expectText(telephony.voicemailStatus, 'Off');
       expect(utils.getSwitchState(telephony.voicemailSwitch)).toBeFalsy();
 
       utils.enableSwitch(telephony.voicemailSwitch);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Voicemail configuration saved successfully');
 
-      expect(telephony.voicemailStatus.getText()).toEqual('On');
+      utils.expectText(telephony.voicemailStatus, 'On');
       expect(utils.getSwitchState(telephony.voicemailSwitch)).toBeTruthy();
     });
   });
@@ -416,34 +423,34 @@ xdescribe('Telephony Info', function () {
   describe('Single Number Reach', function () {
 
     it('should save the enabled state', function () {
-      telephony.snrFeature.click();
+      utils.click(telephony.snrFeature);
       expect(utils.getSwitchState(telephony.snrSwitch)).toBeFalsy();
-      expect(telephony.snrNumber.isDisplayed()).toBeFalsy();
+      utils.expectIsNotDisplayed(telephony.snrNumber);
 
       utils.enableSwitch(telephony.snrSwitch);
-      expect(telephony.snrNumber.isDisplayed()).toBeTruthy();
+      utils.expectIsDisplayed(telephony.snrNumber);
 
       telephony.snrNumber.sendKeys(snrLine);
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Single Number Reach configuration saved successfully');
 
       expect(utils.getSwitchState(telephony.snrSwitch)).toBeTruthy();
-      expect(telephony.snrStatus.getText()).toEqual('On');
+      utils.expectText(telephony.snrStatus, 'On');
     });
 
     it('should save the disabled state', function () {
-      telephony.snrFeature.click();
-      expect(telephony.snrNumber.isDisplayed()).toBeTruthy();
-      expect(telephony.snrNumber.isDisplayed()).toBeTruthy();
+      utils.click(telephony.snrFeature);
+      utils.expectIsDisplayed(telephony.snrNumber);
+      utils.expectIsDisplayed(telephony.snrNumber);
 
       utils.disableSwitch(telephony.snrSwitch);
-      expect(telephony.snrNumber.isDisplayed()).toBeFalsy();
+      utils.expectIsNotDisplayed(telephony.snrNumber);
 
-      telephony.saveButton.click();
+      utils.click(telephony.saveButton);
       notifications.assertSuccess('Single Number Reach configuration removed successfully');
 
       expect(utils.getSwitchState(telephony.snrSwitch)).toBeFalsy();
-      expect(telephony.snrStatus.getText()).toEqual('Off');
+      utils.expectText(telephony.snrStatus, 'Off');
     });
   });
 

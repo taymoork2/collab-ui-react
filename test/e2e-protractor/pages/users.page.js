@@ -79,7 +79,7 @@ var UsersPage = function () {
   this.collabRadio1 = element(by.id('collabRadioLabel1'));
   this.collabRadio2 = element(by.id('collabRadioLabel2'));
 
-  this.rolesChevron = element(by.css('#rolesChevron .feature-arrow'));
+  this.rolesChevron = element(by.css('#rolesChevron .header-title'));
 
   this.messageLicenses = element(by.id('messaging'));
   this.conferenceLicenses = element(by.id('conference'));
@@ -109,7 +109,7 @@ var UsersPage = function () {
   };
 
   this.assertPage = function (page) {
-    expect(this.currentPage.getText()).toBe(page);
+    utils.expectText(this.currentPage, page);
   };
 
   this.assertResultsLength = function (results) {

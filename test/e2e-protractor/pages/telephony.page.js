@@ -89,7 +89,7 @@ var TelephonyPage = function () {
 
   this.setNumber = function (dropdown, number) {
     var input = dropdown.element(by.css('input'));
-    input.click();
+    utils.click(input);
     input.sendKeys(number);
   };
 };

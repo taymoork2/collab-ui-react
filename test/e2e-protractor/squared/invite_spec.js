@@ -50,7 +50,7 @@ describe('Invite Launcher Flow', function () {
 
   it('invitelauncher should forward to squared app', function () {
     browser.get('#/invitelauncher');
-    expect(invite.inviteLauncher.isDisplayed()).toBeTruthy();
+    utils.expectIsDisplayed(invite.inviteLauncher);
   });
 
 });

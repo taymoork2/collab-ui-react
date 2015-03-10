@@ -69,7 +69,7 @@ var LoginPage = function () {
 
   this.loginSSO = function (username, password) {
     this.get();
-    this.loginButton.click();
+    utils.click(this.loginButton);
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();
@@ -83,7 +83,7 @@ var LoginPage = function () {
 
   this.loginSSOSecondTime = function (username) {
     this.get();
-    this.loginButton.click();
+    utils.click(this.loginButton);
     browser.driver.wait(this.isLoginUsernamePresent);
     this.setLoginUsername(username);
     this.clickLoginNext();

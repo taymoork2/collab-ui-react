@@ -21,16 +21,13 @@ var CallRoutingPage = function () {
   this.callParkCount = element(by.cssContainingText('.callrouting-nav-menuitem', 'Park')).element(by.css('.count'));
 
   this.deleteCallPark = function (pattern) {
-    this.callParks.filter(function (elem) {
+    utils.click(this.callParks.filter(function (elem) {
       return elem.evaluate('callPark.pattern').then(function (value) {
         return value === pattern;
       });
-    }).first().element(by.css('.delete-icon')).click();
-    browser.sleep(1000);
-    expect(element(by.buttonText('Delete')).isDisplayed()).toBeTruthy();
-    element(by.buttonText('Delete')).click();
+    }).first().element(by.css('.delete-icon')));
+    utils.click(element(by.buttonText('Delete')));
     notifications.assertSuccess('deleted successfully');
-    browser.sleep(1000);
   };
 };
 
