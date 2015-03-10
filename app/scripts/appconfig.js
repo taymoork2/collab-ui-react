@@ -77,8 +77,10 @@ angular
 
       $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
+      var defaultLang = "en_US";
+
       //Tell the module what language to use by default
-      $translateProvider.preferredLanguage('en_US');
+      $translateProvider.preferredLanguage(defaultLang);
     }
   ]);
 
@@ -287,7 +289,20 @@ angular
           templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
           controller: 'UserPreviewCtrl',
           data: {
-            displayName: 'Entitlements'
+            displayName: 'Messaging'
+          },
+          params: {
+            service: "MESSAGING"
+          }
+        })
+        .state('user-overview.conferencing', {
+          templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
+          controller: 'UserPreviewCtrl',
+          data: {
+            displayName: 'Conferencing'
+          },
+          params: {
+            service: "CONFERENCING"
           }
         })
         .state('user-overview.userProfile', {

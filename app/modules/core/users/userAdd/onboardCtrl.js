@@ -92,7 +92,7 @@ angular.module('Core')
         }]
       };
 
-      $scope.collabRadio = 2;
+      $scope.collabRadio = 1;
       $scope.radioStates = {
         msgRadio: 0,
         confRadio: 0,

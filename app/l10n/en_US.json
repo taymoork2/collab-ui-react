@@ -283,7 +283,10 @@
     "done": "Done",
     "begin": "Begin",
     "back": "Back",
-    "finish": "Finish"
+    "finish": "Finish",
+    "language": "Language",
+    "selectLanguage": "Select a language",
+    "select": "Select"
   },
   "notifications": {
     "success": "Success notifications",
@@ -811,7 +814,8 @@
     "userAdmin": "User Administrator",
     "billingAdmin": "Billing Administrator",
     "supportAdmin": "Support Administrator",
-    "save": "Save"
+    "save": "Save",
+    "roles": "Roles"
   },
   "mohManagement": {
     "title": "Media On Hold",

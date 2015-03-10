@@ -3,8 +3,57 @@
 angular.module('Squared')
   .controller('UserEntitlementsCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', 'HttpUtils',
     function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, HttpUtils) {
+      $scope.hasAccount = Authinfo.hasAccount();
 
-      $scope.entitlementsKeys = Object.keys($scope.entitlements).sort().reverse();
+      var getSqEntitlement = function (key) {
+        var sqEnt = null;
+        var orgServices = Authinfo.getServices();
+        for (var n = 0; n < orgServices.length; n++) {
+          var service = orgServices[n];
+          if (key === service.ciService) {
+            return service.sqService;
+          }
+        }
+        return sqEnt;
+      };
+
+      var getServiceEntitlements = function (list) {
+        var ents = [];
+        for (var x = 0; x < list.length; x++) {
+          var serviceFeature = list[x];
+          if (serviceFeature && serviceFeature.entitlements) {
+            for (var y = 0; y < serviceFeature.entitlements.length; y++) {
+              var entitlement = serviceFeature.entitlements[y];
+              ents.push(getSqEntitlement(entitlement));
+            }
+          }
+        }
+        return ents;
+      };
+
+      if (!Authinfo.hasAccount()) {
+        $scope.entitlementsKeys = Object.keys($scope.entitlements).sort().reverse();
+      } else if ($scope.service && Authinfo.hasAccount()) {
+        var entList = [];
+        switch ($scope.service) {
+        case 'CONFERENCING':
+          var confService = Authinfo.getConferenceServices();
+          entList = getServiceEntitlements(confService);
+          break;
+        case 'MESSAGING':
+          var msgService = Authinfo.getMessageServices();
+          entList = getServiceEntitlements(msgService);
+          break;
+        case 'COMMUNICATION':
+          var commService = Authinfo.getCommunicationServices();
+          entList = getServiceEntitlements(commService);
+          break;
+        }
+        $scope.entitlementsKeys = entList;
+      } else {
+        $scope.entitlementsKeys = Object.keys($scope.entitlements).sort().reverse();
+      }
+
       $scope.saveDisabled = true;
 
       function Feature(name, state) {
@@ -158,7 +207,8 @@ angular.module('Squared')
       scope: {
         currentUser: '=',
         entitlements: '=',
-        queryuserslist: '='
+        queryuserslist: '=',
+        service: '='
       },
       templateUrl: 'modules/squared/scripts/directives/views/userentitlements.html'
     };

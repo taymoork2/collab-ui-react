@@ -11,16 +11,18 @@
     </div>
     <div>
       <form>
-        <input type="radio" name="collabRadio" id="collabRadio2" value="2" ng-model="collabRadio" >
-        <span id="collabRadioLabel2" class="onboard-radio" ng-click="setRadio(2)">{{collabRadio2.label}}</span>
+        <div ng-if="false">
+          <input type="radio" name="collabRadio" id="collabRadio2" value="2" ng-model="collabRadio" >
+          <span id="collabRadioLabel2" class="onboard-radio" ng-click="setRadio(2)">{{collabRadio2.label}}</span>
 
-        <div class="select-grp">
-          <select ng-model="selectedGroup"
-            ng-options="group as group.displayName for group in groups">
-          </select>
-          <a href="" class="manage-groups">
-            <span id="btnManage" translate="onboardModal.manageBtn"></span>
-          </a>
+          <div class="select-grp">
+            <select ng-model="selectedGroup"
+              ng-options="group as group.displayName for group in groups">
+            </select>
+            <a href="" class="manage-groups">
+              <span id="btnManage" translate="onboardModal.manageBtn"></span>
+            </a>
+          </div>
         </div>
 
         <input type="radio" name="collabRadio" id="collabRadio1" value="1" ng-model="collabRadio">

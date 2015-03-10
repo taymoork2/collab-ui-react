@@ -38,6 +38,89 @@ angular.module('Core')
           $location.path(path);
         }
       };
+
+      var vm = this;
+      vm.options = [];
+      vm.filterPlaceholder = $translate.instant('common.select');
+      vm.selectPlaceholder = $translate.instant('common.selectLanguage');
+      vm.selected = {};
+
+      vm.selected = {
+        label: 'English(American)',
+        value: 'en_US'
+      };
+
+      vm.options = [{
+        value: 'da_DK',
+        label: 'Danish'
+      }, {
+        value: 'de_DE',
+        label: 'German'
+      }, {
+        value: 'en_GB',
+        label: 'English(British)'
+      }, {
+        value: 'en_US',
+        label: 'English(American)'
+      }, {
+        value: 'es_ES',
+        label: 'Spanish(Spain)'
+      }, {
+        value: 'es_LA',
+        label: 'Spanish(Latin America)'
+      }, {
+        value: 'fr_FR',
+        label: 'French'
+      }, {
+        value: 'id_ID',
+        label: 'Indionesian'
+      }, {
+        value: 'it_IT',
+        label: 'Italian'
+      }, {
+        value: 'js_JA',
+        label: 'Japanese'
+      }, {
+        value: 'ko_KR',
+        label: 'Korean'
+      }, {
+        value: 'nb_NO',
+        label: 'Norwegian'
+      }, {
+        value: 'nl_NL',
+        label: 'Netherlands'
+      }, {
+        value: 'pl_PL',
+        label: 'Polish'
+      }, {
+        value: 'pt_BR',
+        label: 'Brazilian'
+      }, {
+        value: 'ru_RU',
+        label: 'Russian'
+      }, {
+        value: 'sv_SE',
+        label: 'Swedish'
+      }, {
+        value: 'tr_TR',
+        label: 'Turkish'
+      }, {
+        value: 'zh_CN',
+        label: 'Chinese(Mandarin)'
+      }, {
+        value: 'zh_TW',
+        label: 'Chinese(Traditional)'
+      }];
+
+      $scope.updateLanguage = function () {
+        $translate.use(vm.selected.value);
+        // $state.transitionTo($state.current, $stateParams, {
+        //     reload: true,
+        //     inherit: false,
+        //     notify: true
+        // });
+        $state.go('overview');
+      };
     }
 
   ]);
