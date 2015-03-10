@@ -65,7 +65,8 @@ describe('Add/Invite/Entitle User flow', function () {
 
     var inviteEmail;
     describe('Invite users', function () {
-      it('should invite users successfully', function () {
+      //TODO disabled due to backend consumer error
+      xit('should invite users successfully', function () {
         inviteEmail = utils.randomTestGmail();
         utils.click(users.clearButton);
         users.addUsersField.sendKeys(inviteEmail);
@@ -74,12 +75,13 @@ describe('Add/Invite/Entitle User flow', function () {
         notifications.assertSuccess('sent successfully');
       });
 
-      it('clicking on cancel button should close the modal', function () {
+      xit('clicking on cancel button should close the modal', function () {
         utils.click(users.closeAddUsers);
         utils.expectIsNotDisplayed(users.manageDialog);
       });
 
-      it('should show call-initiation entitlement for the user', function () {
+      xit('should show call-initiation entitlement for the user', function () {
+
         utils.search(inviteEmail);
         utils.expectText(users.userListEnts.first(), inviteEmail);
         utils.click(users.gridCell);
@@ -92,11 +94,11 @@ describe('Add/Invite/Entitle User flow', function () {
         utils.click(users.closeSidePanel);
       });
 
-      it('should delete randon user', function () {
+      xit('should delete randon user', function () {
         deleteUtils.deleteUser(inviteEmail);
       });
 
-      it('click on add button should pop up the adduser modal and display only invite button', function () {
+      xit('click on add button should pop up the adduser modal and display only invite button', function () {
         utils.click(users.addUsers);
         utils.expectIsDisplayed(users.manageDialog);
       });
