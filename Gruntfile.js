@@ -895,9 +895,6 @@ module.exports = function (grunt) {
     'htmlprocess_build',
     'karmaconfig',
     'karma:continuous',
-    'continue:on', // dont fail the build if mocha sanity tests fail
-    'mochaTest',
-    'continue:off'
   ]);
 
   // Build files into the dist folder for production
@@ -1020,6 +1017,9 @@ module.exports = function (grunt) {
       ]);
     }
     grunt.task.run([
+      'continue:on', // dont fail the build if mocha sanity tests fail
+      'mochaTest',
+      'continue:off',
       'test-setup:dist',
       'protractor:squared',
       'protractor:huron',
