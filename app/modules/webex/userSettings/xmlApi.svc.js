@@ -24,7 +24,7 @@
     ) {
       var _self = this;
       var x2js = new X2JS();
-      var xmlServerURL = "http://172.24.93.53/xml9.0.0/XMLService";
+      var xmlServerURL = "";
 
       this.getXMLApi = function (xmlServerURL, xmlRequest, resolve, reject) {
         $http({

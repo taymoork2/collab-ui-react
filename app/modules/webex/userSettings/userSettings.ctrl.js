@@ -20,7 +20,7 @@
       this.getUserSettingsInfo = function () {
         var currView = this;
         var xmlApiAccessInfo = {
-          xmlServerURL: "http://172.24.93.53/xml9.0.0/XMLService",
+          xmlServerURL: "",
           webexAdminID: "",
           webexAdminPswd: "",
           siteID: "4272",
