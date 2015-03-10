@@ -89,6 +89,7 @@ angular.module('Core')
         }
         return tabs;
       };
+
       var isEntitled = function (entitlement) {
         var services = authData.services;
         if (services) {

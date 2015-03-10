@@ -80,6 +80,8 @@ angular.module('Core')
 
         statusPageUrl: 'http://status.projectsquared.com/',
 
+        statusPageUrlSpark: 'http://status.ciscospark.com/',
+
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
 
         callflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
@@ -96,7 +98,8 @@ angular.module('Core')
 
         healthCheckUrl: {
           dev: 'http://projectsquared.statuspage.io/index.json',
-          prod: 'https://projectsquared.statuspage.io/index.json'
+          prod: 'https://projectsquared.statuspage.io/index.json',
+          spark: 'https://ciscospark.statuspage.io/index.json'
         },
 
         herculesUrl: {
@@ -399,7 +402,9 @@ angular.module('Core')
         },
 
         getHealthCheckUrlServiceUrl: function () {
-          if (this.isDev()) {
+          if (this.isSparkInt() || this.isSparkProd()) {
+            return this.healthCheckUrl.spark;
+          } else if (this.isDev()) {
             return this.healthCheckUrl.prod;
           } else {
             return this.healthCheckUrl.prod;
@@ -415,7 +420,11 @@ angular.module('Core')
         },
 
         getStatusPageUrl: function () {
-          return this.statusPageUrl;
+          if (this.isSparkInt() || this.isSparkProd()) {
+            return this.statusPageUrlSpark;
+          } else {
+            return this.statusPageUrl;
+          }
         },
 
         getSquaredAppUrl: function () {

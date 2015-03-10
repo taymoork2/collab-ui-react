@@ -68,5 +68,15 @@ angular.module('Core')
       $scope.login = function () {
         Auth.redirectToLogin();
       };
+
+      //Branding dependent changes. To be removed later. 
+      $scope.isSpark = function () {
+        return Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint';
+      };
+
+      if ($scope.isSpark()) {
+        angular.element('html').css('background', 'url(images/bg_3515.jpg) no-repeat center center fixed');
+      }
+
     }
   ]);
