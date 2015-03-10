@@ -827,6 +827,18 @@ module.exports = function (grunt) {
           }
         }
       }
+    },
+
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+          timeout: 20000,
+          'async-only': true
+        },
+        src: ['test/api_sanity/**/*_test.coffee'],
+        require: 'coffee-script/register'
+      }
     }
   };
 
@@ -881,7 +893,10 @@ module.exports = function (grunt) {
     'autoprefixer',
     'htmlprocess_build',
     'karmaconfig',
-    'karma:continuous'
+    'karma:continuous',
+    'continue:on', // dont fail the build if mocha sanity tests fail
+    'mochaTest',
+    'continue:off'
   ]);
 
   // Build files into the dist folder for production
@@ -1072,4 +1087,6 @@ module.exports = function (grunt) {
       }
     });
   });
+
+  grunt.registerTask('mocha', 'mochaTest');
 };
