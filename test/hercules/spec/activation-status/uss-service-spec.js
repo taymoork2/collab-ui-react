@@ -4,7 +4,7 @@ describe('Service: USSService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $httpBackend, Service;
-  var rootPath = 'https://hercules-a.wbx2.com/uss/api/v1/';
+  var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
 
   beforeEach(function () {
     module(function ($provide) {

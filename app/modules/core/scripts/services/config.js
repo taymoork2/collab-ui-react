@@ -108,6 +108,12 @@ angular.module('Core')
           prod: 'https://hercules-a.wbx2.com/'
         },
 
+        ussUrl: {
+          dev: 'https://uss-integration.wbx2.com/',
+          integration: 'https://uss-integration.wbx2.com/',
+          prod: 'https://uss-integration.wbx2.com/'
+        },
+
         scimSchemas: [
           'urn:scim:schemas:core:1.0',
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
@@ -449,6 +455,10 @@ angular.module('Core')
 
         getHerculesUrl: function () {
           return this.herculesUrl[this.getEnv()];
+        },
+
+        getUssUrl: function () {
+          return this.ussUrl[this.getEnv()];
         },
 
         getDefaultEntitlements: function () {
