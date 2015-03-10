@@ -11,6 +11,7 @@ describe('Downloads page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   describe('with email parameter and reset/admin email params', function () {

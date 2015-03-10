@@ -15,6 +15,7 @@ describe('Devices flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   it('should login as squared team member admin user', function () {

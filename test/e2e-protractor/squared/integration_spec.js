@@ -25,6 +25,7 @@ describe('App flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   it('should just login', function () {

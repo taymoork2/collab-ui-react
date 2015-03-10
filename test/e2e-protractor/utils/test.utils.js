@@ -4,10 +4,6 @@
 
 var config = require('./test.config.js');
 var request = require('request');
-// var jar = request.jar();
-// var req = request.defaults({
-//   jar: jar
-// });
 
 exports.searchButton = element(by.css('.header-search-toggle'));
 
@@ -182,4 +178,16 @@ exports.search = function (query) {
 exports.searchAndClick = function (query) {
   this.search(query);
   utils.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+};
+
+exports.dumpConsoleErrors = function (name) {
+  // jshint node:true
+  browser.manage().logs().get('browser').then(function (browserLogs) {
+    browserLogs.forEach(function (log) {
+      if (log.level.value > 900) {
+        if (name) console.log('        ↱ ' + name);
+        console.log('CONSOLE ↳ ' + log.message);
+      }
+    });
+  });
 };

@@ -30,6 +30,7 @@ describe('Support flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   describe('Support tab', function () {

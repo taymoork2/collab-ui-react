@@ -11,8 +11,10 @@ describe('Squared Invite User Flow', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
+
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   describe('Display invite dialog', function () {

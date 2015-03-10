@@ -16,8 +16,10 @@ describe('Partner flow', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
+
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   // Logging in. Write your tests after the login flow is complete.

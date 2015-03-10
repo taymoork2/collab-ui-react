@@ -20,112 +20,118 @@ var encryptedQueryParam = 'bnlA6k3ZerWIccYYY2RndVEeMjFu914UOsnFVyYNQoOtS2WBXdmPi
 // - State is conserved between each describe and it blocks.
 // - When a page is being loaded, use wait() to check if elements are there before asserting.
 
-describe('invite page with user param', function () {
+describe('invite spec', function () {
+  afterEach(function () {
+    utils.dumpConsoleErrors(this.getFullName());
+  });
 
-  it('should forward to squared app without page param', function () {
-    browser.get('#/invite');
+  describe('invite page with user param', function () {
 
-    browser.driver.wait(function () {
-      return browser.driver.isElementPresent(by.id(loginBtnId));
-    }).then(function () {
-      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+    it('should forward to squared app without page param', function () {
+      browser.get('#/invite');
+
+      browser.driver.wait(function () {
+        return browser.driver.isElementPresent(by.id(loginBtnId));
+      }).then(function () {
+        expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+      });
+
+    });
+
+    it('should forward to squared app with page param', function () {
+      browser.get('#/invite?user=' + encodeURIComponent(encryptedQueryParam));
+
+      browser.driver.wait(function () {
+        return browser.driver.isElementPresent(by.id(loginBtnId));
+      }).then(function () {
+        expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+      });
+
     });
 
   });
 
-  it('should forward to squared app with page param', function () {
-    browser.get('#/invite?user=' + encodeURIComponent(encryptedQueryParam));
+  describe('Invite Launcher Flow', function () {
 
-    browser.driver.wait(function () {
-      return browser.driver.isElementPresent(by.id(loginBtnId));
-    }).then(function () {
-      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+    it('invitelauncher should forward to squared app', function () {
+      browser.get('#/invitelauncher');
+      utils.expectIsDisplayed(invite.inviteLauncher);
     });
 
   });
 
-});
+  describe('App Launcher Flow', function () {
 
-describe('Invite Launcher Flow', function () {
+    it('applauncher route should forward to squared app', function () {
+      browser.get('#/applauncher');
 
-  it('invitelauncher should forward to squared app', function () {
-    browser.get('#/invitelauncher');
-    utils.expectIsDisplayed(invite.inviteLauncher);
-  });
+      browser.driver.wait(function () {
+        return browser.driver.isElementPresent(by.id(loginBtnId));
+      }).then(function () {
+        expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+      });
 
-});
+    });
 
-describe('App Launcher Flow', function () {
+    it('applauncher page should forward to squared app', function () {
+      browser.get('applauncher.html');
 
-  it('applauncher route should forward to squared app', function () {
-    browser.get('#/applauncher');
+      browser.driver.wait(function () {
+        return browser.driver.isElementPresent(by.id(loginBtnId));
+      }).then(function () {
+        expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+      });
 
-    browser.driver.wait(function () {
-      return browser.driver.isElementPresent(by.id(loginBtnId));
-    }).then(function () {
-      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+    });
+
+    it('applauncher route should forward to squared app with url paramters', function () {
+      browser.get('#/applauncher' + urlparams);
+
+      browser.driver.wait(function () {
+        return browser.driver.isElementPresent(by.id(loginBtnId));
+      }).then(function () {
+        expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+        expect(browser.driver.getCurrentUrl()).toContain(urlparams);
+      });
+
+    });
+
+    it('applauncher page should forward to squared app with url parameters', function () {
+      browser.get('applauncher.html' + urlparams);
+
+      browser.driver.wait(function () {
+        return browser.driver.isElementPresent(by.id(loginBtnId));
+      }).then(function () {
+        expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+        expect(browser.driver.getCurrentUrl()).toContain(urlparams);
+      });
+
     });
 
   });
 
-  it('applauncher page should forward to squared app', function () {
-    browser.get('applauncher.html');
+  describe('App Download Page', function () {
 
-    browser.driver.wait(function () {
-      return browser.driver.isElementPresent(by.id(loginBtnId));
-    }).then(function () {
-      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+    it('appdownload route should forward to webapp', function () {
+      browser.get('#/appdownload');
+
+      browser.driver.wait(function () {
+        return browser.driver.isElementPresent(by.id(loginBtnId));
+      }).then(function () {
+        expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+      });
+
     });
 
-  });
+    it('applauncher page should forward to squared app', function () {
+      browser.get('appdownload.html');
 
-  it('applauncher route should forward to squared app with url paramters', function () {
-    browser.get('#/applauncher' + urlparams);
+      browser.driver.wait(function () {
+        return browser.driver.isElementPresent(by.id(loginBtnId));
+      }).then(function () {
+        expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
+      });
 
-    browser.driver.wait(function () {
-      return browser.driver.isElementPresent(by.id(loginBtnId));
-    }).then(function () {
-      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
-      expect(browser.driver.getCurrentUrl()).toContain(urlparams);
     });
-
-  });
-
-  it('applauncher page should forward to squared app with url parameters', function () {
-    browser.get('applauncher.html' + urlparams);
-
-    browser.driver.wait(function () {
-      return browser.driver.isElementPresent(by.id(loginBtnId));
-    }).then(function () {
-      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
-      expect(browser.driver.getCurrentUrl()).toContain(urlparams);
-    });
-
-  });
-
-});
-
-describe('App Download Page', function () {
-
-  it('appdownload route should forward to webapp', function () {
-    browser.get('#/appdownload');
-
-    browser.driver.wait(function () {
-      return browser.driver.isElementPresent(by.id(loginBtnId));
-    }).then(function () {
-      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
-    });
-
-  });
-
-  it('applauncher page should forward to squared app', function () {
-    browser.get('appdownload.html');
-
-    browser.driver.wait(function () {
-      return browser.driver.isElementPresent(by.id(loginBtnId));
-    }).then(function () {
-      expect(browser.driver.getCurrentUrl()).toContain(webClientURL);
-    });
-
   });
 });

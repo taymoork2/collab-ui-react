@@ -11,8 +11,10 @@ describe('Squared Add & Entitle User Flows', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
+
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   describe('Login as users.testUser admin and launch add users modal', function () {

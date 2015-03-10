@@ -11,6 +11,7 @@ describe('Invite User and Check Buckets', function () {
   });
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   //log in as huron user

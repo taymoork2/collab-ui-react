@@ -16,6 +16,7 @@ describe('Customer Admin Landing Page License Info', function () {
   });
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   describe('Organization not on trials', function () {

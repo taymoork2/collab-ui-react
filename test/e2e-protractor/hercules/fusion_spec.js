@@ -18,6 +18,7 @@ describe('Fusion Page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors(this.getFullName());
   });
 
   it('should log in as admin', function () {
