@@ -19,7 +19,7 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         url: 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/4214d345-7caf-4e32-b015-34de878d1158/unlicensedUsers'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
-        data = JSON.parse(body)
+        data = helper.parseJSON(body)
         assert _.isObject(data)
         assert.equal 200, res.statusCode
         done()
@@ -29,7 +29,7 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         url: 'https://atlas-integration.wbx2.com/admin/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/users/partneradmins'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
-        data = JSON.parse(body)
+        data = helper.parseJSON(body)
         assert _.isObject(data)
         assert.equal 200, res.statusCode
         done()
@@ -44,12 +44,12 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         assert.equal 200, res.statusCode
         done()
 
-  describe 'partner-admin', ->
+  describe 'partner-admin ( please be patient... )', ->
 
     bearer = null
 
     before (done) ->
-      helper.getBearerToken 'pbr-admin', (b) ->
+      helper.getBearerToken 'partner-admin', (b) ->
         bearer = b
         done()
 
@@ -58,7 +58,45 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         url: 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/c054027f-c5bd-4598-8cd8-07c08163e8cd/managedOrgs'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
-        data = JSON.parse(body)
+        data = helper.parseJSON(body)
         assert _.isObject(data)
         assert.equal 200, res.statusCode
         done()
+
+    it 'should create and delete a partner trial', (done) ->
+      name = 'mocha_api_sanity_' + new Date().getTime().toString(16)
+      opts =
+        url: 'https://atlas-integration.wbx2.com/admin/api/v1/organization/c054027f-c5bd-4598-8cd8-07c08163e8cd/trials'
+        auth: bearer: bearer
+        json:
+          trialPeriod: 90
+          customerName: name
+          customerEmail: "#{name}@example.com"
+          startDate: '2015-03-10T17:05:02.713Z'
+          offers: [{id: "COLLAB", licenseCount: 100}]
+        headers:
+          'Content-Type': 'application/json'
+
+      request.post opts, (err, res, body) ->
+        assert not body.errors, JSON.stringify(body)
+        assert.equal 200, res.statusCode
+        trialOrgId = body.customerOrgId
+
+        opts =
+          url: 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/' + trialOrgId
+          auth: bearer: bearer
+
+        request.del opts, (err, res, body) ->
+          assert.equal 204, res.statusCode
+          done()
+
+    it 'should fetch trials', (done) ->
+      opts =
+        url: 'https://atlas-integration.wbx2.com/admin/api/v1/organization/c054027f-c5bd-4598-8cd8-07c08163e8cd/trials'
+        auth: bearer: bearer
+      request.get opts, (err, res, body) ->
+        data = helper.parseJSON(body)
+        assert _.isObject(data)
+        assert.equal 200, res.statusCode
+        done()
+

@@ -1,4 +1,4 @@
-request = require('request').defaults({jar: true})
+request = require('request')
 
 auth =
   'sqtest-admin':
@@ -17,7 +17,7 @@ auth =
 clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec'
 clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857'
 
-getSSOToken = (creds, cb) ->
+getSSOToken = (req, jar, creds, cb) ->
   opts =
     url: 'https://idbroker.webex.com/idb/UI/Login?org=' + creds.org
     headers:
@@ -25,15 +25,18 @@ getSSOToken = (creds, cb) ->
     form:
       IDToken1: creds.user
       IDToken2: creds.pass
-    jar: true
 
-  request.post opts, (err, res, body) ->
+  req.post opts, (err, res, body) ->
     if err
       console.error err, body
-      throw new Error 'Failed to fetch SSO token from CI'
+      throw new Error 'Failed to fetch SSO token from CI. Status: ' + res?.statusCode
+
+    token = res.headers['set-cookie'][0].match(/cisPRODAMAuthCookie=(.*); Domain/)[1]
+    jar.setCookie 'cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/'
+
     cb()
 
-getAuthCode = (creds, cb) ->
+getAuthCode = (req, creds, cb) ->
   opts =
     url: 'https://idbroker.webex.com/idb/oauth2/v1/authorize'
     headers:
@@ -42,25 +45,24 @@ getAuthCode = (creds, cb) ->
       response_type: 'code'
       redirect_uri: 'urn:ietf:wg:oauth:2.0:oob'
       client_id: clientId
-      # scope: 'Identity:SCIM Identity:Organization Identity:Config'
       scope: 'webexsquare:admin Identity:SCIM Identity:Config Identity:Organization'
       realm: '/' + creds.org
       state: 'this-should-be-a-random-string-for-security-purpose'
 
-  request.post opts, (err, res, body) ->
+  req.post opts, (err, res, body) ->
     if err
       console.error err, body
-      throw new Error 'Failed to fetch Auth Code from CI'
+      throw new Error 'Failed to fetch Auth Code from CI. Status: ' + res?.statusCode
 
-    code = body.match(/<title>(.*)</)[1]
+    code = body.match(/<title>(.*)</)?[1]
 
     if not code
       console.error body
-      throw new Error 'Failed to extract Auth Code'
+      throw new Error 'Failed to extract Auth Code. Status: ' + res?.statusCode
 
     cb(code)
 
-getAccessToken = (code, cb) ->
+getAccessToken = (req, code, cb) ->
   opts =
     url: 'https://idbroker.webex.com/idb/oauth2/v1/access_token'
     headers:
@@ -73,20 +75,20 @@ getAccessToken = (code, cb) ->
       user: clientId
       pass: clientSecret
 
-  request.post opts, (err, res, body) ->
+  req.post opts, (err, res, body) ->
     if err
       console.error err, body
-      throw new Error 'Failed to fetch Access Token from CI'
+      throw new Error 'Failed to fetch Access Token from CI. Status: ' + res?.statusCode
 
     obj = try
       JSON.parse(body)
     catch e
       console.error body
-      throw new Error 'Failed to parse Access Token JSON'
+      throw new Error 'Failed to parse Access Token JSON. Status: ' + res?.statusCode
 
     if not obj?.access_token
       console.error body
-      throw new Error 'Failed to extract Access Token'
+      throw new Error 'Failed to extract Access Token. Status: ' + res?.statusCode
 
     cb(obj.access_token)
 
@@ -95,6 +97,16 @@ module.exports =
     creds = auth[user]
     throw new Error('Credentials for ' + user + ' not found') unless creds
 
-    getSSOToken creds, ->
-      getAuthCode creds, (authCode) ->
-        getAccessToken authCode, callback
+    jar = request.jar()
+    req = request.defaults jar: jar
+
+    getSSOToken req, jar, creds, ->
+      getAuthCode req, creds, (authCode) ->
+        getAccessToken req, authCode, callback
+
+  parseJSON: (data) ->
+    try
+      JSON.parse(data)
+    catch
+      throw new Error 'Unable to parse JSON: ' + data
+

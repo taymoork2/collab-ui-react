@@ -834,7 +834,7 @@ module.exports = function (grunt) {
       test: {
         options: {
           reporter: 'spec',
-          timeout: 20000,
+          timeout: 30000,
           'async-only': true
         },
         src: ['test/api_sanity/**/*_test.coffee'],
