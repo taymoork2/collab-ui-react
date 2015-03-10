@@ -24,6 +24,7 @@ angular.module('Core')
 
       var authorizeUser = function () {
         $scope.loading = true;
+        $scope.loginText = 'loginPage.loading';
 
         Auth.authorize($rootScope.token).then(function () {
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -42,6 +43,7 @@ angular.module('Core')
             $rootScope.services = Authinfo.getServices();
 
             $timeout(function () {
+              angular.element('html').css('background', 'none');
               $state.go(state, params);
             }, loadingDelay);
           }
@@ -70,6 +72,8 @@ angular.module('Core')
       };
 
       //Branding dependent changes. To be removed later. 
+      $scope.loginText = 'loginPage.login';
+
       $scope.isSpark = function () {
         return Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint';
       };

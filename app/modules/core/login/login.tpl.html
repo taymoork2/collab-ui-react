@@ -12,8 +12,7 @@
     </div>
     <div class="round-button" ng-hide="result" ng-show="isSpark()">
       <div class="round-button-circle" ng-show="isSpark()">
-        <span class="btn btn-info btn-block login-btn" role="button" ng-click="login()" ng-hide="loading" translate="loginPage.login"></span>
-        <span class="btn btn-info btn-block login-btn" role="button" ng-show="loading" translate="loginPage.loading"></span>
+        <span class="btn btn-info btn-block login-btn" role="button" ng-click="login()" ng-disabled="loading">{{ loginText | translate }}</span>
       </div>
     </div>
   </div>
