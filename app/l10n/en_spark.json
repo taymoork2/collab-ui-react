@@ -92,13 +92,15 @@
     "entitlementsPreview": "Entitlements",
     "addNewLinePreview": "Add a New Line",
     "newLine": "New Line",
-    "devicesPreview": "Devices",
+    "devicesPreview": "Devices & Software",
     "activateNewDevice": "Activate New Device",
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an Activation Code to enable a new device for this user.",
     "activationCodeTitle": "Activation Code for New Device",
-    "expires": "Expires"
+    "expires": "Expires",
+    "editServices": "Edit services",
+    "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Messaging"
@@ -137,7 +139,7 @@
     "welcome": "Welcome!",
     "feedback": "Feedback",
     "logout": "Sign Out",
-    "appTitle": "Cisco Spark Management",
+    "appTitle": "Cisco Spark Admin Tool",
     "genericTitle": "Cisco Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
@@ -153,7 +155,7 @@
     "install": "Please install Cisco Spark by following",
     "link": "this link.",
     "using": "Please start using",
-    "squared": "Cisco Spark"
+    "squared": "Cisco Spark."
   },
   "invitePage": {
     "redirect": "Redirecting...",
@@ -212,6 +214,7 @@
     "error": "Update user failed."
   },
   "supportPage": {
+    "title": "Support",
     "subtitleLogs": "Search for logs",
     "listlogsbtn": "Search",
     "noResults": "No Results.",
@@ -256,7 +259,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "Failed to retrieve call info. Status: {{status}}",
     "subTitleCallFlow": "Call Flow",
-    "downloading": "This download might take up to 5 minutes. Please be patient..."
+    "downloading": "This download might take up to 5 minutes. Please be patient...",
+    "operational": "All systems operational",
+    "error": "Error in system",
+    "supportResources": "Support Resources",
+    "showDetails": "Show Details",
+    "hideDetails": "Hide Details",
+    "problemReports": "Problem Reports",
+    "reportingUrl": "Reporting URL:",
+    "helpFaq": "Help and FAQs",
+    "helpUrl": "Help URL:",
+    "sendFeedback": "Cisco Feedback"
   },
   "common": {
     "delete": "Delete",
@@ -588,6 +601,7 @@
     "createButton": "Create Call Park"
   },
   "telephonyPreview": {
+    "squareduc": "Cisco Spark UC",
     "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -628,7 +642,7 @@
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "Enables users to answer incoming calls to their extension to another number",
+    "description": "<small>Enables users to answer incoming calls to their extension to another number</small>",
     "toggle": "Single Number Reach",
     "snrNote": "SNR can cover all the user's lines or limited to specific lines",
     "success": "Single Number Reach configuration saved successfully",
@@ -754,6 +768,7 @@
     "inputPlacehoder": "Enter phone numbers separated by commas"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Device Configuration",
     "deviceStatus": "Device Status",
     "description": "Description",
     "id": "ID",
@@ -885,5 +900,10 @@
     "overAllUtil": "Overall Utilization",
     "average": "Average",
     "bridgeUtilization": "Bridge By Bridge Utilization"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
+    "info": "Status",
+    "wait": "Please wait while we redirect you"
   }
 }
