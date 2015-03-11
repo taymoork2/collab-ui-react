@@ -49,6 +49,7 @@ exports.config = {
     var RolesPage = require('./test/e2e-protractor/pages/roles.page.js');
     var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
     var BasicSettigsPage = require('./test/e2e-protractor/pages/webexbasicsettings.page.js');
+    var OrgProfilePage = require('./test/e2e-protractor/pages/orgprofile.page.js');
 
 
     global.notifications = new Notifications();
@@ -74,7 +75,7 @@ exports.config = {
     global.roles = new RolesPage();
     global.meetings = new MeetingsPage();
     global.usersettings = new BasicSettigsPage();
-
+    global.orgprofile = new OrgProfilePage();
 
     var ScreenShotReporter = require('protractor-screenshot-reporter');
     var path = require('path');

@@ -78,6 +78,38 @@ angular.module('Core')
           });
         },
 
+        setOrgSettings: function (orgId, reportingSiteUrl, reportingSiteDesc, helpUrl, callback) {
+          var orgUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings';
+
+          var payload = {};
+          if (reportingSiteUrl !== '') {
+            payload['reportingSiteUrl'] = reportingSiteUrl;
+          }
+          if (reportingSiteDesc !== '') {
+            payload['reportingSiteDesc'] = reportingSiteDesc;
+          }
+          if (helpUrl !== '') {
+            payload['helpUrl'] = helpUrl;
+          }
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+          $http({
+              method: 'PATCH',
+              url: orgUrl,
+              data: payload
+            })
+            .success(function (data, status) {
+              data.success = true;
+              Log.debug('Posted orgSettings: ' + payload);
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
+        },
+
         createOrg: function (accountId, emailAddress, callback) {
           var orgUrl = Config.getAdminServiceUrl() + 'organizations';
           var orgRequest = {

@@ -107,6 +107,7 @@
     "servicesetup": true,
     "notifications": true,
     "getJSONFixture": true,
-    "enterpriseResource": true
+    "enterpriseResource": true,
+    "orgprofile": true
   }
 }

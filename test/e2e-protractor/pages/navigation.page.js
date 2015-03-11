@@ -92,6 +92,11 @@ var Navigation = function () {
 
   this.clickFirstTimeWizard = function () {
     utils.click(this.settingsMenu);
+    utils.click(this.dropdownItems.second());
+  };
+
+  this.clickOrgProfile = function () {
+    utils.click(this.settingsMenu);
     utils.click(this.dropdownItems.first());
   };
 

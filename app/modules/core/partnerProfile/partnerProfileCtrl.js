@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService',
-    function ($scope, Authinfo, Notification, $stateParams, UserListService) {
+  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log',
+
+    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log) {
 
       // toggles api calls, show/hides divs based on customer or partner profile
       $scope.isPartner = $stateParams.isPartner === 'true' ? true : false;
@@ -37,7 +38,6 @@ angular.module('Core')
         };
 
         $scope.companyName = Authinfo.getOrgName();
-
         $scope.problemSiteRadioValue = 0;
         $scope.helpSiteRadioValue = 0;
 
@@ -61,21 +61,50 @@ angular.module('Core')
         //     //console.log(data);
         //   }
         // });
+
+        Orgservice.getOrg(function (data, status) {
+          if (data.success) {
+            if (data.orgSettings && data.orgSettings.length > 0) {
+              var length = data.orgSettings.length;
+              for (var i = 0; i < length; i++) {
+                var orgSettingsObj;
+                try {
+                  orgSettingsObj = JSON.parse(data.orgSettings[i]);
+                } catch (e) {
+                  continue;
+                }
+
+                if (typeof (orgSettingsObj.reportingSiteUrl) !== 'undefined') {
+                  $scope.problemSiteRadioValue = 1;
+                  $scope.supportUrl = orgSettingsObj.reportingSiteUrl;
+                  $scope.oldSupportUrl = $scope.supportUrl;
+                }
+                if (typeof (orgSettingsObj.reportingSiteDesc) !== 'undefined') {
+                  $scope.problemSiteRadioValue = 1;
+                  $scope.supportText = orgSettingsObj.reportingSiteDesc;
+                  $scope.oldSupportText = $scope.supportText;
+                }
+                if (typeof (orgSettingsObj.helpUrl) !== 'undefined') {
+                  $scope.helpSiteRadioValue = 1;
+                  $scope.helpUrl = orgSettingsObj.helpUrl;
+                  $scope.oldHelpUrl = $scope.helpUrl;
+                }
+              }
+            } else {
+              Log.debug('No orgSettings found for org: ' + data.id);
+            }
+
+          } else {
+            Log.debug('Get existing org failed. Status: ' + status);
+          }
+        }, Authinfo.getOrgId());
       };
 
       $scope.init();
 
-      // validates support url as valid url & checks for %%logID%% where logID is any alphanumeric value
       $scope.validation = function () {
-        var validUrlRegex = new RegExp('http[s]?:\\/\\/(?:www\\.|(?!www))[^\\s\\.]+\\.[^\\s]{2,}|www\\.[^\\s]+\\.[^\\s]{2,}');
-        var logIdRegex = new RegExp('\\?id=%%[a-zA-Z0-9]+%%');
-        if ($scope.problemSiteRadioValue === 1) {
-          if ($scope.supportUrl.match(validUrlRegex) && $scope.supportUrl.match(logIdRegex)) {
-            Notification.notify(['You have successfully set your support URL.'], 'success');
-          } else {
-            Notification.notify(['Please make sure that the url is formatted correctly. Example: http://www.acme.com/reportproblem?id=%%logID%%'], 'error');
-          }
-        }
+        angular.element('#orgProfileSaveBtn').button('loading');
+        updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl, $scope.supportText, $scope.helpUrl);
       };
 
       $scope.setProblemRadio = function (value) {
@@ -85,5 +114,42 @@ angular.module('Core')
       $scope.setHelpRadio = function (value) {
         $scope.helpSiteRadioValue = value;
       };
+
+      var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl) {
+        Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, function (data, status) {
+          if (data.success) {
+            var orgs = [];
+            var numOrgs = data.organizations.length;
+            var numFailed = 0;
+            var failedOrgs = [];
+            for (var i = 0; i < numOrgs; i++) {
+              if (!data.organizations[i].isSuccess) {
+                numFailed++;
+                failedOrgs.push('[orgId: ' + data.organizations[i].orgId + ', isPartnerOrg: ' + data.organizations[i].isPartnerOrg + '] <br/>');
+              } else {
+                orgs.push('[orgId: ' + data.organizations[i].orgId + ', isPartnerOrg: ' + data.organizations[i].isPartnerOrg + '] <br/>');
+              }
+            }
+
+            if (numOrgs === 1) {
+              if (numFailed === 0) {
+                Notification.notify(['orgSettings updated successfully for organization: <br/>' + orgs.toString()], 'success');
+              } else {
+                Notification.notify(['update orgSettings failed for organization: <br/>' + failedOrgs.toString()], 'error');
+              }
+            } else {
+              if (numFailed === 0) {
+                Notification.notify(['orgSettings updated successfully for partner and his managedOrgs: <br/>' + orgs.toString()], 'success');
+              } else {
+                Notification.notify(['update orgSettings failed for partner and his managedOrgs: <br/>' + failedOrgs.toString()], 'error');
+              }
+            }
+          } else {
+            Notification.notify(['update orgSettings failed for organization: <br/>' + orgId], 'error');
+          }
+          angular.element('#orgProfileSaveBtn').button('reset');
+        });
+      };
+
     }
   ]);

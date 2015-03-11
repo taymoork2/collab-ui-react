@@ -4,9 +4,22 @@ angular.module('Core')
   .controller('SettingsMenuCtrl', ['$scope', '$location', '$state', '$translate', 'Authinfo', 'Utils',
     function ($scope, $location, $state, $translate, Authinfo, Utils) {
       $scope.menuItems = [];
+      var partnerAdminProfile = {
+        link: '/profile/true',
+        title: $translate.instant('partnerProfile.link')
+      };
+      var customerAdminProfile = {
+        link: '/profile/false',
+        title: $translate.instant('partnerProfile.customerLink')
+      };
+
+      if (Authinfo.isPartner()) {
+        $scope.menuItems.push(partnerAdminProfile);
+      } else if (Authinfo.isCustomerAdmin()) {
+        $scope.menuItems.push(customerAdminProfile);
+      }
 
       var initialSetupText = $translate.instant('settings.initialSetup');
-
       var getAuthinfoData = function () {
         var found = false;
         if (Authinfo.isCustomerAdmin()) {
@@ -122,5 +135,4 @@ angular.module('Core')
         $state.go('overview');
       };
     }
-
   ]);
