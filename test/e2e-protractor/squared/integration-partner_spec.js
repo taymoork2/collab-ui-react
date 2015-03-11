@@ -40,7 +40,7 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
       utils.expectIsDisplayed(navigation.reportsTab);
-      expect(navigation.getTabCount()).toBe(3);
+      expect(navigation.getTabCount()).toBe(4);
     });
 
     it('should display trials list', function () {

@@ -37,7 +37,7 @@ describe('CS Admin flow', function () {
   describe('Navigation Bar', function () {
 
     it('should display correct tabs for user based on role', function () {
-      expect(navigation.getTabCount()).toBe(5);
+      expect(navigation.getTabCount()).toBe(6);
       expect(navigation.homeTab.isDisplayed()).toBeTruthy();
       expect(navigation.customersTab.isDisplayed()).toBeTruthy();
       expect(navigation.usersTab.isDisplayed()).toBeTruthy();

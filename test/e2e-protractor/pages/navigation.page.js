@@ -6,6 +6,7 @@ var Navigation = function () {
   this.tabCount = element.all(by.repeater('page in pages'));
   this.homeTab = element(by.css('li.overviewTab > a'));
   this.usersTab = element(by.css('li.userTab > a'));
+  this.accountTab = element(by.css('li.accountTab > a'));
   this.listUsersTab = element(by.css('a[href="#users"]'));
   this.orgTab = element(by.css('a[href="#organization"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
@@ -92,12 +93,11 @@ var Navigation = function () {
 
   this.clickFirstTimeWizard = function () {
     utils.click(this.settingsMenu);
-    utils.click(this.dropdownItems.get(1));
+    utils.click(this.dropdownItems.get(0));
   };
 
   this.clickOrgProfile = function () {
-    utils.click(this.settingsMenu);
-    utils.click(this.dropdownItems.first());
+    utils.click(this.accountTab);
   };
 
   this.getTabCount = function () {

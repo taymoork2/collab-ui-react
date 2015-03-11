@@ -45,7 +45,7 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(navigation.reportsTab);
       utils.expectIsDisplayed(navigation.supportTab);
       utils.expectIsDisplayed(navigation.developmentTab);
-      expect(navigation.getTabCount()).toBe(6);
+      expect(navigation.getTabCount()).toBe(7);
     });
 
     it('should not display results panel initially', function () {

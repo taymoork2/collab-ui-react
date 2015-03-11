@@ -7,25 +7,6 @@ angular.module('Core')
 
       var initialSetupText = $translate.instant('settings.initialSetup');
       var getAuthinfoData = function () {
-        var partnerAdminProfile = {
-          link: '/profile/true',
-          title: $translate.instant('partnerProfile.link')
-        };
-        var customerAdminProfile = {
-          link: '/profile/false',
-          title: $translate.instant('partnerProfile.customerLink')
-        };
-
-        if (Authinfo.isPartner()) {
-          if ($scope.menuItems.indexOf(partnerAdminProfile) == -1) {
-            $scope.menuItems.push(partnerAdminProfile);
-          }
-        } else if (Authinfo.isCustomerAdmin()) {
-          if ($scope.menuItems.indexOf(customerAdminProfile) == -1) {
-            $scope.menuItems.push(customerAdminProfile);
-          }
-        }
-
         var found = false;
         if (Authinfo.isCustomerAdmin()) {
           for (var i = 0, l = $scope.menuItems.length; i < l; i++) {
@@ -41,6 +22,7 @@ angular.module('Core')
           }
         }
       };
+
       if (Utils.isAdminPage()) {
         getAuthinfoData();
       }

@@ -136,7 +136,7 @@ angular
           authenticate: false
         })
         .state('profile', {
-          url: '/profile/:isPartner',
+          url: '/profile',
           templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
           controller: 'PartnerProfileCtrl',
           parent: 'main'

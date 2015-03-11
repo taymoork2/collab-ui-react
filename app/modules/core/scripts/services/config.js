@@ -196,6 +196,12 @@ angular.module('Core')
           state: 'support',
           link: '/support'
         }, {
+          tab: 'accountTab',
+          icon: 'icon-sliders',
+          title: 'tabs.accountTab',
+          state: 'profile',
+          link: '/profile'
+        }, {
           /*
           tab: 'webexUserSettingsTab',
           icon: 'icon-support',

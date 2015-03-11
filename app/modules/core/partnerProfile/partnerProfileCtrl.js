@@ -6,7 +6,7 @@ angular.module('Core')
     function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService) {
 
       // toggles api calls, show/hides divs based on customer or partner profile
-      $scope.isPartner = $stateParams.isPartner === 'true' ? true : false;
+      $scope.isPartner = Authinfo.isPartner();
 
       $scope.profileHelpUrl = 'https://support.projectsquared.com';
 
