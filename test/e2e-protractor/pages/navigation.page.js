@@ -92,7 +92,7 @@ var Navigation = function () {
 
   this.clickFirstTimeWizard = function () {
     utils.click(this.settingsMenu);
-    utils.click(this.dropdownItems.second());
+    utils.click(this.dropdownItems.get(1));
   };
 
   this.clickOrgProfile = function () {
