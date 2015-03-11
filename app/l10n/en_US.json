@@ -871,7 +871,7 @@
     "ciscoRep": "Cisco Representative",
     "supportSetup": "Trouble Ticket / Reporting Location",
     "save": "Save",
-    "supportInfo": "If you are providing support for your customers' users, enter your support paramters below. These paramaters will be displayed under Support Options in the Squared applications;",
+    "supportInfo": "If you are providing support for your customers' users, enter your support paramters below. These paramaters will be displayed under Support Options in the Squared applications.",
     "lifeCycle": "Lifecycle partners are required to provide both types of support shown below.",
     "supportOptions": "Cisco Support Options",
     "seeExample": "see an example.",

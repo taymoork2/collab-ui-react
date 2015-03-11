@@ -15,7 +15,7 @@
         <button id="orgProfileCancelBtn" ng-click="init()" class="btn btn-default" ng-disabled="!supportForm.$dirty">
           <span translate="partnerProfile.cancel"></span>
         </button>
-        <button id="orgProfileSaveBtn" ng-click="validation()" class="btn btn-primary" data-loading-text="<i class='icon icon-spinner'></i>" 
+        <button id="orgProfileSaveBtn" ng-click="validation()" class="btn btn-primary" data-loading-text="<i class='icon icon-spinner'></i>"
             ng-disabled="!supportForm.$dirty">
           <span translate="partnerProfile.save"></span>
         </button>
@@ -44,7 +44,7 @@
     </div>
 
     <!-- cisco rep -->
-    <div class="row" id="ciscoRepPanel">
+    <div class="row" id="ciscoRepPanel" ng-show="rep !== null">
       <div class="col-xs-12 form-section">
         <h2 ng-if="isPartner" translate="partnerProfile.ciscoRep"></h2>
         <h2 ng-if="!isPartner" translate="customerProfile.supportContacts"></h2>
@@ -72,13 +72,13 @@
     </div>
 
     <!-- support title / description -->
-    <div class="row" id="supportTitleAndDescPanel">
+    <div class="row form-section" id="supportTitleAndDescPanel">
       <div class="col-xs-7">
         <h2 translate="partnerProfile.supportTitle"></h2>
         <div class="form-spacing">
           <span ng-if="!isPartner" translate="customerProfile.supportInfo"></span>
           <span ng-if="isPartner" translate="partnerProfile.supportInfo"></span>
-          <a href="/#">
+          <a ng-show="false" href="/#">
             <span translate="partnerProfile.seeExample"></span>
           </a>
           <span ng-if="isPartner" translate="partnerProfile.lifeCycle"></span>
@@ -88,7 +88,7 @@
 
     <!-- trouble ticket reporting location form -->
     <div class="row" id="troubleReportingPanel">
-      <div class="col-xs-12">
+      <div class="col-xs-12 form-section">
         <h3 translate="partnerProfile.supportSetup"></h3>
           <span ng-if="isPartner" translate="partnerProfile.enterReports"></span>
         <!-- partner problem reporting site form -->
@@ -152,7 +152,7 @@
             <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(0)">{{collabRadio2.label}}</span>
           </div>
           <div class="col-xs-10 default-link-row">
-            <a href="/#">
+            <a ng-href="{{profileHelpUrl}}" target="_blank">
               <span ng-if="!isPartner" translate="partnerProfile.partnerHelp"></span>
               <span ng-if="isPartner" translate="partnerProfile.ciscoHelp"></span>
             </a>

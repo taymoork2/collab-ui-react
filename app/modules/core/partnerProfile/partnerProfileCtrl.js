@@ -1,12 +1,18 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log',
+  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config',
 
-    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log) {
+    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config) {
 
       // toggles api calls, show/hides divs based on customer or partner profile
       $scope.isPartner = $stateParams.isPartner === 'true' ? true : false;
+
+      $scope.profileHelpUrl = 'https://support.projectsquared.com';
+
+      if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
+        $scope.profileHelpUrl = 'https://support.ciscospark.com';
+      }
 
       // hold partner admin object
       $scope.partner = null;
@@ -31,11 +37,7 @@ angular.module('Core')
 
       // ci api calls will go in here
       $scope.init = function () {
-        $scope.rep = {
-          name: 'Kevin Perlas',
-          phone: '555-444-555',
-          email: 'kperlas@cisco.com'
-        };
+        $scope.rep = null;
 
         $scope.companyName = Authinfo.getOrgName();
         $scope.problemSiteRadioValue = 0;
