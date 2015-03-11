@@ -88,6 +88,8 @@ angular.module('Core')
 
         feedbackUrl: 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl',
 
+        ciscoOrgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
+
         appinfo: {
           webClientURL: 'https://web.projectsquared.com/',
           iPhoneURL: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',
@@ -407,6 +409,10 @@ angular.module('Core')
           return this.ssoTestUrl;
         },
 
+        getCiscoOrgId: function () {
+          return this.ciscoOrgId;
+        },
+
         getHealthCheckUrlServiceUrl: function () {
           if (this.isSparkInt() || this.isSparkProd()) {
             return this.healthCheckUrl.spark;
@@ -504,7 +510,8 @@ angular.module('Core')
         WX2_SquaredInviter: [],
         User: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit'],
-        PARTNER_USER: ['partneroverview', 'partnerreports']
+        PARTNER_USER: ['partneroverview', 'partnerreports'],
+        CUSTOMER_PARTNER: ['partnercustomers']
       };
 
       config.serviceStates = {

@@ -8,6 +8,7 @@ angular.module('Core')
         this.name = name;
         this.id = id;
         this.entitlements = entitlements;
+        this.isCustomerPartner = false;
       }
 
       // AngularJS will instantiate a singleton by calling "new" on this function
@@ -17,6 +18,7 @@ angular.module('Core')
         'orgid': null,
         'addUserEnabled': null,
         'entitleUserEnabled': null,
+        'managedOrgs': [],
         'entitlements': null,
         'services': null,
         'roles': null,
@@ -109,9 +111,20 @@ angular.module('Core')
           authData.orgid = data.orgId;
           authData.addUserEnabled = data.addUserEnabled;
           authData.entitleUserEnabled = data.entitleUserEnabled;
+          authData.managedOrgs = data.managedOrgs;
           authData.entitlements = data.entitlements;
           authData.services = data.services;
           authData.roles = data.roles;
+          //if Full_Admin or WX2_User and has managedOrgs, add partnerustomers tab as allowed tab
+          if (authData.managedOrgs) {
+            for (var i = 0; i < authData.roles.length; i++) {
+              if (authData.roles[i] === 'Full_Admin' || authData.roles[i] === 'WX2_User') {
+                this.isCustomerPartner = true;
+                authData.roles.push('CUSTOMER_PARTNER');
+                break;
+              }
+            }
+          }
           authData.tabs = initializeTabs();
           // TODO remove this from rootScope
           $rootScope.services = data.services;
@@ -267,7 +280,7 @@ angular.module('Core')
           return authData.hasAccount;
         },
         isCisco: function () {
-          return authData.orgid === '1eb65fdf-9643-417f-9974-ad72cae0e10f';
+          return authData.orgid === Config.getCiscoOrgId();
         }
       };
     }

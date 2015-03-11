@@ -19,6 +19,11 @@ var PartnerHomePage = function () {
     password: 'C1sc0123!'
   };
 
+  this.csrole = {
+    adminOrgId: '9a65eda3-272a-4aca-ac28-c72cb34013e4',
+    regularOrgId: 'c6b0e64c-908e-498e-a94e-5d3ae1e650ad',
+  };
+
   this.trialsPanel = element(by.id('trialsPanel'));
   this.addButton = element(by.id('addTrial'));
   this.startTrialButton = element(by.id('startTrialButton'));
@@ -65,6 +70,9 @@ var PartnerHomePage = function () {
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
+
+  this.adminCustomerOrgId = element(by.css('div[orgid="' + this.csrole.adminOrgId + '"]'));
+  this.regularCustomerOrgId = element(by.css('div[orgid="' + this.csrole.regularOrgId + '"]'));
 
   this.assertDisabled = function (id) {
     expect(element(by.id(id)).isEnabled()).toBeFalsy();

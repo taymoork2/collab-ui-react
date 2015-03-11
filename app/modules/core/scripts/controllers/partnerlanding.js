@@ -21,6 +21,7 @@ angular.module('Core')
       $scope.currentTrial = null;
       $scope.showTrialsRefresh = true;
       $scope.filter = 'ALL';
+      $scope.isCustomerPartner = Authinfo.isCustomerPartner;
 
       $scope.openAddTrialModal = function () {
         $state.go('trialAdd.info').then(function () {
@@ -230,7 +231,10 @@ angular.module('Core')
                 $scope.totalOrgsData.push(orgObj);
               }
               Log.debug('total managed orgs records found:' + $scope.totalOrgsData.length);
-              $scope.activeCount = $scope.activeList.length;
+              if ($scope.activeList)
+                $scope.activeCount = $scope.activeList.length;
+              else
+                $scope.activeCount = 0;
               $scope.managedOrgsList = $scope.totalOrgsData;
 
               if ($scope.activeFilter === 'all') {
@@ -298,7 +302,9 @@ angular.module('Core')
         angular.element('.open').removeClass('open');
       };
 
-      getTrialsList();
+      if (!$scope.isCustomerPartner) {
+        getTrialsList();
+      }
       getManagedOrgsList();
 
       $scope.newTrialName = null;

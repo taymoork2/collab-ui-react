@@ -2,7 +2,7 @@
   <div class="row page-header">
     <div class="page-title col-md-8 col-sm-8">
       <h2 class="title">{{'customerPage.title' | translate}}</h2>
-      <div dropdown class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
+      <div dropdown class="grid-filter" ng-if="!isCustomerPartner" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
           <span class="name" ng-if="activeFilter === 'all'">{{'customerPage.all' | translate}}</span>
           <span class="name" ng-if="activeFilter === 'trials'">{{'customerPage.trial' | translate}}</span>
@@ -32,7 +32,7 @@
     </div> -->
     <div class="col-md-4 col-sm-4">
       <div class="page-option-buttons">
-        <button id="addTrial" ng-click="openAddTrialModal()" class="btn btn-lg btn-info add-button" translate="customerPage.addTrial"></button>
+        <button id="addTrial" ng-if="!isCustomerPartner" ng-click="openAddTrialModal()" class="btn btn-lg btn-info add-button" translate="customerPage.addTrial"></button>
         <a id="export-btn" ng-csv="exportCSV()" filename="{{'customerPage.csvFilename' | translate}}" title="{{'customerPage.csvBtnTitle' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
           <span id="export-icon"><i class="icon icon-content-share"></i></span>
         </a>
