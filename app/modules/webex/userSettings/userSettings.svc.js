@@ -10,7 +10,6 @@
       $log,
       XmlApiSvc
     ) {
-
       return {
         getUserInfo: function (xmlApiAccessInfo) {
           var xmlData = XmlApiSvc.getUserInfo(xmlApiAccessInfo);
@@ -37,6 +36,10 @@
 
           return $q.all([userInfoXml, siteInfoXml, meetingTypeXml]);
         }, // getUserSettingsInfo()
+
+        updateUserSettings: function (xmlApiAccessInfo, userSettings) {
+          return XmlApiSvc.updateUserPrivileges(xmlApiAccessInfo, userSettings);
+        },
 
         xml2JsonConvert: function (commentText, xmlDataText, startOfBodyStr, endOfBodyStr) {
           return XmlApiSvc.xml2JsonConvert(commentText, xmlDataText, startOfBodyStr, endOfBodyStr);

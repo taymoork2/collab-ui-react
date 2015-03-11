@@ -3,7 +3,6 @@
 angular.module('WebExUserSettings')
   .service('WebexUserPrivilegesModel', [
     function WebexUserPrivilegesModel() {
-
       return {
         sessionEnablementTitle: "Session Enablement",
         userPrivilegesTitle: "User Privileges",

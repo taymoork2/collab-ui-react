@@ -6,30 +6,27 @@
     '$log',
     'WebExUserSettingsSvc',
     'WebexUserPrivilegesModel',
+    'Notification',
     function (
       $scope,
       $log,
       WebExUserSettingsSvc,
-      userPrivilegesModel
+      userPrivilegesModel,
+      Notification
     ) {
-
-      // this.createUserPrivilegesModel = function () {
-      //   this.userPrivilegesModel = userPrivilegesModel;
-      // };
+      this.xmlApiAccessInfo = {
+        xmlServerURL: null,
+        webexAdminID: null,
+        webexAdminPswd: null,
+        siteID: null,
+        webexSessionTicket: null,
+        webexUserId: null
+      };
 
       this.getUserSettingsInfo = function () {
         var currView = this;
-        var xmlApiAccessInfo = {
-          xmlServerURL: "",
-          webexAdminID: "",
-          webexAdminPswd: "",
-          siteID: "4272",
-          PartnerID: "4272",
-          webexSessionTicket: null,
-          webexUserId: ""
-        };
 
-        WebExUserSettingsSvc.getUserSettingsInfo(xmlApiAccessInfo).then(
+        WebExUserSettingsSvc.getUserSettingsInfo(this.xmlApiAccessInfo).then(
           function getUserSettingsInfoSuccess(result) {
             currView.userInfoXml = result[0];
             currView.siteInfoXml = result[1];
@@ -101,7 +98,7 @@
               "siteMtgServiceTypeID=" + siteMtgServiceTypeID + "\n" +
               "siteMtgProductCodePrefix=" + siteMtgProductCodePrefix + "\n" +
               "siteMtgServiceTypes=" + siteMtgServiceTypes;
-            $log.log(logMsg);
+            // $log.log(logMsg);
             // alert(logMsg);
           }
 
@@ -151,7 +148,7 @@
 
         logMsg = funcName + ": " + "\n" +
           "enabledSessionTypesIDs=" + enabledSessionTypesIDs;
-        $log.log(logMsg);
+        // $log.log(logMsg);
         // alert(logMsg);
 
         enabledSessionTypesIDs.forEach(function (enabledSessionTypeID) { // loop through user's enabled session type
@@ -161,7 +158,7 @@
             logMsg = funcName + ": " + "\n" +
               "enabledSessionTypeID=" + enabledSessionTypeID + "\n" +
               "sessionTypeId=" + sessionTypeId;
-            $log.log(logMsg);
+            // $log.log(logMsg);
             // alert(logMsg);
 
             if (sessionType.sessionTypeId == enabledSessionTypeID) {
@@ -218,8 +215,36 @@
       }; // updateUserPrivilegesModel()
 
       this.updateUserSettings = function () {
-        // alert("updateUserSettings(): START");
-        // alert("updateUserSettings(): END");
+        $log.log("updateUserSettings(): START");
+
+        var userPrivileges = {
+          meetingTypes: [],
+          meetingCenter: false,
+          trainingCenter: false,
+          supportCenter: false,
+          eventCenter: false,
+          salesCenter: false
+        };
+
+        //go through the session types
+        userPrivilegesModel.sessionTypes.forEach(function (sessionType) {
+          if (sessionType.sessionEnabled) {
+            userPrivileges.meetingTypes.push(sessionType.sessionTypeId);
+            $log.log("sessionType.sessionTypeId = " + sessionType.sessionTypeId);
+            $log.log("sessionType.trainingCenterApplicable = " + sessionType.trainingCenterApplicable);
+            if (!userPrivileges.meetingCenter) userPrivileges.meetingCenter = sessionType.meetingCenterApplicable ? true : false;
+            if (!userPrivileges.trainingCenter) userPrivileges.trainingCenter = sessionType.trainingCenterApplicable ? true : false;
+            if (!userPrivileges.supportCenter) userPrivileges.supportCenter = sessionType.supportCenterApplicable ? true : false;
+            if (!userPrivileges.eventCenter) userPrivileges.eventCenter = sessionType.eventCenterApplicable ? true : false;
+            if (!userPrivileges.salesCenter) userPrivileges.salesCenter = sessionType.salesCenterApplicable ? true : false;
+          }
+        });
+
+        WebExUserSettingsSvc.updateUserSettings(this.xmlApiAccessInfo, userPrivileges);
+
+        Notification.notify(['User privileges updated'], 'success');
+
+        $log.log("updateUserSettings(): END");
       }; // updateUserSettings()
 
       //----------------------------------------------------------------------//
