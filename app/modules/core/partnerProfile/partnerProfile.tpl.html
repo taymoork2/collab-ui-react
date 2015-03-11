@@ -101,13 +101,12 @@
               </div>
               <div class="col-xs-10 default-link-row">
                 <div class="partner-link">
-                  <a ng-if="!isPartner" href="/#">
-                    <span translate="partnerProfile.partnerProblem"></span>
+                  <a href="" ng-click="sendFeedback()">
+                    <span translate="partnerProfile.ciscoProblem"></span>
                   </a>
                 </div>
-                  <span ng-if="isPartner" translate="partnerProfile.ciscoProblem"></span>
                   <div class="partner-text">
-                    <span ng-if="!isPartner">{{partnerProvidedText | translate}}</span>
+                    <span ng-if="false">{{partnerProvidedText | translate}}</span>
                   </div>
               </div>
             </div>
@@ -153,8 +152,7 @@
           </div>
           <div class="col-xs-10 default-link-row">
             <a ng-href="{{profileHelpUrl}}" target="_blank">
-              <span ng-if="!isPartner" translate="partnerProfile.partnerHelp"></span>
-              <span ng-if="isPartner" translate="partnerProfile.ciscoHelp"></span>
+              <span translate="partnerProfile.ciscoHelp"></span>
             </a>
 
           </div>

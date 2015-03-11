@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config',
+  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService',
 
-    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config) {
+    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService) {
 
       // toggles api calls, show/hides divs based on customer or partner profile
       $scope.isPartner = $stateParams.isPartner === 'true' ? true : false;
@@ -26,6 +26,20 @@ angular.module('Core')
       $scope.helpSiteInfo = {
         partner: 0,
         yours: 1
+      };
+
+      $scope.sendFeedback = function () {
+        var appType = 'Atlas_' + $window.navigator.userAgent;
+        var feedbackId = Utils.getUUID();
+
+        FeedbackService.getFeedbackUrl(appType, feedbackId, function (data, status) {
+          Log.debug('feedback status: ' + status);
+          if (data.success) {
+            $window.open(data.url, '_blank');
+          } else {
+            Log.debug('Cannot load feedback url: ' + status);
+          }
+        });
       };
 
       // strings to be translated as placeholders, need to be used as values
