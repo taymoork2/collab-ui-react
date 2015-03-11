@@ -469,7 +469,7 @@ angular.module('Core')
           for (i = 0; i < usersList.length; i += chunk) {
             temparray = usersList.slice(i, i + chunk);
             //update entitlements
-            Userservice.inviteUsers(usersList, callback);
+            Userservice.inviteUsers(usersList, null, callback);
           }
 
         } else {

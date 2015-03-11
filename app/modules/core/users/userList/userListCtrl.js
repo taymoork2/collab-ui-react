@@ -159,7 +159,7 @@ angular.module('Core')
           'name': userName
         }];
 
-        Userservice.inviteUsers(userData, true, function (data) {
+        Userservice.inviteUsers(userData, null, true, function (data) {
 
           if (data.success) {
             Notification.notify(['Successfully resent invitation.'], 'success');

@@ -132,6 +132,9 @@ angular.module('Core')
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
         },
+        initializeTabs: function () {
+          initializeTabs();
+        },
         clear: function () {
           authData.username = null;
           authData.orgname = null;

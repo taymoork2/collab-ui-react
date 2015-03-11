@@ -177,14 +177,14 @@ angular.module('Core')
           }
         },
 
-        inviteUsers: function (usersDataArray, forceResend, callback) {
+        inviteUsers: function (usersDataArray, entitlements, forceResend, callback) {
           var apiUrl = null;
-          if (arguments.length === 2) { // if only two arguments were supplied
+          if (arguments.length === 3) { // if only two arguments were supplied
             if (Object.prototype.toString.call(forceResend) === '[object Function]') {
               callback = forceResend;
               apiUrl = userUrl + 'organization/' + Authinfo.getOrgId() + '/invitations';
             }
-          } else if (arguments.length === 3) {
+          } else if (arguments.length === 4) {
             apiUrl = userUrl + 'organization/' + Authinfo.getOrgId() + '/invitations/?resendInvite=' + forceResend;
           }
 
@@ -202,8 +202,12 @@ angular.module('Core')
 
             var user = {
               'email': userEmail,
-              'displayName': userName
+              'displayName': userName,
+              'userEntitlements': null
             };
+            if (entitlements) {
+              user['userEntitlements'] = entitlements;
+            }
             if (userEmail.length > 0) {
               userData.inviteList.push(user);
             }

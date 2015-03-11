@@ -63,11 +63,6 @@ angular.module('Core')
       vm.selectPlaceholder = $translate.instant('common.selectLanguage');
       vm.selected = {};
 
-      vm.selected = {
-        label: 'English(American)',
-        value: 'en_US'
-      };
-
       vm.options = [{
         value: 'da_DK',
         label: 'Danish'
@@ -96,7 +91,7 @@ angular.module('Core')
         value: 'it_IT',
         label: 'Italian'
       }, {
-        value: 'js_JA',
+        value: 'jp_JA',
         label: 'Japanese'
       }, {
         value: 'ko_KR',
@@ -130,14 +125,18 @@ angular.module('Core')
         label: 'Chinese(Traditional)'
       }];
 
+      for (var x = 0; x < vm.options.length; x++) {
+        var option = vm.options[x];
+        if (option.value === $translate.use()) {
+          vm.selected = option;
+          break;
+        }
+      }
+
       $scope.updateLanguage = function () {
         $translate.use(vm.selected.value);
-        // $state.transitionTo($state.current, $stateParams, {
-        //     reload: true,
-        //     inherit: false,
-        //     notify: true
-        // });
         $state.go('overview');
+        Authinfo.initializeTabs();
       };
     }
   ]);
