@@ -41,5 +41,9 @@ angular.module('Squared')
       $rootScope.$on('$stateChangeSuccess', function () {
         setNavigationTab();
       });
+
+      $rootScope.$on('TABS_UPDATED', function () {
+        $scope.tabs = Authinfo.getTabs();
+      });
     }
   ]);

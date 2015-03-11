@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('SettingsMenuCtrl', ['$scope', '$location', '$state', '$translate', 'Authinfo', 'Utils',
-    function ($scope, $location, $state, $translate, Authinfo, Utils) {
+  .controller('SettingsMenuCtrl', ['$scope', '$location', '$state', '$translate', 'Authinfo', 'Utils', '$rootScope',
+    function ($scope, $location, $state, $translate, Authinfo, Utils, $rootScope) {
       $scope.menuItems = [];
 
       var initialSetupText = $translate.instant('settings.initialSetup');
@@ -134,9 +134,11 @@ angular.module('Core')
       }
 
       $scope.updateLanguage = function () {
-        $translate.use(vm.selected.value);
-        $state.go('overview');
-        Authinfo.initializeTabs();
+        $translate.use(vm.selected.value).then(function () {
+          Authinfo.initializeTabs();
+          $state.go('overview');
+          $rootScope.$broadcast('TABS_UPDATED');
+        });
       };
     }
   ]);

@@ -133,7 +133,7 @@ angular.module('Core')
           $rootScope.$broadcast('AuthinfoUpdated');
         },
         initializeTabs: function () {
-          initializeTabs();
+          authData.tabs = initializeTabs();
         },
         clear: function () {
           authData.username = null;
