@@ -1,12 +1,18 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log',
+  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService',
 
-    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log) {
+    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService) {
 
       // toggles api calls, show/hides divs based on customer or partner profile
       $scope.isPartner = $stateParams.isPartner === 'true' ? true : false;
+
+      $scope.profileHelpUrl = 'https://support.projectsquared.com';
+
+      if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
+        $scope.profileHelpUrl = 'https://support.ciscospark.com';
+      }
 
       // hold partner admin object
       $scope.partner = null;
@@ -22,6 +28,20 @@ angular.module('Core')
         yours: 1
       };
 
+      $scope.sendFeedback = function () {
+        var appType = 'Atlas_' + $window.navigator.userAgent;
+        var feedbackId = Utils.getUUID();
+
+        FeedbackService.getFeedbackUrl(appType, feedbackId, function (data, status) {
+          Log.debug('feedback status: ' + status);
+          if (data.success) {
+            $window.open(data.url, '_blank');
+          } else {
+            Log.debug('Cannot load feedback url: ' + status);
+          }
+        });
+      };
+
       // strings to be translated as placeholders, need to be used as values
       $scope.grant = 'Grant support access to Cisco\'s Customer Success team.';
       $scope.troubleUrl = 'Your trouble reporting site URL';
@@ -31,11 +51,7 @@ angular.module('Core')
 
       // ci api calls will go in here
       $scope.init = function () {
-        $scope.rep = {
-          name: 'Kevin Perlas',
-          phone: '555-444-555',
-          email: 'kperlas@cisco.com'
-        };
+        $scope.rep = null;
 
         $scope.companyName = Authinfo.getOrgName();
         $scope.problemSiteRadioValue = 0;

@@ -26,7 +26,7 @@ describe('Customer Profile Page', function () {
     utils.expectIsDisplayed(orgprofile.orgProfileSaveBtn);
     utils.expectIsDisplayed(orgprofile.orgProfileCancelBtn);
     utils.expectIsDisplayed(orgprofile.companyInfoPanel);
-    utils.expectIsDisplayed(orgprofile.ciscoRepPanel);
+    // utils.expectIsDisplayed(orgprofile.ciscoRepPanel);
     utils.expectIsDisplayed(orgprofile.troubleReportingPanel);
     utils.expectIsDisplayed(orgprofile.troubleReportingCiscoPanel);
     utils.expectIsDisplayed(orgprofile.troubleReportingPartnerPanel);

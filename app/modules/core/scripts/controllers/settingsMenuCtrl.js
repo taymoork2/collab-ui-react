@@ -17,9 +17,13 @@ angular.module('Core')
         };
 
         if (Authinfo.isPartner()) {
-          $scope.menuItems.push(partnerAdminProfile);
+          if ($scope.menuItems.indexOf(partnerAdminProfile) == -1) {
+            $scope.menuItems.push(partnerAdminProfile);
+          }
         } else if (Authinfo.isCustomerAdmin()) {
-          $scope.menuItems.push(customerAdminProfile);
+          if ($scope.menuItems.indexOf(customerAdminProfile) == -1) {
+            $scope.menuItems.push(customerAdminProfile);
+          }
         }
 
         var found = false;
