@@ -18,40 +18,28 @@ exports.randomTestRoom = function () {
 };
 
 exports.randomTestGmail = function () {
-  var email = 'collabctg+' + this.randomId() + '@gmail.com';
-  //console.log('randomTestGmail: ' + email);
-  return email;
+  return 'collabctg+' + this.randomId() + '@gmail.com';
 };
 
 exports.sendRequest = function (options) {
   var flow = protractor.promise.controlFlow();
   return flow.execute(function () {
     var defer = protractor.promise.defer();
-    // //console.log('\nSending Request...', options);
-
-    request(options, function (error, response, message) {
-      // //console.log('\nResponse Received...', options.url);
-      // //console.log('--error: ' + error);
-      // //console.log('--status code: ' + response.statusCode);
-      // //console.log('--message: ' + message);
-
-      if (error || response.statusCode >= 400) {
-        defer.reject({
-          status: response.statusCode,
-          error: error,
-          message: message
-        });
+    request(options, function (error, response, body) {
+      var status = response && response.statusCode ? response.statusCode : 'unknown';
+      if (error) {
+        defer.reject('Send request failed with status ' + status + '. Error: ' + error);
+      } else if (response && response.statusCode >= 400) {
+        defer.reject('Send request failed with status ' + status + '. Body: ' + body);
       } else {
-        defer.fulfill(message);
+        defer.fulfill(body);
       }
     });
-
     return defer.promise;
   });
 };
 
 exports.getToken = function () {
-  //console.log('getting token');
   var options = {
     method: 'post',
     url: config.oauth2Url + 'access_token',
@@ -68,7 +56,6 @@ exports.getToken = function () {
 
   return this.sendRequest(options).then(function (data) {
     var resp = JSON.parse(data);
-    //console.log('access token', resp.access_token);
     return resp.access_token;
   });
 };
@@ -185,8 +172,7 @@ exports.dumpConsoleErrors = function (name) {
   browser.manage().logs().get('browser').then(function (browserLogs) {
     browserLogs.forEach(function (log) {
       if (log.level.value > 900) {
-        if (name) console.log('        ↱ ' + name);
-        console.log('CONSOLE ↳ ' + log.message);
+        console.log('CONSOLE - ' + log.message);
       }
     });
   });
