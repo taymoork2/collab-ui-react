@@ -36,3 +36,17 @@ exports.deleteSquaredUCUser = function (customerUuid, userUuid) {
     });
   });
 };
+
+exports.deleteSquaredUCCustomer = function (customerUuid, token) {
+  var options = {
+    method: 'delete',
+    url: config.squaredUCServiceUrl.integration + 'common/customers/' + customerUuid,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    }
+  };
+  return utils.sendRequest(options).then(function () {
+    return 204;
+  });
+};

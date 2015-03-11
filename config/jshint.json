@@ -67,6 +67,7 @@
     "exports": true,
 
     "by": true,
+    "By": true,
     "browser": true,
     "element": true,
     "it": true,

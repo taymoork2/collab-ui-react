@@ -2,9 +2,9 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state',
+  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', 'ExternalNumberPool',
 
-    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state) {
+    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, ExternalNumberPool) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -413,6 +413,11 @@ angular.module('Core')
 
       $scope.showCustomerDetails = function (customer) {
         $scope.currentTrial = customer;
+        ExternalNumberPool.getAll(customer.customerOrgId).then(function (results) {
+          if (angular.isDefined(results) && angular.isDefined(results.length) && results.length > 0) {
+            $scope.noOfPhoneNumbers = results.length;
+          }
+        });
         $state.go('partnercustomers.list.preview');
       };
 

@@ -14,5 +14,6 @@ angular.module('Core')
           showPartnerEdit: true
         });
       };
+
     }
   ]);

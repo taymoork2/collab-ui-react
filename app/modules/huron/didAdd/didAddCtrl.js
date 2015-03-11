@@ -2,22 +2,44 @@
   'use strict';
 
   angular
-    .module('uc.didadd')
+    .module('uc.didadd', ['Squared'])
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($scope, $state, $stateParams, $q, $translate, ExternalNumberPool, DidAddEmailService, Notification, Authinfo) {
+  function DidAddCtrl($scope, $state, $stateParams, $q, $translate, ExternalNumberPool, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService) {
     var vm = this;
     vm.invalidcount = 0;
     vm.submitBtnStatus = false;
-    // vm.successCount;
-    // vm.failCount;
+    vm.existCount = 0;
+    vm.newCount = 0;
+    vm.deleteCount = 0;
     vm.addNumbers = true;
+    vm.deleteNumbers = false;
     vm.addingNumbers = false;
     vm.addSuccess = false;
+    vm.unsavedTokens = [];
     vm.tokens = [];
+    vm.deletedNumbers = '';
     vm.tokenfieldid = 'didAddField';
     vm.tokenplacehoder = $translate.instant('didAddModal.inputPlacehoder');
+    vm.init = function (customerId) {
+      if (angular.isUndefined(customerId) && angular.isDefined($stateParams.currentOrg) && angular.isDefined($stateParams.currentOrg.customerOrgId)) {
+        customerId = $stateParams.currentOrg.customerOrgId;
+      }
+      if (angular.isDefined(customerId)) {
+        ExternalNumberPool.getAll(customerId).then(function (results) {
+          if (angular.isDefined(results) && angular.isDefined(results.length)) {
+            $timeout(function () {
+              for (var i = 0; i < results.length; i++) {
+                $('#didAddField').tokenfield('createToken', results[i].pattern);
+              }
+              vm.tokens = results;
+            });
+          }
+        });
+      }
+    };
+
     vm.tokenoptions = {
       delimiter: [',', ';'],
       createTokensOnBlur: true,
@@ -64,10 +86,11 @@
     };
     vm.checkForInvalidTokens = checkForInvalidTokens;
     vm.submit = submit;
+    vm.confirmSubmit = confirmSubmit;
+    vm.goBackToAddNumber = goBackToAddNumber;
     vm.startTrial = startTrial;
     vm.sendEmail = sendEmail;
     vm.currentOrg = $stateParams.currentOrg;
-
     ////////////
 
     function validateDID(input) {
@@ -84,24 +107,125 @@
     }
 
     function getDIDList() {
-      var tokens = vm.tokens;
+      var tokens = vm.unsavedTokens;
       var didList = tokens.split(',');
 
       return didList;
     }
 
-    function submit(customerId) {
+    function getDidBucket() {
+      var didBucket = {
+        'deletedDid': [],
+        'newlyAddedDid': [],
+        'alreadyExistingDid': []
+      };
       var didList = getDIDList();
+      if (angular.isDefined(vm.tokens) && angular.isDefined(vm.tokens.length) && vm.tokens.length > 0) {
+
+        if (angular.isUndefined(didList) || angular.isUndefined(didList.length) || didList.length === 0) {
+          didBucket.alreadyExistingDid = vm.tokens.slice();
+          return didBucket;
+        }
+
+        var tokens = vm.tokens.slice();
+        // Adding all deleted dids in bucket
+        for (var i = 0; i < vm.tokens.length; i++) {
+          if (didList.indexOf(vm.tokens[i].pattern) == -1) {
+            tokens.splice(i);
+            didBucket.deletedDid.push(vm.tokens[i]);
+          } else {
+            didList.splice(didList.indexOf(vm.tokens[i].pattern), 1);
+          }
+        }
+
+        //Adding the newly added dids
+        if (didList.length > 0) {
+          didBucket.newlyAddedDid = didList.slice();
+        }
+
+        //Adding already existing dids
+        didBucket.alreadyExistingDid = tokens.slice();
+
+      } else if (angular.isDefined(didList) && angular.isDefined(didList.length) && didList.length > 0) {
+        didBucket.newlyAddedDid = didList.slice();
+      }
+
+      return didBucket;
+    }
+
+    function confirmSubmit(customerId) {
+      var didBucket = getDidBucket();
       vm.addNumbers = false;
+
+      if (didBucket.deletedDid.length > 0) {
+        vm.deleteCount = didBucket.deletedDid.length;
+        vm.deletedNumbers = formatDidList(didBucket.deletedDid).toString();
+        vm.deleteNumbers = true;
+      } else {
+        submit(customerId);
+      }
+
+    }
+
+    function submit(customerId) {
+      var didBucket = getDidBucket();
+
+      vm.deleteNumbers = false;
       vm.addingNumbers = true;
 
-      return ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, didList).then(function (results) {
-        vm.successCount = results.successes.length;
-        vm.failCount = results.failures.length;
+      vm.existCount = didBucket.alreadyExistingDid.length;
+      vm.newCount = didBucket.newlyAddedDid.length;
+      vm.deleteCount = didBucket.deletedDid.length;
 
+      var promises = [];
+      if (angular.isDefined(didBucket)) {
+
+        if (didBucket.deletedDid.length > 0) {
+
+          promises[0] = ExternalNumberPool.deleteExtNums(customerId ? customerId : vm.currentOrg.customerOrgId, didBucket.deletedDid).then(function (results) {
+            vm.deleteCount = results.successes;
+          });
+        }
+
+        if (didBucket.newlyAddedDid.length > 0) {
+          promises[1] = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, didBucket.newlyAddedDid).then(function (results) {
+            vm.newCount = results.successes.length;
+          });
+        }
+
+      }
+
+      return $q.all(promises).finally(function () {
         vm.addingNumbers = false;
         vm.addSuccess = true;
       });
+
+    }
+
+    function goBackToAddNumber() {
+      vm.addNumbers = true;
+      vm.deleteNumbers = false;
+    }
+
+    function formatDidList(didList) {
+      var result = [];
+      if (angular.isDefined(didList) && angular.isDefined(didList.length) && didList.length > 0) {
+        for (var i = 0; i < didList.length; i++) {
+          result.push(formatPhoneNumbers(didList[i].pattern));
+        }
+      }
+      return result;
+    }
+
+    function formatPhoneNumbers(value) {
+      value = value.replace(/[^0-9]/g, '');
+      var vLength = value.length;
+      if (vLength === 10) {
+        value = value.replace(/(\d{3})(\d{3})(\d{4})/, "1 ($1) $2-$3");
+      } else if (vLength === 11) {
+        value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
+      }
+      return value;
     }
 
     function startTrial() {
@@ -132,6 +256,8 @@
       });
       $state.modal.close();
     }
+
+    vm.init();
 
   }
 })();

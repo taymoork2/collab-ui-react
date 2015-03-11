@@ -9,6 +9,11 @@ var PartnerHomePage = function () {
     customerEmail: 'collabctg+Atlas_Test_Trial_' + randomNumber + '@gmail.com'
   };
 
+  this.newSqUCTrial = {
+    customerName: 'Atlas_Test_Squc_' + randomNumber.slice(0, 5),
+    customerEmail: 'collabctg+Atlas' + randomNumber.slice(0, 5) + '@gmail.com'
+  };
+
   this.differentTrial = {
     customerName: 'collabctg+Atlas_Different',
     customerEmail: 'collabctg+Atlas_Different@gmail.com'
@@ -21,13 +26,29 @@ var PartnerHomePage = function () {
 
   this.csrole = {
     adminOrgId: '9a65eda3-272a-4aca-ac28-c72cb34013e4',
-    regularOrgId: 'c6b0e64c-908e-498e-a94e-5d3ae1e650ad',
+    regularOrgId: 'c6b0e64c-908e-498e-a94e-5d3ae1e650ad'
+  };
+
+  this.dids = {
+    one: utils.randomDid(),
+    two: utils.randomDid()
   };
 
   this.trialsPanel = element(by.id('trialsPanel'));
   this.addButton = element(by.id('addTrial'));
   this.startTrialButton = element(by.id('startTrialButton'));
+  this.startTrialWithSqUCButton = element(by.id('startTrial'));
+  this.trialDoneButton = element(by.id('trialDone'));
   this.customerNameInput = element(by.id('customerNameInput'));
+  this.didNumberSpan = element(by.id('didNumberSpan'));
+  this.didAddModal = element(by.id('didAddModal'));
+  this.addDidButton = element(by.id('addDidButton'));
+  this.removeDidPanel = element(by.id('removeDidPanel'));
+  this.removeDidButton = element(by.id('removeDidButton'));
+  this.addDidDismissButton = element(by.id('addDidDismissButton'));
+  this.notifyCustLaterLink = element(by.id('notifyCustLaterLink'));
+  this.customerDidAddInput = element(by.id('didAddField'));
+  this.customerDidInput = element(by.id('didAddField-tokenfield'));
   this.customerEmailInput = element(by.id('customerEmailInput'));
   this.licenseCount = element(by.id('licenseCount'));
   this.licenseDuration = element(by.id('licenseDuration'));
@@ -35,8 +56,10 @@ var PartnerHomePage = function () {
   this.newTrialName = element(by.binding('trial.'));
   this.saveSendButton = element(by.id('saveSendButton'));
   this.newTrialRow = element(by.id(this.newTrial.customerName));
+  this.newSqUCTrialRow = element(by.id(this.newSqUCTrial.customerName));
   this.editTrialForm = element(by.id('editTrialForm'));
   this.editLink = element(by.id('editLink'));
+  this.editDidLink = element(by.id('editDidLink'));
   this.addTrialForm = element(by.id('addTrialForm'));
   this.cancelTrialButton = element(by.id('cancelNewTrialButton'));
   this.customerNameForm = element(by.id('customerNameForm'));
