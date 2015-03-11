@@ -4,10 +4,10 @@
       <cs-headersearch></cs-headersearch>
     </div>
     <div class="leaderboard-push-trigger" ng-controller="HeaderPushCtrl" ng-show="Utils.isAdminPage()">
-      <cs-header-push-trigger icon="icon" state="state" label="label"></cs-header-push-trigger>
+      <cs-header-push-trigger state="state" label="label"></cs-header-push-trigger>
     </div>
     <div class="settings-menu dropdown" ng-controller="SettingsMenuCtrl as settings" ng-show="Utils.isAdminPage()">
-      <button class="btn btn-header dropdown-toggle"><i class="icon-settings icon"></i></button>
+      <button class="btn btn-header dropdown-toggle"><i class="icon-settings icon"></i>{{settings.label}}</button>
       <ul class="dropdown-menu" role="menu" >
         <li ng-repeat="item in menuItems">
           <a ng-click="doAction(item.link)">{{item.title}}</a>

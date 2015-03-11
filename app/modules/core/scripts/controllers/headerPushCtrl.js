@@ -5,7 +5,6 @@ angular
   .controller('HeaderPushCtrl', ['$scope',
     function ($scope) {
       $scope.label = 'License Usage';
-      $scope.state = 'normal';
-      $scope.icon = 'icon-star';
+      $scope.state = 'license'; // Possible values are "license, warning, error"
     }
   ]);

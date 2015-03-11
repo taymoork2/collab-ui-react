@@ -41,6 +41,7 @@ angular.module('Core')
 
       var vm = this;
       vm.options = [];
+      vm.label = $translate.instant('settings.title');
       vm.filterPlaceholder = $translate.instant('common.select');
       vm.selectPlaceholder = $translate.instant('common.selectLanguage');
       vm.selected = {};

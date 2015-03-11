@@ -106,6 +106,7 @@
     "title": "Messaging"
   },
   "settings": {
+    "title": "Service Setup",
     "initialSetup": "Initial Setup"
   },
   "tabs": {
