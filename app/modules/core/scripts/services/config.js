@@ -159,16 +159,18 @@ angular.module('Core')
           title: 'tabs.userTab',
           state: 'users',
           subPages: [{
-            title: 'tabs.listUserTab',
-            desc: 'tabs.listUserTabDesc',
-            state: 'users.list',
-            link: '#users'
-          }, {
-            title: 'tabs.groupTab',
-            desc: 'tabs.groupTabDesc',
-            state: 'groups',
-            link: '#groups'
-          }]
+              title: 'tabs.listUserTab',
+              desc: 'tabs.listUserTabDesc',
+              state: 'users.list',
+              link: '#users'
+            }
+            // , {
+            //   title: 'tabs.groupTab',
+            //   desc: 'tabs.groupTabDesc',
+            //   state: 'groups',
+            //   link: '#groups'
+            // }
+          ]
         }, {
           tab: 'deviceTab',
           icon: 'icon-devices',
