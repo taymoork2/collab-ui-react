@@ -3,7 +3,7 @@
     <div class="header-search" ng-controller="SearchCtrl" ng-show="Utils.isAdminPage()">
       <cs-headersearch></cs-headersearch>
     </div>
-    <div class="leaderboard-push-trigger" ng-controller="HeaderPushCtrl">
+    <div class="leaderboard-push-trigger" ng-controller="HeaderPushCtrl" ng-show="Utils.isAdminPage()">
       <cs-header-push-trigger icon="icon" state="state" label="label"></cs-header-push-trigger>
     </div>
     <div class="settings-menu dropdown" ng-controller="SettingsMenuCtrl as settings" ng-show="Utils.isAdminPage()">
@@ -29,7 +29,7 @@
     <div class="page-content-wrapper container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <cs-header-push-container>
+          <cs-header-push-container ng-show="Utils.isAdminPage()">
             <leader-board-bucket></leader-board-bucket>
           </cs-header-push-container>
         </div>
