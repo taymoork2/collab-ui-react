@@ -149,7 +149,7 @@ angular.module('Core')
           authData.setupDone = null;
         },
         updateAccountInfo: function (data) {
-          if (data.success) {
+          if (data) {
             var msgLicenses = [];
             var confLicenses = [];
             var commLicenses = [];

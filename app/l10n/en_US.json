@@ -319,7 +319,16 @@
     "cancel": "Cancel",
     "emailAddress": "Email Address",
     "name": "Name",
-    "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}"
+    "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
+    "quickLinksText": "Quick Links",
+    "addUserText": "Add Users",
+    "installDeviceText": "Install a Device for a User",
+    "installSharedSpaceText": "Install a Devices into a Shared Space",
+    "autoAttendantText": "Configure an Auto Attendant",
+    "searchLogsText": "Search device logs",
+    "unlicensedDateText": "unlicensed users registered on",
+    "unlicensedText": "Unlicensed Users",
+    "convertText": "View and convert users currently using the free version"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -570,7 +579,18 @@
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
-    "services": "All Services"
+    "services": "All Services",
+    "UsersOnboarded": "Users Onboarded",
+    "AvgCallsPerUser": "Avg Calls Per User",
+    "AvgRoomsPerUser": "Avg Rooms Per User",
+    "ActiveUsers": "Active Users",
+    "OneOnOneRooms": "One On One Rooms",
+    "GroupRooms": "Group Rooms",
+    "VideoCalls": "Video Calls",
+    "AvgDurationofCalls": "Avg Duration of Calls",
+    "ContentShared": "Content Shared",
+    "AmountofContentShared": "Amount of Content Shared",
+    "UserEngagement": "User Engagement"
   },
   "callRouting": {
     "title": "Call Routing",
