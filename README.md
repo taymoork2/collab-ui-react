@@ -30,7 +30,7 @@ Setup the environment (If necessary)
 ------------------------------------
 
 * Use setup.sh or (if it fails):
-* install node.js version >= v0.10.26 (for npm): http://nodejs.org/download/
+* install node.js version <= v0.10.28 (for npm): http://nodejs.org/download/
 * update gem and install gem dependencies: $ gem update --system
 * $ gem install sass (Make sure to install sass first)
 * $ gem install compass
