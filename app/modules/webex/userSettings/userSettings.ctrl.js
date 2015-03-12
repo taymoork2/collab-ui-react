@@ -15,12 +15,12 @@
       Notification
     ) {
       this.xmlApiAccessInfo = {
-        xmlServerURL: null,
-        webexAdminID: null,
-        webexAdminPswd: null,
+        xmlServerURL: "",
+        webexAdminID: "",
+        webexAdminPswd: "",
         siteID: null,
         webexSessionTicket: null,
-        webexUserId: null
+        webexUserId: ""
       };
 
       this.getUserSettingsInfo = function () {
@@ -240,9 +240,13 @@
           }
         });
 
-        WebExUserSettingsSvc.updateUserSettings(this.xmlApiAccessInfo, userPrivileges);
-
-        Notification.notify(['User privileges updated'], 'success');
+        WebExUserSettingsSvc.updateUserSettings(this.xmlApiAccessInfo, userPrivileges)
+          .then(function () {
+              Notification.notify(['User privileges updated'], 'success');
+            },
+            function () {
+              Notification.notify(['User privileges update failed'], 'error');
+            });
 
         $log.log("updateUserSettings(): END");
       }; // updateUserSettings()
