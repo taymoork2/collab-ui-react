@@ -10,12 +10,14 @@ angular.module('WebExUserSettings')
         sessionTypes: null,
 
         meetingCenter: {
+          id: "MC",
           label: "Meeting Center",
           serviceType: "MeetingCenter",
           isSiteEnabled: false
         }, // meetingCenter
 
         trainingCenter: {
+          id: "TC",
           label: "Training Center",
           serviceType: "TrainingCenter",
           isSiteEnabled: false,
@@ -29,6 +31,7 @@ angular.module('WebExUserSettings')
         }, // trainingCenter
 
         eventCenter: {
+          id: "EC",
           label: "Event Center",
           serviceType: "EventCenter",
           isSiteEnabled: false,
@@ -36,43 +39,41 @@ angular.module('WebExUserSettings')
           optimizeBandwidthUsage: {
             id: "optimizeBandwidthUsage",
             label: "Optimized bandwidth usage for attendees within the same network",
-            value: false,
-            isSiteEnabled: false
+            value: false, // TODO
+            isSiteEnabled: false // TODO
           }
         }, // eventCenter
 
         supportCenter: {
+          id: "SC",
           label: "Support Center",
           serviceType: "SupportCenter",
           isSiteEnabled: false
         }, // supportCenter
 
-        /*
-        collabRoom: {
-          id: "collabRoom",
-          label: "Collabration Room",
-          value: true
-        }, // collabRoom
-        */
+        collabMeetingRoom: {
+          id: "collabMeetingRoom",
+          label: "Collabration Room Cloud Service",
+          isSiteEnabled: false,
+          value: false
+        }, // collabMeetingRoom
 
-        /*
         general: {
           label: "General",
 
           hiQualVideo: {
             id: "hiQualVideo",
             label: "Turn on high-quality video (360p)",
-            value: true
-          },
+            isSiteEnabled: false, // TODO
+            value: false, // TODO
 
-          hiDefVideo: {
-            id: "hiDefVideo",
-            label: "Turn on high-definition video video (720p)",
-            value: true
-          },
-
+            hiDefVideo: {
+              id: "hiDefVideo",
+              label: "Turn on high-definition video video (720p)", // TODO
+              value: false // TODO
+            }
+          }
         }, // general
-        */
 
         telephonyPriviledge: {
           label: "Telephony Privilege",
@@ -87,74 +88,65 @@ angular.module('WebExUserSettings')
             callInTollOnly: {
               id: "tollOnly",
               label: "Toll",
-              isSiteEnabled: true,
+              isSiteEnabled: false,
               value: 1
             },
 
             callInTollFreeOnly: {
               id: "tollFreeOnly",
               label: "Toll free",
-              isSiteEnabled: true,
+              isSiteEnabled: false,
               value: 2
             },
 
             callInTollAndTollFree: {
               id: "tollAndTollFree",
               label: "Toll & Toll free",
-              isSiteEnabled: true,
+              isSiteEnabled: false,
               value: 3
             },
 
             teleconfViaGlobalCallin: {
               id: "teleconfViaGlobalCallin",
               label: "Allow access to teleconference via global call-in numbers",
-              value: true
+              isSiteEnabled: true, // TODO
+              value: false
             },
 
             cliAuth: {
               id: "cliAuth",
               label: "Enable teleconferencing CLI authentication",
-              value: true
+              isSiteEnabled: true, // TODO
+              value: false
             }
           }, // callInTeleconf
 
           callBackTeleconf: {
             id: "callBackTeleconf",
             label: "Call-back teleconferencing",
-            value: true,
+            isSiteEnabled: false,
+            value: false,
 
             globalCallBackTeleconf: {
               id: "globalCallBackTeleconf",
               label: "Global call-back teleconferencing",
-              value: true
+              value: false
             },
           },
 
           otherTeleconfServices: {
             id: "otherTeleconfServices",
             label: "Other teleconference services",
-            value: true
+            isSiteEnabled: true, // TODO
+            value: false
           },
 
           integratedVoIP: {
             id: "integratedVoIP",
             label: "Integrated VoIP",
-            value: true
+            isSiteEnabled: false,
+            value: false
           },
-
-          selectTeleconfLocation: {
-            id: "selectTeleconfLocation",
-            label: "Select teleconferencing location",
-            value: true,
-            defaultTeleconfLocation: "Asia",
-
-            teleconfLocations: ["North America",
-              "South America",
-              "Asia",
-              "Africa",
-              "Australia"
-            ]
-          } //selectTeleconfLocation
         }, // telephonyPriviledges
       }; // userPrivilegesModel
     }

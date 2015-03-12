@@ -210,65 +210,68 @@
             });
         }, // getNewSessionTicket()
 
-        xml2JsonConvert: function (commentText, xmlDataText, startOfBodyStr, endOfBodyStr) {
+        xml2JsonConvert: function (commentText, xmlData, startOfBodyStr, endOfBodyStr) {
           var funcName = "xml2JsonConvert()";
           var logMsg = "";
 
           logMsg = funcName + ": " + commentText + "\n" +
             "startOfBodyStr=" + startOfBodyStr + "\n" +
             "endOfBodyStr=" + endOfBodyStr + "\n" +
-            "xmlDataText=" + "\n" + xmlDataText;
+            "xmlData=" + "\n" + xmlData;
           // $log.log(logMsg);
           // alert(logMsg);
 
-          var startOfBodyIndex = xmlDataText.indexOf(startOfBodyStr);
-          var endOfBodyIndex = (null == endOfBodyStr) ? 0 : xmlDataText.indexOf(endOfBodyStr);
+          var startOfBodyIndex = (null == startOfBodyStr) ? -1 : xmlData.indexOf(startOfBodyStr);
+          var endOfBodyIndex = (null == endOfBodyStr) ? -1 : xmlData.indexOf(endOfBodyStr);
 
-          // logMsg = funcName + ": " + commentText + "\n" +
-          //   "startOfBodyIndex=" + startOfBodyIndex + "\n" +
-          //   "endOfBodyIndex=" + endOfBodyIndex;
+          logMsg = funcName + ": " + commentText + "\n" +
+            "startOfBodyIndex=" + startOfBodyIndex + "\n" +
+            "endOfBodyIndex=" + endOfBodyIndex;
           // $log.log(logMsg);
           // alert(logMsg);
 
-          var bodySlice = "";
+          var bodySliceXml = "";
           if (
             (0 <= startOfBodyIndex) &&
-            (0 <= endOfBodyIndex)
+            (0 <= endOfBodyIndex) &&
+            (startOfBodyIndex <= endOfBodyIndex)
           ) {
-            bodySlice = (startOfBodyIndex < endOfBodyIndex) ? xmlDataText.slice(startOfBodyIndex, endOfBodyIndex) : xmlDataText.slice(startOfBodyIndex);
+            bodySliceXml = (startOfBodyIndex < endOfBodyIndex) ? xmlData.slice(startOfBodyIndex, endOfBodyIndex) : xmlData.slice(startOfBodyIndex);
           } else {
             logMsg = funcName + ": " + commentText + "; " + "ERROR!" + "\n" +
               "startOfBodyStr=" + startOfBodyStr + "\n" +
+              "startOfBodyIndex=" + startOfBodyIndex + "\n" +
               "endOfBodyStr=" + endOfBodyStr + "\n" +
-              "xmlDataText=" + "\n" + xmlDataText;
+              "endOfBodyIndex=" + endOfBodyIndex + "\n" +
+              "xmlData=" + "\n" + xmlData;
             $log.log(logMsg);
             // alert(logMsg);
           }
 
           constants.replaceSets.forEach(function (replaceSet) {
-            bodySlice = bodySlice.replace(replaceSet.replaceThis, replaceSet.withThis);
+            bodySliceXml = bodySliceXml.replace(replaceSet.replaceThis, replaceSet.withThis);
           });
 
           logMsg = funcName + ": " + commentText + "\n" +
-            "bodySlice=" + "\n" + bodySlice;
+            "bodySliceXml=" + "\n" + bodySliceXml;
           // $log.log(logMsg);
           // alert(logMsg);
 
-          var fullBody = "<body>" + bodySlice + "</body>";
+          var fullBodyXml = "<body>" + bodySliceXml + "</body>";
 
           logMsg = funcName + ": " + commentText + "\n" +
-            "fullBody=" + "\n" + fullBody;
+            "fullBodyXml=" + "\n" + fullBodyXml;
           // $log.log(logMsg);
           // alert(logMsg);
 
-          var bodyJson = x2js.xml_str2json(fullBody);
+          var fullBodyJson = x2js.xml_str2json(fullBodyXml);
 
           logMsg = funcName + ": " + commentText + "\n" +
-            "bodyJson=\n" + JSON.stringify(bodyJson);
+            "fullBodyJson=\n" + JSON.stringify(fullBodyJson);
           $log.log(logMsg);
           // alert(logMsg);
 
-          return bodyJson;
+          return fullBodyJson;
         }, // xml2JsonConvert()
       }; // return
     } //WebExUserSettingsSvc()
