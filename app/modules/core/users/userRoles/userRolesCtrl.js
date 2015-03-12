@@ -62,21 +62,21 @@ angular.module('Squared')
       $scope.rolesObj.cloudAdminValue = checkSubRoles(Config.backend_roles.application);
 
       $scope.noAdmin = {
-        label: 'No administrator privileges',
+        label: $filter('translate')('rolesPanel.noAdmin'),
         value: 0,
         name: 'adminRoles',
         id: 'noAdmin'
       };
 
       $scope.fullAdmin = {
-        label: 'Full administrator privileges',
+        label: $filter('translate')('rolesPanel.fullAdmin'),
         value: 1,
         name: 'adminRoles',
         id: 'fullAdmin'
       };
 
       $scope.partialAdmin = {
-        label: 'Some administrator privileges',
+        label: $filter('translate')('rolesPanel.partialAdmin'),
         value: 2,
         name: 'adminRoles',
         id: 'partialAdmin'
