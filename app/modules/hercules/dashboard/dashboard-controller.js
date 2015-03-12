@@ -3,8 +3,8 @@
 /* global _ */
 
 angular.module('Hercules')
-  .controller('DashboardController', ['$scope', '$interval', '$http', '$modal', 'ConnectorService',
-    function ($scope, $interval, $http, $modal, service) {
+  .controller('DashboardController', ['$scope', '$interval', '$http', '$modal', 'ConnectorService', 'Authinfo',
+    function ($scope, $interval, $http, $modal, service, Authinfo) {
       $scope.loading = true;
       $scope.inflight = false;
       $scope._promise = true;
@@ -12,6 +12,7 @@ angular.module('Hercules')
       $scope.visibleAlarm = {};
       $scope.pollHasFailed = false;
       $scope.deleteHostInflight = false;
+      $scope.fusionUCEnabled = Authinfo.isFusionUC();
 
       $scope._poll = function () {
         if ($scope._promise) {
@@ -88,7 +89,15 @@ angular.module('Hercules')
         $scope.modal = $modal.open({
           scope: $scope,
           controller: 'NotificationConfigController',
-          templateUrl: 'modules/hercules/notification-config/notification-config.html',
+          templateUrl: 'modules/hercules/notification-config/notification-config.html'
+        });
+      };
+
+      $scope.showUCConfigDialog = function () {
+        $scope.modal = $modal.open({
+          scope: $scope,
+          controller: 'UCConfigController',
+          templateUrl: 'modules/hercules/uc-config/uc-config.html'
         });
       };
 

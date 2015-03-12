@@ -279,6 +279,9 @@ angular.module('Core')
         isFusion: function () {
           return isEntitled(Config.entitlements.fusion_uc) || isEntitled(Config.entitlements.fusion_cal);
         },
+        isFusionUC: function () {
+          return isEntitled(Config.entitlements.fusion_uc);
+        },
         hasAccount: function () {
           return authData.hasAccount;
         },
