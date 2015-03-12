@@ -2,9 +2,10 @@
 
 angular
   .module('Core')
-  .controller('HeaderPushCtrl', ['$scope',
-    function ($scope) {
-      $scope.label = 'License Usage';
-      $scope.state = 'license'; // Possible values are "license, warning, error"
+  .controller('HeaderPushCtrl', ['$scope', '$filter',
+    function ($scope, $filter) {
+      $scope.label = $filter('translate')('leaderBoard.licenseUsage');
+      $scope.state = 'normal';
+      $scope.icon = 'icon-settings';
     }
   ]);

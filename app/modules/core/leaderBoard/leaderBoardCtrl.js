@@ -1,34 +1,34 @@
 'use strict';
 
 angular.module('Core')
-  .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice',
-    function ($scope, Log, Orgservice) {
+  .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter',
+    function ($scope, Log, Orgservice, $filter) {
 
       $scope.buckets = {
         messaging: {
-          title: 'Messaging',
-          subtitle: 'Standard Team Rooms',
+          title: $filter('translate')('leaderBoard.messagingTitle'),
+          subtitle: $filter('translate')('leaderBoard.messagingSubtitle'),
           currentCount: 0,
           totalCount: 0,
-          description: 'Messaging licenses.',
+          description: $filter('translate')('leaderBoard.messagingDesc'),
           visible: false,
           unlimited: false
         },
         communication: {
-          title: 'Communication',
-          subtitle: 'Advanced Unified',
+          title: $filter('translate')('leaderBoard.communicationTitle'),
+          subtitle: $filter('translate')('leaderBoard.communicationSubtitle'),
           currentCount: 0,
           totalCount: 0,
-          description: 'Cisco Unified Communication licenses.',
+          description: $filter('translate')('leaderBoard.communicationDesc'),
           visible: false,
           unlimited: false
         },
         conferencing: {
-          title: 'Conferencing',
-          subtitle: 'Meeting Center',
+          title: $filter('translate')('leaderBoard.conferencingTitle'),
+          subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
           currentCount: 0,
           totalCount: 0,
-          description: 'Cisco Meeting Center and Conferencing licenses.',
+          description: $filter('translate')('leaderBoard.conferencingDesc'),
           visible: false,
           unlimited: false
         }

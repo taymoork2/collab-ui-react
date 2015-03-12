@@ -857,7 +857,16 @@
   "leaderBoard": {
     "actions": "Actions",
     "licenseUsage": "License Usage",
-    "lastSynced": "Last Synced:"
+    "lastSynced": "Last Synced:",
+    "messagingTitle": "Messaging",
+    "messagingSubtitle": "Standard Team Rooms",
+    "messagingDesc": "Messaging licenses.",
+    "communicationTitle": "Communication",
+    "communicationSubtitle": "Advanced Unified",
+    "communicationDesc": "Cisco Unified Communication licenses.",
+    "conferencingTitle": "Conferencing",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Cisco Meeting Center and Conferencing licenses."
   },
   "partnerProfile": {
     "link": "Partner Profile",
