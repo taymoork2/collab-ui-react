@@ -167,7 +167,7 @@ angular.module('Squared')
 
         }
 
-        Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, $scope.currentUser.id, function (data, status) {
+        Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
           if (data.success) {
             if ($scope.rolesObj.form.firstName.$dirty || $scope.rolesObj.form.lastName.$dirty || $scope.rolesObj.form.customerEmail.$dirty) {
               var userData = {

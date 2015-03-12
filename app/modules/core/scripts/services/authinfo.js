@@ -21,7 +21,7 @@ angular.module('Core')
         'managedOrgs': [],
         'entitlements': null,
         'services': null,
-        'roles': null,
+        'roles': [],
         'tabs': [],
         'isInitialized': false,
         'setupDone': false,
@@ -144,7 +144,7 @@ angular.module('Core')
           authData.entitlements = null;
           authData.services = null;
           authData.tabs = [];
-          authData.roles = null;
+          authData.roles = [];
           authData.isInitialized = false;
           authData.setupDone = null;
         },

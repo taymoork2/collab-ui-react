@@ -248,8 +248,8 @@ angular.module('Core')
             });
         },
 
-        patchUserRoles: function (email, name, roles, orgId, callback) {
-          var patchUrl = userUrl + '/organization/' + orgId + '/users/roles';
+        patchUserRoles: function (email, name, roles, callback) {
+          var patchUrl = userUrl + '/organization/' + Authinfo.getOrgId() + '/users/roles';
 
           var requestBody = {
             'users': [{
@@ -258,8 +258,6 @@ angular.module('Core')
               'name': name
             }]
           };
-
-          //console.log(JSON.stringify(requestBody));
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http({

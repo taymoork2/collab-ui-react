@@ -34,10 +34,12 @@ angular.module('Core')
         return $http.get(authUrl)
           .then(function (response) {
             Authinfo.initialize(response.data);
-            return AccountService.getAccount(Authinfo.getOrgId())
-              .success(function (data, status) {
-                Authinfo.updateAccountInfo(data, status);
-              });
+            if (Authinfo.isAdmin()) {
+              return AccountService.getAccount(Authinfo.getOrgId())
+                .success(function (data, status) {
+                  Authinfo.updateAccountInfo(data, status);
+                });
+            }
           })
           .catch(function (response) {
             Authinfo.clear();
