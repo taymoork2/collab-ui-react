@@ -65,6 +65,8 @@ angular.module('Squared')
                   return;
                 }
               }
+            }, {
+              squelchErrors: true
             });
 
           } else {
