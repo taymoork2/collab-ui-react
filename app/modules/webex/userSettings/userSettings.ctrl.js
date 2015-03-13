@@ -5,21 +5,21 @@
     '$scope',
     '$log',
     'WebExUserSettingsSvc',
-    'WebexUserPrivilegesModel',
+    'WebexUserSettingsModel',
     'Notification',
     function (
       $scope,
       $log,
       WebExUserSettingsSvc,
-      userPrivilegesModel,
+      userSettingsModel,
       Notification
     ) {
       this.xmlApiAccessInfo = {
         xmlServerURL: "",
         webexAdminID: "",
         webexAdminPswd: "",
-        siteID: null,
-        webexSessionTicket: null,
+        siteID: "",
+        webexSessionTicket: "",
         webexUserId: ""
       };
 
@@ -136,7 +136,7 @@
         // alert(funcName);
 
         var currView = this;
-        var userPrivilegesModel = currView.userPrivilegesModel;
+        var userSettingsModel = currView.userSettingsModel;
         var userInfoJson = currView.userInfoJson;
         var siteInfoJson = currView.siteInfoJson;
         var meetingTypesInfoJson = currView.meetingTypesInfoJson;
@@ -145,14 +145,14 @@
         var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
 
         siteServiceTypes.forEach(function (siteServiceType) {
-          if (siteServiceType == userPrivilegesModel.meetingCenter.label) {
-            userPrivilegesModel.meetingCenter.isSiteEnabled = true;
-          } else if (siteServiceType == userPrivilegesModel.eventCenter.label) {
-            userPrivilegesModel.eventCenter.isSiteEnabled = true;
-          } else if (siteServiceType == userPrivilegesModel.trainingCenter.label) {
-            userPrivilegesModel.trainingCenter.isSiteEnabled = true;
-          } else if (siteServiceType == userPrivilegesModel.supportCenter.label) {
-            userPrivilegesModel.supportCenter.isSiteEnabled = true;
+          if (siteServiceType == userSettingsModel.meetingCenter.label) {
+            userSettingsModel.meetingCenter.isSiteEnabled = true;
+          } else if (siteServiceType == userSettingsModel.eventCenter.label) {
+            userSettingsModel.eventCenter.isSiteEnabled = true;
+          } else if (siteServiceType == userSettingsModel.trainingCenter.label) {
+            userSettingsModel.trainingCenter.isSiteEnabled = true;
+          } else if (siteServiceType == userSettingsModel.supportCenter.label) {
+            userSettingsModel.supportCenter.isSiteEnabled = true;
           }
         }); // siteServiceTypes.forEach()
         //---------------- end of center status update ----------------//
@@ -183,17 +183,17 @@
             var supportCenterApplicable = false;
 
             siteMtgServiceTypes.forEach(function (siteMtgServiceType) {
-              if (userPrivilegesModel.meetingCenter.serviceType == siteMtgServiceType) {
+              if (userSettingsModel.meetingCenter.serviceType == siteMtgServiceType) {
                 meetingCenterApplicable = true;
-              } else if (userPrivilegesModel.eventCenter.serviceType == siteMtgServiceType) {
+              } else if (userSettingsModel.eventCenter.serviceType == siteMtgServiceType) {
                 if ("AUO" != siteMtgProductCodePrefix) {
                   eventCenterApplicable = true;
                 }
-              } else if (userPrivilegesModel.trainingCenter.serviceType == siteMtgServiceType) {
+              } else if (userSettingsModel.trainingCenter.serviceType == siteMtgServiceType) {
                 if ("AUO" != siteMtgProductCodePrefix) {
                   trainingCenterApplicable = true;
                 }
-              } else if (userPrivilegesModel.supportCenter.serviceType == siteMtgServiceType) {
+              } else if (userSettingsModel.supportCenter.serviceType == siteMtgServiceType) {
                 if (
                   ("SMT" != siteMtgProductCodePrefix) &&
                   ("AUO" != siteMtgProductCodePrefix)
@@ -219,7 +219,7 @@
           }); // siteMeetingTypes.forEach()
         }
 
-        userPrivilegesModel.sessionTypes = sessionTypes;
+        userSettingsModel.sessionTypes = sessionTypes;
         var enabledSessionTypesIDs = [].concat(userInfoJson.use_meetingTypes.use_meetingType);
 
         logMsg = funcName + ": " + "\n" +
@@ -228,7 +228,7 @@
         // alert(logMsg);
 
         enabledSessionTypesIDs.forEach(function (enabledSessionTypeID) { // loop through user's enabled session type
-          userPrivilegesModel.sessionTypes.forEach(function (sessionType) {
+          userSettingsModel.sessionTypes.forEach(function (sessionType) {
             var sessionTypeId = sessionType.sessionTypeId;
 
             logMsg = funcName + ": " + "\n" +
@@ -240,37 +240,37 @@
             if (sessionType.sessionTypeId == enabledSessionTypeID) {
               sessionType.sessionEnabled = true;
             }
-          }); // userPrivilegesModel.sessionTypes.forEach()
+          }); // userSettingsModel.sessionTypes.forEach()
         }); // enabledSessionTypesIDs.forEach()
         //---------------- end of session types update ----------------//
 
         //---------------- start of cmr update----------------//
         if ("true" == siteInfoJson.ns1_siteInstance.ns1_siteCommonOptions.ns1_EnableCloudTelepresence) {
-          userPrivilegesModel.collabMeetingRoom.isSiteEnabled = true;
+          userSettingsModel.collabMeetingRoom.isSiteEnabled = true;
         }
 
         if ("true" == userInfoJson.use_privilege.use_isEnableCET) {
-          userPrivilegesModel.collabMeetingRoom.value = true;
+          userSettingsModel.collabMeetingRoom.value = true;
         }
         //---------------- end of cmr update ----------------//
 
         //---------------- start of user privileges update -----------------//
         if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing) {
-          userPrivilegesModel.telephonyPriviledge.callInTeleconf.isSiteEnabled = true;
+          userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled = true;
         }
 
-        if (userPrivilegesModel.telephonyPriviledge.callInTeleconf.isSiteEnabled) {
+        if (userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled) {
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference) {
-            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled = true;
-            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
-            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled = true;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled = true;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled = true;
           } else if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference) {
-            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
-            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled = true;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled = true;
           } else if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing) {
-            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
           } else {
-            userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled = true;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled = true;
           }
         }
 
@@ -278,48 +278,48 @@
           ("true" == userInfoJson.use_privilege.use_teleConfCallIn) &&
           ("true" == userInfoJson.use_privilege.use_teleConfTollFreeCallIn)
         ) {
-          userPrivilegesModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 3;
+          userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 3;
         } else if ("true" == userInfoJson.use_privilege.use_teleConfTollFreeCallIn) {
-          userPrivilegesModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 2;
+          userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 2;
         } else {
-          userPrivilegesModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 1;
+          userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 1;
         }
 
         //
         if ("true" == userInfoJson.use_privilege.use_teleConfCallInInternational) {
-          userPrivilegesModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value = true;
+          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value = true;
         }
 
         if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing) {
-          userPrivilegesModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled = true;
+          userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled = true;
         }
 
         if ("true" == userInfoJson.use_privilege.use_teleConfCallOut) {
-          userPrivilegesModel.telephonyPriviledge.callBackTeleconf.value = true;
+          userSettingsModel.telephonyPriviledge.callBackTeleconf.value = true;
         }
 
         if ("true" == userInfoJson.use_privilege.use_teleConfCallOutInternational) {
-          userPrivilegesModel.telephonyPriviledge.integratedVoIP.value = true;
+          userSettingsModel.telephonyPriviledge.integratedVoIP.value = true;
         }
 
         if ("true" == userInfoJson.use_privilege.use_otherTelephony) {
-          userPrivilegesModel.telephonyPriviledge.otherTeleconfServices.value = true;
+          userSettingsModel.telephonyPriviledge.otherTeleconfServices.value = true;
         }
 
         if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_internetPhone) {
-          userPrivilegesModel.telephonyPriviledge.integratedVoIP.isSiteEnabled = true;
+          userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled = true;
         }
 
         if ("true" == userInfoJson.use_privilege.use_voiceOverIp) {
-          userPrivilegesModel.telephonyPriviledge.integratedVoIP.value = true;
+          userSettingsModel.telephonyPriviledge.integratedVoIP.value = true;
         }
 
         if ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab) {
-          userPrivilegesModel.trainingCenter.handsOnLabAdmin.isSiteEnabled = true;
+          userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled = true;
         }
 
         if ("true" == userInfoJson.use_privilege.use_labAdmin) {
-          userPrivilegesModel.trainingCenter.handsOnLabAdmin.value = true;
+          userSettingsModel.trainingCenter.handsOnLabAdmin.value = true;
         }
         //---------------- end of user privileges update -----------------//
 
@@ -333,7 +333,7 @@
 
         var disableSwitch = true;
         if (this.viewReady) {
-          this.userPrivilegesModel.sessionTypes.forEach(function (sessionType) {
+          this.userSettingsModel.sessionTypes.forEach(function (sessionType) {
             var meetingCenterApplicable = sessionType.meetingCenterApplicable;
             var sessionEnabled = sessionType.sessionEnabled;
 
@@ -359,7 +359,7 @@
         };
 
         //go through the session types
-        userPrivilegesModel.sessionTypes.forEach(function (sessionType) {
+        userSettingsModel.sessionTypes.forEach(function (sessionType) {
           if (sessionType.sessionEnabled) {
             userPrivileges.meetingTypes.push(sessionType.sessionTypeId);
             $log.log("sessionType.sessionTypeId = " + sessionType.sessionTypeId);
@@ -399,7 +399,7 @@
       this.xml2JsonConvert = WebExUserSettingsSvc.xml2JsonConvert;
       this.getSessionTicket = WebExUserSettingsSvc.getSessionTicket;
 
-      this.userPrivilegesModel = userPrivilegesModel;
+      this.userSettingsModel = userSettingsModel;
 
       this.getUserSettingsInfo();
     } // WebExUserSettingsCtrl()
