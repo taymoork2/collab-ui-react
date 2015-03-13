@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('WebExUserSettings')
-  .service('WebexUserPrivilegesModel', [
-    function WebexUserPrivilegesModel() {
+  .service('WebexUserSettingsModel', [
+    function WebexUserSettingsModel() {
       return {
         sessionEnablementTitle: "Session Enablement",
         userPrivilegesTitle: "User Privileges",
