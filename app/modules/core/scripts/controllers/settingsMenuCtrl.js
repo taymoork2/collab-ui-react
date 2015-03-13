@@ -119,7 +119,7 @@ angular.module('Core')
       $scope.updateLanguage = function () {
         $translate.use(vm.selected.value).then(function () {
           Authinfo.initializeTabs();
-          $state.go('overview');
+          $state.go('login');
           $rootScope.$broadcast('TABS_UPDATED');
         });
       };
