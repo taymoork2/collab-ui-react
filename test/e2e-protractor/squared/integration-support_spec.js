@@ -42,7 +42,7 @@ describe('Support flow', function () {
       notifications.assertError('Search input cannot be empty.');
     });
 
-    it('should search for logs by valid email address', function (done) {
+    xit('should search for logs by valid email address', function (done) {
       support.searchAndVerifyResult(support.searchValidEmail);
 
       utils.expectIsDisplayed(support.supportTable);
@@ -57,7 +57,7 @@ describe('Support flow', function () {
       });
     });
 
-    it('should search for logs by valid uuid', function () {
+    xit('should search for logs by valid uuid', function () {
       support.searchAndVerifyResult(support.searchValidUuid, support.searchValidEmail);
 
       utils.expectIsDisplayed(support.supportTable);
@@ -79,7 +79,7 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(support.closeCallInfo);
     });
 
-    it('should display log-list panel on search', function () {
+    xit('should display log-list panel on search', function () {
       utils.click(support.logSearchBtn);
       utils.expectIsNotDisplayed(support.closeCallInfo);
       utils.expectIsDisplayed(support.supportTable);
