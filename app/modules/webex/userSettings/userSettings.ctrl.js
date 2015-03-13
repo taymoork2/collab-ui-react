@@ -13,12 +13,12 @@
       Notification
     ) {
       this.xmlApiAccessInfo = {
-        xmlServerURL: null,
-        webexAdminID: null,
-        webexAdminPswd: null,
-        siteID: null,
-        webexSessionTicket: null,
-        webexUserId: null
+        xmlServerURL: "",
+        webexAdminID: "",
+        webexAdminPswd: "",
+        siteID: "",
+        webexSessionTicket: "",
+        webexUserId: ""
       };
 
       this.getUserSettingsInfo = function () {
