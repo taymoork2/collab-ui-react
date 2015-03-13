@@ -13,6 +13,9 @@ describe('UConfigController', function () {
       getOrg: sinon.stub(),
       updateOrg: sinon.stub()
     };
+    notification = {
+      notify: sinon.stub()
+    };
     Authinfo = {
       getOrgId: sinon.stub()
     };
