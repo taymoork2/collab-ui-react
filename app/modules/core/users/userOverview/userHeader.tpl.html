@@ -1,8 +1,8 @@
 <cs-sp-header>
   <div class="header-image">
     <div class="user-img">
-      <i ng-if="!user.image" class="icon icon-user"></i>
-      <img ng-if="user.image" ng-src="user.img" />
+      <i ng-if="!userOverview.currentUser.photos" class="icon icon-user"></i>
+      <img ng-if="userOverview.currentUser.photos" ng-src="{{userOverview.currentUser.photos[1].value}}" />
     </div>
   </div>
   <div class="header-info">
