@@ -153,9 +153,9 @@
       }; // disableCmrSwitch()
 
       this.updateUserSettings = function () {
-        var FuncName = "updateUserSettings()";
+        var funcName = "updateUserSettings()";
         var logMsg = "";
-        
+
         logMsg = funcName + ": " + "START";
         $log.log(logMsg);
 
