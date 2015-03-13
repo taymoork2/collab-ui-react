@@ -723,7 +723,19 @@ angular
         .state('webexUserSettings', {
           url: '/webexUserSettings',
           templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
-          // controller: 'WebExUserSettingsCtrl',
+          parent: 'main'
+        });
+    }
+  ]);
+
+angular
+  .module('WebExUserSettings2')
+  .config(['$stateProvider',
+    function ($stateProvider) {
+      $stateProvider
+        .state('webexUserSettings2', {
+          url: '/webexUserSettings2',
+          templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
           parent: 'main'
         });
     }
