@@ -229,17 +229,17 @@ describe('Config', function () {
 
   it('should return correct itunes store url', function () {
     whenCalling('getItunesStoreUrl').expectUrlToBe({
-      development: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',
-      integration: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',
-      production: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8'
+      development: 'http://cs.co/sqios',
+      integration: 'http://cs.co/sqios',
+      production: 'http://cs.co/sqios'
     });
   });
 
   it('should return correct android store url', function () {
     whenCalling('getAndroidStoreUrl').expectUrlToBe({
-      development: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android',
-      integration: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android',
-      production: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android'
+      development: 'http://cs.co/sqandroid',
+      integration: 'http://cs.co/sqandroid',
+      production: 'http://cs.co/sqandroid'
     });
   });
 
