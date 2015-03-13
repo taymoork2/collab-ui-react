@@ -128,6 +128,12 @@ angular
           parent: 'main',
           authenticate: false
         })
+        .state('csadmin', {
+          url: '/csadmin?eqp',
+          templateUrl: 'modules/squared/csadmin/csadmin.html',
+          controller: 'CsAdminCtrl',
+          parent: 'main'
+        })
         .state('downloads', {
           url: '/downloads',
           templateUrl: 'modules/squared/views/downloads.html',

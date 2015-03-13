@@ -18,7 +18,7 @@ angular.module('Squared')
       var redirectUrl;
       $scope.isProcessing = true;
 
-      Orgservice.createOrg($scope.accountId, $scope.adminEmail, function (data, status) {
+      Orgservice.createOrg($scope.accountId, $scope.adminEmail, $scope.orderId, function (data, status) {
         $scope.isProcessing = false;
         if (data.success === true) {
           if ($scope.isPartner === 'true') {

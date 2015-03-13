@@ -1,0 +1,24 @@
+<div id="csAdminSuccess" ng-show="result.success">
+	<p>Success</p>
+	<p>You were successfully assigned to {{result.customerName}} for Order ID {{result.orderId}}.</p>
+	<!-- <p>{{result.customerName}}</p>
+	<p>{{result.contactName}}</p>
+	<p>{{result.contactEmail}}</p>
+	<p>{{result.partnerName}}</p>
+	<p>{{result.partnerContactName}}</p>
+	<p>{{result.partnerContactEmail}}</p> -->
+
+
+</div>
+
+<div id="csAdminLinkExpired" ng-show="result.linkExpired">
+	<p class="activate-error">The link you clicked is no longer valid or you are not entitled to see the page.</p>
+</div>
+
+<div id="csAdminException" ng-show="result.error">
+  <br>
+	<p>Something went wrong.</p>
+	<p>We're sorry, something went wrong trying to assign you to customer {{result.customerName}}.</p> 
+</div>
+
+</div>

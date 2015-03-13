@@ -542,7 +542,7 @@ angular.module('Core')
       };
 
       // These states do not require a role/service check
-      config.allowedStates = ['unauthorized'];
+      config.allowedStates = ['unauthorized', 'csadmin'];
 
       return config;
     }
