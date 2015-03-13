@@ -858,6 +858,9 @@
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx Proto"
   },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
+  },
   "leaderBoard": {
     "actions": "Actions",
     "licenseUsage": "License Usage",
