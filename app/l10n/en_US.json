@@ -906,7 +906,7 @@
     "ciscoRep": "Cisco Representative",
     "supportSetup": "Trouble Ticket / Reporting Location",
     "save": "Save",
-    "supportInfo": "If you are providing support for your customers' users, enter your support paramters below. These paramaters will be displayed under Support Options in the Squared applications.",
+    "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the {{app}} application.",
     "lifeCycle": "Lifecycle partners are required to provide both types of support shown below.",
     "supportOptions": "Cisco Support Options",
     "seeExample": "see an example.",
@@ -916,8 +916,8 @@
     "urlReport": "URL for reporting trouble tickets or opening cases",
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Help & FAQ Location",
-    "matchingTix": "Matching Trouble Tickets",
-    "matchingDescr": "To match trouble tickets with the logs that are uploaded to the Cisco Collaboration Management tool when reports are created, append your support URL with your logID parameter as \"%%logID%%\" (no quotes).",
+    "matchingTix": "Matching Problem Reports",
+    "matchingDescr": "To match problem reports with the logs that are uploaded to the Cisco Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.acme.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
@@ -932,7 +932,7 @@
   "customerProfile": {
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
-    "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Squared application;"
+    "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the {{app}} applications."
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
