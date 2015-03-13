@@ -17,6 +17,8 @@
     vm.addGenerateAuthCodeLink = addGenerateAuthCodeLink;
     vm.removeGenerateAuthCodeLink = removeGenerateAuthCodeLink;
     vm.hasAccount = Authinfo.hasAccount();
+    vm.isSquaredUC = Authinfo.isSquaredUC();
+    vm.isFusion = Authinfo.isFusion();
 
     var hasEntitlement = function (entitlement) {
       var userEntitlements = vm.currentUser.entitlements;

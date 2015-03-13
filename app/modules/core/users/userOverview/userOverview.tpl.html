@@ -23,7 +23,7 @@
       </ul>
     </div>
   </cs-sp-section>
-  <cs-sp-section>
+  <cs-sp-section ng-if="userOverview.isSquaredUC">
     <div class="section-title-row">
       <span class="section-name" translate="usersPreview.devicesPreview"></span>
       <span class="actions-menu dropdown pull-right" ng-if="userOverview.dropDownItems.length > 0">
@@ -37,7 +37,7 @@
     </div>
     <uc-devices></uc-devices>
   </cs-sp-section>
-  <cs-sp-section>
+  <cs-sp-section ng-if="userOverview.isFusion">
     <hercules-activation-status></hercules-activation-status>
   </cs-sp-section>
 </cs-sp-container>
