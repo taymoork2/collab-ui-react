@@ -106,6 +106,7 @@
     "title": "Messaging"
   },
   "settings": {
+    "title": "Service Setup",
     "initialSetup": "Initial Setup"
   },
   "tabs": {
@@ -140,8 +141,8 @@
     "welcome": "Welcome!",
     "feedback": "Feedback",
     "logout": "Sign Out",
-    "appTitle": "Cisco Spark Admin Tool",
-    "genericTitle": "Cisco Spark",
+    "appTitle": "Cisco Spark Management",
+    "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
     "launchPartner": "Manage My Organization"
@@ -153,10 +154,10 @@
   "downloadPage": {
     "thank": "Thank you for registering with Cisco Spark.",
     "account": "Your account {{email}} is now active.",
-    "install": "Please install Cisco Spark by following",
+    "install": "Please install Spark by following",
     "link": "this link.",
     "using": "Please start using",
-    "squared": "Cisco Spark."
+    "squared": "Spark."
   },
   "invitePage": {
     "redirect": "Redirecting...",
@@ -284,7 +285,10 @@
     "done": "Done",
     "begin": "Begin",
     "back": "Back",
-    "finish": "Finish"
+    "finish": "Finish",
+    "language": "Language",
+    "selectLanguage": "Select a language",
+    "select": "Select"
   },
   "notifications": {
     "success": "Success notifications",
@@ -311,11 +315,20 @@
     "launchBtn": "Launch",
     "convert": "Convert",
     "convertUsers": "Convert Unlicensed Users",
-    "convertUsersText": "Convert employees of your organization who have signed up for Cisco Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
+    "convertUsersText": "Convert employees of your organization who have signed up for Project Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
     "name": "Name",
-    "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}"
+    "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
+    "quickLinksText": "Quick Links",
+    "addUserText": "Add Users",
+    "installDeviceText": "Install a Device for a User",
+    "installSharedSpaceText": "Install a Devices into a Shared Space",
+    "autoAttendantText": "Configure an Auto Attendant",
+    "searchLogsText": "Search device logs",
+    "unlicensedDateText": "unlicensed users registered on",
+    "unlicensedText": "Unlicensed Users",
+    "convertText": "View and convert users currently using the free version"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -566,7 +579,18 @@
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
-    "services": "All Services"
+    "services": "All Services",
+    "UsersOnboarded": "Users Onboarded",
+    "AvgCallsPerUser": "Avg Calls Per User",
+    "AvgRoomsPerUser": "Avg Rooms Per User",
+    "ActiveUsers": "Active Users",
+    "OneOnOneRooms": "One On One Rooms",
+    "GroupRooms": "Group Rooms",
+    "VideoCalls": "Video Calls",
+    "AvgDurationofCalls": "Avg Duration of Calls",
+    "ContentShared": "Content Shared",
+    "AmountofContentShared": "Amount of Content Shared",
+    "UserEngagement": "User Engagement"
   },
   "callRouting": {
     "title": "Call Routing",
@@ -602,7 +626,7 @@
     "createButton": "Create Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "Cisco Spark UC",
+    "squareduc": "Spark UC",
     "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -708,7 +732,7 @@
     "launchPortal": "Launch Company Portal",
     "launchPortalPrompt": "If you want to set up the service for the customer:",
     "or": "or",
-    "squareducError": "Created trial, but unable to provision Cisco Spark UC.",
+    "squareducError": "Created trial, but unable to provision Spark UC.",
     "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
@@ -791,7 +815,7 @@
     "send": "Send",
     "to": "To",
     "subject": "Subject",
-    "subjectContent": "Activate your Cisco Spark UC device",
+    "subjectContent": "Activate your Spark UC device",
     "message": "Message",
     "expires": "Expires: {{date}}  <strong>({{timeLeft}} from now)</strong>",
     "clipboardFallback": "Press cmd+c to copy the text below.",
@@ -805,14 +829,16 @@
     "emailAddress": "Email Address",
     "administratorRoles": "Administrator Roles",
     "rolesDescription": "A user may have one or more roles in the system, and will be granted all permissions from selected roles.",
-    "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Cisco Spark system from this portal.",
+    "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Spark system from this portal.",
     "cloudOpAdmin": "Cloud Operations Administrator",
-    "fullAdmin": "Full administrator permissions",
-    "partialAdmin": "Some administrator permissions",
+    "fullAdmin": "Full administrator privileges",
+    "partialAdmin": "Some administrator privileges",
+    "noAdmin": "No administrator privileges",
     "userAdmin": "User Administrator",
     "billingAdmin": "Billing Administrator",
     "supportAdmin": "Support Administrator",
-    "save": "Save"
+    "save": "Save",
+    "roles": "Roles"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -854,6 +880,9 @@
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx Proto"
   },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
+  },
   "leaderBoard": {
     "actions": "Actions",
     "licenseUsage": "License Usage",
@@ -877,7 +906,7 @@
     "ciscoRep": "Cisco Representative",
     "supportSetup": "Trouble Ticket / Reporting Location",
     "save": "Save",
-    "supportInfo": "If you are providing support for your customers' users, enter your support paramters below. These paramaters will be displayed under Support Options in the Cisco Spark applications;",
+    "supportInfo": "If you are providing support for your customers' users, enter your support paramters below. These paramaters will be displayed under Support Options in the Spark applications.",
     "lifeCycle": "Lifecycle partners are required to provide both types of support shown below.",
     "supportOptions": "Cisco Support Options",
     "seeExample": "see an example.",
@@ -888,7 +917,7 @@
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Help & FAQ Location",
     "matchingTix": "Matching Trouble Tickets",
-    "matchingDescr": "To match trouble tickets with the logs that are uploaded to the Cisco Spark Management tool when reports are created, append your support URL with your logID parameter as \"%%logID%%\" (no quotes).",
+    "matchingDescr": "To match trouble tickets with the logs that are uploaded to the Cisco Spark Management when reports are created, append your support URL with your logID parameter as \"%%logID%%\" (no quotes).",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
@@ -903,7 +932,7 @@
   "customerProfile": {
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
-    "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Cisco Spark application;"
+    "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Spark application;"
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
@@ -915,5 +944,27 @@
     "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
     "info": "Status",
     "wait": "Please wait while we redirect you"
+  },
+  "languages": {
+    "danish": "Danish",
+    "german": "German",
+    "englishBritish": "English(British)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish(Spain)",
+    "spanishColumbian": "Spanish(Columbian)",
+    "french": "French",
+    "indionesian": "Indionesian",
+    "italian": "Italian",
+    "japanese": "Japanese",
+    "korean": "Korean",
+    "norwegian": "Norwegian",
+    "dutch": "Dutch",
+    "polish": "Polish",
+    "portugeseBrazillian": "Portugese (Brazillian)",
+    "russian": "Russian",
+    "swedish": "Swedish",
+    "turkish": "Turkish",
+    "chineseMandarin": "Chinese(Mandarin)",
+    "chineseTraditional": "Chinese(Traditional)"
   }
 }
