@@ -153,7 +153,11 @@
       }; // disableCmrSwitch()
 
       this.updateUserSettings = function () {
-        $log.log("updateUserSettings(): START");
+        var FuncName = "updateUserSettings()";
+        var logMsg = "";
+        
+        logMsg = funcName + ": " + "START";
+        $log.log(logMsg);
 
         var userPrivileges = {
           meetingTypes: [],
@@ -186,7 +190,8 @@
               Notification.notify(['User privileges update failed'], 'error');
             });
 
-        $log.log("updateUserSettings(): END");
+        logMsg = funcName + ": " + "END";
+        $log.log(logMsg);
       }; // updateUserSettings()
 
       //----------------------------------------------------------------------//
