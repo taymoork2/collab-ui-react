@@ -99,6 +99,9 @@ angular
 
       if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
         $translate.use('en_spark');
+        $rootScope.favicon = 'images/sparkSm.png';
+      } else {
+        $rootScope.favicon = 'images/logo.png';
       }
 
     }

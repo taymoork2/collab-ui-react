@@ -81,6 +81,16 @@ exports.expectIsDisplayed = function (elem) {
   expect(elem.isDisplayed()).toBeTruthy();
 };
 
+exports.expectIsDisabled = function (elem) {
+  this.wait(elem);
+  expect(elem.isEnabled()).toBeFalsy();
+};
+
+exports.expectIsEnabled = function (elem) {
+  this.wait(elem);
+  expect(elem.isEnabled()).toBeTruthy();
+};
+
 exports.expectIsNotDisplayed = function (elem) {
   browser.wait(function () {
     return elem.isDisplayed().then(function (isDisplayed) {

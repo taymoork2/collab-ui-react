@@ -5,6 +5,7 @@ var RolesPage = function () {
 
   this.rolesDetailsPanel = element(by.id('rolesDetailsPanel'));
   this.lastNameInput = element(by.id('lastNameInput'));
+  this.emailInput = element(by.id('customerEmailInput'));
   this.fullAdmin = element(by.id('full-admin-options')).element(by.css('.ng-valid'));
   this.saveButton = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
   this.noAdmin = element(by.id('no-admin-options')).element(by.css('.ng-valid'));

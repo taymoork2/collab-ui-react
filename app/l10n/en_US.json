@@ -831,8 +831,9 @@
     "rolesDescription": "A user may have one or more roles in the system, and will be granted all permissions from selected roles.",
     "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Squared system from this portal.",
     "cloudOpAdmin": "Cloud Operations Administrator",
-    "fullAdmin": "Full administrator permissions",
-    "partialAdmin": "Some administrator permissions",
+    "fullAdmin": "Full administrator privileges",
+    "partialAdmin": "Some administrator privileges",
+    "noAdmin": "No administrator privileges",
     "userAdmin": "User Administrator",
     "billingAdmin": "Billing Administrator",
     "supportAdmin": "Support Administrator",
@@ -878,6 +879,9 @@
   },
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx Proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -940,5 +944,27 @@
     "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
     "info": "Status",
     "wait": "Please wait while we redirect you"
+  },
+  "languages": {
+    "danish": "Danish",
+    "german": "German",
+    "englishBritish": "English(British)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish(Spain)",
+    "spanishColumbian": "Spanish(Columbian)",
+    "french": "French",
+    "indionesian": "Indionesian",
+    "italian": "Italian",
+    "japanese": "Japanese",
+    "korean": "Korean",
+    "norwegian": "Norwegian",
+    "dutch": "Dutch",
+    "polish": "Polish",
+    "portugeseBrazillian": "Portugese (Brazillian)",
+    "russian": "Russian",
+    "swedish": "Swedish",
+    "turkish": "Turkish",
+    "chineseMandarin": "Chinese(Mandarin)",
+    "chineseTraditional": "Chinese(Traditional)"
   }
 }

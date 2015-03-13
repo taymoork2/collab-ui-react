@@ -4,12 +4,13 @@
      
   <!--Start of Session Enablement section -->
   <p>
-    <b>{{WebExUserSettings.userPrivilegesModel.sessionEnablementTitle}}</b><br>
+    <b>{{WebExUserSettings.userSettingsModel.sessionEnablementTitle}}</b><br>
   </p>
   
   <!-- Start of Meeting Center -->
-  <table ng-show="WebExUserSettings.userPrivilegesModel.meetingCenter.isSiteEnabled"
-         id={{WebExUserSettings.userPrivilegesModel.meetingCenter.id}}>
+  <table ng-show="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled"
+         id={{WebExUserSettings.userSettingsModel.meetingCenter.id}}
+         name={{WebExUserSettings.userSettingsModel.meetingCenter.id}}>
          
     <tr>
       <td width="15">
@@ -17,7 +18,7 @@
       </td>
       
       <td>
-        {{WebExUserSettings.userPrivilegesModel.meetingCenter.label}}:
+        {{WebExUserSettings.userSettingsModel.meetingCenter.label}}:
       </td>
     </tr>
       
@@ -27,7 +28,7 @@
       </td>
     </tr>
     
-    <tr ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+    <tr ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
         ng-show="sessionType.meetingCenterApplicable">
         
       <td width="15">
@@ -37,9 +38,7 @@
       <td>              
         <cs-checkbox id={{sessionType.id}}
                      name={{sessionType.id}}
-                     align="left"
                      ng-model="sessionType.sessionEnabled"
-                     ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
                      cklabel={{sessionType.sessionName}}>
         </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
       </td>
@@ -48,8 +47,9 @@
   <!-- End of Meeting Center -->
   
   <!-- Start of Collaberation Meeting Room (CMR) -->
-  <table ng-show="WebExUserSettings.userPrivilegesModel.collabMeetingRoom.isSiteEnabled"
-         id="CMR">
+  <table ng-show="WebExUserSettings.userSettingsModel.collabMeetingRoom.isSiteEnabled && WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled"
+         id="CMR"
+         name="CMR">
     
     <tr valign="top">
       <td width="15">
@@ -57,7 +57,7 @@
       </td>
       
       <td>
-        {{WebExUserSettings.userPrivilegesModel.collabMeetingRoom.label}}
+        {{WebExUserSettings.userSettingsModel.collabMeetingRoom.label}}
       </td>
       
       <td width="30">
@@ -65,11 +65,10 @@
       </td>
       
       <td>
-        <cs-toggle-switch id="WebExUserSettings.userPrivilegesModel.collabMeetingRoom,id"
-                          name="WebExUserSettings.userPrivilegesModel.collabMeetingRoom,id"
+        <cs-toggle-switch name={{WebExUserSettings.userSettingsModel.collabMeetingRoom.id}}
+                          toggle-id={{WebExUserSettings.userSettingsModel.collabMeetingRoom.id}}
                           size="small"
-                          ng-model="WebExUserSettings.userPrivilegesModel.collabMeetingRoom.value"
-                          ng-disabled="WebExUserSettings.disableCmrSwitch()">
+                          ng-model="WebExUserSettings.userSettingsModel.collabMeetingRoom.value">
         </cs-toggle-switch>
       </td>
     </tr>
@@ -77,8 +76,9 @@
   <!-- End of Collaberation Meeting Room (CMR) -->
         
   <!-- Start of Event Center -->
-  <table ng-show="WebExUserSettings.userPrivilegesModel.eventCenter.isSiteEnabled"
-         id="EC">
+  <table ng-show="WebExUserSettings.userSettingsModel.eventCenter.isSiteEnabled"
+         id="EC"
+         name="EC">
          
     <tr valign="top">
       <td width="15">
@@ -86,7 +86,7 @@
       </td>
       
       <td>
-        {{WebExUserSettings.userPrivilegesModel.eventCenter.label}}:
+        {{WebExUserSettings.userSettingsModel.eventCenter.label}}:
       </td>
     </tr>
       
@@ -97,7 +97,7 @@
     </tr>
     
     <tr valign="top"
-        ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+        ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
         ng-show="sessionType.eventCenterApplicable">
         
       <td width="15">
@@ -107,9 +107,7 @@
       <td>              
         <cs-checkbox id={{sessionType.id}}
                      name={{sessionType.id}}
-                     align="left"
                      ng-model="sessionType.sessionEnabled"
-                     ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
                      cklabel={{sessionType.sessionName}}>
         </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
       </td>
@@ -118,8 +116,9 @@
   <!-- End of Event Center -->
     
   <!-- Start of Support Center -->
-  <table ng-show="WebExUserSettings.userPrivilegesModel.supportCenter.isSiteEnabled"
-         id="SC">
+  <table ng-show="WebExUserSettings.userSettingsModel.supportCenter.isSiteEnabled"
+         id="SC"
+         name="SC">
          
     <tr valign="top">
       <td width="15">
@@ -127,7 +126,7 @@
       </td>
       
       <td>
-        {{WebExUserSettings.userPrivilegesModel.supportCenter.label}}:
+        {{WebExUserSettings.userSettingsModel.supportCenter.label}}:
       </td>
     </tr>
       
@@ -138,7 +137,7 @@
     </tr>
     
     <tr valign="top"
-        ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+        ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
         ng-show="sessionType.supportCenterApplicable">
         
       <td width="15">
@@ -150,7 +149,6 @@
                      name={{sessionType.id}}
                      align="left"
                      ng-model="sessionType.sessionEnabled"
-                     ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
                      cklabel={{sessionType.sessionName}}>
         </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
       </td>
@@ -159,8 +157,9 @@
   <!-- End of Support Center -->
     
   <!-- Start of Training Center -->
-  <table ng-show="WebExUserSettings.userPrivilegesModel.trainingCenter.isSiteEnabled"
-         id="TC">
+  <table ng-show="WebExUserSettings.userSettingsModel.trainingCenter.isSiteEnabled"
+         id="TC"
+         name="TC">
          
     <tr valign="top">
       <td width="15">
@@ -168,7 +167,7 @@
       </td>
       
       <td>
-        {{WebExUserSettings.userPrivilegesModel.trainingCenter.label}}:
+        {{WebExUserSettings.userSettingsModel.trainingCenter.label}}:
       </td>
     </tr>
       
@@ -179,7 +178,7 @@
     </tr>
     
     <tr valign="top"
-        ng-repeat="sessionType in WebExUserSettings.userPrivilegesModel.sessionTypes"
+        ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
         ng-show="sessionType.trainingCenterApplicable">
         
       <td width="15">
@@ -189,9 +188,7 @@
       <td>              
         <cs-checkbox id={{sessionType.id}}
                      name={{sessionType.id}}
-                     align="left"
                      ng-model="sessionType.sessionEnabled"
-                     ng-change={{WebExUserSettings.userPrivilegesModel.updateCenters}}
                      cklabel={{sessionType.sessionName}}>
       </cs-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sessionType.sessionDescription}}
       </td>
@@ -202,335 +199,6 @@
   <hr />
   <!-- End of Session Enablement section -->
   
-  <!-- Begin of User Privileges section -->
-  <!--
-  <p>
-    <b>{{WebExUserSettings.userPrivilegesModel.userPrivilegesTitle}}</b><br>
-  </p>
-  -->
-    
-  <!-- Start of Privilege - General section -->
-  <!--
-  <table>
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-            
-      <td colspan=2>
-        {{WebExUserSettings.userPrivilegesModel.general.label}}
-      </td>
-    </tr>
-    
-    <tr>
-      <td colspan=3>
-        &nbsp;
-      </td>
-    </tr>
-    
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-      
-      <td colspan=2>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.general.hiQualVideo.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.general.hiQualVideo.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.general.hiQualVideo.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.general.hiQualVideo.label}}
-                     ng-disabled=!WebExUserSettings.userPrivilegesModel.general.hiQualVideo.isSiteEnabled> 
-      </cs-checkbox><font size="" color="#ff0000"><b>*</b></font>
-      </td>
-    </tr>
-    
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-      
-      <td width="15">
-        &nbsp;
-      </td>
-      
-      <td>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.general.hiQualVideo.hiDefVideo.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.general.hiQualVideo.hiDefVideo.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.general.hiQualVideo.hiDefVideo.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.general.hiQualVideo.hiDefVideo.label}}
-                     ng-disabled=!WebExUserSettings.userPrivilegesModel.general.hiQualVideo.isSiteEnabled>
-      </cs-checkbox><font size="" color="#ff0000"><b>*</b></font>
-      </td>
-    </tr>
-  </table>
-  
-  <hr />
-  -->
-  <!-- END of Privilege - General section -->
-
-  <!-- Start of Privilege - Telephony section -->
-  <!--
-  <table>
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-      
-      <td colspan=2>
-        {{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.label}}
-      </td>
-    </tr>
-    
-    <tr>
-      <td colspan=3>
-        &nbsp;
-      </td>
-    </tr>
-  </table>
-
-  <table ng-show="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.isSiteEnabled">
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-        
-      <td colspan=2>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.label}}>
-        </cs-checkbox>
-      </td>
-    </tr>
-    
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-
-      <td width="25">
-        &nbsp;
-      </td>
-      
-      <td>
-        <fieldset>
-          <cs-radio label="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollOnly.label"
-                    value="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollOnly.value"
-                    name="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollOnly.id"
-                    id="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollOnly.id"
-                    ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                    ng-disabled="!WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled">
-          </cs-radio>
-          
-          <cs-radio label="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.label"
-                    value="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.value"
-                    name="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.id"
-                    id="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.id"
-                    ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                    ng-disabled="!WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled">
-          </cs-radio>
-          
-          <cs-radio label="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.label"
-                    value="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.value"
-                    name="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.id"
-                    id="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.id"
-                    ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                    ng-disabled="!WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled">
-          </cs-radio>
-        </fieldset>
-      </td>
-    </tr>
-        
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled">
-      <td width="15">
-        &nbsp;
-      </td>
-      
-      <td width="25">
-        &nbsp;
-      </td>
-      
-      <td>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label}}>
-      </cs-checkbox><font size="" color="#ff0000"><b>**</b></font>
-      </td>
-    </tr>
-    
-    <tr ng-show="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled">
-      <td width="15">
-        &nbsp;
-      </td>
-      
-      <td width="25">
-        &nbsp;
-      </td>
-
-      <td>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.cliAuth.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.cliAuth.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.cliAuth.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callInTeleconf.cliAuth.label}}>
-        </cs-checkbox>
-      </td>
-    </tr>
-  </table>
-  
-  <table ng-show="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled">
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-
-      <td colspan=2>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.label}}>
-        </cs-checkbox>
-      </td>
-    </tr>
-
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-
-      <td width="25">
-        &nbsp;
-      </td>
-
-      <td>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label}}
-                     ng-disabled="!WebExUserSettings.userPrivilegesModel.telephonyPriviledge.callBackTeleconf.value">
-        </cs-checkbox>
-      </td>
-    </tr>
-  </table>
-  
-  <table ng-show="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled">
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-
-      <td colspan=2>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.otherTeleconfServices.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.otherTeleconfServices.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.otherTeleconfServices.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.otherTeleconfServices.label}}>
-      </cs-checkbox><font size="" color="#ff0000"><b>**</b></font>
-      </td>
-    </tr>
-  </table>
-    
-  <table ng-show="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
-    <tr>
-      <td width="15">
-        &nbsp;
-      </td>
-
-      <td colspan=2>
-        <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.integratedVoIP.id}}
-                     name={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.integratedVoIP.id}}
-                     ng-model="WebExUserSettings.userPrivilegesModel.telephonyPriviledge.integratedVoIP.value"
-                     cklabel={{WebExUserSettings.userPrivilegesModel.telephonyPriviledge.integratedVoIP.label}}>
-        </cs-checkbox>
-      </td>
-    </tr>
-  </table>
-  
-  <hr />
-  -->
-  <!-- End  of Privilege - Telephony section -->
-
-  <!-- Start of Privilege - Event Center section -->
-  <!--
-  <span ng-show="WebExUserSettings.userPrivilegesModel.eventCenter.isSiteEnabled">
-    <table>
-      <tr>
-        <td width="15">
-          &nbsp;
-        </td>
-        
-        <td>
-          {{WebExUserSettings.userPrivilegesModel.eventCenter.label}}
-        </td>
-      </tr>
-      
-      <tr>
-        <td colspan=2>
-          &nbsp;
-        </td>
-      </tr>
-      
-      <tr>
-        <td width="15">
-          &nbsp;
-        </td>
-        
-        <td>
-          <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.eventCenter.optimizeBandwidthUsage.id}}
-                       name={{WebExUserSettings.userPrivilegesModel.eventCenter.optimizeBandwidthUsage.id}}
-                       ng-model="WebExUserSettings.userPrivilegesModel.eventCenter.optimizeBandwidthUsage.value"
-                       ng-disabled="!WebExUserSettings.userPrivilegesModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled"
-                       cklabel={{WebExUserSettings.userPrivilegesModel.eventCenter.optimizeBandwidthUsage.label}}>
-        </cs-checkbox><font size="" color="#ff0000"><b>*</b></font>
-        </td>
-      </tr>
-    </table>
-    
-    <hr />
-  </span>
-  -->
-  <!-- End of Privilege - Event Center section -->
-  
-  <!-- Start of Privilege - Training Center section -->
-  <!--
-  <span ng-show="WebExUserSettings.userPrivilegesModel.trainingCenter.isSiteEnabled">
-    <table>
-      <tr>
-        <td width="15">
-          &nbsp;
-        </td>
-        
-        <td>
-          {{WebExUserSettings.userPrivilegesModel.trainingCenter.label}}
-        </td>
-      </tr>
-      
-      <tr>
-        <td colspan=2>
-          &nbsp;
-        </td>
-      </tr>
-  
-      <tr>
-        <td width="15">
-          &nbsp;
-        </td>
-
-        <td>
-          <cs-checkbox id={{WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.id}}
-                       name={{WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.id}}
-                       ng-model="WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.value"
-                       ng-disabled="!WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.isSiteEnabled"
-                       cklabel={{WebExUserSettings.userPrivilegesModel.trainingCenter.handsOnLabAdmin.label}}>
-          </cs-checkbox>
-        </td>
-      </tr>
-    </table>
-    
-    <hr />
-  </span>
-  -->
-  <!-- End of Privilege - Training Center section -->
-  <!-- End of User Privileges section -->
-
   <!-- ACTION BUTTONS -->
   <span>
     <p align="right">

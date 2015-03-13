@@ -52,7 +52,7 @@ describe('UConfigController', function () {
     expect($scope.$parent.modal.close.callCount).toBe(1);
   });
 
-  it('notifies when update fails', function () {
+  it('error is set when update fails', function () {
     $scope.org = {
       id: 'foo',
       sipDomain: 'bar'
@@ -64,11 +64,11 @@ describe('UConfigController', function () {
     expect($scope.saving).toBe(true);
 
     ussService.updateOrg.callArgWith(1, ['err']);
-    expect(notification.notify.callCount).toBe(1);
+    expect($scope.error).toBeTruthy();
     expect($scope.saving).toBe(false);
   });
 
-  it('errors on empty sipDomain', function () {
+  it('error on empty sipDomain', function () {
     expect($scope.error).toBeFalsy();
     $scope.org = {
       id: 'foo',

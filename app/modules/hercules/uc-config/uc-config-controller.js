@@ -22,8 +22,11 @@ angular
           $scope.saving = true;
           ussService.updateOrg($scope.org, function (err) {
             $scope.saving = false;
-            if (err) return notification.notify(err);
-            $scope.$parent.modal.close();
+            if (err) {
+              $scope.error = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
+            } else {
+              $scope.$parent.modal.close();
+            }
           });
         }
       };

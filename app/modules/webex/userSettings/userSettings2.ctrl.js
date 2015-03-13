@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', [
+  angular.module('WebExUserSettings2').controller('WebExUserSettings2Ctrl', [
     '$scope',
     '$log',
     'WebExUserSettingsSvc',
@@ -22,13 +22,17 @@
       };
 
       this.getUserSettingsInfo = function () {
+        var funcName = "getUserSettingsInfo()";
+        var logMsg = "";
+
+        $log.log(funcName);
+
         var currView = this;
 
         WebExUserSettingsSvc.getUserSettingsInfo(this.xmlApiAccessInfo).then(
           function getUserSettingsInfoSuccess(result) {
             var funcName = "getUserSettingsInfoSuccess()";
             var logMsg = "";
-            // alert(funcName);
 
             logMsg = funcName + ": " + "\n" +
               "userInfoXml=\n" + result[0];
@@ -105,8 +109,7 @@
                 currView.meetingTypesInfoJson
               );
 
-              currView.viewReady = true;
-              $("#webexUserSettingsPage").removeClass("hidden");
+              $("#webexUserSettingsPage2").removeClass("hidden");
             } else { // xmlapi returns error
               if ("Corresponding User not found" == currView.userInfoErrReason) {
                 // TODO
@@ -133,25 +136,6 @@
         ); // WebExUserSettingsSvc.getUserSettingsInfo()
       }; // getUserSettingsInfo()
 
-      this.disableCmrSwitch = function () {
-        var funcName = "disableCmrSwitch()";
-        var logMsg = "";
-
-        var disableSwitch = true;
-        if (this.viewReady) {
-          this.userSettingsModel.sessionTypes.forEach(function (sessionType) {
-            var meetingCenterApplicable = sessionType.meetingCenterApplicable;
-            var sessionEnabled = sessionType.sessionEnabled;
-
-            if (meetingCenterApplicable && sessionEnabled) {
-              disableSwitch = false;
-            }
-          }); // sessionTypes.forEach()
-        }
-
-        return disableSwitch;
-      }; // disableCmrSwitch()
-
       this.updateUserSettings = function () {
         var funcName = "updateUserSettings()";
         var logMsg = "";
@@ -159,44 +143,11 @@
         logMsg = funcName + ": " + "START";
         $log.log(logMsg);
 
-        var userPrivileges = {
-          meetingTypes: [],
-          meetingCenter: false,
-          trainingCenter: false,
-          supportCenter: false,
-          eventCenter: false,
-          salesCenter: false
-        };
-
-        //go through the session types
-        this.userSettingsModel.sessionTypes.forEach(function (sessionType) {
-          if (sessionType.sessionEnabled) {
-            userPrivileges.meetingTypes.push(sessionType.sessionTypeId);
-            $log.log("sessionType.sessionTypeId = " + sessionType.sessionTypeId);
-            $log.log("sessionType.trainingCenterApplicable = " + sessionType.trainingCenterApplicable);
-            if (!userPrivileges.meetingCenter) userPrivileges.meetingCenter = sessionType.meetingCenterApplicable ? true : false;
-            if (!userPrivileges.trainingCenter) userPrivileges.trainingCenter = sessionType.trainingCenterApplicable ? true : false;
-            if (!userPrivileges.supportCenter) userPrivileges.supportCenter = sessionType.supportCenterApplicable ? true : false;
-            if (!userPrivileges.eventCenter) userPrivileges.eventCenter = sessionType.eventCenterApplicable ? true : false;
-            if (!userPrivileges.salesCenter) userPrivileges.salesCenter = sessionType.salesCenterApplicable ? true : false;
-          }
-        });
-
-        WebExUserSettingsSvc.updateUserSettings(this.xmlApiAccessInfo, userPrivileges)
-          .then(function () {
-              Notification.notify(['User privileges updated'], 'success');
-            },
-            function () {
-              Notification.notify(['User privileges update failed'], 'error');
-            });
-
         logMsg = funcName + ": " + "END";
         $log.log(logMsg);
       }; // updateUserSettings()
 
       //----------------------------------------------------------------------//
-
-      this.viewReady = false;
 
       this.userInfoJson = null;
       this.userInfoErrHeaderJson = "";
@@ -213,6 +164,6 @@
       this.userSettingsModel = WebExUserSettingsSvc.initUserSettingsModel();
 
       this.getUserSettingsInfo();
-    } // WebExUserSettingsCtrl()
+    } // WebExUserSettings2Ctrl()
   ]);
 })();
