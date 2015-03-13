@@ -92,8 +92,9 @@ angular.module('Core')
 
         appinfo: {
           webClientURL: 'https://web.projectsquared.com/',
-          iPhoneURL: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',
-          androidURL: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android',
+          sparkWebClientUrl: 'https://web.ciscospark.com',
+          iPhoneURL: 'http://cs.co/sqios',
+          androidURL: 'http://cs.co/sqandroid',
           androidAppIntent: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
           appURL: 'squared://'
         },
@@ -471,6 +472,10 @@ angular.module('Core')
 
         getWebClientUrl: function () {
           return this.appinfo.webClientURL;
+        },
+
+        getSparkWebClientUrl: function () {
+          return this.appinfo.sparkWebClientURL;
         },
 
         getHerculesUrl: function () {
