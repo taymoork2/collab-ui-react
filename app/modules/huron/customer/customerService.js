@@ -13,7 +13,7 @@
       'uuid': null,
       'name': null,
       'domain': null,
-      'servicePackage': 'DEMO_STANDARD',
+      'servicePackage': 'VOICE_ONLY',
       'admin': {
         'lastName': null,
         'userName': null
