@@ -4,12 +4,12 @@
   angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', [
     '$scope',
     '$log',
-    'WebExUserSettingsSvc',
+    'WebExUserSettingsFact',
     'Notification',
     function (
       $scope,
       $log,
-      WebExUserSettingsSvc,
+      WebExUserSettingsFact,
       Notification
     ) {
       this.xmlApiAccessInfo = {
@@ -24,82 +24,51 @@
       this.getUserSettingsInfo = function () {
         var currView = this;
 
-        WebExUserSettingsSvc.getUserSettingsInfo(this.xmlApiAccessInfo).then(
-          function getUserSettingsInfoSuccess(result) {
+        WebExUserSettingsFact.getUserSettingsInfo(this.xmlApiAccessInfo).then(
+          function getUserSettingsInfoSuccess(getInfoResult) {
             var funcName = "getUserSettingsInfoSuccess()";
             var logMsg = "";
             // alert(funcName);
 
-            logMsg = funcName + ": " + "\n" +
-              "userInfoXml=\n" + result[0];
-            // $log.log(logMsg);
+            var validateUserInfoResult = WebExUserSettingsFact.validateXmlData(
+              "User Data",
+              getInfoResult[0],
+              "<use:",
+              "</serv:bodyContent>"
+            );
 
-            logMsg = funcName + ": " + "\n" +
-              "siteInfoXml=\n" + result[1];
-            // $log.log(logMsg);
+            currView.userInfoHeaderJson = validateUserInfoResult[0];
+            currView.userInfoJson = validateUserInfoResult[1];
+            currView.userInfoErrReason = validateUserInfoResult[2];
 
-            logMsg = funcName + ": " + "\n" +
-              "meetingTypesInfoXml=\n" + result[2];
-            // $log.log(logMsg);
+            var validateSiteInfoResult = WebExUserSettingsFact.validateXmlData(
+              "Site Info",
+              getInfoResult[1],
+              "<ns1:",
+              "</serv:bodyContent>"
+            );
 
-            currView.userInfoJson = WebExUserSettingsSvc.xml2JsonConvert("User Data", result[0], "<use:", "</serv:bodyContent>").body;
-            currView.siteInfoJson = WebExUserSettingsSvc.xml2JsonConvert("Site Info", result[1], "<ns1:", "</serv:bodyContent>").body;
-            currView.meetingTypesInfoJson = WebExUserSettingsSvc.xml2JsonConvert("Meeting Types Info", result[2], "<mtgtype:", "</serv:bodyContent>").body;
+            currView.siteInfoHeaderJson = validateSiteInfoResult[0];
+            currView.siteInfoJson = validateSiteInfoResult[1];
+            currView.siteInfoErrReason = validateSiteInfoResult[2];
 
-            if ("" === currView.userInfoJson) {
-              currView.userInfoErrHeaderJson = WebExUserSettingsSvc.xml2JsonConvert(
-                "User Data Header",
-                result[0],
-                "<serv:header>",
-                "<serv:body>"
-              ).body;
+            var validateMeetingTypesInfoResult = WebExUserSettingsFact.validateXmlData(
+              "Meeting Types Info",
+              getInfoResult[2],
+              "<mtgtype:",
+              "</serv:bodyContent>"
+            );
 
-              this.userInfoErrReason = currView.userInfoErrHeaderJson.serv_header.serv_response.serv_reason;
-
-              logMsg = funcName + ": " + "ERROR!!!" + "\n" +
-                "userInfoErrHeaderJson=\n" + JSON.stringify(currView.userInfoErrHeaderJson) + "\n" +
-                "userInfoErrReason=\n" + currView.userInfoErrReason;
-              $log.log(logMsg);
-            }
-
-            if ("" === currView.siteInfoJson) {
-              currView.siteInfoErrHeaderJson = WebExUserSettingsSvc.xml2JsonConvert(
-                "Site Info Header",
-                result[1],
-                "<serv:header>",
-                "<serv:body>"
-              ).body;
-
-              currView.siteInfoErrReason = currView.siteInfoErrHeaderJson.serv_header.serv_response.serv_reason;
-
-              logMsg = funcName + ": " + "ERROR!!!" + "\n" +
-                "siteInfoErrHeaderJson=\n" + JSON.stringify(currView.siteInfoErrHeaderJson) + "\n" +
-                "siteInfoErrReason=\n" + currView.siteInfoErrReason;
-              $log.log(logMsg);
-            }
-
-            if ("" === currView.meetingTypesInfoJson) {
-              currView.meetingTypesInfoErrHeaderJson = WebExUserSettingsSvc.xml2JsonConvert(
-                "Meeting Types Info Header",
-                result[2],
-                "<serv:header>",
-                "<serv:body>"
-              ).body;
-
-              currView.meetingTypesErrReason = currView.meetingTypesInfoErrHeaderJson.serv_header.serv_response.serv_reason;
-
-              logMsg = funcName + ": " + "ERROR!!!" + "\n" +
-                "meetingTypesInfoErrHeaderJson=\n" + JSON.stringify(currView.meetingTypesInfoErrHeaderJson) + "\n" +
-                "meetingTypesErrReason=\n" + currView.meetingTypesErrReason;
-              $log.log(logMsg);
-            }
+            currView.meetingTypesInfoHeaderJson = validateMeetingTypesInfoResult[0];
+            currView.meetingTypesInfoJson = validateMeetingTypesInfoResult[1];
+            currView.meetingTypesErrReason = validateMeetingTypesInfoResult[2];
 
             if (
               ("" === currView.userInfoErrReason) &&
               ("" === currView.siteInfoErrReason) &&
               ("" === currView.meetingTypesErrReason)
             ) {
-              currView.userSettingsModel = WebExUserSettingsSvc.updateUserSettingsModel(
+              currView.userSettingsModel = WebExUserSettingsFact.updateUserSettingsModel(
                 currView.userInfoJson,
                 currView.siteInfoJson,
                 currView.meetingTypesInfoJson
@@ -122,15 +91,15 @@
             } // xmlapi returns error
           }, // getUserSettingsInfoSuccess()
 
-          function getUserSettingsInfoError(result) {
+          function getUserSettingsInfoError(getInfoResult) {
             var funcName = "getUserSettingsInfoError()";
             var logMsg = "";
 
-            logMsg = funcName + ": " + "result=" + JSON.stringify(result);
+            logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
             $log.log(logMsg);
             // alert(logMsg);
           } // getUserSettingsInfoError()
-        ); // WebExUserSettingsSvc.getUserSettingsInfo()
+        ); // WebExUserSettingsFact.getUserSettingsInfo()
       }; // getUserSettingsInfo()
 
       this.disableCmrSwitch = function () {
@@ -156,9 +125,6 @@
         var funcName = "updateUserSettings()";
         var logMsg = "";
 
-        logMsg = funcName + ": " + "START";
-        $log.log(logMsg);
-
         var userPrivileges = {
           meetingTypes: [],
           meetingCenter: false,
@@ -168,49 +134,54 @@
           salesCenter: false
         };
 
-        //go through the session types
+        // go through the session types
         this.userSettingsModel.sessionTypes.forEach(function (sessionType) {
           if (sessionType.sessionEnabled) {
             userPrivileges.meetingTypes.push(sessionType.sessionTypeId);
-            $log.log("sessionType.sessionTypeId = " + sessionType.sessionTypeId);
-            $log.log("sessionType.trainingCenterApplicable = " + sessionType.trainingCenterApplicable);
-            if (!userPrivileges.meetingCenter) userPrivileges.meetingCenter = sessionType.meetingCenterApplicable ? true : false;
-            if (!userPrivileges.trainingCenter) userPrivileges.trainingCenter = sessionType.trainingCenterApplicable ? true : false;
-            if (!userPrivileges.supportCenter) userPrivileges.supportCenter = sessionType.supportCenterApplicable ? true : false;
-            if (!userPrivileges.eventCenter) userPrivileges.eventCenter = sessionType.eventCenterApplicable ? true : false;
-            if (!userPrivileges.salesCenter) userPrivileges.salesCenter = sessionType.salesCenterApplicable ? true : false;
+
+            logMsg = funcName + ": " + "\n" +
+              "sessionTypeId=" + sessionType.sessionTypeId + "\n" +
+              "meetingCenterApplicable=" + sessionType.meetingCenterApplicable + "\n" +
+              "trainingCenterApplicable=" + sessionType.trainingCenterApplicable + "\n" +
+              "supportCenterApplicable=" + sessionType.supportCenterApplicable + "\n" +
+              "eventCenterApplicable=" + sessionType.eventCenterApplicable;
+            // $log.log(logMsg);
+
+            if (!userPrivileges.meetingCenter) userPrivileges.meetingCenter = sessionType.meetingCenterApplicable;
+            if (!userPrivileges.trainingCenter) userPrivileges.trainingCenter = sessionType.trainingCenterApplicable;
+            if (!userPrivileges.supportCenter) userPrivileges.supportCenter = sessionType.supportCenterApplicable;
+            if (!userPrivileges.eventCenter) userPrivileges.eventCenter = sessionType.eventCenterApplicable;
+            if (!userPrivileges.salesCenter) userPrivileges.salesCenter = sessionType.salesCenterApplicable;
           }
-        });
+        }); // userSettingsModel.sessionTypes.forEach()
 
-        WebExUserSettingsSvc.updateUserSettings(this.xmlApiAccessInfo, userPrivileges)
-          .then(function () {
-              Notification.notify(['User privileges updated'], 'success');
-            },
-            function () {
-              Notification.notify(['User privileges update failed'], 'error');
-            });
-
-        logMsg = funcName + ": " + "END";
-        $log.log(logMsg);
+        WebExUserSettingsFact.updateUserSettings(this.xmlApiAccessInfo, userPrivileges).then(
+          function () {
+            Notification.notify(['User privileges updated'], 'success');
+          },
+          function () {
+            Notification.notify(['User privileges update failed'], 'error');
+          }
+        );
       }; // updateUserSettings()
 
       //----------------------------------------------------------------------//
 
       this.viewReady = false;
 
+      this.userInfoHeaderJson = null;
       this.userInfoJson = null;
-      this.userInfoErrHeaderJson = "";
       this.userInfoErrReason = "";
 
+      this.siteInfoHeaderJson = null;
       this.siteInfoJson = null;
-      this.siteInfoErrHeaderJson = "";
       this.siteInfoErrReason = "";
 
+      this.meetingTypesInfoHeaderJson = null;
       this.meetingTypesInfoJson = null;
-      this.meetingTypesInfoErrHeaderJson = "";
       this.meetingTypesErrReason = "";
 
-      this.userSettingsModel = WebExUserSettingsSvc.initUserSettingsModel();
+      this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
       this.getUserSettingsInfo();
     } // WebExUserSettingsCtrl()

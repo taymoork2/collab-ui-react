@@ -2,7 +2,6 @@
      id="webexUserSettingsPage2"
      class="hidden">
   
-  <!-- Begin of User Privileges section -->
   <p>
     <b>{{WebExUserSettings2.userSettingsModel.userPrivilegesTitle}}</b><br>
   </p>
@@ -279,10 +278,24 @@
     
     <hr />
   </span>
-  <!-- End of Privilege - Event Center section -->
   
   <!-- Start of Privilege - Training Center section -->
   <span ng-show="WebExUserSettings2.userSettingsModel.trainingCenter.isSiteEnabled">
+    <p>
+      {{WebExUserSettings2.userSettingsModel.trainingCenter.label}}
+    </p>
+    
+    <ul>
+      <li>
+        <cs-checkbox id={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
+                     name={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
+                     ng-model="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.value"
+                     ng-disabled="!WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled"
+                     cklabel={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.label}}>
+        </cs-checkbox>
+      </li>
+    </ul>
+    <!--
     <table>
       <tr>
         <td width="15">
@@ -315,6 +328,7 @@
         </td>
       </tr>
     </table>
+    -->
     
     <hr />
   </span>
