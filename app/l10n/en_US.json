@@ -346,6 +346,7 @@
     "testSSOSetupTitle": "Test SSO Setup",
     "enableSSOTitle": "Enable SSO",
     "importMetadataDesc": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Collaboration Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Collaboration service, and upload it into your identity provider (IdP) management interface.",
     "exportMetadataDesc2": "When you have finished uploading the file into your IdP, return to this screen and press Next.",
     "testSSOSetupDesc": "You are ready to test your SSO configuration. Press the button below to launch a new window. If you are able to sign in successfully, you can return to this screen and press next to finalize your SSO setup.",
@@ -941,7 +942,7 @@
     "bridgeUtilization": "Bridge By Bridge Utilization"
   },
   "processOrderPage": {
-    "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
+    "errOrgCreation": "Your order is being processed. Please check back after 24 hours.",
     "info": "Status",
     "wait": "Please wait while we redirect you"
   },
