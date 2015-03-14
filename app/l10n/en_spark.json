@@ -738,7 +738,7 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
   "trials": {
-    "collab": "Standard Team Rooms + 8-party Sync Up",
+    "collab": "Standard team rooms + 25 party meetings",
     "squaredUC": "Advanced Communications"
   },
   "status": {
