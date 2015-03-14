@@ -11,6 +11,10 @@ angular.module('Core')
 
       $rootScope.token = Storage.get('accessToken');
 
+      $scope.isSpark = function () {
+        return Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint';
+      };
+
       var pageParam = $location.search().pp;
       if (pageParam) {
         PageParam.set(pageParam);
@@ -27,7 +31,11 @@ angular.module('Core')
       var authorizeUser = function () {
         $scope.loading = true;
         $scope.loginText = 'loginPage.loading';
-
+        if ($scope.isSpark()) {
+          angular.element('html').css('background', 'url(images/bg_3515.jpg) no-repeat center center fixed');
+        } else {
+          angular.element('html').css('background', 'url(images/bg_1920.jpg) no-repeat center center fixed');
+        }
         Auth.authorize($rootScope.token)
           .then(function () {
             if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -76,10 +84,6 @@ angular.module('Core')
 
       //Branding dependent changes. To be removed later.
       $scope.loginText = 'loginPage.login';
-
-      $scope.isSpark = function () {
-        return Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint';
-      };
 
       if ($scope.isSpark()) {
         angular.element('html').css('background', 'url(images/bg_3515.jpg) no-repeat center center fixed');

@@ -1,12 +1,12 @@
 <div class="app-container">
   <header cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" icon="{{icon}}" ng-controller="HeaderCtrl">
-    <div class="header-search" ng-controller="SearchCtrl" ng-show="Utils.isAdminPage()">
+    <div class="header-search" ng-controller="SearchCtrl" ng-if="Utils.isAdminPage()">
       <cs-headersearch></cs-headersearch>
     </div>
-    <div class="leaderboard-push-trigger" ng-controller="HeaderPushCtrl" ng-show="Utils.isAdminPage()">
+    <div class="leaderboard-push-trigger" ng-controller="HeaderPushCtrl" ng-if="Utils.isAdminPage()">
       <cs-header-push-trigger state="state" label="label"></cs-header-push-trigger>
     </div>
-    <div class="settings-menu dropdown" ng-controller="SettingsMenuCtrl as settings" ng-show="Utils.isAdminPage()">
+    <div class="settings-menu dropdown" ng-controller="SettingsMenuCtrl as settings" ng-if="Utils.isAdminPage()">
       <button class="btn btn-header dropdown-toggle"><i class="icon-settings icon"></i>{{settings.label}}</button>
       <ul class="dropdown-menu" role="menu" >
         <li ng-repeat="item in menuItems">
@@ -21,15 +21,15 @@
         </li>
       </ul>
     </div>
-    <cr-user-info></cr-user-info>
+    <cr-user-info ng-if="Utils.isAdminPage()"></cr-user-info>
   </header>
 
   <div class="wrapper">
-    <cs-left-nav pages="tabs" ng-controller="TabsCtrl" ng-show="Utils.isAdminPage()"></cs-left-nav>
+    <cs-left-nav pages="tabs" ng-controller="TabsCtrl" ng-if="Utils.isAdminPage()"></cs-left-nav>
     <div class="page-content-wrapper container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <cs-header-push-container ng-show="Utils.isAdminPage()">
+          <cs-header-push-container ng-if="Utils.isAdminPage()">
             <leader-board-bucket></leader-board-bucket>
           </cs-header-push-container>
         </div>

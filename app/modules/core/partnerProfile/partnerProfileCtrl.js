@@ -1,17 +1,19 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService',
+  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate',
 
-    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService) {
+    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate) {
 
       // toggles api calls, show/hides divs based on customer or partner profile
       $scope.isPartner = Authinfo.isPartner();
+      $scope.appType = 'Squared';
 
       $scope.profileHelpUrl = 'https://support.projectsquared.com';
 
       if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
         $scope.profileHelpUrl = 'https://support.ciscospark.com';
+        $scope.appType = 'Spark';
       }
 
       // hold partner admin object
