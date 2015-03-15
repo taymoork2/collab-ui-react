@@ -205,18 +205,18 @@ angular.module('Core')
         }, {
           /*
             tab: 'webexUserSettingsTab',
-            icon: 'icon-support',
+            icon: 'icon-tools',
             title: 'webexUserSettings.webexUserSettingsTab',
             state: 'webexUserSettings',
             link: '/webexUserSettings'
           }, {
             tab: 'webexUserSettings2Tab',
-            icon: 'icon-support',
+            icon: 'icon-tools',
             title: 'webexUserSettings2.webexUserSettings2Tab',
             state: 'webexUserSettings2',
             link: '/webexUserSettings2'
+          }, {
           */
-        }, {
           tab: 'developmentTab',
           icon: 'icon-tools',
           title: 'tabs.developmentTab',

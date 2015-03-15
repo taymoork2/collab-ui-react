@@ -8,7 +8,7 @@
     
   <!-- Start of Privilege - General section -->
   <table>
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
@@ -18,13 +18,7 @@
       </td>
     </tr>
     
-    <tr>
-      <td colspan=3>
-        &nbsp;
-      </td>
-    </tr>
-    
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
@@ -39,12 +33,12 @@
       </td>
     </tr>
     
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
       
-      <td width="15">
+      <td width="25">
         &nbsp;
       </td>
       
@@ -64,7 +58,7 @@
 
   <!-- Start of Privilege - Telephony section -->
   <table>
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
@@ -72,17 +66,11 @@
       <td colspan=2>
         {{WebExUserSettings2.userSettingsModel.telephonyPriviledge.label}}
       </td>
-    </tr>
-    
-    <tr>
-      <td colspan=3>
-        &nbsp;
-      </td>
-    </tr>
+    <tr valign="top">
   </table>
 
   <table ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled">
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
@@ -96,7 +84,7 @@
       </td>
     </tr>
     
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
@@ -134,7 +122,9 @@
       </td>
     </tr>
         
-    <tr ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled">
+    <tr valign="top"
+        ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled">
+
       <td width="15">
         &nbsp;
       </td>
@@ -152,7 +142,9 @@
       </td>
     </tr>
     
-    <tr ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled">
+    <tr valign="top"
+        ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled">
+
       <td width="15">
         &nbsp;
       </td>
@@ -172,7 +164,7 @@
   </table>
   
   <table ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled">
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
@@ -186,7 +178,7 @@
       </td>
     </tr>
 
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
@@ -207,7 +199,7 @@
   </table>
   
   <table ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled">
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
@@ -223,7 +215,7 @@
   </table>
     
   <table ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
-    <tr>
+    <tr valign="top">
       <td width="15">
         &nbsp;
       </td>
@@ -244,7 +236,7 @@
   <!-- Start of Privilege - Event Center section -->
   <span ng-show="WebExUserSettings2.userSettingsModel.eventCenter.isSiteEnabled">
     <table>
-      <tr>
+      <tr valign="top">
         <td width="15">
           &nbsp;
         </td>
@@ -254,13 +246,13 @@
         </td>
       </tr>
       
-      <tr>
+      <tr valign="top">
         <td colspan=2>
           &nbsp;
         </td>
       </tr>
       
-      <tr>
+      <tr valign="top">
         <td width="15">
           &nbsp;
         </td>
@@ -281,23 +273,8 @@
   
   <!-- Start of Privilege - Training Center section -->
   <span ng-show="WebExUserSettings2.userSettingsModel.trainingCenter.isSiteEnabled">
-    <p>
-      {{WebExUserSettings2.userSettingsModel.trainingCenter.label}}
-    </p>
-    
-    <ul>
-      <li>
-        <cs-checkbox id={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
-                     name={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
-                     ng-model="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.value"
-                     ng-disabled="!WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled"
-                     cklabel={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.label}}>
-        </cs-checkbox>
-      </li>
-    </ul>
-    <!--
     <table>
-      <tr>
+      <tr valign="top">
         <td width="15">
           &nbsp;
         </td>
@@ -307,13 +284,13 @@
         </td>
       </tr>
       
-      <tr>
+      <tr valign="top">
         <td colspan=2>
           &nbsp;
         </td>
       </tr>
   
-      <tr>
+      <tr valign="top">
         <td width="15">
           &nbsp;
         </td>
@@ -328,7 +305,6 @@
         </td>
       </tr>
     </table>
-    -->
     
     <hr />
   </span>
