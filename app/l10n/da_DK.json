@@ -23,15 +23,15 @@
     "modify": "Ændre",
     "existingUsers": "Eksisterende brugere",
     "userInput": "Indtast én eller flere e-mailadresser separeret med kommaer.",
-    "active": "Aktive",
+    "active": "Aktiv",
     "inactive": "",
-    "validEmailInput": "Indtast venligst gyldig(e) brugere-mail.",
+    "validEmailInput": "Indtast venligst gyldig(e) brugere-mailadresse(r).",
     "csvBtnTitle": "Eksporter til CSV",
     "csvFilename": "exported_users.csv",
     "emailSent": "{{email}} e-mail blev sendt",
     "emailFailed": "{{email}} e-mail ikke sendt, {{message}}",
     "entitled": "{{email}} er allerede berettiget",
-    "forbidden": "{{email}} kan ikke inviteres til service",
+    "forbidden": "{{email}} kan ikke inviteres til tjeneste",
     "errInvite": "Kan ikke behandle din invitation. Status: {{status}}.",
     "exportUsers": "eksportér brugere",
     "moreOptions": "Flere handlinger",
@@ -43,28 +43,42 @@
     "inviteUsers": "Inviter brugere",
     "partners": "Partner-administratorer"
   },
+  "groupsPage": {
+    "manageGroups": "Grupper",
+    "all": "Alle",
+    "groupNameHeader": "Gruppenavn",
+    "membersCountHeader": "Medlemmer"
+  },
   "onboardModal": {
     "onboardUsers": "Indenbords brugere",
     "cancel": "Annuller",
     "addUsersDesc": "Indtast e-mailadresser for de personer i dit selskab, som vil modtage Collaboration Services. De vil modtage en e-mailinvitation til tilmelding.",
     "addUserText": "Hvem vil du gerne tilføje?",
     "userInput": "Indtast e-mailadresser eller gruppemailere separeret med kommaer ...",
-    "addServiceText": "Hvilke tjenester vil du gerne aktivere?",
+    "enableServiceText": "Aktivér tjenester",
     "enableCollab": "Aktivér Collaboration Services individuelt",
-    "enableCollabGroup": "Aktivér Collaboration Services baseret på gruppemedlemsskab.",
+    "enableCollabGroup": "Aktivér samarbejdstjenester baseret på gruppemedlemsskab",
     "addUsersSelect": "Tilføj brugere til:",
-    "manageBtn": "Administrer",
+    "manageBtn": "Administrer grupper",
     "onboardBtn": "Indenbords",
     "howToInvite": "Hvordan vil du gerne invitere dem?",
     "waitInvitation": "Send e-mailinvitationer og vent, til brugeren accepterer, før tjenesterne forsynes.",
     "sendImmediate": "Forsyn brugeren med tjenesterne øjeblikkeligt og send e-mailunderretninger.",
-    "messaging": "Underretning og kommunikation",
+    "messaging": "Underretning",
     "conferencing": "Konferencer",
+    "communications": "Kommunikation",
+    "entitlements": "Brugerberettigelser",
     "saveBtn": "Gem",
     "manageGroups": "Administrer grupper",
     "groupColHeader": "Gruppenavn",
     "collabService": "Vælg de samarbejdstjenestelicenser, der skal gives til brugerne i gruppen.",
-    "addEntitleError": "ikke tilstrækkelig privilegie til at tilføje eller give en bruger rettigheder."
+    "addEntitleError": "ikke tilstrækkelig privilegie til at tilføje eller give en bruger rettigheder.",
+    "freeMsg": "Gratis Squared team-mødelokaler",
+    "freeConf": "Gratis sync-ups for 3 parter",
+    "freeComm": "Gratis IP-stemme og -videoopkald inden for netværket",
+    "paidMsg": "Standard team-mødelokaler",
+    "paidConf": "Sync-ups for 8 parter",
+    "paidComm": "Avanceret kommunikation"
   },
   "usersPreview": {
     "groupPreview": "Gruppe:",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "Berettigelser",
     "addNewLinePreview": "Tilføj en ny linje",
     "newLine": "Ny linje",
-    "devicesPreview": "Enheder",
+    "devicesPreview": "Enheder og software",
     "activateNewDevice": "Aktivér ny enhed",
     "fullAdmin": "Fuld administration",
     "generateActivationCode": "Generer aktiveringskode",
     "generateActivationCodeText": "Generer en aktiveringskode for at aktivere en ny enhed for denne bruger.",
     "activationCodeTitle": "Aktiveringskode for ny enhed",
-    "expires": "Udløber"
+    "expires": "Udløber",
+    "editServices": "Rediger tjenester",
+    "editServiceTitle": "Tjenester aktiveret for {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Underretning"
   },
   "settings": {
+    "title": "Opsætning af tjeneste",
     "initialSetup": "Indledende opsætning"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "Enheder",
     "reportTab": "Rapporter",
     "supportTab": "Support",
+    "accountTab": "Konto",
     "developmentTab": "Udvikling",
     "organizationTab": "Organisation",
     "organizationTabDesc": "Administrer organisationsoplysninger, se tildelte tjenester og benyt værktøj.",
@@ -107,7 +125,17 @@
     "callRoutingTab": "Dirigering af opkald",
     "callRoutingTabDesc": "Administrer funktioner til dirigering af opkald såsom Call Park",
     "mediaOnHoldTab": "Media On Hold",
-    "mediaOnHoldTabDesc": "Media On Hold udviklingseksempel"
+    "mediaOnHoldTabDesc": "Media On Hold udviklingseksempel",
+    "meetingDetailsTab": "Møder",
+    "meetingDetailsTabDesc": "Administration af møder",
+    "vtsDetailsTab": "Virksomhedsressourcer",
+    "vtsDetailsTabDesc": "Administration af virksomhedsressourcer",
+    "listUserTab": "Opstil brugere på liste",
+    "listUserTabDesc": "Administrer brugere og deres funktioner.",
+    "groupTab": "Grupper",
+    "groupTabDesc": "Opret og administrer grupper.",
+    "entResUtilizationTab": "Udnyttelse",
+    "entResUtilizationTabDesc": "Udnyttelse af virksomhedsressourcer"
   },
   "index": {
     "welcome": "Velkommen!",
@@ -124,7 +152,7 @@
     "heading": "List over berettigelser for"
   },
   "downloadPage": {
-    "thank": "Tak for din registering hos Cisco Squared.",
+    "thank": "Tak for din registrering hos Cisco Squared.",
     "account": "Din konto {{email}} er nu aktiv.",
     "install": "Installer Squared ved at følge",
     "link": "dette link.",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "Omdirigerer ...",
     "launch": "Starter app ..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "Admin e-mailadresse: ",
+    "create": "Procesbehandling"
   },
   "orgsPage": {
     "title": "ADMINISTRER ORGANISATIONER",
@@ -184,6 +216,7 @@
     "error": "Opdatering af bruger mislykkedes."
   },
   "supportPage": {
+    "title": "Support",
     "subtitleLogs": "Søg efter logge",
     "listlogsbtn": "Søg",
     "noResults": "Ingen resultater.",
@@ -228,7 +261,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "Kunne ikke hente opkaldsinformation. Status: {{status}}",
     "subTitleCallFlow": "Opkaldsstrøm",
-    "downloading": "Denne filhentning kan tage op til 5 minutter. Vent venligst ..."
+    "downloading": "Denne filhentning kan tage op til 5 minutter. Vent venligst ...",
+    "operational": "Alle systemer fungerer",
+    "error": "Fejl i systemet",
+    "supportResources": "Supportressourcer",
+    "showDetails": "Vis detaljer",
+    "hideDetails": "Skjul detaljer",
+    "problemReports": "Problemrapporter",
+    "reportingUrl": "Rapporterings-URL:",
+    "helpFaq": "Hjælp og ofte stillede spørgsmål",
+    "helpUrl": "Hjælp-URL:",
+    "sendFeedback": "Cisco-tilbagemelding"
   },
   "common": {
     "delete": "Slet",
@@ -242,7 +285,10 @@
     "done": "Færdig",
     "begin": "Begynd",
     "back": "Tilbage",
-    "finish": "Afslut"
+    "finish": "Afslut",
+    "language": "Sprog",
+    "selectLanguage": "Vælg et sprog",
+    "select": "Vælg"
   },
   "notifications": {
     "success": "Succesmeddelelser",
@@ -273,7 +319,16 @@
     "cancel": "Annuller",
     "emailAddress": "E-mailadresse",
     "name": "Navn",
-    "errGetTrialsQuery": "Kunne ikke hente prøveversion. Status: {{status}}"
+    "errGetTrialsQuery": "Kunne ikke hente prøveversion. Status: {{status}}",
+    "quickLinksText": "Kvik-links",
+    "addUserText": "Tilføj brugere",
+    "installDeviceText": "Installer en enhed for en bruger",
+    "installSharedSpaceText": "Installer en enhed i et delt mødelokale",
+    "autoAttendantText": "Konfigurer en automatisk operatør",
+    "searchLogsText": "Søg i enhedslogge",
+    "unlicensedDateText": "ikke-licenserede brugere registreret i",
+    "unlicensedText": "Ikke-licenserede brugere",
+    "convertText": "Vis og konverter brugere, der aktuelt bruger den gratis version"
   },
   "inviteModal": {
     "title": "Tjenesteberettigelse",
@@ -284,8 +339,8 @@
   "ssoModal": {
     "btnTitle": "Opsæt SSO",
     "title": "Opsæt SSO",
-    "enableSSO": "Ja, jeg har en tilpasset SSO-udbyder.",
-    "disableSSO": "Nej, jeg har ikke en SSO-udbyder.",
+    "enableSSO": "Integrer en tredjepart identitetsudbyder. (Avanceret)",
+    "disableSSO": "Brug den indbyggede identitetstjeneste til brugerautentificering. (Simpelt)",
     "importMetadataTitle": "Importér IdP-metadata",
     "exportMetadataTitle": "Eksporter sky-metadata",
     "testSSOSetupTitle": "Afprøv SSO-opsætning",
@@ -303,7 +358,7 @@
     "backBtn": "Tilbage",
     "nextBtn": "Næste",
     "downloadMetadataBtn": "Hent metadatafil",
-    "launchSSOTestBtn": "Start SSO-test",
+    "launchSSOTestBtn": "Test SSO-forbindelse",
     "finishBtn": "Afslut",
     "importFailed": "Kunne ikke importere IdP-metadatafil",
     "invalidFile": "Ugyldig IdP-metadatafil",
@@ -311,7 +366,12 @@
     "retrieveEntityIdFailed": "SSO-konfiguration mislykkedes",
     "readFileFailed": "Kunne ikke læse IdP-metadatafil",
     "importSuccess": "Importerede IdP-metadatafil",
-    "enableSSOSuccess": "Single Sign-On (SSO) aktiveret for all brugere"
+    "enableSSOSuccess": "Single Sign-On (SSO) aktiveret for all brugere",
+    "finalEnableSSO": "Test er vellykket. Aktivér Single Sign-On.",
+    "finalDisableSSO": "Testen mislykkedes. Deaktiver Single Sign-On.",
+    "disableFailed": "Kunne ikke deaktivere Single Sign-On",
+    "diableSuccess": "Single Sign-On (SSO) deaktiveret for alle brugere",
+    "enableSSOFailure": "Kunne ikke deaktivere Single Sign-On (SSO)."
   },
   "serviceSetupModal": {
     "timeZone": "Tidszone",
@@ -319,7 +379,7 @@
     "steeringDigit": "Nummer for udgående opkald",
     "oddDescription": "Specificer det nummer, som brugere skal trykke, før de foretager et eksternt opkald.",
     "internalExtensionRange": "Interval for lokalnumre",
-    "internalNumberRangeDescription": "Specificer intervallet for interne numre.  En længde på 4 eller 5 cifre anbefales.",
+    "internalNumberRangeDescription": "Specificer intervallet for interne numre. En længde på 4 eller 5 cifre anbefales.",
     "to": "til",
     "addMoreExtensionRanges": "Tilføj flere intervaller for lokalnumre",
     "globalMOH": "Global Media On Hold (MOH)",
@@ -438,6 +498,17 @@
       "label": "UC APP Fusion Services",
       "title": "UC APP Fusion Services",
       "desc": "Løft din tjeneste på området"
+    },
+    "activationStatus": {
+      "not_entitled": "Ikke berettiget",
+      "pending_deactivation": "Afventer deaktivering",
+      "pending_activation": "Afventer aktivering",
+      "activated": "Aktiveret",
+      "error": "Fejl"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fusion UC",
+      "squared-fusion-cal": "Fusionskalender"
     }
   },
   "firstTimeWizard": {
@@ -483,7 +554,7 @@
     "nextSteps": "Tryk Næste, når du er klar til at bekræfte, at identitetsinformation bliver synkroniseret.",
     "results": "Resultater",
     "syncAgreementText": "brugere i synkroniseringsaftale",
-    "setupSSOSub": "Opsæt Single Sign-On",
+    "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Vælg venligst den relevante funktion for din SSO-konfiguration.",
     "manualInvite": "Indtast e-mailadresser for de personer i dit selskab, som vil modtage Collaboration Services. De vil modtage en e-mailinvitation til tilmelding.",
     "domainEntry": "Domæneindtastning",
@@ -494,6 +565,32 @@
     "finish": "Afslut",
     "finishSub": "Gennemfør din opsætning",
     "completeRequired": "{{name}} skal være gennemført."
+  },
+  "reports": {
+    "title": "Rapporter",
+    "engagementTab": "Engagement",
+    "qualityTab": "Kvalitet",
+    "opportunitiesTab": "Muligheder",
+    "time": "Hele tiden",
+    "week": "Sidste uge",
+    "month": "Sidste måned",
+    "threeMonths": "De sidste tre måneder",
+    "mostEngaged": "5 mest engagerede",
+    "leastEngaged": "5 mindst engagerede",
+    "highQuality": "5 højeste kvalitet",
+    "leastQuality": "5 laveste kvalitet",
+    "services": "Alle tjenester",
+    "UsersOnboarded": "Brugere taget indenbords",
+    "AvgCallsPerUser": "Gnsn. antal opkald pr. bruger",
+    "AvgRoomsPerUser": "Gnsn. antal mødelokaler pr. bruger",
+    "ActiveUsers": "Aktive brugere",
+    "OneOnOneRooms": "Én-til-én mødelokaler",
+    "GroupRooms": "Gruppemødelokaler",
+    "VideoCalls": "Videoopkald",
+    "AvgDurationofCalls": "Gnsn. opkaldsvarighed",
+    "ContentShared": "Delt indhold",
+    "AmountofContentShared": "Delt indholdsmængde",
+    "UserEngagement": "Brugerengagement"
   },
   "callRouting": {
     "title": "Dirigering af opkald",
@@ -529,6 +626,7 @@
     "createButton": "Opret Call Park"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "eller",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -543,16 +641,21 @@
     "externalNumberLabel": "Eksternt nummer",
     "chooseNumber": "Vælg et nummer",
     "addNewNumber": "Tilføj et nyt nummer",
-    "none": "Ingen"
+    "removeNumber": "Fjern linje",
+    "none": "Ingen",
+    "deleteConfirmation": "Denne handling kan ikke fortrydes. Er du sikker på, du vil ophæve tildeling af {{line}} fra {{user}}?",
+    "deleteLineTitle": "Fjern linje",
+    "disassociationSuccess": "Linjens tildeling til bruger blev ophævet."
   },
   "callForwardPanel": {
     "title": "Videresendelse af opkald",
     "success": "Konfiguration for videresendelse af opkald blev gemt",
     "error": "Konfiguration for videresendelse af opkald mislykkedes",
+    "forwardNoCalls": "Videresend ikke opkald.",
     "forwardAllCalls": "Videresend alle opkald",
     "forwardBusyNoAnswer": "Videresend opkald når linjen er optaget eller borte",
-    "internalAndExternal": "For interne og eksterne opkald",
-    "internalOnly": "Kun for interne opkald",
+    "internalAndExternal": "Kun til interne og eksterne opkald<br>",
+    "internalOnly": "Kun til interne opkald<br>",
     "forwardBusy": "Når linjen er optaget, send opkald til:",
     "forwardNoAnswer": "Når der ikke svares, send opkald til:",
     "forwardExternal": "Videresend eksterne opkald anderledes",
@@ -560,11 +663,11 @@
   },
   "callerIdPanel": {
     "title": "Opkalder-id",
-    "description": "Ændre det viste navn for opkald på denne linje"
+    "description": "<small>Rediger det viste navn for opkald fra denne linje</small>"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "Gør det muligt for brugere at besvare indgående opkald til deres lokalnummer eller et andet nummer",
+    "description": "<small>Aktiver brugere til at besvare indgående opkald til deres lokalnummer via et andet nummer</small>",
     "toggle": "Single Number Reach",
     "snrNote": "SNR kan dække alle brugerens linjer eller begrænses til specifikke linjer",
     "success": "Single Number Reach-konfiguration blev gemt",
@@ -591,17 +694,17 @@
     "expiredToday": "Udløber i dag",
     "daysAgo": "{{days}} dage siden",
     "expireToday": "Udløber i dag",
-    "errGetTrialsQuery": "Kunne ikke hente prøveversioner. Status: {{status}}",
+    "errGetTrialsQuery": "Kunne ikke hente prøveversion. Status: {{status}}",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Varighed",
+    "duration": "Prøveperiode (dage)",
     "thirtyDays": "30 dage",
     "sixtyDays": "60 dage",
-    "ninetyDays": "90 dage",
-    "onehundredtwentyDays": "120 dage",
-    "onehundredeightyDays": "180 dage",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "Annuller",
     "startTrial": "Start prøveversion",
     "customerInformation": "Kundeinformation",
@@ -620,6 +723,22 @@
     "activeUsersTitle": "Daglige aktive brugere",
     "averageCallsTitle": "Gennemsnitlige opkald per bruger",
     "contentSharedTitle": "Samlet delt indhold"
+  },
+  "trialModal": {
+    "trialSuccess": "Du har oprettet din prøveperiode korrekt.",
+    "nextStep": "Næste trin",
+    "sendWelcome": "Send velkomstbesked",
+    "sendWelcomePrompt": "Hvis du ønsker, kunden skal oprette tjenesten:",
+    "launchPortal": "Start virksomhedsportal",
+    "launchPortalPrompt": "Hvis du ønsker at oprette tjenesten for kunden:",
+    "or": "eller",
+    "squareducError": "Oprettede prøveperiode, men kunne ikke forsyne Squared UC.",
+    "addSuccess": "En prøveperiode blev korrekt opstartet for {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dage.",
+    "editSuccess": "Du har redigeret en prøveperiode for {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dage."
+  },
+  "trials": {
+    "collab": "Standard team-mødesteder + sync-up for 8 parter",
+    "squaredUC": "Avanceret kommunikation"
   },
   "status": {
     "noResults": "Ingen resultater tilgængelige.",
@@ -657,7 +776,9 @@
     "expiring": "Prøveversion udløber",
     "expired": "Udløbet prøveversion",
     "expiresToday": "Udløber i dag",
-    "unused": "ubrugte licenser"
+    "unused": "ubrugte licenser",
+    "uploadNumbers": "Send tal",
+    "overPlan": "over plangrænse"
   },
   "didAddModal": {
     "title": "Tilføj telefonnumre",
@@ -665,20 +786,25 @@
     "processingText": "Tilføjer nye telefonnumre ...",
     "successText": "{{count}} nye telefonnumre blev tilføjet.",
     "failText": "{{count}} telefonnumre er allerede i systemet.",
-    "sendEmail": "Send e-mailvelkomst",
+    "sendEmail": "Underret kunde",
     "notifyCustLater": "Underret kunde senere",
     "emailSuccessText": "E-mail blev sendt til kunden.",
     "emailFailText": "Fejl under afsending af e-mail",
-    "inputPlacehoder": "Indtast telefonnumre"
+    "inputPlacehoder": "Indtast telefonnumre adskilt med kommaer"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Enhedskonfiguration",
+    "deviceStatus": "Enhedsstatus",
     "description": "Beskrivelse",
     "id": "Id",
+    "ipAddress": "IP-adresse",
     "deactivate": "Deaktiver",
     "success": "Enheden blev opdateret",
     "error": "Enhedskonfiguration mislykkedes",
     "deactivateDevice": "Deaktiver enhed",
-    "deactivateBody": "Denne handling kan ikke fortrydes. Er du sikker på, du vil deaktivere denne enhed?"
+    "deactivateBody": "Denne handling kan ikke fortrydes. Er du sikker på, du vil deaktivere denne enhed?",
+    "deviceStatusFailureMsg": "Kunne ikke hente enhedsstatus",
+    "deviceIpAddressFailureMsg": "Kunne ikke hente enheds-IP"
   },
   "generateActivationCodeModal": {
     "title": "Aktiveringskode",
@@ -691,7 +817,7 @@
     "subject": "Emne",
     "subjectContent": "Aktiver din Squared UC-enhed",
     "message": "Meddelelse",
-    "expires": "Udløber: {{date}}  <strong>({{timeLeft}} fra nu af)</strong>",
+    "expires": "Udløber: {{date}} <strong>({{timeLeft}} fra nu af)</strong>",
     "clipboardFallback": "Tryk cmd+c for at kopiere teksten herunder.",
     "emailSuccess": "E-mail blev sendt.",
     "emailError": "E-mail mislykkedes."
@@ -710,7 +836,8 @@
     "userAdmin": "Brugeradministrator",
     "billingAdmin": "Faktureringsadministrator",
     "supportAdmin": "Supportadministrator",
-    "save": "Gem"
+    "save": "Gem",
+    "roles": "Roller"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -719,5 +846,99 @@
     "tracks": "Numre",
     "draganddrop": "Træk og slip for at ændre rækkefølgen på numre. Disse numre vil gentages.",
     "setActive": "Indstil aktiv"
+  },
+  "meetingsPage": {
+    "manageMeetings": "Møder",
+    "webexMeetingId": "Møde-ID",
+    "host": "Vært",
+    "date": "Dato",
+    "startTime": "Start",
+    "endTime": "Slut",
+    "resource": "Ressource",
+    "webexSite": "WebEx-websted",
+    "active": "Aktiv",
+    "pending": "Inviter afventende",
+    "enterprise": "Virksomhed",
+    "mediaFusion": "Media-fusion",
+    "cloud": "Sky"
+  },
+  "vtsPage": {
+    "enterpriseResources": "Virksomhedsressourcer",
+    "name": "Navn",
+    "status": "Status",
+    "delete": "Afvikl",
+    "takeOffline": "Gå offline",
+    "bringOnline": "Gå online",
+    "actionsHeader": "Handlinger",
+    "deleteResource": "Afvikl ressource",
+    "deleteResourceConfText1": "Er du sikker på, du vil afvikle denne ressource?",
+    "deleteResourceConfText2": "Den vil blive frakoblet fra skyen og gå offline.",
+    "cancel": "Annuller",
+    "deleteResource": "Afvikl ressource"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx proto"
+  },
+  "leaderBoard": {
+    "actions": "Handlinger",
+    "licenseUsage": "Licensforbrug",
+    "lastSynced": "Sidst synkroniseret:",
+    "messagingTitle": "Underretning",
+    "messagingSubtitle": "Standard team-mødelokaler",
+    "messagingDesc": "Underretningslicenser.",
+    "communicationTitle": "Kommunikation",
+    "communicationSubtitle": "Avanceret samlet",
+    "communicationDesc": "Licenser til Cisco Unified Communication.",
+    "conferencingTitle": "Konferencer",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Licenser til Cisco Meeting Center og konferencer."
+  },
+  "partnerProfile": {
+    "link": "Partnerprofil",
+    "customerLink": "Kundeprofil",
+    "title": "Konto",
+    "name": "Firmanavn",
+    "id": "Kontonummer",
+    "ciscoRep": "Cisco-repræsentant",
+    "supportSetup": "Placering af problemrapporter/-indberetning",
+    "save": "Gem",
+    "supportInfo": "Hvis du yder support til dine kunders brugere, skal du indtaste dine support-parametre herunder. Disse parametre vil blive vist under supportvalgmuligheder i Squared-programmerne.",
+    "lifeCycle": "Lifecycle-partnere skal yde begge typer support vist herunder.",
+    "supportOptions": "Cisco support-valgmuligheder",
+    "seeExample": "se et eksempel.",
+    "yourSupportOptions": "Dine support-valgmuligheder",
+    "urlFaq": "URL for hjælpeside og FAQ",
+    "urlFaqEx": "http://[url of Cisco help site and FAQs]",
+    "urlReport": "URL for rapporteringer af problemindberetninger eller åbning af sager",
+    "urlReportEx": "http://[url of Cisco problem reporting]",
+    "helpFaq": "Placering for hjælp og ofte stillede spørgsmål",
+    "matchingTix": "Tilsvarende problemrapporter",
+    "matchingDescr": "For at sammenføre problemrapporter med loggene, der sendes til Cisco Collaboration Management-værktøjet, når rapporterne oprettes, skal du tilføje dit logID-parameter som \"%%logID%%\" (ingen anførselstegn) til din support-URL.",
+    "forExample": "For eksempel: http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "Opsætning af support",
+    "companyInfo": "Virksomhedsinformation",
+    "cancel": "Annuller",
+    "partnerProblem": "Partnerwebsted for problemrapportering",
+    "partnerHelp": "Partnerhjælpeside",
+    "ciscoProblem": "Problemrapportering vil blive sendt til Cisco teknisk support",
+    "ciscoHelp": "Cisco-hjælpeside",
+    "enterHelp": "Indtast placeringen af dit hjælpeindhold.",
+    "enterReports": "Problemrapporter: Indtast placeringen af dit problemrapporteringsværktøj."
+  },
+  "customerProfile": {
+    "supportContacts": "Supportkontakter",
+    "partnerAdmin": "Partner-administratorer",
+    "supportInfo": "Hvis du yder support for dine kunder, skal du indtaste dine support-parametre herunder. Disse parametre vil blive vist under supportvalgmuligheder i Squared-programmet;"
+  },
+  "utilizationPage": {
+    "entResUtilization": "Udnyttelse af virksomhedsressourcer",
+    "overAllUtil": "Samlet udnyttelse",
+    "average": "Gennemsnit",
+    "bridgeUtilization": "Bridge By Bridge-udnyttelse"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Ordre nr. {{orderId}} er under behandling. Tjek igen efter 24 timer.",
+    "info": "Status",
+    "wait": "Vent venligst, mens vi omdirigerer dig"
   }
 }
