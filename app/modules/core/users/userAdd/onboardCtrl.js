@@ -577,6 +577,7 @@ angular.module('Core')
 
           if (data.success) {
             Log.info('User invitation sent successfully.', data.id);
+            $rootScope.$broadcast('USER_LIST_UPDATED');
             // var success = [$translate.instant('usersPage.successInvite', data)];
             // Notification.notify(success, 'success');
             for (var i = 0; i < data.inviteResponse.length; i++) {
