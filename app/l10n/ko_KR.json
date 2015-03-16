@@ -43,28 +43,42 @@
     "inviteUsers": "사용자 초대",
     "partners": "파트너 관리자"
   },
+  "groupsPage": {
+    "manageGroups": "그룹",
+    "all": "모두",
+    "groupNameHeader": "그룹 이름",
+    "membersCountHeader": "멤버"
+  },
   "onboardModal": {
     "onboardUsers": "온보드 사용자",
     "cancel": "취소",
     "addUsersDesc": "귀사에서 협업 서비스를 수신할 상대방의 이메일 주소를 입력하십시오. 해당 상대방은 가입 이메일 초대장을 받게 됩니다.",
     "addUserText": "추가하시겠습니까?",
     "userInput": "이메일 주소 또는 그룹 메일러는 콤마로 구분하여 입력하십시오...",
-    "addServiceText": "어떤 서비스를 활성화하시겠습니까?",
+    "enableServiceText": "서비스 활성화",
     "enableCollab": "협업 서비스 개별적으로 활성화",
-    "enableCollabGroup": "그룹 멤버십에 기반하여 협업 서비스를 활성화하십시오.",
+    "enableCollabGroup": "그룹 멤버십에 기반하여 협업 서비스 활성화",
     "addUsersSelect": "사용자 추가:",
-    "manageBtn": "관리",
+    "manageBtn": "그룹 관리",
     "onboardBtn": "온보드",
     "howToInvite": "어떤 방법으로 초대하시겠습니까?",
     "waitInvitation": "이메일 초대장을 보내고 서비스를 구축하기 전에 사용자가 수락할 때까지 기다리십시오.",
     "sendImmediate": "사용자를 위한 서비스를 즉시 구축하고 이메일 알림을 보냅니다.",
-    "messaging": "메시지 및 통신",
+    "messaging": "메시지",
     "conferencing": "회의",
+    "communications": "통신",
+    "entitlements": "사용자 자격",
     "saveBtn": "저장",
     "manageGroups": "그룹 관리",
     "groupColHeader": "그룹 이름",
     "collabService": "그룹의 사용자에게 부여될 협업 서비스 라이센스를 선택하십시오.",
-    "addEntitleError": "사용자 추가 또는 자격 부여를 위한 권한 충분하지 않음."
+    "addEntitleError": "사용자 추가 또는 자격 부여를 위한 권한 충분하지 않음.",
+    "freeMsg": "무료 squared 팀 회의실",
+    "freeConf": "무료 3명 미팅",
+    "freeComm": "무료 네트워크내 IP 음성 및 비디오 콜",
+    "paidMsg": "표준 팀 회의실",
+    "paidConf": "8명 미팅",
+    "paidComm": "고급 통신"
   },
   "usersPreview": {
     "groupPreview": "그룹:",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "자격",
     "addNewLinePreview": "새 줄 추가",
     "newLine": "새 줄",
-    "devicesPreview": "장치",
+    "devicesPreview": "장치 및 소프트웨어",
     "activateNewDevice": "새 장치 활성화",
     "fullAdmin": "전체 관리",
     "generateActivationCode": "활성화 코드 생성",
     "generateActivationCodeText": "이 사용자를 위한 새 장치를 활성화하려면 활성화 코드를 생성하십시오.",
     "activationCodeTitle": "새 장치의 활성화 코드",
-    "expires": "만료됨"
+    "expires": "만료됨",
+    "editServices": "서비스 편집",
+    "editServiceTitle": "{{firstName}} {{lastName}} 님을 위한 서비스 활성화됨"
   },
   "messagingPanel": {
     "title": "메시지"
   },
   "settings": {
+    "title": "서비스 설치",
     "initialSetup": "초기 설치"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "장치",
     "reportTab": "보고서",
     "supportTab": "지원",
+    "accountTab": "계정",
     "developmentTab": "개발",
     "organizationTab": "조직",
     "organizationTabDesc": "조직 세부 사항 관리, 지정된 서비스 보기 및 도구에 액세스.",
@@ -107,7 +125,17 @@
     "callRoutingTab": "통화 라우팅",
     "callRoutingTabDesc": "통화 라우팅 기능 관리 (통화 대기 등)",
     "mediaOnHoldTab": "Media On Hold",
-    "mediaOnHoldTabDesc": "Media On Hold 개발 예제"
+    "mediaOnHoldTabDesc": "Media On Hold 개발 예제",
+    "meetingDetailsTab": "미팅",
+    "meetingDetailsTabDesc": "미팅 관리",
+    "vtsDetailsTab": "기업 리소스",
+    "vtsDetailsTabDesc": "기업 리소스 관리",
+    "listUserTab": "사용자 목록",
+    "listUserTabDesc": "사용자 및 관련 기능을 관리합니다.",
+    "groupTab": "그룹",
+    "groupTabDesc": "그룹을 만들고 관리합니다.",
+    "entResUtilizationTab": "사용률",
+    "entResUtilizationTabDesc": "기업 리소스 사용률"
   },
   "index": {
     "welcome": "환영합니다!",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "재이동 중...",
     "launch": "앱 실행 중..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "관리 이메일 주소: ",
+    "create": "프로세스 순서"
   },
   "orgsPage": {
     "title": "조직 관리",
@@ -184,6 +216,7 @@
     "error": "사용자 업데이트 실패함."
   },
   "supportPage": {
+    "title": "지원",
     "subtitleLogs": "로그 검색",
     "listlogsbtn": "검색",
     "noResults": "결과 없음.",
@@ -228,7 +261,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "통화 정보 검색 실패함. 상태: {{status}}",
     "subTitleCallFlow": "통화 흐름",
-    "downloading": "이 다운로드는 최대 5분 정도 소요될 수 있습니다. 잠시 기다리십시오..."
+    "downloading": "이 다운로드는 최대 5분 정도 소요될 수 있습니다. 잠시 기다리십시오...",
+    "operational": "모든 시스템 작동 가능",
+    "error": "시스템 오류",
+    "supportResources": "지원 리소스",
+    "showDetails": "세부 정보 표시",
+    "hideDetails": "세부 정보 숨기기",
+    "problemReports": "문제점 보고서",
+    "reportingUrl": "보고 URL:",
+    "helpFaq": "도움말 및 FAQ",
+    "helpUrl": "도움말 URL:",
+    "sendFeedback": "Cisco 피드백"
   },
   "common": {
     "delete": "삭제",
@@ -242,7 +285,10 @@
     "done": "완료",
     "begin": "시작",
     "back": "뒤로",
-    "finish": "마침"
+    "finish": "마침",
+    "language": "언어",
+    "selectLanguage": "언어 선택",
+    "select": "선택"
   },
   "notifications": {
     "success": "알림 성공",
@@ -273,7 +319,16 @@
     "cancel": "취소",
     "emailAddress": "이메일 주소",
     "name": "이름",
-    "errGetTrialsQuery": "평가판 검색 실패함. 상태: {{status}}"
+    "errGetTrialsQuery": "평가판 검색 실패함. 상태: {{status}}",
+    "quickLinksText": "간편한 링크",
+    "addUserText": "사용자 추가",
+    "installDeviceText": "사용자를 위해 장치 설치",
+    "installSharedSpaceText": "공유된 스페이스에 장치 설치",
+    "autoAttendantText": "자동 전화 교환 구성",
+    "searchLogsText": "장치 로그 검색",
+    "unlicensedDateText": "라이센스 없는 사용자 등록됨:",
+    "unlicensedText": "라이센스 없는 사용자",
+    "convertText": "현재 무료 버전을 사용하는 사용자를 확인하고 변환"
   },
   "inviteModal": {
     "title": "서비스 자격",
@@ -284,8 +339,8 @@
   "ssoModal": {
     "btnTitle": "SSO 설정",
     "title": "SSO 설정",
-    "enableSSO": "예. 사용자 정의한 SSO 제공자가 있습니다.",
-    "disableSSO": "아니요. SSO 제공자가 없습니다.",
+    "enableSSO": "제3자 ID 제공자를 통합합니다. (고급)",
+    "disableSSO": "사용자 인증을 위해 기본 제공된 ID 서비스를 사용합니다. (기본)",
     "importMetadataTitle": "IdP 메타데이터 가져오기",
     "exportMetadataTitle": "클라우드 메타데이터 내보내기",
     "testSSOSetupTitle": "SSO 설정 테스트",
@@ -303,7 +358,7 @@
     "backBtn": "뒤로",
     "nextBtn": "다음",
     "downloadMetadataBtn": "메타데이터 파일 다운로드",
-    "launchSSOTestBtn": "SSO 테스트 실행",
+    "launchSSOTestBtn": "SSO 연결 테스트",
     "finishBtn": "마침",
     "importFailed": "IdP 메타데이터 파일 가져오기 실패함",
     "invalidFile": "유효하지 않은 IdP 메타데이터 파일",
@@ -311,7 +366,12 @@
     "retrieveEntityIdFailed": "SSO 구성 성공하지 못함",
     "readFileFailed": "IdP 메타데이터 파일을 읽지 못함",
     "importSuccess": "IdP 메타데이터 파일 성공적으로 가져오기함",
-    "enableSSOSuccess": "모든 사용자를 위해 싱글 사인온(SSO) 성공적으로 활성화함"
+    "enableSSOSuccess": "모든 사용자를 위해 싱글 사인온(SSO) 성공적으로 활성화함",
+    "finalEnableSSO": "테스트에 성공했습니다. 싱글 사인온을 활성화하십시오.",
+    "finalDisableSSO": "테스트에 성공하지 못했습니다. 싱글 사인온을 비활성화하십시오.",
+    "disableFailed": "싱글 사인온 비활성화 실패함",
+    "diableSuccess": "모든 사용자를 위해 싱글 사인온(SSO) 성공적으로 비활성화됨",
+    "enableSSOFailure": "싱글 사인온(SSO) 비활성화 실패함."
   },
   "serviceSetupModal": {
     "timeZone": "시간대",
@@ -438,6 +498,17 @@
       "label": "UC APP Fusion 서비스",
       "title": "UC APP Fusion 서비스",
       "desc": "온-프레미스로 서비스 활용"
+    },
+    "activationStatus": {
+      "not_entitled": "자격 부여되지 않음",
+      "pending_deactivation": "보류 중인 비활성화",
+      "pending_activation": "보류 중인 활성화",
+      "activated": "활성화됨",
+      "error": "오류"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fusion UC",
+      "squared-fusion-cal": "Fusion 캘린더"
     }
   },
   "firstTimeWizard": {
@@ -483,7 +554,7 @@
     "nextSteps": "ID 정보가 동기화되고 있는지 확인할 준비가 되면 다음 버튼을 누릅니다.",
     "results": "결과",
     "syncAgreementText": "사용자가 동기화 동의",
-    "setupSSOSub": "싱글 사인온 설정",
+    "setupSSOSub": "싱글 사인온",
     "setupSSODesc": "SSO 구성에 적합한 옵션을 선택하십시오.",
     "manualInvite": "귀사에서 협업 서비스를 수신할 상대방의 이메일 주소를 입력하십시오. 해당 상대방은 가입 이메일 초대장을 받게 됩니다.",
     "domainEntry": "도메인 입력",
@@ -494,6 +565,32 @@
     "finish": "마침",
     "finishSub": "설정 완료",
     "completeRequired": "{{name}} 은 완료되어야 합니다."
+  },
+  "reports": {
+    "title": "보고서",
+    "engagementTab": "참여",
+    "qualityTab": "품질",
+    "opportunitiesTab": "기회",
+    "time": "항상",
+    "week": "이전 주",
+    "month": "이전 달",
+    "threeMonths": "마지막 세 달",
+    "mostEngaged": "5명 최대 참여함",
+    "leastEngaged": "5명 최소 참여함",
+    "highQuality": "5개 최고 품질",
+    "leastQuality": "5개 최저 품질",
+    "services": "모든 서비스",
+    "UsersOnboarded": "사용자 온보드됨",
+    "AvgCallsPerUser": "사용자당 평균 통화",
+    "AvgRoomsPerUser": "사용자당 평균 회의실",
+    "ActiveUsers": "활동중인 사용자",
+    "OneOnOneRooms": "1:1 회의실",
+    "GroupRooms": "그룹 회의실",
+    "VideoCalls": "비디오 콜",
+    "AvgDurationofCalls": "통화 평균 지속 시간",
+    "ContentShared": "콘텐츠 공유됨",
+    "AmountofContentShared": "공유된 콘텐츠 수",
+    "UserEngagement": "사용자 참여"
   },
   "callRouting": {
     "title": "통화 라우팅",
@@ -529,6 +626,7 @@
     "createButton": "통화 대기 만들기"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "또는",
     "voicemail": "보이스메일",
     "singleNumberReach": "싱글 번호 연결"
@@ -543,16 +641,21 @@
     "externalNumberLabel": "외부 번호",
     "chooseNumber": "번호 선택",
     "addNewNumber": "새 번호 추가",
-    "none": "없음"
+    "removeNumber": "라인 제거",
+    "none": "없음",
+    "deleteConfirmation": "이 작업은 실행 취소할 수 없습니다.  {{user}} 님의 {{line}}를 지정 해제하시겠습니까?",
+    "deleteLineTitle": "라인 제거",
+    "disassociationSuccess": "사용자의 라인이 성공적으로 지정 해제되었습니다."
   },
   "callForwardPanel": {
     "title": "통화 전달",
     "success": "통화 전달 구성 성공적으로 저장됨",
     "error": "통화 전달 구성 실패함",
+    "forwardNoCalls": "통화 전달하지 않기",
     "forwardAllCalls": "모든 통화 전달",
     "forwardBusyNoAnswer": "통화중이거나 부재중일 때 통화 전달",
-    "internalAndExternal": "내부 및 외부 통화용",
-    "internalOnly": "내부 통화 전용",
+    "internalAndExternal": "내부 및 외부 통화용<br>",
+    "internalOnly": "내부 통화 전용<br>",
     "forwardBusy": "통화 중일 때 통화 보내기:",
     "forwardNoAnswer": "응답이 없을 때 통화 보내기:",
     "forwardExternal": "외부 통화는 다른 방법으로 전달",
@@ -560,11 +663,11 @@
   },
   "callerIdPanel": {
     "title": "호출자 ID",
-    "description": "이 라인의 통화 표시명 변경"
+    "description": "<small>이 라인의 통화 표시명 변경</small>"
   },
   "singleNumberReachPanel": {
     "title": "싱글 번호 연결",
-    "description": "사용자가 내선으로 걸려오는 전화를 다른 번호에서 응답할 수 있도록 허용",
+    "description": "<small>사용자가 내선으로 걸려오는 전화를 다른 번호에서 응답할 수 있도록 허용</small>",
     "toggle": "싱글 번호 연결",
     "snrNote": "SNR은 모든 사용자의 라인을 커버하거나 특정 라인으로 제한할 수 있습니다",
     "success": "싱글 번호 연결 구성이 성공적으로 저장됨",
@@ -588,7 +691,7 @@
     "trialsEndDate": "일 남음",
     "trialsNumUsers": "사용자/ 라이센스",
     "viewAll": "모든 평가판 보기",
-    "expiredToday": "오늘 완료됨",
+    "expiredToday": "오늘 만료됨",
     "daysAgo": "{{days}}일 전",
     "expireToday": "오늘 만료",
     "errGetTrialsQuery": "평가판 검색 실패함. 상태: {{status}}",
@@ -596,12 +699,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "지속 시간",
+    "duration": "평가판 지속 시간 (일)",
     "thirtyDays": "30일",
     "sixtyDays": "60일",
-    "ninetyDays": "90일",
-    "onehundredtwentyDays": "120일",
-    "onehundredeightyDays": "180일",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "취소",
     "startTrial": "평가판 시작",
     "customerInformation": "고객 정보",
@@ -620,6 +723,22 @@
     "activeUsersTitle": "매일 활동중인 사용자",
     "averageCallsTitle": "사용자당 평균 통화",
     "contentSharedTitle": "총 공유된 콘텐츠"
+  },
+  "trialModal": {
+    "trialSuccess": "평가판을 성공적으로 설정했습니다.",
+    "nextStep": "다음 단계",
+    "sendWelcome": "환영 메시지 보내기",
+    "sendWelcomePrompt": "고객이 서비스를 설정하도록 하려면:",
+    "launchPortal": "기업 포털 실행",
+    "launchPortalPrompt": "고객을 위해 서비스를 설정하려면:",
+    "or": "또는",
+    "squareducError": "평가판을 만들었으나 Squared UC를 구축할 수 없습니다.",
+    "addSuccess": "{{customerName}} 님을 위한 평가판이 성공적으로 시작되었습니다. ({licenseCount}}개 라이센스, {{licenseDuration}}일 동안)",
+    "editSuccess": "{{customerName}} 님을 위한 평가판을 성공적으로 편집했습니다. ({{licenseCount}}개 라이센스, {{licenseDuration}}일 동안)"
+  },
+  "trials": {
+    "collab": "표준 팀 회의실 + 8명 미팅",
+    "squaredUC": "고급 통신"
   },
   "status": {
     "noResults": "사용 가능한 결과 없음.",
@@ -657,7 +776,9 @@
     "expiring": "평가판 만료",
     "expired": "평가판 만료됨",
     "expiresToday": "오늘 만료됨",
-    "unused": "사용되지 않은 라이센스"
+    "unused": "사용되지 않은 라이센스",
+    "uploadNumbers": "번호 업로드",
+    "overPlan": "초과 계획 제한"
   },
   "didAddModal": {
     "title": "전화 번호 추가",
@@ -665,20 +786,25 @@
     "processingText": "전화 번호 추가 중...",
     "successText": "{{count}}개 새로운 전화 번호가 성공적으로 추가됨.",
     "failText": "{{count}}개 전화 번호가 이미 시스템에 있음.",
-    "sendEmail": "환영 이메일 보내기",
+    "sendEmail": "고객에게 통지",
     "notifyCustLater": "나중에 고객에게 알리기",
     "emailSuccessText": "이메일이 고객에게 성공적으로 발송되었습니다.",
     "emailFailText": "이메일 보내기 오류",
-    "inputPlacehoder": "전화 번호 입력"
+    "inputPlacehoder": "전화 번호는 콤마로 구분하여 입력하십시오"
   },
   "deviceDetailPage": {
+    "deviceConfig": "장치 구성",
+    "deviceStatus": "장치 상태",
     "description": "설명",
     "id": "ID",
+    "ipAddress": "IP 주소",
     "deactivate": "비활성화",
     "success": "장치 성공적으로 업데이트됨",
     "error": "장치 구성 실패함",
     "deactivateDevice": "장치 비활성화",
-    "deactivateBody": "이 작업은 실행 취소할 수 없습니다.  이 장치를 비활성화하시겠습니까?"
+    "deactivateBody": "이 작업은 실행 취소할 수 없습니다.  이 장치를 비활성화하시겠습니까?",
+    "deviceStatusFailureMsg": "장치 상태 페치에 실패함",
+    "deviceIpAddressFailureMsg": "장치 IP 페치에 실패함"
   },
   "generateActivationCodeModal": {
     "title": "활성화 코드",
@@ -710,7 +836,8 @@
     "userAdmin": "사용자 관리자",
     "billingAdmin": "비용 청구 관리자",
     "supportAdmin": "지원 관리자",
-    "save": "저장"
+    "save": "저장",
+    "roles": "역할"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -719,5 +846,99 @@
     "tracks": "트랙",
     "draganddrop": "트랙의 순서를 재정렬하려면 드래그하고 드롭하십시오. 해당 트랙은 루프됩니다.",
     "setActive": "Active 설정"
+  },
+  "meetingsPage": {
+    "manageMeetings": "미팅",
+    "webexMeetingId": "미팅 ID",
+    "host": "호스트",
+    "date": "날짜",
+    "startTime": "시작",
+    "endTime": "종료",
+    "resource": "리소스",
+    "webexSite": "WebEx 사이트",
+    "active": "활동중",
+    "pending": "초대 보류 중",
+    "enterprise": "기업",
+    "mediaFusion": "Media Fusion",
+    "cloud": "클라우드"
+  },
+  "vtsPage": {
+    "enterpriseResources": "기업 리소스",
+    "name": "이름",
+    "status": "상태",
+    "delete": "해제",
+    "takeOffline": "오프라인으로 지정하기",
+    "bringOnline": "온라인으로 가져오기",
+    "actionsHeader": "작업",
+    "deleteResource": "리소스 해제",
+    "deleteResourceConfText1": "이 리소스를 해제하시겠습니까?",
+    "deleteResourceConfText2": "클라우드의 연결이 끊기고 오프라인으로 지정됩니다.",
+    "cancel": "취소",
+    "deleteResource": "리소스 해제"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx 프로토"
+  },
+  "leaderBoard": {
+    "actions": "작업",
+    "licenseUsage": "라이센스 사용",
+    "lastSynced": "마지막 동기화됨:",
+    "messagingTitle": "메시지",
+    "messagingSubtitle": "표준 팀 회의실",
+    "messagingDesc": "메시지 라이센스.",
+    "communicationTitle": "통신",
+    "communicationSubtitle": "Advanced Unified",
+    "communicationDesc": "Cisco Unified Communication 라이센스.",
+    "conferencingTitle": "회의",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Cisco Meeting Center 및 회의 라이센스."
+  },
+  "partnerProfile": {
+    "link": "파트너 프로필",
+    "customerLink": "고객 프로필",
+    "title": "계정",
+    "name": "회사명",
+    "id": "계정 번호",
+    "ciscoRep": "Cisco 담당자",
+    "supportSetup": "문제 티켓 / 보고 위치",
+    "save": "저장",
+    "supportInfo": "고객의 사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Squared 응용프로그램의 지원 옵션 아래에 표시됩니다.",
+    "lifeCycle": "아래 표시된 지원의 두 가지 유형을 모두 제공하려면 수명 주기 파트너가 필요합니다.",
+    "supportOptions": "Cisco 지원 옵션",
+    "seeExample": "예제를 참조하십시오.",
+    "yourSupportOptions": "귀하의 지원 옵션",
+    "urlFaq": "도움말 사이트 및 FAQ용 URL",
+    "urlFaqEx": "http://[url of Cisco help site and FAQs]",
+    "urlReport": "문제 보고 및 케이스 제출용 URL",
+    "urlReportEx": "http://[url of Cisco problem reporting]",
+    "helpFaq": "도움말 및 FAQ 위치",
+    "matchingTix": "일치하는 문제 티켓",
+    "matchingDescr": "문제 티켓을 보고서가 생성될 때 Cisco 협업 관리 도구에 업로드한 로그와 일치하려면 로그ID 파라미터를 포함한 지원 URL을 첨부하십시오. (\"%%logID%%\") (따옴표 없음)",
+    "forExample": "예: http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "지원 설정",
+    "companyInfo": "기업 정보",
+    "cancel": "취소",
+    "partnerProblem": "파트너 문제점 보고 사이트",
+    "partnerHelp": "파트너 도움말 사이트",
+    "ciscoProblem": "문제점 보고서가 Cisco 기술 지원에게 발송됩니다",
+    "ciscoHelp": "Cisco 도움말 사이트",
+    "enterHelp": "도움말 콘텐츠의 위치를 입력하십시오.",
+    "enterReports": "문제점 보고서: 문제점 보고 도구의 위치를 입력하십시오."
+  },
+  "customerProfile": {
+    "supportContacts": "지원 연락처",
+    "partnerAdmin": "파트너 관리자",
+    "supportInfo": "사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Squared 응용프로그램의 지원 옵션 아래에 표시됩니다."
+  },
+  "utilizationPage": {
+    "entResUtilization": "기업 리소스 사용률",
+    "overAllUtil": "전반적인 사용률",
+    "average": "평균",
+    "bridgeUtilization": "브리지별 사용률"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "주문 # {{orderId}} 이(가) 처리되고 있습니다. 24시간 이후에 다시 확인하십시오.",
+    "info": "상태",
+    "wait": "귀하를 리디렉트하는 동안 잠시 기다리십시오"
   }
 }

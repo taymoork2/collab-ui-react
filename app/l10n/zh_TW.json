@@ -29,7 +29,7 @@
     "csvBtnTitle": "匯出至 CSV 檔",
     "csvFilename": "exported_users.csv",
     "emailSent": "{{email}} 電子郵件已成功傳送",
-    "emailFailed": "{{email}} 郵件未送出，{{message}}",
+    "emailFailed": "{{email}} 電子郵件未送出，{{message}}",
     "entitled": "{{email}} 已授與權限",
     "forbidden": "{{email}} 無法獲邀請加入服務",
     "errInvite": "無法處理邀請。狀態：{{status}}。",
@@ -43,28 +43,42 @@
     "inviteUsers": "邀請使用者",
     "partners": "夥伴管理員"
   },
+  "groupsPage": {
+    "manageGroups": "群組",
+    "all": "全部",
+    "groupNameHeader": "群組名稱",
+    "membersCountHeader": "成員"
+  },
   "onboardModal": {
     "onboardUsers": "線上使用者",
     "cancel": "取消",
     "addUsersDesc": "請輸入公司中將接收協作服務的人員電子郵件地址。這些人員將收到註冊的電子郵件邀請。",
     "addUserText": "您想要加誰？",
     "userInput": "請輸入以逗號分隔的電子郵件地址或群組郵件程式...",
-    "addServiceText": "您要啟用哪些服務？",
+    "enableServiceText": "啟用服務",
     "enableCollab": "單獨啟用協作服務",
-    "enableCollabGroup": "根據群組成員資格來啟用協作服務。",
+    "enableCollabGroup": "根據群組成員資格來啟用協作服務",
     "addUsersSelect": "新增使用者以執行下列作業：",
-    "manageBtn": "管理",
+    "manageBtn": "管理群組",
     "onboardBtn": "線上",
     "howToInvite": "您是否想要邀請他們嗎？",
     "waitInvitation": "供應服務之前傳送電子郵件邀請並等到使用者接受。",
     "sendImmediate": "立即為使用者供應服務並傳送電子郵件通知。",
-    "messaging": "傳訊與通訊",
+    "messaging": "傳訊",
     "conferencing": "會議",
+    "communications": "通訊",
+    "entitlements": "使用者授權",
     "saveBtn": "儲存",
     "manageGroups": "管理群組",
     "groupColHeader": "群組名稱",
     "collabService": "選取應該授與群組中使用者的協同作業服務授權。",
-    "addEntitleError": "專用權不足以新增使用者或向使用者授權。"
+    "addEntitleError": "專用權不足以新增使用者或向使用者授權。",
+    "freeMsg": "免費的 Squared 小組會議室",
+    "freeConf": "免費的 3 方同步",
+    "freeComm": "免費的網路間 IP 語音與視訊通話",
+    "paidMsg": "標準小組會議室",
+    "paidConf": "8 方同步",
+    "paidComm": "進階通訊"
   },
   "usersPreview": {
     "groupPreview": "群組：",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "授權",
     "addNewLinePreview": "新增線路",
     "newLine": "新增線路",
-    "devicesPreview": "裝置",
+    "devicesPreview": "裝置與軟體",
     "activateNewDevice": "啟動新裝置",
     "fullAdmin": "完整管理",
     "generateActivationCode": "產生啟動碼",
     "generateActivationCodeText": "產生啟動碼以啟動此使用者的新裝置。",
     "activationCodeTitle": "新裝置的啟動碼",
-    "expires": "到期"
+    "expires": "到期",
+    "editServices": "編輯服務",
+    "editServiceTitle": "{lastName}} {{firstName}} 已啟用服務"
   },
   "messagingPanel": {
     "title": "傳訊"
   },
   "settings": {
+    "title": "服務設定",
     "initialSetup": "初始設定"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "裝置",
     "reportTab": "報告",
     "supportTab": "支援",
+    "accountTab": "帳戶",
     "developmentTab": "開發",
     "organizationTab": "組織",
     "organizationTabDesc": "管理組織詳細資料、檢視指派的服務及存取工具。",
@@ -107,7 +125,17 @@
     "callRoutingTab": "通話路由",
     "callRoutingTabDesc": "管理呼叫駐留等通話路由功能",
     "mediaOnHoldTab": "媒體保留中",
-    "mediaOnHoldTabDesc": "媒體保留中開發範例"
+    "mediaOnHoldTabDesc": "媒體保留中開發範例",
+    "meetingDetailsTab": "會議",
+    "meetingDetailsTabDesc": "會議管理",
+    "vtsDetailsTab": "企業資源",
+    "vtsDetailsTabDesc": "企業資源管理",
+    "listUserTab": "列出使用者",
+    "listUserTabDesc": "管理使用者及其功能。",
+    "groupTab": "群組",
+    "groupTabDesc": "建立並管理群組。",
+    "entResUtilizationTab": "使用率",
+    "entResUtilizationTabDesc": "企業資源使用率"
   },
   "index": {
     "welcome": "歡迎！",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "重新導向中...",
     "launch": "正在啟動應用程式..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "管理者電子郵件地址： ",
+    "create": "處理訂單"
   },
   "orgsPage": {
     "title": "管理組織",
@@ -184,6 +216,7 @@
     "error": "更新使用者失敗。"
   },
   "supportPage": {
+    "title": "支援",
     "subtitleLogs": "搜尋日誌",
     "listlogsbtn": "搜尋",
     "noResults": "無結果。",
@@ -197,7 +230,7 @@
     "callflowAction": "通話流程圖表",
     "callAction": "通話資訊",
     "errEmptyinput": "「搜尋輸入」不能是空的。",
-    "errLogQuery": "無法擷取日誌。狀態：{{status}}",
+    "errLogQuery": "擷取日誌失敗。狀態：{{status}}",
     "inputPlaceholder": "請輸入搜尋詞彙（電子郵件地址、使用者 ID 和 Locus ID 等）",
     "subTitleCallInfo": "下列項目的通話資訊記錄：",
     "locusId": "locusId",
@@ -226,9 +259,19 @@
     "errorMessage": "error.message",
     "rx": "接收",
     "tx": "傳送",
-    "errCallInfoQuery": "無法擷取通話資訊。狀態：{{status}}",
+    "errCallInfoQuery": "擷取通話資訊失敗。狀態：{{status}}",
     "subTitleCallFlow": "通話流程",
-    "downloading": "此下載可能需要長達 5 分鐘時間才能完成。請耐心等候..."
+    "downloading": "此下載可能需要長達 5 分鐘時間才能完成。請耐心等候...",
+    "operational": "所有系統都在運作中",
+    "error": "系統發生錯誤",
+    "supportResources": "支援資源",
+    "showDetails": "顯示詳細資料",
+    "hideDetails": "隱藏詳細資料",
+    "problemReports": "問題報告",
+    "reportingUrl": "報告 URL：",
+    "helpFaq": "說明與常見問題及解答",
+    "helpUrl": "說明 URL：",
+    "sendFeedback": "Cisco 意見回饋"
   },
   "common": {
     "delete": "刪除",
@@ -237,12 +280,15 @@
     "ok": "確定",
     "next": "下一步",
     "close": "關閉",
-    "rename": "更名",
+    "rename": "重新命名",
     "play": "播放",
     "done": "完成",
     "begin": "開始",
     "back": "後退",
-    "finish": "完成"
+    "finish": "完成",
+    "language": "語言",
+    "selectLanguage": "請選取語言",
+    "select": "選取"
   },
   "notifications": {
     "success": "成功通知數",
@@ -273,7 +319,16 @@
     "cancel": "取消",
     "emailAddress": "電子郵件地址",
     "name": "名稱",
-    "errGetTrialsQuery": "無法擷取試用客戶。狀態：{{status}}"
+    "errGetTrialsQuery": "擷取試用客戶失敗。狀態：{{status}}",
+    "quickLinksText": "快速鏈結",
+    "addUserText": "新增使用者",
+    "installDeviceText": "為使用者安裝裝置",
+    "installSharedSpaceText": "將裝置安裝至共用空間",
+    "autoAttendantText": "配置自動語音應答",
+    "searchLogsText": "搜尋裝置日誌",
+    "unlicensedDateText": "未授權使用者已登錄於",
+    "unlicensedText": "未授權使用者",
+    "convertText": "檢視及轉換目前正在使用免費版本的使用者"
   },
   "inviteModal": {
     "title": "服務授權",
@@ -284,14 +339,14 @@
   "ssoModal": {
     "btnTitle": "設定 SSO",
     "title": "設定 SSO",
-    "enableSSO": "是，我有自訂 SSO 提供者。",
-    "disableSSO": "否，我沒有 SSO 提供者。",
+    "enableSSO": "整合協力廠商身分識別提供者。（進階）",
+    "disableSSO": "使用內建身分服務進行使用者驗證。（簡式）",
     "importMetadataTitle": "匯入 IdP 中繼資料",
     "exportMetadataTitle": "匯出雲端中繼資料",
     "testSSOSetupTitle": "測試 SSO 設定",
     "enableSSOTitle": "啟用 SSO",
-    "importMetadataDesc": "透過從身份識別提供者 (IdP) 取得信任中繼資料檔案並在這裡上傳，開始設定 IdP 與 Cisco 協同作業雲端之間的信任關係。",
-    "exportMetadataDesc1": "從 Cisco 協同作業服務下載下列信任中繼資料檔案，並將檔案上傳至身份識別提供者 (IdP) 管理介面。",
+    "importMetadataDesc": "透過從身分識別提供者 (IdP) 取得信任中繼資料檔案並在這裡上傳，開始設定 IdP 與 Cisco 協同作業雲端之間的信任關係。",
+    "exportMetadataDesc1": "從 Cisco 協同作業服務下載下列信任中繼資料檔案，並將檔案上傳至身分識別提供者 (IdP) 管理介面。",
     "exportMetadataDesc2": "完成將檔案上傳至 IdP 後，請回到這個畫面並按「下一步」。",
     "testSSOSetupDesc": "您已準備好測試 SSO 設定。按下面的按鈕以啟動新視窗。如果成功登入，則可以回到這個畫面並按「下一步」以完成 SSO 設定。",
     "enableSSODesc": "如果已準備好給所有使用者啟用「單一登入 (SSO)」，請按「完成」按鈕。所有使用者驗證隨後都將透過您的新 SSO 提供者進行處理。",
@@ -303,15 +358,20 @@
     "backBtn": "後退",
     "nextBtn": "下一步",
     "downloadMetadataBtn": "下載中繼資料檔案",
-    "launchSSOTestBtn": "啟動 SSO 測試",
+    "launchSSOTestBtn": "測試 SSO 連線",
     "finishBtn": "完成",
-    "importFailed": "無法匯入 IdP 中繼資料檔案",
+    "importFailed": "匯入 IdP 中繼資料檔案失敗",
     "invalidFile": "無效的 IdP 中繼資料檔案",
-    "downloadMetaFailed": "無法下載中繼資料檔案",
+    "downloadMetaFailed": "下載中繼資料檔案失敗",
     "retrieveEntityIdFailed": "SSO 設定失敗",
     "readFileFailed": "無法讀取 IdP 中繼資料檔案",
     "importSuccess": "已成功匯入 IdP 中繼資料檔案",
-    "enableSSOSuccess": "已成功給所有使用者啟用「單一登入 (SSO)」"
+    "enableSSOSuccess": "已成功給所有使用者啟用「單一登入 (SSO)」",
+    "finalEnableSSO": "測試成功。請啟用「單一登入」。",
+    "finalDisableSSO": "測試失敗。請停用「單一登入」。",
+    "disableFailed": "停用「單一登入」失敗",
+    "diableSuccess": "已成功給所有使用者停用「單一登入 (SSO)」",
+    "enableSSOFailure": "停用「單一登入 (SSO)」失敗。"
   },
   "serviceSetupModal": {
     "timeZone": "時區",
@@ -370,10 +430,10 @@
     "equalSigne": "=",
     "plusBtn": "+",
     "syncNowBtn": "立即同步",
-    "getDomainFailed": "無法擷取「目錄同步」設定",
-    "setDomainFailed": "無法建立「目錄同步」網域",
-    "getStatusFailed": "無法擷取「目錄同步」狀態",
-    "getListFailed": "無法擷取使用者清單",
+    "getDomainFailed": "擷取「目錄同步」設定失敗",
+    "setDomainFailed": "建立「目錄同步」網域失敗",
+    "getStatusFailed": "擷取「目錄同步」狀態失敗",
+    "getListFailed": "擷取使用者清單失敗",
     "dirsyncFailed": "目錄同步失敗",
     "dirsyncSuccess": "正在進行目錄同步"
   },
@@ -438,6 +498,17 @@
       "label": "UC APP Fusion 服務",
       "title": "UC APP Fusion 服務",
       "desc": "運用內部部署服務"
+    },
+    "activationStatus": {
+      "not_entitled": "未授權",
+      "pending_deactivation": "等待停用",
+      "pending_activation": "等待啟動",
+      "activated": "已啟動",
+      "error": "錯誤"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fusion UC",
+      "squared-fusion-cal": "Fusion 行事曆"
     }
   },
   "firstTimeWizard": {
@@ -483,7 +554,7 @@
     "nextSteps": "準備好確認正在同步身分資訊時按「下一步」按鈕。",
     "results": "結果",
     "syncAgreementText": "同步協議中的使用者",
-    "setupSSOSub": "設定單一登入",
+    "setupSSOSub": "單一登入",
     "setupSSODesc": "請選取適合 SSO 設定的選項。",
     "manualInvite": "請輸入公司中將接收協作服務的人員電子郵件地址。這些人員將收到註冊的電子郵件邀請。",
     "domainEntry": "輸入網域",
@@ -494,6 +565,32 @@
     "finish": "完成",
     "finishSub": "完成設定",
     "completeRequired": "必須填寫 {{name}}。"
+  },
+  "reports": {
+    "title": "報告",
+    "engagementTab": "參與度",
+    "qualityTab": "品質",
+    "opportunitiesTab": "機會",
+    "time": "所有時間",
+    "week": "上週",
+    "month": "上月",
+    "threeMonths": "最近 3 個月",
+    "mostEngaged": "參與度至多為 5",
+    "leastEngaged": "參與度至少為 5",
+    "highQuality": "品質最高為 5",
+    "leastQuality": "品質最低為 5",
+    "services": "所有服務",
+    "UsersOnboarded": "使用者已在線",
+    "AvgCallsPerUser": "每個使用者的平均通話次數",
+    "AvgRoomsPerUser": "每個使用者的平均會議室數",
+    "ActiveUsers": "使用中的使用者",
+    "OneOnOneRooms": "一對一會議室",
+    "GroupRooms": "群組會議室",
+    "VideoCalls": "視訊通話",
+    "AvgDurationofCalls": "通話的平均持續時間",
+    "ContentShared": "共用的內容",
+    "AmountofContentShared": "共用的內容數量",
+    "UserEngagement": "使用者參與度"
   },
   "callRouting": {
     "title": "通話路由",
@@ -523,12 +620,13 @@
     "callReversion": "通話恢復規則",
     "callReversionDescription": "這定義未接聽呼叫時呼叫的路由",
     "owner": "駐留呼叫的人",
-    "namePlaceholder": "鍵入姓名",
+    "namePlaceholder": "輸入姓名",
     "numberPlaceholder": "輸入號碼",
     "singleNumberPlaceholder": "輸入單一號碼",
     "createButton": "建立呼叫駐留"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "或",
     "voicemail": "語音郵件",
     "singleNumberReach": "單一號碼存取"
@@ -543,16 +641,21 @@
     "externalNumberLabel": "外部號碼",
     "chooseNumber": "選擇號碼",
     "addNewNumber": "新增號碼",
-    "none": "無"
+    "removeNumber": "移除線路",
+    "none": "無",
+    "deleteConfirmation": "此動作無法復原。確定要將 {{line}} 從 {{user}} 取消指派嗎？",
+    "deleteLineTitle": "移除線路",
+    "disassociationSuccess": "已成功將線路從使用者取消指派。"
   },
   "callForwardPanel": {
     "title": "來電轉接",
     "success": "「來電轉接」設定已成功儲存",
     "error": "「來電轉接」設定失敗",
+    "forwardNoCalls": "不進行呼叫轉移",
     "forwardAllCalls": "轉接所有來電",
     "forwardBusyNoAnswer": "線路忙或離開時轉接來電",
-    "internalAndExternal": "適用於內部及外部來電",
-    "internalOnly": "僅適用於內部來電",
+    "internalAndExternal": "適用於內部及外部來電<br>",
+    "internalOnly": "僅適用於內部來電<br>",
     "forwardBusy": "線路忙時，傳送來電至：",
     "forwardNoAnswer": "未接聽時，傳送來電至：",
     "forwardExternal": "以不同方式轉接外部來電",
@@ -560,11 +663,11 @@
   },
   "callerIdPanel": {
     "title": "呼叫者 ID",
-    "description": "變更來自此線路之呼叫的顯示名稱"
+    "description": "<small>變更來自此線路之呼叫的顯示名稱</small>"
   },
   "singleNumberReachPanel": {
     "title": "單一號碼存取",
-    "description": "可讓使用者利用其他分機號碼來接聽傳入的呼叫",
+    "description": "<small>可讓使用者利用其他分機號碼來接聽傳入的呼叫</small>",
     "toggle": "單一號碼存取",
     "snrNote": "SNR 可以涵蓋使用者的所有線路，或限制為特定線路",
     "success": "「單一號碼存取」設定已成功儲存",
@@ -591,17 +694,17 @@
     "expiredToday": "今天到期",
     "daysAgo": "{{days}} 天前",
     "expireToday": "將於今天到期",
-    "errGetTrialsQuery": "無法擷取試用客戶。狀態：{{status}}",
+    "errGetTrialsQuery": "擷取試用客戶失敗。狀態：{{status}}",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "持續時間",
+    "duration": "試用持續時間（天）",
     "thirtyDays": "30 天",
     "sixtyDays": "60 天",
-    "ninetyDays": "90 天",
-    "onehundredtwentyDays": "120 天",
-    "onehundredeightyDays": "180 天",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "取消",
     "startTrial": "開始試用",
     "customerInformation": "客戶資訊",
@@ -620,6 +723,22 @@
     "activeUsersTitle": "每日的使用中使用者",
     "averageCallsTitle": "每個使用者的平均通話次數",
     "contentSharedTitle": "共用的內容總計："
+  },
+  "trialModal": {
+    "trialSuccess": "您已成功設定試用時間。",
+    "nextStep": "下一步",
+    "sendWelcome": "傳送歡迎使用訊息",
+    "sendWelcomePrompt": "如果想要客戶設定服務：",
+    "launchPortal": "啟動公司入口網站",
+    "launchPortalPrompt": "如果想要給客戶設定服務：",
+    "or": "或",
+    "squareducError": "已建立試用服務，但無法供應 Squared UC。",
+    "addSuccess": "已成功給 {{customerName}} 啟動試用服務，共 {{licenseCount}} 個授權，時間為 {{licenseDuration}} 天。",
+    "editSuccess": "已成功編輯 {{customerName}} 的試用服務，共 {{licenseCount}} 個授權，時間為 {{licenseDuration}} 天。"
+  },
+  "trials": {
+    "collab": "標準小組會議室 + 8 方同步",
+    "squaredUC": "進階通訊"
   },
   "status": {
     "noResults": "沒有可用的結果。",
@@ -657,7 +776,9 @@
     "expiring": "試用客戶到期",
     "expired": "過期的試用客戶",
     "expiresToday": "今天到期",
-    "unused": "未使用的授權"
+    "unused": "未使用的授權",
+    "uploadNumbers": "上傳次數",
+    "overPlan": "超過計劃限制"
   },
   "didAddModal": {
     "title": "新增電話號碼",
@@ -665,20 +786,25 @@
     "processingText": "正在新增電話號碼...",
     "successText": "已成功新增 {{count}} 個新的電話號碼。",
     "failText": "有 {{count}} 個電話號碼已存在於系統中。",
-    "sendEmail": "傳送歡迎電子郵件",
+    "sendEmail": "通知客戶",
     "notifyCustLater": "稍後通知客戶",
     "emailSuccessText": "電子郵件已成功傳送給客戶。",
     "emailFailText": "傳送電子郵件時發生錯誤",
-    "inputPlacehoder": "輸入電話號碼"
+    "inputPlacehoder": "輸入電話號碼並用逗號分隔"
   },
   "deviceDetailPage": {
+    "deviceConfig": "裝置設定",
+    "deviceStatus": "裝置狀態",
     "description": "說明",
     "id": "ID",
+    "ipAddress": "IP 位址",
     "deactivate": "停用",
     "success": "已成功更新裝置",
     "error": "裝置設定失敗",
     "deactivateDevice": "停用裝置",
-    "deactivateBody": "此動作無法復原。確定要停用此裝置嗎？"
+    "deactivateBody": "此動作無法復原。確定要停用此裝置嗎？",
+    "deviceStatusFailureMsg": "擷取裝置狀態失敗",
+    "deviceIpAddressFailureMsg": "擷取裝置 IP 失敗"
   },
   "generateActivationCodeModal": {
     "title": "啟動碼",
@@ -710,7 +836,8 @@
     "userAdmin": "使用者管理員",
     "billingAdmin": "帳單管理員",
     "supportAdmin": "支援管理員",
-    "save": "儲存"
+    "save": "儲存",
+    "roles": "角色"
   },
   "mohManagement": {
     "title": "媒體保留中",
@@ -719,5 +846,99 @@
     "tracks": "音軌",
     "draganddrop": "拖放以重新排序音軌。這些音軌將循環。",
     "setActive": "設為使用中"
+  },
+  "meetingsPage": {
+    "manageMeetings": "會議",
+    "webexMeetingId": "會議 ID",
+    "host": "主持人",
+    "date": "日期",
+    "startTime": "開始",
+    "endTime": "結束",
+    "resource": "資源",
+    "webexSite": "WebEx 網站",
+    "active": "使用中",
+    "pending": "邀請擱置中",
+    "enterprise": "企業",
+    "mediaFusion": "媒體 Fusion",
+    "cloud": "雲端"
+  },
+  "vtsPage": {
+    "enterpriseResources": "企業資源",
+    "name": "名稱",
+    "status": "狀態",
+    "delete": "解除任務",
+    "takeOffline": "離線",
+    "bringOnline": "上線",
+    "actionsHeader": "動作",
+    "deleteResource": "解除資源的任務",
+    "deleteResourceConfText1": "確定要解除此資源的任務嗎？",
+    "deleteResourceConfText2": "它將中斷與雲端的連線，並且離線。",
+    "cancel": "取消",
+    "deleteResource": "解除資源的任務"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx Proto"
+  },
+  "leaderBoard": {
+    "actions": "動作",
+    "licenseUsage": "授權使用情況",
+    "lastSynced": "前次同步時間：",
+    "messagingTitle": "傳訊",
+    "messagingSubtitle": "標準小組會議室",
+    "messagingDesc": "傳訊授權。",
+    "communicationTitle": "通訊",
+    "communicationSubtitle": "Advanced Unified",
+    "communicationDesc": "Cisco Unified Communication 授權。",
+    "conferencingTitle": "會議",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Cisco Meeting Center 與 Conferencing 授權。"
+  },
+  "partnerProfile": {
+    "link": "合作夥伴設定檔",
+    "customerLink": "客戶設定檔",
+    "title": "帳戶",
+    "name": "公司名稱",
+    "id": "帳號",
+    "ciscoRep": "Cisco 代表",
+    "supportSetup": "故障報修單/報告位置",
+    "save": "儲存",
+    "supportInfo": "如果要提供支援給客戶的使用者，請在下面輸入您的支援參數。這些參數將顯示在 Squared 應用程式中「支援選項」下方。",
+    "lifeCycle": "需要生命週期合作夥伴才能提供如下所示的兩種支援。",
+    "supportOptions": "Cisco 支援選項",
+    "seeExample": "請參閱範例。",
+    "yourSupportOptions": "您的支援選項",
+    "urlFaq": "協助網站與常見問題及解答的 URL",
+    "urlFaqEx": "http://[Cisco 協助網站與常見問題及解答的 URL]",
+    "urlReport": "用來報告故障報修單或開啟案例的 URL",
+    "urlReportEx": "http://[Cisco 問題報告的 URL]",
+    "helpFaq": "協助與常見問題及解答位置",
+    "matchingTix": "符合故障報修單",
+    "matchingDescr": "若要使故障報修單與建立報告時上傳至「Cisco 協同作業管理」的日誌相符，請以 \"%%logID%%\"（無引號）作為 logID 參數並將其增添至您的支援 URL。",
+    "forExample": "例如：http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "支援設定",
+    "companyInfo": "公司資訊",
+    "cancel": "取消",
+    "partnerProblem": "合作夥伴問題報告網站",
+    "partnerHelp": "合作夥伴協助網站",
+    "ciscoProblem": "問題報告將傳送至 Cisco 技術支援",
+    "ciscoHelp": "Cisco 協助網站",
+    "enterHelp": "請輸入協助內容的位置。",
+    "enterReports": "問題報告：請輸入問題報告工具的位置。"
+  },
+  "customerProfile": {
+    "supportContacts": "支援聯絡人",
+    "partnerAdmin": "夥伴管理員",
+    "supportInfo": "如果要提供支援給使用者，請在下面輸入您的支援參數。這些參數將顯示在 Squared 應用程式中「支援選項」下方；"
+  },
+  "utilizationPage": {
+    "entResUtilization": "企業資源使用率",
+    "overAllUtil": "體總使用率",
+    "average": "平均值",
+    "bridgeUtilization": "以橋接器為基礎的使用率"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "正在處理編號為 {{orderId}} 的訂單。請在 24 小時之後重新檢查。",
+    "info": "狀態",
+    "wait": "正在重新導向，請稍候"
   }
 }

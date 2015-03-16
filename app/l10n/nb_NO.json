@@ -43,28 +43,42 @@
     "inviteUsers": "Inviter brukere",
     "partners": "Partneradministratorer"
   },
+  "groupsPage": {
+    "manageGroups": "Grupper",
+    "all": "Alle",
+    "groupNameHeader": "Gruppenavn",
+    "membersCountHeader": "Medlemmer"
+  },
   "onboardModal": {
     "onboardUsers": "Brukere ombord",
     "cancel": "Avbryt",
     "addUsersDesc": "Skriv inn e-postadressene til personene i din bedrift som skal motta samarbeidstjenester. De vil motta en e-postinvitasjon til å registrere seg.",
     "addUserText": "Hvem ønsker du å legge til?",
     "userInput": "Skriv inn e-postadresser eller gruppe-e-post adskilt med komma ...",
-    "addServiceText": "Hvilke tjenester ønsker du å aktivere?",
+    "enableServiceText": "Aktiver tjenester",
     "enableCollab": "Aktiver samarbeidstjenester individuelt",
-    "enableCollabGroup": "Aktiver samarbeidstjenester basert på gruppemedlemskap.",
+    "enableCollabGroup": "Aktiver samarbeidstjenester basert på gruppemedlemskap",
     "addUsersSelect": "Legg til brukere i:",
-    "manageBtn": "Administrer",
+    "manageBtn": "Administrer grupper",
     "onboardBtn": "Ombord",
     "howToInvite": "Hvordan ønsker du at de blir invitert?",
     "waitInvitation": "Sende e-postinvitasjoner og vente til brukeren godtar før tjenester leveres.",
     "sendImmediate": "Levere tjenester for brukeren umiddelbart og sende e-postvarsler.",
-    "messaging": "Meldinger og kommunikasjon",
+    "messaging": "Meldinger",
     "conferencing": "Konferanser",
+    "communications": "Kommunikasjoner",
+    "entitlements": "Brukerrettigheter",
     "saveBtn": "Lagre",
     "manageGroups": "Administrer grupper",
     "groupColHeader": "Gruppenavn",
     "collabService": "Velg lisenser for samarbeidstjenestene som bør gis til brukerne i gruppen.",
-    "addEntitleError": "utilstrekkelig rettighet å legge til eller gi rettigheter til en bruker."
+    "addEntitleError": "utilstrekkelig rettighet å legge til eller gi rettigheter til en bruker.",
+    "freeMsg": "Gratis squared-teamrom",
+    "freeConf": "Gratis tredjeparts synkroniseringer",
+    "freeComm": "Gratis tale- og videosamtaler innenfor nettverket",
+    "paidMsg": "Standard teamrom",
+    "paidConf": "Synkroniseringer med 8 parter",
+    "paidComm": "Avanserte kommunikasjoner"
   },
   "usersPreview": {
     "groupPreview": "Gruppe:",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "Rettigheter",
     "addNewLinePreview": "Legg til en ny linje",
     "newLine": "Ny linje",
-    "devicesPreview": "Enheter",
+    "devicesPreview": "Enheter og programvare",
     "activateNewDevice": "Aktiver ny enhet",
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generer aktiveringskode",
     "generateActivationCodeText": "Generer en aktiveringskode for å aktivere en ny enhet for denne brukeren.",
     "activationCodeTitle": "Aktiveringskode for ny enhet",
-    "expires": "Utløper"
+    "expires": "Utløper",
+    "editServices": "Rediger tjenester",
+    "editServiceTitle": "Tjenester aktivert for {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Meldinger"
   },
   "settings": {
+    "title": "Oppsett av tjeneste",
     "initialSetup": "Opprinnelige oppsett"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "Enheter",
     "reportTab": "Rapporter",
     "supportTab": "Støtte",
+    "accountTab": "Konto",
     "developmentTab": "Utvikling",
     "organizationTab": "Organisasjon",
     "organizationTabDesc": "Administrer organisasjonsdetaljer, se tildelte tjenester og få tilgang til verktøy.",
@@ -107,7 +125,17 @@
     "callRoutingTab": "Samtaleruting",
     "callRoutingTabDesc": "Administrer funksjoner for samtaleruting, slik som samtaleparkering",
     "mediaOnHoldTab": "Media på vent",
-    "mediaOnHoldTabDesc": "Media på vent – eksempel på utvikling"
+    "mediaOnHoldTabDesc": "Media på vent – eksempel på utvikling",
+    "meetingDetailsTab": "Møter",
+    "meetingDetailsTabDesc": "Møteadministrasjon",
+    "vtsDetailsTab": "Bedriftsressurser",
+    "vtsDetailsTabDesc": "Administrasjon av bedriftsressurser",
+    "listUserTab": "List brukere",
+    "listUserTabDesc": "Administrer brukere og deres funksjoner.",
+    "groupTab": "Grupper",
+    "groupTabDesc": "Opprett og administrer grupper",
+    "entResUtilizationTab": "Utnyttelse",
+    "entResUtilizationTabDesc": "Ressursutnyttelse for bedrift"
   },
   "index": {
     "welcome": "Velkommen!",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "Viderekobler ...",
     "launch": "Lanserer app ..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "Admin epostadresse: ",
+    "create": "Behandle ordren"
   },
   "orgsPage": {
     "title": "ADMINISTRER ORGANISASJONER",
@@ -184,6 +216,7 @@
     "error": "Oppdatering av bruker mislyktes."
   },
   "supportPage": {
+    "title": "Støtte",
     "subtitleLogs": "Søk etter logger",
     "listlogsbtn": "Søk",
     "noResults": "Ingen resultater.",
@@ -228,7 +261,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "Kunne ikke hente samtaleinfo. Status: {{status}}",
     "subTitleCallFlow": "Samtaleflyt",
-    "downloading": "Denne nedlastingen kan ta opp til 5 minutter. Vennligst vent ..."
+    "downloading": "Denne nedlastingen kan ta opp til 5 minutter. Vennligst vent ...",
+    "operational": "Alle systemer er operative",
+    "error": "Feil i systemet",
+    "supportResources": "Ressurser til brukerstøtte",
+    "showDetails": "Vis detaljer",
+    "hideDetails": "Skjul detaljer",
+    "problemReports": "Problemrapporter",
+    "reportingUrl": "Rapporterende URL:",
+    "helpFaq": "Hjelp og Ofte stilte spørsmål (FAQ)",
+    "helpUrl": "Hjelp-URL:",
+    "sendFeedback": "Cisco tilbakemelding"
   },
   "common": {
     "delete": "Slett",
@@ -242,7 +285,10 @@
     "done": "Ferdig",
     "begin": "Begynn",
     "back": "Tilbake",
-    "finish": "Fullfør"
+    "finish": "Fullfør",
+    "language": "Språk",
+    "selectLanguage": "Velg et språk",
+    "select": "Velg"
   },
   "notifications": {
     "success": "Godkjent-meldinger",
@@ -273,7 +319,16 @@
     "cancel": "Avbryt",
     "emailAddress": "E-postadresse",
     "name": "Navn",
-    "errGetTrialsQuery": "Kunne ikke hente prøveversjoner. Status: {{status}}"
+    "errGetTrialsQuery": "Kunne ikke hente prøveversjoner. Status: {{status}}",
+    "quickLinksText": "Hurtiglenker",
+    "addUserText": "Legg til brukere",
+    "installDeviceText": "Installer en enhet for en bruker",
+    "installSharedSpaceText": "Installer en enhet i delt rom",
+    "autoAttendantText": "Konfigurer en automatisk deltaker",
+    "searchLogsText": "Søk enhetslogger",
+    "unlicensedDateText": "brukere uten lisens registrert på",
+    "unlicensedText": "Brukere uten lisens",
+    "convertText": "Vis og konverter brukere som for øyeblikket bruker gratisversjonen"
   },
   "inviteModal": {
     "title": "Rettighet på tjeneste",
@@ -284,8 +339,8 @@
   "ssoModal": {
     "btnTitle": "Oppsett SSO",
     "title": "Oppsett SSO",
-    "enableSSO": "Ja, jeg har en tilpasset SSO-leverandør.",
-    "disableSSO": "Nei, jeg har ikke en SSO-leverandør.",
+    "enableSSO": "Integrer en tredjeparts-identitetsleverandør. (Avansert)",
+    "disableSSO": "Bruk den innebygde identitetstjenesten for brukerautentisering. (Enkelt)",
     "importMetadataTitle": "Importer IdP-metadata",
     "exportMetadataTitle": "Eksporter metadata for Cloud",
     "testSSOSetupTitle": "Test SSO-oppsett",
@@ -303,7 +358,7 @@
     "backBtn": "Tilbake",
     "nextBtn": "Neste",
     "downloadMetadataBtn": "Last ned metadatafil",
-    "launchSSOTestBtn": "Start SSO-test",
+    "launchSSOTestBtn": "Test SSO-tilkobling",
     "finishBtn": "Fullfør",
     "importFailed": "Kunne ikke importere IdP-metadatafil",
     "invalidFile": "Ugyldig IdP-metadatafil",
@@ -311,7 +366,12 @@
     "retrieveEntityIdFailed": "SSO-konfigurasjon var ikke vellykket",
     "readFileFailed": "Kunne ikke lese IdP-metadatafil",
     "importSuccess": "IdP-metadatafil vellykket importert",
-    "enableSSOSuccess": "Engangspålogging (SSO) aktivert for alle brukere"
+    "enableSSOSuccess": "Engangspålogging (SSO) aktivert for alle brukere",
+    "finalEnableSSO": "Testen var vellykket. Aktiver engangspålogging.",
+    "finalDisableSSO": "Testen var mislykket. Deaktiver engangspålogging.",
+    "disableFailed": "Kunne ikke deaktivere engangspålogging",
+    "diableSuccess": "Engangspålogging (SSO) ble deaktivert for alle brukere",
+    "enableSSOFailure": "Kunne ikke deaktivere engangspålogging (SSO)."
   },
   "serviceSetupModal": {
     "timeZone": "Tidssone",
@@ -438,6 +498,17 @@
       "label": "UC-APP-tjenester for fusjon",
       "title": "UC-APP-tjenester for fusjon",
       "desc": "Utnytt dine tjenester innenfor området"
+    },
+    "activationStatus": {
+      "not_entitled": "Ikke berettiget",
+      "pending_deactivation": "Avventer deaktivering",
+      "pending_activation": "Avventer aktivering",
+      "activated": "Aktivert",
+      "error": "Feil"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fusjoner UC",
+      "squared-fusion-cal": "Fusjonskalender"
     }
   },
   "firstTimeWizard": {
@@ -483,7 +554,7 @@
     "nextSteps": "Trykk på «Neste»-knappen når du er klar til å bekrefte at identitetsinformasjon blir synkronisert.",
     "results": "Resultater",
     "syncAgreementText": "brukere i synkroniseringsavtale",
-    "setupSSOSub": "Oppsett for engangspålogging",
+    "setupSSOSub": "Engangspålogging",
     "setupSSODesc": "Velg det aktuelle alternativet for din SSO-konfigurasjon.",
     "manualInvite": "Skriv inn e-postadressene til personene i din bedrift som skal motta samarbeidstjenester. De vil motta en e-postinvitasjon til å registrere seg.",
     "domainEntry": "Domeneoppføring",
@@ -494,6 +565,32 @@
     "finish": "Fullfør",
     "finishSub": "Fullfør oppsettet ditt",
     "completeRequired": "{{name}} må fylles ut."
+  },
+  "reports": {
+    "title": "Rapporter",
+    "engagementTab": "Engasjement",
+    "qualityTab": "Kvalitet",
+    "opportunitiesTab": "Muligheter",
+    "time": "Alle tider",
+    "week": "Forrige uke",
+    "month": "Forrige måned",
+    "threeMonths": "Siste tre måneder",
+    "mostEngaged": "5 mest engasjerte",
+    "leastEngaged": "5 minst engasjerte",
+    "highQuality": "5 høyest kvalitet",
+    "leastQuality": "5 lavest kvalitet",
+    "services": "Alle tjenester",
+    "UsersOnboarded": "Brukere som er ombord",
+    "AvgCallsPerUser": "Gj.sn. samtaler per bruker",
+    "AvgRoomsPerUser": "Gj.sn. rom per bruker",
+    "ActiveUsers": "Aktive brukere",
+    "OneOnOneRooms": "Én-til-én-rom",
+    "GroupRooms": "Grupperom",
+    "VideoCalls": "Videosamtaler",
+    "AvgDurationofCalls": "Gj.sn. samtalevarighet",
+    "ContentShared": "Innhold delt",
+    "AmountofContentShared": "Mengde med delt innhold",
+    "UserEngagement": "Brukerengasjement"
   },
   "callRouting": {
     "title": "Samtaleruting",
@@ -529,6 +626,7 @@
     "createButton": "Opprett samtaleparkering"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "eller",
     "voicemail": "Talepost",
     "singleNumberReach": "Single Number Reach"
@@ -543,16 +641,21 @@
     "externalNumberLabel": "Eksternt nummer",
     "chooseNumber": "Velg et nummer",
     "addNewNumber": "Legg til et nytt nummer",
-    "none": "Ingen"
+    "removeNumber": "Fjern linjen",
+    "none": "Ingen",
+    "deleteConfirmation": "Denne handlingen kan ikke angres, er du sikker på at du vil fjerne tilordningen {{line}} fra {{user}}?",
+    "deleteLineTitle": "Fjern linjen",
+    "disassociationSuccess": "Fjerning av linjen fra bruker var vellykket."
   },
   "callForwardPanel": {
     "title": "Viderekobling av samtale",
     "success": "Konfigurasjon av viderekobling av anrop ble lagret",
     "error": "Konfigurasjon av viderekobling av anrop mislyktes",
+    "forwardNoCalls": "Ikke videresend samtaler",
     "forwardAllCalls": "Viderekoble alle anrop",
     "forwardBusyNoAnswer": "Viderekoble anrop når linjen er opptatt eller borte",
-    "internalAndExternal": "For interne og eksterne anrop",
-    "internalOnly": "Kun for interne anrop",
+    "internalAndExternal": "For interne og eksterne anrop<br>",
+    "internalOnly": "Bare for interne anrop<br>",
     "forwardBusy": "Når linjen er opptatt, send anrop til:",
     "forwardNoAnswer": "Når det ikke er noe svar, send anrop til:",
     "forwardExternal": "Viderekoble eksterne anrop annerledes",
@@ -560,11 +663,11 @@
   },
   "callerIdPanel": {
     "title": "Innringer-ID",
-    "description": "Endre visningsnavnet for samtaler fra denne linjen"
+    "description": "<small>Endre visningsnavnet for anrop fra denne linjen</small>"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "Lar brukerne besvare innkommende anrop på deres biapparat til et annet nummer",
+    "description": "<small>Lar brukere besvare innkommende anrop på et annet nummer som anropet er viderekoblet til</small>",
     "toggle": "Single Number Reach",
     "snrNote": "SNR kan dekke alle brukerens linjer eller begrenset til bestemte linjer",
     "success": "Konfigurasjon av Single Number Reach ble lagret",
@@ -596,12 +699,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Varighet",
+    "duration": "Prøveperiode (dager)",
     "thirtyDays": "30 dager",
     "sixtyDays": "60 dager",
-    "ninetyDays": "90 dager",
-    "onehundredtwentyDays": "120 dager",
-    "onehundredeightyDays": "180 dager",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "Avbryt",
     "startTrial": "Start prøveversjon",
     "customerInformation": "Kundeinformasjon",
@@ -620,6 +723,22 @@
     "activeUsersTitle": "Daglig aktive brukere",
     "averageCallsTitle": "Gjennomsnittlige anrop per bruker",
     "contentSharedTitle": "Delt innhold totalt"
+  },
+  "trialModal": {
+    "trialSuccess": "Oppsett av din prøveperiode var vellykket.",
+    "nextStep": "Neste trinn",
+    "sendWelcome": "Send velkomstmelding",
+    "sendWelcomePrompt": "Hvis du vil at kunden skal sette opp tjenesten:",
+    "launchPortal": "Lanser firmaportal",
+    "launchPortalPrompt": "Hvis du vil sette opp tjenesten for kunden:",
+    "or": "eller",
+    "squareducError": "Opprettet prøveperioden, men kunne ikke levere Squared UC.",
+    "addSuccess": "Prøveperioden ble startet for {{customerName}} med {{licenseCount}} lisenser for {{licenseDuration}} dager.",
+    "editSuccess": "Du har redigert en prøveperiode for {{customerName}} med {{licenseCount}} lisenser for {{licenseDuration}} dager."
+  },
+  "trials": {
+    "collab": "Standard teamrom + 8-parters synkronisering",
+    "squaredUC": "Avanserte kommunikasjoner"
   },
   "status": {
     "noResults": "Ingen resultater tilgjengelig.",
@@ -657,7 +776,9 @@
     "expiring": "Prøveversjon utløper",
     "expired": "Utløpt prøveversjon",
     "expiresToday": "Utløper i dag",
-    "unused": "ubrukte lisenser"
+    "unused": "ubrukte lisenser",
+    "uploadNumbers": "Last opp numre",
+    "overPlan": "over plangrensen"
   },
   "didAddModal": {
     "title": "Legg til telefonnumre",
@@ -665,20 +786,25 @@
     "processingText": "Legger til telefonnumre ...",
     "successText": "{{count}} nytt/nye telefonnummer/telefonnumre lagt til.",
     "failText": "{{count}}  telefonnummer/telefonnumre allerede i systemet.",
-    "sendEmail": "Send velkomst-e-post",
+    "sendEmail": "Underrett kunden",
     "notifyCustLater": "Varsle kunden senere",
     "emailSuccessText": "E-post sendt til kunden.",
     "emailFailText": "Feil under sending av e-post",
-    "inputPlacehoder": "Legg inn telefonnumre"
+    "inputPlacehoder": "Oppgi telefonnumre adskilt med komma"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Enhetskonfigurasjon",
+    "deviceStatus": "Enhetsstatus",
     "description": "Beskrivelse",
     "id": "ID",
+    "ipAddress": "IP-adresse",
     "deactivate": "Deaktiver",
     "success": "Enhet ble oppdatert",
     "error": "Enhetskonfigurasjon mislyktes",
     "deactivateDevice": "Deaktiver enhet",
-    "deactivateBody": "Denne handlingen kan ikke angres. Er du sikker på at du vil deaktivere denne enheten?"
+    "deactivateBody": "Denne handlingen kan ikke angres. Er du sikker på at du vil deaktivere denne enheten?",
+    "deviceStatusFailureMsg": "Kunne ikke innhente enhetsstatus",
+    "deviceIpAddressFailureMsg": "Kunne ikke innhente enhets-IP"
   },
   "generateActivationCodeModal": {
     "title": "Aktiveringskode",
@@ -710,7 +836,8 @@
     "userAdmin": "Brukeradministrator",
     "billingAdmin": "Faktureringsadministrator",
     "supportAdmin": "Støtteadministrator",
-    "save": "Lagre"
+    "save": "Lagre",
+    "roles": "Roller"
   },
   "mohManagement": {
     "title": "Media på vent",
@@ -719,5 +846,99 @@
     "tracks": "Spor",
     "draganddrop": "Dra og slipp for å endre rekkefølgen på sporene. Disse sporene vil gå i sløyfe.",
     "setActive": "Angi aktiv"
+  },
+  "meetingsPage": {
+    "manageMeetings": "Møter",
+    "webexMeetingId": "Møte-ID",
+    "host": "Vert",
+    "date": "Dato",
+    "startTime": "Start",
+    "endTime": "Slutt",
+    "resource": "Ressurs",
+    "webexSite": "WebEx-sted",
+    "active": "Aktiv",
+    "pending": "Invitasjon ventende",
+    "enterprise": "Bedrift",
+    "mediaFusion": "Media-fusjon",
+    "cloud": "Nettbasert sky"
+  },
+  "vtsPage": {
+    "enterpriseResources": "Bedriftsressurser",
+    "name": "Navn",
+    "status": "Status",
+    "delete": "Avvikle",
+    "takeOffline": "Ta offline",
+    "bringOnline": "Ta online",
+    "actionsHeader": "Handlinger",
+    "deleteResource": "Avvikle ressurs",
+    "deleteResourceConfText1": "Er du sikker på at du vil avvikle denne ressursen?",
+    "deleteResourceConfText2": "Den vil bli frakoblet skyen og satt offline.",
+    "cancel": "Avbryt",
+    "deleteResource": "Avvikle ressurs"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx-proto"
+  },
+  "leaderBoard": {
+    "actions": "Handlinger",
+    "licenseUsage": "Lisensbruk",
+    "lastSynced": "Sist synkronisert:",
+    "messagingTitle": "Meldinger",
+    "messagingSubtitle": "Standard teamrom",
+    "messagingDesc": "Meldingslisenser.",
+    "communicationTitle": "Kommunikasjon",
+    "communicationSubtitle": "Avanser samlet",
+    "communicationDesc": "Cisco samlede kommunikasjonslisenser.",
+    "conferencingTitle": "Konferanser",
+    "conferencingSubtitle": "Møtesenter",
+    "conferencingDesc": "Cisco møtesenter- og konferanselisenser."
+  },
+  "partnerProfile": {
+    "link": "Partnerprofil",
+    "customerLink": "Kundeprofil",
+    "title": "Konto",
+    "name": "Bedriftsnavn",
+    "id": "Kontonummer",
+    "ciscoRep": "Cisco-representant",
+    "supportSetup": "Brukerstøttehenvendelse/rapporteringssted",
+    "save": "Lagre",
+    "supportInfo": "Hvis du gir støtte til dine kunders brukere, skriv inn dine støtteparametre nedenfor. Disse parameterne vil vises under støttealternativer i Squared-applikasjonen.",
+    "lifeCycle": "Lifecycle-partnere er pålagt å tilby begge typene støtte som vist nedenfor.",
+    "supportOptions": "Alternativer for Cisco-støtte",
+    "seeExample": "se et eksempel.",
+    "yourSupportOptions": "Alternativer for din støtte",
+    "urlFaq": "URL for hjelpside og FAQ-er",
+    "urlFaqEx": "http://[url til Cisco hjelpside og FAQ-er]",
+    "urlReport": "URL for rapportering av problemforespørsler eller åpne saker",
+    "urlReportEx": "http://[url for Cisco-problemrapportering]",
+    "helpFaq": "Sted for Hjelp og FAQ",
+    "matchingTix": "Å matche brukerstøttehenvendelser",
+    "matchingDescr": "For å matche brukerstøttehenvendelser med loggene som er lastet opp til verktøyet Cisco Collaboration Management når rapporter er opprettet, tilføy din støtte-URL til din logID-parameter slik: \"%%logID%%\" (uten anførselstegn).",
+    "forExample": "For eksempel: http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "Oppsett for støtte",
+    "companyInfo": "Selskapsinformasjon",
+    "cancel": "Avbryt",
+    "partnerProblem": "Problemrapporteringsside for samarbeidspartner",
+    "partnerHelp": "Hjelpeside for samarbeidspartner",
+    "ciscoProblem": "Problemrapportering vil bli sendt til Cisco teknisk støtte",
+    "ciscoHelp": "Cisco hjelpeside",
+    "enterHelp": "Angi stedet for ditt hjelpeinnhold.",
+    "enterReports": "Problemrapporter: angi stedet for ditt problemrapporteringsverktøy."
+  },
+  "customerProfile": {
+    "supportContacts": "Kundestøttekontakter",
+    "partnerAdmin": "Partneradministratorer",
+    "supportInfo": "Hvis du gir støtte til dine brukere, skriv inn dine støtteparametere nedenfor. Disse parameterne vil vises under støttealternativer i Squared-applikasjonen;"
+  },
+  "utilizationPage": {
+    "entResUtilization": "Ressursutnyttelse for bedrift",
+    "overAllUtil": "Samlet utnyttelse",
+    "average": "Gjennomsnitt",
+    "bridgeUtilization": "Utnyttelse bridge for bridge"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Ordrenr. {{orderId}} er under behandling. Sjekk på nytt etter 24 timer.",
+    "info": "Status",
+    "wait": "Vent mens vi omdirigerer deg"
   }
 }

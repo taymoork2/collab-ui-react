@@ -43,28 +43,42 @@
     "inviteUsers": "邀请用户",
     "partners": "合作伙伴管理员"
   },
+  "groupsPage": {
+    "manageGroups": "群",
+    "all": "全部",
+    "groupNameHeader": "群名称",
+    "membersCountHeader": "成员"
+  },
   "onboardModal": {
     "onboardUsers": "线上用户",
     "cancel": "取消",
     "addUsersDesc": "输入公司中将接收协作服务的人员的电子邮件地址。这些人员将收到注册的电子邮件邀请。",
     "addUserText": "您想要添加谁？",
     "userInput": "输入电子邮件地址或群电子邮件发送器，以逗号分隔...",
-    "addServiceText": "您要启用哪些服务？",
+    "enableServiceText": "启用服务",
     "enableCollab": "单独启用协作服务",
-    "enableCollabGroup": "根据群成员身份来启用协作服务。",
+    "enableCollabGroup": "根据群成员身份来启用协作服务",
     "addUsersSelect": "添加用户以执行下列操作：",
-    "manageBtn": "管理",
+    "manageBtn": "管理群",
     "onboardBtn": "线上",
     "howToInvite": "您想要邀请他们吗？",
     "waitInvitation": "发送电子邮件邀请并等用户接受，然后再供应服务。",
     "sendImmediate": "立即为用户供应服务并发送电子邮件通知。",
-    "messaging": "消息和通信",
+    "messaging": "消息",
     "conferencing": "会议",
+    "communications": "通信",
+    "entitlements": "用户授权",
     "saveBtn": "保存",
     "manageGroups": "管理群",
     "groupColHeader": "群名称",
     "collabService": "选择应授予群用户的协作服务许可证。",
-    "addEntitleError": "权限不足，无法添加用户或为用户授权。"
+    "addEntitleError": "权限不足，无法添加用户或为用户授权。",
+    "freeMsg": "免费 Squared 团队房间",
+    "freeConf": "免费 3 方同步",
+    "freeComm": "免费网内 IP 语音和视频呼叫",
+    "paidMsg": "标准团队房间",
+    "paidConf": "8 方同步",
+    "paidComm": "高级通信"
   },
   "usersPreview": {
     "groupPreview": "群：",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "授权",
     "addNewLinePreview": "添加新线路",
     "newLine": "新增线路",
-    "devicesPreview": "设备",
+    "devicesPreview": "设备和软件",
     "activateNewDevice": "激活新设备",
     "fullAdmin": "完全管理",
     "generateActivationCode": "生成激活码",
     "generateActivationCodeText": "生成激活码来启用此用户的新设备。",
     "activationCodeTitle": "新设备的激活码",
-    "expires": "到期"
+    "expires": "到期",
+    "editServices": "编辑服务",
+    "editServiceTitle": "已为 {{firstName}} {{lastName}} 启用服务"
   },
   "messagingPanel": {
     "title": "消息"
   },
   "settings": {
+    "title": "服务设置",
     "initialSetup": "初始设置"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "设备",
     "reportTab": "报告",
     "supportTab": "支持",
+    "accountTab": "帐户",
     "developmentTab": "开发",
     "organizationTab": "组织",
     "organizationTabDesc": "管理组织详情、查看分配的服务，以及访问工具。",
@@ -107,7 +125,17 @@
     "callRoutingTab": "呼叫路由",
     "callRoutingTabDesc": "管理呼叫驻留等呼叫路由功能",
     "mediaOnHoldTab": "媒体保持",
-    "mediaOnHoldTabDesc": "媒体保持开发示例"
+    "mediaOnHoldTabDesc": "媒体保持开发示例",
+    "meetingDetailsTab": "会议",
+    "meetingDetailsTabDesc": "会议管理",
+    "vtsDetailsTab": "企业资源",
+    "vtsDetailsTabDesc": "企业资源管理",
+    "listUserTab": "列出用户",
+    "listUserTabDesc": "管理用户及其功能。",
+    "groupTab": "群",
+    "groupTabDesc": "创建和管理群。",
+    "entResUtilizationTab": "利用率",
+    "entResUtilizationTabDesc": "企业资源利用率"
   },
   "index": {
     "welcome": "欢迎！",
@@ -121,7 +149,7 @@
   },
   "entitlementPage": {
     "title": "修改授权",
-    "heading": "授权列表 - "
+    "heading": "授权列表 -"
   },
   "downloadPage": {
     "thank": "感谢您注册 Cisco Squared。",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "重定向中...",
     "launch": "正在启动应用程序..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "管理员电子邮件地址： ",
+    "create": "处理订单"
   },
   "orgsPage": {
     "title": "管理组织",
@@ -184,6 +216,7 @@
     "error": "更新用户失败。"
   },
   "supportPage": {
+    "title": "支持",
     "subtitleLogs": "搜索日志",
     "listlogsbtn": "搜索",
     "noResults": "无结果。",
@@ -228,7 +261,17 @@
     "tx": "发送",
     "errCallInfoQuery": "检索呼叫信息失败。状态：{{status}}",
     "subTitleCallFlow": "呼叫流程",
-    "downloading": "此下载可能需要长达 5 分钟才能完成。请耐心等候..."
+    "downloading": "此下载可能需要长达 5 分钟才能完成。请耐心等候...",
+    "operational": "所有系统运行正常",
+    "error": "系统出错",
+    "supportResources": "支持资源",
+    "showDetails": "显示详细信息",
+    "hideDetails": "隐藏详细信息",
+    "problemReports": "问题报告",
+    "reportingUrl": "报告 URL：",
+    "helpFaq": "帮助和常见问题解答",
+    "helpUrl": "帮助 URL：",
+    "sendFeedback": "Cisco 反馈"
   },
   "common": {
     "delete": "删除",
@@ -242,7 +285,10 @@
     "done": "完成",
     "begin": "开始",
     "back": "返回",
-    "finish": "完成"
+    "finish": "完成",
+    "language": "语言",
+    "selectLanguage": "选择语言",
+    "select": "选择"
   },
   "notifications": {
     "success": "成功通知数",
@@ -273,7 +319,16 @@
     "cancel": "取消",
     "emailAddress": "电子邮件地址",
     "name": "名称",
-    "errGetTrialsQuery": "检索试用失败。状态：{{status}}"
+    "errGetTrialsQuery": "检索试用失败。状态：{{status}}",
+    "quickLinksText": "快速链接",
+    "addUserText": "添加用户",
+    "installDeviceText": "为用户安装设备",
+    "installSharedSpaceText": "将设备安装到共享空间",
+    "autoAttendantText": "配置自动语音应答",
+    "searchLogsText": "搜索设备日志",
+    "unlicensedDateText": "未授权的用户注册的日期",
+    "unlicensedText": "未授权的用户",
+    "convertText": "查看和转换当前使用免费版本的用户"
   },
   "inviteModal": {
     "title": "服务授权",
@@ -284,8 +339,8 @@
   "ssoModal": {
     "btnTitle": "设置 SSO",
     "title": "设置 SSO",
-    "enableSSO": "是，我有自定义 SSO 提供者。",
-    "disableSSO": "否，我没有 SSO 提供者。",
+    "enableSSO": "集成第三方身份提供程序。（高级）",
+    "disableSSO": "将内置身份识别服务用于用户验证。（简单）",
     "importMetadataTitle": "导入 IdP 元数据",
     "exportMetadataTitle": "导出云端元数据",
     "testSSOSetupTitle": "测试 SSO 设置",
@@ -303,7 +358,7 @@
     "backBtn": "返回",
     "nextBtn": "下一步",
     "downloadMetadataBtn": "下载元数据文件",
-    "launchSSOTestBtn": "启动 SSO 测试",
+    "launchSSOTestBtn": "测试 SSO 连接",
     "finishBtn": "完成",
     "importFailed": "导入 IdP 元数据文件失败",
     "invalidFile": "IdP 元数据文件无效",
@@ -311,7 +366,12 @@
     "retrieveEntityIdFailed": "SSO 配置失败",
     "readFileFailed": "无法读取 IdP 元数据文件",
     "importSuccess": "IdP 元数据文件导入成功",
-    "enableSSOSuccess": "为所有用户启用“单点登录 (SSO)”成功"
+    "enableSSOSuccess": "为所有用户启用“单点登录 (SSO)”成功",
+    "finalEnableSSO": "测试成功。请启用“单点登录”。",
+    "finalDisableSSO": "测试不成功。请禁用“单点登录”。",
+    "disableFailed": "禁用“单点登录”失败",
+    "diableSuccess": "为所有用户禁用“单点登录 (SSO)”成功",
+    "enableSSOFailure": "禁用“单点登录 (SSO)”失败。"
   },
   "serviceSetupModal": {
     "timeZone": "时区",
@@ -438,6 +498,17 @@
       "label": "UC APP Fusion 服务",
       "title": "UC APP Fusion 服务",
       "desc": "运用内建服务"
+    },
+    "activationStatus": {
+      "not_entitled": "未获授权",
+      "pending_deactivation": "待停用",
+      "pending_activation": "待激活",
+      "activated": "已激活",
+      "error": "错误"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fusion UC",
+      "squared-fusion-cal": "Fusion 日历"
     }
   },
   "firstTimeWizard": {
@@ -483,7 +554,7 @@
     "nextSteps": "准备好验证要同步的身份信息后，请按“下一步”按钮。",
     "results": "结果",
     "syncAgreementText": "同步协议中的用户",
-    "setupSSOSub": "设置单点登录",
+    "setupSSOSub": "单点登录",
     "setupSSODesc": "请为 SSO 配置选择适当的选项。",
     "manualInvite": "输入公司中将接收协作服务的人员的电子邮件地址。这些人员将收到注册的电子邮件邀请。",
     "domainEntry": "输入域",
@@ -494,6 +565,32 @@
     "finish": "完成",
     "finishSub": "完成设置",
     "completeRequired": "必须填写 {{name}}。"
+  },
+  "reports": {
+    "title": "报告",
+    "engagementTab": "参与度",
+    "qualityTab": "质量",
+    "opportunitiesTab": "机会",
+    "time": "所有时间",
+    "week": "上周",
+    "month": "上月",
+    "threeMonths": "最近三个月",
+    "mostEngaged": "参与度最高的前 5 个",
+    "leastEngaged": "参与度最低的前 5 个",
+    "highQuality": "质量最高的前 5 个",
+    "leastQuality": "质量最低的前 5 个",
+    "services": "所有服务",
+    "UsersOnboarded": "用户已在线",
+    "AvgCallsPerUser": "每个用户的平均呼叫数",
+    "AvgRoomsPerUser": "每个用户的平均房间数",
+    "ActiveUsers": "活动用户",
+    "OneOnOneRooms": "一对一房间",
+    "GroupRooms": "群房间",
+    "VideoCalls": "视频呼叫",
+    "AvgDurationofCalls": "呼叫的平均持续时间",
+    "ContentShared": "共享内容",
+    "AmountofContentShared": "共享内容量",
+    "UserEngagement": "用户参与度"
   },
   "callRouting": {
     "title": "呼叫路由",
@@ -529,6 +626,7 @@
     "createButton": "创建呼叫驻留"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "或",
     "voicemail": "语音邮件",
     "singleNumberReach": "单一号码存取"
@@ -543,16 +641,21 @@
     "externalNumberLabel": "外部号码",
     "chooseNumber": "选择号码",
     "addNewNumber": "添加新号码",
-    "none": "无"
+    "removeNumber": "删除线路",
+    "none": "无",
+    "deleteConfirmation": "此操作无法撤消。确定要为 {{user}} 取消分配 {{line}} 吗？",
+    "deleteLineTitle": "删除线路",
+    "disassociationSuccess": "为用户取消分配线路成功。"
   },
   "callForwardPanel": {
     "title": "呼叫转移",
     "success": "呼叫转移配置保存成功",
     "error": "呼叫转移配置失败",
+    "forwardNoCalls": "不转移呼叫",
     "forwardAllCalls": "转移所有呼叫",
     "forwardBusyNoAnswer": "线路忙或离开时转移呼叫",
-    "internalAndExternal": "适用于内部和外部呼叫",
-    "internalOnly": "仅适用于内部呼叫",
+    "internalAndExternal": "用于内部和外部呼叫<br>",
+    "internalOnly": "仅用于内部呼叫<br>",
     "forwardBusy": "线路忙时，发送呼叫至：",
     "forwardNoAnswer": "无应答时，发送呼叫至：",
     "forwardExternal": "以不同方式转移外部呼叫",
@@ -560,11 +663,11 @@
   },
   "callerIdPanel": {
     "title": "呼叫者标识",
-    "description": "更改来自此线路的呼叫的显示名称"
+    "description": "<small>从此行开始更改呼叫的显示名称</small>"
   },
   "singleNumberReachPanel": {
     "title": "单一号码存取",
-    "description": "可让用户利用其他分机号码来接听来电",
+    "description": "<small>可让用户利用其他分机号码来接听来电</small>",
     "toggle": "单一号码存取",
     "snrNote": "SNR 可以覆盖用户的所有线路，或限制为特定线路",
     "success": "单一号码存取配置保存成功",
@@ -596,12 +699,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "持续时间",
+    "duration": "试用期（天）",
     "thirtyDays": "30 天",
     "sixtyDays": "60 天",
-    "ninetyDays": "90 天",
-    "onehundredtwentyDays": "120 天",
-    "onehundredeightyDays": "180 天",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "取消",
     "startTrial": "开始试用",
     "customerInformation": "客户信息",
@@ -620,6 +723,22 @@
     "activeUsersTitle": "每日活动用户数",
     "averageCallsTitle": "每个用户的平均呼叫数",
     "contentSharedTitle": "共享内容总计"
+  },
+  "trialModal": {
+    "trialSuccess": "设置试用成功。",
+    "nextStep": "下一步",
+    "sendWelcome": "发送欢迎消息",
+    "sendWelcomePrompt": "如果您希望客户设置服务：",
+    "launchPortal": "启动公司门户网站",
+    "launchPortalPrompt": "如果您希望为客户设置服务：",
+    "or": "或",
+    "squareducError": "已创建试用，但是无法供应 Squared UC。",
+    "addSuccess": "已成功为 {{customerName}} 开启试用，许可证数为 {{licenseCount}} 个，试用期为 {{licenseDuration}} 天。",
+    "editSuccess": "已成功为 {{customerName}} 编辑试用，许可证数为 {{licenseCount}} 个，试用期为 {{licenseDuration}} 天。"
+  },
+  "trials": {
+    "collab": "标准团队房间 + 8 方同步",
+    "squaredUC": "高级通信"
   },
   "status": {
     "noResults": "无可用的结果。",
@@ -657,7 +776,9 @@
     "expiring": "试用到期",
     "expired": "过期试用",
     "expiresToday": "今天到期",
-    "unused": "未使用的许可证"
+    "unused": "未使用的许可证",
+    "uploadNumbers": "上传数",
+    "overPlan": "超过计划限额"
   },
   "didAddModal": {
     "title": "添加电话号码",
@@ -665,20 +786,25 @@
     "processingText": "正在添加电话号码...",
     "successText": "{{count}} 个新电话号码添加成功。",
     "failText": "{{count}} 个电话号码已存在于系统中。",
-    "sendEmail": "发送欢迎电子邮件",
+    "sendEmail": "通知客户",
     "notifyCustLater": "稍后通知客户",
     "emailSuccessText": "电子邮件已成功发送给客户。",
     "emailFailText": "发送电子邮件时出错",
-    "inputPlacehoder": "输入电话号码"
+    "inputPlacehoder": "输入电话号码，以逗号分隔"
   },
   "deviceDetailPage": {
+    "deviceConfig": "设备配置",
+    "deviceStatus": "设备状态",
     "description": "描述",
     "id": "标识",
+    "ipAddress": "IP 地址",
     "deactivate": "停用",
     "success": "设备更新成功",
     "error": "设备配置失败",
     "deactivateDevice": "停用设备",
-    "deactivateBody": "此操作无法撤消。确定要停用此设备吗？"
+    "deactivateBody": "此操作无法撤消。确定要停用此设备吗？",
+    "deviceStatusFailureMsg": "获取设备状态失败",
+    "deviceIpAddressFailureMsg": "获取设备 IP 失败"
   },
   "generateActivationCodeModal": {
     "title": "激活码",
@@ -710,7 +836,8 @@
     "userAdmin": "用户管理员",
     "billingAdmin": "帐单管理员",
     "supportAdmin": "支持管理员",
-    "save": "保存"
+    "save": "保存",
+    "roles": "角色"
   },
   "mohManagement": {
     "title": "媒体保持",
@@ -719,5 +846,99 @@
     "tracks": "音轨",
     "draganddrop": "拖放以重新排序音轨。这些音轨将循环。",
     "setActive": "设置为活动"
+  },
+  "meetingsPage": {
+    "manageMeetings": "会议",
+    "webexMeetingId": "会议标识",
+    "host": "主持人",
+    "date": "日期",
+    "startTime": "开始",
+    "endTime": "结束",
+    "resource": "资源",
+    "webexSite": "WebEx 站点",
+    "active": "活动",
+    "pending": "邀请暂挂",
+    "enterprise": "企业",
+    "mediaFusion": "媒体 Fusion",
+    "cloud": "云"
+  },
+  "vtsPage": {
+    "enterpriseResources": "企业资源",
+    "name": "名称",
+    "status": "状态",
+    "delete": "停用",
+    "takeOffline": "离线",
+    "bringOnline": "在线",
+    "actionsHeader": "操作",
+    "deleteResource": "停用资源",
+    "deleteResourceConfText1": "确定要停用此资源吗？",
+    "deleteResourceConfText2": "它将与云断开连接并变为离线状态。",
+    "cancel": "取消",
+    "deleteResource": "停用资源"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx Proto"
+  },
+  "leaderBoard": {
+    "actions": "操作",
+    "licenseUsage": "许可证使用情况",
+    "lastSynced": "上次同步：",
+    "messagingTitle": "消息",
+    "messagingSubtitle": "标准团队房间",
+    "messagingDesc": "消息许可证。",
+    "communicationTitle": "通信",
+    "communicationSubtitle": "高级统一",
+    "communicationDesc": "Cisco Unified Communication 许可证。",
+    "conferencingTitle": "会议",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Cisco Meeting Center 和会议许可证。"
+  },
+  "partnerProfile": {
+    "link": "合作伙伴档案",
+    "customerLink": "客户档案",
+    "title": "帐户",
+    "name": "公司名称",
+    "id": "帐号",
+    "ciscoRep": "Cisco 代表",
+    "supportSetup": "故障报修单 / 报告位置",
+    "save": "保存",
+    "supportInfo": "为客户的用户提供支持时，请在下面输入支持参数。这些参数将显示在 Squared 应用程序中的“支持选项”下面。",
+    "lifeCycle": "生命周期合作伙伴必须提供下面显示的两种类型的支持。",
+    "supportOptions": "Cisco 支持选项",
+    "seeExample": "请见示例。",
+    "yourSupportOptions": "您的支持选项",
+    "urlFaq": "帮助站点和常见问题解答的 URL",
+    "urlFaqEx": "http://[Cisco 帮助站点和常见问题解答的 URL]",
+    "urlReport": "报告故障报修单或开设案例的 URL",
+    "urlReportEx": "http://[Cisco 问题报告的 URL]",
+    "helpFaq": "帮助和常见问题解答位置",
+    "matchingTix": "匹配故障报修单",
+    "matchingDescr": "要将故障报修单与创建报告时上传至 Cisco 协作管理工具的日志进行匹配，请附上支持 URL 以及 \"%%logID%%\"（无引号）形式的 logID 参数。",
+    "forExample": "例如：http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "支持设置",
+    "companyInfo": "公司信息",
+    "cancel": "取消",
+    "partnerProblem": "合作伙伴问题报告站点",
+    "partnerHelp": "合作伙伴帮助站点",
+    "ciscoProblem": "问题报告将发送至 Cisco 技术支持",
+    "ciscoHelp": "Cisco 帮助站点",
+    "enterHelp": "输入帮助内容的位置。",
+    "enterReports": "问题报告：输入问题报告工具的位置。"
+  },
+  "customerProfile": {
+    "supportContacts": "支持联系人",
+    "partnerAdmin": "合作伙伴管理员",
+    "supportInfo": "为用户提供支持时，请在下面输入支持参数。这些参数将显示在 Squared 应用程序中的“支持选项”下面；"
+  },
+  "utilizationPage": {
+    "entResUtilization": "企业资源利用率",
+    "overAllUtil": "总利用率",
+    "average": "平均",
+    "bridgeUtilization": "Bridge By Bridge 利用率"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "订单 # {{orderId}} 正在处理。请在 24 小时后再来检查。",
+    "info": "状态",
+    "wait": "我们正在对您进行重定向，请稍候"
   }
 }
