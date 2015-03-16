@@ -734,8 +734,7 @@
     "or": "ou",
     "squareducError": "A avaliação foi criada, mas não foi possível provisionar o Squared UC.",
     "addSuccess": "Uma avaliação foi iniciada com êxito para {{customerName}} com {{licenseCount}} licenças para {{licenseDuration}} dias.",
-    "editSuccess": "Você editou com êxito uma avaliação para {{customerName}} com {{licenseCount}} licenças para {{licenseDuration}} dias
-."
+    "editSuccess": "Você editou com êxito uma avaliação para {{customerName}} com {{licenseCount}} licenças para {{licenseDuration}} dias."
   },
   "trials": {
     "collab": "Salas de equipes padrão + sincronização de 8 partes",
