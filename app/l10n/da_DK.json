@@ -346,6 +346,7 @@
     "testSSOSetupTitle": "Afprøv SSO-opsætning",
     "enableSSOTitle": "Aktivér SSO",
     "importMetadataDesc": "Begynd konfiguration af tillidsforholdet mellem din identitetsudbyder (IdP) og Cisco Collaboration Cloud ved at modtage en tillids-metadatafil fra din IdP og sende den hertil.",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Hent den følgende tillids-metadatafil fra Cisco Collaboration Service og send den til din identitetsudbyders (IdP) administrationsgrænseflade.",
     "exportMetadataDesc2": "Når du er færdig med at sende din fil til din IdP, så kom tilbage til denne skærm og tryk Næste.",
     "testSSOSetupDesc": "Du er klar til at afprøve din SSO-konfiguration. Tryk på knappen herunder for at starte i et nyt vindue. Hvis du kan logge ind, kan du vende tilbage til denne skærm og trykke Næste for at gennemføre din SSO-opsætning.",
@@ -833,6 +834,7 @@
     "cloudOpAdmin": "Administrator for skyoperationer",
     "fullAdmin": "Fulde administratortilladelser",
     "partialAdmin": "Nogle administratortilladelser",
+    "noAdmin": "Utilstrækkelige privilegier",
     "userAdmin": "Brugeradministrator",
     "billingAdmin": "Faktureringsadministrator",
     "supportAdmin": "Supportadministrator",
@@ -878,6 +880,9 @@
   },
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
   },
   "leaderBoard": {
     "actions": "Handlinger",
@@ -940,5 +945,27 @@
     "errOrgCreation": "Ordre nr. {{orderId}} er under behandling. Tjek igen efter 24 timer.",
     "info": "Status",
     "wait": "Vent venligst, mens vi omdirigerer dig"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }

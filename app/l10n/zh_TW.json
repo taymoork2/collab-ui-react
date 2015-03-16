@@ -346,6 +346,7 @@
     "testSSOSetupTitle": "測試 SSO 設定",
     "enableSSOTitle": "啟用 SSO",
     "importMetadataDesc": "透過從身分識別提供者 (IdP) 取得信任中繼資料檔案並在這裡上傳，開始設定 IdP 與 Cisco 協同作業雲端之間的信任關係。",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "從 Cisco 協同作業服務下載下列信任中繼資料檔案，並將檔案上傳至身分識別提供者 (IdP) 管理介面。",
     "exportMetadataDesc2": "完成將檔案上傳至 IdP 後，請回到這個畫面並按「下一步」。",
     "testSSOSetupDesc": "您已準備好測試 SSO 設定。按下面的按鈕以啟動新視窗。如果成功登入，則可以回到這個畫面並按「下一步」以完成 SSO 設定。",
@@ -833,6 +834,7 @@
     "cloudOpAdmin": "雲端作業管理員",
     "fullAdmin": "完全管理員權限",
     "partialAdmin": "部分管理員權限",
+    "noAdmin": "權限不足",
     "userAdmin": "使用者管理員",
     "billingAdmin": "帳單管理員",
     "supportAdmin": "支援管理員",
@@ -878,6 +880,9 @@
   },
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx Proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
   },
   "leaderBoard": {
     "actions": "動作",
@@ -940,5 +945,27 @@
     "errOrgCreation": "正在處理編號為 {{orderId}} 的訂單。請在 24 小時之後重新檢查。",
     "info": "狀態",
     "wait": "正在重新導向，請稍候"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }

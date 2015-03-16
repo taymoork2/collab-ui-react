@@ -346,6 +346,7 @@
     "testSSOSetupTitle": "测试 SSO 设置",
     "enableSSOTitle": "启用 SSO",
     "importMetadataDesc": "开始配置身份提供程序 (IdP) 和 Cisco Collaboration Cloud 之间的信任关系，方法是从 IdP 取得信任元数据文件并在此上传。",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "从 Cisco 协作服务下载下列信任元数据文件，并将文件上传至身份提供程序 (IdP) 管理界面。",
     "exportMetadataDesc2": "将文件上传至 IdP 后，请回到这个界面并按“下一步”。",
     "testSSOSetupDesc": "您已准备好测试 SSO 配置。按下面的按钮来启动新窗口。如果登录成功，则可以回到这个界面并按“下一步”来完成 SSO 设置。",
@@ -833,6 +834,7 @@
     "cloudOpAdmin": "云端操作管理员",
     "fullAdmin": "完全管理员权限",
     "partialAdmin": "部分管理员权限",
+    "noAdmin": "权限不足",
     "userAdmin": "用户管理员",
     "billingAdmin": "帐单管理员",
     "supportAdmin": "支持管理员",
@@ -878,6 +880,9 @@
   },
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx Proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
   },
   "leaderBoard": {
     "actions": "操作",
@@ -940,5 +945,27 @@
     "errOrgCreation": "订单 # {{orderId}} 正在处理。请在 24 小时后再来检查。",
     "info": "状态",
     "wait": "我们正在对您进行重定向，请稍候"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }

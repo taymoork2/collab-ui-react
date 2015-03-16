@@ -346,6 +346,7 @@
     "testSSOSetupTitle": "Tes Pengaturan SSO",
     "enableSSOTitle": "Aktifkan SSO",
     "importMetadataDesc": "Mulai mengonfigurasikan hubungan kepercayaan antara penyedia identitas/ identity provider (IdP) Anda dan Cloud Kolaborasi Cisco dengan mendapatkan file metadata kepercayaan dari IdP dan mengunggahnya ke sini.",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Unduh file metadata kepercayaan berikut dari layanan Kolaborasi Cisco, dan unggah ke antarmuka manajemen penyedia identitas/ identity provider (IdP) Anda.",
     "exportMetadataDesc2": "Setelah selesai mengunggah file ke IdP Anda, kembali ke layar ini dan tekan Selanjutnya.",
     "testSSOSetupDesc": "Anda siap menguji konfigurasi SSO. Tekan tombol di bawah ini untuk membuka jendela baru. Jika Anda berhasil masuk, Anda dapat kembali ke layar ini dan tekan Selanjutnya untuk menyelesaikan pengaturan SSO.",
@@ -833,6 +834,7 @@
     "cloudOpAdmin": "Administrator Pengoperasian Cloud",
     "fullAdmin": "Izin administrator penuh",
     "partialAdmin": "Beberapa izin administrator",
+    "noAdmin": "No administrator privileges",
     "userAdmin": "Administrator Pengguna",
     "billingAdmin": "Administrator Penagihan",
     "supportAdmin": "Administrator Dukungan",
@@ -878,6 +880,9 @@
   },
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx Proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
   },
   "leaderBoard": {
     "actions": "Tindakan",
@@ -940,5 +945,27 @@
     "errOrgCreation": "Pesanan # {{orderId}} sedang diproses. Silakan periksa kembali setelah 24 jam.",
     "info": "Status",
     "wait": "Harap tunggu, kami sedang mengarahkan Anda"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }

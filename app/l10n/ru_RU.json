@@ -346,6 +346,7 @@
     "testSSOSetupTitle": "Проверить настройку технологии единого входа",
     "enableSSOTitle": "Включить технологию единого входа",
     "importMetadataDesc": "Начните настройку доверительных отношений между вашим поставщиком удостоверений (IdP) и Cisco Collaboration Cloud, получив файл доверенных метаданных от своего IdP и загрузив его здесь.",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Скачайте следующий файл доверенных метаданных из службы Cisco Collaboration и загрузите его в интерфейс управления вашего поставщика удостоверений (IdP).",
     "exportMetadataDesc2": "По завершении загрузки файла в интерфейс своего IdP вернитесь на этот экран и нажмите \"Далее\".",
     "testSSOSetupDesc": "Вы готовы проверить конфигурацию технологии единого входа. Нажмите кнопку ниже, чтобы запустить новое окно. Если вам удалось успешно войти в систему, вы можете вернуться на этот экран и нажать \"Далее\", чтобы завершить настройку технологии единого входа.",
@@ -833,6 +834,7 @@
     "cloudOpAdmin": "Администратор операций в облаке",
     "fullAdmin": "Полные административные полномочия",
     "partialAdmin": "Некоторые административные полномочия",
+    "noAdmin": "Недостаточно привилегий",
     "userAdmin": "Администратор пользователей",
     "billingAdmin": "Администратор платежей",
     "supportAdmin": "Администратор поддержки",
@@ -878,6 +880,9 @@
   },
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx Proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
   },
   "leaderBoard": {
     "actions": "Действия",
@@ -940,5 +945,27 @@
     "errOrgCreation": "Идет обработка заказа № {{orderId}}.  Повторите попытку через 24 часа.",
     "info": "Состояние",
     "wait": "Подождите, пока мы перенаправим вас"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }

@@ -346,6 +346,7 @@
     "testSSOSetupTitle": "SSO 설정 테스트",
     "enableSSOTitle": "SSO 활성화",
     "importMetadataDesc": "IdP에서 신뢰할 수 있는 메타데이터 파일을 확보하고 여기에 업로드하여 ID 제공자(IdP)와 Cisco 협업 클라우드 사이에 신뢰할 수 있는 관계를 구성하기 시작하십시오.",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Cisco 협업 서비스에서 다음 신뢰할 수 있는 메타데이터 파일을 다운로드하고 ID 제공자(IdP) 관리 인터페이스로 업로드하십시오.",
     "exportMetadataDesc2": "IdP에 파일 업로드를 마친 후 이 화면으로 돌아와 다음을 누릅니다.",
     "testSSOSetupDesc": "SSO 구성을 테스트할 준비가 되었습니다. 새로운 창을 실행하려면 아래 버튼을 누르십시오. 성공적으로 로그인할 수 있으면 이 화면으로 돌아와서 다음을 눌러 SSO 설정을 마무리할 수 있습니다.",
@@ -833,6 +834,7 @@
     "cloudOpAdmin": "클라우드 운영 관리자",
     "fullAdmin": "전체 관리자 권한",
     "partialAdmin": "일부 관리자 권한",
+    "noAdmin": "권한이 부족합니다.",
     "userAdmin": "사용자 관리자",
     "billingAdmin": "비용 청구 관리자",
     "supportAdmin": "지원 관리자",
@@ -878,6 +880,9 @@
   },
   "webexUserSettings": {
     "webexUserSettingsTab": "WebEx 프로토"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
   },
   "leaderBoard": {
     "actions": "작업",
@@ -940,5 +945,27 @@
     "errOrgCreation": "주문 # {{orderId}} 이(가) 처리되고 있습니다. 24시간 이후에 다시 확인하십시오.",
     "info": "상태",
     "wait": "귀하를 리디렉트하는 동안 잠시 기다리십시오"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }
