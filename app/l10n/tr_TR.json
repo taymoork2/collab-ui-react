@@ -26,7 +26,7 @@
     "active": "Etkin",
     "inactive": "",
     "validEmailInput": "Lütfen geçerli kullanıcı e-postası girin.",
-    "csvBtnTitle": "CSV\'ye aktar",
+    "csvBtnTitle": "CSV'ye aktar",
     "csvFilename": "exported_users.csv",
     "emailSent": "{{email}} e-postası başarıyla gönderildi",
     "emailFailed": "{{email}} e-postası gönderilmedi, {{message}}",
@@ -43,28 +43,42 @@
     "inviteUsers": "Kullanıcıları Davet Et",
     "partners": "İş Ortağı Yöneticileri"
   },
+  "groupsPage": {
+    "manageGroups": "Gruplar",
+    "all": "Tümü",
+    "groupNameHeader": "Grup adı",
+    "membersCountHeader": "Üyeler"
+  },
   "onboardModal": {
     "onboardUsers": "Kullanıcı Ekle",
     "cancel": "İptal",
     "addUsersDesc": "Şirketinizde İşbirliği Hizmetleri alacak kişilerin e-posta adreslerini girin. Kaydolmak için bir e-posta daveti alacaklardır.",
     "addUserText": "Kimi eklemek istersiniz?",
     "userInput": "Virgülle ayırarak e-posta adresleri veya grup posta göndericileri girin...",
-    "addServiceText": "Hangi hizmetleri etkinleştirmek istersiniz?",
+    "enableServiceText": "Hizmetleri Etkinleştir",
     "enableCollab": "İşbirliği hizmetlerini tek tek etkinleştir",
-    "enableCollabGroup": "İşbirliği hizmetlerini grup üyeliğine göre etkinleştirin.",
+    "enableCollabGroup": "Grup üyeliğini temel alan işbirliği hizmetlerini etkinleştir",
     "addUsersSelect": "Kullanıcıları şuraya ekle:",
-    "manageBtn": "Yönet",
+    "manageBtn": "Grupları Yönet",
     "onboardBtn": "Ekle",
     "howToInvite": "Nasıl davet edilmelerini istersiniz?",
     "waitInvitation": "E-posta davetleri gönderin ve hizmetleri sağlamadan önce kullanıcının kabul etmesini bekleyin.",
     "sendImmediate": "Kullanıcı için hemen hizmet sağlayın ve e-posta bildirimleri gönderin.",
-    "messaging": "Mesajlaşma ve İletişim",
+    "messaging": "Mesajlaşma",
     "conferencing": "Konferans",
+    "communications": "İletişim",
+    "entitlements": "Kullanıcı Yetkilendirmeleri",
     "saveBtn": "Kaydet",
     "manageGroups": "Grupları Yönet",
     "groupColHeader": "Grup Adı",
     "collabService": "Gruptaki kullanıcılara verilmesi gereken işbirliği hizmeti lisanslarını seçin.",
-    "addEntitleError": "kullanıcıyı eklemek veya yetkilendirmek için ayrıcalıklar yetersizler."
+    "addEntitleError": "kullanıcıyı eklemek veya yetkilendirmek için ayrıcalıklar yetersizler.",
+    "freeMsg": "Ücretsiz squared ekip odaları",
+    "freeConf": "Ücretsiz 3 taraflı senkronizasyonlar",
+    "freeComm": "Ücretsiz ağ içi IP ses ve video çağrısı",
+    "paidMsg": "Standart ekip odaları",
+    "paidConf": "8 taraflı senkronizasyonlar",
+    "paidComm": "Gelişmiş iletişim"
   },
   "usersPreview": {
     "groupPreview": "Grup:",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "Yetkilendirmeler",
     "addNewLinePreview": "Yeni Hat Ekle",
     "newLine": "Yeni Hat",
-    "devicesPreview": "Cihazlar",
+    "devicesPreview": "Cihazlar ve Yazılım",
     "activateNewDevice": "Yeni Cihazı Etkinleştir",
     "fullAdmin": "Tam Yönetici",
     "generateActivationCode": "Etkinleştirme Kodu Oluştur",
     "generateActivationCodeText": "Bu kullanıcı için yeni bir cihazı etkinleştirecek Etkinleştirme Kodu oluşturun.",
     "activationCodeTitle": "Yeni Cihaz için Etkinleştirme Kodu",
-    "expires": "Son Kullanma Tarihi"
+    "expires": "Son Kullanma Tarihi",
+    "editServices": "Servisleri düzenle",
+    "editServiceTitle": "{{firstName}} {{lastName}} için Etkinleştirilen Servisler"
   },
   "messagingPanel": {
     "title": "Mesajlaşma"
   },
   "settings": {
+    "title": "Hizmet Kurulumu",
     "initialSetup": "İlk Kurulum"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "Cihazlar",
     "reportTab": "Raporlar",
     "supportTab": "Destek",
+    "accountTab": "Hesap",
     "developmentTab": "Geliştirme",
     "organizationTab": "Kuruluş",
     "organizationTabDesc": "Kuruluş Ayrıntılarını Yönetin, Atanan Hizmetleri Görüntüleyin ve Araçlara Erişin.",
@@ -107,7 +125,17 @@
     "callRoutingTab": "Çağrı Yönlendirme",
     "callRoutingTabDesc": "Çağrı Bekletme Gibi Çağrı Yönlendirme Özelliklerini Yönetin",
     "mediaOnHoldTab": "Bekletilen Ortam",
-    "mediaOnHoldTabDesc": "Bekletilen Ortam Geliştirme Örneği"
+    "mediaOnHoldTabDesc": "Bekletilen Ortam Geliştirme Örneği",
+    "meetingDetailsTab": "Toplantılar",
+    "meetingDetailsTabDesc": "Toplantı Yönetimi",
+    "vtsDetailsTab": "Kurumsal Kaynaklar",
+    "vtsDetailsTabDesc": "Kurumsal Kaynak Yönetimi",
+    "listUserTab": "Kullanıcıları Listele",
+    "listUserTabDesc": "Kullanıcıları ve Özelliklerini Yönet",
+    "groupTab": "Gruplar",
+    "groupTabDesc": "Grupları Oluştur ve Yönet",
+    "entResUtilizationTab": "Kullanım",
+    "entResUtilizationTabDesc": "Kurumsal Kaynakların Kullanımı"
   },
   "index": {
     "welcome": "Hoş geldiniz!",
@@ -124,16 +152,20 @@
     "heading": "Yetkilendirme listesi"
   },
   "downloadPage": {
-    "thank": "Cisco Squared\'e kaydolduğunuz için teşekkürler.",
+    "thank": "Cisco Squared'e kaydolduğunuz için teşekkürler.",
     "account": "Hesabınız {{email}} artık etkin.",
-    "install": "Lütfen bu bağlantıya giderek Squared\'i",
+    "install": "Lütfen bu bağlantıya giderek Squared'i",
     "link": "yükleyin.",
     "using": "Lütfen",
-    "squared": "Squared\'i kullanmaya başlayın."
+    "squared": "Squared'i kullanmaya başlayın."
   },
   "invitePage": {
     "redirect": "Yeniden yönlendiriliyor...",
     "launch": "Uygulama Başlatılıyor..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "Yönetici e-posta adresi: ",
+    "create": "Siparişi İşle"
   },
   "orgsPage": {
     "title": "KURULUŞLARI YÖNET",
@@ -184,6 +216,7 @@
     "error": "Kullanıcı güncellenemedi."
   },
   "supportPage": {
+    "title": "Destek",
     "subtitleLogs": "Günlükleri ara",
     "listlogsbtn": "Ara",
     "noResults": "Sonuç Yok.",
@@ -228,7 +261,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "Çağrı bilgisi alınamadı. Durum: {{status}}",
     "subTitleCallFlow": "Çağrı Akışı",
-    "downloading": "Bu indirme işleminin tamamlanması 5 dakikayı bulabilir. Lütfen sabırlı olun..."
+    "downloading": "Bu indirme işleminin tamamlanması 5 dakikayı bulabilir. Lütfen sabırlı olun...",
+    "operational": "Tüm sistemler çalışıyor",
+    "error": "Sistemde hata",
+    "supportResources": "Destek Kaynakları",
+    "showDetails": "Ayrıntıları Göster",
+    "hideDetails": "Ayrıntıları Gizle",
+    "problemReports": "Sorun Raporları",
+    "reportingUrl": "Bildirim URL'si:",
+    "helpFaq": "Yardım ve SSS'ler",
+    "helpUrl": "Yardım URL'si:",
+    "sendFeedback": "Cisco Geribildirimi"
   },
   "common": {
     "delete": "Sil",
@@ -242,7 +285,10 @@
     "done": "Bitti",
     "begin": "Başla",
     "back": "Geri",
-    "finish": "Son"
+    "finish": "Son",
+    "language": "Dil",
+    "selectLanguage": "Dil seçin",
+    "select": "Seç"
   },
   "notifications": {
     "success": "Başarı bildirimleri",
@@ -273,28 +319,37 @@
     "cancel": "İptal",
     "emailAddress": "E-posta Adresi",
     "name": "Ad",
-    "errGetTrialsQuery": "Deneme sürümleri alınamadı. Durum: {{status}}"
+    "errGetTrialsQuery": "Deneme sürümleri alınamadı. Durum: {{status}}",
+    "quickLinksText": "Hızlı Bağlantılar",
+    "addUserText": "Kullanıcı Ekle",
+    "installDeviceText": "Kullanıcı için Cihaz Yükle",
+    "installSharedSpaceText": "Cihazları Paylaşılan Alana Yükle",
+    "autoAttendantText": "Otomatik Santral Yapılandır",
+    "searchLogsText": "Cihaz günlüklerini ara",
+    "unlicensedDateText": "kayıtlı lisanssız kullanıcılar",
+    "unlicensedText": "Lisanssız Kullanıcılar",
+    "convertText": "Ücretsiz sürümü kullanmakta olan kullanıcıları görüntüle ve dönüştür"
   },
   "inviteModal": {
     "title": "Hizmet Yetkilendirmesi",
     "heading": " Hizmet Yetkilendirmesini Etkinleştir",
-    "content": "Kuruluştaki kullanıcıları Squared\'i kullanmaya davet edin...",
+    "content": "Kuruluştaki kullanıcıları Squared'i kullanmaya davet edin...",
     "inviteAll": "Kuruluş genelinde hizmet yetkilendirmesini etkinleştir"
   },
   "ssoModal": {
-    "btnTitle": "SSO\'yu kur",
-    "title": "SSO\'yu kur",
-    "enableSSO": "Evet, özel bir SSO sağlayıcım var.",
-    "disableSSO": "Hayır, SSO sağlayıcım yok.",
+    "btnTitle": "SSO'yu kur",
+    "title": "SSO'yu kur",
+    "enableSSO": "Bir 3. taraf kimlik sağlayıcı entegre edin. (Gelişmiş)",
+    "disableSSO": "Kullanıcı kimlik doğrulaması için yerleşik kimlik hizmetini kullanın. (Basit)",
     "importMetadataTitle": "IdP Meta Verilerini İçe Aktar",
     "exportMetadataTitle": "Bulut Meta Verilerini Dışa Aktar",
     "testSSOSetupTitle": "SSO Kurulumunu Test Et",
-    "enableSSOTitle": "SSO\'yu Etkinleştir",
-    "importMetadataDesc": "IdP\'nizden bir güven meta veri dosyası alarak ve buraya yükleyerek kimlik sağlayıcınız (IdP) ile Cisco İşbirliği Bulutu arasındaki güven ilişkisini yapılandırmaya başlayın.",
+    "enableSSOTitle": "SSO'yu Etkinleştir",
+    "importMetadataDesc": "IdP'nizden bir güven meta veri dosyası alarak ve buraya yükleyerek kimlik sağlayıcınız (IdP) ile Cisco İşbirliği Bulutu arasındaki güven ilişkisini yapılandırmaya başlayın.",
     "exportMetadataDesc1": "Cisco İşbirliği hizmetinden aşağıdaki güven meta veri dosyasını indirin ve kimlik sağlayıcınızın (IdP) yönetim arayüzüne yükleyin.",
-    "exportMetadataDesc2": "Dosyayı IdP\'nize yüklemeyi tamamladıktan sonra, bu ekrana dönün ve İleri\'ye basın.",
+    "exportMetadataDesc2": "Dosyayı IdP'nize yüklemeyi tamamladıktan sonra, bu ekrana dönün ve İleri'ye basın.",
     "testSSOSetupDesc": "SSO yapılandırmanızı test etmek için hazırsınız. Yeni bir pencere açmak için aşağıdaki düğmeye basın. Başarıyla oturum açabiliyorsanız, bu ekrana dönebilir veya SSO kurulumunuzu sonlandırmak için ileri seçeneğine basabilirsiniz.",
-    "enableSSODesc": "Tüm kullanıcılar için Tek Oturum Açma\'yı (SSO) etkinleştirmeye hazırsanız, son düğmesine basın. Tüm kullanıcı kimlik doğrulama işlemleri, artık yeni SSO sağlayıcınızla yapılacaktır.",
+    "enableSSODesc": "Tüm kullanıcılar için Tek Oturum Açma'yı (SSO) etkinleştirmeye hazırsanız, son düğmesine basın. Tüm kullanıcı kimlik doğrulama işlemleri, artık yeni SSO sağlayıcınızla yapılacaktır.",
     "IdPFileLabel": "IdP Meta Veri Dosyası",
     "chooseFilePlaceHolder": "Dosya Seçin...",
     "browseBtn": "Gözat...",
@@ -303,7 +358,7 @@
     "backBtn": "Geri",
     "nextBtn": "İleri",
     "downloadMetadataBtn": "Meta Veri Dosyasını İndir",
-    "launchSSOTestBtn": "SSO Testini Başlat",
+    "launchSSOTestBtn": "SSO Bağlantısını Test Et",
     "finishBtn": "Son",
     "importFailed": "IdP Meta Veri Dosyası içe aktarılamadı",
     "invalidFile": "Geçersiz IdP meta veri dosyası",
@@ -311,7 +366,12 @@
     "retrieveEntityIdFailed": "SSO yapılandırması başarısız oldu",
     "readFileFailed": "IdP Meta Veri dosyası okunamadı",
     "importSuccess": "IdP meta veri dosyası başarıyla içe aktarıldı",
-    "enableSSOSuccess": "Tek Oturum Açma (SSO) tüm kullanıcılar için başarıyla etkinleştirildi"
+    "enableSSOSuccess": "Tek Oturum Açma (SSO) tüm kullanıcılar için başarıyla etkinleştirildi",
+    "finalEnableSSO": "Test başarılı oldu. Tek Oturum Açma'yı etkinleştirin.",
+    "finalDisableSSO": "Test başarısız oldu. Tek Oturum Açma'yı devre dışı bırakın.",
+    "disableFailed": "Tek Oturum Açma devre dışı bırakılamadı.",
+    "diableSuccess": "Tek Oturum Açma (SSO) tüm kullanıcılar için başarıyla devre dışı bırakıldı",
+    "enableSSOFailure": "Tek Oturum Açma (SSO) devre dışı bırakılamadı."
   },
   "serviceSetupModal": {
     "timeZone": "Saat Dilimi",
@@ -333,14 +393,14 @@
   },
   "dirsyncModal": {
     "chooseSync": "Senkronizasyon Seçin",
-    "chooseSyncDesc": "Manuel olarak kullanıcı girmek mi, yoksa kullanıcıları Active Directory\'den senkronize etmek mi istersiniz?",
+    "chooseSyncDesc": "Manuel olarak kullanıcı girmek mi, yoksa kullanıcıları Active Directory'den senkronize etmek mi istersiniz?",
     "chooseManualDesc": "Manuel Kullanıcı Girişi",
     "chooseADSyncDesc": "Active Directory Senkronizasyonu",
     "btnTitle": "DirSync",
     "title": "Dizin Senkronizasyonu",
     "manualTitle": "Kullanıcı Girişi",
     "yourDomainTitle": "Etki Alanınız",
-    "installTitle": "Bulut Bağlayıcı\'yı Yükle",
+    "installTitle": "Bulut Bağlayıcı'yı Yükle",
     "syncStatus": "Senkronizasyon Durumu",
     "grantServices": "Hizmetlere İzin Ver",
     "connectionTitle": "Bağlantı",
@@ -349,7 +409,7 @@
     "domain": "Etki Alanı",
     "defaultPlaceholder": "Varsayılan",
     "domainDesc": "Senkronize edeceğiniz Active Directory etki alanını belirleyin.",
-    "installStep1": "1. İşletmenize Cisco Bulut Bağlayıcı\'yı <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>indirin</a> ve yükleyin.",
+    "installStep1": "1. İşletmenize Cisco Bulut Bağlayıcı'yı <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>indirin</a> ve yükleyin.",
     "installStep2": "2. Active Directory senkronizasyon anlaşmasını yapılandırın.",
     "installStep3": "3. Senkronizasyon anlaşmasını test edin.",
     "nextSteps": "Kimlik bilgilerinin senkronize edildiğini doğrulamak için hazır olduğunuzda İleri düğmesine basın.",
@@ -386,7 +446,7 @@
     "status401": "Onaylama başarısız oldu. Sunucu onaylama belirtecini işleyemiyor. Oturumunuz birkaç saniye içinde otomatik olarak kapatılacak.",
     "serverDown": "Onaylama başarısız oldu. Sunucu arızalı olabilir, lütfen sistem yöneticisiyle iletişim kurun. Oturumunuz birkaç saniye içinde otomatik olarak kapatılacak.",
     "expired": "Oturumunuzun süresi dolmuş veya oturumunuz onaylanmamış. Oturumunuz birkaç saniye içinde otomatik olarak kapatılacak. Hizmeti kullanmaya devam etmek için lütfen yeniden oturum açın.",
-    "unsupported": "Internet Explorer\'ın <strong>eski</strong> bir sürümünü kullanıyorsanız. Lütfen tarayıcınızı sürüm 11 veya üstüne <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>yükseltin</a>."
+    "unsupported": "Internet Explorer'ın <strong>eski</strong> bir sürümünü kullanıyorsanız. Lütfen tarayıcınızı sürüm 11 veya üstüne <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>yükseltin</a>."
   },
   "spacesPage": {
     "title": "Cihazlar",
@@ -423,7 +483,7 @@
       "alarms": "Alarmlar"
     },
     "status": {
-      "unknown": "bilinmeyen bir durum bildiriyor. Ayrıntılar için lütfen expressway\'i kontrol edin.",
+      "unknown": "bilinmeyen bir durum bildiriyor. Ayrıntılar için lütfen expressway'i kontrol edin.",
       "not_configured": "hizmeti yükledi, ancak hizmet yapılandırılmamış.",
       "installing": "hizmeti yüklüyor.",
       "disabled": "bu hizmeti devre dışı bıraktı.",
@@ -438,13 +498,24 @@
       "label": "UC APP Fusion Hizmetleri",
       "title": "UC APP Fusion Hizmetleri",
       "desc": "Hizmetlerinizi şirket içinde kullanın"
+    },
+    "activationStatus": {
+      "not_entitled": "Yetkilendirmeye sahip değil",
+      "pending_deactivation": "Etkinleştirmenin Kaldırılmasını Bekliyor",
+      "pending_activation": "Etkinleştirmeyi Bekliyor",
+      "activated": "Etkinleştirildi",
+      "error": "Hata"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fusion UC",
+      "squared-fusion-cal": "Fusion Takvimi"
     }
   },
   "firstTimeWizard": {
     "simple": "Basit",
     "advanced": "Gelişmiş",
     "simpleSub": "İhtiyacınız olan tek şey kullanıcıların e-posta adresleridir",
-    "advancedSub": "Kullanıcıları Active Directory\'den senkronize et",
+    "advancedSub": "Kullanıcıları Active Directory'den senkronize et",
     "needHelp": "Yardıma mı ihtiyacınız var?",
     "planReview": "Plan İncelemesi",
     "enterpriseSettings": "Kurumsal Ayarlar",
@@ -467,33 +538,59 @@
     "doneBtn": "Son",
     "beginBtn": "Başla",
     "closeBtn": "Kapat",
-    "chooseSyncDesc": "Manuel olarak kullanıcı girmek mi, yoksa kullanıcıları Active Directory\'den senkronize etmek mi istersiniz?",
+    "chooseSyncDesc": "Manuel olarak kullanıcı girmek mi, yoksa kullanıcıları Active Directory'den senkronize etmek mi istersiniz?",
     "chooseManualDesc": "Manuel Kullanıcı Girişi",
     "chooseADSyncDesc": "Active Directory Senkronizasyonu",
     "manualTitle": "Kullanıcı Girişi",
     "yourDomainTitle": "Etki Alanınız",
-    "installTitle": "Bulut Bağlayıcı\'yı Yükle",
+    "installTitle": "Bulut Bağlayıcı'yı Yükle",
     "syncStatus": "Senkronizasyon Durumu",
     "domain": "Etki Alanı",
     "defaultPlaceholder": "Varsayılan",
     "domainDesc": "Senkronize edeceğiniz Active Directory etki alanını belirleyin.",
-    "installStep1": "1. İşletmenize Cisco Bulut Bağlayıcı\'yı <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>indirin</a> ve yükleyin.",
+    "installStep1": "1. İşletmenize Cisco Bulut Bağlayıcı'yı <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>indirin</a> ve yükleyin.",
     "installStep2": "2. Active Directory senkronizasyon anlaşmasını yapılandırın.",
     "installStep3": "3. Senkronizasyon anlaşmasını test edin.",
     "nextSteps": "Kimlik bilgilerinin senkronize edildiğini doğrulamak için hazır olduğunuzda İleri düğmesine basın.",
     "results": "Sonuçlar",
     "syncAgreementText": "senkronizasyon anlaşmasındaki kullanıcılar",
-    "setupSSOSub": "Tek Oturum Açmayı Kur",
+    "setupSSOSub": "Tek Oturum Açma",
     "setupSSODesc": "Lütfen SSO yapılandırmanız için uygun seçeneği belirleyin.",
     "manualInvite": "Şirketinizde İşbirliği Hizmetleri alacak kişilerin e-posta adreslerini girin. Kaydolmak için bir e-posta daveti alacaklardır.",
     "domainEntry": "Etki Alanı Girişi",
     "domainSubDesc": "Senkronize edilecek AD etki alanını girin:",
-    "connectorSteps": "Bulut Bağlayıcı\'yı yüklemek için şu adımları uygulayın:",
+    "connectorSteps": "Bulut Bağlayıcı'yı yüklemek için şu adımları uygulayın:",
     "readyToGo": "Başlamak için hazırsınız!",
     "finishDesc": "Kurulum sihirbazını tamamladınız. Adımları atladıysanız veya ayarlardan herhangi birini değiştirmeniz gerekiyorsa, sağ üst köşedeki dişli simgesine tıklayarak bu panele yeniden erişin.",
     "finish": "Son",
     "finishSub": "Kurulumunuzu tamamlayın",
     "completeRequired": "{{name}} doldurulmalıdır."
+  },
+  "reports": {
+    "title": "Raporlar",
+    "engagementTab": "Etkileşim",
+    "qualityTab": "Kalite",
+    "opportunitiesTab": "Fırsatlar",
+    "time": "Tüm Zamanlar",
+    "week": "Önceki Hafta",
+    "month": "Önceki Ay",
+    "threeMonths": "Önceki Üç Ay",
+    "mostEngaged": "En Fazla Etkileşime Sahip Olan 5",
+    "leastEngaged": "En Az Etkileşime Sahip Olan 5",
+    "highQuality": "En Yüksek Kaliteli 5",
+    "leastQuality": "En Düşük Kaliteli 5",
+    "services": "Tüm Hizmetler",
+    "UsersOnboarded": "Eklenen Kullanıcılar",
+    "AvgCallsPerUser": "Kullanıcı Başına Ort. Çağrı",
+    "AvgRoomsPerUser": "Kullanıcı Başına Ort. Oda",
+    "ActiveUsers": "Etkin Kullanıcılar",
+    "OneOnOneRooms": "Bire Bir Odalar",
+    "GroupRooms": "Grup Odaları",
+    "VideoCalls": "Görüntülü Çağrılar",
+    "AvgDurationofCalls": "Çağrıların Ort. Süresi",
+    "ContentShared": "Paylaşılan İçerik",
+    "AmountofContentShared": "Paylaşılan İçerik Miktarı",
+    "UserEngagement": "Kullanıcı Etkileşimi"
   },
   "callRouting": {
     "title": "Çağrı Yönlendirme",
@@ -529,6 +626,7 @@
     "createButton": "Çağrı Bekletme Oluştur"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "veya",
     "voicemail": "Sesli Mesaj",
     "singleNumberReach": "Tek Numarayla Ulaşma"
@@ -543,16 +641,21 @@
     "externalNumberLabel": "Harici Numara",
     "chooseNumber": "Numara Seçin",
     "addNewNumber": "Yeni Numara Ekle",
-    "none": "Hiçbiri"
+    "removeNumber": "Hattı Kaldır",
+    "none": "Hiçbiri",
+    "deleteConfirmation": "Bu işlem geri alınamaz.  {{line}} öğesinin atamasını {{user}} kullanıcısından kaldırmak istediğinizden emin misiniz?",
+    "deleteLineTitle": "Hattı Kaldır",
+    "disassociationSuccess": "Hat, kullanıcıdan başarıyla kaldırıldı."
   },
   "callForwardPanel": {
     "title": "Çağrı İletme",
     "success": "Çağrı İletme yapılandırması başarıyla kaydedildi",
     "error": "Çağrı İletme yapılandırması başarısız oldu",
+    "forwardNoCalls": "Çağrıları yönlendirme",
     "forwardAllCalls": "Tüm çağrıları ilet",
     "forwardBusyNoAnswer": "Hat meşgul olduğunda veya hatta ulaşılamadığında çağrıları ilet",
-    "internalAndExternal": "Dahili ve harici çağrılar için",
-    "internalOnly": "Yalnızca dahili çağrılar için",
+    "internalAndExternal": "Dahili ve harici çağrılar için<br>",
+    "internalOnly": "Yalnızca dahili çağrılar için<br>",
     "forwardBusy": "Hat meşgul olduğunda çağrıları şuraya gönder:",
     "forwardNoAnswer": "Yanıt olmadığında çağrıları şuraya gönder:",
     "forwardExternal": "Harici çağrıları farklı bir şekilde ilet",
@@ -560,11 +663,11 @@
   },
   "callerIdPanel": {
     "title": "Arayan Kimliği",
-    "description": "Bu hattan yapılan çağrılar için görünen adı değiştir"
+    "description": "<small>Bu hattan çağrılar için görünen adı değiştir</small>"
   },
   "singleNumberReachPanel": {
     "title": "Tek Numarayla Ulaşma",
-    "description": "Kullanıcıların dahili numaralarına gelen çağrıları başka bir numarada yanıtlamalarını sağlar",
+    "description": "<small>Kullanıcıların, dahili numaralarına gelen çağrıları başka bir numarayla yanıtlamalarını sağlar</small>",
     "toggle": "Tek Numarayla Ulaşma",
     "snrNote": "SNR, kullanıcının tüm hatlarını kapsayabilir veya belirli hatlarla sınırlı olabilir",
     "success": "Tek Numarayla Ulaşma yapılandırması başarıyla kaydedildi",
@@ -596,12 +699,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Süre",
+    "duration": "Deneme Süresi (gün)",
     "thirtyDays": "30 Gün",
     "sixtyDays": "60 Gün",
-    "ninetyDays": "90 Gün",
-    "onehundredtwentyDays": "120 Gün",
-    "onehundredeightyDays": "180 Gün",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "İptal",
     "startTrial": "Deneme Süresini Başlat",
     "customerInformation": "Müşteri Bilgileri",
@@ -621,6 +724,22 @@
     "averageCallsTitle": "Kullanıcı Başına Ortalama Çağrı",
     "contentSharedTitle": "Paylaşılan Toplam İçerik"
   },
+  "trialModal": {
+    "trialSuccess": "Deneme sürümünüzü başarıyla kurdunuz.",
+    "nextStep": "Sonraki Adım",
+    "sendWelcome": "Karşılama Mesajı Gönder",
+    "sendWelcomePrompt": "Hizmeti müşterinin kurmasını istiyorsanız:",
+    "launchPortal": "Şirket Portalını Başlat",
+    "launchPortalPrompt": "Hizmeti müşteri için kurmak istiyorsanız:",
+    "or": "veya",
+    "squareducError": "Deneme sürümü oluşturuldu, ancak Squared UC sağlanamıyor.",
+    "addSuccess": "{{customerName}} için {{licenseDuration}} gün süreyle {{licenseCount}} lisansa yönelik deneme sürümü başarıyla başlatıldı.",
+    "editSuccess": "{{customerName}} için {{licenseDuration}} gün süreyle {{licenseCount}} lisansa yönelik deneme sürümünü başarıyla düzenlediniz."
+  },
+  "trials": {
+    "collab": "Standart Ekip Odaları + 8 Taraflı Senkronizasyon",
+    "squaredUC": "Gelişmiş İletişim"
+  },
   "status": {
     "noResults": "Sonuç yok.",
     "errorProcessing": "İstek işlenirken hata oluştu."
@@ -637,7 +756,7 @@
     "statusDaysLeft": "Kalan Gün",
     "actionHeader": "Eylemler",
     "addTrial": "Bir Deneme Süresi Başlat",
-    "csvBtnTitle": "CSV\'ye aktar",
+    "csvBtnTitle": "CSV'ye aktar",
     "csvFilename": "exported_customers.csv",
     "custDetail": "Müşteri Ayrıntısı",
     "contactName": "Kişi Adı",
@@ -657,7 +776,9 @@
     "expiring": "Süresi Dolacak Deneme Sürümü",
     "expired": "Süresi Dolmuş Deneme Sürümü",
     "expiresToday": "Bugün Sona Eriyor",
-    "unused": "kullanılmamış lisanslar"
+    "unused": "kullanılmamış lisanslar",
+    "uploadNumbers": "Yükleme Numaraları",
+    "overPlan": "plan limitinin üzerinde"
   },
   "didAddModal": {
     "title": "Telefon Numaraları Ekle",
@@ -665,20 +786,25 @@
     "processingText": "Telefon Numaraları Ekleniyor...",
     "successText": "{{count}} yeni telefon numarası başarıyla eklendi.",
     "failText": "{{count}} telefon numarası zaten sistemde var.",
-    "sendEmail": "Karşılama E-postası Gönder",
+    "sendEmail": "Müşteriye Bildir",
     "notifyCustLater": "Müşteriyi Daha Sonra Bilgilendir",
     "emailSuccessText": "E-posta müşteriye başarıyla gönderildi.",
     "emailFailText": "E-posta gönderilirken hata oluştu",
-    "inputPlacehoder": "Telefon Numaralarını Girin"
+    "inputPlacehoder": "Telefon numaralarını virgülle ayırarak girin"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Cihaz Yapılandırması",
+    "deviceStatus": "Cihaz Durumu",
     "description": "Açıklama",
     "id": "Kimlik",
+    "ipAddress": "IP Adresi",
     "deactivate": "Devre dışı bırak",
     "success": "Cihaz başarıyla güncellendi",
     "error": "Cihaz yapılandırması başarısız oldu",
     "deactivateDevice": "Cihazı Devre Dışı Bırak",
-    "deactivateBody": "Bu eylem geri alınamaz. Bu cihazı devre dışı bırakmak istediğinizden emin misiniz?"
+    "deactivateBody": "Bu eylem geri alınamaz. Bu cihazı devre dışı bırakmak istediğinizden emin misiniz?",
+    "deviceStatusFailureMsg": "Cihaz durumu alınamadı",
+    "deviceIpAddressFailureMsg": "Cihaz IP'si alınamadı"
   },
   "generateActivationCodeModal": {
     "title": "Etkinleştirme Kodu",
@@ -710,14 +836,109 @@
     "userAdmin": "Kullanıcı Yöneticisi",
     "billingAdmin": "Fatura Yöneticisi",
     "supportAdmin": "Destek Yöneticisi",
-    "save": "Kaydet"
+    "save": "Kaydet",
+    "roles": "Roller"
   },
   "mohManagement": {
     "title": "Bekletilen Ortam",
-    "subtitle": "Ahmed\'den gelecek yeni kopya.",
+    "subtitle": "Ahmed'den gelecek yeni kopya.",
     "newPlaylistButton": "Yeni Çalma Listesi",
     "tracks": "Parçalar",
     "draganddrop": "Parçaları yeniden sıralamak için sürükleyip bırakın. Bu parçalar döngüye alınacaktır.",
     "setActive": "Etkin Olarak Ayarla"
+  },
+  "meetingsPage": {
+    "manageMeetings": "Toplantılar",
+    "webexMeetingId": "Toplantı Kimliği",
+    "host": "Toplantı Sahibi",
+    "date": "Tarih",
+    "startTime": "Başlangıç",
+    "endTime": "Bitiş",
+    "resource": "Kaynak",
+    "webexSite": "WebEx Sitesi",
+    "active": "Etkin",
+    "pending": "Davet Bekliyor",
+    "enterprise": "Kurumsal",
+    "mediaFusion": "Media Fusion",
+    "cloud": "Bulut"
+  },
+  "vtsPage": {
+    "enterpriseResources": "Kurumsal Kaynaklar",
+    "name": "Ad",
+    "status": "Durum",
+    "delete": "Kullanımdan Kaldırma",
+    "takeOffline": "Çevrimdışına al",
+    "bringOnline": "Çevrimiçine al",
+    "actionsHeader": "Eylemler",
+    "deleteResource": "Kaynağı Kullanımdan Kaldır",
+    "deleteResourceConfText1": "Bu kaynağı kullanımdan kaldırmak istediğinizden emin misiniz?",
+    "deleteResourceConfText2": "Kaynağın bulutla olan bağlantısı kesilecek ve kaynak çevrimdışına alınacak.",
+    "cancel": "İptal",
+    "deleteResource": "Kaynağı Kullanımdan Kaldır"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx Proto"
+  },
+  "leaderBoard": {
+    "actions": "Eylemler",
+    "licenseUsage": "Lisans Kullanımı",
+    "lastSynced": "Son Senkronizasyon Tarihi:",
+    "messagingTitle": "Mesajlaşma",
+    "messagingSubtitle": "Standart Ekip Odaları",
+    "messagingDesc": "Mesajlaşma lisansları.",
+    "communicationTitle": "İletişim",
+    "communicationSubtitle": "Gelişmiş Unified",
+    "communicationDesc": "Cisco Unified Communication lisansları.",
+    "conferencingTitle": "Konferans",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Cisco Meeting Center ve Conferencing lisansları."
+  },
+  "partnerProfile": {
+    "link": "Ortak Profili",
+    "customerLink": "Müşteri Profili",
+    "title": "Hesap",
+    "name": "Şirket Adı",
+    "id": "Hesap Numarası",
+    "ciscoRep": "Cisco Temsilcisi",
+    "supportSetup": "Sorun Bileti / Raporlama Konumu",
+    "save": "Kaydet",
+    "supportInfo": "Müşterilerinizin kullanıcıları için destek sağlıyorsanız, destek parametrelerinizi aşağıya girin. Bu parametreler, Squared uygulamalarında Destek Seçenekleri altında görüntülenecektir.",
+    "lifeCycle": "Yaşam döngüsü ortaklarının aşağıda gösterilen her iki destek türünü sağlaması gerekir.",
+    "supportOptions": "Cisco Destek Seçenekleri",
+    "seeExample": "bir örneğe bakın.",
+    "yourSupportOptions": "Destek Seçenekleriniz",
+    "urlFaq": "Yardım sitesi ve SSS'lere yönelik URL",
+    "urlFaqEx": "http://[Cisco yardım sitesinin ve SSS'lerin url'si]",
+    "urlReport": "Sorun biletlerini bildirmeye veya vaka açmaya yönelik URL",
+    "urlReportEx": "http://[Cisco sorun bildiriminin url'si]",
+    "helpFaq": "Yardım ve SSS Konumu",
+    "matchingTix": "Eşleşen Sorun Biletleri",
+    "matchingDescr": "Raporlar oluşturulduğunda sorun biletlerini Cisco İşbirliği Yönetimi aracına yüklenen günlüklerle eşleştirmek için, \"%%logID%%\" biçimindeki (tırnak işaretleri olmadan) günlük kimliğinizi destek URL'nizin sonuna ekleyin.",
+    "forExample": "Örneğin: http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "Destek Kurulumu",
+    "companyInfo": "Şirket Bilgileri",
+    "cancel": "İptal",
+    "partnerProblem": "Ortak sorun raporlama sitesi",
+    "partnerHelp": "Ortak yardım sitesi",
+    "ciscoProblem": "Sorun raporlama Cisco Teknik Destek birimine gönderilecektir",
+    "ciscoHelp": "Cisco yardım sitesi",
+    "enterHelp": "Yardım içeriğinizin konumunu girin.",
+    "enterReports": "Sorun Raporları: Sorun raporlama aracınızın konumunu girin."
+  },
+  "customerProfile": {
+    "supportContacts": "Destek İletişim Kişileri",
+    "partnerAdmin": "İş Ortağı Yöneticileri",
+    "supportInfo": "Kullanıcılarınız için destek sağlıyorsanız, destek parametrelerinizi aşağıya girin. Bu parametreler, Squared uygulamalarında Destek Seçenekleri altında görüntülenecektir."
+  },
+  "utilizationPage": {
+    "entResUtilization": "Kurumsal Kaynakların Kullanımı",
+    "overAllUtil": "Genel Kullanım",
+    "average": "Ortalama",
+    "bridgeUtilization": "Köprü Bazlı Kullanım"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Sipariş No. {{orderId}} işleniyor. Lütfen 24 saat sonra tekrar kontrol edin.",
+    "info": "Durum",
+    "wait": "Lütfen sizi yönlendirirken bekleyin"
   }
 }

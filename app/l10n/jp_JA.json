@@ -26,7 +26,7 @@
     "active": "アクティブ",
     "inactive": "",
     "validEmailInput": "有効なユーザーのメールを入力してください。",
-    "csvBtnTitle": "CSV にエクスポート ",
+    "csvBtnTitle": "CSV にエクスポート",
     "csvFilename": "exported_users.csv",
     "emailSent": "{{email}} のメールは正常に送信されました",
     "emailFailed": "{{email}} のメールは送信されませんでした。{{message}}",
@@ -43,28 +43,42 @@
     "inviteUsers": "ユーザーを招待する",
     "partners": "パートナー管理者"
   },
+  "groupsPage": {
+    "manageGroups": "グループ",
+    "all": "すべて",
+    "groupNameHeader": "グループ名",
+    "membersCountHeader": "メンバー"
+  },
   "onboardModal": {
     "onboardUsers": "オンボードユーザー",
     "cancel": "キャンセル",
     "addUsersDesc": "会社でコラボレーションサービスを受ける人々のメールアドレスを入力してください。サインアップのためのメールの招待状が送られます。",
     "addUserText": "誰を追加しますか ?",
     "userInput": "メールアドレスまたはグループメーラーをコンマで区切って入力してください ...",
-    "addServiceText": "どのサービスを有効にしますか ?",
+    "enableServiceText": "サービスを有効化",
     "enableCollab": "コラボレーションービスを個別に有効にする",
-    "enableCollabGroup": "コラボレーションサービスをグループのメンバーシップに基づいて有効にする。",
+    "enableCollabGroup": "グループメンバーに基づいてコラボレーションサービスを有効化",
     "addUsersSelect": "ユーザーを次に追加する：",
-    "manageBtn": "管理",
+    "manageBtn": "グループの管理",
     "onboardBtn": "オンボード",
     "howToInvite": "どの方法で招待しますか ?",
-    "waitInvitation": "メールの招待状を送信して、サービスのプロビジョニングの前にユーザーが受理するのを待ちます。 ",
+    "waitInvitation": "メールの招待状を送信して、サービスのプロビジョニングの前にユーザーが受理するのを待ちます。",
     "sendImmediate": "すぐにユーザーへのサービスのプロビジョニングを行って、メールの通知を送信します。",
-    "messaging": "メッセージングとコミュニケーション",
+    "messaging": "メッセージング",
     "conferencing": "カンファレンス",
+    "communications": "コミュニケーション",
+    "entitlements": "ユーザーエンタイトルメント",
     "saveBtn": "保存",
     "manageGroups": "グループの管理",
     "groupColHeader": "グループ名",
     "collabService": "グループのユーザーに与えられるコラボレーションサービスのライセンスを選択してください。",
-    "addEntitleError": "ユーザーの追加またはエンタイトルを行うには権限が不足しています。"
+    "addEntitleError": "ユーザーの追加またはエンタイトルを行うには権限が不足しています。",
+    "freeMsg": "無料Squaredチームルーム",
+    "freeConf": "無料サードパーティ同期",
+    "freeComm": "無料ネットワーク内IP音声およびビデオ通話",
+    "paidMsg": "標準チームルーム",
+    "paidConf": "8パーティ同期",
+    "paidComm": "高度なコミュニケーション"
   },
   "usersPreview": {
     "groupPreview": "グループ：",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "エンタイトルメント",
     "addNewLinePreview": "新規ラインの追加",
     "newLine": "新規ライン",
-    "devicesPreview": "デバイス",
+    "devicesPreview": "デバイスとソフトウェア",
     "activateNewDevice": "新規デバイスのアクティベート",
     "fullAdmin": "フル管理権限",
     "generateActivationCode": "アクティベーションコードの生成",
     "generateActivationCodeText": "新しいデバイスをこのユーザーで有効にするためのアクティベーションコードを生成します。",
     "activationCodeTitle": "新規デバイスのアクティベーションコード",
-    "expires": "終了期限"
+    "expires": "終了期限",
+    "editServices": "サービス編集",
+    "editServiceTitle": "{{firstName}} {{lastName}} が利用可能なサービス"
   },
   "messagingPanel": {
     "title": "メッセージング"
   },
   "settings": {
+    "title": "サービスのセットアップ",
     "initialSetup": "初期セットアップ"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "デバイス",
     "reportTab": "レポート",
     "supportTab": "サポート",
+    "accountTab": "アカウント",
     "developmentTab": "開発",
     "organizationTab": "組織",
     "organizationTabDesc": "組織の詳細の管理、割り当てサービスの表示、ツールへのアクセスを行います。",
@@ -107,7 +125,17 @@
     "callRoutingTab": "呼び出しルーティング",
     "callRoutingTabDesc": "コールパークのような呼び出しルーティング機能を管理します。",
     "mediaOnHoldTab": "ホールド時メディア",
-    "mediaOnHoldTabDesc": "ホールド時メディア開発の例"
+    "mediaOnHoldTabDesc": "ホールド時メディア開発の例",
+    "meetingDetailsTab": "ミーティング",
+    "meetingDetailsTabDesc": "ミーティング管理",
+    "vtsDetailsTab": "ミーティングリソース",
+    "vtsDetailsTabDesc": "エンタープライズリソース管理",
+    "listUserTab": "リストユーザー",
+    "listUserTabDesc": "ユーザーと機能の管理",
+    "groupTab": "グループ",
+    "groupTabDesc": "グループの作成と管理",
+    "entResUtilizationTab": "利用状況",
+    "entResUtilizationTabDesc": "エンタープライズリソース利用状況"
   },
   "index": {
     "welcome": "ウェルカム !",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "リダイレクト中 ...",
     "launch": "アプリの起動中 ..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "管理者電子メールアドレス ",
+    "create": "プロセス注文"
   },
   "orgsPage": {
     "title": "組織の管理",
@@ -184,6 +216,7 @@
     "error": "ユーザーのアップデートは失敗しました。"
   },
   "supportPage": {
+    "title": "サポート",
     "subtitleLogs": "ログの検索",
     "listlogsbtn": "検索",
     "noResults": "結果はありません。",
@@ -228,7 +261,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "通話情報の取得に失敗しました。ステータス： {{status}}",
     "subTitleCallFlow": "通話フロー",
-    "downloading": "このダウンロードには最大 5 分かかります。お待ちください ..."
+    "downloading": "このダウンロードには最大 5 分かかります。お待ちください ...",
+    "operational": "すべてのシステムが稼働中です",
+    "error": "システムにエラーが発生しました",
+    "supportResources": "サポートリソース",
+    "showDetails": "詳細を表示",
+    "hideDetails": "詳細を非表示",
+    "problemReports": "問題のレポート",
+    "reportingUrl": "レポートのURL:",
+    "helpFaq": "ヘルプとFAQ",
+    "helpUrl": "ヘルプのURL:",
+    "sendFeedback": "Ciscoのフィードバック"
   },
   "common": {
     "delete": "削除",
@@ -242,7 +285,10 @@
     "done": "完了",
     "begin": "開始",
     "back": "戻る",
-    "finish": "完了"
+    "finish": "完了",
+    "language": "言語",
+    "selectLanguage": "言語の選択",
+    "select": "選択"
   },
   "notifications": {
     "success": "成功の通知",
@@ -273,19 +319,28 @@
     "cancel": "キャンセル",
     "emailAddress": "メールアドレス",
     "name": "名前",
-    "errGetTrialsQuery": "トライアルの取得に失敗しました。状況： {{status}}"
+    "errGetTrialsQuery": "トライアルの取得に失敗しました。状況： {{status}}",
+    "quickLinksText": "クイックリンク",
+    "addUserText": "ユーザーの追加",
+    "installDeviceText": "ユーザーに対しデバイスをインストール",
+    "installSharedSpaceText": "共有スペースにデバイスをインストール",
+    "autoAttendantText": "自動アテンダントを構成",
+    "searchLogsText": "デバイスログを検索",
+    "unlicensedDateText": "未ライセンスのユーザーが登録されています",
+    "unlicensedText": "未ライセンスのユーザー",
+    "convertText": "現在無料バージョンを使用しているユーザーの表示および転換"
   },
   "inviteModal": {
     "title": "サービスエンタイトルメント",
-    "heading": "サービスエンタイトルメントを有効にする",
+    "heading": " サービスエンタイトルメントを有効にする",
     "content": "組織のユーザーを squared を使用するように招待する ...",
     "inviteAll": "組織全体のサービスエンタイトル面とを有効にする"
   },
   "ssoModal": {
     "btnTitle": "SSO のセットアップ",
     "title": "SSO のセットアップ",
-    "enableSSO": "はい、私にはカスタムの SSO プロバイダがあります。",
-    "disableSSO": "いいえ、私には SSO プロバイダはありません。",
+    "enableSSO": "サードパーティのアイデンティティ・プロバイダを統合。(Advanced)",
+    "disableSSO": "内蔵のアイデンティティ・サービスを認証に利用。(Simple)",
     "importMetadataTitle": "IdP メタデータのインポート",
     "exportMetadataTitle": "クラウドメタデータのエクスポート",
     "testSSOSetupTitle": "SSO セットアップのテスト",
@@ -303,7 +358,7 @@
     "backBtn": "戻る",
     "nextBtn": "次へ",
     "downloadMetadataBtn": "メタデータファイルのダウンロード",
-    "launchSSOTestBtn": "SSO テストの開始",
+    "launchSSOTestBtn": "SSO接続のテスト",
     "finishBtn": "完了",
     "importFailed": "IdP メタデータファイルのインポートに失敗しました",
     "invalidFile": "無効な IdP メタデータファイルです",
@@ -311,7 +366,12 @@
     "retrieveEntityIdFailed": "SSO の構成が正常に行われませんでした",
     "readFileFailed": "IdP メタデータファイルを読むことができませんでした",
     "importSuccess": "IdP メタデータファイルを正常にインポートしました",
-    "enableSSOSuccess": "シングルサインオン（SSO）はすべてのユーザーに対して正常に有効にされました"
+    "enableSSOSuccess": "シングルサインオン（SSO）はすべてのユーザーに対して正常に有効にされました",
+    "finalEnableSSO": "テストに合格しました。シングルサインオンを有効にします。",
+    "finalDisableSSO": "テストに合格しませんでした。シングルサインオンを無効にします。",
+    "disableFailed": "シングルサインオンの無効化に失敗しました",
+    "diableSuccess": "シングルサインオン（SSO）はすべてのユーザーに対して正常に無効にされました",
+    "enableSSOFailure": "シングルサインオン（SSO）の無効化に失敗しました"
   },
   "serviceSetupModal": {
     "timeZone": "タイムゾーン",
@@ -327,9 +387,9 @@
     "ciscoDefault": "シスコのデフォルト",
     "fall": "秋",
     "winter": "冬",
-    "addSuccess": "正常に追加されました。",
+    "addSuccess": " 正常に追加されました。",
     "emptyNumber": "番号を空白にすることはできません",
-    "notANumber": "は有効な番号ではありません"
+    "notANumber": " は有効な番号ではありません"
   },
   "dirsyncModal": {
     "chooseSync": "同期の選択",
@@ -438,13 +498,24 @@
       "label": "UC APP フュージョンサービス",
       "title": "UC APP フュージョンサービス",
       "desc": "サービスをオンプレミスで強化します"
+    },
+    "activationStatus": {
+      "not_entitled": "資格がありません",
+      "pending_deactivation": "非アクティブ化の保留",
+      "pending_activation": "アクティブ化の保留",
+      "activated": "アクティブ化",
+      "error": "エラー"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "フュージョンUC",
+      "squared-fusion-cal": "フュージョンカレンダー"
     }
   },
   "firstTimeWizard": {
     "simple": "シンプル",
     "advanced": "高度",
     "simpleSub": "必要なのはユーザーのメールアドレスだけです",
-    "advancedSub": "Active Directory からユーザーを同期化します ",
+    "advancedSub": "Active Directory からユーザーを同期化します",
     "needHelp": "ヘルプが必要ですか ?",
     "planReview": "プランのレビュー",
     "enterpriseSettings": "エンタープライズ設定",
@@ -483,7 +554,7 @@
     "nextSteps": "ID 情報が同期中であることを確認する準備ができたら [次へ] ボタンをクリックします。",
     "results": "結果",
     "syncAgreementText": "同期の合意内のユーザー",
-    "setupSSOSub": "シングルサインオンのセットアップ",
+    "setupSSOSub": "シングルサインオン",
     "setupSSODesc": "SSO の設定のために適切なオプションを選択してください。",
     "manualInvite": "会社でコラボレーションサービスを受ける人々のメールアドレスを入力してください。サインアップのためのメールの招待状が送られます。",
     "domainEntry": "ドメインの入力",
@@ -494,6 +565,32 @@
     "finish": "完了",
     "finishSub": "セットアップを完了します",
     "completeRequired": "{{name}} は完了する必要があります。"
+  },
+  "reports": {
+    "title": "レポート",
+    "engagementTab": "エンゲージメント",
+    "qualityTab": "クオリティ",
+    "opportunitiesTab": "機会",
+    "time": "常時",
+    "week": "先週",
+    "month": "先月",
+    "threeMonths": "最近3か月",
+    "mostEngaged": "5つの最大のエンゲージ",
+    "leastEngaged": "5つの最低のエンゲージ",
+    "highQuality": "5つの最高のクオリティ",
+    "leastQuality": "5つの最低のクオリティ",
+    "services": "すべてのサービス",
+    "UsersOnboarded": "オンボードのユーザー",
+    "AvgCallsPerUser": "ユーザーごとの平均通話数",
+    "AvgRoomsPerUser": "ユーザーごとの平均ルーム数",
+    "ActiveUsers": "アクティブなユーザー",
+    "OneOnOneRooms": "1対1ルーム",
+    "GroupRooms": "グループルーム",
+    "VideoCalls": "ビデオコール",
+    "AvgDurationofCalls": "通話の平均時間",
+    "ContentShared": "共有コンテンツ",
+    "AmountofContentShared": "共有コンテンツの合計",
+    "UserEngagement": "ユーザーのエンゲージメント"
   },
   "callRouting": {
     "title": "呼び出しルーティング",
@@ -529,6 +626,7 @@
     "createButton": "コールパークの作成"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "または",
     "voicemail": "ボイスメール",
     "singleNumberReach": "単一番号リーチ"
@@ -543,16 +641,21 @@
     "externalNumberLabel": "外線番号",
     "chooseNumber": "番号の選択",
     "addNewNumber": "新規番号の追加",
-    "none": "なし"
+    "removeNumber": "ラインの削除",
+    "none": "なし",
+    "deleteConfirmation": "この操作を取り消すことはできません。{{line}}の{{user}}への割り当てを解除してもよろしいですか？",
+    "deleteLineTitle": "ラインの削除",
+    "disassociationSuccess": "ラインのユーザーへの割り当てが解除されました"
   },
   "callForwardPanel": {
     "title": "通話転送",
     "success": "通話転送の設定は正常に保存されました",
     "error": "通話転送の設定に失敗しました",
+    "forwardNoCalls": "コールを転送しない",
     "forwardAllCalls": "すべての通話を転送",
     "forwardBusyNoAnswer": "回線が使用中または離席中の場合に通話を転送",
-    "internalAndExternal": "内線通話と外線通話用",
-    "internalOnly": "内線通話のみ",
+    "internalAndExternal": "内部通話および外部通話<br>",
+    "internalOnly": "内部通話のみ<br>",
     "forwardBusy": "回線が使用中の場合の転送先：",
     "forwardNoAnswer": "応答がない場合の転送先：",
     "forwardExternal": "外線通話の転送は別にする",
@@ -560,11 +663,11 @@
   },
   "callerIdPanel": {
     "title": "発信元 ID",
-    "description": "この回線からの通話については表示名を変更する"
+    "description": "<small>この回線からの通話の表示名を変更する</small>"
   },
   "singleNumberReachPanel": {
     "title": "単一番号リーチ",
-    "description": "自分の内線番号にかかってきた通話に他の番号で応答できるようにする",
+    "description": "<small>他の番号の内線番号に対する受信コールにユーザーが応答できるようにする</small>",
     "toggle": "単一番号リーチ",
     "snrNote": "SNR はすべてのユーザーの回線に対応することも、特定の回線に制限することもできます",
     "success": "単一番号リーチの設定は正常に保存されました",
@@ -596,12 +699,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "期間",
+    "duration": "試用期間 (日)",
     "thirtyDays": "30 日",
     "sixtyDays": "60 日",
-    "ninetyDays": "90 日",
-    "onehundredtwentyDays": "120 日",
-    "onehundredeightyDays": "180 日",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "キャンセル",
     "startTrial": "トライアルの開始",
     "customerInformation": "カスタマ情報",
@@ -621,6 +724,22 @@
     "averageCallsTitle": "ユーザーごとの平均通話数",
     "contentSharedTitle": "共有コンテンツの総数"
   },
+  "trialModal": {
+    "trialSuccess": "試用のセットアップが完了しました。",
+    "nextStep": "次のステップ",
+    "sendWelcome": "ウェルカムメッセージの送信",
+    "sendWelcomePrompt": "カスタマにサービスをセットアップしていただく場合",
+    "launchPortal": "企業ポータルの起動",
+    "launchPortalPrompt": "カスタマに対するサービスをセットアップする場合",
+    "or": "または",
+    "squareducError": "トライアルが作成されましたが、Squared UCをプロビジョニングできません。",
+    "addSuccess": "{{customerName}}のためのトライアルが、{{licenseDuration}} 日間の{{licenseCount}} ライセンス付きで開始されました。",
+    "editSuccess": "{{licenseDuration}} 日間の{{licenseCount}} ライセンスを持つ {{customerName}}に対するトライアルを編集しました。"
+  },
+  "trials": {
+    "collab": "標準チームルーム + 8パーティ同期",
+    "squaredUC": "高度なコミュニケーション"
+  },
   "status": {
     "noResults": "結果は利用できません",
     "errorProcessing": "リクエストの処理中にエラーが発生"
@@ -637,7 +756,7 @@
     "statusDaysLeft": "残り日数",
     "actionHeader": "アクション",
     "addTrial": "トライアルの開始",
-    "csvBtnTitle": "CSV にエクスポート ",
+    "csvBtnTitle": "CSV にエクスポート",
     "csvFilename": "exported_customers.csv",
     "custDetail": "カスタマの詳細",
     "contactName": "連絡先の名前",
@@ -657,7 +776,9 @@
     "expiring": "トライアルの終了",
     "expired": "終了したトライアル",
     "expiresToday": "本日終了",
-    "unused": "未使用のライセンス"
+    "unused": "未使用のライセンス",
+    "uploadNumbers": "アップロード番号",
+    "overPlan": "オーバープラン制限"
   },
   "didAddModal": {
     "title": "電話番号の追加",
@@ -665,20 +786,25 @@
     "processingText": "電話番号の追加 ...",
     "successText": "{{count}} 件の電話番号が正常に追加されました。",
     "failText": "{{count}} 件の電話番号はすでにシステムに含まれています。",
-    "sendEmail": "ウェルカムメールの送信",
+    "sendEmail": "カスタマに通知",
     "notifyCustLater": "カスタマに後ほど通知する",
     "emailSuccessText": ".メールは正常にカスタマに送信されました。",
     "emailFailText": "メール送信でエラー",
-    "inputPlacehoder": "電話番号の入力"
+    "inputPlacehoder": "コンマで区切られた電話番号を入力"
   },
   "deviceDetailPage": {
+    "deviceConfig": "デバイス構成",
+    "deviceStatus": "デバイスのステータス",
     "description": "説明",
     "id": "ID",
+    "ipAddress": "IPアドレス",
     "deactivate": "アクティベート解除",
     "success": "デバイスは正常に更新されました",
     "error": "デバイスの設定に失敗しました",
     "deactivateDevice": "デバイスのアクティベート解除",
-    "deactivateBody": "この操作を取り消すことはできません。このデバイスをアクティベート解除してもよいですか ?"
+    "deactivateBody": "この操作を取り消すことはできません。このデバイスをアクティベート解除してもよいですか ?",
+    "deviceStatusFailureMsg": "デバイスのステータスを取得できませんでした",
+    "deviceIpAddressFailureMsg": "デバイスのIPを取得できませんでした。"
   },
   "generateActivationCodeModal": {
     "title": "アクティベーションコード",
@@ -710,7 +836,8 @@
     "userAdmin": "ユーザー管理者",
     "billingAdmin": "請求管理者",
     "supportAdmin": "サポート管理者",
-    "save": "保存"
+    "save": "保存",
+    "roles": "役割"
   },
   "mohManagement": {
     "title": "ホールド時メディア",
@@ -719,5 +846,99 @@
     "tracks": "トラック",
     "draganddrop": "トラックを並べ替えるにはドラッグアンドドロップします。これらのトラックはループします。",
     "setActive": "アクティブに設定"
+  },
+  "meetingsPage": {
+    "manageMeetings": "ミーティング",
+    "webexMeetingId": "ミーティングID",
+    "host": "ホスト",
+    "date": "日付",
+    "startTime": "開始",
+    "endTime": "終了",
+    "resource": "リソース",
+    "webexSite": "WebExサイト",
+    "active": "アクティブ",
+    "pending": "招待保留中",
+    "enterprise": "エンタープライズ設定",
+    "mediaFusion": "ミーティングフュージョン",
+    "cloud": "クラウド"
+  },
+  "vtsPage": {
+    "enterpriseResources": "ミーティングリソース",
+    "name": "名前",
+    "status": "状況",
+    "delete": "コミッション解除",
+    "takeOffline": "オフラインにする",
+    "bringOnline": "オンラインにする",
+    "actionsHeader": "アクション",
+    "deleteResource": "コミッション解除リソース",
+    "deleteResourceConfText1": "このリソースをコミッション解除してもよろしいですか？",
+    "deleteResourceConfText2": "クラウドから切断され、オフラインになります",
+    "cancel": "キャンセル",
+    "deleteResource": "コミッション解除リソース"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebExの写真"
+  },
+  "leaderBoard": {
+    "actions": "アクション",
+    "licenseUsage": "ライセンスの使用状況",
+    "lastSynced": "最新の同期",
+    "messagingTitle": "メッセージング",
+    "messagingSubtitle": "標準チームルーム",
+    "messagingDesc": "メッセージのライセンス",
+    "communicationTitle": "コミュニケーション",
+    "communicationSubtitle": "Advanced Unified",
+    "communicationDesc": "Cisco Unified Communicationライセンス",
+    "conferencingTitle": "カンファレンス",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Cisco Meeting Center and Conferencingライセンス"
+  },
+  "partnerProfile": {
+    "link": "パートナーのプロファイル",
+    "customerLink": "カスタマのプロファイル",
+    "title": "アカウント",
+    "name": "会社名",
+    "id": "アカウント番号",
+    "ciscoRep": "Ciscoの代表者",
+    "supportSetup": "トラブルチケット/ レポートの場所",
+    "save": "保存",
+    "supportInfo": "ユーザーに対しサポートを提供する場合、以下にサポートのパラメータを入力してください。これらのパラメータはSquaredアプリケーションのサポートオプションの下に表示されます。",
+    "lifeCycle": "ライフサイクルパートナーは以下に表示された両方の種類のサポートを提供する必要があります。",
+    "supportOptions": "Ciscoサポートオプション",
+    "seeExample": "例を見てください",
+    "yourSupportOptions": "サポートオプション",
+    "urlFaq": "ヘルプサイトとFAQのURL",
+    "urlFaqEx": "http://[url of Cisco help site and FAQs]",
+    "urlReport": "トラブルチケットまたはオープニングケースを報告するURL",
+    "urlReportEx": "http://[url of Cisco problem reporting]",
+    "helpFaq": "ヘルプとFAQの場所",
+    "matchingTix": "ミーティングのトラブルチケット",
+    "matchingDescr": "レポートが作成されたときにCisco Collaboration Managementツールにアップロードされたログとトラブルチケットを照合するには、サポートURLにlogIDパラメータを追加して、「%%logID%%」のようにしてください (鍵括弧はなし)。",
+    "forExample": "例: http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "サポートのセットアップ",
+    "companyInfo": "会社情報",
+    "cancel": "キャンセル",
+    "partnerProblem": "パートナープログラムレポートサイト",
+    "partnerHelp": "パートナーヘルプサイト",
+    "ciscoProblem": "問題のレポートはCisco Technical Supportに送信されます",
+    "ciscoHelp": "Ciscoヘルプサイト",
+    "enterHelp": "ヘルプ内容の場所を入力してください",
+    "enterReports": "問題レポート: 問題レポートツールの場所を入力してください。"
+  },
+  "customerProfile": {
+    "supportContacts": "サポート連絡先",
+    "partnerAdmin": "パートナー管理者",
+    "supportInfo": "ユーザーに対しサポートを提供する場合、以下にサポートのパラメータを入力してください。これらのパラメータはSquaredアプリケーションのサポートオプションの下に表示されます。"
+  },
+  "utilizationPage": {
+    "entResUtilization": "エンタープライズリソース利用状況",
+    "overAllUtil": "全体の利用状況",
+    "average": "平均",
+    "bridgeUtilization": "Bridge By Bridge 利用状況"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "注文番号 {{orderId}} を処理しています。24時間後に再度確認してください。",
+    "info": "状況",
+    "wait": "リダイレクト中です"
   }
 }

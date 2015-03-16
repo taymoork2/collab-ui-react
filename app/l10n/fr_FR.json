@@ -43,28 +43,42 @@
     "inviteUsers": "Inviter des utilisateurs",
     "partners": "Administrateurs partenaires"
   },
+  "groupsPage": {
+    "manageGroups": "Groupes",
+    "all": "Tous",
+    "groupNameHeader": "Nom du groupe",
+    "membersCountHeader": "Membres"
+  },
   "onboardModal": {
-    "onboardUsers": "Utilisateurs habilités",
+    "onboardUsers": "Utilisateurs autorisés",
     "cancel": "Annuler",
     "addUsersDesc": "Saisissez les adresses électroniques des personnes de votre société qui recevront les services de collaboration. Ils recevront un courrier électronique d'invitation pour s'inscrire.",
     "addUserText": "Qui souhaitez-vous ajouter ?",
-    "userInput": "Saisissez les adresses électroniques ou les groupes d'expéditeurs séparés par des virgules... ",
-    "addServiceText": "Quels services souhaitez-vous activer ?",
+    "userInput": "Saisissez les adresses électroniques ou les groupes d'expéditeurs séparés par des virgules...",
+    "enableServiceText": "Activer les services",
     "enableCollab": "Activer les services de collaboration individuellement",
-    "enableCollabGroup": "Activer les services de collaboration en fonction de l'adhésion de groupe.",
+    "enableCollabGroup": "Activer les services de collaboration en fonction de l'adhésion au groupe",
     "addUsersSelect": "Ajouter des utilisateurs à :",
-    "manageBtn": "Gérer",
+    "manageBtn": "Gérer les groupes",
     "onboardBtn": "Engager",
     "howToInvite": "Comment voulez-vous qu'ils soient invités ?",
     "waitInvitation": "Envoyez des courriers électroniques d'invitation et attendez que les utilisateurs acceptent avant de fournir les services.",
     "sendImmediate": "Fournir les services immédiatement à l'utilisateur et envoyer des notifications par messagerie électronique.",
-    "messaging": "Messagerie et Notifications",
+    "messaging": "Messagerie",
     "conferencing": "Conférences",
+    "communications": "Communications",
+    "entitlements": "Autorisations de l'utilisateur",
     "saveBtn": "Enregistrer",
     "manageGroups": "Gérer les groupes",
     "groupColHeader": "Nom du groupe",
     "collabService": "Sélectionnez les licences du service de collaboration qui doivent être accordées aux utilisateurs du groupe.",
-    "addEntitleError": "privilèges insuffisants pour ajouter ou autoriser un utilisateur."
+    "addEntitleError": "privilèges insuffisants pour ajouter ou autoriser un utilisateur.",
+    "freeMsg": "Salles d'équipes squared gratuites",
+    "freeConf": "Réunions gratuites pour 3 parties",
+    "freeComm": "Appels avec Voix sur IP et vidéo gratuits",
+    "paidMsg": "Salles d'équipes standard",
+    "paidConf": "Réunions de 8 parties",
+    "paidComm": "Communications avancées"
   },
   "usersPreview": {
     "groupPreview": "Groupe :",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "Autorisations",
     "addNewLinePreview": "Ajouter une nouvelle ligne",
     "newLine": "Nouvelle ligne",
-    "devicesPreview": "Périphériques",
+    "devicesPreview": "Périphériques & Logiciel",
     "activateNewDevice": "Activer le nouveau périphérique",
     "fullAdmin": "Tous droits d'administrateur",
     "generateActivationCode": "Générer le code d'activation",
     "generateActivationCodeText": "Générez un code d'activation pour activer un nouveau périphérique pour cet utilisateur.",
     "activationCodeTitle": "Code d'activation pour le nouveau périphérique",
-    "expires": "Expire"
+    "expires": "Expire",
+    "editServices": "Modifier les services",
+    "editServiceTitle": "Services activés pour {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Messagerie"
   },
   "settings": {
+    "title": "Configuration du service",
     "initialSetup": "Première installation"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "Périphériques",
     "reportTab": "Rapports",
     "supportTab": "Assistance",
+    "accountTab": "Compte",
     "developmentTab": "Développement",
     "organizationTab": "Organisation",
     "organizationTabDesc": "Gestion des détails de l'organisation, Affichage des services attribués et Outils d'accès.",
@@ -107,7 +125,17 @@
     "callRoutingTab": "Routage des appels",
     "callRoutingTabDesc": "Gérer les fonctionnalités de routage des appels tel que Call Park",
     "mediaOnHoldTab": "Média en attente",
-    "mediaOnHoldTabDesc": "Exemple de développement d'un média en attente"
+    "mediaOnHoldTabDesc": "Exemple de développement d'un média en attente",
+    "meetingDetailsTab": "Réunions",
+    "meetingDetailsTabDesc": "Gestion des réunions",
+    "vtsDetailsTab": "Ressources d'entreprise",
+    "vtsDetailsTabDesc": "Gestions des ressources d'entreprise",
+    "listUserTab": "Lister les utilisateurs",
+    "listUserTabDesc": "Gérer les utilisateurs et leurs fonctionnalités.",
+    "groupTab": "Groupes",
+    "groupTabDesc": "Créer et gérer les groupes.",
+    "entResUtilizationTab": "Utilisation",
+    "entResUtilizationTabDesc": "Utilisation des ressources de l'entreprise"
   },
   "index": {
     "welcome": "Bienvenue !",
@@ -120,20 +148,24 @@
     "launchPartner": "Gérer mon organisation"
   },
   "entitlementPage": {
-    "title": "Modifier les habilitations",
-    "heading": "Liste des habilitations pour "
+    "title": "Modifier les autorisations",
+    "heading": "Liste des habilitations pour"
   },
   "downloadPage": {
     "thank": "Merci pour votre inscription à Cisco Squared.",
     "account": "Votre compte {{email}} est maintenant actif.",
-    "install": "Veuillez installer Squared en suivant ",
+    "install": "Veuillez installer Squared en suivant",
     "link": "ce lien.",
     "using": "Veuillez commencer en utilisant",
     "squared": "Squared."
   },
   "invitePage": {
-    "redirect": "Redirection en cours... ",
+    "redirect": "Redirection en cours...",
     "launch": "Lancement de l'application..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "Adresse électronique de l'admin : ",
+    "create": "Traiter la commande"
   },
   "orgsPage": {
     "title": "GÉRER LES ORGANISATIONS",
@@ -184,6 +216,7 @@
     "error": "La modification de l'utilisateur a échoué."
   },
   "supportPage": {
+    "title": "Assistance",
     "subtitleLogs": "Rechercher des journaux",
     "listlogsbtn": "Rechercher",
     "noResults": "Aucun résultat.",
@@ -228,7 +261,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "Échec de la récupération des infos d'appel. Statut : {{status}}",
     "subTitleCallFlow": "Flux des appels",
-    "downloading": "Ce téléchargement peut prendre jusqu'à 5 minutes. Veuillez patienter..."
+    "downloading": "Ce téléchargement peut prendre jusqu'à 5 minutes. Veuillez patienter...",
+    "operational": "Tous les systèmes sont opérationnels",
+    "error": "Erreur dans le système",
+    "supportResources": "Ressources d'assistance",
+    "showDetails": "Afficher les détails",
+    "hideDetails": "Masquer les détails",
+    "problemReports": "Rapports de problèmes",
+    "reportingUrl": "URL de reporting :",
+    "helpFaq": "Aide et FAQ",
+    "helpUrl": "URL de l'Aide :",
+    "sendFeedback": "Commentaire Cisco"
   },
   "common": {
     "delete": "Supprimer",
@@ -242,12 +285,15 @@
     "done": "Terminé",
     "begin": "Commencer",
     "back": "Retour",
-    "finish": "Terminer"
+    "finish": "Terminer",
+    "language": "Langue",
+    "selectLanguage": "Sélectionner une langue",
+    "select": "Sélectionner"
   },
   "notifications": {
     "success": "Notifications de réussite",
     "error": "Notifications d'erreur",
-    "successTotal": "{total, pluriel, un{# succès} autre{# succès}}",
+    "successTotal": "{total, plural, one{# succès} autre{# succès}}",
     "errorTotal": "{total, plural, one{# error} autres{# errors}}"
   },
   "homePage": {
@@ -273,19 +319,28 @@
     "cancel": "Annuler",
     "emailAddress": "Adresse électronique",
     "name": "Nom",
-    "errGetTrialsQuery": "Impossible de retrouver les essais. Statut : {{status}}"
+    "errGetTrialsQuery": "Impossible de retrouver les essais. Statut : {{status}}",
+    "quickLinksText": "Liens rapides",
+    "addUserText": "Ajouter des utilisateurs",
+    "installDeviceText": "Installer un périphérique pour un utilisateur",
+    "installSharedSpaceText": "Installer un périphérique dans un espace partagé",
+    "autoAttendantText": "Configurer un invité automatique",
+    "searchLogsText": "Rechercher les journaux d'un périphérique",
+    "unlicensedDateText": "utilisateurs sans licence inscrits sur",
+    "unlicensedText": "Utilisateurs sans licence",
+    "convertText": "Afficher et convertir les utilisateurs utilisant actuellement la version gratuite"
   },
   "inviteModal": {
     "title": "Autorisation de service",
-    "heading": "Activer l'autorisation de service",
+    "heading": " Activer l'autorisation de service",
     "content": "Inviter les utilisateurs de l'organisation à utiliser squared...",
     "inviteAll": "Activer l'autorisation du service à l'ensemble de l'organisation"
   },
   "ssoModal": {
     "btnTitle": "Configurer la SSO",
     "title": "Configurer la SSO",
-    "enableSSO": "Oui, j'ai un fournisseur SSO personnel.",
-    "disableSSO": "Non, je n'ai pas de fournisseur SSO.",
+    "enableSSO": "Intégrer un fournisseur d'identité tiers. (Avancé)",
+    "disableSSO": "Utiliser le service d'identité intégré pour l'authentification des utilisateurs. (Simple)",
     "importMetadataTitle": "Importer les métadonnées IdP",
     "exportMetadataTitle": "Exporter les métadonnées du Cloud",
     "testSSOSetupTitle": "Tester la configuration SSO",
@@ -295,7 +350,7 @@
     "exportMetadataDesc2": "Lorsque vous avez fini de charger le fichier dans votre IdP, revenez sur cet écran et appuyez sur Suivant.",
     "testSSOSetupDesc": "Vous êtes prêt(e) à tester votre configuration SSO. Appuyez sur le bouton ci-dessous pour lancer une nouvelle fenêtre. Si vous parvenez à vous connecter, vous pouvez revenir sur cet écran et appuyer sur suivant pour finaliser votre configuration SSO.",
     "enableSSODesc": "Si vous êtes prêt(e) à activer l'authentification unique (SSO) pour tous les utilisateurs, appuyez sur le bouton terminé. Toutes les authentifications des utilisateurs seront alors traitées par votre nouveau fournisseur SSO.",
-    "IdPFileLabel": "Fichiers de métadonnées IdP ",
+    "IdPFileLabel": "Fichiers de métadonnées IdP",
     "chooseFilePlaceHolder": "Choisir un fichier...",
     "browseBtn": "Parcourir...",
     "importBtn": "Importer",
@@ -303,7 +358,7 @@
     "backBtn": "Retour",
     "nextBtn": "Suivant",
     "downloadMetadataBtn": "Télécharger le fichier de métadonnées",
-    "launchSSOTestBtn": "Lancer le test SSO",
+    "launchSSOTestBtn": "Test de la connexion SSO",
     "finishBtn": "Terminer",
     "importFailed": "Échec de l'importation du fichiers de métadonnées IdP",
     "invalidFile": "Fichier de métadonnées IdP non valide",
@@ -311,7 +366,12 @@
     "retrieveEntityIdFailed": "La configuration SSO a échoué",
     "readFileFailed": "Lecture du fichier de métadonnées IdP impossible",
     "importSuccess": "Le fichier de métadonnées IdP a été importé avec succès",
-    "enableSSOSuccess": "L'authentification unique (SSO) a été activée avec succès pour tous les utilisateurs"
+    "enableSSOSuccess": "L'authentification unique (SSO) a été activée avec succès pour tous les utilisateurs",
+    "finalEnableSSO": "Le test a réussi. Activer l'authentification unique (SSO).",
+    "finalDisableSSO": "Le test a échoué. Désactiver l'authentification unique SSO.",
+    "disableFailed": "Échec de l'authentification unique SSO",
+    "diableSuccess": "L'authentification unique (SSO) a bien été désactivée pour tous les utilisateurs",
+    "enableSSOFailure": "Échec de la désactivation de l'authentification unique (SSO)."
   },
   "serviceSetupModal": {
     "timeZone": "Fuseau horaire",
@@ -327,9 +387,9 @@
     "ciscoDefault": "Cisco par défaut",
     "fall": "Automne",
     "winter": "Hiver",
-    "addSuccess": "ajouté avec succès.",
+    "addSuccess": " ajouté avec succès.",
     "emptyNumber": "Le nombre ne peut pas être vide",
-    "notANumber": "n'est pas un nombre valide"
+    "notANumber": " n'est pas un nombre valide"
   },
   "dirsyncModal": {
     "chooseSync": "Choisir la synchronisation",
@@ -438,6 +498,17 @@
       "label": "Services de Fusion UC APP",
       "title": "Services de Fuison UC APP",
       "desc": "Tirez profit de vos services sur site"
+    },
+    "activationStatus": {
+      "not_entitled": "Non autorisé",
+      "pending_deactivation": "Désactivation en attente",
+      "pending_activation": "Activation en attente",
+      "activated": "Activé(e)",
+      "error": "Erreur"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fusion UC",
+      "squared-fusion-cal": "Fusion du calendrier"
     }
   },
   "firstTimeWizard": {
@@ -477,13 +548,13 @@
     "domain": "Domaine",
     "defaultPlaceholder": "Par défaut",
     "domainDesc": "Identifiez le domaine du répertoire actif que vous allez synchroniser.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Téléchargez </a> et installez le connecteur Cisco Cloud dans votre entreprise.",
+    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Téléchargez </a> et installez le connecteur Cisco Cloud (Cisco Cloud Connector) dans votre entreprise.",
     "installStep2": "2. Configurez l'accord de synchronisation du répertoire actif.",
     "installStep3": "3. Testez l'accord de synchronisation.",
-    "nextSteps": "Appuyez sur le bouton Suivant lorsque vous êtes prêt(e) à vérifier que les informations d'identité sont en cours de synchronisation.",
+    "nextSteps": "Appuyez sur le bouton lorsque vous êtes prêt(e) à vérifier que les informations d'identité sont synchronisées.",
     "results": "Résultats",
     "syncAgreementText": "utilisateurs de l'accord de synchronisation",
-    "setupSSOSub": "Configurer l'authentification unique SSO",
+    "setupSSOSub": "Authentification unique (SSO)",
     "setupSSODesc": "Veuillez sélectionner l'option appropriée pour votre configuration SSO.",
     "manualInvite": "Saisissez les adresses électroniques des personnes de votre société qui recevront les services de collaboration. Ils recevront une invitation à s'inscrire par courrier électronique.",
     "domainEntry": "Saisie du domaine",
@@ -491,9 +562,35 @@
     "connectorSteps": "Suivez ces étapes pour installer le connecteur du Cloud (Cloud Connector) :",
     "readyToGo": "Vous pouvez commencer !",
     "finishDesc": "Vous avez terminé les étapes de l'assistant d'installation. Si vous avez sauté des étapes ou si vous souhaitez modifier l'un des paramètres, cliquez sur l'icône d'engrenage situé dans le coin supérieur droit de la page pour accéder à nouveau à ce panneau.",
-    "finish": "Terminé",
+    "finish": "Terminer",
     "finishSub": "Terminez votre installation",
     "completeRequired": "{{name}} doit être terminé."
+  },
+  "reports": {
+    "title": "Rapports",
+    "engagementTab": "Engagement",
+    "qualityTab": "Qualité",
+    "opportunitiesTab": "Opportunités",
+    "time": "Toutes les heures",
+    "week": "Semaine précédente",
+    "month": "Mois précédent",
+    "threeMonths": "Trois derniers mois",
+    "mostEngaged": "Les 5 plus motivés",
+    "leastEngaged": "Les 5 derniers engagés",
+    "highQuality": "Les 5 de meilleure qualité",
+    "leastQuality": "Les 5 de moins bonne qualité",
+    "services": "Tous les services",
+    "UsersOnboarded": "Utilisateurs autorisés",
+    "AvgCallsPerUser": "Moyenne des appels par utilisateur",
+    "AvgRoomsPerUser": "Moyenne des salles par utilisateur",
+    "ActiveUsers": "Utilisateurs actifs",
+    "OneOnOneRooms": "Salles un à un",
+    "GroupRooms": "Salles de groupe",
+    "VideoCalls": "Appels vidéo",
+    "AvgDurationofCalls": "Durée moyenne des appels",
+    "ContentShared": "Contenu partagé",
+    "AmountofContentShared": "Total du contenu partagé",
+    "UserEngagement": "Engagement de l'utilisateur"
   },
   "callRouting": {
     "title": "Routage des appels",
@@ -507,7 +604,7 @@
   "callPark": {
     "newCallPark": "Nouveau parcage d'appels",
     "callParkInformation": "Informations sur le parcage d'appels",
-    "information1": "La fonctionnalité Call Park vous permet de mettre un appel en attente, afin qu'il soit récupéré par un autre téléphone du système. Si vous êtes au téléphone sur un appel actif, vous pouvez mettre l'appel en attente sur une extension de mise en attente des appels en appuyant sur la touche Mise en attente ou le bouton Call Park (Mise en attente des appels). Une personne sur un autre téléphone de votre système peut alors composer l'extension de mise en attente des appels pour récupérer l'appel. ",
+    "information1": "La fonctionnalité Call Park vous permet de mettre un appel en attente, afin qu'il soit récupéré par un autre téléphone du système. Si vous êtes au téléphone sur un appel actif, vous pouvez mettre l'appel en attente sur une extension de mise en attente des appels en appuyant sur la touche Mise en attente ou le bouton Call Park (Mise en attente des appels). Une personne sur un autre téléphone de votre système peut alors composer l'extension de mise en attente des appels pour récupérer l'appel.",
     "information2": "Vous pouvez définir soit un numéro de répertoire individuel ou une plage de numéros de répertoire pour les utiliser comme numéros d'extension de parcage d'appels. Vous ne pouvez placer qu'un seul appel en attente (parquer) sur chaque numéro de parcage d'appels.",
     "deleteCallPark": "Supprimer le parcage d'appels",
     "deleteConfirmation": "Cette action est irréversible. Êtes-vous sûr(e) de vouloir supprimer ce parcage d'appels ?",
@@ -529,6 +626,7 @@
     "createButton": "Créer un parcage d'appels"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "ou",
     "voicemail": "Messagerie vocale",
     "singleNumberReach": "Portée du numéro individuel"
@@ -543,16 +641,21 @@
     "externalNumberLabel": "Numéro externe",
     "chooseNumber": "Choisissez un numéro",
     "addNewNumber": "Ajouter un nouveau numéro",
-    "none": "Aucun"
+    "removeNumber": "Supprimer la ligne",
+    "none": "Aucun",
+    "deleteConfirmation": "Cette action ne peut pas être annulée. Êtes-vous sûr(e) de vouloir retirer {{line}} de {{user}}?",
+    "deleteLineTitle": "Supprimer la ligne",
+    "disassociationSuccess": "La ligne de l'utilisateur a été retirée avec succès."
   },
   "callForwardPanel": {
     "title": "Transfert d'appels",
     "success": "La configuration du transfert d'appel a été enregistrée avec succès",
     "error": "Échec de la configuration de transfert d'appel",
+    "forwardNoCalls": "Ne pas transférer les appels",
     "forwardAllCalls": "Transférer tous les appels",
     "forwardBusyNoAnswer": "Transférer les appels lorsque la ligne est occupée ou coupée",
-    "internalAndExternal": "Pour les appels internes et externes",
-    "internalOnly": "Uniquement pour les appels internes",
+    "internalAndExternal": "Pour les appels internes et externes<br>",
+    "internalOnly": "Uniquement pour les appels internes<br>",
     "forwardBusy": "Lorsque la ligne est occupée, envoyer les appels à :",
     "forwardNoAnswer": "Lorsqu'il n'y a aucune réponse, envoyer les appels à :",
     "forwardExternal": "Transférer les appels externes différemment",
@@ -560,11 +663,11 @@
   },
   "callerIdPanel": {
     "title": "ID de l'appelant",
-    "description": "Changer le nom d'affichage des appels de cette ligne"
+    "description": "<small>Changer le nom d'affichage des appels à partir de cette ligne</small>"
   },
   "singleNumberReachPanel": {
     "title": "Portée du numéro individuel",
-    "description": "Permet aux utilisateurs de répondre aux appels entrant sur leur extension à un autre numéro",
+    "description": "<small>Permet aux utilisateurs de répondre aux appels entrants sur leur extension sur un autre numéro</small>",
     "toggle": "Portée du numéro individuel",
     "snrNote": "SNR peut prendre toutes les lignes de l'utilisateur ou se limiter à des lignes spécifiques",
     "success": "La configuration SNR (Portée du numéro individuel) a été enregistrée avec succès",
@@ -591,17 +694,17 @@
     "expiredToday": "Expire aujourd'hui",
     "daysAgo": "Il y a {{days}} jours",
     "expireToday": "Expirant aujourd'hui",
-    "errGetTrialsQuery": "Récupération impossible des essais. Statut : {{status}}",
+    "errGetTrialsQuery": "Impossible de retrouver les essais. Statut : {{status}}",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Durée",
+    "duration": "Durée de l'essai (jours)",
     "thirtyDays": "30 jours",
     "sixtyDays": "60 jours",
-    "ninetyDays": "90 jours",
-    "onehundredtwentyDays": "120 jours",
-    "onehundredeightyDays": "180 jours",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "Annuler",
     "startTrial": "Commencer un essai",
     "customerInformation": "Informations du client",
@@ -616,10 +719,26 @@
     "edit": "Modifier",
     "saveSendReminder": "Enregistrer et envoyer un rappel",
     "partnerHeading": "Adoption et engagement",
-    "entitlementsTitle": "Utilisateurs habilités",
+    "entitlementsTitle": "Utilisateurs autorisés",
     "activeUsersTitle": "Utilisateurs actifs quotidiennement",
     "averageCallsTitle": "Moyenne des appels par utilisateur",
     "contentSharedTitle": "Total du contenu partagé"
+  },
+  "trialModal": {
+    "trialSuccess": "Vous avez configuré votre essai avec succès.",
+    "nextStep": "Étape suivante",
+    "sendWelcome": "Envoyer un message de bienvenue",
+    "sendWelcomePrompt": "Si vous souhaitez que le client configure le service :",
+    "launchPortal": "Lancer le portail de la société",
+    "launchPortalPrompt": "Si vous souhaitez configurer le service pour le client :",
+    "or": "ou",
+    "squareducError": "A créé l'essai, mais impossible de fournir Squared UC.",
+    "addSuccess": "Un essai a été démarré avec succès pour {{customerName}} avec {{licenseCount}} licences pour {{licenseDuration}} jours.",
+    "editSuccess": "Vous avez modifié un essai avec succès pour {{customerName}} avec {{licenseCount}} licences pour {{licenseDuration}} jours."
+  },
+  "trials": {
+    "collab": "Salles d'équipes standard + réunion avec 8 parties",
+    "squaredUC": "Communications avancées"
   },
   "status": {
     "noResults": "Aucun résultat disponible",
@@ -657,7 +776,9 @@
     "expiring": "L'essai arrive à expiration",
     "expired": "L'essai a expiré",
     "expiresToday": "L'essai expire aujourd'hui",
-    "unused": "licences non utilisées"
+    "unused": "licences non utilisées",
+    "uploadNumbers": "Charger les numéros",
+    "overPlan": "dépasse la limite d'abonnement"
   },
   "didAddModal": {
     "title": "Ajouter des numéros de téléphone",
@@ -665,20 +786,25 @@
     "processingText": "Ajout des numéros de téléphone...",
     "successText": "{{count}} nouveau(x) numéro(s) de téléphone(s) ajoutés avec succès.",
     "failText": "{{count}} numéro(s) de téléphone sont déjà dans le système.",
-    "sendEmail": "Envoyer un message électronique de bienvenue",
+    "sendEmail": "Envoyer une notification au client",
     "notifyCustLater": "Notifier le client plus tard",
     "emailSuccessText": "Le courrier électronique a été envoyé au client avec succès.",
     "emailFailText": "Erreur lors de l'envoi du courrier électronique",
-    "inputPlacehoder": "Saisissez les numéros de téléphone"
+    "inputPlacehoder": "Saisissez les numéros de téléphone séparés par des virgules"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Configuration du périphérique",
+    "deviceStatus": "Statut du périphérique",
     "description": "Description",
     "id": "ID",
+    "ipAddress": "Adresse IP",
     "deactivate": "Désactiver",
     "success": "Le périphérique a été mis à jour avec succès",
     "error": "La configuration du périphérique a échoué",
     "deactivateDevice": "Désactiver le périphérique",
-    "deactivateBody": "Cette action est irréversible. Êtes-vous sûr(e) de vouloir désactiver ce périphérique ?"
+    "deactivateBody": "Cette action est irréversible. Êtes-vous sûr(e) de vouloir désactiver ce périphérique ?",
+    "deviceStatusFailureMsg": "Impossible de récupérer le statut du périphérique",
+    "deviceIpAddressFailureMsg": "Impossible de récupérer l'IP du périphérique"
   },
   "generateActivationCodeModal": {
     "title": "Code d'activation",
@@ -710,7 +836,8 @@
     "userAdmin": "Administrateur des utilisateurs",
     "billingAdmin": "Administrateur de la facturation",
     "supportAdmin": "Administrateur de l'assistance",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "roles": "Rôles"
   },
   "mohManagement": {
     "title": "Média en attente",
@@ -719,5 +846,99 @@
     "tracks": "Pistes",
     "draganddrop": "Effectuez un glisser-déposer pour trier ces pistes. Ces pistes seront en boucle.",
     "setActive": "Paramétrer sous Actif"
+  },
+  "meetingsPage": {
+    "manageMeetings": "Réunions",
+    "webexMeetingId": "ID de réunion",
+    "host": "Organisateur",
+    "date": "Date",
+    "startTime": "Démarrage",
+    "endTime": "Fin",
+    "resource": "Ressource",
+    "webexSite": "Site WebEx",
+    "active": "Actif",
+    "pending": "Invitation en attente",
+    "enterprise": "Enterprise",
+    "mediaFusion": "Fusion Média",
+    "cloud": "Cloud"
+  },
+  "vtsPage": {
+    "enterpriseResources": "Ressources d'entreprise",
+    "name": "Nom",
+    "status": "Statut",
+    "delete": "Retirer",
+    "takeOffline": "Mettre hors-ligne",
+    "bringOnline": "Mettre en ligne",
+    "actionsHeader": "Actions",
+    "deleteResource": "Retirer la ressource",
+    "deleteResourceConfText1": "Êtes-vous sûr(e) de vouloir retirer cette ressource ?",
+    "deleteResourceConfText2": "Il sera déconnecté du cloud et mis hors-ligne.",
+    "cancel": "Annuler",
+    "deleteResource": "Retirer la ressource"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "Proto WebEx"
+  },
+  "leaderBoard": {
+    "actions": "Actions",
+    "licenseUsage": "Utilisation des licences",
+    "lastSynced": "Dernière synchronisation :",
+    "messagingTitle": "Messagerie",
+    "messagingSubtitle": "Salles d'équipes standard",
+    "messagingDesc": "Licences de messagerie",
+    "communicationTitle": "Communication",
+    "communicationSubtitle": "Unified avancé",
+    "communicationDesc": "Licences Cisco Unified Communication.",
+    "conferencingTitle": "Conférences",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Licences Cisco Meeting Center et Service de conférences"
+  },
+  "partnerProfile": {
+    "link": "Profil du partenaire",
+    "customerLink": "Profil du client",
+    "title": "Compte",
+    "name": "Nom de la société",
+    "id": "Numéro de compte",
+    "ciscoRep": "Représentant Cisco",
+    "supportSetup": "Ticket de problème / Emplacement du service de rapport",
+    "save": "Enregistrer",
+    "supportInfo": "Si vous fournissez une assistance pour les utilisateurs de vos clients, saisissez vos paramètres d'assistance ci-dessous. Ces paramètres seront affichés sous Options d'assistance dans les applications Squared.",
+    "lifeCycle": "Les partenaires du cycle de vie sont requis pour fournir les deux types d'assistance affichés ci-dessous.",
+    "supportOptions": "Options d'assistance Cisco",
+    "seeExample": "voir un exemple.",
+    "yourSupportOptions": "Vos options d'assistance",
+    "urlFaq": "URL pour le site d'aide et FAQ",
+    "urlFaqEx": "http://[url of Cisco help site and FAQs]",
+    "urlReport": "URL pour le rapport des tickets de problèmes rencontrés ou ouvrir des cas",
+    "urlReportEx": "http://[url of Cisco problem reporting]",
+    "helpFaq": "Emplacement de l'Aide & FAQ",
+    "matchingTix": "Association des tickets de problèmes",
+    "matchingDescr": "Pour associer les tickets de problèmes avec les journaux qui sont chargés sur l'outil de gestion de la collaboration Cisco lors de la création des rapports, attachez votre URL d'assistance à votre paramètre d'ID de journalisation (logID) comme \« %%logID%%\ » (sans guillemets).",
+    "forExample": "Par exemple : http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "Configuration de l'assistance",
+    "companyInfo": "Informations sur la société",
+    "cancel": "Annuler",
+    "partnerProblem": "Site partenaire de rapport de problèmes",
+    "partnerHelp": "Site partenaire d'aide",
+    "ciscoProblem": "Les rapports de problèmes seront envoyés à l'Assistance technique Cisco",
+    "ciscoHelp": "Site d'aide Cisco",
+    "enterHelp": "Saisissez l'emplacement de votre contenu d'aide.",
+    "enterReports": "Rapports de problèmes : saisissez l'emplacement de votre outil de rapports de problèmes."
+  },
+  "customerProfile": {
+    "supportContacts": "Contacts d'assistance",
+    "partnerAdmin": "Administrateurs partenaires",
+    "supportInfo": "Si vous fournissez une assistance pour vos utilisateurs, saisissez vos paramètres d'assistance ci-dessous. Ces paramètres seront affichés sous Options d'assistance dans l'application Squared ;"
+  },
+  "utilizationPage": {
+    "entResUtilization": "Utilisation des ressources de l'entreprise",
+    "overAllUtil": "Utilisation générale",
+    "average": "Moyenne",
+    "bridgeUtilization": "Utilisation pont par pont"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Votre commande N° {{orderId}} est en cours de traitement. Veuillez vérifier à nouveau dans 24 heures.",
+    "info": "Statut",
+    "wait": "Veuillez patienter pendant que nous procédons à votre redirection"
   }
 }
