@@ -74,10 +74,10 @@
     "collabService": "Select the collaboration service licences that should be given to the users in the group",
     "addEntitleError": "Insufficient privilege to add or entitle a user",
     "freeMsg": "Free squared team rooms",
-    "freeConf": "Free 3-party sync-ups",
+    "freeConf": "Free 3-party Meetings",
     "freeComm": "Free in-network IP voice and video calling",
     "paidMsg": "Standard team rooms",
-    "paidConf": "8-party sync-ups",
+    "paidConf": "25-party Meetings",
     "paidComm": "Advanced communications"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licences for {{licenseDuration}} days"
   },
   "trials": {
-    "collab": "Standard Team Rooms + 8-party Sync Up",
+    "collab": "Standard Team Rooms + 25-party Meeting",
     "squaredUC": "Advanced communications"
   },
   "status": {

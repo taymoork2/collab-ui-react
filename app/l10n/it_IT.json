@@ -77,7 +77,7 @@
     "freeConf": "Sincronizzazioni di terze parti gratuite",
     "freeComm": "Chiamate vocali e video in rete IP gratuite",
     "paidMsg": "Chat team standard",
-    "paidConf": "Sincronizzazione di 8 parti",
+    "paidConf": "Sincronizzazione di 25 parti",
     "paidComm": "Comunicazioni avanzate"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "È stata modificata correttamente una versione di prova per {{customerName}} con {{licenseCount}} licenze per {{licenseDuration}} giorni."
   },
   "trials": {
-    "collab": "Chat team standard + sincronizzazione di 8 parti",
+    "collab": "Chat team standard + sincronizzazione di 25 parti",
     "squaredUC": "Comunicazioni avanzate"
   },
   "status": {

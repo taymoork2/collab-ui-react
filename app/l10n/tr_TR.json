@@ -77,7 +77,7 @@
     "freeConf": "Ücretsiz 3 taraflı senkronizasyonlar",
     "freeComm": "Ücretsiz ağ içi IP ses ve video çağrısı",
     "paidMsg": "Standart ekip odaları",
-    "paidConf": "8 taraflı senkronizasyonlar",
+    "paidConf": "25 taraflı senkronizasyonlar",
     "paidComm": "Gelişmiş iletişim"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "{{customerName}} için {{licenseDuration}} gün süreyle {{licenseCount}} lisansa yönelik deneme sürümünü başarıyla düzenlediniz."
   },
   "trials": {
-    "collab": "Standart Ekip Odaları + 8 Taraflı Senkronizasyon",
+    "collab": "Standart Ekip Odaları + 25 Taraflı Senkronizasyon",
     "squaredUC": "Gelişmiş İletişim"
   },
   "status": {

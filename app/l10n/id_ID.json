@@ -77,7 +77,7 @@
     "freeConf": "Gratis rapat 3 peserta",
     "freeComm": "Gratis panggilan suara dan video IP dalam jaringan",
     "paidMsg": "Kamar tim standar",
-    "paidConf": "Rapat 8 peserta",
+    "paidConf": "Rapat 25 peserta",
     "paidComm": "Komunikasi Lanjut"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "Anda berhasil mengedit percobaan untuk {{customerName}} dengan {{licenseCount}} lisensi selama {{licenseDuration}}."
   },
   "trials": {
-    "collab": "Kamar Tim Standar + Rapat 8 Peserta",
+    "collab": "Kamar Tim Standar + Rapat 25 Peserta",
     "squaredUC": "Komunikasi Lanjut"
   },
   "status": {

@@ -77,7 +77,7 @@
     "freeConf": "Gratis tredjeparts synkroniseringer",
     "freeComm": "Gratis tale- og videosamtaler innenfor nettverket",
     "paidMsg": "Standard teamrom",
-    "paidConf": "Synkroniseringer med 8 parter",
+    "paidConf": "Synkroniseringer med 25 parter",
     "paidComm": "Avanserte kommunikasjoner"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "Du har redigert en prøveperiode for {{customerName}} med {{licenseCount}} lisenser for {{licenseDuration}} dager."
   },
   "trials": {
-    "collab": "Standard teamrom + 8-parters synkronisering",
+    "collab": "Standard teamrom + 25-parters synkronisering",
     "squaredUC": "Avanserte kommunikasjoner"
   },
   "status": {

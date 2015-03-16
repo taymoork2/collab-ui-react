@@ -77,7 +77,7 @@
     "freeConf": "Sincronizaciones de 3 participantes gratuitas",
     "freeComm": "Videollamadas y voz IP dentro de la red gratuitas",
     "paidMsg": "Salas de equipo estándar",
-    "paidConf": "sincronizaciones de 8 participantes",
+    "paidConf": "sincronizaciones de 25 participantes",
     "paidComm": "Comunicación avanzada"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "Editó correctamente una prueba para {{customerName}} con {{licenseCount}} licencias para {{licenseDuration}} días."
   },
   "trials": {
-    "collab": "Salas de equipo estándar + sincronización de 8 participantes",
+    "collab": "Salas de equipo estándar + sincronización de 25 participantes",
     "squaredUC": "Comunicación avanzada"
   },
   "status": {

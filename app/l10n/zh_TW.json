@@ -77,7 +77,7 @@
     "freeConf": "免費的 3 方同步",
     "freeComm": "免費的網路間 IP 語音與視訊通話",
     "paidMsg": "標準小組會議室",
-    "paidConf": "8 方同步",
+    "paidConf": "25 方同步",
     "paidComm": "進階通訊"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "已成功編輯 {{customerName}} 的試用服務，共 {{licenseCount}} 個授權，時間為 {{licenseDuration}} 天。"
   },
   "trials": {
-    "collab": "標準小組會議室 + 8 方同步",
+    "collab": "標準小組會議室 + 25 方同步",
     "squaredUC": "進階通訊"
   },
   "status": {

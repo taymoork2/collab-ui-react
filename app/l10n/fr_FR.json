@@ -77,7 +77,7 @@
     "freeConf": "Réunions gratuites pour 3 parties",
     "freeComm": "Appels avec Voix sur IP et vidéo gratuits",
     "paidMsg": "Salles d'équipes standard",
-    "paidConf": "Réunions de 8 parties",
+    "paidConf": "Réunions de 25 parties",
     "paidComm": "Communications avancées"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "Vous avez modifié un essai avec succès pour {{customerName}} avec {{licenseCount}} licences pour {{licenseDuration}} jours."
   },
   "trials": {
-    "collab": "Salles d'équipes standard + réunion avec 8 parties",
+    "collab": "Salles d'équipes standard + réunion avec 25 parties",
     "squaredUC": "Communications avancées"
   },
   "status": {

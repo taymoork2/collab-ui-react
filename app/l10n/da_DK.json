@@ -74,10 +74,10 @@
     "collabService": "Vælg de samarbejdstjenestelicenser, der skal gives til brugerne i gruppen.",
     "addEntitleError": "ikke tilstrækkelig privilegie til at tilføje eller give en bruger rettigheder.",
     "freeMsg": "Gratis Squared team-mødelokaler",
-    "freeConf": "Gratis sync-ups for 3 parter",
+    "freeConf": "Gratis Meetings for 3 parter",
     "freeComm": "Gratis IP-stemme og -videoopkald inden for netværket",
     "paidMsg": "Standard team-mødelokaler",
-    "paidConf": "Sync-ups for 8 parter",
+    "paidConf": "Meetings for 25 parter",
     "paidComm": "Avanceret kommunikation"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "Du har redigeret en prøveperiode for {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dage."
   },
   "trials": {
-    "collab": "Standard team-mødesteder + sync-up for 8 parter",
+    "collab": "Standard team-mødesteder + Meeting for 25 parter",
     "squaredUC": "Avanceret kommunikation"
   },
   "status": {

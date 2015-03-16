@@ -77,7 +77,7 @@
     "freeConf": "Sincronizações de 3 partes livre",
     "freeComm": "Chamada de voz e vídeo sobre IP livre na rede",
     "paidMsg": "Salas de equipes padrão",
-    "paidConf": "Sincronizações de 8 partes",
+    "paidConf": "Sincronizações de 25 partes",
     "paidComm": "Comunicações avançadas"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "Você editou com êxito uma avaliação para {{customerName}} com {{licenseCount}} licenças para {{licenseDuration}} dias."
   },
   "trials": {
-    "collab": "Salas de equipes padrão + sincronização de 8 partes",
+    "collab": "Salas de equipes padrão + sincronização de 25 partes",
     "squaredUC": "Comunicações avançadas"
   },
   "status": {

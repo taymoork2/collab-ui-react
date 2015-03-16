@@ -74,10 +74,10 @@
     "collabService": "Kies de collaboration service-licenties die aan de gebruikers in de groep dienen gegeven te worden.",
     "addEntitleError": "onvoldoende rechten om een gebruiker toe te voegen of te machtigen.",
     "freeMsg": "Gratis teamruimtes in Squared",
-    "freeConf": "Gratis sync-ups van drie partijen",
+    "freeConf": "Gratis Meetings van drie partijen",
     "freeComm": "Gratis spraak- en videogesprekken via IP binnen uw netwerk",
     "paidMsg": "Standaard teamruimtes",
-    "paidConf": "Sync-ups van 8 partijen",
+    "paidConf": "Meetings van 25 partijen",
     "paidComm": "Geavanceerde communicatie"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "U hebt met succes het proefabonnement van {{customerName}} met {{licenseCount}} licenties gewijzigd. De proefperiode duurt {{licenseDuration}} dagen."
   },
   "trials": {
-    "collab": "Standaard teamruimtes + sync-up voor 8 partijen",
+    "collab": "Standaard teamruimtes + Meeting voor 25 partijen",
     "squaredUC": "Geavanceerde communicatie"
   },
   "status": {

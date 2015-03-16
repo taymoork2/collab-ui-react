@@ -74,10 +74,10 @@
     "collabService": "Wybierz licencje usługi współpracy, które powinny zostać przekazane użytkownikom w grupie.",
     "addEntitleError": "Niewystarczające uprawnienia, aby dodać lub upoważnić użytkownika.",
     "freeMsg": "Bezpłatne pokoje zespołów w usłudze Squared",
-    "freeConf": "Bezpłatne połączenia Sync-Up z 3 uczestnikami",
+    "freeConf": "Bezpłatne połączenia Meeting z 3 uczestnikami",
     "freeComm": "Bezpłatne połączenia głosowe i wideo IP w ramach sieci",
     "paidMsg": "Standardowe pokoje zespołów",
-    "paidConf": "Połączenia Sync-Up z 8 uczestnikami",
+    "paidConf": "Połączenia Meeting z 25 uczestnikami",
     "paidComm": "Zaawansowana komunikacja"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "Pomyślnie edytowano {{licenseDuration}}-dniową wersję próbną dla klienta {{customerName}} z następującą liczbą licencji: {{licenseCount}}."
   },
   "trials": {
-    "collab": "Standardowe pokoje zespołów i połączenia Sync-Up z 8 uczestnikami",
+    "collab": "Standardowe pokoje zespołów i połączenia Meeting z 25 uczestnikami",
     "squaredUC": "Zaawansowana komunikacja"
   },
   "status": {

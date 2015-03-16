@@ -77,7 +77,7 @@
     "freeConf": "Freie Synchronisierungen für 3 Teilnehmer",
     "freeComm": "Freie netzwerkinterne IP – Sprach- und Videoanrufe",
     "paidMsg": "Standard-Gruppenräume",
-    "paidConf": "Synchronisierungen für 8 Teilnehmer",
+    "paidConf": "Synchronisierungen für 25 Teilnehmer",
     "paidComm": "Advanced Communications"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "Sie haben einen Test für {{customerName}} mit {{licenseCount}} Lizenzen für {{licenseDuration}} Tage erfolgreich bearbeitet."
   },
   "trials": {
-    "collab": "Standard-Gruppenräume + Synchronisierung für 8 Teilnehmer",
+    "collab": "Standard-Gruppenräume + Synchronisierung für 25 Teilnehmer",
     "squaredUC": "Advanced Communications"
   },
   "status": {

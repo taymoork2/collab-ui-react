@@ -74,10 +74,10 @@
     "collabService": "Välj vilka collaboration service-licenser som ska beviljas användarna i gruppen.",
     "addEntitleError": "otillräckliga privilegier för att lägga till eller berättiga en användare",
     "freeMsg": "Gratis grupprum i Squared",
-    "freeConf": "Gratis sync-ups med 3 personer",
+    "freeConf": "Gratis Meetings med 3 personer",
     "freeComm": "Gratis interna röst- och videosamtal via IP",
     "paidMsg": "Standardgrupprum",
-    "paidConf": "Sync-ups med 8 personer",
+    "paidConf": "Meetings med 25 personer",
     "paidComm": "Avancerad kommunikation"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "Du har ändrat en provperiod för {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dagar."
   },
   "trials": {
-    "collab": "Standardgrupprum + Sync Up med 8 personer",
+    "collab": "Standardgrupprum + Meeting med 25 personer",
     "squaredUC": "Avancerad kommunikation"
   },
   "status": {

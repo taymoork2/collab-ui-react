@@ -77,7 +77,7 @@
     "freeConf": "免费 3 方同步",
     "freeComm": "免费网内 IP 语音和视频呼叫",
     "paidMsg": "标准团队房间",
-    "paidConf": "8 方同步",
+    "paidConf": "25 方同步",
     "paidComm": "高级通信"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "已成功为 {{customerName}} 编辑试用，许可证数为 {{licenseCount}} 个，试用期为 {{licenseDuration}} 天。"
   },
   "trials": {
-    "collab": "标准团队房间 + 8 方同步",
+    "collab": "标准团队房间 + 25 方同步",
     "squaredUC": "高级通信"
   },
   "status": {

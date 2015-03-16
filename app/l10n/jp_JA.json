@@ -77,7 +77,7 @@
     "freeConf": "無料サードパーティ同期",
     "freeComm": "無料ネットワーク内IP音声およびビデオ通話",
     "paidMsg": "標準チームルーム",
-    "paidConf": "8パーティ同期",
+    "paidConf": "25パーティ同期",
     "paidComm": "高度なコミュニケーション"
   },
   "usersPreview": {
@@ -737,7 +737,7 @@
     "editSuccess": "{{licenseDuration}} 日間の{{licenseCount}} ライセンスを持つ {{customerName}}に対するトライアルを編集しました。"
   },
   "trials": {
-    "collab": "標準チームルーム + 8パーティ同期",
+    "collab": "標準チームルーム + 25パーティ同期",
     "squaredUC": "高度なコミュニケーション"
   },
   "status": {
