@@ -9,9 +9,15 @@ angular.module('Core')
       };
 
       $scope.openEditTrialModal = function () {
-        $state.go('trialEdit', {
+        $state.go('trialEdit.info', {
           currentTrial: $scope.currentTrial,
           showPartnerEdit: true
+        }).then(function () {
+          $state.modal.result.then(function () {
+            $state.go('partnercustomers.list', {}, {
+              reload: true
+            });
+          });
         });
       };
 

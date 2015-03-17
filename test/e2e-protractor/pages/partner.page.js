@@ -55,6 +55,7 @@ var PartnerHomePage = function () {
   this.editTrialButton = element(by.id('editTrialButton'));
   this.newTrialName = element(by.binding('trial.'));
   this.saveSendButton = element(by.id('saveSendButton'));
+  this.saveUpdateButton = element(by.id('saveUpdateButton'));
   this.newTrialRow = element(by.id(this.newTrial.customerName));
   this.newSqUCTrialRow = element(by.id(this.newSqUCTrial.customerName));
   this.editTrialForm = element(by.id('editTrialForm'));

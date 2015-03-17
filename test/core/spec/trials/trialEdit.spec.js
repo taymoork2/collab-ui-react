@@ -1,10 +1,10 @@
 'use strict';
 
 describe('Controller: TrialEditCtrl', function () {
-  var controller, $scope, $state, $q, $translate, Notification, TrialService;
+  var controller, $scope, $state, $q, $translate, Notification, TrialService, HuronCustomer;
 
   beforeEach(module('Core'));
-
+  beforeEach(module('Huron'));
   var stateParams = {
     currentTrial: {
       offers: [{
@@ -15,13 +15,14 @@ describe('Controller: TrialEditCtrl', function () {
     }
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Notification_, _TrialService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Notification_, _TrialService_, _HuronCustomer_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
     Notification = _Notification_;
     TrialService = _TrialService_;
+    HuronCustomer = _HuronCustomer_;
 
     spyOn(Notification, 'notify');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
@@ -31,7 +32,8 @@ describe('Controller: TrialEditCtrl', function () {
       $translate: $translate,
       $stateParams: stateParams,
       TrialService: TrialService,
-      Notification: Notification
+      Notification: Notification,
+      HuronCustomer: HuronCustomer
     });
     $scope.$apply();
   }));

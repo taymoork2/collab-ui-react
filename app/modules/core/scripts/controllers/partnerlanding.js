@@ -33,7 +33,8 @@ angular.module('Core')
       };
 
       $scope.openEditTrialModal = function () {
-        $state.go('trialEdit', {
+        $state.go('trialEdit.info', {
+          showPartnerEdit: true,
           currentTrial: $scope.currentTrial
         }).then(function () {
           $state.modal.result.then(function () {

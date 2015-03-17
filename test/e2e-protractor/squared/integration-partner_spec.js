@@ -91,7 +91,7 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.editTrialForm);
 
       utils.expectAttribute(partner.squaredTrialCheckbox, 'disabled', 'true');
-      utils.click(partner.saveSendButton);
+      utils.click(partner.saveUpdateButton);
 
       notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
 
@@ -105,6 +105,7 @@ describe('Partner flow', function () {
     it('Launch customer portal via preview panel and display first time wizard', function () {
       var appWindow = browser.getWindowHandle();
 
+      utils.click(partner.newTrialRow);
       utils.click(partner.launchCustomerPanelButton);
 
       browser.getAllWindowHandles().then(function (handles) {

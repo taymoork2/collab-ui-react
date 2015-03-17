@@ -6,7 +6,8 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService) {
+
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config) {
     var vm = this;
     vm.invalidcount = 0;
     vm.submitBtnStatus = false;
@@ -22,6 +23,9 @@
     vm.deletedNumbers = '';
     vm.tokenfieldid = 'didAddField';
     vm.tokenplacehoder = $translate.instant('didAddModal.inputPlacehoder');
+    vm.fromEditTrial = $stateParams.fromEditTrial;
+    vm.currentTrial = angular.copy($stateParams.currentTrial);
+
     vm.init = function (customerId) {
       if (angular.isUndefined(customerId) && angular.isDefined($stateParams.currentOrg) && angular.isDefined($stateParams.currentOrg.customerOrgId)) {
         customerId = $stateParams.currentOrg.customerOrgId;
@@ -89,7 +93,10 @@
     vm.confirmSubmit = confirmSubmit;
     vm.goBackToAddNumber = goBackToAddNumber;
     vm.startTrial = startTrial;
+    vm.editTrial = editTrial;
     vm.sendEmail = sendEmail;
+    vm.backtoStartTrial = backtoStartTrial;
+    vm.backtoEditTrial = backtoEditTrial;
     vm.currentOrg = $stateParams.currentOrg;
     ////////////
 
@@ -190,22 +197,40 @@
         if (didBucket.newlyAddedDid.length > 0) {
           promises[1] = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, didBucket.newlyAddedDid).then(function (results) {
             vm.newCount = results.successes.length;
+            vm.failedAdd = results.failures;
           });
         }
-
       }
 
       return $q.all(promises).finally(function () {
         $rootScope.$broadcast('DIDS_UPDATED');
         vm.addingNumbers = false;
         vm.addSuccess = true;
-      });
 
+        if (vm.failedAdd.length > 0) {
+          var errorMsg = [$translate.instant('didAddModal.failText', {
+            count: vm.failedAdd.length
+          })];
+          Notification.notify(errorMsg, 'error');
+        }
+      });
     }
 
     function goBackToAddNumber() {
       vm.addNumbers = true;
       vm.deleteNumbers = false;
+    }
+
+    function backtoEditTrial() {
+      $state.go('trialEdit.info', {
+        currentTrial: vm.currentTrial,
+        showPartnerEdit: true,
+        addUC: true
+      });
+    }
+
+    function backtoStartTrial() {
+      $state.go('trialAdd.info');
     }
 
     function formatDidList(didList) {
@@ -236,6 +261,19 @@
           return submit(customerId);
         }).then(function () {
           return $state.go('trialAdd.nextSteps');
+        }).catch(function () {
+          angular.element('#startTrial').button('reset');
+        });
+      }
+    }
+
+    function editTrial() {
+      if ($scope.trial && angular.isFunction($scope.trial.editTrial)) {
+        angular.element('#startTrial').button('loading');
+        $q.when($scope.trial.editTrial(true)).then(function (customerId) {
+          return submit(customerId);
+        }).then(function () {
+          $state.modal.close();
         }).catch(function () {
           angular.element('#startTrial').button('reset');
         });
