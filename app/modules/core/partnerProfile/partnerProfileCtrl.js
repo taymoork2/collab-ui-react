@@ -9,12 +9,7 @@ angular.module('Core')
       $scope.isPartner = Authinfo.isPartner();
       $scope.appType = 'Squared';
 
-      $scope.profileHelpUrl = 'https://support.projectsquared.com';
-
-      if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
-        $scope.profileHelpUrl = 'https://support.ciscospark.com';
-        $scope.appType = 'Spark';
-      }
+      $scope.profileHelpUrl = 'https://support.ciscospark.com';
 
       // hold partner admin object
       $scope.partner = null;

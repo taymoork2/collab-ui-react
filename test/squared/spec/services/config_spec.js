@@ -22,8 +22,8 @@ describe('Config', function () {
   }));
 
   var devHost = 'localhost';
-  var prodHost = 'admin.projectsquared.com';
-  var intHost = 'int-admin.projectsquared.com';
+  var prodHost = 'admin.ciscospark.com';
+  var intHost = 'int-admin.ciscospark.com';
 
   var whenCalling = function (fn, arg) {
     var hosts = {
@@ -133,17 +133,17 @@ describe('Config', function () {
 
   it('should return correct oauth login url', function () {
     whenCalling('getOauthLoginUrl').expectUrlToBe({
-      development: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=webex-squared',
-      integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fint-admin.projectsquared.com%2F&state=random-string&service=webex-squared',
-      production: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fadmin.projectsquared.com%2F&state=random-string&service=webex-squared'
+      development: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=spark',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fint-admin.ciscospark.com%2F&state=random-string&service=spark',
+      production: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization&redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F&state=random-string&service=spark'
     });
   });
 
   it('should return correct redir url', function () {
     whenCalling('getRedirectUrl').expectUrlToBe({
       development: 'redirect_uri=http%3A%2F%2F127.0.0.1%3A8000',
-      integration: 'redirect_uri=https%3A%2F%2Fint-admin.projectsquared.com%2F',
-      production: 'redirect_uri=https%3A%2F%2Fadmin.projectsquared.com%2F'
+      integration: 'redirect_uri=https%3A%2F%2Fint-admin.ciscospark.com%2F',
+      production: 'redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F'
     });
   });
 
@@ -166,8 +166,8 @@ describe('Config', function () {
   it('should return correct logout url', function () {
     whenCalling('getLogoutUrl').expectUrlToBe({
       development: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=http%3A%2F%2F127.0.0.1%3A8000',
-      integration: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fint-admin.projectsquared.com%2F',
-      production: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fadmin.projectsquared.com%2F'
+      integration: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fint-admin.ciscospark.com%2F',
+      production: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fadmin.ciscospark.com%2F'
     });
   });
 
@@ -189,9 +189,9 @@ describe('Config', function () {
 
   it('should return correct health check service url', function () {
     whenCalling('getHealthCheckUrlServiceUrl').expectUrlToBe({
-      development: 'https://projectsquared.statuspage.io/index.json',
-      integration: 'https://projectsquared.statuspage.io/index.json',
-      production: 'https://projectsquared.statuspage.io/index.json'
+      development: 'https://ciscospark.statuspage.io/index.json',
+      integration: 'https://ciscospark.statuspage.io/index.json',
+      production: 'https://ciscospark.statuspage.io/index.json'
     });
   });
 
@@ -213,9 +213,9 @@ describe('Config', function () {
 
   it('should return correct status page url', function () {
     whenCalling('getStatusPageUrl').expectUrlToBe({
-      development: 'http://status.projectsquared.com/',
-      integration: 'http://status.projectsquared.com/',
-      production: 'http://status.projectsquared.com/'
+      development: 'http://status.ciscospark.com/',
+      integration: 'http://status.ciscospark.com/',
+      production: 'http://status.ciscospark.com/'
     });
   });
 
@@ -253,9 +253,9 @@ describe('Config', function () {
 
   it('should return correct web client url', function () {
     whenCalling('getWebClientUrl').expectUrlToBe({
-      development: 'https://web.projectsquared.com/',
-      integration: 'https://web.projectsquared.com/',
-      production: 'https://web.projectsquared.com/'
+      development: 'https://web.ciscospark.com/',
+      integration: 'https://web.ciscospark.com/',
+      production: 'https://web.ciscospark.com/'
     });
   });
 

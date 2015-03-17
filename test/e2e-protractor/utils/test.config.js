@@ -31,4 +31,4 @@ exports.orgId = {
   pbrOrg: '4214d345-7caf-4e32-b015-34de878d1158'
 };
 
-exports.webClientURL = 'https://web.projectsquared.com/';
+exports.webClientURL = 'https://web.ciscospark.com/';

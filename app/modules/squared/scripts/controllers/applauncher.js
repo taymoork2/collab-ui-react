@@ -19,11 +19,7 @@ angular.module('Squared')
           urlParams = '?' + params;
         }
 
-        if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
-          $window.location.href = Config.getSparkWebClientUrl() + urlParams;
-        } else {
-          $window.location.href = Config.getWebClientUrl() + urlParams;
-        }
+        $window.location.href = Config.getWebClientUrl() + urlParams;
 
       } else if (Utils.isIPhone()) {
 

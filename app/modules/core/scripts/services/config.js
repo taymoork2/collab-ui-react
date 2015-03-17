@@ -12,10 +12,8 @@ angular.module('Core')
 
         adminClientUrl: {
           dev: 'http://127.0.0.1:8000',
-          integration: 'https://int-admin.projectsquared.com/',
-          prod: 'https://admin.projectsquared.com/',
-          sparkprod: 'https://admin.ciscospark.com/',
-          sparkint: 'https://int-admin.ciscospark.com/'
+          integration: 'https://int-admin.ciscospark.com/',
+          prod: 'https://admin.ciscospark.com/'
         },
 
         adminServiceUrl: {
@@ -78,9 +76,7 @@ angular.module('Core')
 
         scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
 
-        statusPageUrl: 'http://status.projectsquared.com/',
-
-        statusPageUrlSpark: 'http://status.ciscospark.com/',
+        statusPageUrl: 'http://status.ciscospark.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
 
@@ -91,8 +87,7 @@ angular.module('Core')
         ciscoOrgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
 
         appinfo: {
-          webClientURL: 'https://web.projectsquared.com/',
-          sparkWebClientUrl: 'https://web.ciscospark.com',
+          webClientURL: 'https://web.ciscospark.com/',
           iPhoneURL: 'http://cs.co/sqios',
           androidURL: 'http://cs.co/sqandroid',
           androidAppIntent: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
@@ -100,9 +95,8 @@ angular.module('Core')
         },
 
         healthCheckUrl: {
-          dev: 'http://projectsquared.statuspage.io/index.json',
-          prod: 'https://projectsquared.statuspage.io/index.json',
-          spark: 'https://ciscospark.statuspage.io/index.json'
+          dev: 'https://ciscospark.statuspage.io/index.json',
+          prod: 'https://ciscospark.statuspage.io/index.json'
         },
 
         herculesUrl: {
@@ -317,27 +311,15 @@ angular.module('Core')
         },
 
         isIntegration: function () {
-          return getCurrentHostname() === 'int-admin.projectsquared.com';
-        },
-
-        isProd: function () {
-          return getCurrentHostname() === 'admin.projectsquared.com';
-        },
-
-        isSparkProd: function () {
-          return getCurrentHostname() === 'admin.ciscospark.com';
-        },
-
-        isSparkInt: function () {
           return getCurrentHostname() === 'int-admin.ciscospark.com';
         },
 
+        isProd: function () {
+          return getCurrentHostname() === 'admin.ciscospark.com';
+        },
+
         getEnv: function () {
-          if (this.isSparkInt()) {
-            return 'sparkint';
-          } else if (this.isSparkProd()) {
-            return 'sparkprod';
-          } else if (this.isDev()) {
+          if (this.isDev()) {
             return 'dev';
           } else if (this.isIntegration()) {
             return 'integration';
@@ -401,11 +383,7 @@ angular.module('Core')
         },
 
         getOauthServiceType: function () {
-          if (this.getEnv() === 'sparkint' || this.getEnv() === 'sparkprod') {
-            return 'spark';
-          } else {
-            return 'webex-squared';
-          }
+          return 'spark';
         },
 
         getLogoutUrl: function () {
@@ -429,10 +407,8 @@ angular.module('Core')
         },
 
         getHealthCheckUrlServiceUrl: function () {
-          if (this.isSparkInt() || this.isSparkProd()) {
-            return this.healthCheckUrl.spark;
-          } else if (this.isDev()) {
-            return this.healthCheckUrl.prod;
+          if (this.isDev()) {
+            return this.healthCheckUrl.dev;
           } else {
             return this.healthCheckUrl.prod;
           }
@@ -447,11 +423,7 @@ angular.module('Core')
         },
 
         getStatusPageUrl: function () {
-          if (this.isSparkInt() || this.isSparkProd()) {
-            return this.statusPageUrlSpark;
-          } else {
-            return this.statusPageUrl;
-          }
+          return this.statusPageUrl;
         },
 
         getSquaredAppUrl: function () {
@@ -472,10 +444,6 @@ angular.module('Core')
 
         getWebClientUrl: function () {
           return this.appinfo.webClientURL;
-        },
-
-        getSparkWebClientUrl: function () {
-          return this.appinfo.sparkWebClientURL;
         },
 
         getHerculesUrl: function () {

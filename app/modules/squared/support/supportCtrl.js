@@ -10,14 +10,8 @@ angular.module('Squared')
       $scope.problemHandler = ' by Cisco';
       $scope.helpHandler = 'by Cisco';
       $scope.reportingUrl = null;
-      $scope.helpUrl = 'https://support.projectsquared.com';
+      $scope.helpUrl = 'https://support.ciscospark.com';
       $scope.statusPageUrl = Config.getStatusPageUrl();
-
-      //New Branding changes. To be removed
-      if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
-        $scope.helpUrl = 'https://support.ciscospark.com';
-      }
-
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
 

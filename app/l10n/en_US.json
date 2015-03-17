@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cisco Collaboration Management",
+    "title": "Cisco Spark Management",
     "login": "Login",
     "loading": "Loading"
   },
@@ -141,8 +141,8 @@
     "welcome": "Welcome!",
     "feedback": "Feedback",
     "logout": "Sign Out",
-    "appTitle": "Squared Admin Tool",
-    "genericTitle": "Squared",
+    "appTitle": "Cisco Spark Management",
+    "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
     "launchPartner": "Manage My Organization"
@@ -152,12 +152,12 @@
     "heading": "List of entitlements for"
   },
   "downloadPage": {
-    "thank": "Thank you for registering with Cisco Squared.",
+    "thank": "Thank you for registering with Cisco Spark.",
     "account": "Your account {{email}} is now active.",
-    "install": "Please install Squared by following",
+    "install": "Please install Spark by following",
     "link": "this link.",
     "using": "Please start using",
-    "squared": "Squared."
+    "squared": "Spark."
   },
   "invitePage": {
     "redirect": "Redirecting...",
@@ -315,7 +315,7 @@
     "launchBtn": "Launch",
     "convert": "Convert",
     "convertUsers": "Convert Unlicensed Users",
-    "convertUsersText": "Convert employees of your organization who have signed up for Project Squared on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
+    "convertUsersText": "Convert employees of your organization who have signed up for Project Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
     "name": "Name",
@@ -333,7 +333,7 @@
   "inviteModal": {
     "title": "Service Entitlement",
     "heading": " Enable Service Entitlement",
-    "content": "Invite users in the organization to use squared...",
+    "content": "Invite users in the organization to use Cisco Spark...",
     "inviteAll": "Enable organization wide service entitlement"
   },
   "ssoModal": {
@@ -627,7 +627,7 @@
     "createButton": "Create Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -733,7 +733,7 @@
     "launchPortal": "Launch Company Portal",
     "launchPortalPrompt": "If you want to set up the service for the customer:",
     "or": "or",
-    "squareducError": "Created trial, but unable to provision Squared UC.",
+    "squareducError": "Created trial, but unable to provision Spark UC.",
     "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
@@ -816,7 +816,7 @@
     "send": "Send",
     "to": "To",
     "subject": "Subject",
-    "subjectContent": "Activate your Squared UC device",
+    "subjectContent": "Activate your Spark UC device",
     "message": "Message",
     "expires": "Expires: {{date}}  <strong>({{timeLeft}} from now)</strong>",
     "clipboardFallback": "Press cmd+c to copy the text below.",
@@ -830,7 +830,7 @@
     "emailAddress": "Email Address",
     "administratorRoles": "Administrator Roles",
     "rolesDescription": "A user may have one or more roles in the system, and will be granted all permissions from selected roles.",
-    "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Squared system from this portal.",
+    "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Spark system from this portal.",
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",
     "partialAdmin": "Some administrator privileges",
@@ -907,7 +907,7 @@
     "ciscoRep": "Cisco Representative",
     "supportSetup": "Trouble Ticket / Reporting Location",
     "save": "Save",
-    "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the {{app}} application.",
+    "supportInfo": "If you are providing support for your customers' users, enter your support paramters below. These paramaters will be displayed under Support Options in the Spark applications.",
     "lifeCycle": "Lifecycle partners are required to provide both types of support shown below.",
     "supportOptions": "Cisco Support Options",
     "seeExample": "see an example.",
@@ -917,8 +917,8 @@
     "urlReport": "URL for reporting trouble tickets or opening cases",
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Help & FAQ Location",
-    "matchingTix": "Matching Problem Reports",
-    "matchingDescr": "To match problem reports with the logs that are uploaded to the Cisco Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.acme.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
+    "matchingTix": "Matching Trouble Tickets",
+    "matchingDescr": "To match trouble tickets with the logs that are uploaded to the Cisco Spark Management when reports are created, append your support URL with your logID parameter as \"%%logID%%\" (no quotes).",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
@@ -933,7 +933,7 @@
   "customerProfile": {
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
-    "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the {{app}} applications."
+    "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Spark application;"
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
@@ -942,7 +942,7 @@
     "bridgeUtilization": "Bridge By Bridge Utilization"
   },
   "processOrderPage": {
-    "errOrgCreation": "Your order is being processed. Please check back after 24 hours.",
+    "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
     "info": "Status",
     "wait": "Please wait while we redirect you"
   },
