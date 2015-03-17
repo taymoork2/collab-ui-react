@@ -1,8 +1,8 @@
 'use strict';
 
-var pattern = Math.ceil(Math.random() * Math.pow(10, 5)).toString();
+describe('First Time Wizard - CiscoUC Service Setup', function () {
+  var pattern = servicesetup.getPattern();
 
-xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
@@ -12,7 +12,7 @@ xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
   });
 
   it('should login as an admin user', function () {
-    login.login('huron-int1');
+    login.login('huron-e2e');
   });
 
   it('clicking on gear icon should open first time wizard', function () {
@@ -24,7 +24,7 @@ xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
 
   it('should load views according to left navigation clicks', function () {
     wizard.clickServiceSetup();
-    expect(wizard.mainviewTitle.getText()).toEqual('Unified Communications');
+    utils.expectText(wizard.mainviewTitle, 'Unified Communications');
     utils.expectIsDisplayed(servicesetup.timeZone);
     utils.expectIsDisplayed(servicesetup.steeringDigit);
     utils.expectIsDisplayed(servicesetup.globalMOH);
@@ -33,9 +33,8 @@ xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
 
   it('should add a number range', function () {
     utils.click(servicesetup.addNumberRange);
-    var newRange = servicesetup.numberRanges.last();
-    newRange.element(by.model('internalNumberRange.beginNumber')).sendKeys(pattern);
-    newRange.element(by.model('internalNumberRange.endNumber')).sendKeys(pattern);
+    utils.sendKeys(servicesetup.newBeginRange, pattern);
+    utils.sendKeys(servicesetup.newEndRange, pattern);
     utils.click(servicesetup.save);
     notifications.assertSuccess('added successfully');
   });
@@ -47,7 +46,7 @@ xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
   });
 
   it('should close the first time wizard and log out', function () {
-    element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
+    utils.clickEscape();
 
     navigation.logout();
   });

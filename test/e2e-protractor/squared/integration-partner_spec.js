@@ -75,7 +75,7 @@ describe('Partner flow', function () {
     it('should find new trial', function (done) {
       utils.expectIsDisplayed(partner.newTrialRow);
 
-      partner.retrieveOrgId().then(function (_orgId) {
+      partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
         orgId = _orgId;
         done();
       });

@@ -9,7 +9,7 @@
 /* global notifications */
 /* global deleteTrialUtils */
 
-xdescribe('Partner flow', function () {
+describe('Spark UC Partner flow', function () {
   var orgId;
   var accessToken;
 
@@ -28,22 +28,10 @@ xdescribe('Partner flow', function () {
     });
 
     it('should have a partner token', function (done) {
-      element(by.tagName('body')).evaluate('token').then(function (token) {
+      utils.retrieveToken().then(function (token) {
         accessToken = token;
-        expect(accessToken).not.toBeNull();
         done();
       });
-    });
-
-    it('should display correct tabs for user based on role', function () {
-
-      utils.expectIsDisplayed(navigation.homeTab);
-      utils.expectIsDisplayed(navigation.customersTab);
-      utils.expectIsDisplayed(navigation.devicesTab);
-      utils.expectIsDisplayed(navigation.reportsTab);
-      utils.expectIsDisplayed(navigation.accountTab);
-      utils.expectIsDisplayed(navigation.developmentTab);
-      expect(navigation.getTabCount()).toBe(6);
     });
 
     it('should display trials list', function () {
@@ -54,13 +42,12 @@ xdescribe('Partner flow', function () {
   describe('Add Partner Trial', function () {
 
     it('should view all trials', function () {
-      utils.click(partner.viewAllLink);
-      navigation.expectCurrentUrl('/customers');
-
+      navigation.clickCustomers();
       utils.expectIsDisplayed(partner.customerList);
+      utils.click(partner.trialFilter);
     });
 
-    it('should add a new trial', function (done) {
+    it('should add a new trial', function () {
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
 
@@ -69,22 +56,24 @@ xdescribe('Partner flow', function () {
       utils.expectIsDisplayed(partner.squaredTrialCheckbox);
       utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
 
-      partner.customerNameInput.sendKeys(partner.newSqUCTrial.customerName);
-      partner.customerEmailInput.sendKeys(partner.newSqUCTrial.customerEmail);
+      utils.sendKeys(partner.customerNameInput, partner.newSqUCTrial.customerName);
+      utils.sendKeys(partner.customerEmailInput, partner.newSqUCTrial.customerEmail);
       utils.click(partner.squaredTrialCheckbox);
 
       utils.click(partner.startTrialButton);
-
-      utils.expectIsDisplayed(partner.newSqUCTrialRow);
-
-      partner.newSqUCTrialRow.getAttribute('orgId').then(function (attr) {
-        orgId = attr;
-        expect(orgId).not.toBeNull();
-        done();
-      });
+      notifications.assertSuccess(partner.newSqUCTrial.customerName, 'A trial was successfully started');
     }, 60000);
 
-    it('should edit trial with uc entitlements and add one did', function (done) {
+    it('should find new trial', function (done) {
+      utils.expectIsDisplayed(partner.newSqUCTrialRow);
+
+      partner.retrieveOrgId(partner.newSqUCTrialRow).then(function (_orgId) {
+        orgId = _orgId;
+        done();
+      });
+    });
+
+    it('should edit trial with uc entitlements and add one did', function () {
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
@@ -92,87 +81,69 @@ xdescribe('Partner flow', function () {
 
       utils.expectIsDisplayed(partner.editTrialForm);
 
-      utils.expectAttribute(partner.squaredTrialCheckbox, 'disabled', 'true');
-      utils.expectAttribute(partner.squaredUCTrialCheckbox, 'disabled', 'false');
-
+      utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
       utils.click(partner.squaredUCTrialCheckbox);
 
       utils.click(partner.saveUpdateButton);
 
-      utils.expectIsDisplayed(partner.customerDidInput);
-
       utils.sendKeys(partner.customerDidInput, partner.dids.one);
-      utils.click(partner.didAddModal);
+      utils.sendKeys(partner.customerDidInput, protractor.Key.ENTER);
 
       utils.click(partner.startTrialWithSqUCButton);
 
-      notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
-
-      utils.expectIsDisplayed(partner.newTrialRow);
+      notifications.assertSuccess(partner.newSqUCTrial.customerName, 'You have successfully edited a trial for');
     }, 60000);
 
-    it('should add new did to the trial', function (done) {
+    it('should add new did to the trial', function () {
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
       utils.click(partner.editDidLink);
 
       utils.expectIsDisplayed(partner.customerDidInput);
-      utils.expectValueToBeSet(partner.customerDidAddInput, "+" + partner.dids.one);
+      utils.expectValueToBeSet(partner.customerDidAddInput, '+' + partner.dids.one);
 
-      partner.customerDidInput.sendKeys(partner.dids.two);
-      utils.click(partner.didAddModal);
+      utils.sendKeys(partner.customerDidInput, partner.dids.two);
+      utils.sendKeys(partner.customerDidInput, protractor.Key.ENTER);
       utils.click(partner.addDidButton);
       utils.click(partner.notifyCustLaterLink);
 
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.expectIsDisplayed(partner.didNumberSpan);
       utils.expectTextToBeSet(partner.didNumberSpan, '2');
+    });
 
+    it('should delete extra did from the trial', function () {
       utils.click(partner.editDidLink);
 
       utils.expectIsDisplayed(partner.customerDidInput);
-      utils.expectValueToContain(partner.customerDidAddInput, "+" + partner.dids.one);
-      utils.expectValueToContain(partner.customerDidAddInput, "+" + partner.dids.two);
+      utils.expectValueToContain(partner.customerDidAddInput, '+' + partner.dids.one);
+      utils.expectValueToContain(partner.customerDidAddInput, '+' + partner.dids.two);
 
-      element.all(by.css('.token')).filter(function (elem, index) {
-        var label = elem.getWebElement().findElement(By.css('.token-label'));
-        return label.getText().then(function (text) {
-          return text === utils.formatPhoneNumbers(partner.dids.two.toString());
-        });
-      }).then(function (tokens) {
-        var close = tokens[0].getWebElement().findElement(By.css('.close'));
-        close.click();
-      });
+      utils.click(partner.getDidTokenClose(partner.dids.two));
+
       utils.click(partner.addDidButton);
       utils.expectIsDisplayed(partner.removeDidPanel);
-      utils.expectIsDisplayed(partner.removeDidButton);
       utils.click(partner.removeDidButton);
       utils.click(partner.notifyCustLaterLink);
 
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.expectIsDisplayed(partner.didNumberSpan);
       utils.expectTextToBeSet(partner.didNumberSpan, '1');
 
       utils.click(partner.editDidLink);
 
       utils.expectIsDisplayed(partner.customerDidInput);
-      utils.expectValueToBeSet(partner.customerDidAddInput, "+" + partner.dids.one);
+      utils.expectValueToBeSet(partner.customerDidAddInput, '+' + partner.dids.one);
       utils.click(partner.addDidDismissButton);
-
-      done();
-    }, 60000);
-
+    });
   });
 
   it('should delete an exisiting org thus deleting trial', function () {
-    expect(deleteTrialUtils.deleteOrg(orgId, accessToken)).toEqual(200);
-    expect(deleteUtils.deleteSquaredUCCustomer(orgId, accessToken)).toEqual(204);
-
+    deleteTrialUtils.deleteOrg(orgId, accessToken);
+    deleteUtils.deleteSquaredUCCustomer(orgId, accessToken);
   });
 
   // Log Out

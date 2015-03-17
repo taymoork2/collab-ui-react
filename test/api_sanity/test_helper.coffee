@@ -36,6 +36,11 @@ auth =
     pass: 'Cisco123!'
     org:  '6662df48-b367-4c1e-9c3c-aa408aaa79a1'
 
+  'huron-e2e':
+    user: 'admin@uc.e2e.huron-alpha.com'
+    pass: 'C1sco123!'
+    org:  '40c419e0-c74e-4f50-bcac-cc5581f9db6d'
+
   'account-admin':
     user: 'nkamboh+acc2@gmail.com'
     pass: 'C1sc0123!'

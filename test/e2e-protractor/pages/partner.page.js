@@ -34,6 +34,14 @@ var PartnerHomePage = function () {
     two: utils.randomDid()
   };
 
+  this.getDidTokenClose = function (did) {
+    return element.all(by.css('.token')).filter(function (elem, index) {
+      return elem.element(by.css('.token-label')).getText().then(function (text) {
+        return text === utils.formatPhoneNumbers(did);
+      });
+    }).first().element(by.css('.close'));
+  };
+
   this.trialsPanel = element(by.id('trialsPanel'));
   this.addButton = element(by.id('addTrial'));
   this.startTrialButton = element(by.id('startTrialButton'));
@@ -109,8 +117,8 @@ var PartnerHomePage = function () {
     });
   };
 
-  this.retrieveOrgId = function () {
-    return this.newTrialRow.getAttribute('orgId').then(function (orgId) {
+  this.retrieveOrgId = function (trialRow) {
+    return trialRow.getAttribute('orgId').then(function (orgId) {
       expect(orgId).not.toBeNull();
       return orgId;
     });

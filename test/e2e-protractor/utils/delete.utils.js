@@ -20,20 +20,18 @@ exports.deleteUser = function (email) {
   });
 };
 
-exports.deleteSquaredUCUser = function (customerUuid, userUuid) {
-  return utils.getToken().then(function (token) {
-    var options = {
-      method: 'delete',
-      url: config.squaredUCServiceUrl.integration + 'common/customers/' + customerUuid + '/users/' + userUuid,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      }
-    };
+exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
+  var options = {
+    method: 'delete',
+    url: config.squaredUCServiceUrl.integration + 'common/customers/' + customerUuid + '/users/' + userUuid,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    }
+  };
 
-    return utils.sendRequest(options).then(function () {
-      return 204;
-    });
+  return utils.sendRequest(options).then(function () {
+    return 204;
   });
 };
 

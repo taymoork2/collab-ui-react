@@ -6,7 +6,7 @@ module.exports = function(context) {
   'utils', 'deleteUtils', 'deleteTrialUtils',
   // page objects
   'notifications', 'login', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
-  'callrouting', 'servicesetup'
+  'callrouting', 'servicesetup', 'telephony'
   ];
 
   var allowedPageElementMethods = ['first', 'last', 'then'];

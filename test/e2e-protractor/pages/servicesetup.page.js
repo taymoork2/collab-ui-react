@@ -8,6 +8,14 @@ var ServiceSetup = function () {
   this.numberRanges = element.all(by.repeater('internalNumberRange in internalNumberRanges'));
   this.save = element(by.buttonText('Save'));
 
+  this.newRange = this.numberRanges.last();
+  this.newBeginRange = this.newRange.element(by.model('internalNumberRange.beginNumber'));
+  this.newEndRange = this.newRange.element(by.model('internalNumberRange.endNumber'));
+
+  this.getPattern = function () {
+    return (Math.floor(Math.random() * 9000) + 1000).toString(); // 4 digits
+  };
+
   this.deleteNumberRange = function (testBeginNumber) {
     utils.click(this.numberRanges.filter(function (elem) {
       return elem.evaluate('internalNumberRange.beginNumber').then(function (value) {

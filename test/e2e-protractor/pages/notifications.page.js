@@ -10,6 +10,7 @@ var assertDisplayed = function (cssSelector, message) {
 };
 
 var Notifications = function () {
+  var alert = element(by.css('.alertify-log'));
   this.errorAlert = element(by.css('.alertify-log-error'));
   this.successAlert = element(by.css('.alertify-log-success'));
 
@@ -28,14 +29,18 @@ var Notifications = function () {
   };
 
   this.clearNotifications = function () {
-    var notifications = element.all(by.css('alertify-log'));
-    if (notifications.length > 0) {
-      notifications.then(function (notifications) {
-        for (var idx in notifications) {
-          notifications[idx].click();
+    browser.wait(function () {
+      // If a notification is displayed, try to click it
+      return alert.isDisplayed().then(function (isDisplayed) {
+        if (isDisplayed) {
+          // The notification may still be animating, so ignore click errors
+          alert.click().then(function () {}, function () {});
         }
+        return false;
+      }, function () {
+        return true;
       });
-    }
+    });
   };
 };
 

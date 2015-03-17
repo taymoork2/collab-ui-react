@@ -3,7 +3,7 @@
 /* global describe */
 /* global it */
 
-xdescribe('Squared UC Add User flow', function () {
+describe('Squared UC Add User flow', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
@@ -15,9 +15,17 @@ xdescribe('Squared UC Add User flow', function () {
   var currentUser;
   describe('Add and Entitle User Flows', function () {
     var inputEmail = utils.randomTestGmail();
+    var token;
     describe('Login as testuser admin and launch add users modal', function () {
       it('should login as testuser admin', function () {
         login.login('huron-int1');
+      });
+
+      it('should retrieve a token', function (done) {
+        utils.retrieveToken().then(function (_token) {
+          token = _token;
+          done();
+        });
       });
 
       it('clicking on users tab should change the view', function () {
@@ -34,113 +42,97 @@ xdescribe('Squared UC Add User flow', function () {
 
     describe('Add a new Squared UC user', function () {
       it('should display input user email in results with success message', function () {
-        users.addUsersField.sendKeys(inputEmail);
+        utils.sendKeys(users.addUsersField, inputEmail);
         utils.click(users.collabRadio1);
-        // utils.click(users.inviteRadio2);
-
-        utils.expectIsDisplayed(users.onboardButton);
-        users.assertEntitlementListSize(5);
         utils.click(users.squaredUCCheckBox);
         utils.click(users.onboardButton);
-        notifications.assertSuccess(inputEmail, 'added successfully');
+        notifications.assertSuccess(inputEmail, 'onboarded successfully');
         utils.click(users.closeAddUsers);
+      });
 
+      it('should verify the created user', function (done) {
+        utils.searchAndClick(inputEmail);
+        users.retrieveCurrentUser().then(function (_currentUser) {
+          currentUser = _currentUser;
+          done();
+        });
       });
     });
 
-    describe('Verify the created user', function () {
-      it('should show the Telephony panel', function () {
-        utils.searchAndClick(inputEmail);
-        element(by.binding('currentUser.userName')).evaluate('currentUser').then(function (_currentUser) {
-          currentUser = _currentUser;
-          expect(currentUser).not.toBeNull();
-        });
+    describe('Verify communcation defaults', function () {
+      it('should show the Communication panel', function () {
+        utils.click(users.communicationsService);
+        utils.expectIsDisplayed(telephony.communicationPanel);
       });
       it('should have a line/directory number', function () {
-        utils.expectIsDisplayed(telephony.telephonyPanel);
-        expect(telephony.directoryNumbers.count()).toBe(1);
+        utils.expectCount(telephony.directoryNumbers, 1);
       });
-      it('should have voicemail on', function () {
+      it('should have voicemail off', function () {
         utils.expectIsDisplayed(telephony.voicemailFeature);
-        utils.expectText(telephony.voicemailStatus, 'On');
+        utils.expectText(telephony.voicemailStatus, 'Off');
       });
 
       describe('Verify call forwarding defaults', function () {
         it('should show the Line Configuration panel', function () {
-          utils.click(telephony.primaryNumber);
-          browser.wait(function () {
-            return telephony.lineConfigPanel.isPresent().then(function (present) {
-              return present;
-            });
-          });
+          utils.click(telephony.directoryNumbers.first());
+          utils.expectIsDisplayed(telephony.lineConfigurationPanel);
         });
-        it('should have call forwarding default to voicemail', function () {
-          expect(telephony.forwardBusyNoAnswerInput.getAttribute('value')).toEqual('Voicemail');
+        it('should have call forwarding default to empty', function () {
+          utils.expectInputValue(telephony.forwardBusyNoAnswer, '');
         });
-        it('should close the Line Configuration panel', function () {
-          utils.click(telephony.closeLineConfig);
+        it('should navigate back to overview panel', function () {
+          utils.clickFirstBreadcrumb();
         });
       });
-
     });
 
     describe('To remove Squared UC from the user', function () {
-      it('should show the Telephony panel', function () {
-        utils.search(inputEmail);
-        users.userListEnts.then(function (cell) {
-          expect(cell[0].getText()).toContain(inputEmail);
-          utils.click(users.gridCell);
-        });
-      });
       it('should uncheck Squared UC checkbox', function () {
+        utils.click(users.messagingService);
         utils.click(telephony.squaredUCCheckBox);
         utils.click(telephony.saveEntitlements);
         notifications.assertSuccess('entitlements were updated successfully');
       });
       it('should not have line or voicemail visible', function () {
-        utils.expectIsNotDisplayed(telephony.telephonyPanel);
-        utils.expectIsNotDisplayed(telephony.voicemailFeature);
-      });
-      it('should close the preview panel', function () {
-        utils.click(telephony.close);
+        utils.click(users.closeSidePanel);
+
+        navigation.clickHome();
+        navigation.clickUsers();
+        utils.searchAndClick(inputEmail);
+        utils.expectIsNotDisplayed(users.communicationsService);
       });
     });
 
     describe('To entitle Squared UC to the user again', function () {
-      it('should show the Telephony panel', function () {
-        utils.search(inputEmail);
-        users.userListEnts.then(function (cell) {
-          expect(cell[0].getText()).toContain(inputEmail);
-          utils.click(users.gridCell);
-        });
-      });
       it('should check Squared UC checkbox and close the preview panel', function () {
+        utils.click(users.messagingService);
         utils.click(telephony.squaredUCCheckBox);
         utils.click(telephony.saveEntitlements);
         notifications.assertSuccess('entitlements were updated successfully');
-        utils.click(telephony.close);
       });
-      it('should show the Telephony panel', function () {
-        utils.search(inputEmail);
-        users.userListEnts.then(function (cell) {
-          expect(cell[0].getText()).toContain(inputEmail);
-          utils.click(users.gridCell);
-        });
+      it('should show the Communications service', function () {
+        utils.click(users.closeSidePanel);
+
+        navigation.clickHome();
+        navigation.clickUsers();
+        utils.searchAndClick(inputEmail);
+        utils.expectIsDisplayed(users.communicationsService);
       });
       it('should have a line/directory number again', function () {
-        utils.expectIsDisplayed(telephony.telephonyPanel);
-        expect(telephony.directoryNumbers.count()).toBe(1);
+        utils.click(users.communicationsService);
+        utils.expectIsDisplayed(telephony.communicationPanel);
+        utils.expectCount(telephony.directoryNumbers, 1);
       });
-      it('should have voicemail on', function () {
+      it('should have voicemail off', function () {
         utils.expectIsDisplayed(telephony.voicemailFeature);
-        utils.expectText(telephony.voicemailStatus, 'On');
+        utils.expectText(telephony.voicemailStatus, 'Off');
       });
     });
 
     describe('Delete user used for add test', function () {
       it('should delete added user', function () {
-        expect(deleteUtils.deleteSquaredUCUser(currentUser.meta.organizationID, currentUser.id, currentUser.userName)).toEqual(204);
-        expect(deleteUtils.deleteUser(inputEmail)).toEqual(200);
+        deleteUtils.deleteSquaredUCUser(currentUser.meta.organizationID, currentUser.id, token);
+        deleteUtils.deleteUser(inputEmail);
       });
     });
 

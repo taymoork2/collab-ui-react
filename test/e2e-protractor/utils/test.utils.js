@@ -14,7 +14,7 @@ exports.randomId = function () {
 };
 
 exports.randomDid = function () {
-  return Math.floor((Math.random() * 100000000000) + 1);
+  return Math.floor((Math.random() * 90000000000)) + 10000000000; // 11 digits
 };
 
 exports.randomTestRoom = function () {
@@ -171,6 +171,11 @@ exports.expectValueToContain = function (elem, value) {
   }, 40000, 'Waiting for: ' + elem.locator());
 };
 
+exports.expectInputValue = function (elem, value) {
+  this.wait(elem);
+  this.expectValueToBeSet(elem.element(by.tagName('input')), value);
+};
+
 exports.click = function (elem, maxRetry) {
   this.wait(elem);
   if (typeof maxRetry === 'undefined') {
@@ -239,29 +244,11 @@ exports.clickEscape = function () {
   this.sendKeys(element(by.tagName('body')), protractor.Key.ESCAPE);
 };
 
-exports.getSwitchState = function (elem) {
-  return elem.evaluate('buttonValue');
-};
-
-exports.toggleSwitch = function (elem, toggle) {
-  this.getSwitchState(elem).then(function (value) {
-    if (value !== toggle) {
-      elem.element(by.css('input'))
-        .then(function (input) {
-          input.click();
-        }, function () {
-          elem.click();
-        });
-    }
+exports.expectSwitchState = function (elem, value) {
+  this.wait(elem);
+  return elem.element(by.tagName('input')).getAttribute('ng-model').then(function (ngModel) {
+    return elem.evaluate(ngModel);
   });
-};
-
-exports.enableSwitch = function (elem) {
-  this.toggleSwitch(elem, true);
-};
-
-exports.disableSwitch = function (elem) {
-  this.toggleSwitch(elem, false);
 };
 
 exports.findDirectoryNumber = function (message, lineNumber) {
@@ -301,6 +288,9 @@ exports.dumpConsoleErrors = function () {
 };
 
 exports.formatPhoneNumbers = function (value) {
+  if (typeof value !== 'string') {
+    value = value.toString();
+  }
   value = value.replace(/[^0-9]/g, '');
   var vLength = value.length;
   if (vLength === 10) {
@@ -309,4 +299,14 @@ exports.formatPhoneNumbers = function (value) {
     value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
   }
   return value;
+};
+
+exports.clickFirstBreadcrumb = function () {
+  this.scrollTop();
+  this.click(element.all(by.css('.side-panel-container')).last().all(by.css('li[ng-repeat="crumb in breadcrumbs"] a')).first());
+};
+
+exports.clickLastBreadcrumb = function () {
+  this.scrollTop();
+  this.click(element.all(by.css('.side-panel-container')).last().all(by.css('li[ng-repeat="crumb in breadcrumbs"] a')).last());
 };

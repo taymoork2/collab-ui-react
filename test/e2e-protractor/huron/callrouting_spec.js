@@ -1,8 +1,8 @@
 'use strict';
 
-var pattern = Math.ceil(Math.random() * Math.pow(10, 4)).toString();
+describe('Huron Call Routing', function () {
+  var pattern = callrouting.getPattern();
 
-xdescribe('Huron Call Routing', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
@@ -35,11 +35,11 @@ xdescribe('Huron Call Routing', function () {
       utils.click(callrouting.addCallParkButton);
 
       utils.expectIsDisplayed(callrouting.name);
-      callrouting.name.sendKeys(pattern);
+      utils.sendKeys(callrouting.name, pattern);
       utils.click(callrouting.singleNumber);
-      callrouting.pattern.sendKeys(pattern);
-      callrouting.retrievalPrefix.sendKeys(pattern);
-      callrouting.reversionPattern.sendKeys(pattern);
+      utils.sendKeys(callrouting.pattern, pattern);
+      utils.sendKeys(callrouting.retrievalPrefix, pattern);
+      utils.sendKeys(callrouting.reversionPattern, pattern);
       utils.click(callrouting.createButton);
 
       notifications.assertSuccess(pattern + ' added successfully');
@@ -49,15 +49,15 @@ xdescribe('Huron Call Routing', function () {
       utils.click(callrouting.addCallParkButton);
 
       utils.expectIsDisplayed(callrouting.name);
-      callrouting.name.sendKeys((pattern + 1) + " through " + (pattern + 2));
+      utils.sendKeys(callrouting.name, (pattern + 1) + ' through ' + (pattern + 2));
       utils.click(callrouting.rangeMin);
-      callrouting.rangeMin.sendKeys((pattern + 1));
+      utils.sendKeys(callrouting.rangeMin, (pattern + 1));
       utils.click(callrouting.rangeMax);
-      callrouting.rangeMax.sendKeys((pattern + 2));
+      utils.sendKeys(callrouting.rangeMax, (pattern + 2));
       utils.click(callrouting.retrievalPrefix);
-      callrouting.retrievalPrefix.sendKeys(pattern);
+      utils.sendKeys(callrouting.retrievalPrefix, pattern);
       utils.click(callrouting.reversionPattern);
-      callrouting.reversionPattern.sendKeys(pattern);
+      utils.sendKeys(callrouting.reversionPattern, pattern);
       utils.click(callrouting.createButton);
 
       notifications.assertSuccess((pattern + 1) + ' added successfully', (pattern + 2) + ' added successfully');
@@ -80,16 +80,23 @@ xdescribe('Huron Call Routing', function () {
     });
 
     it('should cancel a delete', function () {
-      utils.click(callrouting.callParks.get(0).element(by.css('.delete-icon')));
-      utils.expectIsDisplayed(callrouting.cancelButton);
+      callrouting.clickDeleteIcon(pattern);
       utils.click(callrouting.cancelButton);
       utils.expectIsNotDisplayed(callrouting.cancelButton);
     });
 
     it('should delete the previously created call parks', function () {
-      callrouting.deleteCallPark(pattern);
-      callrouting.deleteCallPark(pattern + 1);
-      callrouting.deleteCallPark(pattern + 2);
+      callrouting.clickDeleteIcon(pattern);
+      utils.click(callrouting.deleteButton);
+      notifications.assertSuccess('deleted successfully');
+
+      callrouting.clickDeleteIcon(pattern + 1);
+      utils.click(callrouting.deleteButton);
+      notifications.assertSuccess('deleted successfully');
+
+      callrouting.clickDeleteIcon(pattern + 2);
+      utils.click(callrouting.deleteButton);
+      notifications.assertSuccess('deleted successfully');
     });
   });
 

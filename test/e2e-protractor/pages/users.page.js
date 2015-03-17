@@ -27,7 +27,6 @@ var UsersPage = function () {
   this.manageDialog = element(by.id('modalContent'));
   this.squaredPanel = element(by.id('conversations-link'));
   this.entitlementPanel = element(by.id('entitlementPanel'));
-  this.huronPanel = element(by.id('huronPanel'));
   this.conferencePanel = element(by.id('conferencePanel'));
   this.endpointPanel = element(by.id('endpointPanel'));
   this.previewPanel = element(by.id('details-panel'));
@@ -38,6 +37,7 @@ var UsersPage = function () {
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
   this.messagingService = element(by.id('Messaging'));
+  this.communicationsService = element(by.id('Communications'));
 
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield-tokenfield'));
@@ -107,6 +107,8 @@ var UsersPage = function () {
   this.conferenceLicenses = element(by.id('conference'));
   this.communicationLicenses = element(by.id('communication'));
 
+  this.selectedRow = element(by.css('[ng-repeat="row in renderedRows"].selected'));
+
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
       var queryresults = parseInt(value, 10);
@@ -154,6 +156,13 @@ var UsersPage = function () {
   this.assertEntitlementListSize = function (size) {
     element.all(by.repeater('key in entitlementsKeys')).then(function (items) {
       expect(items.length).toBe(size);
+    });
+  };
+
+  this.retrieveCurrentUser = function () {
+    return this.selectedRow.evaluate('currentUser').then(function (currentUser) {
+      expect(currentUser).not.toBeNull();
+      return currentUser;
     });
   };
 };

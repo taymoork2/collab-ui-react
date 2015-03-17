@@ -479,7 +479,8 @@ module.exports = function (grunt) {
         configFile: 'config/eslint.json',
         rulePaths: ['config/rules']
       },
-      squared: ['test/e2e-protractor/squared/*_spec.js']
+      squared: ['test/e2e-protractor/squared/*_spec.js'],
+      huron: ['test/e2e-protractor/huron/*_spec.js']
     },
 
     // Compile the main Less file into the build directory
@@ -1014,7 +1015,6 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'test-setup:build',
         'protractor:squared',
-        'protractor:huron',
         'protractor:hercules'
       ]);
     } else if (target === 'coverage') {
@@ -1031,7 +1031,6 @@ module.exports = function (grunt) {
       'continue:off',
       'test-setup:dist',
       'protractor:squared',
-      'protractor:huron',
       'protractor:hercules'
     ]);
   });
