@@ -8,7 +8,7 @@ describe('Login Page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   it('should login and redirect to the requested users page', function () {

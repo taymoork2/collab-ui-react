@@ -32,14 +32,17 @@ describe('Customer Profile Page', function () {
 
   it('should be able to set custom supportUrl, supportText and helpUrl', function () {
     utils.click(orgprofile.troubleReportingPartnerPanelRadio);
-    orgprofile.partnerSupportUrl.sendKeys('http://www.test.com/support');
-    orgprofile.partnerSupportText.sendKeys('This is a custom support url');
+    utils.clear(orgprofile.partnerSupportUrl);
+    utils.sendKeys(orgprofile.partnerSupportUrl, 'http://www.test.com/support');
+    utils.clear(orgprofile.partnerSupportText);
+    utils.sendKeys(orgprofile.partnerSupportText, 'This is a custom support url');
     utils.click(orgprofile.helpPartnerPanelRadio);
-    orgprofile.partnerHelpUrl.sendKeys('http://www.test.com/help');
-    browser.executeScript('window.scrollTo(0,0);').then(function () {
-      utils.click(orgprofile.orgProfileSaveBtn);
-      notifications.assertSuccess('orgSettings updated successfully');
-    });
+    utils.clear(orgprofile.partnerHelpUrl);
+    utils.sendKeys(orgprofile.partnerHelpUrl, 'http://www.test.com/help');
+
+    utils.scrollTop();
+    utils.click(orgprofile.orgProfileSaveBtn);
+    notifications.assertSuccess('orgSettings updated successfully');
   });
 
   it('should log out', function () {

@@ -474,6 +474,14 @@ module.exports = function (grunt) {
       globals: {}
     },
 
+    eslint: {
+      options: {
+        configFile: 'config/eslint.json',
+        rulePaths: ['config/rules']
+      },
+      squared: ['test/e2e-protractor/squared/*_spec.js']
+    },
+
     // Compile the main Less file into the build directory
     less: {
       build: {
@@ -960,12 +968,14 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'clean',
         'build',
+        'eslint',
         'connect:test_build'
       ]);
     } else if (target === 'coverage') {
       return grunt.task.run([
         'clean',
         'build',
+        'eslint',
         'copy:coverage',
         'instrument',
         'connect:test_coverage'

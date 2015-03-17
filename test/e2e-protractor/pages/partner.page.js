@@ -107,6 +107,13 @@ var PartnerHomePage = function () {
       expect(rows.length).toBeGreaterThan(1);
     });
   };
+
+  this.retrieveOrgId = function () {
+    return this.newTrialRow.getAttribute('orgId').then(function (orgId) {
+      expect(orgId).not.toBeNull();
+      return orgId;
+    });
+  };
 };
 
 module.exports = PartnerHomePage;

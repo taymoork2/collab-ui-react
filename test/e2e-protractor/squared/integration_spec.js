@@ -13,7 +13,7 @@ describe('App flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   it('should just login', function () {

@@ -41,10 +41,10 @@ describe('CS Admin flow', function () {
     it('clicking on customers should enable/disable ability to launch appropriately', function () {
       utils.click(partner.adminCustomerOrgId);
       utils.expectIsDisplayed(partner.launchCustomerPanelButton);
-      expect(partner.launchCustomerPanelButton.isEnabled()).toBeTruthy();
+      utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.regularCustomerOrgId);
       utils.expectIsDisplayed(partner.launchCustomerPanelButton);
-      expect(partner.launchCustomerPanelButton.isEnabled()).toBeFalsy();
+      utils.expectIsDisabled(partner.launchCustomerPanelButton);
     });
 
   });
@@ -80,7 +80,7 @@ describe('CS User flow', function () {
       utils.expectIsDisplayed(navigation.customersTab);
       utils.expectIsDisplayed(navigation.reportsTab);
       utils.expectIsDisplayed(navigation.supportTab);
-      expect(navigation.getTabCount()).toBe(4);
+      utils.expectCount(navigation.tabCount, 4);
     });
 
     it('clicking on customers tab should change the view', function () {
@@ -94,10 +94,10 @@ describe('CS User flow', function () {
     it('clicking on customers should enable/disable ability to launch appropriately', function () {
       utils.click(partner.regularCustomerOrgId);
       utils.expectIsDisplayed(partner.launchCustomerPanelButton);
-      expect(partner.launchCustomerPanelButton.isEnabled()).toBeTruthy();
+      utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.adminCustomerOrgId);
       utils.expectIsDisplayed(partner.launchCustomerPanelButton);
-      expect(partner.launchCustomerPanelButton.isEnabled()).toBeFalsy();
+      utils.expectIsDisabled(partner.launchCustomerPanelButton);
     });
 
   });

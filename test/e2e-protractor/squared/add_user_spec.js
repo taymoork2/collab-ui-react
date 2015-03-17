@@ -14,7 +14,7 @@ describe('Squared Add & Entitle User Flows', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   describe('Login as users.testUser admin and launch add users modal', function () {
@@ -32,8 +32,8 @@ describe('Squared Add & Entitle User Flows', function () {
   describe('Add an existing user', function () {
     it('should display input user email in results with already exists message', function () {
       utils.click(users.clearButton);
-      users.addUsersField.sendKeys(users.testUser.username);
-      users.addUsersField.sendKeys(protractor.Key.ENTER);
+      utils.sendKeys(users.addUsersField, users.testUser.username);
+      utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
       utils.click(users.collabRadio1);
       utils.click(users.onboardButton);
       notifications.assertError('already entitled');
@@ -44,8 +44,8 @@ describe('Squared Add & Entitle User Flows', function () {
   describe('Add a new user', function () {
     it('should display input user email in results with success message', function () {
       utils.click(users.clearButton);
-      users.addUsersField.sendKeys(inputEmail);
-      users.addUsersField.sendKeys(protractor.Key.ENTER);
+      utils.sendKeys(users.addUsersField, inputEmail);
+      utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
       utils.click(users.collabRadio1);
       utils.click(users.onboardButton);
       notifications.assertSuccess(inputEmail, 'sent successfully');

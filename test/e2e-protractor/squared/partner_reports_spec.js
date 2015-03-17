@@ -11,7 +11,7 @@ xdescribe('Partner Reports', function () {
   describe('Reports Page', function () {
     it('should navigate to partner reports page', function () {
       navigation.clickReports();
-      expect(reports.pageTitle.isPresent()).toBeTruthy();
+      utils.expectIsDisplayed(reports.pageTitle);
     });
 
     it('should verify report tabs', function () {
@@ -36,13 +36,8 @@ xdescribe('Partner Reports', function () {
     it('should verify service dropdown', function () {
       utils.click(reports.customerSelect);
       reports.verifyOption(reports.customerSelect, 'All Customers');
-      browser.wait(function () {
-        return reports.engagementRefreshDiv.isDisplayed().then(function (value) {
-          return !value;
-        });
-      });
+      utils.expectIsNotDisplayed(reports.engagementRefreshDiv);
       reports.numOptions(reports.customerSelect).then(function (totalOptions) {
-        expect(totalOptions > 0).toBeTruthy();
         if (totalOptions > 10) {
           reports.verifyOption(reports.customerSelect, '5 Most Engaged');
           reports.verifyOption(reports.customerSelect, '5 Least Engaged');

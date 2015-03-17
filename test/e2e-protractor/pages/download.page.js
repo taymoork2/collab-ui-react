@@ -10,6 +10,10 @@ var DownloadPage = function () {
   this.iconSearch = element(by.id('icon-search'));
   this.searchInput = element(by.id('search-input'));
   this.settingBar = element(by.id('setting-bar'));
+
+  this.webTxt = element(by.id('webTxt'));
+  this.iosTxt = element(by.id('iosTxt'));
+  this.androidTxt = element(by.id('androidTxt'));
 };
 
 module.exports = DownloadPage;

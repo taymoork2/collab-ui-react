@@ -14,7 +14,7 @@ describe('First Time Wizard', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   it('should login as an admin user', function () {
@@ -64,10 +64,10 @@ describe('First Time Wizard', function () {
     utils.click(wizard.nextBtn);
     utils.expectIsDisplayed(wizard.fusionFuse);
     utils.click(wizard.finishBtn);
+    utils.expectIsNotDisplayed(wizard.wizard);
   }, 60000);
 
   it('should reopen the wizard', function () {
-    element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
     navigation.clickFirstTimeWizard();
     utils.expectIsDisplayed(wizard.wizard);
     utils.expectIsDisplayed(wizard.leftNav);
@@ -79,16 +79,17 @@ describe('First Time Wizard', function () {
     utils.click(wizard.radiobuttons.last());
     utils.click(wizard.nextBtn);
     utils.expectText(wizard.mainviewSubtitle, 'Domain Entry');
-    wizard.dirDomainInput.sendKeys('test_domain');
+    utils.sendKeys(wizard.dirDomainInput, 'test_domain');
     utils.click(wizard.nextBtn);
     utils.expectText(wizard.mainviewSubtitle, 'Install Cloud Connector');
     utils.click(wizard.nextBtn);
     utils.expectText(wizard.mainviewSubtitle, 'Sync Status');
     utils.click(wizard.finishBtn);
+    utils.clickEscape();
+    utils.expectIsNotDisplayed(wizard.wizard);
   });
 
   it('should reopen the wizard', function () {
-    element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
     navigation.clickFirstTimeWizard();
     utils.expectIsDisplayed(wizard.wizard);
     utils.expectIsDisplayed(wizard.leftNav);
@@ -96,7 +97,8 @@ describe('First Time Wizard', function () {
   });
 
   it('should close the first time wizard and log out', function () {
-    element(by.css('body')).sendKeys(protractor.Key.ESCAPE);
+    utils.clickEscape();
+    utils.expectIsNotDisplayed(wizard.wizard);
     navigation.logout();
   });
 });

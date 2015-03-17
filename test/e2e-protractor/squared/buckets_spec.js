@@ -11,7 +11,7 @@ describe('Invite User and Check Buckets', function () {
   });
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   //log in as admin with an account
@@ -33,7 +33,7 @@ describe('Invite User and Check Buckets', function () {
 
     describe('check account buckets', function () {
       it('should clear user input field and error message', function () {
-        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
         utils.click(users.clearButton);
         utils.expectText(users.addUsersField, '');
       });
@@ -49,8 +49,8 @@ describe('Invite User and Check Buckets', function () {
     describe('Add users', function () {
       it('should add users successfully', function () {
         utils.click(users.clearButton);
-        users.addUsersField.sendKeys(addEmail);
-        users.addUsersField.sendKeys(protractor.Key.ENTER);
+        utils.sendKeys(users.addUsersField, addEmail);
+        utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
         utils.click(users.collabRadio1);
         utils.click(users.onboardButton);
         notifications.assertSuccess(addEmail, 'sent successfully');

@@ -7,6 +7,71 @@ var ActivatePage = function () {
   this.userEmail = element(by.binding('userEmail'));
   this.sendCodeLink = element(by.id('sendCodeLink'));
   this.testData = element(by.id('testdata'));
+
+  this.expectNewEqp = function () {
+    utils.wait(activate.testData);
+    expect(activate.testData.getAttribute('eqp')).not.toBeNull();
+  };
+
+  this.setup = setup;
+
+  function setup(deviceUA) {
+    var obj = {
+      body: getTestBody(),
+      deviceUA: deviceUA
+    };
+    var flow = protractor.promise.controlFlow();
+    flow.execute(getToken.bind(null, obj));
+    flow.execute(verifyEmail.bind(null, obj));
+    expect(obj.encryptedQueryParam).not.toBeNull();
+    return obj;
+  }
+
+  function getTestBody() {
+    return {
+      'email': utils.randomTestGmail(),
+      'pushId': utils.randomId(),
+      'deviceName': utils.randomId(),
+      'deviceId': utils.randomId()
+    };
+  }
+
+  function getToken(obj) {
+    var options = {
+      method: 'post',
+      url: config.oauth2Url + 'access_token',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      auth: {
+        'user': config.oauthClientRegistration.id,
+        'pass': config.oauthClientRegistration.secret,
+        'sendImmediately': true
+      },
+      body: 'grant_type=client_credentials&scope=' + config.oauthClientRegistration.scope
+    };
+    return utils.sendRequest(options).then(function (data) {
+      var resp = JSON.parse(data);
+      obj.token = resp.access_token;
+    });
+  }
+
+  function verifyEmail(obj) {
+    var options = {
+      method: 'post',
+      url: config.adminServiceUrl.integration + 'users/email/verify',
+      headers: {
+        'User-Agent': obj.deviceUA,
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + obj.token
+      },
+      body: JSON.stringify(obj.body)
+    };
+    return utils.sendRequest(options).then(function (data) {
+      var resp = JSON.parse(data);
+      obj.encryptedQueryParam = resp.eqp;
+    });
+  }
 };
 
 module.exports = ActivatePage;

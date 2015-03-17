@@ -64,6 +64,13 @@ exports.getToken = function () {
   });
 };
 
+exports.retrieveToken = function () {
+  return element(by.tagName('body')).evaluate('token').then(function (token) {
+    expect(token).not.toBeNull();
+    return token;
+  });
+};
+
 exports.scrollTop = function () {
   browser.executeScript('window.scrollTo(0,0);');
 };
@@ -150,9 +157,38 @@ exports.click = function (elem, maxRetry) {
   }
 };
 
+exports.clear = function (elem) {
+  this.wait(elem);
+  elem.clear();
+};
+
+exports.sendKeys = function (elem, value) {
+  this.wait(elem);
+  elem.sendKeys(value);
+};
+
+exports.expectAttribute = function (elem, attr, value) {
+  this.wait(elem);
+  expect(elem.getAttribute(attr)).toEqual(value);
+};
+
 exports.expectText = function (elem, value) {
   this.wait(elem);
   expect(elem.getText()).toContain(value);
+};
+
+exports.expectNotText = function (elem, value) {
+  this.wait(elem);
+  expect(elem.getText()).not.toContain(value);
+};
+
+exports.expectCount = function (elems, count) {
+  this.wait(elems);
+  expect(elems.count()).toEqual(count);
+};
+
+exports.clickEscape = function () {
+  this.sendKeys(element(by.tagName('body')), protractor.Key.ESCAPE);
 };
 
 exports.getSwitchState = function (elem) {
@@ -211,7 +247,7 @@ exports.searchAndClick = function (query) {
   utils.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
 };
 
-exports.dumpConsoleErrors = function (name) {
+exports.dumpConsoleErrors = function () {
   // jshint node:true
   browser.manage().logs().get('browser').then(function (browserLogs) {
     browserLogs.forEach(function (log) {

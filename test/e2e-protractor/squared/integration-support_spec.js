@@ -8,6 +8,7 @@
 //test link: http://127.0.0.1:8000/#/login?pp=support_search:5354d535-9aaf-5e22-a091-34de878d2200
 
 describe('Support flow', function () {
+  var locusId;
 
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -15,7 +16,7 @@ describe('Support flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   describe('Support tab', function () {
@@ -30,7 +31,7 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(navigation.reportsTab);
       utils.expectIsDisplayed(navigation.supportTab);
       utils.expectIsDisplayed(navigation.developmentTab);
-      expect(navigation.getTabCount()).toBe(7);
+      utils.expectCount(navigation.tabCount, 7);
     });
 
     it('should not display results panel initially', function () {
@@ -51,8 +52,8 @@ describe('Support flow', function () {
 
       utils.click(support.locusIdSort);
       utils.click(support.locusIdSort);
-      support.locusId.getText().then(function (locusId) {
-        support.searchValidLocusid = locusId;
+      support.retrieveLocusId().then(function (_locusId) {
+        locusId = _locusId;
         done();
       });
     });
@@ -62,16 +63,16 @@ describe('Support flow', function () {
 
       utils.expectIsDisplayed(support.supportTable);
       utils.expectIsDisplayed(support.emailAddress);
-      utils.expectText(support.emailAddress.getText(), support.searchValidEmail);
+      utils.expectText(support.emailAddress, support.searchValidEmail);
     });
 
     xit('should search for logs by valid locusId', function () {
-      support.searchAndVerifyResult(support.searchValidLocusid, support.searchValidEmail);
+      support.searchAndVerifyResult(locusId, support.searchValidEmail);
       utils.expectIsDisplayed(support.supportTable);
 
       utils.expectIsDisplayed(support.locusId);
-      utils.expectText(support.locusId.getText(), support.searchValidLocusid);
-      expect(support.callStart.getText()).not.toBe('-NA-');
+      utils.expectText(support.locusId, locusId);
+      utils.expectNotText(support.callStart, '-NA-');
     });
 
     xit('should display call-info panel for the log', function () {
@@ -114,7 +115,7 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.reportsTab);
       utils.expectIsDisplayed(navigation.supportTab);
-      expect(navigation.getTabCount()).toBe(3);
+      utils.expectCount(navigation.tabCount, 3);
     });
 
     it('should log out', function () {

@@ -13,7 +13,7 @@ describe('Fusion Page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   it('should log in as admin', function () {

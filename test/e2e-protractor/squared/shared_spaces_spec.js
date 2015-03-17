@@ -10,7 +10,7 @@ describe('Devices flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   it('should login as squared team member admin user', function () {
@@ -30,8 +30,8 @@ describe('Devices flow', function () {
 
   it('entering a new room should add the room successfully', function () {
     var testRoom = utils.randomTestRoom();
-    spaces.newRoomField.clear();
-    spaces.newRoomField.sendKeys(testRoom);
+    utils.clear(spaces.newRoomField);
+    utils.sendKeys(spaces.newRoomField, testRoom);
     utils.click(spaces.addRoomButton);
     utils.expectIsDisplayed(spaces.deviceCard);
     notifications.assertSuccess('added successfully');

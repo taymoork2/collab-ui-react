@@ -14,7 +14,7 @@ describe('Squared Invite User Flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   describe('Display invite dialog', function () {
@@ -40,8 +40,8 @@ describe('Squared Invite User Flow', function () {
     xit('should invite users successfully', function () {
       inviteEmail = utils.randomTestGmail();
       utils.click(users.clearButton);
-      users.addUsersField.sendKeys(inviteEmail);
-      users.addUsersField.sendKeys(protractor.Key.ENTER);
+      utils.sendKeys(users.addUsersField, inviteEmail);
+      utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
       utils.click(users.onboardButton);
       notifications.assertSuccess('sent successfully');
     });
@@ -75,8 +75,8 @@ describe('Squared Invite User Flow', function () {
     it('should not invite users successfully if they are already entitled', function () {
       inviteEmail = users.inviteTestUser.username;
       utils.click(users.clearButton);
-      users.addUsersField.sendKeys(inviteEmail);
-      users.addUsersField.sendKeys(protractor.Key.ENTER);
+      utils.sendKeys(users.addUsersField, inviteEmail);
+      utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
       utils.click(users.onboardButton);
       notifications.assertError('already entitled');
     });
@@ -84,8 +84,8 @@ describe('Squared Invite User Flow', function () {
     it('should invite users successfully from org which has autoentitlement flag disabled', function () {
       inviteEmail = users.inviteTestUser.usernameWithNoEntitlements;
       utils.click(users.clearButton);
-      users.addUsersField.sendKeys(inviteEmail);
-      users.addUsersField.sendKeys(protractor.Key.ENTER);
+      utils.sendKeys(users.addUsersField, inviteEmail);
+      utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
       utils.click(users.onboardButton);
       notifications.assertSuccess('sent successfully');
     });

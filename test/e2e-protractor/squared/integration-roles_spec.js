@@ -14,7 +14,7 @@ describe('Org Entitlement flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   it('should login as non-sso admin user', function () {

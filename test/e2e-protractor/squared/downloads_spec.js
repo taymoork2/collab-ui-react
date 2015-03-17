@@ -11,7 +11,7 @@ describe('Downloads page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   describe('with email parameter and reset/admin email params', function () {
@@ -21,9 +21,9 @@ describe('Downloads page', function () {
     });
 
     it('should display message only for non-mobile device', function () {
-      utils.expectIsDisplayed(element(by.id('webTxt')));
-      utils.expectIsNotDisplayed(element(by.id('iosTxt')));
-      utils.expectIsNotDisplayed(element(by.id('androidTxt')));
+      utils.expectIsDisplayed(download.webTxt);
+      utils.expectIsNotDisplayed(download.iosTxt);
+      utils.expectIsNotDisplayed(download.androidTxt);
     });
 
     it('should not display logged in user, logout link, search field, and tabs', function () {

@@ -19,7 +19,7 @@ describe('Partner flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   // Logging in. Write your tests after the login flow is complete.
@@ -33,13 +33,12 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
       utils.expectIsDisplayed(navigation.reportsTab);
-      expect(navigation.getTabCount()).toBe(4);
+      utils.expectCount(navigation.tabCount, 4);
     });
 
     it('should have a partner token', function (done) {
-      element(by.tagName('body')).evaluate('token').then(function (token) {
+      utils.retrieveToken().then(function (token) {
         accessToken = token;
-        expect(accessToken).not.toBeNull();
         done();
       });
     });
@@ -56,7 +55,7 @@ describe('Partner flow', function () {
       navigation.clickCustomers();
     });
 
-    it('should add a new trial', function (done) {
+    it('should add a new trial', function () {
       utils.click(partner.trialFilter);
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
@@ -66,21 +65,22 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.squaredTrialCheckbox);
       utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
 
-      partner.customerNameInput.sendKeys(partner.newTrial.customerName);
-      partner.customerEmailInput.sendKeys(partner.newTrial.customerEmail);
+      utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
+      utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
       utils.click(partner.squaredTrialCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
+    }, 60000);
 
+    it('should find new trial', function (done) {
       utils.expectIsDisplayed(partner.newTrialRow);
 
-      partner.newTrialRow.getAttribute('orgId').then(function (attr) {
-        orgId = attr;
-        expect(orgId).not.toBeNull();
+      partner.retrieveOrgId().then(function (_orgId) {
+        orgId = _orgId;
         done();
       });
-    }, 60000);
+    });
 
     it('should edit an exisiting trial', function () {
       utils.click(partner.newTrialRow);
@@ -90,8 +90,7 @@ describe('Partner flow', function () {
 
       utils.expectIsDisplayed(partner.editTrialForm);
 
-      expect(partner.squaredTrialCheckbox.getAttribute('disabled')).toBeTruthy();
-      utils.expectIsDisplayed(partner.saveSendButton);
+      utils.expectAttribute(partner.squaredTrialCheckbox, 'disabled', 'true');
       utils.click(partner.saveSendButton);
 
       notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
@@ -117,7 +116,7 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(wizard.mainView);
         utils.click(wizard.finishTab);
 
-        expect(wizard.mainviewTitle.getText()).toEqual('Get Started');
+        utils.expectText(wizard.mainviewTitle, 'Get Started');
         utils.expectIsDisplayed(wizard.mainviewTitle);
         utils.click(wizard.finishBtn);
         navigation.expectDriverCurrentUrl('overview');
@@ -180,31 +179,31 @@ describe('Partner flow', function () {
   describe('Partner landing page reports', function () {
 
     it('should delete an exisiting org thus deleting trial', function () {
-      expect(deleteTrialUtils.deleteOrg(orgId, accessToken)).toEqual(200);
+      deleteTrialUtils.deleteOrg(orgId, accessToken);
     });
 
     it('should show the reports', function () {
       navigation.clickHome();
       utils.expectIsDisplayed(partner.entitlementsChart);
-      expect(partner.entitlementsCount.getText()).toBeTruthy();
+      utils.expectIsDisplayed(partner.entitlementsCount);
     });
 
     it('should show active users chart', function () {
       utils.click(partner.activeUsersTab);
       utils.expectIsDisplayed(partner.activeUsersChart);
-      utils.expectIsDisplayed(partner.activeUsersCount.getText());
+      utils.expectIsDisplayed(partner.activeUsersCount);
     });
 
     it('should show average calls chart', function () {
       utils.click(partner.averageCallsTab);
       utils.expectIsDisplayed(partner.averageCallsChart);
-      utils.expectIsDisplayed(partner.averageCallsCount.getText());
+      utils.expectIsDisplayed(partner.averageCallsCount);
     });
 
     it('should show content shared chart', function () {
       utils.click(partner.contentSharedTab);
       utils.expectIsDisplayed(partner.contentSharedChart);
-      utils.expectIsDisplayed(partner.contentSharedCount.getText());
+      utils.expectIsDisplayed(partner.contentSharedCount);
     });
   });
 

@@ -12,7 +12,7 @@ describe('Org Info flow', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = false;
-    utils.dumpConsoleErrors(this.getFullName());
+    utils.dumpConsoleErrors();
   });
 
   it('should login as squared team member admin user', function () {

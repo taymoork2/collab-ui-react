@@ -52,6 +52,13 @@ var SupportPage = function () {
     utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', assertion)));
   };
 
+  this.retrieveLocusId = function () {
+    return this.locusId.getText().then(function (locusId) {
+      expect(locusId).not.toBeNull();
+      return locusId;
+    });
+  };
+
 };
 
 module.exports = SupportPage;
