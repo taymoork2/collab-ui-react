@@ -1,23 +1,23 @@
-<div ng-class="{'login-splash-spark': isSpark(), 'login-splash': !isSpark() }">
+<div class="login-splash-spark">
   <div class="content">
-    <div class="icon icon-cisco-logo" ng-hide="isSpark()"></div>
-    <div class="spark-icon" ng-show="isSpark()"><img src="images/sparkLg.png" alt="Cisco Spark"></div>
+    <div class="spark-icon"><img src="images/sparkLg.png" alt="Cisco Spark"></div>
     <div class="title" translate="loginPage.title"></div>
-
-    <div class="results alert alert-danger" ng-bind-html="result" ng-show="result"></div>
-    <div class="round-button" ng-class="{spinner: loading === true}" ng-hide="result || isSpark()">
-      <div class="round-button-circle">
-        <span role="button" ng-click="login()" translate="loginPage.login" ng-hide="loading"></span>
-      </div>
+    <div ng-show="result">
+      <div class="results alert alert-danger" ng-bind-html="result"></div>
     </div>
-    <div class="round-button" ng-hide="result" ng-show="isSpark()">
-      <div class="round-button-circle" ng-show="isSpark()">
-        <span class="btn btn-info btn-block login-btn" role="button" ng-click="login()" ng-disabled="loading">{{ loginText | translate }}</span>
+    <div class="round-button" ng-hide="result">
+      <div class="round-button-circle">
+        <div ng-hide="loading">
+          <span class="btn btn-info btn-block login-btn" role="button" ng-click="login()"  translate="loginPage.login"></span>
+        </div>
+        <div ng-show="loading">
+          <span class="btn btn-info btn-block login-btn" role="button"  translate="loginPage.loading"></span>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<div class="icon icon-cisco-logo bottom-icon" ng-show="isSpark()"></div>
+<div class="icon icon-cisco-logo bottom-icon"></div>
 
 <style media="screen" type="text/css">
   html {

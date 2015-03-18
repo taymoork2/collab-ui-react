@@ -28,8 +28,6 @@ angular.module('Core')
         $scope.loading = true;
         $scope.loginText = 'loginPage.loading';
 
-        angular.element('html').css('background', 'url(images/bg_3515.jpg) center center / cover no-repeat fixed');
-
         Auth.authorize($rootScope.token)
           .then(function () {
             if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -48,7 +46,6 @@ angular.module('Core')
               $rootScope.services = Authinfo.getServices();
 
               $timeout(function () {
-                angular.element('html').css('background', 'none');
                 $state.go(state, params);
               }, loadingDelay);
             }
@@ -77,7 +74,5 @@ angular.module('Core')
       };
 
       $scope.loginText = 'loginPage.login';
-      angular.element('html').css('background', 'url(images/bg_3515.jpg) center center / cover no-repeat fixed');
-
     }
   ]);

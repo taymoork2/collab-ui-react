@@ -96,8 +96,5 @@ angular
       $rootScope.$on('$stateChangeSuccess', function () {
         HttpUtils.setTrackingID();
       });
-
-      $rootScope.favicon = 'images/sparkSm.png';
-
     }
   ]);
