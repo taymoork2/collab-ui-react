@@ -48,6 +48,19 @@ describe('XhrNotificationService', function () {
     expect(notification.notify.args[0][0][0]).toBe('Resource not found');
   });
 
+  it('should handle description as string', function () {
+    Service.notify([{
+      "error": {
+        "key": "404",
+        "message": [{
+          "description": "Resource not found"
+        }]
+      }
+    }]);
+    expect(notification.notify.callCount).toBe(1);
+    expect(notification.notify.args[0][0][0]).toBe('Resource not found');
+  });
+
   it('should handle json error strings', function () {
     Service.notify([{
       "error": {

@@ -6,23 +6,23 @@ angular.module('Hercules')
 
       var findMessages = function (data, messages) {
         messages = messages || [];
-        _.each(data, function (val, key) {
-          if (key == 'message') {
-            if (_.isArray(val)) {
-              _.each(val, function (m) {
-                if (_.isPlainObject(m) || _.isArray(m)) {
-                  findMessages(m, messages);
-                } else {
-                  messages.push(m);
-                }
-              });
-            } else {
-              messages.push(val);
+        if (_.isPlainObject(data) || _.isArray(data)) {
+          _.each(data, function (val, key) {
+            if (key == 'message' || key == 'description') {
+              if (_.isString(val)) {
+                messages.push(val);
+              }
+              if (_.isArray(val)) {
+                _.each(val, function (v, k) {
+                  if (!k && _.isString(v)) {
+                    messages.push(v);
+                  }
+                });
+              }
             }
-          } else if (_.isPlainObject(val) || _.isArray(val)) {
             findMessages(val, messages);
-          }
-        });
+          });
+        }
         return messages;
       };
 
