@@ -299,6 +299,18 @@ angular
             service: "CONFERENCING"
           }
         })
+        // .state('user-overview.webex', {
+        //   // template: '<div ui-view="header"></div><cs-sp-container><cs-sp-section><div>Hello {{currentUser.name.givenName}}</div></cs-sp-container></cs-sp-section>',
+        //   templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
+        //   controller: 'WebExUserSettingsCtrl',
+        //   controllerAs: 'WebExUserSettings',
+        //   data: {
+        //     displayName: "WebEx"
+        //   },
+        //   params: {
+        //     currentUser: {}
+        //   }
+        // })
         .state('user-overview.userProfile', {
           templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
           controller: 'UserRolesCtrl',

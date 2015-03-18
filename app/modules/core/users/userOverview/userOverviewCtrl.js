@@ -55,6 +55,11 @@
         state: 'user-overview.conferencing'
       };
 
+      var webexState = {
+        name: "WebEx",
+        state: 'user-overview.webex'
+      };
+
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         vm.services.push(msgState);
       }
@@ -64,6 +69,8 @@
       if (hasEntitlement('ciscouc')) {
         vm.services.push(commState);
       }
+
+      //vm.services.push(webexState);
     }
 
     activate();

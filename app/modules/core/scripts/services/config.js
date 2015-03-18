@@ -201,15 +201,15 @@ angular.module('Core')
           title: 'tabs.accountTab',
           state: 'profile',
           link: '/profile'
-        }, {
-          /*
+        },
+        /*{
           tab: 'webexUserSettingsTab',
           icon: 'icon-support',
           title: 'webexUserSettings.webexUserSettingsTab',
           state: 'webexUserSettings',
           link: '/webexUserSettings'
-          */
-        }, {
+        }, */
+        {
           tab: 'developmentTab',
           icon: 'icon-tools',
           title: 'tabs.developmentTab',

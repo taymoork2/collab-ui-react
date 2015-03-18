@@ -7,13 +7,19 @@
     'WebExUserSettingsSvc',
     'WebexUserPrivilegesModel',
     'Notification',
+    '$filter',
+    '$stateParams',
     function (
       $scope,
       $log,
       WebExUserSettingsSvc,
       userPrivilegesModel,
-      Notification
+      Notification,
+      $filter,
+      $stateParams
     ) {
+      this.currentUser = $stateParams.currentUser;
+
       this.xmlApiAccessInfo = {
         xmlServerURL: "",
         webexAdminID: "",
@@ -22,6 +28,8 @@
         webexSessionTicket: null,
         webexUserId: ""
       };
+
+      this.xmlApiAccessInfo.webexUserId = this.currentUser.userName.match(/^([^@]*)@/)[1]; // stripping out the @domain part and keeping only username for now
 
       this.getUserSettingsInfo = function () {
         var currView = this;
@@ -374,6 +382,8 @@
 
         WebExUserSettingsSvc.updateUserSettings(this.xmlApiAccessInfo, userPrivileges)
           .then(function () {
+              var successMsg = [];
+              successMsg.push($filter('translate')('webexUserSettings.userUpdateSuccess'));
               Notification.notify(['User privileges updated'], 'success');
             },
             function () {
