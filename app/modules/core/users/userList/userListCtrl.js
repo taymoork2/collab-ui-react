@@ -34,7 +34,7 @@ angular.module('Core')
 
       var init = function () {
         if ($state.params.showAddUsers === 'add') {
-          $('#addUsersDialog').modal('show');
+          $state.go('users.add');
         }
       };
       $timeout(init, 0);

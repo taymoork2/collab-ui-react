@@ -201,6 +201,14 @@ angular
             showAddUsers: {}
           }
         })
+        .state('users.add', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              template: '<cr-add-users></cr-add-users>'
+            }
+          }
+        })
         .state('editService', {
           parent: 'modalLarge',
           views: {

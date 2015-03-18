@@ -12,12 +12,6 @@ angular.module('Core')
         $state.go('users.list.add');
       };
 
-      $scope.resetEntitlements = function () {
-        for (var svc in $scope.entitlements) {
-          $scope.entitlements[svc] = false;
-        }
-      };
-
       //radio group
       $scope.entitlements = {};
       var setEntitlementList = function () {

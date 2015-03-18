@@ -233,18 +233,18 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 };
 
 exports.search = function (query) {
-  this.searchButton.click();
-  utils.expectIsDisplayed(this.searchField);
-  this.searchField.clear();
+  this.click(this.searchButton);
+  this.expectIsDisplayed(this.searchField);
+  this.clear(this.searchField);
   if (query) {
-    this.searchField.sendKeys(query);
-    utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+    this.sendKeys(this.searchField, query);
+    this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
   }
 };
 
 exports.searchAndClick = function (query) {
   this.search(query);
-  utils.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  this.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
 };
 
 exports.dumpConsoleErrors = function () {

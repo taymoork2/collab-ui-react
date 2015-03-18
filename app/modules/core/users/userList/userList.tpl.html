@@ -32,8 +32,7 @@
     </div>
     <div class="col-xs-12 col-sm-5 col-md-5" ng-show="Utils.isAdminPage() && userTabActive">
       <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
-        <button id="addUsers" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addUsersDialog" translate="usersPage.inviteUsers" ng-click="setupTokenfield();resetEntitlements();">
-        </button>
+        <button id="addUsers" class="btn btn-lg btn-info add-button" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
         <a id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" title="{{'usersPage.csvBtnTitle' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
           <span id="export-icon"><i class="icon icon-content-share"></i></span>
         </a>
@@ -47,5 +46,3 @@
 <div ng-class="{preview: userPreviewActive, details: userDetailsActive}" class="user-management">
   <div ui-view class="outer-details-div" id="entire-slide"></div>
 </div>
-
-<cr-add-users></cr-add-users>
