@@ -28,7 +28,7 @@ angular.module('Core')
         $scope.loading = true;
         $scope.loginText = 'loginPage.loading';
 
-        angular.element('html').css('background', 'url(images/bg_3515.jpg) no-repeat center center fixed');
+        angular.element('html').css('background', 'url(images/bg_3515.jpg) center center / cover no-repeat fixed');
 
         Auth.authorize($rootScope.token)
           .then(function () {
@@ -77,7 +77,7 @@ angular.module('Core')
       };
 
       $scope.loginText = 'loginPage.login';
-      angular.element('html').css('background', 'url(images/bg_3515.jpg) no-repeat center center fixed');
+      angular.element('html').css('background', 'url(images/bg_3515.jpg) center center / cover no-repeat fixed');
 
     }
   ]);

@@ -9,7 +9,7 @@
 /* global notifications */
 /* global deleteTrialUtils */
 
-describe('Partner flow', function () {
+xdescribe('Partner flow', function () {
   var orgId;
   var accessToken;
 

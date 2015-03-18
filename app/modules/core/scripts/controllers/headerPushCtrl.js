@@ -5,7 +5,6 @@ angular
   .controller('HeaderPushCtrl', ['$scope', '$filter',
     function ($scope, $filter) {
       $scope.label = $filter('translate')('leaderBoard.licenseUsage');
-      $scope.state = 'normal';
-      $scope.icon = 'icon-settings';
+      $scope.state = 'license'; // Possible values are license, warning or error
     }
   ]);
