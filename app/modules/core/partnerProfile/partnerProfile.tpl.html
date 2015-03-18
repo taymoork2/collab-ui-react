@@ -42,24 +42,26 @@
     </div>
 
     <!-- cisco rep -->
-    <div class="row" id="ciscoRepPanel" ng-show="rep !== null">
+    <div class="row cisco-rep-panel" id="ciscoRepPanel" ng-show="rep !== null || partner !== null">
       <div class="col-xs-12 form-section">
         <h2 ng-if="isPartner" translate="partnerProfile.ciscoRep"></h2>
         <h2 ng-if="!isPartner" translate="customerProfile.supportContacts"></h2>
         <div class="form-spacing">
-          <h3 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h3>
-            <span class="rep-info">{{rep.name | translate}}</span>
-            <span class="rep-info">{{rep.phone | translate}}</span>
-            <span class="rep-info">{{rep.email | translate}}</span>
+          <div ng-show="rep !== null">
+            <h3 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h3>
+            <span class="rep-info">{{rep.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
+            <span class="rep-info">{{rep.displayName | translate}}</span>
+            <span class="rep-info">{{rep.userName | translate}}</span>
 
-          <!-- grant cisco access checkbox -->
-          <div class="row grant-row">
-            <div class="col-xs-12">
-              <cs-checkbox id="ckbox1" ng-model="cb.checkboxValue0" cklabel="{{grant | translate}}"></cs-checkbox>
+            <!-- grant cisco access checkbox -->
+            <div class="row grant-row">
+              <div class="col-xs-12">
+                <cs-checkbox id="ckbox1" ng-model="cb.checkboxValue0" cklabel="{{grant | translate}}"></cs-checkbox>
+              </div>
             </div>
           </div>
 
-          <div ng-if="!isPartner && partner">
+          <div ng-if="!isPartner && partner !== null">
             <h3 translate="customerProfile.partnerAdmin"></h3>
               <span class="rep-info">{{partner.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
               <span class="rep-info">{{partner.displayName | translate}}</span>
