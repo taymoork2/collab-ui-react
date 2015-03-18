@@ -77,7 +77,7 @@ angular
 
       $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
-      var defaultLang = "en_US";
+      var defaultLang = 'en_US';
 
       //Tell the module what language to use by default
       $translateProvider.preferredLanguage(defaultLang);
@@ -127,6 +127,12 @@ angular
           controller: 'ActivateCtrl',
           parent: 'main',
           authenticate: false
+        })
+        .state('csadmin', {
+          url: '/csadmin?eqp',
+          templateUrl: 'modules/squared/csadmin/csadmin.html',
+          controller: 'CsAdminCtrl',
+          parent: 'main'
         })
         .state('downloads', {
           url: '/downloads',
@@ -735,7 +741,19 @@ angular
         .state('webexUserSettings', {
           url: '/webexUserSettings',
           templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
-          // controller: 'WebExUserSettingsCtrl',
+          parent: 'main'
+        });
+    }
+  ]);
+
+angular
+  .module('WebExUserSettings2')
+  .config(['$stateProvider',
+    function ($stateProvider) {
+      $stateProvider
+        .state('webexUserSettings2', {
+          url: '/webexUserSettings2',
+          templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
           parent: 'main'
         });
     }

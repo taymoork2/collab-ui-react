@@ -50,6 +50,26 @@ angular.module('Hercules')
           default:
             return 'unknown';
           }
+        },
+        getOrg: function (orgId, callback) {
+          $http
+            .get(ConfigService.getUSSUrl() + '/orgs/' + orgId)
+            .success(function (data) {
+              callback(null, data);
+            })
+            .error(function () {
+              callback(arguments, null);
+            });
+        },
+        updateOrg: function (org, callback) {
+          $http
+            .patch(ConfigService.getUSSUrl() + '/orgs/' + org.id, org)
+            .success(function (data) {
+              callback(null, data);
+            })
+            .error(function () {
+              callback(arguments, null);
+            });
         }
       };
     }

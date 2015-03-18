@@ -28,95 +28,9 @@
 	.report-tabs-container {
 		padding: 5px;
 		background-color: @brand-white;
-
-		.largetabs {
-  		li {
-		  	a {
-		  		background-color: @gray-lightest;
-		  		border-color: rgb(234,235,238);
-		  		border-width: 1px;
-	  			height: 55px;
-	  			margin-top: 0;
-
-		  		h4 {
-			  		color: @gray-darkest;
-			  		text-align: center;
-		  		}
-		  	}
-  		}
-
-  		li:first-of-type {
-  			padding-left: 1px;
-
-  			a {
-  				border-left: 1px solid #eaebee;
-  			}
-  		}
-
-  		li:last-of-type{
-  			padding-right: 1px;
-
-  			a {
-  				border-right: 1px solid #eaebee;
-  			}
-  		}
-
-  		li.active {
-		  	a {
-		  		background-color: @brand-white;
-		  		border-color: rgb(234,235,238);
-		  		border-width: 1px;
-	  			height: 60px;
-		  		border-color: #EAEBEE;
-	  			position: relative;
-	  			z-index: 3;
-
-		  		h4 {
-			  		color: @gray-darkest;
-			  		text-align: center;
-		  		}
-		  	}
-  		}
-
-  		li.active:hover {
-  			a {
-  				height: 60px;
-  			}
-  		}
-
-  		li:hover {
-		  	a {
-		  		background-color: @brand-white;
-		  		border-color: rgb(234,235,238);
-		  		border-width: 1px;
-	  			height: 55px;
-		  		border-color: #EAEBEE;
-
-		  		h4 {
-			  		color: @gray-darkest;
-			  		text-align: center;
-		  		}
-		  	}
-  		}
-
-	  	.tab-content {
-	  		padding: 24px;
-	  		position: relative;
-	  		top: -1px;
-
-	  		.tab-pane {
-	  			min-height: 300px;
-	  			
-	  			.report-status {
-		  			position: absolute;
-					top: 50%;
-					left: 50%;
-					transform: translate(-50%, -50%);
-					-ms-transform: translate(-50%, -50%);
-    				-webkit-transform: translate(-50%, -50%);
-	  			}
-		  	}
-			}
-		}
 	}
+}
+
+div[large] {
+	float: left;
 }

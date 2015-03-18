@@ -35,6 +35,8 @@ describe('Org Entitlement flow', function () {
     utils.expectIsDisplayed(users.rolesChevron);
     utils.click(users.rolesChevron);
     utils.expectIsDisplayed(roles.rolesDetailsPanel);
+    utils.expectIsDisplayed(roles.emailInput);
+    utils.expectIsDisabled(roles.emailInput);
   });
 
   it('should edit last name, roles & save', function () {

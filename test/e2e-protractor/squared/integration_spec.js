@@ -28,7 +28,7 @@ describe('App flow', function () {
       browser.getAllWindowHandles().then(function (handles) {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
-        navigation.expectDriverCurrentUrl('status.projectsquared.com/');
+        navigation.expectDriverCurrentUrl('status.ciscospark.com/');
         browser.driver.close();
         browser.switchTo().window(appWindow);
       });

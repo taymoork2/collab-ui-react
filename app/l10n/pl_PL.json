@@ -43,28 +43,42 @@
     "inviteUsers": "Zaproś użytkowników",
     "partners": "Administratorzy partnera"
   },
+  "groupsPage": {
+    "manageGroups": "Grupy",
+    "all": "Wszystkie",
+    "groupNameHeader": "Nazwa grupy",
+    "membersCountHeader": "Członkowie"
+  },
   "onboardModal": {
     "onboardUsers": "Użytkownicy dodani",
     "cancel": "Anuluj",
     "addUsersDesc": "Wpisz adresy e-mail osób w swojej firmie, które będą mogły korzystać z usług współpracy. Otrzymają zaproszenie e-mail umożliwiające zarejestrowanie się.",
     "addUserText": "Kogo chcesz dodać?",
     "userInput": "Wpisz adresy e-mail lub grupy mailingowe oddzielone przecinkami...",
-    "addServiceText": "Jakie usługi chcesz włączyć?",
+    "enableServiceText": "Włącz usługi",
     "enableCollab": "Włącz usługi współpracy indywidualnie",
     "enableCollabGroup": "Włącz usługi współpracy na podstawie przynależności do grupy",
     "addUsersSelect": "Dodaj użytkowników do:",
-    "manageBtn": "Zarządzaj",
+    "manageBtn": "Zarządzaj grupami",
     "onboardBtn": "Dodaj",
     "howToInvite": "W jaki sposób chcesz ich zaprosić?",
     "waitInvitation": "Wyślij zaproszenia e-mail i zaczekaj z udostępnieniem usług, aż użytkownik je zaakceptuje.",
     "sendImmediate": "Natychmiast udostępnij użytkownikowi usługi i wyślij powiadomienia e-mail.",
-    "messaging": "Wiadomości i komunikacja",
+    "messaging": "Wiadomości",
     "conferencing": "Konferencje",
+    "communications": "Komunikacja",
+    "entitlements": "Upoważnienia użytkowników",
     "saveBtn": "Zapisz",
     "manageGroups": "Zarządzaj grupami",
     "groupColHeader": "Nazwa grupy",
     "collabService": "Wybierz licencje usługi współpracy, które powinny zostać przekazane użytkownikom w grupie.",
-    "addEntitleError": "Niewystarczające uprawnienia, aby dodać lub upoważnić użytkownika."
+    "addEntitleError": "Niewystarczające uprawnienia, aby dodać lub upoważnić użytkownika.",
+    "freeMsg": "Bezpłatne pokoje zespołów w usłudze Squared",
+    "freeConf": "Bezpłatne połączenia Meeting z 3 uczestnikami",
+    "freeComm": "Bezpłatne połączenia głosowe i wideo IP w ramach sieci",
+    "paidMsg": "Standardowe pokoje zespołów",
+    "paidConf": "Połączenia Meeting z 25 uczestnikami",
+    "paidComm": "Zaawansowana komunikacja"
   },
   "usersPreview": {
     "groupPreview": "Grupa:",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "Upoważnienia",
     "addNewLinePreview": "Dodaj nową linię",
     "newLine": "Nowa linia",
-    "devicesPreview": "Urządzenia",
+    "devicesPreview": "Urządzenia i oprogramowanie",
     "activateNewDevice": "Aktywuj nowe urządzenie",
     "fullAdmin": "Pełna administracja",
     "generateActivationCode": "Wygeneruj kod aktywacji",
     "generateActivationCodeText": "Wygeneruj kod aktywacji, aby udostępnić nowe urządzenie temu użytkownikowi.",
     "activationCodeTitle": "Kod aktywacji dla nowego urządzenia",
-    "expires": "Data wygaśnięcia"
+    "expires": "Data wygaśnięcia",
+    "editServices": "Edytuj urządzenia",
+    "editServiceTitle": "Usługi włączone dla {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Wiadomości"
   },
   "settings": {
+    "title": "Konfiguracja usługi",
     "initialSetup": "Konfiguracja początkowa"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "Urządzenia",
     "reportTab": "Raporty",
     "supportTab": "Pomoc",
+    "accountTab": "Konto",
     "developmentTab": "Rozwój",
     "organizationTab": "Organizacja",
     "organizationTabDesc": "Zarządzaj szczegółami organizacji, wyświetlaj przydzielone usługi i korzystaj z narzędzi.",
@@ -107,7 +125,17 @@
     "callRoutingTab": "Przekierowywanie połączeń",
     "callRoutingTabDesc": "Zarządzaj funkcjami przekierowywania połączeń takimi jak parkowanie",
     "mediaOnHoldTab": "Multimedia podczas wstrzymania",
-    "mediaOnHoldTabDesc": "Wstrzymane media — przykład rozwoju"
+    "mediaOnHoldTabDesc": "Wstrzymane media — przykład rozwoju",
+    "meetingDetailsTab": "Spotkania",
+    "meetingDetailsTabDesc": "Zarządzanie spotkaniami",
+    "vtsDetailsTab": "Zasoby przedsiębiorstwa",
+    "vtsDetailsTabDesc": "Zarządzanie zasobami przedsiębiorstwa",
+    "listUserTab": "Lista użytkowników",
+    "listUserTabDesc": "Zarządzanie użytkownikami i ich funkcjami.",
+    "groupTab": "Grupy",
+    "groupTabDesc": "Tworzenie grup i zarządzanie nimi.",
+    "entResUtilizationTab": "Wykorzystanie",
+    "entResUtilizationTabDesc": "Wykorzystanie zasobów przedsiębiorstwa"
   },
   "index": {
     "welcome": "Witamy!",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "Przekierowywanie...",
     "launch": "Uruchamianie aplikacji..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "Adres e-mail administratora: ",
+    "create": "Przetwórz zamówienie"
   },
   "orgsPage": {
     "title": "ZARZĄDZAJ ORGANIZACJAMI",
@@ -184,6 +216,7 @@
     "error": "Aktualizacja użytkownika nie powiodła się."
   },
   "supportPage": {
+    "title": "Pomoc",
     "subtitleLogs": "Szukaj dzienników",
     "listlogsbtn": "Szukaj",
     "noResults": "Brak wyników.",
@@ -228,7 +261,17 @@
     "tx": "Wysłane",
     "errCallInfoQuery": "Nie udało się uzyskać informacji o połączeniu. Stan: {{status}}",
     "subTitleCallFlow": "Przepływ połączeń",
-    "downloading": "Pobieranie może potrwać do 5 minut. Prosimy o cierpliwość..."
+    "downloading": "Pobieranie może potrwać do 5 minut. Prosimy o cierpliwość...",
+    "operational": "Wszystkie systemy operacyjne",
+    "error": "Błąd w systemie",
+    "supportResources": "Zasoby pomocy technicznej",
+    "showDetails": "Pokaż szczegóły",
+    "hideDetails": "Ukryj szczegóły",
+    "problemReports": "Raporty o problemach",
+    "reportingUrl": "Adres URL dla raportów:",
+    "helpFaq": "Pomoc i często zadawane pytania",
+    "helpUrl": "Adres URL pomocy:",
+    "sendFeedback": "Uwagi do firmy Cisco"
   },
   "common": {
     "delete": "Usuń",
@@ -242,7 +285,10 @@
     "done": "Gotowe",
     "begin": "Rozpocznij",
     "back": "Wstecz",
-    "finish": "Zakończ"
+    "finish": "Zakończ",
+    "language": "Język",
+    "selectLanguage": "Wybierz język",
+    "select": "Wybierz"
   },
   "notifications": {
     "success": "Powiadomienia o powodzeniu",
@@ -273,7 +319,16 @@
     "cancel": "Anuluj",
     "emailAddress": "Adres e-mail",
     "name": "Nazwa",
-    "errGetTrialsQuery": "Nie udało się uzyskać wersji próbnych. Stan: {{status}}"
+    "errGetTrialsQuery": "Nie udało się uzyskać wersji próbnych. Stan: {{status}}",
+    "quickLinksText": "Szybkie łącza",
+    "addUserText": "Dodaj użytkowników",
+    "installDeviceText": "Zainstaluj urządzenie dla użytkownika",
+    "installSharedSpaceText": "Zainstaluj urządzenia w przestrzeni udostępnianej",
+    "autoAttendantText": "Konfiguruj Automatycznego asystenta",
+    "searchLogsText": "Przeszukaj dzienniki urządzenia",
+    "unlicensedDateText": "użytkownicy bez licencji zarejestrowani na",
+    "unlicensedText": "użytkownicy bez licencji",
+    "convertText": "Wyświetl i przekonwertuj użytkowników korzystających aktualnie z wersji bezpłatnej"
   },
   "inviteModal": {
     "title": "Upoważnienie do korzystania z usługi",
@@ -284,13 +339,14 @@
   "ssoModal": {
     "btnTitle": "Konfiguracja rejestracji jednokrotnej",
     "title": "Konfiguracja rejestracji jednokrotnej",
-    "enableSSO": "Tak, mam niestandardowego dostawcę rejestracji jednokrotnej.",
-    "disableSSO": "Nie, nie mam dostawcy rejestracji jednokrotnej.",
+    "enableSSO": "Zintegruj niezależnego dostawcę tożsamości. (Zaawansowane)",
+    "disableSSO": "Użyj wbudowanej usługi tożsamości do uwierzytelniania użytkowników. (Proste)",
     "importMetadataTitle": "Importuj metadane IdP",
     "exportMetadataTitle": "Eksportuj metadane chmury",
     "testSSOSetupTitle": "Testuj konfigurację rejestracji jednokrotnej",
     "enableSSOTitle": "Włącz rejestrację jednokrotną",
     "importMetadataDesc": "Rozpocznij konfigurowanie relacji zaufania między dostawcą tożsamości (IdP) a usługą Cisco Collaboration Cloud, pozyskując plik metadanych zaufania od IdP i przesyłając go tutaj.",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Pobierz następujący plik metadanych zaufania z usługi Cisco Collaboration i prześlij go do interfejsu zarządzania dostawcami tożsamości (IdP).",
     "exportMetadataDesc2": "Po zakończeniu przesyłania pliku do IdP wróć do tego ekranu i naciśnij przycisk Dalej.",
     "testSSOSetupDesc": "Teraz możesz przetestować swoją konfigurację rejestracji jednokrotnej. Naciśnij przycisk poniżej, aby otworzyć nowe okno. Jeśli możesz się zalogować, wróć do tego ekranu i naciśnij przycisk Dalej, aby ukończyć konfigurację rejestracji jednokrotnej.",
@@ -303,7 +359,7 @@
     "backBtn": "Wstecz",
     "nextBtn": "Dalej",
     "downloadMetadataBtn": "Pobierz plik metadanych",
-    "launchSSOTestBtn": "Uruchom test rejestracji jednokrotnej",
+    "launchSSOTestBtn": "Sprawdź połączenie rejestracji jednokrotnej",
     "finishBtn": "Zakończ",
     "importFailed": "Nie udało się zaimportować pliku metadanych IdP",
     "invalidFile": "Nieprawidłowy plik metadanych IdP",
@@ -311,7 +367,12 @@
     "retrieveEntityIdFailed": "Nieudana konfiguracja rejestracji jednokrotnej",
     "readFileFailed": "Nie można odczytać pliku metadanych IdP",
     "importSuccess": "Pomyślnie zaimportowano plik metadanych IdP",
-    "enableSSOSuccess": "Rejestracja jednokrotna została włączona dla wszystkich użytkowników"
+    "enableSSOSuccess": "Rejestracja jednokrotna została włączona dla wszystkich użytkowników",
+    "finalEnableSSO": "Sprawdzenie zostało ukończone pomyślnie. Włącz rejestrację jednokrotną.",
+    "finalDisableSSO": "Sprawdzenie się nie powiodło. Wyłącz rejestrację jednokrotną.",
+    "disableFailed": "Nie można wyłączyć rejestracji jednokrotnej",
+    "diableSuccess": "Rejestracja jednokrotna została pomyślnie wyłączona dla wszystkich użytkowników",
+    "enableSSOFailure": "Nie można wyłączyć rejestracji jednokrotnej."
   },
   "serviceSetupModal": {
     "timeZone": "Strefa czasowa",
@@ -438,6 +499,17 @@
       "label": "Usługi UC APP Fusion",
       "title": "Usługi UC APP Fusion",
       "desc": "Użyj swoich usług lokalnych"
+    },
+    "activationStatus": {
+      "not_entitled": "Brak upoważnienia",
+      "pending_deactivation": "Oczekiwanie na dezaktywację",
+      "pending_activation": "Oczekiwanie na aktywację",
+      "activated": "Aktywowano",
+      "error": "Błąd"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fuzja — UC",
+      "squared-fusion-cal": "Fuzja — kalendarz"
     }
   },
   "firstTimeWizard": {
@@ -483,7 +555,7 @@
     "nextSteps": "Naciśnij przycisk Dalej, kiedy będzie można zweryfikować, że informacje o tożsamości są synchronizowane.",
     "results": "Wyniki",
     "syncAgreementText": "użytkownicy w uzgodnieniu synchronizacji",
-    "setupSSOSub": "Skonfiguruj rejestrację jednokrotną",
+    "setupSSOSub": "Rejestracja jednokrotna",
     "setupSSODesc": "Wybierz odpowiednią opcję dla swojej konfiguracji rejestracji jednokrotnej.",
     "manualInvite": "Wpisz adresy e-mail osób w swojej firmie, które będą mogły korzystać z usług współpracy. Otrzymają zaproszenie e-mail umożliwiające zarejestrowanie się.",
     "domainEntry": "Wprowadzanie domeny",
@@ -494,6 +566,32 @@
     "finish": "Zakończ",
     "finishSub": "Zakończ konfigurację",
     "completeRequired": "{{name}} nie może być puste."
+  },
+  "reports": {
+    "title": "Raporty",
+    "engagementTab": "Zaangażowanie",
+    "qualityTab": "Jakość",
+    "opportunitiesTab": "Możliwości",
+    "time": "Cały czas",
+    "week": "Poprzedni tydzień",
+    "month": "Poprzedni miesiąc",
+    "threeMonths": "Ostatnie trzy miesiące",
+    "mostEngaged": "5 najbardziej zaangażowanych",
+    "leastEngaged": "5 najmniej zaangażowanych",
+    "highQuality": "5 o najwyższej jakości",
+    "leastQuality": "5 o najniższej jakości",
+    "services": "Wszystkie usługi",
+    "UsersOnboarded": "Dodani użytkownicy",
+    "AvgCallsPerUser": "Średnia liczba połączeń na użytkownika",
+    "AvgRoomsPerUser": "Średnia liczba pokojów na użytkownika",
+    "ActiveUsers": "Aktywni użytkownicy",
+    "OneOnOneRooms": "Pokoje dwuosobowe",
+    "GroupRooms": "Pokoje grupowe",
+    "VideoCalls": "Połączenia wideo",
+    "AvgDurationofCalls": "Średni czas trwania połączeń",
+    "ContentShared": "Treści udostępnione",
+    "AmountofContentShared": "Ilość udostępnionych treści",
+    "UserEngagement": "Zaangażowanie użytkownika"
   },
   "callRouting": {
     "title": "Przekierowywanie połączeń",
@@ -529,6 +627,7 @@
     "createButton": "Utwórz parkowanie połączenia"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "lub",
     "voicemail": "Poczta głosowa",
     "singleNumberReach": "Zasięg pojedynczego numeru"
@@ -543,16 +642,21 @@
     "externalNumberLabel": "Numer zewnętrzny",
     "chooseNumber": "Wybierz numer",
     "addNewNumber": "Dodaj nowy numer",
-    "none": "Brak"
+    "removeNumber": "Usuń linię",
+    "none": "Brak",
+    "deleteConfirmation": "Nie można tego cofnąć.  Czy na pewno chcesz wycofać przypisanie linii {{line}} do użytkownika {{user}}?",
+    "deleteLineTitle": "Usuń linię",
+    "disassociationSuccess": "Pomyślnie usunięto przypisanie linii do użytkownika."
   },
   "callForwardPanel": {
     "title": "Przekazywanie połączeń",
     "success": "Konfiguracja przekazywania połączeń zapisana pomyślnie",
     "error": "Konfiguracja przekazywania połączeń nie powiodła się",
+    "forwardNoCalls": "Nie przekazuj połączeń",
     "forwardAllCalls": "Przekazuj wszystkie połączenia",
     "forwardBusyNoAnswer": "Przekazuj połączenia, kiedy linia jest zajęta lub wyłączona",
-    "internalAndExternal": "Dla połączeń wewnętrznych i zewnętrznych",
-    "internalOnly": "Tylko dla połączeń wewnętrznych",
+    "internalAndExternal": "Połączenia wewnętrzne i zewnętrzne<br>",
+    "internalOnly": "Tylko połączenia wewnętrzne<br>",
     "forwardBusy": "Kiedy linia jest zajęta, wysyłaj połączenia do:",
     "forwardNoAnswer": "Kiedy nie ma odpowiedzi, wysyłaj połączenia do:",
     "forwardExternal": "Przekazuj połączenia zewnętrzne w inny sposób",
@@ -560,11 +664,11 @@
   },
   "callerIdPanel": {
     "title": "ID dzwoniącego",
-    "description": "Zmień wyświetlaną nazwę połączeń z tej linii"
+    "description": "<small>Zmień wyświetlaną nazwę dla połączeń wykonywanych z tej linii</small>"
   },
   "singleNumberReachPanel": {
     "title": "Zasięg pojedynczego numeru",
-    "description": "Umożliwia użytkownikom odpowiadanie na połączenia przychodzące pod ich numer wewnętrzny na innym numerze",
+    "description": "<small>Umożliwia użytkownikom odpowiadanie na połączenia przychodzące pod ich numer wewnętrzny na innym numerze</small>",
     "toggle": "Zasięg pojedynczego numeru",
     "snrNote": "SNR może objąć linie wszystkich użytkowników lub ograniczyć się do określonych linii",
     "success": "Konfiguracja zasięgu pojedynczego numeru zapisana pomyślnie",
@@ -596,12 +700,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Czas trwania",
+    "duration": "Czas trwania wersji próbnej (w dniach)",
     "thirtyDays": "30 dni",
     "sixtyDays": "60 dni",
-    "ninetyDays": "90 dni",
-    "onehundredtwentyDays": "120 dni",
-    "onehundredeightyDays": "180 dni",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "Anuluj",
     "startTrial": "Rozpocznij wersję próbną",
     "customerInformation": "Informacje o kliencie",
@@ -620,6 +724,22 @@
     "activeUsersTitle": "Aktywni użytkownicy dziennie",
     "averageCallsTitle": "Średnia liczba połączeń na użytkownika",
     "contentSharedTitle": "Łączna ilość udostępnionych treści"
+  },
+  "trialModal": {
+    "trialSuccess": "Pomyślnie skonfigurowano wersję próbną.",
+    "nextStep": "Następny krok",
+    "sendWelcome": "Wyślij wiadomość powitalną",
+    "sendWelcomePrompt": "Jeśli chcesz, aby klient skonfigurował tę usługę:",
+    "launchPortal": "Otwórz portal firmy",
+    "launchPortalPrompt": "Jeśli chcesz skonfigurować usługę dla klienta:",
+    "or": "lub",
+    "squareducError": "Utworzono wersję próbną, ale nie można przydzielić zasobów do usługi Squared UC.",
+    "addSuccess": "Pomyślnie utworzono {{licenseDuration}}-dniową wersję próbną dla klienta {{customerName}} z następującą liczbą licencji: {{licenseCount}}.",
+    "editSuccess": "Pomyślnie edytowano {{licenseDuration}}-dniową wersję próbną dla klienta {{customerName}} z następującą liczbą licencji: {{licenseCount}}."
+  },
+  "trials": {
+    "collab": "Standardowe pokoje zespołów i połączenia Meeting z 25 uczestnikami",
+    "squaredUC": "Zaawansowana komunikacja"
   },
   "status": {
     "noResults": "Brak dostępnych wyników.",
@@ -657,7 +777,9 @@
     "expiring": "Wygasająca wersja próbna",
     "expired": "Wygasła dzisiaj",
     "expiresToday": "Wygasa dzisiaj",
-    "unused": "nieużywane licencje"
+    "unused": "nieużywane licencje",
+    "uploadNumbers": "Przekaż numery",
+    "overPlan": "powyżej limitu planu"
   },
   "didAddModal": {
     "title": "Dodaj numery telefonów",
@@ -665,20 +787,25 @@
     "processingText": "Dodawanie numerów telefonów...",
     "successText": "Dodano pomyślnie nowe numery telefonów: {{count}}.",
     "failText": "Numery telefonów istnieją już w systemie: {{count}}.",
-    "sendEmail": "Wyślij powitalną wiadomość e-mail",
+    "sendEmail": "Powiadom klienta",
     "notifyCustLater": "Powiadom klienta później",
     "emailSuccessText": "Wiadomość e-mail pomyślnie wysłana do klienta.",
     "emailFailText": "Błąd podczas wysyłania wiadomości e-mail",
-    "inputPlacehoder": "Podaj numery telefonów"
+    "inputPlacehoder": "Wpisz numery telefonów rozdzielone przecinkami"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Konfiguracja urządzenia",
+    "deviceStatus": "Stan urządzenia",
     "description": "Opis",
     "id": "ID",
+    "ipAddress": "Adres IP",
     "deactivate": "Dezaktywuj",
     "success": "Urządzenie zostało zaktualizowane",
     "error": "Konfiguracja urządzenia nie powiodła się",
     "deactivateDevice": "Dezaktywuj urządzenie",
-    "deactivateBody": "Nie można tego cofnąć. Czy na pewno chcesz dezaktywować to urządzenie?"
+    "deactivateBody": "Nie można tego cofnąć. Czy na pewno chcesz dezaktywować to urządzenie?",
+    "deviceStatusFailureMsg": "Nie można pobrać stanu urządzenia",
+    "deviceIpAddressFailureMsg": "Nie można pobrać adresu IP urządzenia"
   },
   "generateActivationCodeModal": {
     "title": "Kod aktywacji",
@@ -707,10 +834,12 @@
     "cloudOpAdmin": "Administrator operacji w chmurze",
     "fullAdmin": "Pełne uprawnienia administratora",
     "partialAdmin": "Częściowe uprawnienia administratora",
+    "noAdmin": "Niewystarczające uprawnienia",
     "userAdmin": "Administrator użytkowników",
     "billingAdmin": "Administrator rozliczeń",
     "supportAdmin": "Administrator pomocy",
-    "save": "Zapisz"
+    "save": "Zapisz",
+    "roles": "Role"
   },
   "mohManagement": {
     "title": "Multimedia podczas wstrzymania",
@@ -719,5 +848,124 @@
     "tracks": "Ścieżki",
     "draganddrop": "Przeciągnij i upuść ścieżki, aby zmienić ich kolejność. Będą one odtwarzane w pętli.",
     "setActive": "Ustaw aktywne"
+  },
+  "meetingsPage": {
+    "manageMeetings": "Spotkania",
+    "webexMeetingId": "Identyfikator spotkania",
+    "host": "Gospodarz",
+    "date": "Data",
+    "startTime": "Rozpoczęcie",
+    "endTime": "Zakończenie",
+    "resource": "Zasób",
+    "webexSite": "Witryna WebEx",
+    "active": "Aktywny",
+    "pending": "Oczekujące zaproszenie",
+    "enterprise": "Przedsiębiorstwo",
+    "mediaFusion": "Fuzja — multimedia",
+    "cloud": "Chmura"
+  },
+  "vtsPage": {
+    "enterpriseResources": "Zasoby przedsiębiorstwa",
+    "name": "Nazwa",
+    "status": "Stan",
+    "delete": "Wycofaj",
+    "takeOffline": "Przenieś offline",
+    "bringOnline": "Przenieś online",
+    "actionsHeader": "Czynności",
+    "deleteResource": "Wycofaj zasób",
+    "deleteResourceConfText1": "Czy na pewno chcesz wycofać ten zasób?",
+    "deleteResourceConfText2": "Zostanie on odłączony od chmury i przeniesiony w tryb offline.",
+    "cancel": "Anuluj",
+    "deleteResource": "Wycofaj zasób"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx Proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
+  },
+  "leaderBoard": {
+    "actions": "Czynności",
+    "licenseUsage": "Użycie licencji",
+    "lastSynced": "Ostatnia synchronizacja:",
+    "messagingTitle": "Wiadomości",
+    "messagingSubtitle": "Standardowe pokoje zespołów",
+    "messagingDesc": "Licencje dotyczące wiadomości.",
+    "communicationTitle": "Komunikacja",
+    "communicationSubtitle": "Advanced Unified",
+    "communicationDesc": "Licencje Cisco Unified Communication.",
+    "conferencingTitle": "Konferencje",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Licencje usług Cisco Meeting Center oraz Konferencje."
+  },
+  "partnerProfile": {
+    "link": "Profil partnera",
+    "customerLink": "Profil klienta",
+    "title": "Konto",
+    "name": "Nazwa firmy",
+    "id": "Numer konta",
+    "ciscoRep": "Przedstawiciel firmy Cisco",
+    "supportSetup": "Lokalizacja zgłoszenia / raportowania",
+    "save": "Zapisz",
+    "supportInfo": "W przypadku świadczenia usług pomocy technicznej dla użytkowników wprowadź poniżej swoje dane dotyczące pomocy technicznej. Będą one wyświetlane w polu Opcje pomocy technicznej w aplikacjach Squared.",
+    "lifeCycle": "Zgodnie z wymaganiami partnerzy w cyklu eksploatacji są zobowiązani świadczyć oba wymienione poniżej typy pomocy technicznej.",
+    "supportOptions": "Opcje pomocy technicznej firmy Cisco",
+    "seeExample": "zobacz przykład",
+    "yourSupportOptions": "Opcje pomocy technicznej",
+    "urlFaq": "Adres URL witryny pomocy i często zadawanych pytań",
+    "urlFaqEx": "http://[url of Cisco help site and FAQs]",
+    "urlReport": "Adres URL do zgłaszania problemów i otwierania spraw",
+    "urlReportEx": "http://[url of Cisco problem reporting]",
+    "helpFaq": "Pomoc i często zadawane pytania — lokalizacja",
+    "matchingTix": "Dopasowywanie zgłoszeń problemów",
+    "matchingDescr": "Aby dopasować zgłoszenia problemów do dzienników przesyłanych do narzędzia Cisco Collaboration Management po utworzeniu raportów, dołącz do adresu URL pomocy technicznej swój identyfikator logowania, dodając ciąg \"%%identyfikatorlogowania%%\" (bez cudzysłowów).",
+    "forExample": "Na przykład: http://www.acme.com/reportproblem?id=%%identyfikatorlogowania%%",
+    "supportTitle": "Konfiguracja pomocy technicznej",
+    "companyInfo": "Informacje o firmie",
+    "cancel": "Anuluj",
+    "partnerProblem": "Partnerska witryna raportowania problemów",
+    "partnerHelp": "Partnerska witryna pomocy",
+    "ciscoProblem": "Raporty problemów będą przesyłane do działu pomocy technicznej firmy Cisco",
+    "ciscoHelp": "Witryna pomocy firmy Cisco",
+    "enterHelp": "Wprowadź lokalizację zasobów pomocy.",
+    "enterReports": "Raporty problemów: wprowadź lokalizację narzędzia raportowania problemów."
+  },
+  "customerProfile": {
+    "supportContacts": "Dane kontaktowe pomocy technicznej",
+    "partnerAdmin": "Administratorzy partnera",
+    "supportInfo": "W przypadku świadczenia usług pomocy technicznej dla użytkowników wprowadź poniżej swoje dane dotyczące pomocy technicznej. Będą one wyświetlane w polu Opcje pomocy technicznej w aplikacji Squared;"
+  },
+  "utilizationPage": {
+    "entResUtilization": "Wykorzystanie zasobów przedsiębiorstwa",
+    "overAllUtil": "Ogólne wykorzystanie",
+    "average": "Średnie",
+    "bridgeUtilization": "Wykorzystanie wg mostków"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Zamówienie nr {{orderId}} jest przetwarzane. Sprawdź za 24 godziny.",
+    "info": "Stan",
+    "wait": "Zaczekaj na przekierowanie"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }

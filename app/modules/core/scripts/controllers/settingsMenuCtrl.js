@@ -41,70 +41,71 @@ angular.module('Core')
 
       var vm = this;
       vm.options = [];
+      vm.label = $translate.instant('settings.title');
       vm.filterPlaceholder = $translate.instant('common.select');
       vm.selectPlaceholder = $translate.instant('common.selectLanguage');
       vm.selected = {};
 
       vm.options = [{
         value: 'da_DK',
-        label: 'Danish'
+        label: $translate.instant('languages.danish')
       }, {
         value: 'de_DE',
-        label: 'German'
+        label: $translate.instant('languages.german')
       }, {
         value: 'en_GB',
-        label: 'English(British)'
+        label: $translate.instant('languages.englishBritish')
       }, {
         value: 'en_US',
-        label: 'English(American)'
+        label: $translate.instant('languages.englishAmerican')
       }, {
         value: 'es_ES',
-        label: 'Spanish(Spain)'
+        label: $translate.instant('languages.spanishSpain')
       }, {
         value: 'es_LA',
-        label: 'Spanish(Latin America)'
+        label: $translate.instant('languages.spanishColumbian')
       }, {
         value: 'fr_FR',
-        label: 'French'
+        label: $translate.instant('languages.french')
       }, {
         value: 'id_ID',
-        label: 'Indionesian'
+        label: $translate.instant('languages.indionesian')
       }, {
         value: 'it_IT',
-        label: 'Italian'
+        label: $translate.instant('languages.italian')
       }, {
         value: 'jp_JA',
-        label: 'Japanese'
+        label: $translate.instant('languages.japanese')
       }, {
         value: 'ko_KR',
-        label: 'Korean'
+        label: $translate.instant('languages.korean')
       }, {
         value: 'nb_NO',
-        label: 'Norwegian'
+        label: $translate.instant('languages.norwegian')
       }, {
         value: 'nl_NL',
-        label: 'Netherlands'
+        label: $translate.instant('languages.dutch')
       }, {
         value: 'pl_PL',
-        label: 'Polish'
+        label: $translate.instant('languages.polish')
       }, {
         value: 'pt_BR',
-        label: 'Brazilian'
+        label: $translate.instant('languages.portugeseBrazillian')
       }, {
         value: 'ru_RU',
-        label: 'Russian'
+        label: $translate.instant('languages.russian')
       }, {
         value: 'sv_SE',
-        label: 'Swedish'
+        label: $translate.instant('languages.swedish')
       }, {
         value: 'tr_TR',
-        label: 'Turkish'
+        label: $translate.instant('languages.turkish')
       }, {
         value: 'zh_CN',
-        label: 'Chinese(Mandarin)'
+        label: $translate.instant('languages.chineseMandarin')
       }, {
         value: 'zh_TW',
-        label: 'Chinese(Traditional)'
+        label: $translate.instant('languages.chineseTraditional')
       }];
 
       for (var x = 0; x < vm.options.length; x++) {
@@ -118,7 +119,7 @@ angular.module('Core')
       $scope.updateLanguage = function () {
         $translate.use(vm.selected.value).then(function () {
           Authinfo.initializeTabs();
-          $state.go('overview');
+          $state.go('login');
           $rootScope.$broadcast('TABS_UPDATED');
         });
       };

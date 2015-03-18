@@ -593,6 +593,7 @@ module.exports = function (grunt) {
           '<%= app_dir %>/**/*.json'
         ],
         tasks: [
+          'jsbeautifier:beautify',
           'jshint:app',
           'copy:build_app_files',
           'htmlprocess_build',

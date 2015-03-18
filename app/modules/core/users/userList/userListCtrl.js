@@ -270,31 +270,25 @@ angular.module('Core')
 
       $scope.showUserDetails = function (user) {
         //Service profile
-        if (($scope.currentUser && $scope.currentUser.id !== user.id) || $scope.currentUser === null) {
-          $scope.entitlements = {};
-          for (var i = $rootScope.services.length - 1; i >= 0; i--) {
-            var service = $rootScope.services[i].sqService;
-            var ciService = $rootScope.services[i].ciService;
-            if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
-              $scope.entitlements[service] = true;
-              $scope.entitlements.webExSquared = true;
-            } else {
-              $scope.entitlements[service] = false;
-            }
+        $scope.entitlements = {};
+        for (var i = $rootScope.services.length - 1; i >= 0; i--) {
+          var service = $rootScope.services[i].sqService;
+          var ciService = $rootScope.services[i].ciService;
+          if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
+            $scope.entitlements[service] = true;
+            $scope.entitlements.webExSquared = true;
+          } else {
+            $scope.entitlements[service] = false;
           }
-          $scope.currentUser = user;
-          $scope.roles = user.roles;
-          $scope.queryuserslist = $scope.gridData;
-          $state.go('user-overview', {
-            currentUser: $scope.currentUser,
-            entitlements: $scope.entitlements,
-            queryuserslist: $scope.queryuserslist
-          });
-        } else {
-          $state.go('user-overview', {
-            currentUser: $scope.currentUser
-          });
         }
+        $scope.currentUser = user;
+        $scope.roles = user.roles;
+        $scope.queryuserslist = $scope.gridData;
+        $state.go('user-overview', {
+          currentUser: $scope.currentUser,
+          entitlements: $scope.entitlements,
+          queryuserslist: $scope.queryuserslist
+        });
       };
 
       $scope.getUserPhoto = function (user) {

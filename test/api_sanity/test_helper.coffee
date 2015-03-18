@@ -16,6 +16,11 @@ auth =
     pass: 'C1sc0123!'
     org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
 
+  'partner-squc-admin':
+    user: 'atlaspartner_squc_admin@atlas.com'
+    pass: 'C1sco123!'
+    org:  '1b6248c1-0d0c-4bd7-9640-c637483541fb'
+
   'pbr-admin-test':
     user: 'pbr-org-admin-test@wx2.example.com'
     pass: 'C1sc0123!'

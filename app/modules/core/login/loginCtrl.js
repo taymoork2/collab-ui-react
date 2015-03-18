@@ -28,6 +28,8 @@ angular.module('Core')
         $scope.loading = true;
         $scope.loginText = 'loginPage.loading';
 
+        angular.element('html').css('background', 'url(images/bg_3515.jpg) no-repeat center center fixed');
+
         Auth.authorize($rootScope.token)
           .then(function () {
             if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -74,16 +76,8 @@ angular.module('Core')
         Auth.redirectToLogin();
       };
 
-      //Branding dependent changes. To be removed later.
       $scope.loginText = 'loginPage.login';
-
-      $scope.isSpark = function () {
-        return Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint';
-      };
-
-      if ($scope.isSpark()) {
-        angular.element('html').css('background', 'url(images/bg_3515.jpg) no-repeat center center fixed');
-      }
+      angular.element('html').css('background', 'url(images/bg_3515.jpg) no-repeat center center fixed');
 
     }
   ]);

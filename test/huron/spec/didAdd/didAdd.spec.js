@@ -36,23 +36,33 @@ describe('Controller: DidAddCtrl', function () {
     }
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, $timeout) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $state = state;
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(200, [{
+      'pattern': '+9999999991',
+      'uuid': '9999999991-id'
+    }, {
+      'pattern': '+8888888881',
+      'uuid': '8888888881-id'
+    }]);
+
     controller = $controller('DidAddCtrl', {
       $scope: $scope,
       $state: $state,
       $stateParams: stateParams
     });
-    controller.tokens = '+9999999999,+8888888888,+7777777777,+6666666666,+5555555555';
+    controller.unsavedTokens = '+9999999999,+8888888888,+7777777777,+6666666666,+5555555555';
     controller.successCount = 0;
     controller.failCount = 0;
     controller.invalidcount = 0;
     controller.submitBtnStatus = false;
+    $httpBackend.flush();
     $rootScope.$apply();
+    $timeout.flush();
   }));
 
   afterEach(function () {
@@ -161,7 +171,7 @@ describe('Controller: DidAddCtrl', function () {
           expect(controller.submit).toBeDefined();
         });
 
-        describe('submit DIDs', function () {
+        describe('Added & Deleted DIDs', function () {
           beforeEach(function () {
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
               'pattern': '+9999999999'
@@ -177,19 +187,76 @@ describe('Controller: DidAddCtrl', function () {
             }).respond(201);
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
               'pattern': '+5555555555'
-            }).respond(500);
+            }).respond(201);
+            $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/9999999991-id')
+              .respond(204);
+            $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/8888888881-id')
+              .respond(204);
             controller.submit();
             $httpBackend.flush();
           });
 
-          it('should have a successCount of 4', function () {
-            expect(controller.successCount).toEqual(4);
+          it('should have a newCount of 5', function () {
+            expect(controller.newCount).toEqual(5);
           });
 
-          it('should have a failCount of 1', function () {
-            expect(controller.failCount).toEqual(1);
+          it('should have a deleteCount of 2', function () {
+            expect(controller.deleteCount).toEqual(2);
           });
+
+          it('should have a existCount of 0', function () {
+            expect(controller.existCount).toEqual(0);
+          });
+
         });
+
+        describe('Edited DIDs', function () {
+          beforeEach(function () {
+            controller.unsavedTokens = '+9999999991,+8888888888';
+            $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
+              'pattern': '+8888888888'
+            }).respond(201);
+            $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/8888888881-id').respond(204);
+            controller.submit();
+            $httpBackend.flush();
+          });
+
+          it('should have a newCount of 1', function () {
+            expect(controller.newCount).toEqual(1);
+          });
+
+          it('should have a deleteCount of 1', function () {
+            expect(controller.deleteCount).toEqual(1);
+          });
+
+          it('should have a existCount of 1', function () {
+            expect(controller.existCount).toEqual(1);
+          });
+
+        });
+
+        describe('Deleted DIDs', function () {
+          beforeEach(function () {
+            controller.unsavedTokens = '+9999999991';
+            $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/8888888881-id').respond(204);
+            controller.submit();
+            $httpBackend.flush();
+          });
+
+          it('should have a newCount of 0', function () {
+            expect(controller.newCount).toEqual(0);
+          });
+
+          it('should have a deleteCount of 1', function () {
+            expect(controller.deleteCount).toEqual(1);
+          });
+
+          it('should have a existCount of 1', function () {
+            expect(controller.existCount).toEqual(1);
+          });
+
+        });
+
       });
 
       describe('sendEmail function', function () {

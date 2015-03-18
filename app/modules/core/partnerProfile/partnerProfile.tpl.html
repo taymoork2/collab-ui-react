@@ -3,42 +3,40 @@
   <form name="supportForm" novalidate>
     <div class="row">
 
-    <!-- page title -->
-      <div class="col-xs-10">
+      <!-- page title -->
+      <div class="col-xs-6">
         <div class="page-title partner-page-title">
           <span id="orgProfilePageTitle" class="title" translate="partnerProfile.title"></span>
         </div>
       </div>
 
       <!-- save / cancel button -->
-      <div class="col-xs-2 save-button">
-        <button id="orgProfileCancelBtn" ng-click="init()" class="btn btn-default" ng-disabled="!supportForm.$dirty">
-          <span translate="partnerProfile.cancel"></span>
-        </button>
-        <button id="orgProfileSaveBtn" ng-click="validation()" class="btn btn-primary" data-loading-text="<i class='icon icon-spinner'></i>"
-            ng-disabled="!supportForm.$dirty">
+      <div class="col-xs-6 save-button">
+        <button id="orgProfileSaveBtn" ng-click="validation()" class="btn btn-primary pull-right" data-loading-text="<i class='icon icon-spinner'></i>"
+            ng-disabled="isBtnDisabled()">
           <span translate="partnerProfile.save"></span>
+        </button>
+        <button id="orgProfileCancelBtn" ng-click="init()" class="btn btn-default pull-right left-btn" ng-disabled="isBtnDisabled()">
+          <span translate="partnerProfile.cancel"></span>
         </button>
       </div>
     </div>
 
     <!-- company name / account number -->
     <div class="row" id="companyInfoPanel">
-      <div class="col-xs-12">
+      <div class="col-xs-6">
         <h2 translate="partnerProfile.companyInfo"></h2>
-        <div class="input-group">
-          <div class="row">
-            <div class="col-xs-12 col-md-4 form-group">
-              <h4 translate="partnerProfile.name"></h4>
-              <input class="form-control" name ="test2" type="text" ng-model="companyName" disabled="true">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-12 col-md-4 form-spacing">
-              <h4 translate="partnerProfile.id"></h4>
-              <input class="form-control" type="text" disabled="true">
-            </div>
-          </div>
+        <div class="form-group">
+          <!-- <div class="col-xs-4"> -->
+            <label for="company-name" translate="partnerProfile.name"></label>
+            <input class="form-control" name="test2" type="text" ng-model="companyName" disabled="true" id="company-name">
+          <!-- </div> -->
+        </div>
+        <div class="form-group">
+          <!-- <div class="col-xs-4"> -->
+            <label for="company-id" translate="partnerProfile.id"></label>
+            <input id="company-id" class="form-control" type="text" disabled="true">
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -72,12 +70,12 @@
     </div>
 
     <!-- support title / description -->
-    <div class="row form-section" id="supportTitleAndDescPanel">
+    <div class="row main-section" id="supportTitleAndDescPanel">
       <div class="col-xs-7">
         <h2 translate="partnerProfile.supportTitle"></h2>
         <div class="form-spacing">
-          <span ng-if="!isPartner" translate="customerProfile.supportInfo"></span>
-          <span ng-if="isPartner" translate="partnerProfile.supportInfo"></span>
+          <span ng-if="!isPartner" translate="customerProfile.supportInfo" translate-values="{app : appType}"></span>
+          <span ng-if="isPartner" translate="partnerProfile.supportInfo" translate-values="{app : appType}"></span>
           <a ng-show="false" href="/#">
             <span translate="partnerProfile.seeExample"></span>
           </a>
@@ -130,33 +128,23 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-xs-12 col-md-4">
-      <!-- <div class="col-xs-12 col-md-3 description-url"> -->
-        <span translate="partnerProfile.matchingTix"></span>
-        <span translate="partnerProfile.matchingDescr"></span>
-        <span translate="partnerProfile.forExample"></span>
-      </div>
-    </div>
-
-    <!-- help / faq url -->
-    <div class="row" id="helpPanel">
-      <div class="col-xs-7 form-section-last">
-        <h3 translate="partnerProfile.helpFaq"></h3>
+        <div class="form-section-last" id="helpPanel">
+          <h3 translate="partnerProfile.helpFaq"></h3>
           <span ng-if="isPartner" translate="partnerProfile.enterHelp"></span>
-        <!-- partner help site form -->
-        <div class="row optional-row" id="helpCiscoPanel">
-          <div class="col-xs-2 radio-column">
-            <input type="radio" value="0" ng-model="helpSiteRadioValue" >
-            <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(0)">{{collabRadio2.label}}</span>
-          </div>
-          <div class="col-xs-10 default-link-row">
-            <a ng-href="{{profileHelpUrl}}" target="_blank">
-              <span translate="partnerProfile.ciscoHelp"></span>
-            </a>
 
+          <!-- partner help site form -->
+          <div class="row optional-row" id="helpCiscoPanel">
+            <div class="col-xs-2 radio-column">
+              <input type="radio" value="0" ng-model="helpSiteRadioValue" >
+              <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(0)">{{collabRadio2.label}}</span>
+            </div>
+            <div class="col-xs-10 default-link-row">
+              <a ng-href="{{profileHelpUrl}}" target="_blank">
+                <span translate="partnerProfile.ciscoHelp"></span>
+              </a>
+            </div>
           </div>
-        </div>
+
         <!-- help site url form -->
         <div class="row" ng-click="setHelpRadio(1)" id="helpPartnerPanel">
           <div class="col-xs-2 radio-column">
@@ -164,13 +152,17 @@
             <span id="helpPartnerPanelRadio" class="onboard-radio">{{collabRadio2.label}}</span>
           </div>
           <div class="col-xs-10">
-             <div class="input-group">
+            <div class="input-group">
               <input type="text" id="partnerHelpUrl" name="testForm" class="form-control" placeholder="{{helpUrlText | translate}}" ng-model="helpUrl" required>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-xs-3">
+    </div>
+      <div class="col-xs-12 col-md-4">
+        <h5 translate="partnerProfile.matchingTix"></h5>
+        <span translate="partnerProfile.matchingDescr"></span>
+        <span translate="partnerProfile.forExample"></span>
       </div>
     </div>
   </form>

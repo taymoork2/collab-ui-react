@@ -110,12 +110,12 @@ angular.module('Core')
             });
         },
 
-        createOrg: function (accountId, emailAddress, callback) {
+        createOrg: function (enc, callback) {
           var orgUrl = Config.getAdminServiceUrl() + 'organizations';
           var orgRequest = {
-            'accountId': accountId,
-            'adminEmail': emailAddress
+            'encryptedQueryString': enc
           };
+
           Auth.getAccessToken().then(function (token) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + token;
             $http.post(orgUrl, orgRequest)

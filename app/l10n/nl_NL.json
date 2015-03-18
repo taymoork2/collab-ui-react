@@ -43,28 +43,42 @@
     "inviteUsers": "Gebruikers uitnodigen",
     "partners": "Partnerbeheerders"
   },
+  "groupsPage": {
+    "manageGroups": "Groepen",
+    "all": "Alles",
+    "groupNameHeader": "Groepsnaam",
+    "membersCountHeader": "Leden"
+  },
   "onboardModal": {
     "onboardUsers": "Gebruikers integreren",
     "cancel": "Annuleren",
     "addUsersDesc": "Voer de e-mailadressen in van de personen in uw bedrijf die Collaboration Services zullen ontvangen. Ze zullen een e-mailuitnodiging krijgen om zich in te schrijven.",
     "addUserText": "Wie wilt u toevoegen?",
     "userInput": "Voer door komma's gescheiden e-mailadressen of groepmailers in.",
-    "addServiceText": "Welke services wilt u inschakelen?",
+    "enableServiceText": "Services inschakelen",
     "enableCollab": "Samenwerkingsservices afzonderlijk inschakelen",
-    "enableCollabGroup": "Samenwerkingsservices inschakelen op basis van een lidmaatschap van een groep.",
+    "enableCollabGroup": "Samenwerkingsservices inschakelen op basis van groepslidmaatschap",
     "addUsersSelect": "Voeg gebruikers toe aan:",
-    "manageBtn": "Beheren",
+    "manageBtn": "Groepen beheren",
     "onboardBtn": "Integreren",
     "howToInvite": "Hoe wilt u ze uitnodigen?",
     "waitInvitation": "Verstuur e-mailuitnodigingen en wacht totdat de gebruiker deze accepteert alvorens services te voorzien.",
     "sendImmediate": "Voorzie onmiddellijk services voor de gebruiker en verstuur e-mailmeldingen.",
-    "messaging": "Chatten en communicatie",
+    "messaging": "Chatten",
     "conferencing": "Conferentie",
+    "communications": "Communicatie",
+    "entitlements": "Gebruikersrechten",
     "saveBtn": "Opslaan",
     "manageGroups": "Groepen beheren",
     "groupColHeader": "Groepnaam",
     "collabService": "Kies de collaboration service-licenties die aan de gebruikers in de groep dienen gegeven te worden.",
-    "addEntitleError": "onvoldoende rechten om een gebruiker toe te voegen of te machtigen."
+    "addEntitleError": "onvoldoende rechten om een gebruiker toe te voegen of te machtigen.",
+    "freeMsg": "Gratis teamruimtes in Squared",
+    "freeConf": "Gratis Meetings van drie partijen",
+    "freeComm": "Gratis spraak- en videogesprekken via IP binnen uw netwerk",
+    "paidMsg": "Standaard teamruimtes",
+    "paidConf": "Meetings van 25 partijen",
+    "paidComm": "Geavanceerde communicatie"
   },
   "usersPreview": {
     "groupPreview": "Groep:",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "Machtigingen",
     "addNewLinePreview": "Een nieuwe lijn toevoegen",
     "newLine": "Nieuwe lijn",
-    "devicesPreview": "Apparaten",
+    "devicesPreview": "Apparatuur & Software",
     "activateNewDevice": "Nieuw apparaat activeren",
     "fullAdmin": "Volledig beheer",
     "generateActivationCode": "Activeringscode genereren",
     "generateActivationCodeText": "Genereer een activeringscode om een nieuw apparaat in te schakelen voor deze gebruiker.",
     "activationCodeTitle": "Activeringscode voor nieuw apparaat",
-    "expires": "Vervalt"
+    "expires": "Vervalt",
+    "editServices": "Services bewerken",
+    "editServiceTitle": "Services ingeschakeld voor {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Chatten"
   },
   "settings": {
+    "title": "Serviceconfiguratie",
     "initialSetup": "Initiële configuratie"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "Apparaten",
     "reportTab": "Rapporten",
     "supportTab": "Ondersteuning",
+    "accountTab": "Account",
     "developmentTab": "Ontwikkeling",
     "organizationTab": "Organisatie",
     "organizationTabDesc": "Beheer organisatiegegevens, bekijk toegewezen services en open tools.",
@@ -107,7 +125,17 @@
     "callRoutingTab": "Gespreksomleiding",
     "callRoutingTabDesc": "Beheer functies voor gespreksomleiding, zoals 'Gesprek parkeren'",
     "mediaOnHoldTab": "Media in de wachtrij",
-    "mediaOnHoldTabDesc": "Ontwikkelingsvoorbeeld voor 'Media in de wachtrij'"
+    "mediaOnHoldTabDesc": "Ontwikkelingsvoorbeeld voor 'Media in de wachtrij'",
+    "meetingDetailsTab": "Vergaderingen",
+    "meetingDetailsTabDesc": "Vergaderingbeheer",
+    "vtsDetailsTab": "Enterprise Resources",
+    "vtsDetailsTabDesc": "Beheer van Enterprise Resources",
+    "listUserTab": "Gebruikers weergeven",
+    "listUserTabDesc": "Beheer gebruikers en hun functies.",
+    "groupTab": "Groepen",
+    "groupTabDesc": "Maak en beheer groepen.",
+    "entResUtilizationTab": "Gebruik",
+    "entResUtilizationTabDesc": "Gebruik van Enterprise Resources"
   },
   "index": {
     "welcome": "Welkom!",
@@ -124,7 +152,7 @@
     "heading": "Lijst met rechten voor"
   },
   "downloadPage": {
-    "thank": "Bedankt voor uw inschrijving voor Cisco Squared.",
+    "thank": "Bedankt voor uw registratie bij Cisco Squared.",
     "account": "Uw account {{email}} is nu actief.",
     "install": "U kunt Squared installeren via",
     "link": "deze koppeling.",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "U wordt omgeleid...",
     "launch": "De app wordt opgestart..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "E-mailadres van beheerder: ",
+    "create": "Verwerkingsvolgorde"
   },
   "orgsPage": {
     "title": "ORGANISATIES BEHEREN",
@@ -175,7 +207,7 @@
     "fname": "Voornaam",
     "lname": "Achternaam",
     "display": "Weergavenaam",
-    "email": "E-mailadres",
+    "email": "E-mail",
     "org": "Organisatie",
     "title": "Aanhef",
     "modDate": "Laatste wijzigingsdatum",
@@ -184,6 +216,7 @@
     "error": "De gebruiker kon niet worden bijgewerkt."
   },
   "supportPage": {
+    "title": "Ondersteuning",
     "subtitleLogs": "Zoeken naar logbestanden",
     "listlogsbtn": "Zoeken",
     "noResults": "Er zijn geen resultaten gevonden.",
@@ -228,7 +261,17 @@
     "tx": "Uitgaand",
     "errCallInfoQuery": "De gespreksgegevens kunnen niet worden opgehaald. Status: {{status}}",
     "subTitleCallFlow": "Gespreksverloop",
-    "downloading": "Een ogenblikje geduld. Het downloaden kan circa 5 minuten duren..."
+    "downloading": "Een ogenblikje geduld. Het downloaden kan circa 5 minuten duren...",
+    "operational": "Alle systemen operationeel",
+    "error": "Fout in systeem",
+    "supportResources": "Ondersteuningsresources",
+    "showDetails": "Details weergeven",
+    "hideDetails": "Details verbergen",
+    "problemReports": "Probleemmeldingen",
+    "reportingUrl": "URL voor melding:",
+    "helpFaq": "Help en Veelgestelde vragen",
+    "helpUrl": "Help-URL:",
+    "sendFeedback": "Cisco Feedback"
   },
   "common": {
     "delete": "Verwijderen",
@@ -242,7 +285,10 @@
     "done": "Gereed",
     "begin": "Start",
     "back": "Terug",
-    "finish": "Voltooien"
+    "finish": "Voltooien",
+    "language": "Taal",
+    "selectLanguage": "Kies een taal",
+    "select": "Selecteren"
   },
   "notifications": {
     "success": "Succesmeldingen",
@@ -273,24 +319,34 @@
     "cancel": "Annuleren",
     "emailAddress": "E-mailadres",
     "name": "Naam",
-    "errGetTrialsQuery": "De informatie over de proefperioden kon niet worden opgehaald. Status: {{status}}"
+    "errGetTrialsQuery": "De informatie over de proefperioden kon niet worden opgehaald. Status: {{status}}",
+    "quickLinksText": "Snelkoppelingen",
+    "addUserText": "Gebruikers toevoegen",
+    "installDeviceText": "Een apparaat voor een gebruiker installeren",
+    "installSharedSpaceText": "Een apparaat in een gedeelde ruimte installeren",
+    "autoAttendantText": "Een virtuele operator configureren",
+    "searchLogsText": "Apparaatlogboeken zoeken",
+    "unlicensedDateText": "gebruikers zonder licentie geregistreerd op",
+    "unlicensedText": "Gebruikers zonder licentie",
+    "convertText": "Bekijk en zet gebruikers om die momenteel de gratis versie gebruiken"
   },
   "inviteModal": {
     "title": "Recht op de service",
-    "heading": "Recht op de service inschakelen",
+    "heading": " Recht op de service inschakelen",
     "content": "Nodig gebruikers binnen uw organisatie uit voor Squared...",
     "inviteAll": "Organisatiebreed recht op de service inschakelen"
   },
   "ssoModal": {
     "btnTitle": "Eenmalige aanmelding (SSO) configureren",
     "title": "Eenmalige aanmelding (SSO) configureren",
-    "enableSSO": "Ja, ik heb een eigen SSO-provider",
-    "disableSSO": "Nee, ik heb geen SSO-provider.",
+    "enableSSO": "Integreer een externe identiteitsprovider. (Geavanceerd)",
+    "disableSSO": "Gebruik de ingebouwde identiteitsservice voor gebruikersverificatie. (Eenvoudig)",
     "importMetadataTitle": "Metagegevens van de identiteitsprovider importeren",
     "exportMetadataTitle": "Metagegevens van de cloud exporteren",
     "testSSOSetupTitle": "SSO-configuratie testen",
     "enableSSOTitle": "Eenmalige aanmelding (SSO) inschakelen",
     "importMetadataDesc": "Begin de vertrouwensrelatie tussen uw identiteitsprovider (IdP) en de Collaboration Cloud van Cisco te configureren door een bestand met vertrouwde metagegevens van uw identiteitsprovider te uploaden.",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Download het volgende bestand met vertrouwde metagegevens uit de samenwerkingsservice van Cisco en upload het via de beheerinterface van uw identiteitsprovider.",
     "exportMetadataDesc2": "Wanneer u klaar bent met het uploaden van het bestand, keert u terug naar dit scherm en drukt u op 'Volgende'.",
     "testSSOSetupDesc": "U bent nu klaar om uw SSO-configuratie te testen. Druk op de onderstaande knop om een nieuw venster te openen. Wanneer u zich succesvol kunt aanmelden, kunt u terugkeren naar dit scherm. Druk vervolgens op 'Volgende' om uw SSO-configuratie af te ronden.",
@@ -303,7 +359,7 @@
     "backBtn": "Vorige",
     "nextBtn": "Volgende",
     "downloadMetadataBtn": "Bestand met metagegevens downloaden",
-    "launchSSOTestBtn": "SSO-test starten",
+    "launchSSOTestBtn": "SSO-verbinding testen",
     "finishBtn": "Voltooien",
     "importFailed": "Het bestand met metagegevens van de identiteitsprovider kon niet worden geïmporteerd",
     "invalidFile": "Het bestand met metagegevens van de identiteitsprovider is ongeldig",
@@ -311,7 +367,12 @@
     "retrieveEntityIdFailed": "De SSO-configuratie is mislukt",
     "readFileFailed": "Het bestand met metagegevens van de identiteitsprovider kon niet worden gelezen",
     "importSuccess": "Het bestand met metagegevens van de identiteitsprovider is met succes geïmporteerd",
-    "enableSSOSuccess": "Eenmalige aanmelding (SSO) is met succes ingeschakeld voor alle gebruikers"
+    "enableSSOSuccess": "Eenmalige aanmelding (SSO) is met succes ingeschakeld voor alle gebruikers",
+    "finalEnableSSO": "De test is geslaagd. Eenmalige aanmelding inschakelen.",
+    "finalDisableSSO": "De test is mislukt. Eenmalige aanmelding uitschakelen.",
+    "disableFailed": "Kon Eenmalige aanmelding niet uitschakelen.",
+    "diableSuccess": "Eenmalige aanmelding (SSO) is met succes uitgeschakeld voor alle gebruikers",
+    "enableSSOFailure": "Kon Eenmalige aanmelding (SSO) niet uitschakelen."
   },
   "serviceSetupModal": {
     "timeZone": "Tijdzone",
@@ -358,7 +419,7 @@
     "syncAgreementText": "gebruikers in synchronisatieovereenkomst",
     "firstName": "Voornaam",
     "lastName": "Achternaam",
-    "email": "E-mailadres",
+    "email": "E-mail",
     "location": "Locatie",
     "manager": "Manager",
     "autoAssignText": "Gebruikers automatisch toewijzen aan groepen wanneer ze worden gesynchroniseerd",
@@ -371,7 +432,7 @@
     "plusBtn": "+",
     "syncNowBtn": "Nu synchroniseren",
     "getDomainFailed": "De configuratie van de telefoonlijstsynchronisatie kan niet worden opgehaald",
-    "setDomainFailed": "Het synchronisatiedomein voor de telefoonlijst kan niet worden gemaakt ",
+    "setDomainFailed": "Het synchronisatiedomein voor de telefoonlijst kan niet worden gemaakt",
     "getStatusFailed": "De status van de telefoonlijstsynchronisatie kan niet worden opgehaald",
     "getListFailed": "De lijst met gebruikers kan niet worden opgehaald",
     "dirsyncFailed": "De telefoonlijstsynchronisatie is mislukt",
@@ -410,7 +471,7 @@
     "deleteDeviceConfText": "Weet u zeker dat u dit apparaat wilt verwijderen?"
   },
   "hercules": {
-    "page_title": "UC APP-fusieservices",
+    "page_title": "UC APP Fusion-services",
     "connectors": {
       "group_by": "Services groeperen op:",
       "cluster_id": "Cluster",
@@ -435,9 +496,20 @@
       "uninstalling": "is bezig met de installatie van de service ongedaan te maken."
     },
     "setup": {
-      "label": "UC APP-fusieservices",
+      "label": "UC APP Fusion-services",
       "title": "UC APP-fusieservices",
       "desc": "Benut de aanwezige services op locatie"
+    },
+    "activationStatus": {
+      "not_entitled": "Niet gerechtigd",
+      "pending_deactivation": "In afwachting van deactivering",
+      "pending_activation": "In afwachting van activering",
+      "activated": "Geactiveerd",
+      "error": "Fout"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fusion UC",
+      "squared-fusion-cal": "Fusion-agenda"
     }
   },
   "firstTimeWizard": {
@@ -461,7 +533,7 @@
     "getStarted": "Aan de slag",
     "chooseSync": "Synchronisatie kiezen",
     "cancelBtn": "Annuleren",
-    "backBtn": "Terug",
+    "backBtn": "Vorige",
     "nextBtn": "Volgende",
     "skipBtn": "Overslaan",
     "doneBtn": "Voltooien",
@@ -480,10 +552,10 @@
     "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Download </a> en installeer de Cisco Cloud Connector in uw organisatie.",
     "installStep2": "2. Configureeer de synchronisatieovereenkomst voor Active Directory.",
     "installStep3": "3. Test de synchronisatieovereenkomst.",
-    "nextSteps": "Druk op de knop 'Volgende' wanneer u klaar bent om te controleren of de identiteitsgegevens worden gesynchroniseerd.",
+    "nextSteps": "Druk op Volgende wanneer u klaar bent om te controleren of de identiteitsgegevens worden gesynchroniseerd.",
     "results": "Resultaten",
     "syncAgreementText": "gebruikers in synchronisatieovereenkomst",
-    "setupSSOSub": "Eenmalige aanmelding (SSO) configureren",
+    "setupSSOSub": "Eenmalige aanmelding",
     "setupSSODesc": "Kies de juiste optie voor uw SSO-configuratie.",
     "manualInvite": "Voer de e-mailadressen in van de personen in uw bedrijf die Collaboration Services zullen ontvangen. Ze zullen een e-mailuitnodiging krijgen om zich in te schrijven.",
     "domainEntry": "Domeininvoer",
@@ -494,6 +566,32 @@
     "finish": "Voltooien",
     "finishSub": "Uw configuratie voltooien",
     "completeRequired": "U moet {{name}} invullen."
+  },
+  "reports": {
+    "title": "Rapporten",
+    "engagementTab": "Activiteit",
+    "qualityTab": "Kwaliteit",
+    "opportunitiesTab": "Mogelijkheden",
+    "time": "Altijd",
+    "week": "Vorige week",
+    "month": "Vorige maand",
+    "threeMonths": "Afgelopen drie maanden",
+    "mostEngaged": "5 meest actieve klanten",
+    "leastEngaged": "5 minst actieve klanten",
+    "highQuality": "5 met hoogste kwaliteit",
+    "leastQuality": "5 met slechtste kwaliteit",
+    "services": "Alle services",
+    "UsersOnboarded": "Geïntegreerde gebruikers",
+    "AvgCallsPerUser": "Gem. aantal gesprekken per gebruiker",
+    "AvgRoomsPerUser": "Gem. aantal ruimtes per gebruiker",
+    "ActiveUsers": "Actieve gebruikers",
+    "OneOnOneRooms": "Een-op-een-ruimtes",
+    "GroupRooms": "Groepsruimtes",
+    "VideoCalls": "Videogesprekken",
+    "AvgDurationofCalls": "Gem. duur van gesprekken",
+    "ContentShared": "Inhoud gedeeld",
+    "AmountofContentShared": "Hoeveelheid gedeelde inhoud",
+    "UserEngagement": "Gebruikersbetrokkenheid"
   },
   "callRouting": {
     "title": "Gespreksomleiding",
@@ -529,6 +627,7 @@
     "createButton": "Geparkeerd gesprek maken"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "of",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -543,16 +642,21 @@
     "externalNumberLabel": "Extern nummer",
     "chooseNumber": "Kies een nummer",
     "addNewNumber": "Een nieuw nummer toevoegen",
-    "none": "Geen"
+    "removeNumber": "Lijn verwijderen",
+    "none": "Geen",
+    "deleteConfirmation": "U kunt deze actie niet ongedaan maken. Weet u zeker dat u {{line}} wilt loskoppelen van {{user}}?",
+    "deleteLineTitle": "Lijn verwijderen",
+    "disassociationSuccess": "De lijn is met succes losgekoppeld van de gebruiker."
   },
   "callForwardPanel": {
     "title": "Gesprekken doorschakelen",
     "success": "De configuratie voor gesprekken doorschakelen is succesvol opgeslagen",
     "error": "De configuratie voor gesprekken doorschakelen is mislukt",
+    "forwardNoCalls": "Gesprekken niet doorschakelen",
     "forwardAllCalls": "Alle gesprekken doorschakelen",
     "forwardBusyNoAnswer": "Gesprekken doorschakelen wanneer de lijn bezet is of wanneer er niemand aanwezig is",
-    "internalAndExternal": "Voor interne en externe gesprekken",
-    "internalOnly": "Alleen voor interne gesprekken",
+    "internalAndExternal": "Voor interne en externe gesprekken<br>",
+    "internalOnly": "Alleen voor interne gesprekken<br>",
     "forwardBusy": "Gesprekken doorsturen naar het volgende nummer wanneer de lijn bezet is:",
     "forwardNoAnswer": "Gesprekken doorsturen naar het volgende nummer wanneer ze niet worden beantwoord:",
     "forwardExternal": "Externe gesprekken anders doorsturen",
@@ -560,11 +664,11 @@
   },
   "callerIdPanel": {
     "title": "Beller-id",
-    "description": "Wijzig de weergavenaam voor gesprekken vanaf dit nummer"
+    "description": "<small>Wijzig de weergavenaam voor gesprekken van deze lijn</small>"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "Hiermee kunnen gebruikers binnenkomende gesprekken op hun toestel beantwoorden via een ander nummer",
+    "description": "<small>Stelt gebruikers in staat binnenkomende gesprekken te beantwoorden op hun toestel met een ander nummer</small>",
     "toggle": "Single Number Reach",
     "snrNote": "SNR kan alle lijnen van de gebruiker dekken of beperkt worden tot specifieke lijnen",
     "success": "De configuratie van Single Number Reach is met succes opgeslagen",
@@ -580,7 +684,7 @@
     "voicemailNote": "Opmerking: wanneer u de voicemail uitschakelt, kan dit gevolgen hebben voor de mogelijkheden van een gebruiker om gesprekken door te schakelen"
   },
   "partnerHomePage": {
-    "trialsHeading": "Actieve proefperioden",
+    "trialsHeading": "Actieve proefabonnementen",
     "noResults": "Geen resultaten",
     "expiredHeading": "Verlopen proefperioden",
     "addTrial": "Nieuwe proefperiode",
@@ -596,12 +700,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Duur",
+    "duration": "Duur van de proefperiode (in dagen)",
     "thirtyDays": "30 dagen",
     "sixtyDays": "60 dagen",
-    "ninetyDays": "90 dagen",
-    "onehundredtwentyDays": "120 dagen",
-    "onehundredeightyDays": "180 dagen",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "Annuleren",
     "startTrial": "Proefperiode starten",
     "customerInformation": "Klantgegevens",
@@ -621,12 +725,28 @@
     "averageCallsTitle": "Gemiddeld aantal gesprekken per gebruiker",
     "contentSharedTitle": "Totaal gedeelde inhoud"
   },
+  "trialModal": {
+    "trialSuccess": "Uw proefperiode is met succes aangevraagd.",
+    "nextStep": "Volgende stap",
+    "sendWelcome": "Welkomstbericht verzenden",
+    "sendWelcomePrompt": "Wilt u dat de klant de service configureert?",
+    "launchPortal": "Start dan de bedrijfsportal op",
+    "launchPortalPrompt": "Wilt u de service voor de klant configureren?",
+    "or": "of",
+    "squareducError": "Er is een proefabonnement aangemaakt, maar Squared UC kan niet worden geïmplementeerd.",
+    "addSuccess": "Er werd met succes een proefabonnement met {{licenseCount}} licenties aangemaakt voor {{customerName}}. De proefperiode duurt {{licenseDuration}} dagen.",
+    "editSuccess": "U hebt met succes het proefabonnement van {{customerName}} met {{licenseCount}} licenties gewijzigd. De proefperiode duurt {{licenseDuration}} dagen."
+  },
+  "trials": {
+    "collab": "Standaard teamruimtes + Meeting voor 25 partijen",
+    "squaredUC": "Geavanceerde communicatie"
+  },
   "status": {
     "noResults": "Er zijn geen resultaten beschikbaar.",
     "errorProcessing": "Er is een fout opgetreden tijdens het verwerken van uw aanvraag."
   },
   "customerPage": {
-    "all": "Alle",
+    "all": "Alles",
     "trial": "Proefperiode",
     "title": "Klanten",
     "customerNameHeader": "Naam van de klant",
@@ -637,7 +757,7 @@
     "statusDaysLeft": "dag(en) resterend",
     "actionHeader": "Acties",
     "addTrial": "Een proefperiode starten",
-    "csvBtnTitle": "Exporteren naar csv-bestand",
+    "csvBtnTitle": "Exporteren naar CSV",
     "csvFilename": "geëxporteerde_klanten.csv",
     "custDetail": "Klantgegevens",
     "contactName": "Naam van de contactpersoon",
@@ -657,7 +777,9 @@
     "expiring": "De proefperiode verloopt bijna",
     "expired": "Verlopen proefperiode",
     "expiresToday": "Verloopt vandaag",
-    "unused": "ongebruikte licenties"
+    "unused": "ongebruikte licenties",
+    "uploadNumbers": "Nummers uploaden",
+    "overPlan": "De abonnementslimiet is overschreden"
   },
   "didAddModal": {
     "title": "Telefoonnummers toevoegen",
@@ -665,20 +787,25 @@
     "processingText": "De telefoonnummers worden toegevoegd...",
     "successText": "{{count}} nieuw(e) telefoonnummer(s) werd(en) met succes toegevoegd.",
     "failText": "{{count}} telefoonnummer(s) bevond(en) zich al in het systeem.",
-    "sendEmail": "Welkomste-mail verzenden",
+    "sendEmail": "Klant waarschuwen",
     "notifyCustLater": "Klant later waarschuwen",
     "emailSuccessText": "De e-mail is met succes naar de klant verzonden.",
     "emailFailText": "Er is een fout opgetreden tijdens het verzenden van de e-mail",
-    "inputPlacehoder": "Voer telefoonnummers in"
+    "inputPlacehoder": "Voer telefoonnummers in, gescheiden met een komma"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Apparaatconfiguratie",
+    "deviceStatus": "Apparaatstatus",
     "description": "Beschrijving",
     "id": "Id",
+    "ipAddress": "IP-adres",
     "deactivate": "Deactiveren",
     "success": "Het apparaat is met succes bijgewerkt",
     "error": "De apparaatconfiguratie is mislukt",
     "deactivateDevice": "Apparaat deactiveren",
-    "deactivateBody": "U kunt deze actie niet ongedaan maken. Weet u zeker dat u dit apparaat wilt deactiveren?"
+    "deactivateBody": "U kunt deze actie niet ongedaan maken. Weet u zeker dat u dit apparaat wilt deactiveren?",
+    "deviceStatusFailureMsg": "De apparaatstatus kon niet worden opgehaald",
+    "deviceIpAddressFailureMsg": "Het IP-adres van het apparaat kon niet worden opgehaald"
   },
   "generateActivationCodeModal": {
     "title": "Activeringscode",
@@ -707,10 +834,12 @@
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Volledige beheerrechten",
     "partialAdmin": "Gedeeltelijke beheerrechten",
+    "noAdmin": "Onvoldoende rechten",
     "userAdmin": "Gebruikersbeheerder",
     "billingAdmin": "Facturatiebeheerder",
     "supportAdmin": "Ondersteuningsbeheerder",
-    "save": "Opslaan"
+    "save": "Opslaan",
+    "roles": "Rollen"
   },
   "mohManagement": {
     "title": "Media in de wachtrij",
@@ -719,5 +848,124 @@
     "tracks": "Nummers",
     "draganddrop": "U kunt de volgorde van de nummers wijzigen door ze te verplaatsen. Deze nummers worden oneindig afgespeeld.",
     "setActive": "Als 'Actief' instellen"
+  },
+  "meetingsPage": {
+    "manageMeetings": "Vergaderingen",
+    "webexMeetingId": "Vergaderings-id",
+    "host": "Host",
+    "date": "Datum",
+    "startTime": "Begin",
+    "endTime": "Eind",
+    "resource": "Resource",
+    "webexSite": "WebEx-site",
+    "active": "Actief",
+    "pending": "Uitnodiging in behandeling",
+    "enterprise": "Organisatie",
+    "mediaFusion": "Mediafusie",
+    "cloud": "Cloud"
+  },
+  "vtsPage": {
+    "enterpriseResources": "Enterprise Resources",
+    "name": "Naam",
+    "status": "Status",
+    "delete": "Uitschakeling",
+    "takeOffline": "Offline halen",
+    "bringOnline": "Online zetten",
+    "actionsHeader": "Acties",
+    "deleteResource": "Resource uitschakelen",
+    "deleteResourceConfText1": "Weet u zeker dat u deze resource wilt uitschakelen?",
+    "deleteResourceConfText2": "De resource heeft dan geen verbinding meer met de cloud en wordt offline gehaald.",
+    "cancel": "Annuleren",
+    "deleteResource": "Resource uitschakelen"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx Proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
+  },
+  "leaderBoard": {
+    "actions": "Acties",
+    "licenseUsage": "Licentiegebruik",
+    "lastSynced": "Laatst gesynchroniseerd op:",
+    "messagingTitle": "Chatten",
+    "messagingSubtitle": "Standaard teamruimtes",
+    "messagingDesc": "Chatlicenties.",
+    "communicationTitle": "Communicatie",
+    "communicationSubtitle": "Advanced Unified",
+    "communicationDesc": "Cisco Unified Communication-licenties.",
+    "conferencingTitle": "Conferentie",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Cisco Meeting Center and Conferencing-licenties."
+  },
+  "partnerProfile": {
+    "link": "Partnerprofiel",
+    "customerLink": "Klantenprofiel",
+    "title": "Account",
+    "name": "Bedrijfsnaam",
+    "id": "Accountnummer",
+    "ciscoRep": "Cisco-vertegenwoordiger",
+    "supportSetup": "Hulpticket/rapportagepunt",
+    "save": "Opslaan",
+    "supportInfo": "Indien u ondersteuning biedt voor uw gebruikers, voert u hieronder uw ondersteuningsparameters in. Deze parameters worden weergegeven onder Ondersteuningsopties in de Squared-toepassing.",
+    "lifeCycle": "Lifecycle-partners moeten beide hieronder weergegeven types ondersteuning voorzien.",
+    "supportOptions": "Ondersteuningsopties van Cisco",
+    "seeExample": "bekijk een voorbeeld.",
+    "yourSupportOptions": "Uw ondersteuningsopties",
+    "urlFaq": "URL voor website met uitleg en veelgestelde vragen",
+    "urlFaqEx": "http://[URL voor website met uitleg en veelgestelde vragen]",
+    "urlReport": "URL voor het melden van problemen of openen van hulpaanvragen",
+    "urlReportEx": "http://[URL voor het melden van problemen of openen van hulpaanvragen]",
+    "helpFaq": "Help & Locatie Veelgestelde vragen",
+    "matchingTix": "Overeenstemmende hulptickets",
+    "matchingDescr": "Om uw hulptickets overeen te stemmen met de logboeken die worden geüpload naar de Cisco Collaboration Management tool wanneer rapporten worden gemaakt, voegt u uw ondersteunings-URL bij uw logID-parameter als \"%%logID%%\" (geen aanhalingstekens).",
+    "forExample": "Bijvoorbeeld: http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "Configuratie van ondersteuning",
+    "companyInfo": "Bedrijfsinformatie",
+    "cancel": "Annuleren",
+    "partnerProblem": "Partnersite voor het melden van problemen",
+    "partnerHelp": "Partnerhelpsite",
+    "ciscoProblem": "Probleemmelding wordt verzonden naar de Technische ondersteuning van Cisco",
+    "ciscoHelp": "Cisco-helpsite",
+    "enterHelp": "Voer de locatie van uw helpinhoud in.",
+    "enterReports": "Probleemrapporten: voer de locatie van uw probleemrapportagetool in."
+  },
+  "customerProfile": {
+    "supportContacts": "Contactpersonen bij Ondersteuning",
+    "partnerAdmin": "Partnerbeheerders",
+    "supportInfo": "Indien u ondersteuning biedt voor uw gebruikers, voert u hieronder uw ondersteuningsparameters in. Deze parameters worden weergegeven onder Ondersteuningsopties in de Squared-toepassing;"
+  },
+  "utilizationPage": {
+    "entResUtilization": "Gebruik van Enterprise Resources",
+    "overAllUtil": "Globaal gebruik",
+    "average": "Gemiddelde",
+    "bridgeUtilization": "Gebruik van Bridge By Bridge"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Order # {{orderId}} wordt verwerkt. Kom terug en controleer na 24 uur.",
+    "info": "Status",
+    "wait": "Even geduld terwijl u wordt omgeleid"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }

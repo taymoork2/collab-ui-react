@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($state, $stateParams, $translate, Authinfo, TrialService, Notification) {
+  function TrialEditCtrl($state, $stateParams, $translate, Authinfo, TrialService, Notification, Config) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -34,6 +34,8 @@
     vm.isSquaredUC = Authinfo.isSquaredUC;
     vm.getDaysLeft = getDaysLeft;
     vm.editTrial = editTrial;
+    vm.disableSquaredUCCheckBox = false;
+    vm.squaredUCOfferID = Config.trials.squaredUC;
 
     initializeOffers();
 
@@ -45,6 +47,9 @@
           var offer = vm.currentTrial.offers[i];
           if (offer && offer.id) {
             vm.offers[offer.id] = true;
+            if (offer.id === vm.squaredUCOfferID) {
+              vm.disableSquaredUCCheckBox = true;
+            }
           }
         }
       }

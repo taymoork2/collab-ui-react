@@ -116,7 +116,7 @@ angular.module('Core')
           authData.services = data.services;
           authData.roles = data.roles;
           //if Full_Admin or WX2_User and has managedOrgs, add partnerustomers tab as allowed tab
-          if (authData.managedOrgs) {
+          if (authData.managedOrgs && authData.managedOrgs.length > 0) {
             for (var i = 0; i < authData.roles.length; i++) {
               if (authData.roles[i] === 'Full_Admin' || authData.roles[i] === 'WX2_User') {
                 this.isCustomerPartner = true;
@@ -149,7 +149,7 @@ angular.module('Core')
           authData.setupDone = null;
         },
         updateAccountInfo: function (data) {
-          if (data.success) {
+          if (data) {
             var msgLicenses = [];
             var confLicenses = [];
             var commLicenses = [];
@@ -278,6 +278,9 @@ angular.module('Core')
         },
         isFusion: function () {
           return isEntitled(Config.entitlements.fusion_uc) || isEntitled(Config.entitlements.fusion_cal);
+        },
+        isFusionUC: function () {
+          return isEntitled(Config.entitlements.fusion_uc);
         },
         hasAccount: function () {
           return authData.hasAccount;

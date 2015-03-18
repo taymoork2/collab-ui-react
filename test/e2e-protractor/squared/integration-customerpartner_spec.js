@@ -28,7 +28,6 @@ describe('CS Admin flow', function () {
       utils.expectIsDisplayed(navigation.usersTab);
       utils.expectIsDisplayed(navigation.reportsTab);
       utils.expectIsDisplayed(navigation.supportTab);
-      expect(navigation.getTabCount()).toBe(6);
     });
 
     it('clicking on customers tab should change the view', function () {

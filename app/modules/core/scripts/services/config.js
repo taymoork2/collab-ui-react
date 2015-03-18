@@ -12,10 +12,8 @@ angular.module('Core')
 
         adminClientUrl: {
           dev: 'http://127.0.0.1:8000',
-          integration: 'https://int-admin.projectsquared.com/',
-          prod: 'https://admin.projectsquared.com/',
-          sparkprod: 'https://admin.ciscospark.com/',
-          sparkint: 'https://int-admin.ciscospark.com/'
+          integration: 'https://int-admin.ciscospark.com/',
+          prod: 'https://admin.ciscospark.com/'
         },
 
         adminServiceUrl: {
@@ -78,9 +76,7 @@ angular.module('Core')
 
         scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
 
-        statusPageUrl: 'http://status.projectsquared.com/',
-
-        statusPageUrlSpark: 'http://status.ciscospark.com/',
+        statusPageUrl: 'http://status.ciscospark.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
 
@@ -91,17 +87,16 @@ angular.module('Core')
         ciscoOrgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
 
         appinfo: {
-          webClientURL: 'https://web.projectsquared.com/',
-          iPhoneURL: 'https://itunes.apple.com/us/app/project-squared/id833967564?ls=1&mt=8',
-          androidURL: 'https://play.google.com/store/apps/details?id=com.cisco.wx2.android',
+          webClientURL: 'https://web.ciscospark.com/',
+          iPhoneURL: 'http://cs.co/sqios',
+          androidURL: 'http://cs.co/sqandroid',
           androidAppIntent: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
           appURL: 'squared://'
         },
 
         healthCheckUrl: {
-          dev: 'http://projectsquared.statuspage.io/index.json',
-          prod: 'https://projectsquared.statuspage.io/index.json',
-          spark: 'https://ciscospark.statuspage.io/index.json'
+          dev: 'https://ciscospark.statuspage.io/index.json',
+          prod: 'https://ciscospark.statuspage.io/index.json'
         },
 
         herculesUrl: {
@@ -201,15 +196,21 @@ angular.module('Core')
           title: 'tabs.accountTab',
           state: 'profile',
           link: '/profile'
-        },
-        /*{
-          tab: 'webexUserSettingsTab',
-          icon: 'icon-support',
-          title: 'webexUserSettings.webexUserSettingsTab',
-          state: 'webexUserSettings',
-          link: '/webexUserSettings'
-        }, */
-        {
+        }, {
+          /*
+            tab: 'webexUserSettingsTab',
+            icon: 'icon-tools',
+            title: 'webexUserSettings.webexUserSettingsTab',
+            state: 'webexUserSettings',
+            link: '/webexUserSettings'
+          }, {
+            tab: 'webexUserSettings2Tab',
+            icon: 'icon-tools',
+            title: 'webexUserSettings2.webexUserSettings2Tab',
+            state: 'webexUserSettings2',
+            link: '/webexUserSettings2'
+          }, {
+          */
           tab: 'developmentTab',
           icon: 'icon-tools',
           title: 'tabs.developmentTab',
@@ -310,27 +311,15 @@ angular.module('Core')
         },
 
         isIntegration: function () {
-          return getCurrentHostname() === 'int-admin.projectsquared.com';
-        },
-
-        isProd: function () {
-          return getCurrentHostname() === 'admin.projectsquared.com';
-        },
-
-        isSparkProd: function () {
-          return getCurrentHostname() === 'admin.ciscospark.com';
-        },
-
-        isSparkInt: function () {
           return getCurrentHostname() === 'int-admin.ciscospark.com';
         },
 
+        isProd: function () {
+          return getCurrentHostname() === 'admin.ciscospark.com';
+        },
+
         getEnv: function () {
-          if (this.isSparkInt()) {
-            return 'sparkint';
-          } else if (this.isSparkProd()) {
-            return 'sparkprod';
-          } else if (this.isDev()) {
+          if (this.isDev()) {
             return 'dev';
           } else if (this.isIntegration()) {
             return 'integration';
@@ -394,11 +383,7 @@ angular.module('Core')
         },
 
         getOauthServiceType: function () {
-          if (this.getEnv() === 'sparkint' || this.getEnv() === 'sparkprod') {
-            return 'spark';
-          } else {
-            return 'webex-squared';
-          }
+          return 'spark';
         },
 
         getLogoutUrl: function () {
@@ -422,10 +407,8 @@ angular.module('Core')
         },
 
         getHealthCheckUrlServiceUrl: function () {
-          if (this.isSparkInt() || this.isSparkProd()) {
-            return this.healthCheckUrl.spark;
-          } else if (this.isDev()) {
-            return this.healthCheckUrl.prod;
+          if (this.isDev()) {
+            return this.healthCheckUrl.dev;
           } else {
             return this.healthCheckUrl.prod;
           }
@@ -440,11 +423,7 @@ angular.module('Core')
         },
 
         getStatusPageUrl: function () {
-          if (this.isSparkInt() || this.isSparkProd()) {
-            return this.statusPageUrlSpark;
-          } else {
-            return this.statusPageUrl;
-          }
+          return this.statusPageUrl;
         },
 
         getSquaredAppUrl: function () {
@@ -494,6 +473,7 @@ angular.module('Core')
       config.roleStates = {
         Full_Admin: [
           // 'webexUserSettings',
+          // 'webexUserSettings2',
           'overview',
           'users',
           'user-overview',
@@ -510,6 +490,7 @@ angular.module('Core')
         Support: ['overview', 'reports', 'support'],
         WX2_User: [
           // 'webexUserSettings',
+          // 'webexUserSettings2',
           'overview',
           'reports',
           'support'
@@ -542,7 +523,7 @@ angular.module('Core')
       };
 
       // These states do not require a role/service check
-      config.allowedStates = ['unauthorized'];
+      config.allowedStates = ['unauthorized', 'csadmin'];
 
       return config;
     }

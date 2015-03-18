@@ -43,28 +43,42 @@
     "inviteUsers": "Undang Pengguna",
     "partners": "Administrator Mitra"
   },
+  "groupsPage": {
+    "manageGroups": "Grup",
+    "all": "Semua",
+    "groupNameHeader": "Nama grup",
+    "membersCountHeader": "Anggota"
+  },
   "onboardModal": {
     "onboardUsers": "Pengguna Onboard",
     "cancel": "Batalkan",
     "addUsersDesc": "Masukkan alamat email orang di perusahaan Anda yang akan menerima Layanan Kolaborasi. Mereka akan menerima email undangan untuk mendaftar.",
     "addUserText": "Siapa yang ingin Anda tambahkan?",
     "userInput": "Masukkan alamat email atau email grup yang dipisahkan dengan tanda koma...",
-    "addServiceText": "Layanan apa yang ingin Anda aktifkan?",
+    "enableServiceText": "Aktifkan Layanan",
     "enableCollab": "Aktifkan layanan kolaborasi secara terpisah",
-    "enableCollabGroup": "Aktifkan layanan kolaborasi berdasarkan keanggotaan grup.",
+    "enableCollabGroup": "Mengaktifkan layanan kolaborasi berdasarkan keanggotaan grup",
     "addUsersSelect": "Tambahkan pengguna ke:",
-    "manageBtn": "Kelola",
+    "manageBtn": "Kelola Grup",
     "onboardBtn": "Onboard",
     "howToInvite": "Bagaimana Anda ingin mengundang mereka?",
     "waitInvitation": "Kirim email undangan dan tunggu sampai pengguna menerima permintaan sebelum memulai layanan.",
     "sendImmediate": "Segera mulai layanan untuk pengguna dan kirimkan email pemberitahuan.",
-    "messaging": "Pesan dan Komunikasi",
+    "messaging": "Pesan",
     "conferencing": "Konferensi",
+    "communications": "Komunikasi",
+    "entitlements": "Penetapan Pengguna",
     "saveBtn": "Simpan",
     "manageGroups": "Kelola Grup",
     "groupColHeader": "Nama Grup",
     "collabService": "Pilih lisensi layanan kolaborasi yang harus diberikan kepada pengguna di grup.",
-    "addEntitleError": "hak untuk menambahkan atau menetapkan pengguna tidak memadai."
+    "addEntitleError": "hak untuk menambahkan atau menetapkan pengguna tidak memadai.",
+    "freeMsg": "Gratis kamar tim squared",
+    "freeConf": "Gratis rapat 3 peserta",
+    "freeComm": "Gratis panggilan suara dan video IP dalam jaringan",
+    "paidMsg": "Kamar tim standar",
+    "paidConf": "Rapat 25 peserta",
+    "paidComm": "Komunikasi Lanjut"
   },
   "usersPreview": {
     "groupPreview": "Grup:",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "Penetapan",
     "addNewLinePreview": "Tambahkan Jalur Baru",
     "newLine": "Jalur Baru",
-    "devicesPreview": "Perangkat",
+    "devicesPreview": "Perangkat & Perangkat Lunak",
     "activateNewDevice": "Aktifkan Perangkat Baru",
     "fullAdmin": "Admin Penuh",
     "generateActivationCode": "Buat Kode Aktivasi",
     "generateActivationCodeText": "Buat Kode Aktivasi untuk mengaktifkan perangkat baru untuk pengguna ini.",
     "activationCodeTitle": "Kode Aktivasi untuk Perangkat Baru",
-    "expires": "Berakhir"
+    "expires": "Berakhir",
+    "editServices": "Edit layanan",
+    "editServiceTitle": "Layanan Telah Diaktifkan untuk {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Pesan"
   },
   "settings": {
+    "title": "Pengaturan Layanan",
     "initialSetup": "Pengaturan Awal"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "Perangkat",
     "reportTab": "Laporan",
     "supportTab": "Dukungan",
+    "accountTab": "Akun",
     "developmentTab": "Pengembangan",
     "organizationTab": "Organisasi",
     "organizationTabDesc": "Kelola Rincian Organisasi, Lihat Layanan yang Ditetapkan, dan Alat Akses.",
@@ -107,7 +125,17 @@
     "callRoutingTab": "Pengarahan Panggilan",
     "callRoutingTabDesc": "Kelola Fitur Pengarahan Panggilan Seperti Call Park",
     "mediaOnHoldTab": "Media On Hold",
-    "mediaOnHoldTabDesc": "Contoh Pengembangan Media On Hold"
+    "mediaOnHoldTabDesc": "Contoh Pengembangan Media On Hold",
+    "meetingDetailsTab": "Rapat",
+    "meetingDetailsTabDesc": "Manajemen Rapat",
+    "vtsDetailsTab": "Sumber Daya Perusahaan",
+    "vtsDetailsTabDesc": "Manajemen Sumber Daya Perusahaan",
+    "listUserTab": "Daftar Pengguna",
+    "listUserTabDesc": "Mengelola Pengguna dan Fiturnya.",
+    "groupTab": "Grup",
+    "groupTabDesc": "Membuat dan Mengelola Grup.",
+    "entResUtilizationTab": "Penggunaan",
+    "entResUtilizationTabDesc": "Penggunaan Sumber Daya Perusahaan"
   },
   "index": {
     "welcome": "Selamat Datang!",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "Mengarahkan...",
     "launch": "Membuka Aplikasi..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "Alamat email admin: ",
+    "create": "Proses Permintaan"
   },
   "orgsPage": {
     "title": "KELOLA ORGANISASI",
@@ -184,6 +216,7 @@
     "error": "Gagal memperbarui pengguna."
   },
   "supportPage": {
+    "title": "Dukungan",
     "subtitleLogs": "Cari log",
     "listlogsbtn": "Cari",
     "noResults": "Tidak Ada hasil.",
@@ -228,7 +261,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "Gagal membuka info panggilan. Status: {{status}}",
     "subTitleCallFlow": "Aliran Panggilan",
-    "downloading": "Unduhan ini mungkin memerlukan waktu hingga 5 menit. Harap menunggu..."
+    "downloading": "Unduhan ini mungkin memerlukan waktu hingga 5 menit. Harap menunggu...",
+    "operational": "Semua pengoperasian sistem",
+    "error": "Kesalahan sistem",
+    "supportResources": "Sumber Daya Dukungan",
+    "showDetails": "Tampilkan Rincian",
+    "hideDetails": "Sembunyikan Rincian",
+    "problemReports": "Laporan Masalah",
+    "reportingUrl": "URL Pelaporan:",
+    "helpFaq": "Bantuan dan Pertanyaan Umum",
+    "helpUrl": "URL Bantuan:",
+    "sendFeedback": "Masukan Cisco"
   },
   "common": {
     "delete": "Hapus",
@@ -242,7 +285,10 @@
     "done": "Selesai",
     "begin": "Mulai",
     "back": "Kembali",
-    "finish": "Selesai"
+    "finish": "Selesai",
+    "language": "Bahasa",
+    "selectLanguage": "Pilih bahasa",
+    "select": "Pilih"
   },
   "notifications": {
     "success": "Pemberitahuan berhasil",
@@ -273,7 +319,16 @@
     "cancel": "Batalkan",
     "emailAddress": "Alamat Email",
     "name": "Nama",
-    "errGetTrialsQuery": "Gagal membuka percobaan. Status: {{status}}"
+    "errGetTrialsQuery": "Gagal membuka percobaan. Status: {{status}}",
+    "quickLinksText": "Tautan Cepat",
+    "addUserText": "Tambah Pengguna",
+    "installDeviceText": "Instal Perangkat untuk Pengguna",
+    "installSharedSpaceText": "Instal Perangkat ke Ruang Bersama",
+    "autoAttendantText": "Konfigurasi Asisten Otomatis",
+    "searchLogsText": "Cari log perangkat",
+    "unlicensedDateText": "pengguna tidak berlisensi didaftarkan pada",
+    "unlicensedText": "Pengguna Tidak Berlisensi",
+    "convertText": "Lihat dan konversi pengguna yang saat ini menggunakan versi gratis"
   },
   "inviteModal": {
     "title": "Penetapan Layanan",
@@ -284,13 +339,14 @@
   "ssoModal": {
     "btnTitle": "Atur SSO",
     "title": "Atur SSO",
-    "enableSSO": "Ya, saya memiliki penyedia SSO kustom.",
-    "disableSSO": "Tidak, saya tidak memiliki penyedia SSO.",
+    "enableSSO": "Gabungkan penyedia identitas pihak ke-3. (Lanjutan)",
+    "disableSSO": "Gunakan layanan identitas internal untuk otentikasi pengguna. (Sederhana)",
     "importMetadataTitle": "Impor Metadata IdP",
     "exportMetadataTitle": "Ekspor Metadata Cloud",
-    "testSSOSetupTitle": "Tes Pengaturan SSO ",
+    "testSSOSetupTitle": "Tes Pengaturan SSO",
     "enableSSOTitle": "Aktifkan SSO",
     "importMetadataDesc": "Mulai mengonfigurasikan hubungan kepercayaan antara penyedia identitas/ identity provider (IdP) Anda dan Cloud Kolaborasi Cisco dengan mendapatkan file metadata kepercayaan dari IdP dan mengunggahnya ke sini.",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Unduh file metadata kepercayaan berikut dari layanan Kolaborasi Cisco, dan unggah ke antarmuka manajemen penyedia identitas/ identity provider (IdP) Anda.",
     "exportMetadataDesc2": "Setelah selesai mengunggah file ke IdP Anda, kembali ke layar ini dan tekan Selanjutnya.",
     "testSSOSetupDesc": "Anda siap menguji konfigurasi SSO. Tekan tombol di bawah ini untuk membuka jendela baru. Jika Anda berhasil masuk, Anda dapat kembali ke layar ini dan tekan Selanjutnya untuk menyelesaikan pengaturan SSO.",
@@ -303,7 +359,7 @@
     "backBtn": "Kembali",
     "nextBtn": "Selanjutnya",
     "downloadMetadataBtn": "Unduh File Metadata",
-    "launchSSOTestBtn": "Buka Tes SSO",
+    "launchSSOTestBtn": "Tes Koneksi SSO",
     "finishBtn": "Selesai",
     "importFailed": "Gagal mengimpor File Metadata IdP",
     "invalidFile": "File metadata IdP tidak valid",
@@ -311,7 +367,12 @@
     "retrieveEntityIdFailed": "Konfigurasi SSO gagal",
     "readFileFailed": "Tidak dapat membaca file Metadata IdP",
     "importSuccess": "Berhasil mengimpor file metadata IdP",
-    "enableSSOSuccess": "Single Sign-On (SSO) berhasil diaktifkan untuk semua pengguna"
+    "enableSSOSuccess": "Single Sign-On (SSO) berhasil diaktifkan untuk semua pengguna",
+    "finalEnableSSO": "Tes berhasil dilakukan. Aktifkan Single Sign On.",
+    "finalDisableSSO": "Tes gagal. Nonaktifkan Single Sign On.",
+    "disableFailed": "Gagal menonaktifkan Single Sign On",
+    "diableSuccess": "Single Sign-On (SSO) berhasil dinonaktifkan untuk semua pengguna",
+    "enableSSOFailure": "Gagal menonaktifkan Single Sign-On (SSO)."
   },
   "serviceSetupModal": {
     "timeZone": "Zona Waktu",
@@ -438,6 +499,17 @@
       "label": "Layanan Penggabungan APP UC",
       "title": "Layanan Penggabungan APP UC",
       "desc": "Tingkatkan layanan Anda di lokasi"
+    },
+    "activationStatus": {
+      "not_entitled": "Tidak ditetapkan",
+      "pending_deactivation": "Penonaktifan Ditunda",
+      "pending_activation": "Pengaktifan Ditunda",
+      "activated": "Diaktifkan",
+      "error": "Kesalahan"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "UC Gabungan",
+      "squared-fusion-cal": "Kalender Gabungan"
     }
   },
   "firstTimeWizard": {
@@ -483,7 +555,7 @@
     "nextSteps": "Tekan tombol Selanjutnya setelah Anda siap memverifikasi bahwa informasi identitas sedang diselaraskan.",
     "results": "Hasil",
     "syncAgreementText": "pengguna dalam perjanjian penyelarasan",
-    "setupSSOSub": "Atur Single Sign-On",
+    "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Harap pilih opsi yang sesuai untuk konfigurasi SSO.",
     "manualInvite": "Masukkan alamat email orang di perusahaan Anda yang akan menerima Layanan Kolaborasi. Mereka akan menerima email undangan untuk mendaftar.",
     "domainEntry": "Entri Domain",
@@ -494,6 +566,32 @@
     "finish": "Selesai",
     "finishSub": "Lengkapi pengaturan",
     "completeRequired": "{{name}} harus diisi."
+  },
+  "reports": {
+    "title": "Laporan",
+    "engagementTab": "Hubungan",
+    "qualityTab": "Kualitas",
+    "opportunitiesTab": "Kesempatan",
+    "time": "Setiap Saat",
+    "week": "Pekan Sebelumnya",
+    "month": "Bulan Sebelumnya",
+    "threeMonths": "Tiga Bulan Terakhir",
+    "mostEngaged": "5 Paling Sering Dihubungi",
+    "leastEngaged": "5 Paling Jarang Dihubungi",
+    "highQuality": "5 Kualitas Terbaik",
+    "leastQuality": "5 Kualitas Terburuk",
+    "services": "Semua Layanan",
+    "UsersOnboarded": "Pengguna Onboard",
+    "AvgCallsPerUser": "Rerata Panggilan per Pengguna",
+    "AvgRoomsPerUser": "Rerata Kamar per Pengguna",
+    "ActiveUsers": "Pengguna Aktif",
+    "OneOnOneRooms": "Kamar Satu banding Satu",
+    "GroupRooms": "Kamar Grup",
+    "VideoCalls": "Panggilan Video",
+    "AvgDurationofCalls": "Rerata Durasi Panggilan",
+    "ContentShared": "Konten yang Dibagikan",
+    "AmountofContentShared": "Jumlah Konten yang Dibagikan",
+    "UserEngagement": "Hubungan Pengguna"
   },
   "callRouting": {
     "title": "Pengarahan Panggilan",
@@ -529,6 +627,7 @@
     "createButton": "Buat Call Park"
   },
   "telephonyPreview": {
+    "squareduc": "UC Squared",
     "or": "atau",
     "voicemail": "Surat Suara",
     "singleNumberReach": "Menjangkau Satu Nomor"
@@ -543,16 +642,21 @@
     "externalNumberLabel": "Nomor Eksternal",
     "chooseNumber": "Pilih Nomor",
     "addNewNumber": "Tambah Nomor Baru",
-    "none": "Tidak Ada"
+    "removeNumber": "Hapus Saluran",
+    "none": "Tidak Ada",
+    "deleteConfirmation": "Tindakan ini tidak dapat dibatalkan.  Anda yakin ingin menghapus {{line}} dari {{user}}?",
+    "deleteLineTitle": "Hapus Saluran",
+    "disassociationSuccess": "Saluran berhasil dihapus dari pengguna."
   },
   "callForwardPanel": {
     "title": "Penerusan Panggilan",
     "success": "Konfigurasi Penerusan Panggilan berhasil disimpan",
     "error": "Konfigurasi Penerusan Panggilan gagal",
+    "forwardNoCalls": "Jangan teruskan panggilan",
     "forwardAllCalls": "Teruskan semua panggilan",
     "forwardBusyNoAnswer": "Teruskan panggilan ketika jalur sibuk atau tidak terjangkau",
-    "internalAndExternal": "Untuk panggilan internal dan eksternal",
-    "internalOnly": "Hanya untuk panggilan internal",
+    "internalAndExternal": "Untuk panggilan internal dan eksternal<br>",
+    "internalOnly": "Hanya untuk panggilan internal<br>",
     "forwardBusy": "Ketika jalur sibuk, kirim panggilan ke:",
     "forwardNoAnswer": "Jika tidak ada jawaban, kirim panggilan ke:",
     "forwardExternal": "Teruskan panggilan eksternal ke nomor berbeda",
@@ -560,11 +664,11 @@
   },
   "callerIdPanel": {
     "title": "ID Pemanggil",
-    "description": "Ganti nama tampilan untuk panggilan dari jalur ini"
+    "description": "<small>Ganti nama layar untuk panggilan dari saluran ini</small>"
   },
   "singleNumberReachPanel": {
     "title": "Menjangkau Satu Nomor",
-    "description": "Memungkinkan pengguna menjawab panggilan ke enstensi mereka ke nomor lain",
+    "description": "<small>Mengizinkan pengguna menjawab panggilan masuk ke ekstensinya ke nomor lain</small>",
     "toggle": "Menjangkau Satu Nomor",
     "snrNote": "SNR capat menjangkau semua jalur pengguna atau terbatas untuk jalur tertentu",
     "success": "Konfigurasi Single Number Reach berhasil disimpan",
@@ -596,12 +700,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Durasi",
+    "duration": "Durasi Percobaan (hari)",
     "thirtyDays": "30 Hari",
     "sixtyDays": "60 Hari",
-    "ninetyDays": "90 Hari",
-    "onehundredtwentyDays": "120 Hari",
-    "onehundredeightyDays": "180 Hari",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "Batalkan",
     "startTrial": "Mulai Percobaan",
     "customerInformation": "Informasi Pelanggan",
@@ -620,6 +724,22 @@
     "activeUsersTitle": "Pengguna Aktif Harian",
     "averageCallsTitle": "Rerata Panggilan per Pengguna",
     "contentSharedTitle": "Total Konten yang Dibagikan"
+  },
+  "trialModal": {
+    "trialSuccess": "Anda berhasil mengatur percobaan.",
+    "nextStep": "Langkah Selanjutnya",
+    "sendWelcome": "Kirim Pesan Sambutan",
+    "sendWelcomePrompt": "Jika Anda ingin pelanggan mengatur layanan:",
+    "launchPortal": "Buka Portal Perusahaan",
+    "launchPortalPrompt": "Jika Anda ingin mengatur layanan untuk pelanggan:",
+    "or": "atau",
+    "squareducError": "Percobaan telah dibuat, namun tidak dapat menetapkan Squared UC.",
+    "addSuccess": "Percobaan berhasil dimulai untuk {{customerName}} dengan {{licenseCount}} lisensi selama {{licenseDuration}} hari.",
+    "editSuccess": "Anda berhasil mengedit percobaan untuk {{customerName}} dengan {{licenseCount}} lisensi selama {{licenseDuration}}."
+  },
+  "trials": {
+    "collab": "Kamar Tim Standar + Rapat 25 Peserta",
+    "squaredUC": "Komunikasi Lanjut"
   },
   "status": {
     "noResults": "Tidak ada hasil yang tersedia.",
@@ -657,7 +777,9 @@
     "expiring": "Percobaan Segera Berakhir",
     "expired": "Percobaan Berakhir",
     "expiresToday": "Berakhir Hari Ini",
-    "unused": "lisensi tidak digunakan"
+    "unused": "lisensi tidak digunakan",
+    "uploadNumbers": "Jumlah Unggahan",
+    "overPlan": "melebihi batas rencana"
   },
   "didAddModal": {
     "title": "Tambah Nomor Telepon",
@@ -665,20 +787,25 @@
     "processingText": "Menambahkan Nomor Telepon...",
     "successText": "{{count}} nomor telepon baru berhasil ditambahkan.",
     "failText": "{{count}} nomor telepon sudah ada di sistem.",
-    "sendEmail": "Kirim Email Sambutan",
+    "sendEmail": "Beritahu Pelanggan",
     "notifyCustLater": "Beritahu Pelanggan Nanti",
     "emailSuccessText": "Email berhasil dikirim kepada pelanggan.",
     "emailFailText": "Kesalahan pengiriman email",
-    "inputPlacehoder": "Masukkan Nomor Telepon"
+    "inputPlacehoder": "Masukkan nomor telepon dipisahkan dengan tanda koma"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Konfigurasi Perangkat",
+    "deviceStatus": "Status Perangkat",
     "description": "Deskripsi",
     "id": "ID",
+    "ipAddress": "Alamat IP",
     "deactivate": "Nonaktifkan",
     "success": "Perangkat berhasil ditambahkan",
     "error": "Konfigurasi perangkat gagal",
     "deactivateDevice": "Nonaktifkan Perangkat",
-    "deactivateBody": "Tindakan ini tidak dapat dibatalkan. Anda yakin ingin menonaktifkan perangkat ini?"
+    "deactivateBody": "Tindakan ini tidak dapat dibatalkan. Anda yakin ingin menonaktifkan perangkat ini?",
+    "deviceStatusFailureMsg": "Gagal memperoleh status perangkat",
+    "deviceIpAddressFailureMsg": "Gagal memperoleh IP perangkat"
   },
   "generateActivationCodeModal": {
     "title": "Kode Aktivasi",
@@ -707,10 +834,12 @@
     "cloudOpAdmin": "Administrator Pengoperasian Cloud",
     "fullAdmin": "Izin administrator penuh",
     "partialAdmin": "Beberapa izin administrator",
+    "noAdmin": "No administrator privileges",
     "userAdmin": "Administrator Pengguna",
     "billingAdmin": "Administrator Penagihan",
     "supportAdmin": "Administrator Dukungan",
-    "save": "Simpan"
+    "save": "Simpan",
+    "roles": "Jabatan"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -719,5 +848,124 @@
     "tracks": "Track",
     "draganddrop": "Seret dan jatuhkan untuk mengurutkan kembali track. Track tersebut akan diputar.",
     "setActive": "Tetapkan Aktif"
+  },
+  "meetingsPage": {
+    "manageMeetings": "Rapat",
+    "webexMeetingId": "ID Rapat",
+    "host": "Penyelenggara",
+    "date": "Tanggal",
+    "startTime": "Mulai",
+    "endTime": "Selesai",
+    "resource": "Sumber Daya",
+    "webexSite": "Situs WebEx",
+    "active": "Aktif",
+    "pending": "Undangan Ditunda",
+    "enterprise": "Perusahaan",
+    "mediaFusion": "Penggabungan Media",
+    "cloud": "Awan"
+  },
+  "vtsPage": {
+    "enterpriseResources": "Sumber Daya Perusahaan",
+    "name": "Nama",
+    "status": "Status",
+    "delete": "Hentikan",
+    "takeOffline": "Jadikan offline",
+    "bringOnline": "Jadikan online",
+    "actionsHeader": "Tindakan",
+    "deleteResource": "Hentikan Sumber Daya",
+    "deleteResourceConfText1": "Anda yakin ingin menghentikan sumber daya ini?",
+    "deleteResourceConfText2": "Sambungan akan diputus dari awan dan dijadikan offline.",
+    "cancel": "Batalkan",
+    "deleteResource": "Hentikan Sumber Daya"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx Proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
+  },
+  "leaderBoard": {
+    "actions": "Tindakan",
+    "licenseUsage": "Penggunaan Lisensi",
+    "lastSynced": "Terakhir Diselaraskan:",
+    "messagingTitle": "Pesan",
+    "messagingSubtitle": "Kamar Tim Standar",
+    "messagingDesc": "Lisensi pesan.",
+    "communicationTitle": "Komunikasi",
+    "communicationSubtitle": "Gabungan Lanjutan",
+    "communicationDesc": "Lisensi Komunikasi Gabungan (UC) Cisco.",
+    "conferencingTitle": "Konferensi",
+    "conferencingSubtitle": "Pusat Rapat",
+    "conferencingDesc": "Lisensi Pusat Rapat dan Konferensi Cisco."
+  },
+  "partnerProfile": {
+    "link": "Profil Mitra",
+    "customerLink": "Profil Pelanggan",
+    "title": "Akun",
+    "name": "Nama Perusahaan",
+    "id": "Nomor Akun",
+    "ciscoRep": "Perwakilan Cisco",
+    "supportSetup": "Lokasi Tiket / Pelaporan Masalah",
+    "save": "Simpan",
+    "supportInfo": "Jika Anda menyediakan dukungan untuk pengguna dari pelanggan Anda, masukkan parameter dukungan Anda di bawah. Paramater tersebut akan ditampilkan di bagian Pilihan Dukungan di aplikasi Squared.",
+    "lifeCycle": "Mitra siklus hidup diperlukan untuk menyediakan dua jenis dukungan di bawah ini.",
+    "supportOptions": "Opsi Dukungan Cisco",
+    "seeExample": "lihat contoh.",
+    "yourSupportOptions": "Opsi Dukungan Anda",
+    "urlFaq": "URL untuk situs bantuan dan Pertanyaan Umum",
+    "urlFaqEx": "http://[url of Cisco help site and FAQs]",
+    "urlReport": "URL untuk tiket pelaporan masalah atau kasus yang aktif",
+    "urlReportEx": "http://[url Cisco untuk pelaporan masalah]",
+    "helpFaq": "Lokasi Bantuan & Pertanyaan Umum",
+    "matchingTix": "Tiket Masalah yang Cocok",
+    "matchingDescr": "Untuk mencocokkan tiket masalah dengan log yang diunggah ke alat Manajemen Kolaborasi Cisco ketika laporan dibuat, cantumkan URL dukungan dengan parameter logID Anda sebagai \"%%logID%%\" (tanpa tanda petik).",
+    "forExample": "Misalnya: http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "Atur Dukungan",
+    "companyInfo": "Informasi Perusahaan",
+    "cancel": "Batalkan",
+    "partnerProblem": "Situs pelaporan masalah mitra",
+    "partnerHelp": "Situs bantuan mitra",
+    "ciscoProblem": "Masalah pelaporan akan dikirim ke Dukungan Teknis Cisco",
+    "ciscoHelp": "Situs bantuan Cisco",
+    "enterHelp": "Masukkan lokasi konten bantuan Anda.",
+    "enterReports": "Melaporkan Masalah: masukkan lokasi alat pelaporan masalah Anda."
+  },
+  "customerProfile": {
+    "supportContacts": "Hubungi Dukungan",
+    "partnerAdmin": "Administrator Mitra",
+    "supportInfo": "Jika Anda menyediakan dukungan untuk pengguna dari pelanggan Anda, masukkan parameter dukungan Anda di bawah. Paramater tersebut akan ditampilkan di bagian Pilihan Dukungan di aplikasi Squared;"
+  },
+  "utilizationPage": {
+    "entResUtilization": "Penggunaan Sumber Daya Perusahaan",
+    "overAllUtil": "Penggunaan Keseluruhan",
+    "average": "Rerata",
+    "bridgeUtilization": "Penggunaan Bridge By Bridge"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Pesanan # {{orderId}} sedang diproses. Silakan periksa kembali setelah 24 jam.",
+    "info": "Status",
+    "wait": "Harap tunggu, kami sedang mengarahkan Anda"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }

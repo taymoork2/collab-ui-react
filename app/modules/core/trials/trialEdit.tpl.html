@@ -57,7 +57,7 @@
     </div>
     <div class="row" ng-if="trial.isSquaredUC()">
       <div class="col-xs-8 col-xs-offset-4">
-        <cs-checkbox id="squaredUCTrial" ng-model="trial.offers['SQUAREDUC']" cklabel="{{'trials.squaredUC' | translate}}" ng-disabled="true"></cs-checkbox>
+        <cs-checkbox id="squaredUCTrial" ng-model="trial.offers['SQUAREDUC']" cklabel="{{'trials.squaredUC' | translate}}" ng-disabled="trial.disableSquaredUCCheckBox"></cs-checkbox>
       </div>
     </div>
     <div ng-show="trial.editTerms && !trial.showPartnerEdit">

@@ -29,7 +29,7 @@ angular.module('Squared')
         }, 25);
 
       } else if (Utils.isAndroid()) {
-        $window.location.href = Config.getAndroidAppIntent();
+        $window.location.href = Config.getAndroidStoreUrl();
       }
 
     }

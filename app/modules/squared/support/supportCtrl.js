@@ -10,14 +10,8 @@ angular.module('Squared')
       $scope.problemHandler = ' by Cisco';
       $scope.helpHandler = 'by Cisco';
       $scope.reportingUrl = null;
-      $scope.helpUrl = 'https://support.projectsquared.com';
+      $scope.helpUrl = 'https://support.ciscospark.com';
       $scope.statusPageUrl = Config.getStatusPageUrl();
-
-      //New Branding changes. To be removed
-      if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
-        $scope.helpUrl = 'https://support.ciscospark.com';
-      }
-
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
 
@@ -76,19 +70,25 @@ angular.module('Squared')
       };
 
       var getOrg = function () {
+        var orgSettings = '';
         Orgservice.getOrg(function (data, status) {
           if (data.success) {
             if (data.orgSettings) {
-              for (var url in data.orgSettings) {
-                if (data.orgSettings[url].indexOf('reportingSiteUrl=') > -1) {
-                  $scope.reportingUrl = data.orgSettings[url].split("reportingSiteUrl=").pop();
+              for (var settings in data.orgSettings) {
+                try {
+                  orgSettings = JSON.parse(data.orgSettings[settings]);
+                } catch (e) {
+                  continue;
+                }
+                if (orgSettings.reportingSiteUrl) {
+                  $scope.reportingUrl = orgSettings.reportingSiteUrl;
                   $scope.problemHandler = 'externally';
-                } else if (data.orgSettings[url].indexOf('helpUrl=') > -1) {
-                  $scope.helpUrl = data.orgSettings[url].split("helpUrl=").pop();
+                }
+                if (orgSettings.helpUrl) {
+                  $scope.helpUrl = orgSettings.helpUrl;
                   $scope.helpHandler = 'externally';
                 }
               }
-
             }
           } else {
             Log.debug('Get org failed. Status: ' + status);

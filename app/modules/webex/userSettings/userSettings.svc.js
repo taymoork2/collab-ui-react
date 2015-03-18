@@ -1,54 +1,153 @@
-(function () {
-  'use strict';
+'use strict';
 
-  angular.module('WebExUserSettings').factory('WebExUserSettingsSvc', [
-    '$q',
-    '$log',
-    'XmlApiSvc',
-    function (
-      $q,
-      $log,
-      XmlApiSvc
-    ) {
+angular.module('WebExUserSettings')
+  .service('WebexUserSettingsSvc', [
+    function WebexUserSettingsModel() {
       return {
-        getUserInfo: function (xmlApiAccessInfo) {
-          var xmlData = XmlApiSvc.getUserInfo(xmlApiAccessInfo);
+        sessionEnablementTitle: "Session Enablement",
+        userPrivilegesTitle: "User Privileges",
 
-          return $q.all(xmlData);
-        }, // getUserInfo()
+        sessionTypes: null,
 
-        getSiteInfo: function (xmlApiAccessInfo) {
-          var xmlData = XmlApiSvc.getSiteInfo(xmlApiAccessInfo);
+        meetingCenter: {
+          id: "MC",
+          label: "Meeting Center",
+          serviceType: "MeetingCenter",
+          isSiteEnabled: false
+        }, // meetingCenter
 
-          return $q.all(xmlData);
-        }, // getSiteInfo()
+        trainingCenter: {
+          id: "TC",
+          label: "Training Center",
+          serviceType: "TrainingCenter",
+          isSiteEnabled: false,
 
-        getMeetingTypeInfo: function (xmlApiAccessInfo) {
-          var xmlData = XmlApiSvc.getMeetingTypeInfo(xmlApiAccessInfo);
+          handsOnLabAdmin: {
+            id: "handsOnLabAdmin",
+            label: "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
+            value: false,
+            isSiteEnabled: false
+          }
+        }, // trainingCenter
 
-          return $q.all(xmlData);
-        }, // getMeetingTypeInfo()
+        eventCenter: {
+          id: "EC",
+          label: "Event Center",
+          serviceType: "EventCenter",
+          isSiteEnabled: false,
 
-        getUserSettingsInfo: function (xmlApiAccessInfo) {
-          var userInfoXml = XmlApiSvc.getUserInfo(xmlApiAccessInfo);
-          var siteInfoXml = XmlApiSvc.getSiteInfo(xmlApiAccessInfo);
-          var meetingTypeXml = XmlApiSvc.getMeetingTypeInfo(xmlApiAccessInfo);
+          optimizeBandwidthUsage: {
+            id: "optimizeBandwidthUsage",
+            label: "Optimized bandwidth usage for attendees within the same network",
+            value: false, // TODO
+            isSiteEnabled: false // TODO
+          }
+        }, // eventCenter
 
-          return $q.all([userInfoXml, siteInfoXml, meetingTypeXml]);
-        }, // getUserSettingsInfo()
+        supportCenter: {
+          id: "SC",
+          label: "Support Center",
+          serviceType: "SupportCenter",
+          isSiteEnabled: false
+        }, // supportCenter
 
-        updateUserSettings: function (xmlApiAccessInfo, userSettings) {
-          return XmlApiSvc.updateUserPrivileges(xmlApiAccessInfo, userSettings);
-        },
+        collabMeetingRoom: {
+          id: "collabMeetingRoom",
+          label: "Collabration Room Cloud Service",
+          isSiteEnabled: false,
+          value: false
+        }, // collabMeetingRoom
 
-        xml2JsonConvert: function (commentText, xmlDataText, startOfBodyStr, endOfBodyStr) {
-          return XmlApiSvc.xml2JsonConvert(commentText, xmlDataText, startOfBodyStr, endOfBodyStr);
-        }, // xml2JsonConvert()
+        general: {
+          label: "General",
 
-        getSessionTicket: function (wbxSiteUrl) {
-          return XmlApiSvc.getSessionTicket(wbxSiteUrl);
-        }, //getSessionTicket()
+          hiQualVideo: {
+            id: "hiQualVideo",
+            label: "Turn on high-quality video (360p)",
+            isSiteEnabled: false, // TODO
+            value: false, // TODO
+
+            hiDefVideo: {
+              id: "hiDefVideo",
+              label: "Turn on high-definition video video (720p)", // TODO
+              value: false // TODO
+            }
+          }
+        }, // general
+
+        telephonyPriviledge: {
+          label: "Telephony Privilege",
+
+          callInTeleconf: {
+            id: "callInTeleconf",
+            label: "Call-in teleconferencing",
+            value: true,
+            isSiteEnabled: false,
+            selectedCallInTollType: 0,
+
+            callInTollOnly: {
+              id: "tollOnly",
+              label: "Toll",
+              isSiteEnabled: false,
+              value: 1
+            },
+
+            callInTollFreeOnly: {
+              id: "tollFreeOnly",
+              label: "Toll free",
+              isSiteEnabled: false,
+              value: 2
+            },
+
+            callInTollAndTollFree: {
+              id: "tollAndTollFree",
+              label: "Toll & Toll free",
+              isSiteEnabled: false,
+              value: 3
+            },
+
+            teleconfViaGlobalCallin: {
+              id: "teleconfViaGlobalCallin",
+              label: "Allow access to teleconference via global call-in numbers",
+              isSiteEnabled: true, // TODO
+              value: false
+            },
+
+            cliAuth: {
+              id: "cliAuth",
+              label: "Enable teleconferencing CLI authentication",
+              isSiteEnabled: true, // TODO
+              value: false
+            }
+          }, // callInTeleconf
+
+          callBackTeleconf: {
+            id: "callBackTeleconf",
+            label: "Call-back teleconferencing",
+            isSiteEnabled: false,
+            value: false,
+
+            globalCallBackTeleconf: {
+              id: "globalCallBackTeleconf",
+              label: "Global call-back teleconferencing",
+              value: false
+            },
+          },
+
+          otherTeleconfServices: {
+            id: "otherTeleconfServices",
+            label: "Other teleconference services",
+            isSiteEnabled: true, // TODO
+            value: false
+          },
+
+          integratedVoIP: {
+            id: "integratedVoIP",
+            label: "Integrated VoIP",
+            isSiteEnabled: false,
+            value: false
+          },
+        }, // telephonyPriviledges
       }; // return
-    } //WebExUserSettingsSvc
-  ]); // angular
-})();
+    } // WebexUserSettingsModel
+  ]); // service

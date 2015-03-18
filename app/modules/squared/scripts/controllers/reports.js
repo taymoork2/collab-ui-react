@@ -2,8 +2,8 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config',
-    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config) {
+  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate',
+    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config, $translate) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
@@ -108,48 +108,60 @@ angular.module('Squared')
         checkAllValues();
       };
 
+      var label = '';
       $scope.$on('entitlementsLoaded', function (event, response) {
-        getCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', 'Users Onboarded', Config.chartColors.blue, 'sum');
+        label = $translate.instant('reports.UsersOnboarded');
+        getCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', label, Config.chartColors.blue, 'sum');
       });
 
       $scope.$on('avgCallsPerUserLoaded', function (event, response) {
-        getCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', 'Avg Calls Per User', Config.chartColors.red, 'average');
+        label = $translate.instant('reports.AvgCallsPerUser');
+        getCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', label, Config.chartColors.red, 'average');
       });
 
       $scope.$on('avgConversationsLoaded', function (event, response) {
-        getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', 'Avg Rooms Per User', Config.chartColors.yellow, 'average');
+        label = $translate.instant('reports.AvgRoomsPerUser');
+        getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', label, Config.chartColors.yellow, 'average');
       });
 
       $scope.$on('activeUsersLoaded', function (event, response) {
-        getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', 'Active Users', Config.chartColors.green, 'sum');
+        label = $translate.instant('reports.ActiveUsers');
+        getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', label, Config.chartColors.green, 'sum');
       });
 
       $scope.$on('convOneOnOneLoaded', function (event, response) {
-        getCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', 'One On One Rooms', Config.chartColors.blue, 'sum');
+        label = $translate.instant('reports.OneOnOneRooms');
+        getCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', label, Config.chartColors.blue, 'sum');
       });
 
       $scope.$on('convGroupLoaded', function (event, response) {
-        getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', 'Group Rooms', Config.chartColors.red, 'sum');
+        label = $translate.instant('reports.GroupRooms');
+        getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', label, Config.chartColors.red, 'sum');
       });
 
       $scope.$on('callsLoaded', function (event, response) {
-        getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', 'Video Calls', Config.chartColors.yellow, 'sum');
+        label = $translate.instant('reports.VideoCalls');
+        getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', label, Config.chartColors.yellow, 'sum');
       });
 
       $scope.$on('callsAvgDurationLoaded', function (event, response) {
-        getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', 'Avg Duration of Calls', Config.chartColors.green, 'average');
+        label = $translate.instant('reports.AvgDurationofCalls');
+        getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', label, Config.chartColors.green, 'average');
       });
 
       $scope.$on('contentSharedLoaded', function (event, response) {
-        getCharts(response, 'contentShared', 'contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', 'Content Shared', Config.chartColors.blue, 'sum');
+        label = $translate.instant('reports.ContentShared');
+        getCharts(response, 'contentShared', 'contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', label, Config.chartColors.blue, 'sum');
       });
 
       $scope.$on('contentShareSizesLoaded', function (event, response) {
-        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', 'Amount of Content Shared', Config.chartColors.red, 'sum');
+        label = $translate.instant('reports.AmountofContentShared');
+        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', label, Config.chartColors.red, 'sum');
       });
 
       $scope.$on('onboardingFunnelLoaded', function (event, response) {
-        getCharts(response, 'onboardingFunnel', 'onboardingFunnelDiv', 'onboarding-funnel-refresh', 'showOnboardingFunnelRefresh', 'User Engagement', null, 'funnel');
+        label = $translate.instant('reports.UserEngagement');
+        getCharts(response, 'onboardingFunnel', 'onboardingFunnelDiv', 'onboarding-funnel-refresh', 'showOnboardingFunnelRefresh', label, null, 'funnel');
       });
 
       $scope.manualReload = function (backendCache) {

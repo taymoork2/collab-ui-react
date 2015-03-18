@@ -1,31 +1,28 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService',
+  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate',
 
-    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService) {
+    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate) {
 
       // toggles api calls, show/hides divs based on customer or partner profile
       $scope.isPartner = Authinfo.isPartner();
+      $scope.appType = 'Squared';
 
-      $scope.profileHelpUrl = 'https://support.projectsquared.com';
-
-      if (Config.getEnv() === 'sparkprod' || Config.getEnv() === 'sparkint') {
-        $scope.profileHelpUrl = 'https://support.ciscospark.com';
-      }
+      $scope.profileHelpUrl = 'https://support.ciscospark.com';
 
       // hold partner admin object
       $scope.partner = null;
 
       // radio button values
       $scope.problemSiteInfo = {
-        partner: 0,
-        yours: 1
+        cisco: 0,
+        ext: 1
       };
 
       $scope.helpSiteInfo = {
-        partner: 0,
-        yours: 1
+        cisco: 0,
+        ext: 1
       };
 
       $scope.sendFeedback = function () {
@@ -52,6 +49,7 @@ angular.module('Core')
       // ci api calls will go in here
       $scope.init = function () {
         $scope.rep = null;
+        $scope.radioModified = false;
 
         $scope.companyName = Authinfo.getOrgName();
         $scope.problemSiteRadioValue = 0;
@@ -70,11 +68,7 @@ angular.module('Core')
         /* UNCOMMENT ONCE CISCO IS A PARTNER */
         // UserListService.getCiscoRep(function(data, status){
         //   if(data.success){
-        //     //console.log('success');
-        //     //console.log(data);
         //   } else{
-        //     //console.log('error');
-        //     //console.log(data);
         //   }
         // });
 
@@ -124,11 +118,24 @@ angular.module('Core')
       };
 
       $scope.setProblemRadio = function (value) {
+        if (value === $scope.problemSiteInfo.cisco) {
+          $scope.supportUrl = '';
+          $scope.supportText = '';
+        }
+        $scope.radioModified = true;
         $scope.problemSiteRadioValue = value;
       };
 
       $scope.setHelpRadio = function (value) {
+        if (value === $scope.helpSiteInfo.cisco) {
+          $scope.helpUrl = '';
+        }
+        $scope.radioModified = true;
         $scope.helpSiteRadioValue = value;
+      };
+
+      $scope.isBtnDisabled = function () {
+        return !($scope.radioModified || $scope.supportForm.$dirty);
       };
 
       var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl) {

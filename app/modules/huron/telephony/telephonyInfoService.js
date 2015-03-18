@@ -200,7 +200,8 @@
               // get External (alternate) number if exists
               AlternateNumberService.query({
                 customerId: Authinfo.getOrgId(),
-                directoryNumberId: userLine.uuid
+                directoryNumberId: userLine.uuid,
+                alternatenumbertype: '+E.164 Number'
               }, function (altNumList) {
                 if (angular.isArray(altNumList) && altNumList[0]) {
                   // using 'this' to ensure we are changing the current

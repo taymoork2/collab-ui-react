@@ -9,7 +9,8 @@
     <title ng-bind="Localize.varTitle()"></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="icon" type="image/png" ng-href="{{$root.favicon}}">
+    <link type="image/x-icon" rel="shortcut icon" ng-href="{{$root.favicon}}"/>
     <!-- build:css({.tmp,app}) styles/main.css -->
     <% styles.forEach( function( file ) { %>
     <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
@@ -18,7 +19,6 @@
   <body ng-cloak cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
     <cr-notifications></cr-notifications>
     <div ui-view="main"></div>
-
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>

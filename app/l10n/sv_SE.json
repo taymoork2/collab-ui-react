@@ -43,28 +43,42 @@
     "inviteUsers": "Bjud in användare",
     "partners": "Partneradministratörer"
   },
+  "groupsPage": {
+    "manageGroups": "Grupper",
+    "all": "Alla",
+    "groupNameHeader": "Gruppnamn",
+    "membersCountHeader": "Medlemmar"
+  },
   "onboardModal": {
     "onboardUsers": "Registrerade användare",
     "cancel": "Avbryt",
     "addUsersDesc": "Ange e-postadresserna till personer i ditt företag som kommer att ta del av Collaboration Services. De får en e-postinbjudan om att registrera sig.",
     "addUserText": "Vem vill du lägga till?",
     "userInput": "Ange e-postadresser eller adresslistor avgränsade med kommatecken ...",
-    "addServiceText": "Vilka tjänster vill du aktivera?",
+    "enableServiceText": "Aktivera tjänster",
     "enableCollab": "Aktivera enskilda collaboration services",
-    "enableCollabGroup": "Aktivera collaboration services baserat på gruppmedlemskap.",
+    "enableCollabGroup": "Aktivera samarbetstjänster baserat på gruppmedlemskap",
     "addUsersSelect": "Lägg till användare i:",
-    "manageBtn": "Hantera",
+    "manageBtn": "Hantera grupper",
     "onboardBtn": "Registrerad",
     "howToInvite": "Hur vill du bjuda in dem?",
     "waitInvitation": "Skicka e-postinbjudningar och vänta tills användaren har accepterat innan tjänsterna erbjuds.",
     "sendImmediate": "Gör tjänsterna tillgängliga för användaren omedelbart och skicka e-postaviseringar.",
-    "messaging": "Meddelanden och kommunikation",
+    "messaging": "Meddelanden",
     "conferencing": "Konferens",
+    "communications": "Kommunikation",
+    "entitlements": "Användarberättiganden",
     "saveBtn": "Spara",
     "manageGroups": "Hantera grupper",
     "groupColHeader": "Gruppnamn",
     "collabService": "Välj vilka collaboration service-licenser som ska beviljas användarna i gruppen.",
-    "addEntitleError": "otillräckliga privilegier för att lägga till eller berättiga en användare"
+    "addEntitleError": "otillräckliga privilegier för att lägga till eller berättiga en användare",
+    "freeMsg": "Gratis grupprum i Squared",
+    "freeConf": "Gratis Meetings med 3 personer",
+    "freeComm": "Gratis interna röst- och videosamtal via IP",
+    "paidMsg": "Standardgrupprum",
+    "paidConf": "Meetings med 25 personer",
+    "paidComm": "Avancerad kommunikation"
   },
   "usersPreview": {
     "groupPreview": "Grupp:",
@@ -78,18 +92,21 @@
     "entitlementsPreview": "Berättiganden",
     "addNewLinePreview": "Lägg till en ny rad",
     "newLine": "Ny rad",
-    "devicesPreview": "Enheter",
+    "devicesPreview": "Enheter och programvara",
     "activateNewDevice": "Aktivera ny enhet",
     "fullAdmin": "Fullständig administratör",
     "generateActivationCode": "Generera aktiveringskod",
     "generateActivationCodeText": "Generera en aktiveringskod om du vill aktivera en ny enhet för den här användaren.",
     "activationCodeTitle": "Aktiveringskod för ny enhet",
-    "expires": "Upphör"
+    "expires": "Upphör",
+    "editServices": "Ändra tjänster",
+    "editServiceTitle": "Tjänster aktiverade för {{firstName}} {{lastName}}"
   },
   "messagingPanel": {
     "title": "Meddelanden"
   },
   "settings": {
+    "title": "Konfigurera tjänster",
     "initialSetup": "Initial konfiguration"
   },
   "tabs": {
@@ -99,6 +116,7 @@
     "deviceTab": "Enheter",
     "reportTab": "Rapporter",
     "supportTab": "Support",
+    "accountTab": "Konto",
     "developmentTab": "Utveckling",
     "organizationTab": "Organisation",
     "organizationTabDesc": "Hantera organisationsuppgifter, visa tilldelade tjänster och öppna verktyg.",
@@ -107,7 +125,17 @@
     "callRoutingTab": "Samtalsomkoppling",
     "callRoutingTabDesc": "Hantera samtalsomkopplingsfunktioner, t.ex. Call Park",
     "mediaOnHoldTab": "Media On Hold",
-    "mediaOnHoldTabDesc": "Utvecklarexempel av Media On Hold"
+    "mediaOnHoldTabDesc": "Utvecklarexempel av Media On Hold",
+    "meetingDetailsTab": "Möten",
+    "meetingDetailsTabDesc": "Möteshantering",
+    "vtsDetailsTab": "Företagsresurser",
+    "vtsDetailsTabDesc": "Hantering av företagsresurser",
+    "listUserTab": "Lista användare",
+    "listUserTabDesc": "Hantera användare och deras funktioner.",
+    "groupTab": "Grupper",
+    "groupTabDesc": "Skapa och hantera grupper.",
+    "entResUtilizationTab": "Användning",
+    "entResUtilizationTabDesc": "Använda Enterprise Resources"
   },
   "index": {
     "welcome": "Välkommen!",
@@ -124,7 +152,7 @@
     "heading": "Lista över berättiganden för"
   },
   "downloadPage": {
-    "thank": "Tack för att du har registrerat dig hos Cisco Squared.",
+    "thank": "Tack för att du har registrerat dig för Cisco Squared.",
     "account": "Ditt konto {{email}} är nu aktivt.",
     "install": "Installera Squared genom att gå till",
     "link": "den här länken.",
@@ -134,6 +162,10 @@
   "invitePage": {
     "redirect": "Omdirigerar ...",
     "launch": "Startar app ..."
+  },
+  "createOrgPage": {
+    "addAdminEmailText": "E-postadress till administratör: ",
+    "create": "Behandla order"
   },
   "orgsPage": {
     "title": "HANTERA ORGANISATIONER",
@@ -184,6 +216,7 @@
     "error": "Användaren har inte uppdaterats."
   },
   "supportPage": {
+    "title": "Support",
     "subtitleLogs": "Sök efter loggar",
     "listlogsbtn": "Sök",
     "noResults": "Inga träffar.",
@@ -228,7 +261,17 @@
     "tx": "Tx",
     "errCallInfoQuery": "Kunde inte hämta samtalsinfo. Status: {{status}}",
     "subTitleCallFlow": "Samtalsflöde",
-    "downloading": "Hämtningen kan ta upp till 5 minuter. Tack för att du väntar ..."
+    "downloading": "Hämtningen kan ta upp till 5 minuter. Tack för att du väntar ...",
+    "operational": "Alla system är i drift",
+    "error": "Systemfel",
+    "supportResources": "Supportresurser",
+    "showDetails": "Visa detaljer",
+    "hideDetails": "Dölj detaljer",
+    "problemReports": "Problemrapport",
+    "reportingUrl": "Rapporterings-URL:",
+    "helpFaq": "Hjälp och vanliga frågor",
+    "helpUrl": "Hjälp-URL:",
+    "sendFeedback": "Cisco-feedback"
   },
   "common": {
     "delete": "Ta bort",
@@ -242,7 +285,10 @@
     "done": "Färdig",
     "begin": "Börja",
     "back": "Tillbaka",
-    "finish": "Slutför"
+    "finish": "Slutför",
+    "language": "Språk",
+    "selectLanguage": "Välj ett språk",
+    "select": "Välj"
   },
   "notifications": {
     "success": "Aviseringar om slutförda åtgärder",
@@ -273,7 +319,16 @@
     "cancel": "Avbryt",
     "emailAddress": "E-postadress",
     "name": "Namn",
-    "errGetTrialsQuery": "Kunde inte hämta provperioder. Status: {{status}}"
+    "errGetTrialsQuery": "Kunde inte hämta provperioder. Status: {{status}}",
+    "quickLinksText": "Snabblänkar",
+    "addUserText": "Lägg till användare",
+    "installDeviceText": "Installera en enhet åt en användare",
+    "installSharedSpaceText": "Installera en enhet på en delad plats",
+    "autoAttendantText": "Konfigurera autosvar",
+    "searchLogsText": "Sök enhetsloggar",
+    "unlicensedDateText": "olicensierade användare registrerade på",
+    "unlicensedText": "Olicensierade användare",
+    "convertText": "Visa och omvandla användare som för närvarande använder gratisversionen"
   },
   "inviteModal": {
     "title": "Serviceberättigande",
@@ -284,13 +339,14 @@
   "ssoModal": {
     "btnTitle": "Konfigurera SSO",
     "title": "Konfigurera SSO",
-    "enableSSO": "Ja, jag har en egen SSO-leverantör.",
-    "disableSSO": "Nej, jag har ingen SSO-leverantör.",
+    "enableSSO": "Integrera en tredjeparts identitetsleverantör. (Avancerat)",
+    "disableSSO": "Använd den inbyggda identitetstjänsten för användarautentisering. (Grundläggande)",
     "importMetadataTitle": "Importera IdP-metadata",
     "exportMetadataTitle": "Exportera moln-metadata",
     "testSSOSetupTitle": "Testa SSO-konfiguration",
     "enableSSOTitle": "Aktivera SSO",
     "importMetadataDesc": "Börja med att konfigurera en pålitlig anslutning mellan din identitetsleverantör (IdP) och Cisco Collaboration Cloud genom att hämta en pålitlig metadatafil från din IdP och överföra den här.",
+    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Hämta följande pålitliga metadatafil från Cisco Collaboration-tjänsten och överför den till administrationsgränssnittet hos din identitetsleverantör (IdP).",
     "exportMetadataDesc2": "När du har överfört filen till din IdP återgår du till denna skärm och trycker på Nästa.",
     "testSSOSetupDesc": "Nu är du redo att testa din SSO-konfiguration. Tryck på knappen nedan för att öppna ett nytt fönster. Om du lyckas logga in utan problem kan du återgå till den här skärmen och trycka på Nästa för att slutföra SSO-konfigurationen.",
@@ -303,7 +359,7 @@
     "backBtn": "Tillbaka",
     "nextBtn": "Nästa",
     "downloadMetadataBtn": "Hämta metadatafil",
-    "launchSSOTestBtn": "Starta SSO-test",
+    "launchSSOTestBtn": "Testa SSO-anslutning",
     "finishBtn": "Slutför",
     "importFailed": "Kunde inte importera IdP-metadatafil",
     "invalidFile": "Ogiltig IdP-metadatafil",
@@ -311,7 +367,12 @@
     "retrieveEntityIdFailed": "SSO-konfigurationen misslyckades",
     "readFileFailed": "Kunde inte läsa IdP-metadatafil",
     "importSuccess": "IdP-metadatafilen importerades",
-    "enableSSOSuccess": "Single Sign-On (SSO) har aktiverats för alla användare"
+    "enableSSOSuccess": "Single Sign-On (SSO) har aktiverats för alla användare",
+    "finalEnableSSO": "Testet lyckades. Aktivera enkel inloggning (SSO).",
+    "finalDisableSSO": "Testet misslyckades. Inaktivera enkel inloggning (SSO).",
+    "disableFailed": "Kunde inte inaktivera enkel inloggning (SSO).",
+    "diableSuccess": "Enkel inloggning (SSO) har inaktiverats för alla användare",
+    "enableSSOFailure": "Kunde inte inaktivera enkel inloggning (SSO)."
   },
   "serviceSetupModal": {
     "timeZone": "Tidszon",
@@ -438,6 +499,17 @@
       "label": "UC APP Fusion Services",
       "title": "UC APP Fusion Services",
       "desc": "Dra nytta av dina tjänster på plats"
+    },
+    "activationStatus": {
+      "not_entitled": "Inte berättigad",
+      "pending_deactivation": "Inväntar inaktivering",
+      "pending_activation": "Inväntar aktivering",
+      "activated": "Aktiverad",
+      "error": "Fel"
+    },
+    "serviceNames": {
+      "squared-fusion-uc": "Fusions-UC",
+      "squared-fusion-cal": "Fusionskalender"
     }
   },
   "firstTimeWizard": {
@@ -483,7 +555,7 @@
     "nextSteps": "Tryck på Nästa när du är redo att verifiera att identitetsinformationen är synkroniserad.",
     "results": "Träffar",
     "syncAgreementText": "användare i synkroniseringsavtal",
-    "setupSSOSub": "Konfigurera Single Sign-On",
+    "setupSSOSub": "Enkel inloggning",
     "setupSSODesc": "Välj lämpligt alternativ för din SSO-konfiguration.",
     "manualInvite": "Ange e-postadresserna till personer i ditt företag som kommer att ta del av Collaboration Services. De får en e-postinbjudan om att registrera sig.",
     "domainEntry": "Ange domän",
@@ -494,6 +566,32 @@
     "finish": "Slutför",
     "finishSub": "Slutför konfigurationen",
     "completeRequired": "{{name}} måste fyllas i."
+  },
+  "reports": {
+    "title": "Rapporter",
+    "engagementTab": "Engagemang",
+    "qualityTab": "Kvalitet",
+    "opportunitiesTab": "Möjligheter",
+    "time": "Sedan början",
+    "week": "Förra veckan",
+    "month": "Förra månaden",
+    "threeMonths": "Senaste tre månaderna",
+    "mostEngaged": "5 mest engagerade",
+    "leastEngaged": "5 minst engagerade",
+    "highQuality": "5 med högsta kvalitet",
+    "leastQuality": "5 med lägsta kvalitet",
+    "services": "Alla tjänster",
+    "UsersOnboarded": "Registrerade användare",
+    "AvgCallsPerUser": "Snittsamtal per användare",
+    "AvgRoomsPerUser": "Snittrum per användare",
+    "ActiveUsers": "Aktiva användare",
+    "OneOnOneRooms": "En-till-en-rum",
+    "GroupRooms": "Grupprum",
+    "VideoCalls": "Videosamtal",
+    "AvgDurationofCalls": "Snittvaraktighet på samtal",
+    "ContentShared": "Delat innehåll",
+    "AmountofContentShared": "Mängd delat innehåll",
+    "UserEngagement": "Användarengagemang"
   },
   "callRouting": {
     "title": "Samtalsomkoppling",
@@ -529,6 +627,7 @@
     "createButton": "Skapa Call Park"
   },
   "telephonyPreview": {
+    "squareduc": "Squared UC",
     "or": "eller",
     "voicemail": "Röstbrevlåda",
     "singleNumberReach": "Single Number Reach"
@@ -543,16 +642,21 @@
     "externalNumberLabel": "Externt nummer",
     "chooseNumber": "Välj ett nummer",
     "addNewNumber": "Lägg till nytt nummer",
-    "none": "Inget"
+    "removeNumber": "Ta bort linje",
+    "none": "Inget",
+    "deleteConfirmation": "Denna åtgärd går inte att ångra. Är du säker på att du vill inaktivera {{line}} från {{user}}?",
+    "deleteLineTitle": "Ta bort linje",
+    "disassociationSuccess": "Linjen har tagits bort från användaren."
   },
   "callForwardPanel": {
     "title": "Samtalsomkoppling",
     "success": "Konfiguration av samtalsomkoppling sparades",
     "error": "Konfiguration av samtalsomkoppling misslyckades",
+    "forwardNoCalls": "Koppla inte om samtal",
     "forwardAllCalls": "Koppla om alla samtal",
     "forwardBusyNoAnswer": "Koppla om samtal när linjen är upptagen eller obevakad",
-    "internalAndExternal": "Vid interna och externa samtal",
-    "internalOnly": "Endast vid interna samtal",
+    "internalAndExternal": "För interna och externa samtal<br>",
+    "internalOnly": "Endast för interna samtal<br>",
     "forwardBusy": "Om linjen är upptagen, koppla samtalet till:",
     "forwardNoAnswer": "Om ingen svarar, koppla samtalet till:",
     "forwardExternal": "Koppla om externa samtal annorlunda",
@@ -560,11 +664,11 @@
   },
   "callerIdPanel": {
     "title": "Inringar-ID",
-    "description": "Ändra visningsnamnet för samtal från denna linje"
+    "description": "<small>Ändra visningsnamn för samtal från denna linje</small>"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "Låter användare svara på inkommande samtal på sin anknytning på ett annat nummer",
+    "description": "<small>Gör det möjligt för användare att svara på inkommande samtal till sin anknytning på ett annat nummer</small>",
     "toggle": "Single Number Reach",
     "snrNote": "SNR kan omfatta alla användarens linjer eller begränsas till utvalda linjer",
     "success": "Konfiguration av Single Number Reach sparades",
@@ -596,12 +700,12 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Varaktighet",
+    "duration": "Provperiod (dagar)",
     "thirtyDays": "30 dagar",
     "sixtyDays": "60 dagar",
-    "ninetyDays": "90 dagar",
-    "onehundredtwentyDays": "120 dagar",
-    "onehundredeightyDays": "180 dagar",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
     "cancel": "Avbryt",
     "startTrial": "Påbörja provperiod",
     "customerInformation": "Kundinformation",
@@ -620,6 +724,22 @@
     "activeUsersTitle": "Dagliga aktiva användare",
     "averageCallsTitle": "Genomsnittligt antal samtal per användare",
     "contentSharedTitle": "Totalt delat innehåll"
+  },
+  "trialModal": {
+    "trialSuccess": "Du har konfigurerat din provperiod.",
+    "nextStep": "Nästa steg",
+    "sendWelcome": "Skicka välkomstmeddelande",
+    "sendWelcomePrompt": "Om du vill att kunden ska konfigurera tjänsten:",
+    "launchPortal": "Starta företagsportalen",
+    "launchPortalPrompt": "Om du vill konfigurera tjänsten åt kunden:",
+    "or": "eller",
+    "squareducError": "Skapade provperiod, men kunde inte tillhandahålla Squared UC.",
+    "addSuccess": "En provperiod har påbörjats för {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dagar.",
+    "editSuccess": "Du har ändrat en provperiod för {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dagar."
+  },
+  "trials": {
+    "collab": "Standardgrupprum + Meeting med 25 personer",
+    "squaredUC": "Avancerad kommunikation"
   },
   "status": {
     "noResults": "Inga träffar hittades.",
@@ -657,7 +777,9 @@
     "expiring": "Provperiod upphör",
     "expired": "Utgången provperiod",
     "expiresToday": "Upphör idag",
-    "unused": "oanvända licenser"
+    "unused": "oanvända licenser",
+    "uploadNumbers": "Överföringsmängd",
+    "overPlan": "överskrider plangränsen"
   },
   "didAddModal": {
     "title": "Lägg till telefonnummer",
@@ -665,20 +787,25 @@
     "processingText": "Lägger till telefonnummer ...",
     "successText": "{{count}} nytt/nya telefonnummer lades till.",
     "failText": "{{count}} telefonnummer finns redan i systemet.",
-    "sendEmail": "Skicka välkomstmeddelande",
+    "sendEmail": "Underrätta kunden",
     "notifyCustLater": "Avisera kunden senare",
     "emailSuccessText": "E-postmeddelandet skickades till kunden.",
     "emailFailText": "Kunde inte skicka e-postmeddelande",
-    "inputPlacehoder": "Ingående telefonnummer"
+    "inputPlacehoder": "Ange telefonnummer avgränsade med kommatecken"
   },
   "deviceDetailPage": {
+    "deviceConfig": "Enhetskonfiguration",
+    "deviceStatus": "Enhetsstatus",
     "description": "Beskrivning",
     "id": "ID",
+    "ipAddress": "IP-adress",
     "deactivate": "Inaktivera",
     "success": "Enheten uppdaterades",
     "error": "Enhetskonfigurationen misslyckades",
     "deactivateDevice": "Inaktivera enhet",
-    "deactivateBody": "Denn åtgärd går inte att ångra. Är du säker på att du vill inaktivera den här enheten?"
+    "deactivateBody": "Denna åtgärd går inte att ångra. Är du säker på att du vill inaktivera den här enheten?",
+    "deviceStatusFailureMsg": "Kunde inte hämta enhetsstatus",
+    "deviceIpAddressFailureMsg": "Kunde inte hämta enhetens IP-adress"
   },
   "generateActivationCodeModal": {
     "title": "Aktiveringskod",
@@ -707,10 +834,12 @@
     "cloudOpAdmin": "Molnadministratör",
     "fullAdmin": "Fullständig administratörsbehörighet",
     "partialAdmin": "Viss administratörsbehörighet",
+    "noAdmin": "Otillräckliga privilegier",
     "userAdmin": "Användaradministratör",
     "billingAdmin": "Faktureringsadministratör",
     "supportAdmin": "Supportadministratör",
-    "save": "Spara"
+    "save": "Spara",
+    "roles": "Roller"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -719,5 +848,124 @@
     "tracks": "Spår",
     "draganddrop": "Dra och släpp för att sortera om spåren. Spåren kommer att upprepas.",
     "setActive": "Gör aktiv"
+  },
+  "meetingsPage": {
+    "manageMeetings": "Möten",
+    "webexMeetingId": "Mötes-ID",
+    "host": "Värd",
+    "date": "Datum",
+    "startTime": "Start",
+    "endTime": "Slut",
+    "resource": "Resurs",
+    "webexSite": "WebEx-webbplats",
+    "active": "Aktiv",
+    "pending": "Avvaktande inbjudan",
+    "enterprise": "Företag",
+    "mediaFusion": "Mediafusion",
+    "cloud": "Moln"
+  },
+  "vtsPage": {
+    "enterpriseResources": "Företagsresurser",
+    "name": "Namn",
+    "status": "Status",
+    "delete": "Stäng ner",
+    "takeOffline": "Gör offline",
+    "bringOnline": "Gör online",
+    "actionsHeader": "Åtgärder",
+    "deleteResource": "Stäng ner resurs",
+    "deleteResourceConfText1": "Vill du stänga ner den här resursen?",
+    "deleteResourceConfText2": "Den kommer att kopplas bort från molnet och bli offline.",
+    "cancel": "Avbryt",
+    "deleteResource": "Stäng ner resurs"
+  },
+  "webexUserSettings": {
+    "webexUserSettingsTab": "WebEx Proto"
+  },
+  "webexUserSettings2": {
+    "webexUserSettings2Tab": "WebEx Proto2"
+  },
+  "leaderBoard": {
+    "actions": "Åtgärder",
+    "licenseUsage": "Licensanvändning",
+    "lastSynced": "Synkades senast:",
+    "messagingTitle": "Meddelanden",
+    "messagingSubtitle": "Standardteamrum",
+    "messagingDesc": "Meddelande-licenser.",
+    "communicationTitle": "Kommunikation",
+    "communicationSubtitle": "Advanced Unified",
+    "communicationDesc": "Cisco Unified Communication-licenser.",
+    "conferencingTitle": "Konferens",
+    "conferencingSubtitle": "Meeting Center",
+    "conferencingDesc": "Cisco Meeting Center- och Conferencing-licenser."
+  },
+  "partnerProfile": {
+    "link": "Partnerprofil",
+    "customerLink": "Kundprofil",
+    "title": "Konto",
+    "name": "Företagsnamn",
+    "id": "Kontonummer",
+    "ciscoRep": "Cisco-representant",
+    "supportSetup": "Problemärende/rapportera plats",
+    "save": "Spara",
+    "supportInfo": "Om du tillhandahåller support för dina kunders användare anger du dina supportparametrar nedan. Dessa parametrar kommer att visas under Supportalternativ i Squared-program.",
+    "lifeCycle": "Livscykelpartners måste tillhandahålla båda typer av support som visas nedan.",
+    "supportOptions": "Ciscos supportalternativ",
+    "seeExample": "se ett exempel.",
+    "yourSupportOptions": "Dina supportalternativ",
+    "urlFaq": "URL till hjälpsida och vanliga frågor",
+    "urlFaqEx": "http://[url till Cisco hjälpsida och vanliga frågor]",
+    "urlReport": "URL för att rapportera problemärenden eller öppna nya ärenden",
+    "urlReportEx": "http://[url till Cisco problemrapportering]",
+    "helpFaq": "Hjälp och vanliga frågor",
+    "matchingTix": "Matcha problemärenden",
+    "matchingDescr": "För att matcha problemärenden med hjälp av loggarna som överförs till Cisco Collaboration Management-verktyget när rapporter skapas bifogar du din support-URL till din logID-parameter enligt: \"%%logID%%\" (utan citationstecken)",
+    "forExample": "Till exempel: http://www.acme.com/reportproblem?id=%%logID%%",
+    "supportTitle": "Supportkonfiguration",
+    "companyInfo": "Företagsinformation",
+    "cancel": "Avbryt",
+    "partnerProblem": "Rapportwebbplats för partnerproblem",
+    "partnerHelp": "Webbplats för partnerhjälp",
+    "ciscoProblem": "Problemrapporter skickas till Ciscos tekniska support",
+    "ciscoHelp": "Ciscos hjälpwebbplats",
+    "enterHelp": "Ange platsen där ditt hjälpinnehåll finns",
+    "enterReports": "Problemrapporter: ange platsen där ditt problemrapporteringsverktyg finns."
+  },
+  "customerProfile": {
+    "supportContacts": "Supportkontakter",
+    "partnerAdmin": "Partneradministratörer",
+    "supportInfo": "Om du tillhandahåller support för dina kunders användare anger du dina supportparametrar nedan. Parametrarna kommer att visas under Supportalternativ i Squared-programvaran;"
+  },
+  "utilizationPage": {
+    "entResUtilization": "Använda Enterprise Resources",
+    "overAllUtil": "Allmän användning",
+    "average": "Genomsnitt",
+    "bridgeUtilization": "Bridge By Bridge-användning"
+  },
+  "processOrderPage": {
+    "errOrgCreation": "Beställningsnummer {{orderId}} behandlas. Kom tillbaka efter 24 timmar.",
+    "info": "Status",
+    "wait": "Vänta medan vi omdirigerar dig"
+  },
+  "languages": {
+    "danish": "Danish (Dansk)",
+    "german": "German (Deutsch)",
+    "englishBritish": "English (UK)",
+    "englishAmerican": "English(American)",
+    "spanishSpain": "Spanish (Español)",
+    "spanishColumbian": "Latin American Spanish (Español)",
+    "french": "French (Français)",
+    "indionesian": "Indonesian (Bahasa Indonesia)",
+    "italian": "Italian (Italiano)",
+    "japanese": "Japanese (日本語)",
+    "korean": "Korean (한국의)",
+    "norwegian": "Norwegian (Norsk)",
+    "dutch": "Dutch (Nederlands)",
+    "polish": "Polish (język polski)",
+    "portugeseBrazillian": "Portuguese (Brazil)",
+    "russian": "Russian (Pусский)",
+    "swedish": "Swedish (Svenska)",
+    "turkish": "Turkish (Türkçe)",
+    "chineseMandarin": "Simplified Chinese (简体中文)",
+    "chineseTraditional": "Traditional Chinese (繁體中文)"
   }
 }

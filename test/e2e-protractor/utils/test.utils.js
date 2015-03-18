@@ -13,6 +13,10 @@ exports.randomId = function () {
   return (Math.random() + 1).toString(36).slice(2);
 };
 
+exports.randomDid = function () {
+  return Math.floor((Math.random() * 100000000000) + 1);
+};
+
 exports.randomTestRoom = function () {
   return 'atlas-' + this.randomId();
 };
@@ -81,14 +85,54 @@ exports.expectIsDisplayed = function (elem) {
   expect(elem.isDisplayed()).toBeTruthy();
 };
 
+exports.expectIsDisabled = function (elem) {
+  this.wait(elem);
+  expect(elem.isEnabled()).toBeFalsy();
+};
+
+exports.expectIsEnabled = function (elem) {
+  this.wait(elem);
+  expect(elem.isEnabled()).toBeTruthy();
+};
+
 exports.expectIsNotDisplayed = function (elem) {
   browser.wait(function () {
     return elem.isDisplayed().then(function (isDisplayed) {
       return !isDisplayed;
     }, function () {
       return true;
-    }, 40000, 'Waiting for: ' + elem.locator());
-  });
+    });
+  }, 40000, 'Waiting for: ' + elem.locator());
+};
+
+exports.expectTextToBeSet = function (elem, text) {
+  browser.wait(function () {
+    return elem.getText().then(function (result) {
+      return result !== undefined && result !== null && result === text;
+    }, function () {
+      return false;
+    });
+  }, 40000, 'Waiting for: ' + elem.locator());
+};
+
+exports.expectValueToBeSet = function (elem, value) {
+  browser.wait(function () {
+    return elem.getAttribute('value').then(function (result) {
+      return result !== undefined && result !== null && result === value;
+    }, function () {
+      return false;
+    });
+  }, 40000, 'Waiting for: ' + elem.locator());
+};
+
+exports.expectValueToContain = function (elem, value) {
+  browser.wait(function () {
+    return elem.getAttribute('value').then(function (result) {
+      return result !== undefined && result !== null && result.indexOf(value) > -1;
+    }, function () {
+      return false;
+    });
+  }, 40000, 'Waiting for: ' + elem.locator());
 };
 
 exports.click = function (elem, maxRetry) {
@@ -176,4 +220,15 @@ exports.dumpConsoleErrors = function (name) {
       }
     });
   });
+};
+
+exports.formatPhoneNumbers = function (value) {
+  value = value.replace(/[^0-9]/g, '');
+  var vLength = value.length;
+  if (vLength === 10) {
+    value = value.replace(/(\d{3})(\d{3})(\d{4})/, "1 ($1) $2-$3");
+  } else if (vLength === 11) {
+    value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
+  }
+  return value;
 };
