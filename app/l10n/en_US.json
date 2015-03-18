@@ -897,6 +897,8 @@
     "deleteResource": "Decomission Resource"
   },
   "webexUserSettings": {
+    "userUpdateSuccess": "User privileges updated",
+    "userUpdateError": "User privileges update failed",
     "webexUserSettingsTab": "WebEx Proto"
   },
   "webexUserSettings2": {

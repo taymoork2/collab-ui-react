@@ -4,11 +4,15 @@
   angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', [
     '$scope',
     '$log',
+    '$filter',
+    '$stateParams',
     'WebExUserSettingsFact',
     'Notification',
     function (
       $scope,
       $log,
+      $filter,
+      $stateParams,
       WebExUserSettingsFact,
       Notification
     ) {
@@ -20,6 +24,9 @@
         webexSessionTicket: "",
         webexUserId: ""
       };
+
+      this.currentUser = $stateParams.currentUser;
+      this.xmlApiAccessInfo.webexUserId = this.currentUser.userName.match(/^([^@]*)@/)[1];
 
       this.getUserSettingsInfo = function () {
         var currView = this;
@@ -157,6 +164,8 @@
 
         WebExUserSettingsFact.updateUserSettings(this.xmlApiAccessInfo, userPrivileges).then(
           function () {
+            var successMsg = [];
+            successMsg.push($filter('translate')('webexUserSettings.userUpdateSuccess'));
             Notification.notify(['User privileges updated'], 'success');
           },
           function () {
