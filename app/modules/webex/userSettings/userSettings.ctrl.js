@@ -4,7 +4,6 @@
   angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', [
     '$scope',
     '$log',
-    '$translate',
     '$filter',
     '$stateParams',
     'WebExUserSettingsFact',
@@ -12,32 +11,19 @@
     function (
       $scope,
       $log,
-      $translate,
       $filter,
       $stateParams,
       WebExUserSettingsFact,
       Notification
     ) {
-      this.xmlApiAccessInfo = {
-        xmlServerURL: "",
-        webexAdminID: "",
-        webexAdminPswd: "",
-        siteID: "",
-        webexSessionTicket: "",
-        webexUserId: ""
-      };
-
-      this.currentUser = $stateParams.currentUser;
-      this.xmlApiAccessInfo.webexUserId = this.currentUser.userName.match(/^([^@]*)@/)[1];
 
       this.getUserSettingsInfo = function () {
         var currView = this;
 
-        WebExUserSettingsFact.getUserSettingsInfo(this.xmlApiAccessInfo).then(
+        WebExUserSettingsFact.getUserSettingsInfo().then(
           function getUserSettingsInfoSuccess(getInfoResult) {
             var funcName = "getUserSettingsInfoSuccess()";
             var logMsg = "";
-            // alert(funcName);
 
             var validateUserInfoResult = WebExUserSettingsFact.validateXmlData(
               "User Data",
@@ -49,7 +35,6 @@
             currView.userInfoHeaderJson = validateUserInfoResult[0];
             currView.userInfoJson = validateUserInfoResult[1];
             currView.userInfoErrReason = validateUserInfoResult[2];
-            currView.userInfoErrId = validateUserInfoResult[3];
 
             var validateSiteInfoResult = WebExUserSettingsFact.validateXmlData(
               "Site Info",
@@ -74,7 +59,7 @@
             currView.meetingTypesErrReason = validateMeetingTypesInfoResult[2];
 
             if (
-              ("" === currView.userInfoErrId) &&
+              ("" === currView.userInfoErrReason) &&
               ("" === currView.siteInfoErrReason) &&
               ("" === currView.meetingTypesErrReason)
             ) {
@@ -87,16 +72,10 @@
               currView.viewReady = true;
               $("#webexUserSettingsPage").removeClass("hidden");
             } else { // xmlapi returns error
-              var errorMessage = $translate.instant('webexUserSettingsUserErrors.' + currView.userInfoErrId);
-              $log.log("Error message: " + errorMessage);
-              if (errorMessage.indexOf(currView.userInfoErrId) > -1) {
-                Notification.notify([$translate.instant('webexUserSettingsUserErrors.userDefaultError')], 'error');
-              } else {
-                Notification.notify([errorMessage], 'error');
-              }
-
-              if ("030001" == currView.userInfoErrId) {
-                logMsg = funcName + ": " + "Corresponding User not found!!!";
+              if ("Corresponding User not found" == currView.userInfoErrReason) {
+                // TODO
+                //   handle invalid user error
+                logMsg = funcName + ": " + "INVALID USER!!!";
                 $log.log(logMsg);
               } else {
                 // TODO
@@ -113,7 +92,6 @@
 
             logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
             $log.log(logMsg);
-            // alert(logMsg);
           } // getUserSettingsInfoError()
         ); // WebExUserSettingsFact.getUserSettingsInfo()
       }; // getUserSettingsInfo()
@@ -141,46 +119,38 @@
         var funcName = "updateUserSettings()";
         var logMsg = "";
 
-        var userPrivileges = {
+        logMsg = funcName + ": " + "START";
+        // $log.log(logMsg);
+
+        var userSettings = {
           meetingTypes: [],
-          meetingCenter: false,
-          trainingCenter: false,
-          supportCenter: false,
-          eventCenter: false,
-          salesCenter: false
+          meetingCenter: this.userInfoJson.use_supportedServices.use_meetingCenter,
+          trainingCenter: this.userInfoJson.use_supportedServices.use_trainingCenter,
+          supportCenter: this.userInfoJson.use_supportedServices.use_supportCenter,
+          eventCenter: this.userInfoJson.use_supportedServices.use_eventCenter,
+          salesCenter: this.userInfoJson.use_supportedServices.use_salesCenter
         };
 
         // go through the session types
         this.userSettingsModel.sessionTypes.forEach(function (sessionType) {
           if (sessionType.sessionEnabled) {
-            userPrivileges.meetingTypes.push(sessionType.sessionTypeId);
-
-            logMsg = funcName + ": " + "\n" +
-              "sessionTypeId=" + sessionType.sessionTypeId + "\n" +
-              "meetingCenterApplicable=" + sessionType.meetingCenterApplicable + "\n" +
-              "trainingCenterApplicable=" + sessionType.trainingCenterApplicable + "\n" +
-              "supportCenterApplicable=" + sessionType.supportCenterApplicable + "\n" +
-              "eventCenterApplicable=" + sessionType.eventCenterApplicable;
-            // $log.log(logMsg);
-
-            if (!userPrivileges.meetingCenter) userPrivileges.meetingCenter = sessionType.meetingCenterApplicable;
-            if (!userPrivileges.trainingCenter) userPrivileges.trainingCenter = sessionType.trainingCenterApplicable;
-            if (!userPrivileges.supportCenter) userPrivileges.supportCenter = sessionType.supportCenterApplicable;
-            if (!userPrivileges.eventCenter) userPrivileges.eventCenter = sessionType.eventCenterApplicable;
-            if (!userPrivileges.salesCenter) userPrivileges.salesCenter = sessionType.salesCenterApplicable;
+            userSettings.meetingTypes.push(sessionType.sessionTypeId);
           }
         }); // userSettingsModel.sessionTypes.forEach()
 
-        WebExUserSettingsFact.updateUserSettings(this.xmlApiAccessInfo, userPrivileges).then(
+        WebExUserSettingsFact.updateUserSettings(userSettings).then(
           function () {
             var successMsg = [];
-            successMsg.push($filter('translate')('webexUserSettings.userUpdateSuccess'));
-            Notification.notify(['User privileges updated'], 'success');
+            successMsg.push($filter('translate')('webexUserSettings.updateSuccess'));
+            Notification.notify(['Session Enablement updated'], 'success');
           },
           function () {
-            Notification.notify(['User privileges update failed'], 'error');
+            Notification.notify(['Session Enablement update failed'], 'error');
           }
         );
+
+        logMsg = funcName + ": " + "END";
+        $log.log(logMsg);
       }; // updateUserSettings()
 
       //----------------------------------------------------------------------//
@@ -199,7 +169,19 @@
       this.meetingTypesInfoJson = null;
       this.meetingTypesErrReason = "";
 
-      this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
+      // TODO: fix this
+      var webexSiteName = "";
+      var webexdminID = "";
+      var webexAdminSessionTicket = "";
+
+      this.xmlApiInfo = WebExUserSettingsFact.getXmlApiInfo(
+        webexSiteName,
+        webexdminID,
+        webexAdminSessionTicket,
+        $stateParams.currentUser
+      );
+
+      this.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
 
       this.getUserSettingsInfo();
     } // WebExUserSettingsCtrl()

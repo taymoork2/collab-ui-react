@@ -4,31 +4,26 @@
   angular.module('WebExUserSettings2').controller('WebExUserSettings2Ctrl', [
     '$scope',
     '$log',
+    '$filter',
+    '$stateParams',
     'WebExUserSettingsFact',
     'Notification',
     function (
       $scope,
       $log,
+      $filter,
+      $stateParams,
       WebExUserSettingsFact,
       Notification
     ) {
-      this.xmlApiAccessInfo = {
-        xmlServerURL: "",
-        webexAdminID: "",
-        webexAdminPswd: "",
-        siteID: "",
-        webexSessionTicket: "",
-        webexUserId: ""
-      };
 
       this.getUserSettingsInfo = function () {
         var currView = this;
 
-        WebExUserSettingsFact.getUserSettingsInfo(this.xmlApiAccessInfo).then(
+        WebExUserSettingsFact.getUserSettingsInfo().then(
           function getUserSettingsInfoSuccess(getInfoResult) {
             var funcName = "getUserSettingsInfoSuccess()";
             var logMsg = "";
-            // alert(funcName);
 
             var validateUserInfoResult = WebExUserSettingsFact.validateXmlData(
               "User Data",
@@ -49,7 +44,7 @@
             );
 
             currView.siteInfoHeaderJson = validateSiteInfoResult[0];
-            currView.siteInfoJson = validateSiteInfoResult[1];
+            currView.siteBodyJson = validateSiteInfoResult[1];
             currView.siteInfoErrReason = validateSiteInfoResult[2];
 
             var validateMeetingTypesInfoResult = WebExUserSettingsFact.validateXmlData(
@@ -70,7 +65,7 @@
             ) {
               currView.userSettingsModel = WebExUserSettingsFact.updateUserSettingsModel(
                 currView.userInfoJson,
-                currView.siteInfoJson,
+                currView.siteBodyJson,
                 currView.meetingTypesInfoJson
               );
 
@@ -96,7 +91,6 @@
 
             logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
             $log.log(logMsg);
-            // alert(logMsg);
           } // getUserSettingsInfoError()
         ); // WebExUserSettingsFact.getUserSettingsInfo()
       }; // getUserSettingsInfo()
@@ -107,6 +101,18 @@
 
         logMsg = funcName + ": " + "START";
         $log.log(logMsg);
+
+        WebExUserSettingsFact.updateUserSettings2().then(
+          function () {
+            var successMsg = [];
+            successMsg.push($filter('translate')('webexUserSettings2.updateSuccess'));
+
+            Notification.notify(['Privileges updated'], 'success');
+          },
+          function () {
+            Notification.notify(['Privileges update failed'], 'error');
+          }
+        );
 
         logMsg = funcName + ": " + "END";
         $log.log(logMsg);
@@ -119,14 +125,26 @@
       this.userInfoErrReason = "";
 
       this.siteInfoHeaderJson = null;
-      this.siteInfoJson = null;
+      this.siteBodyJson = null;
       this.siteInfoErrReason = "";
 
       this.meetingTypesInfoHeaderJson = null;
       this.meetingTypesInfoJson = null;
       this.meetingTypesErrReason = "";
 
-      this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
+      // TODO: fix this
+      var webexSiteName = "";
+      var webexdminID = "";
+      var webexAdminSessionTicket = "";
+
+      this.xmlApiInfo = WebExUserSettingsFact.getXmlApiInfo(
+        webexSiteName,
+        webexdminID,
+        webexAdminSessionTicket,
+        $stateParams.currentUser
+      );
+
+      this.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
 
       this.getUserSettingsInfo();
     } // WebExUserSettings2Ctrl()

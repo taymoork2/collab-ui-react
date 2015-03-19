@@ -4,9 +4,6 @@ angular.module('WebExUserSettings')
   .service('WebexUserSettingsSvc', [
     function WebexUserSettingsModel() {
       return {
-        sessionEnablementTitle: "Session Enablement",
-        userPrivilegesTitle: "User Privileges",
-
         sessionTypes: null,
 
         meetingCenter: {
@@ -38,9 +35,9 @@ angular.module('WebExUserSettings')
 
           optimizeBandwidthUsage: {
             id: "optimizeBandwidthUsage",
-            label: "Optimized bandwidth usage for attendees within the same network",
-            value: false, // TODO
-            isSiteEnabled: false // TODO
+            label: "Optimized bandwidth usage for attendees within the same network (Note 1)",
+            isSiteEnabled: true, // TODO
+            value: false // TODO
           }
         }, // eventCenter
 
@@ -63,13 +60,13 @@ angular.module('WebExUserSettings')
 
           hiQualVideo: {
             id: "hiQualVideo",
-            label: "Turn on high-quality video (360p)",
-            isSiteEnabled: false, // TODO
+            label: "Turn on high-quality video (360p) (Note 1)",
+            isSiteEnabled: true, // TODO
             value: false, // TODO
 
             hiDefVideo: {
               id: "hiDefVideo",
-              label: "Turn on high-definition video video (720p)", // TODO
+              label: "Turn on high-definition video video (720p) (Note 1)", // TODO
               value: false // TODO
             }
           }
@@ -108,16 +105,22 @@ angular.module('WebExUserSettings')
 
             teleconfViaGlobalCallin: {
               id: "teleconfViaGlobalCallin",
-              label: "Allow access to teleconference via global call-in numbers",
+              label: "Allow access to teleconference via global call-in numbers (Note 2)",
               isSiteEnabled: true, // TODO
               value: false
             },
 
             cliAuth: {
               id: "cliAuth",
-              label: "Enable teleconferencing CLI authentication",
+              label: "Enable teleconferencing CLI authentication (Note 1)",
               isSiteEnabled: true, // TODO
-              value: false
+              value: false, // TODO
+
+              reqPinEnabled: {
+                id: "reqPinEnabled",
+                label: "Host and attendees must have PIN enabled (Note 1)",
+                value: false // TODO
+              }
             }
           }, // callInTeleconf
 
@@ -136,7 +139,7 @@ angular.module('WebExUserSettings')
 
           otherTeleconfServices: {
             id: "otherTeleconfServices",
-            label: "Other teleconference services",
+            label: "Other teleconference services (Note 2)",
             isSiteEnabled: true, // TODO
             value: false
           },
@@ -147,6 +150,9 @@ angular.module('WebExUserSettings')
             isSiteEnabled: false,
             value: false
           },
+
+          teleConfCallIn: false,
+          teleConfTollFreeCallIn: false,
         }, // telephonyPriviledges
       }; // return
     } // WebexUserSettingsModel

@@ -305,18 +305,28 @@ angular
             service: "CONFERENCING"
           }
         })
-        // .state('user-overview.webex', {
-        //   // template: '<div ui-view="header"></div><cs-sp-container><cs-sp-section><div>Hello {{currentUser.name.givenName}}</div></cs-sp-container></cs-sp-section>',
-        //   templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
-        //   controller: 'WebExUserSettingsCtrl',
-        //   controllerAs: 'WebExUserSettings',
-        //   data: {
-        //     displayName: "WebEx"
-        //   },
-        //   params: {
-        //     currentUser: {}
-        //   }
-        // })
+        .state('user-overview.webex', {
+          templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
+          controller: 'WebExUserSettingsCtrl',
+          controllerAs: 'WebExUserSettings',
+          data: {
+            displayName: "WebEx Session Enablement"
+          },
+          params: {
+            currentUser: {}
+          }
+        })
+        .state('user-overview.webex2', {
+          templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
+          controller: 'WebExUserSettings2Ctrl',
+          controllerAs: 'WebExUserSettings2',
+          data: {
+            displayName: "WebEx Privileges"
+          },
+          params: {
+            currentUser: {}
+          }
+        })
         .state('user-overview.userProfile', {
           templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
           controller: 'UserRolesCtrl',

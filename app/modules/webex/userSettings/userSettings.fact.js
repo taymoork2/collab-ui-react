@@ -6,11 +6,13 @@
     '$log',
     'XmlApiFact',
     'WebexUserSettingsSvc',
+    'XmlApiInfoSvc',
     function (
       $q,
       $log,
       XmlApiFact,
-      userSettingsModel
+      userSettingsModel,
+      xmlApiInfo
     ) {
       return {
         validateXmlData: function (
@@ -47,11 +49,9 @@
           $log.log(logMsg);
 
           var errReason = "";
-          var errId = "";
           if ("SUCCESS" != headerJson.serv_header.serv_response.serv_result) {
             // if ("" === infoJson) {
             errReason = headerJson.serv_header.serv_response.serv_reason;
-            errId = headerJson.serv_header.serv_response.serv_exceptionID;
 
             logMsg = funcName + ": " + "ERROR!!!" + "\n" +
               "headerJson=\n" + JSON.stringify(headerJson) + "\n" +
@@ -62,14 +62,35 @@
           return ([
             headerJson,
             infoJson,
-            errReason,
-            errId
+            errReason
           ]);
         }, // validateXmlData()
 
-        initUserSettingsModel: function () {
+        getUserSettingsModel: function () {
           return userSettingsModel;
-        }, // initUserSettingsModel()
+        }, // getUserSettingsModel()
+
+        getXmlApiInfo: function (
+          webexSiteName,
+          webexdminID,
+          webexAdminSessionTicket,
+          webexUser
+        ) {
+
+          xmlApiInfo.xmlServerURL = "";
+          xmlApiInfo.siteID = "";
+          xmlApiInfo.webexAdminID = "";
+          xmlApiInfo.webexAdminPswd = "";
+
+          /* TODO
+          xmlApiInfo.xmlServerURL = webexSiteName + "/WBXService/XMLService";
+          xmlApiInfo.webexAdminID = webexdminID;
+          xmlApiInfo.webexSessionTicket = webexAdminSessionTicket;
+          */
+          xmlApiInfo.webexUserId = webexUser.userName;
+
+          return xmlApiInfo;
+        }, // getXmlApiInfo()
 
         updateUserSettingsModel: function (
           userInfoJson,
@@ -112,7 +133,6 @@
                   "siteMtgProductCodePrefix=" + siteMtgProductCodePrefix + "\n" +
                   "siteMtgServiceTypes=" + siteMtgServiceTypes;
                 // $log.log(logMsg);
-                // alert(logMsg);
               }
 
               var meetingCenterApplicable = false;
@@ -163,7 +183,6 @@
           logMsg = funcName + ": " + "\n" +
             "enabledSessionTypesIDs=" + enabledSessionTypesIDs;
           // $log.log(logMsg);
-          // alert(logMsg);
 
           enabledSessionTypesIDs.forEach(function (enabledSessionTypeID) { // loop through user's enabled session type
             userSettingsModel.sessionTypes.forEach(function (sessionType) {
@@ -173,7 +192,6 @@
                 "enabledSessionTypeID=" + enabledSessionTypeID + "\n" +
                 "sessionTypeId=" + sessionTypeId;
               // $log.log(logMsg);
-              // alert(logMsg);
 
               if (sessionType.sessionTypeId == enabledSessionTypeID) {
                 sessionType.sessionEnabled = true;
@@ -193,16 +211,26 @@
           //---------------- end of cmr update ----------------//
 
           //---------------- start of user privileges update -----------------//
+          // General
+          // TODO:
+          //   if (???) {
+          //     userSettingsModel.general.hiQualVideo.isSiteEnabled = true;
+          //   }
+          //
+          //   if (???) {
+          //     userSettingsModel.general.hiQualVideo.value = true;
+          //   }
+          //
+          //   if (???) {
+          //     userSettingsModel.general.hiQualVideo.hiDefVideo.value = true;
+          //   }
+
+          // Telephony
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing) {
             userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled = true;
-          }
 
-          if (userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled) {
             if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference) {
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled = true;
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled = true;
-            } else if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference) {
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled = true;
             } else if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing) {
@@ -223,10 +251,37 @@
             userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 1;
           }
 
-          //
+          logMsg = funcName + ": " + "\n" +
+            "ns1_callInTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing + "\n" +
+            "ns1_hybridTeleconference=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference + "\n" +
+            "ns1_tollFreeCallinTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing + "\n" +
+            "use_teleConfCallIn=" + userInfoJson.use_privilege.use_teleConfCallIn + "\n" +
+            "use_teleConfTollFreeCallIn=" + userInfoJson.use_privilege.use_teleConfTollFreeCallIn;
+          // $log.log(logMsg);
+
+          // TODO:
+          //   if (???) {
+          //     userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = true;
+          //   }
+
           if ("true" == userInfoJson.use_privilege.use_teleConfCallInInternational) {
             userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value = true;
           }
+
+          // TODO:
+          //   if (???) {
+          //     userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled == true;
+          //
+
+          // TODO:
+          //   if (???) {
+          //     userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.value = true;
+          //   }
+
+          // TODO:
+          //   if (???) {
+          //      userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.reqPinEnabled.value = true;
+          //   }
 
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing) {
             userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled = true;
@@ -237,8 +292,13 @@
           }
 
           if ("true" == userInfoJson.use_privilege.use_teleConfCallOutInternational) {
-            userSettingsModel.telephonyPriviledge.integratedVoIP.value = true;
+            userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = true;
           }
+
+          // TODO:
+          //   if (???) {
+          //     userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = true;
+          //   }
 
           if ("true" == userInfoJson.use_privilege.use_otherTelephony) {
             userSettingsModel.telephonyPriviledge.otherTeleconfServices.value = true;
@@ -252,6 +312,17 @@
             userSettingsModel.telephonyPriviledge.integratedVoIP.value = true;
           }
 
+          // Event Center
+          // TODO:
+          //   if (???) {
+          //     userSettingsModel.eventCenter.optimizeBandwidthUsage.isSitenEnabled = true;
+          //   }
+          //
+          //   if (???) {
+          //     userSettingsModel.eventCenter.optimizeBandwidthUsage.value = true;
+          //   }
+
+          // Training Center
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab) {
             userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled = true;
           }
@@ -264,38 +335,66 @@
           return userSettingsModel;
         }, // updateUserSettingsModel()
 
-        getUserInfo: function (xmlApiAccessInfo) {
-          var xmlData = XmlApiFact.getUserInfo(xmlApiAccessInfo);
+        getUserInfo: function () {
+          var xmlData = XmlApiFact.getUserInfo(xmlApiInfo);
 
           return $q.all(xmlData);
         }, // getUserInfo()
 
-        getSiteInfo: function (xmlApiAccessInfo) {
-          var xmlData = XmlApiFact.getSiteInfo(xmlApiAccessInfo);
+        getSiteInfo: function () {
+          var xmlData = XmlApiFact.getSiteInfo(xmlApiInfo);
 
           return $q.all(xmlData);
         }, // getSiteInfo()
 
-        getMeetingTypeInfo: function (xmlApiAccessInfo) {
-          var xmlData = XmlApiFact.getMeetingTypeInfo(xmlApiAccessInfo);
+        getMeetingTypeInfo: function () {
+          var xmlData = XmlApiFact.getMeetingTypeInfo(xmlApiInfo);
 
           return $q.all(xmlData);
         }, // getMeetingTypeInfo()
 
-        getUserSettingsInfo: function (xmlApiAccessInfo) {
-          var userInfoXml = XmlApiFact.getUserInfo(xmlApiAccessInfo);
-          var siteInfoXml = XmlApiFact.getSiteInfo(xmlApiAccessInfo);
-          var meetingTypeXml = XmlApiFact.getMeetingTypeInfo(xmlApiAccessInfo);
+        getUserSettingsInfo: function () {
+          var userInfoXml = XmlApiFact.getUserInfo(xmlApiInfo);
+          var siteInfoXml = XmlApiFact.getSiteInfo(xmlApiInfo);
+          var meetingTypeXml = XmlApiFact.getMeetingTypeInfo(xmlApiInfo);
 
           return $q.all([userInfoXml, siteInfoXml, meetingTypeXml]);
         }, // getUserSettingsInfo()
 
-        updateUserSettings: function (xmlApiAccessInfo, userSettings) {
-          return XmlApiFact.updateUserSettings(xmlApiAccessInfo, userSettings);
+        updateUserSettings: function (userSettings) {
+          return XmlApiFact.updateUserSettings(xmlApiInfo, userSettings);
         },
 
-        updateUserSettings2: function (xmlApiAccessInfo, userSettings) {
-          return XmlApiFact.updateUserSettings2(xmlApiAccessInfo, userSettings);
+        updateUserSettings2: function () {
+          var teleConfCallIn = false;
+          var teleConfTollFreeCallIn = false;
+
+          if (3 == userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType) {
+            teleConfCallIn = true;
+            teleConfTollFreeCallIn = true;
+          } else if (2 == userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType) {
+            teleConfTollFreeCallIn = true;
+          } else {
+            teleConfCallIn = true;
+          }
+
+          userSettingsModel.telephonyPriviledge.teleConfCallIn = teleConfCallIn;
+          userSettingsModel.telephonyPriviledge.teleConfTollFreeCallIn = teleConfTollFreeCallIn;
+
+          if (!userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.value) {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.reqPinEnabled = false;
+          }
+
+          xmlApiInfo.teleConfCallIn = userSettingsModel.telephonyPriviledge.teleConfCallIn;
+          xmlApiInfo.teleConfTollFreeCallIn = userSettingsModel.telephonyPriviledge.teleConfTollFreeCallIn;
+          xmlApiInfo.teleconfViaGlobalCallin = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value;
+          xmlApiInfo.callBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.value;
+          xmlApiInfo.globalCallBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value;
+          xmlApiInfo.otherTelephony = userSettingsModel.telephonyPriviledge.otherTeleconfServices.value;
+          xmlApiInfo.integratedVoIP = userSettingsModel.telephonyPriviledge.integratedVoIP.value;
+          xmlApiInfo.handsOnLabAdmin = userSettingsModel.trainingCenter.handsOnLabAdmin.value;
+
+          return XmlApiFact.updateUserSettings2(xmlApiInfo);
         }, // updateUserSettings2()
 
         getSessionTicket: function (wbxSiteUrl) {

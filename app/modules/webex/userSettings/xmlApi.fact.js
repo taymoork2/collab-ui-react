@@ -12,7 +12,7 @@
     '$rootScope',
     'Authinfo',
     'Storage',
-    'XmlApiSvc',
+    'XmlApiConstsSvc',
     function (
       $http,
       $log,
@@ -67,46 +67,35 @@
           });
         }, //getMeetingTypeInfo()
 
-        updateUserSettings: function (xmlApiAccessInfo, userPrivileges) {
+        updateUserSettings: function (xmlApiAccessInfo, userSettings) {
           var funcName = "updateUserSettings()";
           var logMsg = "";
 
           logMsg = funcName + ": " + "\n" +
-            "xmlApiAccessInfo=" + JSON.stringify(xmlApiAccessInfo);
-          $log.log(logMsg);
+            "userSettings=" + JSON.stringify(userSettings);
+          // $log.log(logMsg);
 
-          var xmlRequest = $interpolate(constants.updateUserSettings1)(xmlApiAccessInfo);
+          var xmlRequest = $interpolate(constants.updateUserSettings_1)(xmlApiAccessInfo);
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #1 =\n" + xmlRequest;
           $log.log(logMsg);
 
-          xmlRequest += $interpolate(constants.updateUserSettings2)(xmlApiAccessInfo);
-
-          logMsg = funcName + ": " + "\n" +
-            "xmlRequest #2 =\n" + xmlRequest;
-          $log.log(logMsg);
-
-          xmlRequest += constants.updateUserSettings3_1;
-          $log.log("xmlRequest #3 =\n" + xmlRequest);
-
-          for (var i = 0; i < userPrivileges.meetingTypes.length; i++) {
+          for (var i = 0; i < userSettings.meetingTypes.length; i++) {
             var tmpMeetingTypesObj = {};
-            tmpMeetingTypesObj.meetingType = userPrivileges.meetingTypes[i];
-            xmlRequest += $interpolate(constants.updateUserSettings3_2)(tmpMeetingTypesObj);
+            tmpMeetingTypesObj.meetingType = userSettings.meetingTypes[i];
+            xmlRequest += $interpolate(constants.updateUserSettings_2)(tmpMeetingTypesObj);
           }
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #4 =\n" + xmlRequest;
           $log.log(logMsg);
 
-          xmlRequest += constants.updateUserSettings3_3;
+          xmlRequest += $interpolate(constants.updateUserSettings_3)(userSettings);
 
           logMsg = funcName + ": " + "\n" +
-            "xmlRequest #5 =\n" + xmlRequest;
-
-          xmlRequest += $interpolate(constants.updateUserSettings4)(userPrivileges);
-          $log.log("xmlRequest #6 = " + xmlRequest);
+            "xmlRequest #6 =\n" + xmlRequest;
+          $log.log(logMsg);
 
           return $q(
             function (resolve, reject) {
@@ -120,8 +109,30 @@
           );
         }, // updateUserSettings()
 
-        updateUserSettings2: function (xmlApiAccessInfo, userPrivileges) {
-          return null;
+        updateUserSettings2: function (xmlApiAccessInfo) {
+          var funcName = "updateUserSettings2()";
+          var logMsg = "";
+
+          logMsg = funcName + ": " + "\n" +
+            "xmlApiAccessInfo=\n" + JSON.stringify(xmlApiAccessInfo);
+          // $log.log(logMsg);
+
+          var xmlRequest = $interpolate(constants.updateUserSettings2)(xmlApiAccessInfo);
+
+          logMsg = funcName + ": " + "\n" +
+            "xmlRequest =\n" + xmlRequest;
+          $log.log(logMsg);
+
+          return $q(
+            function (resolve, reject) {
+              _self.getXMLApi(
+                xmlApiAccessInfo.xmlServerURL,
+                xmlRequest,
+                resolve,
+                reject
+              );
+            }
+          );
         }, // updateUserSettings2()
 
         getSessionTicketInfo: function (xmlApiAccessInfo) {
@@ -272,7 +283,6 @@
             "endOfBodyStr=" + endOfBodyStr + "\n" +
             "xmlData=" + "\n" + xmlData;
           // $log.log(logMsg);
-          // alert(logMsg);
 
           var startOfBodyIndex = (null == startOfBodyStr) ? -1 : xmlData.indexOf(startOfBodyStr);
           var endOfBodyIndex = (null == endOfBodyStr) ? -1 : xmlData.indexOf(endOfBodyStr);
@@ -281,7 +291,6 @@
             "startOfBodyIndex=" + startOfBodyIndex + "\n" +
             "endOfBodyIndex=" + endOfBodyIndex;
           // $log.log(logMsg);
-          // alert(logMsg);
 
           var bodySliceXml = "";
           if (
@@ -297,8 +306,7 @@
               "endOfBodyStr=" + endOfBodyStr + "\n" +
               "endOfBodyIndex=" + endOfBodyIndex + "\n" +
               "xmlData=" + "\n" + xmlData;
-            $log.log(logMsg);
-            // alert(logMsg);
+            // $log.log(logMsg);
           }
 
           constants.replaceSets.forEach(function (replaceSet) {
@@ -308,21 +316,18 @@
           logMsg = funcName + ": " + commentText + "\n" +
             "bodySliceXml=" + "\n" + bodySliceXml;
           // $log.log(logMsg);
-          // alert(logMsg);
 
           var fullBodyXml = "<body>" + bodySliceXml + "</body>";
 
           logMsg = funcName + ": " + commentText + "\n" +
             "fullBodyXml=" + "\n" + fullBodyXml;
           // $log.log(logMsg);
-          // alert(logMsg);
 
           var fullBodyJson = x2js.xml_str2json(fullBodyXml);
 
           logMsg = funcName + ": " + commentText + "\n" +
             "fullBodyJson=\n" + JSON.stringify(fullBodyJson);
           $log.log(logMsg);
-          // alert(logMsg);
 
           return fullBodyJson;
         }, // xml2JsonConvert()
