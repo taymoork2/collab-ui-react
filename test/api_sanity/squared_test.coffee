@@ -3,6 +3,12 @@ assert  = require 'assert'
 request = require 'request'
 helper  = require './test_helper'
 
+assertNoError = (err) ->
+  assert not err, JSON.stringify(err)
+
+assertStatusCode = (status, res) ->
+  assert.equal status, res.statusCode
+
 describe 'squared api ( jkuiros@cisco.com ) -',  ->
 
   describe 'pbr-admin', ->
@@ -19,12 +25,10 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         url: 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/4214d345-7caf-4e32-b015-34de878d1158/unlicensedUsers'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
-        data = try
-          JSON.parse(body)
-        catch
-          throw new Error 'Unable to parse JSON ' + body
+        assertNoError err
+        assertStatusCode 200, res
+        data = helper.parseJSON(body)
         assert _.isObject(data)
-        assert.equal 200, res.statusCode
         done()
 
     it 'should fetch partner admins', (done) ->
@@ -32,9 +36,10 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         url: 'https://atlas-integration.wbx2.com/admin/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/users/partneradmins'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
+        assertNoError err
+        assertStatusCode 200, res
         data = helper.parseJSON(body)
         assert _.isObject(data)
-        assert.equal 200, res.statusCode
         done()
 
     it 'should search for a user', (done) ->
@@ -42,12 +47,13 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         url: 'https://identity.webex.com/identity/scim/4214d345-7caf-4e32-b015-34de878d1158/v1/Users?filter=userName%20sw%20%22yolo%22%20or%20name.givenName%20sw%20%22yolo%22%20or%20name.familyName%20sw%20%22yolo%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles&count=100&sortBy=name&sortOrder=ascending'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
+        assertNoError err
+        assertStatusCode 200, res
         data = JSON.parse(body)
         assert _.isObject(data)
-        assert.equal 200, res.statusCode
         done()
 
-  describe 'partner-admin ( please be patient... )', ->
+  describe 'partner-admin', ->
 
     bearer = null
 
@@ -61,9 +67,10 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         url: 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/c054027f-c5bd-4598-8cd8-07c08163e8cd/managedOrgs'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
+        assertNoError err
+        assertStatusCode 200, res
         data = helper.parseJSON(body)
         assert _.isObject(data)
-        assert.equal 200, res.statusCode
         done()
 
     trialOrgId = null
@@ -83,8 +90,9 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
           'Content-Type': 'application/json'
 
       request.post opts, (err, res, body) ->
+        assertNoError err
+        assertStatusCode 200, res
         assert not body.errors, JSON.stringify(body)
-        assert.equal 200, res.statusCode
         trialOrgId = body.customerOrgId
         done()
 
@@ -94,9 +102,10 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         auth: bearer: bearer
 
       request.get opts, (err, res, body) ->
+        assertNoError err
+        assertStatusCode 200, res
         data = helper.parseJSON(body)
         assert _.isObject(data)
-        assert.equal 200, res.statusCode
         done()
 
     it 'should delete a partner trial', (done) ->
@@ -105,7 +114,8 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         auth: bearer: bearer
 
       request.del opts, (err, res, body) ->
-        assert.equal 204, res.statusCode
+        assertNoError err
+        assertStatusCode 204, res
         done()
 
     it 'should fetch trials', (done) ->
@@ -113,8 +123,9 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
         url: 'https://atlas-integration.wbx2.com/admin/api/v1/organization/c054027f-c5bd-4598-8cd8-07c08163e8cd/trials'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
+        assertNoError err
+        assertStatusCode 200, res
         data = helper.parseJSON(body)
         assert _.isObject(data)
-        assert.equal 200, res.statusCode
         done()
 
