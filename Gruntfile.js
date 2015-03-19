@@ -984,6 +984,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean',
       'build',
+      'eslint',
       'compile',
       'connect:test'
     ]);
