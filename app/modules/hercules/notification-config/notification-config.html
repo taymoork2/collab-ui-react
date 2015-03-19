@@ -1,52 +1,37 @@
 <div class="hercules-notification-config">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button id="convertModalClose" type="button" class="close" ng-click="$parent.modal.close()">
-        <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
-      </button>
-      <h3 class="modal-title">
-        <span>Error Notifications</span>
-      </h3>
+  <div class="modal-header">
+    <button id="convertModalClose" type="button" class="close" ng-click="$parent.modal.close()">
+      <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title">
+      <span>Error Notifications</span>
+    </h3>
+  </div>
+  <div class="modal-body">
+    <div ng-show="loading" style="text-align: center; padding: 60px;">
+      <i class="icon icon-spinner icon-2x"></i>
     </div>
-    <div class="modal-body">
-      <div ng-show="loading" style="text-align: center; padding: 60px;">
-        <i class="icon icon-spinner icon-2x"></i>
+    <div ng-hide="loading">
+      <p>
+        When things go bad, who we gonna notify?
+      </p>
+      <div ng-show="error" class="alert alert-danger" style="margin: 0 10px 10px 10px">
+        {{error}}
       </div>
-      <div ng-hide="loading">
-        <p>
-          When things go bad, who we gonna notify?
-        </p>
-        <div ng-show="error" class="alert alert-danger" style="margin: 0 10px 10px 10px">
-          {{error}}
-        </div>
-        <div class="form-group">
-          <textarea ng-disabled="saving" placeholder="A list of comma-seprated email addresses, eg. foo@example.com, bar@example.com, ..." class="form-control" id="wx2_users" type="text" ng-model="config.wx2users"></textarea>
-        </div>
-
-<!--         <p>
-          And we need a service user who can post to WX2:
-        </p>
-        <div class="form-group">
-          <label for="wx2_username">Username:</label>
-          <input ng-disabled="saving" class="form-control" id="wx2_username" type="text" ng-model="config.username" placeholder="foo@example.com" />
-        </div>
-        <div class="form-group">
-          <label for="wx2_password">Password:</label>
-          <input ng-disabled="saving" class="form-control" id="wx2_password" type="password" ng-model="config.password" />
-        </div> -->
+      <div class="form-group">
+        <textarea ng-disabled="saving" placeholder="A list of comma-seprated email addresses, eg. foo@example.com, bar@example.com, ..." class="form-control" id="wx2_users" type="text" ng-model="config.wx2users"></textarea>
       </div>
-
     </div>
-    <div class="modal-footer">
-      <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn-primary pull-right" ng-click="writeConfig()">
-        <span ng-hide="saving">Save</span>
-        <span ng-show="saving">
-          <i class="icon icon-spinner" />
-        </span>
-      </button>
-      <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
-        <span>Cancel</span>
-      </button>
-    </div>
+  </div>
+  <div class="modal-footer">
+    <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn-primary pull-right" ng-click="writeConfig()">
+      <span ng-hide="saving">Save</span>
+      <span ng-show="saving">
+        <i class="icon icon-spinner" />
+      </span>
+    </button>
+    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
+      <span>Cancel</span>
+    </button>
   </div>
 </div>
