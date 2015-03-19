@@ -4,6 +4,7 @@
   angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', [
     '$scope',
     '$log',
+    '$translate',
     '$filter',
     '$stateParams',
     'WebExUserSettingsFact',
@@ -11,6 +12,7 @@
     function (
       $scope,
       $log,
+      $translate,
       $filter,
       $stateParams,
       WebExUserSettingsFact,
@@ -47,6 +49,7 @@
             currView.userInfoHeaderJson = validateUserInfoResult[0];
             currView.userInfoJson = validateUserInfoResult[1];
             currView.userInfoErrReason = validateUserInfoResult[2];
+            currView.userInfoErrId = validateUserInfoResult[3];
 
             var validateSiteInfoResult = WebExUserSettingsFact.validateXmlData(
               "Site Info",
@@ -71,7 +74,7 @@
             currView.meetingTypesErrReason = validateMeetingTypesInfoResult[2];
 
             if (
-              ("" === currView.userInfoErrReason) &&
+              ("" === currView.userInfoErrId) &&
               ("" === currView.siteInfoErrReason) &&
               ("" === currView.meetingTypesErrReason)
             ) {
@@ -84,10 +87,16 @@
               currView.viewReady = true;
               $("#webexUserSettingsPage").removeClass("hidden");
             } else { // xmlapi returns error
-              if ("Corresponding User not found" == currView.userInfoErrReason) {
-                // TODO
-                //   handle invalid user error
-                logMsg = funcName + ": " + "INVALID USER!!!";
+              var errorMessage = $translate.instant('webexUserSettingsUserErrors.' + currView.userInfoErrId);
+              $log.log("Error message: " + errorMessage);
+              if (errorMessage.indexOf(currView.userInfoErrId) > -1) {
+                Notification.notify([$translate.instant('webexUserSettingsUserErrors.userDefaultError')], 'error');
+              } else {
+                Notification.notify([errorMessage], 'error');
+              }
+
+              if ("030001" == currView.userInfoErrId) {
+                logMsg = funcName + ": " + "Corresponding User not found!!!";
                 $log.log(logMsg);
               } else {
                 // TODO

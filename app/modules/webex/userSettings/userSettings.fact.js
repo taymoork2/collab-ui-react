@@ -47,9 +47,11 @@
           $log.log(logMsg);
 
           var errReason = "";
+          var errId = "";
           if ("SUCCESS" != headerJson.serv_header.serv_response.serv_result) {
             // if ("" === infoJson) {
             errReason = headerJson.serv_header.serv_response.serv_reason;
+            errId = headerJson.serv_header.serv_response.serv_exceptionID;
 
             logMsg = funcName + ": " + "ERROR!!!" + "\n" +
               "headerJson=\n" + JSON.stringify(headerJson) + "\n" +
@@ -60,7 +62,8 @@
           return ([
             headerJson,
             infoJson,
-            errReason
+            errReason,
+            errId
           ]);
         }, // validateXmlData()
 
