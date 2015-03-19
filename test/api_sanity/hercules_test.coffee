@@ -10,7 +10,8 @@ describe 'hercules api ( stimurbe@cisco.com ) -',  ->
         url: 'https://hercules-integration.wbx2.com/v1/clusters'
         auth: bearer: bearer
       request.get opts, (err, res, body) ->
+        assert not err, JSON.stringify(err)
+        assert.equal 200, res.statusCode
         data = helper.parseJSON(body)
         assert _.isArray(data)
-        assert.equal 200, res.statusCode
         done()

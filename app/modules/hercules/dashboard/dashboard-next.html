@@ -1,0 +1,79 @@
+<div id="fusion-root">
+  <!-- header -->
+  <div class="page-header row">
+    <div class="page-title clearfix">
+      <span class="title" translate="hercules.page_title" />
+      <div style="float: right; white-space: nowrap">
+        <button class="btn btn-info" ng-click="showUCConfigDialog()" ng-show="fusionUCEnabled">
+          <span>
+            <i class="fa fa-wrench" />
+          </span>
+        </button>
+
+        <button class="btn btn-info" ng-click="showNotificationConfigDialog()">
+          <span>
+            <i class="fa fa-bell" />
+          </span>
+        </button>
+
+        <button ng-show="pollHasFailed" ng-disabled="inflight" class="btn btn-info" ng-click="reload()" style="transition: all 0 ease 0;">
+          <span ng-hide="inflight">
+            <i class="icon icon-refresh" />
+          </span>
+          <span ng-show="inflight">
+            <i class="icon icon-refresh icon-spin" />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- content -->
+  <div class="row">
+    <div class="col-sm-12">
+      <!-- loader -->
+      <div ng-show="loading" style="text-align: center; padding-top: 60px;">
+        <i class="icon icon-spinner icon-2x"></i>
+      </div>
+
+      <div ng-show="!loading">
+
+        <!-- nothing fused -->
+        <div ng-show="clusters.length == 0" style="padding: 20px 40px">
+          <hercules-nothing-fused />
+        </div>
+
+        <!-- header -->
+        <div ng-show="clusters.length != 0">
+          <hercules-dashboard-header/>
+        </div>
+
+        <!-- clusters -->
+        <div ng-show="clusters.length != 0">
+
+          <div class="container-fluid grid" style="margin-top: 30px; margin-right: -30px;">
+            <div class="row" ng-repeat="cluster in clusters" ng-click="showClusterDetails(cluster)">
+              <div class="col-sm-4">
+                <i class="icon icon-data icon-inverse-round" />
+                {{cluster.name}}
+              </div>
+              <div class="col-sm-7">
+                <div ng-show="cluster.needs_attention" class="red">
+                  <i class="fa fa-circle" />
+                  Cluster needs attention
+                </div>
+                <div ng-hide="cluster.needs_attention" class="green">
+                  <i class="fa fa-circle" />
+                  Running
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <i class="icon icon-three-dots" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

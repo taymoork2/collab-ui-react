@@ -699,6 +699,27 @@ angular
           templateUrl: 'modules/hercules/dashboard/dashboard.html',
           controller: 'DashboardController',
           parent: 'main'
+        })
+        .state('fusion-next', {
+          url: '/fusion-next',
+          templateUrl: 'modules/hercules/dashboard/dashboard-next.html',
+          controller: 'DashboardNextController',
+          parent: 'main'
+        })
+        .state('cluster-details', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'ClusterDetailsController',
+              templateUrl: 'modules/hercules/dashboard/cluster-details.html'
+            }
+          },
+          data: {
+            displayName: 'Overview'
+          },
+          params: {
+            cluster: {}
+          }
         });
     }
   ]);
