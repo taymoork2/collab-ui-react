@@ -122,6 +122,8 @@
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
     "fusionDetailsTab": "Fusion",
     "fusionDetailsTabDesc": "Fusion Management",
+    "fusionNextTab": "Fusion Next",
+    "fusionNextTabDesc": "Fusion Management",
     "callRoutingTab": "Call Routing",
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",

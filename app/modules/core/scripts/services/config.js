@@ -223,6 +223,11 @@ angular.module('Core')
             state: 'fusion',
             link: '#fusion'
           }, {
+            title: 'tabs.fusionNextTab',
+            desc: 'tabs.fusionNextTabDesc',
+            state: 'fusion-next',
+            link: '#fusion-next'
+          }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
             state: 'callrouting',
@@ -511,9 +516,20 @@ angular.module('Core')
           'didadd',
           'newpartnerreports'
         ],
-        'squared-fusion-uc': ['fusion', 'devices'],
-        'squared-team-member': ['organization'],
-        'squared-fusion-media': ['meetings', 'vts', 'utilization']
+        'squared-fusion-uc': [
+          'fusion',
+          'fusion-next',
+          'cluster-details',
+          'devices'
+        ],
+        'squared-team-member': [
+          'organization'
+        ],
+        'squared-fusion-media': [
+          'meetings',
+          'vts',
+          'utilization'
+        ]
       };
 
       // These states do not require a role/service check

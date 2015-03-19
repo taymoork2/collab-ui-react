@@ -24,3 +24,35 @@
   padding-top: 5px;
   display: block;
 }
+
+.grid {
+  background-color: @brand-white;
+
+  .row:nth-child(n+2) {
+    border-top: 1px solid #eee;
+  }
+
+  .row {
+    cursor: pointer;
+  }
+
+  .row:hover {
+    background: #fafafa;
+  }
+
+  .row > div {
+    padding: 24px 20px 20px 20px;
+    // border-right: 1px solid #eee;
+  }
+
+  i {
+    margin-right: 10px;
+  }
+}
+
+.icon-inverse-round {
+  color: white;
+  padding: 10px;
+  border-radius: 100px;
+  background: @gray-lighter;
+}

@@ -48,7 +48,7 @@
           <accordion close-others="{{false}}">
             <accordion-group ng-repeat="cluster in clusters" is-open="panelStates[cluster.id]">
               <accordion-heading>
-                <h4>
+                <h4 style="color: black">
                   <span class="{{cluster.needs_attention ? 'red' : cluster.running_hosts ? 'green' : ''}}" style="padding-right: 10px;">
                     <i class="fa fa-circle-o" />
                   </span>
