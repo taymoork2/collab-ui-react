@@ -15,7 +15,7 @@
         <li>
           <a><span | translate="common.language"></span>
             <br>
-            <select ng-options="item.label for item in settings.options track by item.value" ng-model="settings.selected" ng-change="updateLanguage()" onclick="event.stopPropagation();">
+            <select id="languageSelector" ng-options="item.label for item in settings.options track by item.value" ng-model="settings.selected" ng-change="updateLanguage()" onclick="event.stopPropagation();">
             </select>
           </a>
         </li>
