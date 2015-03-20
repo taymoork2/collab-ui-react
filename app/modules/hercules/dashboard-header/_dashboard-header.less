@@ -1,28 +1,32 @@
 .dashboard-header {
   margin-left: 2px;
-  text-align: center;
   font-family: @brand-font-cisco-TT-Extra-Light;
-}
 
-.dashboard-header h4 {
-  padding-bottom: 0;
-}
-
-.dashboard-header .item {
-  margin: 0 20px;
-  padding: 10px 30px;
-  background-color: @brand-white;
-}
-
-.dashboard-header .header-stat {
-  font-size: 36px;
-}
-
-@media (max-width: @screen-sm-min) {
-  .dashboard-header {
-    padding: 20px 30px;
+  h4 {
+    margin-top: 5px;
+    padding-bottom: 0;
   }
-  .dashboard-header .item {
-    padding: 0;
+
+  .item {
+    padding: 10px 20px;
+    margin: 0 10px 10px 0;
+    background-color: @brand-white;
+  }
+
+  .header-stat {
+    font-size: 36px;
+  }
+
+  i {
+    float: left;
+    color: white;
+    padding: 15px;
+    font-size: 28px;
+    border-radius: 100px;
+    background: @gray-lighter;
+  }
+
+  .content {
+    padding-left: 80px;
   }
 }

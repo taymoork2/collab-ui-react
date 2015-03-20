@@ -16,30 +16,34 @@ angular.module('Hercules')
 
       var createEmptyServicesAggregate = function (services) {
         return _.reduce(services, function (serviceAggregate, service) {
-          serviceAggregate[service.type] = {
-            name: service.name,
-            icon: service.icon,
-            running: 0,
-            needs_attention: 0,
-            software_upgrades: 0
-          };
+          if (service.type != 'c_mgmt') {
+            serviceAggregate[service.type] = {
+              name: service.name,
+              icon: service.icon,
+              running: 0,
+              needs_attention: 0,
+              software_upgrades: 0
+            };
+          }
           return serviceAggregate;
         }, {});
       };
 
       var aggregateServiceStatus = function (clusterAggregate, cluster) {
         _.each(cluster.services, function (service) {
-          var allConnecorsDisabled = _.reduce(service.connectors, function (aggregateStatus, connector) {
-            return aggregateStatus && connector.state == 'disabled';
-          }, true);
-          if (!allConnecorsDisabled) {
-            if (service.needs_attention) {
-              clusterAggregate.services[service.service_type].needs_attention++;
-            } else {
-              clusterAggregate.services[service.service_type].running++;
-            }
-            if (service.not_approved_package) {
-              clusterAggregate.services[service.service_type].software_upgrades++;
+          if (service.service_type != 'c_mgmt') {
+            var allConnecorsDisabled = _.reduce(service.connectors, function (aggregateStatus, connector) {
+              return aggregateStatus && connector.state == 'disabled';
+            }, true);
+            if (!allConnecorsDisabled) {
+              if (service.needs_attention) {
+                clusterAggregate.services[service.service_type].needs_attention++;
+              } else {
+                clusterAggregate.services[service.service_type].running++;
+              }
+              if (service.not_approved_package) {
+                clusterAggregate.services[service.service_type].software_upgrades++;
+              }
             }
           }
         });

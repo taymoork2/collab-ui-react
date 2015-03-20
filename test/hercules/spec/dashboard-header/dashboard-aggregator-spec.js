@@ -165,11 +165,7 @@ describe('DashboardAggregator', function () {
     expect(calService.software_upgrades).toBe(1);
 
     var mgmtService = aggregate.services.c_mgmt;
-    expect(mgmtService.name).toBe('Fusion Management Service');
-    expect(mgmtService.icon).toBe('Management');
-    expect(mgmtService.running).toBe(1);
-    expect(mgmtService.needs_attention).toBe(1);
-    expect(mgmtService.software_upgrades).toBe(0);
+    expect(mgmtService).toBeFalsy();
   });
 
 });

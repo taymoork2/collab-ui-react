@@ -1,37 +1,36 @@
 <div>
   <h3 style="padding-left: 20px">Service Health</h3>
   <div class="dashboard-header row">
-    <div class="item col-sm-6 col-md-3" ng-repeat="(type, service) in serviceAggregates.services">
-      <hr class="hidden-sm hidden-md hidden-lg" />
-      <h4>
-        {{service.name}}
-      </h4>
-      <p>
-        <div class="header-stat">
-          {{service.running}}
+    <div class="col-sm-6" ng-repeat="(type, service) in serviceAggregates.services">
+      <div class="item">
+        <i class="icon icon-data" />
+        <div class="content clearfix">
+          <h4>{{service.name}}</h4>
+          <div>
+            <div>
+              <span ng-show="service.running == 1">
+                Running on {{service.running}} cluster
+              </span>
+              <span ng-hide="service.running == 1">
+                Running on {{service.running}} clusters
+              </span>
+            </div>
+            <!--
+            <div class="text-danger">
+              <span ng-show="service.needs_attention == 0">
+                &nbsp;
+              </span>
+              <span ng-show="service.needs_attention == 1">
+                {{service.needs_attention}} cluster needs attention
+              </span>
+              <span ng-show="service.needs_attention > 1">
+                {{service.needs_attention}} clusters need attention
+              </span>
+            </div>
+            -->
+          </div>
         </div>
-
-        <div>
-          <span ng-show="service.running == 1">
-            Running on {{service.running}} cluster
-          </span>
-          <span ng-hide="service.running == 1">
-            Running on {{service.running}} clusters
-          </span>
-        </div>
-
-        <div class="text-danger">
-          <span ng-show="service.needs_attention == 0">
-            &nbsp;
-          </span>
-          <span ng-show="service.needs_attention == 1">
-            {{service.needs_attention}} cluster needs attention
-          </span>
-          <span ng-show="service.needs_attention > 1">
-            {{service.needs_attention}} clusters need attention
-          </span>
-        </div>
-      </p>
+      </div>
     </div>
   </div>
 </div>
