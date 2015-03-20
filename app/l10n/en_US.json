@@ -901,7 +901,12 @@
   "webexUserSettings": {
     "userUpdateSuccess": "User privileges updated",
     "userUpdateError": "User privileges update failed",
-    "webexUserSettingsTab": "WebEx Proto"
+    "webexUserSettingsTab": "WebEx Proto",
+    "reload": "Try Again"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "Error reading user information",
+    "030001": "{{user}} has not yet been provisioned to this site. This process may take a moment."
   },
   "webexUserSettingsUserErrors": {
     "userDefaultError": "Error reading user information",

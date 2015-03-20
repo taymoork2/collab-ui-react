@@ -4,6 +4,7 @@
   angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', [
     '$scope',
     '$log',
+    '$translate',
     '$filter',
     '$stateParams',
     'WebExUserSettingsFact',
@@ -11,6 +12,7 @@
     function (
       $scope,
       $log,
+      $translate,
       $filter,
       $stateParams,
       WebExUserSettingsFact,
@@ -46,6 +48,7 @@
             currView.siteInfoHeaderJson = validateSiteInfoResult[0];
             currView.siteInfoJson = validateSiteInfoResult[1];
             currView.siteInfoErrReason = validateSiteInfoResult[2];
+            currView.userInfoErrId = validateUserInfoResult[3];
 
             var validateMeetingTypesInfoResult = WebExUserSettingsFact.validateXmlData(
               "Meeting Types Info",
@@ -59,7 +62,7 @@
             currView.meetingTypesErrReason = validateMeetingTypesInfoResult[2];
 
             if (
-              ("" === currView.userInfoErrReason) &&
+              ("" === currView.userInfoErrId) &&
               ("" === currView.siteInfoErrReason) &&
               ("" === currView.meetingTypesErrReason)
             ) {
@@ -72,10 +75,10 @@
               currView.viewReady = true;
               $("#webexUserSettingsPage").removeClass("hidden");
             } else { // xmlapi returns error
-              if ("Corresponding User not found" == currView.userInfoErrReason) {
-                // TODO
-                //   handle invalid user error
-                logMsg = funcName + ": " + "INVALID USER!!!";
+              var errorMessage = $translate.instant('webexUserSettingsUserErrors.' + currView.userInfoErrId);
+              $log.log("Error message: " + errorMessage);
+              if ("030001" == currView.userInfoErrId) {
+                logMsg = funcName + ": " + "Corresponding User not found!!!";
                 $log.log(logMsg);
               } else {
                 // TODO
