@@ -169,13 +169,13 @@ angular.module('Squared')
 
         Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
           if (data.success) {
-            if ($scope.rolesObj.form.$dirty) {
+            if ($scope.rolesObj.form.$dirty && $scope.currentUser) {
               var userData = {
                 'schemas': Config.scimSchemas,
                 'title': $scope.currentUser.title,
                 'name': {
-                  'givenName': $scope.currentUser.name.givenName,
-                  'familyName': $scope.currentUser.name.familyName
+                  'givenName': $scope.currentUser.name ? $scope.currentUser.name.givenName : '',
+                  'familyName': $scope.currentUser.name ? $scope.currentUser.name.familyName : ''
                 },
                 'displayName': $scope.currentUser.displayName,
               };
