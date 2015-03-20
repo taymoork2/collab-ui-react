@@ -2,8 +2,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$filter', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification', 'Orgservice', 'Authinfo',
-    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $filter, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo) {
+  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$translate', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification', 'Orgservice', 'Authinfo',
+    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo) {
 
       //Initialize variables
       $scope.load = true;
@@ -210,21 +210,24 @@ angular.module('Core')
           width: 70
         }, {
           field: 'name.givenName',
-          displayName: $filter('translate')('usersPage.firstnameHeader')
+          displayName: $translate.instant('usersPage.firstnameHeader')
         }, {
           field: 'name.familyName',
-          displayName: $filter('translate')('usersPage.lastnameHeader')
+          displayName: $translate.instant('usersPage.lastnameHeader')
+        }, {
+          field: 'displayName',
+          displayName: $translate.instant('usersPage.displayNameHeader')
         }, {
           field: 'userName',
-          displayName: $filter('translate')('usersPage.emailHeader')
+          displayName: $translate.instant('usersPage.emailHeader')
         }, {
           field: 'userStatus',
           cellFilter: 'userListFilter',
           sortable: false,
-          displayName: $filter('translate')('usersPage.status')
+          displayName: $translate.instant('usersPage.status')
         }, {
           field: 'action',
-          displayName: $filter('translate')('usersPage.actionHeader'),
+          displayName: $translate.instant('usersPage.actionHeader'),
           sortable: false,
           cellTemplate: actionsTemplate
         }]
@@ -249,6 +252,9 @@ angular.module('Core')
         if (newValue !== oldValue) {
           if ($scope.sortInfo) {
             switch ($scope.sortInfo.fields[0]) {
+            case 'displayName':
+              $scope.sort.by = 'displayName';
+              break;
             case 'userName':
               $scope.sort.by = 'userName';
               break;
@@ -341,14 +347,14 @@ angular.module('Core')
         Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
           if (data.success) {
             var successMessage = [];
-            successMessage.push($filter('translate')('profilePage.success'));
+            successMessage.push($translate.instant('profilePage.success'));
             Notification.notify(successMessage, 'success');
             angular.element('#btn-save').button('reset');
             $scope.user = data;
           } else {
             Log.debug('Update existing user failed. Status: ' + status);
             var errorMessage = [];
-            errorMessage.push($filter('translate')('profilePage.error'));
+            errorMessage.push($translate.instant('profilePage.error'));
             Notification.notify(errorMessage, 'error');
             angular.element('#btn-save').button('reset');
           }

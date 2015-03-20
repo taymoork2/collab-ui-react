@@ -15,6 +15,7 @@
     "entitle": "Entitle",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
+    "displayNameHeader": "Display Name",
     "emailHeader": "Email",
     "actionHeader": "Actions",
     "invite": "Send Invites",

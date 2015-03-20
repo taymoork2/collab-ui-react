@@ -37,14 +37,17 @@ describe('Org Entitlement flow', function () {
     utils.expectIsDisplayed(roles.rolesDetailsPanel);
     utils.expectIsDisplayed(roles.emailInput);
     utils.expectIsDisabled(roles.emailInput);
+    utils.expectIsDisplayed(roles.displayNameInput);
   });
 
-  it('should edit last name, roles & save', function () {
+  it('should edit last name and display name, roles & save', function () {
     roles.editLastName();
+    roles.editDisplayName();
     utils.click(roles.fullAdmin);
     utils.click(roles.saveButton);
 
     notifications.assertSuccess('User successfully updated.');
+    notifications.clearNotifications();
   });
 
   it('should reverse role change', function () {
@@ -52,8 +55,15 @@ describe('Org Entitlement flow', function () {
     utils.click(roles.saveButton);
 
     notifications.assertSuccess('User successfully updated.');
+    notifications.clearNotifications();
 
     utils.click(users.closeSidePanel);
+  });
+
+  it('should verify user name change', function () {
+    var user = roles.getCreatedUser();
+    utils.search(user);
+    utils.expectText(users.userListDisplayName, user);
   });
 
   it('should log out', function () {
