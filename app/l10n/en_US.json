@@ -908,10 +908,6 @@
     "userDefaultError": "Error reading user information",
     "030001": "{{user}} has not yet been provisioned to this site. This process may take a moment."
   },
-  "webexUserSettingsUserErrors": {
-    "userDefaultError": "Error reading user information",
-    "030001": "User not found in this WebEx site"
-  },
   "webexUserSettings2": {
     "webexUserSettings2Tab": "WebEx Proto2"
   },
