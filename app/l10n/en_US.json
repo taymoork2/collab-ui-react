@@ -910,7 +910,8 @@
     "030001": "{{user}} has not yet been provisioned to this site. This process may take a moment."
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "Advanced Settings"
   },
   "leaderBoard": {
     "actions": "Actions",

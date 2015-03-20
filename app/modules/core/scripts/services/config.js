@@ -111,6 +111,11 @@ angular.module('Core')
           prod: 'https://uss-integration.wbx2.com/'
         },
 
+        webexUrl: {
+          siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminHomePage&adminEmail=%s',
+          siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminEditUserPage&adminEmail=%s&userEmail=%s'
+        },
+
         scimSchemas: [
           'urn:scim:schemas:core:1.0',
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
@@ -478,6 +483,16 @@ angular.module('Core')
           } else {
             return this.utilizationServiceUrl.prod;
           }
+        },
+
+        getWebexAdvancedHomeUrl: function (siteURL, adminEmail) {
+          var params = [siteURL, adminEmail];
+          return Utils.sprintf(this.webexUrl.siteAdminHomeUrl, params);
+        },
+
+        getWebexAdvancedEditUrl: function (siteURL, adminEmail, userEmail) {
+          var params = [siteURL, adminEmail, userEmail];
+          return Utils.sprintf(this.webexUrl.siteAdminDeepUrl, params);
         }
 
       };
