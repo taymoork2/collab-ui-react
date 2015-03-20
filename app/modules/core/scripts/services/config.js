@@ -366,12 +366,20 @@ angular.module('Core')
         },
 
         getOauthLoginUrl: function () {
-          var params = [this.oauthUrl.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()]), this.getOauthServiceType()];
+          var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
+          var params = [
+            this.oauthUrl.oauth2Url,
+            this.oauthClientRegistration.id,
+            this.oauthClientRegistration.scope,
+            encodeURIComponent(acu),
+            this.getOauthServiceType()
+          ];
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
         getRedirectUrl: function () {
-          var params = [encodeURIComponent(this.adminClientUrl[this.getEnv()])];
+          var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
+          var params = [encodeURIComponent(acu)];
           return Utils.sprintf(this.oauthUrl.ciRedirectUrl, params);
         },
 
@@ -390,7 +398,8 @@ angular.module('Core')
         },
 
         getLogoutUrl: function () {
-          return this.logoutUrl + encodeURIComponent(this.adminClientUrl[this.getEnv()]);
+          var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
+          return this.logoutUrl + encodeURIComponent(acu);
         },
 
         getAdminPortalUrl: function () {
@@ -450,11 +459,11 @@ angular.module('Core')
         },
 
         getHerculesUrl: function () {
-          return this.herculesUrl[this.getEnv()];
+          return this.herculesUrl[this.getEnv()] || this.herculesUrl.prod;
         },
 
         getUssUrl: function () {
-          return this.ussUrl[this.getEnv()];
+          return this.ussUrl[this.getEnv()] || this.ussUrl.prod;
         },
 
         getDefaultEntitlements: function () {

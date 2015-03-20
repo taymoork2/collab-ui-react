@@ -48,6 +48,17 @@ describe('Config', function () {
             throw new Error("Expected " + fn + " in " + env + " to be '" + expected + "' but it was '" + actual + "'");
           }
         });
+
+        Config.getEnv = function () {
+          return 'foo-' + new Date().getTime().toString(16);
+        };
+        var conf = Config[fn](arg);
+        if (!conf) {
+          throw new Error("Expected " + fn + " to have a sensible default for unknown envs");
+        }
+        if (conf.indexOf('undefined') != -1) {
+          throw new Error("Expected " + fn + " to not have undefined parts for unknown envs. Got: " + conf);
+        }
       }
     };
   };
@@ -264,6 +275,14 @@ describe('Config', function () {
       development: 'https://hercules-integration.wbx2.com/',
       integration: 'https://hercules-integration.wbx2.com/',
       production: 'https://hercules-a.wbx2.com/'
+    });
+  });
+
+  it('should return correct USS url', function () {
+    whenCalling('getUssUrl').expectUrlToBe({
+      development: 'https://uss-integration.wbx2.com/',
+      integration: 'https://uss-integration.wbx2.com/',
+      production: 'https://uss-integration.wbx2.com/'
     });
   });
 
