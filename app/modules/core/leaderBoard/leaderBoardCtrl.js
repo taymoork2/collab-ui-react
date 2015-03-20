@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter',
-    function ($scope, Log, Orgservice, $filter) {
+  .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter', '$log',
+    function ($scope, Log, Orgservice, $filter, $log) {
 
       $scope.buckets = {
         messaging: {
@@ -61,12 +61,13 @@ angular.module('Core')
         });
       };
 
-      var init = function () {
-        //getBuckets();
+      $scope.init = function () {
         getLicenses();
       };
 
-      init();
+      $scope.$on('Userservice::updateUsers', function () {
+        getLicenses();
+      });
 
     }
   ])
