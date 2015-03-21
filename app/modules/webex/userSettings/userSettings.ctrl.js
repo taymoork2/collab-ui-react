@@ -19,8 +19,30 @@
       Notification
     ) {
 
+      /**
+       * If user does not have first and last names, use the email address as the display name
+       */
+      this.getGivenName = function () {
+        if (!$stateParams.currentUser.name) {
+          return $stateParams.currentUser.userName;
+        }
+        if ($stateParams.currentUser.name.givenName === "" && $stateParams.currentUser.name.familyName === "") {
+          return $stateParams.currentUser.userName;
+        }
+        return $stateParams.currentUser.name.givenName;
+      };
+
+      this.getFamilyName = function () {
+        if (!$stateParams.currentUser.name) {
+          return "";
+        }
+        return $stateParams.currentUser.name.familyName;
+      };
+
       this.getUserSettingsInfo = function () {
         var currView = this;
+
+        angular.element('#reloadBtn').button('loading'); //show spinning icon in "Try again" button
 
         WebExUserSettingsFact.getUserSettingsInfo().then(
           function getUserSettingsInfoSuccess(getInfoResult) {
@@ -87,6 +109,7 @@
                 $log.log(logMsg);
               }
             } // xmlapi returns error
+            angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
           }, // getUserSettingsInfoSuccess()
 
           function getUserSettingsInfoError(getInfoResult) {
@@ -95,6 +118,7 @@
 
             logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
             $log.log(logMsg);
+            angular.element('#reloadBtn').button('reset'); //Reset "try again button" to normal state
           } // getUserSettingsInfoError()
         ); // WebExUserSettingsFact.getUserSettingsInfo()
       }; // getUserSettingsInfo()

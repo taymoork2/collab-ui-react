@@ -15,6 +15,7 @@
     "entitle": "Entitle",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
+    "displayNameHeader": "Display Name",
     "emailHeader": "Email",
     "actionHeader": "Actions",
     "invite": "Send Invites",
@@ -906,10 +907,11 @@
   },
   "webexUserSettingsUserErrors": {
     "userDefaultError": "Error reading user information",
-    "030001": "{{user}} has not yet been provisioned to this site. This process may take a moment."
+    "030001": "{{givenName}} {{familyName}} has not yet been provisioned to this site. This process may take a moment."
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "Advanced Settings"
   },
   "leaderBoard": {
     "actions": "Actions",
