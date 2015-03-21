@@ -52,21 +52,21 @@
           <h3 style="padding-left: 20px">Expressway Clusters: {{clusters.length}}</h3>
           <div class="container-fluid grid" style="margin-right: -30px;">
             <div class="row" ng-repeat="cluster in clusters" ng-click="showClusterDetails(cluster)">
-              <div class="col-sm-4">
+              <div class="col-sm-4 col-xs-11">
                 <i class="icon icon-data icon-inverse-round" />
                 {{cluster.name}}
               </div>
-              <div class="col-sm-7">
+              <div class="col-sm-7 col-xs-1">
                 <div ng-show="cluster.needs_attention" class="red">
                   <i class="fa fa-circle" />
-                  Cluster needs attention
+                  <span class="hidden-xs">Cluster needs attention</span>
                 </div>
                 <div ng-hide="cluster.needs_attention" class="green">
                   <i class="fa fa-circle" />
-                  Running
+                  <span class="hidden-xs">Running</span>
                 </div>
               </div>
-              <div class="col-sm-1">
+              <div class="col-sm-1 hidden-xs">
                 <i class="icon icon-three-dots" />
               </div>
             </div>

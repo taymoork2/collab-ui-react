@@ -111,6 +111,11 @@ angular.module('Core')
           prod: 'https://uss-integration.wbx2.com/'
         },
 
+        webexUrl: {
+          siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminHomePage&adminEmail=%s',
+          siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminEditUserPage&adminEmail=%s&userEmail=%s'
+        },
+
         scimSchemas: [
           'urn:scim:schemas:core:1.0',
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
@@ -366,12 +371,20 @@ angular.module('Core')
         },
 
         getOauthLoginUrl: function () {
-          var params = [this.oauthUrl.oauth2Url, this.oauthClientRegistration.id, this.oauthClientRegistration.scope, encodeURIComponent(this.adminClientUrl[this.getEnv()]), this.getOauthServiceType()];
+          var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
+          var params = [
+            this.oauthUrl.oauth2Url,
+            this.oauthClientRegistration.id,
+            this.oauthClientRegistration.scope,
+            encodeURIComponent(acu),
+            this.getOauthServiceType()
+          ];
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
         getRedirectUrl: function () {
-          var params = [encodeURIComponent(this.adminClientUrl[this.getEnv()])];
+          var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
+          var params = [encodeURIComponent(acu)];
           return Utils.sprintf(this.oauthUrl.ciRedirectUrl, params);
         },
 
@@ -390,7 +403,8 @@ angular.module('Core')
         },
 
         getLogoutUrl: function () {
-          return this.logoutUrl + encodeURIComponent(this.adminClientUrl[this.getEnv()]);
+          var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
+          return this.logoutUrl + encodeURIComponent(acu);
         },
 
         getAdminPortalUrl: function () {
@@ -450,11 +464,11 @@ angular.module('Core')
         },
 
         getHerculesUrl: function () {
-          return this.herculesUrl[this.getEnv()];
+          return this.herculesUrl[this.getEnv()] || this.herculesUrl.prod;
         },
 
         getUssUrl: function () {
-          return this.ussUrl[this.getEnv()];
+          return this.ussUrl[this.getEnv()] || this.ussUrl.prod;
         },
 
         getDefaultEntitlements: function () {
@@ -469,6 +483,16 @@ angular.module('Core')
           } else {
             return this.utilizationServiceUrl.prod;
           }
+        },
+
+        getWebexAdvancedHomeUrl: function (siteURL, adminEmail) {
+          var params = [siteURL, adminEmail];
+          return Utils.sprintf(this.webexUrl.siteAdminHomeUrl, params);
+        },
+
+        getWebexAdvancedEditUrl: function (siteURL, adminEmail, userEmail) {
+          var params = [siteURL, adminEmail, userEmail];
+          return Utils.sprintf(this.webexUrl.siteAdminDeepUrl, params);
         }
 
       };

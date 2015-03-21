@@ -69,6 +69,7 @@ angular.module('Core')
                     data.success = true;
                     callback(data, status);
                   }
+                  $rootScope.$broadcast('Userservice::updateUsers');
                 }
               })
               .error(function (data, status) {

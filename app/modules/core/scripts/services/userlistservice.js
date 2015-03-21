@@ -81,30 +81,6 @@ angular.module('Core')
             });
         },
 
-        getCiscoRep: function (callback) {
-          var ciscoRepUrl = Utils.sprintf(Config.scimUrl, [ciscoOrgId]);
-          ciscoRepUrl = ciscoRepUrl + '?filter=managedOrgs%5BorgId%20eq%20%22' + Authinfo.getOrgId() + '%22%5D';
-
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-          $http.get(ciscoRepUrl)
-            .success(function (data, status) {
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-              Auth.handleStatus(status, description);
-            });
-
-        },
-
         exportCSV: function (scope) {
           var deferred = $q.defer();
           var users = [];

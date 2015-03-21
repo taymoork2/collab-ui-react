@@ -11,9 +11,6 @@ angular.module('Core')
 
       $scope.profileHelpUrl = 'https://support.ciscospark.com';
 
-      // hold partner admin object
-      $scope.partner = null;
-
       // radio button values
       $scope.problemSiteInfo = {
         cisco: 0,
@@ -48,7 +45,8 @@ angular.module('Core')
 
       // ci api calls will go in here
       $scope.init = function () {
-        $scope.rep = null;
+        $scope.rep = null; // cs admin rep
+        $scope.partner = null;
         $scope.radioModified = false;
 
         $scope.companyName = Authinfo.getOrgName();
@@ -59,18 +57,16 @@ angular.module('Core')
         $scope.supportText = '';
         $scope.helpUrl = '';
 
-        if (!$scope.isPartner) {
-          UserListService.listPartners(Authinfo.getOrgId(), function (data) {
-            $scope.partner = data.partners[0];
-          });
-        }
-
-        /* UNCOMMENT ONCE CISCO IS A PARTNER */
-        // UserListService.getCiscoRep(function(data, status){
-        //   if(data.success){
-        //   } else{
-        //   }
-        // });
+        UserListService.listPartners(Authinfo.getOrgId(), function (data) {
+          for (var partner in data.partners) {
+            var currentPartner = data.partners[partner];
+            if (!$scope.isPartner && currentPartner.userName.indexOf('@cisco.com') === -1) {
+              $scope.partner = currentPartner;
+            } else if (currentPartner.userName.indexOf('@cisco.com') > -1) {
+              $scope.rep = currentPartner;
+            }
+          }
+        });
 
         Orgservice.getOrg(function (data, status) {
           if (data.success) {

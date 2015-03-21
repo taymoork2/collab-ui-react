@@ -3,8 +3,8 @@
 /* global _ */
 
 angular.module('Hercules')
-  .controller('DashboardController', ['$scope', '$interval', '$http', '$modal', 'ConnectorService', 'Authinfo',
-    function ($scope, $interval, $http, $modal, service, Authinfo) {
+  .controller('DashboardController', ['$scope', '$interval', '$http', '$modal', 'ConnectorService', 'Authinfo', '$log',
+    function ($scope, $interval, $http, $modal, service, Authinfo, $log) {
       $scope.loading = true;
       $scope.inflight = false;
       $scope._promise = true;
@@ -13,6 +13,7 @@ angular.module('Hercules')
       $scope.pollHasFailed = false;
       $scope.deleteHostInflight = false;
       $scope.fusionUCEnabled = Authinfo.isFusionUC();
+      $log.log('We miss you Stig (and console.log) :)');
 
       $scope._poll = function () {
         if ($scope._promise) {

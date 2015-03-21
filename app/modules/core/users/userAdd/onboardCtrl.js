@@ -498,6 +498,7 @@ angular.module('Core')
               isComplete = false;
             }
             $scope.results.resultList.push(userResult);
+            $scope.$dismiss();
           }
 
           //concatenating the results in an array of strings for notify function

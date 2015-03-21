@@ -8,13 +8,17 @@
     '$stateParams',
     'WebExUserSettingsFact',
     'Notification',
+    'Authinfo',
+    'Config',
     function (
       $scope,
       $log,
       $filter,
       $stateParams,
       WebExUserSettingsFact,
-      Notification
+      Notification,
+      Authinfo,
+      Config
     ) {
 
       this.getUserSettingsInfo = function () {
@@ -147,6 +151,9 @@
       this.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
 
       this.getUserSettingsInfo();
+
+      $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(webexSiteName, Authinfo.getUserName(), $stateParams.currentUser.userName);
+
     } // WebExUserSettings2Ctrl()
   ]);
 })();
