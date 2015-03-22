@@ -35,7 +35,7 @@ angular.module('WebExUserSettings')
 
           optimizeBandwidthUsage: {
             id: "optimizeBandwidthUsage",
-            label: "Optimized bandwidth usage for attendees within the same network (Note 1)",
+            label: "Optimized bandwidth usage for attendees within the same network **",
             isSiteEnabled: true, // TODO
             value: false // TODO
           }
@@ -60,13 +60,13 @@ angular.module('WebExUserSettings')
 
           hiQualVideo: {
             id: "hiQualVideo",
-            label: "Turn on high-quality video (360p) (Note 1)",
+            label: "Turn on high-quality video (360p) **",
             isSiteEnabled: true, // TODO
             value: false, // TODO
 
             hiDefVideo: {
               id: "hiDefVideo",
-              label: "Turn on high-definition video video (720p) (Note 1)", // TODO
+              label: "Turn on high-definition video video (720p) **", // TODO
               value: false // TODO
             }
           }
@@ -105,20 +105,20 @@ angular.module('WebExUserSettings')
 
             teleconfViaGlobalCallin: {
               id: "teleconfViaGlobalCallin",
-              label: "Allow access to teleconference via global call-in numbers (Note 2)",
+              label: "Allow access to teleconference via global call-in numbers *",
               isSiteEnabled: true, // TODO
               value: false
             },
 
             cliAuth: {
               id: "cliAuth",
-              label: "Enable teleconferencing CLI authentication (Note 1)",
+              label: "Enable teleconferencing CLI authentication **",
               isSiteEnabled: true, // TODO
               value: false, // TODO
 
               reqPinEnabled: {
                 id: "reqPinEnabled",
-                label: "Host and attendees must have PIN enabled (Note 1)",
+                label: "Host and attendees must have PIN enabled **",
                 value: false // TODO
               }
             }
@@ -139,7 +139,7 @@ angular.module('WebExUserSettings')
 
           otherTeleconfServices: {
             id: "otherTeleconfServices",
-            label: "Other teleconference services (Note 2)",
+            label: "Other teleconference services *",
             isSiteEnabled: true, // TODO
             value: false
           },
