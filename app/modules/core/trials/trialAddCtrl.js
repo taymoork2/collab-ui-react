@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config) {
+  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config, LogMetricsService) {
     var vm = this;
 
     vm.customerOrgId = null;
@@ -56,6 +56,7 @@
     }
 
     function gotoAddNumber() {
+      LogMetricsService.logMetrics('In trial DID page', LogMetricsService.getEventType('trialDidPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
       $state.go('trialAdd.addNumbers');
     }
 

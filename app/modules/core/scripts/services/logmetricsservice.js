@@ -1,7 +1,7 @@
 'use strict';
 /* global moment */
 
-angular.module('Squared')
+angular.module('Core')
   .service('LogMetricsService', ['$rootScope', '$http', 'Authinfo', 'Config', 'Log', 'Storage', 'Auth',
     function ($rootScope, $http, Authinfo, Config, Log, Storage, Auth) {
 
@@ -17,11 +17,18 @@ angular.module('Squared')
       return {
         eventAction: {
           buttonClick: 'BUTTONCLICK',
-          pageLoad: 'PAGELOAD'
+          pageLoad: 'PAGELOAD',
+          keyInputs: 'KEYINPUTS'
         },
 
         eventType: {
-          inviteUsers: 'INVITEUSERS'
+          inviteUsers: 'INVITEUSERS',
+          partnerLogin: 'PARTNERLOGIN',
+          partnerCustomersPage: 'PARTNERCUSTOMERSPAGE',
+          trialPage: 'TRIALPAGE',
+          trialDidPage: 'TRIALDIDPAGE',
+          trialDidEntered: 'TRIALDIDENTERED',
+          trialStarted: 'TRIALSTARTED'
         },
 
         getEventAction: function (eAction) {
@@ -49,15 +56,7 @@ angular.module('Squared')
             Log.debug(logsMetricEvent);
 
             if (Config.isProd()) {
-              $http.post(metricUrl, logsMetricEvent)
-                .success(function (data, status) {
-                  data.success = true;
-                  data.status = status;
-                })
-                .error(function (data, status) {
-                  data.success = false;
-                  data.status = status;
-                });
+              $http.post(metricUrl, logsMetricEvent);
             }
           } else {
             Log.error('Invalid eventAction/eventType.');

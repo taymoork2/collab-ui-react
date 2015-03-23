@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams',
-    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams) {
+  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService',
+    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService) {
 
       var loadingDelay = 2000;
       var logoutDelay = 5000;
@@ -41,6 +41,10 @@ angular.module('Core')
                 state = SessionStorage.pop(storedState);
                 params = SessionStorage.popObject(storedParams);
               } else if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
+                if (Auth.isLoginMarked()) {
+                  LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+                  Auth.clearLoginMarker();
+                }
                 state = 'partneroverview';
               }
               $rootScope.services = Authinfo.getServices();

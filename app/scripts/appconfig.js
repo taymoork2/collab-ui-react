@@ -693,7 +693,8 @@ angular
           parent: 'modal',
           url: '/didadd',
           params: {
-            currentOrg: {}
+            currentOrg: {},
+            editMode: true
           },
           views: {
             'modal@': {

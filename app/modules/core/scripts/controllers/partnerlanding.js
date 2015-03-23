@@ -2,9 +2,9 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', 'ExternalNumberPool',
+  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService',
 
-    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, ExternalNumberPool) {
+    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, ExternalNumberPool, LogMetricsService) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -24,6 +24,7 @@ angular.module('Core')
       $scope.isCustomerPartner = Authinfo.isCustomerPartner;
 
       $scope.openAddTrialModal = function () {
+        LogMetricsService.logMetrics('In trial page', LogMetricsService.getEventType('trialPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
         $state.go('trialAdd.info').then(function () {
           $state.modal.result.then(function () {
             getTrialsList();
@@ -493,5 +494,8 @@ angular.module('Core')
         return angular.isUndefined(license) || license === null;
       };
 
+      if ($state.current.name === "partnercustomers.list") {
+        LogMetricsService.logMetrics('Partner in customers page', LogMetricsService.getEventType('partnerCustomersPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+      }
     }
   ]);

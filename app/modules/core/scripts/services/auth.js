@@ -11,6 +11,8 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     oauthUrl: Config.oauthUrl.oauth2Url
   };
 
+  var loginMarker = false;
+
   auth.getAccount = function (org) {
     var $http = $injector.get('$http');
     var accountUrl = Config.getAdminServiceUrl();
@@ -103,6 +105,12 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
         }
       })
       .success(function (data) {
+        // This flow happens before the login controller is engaged and
+        // login controller would not know that the admin logged in
+        // without this marker. If there is a better way to check this
+        // information from the login controller in the future, this
+        // can be changed.
+        loginMarker = true;
         deferred.resolve(data);
       })
       .error(function (data, status) {
@@ -182,6 +190,14 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
 
   auth.redirectToLogin = function () {
     $window.location.href = Config.getOauthLoginUrl();
+  };
+
+  auth.isLoginMarked = function () {
+    return loginMarker;
+  };
+
+  auth.clearLoginMarker = function () {
+    loginMarker = false;
   };
 
   return auth;

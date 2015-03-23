@@ -14,9 +14,12 @@ describe('Service: Trial Service', function () {
 
   var Auth = jasmine.createSpyObj('Auth', ['handleStatus']);
 
+  var LogMetricsService = jasmine.createSpyObj('LogMetricsService', ['getEventType', 'getEventAction', 'logMetrics']);
+
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
     $provide.value("Auth", Auth);
+    $provide.value("LogMetricsService", LogMetricsService);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _TrialService_, _Config_) {
@@ -40,6 +43,7 @@ describe('Service: Trial Service', function () {
       $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(trialAddResponse);
       TrialService.startTrial('', '', '', '', '', ['COLLAB']).then(function (response) {
         expect(response.data).toEqual(trialAddResponse);
+        expect(LogMetricsService.logMetrics).toHaveBeenCalled();
       });
       $httpBackend.flush();
     });

@@ -9,6 +9,8 @@
 
   function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config) {
     var vm = this;
+    var firstValidDid = false;
+    var editMode = false;
     vm.invalidcount = 0;
     vm.submitBtnStatus = false;
     vm.existCount = 0;
@@ -68,6 +70,11 @@
         if (!validateDID(e.attrs.value)) {
           angular.element(e.relatedTarget).addClass('invalid');
           vm.invalidcount++;
+        } else {
+          if (!editMode && !firstValidDid) {
+            firstValidDid = true;
+            LogMetricsService.logMetrics('First valid DID number entered', LogMetricsService.getEventType('trialDidEntered'), LogMetricsService.getEventAction('keyInputs'), 200, moment(), 1);
+          }
         }
         vm.submitBtnStatus = vm.checkForInvalidTokens();
       },
@@ -98,6 +105,11 @@
     vm.backtoStartTrial = backtoStartTrial;
     vm.backtoEditTrial = backtoEditTrial;
     vm.currentOrg = $stateParams.currentOrg;
+    if ($stateParams.editMode === undefined || $stateParams.editMode === null) {
+      editMode = false;
+    } else {
+      editMode = $stateParams.editMode;
+    }
     ////////////
 
     function validateDID(input) {

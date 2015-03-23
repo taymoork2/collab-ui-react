@@ -5,7 +5,7 @@
     .factory('TrialService', TrialService);
 
   /* @ngInject */
-  function TrialService($http, $rootScope, Config, Authinfo, Auth) {
+  function TrialService($http, $rootScope, Config, Authinfo, Auth, LogMetricsService) {
 
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -55,7 +55,13 @@
         });
       }
 
-      return $http.post(trialsUrl, trialData);
+      return $http.post(trialsUrl, trialData)
+        .success(function (data, status) {
+          LogMetricsService.logMetrics('Start Trial', LogMetricsService.getEventType('trialStarted'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1);
+        })
+        .error(function (data, status) {
+          LogMetricsService.logMetrics('Start Trial', LogMetricsService.getEventType('trialStarted'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1);
+        });
     }
   }
 })();
