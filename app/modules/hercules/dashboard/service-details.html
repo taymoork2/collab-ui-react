@@ -1,0 +1,85 @@
+<cs-sp-container>
+
+  <cs-sp-section>
+    <div class="section-name" style="padding: 15px 0;">
+      {{service.display_name}}
+    </div>
+
+    <!-- connectors -->
+    <div ng-repeat="connector in service.connectors" class="list">
+      <div ng-class="connector.state">
+        <i class="fa fa-circle" />
+        <span>{{connector.host.host_name}}</span>
+        <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
+      </div>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section>
+
+    <!-- connectors -->
+    <div ng-repeat="connector in service.connectors">
+
+      <!-- connector error -->
+      <div style="padding: 15px 0 5px 0;" class="clearfix" ng-repeat="alarm in connector.deduced_alarms">
+        <span style="color: #f05d3b">{{connector.host.host_name}}</span>
+        <span>is pending software upgrade from {{connector.version}} to {{alarm.expected_version}}.</span>
+      </div>
+
+      <!-- connector alarms -->
+      <div ng-show="{{connector.alarms.length}}">
+        <div class="clearfix" style="padding: 15px 0 5px 0; font-weight: bold;">
+          <span style="color: #f05d3b">{{connector.host.host_name}}</span>
+          <span ng-show="connector.alarms.length == 1">has reported {{connector.alarms.length}} alarm:</span>
+          <span ng-hide="connector.alarms.length == 1">has reported {{connector.alarms.length}} alarms:</span>
+        </div>
+
+        <div ng-repeat="alarm in connector.alarms" style="padding-bottom: 5px;" class="clearfix">
+          <span style="color: #f05d3b; text-transform: capitalize;">{{alarm.severity}}:</span>
+          <span>{{alarm.title}}.</span>
+          <span>{{alarm.description}}</span>
+        </div>
+
+        <div style="padding-bottom: 5px">
+          Manage the alarms in the <a href="https://{{connector.host.host_name}}/alarms" target="_blank">alarms page</a>.
+        </div>
+      </div>
+    </div>
+  </cs-sp-section>
+
+  <!-- sw upgrade -->
+  <cs-sp-section ng-show="service.software_upgrade_available">
+    <div class="section-name" style="padding: 15px 0;">
+      Software Upgrade
+    </div>
+
+    <div ng-show="service.installed">
+      <!-- sw update for existing service -->
+        <div style="padding-bottom: 5px" class="clearfix">
+          <span>A software update is available.</span>
+          <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
+          <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
+        </div>
+        <div style="padding-bottom: 5px">
+          <hercules-upgrade-button
+            cluster-id="{{cluster.id}}"
+            service-type="{{service.service_type}}",
+            button-text="Upgrade Now"
+            />
+        </div>
+    </div>
+
+    <div ng-show="!service.installed && service.install_available">
+      <!-- install the new service -->
+      <div style="padding-bottom: 5px">
+        <hercules-upgrade-button
+          cluster-id="{{cluster.id}}"
+          service-type="{{service.service_type}}",
+          button-text="Install Now"
+          />
+      </div>
+    </div>
+
+  </cs-sp-section>
+
+</cs-sp-container>

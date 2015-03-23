@@ -1,179 +1,62 @@
-<cs-sp-header>
-  <div class="header-image">
-    <div style="font-size: 36px; padding-top: 14px;" class="user-img">
-      <i class="icon icon-data" />
-    </div>
-  </div>
+<div ui-view="header"></div>
 
-  <div class="header-info">
-    <div class="header-info-wrap">
-      <div class="header-title">
-        {{cluster.name}}
-      </div>
-      <div class="header-sub-info">
-        <span ng-show="{{!cluster.needs_attention && cluster.software_upgrade_available}}" style="color: #00B29D;">
-          Software Upgrades Available
-        </span>
-        <span ng-show="{{cluster.needs_attention}}" style="color: #f05d3b;">
-          Cluster Needs Attention
-        </span>
-      </div>
-    </div>
-  </div>
-</cs-sp-header>
 <cs-sp-container>
 
-  <!-- old hosts stuff -->
+  <!-- cluster overview -->
   <cs-sp-section>
     <div class="sw-upgrade">
       <span style="font-size: xs;">
-        <span>This cluster consists of {{cluster.hosts.length}} {{cluster.hosts.length == 1 ? 'host' : 'hosts'}}:</span>
-        <span ng-repeat="host in cluster.hosts">
-          <a href="https://{{host.host_name}}" target="_blank">
-            {{host.host_name}}
-          </a>
-          <span ng-hide="$last">|</span>
-        </span>
+        This cluster consists of {{cluster.hosts.length}} {{cluster.hosts.length == 1 ? 'host' : 'hosts'}}.
       </span>
-      <div style="padding-top: 5px" class="clearfix" ng-repeat="host in cluster.hosts | filter: { offline: true }">
-        <span style="color: #f05d3b">{{host.host_name}}</span>
-        <span translate="{{'hercules.status.offline'}}" />
-        <a href>
-          <i class="icon icon-close" ng-click="toggleEdit(host.host_name)" />
-        </a>
-        <div style="margin-top: 5px" ng-show="host.host_name == editingHost">
-          <button ng-disabled="deleteHostInflight" class="btn btn-danger btn-sm" ng-click="deleteHost(cluster.id, host.serial)">
-            <span ng-hide="deleteHostInflight">
-              Delete {{host.host_name}}?
-            </span>
-            <span ng-show="deleteHostInflight">
-              <i class="icon icon-spinner icon-spin" />
-            </span>
-          </button>
-        </div>
-      </div>
     </div>
   </cs-sp-section>
 
-  <!--
+  <!-- hosts -->
   <cs-sp-section>
-    <a href="#" style="padding-top: 1.4rem; display: block;">
+    <a ui-sref="cluster-details.hosts" style="padding-top: 1.4rem; display: block;">
       All hosts in this cluster
       <i class="icon icon-chevron-right pull-right" />
     </a>
   </cs-sp-section>
-  -->
 
   <!-- old services stuff -->
   <cs-sp-section>
+    <div class="section-name" style="padding: 15px 0;">
+      Connectors
+    </div>
     <div>
       <div class="sw-upgrade clearfix">
-        <div ng-repeat="service in cluster.services">
-          <div class="col-md-12 clearfix">
-            <h4 class="header pull-left">
-              <span class="clearfix" ng-show="{{service.needs_attention && service.running_hosts}}">
-                {{service.display_name}} needs attention
-              </span>
-              <span class="clearfix" ng-show="{{service.needs_attention && !service.running_hosts}}">
-                {{service.display_name}} is not running
-              </span>
-              <span ng-show="{{!service.needs_attention}}">
-                <span class="clearfix" ng-show="{{!service.is_disabled && service.installed}}">
-                  {{service.display_name}} is running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}
-                </span>
-                <span class="clearfix" ng-show="{{!service.is_disabled && !service.installed && !service.install_available}}">
-                  {{service.display_name}} is pending installation
-                </span>
-                <span class="clearfix" ng-show="{{!service.is_disabled && !service.installed && service.install_available}}">
-                  {{service.display_name}} is not installed
-                </span>
-                <span class="clearfix" ng-show="{{service.is_disabled}}" style="opacity: 0.5">
-                  {{service.display_name}} is disabled
-                </span>
-              </span>
-            </h4>
-          </div>
 
-          <div class="col-md-12">
+        <div ng-repeat="service in cluster.services" class="list">
+          <a ui-sref="cluster-details.service({service: service})" style="padding-bottom: 15px; display: block;" ng-class="service.needs_attention ? 'needs_attention' : (service.is_disabled || !service.running_hosts) ? 'disabled' : 'running'">
+            <i class="fa fa-circle" style="padding-right: 10px;" />
+            <span>{{service.display_name}}</span>
+            <i class="icon icon-chevron-right pull-right" />
+            <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
 
-            <!-- connectors -->
-            <div class="connector-info-item" ng-repeat="connector in service.connectors">
-              <!-- connector status -->
-              <div style="padding-bottom: 5px" class="clearfix" ng-show="{{connector.state != 'running' && connector.state != 'disabled' && connector.state != 'offline'}}">
-                <span style="color: #f05d3b">{{connector.host.host_name}}</span>
-                <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}" />
-              </div>
-
-              <!-- connector deduced error -->
-              <div style="padding-bottom: 5px" class="clearfix" ng-repeat="alarm in connector.deduced_alarms">
-                <span style="color: #f05d3b">{{connector.host.host_name}}</span>
-                <span>is pending software upgrade from {{connector.version}} to {{alarm.expected_version}}.</span>
-              </div>
-
-              <!-- connector alarms -->
-              <div ng-show="{{connector.alarms.length}}">
-                <div class="clearfix" style="padding-bottom: 5px">
-                  <span style="color: #f05d3b">{{connector.host.host_name}}</span>
-                  <span ng-show="connector.alarms.length == 1">has reported {{connector.alarms.length}} alarm</span>
-                  <span ng-hide="connector.alarms.length == 1">has reported {{connector.alarms.length}} alarms</span>
-                  <a href ng-click="toggleAlarms(cluster.id, service.service_type, connector.host.host_name)">
-                    <span ng-show="visibleAlarm.clusterId == cluster.id && visibleAlarm.serviceType == service.service_type && visibleAlarm.hostName == connector.host.host_name">
-                      <i class="icon icon-chevron-up" />
+              <span ng-switch="service.is_disabled">
+                <span ng-switch-when="true">
+                  Disabled
+                </span>
+                <span ng-switch-default>
+                  <span ng-switch="service.needs_attention">
+                    <span ng-switch-when="true">
+                      <span ng-show="{{service.running_hosts}}">Needs attention</span>
+                      <span ng-show="{{!service.running_hosts}}">Is not running</span>
                     </span>
-                    <span ng-hide="visibleAlarm.clusterId == cluster.id && visibleAlarm.serviceType == service.service_type">
-                      <i class="icon icon-chevron-down" />
+                    <span ng-switch-default>
+                      <span ng-show="{{service.installed}}">Running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}</span>
+                      <span ng-show="{{!service.installed && !service.install_available}}">Pending installation</span>
+                      <span ng-show="{{!service.installed && service.install_available}}">Not installed</span>
                     </span>
-                  </a>
-                </div>
-
-                <div style="padding-left: 20px"  ng-show="visibleAlarm.clusterId == cluster.id && visibleAlarm.serviceType == service.service_type && visibleAlarm.hostName == connector.host.host_name">
-                  <div ng-repeat="alarm in connector.alarms" style="padding-bottom: 5px;" class="clearfix">
-                    <span style="color: #f05d3b; text-transform: capitalize;">{{alarm.severity}}:</span>
-                    <span>{{alarm.title}}.</span>
-                    <span>{{alarm.description}}</span>
-                  </div>
-                  <div style="padding-bottom: 5px">
-                    Manage the alarms in the <a href="https://{{connector.host.host_name}}/alarms" target="_blank">alarms page</a>.
-                  </div>
-                </div>
-              </div>
+                  </span>
+                </span>
+              </span>
             </div>
-
-            <!-- sw upgrade -->
-            <div class="connector-info-item" ng-show="service.software_upgrade_available">
-              <div ng-show="service.installed">
-                <!-- sw update for existing service -->
-                  <div style="padding-bottom: 5px" class="clearfix">
-                    <span>A software update is available.</span>
-                    <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
-                    <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
-                  </div>
-                  <div style="padding-bottom: 5px">
-                    <hercules-upgrade-button
-                      cluster-id="{{cluster.id}}"
-                      service-type="{{service.service_type}}",
-                      button-text="Upgrade Now"
-                      />
-                  </div>
-              </div>
-
-              <div ng-show="!service.installed && service.install_available">
-                <!-- install the new service -->
-                <div style="padding-bottom: 5px">
-                  <hercules-upgrade-button
-                    cluster-id="{{cluster.id}}"
-                    service-type="{{service.service_type}}",
-                    button-text="Install Now"
-                    />
-                </div>
-              </div>
-
-            </div>
-
-          </div>
+          </a>
         </div>
-      </div>
 
+      </div>
     </div>
   </cs-sp-section>
 </cs-sp-container>

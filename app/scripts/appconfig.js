@@ -694,14 +694,14 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('fusion', {
-          url: '/fusion',
+        .state('fusion-old', {
+          url: '/fusion-old',
           templateUrl: 'modules/hercules/dashboard/dashboard.html',
           controller: 'DashboardController',
           parent: 'main'
         })
-        .state('fusion-next', {
-          url: '/fusion-next',
+        .state('fusion', {
+          url: '/fusion',
           templateUrl: 'modules/hercules/dashboard/dashboard-next.html',
           controller: 'DashboardNextController',
           parent: 'main'
@@ -712,6 +712,9 @@ angular
             'sidepanel@': {
               controller: 'ClusterDetailsController',
               templateUrl: 'modules/hercules/dashboard/cluster-details.html'
+            },
+            'header@cluster-details': {
+              templateUrl: 'modules/hercules/dashboard/cluster-header.html'
             }
           },
           data: {
@@ -719,6 +722,23 @@ angular
           },
           params: {
             cluster: {}
+          }
+        })
+        .state('cluster-details.hosts', {
+          templateUrl: 'modules/hercules/dashboard/host-details.html',
+          controller: 'HostDetailsController',
+          data: {
+            displayName: 'Hosts'
+          }
+        })
+        .state('cluster-details.service', {
+          templateUrl: 'modules/hercules/dashboard/service-details.html',
+          controller: 'ServiceDetailsController',
+          data: {
+            displayName: 'Service'
+          },
+          params: {
+            service: {}
           }
         });
     }

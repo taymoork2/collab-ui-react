@@ -9,7 +9,6 @@ angular.module('Hercules')
       $scope.inflight = false;
       $scope._promise = true;
       $scope.panelStates = {};
-      $scope.visibleAlarm = {};
       $scope.pollHasFailed = false;
       $scope.deleteHostInflight = false;
       $scope.fusionUCEnabled = Authinfo.isFusionUC();
@@ -77,18 +76,6 @@ angular.module('Hercules')
             $scope.deleteHostInflight = false;
           }, true);
         });
-      };
-
-      $scope.toggleAlarms = function (clusterId, serviceType, hostName) {
-        if ($scope.visibleAlarm.clusterId == clusterId && $scope.visibleAlarm.serviceType == serviceType && $scope.visibleAlarm.hostName == hostName) {
-          $scope.visibleAlarm = {};
-        } else {
-          $scope.visibleAlarm = {
-            clusterId: clusterId,
-            serviceType: serviceType,
-            hostName: hostName
-          };
-        }
       };
 
       $scope.showNotificationConfigDialog = function () {
