@@ -1,13 +1,13 @@
 <h3 translate='ssoModal.importMetadataTitle'></h3>
 <div id="importMetaDiv">
   <p translate="ssoModal.importMetadataDesc"></p>
-  <div id="importFileDiv">
+  <div id="importFileDiv" class="form-inline">
     <span translate="ssoModal.IdPFileLabel"></span>
     <input type="file" accept="text/xml" id="fileToUploadTextHolder" class="fileholder" onchange="angular.element(this).scope().setFile(this)"/>
-    <input type="text" class="fileholder" id="fileToUploadText" placeholder="{{'ssoModal.chooseFilePlaceHolder' | translate}}" ng-model="filename" disabled/>
-    <input type="file" accept="text/xml" id="fileToUploadBtnHolder" class="btn btn-primary right" onchange="angular.element(this).scope().setFile(this)"/>
-    <button class="btn btn-primary" id="fileToUploadBtn"><span translate="ssoModal.browseBtn"></span></button>
-    <button class="btn btn-primary" ng-disabled="!(filename)" ng-click="importRemoteIdp()"><span translate="ssoModal.importBtn"></span></button>
+    <input type="text" class="fileholder form-control" id="fileToUploadText" placeholder="{{'ssoModal.chooseFilePlaceHolder' | translate}}" ng-model="filename" disabled/>
+    <input type="file" accept="text/xml" id="fileToUploadBtnHolder" class="btn btn-default right" onchange="angular.element(this).scope().setFile(this)"/>
+    <button class="btn btn-default" id="fileToUploadBtn"><span translate="ssoModal.browseBtn"></span></button>
+    <button class="btn btn-info" ng-disabled="!(filename)" ng-click="importRemoteIdp()"><span translate="ssoModal.importBtn"></span></button>
   </div>
   <p translate="ssoModal.importMetadataNote"></p>
 </div>

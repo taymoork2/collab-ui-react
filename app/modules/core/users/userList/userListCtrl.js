@@ -75,6 +75,14 @@ angular.module('Core')
         return false;
       };
 
+      // if the side panel is closing unselect the user
+      $rootScope.$on('$stateChangeSuccess', function () {
+        if ($state.includes('users.list')) {
+          $scope.currentUser = null;
+          $scope.gridOptions.$gridScope.toggleSelectAll(false, true);
+        }
+      });
+
       var getUserList = function (startAt) {
 
         //clear currentUser if a new search begins
