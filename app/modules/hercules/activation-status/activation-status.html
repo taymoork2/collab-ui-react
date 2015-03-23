@@ -22,7 +22,7 @@
             <li ng-repeat="status in activationStatus.userStatuses">
               <span translate="hercules.serviceNames.{{status.serviceId}}"></span>:
               <span translate="hercules.activationStatus.{{getStatus(status)}}"></span>
-              <span>{{status.description}}</span>
+              <span ng-show="status.description && status.state == 'error'"><br>{{status.description.defaultMessage}}</span>
             </li>
           </ul>
           <ul ng-hide="activationStatus.userStatuses">
