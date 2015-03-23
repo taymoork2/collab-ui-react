@@ -301,7 +301,13 @@ angular.module('Core')
           blue: '#1EA7D1',
           red: '#F46315',
           yellow: '#EBC31C',
-          green: '#50D71D'
+          green: '#50D71D',
+          brandSuccessDark: '#6ab140',
+          brandSuccessLight: '#99cf78',
+          brandWhite: '#fff',
+          grayDarkest: '#444',
+          grayDarker: '#666',
+          grayLight: '#ccc'
         },
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],

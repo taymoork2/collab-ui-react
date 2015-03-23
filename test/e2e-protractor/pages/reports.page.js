@@ -26,14 +26,18 @@ var ReportsPage = function () {
   // partner reports
   this.pageTitle = element(by.cssContainingText('span', 'Reports'));
   this.timeSelect = element(by.id('timeFilter'));
-  this.serviceSelect = element(by.id('serviceFilter'));
   this.customerSelect = element(by.id('customerFilter'));
-  this.engagementRefreshDiv = element(by.id('engagementRefreshDiv'));
+  this.noData = element(by.css('.no-data-center'));
+  this.mostActiveButton = element(by.css('.most-active-btn'));
+  this.activeUsersTable = element(by.css('.active-users-table'));
+  this.activeUsersTableContent = element.all(by.repeater('user in nav.mostActiveUsers'));
+  this.activeCarousel = element(by.id('activeCarousel')).all(by.css('button'));
+  this.activeUserGraph = element(by.id('activeUsersdiv')).all(by.css('div')).first();
+  this.activeUserRefresh = element(by.id('activeUsersRefreshDiv'));
 
   this.verifyReportTab = function (tabName) {
     expect(element(by.cssContainingText('h4', tabName)).isDisplayed()).toBeTruthy();
     expect(element(by.id(tabName.toLowerCase() + "Report")).isPresent()).toBeTruthy();
-    expect(element(by.id(tabName.toLowerCase() + "RefreshDiv")).isPresent()).toBeTruthy();
   };
 
   this.verifyOption = function (dropdown, option) {
@@ -44,6 +48,14 @@ var ReportsPage = function () {
 
   this.numOptions = function (dropdown) {
     return dropdown.all(by.css('option')).count();
+  };
+
+  this.verifyLegend = function (text) {
+    utils.expectIsPresent(element(by.cssContainingText('text', text)));
+  };
+
+  this.getOptions = function (select, index) {
+    return select.all(by.css('option')).get(index);
   };
 };
 

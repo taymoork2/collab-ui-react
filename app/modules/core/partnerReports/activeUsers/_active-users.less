@@ -1,0 +1,84 @@
+.active-user {
+  min-width: 520px;
+  width: 48%;
+  position: relative;
+
+  .graph-match {
+    margin: 0 15px;
+  }
+
+  .carousel-container {
+    margin-top: 20px;
+  }
+
+  .spinner-position {
+    position: relative;
+    top: -450px;
+  }
+
+  .clear-graph {
+    background-color: @brand-white;
+  }
+
+  .active-user-status {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+  }
+
+  .horizontal-center {
+    text-align: center;
+  }
+
+  .vertical-center {
+   vertical-align: middle;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .most-active-btn {
+    font-family: "Arial";
+    font-size: 13px;
+    line-height:18px;
+    color: @gray-darkest;
+    text-align: left;
+    padding: 0;
+  }
+
+  .most-active-btn:hover, .most-active-btn:focus, .most-active-btn:active, .carousel-btn:hover {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  .active-users-table {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .carousel-btn {
+    border-color: #878787;
+    color: #878787;
+  }
+
+  .carousel-btn:hover, btn-none:focus, .btn-none:hover {
+    border-color: transparent;
+  }
+
+  .no-data-center {
+    height: 450px;
+    left: 35%;
+    position: absolute;
+    transform: translate(0%, 35%);
+
+    .no-data {
+      color: @gray-light;
+      font-family: "CiscoSansTT Light";
+      font-size: 46px;
+    }
+  }
+}

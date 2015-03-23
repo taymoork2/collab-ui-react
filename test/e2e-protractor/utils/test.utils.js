@@ -87,9 +87,28 @@ exports.wait = function (elem) {
   }, 40000, 'Waiting for: ' + elem.locator());
 };
 
+exports.waitUntilEnabled = function (elem) {
+  browser.wait(function () {
+    return elem.isEnabled();
+  }, 40000, 'Waiting for: ' + elem.locator());
+};
+
 exports.expectIsDisplayed = function (elem) {
   this.wait(elem);
   expect(elem.isDisplayed()).toBeTruthy();
+};
+
+exports.expectAllDisplayed = function (elems) {
+  this.wait(elems);
+  elems.each().then(function (elem) {
+    expect(elem.isDisplayed()).toBeTruthy();
+  });
+};
+
+exports.expectAllNotDisplayed = function (elems) {
+  elems.each().then(function (elem) {
+    expect(elem.isDisplayed()).toBeFalsy();
+  });
 };
 
 exports.expectIsDisabled = function (elem) {
@@ -100,6 +119,16 @@ exports.expectIsDisabled = function (elem) {
 exports.expectIsEnabled = function (elem) {
   this.wait(elem);
   expect(elem.isEnabled()).toBeTruthy();
+};
+
+exports.expectIsPresent = function (elem) {
+  this.wait(elem);
+  expect(elem.isPresent()).toBeTruthy();
+};
+
+exports.expectIsNotPresent = function (elem) {
+  this.wait(elem);
+  expect(elem.isPresent()).toBeFalsy();
 };
 
 exports.expectIsNotDisplayed = function (elem) {
@@ -185,6 +214,18 @@ exports.expectNotText = function (elem, value) {
 exports.expectCount = function (elems, count) {
   this.wait(elems);
   expect(elems.count()).toEqual(count);
+};
+
+exports.expectCountToBeGreater = function (elems, num) {
+  this.wait(elems);
+  elems.count().then(function (count) {
+    expect(count > num);
+  });
+};
+
+exports.expectTruthy = function (elem) {
+  this.wait(elem);
+  expect(elem).toBeTruthy();
 };
 
 exports.clickEscape = function () {

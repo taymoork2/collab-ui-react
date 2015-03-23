@@ -1,27 +1,39 @@
-<div class="reports">
+<div class="partner-reports">
 	<div class="reports-header row page-header">
-		<div class="page-title col-md-3">
-		  <span class="title" translate="reports.title"/>
+		<div class="page-title col-md-6">
+			<h2 class="title" translate="reportsPage.pageTitle"></h2>
+			<span class="sync"><span translate="reportsPage.sync"></span>: {{nav.recentUpdate}}</span>
 		</div>
-		<div class="page-title col-md-9 report-filters-container">
-		    <select class="report-filter report-filter-one" id="serviceFilter" ng-options="option.label for option in nav.serviceOptions track by option.id" ng-model="nav.serviceSelected"></select>
-		    <select class="report-filter report-filter-two" id="customerFilter" ng-options="option.label for option in nav.customerOptions track by option.id" ng-model="nav.customerSelected"></select>
-		    <select class="report-filter report-filter-one" id="timeFilter" ng-options="option.label for option in nav.timeOptions track by option.id" ng-model="nav.timeSelected"></select>
+		<div class="page-title col-md-6">
+			<div class="pull-right report-filters-container">
+			    <select class="report-filter report-filter-one" id="timeFilter" ng-options="option.label for option in nav.timeOptions track by option.id"
+			    	ng-model="nav.timeSelected" ng-change="nav.updateReports()" ng-disabled="nav.isRefresh(nav.activeUsersRefresh)"></select>
+			    <select class="report-filter report-filter-two" id="customerFilter" ng-options="option.label for option in nav.customerOptions track by option.id"
+			    	ng-model="nav.customerSelected" ng-change="nav.updateReports()" ng-disabled="nav.isRefresh(nav.activeUsersRefresh)"></select>
+			</div>
 		</div>
 	</div>
 	<div class="report-tabs-container">
 		<section class="tab-reports background-white">
-		    <cs-tabset justified="true" class="largetabs">
-			    <cs-tab ng-repeat="tab in nav.tabs"  ui-sref-active="current">
+		    <cs-tabset>
+			    <cs-tab id="engagementTab" ui-sref-active="current">
 			        <cs-tab-heading>
-			        	<h4 translate="{{tab.title}}"></h4>
+			        	<h4 translate="reportsPage.engagementTab"></h4>
 			        </cs-tab-heading>
-			        <div id="{{tab.name}}Report" class="tab-report" ng-hide="nav.isRefresh(tab)"></div>
-			        <div id="{{tab.name}}RefreshDiv" class="report-status" ng-show="nav.isRefresh(tab)">
+			        <div id="engagementReport" class="tab-report engagement-reports report-column">
+			        	<uc-active-user class="report-section"></uc-active-user>
+			        </div>
+			    </cs-tab>
+			    <cs-tab id="qualityTab" ui-sref-active="current">
+			        <cs-tab-heading>
+			        	<h4 translate="reportsPage.qualityTab"></h4>
+			        </cs-tab-heading>
+			        <div id="qualityReport" class="tab-report quality-reports" ng-hide="nav.isRefresh(nav.qualityTab)">
+			        </div>
+			        <div id="qualityRefreshDiv" class="report-status" ng-show="nav.isRefresh(nav.qualityTab)">
 			        	<i class='icon icon-spinner icon-2x'></i>
 			        </div>
 			    </cs-tab>
-		    </cs-tabset>
 		</section>
 	</div>
 </div>
