@@ -105,7 +105,7 @@ angular.module('Core')
 
           if (userData.users.length > 0) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-            $http.post(userUrl + 'users', userData)
+            $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users', userData)
               .success(function (data, status) {
                 data.success = true;
                 callback(data, status);
