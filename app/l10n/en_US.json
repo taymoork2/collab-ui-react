@@ -488,15 +488,16 @@
     },
     "status": {
       "unknown": "reports an unknown state. Please check the expressway for details.",
-      "not_configured": "has installed the service, but it's not configured.",
-      "installing": "is installing the service.",
-      "disabled": "has this service disabled.",
-      "not_installed": "has not installed the service.",
-      "stopped": "reports the service as stopped.",
+      "not_configured": "has installed the connector, but it's not configured.",
+      "installing": "is installing the connector.",
+      "disabled": "has this connector disabled.",
+      "not_installed": "has not installed the connector.",
+      "stopped": "reports the connector as stopped.",
       "offline": "has not posted status in a while and could be offline.",
       "registered": "is registered but has not yet posted status.",
-      "downloading": "is downloading the service software.",
-      "uninstalling": "is uninstalling the service."
+      "downloading": "is downloading the connector software.",
+      "uninstalling": "is uninstalling the connector.",
+      "running": "is running."
     },
     "setup": {
       "label": "UC APP Fusion Services",

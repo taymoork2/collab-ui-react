@@ -1,0 +1,26 @@
+<cs-sp-container>
+  <cs-sp-section>
+    <ul>
+      <li ng-repeat="host in cluster.hosts">
+        <a target="_blank" href="https://{{host.host_name}}">{{host.host_name}}</a>
+      </li>
+    </ul>
+    <div style="padding-top: 5px" class="clearfix" ng-repeat="host in cluster.hosts | filter: { offline: true }">
+      <span style="color: #f05d3b">{{host.host_name}}</span>
+      <span translate="{{'hercules.status.offline'}}" />
+      <a href>
+        <i class="icon icon-close" ng-click="toggleEdit(host.host_name)" />
+      </a>
+      <div style="margin-top: 5px" ng-show="host.host_name == editingHost">
+        <button ng-disabled="deleteHostInflight" class="btn btn-danger btn-sm" ng-click="deleteHost(cluster.id, host.serial)">
+          <span ng-hide="deleteHostInflight">
+            Delete {{host.host_name}}?
+          </span>
+          <span ng-show="deleteHostInflight">
+            <i class="icon icon-spinner icon-spin" />
+          </span>
+        </button>
+      </div>
+    </div>
+  </cs-sp-section>
+</cs-sp-container>

@@ -228,11 +228,6 @@ angular.module('Core')
             state: 'fusion',
             link: '#fusion'
           }, {
-            title: 'tabs.fusionNextTab',
-            desc: 'tabs.fusionNextTabDesc',
-            state: 'fusion-next',
-            link: '#fusion-next'
-          }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
             state: 'callrouting',
@@ -542,7 +537,7 @@ angular.module('Core')
         ],
         'squared-fusion-uc': [
           'fusion',
-          'fusion-next',
+          'fusion-old',
           'cluster-details',
           'devices'
         ],
