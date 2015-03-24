@@ -86,6 +86,10 @@ angular.module('Core')
           var exportedUsers = [];
 
           var getUsersBatch = function (startIndex) {
+            var entitlementFilter = '';
+            if (scope.activeFilter === 'administrators') {
+              entitlementFilter = 'webex-squared';
+            }
             userlistservice.listUsers(startIndex, 0, 'userName', 'ascending', function (data, status) {
               if (data.success && data.Resources.length > 0) {
                 users = users.concat(data.Resources);
@@ -126,7 +130,7 @@ angular.module('Core')
                 Log.debug('Exporting users failed. Status ' + status);
                 deferred.reject('Exporting users failed. Status ' + status);
               }
-            }, 'webex-squared');
+            }, entitlementFilter);
           };
 
           $('#export-icon').html('<i class=\'icon icon-spinner\'></i>');
