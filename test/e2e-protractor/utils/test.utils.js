@@ -228,6 +228,13 @@ exports.expectTruthy = function (elem) {
   expect(elem).toBeTruthy();
 };
 
+exports.expectClass = function (elem, cls) {
+  this.wait(elem);
+  return elem.getAttribute('class').then(function (classes) {
+    return classes.split(' ').indexOf(cls) !== -1;
+  });
+};
+
 exports.clickEscape = function () {
   this.sendKeys(element(by.tagName('body')), protractor.Key.ESCAPE);
 };
@@ -255,12 +262,6 @@ exports.enableSwitch = function (elem) {
 
 exports.disableSwitch = function (elem) {
   this.toggleSwitch(elem, false);
-};
-
-exports.hasClass = function (element, cls) {
-  return element.getAttribute('class').then(function (classes) {
-    return classes.split(' ').indexOf(cls) !== -1;
-  });
 };
 
 exports.findDirectoryNumber = function (message, lineNumber) {

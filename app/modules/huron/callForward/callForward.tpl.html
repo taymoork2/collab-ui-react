@@ -20,7 +20,7 @@
     <span ng-show="lineSettings.forwardExternalCalls" translate="callForwardPanel.internalOnly"></span>
     <cs-combobox id="cfbna" list="lineSettings.validForwardOptions" addtext="lineSettings.cbAddText" value="lineSettings.forwardNABCalls" required="true"></cs-combobox>
     <br>
-    <cs-checkbox id="ckForwardExternalCalls" ng-model="lineSettings.forwardExternalCalls" cklabel="{{'callForwardPanel.forwardExternal' | translate}}"></cs-checkbox>
+    <cs-checkbox ckid="ckForwardExternalCalls" ng-model="lineSettings.forwardExternalCalls" label="{{'callForwardPanel.forwardExternal' | translate}}"></cs-checkbox>
     <br>
     <div ng-show="lineSettings.forwardExternalCalls">
       <cs-combobox id="cfbnaExternal" list="lineSettings.validForwardOptions" addtext="lineSettings.cbAddText" value="lineSettings.forwardExternalNABCalls" required="true"></cs-combobox>

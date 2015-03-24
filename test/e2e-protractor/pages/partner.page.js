@@ -90,8 +90,8 @@ var PartnerHomePage = function () {
   this.partnerFilter = element(by.id('partnerFilter'));
   this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
   this.partnerEmail = element.all(by.binding('userName'));
-  this.squaredTrialCheckbox = element(by.id('squaredTrial'));
-  this.squaredUCTrialCheckbox = element(by.id('squaredUCTrial'));
+  this.squaredTrialCheckbox = element(by.css('label[for="squaredTrial"]'));
+  this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));

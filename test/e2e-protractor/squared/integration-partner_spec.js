@@ -89,7 +89,7 @@ describe('Partner flow', function () {
 
       utils.expectIsDisplayed(partner.editTrialForm);
 
-      utils.expectAttribute(partner.squaredTrialCheckbox, 'disabled', 'true');
+      utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
       utils.click(partner.saveUpdateButton);
 
       notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');

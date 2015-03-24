@@ -48,21 +48,21 @@
           </fieldset>
           <div ng-click="radioHandler()">
             <div class="admin-options" ng-show="false">
-              <cs-checkbox class="indented-checkbox" cklabel="{{'rolesPanel.userAdmin' | translate}}" ng-model="rolesObj.userAdminValue" ng-disabled="false"></cs-checkbox>
+              <cs-checkbox ckid="userAdminCkbx" class="indented-checkbox" label="{{'rolesPanel.userAdmin' | translate}}" ng-model="rolesObj.userAdminValue" isdisabled="false"></cs-checkbox>
               <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
             <div class="admin-options" ng-show="false">
-              <cs-checkbox class="indented-checkbox" cklabel="{{'rolesPanel.billingAdmin' | translate}}" ng-model="rolesObj.billingAdminValue" ng-disabled="false"></cs-checkbox>
+              <cs-checkbox ckid="billingAdminCkbx" class="indented-checkbox" label="{{'rolesPanel.billingAdmin' | translate}}" ng-model="rolesObj.billingAdminValue" isdisabled="false"></cs-checkbox>
               <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i class='icon icon-remove'></i>Analytics & Reports</li><li><i class='icon icon-remove'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
             <div class="admin-options">
-              <cs-checkbox class="indented-checkbox" cklabel="{{'rolesPanel.supportAdmin' | translate}}" ng-model="rolesObj.supportAdminValue" ng-disabled="false"></cs-checkbox>
+              <cs-checkbox ckid="supportAdminCkbx" class="indented-checkbox" label="{{'rolesPanel.supportAdmin' | translate}}" ng-model="rolesObj.supportAdminValue" isdisabled="false"></cs-checkbox>
               <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-remove'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
           </div>
         <div ng-show="false">
           <span class="description" translate="rolesPanel.cloudOpDescription"></span>
-          <cs-checkbox class="cloudChkBox"cklabel="{{'rolesPanel.cloudOpAdmin' | translate}}" ng-model="rolesObj.cloudAdminValue" ng-disabled="false"></cs-checkbox>
+          <cs-checkbox ckid="cloudAdminCkbx" class="cloudChkBox" label="{{'rolesPanel.cloudOpAdmin' | translate}}" ng-model="rolesObj.cloudAdminValue" ng-disabled="false"></cs-checkbox>
         </div>
       </div>
     </div>

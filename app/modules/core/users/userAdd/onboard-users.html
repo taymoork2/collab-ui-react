@@ -40,7 +40,7 @@
 
       <div class="license-block">
         <div class="entitle-check-grp" ng-repeat="key in entitlementsKeys" ng-if="isServiceAllowed(key)">
-          <cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared')}" id="{{'chk_'+key}}" id="{{'chk_'+key}}" ng-model="entitlements[key]" cklabel="{{getServiceName(key)}}"></cs-checkbox>
+          <cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared')}" ckid="{{'chk_'+key}}" ng-model="entitlements[key]" label="{{getServiceName(key)}}"></cs-checkbox>
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ var TelephonyPage = function () {
   this.snrFeature = element(by.cssContainingText('.sub-service', 'Single Number Reach'))
     .element(by.cssContainingText('span', 'Single Number Reach'));
   this.close = element(by.id('close-preview-button'));
-  this.squaredUCCheckBox = element(by.id('chk_ciscoUC'));
+  this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
 
   this.saveButton = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
   this.saveEntitlements = element(by.css('.user-entitlements-body')).element(by.id('btn-save'));
