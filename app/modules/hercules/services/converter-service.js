@@ -124,12 +124,23 @@ angular.module('Hercules')
         }, {});
 
         _.each(cluster.hosts, function (host) {
+          host.services = [];
           host.offline = false;
           if (map[host.host_name]) {
             host.offline = _.reduce(map[host.host_name], function (offline, status) {
               return offline && status == 'offline';
             }, true);
           }
+          _.each(cluster.services, function (service) {
+            _.each(service.connectors, function (connector) {
+              if (connector.host.serial == host.serial) {
+                host.services.push({
+                  display_name: service.display_name,
+                  state: connector.state
+                });
+              }
+            });
+          });
         });
       };
 
