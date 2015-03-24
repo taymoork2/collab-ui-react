@@ -7,12 +7,14 @@
     'XmlApiFact',
     'WebexUserSettingsSvc',
     'XmlApiInfoSvc',
+    'Authinfo',
     function (
       $q,
       $log,
       XmlApiFact,
       userSettingsModel,
-      xmlApiInfo
+      xmlApiInfo,
+      Authinfo
     ) {
       return {
         validateXmlData: function (
@@ -81,9 +83,10 @@
         ) {
 
           xmlApiInfo.xmlServerURL = "";
-          xmlApiInfo.siteID = "";
-          xmlApiInfo.webexAdminID = "";
-          xmlApiInfo.webexAdminPswd = "";
+          xmlApiInfo.webexSiteName = "";
+          xmlApiInfo.webexAdminSessionTicket = webexAdminSessionTicket;
+          xmlApiInfo.webexAdminID = Authinfo.getUserName();
+          // xmlApiInfo.webexAdminPswd = "P@ss123";
 
           /* TODO
           xmlApiInfo.xmlServerURL = webexSiteName + "/WBXService/XMLService";
