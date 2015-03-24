@@ -19,7 +19,7 @@
         'userName': null
       },
       "voice": {
-        "callManagerGroup": "Default"
+        "callManagerGroup": "CMG-1-2"
       }
     };
 
