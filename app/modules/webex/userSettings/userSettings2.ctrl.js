@@ -143,7 +143,7 @@
 
       var _self = this;
 
-      WebExUserSettingsFact.getSessionTicket("t30citest.eng.webex.com")
+      WebExUserSettingsFact.getSessionTicket("")
         .then(function (webexAdminSessionTicket) {
             _self.xmlApiInfo = WebExUserSettingsFact.getXmlApiInfo(
               webexSiteName,
