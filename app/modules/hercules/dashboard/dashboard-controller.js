@@ -48,15 +48,6 @@ angular.module('Hercules')
         });
       };
 
-      $scope.upgradeSoftware = function (clusterId, serviceType, callback) {
-        service.upgradeSoftware(clusterId, serviceType, function () {
-          $scope.reload(function () {
-            callback();
-          }, true);
-        });
-        return false;
-      };
-
       $scope.toggleEdit = function (hostName) {
         if ($scope.editingHost == hostName) {
           $scope.editingHost = null;
@@ -99,6 +90,17 @@ angular.module('Hercules')
           scope: $scope,
           controller: 'UCConfigController',
           templateUrl: 'modules/hercules/uc-config/uc-config.html'
+        });
+      };
+
+      $scope.showUpgradeDialog = function (upgradePackage, cluster, currentVersion) {
+        $scope.upgradePackage = upgradePackage;
+        $scope.cluster = cluster;
+        $scope.currentVersion = currentVersion;
+        $scope.modal = $modal.open({
+          scope: $scope,
+          controller: 'SWUpgradeController',
+          templateUrl: 'modules/hercules/sw-upgrade/upgrade-dialog.html'
         });
       };
 

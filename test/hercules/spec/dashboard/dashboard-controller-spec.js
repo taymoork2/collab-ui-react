@@ -108,30 +108,6 @@ describe('DashboardController', function () {
     expect(service.fetch.calledTwice).toBe(true);
   });
 
-  it('upgrades software', function () {
-    expect(service.upgradeSoftware.callCount).toBe(0);
-
-    $scope.upgradeSoftware('clusterid', 'servicetype', sinon.stub());
-
-    expect(service.upgradeSoftware.calledOnce).toBe(true);
-    expect(service.upgradeSoftware.args[0][0]).toBe('clusterid');
-    expect(service.upgradeSoftware.args[0][1]).toBe('servicetype');
-  });
-
-  it('triggers callback on software upgrade', function () {
-    var callback = sinon.stub();
-    $scope._poll = sinon.stub();
-
-    $scope.upgradeSoftware('clusterid', 'servicetype', callback);
-    expect(callback.callCount).toBe(0);
-
-    service.upgradeSoftware.args[0][2]();
-    service.fetch.callArgWith(0, null, []);
-
-    expect(callback.callCount).toBe(1);
-    expect($scope._poll.callCount).toBe(1);
-  });
-
   it('updates state on toggle edit', function () {
     expect($scope.editingHost).toBeFalsy();
 
@@ -188,4 +164,24 @@ describe('DashboardController', function () {
     expect($scope.modal).toBeTruthy();
   });
 
+  it('shows modal software upgrade dialog with correct scope', function () {
+    expect($scope.modal).toBeFalsy();
+    var upgradePackage = {
+      version: '2.0',
+      release_notes: 'something',
+      service: {
+        display_name: 'UCM Service'
+      }
+    };
+    var cluster = {
+      id: '1',
+      name: 'testcluster'
+    };
+    var currentVersion = "1.0";
+    $scope.showUpgradeDialog(upgradePackage, cluster, currentVersion);
+    expect($scope.modal).toBeTruthy();
+    expect($scope.upgradePackage).toBe(upgradePackage);
+    expect($scope.cluster).toBe(cluster);
+    expect($scope.currentVersion).toBe(currentVersion);
+  });
 });

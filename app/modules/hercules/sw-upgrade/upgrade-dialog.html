@@ -1,0 +1,45 @@
+<div class="hercules-notification-config">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button id="convertModalClose" type="button" class="close" ng-click="upgradeModal.close()">
+        <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+      </button>
+      <h3 class="modal-title">
+        <span>Software upgrade</span>
+      </h3>
+    </div>
+    <div class="modal-body">
+      <div ng-show="loading" style="text-align: center; padding: 60px;">
+        <i class="icon icon-spinner icon-2x"></i>
+      </div>
+      <div ng-hide="loading">
+        <p>You are about to upgrade the software for the {{upgradePackage.service.display_name}} on all hosts
+          running on the Expressway Cluster {{cluster.name || 'Unknown Cluster Name'}}</p>
+        <p><b>{{upgradePackage.service.display_name}} {{upgradePackage.version}}</b></p>
+        <p>
+          <pre style="margin:0 0 0 0;padding:0 0 0 0; border:0;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:14px;">{{upgradePackage.release_notes}}
+          </pre>
+        </p>
+        <p>
+          Current version: {{currentVersion || 'Not installed'}}</br>
+          After upgrade: {{upgradePackage.version}}
+        </p>
+        <div ng-show="error" class="alert alert-danger" style="margin: 0 10px 10px 10px">
+          {{error}}
+        </div>                
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn-primary pull-right" ng-click="upgradeSoftware()">
+        <span ng-hide="saving">Confirm</span>
+        <span ng-show="saving"> 
+          <i class="icon icon-spinner" />
+        </span>
+      </button>
+      <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="upgradeModal.close()" style="margin-right: 10px">
+        <span>Cancel</span>
+      </button>
+    </div> 
+  </div>
+</div>

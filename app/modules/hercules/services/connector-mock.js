@@ -119,7 +119,8 @@ var calPkg = {
     "display_name": "Calendar Service"
   },
   "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
-  "version": "8.2-2.1"
+  "version": "8.2-2.1",
+  "release_notes": "foo"
 };
 
 var calPkgApp = {

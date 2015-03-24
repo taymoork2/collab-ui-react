@@ -9,15 +9,6 @@ angular.module('Hercules')
 
       $scope.visibleAlarm = {};
 
-      $scope.upgradeSoftware = function (clusterId, serviceType, callback) {
-        ConnectorService.upgradeSoftware(clusterId, serviceType, function () {
-          $scope.reload(function () {
-            callback();
-          });
-        });
-        return false;
-      };
-
       $scope.toggleEdit = function (hostName) {
         if ($scope.editingHost == hostName) {
           $scope.editingHost = null;

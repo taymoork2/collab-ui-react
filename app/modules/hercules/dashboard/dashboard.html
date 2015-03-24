@@ -183,24 +183,19 @@
                               <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
                               <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
                             </div>
-                            <div style="padding-bottom: 5px">
-                              <hercules-upgrade-button
-                                cluster-id="{{cluster.id}}"
-                                service-type="{{service.service_type}}",
-                                button-text="Upgrade Now"
-                                />
-                            </div>
+                            <button class="btn btn-info btn-sm" ng-click="showUpgradeDialog(service.not_approved_package, cluster, service.connectors[0].version)">
+                             <span>
+                               Upgrade software
+                             </span>
+                           </button>
                         </div>
 
                         <div ng-show="!service.installed && service.install_available">
-                          <!-- install the new service -->
-                          <div style="padding-bottom: 5px">
-                            <hercules-upgrade-button
-                              cluster-id="{{cluster.id}}"
-                              service-type="{{service.service_type}}",
-                              button-text="Install Now"
-                              />
-                          </div>
+                          <button class="btn btn-info btn-sm" ng-click="showUpgradeDialog(service.not_approved_package, cluster, service.connectors[0].version)">
+                           <span>
+                             Upgrade software
+                           </span>
+                         </button>
                         </div>
 
                       </div>
