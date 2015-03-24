@@ -904,7 +904,8 @@
     "userUpdateSuccess": "User privileges updated",
     "userUpdateError": "User privileges update failed",
     "webexUserSettingsTab": "WebEx Proto",
-    "reload": "Try Again"
+    "reload": "Try Again",
+    "cancel": "Go Back"
   },
   "webexUserSettingsUserErrors": {
     "userDefaultError": "Error reading user information",

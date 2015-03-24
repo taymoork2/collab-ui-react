@@ -2,14 +2,14 @@
   <cs-sp-section>
     <div id="webexUserSettingsPageUserNotFound" ng-if="WebExUserSettings.userInfoErrId == 030001">
       <div class="center">
-        <div class="user-img">
+        <div class="user-img nodata-icon">
             <i class="icon icon-user"></i>
           </div> 
-          <div class="search-title" translate="webexUserSettingsUserErrors.030001" translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}"></div>   
-          <button id="cancelBtn" class="btn btn-default" ui-sref="user-overview"></i>
-            <span translate="common.cancel"></span>
+          <div class="nodata-message" translate="webexUserSettingsUserErrors.030001" translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}"></div>   
+          <button id="cancelBtn" class="btn btn-default wiz-onboard-btn" ui-sref="user-overview"></i>
+            <span translate="webexUserSettings.cancel"></span>
           </button>
-          <button id="reloadBtn" class="btn btn-info" ng-click="WebExUserSettings.getUserSettingsInfo()" data-loading-text="<i class='icon icon-spinner'></i>">
+          <button id="reloadBtn" class="btn btn-info wiz-onboard-btn" ng-click="WebExUserSettings.getUserSettingsInfo()" data-loading-text="<i class='icon icon-spinner'></i>">
             <span translate="webexUserSettings.reload"></span>
           </button>
         </div>
