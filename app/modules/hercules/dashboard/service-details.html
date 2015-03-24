@@ -9,7 +9,7 @@
     <div ng-repeat="connector in service.connectors" class="list">
       <div ng-class="connector.state">
         <i class="fa fa-circle" />
-        <span>{{connector.host.host_name}}</span>
+        <span>{{connector.host.host_name}}:</span>
         <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
       </div>
     </div>
