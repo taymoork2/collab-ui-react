@@ -201,16 +201,22 @@
       var webexdminID = "";
       var webexAdminSessionTicket = "";
 
-      this.xmlApiInfo = WebExUserSettingsFact.getXmlApiInfo(
-        webexSiteName,
-        webexdminID,
-        webexAdminSessionTicket,
-        $stateParams.currentUser
-      );
+      var _self = this;
 
-      this.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
+      WebExUserSettingsFact.getSessionTicket("t30citest.eng.webex.com")
+        .then(function (webexAdminSessionTicket) {
+            _self.xmlApiInfo = WebExUserSettingsFact.getXmlApiInfo(
+              webexSiteName,
+              webexdminID,
+              webexAdminSessionTicket,
+              $stateParams.currentUser
+            );
 
-      this.getUserSettingsInfo();
+            _self.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
+
+            _self.getUserSettingsInfo();
+          },
+          function (reason) {});
     } // WebExUserSettingsCtrl()
   ]);
 })();

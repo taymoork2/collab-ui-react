@@ -1,16 +1,16 @@
 'use strict';
 
 angular.module('WebExUserSettings')
-  .service('XmlApiConstsSvc', [
+  .service('XmlApiSvc', [
     function XmlApiConstants() {
       return {
         siteInfoRequest: "" +
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
           "    <header>" + "\n" +
           "        <securityContext>" + "\n" +
-          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
           "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
-          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
+          "            <password>{{webexAdminPswd}}</password>" + "\n" +
+          "            <siteID>{{siteID}}</siteID>" + "\n" +
           "        </securityContext>" + "\n" +
           "    </header>" + "\n" +
           "    <body>" + "\n" +
@@ -22,9 +22,9 @@ angular.module('WebExUserSettings')
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
           "    <header>" + "\n" +
           "        <securityContext>" + "\n" +
-          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
           "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
-          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
+          "            <password>{{webexAdminPswd}}</password>" + "\n" +
+          "            <siteID>{{siteID}}</siteID>" + "\n" +
           "        </securityContext>" + "\n" +
           "    </header>" + "\n" +
           "    <body>" + "\n" +
@@ -38,9 +38,9 @@ angular.module('WebExUserSettings')
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
           "    <header>" + "\n" +
           "        <securityContext>" + "\n" +
-          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
           "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
-          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
+          "            <password>{{webexAdminPswd}}</password>" + "\n" +
+          "            <siteID>{{siteID}}</siteID>" + "\n" +
           "        </securityContext>" + "\n" +
           "    </header>" + "\n" +
           "    <body>" + "\n" +
@@ -48,27 +48,31 @@ angular.module('WebExUserSettings')
           "    </body>" + "\n" +
           "</serv:message>",
 
-        updateUserSettings_1: "" +
+        updateUserSettings1: "" +
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" + "\n" +
           "    xmlns:serv=\"http://www.webex.com/schemas/2002/06/service\">" + "\n" +
           "    <header>" + "\n" +
           "        <securityContext>" + "\n" +
-          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
+          "            <siteID>{{siteID}}</siteID>" + "\n" +
           "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
-          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
+          "            <password>{{webexAdminPswd}}</password>" + "\n" +
           "        </securityContext>" + "\n" +
-          "    </header>" + "\n" +
+          "    </header>" + "\n",
+
+        updateUserSettings2: "" +
           "    <body>" + "\n" +
           "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.SetUser\">" + "\n" +
-          "            <webExId>{{webexUserId}}</webExId>" + "\n" +
+          "            <webExId>{{webexUserId}}</webExId>",
+
+        updateUserSettings3_1: "" +
           "            <use:meetingTypes>" + "\n",
-
-        updateUserSettings_2: "" +
+        updateUserSettings3_2: "" +
           "                <use:meetingType>{{meetingType}}</use:meetingType>" + "\n",
+        updateUserSettings3_3: "" +
+          "            </use:meetingTypes>" + "\n",
 
-        updateUserSettings_3: "" +
-          "            </use:meetingTypes>" + "\n" +
+        updateUserSettings4: "" +
           "            <use:supportedServices>" + "\n" +
           "                <use:meetingCenter>{{meetingCenter}}</use:meetingCenter>" + "\n" +
           "                <use:trainingCenter>{{trainingCenter}}</use:trainingCenter>" + "\n" +
@@ -80,46 +84,18 @@ angular.module('WebExUserSettings')
           "    </body>" + "\n" +
           "</serv:message>",
 
-        updateUserSettings2: "" +
-          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
-          "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" + "\n" +
-          "    xmlns:serv=\"http://www.webex.com/schemas/2002/06/service\">" + "\n" +
-          "    <header>" + "\n" +
-          "        <securityContext>" + "\n" +
-          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
-          "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
-          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
-          "        </securityContext>" + "\n" +
-          "    </header>" + "\n" +
-          "    <body>" + "\n" +
-          "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.SetUser\">" + "\n" +
-          "            <webExId>{{webexUserId}}</webExId>" + "\n" +
-          "            <use:privilege>" + "\n" +
-          "                <use:teleConfCallIn>{{teleConfCallIn}}</use:teleConfCallIn>" + "\n" +
-          "                <use:teleConfTollFreeCallIn>{{teleConfTollFreeCallIn}}</use:teleConfTollFreeCallIn>" + "\n" +
-          "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n" +
-          "                <use:teleConfCallOut>{{callBackTeleconf}}</use:teleConfCallOut>" + "\n" +
-          "                <use:teleConfCallOutInternational>{{globalCallBackTeleconf}}</use:teleConfCallOutInternational>" + "\n" +
-          "                <use:otherTelephony>{{otherTelephony}}</use:otherTelephony>" + "\n" +
-          "                <use:voiceOverIp>{{integratedVoIP}}</use:voiceOverIp>" + "\n" +
-          "                <use:labAdmin>{{handsOnLabAdmin}}</use:labAdmin>" + "\n" +
-          "            </use:privilege>" + "\n" +
-          "        </bodyContent>" + "\n" +
-          "    </body>" + "\n" +
-          "</serv:message>",
-
         sessionTicketRequest: "" +
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
           "    <header>" + "\n" +
           "        <securityContext>" + "\n" +
-          "       <siteName>{{wbxSiteName}}</siteName> " + "\n" +
-          "             <webExID>{{webexAdminID}}</webExID>" + "\n" +
+          "				<siteName>{{wbxSiteName}}</siteName> " + "\n" +
+          "            	<webExID>{{webexAdminID}}</webExID>" + "\n" +
           "        </securityContext>" + "\n" +
           "    </header>" + "\n" +
           "    <body>" + "\n" +
-          "     <bodyContent xsi:type=\"java:com.webex.service.binding.user.AuthenticateUser\">" + "\n" +
-          "       <accessToken>{{accessToken}}</accessToken>" + "\n" +
-          "     </bodyContent>" + "\n" +
+          "			<bodyContent xsi:type=\"java:com.webex.service.binding.user.AuthenticateUser\">" + "\n" +
+          "				<accessToken>{{accessToken}}</accessToken>" + "\n" +
+          "			</bodyContent>" + "\n" +
           "    </body>" + "\n" +
           "</serv:message>",
 
