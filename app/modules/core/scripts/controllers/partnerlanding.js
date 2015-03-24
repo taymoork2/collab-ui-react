@@ -413,13 +413,21 @@ angular.module('Core')
 
       $scope.showCustomerDetails = function (customer) {
         $scope.currentTrial = customer;
-        ExternalNumberPool.getAll(customer.customerOrgId).then(function (results) {
+        updatePhoneNumberCount(customer.customerOrgId);
+        $state.go('partnercustomers.list.preview');
+      };
+
+      $scope.$on('DIDS_UPDATED', function () {
+        updatePhoneNumberCount($scope.currentTrial.customerOrgId);
+      });
+
+      function updatePhoneNumberCount(orgId) {
+        ExternalNumberPool.getAll(orgId).then(function (results) {
           if (angular.isDefined(results) && angular.isDefined(results.length) && results.length > 0) {
             $scope.noOfPhoneNumbers = results.length;
           }
         });
-        $state.go('partnercustomers.list.preview');
-      };
+      }
 
       $scope.sort = {
         by: 'customerName',

@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($scope, $state, $stateParams, $q, $translate, ExternalNumberPool, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService) {
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService) {
     var vm = this;
     vm.invalidcount = 0;
     vm.submitBtnStatus = false;
@@ -196,6 +196,7 @@
       }
 
       return $q.all(promises).finally(function () {
+        $rootScope.$broadcast('DIDS_UPDATED');
         vm.addingNumbers = false;
         vm.addSuccess = true;
       });
