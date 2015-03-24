@@ -25,6 +25,7 @@
             <i class="icon icon-refresh icon-spin" />
           </span>
         </button>
+
       </div>
     </div>
   </div>
@@ -33,11 +34,12 @@
   <div class="row">
     <div class="col-sm-12">
       <!-- loader -->
-      <div ng-show="loading" style="text-align: center; padding-top: 60px;">
+      <div ng-show="loading || pollHasFailed" style="text-align: center; padding-top: 60px;">
+        <p ng-show="pollHasFailed">Disconnected. Trying to reconnect...</p>
         <i class="icon icon-spinner icon-2x"></i>
       </div>
 
-      <div ng-show="!loading">
+      <div ng-show="!loading && !pollHasFailed">
 
         <!-- nothing fused -->
         <div ng-show="clusters.length == 0" style="padding: 20px 40px">
