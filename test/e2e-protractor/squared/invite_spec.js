@@ -40,7 +40,7 @@ describe('invite spec', function () {
 
     it('invitelauncher should forward to squared app', function () {
       browser.get('#/invitelauncher');
-      utils.expectIsDisplayed(invite.inviteLauncher);
+      invite.expectSquaredProtocol();
     });
 
   });

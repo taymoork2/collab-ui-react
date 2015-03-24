@@ -86,7 +86,7 @@ var UsersPage = function () {
   this.userListDisplayName = element.all(by.binding('displayName'));
   this.userListAction = element(by.id('actionsButton'));
   this.actionDropdown = element(by.css('.dropdown-menu'));
-  this.resendInviteOption = element(by.id('resendInviteOption'));
+  this.resendInviteOption = element(by.css('#resendInviteOption a'));
   this.gridCell = element(by.css('.ngCell'));
   this.userLink = element(by.id('user-profile'));
 
@@ -127,7 +127,7 @@ var UsersPage = function () {
   };
 
   this.clickOnUser = function () {
-    utils.click(element.all(by.repeater('row in renderedRows')).first());
+    utils.click(element.all(by.repeater('row in renderedRows')).first().all(by.repeater('col in renderedColumns')).first());
   };
 
   this.assertPage = function (page) {

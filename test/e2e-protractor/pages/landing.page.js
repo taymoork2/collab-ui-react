@@ -33,7 +33,7 @@ var LandingPage = function () {
   this.unlicensedUsers = element(by.css('.unlicensed-users'));
   this.callsChart = element(by.id('callsChart'));
 
-  this.monitoringRows = element.all(by.repeater('health in healthMetrics'));
+  this.monitoringRows = element.all(by.repeater('health in healthMetrics')).all(by.tagName('a'));
 
   this.refreshButton = element(by.id('time-click-div'));
   this.reloadedTime = element(by.id('lastReloadedTime'));

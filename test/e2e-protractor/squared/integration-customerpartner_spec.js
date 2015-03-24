@@ -80,7 +80,6 @@ describe('CS User flow', function () {
       utils.expectIsDisplayed(navigation.customersTab);
       utils.expectIsDisplayed(navigation.reportsTab);
       utils.expectIsDisplayed(navigation.supportTab);
-      utils.expectCount(navigation.tabCount, 4);
     });
 
     it('clicking on customers tab should change the view', function () {

@@ -723,10 +723,7 @@ module.exports = function (grunt) {
       options: {
         configFile: 'protractor-config.js',
         keepAlive: false,
-        noColor: false,
-        args: {
-          browser: 'chrome'
-        }
+        noColor: false
       },
       squared: {
         options: {

@@ -1,7 +1,8 @@
 'use strict';
 
 var InvitePage = function () {
-  this.inviteLauncher = element(by.id('invitelauncher'));
+  var inviteLauncher = element(by.id('invitelauncher'));
+  var squaredUrl = 'squared://invitee/?invdata=';
 
   this.expectWebClient = function (urlparams) {
     browser.driver.wait(function () {
@@ -11,6 +12,16 @@ var InvitePage = function () {
     if (urlparams) {
       expect(browser.driver.getCurrentUrl()).toContain(urlparams);
     }
+  };
+
+  this.expectSquaredProtocol = function () {
+    browser.driver.wait(function () {
+      return inviteLauncher.isPresent().then(function (isPresent) {
+        return isPresent || browser.driver.getCurrentUrl().then(function (currentUrl) {
+          return currentUrl.indexOf(squaredUrl) !== -1;
+        });
+      });
+    });
   };
 };
 

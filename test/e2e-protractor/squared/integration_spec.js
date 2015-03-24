@@ -23,15 +23,12 @@ describe('App flow', function () {
   describe('Switching tabs', function () {
     it('clicking on system health panel should open to status page in a new tab', function () {
       navigation.clickHome();
-      var appWindow = browser.getWindowHandle();
-      utils.click(landing.monitoringRows.first());
-      browser.getAllWindowHandles().then(function (handles) {
-        var newWindowHandle = handles[1];
-        browser.switchTo().window(newWindowHandle);
-        navigation.expectDriverCurrentUrl('status.ciscospark.com/');
-        browser.driver.close();
-        browser.switchTo().window(appWindow);
-      });
+
+      utils.expectAttribute(landing.monitoringRows.first(), 'href', 'http://status.ciscospark.com/');
+
+      utils.expectIsDisplayed(landing.reloadedTime);
+      utils.expectIsDisplayed(landing.refreshData);
+      utils.expectIsDisplayed(landing.callsChart);
     });
 
     it('clicking on orgs tab should change the view', function () {
@@ -57,14 +54,6 @@ describe('App flow', function () {
       utils.expectIsDisplayed(reports.callsAvgDuration);
       utils.expectIsDisplayed(reports.contentShared);
       utils.expectIsDisplayed(reports.contentShareSizes);
-    });
-
-    it('should load cached values into directive when switching tabs', function () {
-      navigation.clickHome();
-
-      utils.expectIsDisplayed(landing.reloadedTime);
-      utils.expectIsDisplayed(landing.refreshData);
-      utils.expectIsDisplayed(landing.callsChart);
     });
   });
 

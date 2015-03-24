@@ -33,7 +33,6 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
       utils.expectIsDisplayed(navigation.reportsTab);
-      utils.expectCount(navigation.tabCount, 4);
     });
 
     it('should have a partner token', function (done) {
@@ -141,12 +140,6 @@ describe('Partner flow', function () {
         var newWindowHandle = handles[1];
         browser.switchTo().window(newWindowHandle);
         utils.expectIsDisplayed(navigation.tabs);
-
-        navigation.clickUsers();
-        utils.click(partner.partnerFilter);
-        utils.expectIsDisplayed(partner.partnerEmail);
-        users.assertResultsLength(0);
-        utils.expectText(partner.partnerEmail.first(), partner.testuser.username);
 
         browser.driver.close();
         browser.switchTo().window(appWindow);

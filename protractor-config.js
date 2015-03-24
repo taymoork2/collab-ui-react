@@ -36,6 +36,24 @@ exports.config = {
       })
     );
 
+    var ScreenShotReporter = require('protractor-jasmine2-screenshot-reporter');
+    jasmine.getEnv().addReporter(
+      new ScreenShotReporter({
+        dest: './screenshots',
+        captureOnlyFailedSpecs: true,
+        ignoreSkippedSpecs: true,
+        pathBuilder: function(currentSpec) {
+          return currentSpec.fullName;
+        }
+      })
+    );
+
+    browser.getCapabilities().then(function (capabilities) {
+      if (capabilities.caps_.browserName === 'firefox') {
+        browser.driver.manage().window().maximize();
+      }
+    });
+
     global.baseUrl = exports.config.baseUrl;
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
@@ -94,17 +112,6 @@ exports.config = {
     global.meetings = new MeetingsPage();
     global.usersettings = new BasicSettigsPage();
     global.orgprofile = new OrgProfilePage();
-
-    var path = require('path');
-    var ScreenShotReporter = require('protractor-screenshot-reporter');
-    jasmine.getEnv().addReporter(new ScreenShotReporter({
-      baseDirectory: './screenshots',
-      takeScreenShotsOnlyForFailedSpecs: true,
-      pathBuilder: function(spec, descriptions, results, capabilities) {
-        return path.join(capabilities.caps_.browserName, descriptions.join('-'));
-      }
-    }));
-
   },
 
   jasmineNodeOpts: {

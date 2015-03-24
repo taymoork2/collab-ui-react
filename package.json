@@ -65,7 +65,7 @@
     "lodash": "^3.6.0",
     "mimelib": "^0.2.19",
     "mocha": "^2.2.1",
-    "protractor-screenshot-reporter": "~0.0.5",
+    "protractor-jasmine2-screenshot-reporter": "~0.1.4",
     "request": "~2.54.0",
     "requirejs": "~2.1.16",
     "sinon": "^1.14.1",
