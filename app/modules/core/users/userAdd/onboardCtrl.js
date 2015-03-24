@@ -136,20 +136,7 @@ angular.module('Core')
       };
 
       $scope.onboardUsers = function () {
-        var entList = getEntitlements('add');
-        if (entList.length > 0 && !isUCSelected(entList)) {
-          inviteUsers();
-        } else {
-          if ($scope.isAddEnabled()) {
-            addUsers();
-          } else if ($scope.isEntitleEnabled()) {
-            entitleUsers();
-          } else {
-            var error = [];
-            error.push();
-            Notification.notify(error, 'error');
-          }
-        }
+        onboardUsers();
       };
 
       var usersList = [];
@@ -363,7 +350,7 @@ angular.module('Core')
         $scope.results = null;
       };
 
-      var addUsers = function () {
+      var onboardUsers = function () {
         $scope.results = {
           resultList: []
         };
@@ -372,7 +359,7 @@ angular.module('Core')
         Log.debug('Entitlements: ', usersList);
         var callback = function (data, status) {
           if (data.success) {
-            Log.info('User add request returned:', data);
+            Log.info('User onboard request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
 
             for (var i = 0; i < data.userResponse.length; i++) {
@@ -384,7 +371,7 @@ angular.module('Core')
               var userStatus = data.userResponse[i].status;
 
               if (userStatus === 200) {
-                userResult.message = 'added successfully';
+                userResult.message = 'onboarded successfully';
                 userResult.alertType = 'success';
                 if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
                   var userData = {
@@ -393,11 +380,11 @@ angular.module('Core')
                   HuronUser.create(data.userResponse[i].uuid, userData);
                 }
               } else if (userStatus === 409) {
-                userResult.message = 'already exists';
+                userResult.message = data.userResponse[i].message;
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {
-                userResult.message = 'not added, status: ' + userStatus;
+                userResult.message = 'not onboarded, status: ' + userStatus;
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
@@ -425,7 +412,7 @@ angular.module('Core')
             }
 
           } else {
-            Log.warn('Could not add the user', data);
+            Log.warn('Could not onboard the user', data);
             var error = null;
             if (status) {
               error = ['Request failed with status: ' + status + '. Message: ' + data];
@@ -451,7 +438,7 @@ angular.module('Core')
           for (i = 0; i < usersList.length; i += chunk) {
             temparray = usersList.slice(i, i + chunk);
             //update entitlements
-            Userservice.addUsers(temparray, getEntitlements('add'), callback);
+            Userservice.onboardUsers(temparray, getEntitlements('add'), callback);
           }
 
         } else {
@@ -541,125 +528,6 @@ angular.module('Core')
 
         if (isComplete) {
           resetUsersfield();
-        }
-
-      };
-
-      var entitleUsers = function () {
-        usersList = getUsersList();
-        Log.debug('Entitlements: ', usersList);
-
-        if (typeof usersList !== 'undefined' && usersList.length > 0) {
-          angular.element('#btnOnboard').button('loading');
-
-          var i, temparray, chunk = Config.batchSize;
-          for (i = 0; i < usersList.length; i += chunk) {
-            temparray = usersList.slice(i, i + chunk);
-            //update entitlements
-            Userservice.updateUsers(temparray, getEntitlements('entitle'), entitleUserCallback);
-          }
-
-        } else {
-          Log.debug('No users entered.');
-          var error = [$filter('translate')('usersPage.validEmailInput')];
-          Notification.notify(error, 'error');
-        }
-
-      };
-
-      var inviteUsers = function () {
-        usersList = getUsersList();
-        Log.debug('Invite: ', usersList);
-        $scope.results = {
-          resultList: []
-        };
-        var isComplete = true;
-        var callback = function (data, status) {
-
-          if (data.success) {
-            Log.info('User invitation sent successfully.', data.id);
-            $rootScope.$broadcast('USER_LIST_UPDATED');
-            // var success = [$translate.instant('usersPage.successInvite', data)];
-            // Notification.notify(success, 'success');
-            for (var i = 0; i < data.inviteResponse.length; i++) {
-
-              var userResult = {
-                email: data.inviteResponse[i].email,
-                alertType: null
-              };
-
-              var userStatus = data.inviteResponse[i].status;
-
-              if (userStatus === 200) {
-                userResult.alertType = 'success';
-              } else {
-                userResult.alertType = 'danger';
-                isComplete = false;
-              }
-              userResult.status = userStatus;
-              $scope.results.resultList.push(userResult);
-            }
-
-            //concatenating the results in an array of strings for notify function
-            var successes = [];
-            var errors = [];
-            var count_s = 0;
-            var count_e = 0;
-            for (var idx in $scope.results.resultList) {
-              if ($scope.results.resultList[idx].status === 200) {
-                successes[count_s] = $translate.instant('usersPage.emailSent', $scope.results.resultList[idx]);
-                count_s++;
-              } else if ($scope.results.resultList[idx].status === 304) {
-                errors[count_e] = $translate.instant('usersPage.entitled', $scope.results.resultList[idx]);
-                count_e++;
-              } else if ($scope.results.resultList[idx].status === 403) {
-                errors[count_e] = $translate.instant('usersPage.forbidden', $scope.results.resultList[idx]);
-                count_e++;
-              } else {
-                errors[count_e] = $translate.instant('usersPage.emailFailed', $scope.results.resultList[idx]);
-                count_e++;
-              }
-            }
-            //Displaying notifications
-            if (successes.length + errors.length === usersList.length) {
-              angular.element('#btnOnboard').button('reset');
-              Notification.notify(successes, 'success');
-              Notification.notify(errors, 'error');
-            }
-
-          } else {
-            Log.error('Could not process invitation.  Status: ' + status, data);
-            var error = [$translate.instant('usersPage.errInvite', data)];
-            Notification.notify(error, 'error');
-            isComplete = false;
-            angular.element('#btnOnboard').button('reset');
-          }
-
-          var msg = 'inviting ' + usersList.length + ' users...';
-          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), status, startLog, usersList.length);
-
-          if (isComplete) {
-            resetUsersfield();
-          }
-
-        };
-
-        if (typeof usersList !== 'undefined' && usersList.length > 0) {
-          angular.element('#btnOnboard').button('loading');
-
-          startLog = moment();
-
-          var i, temparray, chunk = Config.batchSize;
-          for (i = 0; i < usersList.length; i += chunk) {
-            temparray = usersList.slice(i, i + chunk);
-            //update entitlements
-            Userservice.inviteUsers(temparray, getEntitlements('add'), callback);
-          }
-
-        } else {
-          Log.debug('No users entered.');
-          var error = [$filter('translate')('usersPage.validEmailInput')];
-          Notification.notify(error, 'error');
         }
 
       };
