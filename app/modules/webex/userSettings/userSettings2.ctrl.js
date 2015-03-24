@@ -6,6 +6,7 @@
     '$log',
     '$filter',
     '$stateParams',
+    '$sce',
     'WebExUserSettingsFact',
     'Notification',
     'Authinfo',
@@ -15,6 +16,7 @@
       $log,
       $filter,
       $stateParams,
+      $sce,
       WebExUserSettingsFact,
       Notification,
       Authinfo,
@@ -156,7 +158,13 @@
 
             _self.getUserSettingsInfo();
 
-            $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(webexSiteName, Authinfo.getUserName(), $stateParams.currentUser.userName);
+            $scope.trustSrc = function (src) {
+              return $sce.trustAsResourceUrl(src);
+            };
+
+            $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(webexSiteName);
+            $scope.adminEmailParam = Authinfo.getUserName();
+            $scope.userEmailParam = $stateParams.currentUser.userName;
           },
           function (reason) {
 

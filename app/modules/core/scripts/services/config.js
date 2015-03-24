@@ -112,8 +112,8 @@ angular.module('Core')
         },
 
         webexUrl: {
-          siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminHomePage&adminEmail=%s',
-          siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminEditUserPage&adminEmail=%s&userEmail=%s'
+          siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminHomePage',
+          siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminEditUserPage'
         },
 
         scimSchemas: [
@@ -486,13 +486,13 @@ angular.module('Core')
           }
         },
 
-        getWebexAdvancedHomeUrl: function (siteURL, adminEmail) {
-          var params = [siteURL, adminEmail];
+        getWebexAdvancedHomeUrl: function (siteURL) {
+          var params = [siteURL];
           return Utils.sprintf(this.webexUrl.siteAdminHomeUrl, params);
         },
 
-        getWebexAdvancedEditUrl: function (siteURL, adminEmail, userEmail) {
-          var params = [siteURL, adminEmail, userEmail];
+        getWebexAdvancedEditUrl: function (siteURL) {
+          var params = [siteURL];
           return Utils.sprintf(this.webexUrl.siteAdminDeepUrl, params);
         }
 

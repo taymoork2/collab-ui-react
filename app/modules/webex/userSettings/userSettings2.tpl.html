@@ -194,23 +194,9 @@
         </p>
       </div>
       <!-- End of Training Center section -->
-      
-      <div id="webex-admin-linkout"
-           name="webex-admin-linkout">
-           
-        <span>
-          <div class="list-group-item-text default-link-row">
-            <a ng-href="{{webexAdvancedUrl}}" target="_blank">
-              <span translate="webexUserSettings2.advancedLink"></span>
-            </a>
-          </div>
-        </span>
-      
         <p class="list-group-item-text">
           &nbsp;
         </p>
-      </div>
-      
       <!-- ACTION BUTTONS -->
       <p align="right">
         <button id="btnUpdate"
@@ -224,4 +210,21 @@
       </p>
     </div>
   </cs-sp-section>
+  <p class="list-group-item-text">
+          &nbsp;
+        </p>
+  <div id="webex-admin-linkout"
+           name="webex-admin-linkout">
+        
+      <form name="advancedSettings" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
+      <input id="adminEmail" type="hidden" name="adminEmail" ng-model="advancedSettings.adminEmail" value="{{adminEmailParam}}" />
+      <input id="userEmail" type="hidden" name="userEmail" ng-model="advancedSettings.userEmail" value="{{userEmailParam}}" />
+      <div>
+      <a href="" onClick="document.getElementById('hiddenButton').click();">
+      <span translate="webexUserSettings2.advancedLink"></span>
+      </a>
+      <button id='hiddenButton' type="submit" style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;">Submit</button>
+      </div>
+    </form>
+    </div>
 </cs-sp-container>
