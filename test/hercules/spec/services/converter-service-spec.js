@@ -56,6 +56,20 @@ describe('ConverterService', function () {
     expect(converted[0].needs_attention).toBe(true);
   });
 
+  it('should aggregate alarm count', function () {
+    var mockData = [{
+      "services": [{
+        "connectors": [{
+          alarms: [{}]
+        }, {
+          alarms: [{}]
+        }]
+      }]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].alarm_count).toBe(2);
+  });
+
   it('should aggregate service status from hosts in cluster where one connector has alarms', function () {
     var mockData = [{
       "services": [{
@@ -396,6 +410,7 @@ describe('ConverterService', function () {
     var converted = Service.convertClusters(mockData);
     expect(converted[0].needs_attention).toBe(true);
     expect(converted[0].services[0].needs_attention).toBe(true);
+    expect(converted[0].services[0].alarm_count).toBe(1);
     expect(converted[0].services[0].connectors[0].deduced_alarms.length).toEqual(1);
     expect(converted[0].services[0].connectors[0].deduced_alarms[0].type).toEqual('software_version_mismatch');
     expect(converted[0].services[0].connectors[0].deduced_alarms[0].expected_version).toEqual('8.2-2.1');
