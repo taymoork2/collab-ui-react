@@ -61,7 +61,7 @@ describe('Service: USSService', function () {
 
   it('should refresh CI status for user', function () {
     $httpBackend
-      .when('POST', rootPath + '/userStatuses/actions/refreshEntitlementsForUser/invoke/?userId=123')
+      .when('POST', rootPath + 'userStatuses/actions/refreshEntitlementsForUser/invoke/?userId=123')
       .respond({});
 
     var callback = sinon.stub();
@@ -75,7 +75,7 @@ describe('Service: USSService', function () {
 
   it('should set error when CI refresh fails', function () {
     $httpBackend
-      .when('POST', rootPath + '/userStatuses/actions/refreshEntitlementsForUser/invoke/?userId=123')
+      .when('POST', rootPath + 'userStatuses/actions/refreshEntitlementsForUser/invoke/?userId=123')
       .respond(500);
 
     var callback = sinon.stub();
