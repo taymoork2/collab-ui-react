@@ -16,7 +16,7 @@ angular.module('Hercules')
         },
         pollCIForUser: function (userId, callback) {
           $http
-            .post(ConfigService.getUSSUrl() + '/pollCI/' + userId)
+            .post(ConfigService.getUSSUrl() + '/userStatuses/actions/refreshEntitlementsForUser/invoke/?userId=' + userId)
             .success(function (data) {
               callback(null, data);
             })
