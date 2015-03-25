@@ -8,7 +8,11 @@ angular.module('Hercules')
           $http
             .get(ConfigService.getUSSUrl() + '/userStatuses?userId=' + userId)
             .success(function (data) {
-              callback(null, data);
+              callback(null, {
+                userStatuses: _.filter(data.userStatuses, function (nugget) {
+                  return nugget.entitled || (nugget.entitled === false && nugget.state != "deactivated");
+                })
+              });
             })
             .error(function () {
               callback(arguments, null);
