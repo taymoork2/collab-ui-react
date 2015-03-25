@@ -155,9 +155,9 @@
     "heading": "Yetkilendirme listesi"
   },
   "downloadPage": {
-    "thank": "Cisco Spark\'a kaydolduğunuz için teşekkürler.",
+    "thank": "Cisco Spark'a kaydolduğunuz için teşekkürler.",
     "account": "Hesabınız {{email}} artık etkin.",
-    "install": "Lütfen aşağıdakileri uygulayarak Spark\'ı yükleyin",
+    "install": "Lütfen aşağıdakileri uygulayarak Spark'ı yükleyin",
     "link": "yükleyin.",
     "using": "Lütfen",
     "squared": "Spark."
@@ -318,7 +318,7 @@
     "launchBtn": "Başlat",
     "convert": "Dönüştür",
     "convertUsers": "Lisanssız Kullanıcıları Dönüştür",
-    "convertUsersText": "Şirket e-posta adresiyle kendi başlarına Project Spark\'a kaydolan kuruluşunuzun çalışanlarını lisanslı kullanıcıya dönüştürün. Lisanslı kullanıcılar ek kurumsal özellikler edinir ve kuruluşunuzun politikalarına ve yönetimine tabi olur.<br><br>Seçilen kullanıcılar, e-posta adreslerini şirket dışı e-posta adresine dönüştürme veya değiştirme daveti alacaktır.",
+    "convertUsersText": "Şirket e-posta adresiyle kendi başlarına Project Spark'a kaydolan kuruluşunuzun çalışanlarını lisanslı kullanıcıya dönüştürün. Lisanslı kullanıcılar ek kurumsal özellikler edinir ve kuruluşunuzun politikalarına ve yönetimine tabi olur.<br><br>Seçilen kullanıcılar, e-posta adreslerini şirket dışı e-posta adresine dönüştürme veya değiştirme daveti alacaktır.",
     "cancel": "İptal",
     "emailAddress": "E-posta Adresi",
     "name": "Ad",
@@ -336,7 +336,7 @@
   "inviteModal": {
     "title": "Hizmet Yetkilendirmesi",
     "heading": " Hizmet Yetkilendirmesini Etkinleştir",
-    "content": "Kuruluştaki kullanıcıları Cisco Spark\'ı kullanmaya davet edin...",
+    "content": "Kuruluştaki kullanıcıları Cisco Spark'ı kullanmaya davet edin...",
     "inviteAll": "Kuruluş genelinde hizmet yetkilendirmesini etkinleştir"
   },
   "ssoModal": {
