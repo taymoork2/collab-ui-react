@@ -153,8 +153,16 @@ angular.module('Core')
           }
         },
 
+        isWindowsPhone: function () {
+          if (navigator.userAgent.match(/WPDesktop/i) || navigator.userAgent.match(/Windows Phone/i)) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+
         isWeb: function () {
-          return !this.isIPhone() && !this.isAndroid();
+          return !this.isIPhone() && !this.isAndroid() && !this.isWindowsPhone();
         },
 
         removeDuplicates: function (array, key) {
