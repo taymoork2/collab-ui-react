@@ -86,6 +86,7 @@ angular.module('Core')
                   daysLeft: 0,
                   usage: 0,
                   licenses: 0,
+                  licenseList: [],
                   daysUsed: 0,
                   percentUsed: 0,
                   duration: trial.trialPeriod,
@@ -118,6 +119,7 @@ angular.module('Core')
                   trialObj.offer = offerNames.join(', ');
                 }
 
+                trialObj.licenseList = trial.licenses;
                 var now = moment().format('MMM D, YYYY');
                 var then = edate;
                 var start = moment(trial.startDate).format('MMM D, YYYY');
@@ -128,8 +130,8 @@ angular.module('Core')
 
                 var daysLeft = moment(then).diff(now, 'days');
                 trialObj.daysLeft = daysLeft;
+                trialObj.status = trial.state;
                 if (daysLeft >= 0) {
-                  trialObj.status = $translate.instant('customerPage.active');
                   $scope.activeList.push(trialObj);
                 } else {
                   //trialObj.daysLeft = Math.abs(daysLeft);
@@ -186,6 +188,7 @@ angular.module('Core')
                   daysLeft: 0,
                   usage: 0,
                   licenses: 0,
+                  licenseList: [],
                   daysUsed: 0,
                   percentUsed: 0,
                   duration: org.trialPeriod,
@@ -219,9 +222,11 @@ angular.module('Core')
                   orgObj.offer = offerNames.join(', ');
                 }
 
+                orgObj.licenseList = org.licenses;
                 var now = moment().format('MMM D, YYYY');
                 var then = edate;
                 var start = moment(org.startDate).format('MMM D, YYYY');
+                orgObj.status = org.state;
 
                 var daysDone = moment(now).diff(start, 'days');
                 orgObj.daysUsed = daysDone;
@@ -254,23 +259,6 @@ angular.module('Core')
             })], 'error');
           }
         });
-      };
-
-      $scope.getProgressValue = function (obj) {
-        if (obj.daysLeft <= 0) {
-          return obj.duration;
-        } else {
-          return obj.daysUsed;
-        }
-      };
-
-      $scope.getProgressPercent = function (obj) {
-        var percent = ($scope.getProgressValue(obj) / obj.duration) * 100;
-        return percent;
-      };
-
-      $scope.getProgressDuration = function (obj) {
-        return obj.duration;
       };
 
       $scope.getDaysLeft = function (daysLeft) {
@@ -348,15 +336,17 @@ angular.module('Core')
         '<div ng-cell></div>' +
         '</div>';
 
-      var licenseTemplate = '<div class="ngCellText" ng-class="col.colIndex()"><span ng-show="row.entity.trialId" ng-cell-text>{{row.entity.usage}}/{{row.entity.licenses}}</span></div>';
+      var serviceTemplate = '<div class="ngCellText align-center">' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseActive(getLicense(row.entity.licenseList, col.field))" class="badge badge-primary" ng-class="{\'badge-disabled\': row.entity.status === \'SUSPENDED\'}" translate="customerPage.active"></span>' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseATrial(getLicense(row.entity.licenseList, col.field))" class="badge badge-warning" ng-class="{\'badge-disabled\': row.entity.status === \'SUSPENDED\'}" translate="customerPage.trial"></span>' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseFree(getLicense(row.entity.licenseList, col.field))" class="free" ng-class="{\'disabled\': row.entity.status === \'SUSPENDED\'}" translate="customerPage.free"></span></div>';
 
-      var statusTemplate = '<div class="ngCellText"><div style="width:225px; height:6px"><span>{{row.entity.state}}</span> </div></div>';
-
-      var progressTemplate = '<div class="ngCellText">' +
-        '<div ng-show="row.entity.trialId" class="progress"><div class="progress-bar" ng-class="{\'danger-bar\': row.entity.daysLeft <= 5, \'warning-bar\': (row.entity.daysLeft < row.entity.duration/2), \'success-bar\': (row.entity.daysLeft >= row.entity.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(row.entity)}}" aria-valuemin="0" aria-valuemax="{{getProgressDuration(row.entity)}}" style="width: {{getProgressPercent(row.entity)}}%;"></div></div>' +
-        '</div>';
-
-      var daysLeftTemplate = '<div class="ngCellText"><div ng-show="row.entity.trialId" ng-class="{\'trial-danger-text\': row.entity.daysLeft <= 5}"><span>{{getGridDaysLeft(row.entity.daysLeft)}}</span></div></div>';
+      var notesTemplate = '<div class="ngCellText">' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft > 0" translate="customerPage.daysRemaining" translate-values="{count: row.entity.daysLeft}"></span>' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft == 0" class="red" translate="customerPage.expiringToday"></span>' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft < 0" class="red" translate="customerPage.expired"></span>' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'SUSPENDED\'" translate="customerPage.suspended"> </span>' +
+        '<span ng-if="!isLicenseInfoAvailable(row.entity.licenseList)" class="red" translate="customerPage.licenseInfoNotAvailable"></span></div>';
 
       $scope.gridOptions = {
         data: 'gridData',
@@ -373,42 +363,36 @@ angular.module('Core')
 
         columnDefs: [{
           field: 'customerName',
-          displayName: $filter('translate')('customerPage.customerNameHeader'),
+          displayName: $translate.instant('customerPage.customerNameHeader'),
           width: '25%'
         }, {
-          field: 'offer',
-          displayName: $filter('translate')('customerPage.trialIdHeader'),
-          sortable: true,
-          width: '14%'
+          field: 'messaging',
+          displayName: $translate.instant('customerPage.messaging'),
+          width: '12%',
+          cellTemplate: serviceTemplate,
+          headerClass: 'align-center'
         }, {
-          field: 'license',
-          displayName: $filter('translate')('customerPage.licenseHeader'),
-          sortable: false,
-          cellTemplate: licenseTemplate,
-          width: '10%'
+          field: 'conferencing',
+          displayName: $translate.instant('customerPage.conferencing'),
+          width: '12%',
+          cellTemplate: serviceTemplate,
+          headerClass: 'align-center'
         }, {
-          field: 'status',
-          displayName: $filter('translate')('customerPage.statusHeader'),
-          sortable: true,
-          cellTemplate: statusTemplate,
-          width: '105'
+          field: 'communications',
+          displayName: $translate.instant('customerPage.communications'),
+          width: '12%',
+          cellTemplate: serviceTemplate,
+          headerClass: 'align-center'
         }, {
-          field: 'progress',
-          displayName: null,
-          sortable: false,
-          cellTemplate: progressTemplate
-        }, {
-          field: 'daysLeft',
-          displayName: $filter('translate')('customerPage.statusDaysLeft'),
-          sortable: true,
-          cellTemplate: daysLeftTemplate,
-          width: '120'
+          field: 'notes',
+          displayName: $translate.instant('customerPage.notes'),
+          cellTemplate: notesTemplate,
         }, {
           field: 'action',
-          displayName: $filter('translate')('customerPage.actionHeader'),
+          displayName: $translate.instant('customerPage.actionHeader'),
           sortable: false,
           cellTemplate: actionsTemplate,
-          width: '90'
+          width: '90px'
         }]
       };
 
@@ -472,5 +456,42 @@ angular.module('Core')
           $scope.gridData = $scope.managedOrgsList;
         }
       };
+
+      $scope.getLicense = function (licenses, licenseTypeField) {
+        var offerName;
+        if (licenseTypeField === 'messaging') {
+          offerName = 'MS';
+        } else if (licenseTypeField === 'conferencing') {
+          offerName = 'CF';
+        } else if (licenseTypeField === 'communications') {
+          offerName = 'CO';
+        }
+
+        if (angular.isDefined(licenses) && angular.isDefined(licenses.length)) {
+          for (var i = 0; i < licenses.length; i++) {
+            if (licenses[i].offerName === offerName) {
+              return licenses[i];
+            }
+          }
+        }
+        return null;
+      };
+
+      $scope.isLicenseInfoAvailable = function (licenses) {
+        return angular.isDefined(licenses) && licenses !== null && angular.isDefined(licenses.length) && licenses.length > 0;
+      };
+
+      $scope.isLicenseATrial = function (license) {
+        return angular.isDefined(license) && license !== null && license.isTrial === true;
+      };
+
+      $scope.isLicenseActive = function (license) {
+        return angular.isDefined(license) && license !== null && license.isTrial === false;
+      };
+
+      $scope.isLicenseFree = function (license) {
+        return angular.isUndefined(license) || license === null;
+      };
+
     }
   ]);
