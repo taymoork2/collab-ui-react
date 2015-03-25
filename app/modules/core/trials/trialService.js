@@ -30,17 +30,13 @@
         });
       }
 
-      $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
       var editTrialUrl = trialsUrl + '/' + id;
 
       return $http({
-          method: 'PATCH',
-          url: editTrialUrl,
-          data: editTrialData
-        })
-        .error(function (data, status) {
-          Auth.handleStatus(status);
-        });
+        method: 'PATCH',
+        url: editTrialUrl,
+        data: editTrialData
+      });
     }
 
     function startTrial(customerName, customerEmail, trialPeriod, count, startDate, offersList) {
@@ -59,12 +55,7 @@
         });
       }
 
-      $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
-      return $http.post(trialsUrl, trialData)
-        .error(function (data, status) {
-          Auth.handleStatus(status);
-        });
+      return $http.post(trialsUrl, trialData);
     }
   }
 })();

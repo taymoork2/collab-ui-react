@@ -42,10 +42,11 @@ angular.module('Squared')
           expires: 1 // 1 day
         };
 
-        // call backend to decrypt param 
+        // call backend to decrypt param
         Inviteservice.resolveInvitedUser(encryptedUser)
-          .then(function (data) {
+          .then(function (res) {
             Log.debug('param decrypted');
+            var data = res.data;
 
             inviteCookie.userEmail = data.email;
             inviteCookie.displayName = data.displayName;

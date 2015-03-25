@@ -29,8 +29,6 @@ angular.module('Mediafusion')
             meetingListUrl = meetingListUrl + '?' + queryParams;
           }
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           //Actual rest call to get meeting info from server and also error case is handeled.
           $http.get(meetingListUrl)
             .success(function (data, status) {
@@ -47,15 +45,12 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
         listMeetingsinfo: function (startDateTime, callback) {
           var meetinginfolistUrl = Utils.sprintf(meetinginfoUrl + '/meeting/getAddnInfo?id=' + $rootScope.meetingid, [Authinfo.getOrgId()]);
           meetinginfolistUrl = meetinginfolistUrl + "&startDateTime=" + startDateTime;
-
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           //Actual rest call to get additional meeting info from server and also error case is handeled.
           $http.get(meetinginfolistUrl)
@@ -73,13 +68,11 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
 
         },
         listParticipantinfo: function (callback) {
           var participantlistUrl = Utils.sprintf(meetinginfoUrl + '/participant/getPartInfo?id=' + $rootScope.meetingid, [Authinfo.getOrgId()]);
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           //Actual rest call to get participant info from server and also error case is handeled.
           $http.get(participantlistUrl)
@@ -97,7 +90,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -109,7 +101,6 @@ angular.module('Mediafusion')
           var meetingChartUrl = Utils.sprintf(baseUrl + '/meeting/meetingGraphData', [Authinfo.getOrgId()]);
           var queryParams = "day=" + numberOfDays + "&type=" + durationType + "&latestdate=" + latestDate;
           meetingChartUrl = meetingChartUrl + '?' + queryParams;
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           //Actual rest call to get meeting chart info from server and also error case is handeled.
           $http.get(meetingChartUrl)
@@ -127,7 +118,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         }
 

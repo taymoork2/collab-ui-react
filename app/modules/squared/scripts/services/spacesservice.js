@@ -8,7 +8,6 @@ angular.module('Squared')
 
       return {
         listDevices: function (callback) {
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(deviceUrl)
             .success(function (data, status) {
               data.success = true;
@@ -18,7 +17,6 @@ angular.module('Squared')
               data.success = false;
               data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 
@@ -28,7 +26,6 @@ angular.module('Squared')
           };
 
           if (deviceData.name.length > 0) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             $http.post(deviceUrl, deviceData)
               .success(function (data, status) {
                 data.success = true;
@@ -38,7 +35,6 @@ angular.module('Squared')
                 data.success = false;
                 data.status = status;
                 callback(data, status);
-                Auth.handleStatus(status);
               });
           } else {
             callback('No valid device entered.');
@@ -50,7 +46,6 @@ angular.module('Squared')
 
           if ((deviceUuid !== null) && (deviceUuid.length > 0)) {
             var deleteUrl = deviceUrl + '/' + deviceUuid;
-            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             $http.delete(deleteUrl)
               .success(function (data, status) {
                 data.success = true;
@@ -60,7 +55,6 @@ angular.module('Squared')
                 data.success = false;
                 data.status = status;
                 callback(data, status);
-                Auth.handleStatus(status);
               });
           } else {
             callback('No valid device available to delete.');

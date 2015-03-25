@@ -16,8 +16,6 @@ angular.module('Mediafusion')
 
           var overallUtilizationUrl = Utils.sprintf(baseUrl + '/utilization/overAllUtilization');
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           //Actual rest call to get OverallUtilization info from server and also error case is handeled.
           $http.get(overallUtilizationUrl)
             .success(function (data, status) {
@@ -34,7 +32,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -44,8 +41,6 @@ angular.module('Mediafusion')
 
           //console.log("inside realTimeBridgeUtilization of utilizationservice");
           var realTimeBridgeUtilizationUrl = Utils.sprintf(baseUrl + '/utilization/realTimeUtilization');
-
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           //Actual rest call to get realTimeBridgeUtilizationUrl info from server and also error case is handeled.
           $http.get(realTimeBridgeUtilizationUrl)
@@ -63,7 +58,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 

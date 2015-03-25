@@ -49,7 +49,6 @@ angular.module('Squared')
             Log.debug(logsMetricEvent);
 
             if (Config.isProd()) {
-              $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
               $http.post(metricUrl, logsMetricEvent)
                 .success(function (data, status) {
                   data.success = true;
@@ -58,7 +57,6 @@ angular.module('Squared')
                 .error(function (data, status) {
                   data.success = false;
                   data.status = status;
-                  Auth.handleStatus(status);
                 });
             }
           } else {

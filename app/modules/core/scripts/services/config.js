@@ -52,7 +52,7 @@ angular.module('Core')
           oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s',
           oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
           oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
-          oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope='
+          oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s'
         },
 
         feedbackNavConfig: {
@@ -394,8 +394,11 @@ angular.module('Core')
           return Utils.sprintf(this.oauthUrl.oauth2CodeUrlPattern, params);
         },
 
-        getOauthAccessCodeUrl: function (refresh) {
-          var params = [refresh];
+        getOauthAccessCodeUrl: function (refresh_token) {
+          var params = [
+            refresh_token,
+            this.oauthClientRegistration.scope
+          ];
           return Utils.sprintf(this.oauthUrl.oauth2AccessCodeUrlPattern, params);
         },
 
@@ -494,8 +497,11 @@ angular.module('Core')
         getWebexAdvancedEditUrl: function (siteURL) {
           var params = [siteURL];
           return Utils.sprintf(this.webexUrl.siteAdminDeepUrl, params);
-        }
+        },
 
+        getOAuthClientRegistrationCredentials: function () {
+          return Utils.Base64.encode(this.oauthClientRegistration.id + ':' + this.oauthClientRegistration.secret);
+        }
       };
 
       config.roleStates = {

@@ -61,7 +61,6 @@ angular.module('Core')
             listUrl = listUrl + '&sortOrder=' + sortOrder;
           }
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(listUrl)
             .success(function (data, status) {
               data.success = true;
@@ -77,7 +76,6 @@ angular.module('Core')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -147,7 +145,6 @@ angular.module('Core')
 
           var adminUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(adminUrl)
             .success(function (data, status) {
               data.success = true;
@@ -162,7 +159,6 @@ angular.module('Core')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -171,7 +167,6 @@ angular.module('Core')
           var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
           var getUserUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(getUserUrl)
             .success(function (data, status) {
               data.success = true;
@@ -182,7 +177,6 @@ angular.module('Core')
               data.success = false;
               data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         }
       };

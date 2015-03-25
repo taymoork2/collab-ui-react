@@ -34,11 +34,8 @@ describe('Service: Partner Reports Service', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  var Auth = jasmine.createSpyObj('Auth', ['handleStatus']);
-
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
-    $provide.value("Auth", Auth);
   }));
 
   beforeEach(inject(function (_$httpBackend_, _PartnerReportService_, _Config_, _Notification_) {

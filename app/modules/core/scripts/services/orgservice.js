@@ -13,7 +13,7 @@ angular.module('Core')
           } else {
             scomUrl = Config.scomUrl + '/' + Authinfo.getOrgId();
           }
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
           $http.get(scomUrl)
             .success(function (data, status) {
               data.success = true;
@@ -23,7 +23,6 @@ angular.module('Core')
               data.success = false;
               data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 
@@ -34,7 +33,7 @@ angular.module('Core')
           } else {
             adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
           }
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
           $http.get(adminUrl)
             .success(function (data, status) {
               data.success = true;
@@ -44,7 +43,6 @@ angular.module('Core')
               data.success = false;
               data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 
@@ -55,7 +53,7 @@ angular.module('Core')
           } else {
             adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers";
           }
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
           $http.get(adminUrl)
             .success(function (data, status) {
               data.success = true;
@@ -65,13 +63,12 @@ angular.module('Core')
               data.success = false;
               data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 
         setSetupDone: function () {
           var adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/setup';
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
           return $http({
             method: 'PATCH',
             url: adminUrl
@@ -92,7 +89,6 @@ angular.module('Core')
             payload['helpUrl'] = helpUrl;
           }
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http({
               method: 'PATCH',
               url: orgUrl,
@@ -116,21 +112,17 @@ angular.module('Core')
             'encryptedQueryString': enc
           };
 
-          Auth.getAccessToken().then(function (token) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-            $http.post(orgUrl, orgRequest)
-              .success(function (data, status) {
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                data.success = false;
-                data.status = status;
-                callback(data, status);
-              });
-          });
+          $http.post(orgUrl, orgRequest)
+            .success(function (data, status) {
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
         }
-
       };
     }
   ]);

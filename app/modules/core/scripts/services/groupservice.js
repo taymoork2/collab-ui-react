@@ -10,7 +10,6 @@ angular.module('Core')
 
         getGroupList: function (callback) {
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(groupssUrl)
             .success(function (data, status) {
               data.success = true;
@@ -20,7 +19,6 @@ angular.module('Core')
             .error(function (data, status) {
               data.success = false;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         }
 

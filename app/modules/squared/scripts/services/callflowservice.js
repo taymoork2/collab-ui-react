@@ -16,7 +16,6 @@ angular.module('Squared')
             callflowChartsUrl += '&start_ts=' + callStart;
           }
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(callflowChartsUrl)
             .success(function (data, status) {
               data.success = true;
@@ -25,7 +24,6 @@ angular.module('Squared')
             })
             .error(function (data, status) {
               callback(data, status);
-              Auth.handleStatus(status);
             });
         }
       };

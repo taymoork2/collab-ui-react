@@ -1,13 +1,12 @@
 'use strict';
 
-angular.module('Core')
+angular
+  .module('Core')
   .service('FeedbackService', ['$http', '$rootScope', '$location', 'Config', 'Log', '$translate', 'Auth',
     function ($http, $rootScope, $location, Config, Log, $translate, Auth) {
-
       var feedbackUrl = Config.feedbackUrl;
 
       return {
-
         getFeedbackUrl: function (appType, feedbackId, callback) {
           var feedbackData = {
             'appType': appType,
@@ -15,9 +14,7 @@ angular.module('Core')
             'feedbackId': feedbackId,
             'languageCode': $translate.use()
           };
-
           if (appType && feedbackId) {
-            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             $http({
                 method: 'POST',
                 url: feedbackUrl,
@@ -29,12 +26,10 @@ angular.module('Core')
               })
               .error(function (data, status) {
                 callback(data, status);
-                Auth.handleStatus(status);
               });
           } else {
             callback('get feedback url not valid - empty request.');
           }
-          //console.log(feedbackData);
         },
 
         getUrlTemplate: function (url, callback) {
@@ -48,7 +43,6 @@ angular.module('Core')
             })
             .error(function (data, status) {
               callback(data, status);
-              Auth.handleStatus(status);
             });
         }
       };

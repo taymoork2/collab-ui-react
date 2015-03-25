@@ -73,7 +73,7 @@ angular
 
       var refreshToken = function () {
         $interval(function () {
-          Auth.RefreshAccessToken(Storage.get('refreshToken'))
+          Auth.refreshAccessToken(Storage.get('refreshToken'))
             .then(function (data) {
               Storage.put('accessToken', data.access_token);
               $rootScope.token = data.access_token;

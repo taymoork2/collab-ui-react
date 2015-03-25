@@ -11,7 +11,6 @@ angular.module('Squared')
           var csadminData = {
             'encryptedQueryString': encryptedParam
           };
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.post(csadminUrl, csadminData)
             .success(function (data, status) {
               data.success = true;
@@ -21,7 +20,6 @@ angular.module('Squared')
               data.success = false;
               data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         }
       };

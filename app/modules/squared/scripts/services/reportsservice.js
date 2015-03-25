@@ -80,8 +80,6 @@ angular.module('Squared')
       return {
 
         getUsageMetrics: function (metricType, params) {
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           var metricUrl = buildUrl(metricType, params);
 
           return $http.get(metricUrl)
@@ -95,7 +93,6 @@ angular.module('Squared')
               data.status = status;
               data.errorMsg = data;
               sendChartResponse(data, status, metricType);
-              Auth.handleStatus(status);
             });
         },
 
@@ -175,7 +172,6 @@ angular.module('Squared')
         getLogInfo: function (locusId, startTime, callback) {
           var logInfoUrl = logInfoBaseUrl + locusId + '?locusCallStartTime=' + startTime;
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(logInfoUrl)
             .success(function (data, status) {
               data.success = true;
@@ -186,7 +182,6 @@ angular.module('Squared')
               data.success = false;
               data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 

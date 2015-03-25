@@ -8,7 +8,6 @@ angular.module('Squared')
         listLogs: function (userId, callback) {
           var logsUrl = Config.getAdminServiceUrl() + 'logs/' + userId;
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(logsUrl)
             .success(function (data, status) {
               data.success = true;
@@ -19,14 +18,12 @@ angular.module('Squared')
               // data.success = false;
               // data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 
         searchLogs: function (searchInput, callback) {
           var logsUrl = Config.getAdminServiceUrl() + 'logs?search=' + window.encodeURIComponent(searchInput);
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(logsUrl)
             .success(function (data, status) {
               data.success = true;
@@ -34,10 +31,7 @@ angular.module('Squared')
               callback(data, status);
             })
             .error(function (data, status) {
-              // data.success = false;
-              // data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 
@@ -47,7 +41,6 @@ angular.module('Squared')
             file: filename
           };
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.post(logsUrl, payload)
             .success(function (data, status) {
               data.success = true;
@@ -55,10 +48,7 @@ angular.module('Squared')
               callback(data, status);
             })
             .error(function (data, status) {
-              // data.success = false;
-              // data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         }
       };

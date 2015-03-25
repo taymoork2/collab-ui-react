@@ -18,7 +18,6 @@
     return factory;
 
     function getTrialsList(callback) {
-      $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
       $http.get(trialsUrl)
         .success(function (data, status) {
           data.success = true;
@@ -29,12 +28,10 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          Auth.handleStatus(status);
         });
     }
 
     function getManagedOrgsList(callback) {
-      $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
       $http.get(managedOrgsUrl)
         .success(function (data, status) {
           data.success = true;
@@ -45,7 +42,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          Auth.handleStatus(status);
         });
     }
   }

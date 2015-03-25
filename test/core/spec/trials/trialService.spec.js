@@ -44,13 +44,6 @@ describe('Service: Trial Service', function () {
       $httpBackend.flush();
     });
 
-    it('should handle an error', function () {
-      $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(500);
-      TrialService.startTrial('', '', '', '', '', ['COLLAB']);
-      $httpBackend.flush();
-      expect(Auth.handleStatus).toHaveBeenCalled();
-    });
-
   });
 
   describe('editTrial function', function () {
@@ -61,13 +54,6 @@ describe('Service: Trial Service', function () {
         expect(response.data).toEqual(trialEditResponse);
       });
       $httpBackend.flush();
-    });
-
-    it('should handle an error', function () {
-      $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/444').respond(500);
-      TrialService.editTrial('444', '', '', '', '', ['COLLAB']);
-      $httpBackend.flush();
-      expect(Auth.handleStatus).toHaveBeenCalled();
     });
 
   });

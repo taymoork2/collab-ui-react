@@ -110,6 +110,11 @@ describe('Config', function () {
     expect(Config.getEnv()).toBe('prod');
   });
 
+  it('should return the correct oauth credentials', function () {
+    var creds = Config.getOAuthClientRegistrationCredentials();
+    expect(creds).toBe('QzgwZmI5YzcwOTZiZDg0NzQ2MjczMTdlZTFkN2E4MTdlZmYzNzJjYTljOWNlZTNjZTQzYzNlYTNlOGQxNTExZWM6YzEwYzM3MWI0NjQxMDEwYTc1MDA3M2IzYzhlNjVhN2ZmZjA1Njc0MDBkMzE2MDU1ODI4ZDNjNzQ5MjViMDg1Nw==');
+  });
+
   it('should return correct admin service url', function () {
     whenCalling('getAdminServiceUrl').expectUrlToBe({
       development: 'https://atlas-integration.wbx2.com/admin/api/v1/',
@@ -167,10 +172,11 @@ describe('Config', function () {
   });
 
   it('should return correct access code url', function () {
+    var scope = 'webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization';
     whenCalling('getOauthAccessCodeUrl', 'foo').expectUrlToBe({
-      development: 'grant_type=refresh_token&refresh_token=foo&scope=',
-      integration: 'grant_type=refresh_token&refresh_token=foo&scope=',
-      production: 'grant_type=refresh_token&refresh_token=foo&scope='
+      development: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
+      integration: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
+      production: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope
     });
   });
 

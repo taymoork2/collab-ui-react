@@ -8,8 +8,6 @@ angular.module('Core')
 
       return {
         getDirSyncDomain: function (callback) {
-
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(dirsyncUrl)
             .success(function (data, status) {
               data.success = true;
@@ -17,7 +15,6 @@ angular.module('Core')
               callback(data, status);
             })
             .error(function (data, status) {
-              Auth.handleStatus(status);
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -27,7 +24,6 @@ angular.module('Core')
         getDirSyncStatus: function (callback) {
           var dirsyncStatusUrl = dirsyncUrl + '/status';
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.get(dirsyncStatusUrl)
             .success(function (data, status) {
               data.success = true;
@@ -35,7 +31,6 @@ angular.module('Core')
               callback(data, status);
             })
             .error(function (data, status) {
-              Auth.handleStatus(status);
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -48,7 +43,6 @@ angular.module('Core')
             domainName: domainName
           };
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http.post(domainUrl, payload)
             .success(function (data, status) {
               data.success = true;
@@ -56,7 +50,6 @@ angular.module('Core')
               callback(data, status);
             })
             .error(function (data, status) {
-              Auth.handleStatus(status);
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -69,7 +62,6 @@ angular.module('Core')
             fullSyncEnable: true
           };
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
           $http({
               method: 'PATCH',
               url: dirsyncUrl,
@@ -81,7 +73,6 @@ angular.module('Core')
               callback(data, status);
             })
             .error(function (data, status) {
-              Auth.handleStatus(status);
               data.success = false;
               data.status = status;
               callback(data, status);

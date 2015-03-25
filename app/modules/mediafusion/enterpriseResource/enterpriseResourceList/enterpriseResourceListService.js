@@ -12,7 +12,7 @@ angular.module('Mediafusion')
         //console.log("Inside vtslistservice function");
 
         var listUrl = 'http://mf-device-mgmt-service.mb-lab.huron.uno/mediafusion/v1/devices' + '?orgId=' + [Authinfo.getOrgId()];
-        $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
         $http.get(listUrl)
           .success(function (data, status) {
             data.success = true;
@@ -29,7 +29,6 @@ angular.module('Mediafusion')
             if (errors) {
               description = errors[0].description;
             }
-            Auth.handleStatus(status, description);
           });
 
       },
@@ -38,7 +37,7 @@ angular.module('Mediafusion')
         //console.log("Inside remove function");
 
         var deleteUrl = 'http://mf-device-mgmt-service.mb-lab.huron.uno/mediafusion/v1/devices' + '/' + entResId;
-        $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
         $http.delete(deleteUrl)
           .success(function (data, status) {
             data.success = true;
@@ -55,7 +54,6 @@ angular.module('Mediafusion')
             if (errors) {
               description = errors[0].description;
             }
-            Auth.handleStatus(status, description);
           });
 
       },
@@ -89,7 +87,6 @@ angular.module('Mediafusion')
               description = errors[0].description;
             }
             //console.log("inside http changeState error description = " + description);
-            Auth.handleStatus(status, description);
           });
 
       }

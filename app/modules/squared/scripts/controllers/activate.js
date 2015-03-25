@@ -41,7 +41,9 @@ angular.module('Squared')
       if (encryptedParam) {
 
         Activateservice.activateUser(encryptedParam)
-          .then(function (data) {
+          .then(function (res) {
+            var data = res.data;
+
             $scope.userEmail = data.email;
             $scope.deviceName = data.deviceName;
             $scope.pushId = data.pushId;
@@ -77,9 +79,9 @@ angular.module('Squared')
       $scope.resendCode = function () {
 
         Activateservice.resendCode(encryptedParam)
-          .then(function (data) {
-            if (data) {
-              $scope.eqp = data.eqp;
+          .then(function (res) {
+            if (res.data) {
+              $scope.eqp = res.data.eqp;
               showHide(false, false, true);
             }
           }, function (status) {
