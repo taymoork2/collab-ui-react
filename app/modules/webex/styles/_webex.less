@@ -1,1 +1,18 @@
 @import '../userSettings/_usersettings';
+
+.popout-link {
+  color: @link-color;
+  font-weight: lighter;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 0;
+
+  &:hover,
+  &:focus {
+  	//TODO: finalize on the hover color
+  	//color: @link-hover-color;
+    color: @gray-darkest;
+    text-decoration: none;
+    background-color: transparent;
+  }
+}
