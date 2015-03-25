@@ -22,11 +22,15 @@ describe('Squared Add & Entitle User Flows', function () {
       login.login('test-user');
     });
 
-    it('should open add user modal in users page while clicking on the quick link', function () {
-      utils.click(landing.addUserQuickLink);
-      navigation.expectCurrentUrl('/users');
+    it('clicking on users tab should change the view', function () {
+      navigation.clickUsers();
+    });
+
+    it('click on add button should pop up the adduser modal and display only invite button', function () {
+      utils.click(users.addUsers);
       utils.expectIsDisplayed(users.manageDialog);
     });
+
   });
 
   describe('Add an existing user', function () {

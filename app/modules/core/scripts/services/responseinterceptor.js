@@ -27,11 +27,11 @@
     }
 
     function isHttpAuthError(response) {
-      return response.status == 401 && responseContains(response, 'This request requires HTTP authentication.');
+      return response.status == 401 && responseContains(response, 'This request requires HTTP authentication');
     }
 
     function isCIInvalidAccessTokenError(response) {
-      return response.status == 400 && responseContains(response, "Invalid access token.");
+      return response.status == 400 && responseContains(response, "Invalid access token");
     }
 
     function refreshTokenHasExpired(response) {
