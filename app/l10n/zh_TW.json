@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cisco 協同作業管理",
+    "title": "Cisco Spark 管理",
     "login": "登入",
     "loading": "載入中"
   },
@@ -15,6 +15,7 @@
     "entitle": "授權",
     "firstnameHeader": "名字",
     "lastnameHeader": "姓氏",
+    "displayNameHeader": "顯示名稱",
     "emailHeader": "電子郵件",
     "actionHeader": "動作",
     "invite": "傳送邀請",
@@ -73,11 +74,11 @@
     "groupColHeader": "群組名稱",
     "collabService": "選取應該授與群組中使用者的協同作業服務授權。",
     "addEntitleError": "專用權不足以新增使用者或向使用者授權。",
-    "freeMsg": "免費的 Squared 小組會議室",
-    "freeConf": "免費的 3 方同步",
+    "freeMsg": "免費的小組會議室",
+    "freeConf": "免費的 3 人會議",
     "freeComm": "免費的網路間 IP 語音與視訊通話",
     "paidMsg": "標準小組會議室",
-    "paidConf": "25 方同步",
+    "paidConf": "25 人會議",
     "paidComm": "進階通訊"
   },
   "usersPreview": {
@@ -122,6 +123,8 @@
     "organizationTabDesc": "管理組織詳細資料、檢視指派的服務及存取工具。",
     "fusionDetailsTab": "Fusion",
     "fusionDetailsTabDesc": "Fusion 管理",
+    "fusionNextTab": "Fusion 下一步",
+    "fusionNextTabDesc": "Fusion 管理",
     "callRoutingTab": "通話路由",
     "callRoutingTabDesc": "管理呼叫駐留等通話路由功能",
     "mediaOnHoldTab": "媒體保留中",
@@ -141,8 +144,8 @@
     "welcome": "歡迎！",
     "feedback": "意見回饋",
     "logout": "登出",
-    "appTitle": "Squared 管理工具",
-    "genericTitle": "Squared",
+    "appTitle": "Cisco Spark 管理",
+    "genericTitle": "Spark",
     "search": "依姓名或電子郵件搜尋使用者",
     "greeting": "{{name}} 您好！",
     "launchPartner": "管理我的組織"
@@ -152,12 +155,12 @@
     "heading": "下列項目的授權清單："
   },
   "downloadPage": {
-    "thank": "感謝您向 Cisco Squared 註冊。",
+    "thank": "感謝您向 Cisco Spark 註冊！",
     "account": "您的帳戶 {{email}} 現已在使用中。",
-    "install": "請按這個鏈結來安裝",
+    "install": "請按下列鏈結來安裝 Spark",
     "link": "Squared。",
     "using": "請開始使用",
-    "squared": "Squared。"
+    "squared": "Spark。"
   },
   "invitePage": {
     "redirect": "重新導向中...",
@@ -315,7 +318,7 @@
     "launchBtn": "啟動",
     "convert": "轉換",
     "convertUsers": "轉換未授權使用者",
-    "convertUsersText": "將已使用公司電子郵件地址來單獨註冊 Project Squared 的組織員工轉換為授權使用者。授權使用者會收到其他企業功能，並且受組織原則和管理的限制。<br><br>所選使用者將收到邀請，讓他們將其電子郵件地址轉換或變更為非公司電子郵件地址。",
+    "convertUsersText": "將已使用公司電子郵件地址來單獨註冊 Project Spark 的組織員工轉換為授權使用者。授權使用者會收到其他企業功能，並且受組織原則和管理的限制。<br><br>所選使用者將收到邀請，讓他們將其電子郵件地址轉換或變更為非公司電子郵件地址。",
     "cancel": "取消",
     "emailAddress": "電子郵件地址",
     "name": "名稱",
@@ -333,7 +336,7 @@
   "inviteModal": {
     "title": "服務授權",
     "heading": " 啟用服務授權",
-    "content": "邀請組織中的使用者使用 Squared...",
+    "content": "邀請組織中的使用者使用 Cisco Spark...",
     "inviteAll": "啟用組織範圍服務授權"
   },
   "ssoModal": {
@@ -346,7 +349,7 @@
     "testSSOSetupTitle": "測試 SSO 設定",
     "enableSSOTitle": "啟用 SSO",
     "importMetadataDesc": "透過從身分識別提供者 (IdP) 取得信任中繼資料檔案並在這裡上傳，開始設定 IdP 與 Cisco 協同作業雲端之間的信任關係。",
-    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
+    "importMetadataNote": "附註：透過匯入中繼資料檔案，將<b>開啟</b> SSO。如果只是測試 SSO，請記住在下一個畫面中關閉 SSO。",
     "exportMetadataDesc1": "從 Cisco 協同作業服務下載下列信任中繼資料檔案，並將檔案上傳至身分識別提供者 (IdP) 管理介面。",
     "exportMetadataDesc2": "完成將檔案上傳至 IdP 後，請回到這個畫面並按「下一步」。",
     "testSSOSetupDesc": "您已準備好測試 SSO 設定。按下面的按鈕以啟動新視窗。如果成功登入，則可以回到這個畫面並按「下一步」以完成 SSO 設定。",
@@ -410,7 +413,7 @@
     "domain": "網域",
     "defaultPlaceholder": "預設值",
     "domainDesc": "識別您將同步的 Active Directory 網域。",
-    "installStep1": "1. 在企業中<a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>下載</a>並安裝 Cisco Cloud Connector。",
+    "installStep1": "1. 在企業中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下載</a>並安裝 Cisco Cloud Connector。",
     "installStep2": "2. 設定 Active Directory 同步協議。",
     "installStep3": "3. 測試同步協議。",
     "nextSteps": "準備好確認正在同步身分資訊時按「下一步」按鈕。",
@@ -549,7 +552,7 @@
     "domain": "網域",
     "defaultPlaceholder": "預設值",
     "domainDesc": "識別您將同步的 Active Directory 網域。",
-    "installStep1": "1. 在企業中<a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>下載</a>並安裝 Cisco Cloud Connector。",
+    "installStep1": "1. 在企業中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下載</a>並安裝 Cisco Cloud Connector。",
     "installStep2": "2. 設定 Active Directory 同步協議。",
     "installStep3": "3. 測試同步協議。",
     "nextSteps": "準備好確認正在同步身分資訊時按「下一步」按鈕。",
@@ -627,7 +630,7 @@
     "createButton": "建立呼叫駐留"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "或",
     "voicemail": "語音郵件",
     "singleNumberReach": "單一號碼存取"
@@ -733,12 +736,12 @@
     "launchPortal": "啟動公司入口網站",
     "launchPortalPrompt": "如果想要給客戶設定服務：",
     "or": "或",
-    "squareducError": "已建立試用服務，但無法供應 Squared UC。",
+    "squareducError": "已建立試用服務，但無法供應 Spark UC。",
     "addSuccess": "已成功給 {{customerName}} 啟動試用服務，共 {{licenseCount}} 個授權，時間為 {{licenseDuration}} 天。",
     "editSuccess": "已成功編輯 {{customerName}} 的試用服務，共 {{licenseCount}} 個授權，時間為 {{licenseDuration}} 天。"
   },
   "trials": {
-    "collab": "標準小組會議室 + 25 方同步",
+    "collab": "標準小組會議室 + 25 人會議",
     "squaredUC": "進階通訊"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "今天到期",
     "unused": "未使用的授權",
     "uploadNumbers": "上傳次數",
-    "overPlan": "超過計劃限制"
+    "overPlan": "超過計劃限制",
+    "communication": "通訊",
+    "phoneNumbers": "電話號碼",
+    "none": "無"
   },
   "didAddModal": {
     "title": "新增電話號碼",
@@ -787,6 +793,21 @@
     "processingText": "正在新增電話號碼...",
     "successText": "已成功新增 {{count}} 個新的電話號碼。",
     "failText": "有 {{count}} 個電話號碼已存在於系統中。",
+    "sendEmail": "通知客戶",
+    "notifyCustLater": "稍後通知客戶",
+    "emailSuccessText": "電子郵件已成功傳送給客戶。",
+    "emailFailText": "傳送電子郵件時發生錯誤",
+    "inputPlacehoder": "輸入電話號碼並用逗號分隔"
+  },
+  "didManageModal": {
+    "title": "管理電話號碼",
+    "instructionsText": "您正在設定的公司需要向您提供其現有電話號碼。這將啟動公司電話號碼的移轉請求。",
+    "processingText": "正在新增電話號碼...",
+    "newDidText": "已成功新增 {{count}} 個新的電話號碼。",
+    "existingDidText": "有 {{count}} 個電話號碼已存在於系統中。",
+    "deleteDidText": "已刪除 {{count}} 個電話號碼。",
+    "deleteConfirmationText": "您確定要刪除下列 {{count}} 個號碼嗎？如果這些號碼已指派給使用者的線路，則可能會影響最終使用者。",
+    "removeNumbers": "移除號碼",
     "sendEmail": "通知客戶",
     "notifyCustLater": "稍後通知客戶",
     "emailSuccessText": "電子郵件已成功傳送給客戶。",
@@ -816,7 +837,7 @@
     "send": "傳送",
     "to": "收件者",
     "subject": "主旨",
-    "subjectContent": "啟動 Squared UC 裝置",
+    "subjectContent": "啟動 Spark UC 裝置",
     "message": "訊息",
     "expires": "到期日期：{{date}}<strong>（現在還剩 {{timeLeft}}</strong>",
     "clipboardFallback": "CMD+C 以複製下面的文字。",
@@ -830,11 +851,11 @@
     "emailAddress": "電子郵件地址",
     "administratorRoles": "管理員角色",
     "rolesDescription": "使用者在系統中可能具有一個或多個角色，並且將獲授與所選角色的所有權限。",
-    "cloudOpDescription": "此使用者也可以啟用為「雲端作業管理員」。此角色包含可從此入口網站檢視及操作 Squared 系統的特殊存取權限。",
+    "cloudOpDescription": "此使用者也可以啟用為「雲端作業管理員」。此角色包含可從此入口網站檢視及操作 Spark 系統的特殊存取權限。",
     "cloudOpAdmin": "雲端作業管理員",
-    "fullAdmin": "完全管理員權限",
+    "fullAdmin": "完整管理員權限",
     "partialAdmin": "部分管理員權限",
-    "noAdmin": "權限不足",
+    "noAdmin": "無管理員權限",
     "userAdmin": "使用者管理員",
     "billingAdmin": "帳單管理員",
     "supportAdmin": "支援管理員",
@@ -879,10 +900,18 @@
     "deleteResource": "解除資源的任務"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx Proto"
+    "userUpdateSuccess": "已更新使用者特權",
+    "userUpdateError": "更新使用者特權失敗",
+    "webexUserSettingsTab": "WebEx Proto",
+    "reload": "請再試一次"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "讀取使用者資訊時發生錯誤",
+    "030001": "尚未將 {{givenName}} {{familyName}} 供應給這個網站。此程序可能需要一段時間。"
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "進階設定"
   },
   "leaderBoard": {
     "actions": "動作",
@@ -907,7 +936,7 @@
     "ciscoRep": "Cisco 代表",
     "supportSetup": "故障報修單/報告位置",
     "save": "儲存",
-    "supportInfo": "如果要提供支援給客戶的使用者，請在下面輸入您的支援參數。這些參數將顯示在 Squared 應用程式中「支援選項」下方。",
+    "supportInfo": "如果要提供支援給客戶的使用者，請在下面輸入您的支援參數。這些參數將顯示在 Spark 應用程式中「支援選項」下方。",
     "lifeCycle": "需要生命週期合作夥伴才能提供如下所示的兩種支援。",
     "supportOptions": "Cisco 支援選項",
     "seeExample": "請參閱範例。",
@@ -918,7 +947,7 @@
     "urlReportEx": "http://[Cisco 問題報告的 URL]",
     "helpFaq": "協助與常見問題及解答位置",
     "matchingTix": "符合故障報修單",
-    "matchingDescr": "若要使故障報修單與建立報告時上傳至「Cisco 協同作業管理」的日誌相符，請以 \"%%logID%%\"（無引號）作為 logID 參數並將其增添至您的支援 URL。",
+    "matchingDescr": "若要使故障報修單與建立報告時上傳至「Cisco Spark 管理」的日誌相符，請以 \"%%logID%%\"（無引號）作為 logID 參數並將其增添至您的支援 URL。",
     "forExample": "例如：http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "支援設定",
     "companyInfo": "公司資訊",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "支援聯絡人",
     "partnerAdmin": "夥伴管理員",
-    "supportInfo": "如果要提供支援給使用者，請在下面輸入您的支援參數。這些參數將顯示在 Squared 應用程式中「支援選項」下方；"
+    "supportInfo": "如果要提供支援給使用者，請在下面輸入您的支援參數。這些參數將顯示在 Spark 應用程式中「支援選項」下方；"
   },
   "utilizationPage": {
     "entResUtilization": "企業資源使用率",

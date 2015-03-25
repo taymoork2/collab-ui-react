@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Manajemen Kolaborasi Cisco",
+    "title": "Manajemen Cisco Spark",
     "login": "Login",
     "loading": "Memuat"
   },
@@ -15,6 +15,7 @@
     "entitle": "Tetapkan",
     "firstnameHeader": "Nama Depan",
     "lastnameHeader": "Nama Belakang",
+    "displayNameHeader": "Nama Tampilan",
     "emailHeader": "Email",
     "actionHeader": "Tindakan",
     "invite": "Kirim Undangan",
@@ -73,8 +74,8 @@
     "groupColHeader": "Nama Grup",
     "collabService": "Pilih lisensi layanan kolaborasi yang harus diberikan kepada pengguna di grup.",
     "addEntitleError": "hak untuk menambahkan atau menetapkan pengguna tidak memadai.",
-    "freeMsg": "Gratis kamar tim squared",
-    "freeConf": "Gratis rapat 3 peserta",
+    "freeMsg": "Kamar tim gratis",
+    "freeConf": "Rapat 3 peserta gratis",
     "freeComm": "Gratis panggilan suara dan video IP dalam jaringan",
     "paidMsg": "Kamar tim standar",
     "paidConf": "Rapat 25 peserta",
@@ -122,6 +123,8 @@
     "organizationTabDesc": "Kelola Rincian Organisasi, Lihat Layanan yang Ditetapkan, dan Alat Akses.",
     "fusionDetailsTab": "Penggabungan",
     "fusionDetailsTabDesc": "Manajemen Penggabungan",
+    "fusionNextTab": "Penggabungan Selanjutnya",
+    "fusionNextTabDesc": "Manajemen Penggabungan",
     "callRoutingTab": "Pengarahan Panggilan",
     "callRoutingTabDesc": "Kelola Fitur Pengarahan Panggilan Seperti Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -141,8 +144,8 @@
     "welcome": "Selamat Datang!",
     "feedback": "Masukan",
     "logout": "Keluar",
-    "appTitle": "Alat Admin Squared",
-    "genericTitle": "Squared",
+    "appTitle": "Manajemen Cisco Spark",
+    "genericTitle": "Spark",
     "search": "Cari pengguna menurut nama atau email",
     "greeting": "Hai {{name}}",
     "launchPartner": "Kelola Organisasi Saya"
@@ -152,12 +155,12 @@
     "heading": "Daftar penetapan untuk"
   },
   "downloadPage": {
-    "thank": "Terima kasih Anda telah mendaftar Squared.",
+    "thank": "Terima kasih telah mendaftar ke Cisco Spark.",
     "account": "Akun Anda {{email}} sudah aktif.",
-    "install": "Silakan instal Squared dengan mengeklik",
+    "install": "Harap instal Spark dengan mengeklik",
     "link": "tautan berikut.",
     "using": "Selamat menggunakan",
-    "squared": "Squared."
+    "squared": "Spark."
   },
   "invitePage": {
     "redirect": "Mengarahkan...",
@@ -315,7 +318,7 @@
     "launchBtn": "Buka",
     "convert": "Konversi",
     "convertUsers": "Konversi Pengguna Tidak Berlisensi",
-    "convertUsersText": "Mengonversi karyawan di organisasi Anda yang telah mendaftar ke Squared dengan alamat email perusahaan menjadi pengguna berlisensi. Pengguna berlisensi akan mendapatkan fitur perusahaan tambahan, dan tunduk pada kebijakan dan administrasi perusahaan.<br><br>Pengguna yang dipilih akan menerima undangan untuk mengonversi atau mengubah alamat email mereka ke alamat email non-perusahaan.",
+    "convertUsersText": "Konversi karyawan di perusahaan Anda yang telah mendaftar sendiri ke Project Spark dengan alamat email perusahaan menjadi pengguna berlisensi. Pengguna berlisensi akan menerima fitur tambahan dari perusahaan, dan wajib menaati kebijakan dan administrasi perusahaan Anda.<br><br>Pengguna terpilih akan menerima undangan untuk mengonversi atau mengubah alamat email mereka ke alamat email bukan perusahaan.",
     "cancel": "Batalkan",
     "emailAddress": "Alamat Email",
     "name": "Nama",
@@ -333,7 +336,7 @@
   "inviteModal": {
     "title": "Penetapan Layanan",
     "heading": " Aktifkan Penetapan Layanan",
-    "content": "Undang pengguna di organisasi untuk menggunakan Squared...",
+    "content": "Undang pengguna di perusahaan untuk menggunakan Cisco Spark...",
     "inviteAll": "Aktifkan penetapan layanan tingkat organisasi"
   },
   "ssoModal": {
@@ -346,7 +349,7 @@
     "testSSOSetupTitle": "Tes Pengaturan SSO",
     "enableSSOTitle": "Aktifkan SSO",
     "importMetadataDesc": "Mulai mengonfigurasikan hubungan kepercayaan antara penyedia identitas/ identity provider (IdP) Anda dan Cloud Kolaborasi Cisco dengan mendapatkan file metadata kepercayaan dari IdP dan mengunggahnya ke sini.",
-    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
+    "importMetadataNote": "Catatan: Dengan mengimpor file metadata, SSO akan <b>diaktifkan</b>. Jika Anda sedang menguji SSO, jangan lupa untuk menonaktifkannya di layar berikutnya.",
     "exportMetadataDesc1": "Unduh file metadata kepercayaan berikut dari layanan Kolaborasi Cisco, dan unggah ke antarmuka manajemen penyedia identitas/ identity provider (IdP) Anda.",
     "exportMetadataDesc2": "Setelah selesai mengunggah file ke IdP Anda, kembali ke layar ini dan tekan Selanjutnya.",
     "testSSOSetupDesc": "Anda siap menguji konfigurasi SSO. Tekan tombol di bawah ini untuk membuka jendela baru. Jika Anda berhasil masuk, Anda dapat kembali ke layar ini dan tekan Selanjutnya untuk menyelesaikan pengaturan SSO.",
@@ -410,7 +413,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Standar",
     "domainDesc": "Identifikasi domain Direktori Aktif yang akan diselaraskan.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Unduh </a> dan Instal Konektor Cloud Cisco di perusahaan Anda.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Unduh </a> dan Instal Cisco Cloud Connector di perusahaan Anda.",
     "installStep2": "2. Konfigurasikan perjanjian penyelarasan Direktori Aktif.",
     "installStep3": "3. Tes perjanjian penyelarasan.",
     "nextSteps": "Tekan tombol Selanjutnya setelah Anda siap memverifikasi bahwa informasi identitas sedang diselaraskan.",
@@ -549,7 +552,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Standar",
     "domainDesc": "Identifikasi domain Direktori Aktif yang akan diselaraskan.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Unduh </a> dan Instal Konektor Cloud Cisco di perusahaan Anda.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Unduh </a> dan Instal Cisco Cloud Connector di perusahaan Anda.",
     "installStep2": "2. Konfigurasikan perjanjian penyelarasan Direktori Aktif.",
     "installStep3": "3. Tes perjanjian penyelarasan.",
     "nextSteps": "Tekan tombol Selanjutnya setelah Anda siap memverifikasi bahwa informasi identitas sedang diselaraskan.",
@@ -627,7 +630,7 @@
     "createButton": "Buat Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "UC Squared",
+    "squareduc": "Spark UC",
     "or": "atau",
     "voicemail": "Surat Suara",
     "singleNumberReach": "Menjangkau Satu Nomor"
@@ -733,12 +736,12 @@
     "launchPortal": "Buka Portal Perusahaan",
     "launchPortalPrompt": "Jika Anda ingin mengatur layanan untuk pelanggan:",
     "or": "atau",
-    "squareducError": "Percobaan telah dibuat, namun tidak dapat menetapkan Squared UC.",
+    "squareducError": "Versi percobaan telah dibuat, namun tidak dapat menetapkan Spark UC.",
     "addSuccess": "Percobaan berhasil dimulai untuk {{customerName}} dengan {{licenseCount}} lisensi selama {{licenseDuration}} hari.",
     "editSuccess": "Anda berhasil mengedit percobaan untuk {{customerName}} dengan {{licenseCount}} lisensi selama {{licenseDuration}}."
   },
   "trials": {
-    "collab": "Kamar Tim Standar + Rapat 25 Peserta",
+    "collab": "Kamar tim standar + rapat 25 peserta",
     "squaredUC": "Komunikasi Lanjut"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "Berakhir Hari Ini",
     "unused": "lisensi tidak digunakan",
     "uploadNumbers": "Jumlah Unggahan",
-    "overPlan": "melebihi batas rencana"
+    "overPlan": "melebihi batas rencana",
+    "communication": "Komunikasi",
+    "phoneNumbers": "Nomor Telepon",
+    "none": "Tidak Ada"
   },
   "didAddModal": {
     "title": "Tambah Nomor Telepon",
@@ -787,6 +793,21 @@
     "processingText": "Menambahkan Nomor Telepon...",
     "successText": "{{count}} nomor telepon baru berhasil ditambahkan.",
     "failText": "{{count}} nomor telepon sudah ada di sistem.",
+    "sendEmail": "Beritahu Pelanggan",
+    "notifyCustLater": "Beritahu Pelanggan Nanti",
+    "emailSuccessText": "Email berhasil dikirim kepada pelanggan.",
+    "emailFailText": "Kesalahan pengiriman email",
+    "inputPlacehoder": "Masukkan nomor telepon dipisahkan dengan tanda koma"
+  },
+  "didManageModal": {
+    "title": "Atur Nomor Telepon",
+    "instructionsText": "Perusahaan yang Anda atur harus memberikan Nomor Telepon perusahaan yang aktif. Ini akan memulai permintaan penerusan dari nomor telepon perusahaan.",
+    "processingText": "Menambahkan Nomor Telepon...",
+    "newDidText": "{{count}} nomor telepon baru berhasil ditambahkan.",
+    "existingDidText": "{{count}} nomor telepon sudah ada di sistem.",
+    "deleteDidText": "{{count}} nomor telepon telah dihapus.",
+    "deleteConfirmationText": "Anda yakin ingin menghapus {{count}} nomor telepon berikut? Ini mungkin akan memengaruhi pengguna akhir jika nomor tersebut ditetapkan ke saluran pengguna.",
+    "removeNumbers": "Hapus Nomor",
     "sendEmail": "Beritahu Pelanggan",
     "notifyCustLater": "Beritahu Pelanggan Nanti",
     "emailSuccessText": "Email berhasil dikirim kepada pelanggan.",
@@ -816,7 +837,7 @@
     "send": "Kirim",
     "to": "Ke",
     "subject": "Subjek",
-    "subjectContent": "Aktifkan perangkat UC Squared",
+    "subjectContent": "Aktifkan perangkat Spark UC Anda",
     "message": "Pesan",
     "expires": "Berakhir: {{date}}  <strong>({{timeLeft}} mulai sekarang)</strong>",
     "clipboardFallback": "Tekan cmd+c untuk menyalin teks berikut.",
@@ -830,11 +851,11 @@
     "emailAddress": "Alamat Email",
     "administratorRoles": "Jabatan Administrator",
     "rolesDescription": "Pengguna mungkin memiliki satu atau beberapa jabatan di sistem, dan akan diberikan semua izin dari jabatan yang dipilih.",
-    "cloudOpDescription": "Pengguna ini juga dapat diaktifkan sebagai Administrator Pengoperasian Cloud. Jabatan ini memiliki izin khusus untuk melihat dan mengoperasikan sistem Squared dari portal ini.",
+    "cloudOpDescription": "Pengguna ini juga dapat diaktifkan sebagai Administrator Operasional Awan. Peran ini memiliki izin khusus untuk melihat dan mengoperasikan sistem Spark dari portal ini.",
     "cloudOpAdmin": "Administrator Pengoperasian Cloud",
-    "fullAdmin": "Izin administrator penuh",
-    "partialAdmin": "Beberapa izin administrator",
-    "noAdmin": "No administrator privileges",
+    "fullAdmin": "Hak administrator penuh",
+    "partialAdmin": "Beberapa hak administrator",
+    "noAdmin": "Tidak ada hak administrator",
     "userAdmin": "Administrator Pengguna",
     "billingAdmin": "Administrator Penagihan",
     "supportAdmin": "Administrator Dukungan",
@@ -879,10 +900,18 @@
     "deleteResource": "Hentikan Sumber Daya"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx Proto"
+    "userUpdateSuccess": "Hak pengguna telah diperbarui",
+    "userUpdateError": "Gagal memperbarui hak pengguna",
+    "webexUserSettingsTab": "WebEx Proto",
+    "reload": "Coba Lagi"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "Gagal membaca informasi pengguna",
+    "030001": "{{givenName}} {{familyName}} belum ditetapkan ke situs ini. Proses ini dapat memerlukan waktu beberapa saat."
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "Pengaturan Lanjutan"
   },
   "leaderBoard": {
     "actions": "Tindakan",
@@ -907,7 +936,7 @@
     "ciscoRep": "Perwakilan Cisco",
     "supportSetup": "Lokasi Tiket / Pelaporan Masalah",
     "save": "Simpan",
-    "supportInfo": "Jika Anda menyediakan dukungan untuk pengguna dari pelanggan Anda, masukkan parameter dukungan Anda di bawah. Paramater tersebut akan ditampilkan di bagian Pilihan Dukungan di aplikasi Squared.",
+    "supportInfo": "Jika Anda memberikan dukungan untuk pengguna dari pelanggan Anda, masukkan parameter dukungan di bawah ini. Paramater tersebut akan ditampilkan di bagian Opsi Dukungan di aplikasi Spark.",
     "lifeCycle": "Mitra siklus hidup diperlukan untuk menyediakan dua jenis dukungan di bawah ini.",
     "supportOptions": "Opsi Dukungan Cisco",
     "seeExample": "lihat contoh.",
@@ -918,7 +947,7 @@
     "urlReportEx": "http://[url Cisco untuk pelaporan masalah]",
     "helpFaq": "Lokasi Bantuan & Pertanyaan Umum",
     "matchingTix": "Tiket Masalah yang Cocok",
-    "matchingDescr": "Untuk mencocokkan tiket masalah dengan log yang diunggah ke alat Manajemen Kolaborasi Cisco ketika laporan dibuat, cantumkan URL dukungan dengan parameter logID Anda sebagai \"%%logID%%\" (tanpa tanda petik).",
+    "matchingDescr": "Untuk mencocokkan tiket masalah dengan log yang diunggah ke Manajemen Cisco Spark ketika laporan dibuat, cantumkan URL dukungan dengan parameter logID Anda dalam format \"%%logID%%\" (tanpa tanda petik).",
     "forExample": "Misalnya: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Atur Dukungan",
     "companyInfo": "Informasi Perusahaan",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "Hubungi Dukungan",
     "partnerAdmin": "Administrator Mitra",
-    "supportInfo": "Jika Anda menyediakan dukungan untuk pengguna dari pelanggan Anda, masukkan parameter dukungan Anda di bawah. Paramater tersebut akan ditampilkan di bagian Pilihan Dukungan di aplikasi Squared;"
+    "supportInfo": "Jika Anda memberikan dukungan untuk pengguna Anda, masukkan parameter dukungan di bawah ini. Paramater tersebut akan ditampilkan di bagian Opsi Dukungan di aplikasi Spark;"
   },
   "utilizationPage": {
     "entResUtilization": "Penggunaan Sumber Daya Perusahaan",
@@ -942,7 +971,7 @@
     "bridgeUtilization": "Penggunaan Bridge By Bridge"
   },
   "processOrderPage": {
-    "errOrgCreation": "Pesanan # {{orderId}} sedang diproses. Silakan periksa kembali setelah 24 jam.",
+    "errOrgCreation": "Permintaan # {{orderId}} sedang diproses. Silakan periksa kembali setelah 24 jam.",
     "info": "Status",
     "wait": "Harap tunggu, kami sedang mengarahkan Anda"
   },

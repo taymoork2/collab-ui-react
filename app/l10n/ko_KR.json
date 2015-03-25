@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cisco 협업 관리",
+    "title": "Cisco Spark 관리",
     "login": "로그인",
     "loading": "로드 중"
   },
@@ -15,6 +15,7 @@
     "entitle": "자격 부여",
     "firstnameHeader": "이름",
     "lastnameHeader": "성",
+    "displayNameHeader": "표시명",
     "emailHeader": "이메일",
     "actionHeader": "작업",
     "invite": "초대 보내기",
@@ -73,10 +74,10 @@
     "groupColHeader": "그룹 이름",
     "collabService": "그룹의 사용자에게 부여될 협업 서비스 라이센스를 선택하십시오.",
     "addEntitleError": "사용자 추가 또는 자격 부여를 위한 권한 충분하지 않음.",
-    "freeMsg": "무료 squared 팀 회의실",
+    "freeMsg": "무료 그룹 회의실",
     "freeConf": "무료 3명 미팅",
-    "freeComm": "무료 네트워크내 IP 음성 및 비디오 콜",
-    "paidMsg": "표준 팀 회의실",
+    "freeComm": "무료 네트워크내 IP 음성 및 화상 통화",
+    "paidMsg": "표준 그룹 회의실",
     "paidConf": "25명 미팅",
     "paidComm": "고급 통신"
   },
@@ -122,6 +123,8 @@
     "organizationTabDesc": "조직 세부 사항 관리, 지정된 서비스 보기 및 도구에 액세스.",
     "fusionDetailsTab": "Fusion",
     "fusionDetailsTabDesc": "Fusion 관리",
+    "fusionNextTab": "Fusion 다음",
+    "fusionNextTabDesc": "Fusion 관리",
     "callRoutingTab": "통화 라우팅",
     "callRoutingTabDesc": "통화 라우팅 기능 관리 (통화 대기 등)",
     "mediaOnHoldTab": "Media On Hold",
@@ -141,8 +144,8 @@
     "welcome": "환영합니다!",
     "feedback": "피드백",
     "logout": "로그아웃",
-    "appTitle": "Squared 관리 도구",
-    "genericTitle": "Squared",
+    "appTitle": "Cisco Spark 관리",
+    "genericTitle": "Spark",
     "search": "이름 또는 이메일로 사용자 검색",
     "greeting": "안녕하세요, {{name}} 님!",
     "launchPartner": "내 조직 관리"
@@ -152,12 +155,12 @@
     "heading": "자격의 목록"
   },
   "downloadPage": {
-    "thank": "Cisco Squared에 등록해 주셔서 감사합니다.",
+    "thank": "Cisco Spark에 등록해 주셔서 감사합니다.",
     "account": "이제 귀하의 계정 {{email}}이 활성화되었습니다.",
-    "install": "이 링크에 따라 Squared를 설치하십시오",
+    "install": "이 링크에 따라 Spark를 설치하십시오.",
     "link": ".",
     "using": "Squared 사용을",
-    "squared": "시작하십시오."
+    "squared": "Spark."
   },
   "invitePage": {
     "redirect": "재이동 중...",
@@ -315,7 +318,7 @@
     "launchBtn": "실행",
     "convert": "변환",
     "convertUsers": "라이센스 없는 사용자 변환",
-    "convertUsersText": "기업 이메일 주소로 스스로 Project Squared에 등록한 조직의 직원을 라이센스가 있는 사용자로 변환합니다. 라이센스가 있는 사용자는 추가 엔터프라이즈 기능을 수신하고 조직의 정책 및 관리에 의해 변경될 수도 있습니다.<br><br>선택한 사용자는 변환 또는 이메일 주소를 기업 이메일 주소가 아닌 것으로 변경할 수 있는 초대장을 수신하게 됩니다.",
+    "convertUsersText": "기업 이메일 주소로 스스로 Project Spark에 등록한 조직의 직원을 라이센스가 있는 사용자로 변환합니다. 라이센스가 있는 사용자는 추가 엔터프라이즈 기능을 수신하고, 조직의 정책 및 관리에 의해 변경될 수도 있습니다.<br><br>선택한 사용자는 변환 또는 이메일 주소를 기업 이메일 주소가 아닌 것으로 변경할 수 있는 초대장을 수신하게 됩니다.",
     "cancel": "취소",
     "emailAddress": "이메일 주소",
     "name": "이름",
@@ -333,7 +336,7 @@
   "inviteModal": {
     "title": "서비스 자격",
     "heading": " 서비스 자격 활성화",
-    "content": "조직에서 Squared를 사용할 사용자 초대...",
+    "content": "조직에서 Cisco Spark를 사용할 사용자 초대...",
     "inviteAll": "조직 광범위 서비스 자격 활성화"
   },
   "ssoModal": {
@@ -346,7 +349,7 @@
     "testSSOSetupTitle": "SSO 설정 테스트",
     "enableSSOTitle": "SSO 활성화",
     "importMetadataDesc": "IdP에서 신뢰할 수 있는 메타데이터 파일을 확보하고 여기에 업로드하여 ID 제공자(IdP)와 Cisco 협업 클라우드 사이에 신뢰할 수 있는 관계를 구성하기 시작하십시오.",
-    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
+    "importMetadataNote": "참고: 메타데이터 파일을 가져오기하면 SSO가 <b>켜집니다</b>. 단순히 SSO를 테스트하고 있는 경우엔 다음 화면에서 SSO를 끄십시오.",
     "exportMetadataDesc1": "Cisco 협업 서비스에서 다음 신뢰할 수 있는 메타데이터 파일을 다운로드하고 ID 제공자(IdP) 관리 인터페이스로 업로드하십시오.",
     "exportMetadataDesc2": "IdP에 파일 업로드를 마친 후 이 화면으로 돌아와 다음을 누릅니다.",
     "testSSOSetupDesc": "SSO 구성을 테스트할 준비가 되었습니다. 새로운 창을 실행하려면 아래 버튼을 누르십시오. 성공적으로 로그인할 수 있으면 이 화면으로 돌아와서 다음을 눌러 SSO 설정을 마무리할 수 있습니다.",
@@ -410,7 +413,7 @@
     "domain": "도메인",
     "defaultPlaceholder": "기본값",
     "domainDesc": "동기화할 Active Directory 도메인을 식별하십시오.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> 기업에서 Cisco 클라우드 커넥터를 다운로드하고 설치합니다.</a>",
+    "installStep1": "1. 기업에 Cisco Cloud Connector를<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> 다운로드</a>하고 설치합니다.",
     "installStep2": "2. Active Directory 동기화 동의를 구성합니다.",
     "installStep3": "3. 동기화 동의를 테스트합니다.",
     "nextSteps": "ID 정보가 동기화되고 있는지 확인할 준비가 되면 다음 버튼을 누릅니다.",
@@ -549,7 +552,7 @@
     "domain": "도메인",
     "defaultPlaceholder": "기본값",
     "domainDesc": "동기화할 Active Directory 도메인을 식별하십시오.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> 기업에서 Cisco 클라우드 커넥터를 다운로드하고 설치합니다.</a>",
+    "installStep1": "1. 기업에 Cisco Cloud Connector를<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> 다운로드</a>하고 설치합니다.",
     "installStep2": "2. Active Directory 동기화 동의를 구성합니다.",
     "installStep3": "3. 동기화 동의를 테스트합니다.",
     "nextSteps": "ID 정보가 동기화되고 있는지 확인할 준비가 되면 다음 버튼을 누릅니다.",
@@ -587,7 +590,7 @@
     "ActiveUsers": "활동중인 사용자",
     "OneOnOneRooms": "1:1 회의실",
     "GroupRooms": "그룹 회의실",
-    "VideoCalls": "비디오 콜",
+    "VideoCalls": "화상 통화",
     "AvgDurationofCalls": "통화 평균 지속 시간",
     "ContentShared": "콘텐츠 공유됨",
     "AmountofContentShared": "공유된 콘텐츠 수",
@@ -627,7 +630,7 @@
     "createButton": "통화 대기 만들기"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "또는",
     "voicemail": "보이스메일",
     "singleNumberReach": "싱글 번호 연결"
@@ -733,12 +736,12 @@
     "launchPortal": "기업 포털 실행",
     "launchPortalPrompt": "고객을 위해 서비스를 설정하려면:",
     "or": "또는",
-    "squareducError": "평가판을 만들었으나 Squared UC를 구축할 수 없습니다.",
+    "squareducError": "평가판을 만들었으나 Spark UC를 구축할 수 없습니다.",
     "addSuccess": "{{customerName}} 님을 위한 평가판이 성공적으로 시작되었습니다. ({licenseCount}}개 라이센스, {{licenseDuration}}일 동안)",
     "editSuccess": "{{customerName}} 님을 위한 평가판을 성공적으로 편집했습니다. ({{licenseCount}}개 라이센스, {{licenseDuration}}일 동안)"
   },
   "trials": {
-    "collab": "표준 팀 회의실 + 25명 미팅",
+    "collab": "표준 그룹 회의실 + 25명 미팅",
     "squaredUC": "고급 통신"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "오늘 만료됨",
     "unused": "사용되지 않은 라이센스",
     "uploadNumbers": "번호 업로드",
-    "overPlan": "초과 계획 제한"
+    "overPlan": "초과 계획 제한",
+    "communication": "통신",
+    "phoneNumbers": "전화 번호",
+    "none": "없음"
   },
   "didAddModal": {
     "title": "전화 번호 추가",
@@ -787,6 +793,21 @@
     "processingText": "전화 번호 추가 중...",
     "successText": "{{count}}개 새로운 전화 번호가 성공적으로 추가됨.",
     "failText": "{{count}}개 전화 번호가 이미 시스템에 있음.",
+    "sendEmail": "고객에게 통지",
+    "notifyCustLater": "나중에 고객에게 알리기",
+    "emailSuccessText": "이메일이 고객에게 성공적으로 발송되었습니다.",
+    "emailFailText": "이메일 보내기 오류",
+    "inputPlacehoder": "전화 번호는 콤마로 구분하여 입력하십시오"
+  },
+  "didManageModal": {
+    "title": "전화 번호 관리",
+    "instructionsText": "현재 설정하고 있는 기업은 기존 전화 번호를 제공해야 합니다. 이는 기업 전화 번호의 요청 포트를 시작합니다.",
+    "processingText": "전화 번호 추가 중...",
+    "newDidText": "{{count}}개 새로운 전화 번호가 성공적으로 추가됨.",
+    "existingDidText": "{{count}}개 전화 번호가 이미 시스템에 있음.",
+    "deleteDidText": "{{count}}개 전화 번호가 삭제되었습니다.",
+    "deleteConfirmationText": "다음 {{count}}개 번호를 삭제하시겠습니까? 해당 번호가 사용자의 라인에 지정된 경우, 최종 사용자에게 영향을 미칠 수도 있습니다.",
+    "removeNumbers": "번호 제거",
     "sendEmail": "고객에게 통지",
     "notifyCustLater": "나중에 고객에게 알리기",
     "emailSuccessText": "이메일이 고객에게 성공적으로 발송되었습니다.",
@@ -816,7 +837,7 @@
     "send": "보내기",
     "to": "받는 사람",
     "subject": "제목",
-    "subjectContent": "Squared UC 장치 활성화",
+    "subjectContent": "Spark UC 장치 활성화",
     "message": "메시지",
     "expires": "만료: {{date}}  <strong>({{timeLeft}} from now)</strong>",
     "clipboardFallback": "아래 텍스트를 복사하려면 cmd+c을 누르십시오.",
@@ -830,11 +851,11 @@
     "emailAddress": "이메일 주소",
     "administratorRoles": "관리자 역할",
     "rolesDescription": "시스템에서 사용자가 한 개 이상의 역할을 갖고 있으며, 선택한 역할의 모든 권한이 부여됩니다.",
-    "cloudOpDescription": "또한 이 사용자는 클라우드 운영 관리자로 활성화될 수도 있습니다. 이 역할에는 이 포털에서 Squared 시스템을 확인하고 운영할 수 있는 특별한 권한이 포함됩니다.",
+    "cloudOpDescription": "또한 이 사용자는 클라우드 운영 관리자로 활성화될 수도 있습니다. 이 역할에는 이 포털에서 Spark 시스템을 확인하고 운영할 수 있는 특별한 권한이 포함됩니다.",
     "cloudOpAdmin": "클라우드 운영 관리자",
     "fullAdmin": "전체 관리자 권한",
     "partialAdmin": "일부 관리자 권한",
-    "noAdmin": "권한이 부족합니다.",
+    "noAdmin": "관리자 권한 없음",
     "userAdmin": "사용자 관리자",
     "billingAdmin": "비용 청구 관리자",
     "supportAdmin": "지원 관리자",
@@ -879,17 +900,25 @@
     "deleteResource": "리소스 해제"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx 프로토"
+    "userUpdateSuccess": "사용자 권한 업데이트됨",
+    "userUpdateError": "사용자 권한 업데이트 실패함",
+    "webexUserSettingsTab": "WebEx Proto",
+    "reload": "다시 시도"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "사용자 정보 읽기 오류",
+    "030001": "{{givenName}} {{familyName}} 님은 아직 이 사이트에 구축되지 않았습니다. 이 과정은 몇 분 정도 소요될 수 있습니다."
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "고급 설정"
   },
   "leaderBoard": {
     "actions": "작업",
     "licenseUsage": "라이센스 사용",
     "lastSynced": "마지막 동기화됨:",
     "messagingTitle": "메시지",
-    "messagingSubtitle": "표준 팀 회의실",
+    "messagingSubtitle": "표준 그룹 회의실",
     "messagingDesc": "메시지 라이센스.",
     "communicationTitle": "통신",
     "communicationSubtitle": "Advanced Unified",
@@ -907,7 +936,7 @@
     "ciscoRep": "Cisco 담당자",
     "supportSetup": "문제 티켓 / 보고 위치",
     "save": "저장",
-    "supportInfo": "고객의 사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Squared 응용프로그램의 지원 옵션 아래에 표시됩니다.",
+    "supportInfo": "고객의 사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Spark 응용프로그램의 지원 옵션 아래에 표시됩니다.",
     "lifeCycle": "아래 표시된 지원의 두 가지 유형을 모두 제공하려면 수명 주기 파트너가 필요합니다.",
     "supportOptions": "Cisco 지원 옵션",
     "seeExample": "예제를 참조하십시오.",
@@ -918,7 +947,7 @@
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "도움말 및 FAQ 위치",
     "matchingTix": "일치하는 문제 티켓",
-    "matchingDescr": "문제 티켓을 보고서가 생성될 때 Cisco 협업 관리 도구에 업로드한 로그와 일치하려면 로그ID 파라미터를 포함한 지원 URL을 첨부하십시오. (\"%%logID%%\") (따옴표 없음)",
+    "matchingDescr": "문제 티켓을 보고서가 생성될 때 Cisco Spark 관리에 업로드한 로그와 일치하려면 로그ID 파라미터를 포함한 지원 URL을 첨부하십시오. (\"%%logID%%\") (따옴표 없음)",
     "forExample": "예: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "지원 설정",
     "companyInfo": "기업 정보",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "지원 연락처",
     "partnerAdmin": "파트너 관리자",
-    "supportInfo": "사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Squared 응용프로그램의 지원 옵션 아래에 표시됩니다."
+    "supportInfo": "사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Spark 응용프로그램의 지원 옵션 아래에 표시됩니다."
   },
   "utilizationPage": {
     "entResUtilization": "기업 리소스 사용률",

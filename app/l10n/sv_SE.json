@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cisco Collaboration Management",
+    "title": "Hantering av Cisco Spark",
     "login": "Logga in",
     "loading": "Läser in"
   },
@@ -15,6 +15,7 @@
     "entitle": "Berättiga",
     "firstnameHeader": "Förnamn",
     "lastnameHeader": "Efternamn",
+    "displayNameHeader": "Visningsnamn",
     "emailHeader": "E-post",
     "actionHeader": "Åtgärder",
     "invite": "Skicka inbjudningar",
@@ -73,11 +74,11 @@
     "groupColHeader": "Gruppnamn",
     "collabService": "Välj vilka collaboration service-licenser som ska beviljas användarna i gruppen.",
     "addEntitleError": "otillräckliga privilegier för att lägga till eller berättiga en användare",
-    "freeMsg": "Gratis grupprum i Squared",
-    "freeConf": "Gratis Meetings med 3 personer",
+    "freeMsg": "Kostnadsfria grupprum",
+    "freeConf": "Kostnadsfria möten för tre personer",
     "freeComm": "Gratis interna röst- och videosamtal via IP",
     "paidMsg": "Standardgrupprum",
-    "paidConf": "Meetings med 25 personer",
+    "paidConf": "Möten för 25 personer",
     "paidComm": "Avancerad kommunikation"
   },
   "usersPreview": {
@@ -122,6 +123,8 @@
     "organizationTabDesc": "Hantera organisationsuppgifter, visa tilldelade tjänster och öppna verktyg.",
     "fusionDetailsTab": "Fusion",
     "fusionDetailsTabDesc": "Fusion-hantering",
+    "fusionNextTab": "Fusion Next",
+    "fusionNextTabDesc": "Fusion-hantering",
     "callRoutingTab": "Samtalsomkoppling",
     "callRoutingTabDesc": "Hantera samtalsomkopplingsfunktioner, t.ex. Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -141,8 +144,8 @@
     "welcome": "Välkommen!",
     "feedback": "Feedback",
     "logout": "Logga ut",
-    "appTitle": "Squared administratörsverktyg",
-    "genericTitle": "Squared",
+    "appTitle": "Hantering av Cisco Spark",
+    "genericTitle": "Spark",
     "search": "Sök användare efter namn eller e-post",
     "greeting": "Hej {{name}}",
     "launchPartner": "Hantera min organisation"
@@ -152,12 +155,12 @@
     "heading": "Lista över berättiganden för"
   },
   "downloadPage": {
-    "thank": "Tack för att du har registrerat dig för Cisco Squared.",
+    "thank": "Tack för att du registrerade dig för Cisco Spark.",
     "account": "Ditt konto {{email}} är nu aktivt.",
-    "install": "Installera Squared genom att gå till",
+    "install": "Installera Spark genom att följa",
     "link": "den här länken.",
     "using": "Börja använda",
-    "squared": "Squared."
+    "squared": "Spark."
   },
   "invitePage": {
     "redirect": "Omdirigerar ...",
@@ -315,7 +318,7 @@
     "launchBtn": "Starta",
     "convert": "Omvandla",
     "convertUsers": "Omvandla olicensierade användare",
-    "convertUsersText": "Medarbetare i din organisation som på egen hand har registrerat sig för Project Squared med en företagsknuten e-postadress kan omvandlas till licensierade användare. Licensierade användare får tillgång till ytterligare företagsfunktioner och lyder under din organisations policyer och administrationsrutiner.<br><br>Utvalda användare får en inbjudan om att omvandla eller ändra sina e-postadresser till en företagsoberoende e-postadress.",
+    "convertUsersText": "Omvandla medarbetare i din organisation som har registrerat sig för Project Spark på egen hand med en av företagets e-postadresser till en licenserad användare. Licenserade användare får ytterligare företagsfunktioner och omfattas av din organisations policyer och administration.<br><br>De användare som väljs kommer att få en inbjudan om att omvandla eller ändra sina e-postadresser till en e-postadress som inte är en företagsadress.",
     "cancel": "Avbryt",
     "emailAddress": "E-postadress",
     "name": "Namn",
@@ -333,7 +336,7 @@
   "inviteModal": {
     "title": "Serviceberättigande",
     "heading": " Aktivera serviceberättigande",
-    "content": "Bjud in användare i organisationen till Squared ...",
+    "content": "Bjud in användare i organisationen till att använda Cisco Spark ...",
     "inviteAll": "Aktivera organisationsomspännande serviceberättigande"
   },
   "ssoModal": {
@@ -346,7 +349,7 @@
     "testSSOSetupTitle": "Testa SSO-konfiguration",
     "enableSSOTitle": "Aktivera SSO",
     "importMetadataDesc": "Börja med att konfigurera en pålitlig anslutning mellan din identitetsleverantör (IdP) och Cisco Collaboration Cloud genom att hämta en pålitlig metadatafil från din IdP och överföra den här.",
-    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
+    "importMetadataNote": "Obs! Genom att importera metadatafilen kommer SSO att <b>aktiveras</b>. Glöm inte att stänga av det på nästa skärm om du bara testar SSO.",
     "exportMetadataDesc1": "Hämta följande pålitliga metadatafil från Cisco Collaboration-tjänsten och överför den till administrationsgränssnittet hos din identitetsleverantör (IdP).",
     "exportMetadataDesc2": "När du har överfört filen till din IdP återgår du till denna skärm och trycker på Nästa.",
     "testSSOSetupDesc": "Nu är du redo att testa din SSO-konfiguration. Tryck på knappen nedan för att öppna ett nytt fönster. Om du lyckas logga in utan problem kan du återgå till den här skärmen och trycka på Nästa för att slutföra SSO-konfigurationen.",
@@ -410,7 +413,7 @@
     "domain": "Domän",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Identifiera den Active Directory-domän som ska synkroniseras.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Hämta </a> och installera Cisco Cloud Connector till din verksamhet.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hämta </a> och installera Cisco Cloud Connector på ditt företag.",
     "installStep2": "2. Konfigurera synkroniseringsavtalet för Active Directory.",
     "installStep3": "3. Testa synkroniseringsavtalet.",
     "nextSteps": "Tryck på Nästa när du är redo att verifiera att identitetsinformationen är synkroniserad.",
@@ -549,7 +552,7 @@
     "domain": "Domän",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Identifiera den Active Directory-domän som ska synkroniseras.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Hämta </a> och installera Cisco Cloud Connector till din verksamhet.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hämta </a> och installera Cisco Cloud Connector på ditt företag.",
     "installStep2": "2. Konfigurera synkroniseringsavtalet för Active Directory.",
     "installStep3": "3. Testa synkroniseringsavtalet.",
     "nextSteps": "Tryck på Nästa när du är redo att verifiera att identitetsinformationen är synkroniserad.",
@@ -627,7 +630,7 @@
     "createButton": "Skapa Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "eller",
     "voicemail": "Röstbrevlåda",
     "singleNumberReach": "Single Number Reach"
@@ -733,12 +736,12 @@
     "launchPortal": "Starta företagsportalen",
     "launchPortalPrompt": "Om du vill konfigurera tjänsten åt kunden:",
     "or": "eller",
-    "squareducError": "Skapade provperiod, men kunde inte tillhandahålla Squared UC.",
+    "squareducError": "Provperioden har skapats, men Spark UC kunde inte tillhandahållas.",
     "addSuccess": "En provperiod har påbörjats för {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dagar.",
     "editSuccess": "Du har ändrat en provperiod för {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dagar."
   },
   "trials": {
-    "collab": "Standardgrupprum + Meeting med 25 personer",
+    "collab": "Standardgrupprum + möten för 25 personer",
     "squaredUC": "Avancerad kommunikation"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "Upphör idag",
     "unused": "oanvända licenser",
     "uploadNumbers": "Överföringsmängd",
-    "overPlan": "överskrider plangränsen"
+    "overPlan": "överskrider plangränsen",
+    "communication": "Kommunikation",
+    "phoneNumbers": "Telefonnummer",
+    "none": "Inget"
   },
   "didAddModal": {
     "title": "Lägg till telefonnummer",
@@ -787,6 +793,21 @@
     "processingText": "Lägger till telefonnummer ...",
     "successText": "{{count}} nytt/nya telefonnummer lades till.",
     "failText": "{{count}} telefonnummer finns redan i systemet.",
+    "sendEmail": "Underrätta kunden",
+    "notifyCustLater": "Avisera kunden senare",
+    "emailSuccessText": "E-postmeddelandet skickades till kunden.",
+    "emailFailText": "Kunde inte skicka e-postmeddelande",
+    "inputPlacehoder": "Ange telefonnummer avgränsade med kommatecken"
+  },
+  "didManageModal": {
+    "title": "Hantera telefonnummer",
+    "instructionsText": "Företaget du konfigurerar måste tillhandahålla sina befintliga telefonnummer. Detta initierar porteringsbegäran om företagets telefonnummer.",
+    "processingText": "Lägger till telefonnummer ...",
+    "newDidText": "{{count}} nytt/nya telefonnummer lades till.",
+    "existingDidText": "{{count}} telefonnummer finns redan i systemet.",
+    "deleteDidText": "{{count}} telefonnummer har tagits bort.",
+    "deleteConfirmationText": "Är du säker på att du vill ta bort följande {{count}} nummer? Om dessa nummer är tilldelade användares linjer kan det kan påverka slutanvändarna.",
+    "removeNumbers": "Ta bort nummer",
     "sendEmail": "Underrätta kunden",
     "notifyCustLater": "Avisera kunden senare",
     "emailSuccessText": "E-postmeddelandet skickades till kunden.",
@@ -816,7 +837,7 @@
     "send": "Skicka",
     "to": "Till",
     "subject": "Ämne",
-    "subjectContent": "Aktivera din Squared UC-enhet",
+    "subjectContent": "Aktivera din Spark UC-enhet",
     "message": "Meddelande",
     "expires": "Upphör: {{date}}  <strong>({{timeLeft}} från nu)</strong>",
     "clipboardFallback": "Tryck på cmd+c för att kopiera texten nedan.",
@@ -830,11 +851,11 @@
     "emailAddress": "E-postadress",
     "administratorRoles": "Administratörsroller",
     "rolesDescription": "En användare kan ha en eller flera roller i systemet och blir beviljad alla behörigheter utifrån valda roller.",
-    "cloudOpDescription": "Denna användare kan även aktiveras som molnadministratör. I den rollen ingår särskild behörighet att visa och hantera Squared-systemet via den här portalen.",
+    "cloudOpDescription": "Användaren kan även aktiveras som en molndriftsadministratör. Den här rollen innefattar särskilda behörigheter att visa och använda Spark-systemet via den här portalen.",
     "cloudOpAdmin": "Molnadministratör",
-    "fullAdmin": "Fullständig administratörsbehörighet",
-    "partialAdmin": "Viss administratörsbehörighet",
-    "noAdmin": "Otillräckliga privilegier",
+    "fullAdmin": "Fullständiga administratörsbehörigheter",
+    "partialAdmin": "Vissa administratörsbehörigheter",
+    "noAdmin": "Inga administratörsbehörigheter",
     "userAdmin": "Användaradministratör",
     "billingAdmin": "Faktureringsadministratör",
     "supportAdmin": "Supportadministratör",
@@ -879,10 +900,18 @@
     "deleteResource": "Stäng ner resurs"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx Proto"
+    "userUpdateSuccess": "Användarprivilegierna har uppdaterats",
+    "userUpdateError": "Användarprivilegierna kunde inte uppdateras",
+    "webexUserSettingsTab": "WebEx Proto",
+    "reload": "Försök igen"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "Fel vid inläsning av användarinformation",
+    "030001": "{{givenName}} {{familyName}} har ännu inte registrerats på den här webbplatsen. Den processen kan ta en stund."
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "Avancerade inställningar"
   },
   "leaderBoard": {
     "actions": "Åtgärder",
@@ -907,7 +936,7 @@
     "ciscoRep": "Cisco-representant",
     "supportSetup": "Problemärende/rapportera plats",
     "save": "Spara",
-    "supportInfo": "Om du tillhandahåller support för dina kunders användare anger du dina supportparametrar nedan. Dessa parametrar kommer att visas under Supportalternativ i Squared-program.",
+    "supportInfo": "Om du ger dina kunders användare support anger du supportparametrarna nedan. Dessa parametrar visas under Supportalternativ i Spark-programmen.",
     "lifeCycle": "Livscykelpartners måste tillhandahålla båda typer av support som visas nedan.",
     "supportOptions": "Ciscos supportalternativ",
     "seeExample": "se ett exempel.",
@@ -917,8 +946,8 @@
     "urlReport": "URL för att rapportera problemärenden eller öppna nya ärenden",
     "urlReportEx": "http://[url till Cisco problemrapportering]",
     "helpFaq": "Hjälp och vanliga frågor",
-    "matchingTix": "Matcha problemärenden",
-    "matchingDescr": "För att matcha problemärenden med hjälp av loggarna som överförs till Cisco Collaboration Management-verktyget när rapporter skapas bifogar du din support-URL till din logID-parameter enligt: \"%%logID%%\" (utan citationstecken)",
+    "matchingTix": "Matchar felrapporter",
+    "matchingDescr": "För att matcha felrapporter med de loggar som överförs till Cisco Spark-hanteringen när rapporter skapas bifogar du support-URL-adressen med dina logg-ID-parametrar i formatet \"%%logID%%\" (inga citattecken).",
     "forExample": "Till exempel: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Supportkonfiguration",
     "companyInfo": "Företagsinformation",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "Supportkontakter",
     "partnerAdmin": "Partneradministratörer",
-    "supportInfo": "Om du tillhandahåller support för dina kunders användare anger du dina supportparametrar nedan. Parametrarna kommer att visas under Supportalternativ i Squared-programvaran;"
+    "supportInfo": "Om du ger dina användare support anger du supportparametrarna nedan. Dessa parametrar kommer att visas under Supportalternativ i Spark-programmen:"
   },
   "utilizationPage": {
     "entResUtilization": "Använda Enterprise Resources",
@@ -942,7 +971,7 @@
     "bridgeUtilization": "Bridge By Bridge-användning"
   },
   "processOrderPage": {
-    "errOrgCreation": "Beställningsnummer {{orderId}} behandlas. Kom tillbaka efter 24 timmar.",
+    "errOrgCreation": "Beställningsnr. {{orderId}} behandlas. Kontrollera igen om 24 timmar.",
     "info": "Status",
     "wait": "Vänta medan vi omdirigerar dig"
   },

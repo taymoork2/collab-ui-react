@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cisco İşbirliği Yönetimi",
+    "title": "Cisco Spark Yönetimi",
     "login": "Oturum aç",
     "loading": "Yükleniyor"
   },
@@ -15,6 +15,7 @@
     "entitle": "Yetki ver",
     "firstnameHeader": "Adı",
     "lastnameHeader": "Soyadı",
+    "displayNameHeader": "Görünen Adı",
     "emailHeader": "E-posta",
     "actionHeader": "Eylemler",
     "invite": "Davetiye Gönder",
@@ -73,11 +74,11 @@
     "groupColHeader": "Grup Adı",
     "collabService": "Gruptaki kullanıcılara verilmesi gereken işbirliği hizmeti lisanslarını seçin.",
     "addEntitleError": "kullanıcıyı eklemek veya yetkilendirmek için ayrıcalıklar yetersizler.",
-    "freeMsg": "Ücretsiz squared ekip odaları",
-    "freeConf": "Ücretsiz 3 taraflı senkronizasyonlar",
+    "freeMsg": "Ücretsiz ekip odaları",
+    "freeConf": "Ücretsiz 3 taraflı toplantılar",
     "freeComm": "Ücretsiz ağ içi IP ses ve video çağrısı",
     "paidMsg": "Standart ekip odaları",
-    "paidConf": "25 taraflı senkronizasyonlar",
+    "paidConf": "25 taraflı toplantılar",
     "paidComm": "Gelişmiş iletişim"
   },
   "usersPreview": {
@@ -122,6 +123,8 @@
     "organizationTabDesc": "Kuruluş Ayrıntılarını Yönetin, Atanan Hizmetleri Görüntüleyin ve Araçlara Erişin.",
     "fusionDetailsTab": "Fusion",
     "fusionDetailsTabDesc": "Fusion Yönetimi",
+    "fusionNextTab": "Fusion Next",
+    "fusionNextTabDesc": "Fusion Yönetimi",
     "callRoutingTab": "Çağrı Yönlendirme",
     "callRoutingTabDesc": "Çağrı Bekletme Gibi Çağrı Yönlendirme Özelliklerini Yönetin",
     "mediaOnHoldTab": "Bekletilen Ortam",
@@ -141,8 +144,8 @@
     "welcome": "Hoş geldiniz!",
     "feedback": "Geribildirim",
     "logout": "Oturumu Kapat",
-    "appTitle": "Squared Yönetim Aracı",
-    "genericTitle": "Squared",
+    "appTitle": "Cisco Spark Yönetimi",
+    "genericTitle": "Spark",
     "search": "Kullanıcıları ada veya e-postaya göre ara",
     "greeting": "Merhaba {{name}}",
     "launchPartner": "Kuruluşumu Yönet"
@@ -152,12 +155,12 @@
     "heading": "Yetkilendirme listesi"
   },
   "downloadPage": {
-    "thank": "Cisco Squared'e kaydolduğunuz için teşekkürler.",
+    "thank": "Cisco Spark\'a kaydolduğunuz için teşekkürler.",
     "account": "Hesabınız {{email}} artık etkin.",
-    "install": "Lütfen bu bağlantıya giderek Squared'i",
+    "install": "Lütfen aşağıdakileri uygulayarak Spark\'ı yükleyin",
     "link": "yükleyin.",
     "using": "Lütfen",
-    "squared": "Squared'i kullanmaya başlayın."
+    "squared": "Spark."
   },
   "invitePage": {
     "redirect": "Yeniden yönlendiriliyor...",
@@ -315,7 +318,7 @@
     "launchBtn": "Başlat",
     "convert": "Dönüştür",
     "convertUsers": "Lisanssız Kullanıcıları Dönüştür",
-    "convertUsersText": "Kuruluşunuzda şirket e-posta adresiyle Project Squared için kendi başlarına kaydolan çalışanlarınızı lisanslı kullanıcıya dönüştürün. Lisanslı kullanıcılar ek kurumsal özellikler elde eder ve kuruluşunuzun ilkelerine ve yönetimine tabi olur.<br><br>Seçilen kullanıcılar, dönüşüm için davet edilecek veya e-posta adreslerini şirket dışı bir e-posta adresiyle değiştirmeleri istenecektir.",
+    "convertUsersText": "Şirket e-posta adresiyle kendi başlarına Project Spark\'a kaydolan kuruluşunuzun çalışanlarını lisanslı kullanıcıya dönüştürün. Lisanslı kullanıcılar ek kurumsal özellikler edinir ve kuruluşunuzun politikalarına ve yönetimine tabi olur.<br><br>Seçilen kullanıcılar, e-posta adreslerini şirket dışı e-posta adresine dönüştürme veya değiştirme daveti alacaktır.",
     "cancel": "İptal",
     "emailAddress": "E-posta Adresi",
     "name": "Ad",
@@ -333,7 +336,7 @@
   "inviteModal": {
     "title": "Hizmet Yetkilendirmesi",
     "heading": " Hizmet Yetkilendirmesini Etkinleştir",
-    "content": "Kuruluştaki kullanıcıları Squared'i kullanmaya davet edin...",
+    "content": "Kuruluştaki kullanıcıları Cisco Spark\'ı kullanmaya davet edin...",
     "inviteAll": "Kuruluş genelinde hizmet yetkilendirmesini etkinleştir"
   },
   "ssoModal": {
@@ -346,7 +349,7 @@
     "testSSOSetupTitle": "SSO Kurulumunu Test Et",
     "enableSSOTitle": "SSO'yu Etkinleştir",
     "importMetadataDesc": "IdP'nizden bir güven meta veri dosyası alarak ve buraya yükleyerek kimlik sağlayıcınız (IdP) ile Cisco İşbirliği Bulutu arasındaki güven ilişkisini yapılandırmaya başlayın.",
-    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
+    "importMetadataNote": "Not: Meta veri dosyası içe aktarıldığında, SSO <b>açık</b> duruma getirilecektir. Amacınız yalnızca SSO'yu test etmekse, lütfen sonraki ekranda kapatmayı unutmayın.",
     "exportMetadataDesc1": "Cisco İşbirliği hizmetinden aşağıdaki güven meta veri dosyasını indirin ve kimlik sağlayıcınızın (IdP) yönetim arayüzüne yükleyin.",
     "exportMetadataDesc2": "Dosyayı IdP'nize yüklemeyi tamamladıktan sonra, bu ekrana dönün ve İleri'ye basın.",
     "testSSOSetupDesc": "SSO yapılandırmanızı test etmek için hazırsınız. Yeni bir pencere açmak için aşağıdaki düğmeye basın. Başarıyla oturum açabiliyorsanız, bu ekrana dönebilir veya SSO kurulumunuzu sonlandırmak için ileri seçeneğine basabilirsiniz.",
@@ -410,7 +413,7 @@
     "domain": "Etki Alanı",
     "defaultPlaceholder": "Varsayılan",
     "domainDesc": "Senkronize edeceğiniz Active Directory etki alanını belirleyin.",
-    "installStep1": "1. İşletmenize Cisco Bulut Bağlayıcı'yı <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>indirin</a> ve yükleyin.",
+    "installStep1": "1. Kuruluşunuz için Cisco Cloud Connector'ı <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> İndirin </a> ve Yükleyin.",
     "installStep2": "2. Active Directory senkronizasyon anlaşmasını yapılandırın.",
     "installStep3": "3. Senkronizasyon anlaşmasını test edin.",
     "nextSteps": "Kimlik bilgilerinin senkronize edildiğini doğrulamak için hazır olduğunuzda İleri düğmesine basın.",
@@ -549,7 +552,7 @@
     "domain": "Etki Alanı",
     "defaultPlaceholder": "Varsayılan",
     "domainDesc": "Senkronize edeceğiniz Active Directory etki alanını belirleyin.",
-    "installStep1": "1. İşletmenize Cisco Bulut Bağlayıcı'yı <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>indirin</a> ve yükleyin.",
+    "installStep1": "1. Kuruluşunuz için Cisco Cloud Connector'ı <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> İndirin </a> ve Yükleyin.",
     "installStep2": "2. Active Directory senkronizasyon anlaşmasını yapılandırın.",
     "installStep3": "3. Senkronizasyon anlaşmasını test edin.",
     "nextSteps": "Kimlik bilgilerinin senkronize edildiğini doğrulamak için hazır olduğunuzda İleri düğmesine basın.",
@@ -627,7 +630,7 @@
     "createButton": "Çağrı Bekletme Oluştur"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "veya",
     "voicemail": "Sesli Mesaj",
     "singleNumberReach": "Tek Numarayla Ulaşma"
@@ -733,12 +736,12 @@
     "launchPortal": "Şirket Portalını Başlat",
     "launchPortalPrompt": "Hizmeti müşteri için kurmak istiyorsanız:",
     "or": "veya",
-    "squareducError": "Deneme sürümü oluşturuldu, ancak Squared UC sağlanamıyor.",
+    "squareducError": "Deneme sürümü oluşturuldu, ancak Spark UC sağlanamıyor.",
     "addSuccess": "{{customerName}} için {{licenseDuration}} gün süreyle {{licenseCount}} lisansa yönelik deneme sürümü başarıyla başlatıldı.",
     "editSuccess": "{{customerName}} için {{licenseDuration}} gün süreyle {{licenseCount}} lisansa yönelik deneme sürümünü başarıyla düzenlediniz."
   },
   "trials": {
-    "collab": "Standart Ekip Odaları + 25 Taraflı Senkronizasyon",
+    "collab": "Standart ekip odaları + 25 taraflı toplantılar",
     "squaredUC": "Gelişmiş İletişim"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "Bugün Sona Eriyor",
     "unused": "kullanılmamış lisanslar",
     "uploadNumbers": "Yükleme Numaraları",
-    "overPlan": "plan limitinin üzerinde"
+    "overPlan": "plan limitinin üzerinde",
+    "communication": "İletişim",
+    "phoneNumbers": "Telefon Numaraları",
+    "none": "Hiçbiri"
   },
   "didAddModal": {
     "title": "Telefon Numaraları Ekle",
@@ -787,6 +793,21 @@
     "processingText": "Telefon Numaraları Ekleniyor...",
     "successText": "{{count}} yeni telefon numarası başarıyla eklendi.",
     "failText": "{{count}} telefon numarası zaten sistemde var.",
+    "sendEmail": "Müşteriye Bildir",
+    "notifyCustLater": "Müşteriyi Daha Sonra Bilgilendir",
+    "emailSuccessText": "E-posta müşteriye başarıyla gönderildi.",
+    "emailFailText": "E-posta gönderilirken hata oluştu",
+    "inputPlacehoder": "Telefon numaralarını virgülle ayırarak girin"
+  },
+  "didManageModal": {
+    "title": "Telefon Numaralarını Yönet",
+    "instructionsText": "Ayarladığınız Şirketin size mevcut Telefon Numaralarını sağlaması gerekiyor. Bu, şirket telefon numaralarının taşınma isteğini başlatacaktır.",
+    "processingText": "Telefon Numaraları Ekleniyor...",
+    "newDidText": "{{count}} yeni telefon numarası başarıyla eklendi.",
+    "existingDidText": "{{count}} telefon numarası zaten sistemde var.",
+    "deleteDidText": "{{count}} telefon numarası silindi.",
+    "deleteConfirmationText": "Aşağıdaki {{count}} numarayı silmek istediğinizden emin misiniz? Bu işlem, bu numaralar kullanıcının hatlarına atanırsa son kullanıcıları etkileyebilir.",
+    "removeNumbers": "Numaraları Kaldır",
     "sendEmail": "Müşteriye Bildir",
     "notifyCustLater": "Müşteriyi Daha Sonra Bilgilendir",
     "emailSuccessText": "E-posta müşteriye başarıyla gönderildi.",
@@ -816,7 +837,7 @@
     "send": "Gönder",
     "to": "Kime",
     "subject": "Konu",
-    "subjectContent": "Squared UC cihazınızı etkinleştirin",
+    "subjectContent": "Spark UC cihazınızı etkinleştirin",
     "message": "Mesaj",
     "expires": "Son tarih: {{date}}  <strong>(şu andan itibaren {{timeLeft}})</strong>",
     "clipboardFallback": "Aşağıdaki metni kopyalamak için cmd+c tuşlarına basın.",
@@ -830,11 +851,11 @@
     "emailAddress": "E-posta Adresi",
     "administratorRoles": "Yönetici Rolleri",
     "rolesDescription": "Bir kullanıcının sistemde bir veya daha fazla rolü olabilir ve kullanıcıya seçilen rollerdeki tüm izinler verilecektir.",
-    "cloudOpDescription": "Bu kullanıcı, Bulut İşlemleri Yöneticisi olarak da etkinleştirilebilir. Bu rol, Squared sistemini bu portaldan görüntülemek ve yönetmek için özel izinler içerir.",
+    "cloudOpDescription": "Bu kullanıcı Bulut İşlemleri Yöneticisi olarak da etkinleştirilebilir. Bu rol, Spark sistemini bu portalından görüntüleme ve çalıştırmaya yönelik özel izinleri içerir.",
     "cloudOpAdmin": "Bulut İşlemleri Yöneticisi",
-    "fullAdmin": "Tam yönetici izinleri",
-    "partialAdmin": "Bazı yönetici izinleri",
-    "noAdmin": "Yetersiz ayrıcalık",
+    "fullAdmin": "Tam yönetici ayrıcalıkları",
+    "partialAdmin": "Bazı yönetici ayrıcalıkları",
+    "noAdmin": "Yönetici ayrıcalıkları yok",
     "userAdmin": "Kullanıcı Yöneticisi",
     "billingAdmin": "Fatura Yöneticisi",
     "supportAdmin": "Destek Yöneticisi",
@@ -879,10 +900,18 @@
     "deleteResource": "Kaynağı Kullanımdan Kaldır"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx Proto"
+    "userUpdateSuccess": "Kullanıcı ayrıcalıkları güncellendi",
+    "userUpdateError": "Kullanıcı ayrıcalıkları güncellenemedi",
+    "webexUserSettingsTab": "WebEx Proto",
+    "reload": "Tekrar Dene"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "Kullanıcı bilgileri okunurken hata oluştu",
+    "030001": "{{givenName}} {{familyName}} bu siteye henüz sağlanmadı. Bu işlem biraz zaman alabilir."
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "Gelişmiş Ayarlar"
   },
   "leaderBoard": {
     "actions": "Eylemler",
@@ -907,7 +936,7 @@
     "ciscoRep": "Cisco Temsilcisi",
     "supportSetup": "Sorun Bileti / Raporlama Konumu",
     "save": "Kaydet",
-    "supportInfo": "Müşterilerinizin kullanıcıları için destek sağlıyorsanız, destek parametrelerinizi aşağıya girin. Bu parametreler, Squared uygulamalarında Destek Seçenekleri altında görüntülenecektir.",
+    "supportInfo": "Müşterilerinizin kullanıcıları için destek sağlıyorsanız, destek parametrelerinizi aşağıya girin. Bu parametreler, Spark uygulamalarında Destek Seçenekleri altında görüntülenecektir;",
     "lifeCycle": "Yaşam döngüsü ortaklarının aşağıda gösterilen her iki destek türünü sağlaması gerekir.",
     "supportOptions": "Cisco Destek Seçenekleri",
     "seeExample": "bir örneğe bakın.",
@@ -917,8 +946,8 @@
     "urlReport": "Sorun biletlerini bildirmeye veya vaka açmaya yönelik URL",
     "urlReportEx": "http://[Cisco sorun bildiriminin url'si]",
     "helpFaq": "Yardım ve SSS Konumu",
-    "matchingTix": "Eşleşen Sorun Biletleri",
-    "matchingDescr": "Raporlar oluşturulduğunda sorun biletlerini Cisco İşbirliği Yönetimi aracına yüklenen günlüklerle eşleştirmek için, \"%%logID%%\" biçimindeki (tırnak işaretleri olmadan) günlük kimliğinizi destek URL'nizin sonuna ekleyin.",
+    "matchingTix": "Sorun Biletleri Eşleştiriliyor",
+    "matchingDescr": "Raporlar oluşturulduğunda Cisco Spark Yönetimi'ne yüklenen günlüklerle sorun biletlerini eşleştirmek için destek URL'nize \"%%logID%%\" (tırnak olmadan) olarak logID parametrenizi ekleyin.",
     "forExample": "Örneğin: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Destek Kurulumu",
     "companyInfo": "Şirket Bilgileri",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "Destek İletişim Kişileri",
     "partnerAdmin": "İş Ortağı Yöneticileri",
-    "supportInfo": "Kullanıcılarınız için destek sağlıyorsanız, destek parametrelerinizi aşağıya girin. Bu parametreler, Squared uygulamalarında Destek Seçenekleri altında görüntülenecektir."
+    "supportInfo": "Kullanıcılarınız için destek sağlıyorsanız, destek parametrelerinizi aşağıya girin. Bu parametreler, Spark uygulamasında Destek Seçenekleri altında görüntülenecektir;"
   },
   "utilizationPage": {
     "entResUtilization": "Kurumsal Kaynakların Kullanımı",
@@ -942,7 +971,7 @@
     "bridgeUtilization": "Köprü Bazlı Kullanım"
   },
   "processOrderPage": {
-    "errOrgCreation": "Sipariş No. {{orderId}} işleniyor. Lütfen 24 saat sonra tekrar kontrol edin.",
+    "errOrgCreation": "Sipariş # {{orderId}} işleniyor. Lütfen 24 saat sonra kontrol edin.",
     "info": "Durum",
     "wait": "Lütfen sizi yönlendirirken bekleyin"
   },

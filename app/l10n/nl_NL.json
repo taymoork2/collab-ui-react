@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cisco Collaboration Management",
+    "title": "Cisco Spark Management",
     "login": "Gebruikersnaam",
     "loading": "Wordt geladen"
   },
@@ -15,6 +15,7 @@
     "entitle": "Machtigen",
     "firstnameHeader": "Voornaam",
     "lastnameHeader": "Familienaam",
+    "displayNameHeader": "Weergavenaam",
     "emailHeader": "E-mail",
     "actionHeader": "Acties",
     "invite": "Uitnodigingen versturen",
@@ -73,11 +74,11 @@
     "groupColHeader": "Groepnaam",
     "collabService": "Kies de collaboration service-licenties die aan de gebruikers in de groep dienen gegeven te worden.",
     "addEntitleError": "onvoldoende rechten om een gebruiker toe te voegen of te machtigen.",
-    "freeMsg": "Gratis teamruimtes in Squared",
-    "freeConf": "Gratis Meetings van drie partijen",
+    "freeMsg": "Gratis teamruimtes",
+    "freeConf": "Gratis vergaderingen met 3 partijen",
     "freeComm": "Gratis spraak- en videogesprekken via IP binnen uw netwerk",
     "paidMsg": "Standaard teamruimtes",
-    "paidConf": "Meetings van 25 partijen",
+    "paidConf": "Vergaderingen met 25 partijen",
     "paidComm": "Geavanceerde communicatie"
   },
   "usersPreview": {
@@ -122,6 +123,8 @@
     "organizationTabDesc": "Beheer organisatiegegevens, bekijk toegewezen services en open tools.",
     "fusionDetailsTab": "Fusie",
     "fusionDetailsTabDesc": "Fusiebeheer",
+    "fusionNextTab": "Fusion Next",
+    "fusionNextTabDesc": "Fusion Management",
     "callRoutingTab": "Gespreksomleiding",
     "callRoutingTabDesc": "Beheer functies voor gespreksomleiding, zoals 'Gesprek parkeren'",
     "mediaOnHoldTab": "Media in de wachtrij",
@@ -141,8 +144,8 @@
     "welcome": "Welkom!",
     "feedback": "Feedback",
     "logout": "Afmelden",
-    "appTitle": "Beheertool voor Squared",
-    "genericTitle": "Squared",
+    "appTitle": "Cisco Spark Management",
+    "genericTitle": "Spark",
     "search": "Zoek gebruikers aan de hand van hun naam of e-mailadres",
     "greeting": "Hallo {{name}},",
     "launchPartner": "Mijn organisatie beheren"
@@ -152,12 +155,12 @@
     "heading": "Lijst met rechten voor"
   },
   "downloadPage": {
-    "thank": "Bedankt voor uw registratie bij Cisco Squared.",
+    "thank": "Bedankt om u in te schrijven voor Cisco Spark.",
     "account": "Uw account {{email}} is nu actief.",
-    "install": "U kunt Squared installeren via",
+    "install": "Installeer Spark en volg",
     "link": "deze koppeling.",
     "using": "Aan de slag met",
-    "squared": "Squared."
+    "squared": "Spark."
   },
   "invitePage": {
     "redirect": "U wordt omgeleid...",
@@ -315,7 +318,7 @@
     "launchBtn": "Opstarten",
     "convert": "Omzetten",
     "convertUsers": "Gebruikers zonder licentie omzetten",
-    "convertUsersText": "Zet gebruikers binnen uw organisatie die zich met een zakelijk e-mailadres hebben aangemeld voor Project Squared om in gelicentieerde gebruikers. Gebruikers met een licentie krijgen toegang tot extra zakelijke functies en kunnen worden beheerd via het beleid en de beheermogelijkheden van uw organisatie.<br><br>De geselecteerde gebruikers krijgen een uitnodiging waarmee ze hun account kunnen omzetten of waarmee ze hun zakelijke e-mailadres kunnen wijzigen in een niet-zakelijk e-mailadres.",
+    "convertUsersText": "Converteer werknemers van uw organisatie die zich zelf hebben ingeschreven voor Project Spark met een bedrijfse-mailadres van een gelicentieerde gebruiker. Gebruikers met een licentie ontvangen extra ondernemingsfuncties en zijn onderworpen aan de beleidsregels en het beheer van uw organisatie.<br><br>Geselecteerde gebruikers krijgen een uitnodiging om hun e-mailadres te converteren of te wijzigen in een niet-bedrijfse-mailadres.",
     "cancel": "Annuleren",
     "emailAddress": "E-mailadres",
     "name": "Naam",
@@ -333,7 +336,7 @@
   "inviteModal": {
     "title": "Recht op de service",
     "heading": " Recht op de service inschakelen",
-    "content": "Nodig gebruikers binnen uw organisatie uit voor Squared...",
+    "content": "Nodig gebruikers in de organisatie uit om Cisco Spark te gebruiken...",
     "inviteAll": "Organisatiebreed recht op de service inschakelen"
   },
   "ssoModal": {
@@ -346,7 +349,7 @@
     "testSSOSetupTitle": "SSO-configuratie testen",
     "enableSSOTitle": "Eenmalige aanmelding (SSO) inschakelen",
     "importMetadataDesc": "Begin de vertrouwensrelatie tussen uw identiteitsprovider (IdP) en de Collaboration Cloud van Cisco te configureren door een bestand met vertrouwde metagegevens van uw identiteitsprovider te uploaden.",
-    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
+    "importMetadataNote": "Opmerking: door het metagegevensbestand te importeren, wordt SSO <b>ingeschakeld</b>. Indien u gewoon SSO test, denk er dan aan om het uit te schakelen in het volgende scherm.",
     "exportMetadataDesc1": "Download het volgende bestand met vertrouwde metagegevens uit de samenwerkingsservice van Cisco en upload het via de beheerinterface van uw identiteitsprovider.",
     "exportMetadataDesc2": "Wanneer u klaar bent met het uploaden van het bestand, keert u terug naar dit scherm en drukt u op 'Volgende'.",
     "testSSOSetupDesc": "U bent nu klaar om uw SSO-configuratie te testen. Druk op de onderstaande knop om een nieuw venster te openen. Wanneer u zich succesvol kunt aanmelden, kunt u terugkeren naar dit scherm. Druk vervolgens op 'Volgende' om uw SSO-configuratie af te ronden.",
@@ -410,7 +413,7 @@
     "domain": "Domein",
     "defaultPlaceholder": "Standaard",
     "domainDesc": "Geef op met welk Active Directory-domein u wilt synchroniseren.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Download </a> en installeer de Cisco Cloud Connector in uw organisatie.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> en installeer de Cisco Cloud Connector in uw onderneming.",
     "installStep2": "2. Configureeer de synchronisatieovereenkomst voor Active Directory.",
     "installStep3": "3. Test de synchronisatieovereenkomst.",
     "nextSteps": "Druk op Volgende wanneer u klaar bent om te controleren of de identiteitsgegevens worden gesynchroniseerd.",
@@ -549,7 +552,7 @@
     "domain": "Domein",
     "defaultPlaceholder": "Standaard",
     "domainDesc": "Geef op met welk Active Directory-domein u wilt synchroniseren.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Download </a> en installeer de Cisco Cloud Connector in uw organisatie.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> en installeer de Cisco Cloud Connector in uw onderneming.",
     "installStep2": "2. Configureeer de synchronisatieovereenkomst voor Active Directory.",
     "installStep3": "3. Test de synchronisatieovereenkomst.",
     "nextSteps": "Druk op Volgende wanneer u klaar bent om te controleren of de identiteitsgegevens worden gesynchroniseerd.",
@@ -627,7 +630,7 @@
     "createButton": "Geparkeerd gesprek maken"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "of",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -733,12 +736,12 @@
     "launchPortal": "Start dan de bedrijfsportal op",
     "launchPortalPrompt": "Wilt u de service voor de klant configureren?",
     "or": "of",
-    "squareducError": "Er is een proefabonnement aangemaakt, maar Squared UC kan niet worden geïmplementeerd.",
+    "squareducError": "Proefversie gemaakt, maar onmogelijk om Spark UC te voorzien.",
     "addSuccess": "Er werd met succes een proefabonnement met {{licenseCount}} licenties aangemaakt voor {{customerName}}. De proefperiode duurt {{licenseDuration}} dagen.",
     "editSuccess": "U hebt met succes het proefabonnement van {{customerName}} met {{licenseCount}} licenties gewijzigd. De proefperiode duurt {{licenseDuration}} dagen."
   },
   "trials": {
-    "collab": "Standaard teamruimtes + Meeting voor 25 partijen",
+    "collab": "Standaard teamruimtes + vergaderingen met 25 partijen",
     "squaredUC": "Geavanceerde communicatie"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "Verloopt vandaag",
     "unused": "ongebruikte licenties",
     "uploadNumbers": "Nummers uploaden",
-    "overPlan": "De abonnementslimiet is overschreden"
+    "overPlan": "De abonnementslimiet is overschreden",
+    "communication": "Communicatie",
+    "phoneNumbers": "Telefoonnummers",
+    "none": "Geen"
   },
   "didAddModal": {
     "title": "Telefoonnummers toevoegen",
@@ -787,6 +793,21 @@
     "processingText": "De telefoonnummers worden toegevoegd...",
     "successText": "{{count}} nieuw(e) telefoonnummer(s) werd(en) met succes toegevoegd.",
     "failText": "{{count}} telefoonnummer(s) bevond(en) zich al in het systeem.",
+    "sendEmail": "Klant waarschuwen",
+    "notifyCustLater": "Klant later waarschuwen",
+    "emailSuccessText": "De e-mail is met succes naar de klant verzonden.",
+    "emailFailText": "Er is een fout opgetreden tijdens het verzenden van de e-mail",
+    "inputPlacehoder": "Voer telefoonnummers in, gescheiden met een komma"
+  },
+  "didManageModal": {
+    "title": "Telefoonnummers beheren",
+    "instructionsText": "Het bedrijf waarvoor u de configuratie uitvoert, moet u de bestaande telefoonnummers geven. Vervolgens kunt u de telefoonnummers porteren.",
+    "processingText": "De telefoonnummers worden toegevoegd...",
+    "newDidText": "{{count}} nieuw(e) telefoonnummer(s) werd(en) met succes toegevoegd.",
+    "existingDidText": "{{count}} telefoonnummer(s) bevond(en) zich al in het systeem.",
+    "deleteDidText": "{{count}} telefoonnummer(s) werd(en) verwijderd.",
+    "deleteConfirmationText": "Weet u zeker dat u het/de volgende {{count}} nummer(s) wilt verwijderen? Dit kan gevolgen hebben voor eindgebruikers als deze nummers toegekend worden aan gebruikerslijnen.",
+    "removeNumbers": "Nummers verwijderen",
     "sendEmail": "Klant waarschuwen",
     "notifyCustLater": "Klant later waarschuwen",
     "emailSuccessText": "De e-mail is met succes naar de klant verzonden.",
@@ -816,7 +837,7 @@
     "send": "Verzenden",
     "to": "Aan",
     "subject": "Onderwerp",
-    "subjectContent": "Activeer uw Squared UC-apparaat",
+    "subjectContent": "Uw Spark UC-apparaat activeren",
     "message": "Bericht",
     "expires": "Verloopt op: {{date}}  <strong>({{timeLeft}} vanaf nu)</strong>",
     "clipboardFallback": "Druk op cmd+c om de onderstaande tekst te kopiëren.",
@@ -830,11 +851,11 @@
     "emailAddress": "E-mailadres",
     "administratorRoles": "Beheerdersrollen",
     "rolesDescription": "Een gebruiker kan meer dan één rol hebben in het systeem en krijgt alle rechten voor een geselecteerde rol.",
-    "cloudOpDescription": "U kunt de gebruiker ook instellen als Cloud Operations Administrator. Bij deze rol horen speciale rechten om het Squared-systeem te bekijken en te beheren via deze portal.",
+    "cloudOpDescription": "Deze gebruiker kan ook geactiveerd worden als een Cloud Operations-beheerder. Deze rol heeft speciale machtigingen om het Spark-systeem vanf deze portal te bekijken en bedienen.",
     "cloudOpAdmin": "Cloud Operations Administrator",
-    "fullAdmin": "Volledige beheerrechten",
-    "partialAdmin": "Gedeeltelijke beheerrechten",
-    "noAdmin": "Onvoldoende rechten",
+    "fullAdmin": "Volledige beheerdersrechten",
+    "partialAdmin": "Bepaalde beheerdersrechten",
+    "noAdmin": "Geen beheerdersrechten",
     "userAdmin": "Gebruikersbeheerder",
     "billingAdmin": "Facturatiebeheerder",
     "supportAdmin": "Ondersteuningsbeheerder",
@@ -879,10 +900,18 @@
     "deleteResource": "Resource uitschakelen"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx Proto"
+    "userUpdateSuccess": "Gebruikersprivileges bijgewerkt",
+    "userUpdateError": "Bijwerken van gebruikersprivileges mislukt",
+    "webexUserSettingsTab": "WebEx Proto",
+    "reload": "Probeer het opnieuw"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "Fout bij het lezen van de gebruikersgegevens",
+    "030001": "{{givenName}} {{familyName}} is nog niet voorzien voor deze site. Dit proces kan even duren."
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "Geavanceerde instellingen"
   },
   "leaderBoard": {
     "actions": "Acties",
@@ -907,7 +936,7 @@
     "ciscoRep": "Cisco-vertegenwoordiger",
     "supportSetup": "Hulpticket/rapportagepunt",
     "save": "Opslaan",
-    "supportInfo": "Indien u ondersteuning biedt voor uw gebruikers, voert u hieronder uw ondersteuningsparameters in. Deze parameters worden weergegeven onder Ondersteuningsopties in de Squared-toepassing.",
+    "supportInfo": "Indien u ondersteuning biedt voor de gebruikers van uw klanten, voert u uw ondersteuningsparamaters hieronder in. Deze parameters worden weergegeven onder Ondersteuningsopties in de Spark-toepassingen.",
     "lifeCycle": "Lifecycle-partners moeten beide hieronder weergegeven types ondersteuning voorzien.",
     "supportOptions": "Ondersteuningsopties van Cisco",
     "seeExample": "bekijk een voorbeeld.",
@@ -918,7 +947,7 @@
     "urlReportEx": "http://[URL voor het melden van problemen of openen van hulpaanvragen]",
     "helpFaq": "Help & Locatie Veelgestelde vragen",
     "matchingTix": "Overeenstemmende hulptickets",
-    "matchingDescr": "Om uw hulptickets overeen te stemmen met de logboeken die worden geüpload naar de Cisco Collaboration Management tool wanneer rapporten worden gemaakt, voegt u uw ondersteunings-URL bij uw logID-parameter als \"%%logID%%\" (geen aanhalingstekens).",
+    "matchingDescr": "Om hulptickets overeen te stemmen met de logboeken die geüpload zijn in Cisco Spark Management wanneer rapporten gemaakt worden, voegt u uw ondersteunings-URL bij met uw log-id-parameter als \"%%logID%%\" (geen aanhalingstekens).",
     "forExample": "Bijvoorbeeld: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Configuratie van ondersteuning",
     "companyInfo": "Bedrijfsinformatie",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "Contactpersonen bij Ondersteuning",
     "partnerAdmin": "Partnerbeheerders",
-    "supportInfo": "Indien u ondersteuning biedt voor uw gebruikers, voert u hieronder uw ondersteuningsparameters in. Deze parameters worden weergegeven onder Ondersteuningsopties in de Squared-toepassing;"
+    "supportInfo": "Indien u ondersteuning biedt voor uw gebruikers, voert u uw ondersteuningsparamaters hieronder in. Deze parameters worden weergegeven onder Ondersteuningsopties in de Spark-toepassing;"
   },
   "utilizationPage": {
     "entResUtilization": "Gebruik van Enterprise Resources",
@@ -942,7 +971,7 @@
     "bridgeUtilization": "Gebruik van Bridge By Bridge"
   },
   "processOrderPage": {
-    "errOrgCreation": "Order # {{orderId}} wordt verwerkt. Kom terug en controleer na 24 uur.",
+    "errOrgCreation": "Ordernr. {{orderId}} wordt verwerkt. Kom terug een kijkje nemen na 24 uur.",
     "info": "Status",
     "wait": "Even geduld terwijl u wordt omgeleid"
   },

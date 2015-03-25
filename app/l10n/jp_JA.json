@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "シスココラボレーションマネジメント",
+    "title": "Cisco Spark Management",
     "login": "ログイン",
     "loading": "ロード中"
   },
@@ -15,6 +15,7 @@
     "entitle": "エンタイトル",
     "firstnameHeader": "名",
     "lastnameHeader": "姓",
+    "displayNameHeader": "表示名",
     "emailHeader": "メール",
     "actionHeader": "アクション",
     "invite": "招待状を送信する",
@@ -73,11 +74,11 @@
     "groupColHeader": "グループ名",
     "collabService": "グループのユーザーに与えられるコラボレーションサービスのライセンスを選択してください。",
     "addEntitleError": "ユーザーの追加またはエンタイトルを行うには権限が不足しています。",
-    "freeMsg": "無料Squaredチームルーム",
-    "freeConf": "無料サードパーティ同期",
+    "freeMsg": "無料のチームルーム",
+    "freeConf": "無料の 3 人のミーティング",
     "freeComm": "無料ネットワーク内IP音声およびビデオ通話",
     "paidMsg": "標準チームルーム",
-    "paidConf": "25パーティ同期",
+    "paidConf": "25 人のミーティング",
     "paidComm": "高度なコミュニケーション"
   },
   "usersPreview": {
@@ -122,6 +123,8 @@
     "organizationTabDesc": "組織の詳細の管理、割り当てサービスの表示、ツールへのアクセスを行います。",
     "fusionDetailsTab": "フュージョン",
     "fusionDetailsTabDesc": "フュージョン管理",
+    "fusionNextTab": "Fusion Next",
+    "fusionNextTabDesc": "フュージョン管理",
     "callRoutingTab": "呼び出しルーティング",
     "callRoutingTabDesc": "コールパークのような呼び出しルーティング機能を管理します。",
     "mediaOnHoldTab": "ホールド時メディア",
@@ -141,8 +144,8 @@
     "welcome": "ウェルカム !",
     "feedback": "フィードバック",
     "logout": "サインアウト",
-    "appTitle": "Squared 管理ツール",
-    "genericTitle": "Squared 済み",
+    "appTitle": "Cisco Spark Management",
+    "genericTitle": "Spark",
     "search": "ユーザーを名前または電子メールで検索",
     "greeting": "こんにちは、{{name}}",
     "launchPartner": "自分の組織の管理"
@@ -152,12 +155,12 @@
     "heading": "エンタイトルメントのリスト："
   },
   "downloadPage": {
-    "thank": "Cisco Squared にご登録くださり、ありがとうございます。",
+    "thank": "Cisco Sparkにご登録いただきありがとうございます。",
     "account": "アカウント {{email}} はアクティブになっています。",
-    "install": "次の手順に従って Squared をインストールしてください",
+    "install": "以下の手順でSparkをインストールしてください",
     "link": "このリンク",
     "using": "使用を開始してください",
-    "squared": "Squared。"
+    "squared": "Spark"
   },
   "invitePage": {
     "redirect": "リダイレクト中 ...",
@@ -315,7 +318,7 @@
     "launchBtn": "起動",
     "convert": "転換",
     "convertUsers": "未ライセンスのユーザーを転換",
-    "convertUsersText": "組織内の、自分自身では会社のメールアドレスで Project Squared にサインアップしていない従業員をライセンス済みユーザーに転換します。ライセンス済みユーザーは追加のエンタープライズ機能を利用でき、組織のポリシーと管理の対象になります。<br><br>選ばれたユーザーは、自分のメールアドレスを会社以外のメールアドレスに転換または変更するようにとの招待を受け取ります。",
+    "convertUsersText": "会社のメールアドレスを使用して自分でProject Sparkにサインアップした組織の従業員を、ライセンスユーザーに転換してください。ライセンスユーザーは追加のエンタープライズ機能を利用でき、組織のポリシーと管理の対象となります。<br><br>選択されたユーザーは自分のメールアドレスを会社以外のメールアドレスに転換する招待を受けます。",
     "cancel": "キャンセル",
     "emailAddress": "メールアドレス",
     "name": "名前",
@@ -333,7 +336,7 @@
   "inviteModal": {
     "title": "サービスエンタイトルメント",
     "heading": " サービスエンタイトルメントを有効にする",
-    "content": "組織のユーザーを squared を使用するように招待する ...",
+    "content": "Cisco Sparkを使用できるように組織内のユーザーを招待します...",
     "inviteAll": "組織全体のサービスエンタイトル面とを有効にする"
   },
   "ssoModal": {
@@ -346,8 +349,8 @@
     "testSSOSetupTitle": "SSO セットアップのテスト",
     "enableSSOTitle": "SSO を有効にする",
     "importMetadataDesc": "IdP から信頼メタデータファイルを取得して、ここにアップロードすることにより、自分の ID プロバイダ（IdP）とシスココラボレーションクラウドの間での信頼関係の設定を開始します。",
-    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
-    "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Collaboration service, and upload it into your identity provider (IdP) management interface.",
+    "importMetadataNote": "注: メタデータファイルをインポートすることにより、SSO は<b>オン</b>になります。SSO をテストするだけの場合は、次の画面でオフにすることを忘れないでください。",
+    "exportMetadataDesc1": "シスココラボレーションサービスから次の信頼メタデータをダウンロードして、自分の ID プロバイダ（IdP）の管理インタフェースにアップロードします。",
     "exportMetadataDesc2": "ファイルを IdP にアップロードしたら、この画面に戻って [次へ] をクリックします。",
     "testSSOSetupDesc": "これで SSO の構成をテストする準備ができました。下のボタンをクリックして新しいウィンドウを開きます。正常にサインインすることができたら、この画面に戻って [次へ] をクリックし、SSO のセットアップを終了してください。",
     "enableSSODesc": "すべてのユーザーに対してシングルサインオン（SSO）を有効にする準備ができたら、[完了] ボタンをクリックします。すべてのユーザー認証はこれ以後新しい SSO プロバイダを通して処理されます。",
@@ -410,7 +413,7 @@
     "domain": "ドメイン",
     "defaultPlaceholder": "デフォルト",
     "domainDesc": "同期の対象とする Active Directory のドメインを識別します。",
-    "installStep1": "1. シスコクラウドコネクタを<a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>ダウンロード</a>して自分のエンタープライズにインストールします。",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> エンタープライズで Cisco Cloud Connector をダウンロード</a>し、インストールします。",
     "installStep2": "2. Active Directory の同期の合意を設定します。",
     "installStep3": "3. 同期の合意をテストします。",
     "nextSteps": "ID 情報が同期中であることを確認する準備ができたら [次へ] ボタンをクリックします。",
@@ -549,7 +552,7 @@
     "domain": "ドメイン",
     "defaultPlaceholder": "デフォルト",
     "domainDesc": "同期の対象とする Active Directory のドメインを識別します。",
-    "installStep1": "1. シスコクラウドコネクタを<a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>ダウンロード</a>して自分のエンタープライズにインストールします。",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> エンタープライズで Cisco Cloud Connector をダウンロード</a>し、インストールします。",
     "installStep2": "2. Active Directory の同期の合意を設定します。",
     "installStep3": "3. 同期の合意をテストします。",
     "nextSteps": "ID 情報が同期中であることを確認する準備ができたら [次へ] ボタンをクリックします。",
@@ -627,7 +630,7 @@
     "createButton": "コールパークの作成"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "または",
     "voicemail": "ボイスメール",
     "singleNumberReach": "単一番号リーチ"
@@ -733,12 +736,12 @@
     "launchPortal": "企業ポータルの起動",
     "launchPortalPrompt": "カスタマに対するサービスをセットアップする場合",
     "or": "または",
-    "squareducError": "トライアルが作成されましたが、Squared UCをプロビジョニングできません。",
+    "squareducError": "トライアルが作成されましたが、Spark UCにプロビジョニングできません。",
     "addSuccess": "{{customerName}}のためのトライアルが、{{licenseDuration}} 日間の{{licenseCount}} ライセンス付きで開始されました。",
     "editSuccess": "{{licenseDuration}} 日間の{{licenseCount}} ライセンスを持つ {{customerName}}に対するトライアルを編集しました。"
   },
   "trials": {
-    "collab": "標準チームルーム + 25パーティ同期",
+    "collab": "標準チームルーム + 25 人のミーティング",
     "squaredUC": "高度なコミュニケーション"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "本日終了",
     "unused": "未使用のライセンス",
     "uploadNumbers": "アップロード番号",
-    "overPlan": "オーバープラン制限"
+    "overPlan": "オーバープラン制限",
+    "communication": "コミュニケーション",
+    "phoneNumbers": "電話番号",
+    "none": "なし"
   },
   "didAddModal": {
     "title": "電話番号の追加",
@@ -787,6 +793,21 @@
     "processingText": "電話番号の追加 ...",
     "successText": "{{count}} 件の電話番号が正常に追加されました。",
     "failText": "{{count}} 件の電話番号はすでにシステムに含まれています。",
+    "sendEmail": "カスタマに通知",
+    "notifyCustLater": "カスタマに後ほど通知する",
+    "emailSuccessText": ".メールは正常にカスタマに送信されました。",
+    "emailFailText": "メール送信でエラー",
+    "inputPlacehoder": "コンマで区切られた電話番号を入力"
+  },
+  "didManageModal": {
+    "title": "電話番号の管理",
+    "instructionsText": "セットアップ中の会社は、既存の電話番号を提供する必要があります。これにより、会社の電話番号のポーティングリクエストが開始します。",
+    "processingText": "電話番号の追加 ...",
+    "newDidText": "{{count}} 件の電話番号が正常に追加されました。",
+    "existingDidText": "{{count}} 件の電話番号はすでにシステムに含まれています。",
+    "deleteDidText": "{{count}} 件の電話番号が削除されました。",
+    "deleteConfirmationText": "以下の {{count}} 件の電話番号を本当に削除しますか？電話番号がユーザーのラインに割り当てられている場合、エンドユーザーに影響が出る可能性があります。",
+    "removeNumbers": "電話番号の削除",
     "sendEmail": "カスタマに通知",
     "notifyCustLater": "カスタマに後ほど通知する",
     "emailSuccessText": ".メールは正常にカスタマに送信されました。",
@@ -816,7 +837,7 @@
     "send": "送信",
     "to": "宛先",
     "subject": "表題",
-    "subjectContent": "Squared UC デバイスのアクティベート",
+    "subjectContent": "Spark UCデバイスのアクティブ化",
     "message": "メッセージ",
     "expires": "{{date}} に期限が切れます <strong>({{timeLeft}} 日後)</strong>",
     "clipboardFallback": "cmd+c を押して下記のテキストをコピーしてください。",
@@ -830,11 +851,11 @@
     "emailAddress": "メールアドレス",
     "administratorRoles": "管理者の役割",
     "rolesDescription": "ユーザーはシステム内で 1 つまたは複数のロールを持っていることがあります。その場合、選択したロールのすべての権限が与えられます。",
-    "cloudOpDescription": "このユーザーもクラウドオペレーション管理者として有効にできます。このロールには、このポータルから Squared システムを表示して操作する特別な権限が含まれています。",
+    "cloudOpDescription": "このユーザーをCloud Operations Administratorとして設定できます。このロールにはポータルからSparkシステムを表示し操作するための特殊なパーミッションが含まれます。",
     "cloudOpAdmin": "クラウドオペレーション管理者",
-    "fullAdmin": "管理者のフル権限",
-    "partialAdmin": "管理者の一部の権限",
-    "noAdmin": "権限が不十分です",
+    "fullAdmin": "完全な管理者権限",
+    "partialAdmin": "一部の管理者権限",
+    "noAdmin": "管理者権限なし",
     "userAdmin": "ユーザー管理者",
     "billingAdmin": "請求管理者",
     "supportAdmin": "サポート管理者",
@@ -879,10 +900,18 @@
     "deleteResource": "コミッション解除リソース"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebExの写真"
+    "userUpdateSuccess": "ユーザー権限が更新されました",
+    "userUpdateError": "ユーザー権限の更新が失敗しました",
+    "webexUserSettingsTab": "WebExの写真",
+    "reload": "再試行してください。"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "ユーザー情報読み込み中にエラーが発生",
+    "030001": "{{givenName}} {{familyName}} はまだこのサイトにプロビジョニングされていません。このプロセスには時間がかかります。"
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "詳細設定"
   },
   "leaderBoard": {
     "actions": "アクション",
@@ -907,7 +936,7 @@
     "ciscoRep": "Ciscoの代表者",
     "supportSetup": "トラブルチケット/ レポートの場所",
     "save": "保存",
-    "supportInfo": "ユーザーに対しサポートを提供する場合、以下にサポートのパラメータを入力してください。これらのパラメータはSquaredアプリケーションのサポートオプションの下に表示されます。",
+    "supportInfo": "カスタマのユーザーにサポートを提供している場合、以下にサポートパラメータを入力してください。このパラメータはSparkアプリケーション中のサポートオプションの下に表示されます。",
     "lifeCycle": "ライフサイクルパートナーは以下に表示された両方の種類のサポートを提供する必要があります。",
     "supportOptions": "Ciscoサポートオプション",
     "seeExample": "例を見てください",
@@ -917,8 +946,8 @@
     "urlReport": "トラブルチケットまたはオープニングケースを報告するURL",
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "ヘルプとFAQの場所",
-    "matchingTix": "ミーティングのトラブルチケット",
-    "matchingDescr": "レポートが作成されたときにCisco Collaboration Managementツールにアップロードされたログとトラブルチケットを照合するには、サポートURLにlogIDパラメータを追加して、「%%logID%%」のようにしてください (鍵括弧はなし)。",
+    "matchingTix": "トラブルチケットの照合",
+    "matchingDescr": "レポートが作成されたときに、Cisco Spark Managementにアップロードされたログとトラブルチケットを照合するには、「%%logID%%」のように、logIDパラメータと共にサポートURLを追加してください。",
     "forExample": "例: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "サポートのセットアップ",
     "companyInfo": "会社情報",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "サポート連絡先",
     "partnerAdmin": "パートナー管理者",
-    "supportInfo": "ユーザーに対しサポートを提供する場合、以下にサポートのパラメータを入力してください。これらのパラメータはSquaredアプリケーションのサポートオプションの下に表示されます。"
+    "supportInfo": "ユーザーにサポートを提供している場合、以下にサポートパラメータを入力してください。このパラメータはSparkアプリケーション中のサポートオプションの下に表示されます。"
   },
   "utilizationPage": {
     "entResUtilization": "エンタープライズリソース利用状況",
@@ -942,7 +971,7 @@
     "bridgeUtilization": "Bridge By Bridge 利用状況"
   },
   "processOrderPage": {
-    "errOrgCreation": "注文番号 {{orderId}} を処理しています。24時間後に再度確認してください。",
+    "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
     "info": "状況",
     "wait": "リダイレクト中です"
   },

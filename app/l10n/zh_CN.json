@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cisco 协作管理",
+    "title": "Cisco Spark Management",
     "login": "登录",
     "loading": "正在加载"
   },
@@ -15,6 +15,7 @@
     "entitle": "授权",
     "firstnameHeader": "名字",
     "lastnameHeader": "姓氏",
+    "displayNameHeader": "显示名称",
     "emailHeader": "电子邮件",
     "actionHeader": "操作",
     "invite": "发送邀请",
@@ -73,11 +74,11 @@
     "groupColHeader": "群名称",
     "collabService": "选择应授予群用户的协作服务许可证。",
     "addEntitleError": "权限不足，无法添加用户或为用户授权。",
-    "freeMsg": "免费 Squared 团队房间",
-    "freeConf": "免费 3 方同步",
+    "freeMsg": "免费的团队房间",
+    "freeConf": "免费的 3 人会议",
     "freeComm": "免费网内 IP 语音和视频呼叫",
     "paidMsg": "标准团队房间",
-    "paidConf": "25 方同步",
+    "paidConf": "25 人会议",
     "paidComm": "高级通信"
   },
   "usersPreview": {
@@ -122,6 +123,8 @@
     "organizationTabDesc": "管理组织详情、查看分配的服务，以及访问工具。",
     "fusionDetailsTab": "Fusion",
     "fusionDetailsTabDesc": "Fusion 管理",
+    "fusionNextTab": "Fusion 下一步",
+    "fusionNextTabDesc": "Fusion 管理",
     "callRoutingTab": "呼叫路由",
     "callRoutingTabDesc": "管理呼叫驻留等呼叫路由功能",
     "mediaOnHoldTab": "媒体保持",
@@ -141,8 +144,8 @@
     "welcome": "欢迎！",
     "feedback": "反馈",
     "logout": "注销",
-    "appTitle": "Squared 管理工具",
-    "genericTitle": "Squared",
+    "appTitle": "Cisco Spark Management",
+    "genericTitle": "Spark",
     "search": "按姓名或电子邮件搜索用户",
     "greeting": "{{name}} 您好！",
     "launchPartner": "管理我的组织"
@@ -152,12 +155,12 @@
     "heading": "授权列表 -"
   },
   "downloadPage": {
-    "thank": "感谢您注册 Cisco Squared。",
+    "thank": "感谢您注册 Cisco Spark。",
     "account": "您的帐户 {{email}} 现已处于活动状态。",
-    "install": "请按这个链接来安装",
+    "install": "请按照下面的步骤下载 Spark：",
     "link": "Squared。",
     "using": "请开始使用",
-    "squared": "Squared。"
+    "squared": "Spark。"
   },
   "invitePage": {
     "redirect": "重定向中...",
@@ -315,7 +318,7 @@
     "launchBtn": "启动",
     "convert": "转换",
     "convertUsers": "转换未授权的用户",
-    "convertUsersText": "将已使用公司电子邮件地址来单独注册 Project Squared 的组织员工转换为授权用户。授权用户可收到其他企业功能，并且受组织政策和管理的限制。<br><br>所选用户将收到邀请，让他们将其电子邮件地址转换或更改为非公司电子邮件地址。",
+    "convertUsersText": "将您的组织中已使用公司电子邮件地址自行注册 Project Spark 的员工转换为授权用户。授权用户将获得其他企业功能并应遵守您的组织的政策和管理。<br><br>所选用户将收到将其电子邮件地址转换或更改为非公司电子邮件地址的邀请。",
     "cancel": "取消",
     "emailAddress": "电子邮件地址",
     "name": "名称",
@@ -333,7 +336,7 @@
   "inviteModal": {
     "title": "服务授权",
     "heading": " 启用服务授权",
-    "content": "邀请组织中的用户使用 Squared...",
+    "content": "邀请组织中的用户使用 Cisco Spark...",
     "inviteAll": "启用组织范围服务授权"
   },
   "ssoModal": {
@@ -346,7 +349,7 @@
     "testSSOSetupTitle": "测试 SSO 设置",
     "enableSSOTitle": "启用 SSO",
     "importMetadataDesc": "开始配置身份提供程序 (IdP) 和 Cisco Collaboration Cloud 之间的信任关系，方法是从 IdP 取得信任元数据文件并在此上传。",
-    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
+    "importMetadataNote": "注：导入元数据文件将<b>打开</b> SSO。如果您只是测试 SSO，请谨记在下一个屏幕中将其关闭。",
     "exportMetadataDesc1": "从 Cisco 协作服务下载下列信任元数据文件，并将文件上传至身份提供程序 (IdP) 管理界面。",
     "exportMetadataDesc2": "将文件上传至 IdP 后，请回到这个界面并按“下一步”。",
     "testSSOSetupDesc": "您已准备好测试 SSO 配置。按下面的按钮来启动新窗口。如果登录成功，则可以回到这个界面并按“下一步”来完成 SSO 设置。",
@@ -410,7 +413,7 @@
     "domain": "域",
     "defaultPlaceholder": "缺省值",
     "domainDesc": "识别要同步的 Active Directory 域。",
-    "installStep1": "1. 在企业中<a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>下载</a>并安装 Cisco Cloud Connector。",
+    "installStep1": "1. 在企业中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下载</a>并安装 Cisco Cloud Connector。",
     "installStep2": "2. 配置 Active Directory 同步协议。",
     "installStep3": "3. 测试同步协议。",
     "nextSteps": "准备好验证要同步的身份信息后，请按“下一步”按钮。",
@@ -549,7 +552,7 @@
     "domain": "域",
     "defaultPlaceholder": "缺省值",
     "domainDesc": "识别要同步的 Active Directory 域。",
-    "installStep1": "1. 在企业中<a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'>下载</a>并安装 Cisco Cloud Connector。",
+    "installStep1": "1. 在企业中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下载</a>并安装 Cisco Cloud Connector。",
     "installStep2": "2. 配置 Active Directory 同步协议。",
     "installStep3": "3. 测试同步协议。",
     "nextSteps": "准备好验证要同步的身份信息后，请按“下一步”按钮。",
@@ -627,7 +630,7 @@
     "createButton": "创建呼叫驻留"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "或",
     "voicemail": "语音邮件",
     "singleNumberReach": "单一号码存取"
@@ -733,12 +736,12 @@
     "launchPortal": "启动公司门户网站",
     "launchPortalPrompt": "如果您希望为客户设置服务：",
     "or": "或",
-    "squareducError": "已创建试用，但是无法供应 Squared UC。",
+    "squareducError": "已创建试用，但无法供应 Spark UC。",
     "addSuccess": "已成功为 {{customerName}} 开启试用，许可证数为 {{licenseCount}} 个，试用期为 {{licenseDuration}} 天。",
     "editSuccess": "已成功为 {{customerName}} 编辑试用，许可证数为 {{licenseCount}} 个，试用期为 {{licenseDuration}} 天。"
   },
   "trials": {
-    "collab": "标准团队房间 + 25 方同步",
+    "collab": "标准团队房间 + 25 人会议",
     "squaredUC": "高级通信"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "今天到期",
     "unused": "未使用的许可证",
     "uploadNumbers": "上传数",
-    "overPlan": "超过计划限额"
+    "overPlan": "超过计划限额",
+    "communication": "通信",
+    "phoneNumbers": "电话号码",
+    "none": "无"
   },
   "didAddModal": {
     "title": "添加电话号码",
@@ -787,6 +793,21 @@
     "processingText": "正在添加电话号码...",
     "successText": "{{count}} 个新电话号码添加成功。",
     "failText": "{{count}} 个电话号码已存在于系统中。",
+    "sendEmail": "通知客户",
+    "notifyCustLater": "稍后通知客户",
+    "emailSuccessText": "电子邮件已成功发送给客户。",
+    "emailFailText": "发送电子邮件时出错",
+    "inputPlacehoder": "输入电话号码，以逗号分隔"
+  },
+  "didManageModal": {
+    "title": "管理电话号码",
+    "instructionsText": "您正在设置的公司需要向您提供其现有电话号码。这将启动公司电话号码的转移请求。",
+    "processingText": "正在添加电话号码...",
+    "newDidText": "{{count}} 个新电话号码添加成功。",
+    "existingDidText": "{{count}} 个电话号码已存在于系统中。",
+    "deleteDidText": "{{count}} 个电话号码已删除。",
+    "deleteConfirmationText": "确定要删除下列 {{count}} 个号码吗？如果将这些号码分配给用户的线路，可能会影响最终用户。",
+    "removeNumbers": "删除号码",
     "sendEmail": "通知客户",
     "notifyCustLater": "稍后通知客户",
     "emailSuccessText": "电子邮件已成功发送给客户。",
@@ -816,7 +837,7 @@
     "send": "发送",
     "to": "收件人",
     "subject": "主题",
-    "subjectContent": "激活 Squared UC 设备",
+    "subjectContent": "激活您的 Spark UC 设备",
     "message": "消息",
     "expires": "到期日期：{{date}}<strong>（现在还剩 {{timeLeft}}）</strong>",
     "clipboardFallback": "按 cmd+c 复制下面的文字。",
@@ -830,11 +851,11 @@
     "emailAddress": "电子邮件地址",
     "administratorRoles": "管理员角色",
     "rolesDescription": "系统中的用户可能具有一个或多个角色，并且将被授予所选角色的所有权限。",
-    "cloudOpDescription": "此用户也可以启用为“云端操作管理员”。此角色包含从此门户网站查看和操作 Squared 系统的特殊权限。",
+    "cloudOpDescription": "此用户已启用为云端操作管理员。该角色包括可从此门户网站查看和操作 Spark 系统的特殊权限。",
     "cloudOpAdmin": "云端操作管理员",
     "fullAdmin": "完全管理员权限",
     "partialAdmin": "部分管理员权限",
-    "noAdmin": "权限不足",
+    "noAdmin": "无管理员权限",
     "userAdmin": "用户管理员",
     "billingAdmin": "帐单管理员",
     "supportAdmin": "支持管理员",
@@ -879,10 +900,18 @@
     "deleteResource": "停用资源"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx Proto"
+    "userUpdateSuccess": "用户权限已更新",
+    "userUpdateError": "用户权限更新失败",
+    "webexUserSettingsTab": "WebEx Proto",
+    "reload": "请重试"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "读取用户信息时出错",
+    "030001": "{{givenName}} {{familyName}} 尚未供应至此站点。此过程可能需要一些时间。"
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "高级设置"
   },
   "leaderBoard": {
     "actions": "操作",
@@ -907,7 +936,7 @@
     "ciscoRep": "Cisco 代表",
     "supportSetup": "故障报修单 / 报告位置",
     "save": "保存",
-    "supportInfo": "为客户的用户提供支持时，请在下面输入支持参数。这些参数将显示在 Squared 应用程序中的“支持选项”下面。",
+    "supportInfo": "如果您向您的客户的用户提供支持，请在下面输入支持参数。这些参数将显示在 Spark 应用程序中的“支持选项”下。",
     "lifeCycle": "生命周期合作伙伴必须提供下面显示的两种类型的支持。",
     "supportOptions": "Cisco 支持选项",
     "seeExample": "请见示例。",
@@ -918,7 +947,7 @@
     "urlReportEx": "http://[Cisco 问题报告的 URL]",
     "helpFaq": "帮助和常见问题解答位置",
     "matchingTix": "匹配故障报修单",
-    "matchingDescr": "要将故障报修单与创建报告时上传至 Cisco 协作管理工具的日志进行匹配，请附上支持 URL 以及 \"%%logID%%\"（无引号）形式的 logID 参数。",
+    "matchingDescr": "要在报告创建后将故障报修单与已上传至 Cisco Spark Management 的日志进行匹配，请附加您的支持 URL 和 \"%%logID%%\"（无引号）形式的 logID。",
     "forExample": "例如：http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "支持设置",
     "companyInfo": "公司信息",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "支持联系人",
     "partnerAdmin": "合作伙伴管理员",
-    "supportInfo": "为用户提供支持时，请在下面输入支持参数。这些参数将显示在 Squared 应用程序中的“支持选项”下面；"
+    "supportInfo": "如果您向您的用户提供支持，请在下面输入支持参数。这些参数将显示在 Spark 应用程序中的“支持选项”下；"
   },
   "utilizationPage": {
     "entResUtilization": "企业资源利用率",
@@ -942,7 +971,7 @@
     "bridgeUtilization": "Bridge By Bridge 利用率"
   },
   "processOrderPage": {
-    "errOrgCreation": "订单 # {{orderId}} 正在处理。请在 24 小时后再来检查。",
+    "errOrgCreation": "订单 # {{orderId}} 正在处理中。请于 24 小时后再来核对。",
     "info": "状态",
     "wait": "我们正在对您进行重定向，请稍候"
   },

@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Gestion de la collaboration Cisco",
+    "title": "Gestion de Cisco Spark",
     "login": "Connexion",
     "loading": "Chargement en cours"
   },
@@ -15,6 +15,7 @@
     "entitle": "Autoriser",
     "firstnameHeader": "Prénom",
     "lastnameHeader": "Nom",
+    "displayNameHeader": "Nom d'affichage",
     "emailHeader": "Adresse électronique",
     "actionHeader": "Actions",
     "invite": "Envoyer des invitations",
@@ -73,11 +74,11 @@
     "groupColHeader": "Nom du groupe",
     "collabService": "Sélectionnez les licences du service de collaboration qui doivent être accordées aux utilisateurs du groupe.",
     "addEntitleError": "privilèges insuffisants pour ajouter ou autoriser un utilisateur.",
-    "freeMsg": "Salles d'équipes squared gratuites",
-    "freeConf": "Réunions gratuites pour 3 parties",
+    "freeMsg": "Salles d'équipes gratuites",
+    "freeConf": "Réunions gratuites pour 25 personnes",
     "freeComm": "Appels avec Voix sur IP et vidéo gratuits",
     "paidMsg": "Salles d'équipes standard",
-    "paidConf": "Réunions de 25 parties",
+    "paidConf": "Réunions de 25 personnes",
     "paidComm": "Communications avancées"
   },
   "usersPreview": {
@@ -122,6 +123,8 @@
     "organizationTabDesc": "Gestion des détails de l'organisation, Affichage des services attribués et Outils d'accès.",
     "fusionDetailsTab": "Fusion",
     "fusionDetailsTabDesc": "Gestion de la fusion",
+    "fusionNextTab": "Fusion Suivant",
+    "fusionNextTabDesc": "Gestion de la fusion",
     "callRoutingTab": "Routage des appels",
     "callRoutingTabDesc": "Gérer les fonctionnalités de routage des appels tel que Call Park",
     "mediaOnHoldTab": "Média en attente",
@@ -141,8 +144,8 @@
     "welcome": "Bienvenue !",
     "feedback": "Commentaires",
     "logout": "Déconnexion",
-    "appTitle": "Outil d'administration Squared",
-    "genericTitle": "Squared",
+    "appTitle": "Gestion de Cisco Spark",
+    "genericTitle": "Spark",
     "search": "Rechercher des utilisateurs par le nom ou l'adresse électronique",
     "greeting": "Bonjour {{name}}",
     "launchPartner": "Gérer mon organisation"
@@ -152,12 +155,12 @@
     "heading": "Liste des habilitations pour"
   },
   "downloadPage": {
-    "thank": "Merci pour votre inscription à Cisco Squared.",
+    "thank": "Merci pour votre inscription à Cisco Spark.",
     "account": "Votre compte {{email}} est maintenant actif.",
-    "install": "Veuillez installer Squared en suivant",
+    "install": "Veuillez insaller Spark en suivant",
     "link": "ce lien.",
     "using": "Veuillez commencer en utilisant",
-    "squared": "Squared."
+    "squared": "Spark."
   },
   "invitePage": {
     "redirect": "Redirection en cours...",
@@ -315,7 +318,7 @@
     "launchBtn": "Lancer",
     "convert": "Convertir",
     "convertUsers": "Convertir les utilisateurs sans licence",
-    "convertUsersText": "Convertissez les employés de votre organisation qui se sont inscrits eux-mêmes à Project Squared avec l'adresse électronique d'un utilisateur possédant une licence. Les utilisateurs avec licence reçoivent des fonctionnalités professionnelles supplémentaires et doivent respecter les politiques et règles administratives de votre organisation.<br><br>Les utilisateurs sélectionnés recevront une invitation à convertir ou remplacer leur adresse électronique par une adresse électronique non professionnelle.",
+    "convertUsersText": "Convertissez les employés de votre organisation qui se sont inscrits eux-mêmes à Project Spark avec l'adresse électronique d'une société en utilisateurs avec licences. Les utilisateurs avec licence recevront des fonctionnalités professionnelles supplémentaires et sont soumis à la politique et aux règles administratives de votre organisation.<br><br>Les utilisateurs sélectionnés recevront une invitation pour convertir ou modifier leur adresse électronique en une adresse électronique non professionnelle.",
     "cancel": "Annuler",
     "emailAddress": "Adresse électronique",
     "name": "Nom",
@@ -333,7 +336,7 @@
   "inviteModal": {
     "title": "Autorisation de service",
     "heading": " Activer l'autorisation de service",
-    "content": "Inviter les utilisateurs de l'organisation à utiliser squared...",
+    "content": "Invitez les utilisateurs de l'organisation à utiliser Cisco Spark...",
     "inviteAll": "Activer l'autorisation du service à l'ensemble de l'organisation"
   },
   "ssoModal": {
@@ -346,7 +349,7 @@
     "testSSOSetupTitle": "Tester la configuration SSO",
     "enableSSOTitle": "Activer la SSO",
     "importMetadataDesc": "Commencez par configurer la relation de confiance entre votre fournisseur d'identité (IdP) et le Cisco Collaboration Cloud (Nuage de collaboration Cisco) en obtenant un fichier de métadonnées de confiance de la part de votre fournisseur d'identité et en le chargeant ici.",
-    "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
+    "importMetadataNote": "Remarque : En important le fichier de métadonnées, la SSO sera <b>activée</b>. Si vous testez simplement la SSO, veuillez vous souvenir de la désactiver dans le prochain écran.",
     "exportMetadataDesc1": "Téléchargez le fichier de métadonnées sécurisé suivant à partir du service de Collaboration Cisco et chargez-le dans l'interface de gestion de votre founissseur d'identité (IdP).",
     "exportMetadataDesc2": "Lorsque vous avez fini de charger le fichier dans votre IdP, revenez sur cet écran et appuyez sur Suivant.",
     "testSSOSetupDesc": "Vous êtes prêt(e) à tester votre configuration SSO. Appuyez sur le bouton ci-dessous pour lancer une nouvelle fenêtre. Si vous parvenez à vous connecter, vous pouvez revenir sur cet écran et appuyer sur suivant pour finaliser votre configuration SSO.",
@@ -410,7 +413,7 @@
     "domain": "Domaine",
     "defaultPlaceholder": "Par défaut",
     "domainDesc": "Identifiez le domaine du répertoire actif que vous allez synchroniser.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Téléchargez </a> et installez le connecteur Cisco Cloud (Cisco Cloud Connector) dans votre entreprise.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Téléchargez </a> et installez le Cisco Cloud Connector dans votre entreprise.",
     "installStep2": "2. Configurez l'accord de synchronisation du répertoire actif.",
     "installStep3": "3. Testez l'accord de synchronisation.",
     "nextSteps": "Appuyez sur le bouton lorsque vous êtes prêt(e) à vérifier que les informations d'identité sont synchronisées.",
@@ -549,7 +552,7 @@
     "domain": "Domaine",
     "defaultPlaceholder": "Par défaut",
     "domainDesc": "Identifiez le domaine du répertoire actif que vous allez synchroniser.",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Téléchargez </a> et installez le connecteur Cisco Cloud (Cisco Cloud Connector) dans votre entreprise.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Téléchargez </a> et installez le Cisco Cloud Connector dans votre entreprise.",
     "installStep2": "2. Configurez l'accord de synchronisation du répertoire actif.",
     "installStep3": "3. Testez l'accord de synchronisation.",
     "nextSteps": "Appuyez sur le bouton lorsque vous êtes prêt(e) à vérifier que les informations d'identité sont synchronisées.",
@@ -627,7 +630,7 @@
     "createButton": "Créer un parcage d'appels"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "ou",
     "voicemail": "Messagerie vocale",
     "singleNumberReach": "Portée du numéro individuel"
@@ -733,12 +736,12 @@
     "launchPortal": "Lancer le portail de la société",
     "launchPortalPrompt": "Si vous souhaitez configurer le service pour le client :",
     "or": "ou",
-    "squareducError": "A créé l'essai, mais impossible de fournir Squared UC.",
+    "squareducError": "L'essai a été créé, mais il est impossible de déployer Spark UC.",
     "addSuccess": "Un essai a été démarré avec succès pour {{customerName}} avec {{licenseCount}} licences pour {{licenseDuration}} jours.",
     "editSuccess": "Vous avez modifié un essai avec succès pour {{customerName}} avec {{licenseCount}} licences pour {{licenseDuration}} jours."
   },
   "trials": {
-    "collab": "Salles d'équipes standard + réunion avec 25 parties",
+    "collab": "Salles d'équipes standard + réunions de 25 personnes",
     "squaredUC": "Communications avancées"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "L'essai expire aujourd'hui",
     "unused": "licences non utilisées",
     "uploadNumbers": "Charger les numéros",
-    "overPlan": "dépasse la limite d'abonnement"
+    "overPlan": "dépasse la limite d'abonnement",
+    "communication": "Communication",
+    "phoneNumbers": "Numéros de téléphone",
+    "none": "Aucun"
   },
   "didAddModal": {
     "title": "Ajouter des numéros de téléphone",
@@ -787,6 +793,21 @@
     "processingText": "Ajout des numéros de téléphone...",
     "successText": "{{count}} nouveau(x) numéro(s) de téléphone(s) ajoutés avec succès.",
     "failText": "{{count}} numéro(s) de téléphone sont déjà dans le système.",
+    "sendEmail": "Envoyer une notification au client",
+    "notifyCustLater": "Notifier le client plus tard",
+    "emailSuccessText": "Le courrier électronique a été envoyé au client avec succès.",
+    "emailFailText": "Erreur lors de l'envoi du courrier électronique",
+    "inputPlacehoder": "Saisissez les numéros de téléphone séparés par des virgules"
+  },
+  "didManageModal": {
+    "title": "Gérer les numéros de téléphone",
+    "instructionsText": "La société que vous configurez doit vous fournir ses numéros de téléphone existants. Ceci permettra d'initier la demande de report des numéros de téléphone de la société.",
+    "processingText": "Ajout des numéros de téléphone...",
+    "newDidText": "{{count}} nouveau(x) numéro(s) de téléphone ajoutés avec succès.",
+    "existingDidText": "{{count}} numéro(s) de téléphone sont déjà dans le système.",
+    "deleteDidText": "{{count}} numéro(s) de téléphone ont été supprimés.",
+    "deleteConfirmationText": "Êtes-vous sûre de vouloir supprimer les {{count}} numéro(s) suivant(s) ? Cette action peut avoir des conséquences sur les utilisateurs finaux si ces niméros sont associés aux lignes téléphoniques des utilisateurs.",
+    "removeNumbers": "Supprimer les numéros",
     "sendEmail": "Envoyer une notification au client",
     "notifyCustLater": "Notifier le client plus tard",
     "emailSuccessText": "Le courrier électronique a été envoyé au client avec succès.",
@@ -816,7 +837,7 @@
     "send": "Envoyer",
     "to": "À",
     "subject": "Objet",
-    "subjectContent": "Activez votre périphérique Squared UC",
+    "subjectContent": "Activer votre périphérique Spark UC",
     "message": "Message",
     "expires": "Expire le : {{date}}  <strong>({{timeLeft}} à partir de ce jour)</strong>",
     "clipboardFallback": "Appuyez sur cmd+c pour copier le texte ci-dessous.",
@@ -830,11 +851,11 @@
     "emailAddress": "Adresse électronique",
     "administratorRoles": "Rôles de l'administrateur",
     "rolesDescription": "Un utilisateur peut avoir un ou plusieurs rôles dans le système et il lui sera donné toutes les permissions des rôles sélectionnés.",
-    "cloudOpDescription": "Cet utilisateur peut également être activé en tant qu'Administrateur des opérations du Cloud. Ce rôle inclut les permissions spéciales de voir et de contrôler le système Squared à partir de ce portail.",
+    "cloudOpDescription": "Cet utilisateur peut également être activé en tant qu'Administrateur des opérations du Cloud. Ce rôle inclut les permissions spéciales d'affichage et de gestion du système Spark à partir de ce portail.",
     "cloudOpAdmin": "Administrateur des opérations sur le Cloud",
-    "fullAdmin": "Permissions d'administrateur complètes",
-    "partialAdmin": "Certaines permissions d'administrateur",
-    "noAdmin": "Privilèges insuffisants",
+    "fullAdmin": "Privilèges complets d'administrateur",
+    "partialAdmin": "Certains privilèges d'administrateur",
+    "noAdmin": "Aucun privilège d'administrateur",
     "userAdmin": "Administrateur des utilisateurs",
     "billingAdmin": "Administrateur de la facturation",
     "supportAdmin": "Administrateur de l'assistance",
@@ -879,10 +900,18 @@
     "deleteResource": "Retirer la ressource"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "Proto WebEx"
+    "userUpdateSuccess": "Les privilèges de l'utilisateur ont été modifiés",
+    "userUpdateError": "La modification des privilèges de l'utilisateur a échoué",
+    "webexUserSettingsTab": "Proto WebEx",
+    "reload": "Veuillez réessayer"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "Erreur de lecture des informations de l'utilisateur",
+    "030001": "{{givenName}} {{familyName}} n'a pas encore été déployé sur ce site. Ce processus peut prendre un moment."
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "Paramètres avancés"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -907,7 +936,7 @@
     "ciscoRep": "Représentant Cisco",
     "supportSetup": "Ticket de problème / Emplacement du service de rapport",
     "save": "Enregistrer",
-    "supportInfo": "Si vous fournissez une assistance pour les utilisateurs de vos clients, saisissez vos paramètres d'assistance ci-dessous. Ces paramètres seront affichés sous Options d'assistance dans les applications Squared.",
+    "supportInfo": "Si vous fournissez une assistance aux utilisateurs de vos clients, saisissez vos paramètres d'assistance ci-dessous. Ces paramètres seront affichés dans Options d'assistance dans les applications Spark.",
     "lifeCycle": "Les partenaires du cycle de vie sont requis pour fournir les deux types d'assistance affichés ci-dessous.",
     "supportOptions": "Options d'assistance Cisco",
     "seeExample": "voir un exemple.",
@@ -917,8 +946,8 @@
     "urlReport": "URL pour le rapport des tickets de problèmes rencontrés ou ouvrir des cas",
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Emplacement de l'Aide & FAQ",
-    "matchingTix": "Association des tickets de problèmes",
-    "matchingDescr": "Pour associer les tickets de problèmes avec les journaux qui sont chargés sur l'outil de gestion de la collaboration Cisco lors de la création des rapports, attachez votre URL d'assistance à votre paramètre d'ID de journalisation (logID) comme \« %%logID%%\ » (sans guillemets).",
+    "matchingTix": "Associer les tickets de problèmes rencontrés",
+    "matchingDescr": "Pour associer les tickets de problèmes aux journaux qui sont chargés dans l'interface de gestion de Cisco Spark lorsque les rapports sont créés, attachez votre URL d'assistance à votre paramètre logID sous la forme \"%%logID%%\" (sans guillemets).",
     "forExample": "Par exemple : http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Configuration de l'assistance",
     "companyInfo": "Informations sur la société",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "Contacts d'assistance",
     "partnerAdmin": "Administrateurs partenaires",
-    "supportInfo": "Si vous fournissez une assistance pour vos utilisateurs, saisissez vos paramètres d'assistance ci-dessous. Ces paramètres seront affichés sous Options d'assistance dans l'application Squared ;"
+    "supportInfo": "Si vous fournissez une assistance à vos utilisateurs, saisissez vos paramètres d'assistance ci-dessous. Ces paramètres seront affichés dans Options d'assistance dans les applications Spark."
   },
   "utilizationPage": {
     "entResUtilization": "Utilisation des ressources de l'entreprise",
@@ -942,7 +971,7 @@
     "bridgeUtilization": "Utilisation pont par pont"
   },
   "processOrderPage": {
-    "errOrgCreation": "Votre commande N° {{orderId}} est en cours de traitement. Veuillez vérifier à nouveau dans 24 heures.",
+    "errOrgCreation": "La commande N° {{orderId}} est en cours de traitement. Veuillez vérifier après un délai de 24 heures.",
     "info": "Statut",
     "wait": "Veuillez patienter pendant que nous procédons à votre redirection"
   },

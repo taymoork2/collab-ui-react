@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cisco Collaboration Management",
+    "title": "Cisco Spark Management",
     "login": "Login",
     "loading": "Loading"
   },
@@ -15,6 +15,7 @@
     "entitle": "Entitle",
     "firstnameHeader": "First name",
     "lastnameHeader": "Last name",
+    "displayNameHeader": "Display name",
     "emailHeader": "E-mail",
     "actionHeader": "Actions",
     "invite": "Send invites",
@@ -50,9 +51,9 @@
     "membersCountHeader": "Members"
   },
   "onboardModal": {
-    "onboardUsers": "Onboard users",
+    "onboardUsers": "On-board users",
     "cancel": "Cancel",
-    "addUsersDesc": "Enter the e-mail addresses of persons in your company who will receive Collaboration Services. They will receive an e-mail invitation to sign up",
+    "addUsersDesc": "Enter the e-mail addresses of persons in your company who will receive Collaboration Services. They will receive an e-mail invitation to sign up.",
     "addUserText": "Whom would you like to add?",
     "userInput": "Enter e-mail addresses or group mailers separated by commas...",
     "enableServiceText": "Enable services",
@@ -60,7 +61,7 @@
     "enableCollabGroup": "Enable collaboration services based on group membership",
     "addUsersSelect": "Add users to:",
     "manageBtn": "Manage groups",
-    "onboardBtn": "Onboard",
+    "onboardBtn": "On-board",
     "howToInvite": "How would you like them to be invited?",
     "waitInvitation": "Send e-mail invitations and wait until the user accepts before provisioning services",
     "sendImmediate": "Immediately provision services to the user and send e-mail notifications",
@@ -73,11 +74,11 @@
     "groupColHeader": "Group name",
     "collabService": "Select the collaboration service licences that should be given to the users in the group",
     "addEntitleError": "Insufficient privilege to add or entitle a user",
-    "freeMsg": "Free squared team rooms",
-    "freeConf": "Free 3-party Meetings",
+    "freeMsg": "Free team rooms",
+    "freeConf": "Free 3-party meetings",
     "freeComm": "Free in-network IP voice and video calling",
     "paidMsg": "Standard team rooms",
-    "paidConf": "25-party Meetings",
+    "paidConf": "25-party meetings",
     "paidComm": "Advanced communications"
   },
   "usersPreview": {
@@ -122,6 +123,8 @@
     "organizationTabDesc": "Manage organisation details, view assigned services, and access tools",
     "fusionDetailsTab": "Fusion",
     "fusionDetailsTabDesc": "Fusion management",
+    "fusionNextTab": "Fusion Next",
+    "fusionNextTabDesc": "Fusion management",
     "callRoutingTab": "Call routing",
     "callRoutingTabDesc": "Manage call routing features, such as call park",
     "mediaOnHoldTab": "Media on hold",
@@ -141,8 +144,8 @@
     "welcome": "Welcome!",
     "feedback": "Feedback",
     "logout": "Sign out",
-    "appTitle": "Squared admin tool",
-    "genericTitle": "Squared",
+    "appTitle": "Cisco Spark Management",
+    "genericTitle": "Spark",
     "search": "Search users by name or e-mail",
     "greeting": "Hi, {{name}}",
     "launchPartner": "Manage my organisation"
@@ -152,12 +155,12 @@
     "heading": "List of entitlements for"
   },
   "downloadPage": {
-    "thank": "Thank you for registering with Cisco Squared!",
+    "thank": "Thank you for registering with Cisco Spark.",
     "account": "Your account {{email}} is now active",
-    "install": "Please install Squared by following",
+    "install": "Please install Spark by following",
     "link": "this link",
     "using": "Please start using",
-    "squared": "Squared"
+    "squared": "Spark."
   },
   "invitePage": {
     "redirect": "Redirecting...",
@@ -314,8 +317,8 @@
     "advProv": "Provision users with a guided wizard to set up Directory Sync, Single Sign-On and customised reports",
     "launchBtn": "Launch",
     "convert": "Convert",
-    "convertUsers": "Convert unlicenced users",
-    "convertUsersText": "Convert employees of your organisation who have signed up for Project Squared on their own with a company e-mail address to a licenced user. Licenced users receive additional enterprise features and are subject to your organisation's policies and administration.<br><br>Selected users will receive an invitation to convert or change their e-mail address to a non-company e-mail address.",
+    "convertUsers": "Convert unlicensed users",
+    "convertUsersText": "Convert employees of your organisation who have signed up for Project Spark on their own with a company email address to licensed users. Licensed users receive additional enterprise features and are subject to your organisation's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
     "cancel": "Cancel",
     "emailAddress": "E-mail address",
     "name": "Name",
@@ -326,14 +329,14 @@
     "installSharedSpaceText": "Install a device into a Shared Space",
     "autoAttendantText": "Configure Auto Attendant",
     "searchLogsText": "Search device logs",
-    "unlicensedDateText": "Unlicenced users registered on",
-    "unlicensedText": "Unlicenced users",
+    "unlicensedDateText": "Unlicensed users registered on",
+    "unlicensedText": "Unlicensed users",
     "convertText": "View and convert users currently using the free version"
   },
   "inviteModal": {
     "title": "Service entitlement",
     "heading": " Enable service entitlement",
-    "content": "Invite users in the organisation to use Squared...",
+    "content": "Invite users in the organisation to use Cisco Spark...",
     "inviteAll": "Enable organisation-wide service entitlement"
   },
   "ssoModal": {
@@ -372,7 +375,7 @@
     "finalDisableSSO": "The test was unsuccessful. Disable Single Sign-On",
     "disableFailed": "Failed to disable Single Sign-On",
     "diableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
-    "enableSSOFailure": "Failed to disable Single Sign On (SSO)."
+    "enableSSOFailure": "Failed to disable Single Sign On (SSO)"
   },
   "serviceSetupModal": {
     "timeZone": "Time zone",
@@ -410,7 +413,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Default",
     "domainDesc": "Identify the Active Directory domain you will be syncing",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Download </a> and install the Cisco Cloud Connector in your enterprise",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronisation agreement",
     "installStep3": "3. Test the synchronisation agreement",
     "nextSteps": "Press the Next button when you're ready to verify that the identity information is being synchronised",
@@ -443,7 +446,7 @@
     "text": "You are not authorised to access the page you requested"
   },
   "errors": {
-    "status403": "Authorisation failed. You do not have administrator privileges. You will be logged out in a few seconds.",
+    "status403": "Authorisation failed. You do not have administrator privileges. You will be logged out in a few seconds",
     "status401": "Authorisation failed. Server unable to process the authorisation token. You will automatically be logged out in a few seconds",
     "serverDown": "Authorisation failed. Server may be down, please contact system administrator. You will automatically be logged out in a few seconds",
     "expired": "Your session has expired or is unauthorised. You will automatically be logged out in a few seconds. Please login again to continue using the service",
@@ -549,7 +552,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Default",
     "domainDesc": "Identify the Active Directory domain you will be syncing",
-    "installStep1": "1. <a href='http://wikicentral.cisco.com/display/CODEV/Cloud+Connector+-+Downloads' target='_blank'> Download </a> and install the Cisco Cloud Connector in your enterprise",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronisation agreement",
     "installStep3": "3. Test the synchronisation agreement",
     "nextSteps": "Press the Next button when you're ready to verify that the identity information is being synchronised",
@@ -627,7 +630,7 @@
     "createButton": "Create a Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "Squared UC",
+    "squareduc": "Spark UC",
     "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -644,7 +647,7 @@
     "addNewNumber": "Add a new number",
     "removeNumber": "Remove line",
     "none": "None",
-    "deleteConfirmation": "This action cannot be undone.  Are you sure you want to unassign {{line}} from {{user}}?",
+    "deleteConfirmation": "This action cannot be undone. Are you sure you want to unassign {{line}} from {{user}}?",
     "deleteLineTitle": "Remove line",
     "disassociationSuccess": "Line successfully unassigned"
   },
@@ -733,12 +736,12 @@
     "launchPortal": "Launch Company Portal",
     "launchPortalPrompt": "If you want to set up the service for the customer:",
     "or": "or",
-    "squareducError": "Created trial, but unable to provision Squared UC",
+    "squareducError": "Created trial but unable to provision Spark UC.",
     "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licences for {{licenseDuration}} days",
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licences for {{licenseDuration}} days"
   },
   "trials": {
-    "collab": "Standard Team Rooms + 25-party Meeting",
+    "collab": "Standard team rooms + 25 party meetings",
     "squaredUC": "Advanced communications"
   },
   "status": {
@@ -779,7 +782,10 @@
     "expiresToday": "Expires today",
     "unused": "Unused licences",
     "uploadNumbers": "Upload numbers",
-    "overPlan": "over plan limit"
+    "overPlan": "over plan limit",
+    "communication": "Communication",
+    "phoneNumbers": "Phone Numbers",
+    "none": "None"
   },
   "didAddModal": {
     "title": "Add phone numbers",
@@ -787,6 +793,21 @@
     "processingText": "Adding phone numbers...",
     "successText": "{{count}} new phone number(s) successfully added",
     "failText": "{{count}} phone number(s) already in the system",
+    "sendEmail": "Notify customer",
+    "notifyCustLater": "Notify customer later",
+    "emailSuccessText": "E-mail successfully sent to customer",
+    "emailFailText": "Error when sending the e-mail",
+    "inputPlacehoder": "Enter phone numbers separated by commas"
+  },
+  "didManageModal": {
+    "title": "Manage Phone Numbers",
+    "instructionsText": "The Company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers",
+    "processingText": "Adding phone numbers...",
+    "newDidText": "{{count}} new phone number(s) successfully added",
+    "existingDidText": "{{count}} phone number(s) already in the system",
+    "deleteDidText": "{{count}} phone number(s) were deleted.",
+    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s) ? It might impact end users if these numbers are assigned to users' lines.",
+    "removeNumbers": "Remove Numbers",
     "sendEmail": "Notify customer",
     "notifyCustLater": "Notify customer later",
     "emailSuccessText": "E-mail successfully sent to customer",
@@ -803,7 +824,7 @@
     "success": "Device updated successfully",
     "error": "Device configuration failed",
     "deactivateDevice": "Deactivate device",
-    "deactivateBody": "This action cannot be undone.  Are you sure you want to deactivate this device?",
+    "deactivateBody": "This action cannot be undone. Are you sure you want to deactivate this device?",
     "deviceStatusFailureMsg": "Failed to fetch device status",
     "deviceIpAddressFailureMsg": "Failed to fetch device IP"
   },
@@ -816,7 +837,7 @@
     "send": "Send",
     "to": "To",
     "subject": "Subject",
-    "subjectContent": "Activate your Squared UC device",
+    "subjectContent": "Activate your Spark UC device",
     "message": "Message",
     "expires": "Expires: {{date}}  <strong>({{timeLeft}} from now)</strong>",
     "clipboardFallback": "Press cmd+c to copy the text below",
@@ -830,10 +851,10 @@
     "emailAddress": "E-mail address",
     "administratorRoles": "Administrator roles",
     "rolesDescription": "A user may have one or more roles in the system and will be granted all permissions from selected roles",
-    "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Squared system from this portal",
+    "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Spark system from this portal.",
     "cloudOpAdmin": "Cloud operations administrator",
-    "fullAdmin": "Full administrator permissions",
-    "partialAdmin": "Some administrator permissions",
+    "fullAdmin": "Full administrator privileges",
+    "partialAdmin": "Some administrator privileges",
     "noAdmin": "No administrator privileges",
     "userAdmin": "User administrator",
     "billingAdmin": "Billing administrator",
@@ -879,10 +900,18 @@
     "deleteResource": "Decommission resource"
   },
   "webexUserSettings": {
-    "webexUserSettingsTab": "WebEx Proto"
+    "userUpdateSuccess": "User privileges updated",
+    "userUpdateError": "User privileges update failed",
+    "webexUserSettingsTab": "WebEx Proto",
+    "reload": "Try again"
+  },
+  "webexUserSettingsUserErrors": {
+    "userDefaultError": "Error reading user information",
+    "030001": "{{givenName}} {{familyName}} has not yet been provisioned to this site. This process may take a moment."
   },
   "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2"
+    "webexUserSettings2Tab": "WebEx Proto2",
+    "advancedLink": "Advanced Settings"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -907,18 +936,18 @@
     "ciscoRep": "Cisco representative",
     "supportSetup": "Trouble ticket/reporting location",
     "save": "Save",
-    "supportInfo": "If you are providing support for your customers' users, enter your support parameters below. These parameters will be displayed under Support Options in the Squared applications",
+    "supportInfo": "If you provide support to your customers' users, enter your support parameters below. These parameters will be displayed under Support Options in Spark applications.",
     "lifeCycle": "Lifecycle partners are required to provide both types of support shown below",
     "supportOptions": "Cisco support options",
-    "seeExample": "See an example",
+    "seeExample": "Here is an example",
     "yourSupportOptions": "Your support options",
     "urlFaq": "URL for help site and FAQs",
     "urlFaqEx": "http://[url of Cisco help site and FAQs]",
     "urlReport": "URL for reporting trouble tickets or opening cases",
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Help & FAQ location",
-    "matchingTix": "Matching trouble tickets",
-    "matchingDescr": "To match trouble tickets with the logs uploaded to the Cisco Collaboration Management tool when reports are created, append your support URL with your logID parameter as \"%%logID%%\" (no quotes)",
+    "matchingTix": "Matching Trouble Tickets",
+    "matchingDescr": "To match trouble tickets with the logs uploaded to Cisco Spark Management when reports are created, append your support URL with your logID parameter as \"%%logID%%\" (no quotes).",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Support setup",
     "companyInfo": "Company information",
@@ -933,7 +962,7 @@
   "customerProfile": {
     "supportContacts": "Support contacts",
     "partnerAdmin": "Partner administrators",
-    "supportInfo": "If you provide support to your users, enter your support parameters below. These parameters will be displayed under Support Options in Squared applications"
+    "supportInfo": "If you provide support to your users, enter your support parameters below. These parameters will be displayed under Support Options in Spark applications."
   },
   "utilizationPage": {
     "entResUtilization": "Utilisation of enterprise resources",
@@ -942,7 +971,7 @@
     "bridgeUtilization": "Bridge by bridge utilisation"
   },
   "processOrderPage": {
-    "errOrgCreation": "Order # {{orderId}} is being processed. Please check again in 24 hours",
+    "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
     "info": "Status",
     "wait": "Please wait while we redirect you"
   },
