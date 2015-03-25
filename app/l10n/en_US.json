@@ -101,7 +101,8 @@
     "activationCodeTitle": "Activation Code for New Device",
     "expires": "Expires",
     "editServices": "Edit services",
-    "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}"
+    "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
+    "siteUris": "Site Urls"
   },
   "messagingPanel": {
     "title": "Messaging"

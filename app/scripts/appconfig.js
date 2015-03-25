@@ -304,8 +304,9 @@ angular
           }
         })
         .state('user-overview.conferencing', {
-          templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
-          controller: 'UserPreviewCtrl',
+          templateUrl: 'modules/core/users/userPreview/conferencePreview.tpl.html',
+          controller: 'ConferencePreviewCtrl',
+          controllerAs: 'confPreview',
           data: {
             displayName: 'Conferencing'
           },
