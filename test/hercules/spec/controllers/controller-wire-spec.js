@@ -9,7 +9,7 @@ describe('ControllerWireing', function () {
     'DashboardHeaderController',
     'EntitledServicesController',
     'ActivationStatusController',
-    'UpgradeButtonController',
+    'SWUpgradeController',
     'NotificationConfigController',
     'FusionSetupCtrl',
     'StatusController'
