@@ -34,7 +34,31 @@ describe('Service: USSService', function () {
     $httpBackend
       .when('GET', rootPath + 'userStatuses?userId=123')
       .respond({
-        foo: 'bar'
+        "userStatuses": [{
+          "userId": "123",
+          "orgId": "cisco",
+          "serviceId": "squared-fusion-cal",
+          "entitled": false,
+          "state": "deactivated"
+        }, {
+          "userId": "123",
+          "orgId": "cisco",
+          "serviceId": "squared-fusion-uc",
+          "entitled": false,
+          "state": "pendingDeactivation"
+        }, {
+          "userId": "123",
+          "orgId": "cisco",
+          "serviceId": "squared-fusion-yolo",
+          "entitled": true,
+          "state": "deactivated"
+        }, {
+          "userId": "123",
+          "orgId": "cisco",
+          "serviceId": "squared-fusion-voicemail",
+          "entitled": true,
+          "state": "activated"
+        }]
       });
 
     var callback = sinon.stub();
@@ -43,7 +67,30 @@ describe('Service: USSService', function () {
 
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0]).toBeFalsy();
-    expect(callback.args[0][1].foo).toBe('bar');
+    expect(callback.args[0][1].userStatuses.length).toBe(3);
+    expect(callback.args[0][1].userStatuses[0].serviceId).toBe('squared-fusion-uc');
+    expect(callback.args[0][1].userStatuses[1].serviceId).toBe('squared-fusion-yolo');
+    expect(callback.args[0][1].userStatuses[2].serviceId).toBe('squared-fusion-voicemail');
+  });
+
+  it('should do the jazz', function () {
+    $httpBackend
+      .when('GET', rootPath + 'userStatuses?userId=123')
+      .respond({
+        "userStatuses": [{
+          "userId": "123",
+          "orgId": "cisco",
+          "serviceId": "squared-fusion-cal",
+          "entitled": false,
+          "state": "deactivated"
+        }]
+      });
+
+    var callback = sinon.stub();
+    Service.getStatusesForUser('123', callback);
+    $httpBackend.flush();
+
+    expect(callback.args[0][1].userStatuses.length).toBe(0);
   });
 
   it('should return error status if unable to fetch data from backend', function () {
