@@ -112,8 +112,8 @@ angular.module('Core')
         },
 
         webexUrl: {
-          siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminHomePage&adminEmail=%s',
-          siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminEditUserPage&adminEmail=%s&userEmail=%s'
+          siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminHomePage',
+          siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminEditUserPage'
         },
 
         scimSchemas: [
@@ -301,7 +301,13 @@ angular.module('Core')
           blue: '#1EA7D1',
           red: '#F46315',
           yellow: '#EBC31C',
-          green: '#50D71D'
+          green: '#50D71D',
+          brandSuccessDark: '#6ab140',
+          brandSuccessLight: '#99cf78',
+          brandWhite: '#fff',
+          grayDarkest: '#444',
+          grayDarker: '#666',
+          grayLight: '#ccc'
         },
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
@@ -480,13 +486,13 @@ angular.module('Core')
           }
         },
 
-        getWebexAdvancedHomeUrl: function (siteURL, adminEmail) {
-          var params = [siteURL, adminEmail];
+        getWebexAdvancedHomeUrl: function (siteURL) {
+          var params = [siteURL];
           return Utils.sprintf(this.webexUrl.siteAdminHomeUrl, params);
         },
 
-        getWebexAdvancedEditUrl: function (siteURL, adminEmail, userEmail) {
-          var params = [siteURL, adminEmail, userEmail];
+        getWebexAdvancedEditUrl: function (siteURL) {
+          var params = [siteURL];
           return Utils.sprintf(this.webexUrl.siteAdminDeepUrl, params);
         }
 

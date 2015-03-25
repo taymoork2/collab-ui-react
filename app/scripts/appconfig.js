@@ -638,24 +638,41 @@ angular
         .state('trialAdd.addNumbers', {
           templateUrl: 'modules/core/trials/addNumbers.tpl.html',
           controller: 'DidAddCtrl',
-          controllerAs: 'didAdd'
+          controllerAs: 'didAdd',
+          params: {
+            currentTrial: {},
+            currentOrg: {}
+          }
         })
         .state('trialAdd.nextSteps', {
           templateUrl: 'modules/core/trials/nextStep.tpl.html'
         })
         .state('trialEdit', {
+          abstract: true,
           parent: 'modal',
-          params: {
-            currentTrial: null,
-            showPartnerEdit: false
-          },
           views: {
             'modal@': {
+              template: '<div ui-view></div>',
               controller: 'TrialEditCtrl',
-              controllerAs: 'trial',
-              templateUrl: 'modules/core/trials/trialEdit.tpl.html'
+              controllerAs: 'trial'
             }
+          },
+          params: {
+            showPartnerEdit: false,
+            currentTrial: {}
           }
+        })
+        .state('trialEdit.addNumbers', {
+          templateUrl: 'modules/core/trials/addNumbers.tpl.html',
+          controller: 'DidAddCtrl',
+          controllerAs: 'didAdd',
+          params: {
+            fromEditTrial: false,
+            currentOrg: {}
+          }
+        })
+        .state('trialEdit.info', {
+          templateUrl: 'modules/core/trials/trialEdit.tpl.html'
         })
         .state('generateauthcode', {
           parent: 'modal',

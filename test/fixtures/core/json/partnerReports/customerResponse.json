@@ -1,0 +1,41 @@
+[{
+  "customerOrgId": "ecb1898d-8544-413e-9a9e-1fcc5a72c23a",
+  "state": "ACTIVE",
+  "customerName": "Test Org One",
+  "isAllowedToManage": true
+}, {
+  "customerOrgId": "04e38dd8-e66d-45d4-97f5-2c1e6dcf184a",
+  "state": "ACTIVE",
+  "customerName": "Test Org Two",
+  "isAllowedToManage": true
+}, {
+  "customerOrgId": "0bc99b9c-4452-40bb-aff4-2d0566ffe921",
+  "state": "ACTIVE",
+  "customerName": "Test Org Three",
+  "isAllowedToManage": true
+}, {
+  "customerOrgId": "0ed03702-e8c1-4bd7-bfd6-88920359521a",
+  "state": "ACTIVE",
+  "customerName": "Test Org Four",
+  "isAllowedToManage": true
+}, {
+  "customerOrgId": "04e38dd8-e66d-45d4-97d5-2c1e6dcf184a",
+  "state": "ACTIVE",
+  "customerName": "Test Org Five",
+  "isAllowedToManage": true
+}, {
+  "customerOrgId": "0bc99b9c-4452-40bb-af34-2d0566ffe921",
+  "state": "ACTIVE",
+  "customerName": "Test Org Six",
+  "isAllowedToManage": true
+}, {
+  "customerOrgId": "04e38ab8-e66d-45d4-9705-2c1e6dcf184a",
+  "state": "ACTIVE",
+  "customerName": "Test Org Seven",
+  "isAllowedToManage": true
+}, {
+  "customerOrgId": "0bc99b9c-4c52-40bb-af34-2d0566ffe921",
+  "state": "ACTIVE",
+  "customerName": "Test Org Eight",
+  "isAllowedToManage": true
+}]

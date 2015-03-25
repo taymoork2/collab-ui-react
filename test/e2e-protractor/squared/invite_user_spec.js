@@ -43,7 +43,7 @@ describe('Squared Invite User Flow', function () {
       utils.sendKeys(users.addUsersField, inviteEmail);
       utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
       utils.click(users.onboardButton);
-      notifications.assertSuccess('sent successfully');
+      notifications.assertSuccess('onboarded successfully');
     });
 
     xit('clicking on cancel button should close the modal', function () {
@@ -78,7 +78,7 @@ describe('Squared Invite User Flow', function () {
       utils.sendKeys(users.addUsersField, inviteEmail);
       utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
       utils.click(users.onboardButton);
-      notifications.assertError('already entitled');
+      notifications.assertError('already entitled/unentitled');
     });
 
     it('should invite users successfully from org which has autoentitlement flag disabled', function () {
@@ -87,7 +87,7 @@ describe('Squared Invite User Flow', function () {
       utils.sendKeys(users.addUsersField, inviteEmail);
       utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
       utils.click(users.onboardButton);
-      notifications.assertSuccess('sent successfully');
+      notifications.assertSuccess('onboarded successfully');
     });
 
     it('clicking on cancel button should close the modal', function () {

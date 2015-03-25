@@ -72,16 +72,8 @@ xdescribe('Partner flow', function () {
       partner.customerNameInput.sendKeys(partner.newSqUCTrial.customerName);
       partner.customerEmailInput.sendKeys(partner.newSqUCTrial.customerEmail);
       utils.click(partner.squaredTrialCheckbox);
-      utils.click(partner.squaredUCTrialCheckbox);
 
       utils.click(partner.startTrialButton);
-
-      utils.expectIsDisplayed(partner.customerDidInput);
-      partner.customerDidInput.sendKeys(partner.dids.one);
-      utils.click(partner.didAddModal);
-      utils.click(partner.startTrialWithSqUCButton);
-
-      utils.click(partner.trialDoneButton);
 
       utils.expectIsDisplayed(partner.newSqUCTrialRow);
 
@@ -92,7 +84,34 @@ xdescribe('Partner flow', function () {
       });
     }, 60000);
 
-    it('should add new dids to the trial', function (done) {
+    it('should edit trial with uc entitlements and add one did', function (done) {
+      utils.click(partner.newSqUCTrialRow);
+
+      utils.expectIsDisplayed(partner.previewPanel);
+      utils.click(partner.editLink);
+
+      utils.expectIsDisplayed(partner.editTrialForm);
+
+      utils.expectAttribute(partner.squaredTrialCheckbox, 'disabled', 'true');
+      utils.expectAttribute(partner.squaredUCTrialCheckbox, 'disabled', 'false');
+
+      utils.click(partner.squaredUCTrialCheckbox);
+
+      utils.click(partner.saveUpdateButton);
+
+      utils.expectIsDisplayed(partner.customerDidInput);
+
+      utils.sendKeys(partner.customerDidInput, partner.dids.one);
+      utils.click(partner.didAddModal);
+
+      utils.click(partner.startTrialWithSqUCButton);
+
+      notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
+
+      utils.expectIsDisplayed(partner.newTrialRow);
+    }, 60000);
+
+    it('should add new did to the trial', function (done) {
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);

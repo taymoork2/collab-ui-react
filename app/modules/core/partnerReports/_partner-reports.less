@@ -1,36 +1,105 @@
-.reports {
-	padding: 0px;
-	height: auto;
+@import 'activeUsers/_active-users';
 
-	.reports-header {
-		.row;
-		.page-header;
+.partner-reports {
+  padding: 0px;
+  height: auto;
 
-		.report-filters-container {
-			padding-right: 20px;
+  .reports-header {
+    .row;
+    .page-header;
 
-		    .report-filter {
-		    	float: right;
-		    	height: 35px;
-		    	margin: 5px;
-		    }
+    .sync {
+      position: relative;
+      top: 17px;
+      padding-left: 15px;
+      font-family: "CiscoSansTT Extra Light";
+      color: @gray-darker;
+    }
 
-		    .report-filter-one {
-		    	width: 200px;
-		    }
+    .report-filters-container {
+      padding-right: 20px;
 
-		    .report-filter-two {
-		    	width: 240px;
-		    }
-		}
-	}
+      .report-filter {
+        height: 35px;
+        margin: 5px;
+      }
 
-	.report-tabs-container {
-		padding: 5px;
-		background-color: @brand-white;
-	}
-}
+      .report-filter-one {
+        width: 200px;
+      }
 
-div[large] {
-	float: left;
+      .report-filter-two {
+        width: 240px;
+      }
+    }
+  }
+
+  .cstabs {
+    a {
+      background-color: @gray-lightest;
+      border-color: rgb(234,235,238);
+    }
+  }
+
+  .report-tabs-container {
+    padding: 5px;
+    background-color: @brand-white;
+
+    .tab-pane {
+      padding: 40px 30px 60px;
+
+      .section-title {
+        font-family: "CiscoSansTT Light";
+        font-size: 22px;
+        color: @brand-primary;
+        text-align: left;
+        margin: 0 0 10px;
+      }
+
+      .sub-section-title {
+        font-family: "CiscoSansTT Light";
+        font-size: 18px;
+        color: @gray-darkest;
+        text-align: left;
+        margin-top: 40px;
+        margin-bottom: 15px;
+      }
+
+      .report-threedot-button {
+        font-size: 15px;
+        padding-top: 5px;
+      }
+
+      .title-break {
+        margin-top: 0;
+        width: 100%;
+      }
+
+      .report-section {
+        min-width: 520px;
+        text-align: left;
+      }
+
+      .timechartDiv {
+        font-size: 11px;
+        height: 450px;
+        width: 100%;
+      }
+
+      .graph-text {
+        font-family: "Arial";
+        font-size: 15px;
+        color: @gray-darkest;
+        text-align: left;
+        float:left;
+
+        .graph-number {
+          font-family: "Arial";
+          font-size: 18px;
+          color: @brand-success;
+          text-align: left;
+        }
+      }
+    }
+  }
 }

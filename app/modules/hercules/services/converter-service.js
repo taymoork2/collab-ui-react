@@ -42,6 +42,7 @@ angular.module('Hercules')
                 type: 'software_version_mismatch',
                 expected_version: expected_version
               });
+              service.alarm_count++;
               serviceAndClusterNeedsAttention(service, cluster);
             }
           });
@@ -50,7 +51,9 @@ angular.module('Hercules')
 
       var updateServiceStatus = function (service, cluster) {
         service.running_hosts = 0;
+        service.alarm_count = 0;
         _.each(service.connectors, function (connector) {
+          service.alarm_count += connector.alarms ? connector.alarms.length : 0;
           if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
             serviceAndClusterNeedsAttention(service, cluster);
             service.is_disabled = false;
@@ -121,12 +124,23 @@ angular.module('Hercules')
         }, {});
 
         _.each(cluster.hosts, function (host) {
+          host.services = [];
           host.offline = false;
           if (map[host.host_name]) {
             host.offline = _.reduce(map[host.host_name], function (offline, status) {
               return offline && status == 'offline';
             }, true);
           }
+          _.each(cluster.services, function (service) {
+            _.each(service.connectors, function (connector) {
+              if (connector.host.serial == host.serial) {
+                host.services.push({
+                  display_name: service.display_name,
+                  state: connector.state
+                });
+              }
+            });
+          });
         });
       };
 
@@ -140,11 +154,14 @@ angular.module('Hercules')
           });
           updateClusterNameIfNotSet(cluster);
           updateHostStatus(cluster);
+
+          cluster.services = _.sortBy(cluster.services, 'display_name');
           cluster.services = _.sortBy(cluster.services, function (obj) {
             if (obj.needs_attention) return 1;
             if (obj.is_disabled) return 3;
             return 2;
           });
+
           return cluster;
         });
         return _.sortBy(converted, function (obj) {

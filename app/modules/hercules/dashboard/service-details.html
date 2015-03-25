@@ -9,15 +9,20 @@
     <div ng-repeat="connector in service.connectors" class="list">
       <div ng-class="connector.state">
         <i class="fa fa-circle" />
-        <span>{{connector.host.host_name}}</span>
+        <span>{{connector.host.host_name}}:</span>
         <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
+      </div>
+    </div>
+    <div ng-hide="service.connectors.length" class="list">
+      <div class="disabled">
+        <i class="fa fa-circle" />
+        <span>Not installed on any hosts.</span>
       </div>
     </div>
   </cs-sp-section>
 
-  <cs-sp-section>
-
-    <!-- connectors -->
+  <!-- connectors -->
+  <cs-sp-section ng-show="service.needs_attention && service.alarm_count">
     <div ng-repeat="connector in service.connectors">
 
       <!-- connector error -->

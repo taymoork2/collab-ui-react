@@ -1,13 +1,22 @@
 <cs-sp-container>
+
   <cs-sp-section>
-    <ul>
-      <li ng-repeat="host in cluster.hosts">
-        <a target="_blank" href="https://{{host.host_name}}">{{host.host_name}}</a>
-      </li>
-    </ul>
+    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px">
+      <a target="_blank" href="https://{{host.host_name}}" style="padding: 5px 0">
+        {{host.host_name}}
+      </a>
+      <div ng-repeat="service in host.services" class="list">
+        <div ng-class="service.state">
+          <i class="fa fa-circle" />
+          <span>{{service.display_name}}:</span>
+          <span translate="{{'hercules.status.' + (service.state || 'unknown') }}"></span>
+        </div>
+      </div>
+    </div>
+
     <div style="padding-top: 5px" class="clearfix" ng-repeat="host in cluster.hosts | filter: { offline: true }">
+      <span>Delete offline host:</span>
       <span style="color: #f05d3b">{{host.host_name}}</span>
-      <span translate="{{'hercules.status.offline'}}" />
       <a href>
         <i class="icon icon-close" ng-click="toggleEdit(host.host_name)" />
       </a>
@@ -23,4 +32,5 @@
       </div>
     </div>
   </cs-sp-section>
+
 </cs-sp-container>

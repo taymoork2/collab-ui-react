@@ -12,6 +12,7 @@ angular.module('Hercules')
       $scope.pollHasFailed = false;
       $scope.deleteHostInflight = false;
       $scope.fusionUCEnabled = Authinfo.isFusionUC();
+      $scope.pollTimer = 1000;
 
       $scope.showClusterDetails = function (cluster) {
         $state.go('cluster-details', {
@@ -21,7 +22,7 @@ angular.module('Hercules')
 
       $scope._poll = function () {
         if ($scope._promise) {
-          $scope._promise = $interval($scope.reload, 1000, 1);
+          $scope._promise = $interval($scope.reload, $scope.pollTimer, 1);
         }
       };
 
@@ -42,13 +43,14 @@ angular.module('Hercules')
               $scope.panelStates[c.id] = true;
             }
           });
+
+          $scope.pollHasFailed = !!err;
+          $scope.pollTimer = $scope.pollHasFailed ? $scope.pollTimer > 10000 ? $scope.pollTimer : $scope.pollTimer * 2 : 1000;
+          if (!skipPoll) $scope._poll();
+
           callback();
-          if (err) {
-            $scope.pollHasFailed = true;
-          } else {
-            $scope.pollHasFailed = false;
-            if (!skipPoll) $scope._poll();
-          }
+        }, {
+          squelchErrors: true
         });
       };
 

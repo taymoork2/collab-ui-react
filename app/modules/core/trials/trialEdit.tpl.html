@@ -57,7 +57,7 @@
     </div>
     <div class="row" ng-if="trial.isSquaredUC()">
       <div class="col-xs-8 col-xs-offset-4">
-        <cs-checkbox id="squaredUCTrial" ng-model="trial.offers['SQUAREDUC']" cklabel="{{'trials.squaredUC' | translate}}" ng-disabled="trial.disableSquaredUCCheckBox"></cs-checkbox>
+        <cs-checkbox id="squaredUCTrial" ng-model="trial.offers['SQUAREDUC']" cklabel="{{'trials.squaredUC' | translate}}" ng-disabled="trial.disableSquaredUCCheckBox || (!trial.showPartnerEdit && trial.editTerms)"></cs-checkbox>
       </div>
     </div>
     <div ng-show="trial.editTerms && !trial.showPartnerEdit">
@@ -96,8 +96,9 @@
       <button id="cancelTrialButton" class="btn btn-default" ng-click="$dismiss()">
         <span translate="partnerHomePage.cancel"></span>
       </button>
-      <button id="saveSendButton" class="btn btn-primary" ng-click="trial.editTrial()" ng-disabled="trialForm.$invalid" data-loading-text="<i class='icon icon-spinner'></i>">
-        <span translate="partnerHomePage.saveSendReminder"></span>
+      <button id="saveUpdateButton" class="btn btn-primary" ng-click="trialForm.$setPristine(true); (trial.isSquaredUCEnabled() && !trial.disableSquaredUCCheckBox) ? trial.gotoAddNumber() : trial.editTrial();" ng-disabled="trialForm.$invalid" data-loading-text="<i class='icon icon-spinner'></i>">
+      <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="partnerHomePage.saveSendReminder"></span>
+      <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" translate="common.next"></span>
       </button>
     </div>
   </div>

@@ -56,6 +56,20 @@ describe('ConverterService', function () {
     expect(converted[0].needs_attention).toBe(true);
   });
 
+  it('should aggregate alarm count', function () {
+    var mockData = [{
+      "services": [{
+        "connectors": [{
+          alarms: [{}]
+        }, {
+          alarms: [{}]
+        }]
+      }]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].alarm_count).toBe(2);
+  });
+
   it('should aggregate service status from hosts in cluster where one connector has alarms', function () {
     var mockData = [{
       "services": [{
@@ -307,12 +321,14 @@ describe('ConverterService', function () {
     expect(converted.running_hosts).toBeFalsy();
   });
 
-  it('aggregates offline state per host', function () {
+  it('aggregates offline state and services per host', function () {
     var mockData = [{
       "hosts": [{
-        host_name: "bar_host_name"
+        host_name: "bar_host_name",
+        serial: 1
       }, {
-        host_name: "qux_host_name"
+        host_name: "qux_host_name",
+        serial: 2
       }],
       "services": [{
         "service_type": "c_cal",
@@ -320,13 +336,15 @@ describe('ConverterService', function () {
           "state": "offline",
           version: 'bar_version',
           host: {
-            host_name: 'bar_host_name'
+            host_name: 'bar_host_name',
+            serial: 1
           }
         }, {
           "state": "offline",
           version: 'bar_version',
           host: {
-            host_name: 'bar_host_name'
+            host_name: 'bar_host_name',
+            serial: 2
           }
         }]
       }, {
@@ -335,13 +353,15 @@ describe('ConverterService', function () {
           "state": "offline",
           version: 'bar_version',
           host: {
-            host_name: 'qux_host_name'
+            host_name: 'qux_host_name',
+            serial: 1
           }
         }, {
           "state": "running",
           version: 'bar_version',
           host: {
-            host_name: 'qux_host_name'
+            host_name: 'qux_host_name',
+            serial: 2
           }
         }]
       }]
@@ -349,6 +369,9 @@ describe('ConverterService', function () {
     var converted = Service.convertClusters(mockData);
     expect(converted[0].hosts[0].offline).toBe(true);
     expect(converted[0].hosts[1].offline).toBe(false);
+
+    expect(converted[0].hosts[0].services.length).toBe(2);
+    expect(converted[0].hosts[1].services.length).toBe(2);
   });
 
   it('set display_name to first connector if none provided', function () {
@@ -396,6 +419,7 @@ describe('ConverterService', function () {
     var converted = Service.convertClusters(mockData);
     expect(converted[0].needs_attention).toBe(true);
     expect(converted[0].services[0].needs_attention).toBe(true);
+    expect(converted[0].services[0].alarm_count).toBe(1);
     expect(converted[0].services[0].connectors[0].deduced_alarms.length).toEqual(1);
     expect(converted[0].services[0].connectors[0].deduced_alarms[0].type).toEqual('software_version_mismatch');
     expect(converted[0].services[0].connectors[0].deduced_alarms[0].expected_version).toEqual('8.2-2.1');

@@ -86,7 +86,6 @@
           xmlApiInfo.webexSiteName = "";
           xmlApiInfo.webexAdminSessionTicket = webexAdminSessionTicket;
           xmlApiInfo.webexAdminID = Authinfo.getUserName();
-          // xmlApiInfo.webexAdminPswd = "P@ss123";
 
           /* TODO
           xmlApiInfo.xmlServerURL = webexSiteName + "/WBXService/XMLService";
