@@ -51,12 +51,14 @@ angular.module('Core')
             }
           }).catch(function (error) {
             if (error) {
-              $timeout(function () {
-                $scope.result = error;
-                $timeout(Auth.logout, logoutDelay);
-              }, loadingDelay);
+              Auth.logout();
+              // $timeout(function () {
+              //   $scope.result = error;
+              //   $timeout(Auth.logout, logoutDelay);
+              // }, loadingDelay);
             } else {
-              $timeout(Auth.logout, logoutDelay);
+              Auth.logout();
+              // $timeout(Auth.logout, logoutDelay);
             }
           });
       };
