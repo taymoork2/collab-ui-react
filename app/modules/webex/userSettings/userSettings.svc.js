@@ -8,20 +8,20 @@ angular.module('WebExUserSettings')
 
         meetingCenter: {
           id: "MC",
-          label: "Meeting Center",
+          label: "",
           serviceType: "MeetingCenter",
           isSiteEnabled: false
         }, // meetingCenter
 
         trainingCenter: {
           id: "TC",
-          label: "Training Center",
+          label: "",
           serviceType: "TrainingCenter",
           isSiteEnabled: false,
 
           handsOnLabAdmin: {
             id: "handsOnLabAdmin",
-            label: "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
+            label: "",
             value: false,
             isSiteEnabled: false
           }
@@ -29,13 +29,13 @@ angular.module('WebExUserSettings')
 
         eventCenter: {
           id: "EC",
-          label: "Event Center",
+          label: "",
           serviceType: "EventCenter",
           isSiteEnabled: false,
 
           optimizeBandwidthUsage: {
             id: "optimizeBandwidthUsage",
-            label: "Optimized bandwidth usage for attendees within the same network **", // TODO
+            label: "",
             isSiteEnabled: true, // TODO
             value: false // TODO
           }
@@ -43,59 +43,59 @@ angular.module('WebExUserSettings')
 
         supportCenter: {
           id: "SC",
-          label: "Support Center",
+          label: "",
           serviceType: "SupportCenter",
           isSiteEnabled: false
         }, // supportCenter
 
         collabMeetingRoom: {
           id: "collabMeetingRoom",
-          label: "Collabration Room Cloud Service",
+          label: "",
           isSiteEnabled: false,
           value: false
         }, // collabMeetingRoom
 
         generalSettings: {
-          label: "General Settings",
+          label: "",
 
           hiQualVideo: {
             id: "hiQualVideo",
-            label: "Turn on high-quality video (360p) **",
+            label: "",
             isSiteEnabled: true, // TODO
             value: false, // TODO
 
             hiDefVideo: {
               id: "hiDefVideo",
-              label: "Turn on high-definition video video (720p) **", // TODO
+              label: "",
               value: false // TODO
             }
           }
         }, // generalSettings
 
         telephonyPriviledge: {
-          label: "Telephony Privilege",
+          label: "",
 
           callInTeleconf: {
             id: "callInTeleconf",
-            label: "Call-in teleconferencing",
+            label: "",
             value: true,
             isSiteEnabled: false,
             selectedCallInTollType: 0,
 
             callInTollTypes: [{
-              label: "Toll",
+              label: "",
               value: 1,
               id: "tollOnly",
               name: "callInTollType",
               isDisabled: true
             }, {
-              label: "Toll free",
+              label: "",
               value: 2,
               id: "tollFreeOnly",
               name: "callInTollType",
               isDisabled: true
             }, {
-              label: "Toll & Toll free",
+              label: "",
               value: 3,
               id: "tollAndTollFree",
               name: "callInTollType",
@@ -104,20 +104,20 @@ angular.module('WebExUserSettings')
 
             teleconfViaGlobalCallin: {
               id: "teleconfViaGlobalCallin",
-              label: "Allow access to teleconference via global call-in numbers *", // TODO
+              label: "",
               isSiteEnabled: true, // TODO
               value: false
             },
 
             cliAuth: {
               id: "cliAuth",
-              label: "Enable teleconferencing CLI authentication **",
+              label: "",
               isSiteEnabled: true, // TODO
               value: false, // TODO
 
               reqPinEnabled: {
                 id: "reqPinEnabled",
-                label: "Host and attendees must have PIN enabled **", // TODO
+                label: "", // TODO
                 value: false // TODO
               }
             }
@@ -125,27 +125,27 @@ angular.module('WebExUserSettings')
 
           callBackTeleconf: {
             id: "callBackTeleconf",
-            label: "Call-back teleconferencing",
+            label: "",
             isSiteEnabled: false,
             value: false,
 
             globalCallBackTeleconf: {
               id: "globalCallBackTeleconf",
-              label: "Global call-back teleconferencing",
+              label: "",
               value: false
             },
           },
 
           otherTeleconfServices: {
             id: "otherTeleconfServices",
-            label: "Other teleconference services *", // TODO
+            label: "",
             isSiteEnabled: true, // TODO
             value: false
           },
 
           integratedVoIP: {
             id: "integratedVoIP",
-            label: "Integrated VoIP",
+            label: "",
             isSiteEnabled: false,
             value: false
           },
