@@ -44,6 +44,7 @@
     "grunt-usemin": "~3.0.0",
     "jasmine-core": "^2.2.0",
     "jasmine-reporters": "2.0.5",
+    "jasmine-spec-reporter": "^2.1.0",
     "jshint-stylish": "~1.0.1",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.1.7",

@@ -28,6 +28,14 @@ exports.config = {
       })
     );
 
+    var SpecReporter = require('jasmine-spec-reporter');
+    jasmine.getEnv().addReporter(
+      new SpecReporter({
+        displayStacktrace: true,
+        displaySpecDuration: true
+      })
+    );
+
     global.baseUrl = exports.config.baseUrl;
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
@@ -103,6 +111,7 @@ exports.config = {
     onComplete: null,
     isVerbose: true,
     showColors: true,
+    print: function() {},
     includeStackTrace: true,
     defaultTimeoutInterval: 40000
   },
