@@ -33,15 +33,15 @@
       </p>
     
       <!-- Start of Meeting Center -->
-      <div ng-show="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
-        {{WebExUserSettings.userSettingsModel.meetingCenter.label}}:
+      <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
+        {{WebExUserSettings.userSettingsModel.meetingCenter.label}}
         
         <table id="MC"
                name="MC">
                
           <tr valign="top"
               ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
-              ng-show="sessionType.meetingCenterApplicable">
+              ng-if="sessionType.meetingCenterApplicable">
               
             <td>
               <cs-checkbox id={{sessionType.id}}
@@ -62,7 +62,7 @@
         </table>
         
         <!-- Start of CMR -->
-        <div ng-show="WebExUserSettings.userSettingsModel.collabMeetingRoom.isSiteEnabled">
+        <div ng-if="WebExUserSettings.userSettingsModel.collabMeetingRoom.isSiteEnabled">
           <table id="CMR"
                  name="CMR">
                  
@@ -87,15 +87,15 @@
       <!-- End of Meeting Center -->
             
       <!-- Start of Event Center -->
-      <div ng-show="WebExUserSettings.userSettingsModel.eventCenter.isSiteEnabled">
-        {{WebExUserSettings.userSettingsModel.eventCenter.label}}:
+      <div ng-if="WebExUserSettings.userSettingsModel.eventCenter.isSiteEnabled">
+        {{WebExUserSettings.userSettingsModel.eventCenter.label}}
         
         <table id="EC"
                name="EC">
                
           <tr valign="top"
               ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
-              ng-show="sessionType.eventCenterApplicable">
+              ng-if="sessionType.eventCenterApplicable">
               
             <td>
               <cs-checkbox id={{sessionType.id}}
@@ -118,15 +118,15 @@
       <!-- End of Event Center -->
         
       <!-- Start of Support Center -->
-      <div ng-show="WebExUserSettings.userSettingsModel.supportCenter.isSiteEnabled">
-        {{WebExUserSettings.userSettingsModel.supportCenter.label}}:
+      <div ng-if="WebExUserSettings.userSettingsModel.supportCenter.isSiteEnabled">
+        {{WebExUserSettings.userSettingsModel.supportCenter.label}}
         
         <table id="SC"
                name="SC">
            
           <tr valign="top"
               ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
-              ng-show="sessionType.supportCenterApplicable">
+              ng-if="sessionType.supportCenterApplicable">
               
             <td>
               <cs-checkbox id={{sessionType.id}}
@@ -149,15 +149,15 @@
       <!-- End of Support Center -->
         
       <!-- Start of Training Center -->
-      <div ng-show="WebExUserSettings.userSettingsModel.trainingCenter.isSiteEnabled">
-        {{WebExUserSettings.userSettingsModel.trainingCenter.label}}:
+      <div ng-if="WebExUserSettings.userSettingsModel.trainingCenter.isSiteEnabled">
+        {{WebExUserSettings.userSettingsModel.trainingCenter.label}}
           
         <table id="TC"
                name="TC">
         
           <tr valign="top"
               ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
-              ng-show="sessionType.trainingCenterApplicable">
+              ng-if="sessionType.trainingCenterApplicable">
               
             <td>
               <cs-checkbox id={{sessionType.id}}
@@ -180,18 +180,18 @@
       <!-- End of Training Center -->
       
       <!-- ACTION BUTTONS -->
-      <span>
-        <p align="right">
-          <button id="btnUpdate"
-                  name="btnUpdate"
-                  type="button"
-                  class="btn btn-primary"
-                  ng-click="WebExUserSettings.updateUserSettings()">
-                  
-            Save
-          </button>
-        </p>
-      </span>
+      <p align="right">
+        To be removed -->&nbsp;&nbsp;
+        
+        <button id="btnUpdate"
+                name="btnUpdate"
+                type="button"
+                class="btn btn-primary"
+                ng-click="WebExUserSettings.updateUserSettings()">
+                
+          Save
+        </button>
+      </p>
     </div>
   </cs-sp-section>
 </cs-sp-container>

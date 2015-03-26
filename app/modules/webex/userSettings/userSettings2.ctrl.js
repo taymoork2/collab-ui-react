@@ -138,6 +138,8 @@
       this.meetingTypesInfoJson = null;
       this.meetingTypesErrReason = "";
 
+      this.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
+
       var _self = this;
       var webexSiteUrl = "";
       var webexSiteName = "";
