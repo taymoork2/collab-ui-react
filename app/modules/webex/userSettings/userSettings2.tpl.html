@@ -1,32 +1,41 @@
 <cs-sp-container>
   <cs-sp-section>
+    <h4 class="list-group-item-heading">
+      &nbsp;
+    </h4>
+    
+    <div id="errSection"
+         name="errSection">
+         
+    </div>
+    
     <div id="webexUserSettingsPage2"
          class="hidden">
       
-      <h4 class="list-group-item-heading">
-        &nbsp;
-      </h4>
-    
       <!-- Start of General section -->
       <div id="generalPrivileges"
            name="generalPrivileges">
-           
-        {{WebExUserSettings2.userSettingsModel.general.label}}
         
-        <div ng-show="WebExUserSettings2.userSettingsModel.general.hiQualVideo.isSiteEnabled">
-          <cs-checkbox id={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.id}}
-                       name={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.id}}
+        <p>
+          <b>
+            {{WebExUserSettings2.userSettingsModel.generalSettings.label}}
+          </b>
+        </p>
+        
+        <div ng-show="WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.isSiteEnabled">
+          <cs-checkbox id={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.id}}
+                       name={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.id}}
                        ng-disabled="true"
-                       ng-model="WebExUserSettings2.userSettingsModel.general.hiQualVideo.value"
-                       cklabel={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.label}}> 
+                       ng-model="WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.value"
+                       cklabel={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.label}}> 
           </cs-checkbox>
         
           <div class="indentedCheckbox">
-            <cs-checkbox id={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.hiDefVideo.id}}
-                         name={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.hiDefVideo.id}}
-                         ng-model="WebExUserSettings2.userSettingsModel.general.hiQualVideo.hiDefVideo.value"
-                         ng-disabled="!WebExUserSettings2.userSettingsModel.general.hiQualVideo.value"
-                         cklabel={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.hiDefVideo.label}}>
+            <cs-checkbox id={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.id}}
+                         name={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.id}}
+                         ng-model="WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.value"
+                         ng-disabled="!WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.value"
+                         cklabel={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.label}}>
             </cs-checkbox>
           </div>
         </div>
@@ -38,8 +47,12 @@
       <!-- Start of Telephony section -->
       <div id="telephonyPrivileges"
            name="telephonyPrivileges">
-                
-        {{WebExUserSettings2.userSettingsModel.telephonyPriviledge.label}}
+        
+        <p>
+          <b>
+            {{WebExUserSettings2.userSettingsModel.telephonyPriviledge.label}}
+          </b>
+        </p>
         
         <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled">
           <cs-checkbox id={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.id}}
@@ -113,8 +126,12 @@
       <div id="eventCenterPrivileges"
            name="eventCenterPrivileges"
            ng-show="WebExUserSettings2.userSettingsModel.eventCenter.isSiteEnabled">
-                
-         {{WebExUserSettings2.userSettingsModel.eventCenter.label}}
+         
+         <p>
+           <b>
+             {{WebExUserSettings2.userSettingsModel.eventCenter.label}}
+           </b>
+         </p>
         
         <div ng-show="WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled">
           <cs-checkbox id={{WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.id}}
@@ -133,8 +150,12 @@
       <div id="trainingCenterPrivleges"
            name="trainingCenterPrivleges"
            ng-show="WebExUserSettings2.userSettingsModel.trainingCenter.isSiteEnabled">
-                      
-        {{WebExUserSettings2.userSettingsModel.trainingCenter.label}}
+        
+        <p>
+          <b>
+            {{WebExUserSettings2.userSettingsModel.trainingCenter.label}}
+          </b>
+        </p>
         
         <div ng-show="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled">
           <cs-checkbox id={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
@@ -148,7 +169,7 @@
       </div>
       <!-- End of Training Center section -->
       
-      <!-- ACTION BUTTONS -->
+      <!-- ACTION BUTTONS (will be removed) -->
       <p align="right">
         <button id="btnUpdate"
                 name="btnUpdate"
@@ -171,7 +192,10 @@
         <div>
           <a href="" onClick="document.getElementById('hiddenButton').click();">
             <p class="popout-link">
-              <span translate="webexUserSettings2.advancedLink"></span>
+              <span id="webexUserAdminLink"
+                    name="webexUserAdminLink"
+                    translate="webexUserSettingLabels.advancedLinkLabel">
+              </span>
             </p>
           </a>
           

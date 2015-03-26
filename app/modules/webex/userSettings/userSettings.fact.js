@@ -211,15 +211,15 @@
           // General
           // TODO:
           //   if (???) {
-          //     userSettingsModel.general.hiQualVideo.isSiteEnabled = true;
+          //     userSettingsModel.generalSettings.hiQualVideo.isSiteEnabled = true;
           //   }
           //
           //   if (???) {
-          //     userSettingsModel.general.hiQualVideo.value = true;
+          //     userSettingsModel.generalSettings.hiQualVideo.value = true;
           //   }
           //
           //   if (???) {
-          //     userSettingsModel.general.hiQualVideo.hiDefVideo.value = true;
+          //     userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.value = true;
           //   }
 
           // Telephony
@@ -230,14 +230,16 @@
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = false;
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = false;
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = false;
-            } else if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing) {
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = true;
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = false;
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = true;
             } else {
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = true;
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = true;
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = false;
+              if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing) {
+                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = true;
+                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = false;
+                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = true;
+              } else {
+                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = true;
+                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = true;
+                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = false;
+              }
             }
           }
 

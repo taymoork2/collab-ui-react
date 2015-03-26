@@ -35,7 +35,7 @@ angular.module('WebExUserSettings')
 
           optimizeBandwidthUsage: {
             id: "optimizeBandwidthUsage",
-            label: "Optimized bandwidth usage for attendees within the same network **",
+            label: "Optimized bandwidth usage for attendees within the same network **", // TODO
             isSiteEnabled: true, // TODO
             value: false // TODO
           }
@@ -55,8 +55,8 @@ angular.module('WebExUserSettings')
           value: false
         }, // collabMeetingRoom
 
-        general: {
-          label: "General",
+        generalSettings: {
+          label: "General Settings",
 
           hiQualVideo: {
             id: "hiQualVideo",
@@ -70,7 +70,7 @@ angular.module('WebExUserSettings')
               value: false // TODO
             }
           }
-        }, // general
+        }, // generalSettings
 
         telephonyPriviledge: {
           label: "Telephony Privilege",
@@ -104,7 +104,7 @@ angular.module('WebExUserSettings')
 
             teleconfViaGlobalCallin: {
               id: "teleconfViaGlobalCallin",
-              label: "Allow access to teleconference via global call-in numbers *",
+              label: "Allow access to teleconference via global call-in numbers *", // TODO
               isSiteEnabled: true, // TODO
               value: false
             },
@@ -117,7 +117,7 @@ angular.module('WebExUserSettings')
 
               reqPinEnabled: {
                 id: "reqPinEnabled",
-                label: "Host and attendees must have PIN enabled **",
+                label: "Host and attendees must have PIN enabled **", // TODO
                 value: false // TODO
               }
             }
@@ -138,7 +138,7 @@ angular.module('WebExUserSettings')
 
           otherTeleconfServices: {
             id: "otherTeleconfServices",
-            label: "Other teleconference services *",
+            label: "Other teleconference services *", // TODO
             isSiteEnabled: true, // TODO
             value: false
           },

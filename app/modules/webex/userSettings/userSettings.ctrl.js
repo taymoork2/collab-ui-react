@@ -97,7 +97,7 @@
               currView.viewReady = true;
               $("#webexUserSettingsPage").removeClass("hidden");
             } else { // xmlapi returns error
-              var errorMessage = $translate.instant('webexUserSettingsUserErrors.' + currView.userInfoErrId);
+              var errorMessage = $translate.instant('webexUserSettingsAccessErrors.' + "errCode-" + currView.userInfoErrId);
               $log.log("Error message: " + errorMessage);
               if ("030001" == currView.userInfoErrId) {
                 logMsg = funcName + ": " + "Corresponding User not found!!!";
@@ -199,8 +199,8 @@
       this.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
 
       var _self = this;
-      var webexSiteUrl = "";
-      var webexSiteName = "";
+      var webexSiteUrl = "t30citest.webex.com";
+      var webexSiteName = "t30citest";
 
       WebExUserSettingsFact.getSessionTicket(webexSiteUrl).then(
         function getSessionTicketSuccess(webexAdminSessionTicket) {

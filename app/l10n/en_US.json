@@ -938,19 +938,40 @@
     "deleteResource": "Decomission Resource"
   },
   "webexUserSettings": {
-    "userUpdateSuccess": "User privileges updated",
-    "userUpdateError": "User privileges update failed",
-    "webexUserSettingsTab": "WebEx Proto",
+    "userUpdateSuccess": "Conference settings updated",
+    "userUpdateError": "Conference settings failed",
     "reload": "Try Again",
     "cancel": "Go Back"
   },
-  "webexUserSettingsUserErrors": {
-    "userDefaultError": "Error reading user information",
-    "030001": "{{givenName}} {{familyName}} has not yet been provisioned to this site. This process may take a moment."
+  "webexUserSettingsAccessErrors": {
+    "defaultAccessError": "Unable to access information from the server at this time",
+    "errCode-030001": "{{givenName}} {{familyName}} has not yet been provisioned to this site. This process may take a moment."
   },
-  "webexUserSettings2": {
-    "webexUserSettings2Tab": "WebEx Proto2",
-    "advancedLink": "Advanced Settings"
+  "webexUserSettingLabels": {
+    "sessionEnablementLabel": "Session Enablement",
+    "meetingCenterLabel": "Meeting Center",
+    "trainingCenterLabel": "Training Center",
+    "handsOnLabAdminLabel": "Hands-on Lab Admin (effective only when hands-on lab is enabled",
+    "eventCenterLabel": "Event Center",
+    "optimizeBandwidthUsageLabel": "Optimized bandwidth usage for attendees within the same network **",
+    "supportCenterLabel": "Support Center",
+    "collabMeetingRoomLabel": "Collabration Room Cloud Service",
+    "generalSettingsLabel": "General Settings",
+    "hiQualVideoLabel": "Turn on high-quality video (360p) **",
+    "hiDefVideoLabel": "Turn on high-definition video video (720p) **",
+    "telephonyPrivilegesLabel": "Telephony Privileges",
+    "callInTeleconfLabel": "Call-in teleconferencing",
+    "tollOnlyLabel": "Toll",
+    "tollFreeOnlyLabel": "Toll free",
+    "tollAndTollFreeLabel": "Toll & Toll free",
+    "teleconfViaGlobalCallinLabel": "Allow access to teleconference via global call-in numbers *",
+    "cliAuthLabel": "Enable teleconferencing CLI authentication **",
+    "reqPinEnabledLabel": "Host and attendees must have PIN enabled **",
+    "callBackTeleconfLabel": "Call-back teleconferencing",
+    "globalCallBackTeleconfLabel": "Global call-back teleconferencing",
+    "otherTeleconfServicesLabel": "Other teleconference services *",
+    "integratedVoIPLaabel": "Integrated VoIP",
+    "advancedLinkLabel": "Advanced Settings"
   },
   "leaderBoard": {
     "actions": "Actions",
