@@ -4,10 +4,10 @@
   /* global alertify */
 
   angular.module('Core')
-    .service('Notification', Notification);
+    .service('Notification', NotificationFn);
 
   /* @ngInject */
-  function Notification() {
+  function NotificationFn() {
     return {
       notify: function (notifications, type) {
         if (!notifications) {

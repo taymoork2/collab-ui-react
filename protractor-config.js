@@ -1,6 +1,8 @@
 'use strict';
 
 exports.config = {
+  framework: "jasmine2",
+
   directConnect: true,
 
   capabilities: {
@@ -17,8 +19,14 @@ exports.config = {
   baseUrl: 'http://127.0.0.1:8000',
 
   onPrepare: function() {
-    require('jasmine-reporters');
-    jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('test/e2e-protractor/reports', true, true));
+    var jasmineReporters = require('jasmine-reporters');
+    jasmine.getEnv().addReporter(
+      new jasmineReporters.JUnitXmlReporter({
+        savePath:'test/e2e-protractor/reports',
+        consolidateAll: true,
+        useDotNotation: true
+      })
+    );
 
     global.baseUrl = exports.config.baseUrl;
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
@@ -79,8 +87,8 @@ exports.config = {
     global.usersettings = new BasicSettigsPage();
     global.orgprofile = new OrgProfilePage();
 
-    var ScreenShotReporter = require('protractor-screenshot-reporter');
     var path = require('path');
+    var ScreenShotReporter = require('protractor-screenshot-reporter');
     jasmine.getEnv().addReporter(new ScreenShotReporter({
       baseDirectory: './screenshots',
       takeScreenShotsOnlyForFailedSpecs: true,
