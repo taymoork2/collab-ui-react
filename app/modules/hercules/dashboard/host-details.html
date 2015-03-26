@@ -3,6 +3,7 @@
   <cs-sp-section>
     <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px">
       <a target="_blank" href="https://{{host.host_name}}" style="padding: 5px 0">
+        <i class="fa fa-caret-right" style="padding-right: 10px;" />
         {{host.host_name}}
       </a>
       <div ng-repeat="service in host.services" class="list">

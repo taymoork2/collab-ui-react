@@ -4,22 +4,13 @@
 
   <!-- cluster overview -->
   <cs-sp-section>
-    <div class="sw-upgrade">
-      <span style="font-size: xs;">
-        This cluster consists of {{cluster.hosts.length}} {{cluster.hosts.length == 1 ? 'host' : 'hosts'}}.
-      </span>
+    <div class="sw-upgrade" style="font-size: xs">
+      <div>Status: {{cluster.needs_attention ? 'Needs attention' : 'Running'}}.</div>
+      <div>Cluster consists of {{cluster.hosts.length}} {{cluster.hosts.length == 1 ? 'host' : 'hosts'}}.</div>
     </div>
   </cs-sp-section>
 
-  <!-- hosts -->
-  <cs-sp-section>
-    <a ui-sref="cluster-details.hosts" style="padding-top: 1.4rem; display: block;">
-      All hosts in this cluster
-      <i class="icon icon-chevron-right pull-right" />
-    </a>
-  </cs-sp-section>
-
-  <!-- old services stuff -->
+  <!-- services stuff -->
   <cs-sp-section>
     <div class="section-name" style="padding: 15px 0;">
       Connectors
@@ -59,4 +50,26 @@
       </div>
     </div>
   </cs-sp-section>
+
+  <!-- hosts -->
+  <cs-sp-section>
+    <div class="section-name" style="padding: 15px 0;">
+      Expressway Hosts
+    </div>
+
+    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px">
+      <a target="_blank" href="https://{{host.host_name}}" style="padding: 5px 0">
+        <i class="fa fa-caret-right" style="padding-right: 10px;" />
+        {{host.host_name}}
+      </a>
+    </div>
+
+    <a ui-sref="cluster-details.hosts" style="padding-top: 1.4rem; display: block;">
+      View details of all hosts in this cluster
+      <i class="icon icon-chevron-right pull-right" />
+    </a>
+
+  </cs-sp-section>
+
+
 </cs-sp-container>

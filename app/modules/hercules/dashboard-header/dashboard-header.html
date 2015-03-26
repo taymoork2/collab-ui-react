@@ -1,5 +1,5 @@
 <div>
-  <h3 style="padding-left: 20px">Service Health</h3>
+  <h3 style="padding-left: 20px">Connector Status</h3>
   <div class="dashboard-header row">
     <div class="col-sm-6" ng-repeat="(type, service) in serviceAggregates.services">
       <div class="item">
@@ -16,19 +16,6 @@
                 Running on {{service.running}} clusters
               </span>
             </div>
-            <!--
-            <div class="text-danger">
-              <span ng-show="service.needs_attention == 0">
-                &nbsp;
-              </span>
-              <span ng-show="service.needs_attention == 1">
-                {{service.needs_attention}} cluster needs attention
-              </span>
-              <span ng-show="service.needs_attention > 1">
-                {{service.needs_attention}} clusters need attention
-              </span>
-            </div>
-            -->
           </div>
         </div>
       </div>
