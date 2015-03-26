@@ -138,38 +138,33 @@
       this.meetingTypesInfoJson = null;
       this.meetingTypesErrReason = "";
 
-      // TODO: fix this
-      var webexSiteName = "";
-      var webexdminID = "";
-      var webexAdminSessionTicket = "";
-
       var _self = this;
+      var webexSiteUrl = "";
+      var webexSiteName = "";
 
-      WebExUserSettingsFact.getSessionTicket("")
-        .then(function (webexAdminSessionTicket) {
-            _self.xmlApiInfo = WebExUserSettingsFact.getXmlApiInfo(
-              webexSiteName,
-              webexdminID,
-              webexAdminSessionTicket,
-              $stateParams.currentUser
-            );
+      WebExUserSettingsFact.getSessionTicket(webexSiteUrl).then(
+        function getSessionTicketSuccess(webexAdminSessionTicket) {
+          WebExUserSettingsFact.initXmlApiInfo(
+            webexSiteUrl,
+            webexSiteName,
+            webexAdminSessionTicket
+          );
 
-            _self.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
+          _self.getUserSettingsInfo();
 
-            _self.getUserSettingsInfo();
+          $scope.trustSrc = function (src) {
+            return $sce.trustAsResourceUrl(src);
+          };
 
-            $scope.trustSrc = function (src) {
-              return $sce.trustAsResourceUrl(src);
-            };
+          $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(webexSiteUrl);
+          $scope.adminEmailParam = Authinfo.getUserName();
+          $scope.userEmailParam = $stateParams.currentUser.userName;
+        }, // getSessionTicketSuccess()
 
-            $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(webexSiteName);
-            $scope.adminEmailParam = Authinfo.getUserName();
-            $scope.userEmailParam = $stateParams.currentUser.userName;
-          },
-          function (reason) {
-
-          });
-
+        function getSessionTicketError(reason) {
+          $log.log("WebExUserSettings2Ctrl(): failed to get session ticket");
+        } // getSessionTicketError()
+      );
     } // WebExUserSettings2Ctrl()
   ]);
 })();

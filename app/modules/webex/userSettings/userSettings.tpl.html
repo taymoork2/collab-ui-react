@@ -16,17 +16,15 @@
     </div>
   
     <div id="webexUserSettingsPage"
-         class="list-group hidden">
-           
+         class="hidden">
+         
       <h4 class="list-group-item-heading">
         &nbsp;
       </h4>
     
       <!-- Start of Meeting Center -->
       <div ng-show="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
-        <h4 class="list-group-item-heading">
-          {{WebExUserSettings.userSettingsModel.meetingCenter.label}}:
-        </h4>
+        {{WebExUserSettings.userSettingsModel.meetingCenter.label}}:
         
         <table id="MC"
                name="MC">
@@ -38,7 +36,6 @@
             <td>
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
-                           class="list-group-item-text"
                            ng-model="sessionType.sessionEnabled"
                            cklabel={{sessionType.sessionName}}>
               </cs-checkbox>
@@ -48,7 +45,7 @@
               &nbsp;
             </td>
     
-            <td class="list-group-item-text">
+            <td>
               {{sessionType.sessionDescription}}
             </td>
           </tr>
@@ -59,18 +56,15 @@
           <table id="CMR"
                  name="CMR">
                  
-            <tr valign="top">
-              <td class="list-group-item-text">
+            <tr>
+              <td valign="top">
                 {{WebExUserSettings.userSettingsModel.collabMeetingRoom.label}}
               </td>
               
-              <td width="30">
-                &nbsp;
-              </td>
-              
-              <td>
+              <td valign="center">
                 <cs-toggle-switch toggle-id={{WebExUserSettings.userSettingsModel.collabMeetingRoom.id}}
                                   name={{WebExUserSettings.userSettingsModel.collabMeetingRoom.id}}
+                                  class="indentedCheckbox"
                                   size="small"
                                   ng-model="WebExUserSettings.userSettingsModel.collabMeetingRoom.value">
                 </cs-toggle-switch>
@@ -79,18 +73,12 @@
           </table>
         </div>
         <!-- End of CMR -->
-        
-        <p class="list-group-item-text">
-          &nbsp;
-        </p>
       </div>
       <!-- End of Meeting Center -->
-      
+            
       <!-- Start of Event Center -->
       <div ng-show="WebExUserSettings.userSettingsModel.eventCenter.isSiteEnabled">
-        <h4 class="list-group-item-heading">
-          {{WebExUserSettings.userSettingsModel.eventCenter.label}}:
-        </h4>
+        {{WebExUserSettings.userSettingsModel.eventCenter.label}}:
         
         <table id="EC"
                name="EC">
@@ -102,7 +90,6 @@
             <td>
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
-                           class="list-group-item-text"
                            ng-model="sessionType.sessionEnabled"
                            cklabel={{sessionType.sessionName}}>
               </cs-checkbox>
@@ -112,23 +99,17 @@
               &nbsp;
             </td>
     
-            <td class="list-group-item-text">
+            <td>
               {{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
-        
-        <h4 class="list-group-item-heading">
-          &nbsp;
-        </h4>
       </div>
       <!-- End of Event Center -->
         
       <!-- Start of Support Center -->
       <div ng-show="WebExUserSettings.userSettingsModel.supportCenter.isSiteEnabled">
-        <h4 class="list-group-item-heading">
-          {{WebExUserSettings.userSettingsModel.supportCenter.label}}:
-        </h4>
+        {{WebExUserSettings.userSettingsModel.supportCenter.label}}:
         
         <table id="SC"
                name="SC">
@@ -140,7 +121,6 @@
             <td>
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
-                           class="list-group-item-text"
                            ng-model="sessionType.sessionEnabled"
                            cklabel={{sessionType.sessionName}}>
               </cs-checkbox>
@@ -150,23 +130,17 @@
               &nbsp;
             </td>
       
-            <td class="list-group-item-text">
+            <td>
               {{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
-        
-        <h4 class="list-group-item-heading">
-          &nbsp;
-        </h4>
       </div>
       <!-- End of Support Center -->
         
       <!-- Start of Training Center -->
       <div ng-show="WebExUserSettings.userSettingsModel.trainingCenter.isSiteEnabled">
-        <h4 class="list-group-item-heading">
-          {{WebExUserSettings.userSettingsModel.trainingCenter.label}}:
-        </h4>
+        {{WebExUserSettings.userSettingsModel.trainingCenter.label}}:
           
         <table id="TC"
                name="TC">
@@ -178,7 +152,6 @@
             <td>
               <cs-checkbox id={{sessionType.id}}
                            name={{sessionType.id}}
-                           class="list-group-item-text"
                            ng-model="sessionType.sessionEnabled"
                            cklabel={{sessionType.sessionName}}>
               </cs-checkbox>
@@ -188,15 +161,11 @@
               &nbsp;
             </td>
       
-            <td class="list-group-item-text">
+            <td>
               {{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
-        
-        <h4 class="list-group-item-heading">
-          &nbsp;
-        </h4>
       </div>
       <!-- End of Training Center -->
       

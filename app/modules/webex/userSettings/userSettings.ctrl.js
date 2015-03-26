@@ -196,27 +196,27 @@
       this.meetingTypesInfoJson = null;
       this.meetingTypesErrReason = "";
 
-      // TODO: fix this
-      var webexSiteName = "";
-      var webexdminID = "";
-      var webexAdminSessionTicket = "";
+      this.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
 
       var _self = this;
+      var webexSiteUrl = "";
+      var webexSiteName = "";
 
-      WebExUserSettingsFact.getSessionTicket("")
-        .then(function (webexAdminSessionTicket) {
-            _self.xmlApiInfo = WebExUserSettingsFact.getXmlApiInfo(
-              webexSiteName,
-              webexdminID,
-              webexAdminSessionTicket,
-              $stateParams.currentUser
-            );
+      WebExUserSettingsFact.getSessionTicket(webexSiteUrl).then(
+        function getSessionTicketSuccess(webexAdminSessionTicket) {
+          WebExUserSettingsFact.initXmlApiInfo(
+            webexSiteUrl,
+            webexSiteName,
+            webexAdminSessionTicket
+          );
 
-            _self.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
+          _self.getUserSettingsInfo();
+        }, // getSessionTicketSuccess()
 
-            _self.getUserSettingsInfo();
-          },
-          function (reason) {});
+        function getSessionTicketError(reason) {
+          $log.log("WebExUserSettingsCtrl(): failed to get session ticket");
+        } // getSessionTicketError
+      );
     } // WebExUserSettingsCtrl()
   ]);
 })();

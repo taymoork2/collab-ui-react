@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('WebExUserSettings')
-  .service('XmlApiConstsSvc', [
+angular.module('WebExUserSettings').service(
+  'XmlApiConstsSvc', [
     function XmlApiConstants() {
       return {
         siteInfoRequest: "" +
@@ -16,7 +16,7 @@ angular.module('WebExUserSettings')
           "    <body>" + "\n" +
           "        <bodyContent xsi:type=\"java:com.webex.service.binding.site.GetSite\" />" + "\n" +
           "    </body>" + "\n" +
-          "</serv:message>",
+          "</serv:message>" + "\n",
 
         userInfoRequest: "" +
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
@@ -32,7 +32,7 @@ angular.module('WebExUserSettings')
           "            <webExId>{{webexUserId}}</webExId>" + "\n" +
           "        </bodyContent>" + "\n" +
           "    </body>" + "\n" +
-          "</serv:message>",
+          "</serv:message>" + "\n",
 
         meetingTypeInfoRequest: "" +
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
@@ -46,7 +46,7 @@ angular.module('WebExUserSettings')
           "    <body>" + "\n" +
           "        <bodyContent xsi:type=\"java:com.webex.service.binding.meetingtype.LstMeetingType\" />" + "\n" +
           "    </body>" + "\n" +
-          "</serv:message>",
+          "</serv:message>" + "\n",
 
         updateUserSettings_1: "" +
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
@@ -78,7 +78,7 @@ angular.module('WebExUserSettings')
           "            </use:supportedServices>" + "\n" +
           "        </bodyContent>" + "\n" +
           "    </body>" + "\n" +
-          "</serv:message>",
+          "</serv:message>" + "\n",
 
         updateUserSettings2: "" +
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
@@ -106,7 +106,7 @@ angular.module('WebExUserSettings')
           "            </use:privilege>" + "\n" +
           "        </bodyContent>" + "\n" +
           "    </body>" + "\n" +
-          "</serv:message>",
+          "</serv:message>" + "\n",
 
         sessionTicketRequest: "" +
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
@@ -121,7 +121,7 @@ angular.module('WebExUserSettings')
           "       <accessToken>{{accessToken}}</accessToken>" + "\n" +
           "     </bodyContent>" + "\n" +
           "    </body>" + "\n" +
-          "</serv:message>",
+          "</serv:message>" + "\n",
 
         replaceSets: [{
             replaceThis: /<ns1:/g,
@@ -156,4 +156,5 @@ angular.module('WebExUserSettings')
           }] // replaceSets[]
       }; // return
     } // XmlApiConstants
-  ]); // service
+  ]
+); // service
