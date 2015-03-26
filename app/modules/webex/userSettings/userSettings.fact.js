@@ -4,6 +4,7 @@
   angular.module('WebExUserSettings').factory('WebExUserSettingsFact', [
     '$q',
     '$log',
+    '$stateParams',
     'XmlApiFact',
     'WebexUserSettingsSvc',
     'XmlApiInfoSvc',
@@ -11,6 +12,7 @@
     function (
       $q,
       $log,
+      $stateParams,
       XmlApiFact,
       userSettingsModel,
       xmlApiInfo,
@@ -48,7 +50,7 @@
           logMsg = funcName + ": " + "\n" +
             "commentText=" + commentText + "\n" +
             "infoJson=\n" + JSON.stringify(infoJson);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           var errReason = "";
           var errId = "";
@@ -75,27 +77,17 @@
           return userSettingsModel;
         }, // getUserSettingsModel()
 
-        getXmlApiInfo: function (
+        initXmlApiInfo: function (
+          webexSiteUrl,
           webexSiteName,
-          webexdminID,
-          webexAdminSessionTicket,
-          webexUser
+          webexAdminSessionTicket
         ) {
-
-          xmlApiInfo.xmlServerURL = "";
-          xmlApiInfo.webexSiteName = "";
-          xmlApiInfo.webexAdminSessionTicket = webexAdminSessionTicket;
+          xmlApiInfo.xmlServerURL = "https://" + webexSiteUrl + "/WBXService/XMLService";
+          xmlApiInfo.webexSiteName = webexSiteName;
           xmlApiInfo.webexAdminID = Authinfo.getUserName();
-
-          /* TODO
-          xmlApiInfo.xmlServerURL = webexSiteName + "/WBXService/XMLService";
-          xmlApiInfo.webexAdminID = webexdminID;
-          xmlApiInfo.webexSessionTicket = webexAdminSessionTicket;
-          */
-          xmlApiInfo.webexUserId = webexUser.userName;
-
-          return xmlApiInfo;
-        }, // getXmlApiInfo()
+          xmlApiInfo.webexAdminSessionTicket = webexAdminSessionTicket;
+          xmlApiInfo.webexUserId = $stateParams.currentUser.userName;
+        }, // initXmlApiInfo()
 
         updateUserSettingsModel: function (
           userInfoJson,
@@ -235,13 +227,17 @@
             userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled = true;
 
             if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference) {
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled = true;
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled = true;
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = false;
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = false;
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = false;
             } else if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing) {
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled = true;
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = true;
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = false;
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = true;
             } else {
-              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled = true;
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = true;
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = true;
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = false;
             }
           }
 
@@ -261,8 +257,12 @@
             "ns1_hybridTeleconference=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference + "\n" +
             "ns1_tollFreeCallinTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing + "\n" +
             "use_teleConfCallIn=" + userInfoJson.use_privilege.use_teleConfCallIn + "\n" +
-            "use_teleConfTollFreeCallIn=" + userInfoJson.use_privilege.use_teleConfTollFreeCallIn;
-          // $log.log(logMsg);
+            "use_teleConfTollFreeCallIn=" + userInfoJson.use_privilege.use_teleConfTollFreeCallIn + "\n" +
+            "callInTeleconf.selectedCallInTollType=" + userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType + "\n" +
+            "callInTollTypes[0].isDisabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled + "\n" +
+            "callInTollTypes[1].isDisabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled + "\n" +
+            "callInTollTypes[2].isDisabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled;
+          $log.log(logMsg);
 
           // TODO:
           //   if (???) {
@@ -402,8 +402,8 @@
           return XmlApiFact.updateUserSettings2(xmlApiInfo);
         }, // updateUserSettings2()
 
-        getSessionTicket: function (wbxSiteUrl) {
-          return XmlApiFact.getSessionTicket(wbxSiteUrl);
+        getSessionTicket: function (webexSiteUrl) {
+          return XmlApiFact.getSessionTicket(webexSiteUrl);
         }, //getSessionTicket()
 
         xml2JsonConvert: function (

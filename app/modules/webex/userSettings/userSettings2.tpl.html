@@ -1,7 +1,7 @@
 <cs-sp-container>
   <cs-sp-section>
     <div id="webexUserSettingsPage2"
-         class="list-group hidden">
+         class="hidden">
       
       <h4 class="list-group-item-heading">
         &nbsp;
@@ -11,14 +11,11 @@
       <div id="generalPrivileges"
            name="generalPrivileges">
            
-        <h4 class="list-group-item-heading">
-          {{WebExUserSettings2.userSettingsModel.general.label}}
-        </h4>
+        {{WebExUserSettings2.userSettingsModel.general.label}}
         
         <div ng-show="WebExUserSettings2.userSettingsModel.general.hiQualVideo.isSiteEnabled">
           <cs-checkbox id={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.id}}
                        name={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.id}}
-                       class="list-group-item-text"
                        ng-disabled="true"
                        ng-model="WebExUserSettings2.userSettingsModel.general.hiQualVideo.value"
                        cklabel={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.label}}> 
@@ -27,7 +24,6 @@
           <div class="indentedCheckbox">
             <cs-checkbox id={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.hiDefVideo.id}}
                          name={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.hiDefVideo.id}}
-                         class="list-group-item-text"
                          ng-model="WebExUserSettings2.userSettingsModel.general.hiQualVideo.hiDefVideo.value"
                          ng-disabled="!WebExUserSettings2.userSettingsModel.general.hiQualVideo.value"
                          cklabel={{WebExUserSettings2.userSettingsModel.general.hiQualVideo.hiDefVideo.label}}>
@@ -35,9 +31,7 @@
           </div>
         </div>
         
-        <p class="list-group-item-text">
-          &nbsp;
-        </p>
+        <hr>
       </div>
       <!-- End of General section -->
       
@@ -45,47 +39,23 @@
       <div id="telephonyPrivileges"
            name="telephonyPrivileges">
                 
-        <h4 class="list-group-item-heading">
-          {{WebExUserSettings2.userSettingsModel.telephonyPriviledge.label}}
-        </h4>
+        {{WebExUserSettings2.userSettingsModel.telephonyPriviledge.label}}
         
         <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled">
           <cs-checkbox id={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.id}}
                        name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.id}}
-                       class="list-group-item-text"
                        ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value"
                        cklabel={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.label}}>
           </cs-checkbox>
           
           <div class="indentedCheckbox">
-            <cs-radio id="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollOnly.id"
-                      name="callInTollType"
-                      label="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollOnly.label"
-                      value="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollOnly.value"
-                      ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                      ng-disabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollOnly.isSiteEnabled">
-            </cs-radio>
-            
-            <cs-radio id="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.id"
-                      name="callInTollType"
-                      label="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.label"
-                      value="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.value"
-                      ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                      ng-disabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollFreeOnly.isSiteEnabled">
-            </cs-radio>
-            
-            <cs-radio id="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.id"
-                      name="callInTollType"
-                      label="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.label"
-                      value="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.value"
-                      ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
-                      ng-disabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollAndTollFree.isSiteEnabled">
-            </cs-radio>
-            
+            <cs-radiolist options="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes"
+                          ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType">
+            </cs-radiolist>
+  
             <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled">
               <cs-checkbox id={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
                            name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
-                           class="list-group-item-text"
                            ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value"
                            cklabel={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label}}>
               </cs-checkbox>
@@ -94,7 +64,6 @@
             <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled">
               <cs-checkbox id={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.id}}
                            name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.id}}
-                           class="list-group-item-text"
                            ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.value"
                            ng-disabled="true"
                            cklabel={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.label}}>
@@ -105,7 +74,6 @@
           <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled">
             <cs-checkbox id={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.id}}
                          name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.id}}
-                         class="list-group-item-text"
                          ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.value"
                          cklabel={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.label}}>
             </cs-checkbox>
@@ -113,7 +81,6 @@
             <div class="indentedCheckbox">
               <cs-checkbox id={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
                            name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
-                           class="list-group-item-text"
                            ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value"
                            cklabel={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label}}
                            ng-disabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.value">
@@ -124,7 +91,6 @@
           <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled">
             <cs-checkbox id={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.id}}
                          name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.id}}
-                         class="list-group-item-text"
                          ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.value"
                          cklabel={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.label}}>
             </cs-checkbox>
@@ -133,16 +99,13 @@
           <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
             <cs-checkbox id={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.id}}
                          name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.id}}
-                         class="list-group-item-text"
                          ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.value"
                          cklabel={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.label}}>
             </cs-checkbox>
           </div>
         </div>
         
-        <p class="list-group-item-text">
-          &nbsp;
-        </p>
+        <hr>
       </div>
       <!-- End of Telephony section -->
       
@@ -151,23 +114,18 @@
            name="eventCenterPrivileges"
            ng-show="WebExUserSettings2.userSettingsModel.eventCenter.isSiteEnabled">
                 
-        <h4 class="list-group-item-heading">
-           {{WebExUserSettings2.userSettingsModel.eventCenter.label}}
-        </h4>
+         {{WebExUserSettings2.userSettingsModel.eventCenter.label}}
         
         <div ng-show="WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled">
           <cs-checkbox id={{WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.id}}
                        name={{WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.id}}
-                       class="list-group-item-text"
                        ng-model="WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.value"
                        ng-disabled="true"
                        cklabel={{WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.label}}>
           </cs-checkbox>
         </div>
         
-        <p class="list-group-item-text">
-          &nbsp;
-        </p>
+        <hr>
       </div>
       <!-- End of Event Center section -->
       
@@ -176,27 +134,20 @@
            name="trainingCenterPrivleges"
            ng-show="WebExUserSettings2.userSettingsModel.trainingCenter.isSiteEnabled">
                       
-        <h4 class="list-group-item-heading">
-          {{WebExUserSettings2.userSettingsModel.trainingCenter.label}}
-        </h4>
+        {{WebExUserSettings2.userSettingsModel.trainingCenter.label}}
         
         <div ng-show="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled">
           <cs-checkbox id={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
                        name={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
-                       class="list-group-item-text"
                        ng-model="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.value"
                        cklabel={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.label}}>
           </cs-checkbox>
         </div>
         
-        <p class="list-group-item-text">
-          &nbsp;
-        </p>
+        <hr>
       </div>
       <!-- End of Training Center section -->
-        <p class="list-group-item-text">
-          &nbsp;
-        </p>
+      
       <!-- ACTION BUTTONS -->
       <p align="right">
         <button id="btnUpdate"
@@ -209,22 +160,24 @@
         </button>
       </p>
     </div>
-  </cs-sp-section>
-  <p class="list-group-item-text">
-          &nbsp;
-        </p>
-  <div id="webex-admin-linkout"
-           name="webex-admin-linkout">
+        
+    <div id="webex-admin-linkout"
+         name="webex-admin-linkout">
         
       <form name="advancedSettings" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
-      <input id="adminEmail" type="hidden" name="adminEmail" ng-model="advancedSettings.adminEmail" value="{{adminEmailParam}}" />
-      <input id="userEmail" type="hidden" name="userEmail" ng-model="advancedSettings.userEmail" value="{{userEmailParam}}" />
-      <div>
-      <a href="" onClick="document.getElementById('hiddenButton').click();">
-      <p class="popout-link"><span translate="webexUserSettings2.advancedLink"></span></p>
-      </a>
-      <button id='hiddenButton' type="submit" style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;">Submit</button>
-      </div>
-    </form>
+        <input id="adminEmail" type="hidden" name="adminEmail" ng-model="advancedSettings.adminEmail" value="{{adminEmailParam}}" />
+        <input id="userEmail" type="hidden" name="userEmail" ng-model="advancedSettings.userEmail" value="{{userEmailParam}}" />
+        
+        <div>
+          <a href="" onClick="document.getElementById('hiddenButton').click();">
+            <p class="popout-link">
+              <span translate="webexUserSettings2.advancedLink"></span>
+            </p>
+          </a>
+          
+          <button id='hiddenButton' type="submit" style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;">Submit</button>
+        </div>
+      </form>
     </div>
+  </cs-sp-section>
 </cs-sp-container>

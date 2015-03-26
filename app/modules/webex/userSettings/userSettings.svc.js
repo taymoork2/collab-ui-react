@@ -82,26 +82,25 @@ angular.module('WebExUserSettings')
             isSiteEnabled: false,
             selectedCallInTollType: 0,
 
-            callInTollOnly: {
-              id: "tollOnly",
+            callInTollTypes: [{
               label: "Toll",
-              isSiteEnabled: false,
-              value: 1
-            },
-
-            callInTollFreeOnly: {
-              id: "tollFreeOnly",
+              value: 1,
+              id: "tollOnly",
+              name: "callInTollType",
+              isDisabled: true
+            }, {
               label: "Toll free",
-              isSiteEnabled: false,
-              value: 2
-            },
-
-            callInTollAndTollFree: {
-              id: "tollAndTollFree",
+              value: 2,
+              id: "tollFreeOnly",
+              name: "callInTollType",
+              isDisabled: true
+            }, {
               label: "Toll & Toll free",
-              isSiteEnabled: false,
-              value: 3
-            },
+              value: 3,
+              id: "tollAndTollFree",
+              name: "callInTollType",
+              isDisabled: true
+            }],
 
             teleconfViaGlobalCallin: {
               id: "teleconfViaGlobalCallin",
