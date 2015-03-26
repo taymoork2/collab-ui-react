@@ -139,8 +139,8 @@
       this.meetingTypesErrReason = "";
 
       var _self = this;
-      var webexSiteUrl = "t30citest.webex.com";
-      var webexSiteName = "t30citest";
+      var webexSiteUrl = "";
+      var webexSiteName = "";
 
       WebExUserSettingsFact.getSessionTicket(webexSiteUrl).then(
         function getSessionTicketSuccess(webexAdminSessionTicket) {
