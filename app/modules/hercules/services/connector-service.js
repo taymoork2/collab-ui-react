@@ -35,12 +35,23 @@ angular.module('Hercules')
         return lastClusterResponse;
       };
 
-      var upgradeSoftware = function (clusterId, serviceType, callback) {
+      var upgradeSoftware = function (clusterId, serviceType, callback, opts) {
         var url = config.getUrl() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+
+        var errorCallback = (function () {
+          if (opts && opts.squelchErrors) {
+            return function () {
+              callback(arguments);
+            };
+          } else {
+            return createErrorHandler('Unable to upgrade software', callback);
+          }
+        }());
+
         $http
           .post(url, '{}')
           .success(createSuccessCallback(callback))
-          .error(createErrorHandler('Unable to upgrade software', callback));
+          .error(errorCallback);
       };
 
       var deleteHost = function (clusterId, serial, callback) {

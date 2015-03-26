@@ -19,6 +19,7 @@ angular.module('Hercules')
           if (service.type != 'c_mgmt') {
             serviceAggregate[service.type] = {
               name: service.name,
+              type: service.type,
               icon: service.icon,
               running: 0,
               needs_attention: 0,

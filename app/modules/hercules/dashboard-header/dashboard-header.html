@@ -3,7 +3,8 @@
   <div class="dashboard-header row">
     <div class="col-sm-6" ng-repeat="(type, service) in serviceAggregates.services">
       <div class="item">
-        <i class="icon icon-data" />
+        <i ng-class="service.icon" />
+        <hercules-uc-config-button style="float: right" ng-show="service.type == 'c_ucmc'"></hercules-uc-config-button>
         <div class="content clearfix">
           <h4>{{service.name}}</h4>
           <div>

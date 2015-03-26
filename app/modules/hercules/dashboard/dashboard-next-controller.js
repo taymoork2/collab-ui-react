@@ -11,7 +11,6 @@ angular.module('Hercules')
       $scope.panelStates = {};
       $scope.pollHasFailed = false;
       $scope.deleteHostInflight = false;
-      $scope.fusionUCEnabled = Authinfo.isFusionUC();
       $scope.pollTimer = 1000;
 
       $scope.showClusterDetails = function (cluster) {
@@ -85,14 +84,6 @@ angular.module('Hercules')
           scope: $scope,
           controller: 'NotificationConfigController',
           templateUrl: 'modules/hercules/notification-config/notification-config.html'
-        });
-      };
-
-      $scope.showUCConfigDialog = function () {
-        $scope.modal = $modal.open({
-          scope: $scope,
-          controller: 'UCConfigController',
-          templateUrl: 'modules/hercules/uc-config/uc-config.html'
         });
       };
 
