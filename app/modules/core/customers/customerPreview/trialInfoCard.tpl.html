@@ -41,21 +41,24 @@
     </div>
   </div>
 
-  <hr>
+  <div ng-if="currentTrial.isSquaredUcOffer">
+    <hr>
 
-  <div class="row trial-terms">
-    <div class="col-xs-10">
-      <span translate="customerPage.communication"></span>
+    <div class="row trial-terms">
+      <div class="col-xs-10">
+        <span translate="customerPage.communication"></span>
+      </div>
+      <div class="col-xs-2">
+        <a id="editDidLink" class="edit-lnk" ui-sref="didadd({currentOrg: currentTrial})" translate="customerPage.edit"></a>
+      </div>
     </div>
-    <div class="col-xs-2">
-      <a id="editDidLink" class="edit-lnk" ui-sref="didadd({currentOrg: currentTrial})" translate="customerPage.edit"></a>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="user-title license-title"><span translate="customerPage.phoneNumbers" class="trial-heading"></span> <span id="didNumberSpan" ng-if="noOfPhoneNumbers">{{noOfPhoneNumbers}}</span><span ng-if="!noOfPhoneNumbers" translate="customerPage.none"></span></div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="user-title license-title"><span translate="customerPage.phoneNumbers" class="trial-heading"></span> <span id="didNumberSpan" ng-if="noOfPhoneNumbers">{{noOfPhoneNumbers}}</span><span ng-if="!noOfPhoneNumbers" translate="customerPage.none"></span></div>
+      </div>
     </div>
+
   </div>
 
 </div>

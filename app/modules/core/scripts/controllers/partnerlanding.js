@@ -399,12 +399,16 @@ angular.module('Core')
 
       $scope.showCustomerDetails = function (customer) {
         $scope.currentTrial = customer;
-        updatePhoneNumberCount(customer.customerOrgId);
+        if ($scope.currentTrial.isSquaredUcOffer) {
+          updatePhoneNumberCount(customer.customerOrgId);
+        }
         $state.go('partnercustomers.list.preview');
       };
 
       $scope.$on('DIDS_UPDATED', function () {
-        updatePhoneNumberCount($scope.currentTrial.customerOrgId);
+        if ($scope.currentTrial !== null && $scope.currentTrial.customerOrgId !== null && $scope.currentTrial.isSquaredUcOffer) {
+          updatePhoneNumberCount($scope.currentTrial.customerOrgId);
+        }
       });
 
       function updatePhoneNumberCount(orgId) {
