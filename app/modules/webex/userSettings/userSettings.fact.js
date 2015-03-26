@@ -5,6 +5,7 @@
     '$q',
     '$log',
     '$stateParams',
+    '$translate',
     'XmlApiFact',
     'WebexUserSettingsSvc',
     'XmlApiInfoSvc',
@@ -13,6 +14,7 @@
       $q,
       $log,
       $stateParams,
+      $translate,
       XmlApiFact,
       userSettingsModel,
       xmlApiInfo,
@@ -73,9 +75,38 @@
           ]);
         }, // validateXmlData()
 
-        getUserSettingsModel: function () {
+        initUserSettingsModel: function () {
+          userSettingsModel.meetingCenter.label = $translate.instant("webexUserSettingLabels.meetingCenterLabel");
+
+          userSettingsModel.trainingCenter.label = $translate.instant("webexUserSettingLabels.trainingCenterLabel");
+          userSettingsModel.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
+
+          userSettingsModel.eventCenter.label = $translate.instant("webexUserSettingLabels.eventCenterLabel");
+          userSettingsModel.eventCenter.optimizeBandwidthUsage.label = $translate.instant("webexUserSettingLabels.optimizeBandwidthUsageLabel");
+
+          userSettingsModel.supportCenter.label = $translate.instant("webexUserSettingLabels.supportCenterLabel");
+
+          userSettingsModel.collabMeetingRoom.label = $translate.instant("webexUserSettingLabels.collabMeetingRoomLabel");
+
+          userSettingsModel.generalSettings.label = $translate.instant("webexUserSettingLabels.generalSettingsLabel");
+          userSettingsModel.generalSettings.hiQualVideo.label = $translate.instant("webexUserSettingLabels.hiQualVideoLabel");
+          userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.label = $translate.instant("webexUserSettingLabels.hiDefVideoLabel");
+
+          userSettingsModel.telephonyPriviledge.label = $translate.instant("webexUserSettingLabels.telephonyPrivilegesLabel");
+          userSettingsModel.telephonyPriviledge.callInTeleconf.label = $translate.instant("webexUserSettingLabels.callInTeleconfLabel");
+          userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label = $translate.instant("webexUserSettingLabels.tollOnlyLabel");
+          userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label = $translate.instant("webexUserSettingLabels.tollFreeOnlyLabel");
+          userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].label = $translate.instant("webexUserSettingLabels.tollAndTollFreeLabel");
+          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label = $translate.instant("webexUserSettingLabels.teleconfViaGlobalCallinLabel");
+          userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.label = $translate.instant("webexUserSettingLabels.cliAuthLabel");
+          userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.reqPinEnabled.label = $translate.instant("webexUserSettingLabels.reqPinEnabledLabel");
+          userSettingsModel.telephonyPriviledge.callBackTeleconf.label = $translate.instant("webexUserSettingLabels.callBackTeleconfLabel");
+          userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label = $translate.instant("webexUserSettingLabels.globalCallBackTeleconfLabel");
+          userSettingsModel.telephonyPriviledge.otherTeleconfServices.label = $translate.instant("webexUserSettingLabels.otherTeleconfServicesLabel");
+          userSettingsModel.telephonyPriviledge.integratedVoIP.label = $translate.instant("webexUserSettingLabels.integratedVoIPLaabel");
+
           return userSettingsModel;
-        }, // getUserSettingsModel()
+        }, // initUserSettingsModel()
 
         initXmlApiInfo: function (
           webexSiteUrl,
