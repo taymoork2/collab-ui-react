@@ -325,7 +325,7 @@ angular
             currentUser: {}
           }
         })
-        .state('user-overview.webex2', {
+        .state('user-overview.webex.webex2', {
           templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
           controller: 'WebExUserSettings2Ctrl',
           controllerAs: 'WebExUserSettings2',

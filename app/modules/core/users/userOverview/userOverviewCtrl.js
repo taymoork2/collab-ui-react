@@ -58,13 +58,8 @@
       };
 
       var webexState = {
-        name: "WebEx Session Enablement",
+        name: "Conference",
         state: 'user-overview.webex'
-      };
-
-      var webex2State = {
-        name: "WebEx Privileges",
-        state: 'user-overview.webex2'
       };
 
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
@@ -78,7 +73,6 @@
       }
 
       // vm.services.push(webexState);
-      // vm.services.push(webex2State);
     }
 
     activate();

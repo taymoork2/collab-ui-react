@@ -1,8 +1,7 @@
 <cs-sp-container>
-  <cs-sp-section>
     <div id="errSection"
          name="errSection">
-         
+      <cs-sp-section>
       <div id="webexUserSettingsPageUserNotFound" ng-if="WebExUserSettings.userInfoErrId == 030001">
         <div class="center">
           <div class="user-img nodata-icon">
@@ -17,11 +16,12 @@
             </button>
           </div>
       </div>
+      </cs-sp-section>
     </div>
   
     <div id="webexUserSettingsPage"
          class="hidden">
-         
+    <cs-sp-section>
       <h4 class="list-group-item-heading">
         &nbsp;
       </h4>
@@ -192,6 +192,21 @@
           Save
         </button>
       </p>
+    </cs-sp-section>
+      <cs-sp-section>
+      <h4 class="list-group-item-heading">
+        &nbsp;
+      </h4>
+        <div class="feature-list">
+          <ul>
+            <li class="feature">
+              <a id="webex-user-privs" ui-sref="user-overview.webex.webex2">
+                <span class="feature-name">User Privileges</span>
+                <i class="feature-arrow"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </cs-sp-section>
     </div>
-  </cs-sp-section>
 </cs-sp-container>
