@@ -957,7 +957,7 @@
     "optimizeBandwidthUsageLabel": "Optimized bandwidth usage for attendees within the same network **",
     "supportCenterLabel": "Support Center",
     "collabMeetingRoomLabel": "Collabration Room Cloud Service",
-    "generalSettingsLabel": "General Settings",
+    "videoSettingsLabel": "General Settings",
     "hiQualVideoLabel": "Turn on high-quality video (360p) **",
     "hiDefVideoLabel": "Turn on high-definition video video (720p) **",
     "telephonyPrivilegesLabel": "Telephony Privileges",
@@ -972,6 +972,7 @@
     "globalCallBackTeleconfLabel": "Global call-back teleconferencing",
     "otherTeleconfServicesLabel": "Other teleconference services *",
     "integratedVoIPLaabel": "Integrated VoIP",
+    "userPriviligesLabel": "User Privileges",
     "advancedLinkLabel": "Advanced Settings"
   },
   "leaderBoard": {

@@ -88,9 +88,9 @@
 
           userSettingsModel.collabMeetingRoom.label = $translate.instant("webexUserSettingLabels.collabMeetingRoomLabel");
 
-          userSettingsModel.generalSettings.label = $translate.instant("webexUserSettingLabels.generalSettingsLabel");
-          userSettingsModel.generalSettings.hiQualVideo.label = $translate.instant("webexUserSettingLabels.hiQualVideoLabel");
-          userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.label = $translate.instant("webexUserSettingLabels.hiDefVideoLabel");
+          userSettingsModel.videoSettings.label = $translate.instant("webexUserSettingLabels.videoSettingsLabel");
+          userSettingsModel.videoSettings.hiQualVideo.label = $translate.instant("webexUserSettingLabels.hiQualVideoLabel");
+          userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.label = $translate.instant("webexUserSettingLabels.hiDefVideoLabel");
 
           userSettingsModel.telephonyPriviledge.label = $translate.instant("webexUserSettingLabels.telephonyPrivilegesLabel");
           userSettingsModel.telephonyPriviledge.callInTeleconf.label = $translate.instant("webexUserSettingLabels.callInTeleconfLabel");
@@ -242,15 +242,15 @@
           // General
           // TODO:
           //   if (???) {
-          //     userSettingsModel.generalSettings.hiQualVideo.isSiteEnabled = true;
+          //     userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = true;
           //   }
           //
           //   if (???) {
-          //     userSettingsModel.generalSettings.hiQualVideo.value = true;
+          //     userSettingsModel.videoSettings.hiQualVideo.value = true;
           //   }
           //
           //   if (???) {
-          //     userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.value = true;
+          //     userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value = true;
           //   }
 
           // Telephony

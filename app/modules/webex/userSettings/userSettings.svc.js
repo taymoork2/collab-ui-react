@@ -55,7 +55,7 @@ angular.module('WebExUserSettings')
           value: false
         }, // collabMeetingRoom
 
-        generalSettings: {
+        videoSettings: {
           label: "",
 
           hiQualVideo: {
@@ -70,7 +70,7 @@ angular.module('WebExUserSettings')
               value: false // TODO
             }
           }
-        }, // generalSettings
+        }, // videoSettings
 
         telephonyPriviledge: {
           label: "",

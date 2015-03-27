@@ -12,38 +12,6 @@
     <div id="webexUserSettingsPage2"
          class="hidden">
 
-      <!-- Start of General section -->
-      <div id="generalPrivileges"
-           name="generalPrivileges">
-
-        <p>
-          <b>
-            {{WebExUserSettings2.userSettingsModel.generalSettings.label}}
-          </b>
-        </p>
-
-        <div ng-show="WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.isSiteEnabled">
-          <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.id}}
-                       name={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.id}}
-                       isdisabled="true"
-                       ng-model="WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.value"
-                       label={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.label}}>
-          </cs-checkbox>
-
-          <div class="indentedCheckbox">
-            <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.id}}
-                         name={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.id}}
-                         ng-model="WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.value"
-                         isdisabled="!WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.value"
-                         label={{WebExUserSettings2.userSettingsModel.generalSettings.hiQualVideo.hiDefVideo.label}}>
-            </cs-checkbox>
-          </div>
-        </div>
-
-        <hr>
-      </div>
-      <!-- End of General section -->
-
       <!-- Start of Telephony section -->
       <div id="telephonyPrivileges"
            name="telephonyPrivileges">
@@ -122,6 +90,38 @@
       </div>
       <!-- End of Telephony section -->
 
+      <!-- Start of Video section -->
+      <div id="generalPrivileges"
+           name="generalPrivileges">
+
+        <p>
+          <b>
+            {{WebExUserSettings2.userSettingsModel.videoSettings.label}}
+          </b>
+        </p>
+
+        <div ng-show="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled">
+          <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.id}}
+                       name={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.id}}
+                       isdisabled="true"
+                       ng-model="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.value"
+                       label={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.label}}>
+          </cs-checkbox>
+
+          <div class="indentedCheckbox">
+            <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.id}}
+                         name={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.id}}
+                         ng-model="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value"
+                         isdisabled="!WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.value"
+                         label={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.label}}>
+            </cs-checkbox>
+          </div>
+        </div>
+
+        <hr>
+      </div>
+      <!-- End of Video section -->
+
       <!-- Start of Event Center section -->
       <div id="eventCenterPrivileges"
            name="eventCenterPrivileges"
@@ -169,7 +169,7 @@
       </div>
       <!-- End of Training Center section -->
 
-      <!-- ACTION BUTTONS (will be removed) -->
+      <!-- Start of Action Buttons (will be removed) -->
       <p align="right">
         To be removed -->&nbsp;&nbsp;
 
@@ -182,6 +182,7 @@
           Save
         </button>
       </p>
+      <!-- End of Action Buttons -->
 
       <div id="webex-admin-linkout"
            name="webex-admin-linkout">

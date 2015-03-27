@@ -1,29 +1,30 @@
 <cs-sp-container>
-    <div id="errSection"
-         name="errSection">
-      <cs-sp-section>
-      <div id="webexUserSettingsPageUserNotFound" ng-if="WebExUserSettings.userInfoErrId == 030001">
-        <div class="center">
-          <div class="user-img nodata-icon">
-              <i class="icon icon-user"></i>
-            </div>
-            <div class="nodata-message" translate="webexUserSettingsAccessErrors.errCode-030001" translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}"></div>
-            <button id="cancelBtn" class="btn btn-default wiz-onboard-btn" ui-sref="user-overview"></i>
-              <span translate="webexUserSettings.cancel"></span>
-            </button>
-            <button id="reloadBtn" class="btn btn-info wiz-onboard-btn" ng-click="WebExUserSettings.getUserSettingsInfo()" data-loading-text="<i class='icon icon-spinner'></i>">
-              <span translate="webexUserSettings.reload"></span>
-            </button>
+  <div id="errSection"
+       name="errSection">
+    <cs-sp-section>
+    <div id="webexUserSettingsPageUserNotFound" ng-if="WebExUserSettings.userInfoErrId == 030001">
+      <div class="center">
+        <div class="user-img nodata-icon">
+            <i class="icon icon-user"></i>
           </div>
-      </div>
-      </cs-sp-section>
+          <div class="nodata-message" translate="webexUserSettingsAccessErrors.errCode-030001" translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}"></div>
+          <button id="cancelBtn" class="btn btn-default wiz-onboard-btn" ui-sref="user-overview"></i>
+            <span translate="webexUserSettings.cancel"></span>
+          </button>
+          <button id="reloadBtn" class="btn btn-info wiz-onboard-btn" ng-click="WebExUserSettings.getUserSettingsInfo()" data-loading-text="<i class='icon icon-spinner'></i>">
+            <span translate="webexUserSettings.reload"></span>
+          </button>
+        </div>
     </div>
-  
-    <div id="webexUserSettingsPage" class="hidden">
+    </cs-sp-section>
+  </div>
+
+  <div id="webexUserSettingsPage" class="hidden">
     <cs-sp-section>
       <h4 class="list-group-item-heading">
         &nbsp;
       </h4>
+      
       <p>
         <b>
           <span translate="webexUserSettingLabels.sessionEnablementLabel"></span>
@@ -169,7 +170,9 @@
       </div>
       <!-- End of Training Center -->
 
-      <!-- ACTION BUTTONS -->
+      <hr>
+      
+      <!-- Start of Action Buttons (will be removed) -->
       <p align="right">
         To be removed -->&nbsp;&nbsp;
 
@@ -182,21 +185,21 @@
           Save
         </button>
       </p>
+      <!-- End of Action Buttons -->
+
+      <div class="feature-list">
+        <ul>
+          <li class="feature">
+            <a id="webex-user-privs" ui-sref="user-overview.webex.webex2">
+              <span class="feature-name">
+                <span translate="webexUserSettingLabels.userPriviligesLabel"></span>
+              </span>
+              
+              <i class="feature-arrow"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
     </cs-sp-section>
-      <cs-sp-section>
-        <h4 class="list-group-item-heading">
-          &nbsp;
-        </h4>
-        <div class="feature-list">
-          <ul>
-            <li class="feature">
-              <a id="webex-user-privs" ui-sref="user-overview.webex.webex2">
-                <span class="feature-name">User Privileges</span>
-                <i class="feature-arrow"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </cs-sp-section>
-    </div>
+  </div>
 </cs-sp-container>
