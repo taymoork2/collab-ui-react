@@ -950,12 +950,8 @@
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Session Enablement",
-    "meetingCenterLabel": "Meeting Center",
-    "trainingCenterLabel": "Training Center",
     "handsOnLabAdminLabel": "Hands-on Lab Admin (effective only when hands-on lab is enabled",
-    "eventCenterLabel": "Event Center",
     "optimizeBandwidthUsageLabel": "Optimized bandwidth usage for attendees within the same network **",
-    "supportCenterLabel": "Support Center",
     "collabMeetingRoomLabel": "Collabration Room Cloud Service",
     "videoSettingsLabel": "General Settings",
     "hiQualVideoLabel": "Turn on high-quality video (360p) **",
