@@ -31,7 +31,7 @@ describe('ConfigService', function () {
   });
 
   it('should return uss url', function () {
-    expect(Service.getUSSUrl()).toBe('https://uss-integration.wbx2.com/uss/api/v1');
+    expect(Service.getUSSUrl()).toBe('https://uss-a.wbx2.com/uss/api/v1');
   });
 
   it('should be possible to override USS url', function () {
