@@ -76,15 +76,15 @@
         }, // validateXmlData()
 
         initUserSettingsModel: function () {
-          userSettingsModel.meetingCenter.label = $translate.instant("webexUserSettingLabels.meetingCenterLabel");
+          userSettingsModel.meetingCenter.label = "Meeting Center";
 
-          userSettingsModel.trainingCenter.label = $translate.instant("webexUserSettingLabels.trainingCenterLabel");
+          userSettingsModel.trainingCenter.label = "Training Center";
           userSettingsModel.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
 
-          userSettingsModel.eventCenter.label = $translate.instant("webexUserSettingLabels.eventCenterLabel");
+          userSettingsModel.eventCenter.label = "Event Center";
           userSettingsModel.eventCenter.optimizeBandwidthUsage.label = $translate.instant("webexUserSettingLabels.optimizeBandwidthUsageLabel");
 
-          userSettingsModel.supportCenter.label = $translate.instant("webexUserSettingLabels.supportCenterLabel");
+          userSettingsModel.supportCenter.label = "Support Center";
 
           userSettingsModel.collabMeetingRoom.label = $translate.instant("webexUserSettingLabels.collabMeetingRoomLabel");
 
@@ -154,14 +154,6 @@
               var siteMtgProductCodePrefix = siteMeetingType.mtgtype_productCodePrefix;
               var siteMtgDisplayName = siteMeetingType.mtgtype_displayName;
               var siteMtgServiceTypes = [].concat(siteMeetingType.mtgtype_serviceTypes.mtgtype_serviceType);
-
-              if (1 < siteMtgServiceTypes.length) {
-                logMsg = funcName + ": " + "\n" +
-                  "siteMtgServiceTypeID=" + siteMtgServiceTypeID + "\n" +
-                  "siteMtgProductCodePrefix=" + siteMtgProductCodePrefix + "\n" +
-                  "siteMtgServiceTypes=" + siteMtgServiceTypes;
-                // $log.log(logMsg);
-              }
 
               var meetingCenterApplicable = false;
               var trainingCenterApplicable = false;
