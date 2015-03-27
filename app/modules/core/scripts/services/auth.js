@@ -8,7 +8,7 @@ angular
 function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, $rootScope) {
   var auth = {
     authorizeUrl: Config.getAdminServiceUrl(),
-    oauthUrl: Config.oauthUrl.oauth2Url
+    oauthUrl: Config.getOauth2Url()
   };
 
   var loginMarker = false;
@@ -138,8 +138,8 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
   auth.setAccessToken = function () {
     var deferred = $q.defer();
     var $http = $injector.get('$http');
-    var token = Utils.Base64.encode(Config.oauthClientRegistration.id + ':' + Config.oauthClientRegistration.secret);
-    var data = Config.oauthUrl.oauth2ClientUrlPattern + Config.oauthClientRegistration.scope;
+    var token = Utils.Base64.encode(Config.getClientId() + ':' + Config.getClientSecret());
+    var data = Config.oauthUrl.oauth2ClientUrlPattern + Config.oauthClientRegistration.atlas.scope;
     $http({
         method: 'POST',
         url: auth.oauthUrl + 'access_token',

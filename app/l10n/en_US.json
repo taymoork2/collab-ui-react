@@ -142,7 +142,10 @@
     "groupTab": "Groups",
     "groupTabDesc": "Create And Manage Groups.",
     "entResUtilizationTab": "Utilization",
-    "entResUtilizationTabDesc": "Enterprise Resources Utilization"
+    "entResUtilizationTabDesc": "Enterprise Resources Utilization",
+    "servicesTab": "Services",
+    "conferencing": "Conferencing",
+    "conferencingDesc": "List of Site Admins"
   },
   "index": {
     "welcome": "Welcome!",
@@ -1149,5 +1152,12 @@
     "turkish": "Turkish",
     "chineseMandarin": "Chinese(Mandarin)",
     "chineseTraditional": "Chinese(Traditional)"
+  },
+  "siteList": {
+    "conferencing": "Conferencing",
+    "siteName": "Site Name",
+    "licenseCount": "License Count",
+    "type": "Type",
+    "launchSite": "Launch Site Admin"
   }
 }

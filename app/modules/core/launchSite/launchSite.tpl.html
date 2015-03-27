@@ -1,0 +1,17 @@
+<div ng-controller="LaunchSiteCtrl">
+  <form name="advancedSettings" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
+    <input id="adminEmail" type="hidden" name="adminEmail" ng-model="advancedSettings.adminEmail" value="{{adminEmailParam}}" />
+    <input id="userEmail" type="hidden" name="userEmail" ng-model="advancedSettings.userEmail" value="{{userEmailParam}}" />
+    <div>
+      <a href="" onClick="document.getElementById('hiddenButton').click();">
+        <p class="ngCellText">
+          <span id="webexUserAdminLink"
+                name="webexUserAdminLink">
+            <i class="fa fa-external-link fa-lg"></i>
+          </span>
+        </p>
+      </a>
+      <button id='hiddenButton' type="submit" class="hidden-button">Submit</button>
+    </div>
+  </form>
+</div>

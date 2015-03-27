@@ -1,14 +1,24 @@
 'use strict';
+// jshint devel:true
+// jshint undef:false
 angular.module('Core')
   .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', '$filter',
     function Authinfo($rootScope, $location, Utils, Config, $filter) {
-      function ServiceFeature(label, value, name, id, entitlements) {
+      function ServiceFeature(label, value, name, id, entitlements, siteObj) {
         this.label = label;
         this.value = value;
         this.name = name;
         this.id = id;
         this.entitlements = entitlements;
         this.isCustomerPartner = false;
+        if (siteObj) {
+          this.type = siteObj.type;
+          if (this.type === 'CONFERENCING') {
+            this.siteUrl = siteObj.siteUrl;
+            this.capacity = siteObj.capacity;
+            this.volume = siteObj.volume;
+          }
+        }
       }
 
       // AngularJS will instantiate a singleton by calling "new" on this function
@@ -162,9 +172,16 @@ angular.module('Core')
               for (var l = 0; l < account.licenses.length; l++) {
                 var license = account.licenses[l];
                 var service = null;
+                var siteUrl = null;
                 switch (license.licenseType) {
                 case 'CONFERENCING':
-                  service = new ServiceFeature($filter('translate')('onboardModal.paidConf'), x + 1, 'confRadio', license.licenseType, license.features);
+                  var siteObj = {
+                    type: license.licenseType,
+                    siteUrl: license.siteUrl,
+                    capacity: license.capacity,
+                    volume: license.volume,
+                  };
+                  service = new ServiceFeature($filter('translate')('onboardModal.paidConf'), x + 1, 'confRadio', license.licenseType, license.features, siteObj);
                   confLicenses.push(service);
                   break;
                 case 'MESSAGING':

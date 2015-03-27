@@ -13,13 +13,15 @@ angular.module('Core')
         adminClientUrl: {
           dev: 'http://127.0.0.1:8000',
           integration: 'https://int-admin.ciscospark.com/',
-          prod: 'https://admin.ciscospark.com/'
+          prod: 'https://admin.ciscospark.com/',
+          cfe: 'https://cfe-admin.ciscospark.com'
         },
 
         adminServiceUrl: {
           dev: 'http://localhost:8080/atlas-server/admin/api/v1/',
           integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-          prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
+          prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
+          cfe: 'https://atlas-e.wbx2.com/admin/api/v1/'
         },
 
         locusServiceUrl: {
@@ -41,14 +43,22 @@ angular.module('Core')
         },
 
         oauthClientRegistration: {
-          id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
-          secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',
-          scope: 'webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization'
+          atlas: {
+            id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
+            secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',
+            scope: 'webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization'
+          },
+          cfe: {
+            id: 'C5469b72a6de8f8f0c5a23e50b073063ea872969fc74bb461d0ea0438feab9c03',
+            secret: 'b485aae87723fc2c355547dce67bbe2635ff8052232ad812a689f2f9b9efa048',
+            scope: 'webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization'
+          }
         },
 
         oauthUrl: {
           ciRedirectUrl: 'redirect_uri=%s',
-          oauth2Url: 'https://idbroker.webex.com/idb/oauth2/v1/',
+          oauth2UrlAtlas: 'https://idbroker.webex.com/idb/oauth2/v1/',
+          oauth2UrlCfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
           oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s',
           oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
           oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
@@ -171,6 +181,16 @@ angular.module('Core')
             //   link: '#groups'
             // }
           ]
+        }, {
+          tab: 'servicesTab',
+          icon: 'icon-settings',
+          title: 'tabs.servicesTab',
+          subPages: [{
+            title: 'tabs.conferencing',
+            desc: 'tabs.conferencingDesc',
+            state: 'site-list',
+            link: '#site-list'
+          }]
         }, {
           tab: 'deviceTab',
           icon: 'icon-devices',
@@ -327,6 +347,10 @@ angular.module('Core')
           return getCurrentHostname() === 'admin.ciscospark.com';
         },
 
+        isCfe: function () {
+          return getCurrentHostname() === 'cfe-admin.ciscospark.com';
+        },
+
         getEnv: function () {
           if (this.isDev()) {
             return 'dev';
@@ -340,6 +364,8 @@ angular.module('Core')
         getAdminServiceUrl: function () {
           if (this.isDev()) {
             return this.adminServiceUrl.integration;
+          } else if (this.isCfe()) {
+            return this.adminServiceUrl.cfe;
           } else if (this.isIntegration()) {
             return this.adminServiceUrl.integration;
           } else {
@@ -371,16 +397,42 @@ angular.module('Core')
           }
         },
 
+        getClientSecret: function () {
+          if (this.isCfe()) {
+            return this.oauthClientRegistration.cfe.secret;
+          } else {
+            return this.oauthClientRegistration.atlas.secret;
+          }
+        },
+
+        getClientId: function () {
+          if (this.isCfe()) {
+            return this.oauthClientRegistration.cfe.id;
+          } else {
+            return this.oauthClientRegistration.atlas.id;
+          }
+        },
+
+        getOauth2Url: function () {
+          if (this.isCfe()) {
+            return this.oauthUrl.oauth2UrlCfe;
+          } else {
+            return this.oauthUrl.oauth2UrlAtlas;
+          }
+        },
+
         getOauthLoginUrl: function () {
           var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
           var params = [
-            this.oauthUrl.oauth2Url,
-            this.oauthClientRegistration.id,
-            this.oauthClientRegistration.scope,
+            this.getOauth2Url(),
+            this.getClientId(),
+            this.oauthClientRegistration.atlas.scope,
             encodeURIComponent(acu),
             this.getOauthServiceType()
           ];
-          return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
+          var test = Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
+
+          return test;
         },
 
         getRedirectUrl: function () {
@@ -397,7 +449,7 @@ angular.module('Core')
         getOauthAccessCodeUrl: function (refresh_token) {
           var params = [
             refresh_token,
-            this.oauthClientRegistration.scope
+            this.oauthClientRegistration.atlas.scope
           ];
           return Utils.sprintf(this.oauthUrl.oauth2AccessCodeUrlPattern, params);
         },
@@ -500,7 +552,7 @@ angular.module('Core')
         },
 
         getOAuthClientRegistrationCredentials: function () {
-          return Utils.Base64.encode(this.oauthClientRegistration.id + ':' + this.oauthClientRegistration.secret);
+          return Utils.Base64.encode(this.getClientId() + ':' + this.getClientSecret());
         }
       };
 
@@ -517,7 +569,8 @@ angular.module('Core')
           'profile',
           'customerprofile',
           'support',
-          'editService'
+          'editService',
+          'site-list'
         ],
         Support: ['overview', 'reports', 'support'],
         WX2_User: [
@@ -528,7 +581,7 @@ angular.module('Core')
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         User: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
+        PARTNER_ADMIN: ['partneroverview', 'site-list', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
         PARTNER_USER: ['partneroverview', 'partnerreports'],
         CUSTOMER_PARTNER: ['partnercustomers']
       };

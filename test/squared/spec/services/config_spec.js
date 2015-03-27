@@ -24,12 +24,14 @@ describe('Config', function () {
   var devHost = 'localhost';
   var prodHost = 'admin.ciscospark.com';
   var intHost = 'int-admin.ciscospark.com';
+  var cfeHost = 'cfe-admin.ciscospark.com';
 
   var whenCalling = function (fn, arg) {
     var hosts = {
       development: devHost,
       integration: intHost,
-      production: prodHost
+      production: prodHost,
+      cfe: cfeHost
     };
     return {
       expectUrlToBe: function (obj) {
@@ -119,7 +121,7 @@ describe('Config', function () {
     whenCalling('getAdminServiceUrl').expectUrlToBe({
       development: 'https://atlas-integration.wbx2.com/admin/api/v1/',
       integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      production: 'https://atlas-a.wbx2.com/admin/api/v1/'
+      production: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
   });
 
