@@ -6,7 +6,7 @@
 <div class="modal-body">
   <h5 class="dialog-subtitle">{{'entitlementPage.heading' | translate}} {{username}}:</h5>
   <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements">
-    <cs-checkbox id="{{'chk_'+service}}" ng-model="entitlements[service]" cklabel="{{getServiceName(service)}}"></cs-checkbox>
+    <cs-checkbox ckid="{{'chk_'+service}}" ng-model="entitlements[service]" label="{{getServiceName(service)}}"></cs-checkbox>
   </div>
 </div>
 <div class="modal-footer">

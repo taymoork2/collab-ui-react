@@ -288,7 +288,7 @@ describe('Config', function () {
     whenCalling('getUssUrl').expectUrlToBe({
       development: 'https://uss-integration.wbx2.com/',
       integration: 'https://uss-integration.wbx2.com/',
-      production: 'https://uss-integration.wbx2.com/'
+      production: 'https://uss-a.wbx2.com/'
     });
   });
 

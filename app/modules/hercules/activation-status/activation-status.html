@@ -18,16 +18,17 @@
     <div class="services-row row">
       <div class="col-md-12">
         <div ng-hide="lastRequestFailed">
-          <ul ng-show="activationStatus.userStatuses">
-            <li ng-repeat="status in activationStatus.userStatuses">
+          <div ng-show="activationStatus.userStatuses" ng-repeat="status in activationStatus.userStatuses" class="status-list">
+            <div ng-class="status.state">
+              <i class="fa fa-circle" />
               <span translate="hercules.serviceNames.{{status.serviceId}}"></span>:
               <span translate="hercules.activationStatus.{{getStatus(status)}}"></span>
-              <span ng-show="status.description && status.state == 'error'"><br>{{status.description.defaultMessage}}</span>
-            </li>
-          </ul>
-          <ul ng-hide="activationStatus.userStatuses">
-            <li>Not entitled to any services</li>
-          </ul>
+              <span ng-show="status.description && status.state == 'error'" style="padding-left: 27px;"><br>{{status.description.defaultMessage}}</span>
+            </div>
+          </div>
+          <div ng-show="!activationStatus.userStatuses || activationStatus.userStatuses.length == 0">
+            Not entitled to any services
+          </div>
         </div>
         <ul ng-show="lastRequestFailed">
           <li>Unable to fetch service status: {{lastRequestFailed[0]}}</li>

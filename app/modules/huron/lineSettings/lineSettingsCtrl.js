@@ -227,7 +227,7 @@
               })
               .catch(function (response) {
                 Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
-                Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
+                Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
               });
 
           } else { // new line
@@ -246,7 +246,7 @@
               })
               .catch(function (response) {
                 Log.debug('addNewLine failed.  Status: ' + response.status + ' Response: ' + response.data);
-                Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
+                Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
               });
           }
         }
@@ -274,7 +274,7 @@
             })
             .catch(function (response) {
               Log.debug('disassociateInternalLine failed.  Status: ' + response.status + ' Response: ' + response.data);
-              Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
+              Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
             });
         });
       });

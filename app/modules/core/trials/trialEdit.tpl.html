@@ -52,12 +52,12 @@
     <h4 class="section-title" translate="partnerHomePage.termsOfTrial"></h4>
     <div class="row">
       <div class="col-xs-8 col-xs-offset-4">
-        <cs-checkbox id="squaredTrial" ng-model="trial.offers['COLLAB']" cklabel="{{'trials.collab' | translate}}" ng-disabled="true"></cs-checkbox>
+        <cs-checkbox ckid="squaredTrial" ng-model="trial.offers['COLLAB']" label="{{'trials.collab' | translate}}" isdisabled="true"></cs-checkbox>
       </div>
     </div>
     <div class="row" ng-if="trial.isSquaredUC()">
       <div class="col-xs-8 col-xs-offset-4">
-        <cs-checkbox id="squaredUCTrial" ng-model="trial.offers['SQUAREDUC']" cklabel="{{'trials.squaredUC' | translate}}" ng-disabled="trial.disableSquaredUCCheckBox || (!trial.showPartnerEdit && trial.editTerms)"></cs-checkbox>
+        <cs-checkbox ckid="squaredUCTrial" ng-model="trial.offers['SQUAREDUC']" label="{{'trials.squaredUC' | translate}}" isdisabled="trial.disableSquaredUCCheckBox || (!trial.showPartnerEdit && trial.editTerms)"></cs-checkbox>
       </div>
     </div>
     <div ng-show="trial.editTerms && !trial.showPartnerEdit">

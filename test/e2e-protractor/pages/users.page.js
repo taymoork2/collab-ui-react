@@ -45,13 +45,13 @@ var UsersPage = function () {
   this.invalid = element(by.css('.invalid'));
   this.close = element(by.css('.close'));
 
-  this.manageCallInitiation = element(by.id('chk_squaredCallInitiation')); // on add users
-  this.manageSquaredTeamMember = element(by.id('chk_squaredTeamMember'));
-  this.callInitiationCheckbox = element(by.id('chk_squaredCallInitiation')); // on edit user
-  this.messengerCheckBox = element(by.id('chk_jabberMessenger'));
-  this.fusionCheckBox = element(by.id('chk_squaredFusionUC'));
-  this.squaredCheckBox = element(by.id('chk_webExSquared'));
-  this.squaredUCCheckBox = element(by.id('chk_ciscoUC'));
+  this.manageCallInitiation = element(by.css('label[for="chk_squaredCallInitiation"]')); // on add users
+  this.manageSquaredTeamMember = element(by.css('label[for="chk_squaredTeamMember"]'));
+  this.callInitiationCheckbox = element(by.css('label[for="chk_squaredCallInitiation"]')); // on edit user
+  this.messengerCheckBox = element(by.css('label[for="chk_jabberMessenger"]'));
+  this.fusionCheckBox = element(by.css('label[for="chk_squaredFusionUC"]'));
+  this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
+  this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 

@@ -6,8 +6,8 @@
         <div class="center">
           <div class="user-img nodata-icon">
               <i class="icon icon-user"></i>
-            </div> 
-            <div class="nodata-message" translate="webexUserSettingsAccessErrors.errCode-030001" translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}"></div>   
+            </div>
+            <div class="nodata-message" translate="webexUserSettingsAccessErrors.errCode-030001" translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}"></div>
             <button id="cancelBtn" class="btn btn-default wiz-onboard-btn" ui-sref="user-overview"></i>
               <span translate="webexUserSettings.cancel"></span>
             </button>
@@ -19,58 +19,54 @@
       </cs-sp-section>
     </div>
   
-    <div id="webexUserSettingsPage"
-         class="hidden">
+    <div id="webexUserSettingsPage" class="hidden">
     <cs-sp-section>
       <h4 class="list-group-item-heading">
         &nbsp;
       </h4>
-      
       <p>
         <b>
           <span translate="webexUserSettingLabels.sessionEnablementLabel"></span>
         </b>
       </p>
-    
+
       <!-- Start of Meeting Center -->
       <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
         {{WebExUserSettings.userSettingsModel.meetingCenter.label}}
-        
         <table id="MC"
                name="MC">
-               
+
           <tr valign="top"
               ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
               ng-if="sessionType.meetingCenterApplicable">
-              
             <td>
-              <cs-checkbox id={{sessionType.id}}
+              <cs-checkbox ckid={{sessionType.id}}
                            name={{sessionType.id}}
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}>
+                           label={{sessionType.sessionName}}>
               </cs-checkbox>
             </td>
-            
+
             <td width="15">
               &nbsp;
             </td>
-    
+
             <td>
               {{sessionType.sessionDescription}}
             </td>
           </tr>
         </table>
-        
+
         <!-- Start of CMR -->
         <div ng-if="WebExUserSettings.userSettingsModel.collabMeetingRoom.isSiteEnabled">
           <table id="CMR"
                  name="CMR">
-                 
+
             <tr>
               <td valign="top">
                 {{WebExUserSettings.userSettingsModel.collabMeetingRoom.label}}
               </td>
-              
+
               <td valign="center">
                 <cs-toggle-switch toggle-id={{WebExUserSettings.userSettingsModel.collabMeetingRoom.id}}
                                   name={{WebExUserSettings.userSettingsModel.collabMeetingRoom.id}}
@@ -85,30 +81,28 @@
         <!-- End of CMR -->
       </div>
       <!-- End of Meeting Center -->
-            
+
       <!-- Start of Event Center -->
       <div ng-if="WebExUserSettings.userSettingsModel.eventCenter.isSiteEnabled">
         {{WebExUserSettings.userSettingsModel.eventCenter.label}}
-        
         <table id="EC"
                name="EC">
-               
+
           <tr valign="top"
               ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
               ng-if="sessionType.eventCenterApplicable">
-              
             <td>
-              <cs-checkbox id={{sessionType.id}}
+              <cs-checkbox ckid={{sessionType.id}}
                            name={{sessionType.id}}
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}>
+                           label={{sessionType.sessionName}}>
               </cs-checkbox>
             </td>
-            
+
             <td width="15">
               &nbsp;
             </td>
-    
+
             <td>
               {{sessionType.sessionDescription}}
             </td>
@@ -116,30 +110,28 @@
         </table>
       </div>
       <!-- End of Event Center -->
-        
+
       <!-- Start of Support Center -->
       <div ng-if="WebExUserSettings.userSettingsModel.supportCenter.isSiteEnabled">
         {{WebExUserSettings.userSettingsModel.supportCenter.label}}
-        
         <table id="SC"
                name="SC">
-           
+
           <tr valign="top"
               ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
               ng-if="sessionType.supportCenterApplicable">
-              
             <td>
-              <cs-checkbox id={{sessionType.id}}
+              <cs-checkbox ckid={{sessionType.id}}
                            name={{sessionType.id}}
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}>
+                           label={{sessionType.sessionName}}>
               </cs-checkbox>
             </td>
-            
+
             <td width="15">
               &nbsp;
             </td>
-      
+
             <td>
               {{sessionType.sessionDescription}}
             </td>
@@ -147,30 +139,28 @@
         </table>
       </div>
       <!-- End of Support Center -->
-        
+
       <!-- Start of Training Center -->
       <div ng-if="WebExUserSettings.userSettingsModel.trainingCenter.isSiteEnabled">
         {{WebExUserSettings.userSettingsModel.trainingCenter.label}}
-          
         <table id="TC"
                name="TC">
-        
+
           <tr valign="top"
               ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
               ng-if="sessionType.trainingCenterApplicable">
-              
             <td>
-              <cs-checkbox id={{sessionType.id}}
+              <cs-checkbox ckid={{sessionType.id}}
                            name={{sessionType.id}}
                            ng-model="sessionType.sessionEnabled"
-                           cklabel={{sessionType.sessionName}}>
+                           label={{sessionType.sessionName}}>
               </cs-checkbox>
             </td>
-            
+
             <td width="15">
               &nbsp;
             </td>
-      
+
             <td>
               {{sessionType.sessionDescription}}
             </td>
@@ -178,25 +168,25 @@
         </table>
       </div>
       <!-- End of Training Center -->
-      
+
       <!-- ACTION BUTTONS -->
       <p align="right">
         To be removed -->&nbsp;&nbsp;
-        
+
         <button id="btnUpdate"
                 name="btnUpdate"
                 type="button"
                 class="btn btn-primary"
                 ng-click="WebExUserSettings.updateUserSettings()">
-                
+
           Save
         </button>
       </p>
     </cs-sp-section>
       <cs-sp-section>
-      <h4 class="list-group-item-heading">
-        &nbsp;
-      </h4>
+        <h4 class="list-group-item-heading">
+          &nbsp;
+        </h4>
         <div class="feature-list">
           <ul>
             <li class="feature">

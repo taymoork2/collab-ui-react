@@ -17,7 +17,7 @@
         <input class="form-control" type="text" id="usersfield" placeholder="Enter email addresses separated by commas or semi-colons" />
         <br>
         <div class="entitle-check-grp" ng-repeat="(service, val) in entitlements" ng-if="service!=='webExSquared' && isServiceAllowed(service)">
-          <cs-checkbox id="{{'chk_'+service}}" ng-model="entitlements[service]" cklabel="{{getServiceName(service)}}"></cs-checkbox>
+          <cs-checkbox ckid="{{'chk_'+service}}" ng-model="entitlements[service]" label="{{getServiceName(service)}}"></cs-checkbox>
         </div>
       </div>
       <div class="form-group">

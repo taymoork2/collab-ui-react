@@ -108,7 +108,7 @@ angular.module('Core')
         ussUrl: {
           dev: 'https://uss-integration.wbx2.com/',
           integration: 'https://uss-integration.wbx2.com/',
-          prod: 'https://uss-integration.wbx2.com/'
+          prod: 'https://uss-a.wbx2.com/'
         },
 
         webexUrl: {
