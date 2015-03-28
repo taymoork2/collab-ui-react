@@ -199,8 +199,8 @@
       this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
       var _self = this;
-      var webexSiteUrl = "";
-      var webexSiteName = "";
+      var webexSiteUrl = WebExUserSettingsFact.getSiteUrl();
+      var webexSiteName = WebExUserSettingsFact.getSiteName(webexSiteUrl);
 
       WebExUserSettingsFact.getSessionTicket(webexSiteUrl).then(
         function getSessionTicketSuccess(webexAdminSessionTicket) {

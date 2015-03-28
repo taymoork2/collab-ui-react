@@ -314,7 +314,7 @@ angular
             service: "CONFERENCING"
           }
         })
-        .state('user-overview.webex', {
+        .state('user-overview.conferencing.webex', {
           templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
           controller: 'WebExUserSettingsCtrl',
           controllerAs: 'WebExUserSettings',
@@ -322,10 +322,11 @@ angular
             displayName: "WebEx Session Enablement"
           },
           params: {
-            currentUser: {}
+            currentUser: {},
+            site: {}
           }
         })
-        .state('user-overview.webex.webex2', {
+        .state('user-overview.conferencing.webex.webex2', {
           templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
           controller: 'WebExUserSettings2Ctrl',
           controllerAs: 'WebExUserSettings2',
@@ -333,7 +334,8 @@ angular
             displayName: "WebEx Privileges"
           },
           params: {
-            currentUser: {}
+            currentUser: {},
+            site: {}
           }
         })
         .state('user-overview.userProfile', {

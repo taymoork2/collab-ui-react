@@ -8,7 +8,7 @@
             <i class="icon icon-user"></i>
           </div>
           <div class="nodata-message" translate="webexUserSettingsAccessErrors.errCode-030001" translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}"></div>
-          <button id="cancelBtn" class="btn btn-default wiz-onboard-btn" ui-sref="user-overview"></i>
+          <button id="cancelBtn" class="btn btn-default wiz-onboard-btn" ui-sref="user-overview.conferencing"></i>
             <span translate="webexUserSettings.cancel"></span>
           </button>
           <button id="reloadBtn" class="btn btn-info wiz-onboard-btn" ng-click="WebExUserSettings.getUserSettingsInfo()" data-loading-text="<i class='icon icon-spinner'></i>">
@@ -207,7 +207,7 @@
       <div class="feature-list">
         <ul>
           <li class="feature">
-            <a id="webex-user-privs" ui-sref="user-overview.webex.webex2">
+            <a id="webex-user-privs" ui-sref="user-overview.conferencing.webex.webex2">
               <span class="feature-name">
                 <span translate="webexUserSettingLabels.userPriviligesLabel"></span>
               </span>

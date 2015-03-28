@@ -444,6 +444,19 @@
             endOfBodyStr
           );
         }, // xml2JsonConvert()
+
+        getSiteUrl: function () {
+          if (!$stateParams.site) {
+            return "";
+          }
+          return $stateParams.site;
+        }, //getSiteUrl
+
+        getSiteName: function (siteUrl) {
+          var index = siteUrl.indexOf(".");
+          return siteUrl.slice(0, index);
+        }, //getSiteName
+
       }; // return
     } //WebExUserSettingsFact
   ]); // angular
