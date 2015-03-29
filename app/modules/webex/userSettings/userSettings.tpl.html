@@ -1,26 +1,42 @@
 <cs-sp-container>
-  <div id="errSection"
-       name="errSection">
-    <cs-sp-section>
-    <div id="webexUserSettingsPageUserNotFound" ng-if="WebExUserSettings.userInfoErrId == 030001">
-      <div class="center">
-        <div class="user-img nodata-icon">
+  <cs-sp-section>
+    <div id="errSection"
+         name="errSection"
+         ng-if="WebExUserSettings.userSettingsModel.loadErr">
+       
+      <div id="webexUserSettingsPageUserNotFound"
+           ng-if="WebExUserSettings.userSettingsModel.userInfo.errId == '030001'">
+           
+        <div class="center">
+          <div class="user-img nodata-icon">
             <i class="icon icon-user"></i>
           </div>
-          <div class="nodata-message" translate="webexUserSettingsAccessErrors.errCode-030001" translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}"></div>
-          <button id="cancelBtn" class="btn btn-default wiz-onboard-btn" ui-sref="user-overview.conferencing"></i>
+          <div class="nodata-message"
+               translate="webexUserSettingsAccessErrors.errCode-030001"
+               translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}">
+          </div>
+          
+          <button id="cancelBtn" class="btn btn-default wiz-onboard-btn" ui-sref="user-overview.conferencing">
             <span translate="webexUserSettings.cancel"></span>
           </button>
+          
           <button id="reloadBtn" class="btn btn-info wiz-onboard-btn" ng-click="WebExUserSettings.getUserSettingsInfo()" data-loading-text="<i class='icon icon-spinner'></i>">
             <span translate="webexUserSettings.reload"></span>
           </button>
         </div>
+      </div>
+      
+      <!-- TODO -->
+      <div id="loadError",
+           ng-if="WebExUserSettings.userSettingsModel.userInfo.errId != '030001'">
+           
+        <b>ERROR!</b>
+      </div>
     </div>
-    </cs-sp-section>
-  </div>
 
-  <div id="webexUserSettingsPage" class="hidden">
-    <cs-sp-section>
+    <div id="webexUserSettingsPage"
+         ng-if="WebExUserSettings.userSettingsModel.viewReady">
+         
       <h4 class="list-group-item-heading">
         &nbsp;
       </h4>
@@ -62,29 +78,6 @@
             </td>
           </tr>
         </table>
-
-        <!-- Start of CMR -->
-        <div ng-if="WebExUserSettings.userSettingsModel.collabMeetingRoom.isSiteEnabled">
-          <table id="CMR"
-                 name="CMR">
-
-            <tr>
-              <td>
-                {{WebExUserSettings.userSettingsModel.collabMeetingRoom.label}}
-              </td>
-
-              <td>
-                <cs-toggle-switch toggle-id={{WebExUserSettings.userSettingsModel.collabMeetingRoom.id}}
-                                  name={{WebExUserSettings.userSettingsModel.collabMeetingRoom.id}}
-                                  class="indentedCheckbox"
-                                  size="small"
-                                  ng-model="WebExUserSettings.userSettingsModel.collabMeetingRoom.value">
-                </cs-toggle-switch>
-              </td>
-            </tr>
-          </table>
-        </div>
-        <!-- End of CMR -->
       </div>
       <!-- End of Meeting Center -->
 
@@ -191,7 +184,7 @@
       
       <!-- Start of Action Buttons (will be removed) -->
       <p align="right">
-        To be removed -->&nbsp;&nbsp;
+        To be removed -->&nbsp;
 
         <button id="btnUpdate"
                 name="btnUpdate"
@@ -217,6 +210,6 @@
           </li>
         </ul>
       </div>
-    </cs-sp-section>
-  </div>
+    </div>
+  </cs-sp-section>
 </cs-sp-container>

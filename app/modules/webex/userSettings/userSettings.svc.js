@@ -48,13 +48,6 @@ angular.module('WebExUserSettings')
           isSiteEnabled: false
         }, // supportCenter
 
-        collabMeetingRoom: {
-          id: "collabMeetingRoom",
-          label: "",
-          isSiteEnabled: false,
-          value: false
-        }, // collabMeetingRoom
-
         videoSettings: {
           label: "",
 
@@ -152,6 +145,17 @@ angular.module('WebExUserSettings')
 
           teleConfCallIn: false,
           teleConfTollFreeCallIn: false,
+
+          viewReady: false,
+          loadError: false,
+
+          getSessionTicketErr: false,
+
+          userInfo: null,
+          userInfoJson: null,
+
+          siteInfo: null,
+          meetingTypesInfo: null,
         }, // telephonyPriviledges
       }; // return
     } // WebexUserSettingsModel

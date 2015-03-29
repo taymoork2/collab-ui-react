@@ -1,16 +1,18 @@
 <cs-sp-container>
   <cs-sp-section>
-    <h4 class="list-group-item-heading">
-      &nbsp;
-    </h4>
-
     <div id="errSection"
-         name="errSection">
-
+         name="errSection"
+         ng-if="WebExUserSettings.userSettingsModel.loadErr">
+      
+      <!-- TODO -->
     </div>
 
     <div id="webexUserSettingsPage2"
-         class="hidden">
+         ng-if="WebExUserSettings.userSettingsModel.viewReady">
+
+      <h4 class="list-group-item-heading">
+        &nbsp;
+      </h4>
 
       <!-- Start of Telephony section -->
       <div id="telephonyPrivileges"
@@ -22,7 +24,7 @@
           </b>
         </p>
 
-        <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled">
+        <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled">
           <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.id}}
                        name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.id}}
                        ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value"
@@ -34,7 +36,7 @@
                           ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType">
             </cs-radiolist>
 
-            <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled">
+            <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled">
               <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
                            name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
                            ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value"
@@ -42,7 +44,7 @@
               </cs-checkbox>
             </div>
 
-            <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled">
+            <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled">
               <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.id}}
                            name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.id}}
                            ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.value"
@@ -52,7 +54,7 @@
             </div>
           </div>
 
-          <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled">
+          <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled">
             <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.id}}
                          name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.id}}
                          ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.value"
@@ -69,7 +71,7 @@
             </div>
           </div>
 
-          <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled">
+          <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled">
             <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.id}}
                          name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.id}}
                          ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.value"
@@ -77,7 +79,7 @@
             </cs-checkbox>
           </div>
 
-          <div ng-show="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
+          <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
             <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.id}}
                          name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.id}}
                          ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.value"
@@ -91,8 +93,8 @@
       <!-- End of Telephony section -->
 
       <!-- Start of Video section -->
-      <div id="generalPrivileges"
-           name="generalPrivileges">
+      <div id="videoPrivileges"
+           name="videoPrivileges">
 
         <p>
           <b>
@@ -100,7 +102,7 @@
           </b>
         </p>
 
-        <div ng-show="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled">
+        <div ng-if="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled">
           <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.id}}
                        name={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.id}}
                        isdisabled="true"
@@ -125,7 +127,7 @@
       <!-- Start of Event Center section -->
       <div id="eventCenterPrivileges"
            name="eventCenterPrivileges"
-           ng-show="WebExUserSettings2.userSettingsModel.eventCenter.isSiteEnabled">
+           ng-if="WebExUserSettings2.userSettingsModel.eventCenter.isSiteEnabled">
 
          <p>
            <b>
@@ -133,7 +135,7 @@
            </b>
          </p>
 
-        <div ng-show="WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled">
+        <div ng-if="WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled">
           <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.id}}
                        name={{WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.id}}
                        ng-model="WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.value"
@@ -149,7 +151,7 @@
       <!-- Start of Training Center section -->
       <div id="trainingCenterPrivleges"
            name="trainingCenterPrivleges"
-           ng-show="WebExUserSettings2.userSettingsModel.trainingCenter.isSiteEnabled">
+           ng-if="WebExUserSettings2.userSettingsModel.trainingCenter.isSiteEnabled">
 
         <p>
           <b>
@@ -157,7 +159,7 @@
           </b>
         </p>
 
-        <div ng-show="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled">
+        <div ng-if="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled">
           <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
                        name={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
                        ng-model="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.value"
@@ -171,7 +173,7 @@
 
       <!-- Start of Action Buttons (will be removed) -->
       <p align="right">
-        To be removed -->&nbsp;&nbsp;
+        To be removed -->&nbsp;
 
         <button id="btnUpdate"
                 name="btnUpdate"

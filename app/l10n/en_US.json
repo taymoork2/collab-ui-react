@@ -952,7 +952,6 @@
     "sessionEnablementLabel": "Session Enablement",
     "handsOnLabAdminLabel": "Hands-on Lab Admin (effective only when hands-on lab is enabled",
     "optimizeBandwidthUsageLabel": "Optimized bandwidth usage for attendees within the same network **",
-    "collabMeetingRoomLabel": "Collabration Room Cloud Service",
     "videoSettingsLabel": "General Settings",
     "hiQualVideoLabel": "Turn on high-quality video (360p) **",
     "hiDefVideoLabel": "Turn on high-definition video video (720p) **",

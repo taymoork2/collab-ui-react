@@ -290,7 +290,7 @@
           logMsg = funcName + ": " + commentText + "\n" +
             "startOfBodyIndex=" + startOfBodyIndex + "\n" +
             "endOfBodyIndex=" + endOfBodyIndex;
-          // $log.log(logMsg);
+          $log.log(logMsg);
 
           var bodySliceXml = "";
           if (
@@ -306,7 +306,7 @@
               "endOfBodyStr=" + endOfBodyStr + "\n" +
               "endOfBodyIndex=" + endOfBodyIndex + "\n" +
               "xmlData=" + "\n" + xmlData;
-            // $log.log(logMsg);
+            $log.log(logMsg);
           }
 
           constants.replaceSets.forEach(function (replaceSet) {
