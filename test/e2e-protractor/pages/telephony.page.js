@@ -3,6 +3,7 @@
 var TelephonyPage = function () {
   this.communicationPanel = element(by.cssContainingText('.section-title-row', 'Spark UC'));
   this.lineConfigurationPanel = element(by.cssContainingText('.section-title-row', 'Line Configuration'));
+  this.close = element(by.id('close-preview-button'));
 
   this.lineConfigurationActionButton = this.lineConfigurationPanel.element(by.css('button.actions-button'));
   this.removeButton = element(by.cssContainingText('a', 'Remove Line'));
@@ -10,11 +11,21 @@ var TelephonyPage = function () {
   this.communicationActionButton = this.communicationPanel.element(by.css('button.actions-button'));
   this.newLineButton = element(by.cssContainingText('a', 'Add a New Line'));
 
+  // voicemail related variabls
+  this.voicemailFeature = element(by.cssContainingText('.feature', 'Voicemail')).element(by.cssContainingText('span', 'Voicemail'));
+  this.voicemailStatus = element(by.cssContainingText('.feature', 'Voicemail')).element(by.css('.feature-status'));
+  this.voicemailSave = element(by.name('voicemail.form')).element(by.buttonText('Save'));
+  this.voicemailCancel = element(by.name('voicemail.form')).element(by.buttonText('Cancel'));
+  this.disableVoicemailtitle = element(by.cssContainingText('h3', 'Disable Voicemail'));
+  this.disableVoicemailCancel = element(by.css('.modal-footer')).element(by.buttonText('Cancel'));
+  this.disableVoicemailSave = element(by.css('.modal-footer')).element(by.buttonText('Disable'));
+  this.voicemailTitle = element(by.cssContainingText('.section-name', 'Voicemail'));
+  this.voicemailSwitch = element(by.css('label[for="enableVoicemail"]'));
+
   this.directoryNumbers = element.all(by.repeater('directoryNumber in telephonyOverview.telephonyInfo.directoryNumbers track by directoryNumber.uuid')).all(by.tagName('a'));
   this.primary = element(by.cssContainingText('span', 'Primary'));
   this.voicemailFeature = element(by.cssContainingText('.feature a', 'Voicemail'));
   this.snrFeature = element(by.cssContainingText('.feature a', 'Single Number Reach'));
-  this.close = element(by.id('close-preview-button'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
 
   this.saveButton = element(by.buttonText('Save'));
@@ -31,9 +42,6 @@ var TelephonyPage = function () {
   this.forwardBusyNoAnswer = element(by.id('cfbna'));
   this.forwardExternalCalls = element(by.css('label[for="ckForwardExternalCalls"]'));
   this.forwardExternalBusyNoAnswer = element(by.id('cfbnaExternal'));
-
-  this.voicemailSwitch = element(by.css('label[for="enableVoicemail"]'));
-  this.voicemailStatus = this.voicemailFeature.element(by.css('.feature-status'));
 
   this.snrSwitch = element(by.css('label[for="enableSnr"]'));
   this.snrNumber = element(by.id('number'));

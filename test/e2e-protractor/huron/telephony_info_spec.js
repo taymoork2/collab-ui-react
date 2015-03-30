@@ -12,8 +12,8 @@ describe('Telephony Info', function () {
   var currentUser, token;
   var user = utils.randomTestGmail();
   var dropdownVariables = {
-    voicemail: 'Voicemail',
-    addNew: 'Add New'
+    'voicemail': 'Voicemail',
+    'addNew': 'Add New'
   };
   var snrLine = telephony.getRandomNumber();
   var externalCFLine = telephony.getRandomNumber();
@@ -305,16 +305,60 @@ describe('Telephony Info', function () {
 
   describe('Voicemail', function () {
 
-    it('should have the disabled state', function () {
+    it('should go to the Voicemail Panel', function () {
       utils.expectText(telephony.voicemailStatus, 'Off');
       utils.click(telephony.voicemailFeature);
-      utils.expectSwitchState(telephony.voicemailSwitch, false);
-      utils.click(telephony.voicemailSwitch);
-      utils.expectIsDisabled(telephony.saveButton);
-      utils.click(telephony.cancelButton);
-      utils.clickLastBreadcrumb();
+      utils.expectIsDisplayed(telephony.voicemailTitle);
     });
 
+    it('should cancel changes', function () {
+      utils.click(telephony.voicemailSwitch);
+      utils.expectIsDisplayed(telephony.voicemailCancel);
+      utils.expectIsDisplayed(telephony.voicemailSave);
+      utils.expectIsDisabled(telephony.voicemailSave);
+
+      utils.click(telephony.voicemailCancel);
+      utils.expectIsNotDisplayed(telephony.voicemailCancel);
+      utils.expectIsNotDisplayed(telephony.voicemailSave);
+
+      utils.clickLastBreadcrumb();
+      utils.expectText(telephony.voicemailStatus, 'Off');
+    });
+
+    xit('should save the enabled state', function () {
+      utils.expectSwitchState(telephony.voicemailSwitch, false);
+      utils.click(telephony.voicemailSwitch);
+      utils.click(telephony.voicemailSave);
+
+      notifications.assertSuccess('Voicemail configuration saved successfully');
+      utils.expectSwitchState(telephony.voicemailSwitch, true);
+
+      utils.clickLastBreadcrumb();
+      utils.expectText(telephony.voicemailStatus, 'On');
+    });
+
+    xit('should cancel saving the disabled state', function () {
+      utils.click(telephony.voicemailFeature);
+      utils.click(telephony.voicemailSwitch);
+      utils.click(telephony.voicemailSave);
+
+      utils.expectIsDisplayed(telephony.disableVoicemailtitle);
+      utils.click(telephony.disableVoicemailCancel);
+      utils.expectIsNotDisplayed(telephony.disableVoicemailtitle);
+      utils.expectSwitchState(telephony.voicemailSwitch, true);
+    });
+
+    xit('should save the disabled state', function () {
+      utils.click(telephony.voicemailSwitch);
+      utils.click(telephony.voicemailSave);
+      utils.click(telephony.disableVoicemailSave);
+
+      notifications.assertSuccess('Voicemail configuration saved successfully');
+      utils.expectSwitchState(telephony.voicemailSwitch, false);
+
+      utils.clickLastBreadcrumb();
+      utils.expectText(telephony.voicemailStatus, 'Off');
+    });
   });
 
   describe('Single Number Reach', function () {

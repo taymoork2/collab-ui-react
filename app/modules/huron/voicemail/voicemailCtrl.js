@@ -6,7 +6,7 @@
     .controller('VoicemailInfoCtrl', VoicemailInfoCtrl);
 
   /* @ngInject */
-  function VoicemailInfoCtrl($scope, $stateParams, $translate, UserServiceCommon, TelephonyInfoService, Notification, HttpUtils) {
+  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, UserServiceCommon, TelephonyInfoService, Notification, HttpUtils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveVoicemail = saveVoicemail;
@@ -78,35 +78,48 @@
               'dtmfAccessId': $scope.directoryNumber.pattern
             };
           }
+          updateVoicemail(voicemailPayload, result);
         } else {
-          for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
-            if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
-              vm.telephonyInfo.services.splice(j, 1);
+          $modal.open({
+            templateUrl: 'modules/huron/voicemail/disableConfirmation.tpl.html',
+            scope: $scope
+          }).result.then(function () {
+            for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
+              if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
+                vm.telephonyInfo.services.splice(j, 1);
+              }
             }
-          }
+            updateVoicemail(voicemailPayload, result);
+          }, function () {
+            vm.reset();
+            angular.element('#btnSaveVoicemail').button('reset');
+          });
         }
-        voicemailPayload.services = vm.telephonyInfo.services;
-        UserServiceCommon.update({
-            customerId: vm.currentUser.meta.organizationID,
-            userId: vm.currentUser.id
-          },
-          voicemailPayload,
-          function () {
-            angular.element('#btnSaveVoicemail').button('reset');
-            resetForm();
-            result.msg = $translate.instant('voicemailPanel.success');
-            result.type = 'success';
-            Notification.notify([result.msg], result.type);
-            TelephonyInfoService.updateUserServices(vm.telephonyInfo.services);
-          },
-          function (response) {
-            result.msg = $translate.instant('voicemailPanel.error') + response.data;
-            result.type = 'error';
-            Notification.notify([result.msg], result.type);
-            angular.element('#btnSaveVoicemail').button('reset');
-          }
-        );
       });
+    }
+
+    function updateVoicemail(voicemailPayload, result) {
+      voicemailPayload.services = vm.telephonyInfo.services;
+      UserServiceCommon.update({
+          customerId: vm.currentUser.meta.organizationID,
+          userId: vm.currentUser.id
+        },
+        voicemailPayload,
+        function () {
+          angular.element('#btnSaveVoicemail').button('reset');
+          resetForm();
+          result.msg = $translate.instant('voicemailPanel.success');
+          result.type = 'success';
+          Notification.notify([result.msg], result.type);
+          TelephonyInfoService.updateUserServices(vm.telephonyInfo.services);
+        },
+        function (response) {
+          result.msg = $translate.instant('voicemailPanel.error') + response.data.errorMessage;
+          result.type = 'error';
+          Notification.notify([result.msg], result.type);
+          angular.element('#btnSaveVoicemail').button('reset');
+        }
+      );
     }
   }
 })();

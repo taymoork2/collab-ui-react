@@ -1,20 +1,28 @@
 'use strict';
 
 describe('Controller: VoicemailInfoCtrl', function () {
-  var controller, $scope, $stateParams, $httpBackend, TelephonyInfoService, Notification, HuronConfig;
+  var controller, $scope, $stateParams, $httpBackend, $modal, $q, TelephonyInfoService, Notification, HuronConfig, modalDefer;
 
   var currentUser = getJSONFixture('core/json/currentUser.json');
   var telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
+  var errorMessage = {
+    'data': {
+      'errorMessage': 'Common User create failed.'
+    }
+  };
   var url;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _TelephonyInfoService_, _Notification_, _HuronConfig_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$modal_, _$q_, _TelephonyInfoService_, _Notification_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     TelephonyInfoService = _TelephonyInfoService_;
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
+    $modal = _$modal_;
+    $q = _$q_;
+    modalDefer = $q.defer();
 
     $stateParams = {
       currentUser: currentUser
@@ -23,10 +31,14 @@ describe('Controller: VoicemailInfoCtrl', function () {
 
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.callThrough();
     spyOn(Notification, 'notify');
+    spyOn($modal, 'open').and.returnValue({
+      result: modalDefer.promise
+    });
 
     controller = $controller('VoicemailInfoCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
+      $modal: $modal,
       TelephonyInfoService: TelephonyInfoService,
       Notification: Notification
     });
@@ -53,7 +65,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
       });
 
       it('should notify on error', function () {
-        $httpBackend.whenPUT(url).respond(500);
+        $httpBackend.whenPUT(url).respond(500, errorMessage);
         controller.saveVoicemail();
         $httpBackend.flush();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -82,15 +94,23 @@ describe('Controller: VoicemailInfoCtrl', function () {
       it('should notify on success', function () {
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
+        modalDefer.resolve();
         $httpBackend.flush();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
       it('should notify on error', function () {
-        $httpBackend.whenPUT(url).respond(500);
+        $httpBackend.whenPUT(url).respond(500, errorMessage);
         controller.saveVoicemail();
+        modalDefer.resolve();
         $httpBackend.flush();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      it('should do nothing on modal cancel', function () {
+        controller.saveVoicemail();
+        modalDefer.reject();
+        expect(Notification.notify).not.toHaveBeenCalled();
       });
     });
   });

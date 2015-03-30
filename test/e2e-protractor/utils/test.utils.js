@@ -127,7 +127,6 @@ exports.expectIsPresent = function (elem) {
 };
 
 exports.expectIsNotPresent = function (elem) {
-  this.wait(elem);
   expect(elem.isPresent()).toBeFalsy();
 };
 
@@ -251,6 +250,10 @@ exports.expectSwitchState = function (elem, value) {
   });
 };
 
+exports.getSwitchState = function (elem) {
+  return elem.isSelected();
+};
+
 exports.findDirectoryNumber = function (message, lineNumber) {
   for (var i = 0; i < message.length; i++) {
     var line = message[i];
@@ -267,13 +270,13 @@ exports.search = function (query) {
   this.clear(this.searchField);
   if (query) {
     this.sendKeys(this.searchField, query);
-    this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+    this.expectIsDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
   }
 };
 
 exports.searchAndClick = function (query) {
   this.search(query);
-  this.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
 };
 
 exports.dumpConsoleErrors = function () {
