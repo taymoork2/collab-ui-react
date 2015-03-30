@@ -6,7 +6,7 @@ angular.module('Core')
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
       var searchFilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
-      var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles';
+      var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
       var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
 
@@ -64,6 +64,13 @@ angular.module('Core')
           $http.get(listUrl)
             .success(function (data, status) {
               data.success = true;
+              var activeUsers = [];
+              for (var i = 0; i < data.Resources.length; i++) {
+                if (data.Resources[i].active === true) {
+                  activeUsers.push(data.Resources[i]);
+                }
+              }
+              data.Resources = activeUsers;
               Log.debug('Callback with search=' + searchStr);
               callback(data, status, searchStr);
             })

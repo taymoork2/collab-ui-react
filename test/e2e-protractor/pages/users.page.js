@@ -25,6 +25,7 @@ var UsersPage = function () {
 
   this.listPanel = element(by.id('userslistpanel'));
   this.manageDialog = element(by.id('modalContent'));
+  this.deleteUserModal = element(by.id('deleteUserModal'));
   this.squaredPanel = element(by.id('conversations-link'));
   this.entitlementPanel = element(by.id('entitlementPanel'));
   this.conferencePanel = element(by.id('conferencePanel'));
@@ -62,6 +63,7 @@ var UsersPage = function () {
   this.inviteButton = element(by.id('btnInvite'));
   this.entitleButton = element(by.id('btnEntitle'));
   this.addButton = element(by.id('btnAdd'));
+  this.deleteUserButton = element(by.id('deleteUserButton'));
 
   this.cancelButton = element(by.id('btn-cancel'));
   this.saveButton = element(by.id('btn-save'));
@@ -87,6 +89,7 @@ var UsersPage = function () {
   this.userListAction = element(by.id('actionsButton'));
   this.actionDropdown = element(by.css('.dropdown-menu'));
   this.resendInviteOption = element(by.css('#resendInviteOption a'));
+  this.deleteUserOption = element(by.css('#deleteUserOption a'));
   this.gridCell = element(by.css('.ngCell'));
   this.userLink = element(by.id('user-profile'));
 
@@ -140,9 +143,6 @@ var UsersPage = function () {
     element.all(by.repeater('row in renderedRows')).then(function (rows) {
       if (results === 20) {
         expect(rows.length).toBeLessThanOrEqualTo(results);
-      } else if (results === 0) {
-        return expect(rows.length).toBeGreaterThan(results);
-        //expect(rows.length).toBeGreaterThan(results);
       } else {
         expect(rows.length).toBe(results);
       }

@@ -42,7 +42,12 @@
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Invite Users",
-    "partners": "Partner Administrators"
+    "partners": "Partner Administrators",
+    "deleteUser": "Delete User",
+    "deleteUserConfText": "Are you sure you want to delete {{email}}?",
+    "resend": "Resend Invitation",
+    "deleteUserSuccess": "User {{email}} deleted successfully",
+    "deleteUserError": "Error deleting user. Status: {{status}}"
   },
   "groupsPage": {
     "manageGroups": "Groups",

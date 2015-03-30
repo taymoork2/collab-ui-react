@@ -64,6 +64,20 @@ describe('Squared Add & Entitle User Flows', function () {
     });
   });
 
+  describe('Soft Delete user used for entitle test', function () {
+    it('should soft delete added user and the user should not show up in search results', function () {
+      utils.search(inputEmail);
+      utils.click(users.userListAction);
+      utils.click(users.deleteUserOption);
+      utils.expectIsDisplayed(users.deleteUserModal);
+      utils.click(users.deleteUserButton);
+      notifications.assertSuccess(inputEmail, 'deleted successfully');
+      utils.expectIsNotDisplayed(users.deleteUserModal);
+      notifications.clearNotifications();
+      users.assertResultsLength(0);
+    });
+  });
+
   describe('Delete user used for entitle test', function () {
     it('should delete added user', function () {
       deleteUtils.deleteUser(inputEmail);

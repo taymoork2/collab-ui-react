@@ -159,6 +159,14 @@ angular.module('Core')
             Log.debug('Query existing users failed. Status: ' + status);
           }
         });
+
+        Orgservice.getOrg(function (data, status) {
+          if (data.success) {
+            $scope.org = data;
+          } else {
+            Log.debug('Get existing org failed. Status: ' + status);
+          }
+        });
       };
 
       $scope.resendInvitation = function (userEmail, userName) {
@@ -182,6 +190,14 @@ angular.module('Core')
 
       };
 
+      $scope.setDeactivateUser = function (deleteUserOrgId, deleteUserUuId, deleteUsername) {
+        $state.go('users.delete', {
+          deleteUserOrgId: deleteUserOrgId,
+          deleteUserUuId: deleteUserUuId,
+          deleteUsername: deleteUsername
+        });
+      };
+
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showUserDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
         '<div ng-cell></div>' +
@@ -192,12 +208,13 @@ angular.module('Core')
         '<i class="icon icon-user"></i>' +
         '</span>';
 
-      var actionsTemplate = '<span dropdown ng-if="row.entity.userStatus === \'pending\'">' +
+      var actionsTemplate = '<span dropdown ng-if="row.entity.userStatus === \'pending\' || !org.dirsyncEnabled">' +
         '<button id="actionsButton" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
-        '<li id="resendInviteOption"><a ng-click="$event.stopPropagation(); resendInvitation(row.entity.userName, row.entity.name.givenName); ">Resend Invitation</a></li>' +
+        '<li ng-if="row.entity.userStatus === \'pending\'" id="resendInviteOption"><a ng-click="$event.stopPropagation(); resendInvitation(row.entity.userName, row.entity.name.givenName); "><span translate="usersPage.resend"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';
 

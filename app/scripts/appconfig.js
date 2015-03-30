@@ -201,6 +201,20 @@ angular
             showAddUsers: {}
           }
         })
+        .state('users.delete', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'UserDeleteCtrl',
+              templateUrl: 'modules/core/users/userDelete/userDelete.tpl.html'
+            }
+          },
+          params: {
+            deleteUserOrgId: null,
+            deleteUserUuId: null,
+            deleteUsername: null
+          }
+        })
         .state('users.add', {
           parent: 'modalLarge',
           views: {

@@ -333,6 +333,29 @@ angular.module('Core')
           } else {
             callback('No valid emails entered.');
           }
+        },
+
+        deactivateUser: function (deleteUserOrgId, deleteUserUuId, userData, callback) {
+          var scimUrl = Config.scimUrl + '/' + deleteUserUuId;
+          scimUrl = Utils.sprintf(scimUrl, [deleteUserOrgId]);
+
+          if (userData) {
+
+            $http({
+                method: 'PATCH',
+                url: scimUrl,
+                data: userData
+              })
+              .success(function (data, status) {
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function (data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          }
         }
       };
     }
