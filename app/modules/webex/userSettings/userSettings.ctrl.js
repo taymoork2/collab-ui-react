@@ -23,6 +23,10 @@
        * If user does not have first and last names, use the email address as the display name
        */
       this.getGivenName = function () {
+        if ($stateParams.currentUser.displayName) {
+              return $stateParams.currentUser.displayName;
+        }
+
         if (!$stateParams.currentUser.name) {
           return $stateParams.currentUser.userName;
         }
@@ -38,7 +42,7 @@
       }; // getGivenName()
 
       this.getFamilyName = function () {
-        if (!$stateParams.currentUser.name) {
+        if (!$stateParams.currentUser.name || $stateParams.currentUser.displayName) {
           return "";
         }
 
