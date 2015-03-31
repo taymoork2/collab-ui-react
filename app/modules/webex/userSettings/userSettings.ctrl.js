@@ -60,13 +60,15 @@
         logMsg = funcName + ": " + "START";
         // $log.log(logMsg);
 
+        var useSupportedServices = this.userSettingsModel.userInfo.bodyJson.use_supportedServices;
+
         var userSettings = {
           meetingTypes: [],
-          meetingCenter: this.userInfoJson.use_supportedServices.use_meetingCenter,
-          trainingCenter: this.userInfoJson.use_supportedServices.use_trainingCenter,
-          supportCenter: this.userInfoJson.use_supportedServices.use_supportCenter,
-          eventCenter: this.userInfoJson.use_supportedServices.use_eventCenter,
-          salesCenter: this.userInfoJson.use_supportedServices.use_salesCenter
+          meetingCenter: useSupportedServices.use_meetingCenter,
+          trainingCenter: useSupportedServices.use_trainingCenter,
+          supportCenter: useSupportedServices.use_supportCenter,
+          eventCenter: useSupportedServices.use_eventCenter,
+          salesCenter: useSupportedServices.use_salesCenter
         };
 
         // go through the session types
