@@ -71,7 +71,7 @@ angular.module('WebExUserSettings')
           callInTeleconf: {
             id: "callInTeleconf",
             label: "",
-            value: true,
+            value: true, // TODO
             isSiteEnabled: false,
             selectedCallInTollType: 0,
 
