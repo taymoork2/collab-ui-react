@@ -23,6 +23,8 @@
       Config
     ) {
 
+      $scope.userSettingsView.form.$dirty = false;
+
       this.getUserSettingsInfo = function () {
         angular.element('#reloadBtn').button('loading'); //show spinning icon in "Try again" button
 

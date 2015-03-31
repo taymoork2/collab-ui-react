@@ -1,3 +1,4 @@
+<form name="userSettingsView.form" novalidate role="form">
 <cs-sp-container>
   <cs-sp-section>
     <div id="errSection"
@@ -183,25 +184,23 @@
       <hr>
       
       <!-- Start of Action Buttons (will be removed) -->
-      <p align="right">
-        To be removed -->&nbsp;
-
-        <button id="btnUpdate"
+      <p align="left">
+       <button id="btnUpdate"
                 name="btnUpdate"
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-info btn-save"
+                ng-disabled="!userSettingsView.form.$dirty"
                 ng-click="WebExUserSettings.updateUserSettings()">
-
           Save
         </button>
       </p>
       <!-- End of Action Buttons -->
-
-      <div class="feature-list">
+	  </form>
+      <div class="feature-list" ng-binding>
         <ul>
           <li class="feature">
             <a id="webex-user-privs" ui-sref="user-overview.conferencing.webex.webex2">
-              <span class="feature-name">
+              <span class="feature-name" ng-binding>
                 <span translate="webexUserSettingLabels.userPriviligesLabel"></span>
               </span>
               
@@ -213,3 +212,4 @@
     </div>
   </cs-sp-section>
 </cs-sp-container>
+
