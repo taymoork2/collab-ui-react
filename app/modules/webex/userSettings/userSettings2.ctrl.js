@@ -26,11 +26,7 @@
       $scope.userSettingsView.form.$dirty = false;
 
       this.getUserSettingsInfo = function () {
-        angular.element('#reloadBtn').button('loading'); //show spinning icon in "Try again" button
-
-        var getUserSettingsInfoResult = WebExUserSettingsFact.getUserSettingsInfo();
-
-        angular.element('#reloadBtn').button('reset'); // Reset "try again button" to normal state
+        WebExUserSettingsFact.getUserSettingsInfo();
       }; // getUserSettingsInfo()
 
       this.updateUserSettings = function () {

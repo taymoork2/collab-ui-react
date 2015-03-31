@@ -74,6 +74,9 @@
         }, // validateXmlData()
 
         initUserSettingsModel: function () {
+          userSettingsModel.viewReady = false;
+          userSettingsModel.loadError = false;
+
           userSettingsModel.meetingCenter.label = "Meeting Center";
 
           userSettingsModel.trainingCenter.label = "Training Center";
@@ -277,6 +280,11 @@
 
           // TODO:
           //   if (???) {
+          //     userSettingsModel.telephonyPriviledge.callInTeleconf.value = true;
+          //   }
+
+          // TODO:
+          //   if (???) {
           //     userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = true;
           //   }
 
@@ -381,13 +389,12 @@
         }, // getUserSettingsInfoXml()
 
         getUserSettingsInfo: function () {
-          userSettingsModel.viewReady = false;
-          userSettingsModel.loadError = false;
-
           var _self = this;
 
+          angular.element('#reloadBtn').button('loading');
+
           this.getUserSettingsInfoXml().then(
-            function getUserSettingsInfoSuccess(getInfoResult) {
+            function getUserSettingsInfoXmlSuccess(getInfoResult) {
               var funcName = "getUserSettingsInfo().getUserSettingsInfoSuccess()";
               var logMsg = "";
 
@@ -421,6 +428,7 @@
                 _self.updateUserSettingsModel();
 
                 userSettingsModel.viewReady = true;
+                userSettingsModel.loadError = false;
               } else { // xmlapi returns error
                 logMsg = funcName + ": " + "\n" +
                   "userInfo.errId=" + userSettingsModel.userInfo.errId + "\n" +
@@ -445,21 +453,20 @@
                   $log.log(logMsg);
                 }
 
+                userSettingsModel.viewReady = false;
                 userSettingsModel.loadError = true;
               } // xmlapi returns error
 
-              return true;
-            }, // getUserSettingsInfoSuccess()
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
+            }, // getUserSettingsInfoXmlSuccess()
 
-            function getUserSettingsInfoError(getInfoResult) {
-              var funcName = "getUserSettingsInfoError()";
+            function getUserSettingsInfoXmlError(getInfoResult) {
+              var funcName = "getUserSettingsInfoXmlError()";
               var logMsg = "";
 
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               $log.log(logMsg);
-
-              return false;
-            } // getUserSettingsInfoError()
+            } // getUserSettingsInfoXmlError()
           ); // WebExUserSettingsFact.getUserSettingsInfoXml()
         }, // getUserSettingsInfo()
 
