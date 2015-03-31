@@ -1,9 +1,10 @@
 'use strict';
 
 describe('Controller: VoicemailInfoCtrl', function () {
-  var controller, $scope, $stateParams, $httpBackend, $modal, $q, TelephonyInfoService, Notification, HuronConfig, modalDefer;
+  var controller, $scope, $stateParams, $httpBackend, $modal, $q, TelephonyInfoService, Notification, HuronConfig, modalDefer, UserServiceCommon;
 
   var currentUser = getJSONFixture('core/json/currentUser.json');
+  var telephonyInfoWithVoice = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
   var telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
   var errorMessage = {
     'data': {
@@ -14,7 +15,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$modal_, _$q_, _TelephonyInfoService_, _Notification_, _HuronConfig_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$modal_, _$q_, _TelephonyInfoService_, _Notification_, _HuronConfig_, _UserServiceCommon_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     TelephonyInfoService = _TelephonyInfoService_;
@@ -23,23 +24,26 @@ describe('Controller: VoicemailInfoCtrl', function () {
     $modal = _$modal_;
     $q = _$q_;
     modalDefer = $q.defer();
+    UserServiceCommon = _UserServiceCommon_;
 
     $stateParams = {
       currentUser: currentUser
     };
     url = HuronConfig.getCmiUrl() + '/common/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id;
 
-    spyOn(TelephonyInfoService, 'getTelephonyInfo').and.callThrough();
+    spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithVoice);
     spyOn(Notification, 'notify');
     spyOn($modal, 'open').and.returnValue({
       result: modalDefer.promise
     });
+    spyOn(UserServiceCommon, 'update').and.callThrough();
 
     controller = $controller('VoicemailInfoCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
       $modal: $modal,
       TelephonyInfoService: TelephonyInfoService,
+      UserServiceCommon: UserServiceCommon,
       Notification: Notification
     });
 
@@ -62,6 +66,13 @@ describe('Controller: VoicemailInfoCtrl', function () {
         controller.saveVoicemail();
         $httpBackend.flush();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      });
+
+      it('should update dtmfAccessId with external number', function () {
+        $httpBackend.whenPUT(url).respond(200);
+        controller.saveVoicemail();
+        $httpBackend.flush();
+        expect(UserServiceCommon.update.calls.mostRecent().args[1].voicemail.dtmfAccessId).toEqual(telephonyInfoWithVoice.directoryNumbers[0].altDnPattern);
       });
 
       it('should notify on error', function () {

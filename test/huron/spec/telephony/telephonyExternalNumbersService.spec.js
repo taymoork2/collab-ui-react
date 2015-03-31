@@ -4,9 +4,7 @@ describe('Service: ExternalNumberPool', function () {
   var $httpBackend, ExternalNumberPool, HuronConfig;
   var didList = ['+9999999999', '+8888888888', '+7777777777', '+6666666666', '+5555555555'];
 
-  beforeEach(module('ui.router'));
   beforeEach(module('Huron'));
-  beforeEach(module('ngResource'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1')
@@ -55,11 +53,7 @@ describe('Service: ExternalNumberPool', function () {
     });
   });
 
-  describe('remove function', function () {
-    xit('should exist', function () {
-      expect(ExternalNumberPool.remove).toBeDefined();
-    });
-
+  describe('deletePool function', function () {
     it('should remove DID', function () {
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/1').respond(204);
       ExternalNumberPool.deletePool('1', '1').then(function () {});
@@ -67,11 +61,7 @@ describe('Service: ExternalNumberPool', function () {
     });
   });
 
-  describe('removeAll function', function () {
-    xit('should exist', function () {
-      expect(ExternalNumberPool.removeAll).toBeDefined();
-    });
-
+  describe('deleteAll function', function () {
     it('should remove all DIDs', function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(200, getJSONFixture('huron/json/externalNumbers/externalNumbers.json'));
       $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/3f51ef5b-584f-42db-9ad8-8810b5e9e9e3').respond(204);

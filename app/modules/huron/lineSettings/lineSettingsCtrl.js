@@ -6,7 +6,7 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HttpUtils) {
+  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.cbAddText = $translate.instant('callForwardPanel.addNew');
@@ -214,6 +214,12 @@
             }
 
             $q.all(promises)
+              .then(function () {
+                if (vm.telephonyInfo.currentDirectoryNumber.dnUsage === 'Primary' && vm.telephonyInfo.services.indexOf('VOICEMAIL') !== -1) {
+                  var dtmfAccessId = vm.telephonyInfo.alternateDirectoryNumber.pattern ? vm.telephonyInfo.alternateDirectoryNumber.pattern : vm.telephonyInfo.currentDirectoryNumber.pattern;
+                  return HuronUser.updateDtmfAccessId(vm.currentUser.id, dtmfAccessId);
+                }
+              })
               .then(function () {
                 TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
                   .then(function () {

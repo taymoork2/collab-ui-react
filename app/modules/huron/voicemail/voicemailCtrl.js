@@ -64,19 +64,15 @@
             vm.telephonyInfo.services.push('VOICEMAIL');
           }
 
-          if (typeof $scope.directoryNumber === 'undefined') {
-            for (var i = 0; i < vm.telephonyInfo.directoryNumbers.length; i++) {
-              if (vm.telephonyInfo.directoryNumbers[i].dnUsage === 'Primary') {
-                voicemailPayload.voicemail = {
-                  'dtmfAccessId': vm.telephonyInfo.directoryNumbers[i].pattern
-                };
-                voicemailPayload.userName = vm.currentUser.userName;
-              }
+          for (var i = 0; i < vm.telephonyInfo.directoryNumbers.length; i++) {
+            var dn = vm.telephonyInfo.directoryNumbers[i];
+            if (dn.dnUsage === 'Primary') {
+              voicemailPayload.voicemail = {
+                'dtmfAccessId': dn.altDnPattern ? dn.altDnPattern : dn.pattern
+              };
+              voicemailPayload.userName = vm.currentUser.userName;
+              break;
             }
-          } else {
-            voicemailPayload.voicemail = {
-              'dtmfAccessId': $scope.directoryNumber.pattern
-            };
           }
           updateVoicemail(voicemailPayload, result);
         } else {

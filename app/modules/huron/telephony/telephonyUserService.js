@@ -71,7 +71,7 @@
           // TO-DO
           // the following is commented out to disable Voicemail setting while adding new users,
           // in order to upgrade Unity to 11.0. Needs to turn it back on when the upgrade is done.
-          // 
+          //
           //   user.services.push('VOICEMAIL');
           //   user.voicemail = {
           //     'dtmfAccessId': directoryNumber.pattern
@@ -106,11 +106,25 @@
       }, user).$promise;
     }
 
+    function updateDtmfAccessId(uuid, dtmfAccessId) {
+      var payload = {
+        'voicemail': {
+          'dtmfAccessId': dtmfAccessId
+        }
+      };
+
+      return UserServiceCommon.update({
+        customerId: Authinfo.getOrgId(),
+        userId: uuid
+      }, payload).$promise;
+    }
+
     return {
       delete: deleteUser,
       acquireOTP: acquireOTP,
       create: create,
-      update: update
+      update: update,
+      updateDtmfAccessId: updateDtmfAccessId
     };
 
   }
