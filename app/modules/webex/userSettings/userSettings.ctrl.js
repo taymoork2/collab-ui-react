@@ -24,7 +24,7 @@
        */
       this.getGivenName = function () {
         if ($stateParams.currentUser.displayName) {
-              return $stateParams.currentUser.displayName;
+          return $stateParams.currentUser.displayName;
         }
 
         if (!$stateParams.currentUser.name) {
