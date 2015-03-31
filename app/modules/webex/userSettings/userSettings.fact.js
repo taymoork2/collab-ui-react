@@ -442,7 +442,7 @@
                   $log.log(logMsg);
                 }
 
-                userSettingsModel.loadErr = true;
+                userSettingsModel.loadError = true;
               } // xmlapi returns error
 
               return true;
