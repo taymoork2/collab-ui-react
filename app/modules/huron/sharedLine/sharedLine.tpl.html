@@ -1,0 +1,43 @@
+<script type="text/ng-template" id="customTemplate.html">
+  <a>
+      <span bind-html-unsafe="match.label.name.givenName | typeaheadHighlight:query" ng-if="match.label.name.givenName"></span>
+      <span bind-html-unsafe="match.label.name.familyName | typeaheadHighlight:query" ng-if="match.label.name.familyName"></span>
+      <span ng-show="match.label.name.familyName">(<span bind-html-unsafe="match.label.userName | typeaheadHighlight:query"></span>)</span>
+      <span ng-show="!match.label.name.familyName" bind-html-unsafe="match.label.userName | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div class="shared-line shared-line-container">
+  <!-- <cs-switchbutton class="shared-line-toggle" ng-model=" lineSettings.sharedLineBtn"> </cs-switchbutton> -->
+  <cs-toggle-switch class="shared-line-toggle" ng-model="lineSettings.sharedLineBtn" toggle-id="toggle2" size="small"></cs-toggle-switch>
+  <h4 class="shared-line-title" translate="sharedLinePanel.title"></h4>
+  <p><small translate="sharedLinePanel.description"></small></p>
+  <div class="form-group" ng-show="lineSettings.sharedLineBtn">
+    <div class="typeahead-dropdown">
+      <input id="userInput" type="text" ng-model="lineSettings.selected" class="form-control inline"
+        typeahead="user for user in lineSettings.users | filter:$viewValue | limitTo:8"
+        typeahead-on-select="lineSettings.selectSharedLineUser($item)"
+        typeahead-template-url="customTemplate.html" placeholder="Add member"/>
+      <i class="icon icon-search"></i>
+    </div>
+    <div>
+      <div>
+      <p ng-if="lineSettings.sharedLineUsers.length!==0"><span translate="sharedLinePanel.member"></span></p>
+      <cs-accordion close-others="lineSettings.oneAtATime">
+        <cs-accordion-group ng-repeat="user in lineSettings.sharedLineUsers" display-status="primary" show-caret="true">
+          <cs-accordion-heading ng-if="user.name"> {{user.name}} <span class="pull-right caret"></span>
+          </cs-accordion-heading>
+          <cs-accordion-heading ng-if="!user.name"> {{user.userName}}  </cs-accordion-heading>
+              <div ng-if="lineSettings.sharedLineEndpoints" ng-repeat="device in lineSettings.sharedLineEndpoints">
+                <a href=""  ng-if="user.name.givenName" >{{user.userName}}</a>
+                <cs-checkbox ng-if="device.userUuid == user.uuid" ckid="device.model" ng-model="device.isSharedLine" label="{{device.model}}"></cs-checkbox>
+                <p ng-if="device.userUuid == user.uuid && device.lineCount > lineSettings.maxLines">
+                <span class="icon icon-warning" translate = "sharedLinePanel.errorExceedLines">
+                </span></p>
+              </div>
+              <a class="list-group-item" ng-if="user.dnUsage != 'Primary'" href=""  translate="sharedLinePanel.remove" ng-click="lineSettings.disassociateSharedLineUser(user.uuid, user.userDnUuid)"> </a>
+        </cs-accordion-group>
+      </cs-accordion>
+      </div>
+    </div>
+  </div>
+</div>

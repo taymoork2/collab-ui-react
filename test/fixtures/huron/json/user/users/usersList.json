@@ -1,0 +1,23 @@
+[{
+  "displayName": "Peter@yahoo.com",
+  "givenName": "Peter",
+  "familyName": "Pie",
+  "entitlements": [
+    "ciscouc",
+    "squared-call-initiation",
+    "webex-squared"
+  ],
+  "id": "a787b84a-3cdf-436c-b1a7-e46e0a0cae11",
+  "userName": "Peter@yahoo.com"
+}, {
+  "displayName": "ray@gmail.com",
+  "givenName": "Ray",
+  "familyName": "Ban",
+  "entitlements": [
+    "ciscouc",
+    "squared-call-initiation",
+    "webex-squared"
+  ],
+  "id": "a787b84a-3cdf-436c-b1a7-e46e0a0cae99",
+  "userName": "ray@gmail.com"
+}]

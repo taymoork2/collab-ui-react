@@ -6,7 +6,8 @@
     "dnUsage": "Primary",
     "pattern": "1072",
     "userDnUuid": "4ac9aaa6-8b25-4b65-b62c-8536ce6fe4a9",
-    "uuid": "785da217-9597-427b-b8fe-4e31f56928d1"
+    "uuid": "785da217-9597-427b-b8fe-4e31f56928d1",
+    "dnSharedUsage": "Primary"
   }],
   "currentDirectoryNumber": {
     "uuid": "785da217-9597-427b-b8fe-4e31f56928d1",

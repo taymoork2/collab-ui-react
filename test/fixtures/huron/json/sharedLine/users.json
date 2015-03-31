@@ -1,0 +1,18 @@
+[{
+  "deviceCount": "1",
+  "name": "Peter Pie",
+  "uuid": "06b049f8-21d0-4126-b1e1-d280cd0013ca",
+  "userName": "Peter@yahoo.com",
+  "user": {
+    "uuid": "a787b84a-3cdf-436c-b1a7-e46e0a0cae11"
+  }
+
+}, {
+  "deviceCount": "2",
+  "name": "Ray Ban",
+  "uuid": "06b049f8-21d0-4126-b1e1-d280cd001341",
+  "userName": "ray@gmail.com",
+  "user": {
+    "uuid": "a787b84a-3cdf-436c-b1a7-e46e0a0cae99"
+  }
+}]

@@ -6,7 +6,8 @@
     .factory('TelephonyInfoService', TelephonyInfoService);
 
   /* @ngInject */
-  function TelephonyInfoService($rootScope, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, DirectoryNumber, ServiceSetup) {
+
+  function TelephonyInfoService($rootScope, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService) {
 
     var broadcastEvent = "telephonyInfoUpdated";
 
@@ -16,7 +17,8 @@
         uuid: 'none',
         pattern: '',
         dnUsage: 'Undefined',
-        userDnUuid: 'none'
+        userDnUuid: 'none',
+        dnSharedUsage: ''
       },
       alternateDirectoryNumber: {
         uuid: 'none',
@@ -61,7 +63,7 @@
       Function to inspect dnUsage from Huron and change the display
       value to what UX team wants.
     **/
-    function getDnType(dnUsage) {
+    function getDnType(dnUsage, uuid) {
       return (dnUsage === 'Primary') ? 'Primary' : '';
     }
 
@@ -85,7 +87,8 @@
         uuid: 'none',
         pattern: '',
         dnUsage: 'Undefined',
-        userDnUuid: 'none'
+        userDnUuid: 'none',
+        dnSharedUsage: ''
       };
       telephonyInfo.alternateDirectoryNumber = {
         uuid: 'none',
@@ -109,7 +112,7 @@
       for (var num in telephonyInfo.directoryNumbers) {
         var dn = telephonyInfo.directoryNumbers[num];
         if (dn.uuid === uuid) {
-          updateCurrentDirectoryNumber(dn.uuid, dn.pattern, dn.dnUsage, dn.userDnUuid);
+          updateCurrentDirectoryNumber(dn.uuid, dn.pattern, dn.dnUsage, dn.userDnUuid, dn.dnSharedUsage);
           break;
         }
       }
@@ -142,11 +145,12 @@
       $rootScope.$broadcast(broadcastEvent);
     }
 
-    function updateCurrentDirectoryNumber(dnUuid, pattern, dnUsage, userDnUuid, broadcast) {
+    function updateCurrentDirectoryNumber(dnUuid, pattern, dnUsage, userDnUuid, dnSharedUsage, broadcast) {
       broadcast = typeof broadcast !== 'undefined' ? broadcast : true;
       telephonyInfo.currentDirectoryNumber.uuid = dnUuid;
       telephonyInfo.currentDirectoryNumber.pattern = pattern;
       telephonyInfo.currentDirectoryNumber.dnUsage = dnUsage;
+      telephonyInfo.currentDirectoryNumber.dnSharedUsage = dnSharedUsage;
       if (userDnUuid) {
         telephonyInfo.currentDirectoryNumber.userDnUuid = userDnUuid;
       } else {
@@ -194,21 +198,27 @@
             var userDnList = [];
             for (var i = 0; i < userDnInfo.length; i++) {
               var userLine = {
-                'dnUsage': getDnType(userDnInfo[i].dnUsage),
+                'dnUsage': getDnType(userDnInfo[i].dnUsage, userDnInfo[i].directoryNumber.uuid),
                 'uuid': userDnInfo[i].directoryNumber.uuid,
                 'pattern': userDnInfo[i].directoryNumber.pattern,
                 'userDnUuid': userDnInfo[i].uuid,
                 'altDnUuid': '',
-                'altDnPattern': ''
+                'altDnPattern': '',
+                'dnSharedUsage': ''
               };
 
-              // get External (alternate) number if exists
-              DirectoryNumber.getAlternateNumbers(userLine.uuid).then(function (altNumList) {
-                if (angular.isArray(altNumList) && altNumList[0]) {
-                  userLine.altDnUuid = altNumList[0].uuid;
-                  userLine.altDnPattern = altNumList[0].numMask;
-                }
-              });
+              DirectoryNumberUserService.query({
+                  'customerId': Authinfo.getOrgId(),
+                  'directoryNumberId': userLine.uuid
+                }).$promise
+                .then(function (data) {
+                  if (this.dnUsage === 'Primary') {
+                    this.dnSharedUsage = 'Primary';
+                  }
+                  if (data.length > 1) {
+                    this.dnSharedUsage = this.dnSharedUsage + ' Shared';
+                  }
+                }.bind(userLine));
 
               // Put the Primary line first in array
               if (userLine.dnUsage === 'Primary') {

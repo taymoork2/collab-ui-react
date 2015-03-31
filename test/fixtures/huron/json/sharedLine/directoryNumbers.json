@@ -1,0 +1,11 @@
+[{
+  "directoryNumber": {
+    "uuid": "1",
+    "dnUsage": "Primary"
+  }
+}, {
+  "directoryNumber": {
+    "uuid": "1",
+    "dnUsage": "Undefined"
+  }
+}]

@@ -6,7 +6,9 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, ServiceSetup) {
+
+  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, ServiceSetup,
+    UserListService, SharedLineInfoService) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.cbAddText = $translate.instant('callForwardPanel.addNew');
@@ -20,6 +22,18 @@
     vm.directoryNumber = DirectoryNumber.getNewDirectoryNumber();
     vm.internalNumberPool = [];
     vm.externalNumberPool = [];
+
+    // SharedLine Info ---
+    vm.sharedLineBtn = false;
+    vm.selected = undefined;
+    vm.users = [];
+    vm.selectedUsers = [];
+    vm.sharedLineEndpoints = [];
+    vm.devices = [];
+    vm.sharedLineUsers = [];
+    vm.oneAtATime = true;
+    vm.maxLines = 6;
+    // end SharedLine Info ---
 
     // Caller ID Radio Button Model
     var name;
@@ -46,7 +60,14 @@
     vm.initNewForm = initNewForm;
     vm.init = init;
 
+    vm.disassociateSharedLineUser = disassociateSharedLineUser;
     ////////////
+
+    $scope.$on('SharedLineInfoUpdated', function () {
+      vm.sharedLineEndpoints = SharedLineInfoService.getSharedLineDevices();
+      vm.devices = angular.copy(vm.sharedLineEndpoints);
+
+    });
 
     function initNewForm() {
       if ($stateParams.directoryNumber === 'new' && vm.form) {
@@ -62,6 +83,25 @@
         vm.form.$setUntouched();
       }
     }
+
+    var listenStateChange = $scope.$on('$stateChangeStart', function (event, toState) {
+
+      if (vm.form.$dirty && toState.name === 'user-overview') {
+
+        if (angular.isDefined(toState)) {
+          event.preventDefault();
+          $modal.open({
+            templateUrl: 'modules/huron/lineSettings/confirmModal.tpl.html'
+          }).result.then(function () {
+            if (vm.form) {
+              vm.form.$setPristine();
+              vm.form.$setUntouched();
+            }
+            $state.go(toState);
+          });
+        }
+      }
+    });
 
     function resetLineSettings() {
       init();
@@ -151,6 +191,9 @@
           vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
         }
       }
+      listSharedLineUsers(directoryNumber.uuid);
+      getUserList();
+
     }
 
     function initDirectoryNumber(directoryNumber) {
@@ -171,11 +214,13 @@
       HttpUtils.setTrackingID().then(function () {
         processCallerId();
         var callForwardSet = processCallForward();
-
         if (callForwardSet === true) {
           if (typeof vm.directoryNumber.uuid !== 'undefined' && vm.directoryNumber.uuid !== '') { // line exists
             var promise;
             var promises = [];
+            promise = processSharedLineUsers();
+            promises.push(promise);
+
             if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line
               promise = LineSettings.changeInternalLine(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.telephonyInfo.currentDirectoryNumber.dnUsage, vm.assignedInternalNumber.pattern, vm.directoryNumber)
                 .then(function () {
@@ -210,6 +255,7 @@
                   });
                 promises.push(promise);
               }
+
             }
 
             $q.all(promises)
@@ -243,10 +289,14 @@
                     vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
                     vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
                     vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
+                  }).then(function () {
+                    return processSharedLineUsers();
+                  }).then(function () {
                     Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
                     $state.go('user-overview.communication.directorynumber', {
                       directoryNumber: vm.directoryNumber
                     });
+
                   });
               })
               .catch(function (response) {
@@ -276,6 +326,8 @@
               vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
               Notification.notify([$translate.instant('directoryNumberPanel.disassociationSuccess')], 'success');
               $state.go('user-overview.communication');
+            }).then(function () {
+              return disassociateSharedLineUsers(true);
             })
             .catch(function (response) {
               Log.debug('disassociateInternalLine failed.  Status: ' + response.status + ' Response: ' + response.data);
@@ -514,6 +566,187 @@
       vm.externalNumberPool = extNumPool;
     }
 
+    // Sharedline starts from here.........
+    $scope.sort = {
+      by: 'name',
+      order: 'ascending',
+      maxCount: 10000,
+      startAt: 0
+    };
+
+    function getUserList() {
+
+      $rootScope.searchStr = '';
+
+      //get all Users to search on
+      UserListService.listUsers($scope.sort.startAt, $scope.sort.maxCount, $scope.sort.by, $scope.sort.order, function (data, status) {
+        if (data.success) {
+          vm.users = data.Resources;
+        } else {
+          Log.debug('Query existing users failed. Status: ' + status);
+        }
+      });
+    }
+
+    vm.selectSharedLineUser = function ($item) {
+      var userInfo = {
+        'uuid': $item.id,
+        'name': ($item.name) ? ($item.name.givenName + ' ' + $item.name.familyName).trim() : '',
+        'userName': $item.userName,
+        'userDnUuid': 'none',
+        'entitlements': $item.entitlements
+      };
+
+      vm.selected = undefined;
+
+      if (isValidSharedLineUser(userInfo)) {
+        vm.selectedUsers.push(userInfo);
+        vm.sharedLineUsers.push(userInfo);
+      }
+    };
+
+    function isValidSharedLineUser(userInfo) {
+      var isVoiceUser = false;
+      var isValidUser = true;
+
+      angular.forEach(userInfo.entitlements, function (e) {
+        if (e === 'ciscouc') {
+          isVoiceUser = true;
+        }
+      });
+
+      if (!isVoiceUser || userInfo.uuid == vm.currentUser.id) {
+        // Exclude users without Voice service to be shared line User
+        // Exclude current user 
+        isValidUser = false;
+      }
+      if (isValidUser) {
+        // Exclude selection of already selected users
+        angular.forEach(vm.selectedUsers, function (user) {
+          if (user.uuid === userInfo.uuid) {
+            isValidUser = false;
+          }
+        });
+        if (isValidUser) {
+          //Exclude current sharedLine users 
+          angular.forEach(vm.sharedLineUsers, function (user) {
+            if (user.uuid === userInfo.uuid) {
+              isValidUser = false;
+            }
+          });
+        }
+      }
+      return isValidUser;
+
+    }
+
+    function addSharedLineUsers() {
+      //Associate new Sharedline users
+      var uuid;
+      var promises = [];
+      var promise;
+
+      if (vm.sharedLineBtn === true) {
+        angular.forEach(vm.selectedUsers, function (user) {
+          promise = SharedLineInfoService.getUserLineCount(user.uuid)
+            .then(function (totalLines) {
+              if (totalLines < vm.maxLines) {
+                return SharedLineInfoService.addSharedLineUser(user.uuid, vm.directoryNumber.uuid)
+                  .then(function (users) {
+                    return listSharedLineUsers(vm.directoryNumber.uuid);
+                  });
+              } else {
+                Notification.notify([user.name + " " + $translate.instant('sharedLinePanel.maxLines')], 'error');
+                return listSharedLineUsers(vm.directoryNumber.uuid);
+              }
+            });
+          promises.push(promise);
+        });
+        vm.selectedUsers = [];
+
+      }
+      return $q.all(promises);
+    }
+
+    function listSharedLineUsers(dnUuid) {
+      vm.sharedLineUsers = [];
+      var promise = SharedLineInfoService.loadSharedLineUsers(dnUuid, vm.currentUser.id)
+        .then(function (users) {
+          vm.sharedLineUsers = users;
+          vm.sharedLineBtn = (vm.sharedLineUsers.length) ? true : false;
+          vm.sharedLineEndpoints = SharedLineInfoService.loadSharedLineUserDevices(dnUuid);
+        });
+      return promise;
+    }
+
+    function disassociateSharedLineUser(userUuid, userDnUuid) {
+      vm.selectedUsers = [];
+      return SharedLineInfoService.disassociateSharedLineUser(userUuid, userDnUuid, vm.directoryNumber.uuid)
+        .then(function () {
+          return listSharedLineUsers(vm.directoryNumber.uuid);
+        });
+    }
+
+    function disassociateSharedLineUsers(deleteLineSettings) {
+      var promise;
+      var promises = [];
+      if (vm.sharedLineBtn === false || deleteLineSettings) {
+        //Disassociate SharedLine user on toggle/delete line
+        angular.forEach(vm.sharedLineUsers, function (user) {
+          if (user.dnUsage !== 'Primary') {
+            promise = disassociateSharedLineUser(user.uuid, user.userDnUuid);
+            promises.push(promise);
+          }
+        });
+      }
+      return $q.all(promises);
+    }
+
+    function updateSharedLineDevices() {
+      var promise;
+      var promises = [];
+      if (vm.sharedLineBtn === true && vm.sharedLineEndpoints) {
+        for (var i = 0; i < vm.sharedLineEndpoints.length; i++) {
+          //Update any device associated with SharedLine Users if any change.
+          //Check/Uncheck Device association with line
+          var curDevice = vm.devices[i];
+          var changedDevice = vm.sharedLineEndpoints[i];
+          if (curDevice && curDevice.isSharedLine != changedDevice.isSharedLine) {
+            if (changedDevice.isSharedLine) {
+              promise = SharedLineInfoService.associateLineEndpoint(changedDevice.uuid, vm.directoryNumber.uuid, changedDevice.maxIndex);
+            } else {
+              promise = SharedLineInfoService.disassociateLineEndpoint(changedDevice.uuid, vm.directoryNumber.uuid, changedDevice.endpointDnUuid);
+            }
+            promises.push(promise);
+          }
+        }
+
+      }
+      return $q.all(promises);
+    }
+
+    function processSharedLineUsers() {
+        //This handles Shared Line Endpoint Association/Disassociation
+        var promise;
+        var promises = [];
+        //Associate sharedline users if selected
+        if (vm.selectedUsers) {
+          promise = addSharedLineUsers();
+          promises.push(promise);
+        }
+        if (vm.sharedLineUsers) {
+          //Disassociate sharedline users if selected
+          promise = disassociateSharedLineUsers(false);
+          promises.push(promise);
+
+          //Update Shared Line User devices if updated
+          promise = updateSharedLineDevices();
+          promises.push(promise);
+        }
+
+        return $q.all(promises);
+      }
+      // ........Sharedline 
     init();
   }
 })();

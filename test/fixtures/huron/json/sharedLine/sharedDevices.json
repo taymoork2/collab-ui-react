@@ -1,0 +1,31 @@
+ [{
+   "userUuid": "a787b84a-3cdf-436c-b1a7-e46e0a0cae11",
+   "dnUuid": "1",
+   "uuid": "e787b84a-3cdf-436c-b1a7-e46e0a0ca11",
+   "name": "SEPF09E630F0528",
+   "model": "DX650",
+   "description": "Peter",
+   "isSharedLine": "true",
+   "maxIndex": "1",
+   "endpointDnUuid": "d787b84a-3cdf-436c-b1a7-e46e0a0cae9"
+ }, {
+   "userUuid": "a787b84a-3cdf-436c-b1a7-e46e0a0cae99",
+   "dnUuid": "1",
+   "uuid": "e787b84a-3cdf-436c-b1a7-e46e0a0ca22",
+   "name": "SEPF09E630F0529",
+   "model": "DX650",
+   "description": "Ray",
+   "isSharedLine": "false",
+   "maxIndex": "1",
+   "endpointDnUuid": "1287b84a-3cdf-436c-b1a7-e46e0a0cae8"
+ }, {
+   "userUuid": "a787b84a-3cdf-436c-b1a7-e46e0a0cae99",
+   "dnUuid": "1",
+   "uuid": "e787b84a-3cdf-436c-b1a7-e46e0a0ca33",
+   "name": "SEPF09E630F0111",
+   "model": "DX80",
+   "description": "Ray",
+   "isSharedLine": "true",
+   "maxIndex": "1",
+   "endpointDnUuid": "d787b84a-3cdf-436c-b1a7-e46e0a0ca55"
+ }]

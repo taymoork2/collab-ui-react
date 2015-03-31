@@ -182,5 +182,30 @@
         method: 'PUT'
       }
     });
+  })
+
+  .factory('DirectoryNumberUserService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/users/:dnUserAssnId', {
+      customerId: '@customerId',
+      directoryNumberId: '@directoryNumberId',
+      dnUserAssnId: '@dnUserAssnId'
+    });
+  })
+
+  .factory('DirectoryNumberSipEndPointService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/sipendpoints/:endpointDnAssnId', {
+      customerId: '@customerId',
+      sipendpointId: '@directoryNumberId',
+      endpointDnAssnId: '@endpointDnAssnId'
+    });
+  })
+
+  .factory('SipEndpointDirectoryNumberService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipendpointId/directorynumbers/:endpointDnAssnId', {
+      customerId: '@customerId',
+      sipendpointId: '@sipendpointId',
+      endpointDnAssnId: '@endpointDnAssnId'
+    });
   });
+
 })();
