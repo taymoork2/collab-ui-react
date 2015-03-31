@@ -383,7 +383,7 @@
         getUserSettingsInfo: function () {
           userSettingsModel.viewReady = false;
           userSettingsModel.loadError = false;
-          
+
           var _self = this;
 
           this.getUserSettingsInfoXml().then(
