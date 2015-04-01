@@ -188,11 +188,9 @@
       
       <div id="webex-admin-linkout"
            name="webex-admin-linkout">
-
         <form name="advancedSettings" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
           <input id="adminEmail" type="hidden" name="adminEmail" ng-model="advancedSettings.adminEmail" value="{{adminEmailParam}}" />
           <input id="userEmail" type="hidden" name="userEmail" ng-model="advancedSettings.userEmail" value="{{userEmailParam}}" />
-
           <div>
             <a href="" onClick="document.getElementById('hiddenButton').click();">
               <p class="popout-link">
@@ -202,8 +200,7 @@
                 </span>
               </p>
             </a>
-
-            <button id='hiddenButton' type="submit" style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;">Submit</button>
+            <button id='hiddenButton' type="submit" style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;"></button>
           </div>
         </form>
       </div>
