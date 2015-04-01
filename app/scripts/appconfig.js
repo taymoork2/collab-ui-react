@@ -333,7 +333,7 @@ angular
           controller: 'WebExUserSettingsCtrl',
           controllerAs: 'WebExUserSettings',
           data: {
-            displayName: "WebEx Session Enablement"
+            displayName: "Session Enablement"
           },
           params: {
             currentUser: {},
@@ -345,7 +345,7 @@ angular
           controller: 'WebExUserSettings2Ctrl',
           controllerAs: 'WebExUserSettings2',
           data: {
-            displayName: "WebEx Privileges"
+            displayName: "Privileges"
           },
           params: {
             currentUser: {},
