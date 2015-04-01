@@ -78,8 +78,7 @@
         } else {
           $modal.open({
             templateUrl: 'modules/huron/voicemail/disableConfirmation.tpl.html',
-            scope: $scope,
-            size: 'sm'
+            scope: $scope
           }).result.then(function () {
             for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
               if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
