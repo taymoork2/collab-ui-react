@@ -25,6 +25,10 @@
 
       $scope.userSettingsView.form.$dirty = false;
 
+      this.initPanel = function (webexSiteUrl) {
+        WebExUserSettingsFact.initPanel(webexSiteUrl);
+      }; // initPanel()
+
       this.getUserSettingsInfo = function () {
         WebExUserSettingsFact.getUserSettingsInfo();
       }; // getUserSettingsInfo()
@@ -60,6 +64,8 @@
       var webexSiteUrl = WebExUserSettingsFact.getSiteUrl();
       var webexSiteName = WebExUserSettingsFact.getSiteName(webexSiteUrl);
 
+      this.initPanel(webexSiteUrl);
+      /*
       WebExUserSettingsFact.getSessionTicket(webexSiteUrl).then(
         function getSessionTicketSuccess(webexAdminSessionTicket) {
           WebExUserSettingsFact.initXmlApiInfo(
@@ -81,8 +87,11 @@
 
         function getSessionTicketError(reason) {
           $log.log("WebExUserSettings2Ctrl(): failed to get session ticket");
+
+          this.userSettingsModel.sessionTicketErr = true;
         } // getSessionTicketError()
-      );
+      ); // WebExUserSettingsFact.getSessionTicket().then()
+      */
     } // WebExUserSettings2Ctrl()
   ]);
 })();

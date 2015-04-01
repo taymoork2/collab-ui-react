@@ -76,6 +76,7 @@
         initUserSettingsModel: function () {
           userSettingsModel.viewReady = false;
           userSettingsModel.loadError = false;
+          userSettingsModel.sessionTicketErr = false;
 
           userSettingsModel.meetingCenter.label = "Meeting Center";
 
@@ -523,6 +524,33 @@
 
           return XmlApiFact.updateUserSettings2(xmlApiInfo);
         }, // updateUserSettings2()
+
+        initPanel: function (webexSiteUrl) {
+          var webexSiteName = this.getSiteName(webexSiteUrl);
+          var _self = this;
+
+          this.getSessionTicket(webexSiteUrl).then(
+            function getSessionTicketSuccess(webexAdminSessionTicket) {
+              _self.initXmlApiInfo(
+                webexSiteUrl,
+                webexSiteName,
+                webexAdminSessionTicket
+              );
+
+              userSettingsModel.sessionTicketErr = false;
+              userSettingsModel.loadError = false;
+
+              _self.getUserSettingsInfo();
+            }, // getSessionTicketSuccess()
+
+            function getSessionTicketError(reason) {
+              $log.log("WebExUserSettingsCtrl(): failed to get session ticket");
+
+              userSettingsModel.sessionTicketErr = true;
+              userSettingsModel.loadError = true;
+            } // getSessionTicketError
+          ); // WebExUserSettingsFact.getSessionTicket().then()
+        }, // initPanel()
 
         getSessionTicket: function (webexSiteUrl) {
           return XmlApiFact.getSessionTicket(webexSiteUrl);
