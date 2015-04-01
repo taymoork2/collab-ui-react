@@ -440,7 +440,7 @@
                 $log.log(logMsg);
 
                 logMsg = funcName + ": " + "\n" +
-                  "Error message=[" + $translate.instant('webexUserSettingsAccessErrors.' + "errCode-" + userSettingsModel.userInfo.errId) + "]";
+                  "Error message=[" + $translate.instant('webexUserSettingsAccessErrors.' + userSettingsModel.userInfo.errId) + "]";
                 $log.log("logMsg");
 
                 if ("030001" == userSettingsModel.userInfo.errId) {
