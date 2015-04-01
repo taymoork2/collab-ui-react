@@ -112,8 +112,8 @@ angular.module('Core')
         },
 
         webexUrl: {
-          siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminHomePage',
-          siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GotoSiteAdminEditUserPage'
+          siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
+          siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
         },
 
         scimSchemas: [
