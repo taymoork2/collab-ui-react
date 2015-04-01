@@ -79,8 +79,6 @@
 
       this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
-      var _self = this;
-
       this.initPanel();
     } // WebExUserSettingsCtrl()
   ]);

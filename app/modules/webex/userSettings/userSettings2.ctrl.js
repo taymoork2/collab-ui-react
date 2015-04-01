@@ -26,6 +26,10 @@
       $scope.userSettingsView.form.$dirty = false;
 
       this.initPanel = function () {
+        $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
+        $scope.adminEmailParam = Authinfo.getUserName();
+        $scope.userEmailParam = $stateParams.currentUser.userName;
+
         WebExUserSettingsFact.initPanel();
       }; // initPanel()
 
@@ -60,9 +64,11 @@
 
       this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
-      var _self = this;
-
       this.initPanel();
+
+      $scope.trustSrc = function (src) {
+        return $sce.trustAsResourceUrl(src);
+      }; // trustSrc()
     } // WebExUserSettings2Ctrl()
   ]);
 })();
