@@ -6,7 +6,7 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils) {
+  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, ServiceSetup) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.cbAddText = $translate.instant('callForwardPanel.addNew');
@@ -44,6 +44,7 @@
     vm.deleteLineSettings = deleteLineSettings;
     vm.resetLineSettings = resetLineSettings;
     vm.initNewForm = initNewForm;
+    vm.init = init;
 
     ////////////
 
@@ -63,18 +64,12 @@
     }
 
     function resetLineSettings() {
-      activate();
+      init();
       resetForm();
     }
 
-    function activate() {
+    function init() {
       var directoryNumber = $stateParams.directoryNumber;
-      if (directoryNumber) {
-        if (directoryNumber === 'new') {
-          TelephonyInfoService.updateCurrentDirectoryNumber('new');
-        }
-      }
-
       initDirectoryNumber(directoryNumber);
 
       vm.assignedInternalNumber = {
@@ -163,6 +158,10 @@
         TelephonyInfoService.updateCurrentDirectoryNumber('new');
       } else {
         // update alternate number first
+        if (typeof directoryNumber.altDnUuid === 'undefined') {
+          directoryNumber.altDnUuid = '';
+          directoryNumber.altDnPattern = '';
+        }
         TelephonyInfoService.updateAlternateDirectoryNumber(directoryNumber.altDnUuid, directoryNumber.altDnPattern);
         TelephonyInfoService.updateCurrentDirectoryNumber(directoryNumber.uuid, directoryNumber.pattern, directoryNumber.dnUsage, directoryNumber.userDnUuid);
       }
@@ -198,7 +197,7 @@
                     processExternalNumberList();
                   });
                 promises.push(promise);
-              } else if ((vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' || vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') && vm.assignedExternalNumber.uuid !== 'none') { // changing external line
+              } else if ((vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') && vm.assignedExternalNumber.uuid !== 'none') { // changing external line
                 promise = LineSettings.changeExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid, vm.assignedExternalNumber.pattern)
                   .then(function () {
                     processExternalNumberList();
@@ -515,6 +514,6 @@
       vm.externalNumberPool = extNumPool;
     }
 
-    activate();
+    init();
   }
 })();

@@ -102,7 +102,7 @@ describe('Service: DirectoryNumber', function () {
 
   describe('getAlternateNumber function', function () {
     it('should exist', function () {
-      expect(DirectoryNumber.getAlternateNumber).toBeDefined();
+      expect(DirectoryNumber.getAlternateNumbers).toBeDefined();
     });
   });
 

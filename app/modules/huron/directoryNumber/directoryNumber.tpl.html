@@ -1,14 +1,32 @@
 <h4 translate="directoryNumberPanel.directNumbers"></h4>
 <div class="form-group">
   <label for="internalNumber">
-    {{'directoryNumberPanel.internalNumberLabel' | translate}}<br>
+    {{'directoryNumberPanel.internalNumberLabel' | translate}}
+  </label>
+</div>
+<div class="form-group">
+  <label for="internalNumber">
     {{'directoryNumberPanel.internalNumberExtension' | translate}}<span class="asterix">*</span>
+    <span popover="{{'directoryNumberPanel.internalNumberExtensionTooltip' | translate}}">
+      <i class="dn-help-icon"></i>
+    </span>
   </label>
   <select ng-model="lineSettings.assignedInternalNumber" class="form-control" id="internalNumber" ng-options="directoryNumber.pattern for directoryNumber in lineSettings.internalNumberPool track by directoryNumber.uuid">
   </select>
+  <div class="esn-number-field">
+    <p>
+      {{'directoryNumberPanel.enterpriseSiteNumberLabel' | translate }}&nbsp;
+      {{lineSettings.telephonyInfo.siteSteeringDigit}}{{lineSettings.telephonyInfo.siteCode}}<strong class="esn-extension" id="esnTail">{{lineSettings.assignedInternalNumber.pattern}}</strong>
+    </p>
+  </div>
 </div>
 <div class="form-group">
-  <label for="externalNumber" translate="directoryNumberPanel.externalNumberLabel"></label>
+  <label for="externalNumber">
+    {{'directoryNumberPanel.externalNumberLabel' | translate}}
+    <span popover="{{'directoryNumberPanel.externalNumberTooltip' | translate}}">
+      <i class="dn-help-icon"></i>
+    </span>
+  </label>
   <select ng-model="lineSettings.assignedExternalNumber" class="form-control" id="externalNumber" ng-options="directoryNumber.pattern for directoryNumber in lineSettings.externalNumberPool track by directoryNumber.uuid">
   </select>
 </div>

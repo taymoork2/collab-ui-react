@@ -6,7 +6,7 @@
     .factory('TelephonyInfoService', TelephonyInfoService);
 
   /* @ngInject */
-  function TelephonyInfoService($rootScope, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService) {
+  function TelephonyInfoService($rootScope, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, DirectoryNumber, ServiceSetup) {
 
     var broadcastEvent = "telephonyInfoUpdated";
 
@@ -29,7 +29,9 @@
         destination: null,
         remoteDestinations: null,
         singleNumberReachEnabled: false
-      }
+      },
+      siteSteeringDigit: '',
+      siteCode: ''
     };
 
     var internalNumberPool = [];
@@ -64,6 +66,16 @@
     }
 
     function getTelephonyInfo() {
+      if (telephonyInfo.siteSteeringDigit === '') {
+        ServiceSetup.listSites().then(function () {
+          if (ServiceSetup.sites.length !== 0) {
+            ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
+              telephonyInfo.siteSteeringDigit = site.siteSteeringDigit;
+              telephonyInfo.siteCode = site.siteCode;
+            });
+          }
+        });
+      }
       return telephonyInfo;
     }
 
@@ -190,26 +202,20 @@
                 'altDnPattern': ''
               };
 
+              // get External (alternate) number if exists
+              DirectoryNumber.getAlternateNumbers(userLine.uuid).then(function (altNumList) {
+                if (angular.isArray(altNumList) && altNumList[0]) {
+                  userLine.altDnUuid = altNumList[0].uuid;
+                  userLine.altDnPattern = altNumList[0].numMask;
+                }
+              });
+
               // Put the Primary line first in array
               if (userLine.dnUsage === 'Primary') {
                 userDnList.unshift(userLine);
               } else {
                 userDnList.push(userLine);
               }
-
-              // get External (alternate) number if exists
-              AlternateNumberService.query({
-                customerId: Authinfo.getOrgId(),
-                directoryNumberId: userLine.uuid,
-                alternatenumbertype: '+E.164 Number'
-              }, function (altNumList) {
-                if (angular.isArray(altNumList) && altNumList[0]) {
-                  // using 'this' to ensure we are changing the current
-                  // userLine object referenced in the for loop
-                  this.altDnUuid = altNumList[0].uuid;
-                  this.altDnPattern = altNumList[0].numMask;
-                }
-              }.bind(userLine));
             }
             updateDirectoryNumbers(userDnList);
           } else {

@@ -21,7 +21,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
 
     url = HuronConfig.getCmiUrl() + '/voice/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id + '/remotedestinations';
 
-    spyOn(TelephonyInfoService, 'getTelephonyInfo').and.callThrough();
+    spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithSnr);
     spyOn(TelephonyInfoService, 'getRemoteDestinationInfo');
     spyOn(Notification, 'notify');
 

@@ -6,7 +6,7 @@
     .factory('DirectoryNumber', DirectoryNumber);
 
   /* @ngInject */
-  function DirectoryNumber(Authinfo, TelephonyInfoService, UserDirectoryNumberService, DirectoryNumberService, AlternateNumberService) {
+  function DirectoryNumber(Authinfo, UserDirectoryNumberService, DirectoryNumberService, AlternateNumberService) {
     var directoryNumberPayload = {
       uuid: '',
       pattern: '',
@@ -42,7 +42,7 @@
       disassociateDirectoryNumber: disassociateDirectoryNumber,
       updateDirectoryNumber: updateDirectoryNumber,
       changeInternalNumber: changeInternalNumber,
-      getAlternateNumber: getAlternateNumber,
+      getAlternateNumbers: getAlternateNumbers,
       addAlternateNumber: addAlternateNumber,
       updateAlternateNumber: updateAlternateNumber,
       deleteAlternateNumber: deleteAlternateNumber
@@ -128,21 +128,12 @@
       return service.deleteDirectoryNumber(oldDnId).then(function () {}).$promise;
     }
 
-    function getAlternateNumber(dnUuid) {
+    function getAlternateNumbers(dnUuid) {
       return AlternateNumberService.query({
-          customerId: Authinfo.getOrgId(),
-          directoryNumberId: dnUuid,
-          alternatenumbertype: '+E.164 Number'
-        }).$promise
-        .then(function (altNumbers) {
-          if (angular.isArray(altNumbers) && altNumbers.length > 0) {
-            return AlternateNumberService.get({
-              customerId: Authinfo.getOrgId(),
-              directoryNumberId: dnUuid,
-              alternateNumberId: altNumbers[0].uuid
-            }).$promise;
-          }
-        });
+        customerId: Authinfo.getOrgId(),
+        directoryNumberId: dnUuid,
+        alternatenumbertype: '+E.164 Number'
+      }).$promise;
     }
 
     function addAlternateNumber(dnUuid, pattern) {

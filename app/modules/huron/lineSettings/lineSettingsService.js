@@ -36,10 +36,7 @@
         .then(function () {
           if (typeof altNum.pattern !== 'undefined' && altNum.pattern !== 'None') {
             var telInfo = TelephonyInfoService.getTelephonyInfo();
-            return DirectoryNumber.addAlternateNumber(telInfo.currentDirectoryNumber.uuid, altNum.pattern)
-              .then(function (newAltNumber) {
-                TelephonyInfoService.updateAlternateDirectoryNumber(newAltNumber.uuid, newAltNumber.numMask);
-              });
+            return addExternalLine(telInfo.currentDirectoryNumber.uuid, altNum.pattern);
           }
         })
         .then(function () {

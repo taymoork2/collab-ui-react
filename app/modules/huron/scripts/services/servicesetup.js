@@ -29,6 +29,13 @@
         })).$promise;
       },
 
+      getSite: function (siteUuid) {
+        return SiteService.get({
+          customerId: Authinfo.getOrgId(),
+          siteId: siteUuid
+        }).$promise;
+      },
+
       createInternalNumberRanges: function (internalNumberRanges) {
         var success = [];
         var error = [];

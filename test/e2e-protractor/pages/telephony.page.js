@@ -54,6 +54,8 @@ var TelephonyPage = function () {
   this.callerIdCustom = element(by.css('label[for="callerIdOther"]'));
   this.callerId = element(by.id('other'));
 
+  this.esnTail = element(by.id('esnTail'));
+
   this.retrieveInternalNumber = function () {
     utils.wait(this.internalNumber);
     return this.internalNumber.evaluate('lineSettings.assignedInternalNumber.pattern');

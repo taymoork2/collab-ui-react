@@ -72,6 +72,13 @@ describe('Telephony Info', function () {
       utils.expectIsDisplayed(telephony.internalNumber);
     });
 
+    it('should show ESN number', function () {
+      utils.expectIsDisplayed(telephony.esnTail);
+      telephony.retrieveInternalNumber().then(function (number) {
+        utils.expectText(telephony.esnTail, number);
+      });
+    });
+
     it('should not display remove button for primary line', function () {
       utils.expectIsNotDisplayed(telephony.lineConfigurationActionButton);
     });

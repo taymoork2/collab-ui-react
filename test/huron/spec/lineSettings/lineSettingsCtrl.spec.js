@@ -1,12 +1,12 @@
 'use strict';
 
 describe('Controller: LineSettingsCtrl', function () {
-  var controller, $scope, $stateParams, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser;
+  var controller, $scope, $stateParams, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, ServiceSetup;
   var currentUser, directoryNumber, getDirectoryNumber, internalNumbers, externalNumbers, telephonyInfoWithVoicemail;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $modal = _$modal_;
@@ -16,6 +16,7 @@ describe('Controller: LineSettingsCtrl', function () {
     LineSettings = _LineSettings_;
     HuronAssignedLine = _HuronAssignedLine_;
     HuronUser = _HuronUser_;
+    ServiceSetup = _ServiceSetup_;
 
     currentUser = getJSONFixture('core/json/currentUser.json');
     directoryNumber = getJSONFixture('huron/json/lineSettings/directoryNumber.json');
@@ -47,6 +48,8 @@ describe('Controller: LineSettingsCtrl', function () {
 
     spyOn(HuronUser, 'updateDtmfAccessId').and.returnValue($q.when());
 
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
+
     controller = $controller('LineSettingsCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
@@ -64,6 +67,15 @@ describe('Controller: LineSettingsCtrl', function () {
   afterEach(function () {
     // Cached fixture is being manipulated by controller, so needs to be cleared
     jasmine.getJSONFixtures().clearCache();
+  });
+
+  describe('init', function () {
+    it('should call TelephonyInfoService.getTelephonyInfo()', function () {
+      controller.init();
+      $scope.$apply();
+      expect(TelephonyInfoService.getTelephonyInfo).toHaveBeenCalled();
+      expect(controller.directoryNumber).toEqual(getDirectoryNumber);
+    });
   });
 
   describe('saveLineSettings', function () {
