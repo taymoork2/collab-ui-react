@@ -5,33 +5,43 @@
          name="errSection"
          ng-if="WebExUserSettings.userSettingsModel.loadError">
        
-      <div id="webexUserSettingsPageUserNotFound"
-           ng-if="WebExUserSettings.userSettingsModel.userInfo.errId == '030001'">
-           
-        <div class="center">
-          <div class="nodata-icon">
-			<span class="icon icon-circle-clock"></span> 
-          </div>
-          <div class="nodata-message"
-               translate="webexUserSettingsAccessErrors.030001"
-               translate-values="{givenName: '{{WebExUserSettings.getGivenName()}}', familyName: '{{WebExUserSettings.getFamilyName()}}'}">
-          </div>
-          
-          <button id="cancelBtn" class="btn btn-default wiz-onboard-btn" ui-sref="user-overview.conferencing">
-            <span translate="webexUserSettings.cancel"></span>
-          </button>
-          
-          <button id="reloadBtn" class="btn btn-info wiz-onboard-btn" ng-click="WebExUserSettings.getUserSettingsInfo()" data-loading-text="<i class='icon icon-spinner'></i>">
-            <span translate="webexUserSettings.reload"></span>
-          </button>
+      <div class="center">
+        <div ng-if="WebExUserSettings.userSettingsModel.allowRetry"
+             class="nodata-icon">
+             
+		      <span class="icon icon-circle-clock"></span> 
         </div>
-      </div>
-      
-      <!-- TODO -->
-      <div id="loadError",
-           ng-if="WebExUserSettings.userSettingsModel.userInfo.errId != '030001'">
-           
-        <b>ERROR!</b>
+        
+        <div class="nodata-message">
+          {{WebExUserSettings.userSettingsModel.errMsg}}
+        </div>
+        
+        <button id="cancelBtn"
+                class="btn btn-default wiz-onboard-btn"
+                ui-sref="user-overview.conferencing">
+                
+          <span translate="webexUserSettings.cancel"></span>
+        </button>
+        
+        <button id="reloadBtn"
+                name="reloadBtn"
+                class="btn btn-info wiz-onboard-btn"
+                ng-if="WebExUserSettings.userSettingsModel.allowRetry && !WebExUserSettings.userSettingsModel.sessionTicketErr"
+                ng-click="WebExUserSettings.getUserSettingsInfo()"
+                data-loading-text="<i class='icon icon-spinner'></i>">
+                
+          <span translate="webexUserSettings.reload"></span>
+        </button>
+        
+        <button id="reloadBtn"
+                name="reloadBtn"
+                class="btn btn-info wiz-onboard-btn"
+                ng-if="WebExUserSettings.userSettingsModel.sessionTicketErr"
+                ng-click="WebExUserSettings.initPanel()"
+                data-loading-text="<i class='icon icon-spinner'></i>">
+                
+          <span translate="webexUserSettings.reload"></span>
+        </button>
       </div>
     </div>
 

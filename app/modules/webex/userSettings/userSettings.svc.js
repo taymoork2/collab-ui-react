@@ -148,8 +148,9 @@ angular.module('WebExUserSettings')
 
           viewReady: false,
           loadError: false,
-
           sessionTicketErr: false,
+          errMsg: "",
+          allowRetry: false,
 
           userInfo: null,
           userInfoJson: null,

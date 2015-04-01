@@ -942,7 +942,7 @@
     "cancel": "Go Back"
   },
   "webexUserSettingsAccessErrors": {
-    "030001": "{{givenName}} {{familyName}} has not yet been provisioned to this site. This process may take a moment.",
+    "030001": "{{userName}} has not yet been provisioned to this site. This process may take a moment.",
     "030002": "Invalid Password",
     "030003": "The password should be at least 6 characters long.",
     "030004": "WebExID or Email is already in use by this site.",
@@ -1031,6 +1031,7 @@
     "039007": "Your Email address is not accepted by our site.",
     "039008": "",
     "039009": "",
+    "200006": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access information from the server at this time"
   },
   "webexUserSettingLabels": {

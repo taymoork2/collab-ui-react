@@ -213,7 +213,7 @@
         getNewSessionTicket: function (wbxSiteName, wbxSiteUrl) {
           var currView = this;
           var defer = $q.defer();
-          var funcName = "getSessionTicketInfoSuccess()";
+          var funcName = "getNewSessionTicket()";
           var logMsg = "";
 
           var xmlApiAccessInfo = {
@@ -238,7 +238,10 @@
               if (result != "SUCCESS") {
                 logMsg = funcName + ".error()" + ": " + "\n" + "JsonData=" + JSON.stringify(JsonData) + " , result=" + result;
                 $log.log(logMsg);
-                defer.reject('Error from AS');
+
+                var exceptionId = JsonData.body.serv_header.serv_response.serv_exceptionID;
+
+                defer.reject(exceptionId);
               } else {
                 var sessionTicket = JsonData.body.serv_body.serv_bodyContent.use_sessionTicket;
                 var createTime = JsonData.body.serv_body.serv_bodyContent.use_createTime;

@@ -21,6 +21,44 @@
       Authinfo
     ) {
       return {
+        /**
+         * If user does not have first and last names, use the email address as the display name
+         */
+        getGivenName: function () {
+          if ($stateParams.currentUser.displayName) {
+            return $stateParams.currentUser.displayName;
+          }
+
+          if (!$stateParams.currentUser.name) {
+            return $stateParams.currentUser.userName;
+          }
+
+          if (
+            ($stateParams.currentUser.name.givenName === "") &&
+            ($stateParams.currentUser.name.familyName === "")
+          ) {
+            return $stateParams.currentUser.userName;
+          }
+
+          return $stateParams.currentUser.name.givenName;
+        }, // getGivenName()
+
+        getFamilyName: function () {
+          if (!$stateParams.currentUser.name || $stateParams.currentUser.displayName) {
+            return "";
+          }
+
+          return $stateParams.currentUser.name.familyName;
+        }, // getFamilyName()
+
+        getUserName: function () {
+          var userName = this.getGivenName() + " " + this.getFamilyName();
+
+          $log.log("getUserName(): userName=" + userName);
+
+          return userName;
+        }, // getUserName()
+
         validateXmlData: function (
           commentText,
           infoXml,
@@ -76,6 +114,7 @@
         initUserSettingsModel: function () {
           userSettingsModel.viewReady = false;
           userSettingsModel.loadError = false;
+          userSettingsModel.allowRetry = false;
           userSettingsModel.sessionTicketErr = false;
 
           userSettingsModel.meetingCenter.label = "Meeting Center";
@@ -440,21 +479,34 @@
                   "meetingTypesInfo.errReason=" + userSettingsModel.meetingTypesInfo.errReason;
                 $log.log(logMsg);
 
-                logMsg = funcName + ": " + "\n" +
-                  "Error message=[" + $translate.instant('webexUserSettingsAccessErrors.' + userSettingsModel.userInfo.errId) + "]";
-                $log.log("logMsg");
+                userSettingsModel.viewReady = false;
+                userSettingsModel.allowRetry = true;
 
-                if ("030001" == userSettingsModel.userInfo.errId) {
-                  logMsg = funcName + ": " + "Corresponding User not found!!!";
-                  $log.log(logMsg);
+                var errId = null;
+                if ("" !== userSettingsModel.userInfo.errId) {
+                  errId = userSettingsModel.userInfo.errId;
+                } else if ("" === userSettingsModel.siteInfo.errId) {
+                  errId = userSettingsModel.siteInfo.errId;
                 } else {
-                  // TODO
-                  //   handle all other errors
-                  logMsg = funcName + ": " + "OTHER ERROR!!!";
-                  $log.log(logMsg);
+                  errId = userSettingsModel.meetingTypesInfo.errId;
                 }
 
-                userSettingsModel.viewReady = false;
+                if ("030001" == errId) {
+                  var userName = _self.getUserName();
+
+                  userSettingsModel.errMsg = $translate.instant(
+                    "webexUserSettingsAccessErrors.030001", {
+                      userName: userName
+                    }
+                  );
+                } else {
+                  userSettingsModel.errMsg = $translate.instant('webexUserSettingsAccessErrors.' + errId);
+                }
+
+                logMsg = funcName + ": " + "\n" +
+                  "Error message=[" + userSettingsModel.errMsg + "]";
+                $log.log(logMsg);
+
                 userSettingsModel.loadError = true;
               } // xmlapi returns error
 
@@ -525,29 +577,42 @@
           return XmlApiFact.updateUserSettings2(xmlApiInfo);
         }, // updateUserSettings2()
 
-        initPanel: function (webexSiteUrl) {
-          var webexSiteName = this.getSiteName(webexSiteUrl);
+        initPanel: function () {
           var _self = this;
+          var webexSiteUrl = this.getSiteUrl();
+          var webexSiteName = this.getSiteName(webexSiteUrl);
+
+          angular.element('#reloadBtn').button('loading');
 
           this.getSessionTicket(webexSiteUrl).then(
             function getSessionTicketSuccess(webexAdminSessionTicket) {
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
+
               _self.initXmlApiInfo(
                 webexSiteUrl,
                 webexSiteName,
                 webexAdminSessionTicket
               );
 
-              userSettingsModel.sessionTicketErr = false;
               userSettingsModel.loadError = false;
+              userSettingsModel.sessionTicketErr = false;
 
               _self.getUserSettingsInfo();
             }, // getSessionTicketSuccess()
 
-            function getSessionTicketError(reason) {
-              $log.log("WebExUserSettingsCtrl(): failed to get session ticket");
+            function getSessionTicketError(errId) {
+              var funcName = "initPanel().getSessionTicketError()";
+              var logMsg = "";
 
+              logMsg = funcName + ": " + "failed to get session ticket" + "\n" +
+                "errId=" + errId;
+              $log.log(logMsg);
+
+              userSettingsModel.errMsg = $translate.instant('webexUserSettingsAccessErrors.' + errId);
+              userSettingsModel.allowRetry = true;
               userSettingsModel.sessionTicketErr = true;
               userSettingsModel.loadError = true;
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
             } // getSessionTicketError
           ); // WebExUserSettingsFact.getSessionTicket().then()
         }, // initPanel()
