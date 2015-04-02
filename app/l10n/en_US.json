@@ -83,7 +83,7 @@
     "freeConf": "Free 3 party meetings",
     "freeComm": "Free in-network IP voice and video calling",
     "paidMsg": "Standard team rooms",
-    "paidConf": "25 party meetings",
+    "paidConf": "t30citest.webex.com",
     "paidComm": "Advanced communications"
   },
   "usersPreview": {
@@ -1055,7 +1055,7 @@
     "callInTeleconfLabel": "Call-in teleconferencing",
     "tollOnlyLabel": "Toll",
     "tollFreeOnlyLabel": "Toll free",
-    "tollAndTollFreeLabel": "Toll & Toll free",
+    "tollAndTollFreeLabel": "Toll & Toll free *",
     "teleconfViaGlobalCallinLabel": "Allow access to teleconference via global call-in numbers *",
     "cliAuthLabel": "Enable teleconferencing CLI authentication",
     "reqPinEnabledLabel": "Host and attendees must have PIN enabled",
