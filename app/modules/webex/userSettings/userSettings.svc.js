@@ -54,12 +54,13 @@ angular.module('WebExUserSettings')
           hiQualVideo: {
             id: "hiQualVideo",
             label: "",
-            isSiteEnabled: true, // TODO
+            isSiteEnabled: false,
             value: false, // TODO
 
             hiDefVideo: {
               id: "hiDefVideo",
               label: "",
+              isSiteEnabled: false,
               value: false // TODO
             }
           }

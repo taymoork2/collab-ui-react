@@ -103,6 +103,8 @@ angular.module('WebExUserSettings').service(
           "                <use:otherTelephony>{{otherTelephony}}</use:otherTelephony>" + "\n" +
           "                <use:voiceOverIp>{{integratedVoIP}}</use:voiceOverIp>" + "\n" +
           "                <use:labAdmin>{{handsOnLabAdmin}}</use:labAdmin>" + "\n" +
+          "                <use:HQvideo>{{hiQualVideo}}</use:HQvideo>" + "\n" +
+          "                <use:HDvideo>{{hiDefVideo}}</use:HDvideo>" + "\n" +
           "            </use:privilege>" + "\n" +
           "        </bodyContent>" + "\n" +
           "    </body>" + "\n" +
