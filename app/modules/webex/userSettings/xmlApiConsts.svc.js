@@ -108,6 +108,9 @@ angular.module('WebExUserSettings').service(
           "                <use:HQvideo>{{hiQualVideo}}</use:HQvideo>" + "\n" +
           "                <use:HDvideo>{{hiDefVideo}}</use:HDvideo>" + "\n" +
           "            </use:privilege>" + "\n" +
+          "            <use:eventCenter>" + "\n " +
+          "                <use:optimizeAttendeeBandwidthUsage>{{optimizeBandwidthUsage}}</use:optimizeAttendeeBandwidthUsage>" + "\n" +
+          "            </use:eventCenter>" + "\n " +
           "        </bodyContent>" + "\n" +
           "    </body>" + "\n" +
           "</serv:message>" + "\n",
