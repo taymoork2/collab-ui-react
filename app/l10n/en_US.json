@@ -47,7 +47,10 @@
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
     "resend": "Resend Invitation",
     "deleteUserSuccess": "User {{email}} deleted successfully",
-    "deleteUserError": "Error deleting user. Status: {{status}}"
+    "deleteUserError": "Error deleting user. Status: {{status}}",
+    "onboardSuccess": "{{email}} onboarded successfully",
+    "onboardError": "{{email}} not onboarded. Status: {{status}}",
+    "ciscoucError": "{{email}} did not provision Unified Communications."
   },
   "groupsPage": {
     "manageGroups": "Groups",

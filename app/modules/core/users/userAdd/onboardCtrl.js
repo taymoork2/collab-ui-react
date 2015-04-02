@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$location', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
-    function ($scope, $state, $stateParams, $location, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$location', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
+    function ($scope, $state, $stateParams, $q, $location, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
 
       $scope.hasAccount = Authinfo.hasAccount();
 
@@ -361,6 +361,7 @@ angular.module('Core')
           if (data.success) {
             Log.info('User onboard request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
+            var promises = [];
 
             for (var i = 0; i < data.userResponse.length; i++) {
               var userResult = {
@@ -371,45 +372,56 @@ angular.module('Core')
               var userStatus = data.userResponse[i].status;
 
               if (userStatus === 200) {
-                userResult.message = 'onboarded successfully';
+                userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
                 if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
                   var userData = {
                     'email': data.userResponse[i].email
                   };
-                  HuronUser.create(data.userResponse[i].uuid, userData);
+                  var promise = HuronUser.create(data.userResponse[i].uuid, userData)
+                    .catch(function (response) {
+                      this.alertType = 'danger';
+                      this.message = $translate.instant('usersPage.ciscoucError', this) + ' ' + response.data.errorMessage;
+                    }.bind(userResult));
+                  promises.push(promise);
                 }
               } else if (userStatus === 409) {
-                userResult.message = data.userResponse[i].message;
+                userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {
-                userResult.message = 'not onboarded, status: ' + userStatus;
+                userResult.message = $translate.instant('usersPage.onboardError', {
+                  email: userResult.email,
+                  status: userStatus
+                });
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
               $scope.results.resultList.push(userResult);
             }
-            //concatenating the results in an array of strings for notify function
-            var successes = [];
-            var errors = [];
-            var count_s = 0;
-            var count_e = 0;
-            for (var idx in $scope.results.resultList) {
-              if ($scope.results.resultList[idx].alertType === 'success') {
-                successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
-                count_s++;
-              } else {
-                errors[count_e] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
-                count_e++;
+
+            $q.all(promises).then(function () {
+              //concatenating the results in an array of strings for notify function
+              var successes = [];
+              var errors = [];
+              var count_s = 0;
+              var count_e = 0;
+              for (var idx in $scope.results.resultList) {
+                if ($scope.results.resultList[idx].alertType === 'success') {
+                  successes[count_s] = $scope.results.resultList[idx].message;
+                  count_s++;
+                } else {
+                  errors[count_e] = $scope.results.resultList[idx].message;
+                  count_e++;
+                }
               }
-            }
-            //Displaying notifications
-            if (successes.length + errors.length === usersList.length) {
-              angular.element('#btnOnboard').button('reset');
-              Notification.notify(successes, 'success');
-              Notification.notify(errors, 'error');
-            }
+              //Displaying notifications
+              if (successes.length + errors.length === usersList.length) {
+                angular.element('#btnOnboard').button('reset');
+                Notification.notify(successes, 'success');
+                Notification.notify(errors, 'error');
+              }
+            });
 
           } else {
             Log.warn('Could not onboard the user', data);
