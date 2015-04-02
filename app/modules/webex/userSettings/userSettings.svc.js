@@ -36,8 +36,8 @@ angular.module('WebExUserSettings')
           optimizeBandwidthUsage: {
             id: "optimizeBandwidthUsage",
             label: "",
-            isSiteEnabled: true, // TODO
-            value: false // TODO
+            isSiteEnabled: true,
+            value: false
           }
         }, // eventCenter
 
@@ -55,13 +55,13 @@ angular.module('WebExUserSettings')
             id: "hiQualVideo",
             label: "",
             isSiteEnabled: false,
-            value: false, // TODO
+            value: false,
 
             hiDefVideo: {
               id: "hiDefVideo",
               label: "",
               isSiteEnabled: false,
-              value: false // TODO
+              value: false
             }
           }
         }, // videoSettings
@@ -93,7 +93,7 @@ angular.module('WebExUserSettings')
               value: 3,
               id: "tollAndTollFree",
               name: "callInTollType",
-              isDisabled: true
+              isDisabled: true  // TODO
             }],
 
             teleconfViaGlobalCallin: {
@@ -106,13 +106,13 @@ angular.module('WebExUserSettings')
             cliAuth: {
               id: "cliAuth",
               label: "",
-              isSiteEnabled: true, // TODO
-              value: false, // TODO
+              isSiteEnabled: true,
+              value: false,
 
               reqPinEnabled: {
                 id: "reqPinEnabled",
-                label: "", // TODO
-                value: false // TODO
+                label: "",
+                value: false
               }
             }
           }, // callInTeleconf
