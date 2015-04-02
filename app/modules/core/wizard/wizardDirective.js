@@ -33,9 +33,12 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $controller, $translate, PromiseHook) {
+  function WizardCtrl($scope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage) {
     var vm = this;
     vm.current = {};
+    vm.termsCheckbox = false;
+    vm.isCustomerPartner = isCustomerPartner;
+    vm.isFromPartnerLaunch = isFromPartnerLaunch;
 
     vm.getController = getController;
     vm.getSubTabTitle = getSubTabTitle;
@@ -56,6 +59,8 @@
     vm.isFirstTime = isFirstTime;
 
     vm.getNextText = getNextText;
+
+    vm.openTermsAndConditions = openTermsAndConditions;
 
     init();
 
@@ -195,6 +200,14 @@
       });
     }
 
+    function isCustomerPartner() {
+      return Authinfo.getRoles().indexOf('CUSTOMER_PARTNER') > -1;
+    }
+
+    function isFromPartnerLaunch() {
+      return SessionStorage.get('customerOrgId') !== null;
+    }
+
     function isFirstTab() {
       return getTabs().indexOf(getTab()) === 0;
     }
@@ -227,6 +240,12 @@
       } else {
         return 'common.next';
       }
+    }
+
+    function openTermsAndConditions() {
+      var modalInstance = $modal.open({
+        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html'
+      });
     }
   }
 

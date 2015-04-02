@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('Core')
-  .controller('ConvertUsersModalCtrl', ['$scope', '$filter', 'Userservice', 'Notification',
-    function ($scope, $filter, Userservice, Notification) {
-
+  .controller('ConvertUsersModalCtrl', ['$scope', '$filter', 'Userservice', 'Notification', '$log', '$translate',
+    function ($scope, $filter, Userservice, Notification, $log, $translate) {
+      $log.log($scope.licenses.unlicensedUsersList);
       $scope.convertUsers = function () {
         Userservice.migrateUsers($scope.gridOptions.$gridScope.selectedItems, function (data, status) {
           if (data.success) {
@@ -19,10 +19,6 @@ angular.module('Core')
         $scope.convertModalInstance.close();
       };
 
-      var nameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{getName(row.entity)}}">{{getName(row.entity)}}</p></div>';
-
-      var emailTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.userName}}">{{row.entity.userName}}</p></div>';
-
       $scope.gridOptions = {
         data: 'licenses.unlicensedUsersList',
         rowHeight: 45,
@@ -30,25 +26,31 @@ angular.module('Core')
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 2,
         showSelectionCheckbox: true,
-
+        sortInfo: {
+          fields: ['userName'],
+          directions: ['desc']
+        },
         selectedItems: [],
         columnDefs: [{
-          displayName: $filter('translate')('homePage.name'),
-          width: 342,
+          field: 'name.givenName',
+          displayName: $translate.instant('usersPage.firstnameHeader'),
+
           resizable: false,
-          cellTemplate: nameTemplate,
-          sortable: false
+          sortable: true
+        }, {
+          field: 'name.familyName',
+          displayName: $translate.instant('usersPage.lastnameHeader'),
+
+          resizable: false,
+          sortable: true
         }, {
           field: 'userName',
           displayName: $filter('translate')('homePage.emailAddress'),
-          cellTemplate: emailTemplate,
-          width: 405,
+
           resizable: false,
-          sortable: false
+          sortable: true
         }]
       };
-
-      $scope.gridOptions.enableHorizontalScrollbar = 0;
 
     }
   ]);

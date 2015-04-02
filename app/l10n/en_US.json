@@ -560,6 +560,7 @@
     }
   },
   "firstTimeWizard": {
+    "termsAndConditions": "Terms and Conditions",
     "simple": "Simple",
     "advanced": "Advanced",
     "simpleSub": "All you need are users' email addresses",

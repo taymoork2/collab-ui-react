@@ -325,7 +325,7 @@ angular
             displayName: 'Conferencing'
           },
           params: {
-            service: "CONFERENCING"
+            service: 'CONFERENCING'
           }
         })
         .state('user-overview.conferencing.webex', {
@@ -333,7 +333,7 @@ angular
           controller: 'WebExUserSettingsCtrl',
           controllerAs: 'WebExUserSettings',
           data: {
-            displayName: "Session Enablement"
+            displayName: 'Session Enablement'
           },
           params: {
             currentUser: {},
@@ -345,7 +345,7 @@ angular
           controller: 'WebExUserSettings2Ctrl',
           controllerAs: 'WebExUserSettings2',
           data: {
-            displayName: "Privileges"
+            displayName: 'Privileges'
           },
           params: {
             currentUser: {},
