@@ -526,6 +526,8 @@
 
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               $log.log(logMsg);
+
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
             } // getUserSettingsInfoXmlError()
           ); // WebExUserSettingsFact.getUserSettingsInfoXml()
         }, // getUserSettingsInfo()
@@ -609,6 +611,8 @@
               userSettingsModel.loadError = false;
               userSettingsModel.sessionTicketErr = false;
 
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
+
               _self.getUserSettingsInfo();
             }, // getSessionTicketSuccess()
 
@@ -624,6 +628,7 @@
               userSettingsModel.allowRetry = true;
               userSettingsModel.sessionTicketErr = true;
               userSettingsModel.loadError = true;
+
               angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
             } // getSessionTicketError
           ); // WebExUserSettingsFact.getSessionTicket().then()
