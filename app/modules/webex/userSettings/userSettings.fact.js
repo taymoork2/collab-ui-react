@@ -152,7 +152,12 @@
         }, // initXmlApiInfo()
 
         updateUserSettingsModel: function () {
-          var funcName = "updateUserSettingsModel()";
+          this.updateUserSettingsModelPart1();
+          this.updateUserSettingsModelPart2();
+        }, // updateUserSettingsModel()
+
+        updateUserSettingsModelPart1: function () {
+          var funcName = "updateUserSettingsModelPart1()";
           var logMsg = null;
 
           var userInfoJson = userSettingsModel.userInfo.bodyJson;
@@ -250,6 +255,15 @@
             }); // userSettingsModel.sessionTypes.forEach()
           }); // enabledSessionTypesIDs.forEach()
           //---------------- end of session types update ----------------//
+        }, // updateUserSettingsModelPart1()
+
+        updateUserSettingsModelPart2: function () {
+          var funcName = "updateUserSettingsModelPart2()";
+          var logMsg = null;
+
+          var userInfoJson = userSettingsModel.userInfo.bodyJson;
+          var siteInfoJson = userSettingsModel.siteInfo.bodyJson;
+          var meetingTypesInfoJson = userSettingsModel.meetingTypesInfo.bodyJson;
 
           //---------------- start of user privileges update -----------------//
           // Video
@@ -369,14 +383,13 @@
           }
 
           // Event Center
-          // TODO:
-          //   if (???) {
-          //     userSettingsModel.eventCenter.optimizeBandwidthUsage.isSitenEnabled = true;
-          //   }
-          //
-          //   if (???) {
-          //     userSettingsModel.eventCenter.optimizeBandwidthUsage.value = true;
-          //   }
+          if ("true" == siteInfoJson.ns1_siteInstance.ns1_supportedServices.ns1_eventCenter.ns1_optimizeAttendeeBandwidthUsage) {
+            userSettingsModel.eventCenter.optimizeBandwidthUsage.isSitenEnabled = true;
+          }
+
+          if ("true" == userInfoJson.use_eventCenter.use_optimizeAttendeeBandwidthUsage) {
+            userSettingsModel.eventCenter.optimizeBandwidthUsage.value = true;
+          }
 
           // Training Center
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab) {
@@ -388,7 +401,7 @@
           }
           //---------------- end of user privileges update -----------------//
 
-        }, // updateUserSettingsModel()
+        }, // updateUserSettingsModelPart2()
 
         getUserInfoXml: function () {
           var xmlData = XmlApiFact.getUserInfo(xmlApiInfo);
@@ -568,6 +581,7 @@
           xmlApiInfo.globalCallBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value;
           xmlApiInfo.otherTelephony = userSettingsModel.telephonyPriviledge.otherTeleconfServices.value;
           xmlApiInfo.integratedVoIP = userSettingsModel.telephonyPriviledge.integratedVoIP.value;
+          xmlApiInfo.optimizeBandwidthUsage = userSettingsModel.eventCenter.optimizeBandwidthUsage.value;
           xmlApiInfo.handsOnLabAdmin = userSettingsModel.trainingCenter.handsOnLabAdmin.value;
           xmlApiInfo.hiQualVideo = userSettingsModel.videoSettings.hiQualVideo.value;
           xmlApiInfo.hiDefVideo = userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value;
