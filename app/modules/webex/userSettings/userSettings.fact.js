@@ -327,20 +327,17 @@
             userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value = true;
           }
 
-          // TODO:
-          //   if (???) {
-          //     userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled == true;
-          //
+          if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_teleCLIAuthEnabled) {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled = true;
+          }
 
-          // TODO:
-          //   if (???) {
-          //     userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.value = true;
-          //   }
+          if ("true" == userInfoJson.use_privilege.use_teleCLIAuthEnabled) {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.value = true;
+          }
 
-          // TODO:
-          //   if (???) {
-          //      userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.reqPinEnabled.value = true;
-          //   }
+          if ("true" == userInfoJson.use_privilege.use_teleCLIPINEnabled) {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.reqPinEnabled.value = true;
+          }
 
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing) {
             userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled = true;
@@ -564,6 +561,8 @@
 
           xmlApiInfo.teleConfCallIn = userSettingsModel.telephonyPriviledge.teleConfCallIn;
           xmlApiInfo.teleConfTollFreeCallIn = userSettingsModel.telephonyPriviledge.teleConfTollFreeCallIn;
+          xmlApiInfo.cliAuth = userSettingsModel.telephonyPriviledge.cliAuth.value;
+          xmlApiInfo.reqPinEnabled = userSettingsModel.telephonyPriviledge.cliAuth.reqPinEnabled.value;
           xmlApiInfo.teleconfViaGlobalCallin = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value;
           xmlApiInfo.callBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.value;
           xmlApiInfo.globalCallBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value;
