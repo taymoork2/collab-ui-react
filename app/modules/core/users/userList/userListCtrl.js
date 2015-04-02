@@ -75,6 +75,17 @@ angular.module('Core')
         return false;
       };
 
+      $scope.isHuronUser = function (allEntitlements) {
+        if (allEntitlements) {
+          for (var i = 0; i < allEntitlements.length; i++) {
+            if (Config.entitlements.huron === allEntitlements[i]) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+
       // if the side panel is closing unselect the user
       $rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('users.list')) {
@@ -208,13 +219,13 @@ angular.module('Core')
         '<i class="icon icon-user"></i>' +
         '</span>';
 
-      var actionsTemplate = '<span dropdown ng-if="row.entity.userStatus === \'pending\' || !org.dirsyncEnabled">' +
+      var actionsTemplate = '<span dropdown ng-if="row.entity.userStatus === \'pending\' || (!org.dirsyncEnabled && !isHuronUser(row.entity.entitlements))">' +
         '<button id="actionsButton" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
         '<li ng-if="row.entity.userStatus === \'pending\'" id="resendInviteOption"><a ng-click="$event.stopPropagation(); resendInvitation(row.entity.userName, row.entity.name.givenName); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && !isHuronUser(row.entity.entitlements)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';
 

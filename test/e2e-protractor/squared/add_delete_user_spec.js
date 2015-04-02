@@ -62,10 +62,8 @@ describe('Squared Add & Entitle User Flows', function () {
       utils.click(users.closeAddUsers);
       utils.expectIsNotDisplayed(users.manageDialog);
     });
-  });
 
-  describe('Soft Delete user used for entitle test', function () {
-    it('should soft delete added user and the user should not show up in search results', function () {
+    it('should soft delete added user used for entitle test and the user should not show up in search results', function () {
       utils.search(inputEmail);
       utils.click(users.userListAction);
       utils.click(users.deleteUserOption);
@@ -76,16 +74,62 @@ describe('Squared Add & Entitle User Flows', function () {
       notifications.clearNotifications();
       users.assertResultsLength(0);
     });
-  });
 
-  describe('Delete user used for entitle test', function () {
     it('should delete added user', function () {
       deleteUtils.deleteUser(inputEmail);
     });
+
+    it('should log out', function () {
+      navigation.logout();
+    });
   });
 
-  it('should log out', function () {
-    navigation.logout();
+  describe('Login as huron-int1 admin and launch add users modal', function () {
+    it('should login as huron-int1 admin', function () {
+      login.login('huron-int1');
+    });
+
+    it('clicking on users tab should change the view', function () {
+      navigation.clickUsers();
+    });
+
+    it('click on add button should pop up the adduser modal and display only invite button', function () {
+      utils.click(users.addUsers);
+      utils.expectIsDisplayed(users.manageDialog);
+    });
+
+  });
+
+  describe('Add a new user with ciscous entitlement', function () {
+    it('should display input user email in results with success message', function () {
+      utils.click(users.clearButton);
+      utils.sendKeys(users.addUsersField, inputEmail);
+      utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+      utils.click(users.squaredUCCheckBox);
+      utils.click(users.onboardButton);
+      notifications.assertSuccess(inputEmail, 'onboarded successfully');
+      notifications.clearNotifications();
+    });
+  });
+
+  describe('Delete user and log out', function () {
+    it('clicking on cancel button should close the modal', function () {
+      utils.click(users.closeAddUsers);
+      utils.expectIsNotDisplayed(users.manageDialog);
+    });
+
+    it('should not be able to soft delete user with ciscoUC entitlememt', function () {
+      utils.search(inputEmail);
+      utils.expectIsNotDisplayed(users.userListAction);
+    });
+
+    it('should delete added user', function () {
+      deleteUtils.deleteUser(inputEmail);
+    });
+
+    it('should log out', function () {
+      navigation.logout();
+    });
   });
 
 });

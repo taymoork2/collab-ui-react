@@ -5,7 +5,7 @@ angular.module('Core')
   .service('UserListService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Utils', '$q', '$filter', '$compile', 'Auth',
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
-      var searchFilter = 'filter=userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
+      var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
       var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active';
       var scimUrl = Config.scimUrl + '?' + '&' + attributes;
       var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
@@ -20,10 +20,12 @@ angular.module('Core')
           var entitlement;
           var scimSearchUrl = null;
           var encodedSearchStr = '';
-          var adminFilter = '&filter=roles%20eq%20%22id_full_admin%22';
+          var adminFilter = '&filter=roles%20eq%20%22id_full_admin%22%20and%20active%20eq%20true';
 
           if (getAdmins && listUrl.indexOf(adminFilter) === -1) {
             listUrl = listUrl + adminFilter;
+          } else {
+            listUrl = listUrl + '&filter=active%20eq%20true';
           }
 
           if (typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
@@ -40,7 +42,7 @@ angular.module('Core')
             listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
           } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
-            filter = 'filter=entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
+            filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement);
             scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
             listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
           }
@@ -64,13 +66,13 @@ angular.module('Core')
           $http.get(listUrl)
             .success(function (data, status) {
               data.success = true;
-              var activeUsers = [];
-              for (var i = 0; i < data.Resources.length; i++) {
-                if (data.Resources[i].active === true) {
-                  activeUsers.push(data.Resources[i]);
-                }
-              }
-              data.Resources = activeUsers;
+              // var activeUsers = [];
+              // for (var i = 0; i < data.Resources.length; i++) {
+              //   if (data.Resources[i].active === true) {
+              //     activeUsers.push(data.Resources[i]);
+              //   }
+              // }
+              // data.Resources = activeUsers;
               Log.debug('Callback with search=' + searchStr);
               callback(data, status, searchStr);
             })
