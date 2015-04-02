@@ -97,6 +97,8 @@ angular.module('WebExUserSettings').service(
           "            <use:privilege>" + "\n" +
           "                <use:teleConfCallIn>{{teleConfCallIn}}</use:teleConfCallIn>" + "\n" +
           "                <use:teleConfTollFreeCallIn>{{teleConfTollFreeCallIn}}</use:teleConfTollFreeCallIn>" + "\n" +
+          "                <use:teleCLIAuthEnabled>{{cliAuth}}</use:teleCLIAuthEnabled>" + "\n" +
+          "                <use:teleCLIPINEnabled>{{reqPinEnabled}}</use:teleCLIPINEnabled>" + "\n" +
           "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n" +
           "                <use:teleConfCallOut>{{callBackTeleconf}}</use:teleConfCallOut>" + "\n" +
           "                <use:teleConfCallOutInternational>{{globalCallBackTeleconf}}</use:teleConfCallOutInternational>" + "\n" +
