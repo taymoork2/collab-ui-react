@@ -106,12 +106,13 @@
         <div ng-if="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled">
           <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.id}}
                        name={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.id}}
-                       isdisabled="true"
                        ng-model="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.value"
                        label={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.label}}>
           </cs-checkbox>
 
-          <div class="indentedCheckbox">
+          <div class="indentedCheckbox"
+               ng-if="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled">
+               
             <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.id}}
                          name={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.id}}
                          ng-model="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value"

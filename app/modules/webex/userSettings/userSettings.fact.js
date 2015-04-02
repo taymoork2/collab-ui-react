@@ -260,19 +260,22 @@
           //---------------- end of session types update ----------------//
 
           //---------------- start of user privileges update -----------------//
-          // General
-          // TODO:
-          //   if (???) {
-          //     userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = true;
-          //   }
-          //
-          //   if (???) {
-          //     userSettingsModel.videoSettings.hiQualVideo.value = true;
-          //   }
-          //
-          //   if (???) {
-          //     userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value = true;
-          //   }
+          // Video
+          if ("true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HQvideo) {
+            userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = true;
+          }
+
+          if ("true" == userInfoJson.use_privilege.use_HQvideo) {
+            userSettingsModel.videoSettings.hiQualVideo.value = true;
+          }
+
+          if ("true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HDvideo) {
+            userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = true;
+          }
+
+          if ("true" == userInfoJson.use_privilege.use_HDvideo) {
+            userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value = true;
+          }
 
           // Telephony
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing) {
@@ -573,6 +576,8 @@
           xmlApiInfo.otherTelephony = userSettingsModel.telephonyPriviledge.otherTeleconfServices.value;
           xmlApiInfo.integratedVoIP = userSettingsModel.telephonyPriviledge.integratedVoIP.value;
           xmlApiInfo.handsOnLabAdmin = userSettingsModel.trainingCenter.handsOnLabAdmin.value;
+          xmlApiInfo.hiQualVideo = userSettingsModel.videoSettings.hiQualVideo.value;
+          xmlApiInfo.hiDefVideo = userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value;
 
           return XmlApiFact.updateUserSettings2(xmlApiInfo);
         }, // updateUserSettings2()
