@@ -362,6 +362,18 @@ angular.module('Core')
             Log.info('User onboard request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
             var promises = [];
+            var numAddedUsers = 0;
+
+            for (var num = 0; num < data.userResponse.length; num++) {
+              if (data.userResponse[num].status === 200) {
+                numAddedUsers++;
+              }
+            }
+
+            if (numAddedUsers > 0) {
+              var msg = 'Invited ' + numAddedUsers + ' users';
+              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers);
+            }
 
             for (var i = 0; i < data.userResponse.length; i++) {
               var userResult = {

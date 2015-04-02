@@ -49,6 +49,11 @@ angular.module('Core')
               }
               $rootScope.services = Authinfo.getServices();
 
+              if (state !== 'partneroverview' && Auth.isLoginMarked()) {
+                LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+                Auth.clearLoginMarker();
+              }
+
               $timeout(function () {
                 $state.go(state, params);
               }, loadingDelay);

@@ -28,7 +28,16 @@ angular.module('Core')
           trialPage: 'TRIALPAGE',
           trialDidPage: 'TRIALDIDPAGE',
           trialDidEntered: 'TRIALDIDENTERED',
-          trialStarted: 'TRIALSTARTED'
+          trialStarted: 'TRIALSTARTED',
+          customerLogin: 'CUSTOMERLOGIN',
+          customerOverviewPage: 'CUSTOMEROVERVIEWPAGE',
+          customerUsersListPage: 'CUSTOMERUSERSLISTPAGE',
+          customerDevicesPage: 'CUSTOMERDEVICESPAGE',
+          customerReportsPage: 'CUSTOMERREPORTSPAGE',
+          customerSupportPage: 'CUSTOMERSUPPORTPAGE',
+          customerAccountPage: 'CUSTOMERACCOUNTPAGE',
+          customerInviteUsersPage: 'CUSTOMERINVITEUSERSPAGE',
+          userOnboardEmailSent: 'USERONBOARDEMAILSENT'
         },
 
         getEventAction: function (eAction) {
@@ -60,6 +69,58 @@ angular.module('Core')
             }
           } else {
             Log.error('Invalid eventAction/eventType.');
+          }
+        },
+
+        logMetricsState: function (state) {
+          var msg = null;
+          var eType = null;
+          var stateFound = true;
+
+          switch (state.name) {
+          case 'overview':
+            msg = "In customer overview page";
+            eType = this.getEventType('customerOverviewPage');
+            break;
+          case 'users.list':
+            msg = "In users list page";
+            eType = this.getEventType('customerUsersListPage');
+            break;
+          case 'devices':
+            if (Authinfo.isCustomerAdmin()) {
+              msg = "In customer devices page";
+              eType = this.getEventType('customerDevicesPage');
+            } else {
+              stateFound = false;
+            }
+            break;
+          case 'reports':
+            msg = "In customer reports page";
+            eType = this.getEventType('customerReportsPage');
+            break;
+          case 'support':
+            msg = "In customer support page";
+            eType = this.getEventType('customerSupportPage');
+            break;
+          case 'profile':
+            if (Authinfo.isCustomerAdmin()) {
+              msg = "In customer account page";
+              eType = this.getEventType('customerAccountPage');
+            } else {
+              stateFound = false;
+            }
+            break;
+          case 'users.add':
+            msg = "In invite users page";
+            eType = this.getEventType('customerInviteUsersPage');
+            break;
+          default:
+            stateFound = false;
+            break;
+          }
+
+          if (stateFound && (msg !== null) && (eType !== null)) {
+            this.logMetrics(msg, eType, this.eventAction['buttonClick'], 200, moment(), 1);
           }
         }
 

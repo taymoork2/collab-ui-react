@@ -6,7 +6,7 @@
     .factory('HuronUser', HuronUser);
 
   /* @ngInject */
-  function HuronUser(Authinfo, UserServiceCommon, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService) {
+  function HuronUser(Authinfo, UserServiceCommon, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, $q, LogMetricsService) {
     var userProfile = Authinfo.getOrgId() + '_000001_UCUP';
     var userPayload = {
       'userName': null,
@@ -85,7 +85,14 @@
         }).then(function (otpInfo) {
           emailInfo.oneTimePassword = otpInfo.password;
           emailInfo.expiresOn = otpInfo.expiresOn;
-          return HuronEmailService.save({}, emailInfo).$promise;
+          HuronEmailService.save({}, emailInfo).$promise
+            .then(function () {
+              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+            })
+            .catch(function (response) {
+              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), response.status || 409, moment(), 1);
+              return $q.reject();
+            });
         });
     }
 

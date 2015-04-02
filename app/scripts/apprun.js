@@ -1,8 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate',
-    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate', 'LogMetricsService',
+    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService) {
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
       $rootScope.Utils = Utils;
@@ -93,8 +93,9 @@ angular
         },
         Config.tokenTimers.refreshDelay); //15 minutes
 
-      $rootScope.$on('$stateChangeSuccess', function () {
+      $rootScope.$on('$stateChangeSuccess', function (event, toState) {
         HttpUtils.setTrackingID();
+        LogMetricsService.logMetricsState(toState);
       });
     }
   ]);
