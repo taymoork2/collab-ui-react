@@ -93,7 +93,7 @@ angular.module('WebExUserSettings')
               value: 3,
               id: "tollAndTollFree",
               name: "callInTollType",
-              isDisabled: true  // TODO
+              isDisabled: true // TODO
             }],
 
             teleconfViaGlobalCallin: {
