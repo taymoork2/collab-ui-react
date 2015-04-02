@@ -51,14 +51,6 @@
           return $stateParams.currentUser.name.familyName;
         }, // getFamilyName()
 
-        getUserName: function () {
-          var userName = this.getGivenName() + " " + this.getFamilyName();
-
-          $log.log("getUserName(): userName=" + userName);
-
-          return userName;
-        }, // getUserName()
-
         validateXmlData: function (
           commentText,
           infoXml,
@@ -492,11 +484,13 @@
                 }
 
                 if ("030001" == errId) {
-                  var userName = _self.getUserName();
+                  var familyName = _self.getFamilyName();
+                  var givenName = _self.getGivenName();
 
                   userSettingsModel.errMsg = $translate.instant(
                     "webexUserSettingsAccessErrors.030001", {
-                      userName: userName
+                      givenName: givenName,
+                      familyName: familyName
                     }
                   );
                 } else {
