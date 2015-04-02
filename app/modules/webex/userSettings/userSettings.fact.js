@@ -297,9 +297,9 @@
                 userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = false;
                 userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = true;
               } else {
-                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = true;
+                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = false;
                 userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = true;
-                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = false;
+                userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = true;
               }
             }
           }
