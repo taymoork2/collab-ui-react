@@ -112,16 +112,18 @@ angular.module('Core')
             'encryptedQueryString': enc
           };
 
-          $http.post(orgUrl, orgRequest)
-            .success(function (data, status) {
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
+          Auth.setAccessToken().then(function () {
+            $http.post(orgUrl, orgRequest)
+              .success(function (data, status) {
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function (data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          });
         }
       };
     }
