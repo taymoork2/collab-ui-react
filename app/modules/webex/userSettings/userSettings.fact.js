@@ -129,8 +129,6 @@
           userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label = $translate.instant("webexUserSettingLabels.tollFreeOnlyLabel");
           userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].label = $translate.instant("webexUserSettingLabels.tollAndTollFreeLabel");
           userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label = $translate.instant("webexUserSettingLabels.teleconfViaGlobalCallinLabel");
-          userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.label = $translate.instant("webexUserSettingLabels.cliAuthLabel");
-          userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.reqPinEnabled.label = $translate.instant("webexUserSettingLabels.reqPinEnabledLabel");
           userSettingsModel.telephonyPriviledge.callBackTeleconf.label = $translate.instant("webexUserSettingLabels.callBackTeleconfLabel");
           userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label = $translate.instant("webexUserSettingLabels.globalCallBackTeleconfLabel");
           userSettingsModel.telephonyPriviledge.otherTeleconfServices.label = $translate.instant("webexUserSettingLabels.otherTeleconfServicesLabel");
@@ -339,18 +337,6 @@
 
           if ("true" == userInfoJson.use_privilege.use_teleConfCallInInternational) {
             userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value = true;
-          }
-
-          if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_teleCLIAuthEnabled) {
-            userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.isSiteEnabled = true;
-          }
-
-          if ("true" == userInfoJson.use_privilege.use_teleCLIAuthEnabled) {
-            userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.value = true;
-          }
-
-          if ("true" == userInfoJson.use_privilege.use_teleCLIPINEnabled) {
-            userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.reqPinEnabled.value = true;
           }
 
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing) {
@@ -576,14 +562,8 @@
           userSettingsModel.telephonyPriviledge.teleConfCallIn = teleConfCallIn;
           userSettingsModel.telephonyPriviledge.teleConfTollFreeCallIn = teleConfTollFreeCallIn;
 
-          if (!userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.value) {
-            userSettingsModel.telephonyPriviledge.callInTeleconf.cliAuth.reqPinEnabled = false;
-          }
-
           xmlApiInfo.teleConfCallIn = userSettingsModel.telephonyPriviledge.teleConfCallIn;
           xmlApiInfo.teleConfTollFreeCallIn = userSettingsModel.telephonyPriviledge.teleConfTollFreeCallIn;
-          xmlApiInfo.cliAuth = userSettingsModel.telephonyPriviledge.cliAuth.value;
-          xmlApiInfo.reqPinEnabled = userSettingsModel.telephonyPriviledge.cliAuth.reqPinEnabled.value;
           xmlApiInfo.teleconfViaGlobalCallin = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value;
           xmlApiInfo.callBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.value;
           xmlApiInfo.globalCallBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value;

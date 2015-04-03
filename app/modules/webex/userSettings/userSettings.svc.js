@@ -102,19 +102,6 @@ angular.module('WebExUserSettings')
               isSiteEnabled: true, // TODO
               value: false
             },
-
-            cliAuth: {
-              id: "cliAuth",
-              label: "",
-              isSiteEnabled: true,
-              value: false,
-
-              reqPinEnabled: {
-                id: "reqPinEnabled",
-                label: "",
-                value: false
-              }
-            }
           }, // callInTeleconf
 
           callBackTeleconf: {

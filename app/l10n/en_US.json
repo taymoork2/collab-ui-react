@@ -1063,8 +1063,6 @@
     "tollFreeOnlyLabel": "Toll free",
     "tollAndTollFreeLabel": "Toll & Toll free *",
     "teleconfViaGlobalCallinLabel": "Allow access to teleconference via global call-in numbers *",
-    "cliAuthLabel": "Enable teleconferencing CLI authentication",
-    "reqPinEnabledLabel": "Host and attendees must have PIN enabled",
     "callBackTeleconfLabel": "Call-back teleconferencing",
     "globalCallBackTeleconfLabel": "Global call-back teleconferencing",
     "otherTeleconfServicesLabel": "Other teleconference services *",
