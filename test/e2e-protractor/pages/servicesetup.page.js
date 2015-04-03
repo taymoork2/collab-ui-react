@@ -3,6 +3,8 @@
 var ServiceSetup = function () {
   this.timeZone = element(by.id('timeZone'));
   this.steeringDigit = element(by.id('steeringDigit'));
+  this.siteSteeringDigit = element(by.id('siteSteeringDigit'));
+  this.siteCode = element(by.id('siteCode'));
   this.globalMOH = element(by.id('globalMOH'));
   this.addNumberRange = element(by.linkText('Add More Extension Ranges'));
   this.numberRanges = element.all(by.repeater('internalNumberRange in internalNumberRanges'));

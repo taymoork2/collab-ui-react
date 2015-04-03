@@ -7,8 +7,11 @@
 
   /* @ngInject */
   function serviceSetupCtrl($scope, $q, Log, ServiceSetup, HttpUtils) {
+    var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = 'America/Los_Angeles';
     var DEFAULT_SD = '9';
+    var DEFAULT_SITE_SD = '8';
+    var DEFAULT_SITE_CODE = '100';
     var DEFAULT_MOH = 'ciscoDefault';
     var DEFAULT_EXTENTION_LENGTH = '5';
     var DEFAULT_FROM = '5000';
@@ -38,10 +41,11 @@
       "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
     ];
     $scope.site = {
+      siteIndex: DEFAULT_SITE_INDEX,
       timeZone: DEFAULT_TZ,
-      steeringDigit: null,
-      siteIndex: '000001',
-      siteCode: '100'
+      steeringDigit: DEFAULT_SD,
+      siteSteeringDigit: DEFAULT_SITE_SD,
+      siteCode: DEFAULT_SITE_CODE
     };
     $scope.globalMOH = DEFAULT_MOH;
     $scope.maxExtLength = DEFAULT_EXTENTION_LENGTH;
@@ -52,10 +56,13 @@
       // sets firstTimeSetup to false if a site exists
       ServiceSetup.listSites().then(function () {
         if (ServiceSetup.sites.length !== 0) {
-          $scope.site.steeringDigit = ServiceSetup.sites[0].steeringDigit;
-          $scope.firstTimeSetup = false;
+          ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
+            $scope.site.steeringDigit = site.steeringDigit;
+            $scope.site.siteSteeringDigit = site.siteSteeringDigit;
+            $scope.site.siteCode = site.siteCode;
+            $scope.firstTimeSetup = false;
+          });
         } else {
-          $scope.site.steeringDigit = DEFAULT_SD;
           $scope.firstTimeSetup = true;
         }
       });
@@ -70,7 +77,6 @@
         });
 
         if ($scope.internalNumberRanges.length === 0) {
-          // Add a default internalNumberRange
           $scope.internalNumberRanges.push({
             beginNumber: DEFAULT_FROM,
             endNumber: DEFAULT_TO

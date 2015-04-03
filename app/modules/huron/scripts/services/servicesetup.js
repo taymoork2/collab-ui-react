@@ -17,7 +17,7 @@
         }, site, function (response) {
           Notification.notify([response.siteIndex + ' added successfully'], 'success');
         }, function (response) {
-          Notification.notify([response.config.data.siteIndex + ' not added'], 'error');
+          Notification.notify([response.data.errorMessage], 'error');
         }).$promise;
       },
 
