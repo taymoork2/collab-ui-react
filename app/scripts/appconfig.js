@@ -448,6 +448,7 @@ angular
           url: '/devices',
           templateUrl: 'modules/squared/devices/devices.html',
           controller: 'SpacesCtrl',
+          controllerAs: 'sc',
           parent: 'main'
         })
         .state('partneroverview', {

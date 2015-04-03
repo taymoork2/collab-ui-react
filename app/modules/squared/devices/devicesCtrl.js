@@ -2,11 +2,14 @@
 /* global moment, $ */
 
 angular.module('Squared')
-  .controller('SpacesCtrl', ['$scope', '$location', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Notification',
-    function ($scope, $location, Storage, Log, Utils, $filter, SpacesService, Notification) {
-      $scope.totalResults = null;
-      $scope.showAdd = true;
-      $scope.emptyDevices = true;
+  .controller('SpacesCtrl', ['$location', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Notification', '$log',
+    function ($location, Storage, Log, Utils, $filter, SpacesService, Notification, $log) {
+      var vm = this;
+
+      vm.totalResults = null;
+      vm.showAdd = true;
+      vm.emptyDevices = true;
+      vm.roomData = null;
 
       var formatActivationCode = function (activationCode) {
         var acode = '';
@@ -20,17 +23,17 @@ angular.module('Squared')
         return acode;
       };
 
-      $scope.setDeleteDevice = function (deviceUuid, room) {
-        $scope.deleteDeviceUuid = deviceUuid;
-        $scope.deleteRoom = room;
+      vm.setDeleteDevice = function (deviceUuid, room) {
+        vm.deleteDeviceUuid = deviceUuid;
+        vm.deleteRoom = room;
       };
 
-      $scope.cancelDelete = function () {
-        $scope.deleteDeviceUuid = null;
-        $scope.deleteRoom = null;
+      vm.cancelDelete = function () {
+        vm.deleteDeviceUuid = null;
+        vm.deleteRoom = null;
       };
 
-      $scope.deleteDevice = function (deviceUuid, device) {
+      vm.deleteDevice = function (deviceUuid, device) {
         SpacesService.deleteDevice(deviceUuid, function (data, status) {
           if (data.success === true) {
             var successMessage = device + ' deleted successfully.';
@@ -50,7 +53,7 @@ angular.module('Squared')
           if (data.success === true) {
             var devices = [];
             if (data.devices) {
-              $scope.totalResults = data.devices.length;
+              vm.totalResults = data.devices.length;
               for (var i = 0; i < data.devices.length; i++) {
                 var device = data.devices[i];
                 var adate = device.activationTime;
@@ -80,7 +83,7 @@ angular.module('Squared')
                 });
               }
             }
-            $scope.roomData = devices;
+            vm.roomData = devices;
           } else {
             Log.error('Error getting rooms. Status: ' + status);
           }
@@ -102,13 +105,13 @@ angular.module('Squared')
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
-        '<li id="deleteDeviceAction"><a data-toggle="modal" data-target="#deleteDeviceModal" ng-click="setDeleteDevice(row.entity.deviceUuid, row.entity.room)"><span translate="spacesPage.delete"></span></a></li>' +
+        '<li id="deleteDeviceAction"><a data-toggle="modal" data-target="#deleteDeviceModal" ng-click="sc.setDeleteDevice(row.entity.deviceUuid, row.entity.room)"><span translate="spacesPage.delete"></span></a></li>' +
         '</ul>' +
         '</span>';
 
-      $scope.newRoomName = null;
-      $scope.gridOptions = {
-        data: 'roomData',
+      vm.newRoomName = null;
+      vm.gridOptions = {
+        data: 'sc.roomData',
         multiSelect: false,
         showFilter: false,
         rowHeight: 75,
@@ -140,20 +143,20 @@ angular.module('Squared')
         }]
       };
 
-      $scope.resetAddDevice = function () {
-        $scope.showAdd = true;
+      vm.resetAddDevice = function () {
+        vm.showAdd = true;
         $('#newRoom').val('');
-        $scope.newRoomName = null;
+        vm.newRoomName = null;
       };
 
-      $scope.addDevice = function () {
-        SpacesService.addDevice($scope.newRoomName, function (data, status) {
+      vm.addDevice = function () {
+        SpacesService.addDevice(vm.newRoomName, function (data, status) {
           if (data.success === true) {
-            $scope.showAdd = false;
+            vm.showAdd = false;
             if (data.activationCode && data.activationCode.length > 0) {
-              $scope.newActivationCode = formatActivationCode(data.activationCode);
+              vm.newActivationCode = formatActivationCode(data.activationCode);
             }
-            var successMessage = $scope.newRoomName + ' added successfully.';
+            var successMessage = vm.newRoomName + ' added successfully.';
             // Notification requires change to accomodate displaying 2nd line with different font size.
             // for now change the font inline in the message.
             if (data.emailConfCode === undefined && data.conversationId === undefined) {
@@ -164,7 +167,7 @@ angular.module('Squared')
               getAllDevices();
             }, 1000);
           } else {
-            var errorMessage = ['Error adding ' + $scope.newRoomName + '. Status: ' + status];
+            var errorMessage = ['Error adding ' + vm.newRoomName + '. Status: ' + status];
             Notification.notify(errorMessage, 'error');
           }
         });
