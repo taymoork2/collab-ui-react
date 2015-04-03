@@ -224,7 +224,6 @@
           };
 
           this.getSessionTicketInfo(xmlApiAccessInfo).then(
-
             function getSessionTicketInfoSuccess(result) {
               funcName = "getSessionTicketInfoSuccess()";
 
@@ -270,7 +269,10 @@
 
               logMsg = funcName + ".error()" + ": " + "\n" + "reason= " + reason;
               $log.log(logMsg);
-              defer.reject(reason);
+
+              var exceptionId = "";
+
+              defer.reject(exceptionId);
             }); //getSessionTicketInfoError
           logMsg = funcName + " Exiting";
           $log.log(logMsg);
