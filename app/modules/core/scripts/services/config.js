@@ -354,6 +354,8 @@ angular.module('Core')
         getEnv: function () {
           if (this.isDev()) {
             return 'dev';
+          } else if (this.isCfe()) {
+            return 'cfe';
           } else if (this.isIntegration()) {
             return 'integration';
           } else {
