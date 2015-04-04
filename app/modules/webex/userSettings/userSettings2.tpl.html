@@ -3,13 +3,40 @@
   <cs-sp-section>
     <div id="errSection"
          name="errSection"
-         ng-if="WebExUserSettings.userSettingsModel.loadErr">
-      
-      <!-- TODO -->
+         ng-if="WebExUserSettings2.userSettingsModel.loadError">
+       
+      <div class="center">
+        <div ng-if="WebExUserSettings2.userSettingsModel.allowRetry"
+             class="nodata-icon">
+             
+          <span class="icon icon-circle-clock"></span> 
+        </div>
+        
+        <div class="nodata-message">
+          {{WebExUserSettings2.userSettingsModel.errMsg}}
+        </div>
+        
+        <button id="cancelBtn"
+                class="btn btn-default wiz-onboard-btn"
+                ui-sref="user-overview.conferencing.webex">
+                
+          <span translate="webexUserSettings.cancel"></span>
+        </button>
+        
+        <button id="reloadBtn"
+                name="reloadBtn"
+                class="btn btn-info wiz-onboard-btn"
+                ng-if="WebExUserSettings2.userSettingsModel.allowRetry"
+                ng-click="WebExUserSettings2.btnReload()"
+                data-loading-text="<i class='icon icon-spinner'></i>">
+                
+          <span translate="webexUserSettings.reload"></span>
+        </button>
+      </div>
     </div>
 
     <div id="webexUserSettingsPage2"
-         ng-if="WebExUserSettings.userSettingsModel.viewReady">
+         ng-if="WebExUserSettings2.userSettingsModel.viewReady">
 
       <h4 class="list-group-item-heading">
         &nbsp;
@@ -164,13 +191,14 @@
       <!-- End of Training Center section -->
 
       <!-- Start of Action Buttons (will be removed) -->
-	  <p align="left">
-       <button id="btnUpdate"
-                name="btnUpdate"
+    <p align="left">
+       <button id="saveBtn"
+                name="saveBtn"
                 type="button"
                 class="btn btn-info btn-save"
                 ng-disabled="!userSettingsView.form.$dirty"
-                ng-click="WebExUserSettings2.updateUserSettings()">
+                ng-click="WebExUserSettings2.btnSave()"
+                data-loading-text="<i class='icon icon-spinner'></i>">
           Save
         </button>
       </p>

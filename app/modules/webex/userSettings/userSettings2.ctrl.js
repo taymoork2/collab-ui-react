@@ -24,41 +24,24 @@
     ) {
 
       $scope.userSettingsView.form.$dirty = false;
+      $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
+      $scope.adminEmailParam = Authinfo.getUserName();
+      $scope.userEmailParam = $stateParams.currentUser.userName;
+
+      this.btnSave = function () {
+        var funcName = "btnSave()";
+        var logMsg = "";
+
+        WebExUserSettingsFact.updateUserSettings2();
+      }; // btnSave()
 
       this.initPanel = function () {
-        $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
-        $scope.adminEmailParam = Authinfo.getUserName();
-        $scope.userEmailParam = $stateParams.currentUser.userName;
-
         WebExUserSettingsFact.initPanel();
       }; // initPanel()
 
       this.getUserSettingsInfo = function () {
         WebExUserSettingsFact.getUserSettingsInfo();
       }; // getUserSettingsInfo()
-
-      this.updateUserSettings = function () {
-        var funcName = "updateUserSettings()";
-        var logMsg = "";
-
-        logMsg = funcName + ": " + "START";
-        $log.log(logMsg);
-
-        WebExUserSettingsFact.updateUserSettings2().then(
-          function () {
-            var successMsg = [];
-            successMsg.push($filter('translate')('webexUserSettings2.updateSuccess'));
-
-            Notification.notify(['Privileges updated'], 'success');
-          },
-          function () {
-            Notification.notify(['Privileges update failed'], 'error');
-          }
-        );
-
-        logMsg = funcName + ": " + "END";
-        $log.log(logMsg);
-      }; // updateUserSettings()
 
       //----------------------------------------------------------------------//
 
