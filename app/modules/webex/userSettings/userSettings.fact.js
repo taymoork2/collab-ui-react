@@ -302,7 +302,6 @@
 
           logMsg = funcName + ": " + "\n" +
             "ns1_callInTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing + "\n" +
-            "ns1_hybridTeleconference=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference + "\n" +
             "ns1_tollFreeCallinTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing + "\n" +
             "use_teleConfCallIn=" + userInfoJson.use_privilege.use_teleConfCallIn + "\n" +
             "use_teleConfTollFreeCallIn=" + userInfoJson.use_privilege.use_teleConfTollFreeCallIn + "\n" +
@@ -313,10 +312,10 @@
           $log.log(logMsg);
 
           // TODO:
-          //   if ("true" == ???) {
-          //     userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = true;
-          //   }
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = true;
+          // if ("true" == ???) {}
+          if (true) {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = true;
+          }
 
           if ("true" == userInfoJson.use_privilege.use_teleConfCallInInternational) {
             userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value = true;
@@ -335,10 +334,10 @@
           }
 
           // TODO
-          // if ("true" == ???) {
-          //   userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = true;
-          // }
-          userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = true;
+          // if ("true" == ???) {}
+          if (true) {
+            userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = true;
+          }
 
           if ("true" == userInfoJson.use_privilege.use_otherTelephony) {
             userSettingsModel.telephonyPriviledge.otherTeleconfServices.value = true;
