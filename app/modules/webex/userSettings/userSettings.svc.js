@@ -36,7 +36,7 @@ angular.module('WebExUserSettings')
           optimizeBandwidthUsage: {
             id: "optimizeBandwidthUsage",
             label: "",
-            isSiteEnabled: true,
+            isSiteEnabled: false,
             value: false
           }
         }, // eventCenter
@@ -72,7 +72,6 @@ angular.module('WebExUserSettings')
           callInTeleconf: {
             id: "callInTeleconf",
             label: "",
-            value: true, // TODO
             isSiteEnabled: false,
             selectedCallInTollType: 0,
 
@@ -93,13 +92,13 @@ angular.module('WebExUserSettings')
               value: 3,
               id: "tollAndTollFree",
               name: "callInTollType",
-              isDisabled: true // TODO
+              isDisabled: true
             }],
 
             teleconfViaGlobalCallin: {
               id: "teleconfViaGlobalCallin",
               label: "",
-              isSiteEnabled: true, // TODO
+              isSiteEnabled: false,
               value: false
             },
           }, // callInTeleconf
@@ -120,7 +119,7 @@ angular.module('WebExUserSettings')
           otherTeleconfServices: {
             id: "otherTeleconfServices",
             label: "",
-            isSiteEnabled: true, // TODO
+            isSiteEnabled: false,
             value: false
           },
 

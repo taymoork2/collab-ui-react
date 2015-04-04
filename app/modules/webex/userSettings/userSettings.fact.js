@@ -156,11 +156,6 @@
           xmlApiInfo.webexUserId = $stateParams.currentUser.userName;
         }, // initXmlApiInfo()
 
-        updateUserSettingsModel: function () {
-          this.updateUserSettingsModelPart1();
-          this.updateUserSettingsModelPart2();
-        }, // updateUserSettingsModel()
-
         updateUserSettingsModelPart1: function () {
           var funcName = "updateUserSettingsModelPart1()";
           var logMsg = null;
@@ -271,28 +266,13 @@
           var meetingTypesInfoJson = userSettingsModel.meetingTypesInfo.bodyJson;
 
           //---------------- start of user privileges update -----------------//
-          // Video
-          if ("true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HQvideo) {
-            userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = true;
-          }
-
-          if ("true" == userInfoJson.use_privilege.use_HQvideo) {
-            userSettingsModel.videoSettings.hiQualVideo.value = true;
-          }
-
-          if ("true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HDvideo) {
-            userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = true;
-          }
-
-          if ("true" == userInfoJson.use_privilege.use_HDvideo) {
-            userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value = true;
-          }
-
           // Telephony
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing) {
             userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled = true;
 
-            if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference) {
+            // TODO
+            // if ("true" == ???) {
+            if (true) {
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = false;
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = false;
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = false;
@@ -322,7 +302,6 @@
 
           logMsg = funcName + ": " + "\n" +
             "ns1_callInTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing + "\n" +
-            "ns1_hybridTeleconference=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference + "\n" +
             "ns1_tollFreeCallinTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing + "\n" +
             "use_teleConfCallIn=" + userInfoJson.use_privilege.use_teleConfCallIn + "\n" +
             "use_teleConfTollFreeCallIn=" + userInfoJson.use_privilege.use_teleConfTollFreeCallIn + "\n" +
@@ -333,14 +312,10 @@
           $log.log(logMsg);
 
           // TODO:
-          //   if (???) {
-          //     userSettingsModel.telephonyPriviledge.callInTeleconf.value = true;
-          //   }
-
-          // TODO:
-          //   if (???) {
-          //     userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = true;
-          //   }
+          // if ("true" == ???) {}
+          if (true) {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = true;
+          }
 
           if ("true" == userInfoJson.use_privilege.use_teleConfCallInInternational) {
             userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value = true;
@@ -358,10 +333,11 @@
             userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = true;
           }
 
-          // TODO:
-          //   if (???) {
-          //     userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = true;
-          //   }
+          // TODO
+          // if ("true" == ???) {}
+          if (true) {
+            userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = true;
+          }
 
           if ("true" == userInfoJson.use_privilege.use_otherTelephony) {
             userSettingsModel.telephonyPriviledge.otherTeleconfServices.value = true;
@@ -371,13 +347,34 @@
             userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled = true;
           }
 
+          logMsg = funcName + ": " +
+            "integratedVoIP.isSiteEnabled=" + userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled;
+          $log.log(logMsg);
+
           if ("true" == userInfoJson.use_privilege.use_voiceOverIp) {
             userSettingsModel.telephonyPriviledge.integratedVoIP.value = true;
           }
 
+          // Video
+          if ("true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HQvideo) {
+            userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = true;
+          }
+
+          if ("true" == userInfoJson.use_privilege.use_HQvideo) {
+            userSettingsModel.videoSettings.hiQualVideo.value = true;
+          }
+
+          if ("true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HDvideo) {
+            userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = true;
+          }
+
+          if ("true" == userInfoJson.use_privilege.use_HDvideo) {
+            userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value = true;
+          }
+
           // Event Center
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_supportedServices.ns1_eventCenter.ns1_optimizeAttendeeBandwidthUsage) {
-            userSettingsModel.eventCenter.optimizeBandwidthUsage.isSitenEnabled = true;
+            userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled = true;
           }
 
           if ("true" == userInfoJson.use_eventCenter.use_optimizeAttendeeBandwidthUsage) {
@@ -463,7 +460,8 @@
                 ("" === userSettingsModel.meetingTypesInfo.errId)
               ) {
 
-                _self.updateUserSettingsModel();
+                _self.updateUserSettingsModelPart1();
+                _self.updateUserSettingsModelPart2();
 
                 userSettingsModel.loadError = false;
                 userSettingsModel.viewReady = true; // only set this after the model has finished being updated
