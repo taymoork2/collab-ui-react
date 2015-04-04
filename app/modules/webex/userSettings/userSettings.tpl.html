@@ -26,18 +26,8 @@
         <button id="reloadBtn"
                 name="reloadBtn"
                 class="btn btn-info wiz-onboard-btn"
-                ng-if="WebExUserSettings.userSettingsModel.allowRetry && !WebExUserSettings.userSettingsModel.sessionTicketErr"
-                ng-click="WebExUserSettings.getUserSettingsInfo()"
-                data-loading-text="<i class='icon icon-spinner'></i>">
-                
-          <span translate="webexUserSettings.reload"></span>
-        </button>
-        
-        <button id="reloadBtn"
-                name="reloadBtn"
-                class="btn btn-info wiz-onboard-btn"
-                ng-if="WebExUserSettings.userSettingsModel.sessionTicketErr"
-                ng-click="WebExUserSettings.initPanel()"
+                ng-if="WebExUserSettings.userSettingsModel.allowRetry"
+                ng-click="WebExUserSettings.btnReload()"
                 data-loading-text="<i class='icon icon-spinner'></i>">
                 
           <span translate="webexUserSettings.reload"></span>
@@ -195,17 +185,19 @@
       
       <!-- Start of Action Buttons (will be removed) -->
       <p align="left">
-       <button id="btnUpdate"
-                name="btnUpdate"
+       <button id="saveBtn"
+                name="saveBtn"
                 type="button"
                 class="btn btn-info btn-save"
                 ng-disabled="!userSettingsView.form.$dirty"
-                ng-click="WebExUserSettings.updateUserSettings()">
+                ng-click="WebExUserSettings.btnSave()"
+                data-loading-text="<i class='icon icon-spinner'></i>">
           Save
         </button>
       </p>
       <!-- End of Action Buttons -->
 	  </form>
+	  
       <div class="feature-list" ng-binding>
         <ul>
           <li class="feature">

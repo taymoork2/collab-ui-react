@@ -6,19 +6,23 @@
     '$log',
     '$stateParams',
     '$translate',
+    '$filter',
     'XmlApiFact',
     'WebexUserSettingsSvc',
     'XmlApiInfoSvc',
     'Authinfo',
+    'Notification',
     function (
       $q,
       $log,
       $stateParams,
       $translate,
+      $filter,
       XmlApiFact,
       userSettingsModel,
       xmlApiInfo,
-      Authinfo
+      Authinfo,
+      Notification
     ) {
       return {
         /**
@@ -74,12 +78,15 @@
             "<serv:body>"
           ).body;
 
-          var bodyJson = XmlApiFact.xml2JsonConvert(
-            commentText,
-            infoXml,
-            startOfBodyStr,
-            endOfBodyStr
-          ).body;
+          var bodyJson = {};
+          if ((null != startOfBodyStr) && (null != endOfBodyStr)) {
+            bodyJson = XmlApiFact.xml2JsonConvert(
+              commentText,
+              infoXml,
+              startOfBodyStr,
+              endOfBodyStr
+            ).body;
+          }
 
           var errReason = "";
           var errId = "";
@@ -495,7 +502,7 @@
 
                   userSettingsModel.loadError = true; // only set this after all the error info is available
                 } else {
-                  _self.setErrMsg(errId);
+                  _self.setLoadingErrMsg(errId);
                 }
 
                 logMsg = funcName + ": " + "\n" +
@@ -517,7 +524,7 @@
               userSettingsModel.allowRetry = true;
 
               var errId = "";
-              _self.setErrMsg(errId);
+              _self.setLoadingErrMsg(errId);
 
               angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
             } // getUserSettingsInfoXmlError()
@@ -525,13 +532,36 @@
         }, // getUserSettingsInfo()
 
         updateUserSettings: function (userSettings) {
-          return XmlApiFact.updateUserSettings(xmlApiInfo, userSettings);
+          var _self = this;
+
+          angular.element('#saveBtn').button('loading');
+
+          XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
+            function updateUserSettingsSuccess(result) {
+              angular.element('#saveBtn').button('reset');
+
+              var successMsg = $translate.instant("webexUserSettings.sessionEnablementUpdateSuccess");
+              _self.processUpdateSuccessResult(
+                result,
+                successMsg);
+
+            }, // updateUserSettingsSuccess()
+
+            function updateUserSettingsError(result) {
+              angular.element('#saveBtn').button('reset');
+
+              _self.updateUserSettingsError(result);
+            } // updateUserSettingsError()
+          );
         },
 
         updateUserSettings2: function () {
           var funcName = "updateUserSettings2()";
           var logMsg = "";
 
+          angular.element('#saveBtn').button('loading');
+
+          var _self = this;
           var teleConfCallIn = false;
           var teleConfTollFreeCallIn = false;
 
@@ -574,8 +604,62 @@
           xmlApiInfo.hiQualVideo = userSettingsModel.videoSettings.hiQualVideo.value;
           xmlApiInfo.hiDefVideo = userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value;
 
-          return XmlApiFact.updateUserSettings2(xmlApiInfo);
+          XmlApiFact.updateUserSettings2(xmlApiInfo).then(
+            function updateUserSettings2Success(result) {
+              angular.element('#saveBtn').button('reset');
+
+              var successMsg = $translate.instant("webexUserSettings.privilegesUpdateSuccess");
+              _self.processUpdateSuccessResult(
+                result,
+                successMsg);
+            }, // updateUserSettings2Success()
+
+            function updateUserSettings2Error(result) {
+              angular.element('#saveBtn').button('reset');
+
+              _self.updateUserSettingsError(result);
+            } // updateUserSettings2Error()
+          );
         }, // updateUserSettings2()
+
+        processUpdateSuccessResult: function (result, successMsg) {
+          var funcName = "processUpdateSuccessResult()";
+          var logMsg = "";
+
+          logMsg = funcName + ": " + "result=" + "\n" +
+            result;
+          $log.log(logMsg);
+
+          var resultJson = this.validateXmlData(
+            "Update user settings2 result",
+            result,
+            null,
+            null
+          );
+
+          logMsg = funcName + ": " + "resultJson=" + "\n" +
+            JSON.stringify(resultJson);
+          $log.log(logMsg);
+
+          if ("" === resultJson.errId) {
+            Notification.notify([successMsg], 'success');
+          } else {
+            var notificationMsg = this.getErrMsg(resultJson.errId);
+            Notification.notify([notificationMsg], 'error');
+          }
+        }, // processUpdateSuccessResult()
+
+        updateUserSettingsError: function (result) {
+          var funcName = "updateUserSettingsError()";
+          var logMsg = "";
+
+          logMsg = funcName + ": " + "result=" + "\n" +
+            result;
+          $log.log(logMsg);
+
+          var errMsg = this.getErrMsg(null);
+          Notification.notify([errMsg], 'error');
+        }, // updateUserSettingsError()
 
         initPanel: function () {
           var _self = this;
@@ -610,7 +694,7 @@
                 "errId=" + errId;
               $log.log(logMsg);
 
-              _self.setErrMsg(errId);
+              _self.setLoadingErrMsg(errId);
 
               userSettingsModel.allowRetry = true;
               userSettingsModel.sessionTicketErr = true;
@@ -620,10 +704,15 @@
           ); // WebExUserSettingsFact.getSessionTicket().then()
         }, // initPanel()
 
-        setErrMsg: function (errId) {
-          userSettingsModel.errMsg = ((null == errId) || ("" === errId)) ? $translate.instant("webexUserSettingsAccessErrors.defaultAccessError") : $translate.instant('webexUserSettingsAccessErrors.' + errId);
+        setLoadingErrMsg: function (errId) {
+          userSettingsModel.errMsg = this.getErrMsg(errId);
           userSettingsModel.loadError = true;
-        }, // setErrMsg()
+        }, // setLoadingErrMsg()
+
+        getErrMsg: function (errId) {
+          var updateErrMsg = ((null == errId) || ("" === errId)) ? $translate.instant('webexUserSettingsAccessErrors.defaultAccessError') : $translate.instant('webexUserSettingsAccessErrors.' + errId);
+          return updateErrMsg;
+        }, // setUpdateErrMsg()
 
         getSessionTicket: function (webexSiteUrl) {
           return XmlApiFact.getSessionTicket(webexSiteUrl);

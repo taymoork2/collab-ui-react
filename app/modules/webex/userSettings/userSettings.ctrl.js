@@ -19,28 +19,17 @@
       Notification
     ) {
 
-      this.getUserName = function () {
-        var userName = WebExUserSettingsFact.getUserName();
+      this.btnReload = function () {
+        if (this.userSettingsModel.sessionTicketErr) {
+          this.initPanel();
+        } else {
+          this.getUserSettingsInfo();
+        }
+      }; // btnReload()
 
-        $log.log("getUserName(): userName=" + userName);
-
-        return userName;
-      }; // getUserName()
-
-      this.initPanel = function () {
-        WebExUserSettingsFact.initPanel();
-      }; // initPanel()
-
-      this.getUserSettingsInfo = function () {
-        WebExUserSettingsFact.getUserSettingsInfo();
-      }; // getUserSettingsInfo()
-
-      this.updateUserSettings = function () {
-        var funcName = "updateUserSettings()";
+      this.btnSave = function () {
+        var funcName = "btnSave()";
         var logMsg = "";
-
-        logMsg = funcName + ": " + "START";
-        // $log.log(logMsg);
 
         var useSupportedServices = this.userSettingsModel.userInfo.bodyJson.use_supportedServices;
 
@@ -60,20 +49,16 @@
           }
         }); // userSettingsModel.sessionTypes.forEach()
 
-        WebExUserSettingsFact.updateUserSettings(userSettings).then(
-          function () {
-            var successMsg = [];
-            successMsg.push($filter('translate')('webexUserSettings.updateSuccess'));
-            Notification.notify(['Session Enablement updated'], 'success');
-          },
-          function () {
-            Notification.notify(['Session Enablement update failed'], 'error');
-          }
-        );
+        WebExUserSettingsFact.updateUserSettings(userSettings);
+      }; // btnSave()
 
-        logMsg = funcName + ": " + "END";
-        $log.log(logMsg);
-      }; // updateUserSettings()
+      this.initPanel = function () {
+        WebExUserSettingsFact.initPanel();
+      }; // initPanel()
+
+      this.getUserSettingsInfo = function () {
+        WebExUserSettingsFact.getUserSettingsInfo();
+      }; // getUserSettingsInfo()
 
       //----------------------------------------------------------------------//
 
