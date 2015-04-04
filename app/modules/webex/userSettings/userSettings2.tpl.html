@@ -44,8 +44,11 @@
 
       <!-- Start of Telephony section -->
       <div id="telephonyPrivileges"
-           name="telephonyPrivileges">
-
+           name="telephonyPrivileges"
+           ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled" ||
+                 "WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled" ||
+                 "WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled" ||
+                 "WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
         <p>
           <b>
             {{WebExUserSettings2.userSettingsModel.telephonyPriviledge.label}}
@@ -55,8 +58,9 @@
         <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled">
           <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.id}}
                        name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.id}}
-                       ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value"
-                       label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.label}}>
+                       ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled"
+                       label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.label}}
+                       isdisabled="true">
           </cs-checkbox>
 
           <div class="indentedCheckbox">
@@ -113,7 +117,8 @@
 
       <!-- Start of Video section -->
       <div id="videoPrivileges"
-           name="videoPrivileges">
+           name="videoPrivileges"
+           ng-if="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled">
 
         <p>
           <b>
@@ -147,7 +152,7 @@
       <!-- Start of Event Center section -->
       <div id="eventCenterPrivileges"
            name="eventCenterPrivileges"
-           ng-if="WebExUserSettings2.userSettingsModel.eventCenter.isSiteEnabled">
+           ng-if="WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled">
 
          <p>
            <b>
@@ -170,8 +175,8 @@
       <!-- Start of Training Center section -->
       <div id="trainingCenterPrivleges"
            name="trainingCenterPrivleges"
-           ng-if="WebExUserSettings2.userSettingsModel.trainingCenter.isSiteEnabled">
-
+           ng-if="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled">
+           
         <p>
           <b>
             {{WebExUserSettings2.userSettingsModel.trainingCenter.label}}
@@ -191,7 +196,7 @@
       <!-- End of Training Center section -->
 
       <!-- Start of Action Buttons (will be removed) -->
-    <p align="left">
+      <p align="left">
        <button id="saveBtn"
                 name="saveBtn"
                 type="button"
