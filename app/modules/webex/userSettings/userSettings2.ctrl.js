@@ -28,6 +28,14 @@
       $scope.adminEmailParam = Authinfo.getUserName();
       $scope.userEmailParam = $stateParams.currentUser.userName;
 
+      this.btnReload = function () {
+        if (this.userSettingsModel.sessionTicketErr) {
+          this.initPanel();
+        } else {
+          this.getUserSettingsInfo();
+        }
+      }; // btnReload()
+
       this.btnSave = function () {
         var funcName = "btnSave()";
         var logMsg = "";
