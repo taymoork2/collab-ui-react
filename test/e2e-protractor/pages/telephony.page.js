@@ -56,6 +56,21 @@ var TelephonyPage = function () {
 
   this.esnTail = element(by.id('esnTail'));
 
+  this.sharedLineToggle = element(by.css('.shared-line-toggle'));
+  this.userInput = element(by.id('userInput'));
+  this.removeMemberLink = element(by.id('removeMemberLink'));
+  this.removeMemberBtn = element(by.id('removeMemberButton'));
+
+  this.userAccordionGroup = function (user) {
+    var accordion = element(by.id(user + '-AccordionGroup'));
+    return accordion;
+  };
+
+  this.selectSharedLineUser = function (user) {
+    var selected = element(by.id(user + '-AccordionGroup'));
+    utils.click(selected);
+  };
+
   this.retrieveInternalNumber = function () {
     utils.wait(this.internalNumber);
     return this.internalNumber.evaluate('lineSettings.assignedInternalNumber.pattern');

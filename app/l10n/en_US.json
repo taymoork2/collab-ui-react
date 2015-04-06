@@ -701,7 +701,9 @@
     "none": "None",
     "deleteConfirmation": "This action cannot be undone.  Are you sure you want to unassign {{line}} from {{user}}?",
     "deleteLineTitle": "Remove Line",
-    "disassociationSuccess": "Line successfully unassigned from user."
+    "disassociationSuccess": "Line successfully unassigned from user.",
+    "alert": "Warning",
+    "confirm": "There are unsaved changes on the page. Do you wish to continue?"
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
@@ -720,6 +722,15 @@
   "callerIdPanel": {
     "title": "Caller ID",
     "description": "<small>Change the display name for calls from this line</small>"
+  },
+  "sharedLinePanel": {
+    "title": "Shared Line",
+    "description": "Simultaneously ring other users' lines when this line is called.",
+    "remove": "Remove member",
+    "member": "Shared Line Members",
+    "maxLines": "has exceeded maximum number of supported lines",
+    "disassociateUser": "This action cannot be undone.  Are you sure you want to unassign the shared line from this user?",
+    "addMember": "Add Member"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",

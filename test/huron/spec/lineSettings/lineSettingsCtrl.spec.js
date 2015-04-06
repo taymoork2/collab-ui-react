@@ -74,7 +74,7 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(HuronUser, 'updateDtmfAccessId').and.returnValue($q.when());
 
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
-    //Sharedline 
+    //Sharedline
     spyOn(UserListService, 'listUsers').and.returnValue($q.when(userList));
     spyOn(SharedLineInfoService, 'loadSharedLineUsers').and.returnValue($q.when(sharedLineUsers));
     spyOn(SharedLineInfoService, 'loadSharedLineUserDevices').and.returnValue($q.when(sharedLineEndpoints));
@@ -84,7 +84,7 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(SharedLineInfoService, 'disassociateLineEndpoint').and.returnValue($q.when());
     spyOn(SharedLineInfoService, 'getSharedLineDevices').and.callThrough();
 
-    //Sharedline 
+    //Sharedline
 
     spyOn(Notification, 'notify');
 
@@ -221,15 +221,13 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.forward = 'none';
       spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
       controller.selectedUsers.push(selectedUsers[0]);
-      controller.sharedLineUsers.push(sharedLineUsers[0]);
       controller.devices = sharedLineEndpoints;
-      controller.disassociateSharedLineUser();
+      controller.disassociateSharedLineUser('a787b84a-3cdf-436c-b1a7-e46e0a0cae99', '2', true);
       $scope.$apply();
     });
 
     it('disassociateSharedLineUsers: should disassociate Shared Line Users', function () {
       expect(SharedLineInfoService.disassociateSharedLineUser).toHaveBeenCalled();
-
     });
   });
 

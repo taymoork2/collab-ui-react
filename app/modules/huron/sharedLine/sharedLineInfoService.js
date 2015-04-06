@@ -67,7 +67,7 @@
                     userId: dnUser.user.uuid
                   }).$promise
                   .then(function (commonUser) {
-                    if (commonUser && commonUser.firstName || commonUser.lastName) {
+                    if (commonUser && commonUser.firstName && commonUser.lastName) {
                       this.name = commonUser.firstName + ' ' + commonUser.lastName;
                     }
                   }.bind(userInfo));

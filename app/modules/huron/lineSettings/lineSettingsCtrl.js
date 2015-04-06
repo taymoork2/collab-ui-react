@@ -6,9 +6,7 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-
-  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, ServiceSetup,
-    UserListService, SharedLineInfoService) {
+  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, ServiceSetup, UserListService, SharedLineInfoService) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.cbAddText = $translate.instant('callForwardPanel.addNew');
@@ -33,6 +31,13 @@
     vm.sharedLineUsers = [];
     vm.oneAtATime = true;
     vm.maxLines = 6;
+    vm.sort = {
+      by: 'name',
+      order: 'ascending',
+      maxCount: 10000,
+      startAt: 0
+    };
+    vm.disableTypeahead = true;
     // end SharedLine Info ---
 
     // Caller ID Radio Button Model
@@ -566,22 +571,17 @@
       vm.externalNumberPool = extNumPool;
     }
 
-    // Sharedline starts from here.........
-    $scope.sort = {
-      by: 'name',
-      order: 'ascending',
-      maxCount: 10000,
-      startAt: 0
-    };
-
+    // Sharedline starts from here........
     function getUserList() {
 
       $rootScope.searchStr = '';
 
       //get all Users to search on
-      UserListService.listUsers($scope.sort.startAt, $scope.sort.maxCount, $scope.sort.by, $scope.sort.order, function (data, status) {
+
+      UserListService.listUsers(vm.sort.startAt, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
         if (data.success) {
           vm.users = data.Resources;
+          vm.disableTypeahead = false;
         } else {
           Log.debug('Query existing users failed. Status: ' + status);
         }
@@ -617,7 +617,7 @@
 
       if (!isVoiceUser || userInfo.uuid == vm.currentUser.id) {
         // Exclude users without Voice service to be shared line User
-        // Exclude current user 
+        // Exclude current user
         isValidUser = false;
       }
       if (isValidUser) {
@@ -628,7 +628,7 @@
           }
         });
         if (isValidUser) {
-          //Exclude current sharedLine users 
+          //Exclude current sharedLine users
           angular.forEach(vm.sharedLineUsers, function (user) {
             if (user.uuid === userInfo.uuid) {
               isValidUser = false;
@@ -679,12 +679,41 @@
       return promise;
     }
 
-    function disassociateSharedLineUser(userUuid, userDnUuid) {
+    function disassociateSharedLineUser(userUuid, userDnUuid, batchDelete) {
       vm.selectedUsers = [];
-      return SharedLineInfoService.disassociateSharedLineUser(userUuid, userDnUuid, vm.directoryNumber.uuid)
-        .then(function () {
-          return listSharedLineUsers(vm.directoryNumber.uuid);
+      if (!batchDelete) {
+        vm.confirmationDialogue = $translate.instant('sharedLinePanel.disassociateUser');
+
+        $modal.open({
+          templateUrl: 'modules/huron/sharedLine/disassociateSharedLineMember.tpl.html',
+          scope: $scope
+        }).result.then(function () {
+          var isRemoveLocal = false;
+          angular.forEach(vm.selectedUsers, function (user, index) {
+            if (userUuid === user.uuid) {
+              isRemoveLocal = true;
+              vm.selectedUsers.splice(index, 1);
+            }
+          });
+          if (isRemoveLocal) {
+            angular.forEach(vm.sharedLineUsers, function (user, index) {
+              if (userUuid === user.uuid) {
+                vm.sharedLineUsers.splice(index, 1);
+              }
+            });
+          } else {
+            return SharedLineInfoService.disassociateSharedLineUser(userUuid, userDnUuid, vm.directoryNumber.uuid)
+              .then(function () {
+                return listSharedLineUsers(vm.directoryNumber.uuid);
+              });
+          }
         });
+      } else {
+        return SharedLineInfoService.disassociateSharedLineUser(userUuid, userDnUuid, vm.directoryNumber.uuid)
+          .then(function () {
+            return listSharedLineUsers(vm.directoryNumber.uuid);
+          });
+      }
     }
 
     function disassociateSharedLineUsers(deleteLineSettings) {
@@ -694,7 +723,7 @@
         //Disassociate SharedLine user on toggle/delete line
         angular.forEach(vm.sharedLineUsers, function (user) {
           if (user.dnUsage !== 'Primary') {
-            promise = disassociateSharedLineUser(user.uuid, user.userDnUuid);
+            promise = disassociateSharedLineUser(user.uuid, user.userDnUuid, true);
             promises.push(promise);
           }
         });
@@ -746,7 +775,7 @@
 
         return $q.all(promises);
       }
-      // ........Sharedline 
+      // ........Sharedline
     init();
   }
 })();

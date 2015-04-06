@@ -9,8 +9,9 @@ describe('Telephony Info', function () {
     browser.ignoreSynchronization = false;
   });
 
-  var currentUser, token;
+  var currentUser, currentUser2, token;
   var user = utils.randomTestGmail();
+  var user2 = utils.randomTestGmail();
   var dropdownVariables = {
     'voicemail': 'Voicemail',
     'addNew': 'Add New'
@@ -33,10 +34,12 @@ describe('Telephony Info', function () {
     navigation.clickUsers();
   });
 
-  it('should create user', function () {
+  it('should create 2 users', function () {
     utils.click(users.addUsers);
     utils.click(users.addUsersField);
     utils.sendKeys(users.addUsersField, user);
+    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+    utils.sendKeys(users.addUsersField, user2);
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
 
     utils.click(users.collabRadio1);
@@ -46,6 +49,14 @@ describe('Telephony Info', function () {
     notifications.assertSuccess(user, 'onboarded successfully');
     utils.click(users.closeAddUsers);
 
+  });
+
+  it('should verify second added user', function (done) {
+    utils.searchAndClick(user2);
+    users.retrieveCurrentUser().then(function (_currentUser) {
+      currentUser2 = _currentUser;
+      done();
+    });
   });
 
   it('should verify added user', function (done) {
@@ -229,6 +240,38 @@ describe('Telephony Info', function () {
       utils.expectIsDisabled(telephony.callerId);
     });
 
+    it('should add the second user to the first users shared line', function () {
+      utils.expectIsDisplayed(telephony.sharedLineToggle);
+
+      utils.click(telephony.sharedLineToggle);
+
+      utils.waitUntilEnabled(telephony.userInput);
+
+      utils.click(telephony.userInput);
+
+      utils.sendKeys(telephony.userInput, user2);
+      utils.sendKeys(telephony.userInput, protractor.Key.ENTER);
+
+      utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
+
+      utils.click(telephony.saveButton);
+      notifications.assertSuccess('Line configuration saved successfully');
+
+      utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
+    });
+
+    it('should find the added user and delete them from shared line', function () {
+      utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
+
+      telephony.selectSharedLineUser(user2);
+      utils.click(telephony.removeMemberLink);
+
+      utils.expectIsDisplayed(telephony.removeMemberBtn);
+      utils.click(telephony.removeMemberBtn);
+
+      utils.expectIsNotDisplayed(telephony.userAccordionGroup(user2));
+    });
+
     it('should cancel a new directory number add', function () {
       utils.clickLastBreadcrumb();
       utils.expectIsDisplayed(telephony.communicationPanel);
@@ -405,6 +448,11 @@ describe('Telephony Info', function () {
   it('should delete added user', function () {
     deleteUtils.deleteSquaredUCUser(currentUser.meta.organizationID, currentUser.id, token);
     deleteUtils.deleteUser(user);
+  });
+
+  it('should delete second added user', function () {
+    deleteUtils.deleteSquaredUCUser(currentUser2.meta.organizationID, currentUser2.id, token);
+    deleteUtils.deleteUser(user2);
   });
 
   it('should log out', function () {
