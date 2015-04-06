@@ -46,7 +46,10 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           return auth.getAccount(Authinfo.getOrgId())
             .success(function (data, status) {
               Authinfo.updateAccountInfo(data, status);
+              Authinfo.initializeTabs();
             });
+        } else {
+          Authinfo.initializeTabs();
         }
       })
       .catch(function (response) {

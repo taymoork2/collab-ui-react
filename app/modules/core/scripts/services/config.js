@@ -94,8 +94,6 @@ angular.module('Core')
 
         feedbackUrl: 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl',
 
-        ciscoOrgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
-
         appinfo: {
           webClientURL: 'https://web.ciscospark.com/',
           iPhoneURL: 'http://cs.co/sqios',
@@ -294,7 +292,7 @@ angular.module('Core')
           squaredUC: 'SQUAREDUC'
         },
 
-        backend_roles: { // as stored in the backend
+        backend_roles: { // as stored in the ci
           full_admin: 'id_full_admin',
           all: 'atlas-portal.all',
           billing: 'atlas-portal.billing',
@@ -432,9 +430,7 @@ angular.module('Core')
             encodeURIComponent(acu),
             this.getOauthServiceType()
           ];
-          var test = Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
-
-          return test;
+          return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
         getRedirectUrl: function () {
@@ -475,10 +471,6 @@ angular.module('Core')
 
         getSSOTestUrl: function () {
           return this.ssoTestUrl;
-        },
-
-        getCiscoOrgId: function () {
-          return this.ciscoOrgId;
         },
 
         getHealthCheckUrlServiceUrl: function () {
@@ -571,8 +563,7 @@ angular.module('Core')
           'profile',
           'customerprofile',
           'support',
-          'editService',
-          'site-list'
+          'editService'
         ],
         Support: ['overview', 'reports', 'support'],
         WX2_User: [
@@ -583,9 +574,10 @@ angular.module('Core')
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         User: [],
-        PARTNER_ADMIN: ['partneroverview', 'site-list', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
         PARTNER_USER: ['partneroverview', 'partnerreports'],
-        CUSTOMER_PARTNER: ['partnercustomers']
+        CUSTOMER_PARTNER: ['partnercustomers'],
+        Site_Admin: ['site-list']
       };
 
       config.serviceStates = {

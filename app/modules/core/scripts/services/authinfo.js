@@ -135,7 +135,7 @@ angular.module('Core')
               }
             }
           }
-          authData.tabs = initializeTabs();
+
           // TODO remove this from rootScope
           $rootScope.services = data.services;
           authData.isInitialized = true;
@@ -181,6 +181,11 @@ angular.module('Core')
                     capacity: license.capacity,
                     volume: license.volume,
                   };
+
+                  if (this.isCustomerAdmin() && license.siteUrl) {
+                    authData.roles.push('Site_Admin');
+                  }
+
                   service = new ServiceFeature($filter('translate')('onboardModal.paidConf'), x + 1, 'confRadio', license.licenseType, license.features, siteObj);
                   confLicenses.push(service);
                   break;
@@ -303,7 +308,7 @@ angular.module('Core')
           return authData.hasAccount;
         },
         isCisco: function () {
-          return authData.orgid === Config.getCiscoOrgId();
+          return authData.username.indexOf('@cisco.com') > -1;
         }
       };
     }
