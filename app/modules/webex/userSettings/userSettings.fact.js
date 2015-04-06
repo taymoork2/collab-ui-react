@@ -536,10 +536,30 @@
           ); // WebExUserSettingsFact.getUserSettingsInfoXml()
         }, // getUserSettingsInfo()
 
-        updateUserSettings: function (userSettings) {
-          var _self = this;
+        updateUserSettings: function () {
+          var funcName = "updateUserSettings()";
+          var logMsg = "";
 
           angular.element('#saveBtn').button('loading');
+
+          var _self = this;
+          var useSupportedServices = userSettingsModel.userInfo.bodyJson.use_supportedServices;
+
+          var userSettings = {
+            meetingTypes: [],
+            meetingCenter: useSupportedServices.use_meetingCenter,
+            trainingCenter: useSupportedServices.use_trainingCenter,
+            supportCenter: useSupportedServices.use_supportCenter,
+            eventCenter: useSupportedServices.use_eventCenter,
+            salesCenter: useSupportedServices.use_salesCenter
+          };
+
+          // go through the session types
+          userSettingsModel.sessionTypes.forEach(function (sessionType) {
+            if (sessionType.sessionEnabled) {
+              userSettings.meetingTypes.push(sessionType.sessionTypeId);
+            }
+          }); // userSettingsModel.sessionTypes.forEach()
 
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
@@ -558,7 +578,7 @@
               _self.updateUserSettingsError(result);
             } // updateUserSettingsError()
           );
-        },
+        }, // updateUserSettings()
 
         updateUserSettings2: function () {
           var funcName = "updateUserSettings2()";
