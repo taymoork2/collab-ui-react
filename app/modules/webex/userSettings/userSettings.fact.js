@@ -138,7 +138,6 @@
           userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label = $translate.instant("webexUserSettingLabels.teleconfViaGlobalCallinLabel");
           userSettingsModel.telephonyPriviledge.callBackTeleconf.label = $translate.instant("webexUserSettingLabels.callBackTeleconfLabel");
           userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label = $translate.instant("webexUserSettingLabels.globalCallBackTeleconfLabel");
-          userSettingsModel.telephonyPriviledge.otherTeleconfServices.label = $translate.instant("webexUserSettingLabels.otherTeleconfServicesLabel");
           userSettingsModel.telephonyPriviledge.integratedVoIP.label = $translate.instant("webexUserSettingLabels.integratedVoIPLaabel");
 
           return userSettingsModel;
@@ -273,6 +272,8 @@
             // TODO
             // if ("true" == ???) {
             if (true) {
+              userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].label = userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].label + " *";
+
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = false;
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = false;
               userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled = false;
@@ -312,8 +313,10 @@
           $log.log(logMsg);
 
           // TODO:
-          // if ("true" == ???) {}
+          // if ("true" == ???) {
           if (true) {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label + " *";
+
             userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = true;
           }
 
@@ -333,9 +336,13 @@
             userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = true;
           }
 
+          userSettingsModel.telephonyPriviledge.otherTeleconfServices.label = siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_otherTeleServiceName;
+
           // TODO
-          // if ("true" == ???) {}
+          // if ("true" == ???) {
           if (true) {
+            userSettingsModel.telephonyPriviledge.otherTeleconfServices.label = userSettingsModel.telephonyPriviledge.otherTeleconfServices.label + " *";
+
             userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = true;
           }
 
