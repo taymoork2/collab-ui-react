@@ -1065,11 +1065,10 @@
     "callInTeleconfLabel": "Call-in teleconferencing",
     "tollOnlyLabel": "Toll",
     "tollFreeOnlyLabel": "Toll free",
-    "tollAndTollFreeLabel": "Toll & Toll free *",
-    "teleconfViaGlobalCallinLabel": "Allow access to teleconference via global call-in numbers *",
+    "tollAndTollFreeLabel": "Toll & Toll free",
+    "teleconfViaGlobalCallinLabel": "Allow access to teleconference via global call-in numbers",
     "callBackTeleconfLabel": "Call-back teleconferencing",
     "globalCallBackTeleconfLabel": "Global call-back teleconferencing",
-    "otherTeleconfServicesLabel": "Other teleconference services *",
     "integratedVoIPLaabel": "Integrated VoIP",
     "userPriviligesLabel": "User Privileges",
     "advancedLinkLabel": "Advanced Settings"
