@@ -370,36 +370,8 @@ describe('Telephony Info', function () {
 
   describe('Single Number Reach', function () {
 
-    it('should update the default snr', function () {
-      utils.expectText(telephony.snrStatus, 'On');
-      utils.click(telephony.snrFeature);
-      utils.expectSwitchState(telephony.snrSwitch, true);
-
-      utils.clear(telephony.snrNumber);
-      utils.sendKeys(telephony.snrNumber, snrLine);
-
-      utils.click(telephony.saveButton);
-      notifications.assertSuccess('Single Number Reach configuration saved successfully');
-
-      utils.clickLastBreadcrumb();
-      utils.expectText(telephony.snrStatus, 'On');
-    });
-
-    it('should delete the snr', function () {
-      utils.click(telephony.snrFeature);
-      utils.expectIsDisplayed(telephony.snrNumber);
-
-      utils.click(telephony.snrSwitch);
-      utils.expectIsNotDisplayed(telephony.snrNumber);
-
-      utils.click(telephony.saveButton);
-      notifications.assertSuccess('Single Number Reach configuration removed successfully');
-
-      utils.clickLastBreadcrumb();
+    it('should save the enabled state', function () {
       utils.expectText(telephony.snrStatus, 'Off');
-    });
-
-    it('should add a new snr', function () {
       utils.click(telephony.snrFeature);
       utils.expectSwitchState(telephony.snrSwitch, false);
       utils.expectIsNotDisplayed(telephony.snrNumber);
@@ -413,6 +385,20 @@ describe('Telephony Info', function () {
 
       utils.clickLastBreadcrumb();
       utils.expectText(telephony.snrStatus, 'On');
+    });
+
+    it('should save the disabled state', function () {
+      utils.click(telephony.snrFeature);
+      utils.expectIsDisplayed(telephony.snrNumber);
+
+      utils.click(telephony.snrSwitch);
+      utils.expectIsNotDisplayed(telephony.snrNumber);
+
+      utils.click(telephony.saveButton);
+      notifications.assertSuccess('Single Number Reach configuration removed successfully');
+
+      utils.clickLastBreadcrumb();
+      utils.expectText(telephony.snrStatus, 'Off');
     });
   });
 
