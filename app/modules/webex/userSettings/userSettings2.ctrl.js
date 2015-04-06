@@ -28,6 +28,10 @@
       $scope.adminEmailParam = Authinfo.getUserName();
       $scope.userEmailParam = $stateParams.currentUser.userName;
 
+      $scope.trustSrc = function (src) {
+        return $sce.trustAsResourceUrl(src);
+      }; // trustSrc()
+
       this.btnReload = function () {
         if (this.userSettingsModel.sessionTicketErr) {
           this.initPanel();
@@ -56,10 +60,6 @@
       this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
       this.initPanel();
-
-      $scope.trustSrc = function (src) {
-        return $sce.trustAsResourceUrl(src);
-      }; // trustSrc()
     } // WebExUserSettings2Ctrl()
   ]);
 })();
