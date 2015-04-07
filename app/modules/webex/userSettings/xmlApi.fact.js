@@ -28,6 +28,13 @@
       var x2js = new X2JS();
 
       this.getXMLApi = function (xmlServerURL, xmlRequest, resolve, reject) {
+        var funcName = "getXMLApi()";
+        var logMsg = "";
+
+        logMsg = funcName + ": " + "xmlRequest=" + "\n" +
+          xmlRequest;
+        $log.log(logMsg);
+
         $http({
           url: xmlServerURL,
           method: "POST",
@@ -79,7 +86,7 @@
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #1 =\n" + xmlRequest;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           for (var i = 0; i < userSettings.meetingTypes.length; i++) {
             var tmpMeetingTypesObj = {};
@@ -89,7 +96,7 @@
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #4 =\n" + xmlRequest;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           xmlRequest += $interpolate(constants.updateUserSettings_3)(userSettings);
 
@@ -121,7 +128,7 @@
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest =\n" + xmlRequest;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           return $q(
             function (resolve, reject) {
