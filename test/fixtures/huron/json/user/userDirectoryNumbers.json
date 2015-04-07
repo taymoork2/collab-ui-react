@@ -1,0 +1,13 @@
+[{
+  "directoryNumber": {
+    "pattern": "4000",
+    "uuid": "1234567890"
+  },
+  "dnUsage": "Primary"
+}, {
+  "directoryNumber": {
+    "pattern": "4001",
+    "uuid": "1234567891"
+  },
+  "dnUsage": "Undefined"
+}]
