@@ -569,7 +569,6 @@
               _self.processUpdateSuccessResult(
                 result,
                 successMsg);
-
             }, // updateUserSettingsSuccess()
 
             function updateUserSettingsError(result) {
