@@ -26,7 +26,7 @@ angular.module('Core')
       var siteUrlTemplate =
         '<launch-site admin-email-param="siteList.siteLaunch.adminEmailParam"' +
         'advanced-settings="siteList.siteLaunch.advancedSettings" user-email-param="siteList.siteLaunch.userEmailParam"' +
-        'webex-advanced-url="siteList.getWebexUrl(row.entity.siteUrl)">' +
+        'webex-advanced-url="siteList.getWebexUrl(row.entity.license.siteUrl)">' +
         '</launch-site>';
 
       vm.gridOptions = {
@@ -40,20 +40,20 @@ angular.module('Core')
         useExternalSorting: true,
 
         columnDefs: [{
-          field: 'siteUrl',
+          field: 'license.siteUrl',
           displayName: $translate.instant('siteList.siteName'),
           sortable: false
         }, {
-          field: 'capacity',
+          field: 'license.capacity',
           displayName: $translate.instant('siteList.type'),
           cellFilter: 'capacityFilter:row.entity.label',
           sortable: false
         }, {
-          field: 'volume',
+          field: 'license.volume',
           displayName: $translate.instant('siteList.licenseCount'),
           sortable: false
         }, {
-          field: 'siteUrl',
+          field: 'license.siteUrl',
           displayName: $translate.instant('siteList.launchSite'),
           sortable: false,
           cellTemplate: siteUrlTemplate

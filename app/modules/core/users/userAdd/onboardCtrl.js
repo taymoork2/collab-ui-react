@@ -6,22 +6,25 @@ angular.module('Core')
 
       $scope.hasAccount = Authinfo.hasAccount();
 
-      function ServiceFeature(label, value, name, id, entitlements, licenseId) {
+      function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
         this.name = name;
-        this.id = id;
-        this.entitlements = entitlements;
-        this.licenseId = licenseId;
+        this.license = license;
+      }
+
+      function FakeLicense(type) {
+        this.licenseType = type;
+        this.features = Config.getDefaultEntitlements();
       }
 
       var userEnts = null;
       $scope.messageFeatures = [];
       $scope.conferenceFeatures = [];
       $scope.communicationFeatures = [];
-      $scope.messageFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeMsg'), 0, 'msgRadio', 'freeTeamRoom', Config.getDefaultEntitlements(), null));
-      $scope.conferenceFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeConf'), 0, 'confRadio', 'freeConferencing', Config.getDefaultEntitlements(), null));
-      $scope.communicationFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeComm'), 0, 'commRadio', 'advancedCommunication', Config.getDefaultEntitlements(), null));
+      $scope.messageFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
+      $scope.conferenceFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
+      $scope.communicationFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeComm'), 0, 'commRadio', new FakeLicense('advancedCommunication')));
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
         userEnts = $scope.currentUser.entitlements;
@@ -131,7 +134,7 @@ angular.module('Core')
 
       var getServiceLicenseIds = function (list, service) {
         if (service.licenseId) {
-          list.push(service.licenseId);
+          list.push(service.license.licenseId);
         }
         return list;
       };

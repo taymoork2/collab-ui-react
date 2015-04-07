@@ -1,24 +1,14 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', '$filter',
-    function Authinfo($rootScope, $location, Utils, Config, $filter) {
-      function ServiceFeature(label, value, name, id, entitlements, licenseId, siteObj) {
+  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', '$translate',
+    function Authinfo($rootScope, $location, Utils, Config, $translate) {
+      function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
         this.name = name;
-        this.id = id;
-        this.entitlements = entitlements;
+        this.license = license;
         this.isCustomerPartner = false;
-        this.licenseId = licenseId;
-        if (siteObj) {
-          this.type = siteObj.type;
-          if (this.type === 'CONFERENCING') {
-            this.siteUrl = siteObj.siteUrl;
-            this.capacity = siteObj.capacity;
-            this.volume = siteObj.volume;
-          }
-        }
       }
 
       // AngularJS will instantiate a singleton by calling "new" on this function
@@ -43,7 +33,7 @@ angular.module('Core')
       };
 
       var getTabTitle = function (title) {
-        return $filter('translate')(title);
+        return $translate.instant(title);
       };
       var isAllowedState = function (state) {
         if (state) {
@@ -96,8 +86,8 @@ angular.module('Core')
           tabs[index].title = getTabTitle(tabs[index].title);
           if (tabs[index].subPages) {
             for (var k in tabs[index].subPages) {
-              tabs[index].subPages[k].title = $filter('translate')(tabs[index].subPages[k].title);
-              tabs[index].subPages[k].desc = $filter('translate')(tabs[index].subPages[k].desc);
+              tabs[index].subPages[k].title = $translate.instant(tabs[index].subPages[k].title);
+              tabs[index].subPages[k].desc = $translate.instant(tabs[index].subPages[k].desc);
             }
           }
         }
@@ -181,6 +171,7 @@ angular.module('Core')
             var confLicenses = [];
             var commLicenses = [];
             var accounts = data.accounts;
+
             if (accounts.length > 0) {
               authData.hasAccount = true;
             }
@@ -189,29 +180,22 @@ angular.module('Core')
               for (var l = 0; l < account.licenses.length; l++) {
                 var license = account.licenses[l];
                 var service = null;
-                var siteUrl = null;
+
                 switch (license.licenseType) {
                 case 'CONFERENCING':
-                  var siteObj = {
-                    type: license.licenseType,
-                    siteUrl: license.siteUrl,
-                    capacity: license.capacity,
-                    volume: license.volume,
-                  };
-
                   if (this.isCustomerAdmin() && license.siteUrl) {
                     authData.roles.push('Site_Admin');
                   }
 
-                  service = new ServiceFeature(Config.confMap[license.offerName], x + 1, 'confRadio', license.licenseType, license.features, license.licenseId, siteObj);
+                  service = new ServiceFeature($translate.instant(Config.confMap[license.offerName]), x + 1, 'confRadio', license);
                   confLicenses.push(service);
                   break;
                 case 'MESSAGING':
-                  service = new ServiceFeature($filter('translate')('onboardModal.paidMsg'), x + 1, 'msgRadio', license.licenseType, license.features, license.licenseId);
+                  service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
                   msgLicenses.push(service);
                   break;
                 case 'COMMUNICATION':
-                  service = new ServiceFeature($filter('translate')('onboardModal.paidComm'), x + 1, 'commRadio', license.licenseType, license.features, license.licenseId);
+                  service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
                   commLicenses.push(service);
                   break;
                 }

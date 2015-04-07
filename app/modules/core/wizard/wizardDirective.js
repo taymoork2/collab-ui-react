@@ -232,7 +232,7 @@
 
     function getNextText() {
       if (isFirstTab() && isFirstStep()) {
-        return 'common.begin';
+        return 'firstTimeWizard.getStarted';
       } else if ((isLastStep() && !isFirstStep()) || (isFirstTime() && isLastTab() && isLastStep())) {
         return 'common.finish';
       } else if (isLastStep() && isFirstStep()) {

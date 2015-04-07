@@ -1,0 +1,18 @@
+[{
+  "isCustomerPartner": false,
+  "label": "Advanced Spark Call",
+  "license": {
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "ciscouc"
+    ],
+    "isTrial": true,
+    "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+    "licenseId": "CO_da652e7d-cd34-4545-8f23-936b74359afd",
+    "licenseType": "COMMUNICATION",
+    "offerName": "CO",
+    "status": "ACTIVE",
+    "volume": 100
+  }
+}]

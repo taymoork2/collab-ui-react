@@ -1,0 +1,59 @@
+{
+  "customerOrgId": "5632f806-ad09-4a26-a0c0-a49a13f38873",
+  "startDate": "2015-03-10T00:00:00.000Z",
+  "trialPeriod": 180,
+  "offers": [{
+    "id": "SQUAREDUC",
+    "licenseCount": 100,
+    "usageCount": 0
+  }, {
+    "id": "COLLAB",
+    "licenseCount": 100,
+    "usageCount": 0
+  }],
+  "licenses": [{
+    "licenseId": "CF_4a1b9bb0-cda5-4dd0-81aa-049842f318c0",
+    "offerName": "CF",
+    "licenseType": "CONFERENCING",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "squared-syncup"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "status": "ACTIVE"
+  }, {
+    "licenseId": "MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0",
+    "offerName": "MS",
+    "licenseType": "MESSAGING",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "messenger-interop",
+      "webex-messenger",
+      "squared-room-moderation"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "status": "ACTIVE"
+  }, {
+    "licenseId": "CO_da652e7d-cd34-4545-8f23-936b74359afd",
+    "offerName": "CO",
+    "licenseType": "COMMUNICATION",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "ciscouc"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "status": "ACTIVE"
+  }],
+  "state": "ACTIVE",
+  "createdBy": "a9b428a6-65a2-48c4-953d-7b45ad35f676",
+  "customerName": "AlexTestTrial",
+  "customerEmail": "AlexBarnes86+test@gmail.com",
+  "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+  "createdDate": "2015-03-10T00:00:00.000Z"
+}

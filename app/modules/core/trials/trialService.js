@@ -2,19 +2,35 @@
   'use strict';
 
   angular.module('Core')
-    .factory('TrialService', TrialService);
+    .factory('TrialService', TrialService)
+    .factory('TrialResource', TrialResource);
 
   /* @ngInject */
-  function TrialService($http, $rootScope, Config, Authinfo, Auth, LogMetricsService) {
+  function TrialResource($resource, Config, Authinfo) {
+    return $resource(Config.getAdminServiceUrl() + '/organization/:orgId/trials/:trialId', {
+      orgId: Authinfo.getOrgId(),
+      trialId: '@trialId'
+    }, {});
+  }
+
+  /* @ngInject */
+  function TrialService($http, Config, Authinfo, LogMetricsService, TrialResource) {
 
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
     var factory = {
+      getTrial: getTrial,
       editTrial: editTrial,
       startTrial: startTrial
     };
 
     return factory;
+
+    function getTrial(id) {
+      return TrialResource.get({
+        trialId: id
+      }).$promise;
+    }
 
     function editTrial(id, trialPeriod, licenseCount, usageCount, corgId, offersList) {
       var editTrialData = {

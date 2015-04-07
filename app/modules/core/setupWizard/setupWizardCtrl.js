@@ -10,6 +10,7 @@ angular.module('Core')
         description: 'firstTimeWizard.planReviewSub',
         icon: 'icon-plan-review',
         title: 'firstTimeWizard.planReview',
+        controller: 'PlanReviewCtrl as planReview',
         steps: [{
           name: 'init',
           template: 'modules/core/setupWizard/planReview.tpl.html'

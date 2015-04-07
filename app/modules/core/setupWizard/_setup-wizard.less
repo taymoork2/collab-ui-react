@@ -1,38 +1,126 @@
-.first-time-wizard {
-  color: @brand-white;
+.wizard-plan-review {
+  min-height: 515px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 
-  .header {
-    height: 120px;
-    width: 1180px;
-    margin: auto;
+  .flex-row {
+    .row;
+    display: flex;
+
+    .col-sm-4 {
+      margin-right: 3px;
+      padding-bottom: 10px;
+    }
+
+    .col-free {
+      background: @gray-lightest;
+      min-height: 50px;
+      padding-top: 15px;
+    }
+
+    .col-paid {
+      background: @gray-lightest;
+      padding: 0;
+    }
+
+    .col-trial {
+      background: @brand-warning;
+      padding: 0;
+    }
+
+    .col-trial-header {
+      padding: 20px 15px 0 15px;
+      background: @brand-warning-dark;
+      height: 100px;
+      font-family: @brand-font-cisco-TT-Extra-Light;
+      font-size: 26px;
+      line-height: 32px;
+      color: @brand-white;
+    }
+
+    &:last-child {
+      flex: 1;
+    }
   }
 
-  .header-left {
-    float: left;
-    display: inline-block;
-    margin-top: 47px;
+  .column-header {
+    text-align: center;
+
+    h3 {
+      margin-top: 10px;
+      font-family: @brand-font-cisco-TT-Extra-Light;
+    }
+
+    .icon {
+      font-size: 65px;
+    }
   }
 
-  .icon-cisco-logo {
-    font-size: 34px;
-    display: inline-block;
-    vertical-align: middle;
+  .column-title {
+    margin-top: 13px;
+
+    h5 {
+      margin-bottom: 2px;
+      font-family: Arial
+    }
   }
 
-  .title {
-    font-family: @brand-font-cisco-TT-Light;
-    font-size: 16px;
-    margin-left: 32px;
-    display: inline-block;
-    vertical-align: middle;
+  .item-free {
+    color: @text-color;
   }
 
-  .greeting {
-    font-family: @brand-font-cisco-TT-Extra-Light;
-    font-size: 30px;
-    float: right;
-    margin-top: 47px;
+  .item-paid {
+    color: @text-color;
+    padding: 20px 15px 10px 15px;
+
+    .sub-item {
+      padding-top: 5px;
+      font-family: Arial;
+      font-size: 13px;
+      color: @gray-darker;
+    }
+
+    .quantity {
+      font-family: Arial;
+      font-size: 13px;
+      color: @gray-darker;
+
+      .quantity-padding {
+        padding-right: 5px;
+      }
+
+      .badge {
+        padding: 3px 9px 3px;
+      }
+
+      .badge.badge-warning {
+        background: @brand-warning-dark;
+      }
+    }
   }
+
+}
+
+.wizard-trial-progress {
+  .col-sm-12 {
+    margin-top: 3px;
+    padding-left: 1px;
+    padding-right: 4px;
+  }
+
+  .progress {
+    margin-bottom: 5px;
+  }
+
+  .progress-bar-warning {
+    background-color: @brand-warning-dark;
+  }
+}
+
+.wizard-trial-progress-text {
+  font-family: Arial;
+  font-size: 12px;
 }
 
 .wizard-row-padding {
@@ -44,18 +132,6 @@
   width: auto;
 }
 
-.wizard-btn-action-row {
-  margin-top: 12px;
-  text-align: right;
-}
-
-.wizard-container {
-  position:relative;
-  top: 5em;
-  left: 3em;
-  width: 90%;
-}
-
 .wizard-onboard-container {
   top: 2em;
   width: 100%;
@@ -64,11 +140,6 @@
 .onboard-label {
   width: 700px;
   margin-top: 15px;
-}
-
-.onboard-panel {
-  width: 710px;
-  margin-left: -30px;
 }
 
 .wiz-onboard-btn {
