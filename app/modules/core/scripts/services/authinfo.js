@@ -128,7 +128,7 @@ angular.module('Core')
           //if Full_Admin or WX2_User and has managedOrgs, add partnerustomers tab as allowed tab
           if (authData.managedOrgs && authData.managedOrgs.length > 0) {
             for (var i = 0; i < authData.roles.length; i++) {
-              if (authData.roles[i] === 'Full_Admin' || authData.roles[i] === 'WX2_User') {
+              if (authData.roles[i] === 'Full_Admin' || authData.roles[i] === 'User') {
                 this.isCustomerPartner = true;
                 authData.roles.push('CUSTOMER_PARTNER');
                 break;

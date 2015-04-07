@@ -576,7 +576,7 @@ angular.module('Core')
         User: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
         PARTNER_USER: ['partneroverview', 'partnerreports'],
-        CUSTOMER_PARTNER: ['partnercustomers'],
+        CUSTOMER_PARTNER: ['overview', 'partnercustomers'],
         Site_Admin: ['site-list']
       };
 

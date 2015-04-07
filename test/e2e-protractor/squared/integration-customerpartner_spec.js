@@ -78,8 +78,8 @@ describe('CS User flow', function () {
     it('should display correct tabs for user based on role', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
-      utils.expectIsDisplayed(navigation.reportsTab);
-      utils.expectIsDisplayed(navigation.supportTab);
+      utils.expectIsNotDisplayed(navigation.reportsTab);
+      utils.expectIsNotDisplayed(navigation.supportTab);
     });
 
     it('clicking on customers tab should change the view', function () {
@@ -106,6 +106,26 @@ describe('CS User flow', function () {
     it('should log out', function () {
       navigation.logout();
     });
+  });
+
+  describe('CS Regular User with no managed orgs flow', function () {
+
+    beforeEach(function () {
+      browser.ignoreSynchronization = true;
+    });
+
+    afterEach(function () {
+      browser.ignoreSynchronization = false;
+    });
+
+    it('should show Unauthorized page after login', function () {
+      login.loginUnauthorized('customer-regular-user');
+    });
+
+    it('should log out', function () {
+      navigation.logout();
+    });
+
   });
 
 });

@@ -76,6 +76,11 @@ auth =
     pass: 'P@ssword123'
     org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
+  'customer-regular-user':
+    user: 'regUser2@csreptestdom.collaborate.com'
+    pass: 'C1sc0123!'
+    org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
+
 clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec'
 clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857'
 
