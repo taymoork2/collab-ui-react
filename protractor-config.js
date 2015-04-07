@@ -23,8 +23,7 @@ exports.config = {
     jasmine.getEnv().addReporter(
       new jasmineReporters.JUnitXmlReporter({
         savePath:'test/e2e-protractor/reports',
-        consolidateAll: true,
-        useDotNotation: true
+        consolidateAll: false
       })
     );
 
@@ -40,8 +39,8 @@ exports.config = {
     jasmine.getEnv().addReporter(
       new ScreenShotReporter({
         dest: './screenshots',
-        captureOnlyFailedSpecs: true,
         ignoreSkippedSpecs: true,
+        captureOnlyFailedSpecs: true,
         pathBuilder: function(currentSpec) {
           return currentSpec.fullName;
         }
