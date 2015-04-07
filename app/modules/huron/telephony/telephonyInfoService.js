@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function TelephonyInfoService($rootScope, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService) {
+  function TelephonyInfoService($rootScope, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber) {
 
     var broadcastEvent = "telephonyInfoUpdated";
 
@@ -206,6 +206,14 @@
                 'altDnPattern': '',
                 'dnSharedUsage': ''
               };
+
+              // get External (alternate) number if exists
+              DirectoryNumber.getAlternateNumbers(userLine.uuid).then(function (altNumList) {
+                if (angular.isArray(altNumList) && altNumList[0]) {
+                  this.altDnUuid = altNumList[0].uuid;
+                  this.altDnPattern = altNumList[0].numMask;
+                }
+              }.bind(userLine));
 
               DirectoryNumberUserService.query({
                   'customerId': Authinfo.getOrgId(),
