@@ -150,7 +150,7 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].not_approved_package.service.service_type).toBe('c_cal');
   });
 
-  it('should not show sw update details if services are disabled', function () {
+  it('should show sw update details if services are disabled', function () {
     var mockData = [{
       "provisioning_data": {
         "not_approved_packages": [{
@@ -184,16 +184,21 @@ describe('ConverterService', function () {
     }];
 
     var converted = Service.convertClusters(mockData);
+
+    expect(converted[0].services[0].service_type).toBe('c_mgmt');
     expect(converted[0].services[0].software_upgrade_available).toBeFalsy();
-    expect(converted[0].services[1].software_upgrade_available).toBeFalsy();
     expect(converted[0].services[0].installed).toBeTruthy();
-    expect(converted[0].services[1].installed).toBeTruthy();
     expect(converted[0].services[0].install_available).toBeFalsy();
+
+    expect(converted[0].services[1].service_type).toBe('c_cal');
+    expect(converted[0].services[1].software_upgrade_available).toBeTruthy();
+    expect(converted[0].services[1].installed).toBeTruthy();
     expect(converted[0].services[1].install_available).toBeFalsy();
-    expect(converted[0].software_upgrade_available).toBeFalsy();
+
+    expect(converted[0].software_upgrade_available).toBeTruthy();
   });
 
-  it('should not show sw update details if service is offline', function () {
+  it('should show sw update details if service is offline', function () {
     var mockData = [{
       "provisioning_data": {
         "not_approved_packages": [{
@@ -219,10 +224,38 @@ describe('ConverterService', function () {
     }];
 
     var converted = Service.convertClusters(mockData);
-    expect(converted[0].services[0].software_upgrade_available).toBeFalsy();
+    expect(converted[0].services[0].service_type).toBe('c_cal');
+    expect(converted[0].services[0].software_upgrade_available).toBeTruthy();
     expect(converted[0].services[0].installed).toBeTruthy();
     expect(converted[0].services[0].install_available).toBeFalsy();
-    expect(converted[0].software_upgrade_available).toBeFalsy();
+    expect(converted[0].software_upgrade_available).toBeTruthy();
+  });
+
+  it('install available should be available if service isn\'t installed and service has no approved packages', function () {
+    var mockData = [{
+      "provisioning_data": {
+        "not_approved_packages": [{
+          "service": {
+            "service_type": "c_cal",
+            "display_name": "Calendar Service"
+          },
+          "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
+          "version": "8.2-2.1"
+        }]
+      },
+      "services": [{
+        "service_type": "c_cal",
+        "display_name": "Calendar Service",
+        "connectors": []
+      }]
+    }];
+
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].service_type).toBe('c_cal');
+    expect(converted[0].services[0].software_upgrade_available).toBeTruthy();
+    expect(converted[0].services[0].installed).toBeFalsy();
+    expect(converted[0].services[0].install_available).toBeTruthy();
+    expect(converted[0].software_upgrade_available).toBeTruthy();
   });
 
   it('should show sw update details if one service is running', function () {
