@@ -73,6 +73,18 @@ angular.module('WebExUserSettings')
             id: "callInTeleconf",
             label: "",
             isSiteEnabled: false,
+            value: false,
+
+            toll: {
+              isSiteEnabled: false,
+              isAllowed: false
+            },
+
+            tollFree: {
+              isSiteEnabled: false,
+              isAllowed: false
+            },
+
             selectedCallInTollType: 0,
 
             callInTollTypes: [{
@@ -112,6 +124,7 @@ angular.module('WebExUserSettings')
             globalCallBackTeleconf: {
               id: "globalCallBackTeleconf",
               label: "",
+              isSiteEnabled: false,
               value: false
             },
           },
@@ -129,9 +142,6 @@ angular.module('WebExUserSettings')
             isSiteEnabled: false,
             value: false
           },
-
-          teleConfCallIn: false,
-          teleConfTollFreeCallIn: false,
 
           viewReady: false,
           loadError: false,
