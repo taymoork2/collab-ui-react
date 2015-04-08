@@ -36,6 +36,20 @@ angular.module('Core')
           prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
 
+         metricsServiceUrl: {
+          dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
+          integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
+          prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
+
+        },
+
+        thresholdServiceUrl: {
+          dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
+          integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
+          prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
+
+        },
+
         MeetinginfoserviceUrl: {
           dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
           integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
@@ -255,6 +269,17 @@ angular.module('Core')
             desc: 'tabs.mediaOnHoldTabDesc',
             state: 'mediaonhold',
             link: '#mediaonhold'
+          },
+          {
+            title: 'tabs.metricsDetailsTab',
+            desc: 'tabs.metricsDetailsTabDesc',
+            state: 'metrics',
+            link: '#metrics'
+          }, {
+            title: 'tabs.thresholdDetailsTab',
+            desc: 'tabs.thresholdDetailsTabDesc',
+            state: 'threshold',
+            link: '#threshold'
           }, {
             title: 'tabs.meetingDetailsTab',
             desc: 'tabs.meetingDetailsTabDesc',
@@ -394,6 +419,35 @@ angular.module('Core')
             return this.MeetinginfoserviceUrl.integration;
           } else {
             return this.MeetinginfoserviceUrl.prod;
+          }
+        },
+         getMetricsServiceUrl: function () {
+          if (this.isDev()) {
+            return this.metricsServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.metricsServiceUrl.integration;
+          } else {
+            return this.metricsServiceUrl.prod;
+          }
+        },
+
+        getThresholdServiceUrl: function () {
+          if (this.isDev()) {
+            return this.thresholdServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.thresholdServiceUrl.integration;
+          } else {
+            return this.thresholdServiceUrl.prod;
+          }
+        },
+
+        getFaultServiceUrl: function () {
+          if (this.isDev()) {
+            return this.thresholdServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.thresholdServiceUrl.integration;
+          } else {
+            return this.thresholdServiceUrl.prod;
           }
         },
 
@@ -606,7 +660,10 @@ angular.module('Core')
         'squared-fusion-media': [
           'meetings',
           'vts',
-          'utilization'
+          'utilization',
+          'metrics', 
+           'threshold', 
+           'fault'
         ]
       };
 

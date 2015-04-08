@@ -136,6 +136,10 @@
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold Development Example",
+    "metricsDetailsTab":"Metrics",
+    "metricsDetailsTabDesc": "Metrics Management",
+    "thresholdDetailsTab":"Threshold",
+    "thresholdDetailsTabDesc": "Threshold Management",
     "meetingDetailsTab": "Meetings",
     "meetingDetailsTabDesc": "Meetings Management",
     "vtsDetailsTab": "Enterprise Resources",
@@ -697,9 +701,7 @@
     "none": "None",
     "deleteConfirmation": "This action cannot be undone.  Are you sure you want to unassign {{line}} from {{user}}?",
     "deleteLineTitle": "Remove Line",
-    "disassociationSuccess": "Line successfully unassigned from user.",
-    "alert": "Warning",
-    "confirm": "There are unsaved changes on the page. Do you wish to continue?"
+    "disassociationSuccess": "Line successfully unassigned from user."
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
@@ -718,13 +720,6 @@
   "callerIdPanel": {
     "title": "Caller ID",
     "description": "<small>Change the display name for calls from this line</small>"
-  },
-  "sharedLinePanel": {
-    "title": "Shared Line",
-    "description": "Simultaneously ring other users' lines when this line is called.",
-    "remove": "Remove member",
-    "member": "Shared Line Members",
-    "maxLines": "has exceeded maximum number of supported lines"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
@@ -938,6 +933,30 @@
     "tracks": "Tracks",
     "draganddrop": "Drag and drop to reorder tracks. These tracks will loop.",
     "setActive": "Set Active"
+  },
+  "metricsPage": {
+    "metrics":"Metrics",
+    "metricsType": "Metric Type",
+    "hostName" : "Host Name",
+    "systemType": "System Type",
+    "counters" : "Counters",
+    "actions": "Actions"
+  },
+  "thresholdPage": {
+    "threshold":"Threshold",
+    "metrictype": "Metric Type",
+    "thresholdname":"Threshold Name",
+    "hostname" : "Host Name",
+    "systemtype": "System Type",
+    "metric" : "Metrics",
+    "action": "Action"
+  },
+  "faultPage": {
+    "systemType": "System Type",
+    "system" : "System",
+    "metrictype": "Metric Type",
+    "thresholdname" : "Threshold Name",
+    "genericevent" : "Generic Event"
   },
   "meetingsPage": {
     "manageMeetings": "Meetings",

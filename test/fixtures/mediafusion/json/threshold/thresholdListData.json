@@ -1,0 +1,41 @@
+{
+	"success" : true,
+	
+	"threshold" :
+	[{ "thresholdName":"high cpu",
+        "metrictype": "CollectD",
+        "hostname": "Bgl-1334",
+        "systemtype": "CMS",
+        "counters": "Cpu.nice",
+        "thresholdRule":"cpu == 80",
+        "eventType":"Test"
+	},{ "thresholdName":"high cpu",
+        "metrictype": "CollectD",
+        "hostname": "Bgl-1334",
+        "systemtype": "CMS",
+        "counters": "Cpu.nice",
+        "thresholdRule":"cpu == 90",
+        "eventType":"Test"
+	},{ "thresholdName":"high cpu temp",
+        "metrictype": "CollectD",
+        "hostname": "Bgl-1334",
+        "systemtype": "CMS",
+        "counters": "Cpu.idle",
+        "thresholdRule":"cpu == 50",
+        "eventType":"Test"
+	},{"thresholdName":"high cpu",
+        "metrictype": "CollectD",
+        "hostname": "Bgl-1334",
+        "systemtype": "CMS",
+        "counters": "Cpu.nice",
+        "thresholdRule":"cpu == 80",
+        "eventType":"Test"
+	},{"thresholdName":"high cpu",
+        "metrictype": "CollectD",
+        "hostname": "Bgl-1334",
+        "systemtype": "CMS",
+        "counters": "Cpu.nice",
+        "thresholdRule":"cpu == 80",
+        "eventType":"Test"
+	}]
+}

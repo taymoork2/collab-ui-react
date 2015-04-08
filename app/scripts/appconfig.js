@@ -812,6 +812,32 @@ angular
           templateUrl: 'modules/mediafusion/meetings/meetingPreview/meetingPreview.tpl.html',
           controller: 'MeetingPreviewCtrl'
         })
+        .state('metrics', {
+          url: '/metrics',
+          templateUrl: 'modules/mediafusion/metrics/metricsList/metricsList.tpl.html',
+          controller: 'MetricsCtrl',
+          parent: 'main'
+        })
+        .state('metrics.preview', {
+          templateUrl: 'modules/mediafusion/metrics/metricsPreview/metricsPreview.tpl.html',
+          controller: 'MetricsPreviewCtrl'
+        })
+        .state('threshold', {
+          url: '/threshold',
+          templateUrl: 'modules/mediafusion/threshold/thresholdList/thresholdList.tpl.html',
+          controller: 'ThresholdCtrl',
+          parent: 'main'
+        })
+        .state('threshold.preview', {
+          templateUrl: 'modules/mediafusion/threshold/thresholdPreview/thresholdPreview.tpl.html',
+          controller: 'ThresholdPreviewCtrl'
+        })
+        .state('fault', {
+          url: '/fault',
+          templateUrl: 'modules/mediafusion/faultRules/faultRules.tpl.html',
+          controller: 'FaultRulesCtrl',
+          parent: 'main'
+        })
         .state('vts', {
           abstract: true,
           template: '<div ui-view></div>',
