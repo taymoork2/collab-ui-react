@@ -95,8 +95,6 @@ angular.module('WebExUserSettings').service(
           "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.SetUser\">" + "\n" +
           "            <webExId>{{webexUserId}}</webExId>" + "\n" +
           "            <use:privilege>" + "\n" +
-          "                <use:teleConfCallIn>{{teleConfCallIn}}</use:teleConfCallIn>" + "\n" +
-          "                <use:teleConfTollFreeCallIn>{{teleConfTollFreeCallIn}}</use:teleConfTollFreeCallIn>" + "\n" +
           "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n" +
           "                <use:teleConfCallOut>{{callBackTeleconf}}</use:teleConfCallOut>" + "\n" +
           "                <use:teleConfCallOutInternational>{{globalCallBackTeleconf}}</use:teleConfCallOutInternational>" + "\n" +

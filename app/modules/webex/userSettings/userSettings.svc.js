@@ -73,8 +73,19 @@ angular.module('WebExUserSettings')
             id: "callInTeleconf",
             label: "",
             isSiteEnabled: false,
-            selectedCallInTollType: 0,
             value: false,
+
+            toll: {
+              isSiteEnabled: false,
+              isAllowed: false
+            },
+
+            tollFree: {
+              isSiteEnabled: false,
+              isAllowed: false
+            },
+
+            selectedCallInTollType: 0,
 
             callInTollTypes: [{
               label: "",
@@ -131,9 +142,6 @@ angular.module('WebExUserSettings')
             isSiteEnabled: false,
             value: false
           },
-
-          teleConfCallIn: false,
-          teleConfTollFreeCallIn: false,
 
           viewReady: false,
           loadError: false,
