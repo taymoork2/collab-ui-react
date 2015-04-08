@@ -41,12 +41,9 @@
     // end SharedLine Info ---
 
     // Caller ID Radio Button Model
-    var name;
-    if (vm.currentUser.name) {
-      name = (vm.currentUser.name.givenName + ' ' + vm.currentUser.name.familyName).trim();
-    } else {
-      name = vm.currentUser.userName;
-    }
+
+    var name = getUserName(vm.currentUser.name);
+
     vm.callerIdInfo = {
       'default': name,
       'otherName': null,
@@ -71,7 +68,6 @@
     $scope.$on('SharedLineInfoUpdated', function () {
       vm.sharedLineEndpoints = SharedLineInfoService.getSharedLineDevices();
       vm.devices = angular.copy(vm.sharedLineEndpoints);
-
     });
 
     function initNewForm() {
@@ -287,26 +283,37 @@
               });
 
           } else { // new line
-            LineSettings.addNewLine(vm.currentUser.id, getDnUsage(), vm.assignedInternalNumber.pattern, vm.directoryNumber, vm.assignedExternalNumber)
-              .then(function () {
-                return TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
-                  .then(function () {
-                    vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-                    vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
-                    vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
-                  }).then(function () {
-                    return processSharedLineUsers();
-                  }).then(function () {
-                    Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
-                    $state.go('user-overview.communication.directorynumber', {
-                      directoryNumber: vm.directoryNumber
-                    });
+            SharedLineInfoService.getUserLineCount(vm.currentUser.id)
+              .then(function (totalLines) {
+                if (totalLines < vm.maxLines) {
+                  LineSettings.addNewLine(vm.currentUser.id, getDnUsage(), vm.assignedInternalNumber.pattern, vm.directoryNumber, vm.assignedExternalNumber)
+                    .then(function () {
+                      return TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
+                        .then(function () {
+                          vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+                          vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
+                          vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
+                        }).then(function () {
+                          return processSharedLineUsers();
+                        }).then(function () {
+                          Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+                          $state.go('user-overview.communication.directorynumber', {
+                            directoryNumber: vm.directoryNumber
+                          });
 
-                  });
-              })
-              .catch(function (response) {
-                Log.debug('addNewLine failed.  Status: ' + response.status + ' Response: ' + response.data);
-                Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
+                        });
+                    })
+                    .catch(function (response) {
+                      Log.debug('addNewLine failed.  Status: ' + response.status + ' Response: ' + response.data);
+                      Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
+                    });
+                } else {
+                  Notification.notify([$translate.instant('directoryNumberPanel.maxLines', {
+                    user: name
+                  })], 'error');
+                  $state.go('user-overview.communication');
+
+                }
               });
           }
         }
@@ -591,7 +598,7 @@
     vm.selectSharedLineUser = function ($item) {
       var userInfo = {
         'uuid': $item.id,
-        'name': ($item.name) ? ($item.name.givenName + ' ' + $item.name.familyName).trim() : '',
+        'name': getUserName($item.name),
         'userName': $item.userName,
         'userDnUuid': 'none',
         'entitlements': $item.entitlements
@@ -618,6 +625,12 @@
       if (!isVoiceUser || userInfo.uuid == vm.currentUser.id) {
         // Exclude users without Voice service to be shared line User
         // Exclude current user
+        if (!isVoiceUser) {
+          var name = (userInfo.name) ? userInfo.name : userInfo.userName;
+          Notification.notify([$translate.instant('sharedLinePanel.invalidUser', {
+            user: name
+          })], 'error');
+        }
         isValidUser = false;
       }
       if (isValidUser) {
@@ -656,7 +669,9 @@
                     return listSharedLineUsers(vm.directoryNumber.uuid);
                   });
               } else {
-                Notification.notify([user.name + " " + $translate.instant('sharedLinePanel.maxLines')], 'error');
+                Notification.notify([$translate.instant('directoryNumberPanel.maxLines', {
+                  user: user.name
+                })], 'error');
                 return listSharedLineUsers(vm.directoryNumber.uuid);
               }
             });
@@ -776,6 +791,14 @@
         return $q.all(promises);
       }
       // ........Sharedline
+
+    function getUserName(name) {
+      var userName = '';
+      userName = (name && name.givenName) ? name.givenName : '';
+      userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
+      return userName;
+    }
+
     init();
   }
 })();
