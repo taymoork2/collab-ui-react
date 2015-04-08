@@ -1,19 +1,10 @@
 <div id="servicePanel">
   <div class="modal-body onboard-block">
-    <div>
       <input class="form-control useradd-textbox" type="text" id="usersfield" placeholder="Enter email addresses or group mailers separated by commas..."/>
-    </div>
-  </div>
-
-  <div class="modal-body onboard-block">
-    <div class="service-title">
-      <span translate="onboardModal.enableServiceText"></span>
-    </div>
-    <div>
       <form>
         <div ng-if="false">
           <input type="radio" name="collabRadio" id="collabRadio2" value="2" ng-model="collabRadio" >
-          <span id="collabRadioLabel2" class="onboard-radio" ng-click="setRadio(2)">{{collabRadio2.label}}</span>
+          <span id="collabRadioLabel2" class="collab-radio" ng-click="setRadio(2)">{{collabRadio2.label}}</span>
 
           <div class="select-grp">
             <select ng-model="selectedGroup"
@@ -26,13 +17,10 @@
         </div>
 
         <input type="radio" name="collabRadio" id="collabRadio1" value="1" ng-model="collabRadio">
-        <span id="collabRadioLabel1" class="onboard-radio" ng-click="setRadio(1)">{{collabRadio1.label}}</span>
+        <span id="collabRadioLabel1" class="collab-svc-radio" ng-click="setRadio(1)">{{collabRadio1.label}}</span>
       </form>
-    </div>
 
-    <cr-services-panels ng-if="collabRadio === 1 && hasAccount" radioStates="radioStates"></cr-services-panels>
-
-    <div id="licenseBlock" class="onboard-block license-block" ng-if="collabRadio === 1 && !hasAccount">
+      <div id="licenseBlock" class="onboard-block license-block" ng-if="collabRadio === 1 && !hasAccount">
       <div class="bold">
         <span translate="onboardModal.entitlements"></span>
         <hr class="onboard-divider"/>
@@ -46,10 +34,14 @@
     </div>
   </div>
 
+  </div>
+
+  <cr-services-panels ng-if="collabRadio === 1 && hasAccount" radioStates="radioStates"></cr-services-panels>
+
   <div class="modal-footer">
-   <button type="button" id="btnCancel" class="btn btn-default" ng-click="clearPanel()"><span translate="usersPage.clear"></span>
+   <button type="button" id="btnCancel" class="btn btn-default" ng-click="clearPanel()"><span translate="onboardModal.cancel"></span>
     </button>
-    <button type="button" id="btnOnboard" class="btn btn-primary" ng-click="onboardUsers()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="onboardModal.onboardBtn"></span></button>
+    <button type="button" id="btnOnboard" class="btn btn-primary" ng-click="onboardUsers()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="onboardModal.saveBtn"></span></button>
   </div>
 
 </div>

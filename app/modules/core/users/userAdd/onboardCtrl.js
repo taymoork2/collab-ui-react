@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$location', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
-    function ($scope, $state, $stateParams, $q, $location, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
+    function ($scope, $state, $stateParams, $q, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
 
       $scope.hasAccount = Authinfo.hasAccount();
 
@@ -94,35 +94,22 @@ angular.module('Core')
 
       $scope.collabRadio = 1;
       $scope.radioStates = {
-        msgRadio: 0,
-        confRadio: 0,
-        commRadio: 0
+        msgRadio: false,
+        confRadio: false,
+        commRadio: false
       };
 
       if (userEnts) {
         for (var x = 0; x < userEnts.length; x++) {
           if (userEnts[x] === 'ciscouc') {
-            $scope.radioStates.commRadio = 1;
+            $scope.radioStates.commRadio = true;
           } else if (userEnts[x] === 'squared-syncup') {
-            $scope.radioStates.confRadio = 1;
+            $scope.radioStates.confRadio = true;
           } else if (userEnts[x] === 'squared-room-moderation') {
-            $scope.radioStates.msgRadio = 1;
+            $scope.radioStates.msgRadio = true;
           }
         }
       }
-
-      $scope.setRadio = function (val) {
-        $scope.collabRadio = val;
-      };
-      $scope.setMsgRadio = function (val) {
-        $scope.radioStates.msgRadio = val;
-      };
-      $scope.setConfRadio = function (val) {
-        $scope.radioStates.confRadio = val;
-      };
-      $scope.setCommRadio = function (val) {
-        $scope.radioStates.commRadio = val;
-      };
 
       var isUCSelected = function (list) {
         for (var x = 0; x < list.length; x++) {
@@ -166,9 +153,14 @@ angular.module('Core')
       var getAccountEntitlements = function () {
         var entitleList = [];
         if (Authinfo.hasAccount()) {
-          var selMsgService = $scope.messageFeatures[$scope.radioStates.msgRadio];
-          var selConfService = $scope.conferenceFeatures[$scope.radioStates.confRadio];
-          var selCommService = $scope.communicationFeatures[$scope.radioStates.commRadio];
+          var index = $scope.radioStates.msgRadio ? 1 : 0;
+          var selMsgService = $scope.messageFeatures[index];
+
+          index = $scope.radioStates.confRadio ? 1 : 0;
+          var selConfService = $scope.conferenceFeatures[index];
+
+          index = $scope.radioStates.commRadio ? 1 : 0;
+          var selCommService = $scope.communicationFeatures[index];
 
           entitleList = getServiceEntitlements(entitleList, selMsgService);
           entitleList = getServiceEntitlements(entitleList, selConfService);
@@ -205,7 +197,6 @@ angular.module('Core')
       };
 
       $scope.updateUserLicense = function () {
-        //console.log('saving user license ' + $scope.currentUser.displayName);
         var entitleList = [];
         var entStrings = getEntitlementStrings(getAccountEntitlements());
 

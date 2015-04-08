@@ -1,77 +1,61 @@
-<div id="servicesPanels">
-  <div id="licenseBlock" class="onboard-block license-block">
-    <div class="absolute" id="messaging">
-      <div class="bold">
-        <span translate="onboardModal.messaging"></span>
-        <hr class="onboard-divider"/>
-      </div>
+<div id="licenseBlock" class="bucket-wrapper">
 
-      <div>
-        <div class="entitle-check-grp onboard-radio" ng-repeat="msgFeature in messageFeatures">
-          <div ng-if="messageFeatures.length > 1">
-            <input type="radio" name="{{msgFeature.name}}" id="{{msgFeature.id}}" value="{{msgFeature.value}}" ng-model="radioStates.msgRadio">
-            <span ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
+  <!-- Messaging Bucket -->
+  <div class="modal-body bucket-license" id="messaging">
+    <h4 class="text-center bucket-lic-header" translate="onboardModal.messaging"></h4>
+      <div class="entitle-check-grp onboard-radio" ng-repeat="msgFeature in messageFeatures">
+        <div ng-if="msgFeature.id === 'freeTeamRoom'">
+          <div class="service-check">
+            <span class="icon icon-check onboard-check"></span>
           </div>
-          <div ng-if="messageFeatures.length === 1">
-            <div class="service-check">
-              <span class="icon icon-check onboard-check"></span>
-            </div>
-            <div class="service-label">
-              <span ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
-            </div>
+          <div class="service-label">
+            <span class="onboard-radio" ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="shift-middle" id="conference">
-      <div class="bold">
-        <span translate="onboardModal.conferencing"></span>
-        <hr class="onboard-divider"/>
-      </div>
-
-      <div>
-        <div class="entitle-check-grp onboard-radio" ng-repeat="confFeature in conferenceFeatures">
-          <div ng-if="conferenceFeatures.length > 1">
-            <input type="radio" name="{{confFeature.name}}" id="{{confFeature.id}}" value="{{confFeature.value}}" ng-model="radioStates.confRadio">
-            <span ng-click="setConfRadio(confFeature.value)">{{confFeature.label}}</span>
-          </div>
-          <div ng-if="conferenceFeatures.length === 1">
-            <div class="service-check">
-              <span class="icon icon-check onboard-check"></span>
-            </div>
-            <div class="service-label">
-              <span ng-click="setConfRadio(confFeature.value)">{{confFeature.label}}</span>
-            </div>
-          </div>
+        <div ng-if="msgFeature.id !== 'freeTeamRoom'">
+          <cs-checkbox ckid="paid-msg" ng-model="radioStates.msgRadio" label="{{msgFeature.label}}" isdisabled=false></cs-checkbox>
         </div>
       </div>
-    </div>
+  </div>
 
-    <div class="shift-right" id="communication">
-      <div class="bold">
-        <span translate="onboardModal.communications"></span>
-        <hr class="onboard-divider"/>
-      </div>
-
-      <div>
-        <div class="entitle-check-grp onboard-radio" ng-repeat="commFeature in communicationFeatures">
-          <div ng-if="communicationFeatures.length > 1">
-            <input type="radio" name="{{commFeature.name}}" id="{{commFeature.id}}" value="{{commFeature.value}}" ng-model="radioStates.commRadio">
-            <span ng-click="setCommRadio(commFeature.value)">{{commFeature.label}}</span>
-          </div>
-          <div ng-if="communicationFeatures.length === 1">
-            <div class="service-check">
-              <span class="icon icon-check onboard-check"></span>
-            </div>
-            <div class="service-label">
-              <span ng-click="setCommRadio(commFeature.value)">{{commFeature.label}}</span>
-            </div>
-          </div>
+  <!-- Conferencing Bucket -->
+  <div class="modal-body bucket-license middle-bucket" id="conference">
+  <h4 class="text-center bucket-lic-header" translate="onboardModal.conferencing"></h4>
+    <div class="entitle-check-grp onboard-radio" ng-repeat="confFeature in conferenceFeatures">
+      <div ng-if="confFeature.id === 'freeConferencing'">
+        <div class="service-check">
+          <span class="icon icon-check onboard-check"></span>
         </div>
+        <div class="service-label">
+          <span ng-click="setConfRadio(confFeature.value)" translate="{{confFeature.label}}"></span>
+        </div>
+      </div>
+      <div ng-if="confFeature.id !== 'freeConferencing'">
+        <cs-checkbox ckid="paid-conf" ng-model="radioStates.confRadio" label="{{confFeature.siteUrl}}" isdisabled=false></cs-checkbox>
+        <p class="conf-desc" ng-if="confFeature.label">{{confFeature.label | translate}} {{confFeature.capacity}}</p>
+        <cs-checkbox ng-if="false" class="indentedCheckbox" ckid="ckbox4" ng-model="cb.checkboxValue3" label="{{confFeature.label}}" isdisabled=false></cs-checkbox>
       </div>
     </div>
   </div>
+
+  <!-- Communications Bucket -->
+  <div class="modal-body bucket-license" id="communication">
+  <h4 class="text-center bucket-lic-header" translate="onboardModal.communications"></h4>
+    <div class="entitle-check-grp onboard-radio" ng-repeat="commFeature in communicationFeatures">
+      <div ng-if="commFeature.id === 'advancedCommunication'">
+        <div class="service-check">
+          <span class="icon icon-check onboard-check"></span>
+        </div>
+        <div class="service-label comm-label">
+          <span>{{commFeature.label}}</span>
+        </div>
+      </div>
+      <div ng-if="commFeature.id !== 'advancedCommunication'">
+        <cs-checkbox ckid="paid-comm" ng-model="radioStates.commRadio" label="{{commFeature.label}}" isdisabled=false></cs-checkbox>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 

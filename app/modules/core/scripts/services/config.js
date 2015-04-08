@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .factory('Config', ['$window', 'Utils',
-    function ($window, Utils) {
+  .factory('Config', ['$window', 'Utils', '$filter',
+    function ($window, Utils, $filter) {
 
       var getCurrentHostname = function () {
         return $window.location.hostname || '';
@@ -89,6 +89,8 @@ angular.module('Core')
           integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
           prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
+
+        ciscoOrgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
 
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
@@ -350,6 +352,16 @@ angular.module('Core')
           grayDarkest: '#444',
           grayDarker: '#666',
           grayLight: '#ccc'
+        },
+
+        confMap: {
+          CF: 'onboardModal.paidConf',
+          EE: 'onboardModal.enterpriseEdition',
+          MC: 'onboardModal.meetingCenter',
+          SC: 'onboardModal.supportCenter',
+          TC: 'onboardModal.trainingCenter',
+          EC: 'onboardModal.eventCenter',
+          CO: 'onboardModal.communication'
         },
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],

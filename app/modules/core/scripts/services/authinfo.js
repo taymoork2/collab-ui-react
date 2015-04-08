@@ -40,6 +40,7 @@ angular.module('Core')
         'communicationServices': null,
         'hasAccount': false
       };
+
       var getTabTitle = function (title) {
         return $filter('translate')(title);
       };
@@ -186,7 +187,7 @@ angular.module('Core')
                     authData.roles.push('Site_Admin');
                   }
 
-                  service = new ServiceFeature($filter('translate')('onboardModal.paidConf'), x + 1, 'confRadio', license.licenseType, license.features, siteObj);
+                  service = new ServiceFeature(Config.confMap[license.offerName], x + 1, 'confRadio', license.licenseType, license.features, siteObj);
                   confLicenses.push(service);
                   break;
                 case 'MESSAGING':
@@ -308,7 +309,7 @@ angular.module('Core')
           return authData.hasAccount;
         },
         isCisco: function () {
-          return authData.username.indexOf('@cisco.com') > -1;
+          return this.getOrgId() === Config.ciscoOrgId;
         }
       };
     }

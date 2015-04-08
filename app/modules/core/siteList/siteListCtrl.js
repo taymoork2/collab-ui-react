@@ -46,6 +46,7 @@ angular.module('Core')
         }, {
           field: 'capacity',
           displayName: $translate.instant('siteList.type'),
+          cellFilter: 'capacityFilter:row.entity.offerName',
           sortable: false
         }, {
           field: 'volume',
