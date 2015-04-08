@@ -61,7 +61,7 @@
 
         $scope.computeDataset = function (value, max, unlimited) {
           if (typeof unlimited !== 'undefined' && unlimited === true) {
-            $scope.text.content = 'unlimited';
+            $scope.text.content = 'Unlimited';
             $scope.colours = ['#3CA8E8'];
             $scope.text.color = '#3CA8E8';
             $scope.dataset = [1];
@@ -174,7 +174,7 @@
             .attr('x', scope.text.x).attr('y', scope.text.y)
             .attr('text-anchor', 'middle')
             .attr('class', 'cs-donut-text')
-            .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px;')
+            .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: CiscoSansTT, Thin')
             .text(scope.text.content);
 
           path = svg.selectAll('path')
@@ -228,7 +228,7 @@
           path.data(pie(scope.clean(scope.dataset)));
           path.transition().duration(750).attrTween('d', scope.tweenArc).each('end', function () {
             text.text(scope.text.content)
-              .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px;')
+              .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: CiscoSansTT, Thin')
               .attr('y', scope.text.y);
             path.attr('fill', function (d, i) {
               return scope.getColour(i);

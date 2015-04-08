@@ -1123,13 +1123,13 @@
     "lastSynced": "Last Synced:",
     "messagingTitle": "Messaging",
     "messagingSubtitle": "Standard Team Rooms",
-    "messagingDesc": "Messaging licenses.",
+    "messagingDesc": "Team Rooms with content storage allow you to easily collaborate from any device to any user inside or outside your organization.",
     "communicationTitle": "Communication",
     "communicationSubtitle": "Advanced Unified",
-    "communicationDesc": "Cisco Unified Communication licenses.",
+    "communicationDesc": "Basic external calling and full Unified Communications enabled for your organization.",
     "conferencingTitle": "Conferencing",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Cisco Meeting Center and Conferencing licenses."
+    "conferencingDesc": "Join up to 8 colleagues in a Team Room Sync-ups or many more in a WebEx Meeting Center."
   },
   "partnerProfile": {
     "link": "Partner Profile",

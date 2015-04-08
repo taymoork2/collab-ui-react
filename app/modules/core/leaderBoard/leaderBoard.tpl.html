@@ -1,24 +1,24 @@
-<div class="leader-board" ng-init="init()">
+<div class="leader-board row" ng-init="init()">
   <div class="title-section">
     <span class="leader-board-title" translate="leaderBoard.licenseUsage"></span>
-    <span class="leader-board-time" translate="leaderBoard.lastSynced"><span>
+    <!-- <span class="leader-board-time" translate="leaderBoard.lastSynced"><span> -->
+  </div>
+  <div class="col-md-4" ng-repeat="key in bucketKeys">
+    <div class="header-section">
+      <span class="bucket-header">{{buckets[key].title | translate}}</span>
     </div>
-    <div class="bucket" ng-repeat="bucket in buckets">
-      <div class="header-section">
-        <span class="bucket-header">{{bucket.title | translate}}</span>
-      </div>
-      <cs-donut value="bucket.currentCount" max="bucket.totalCount" unlimited="bucket.unlimited"></cs-donut>
-      <div class="bucket-info">
-        <h5><span class="total-count">{{bucket.totalCount}}</span> {{bucket.subtitle | translate}}</h5>
-        <p class="bucket-description">{{bucket.description | translate}}</p>
-        <div>
-          <a href="">
+    <cs-donut value="buckets[key].currentCount" max="buckets[key].totalCount" unlimited="buckets[key].unlimited"></cs-donut>
+    <div class="bucket-info">
+      <h4><span class="total-count">{{buckets[key].totalCount}}</span> {{buckets[key].subtitle | translate}}</h4>
+      <p class="bucket-description">{{buckets[key].description | translate}}</p>
+      <div>
+          <!-- <a href="">
             <span class="bucket-actions" translate="leaderBoard.actions"></span>
           </a>
           <div class="vertical-divider"></div>
           <a href="">
             <span class="bucket-actions" translate="leaderBoard.actions"></span>
-          </a>
+          </a> -->
         </div>  
       </div>
     </div>
