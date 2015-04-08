@@ -67,7 +67,7 @@ angular.module('Mediafusion')
         };
 
         FaultRuleService.addThreshold(threshold, function (data, status) {
-          console.log("Threshold saved status is : " + data);
+          //console.log("Threshold saved status is : " + data);
         });
       };
 

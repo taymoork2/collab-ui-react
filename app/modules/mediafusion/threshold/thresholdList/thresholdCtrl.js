@@ -9,7 +9,7 @@ angular.module('Mediafusion')
       $scope.test = ThresholdService.name;
       $scope.querythresholdmetric = [];
       $scope.metric = null;
-      console.log($scope.test);
+      //console.log($scope.test);
 
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showThresholdDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
@@ -80,7 +80,7 @@ angular.module('Mediafusion')
             }
 
             // $scope.querymetricscounters = data.metrics;
-            console.log("counters" + $scope.queryThresholdList);
+            //console.log("counters" + $scope.queryThresholdList);
 
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
@@ -103,16 +103,16 @@ angular.module('Mediafusion')
       };
 
       $scope.showThresholdDetails = function (threshold) {
-        console.log("Inside showMetricsDetails");
+        //console.log("Inside showMetricsDetails");
         $scope.currentThreshold = threshold;
         $rootScope.metricstype = threshold.metricstype;
 
         //$scope.startDateTime = meeting.startDateTime;
         //   getMetricsList();
-        console.log("Inside showMetricsDetails");
-        console.log("naveen" + threshold);
+        //console.log("Inside showMetricsDetails");
+        //console.log("naveen" + threshold);
         $scope.metric = threshold.metric;
-        console.log("conter is:" + threshold.metric);
+        //console.log("conter is:" + threshold.metric);
         $scope.querythresholdmetric = threshold;
         // getMetricsinfo(metrics);
         //getParticipantListinfo();
@@ -121,14 +121,14 @@ angular.module('Mediafusion')
       };
 
       $rootScope.$on('$stateChangeSuccess', function () {
-        console.log("entering success");
+        //console.log("entering success");
         if ($state.includes('threshold.preview')) {
-          console.log("entering preview");
+          // console.log("entering preview");
           $scope.thresholdPreviewActive = true;
-          console.log("thresholdPreviewActive : " + $scope.thresholdPreviewActive);
+          // console.log("thresholdPreviewActive : " + $scope.thresholdPreviewActive);
         } else {
           $scope.thresholdPreviewActive = false;
-          console.log("thresholdPreviewActive : " + $scope.thresholdPreviewActive);
+          // console.log("thresholdPreviewActive : " + $scope.thresholdPreviewActive);
         }
       });
 

@@ -9,7 +9,7 @@ angular.module('Mediafusion')
       $scope.test = MetricsService.name;
       $scope.querymetricscounters = [];
       $scope.counters = null;
-      console.log($scope.test);
+      // console.log($scope.test);
 
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showMetricsDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
@@ -45,7 +45,7 @@ angular.module('Mediafusion')
 
       $scope.searchMetricsList = function () {
         if ($scope.searchString != null) {
-          $scope.currentDataPosition = 1
+          $scope.currentDataPosition = 1;
           getMetricsList($scope.currentDataPosition);
         }
       };
@@ -75,7 +75,7 @@ angular.module('Mediafusion')
             }
 
             // $scope.querymetricscounters = data.metrics;
-            console.log("counters" + $scope.queryMetricsList.counters);
+            //console.log("counters" + $scope.queryMetricsList.counters);
 
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
@@ -87,14 +87,14 @@ angular.module('Mediafusion')
       getMetricsList();
 
       $scope.showMetricsDetails = function (metrics) {
-        console.log("Inside showMetricsDetails");
+        //console.log("Inside showMetricsDetails");
         $scope.currentMetrics = metrics;
         $rootScope.metricstype = metrics.metricstype;
 
-        console.log("Inside showMetricsDetails");
-        console.log("naveen" + metrics);
+        // console.log("Inside showMetricsDetails");
+        //console.log("naveen" + metrics);
         $scope.counters = metrics.counters;
-        console.log("conter is:" + metrics.counters);
+        //console.log("conter is:" + metrics.counters);
         $scope.querymetricscounters = metrics;
         var counters = metrics.counters;
         // counters = counters.substring(1, counters.length - 1);
@@ -105,14 +105,14 @@ angular.module('Mediafusion')
       };
 
       $rootScope.$on('$stateChangeSuccess', function () {
-        console.log("entering success");
+        // console.log("entering success");
         if ($state.includes('metrics.preview')) {
-          console.log("entering preview");
+          // console.log("entering preview");
           $scope.metricsPreviewActive = true;
-          console.log("metricsPreviewActive : " + $scope.metricsPreviewActive);
+          //console.log("metricsPreviewActive : " + $scope.metricsPreviewActive);
         } else {
           $scope.metricsPreviewActive = false;
-          console.log("metricsPreviewActive : " + $scope.metricsPreviewActive);
+          //console.log("metricsPreviewActive : " + $scope.metricsPreviewActive);
         }
       });
 

@@ -36,7 +36,7 @@ angular.module('Core')
           prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
 
-         metricsServiceUrl: {
+        metricsServiceUrl: {
           dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
           integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
           prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
@@ -269,8 +269,7 @@ angular.module('Core')
             desc: 'tabs.mediaOnHoldTabDesc',
             state: 'mediaonhold',
             link: '#mediaonhold'
-          },
-          {
+          }, {
             title: 'tabs.metricsDetailsTab',
             desc: 'tabs.metricsDetailsTabDesc',
             state: 'metrics',
@@ -421,7 +420,7 @@ angular.module('Core')
             return this.MeetinginfoserviceUrl.prod;
           }
         },
-         getMetricsServiceUrl: function () {
+        getMetricsServiceUrl: function () {
           if (this.isDev()) {
             return this.metricsServiceUrl.dev;
           } else if (this.isIntegration()) {
@@ -661,9 +660,9 @@ angular.module('Core')
           'meetings',
           'vts',
           'utilization',
-          'metrics', 
-           'threshold', 
-           'fault'
+          'metrics',
+          'threshold',
+          'fault'
         ]
       };
 

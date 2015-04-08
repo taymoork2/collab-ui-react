@@ -136,9 +136,9 @@
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold Development Example",
-    "metricsDetailsTab":"Metrics",
+    "metricsDetailsTab": "Metrics",
     "metricsDetailsTabDesc": "Metrics Management",
-    "thresholdDetailsTab":"Threshold",
+    "thresholdDetailsTab": "Threshold",
     "thresholdDetailsTabDesc": "Threshold Management",
     "meetingDetailsTab": "Meetings",
     "meetingDetailsTabDesc": "Meetings Management",
@@ -935,28 +935,28 @@
     "setActive": "Set Active"
   },
   "metricsPage": {
-    "metrics":"Metrics",
+    "metrics": "Metrics",
     "metricsType": "Metric Type",
-    "hostName" : "Host Name",
+    "hostName": "Host Name",
     "systemType": "System Type",
-    "counters" : "Counters",
+    "counters": "Counters",
     "actions": "Actions"
   },
   "thresholdPage": {
-    "threshold":"Threshold",
+    "threshold": "Threshold",
     "metrictype": "Metric Type",
-    "thresholdname":"Threshold Name",
-    "hostname" : "Host Name",
+    "thresholdname": "Threshold Name",
+    "hostname": "Host Name",
     "systemtype": "System Type",
-    "metric" : "Metrics",
+    "metric": "Metrics",
     "action": "Action"
   },
   "faultPage": {
     "systemType": "System Type",
-    "system" : "System",
+    "system": "System",
     "metrictype": "Metric Type",
-    "thresholdname" : "Threshold Name",
-    "genericevent" : "Generic Event"
+    "thresholdname": "Threshold Name",
+    "genericevent": "Generic Event"
   },
   "meetingsPage": {
     "manageMeetings": "Meetings",

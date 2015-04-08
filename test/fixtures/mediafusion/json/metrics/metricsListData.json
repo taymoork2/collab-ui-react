@@ -1,26 +1,30 @@
 {
-	"success" : true,
-	
-	"metrics" :
-	[{ "metrictype": "CollectD",
-        "hostname": "Bgl-1334",
-        "systemtype": "CMS",
-        "counters": "Cpu.nice"
-	},{ "metrictype": "RTMT",
-        "hostname": "Bgl-1334",
-        "systemtype": "CMS",
-        "counters": "Cpu.nice"
-	},{ "metrictype": "CollectD",
-        "hostname": "Bgl-1334",
-        "systemtype": "CMS",
-        "counters": "Process"
-	},{ "metrictype": "CUCM",
-        "hostname": "Bgl-1334",
-        "systemtype": "CMS",
-        "counters": "Memory"
-	},{"metrictype": "CollectD",
-        "hostname": "Bgl-1334",
-        "systemtype": "CMS",
-        "counters": "Disk"
-	}]
+  "success": true,
+
+  "metrics": [{
+    "metrictype": "CollectD",
+    "hostname": "Bgl-1334",
+    "systemtype": "CMS",
+    "counters": "Cpu.nice"
+  }, {
+    "metrictype": "RTMT",
+    "hostname": "Bgl-1334",
+    "systemtype": "CMS",
+    "counters": "Cpu.nice"
+  }, {
+    "metrictype": "CollectD",
+    "hostname": "Bgl-1334",
+    "systemtype": "CMS",
+    "counters": "Process"
+  }, {
+    "metrictype": "CUCM",
+    "hostname": "Bgl-1334",
+    "systemtype": "CMS",
+    "counters": "Memory"
+  }, {
+    "metrictype": "CollectD",
+    "hostname": "Bgl-1334",
+    "systemtype": "CMS",
+    "counters": "Disk"
+  }]
 }
