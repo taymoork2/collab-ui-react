@@ -275,7 +275,6 @@
             userSettingsModel.telephonyPriviledge.callInTeleconf.value = true;
           }
           */
-          userSettingsModel.telephonyPriviledge.callInTeleconf.value = true;
 
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing) {
             userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled = true;
@@ -357,11 +356,11 @@
             "callInTollTypes[1].isDisabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled + "\n" +
             "callInTollTypes[2].isDisabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[2].isDisabled;
           $log.log(logMsg);
+          // End of call-in privileges
 
           if ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing) {
             userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled = true;
           }
-          // End of call-in privileges
 
           if ("true" == userInfoJson.use_privilege.use_teleConfCallOut) {
             userSettingsModel.telephonyPriviledge.callBackTeleconf.value = true;
