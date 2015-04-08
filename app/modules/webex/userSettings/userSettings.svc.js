@@ -74,6 +74,7 @@ angular.module('WebExUserSettings')
             label: "",
             isSiteEnabled: false,
             selectedCallInTollType: 0,
+            value: false,
 
             callInTollTypes: [{
               label: "",
@@ -112,6 +113,7 @@ angular.module('WebExUserSettings')
             globalCallBackTeleconf: {
               id: "globalCallBackTeleconf",
               label: "",
+              isSiteEnabled: false,
               value: false
             },
           },
