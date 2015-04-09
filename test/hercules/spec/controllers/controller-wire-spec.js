@@ -5,7 +5,7 @@ describe('ControllerWireing', function () {
 
   var controllersToTest = [
     'FusionSetupCtrl',
-    'DashboardController',
+    'DashboardNextController',
     'DashboardHeaderController',
     'EntitledServicesController',
     'ActivationStatusController',
