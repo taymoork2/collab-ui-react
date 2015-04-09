@@ -5,9 +5,7 @@ angular.module('WebExUserSettings')
     function XmlApiInfo() {
       return {
         xmlServerURL: "",
-        siteID: "", // TODO: remove this
         webexAdminID: "",
-        webexAdminPswd: "", // TODO: remove this
         webexSessionTicket: "",
         webexUserId: ""
       }; // return
