@@ -13,7 +13,6 @@ angular.module('Hercules')
       $scope.pollHasFailed = false;
       $scope.deleteHostInflight = false;
       $scope.fusionUCEnabled = Authinfo.isFusionUC();
-      $log.log('We miss you Stig (and console.log) :)');
 
       $scope._poll = function () {
         if ($scope._promise) {

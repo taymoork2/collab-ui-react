@@ -94,7 +94,7 @@ var createService = function (serviceName, serviceType, hosts) {
 
 var createCluster = function (opts) {
   return {
-    "id": rnd(),
+    "id": opts.id,
     "name": opts.clusterName,
     "provisioning_data": {
       "approved_packages": _.map(opts.approved, function (pkg) {
@@ -146,6 +146,7 @@ var services = [{
 var mockData = function () {
   return [
     createCluster({
+      id: 1,
       clusterName: "Richardsson Cluster 001",
       services: services,
       hosts: [{
@@ -165,6 +166,7 @@ var mockData = function () {
       approved: [calPkgApp]
     }),
     createCluster({
+      id: 2,
       clusterName: "Richardsson Cluster 002",
       services: services,
       hosts: [{
@@ -178,6 +180,7 @@ var mockData = function () {
       approved: [calPkgApp]
     }),
     createCluster({
+      id: 3,
       clusterName: "Oslo Cluster",
       services: [{
         serviceName: 'Calendar Service',
@@ -191,6 +194,7 @@ var mockData = function () {
       approved: [calPkgApp]
     }),
     createCluster({
+      id: 4,
       clusterName: "Shanghai Cluster",
       services: services,
       hosts: [{
@@ -202,6 +206,7 @@ var mockData = function () {
       }]
     }),
     createCluster({
+      id: 5,
       clusterName: "Sydney Cluster",
       services: services,
       hosts: [{

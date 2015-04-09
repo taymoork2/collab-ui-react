@@ -4,6 +4,7 @@ angular.module('Hercules')
   .service('ClusterProxy', ['$interval', 'ConnectorService',
     function ClusterProxy($interval, connectorService) {
       var pollPromise,
+        error = null,
         clusters = [],
         pollCount = 0,
         pollDelay = 1000,
@@ -27,7 +28,10 @@ angular.module('Hercules')
       };
 
       var getClusters = function () {
-        return clusters;
+        return {
+          error: error,
+          clusters: clusters
+        };
       };
 
       var upgradeSoftware = function (clusterId, serviceType, callback, opts) {
@@ -56,6 +60,7 @@ angular.module('Hercules')
 
       var reload = function () {
         connectorService.fetch(function (err, _clusters) {
+          error = err;
           clusters = _clusters || [];
           pollInFlight = false;
           togglePolling();

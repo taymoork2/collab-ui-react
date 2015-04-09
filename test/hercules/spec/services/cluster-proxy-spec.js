@@ -42,7 +42,7 @@ describe('ClusterProxy', function () {
   });
 
   it('should return data after service is started', function () {
-    expect(clusterProxy.getClusters().length).toBe(0);
+    expect(clusterProxy.getClusters().clusters.length).toBe(0);
 
     clusterProxy.startPolling();
     $interval.flush(10000);
@@ -51,8 +51,8 @@ describe('ClusterProxy', function () {
       id: 'foo'
     }]);
 
-    expect(clusterProxy.getClusters().length).toBe(1);
-    expect(clusterProxy.getClusters()[0].id).toBe('foo');
+    expect(clusterProxy.getClusters().clusters.length).toBe(1);
+    expect(clusterProxy.getClusters().clusters[0].id).toBe('foo');
   });
 
   it('should poll', function () {
