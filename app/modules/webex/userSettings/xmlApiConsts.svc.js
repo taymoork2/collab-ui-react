@@ -80,37 +80,6 @@ angular.module('WebExUserSettings').service(
           "    </body>" + "\n" +
           "</serv:message>" + "\n",
 
-        updateUserSettings2: "" +
-          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
-          "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" + "\n" +
-          "    xmlns:serv=\"http://www.webex.com/schemas/2002/06/service\">" + "\n" +
-          "    <header>" + "\n" +
-          "        <securityContext>" + "\n" +
-          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
-          "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
-          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
-          "        </securityContext>" + "\n" +
-          "    </header>" + "\n" +
-          "    <body>" + "\n" +
-          "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.SetUser\">" + "\n" +
-          "            <webExId>{{webexUserId}}</webExId>" + "\n" +
-          "            <use:privilege>" + "\n" +
-          "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n" +
-          "                <use:teleConfCallOut>{{callBackTeleconf}}</use:teleConfCallOut>" + "\n" +
-          "                <use:teleConfCallOutInternational>{{globalCallBackTeleconf}}</use:teleConfCallOutInternational>" + "\n" +
-          "                <use:otherTelephony>{{otherTelephony}}</use:otherTelephony>" + "\n" +
-          "                <use:voiceOverIp>{{integratedVoIP}}</use:voiceOverIp>" + "\n" +
-          "                <use:labAdmin>{{handsOnLabAdmin}}</use:labAdmin>" + "\n" +
-          "                <use:HQvideo>{{hiQualVideo}}</use:HQvideo>" + "\n" +
-          "                <use:HDvideo>{{hiDefVideo}}</use:HDvideo>" + "\n" +
-          "            </use:privilege>" + "\n" +
-          "            <use:eventCenter>" + "\n " +
-          "                <use:optimizeAttendeeBandwidthUsage>{{optimizeBandwidthUsage}}</use:optimizeAttendeeBandwidthUsage>" + "\n" +
-          "            </use:eventCenter>" + "\n " +
-          "        </bodyContent>" + "\n" +
-          "    </body>" + "\n" +
-          "</serv:message>" + "\n",
-
         sessionTicketRequest: "" +
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
           "    <header>" + "\n" +
