@@ -124,11 +124,92 @@
             "xmlApiAccessInfo=\n" + JSON.stringify(xmlApiAccessInfo);
           // $log.log(logMsg);
 
-          var xmlRequest = $interpolate(constants.updateUserSettings2)(xmlApiAccessInfo);
+          var updateUserSettings2XmlMsg =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
+            "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" + "\n" +
+            "    xmlns:serv=\"http://www.webex.com/schemas/2002/06/service\">" + "\n" +
+            "    <header>" + "\n" +
+            "        <securityContext>" + "\n" +
+            "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
+            "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
+            "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
+            "        </securityContext>" + "\n" +
+            "    </header>" + "\n" +
+            "    <body>" + "\n" +
+            "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.SetUser\">" + "\n" +
+            "            <webExId>{{webexUserId}}</webExId>" + "\n";
+
+          // Start of use:privilege
+          updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+            "            <use:privilege>" + "\n";
+
+          if (xmlApiAccessInfo.callInTeleconfSiteEnabled) {
+            // TODO
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "";
+          }
+
+          if (xmlApiAccessInfo.teleconfViaGlobalCallinSiteEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n";
+          }
+
+          if (xmlApiAccessInfo.callBackTeleconfSiteEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:teleConfCallOut>{{callBackTeleconf}}</use:teleConfCallOut>" + "\n";
+
+            if (xmlApiAccessInfo.globalCallBackTeleconfSiteEnabled) {
+              updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+                "                <use:teleConfCallOutInternational>{{globalCallBackTeleconf}}</use:teleConfCallOutInternational>" + "\n";
+            }
+          }
+
+          if (xmlApiAccessInfo.otherTelephonySiteEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:otherTelephony>{{otherTelephony}}</use:otherTelephony>" + "\n";
+          }
+
+          if (xmlApiAccessInfo.integratedVoIPSiteEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:voiceOverIp>{{integratedVoIP}}</use:voiceOverIp>" + "\n";
+          }
+
+          if (xmlApiAccessInfo.handsOnLabAdminSiteEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:labAdmin>{{handsOnLabAdmin}}</use:labAdmin>" + "\n";
+          }
+
+          if (xmlApiAccessInfo.hiQualVideoSitenEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:HQvideo>{{hiQualVideo}}</use:HQvideo>" + "\n";
+
+            if (xmlApiAccessInfo.hiDefVideoSiteEnabled) {
+              updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+                "                <use:HDvideo>{{hiDefVideo}}</use:HDvideo>" + "\n";
+            }
+          }
+
+          updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+            "            </use:privilege>" + "\n";
+          // End of use:privilege
+
+          if (xmlApiAccessInfo.optimizeBandwidthUsageSiteEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "            <use:eventCenter>" + "\n " +
+              "                <use:optimizeAttendeeBandwidthUsage>{{optimizeBandwidthUsage}}</use:optimizeAttendeeBandwidthUsage>" + "\n" +
+              "            </use:eventCenter>" + "\n ";
+          }
+
+          updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+            "        </bodyContent>" + "\n" +
+            "    </body>" + "\n" +
+            "</serv:message>" + "\n";
 
           logMsg = funcName + ": " + "\n" +
-            "xmlRequest =\n" + xmlRequest;
-          // $log.log(logMsg);
+            "updateUserSettings2XmlMsg =\n" + updateUserSettings2XmlMsg;
+          $log.log(logMsg);
+
+          var xmlRequest = $interpolate(updateUserSettings2XmlMsg)(xmlApiAccessInfo);
 
           return $q(
             function (resolve, reject) {

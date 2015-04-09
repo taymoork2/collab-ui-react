@@ -8,14 +8,14 @@ angular.module('WebExUserSettings')
 
         meetingCenter: {
           id: "MC",
-          label: "",
+          label: "Meeting Center",
           serviceType: "MeetingCenter",
           isSiteEnabled: false
         }, // meetingCenter
 
         trainingCenter: {
           id: "TC",
-          label: "",
+          label: "Training Center",
           serviceType: "TrainingCenter",
           isSiteEnabled: false,
 
@@ -29,7 +29,7 @@ angular.module('WebExUserSettings')
 
         eventCenter: {
           id: "EC",
-          label: "",
+          label: "Event Center",
           serviceType: "EventCenter",
           isSiteEnabled: false,
 
@@ -43,7 +43,7 @@ angular.module('WebExUserSettings')
 
         supportCenter: {
           id: "SC",
-          label: "",
+          label: "Support Center",
           serviceType: "SupportCenter",
           isSiteEnabled: false
         }, // supportCenter
