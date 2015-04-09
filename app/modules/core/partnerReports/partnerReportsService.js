@@ -32,7 +32,7 @@
     }
 
     function getUsersForCustomer(orgId) {
-      var url = Utils.sprintf(Config.scimUrl, [orgId]) + '?&attributes=name,userName';
+      var url = Utils.sprintf(Config.getScimUrl(), [orgId]) + '?&attributes=name,userName';
       return $http.get(url);
     }
 

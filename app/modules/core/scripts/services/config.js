@@ -98,9 +98,15 @@ angular.module('Core')
 
         ssoTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
 
-        scimUrl: 'https://identity.webex.com/identity/scim/%s/v1/Users',
+        scimUrl: {
+          spark: 'https://identity.webex.com/identity/scim/%s/v1/Users',
+          cfe: 'https://identitybts.webex.com/identity/scim/%s/v1/Users'
+        },
 
-        scomUrl: 'https://identity.webex.com/organization/scim/v1/Orgs',
+        scomUrl: {
+          spark: 'https://identity.webex.com/organization/scim/v1/Orgs',
+          cfe: 'https://identitybts.webex.com/organization/scim/v1/Orgs'
+        },
 
         statusPageUrl: 'http://status.ciscospark.com/',
 
@@ -394,6 +400,22 @@ angular.module('Core')
             return 'integration';
           } else {
             return 'prod';
+          }
+        },
+
+        getScimUrl: function () {
+          if (this.isCfe()) {
+            return this.scimUrl.cfe;
+          } else {
+            return this.scimUrl.spark;
+          }
+        },
+
+        getScomUrl: function () {
+          if (this.isCfe()) {
+            return this.scomUrl.cfe;
+          } else {
+            return this.scomUrl.spark;
           }
         },
 

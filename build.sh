@@ -5,6 +5,7 @@
 
 # Build
 grunt clean || exit $?
+grunt jsb || exit $?
 grunt js_verify || exit $?
 grunt build || exit $?
 npm test || exit $?

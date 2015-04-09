@@ -7,7 +7,7 @@ angular.module('Core')
 
       var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
       var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active';
-      var scimUrl = Config.scimUrl + '?' + '&' + attributes;
+      var scimUrl = Config.getScimUrl() + '?' + '&' + attributes;
       var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
 
       var userlistservice = {
@@ -31,19 +31,19 @@ angular.module('Core')
           if (typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             //It seems CI does not support 'ANDing' filters in this situation.
             filter = searchFilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
-            scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
+            scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
             listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
           } else if ($rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
             filter = searchFilter;
-            scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
+            scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
             encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
             listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
             searchStr = $rootScope.searchStr;
           } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
             filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement);
-            scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
+            scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
             listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
           }
 
@@ -177,7 +177,7 @@ angular.module('Core')
 
         getUser: function (searchinput, callback) {
           var filter = 'filter=userName%20eq%20%22' + window.encodeURIComponent(searchinput) + '%22';
-          var scimSearchUrl = Config.scimUrl + '?' + filter + '&' + attributes;
+          var scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
           var getUserUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
 
           $http.get(getUserUrl)

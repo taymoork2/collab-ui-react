@@ -155,7 +155,7 @@ angular.module('Squared')
       };
 
       var initializeTypeahead = function () {
-        var scimSearchUrl = Config.scimUrl + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
+        var scimSearchUrl = Config.getScimUrl() + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
         var suggestUsersUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
         var engine = new Bloodhound({
           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('userName'),

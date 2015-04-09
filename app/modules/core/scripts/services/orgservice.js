@@ -9,9 +9,9 @@ angular.module('Core')
         getOrg: function (callback, oid) {
           var scomUrl = null;
           if (oid) {
-            scomUrl = Config.scomUrl + '/' + oid;
+            scomUrl = Config.getScomUrl() + '/' + oid;
           } else {
-            scomUrl = Config.scomUrl + '/' + Authinfo.getOrgId();
+            scomUrl = Config.getScomUrl() + '/' + Authinfo.getOrgId();
           }
 
           $http.get(scomUrl)

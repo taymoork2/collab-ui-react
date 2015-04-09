@@ -121,7 +121,7 @@ angular.module('Core')
         },
 
         getUser: function (userid, callback) {
-          var scimUrl = Config.scimUrl + '/' + userid;
+          var scimUrl = Config.getScimUrl() + '/' + userid;
           var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
 
           $http.get(userUrl)
@@ -137,7 +137,7 @@ angular.module('Core')
         },
 
         updateUserProfile: function (userid, userData, callback) {
-          var scimUrl = Config.scimUrl + '/' + userid;
+          var scimUrl = Config.getScimUrl() + '/' + userid;
           scimUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
 
           if (userData) {
@@ -336,7 +336,7 @@ angular.module('Core')
         },
 
         deactivateUser: function (deleteUserOrgId, deleteUserUuId, userData, callback) {
-          var scimUrl = Config.scimUrl + '/' + deleteUserUuId;
+          var scimUrl = Config.getScimUrl() + '/' + deleteUserUuId;
           scimUrl = Utils.sprintf(scimUrl, [deleteUserOrgId]);
 
           if (userData) {
