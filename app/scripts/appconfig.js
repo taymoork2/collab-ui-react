@@ -737,12 +737,6 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('fusion-old', {
-          url: '/fusion-old',
-          templateUrl: 'modules/hercules/dashboard/dashboard.html',
-          controller: 'DashboardController',
-          parent: 'main'
-        })
         .state('fusion', {
           url: '/fusion',
           templateUrl: 'modules/hercules/dashboard/dashboard-next.html',
