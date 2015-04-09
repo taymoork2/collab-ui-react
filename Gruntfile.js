@@ -453,25 +453,24 @@ module.exports = function (grunt) {
     jshint: {
       app: [
         '<%= app_dir %>/scripts/**/*.js',
-        '<%= app_dir %>/modules/**/*.js',
-        '<%= test_dir %>/**/*.js',
+        '<%= app_dir %>/modules/**/*.js'
         // '<%= app_dir %>/**/*.json',
         // '<%= test_dir %>/**/*.json',
       ],
-      unsupported_app: [
-        // '<%= unsupported_app_dir %>/**/*.js'
-      ],
+      // unsupported_app: [
+      //   '<%= unsupported_app_dir %>/**/*.js'
+      // ],
       test: [
-        // '<%= app_dir %>//**/*.js'
+        '<%= test_dir %>/**/*.js',
       ],
       gruntfile: [
         'Gruntfile.js'
       ],
       options: {
         jshintrc: 'config/jshint.json',
-        reporter: require('jshint-stylish')
+        // reporter: require('jshint-stylish')
       },
-      globals: {}
+      // globals: {}
     },
 
     eslint: {
@@ -602,8 +601,6 @@ module.exports = function (grunt) {
           '<%= app_dir %>/**/*.json'
         ],
         tasks: [
-          'jsbeautifier:beautify',
-          'jshint:app',
           'copy:build_app_files',
           'htmlprocess_build',
           'karma:unit:run'
@@ -630,7 +627,7 @@ module.exports = function (grunt) {
           '<%= unsupported_app_dir %>/scripts/**/*.js'
         ],
         tasks: [
-          'jshint:unsupported_app',
+          // 'jshint:unsupported_app',
           'copy:build_unsupported_app_js',
           'htmlprocess_build',
           'karma:unit:run'
@@ -894,7 +891,7 @@ module.exports = function (grunt) {
     'clean:build',
     // 'htmlangular',
     'html2js',
-    'js_beautify',
+    'js_verify',
     'less',
     'copy_build',
     'imagemin',
@@ -931,14 +928,18 @@ module.exports = function (grunt) {
 
   // Format JS files
   grunt.registerTask('js_beautify', [
-    'jsbeautifier:beautify',
-    'jshint'
+    'jshint',
+    'jsbeautifier:beautify'
   ]);
+
+  grunt.registerTask('jsb', function () {
+    grunt.task.run(['js_beautify']);
+  });
 
   // Check JS files for fomatting errors
   grunt.registerTask('js_verify', [
-    'jsbeautifier:verify',
-    'jshint'
+    'jshint',
+    'jsbeautifier:verify'
   ]);
 
   // Copy the needed files into the build folder
