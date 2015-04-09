@@ -764,7 +764,7 @@ angular
             displayName: 'Overview'
           },
           params: {
-            cluster: {}
+            clusterId: {}
           }
         })
         .state('cluster-details.hosts', {
@@ -781,7 +781,8 @@ angular
             displayName: 'Service'
           },
           params: {
-            service: {}
+            clusterId: {},
+            serviceType: {}
           }
         });
     }

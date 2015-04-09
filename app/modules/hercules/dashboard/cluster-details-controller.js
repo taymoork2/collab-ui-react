@@ -4,10 +4,19 @@ angular.module('Hercules')
   .controller('ClusterDetailsController',
 
     /* @ngInject */
-    function ($scope, $state, $stateParams, ConnectorService) {
-      $scope.cluster = $stateParams.cluster;
-
+    function ($scope, $state, $stateParams, ConnectorService, ClusterProxy) {
       $scope.visibleAlarm = {};
+
+      $scope.$watch(ClusterProxy.getClusters, function (data) {
+        $scope.cluster = _.find(data.clusters || [], function (c) {
+          return c.id == $stateParams.clusterId;
+        });
+        if (data.error || !$scope.cluster) {
+          $state.sidepanel.close();
+        }
+      }, true);
+
+      /* are all fns below used? */
 
       $scope.toggleEdit = function (hostName) {
         if ($scope.editingHost == hostName) {

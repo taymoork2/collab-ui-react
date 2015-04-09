@@ -19,7 +19,7 @@
       <div class="sw-upgrade clearfix">
 
         <div ng-repeat="service in cluster.services" class="list">
-          <a ui-sref="cluster-details.service({service: service})" style="padding-bottom: 15px; display: block;" ng-class="service.needs_attention ? 'needs_attention' : (service.is_disabled || !service.running_hosts) ? 'disabled' : 'running'">
+          <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" style="padding-bottom: 15px; display: block;" ng-class="service.needs_attention ? 'needs_attention' : (service.is_disabled || !service.running_hosts) ? 'disabled' : 'running'">
             <i class="fa fa-circle" style="padding-right: 10px;" />
             <span>{{service.display_name}}</span>
             <i class="icon icon-chevron-right pull-right" />
