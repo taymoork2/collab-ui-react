@@ -10,12 +10,27 @@
 
     return {
       responseError: function (response) {
-        if (is20001Error(response) || isHttpAuthError(response) || isCIInvalidAccessTokenError(response)) {
+        if (is20001Error(response)) {
+          Log.info('Refresh access token due to 20001 response.');
+          return Auth.refreshAccessTokenAndResendRequest(response);
+        }
+        if (isHttpAuthError(response)) {
+          Log.info('Refresh access token due to HTTP authentication error.');
+          return Auth.refreshAccessTokenAndResendRequest(response);
+        }
+        if (isCIInvalidAccessTokenError(response)) {
+          Log.info('Refresh access token due to invalid CI error.');
           return Auth.refreshAccessTokenAndResendRequest(response);
         }
 
-        if (Storage.get('refreshToken') && refreshTokenHasExpired(response)) {
-          Auth.logout();
+        if (refreshTokenHasExpired(response)) {
+          Log.info('Refresh-token has expired.');
+          return Auth.logout();
+        }
+
+        if (refreshTokenIsInvalid(response)) {
+          Log.info('Refresh-token is invalid.');
+          return Auth.logout();
         }
 
         return $q.reject(response);
@@ -36,6 +51,10 @@
 
     function refreshTokenHasExpired(response) {
       return response.status == 400 && responseContains(response, "The refresh token provided is expired");
+    }
+
+    function refreshTokenIsInvalid(response) {
+      return response.status == 400 && responseContains(response, "The requested scope is invalid");
     }
 
     function responseContains(response, searchString) {
