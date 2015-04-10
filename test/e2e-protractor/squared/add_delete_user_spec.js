@@ -34,7 +34,7 @@ describe('Squared Add & Entitle User Flows', function () {
   });
 
   describe('Add an existing user', function () {
-    it('should display input user email in results with already exists message', function () {
+    xit('should display input user email in results with already exists message', function () {
       utils.click(users.clearButton);
       utils.sendKeys(users.addUsersField, users.testUser.username);
       utils.sendKeys(users.addUsersField, protractor.Key.ENTER);

@@ -4,13 +4,14 @@
 angular.module('Core')
   .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', '$filter',
     function Authinfo($rootScope, $location, Utils, Config, $filter) {
-      function ServiceFeature(label, value, name, id, entitlements, siteObj) {
+      function ServiceFeature(label, value, name, id, entitlements, licenseId, siteObj) {
         this.label = label;
         this.value = value;
         this.name = name;
         this.id = id;
         this.entitlements = entitlements;
         this.isCustomerPartner = false;
+        this.licenseId = licenseId;
         if (siteObj) {
           this.type = siteObj.type;
           if (this.type === 'CONFERENCING') {
@@ -187,15 +188,15 @@ angular.module('Core')
                     authData.roles.push('Site_Admin');
                   }
 
-                  service = new ServiceFeature(Config.confMap[license.offerName], x + 1, 'confRadio', license.licenseType, license.features, siteObj);
+                  service = new ServiceFeature(Config.confMap[license.offerName], x + 1, 'confRadio', license.licenseType, license.features, license.licenseId, siteObj);
                   confLicenses.push(service);
                   break;
                 case 'MESSAGING':
-                  service = new ServiceFeature($filter('translate')('onboardModal.paidMsg'), x + 1, 'msgRadio', license.licenseType, license.features);
+                  service = new ServiceFeature($filter('translate')('onboardModal.paidMsg'), x + 1, 'msgRadio', license.licenseType, license.features, license.licenseId);
                   msgLicenses.push(service);
                   break;
                 case 'COMMUNICATION':
-                  service = new ServiceFeature($filter('translate')('onboardModal.paidComm'), x + 1, 'commRadio', license.licenseType, license.features);
+                  service = new ServiceFeature($filter('translate')('onboardModal.paidComm'), x + 1, 'commRadio', license.licenseType, license.features, license.licenseId);
                   commLicenses.push(service);
                   break;
                 }

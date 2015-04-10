@@ -6,21 +6,22 @@ angular.module('Core')
 
       $scope.hasAccount = Authinfo.hasAccount();
 
-      function ServiceFeature(label, value, name, id, entitlements) {
+      function ServiceFeature(label, value, name, id, entitlements, licenseId) {
         this.label = label;
         this.value = value;
         this.name = name;
         this.id = id;
         this.entitlements = entitlements;
+        this.licenseId = licenseId;
       }
 
       var userEnts = null;
       $scope.messageFeatures = [];
       $scope.conferenceFeatures = [];
       $scope.communicationFeatures = [];
-      $scope.messageFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeMsg'), 0, 'msgRadio', 'freeTeamRoom', Config.getDefaultEntitlements()));
-      $scope.conferenceFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeConf'), 0, 'confRadio', 'freeConferencing', Config.getDefaultEntitlements()));
-      $scope.communicationFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeComm'), 0, 'commRadio', 'advancedCommunication', Config.getDefaultEntitlements()));
+      $scope.messageFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeMsg'), 0, 'msgRadio', 'freeTeamRoom', Config.getDefaultEntitlements(), null));
+      $scope.conferenceFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeConf'), 0, 'confRadio', 'freeConferencing', Config.getDefaultEntitlements(), null));
+      $scope.communicationFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeComm'), 0, 'commRadio', 'advancedCommunication', Config.getDefaultEntitlements(), null));
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
         userEnts = $scope.currentUser.entitlements;
@@ -128,12 +129,9 @@ angular.module('Core')
 
       var usersList = [];
 
-      var getServiceEntitlements = function (list, service) {
-        if (service.entitlements) {
-          var features = service.entitlements;
-          for (var f = 0; f < features.length; f++) {
-            list.push(new Feature(getSqEntitlement(features[f]), 'ACTIVE'));
-          }
+      var getServiceLicenseIds = function (list, service) {
+        if (service.licenseId) {
+          list.push(service.licenseId);
         }
         return list;
       };
@@ -150,8 +148,8 @@ angular.module('Core')
         return sqEnt;
       };
 
-      var getAccountEntitlements = function () {
-        var entitleList = [];
+      var getAccountLicenseIds = function () {
+        var licenseIdList = [];
         if (Authinfo.hasAccount()) {
           var index = $scope.radioStates.msgRadio ? 1 : 0;
           var selMsgService = $scope.messageFeatures[index];
@@ -162,26 +160,23 @@ angular.module('Core')
           index = $scope.radioStates.commRadio ? 1 : 0;
           var selCommService = $scope.communicationFeatures[index];
 
-          entitleList = getServiceEntitlements(entitleList, selMsgService);
-          entitleList = getServiceEntitlements(entitleList, selConfService);
-          entitleList = getServiceEntitlements(entitleList, selCommService);
+          licenseIdList = getServiceLicenseIds(licenseIdList, selMsgService);
+          licenseIdList = getServiceLicenseIds(licenseIdList, selConfService);
+          licenseIdList = getServiceLicenseIds(licenseIdList, selCommService);
         }
-        return entitleList;
+        return licenseIdList;
       };
 
       var getEntitlements = function (action) {
         var entitleList = [];
-        if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-          entitleList = getAccountEntitlements();
-        } else {
-          var state = null;
-          for (var key in $scope.entitlements) {
-            state = $scope.entitlements[key];
-            if (action === 'add' || (action === 'entitle' && state)) {
-              entitleList.push(new Feature(key, state));
-            }
+        var state = null;
+        for (var key in $scope.entitlements) {
+          state = $scope.entitlements[key];
+          if (action === 'add' || (action === 'entitle' && state)) {
+            entitleList.push(new Feature(key, state));
           }
         }
+        
         Log.debug(entitleList);
         return entitleList;
       };
@@ -197,19 +192,6 @@ angular.module('Core')
       };
 
       $scope.updateUserLicense = function () {
-        var entitleList = [];
-        var entStrings = getEntitlementStrings(getAccountEntitlements());
-
-        var orgServices = Authinfo.getServices();
-        for (var n = 0; n < orgServices.length; n++) {
-          var service = orgServices[n];
-          if (entStrings.indexOf(service.sqService) !== -1) {
-            entitleList.push(new Feature(service.sqService, true));
-          } else {
-            entitleList.push(new Feature(service.sqService, false));
-          }
-        }
-
         var user = [];
         if ($scope.currentUser) {
           usersList = [];
@@ -222,7 +204,7 @@ angular.module('Core')
         }
         angular.element('#btnSaveEnt').button('loading');
 
-        Userservice.updateUsers(user, entitleList, entitleUserCallback);
+        Userservice.updateUsers(user, getAccountLicenseIds(), [], entitleUserCallback);
       };
 
       //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -453,9 +435,15 @@ angular.module('Core')
           for (i = 0; i < usersList.length; i += chunk) {
             temparray = usersList.slice(i, i + chunk);
             //update entitlements
-            Userservice.onboardUsers(temparray, getEntitlements('add'), callback);
+            var entitleList = [];
+            var licenseList = [];
+            if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+              licenseList = getAccountLicenseIds();
+            } else {
+              entitleList = getEntitlements('add');
+            }
+            Userservice.onboardUsers(temparray, entitleList, licenseList, callback);
           }
-
         } else {
           Log.debug('No users entered.');
           var error = [$filter('translate')('usersPage.validEmailInput')];

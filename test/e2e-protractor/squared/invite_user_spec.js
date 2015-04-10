@@ -72,7 +72,7 @@ describe('Squared Invite User Flow', function () {
       utils.expectIsDisplayed(users.manageDialog);
     });
 
-    it('should not invite users successfully if they are already entitled', function () {
+    xit('should not invite users successfully if they are already entitled', function () {
       inviteEmail = users.inviteTestUser.username;
       utils.click(users.clearButton);
       utils.sendKeys(users.addUsersField, inviteEmail);

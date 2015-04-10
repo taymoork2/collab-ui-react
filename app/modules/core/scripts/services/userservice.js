@@ -8,7 +8,7 @@ angular.module('Core')
 
       return {
 
-        updateUsers: function (usersDataArray, entitlements, callback) {
+        updateUsers: function (usersDataArray, userLicenses, entitlements, callback) {
           var userData = {
             'users': []
           };
@@ -18,7 +18,8 @@ angular.module('Core')
             if (userEmail.length > 0) {
               var user = {
                 'email': userEmail,
-                'userEntitlements': entitlements
+                'userEntitlements': entitlements,
+                'userLicenses': userLicenses
               };
               userData.users.push(user);
             }
@@ -295,7 +296,7 @@ angular.module('Core')
             });
         },
 
-        onboardUsers: function (usersDataArray, entitlements, callback) {
+        onboardUsers: function (usersDataArray, entitlements, userLicenses, callback) {
           var userData = {
             'users': []
           };
@@ -306,7 +307,8 @@ angular.module('Core')
             var user = {
               'email': null,
               'name': null,
-              'userEntitlements': entitlements
+              'userEntitlements': entitlements,
+              'userLicenses': userLicenses
             };
             if (userEmail.length > 0) {
               user.email = userEmail;

@@ -141,7 +141,7 @@ angular.module('Squared')
             'address': user.userName,
             'givenName': givenName,
             'familyName': familyName
-          }], getUserEntitlementList($scope.entitlements), function (data) {
+          }], null, getUserEntitlementList($scope.entitlements), function (data) {
             var entitleResult = {
               msg: null,
               type: 'null'
