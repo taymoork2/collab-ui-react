@@ -110,6 +110,10 @@
           return result;
         }, // validateXmlData()
 
+        getUserSettingsModel: function () {
+          return userSettingsModel;
+        }, // getUserSettingsModel()
+
         initUserSettingsModel: function () {
           userSettingsModel.viewReady = false;
           userSettingsModel.loadError = false;
@@ -545,6 +549,7 @@
           var logMsg = "";
 
           angular.element('#saveBtn').button('loading');
+          angular.element('#saveBtn2').button('loading');
 
           var _self = this;
           var useSupportedServices = userSettingsModel.userInfo.bodyJson.use_supportedServices;
@@ -568,6 +573,7 @@
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
               angular.element('#saveBtn').button('reset');
+              angular.element('#saveBtn2').button('reset');
 
               var successMsg = $translate.instant("webexUserSettings.sessionEnablementUpdateSuccess");
               _self.processUpdateSuccessResult(
@@ -577,6 +583,7 @@
 
             function updateUserSettingsError(result) {
               angular.element('#saveBtn').button('reset');
+              angular.element('#saveBtn2').button('reset');
 
               _self.updateUserSettingsError(result);
             } // updateUserSettingsError()
@@ -588,6 +595,7 @@
           var logMsg = "";
 
           angular.element('#saveBtn').button('loading');
+          angular.element('#saveBtn2').button('loading');
 
           var _self = this;
 
@@ -657,6 +665,7 @@
           XmlApiFact.updateUserSettings2(xmlApiInfo).then(
             function updateUserSettings2Success(result) {
               angular.element('#saveBtn').button('reset');
+              angular.element('#saveBtn2').button('reset');
 
               var successMsg = $translate.instant("webexUserSettings.privilegesUpdateSuccess");
               _self.processUpdateSuccessResult(
@@ -666,6 +675,7 @@
 
             function updateUserSettings2Error(result) {
               angular.element('#saveBtn').button('reset');
+              angular.element('#saveBtn2').button('reset');
 
               _self.updateUserSettingsError(result);
             } // updateUserSettings2Error()
@@ -727,9 +737,6 @@
                 webexSiteName,
                 webexAdminSessionTicket
               );
-
-              userSettingsModel.loadError = false;
-              userSettingsModel.sessionTicketErr = false;
 
               angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
 
