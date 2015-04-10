@@ -163,6 +163,20 @@ describe('Controller: LineSettingsCtrl', function () {
 
   });
 
+  describe('disable SharedLineDevice', function () {
+
+    it('should call IsSingleDevice and return true', function () {
+
+      expect(controller.isSingleDevice(sharedLineEndpoints, sharedLineUsers[0].uuid)).toBeTruthy();
+    });
+
+    it('should call IsSingleDevice and return false', function () {
+
+      expect(controller.isSingleDevice(sharedLineEndpoints, sharedLineUsers[1].uuid)).toBeFalsy();
+    });
+
+  });
+
   describe('update SharedLineDevices', function () {
     beforeEach(function () {
       controller.forward = 'none';

@@ -738,7 +738,7 @@
     "remove": "Remove member",
     "invalidUser": "{{user}} does not have Unified Communications service",
     "member": "Shared Line Members",
-    "disassociateUser": "This action cannot be undone.  Are you sure you want to unassign the shared line from this user?",
+    "disassociateUser": "Removing this user from the shared line members will immediately remove this line from all of their devices. Are you sure you want to proceed?",
     "addMember": "Add Member"
   },
   "singleNumberReachPanel": {

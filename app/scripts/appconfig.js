@@ -260,6 +260,9 @@ angular
           templateUrl: 'modules/huron/overview/telephonyOverview.tpl.html',
           controller: 'TelephonyOverviewCtrl',
           controllerAs: 'telephonyOverview',
+          params: {
+            reloadToggle: false
+          },
           data: {
             displayName: 'Communication'
           }

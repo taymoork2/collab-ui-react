@@ -9,6 +9,7 @@
   function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, ServiceSetup, UserListService, SharedLineInfoService) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
+    vm.entitlements = $stateParams.entitlements;
     vm.cbAddText = $translate.instant('callForwardPanel.addNew');
     vm.title = $translate.instant('directoryNumberPanel.title');
     vm.forward = 'busy';
@@ -56,6 +57,7 @@
       id: 'btn-remove'
     };
 
+    vm.isSingleDevice = isSingleDevice;
     vm.saveLineSettings = saveLineSettings;
     vm.deleteLineSettings = deleteLineSettings;
     vm.resetLineSettings = resetLineSettings;
@@ -192,7 +194,12 @@
           vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
         }
       }
-      listSharedLineUsers(directoryNumber.uuid);
+
+      if (directoryNumber.uuid !== '') {
+        // line exists
+        listSharedLineUsers(directoryNumber.uuid);
+      }
+
       getUserList();
 
     }
@@ -719,7 +726,13 @@
           } else {
             return SharedLineInfoService.disassociateSharedLineUser(userUuid, userDnUuid, vm.directoryNumber.uuid)
               .then(function () {
-                return listSharedLineUsers(vm.directoryNumber.uuid);
+                if (vm.currentUser.id == userUuid) {
+                  $state.go('user-overview.communication', {
+                    reloadToggle : !$stateParams.reloadToggle
+                  });
+                } else {
+                  return listSharedLineUsers(vm.directoryNumber.uuid);
+                }
               });
           }
         });
@@ -770,27 +783,43 @@
     }
 
     function processSharedLineUsers() {
-        //This handles Shared Line Endpoint Association/Disassociation
-        var promise;
-        var promises = [];
-        //Associate sharedline users if selected
-        if (vm.selectedUsers) {
-          promise = addSharedLineUsers();
-          promises.push(promise);
-        }
-        if (vm.sharedLineUsers) {
-          //Disassociate sharedline users if selected
-          promise = disassociateSharedLineUsers(false);
-          promises.push(promise);
 
-          //Update Shared Line User devices if updated
-          promise = updateSharedLineDevices();
-          promises.push(promise);
-        }
-
-        return $q.all(promises);
+      //This handles Shared Line Endpoint Association/Disassociation
+      var promise;
+      var promises = [];
+      //Associate sharedline users if selected
+      if (vm.selectedUsers) {
+        promise = addSharedLineUsers();
+        promises.push(promise);
       }
-      // ........Sharedline
+      if (vm.sharedLineUsers) {
+        //Disassociate sharedline users if selected
+        promise = disassociateSharedLineUsers(false);
+        promises.push(promise);
+
+        //Update Shared Line User devices if updated
+        promise = updateSharedLineDevices();
+        promises.push(promise);
+      }
+
+      return $q.all(promises);
+    }
+
+    function isSingleDevice(userDeviceList, userUuid) {
+      var sharedCount = 0;
+      var deviceCount = 0;
+
+      angular.forEach(userDeviceList, function (device) {
+        if (device.userUuid == userUuid) {
+          deviceCount++;
+          if (device.isSharedLine) {
+            sharedCount++;
+          }
+        }
+      });
+
+      return (deviceCount == 1 && sharedCount == 1);
+    }
 
     function getUserName(name) {
       var userName = '';

@@ -53,26 +53,27 @@
           if (angular.isDefined(dnUserInfo)) {
             for (var i = 0; i < dnUserInfo.length; i++) {
               var dnUser = dnUserInfo[i];
-              if (dnUser.user.uuid !== currentUserId) {
-                var userInfo = {
-                  'uuid': dnUser.user.uuid,
-                  'name': '',
-                  'userName': dnUser.user.userId,
-                  'userDnUuid': dnUser.uuid,
-                  'dnUsage': dnUser.dnUsage
-                };
+              var userInfo = {
+                'uuid': dnUser.user.uuid,
+                'name': '',
+                'userName': dnUser.user.userId,
+                'userDnUuid': dnUser.uuid,
+                'dnUsage': dnUser.dnUsage
+              };
+              if (userInfo.uuid === currentUserId) {
+                sharedLineUsers.unshift(userInfo);
+              } else {
                 sharedLineUsers.push(userInfo);
-                UserServiceCommon.get({
-                    customerId: Authinfo.getOrgId(),
-                    userId: dnUser.user.uuid
-                  }).$promise
-                  .then(function (commonUser) {
-                    this.name = (commonUser && commonUser.firstName) ? (commonUser.firstName) : '';
-                    this.name = (commonUser && commonUser.lastName) ? (this.name + ' ' + commonUser.lastName).trim() : this.name;
-
-                  }.bind(userInfo));
-
               }
+              UserServiceCommon.get({
+                  customerId: Authinfo.getOrgId(),
+                  userId: dnUser.user.uuid
+                }).$promise
+                .then(function (commonUser) {
+                  this.name = (commonUser && commonUser.firstName) ? (commonUser.firstName) : '';
+                  this.name = (commonUser && commonUser.lastName) ? (this.name + ' ' + commonUser.lastName).trim() : this.name;
+
+                }.bind(userInfo));
             }
             return sharedLineUsers;
           }
