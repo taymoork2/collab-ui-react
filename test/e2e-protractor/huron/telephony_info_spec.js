@@ -241,10 +241,6 @@ describe('Telephony Info', function () {
     });
 
     it('should add the second user to the first users shared line', function () {
-      utils.expectIsDisplayed(telephony.sharedLineToggle);
-
-      utils.click(telephony.sharedLineToggle);
-
       utils.waitUntilEnabled(telephony.userInput);
 
       utils.click(telephony.userInput);
