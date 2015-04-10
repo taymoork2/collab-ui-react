@@ -78,13 +78,17 @@ angular.module('Core')
           var stateFound = true;
 
           switch (state.name) {
+          case 'trialAdd.info':
+            msg = "In trial page";
+            eType = this.getEventType('trialPage');
+            break;
+          case 'trialAdd.addNumbers':
+            msg = "In trial DID page";
+            eType = this.getEventType('trialDidPage');
+            break;
           case 'overview':
             msg = "In customer overview page";
             eType = this.getEventType('customerOverviewPage');
-            break;
-          case 'users.list':
-            msg = "In users list page";
-            eType = this.getEventType('customerUsersListPage');
             break;
           case 'devices':
             if (Authinfo.isCustomerAdmin()) {

@@ -24,7 +24,6 @@ angular.module('Core')
       $scope.isCustomerPartner = Authinfo.isCustomerPartner;
 
       $scope.openAddTrialModal = function () {
-        LogMetricsService.logMetrics('In trial page', LogMetricsService.getEventType('trialPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
         $state.go('trialAdd.info').then(function () {
           $state.modal.result.then(function () {
             getTrialsList();
