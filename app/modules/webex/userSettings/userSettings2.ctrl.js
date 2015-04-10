@@ -32,6 +32,7 @@
         return $sce.trustAsResourceUrl(src);
       }; // trustSrc()
 
+      /*
       this.btnReload = function () {
         if (this.userSettingsModel.sessionTicketErr) {
           this.initPanel();
@@ -39,6 +40,7 @@
           this.getUserSettingsInfo();
         }
       }; // btnReload()
+      */
 
       this.btnSave = function () {
         var funcName = "btnSave()";
@@ -47,6 +49,7 @@
         WebExUserSettingsFact.updateUserSettings2();
       }; // btnSave()
 
+      /*
       this.initPanel = function () {
         WebExUserSettingsFact.initPanel();
       }; // initPanel()
@@ -54,12 +57,11 @@
       this.getUserSettingsInfo = function () {
         WebExUserSettingsFact.getUserSettingsInfo();
       }; // getUserSettingsInfo()
+      */
 
       //----------------------------------------------------------------------//
 
-      this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
-
-      this.initPanel();
+      this.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();
     } // WebExUserSettings2Ctrl()
   ]);
 })();
