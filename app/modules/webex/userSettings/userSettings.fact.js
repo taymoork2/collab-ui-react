@@ -295,7 +295,7 @@
 
           /* TODO
           userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = (
-             ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.<callInTeleconf>) &&
+             (userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled) &&
              ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.<teleconfViaGlobalCallIn>)
           ) ? true : false;
           */
