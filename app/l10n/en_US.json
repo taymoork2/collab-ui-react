@@ -1117,7 +1117,6 @@
     "telephonyPrivilegesLabel": "Telephony Privileges",
     "callInTeleconfLabel": "Call-in teleconferencing",
     "tollOnlyLabel": "Toll",
-    "tollFreeOnlyLabel": "Toll free",
     "tollAndTollFreeLabel": "Toll & Toll free",
     "teleconfViaGlobalCallinLabel": "Allow access to teleconference via global call-in numbers",
     "callBackTeleconfLabel": "Call-back teleconferencing",

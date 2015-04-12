@@ -75,17 +75,12 @@ angular.module('WebExUserSettings')
             isSiteEnabled: false,
             value: false,
 
-            toll: {
-              isSiteEnabled: false,
-              isAllowed: false
-            },
+            selectedCallInTollType: 0,
 
             tollFree: {
               isSiteEnabled: false,
-              isAllowed: false
+              value: false,
             },
-
-            selectedCallInTollType: 0,
 
             callInTollTypes: [{
               label: "",
@@ -96,12 +91,6 @@ angular.module('WebExUserSettings')
             }, {
               label: "",
               value: 2,
-              id: "tollFreeOnly",
-              name: "callInTollType",
-              isDisabled: true
-            }, {
-              label: "",
-              value: 3,
               id: "tollAndTollFree",
               name: "callInTollType",
               isDisabled: true

@@ -144,14 +144,20 @@
             "            <use:privilege>" + "\n";
 
           if (xmlApiAccessInfo.callInTeleconfSiteEnabled) {
-            // TODO
+            /* TODO
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-              "";
-          }
+              "                <use:???>{{callInTeleconf}}</use:???>" + "\n";
+            */
 
-          if (xmlApiAccessInfo.teleconfViaGlobalCallinSiteEnabled) {
-            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-              "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n";
+            if (xmlApiAccessInfo.tollFreeIsSiteEnabled) {
+              updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+                "                <use:teleConfTollFreeCallIn>{{tollFree}}</use:teleConfTollFreeCallIn>" + "\n";
+            }
+
+            if (xmlApiAccessInfo.teleconfViaGlobalCallinSiteEnabled) {
+              updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+                "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n";
+            }
           }
 
           if (xmlApiAccessInfo.callBackTeleconfSiteEnabled) {
