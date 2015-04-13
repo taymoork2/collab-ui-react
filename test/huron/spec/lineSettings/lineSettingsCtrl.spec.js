@@ -194,7 +194,6 @@ describe('Controller: LineSettingsCtrl', function () {
     });
 
     it('disassociateSharedLineDevice: should disassociate Shared Line endpoint', function () {
-      expect(controller.sharedLineBtn).toBe(true);
       expect(controller.devices.length).toBe(3);
       expect(controller.devices[0].isSharedLine).toBeTruthy();
       expect(controller.sharedLineEndpoints[0].isSharedLine).toBeFalsy();
@@ -204,30 +203,11 @@ describe('Controller: LineSettingsCtrl', function () {
     });
 
     it('associateSharedLineDevice: should associate Shared Line endpoint', function () {
-      expect(controller.sharedLineBtn).toBe(true);
       expect(controller.sharedLineEndpoints[1].isSharedLine).toBeTruthy();
       expect(SharedLineInfoService.associateLineEndpoint).toHaveBeenCalled();
 
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
-  });
-
-  describe('Toggle button to remove SharedLineUsers', function () {
-    beforeEach(function () {
-      controller.forward = 'none';
-      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
-      controller.selectedUsers = [];
-
-      controller.saveLineSettings();
-      controller.sharedLineBtn = false;
-      $scope.$apply();
-    });
-
-    it('disassociateSharedLineUsers: should disassociate Shared Line Users', function () {
-      expect(controller.sharedLineUsers.length).toBe(2);
-      expect(SharedLineInfoService.disassociateSharedLineUser).toHaveBeenCalled();
-    });
-
   });
 
   describe('Remove SharedLineUsers', function () {

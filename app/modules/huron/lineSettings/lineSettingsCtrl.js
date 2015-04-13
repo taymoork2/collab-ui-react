@@ -195,7 +195,7 @@
         }
       }
 
-      if (directoryNumber.uuid !== '') {
+      if (directoryNumber.uuid && directoryNumber.uuid !== "") {
         // line exists
         listSharedLineUsers(directoryNumber.uuid);
       }
@@ -665,8 +665,7 @@
       var uuid;
       var promises = [];
       var promise;
-
-      if (vm.sharedLineBtn === true) {
+      if (vm.selectedUsers) {
         angular.forEach(vm.selectedUsers, function (user) {
           promise = SharedLineInfoService.getUserLineCount(user.uuid)
             .then(function (totalLines) {
@@ -685,7 +684,6 @@
           promises.push(promise);
         });
         vm.selectedUsers = [];
-
       }
       return $q.all(promises);
     }
@@ -695,7 +693,7 @@
       var promise = SharedLineInfoService.loadSharedLineUsers(dnUuid, vm.currentUser.id)
         .then(function (users) {
           vm.sharedLineUsers = users;
-          vm.sharedLineBtn = (vm.sharedLineUsers.length) ? true : false;
+          vm.sharedLineBtn = (vm.sharedLineUsers) ? true : false;
           vm.sharedLineEndpoints = SharedLineInfoService.loadSharedLineUserDevices(dnUuid);
         });
       return promise;
@@ -747,10 +745,10 @@
     function disassociateSharedLineUsers(deleteLineSettings) {
       var promise;
       var promises = [];
-      if (vm.sharedLineBtn === false || deleteLineSettings) {
+      if (vm.sharedLineUsers && vm.sharedLineUsers.length > 1 && deleteLineSettings) {
         //Disassociate SharedLine user on toggle/delete line
         angular.forEach(vm.sharedLineUsers, function (user) {
-          if (user.dnUsage !== 'Primary') {
+          if (user.dnUsage !== 'Primary' && user.uuid != vm.currentUser.id) {
             promise = disassociateSharedLineUser(user.uuid, user.userDnUuid, true);
             promises.push(promise);
           }

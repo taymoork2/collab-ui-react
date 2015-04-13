@@ -17,7 +17,7 @@
         typeahead-template-url="customTemplate.html" placeholder="{{'sharedLinePanel.addMember' | translate}}" ng-disabled="lineSettings.disableTypeahead"/>
       <i class="icon icon-search"></i>
     </div>
-    <div ng-if="lineSettings.sharedLineUsers.length > 1">
+    <div ng-if="lineSettings.sharedLineUsers.length">
       <p class="no-margin"><span translate="sharedLinePanel.member"></span></p>
       <cs-accordion close-others="lineSettings.oneAtATime">
         <cs-accordion-group ng-repeat="user in lineSettings.sharedLineUsers" id="{{user.userName}}-AccordionGroup" display-status="primary" show-caret="true">

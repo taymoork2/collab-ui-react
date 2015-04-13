@@ -50,7 +50,7 @@
           'directoryNumberId': dnUuid
         }).$promise
         .then(function (dnUserInfo) {
-          if (angular.isDefined(dnUserInfo)) {
+          if (angular.isDefined(dnUserInfo) && dnUserInfo.length > 1) {
             for (var i = 0; i < dnUserInfo.length; i++) {
               var dnUser = dnUserInfo[i];
               var userInfo = {
@@ -75,8 +75,9 @@
 
                 }.bind(userInfo));
             }
-            return sharedLineUsers;
           }
+          return sharedLineUsers;
+
         });
     }
 
