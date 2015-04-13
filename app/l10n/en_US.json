@@ -324,7 +324,9 @@
     "reportingUrl": "Reporting URL:",
     "helpFaq": "Help and FAQs",
     "helpUrl": "Help URL:",
-    "sendFeedback": "Cisco Feedback"
+    "sendFeedback": "Cisco Feedback",
+    "ssoUrl": "SSO URL:",
+    "rolesUrl": "Roles URL:"
   },
   "common": {
     "delete": "Delete",

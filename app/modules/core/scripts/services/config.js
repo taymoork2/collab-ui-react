@@ -151,6 +151,10 @@ angular.module('Core')
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
         ],
 
+        helpUrl: 'https://support.ciscospark.com',
+        ssoUrl: 'https://support.ciscospark.com/customer/portal/articles/1909112-sso-setup',
+        rolesUrl: 'https://support.ciscospark.com/customer/portal/articles/1908564-overview-of-admin-roles',
+
         usersperpage: 100,
         meetingsPerPage: 50,
 

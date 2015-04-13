@@ -61,8 +61,9 @@
             <a ng-show="reportingUrl !== null" href="{{reportingUrl}}" target="_blank">{{reportingUrl}}</a>
           <p class="bucket-header support-header-help header-section" translate="supportPage.helpFaq"></p>
           <p class="support-dsc">{{helpContent | translate }} {{helpHandler | translate}}.</p>
-          <span class="support-dsc" translate="supportPage.helpUrl"></span>
-          <a href="{{helpUrl}}" target="_blank">{{helpUrl}}</a>
+          <p class="support-dsc">{{'supportPage.helpUrl' | translate}} <a href="{{helpUrl}}" target="_blank">{{helpUrl}}</a></p>
+          <p class="support-dsc">{{'supportPage.ssoUrl' | translate}} <a href="{{ssoUrl}}" target="_blank">{{ssoUrl}}</a></p>
+          <p class="support-dsc">{{'supportPage.rolesUrl' | translate}} <a href="{{rolesUrl}}" target="_blank">{{rolesUrl}}</a></p>
         </div>
       </div>
     </div>
