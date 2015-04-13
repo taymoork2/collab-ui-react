@@ -6,6 +6,7 @@
     '$log',
     '$filter',
     '$stateParams',
+    '$translate',
     '$sce',
     'WebExUserSettingsFact',
     'Notification',
@@ -16,6 +17,7 @@
       $log,
       $filter,
       $stateParams,
+      $translate,
       $sce,
       WebExUserSettingsFact,
       Notification,
@@ -27,6 +29,7 @@
       $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
       $scope.adminEmailParam = Authinfo.getUserName();
       $scope.userEmailParam = $stateParams.currentUser.userName;
+      $scope.localeParam = $translate.use();
 
       $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);
