@@ -10,9 +10,9 @@ angular.module('Hercules')
         pollDelay = 1000,
         pollInFlight = false;
 
-      var start = function () {
+      var start = function (callback) {
         pollCount++;
-        togglePolling();
+        togglePolling(callback);
       };
 
       var stop = function () {
@@ -45,7 +45,7 @@ angular.module('Hercules')
         return !!pollCount;
       };
 
-      var togglePolling = function () {
+      var togglePolling = function (callback) {
         if (pollCount <= 0) {
           $interval.cancel(pollPromise);
           pollInFlight = false;
@@ -55,15 +55,18 @@ angular.module('Hercules')
           return;
         }
         pollInFlight = true;
-        pollPromise = $interval(reload, pollDelay, 1);
+        pollPromise = $interval(_.bind(reload, null, callback), pollDelay, 1);
       };
 
-      var reload = function () {
+      var reload = function (callback) {
         connectorService.fetch(function (err, _clusters) {
           error = err;
           clusters = _clusters || [];
           pollInFlight = false;
           togglePolling();
+          if (callback) {
+            callback.apply(null, arguments);
+          }
         }, {
           squelchErrors: true
         });

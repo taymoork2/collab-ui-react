@@ -88,4 +88,14 @@ describe('ClusterProxy', function () {
     expect(cb.callCount).toBe(1);
   });
 
+  it('should allow callback to be passed to start', function () {
+    var cb = sinon.stub();
+    clusterProxy.startPolling(cb);
+
+    $interval.flush(1000);
+    connectorService.fetch.callArgWith(0, null, [{}]);
+
+    expect(cb.callCount).toBe(1);
+  });
+
 });

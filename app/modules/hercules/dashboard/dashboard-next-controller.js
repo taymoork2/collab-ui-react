@@ -8,12 +8,13 @@ angular.module('Hercules')
       $scope.loading = true;
       $scope.pollHasFailed = false;
 
-      ClusterProxy.startPolling();
+      ClusterProxy.startPolling(function () {
+        $scope.loading = false;
+      });
 
       $scope.$watch(ClusterProxy.getClusters, function (data) {
         $scope.clusters = data.clusters || [];
         $scope.pollHasFailed = data.error;
-        $scope.loading = false;
       }, true);
 
       $scope.$on('$destroy', function () {
