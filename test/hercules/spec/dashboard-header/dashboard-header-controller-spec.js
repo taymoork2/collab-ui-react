@@ -3,13 +3,13 @@
 describe('DashboardHeaderController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $scope, aggregator, service;
+  var $scope, aggregator, descriptor;
 
   beforeEach(inject(function (_$controller_) {
     $scope = {
       $watch: sinon.stub()
     };
-    service = {
+    descriptor = {
       services: sinon.stub()
     };
     aggregator = {
@@ -17,15 +17,14 @@ describe('DashboardHeaderController', function () {
     };
     _$controller_('DashboardHeaderController', {
       $scope: $scope,
-      ServiceDescriptor: service,
+      ServiceDescriptor: descriptor,
       DashboardAggregator: aggregator
     });
   }));
 
   it('does its magic', function () {
-    expect(service.services.calledOnce).toEqual(true);
-    service.services.callArgWith(0, 'foo');
-    expect($scope.services).toEqual('foo');
+    expect(descriptor.services.calledOnce).toEqual(true);
+    descriptor.services.callArgWith(0, null, 'foo');
 
     expect(aggregator.aggregateServices.callCount).toBe(0);
     expect($scope.serviceAggregates).toBe(undefined);

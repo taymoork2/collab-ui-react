@@ -6,13 +6,24 @@
       '$scope',
       'ServiceDescriptor',
       'DashboardAggregator',
-      function ($scope, service, aggregator) {
-        service.services(function (services) {
-          $scope.services = services;
+      function ($scope, descriptor, aggregator) {
+        var services = null;
+        var clusters = null;
+
+        var updateServiceAggregates = function () {
+          if (services && clusters) {
+            $scope.serviceAggregates = aggregator.aggregateServices(services, clusters);
+          }
+        };
+
+        descriptor.services(function (error, _services) {
+          services = _services;
+          updateServiceAggregates();
         });
 
-        $scope.$watch('clusters', function (newClusters) {
-          $scope.serviceAggregates = aggregator.aggregateServices($scope.services, newClusters);
+        $scope.$watch('clusters', function (_clusters) {
+          clusters = _clusters;
+          updateServiceAggregates();
         });
       }
     ])
