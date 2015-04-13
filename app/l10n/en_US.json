@@ -322,11 +322,12 @@
     "hideDetails": "Hide Details",
     "problemReports": "Problem Reports",
     "reportingUrl": "Reporting URL:",
-    "helpFaq": "Help and FAQs",
+    "help": "Help",
+    "faqs" : "FAQs",
     "helpUrl": "Help URL:",
     "sendFeedback": "Cisco Feedback",
-    "ssoUrl": "SSO URL:",
-    "rolesUrl": "Roles URL:"
+    "sso": "SSO",
+    "roles": "Roles"
   },
   "common": {
     "delete": "Delete",

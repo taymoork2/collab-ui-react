@@ -59,11 +59,12 @@
           <span class="support-dsc" translate="supportPage.reportingUrl"></span>
             <a ng-show="reportingUrl === null" href="" translate="supportPage.sendFeedback" ng-click="sendFeedback()"></a>
             <a ng-show="reportingUrl !== null" href="{{reportingUrl}}" target="_blank">{{reportingUrl}}</a>
-          <p class="bucket-header support-header-help header-section" translate="supportPage.helpFaq"></p>
+          <p class="bucket-header support-header-help header-section" translate="supportPage.help"></p>
           <p class="support-dsc">{{helpContent | translate }} {{helpHandler | translate}}.</p>
           <p class="support-dsc">{{'supportPage.helpUrl' | translate}} <a href="{{helpUrl}}" target="_blank">{{helpUrl}}</a></p>
-          <p class="support-dsc">{{'supportPage.ssoUrl' | translate}} <a href="{{ssoUrl}}" target="_blank">{{ssoUrl}}</a></p>
-          <p class="support-dsc">{{'supportPage.rolesUrl' | translate}} <a href="{{rolesUrl}}" target="_blank">{{rolesUrl}}</a></p>
+          <p class="bucket-header support-header-help header-section" translate="supportPage.faqs"></p>
+          <p class="support-dsc"><a href="{{ssoUrl}}" target="_blank">{{'supportPage.sso' | translate}}</a></p>
+          <p class="support-dsc"><a href="{{rolesUrl}}" target="_blank">{{'supportPage.roles' | translate}}</a></p>
         </div>
       </div>
     </div>
