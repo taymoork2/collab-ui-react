@@ -16,11 +16,11 @@ angular.module('Hercules')
 
       var createEmptyServicesAggregate = function (services) {
         return _.reduce(services, function (serviceAggregate, service) {
-          if (service.type != 'c_mgmt') {
-            serviceAggregate[service.type] = {
-              name: service.name,
-              type: service.type,
-              icon: service.icon,
+          if (service.connector_type != 'c_mgmt') {
+            serviceAggregate[service.connector_type] = {
+              name: service.display_name,
+              type: service.connector_type,
+              icon: service.icon_class,
               running: 0,
               needs_attention: 0,
               software_upgrades: 0
@@ -61,7 +61,7 @@ angular.module('Hercules')
 
       return {
         aggregateServices: function (services, clusters) {
-          return _.reduce(clusters, aggregateServiceStatus, createEmptyAggregate(services));
+          return _.reduce(clusters, aggregateServiceStatus, createEmptyAggregate(services.fusion_services));
         }
       };
     }

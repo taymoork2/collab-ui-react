@@ -12,19 +12,21 @@ describe('DashboardAggregator', function () {
     Converter = _ConverterService_;
   }));
 
-  var mockServiceData = [{
-    name: 'UCM Service',
-    icon: 'UCM',
-    type: 'c_ucmc'
-  }, {
-    name: 'Calendar Service',
-    icon: 'Calendar',
-    type: 'c_cal'
-  }, {
-    name: 'Fusion Management Service',
-    icon: 'Management',
-    type: 'c_mgmt'
-  }];
+  var mockServiceData = {
+    fusion_services: [{
+      display_name: 'UCM Service',
+      icon_class: 'UCM',
+      connector_type: 'c_ucmc'
+    }, {
+      display_name: 'Calendar Service',
+      icon_class: 'Calendar',
+      connector_type: 'c_cal'
+    }, {
+      display_name: 'Fusion Management Service',
+      icon_class: 'Management',
+      connector_type: 'c_mgmt'
+    }]
+  };
 
   it('should not count disabled services', function () {
     var mockClusterData = [{
