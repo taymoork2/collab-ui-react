@@ -728,7 +728,7 @@
               .then(function () {
                 if (vm.currentUser.id == userUuid) {
                   $state.go('user-overview.communication', {
-                    reloadToggle : !$stateParams.reloadToggle
+                    reloadToggle: !$stateParams.reloadToggle
                   });
                 } else {
                   return listSharedLineUsers(vm.directoryNumber.uuid);

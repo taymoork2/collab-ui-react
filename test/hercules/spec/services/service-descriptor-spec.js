@@ -6,7 +6,7 @@ describe('ServiceDescriptor', function () {
 
   // instantiate service
   var Service, $httpBackend;
-  
+
   beforeEach(inject(function ($injector, _ServiceDescriptor_) {
     Service = _ServiceDescriptor_;
     $httpBackend = $injector.get('$httpBackend');
@@ -19,10 +19,12 @@ describe('ServiceDescriptor', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should fetch services', function (done) { 
+  it('should fetch services', function (done) {
     $httpBackend
       .when('GET', 'https://hercules-integration.wbx2.com/v1/fusion_entitlements_status')
-      .respond({foo: 'bar'});
+      .respond({
+        foo: 'bar'
+      });
     Service.services(function (error, services) {
       expect(services.foo).toEqual('bar');
       done();
