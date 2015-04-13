@@ -2,9 +2,12 @@
   'use strict';
   angular
     .module('Hercules')
-    .controller('EntitledServicesController', ['$scope', 'ServiceDescriptor', function ($scope, service) {
-      service.services(function (services) {
+    .controller('EntitledServicesController', ['$scope', 'ServiceDescriptor', 'XhrNotificationService', function ($scope, service, notification) {
+      service.services(function (error, services) {
         $scope.services = services;
+        if (error) {
+          notification.notify("Failed to fetch service status", error);
+        }
       });
     }])
     .directive('herculesEntitledServices', [

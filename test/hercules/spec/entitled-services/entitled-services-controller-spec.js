@@ -22,7 +22,7 @@ describe('DashboardHeaderController', function () {
     expect($scope.services).toEqual(undefined);
     expect(service.services.callCount).toBe(1);
 
-    service.services.callArgWith(0, 'bar');
+    service.services.callArgWith(0, null, 'bar');
     expect($scope.services).toEqual('bar');
   });
 
