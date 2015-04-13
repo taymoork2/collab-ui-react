@@ -9,7 +9,9 @@ angular.module('Squared')
       $scope.problemHandler = ' by Cisco';
       $scope.helpHandler = 'by Cisco';
       $scope.reportingUrl = null;
-      $scope.helpUrl = 'https://support.ciscospark.com';
+      $scope.helpUrl = Config.helpUrl;
+      $scope.ssoUrl = Config.ssoUrl;
+      $scope.rolesUrl = Config.rolesUrl;
       $scope.statusPageUrl = Config.getStatusPageUrl();
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
