@@ -176,7 +176,7 @@ angular.module('Core')
             entitleList.push(new Feature(key, state));
           }
         }
-        
+
         Log.debug(entitleList);
         return entitleList;
       };

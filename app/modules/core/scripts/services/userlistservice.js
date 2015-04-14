@@ -6,7 +6,7 @@ angular.module('Core')
     function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Utils, $q, $filter, $compile, Auth) {
 
       var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
-      var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active';
+      var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames';
       var scimUrl = Config.getScimUrl() + '?' + '&' + attributes;
       var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
 
