@@ -29,7 +29,11 @@
       $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
       $scope.adminEmailParam = Authinfo.getUserName();
       $scope.userEmailParam = $stateParams.currentUser.userName;
-      $scope.localeParam = $translate.use();
+      var locale = $translate.use();
+      if ( locale == "jp_JA") {
+    	  locale = "ja_JP";
+      }
+      $scope.localeParam = locale;
 
       $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);
