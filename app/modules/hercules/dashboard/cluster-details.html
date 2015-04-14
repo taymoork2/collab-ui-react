@@ -26,21 +26,24 @@
             <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
               <span ng-switch="service.is_disabled">
                 <span ng-switch-when="true">
-                  Disabled
+                  Disabled.
                 </span>
                 <span ng-switch-default>
                   <span ng-switch="service.needs_attention">
                     <span ng-switch-when="true">
-                      <span ng-show="{{service.running_hosts}}">Needs attention</span>
-                      <span ng-show="{{!service.running_hosts}}">Not running</span>
+                      <span ng-show="{{service.running_hosts}}">Needs attention.</span>
+                      <span ng-show="{{!service.running_hosts}}">Not running.</span>
                     </span>
                     <span ng-switch-default>
-                      <span ng-show="{{service.installed}}">Running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}</span>
-                      <span ng-show="{{!service.installed && !service.install_available}}">Pending installation</span>
-                      <span ng-show="{{!service.installed && service.install_available}}">Not installed</span>
+                      <span ng-show="{{service.installed}}">Running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}.</span>
+                      <span ng-show="{{!service.installed && !service.install_available}}">Pending installation.</span>
+                      <span ng-show="{{!service.installed && service.install_available}}">Not installed.</span>
                     </span>
                   </span>
                 </span>
+              </span>
+              <span ng-show="service.software_upgrade_available">
+                <span>Software upgrade available.</span>
               </span>
             </div>
           </a>

@@ -58,27 +58,7 @@
       Software Upgrade
     </div>
 
-    <div ng-show="service.installed">
-      <!-- sw update for existing service -->
-        <div style="padding-bottom: 5px" class="clearfix">
-          <span>A software update is available.</span>
-          <span ng-show="service.connectors[0].version">Current version: {{service.connectors[0].version}}.</span>
-          <span ng-show="service.not_approved_package.version">New version: {{service.not_approved_package.version}}.</span>
-        </div>
-        <button class="btn btn-info btn-sm" ng-click="showUpgradeDialog(service.not_approved_package, cluster, service.connectors[0].version)">
-          <span>
-            Upgrade software
-          </span>
-        </button>
-    </div>
-
-    <div ng-show="!service.installed">
-      <button class="btn btn-info btn-sm" ng-click="showUpgradeDialog(service.not_approved_package, cluster, service.connectors[0].version)">
-        <span>
-          Install software
-        </span>
-      </button>
-    </div>
+    <hercules-software-upgrade />
 
   </cs-sp-section>
 

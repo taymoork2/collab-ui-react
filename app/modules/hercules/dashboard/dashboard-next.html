@@ -47,14 +47,17 @@
                 {{cluster.name}}
               </div>
               <div class="col-sm-7 col-xs-1">
-                <div ng-show="cluster.needs_attention" class="red">
+                <span ng-show="cluster.needs_attention" class="red">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">Cluster needs attention</span>
-                </div>
-                <div ng-hide="cluster.needs_attention" class="green">
+                  <span class="hidden-xs">Cluster needs attention. </span>
+                </span>
+                <span ng-hide="cluster.needs_attention" class="green">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">Running</span>
-                </div>
+                  <span class="hidden-xs">Running. </span>
+                </span>
+                <span ng-show="cluster.software_upgrade_available">
+                  <span class="hidden-xs">Software upgrade available.</span>
+                </span>
               </div>
               <div class="col-sm-1 hidden-xs">
                 <i class="icon icon-three-dots" />
