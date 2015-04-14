@@ -555,7 +555,8 @@
       "registered": "Registered",
       "downloading": "Downloading",
       "uninstalling": "Uninstalling",
-      "running": "Running"
+      "running": "Running",
+      "needs_attention": "Needs attention"
     },
     "setup": {
       "label": "Connector Management",

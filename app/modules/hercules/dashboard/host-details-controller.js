@@ -13,14 +13,6 @@ angular.module('Hercules')
         });
       };
 
-      $scope.toggleEdit = function (hostName) {
-        if ($scope.editingHost == hostName) {
-          $scope.editingHost = null;
-        } else {
-          $scope.editingHost = hostName;
-        }
-      };
-
     }
 
   );

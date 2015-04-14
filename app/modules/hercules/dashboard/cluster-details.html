@@ -20,11 +20,10 @@
 
         <div ng-repeat="service in cluster.services" class="list">
           <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" style="padding-bottom: 15px; display: block;" ng-class="service.needs_attention ? 'needs_attention' : (service.is_disabled || !service.running_hosts) ? 'disabled' : 'running'">
-            <i class="fa fa-circle" style="padding-right: 10px;" />
+            <i class="fa fa-circle" />
             <span>{{service.display_name}}</span>
             <i class="icon icon-chevron-right pull-right" />
             <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
-
               <span ng-switch="service.is_disabled">
                 <span ng-switch-when="true">
                   Disabled
@@ -33,7 +32,7 @@
                   <span ng-switch="service.needs_attention">
                     <span ng-switch-when="true">
                       <span ng-show="{{service.running_hosts}}">Needs attention</span>
-                      <span ng-show="{{!service.running_hosts}}">Is not running</span>
+                      <span ng-show="{{!service.running_hosts}}">Not running</span>
                     </span>
                     <span ng-switch-default>
                       <span ng-show="{{service.installed}}">Running on {{service.running_hosts}} {{service.running_hosts == 1 ? 'host' : 'hosts'}}</span>
@@ -53,21 +52,21 @@
 
   <!-- hosts -->
   <cs-sp-section>
-    <div class="section-name" style="padding: 15px 0;">
+    <div class="section-name" style="padding-top: 15px;">
       Expressway Hosts
     </div>
 
-    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px">
-      <a target="_blank" href="https://{{host.host_name}}" style="padding: 5px 0">
-        <i class="fa fa-caret-right" style="padding-right: 10px;" />
-        {{host.host_name}}
+    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px" class="list">
+      <a ui-sref="cluster-details.hosts" style="padding-top: 1.4rem; display: block;" ng-class="host.state == 'running' ? 'running' : 'needs_attention'">
+        <i class="fa fa-circle" />
+        <span>{{host.host_name}}</span>
+        <i class="icon icon-chevron-right pull-right" />
+        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
+          <span translate="{{'hercules.status.' + (host.state || 'unknown') }}"></span>
+        </div>
       </a>
     </div>
 
-    <a ui-sref="cluster-details.hosts" style="padding-top: 1.4rem; display: block;">
-      View details of all hosts in this cluster
-      <i class="icon icon-chevron-right pull-right" />
-    </a>
 
   </cs-sp-section>
 

@@ -1,36 +1,36 @@
 <cs-sp-container>
 
   <cs-sp-section>
-    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px">
+    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px" class="list">
       <a target="_blank" href="https://{{host.host_name}}" style="padding: 5px 0">
-        <i class="fa fa-caret-right" style="padding-right: 10px;" />
+        <i class="fa fa-circle" />
         {{host.host_name}}
+        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
+          <span translate="{{'hercules.status.' + (host.state || 'unknown') }}"></span>
+        </div>
       </a>
-      <div ng-repeat="service in host.services" class="list">
-        <div ng-class="service.state">
-          <i class="fa fa-circle" />
-          <span>{{service.display_name}}:</span>
-          <span translate="{{'hercules.status.' + (service.state || 'unknown') }}"></span>
+      <div class="list" style="padding-left: 20px">
+        <div ng-repeat="service in host.services">
+          <div ng-class="service.state">
+            <i class="fa fa-circle" />
+            <span>{{service.display_name}}</span>
+            <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;" ng-hide="host.state == 'offline'">
+              <span translate="{{'hercules.status.' + (service.state || 'unknown') }}"></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div style="padding-top: 5px" class="clearfix" ng-repeat="host in cluster.hosts | filter: { offline: true }">
-      <span>Delete offline host:</span>
-      <span style="color: #f05d3b">{{host.host_name}}</span>
-      <a href>
-        <i class="icon icon-close" ng-click="toggleEdit(host.host_name)" />
-      </a>
-      <div style="margin-top: 5px" ng-show="host.host_name == editingHost">
-        <button ng-disabled="deleteHostInflight" class="btn btn-danger btn-sm" ng-click="deleteHost(cluster.id, host.serial)">
-          <span ng-hide="deleteHostInflight">
-            Delete {{host.host_name}}?
-          </span>
-          <span ng-show="deleteHostInflight">
-            <i class="icon icon-spinner icon-spin" />
-          </span>
-        </button>
-      </div>
+      <button ng-disabled="deleteHostInflight" class="btn btn-danger btn-sm" ng-click="deleteHost(cluster.id, host.serial)">
+        <span ng-hide="deleteHostInflight">
+          Delete offline host: {{host.host_name}}?
+        </span>
+        <span ng-show="deleteHostInflight">
+          <i class="icon icon-spinner icon-spin" />
+        </span>
+      </button>
     </div>
   </cs-sp-section>
 

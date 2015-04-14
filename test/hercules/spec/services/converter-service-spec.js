@@ -524,7 +524,7 @@ describe('ConverterService', function () {
     expect(converted[0].id).toBe('dos_error');
   });
 
-  it('should services based on error status', function () {
+  it('should sort services based on error status', function () {
     var mockData = [{
       "services": [{
         id: "dsbld",
@@ -547,6 +547,85 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].id).toBe('errrr');
     expect(converted[0].services[1].id).toBe('rnnng');
     expect(converted[0].services[2].id).toBe('dsbld');
+  });
+
+  it('should aggregate status to services', function () {
+    var mockData = [{
+      "services": [{
+        id: "dsbld",
+        "connectors": [{
+          "state": "disabled"
+        }]
+      }]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].state).toBe('disabled');
+  });
+
+  it('should aggregate mixed status to services as needs_attention', function () {
+    var mockData = [{
+      "services": [{
+        id: "dsbld",
+        "connectors": [{
+          "state": "disabled"
+        }, {
+          "state": "yolo"
+        }]
+      }]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].state).toBe('needs_attention');
+  });
+
+  it('should aggregate status to hosts', function () {
+    var mockData = [{
+      hosts: [{
+        serial: 1,
+        host_name: "host_name"
+      }],
+      services: [{
+        service_type: "foo",
+        connectors: [{
+          state: "offline",
+          version: 'bar_version',
+          host: {
+            host_name: 'host_name',
+            serial: 1
+          }
+        }]
+      }]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].hosts[0].state).toBe('offline');
+  });
+
+  it('should aggregate mixed status to hosts as needs_attention', function () {
+    var mockData = [{
+      hosts: [{
+        serial: 1,
+        host_name: "host_name"
+      }],
+      services: [{
+        service_type: "foo",
+        connectors: [{
+          state: "offline",
+          version: 'bar_version',
+          host: {
+            host_name: 'host_name',
+            serial: 1
+          }
+        }, {
+          state: "online",
+          version: 'bar_version',
+          host: {
+            host_name: 'host_name',
+            serial: 1
+          }
+        }]
+      }]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].hosts[0].state).toBe('needs_attention');
   });
 
 });

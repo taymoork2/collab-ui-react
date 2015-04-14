@@ -47,6 +47,11 @@ angular.module('Hercules')
         service.running_hosts = 0;
         service.alarm_count = 0;
         _.each(service.connectors, function (connector) {
+          if (service.state && connector.state != service.state) {
+            service.state = 'needs_attention';
+          } else {
+            service.state = connector.state;
+          }
           service.alarm_count += connector.alarms ? connector.alarms.length : 0;
           if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
             serviceAndClusterNeedsAttention(service, cluster);
@@ -122,6 +127,11 @@ angular.module('Hercules')
           _.each(cluster.services, function (service) {
             _.each(service.connectors, function (connector) {
               if (connector.host.serial == host.serial) {
+                if (host.state && connector.state != host.state) {
+                  host.state = 'needs_attention';
+                } else {
+                  host.state = connector.state;
+                }
                 host.services.push({
                   display_name: service.display_name,
                   state: connector.state
