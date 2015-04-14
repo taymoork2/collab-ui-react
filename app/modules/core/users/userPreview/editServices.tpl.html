@@ -6,9 +6,7 @@
     <h3 class="modal-title" translate="usersPreview.editServiceTitle" translate-values="{ firstName: currentUser.name.givenName, lastName: currentUser.name.familyName }"></h3>
   </div>
 
-  <div class="modal-body" ng-if="hasAccount">
-    <cr-services-panels radioStates="radioStates"></cr-services-panels>
-  </div>
+  <cr-services-panels ng-if="hasAccount" radioStates="radioStates"></cr-services-panels>
 
   <div class="modal-footer">
     <button type="button" id="btnCancel" class="btn btn-default" ng-click="$dismiss()"><span translate="common.cancel"></span>
