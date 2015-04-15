@@ -134,7 +134,9 @@ angular.module('Hercules')
                 }
                 host.services.push({
                   display_name: service.display_name,
-                  state: connector.state
+                  service_type: service.service_type,
+                  state: connector.state,
+                  version: connector.version
                 });
               }
             });

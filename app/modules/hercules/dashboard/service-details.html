@@ -7,11 +7,17 @@
 
     <!-- connectors -->
     <div ng-repeat="connector in service.connectors" class="list">
-      <div ng-class="connector.state">
+      <a ui-sref="cluster-details.hosts" ng-class="connector.state">
         <i class="fa fa-circle" />
-        <span>{{connector.host.host_name}}:</span>
-        <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
-      </div>
+        <span>{{connector.host.host_name}}</span>
+        <i class="icon icon-chevron-right pull-right" />
+        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
+          <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
+        </div>
+        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
+          Version: {{connector.version}}
+        </div>
+      </a>
     </div>
     <div ng-hide="service.connectors.length" class="list">
       <div class="disabled">

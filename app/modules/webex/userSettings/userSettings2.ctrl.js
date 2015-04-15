@@ -30,8 +30,8 @@
       $scope.adminEmailParam = Authinfo.getUserName();
       $scope.userEmailParam = $stateParams.currentUser.userName;
       var locale = $translate.use();
-      if ( locale == "jp_JA") {
-    	  locale = "ja_JP";
+      if (locale == "jp_JA") {
+        locale = "ja_JP";
       }
       $scope.localeParam = locale;
 

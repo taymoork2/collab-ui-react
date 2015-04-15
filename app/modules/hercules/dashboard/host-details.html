@@ -1,23 +1,23 @@
 <cs-sp-container>
 
   <cs-sp-section>
-    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px" class="list">
-      <a target="_blank" href="https://{{host.host_name}}" style="padding: 5px 0">
-        <i class="fa fa-circle" />
+    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px">
+      <div class="section-name" style="padding: 15px 0;">
         {{host.host_name}}
-        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
-          <span translate="{{'hercules.status.' + (host.state || 'unknown') }}"></span>
-        </div>
-      </a>
+      </div>
       <div class="list" style="padding-left: 20px" ng-hide="host.state == 'offline'">
-        <div ng-repeat="service in host.services">
-          <div ng-class="service.state">
+        <div ng-repeat="service in host.services" style="padding-bottom: 15px;">
+          <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-class="service.state">
             <i class="fa fa-circle" />
             <span>{{service.display_name}}</span>
+            <i class="icon icon-chevron-right pull-right" />
+            <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
+              Version: {{service.version}}
+            </div>
             <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
               <span translate="{{'hercules.status.' + (service.state || 'unknown') }}"></span>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
