@@ -5,7 +5,7 @@
 /* global browser */
 /* global expect */
 
-describe('CS Admin flow', function () {
+xdescribe('CS Admin flow', function () {
 
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -58,7 +58,7 @@ describe('CS Admin flow', function () {
 
 });
 
-describe('CS User flow', function () {
+xdescribe('CS User flow', function () {
 
   beforeEach(function () {
     browser.ignoreSynchronization = true;
