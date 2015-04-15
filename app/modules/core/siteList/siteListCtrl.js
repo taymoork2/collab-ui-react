@@ -26,7 +26,7 @@ angular.module('Core')
       var siteUrlTemplate =
         '<launch-site admin-email-param="siteList.siteLaunch.adminEmailParam"' +
         'advanced-settings="siteList.siteLaunch.advancedSettings" user-email-param="siteList.siteLaunch.userEmailParam"' +
-        'webex-advanced-url="getWebexUrl(row.entity.siteUrl)">' +
+        'webex-advanced-url="siteList.getWebexUrl(row.entity.siteUrl)">' +
         '</launch-site>';
 
       vm.gridOptions = {

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LaunchSiteCtrl', ['$scope', '$sce', '$log',
-    function ($scope, $sce, $log) {
+  .controller('LaunchSiteCtrl', ['$scope', '$sce',
+    function ($scope, $sce) {
 
       $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);
