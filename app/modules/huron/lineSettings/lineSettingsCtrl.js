@@ -281,12 +281,22 @@
                       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
                     }
                   });
+                listSharedLineUsers(vm.directoryNumber.uuid);
                 Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
                 resetForm();
               })
               .catch(function (response) {
-                Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
-                Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
+                listSharedLineUsers(vm.directoryNumber.uuid);
+                if (response.data && response.data.errorMessage) {
+                  Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
+                  Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
+                }
+                else
+                {
+                  Log.debug('saveLineSettings failed.  Status: ' + response.status);
+                  Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
+                }
+
               });
 
           } else { // new line
@@ -311,8 +321,15 @@
                         });
                     })
                     .catch(function (response) {
-                      Log.debug('addNewLine failed.  Status: ' + response.status + ' Response: ' + response.data);
-                      Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
+                      if (response.data && response.data.errorMessage) {
+                        Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
+                        Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
+                      }
+                      else
+                      {
+                        Log.debug('saveLineSettings failed.  Status: ' + response.status);
+                        Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
+                      }
                     });
                 } else {
                   Notification.notify([$translate.instant('directoryNumberPanel.maxLines', {
@@ -662,7 +679,7 @@
 
     function addSharedLineUsers() {
       //Associate new Sharedline users
-      var uuid;
+      var uuid, name;
       var promises = [];
       var promise;
       if (vm.selectedUsers) {
@@ -670,16 +687,17 @@
           promise = SharedLineInfoService.getUserLineCount(user.uuid)
             .then(function (totalLines) {
               if (totalLines < vm.maxLines) {
-                return SharedLineInfoService.addSharedLineUser(user.uuid, vm.directoryNumber.uuid)
-                  .then(function (users) {
-                    return listSharedLineUsers(vm.directoryNumber.uuid);
-                  });
+                return SharedLineInfoService.addSharedLineUser(user.uuid, vm.directoryNumber.uuid);
               } else {
+                name = (user.name) ? user.name : user.userName;
                 Notification.notify([$translate.instant('directoryNumberPanel.maxLines', {
-                  user: user.name
+                  user: name
                 })], 'error');
-                return listSharedLineUsers(vm.directoryNumber.uuid);
               }
+            })
+            .catch(function (response) {
+              name = (user.name) ? user.name : user.userName;
+              notifyError(name, response);
             });
           promises.push(promise);
         });
@@ -790,7 +808,7 @@
         promise = addSharedLineUsers();
         promises.push(promise);
       }
-      if (vm.sharedLineUsers) {
+      if (vm.sharedLineUsers && vm.sharedLineUsers.length) {
         //Disassociate sharedline users if selected
         promise = disassociateSharedLineUsers(false);
         promises.push(promise);
@@ -824,6 +842,18 @@
       userName = (name && name.givenName) ? name.givenName : '';
       userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
       return userName;
+    }
+
+    function notifyError(name, response) {
+      if (response.data && response.data.errorMessage) {
+        Notification.notify([$translate.instant('directoryNumberPanel.userError', {
+          user: name
+        }) + " " + response.data.errorMessage], 'error');
+      } else {
+        Notification.notify([$translate.instant('directoryNumberPanel.userError', {
+          user: name
+        })], 'error');
+      }
     }
 
     init();

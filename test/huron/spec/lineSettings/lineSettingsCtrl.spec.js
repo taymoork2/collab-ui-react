@@ -196,16 +196,12 @@ describe('Controller: LineSettingsCtrl', function () {
     it('disassociateSharedLineDevice: should disassociate Shared Line endpoint', function () {
       expect(controller.devices.length).toBe(3);
       expect(controller.devices[0].isSharedLine).toBeTruthy();
-      expect(controller.sharedLineEndpoints[0].isSharedLine).toBeFalsy();
-
       expect(SharedLineInfoService.disassociateLineEndpoint).toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
 
     it('associateSharedLineDevice: should associate Shared Line endpoint', function () {
-      expect(controller.sharedLineEndpoints[1].isSharedLine).toBeTruthy();
       expect(SharedLineInfoService.associateLineEndpoint).toHaveBeenCalled();
-
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
   });

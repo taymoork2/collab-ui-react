@@ -26,7 +26,7 @@
           <ul class="list-group">
             <li class="list-group-item" ng-if="user.name">{{user.userName}}</span></li>
             <cs-checkbox ng-if="device.userUuid == user.uuid"  ng-repeat="device in lineSettings.sharedLineEndpoints" class="list-group-item" ckid="{{$index}}-{{device.model}}-{{user.userName}}" ng-model="device.isSharedLine" label="{{device.model}}" isdisabled="lineSettings.isSingleDevice(lineSettings.sharedLineEndpoints, user.uuid)"></cs-checkbox>
-            <a class="list-group-item list-item-anchor" id="removeMemberLink" href="" translate="sharedLinePanel.remove" ng-click="lineSettings.disassociateSharedLineUser(user.uuid, user.userDnUuid)"/>
+            <a class="list-group-item list-item-anchor"  ng-if="user.dnUsage != 'Primary'" id="removeMemberLink" href="" translate="sharedLinePanel.remove" ng-click="lineSettings.disassociateSharedLineUser(user.uuid, user.userDnUuid)"/>
           </ul>
         </cs-accordion-group>
       </cs-accordion>

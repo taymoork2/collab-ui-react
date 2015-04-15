@@ -715,6 +715,7 @@
     "deleteLineTitle": "Remove Line",
     "disassociationSuccess": "Line successfully unassigned from user.",
     "alert": "Warning",
+    "userError": "User {{user}} was not correctly provisioned.",
     "maxLines": "{{user}} has exceeded the maximum number of lines. Please remove a line from this user before provisioning additional lines.",
     "confirm": "There are unsaved changes on the page. Do you wish to continue?"
   },
