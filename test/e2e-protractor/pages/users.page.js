@@ -39,6 +39,7 @@ var UsersPage = function () {
   this.closeSidePanel = element(by.css('.panel-close'));
   this.messagingService = element(by.id('Messaging'));
   this.communicationsService = element(by.id('Communications'));
+  this.conferencingService = element(by.css('#Conferencing'));
 
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield-tokenfield'));

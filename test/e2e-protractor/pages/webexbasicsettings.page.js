@@ -3,6 +3,7 @@
 var BasicSettigsPage = function () {
   this.protoTab = element(by.css('li.webexUserSettingsTab > a'));
   this.userSettingsPanel = element(by.id('webexUserSettingsPage'));
+  this.errorPanel = element(by.id('errSection'));
 
   this.mc = element(by.id('MC'));
   this.ec = element(by.id('EC'));
@@ -26,13 +27,16 @@ var BasicSettigsPage = function () {
 
   this.saveButton = element(by.id('btnUpdate'));
 
-  this.save = function () {
-    utils.click(this.saveButton);
+  this.testAdmin = {
+    username: 'atlasintegration@yahoo.com',
+    password: 'Cisco!23',
   };
 
-  this.clickUserSettings = function () {
-    utils.click(this.protoTab);
-    navigation.expectCurrentUrl('/webexUserSettings');
+  //#t30citest\.webex\.com > span:nth-child(1)
+  this.testSiteElement = element(by.id('t30citest.webex.com'));
+
+  this.save = function () {
+    utils.click(this.saveButton);
   };
 
   this.selectMcPro = function () {

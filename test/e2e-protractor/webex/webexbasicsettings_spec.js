@@ -5,25 +5,49 @@
 describe('WebEx user settings', function () {
 
   it('should allow login as admin user', function () {
-    login.login('pbr-admin');
+    login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
   });
 
-  it('should should show the user settings page when clicking the prototype button', function () {
-    usersettings.clickUserSettings();
+  it('click on users tab', function () {
+    navigation.clickUsers();
+  });
+
+  it('should allow search and click on user', function () {
+    utils.search(usersettings.testUser.username);
+    users.clickOnUser();
+  });
+
+  it('should allow click on conferencing arrow', function () {
+    expect(users.conferencingService.isPresent()).toBeTruthy();
+    utils.click(users.conferencingService);
+  });
+
+  it('should allow click on site name', function () {
+    expect(usersettings.testSiteElement.isPresent()).toBeTruthy();
+    utils.click(usersettings.testSiteElement);
+  });
+
+  it('should display basic WebEx settigns page', function () {
+    expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
     expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
   });
 
-  it('should contain correct centres', function () {
-    expect(usersettings.mc.isPresent()).toBeTruthy();
-    expect(usersettings.ec.isPresent()).toBeTruthy();
-    //	  expect(usersettings.tc.isPresent()).toBeFalsy();
+  it('should not display WebEx error page', function () {
+    expect(usersettings.errorPanel.isPresent()).toBeFalsy();
   });
 
-  it('should allow to un select MC PRO check box', function () {
-    expect(usersettings.mcProCheckbox.getAttribute('class')).toContain('checked');
-    usersettings.unSelectMcPro();
-    expect(usersettings.mcProCheckbox.getAttribute('class')).not.toContain('checked');
-  });
+  /**  it('should contain correct centres', function () {
+      expect(usersettings.mc.isPresent()).toBeTruthy();
+      expect(usersettings.ec.isPresent()).toBeTruthy();
+      //	  expect(usersettings.tc.isPresent()).toBeFalsy();
+    });
+
+    it('should allow to un select MC PRO check box', function () {
+      expect(usersettings.mcProCheckbox.getAttribute('class')).toContain('checked');
+      usersettings.unSelectMcPro();
+      expect(usersettings.mcProCheckbox.getAttribute('class')).not.toContain('checked');
+    });
+  **/
 
   /**
     it ('shout allow to save', function () {
