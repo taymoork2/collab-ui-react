@@ -32,6 +32,11 @@ var BasicSettigsPage = function () {
     password: 'Cisco!23',
   };
 
+  this.testUser = {
+    username: 'atlasintegration2@yahoo.com',
+    password: 'J@smine1',
+  };
+
   //#t30citest\.webex\.com > span:nth-child(1)
   this.testSiteElement = element(by.id('t30citest.webex.com'));
 
