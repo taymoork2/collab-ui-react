@@ -290,9 +290,7 @@
                 if (response.data && response.data.errorMessage) {
                   Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
                   Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
-                }
-                else
-                {
+                } else {
                   Log.debug('saveLineSettings failed.  Status: ' + response.status);
                   Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
                 }
@@ -324,9 +322,7 @@
                       if (response.data && response.data.errorMessage) {
                         Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
                         Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
-                      }
-                      else
-                      {
+                      } else {
                         Log.debug('saveLineSettings failed.  Status: ' + response.status);
                         Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
                       }
