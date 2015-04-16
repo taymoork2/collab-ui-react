@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: LineSettingsCtrl', function () {
-  var controller, $scope, $stateParams, $rootScope, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, ServiceSetup;
-  var currentUser, directoryNumber, getDirectoryNumber, internalNumbers, externalNumbers, telephonyInfoWithVoicemail;
+  var controller, $scope, $state, $stateParams, $rootScope, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, ServiceSetup;
+  var currentUser, directoryNumber, getDirectoryNumber, internalNumbers, externalNumbers, telephonyInfoWithVoicemail, telephonyInfoSecondLine, modalDefer;
   var UserListService, SharedLineInfoService;
   var userList = [];
   var userData = [];
@@ -10,15 +10,16 @@ describe('Controller: LineSettingsCtrl', function () {
   var sharedLineDevices = [];
   var sharedLineEndpoints = [];
   var selectedUsers = [];
-  var count;
+
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$httpBackend_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
+  beforeEach(inject(function (_$rootScope_, _$state_, _$httpBackend_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
     _UserListService_, _SharedLineInfoService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
     $modal = _$modal_;
+    $state = _$state_;
     Notification = _Notification_;
     DirectoryNumber = _DirectoryNumber_;
     TelephonyInfoService = _TelephonyInfoService_;
@@ -42,6 +43,7 @@ describe('Controller: LineSettingsCtrl', function () {
     internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
+    telephonyInfoSecondLine = getJSONFixture('huron/json/telephonyInfo/voiceEnabledSecondLine.json');
 
     //Sharedline
     userList = getJSONFixture('huron/json/user/users/usersList.json');
@@ -92,6 +94,8 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope: $scope,
       $rootScope: $rootScope,
       $stateParams: $stateParams,
+      $modal: $modal,
+      $state: $state,
       Notification: Notification,
       DirectoryNumber: DirectoryNumber,
       TelephonyInfoService: TelephonyInfoService,
@@ -132,6 +136,48 @@ describe('Controller: LineSettingsCtrl', function () {
 
   });
 
+  describe('deletePrimaryLine', function () {
+    beforeEach(function () {
+      controller.forward = 'none';
+      modalDefer = $q.defer();
+      spyOn($modal, 'open').and.returnValue({
+        result: modalDefer.promise
+      });
+      spyOn($state, 'go');
+      $scope.$apply();
+    });
+
+    it('should not remove Primary line', function () {
+      controller.deleteLineSettings();
+      modalDefer.resolve();
+      $scope.$apply();
+      expect(LineSettings.disassociateInternalLine).not.toHaveBeenCalledWith(currentUser.id, telephonyInfoWithVoicemail.currentDirectoryNumber.userDnUuid);
+    });
+  });
+
+  describe('deleteSecondLine', function () {
+    beforeEach(function () {
+      controller.forward = 'none';
+      modalDefer = $q.defer();
+      spyOn($modal, 'open').and.returnValue({
+        result: modalDefer.promise
+      });
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoSecondLine);
+      controller.init();
+      spyOn($state, 'go');
+      $scope.$apply();
+    });
+
+    it('should remove second line', function () {
+      controller.deleteLineSettings();
+      modalDefer.resolve();
+      $scope.$apply();
+      expect(LineSettings.disassociateInternalLine).toHaveBeenCalledWith(currentUser.id, telephonyInfoSecondLine.currentDirectoryNumber.userDnUuid);
+      expect(SharedLineInfoService.disassociateSharedLineUser).not.toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    });
+  });
+
   describe('SharedLineUsers', function () {
     beforeEach(function () {
       controller.forward = 'none';
@@ -157,7 +203,6 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(SharedLineInfoService.loadSharedLineUsers).toHaveBeenCalled();
       expect(controller.sharedLineUsers.length).toBe(2);
       expect(controller.sharedLineEndpoints).toBeDefined();
-
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
 
@@ -166,12 +211,10 @@ describe('Controller: LineSettingsCtrl', function () {
   describe('disable SharedLineDevice', function () {
 
     it('should call IsSingleDevice and return true', function () {
-
       expect(controller.isSingleDevice(sharedLineEndpoints, sharedLineUsers[0].uuid)).toBeTruthy();
     });
 
     it('should call IsSingleDevice and return false', function () {
-
       expect(controller.isSingleDevice(sharedLineEndpoints, sharedLineUsers[1].uuid)).toBeFalsy();
     });
 
@@ -206,19 +249,72 @@ describe('Controller: LineSettingsCtrl', function () {
     });
   });
 
-  describe('Remove SharedLineUsers', function () {
+  describe('Remove SharedLine Users', function () {
     beforeEach(function () {
       controller.forward = 'none';
       spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
       controller.selectedUsers.push(selectedUsers[0]);
       controller.devices = sharedLineEndpoints;
-      controller.disassociateSharedLineUser('a787b84a-3cdf-436c-b1a7-e46e0a0cae99', '2', true);
+      var user = {
+        'uuid': 'a787b84a-3cdf-436c-b1a7-e46e0a0cae99',
+        'userDnUuid': '2'
+      };
+      controller.disassociateSharedLineUser(user, true);
       $scope.$apply();
     });
 
     it('disassociateSharedLineUsers: should disassociate Shared Line Users', function () {
       expect(SharedLineInfoService.disassociateSharedLineUser).toHaveBeenCalled();
     });
+  });
+
+  describe('Remove SharedLine Member', function () {
+    beforeEach(function () {
+      controller.forward = 'none';
+      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
+      controller.selectedUsers.push(selectedUsers[0]);
+      controller.devices = sharedLineEndpoints;
+      modalDefer = $q.defer();
+      spyOn($modal, 'open').and.returnValue({
+        result: modalDefer.promise
+      });
+
+    });
+
+    it('disassociateSharedLineUser: should disassociate Shared Line User on Modal Ok', function () {
+      var user = {
+        'uuid': 'a787b84a-3cdf-436c-b1a7-e46e0a0cae99',
+        'userDnUuid': '2'
+      };
+      controller.disassociateSharedLineUser(user, false);
+      modalDefer.resolve();
+      $scope.$apply();
+      expect(SharedLineInfoService.disassociateSharedLineUser).toHaveBeenCalled();
+    });
+
+    it('disassociateSharedLineUser: should not disassociate Shared Line User on Modal Cancel', function () {
+      var user = {
+        'uuid': 'a787b84a-3cdf-436c-b1a7-e46e0a0cae99',
+        'userDnUuid': '2'
+      };
+      controller.disassociateSharedLineUser(user, false);
+      modalDefer.reject();
+      $scope.$apply();
+      expect(SharedLineInfoService.disassociateSharedLineUser).not.toHaveBeenCalled();
+    });
+
+    it('disassociateSharedLineUser: should not disassociate Shared Line User with primary DN', function () {
+      var user = {
+        'uuid': 'a787b84a-3cdf-436c-b1a7-e46e0a0cae99',
+        'userDnUuid': '2',
+        'dnUsage': 'Primary'
+      };
+      controller.disassociateSharedLineUser(user, false);
+      modalDefer.resolve();
+      $scope.$apply();
+      expect(SharedLineInfoService.disassociateSharedLineUser).not.toHaveBeenCalled();
+    });
+
   });
 
   describe('addSharedLineUsersError', function () {

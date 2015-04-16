@@ -58,7 +58,8 @@
                 'name': '',
                 'userName': dnUser.user.userId,
                 'userDnUuid': dnUser.uuid,
-                'dnUsage': dnUser.dnUsage
+                'dnUsage': dnUser.dnUsage,
+                'dnUuid': dnUuid
               };
               if (userInfo.uuid === currentUserId) {
                 sharedLineUsers.unshift(userInfo);
