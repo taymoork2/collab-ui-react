@@ -769,6 +769,10 @@ angular
           controller: 'HostDetailsController',
           data: {
             displayName: 'Hosts'
+          },
+          params: {
+            clusterId: {},
+            hostSerial: {}
           }
         })
         .state('cluster-details.service', {

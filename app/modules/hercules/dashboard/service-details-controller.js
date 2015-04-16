@@ -9,13 +9,13 @@ angular.module('Hercules')
       $scope.$watch(ClusterProxy.getClusters, function (data) {
         if (data.error) return $state.sidepanel.close();
 
-        var cluster = _.find(data.clusters || [], function (c) {
+        $scope.cluster = _.find(data.clusters || [], function (c) {
           return c.id == $stateParams.clusterId;
         });
 
-        if (!cluster) return $state.sidepanel.close();
+        if (!$scope.cluster) return $state.sidepanel.close();
 
-        $scope.service = _.find(cluster.services, function (s) {
+        $scope.service = _.find($scope.cluster.services, function (s) {
           return s.service_type == $stateParams.serviceType;
         });
 
@@ -23,6 +23,7 @@ angular.module('Hercules')
       }, true);
 
       $scope.showUpgradeDialog = function (upgradePackage, cluster, currentVersion) {
+        // todo: why are these needed on the scope?
         $scope.upgradePackage = upgradePackage;
         $scope.cluster = cluster;
         $scope.currentVersion = currentVersion;

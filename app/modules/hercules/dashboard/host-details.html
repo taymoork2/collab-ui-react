@@ -1,13 +1,17 @@
 <cs-sp-container>
-
   <cs-sp-section>
-    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px">
+
+    <div style="padding-bottom: 10px">
       <div class="section-name" style="padding: 15px 0;">
         {{host.host_name}}
+        <div class="clearfix" style="color: #999; font-size: 9px;" ng-show="host.state == 'offline'">
+          Host is offline.
+        </div>
       </div>
+
       <div class="list" style="padding-left: 20px" ng-hide="host.state == 'offline'">
         <div ng-repeat="service in host.services" style="padding-bottom: 15px;">
-          <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-class="service.state">
+          <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-class="service.status">
             <i class="fa fa-circle" />
             <span>{{service.display_name}}</span>
             <i class="icon icon-chevron-right pull-right" />
@@ -20,18 +24,23 @@
           </a>
         </div>
       </div>
+
+      <div style="padding-top: 5px" class="clearfix">
+        <a target="_blank" ng-href="https://{{host.host_name}}/" class="btn btn-primary btn-sm" style="color: white;">
+          Manage
+        </a>
+        <button ng-disabled="deleteHostInflight" class="btn btn-danger btn-sm" ng-click="deleteHost(cluster.id, host.serial)" ng-show="host.state == 'offline'">
+          <span ng-hide="deleteHostInflight">
+            Delete
+          </span>
+          <span ng-show="deleteHostInflight">
+            <i class="icon icon-spinner icon-spin" />
+          </span>
+        </button>
+      </div>
+
+
     </div>
 
-    <div style="padding-top: 5px" class="clearfix" ng-repeat="host in cluster.hosts | filter: { offline: true }">
-      <button ng-disabled="deleteHostInflight" class="btn btn-danger btn-sm" ng-click="deleteHost(cluster.id, host.serial)">
-        <span ng-hide="deleteHostInflight">
-          Delete offline host: {{host.host_name}}?
-        </span>
-        <span ng-show="deleteHostInflight">
-          <i class="icon icon-spinner icon-spin" />
-        </span>
-      </button>
-    </div>
   </cs-sp-section>
-
 </cs-sp-container>

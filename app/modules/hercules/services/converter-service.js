@@ -21,7 +21,7 @@ angular.module('Hercules')
         return false;
       };
 
-      var deduceAlarmsForService = function (service, cluster) {
+      var checkSoftwareUpgradePending = function (service, cluster) {
         if (cluster.provisioning_data && cluster.provisioning_data.approved_packages) {
           var expected_package = _.find(cluster.provisioning_data.approved_packages, function (pkg) {
             return pkg.service.service_type == service.service_type;
@@ -30,15 +30,7 @@ angular.module('Hercules')
           var expected_version = !expected_package ? null : expected_package.version;
 
           _.each(service.connectors, function (connector) {
-            connector.deduced_alarms = connector.deduced_alarms || [];
-            if (expected_version && connector.state == 'running' && connector.version != expected_version) {
-              connector.deduced_alarms.push({
-                type: 'software_version_mismatch',
-                expected_version: expected_version
-              });
-              service.alarm_count++;
-              serviceAndClusterNeedsAttention(service, cluster);
-            }
+            connector.software_upgrade_pending = connector.version != expected_version && expected_version;
           });
         }
       };
@@ -56,13 +48,19 @@ angular.module('Hercules')
           if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
             serviceAndClusterNeedsAttention(service, cluster);
             service.is_disabled = false;
+            service.status = 'needs_attention';
+            connector.status = 'needs_attention';
           }
           if (connector.state == 'disabled' && service.running_hosts === 0) {
             service.is_disabled = true;
+            service.status = service.status || 'disabled';
+            connector.status = connector.status || 'disabled';
           }
           if (connector.state == 'running') {
             service.is_disabled = false;
             service.running_hosts = ++service.running_hosts;
+            service.status = service.status || 'running';
+            connector.status = connector.status || 'running';
           }
         });
         if (service.running_hosts) {
@@ -132,9 +130,11 @@ angular.module('Hercules')
                 } else {
                   host.state = connector.state;
                 }
+
                 host.services.push({
                   display_name: service.display_name,
                   service_type: service.service_type,
+                  status: connector.status,
                   state: connector.state,
                   version: connector.version
                 });
@@ -150,7 +150,7 @@ angular.module('Hercules')
           _.each(cluster.services, function (service) {
             updateServiceStatus(service, cluster);
             updateSoftwareUpgradeAvailableDetails(service, cluster);
-            deduceAlarmsForService(service, cluster);
+            checkSoftwareUpgradePending(service, cluster);
           });
           updateClusterNameIfNotSet(cluster);
           updateHostStatus(cluster);

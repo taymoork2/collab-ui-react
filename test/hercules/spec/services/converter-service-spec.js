@@ -421,27 +421,27 @@ describe('ConverterService', function () {
     expect(converted[0].name).toBe('bar_host_name');
   });
 
-  it('should raise alarm for running services that do not run the correct SW version', function () {
+  it('should flag services that do not run the correct SW version', function () {
     var mockData = [{
-      "provisioning_data": {
-        "approved_packages": [{
-          "service": {
-            "service_type": "c_cal"
+      provisioning_data: {
+        approved_packages: [{
+          service: {
+            service_type: "c_cal"
           },
-          "version": "8.2-2.1"
+          version: "8.2-2.1"
         }]
       },
-      "services": [{
-        "service_type": "c_cal",
-        "connectors": [{
-          "state": "running",
+      services: [{
+        service_type: "c_cal",
+        connectors: [{
+          state: "running",
           version: 'foo_version',
           host: {
             host_name: 'foo_host_name'
           }
         }, {
-          "state": "disabled",
-          version: 'bar_version',
+          state: "disabled",
+          version: '8.2-2.1',
           host: {
             host_name: 'bar_host_name'
           }
@@ -450,24 +450,19 @@ describe('ConverterService', function () {
     }];
 
     var converted = Service.convertClusters(mockData);
-    expect(converted[0].needs_attention).toBe(true);
-    expect(converted[0].services[0].needs_attention).toBe(true);
-    expect(converted[0].services[0].alarm_count).toBe(1);
-    expect(converted[0].services[0].connectors[0].deduced_alarms.length).toEqual(1);
-    expect(converted[0].services[0].connectors[0].deduced_alarms[0].type).toEqual('software_version_mismatch');
-    expect(converted[0].services[0].connectors[0].deduced_alarms[0].expected_version).toEqual('8.2-2.1');
-    expect(converted[0].services[0].connectors[1].deduced_alarms.length).toEqual(0);
+    expect(converted[0].needs_attention).toBeFalsy();
+    expect(converted[0].services[0].needs_attention).toBeFalsy();
+
+    expect(converted[0].services[0].alarm_count).toBe(0);
+
+    expect(converted[0].services[0].connectors[0].software_upgrade_pending).toBe('8.2-2.1');
+    expect(converted[0].services[0].connectors[1].software_upgrade_pending).toBeFalsy();
   });
 
   it('should not fail if approved_packages is empty', function () {
     var mockData = [{
       "provisioning_data": {
-        "approved_packages": [{
-          "service": {
-            "service_type": "yolo"
-          },
-          "version": "8.2-2.1"
-        }]
+        "approved_packages": []
       },
       "services": [{
         "service_type": "c_cal",
@@ -490,8 +485,8 @@ describe('ConverterService', function () {
     var converted = Service.convertClusters(mockData);
     expect(converted[0].needs_attention).toBeFalsy();
     expect(converted[0].services[0].needs_attention).toBeFalsy();
-    expect(converted[0].services[0].connectors[0].deduced_alarms.length).toEqual(0);
-    expect(converted[0].services[0].connectors[1].deduced_alarms.length).toEqual(0);
+    expect(converted[0].services[0].connectors[0].software_upgrade_pending).toBeFalsy();
+    expect(converted[0].services[0].connectors[1].software_upgrade_pending).toBeFalsy();
   });
 
   it('should sort clusters based on error status', function () {
@@ -626,6 +621,41 @@ describe('ConverterService', function () {
     }];
     var converted = Service.convertClusters(mockData);
     expect(converted[0].hosts[0].state).toBe('needs_attention');
+  });
+
+  it('should aggregate status to service and host', function () {
+    var mockData = [{
+      hosts: [{
+        serial: 1,
+        host_name: "host_name"
+      }, {
+        serial: 2,
+        host_name: "host_name2"
+      }],
+      services: [{
+        service_type: "foo",
+        connectors: [{
+          state: "running",
+          version: 'bar_version',
+          host: {
+            host_name: 'host_name',
+            serial: 1
+          }
+        }, {
+          state: "offline",
+          version: 'bar_version',
+          host: {
+            host_name: 'host_name2',
+            serial: 2
+          }
+        }]
+      }]
+    }];
+    var converted = Service.convertClusters(mockData);
+    expect(converted[0].services[0].status).toBe('needs_attention');
+
+    expect(converted[0].services[0].connectors[0].status).toBe('running');
+    expect(converted[0].services[0].connectors[1].status).toBe('needs_attention');
   });
 
 });

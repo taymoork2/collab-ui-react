@@ -6,8 +6,8 @@
     </div>
 
     <!-- connectors -->
-    <div ng-repeat="connector in service.connectors" class="list">
-      <a ui-sref="cluster-details.hosts" ng-class="connector.state">
+    <div ng-repeat="connector in service.connectors" class="list" style="padding-bottom: 10px">
+      <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: connector.host.serial})" ng-class="connector.status">
         <i class="fa fa-circle" />
         <span>{{connector.host.host_name}}</span>
         <i class="icon icon-chevron-right pull-right" />
@@ -15,7 +15,18 @@
           <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
         </div>
         <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
-          Version: {{connector.version}}
+          Version: {{connector.version}}.
+          <span ng-show="connector.software_upgrade_pending">
+            Pending software upgrade to {{connector.software_upgrade_pending}}
+          </span>
+        </div>
+        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;" ng-show="service.alarm_count">
+          <span ng-show="service.alarm_count==1">
+            {{service.alarm_count}} reported alarm
+          </span>
+          <span ng-hide="service.alarm_count==1">
+            {{service.alarm_count}} reported alarms
+          </span>
         </div>
       </a>
     </div>
@@ -31,12 +42,6 @@
   <cs-sp-section ng-show="service.needs_attention && service.alarm_count">
     <div ng-repeat="connector in service.connectors">
 
-      <!-- connector error -->
-      <div style="padding: 15px 0 5px 0;" class="clearfix" ng-repeat="alarm in connector.deduced_alarms">
-        <span style="color: #f05d3b">{{connector.host.host_name}}</span>
-        <span>is pending software upgrade from {{connector.version}} to {{alarm.expected_version}}.</span>
-      </div>
-
       <!-- connector alarms -->
       <div ng-show="{{connector.alarms.length}}">
         <div class="clearfix" style="padding: 15px 0 5px 0; font-weight: bold;">
@@ -51,9 +56,10 @@
           <span>{{alarm.description}}</span>
         </div>
 
-        <div style="padding-bottom: 5px">
-          Manage the alarms in the <a href="https://{{connector.host.host_name}}/alarms" target="_blank">alarms page</a>.
-        </div>
+        <a target="_blank" ng-href="https://{{connector.host.host_name}}/alarms" class="btn btn-primary btn-sm" style="color: white; padding-bottom: 5px">
+          Manage alarms
+        </a>
+
       </div>
     </div>
   </cs-sp-section>
