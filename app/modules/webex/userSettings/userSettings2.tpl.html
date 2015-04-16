@@ -137,7 +137,7 @@
       <!-- Start of Event Center section -->
       <div id="eventCenterPrivileges"
            name="eventCenterPrivileges"
-           ng-if="WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled">
+           ng-if="WebExUserSettings2.userSettingsModel.eventCenter.isSiteEnabled && WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled">
   
         <p>
           <b>
@@ -158,7 +158,7 @@
       <!-- Start of Training Center section -->
       <div id="trainingCenterPrivleges"
            name="trainingCenterPrivleges"
-           ng-if="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled">
+           ng-if="WebExUserSettings2.userSettingsModel.trainingCenter.isSiteEnabled && WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled">
            
         <p>
           <b>
