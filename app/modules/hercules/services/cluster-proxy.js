@@ -6,13 +6,15 @@ angular.module('Hercules')
       var pollPromise,
         error = null,
         clusters = [],
+        callbacks = [],
         pollCount = 0,
         pollDelay = 1000,
         pollInFlight = false;
 
       var start = function (callback) {
         pollCount++;
-        togglePolling(callback);
+        togglePolling();
+        if (callback) callbacks.push(callback);
       };
 
       var stop = function () {
@@ -22,8 +24,10 @@ angular.module('Hercules')
 
       var deleteHost = function (clusterId, serial, callback) {
         connectorService.deleteHost(clusterId, serial, function () {
-          $interval.flush(pollDelay);
-          callback.apply(arguments);
+          var args = arguments;
+          poll(function () {
+            if (callback) callback.apply(args);
+          });
         });
       };
 
@@ -36,8 +40,10 @@ angular.module('Hercules')
 
       var upgradeSoftware = function (clusterId, serviceType, callback, opts) {
         connectorService.upgradeSoftware(clusterId, serviceType, function () {
-          $interval.flush(pollDelay);
-          callback.apply(arguments);
+          var args = arguments;
+          poll(function () {
+            if (callback) callback.apply(args);
+          });
         }, opts);
       };
 
@@ -45,7 +51,7 @@ angular.module('Hercules')
         return !!pollCount;
       };
 
-      var togglePolling = function (callback) {
+      var togglePolling = function () {
         if (pollCount <= 0) {
           $interval.cancel(pollPromise);
           pollInFlight = false;
@@ -55,16 +61,19 @@ angular.module('Hercules')
           return;
         }
         pollInFlight = true;
-        pollPromise = $interval(_.bind(reload, null, callback), pollDelay, 1);
+
+        if (pollPromise) $interval.cancel(pollPromise);
+        pollPromise = $interval(poll, pollDelay, 1);
       };
 
-      var reload = function (callback) {
+      var poll = function (callback) {
         connectorService.fetch(function (err, _clusters) {
           error = err;
           clusters = _clusters || [];
           pollInFlight = false;
           togglePolling();
-          if (callback) {
+          if (callback) callback.apply(null, arguments);
+          while ((callback = callbacks.pop()) != null) {
             callback.apply(null, arguments);
           }
         }, {

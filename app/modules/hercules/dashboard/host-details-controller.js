@@ -26,6 +26,9 @@ angular.module('Hercules')
         $scope.deleteHostInflight = true;
         ClusterProxy.deleteHost(clusterId, serial, function () {
           $scope.deleteHostInflight = false;
+          $state.go('cluster-details', {
+            clusterId: clusterId
+          });
         });
       };
 

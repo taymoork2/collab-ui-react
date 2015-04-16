@@ -70,21 +70,23 @@ describe('ClusterProxy', function () {
     expect(connectorService.fetch.callCount).toBe(2);
   });
 
-  it('should upgrade software and flush', function () {
+  it('should upgrade software and poll', function () {
     clusterProxy.startPolling();
     var cb = sinon.stub();
     clusterProxy.upgradeSoftware('clusterId', 'serviceType', cb);
     connectorService.upgradeSoftware.callArg(2);
     expect(connectorService.fetch.callCount).toBe(1);
+    connectorService.fetch.callArg(0);
     expect(cb.callCount).toBe(1);
   });
 
-  it('should delete host and flush', function () {
+  it('should delete host and poll', function () {
     clusterProxy.startPolling();
     var cb = sinon.stub();
     clusterProxy.deleteHost('clusterId', 'serial', cb);
     connectorService.deleteHost.callArg(2);
     expect(connectorService.fetch.callCount).toBe(1);
+    connectorService.fetch.callArg(0);
     expect(cb.callCount).toBe(1);
   });
 
