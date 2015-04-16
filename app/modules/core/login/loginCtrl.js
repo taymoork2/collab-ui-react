@@ -40,7 +40,7 @@ angular.module('Core')
               } else if (SessionStorage.get(storedState)) {
                 state = SessionStorage.pop(storedState);
                 params = SessionStorage.popObject(storedParams);
-              } else if (Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1) {
+              } else if (Authinfo.isPartner()) {
                 if (Auth.isLoginMarked()) {
                   LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
                   Auth.clearLoginMarker();

@@ -7,7 +7,7 @@ angular.module('Core')
         $scope.username = Authinfo.getUserName();
         $scope.orgname = Authinfo.getOrgName();
         $scope.orgId = Authinfo.getOrgId();
-        $scope.isPartner = Authinfo.isPartner();
+        $scope.isPartner = Authinfo.isPartnerAdmin();
       };
       getAuthinfoData();
       //update the scope when Authinfo data has been populated.
