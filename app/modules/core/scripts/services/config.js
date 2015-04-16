@@ -666,7 +666,7 @@ angular.module('Core')
         WX2_SquaredInviter: [],
         User: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
-        PARTNER_USER: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit'],
+        PARTNER_USER: ['partnercustomers', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers'],
         Site_Admin: ['site-list']
       };

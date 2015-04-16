@@ -286,6 +286,14 @@ angular.module('Core')
             return false;
           }
         },
+        isPartnerUser: function () {
+          var roles = this.getRoles();
+          if (roles) {
+            return roles.indexOf('PARTNER_USER') > -1;
+          } else {
+            return false;
+          }
+        },
         isSquaredTeamMember: function () {
           var roles = this.getRoles();
           return roles.indexOf('WX2_User') > -1;

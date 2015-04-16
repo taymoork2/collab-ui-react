@@ -40,12 +40,15 @@ angular.module('Core')
               } else if (SessionStorage.get(storedState)) {
                 state = SessionStorage.pop(storedState);
                 params = SessionStorage.popObject(storedParams);
-              } else if (Authinfo.isPartner()) {
+
+              } else if (Authinfo.isPartnerAdmin()) {
                 if (Auth.isLoginMarked()) {
                   LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
                   Auth.clearLoginMarker();
                 }
                 state = 'partneroverview';
+              } else if (Authinfo.isPartnerUser()) {
+                state = 'partnercustomers.list';
               }
               $rootScope.services = Authinfo.getServices();
 
