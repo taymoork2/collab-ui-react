@@ -27,8 +27,8 @@
       var _self = this;
       var x2js = new X2JS();
 
-      this.getXMLApi = function (xmlServerURL, xmlRequest, resolve, reject) {
-        var funcName = "getXMLApi()";
+      this.sendXMLApiReq = function (xmlServerURL, xmlRequest, resolve, reject) {
+        var funcName = "sendXMLApiReq()";
         var logMsg = "";
 
         logMsg = funcName + ": " + "xmlRequest=" + "\n" +
@@ -47,14 +47,14 @@
         }).error(function (data) {
           reject(data);
         });
-      }; //getXMLApi()
+      }; //sendXMLApiReq()
 
       return {
         getSiteInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
             var xmlRequest = $interpolate(constants.siteInfoRequest)(xmlApiAccessInfo);
-            _self.getXMLApi(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSiteInfo()
 
@@ -62,7 +62,7 @@
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
             var xmlRequest = $interpolate(constants.userInfoRequest)(xmlApiAccessInfo);
-            _self.getXMLApi(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getUserInfo()
 
@@ -70,7 +70,7 @@
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
             var xmlRequest = $interpolate(constants.meetingTypeInfoRequest)(xmlApiAccessInfo);
-            _self.getXMLApi(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getMeetingTypeInfo()
 
@@ -80,7 +80,7 @@
 
           logMsg = funcName + ": " + "\n" +
             "userSettings=" + JSON.stringify(userSettings);
-          // $log.log(logMsg);
+          $log.log(logMsg);
 
           var xmlRequest = $interpolate(constants.updateUserSettings_1)(xmlApiAccessInfo);
 
@@ -95,18 +95,18 @@
           }
 
           logMsg = funcName + ": " + "\n" +
-            "xmlRequest #4 =\n" + xmlRequest;
+            "xmlRequest #2 =\n" + xmlRequest;
           // $log.log(logMsg);
 
           xmlRequest += $interpolate(constants.updateUserSettings_3)(userSettings);
 
           logMsg = funcName + ": " + "\n" +
-            "xmlRequest #6 =\n" + xmlRequest;
+            "xmlRequest #3 =\n" + xmlRequest;
           $log.log(logMsg);
 
           return $q(
             function (resolve, reject) {
-              _self.getXMLApi(
+              _self.sendXMLApiReq(
                 xmlApiAccessInfo.xmlServerURL,
                 xmlRequest,
                 resolve,
@@ -122,7 +122,7 @@
 
           logMsg = funcName + ": " + "\n" +
             "xmlApiAccessInfo=\n" + JSON.stringify(xmlApiAccessInfo);
-          // $log.log(logMsg);
+          $log.log(logMsg);
 
           var updateUserSettings2XmlMsg =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
@@ -143,21 +143,19 @@
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
             "            <use:privilege>" + "\n";
 
-          if (xmlApiAccessInfo.callInTeleconfSiteEnabled) {
-            /* TODO
+          if (xmlApiAccessInfo.tollSiteEnabled) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-              "                <use:???>{{callInTeleconf}}</use:???>" + "\n";
-            */
+              "                <use:teleConfCallIn>{{toll}}</use:teleConfCallIn>" + "\n";
+          }
 
-            if (xmlApiAccessInfo.tollFreeIsSiteEnabled) {
-              updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-                "                <use:teleConfTollFreeCallIn>{{tollFree}}</use:teleConfTollFreeCallIn>" + "\n";
-            }
+          if (xmlApiAccessInfo.tollFreeSiteEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:teleConfTollFreeCallIn>{{tollFree}}</use:teleConfTollFreeCallIn>" + "\n";
+          }
 
-            if (xmlApiAccessInfo.teleconfViaGlobalCallinSiteEnabled) {
-              updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-                "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n";
-            }
+          if (xmlApiAccessInfo.teleconfViaGlobalCallInSiteEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n";
           }
 
           if (xmlApiAccessInfo.callBackTeleconfSiteEnabled) {
@@ -180,7 +178,10 @@
               "                <use:voiceOverIp>{{integratedVoIP}}</use:voiceOverIp>" + "\n";
           }
 
-          if (xmlApiAccessInfo.handsOnLabAdminSiteEnabled) {
+          if (
+            (xmlApiAccessInfo.trainingCenterSiteEnabled) &&
+            (xmlApiAccessInfo.handsOnLabAdminSiteEnabled)
+          ) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
               "                <use:labAdmin>{{handsOnLabAdmin}}</use:labAdmin>" + "\n";
           }
@@ -199,7 +200,10 @@
             "            </use:privilege>" + "\n";
           // End of use:privilege
 
-          if (xmlApiAccessInfo.optimizeBandwidthUsageSiteEnabled) {
+          if (
+            (xmlApiAccessInfo.eventCenterSiteEnabled) &&
+            (xmlApiAccessInfo.optimizeBandwidthUsageSiteEnabled)
+          ) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
               "            <use:eventCenter>" + "\n " +
               "                <use:optimizeAttendeeBandwidthUsage>{{optimizeBandwidthUsage}}</use:optimizeAttendeeBandwidthUsage>" + "\n" +
@@ -219,7 +223,7 @@
 
           return $q(
             function (resolve, reject) {
-              _self.getXMLApi(
+              _self.sendXMLApiReq(
                 xmlApiAccessInfo.xmlServerURL,
                 xmlRequest,
                 resolve,
@@ -233,7 +237,7 @@
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
             var xmlRequest = $interpolate(constants.sessionTicketRequest)(xmlApiAccessInfo);
-            _self.getXMLApi(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSessionTicketInfo()
 

@@ -11,89 +11,116 @@
       <!-- Start of Telephony section -->
       <div id="telephonyPrivileges"
            name="telephonyPrivileges"
-           ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled" ||
-                 "WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled" ||
-                 "WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled" ||
-                 "WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
+           ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled ||
+                  WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled ||
+                  WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled ||
+                  WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled ||
+                  WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
+                 
         <p>
           <b>
             {{WebExUserSettings2.userSettingsModel.telephonyPriviledge.label}}
           </b>
         </p>
   
-        <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled">
+        <!-- Start of Call-in -->
+        <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled ||
+                    WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled">
+                    
           <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.id}}
                        name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.id}}
-                       ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value"
                        label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.label}}
-                       isdisabled="true">
+                       ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value"
+                       isdisabled="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.value"
+                       ng-click="WebExUserSettings2.callInTeleconfChkboxClick()">
           </cs-checkbox>
   
           <div class="indentedCheckbox">
-            <cs-radiolist options="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes"
-                          ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType">
-            </cs-radiolist>
+            <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value">
+              <cs-radio label="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label"
+                        value="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].value"
+                        name="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].name"
+                        id="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].id"
+                        isdisabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled"
+                        ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
+                        ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled">
+              </cs-radio>
+              
+              <cs-radio label="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label"
+                        value="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].value"
+                        name="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].name"
+                        id="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].id"
+                        isdisabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled"
+                        ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
+                        ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled">
+              </cs-radio>
+            </div>
+            
+            <div ng-if="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value">
+              <cs-radio label="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label"
+                        value="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].value"
+                        name="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].name"
+                        id="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].id"
+                        isdisabled="true"
+                        ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
+                        ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled">
+              </cs-radio>
+              
+              <cs-radio label="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label"
+                        value="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].value"
+                        name="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].name"
+                        id="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].id"
+                        isdisabled="true"
+                        ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType"
+                        ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled">
+              </cs-radio>
+            </div>
   
-            <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled">
-              <!--
-              <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
-                           name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
-                           ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value"
-                           label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label}}
+            <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled">
+              <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.id}}
+                           name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.id}}
+                           label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.label}}
+                           ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value"
                            isdisabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value">
               </cs-checkbox>
-              -->
-              <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
-                           name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.id}}
-                           ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value"
-                           label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label}}
-                           isdisabled="true">
-              </cs-checkbox>
             </div>
           </div>
-  
-          <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled">
-            <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.id}}
-                         name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.id}}
-                         ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.value"
-                         label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.label}}>
-            </cs-checkbox>
-  
-            <div class="indentedCheckbox"
-                 ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled">
-              <!--
-              <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
-                           name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
-                           ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value"
-                           label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label}}
-                           isdisabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.value">
-              </cs-checkbox>
-              -->
-              <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
-                           name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
-                           ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value"
-                           label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label}}
-                           isdisabled="true">
-              </cs-checkbox>
-            </div>
-          </div>
-  
-          <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled">
-            <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.id}}
-                         name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.id}}
-                         ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.value"
-                         label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.label}}
-                         isdisabled="true">
+        </div>
+        <!-- End of Call-in -->
+        
+        <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled">
+          <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.id}}
+                       name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.id}}
+                       label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.label}}
+                       ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.value"
+                       ng-click="WebExUserSettings2.callBackTeleconfChkboxClick()">
+          </cs-checkbox>
+
+          <div class="indentedCheckbox"
+               ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled">
+            <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
+                         name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.id}}
+                         label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label}}
+                         ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value"
+                         isdisabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callBackTeleconf.value">
             </cs-checkbox>
           </div>
-  
-          <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
-            <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.id}}
-                         name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.id}}
-                         ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.value"
-                         label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.label}}>
-            </cs-checkbox>
-          </div>
+        </div>
+
+        <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled">
+          <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.id}}
+                       name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.id}}
+                       label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.label}}
+                       ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.otherTeleconfServices.value">
+          </cs-checkbox>
+        </div>
+
+        <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled">
+          <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.id}}
+                       name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.id}}
+                       label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.label}}
+                       ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.integratedVoIP.value">
+          </cs-checkbox>
         </div>
   
         <hr>
@@ -114,8 +141,9 @@
         <div ng-if="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled">
           <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.id}}
                        name={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.id}}
+                       label={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.label}}
                        ng-model="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.value"
-                       label={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.label}}>
+                       ng-click="WebExUserSettings2.hiQualVideoChkboxClick()">
           </cs-checkbox>
   
           <div class="indentedCheckbox"
@@ -168,8 +196,8 @@
   
         <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
                      name={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
-                     ng-model="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.value"
-                     label={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.label}}>
+                     label={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.label}}
+                     ng-model="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.value">
         </cs-checkbox>
   
         <hr>
@@ -183,7 +211,7 @@
               type="button"
               class="btn btn-info btn-save"
               ng-disabled="!userSettingsView.form.$dirty"
-              ng-click="WebExUserSettings2.btnSave()"
+              ng-click="WebExUserSettings2.btnSave2()"
               data-loading-text="<i class='icon icon-spinner'></i>">
   
           Save
