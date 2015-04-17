@@ -2,8 +2,8 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate', '$log',
-    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config, $translate, $log) {
+  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate',
+    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config, $translate) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
@@ -280,7 +280,6 @@ angular.module('Squared')
           data[idx].info = dscMap[data[idx].title];
           data[idx].title = (data[idx].title).replace(/_/g, ' ');
           data[idx].title = capitalizeEachWord(data[idx].title);
-          $log.log(data[idx]);
         }
       };
 
