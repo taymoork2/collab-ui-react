@@ -11,7 +11,6 @@ angular.module('Core')
 
       $scope.counts = {};
       $scope.refreshTime = null;
-
       $scope.statusPageUrl = Config.getStatusPageUrl();
 
       $scope.reportStatus = {
@@ -21,6 +20,7 @@ angular.module('Core')
       };
 
       $scope.currentDate = moment().subtract('months', 1).format('LL');
+      var weekOf = $translate.instant('reports.weekOf');
 
       var todaysDate = new Date();
       var dummyChartVals = [{
@@ -73,7 +73,9 @@ angular.module('Core')
             'axisColor': '#DDDDDD',
             'gridAlpha': 1,
             'gridColor': '#DDDDDD',
-            'color': '#999999'
+            'color': '#999999',
+            'title': weekOf,
+            'titleColor': '#999999'
           },
           'numberFormatter': {
             'precision': 0,
