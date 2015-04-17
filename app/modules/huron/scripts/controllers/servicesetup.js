@@ -6,14 +6,13 @@
     .controller('serviceSetupCtrl', serviceSetupCtrl);
 
   /* @ngInject */
-  function serviceSetupCtrl($scope, $q, Log, ServiceSetup, HttpUtils) {
+  function serviceSetupCtrl($scope, $q, Log, ServiceSetup, HttpUtils, Notification, $translate) {
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = 'America/Los_Angeles';
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
     var DEFAULT_SITE_CODE = '100';
     var DEFAULT_MOH = 'ciscoDefault';
-    var DEFAULT_EXTENTION_LENGTH = '5';
     var DEFAULT_FROM = '5000';
     var DEFAULT_TO = '5999';
 
@@ -48,7 +47,6 @@
       siteCode: DEFAULT_SITE_CODE
     };
     $scope.globalMOH = DEFAULT_MOH;
-    $scope.maxExtLength = DEFAULT_EXTENTION_LENGTH;
     $scope.internalNumberRanges = [];
     $scope.firstTimeSetup = true;
 
@@ -113,19 +111,43 @@
       }
     };
 
-    $scope.initNext = function () {
-      var deferreds = [];
-      if ($scope.firstTimeSetup) {
-        deferreds.push(ServiceSetup.createSite($scope.site).then(function () {
-          $scope.firstTimeSetup = false;
-        }));
-      }
-      if ($scope.internalNumberRanges && $scope.internalNumberRanges.length > 0) {
-        deferreds.push(ServiceSetup.createInternalNumberRanges($scope.internalNumberRanges));
-      }
-      return $q.all(deferreds).then(function () {
-        listInternalExtentionRanges();
+    function validate() {
+      // Validate DNs
+      var isDnValid = true;
+      var invalidDn = '';
+      angular.forEach($scope.internalNumberRanges, function (dn) {
+        if (dn.beginNumber.length !== 4) {
+          isDnValid = false;
+          invalidDn += (', ' + dn.beginNumber);
+        }
+        if (dn.endNumber.length !== 4) {
+          isDnValid = false;
+          invalidDn += (', ' + dn.endNumber);
+        }
       });
+      if (!isDnValid) {
+        Notification.notify([$translate.instant('serviceSetupModal.extensionError') + invalidDn.slice(2)], 'error');
+      }
+      return isDnValid;
+    }
+
+    $scope.initNext = function () {
+      if (!validate()) {
+        return $q.reject('Field validation failed.');
+      } else {
+        var deferreds = [];
+        if ($scope.firstTimeSetup) {
+          deferreds.push(ServiceSetup.createSite($scope.site).then(function () {
+            $scope.firstTimeSetup = false;
+          }));
+        }
+        if ($scope.internalNumberRanges && $scope.internalNumberRanges.length > 0) {
+          deferreds.push(ServiceSetup.createInternalNumberRanges($scope.internalNumberRanges));
+        }
+        return $q.all(deferreds).then(function () {
+          listInternalExtentionRanges();
+        });
+      }
     };
 
     HttpUtils.setTrackingID().then(function () {

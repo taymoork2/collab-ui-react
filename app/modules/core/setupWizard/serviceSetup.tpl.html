@@ -33,11 +33,11 @@
     <div class="container-fluid">
       <div class="row  wizard-row-padding" ng-repeat="internalNumberRange in internalNumberRanges">
           <div class="col-xs-2">
-            <input ng-disabled="internalNumberRange.uuid" class="form-control" type="text" ng-model="internalNumberRange.beginNumber" maxlength="5" id="ID{{$index}}" required/>
+            <input ng-disabled="internalNumberRange.uuid" class="form-control" type="text" ng-model="internalNumberRange.beginNumber" maxlength="4" id="ID{{$index}}" required/>
           </div>
           <div class="col-xs-1 wizard-top-padding" translate="serviceSetupModal.to"></div>
           <div class="col-xs-2">
-            <input ng-disabled="internalNumberRange.uuid" class="form-control" type="text" ng-model="internalNumberRange.endNumber" maxlength="5" required/>
+            <input ng-disabled="internalNumberRange.uuid" class="form-control" type="text" ng-model="internalNumberRange.endNumber" maxlength="4" required/>
           </div>
           <div class="col-xs-2 wizard-top-padding">
             <a ng-show="internalNumberRanges.indexOf(internalNumberRange) != 0 || !firstTimeSetup" ng-click="deleteInternalNumberRange(internalNumberRanges.indexOf(internalNumberRange), internalNumberRange)" translate="common.delete"></a>
