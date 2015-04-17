@@ -20,12 +20,12 @@
             Pending software upgrade to {{connector.software_upgrade_pending}}
           </span>
         </div>
-        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;" ng-show="service.alarm_count">
-          <span ng-show="service.alarm_count==1">
-            {{service.alarm_count}} reported alarm
+        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;" ng-show="connector.alarms.length">
+          <span ng-show="connector.alarms.length==1">
+            {{connector.alarms.length}} reported alarm
           </span>
-          <span ng-hide="service.alarm_count==1">
-            {{service.alarm_count}} reported alarms
+          <span ng-hide="connector.alarms.length==1">
+            {{connector.alarms.length}} reported alarms
           </span>
         </div>
       </a>
