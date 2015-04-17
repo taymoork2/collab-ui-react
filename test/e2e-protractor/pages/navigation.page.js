@@ -10,13 +10,14 @@ var Navigation = function () {
   this.listUsersTab = element(by.css('a[href="#users"]'));
   this.orgTab = element(by.css('a[href="#organization"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
-  this.fusionTab = element(by.css('.developmentTab a[href="#fusion"]'));
+  this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.newReportsTab = element(by.cssContainingText('span', 'New Reports'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
   this.developmentTab = element(by.css('li.developmentTab > a'));
+  this.servicesTab = element(by.css('li.servicesTab > a'));
   this.meetingsTab = element(by.css('a[href="#meetings"]'));
 
   this.settings = element(by.id('setting-bar'));
@@ -34,6 +35,10 @@ var Navigation = function () {
 
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
+  };
+
+  this.clickServicesTab = function () {
+    utils.click(this.servicesTab);
   };
 
   this.clickHome = function () {
@@ -86,7 +91,7 @@ var Navigation = function () {
   };
 
   this.clickFusion = function () {
-    this.clickDevelopmentTab();
+    this.clickServicesTab();
     utils.click(this.fusionTab);
     this.expectCurrentUrl('/fusion');
   };

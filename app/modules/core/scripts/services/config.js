@@ -214,6 +214,11 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
+          }, {
+            title: 'tabs.fusionDetailsTab',
+            desc: 'tabs.fusionDetailsTabDesc',
+            state: 'fusion',
+            link: '#fusion'
           }]
         }, {
           tab: 'deviceTab',
@@ -266,11 +271,6 @@ angular.module('Core')
             desc: 'tabs.organizationTabDesc',
             state: 'organization',
             link: '#organization'
-          }, {
-            title: 'tabs.fusionDetailsTab',
-            desc: 'tabs.fusionDetailsTabDesc',
-            state: 'fusion',
-            link: '#fusion'
           }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
