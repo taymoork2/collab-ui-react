@@ -132,7 +132,7 @@
           userSettingsModel.telephonyPriviledge.callInTeleconf.label = $translate.instant("webexUserSettingLabels.callInTeleconfLabel");
           userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label = $translate.instant("webexUserSettingLabels.tollOnlyLabel");
           userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label = $translate.instant("webexUserSettingLabels.tollAndTollFreeLabel");
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.label = $translate.instant("webexUserSettingLabels.teleconfViaGlobalCallinLabel");
+          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.label = $translate.instant("webexUserSettingLabels.teleconfViaGlobalCallinLabel");
           userSettingsModel.telephonyPriviledge.callBackTeleconf.label = $translate.instant("webexUserSettingLabels.callBackTeleconfLabel");
           userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label = $translate.instant("webexUserSettingLabels.globalCallBackTeleconfLabel");
           userSettingsModel.telephonyPriviledge.integratedVoIP.label = $translate.instant("webexUserSettingLabels.integratedVoIPLaabel");
@@ -268,15 +268,14 @@
 
           // Start of Telephony privileges
 
-          // Start of call-in privileges
-          userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled = true;
-
-          /* TODO
-          userSettingsModel.telephonyPriviledge.callInTeleconf.value = (
-            "true" == userInfoJson.use_privilege.<callInTeleconf>
+          // Start of call-in teleconf
+          userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled = (
+            "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing
           ) ? true : false;
-          */
-          userSettingsModel.telephonyPriviledge.callInTeleconf.value = true;
+
+          userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = (
+            "true" == userInfoJson.use_privilege.use_teleConfCallIn
+          ) ? true : false;
 
           userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing
@@ -286,44 +285,40 @@
             "true" == userInfoJson.use_privilege.use_teleConfTollFreeCallIn
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = false;
-          userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = !userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled;
-
-          userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = (
-            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value
-          ) ? 2 : 1;
-
-          /* TODO
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = (
-             (userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled) &&
-             ("true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.<teleconfViaGlobalCallIn>)
+          userSettingsModel.telephonyPriviledge.callInTeleconf.value = (
+            (userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value) ||
+            (userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value)
           ) ? true : false;
-          */
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled = true;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value = (
+          if (userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value) {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 2;
+          } else if (userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value) {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 1;
+          } else {
+            userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 0;
+          }
+
+          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled = (
+            "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallInTeleconferencing
+          ) ? true : false;
+
+          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value = (
             "true" == userInfoJson.use_privilege.use_teleConfCallInInternational
           ) ? true : false;
-
-          if (!userSettingsModel.telephonyPriviledge.callInTeleconf.value) {
-            userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled = true;
-            userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled = true;
-          }
 
           logMsg = funcName + ": " + "\n" +
             "ns1_callInTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing + "\n" +
             "ns1_tollFreeCallinTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing + "\n" +
             "use_teleConfCallIn=" + userInfoJson.use_privilege.use_teleConfCallIn + "\n" +
             "use_teleConfTollFreeCallIn=" + userInfoJson.use_privilege.use_teleConfTollFreeCallIn + "\n" +
-            "callInTeleconf.isSiteEnabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteEnabled + "\n" +
-            "callInTeleconf=" + userSettingsModel.telephonyPriviledge.callInTeleconf.value + "\n" +
+            "toll.isSiteEnabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled + "\n" +
+            "toll.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value + "\n" +
             "tollFree.isSiteEnabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled + "\n" +
             "tollFree.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value + "\n" +
-            "callInTeleconf.selectedCallInTollType=" + userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType + "\n" +
-            "callInTollTypes[0].isDisabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].isDisabled + "\n" +
-            "callInTollTypes[1].isDisabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].isDisabled;
+            "callInTeleconf=" + userSettingsModel.telephonyPriviledge.callInTeleconf.value + "\n" +
+            "callInTeleconf.selectedCallInTollType=" + userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType;
           $log.log(logMsg);
-          // End of call-in privileges
+          // End of call-in teleconf
 
           userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing
@@ -333,27 +328,17 @@
             "true" == userInfoJson.use_privilege.use_teleConfCallOut
           ) ? true : false;
 
-          /* TODO
           userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled = (
-            "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.<globalCallBackTeleconf>
+            "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallBackTeleconferencing
           ) ? true : false;
-          */
-          userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled = true;
-
-          if (!userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled) {
-            userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled = false;
-          }
 
           userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = (
             "true" == userInfoJson.use_privilege.use_teleConfCallOutInternational
           ) ? true : false;
 
-          /* TODO
           userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = (
-            "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.<otherTeleconfSerice>
+            "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_supportOtherTypeTeleconf
           ) ? true : false;
-          */
-          userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = true;
 
           userSettingsModel.telephonyPriviledge.otherTeleconfServices.value = (
             "true" == userInfoJson.use_privilege.use_otherTelephony
@@ -368,6 +353,11 @@
           userSettingsModel.telephonyPriviledge.integratedVoIP.value = (
             "true" == userInfoJson.use_privilege.use_voiceOverIp
           ) ? true : false;
+
+          logMsg = funcName + ": " + "\n" +
+            "integratedVoIP.isSiteEnabled=" + userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled + "\n" +
+            "integratedVoIP.value=" + userSettingsModel.telephonyPriviledge.integratedVoIP.value;
+          $log.log(logMsg);
           // End of Telephony privileges
         }, // updateUserSettingsModelPart2()
 
@@ -403,7 +393,7 @@
 
           // Start of Event Center
           userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled = (
-            "true" == siteInfoJson.ns1_siteInstance.ns1_supportedServices.ns1_eventCenter.ns1_optimizeAttendeeBandwidthUsage
+            ("true" == siteInfoJson.ns1_siteInstance.ns1_supportedServices.ns1_eventCenter.ns1_optimizeAttendeeBandwidthUsage)
           ) ? true : false;
 
           userSettingsModel.eventCenter.optimizeBandwidthUsage.value = (
@@ -413,7 +403,7 @@
 
           // Start of Training Center privileges
           userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled = (
-            "true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab
+            ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab)
           ) ? true : false;
 
           userSettingsModel.trainingCenter.handsOnLabAdmin.value = (
@@ -564,7 +554,6 @@
           var logMsg = "";
 
           angular.element('#saveBtn').button('loading');
-          angular.element('#saveBtn2').button('loading');
 
           var _self = this;
           var useSupportedServices = userSettingsModel.userInfo.bodyJson.use_supportedServices;
@@ -588,7 +577,6 @@
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
               angular.element('#saveBtn').button('reset');
-              angular.element('#saveBtn2').button('reset');
 
               var successMsg = $translate.instant("webexUserSettings.sessionEnablementUpdateSuccess");
               _self.processUpdateSuccessResult(
@@ -598,7 +586,6 @@
 
             function updateUserSettingsError(result) {
               angular.element('#saveBtn').button('reset');
-              angular.element('#saveBtn2').button('reset');
 
               _self.updateUserSettingsError(result);
             } // updateUserSettingsError()
@@ -609,28 +596,18 @@
           var funcName = "updateUserSettings2()";
           var logMsg = "";
 
-          angular.element('#saveBtn').button('loading');
           angular.element('#saveBtn2').button('loading');
 
           var _self = this;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = (
-            2 == userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType
-          ) ? true : false;
+          xmlApiInfo.tollSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled;
+          xmlApiInfo.toll = userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value;
 
-          logMsg = funcName + ": " + "\n" +
-            "selectedCallInTollType=" + userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType + "\n" +
-            "tollFree.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
-          // $log.log(logMsg);
-
-          xmlApiInfo.callInTeleconfSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.isSiteenabled;
-          xmlApiInfo.callInTeleconf = userSettingsModel.telephonyPriviledge.callInTeleconf.value;
-
-          xmlApiInfo.tollFreeIsSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled;
+          xmlApiInfo.tollFreeSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled;
           xmlApiInfo.tollFree = userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
 
-          xmlApiInfo.teleconfViaGlobalCallinSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.isSiteEnabled;
-          xmlApiInfo.teleconfViaGlobalCallin = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallin.value;
+          xmlApiInfo.teleconfViaGlobalCallInSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled;
+          xmlApiInfo.teleconfViaGlobalCallIn = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value;
 
           xmlApiInfo.callBackTeleconfSiteEnabled = userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled;
           xmlApiInfo.callBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.value;
@@ -650,15 +627,16 @@
           xmlApiInfo.hiDefVideoSiteEnabled = userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled;
           xmlApiInfo.hiDefVideo = userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value;
 
+          xmlApiInfo.eventCenterSiteEnabled = userSettingsModel.eventCenter.isSiteEnabled;
           xmlApiInfo.optimizeBandwidthUsageSiteEnabled = userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled;
           xmlApiInfo.optimizeBandwidthUsage = userSettingsModel.eventCenter.optimizeBandwidthUsage.value;
 
+          xmlApiInfo.trainingCenterSiteEnabled = userSettingsModel.trainingCenter.isSiteEnabled;
           xmlApiInfo.handsOnLabAdminSiteEnabled = userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled;
           xmlApiInfo.handsOnLabAdmin = userSettingsModel.trainingCenter.handsOnLabAdmin.value;
 
           XmlApiFact.updateUserSettings2(xmlApiInfo).then(
             function updateUserSettings2Success(result) {
-              angular.element('#saveBtn').button('reset');
               angular.element('#saveBtn2').button('reset');
 
               var successMsg = $translate.instant("webexUserSettings.privilegesUpdateSuccess");
@@ -668,7 +646,6 @@
             }, // updateUserSettings2Success()
 
             function updateUserSettings2Error(result) {
-              angular.element('#saveBtn').button('reset');
               angular.element('#saveBtn2').button('reset');
 
               _self.updateUserSettingsError(result);
@@ -761,9 +738,22 @@
         }, // setLoadingErrMsg()
 
         getErrMsg: function (errId) {
-          var updateErrMsg = (
-            (null == errId) || ("" === errId)
-          ) ? $translate.instant('webexUserSettingsAccessErrors.defaultAccessError') : $translate.instant('webexUserSettingsAccessErrors.' + errId);
+          var updateErrMsg = "";
+
+          if (
+            (null == errId) ||
+            ("" === errId)
+          ) {
+            updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.defaultAccessError');
+          } else if (
+            ("000000" === errId) ||
+            ("000035" === errId) ||
+            ("999999" === errId)
+          ) {
+            updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.defaultProcessError');
+          } else {
+            updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.' + errId);
+          }
 
           return updateErrMsg;
         }, // setUpdateErrMsg()
