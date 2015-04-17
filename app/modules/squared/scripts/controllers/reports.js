@@ -165,7 +165,7 @@ angular.module('Squared')
       $scope.$on('contentShareSizesLoaded', function (event, response) {
         label = $translate.instant('reports.AmountofContentShared');
         var axis = $translate.instant('reports.gbSharedAxis');
-        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', label, Config.chartColors.red, 'sum', 'axis');
+        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', label, Config.chartColors.red, 'sum', axis);
       });
 
       $scope.$on('onboardingFunnelLoaded', function (event, response) {
