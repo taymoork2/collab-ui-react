@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function TelephonyInfoService($rootScope, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber) {
+  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber) {
 
     var broadcastEvent = "telephonyInfoUpdated";
 
@@ -185,6 +185,10 @@
             snrInfo.remoteDestinations = null;
           }
           updateSnr(snrInfo);
+        })
+        .catch(function (response) {
+          updateSnr({});
+          $q.reject(response);
         });
     }
 
@@ -239,6 +243,10 @@
           } else {
             updateDirectoryNumbers(null);
           }
+        })
+        .catch(function (response) {
+          updateDirectoryNumbers(null);
+          $q.reject(response);
         });
     }
 
@@ -249,6 +257,10 @@
         }).$promise
         .then(function (telephonyUserInfo) {
           updateUserServices(telephonyUserInfo.services);
+        })
+        .catch(function (response) {
+          updateUserServices([]);
+          $q.reject(response);
         });
     }
 
@@ -276,6 +288,10 @@
           }
           internalNumberPool = intNumPool;
           return angular.copy(internalNumberPool);
+        })
+        .catch(function (response) {
+          internalNumberPool = [];
+          $q.reject(response);
         });
     }
 
@@ -303,6 +319,10 @@
           }
           externalNumberPool = extNumPool;
           return angular.copy(externalNumberPool);
+        })
+        .catch(function (response) {
+          externalNumberPool = [];
+          $q.reject(response);
         });
     }
   }

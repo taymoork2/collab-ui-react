@@ -10,7 +10,6 @@
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
     vm.showPartnerEdit = $stateParams.showPartnerEdit;
-    vm.addUC = $stateParams.addUC;
 
     vm.editTerms = true;
     vm.disableSquaredUCCheckBox = false;
@@ -31,20 +30,6 @@
       name: 'licenseDuration',
       id: 'licenseDuration180'
     }];
-
-    $scope.$watch(function () {
-      return vm.addUC;
-    }, function (newValue) {
-      if (newValue) {
-        vm.offers[Config.trials.squaredUC] = newValue;
-      }
-    });
-
-    $scope.$watch(function () {
-      return vm.offers[Config.trials.squaredUC];
-    }, function (newValue) {
-      vm.offers[Config.trials.squaredUC] = newValue;
-    });
 
     vm.isSquaredUC = Authinfo.isSquaredUC;
     vm.getDaysLeft = getDaysLeft;
@@ -78,7 +63,6 @@
     function gotoAddNumber() {
       $state.go('trialEdit.addNumbers', {
         fromEditTrial: true,
-        currentTrial: vm.currentTrial,
         currentOrg: vm.currentTrial
       });
     }
@@ -129,7 +113,7 @@
             licenseDuration: vm.currentTrial.duration
           })];
           Notification.notify(successMessage, 'success');
-          if (!keepModal || !vm.addUC) {
+          if (!keepModal) {
             $state.modal.close();
           }
         });

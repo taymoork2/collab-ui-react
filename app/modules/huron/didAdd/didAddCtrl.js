@@ -236,8 +236,7 @@
     function backtoEditTrial() {
       $state.go('trialEdit.info', {
         currentTrial: vm.currentTrial,
-        showPartnerEdit: true,
-        addUC: true
+        showPartnerEdit: true
       });
     }
 

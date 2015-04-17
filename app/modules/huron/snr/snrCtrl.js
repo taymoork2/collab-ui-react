@@ -63,9 +63,7 @@
           Notification.notify([result.msg], result.type);
         },
         function (response) {
-          result.msg = $translate.instant('singleNumberReachPanel.error') + response.data.errorMessage;
-          result.type = 'error';
-          Notification.notify([result.msg], result.type);
+          Notification.errorResponse(response, 'singleNumberReachPanel.error');
         }).$promise;
     }
 
@@ -96,9 +94,7 @@
           Notification.notify([result.msg], result.type);
         },
         function (response) {
-          result.msg = $translate.instant('singleNumberReachPanel.error') + response.data.errorMessage;
-          result.type = 'error';
-          Notification.notify([result.msg], result.type);
+          Notification.errorResponse(response, 'singleNumberReachPanel.error');
         }).$promise;
     }
 
@@ -124,9 +120,7 @@
           Notification.notify([result.msg], result.type);
         },
         function (response) {
-          result.msg = $translate.instant('singleNumberReachPanel.error') + response.data.errorMessage;
-          result.type = 'error';
-          Notification.notify([result.msg], result.type);
+          Notification.errorResponse(response, 'singleNumberReachPanel.error');
         }).$promise;
     }
 

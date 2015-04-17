@@ -6,7 +6,7 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Log, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, ServiceSetup, UserListService, SharedLineInfoService) {
+  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, ServiceSetup, UserListService, SharedLineInfoService) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -285,21 +285,14 @@
               })
               .catch(function (response) {
                 listSharedLineUsers(vm.directoryNumber.uuid);
-                if (response.data && response.data.errorMessage) {
-                  Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
-                  Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
-                } else {
-                  Log.debug('saveLineSettings failed.  Status: ' + response.status);
-                  Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
-                }
-
+                Notification.errorResponse(response, 'directoryNumberPanel.error');
               });
 
           } else { // new line
             SharedLineInfoService.getUserLineCount(vm.currentUser.id)
               .then(function (totalLines) {
                 if (totalLines < vm.maxLines) {
-                  LineSettings.addNewLine(vm.currentUser.id, getDnUsage(), vm.assignedInternalNumber.pattern, vm.directoryNumber, vm.assignedExternalNumber)
+                  return LineSettings.addNewLine(vm.currentUser.id, getDnUsage(), vm.assignedInternalNumber.pattern, vm.directoryNumber, vm.assignedExternalNumber)
                     .then(function () {
                       return TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
                         .then(function () {
@@ -315,15 +308,6 @@
                           });
 
                         });
-                    })
-                    .catch(function (response) {
-                      if (response.data && response.data.errorMessage) {
-                        Log.debug('saveLineSettings failed.  Status: ' + response.status + ' Response: ' + response.data);
-                        Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
-                      } else {
-                        Log.debug('saveLineSettings failed.  Status: ' + response.status);
-                        Notification.notify([$translate.instant('directoryNumberPanel.error')], 'error');
-                      }
                     });
                 } else {
                   Notification.notify([$translate.instant('directoryNumberPanel.maxLines', {
@@ -332,6 +316,9 @@
                   $state.go('user-overview.communication');
 
                 }
+              })
+              .catch(function (response) {
+                Notification.errorResponse(response, 'directoryNumberPanel.error');
               });
           }
         }
@@ -361,8 +348,7 @@
                 return disassociateSharedLineUsers(true);
               })
               .catch(function (response) {
-                Log.debug('disassociateInternalLine failed.  Status: ' + response.status + ' Response: ' + response.data);
-                Notification.notify([$translate.instant('directoryNumberPanel.error') + " " + response.data.errorMessage], 'error');
+                Notification.errorResponse(response, 'directoryNumberPanel.error');
               });
           }
         });
@@ -609,8 +595,6 @@
         if (data.success) {
           vm.users = data.Resources;
           vm.disableTypeahead = false;
-        } else {
-          Log.debug('Query existing users failed. Status: ' + status);
         }
       });
     }
@@ -692,7 +676,9 @@
             })
             .catch(function (response) {
               name = (user.name) ? user.name : user.userName;
-              notifyError(name, response);
+              Notification.errorResponse(response, 'directoryNumberPanel.userError', {
+                user: name
+              });
             });
           promises.push(promise);
         });
@@ -837,18 +823,6 @@
       userName = (name && name.givenName) ? name.givenName : '';
       userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
       return userName;
-    }
-
-    function notifyError(name, response) {
-      if (response.data && response.data.errorMessage) {
-        Notification.notify([$translate.instant('directoryNumberPanel.userError', {
-          user: name
-        }) + " " + response.data.errorMessage], 'error');
-      } else {
-        Notification.notify([$translate.instant('directoryNumberPanel.userError', {
-          user: name
-        })], 'error');
-      }
     }
 
     init();
