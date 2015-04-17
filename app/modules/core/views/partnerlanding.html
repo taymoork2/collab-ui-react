@@ -2,11 +2,9 @@
 <div id="trialsPanel" class="container partner-container">
   <div class="row">
     <section class = "col-sm-12 col-md-7 col-lg-8" ng-controller="PartnerReportsCtrl" >
-       <div class="trialTitle">
-        <span translate="partnerHomePage.partnerHeading"></span><span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">:
+        <span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">
         <cr-reload-data id="partnerRefreshData" last-updated-time="refreshTime"></cr-reload-data>
         </span>
-      </div>
 
       <section class="background-white">
         <h3 id="entitlementTitle"><span translate="partnerHomePage.entitlementsTitle"></span> {{counts.entitlements}}</h3>

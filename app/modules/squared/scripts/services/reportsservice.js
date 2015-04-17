@@ -78,6 +78,46 @@ angular.module('Squared')
       };
 
       return {
+        getCounts: function (useCache) {
+          var params = {
+            'intervalCount': 1,
+            'intervalType': 'month',
+            'cache': useCache,
+            'isCustomerView': true
+          };
+
+          var customerCounts = ['callsCount', 'conversationsCount', 'contentSharedCount'];
+          for (var chart in customerCounts) {
+            this.getUsageMetrics(customerCounts[chart], params);
+          }
+        },
+
+        getTimeCharts: function (useCache, customerCharts) {
+          var params = {
+            'intervalCount': 1,
+            'intervalType': 'month',
+            'spanCount': 1,
+            'spanType': 'week',
+            'cache': useCache,
+            'isCustomerView': true
+          };
+
+          for (var chart in customerCharts) {
+            this.getUsageMetrics(customerCharts[chart], params);
+          }
+        },
+
+        getFunnel: function (useCache) {
+          var params = {
+            'cache': useCache
+          };
+
+          var funnelCharts = ['onboardingFunnel'];
+
+          for (var chart in funnelCharts) {
+            this.getUsageMetrics(funnelCharts[chart], params);
+          }
+        },
 
         getUsageMetrics: function (metricType, params) {
           var metricUrl = buildUrl(metricType, params);
@@ -127,46 +167,24 @@ angular.module('Squared')
 
         },
 
+        getLandingMetrics: function (useCache) {
+          this.getCounts(useCache);
+          var charts = ['calls', 'conversations', 'contentShared'];
+          this.getTimeCharts(useCache, charts);
+
+        },
+
         getAllMetrics: function (useCache) {
-          var params = {
-            'intervalCount': 1,
-            'intervalType': 'month',
-            'cache': useCache,
-            'isCustomerView': true
-          };
+          this.getCounts(useCache);
 
-          var customerCounts = ['callsCount', 'conversationsCount', 'contentSharedCount'];
-          for (var chart in customerCounts) {
-            this.getUsageMetrics(customerCounts[chart], params);
-          }
-
-          params = {
-            'intervalCount': 1,
-            'intervalType': 'month',
-            'spanCount': 1,
-            'spanType': 'week',
-            'cache': useCache,
-            'isCustomerView': true
-          };
-
-          var customerCharts = ['calls', 'conversations', 'contentShareSizes', 'contentShared',
+          var charts = ['calls', 'conversations', 'contentShareSizes', 'contentShared',
             'activeUsers', 'entitlements', 'avgCallsPerUser', 'avgConversations', 'convOneOnOne', 'convGroup',
             'calls', 'callsAvgDuration'
           ];
 
-          for (chart in customerCharts) {
-            this.getUsageMetrics(customerCharts[chart], params);
-          }
+          this.getTimeCharts(useCache, charts);
+          this.getFunnel(useCache);
 
-          params = {
-            'cache': useCache
-          };
-
-          var funnelCharts = ['onboardingFunnel'];
-
-          for (chart in funnelCharts) {
-            this.getUsageMetrics(funnelCharts[chart], params);
-          }
         },
 
         getLogInfo: function (locusId, startTime, callback) {

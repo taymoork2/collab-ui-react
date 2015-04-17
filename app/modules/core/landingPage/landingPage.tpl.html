@@ -1,17 +1,15 @@
 <div class="landing-page">
   <div class="landing-content row">
     <section class="analytics-charts col-sm-12 col-md-7 col-lg-8">
-      <div class="trialTitle">
-        <span translate="homePage.activity"></span><span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">:
+      <span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">
         <cr-reload-data id="homeRefreshData" last-updated-time="refreshTime"></cr-reload-data>
-        </span>
-      </div>
+      </span>
       <section class="tab-reports background-white">
         <cs-tabset justified="true" large="true">
           <cs-tab select="resizeCallsChart()">
             <cs-tab-heading>
               <span translate="homePage.calls"></span>
-              <div class="total">{{counts.calls}}</div>
+              <div class="total">{{counts.calls | number}}</div>
             </cs-tab-heading>
             <div id="callsChart" class="tab-report"></div>
             <div id="callsRefreshDiv" class="report-status">
@@ -21,7 +19,7 @@
           <cs-tab select="resizeConversationsChart()">
             <cs-tab-heading>
               <span translate="homePage.conversations"></span>
-              <div class="total">{{counts.conversations}}</div>
+              <div class="total">{{counts.conversations | number}}</div>
             </cs-tab-heading>
             <div id="conversationsChart" class="tab-report"></div>
             <div id="convRefreshDiv" class="report-status">
@@ -31,7 +29,7 @@
           <cs-tab select="resizeContentSharedChart()">
             <cs-tab-heading>
               <span translate="homePage.contentShared"></span>
-              <div class="total">{{counts.contentShared}}</div>
+              <div class="total">{{counts.contentShared | number}}</div>
             </cs-tab-heading>
             <div id="contentSharedChart" class="tab-report"></div>
             <div id="contentRefreshDiv" class="report-status">

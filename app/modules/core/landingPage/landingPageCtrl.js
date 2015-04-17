@@ -1,6 +1,6 @@
 'use strict';
 
-/* global AmCharts */
+/* global AmCharts, moment */
 
 angular.module('Core')
   .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate',
@@ -19,6 +19,8 @@ angular.module('Core')
         conversations: 'refresh',
         contentShared: 'refresh'
       };
+
+      $scope.currentDate = moment().subtract('months', 1).format('LL');
 
       var todaysDate = new Date();
       var dummyChartVals = [{
@@ -41,10 +43,10 @@ angular.module('Core')
         $scope.reportStatus.calls = 'refresh';
         $scope.reportStatus.conversations = 'refresh';
         $scope.reportStatus.contentShared = 'refresh';
-        ReportsService.getAllMetrics(useCache);
+        ReportsService.getLandingMetrics(useCache);
       };
 
-      ReportsService.getAllMetrics(true);
+      ReportsService.getLandingMetrics(true);
 
       var makeChart = function (id, colors) {
         return AmCharts.makeChart(id, {
@@ -72,6 +74,11 @@ angular.module('Core')
             'gridAlpha': 1,
             'gridColor': '#DDDDDD',
             'color': '#999999'
+          },
+          'numberFormatter': {
+            'precision': 0,
+            'decimalSeparator': '.',
+            'thousandsSeparator': ','
           },
           'valueAxes': [{
             'axisColor': '#DDDDDD',
@@ -211,86 +218,6 @@ angular.module('Core')
           if (data.success) {
             $scope.healthMetrics = data.components;
             $scope.isCollapsed = true;
-            // $scope.healthMetricsSections = [{
-            //   "name": "Network",
-            //   "status": "operational",
-            //   "healthMetrics": [{
-            //     "status": "operational",
-            //     "name": "External Networks",
-            //     "created_at": "2014-07-24T17:41:24.922Z",
-            //     "updated_at": "2014-09-15T16:37:13.469Z",
-            //     "position": 3,
-            //     "description": "External network events which may impact Squared users",
-            //     "group_id": null,
-            //     "id": "j54d6vsjp6m2",
-            //     "page_id": "hxh0qmnx70tn"
-            //   }]
-            // }, {
-            //   "name": "Services",
-            //   "status": "no",
-            //   "healthMetrics": [{
-            //     "status": "operational",
-            //     "name": "Administration Portal",
-            //     "created_at": "2014-07-24T17:41:24.922Z",
-            //     "updated_at": "2014-09-15T16:37:13.469Z",
-            //     "position": 1,
-            //     "description": null,
-            //     "group_id": null,
-            //     "id": "kdy73b0dwzr0",
-            //     "page_id": "hxh0qmnx70tn"
-            //   }, {
-            //     "status": "operational",
-            //     "name": "Conversations",
-            //     "created_at": "2014-07-24T17:41:24.922Z",
-            //     "updated_at": "2014-09-15T16:37:13.469Z",
-            //     "position": 2,
-            //     "description": null,
-            //     "group_id": null,
-            //     "id": "2p7k5h7wc114",
-            //     "page_id": "hxh0qmnx70tn"
-            //   }, {
-            //     "status": "no",
-            //     "name": "Media / Calling",
-            //     "created_at": "2014-07-24T17:41:24.922Z",
-            //     "updated_at": "2014-09-15T16:37:13.469Z",
-            //     "position": 3,
-            //     "description": null,
-            //     "group_id": null,
-            //     "id": "q8qzmmqhhjwp",
-            //     "page_id": "hxh0qmnx70tn"
-            //   }, {
-            //     "status": "operational",
-            //     "name": "Mobile Clients",
-            //     "created_at": "2014-07-24T17:41:24.922Z",
-            //     "updated_at": "2014-09-15T16:37:13.469Z",
-            //     "position": 4,
-            //     "description": "iOS and Android clients",
-            //     "group_id": null,
-            //     "id": "kdsghl9qr3nn",
-            //     "page_id": "hxh0qmnx70tn"
-            //   }, {
-            //     "status": "operational",
-            //     "name": "Profile Pictures",
-            //     "created_at": "2014-07-24T17:41:24.922Z",
-            //     "updated_at": "2014-09-15T16:37:13.469Z",
-            //     "position": 5,
-            //     "description": null,
-            //     "group_id": null,
-            //     "id": "4b2vkf1c7yqs",
-            //     "page_id": "hxh0qmnx70tn"
-            //   }, {
-            //     "status": "operational",
-            //     "name": "Web and Desktop Clients",
-            //     "created_at": "2014-07-24T17:41:24.922Z",
-            //     "updated_at": "2014-09-15T16:37:13.469Z",
-            //     "position": 6,
-            //     "description": null,
-            //     "group_id": null,
-            //     "id": "028z71zrzf6b",
-            //     "page_id": "hxh0qmnx70tn"
-            //   }]
-            // }];
-
           } else {
             Log.debug('Query active users metrics failed. Status: ' + status);
           }

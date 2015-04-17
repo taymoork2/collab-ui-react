@@ -1,13 +1,15 @@
 <div class="reports-container">
   <div class="row">
-    <div ng-click="manualReload(false)" class="overview-updated" id="reports-click-div">
+    <div ng-click="manualReload(false)" class="overview-updated col-xs-12" id="reports-click-div">
       <cr-reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime">
       </cr-reload-data>
     </div>
   </div>
-  <div class="row onboarding-row">
-    <div id="onboardingFunnelDiv" class="timechartDiv"></div>
+  <div class="row">
+    <div class="col-sm-12 funnel-div">
+      <div id="onboardingFunnelDiv" class="timechartDiv"></div>
       <div id="onboarding-funnel-refresh" class="metrics-refresh" ng-show="showOnboardingFunnelRefresh"><i class='icon icon-spinner icon-2x'/></div>
+    </div>
   </div>
   <div class="row" ng-show="false">
     <div class="all-reports col-sm-6">

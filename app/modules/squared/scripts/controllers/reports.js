@@ -2,8 +2,8 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate',
-    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config, $translate) {
+  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate', '$log',
+    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config, $translate, $log) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
@@ -18,6 +18,7 @@ angular.module('Squared')
       $('#onboardingFunnelDiv').addClass('chart-border');
 
       var chartVals = [];
+      var weekOf = $translate.instant('reports.weekOf');
 
       var formatDates = function (dataList) {
         if (angular.isArray(dataList)) {
@@ -121,42 +122,50 @@ angular.module('Squared')
 
       $scope.$on('avgConversationsLoaded', function (event, response) {
         label = $translate.instant('reports.AvgRoomsPerUser');
-        getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', label, Config.chartColors.yellow, 'average');
+        var axis = $translate.instant('reports.numberOfRoomsAxis');
+        getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', label, Config.chartColors.yellow, 'average', axis);
       });
 
       $scope.$on('activeUsersLoaded', function (event, response) {
         label = $translate.instant('reports.ActiveUsers');
-        getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', label, Config.chartColors.green, 'sum');
+        var axis = $translate.instant('reports.numberActiveAxis');
+        getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', label, Config.chartColors.green, 'average', axis);
       });
 
       $scope.$on('convOneOnOneLoaded', function (event, response) {
         label = $translate.instant('reports.OneOnOneRooms');
-        getCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', label, Config.chartColors.blue, 'sum');
+        var axis = $translate.instant('reports.oneRoomAxis');
+        getCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', label, Config.chartColors.blue, 'sum', axis);
       });
 
       $scope.$on('convGroupLoaded', function (event, response) {
         label = $translate.instant('reports.GroupRooms');
-        getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', label, Config.chartColors.red, 'sum');
+        var axis = $translate.instant('reports.groupRoomsAxis');
+        getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', label, Config.chartColors.red, 'sum', axis);
       });
 
       $scope.$on('callsLoaded', function (event, response) {
         label = $translate.instant('reports.VideoCalls');
-        getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', label, Config.chartColors.yellow, 'sum');
+        var axis = $translate.instant('reports.videoCallsAxis');
+        getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', label, Config.chartColors.yellow, 'sum', axis);
       });
 
       $scope.$on('callsAvgDurationLoaded', function (event, response) {
         label = $translate.instant('reports.AvgDurationofCalls');
-        getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', label, Config.chartColors.green, 'average');
+        var axis = $translate.instant('reports.avgCallsAxis');
+        getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', label, Config.chartColors.green, 'average', axis);
       });
 
       $scope.$on('contentSharedLoaded', function (event, response) {
         label = $translate.instant('reports.ContentShared');
-        getCharts(response, 'contentShared', 'contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', label, Config.chartColors.blue, 'sum');
+        var axis = $translate.instant('reports.filesSharedAxis');
+        getCharts(response, 'contentShared', 'contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', label, Config.chartColors.blue, 'sum', axis);
       });
 
       $scope.$on('contentShareSizesLoaded', function (event, response) {
         label = $translate.instant('reports.AmountofContentShared');
-        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', label, Config.chartColors.red, 'sum');
+        var axis = $translate.instant('reports.gbSharedAxis');
+        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', label, Config.chartColors.red, 'sum', 'axis');
       });
 
       $scope.$on('onboardingFunnelLoaded', function (event, response) {
@@ -219,7 +228,7 @@ angular.module('Squared')
         return count;
       };
 
-      var getCharts = function (response, type, divName, refreshDivName, refreshVarName, title, color, operation) {
+      var getCharts = function (response, type, divName, refreshDivName, refreshVarName, title, color, operation, yAxisTitle) {
         var avCount = 0;
         var shouldShowCursor = true;
         $scope[refreshVarName] = false;
@@ -244,7 +253,7 @@ angular.module('Squared')
           if (operation === 'funnel') {
             makeFunnelChart(response.data.data, divName, type, title, color, operation, shouldShowCursor);
           } else {
-            makeTimeChart(chartVals, divName, type, title, color, operation, shouldShowCursor);
+            makeTimeChart(chartVals, divName, type, title, color, operation, shouldShowCursor, weekOf, yAxisTitle);
           }
 
         } else {
@@ -259,11 +268,19 @@ angular.module('Squared')
         });
       };
 
+      var dscMap = {
+        organization_size: $translate.instant('reports.orgDsc'),
+        onboarded: $translate.instant('reports.onboardDsc'),
+        active_last_week: $translate.instant('reports.activeDsc'),
+      };
+
       var formatData = function (data) {
         data.reverse();
         for (var idx in data) {
-          data[idx].title = (data[idx].title).replace('_', ' ');
+          data[idx].info = dscMap[data[idx].title];
+          data[idx].title = (data[idx].title).replace(/_/g, ' ');
           data[idx].title = capitalizeEachWord(data[idx].title);
+          $log.log(data[idx]);
         }
       };
 
@@ -288,7 +305,7 @@ angular.module('Squared')
           'startX': 0,
           'startAlpha': 0,
           'outlineThickness': 1,
-          'balloonText': '[[title]]:<b>[[value]]</b>',
+          'balloonText': '[[info]]',
           'marginTop': 20,
           'marginBottom': 10,
           'graphs': [{
@@ -319,7 +336,7 @@ angular.module('Squared')
         });
       };
 
-      var makeTimeChart = function (sdata, divName, metricName, title, color, operation, shouldShowCursor) {
+      var makeTimeChart = function (sdata, divName, metricName, title, color, operation, shouldShowCursor, xAxisTitle, yAxisTitle) {
         if (sdata.length === 0) {
           formatDates(dummyChartVals);
           sdata = dummyChartVals;
@@ -352,7 +369,9 @@ angular.module('Squared')
             'axisColor': '#DDDDDD',
             'gridAlpha': 0,
             'axisAlpha': 1,
-            'color': '#999999'
+            'color': '#999999',
+            'title': yAxisTitle,
+            'titleColor': '#999999'
           }],
           'graphs': [{
             'type': 'column',
@@ -387,7 +406,9 @@ angular.module('Squared')
             'axisColor': '#DDDDDD',
             'gridAlpha': 1,
             'gridColor': '#DDDDDD',
-            'color': '#999999'
+            'color': '#999999',
+            'title': xAxisTitle,
+            'titleColor': '#999999'
           }
         });
       };
