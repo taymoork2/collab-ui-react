@@ -27,11 +27,11 @@
         }
       }; // btnReload()
 
-      this.btnSave = function () {
+      this.btnSave = function (form) {
         var funcName = "btnSave()";
         var logMsg = "";
 
-        WebExUserSettingsFact.updateUserSettings();
+        WebExUserSettingsFact.updateUserSettings(form);
       }; // btnSave()
 
       this.initPanel = function () {
@@ -41,6 +41,12 @@
       this.getUserSettingsInfo = function () {
         WebExUserSettingsFact.getUserSettingsInfo();
       }; // getUserSettingsInfo()
+
+      this.reset = function (form) {
+        form.$setPristine();
+        form.$setUntouched();
+        this.getUserSettingsInfo();
+      }; //reset()
 
       //----------------------------------------------------------------------//
 

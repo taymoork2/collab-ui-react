@@ -25,7 +25,6 @@
       Config
     ) {
 
-      $scope.userSettingsView.form.$dirty = false;
       $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
       $scope.adminEmailParam = Authinfo.getUserName();
       $scope.userEmailParam = $stateParams.currentUser.userName;
@@ -83,7 +82,7 @@
         }
       }; // hiQualVideoChkboxClick()
 
-      this.btnSave2 = function () {
+      this.btnSave2 = function (form) {
         var funcName = "btnSave2()";
         var logMsg = "";
 
@@ -109,8 +108,14 @@
           "toll.value=" + this.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value + "\n" +
           "tollFree.value=" + this.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
 
-        WebExUserSettingsFact.updateUserSettings2();
+        WebExUserSettingsFact.updateUserSettings2(form);
       }; // btnSave2()
+
+      this.reset2 = function (form) {
+        form.$setPristine();
+        form.$setUntouched();
+        WebExUserSettingsFact.getUserSettingsInfo();
+      }; //reset()
 
       //----------------------------------------------------------------------//
 

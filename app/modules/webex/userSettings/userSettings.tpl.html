@@ -1,4 +1,8 @@
 <form name="userSettingsView.form" novalidate role="form">
+<cs-sp-buttons ng-show="userSettingsView.form.$dirty">
+	<button class="btn-primary" translate="common.save" ng-click="WebExUserSettings.btnSave(userSettingsView.form)" type="submit"></button>
+	<button class="btn-default" translate="common.cancel" ng-click="WebExUserSettings.reset(userSettingsView.form)"></button>
+</cs-sp-buttons>
 <cs-sp-container>
   <cs-sp-section>
     <div id="errSection"
@@ -181,28 +185,12 @@
       </div>
       <!-- End of Training Center -->
 
-      <hr>
-      
-      <!-- Start of Action Buttons (will be removed) -->
-      <p align="left">
-        <button id="saveBtn"
-                name="saveBtn"
-                type="button"
-                class="btn btn-info btn-save"
-                ng-disabled="!userSettingsView.form.$dirty"
-                ng-click="WebExUserSettings.btnSave()"
-                data-loading-text="<i class='icon icon-spinner'></i>">
-                
-          Save
-        </button>
-      </p>
-      <!-- End of Action Buttons -->
-	  </form>
+      <hr ng-if="!userSettingsView.form.$dirty">
 	  
       <div class="feature-list" ng-binding>
         <ul>
           <li class="feature">
-            <a id="webex-user-privs" ui-sref="user-overview.conferencing.webex.webex2">
+            <a id="webex-user-privs" ui-sref="user-overview.conferencing.webex.webex2" ng-if="!userSettingsView.form.$dirty">
               <span class="feature-name" ng-binding>
                 <span translate="webexUserSettingLabels.userPriviligesLabel"></span>
               </span>
@@ -215,4 +203,4 @@
     </div>
   </cs-sp-section>
 </cs-sp-container>
-
+</form>

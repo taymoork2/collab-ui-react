@@ -549,7 +549,7 @@
           ); // WebExUserSettingsFact.getUserSettingsInfoXml()
         }, // getUserSettingsInfo()
 
-        updateUserSettings: function () {
+        updateUserSettings: function (form) {
           var funcName = "updateUserSettings()";
           var logMsg = "";
 
@@ -577,6 +577,8 @@
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
               angular.element('#saveBtn').button('reset');
+              form.$dirty = false;
+              form.$setPristine();
 
               var successMsg = $translate.instant("webexUserSettings.sessionEnablementUpdateSuccess");
               _self.processUpdateSuccessResult(
@@ -592,7 +594,7 @@
           );
         }, // updateUserSettings()
 
-        updateUserSettings2: function () {
+        updateUserSettings2: function (form) {
           var funcName = "updateUserSettings2()";
           var logMsg = "";
 
@@ -638,6 +640,8 @@
           XmlApiFact.updateUserSettings2(xmlApiInfo).then(
             function updateUserSettings2Success(result) {
               angular.element('#saveBtn2').button('reset');
+              form.$dirty = false;
+              form.$setPristine();
 
               var successMsg = $translate.instant("webexUserSettings.privilegesUpdateSuccess");
               _self.processUpdateSuccessResult(
