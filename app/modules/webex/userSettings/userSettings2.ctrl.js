@@ -26,7 +26,9 @@
     ) {
 
       $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
-      $scope.adminEmailParam = Authinfo.getUserName();
+      $scope.adminEmailParam = Authinfo.getPrimaryEmail();
+      $log.log("Chandra");
+      $log.log($scope.adminEmailParam);
       $scope.userEmailParam = $stateParams.currentUser.userName;
       var locale = $translate.use();
       if (locale == "jp_JA") {

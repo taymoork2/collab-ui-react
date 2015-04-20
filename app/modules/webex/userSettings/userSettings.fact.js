@@ -147,7 +147,7 @@
         ) {
           xmlApiInfo.xmlServerURL = "https://" + webexSiteUrl + "/WBXService/XMLService";
           xmlApiInfo.webexSiteName = webexSiteName;
-          xmlApiInfo.webexAdminID = Authinfo.getUserName();
+          xmlApiInfo.webexAdminID = Authinfo.getPrimaryEmail();
           xmlApiInfo.webexAdminSessionTicket = webexAdminSessionTicket;
           xmlApiInfo.webexUserId = $stateParams.currentUser.userName;
         }, // initXmlApiInfo()

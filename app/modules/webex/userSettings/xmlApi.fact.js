@@ -317,7 +317,7 @@
           var xmlApiAccessInfo = {
             xmlServerURL: "https://" + wbxSiteUrl + "/WBXService/XMLService",
             wbxSiteName: wbxSiteName,
-            webexAdminID: Authinfo.getUserName(),
+            webexAdminID: Authinfo.getPrimaryEmail(),
             accessToken: $rootScope.token
           };
 
