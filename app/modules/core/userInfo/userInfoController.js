@@ -17,6 +17,9 @@ angular.module('Core')
 
       Userservice.getUser('me', function (data, status) {
         if (data.success) {
+          if (data.emails) {
+            Authinfo.setEmail(data.emails);
+          }
           if (data.photos) {
             for (var i in data.photos) {
               if (data.photos[i].type === 'thumbnail') {

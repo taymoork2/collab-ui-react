@@ -1,6 +1,5 @@
 'use strict';
-// jshint devel:true
-// jshint undef:false
+
 angular.module('Core')
   .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', '$filter',
     function Authinfo($rootScope, $location, Utils, Config, $filter) {
@@ -39,7 +38,8 @@ angular.module('Core')
         'messageServices': null,
         'conferenceServices': null,
         'communicationServices': null,
-        'hasAccount': false
+        'hasAccount': false,
+        'email': null
       };
 
       var getTabTitle = function (title) {
@@ -159,6 +159,21 @@ angular.module('Core')
           authData.roles = [];
           authData.isInitialized = false;
           authData.setupDone = null;
+          authData.email = null;
+        },
+        setEmail: function (data) {
+          authData.email = data;
+        },
+        getEmail: function () {
+          return authData.email;
+        },
+        getPrimaryEmail: function () {
+          for (var emails in authData.email) {
+            if (authData.email[emails].primary === true) {
+              return authData.email[emails].value;
+            }
+            return null;
+          }
         },
         updateAccountInfo: function (data) {
           if (data) {

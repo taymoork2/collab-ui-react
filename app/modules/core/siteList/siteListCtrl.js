@@ -6,7 +6,7 @@ angular.module('Core')
       var vm = this;
 
       vm.siteLaunch = {
-        adminEmailParam: Authinfo.getUserName(),
+        adminEmailParam: Authinfo.getPrimaryEmail(),
         advancedSettings: null,
         userEmailParam: null,
       };
