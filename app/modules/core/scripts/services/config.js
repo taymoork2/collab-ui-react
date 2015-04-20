@@ -646,6 +646,7 @@ angular.module('Core')
           'overview',
           'users',
           'user-overview',
+          'device-overview',
           'userprofile',
           'reports',
           'setupwizardmodal',

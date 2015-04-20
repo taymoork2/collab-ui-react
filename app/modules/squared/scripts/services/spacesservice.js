@@ -59,7 +59,27 @@ angular.module('Squared')
           } else {
             callback('No valid device available to delete.');
           }
+        },
 
+        getDeviceStatus: function (deviceUuid, i, callback) {
+
+          if ((deviceUuid !== null) && (deviceUuid.length > 0)) {
+            var getStatusUrl = deviceUrl + '/' + deviceUuid + '/status';
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+            $http.get(getStatusUrl)
+              .success(function (data, status) {
+                data.success = true;
+                callback(data, i, status);
+              })
+              .error(function (data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, i, status);
+                Auth.handleStatus(status);
+              });
+          } else {
+            callback('No valid device available.');
+          }
         }
       };
     }

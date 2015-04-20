@@ -2,8 +2,8 @@
 /* global moment, $ */
 
 angular.module('Squared')
-  .controller('SpacesCtrl', ['$location', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Notification', '$log',
-    function ($location, Storage, Log, Utils, $filter, SpacesService, Notification, $log) {
+  .controller('SpacesCtrl', ['$state', '$location', 'Storage', 'Log', 'Utils', '$filter', 'SpacesService', 'Notification', '$log', '$translate',
+    function ($state, $location, Storage, Log, Utils, $filter, SpacesService, Notification, $log, $translate) {
       var vm = this;
 
       vm.totalResults = null;
@@ -68,9 +68,10 @@ angular.module('Squared')
 
                 var color, deviceStatus;
                 if (device.status === 'CLAIMED') {
-                  deviceStatus = 'Active';
+                  deviceStatus = 'Offline';
                 } else if (device.status === 'UNCLAIMED') {
-                  deviceStatus = 'Pending Activation: ';
+                  deviceStatus = 'Needs Activation';
+                  color = 'device-status-yellow';
                 }
 
                 devices.push({
@@ -79,11 +80,14 @@ angular.module('Squared')
                   'status': deviceStatus,
                   'activationDate': adate,
                   'deviceUuid': device.accountCisUuid,
-                  'color': color
+                  'color': color,
+                  'serial': device.serial,
+                  'mac': device.mac
                 });
               }
             }
             vm.roomData = devices;
+            getDevicesStatus();
           } else {
             Log.error('Error getting rooms. Status: ' + status);
           }
@@ -92,13 +96,55 @@ angular.module('Squared')
 
       getAllDevices();
 
+      var getDevicesStatus = function () {
+        for (var i = 0; i < vm.roomData.length; i++) {
+          if (vm.roomData[i].status !== 'Needs Activation') {
+            SpacesService.getDeviceStatus(vm.roomData[i].deviceUuid, i, function (data, i, status) {
+              if (data.success === true) {
+                if (data.cisUuid === vm.roomData[i].deviceUuid) {
+                  vm.roomData[i].events = data.events;
+                  if (data.status === 'reachable') {
+                    vm.roomData[i].status = 'Active';
+                    vm.roomData[i].color = 'device-status-green';
+                  } else {
+                    vm.roomData[i].status = 'Offline';
+                    vm.roomData[i].color = 'device-status-gray';
+                  }
+                  vm.roomData[i].diagEvents = [];
+                  for (var j = 0; j < data.events.length; j++) {
+                    var event = data.events[j];
+                    if (event.type.toLowerCase() === 'tcpfallback' && event.level.toLowerCase() != 'ok') {
+                      vm.roomData[i].diagEvents.push({
+                        'type': $translate.instant('spacesPage.videoQTitle'),
+                        'message': $translate.instant('spacesPage.videoQMsg')
+                      });
+                      vm.roomData[i].status = 'Issues Detected';
+                      vm.roomData[i].color = 'device-status-red';
+                    }
+                  }
+                } else {
+                  Log.error('table changed.');
+                }
+              } else {
+                Log.error('Error getting device status. Status: ' + status);
+              }
+            });
+          }
+        }
+      };
+
+      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="sc.showDeviceDetails(row.entity)">' +
+        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
+        '<div ng-cell></div>' +
+        '</div>';
+
       var roomTemplate = '<div class="ngCellText"><div class="device-name-desc">{{row.getProperty(col.field)}}</div></div>';
 
       var deviceCellTemplate = '<div class="ngCellText"><img class="device-img" src="images/SX10.png"/><div class="device-icon-desc">SX10</div></div>';
 
-      var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'Active\', \'device-status-red\': row.getProperty(col.field) !== \'Active\'}"></i>' +
-        '<div ng-class="{\'device-status-nocode\': row.getProperty(col.field)===\'Active\', \'ngCellText ngCellTextCustom\': row.getProperty(col.field) !== \'Active\'}"><p class="device-status-pending">{{row.getProperty(col.field)}}</p>' +
-        '<p ng-if="row.getProperty(col.field) !== \'Active\'">{{row.getProperty(\'code\')}}</p></div>';
+      var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="row.getProperty(\'color\')"></i>' +
+        '<div ng-class="{\'device-status-nocode\': row.getProperty(col.field)!==\'Needs Activation\', \'ngCellText ngCellTextCustom\': row.getProperty(col.field) === \'Needs Activation\'}"><p class="device-status-pending">{{row.getProperty(col.field)}}</p>' +
+        '<p ng-if="row.getProperty(col.field) === \'Needs Activation\'">{{row.getProperty(\'code\')}}</p></div>';
 
       var actionsTemplate = '<span dropdown class="device-align-ellipses">' +
         '<button id="actionlink" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
@@ -116,6 +162,7 @@ angular.module('Squared')
         showFilter: false,
         rowHeight: 75,
         headerRowHeight: 44,
+        rowTemplate: rowTemplate,
         sortInfo: {
           fields: ['status'],
           directions: ['asc']
@@ -141,6 +188,16 @@ angular.module('Squared')
           sortable: false,
           cellTemplate: actionsTemplate
         }]
+      };
+
+      vm.showDeviceDetails = function (device) {
+        //Service profile
+        vm.currentDevice = device;
+        vm.querydeviceslist = vm.roomData;
+        $state.go('device-overview', {
+          currentDevice: vm.currentDevice,
+          querydeviceslist: vm.querydeviceslist
+        });
       };
 
       vm.resetAddDevice = function () {

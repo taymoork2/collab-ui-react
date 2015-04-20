@@ -362,6 +362,26 @@ angular
             displayName: 'Roles'
           }
         })
+        .state('device-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'DeviceOverviewCtrl',
+              controllerAs: 'deviceOverview',
+              templateUrl: 'modules/squared/deviceOverview/deviceOverview.tpl.html'
+            },
+            'header@device-overview': {
+              templateUrl: 'modules/squared/deviceOverview/deviceHeader.tpl.html'
+            }
+          },
+          params: {
+            currentDevice: {},
+            querydeviceslist: {}
+          },
+          data: {
+            displayName: ''
+          }
+        })
         // .state('users.list.preview', {
         //     templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
         //     controller: 'UserPreviewCtrl'
