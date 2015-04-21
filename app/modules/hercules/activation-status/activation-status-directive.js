@@ -20,7 +20,7 @@
         });
       };
 
-      var poll = function() {
+      var poll = function () {
         $interval.cancel(pollPromise);
         pollPromise = $interval(
           _.bind(updateStatusForUser, this, $stateParams.currentUser.id),

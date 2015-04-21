@@ -9,7 +9,7 @@
         </div>
       </div>
 
-      <div class="list" style="padding-left: 20px" ng-hide="host.state == 'offline'">
+      <div class="list" style="padding-left: 20px">
         <div ng-repeat="service in host.services" style="padding-bottom: 15px;">
           <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-class="service.status">
             <i class="fa fa-circle" />
