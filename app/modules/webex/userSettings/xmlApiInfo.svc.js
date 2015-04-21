@@ -9,5 +9,5 @@ angular.module('WebExUserSettings')
         webexSessionTicket: "",
         webexUserId: ""
       }; // return
-    } // XmlApiConstants
-  ]); // service
+    } // XmlApiInfo()
+  ]); // service()

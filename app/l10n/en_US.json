@@ -1130,7 +1130,7 @@
     "039009": "039009",
     "defaultProcessError": "Unable to process request.",
     "defaultAccessError": "Unable to access server at this time",
-    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
+    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Session Enablement",

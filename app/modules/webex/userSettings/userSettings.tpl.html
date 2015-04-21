@@ -1,19 +1,28 @@
 <form name="userSettingsView.form" novalidate role="form">
 <cs-sp-buttons ng-show="userSettingsView.form.$dirty">
-	<button class="btn-primary" translate="common.save" ng-click="WebExUserSettings.btnSave(userSettingsView.form)" type="submit"></button>
-	<button class="btn-default" translate="common.cancel" ng-click="WebExUserSettings.reset(userSettingsView.form)"></button>
+  <button class="btn-primary"
+          translate="common.save"
+          ng-click="WebExUserSettings.btnSave(userSettingsView.form)"
+          type="submit">
+  </button>
+  
+  <button class="btn-default"
+          translate="common.cancel"
+          ng-click="WebExUserSettings.reset(userSettingsView.form)">
+  </button>
 </cs-sp-buttons>
+
 <cs-sp-container>
   <cs-sp-section>
     <div id="errSection"
          name="errSection"
-         ng-if="WebExUserSettings.userSettingsModel.loadError">
+         ng-if="WebExUserSettings.userSettingsModel.hasLoadError">
        
       <div class="center">
         <div ng-if="WebExUserSettings.userSettingsModel.allowRetry"
              class="nodata-icon">
              
-		      <span class="icon icon-circle-clock"></span> 
+          <span class="icon icon-circle-clock"></span> 
         </div>
         
         <div class="nodata-message">
@@ -186,7 +195,7 @@
       <!-- End of Training Center -->
 
       <hr ng-if="!userSettingsView.form.$dirty">
-	  
+    
       <div class="feature-list" ng-binding>
         <ul>
           <li class="feature">
