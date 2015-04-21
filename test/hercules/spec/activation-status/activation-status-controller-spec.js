@@ -80,7 +80,7 @@ describe('ActivationStatusController', function () {
     });
 
     it('polls CI and reloads data for a user', function () {
-      expect($scope.inflight).toBeTruthy();
+      expect($scope.inflight).toBeFalsy();
       expect(service.pollCIForUser.callCount).toBe(0);
 
       $scope.reload();
