@@ -123,6 +123,14 @@ describe('Controller: LineSettingsCtrl', function () {
     });
   });
 
+  describe('callerId should be UserName', function () {
+    it('should set callerId as UserName', function () {
+      expect(controller.callerIdInfo).toBeDefined();
+      expect(controller.callerIdInfo.default).toBe("CurrentUser");
+    });
+
+  });
+
   describe('saveLineSettings', function () {
     beforeEach(function () {
       controller.forward = 'none';
