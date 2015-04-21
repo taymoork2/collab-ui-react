@@ -27,7 +27,8 @@
               <div>
                 <span translate="{{'hercules.status.' + (service.state || 'not_installed') }}"></span>
               </div>
-              <div ng-show="service.software_upgrade_available">
+              <div ng-show="service.software_upgrade_available" style="color: #00c1aa">
+                <i class="fa fa-cloud-upload" style="color: #00c1aa; margin-right: 2px;" />
                 Software upgrade available.
               </div>
               <div class="clearfix" ng-show="service.alarm_count">
