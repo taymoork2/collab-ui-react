@@ -1019,11 +1019,15 @@
     "030050": "L'utente non supporta le chiamate su Internet (VoIP).",
     "030051": "Numero di profilo Cisco Unified MeetingPlace {0} in uso.",
     "030052": "030052",
-    "030053": "forceChangePassword deve essere "true" se resetPassword è impostato su "true".",
+    "030053": "forceChangePassword deve essere "
+    true " se resetPassword è impostato su "
+    true ".",
     "030054": "L'utente non supporta la registrazione della formazione.",
-    "030055": "resetPassword deve essere "true" se SiteAdmin non speficica la password utente.",
+    "030055": "resetPassword deve essere "
+    true " se SiteAdmin non speficica la password utente.",
     "030056": "L'amministratore del sito non può impostare la password per l'utente.",
-    "030057": "È già richiesto che l'utente modifichi la password al successivo accesso. Impossibile impostare forceChangePassword su "false" ora.",
+    "030057": "È già richiesto che l'utente modifichi la password al successivo accesso. Impossibile impostare forceChangePassword su "
+    false " ora.",
     "030058": "Password non consentita. Le password possono includere solo caratteri A-Z, az, 0-9 e segni di interpunzione comuni tranne le virgolette.",
     "030059": "Account utente non confermato.",
     "030060": "La lingua specificata non è valida.",
