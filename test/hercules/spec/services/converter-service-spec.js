@@ -94,7 +94,6 @@ describe('ConverterService', function () {
       }]
     }];
     var converted = Service.convertClusters(mockData);
-    expect(converted[0].services[0].is_disabled).toBe(true);
     expect(!!converted[0].services[0].needs_attention).toBe(false);
   });
 
@@ -117,7 +116,6 @@ describe('ConverterService', function () {
     var converted = Service.convertClusters(mockData);
     expect(converted[0].running_hosts).toBeTruthy();
     expect(converted[0].services[0].running_hosts).toBe(2);
-    expect(!!converted[0].services[0].is_disabled).toBe(false);
     expect(!!converted[0].services[0].needs_attention).toBe(false);
   });
 
@@ -572,90 +570,176 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].state).toBe('needs_attention');
   });
 
-  it('should aggregate status to hosts', function () {
-    var mockData = [{
-      hosts: [{
-        serial: 1,
-        host_name: "host_name"
-      }],
-      services: [{
-        service_type: "foo",
-        connectors: [{
-          state: "offline",
-          version: 'bar_version',
-          host: {
-            host_name: 'host_name',
-            serial: 1
-          }
+  describe('connector state to service and connector status conversion', function () {
+
+    it('if service has alarm on a host, it should have status needs_attention', function () {
+      var mockData = [{
+        hosts: [{
+          serial: 1
+        }, {
+          serial: 2
+        }, {
+          serial: 3
+        }],
+        services: [{
+          service_type: "foo",
+          connectors: [{
+            state: "running",
+            host: {
+              serial: 1
+            }
+          }, {
+            state: "running",
+            host: {
+              serial: 2
+            },
+            alarms: [{}]
+          }, {
+            state: "running",
+            host: {
+              serial: 3
+            }
+          }]
         }]
-      }]
-    }];
-    var converted = Service.convertClusters(mockData);
-    expect(converted[0].hosts[0].state).toBe('offline');
+      }];
+
+      var converted = Service.convertClusters(mockData);
+      expect(converted[0].services[0].status).toBe('needs_attention');
+    });
+
+    it('should aggregate status to service and connector where connector state differs', function () {
+      var mockData = [{
+        hosts: [{
+          serial: 1
+        }, {
+          serial: 2
+        }],
+        services: [{
+          service_type: "foo",
+          connectors: [{
+            state: "running",
+            host: {
+              serial: 1
+            }
+          }, {
+            state: "offline",
+            host: {
+              serial: 2
+            }
+          }]
+        }]
+      }];
+      var converted = Service.convertClusters(mockData);
+      expect(converted[0].services[0].status).toBe('needs_attention');
+
+      expect(converted[0].services[0].connectors[0].status).toBe('running');
+      expect(converted[0].services[0].connectors[1].status).toBe('needs_attention');
+    });
+
   });
 
-  it('should aggregate mixed status to hosts as needs_attention', function () {
-    var mockData = [{
-      hosts: [{
-        serial: 1,
-        host_name: "host_name"
-      }],
-      services: [{
-        service_type: "foo",
-        connectors: [{
-          state: "offline",
-          version: 'bar_version',
-          host: {
-            host_name: 'host_name',
-            serial: 1
-          }
-        }, {
-          state: "online",
-          version: 'bar_version',
-          host: {
-            host_name: 'host_name',
-            serial: 1
-          }
-        }]
-      }]
-    }];
-    var converted = Service.convertClusters(mockData);
-    expect(converted[0].hosts[0].state).toBe('needs_attention');
-  });
+  describe('host state to status conversion', function () {
 
-  it('should aggregate status to service and host', function () {
-    var mockData = [{
-      hosts: [{
-        serial: 1,
-        host_name: "host_name"
-      }, {
-        serial: 2,
-        host_name: "host_name2"
-      }],
-      services: [{
-        service_type: "foo",
-        connectors: [{
-          state: "running",
-          version: 'bar_version',
-          host: {
-            host_name: 'host_name',
-            serial: 1
-          }
-        }, {
-          state: "offline",
-          version: 'bar_version',
-          host: {
-            host_name: 'host_name2',
-            serial: 2
-          }
+    it('should aggregate mixed status to hosts as needs_attention', function () {
+      var mockData = [{
+        hosts: [{
+          serial: 1
+        }],
+        services: [{
+          service_type: "foo",
+          connectors: [{
+            state: "offline",
+            host: {
+              serial: 1
+            }
+          }, {
+            state: "online",
+            host: {
+              serial: 1
+            }
+          }]
         }]
-      }]
-    }];
-    var converted = Service.convertClusters(mockData);
-    expect(converted[0].services[0].status).toBe('needs_attention');
+      }];
+      var converted = Service.convertClusters(mockData);
+      expect(converted[0].hosts[0].state).toBe('needs_attention');
+    });
 
-    expect(converted[0].services[0].connectors[0].status).toBe('running');
-    expect(converted[0].services[0].connectors[1].status).toBe('needs_attention');
+    it('host with mixed status for different services should have state needs_attention', function () {
+      var mockData = [{
+        hosts: [{
+          serial: 1
+        }],
+        services: [{
+          service_type: "foo",
+          connectors: [{
+            state: "running",
+            host: {
+              serial: 1
+            }
+          }]
+        }, {
+          service_type: "bar",
+          connectors: [{
+            state: "disabled",
+            host: {
+              serial: 1
+            }
+          }]
+        }]
+      }];
+
+      var converted = Service.convertClusters(mockData);
+      expect(converted[0].hosts[0].status).toBe('needs_attention');
+    });
+
+    it('should aggregate status to hosts', function () {
+      var mockData = [{
+        hosts: [{
+          serial: 1
+        }],
+        services: [{
+          service_type: "foo",
+          connectors: [{
+            state: "offline",
+            host: {
+              serial: 1
+            }
+          }]
+        }]
+      }];
+      var converted = Service.convertClusters(mockData);
+      expect(converted[0].hosts[0].state).toBe('offline');
+    });
+
+    it('should aggregate alarms to hosts', function () {
+      var mockData = [{
+        hosts: [{
+          serial: 1
+        }],
+        services: [{
+          service_type: "foo",
+          connectors: [{
+            state: "offline",
+            host: {
+              serial: 1
+            },
+            alarms: [{}]
+          }]
+        }, {
+          service_type: "bar",
+          connectors: [{
+            state: "offline",
+            host: {
+              serial: 1
+            },
+            alarms: [{}, {}]
+          }]
+        }]
+      }];
+      var converted = Service.convertClusters(mockData);
+      expect(converted[0].hosts[0].alarms.length).toBe(3);
+    });
+
   });
 
 });

@@ -20,14 +20,6 @@
             Pending software upgrade to {{connector.software_upgrade_pending}}
           </span>
         </div>
-        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;" ng-show="connector.alarms.length">
-          <span ng-show="connector.alarms.length==1">
-            {{connector.alarms.length}} reported alarm
-          </span>
-          <span ng-hide="connector.alarms.length==1">
-            {{connector.alarms.length}} reported alarms
-          </span>
-        </div>
       </a>
     </div>
     <div ng-hide="service.connectors.length" class="list">
@@ -51,7 +43,7 @@
         </div>
 
         <div ng-repeat="alarm in connector.alarms" style="padding-bottom: 5px;" class="clearfix">
-          <span style="color: #f05d3b; text-transform: capitalize;">{{alarm.severity}}:</span>
+          <span ng-class="alarm.severity == 'error' ? 'red' : 'yellow'" style="text-transform: capitalize;">{{alarm.severity}}:</span>
           <span>{{alarm.title}}.</span>
           <span>{{alarm.description}}</span>
         </div>

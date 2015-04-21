@@ -36,32 +36,46 @@ angular.module('Hercules')
       };
 
       var updateServiceStatus = function (service, cluster) {
-        service.running_hosts = 0;
         service.alarm_count = 0;
+
+        service.running_hosts = _.reduce(service.connectors, function (num, con) {
+          if (con.state == 'running') {
+            return ++num;
+          } else {
+            return num;
+          }
+        }, 0);
+
         _.each(service.connectors, function (connector) {
+          connector.alarms = sortBySeverity(connector.alarms);
+
           if (service.state && connector.state != service.state) {
             service.state = 'needs_attention';
           } else {
             service.state = connector.state;
           }
+
           service.alarm_count += connector.alarms ? connector.alarms.length : 0;
+
           if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
             serviceAndClusterNeedsAttention(service, cluster);
-            service.is_disabled = false;
             service.status = 'needs_attention';
             connector.status = 'needs_attention';
           }
-          if (connector.state == 'disabled' && service.running_hosts === 0) {
-            service.is_disabled = true;
-            service.status = service.status || 'disabled';
-            connector.status = connector.status || 'disabled';
+
+          if (connector.state == 'disabled' || connector.state == 'running') {
+            if (connector.status && connector.status != connector.state) {
+              connector.status = 'needs_attention';
+            } else {
+              connector.status = connector.state;
+            }
+            if (service.status && service.status != connector.state) {
+              service.status = 'needs_attention';
+            } else {
+              service.status = connector.state;
+            }
           }
-          if (connector.state == 'running') {
-            service.is_disabled = false;
-            service.running_hosts = ++service.running_hosts;
-            service.status = service.status || 'running';
-            connector.status = connector.status || 'running';
-          }
+
         });
         if (service.running_hosts) {
           cluster.running_hosts = true;
@@ -108,17 +122,19 @@ angular.module('Hercules')
           .value();
 
         var map = _.reduce(connectors, function (map, connector) {
-          var host = connector.host ? connector.host.host_name : 'null';
+          var host = connector.host ? connector.host.serial : 'null';
           map[host] = map[host] || [];
           map[host].push(connector.state);
           return map;
         }, {});
 
         _.each(cluster.hosts, function (host) {
+          host.alarms = [];
           host.services = [];
           host.offline = false;
-          if (map[host.host_name]) {
-            host.offline = _.reduce(map[host.host_name], function (offline, status) {
+
+          if (map[host.serial]) {
+            host.offline = _.reduce(map[host.serial], function (offline, status) {
               return offline && status == 'offline';
             }, true);
           }
@@ -131,17 +147,34 @@ angular.module('Hercules')
                   host.state = connector.state;
                 }
 
+                if (connector.status == 'needs_attention') {
+                  host.status = 'needs_attention';
+                }
+                if (connector.status == 'running' || connector.status == 'disabled') {
+                  if (host.status && host.status != connector.status) {
+                    host.status = 'needs_attention';
+                  } else {
+                    host.status = connector.status;
+                  }
+                }
+
+                host.alarms = sortBySeverity(host.alarms.concat(connector.alarms));
+
                 host.services.push({
                   display_name: service.display_name,
                   service_type: service.service_type,
-                  status: connector.status,
                   state: connector.state,
+                  status: connector.status,
                   version: connector.version
                 });
               }
             });
           });
         });
+      };
+
+      var sortBySeverity = function (alarms) {
+        return _.sortBy(alarms, 'severity');
       };
 
       var convertClusters = function (data) {
@@ -157,8 +190,8 @@ angular.module('Hercules')
 
           cluster.services = _.sortBy(cluster.services, 'display_name');
           cluster.services = _.sortBy(cluster.services, function (obj) {
-            if (obj.needs_attention) return 1;
-            if (obj.is_disabled) return 3;
+            if (obj.status == 'needs_attention') return 1;
+            if (obj.status == 'disabled') return 3;
             return 2;
           });
 

@@ -39,8 +39,26 @@
         </button>
       </div>
 
+    </div>
+  </cs-sp-section>
 
+  <!-- connectors -->
+  <cs-sp-section ng-show="host.alarms.length > 0">
+    <div class="clearfix" style="padding: 15px 0 5px 0; font-weight: bold;">
+      <span>{{host.host_name}}</span>
+      <span ng-show="host.alarms.length == 1">has reported {{host.alarms.length}} alarm:</span>
+      <span ng-hide="host.alarms.length == 1">has reported {{host.alarms.length}} alarms:</span>
     </div>
 
+    <div ng-repeat="alarm in host.alarms" style="padding-bottom: 5px;" class="clearfix">
+      <span ng-class="alarm.severity == 'error' ? 'red' : 'yellow'" style="text-transform: capitalize;">{{alarm.severity}}:</span>
+      <span>{{alarm.title}}.</span>
+      <span>{{alarm.description}}</span>
+    </div>
+
+    <a target="_blank" ng-href="https://{{host.host_name}}/alarms" class="btn btn-primary btn-sm" style="color: white; padding-bottom: 5px">
+      Manage alarms
+    </a>
   </cs-sp-section>
+
 </cs-sp-container>

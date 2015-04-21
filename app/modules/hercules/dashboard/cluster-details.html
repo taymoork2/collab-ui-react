@@ -53,7 +53,7 @@
     </div>
 
     <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px" class="list">
-      <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: host.serial})" style="padding-top: 1.4rem; display: block;" ng-class="host.state == 'running' ? 'running' : 'needs_attention'">
+      <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: host.serial})" style="padding-top: 1.4rem; display: block;" ng-class="host.status">
         <i class="fa fa-circle" />
         <span>{{host.host_name}}</span>
         <i class="icon icon-chevron-right pull-right" />
