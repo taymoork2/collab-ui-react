@@ -167,7 +167,7 @@ angular.module('Core')
           licenseIdList = getServiceLicenseIds(licenseIdList, selConfService);
           licenseIdList = getServiceLicenseIds(licenseIdList, selCommService);
         }
-        return licenseIdList;
+        return licenseIdList.length===0 ? null : licenseIdList;
       };
 
       var getEntitlements = function (action) {
@@ -207,7 +207,7 @@ angular.module('Core')
         }
         angular.element('#btnSaveEnt').button('loading');
 
-        Userservice.updateUsers(user, getAccountLicenseIds(), [], entitleUserCallback);
+        Userservice.updateUsers(user, getAccountLicenseIds(), null, entitleUserCallback);
       };
 
       //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************

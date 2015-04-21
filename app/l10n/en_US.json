@@ -62,6 +62,7 @@
   "onboardModal": {
     "onboardUsers": "Onboard Users",
     "cancel": "Cancel",
+    "clear": "Clear",
     "addUsersDesc": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "addUserText": "Who would you like to add?",
     "userInput": "Enter email addresses or group mailers separated by commas...",
