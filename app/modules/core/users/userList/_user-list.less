@@ -2,27 +2,22 @@
   .ngCell.col0 .ngVerticalBar,
   .ngHeaderCell.col0 .ngVerticalBar {
     display: none;
-  }
-
-  .ngCell.col4 .ngVerticalBar,
-  .ngHeaderCell.col4 .ngVerticalBar {
-    display: none;
-  }
+  } 
 
   .ngHeaderText.colt5 {
-  text-align: right;
-}
+    text-align: left;
+  }
 
- .user-img {
+  .user-img {
     height: 35px;
     width: 35px;
     margin: 4px 5px 4px 30px;
 
     .icon {
-        font-size: 30px;
-        line-height: 35px;
-        bottom: -5px;
-      }
+      font-size: 30px;
+      line-height: 35px;
+      bottom: -5px;
+    }
   }
 
   .ngCell.colt5 {
@@ -34,6 +29,23 @@
       top: 70%;
     }
   }
+
+  .btn-icon {
+    background: none;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    text-align: center;
+
+    &:hover,
+    &:focus,
+    &.active:focus {
+      border: none;
+      box-shadow: none;
+      outline: 0;
+    }
+  }
+
 }
 
 .export-users {
@@ -59,24 +71,7 @@
   }
 }
 
-
-.btn-icon {
-  background: none;
-  border: none;
-  box-shadow: none;
-  width: 100%;
-  text-align: right;
-
-  &:hover,
-  &:focus,
-  &.active:focus {
-    border: none;
-    box-shadow: none;
-    outline: 0;
-  }
-}
-
-.admin-name{
+.admin-name {
   color: @gray-dark;
   font-family: @brand-font-cisco-TT-Extra-Light;
   font-size: 16px;
@@ -86,6 +81,7 @@
 .btn-actions {
   float: right;
   padding: 15px 30px;
+  text-align: center;
 }
 
 .user-status{

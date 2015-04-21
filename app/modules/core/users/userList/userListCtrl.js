@@ -236,7 +236,7 @@ angular.module('Core')
         rowHeight: 44,
         rowTemplate: rowTemplate,
         headerRowHeight: 44,
-        useExternalSorting: true,
+        useExternalSorting: false,
 
         columnDefs: [{
           field: 'photos',
@@ -246,16 +246,20 @@ angular.module('Core')
           width: 70
         }, {
           field: 'name.givenName',
-          displayName: $translate.instant('usersPage.firstnameHeader')
+          displayName: $translate.instant('usersPage.firstnameHeader'),
+          sortable: true
         }, {
           field: 'name.familyName',
-          displayName: $translate.instant('usersPage.lastnameHeader')
+          displayName: $translate.instant('usersPage.lastnameHeader'),
+          sortable: true
         }, {
           field: 'displayName',
-          displayName: $translate.instant('usersPage.displayNameHeader')
+          displayName: $translate.instant('usersPage.displayNameHeader'),
+          sortable: true
         }, {
           field: 'userName',
-          displayName: $translate.instant('usersPage.emailHeader')
+          displayName: $translate.instant('usersPage.emailHeader'),
+          sortable: true
         }, {
           field: 'userStatus',
           cellFilter: 'userListFilter',
@@ -277,38 +281,38 @@ angular.module('Core')
         }
       });
 
-      // this event fires 3x when sorting is done, so watch for sortInfo change
-      $scope.$on('ngGridEventSorted', function (event, sortInfo) {
-        $scope.sortInfo = sortInfo;
-      });
+      // // this event fires 3x when sorting is done, so watch for sortInfo change
+      // $scope.$on('ngGridEventSorted', function (event, sortInfo) {
+      //   $scope.sortInfo = sortInfo;
+      // });
 
-      $scope.$watch('sortInfo', function (newValue, oldValue) {
-        // if newValue === oldValue then page is initializing, so ignore event,
-        // otherwise $scope.getUserList() is called multiple times.
-        if (newValue !== oldValue) {
-          if ($scope.sortInfo) {
-            switch ($scope.sortInfo.fields[0]) {
-            case 'displayName':
-              $scope.sort.by = 'displayName';
-              break;
-            case 'userName':
-              $scope.sort.by = 'userName';
-              break;
-            case 'name.familyName':
-            case 'name.givenName':
-              $scope.sort.by = 'name';
-              break;
-            }
+      // $scope.$watch('sortInfo', function (newValue, oldValue) {
+      //   // if newValue === oldValue then page is initializing, so ignore event,
+      //   // otherwise $scope.getUserList() is called multiple times.
+      //   if (newValue !== oldValue) {
+      //     if ($scope.sortInfo) {
+      //       switch ($scope.sortInfo.fields[0]) {
+      //       case 'displayName':
+      //         $scope.sort.by = 'displayName';
+      //         break;
+      //       case 'userName':
+      //         $scope.sort.by = 'userName';
+      //         break;
+      //       case 'name.familyName':
+      //       case 'name.givenName':
+      //         $scope.sort.by = 'name';
+      //         break;
+      //       }
 
-            if ($scope.sortInfo.directions[0] === 'asc') {
-              $scope.sort.order = 'ascending';
-            } else {
-              $scope.sort.order = 'descending';
-            }
-          }
-          getUserList();
-        }
-      }, true);
+      //       if ($scope.sortInfo.directions[0] === 'asc') {
+      //         $scope.sort.order = 'ascending';
+      //       } else {
+      //         $scope.sort.order = 'descending';
+      //       }
+      //     }
+      //     getUserList();
+      //   }
+      // }, true);
 
       $scope.showUserDetails = function (user) {
         //Service profile
