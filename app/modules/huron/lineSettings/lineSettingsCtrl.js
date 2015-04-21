@@ -31,7 +31,7 @@
     vm.devices = [];
     vm.sharedLineUsers = [];
     vm.oneAtATime = true;
-    vm.maxLines = 6;
+    vm.maxLines = 5;
     vm.sort = {
       by: 'name',
       order: 'ascending',
@@ -43,7 +43,7 @@
 
     // Caller ID Radio Button Model
 
-    var name = getUserName(vm.currentUser.name);
+    var name = getUserName(vm.currentUser.name, vm.currentUser.userName);
 
     vm.callerIdInfo = {
       'default': name,
@@ -602,7 +602,7 @@
     vm.selectSharedLineUser = function ($item) {
       var userInfo = {
         'uuid': $item.id,
-        'name': getUserName($item.name),
+        'name': getUserName($item.name, $item.userName),
         'userName': $item.userName,
         'userDnUuid': 'none',
         'entitlements': $item.entitlements
@@ -630,9 +630,8 @@
         // Exclude users without Voice service to be shared line User
         // Exclude current user
         if (!isVoiceUser) {
-          var name = (userInfo.name) ? userInfo.name : userInfo.userName;
           Notification.notify([$translate.instant('sharedLinePanel.invalidUser', {
-            user: name
+            user: userInfo.name
           })], 'error');
         }
         isValidUser = false;
@@ -818,10 +817,11 @@
       return (deviceCount == 1 && sharedCount == 1);
     }
 
-    function getUserName(name) {
+    function getUserName(name, userId) {
       var userName = '';
       userName = (name && name.givenName) ? name.givenName : '';
       userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
+      userName = (userName) ? userName : userId;
       return userName;
     }
 
