@@ -20,6 +20,13 @@
     ) {
 
       this.btnReload = function () {
+        var funcName = "btnReload()";
+        var logMsg = "";
+
+        logMsg = funcName + ": " + "\n" +
+          "sessionTicketErr=" + this.userSettingsModel.sessionTicketErr;
+        // $log.log(logMsg);
+
         if (this.userSettingsModel.sessionTicketErr) {
           this.initPanel();
         } else {

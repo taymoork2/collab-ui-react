@@ -135,7 +135,7 @@ angular.module('WebExUserSettings')
           },
 
           viewReady: false,
-          loadError: false,
+          hasLoadError: false,
           sessionTicketErr: false,
           errMsg: "",
           allowRetry: false,

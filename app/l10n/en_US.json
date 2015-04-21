@@ -1086,7 +1086,7 @@
     "030045": "Attendee only account not support Service Desk.",
     "030046": "Fail to validate session ticket.",
     "030047": "Not a valid session ticket.",
-    "030048": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
+    "030048": "Authentication Server can't generate a valid session ticket.",
     "030049": "030049",
     "030050": "The user doesn't support Internet Phone (VoIP).",
     "030051": "Cisco Unified MeetingPlace profile number {0} is in use.",
@@ -1128,9 +1128,9 @@
     "039007": "Your Email address is not accepted by our site.",
     "039008": "039008",
     "039009": "039009",
-    "200006": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultProcessError": "Unable to process request.",
-    "defaultAccessError": "Unable to access server at this time"
+    "defaultAccessError": "Unable to access server at this time",
+    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Session Enablement",

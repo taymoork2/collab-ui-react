@@ -116,7 +116,7 @@
 
         initUserSettingsModel: function () {
           userSettingsModel.viewReady = false;
-          userSettingsModel.loadError = false;
+          userSettingsModel.hasLoadError = false;
           userSettingsModel.allowRetry = false;
           userSettingsModel.sessionTicketErr = false;
 
@@ -442,7 +442,69 @@
           });
         }, // getUserSettingsInfoXml()
 
+        initPanel: function () {
+          var funcName = "initPanel()";
+          var logMsg = "";
+
+          logMsg = funcName + ": " +
+            "START";
+          $log.log(logMsg);
+
+          var _self = this;
+          var webexSiteUrl = this.getSiteUrl();
+          var webexSiteName = this.getSiteName(webexSiteUrl);
+
+          angular.element('#reloadBtn').button('loading');
+
+          this.getSessionTicket(webexSiteUrl).then(
+            function getSessionTicketSuccess(webexAdminSessionTicket) {
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
+
+              _self.initXmlApiInfo(
+                webexSiteUrl,
+                webexSiteName,
+                webexAdminSessionTicket
+              );
+
+              userSettingsModel.sessionTicketErr = false;
+
+              // angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
+
+              _self.getUserSettingsInfo();
+            }, // getSessionTicketSuccess()
+
+            function getSessionTicketError(errId) {
+              var funcName = "initPanel().getSessionTicketError()";
+              var logMsg = "";
+
+              logMsg = funcName + ": " + "failed to get session ticket" + "\n" +
+                "errId=" + errId;
+              $log.log(logMsg);
+
+              _self.setLoadingErrMsg(errId);
+
+              userSettingsModel.allowRetry = true;
+              userSettingsModel.sessionTicketErr = true;
+
+              logMsg = funcName + ": " + "\n" +
+                "hasLoadError=" + userSettingsModel.hasLoadError + "\n" +
+                "errMsg=" + userSettingsModel.errMsg + "\n" +
+                "allowRetry=" + userSettingsModel.allowRetry + "\n" +
+                "sessionTicketErr=" + userSettingsModel.sessionTicketErr;
+              $log.log(logMsg);
+
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
+            } // getSessionTicketError
+          ); // WebExUserSettingsFact.getSessionTicket().then()
+        }, // initPanel()
+
         getUserSettingsInfo: function () {
+          var funcName = "getUserSettingsInfo()";
+          var logMsg = "";
+
+          logMsg = funcName + ": " + "START";
+          $log.log(logMsg);
+
           var _self = this;
 
           angular.element('#reloadBtn').button('loading');
@@ -479,11 +541,12 @@
                 ("" === userSettingsModel.meetingTypesInfo.errId)
               ) {
 
+                userSettingsModel.hasLoadError = false;
+
                 _self.updateUserSettingsModelPart1();
                 _self.updateUserSettingsModelPart2();
                 _self.updateUserSettingsModelPart3();
 
-                userSettingsModel.loadError = false;
                 userSettingsModel.viewReady = true; // only set this after the model has finished being updated
               } else { // has invalid xml data
                 logMsg = funcName + ": " + "\n" +
@@ -495,7 +558,6 @@
                   "meetingTypesInfo.errReason=" + userSettingsModel.meetingTypesInfo.errReason;
                 $log.log(logMsg);
 
-                userSettingsModel.viewReady = false;
                 userSettingsModel.allowRetry = true;
 
                 var errId = "";
@@ -507,24 +569,13 @@
                   errId = userSettingsModel.meetingTypesInfo.errId;
                 }
 
-                if ("030001" == errId) {
-                  var familyName = _self.getFamilyName();
-                  var givenName = _self.getGivenName();
-
-                  userSettingsModel.errMsg = $translate.instant(
-                    "webexUserSettingsAccessErrors.030001", {
-                      givenName: givenName,
-                      familyName: familyName
-                    }
-                  );
-
-                  userSettingsModel.loadError = true; // only set this after all the error info is available
-                } else {
-                  _self.setLoadingErrMsg(errId);
-                }
+                _self.setLoadingErrMsg(errId);
 
                 logMsg = funcName + ": " + "\n" +
-                  "Error message=[" + userSettingsModel.errMsg + "]";
+                  "hasLoadError=" + userSettingsModel.hasLoadError + "\n" +
+                  "errMsg=" + userSettingsModel.errMsg + "\n" +
+                  "allowRetry=" + userSettingsModel.allowRetry + "\n" +
+                  "sessionTicketErr=" + userSettingsModel.sessionTicketErr;
                 $log.log(logMsg);
               } // has invalid xml data
 
@@ -541,13 +592,17 @@
               userSettingsModel.viewReady = false;
               userSettingsModel.allowRetry = true;
 
-              var errId = "";
-              _self.setLoadingErrMsg(errId);
+              _self.setLoadingErrMsg("");
 
               angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
             } // getUserSettingsInfoXmlError()
           ); // WebExUserSettingsFact.getUserSettingsInfoXml()
         }, // getUserSettingsInfo()
+
+        setLoadingErrMsg: function (errId) {
+          userSettingsModel.errMsg = this.getErrMsg(errId);
+          userSettingsModel.hasLoadError = true;
+        }, // setLoadingErrMsg()
 
         updateUserSettings: function (form) {
           var funcName = "updateUserSettings()";
@@ -696,51 +751,6 @@
           Notification.notify([errMsg], 'error');
         }, // updateUserSettingsError()
 
-        initPanel: function () {
-          var _self = this;
-          var webexSiteUrl = this.getSiteUrl();
-          var webexSiteName = this.getSiteName(webexSiteUrl);
-
-          angular.element('#reloadBtn').button('loading');
-
-          this.getSessionTicket(webexSiteUrl).then(
-            function getSessionTicketSuccess(webexAdminSessionTicket) {
-              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
-
-              _self.initXmlApiInfo(
-                webexSiteUrl,
-                webexSiteName,
-                webexAdminSessionTicket
-              );
-
-              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
-
-              _self.getUserSettingsInfo();
-            }, // getSessionTicketSuccess()
-
-            function getSessionTicketError(errId) {
-              var funcName = "initPanel().getSessionTicketError()";
-              var logMsg = "";
-
-              logMsg = funcName + ": " + "failed to get session ticket" + "\n" +
-                "errId=" + errId;
-              $log.log(logMsg);
-
-              _self.setLoadingErrMsg(errId);
-
-              userSettingsModel.allowRetry = true;
-              userSettingsModel.sessionTicketErr = true;
-
-              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
-            } // getSessionTicketError
-          ); // WebExUserSettingsFact.getSessionTicket().then()
-        }, // initPanel()
-
-        setLoadingErrMsg: function (errId) {
-          userSettingsModel.errMsg = this.getErrMsg(errId);
-          userSettingsModel.loadError = true;
-        }, // setLoadingErrMsg()
-
         getErrMsg: function (errId) {
           var updateErrMsg = "";
 
@@ -755,6 +765,18 @@
             ("999999" === errId)
           ) {
             updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.defaultProcessError');
+          } else if ("030048" == errId) {
+            updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.defaultNotWebExAdminError');
+          } else if ("030001" == errId) {
+            var familyName = this.getFamilyName();
+            var givenName = this.getGivenName();
+
+            updateErrMsg = $translate.instant(
+              "webexUserSettingsAccessErrors.030001", {
+                givenName: givenName,
+                familyName: familyName
+              }
+            );
           } else {
             updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.' + errId);
           }
