@@ -85,7 +85,7 @@
         }).then(function (otpInfo) {
           emailInfo.oneTimePassword = otpInfo.password;
           emailInfo.expiresOn = otpInfo.expiresOn;
-          HuronEmailService.save({}, emailInfo).$promise
+          return HuronEmailService.save({}, emailInfo).$promise
             .then(function () {
               LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
             })
