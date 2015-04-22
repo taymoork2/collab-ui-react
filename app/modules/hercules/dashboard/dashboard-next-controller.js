@@ -7,6 +7,7 @@ angular.module('Hercules')
     function ($scope, $state, $interval, $http, $modal, ClusterProxy, Authinfo) {
       $scope.loading = true;
       $scope.pollHasFailed = false;
+      $scope.showInfoPanel = false;
 
       ClusterProxy.startPolling(function () {
         $scope.loading = false;
@@ -14,6 +15,7 @@ angular.module('Hercules')
 
       $scope.$watch(ClusterProxy.getClusters, function (data) {
         $scope.clusters = data.clusters || [];
+        $scope.showInfoPanel = data.clusters.length === 0;
         $scope.pollHasFailed = data.error;
       }, true);
 

@@ -5,17 +5,22 @@
     <div class="page-title clearfix">
       <span class="title" translate="hercules.page_title" />
       <div style="float: right; white-space: nowrap">
-
-        <button class="btn btn-info" ng-click="showNotificationConfigDialog()">
-          <span>
-            <i class="fa fa-bell" />
-          </span>
+        <button 
+          class="btn btn-info" 
+          ng-click="showNotificationConfigDialog()" 
+          style="border-radius: 60px; height: 60px; width: 60px;">
+          <i class="fa fa-bell" />
         </button>
-
+        <button 
+          class="btn btn-primary"
+          ng-click="showInfoPanel = !showInfoPanel"
+          style="border-radius: 60px; height: 60px; width: 60px;">
+          <i class="fa fa-info" />
+        </button>
       </div>
     </div>
   </div>
-
+  
   <!-- content -->
   <div class="row">
     <div class="col-sm-12">
@@ -25,19 +30,11 @@
         <i class="icon icon-spinner icon-2x"></i>
       </div>
 
-      <div ng-show="!loading && !pollHasFailed">
+      <div ng-show="!loading && !pollHasFailed" style="padding-bottom: 60px">
+        <hercules-dashboard-info-panel></hercules-dashboard-info-panel>
 
-        <!-- nothing fused -->
-        <div ng-show="clusters.length == 0" style="padding: 20px 40px">
-          <hercules-nothing-fused />
-        </div>
+        <hercules-dashboard-header></hercules-dashboard-header>
 
-        <!-- header -->
-        <div ng-show="clusters.length != 0">
-          <hercules-dashboard-header/>
-        </div>
-
-        <!-- clusters -->
         <div ng-show="clusters.length != 0">
           <h3 style="padding-left: 20px">Expressway Clusters: {{clusters.length}}</h3>
           <div class="container-fluid grid" style="margin-right: -30px;">
@@ -64,7 +61,12 @@
               </div>
             </div>
           </div>
+        </div>
 
+        <div ng-show="clusters.length == 0">
+          <h3 style="text-align: center; padding: 20px 0; color: #ccc">
+            No Expressway Clusters Connected to Spark
+          </h3>
         </div>
       </div>
     </div>

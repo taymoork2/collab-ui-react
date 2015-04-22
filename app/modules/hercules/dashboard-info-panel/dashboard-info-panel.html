@@ -1,0 +1,25 @@
+<div ng-show="showInfoPanel">
+  <h3 style="padding-left: 20px">Information</h3>
+  <div style="background: #fff; padding: 1px 20px; margin: 0 10px 20px 20px;">
+    <cs-accordion>
+      <cs-accordion-group
+        is-open="true"
+        show-caret="true"
+        display-status="primary"
+        heading="About Connector Management">      
+        <b>Extend the cloud to your premises</b>
+        <p>Connect your Expressway to the Spark Management Cloud to add these features:</p>
+                
+        <hercules-entitled-services></hercules-entitled-services>
+
+        <b>Setup</b>
+        <p>To activate and configure these Cloud Extensions, here are the overall steps you need to do:</p>
+        <ol>
+          <li>Verify that the pre-requestites are met</li>
+          <li>Connect and configure your Expressways</li>
+          <li>Activate the Service Connectors for your users</li>
+        </ol>
+      </cs-accordion-group>
+    </cs-accordion>
+  </div>
+</div>

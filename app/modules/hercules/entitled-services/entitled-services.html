@@ -1,15 +1,13 @@
-<div class="row entitled-services" style="border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 0; margin: 30px 0;">
-  <div class="col-sm-5" ng-repeat="service in services.fusion_services | filter: { connector_type: '!c_mgmt' }">
-    <h4>
-      <!-- <i class="{{service.icon}}"></i> -->
-      {{service.display_name}}
-    </h4>
-    {{service.description}}
+<div class="entitled-services">
+  <div ng-repeat="service in services.fusion_services | filter: { connector_type: '!c_mgmt' }">
+    <b>{{service.display_name}}</b>
+    <p>{{service.description}}</p>
+
     <div ng-show="service.status == 'error'" class="alert alert-danger" style="margin: 0 10px 10px 10px">
-        There is a problem with dependent services for {{service.display_name}}, your organization is missing the following needed services:
-        <li ng-repeat="entitlement in service.missing_entitlements">
-          {{entitlement}}
-        </li>
+      There is a problem with dependent services for {{service.display_name}}, your organization is missing the following needed services:
+      <li ng-repeat="entitlement in service.missing_entitlements">
+        {{entitlement}}
+      </li>
     </div>
   </div>
 </div>

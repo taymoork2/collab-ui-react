@@ -1,6 +1,6 @@
 'use strict';
 
-describe('DashboardHeaderDirective', function () {
+describe('EntitledServicesDirective', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $compile, $rootScope;

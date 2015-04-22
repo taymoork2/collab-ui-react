@@ -1,6 +1,6 @@
 'use strict';
 
-describe('DashboardHeaderDirective', function () {
+describe('PopoverDirective', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $compile, $rootScope, element;
