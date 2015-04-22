@@ -155,7 +155,7 @@
 
           if (xmlApiAccessInfo.teleconfViaGlobalCallInSiteEnabled) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-              "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallin}}</use:teleConfCallInInternational>" + "\n";
+              "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallIn}}</use:teleConfCallInInternational>" + "\n";
           }
 
           if (xmlApiAccessInfo.callBackTeleconfSiteEnabled) {
