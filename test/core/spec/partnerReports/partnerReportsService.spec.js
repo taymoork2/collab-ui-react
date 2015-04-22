@@ -2,32 +2,72 @@
 
 describe('Service: Partner Reports Service', function () {
   var $httpBackend, PartnerReportService, Config, Notification;
-  var managedOrgs, activeUsers, dummyUrl;
+  var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl;
 
   beforeEach(module('Core'));
 
-  var testData = {
-    'orgId': "db554da8-b5f5-44e2-84cb-90433040948e",
-    'graphData': {
-      'date': 'Feb 17, 2015',
-      'count': 19,
-      'totalUsers': 25,
-      'percentage': 76
-    },
-    'chartData': {
-      'userId': '57541132-0f02-445c-bcce-3b13bfb39085',
-      'userName': '',
-      'totalCalls': 3,
-      totalPosts: 0,
-      'orgName': 'Dummy Customer db554da8-b5f5-44e2-84cb-90433040948e',
-      'orgId': 'db554da8-b5f5-44e2-84cb-90433040948e'
-    }
-  };
   var dateFormat = "MMM DD, YYYY";
-
-  var activeUserData = getJSONFixture('core/json/partnerReports/fullActiveUserReport.json');
+  var customerGroup = 0;
+  var timeFilter = {
+    'id': 0
+  };
+  var customers = getJSONFixture('core/json/partnerReports/customerResponse.json');
+  var activeUserDetailedData = getJSONFixture('core/json/partnerReports/activeUserDetailedResponse.json');
+  var mostActiveUserData = getJSONFixture('core/json/partnerReports/mostActiveUserResponse.json');
   var customerData = {
-    "organizations": getJSONFixture('core/json/partnerReports/customerResponse.json')
+    'organizations': getJSONFixture('core/json/partnerReports/customerResponse.json')
+  };
+
+  var error = {
+    message: 'error'
+  };
+  var customerDatapoint = {
+    modifiedDate: 'Apr 10, 2015',
+    details: {
+      activeUsers: '14',
+      totalRegisteredUsers: '14'
+    },
+    percentage: 100,
+    activeUsers: 14,
+    totalRegisteredUsers: 14,
+    date: '2015-04-10T02:00:00.000-05:00'
+  };
+  var fiveCustomersDataPoint = {
+    modifiedDate: 'Apr 08, 2015',
+    details: {
+      activeUsers: '0',
+      totalRegisteredUsers: '1'
+    },
+    percentage: 61,
+    activeUsers: 29,
+    totalRegisteredUsers: 47,
+    date: '2015-04-08T02:00:00.000-05:00'
+  };
+  var customerTableDataPoint = {
+    details: {
+      numCalls: '5',
+      totalActivity: '14',
+      userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
+      userName: 'havard.nigardsoy@vijugroup.com'
+    },
+    orgName: 'Test Org One',
+    numCalls: 5,
+    totalActivity: 14,
+    userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
+    userName: 'havard.nigardsoy@vijugroup.com'
+  };
+  var fiveCustomerTableData = {
+    details: {
+      numCalls: '5',
+      totalActivity: '14',
+      userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
+      userName: 'havard.nigardsoy@vijugroup.com'
+    },
+    orgName: 'Test Org One',
+    numCalls: 5,
+    totalActivity: 14,
+    userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
+    userName: 'havard.nigardsoy@vijugroup.com'
   };
 
   var Authinfo = {
@@ -46,9 +86,11 @@ describe('Service: Partner Reports Service', function () {
 
     spyOn(Notification, 'notify');
 
-    managedOrgs = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
-    activeUsers = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/fullReports/timeCharts/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=7&spanType=day&cache=true';
-    dummyUrl = 'modules/core/partnerReports/dummyData.json';
+    managedOrgsUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
+
+    var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
+    activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
+    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
   }));
 
   afterEach(function () {
@@ -61,67 +103,104 @@ describe('Service: Partner Reports Service', function () {
   });
 
   describe('Active User Services', function () {
-    it('should return getMostRecentUpdate', function () {
-      var date = PartnerReportService.getMostRecentUpdate();
-      expect(date).toBe("");
-    });
-
-    it('should return getPreviousFilter', function () {
-      var filter = PartnerReportService.getPreviousFilter();
-      expect(filter).toBe(undefined);
-    });
-
-    it('should return getSavedActiveUsers', function () {
-      var data = PartnerReportService.getSavedActiveUsers();
-      expect(data).toEqual([]);
-    });
-
-    it('should return getCombinedActiveUsers', function () {
-      var data = PartnerReportService.getCombinedActiveUsers();
-      expect(data).toBe(undefined);
-    });
-
-    it('should return getCustomerList', function () {
-      var data = PartnerReportService.getCustomerList();
-      expect(data).toBe(null);
-    });
-
-    it('should return getUserName', function () {
-      var name = PartnerReportService.getUserName('0', '0');
-      expect(name).toBe("Dummy User 0");
-    });
-
-    it('should return getActiveUsersData for a week', function () {
-      $httpBackend.whenGET(managedOrgs).respond(customerData);
-      $httpBackend.whenGET(activeUsers).respond(activeUserData);
-      $httpBackend.whenGET(dummyUrl).respond(activeUserData);
-      PartnerReportService.getActiveUsersData({
-        "id": 0
-      }).then(function (response) {
-        expect(response[0].orgId).toBe(testData.orgId);
-        expect(response[0].graphData[0]).toEqual(testData.graphData);
-        expect(response[0].chartData[0]).toEqual(testData.chartData);
-        expect(response[0].totalPercentage).toBe(75);
-        expect(response[0].totalActivity).toEqual(NaN);
-
-        var date = PartnerReportService.getMostRecentUpdate();
-        expect(date).toBe(moment().format(dateFormat));
-        var filter = PartnerReportService.getPreviousFilter();
-        expect(filter).toEqual({
-          "id": 0
+    describe('should notify an error for setActiveUsersData', function () {
+      it('when activeUsersDetailed does not return data', function () {
+        $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(500, error);
+        PartnerReportService.setActiveUsersData(timeFilter).then(function () {
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
         });
-        var data = PartnerReportService.getCustomerList();
-        expect(data).toEqual(customerData.organizations);
-
-        var savedUserData = PartnerReportService.getSavedActiveUsers();
-        expect(savedUserData[0].orgId).toBe(testData.orgId);
-        expect(savedUserData[0].graphData[0]).toEqual(testData.graphData);
-        expect(savedUserData[0].chartData[0]).toEqual(testData.chartData);
-        expect(savedUserData[0].totalPercentage).toBe(75);
-        expect(savedUserData[0].totalActivity).toEqual(NaN);
+        $httpBackend.flush();
       });
+
+      it('when managedOrgs does not return data', function () {
+        $httpBackend.whenGET(managedOrgsUrl).respond(500, error);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+        PartnerReportService.setActiveUsersData(timeFilter).then(function () {
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        });
+        $httpBackend.flush();
+      });
+    });
+
+    describe('should getActiveUserData', function () {
+      beforeEach(function () {
+        $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
+        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[1].customerOrgId).respond(mostActiveUserData);
+        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[2].customerOrgId).respond(mostActiveUserData);
+        PartnerReportService.setActiveUsersData(timeFilter);
+        $httpBackend.flush();
+      });
+
+      it('for an existing customer', function () {
+        PartnerReportService.getActiveUserData(customers[0].customerOrgId, customers[0].customerName).then(function (response) {
+          expect(response.graphData[0]).toEqual(customerDatapoint);
+          expect(response.tableData[0]).toEqual(customerTableDataPoint);
+        });
+        $httpBackend.flush();
+      });
+
+      it('for a customer group', function () {
+        PartnerReportService.getActiveUserData(customerGroup, "").then(function (response) {
+          expect(response.graphData[0]).toEqual(fiveCustomersDataPoint);
+          expect(response.tableData[0]).toEqual(fiveCustomerTableData);
+        });
+        $httpBackend.flush();
+      });
+    });
+
+    describe('should notify an error for getActiveUserData', function () {
+      it('and return empty table data', function () {
+        $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
+        PartnerReportService.setActiveUsersData(timeFilter);
+        $httpBackend.flush();
+
+        PartnerReportService.getActiveUserData(customers[0].customerOrgId, customers[0].customerName).then(function (response) {
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+          expect(response.graphData[0]).toEqual(customerDatapoint);
+          expect(response.tableData).toEqual([]);
+        });
+        $httpBackend.flush();
+      });
+
+      it('and return empty graph and table data', function () {
+        $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(500, error);
+        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
+        PartnerReportService.setActiveUsersData(timeFilter);
+        $httpBackend.flush();
+
+        PartnerReportService.getActiveUserData(customers[0].customerOrgId, customers[0].customerName).then(function (response) {
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+          expect(response.graphData).toEqual([]);
+          expect(response.tableData).toEqual([]);
+        });
+        $httpBackend.flush();
+      });
+    });
+  });
+
+  describe('Helper Services', function () {
+    beforeEach(function () {
+      $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
+      $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+      PartnerReportService.setActiveUsersData(timeFilter);
       $httpBackend.flush();
     });
 
+    it('getCustomerList should return a list of customers', function () {
+      var list = PartnerReportService.getCustomerList();
+      expect(list.customers).toEqual(customers);
+      expect(list.recentUpdate).toEqual(moment(activeUserDetailedData.date).format(dateFormat));
+    });
+
+    it('getPreviousFilter should return the last timeFilter used to generate queries', function () {
+      var filter = PartnerReportService.getPreviousFilter();
+      expect(filter).toEqual(timeFilter);
+    });
   });
 });

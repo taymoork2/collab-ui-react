@@ -233,13 +233,13 @@
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
-    "customerLoadError": "There was an error while loading the customer list.",
-    "userLoadError": "There was an error while loading the users for the selected customer."
+    "customerLoadError": "There was an error while loading the customer list."
   },
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
-    "activeUserError": "There was an error while loading active user data.",
+    "activeUserGraphError": "There was an error while loading active user data.",
+    "activeUserTableError": "There was an error while loading data for most active users for {{customer}}.",
     "calls": "Calls",
     "customer": "Customer",
     "hideActiveUsers": "Hide Most Active Users",

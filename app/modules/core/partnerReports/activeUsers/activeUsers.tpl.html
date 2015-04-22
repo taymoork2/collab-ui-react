@@ -22,7 +22,7 @@
     	<h4 ng-show="nav.showMostActiveUsers" class="sub-section-title graph-match" translate="activeUsers.mostActiveUsers"></h4>
     </div>
     <div class="row">
-      <div class="graph-match" ng-show="nav.showMostActiveUsers">
+      <div class="graph-match" ng-show="nav.showMostActiveUsers" ng-show="!nav.isRefresh(nav.activeUsersRefresh)">
         <table class="table table-bordered active-users-table">
           <thead>
             <tr>
@@ -36,16 +36,16 @@
             <tr ng-repeat="user in nav.mostActiveUsers | orderBy:nav.activeUserPredicate:nav.activeUserReverse" ng-show="nav.activePage($index)">
               <td class="vertical-center">{{user.userName}}</td>
               <td class="vertical-center">{{user.orgName}}</td>
-              <td class="vertical-center horizontal-center">{{user.totalCalls}}</td>
-              <td class="vertical-center horizontal-center">{{user.totalPosts}}</td>
+              <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
+              <td class="vertical-center horizontal-center">{{user.totalActivity}}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
     <div class="row">
-      <div class="graph-match carousel-container">
-        <button type="button" class="btn actions-button btn-none most-active-btn" ng-click="nav.showMostActiveUsers = !nav.showMostActiveUsers" ng-show="!nav.isRefresh(nav.activeUsersRefresh)">
+      <div class="graph-match carousel-container" ng-show="!nav.isRefresh(nav.activeUsersRefresh)">
+        <button type="button" class="btn actions-button btn-none most-active-btn" ng-click="nav.showMostActiveUsers = !nav.showMostActiveUsers">
           <span ng-hide="nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
           <span ng-show="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
         </button>
