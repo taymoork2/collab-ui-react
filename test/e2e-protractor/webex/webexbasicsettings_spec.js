@@ -36,6 +36,43 @@ describe('WebEx user settings', function () {
     expect(usersettings.errorPanel.isPresent()).toBeFalsy();
   });
 
+  it('should allow navigation to the 4th panel', function () {
+    utils.click(usersettings.userPrivilegesLink);
+    expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
+    expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
+  });
+
+  it('should allow navigation back to the 3rd panel', function () {
+    utils.clickLastBreadcrumb();
+    expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
+    expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
+  });
+
+  it('should allow show save button disabled without any changes', function () {
+    expect(usersettings.saveButton.isEnabled()).toBeFalsy();
+  });
+
+ /** 
+  it('should allow enable save button after a change', function () {
+    if (usersettings.mc.isPresent()) { // MC is enabled 
+      console.log('count=' + element.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).count());
+      element.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).then(function (rows) {
+        for (var i = 0; i < rows.length; ++i) {
+          var checkbox = i.element(by.css('cs-checkbox'));
+          if (checkbox.isDisplayed()) {
+            checkbox.click();
+            expect(usersettings.saveButton.isEnabled()).toBeTruthy();
+            break;
+          }
+        }
+      });
+    }
+  });
+
+  it('should pause', function () {
+    browser.pause();
+  });
+**/
   /**  it('should contain correct centres', function () {
       expect(usersettings.mc.isPresent()).toBeTruthy();
       expect(usersettings.ec.isPresent()).toBeTruthy();
@@ -96,7 +133,7 @@ describe('WebEx user settings', function () {
     });
   **/
 
-  it('should allow log out', function () {
-    navigation.logout();
-  });
+    it('should allow log out', function () {
+      navigation.logout();
+    });
 });

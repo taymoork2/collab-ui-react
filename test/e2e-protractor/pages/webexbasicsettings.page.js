@@ -4,13 +4,18 @@ var BasicSettigsPage = function () {
   this.protoTab = element(by.css('li.webexUserSettingsTab > a'));
   this.userSettingsPanel = element(by.id('webexUserSettingsPage'));
   this.errorPanel = element(by.id('errSection'));
+  this.userPrivilegesLink = element(by.id('webex-user-privs'));
+  this.userPrivilegesPanel = element(by.id('webexUserSettingsPage2'));
 
   this.mc = element(by.id('MC'));
   this.ec = element(by.id('EC'));
   this.tc = element(by.id('TC'));
 
-  this.mcPro = this.mc.element(by.id('MeetingCenter-3'));
-  this.mcProCheckbox = this.mcPro.element(by.className('checkboxValue'));
+  this.mcPro = this.mc.element(by.id('sessionType-3'));
+  this.mcProCheckbox = this.mc.element(by.css('cs-checkbox'));
+
+  this.mcAuo = this.mc.element(by.id('sessionType-16'));
+  this.mcAuoCheckbox = this.mc.element(by.css('cs-checkbox'));
 
   this.recordingEditor = element(by.model('WebExUserSettings.userPrivileges.general.recordingEditor.value'));
   this.recordingEditorCheckbox = this.recordingEditor.element(by.className('checkboxValue'));
@@ -25,7 +30,7 @@ var BasicSettigsPage = function () {
   this.collabRoom = element(by.model('WebExUserSettings.userPrivileges.general.collabRoom.value'));
   this.collabRoomCheckbox = this.collabRoom.element(by.className('checkboxValue'));
 
-  this.saveButton = element(by.id('btnUpdate'));
+  this.saveButton = element(by.id('saveBtn'));
 
   this.testAdmin = {
     username: 'atlasintegration@yahoo.com',
@@ -45,23 +50,30 @@ var BasicSettigsPage = function () {
   };
 
   this.selectMcPro = function () {
-    var mc = this.mcPro;
-    this.mcProCheckbox.getAttribute('class').then(function (classes) {
-      if (classes.split(' ').indexOf('checked') == -1) {
-        mc.click();
-      }
-    });
+    if (!this.mcPro.isSelected()) {
+      this.mcProCheckbox.click();
+    }
   };
 
   this.unSelectMcPro = function () {
-    var mc = this.mcPro;
-    this.mcProCheckbox.getAttribute('class').then(function (classes) {
-      if (classes.split(' ').indexOf('checked') !== -1) {
-        mc.click();
-      }
-    });
+    if (this.mcPro.isSelected()) {
+      this.mcProCheckbox.click();
+    }
   };
 
+  this.selectMcAuo = function () {
+    if (!this.mcAuo.isSelected()) {
+      this.mcAuoCheckbox.click();
+    }
+  };
+
+  this.unSelectMcAuo = function () {
+    if (this.mcAuo.isSelected()) {
+      this.mcAuoCheckbox.click();
+    }
+  };
+
+  /**
   this.clickRecordingEditor = function () {
     utils.click(this.recordingEditor);
   };
@@ -173,6 +185,7 @@ var BasicSettigsPage = function () {
       }
     });
   };
+ **/
 };
 
 module.exports = BasicSettigsPage;
