@@ -646,12 +646,12 @@
                 successMsg);
 
               //flush waf cache
-              XmlApiFact.flushWafCache(xmlApiInfo).then(function(result){//success
-                $log.log("Flush success");
-              },//success
-              function(){ //fail
-                $log.log("Flush error");
-              });//fail
+              XmlApiFact.flushWafCache(xmlApiInfo).then(function (result) { //success
+                  $log.log("Flush success");
+                }, //success
+                function () { //fail
+                  $log.log("Flush error");
+                }); //fail
             }, // updateUserSettingsSuccess()
 
             function updateUserSettingsError(result) {

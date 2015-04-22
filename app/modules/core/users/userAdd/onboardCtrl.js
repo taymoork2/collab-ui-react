@@ -133,7 +133,7 @@ angular.module('Core')
       var usersList = [];
 
       var getServiceLicenseIds = function (list, service) {
-        if (service.licenseId) {
+        if (service.license.licenseId) {
           list.push(service.license.licenseId);
         }
         return list;

@@ -52,7 +52,7 @@ describe('WebEx user settings', function () {
     expect(usersettings.saveButton.isEnabled()).toBeFalsy();
   });
 
- /** 
+  /** 
   it('should allow enable save button after a change', function () {
     if (usersettings.mc.isPresent()) { // MC is enabled 
       console.log('count=' + element.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).count());
@@ -133,7 +133,7 @@ describe('WebEx user settings', function () {
     });
   **/
 
-    it('should allow log out', function () {
-      navigation.logout();
-    });
+  it('should allow log out', function () {
+    navigation.logout();
+  });
 });
