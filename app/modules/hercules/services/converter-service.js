@@ -141,7 +141,10 @@ angular.module('Hercules')
           _.each(cluster.services, function (service) {
             _.each(service.connectors, function (connector) {
               if (connector.host.serial == host.serial) {
-                if (host.state && connector.state != host.state) {
+
+                if ((host.state == 'running' && connector.state == 'disabled') || (host.state == 'disabled' && connector.state == 'running')) {
+                  host.state = 'running';
+                } else if (host.state && connector.state != host.state) {
                   host.state = 'needs_attention';
                 } else {
                   host.state = connector.state;
@@ -150,11 +153,16 @@ angular.module('Hercules')
                 if (connector.status == 'needs_attention') {
                   host.status = 'needs_attention';
                 }
-                if (connector.status == 'running' || connector.status == 'disabled') {
-                  if (host.status && host.status != connector.status) {
-                    host.status = 'needs_attention';
+
+                if (connector.status == 'disabled') {
+                  host.status = host.status || connector.status;
+                }
+
+                if (connector.status == 'running') {
+                  if (host.status == 'disabled') {
+                    host.status = 'running';
                   } else {
-                    host.status = connector.status;
+                    host.status = host.status || connector.status;
                   }
                 }
 
