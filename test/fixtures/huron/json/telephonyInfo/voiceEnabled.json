@@ -18,5 +18,14 @@
   "alternateDirectoryNumber": {
     "uuid": "799ad842-b526-4a55-a6eb-8270f300a110",
     "pattern": "+15556661110"
-  }
+  },
+  "singleNumberReach": "Off",
+  "siteCode": "100",
+  "siteSteeringDigit": "8",
+  "snrInfo": {
+    "destination": null,
+    "remoteDestinations": [],
+    "singleNumberReachEnabled": false
+  },
+  "voicemail": "Off"
 }

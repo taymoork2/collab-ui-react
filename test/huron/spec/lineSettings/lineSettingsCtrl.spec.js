@@ -2,7 +2,7 @@
 
 describe('Controller: LineSettingsCtrl', function () {
   var controller, $scope, $state, $stateParams, $rootScope, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, ServiceSetup;
-  var currentUser, directoryNumber, getDirectoryNumber, internalNumbers, externalNumbers, telephonyInfoWithVoicemail, telephonyInfoSecondLine, modalDefer;
+  var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers, externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoSecondLine, modalDefer;
   var UserListService, SharedLineInfoService;
   var userList = [];
   var userData = [];
@@ -40,9 +40,12 @@ describe('Controller: LineSettingsCtrl', function () {
     currentUser = getJSONFixture('core/json/currentUser.json');
     directoryNumber = getJSONFixture('huron/json/lineSettings/directoryNumber.json');
     getDirectoryNumber = getJSONFixture('huron/json/lineSettings/getDirectoryNumber.json');
+    getDirectoryNumberBusy = getJSONFixture('huron/json/lineSettings/getDirectoryNumberBusy.json');
+    getDirectoryNumberBusyNewLine = getJSONFixture('huron/json/lineSettings/getDirectoryNumberBusyNewLine.json');
     internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
+    telephonyInfoVoiceOnly = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
     telephonyInfoSecondLine = getJSONFixture('huron/json/telephonyInfo/voiceEnabledSecondLine.json');
 
     //Sharedline
@@ -120,6 +123,8 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       expect(TelephonyInfoService.getTelephonyInfo).toHaveBeenCalled();
       expect(controller.directoryNumber).toEqual(getDirectoryNumber);
+      expect(controller.forward).toBe('none');
+      expect(controller.telephonyInfo.voicemail).toBe('On');
     });
   });
 
@@ -141,7 +146,6 @@ describe('Controller: LineSettingsCtrl', function () {
     it('should update dtmfAccessId with the external number pattern', function () {
       expect(HuronUser.updateDtmfAccessId).toHaveBeenCalledWith(currentUser.id, telephonyInfoWithVoicemail.alternateDirectoryNumber.pattern);
     });
-
   });
 
   describe('deletePrimaryLine', function () {
@@ -160,6 +164,47 @@ describe('Controller: LineSettingsCtrl', function () {
       modalDefer.resolve();
       $scope.$apply();
       expect(LineSettings.disassociateInternalLine).not.toHaveBeenCalledWith(currentUser.id, telephonyInfoWithVoicemail.currentDirectoryNumber.userDnUuid);
+    });
+  });
+
+  describe('callforward behavior with voicemail enabled', function () {
+    it('should be busy with voicemail', function () {
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
+      controller.init();
+      $scope.$apply();
+      expect(controller.forward).toBe('busy');
+      expect(controller.forwardNABCalls).toBe('Voicemail');
+      expect(controller.telephonyInfo.voicemail).toBe('On');
+    });
+
+    it('should be busy with a number', function () {
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusy));
+      controller.init();
+      $scope.$apply();
+      expect(controller.forward).toBe('busy');
+      expect(controller.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
+      expect(controller.telephonyInfo.voicemail).toBe('On');
+    });
+  });
+
+  describe('callforward behavior with voicemail disabled', function () {
+    it('should default to no call forward', function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnly);
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
+      controller.init();
+      $scope.$apply();
+      expect(controller.forward).toBe('none');
+      expect(controller.telephonyInfo.voicemail).toBe('Off');
+    });
+
+    it('should default to busy with a number', function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnly);
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusy));
+      controller.init();
+      $scope.$apply();
+      expect(controller.forward).toBe('busy');
+      expect(controller.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
+      expect(controller.telephonyInfo.voicemail).toBe('Off');
     });
   });
 
@@ -217,7 +262,6 @@ describe('Controller: LineSettingsCtrl', function () {
   });
 
   describe('disable SharedLineDevice', function () {
-
     it('should call IsSingleDevice and return true', function () {
       expect(controller.isSingleDevice(sharedLineEndpoints, sharedLineUsers[0].uuid)).toBeTruthy();
     });
