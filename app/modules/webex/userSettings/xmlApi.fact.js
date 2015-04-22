@@ -377,6 +377,14 @@
           return defer.promise;
         }, // getNewSessionTicket()
 
+        flushWafCache: function (xmlApiAccessInfo) {
+          return $q(function (resolve, reject) {
+            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlRequest = $interpolate(constants.flushWafCacheRequest)(xmlApiAccessInfo);
+            _self.getXMLApi(xmlServerURL, xmlRequest, resolve, reject);
+          });
+        }, //getSiteInfo()
+
         xml2JsonConvert: function (commentText, xmlData, startOfBodyStr, endOfBodyStr) {
           var funcName = "xml2JsonConvert()";
           var logMsg = "";

@@ -95,6 +95,21 @@ angular.module('WebExUserSettings').service(
           "    </body>" + "\n" +
           "</serv:message>" + "\n",
 
+        flushWafCacheRequest: "" +
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        "<serv:message xmlns:serv=\"http://www.webex.com/schemas/2002/06/service\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.webex.com/schemas/2002/06/service   http://www.webex.com/schemas/2002/06/service/service.xsd\">" +
+        "   <header>" +
+        "      <securityContext>" +
+        "         <webExID>{{webexAdminID}}</webExID>" +
+        "         <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" +
+        "         <siteName>{{webexSiteName}}</siteName>" +
+        "      </securityContext>" +
+        "   </header>" +
+        "   <body>" +
+        "      <bodyContent xsi:type=\"java:com.webex.service.binding.ep.FlushWebCache\" />" +
+        "   </body>" +
+        "</serv:message>",
+
         replaceSets: [{
             replaceThis: /<ns1:/g,
             withThis: "<ns1_"

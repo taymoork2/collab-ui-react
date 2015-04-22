@@ -615,17 +615,22 @@
 
           var userSettings = {
             meetingTypes: [],
-            meetingCenter: useSupportedServices.use_meetingCenter,
-            trainingCenter: useSupportedServices.use_trainingCenter,
-            supportCenter: useSupportedServices.use_supportCenter,
-            eventCenter: useSupportedServices.use_eventCenter,
-            salesCenter: useSupportedServices.use_salesCenter
+            meetingCenter: "false",
+            trainingCenter: "false",
+            supportCenter: "false",
+            eventCenter: "false",
+            salesCenter: "false"
           };
 
           // go through the session types
           userSettingsModel.sessionTypes.forEach(function (sessionType) {
             if (sessionType.sessionEnabled) {
               userSettings.meetingTypes.push(sessionType.sessionTypeId);
+              if (userSettings.meetingCenter === "false") userSettings.meetingCenter = sessionType.meetingCenterApplicable ? "true" : "false";
+              if (userSettings.trainingCenter === "false") userSettings.trainingCenter = sessionType.trainingCenterApplicable ? "true" : "false";
+              if (userSettings.supportCenter === "false") userSettings.supportCenter = sessionType.supportCenterApplicable ? "true" : "false";
+              if (userSettings.eventCenter === "false") userSettings.eventCenter = sessionType.eventCenterApplicable ? "true" : "false";
+              if (userSettings.salesCenter === "false") userSettings.salesCenter = sessionType.salesCenterApplicable ? "true" : "false";
             }
           }); // userSettingsModel.sessionTypes.forEach()
 
@@ -639,6 +644,14 @@
               _self.processUpdateSuccessResult(
                 result,
                 successMsg);
+
+              //flush waf cache
+              XmlApiFact.flushWafCache(xmlApiInfo).then(function(result){//success
+                $log.log("Flush success");
+              },//success
+              function(){ //fail
+                $log.log("Flush error");
+              });//fail
             }, // updateUserSettingsSuccess()
 
             function updateUserSettingsError(result) {
