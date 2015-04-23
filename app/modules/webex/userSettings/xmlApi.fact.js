@@ -381,7 +381,7 @@
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
             var xmlRequest = $interpolate(constants.flushWafCacheRequest)(xmlApiAccessInfo);
-            _self.getXMLApi(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSiteInfo()
 
