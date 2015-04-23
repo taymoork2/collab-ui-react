@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('UserEntitlementsCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', 'HttpUtils',
-    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, HttpUtils) {
+  .controller('UserEntitlementsCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', '$log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', 'HttpUtils',
+    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, $log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, HttpUtils) {
       $scope.hasAccount = Authinfo.hasAccount();
 
       var getSqEntitlement = function (key) {
@@ -21,9 +21,9 @@ angular.module('Squared')
         var ents = [];
         for (var x = 0; x < list.length; x++) {
           var serviceFeature = list[x];
-          if (serviceFeature && serviceFeature.entitlements) {
-            for (var y = 0; y < serviceFeature.entitlements.length; y++) {
-              var entitlement = serviceFeature.entitlements[y];
+          if (serviceFeature && serviceFeature.license.features) {
+            for (var y = 0; y < serviceFeature.license.features.length; y++) {
+              var entitlement = serviceFeature.license.features[y];
               ents.push(getSqEntitlement(entitlement));
             }
           }

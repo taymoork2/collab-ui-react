@@ -69,7 +69,7 @@ var UsersPage = function () {
   this.cancelButton = element(by.id('btn-cancel'));
   this.saveButton = element(by.id('btn-save'));
 
-  this.clearButton = element(by.id('btnCancel'));
+  this.clearButton = element(by.id('btnClear'));
 
   this.currentPage = element(by.css('.pagination-current a'));
   this.queryCount = element(by.binding('totalResults'));

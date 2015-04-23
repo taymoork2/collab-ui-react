@@ -167,7 +167,7 @@ angular.module('Core')
           licenseIdList = getServiceLicenseIds(licenseIdList, selConfService);
           licenseIdList = getServiceLicenseIds(licenseIdList, selCommService);
         }
-        return licenseIdList.length===0 ? null : licenseIdList;
+        return licenseIdList.length === 0 ? null : licenseIdList;
       };
 
       var getEntitlements = function (action) {
