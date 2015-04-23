@@ -3,8 +3,10 @@
 
   angular.module('WebExUserSettings2').controller('WebExUserSettings2Ctrl', [
     '$scope',
+    '$rootScope',
     '$log',
     '$filter',
+    '$state',
     '$stateParams',
     '$translate',
     '$sce',
@@ -14,8 +16,10 @@
     'Config',
     function (
       $scope,
+      $rootScope,
       $log,
       $filter,
+      $state,
       $stateParams,
       $translate,
       $sce,
@@ -27,9 +31,12 @@
 
       $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
-      $log.log("Chandra");
-      $log.log($scope.adminEmailParam);
       $scope.userEmailParam = $stateParams.currentUser.userName;
+
+      // Update the breadcrumb with site url
+      $state.current.data.displayName = $translate.instant("webexUserSettingLabels.userPriviligesLabel");
+      $rootScope.$broadcast('displayNameUpdated');
+
       var locale = $translate.use();
       if (locale == "jp_JA") {
         locale = "ja_JP";
