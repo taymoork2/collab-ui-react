@@ -37,10 +37,10 @@
           if (service.license.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.license.trialId;
-          }
 
-          if (service.license.status === 'PENDING') {
-            vm.messagingServices.isNewTrial = true;
+            if (service.license.status === 'PENDING') {
+              vm.messagingServices.isNewTrial = true;
+            }
           }
         });
       }
@@ -51,10 +51,10 @@
           if (service.license.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.license.trialId;
-          }
 
-          if (service.license.status === 'PENDING') {
-            vm.commServices.isNewTrial = true;
+            if (service.license.status === 'PENDING') {
+              vm.commServices.isNewTrial = true;
+            }
           }
         });
       }
