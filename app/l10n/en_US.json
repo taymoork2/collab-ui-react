@@ -91,10 +91,10 @@
     "paidComm": "Advanced Spark Call",
     "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition",
-    "meetingCenter": "Meeting Center",
-    "supportCenter": "Support Center",
-    "trainingCenter": "Training Center",
-    "eventCenter": "Event Center",
+    "meetingCenter": "Meeting Center {{capacity}}",
+    "supportCenter": "Support Center {{capacity}}",
+    "trainingCenter": "Training Center {{capacity}}",
+    "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication"
   },
   "usersPreview": {

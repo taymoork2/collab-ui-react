@@ -187,7 +187,9 @@ angular.module('Core')
                     authData.roles.push('Site_Admin');
                   }
 
-                  service = new ServiceFeature($translate.instant(Config.confMap[license.offerName]), x + 1, 'confRadio', license);
+                  service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
+                    capacity: license.capacity
+                  }), x + 1, 'confRadio', license);
                   confLicenses.push(service);
                   break;
                 case 'MESSAGING':

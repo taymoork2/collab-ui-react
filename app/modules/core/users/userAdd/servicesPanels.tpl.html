@@ -13,7 +13,7 @@
           </div>
         </div>
         <div ng-if="msgFeature.license.licenseType !== 'freeTeamRoom'">
-          <cs-checkbox ckid="paid-msg" ng-model="radioStates.msgRadio" label="{{msgFeature.label}}" isdisabled=false></cs-checkbox>
+          <cs-checkbox ckid="paid-msg" ng-model="radioStates.msgRadio" label="{{msgFeature.label}}"></cs-checkbox>
         </div>
       </div>
   </div>
@@ -31,9 +31,13 @@
         </div>
       </div>
       <div ng-if="confFeature.license.licenseType !== 'freeConferencing'">
-        <cs-checkbox ckid="paid-conf" ng-model="radioStates.confRadio" label="{{confFeature.license.siteUrl}}" isdisabled=false></cs-checkbox>
-        <p class="conf-desc" ng-if="confFeature.label">{{confFeature.label | translate}} {{confFeature.license.capacity}}</p>
-        <cs-checkbox ng-if="false" class="indentedCheckbox" ckid="ckbox4" ng-model="cb.checkboxValue3" label="{{confFeature.label}}" isdisabled=false></cs-checkbox>
+        <div ng-if="confFeature.license.siteUrl">
+          <cs-checkbox ckid="paid-conf" ng-model="radioStates.confRadio" label="{{confFeature.license.siteUrl}}"></cs-checkbox>
+          <p class="conf-desc" ng-if="confFeature.label">{{confFeature.label}}</p>
+        </div>
+        <div ng-if="!confFeature.license.siteUrl">
+          <cs-checkbox ckid="paid-conf" ng-model="radioStates.confRadio" label="{{confFeature.label}}"></cs-checkbox>
+        </div>
       </div>
     </div>
   </div>
@@ -51,7 +55,7 @@
         </div>
       </div>
       <div ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
-        <cs-checkbox ckid="paid-comm" ng-model="radioStates.commRadio" label="{{commFeature.label}}" isdisabled=false></cs-checkbox>
+        <cs-checkbox ckid="paid-comm" ng-model="radioStates.commRadio" label="{{commFeature.label}}"></cs-checkbox>
       </div>
     </div>
   </div>
