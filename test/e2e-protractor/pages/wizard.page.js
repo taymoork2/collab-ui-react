@@ -8,7 +8,6 @@ var Wizard = function () {
   this.serviceSetupTab = element(by.id('wizard-serviceSetup-link'));
   this.enterpriseTab = element(by.id('wizard-enterpriseSettings-link'));
   this.addusersTab = element(by.id('wizard-addUsers-link'));
-  this.herculesTab = element(by.id('wizard-hercules.setup-link'));
   this.mainviewTitle = element(by.css('.wizard-main-title'));
   this.mainviewSubtitle = element(by.css('.wizard h3'));
   this.radiobuttons = element.all(by.css('label.cs-radio'));
@@ -28,8 +27,6 @@ var Wizard = function () {
   this.toInstallConnectorBtn = element.all(by.css('[ng-click="changeStep(\'installConnector\')"]'));
   this.toSyncStatusBtn = element.all(by.css('[ng-click="changeStep(\'syncStatus\')"]'));
   this.finishTab = element(by.id('wizard-finish-link'));
-  this.fusionIntro = element(by.id('fuse-setup-intro'));
-  this.fusionFuse = element(by.id('fuse-setup-fuse'));
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);
