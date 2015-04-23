@@ -3,21 +3,29 @@
 
   angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', [
     '$scope',
+    '$rootScope',
     '$log',
     '$translate',
     '$filter',
+    '$state',
     '$stateParams',
     'WebExUserSettingsFact',
     'Notification',
     function (
       $scope,
+      $rootScope,
       $log,
       $translate,
       $filter,
+      $state,
       $stateParams,
       WebExUserSettingsFact,
       Notification
     ) {
+
+      // Update the breadcrumb with site url
+      $state.current.data.displayName = $stateParams.site;
+      $rootScope.$broadcast('displayNameUpdated');
 
       this.btnReload = function () {
         var funcName = "btnReload()";
