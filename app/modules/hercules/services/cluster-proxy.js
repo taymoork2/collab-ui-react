@@ -31,7 +31,10 @@ angular.module('Hercules')
         });
       };
 
-      var getClusters = function () {
+      var getClusters = function (callback) {
+        if (callback) {
+          callbacks.push(callback);
+        }
         return {
           error: error,
           clusters: clusters
@@ -74,7 +77,9 @@ angular.module('Hercules')
           togglePolling();
           if (callback) callback.apply(null, arguments);
           while ((callback = callbacks.pop()) != null) {
-            callback.apply(null, arguments);
+            if (_.isFunction(callback)) {
+              callback.apply(null, arguments);
+            }
           }
         }, {
           squelchErrors: true
