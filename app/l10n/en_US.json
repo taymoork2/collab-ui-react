@@ -1041,8 +1041,8 @@
     "deleteResource": "Decomission Resource"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "Session enablement updated",
-    "privilegesUpdateSuccess": "Privileges updated",
+    "sessionEnablementUpdateSuccess": "Session enablement updated.",
+    "privilegesUpdateSuccess": "Privileges updated.",
     "reload": "Try Again",
     "cancel": "Go Back"
   },
@@ -1138,7 +1138,7 @@
     "039008": "039008",
     "039009": "039009",
     "defaultProcessError": "Unable to process request.",
-    "defaultAccessError": "Unable to access server at this time",
+    "defaultAccessError": "Unable to access server at this time.",
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
   },
   "webexUserSettingLabels": {
