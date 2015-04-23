@@ -890,7 +890,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:build',
     'html2js',
-    'js_verify',
+    'js_beautify',
     'less',
     'copy_build',
     'imagemin',
