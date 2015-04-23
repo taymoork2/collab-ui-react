@@ -59,12 +59,6 @@ describe('First Time Wizard', function () {
     utils.click(wizard.nextBtn);
     utils.expectIsDisplayed(users.addUsersField);
     utils.click(wizard.finishBtn);
-    utils.expectIsDisplayed(wizard.fusionIntro);
-    notifications.clearNotifications(); //TODO remove me when cors is fixed
-    utils.click(wizard.nextBtn);
-    utils.expectIsDisplayed(wizard.fusionFuse);
-    notifications.clearNotifications(); //TODO remove me when cors is fixed
-    utils.click(wizard.finishBtn);
     utils.expectIsNotDisplayed(wizard.wizard);
   }, 60000);
 
