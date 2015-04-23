@@ -352,7 +352,7 @@ angular.module('Core')
         },
 
         chartColors: {
-          blue: '#1EA7D1',
+          blue: '#3ca8e8',
           red: '#F46315',
           yellow: '#EBC31C',
           green: '#50D71D',

@@ -236,6 +236,9 @@ angular.module('Core')
         getServices: function () {
           return authData.services;
         },
+        getManagedOrgs: function () {
+          return authData.managedOrgs;
+        },
         getMessageServices: function () {
           return authData.messageServices;
         },

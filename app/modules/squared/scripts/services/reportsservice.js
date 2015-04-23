@@ -12,11 +12,6 @@ angular.module('Squared')
       var conversationsUrl = apiUrl + 'reports/counts/conversations';
 
       var timeChartUrl;
-      if (Authinfo.isPartner()) {
-        timeChartUrl = apiUrl + 'reports/timeCharts/managedOrgs/';
-      } else {
-        timeChartUrl = apiUrl + 'reports/timeCharts/';
-      }
 
       var logInfoBaseUrl = apiUrl + 'reports/tables/calls/';
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
@@ -59,7 +54,7 @@ angular.module('Squared')
         if (params.spanType) {
           metricUrl += '&spanType=' + params.spanType;
         }
-        if (params.cache) {
+        if (params.cache !== null) {
           metricUrl += '&cache=' + params.cache;
         }
         if (params.isCustomerView) {
@@ -119,7 +114,15 @@ angular.module('Squared')
           }
         },
 
-        getUsageMetrics: function (metricType, params) {
+        getUsageMetrics: function (metricType, params, orgId) {
+          if (Authinfo.isPartner() && !orgId) {
+            timeChartUrl = apiUrl + 'reports/timeCharts/managedOrgs/';
+          } else if (Authinfo.isPartner() && orgId) {
+            timeChartUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/' + 'reports/timeCharts/';
+          } else {
+            timeChartUrl = apiUrl + 'reports/timeCharts/';
+          }
+
           var metricUrl = buildUrl(metricType, params);
 
           return $http.get(metricUrl)
@@ -136,12 +139,12 @@ angular.module('Squared')
             });
         },
 
-        getPartnerMetrics: function (useCache) {
+        getPartnerMetrics: function (useCache, orgId) {
           var chartParams = {
             'intervalCount': 1,
-            'intervalType': 'week',
+            'intervalType': 'month',
             'spanCount': 1,
-            'spanType': 'day',
+            'spanType': 'week',
             'cache': useCache,
             'isCustomerView': false
           };
@@ -152,7 +155,7 @@ angular.module('Squared')
           ];
 
           for (var chart in partnerCharts) {
-            this.getUsageMetrics(partnerCharts[chart], chartParams);
+            this.getUsageMetrics(partnerCharts[chart], chartParams, orgId);
           }
 
           chartParams = {

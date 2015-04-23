@@ -357,7 +357,7 @@
     "overview": "Last 4 weeks",
     "activeUsers": "Active Users",
     "calls": "Calls Placed",
-    "updated": "Last Updated",
+    "updated": "Last sync",
     "conversations": "Rooms Created",
     "contentShared": "Files Shared",
     "activity": "Activity Since",
@@ -386,7 +386,7 @@
     "unlicensedDateText": "unlicensed users registered on",
     "unlicensedText": "Unlicensed Users",
     "convertText": "View and convert users currently using the free version",
-    "lastUpdated": "Last Updated"
+    "lastUpdated": "Last sync"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -660,8 +660,8 @@
     "highQuality": "5 highest quality",
     "leastQuality": "5 lowest quality",
     "services": "All services",
-    "UsersOnboarded": "Users onboarded",
-    "AvgCallsPerUser": "Avg Calls per user",
+    "UsersOnboarded": "Users Onboarded this Month",
+    "AvgCallsPerUser": "Avg. Calls per User this Month",
     "AvgRoomsPerUser": "Avg. Rooms per User this Month",
     "ActiveUsers": "Avg. Active Users this Month",
     "OneOnOneRooms": "1:1 Rooms this Month",
@@ -679,11 +679,14 @@
     "groupRoomsAxis": "Number of Group Rooms (Total)",
     "videoCallsAxis": "Number of Video Calls (Total)",
     "avgCallsAxis": "Call Duration in Minutes (Avg.)",
+    "numberUsersAxis": "Number of Users (Total)",
+    "numberCallsAxis": "Number of Calls (Total)",
     "filesSharedAxis": "Number of Files Shared (Total)",
     "gbSharedAxis": "Number of Gigabytes Shared (Total)",
     "orgDsc": "The total number of users in an organization.",
     "onboardDsc": "The total number of users who have logged in or have been entitled to Spark.",
-    "activeDsc": "The total number of users who sent/read a message or created/entered a room in the past week."
+    "activeDsc": "The total number of users who sent/read a message or created/entered a room in the past week.",
+    "allCustomers": "All Customers"
   },
   "callRouting": {
     "title": "Call Routing",
