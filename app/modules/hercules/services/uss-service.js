@@ -74,6 +74,16 @@ angular.module('Hercules')
             .error(function () {
               callback(arguments, null);
             });
+        },
+        getStatusesSummary: function (callback) {
+          $http
+            .get(ConfigService.getUSSUrl() + '/userStatuses/summary')
+            .success(function (data) {
+              callback(null, data);
+            })
+            .error(function () {
+              callback(arguments, null);
+            });
         }
       };
     }
