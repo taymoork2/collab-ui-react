@@ -29,13 +29,13 @@
       Config
     ) {
 
+      // Localize the breadcrumb 
+      $state.current.data.displayName = $translate.instant("webexUserSettingLabels.userPriviligesLabel");
+      $rootScope.$broadcast('displayNameUpdated');
+
       $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
       $scope.userEmailParam = $stateParams.currentUser.userName;
-
-      // Update the breadcrumb with site url
-      $state.current.data.displayName = $translate.instant("webexUserSettingLabels.userPriviligesLabel");
-      $rootScope.$broadcast('displayNameUpdated');
 
       var locale = $translate.use();
       if (locale == "jp_JA") {
