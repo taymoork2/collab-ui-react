@@ -1,0 +1,15 @@
+<div class="cloud-extensions">
+  <cs-sp-container>
+  <cs-sp-section>
+  <div class="section-title-row">
+    <cs-checkbox ckid="square-fusion-cal" ng-model="fusionCal.state" label="{{fusionCal.label}}"></cs-checkbox>
+  </div>
+  <p class="extension-desc" translate="cloudExtensions.squaredDesc"></p>
+  <p class="extension-desc" translate="cloudExtensions.webexDesc"></p>
+  <div class="entitle-save-btn">
+    <button id="btn-save" class="btn btn-info btn-save" data-loading-text="<i class='icon icon-spinner'></i>" ng-click="updateCalEntitlement(fusionCal.state)"><span translate="common.save"></span></button>
+  </div>
+</cs-sp-section>
+</cs-sp-container>
+</div>
+

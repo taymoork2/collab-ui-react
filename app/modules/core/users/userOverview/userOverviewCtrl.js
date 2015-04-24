@@ -19,6 +19,7 @@
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
+    vm.isFusionCal = Authinfo.isFusionCal();
 
     var hasEntitlement = function (entitlement) {
       var userEntitlements = vm.currentUser.entitlements;
@@ -57,11 +58,6 @@
         state: 'user-overview.conferencing'
       };
 
-      var webexState = {
-        name: "Conference",
-        state: 'user-overview.webex'
-      };
-
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         vm.services.push(msgState);
       }
@@ -71,8 +67,6 @@
       if (hasEntitlement('ciscouc')) {
         vm.services.push(commState);
       }
-
-      // vm.services.push(webexState);
     }
 
     activate();

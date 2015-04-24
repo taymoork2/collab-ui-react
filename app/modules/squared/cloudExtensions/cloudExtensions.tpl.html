@@ -1,0 +1,15 @@
+<div class="cloud-extensions">
+  <div class="section-title-row">
+    <span class="section-name" translate="cloudExtensions.cloudExtensions"></span>
+  </div>
+  <div class="feature-list">
+    <ul>
+      <li class="feature" ng-repeat="extension in extensions">
+        <a id="{{extension.name}}" ui-sref="{{extension.route}}">
+          <span class="feature-name">{{extension.name}}</span><span class="feature-state">{{extension.state}}</span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

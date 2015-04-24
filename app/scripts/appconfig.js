@@ -317,7 +317,14 @@ angular
             displayName: 'Messaging'
           },
           params: {
-            service: "MESSAGING"
+            service: 'MESSAGING'
+          }
+        })
+        .state('user-overview.calendar', {
+          templateUrl: 'modules/squared/cloudExtensions/calendar/calendarPreview.tpl.html',
+          controller: 'CalendarPreviewCtrl',
+          data: {
+            displayName: 'Calendar'
           }
         })
         .state('user-overview.conferencing', {

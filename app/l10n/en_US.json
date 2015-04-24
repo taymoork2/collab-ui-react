@@ -96,7 +96,8 @@
     "supportCenter": "Support Center {{capacity}}",
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
-    "communication": "Communication"
+    "communication": "Communication",
+    "cloudExtensions": "Cloud Extensions"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -1253,5 +1254,14 @@
     "licenseCount": "License Count",
     "type": "Type",
     "launchSite": "Launch Site Admin"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "Cloud Extensions",
+    "calendar": "Calendar",
+    "on": "On",
+    "off": "Off",
+    "calendarService": "Calendar Service",
+    "squaredDesc": "Including @squared in a meeting invitation creates a Spark Room automatically.",
+    "webexDesc": "Including @webex in the meeting invitation creates a WebEx meeting and appends the information to the invitation."
   }
 }

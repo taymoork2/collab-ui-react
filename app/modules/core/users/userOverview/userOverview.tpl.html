@@ -37,6 +37,9 @@
     </div>
     <uc-devices></uc-devices>
   </cs-sp-section>
+  <cs-sp-section ng-if="userOverview.isFusionCal">
+    <sq-cloud-extensions></sq-cloud-extensions>
+  </cs-sp-section>
   <cs-sp-section ng-if="userOverview.isFusion">
     <hercules-activation-status></hercules-activation-status>
   </cs-sp-section>

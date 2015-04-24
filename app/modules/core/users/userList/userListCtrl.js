@@ -370,6 +370,10 @@ angular.module('Core')
         getUserList();
       });
 
+      $scope.$on('cal-entitlement-updated', function () {
+        getUserList();
+      });
+
       $scope.updateUser = function () {
         angular.element('#btn-save').button('loading');
         var userData = {
