@@ -1046,7 +1046,7 @@
     "deleteResource": "Decomission Resource"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "Session enablement updated.",
+    "sessionEnablementUpdateSuccess": "Session type enablement updated.",
     "privilegesUpdateSuccess": "Privileges updated.",
     "reload": "Try Again",
     "cancel": "Go Back"
@@ -1147,7 +1147,7 @@
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "Session Enablement",
+    "sessionEnablementLabel": "Session Type Enablement",
     "handsOnLabAdminLabel": "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
     "optimizeBandwidthUsageLabel": "Optimized bandwidth usage for attendees within the same network",
     "videoSettingsLabel": "Video Settings",
@@ -1161,6 +1161,7 @@
     "callBackTeleconfLabel": "Call-back teleconferencing",
     "globalCallBackTeleconfLabel": "Global call-back teleconferencing",
     "integratedVoIPLaabel": "Integrated VoIP",
+    "priviligesLable": "Privileges",
     "userPriviligesLabel": "User Privileges",
     "advancedLinkLabel": "Advanced Settings"
   },

@@ -30,7 +30,7 @@
     ) {
 
       // Localize the breadcrumb 
-      $state.current.data.displayName = $translate.instant("webexUserSettingLabels.userPriviligesLabel");
+      $state.current.data.displayName = $translate.instant("webexUserSettingLabels.priviligesLable");
       $rootScope.$broadcast('displayNameUpdated');
 
       $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl(WebExUserSettingsFact.getSiteUrl());
