@@ -1,10 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  // jshint devel:true
-  // jshint undef:false
-  .controller('PartnerReportsCtrl', ['$scope', '$window', 'Config', 'ReportsService', '$log', 'Authinfo', 'PartnerService', '$translate',
-    function ($scope, $window, Config, ReportsService, $log, Authinfo, PartnerService, $translate) {
+  .controller('PartnerReportsCtrl', ['$scope', '$window', 'Config', 'ReportsService', '$log', 'Authinfo', 'PartnerService', '$translate', 'CannedDataService',
+    function ($scope, $window, Config, ReportsService, $log, Authinfo, PartnerService, $translate, CannedDataService) {
       var activeUsersChart, avgCallsChart, contentSharedChart, entitlementsChart, avgConvChart,
         convOneOnOneChart, convGroupChart, callsLoadedChart, callsAvgDurationChart, contentSharedSizeChart;
 
@@ -53,21 +51,33 @@ angular.module('Core')
       $scope.getManagedOrgs();
 
       var currentDate = moment();
-
       var dummyChartVals = [];
       for (var i = 0; i < 5; i++) {
         currentDate = currentDate.add(7, 'days');
         var isoDate = currentDate.toISOString();
         var dummyObj = {
-          'date': isoDate,
-          'count': ""
+          data: [{
+            'date': isoDate,
+            'count': ''
+          }],
+          orgName: ''
         };
 
         dummyChartVals.push(dummyObj);
       }
 
-      $log.log('dummy chart vals');
-      $log.log(dummyChartVals);
+      var currentDateSingle = moment();
+      var singleDummyChartVals = [];
+      for (var j = 0; j < 5; j++) {
+        currentDateSingle = currentDateSingle.subtract(7, 'days');
+        var isoDateSingle = currentDateSingle.toISOString();
+        var dummyObjSingle = {
+          'date': isoDateSingle,
+          'count': ''
+        };
+
+        singleDummyChartVals.push(dummyObjSingle);
+      }
 
       $scope.isRefresh = function (property) {
         return $scope.reportStatus[property] === 'refresh';
@@ -83,18 +93,29 @@ angular.module('Core')
 
       $scope.getCustomerReports = function (useCache, orgId, orgName) {
         $scope.currentSelection = orgName;
+
         for (var property in chartRefreshProperties) {
           $scope.reportStatus[chartRefreshProperties[property]] = 'refresh';
         }
-        ReportsService.getPartnerMetrics(useCache, orgId);
+        if (!CannedDataService.isDemoAccount(Authinfo.getOrgId())) {
+          ReportsService.getPartnerMetrics(useCache, orgId);
+        } else {
+          CannedDataService.getIndCustomerData();
+        }
       };
 
       $scope.reloadReports = function (useCache) {
         $scope.currentSelection = 'All Customers';
+
         for (var property in chartRefreshProperties) {
           $scope.reportStatus[chartRefreshProperties[property]] = 'refresh';
         }
-        ReportsService.getPartnerMetrics(useCache);
+
+        if (!CannedDataService.isDemoAccount(Authinfo.getOrgId())) {
+          ReportsService.getPartnerMetrics(useCache);
+        } else {
+          CannedDataService.getAllCustomersData();
+        }
       };
 
       $scope.reloadReports(true);
@@ -107,23 +128,21 @@ angular.module('Core')
             var orgCount = Object.keys(orgNameMap).length;
             var aggregatedData = [];
 
-            if (orgCount > 5) {
-              for (var i = 0; i < data.length; i++) {
-                var obj = data[i];
-                var date = obj.date;
-                var sum = 0;
-                Object.keys(obj).forEach(function (k) {
-                  if (k.indexOf('count') > -1) {
-                    sum += obj[k];
-                  }
-                });
-                var dataSection = {};
-                dataSection.date = date;
-                dataSection.count = sum;
-                aggregatedData.push(dataSection);
-              }
-              data = aggregatedData;
+            for (var i = 0; i < data.length; i++) {
+              var obj = data[i];
+              var date = obj.date;
+              var sum = 0;
+              Object.keys(obj).forEach(function (k) {
+                if (k.indexOf('count') > -1) {
+                  sum += obj[k];
+                }
+              });
+              var dataSection = {};
+              dataSection.date = date;
+              dataSection.count = sum;
+              aggregatedData.push(dataSection);
             }
+            data = aggregatedData;
           }
 
           var chartObject = {
@@ -139,7 +158,7 @@ angular.module('Core')
               'periodValueText': '[[value.' + [operation] + ']]',
               'position': 'top',
               'valueWidth': 10,
-              'fontSize': 30,
+              'fontSize': 22,
               'markerType': 'none',
               'spacing': 0,
               'valueAlign': 'right',
@@ -196,23 +215,6 @@ angular.module('Core')
             delete chartObject.legend;
           }
 
-          // if (orgCount < 5) {
-          //   for (var j = 0; j < orgCount; j++) {
-          //     var orgName = orgNameMap['customerName' + j];
-          //     chartObject.graphs.push({
-          //       'type': 'line',
-          //       'bullet': 'round',
-          //       'lineColor': colors,
-          //       'fillAlphas': 0,
-          //       'lineAlpha': 1,
-          //       'lineThickness': 2,
-          //       'hidden': false,
-          //       'valueField': 'count' + j,
-          //       'title': orgName,
-          //       'balloonText': orgName + ': [[value]]'
-          //     });
-          //   }
-          // } else {
           chartObject.graphs.push({
             'type': 'line',
             'bullet': 'round',
@@ -225,7 +227,6 @@ angular.module('Core')
             'title': title,
             'balloonText': '[[value]]',
           });
-          //}
 
           return AmCharts.makeChart(id, chartObject);
         }
@@ -273,7 +274,7 @@ angular.module('Core')
           }
           formmatedData.push(chartSection);
         }
-
+        formmatedData.reverse();
         return formmatedData;
       };
 
@@ -331,7 +332,11 @@ angular.module('Core')
             $scope.reportStatus[property] = 'refresh';
             angular.element('#' + id).addClass('dummy-data');
             angular.element('#' + refreshDivName).html('<h3 class="dummy-data-message">No Data</h3>');
-            data = dummyChartVals;
+            if ($scope.currentSelection === 'All Customers') {
+              data = dummyChartVals;
+            } else {
+              data = singleDummyChartVals;
+            }
             shouldShowCursor = false;
             operation = 'sum';
           }
@@ -372,6 +377,7 @@ angular.module('Core')
 
       var label = '';
       $scope.$on('entitlementsLoaded', function (event, response) {
+
         label = $translate.instant('reports.UsersOnboarded');
         var axis = $translate.instant('reports.numberUsersAxis');
         entitlementsChart = getCharts(response, 'entitlements', 'avgEntitlementsdiv', label, Config.chartColors.blue, 'sum', axis, 'avg-entitlements-refresh');
