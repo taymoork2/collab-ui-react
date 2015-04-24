@@ -91,16 +91,15 @@ angular.module('Core')
         return $scope.reportStatus[property] === 'error';
       };
 
-      $scope.getCustomerReports = function (useCache, orgId, orgName) {
-        $scope.currentSelection = orgName;
-
+      $scope.getCustomerReports = function (useCache, org) {
+        $scope.currentSelection = org.customerName;
         for (var property in chartRefreshProperties) {
           $scope.reportStatus[chartRefreshProperties[property]] = 'refresh';
         }
         if (!CannedDataService.isDemoAccount(Authinfo.getOrgId())) {
-          ReportsService.getPartnerMetrics(useCache, orgId);
+          ReportsService.getPartnerMetrics(useCache, org.customerOrgId);
         } else {
-          CannedDataService.getIndCustomerData();
+          CannedDataService.getIndCustomerData(org.customerOrgId);
         }
       };
 

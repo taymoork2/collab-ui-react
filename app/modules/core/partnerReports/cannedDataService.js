@@ -16,7 +16,10 @@ angular
       ];
 
       var dataSize = 5;
-      var demoData = {};
+      var allCustomerAllData = [];
+      var singleCustomerAllData = {};
+      var allCustomerAllCount = [];
+
       var chartLimits = [{
         type: 'entitlementsLoaded',
         limit: 1000
@@ -81,11 +84,17 @@ angular
             success: true,
             data: Math.floor((Math.random() * currentCount.limit))
           };
+          var current = {
+            type: currentCount.type,
+            data: obj
+          };
+          allCustomerAllCount.push(current);
           sendChartResponse(currentCount.type, obj);
         }
       };
 
-      var createSingleCustomerResponse = function () {
+      var createSingleCustomerResponse = function (orgId) {
+        singleCustomerAllData[orgId] = [];
         for (var chart in chartLimits) {
           var currentCustomerData = {};
           currentCustomerData.data = [];
@@ -103,6 +112,11 @@ angular
             currentDate = currentDate.subtract(7, 'days');
             currentCustomerData.data.push(newData);
           }
+          var obj = {
+            type: currentChart.type,
+            data: currentCustomerData
+          };
+          singleCustomerAllData[orgId].push(obj);
           sendChartResponse(currentChart.type, currentCustomerData);
         }
       };
@@ -134,7 +148,11 @@ angular
             }
             allCustomerData.data.push(orgObj);
           }
-          currentChart.data = allCustomerData;
+          var chartObj = {
+            type: currentChart.type,
+            data: allCustomerData
+          };
+          allCustomerAllData.push(chartObj);
           sendChartResponse(currentChart.type, allCustomerData);
         }
       };
@@ -143,20 +161,30 @@ angular
         isDemoAccount: function (orgId) {
           return demoAccounts.indexOf(orgId) > -1;
         },
-        getDemoData: function (email) {
-          if (_.has(demoData, email)) {
-            return this.demoData.email;
+        getAllCustomersData: function () {
+          if (allCustomerAllData !== null && allCustomerAllData.length > 0) {
+            for (var charts in allCustomerAllData) {
+              var current = allCustomerAllData[charts];
+              sendChartResponse(current.type, current.data);
+            }
+            for (var counts in allCustomerAllCount) {
+              var currentCount = allCustomerAllCount[counts];
+              sendChartResponse(currentCount.type, currentCount.data);
+            }
           } else {
-            return this.generateNewData(email);
+            createCustomerResponse();
+            createCountResponse();
           }
         },
-        getAllCustomersData: function () {
-          var reponse = createCustomerResponse();
-          createCountResponse();
-        },
-        getIndCustomerData: function () {
-          createSingleCustomerResponse();
-          createCountResponse();
+        getIndCustomerData: function (orgId) {
+          if (_.has(singleCustomerAllData, orgId)) {
+            var currentOrg = singleCustomerAllData[orgId];
+            for (var charts in currentOrg) {
+              sendChartResponse(currentOrg[charts].type, currentOrg[charts].data);
+            }
+          } else {
+            createSingleCustomerResponse(orgId);
+          }
         }
       };
     }

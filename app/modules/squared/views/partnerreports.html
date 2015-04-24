@@ -15,7 +15,7 @@
           <ul class="dropdown-menu reports-customer-dropdown" role="menu">
             <li ng-click="reloadReports(true)"><a href="#"><span translate="reports.allCustomers"></span></a></li>
             <li class="divider"></li>
-            <li ng-repeat="orgs in totalOrgsData" ng-click="getCustomerReports(true, orgs.customerOrgId, orgs.customerName)"><a href="#">{{orgs.customerName}}</a></li>
+            <li ng-repeat="orgs in totalOrgsData" ng-click="getCustomerReports(true, orgs)"><a href="#">{{orgs.customerName}}</a></li>
           </ul>
         </div>
     </div>
