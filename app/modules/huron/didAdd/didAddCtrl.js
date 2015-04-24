@@ -6,45 +6,38 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-
   function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config) {
     var vm = this;
     var firstValidDid = false;
     var editMode = false;
+
     vm.invalidcount = 0;
     vm.submitBtnStatus = false;
-    vm.existCount = 0;
-    vm.newCount = 0;
     vm.deleteCount = 0;
+    vm.unchangedCount = 0;
+
+    vm.deletedCount = 0;
+    vm.addedCount = 0;
+    vm.processing = false;
+    vm.retrievingNumbers = false;
+    vm.errors = [];
+
+    vm.didObjectsFromCmi = [];
+    vm.unchangedDids = [];
+    vm.deletedDids = [];
+    vm.newDids = [];
+
     vm.addNumbers = true;
     vm.deleteNumbers = false;
-    vm.addingNumbers = false;
+
     vm.addSuccess = false;
     vm.unsavedTokens = [];
-    vm.tokens = [];
+
     vm.deletedNumbers = '';
     vm.tokenfieldid = 'didAddField';
-    vm.tokenplacehoder = $translate.instant('didAddModal.inputPlacehoder');
+    vm.tokenplacehoder = $translate.instant('didManageModal.inputPlacehoder');
     vm.fromEditTrial = $stateParams.fromEditTrial;
     vm.currentTrial = angular.copy($stateParams.currentTrial);
-
-    vm.init = function (customerId) {
-      if (angular.isUndefined(customerId) && angular.isDefined($stateParams.currentOrg) && angular.isDefined($stateParams.currentOrg.customerOrgId)) {
-        customerId = $stateParams.currentOrg.customerOrgId;
-      }
-      if (angular.isDefined(customerId)) {
-        ExternalNumberPool.getAll(customerId).then(function (results) {
-          if (angular.isDefined(results) && angular.isDefined(results.length)) {
-            $timeout(function () {
-              for (var i = 0; i < results.length; i++) {
-                $('#didAddField').tokenfield('createToken', results[i].pattern);
-              }
-              vm.tokens = results;
-            });
-          }
-        });
-      }
-    };
 
     vm.tokenoptions = {
       delimiter: [',', ';'],
@@ -76,17 +69,19 @@
             LogMetricsService.logMetrics('First valid DID number entered', LogMetricsService.getEventType('trialDidEntered'), LogMetricsService.getEventAction('keyInputs'), 200, moment(), 1);
           }
         }
+        setPlaceholderText("");
         vm.submitBtnStatus = vm.checkForInvalidTokens();
       },
       removedtoken: function (e) {
         if (!validateDID(e.attrs.value)) {
           vm.invalidcount--;
         }
-        var tokenCount = getDIDList();
-        if (tokenCount.length > 1) {
-          vm.submitBtnStatus = vm.checkForInvalidTokens();
-        } else {
-          vm.submitBtnStatus = false;
+        vm.submitBtnStatus = vm.checkForInvalidTokens();
+
+        //If this is the last token, put back placeholder text.
+        var tokenElement = $("div", ".did-input").children(".token");
+        if (tokenElement.length === 0) {
+          setPlaceholderText(vm.tokenplacehoder);
         }
       },
       editedtoken: function (e) {
@@ -111,7 +106,35 @@
     } else {
       editMode = $stateParams.editMode;
     }
+
+    function activate(customerId) {
+      if (angular.isUndefined(customerId) && angular.isDefined($stateParams.currentOrg) && angular.isDefined($stateParams.currentOrg.customerOrgId)) {
+        customerId = $stateParams.currentOrg.customerOrgId;
+      }
+      if (angular.isDefined(customerId)) {
+        ExternalNumberPool.getAll(customerId).then(function (results) {
+          if (angular.isArray(results)) {
+            $timeout(function () {
+              angular.forEach(results, function (did) {
+                addToTokenField(did.pattern);
+              });
+              vm.didObjectsFromCmi = results;
+            });
+          }
+        });
+      }
+    }
+
+    activate();
     ////////////
+
+    function setPlaceholderText(text) {
+      $('#didAddField-tokenfield').attr('placeholder', text);
+    }
+
+    function addToTokenField(pattern) {
+      $('#didAddField').tokenfield('createToken', pattern);
+    }
 
     function validateDID(input) {
       var didregex = /^\+([0-9]){10,12}$/;
@@ -127,8 +150,12 @@
     }
 
     function getDIDList() {
-      var didList;
+      var didList = [];
       var tokens = vm.unsavedTokens;
+
+      if (tokens !== "") {
+        didList = tokens.split(',');
+      }
 
       if (angular.isDefined(tokens) && angular.isDefined(tokens.length) && tokens.length !== 0) {
         didList = tokens.split(',');
@@ -136,98 +163,100 @@
       return didList;
     }
 
-    function getDidBucket() {
-      var didBucket = {
-        'deletedDid': [],
-        'newlyAddedDid': [],
-        'alreadyExistingDid': []
-      };
+    function populateDidArrays() {
       var didList = getDIDList();
-      if (angular.isDefined(vm.tokens) && angular.isDefined(vm.tokens.length) && vm.tokens.length > 0) {
-
-        if (angular.isUndefined(didList) || angular.isUndefined(didList.length) || didList.length === 0) {
-          didBucket.alreadyExistingDid = vm.tokens.slice();
-          return didBucket;
-        }
-
-        var tokens = vm.tokens.slice();
-        // Adding all deleted dids in bucket
-        for (var i = 0; i < vm.tokens.length; i++) {
-          if (didList.indexOf(vm.tokens[i].pattern) == -1) {
-            tokens.splice(i);
-            didBucket.deletedDid.push(vm.tokens[i]);
+      if (vm.didObjectsFromCmi.length > 0) {
+        //look for DIDs that need to be removed
+        var dids = vm.didObjectsFromCmi.slice();
+        angular.forEach(vm.didObjectsFromCmi, function (didObj, index) {
+          if (!_.contains(didList, didObj.pattern)) {
+            dids.splice(index);
+            vm.deletedDids.push(didObj);
           } else {
-            didList.splice(didList.indexOf(vm.tokens[i].pattern), 1);
+            didList.splice(didList.indexOf(didObj.pattern), 1);
           }
-        }
+        });
 
-        //Adding the newly added dids
+        //Add new dids
         if (didList.length > 0) {
-          didBucket.newlyAddedDid = didList.slice();
+          vm.newDids = didList.slice();
         }
 
         //Adding already existing dids
-        didBucket.alreadyExistingDid = tokens.slice();
+        vm.unchangedDids = dids.slice();
 
-      } else if (angular.isDefined(didList) && angular.isDefined(didList.length) && didList.length > 0) {
-        didBucket.newlyAddedDid = didList.slice();
+      } else if (didList.length > 0) {
+        vm.newDids = didList.slice();
       }
+    }
 
-      return didBucket;
+    function restoreDeletedDids() {
+      _(vm.deletedDids).each(function (deletedDid) {
+        addToTokenField(deletedDid.pattern);
+      });
+      vm.deletedDids = [];
+      vm.deletedNumbers = [];
     }
 
     function confirmSubmit(customerId) {
-      var didBucket = getDidBucket();
+      populateDidArrays();
+
+      vm.unchangedCount = vm.unchangedDids.length;
       vm.addNumbers = false;
 
-      if (didBucket.deletedDid.length > 0) {
-        vm.deleteCount = didBucket.deletedDid.length;
-        vm.deletedNumbers = formatDidList(didBucket.deletedDid).toString();
+      if (vm.deletedDids.length > 0) {
+        vm.deleteCount = vm.deletedDids.length;
+        vm.deletedNumbers = formatDidList(vm.deletedDids);
         vm.deleteNumbers = true;
       } else {
         submit(customerId);
       }
-
     }
 
     function submit(customerId) {
-      var didBucket = getDidBucket();
-
       vm.deleteNumbers = false;
-      vm.addingNumbers = true;
-
-      vm.existCount = didBucket.alreadyExistingDid.length;
-      vm.newCount = didBucket.newlyAddedDid.length;
-      vm.deleteCount = didBucket.deletedDid.length;
+      vm.processing = true;
 
       var promises = [];
-      if (angular.isDefined(didBucket)) {
+      if (vm.deletedDids.length > 0) {
+        _(vm.deletedDids).each(function (delDid) {
+          var deletePromise = ExternalNumberPool.deletePool(customerId ? customerId : vm.currentOrg.customerOrgId, delDid.uuid).then(function (response) {
+            vm.deletedCount++;
+          }).catch(function (response) {
+            vm.errors.push({
+              pattern: this.pattern,
+              message: Notification.processErrorResponse(response)
+            });
+          }.bind(delDid));
+          promises.push(deletePromise);
+        });
+      }
 
-        if (didBucket.deletedDid.length > 0) {
-
-          promises[0] = ExternalNumberPool.deleteExtNums(customerId ? customerId : vm.currentOrg.customerOrgId, didBucket.deletedDid).then(function (results) {
-            vm.deleteCount = results.successes;
-          });
-        }
-
-        if (didBucket.newlyAddedDid.length > 0) {
-          promises[1] = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, didBucket.newlyAddedDid).then(function (results) {
-            vm.newCount = results.successes.length;
-            vm.failedAdd = results.failures;
-          });
-        }
+      if (vm.newDids.length > 0) {
+        _(vm.newDids).each(function (newDid) {
+          var addPromise = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, newDid).then(function (response) {
+            vm.addedCount++;
+          }).catch(function (response) {
+            vm.errors.push({
+              pattern: this,
+              message: Notification.processErrorResponse(response)
+            });
+          }.bind(newDid));
+          promises.push(addPromise);
+        });
       }
 
       return $q.all(promises).finally(function () {
         $rootScope.$broadcast('DIDS_UPDATED');
-        vm.addingNumbers = false;
+        vm.processing = false;
         vm.addSuccess = true;
 
-        if (angular.isDefined(vm.failedAdd) && vm.failedAdd.length > 0) {
-          var errorMsg = [$translate.instant('didAddModal.failText', {
-            count: vm.failedAdd.length
-          })];
-          Notification.notify(errorMsg, 'error');
+        if (vm.errors.length > 0) {
+          var errorMsgs = [];
+          _(vm.errors).each(function (error) {
+            errorMsgs.push("Number: " + error.pattern + " " + error.message);
+          });
+          Notification.notify(errorMsgs, 'error');
         }
       });
     }
@@ -235,6 +264,7 @@
     function goBackToAddNumber() {
       vm.addNumbers = true;
       vm.deleteNumbers = false;
+      restoreDeletedDids();
     }
 
     function backtoEditTrial() {
@@ -249,13 +279,13 @@
     }
 
     function formatDidList(didList) {
-      var result = [];
+      var formattedDids = [];
       if (angular.isDefined(didList) && angular.isDefined(didList.length) && didList.length > 0) {
-        for (var i = 0; i < didList.length; i++) {
-          result.push(formatPhoneNumbers(didList[i].pattern));
-        }
+        _(didList).each(function (number) {
+          formattedDids.push(formatPhoneNumbers(number.pattern));
+        });
       }
-      return result;
+      return formattedDids;
     }
 
     function formatPhoneNumbers(value) {
@@ -273,6 +303,7 @@
       if ($scope.trial && angular.isFunction($scope.trial.startTrial)) {
         angular.element('#startTrial').button('loading');
         $q.when($scope.trial.startTrial(true)).then(function (customerId) {
+          populateDidArrays();
           return submit(customerId);
         }).then(function () {
           return $state.go('trialAdd.nextSteps');
@@ -286,6 +317,7 @@
       if ($scope.trial && angular.isFunction($scope.trial.editTrial)) {
         angular.element('#startTrial').button('loading');
         $q.when($scope.trial.editTrial(true)).then(function (customerId) {
+          populateDidArrays();
           return submit(customerId);
         }).then(function () {
           $state.modal.close();
@@ -302,10 +334,10 @@
         'partnerName': Authinfo.getOrgName()
       };
       DidAddEmailService.save({}, emailInfo, function () {
-        var successMsg = [$translate.instant('didAddModal.emailSuccessText')];
+        var successMsg = [$translate.instant('didManageModal.emailSuccessText')];
         Notification.notify(successMsg, 'success');
       }, function () {
-        var errorMsg = [$translate.instant('didAddModal.emailFailText')];
+        var errorMsg = [$translate.instant('didManageModal.emailFailText')];
         Notification.notify(errorMsg, 'error');
       });
       $state.modal.close();
@@ -318,20 +350,17 @@
             $scope.trial.licenseDuration,
             $scope.trial.customerOrgId)
           .then(function (response) {
-            Notification.notify([$translate.instant('didAddModal.emailSuccessText')], 'success');
+            Notification.notify([$translate.instant('didManageModal.emailSuccessText')], 'success');
           })
           .catch(function (response) {
-            Notification.notify([$translate.instant('didAddModal.emailFailText')], 'error');
+            Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
           })
           .finally(function () {
             angular.element('#trialNotifyCustomer').prop('disabled', true);
           });
       } else {
-        Notification.notify([$translate.instant('didAddModal.emailFailText')], 'error');
+        Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
       }
     }
-
-    vm.init();
-
   }
 })();

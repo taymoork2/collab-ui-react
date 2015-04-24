@@ -915,31 +915,23 @@
     "none": "None"
   },
   "didAddModal": {
-    "title": "Add Phone Numbers (Optional)",
-    "instructionsText": "The Company you are setting up needs to provide you with their existing Phone Numbers. This will initiate the porting request of the company's phone numbers.",
-    "processingText": "Adding Phone Numbers...",
-    "successText": "{{count}} new phone number(s) successfully added.",
-    "failText": "{{count}} phone number(s) already in the system.",
-    "sendEmail": "Notify Customer",
-    "notifyCustLater": "Notify Customer Later",
-    "emailSuccessText": "Email successfully sent to customer.",
-    "emailFailText": "Error sending email",
-    "inputPlacehoder": "Enter phone numbers separated by commas"
+    "title": "Add Phone Numbers (Optional)"
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
-    "instructionsText": "The Company you are setting up needs to provide you with their existing Phone Numbers. This will initiate the porting request of the company's phone numbers.",
-    "processingText": "Adding Phone Numbers...",
+    "instructionsText": "The company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers.",
+    "processingText": "Processing Phone Numbers...",
     "newDidText": "{{count}} new phone number(s) successfully added.",
     "existingDidText": "{{count}} phone number(s) already in the system.",
     "deleteDidText": "{{count}} phone number(s) were deleted.",
-    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s) ? It might impact end users if these numbers are assigned to user's lines.",
+    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s)?  It may impact end users if these numbers are assigned to user's lines.",
     "removeNumbers": "Remove Numbers",
     "sendEmail": "Notify Customer",
     "notifyCustLater": "Notify Customer Later",
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
-    "inputPlacehoder": "Enter phone numbers separated by commas"
+    "inputPlacehoder": "Enter phone numbers separated by commas",
+    "didFormatHelpText": "The first digit must be 1.  Example formats include: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Device Configuration",

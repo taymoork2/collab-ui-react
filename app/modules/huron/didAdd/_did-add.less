@@ -10,11 +10,25 @@
   }
 }
 
+.did-input {
+  position: relative;
+
+  .tokenfield {
+    min-height: 44px;
+  }
+
+  .did-input-help {
+    position: absolute;
+    top: 10px;
+    right: 0;
+  }
+}
+
 .add-numbers,
 .delete-numbers {
   p {
     text-align: left;
-  } 
+  }
 }
 
 .adding-numbers {
@@ -27,7 +41,7 @@
 }
 
 .add-success {
-  .icon-check-mark-success {
+  .icon-check {
     color: @gray-dark;
   }
   .btn {
@@ -43,4 +57,18 @@
 .setupDidBtn,
 .deleteDidBtn {
   display: none;
+}
+
+.did-badge {
+  margin-right: 5px;
+  line-height: @line-height-base;
+}
+
+.did-help-icon {
+  .icon;
+  .icon-help;
+  font-size: 23px;
+  vertical-align: middle;
+  &:hover { color: @brand-primary; }
+  color: @gray-dark;
 }

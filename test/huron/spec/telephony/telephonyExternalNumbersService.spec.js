@@ -2,7 +2,6 @@
 
 describe('Service: ExternalNumberPool', function () {
   var $httpBackend, ExternalNumberPool, HuronConfig;
-  var didList = ['+9999999999', '+8888888888', '+7777777777', '+6666666666', '+5555555555'];
 
   beforeEach(module('Huron'));
 
@@ -36,27 +35,23 @@ describe('Service: ExternalNumberPool', function () {
       expect(ExternalNumberPool.create).toBeDefined();
     });
 
-    it('should create 5 DIDs', function () {
-      $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(201);
-      ExternalNumberPool.create('1', didList).then(function (results) {
-        expect(results.successes.length).toEqual(5);
-      });
+    it('should create a DID', function () {
+      $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(201);
+      ExternalNumberPool.create('1', '+9999999999');
       $httpBackend.flush();
     });
 
-    it('should fail to create 5 DIDs', function () {
-      $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(500);
-      ExternalNumberPool.create('1', didList).then(function (results) {
-        expect(results.failures.length).toEqual(5);
-      });
+    it('should fail to create DID', function () {
+      $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(500);
+      ExternalNumberPool.create('1', '+8888888888');
       $httpBackend.flush();
     });
   });
 
   describe('deletePool function', function () {
     it('should remove DID', function () {
-      $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/1').respond(204);
-      ExternalNumberPool.deletePool('1', '1').then(function () {});
+      $httpBackend.expectDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/1').respond(204);
+      ExternalNumberPool.deletePool('1', '1');
       $httpBackend.flush();
     });
   });

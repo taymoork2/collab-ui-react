@@ -10,7 +10,8 @@
   function NotificationFn($translate) {
     return {
       notify: notify,
-      errorResponse: errorResponse
+      errorResponse: errorResponse,
+      processErrorResponse: processErrorResponse
     };
 
     function notify(notifications, type) {
@@ -28,16 +29,21 @@
     }
 
     function errorResponse(response, errorKey, errorParams) {
+      var errorMsg = processErrorResponse(response, errorKey, errorParams);
+      alertify.log(errorMsg.trim(), 'error', 0);
+    }
+
+    function processErrorResponse(response, errorKey, errorParams) {
       var errorMsg = '';
       if (errorKey) {
         errorMsg += $translate.instant(errorKey, errorParams);
       }
-      if (response && response.data && response.data.errorMessage) {
+      if (response && response.data && angular.isString(response.data.errorMessage)) {
         errorMsg += ' ' + response.data.errorMessage;
       } else if (response && response.status === 404) {
         errorMsg += ' ' + $translate.instant('errors.status404');
       }
-      alertify.log(errorMsg.trim(), 'error', 0);
+      return errorMsg;
     }
   }
 })();

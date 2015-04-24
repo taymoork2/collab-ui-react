@@ -12,15 +12,7 @@
     var customerPayload = {
       'uuid': null,
       'name': null,
-      'domain': null,
-      'servicePackage': 'VOICE_ONLY',
-      'admin': {
-        'lastName': null,
-        'userName': null
-      },
-      "voice": {
-        "callManagerGroup": "CMG-1-2"
-      }
+      'servicePackage': 'VOICE_ONLY'
     };
 
     var factory = {
@@ -33,10 +25,6 @@
       var customer = angular.copy(customerPayload);
       customer.uuid = uuid;
       customer.name = name;
-      customer.domain = name.replace(domainRegex, '') + ".com";
-      customer.admin.userName = email;
-      var emailSplit = email.split('@');
-      customer.admin.lastName = emailSplit[0];
 
       return CustomerCommonService.save({}, customer).$promise;
     }

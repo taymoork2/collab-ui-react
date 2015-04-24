@@ -11,7 +11,6 @@
       var service = {
         create: create,
         getAll: getAll,
-        deleteExtNums: deleteExtNums,
         deletePool: deletePool,
         deleteAll: deleteAll
       };
@@ -19,39 +18,14 @@
       return service;
       /////////////////////
 
-      function create(_customerId, didList) {
-        var results = {
-          successes: [],
-          failures: []
+      function create(_customerId, pattern) {
+        var externalNumber = {
+          'pattern': pattern
         };
-        var customerId = _customerId;
-        var didCount = didList.length;
-        var deferred = $q.defer();
 
-        for (var i = 0; i < didCount; i++) {
-          var externalNumber = {
-            'pattern': didList[i]
-          };
-          ExternalNumberPoolService.save({
-            customerId: customerId
-          }, externalNumber, function (data) {
-            results.successes.push(data.pattern);
-            didCount--;
-            if (didCount === 0) {
-              deferred.resolve(results);
-            }
-          }, function (err) {
-            Log.error("Failure to add did " + err);
-            results.failures.push(err.config.data.pattern);
-            didCount--;
-            if (didCount === 0) {
-              deferred.resolve(results);
-            }
-
-          });
-        }
-
-        return deferred.promise;
+        return ExternalNumberPoolService.save({
+          customerId: _customerId
+        }, externalNumber).$promise;
       }
 
       function getAll(_customerId) {
@@ -67,34 +41,6 @@
           customerId: customerId,
           externalNumberId: externalNumberUuid
         }).$promise;
-      }
-
-      function deleteExtNums(_customerId, didList) {
-        var results = {
-          successes: 0,
-          failures: 0
-        };
-        var customerId = _customerId;
-        var didCount = didList.length;
-        var deferred = $q.defer();
-
-        for (var i = 0; i < didCount; i++) {
-
-          deletePool(customerId, didList[i].uuid).then(function (data) {
-            results.successes++;
-          }, function (err) {
-            Log.error("Failure to delete did " + err);
-            results.failures++;
-          }).finally(function () {
-            didCount--;
-            if (didCount === 0) {
-              deferred.resolve(results);
-            }
-          });
-        }
-
-        return deferred.promise;
-
       }
 
       function deleteAll(_customerId) {
