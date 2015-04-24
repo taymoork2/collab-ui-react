@@ -1262,7 +1262,7 @@
     "on": "On",
     "off": "Off",
     "calendarService": "Calendar Service",
-    "squaredDesc": "Including @squared in a meeting invitation creates a Spark Room automatically.",
+    "sparkDesc": "Including @spark in a meeting invitation creates a Spark Room automatically.",
     "webexDesc": "Including @webex in the meeting invitation creates a WebEx meeting and appends the information to the invitation."
   }
 }
