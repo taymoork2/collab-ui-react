@@ -17,13 +17,13 @@ angular
         $scope.fusionCal = {
           name: $translate.instant('cloudExtensions.calendar'),
           route: 'user-overview.calendar',
-          state: 'off'
+          state: $translate.instant('cloudExtensions.off')
         };
 
         if ($scope.isFusionCal) {
           $scope.extensions.push($scope.fusionCal);
           if (hasEntitlement('squared-fusion-cal')) {
-            $scope.fusionCal.state = 'on';
+            $scope.fusionCal.state = $translate.instant('cloudExtensions.on');
           }
         }
       }
@@ -36,9 +36,9 @@ angular
             $scope.currentUser = data.Resources[0];
             $stateParams.currentUser = data.Resources[0];
             if (hasEntitlement('squared-fusion-cal')) {
-              $scope.fusionCal.state = 'on';
+              $scope.fusionCal.state = $translate.instant('cloudExtensions.on');
             } else {
-              $scope.fusionCal.state = 'off';
+              $scope.fusionCal.state = $translate.instant('cloudExtensions.off');
             }
           }
         });
