@@ -134,6 +134,34 @@ describe('Service: USSService', function () {
     expect(callback.args[0][1]).toBeFalsy();
   });
 
+  it('should return userStatuses summary', function () {
+    $httpBackend
+      .when('GET', rootPath + 'userStatuses/summary')
+      .respond({});
+
+    var callback = sinon.stub();
+    Service.getStatusesSummary(callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBeFalsy();
+    expect(callback.args[0][1]).toBeTruthy();
+  });
+
+  it('should set error when userStatuses summary fails', function () {
+    $httpBackend
+      .when('GET', rootPath + 'userStatuses/summary')
+      .respond(500);
+
+    var callback = sinon.stub();
+    Service.getStatusesSummary(callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBeTruthy();
+    expect(callback.args[0][1]).toBeFalsy();
+  });
+
   describe('status decoration', function () {
 
     afterEach(function () {
