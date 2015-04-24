@@ -19,6 +19,21 @@ angular
       var allCustomerAllData = [];
       var singleCustomerAllData = {};
       var allCustomerAllCount = [];
+      var customerLandingCount = [];
+      var onboardingAllData = {};
+
+      var onboardingFunnel = 'onboardingFunnelLoaded';
+
+      var funnelLimits = [{
+        type: 'active_last_week',
+        limit: 1000
+      }, {
+        type: 'onboarded',
+        limit: 2500
+      }, {
+        type: 'organization_size',
+        limit: 5000
+      }];
 
       var chartLimits = [{
         type: 'entitlementsLoaded',
@@ -50,6 +65,34 @@ angular
       }, {
         type: 'contentShareSizesLoaded',
         limit: 5
+      }, {
+        type: 'conversationsLoaded',
+        limit: 100
+      }];
+
+      var customerLandingCountLimits = [{
+        type: 'callsCountLoaded',
+        limit: 100
+      }, {
+        type: 'conversationsCountLoaded',
+        limit: 100
+      }, {
+        type: 'contentSharedCountLoaded',
+        limit: 1000
+      }];
+
+      var countLimits = [{
+        type: 'activeUserCountLoaded',
+        limit: 6000
+      }, {
+        type: 'averageCallCountLoaded',
+        limit: 500
+      }, {
+        type: 'contentSharedCountLoaded',
+        limit: 9000
+      }, {
+        type: 'entitlementCountLoaded',
+        limit: 12000
       }];
 
       var sendChartResponse = function (type, allData) {
@@ -63,26 +106,32 @@ angular
         }, 2000);
       };
 
-      var countLimits = [{
-        type: 'activeUserCountLoaded',
-        limit: 500
-      }, {
-        type: 'averageCallCountLoaded',
-        limit: 50
-      }, {
-        type: 'contentSharedCountLoaded',
-        limit: 1000
-      }, {
-        type: 'entitlementCountLoaded',
-        limit: 1000
-      }];
+      var createFunnelResponse = function () {
+        var funnelResponse = {};
+        funnelResponse.date = moment().toISOString();
+        funnelResponse.success = true;
+        funnelResponse.data = [];
 
-      var createCountResponse = function () {
-        for (var count in countLimits) {
-          var currentCount = countLimits[count];
+        for (var counts in funnelLimits) {
+          var currentFunnel = funnelLimits[counts];
+          var obj = {
+            title: currentFunnel.type,
+            value: Math.floor(Math.random() * (currentFunnel.limit - currentFunnel.limit / 2) + currentFunnel.limit / 2)
+          };
+          funnelResponse.data.push(obj);
+        }
+
+        onboardingAllData.data = funnelResponse;
+        onboardingAllData.type = onboardingFunnel;
+        sendChartResponse(onboardingFunnel, funnelResponse);
+      };
+
+      var createCountResponse = function (limits) {
+        for (var count in limits) {
+          var currentCount = limits[count];
           var obj = {
             success: true,
-            data: Math.floor((Math.random() * currentCount.limit))
+            data: Math.floor(Math.random() * (currentCount.limit - currentCount.limit / 2) + currentCount.limit / 2)
           };
           var current = {
             type: currentCount.type,
@@ -107,7 +156,7 @@ angular
             var isoDate = currentDate.toISOString();
             var newData = {
               date: isoDate,
-              count: Math.floor((Math.random() * currentChart.limit))
+              count: Math.floor(Math.random() * (currentChart.limit - currentChart.limit / 2) + currentChart.limit / 2)
             };
             currentDate = currentDate.subtract(7, 'days');
             currentCustomerData.data.push(newData);
@@ -141,7 +190,7 @@ angular
               var isoDate = currentDate.toISOString();
               var newData = {
                 date: isoDate,
-                count: Math.floor((Math.random() * currentChart.limit))
+                count: Math.floor(Math.random() * (currentChart.limit - currentChart.limit / 2) + currentChart.limit / 2)
               };
               currentDate = currentDate.subtract(7, 'days');
               orgObj.data.push(newData);
@@ -162,7 +211,7 @@ angular
           return demoAccounts.indexOf(orgId) > -1;
         },
         getAllCustomersData: function () {
-          if (allCustomerAllData !== null && allCustomerAllData.length > 0) {
+          if (allCustomerAllData !== null && allCustomerAllData.length > 0 && allCustomerAllCount !== null && allCustomerAllCount.length > 0) {
             for (var charts in allCustomerAllData) {
               var current = allCustomerAllData[charts];
               sendChartResponse(current.type, current.data);
@@ -173,7 +222,7 @@ angular
             }
           } else {
             createCustomerResponse();
-            createCountResponse();
+            createCountResponse(countLimits);
           }
         },
         getIndCustomerData: function (orgId) {
@@ -185,6 +234,25 @@ angular
           } else {
             createSingleCustomerResponse(orgId);
           }
+        },
+        getFunnelData: function (orgId) {
+          if (_.has(onboardingAllData, 'type') && _.has(onboardingAllData, 'data')) {
+            (onboardingAllData.data.data).reverse();
+            sendChartResponse(onboardingAllData.type, onboardingAllData.data);
+          } else {
+            createFunnelResponse();
+          }
+        },
+        getCustomerCounts: function () {
+          if (allCustomerAllCount !== null && allCustomerAllCount.length > 0) {
+            for (var counts in allCustomerAllCount) {
+              var currentCount = allCustomerAllCount[counts];
+              sendChartResponse(currentCount.type, currentCount.data);
+            }
+          } else {
+            createCountResponse(customerLandingCountLimits);
+          }
+
         }
       };
     }

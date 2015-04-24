@@ -2,8 +2,8 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate',
-    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config, $translate) {
+  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate', 'CannedDataService',
+    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config, $translate, CannedDataService) {
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
@@ -117,19 +117,19 @@ angular.module('Squared')
 
       $scope.$on('avgCallsPerUserLoaded', function (event, response) {
         label = $translate.instant('reports.AvgCallsPerUser');
-        getCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', label, Config.chartColors.red, 'average');
+        getCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', label, Config.chartColors.blue, 'average');
       });
 
       $scope.$on('avgConversationsLoaded', function (event, response) {
         label = $translate.instant('reports.AvgRoomsPerUser');
         var axis = $translate.instant('reports.numberOfRoomsAxis');
-        getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', label, Config.chartColors.yellow, 'average', axis);
+        getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', label, Config.chartColors.blue, 'average', axis);
       });
 
       $scope.$on('activeUsersLoaded', function (event, response) {
         label = $translate.instant('reports.ActiveUsers');
         var axis = $translate.instant('reports.numberActiveAxis');
-        getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', label, Config.chartColors.green, 'average', axis);
+        getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', label, Config.chartColors.blue, 'average', axis);
       });
 
       $scope.$on('convOneOnOneLoaded', function (event, response) {
@@ -141,19 +141,19 @@ angular.module('Squared')
       $scope.$on('convGroupLoaded', function (event, response) {
         label = $translate.instant('reports.GroupRooms');
         var axis = $translate.instant('reports.groupRoomsAxis');
-        getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', label, Config.chartColors.red, 'sum', axis);
+        getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', label, Config.chartColors.blue, 'sum', axis);
       });
 
       $scope.$on('callsLoaded', function (event, response) {
         label = $translate.instant('reports.VideoCalls');
         var axis = $translate.instant('reports.videoCallsAxis');
-        getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', label, Config.chartColors.yellow, 'sum', axis);
+        getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', label, Config.chartColors.blue, 'sum', axis);
       });
 
       $scope.$on('callsAvgDurationLoaded', function (event, response) {
         label = $translate.instant('reports.AvgDurationofCalls');
         var axis = $translate.instant('reports.avgCallsAxis');
-        getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', label, Config.chartColors.green, 'average', axis);
+        getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', label, Config.chartColors.blue, 'average', axis);
       });
 
       $scope.$on('contentSharedLoaded', function (event, response) {
@@ -165,7 +165,7 @@ angular.module('Squared')
       $scope.$on('contentShareSizesLoaded', function (event, response) {
         label = $translate.instant('reports.AmountofContentShared');
         var axis = $translate.instant('reports.gbSharedAxis');
-        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', label, Config.chartColors.red, 'sum', axis);
+        getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', label, Config.chartColors.blue, 'sum', axis);
       });
 
       $scope.$on('onboardingFunnelLoaded', function (event, response) {
@@ -191,10 +191,16 @@ angular.module('Squared')
         contentShareSizesLoaded = false;
         onboardingFunnelLoaded = false;
 
-        if (Authinfo.isPartner()) {
-          ReportsService.getPartnerMetrics(backendCache);
+        if (CannedDataService.isDemoAccount(Authinfo.getOrgId())) {
+          //if(false){
+          CannedDataService.getIndCustomerData(Authinfo.getOrgId());
+          CannedDataService.getFunnelData();
         } else {
-          ReportsService.getAllMetrics(backendCache);
+          if (Authinfo.isPartner()) {
+            ReportsService.getPartnerMetrics(backendCache);
+          } else {
+            ReportsService.getAllMetrics(backendCache);
+          }
         }
 
         $scope.showAvgEntitlementsRefresh = true;
@@ -322,7 +328,7 @@ angular.module('Squared')
             'periodValueText': '[[value.' + [operation] + ']]',
             'position': 'top',
             'valueWidth': 50,
-            'fontSize': 30,
+            'fontSize': 22,
             'markerType': 'none',
             'spacing': 30,
             'valueAlign': 'right',
@@ -344,7 +350,7 @@ angular.module('Squared')
           'type': 'serial',
           'theme': 'none',
           'fontFamily': 'CiscoSansTT Thin',
-          'colors': [color],
+          'colors': [Config.chartColors.blue],
           'backgroundColor': '#ffffff',
           'backgroundAlpha': 1,
           'legend': {
@@ -353,7 +359,7 @@ angular.module('Squared')
             'periodValueText': '[[value.' + [operation] + ']]',
             'position': 'top',
             'valueWidth': 10,
-            'fontSize': 30,
+            'fontSize': 22,
             'markerType': 'none',
             'spacing': 0,
             'valueAlign': 'right',
@@ -361,30 +367,34 @@ angular.module('Squared')
             'useMarkerColorForValues': true,
             'marginLeft': -20,
             'marginRight': 0,
-            'color': '#555'
+            'color': '#444'
           },
           'dataProvider': sdata,
           'valueAxes': [{
-            'axisColor': '#DDDDDD',
+            'axisColor': '#ddd',
             'gridAlpha': 0,
             'axisAlpha': 1,
-            'color': '#999999',
+            'color': '#666',
             'title': yAxisTitle,
-            'titleColor': '#999999'
+            'titleColor': '#666'
           }],
           'graphs': [{
-            'type': 'column',
-            'fillAlphas': 1,
+            'type': 'line',
+            'bullet': 'round',
+            'lineColor': Config.chartColors.blue,
+            'fillAlphas': 0,
+            'lineAlpha': 1,
+            'lineThickness': 3,
             'hidden': false,
-            'lineAlpha': 0,
             'title': title,
+            'balloonText': '[[value]]',
             'valueField': metricName
           }],
           'chartCursor': {
             'enabled': shouldShowCursor,
             'valueLineEnabled': true,
             'valueLineBalloonEnabled': true,
-            'cursorColor': '#AFB0B3',
+            'cursorColor': '#666',
             'valueBalloonsEnabled': false,
             'cursorPosition': 'mouse'
           },
@@ -394,7 +404,7 @@ angular.module('Squared')
             'thousandsSeparator': ','
           },
           'plotAreaBorderAlpha': 0,
-          'plotAreaBorderColor': '#DDDDDD',
+          'plotAreaBorderColor': '#ddd',
           'marginTop': 20,
           'marginRight': 20,
           'marginLeft': 10,
@@ -402,12 +412,12 @@ angular.module('Squared')
           'categoryField': 'week',
           'categoryAxis': {
             'gridPosition': 'start',
-            'axisColor': '#DDDDDD',
+            'axisColor': '#ddd',
             'gridAlpha': 1,
-            'gridColor': '#DDDDDD',
-            'color': '#999999',
+            'gridColor': '#ddd',
+            'color': '#666',
             'title': xAxisTitle,
-            'titleColor': '#999999'
+            'titleColor': '#666'
           }
         });
       };

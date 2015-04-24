@@ -3,8 +3,8 @@
 /* global AmCharts, moment */
 
 angular.module('Core')
-  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate',
-    function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate) {
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService',
+    function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService) {
 
       $scope.isAdmin = false;
       var callsChart, conversationsChart, contentSharedChart;
@@ -43,24 +43,31 @@ angular.module('Core')
         $scope.reportStatus.calls = 'refresh';
         $scope.reportStatus.conversations = 'refresh';
         $scope.reportStatus.contentShared = 'refresh';
-        ReportsService.getLandingMetrics(useCache);
+        if (CannedDataService.isDemoAccount(Authinfo.getOrgId())) {
+          CannedDataService.getCustomerCounts();
+          CannedDataService.getIndCustomerData();
+        } else {
+          ReportsService.getLandingMetrics(useCache);
+        }
       };
 
-      ReportsService.getLandingMetrics(true);
+      $scope.reloadReports(true);
 
       var makeChart = function (id, colors) {
         return AmCharts.makeChart(id, {
           'type': 'serial',
           'theme': 'none',
           'fontFamily': 'CiscoSansTT Thin',
-          'colors': colors,
+          'colors': Config.chartColors.blue,
           'graphs': [{
-            'type': 'column',
-            'fillAlphas': 1,
-            'lineAlpha': 0,
+            'type': 'line',
+            'bullet': 'round',
+            'lineColor': Config.chartColors.blue,
+            'fillAlphas': 0,
+            'lineAlpha': 1,
+            'lineThickness': 3,
             'hidden': false,
             'valueField': 'count',
-            'ballooonText': '[[value]]'
           }],
           'plotAreaBorderAlpha': 1,
           'plotAreaBorderColor': '#DDDDDD',
