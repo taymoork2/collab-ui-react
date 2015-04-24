@@ -1,0 +1,11 @@
+{
+  "choice": [{
+    "value": "1_000001_ULT",
+    "altDisplay": null,
+    "uuid": "b75952c0-2b37-4b33-a548-2641d7c233a7"
+  }, {
+    "value": "STANDARD_ULT",
+    "altDisplay": null,
+    "uuid": "44296405-ff2f-4cf7-ac88-c92b556226de"
+  }]
+}

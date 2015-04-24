@@ -45,10 +45,8 @@ angular.module('Core')
                     .then(function () {
                       data.success = true;
                       callback(data, status);
-                    }).catch(function (error) {
-                      Log.error('Squared UC user create unsuccessful: ' + error);
-                      data.success = false;
-                      callback(data, status);
+                    }).catch(function (response) {
+                      callback(response);
                     });
                 } else {
                   if (data.userResponse[0].unentitled && data.userResponse[0].unentitled.indexOf(Config.entitlements.huron) !== -1) {

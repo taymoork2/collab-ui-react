@@ -6,7 +6,7 @@
     .factory('HuronAssignedLine', HuronAssignedLine);
 
   /* @ngInject */
-  function HuronAssignedLine(Authinfo, InternalNumberPoolService, DirectoryNumberCopyService) {
+  function HuronAssignedLine(Authinfo, InternalNumberPoolService, DirectoryNumberCopyService, $q, $translate) {
     var lineTemplate;
 
     var assignLineService = {
@@ -46,8 +46,13 @@
           return getUnassignedDirectoryNumber();
         })
         .then(function (directoryNumber) {
-          assignedLine = directoryNumber;
-          return copyFromUlt(directoryNumber, dnUsage, userUuid);
+          if (directoryNumber) {
+            assignedLine = directoryNumber;
+            return copyFromUlt(directoryNumber, dnUsage, userUuid);
+          } else {
+            return $q.reject($translate.instant('directoryNumberPanel.unassignedNumberError'));
+          }
+
         })
         .then(function () {
           return assignedLine;
@@ -82,7 +87,7 @@
         }).$promise
         .then(function (directoryNumbers) {
           if (angular.isArray(directoryNumbers) && directoryNumbers.length > 0) {
-            var randomIndex = Math.floor(Math.random() * (directoryNumbers.length - 0 + 1) + 0);
+            var randomIndex = Math.floor(Math.random() * directoryNumbers.length);
             return directoryNumbers[randomIndex];
           }
         });

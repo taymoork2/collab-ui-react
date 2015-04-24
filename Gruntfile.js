@@ -696,6 +696,13 @@ module.exports = function (grunt) {
       options: {
         configFile: '<%= test_dir %>/karma-unit.js'
       },
+      // karma:debug to host server, karma:debug:run to run against server
+      debug: {
+        port: 9019,
+        browsers: ['Chrome'],
+        preprocessors: {},
+        browserNoActivityTimeout: 600000
+      },
       unit: {
         port: 9019,
         background: true

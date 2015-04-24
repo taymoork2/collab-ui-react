@@ -415,12 +415,22 @@ angular.module('Core')
             Log.warn('Could not onboard the user', data);
             var error = null;
             if (status) {
-              error = ['Request failed with status: ' + status + '. Message: ' + data];
-              Notification.notify(error, 'error');
+              error = $translate.instant('usersPage.statusError', {
+                status: status
+              });
+              if (data && angular.isString(data.message)) {
+                error += ' ' + $translate.instant('usersPage.messageError', {
+                  message: data.message
+                });
+              }
             } else {
-              error = ['Request failed: ' + data];
+              error = 'Request failed.';
+              if (angular.isString(data)) {
+                error += ' ' + data;
+              }
               Notification.notify(error, 'error');
             }
+            Notification.notify([error], 'error');
             isComplete = false;
             angular.element('#btnOnboard').button('reset');
           }
@@ -461,9 +471,9 @@ angular.module('Core')
         };
         var isComplete = true;
 
+        $rootScope.$broadcast('USER_LIST_UPDATED');
         if (data.success) {
           Log.info('User successfully updated', data);
-          $rootScope.$broadcast('USER_LIST_UPDATED');
 
           for (var i = 0; i < data.userResponse.length; i++) {
 
@@ -521,12 +531,21 @@ angular.module('Core')
           Log.warn('Could not entitle the user', data);
           var error = null;
           if (status) {
-            error = ['Request failed with status: ' + status + '. Message: ' + data];
-            Notification.notify(error, 'error');
+            error = $translate.instant('usersPage.statusError', {
+              status: status
+            });
+            if (data && angular.isString(data.message)) {
+              error += ' ' + $translate.instant('usersPage.messageError', {
+                message: data.message
+              });
+            }
           } else {
-            error = ['Request failed: ' + data];
-            Notification.notify(error, 'error');
+            error = 'Request failed.';
+            if (angular.isString(data)) {
+              error += ' ' + data;
+            }
           }
+          Notification.notify([error], 'error');
           isComplete = false;
           angular.element('#btnOnboard').button('reset');
           angular.element('#btnSaveEnt').button('reset');
