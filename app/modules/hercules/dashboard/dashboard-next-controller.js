@@ -9,13 +9,13 @@ angular.module('Hercules')
       $scope.pollHasFailed = false;
       $scope.showInfoPanel = false;
 
-      ClusterProxy.startPolling(function () {
+      ClusterProxy.startPolling(function (err, data) {
+        $scope.showInfoPanel = data.length === 0;
         $scope.loading = false;
       });
 
       $scope.$watch(ClusterProxy.getClusters, function (data) {
         $scope.clusters = data.clusters || [];
-        $scope.showInfoPanel = data.clusters.length === 0;
         $scope.pollHasFailed = data.error;
       }, true);
 
