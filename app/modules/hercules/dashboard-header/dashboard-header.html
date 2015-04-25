@@ -10,10 +10,10 @@
           <div>
             <div>
               <span ng-show="service.running == 1">
-                Running on {{service.running}} cluster
+                Running on {{service.running}} cluster. {{summary(service.service_id).activated}} users activated.
               </span>
               <span ng-hide="service.running == 1">
-                Running on {{service.running}} clusters
+                Running on {{service.running}} clusters. {{summary(service.service_id).activated}} users activated.
               </span>
             </div>
           </div>

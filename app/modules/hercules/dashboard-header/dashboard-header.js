@@ -6,9 +6,24 @@
       '$scope',
       'ServiceDescriptor',
       'DashboardAggregator',
-      function ($scope, descriptor, aggregator) {
+      'USSService',
+      function ($scope, descriptor, aggregator, ussService) {
         var services = null;
         var clusters = null;
+
+        ussService.getStatusesSummary(function (err, userStatusesSummary) {
+          if (err) return notification.notify(err);
+          $scope.userStatusesSummary = userStatusesSummary || {}
+          $scope.summary = function (serviceId) {
+            var summary = null;
+            if ($scope.userStatusesSummary) {
+              summary = _.find($scope.userStatusesSummary.summary, function (s) {
+                return s.serviceId == serviceId;
+              });
+            }
+            return summary || { activated: 0, notActivated: 0 };
+          };
+        });
 
         var updateServiceAggregates = function () {
           if (services && clusters) {

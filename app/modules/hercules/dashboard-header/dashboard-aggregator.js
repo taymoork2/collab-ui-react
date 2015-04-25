@@ -21,6 +21,7 @@ angular.module('Hercules')
               name: service.display_name,
               type: service.connector_type,
               icon: service.icon_class,
+              service_id: service.service_id,
               running: 0,
               needs_attention: 0,
               software_upgrades: 0

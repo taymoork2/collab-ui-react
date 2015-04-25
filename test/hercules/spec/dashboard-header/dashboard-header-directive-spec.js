@@ -9,6 +9,7 @@ describe('DashboardHeaderDirective', function () {
     $rootScope = _$rootScope_;
     $injector.get('$httpBackend').when('GET', 'l10n/en_US.json').respond({});
     $injector.get('$httpBackend').when('GET', 'https://hercules-integration.wbx2.com/v1/fusion_entitlements_status').respond({});
+    $injector.get('$httpBackend').when('GET', 'https://uss-integration.wbx2.com/uss/api/v1/userStatuses/summary').respond({});
   }));
 
   it('replaces the element with the appropriate content', function () {
