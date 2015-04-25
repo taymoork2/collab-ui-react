@@ -20,7 +20,10 @@
                 return s.serviceId == serviceId;
               });
             }
-            return summary || { activated: 0, notActivated: 0 };
+            return summary || {
+              activated: 0,
+              notActivated: 0
+            };
           };
         });
 
