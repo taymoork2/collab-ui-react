@@ -12,8 +12,7 @@
         var clusters = null;
 
         ussService.getStatusesSummary(function (err, userStatusesSummary) {
-          if (err) return notification.notify(err);
-          $scope.userStatusesSummary = userStatusesSummary || {}
+          $scope.userStatusesSummary = userStatusesSummary || {};
           $scope.summary = function (serviceId) {
             var summary = null;
             if ($scope.userStatusesSummary) {
