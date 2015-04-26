@@ -10,7 +10,6 @@ angular.module('Hercules')
       $scope.showInfoPanel = false;
 
       ClusterProxy.startPolling(function (err, data) {
-        $scope.showInfoPanel = data.length === 0;
         $scope.loading = false;
       });
 

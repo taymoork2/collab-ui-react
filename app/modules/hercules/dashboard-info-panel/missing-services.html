@@ -1,0 +1,21 @@
+<cs-accordion ng-show="servicesMissing">
+  <cs-accordion-group
+    is-open="false"
+    show-caret="true"
+    display-status="danger"
+    heading="Service entitlements missing.">
+
+    <div ng-repeat="service in services.fusion_services">
+      <div ng-show="service.status == 'error'">
+        There is a problem with dependent services for {{service.display_name}},
+        your organization is missing the following needed services:
+        <ul>
+          <li ng-repeat="entitlement in service.missing_entitlements">
+            {{entitlement}}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </cs-accordion-group>
+</cs-accordion>

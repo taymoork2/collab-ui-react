@@ -1,0 +1,18 @@
+<cs-accordion ng-show="userActivationNotComplete">
+  <cs-accordion-group
+    is-open="false"
+    show-caret="true"
+    display-status="danger"
+    heading="User activation not properly performed.">
+
+    <div ng-repeat="service in xsummary">
+      <div ng-show="service.activated == 0">
+        No users activated for {{service.display_name}}.
+      </div>
+      <div ng-show="service.error != 0">
+        {{service.error}} users in error for {{service.display_name}}.
+      </div>
+    </div>
+
+  </cs-accordion-group>
+</cs-accordion>

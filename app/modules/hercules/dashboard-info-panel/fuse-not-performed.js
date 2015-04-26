@@ -8,7 +8,8 @@
       function ($scope, ClusterProxy) {
         $scope.fusePerformed = false;
         ClusterProxy.getClusters(function (err, clusters) {
-          $scope.fusePerformed = clusters.length;
+          $scope.fusePerformed = err || (clusters && clusters.length);
+          if (!$scope.fusePerformed) $scope.showInfoPanel = true;
         });
       }
 
