@@ -47,6 +47,10 @@
         return $sce.trustAsResourceUrl(src);
       }; // trustSrc()
 
+      this.btnReload2 = function () {
+        WebExUserSettingsFact.getUserSettingsInfo();
+      }; // btnReload2()
+
       this.callInTeleconfChkboxClick = function () {
         if (!this.userSettingsModel.telephonyPriviledge.callInTeleconf.value) {
           this.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 0;

@@ -1,19 +1,50 @@
-<form name="userSettingsView.form" novalidate role="form">
-  <cs-sp-buttons ng-show="userSettingsView.form.$dirty">
-  	<button class="btn-primary"
-  	        translate="common.save"
-  	        ng-click="WebExUserSettings2.btnSave2(userSettingsView.form)"
-  	        type="submit">
-    </button>
-    
-  	<button class="btn-default"
-  	        translate="common.cancel"
-  	        ng-click="WebExUserSettings2.reset2(userSettingsView.form)">
-  	</button>
-  </cs-sp-buttons>
+<cs-sp-buttons ng-show="userSettingsView.form.$dirty">
+	<button class="btn-primary"
+	        translate="common.save"
+	        ng-click="WebExUserSettings2.btnSave2(userSettingsView.form)"
+	        type="submit">
+  </button>
   
+	<button class="btn-default"
+	        translate="common.cancel"
+	        ng-click="WebExUserSettings2.reset2(userSettingsView.form)">
+	</button>
+</cs-sp-buttons>
+  
+<form name="userSettingsView.form" novalidate role="form">
   <cs-sp-container>
     <cs-sp-section>
+      <div id="errSection"
+           name="errSection"
+           ng-if="WebExUserSettings2.userSettingsModel.hasLoadError">
+         
+        <div class="center">
+          <div class="nodata-icon">
+            <span class="icon icon-circle-clock"></span> 
+          </div>
+          
+          <div class="nodata-message">
+            {{WebExUserSettings2.userSettingsModel.errMsg}}
+          </div>
+          
+          <button id="cancelBtn"
+                  name="cancelBtn"
+                  translate="webexUserSettings.cancel"
+                  class="btn btn-default wiz-onboard-btn"
+                  ui-sref="user-overview.conferencing">
+          </button>
+          
+          <button id="reloadBtn2"
+                  name="reloadBtn2"
+                  translate="webexUserSettings.reload"
+                  class="btn btn-info wiz-onboard-btn"
+                  ng-if="WebExUserSettings2.userSettingsModel.allowRetry"
+                  ng-click="WebExUserSettings2.btnReload2()"
+                  data-loading-text="<i class='icon icon-spinner'></i>">
+          </button>
+        </div>
+      </div>
+    
       <div id="webexUserSettingsPage2"
            ng-if="WebExUserSettings2.userSettingsModel.viewReady">
     
