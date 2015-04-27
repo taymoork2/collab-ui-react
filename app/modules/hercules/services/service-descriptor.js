@@ -8,7 +8,7 @@ angular.module('Hercules')
           .get(config.getUrl() + '/fusion_entitlements_status')
           .success(function (data) {
             var services = _.filter(data.fusion_services || [], function (service) {
-              return service.connector_type != 'c_mgmt';
+              return service.connector_type != 'c_mgmt' && service.enabled;
             });
             callback(null, services);
           })

@@ -24,9 +24,13 @@ describe('ServiceDescriptor', function () {
       .when('GET', 'https://hercules-integration.wbx2.com/v1/fusion_entitlements_status')
       .respond({
         fusion_services: [{
-          foo: 'bar'
+          foo: 'bar',
+          enabled: true
         }, {
-          connector_type: 'c_mgmt'
+          connector_type: 'c_mgmt',
+          enabled: true
+        }, {
+          enabled: false
         }]
       });
     Service.services(function (error, services) {
