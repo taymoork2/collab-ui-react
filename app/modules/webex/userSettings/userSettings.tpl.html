@@ -1,5 +1,8 @@
 <cs-sp-buttons ng-show="userSettingsView.form.$dirty">
-  <button class="btn-primary"
+  <button id="saveBtn"
+          name="saveBtn"
+          data-loading-text="<i class='icon icon-spinner'></i>"
+          class="btn-primary"
           translate="common.save"
           ng-click="WebExUserSettings.btnSave(userSettingsView.form)"
           type="submit">

@@ -621,6 +621,7 @@
           var logMsg = "";
 
           angular.element('#saveBtn').button('loading');
+          angular.element('#saveBtn2').button('loading');
 
           var _self = this;
           var useSupportedServices = userSettingsModel.userInfo.bodyJson.use_supportedServices;
@@ -649,6 +650,8 @@
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
               angular.element('#saveBtn').button('reset');
+              angular.element('#saveBtn2').button('reset');
+
               form.$dirty = false;
               form.$setPristine();
 
@@ -668,6 +671,7 @@
 
             function updateUserSettingsError(result) {
               angular.element('#saveBtn').button('reset');
+              angular.element('#saveBtn2').button('reset');
 
               _self.updateUserSettingsError(result);
             } // updateUserSettingsError()
