@@ -700,7 +700,9 @@ angular
           }
         })
         .state('trialAdd.nextSteps', {
-          templateUrl: 'modules/core/trials/nextStep.tpl.html'
+          templateUrl: 'modules/core/trials/nextStep.tpl.html',
+          controller: 'DidAddCtrl',
+          controllerAs: 'didAdd'
         })
         .state('trialEdit', {
           abstract: true,

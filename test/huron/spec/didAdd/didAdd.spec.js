@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DidAddCtrl', function () {
-  var controller, $scope, $state, $httpBackend, HuronConfig, Notification;
+  var controller, $q, $scope, $state, $httpBackend, HuronConfig, Notification, Config, EmailService;
 
   beforeEach(module('ui.bootstrap'));
   beforeEach(module('ui.router'));
@@ -18,10 +18,6 @@ describe('Controller: DidAddCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function (Notification) {
-    sinon.spy(Notification, "notify");
-  }));
-
   var state = {
     modal: {
       close: sinon.stub()
@@ -36,12 +32,23 @@ describe('Controller: DidAddCtrl', function () {
     }
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, $timeout) {
+  var trial = {
+    customerEmail: 'flast@company.com',
+    licenseDuration: '90',
+    customerOrgId: '0000000000000001'
+  };
+
+  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _Config_, _EmailService_, $timeout) {
+    $q = _$q_;
     $scope = $rootScope.$new();
+    $scope.trial = trial;
+
     $httpBackend = _$httpBackend_;
     $state = state;
     HuronConfig = _HuronConfig_;
+    Config = _Config_;
     Notification = _Notification_;
+    EmailService = _EmailService_;
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(200, [{
       'pattern': '+9999999991',
       'uuid': '9999999991-id'
@@ -63,6 +70,10 @@ describe('Controller: DidAddCtrl', function () {
     $httpBackend.flush();
     $rootScope.$apply();
     $timeout.flush();
+
+    spyOn(EmailService, 'emailNotifyTrialCustomer');
+    spyOn(Notification, "notify");
+
   }));
 
   afterEach(function () {
@@ -268,14 +279,66 @@ describe('Controller: DidAddCtrl', function () {
           $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/didadd').respond(200);
           controller.sendEmail();
           $httpBackend.flush();
-          expect(Notification.notify.calledOnce).toBe(true);
+          expect(Notification.notify.calls.count()).toEqual(1);
         });
 
         it('should report error notification when email cannot be sent', function () {
           $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/didadd').respond(500);
           controller.sendEmail();
           $httpBackend.flush();
-          expect(Notification.notify.calledOnce).toBe(true);
+          expect(Notification.notify.calls.count()).toEqual(1);
+        });
+      });
+
+      describe('emailNotifyTrialCustomer function with undefined trial', function () {
+        beforeEach(function () {
+          $scope.trial = undefined;
+        });
+
+        it('should exist', function () {
+          expect(controller.emailNotifyTrialCustomer).toBeDefined();
+        });
+
+        it('should not exist', function () {
+          expect($scope.trial).not.toBeDefined();
+        });
+
+        it('should report error notification when email cannot be sent', function () {
+          controller.emailNotifyTrialCustomer();
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        });
+      });
+
+      describe('emailNotifyTrialCustomer success function', function () {
+        beforeEach(function () {
+          EmailService.emailNotifyTrialCustomer.and.returnValue($q.when());
+        });
+
+        it('should exist', function () {
+          expect(controller.emailNotifyTrialCustomer).toBeDefined();
+        });
+
+        it('should send email and report success notification', function () {
+
+          controller.emailNotifyTrialCustomer();
+          $scope.$apply();
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+        });
+      });
+
+      describe('emailNotifyTrialCustomer failure function', function () {
+        beforeEach(function () {
+          EmailService.emailNotifyTrialCustomer.and.returnValue($q.reject());
+        });
+
+        it('should exist', function () {
+          expect(controller.emailNotifyTrialCustomer).toBeDefined();
+        });
+
+        it('should report error notification when email cannot be sent', function () {
+          controller.emailNotifyTrialCustomer();
+          $scope.$apply();
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
         });
       });
 

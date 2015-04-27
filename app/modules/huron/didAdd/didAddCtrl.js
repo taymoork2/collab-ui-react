@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config) {
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config) {
     var vm = this;
     var firstValidDid = false;
     var editMode = false;
@@ -105,6 +105,7 @@
     vm.backtoStartTrial = backtoStartTrial;
     vm.backtoEditTrial = backtoEditTrial;
     vm.currentOrg = $stateParams.currentOrg;
+    vm.emailNotifyTrialCustomer = emailNotifyTrialCustomer;
     if ($stateParams.editMode === undefined || $stateParams.editMode === null) {
       editMode = false;
     } else {
@@ -126,9 +127,12 @@
     }
 
     function getDIDList() {
+      var didList;
       var tokens = vm.unsavedTokens;
-      var didList = tokens.split(',');
 
+      if (angular.isDefined(tokens) && angular.isDefined(tokens.length) && tokens.length !== 0) {
+        didList = tokens.split(',');
+      }
       return didList;
     }
 
@@ -219,7 +223,7 @@
         vm.addingNumbers = false;
         vm.addSuccess = true;
 
-        if (vm.failedAdd.length > 0) {
+        if (angular.isDefined(vm.failedAdd) && vm.failedAdd.length > 0) {
           var errorMsg = [$translate.instant('didAddModal.failText', {
             count: vm.failedAdd.length
           })];
@@ -305,6 +309,26 @@
         Notification.notify(errorMsg, 'error');
       });
       $state.modal.close();
+    }
+
+    function emailNotifyTrialCustomer() {
+      if (angular.isDefined($scope.trial)) {
+        EmailService.emailNotifyTrialCustomer(
+            $scope.trial.customerEmail,
+            $scope.trial.licenseDuration,
+            $scope.trial.customerOrgId)
+          .then(function (response) {
+            Notification.notify([$translate.instant('didAddModal.emailSuccessText')], 'success');
+          })
+          .catch(function (response) {
+            Notification.notify([$translate.instant('didAddModal.emailFailText')], 'error');
+          })
+          .finally(function () {
+            angular.element('#trialNotifyCustomer').prop('disabled', true);
+          });
+      } else {
+        Notification.notify([$translate.instant('didAddModal.emailFailText')], 'error');
+      }
     }
 
     vm.init();

@@ -911,7 +911,7 @@
     "none": "None"
   },
   "didAddModal": {
-    "title": "Add Phone Numbers",
+    "title": "Add Phone Numbers (Optional)",
     "instructionsText": "The Company you are setting up needs to provide you with their existing Phone Numbers. This will initiate the porting request of the company's phone numbers.",
     "processingText": "Adding Phone Numbers...",
     "successText": "{{count}} new phone number(s) successfully added.",
