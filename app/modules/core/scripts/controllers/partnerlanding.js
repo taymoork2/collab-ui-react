@@ -2,9 +2,9 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService',
+  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
 
-    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, ExternalNumberPool, LogMetricsService) {
+    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -343,7 +343,7 @@ angular.module('Core')
 
       var notesTemplate = '<div class="ngCellText">' +
         '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft > 0" translate="customerPage.daysRemaining" translate-values="{count: row.entity.daysLeft}"></span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft == 0" class="red" translate="customerPage.expiringToday"></span>' +
+        '<span ng-if="isLicenseATrial(row.entity) && isisLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft == 0" class="red" translate="customerPage.expiringToday"></span>' +
         '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft < 0" class="red" translate="customerPage.expired"></span>' +
         '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'SUSPENDED\'" translate="customerPage.suspended"> </span>' +
         '<span ng-if="!isLicenseInfoAvailable(row.entity.licenseList)" class="red" translate="customerPage.licenseInfoNotAvailable"></span></div>';
@@ -462,19 +462,21 @@ angular.module('Core')
       };
 
       $scope.getLicense = function (licenses, licenseTypeField) {
-        var offerName;
+        var offerNames;
         if (licenseTypeField === 'messaging') {
-          offerName = 'MS';
+          offerNames = ['MS'];
         } else if (licenseTypeField === 'conferencing') {
-          offerName = 'CF';
+          offerNames = ['MC', 'CF', 'EE', 'TC', 'SC'];
         } else if (licenseTypeField === 'communications') {
-          offerName = 'CO';
+          offerNames = ['CO'];
         }
 
         if (angular.isDefined(licenses) && angular.isDefined(licenses.length)) {
           for (var i = 0; i < licenses.length; i++) {
-            if (licenses[i].offerName === offerName) {
-              return licenses[i];
+            for (var j = 0; j < offerNames.length; j++) {
+              if (licenses[i].offerName === offerNames[j]) {
+                return licenses[i];
+              }
             }
           }
         }
