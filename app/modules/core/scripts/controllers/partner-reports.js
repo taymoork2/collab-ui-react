@@ -126,7 +126,6 @@ angular.module('Core')
           if ($scope.currentSelection === 'All Customers') {
             var orgCount = Object.keys(orgNameMap).length;
             var aggregatedData = [];
-
             for (var i = 0; i < data.length; i++) {
               var obj = data[i];
               var date = obj.date;
@@ -376,7 +375,6 @@ angular.module('Core')
 
       var label = '';
       $scope.$on('entitlementsLoaded', function (event, response) {
-
         label = $translate.instant('reports.UsersOnboarded');
         var axis = $translate.instant('reports.numberUsersAxis');
         entitlementsChart = getCharts(response, 'entitlements', 'avgEntitlementsdiv', label, Config.chartColors.blue, 'sum', axis, 'avg-entitlements-refresh');

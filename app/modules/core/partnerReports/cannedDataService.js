@@ -37,45 +37,68 @@ angular
 
       var chartLimits = [{
         type: 'entitlementsLoaded',
-        limit: 1000
+        limit: 1000,
+        values: [50, 75, 90, 90, 110],
+        offset: 10
       }, {
         type: 'avgCallsPerUserLoaded',
-        limit: 50
+        limit: 50,
+        values: [25, 35, 45, 55, 65],
+        offset: 15
       }, {
         type: 'avgConversationsLoaded',
-        limit: 50
+        limit: 50,
+        values: [25, 35, 20, 55, 65],
+        offset: 5
       }, {
         type: 'activeUsersLoaded',
-        limit: 500
+        limit: 500,
+        values: [200, 225, 200, 275, 450],
+        offset: 12
+
       }, {
         type: 'convOneOnOneLoaded',
-        limit: 100
+        limit: 100,
+        values: [50, 100, 150, 200, 250],
+        offset: 25
       }, {
         type: 'convGroupLoaded',
-        limit: 50
+        limit: 50,
+        values: [25, 35, 50, 45, 65],
+        offset: 15
       }, {
         type: 'callsLoaded',
-        limit: 100
+        limit: 100,
+        values: [50, 55, 150, 175, 185],
+        offset: 25
       }, {
         type: 'callsAvgDurationLoaded',
-        limit: 2
+        limit: 2,
+        values: [1, 1, 1, 4, 7],
+        offset: 1
       }, {
         type: 'contentSharedLoaded',
-        limit: 1000
+        limit: 1000,
+        values: [100, 200, 300, 250, 350],
+        offset: 50
       }, {
         type: 'contentShareSizesLoaded',
-        limit: 5
+        limit: 5,
+        values: [1, 6, 11, 16, 21],
+        offset: 2
       }, {
         type: 'conversationsLoaded',
-        limit: 100
+        limit: 100,
+        values: [50, 100, 150, 175, 200],
+        offset: 25
       }];
 
       var customerLandingCountLimits = [{
         type: 'callsCountLoaded',
-        limit: 100
+        limit: 500
       }, {
         type: 'conversationsCountLoaded',
-        limit: 100
+        limit: 500
       }, {
         type: 'contentSharedCountLoaded',
         limit: 1000
@@ -89,10 +112,10 @@ angular
         limit: 500
       }, {
         type: 'contentSharedCountLoaded',
-        limit: 9000
+        limit: 8000
       }, {
         type: 'entitlementCountLoaded',
-        limit: 12000
+        limit: 6000
       }];
 
       var sendChartResponse = function (type, allData) {
@@ -129,9 +152,10 @@ angular
       var createCountResponse = function (limits) {
         for (var count in limits) {
           var currentCount = limits[count];
+          var offset = 50;
           var obj = {
             success: true,
-            data: Math.floor(Math.random() * (currentCount.limit - currentCount.limit / 2) + currentCount.limit / 2)
+            data: Math.floor(currentCount.limit + Math.random() * offset)
           };
           var current = {
             type: currentCount.type,
@@ -156,7 +180,8 @@ angular
             var isoDate = currentDate.toISOString();
             var newData = {
               date: isoDate,
-              count: Math.floor(Math.random() * (currentChart.limit - currentChart.limit / 2) + currentChart.limit / 2)
+              //count: Math.floor(Math.random() * (currentChart.limit - currentChart.limit / 2) + currentChart.limit / 2)
+              count: Math.floor(currentChart.values[i] - Math.random() * currentChart.offset)
             };
             currentDate = currentDate.subtract(7, 'days');
             currentCustomerData.data.push(newData);
@@ -186,11 +211,12 @@ angular
               data: []
             };
 
-            for (var i = 0; i < dataSize; i++) {
+            for (var i = dataSize - 1; i > -1; i--) {
               var isoDate = currentDate.toISOString();
               var newData = {
                 date: isoDate,
-                count: Math.floor(Math.random() * (currentChart.limit - currentChart.limit / 2) + currentChart.limit / 2)
+                // count: Math.floor(Math.random() * (currentChart.limit - currentChart.limit / 2) + currentChart.limit / 2)
+                count: Math.floor(currentChart.values[i] + Math.random() * currentChart.offset)
               };
               currentDate = currentDate.subtract(7, 'days');
               orgObj.data.push(newData);
