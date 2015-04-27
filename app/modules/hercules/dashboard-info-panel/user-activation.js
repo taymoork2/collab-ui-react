@@ -12,7 +12,7 @@
             return;
           }
 
-          var nameMap = _.reduce(services.fusion_services, function (map, service) {
+          var nameMap = _.reduce(services, function (map, service) {
             map[service.service_id] = service.display_name;
             return map;
           }, {});

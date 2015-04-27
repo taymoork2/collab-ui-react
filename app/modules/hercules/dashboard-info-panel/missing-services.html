@@ -5,7 +5,7 @@
     display-status="danger"
     heading="Service entitlements missing.">
 
-    <div ng-repeat="service in services.fusion_services">
+    <div ng-repeat="service in services">
       <div ng-show="service.status == 'error'">
         There is a problem with dependent services for {{service.display_name}},
         your organization is missing the following needed services:

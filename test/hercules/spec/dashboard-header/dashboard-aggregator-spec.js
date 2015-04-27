@@ -12,21 +12,15 @@ describe('DashboardAggregator', function () {
     Converter = _ConverterService_;
   }));
 
-  var mockServiceData = {
-    fusion_services: [{
-      display_name: 'UCM Service',
-      icon_class: 'UCM',
-      connector_type: 'c_ucmc'
-    }, {
-      display_name: 'Calendar Service',
-      icon_class: 'Calendar',
-      connector_type: 'c_cal'
-    }, {
-      display_name: 'Fusion Management Service',
-      icon_class: 'Management',
-      connector_type: 'c_mgmt'
-    }]
-  };
+  var mockServiceData = [{
+    display_name: 'UCM Service',
+    icon_class: 'UCM',
+    connector_type: 'c_ucmc'
+  }, {
+    display_name: 'Calendar Service',
+    icon_class: 'Calendar',
+    connector_type: 'c_cal'
+  }];
 
   it('should not count disabled services', function () {
     var mockClusterData = [{
@@ -61,16 +55,19 @@ describe('DashboardAggregator', function () {
         "host_name": "gwydlvm1397"
       }]
     }];
-    // //console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
+    // window.console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
 
-    var aggregate = Service.aggregateServices(mockServiceData, Converter.convertClusters(mockClusterData));
+    var aggregate = Service.aggregateServices(
+      mockServiceData,
+      Converter.convertClusters(mockClusterData)
+    );
+
     expect(aggregate.running).toBe(0);
     expect(aggregate.needs_attention).toBe(0);
 
-    var calService = aggregate.services.c_cal;
-    expect(calService.running).toBe(0);
-    expect(calService.needs_attention).toBe(0);
-    expect(calService.software_upgrades).toBe(0);
+    expect(aggregate.services.c_cal.running).toBe(0);
+    expect(aggregate.services.c_cal.needs_attention).toBe(0);
+    expect(aggregate.services.c_cal.software_upgrades).toBe(0);
   });
 
   it('should aggregate global service status correctly', function () {

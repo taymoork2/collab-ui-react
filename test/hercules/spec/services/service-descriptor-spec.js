@@ -23,10 +23,15 @@ describe('ServiceDescriptor', function () {
     $httpBackend
       .when('GET', 'https://hercules-integration.wbx2.com/v1/fusion_entitlements_status')
       .respond({
-        foo: 'bar'
+        fusion_services: [{
+          foo: 'bar'
+        }, {
+          connector_type: 'c_mgmt'
+        }]
       });
     Service.services(function (error, services) {
-      expect(services.foo).toEqual('bar');
+      expect(services.length).toEqual(1);
+      expect(services[0].foo).toEqual('bar');
       done();
     });
     $httpBackend.flush();

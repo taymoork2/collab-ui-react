@@ -7,7 +7,10 @@ angular.module('Hercules')
         $http
           .get(config.getUrl() + '/fusion_entitlements_status')
           .success(function (data) {
-            callback(null, data);
+            var services = _.filter(data.fusion_services || [], function (service) {
+              return service.connector_type != 'c_mgmt';
+            });
+            callback(null, services);
           })
           .error(function () {
             callback(arguments);

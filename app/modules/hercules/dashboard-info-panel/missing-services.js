@@ -7,8 +7,8 @@
       /* @ngInject */
       function ($scope, ServiceDescriptor, XhrNotificationService) {
         ServiceDescriptor.services(function (error, services) {
-          $scope.services = services || {};
-          $scope.servicesMissing = _.find(services.fusion_services, function (service) {
+          $scope.services = services || [];
+          $scope.servicesMissing = _.find(services, function (service) {
             return service.status == 'error';
           });
           if (error) XhrNotificationService.notify("Failed to fetch service status", error);
