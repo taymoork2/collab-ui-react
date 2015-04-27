@@ -84,6 +84,16 @@ angular.module('Hercules')
             .error(function () {
               callback(arguments, null);
             });
+        },
+        getStatuses: function (callback, serviceId, state, limit) {
+          $http
+            .get(ConfigService.getUSSUrl() + '/userStatuses?serviceId=' + serviceId + "&state=" + state + "&limit=" + limit)
+            .success(function (data) {
+              callback(null, data);
+            })
+            .error(function () {
+              callback(arguments, null);
+            });
         }
       };
     }

@@ -162,6 +162,34 @@ describe('Service: USSService', function () {
     expect(callback.args[0][1]).toBeFalsy();
   });
 
+  it('should return userStatuses in getStatuses', function () {
+    $httpBackend
+      .when('GET', rootPath + 'userStatuses?serviceId=squared-fusion-cal&state=error&limit=20')
+      .respond({});
+
+    var callback = sinon.stub();
+    Service.getStatuses(callback, 'squared-fusion-cal', 'error', 20);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBeFalsy();
+    expect(callback.args[0][1]).toBeTruthy();
+  });
+
+  it('should set error when userStatuses get fails', function () {
+    $httpBackend
+      .when('GET', rootPath + 'userStatuses?serviceId=squared-fusion-cal&state=error&limit=20')
+      .respond(500);
+
+    var callback = sinon.stub();
+    Service.getStatuses(callback, 'squared-fusion-cal', 'error', 20);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0]).toBeTruthy();
+    expect(callback.args[0][1]).toBeFalsy();
+  });
+
   describe('status decoration', function () {
 
     afterEach(function () {
