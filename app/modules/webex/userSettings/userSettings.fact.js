@@ -119,6 +119,8 @@
           userSettingsModel.hasLoadError = false;
           userSettingsModel.allowRetry = false;
           userSettingsModel.sessionTicketErr = false;
+          userSettingsModel.disableCancel = false;
+          userSettingsModel.disableCancel2 = false;
 
           userSettingsModel.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
 
@@ -634,6 +636,8 @@
           var funcName = "updateUserSettings()";
           var logMsg = "";
 
+          userSettingsModel.disableCancel = true;
+
           angular.element('#saveBtn').button('loading');
 
           var _self = this;
@@ -665,6 +669,8 @@
               form.$dirty = false;
               form.$setPristine();
 
+              userSettingsModel.disableCancel = false;
+
               var successMsg = $translate.instant("webexUserSettings.sessionEnablementUpdateSuccess");
               _self.processUpdateSuccessResult(
                 result,
@@ -682,6 +688,8 @@
             function updateUserSettingsError(result) {
               angular.element('#saveBtn').button('reset');
 
+              userSettingsModel.disableCancel = false;
+
               _self.updateUserSettingsError(result);
             } // updateUserSettingsError()
           );
@@ -690,6 +698,8 @@
         updateUserSettings2: function (form) {
           var funcName = "updateUserSettings2()";
           var logMsg = "";
+
+          userSettingsModel.disableCancel2 = true;
 
           angular.element('#saveBtn2').button('loading');
 
@@ -757,6 +767,8 @@
               form.$dirty = false;
               form.$setPristine();
 
+              userSettingsModel.disableCancel2 = false;
+
               var successMsg = $translate.instant("webexUserSettings.privilegesUpdateSuccess");
               _self.processUpdateSuccessResult(
                 result,
@@ -765,6 +777,8 @@
 
             function updateUserSettings2Error(result) {
               angular.element('#saveBtn2').button('reset');
+
+              userSettingsModel.disableCancel2 = false;
 
               _self.updateUserSettingsError(result);
             } // updateUserSettings2Error()

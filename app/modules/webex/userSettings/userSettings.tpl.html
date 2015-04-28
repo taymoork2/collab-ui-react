@@ -1,19 +1,20 @@
 <cs-sp-buttons ng-if="userSettingsView.form.$dirty">
   <button id="saveBtn"
           name="saveBtn"
-          data-loading-text="<i class='icon icon-spinner'></i>"
           class="btn-primary"
           translate="common.save"
-          ng-click="WebExUserSettings.btnSave(userSettingsView.form)"
-          type="submit">
+          type="submit"
+          data-loading-text="<i class='icon icon-spinner'></i>"
+          ng-click="WebExUserSettings.btnSave(userSettingsView.form)">
   </button>
-  
+    
   <button id="resetBtn" 
           name="resetBtn"
-          data-loading-text="<i class='icon icon-spinner'></i>"
           class="btn-default"
           translate="common.cancel"
-          ng-click="WebExUserSettings.btnReset(userSettingsView.form)">
+          data-loading-text="<i class='icon icon-spinner'></i>"
+          ng-click="WebExUserSettings.btnReset(userSettingsView.form)"
+          ng-disabled="WebExUserSettings.userSettingsModel.disableCancel">
   </button>
 </cs-sp-buttons>
 
