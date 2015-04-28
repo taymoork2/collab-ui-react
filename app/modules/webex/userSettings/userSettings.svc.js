@@ -141,6 +141,8 @@ angular.module('WebExUserSettings')
           allowRetry: false,
           disableCancel: false,
           disableCancel2: false,
+          disableSave: false,
+          disableSave2: false,
 
           userInfo: null,
           userInfoJson: null,

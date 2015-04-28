@@ -5,7 +5,8 @@
           translate="common.save"
           type="submit"
           data-loading-text="<i class='icon icon-spinner'></i>"
-          ng-click="WebExUserSettings.btnSave(userSettingsView.form)">
+          ng-click="WebExUserSettings.btnSave(userSettingsView.form)"
+          ng-disabled="WebExUserSettings.userSettingsModel.disableSave">
   </button>
     
   <button id="resetBtn" 
