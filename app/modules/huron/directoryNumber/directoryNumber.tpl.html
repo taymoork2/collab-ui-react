@@ -11,8 +11,19 @@
       <i class="dn-help-icon"></i>
     </span>
   </label>
-  <select ng-model="lineSettings.assignedInternalNumber" class="form-control" id="internalNumber" ng-options="directoryNumber.pattern for directoryNumber in lineSettings.internalNumberPool track by directoryNumber.uuid">
-  </select>
+  <cs-select
+    name="internalNumber"
+    ng-model="lineSettings.assignedInternalNumber"
+    options="lineSettings.internalNumberPool"
+    refresh-data-fn="lineSettings.loadInternalNumberPool(filter)"
+    wait-time="0"
+    placeholder="lineSettings.placeholder"
+    input-placeholder="lineSettings.inputPlaceholder"
+    labelfield="pattern"
+    valuefield="uuid"
+    required="true"
+    filter="true">
+  </cs-select>
   <div class="esn-number-field">
     <p>
       {{'directoryNumberPanel.enterpriseSiteNumberLabel' | translate }}&nbsp;
@@ -27,6 +38,18 @@
       <i class="dn-help-icon"></i>
     </span>
   </label>
-  <select ng-model="lineSettings.assignedExternalNumber" class="form-control" id="externalNumber" ng-options="directoryNumber.pattern for directoryNumber in lineSettings.externalNumberPool track by directoryNumber.uuid">
-  </select>
+  <!-- <select ng-model="lineSettings.assignedExternalNumber" class="form-control" id="externalNumber" ng-options="directoryNumber.pattern for directoryNumber in lineSettings.externalNumberPool track by directoryNumber.uuid">
+  </select> -->
+  <cs-select
+    name="externalNumber"
+    ng-model="lineSettings.assignedExternalNumber"
+    options="lineSettings.externalNumberPool"
+    refresh-data-fn="lineSettings.loadExternalNumberPool(filter)"
+    wait-time="0"
+    placeholder="lineSettings.nonePlaceholder"
+    input-placeholder="lineSettings.inputPlaceholder"
+    labelfield="pattern"
+    valuefield="uuid"
+    filter="true">
+  </cs-select>
 </div>

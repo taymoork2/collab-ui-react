@@ -22,6 +22,13 @@
     vm.internalNumberPool = [];
     vm.externalNumberPool = [];
 
+    vm.placeholder = $translate.instant('directoryNumberPanel.chooseNumber');
+    vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
+    vm.nonePlaceholder = $translate.instant('directoryNumberPanel.none');
+
+    vm.loadInternalNumberPool = loadInternalNumberPool;
+    vm.loadExternalNumberPool = loadExternalNumberPool;
+
     // SharedLine Info ---
     vm.sharedLineBtn = false;
     vm.selected = undefined;
@@ -109,6 +116,18 @@
       resetForm();
     }
 
+    function loadInternalNumberPool(pattern) {
+      TelephonyInfoService.loadInternalNumberPool(pattern).then(function (internalNumberPool) {
+        vm.internalNumberPool = internalNumberPool;
+      });
+    }
+
+    function loadExternalNumberPool(pattern) {
+      TelephonyInfoService.loadExternalNumberPool(pattern).then(function (externalNumberPool) {
+        vm.externalNumberPool = externalNumberPool;
+      });
+    }
+
     function init() {
       var directoryNumber = $stateParams.directoryNumber;
       initDirectoryNumber(directoryNumber);
@@ -146,10 +165,7 @@
           if (vm.internalNumberPool.length === 0) {
             TelephonyInfoService.loadInternalNumberPool().then(function (internalNumberPool) {
               vm.internalNumberPool = internalNumberPool;
-              vm.internalNumberPool.push(internalNumber);
             });
-          } else {
-            vm.internalNumberPool.push(internalNumber);
           }
 
           initCallForward();
@@ -162,10 +178,7 @@
           if (vm.externalNumberPool.length === 0) {
             TelephonyInfoService.loadExternalNumberPool().then(function (externalNumberPool) {
               vm.externalNumberPool = externalNumberPool;
-              vm.externalNumberPool.push(vm.telephonyInfo.alternateDirectoryNumber);
             });
-          } else {
-            vm.externalNumberPool.push(vm.telephonyInfo.alternateDirectoryNumber);
           }
         }
 
@@ -205,9 +218,10 @@
     function initDirectoryNumber(directoryNumber) {
       if (directoryNumber === 'new') {
         TelephonyInfoService.updateCurrentDirectoryNumber('new');
+        TelephonyInfoService.updateAlternateDirectoryNumber('none');
       } else {
         // update alternate number first
-        if (typeof directoryNumber.altDnUuid === 'undefined') {
+        if (typeof directoryNumber.altDnUuid === 'undefined' || directoryNumber.altDnUuid === 'none') {
           directoryNumber.altDnUuid = '';
           directoryNumber.altDnPattern = '';
         }
@@ -299,6 +313,8 @@
                           vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
                           vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
                           vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
+                          vm.directoryNumber.altDnUuid = vm.telephonyInfo.alternateDirectoryNumber.uuid;
+                          vm.directoryNumber.altDnPattern = vm.telephonyInfo.alternateDirectoryNumber.pattern;
                         }).then(function () {
                           return processSharedLineUsers();
                         }).then(function () {
@@ -560,10 +576,6 @@
         'pattern': telephonyInfo.currentDirectoryNumber.pattern
       };
 
-      if (internalNumber.uuid !== '' && internalNumber.uuid !== 'none') {
-        intNumPool.push(internalNumber);
-      }
-
       vm.assignedInternalNumber = internalNumber;
       vm.internalNumberPool = intNumPool;
     }
@@ -575,10 +587,6 @@
         'uuid': telephonyInfo.alternateDirectoryNumber.uuid,
         'pattern': telephonyInfo.alternateDirectoryNumber.pattern
       };
-
-      if (externalNumber.uuid !== '' && externalNumber.uuid !== 'none') {
-        extNumPool.push(externalNumber);
-      }
 
       vm.assignedExternalNumber = externalNumber;
       vm.externalNumberPool = extNumPool;

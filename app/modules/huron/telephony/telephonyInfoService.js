@@ -268,15 +268,14 @@
       return angular.copy(internalNumberPool);
     }
 
-    function loadInternalNumberPool() {
-      var intNumPool = [{
-        uuid: 'none',
-        pattern: $translate.instant('directoryNumberPanel.chooseNumber')
-      }];
+    function loadInternalNumberPool(pattern) {
+      var intNumPool = [];
+      var patternQuery = pattern ? '%' + pattern + '%' : undefined;
       return InternalNumberPoolService.query({
           customerId: Authinfo.getOrgId(),
           directorynumber: '',
-          order: 'pattern'
+          order: 'pattern',
+          pattern: patternQuery
         }).$promise
         .then(function (intPool) {
           for (var i = 0; i < intPool.length; i++) {
@@ -287,6 +286,9 @@
             intNumPool.push(dn);
           }
           internalNumberPool = intNumPool;
+          if (telephonyInfo.currentDirectoryNumber.uuid !== 'none') {
+            internalNumberPool.push(telephonyInfo.currentDirectoryNumber);
+          }
           return angular.copy(internalNumberPool);
         })
         .catch(function (response) {
@@ -299,15 +301,17 @@
       return angular.copy(externalNumberPool);
     }
 
-    function loadExternalNumberPool() {
+    function loadExternalNumberPool(pattern) {
       var extNumPool = [{
         uuid: 'none',
         pattern: $translate.instant('directoryNumberPanel.none')
       }];
+      var patternQuery = pattern ? '%' + pattern + '%' : undefined;
       return ExternalNumberPoolService.query({
           customerId: Authinfo.getOrgId(),
           directorynumber: '',
-          order: 'pattern'
+          order: 'pattern',
+          pattern: patternQuery
         }).$promise
         .then(function (extPool) {
           for (var i = 0; i < extPool.length; i++) {
@@ -318,6 +322,9 @@
             extNumPool.push(dn);
           }
           externalNumberPool = extNumPool;
+          if (telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
+            externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
+          }
           return angular.copy(externalNumberPool);
         })
         .catch(function (response) {

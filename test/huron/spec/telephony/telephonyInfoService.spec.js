@@ -3,6 +3,8 @@
 describe('Service: TelephonyInfoService', function () {
   var $httpBackend, $q, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber;
 
+  var internalNumbers, externalNumbers, getExternalNumberPool;
+
   beforeEach(module('Huron'));
 
   var authInfo = {
@@ -20,6 +22,15 @@ describe('Service: TelephonyInfoService', function () {
     TelephonyInfoService = _TelephonyInfoService_;
     ServiceSetup = _ServiceSetup_;
     DirectoryNumber = _DirectoryNumber_;
+
+    internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
+    externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
+    getExternalNumberPool = externalNumbers.slice(0);
+    getExternalNumberPool.unshift({
+      "uuid": "none",
+      "pattern": "directoryNumberPanel.none"
+    });
+
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
     spyOn(DirectoryNumber, 'getAlternateNumbers').and.returnValue($q.when([]));
   }));
@@ -59,6 +70,62 @@ describe('Service: TelephonyInfoService', function () {
     it('should call getAlternateNumbers', function () {
       expect(DirectoryNumber.getAlternateNumbers).toHaveBeenCalled();
     });
+  });
+
+  describe('loadInternalNumberPool', function () {
+
+    it('should return internal number pool', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond(internalNumbers);
+      TelephonyInfoService.loadInternalNumberPool().then(function (response) {
+        expect(response).toEqual(internalNumbers);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should return internal number pool with query param', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern&pattern=%255%25').respond(internalNumbers);
+      TelephonyInfoService.loadInternalNumberPool('5').then(function (response) {
+        expect(response).toEqual(internalNumbers);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should return an empty pool when an error occurs', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond(500);
+      TelephonyInfoService.loadInternalNumberPool().then(function () {
+        expect(TelephonyInfoService.getInternalNumberPool()).toEqual([]);
+      });
+      $httpBackend.flush();
+    });
+
+  });
+
+  describe('loadExternalNumberPool', function () {
+
+    it('should return external number pool', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(externalNumbers);
+      TelephonyInfoService.loadExternalNumberPool().then(function (response) {
+        expect(response).toEqual(getExternalNumberPool);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should return external number pool with query param', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern&pattern=%255%25').respond(externalNumbers);
+      TelephonyInfoService.loadExternalNumberPool('5').then(function (response) {
+        expect(response).toEqual(getExternalNumberPool);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should return an empty pool when an error occurs', function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(500);
+      TelephonyInfoService.loadExternalNumberPool().then(function () {
+        expect(TelephonyInfoService.getExternalNumberPool()).toEqual([]);
+      });
+      $httpBackend.flush();
+    });
+
   });
 
 });

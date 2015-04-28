@@ -741,6 +741,7 @@
     "externalNumberLabel": "External Number",
     "externalNumberTooltip": "Use the external number to reach this line from outside of the company.",
     "chooseNumber": "Choose a Number",
+    "searchNumber": "Search for a number...",
     "addNewNumber": "Add a New Number",
     "removeNumber": "Remove Line",
     "none": "None",

@@ -62,7 +62,9 @@ describe('Controller: LineSettingsCtrl', function () {
 
     // Wow too many services need to refactor controller
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
+    spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
     spyOn(TelephonyInfoService, 'getExternalNumberPool').and.returnValue(externalNumbers);
+    spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithVoicemail);
     spyOn(TelephonyInfoService, 'getUserDnInfo').and.returnValue($q.when());
 
@@ -403,6 +405,36 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.selectSharedLineUser(userList[0]);
     });
 
+  });
+
+  describe('loadInternalNumberPool', function () {
+    beforeEach(function () {
+      controller.loadInternalNumberPool('5');
+      $scope.$apply();
+    });
+
+    it('should invoke TelephonyInfoService.loadInternalNumberPool', function () {
+      expect(TelephonyInfoService.loadInternalNumberPool).toHaveBeenCalledWith('5');
+    });
+
+    it('should have loaded internalNumberPool', function () {
+      expect(controller.internalNumberPool).toEqual(internalNumbers);
+    });
+  });
+
+  describe('loadExternalNumberPool', function () {
+    beforeEach(function () {
+      controller.loadExternalNumberPool('5');
+      $scope.$apply();
+    });
+
+    it('should invoke TelephonyInfoService.loadExternalNumberPool', function () {
+      expect(TelephonyInfoService.loadExternalNumberPool).toHaveBeenCalledWith('5');
+    });
+
+    it('should have loaded externalNumberPool', function () {
+      expect(controller.externalNumberPool).toEqual(externalNumbers);
+    });
   });
 
 });
