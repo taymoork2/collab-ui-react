@@ -506,7 +506,7 @@
 
           angular.element('#reloadBtn').button('loading');
           angular.element('#reloadBtn2').button('loading');
-          
+
           angular.element('#resetBtn').button('loading');
           angular.element('#resetBtn2').button('loading');
 
@@ -635,7 +635,7 @@
           var logMsg = "";
 
           angular.element('#saveBtn').button('loading');
-          
+
           var _self = this;
           var useSupportedServices = userSettingsModel.userInfo.bodyJson.use_supportedServices;
 
@@ -692,6 +692,28 @@
           var logMsg = "";
 
           angular.element('#saveBtn2').button('loading');
+
+          switch (userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType) {
+          case 1:
+            userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
+            break;
+
+          case 2:
+            userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = true;
+            break;
+
+          default:
+            userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = false;
+            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
+            break;
+          } // switch()
+
+          logMsg = funcName + ": " + "\n" +
+            "selectedCallInTollType=" + userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType + "\n" +
+            "toll.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value + "\n" +
+            "tollFree.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
 
           var _self = this;
 

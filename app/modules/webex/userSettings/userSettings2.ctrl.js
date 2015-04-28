@@ -99,28 +99,6 @@
         var funcName = "btnSave2()";
         var logMsg = "";
 
-        switch (this.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType) {
-        case 1:
-          this.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
-          this.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
-          break;
-
-        case 2:
-          this.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
-          this.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = true;
-          break;
-
-        default:
-          this.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = false;
-          this.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
-          break;
-        } // switch()
-
-        logMsg = funcName + ": " + "\n" +
-          "selectedCallInTollType=" + this.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType + "\n" +
-          "toll.value=" + this.userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value + "\n" +
-          "tollFree.value=" + this.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
-
         WebExUserSettingsFact.updateUserSettings2(form);
       }; // btnSave2()
 
