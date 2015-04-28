@@ -139,6 +139,8 @@ angular.module('WebExUserSettings')
           sessionTicketErr: false,
           errMsg: "",
           allowRetry: false,
+          disableCancel: false,
+          disableCancel2: false,
 
           userInfo: null,
           userInfoJson: null,
