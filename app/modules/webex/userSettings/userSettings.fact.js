@@ -454,9 +454,6 @@
           var webexSiteUrl = this.getSiteUrl();
           var webexSiteName = this.getSiteName(webexSiteUrl);
 
-          angular.element('#reloadBtn').button('loading');
-          angular.element('#reloadBtn2').button('loading');
-
           this.getSessionTicket(webexSiteUrl).then(
             function getSessionTicketSuccess(webexAdminSessionTicket) {
               angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
@@ -484,7 +481,8 @@
               _self.setLoadingErrorDisplay(
                 errId,
                 true,
-                true
+                true,
+                null
               );
 
               logMsg = funcName + ": " + "\n" +
@@ -497,7 +495,7 @@
           ); // WebExUserSettingsFact.getSessionTicket().then()
         }, // initPanel()
 
-        getUserSettingsInfo: function () {
+        getUserSettingsInfo: function (form) {
           var funcName = "getUserSettingsInfo()";
           var logMsg = "";
 
@@ -508,6 +506,9 @@
 
           angular.element('#reloadBtn').button('loading');
           angular.element('#reloadBtn2').button('loading');
+          
+          angular.element('#resetBtn').button('loading');
+          angular.element('#resetBtn2').button('loading');
 
           this.getUserSettingsInfoXml().then(
             function getUserSettingsInfoXmlSuccess(getInfoResult) {
@@ -550,6 +551,11 @@
 
                 angular.element('#reloadBtn').button('reset');
                 angular.element('#reloadBtn2').button('reset');
+
+                if (null != form) {
+                  form.$setPristine();
+                  form.$setUntouched();
+                }
               } else { // has invalid xml data
                 logMsg = funcName + ": " + "\n" +
                   "userInfo.errId=" + userSettingsModel.userInfo.errId + "\n" +
@@ -572,7 +578,8 @@
                 _self.setLoadingErrorDisplay(
                   errId,
                   false,
-                  true
+                  true,
+                  form
                 );
 
                 logMsg = funcName + ": " + "\n" +
@@ -594,7 +601,8 @@
               _self.setLoadingErrorDisplay(
                 null,
                 false,
-                true
+                true,
+                form
               );
             } // getUserSettingsInfoXmlError()
           ); // WebExUserSettingsFact.getUserSettingsInfoXml()
@@ -603,7 +611,8 @@
         setLoadingErrorDisplay: function (
           errId,
           sessionTicketErr,
-          allowRetry
+          allowRetry,
+          form
         ) {
 
           userSettingsModel.errMsg = this.getErrMsg(errId);
@@ -614,6 +623,11 @@
 
           angular.element('#reloadBtn').button('reset');
           angular.element('#reloadBtn2').button('reset');
+
+          if (null != form) {
+            form.$setPristine();
+            form.$setUntouched();
+          }
         }, // setLoadingErrorDisplay()
 
         updateUserSettings: function (form) {
@@ -621,8 +635,7 @@
           var logMsg = "";
 
           angular.element('#saveBtn').button('loading');
-          angular.element('#saveBtn2').button('loading');
-
+          
           var _self = this;
           var useSupportedServices = userSettingsModel.userInfo.bodyJson.use_supportedServices;
 
@@ -649,9 +662,6 @@
 
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
-              angular.element('#saveBtn').button('reset');
-              angular.element('#saveBtn2').button('reset');
-
               form.$dirty = false;
               form.$setPristine();
 
@@ -671,7 +681,6 @@
 
             function updateUserSettingsError(result) {
               angular.element('#saveBtn').button('reset');
-              angular.element('#saveBtn2').button('reset');
 
               _self.updateUserSettingsError(result);
             } // updateUserSettingsError()
@@ -723,7 +732,6 @@
 
           XmlApiFact.updateUserSettings2(xmlApiInfo).then(
             function updateUserSettings2Success(result) {
-              angular.element('#saveBtn2').button('reset');
               form.$dirty = false;
               form.$setPristine();
 

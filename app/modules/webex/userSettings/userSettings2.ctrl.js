@@ -124,11 +124,9 @@
         WebExUserSettingsFact.updateUserSettings2(form);
       }; // btnSave2()
 
-      this.reset2 = function (form) {
-        form.$setPristine();
-        form.$setUntouched();
-        WebExUserSettingsFact.getUserSettingsInfo();
-      }; //reset()
+      this.btnReset2 = function (form) {
+        WebExUserSettingsFact.getUserSettingsInfo(form);
+      }; // btnReset2()
 
       //----------------------------------------------------------------------//
 

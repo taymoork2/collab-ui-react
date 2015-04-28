@@ -27,6 +27,14 @@
       $state.current.data.displayName = $stateParams.site;
       $rootScope.$broadcast('displayNameUpdated');
 
+      this.initPanel = function () {
+        WebExUserSettingsFact.initPanel();
+      }; // initPanel()
+
+      this.getUserSettingsInfo = function (form) {
+        WebExUserSettingsFact.getUserSettingsInfo(form);
+      }; // getUserSettingsInfo()
+
       this.btnReload = function () {
         var funcName = "btnReload()";
         var logMsg = "";
@@ -38,30 +46,17 @@
         if (this.userSettingsModel.sessionTicketErr) {
           this.initPanel();
         } else {
-          this.getUserSettingsInfo();
+          this.getUserSettingsInfo(null);
         }
       }; // btnReload()
 
       this.btnSave = function (form) {
-        var funcName = "btnSave()";
-        var logMsg = "";
-
         WebExUserSettingsFact.updateUserSettings(form);
       }; // btnSave()
 
-      this.initPanel = function () {
-        WebExUserSettingsFact.initPanel();
-      }; // initPanel()
-
-      this.getUserSettingsInfo = function () {
-        WebExUserSettingsFact.getUserSettingsInfo();
-      }; // getUserSettingsInfo()
-
-      this.reset = function (form) {
-        form.$setPristine();
-        form.$setUntouched();
-        this.getUserSettingsInfo();
-      }; //reset()
+      this.btnReset = function (form) {
+        this.getUserSettingsInfo(form);
+      }; // btnReset()
 
       //----------------------------------------------------------------------//
 
