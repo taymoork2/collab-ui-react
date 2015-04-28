@@ -508,7 +508,7 @@
 
           userSettingsModel.disableSave = true;
           userSettingsModel.disableSave2 = true;
-          
+
           angular.element('#reloadBtn').button('loading');
           angular.element('#reloadBtn2').button('loading');
 
@@ -516,7 +516,7 @@
           angular.element('#resetBtn2').button('loading');
 
           var _self = this;
-          
+
           this.getUserSettingsInfoXml().then(
             function getUserSettingsInfoXmlSuccess(getInfoResult) {
               var funcName = "getUserSettingsInfo().getUserSettingsInfoSuccess()";
@@ -596,7 +596,7 @@
                   "sessionTicketErr=" + userSettingsModel.sessionTicketErr;
                 $log.log(logMsg);
               } // has invalid xml data
-              
+
               userSettingsModel.disableSave = false;
               userSettingsModel.disableSave2 = false;
             }, // getUserSettingsInfoXmlSuccess()
@@ -614,7 +614,7 @@
                 true,
                 form
               );
-              
+
               userSettingsModel.disableSave = false;
               userSettingsModel.disableSave2 = false;
             } // getUserSettingsInfoXmlError()
