@@ -121,6 +121,8 @@
           userSettingsModel.sessionTicketErr = false;
           userSettingsModel.disableCancel = false;
           userSettingsModel.disableCancel2 = false;
+          userSettingsModel.disableSave = false;
+          userSettingsModel.disableSave2 = false;
 
           userSettingsModel.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
 
@@ -504,13 +506,16 @@
           logMsg = funcName + ": " + "START";
           $log.log(logMsg);
 
-          var _self = this;
+          userSettingsModel.disableSave = true;
+          userSettingsModel.disableSave2 = true;
 
           angular.element('#reloadBtn').button('loading');
           angular.element('#reloadBtn2').button('loading');
 
           angular.element('#resetBtn').button('loading');
           angular.element('#resetBtn2').button('loading');
+
+          var _self = this;
 
           this.getUserSettingsInfoXml().then(
             function getUserSettingsInfoXmlSuccess(getInfoResult) {
@@ -591,6 +596,9 @@
                   "sessionTicketErr=" + userSettingsModel.sessionTicketErr;
                 $log.log(logMsg);
               } // has invalid xml data
+
+              userSettingsModel.disableSave = false;
+              userSettingsModel.disableSave2 = false;
             }, // getUserSettingsInfoXmlSuccess()
 
             function getUserSettingsInfoXmlError(getInfoResult) {
@@ -606,6 +614,9 @@
                 true,
                 form
               );
+
+              userSettingsModel.disableSave = false;
+              userSettingsModel.disableSave2 = false;
             } // getUserSettingsInfoXmlError()
           ); // WebExUserSettingsFact.getUserSettingsInfoXml()
         }, // getUserSettingsInfo()
