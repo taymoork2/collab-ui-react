@@ -1,7 +1,6 @@
 WebexSquared AdminWebClient
 ===========================
 
-
 Technology
 ----------
 
