@@ -81,7 +81,7 @@ describe 'squared api ( jkuiros@cisco.com ) -',  ->
     describe 'with a created partner trial', ->
 
       before (done) ->
-        name = 'mocha_api_sanity_' + new Date().getTime().toString(16)
+        name = 'Atlas_Test_Mocha_' + new Date().getTime().toString(16)
         opts =
           url: 'https://atlas-integration.wbx2.com/admin/api/v1/organization/c054027f-c5bd-4598-8cd8-07c08163e8cd/trials'
           auth: bearer: @bearer
