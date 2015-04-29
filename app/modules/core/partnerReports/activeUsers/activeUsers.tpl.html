@@ -1,8 +1,8 @@
 <div class="active-user">
   <div class="row">
     <div class="graph-match">
-    	<h4 class="pull-left section-title" translate="activeUsers.activeUsers"></h4>
-    	<div class="actions-menu dropdown pull-right report-threedot-button">
+      <h4 class="pull-left section-title" translate="activeUsers.activeUsers"></h4>
+      <div class="actions-menu dropdown pull-right report-threedot-button">
         <button class="actions-button btn-none">
           <i class="icon icon-three-dots"></i>
         </button>
@@ -18,11 +18,9 @@
         <i class='active-user-status icon icon-spinner icon-2x'></i>
       </div>
     </div>
-    <div class="row">
-    	<h4 ng-show="nav.showMostActiveUsers" class="sub-section-title graph-match" translate="activeUsers.mostActiveUsers"></h4>
-    </div>
-    <div class="row">
-      <div class="graph-match" ng-show="nav.showMostActiveUsers" ng-show="!nav.isRefresh(nav.activeUsersRefresh)">
+    <div class="row" ng-show="nav.showMostActiveUsers && !nav.isRefresh(nav.activeUsersRefresh)">
+      <h4 class="sub-section-title graph-match" translate="activeUsers.mostActiveUsers"></h4>
+      <div class="graph-match">
         <table class="table table-bordered active-users-table">
           <thead>
             <tr>

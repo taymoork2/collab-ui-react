@@ -108,9 +108,9 @@
     }
 
     function getQuery() {
-      if (timeFilter.id === 0) {
+      if (timeFilter.value === 0) {
         return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
-      } else if (timeFilter.id === 1) {
+      } else if (timeFilter.value === 1) {
         return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=week&cache=false';
       } else {
         return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=false';
@@ -171,7 +171,7 @@
           var org = angular.copy(fiveLeastActiveCustomers[i]);
           if (org.activity > activity) {
             fiveLeastActiveCustomers[i].orgId = orgId;
-            fiveMostActiveCustomers[i].orgName = orgName;
+            fiveLeastActiveCustomers[i].orgName = orgName;
             fiveLeastActiveCustomers[i].activity = activity;
             return addLeastActive(org.orgId, org.orgName, org.activity);
           }

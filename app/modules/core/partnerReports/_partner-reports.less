@@ -16,34 +16,36 @@
       color: @gray-darker;
     }
 
-    .report-filters-container {
-      padding-right: 20px;
-
-      .report-filter {
-        height: 35px;
-        margin: 5px;
-      }
-
-      .report-filter-one {
-        width: 200px;
-      }
-
-      .report-filter-two {
-        width: 240px;
-      }
+    .report-filter-one {
+      width: 200px;
+      margin: 5px;
     }
-  }
 
-  .cstabs {
-    a {
-      background-color: @gray-lightest;
-      border-color: rgb(234,235,238);
+    .report-filter-two {
+      width: 240px;
+      margin: 5px;
     }
   }
 
   .report-tabs-container {
     padding: 5px;
     background-color: @brand-white;
+
+    .cstabs {
+      li, li:first-of-type, li:last-of-type {
+        a {
+          margin-top: 0;
+          background-color: @gray-lightest;
+          border-color: rgb(234,235,238);
+        }
+      }
+
+      li.active, li.active:first-of-type, li.active:last-of-type {
+        a {
+          background-color: @brand-white;
+        }
+      }
+    }
 
     .tab-pane {
       padding: 40px 30px 60px;

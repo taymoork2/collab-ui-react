@@ -9,7 +9,7 @@ describe('Service: Partner Reports Service', function () {
   var dateFormat = "MMM DD, YYYY";
   var customerGroup = 0;
   var timeFilter = {
-    'id': 0
+    value: 0
   };
   var customers = getJSONFixture('core/json/partnerReports/customerResponse.json');
   var activeUserDetailedData = getJSONFixture('core/json/partnerReports/activeUserDetailedResponse.json');

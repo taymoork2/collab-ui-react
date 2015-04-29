@@ -9,13 +9,13 @@ describe('Controller: Partner Reports', function () {
   var dummyTableData = getJSONFixture('core/json/partnerReports/dummyTableData.json');
 
   var customerOptions = [{
-    id: 'a7cba512-7b62-4f0a-a869-725b413680e4',
+    value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
     label: 'Test Org One'
   }, {
-    id: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
+    value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
     label: 'Test Org Two'
   }, {
-    id: '1896f9dc-c5a4-4041-8257-b3adfe3cf9a4',
+    value: '1896f9dc-c5a4-4041-8257-b3adfe3cf9a4',
     label: 'Test Org Three'
   }];
 
@@ -259,7 +259,7 @@ describe('Controller: Partner Reports', function () {
 
         expect(controller.customerOptions).toEqual([]);
         expect(controller.customerSelected).toEqual({
-          id: 0,
+          value: 0,
           label: ''
         });
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);

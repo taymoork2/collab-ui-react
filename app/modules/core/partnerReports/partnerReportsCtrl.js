@@ -30,13 +30,13 @@
     vm.customerSelected = null;
 
     vm.timeOptions = [{
-      id: 0,
+      value: 0,
       label: $translate.instant('reportsPage.week')
     }, {
-      id: 1,
+      value: 1,
       label: $translate.instant('reportsPage.month')
     }, {
-      id: 2,
+      value: 2,
       label: $translate.instant('reportsPage.threeMonths')
     }];
     vm.timeSelected = vm.timeOptions[0];
@@ -117,7 +117,7 @@
     }
 
     function updateActiveUserReports() {
-      PartnerReportService.getActiveUserData(vm.customerSelected.id, vm.customerSelected.label).then(function (response) {
+      PartnerReportService.getActiveUserData(vm.customerSelected.value, vm.customerSelected.label).then(function (response) {
         var graphData = response.graphData;
         GraphService.updateActiveUsersGraph(graphData);
 
@@ -145,19 +145,19 @@
       // if there are fewer than 5 orgs, then these options are unnecessary
       if (orgsData.length > 5) {
         vm.customerOptions.push({
-          id: 0,
+          value: 0,
           label: $translate.instant('reportsPage.mostEngaged')
         });
         vm.customerOptions.push({
-          id: 1,
+          value: 1,
           label: $translate.instant('reportsPage.leastEngaged')
         });
         vm.customerOptions.push({
-          id: 2,
+          value: 2,
           label: $translate.instant('reportsPage.highQuality')
         });
         vm.customerOptions.push({
-          id: 3,
+          value: 3,
           label: $translate.instant('reportsPage.leastQuality')
         });
       }
@@ -165,7 +165,7 @@
       // add all customer names to the customerOptions list
       angular.forEach(orgsData, function (org) {
         vm.customerOptions.push({
-          id: org.customerOrgId,
+          value: org.customerOrgId,
           label: org.customerName
         });
       });
@@ -173,7 +173,7 @@
         vm.customerSelected = vm.customerOptions[0];
       } else {
         vm.customerSelected = {
-          id: 0,
+          value: 0,
           label: ""
         };
       }
@@ -185,7 +185,7 @@
         updateCustomerFilter(list.customers);
         vm.recentUpdate = list.recentUpdate;
 
-        PartnerReportService.getActiveUserData(vm.customerSelected.id, vm.customerSelected.label).then(function (response) {
+        PartnerReportService.getActiveUserData(vm.customerSelected.value, vm.customerSelected.label).then(function (response) {
           var graphData = response.graphData;
           GraphService.createActiveUserGraph(graphData);
           GraphService.invalidateActiveUserGraphSize();
