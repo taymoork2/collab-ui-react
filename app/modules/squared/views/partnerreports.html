@@ -8,16 +8,16 @@
           </cr-reload-data>
         </div>
       </div>
-        <div class="btn-group" dropdown is-open="db.isOpen">
-          <button id="customerDropdown" type="button" class="btn btn-primary dropdown-toggle" ng-disabled="db.disabled" data-loading-text="<i class='icon icon-spinner'></i>">
-          <span>{{currentSelection | translate}}</span><span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu reports-customer-dropdown" role="menu">
-            <li ng-click="reloadReports(true)"><a href="#"><span translate="reports.allCustomers"></span></a></li>
-            <li class="divider"></li>
-            <li ng-repeat="orgs in totalOrgsData" ng-click="getCustomerReports(true, orgs)"><a href="#">{{orgs.customerName}}</a></li>
-          </ul>
-        </div>
+      <div class="btn-group" dropdown is-open="db.isOpen">
+        <button id="customerDropdown" type="button" class="btn btn-primary dropdown-toggle" ng-disabled="db.disabled" data-loading-text="<i class='icon icon-spinner'></i>">
+        <span>{{currentSelection | translate}}</span><span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu reports-customer-dropdown" role="menu">
+          <li ng-click="reloadReports(true)"><a href="#"><span translate="reports.allCustomers"></span></a></li>
+          <li class="divider"></li>
+          <li ng-repeat="orgs in totalOrgsData" ng-click="getCustomerReports(true, orgs)"><a href="#">{{orgs.customerName}}</a></li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="row">

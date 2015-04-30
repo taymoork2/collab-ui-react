@@ -325,6 +325,7 @@ angular.module('Core')
           var data;
           if (!isEmpty(response.data.data, title)) {
             $scope.reportStatus[property] = 'ready';
+            angular.element('#' + refreshDivName).html('');
             data = response.data.data;
           } else {
             $scope.reportStatus[property] = 'refresh';

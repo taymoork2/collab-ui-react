@@ -6,19 +6,19 @@ angular.module('Squared')
 
       var apiUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/';
 
-      var callMetricsUrl = apiUrl + 'reports/stats/callUsage';
-      var activeUsersUrl = apiUrl + 'reports/counts/activeUsers';
-      var callsUrl = apiUrl + 'reports/counts/calls';
-      var conversationsUrl = apiUrl + 'reports/counts/conversations';
+      var callMetricsUrl = 'reports/stats/callUsage';
+      var activeUsersUrl = 'reports/counts/activeUsers';
+      var callsUrl = 'reports/counts/calls';
+      var conversationsUrl = 'reports/counts/conversations';
 
       var timeChartUrl;
 
-      var logInfoBaseUrl = apiUrl + 'reports/tables/calls/';
+      var logInfoBaseUrl = 'reports/tables/calls/';
       var healthUrl = Config.getHealthCheckUrlServiceUrl();
-      var averageCallCount = apiUrl + 'reports/counts/avgCallsPerUser';
-      var entitlementCount = apiUrl + 'reports/counts/entitlements';
-      var contentSharedCount = apiUrl + 'reports/counts/contentShared';
-      var onboardingUrl = apiUrl + 'reports/funnel/onboarding';
+      var averageCallCount = 'reports/counts/avgCallsPerUser';
+      var entitlementCount = 'reports/counts/entitlements';
+      var contentSharedCount = 'reports/counts/contentShared';
+      var onboardingUrl = 'reports/funnel/onboarding';
 
       var urls = {
         'callUsage': callMetricsUrl,
@@ -33,11 +33,8 @@ angular.module('Squared')
 
       var buildUrl = function (metricType, params) {
         var metricUrl = '';
-        if (urls[metricType]) {
-          metricUrl = urls[metricType];
-        } else {
-          metricUrl = timeChartUrl + metricType;
-        }
+
+        metricUrl = timeChartUrl;
 
         if (params) {
           metricUrl += '?';
@@ -115,12 +112,26 @@ angular.module('Squared')
         },
 
         getUsageMetrics: function (metricType, params, orgId) {
-          if (Authinfo.isPartner() && !orgId) {
-            timeChartUrl = apiUrl + 'reports/timeCharts/managedOrgs/';
-          } else if (Authinfo.isPartner() && orgId) {
-            timeChartUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/' + 'reports/timeCharts/';
-          } else {
-            timeChartUrl = apiUrl + 'reports/timeCharts/';
+          if (Authinfo.isPartner()) { // partner reports
+            if (urls[metricType]) { // count metric type
+              if (!orgId) { // count for all managed customers
+                timeChartUrl = apiUrl + urls[metricType];
+              } else { // count for specific managed customer
+                timeChartUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/' + urls[metricType];
+              }
+            } else { // timechart metric type
+              if (!orgId) { // timechart for all managed customers
+                timeChartUrl = apiUrl + 'reports/timeCharts/managedOrgs/' + metricType;
+              } else { // timechart for specific managed customer
+                timeChartUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/' + 'reports/timeCharts/' + metricType;
+              }
+            }
+          } else { // customer reports
+            if (urls[metricType]) {
+              timeChartUrl = apiUrl + urls[metricType];
+            } else {
+              timeChartUrl = apiUrl + 'reports/timeCharts/' + metricType;
+            }
           }
 
           var metricUrl = buildUrl(metricType, params);
@@ -217,7 +228,6 @@ angular.module('Squared')
               callback(data, status);
             });
         }
-
       };
     }
   ]);
