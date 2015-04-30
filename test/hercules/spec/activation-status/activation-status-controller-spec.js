@@ -4,7 +4,7 @@ describe('ActivationStatusController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   describe('when fusion is enabled', function () {
-    var $scope, controller, service, $httpBackend;
+    var $scope, controller, service, $httpBackend, descriptor;
 
     var $stateParams = {
       currentUser: getJSONFixture('core/json/currentUser.json')
@@ -12,10 +12,10 @@ describe('ActivationStatusController', function () {
 
     beforeEach(inject(function (_$controller_, $rootScope, $injector) {
       $httpBackend = $injector.get('$httpBackend');
-      $httpBackend
-        .when('GET', 'l10n/en_US.json')
-        .respond({});
-
+      $httpBackend.when('GET', 'l10n/en_US.json').respond({});
+      descriptor = {
+        isFusionEnabled: sinon.stub()
+      };
       service = {
         getStatusesForUser: sinon.stub(),
         pollCIForUser: sinon.stub(),
@@ -30,9 +30,10 @@ describe('ActivationStatusController', function () {
 
       controller = _$controller_('ActivationStatusController', {
         $scope: $scope,
-        $stateParams: $stateParams,
+        Authinfo: authinfo,
         USSService: service,
-        Authinfo: authinfo
+        $stateParams: $stateParams,
+        ServiceDescriptor: descriptor
       });
     }));
 
@@ -47,20 +48,26 @@ describe('ActivationStatusController', function () {
 
     it('shows enabled flag', function () {
       $scope.$digest();
+      expect($scope.isEnabled).toBeFalsy();
+
+      descriptor.isFusionEnabled.callArgWith(0, true);
       expect($scope.isEnabled).toBeTruthy();
     });
 
     it('clears status when user is not selected', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
+
       $scope.$digest();
       expect(service.getStatusesForUser.callCount).toBe(1);
 
       $scope.$digest();
-
       expect(service.getStatusesForUser.callCount).toBe(1);
       expect($scope.activationStatus).toBeFalsy();
     });
 
     it('updates activation status for current user', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
+
       $scope.$digest();
       expect(service.getStatusesForUser.callCount).toBe(1);
       expect($scope.activationStatus).toBeFalsy();
@@ -71,6 +78,8 @@ describe('ActivationStatusController', function () {
     });
 
     it('sets and clears error flag when api derps', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
+
       expect($scope.lastRequestFailed).toBeFalsy();
       $scope.$digest();
       service.getStatusesForUser.callArgWith(1, [true]);
@@ -80,6 +89,8 @@ describe('ActivationStatusController', function () {
     });
 
     it('polls CI and reloads data for a user', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
+
       expect($scope.inflight).toBeFalsy();
       expect(service.pollCIForUser.callCount).toBe(0);
 
@@ -104,13 +115,11 @@ describe('ActivationStatusController', function () {
   });
 
   describe('when fusion is disenabled', function () {
-    var $scope, controller, service, $httpBackend;
+    var $scope, controller, service, $httpBackend, descriptor;
 
     beforeEach(inject(function (_$controller_, $rootScope, $injector) {
       $httpBackend = $injector.get('$httpBackend');
-      $httpBackend
-        .when('GET', 'l10n/en_US.json')
-        .respond({});
+      $httpBackend.when('GET', 'l10n/en_US.json').respond({});
 
       service = {
         getStatusesForUser: sinon.stub()
@@ -120,16 +129,21 @@ describe('ActivationStatusController', function () {
           return false;
         }
       };
+      descriptor = {
+        isFusionEnabled: sinon.stub()
+      };
       $scope = $rootScope.$new();
       controller = _$controller_('ActivationStatusController', {
         $scope: $scope,
         USSService: service,
-        Authinfo: authinfo
+        Authinfo: authinfo,
+        ServiceDescriptor: descriptor
       });
     }));
 
     it('does not show if user is not entitled', function () {
       $scope.$digest();
+      expect(descriptor.isFusionEnabled.callCount).toBe(0);
       expect(service.getStatusesForUser.callCount).toBe(0);
       expect($scope.isEnabled).toBeFalsy();
     });
