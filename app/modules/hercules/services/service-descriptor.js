@@ -17,8 +17,19 @@ angular.module('Hercules')
           });
       };
 
+      var isFusionEnabled = function (callback) {
+        services(function (error, services) {
+          if (error) {
+            callback(false);
+          } else {
+            callback(services.length > 0);
+          }
+        });
+      };
+
       return {
-        services: services
+        services: services,
+        isFusionEnabled: isFusionEnabled
       };
 
     }
