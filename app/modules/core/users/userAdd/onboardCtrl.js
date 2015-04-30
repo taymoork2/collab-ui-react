@@ -282,7 +282,7 @@ angular.module('Core')
               invalidcount--;
             }
           })
-          .on('tokenfield:removetoken', function (e) {
+          .on('tokenfield:removedtoken', function (e) {
             if (!validateEmail(e.attrs.value)) {
               invalidcount--;
             }
@@ -291,6 +291,7 @@ angular.module('Core')
           });
 
         angular.element('#usersfield-tokenfield').css('width', '100%');
+        checkPlaceholder();
       };
 
       var invalidcount = 0;
