@@ -11,6 +11,7 @@
       uuid: '',
       pattern: '',
       alertingName: '',
+      hasCustomAlertingName: false,
       callForwardAll: {
         voicemailEnabled: false,
         destination: ''
@@ -65,6 +66,7 @@
           dn.uuid = data.uuid;
           dn.pattern = data.pattern;
           dn.alertingName = data.alertingName;
+          dn.hasCustomAlertingName = data.hasCustomAlertingName;
           dn.callForwardAll.voicemailEnabled = data.callForwardAll.voicemailEnabled;
           if (typeof data.callForwardAll.destination !== 'undefined') {
             dn.callForwardAll.destination = data.callForwardAll.destination;

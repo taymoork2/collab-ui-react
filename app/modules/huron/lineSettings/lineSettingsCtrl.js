@@ -381,7 +381,7 @@
     }
 
     function initCallerId() {
-      if (vm.directoryNumber.alertingName !== vm.callerIdInfo.default && vm.directoryNumber.alertingName !== '') {
+      if (vm.directoryNumber.hasCustomAlertingName === 'true') {
         vm.callerIdInfo.otherName = vm.directoryNumber.alertingName;
         vm.callerIdInfo.selection = 'other';
       } else {
@@ -393,8 +393,10 @@
     function processCallerId() {
       if (vm.callerIdInfo.selection === 'default') {
         vm.directoryNumber.alertingName = vm.callerIdInfo.default;
+        vm.directoryNumber.hasCustomAlertingName = false;
       } else {
         vm.directoryNumber.alertingName = vm.callerIdInfo.otherName;
+        vm.directoryNumber.hasCustomAlertingName = true;
       }
     }
 

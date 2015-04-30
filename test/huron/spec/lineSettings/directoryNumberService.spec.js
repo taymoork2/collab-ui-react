@@ -18,6 +18,7 @@ describe('Service: DirectoryNumber', function () {
     uuid: '',
     pattern: '',
     alertingName: '',
+    hasCustomAlertingName: false,
     callForwardAll: {
       voicemailEnabled: false,
       destination: ''

@@ -140,6 +140,8 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('saveLineSettings', function () {
     beforeEach(function () {
+      controller.callerIdInfo.selection = 'other';
+      controller.callerIdInfo.otherName = 'Custom Name';
       controller.forward = 'none';
       controller.saveLineSettings();
       $scope.$apply();
@@ -147,6 +149,11 @@ describe('Controller: LineSettingsCtrl', function () {
 
     it('should update dtmfAccessId with the external number pattern', function () {
       expect(HuronUser.updateDtmfAccessId).toHaveBeenCalledWith(currentUser.id, telephonyInfoWithVoicemail.alternateDirectoryNumber.pattern);
+    });
+
+    it('should update hasCustomAlertingName and alertingName', function () {
+      expect(controller.directoryNumber.hasCustomAlertingName).toBe(true);
+      expect(controller.directoryNumber.alertingName).toBe('Custom Name');
     });
   });
 
