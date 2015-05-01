@@ -17,8 +17,8 @@ describe('Controller: DeviceHeaderCtrl', function () {
 
   describe('DeviceHeaderCtrl controller', function () {
     it('should derive device icon name correctly from device model', function () {
-      // model: Cisco DX650 should derive to cisco_dx650.svg
-      expect(controller.icon).toEqual('cisco_dx650.svg');
+      // model: Cisco DX650 should derive to cisco_dx650.png
+      expect(controller.icon).toEqual('cisco_dx650.png');
     });
 
     it('should have a title', function () {

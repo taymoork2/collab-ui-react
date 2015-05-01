@@ -19,7 +19,7 @@
 
       if (device) {
         vm.title = device.model;
-        vm.icon = (device.model.trim().replace(/ /g, '_') + '.svg').toLowerCase();
+        vm.icon = (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase();
       }
     }
 
