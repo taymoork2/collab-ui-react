@@ -42,6 +42,18 @@
         errorMsg += ' ' + response.data.errorMessage;
       } else if (response && response.status === 404) {
         errorMsg += ' ' + $translate.instant('errors.status404');
+      } else if (angular.isString(response)) {
+        errorMsg += ' ' + response;
+      }
+
+      if (response && angular.isFunction(response.headers)) {
+        var trackingId = response.headers('TrackingID');
+        if (trackingId) {
+          if (!errorMsg.endsWith('.')) {
+            errorMsg += '.';
+          }
+          errorMsg += ' TrackingID: ' + trackingId;
+        }
       }
       return errorMsg;
     }

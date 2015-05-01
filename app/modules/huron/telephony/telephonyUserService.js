@@ -92,7 +92,7 @@
             })
             .catch(function (response) {
               LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), response.status || 409, moment(), 1);
-              return $q.reject();
+              return $q.reject(response);
             });
         });
     }

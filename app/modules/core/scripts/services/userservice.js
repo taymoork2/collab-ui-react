@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth', 'Utils', 'HuronUser',
-    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser) {
+  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth', 'Utils', 'HuronUser', 'Notification',
+    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification) {
 
       var userUrl = Config.getAdminServiceUrl();
 
@@ -46,7 +46,12 @@ angular.module('Core')
                       data.success = true;
                       callback(data, status);
                     }).catch(function (response) {
-                      callback(response);
+                      // Notify Huron error
+                      Notification.errorResponse(response);
+
+                      // Callback entitlement success
+                      data.success = true;
+                      callback(data, status);
                     });
                 } else {
                   if (data.userResponse[0].unentitled && data.userResponse[0].unentitled.indexOf(Config.entitlements.huron) !== -1) {
@@ -155,9 +160,12 @@ angular.module('Core')
                     .then(function () {
                       data.success = true;
                       callback(data, status);
-                    }).catch(function (error) {
-                      Log.error('Squared UC user update unsuccessful: ' + error);
-                      data.success = false;
+                    }).catch(function (response) {
+                      // Notify Huron error
+                      Notification.errorResponse(response);
+
+                      // Callback update success
+                      data.success = true;
                       callback(data, status);
                     });
                 } else {

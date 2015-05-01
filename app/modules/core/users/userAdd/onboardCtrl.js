@@ -370,7 +370,7 @@ angular.module('Core')
                   var promise = HuronUser.create(data.userResponse[i].uuid, userData)
                     .catch(function (response) {
                       this.alertType = 'danger';
-                      this.message = $translate.instant('usersPage.ciscoucError', this) + (response.data && response.data.errorMessage ? ' ' + response.data.errorMessage : '');
+                      this.message = Notification.processErrorResponse(response, 'usersPage.ciscoucError', this);
                     }.bind(userResult));
                   promises.push(promise);
                 }
