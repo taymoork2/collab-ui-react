@@ -48,88 +48,43 @@ describe('WebEx user settings', function () {
     expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
   });
 
-  it('should allow show save button disabled without any changes', function () {
-    expect(usersettings.saveButton.isEnabled()).toBeFalsy();
+  it('should not show save button without any changes', function () {
+    expect(usersettings.saveButton.isPresent()).toBeFalsy();
   });
 
-  /** 
-  it('should allow enable save button after a change', function () {
-    if (usersettings.mc.isPresent()) { // MC is enabled 
-      console.log('count=' + element.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).count());
-      element.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).then(function (rows) {
-        for (var i = 0; i < rows.length; ++i) {
-          var checkbox = i.element(by.css('cs-checkbox'));
-          if (checkbox.isDisplayed()) {
-            checkbox.click();
-            expect(usersettings.saveButton.isEnabled()).toBeTruthy();
-            break;
-          }
-        }
-      });
+  it('should not allow save of mc AUO without mc PRO', function () {
+    if (usersettings.mc.isPresent() && usersettings.mc.isDisplayed()) {
+      usersettings.unSelectAllMcSessionTypeByPrefix('PRO');
+      usersettings.selectAllMcSessionTypeByPrefix('AUO');
+      expect(usersettings.saveButton.isDisplayed()).toBeTruthy();
+      usersettings.save();
+      expect(usersettings.alertError.isDisplayed()).toBeTruthy();
+      usersettings.alertError.click();
     }
   });
 
-  it('should pause', function () {
-    browser.pause();
+  it('should allow save of mc AUO with mc PRO', function () {
+    if (usersettings.mc.isPresent() && usersettings.mc.isDisplayed()) {
+      usersettings.selectAllMcSessionTypeByPrefix('PRO');
+      usersettings.selectAllMcSessionTypeByPrefix('AUO');
+      expect(usersettings.saveButton.isDisplayed()).toBeTruthy();
+      usersettings.save();
+      expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
+      usersettings.alertSuccess.click();
+    }
+  });
+
+  /** 
+  it('should allow edit in 4th panel', function () {
+    utils.click(usersettings.userPrivilegesLink);
+    expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
+    expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
   });
 **/
-  /**  it('should contain correct centres', function () {
-      expect(usersettings.mc.isPresent()).toBeTruthy();
-      expect(usersettings.ec.isPresent()).toBeTruthy();
-      //	  expect(usersettings.tc.isPresent()).toBeFalsy();
-    });
 
-    it('should allow to un select MC PRO check box', function () {
-      expect(usersettings.mcProCheckbox.getAttribute('class')).toContain('checked');
-      usersettings.unSelectMcPro();
-      expect(usersettings.mcProCheckbox.getAttribute('class')).not.toContain('checked');
-    });
-  **/
-
-  /**
-    it ('shout allow to save', function () {
-  	  usersettings.save();
-    });
-
-    it('should contain correct General settings', function () {
-        expect(usersettings.recordingEditor.isDisplayed()).toBeTruthy();
-        expect(usersettings.assist.isDisplayed()).toBeTruthy();
-        expect(usersettings.hiQualVideo.isDisplayed()).toBeTruthy();
-        expect(usersettings.hiDefVideo.isDisplayed()).toBeTruthy();
-        expect(usersettings.personalRoom.isDisplayed()).toBeTruthy();
-        expect(usersettings.collabRoom.isDisplayed()).toBeTruthy();
-    });
-
-    it('should allow to click Recording Editor check box', function () {
-  	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).toContain('checked');
-  	  usersettings.clickRecordingEditor();
-  	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).not.toContain('checked');
-    });
-
-    it('should allow to select Recording Editor check box', function () {
-  	  usersettings.selectRecordingEditor();
-  	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).toContain('checked');
-    });
-
-    it('should allow to un select Recording Editor check box', function () {
-  	  usersettings.unSelectRecordingEditor();
-  	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).not.toContain('checked');
-  	  usersettings.unSelectRecordingEditor();
-  	  expect(usersettings.recordingEditorCheckbox.getAttribute('class')).not.toContain('checked');
-    });
-
-    it('should allow to un select other check boxes', function () {
-  	  usersettings.unSelectAssist();
-  	  expect(usersettings.assistCheckbox.getAttribute('class')).not.toContain('checked');
-  	  usersettings.unSelectHiQualVideo();
-  	  expect(usersettings.hiQualVideoCheckbox.getAttribute('class')).not.toContain('checked');
-  	  usersettings.unSelectHiDefVideo();
-  	  expect(usersettings.hiDefVideoCheckbox.getAttribute('class')).not.toContain('checked');
-  	  usersettings.unSelectPersonalRoom();
-  	  expect(usersettings.personalRoomCheckbox.getAttribute('class')).not.toContain('checked');
-  	  usersettings.unSelectCollabRoom();
-  	  expect(usersettings.collabRoomCheckbox.getAttribute('class')).not.toContain('checked');
-  	  browser.sleep(3000);
+  /**  
+    it('should pause', function () {
+      browser.pause();
     });
   **/
 

@@ -5,17 +5,19 @@ var BasicSettigsPage = function () {
   this.userSettingsPanel = element(by.id('webexUserSettingsPage'));
   this.errorPanel = element(by.id('errSection'));
   this.userPrivilegesLink = element(by.id('webex-user-privs'));
-  this.userPrivilegesPanel = element(by.id('webexUserSettingsPage2'));
 
   this.mc = element(by.id('MC'));
   this.ec = element(by.id('EC'));
   this.tc = element(by.id('TC'));
 
-  this.mcPro = this.mc.element(by.id('sessionType-3'));
-  this.mcProCheckbox = this.mc.element(by.css('cs-checkbox'));
+  this.mcPro = this.mc.element(by.css('[ckid="sessionType-3"]'));
+  this.mcProCheckbox = this.mcPro.element(by.css('input'));
 
-  this.mcAuo = this.mc.element(by.id('sessionType-16'));
-  this.mcAuoCheckbox = this.mc.element(by.css('cs-checkbox'));
+  this.mcAuo = this.mc.element(by.css('[ckid="sessionType-16"]'));
+  this.mcAuoCheckbox = this.mcAuo.element(by.css('input'));
+
+  this.userPrivilegesPanel = element(by.id('webexUserSettingsPage2'));
+  this.telephonyPrivileges = element(by.id('telephonyPrivileges'));
 
   this.recordingEditor = element(by.model('WebExUserSettings.userPrivileges.general.recordingEditor.value'));
   this.recordingEditorCheckbox = this.recordingEditor.element(by.className('checkboxValue'));
@@ -30,7 +32,11 @@ var BasicSettigsPage = function () {
   this.collabRoom = element(by.model('WebExUserSettings.userPrivileges.general.collabRoom.value'));
   this.collabRoomCheckbox = this.collabRoom.element(by.className('checkboxValue'));
 
-  this.saveButton = element(by.id('saveBtn'));
+  this.saveButton = element(by.css('[ng-click="WebExUserSettings.btnSave(userSettingsView.form)"]'));
+
+  //alertify-log-error
+  this.alertSuccess = element(by.css('.alertify-log-success'));
+  this.alertError = element(by.css('.alertify-log-error'));
 
   this.testAdmin = {
     username: 'atlasintegration@yahoo.com',
@@ -42,35 +48,103 @@ var BasicSettigsPage = function () {
     password: 'J@smine1',
   };
 
-  //#t30citest\.webex\.com > span:nth-child(1)
   this.testSiteElement = element(by.id('t30citest.webex.com'));
 
   this.save = function () {
     utils.click(this.saveButton);
   };
 
+  this.selectAllMcSessionTypeByPrefix = function (prefix) {
+    usersettings.mc.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).map(function (row) {
+      var checkbox = row.element(by.css('cs-checkbox'));
+      //        checkbox.getOuterHtml().then(function(html) {
+      //        	console.log('--->'+html);
+      //        });
+      var input = checkbox.element(by.css('input'));
+
+      checkbox.element(by.css('.ng-binding')).getText().then(function (text) {
+        if (text.toUpperCase() === prefix.toUpperCase()) {
+          input.isSelected().then(function (selected) {
+            if (!selected) {
+              checkbox.click();
+            }
+          });
+        }
+      });
+    });
+  };
+
+  this.unSelectAllMcSessionTypeByPrefix = function (prefix) {
+    usersettings.mc.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).map(function (row) {
+      var checkbox = row.element(by.css('cs-checkbox'));
+      var input = checkbox.element(by.css('input'));
+
+      checkbox.element(by.css('.ng-binding')).getText().then(function (text) {
+        if (text.toUpperCase() === prefix.toUpperCase()) {
+          input.isSelected().then(function (selected) {
+            if (selected) {
+              checkbox.click();
+            }
+          });
+        }
+      });
+    });
+  };
+
   this.selectMcPro = function () {
-    if (!this.mcPro.isSelected()) {
-      this.mcProCheckbox.click();
-    }
+    var mc = this.mcPro;
+    this.mcProCheckbox.isSelected().then(function (selected) {
+      if (!selected) {
+        mc.click();
+      }
+    });
   };
 
   this.unSelectMcPro = function () {
-    if (this.mcPro.isSelected()) {
-      this.mcProCheckbox.click();
-    }
+    var mc = this.mcPro;
+    this.mcProCheckbox.isSelected().then(function (selected) {
+      if (selected) {
+        mc.click();
+      }
+    });
+  };
+
+  this.isMcProSelected = function () {
+    return this.mcProCheckbox.isSelected().then(function (selected) {
+      if (!selected) {
+        return false;
+      } else {
+        return true;
+      }
+    });
   };
 
   this.selectMcAuo = function () {
-    if (!this.mcAuo.isSelected()) {
-      this.mcAuoCheckbox.click();
-    }
+    var mc = this.mcAuo;
+    this.mcAuoCheckbox.isSelected().then(function (selected) {
+      if (!selected) {
+        mc.click();
+      }
+    });
   };
 
   this.unSelectMcAuo = function () {
-    if (this.mcAuo.isSelected()) {
-      this.mcAuoCheckbox.click();
-    }
+    var mc = this.mcAuo;
+    this.mcAuoCheckbox.isSelected().then(function (selected) {
+      if (selected) {
+        mc.click();
+      }
+    });
+  };
+
+  this.isMcAuoSelected = function () {
+    this.mcAuoCheckbox.isSelected().then(function (selected) {
+      if (!selected) {
+        return false;
+      } else {
+        return true;
+      }
+    });
   };
 
   /**
