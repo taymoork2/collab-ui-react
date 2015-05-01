@@ -158,6 +158,13 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
       customerId: '@customerId',
       internalNumberRangeId: '@internalNumberRangeId'
+    }, {
+      save: {
+        method: 'POST',
+        headers: {
+          'Access-Control-Expose-Headers': 'Location'
+        }
+      }
     });
   })
 

@@ -3,10 +3,10 @@
 
   angular
     .module('Huron')
-    .controller('serviceSetupCtrl', serviceSetupCtrl);
+    .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject */
-  function serviceSetupCtrl($scope, $q, Log, ServiceSetup, HttpUtils, Notification, $translate) {
+  function ServiceSetupCtrl($scope, $q, ServiceSetup, HttpUtils, Notification, $translate) {
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = 'America/Los_Angeles';
     var DEFAULT_SD = '9';
@@ -101,10 +101,14 @@
                 endNumber: DEFAULT_TO
               });
             }
-            Log.debug('Delete InternalNumberRange Success! -- ' + JSON.stringify(internalNumberRange));
+            Notification.notify([$translate.instant('serviceSetupModal.extensionDeleteSuccess', {
+              extension: internalNumberRange.name
+            })], 'success');
           })
-          .catch(function () {
-            Log.debug('Delete InternalNumberRange Failure! -- ' + JSON.stringify(internalNumberRange));
+          .catch(function (response) {
+            Notification.errorResponse(response, $translate.instant('serviceSetupModal.extensionDeleteError', {
+              extension: internalNumberRange.name
+            }));
           });
       } else {
         $scope.internalNumberRanges.splice(index, 1);
@@ -136,16 +140,36 @@
         return $q.reject('Field validation failed.');
       } else {
         var deferreds = [];
+        var errors = [];
         if ($scope.firstTimeSetup) {
-          deferreds.push(ServiceSetup.createSite($scope.site).then(function () {
-            $scope.firstTimeSetup = false;
-          }));
+          var promise = ServiceSetup.createSite($scope.site)
+            .then(function () {
+              $scope.firstTimeSetup = false;
+            }).catch(function (response) {
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
+            });
+          deferreds.push(promise);
         }
-        if ($scope.internalNumberRanges && $scope.internalNumberRanges.length > 0) {
-          deferreds.push(ServiceSetup.createInternalNumberRanges($scope.internalNumberRanges));
+
+        if (angular.isArray($scope.internalNumberRanges)) {
+          angular.forEach($scope.internalNumberRanges, function (internalNumberRange) {
+            var promise = ServiceSetup.createInternalNumberRange(internalNumberRange)
+              .catch(function (response) {
+                var error = Notification.processErrorResponse(response, 'serviceSetupModal.extensionAddError', {
+                  extension: this.name
+                });
+                errors.push(error);
+              }.bind(internalNumberRange));
+            deferreds.push(promise);
+          });
         }
         return $q.all(deferreds).then(function () {
-          listInternalExtentionRanges();
+          if (errors.length > 0) {
+            Notification.notify(errors, 'error');
+            return $q.reject('Site/extension create failed.');
+          } else {
+            Notification.notify([$translate.instant('serviceSetupModal.saveSuccess')], 'success');
+          }
         });
       }
     };

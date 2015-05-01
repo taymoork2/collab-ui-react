@@ -55,7 +55,7 @@ module.exports = {
     js: [
       'bower_components/x2js/xml2json.js',
       'bower_components/x2js/xml2json.min.js',
-	  'bower_components/jquery/dist/jquery.js',
+      'bower_components/jquery/dist/jquery.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/addressparser/src/addressparser.js',
       'bower_components/alertify.js/lib/alertify.js',

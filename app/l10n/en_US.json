@@ -456,9 +456,13 @@
     "ciscoDefault": "Cisco Default",
     "fall": "Fall",
     "winter": "Winter",
-    "addSuccess": " added successfully.",
     "emptyNumber": "Number cannot be empty",
-    "notANumber": " is not a valid number"
+    "notANumber": " is not a valid number",
+    "saveSuccess": "Unified Communications setup saved successfully",
+    "siteError": "Failed to create site.",
+    "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
+    "extensionDeleteError": "Failed to delete extension {{extension}}.",
+    "extensionAddError": "Failed to create extension {{extension}}."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",

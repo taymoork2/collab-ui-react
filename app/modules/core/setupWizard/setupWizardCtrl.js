@@ -78,7 +78,7 @@ angular.module('Core')
           description: 'firstTimeWizard.serviceSetupSub',
           icon: 'icon-tools',
           title: 'firstTimeWizard.unifiedCommunication',
-          controller: 'serviceSetupCtrl',
+          controller: 'ServiceSetupCtrl',
           steps: [{
             name: 'init',
             template: 'modules/core/setupWizard/serviceSetup.tpl.html'
