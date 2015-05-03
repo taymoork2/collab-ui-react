@@ -1,6 +1,10 @@
 {
   "id": "111",
   "userName": "CurrentUser",
+  "entitlements": [
+    "webex-squared",
+    "squared-call-initiation"
+  ],
   "meta": {
     "organizationID": "222"
   }

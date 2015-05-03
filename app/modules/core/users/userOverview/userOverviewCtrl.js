@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($stateParams, $translate, Authinfo) {
+  function UserOverviewCtrl($stateParams, $translate, $http, Authinfo, Config, Utils) {
     /*jshint validthis: true */
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
@@ -21,7 +21,15 @@
     vm.isFusion = Authinfo.isFusion();
     vm.isFusionCal = Authinfo.isFusionCal();
 
-    var hasEntitlement = function (entitlement) {
+    init();
+
+    var generateOtpLink = {
+      name: 'generateAuthCode',
+      text: $translate.instant('usersPreview.generateActivationCode'),
+      state: 'generateauthcode({currentUser: userOverview.currentUser, activationCode: \'new\'})'
+    };
+
+    function hasEntitlement(entitlement) {
       var userEntitlements = vm.currentUser.entitlements;
       if (userEntitlements) {
         for (var n = 0; n < userEntitlements.length; n++) {
@@ -32,13 +40,21 @@
         }
       }
       return false;
-    };
+    }
 
-    var generateOtpLink = {
-      name: 'generateAuthCode',
-      text: $translate.instant('usersPreview.generateActivationCode'),
-      state: 'generateauthcode({currentUser: userOverview.currentUser, activationCode: \'new\'})'
-    };
+    function init() {
+      var scimUrl = Config.getScimUrl();
+      var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]) + '/' + vm.currentUser.id;
+
+      $http.get(userUrl)
+        .success(function (data) {
+          // Copy updated user data into user list
+          angular.copy(data, vm.currentUser);
+        })
+        .finally(function () {
+          activate();
+        });
+    }
 
     function activate() {
       vm.services = [];
@@ -68,8 +84,6 @@
         vm.services.push(commState);
       }
     }
-
-    activate();
 
     function addGenerateAuthCodeLink() {
       var foundLink = false;
