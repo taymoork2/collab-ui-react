@@ -1,13 +1,8 @@
 'use strict';
 
 describe('Controller: GenerateActivationCodeCtrl', function () {
-  var controller, $scope, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification;
+  var controller, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification;
 
-  beforeEach(module('uc.device'));
-  beforeEach(module('ui.bootstrap'));
-  beforeEach(module('ui.router'));
-  beforeEach(module('ngResource'));
-  beforeEach(module('dialogs'));
   beforeEach(module('Huron'));
 
   var OtpService = {
@@ -26,14 +21,19 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
     sinon.spy(Notification, "notify");
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_) {
     $scope = $rootScope.$new();
+    $state = _$state_;
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
+
+    $state.modal = jasmine.createSpyObj('modal', ['close']);
+
     controller = $controller('GenerateActivationCodeCtrl', {
       $scope: $scope,
+      $state: $state,
       $stateParams: stateParams,
       OtpService: OtpService
     });
@@ -83,6 +83,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
           controller.sendActivationCodeEmail();
           $httpBackend.flush();
           expect(Notification.notify.calledWith(['generateActivationCodeModal.emailSuccess'], 'success')).toBe(true);
+          expect($state.modal.close).toHaveBeenCalled();
         });
 
         it('should try to send email and notify error', function () {
@@ -90,6 +91,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
           controller.sendActivationCodeEmail();
           $httpBackend.flush();
           expect(Notification.notify.calledOnce).toBe(true);
+          expect($state.modal.close).not.toHaveBeenCalled();
         });
       });
 

@@ -6,7 +6,7 @@
     .controller('GenerateActivationCodeCtrl', GenerateActivationCodeCtrl);
 
   /* @ngInject */
-  function GenerateActivationCodeCtrl($stateParams, $translate, $window, OtpService, ActivationCodeEmailService, Notification, HttpUtils) {
+  function GenerateActivationCodeCtrl($stateParams, $state, $translate, $window, OtpService, ActivationCodeEmailService, Notification, HttpUtils) {
     var vm = this;
     vm.showEmail = false;
     vm.userName = $stateParams.currentUser.userName;
@@ -61,6 +61,10 @@
         };
 
         Notification.notify([entitleResult.msg], entitleResult.type);
+
+        if (angular.isDefined($state.modal) && angular.isFunction($state.modal.close)) {
+          $state.modal.close();
+        }
       }, function (error) {
         entitleResult = {
           msg: $translate.instant('generateActivationCodeModal.emailError') + "  " + error.data,
