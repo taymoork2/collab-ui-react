@@ -119,10 +119,6 @@
           userSettingsModel.hasLoadError = false;
           userSettingsModel.allowRetry = false;
           userSettingsModel.sessionTicketErr = false;
-          userSettingsModel.disableCancel = false;
-          userSettingsModel.disableCancel2 = false;
-          userSettingsModel.disableSave = false;
-          userSettingsModel.disableSave2 = false;
 
           userSettingsModel.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
 
@@ -452,19 +448,17 @@
 
           logMsg = funcName + ": " +
             "START";
-          // $log.log(logMsg);
-
-          angular.element('#reloadBtn').button('loading');
-          angular.element('#reloadBtn2').button('loading');
+          $log.log(logMsg);
 
           var _self = this;
           var webexSiteUrl = this.getSiteUrl();
           var webexSiteName = this.getSiteName(webexSiteUrl);
 
+          angular.element('#reloadBtn').button('loading');
+
           this.getSessionTicket(webexSiteUrl).then(
             function getSessionTicketSuccess(webexAdminSessionTicket) {
               angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
-              angular.element('#reloadBtn2').button('reset'); //Reset "try again" button to normal state
 
               _self.initXmlApiInfo(
                 webexSiteUrl,
@@ -473,6 +467,8 @@
               );
 
               userSettingsModel.sessionTicketErr = false;
+
+              // angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
 
               _self.getUserSettingsInfo();
             }, // getSessionTicketSuccess()
@@ -485,12 +481,10 @@
                 "errId=" + errId;
               $log.log(logMsg);
 
-              _self.setLoadingErrorDisplay(
-                errId,
-                true,
-                true,
-                null
-              );
+              _self.setLoadingErrMsg(errId);
+
+              userSettingsModel.allowRetry = true;
+              userSettingsModel.sessionTicketErr = true;
 
               logMsg = funcName + ": " + "\n" +
                 "hasLoadError=" + userSettingsModel.hasLoadError + "\n" +
@@ -498,27 +492,22 @@
                 "allowRetry=" + userSettingsModel.allowRetry + "\n" +
                 "sessionTicketErr=" + userSettingsModel.sessionTicketErr;
               $log.log(logMsg);
+
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
             } // getSessionTicketError
           ); // WebExUserSettingsFact.getSessionTicket().then()
         }, // initPanel()
 
-        getUserSettingsInfo: function (form) {
+        getUserSettingsInfo: function () {
           var funcName = "getUserSettingsInfo()";
           var logMsg = "";
 
           logMsg = funcName + ": " + "START";
           $log.log(logMsg);
 
-          userSettingsModel.disableSave = true;
-          userSettingsModel.disableSave2 = true;
+          var _self = this;
 
           angular.element('#reloadBtn').button('loading');
-          angular.element('#reloadBtn2').button('loading');
-
-          angular.element('#resetBtn').button('loading');
-          angular.element('#resetBtn2').button('loading');
-
-          var _self = this;
 
           this.getUserSettingsInfoXml().then(
             function getUserSettingsInfoXmlSuccess(getInfoResult) {
@@ -552,20 +541,13 @@
                 ("" === userSettingsModel.meetingTypesInfo.errId)
               ) {
 
+                userSettingsModel.hasLoadError = false;
+
                 _self.updateUserSettingsModelPart1();
                 _self.updateUserSettingsModelPart2();
                 _self.updateUserSettingsModelPart3();
 
-                userSettingsModel.hasLoadError = false;
                 userSettingsModel.viewReady = true; // only set this after the model has finished being updated
-
-                angular.element('#reloadBtn').button('reset');
-                angular.element('#reloadBtn2').button('reset');
-
-                if (null != form) {
-                  form.$setPristine();
-                  form.$setUntouched();
-                }
               } else { // has invalid xml data
                 logMsg = funcName + ": " + "\n" +
                   "userInfo.errId=" + userSettingsModel.userInfo.errId + "\n" +
@@ -576,6 +558,8 @@
                   "meetingTypesInfo.errReason=" + userSettingsModel.meetingTypesInfo.errReason;
                 $log.log(logMsg);
 
+                userSettingsModel.allowRetry = true;
+
                 var errId = "";
                 if ("" !== userSettingsModel.userInfo.errId) {
                   errId = userSettingsModel.userInfo.errId;
@@ -585,12 +569,7 @@
                   errId = userSettingsModel.meetingTypesInfo.errId;
                 }
 
-                _self.setLoadingErrorDisplay(
-                  errId,
-                  false,
-                  true,
-                  form
-                );
+                _self.setLoadingErrMsg(errId);
 
                 logMsg = funcName + ": " + "\n" +
                   "hasLoadError=" + userSettingsModel.hasLoadError + "\n" +
@@ -600,8 +579,7 @@
                 $log.log(logMsg);
               } // has invalid xml data
 
-              userSettingsModel.disableSave = false;
-              userSettingsModel.disableSave2 = false;
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
             }, // getUserSettingsInfoXmlSuccess()
 
             function getUserSettingsInfoXmlError(getInfoResult) {
@@ -611,46 +589,24 @@
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               $log.log(logMsg);
 
-              _self.setLoadingErrorDisplay(
-                null,
-                false,
-                true,
-                form
-              );
+              userSettingsModel.viewReady = false;
+              userSettingsModel.allowRetry = true;
 
-              userSettingsModel.disableSave = false;
-              userSettingsModel.disableSave2 = false;
+              _self.setLoadingErrMsg("");
+
+              angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
             } // getUserSettingsInfoXmlError()
           ); // WebExUserSettingsFact.getUserSettingsInfoXml()
         }, // getUserSettingsInfo()
 
-        setLoadingErrorDisplay: function (
-          errId,
-          sessionTicketErr,
-          allowRetry,
-          form
-        ) {
-
+        setLoadingErrMsg: function (errId) {
           userSettingsModel.errMsg = this.getErrMsg(errId);
-          userSettingsModel.viewReady = false;
           userSettingsModel.hasLoadError = true;
-          userSettingsModel.sessionTicketErr = sessionTicketErr;
-          userSettingsModel.allowRetry = allowRetry;
-
-          angular.element('#reloadBtn').button('reset');
-          angular.element('#reloadBtn2').button('reset');
-
-          if (null != form) {
-            form.$setPristine();
-            form.$setUntouched();
-          }
-        }, // setLoadingErrorDisplay()
+        }, // setLoadingErrMsg()
 
         updateUserSettings: function (form) {
           var funcName = "updateUserSettings()";
           var logMsg = "";
-
-          userSettingsModel.disableCancel = true;
 
           angular.element('#saveBtn').button('loading');
 
@@ -680,10 +636,9 @@
 
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
+              angular.element('#saveBtn').button('reset');
               form.$dirty = false;
               form.$setPristine();
-
-              userSettingsModel.disableCancel = false;
 
               var successMsg = $translate.instant("webexUserSettings.sessionEnablementUpdateSuccess");
               _self.processUpdateSuccessResult(
@@ -702,8 +657,6 @@
             function updateUserSettingsError(result) {
               angular.element('#saveBtn').button('reset');
 
-              userSettingsModel.disableCancel = false;
-
               _self.updateUserSettingsError(result);
             } // updateUserSettingsError()
           );
@@ -713,31 +666,7 @@
           var funcName = "updateUserSettings2()";
           var logMsg = "";
 
-          userSettingsModel.disableCancel2 = true;
-
           angular.element('#saveBtn2').button('loading');
-
-          switch (userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType) {
-          case 1:
-            userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
-            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
-            break;
-
-          case 2:
-            userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
-            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = true;
-            break;
-
-          default:
-            userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = false;
-            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
-            break;
-          } // switch()
-
-          logMsg = funcName + ": " + "\n" +
-            "selectedCallInTollType=" + userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType + "\n" +
-            "toll.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value + "\n" +
-            "tollFree.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
 
           var _self = this;
 
@@ -778,10 +707,9 @@
 
           XmlApiFact.updateUserSettings2(xmlApiInfo).then(
             function updateUserSettings2Success(result) {
+              angular.element('#saveBtn2').button('reset');
               form.$dirty = false;
               form.$setPristine();
-
-              userSettingsModel.disableCancel2 = false;
 
               var successMsg = $translate.instant("webexUserSettings.privilegesUpdateSuccess");
               _self.processUpdateSuccessResult(
@@ -791,8 +719,6 @@
 
             function updateUserSettings2Error(result) {
               angular.element('#saveBtn2').button('reset');
-
-              userSettingsModel.disableCancel2 = false;
 
               _self.updateUserSettingsError(result);
             } // updateUserSettings2Error()

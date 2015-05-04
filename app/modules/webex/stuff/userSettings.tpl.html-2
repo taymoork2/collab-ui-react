@@ -1,0 +1,215 @@
+<form name="userSettingsView.form" novalidate role="form">
+<cs-sp-buttons ng-show="userSettingsView.form.$dirty">
+  <button class="btn-primary"
+          translate="common.save"
+          ng-click="WebExUserSettings.btnSave(userSettingsView.form)"
+          type="submit">
+  </button>
+  
+  <button class="btn-default"
+          translate="common.cancel"
+          ng-click="WebExUserSettings.reset(userSettingsView.form)">
+  </button>
+</cs-sp-buttons>
+
+<cs-sp-container>
+  <cs-sp-section>
+    <div id="errSection"
+         name="errSection"
+         ng-if="WebExUserSettings.userSettingsModel.hasLoadError">
+       
+      <div class="center">
+        <div ng-if="WebExUserSettings.userSettingsModel.allowRetry"
+             class="nodata-icon">
+             
+          <span class="icon icon-circle-clock"></span> 
+        </div>
+        
+        <div class="nodata-message">
+          {{WebExUserSettings.userSettingsModel.errMsg}}
+        </div>
+        
+        <button id="cancelBtn"
+                class="btn btn-default wiz-onboard-btn"
+                ui-sref="user-overview.conferencing">
+                
+          <span translate="webexUserSettings.cancel"></span>
+        </button>
+        
+        <button id="reloadBtn"
+                name="reloadBtn"
+                class="btn btn-info wiz-onboard-btn"
+                ng-if="WebExUserSettings.userSettingsModel.allowRetry"
+                ng-click="WebExUserSettings.btnReload()"
+                data-loading-text="<i class='icon icon-spinner'></i>">
+                
+          <span translate="webexUserSettings.reload"></span>
+        </button>
+      </div>
+    </div>
+
+    <div id="webexUserSettingsPage"
+         ng-if="WebExUserSettings.userSettingsModel.viewReady">
+         
+      <h4 class="list-group-item-heading">
+        &nbsp;
+      </h4>
+      
+      <p>
+        <b>
+          <span translate="webexUserSettingLabels.sessionEnablementLabel"></span>
+        </b>
+      </p>
+
+      <!-- Start of Meeting Center -->
+      <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
+        {{WebExUserSettings.userSettingsModel.meetingCenter.label}}
+        
+        <table id="MC"
+               name="MC">
+
+          <tr valign="top"
+              ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
+              ng-if="sessionType.meetingCenterApplicable">
+            <td>
+              <cs-checkbox ckid={{sessionType.id}}
+                           name={{sessionType.id}}
+                           ng-model="sessionType.sessionEnabled"
+                           label={{sessionType.sessionName}}>
+              </cs-checkbox>
+            </td>
+
+            <td width="15">
+              &nbsp;
+            </td>
+
+            <td>
+              <span ng-if="sessionType.sessionName != 'AUO'">
+                {{WebExUserSettings.userSettingsModel.meetingCenter.label}}
+              </span>
+              
+              {{sessionType.sessionDescription}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- End of Meeting Center -->
+
+      <!-- Start of Event Center -->
+      <div ng-if="WebExUserSettings.userSettingsModel.eventCenter.isSiteEnabled">
+        {{WebExUserSettings.userSettingsModel.eventCenter.label}}
+        <table id="EC"
+               name="EC">
+
+          <tr valign="top"
+              ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
+              ng-if="sessionType.eventCenterApplicable">
+            <td>
+              <cs-checkbox ckid={{sessionType.id}}
+                           name={{sessionType.id}}
+                           ng-model="sessionType.sessionEnabled"
+                           label={{sessionType.sessionName}}>
+              </cs-checkbox>
+            </td>
+
+            <td width="15">
+              &nbsp;
+            </td>
+
+            <td>
+              <span ng-if="sessionType.sessionName != 'AUO'">
+                {{WebExUserSettings.userSettingsModel.eventCenter.label}}
+              </span>
+              
+              {{sessionType.sessionDescription}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- End of Event Center -->
+
+      <!-- Start of Support Center -->
+      <div ng-if="WebExUserSettings.userSettingsModel.supportCenter.isSiteEnabled">
+        {{WebExUserSettings.userSettingsModel.supportCenter.label}}
+        <table id="SC"
+               name="SC">
+
+          <tr valign="top"
+              ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
+              ng-if="sessionType.supportCenterApplicable">
+            <td>
+              <cs-checkbox ckid={{sessionType.id}}
+                           name={{sessionType.id}}
+                           ng-model="sessionType.sessionEnabled"
+                           label={{sessionType.sessionName}}>
+              </cs-checkbox>
+            </td>
+
+            <td width="15">
+              &nbsp;
+            </td>
+
+            <td>
+              <span ng-if="sessionType.sessionName != 'AUO'">
+                {{WebExUserSettings.userSettingsModel.supportCenter.label}}
+              </span>
+              
+              {{sessionType.sessionDescription}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- End of Support Center -->
+
+      <!-- Start of Training Center -->
+      <div ng-if="WebExUserSettings.userSettingsModel.trainingCenter.isSiteEnabled">
+        {{WebExUserSettings.userSettingsModel.trainingCenter.label}}
+        <table id="TC"
+               name="TC">
+
+          <tr valign="top"
+              ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
+              ng-if="sessionType.trainingCenterApplicable">
+            <td>
+              <cs-checkbox ckid={{sessionType.id}}
+                           name={{sessionType.id}}
+                           ng-model="sessionType.sessionEnabled"
+                           label={{sessionType.sessionName}}>
+              </cs-checkbox>
+            </td>
+
+            <td width="15">
+              &nbsp;
+            </td>
+
+            <td>
+              <span ng-if="sessionType.sessionName != 'AUO'">
+                {{WebExUserSettings.userSettingsModel.trainingCenter.label}}
+              </span>
+              
+              {{sessionType.sessionDescription}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- End of Training Center -->
+
+      <hr ng-if="!userSettingsView.form.$dirty">
+    
+      <div class="feature-list" ng-binding>
+        <ul>
+          <li class="feature">
+            <a id="webex-user-privs" ui-sref="user-overview.conferencing.webex.webex2" ng-if="!userSettingsView.form.$dirty">
+              <span class="feature-name" ng-binding>
+                <span translate="webexUserSettingLabels.userPriviligesLabel"></span>
+              </span>
+              
+              <i class="feature-arrow"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </cs-sp-section>
+</cs-sp-container>
+</form>
