@@ -50,6 +50,10 @@ describe('Controller: UserOverviewCtrl', function () {
       $httpBackend.flush();
       expect(currentUser.entitlements.length).toEqual(3);
     });
+    it('should set the title to displayName', function () {
+      $httpBackend.flush();
+      expect(currentUser.titleCard).toEqual("Display Name");
+    });
   });
 
 });

@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($stateParams, $translate, $http, Authinfo, Config, Utils) {
+  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils) {
     /*jshint validthis: true */
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
@@ -83,6 +83,19 @@
       if (hasEntitlement('ciscouc')) {
         vm.services.push(commState);
       }
+
+      updateUserTitleCard();
+    }
+
+    $scope.$on('USER_LIST_UPDATED', function () {
+      updateUserTitleCard();
+    });
+
+    function updateUserTitleCard() {
+      vm.currentUser.titleCard =
+        (!!vm.currentUser.displayName) ? vm.currentUser.displayName :
+        (!!vm.currentUser.name) ? (vm.currentUser.name.givenName || '') + ' ' + (vm.currentUser.name.familyName || '') :
+        vm.currentUser.userName;
     }
 
     function addGenerateAuthCodeLink() {

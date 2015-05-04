@@ -1,6 +1,7 @@
 {
   "id": "111",
   "userName": "CurrentUser",
+  "displayName": "Display Name",
   "entitlements": [
     "webex-squared",
     "squared-call-initiation"
