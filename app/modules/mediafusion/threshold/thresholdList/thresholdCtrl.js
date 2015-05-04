@@ -9,6 +9,17 @@ angular.module('Mediafusion')
       $scope.test = ThresholdService.name;
       $scope.querythresholdmetric = [];
       $scope.metric = null;
+      $scope.metricTypes = [];
+      $scope.metricCounters = [];
+      $scope.metricInsCounters = [];
+
+      $scope.metricTypeSelected = "";
+      $scope.metricCounterSelected = "";
+      $scope.metricInsCounterSelected = "";
+      $scope.operatorSelected = "";
+      $scope.thresholdName = "";
+      $scope.valuePercentage = "";
+      $scope.eventSelected = "";
 
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showThresholdDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
@@ -31,11 +42,11 @@ angular.module('Mediafusion')
           field: 'thresholdName',
           displayName: 'Threshold Name'
         }, {
-          field: 'hostName',
-          displayName: 'Host Name'
+          field: 'rule',
+          displayName: 'Threshold Rule'
         }, {
-          field: 'systemType',
-          displayName: 'System Type'
+          field: 'eventName',
+          displayName: 'Event Name'
         }, {
           field: 'counter',
           displayName: 'Metric'
@@ -44,6 +55,14 @@ angular.module('Mediafusion')
           displayName: 'Action'
         }]
       };
+
+      $scope.operators = [{
+        "name": "Greaterthan",
+        "value": ">"
+      }, {
+        "name": "Lessthan",
+        "value": "<"
+      }];
 
       /**
        * getThresholdList function will fetch and populate Threshold list table with the Threshold info from its
@@ -57,11 +76,16 @@ angular.module('Mediafusion')
 
           if (data.success) {
             if (pageNo === 1) {
-              $scope.queryThresholdList = data.threshold;
+              $scope.queryThresholdList = data;
             } else {
-              $scope.queryThresholdList = $scope.queryThresholdList.concat(data.threshold);
-              $scope.querythresholdcounters = data.threshold;
+              $scope.queryThresholdList = $scope.queryThresholdList.concat(data);
+              $scope.querythresholdcounters = data;
             }
+
+            for (var index = 0; index < $scope.queryThresholdList.length; index++) {
+              $scope.queryThresholdList[index].rule = $scope.queryThresholdList[index].counter + " " + $scope.queryThresholdList[index].operator + " " + $scope.queryThresholdList[index].value;
+            }
+
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
           }
@@ -69,13 +93,11 @@ angular.module('Mediafusion')
         });
       };
 
-      getThresholdList();
-
       var getThresholdinfo = function (threshold) {
 
         ThresholdService.queryThresholdList(threshold, function (data, status) {
           if (data.success) {
-            $scope.querythresholdmetric = data.threshold;
+            $scope.querythresholdmetric = data;
           } else {
             Log.debug('Query existing meetings failed. Status: ' + status);
           }
@@ -90,6 +112,55 @@ angular.module('Mediafusion')
         $state.go('threshold.preview');
       };
 
+      $scope.getMetricTypes = function () {
+        ThresholdService.listMetricTypes(function (data, status) {
+          $scope.metricTypes = data;
+        });
+      };
+
+      $scope.getMetricCountersByMetricType = function () {
+        ThresholdService.listMetricCounters($scope.metricTypeSelected.metricType, function (data, status) {
+          $scope.metricCounters = data;
+        });
+      };
+
+      $scope.getMetricInsCountersByMetricType = function () {
+        ThresholdService.listMetricInsCounters($scope.metricTypeSelected.metricType, $scope.metricCounterSelected.counterName, function (data, status) {
+          $scope.metricInsCounters = data;
+        });
+      };
+
+      $scope.saveThreshold = function () {
+        var operator = "";
+        for (var index = 0; index < $scope.operators.length; index++) {
+          if ($scope.operators[index].name == $scope.operatorSelected.name) {
+            operator = $scope.operators[index].value;
+            break;
+          }
+        }
+        var threshold = {
+          "thresholdName": $scope.thresholdName,
+          "metricType": $scope.metricTypeSelected.metricType,
+          "counter": $scope.metricCounterSelected.counterName,
+          "counterName": $scope.metricInsCounterSelected.counterName,
+          "operator": operator,
+          "value": $scope.valuePercentage,
+          "eventName": $scope.eventSelected.eventName
+        };
+
+        ThresholdService.addThreshold(threshold, function (data, status) {});
+      };
+
+      $scope.cancel = function () {
+        $scope.metricTypeSelected = "";
+        $scope.metricCounterSelected = "";
+        $scope.metricInsCounterSelected = "";
+        $scope.operatorSelected = "";
+        $scope.thresholdName = "";
+        $scope.valuePercentage = "";
+        $scope.eventSelected = "";
+      };
+
       $rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('threshold.preview')) {
           $scope.thresholdPreviewActive = true;
@@ -97,6 +168,8 @@ angular.module('Mediafusion')
           $scope.thresholdPreviewActive = false;
         }
       });
+
+      getThresholdList();
     }
 
   ]);
