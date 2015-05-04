@@ -601,6 +601,9 @@ angular
               template: '<cr-wizard tabs="tabs" finish="finish"></cr-wizard>',
               controller: 'SetupWizardCtrl'
             }
+          },
+          params: {
+            currentTab: {}
           }
         });
     }

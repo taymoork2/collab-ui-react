@@ -33,9 +33,10 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage) {
+  function WizardCtrl($scope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams) {
     var vm = this;
     vm.current = {};
+    vm.currentTab = $stateParams.currentTab;
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
@@ -65,7 +66,14 @@
     init();
 
     function init() {
-      vm.current.tab = getTabs()[0];
+      if ($stateParams.currentTab) {
+        var tabIndex = _.findIndex(getTabs(), function (t) {
+          return t.name === $stateParams.currentTab;
+        });
+        vm.current.tab = getTabs()[tabIndex];
+      } else {
+        vm.current.tab = getTabs()[0];
+      }
       vm.current.step = getSteps()[0];
     }
 

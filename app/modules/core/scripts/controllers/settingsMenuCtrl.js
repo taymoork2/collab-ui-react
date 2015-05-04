@@ -1,23 +1,32 @@
 'use strict';
 
 angular.module('Core')
-  .controller('SettingsMenuCtrl', ['$scope', '$location', '$state', '$translate', 'Authinfo', 'Utils', '$rootScope',
-    function ($scope, $location, $state, $translate, Authinfo, Utils, $rootScope) {
+  .controller('SettingsMenuCtrl', ['$scope', '$location', '$state', '$translate', 'Authinfo', 'Utils', '$rootScope', '$log',
+    function ($scope, $location, $state, $translate, Authinfo, Utils, $rootScope, $log) {
       $scope.menuItems = [];
 
-      var initialSetupText = $translate.instant('settings.initialSetup');
+      var planReviewText = $translate.instant('firstTimeWizard.planReview');
+      var enterpriseSettingsText = $translate.instant('firstTimeWizard.enterpriseSettings');
+      var addUsersText = $translate.instant('firstTimeWizard.addUsers');
+      var serviceSetupText = $translate.instant('firstTimeWizard.serviceSetup');
+
       var getAuthinfoData = function () {
-        var found = false;
         if (Authinfo.isCustomerAdmin()) {
-          for (var i = 0, l = $scope.menuItems.length; i < l; i++) {
-            if ($scope.menuItems[i].title === initialSetupText) {
-              found = true;
-            }
-          }
-          if (!found) {
+          $scope.menuItems.push({
+            link: '/planreview',
+            title: planReviewText
+          }, {
+            link: '/enterprisesettings',
+            title: enterpriseSettingsText
+          }, {
+            link: '/addusers',
+            title: addUsersText
+          });
+
+          if (Authinfo.isSquaredUC()) {
             $scope.menuItems.push({
-              link: '/initialsetup',
-              title: initialSetupText
+              link: 'servicesetup',
+              title: serviceSetupText
             });
           }
         }
@@ -32,8 +41,22 @@ angular.module('Core')
       });
 
       $scope.doAction = function (path) {
-        if (path === '/initialsetup') {
-          $state.go('setupwizardmodal');
+        if (path === '/planreview') {
+          $state.go('setupwizardmodal', {
+            currentTab: 'planReview'
+          });
+        } else if (path === '/enterprisesettings') {
+          $state.go('setupwizardmodal', {
+            currentTab: 'enterpriseSettings'
+          });
+        } else if (path === '/addusers') {
+          $state.go('setupwizardmodal', {
+            currentTab: 'addUsers'
+          });
+        } else if (path === '/servicesetup') {
+          $state.go('setupwizardmodal', {
+            currentTab: 'serviceSetup'
+          });
         } else {
           $location.path(path);
         }
