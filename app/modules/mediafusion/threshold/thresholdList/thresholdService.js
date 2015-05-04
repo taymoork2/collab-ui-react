@@ -13,22 +13,6 @@ angular.module('Mediafusion')
 
         queryThresholdList: function (pgNo, callback) {
 
-          /*  var data = {};
-            data.metrics = [{
-              metrictype: "CollectD",
-              hostname: "Bgl-1334",
-              systemtype: "CMS",
-              counters: "Cpu.nice"
-            }, {
-              metrictype: "rtmt",
-              hostname: "bgl11.cisco.com",
-              systemtype: "MF",
-              counters: "Cpu.idle"
-            }];
-
-            data.success = true;
-            callback(data, true);*/
-
           var thresholdListUrl = Utils.sprintf(baseUrl + '/threshold/allThreshold', [Authinfo.getOrgId()]);
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
@@ -52,7 +36,6 @@ angular.module('Mediafusion')
               Auth.handleStatus(status, description);
             });
         }
-
       };
 
       return thresholdService;
