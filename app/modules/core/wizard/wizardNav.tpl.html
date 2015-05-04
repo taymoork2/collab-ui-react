@@ -1,5 +1,5 @@
 <div class="wizard-nav">
-  <div ng-repeat="tab in tabs" id="wizard-{{tab.name}}-link" class="wizard-side-item" ng-class="{'wizard-nav-active': wizard.current.tab.name === tab.name}" ng-click="wizard.setTab(tab);">
+  <div ng-repeat="tab in tabs" id="wizard-{{tab.name}}-link" class="wizard-side-item" ng-class="{'wizard-nav-active': wizard.current.tab.name === tab.name, 'wizard-click-inactive': wizard.isFirstTime()}" ng-click="wizard.isFirstTime() || wizard.setTab(tab)">
     <div class="wizard-menu-text">
       <div class="wizard-menu-title" translate="{{tab.label}}"></div>
       <div class="wizard-menu-subtitle">
