@@ -6,7 +6,12 @@
     <div class="add-numbers">
         <div class="modal-body">
             <h4 class="section-title" translate="didAddModal.title"></h4>
-            <cs-token-field tokens="didAdd.unsavedTokens" tokenfieldid="didAdd.tokenfieldid" tokenplacehoder="didAdd.tokenplacehoder" tokenoptions="didAdd.tokenoptions" tokenmethods="didAdd.tokenmethods"></cs-token-field>
+            <div class="did-input">
+              <cs-token-field tokens="didAdd.unsavedTokens" tokenfieldid="didAdd.tokenfieldid" tokenplacehoder="didAdd.tokenplacehoder" tokenoptions="didAdd.tokenoptions" tokenmethods="didAdd.tokenmethods"></cs-token-field>
+              <span class="did-input-help" popover-placement="left" popover="{{'didManageModal.didFormatHelpText' | translate}}">
+                <i class="did-help-icon"></i>
+              </span>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" ng-click="didAdd.fromEditTrial ? didAdd.backtoEditTrial() : didAdd.backtoStartTrial();" translate="common.back"></button>
