@@ -128,6 +128,10 @@
     }
 
     function identifyMostLeastActiveCustomers() {
+      // reset to empty before sorting/resorting the customers
+      fiveMostActiveCustomers = [];
+      fiveLeastActiveCustomers = [];
+
       angular.forEach(customerList, function (customer) {
         var data = getActiveUserGraphData(customer.customerOrgId);
         var totalActivity = 0;
@@ -243,13 +247,13 @@
 
     function getActiveUserTableData(id, name) {
       if (id === 0) {
-        return combinActiveUsersTable(fiveMostActiveCustomers);
+        return combineActiveUsersTable(fiveMostActiveCustomers);
       } else if (id === 1) {
-        return combinActiveUsersTable(fiveLeastActiveCustomers);
+        return combineActiveUsersTable(fiveLeastActiveCustomers);
       } else if (id === 2) {
-        return combinActiveUsersTable(fiveHighestQualityCustomers);
+        return combineActiveUsersTable(fiveHighestQualityCustomers);
       } else if (id === 3) {
-        return combinActiveUsersTable(fiveLowestQualityCustomers);
+        return combineActiveUsersTable(fiveLowestQualityCustomers);
       }
 
       return getService(topn + activeUserUrl + getQuery() + "&orgId=" + id).then(function (response) {
@@ -263,7 +267,7 @@
       });
     }
 
-    function combinActiveUsersTable(orgs) {
+    function combineActiveUsersTable(orgs) {
       var promises = [];
       var tableData = [];
       angular.forEach(orgs, function (org) {
