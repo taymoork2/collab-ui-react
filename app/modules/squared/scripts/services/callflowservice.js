@@ -5,9 +5,14 @@ angular.module('Squared')
     function ($rootScope, $http, Storage, Config, Log, Auth) {
 
       return {
-        getCallflowCharts: function (orgId, userId, locusId, callStart, logfileFullName, callback) {
-          var callflowChartsUrl = Config.getCallflowServiceUrl() + 'callflow/tool/run?orgId=' + orgId + '&userId=' + userId +
-            '&logfileFullName=' + logfileFullName;
+        getCallflowCharts: function (orgId, userId, locusId, callStart, logfileFullName, isGetCallLogs, callback) {
+          var callflowChartsUrl = Config.getCallflowServiceUrl();
+
+          if (isGetCallLogs === true) {
+            callflowChartsUrl += 'callflow/logs?orgId=' + orgId + '&userId=' + userId + '&logfileFullName=' + logfileFullName;
+          } else {
+            callflowChartsUrl += 'callflow/tool/run?orgId=' + orgId + '&userId=' + userId + '&logfileFullName=' + logfileFullName;
+          }
 
           if (locusId !== '-NA-') {
             callflowChartsUrl += '&locusid=' + locusId;

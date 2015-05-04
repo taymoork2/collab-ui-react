@@ -217,6 +217,22 @@ angular.module('Squared')
             });
         },
 
+        getCallSummary: function (locusId, startTime, callback) {
+          var callSummaryUrl = logInfoBaseUrl + locusId + '/callSummaryEvents' + '?locusCallStartTime=' + startTime;
+
+          $http.get(callSummaryUrl)
+            .success(function (data, status) {
+              data.success = true;
+              Log.debug('Retrieved call summary for : ' + locusId + ' startTime : ' + startTime);
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
+        },
+
         healthMonitor: function (callback) {
           $http.get(healthUrl)
             .success(function (data, status) {

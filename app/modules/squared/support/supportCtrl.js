@@ -423,13 +423,20 @@ angular.module('Squared')
         });
       };
 
-      $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, id) {
-        angular.element('#' + id).button('loading');
+      $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs, id) {
+        var elementId = '#';
+        if (isGetCallLogs === true) {
+          elementId += 'logs-' + id;
+        } else {
+          elementId += 'charts-' + id;
+        }
+        angular.element(elementId).button('loading');
+
         var output = $filter('translate')('supportPage.downloading');
         var downloadDialog = window.confirm(output);
         if (downloadDialog === true) {
-          CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, function (data, status) {
-            angular.element('#' + id).button('reset');
+          CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
+            angular.element(elementId).button('reset');
             if (data.success) {
               window.location.assign(data.resultsUrl);
             } else {
@@ -438,7 +445,7 @@ angular.module('Squared')
             }
           });
         } else {
-          angular.element('#' + id).button('reset');
+          angular.element(elementId).button('reset');
         }
       };
 
@@ -460,6 +467,26 @@ angular.module('Squared')
           return;
         }
         getLogInfo(locusId, startTime);
+      };
+
+      $scope.showCallSummary = function (locusId, startTime, id) {
+        angular.element('#' + 'summary-' + id).button('loading');
+        ReportsService.getCallSummary(locusId, startTime, function (data, status) {
+          angular.element('#' + 'summary-' + id).button('reset');
+          if (data.success) {
+            var myWindow = window.open("", "Call Summary", "width=800, height=400");
+            setTimeout(function () {
+              myWindow.document.title = 'Call Summary';
+            }, 1000);
+            myWindow.document.write("<p><u><h3>Call Summary (locusId: " + locusId + ", callStartTime: " + startTime + ")" + "</h3></u></p>");
+            if (data.callRecords.length > 0) {
+              for (var index in data.callRecords) {
+                myWindow.document.write(data.callRecords[index] + "<br/>");
+              }
+            }
+            Log.info('Call summary: ' + data);
+          }
+        });
       };
 
       $scope.closeCallInfo = function () {
@@ -494,9 +521,13 @@ angular.module('Squared')
 
       var clientLogTemplate = '<div class="ngCellText"><a ng-click="downloadLog(row.entity.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></div>';
 
-      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, getRowIndex(row.entity))" id="{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
+      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false, getRowIndex(row.entity))" id="charts-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
+
+      var callFlowLogsTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, true, getRowIndex(row.entity))" id="logs-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
 
       var callInfoTemplate = '<div class="ngCellText"><a ng-click="showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></span></a></div>';
+
+      var callSummaryTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="showCallSummary(row.entity.locusId, row.entity.callStart, getRowIndex(row.entity))" id="summary-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="callInfo-icon"><i class="fa fa-info"></i></button></div>';
 
       $scope.gridOptions = {
         data: 'userLogs',
@@ -524,14 +555,15 @@ angular.module('Squared')
           displayName: $filter('translate')('supportPage.logCallStart'),
           sortable: true
         }, {
-          field: 'date',
-          displayName: $filter('translate')('supportPage.logDate'),
-          sortable: true
-        }, {
           field: 'clientLog',
           displayName: $filter('translate')('supportPage.logAction'),
           sortable: false,
           cellTemplate: clientLogTemplate
+        }, {
+          field: 'callflowLogs',
+          displayName: $filter('translate')('supportPage.callflowLogsAction'),
+          sortable: false,
+          cellTemplate: callFlowLogsTemplate
         }, {
           field: 'callFlow',
           displayName: $filter('translate')('supportPage.callflowAction'),
@@ -543,6 +575,12 @@ angular.module('Squared')
           displayName: $filter('translate')('supportPage.callAction'),
           sortable: false,
           cellTemplate: callInfoTemplate,
+          visible: Authinfo.isCisco()
+        }, {
+          field: 'callSummary',
+          displayName: $filter('translate')('supportPage.callSummaryAction'),
+          sortable: false,
+          cellTemplate: callSummaryTemplate,
           visible: Authinfo.isCisco()
         }]
       };
