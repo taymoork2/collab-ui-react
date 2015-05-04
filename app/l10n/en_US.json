@@ -936,7 +936,7 @@
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
     "inputPlacehoder": "Enter phone numbers separated by commas",
-    "didFormatHelpText": "The first digit must be 1.  Example formats include: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "Example formats include: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Device Configuration",
