@@ -202,7 +202,7 @@ angular.module('Squared')
         },
 
         getLogInfo: function (locusId, startTime, callback) {
-          var logInfoUrl = logInfoBaseUrl + locusId + '?locusCallStartTime=' + startTime;
+          var logInfoUrl = apiUrl + logInfoBaseUrl + locusId + '?locusCallStartTime=' + startTime;
 
           $http.get(logInfoUrl)
             .success(function (data, status) {
@@ -218,7 +218,7 @@ angular.module('Squared')
         },
 
         getCallSummary: function (locusId, startTime, callback) {
-          var callSummaryUrl = logInfoBaseUrl + locusId + '/callSummaryEvents' + '?locusCallStartTime=' + startTime;
+          var callSummaryUrl = apiUrl + logInfoBaseUrl + locusId + '/callSummaryEvents' + '?locusCallStartTime=' + startTime;
 
           $http.get(callSummaryUrl)
             .success(function (data, status) {
