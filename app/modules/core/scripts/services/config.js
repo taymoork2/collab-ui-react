@@ -335,11 +335,10 @@ angular.module('Core')
 
         entitlements: {
           huron: 'ciscouc',
-          fusion: 'squared-fusion-uc',
-          mediafusion: 'squared-fusion-media',
           squared: 'webex-squared',
           fusion_uc: 'squared-fusion-uc',
-          fusion_cal: 'squared-fusion-cal'
+          fusion_cal: 'squared-fusion-cal',
+          mediafusion: 'squared-fusion-media'
         },
 
         trials: {
@@ -725,9 +724,8 @@ angular.module('Core')
           'didadd',
           'newpartnerreports'
         ],
-        'squared-fusion-uc': [
+        'squared-fusion-cal': [
           'fusion',
-          'fusion-old',
           'cluster-details',
           'devices'
         ],
