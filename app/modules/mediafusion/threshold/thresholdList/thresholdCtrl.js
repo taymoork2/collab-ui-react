@@ -27,7 +27,6 @@ angular.module('Mediafusion')
       $scope.valuePercentage = "";
       $scope.severitySelected = "";
       $scope.eventSelected = "";
-      $scope.alarmName = "";
 
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showThresholdDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
@@ -197,11 +196,11 @@ angular.module('Mediafusion')
       };
 
       $scope.cancel = function () {
+        $scope.thresholdName = "";
         $scope.metricTypeSelected = "";
         $scope.metricCounterSelected = "";
         $scope.metricInsCounterSelected = "";
         $scope.operatorSelected = "";
-        $scope.thresholdName = "";
         $scope.valuePercentage = "";
         $scope.eventSelected = "";
       };
@@ -225,17 +224,8 @@ angular.module('Mediafusion')
       };
 
       $scope.eventsCancel = function () {
-        $scope.metricTypeSelected = "";
-        $scope.metricCounterSelected = "";
-        $scope.metricInsCounterSelected = "";
-        $scope.operatorSelected = "";
-        $scope.thresholdName = "";
-        $scope.valuePercentage = "";
-        $scope.eventSelected = "";
-
         $scope.eventName = "";
-        $scope.alarmName = "";
-        $scope.eventSelected = "";
+        $scope.severitySelected = "";
       };
 
       $rootScope.$on('$stateChangeSuccess', function () {

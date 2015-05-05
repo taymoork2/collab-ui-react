@@ -129,30 +129,11 @@
 
                     <div class="col-sm-1 fault-blank-col"></div>
 
-                    <div class="text-center col-md-1 faultRuleDiv"><label><h5>Alarm Name</h5></label></div>
-                    <div class="col-sm-1 fault-blank-col"></div>
-                    <div class="col-md-1 normalDiv">
-                      <input type="text" class="faultRuleDiv-combo" placeholder="Alarm Name" ng-model="alarmName">
-                    </div>
-                  </div>
-
-                  <div class="row page-header fault-blank-row"></div>
-
-                    <div class="row page-header">
                     <div class="text-center col-md-1 faultRuleDiv"><label><h5>Event Severity</h5></label></div>
                     <div class="col-md-1 fault-blank-col"></div>
                     <div class="text-center col-md-1 normalDiv">
                       <select class="faultRuleDiv-combo" ng-model="severitySelected" ng-options="severity.name for severity in severity">
                     </select>
-                    </div>
-
-                    <div class="col-sm-1 fault-blank-col"></div>
-
-                    <div class="text-center col-md-1 faultRuleDiv"><label><h5>{{'faultPage.systemType' | translate}}</h5></label></div>
-                    <div class="col-sm-1 fault-blank-col"></div>
-                    <div class="text-center col-md-1 normalDiv">
-                      <select class="faultRuleDiv-combo" ng-model="sysTypeSelected" ng-selected="sysTypeSelected.systemType" ng-options="sysType.systemType for sysType in systemTypes" ng-change="getSystemsByType()">
-                      </select>
                     </div>
                   </div>
                 </div>
