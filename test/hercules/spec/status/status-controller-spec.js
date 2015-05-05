@@ -5,7 +5,7 @@ describe('StatusController', function () {
 
   describe('is enabled', function () {
 
-    var $scope, service, auth;
+    var $scope, service, auth, descriptor;
 
     beforeEach(inject(function (_$controller_) {
       $scope = {
@@ -19,35 +19,44 @@ describe('StatusController', function () {
           return true;
         }
       };
+      descriptor = {
+        isFusionEnabled: sinon.stub()
+      };
       _$controller_('StatusController', {
         $scope: $scope,
+        Authinfo: auth,
         ConnectorService: service,
-        Authinfo: auth
+        ServiceDescriptor: descriptor
       });
     }));
 
     it('defaults some scope vars', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
       expect($scope.isEnabled).toEqual(true);
       expect($scope.color).toEqual('gray');
       expect($scope.className).toEqual('fa fa-gear fa-spin');
     });
 
     it('fetches on load', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
       expect(service.fetch.callCount).toEqual(1);
     });
 
     it('calls fetch with squelchErrors flag set', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
       expect(service.fetch.callCount).toEqual(1);
       expect(service.fetch.args[0][1].squelchErrors).toEqual(true);
     });
 
     it('sets appropriate values when xhr fails', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
       service.fetch.callArgWith(0, {}, {});
       expect($scope.color).toEqual('red');
       expect($scope.className).toEqual('fa fa-circle');
     });
 
     it('sets appropriate values when there are clusters with errors', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
       service.fetch.callArgWith(0, null, [{
         needs_attention: true
       }, {
@@ -61,6 +70,7 @@ describe('StatusController', function () {
     });
 
     it('sets appropriate values when there are no clusters with errors', function () {
+      descriptor.isFusionEnabled.callArgWith(0, true);
       service.fetch.callArgWith(0, null, [{
         needs_attention: false
       }, {

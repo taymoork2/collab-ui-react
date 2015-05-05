@@ -36,13 +36,16 @@ angular.module('Hercules')
               return aggregateStatus && connector.state == 'disabled';
             }, true);
             if (!allConnecorsDisabled) {
-              if (service.needs_attention) {
-                clusterAggregate.services[service.service_type].needs_attention++;
-              } else {
-                clusterAggregate.services[service.service_type].running++;
-              }
-              if (service.not_approved_package) {
-                clusterAggregate.services[service.service_type].software_upgrades++;
+              var aggregateService = clusterAggregate.services[service.service_type];
+              if (aggregateService) {
+                if (service.needs_attention) {
+                  aggregateService.needs_attention++;
+                } else {
+                  aggregateService.running++;
+                }
+                if (service.not_approved_package) {
+                  aggregateService.software_upgrades++;
+                }
               }
             }
           }
