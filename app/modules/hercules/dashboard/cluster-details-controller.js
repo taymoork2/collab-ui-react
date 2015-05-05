@@ -4,7 +4,7 @@ angular.module('Hercules')
   .controller('ClusterDetailsController',
 
     /* @ngInject */
-    function ($scope, $state, $stateParams, ConnectorService, ClusterProxy) {
+    function ($scope, $state, $stateParams, ClusterProxy) {
       $scope.visibleAlarm = {};
 
       $scope.$watch(ClusterProxy.getClusters, function (data) {
