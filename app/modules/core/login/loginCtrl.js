@@ -1,13 +1,15 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService',
-    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService) {
+  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService', '$log',
+    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, $log) {
 
       var loadingDelay = 2000;
       var logoutDelay = 5000;
+
       var storedState = 'storedState';
       var storedParams = 'storedParams';
+      var queryParams = SessionStorage.popObject('queryParams');
 
       $rootScope.token = Storage.get('accessToken');
 
@@ -23,6 +25,10 @@ angular.module('Core')
         SessionStorage.put('partnerOrgName', $stateParams.partnerOrgName);
         SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
       }
+
+      $scope.login = function () {
+        Auth.redirectToLogin();
+      };
 
       var authorizeUser = function () {
         $scope.loading = true;
@@ -79,13 +85,11 @@ angular.module('Core')
         authorizeUser();
       });
 
-      if ($rootScope.token) {
+      if (!_.isEmpty($rootScope.token)) {
         authorizeUser();
-      }
-
-      $scope.login = function () {
+      } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
         Auth.redirectToLogin();
-      };
+      }
 
       $scope.loginText = 'loginPage.login';
     }

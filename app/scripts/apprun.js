@@ -1,8 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate', 'LogMetricsService',
-    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate', 'LogMetricsService', '$log',
+    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService, $log) {
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
       $rootScope.Utils = Utils;
@@ -14,7 +14,10 @@ angular
 
       var storedState = 'storedState';
       var storedParams = 'storedParams';
+      var queryParams = 'queryParams';
+
       $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
+
         if (typeof to.authenticate === 'undefined' || to.authenticate) {
           if (Authinfo.isInitialized()) {
             if (!Authinfo.isAllowedState(to.name)) {
@@ -24,7 +27,7 @@ angular
           } else {
             $rootScope.token = Storage.get('accessToken');
             e.preventDefault();
-            if ($rootScope.token) {
+            if (!_.isEmpty($rootScope.token)) {
               Auth.authorize($rootScope.token)
                 .then(function () {
                   $state.go(to.name, toParams);
@@ -37,6 +40,7 @@ angular
             } else {
               SessionStorage.put(storedState, to.name);
               SessionStorage.putObject(storedParams, toParams);
+              SessionStorage.putObject(queryParams, $location.search());
               $state.go('login');
             }
           }
