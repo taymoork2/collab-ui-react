@@ -43,6 +43,13 @@ angular.module('Core')
 
         },
 
+        alarmServiceUrl: {
+          dev: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
+          integration: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
+          prod: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice'
+
+        },
+
         thresholdServiceUrl: {
           dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
           integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
@@ -157,6 +164,8 @@ angular.module('Core')
 
         usersperpage: 100,
         meetingsPerPage: 50,
+        alarmsPerPage: 50,
+        eventsPerPage: 50,
 
         logConfig: {
           linesToAttach: 100,
@@ -311,6 +320,16 @@ angular.module('Core')
             desc: 'tabs.entResUtilizationTabDesc',
             state: 'utilization',
             link: '#utilization'
+          }, {
+            title: 'tabs.alarmsTab',
+            desc: 'tabs.alarmsTabDesc',
+            state: 'alarms',
+            link: '#alarms'
+          }, {
+            title: 'tabs.eventsTab',
+            desc: 'tabs.eventsTabDesc',
+            state: 'events',
+            link: '#events'
           }]
         }],
 
@@ -475,6 +494,26 @@ angular.module('Core')
             return this.thresholdServiceUrl.integration;
           } else {
             return this.thresholdServiceUrl.prod;
+          }
+        },
+
+        getAlarmServiceUrl: function () {
+          if (this.isDev()) {
+            return this.alarmServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.alarmServiceUrl.integration;
+          } else {
+            return this.alarmServiceUrl.prod;
+          }
+        },
+
+        getEventServiceUrl: function () {
+          if (this.isDev()) {
+            return this.alarmServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.alarmServiceUrl.integration;
+          } else {
+            return this.alarmServiceUrl.prod;
           }
         },
 
@@ -701,7 +740,9 @@ angular.module('Core')
           'utilization',
           'metrics',
           'threshold',
-          'fault'
+          'fault',
+          'alarms',
+          'events'
         ]
       };
 

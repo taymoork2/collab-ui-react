@@ -886,6 +886,26 @@ angular
           templateUrl: 'modules/mediafusion/enterpriseResource/enterpriseResourcePreview/enterpriseResourcePreview.tpl.html',
           controller: 'VtsPreviewCtrl'
         })
+        .state('alarms', {
+          url: '/alarms',
+          templateUrl: 'modules/mediafusion/alarms/alarmList/alarmList.tpl.html',
+          controller: 'AlarmListCtrl',
+          parent: 'main'
+        })
+        .state('alarms.preview', {
+          templateUrl: 'modules/mediafusion/alarms/alarmPreview/alarmPreview.tpl.html',
+          controller: 'AlarmPreviewCtrl'
+        })
+        .state('events', {
+          url: '/events',
+          templateUrl: 'modules/mediafusion/events/eventList/eventList.tpl.html',
+          controller: 'EventListCtrl',
+          parent: 'main'
+        })
+        .state('events.preview', {
+          templateUrl: 'modules/mediafusion/events/eventPreview/eventPreview.tpl.html',
+          controller: 'EventPreviewCtrl'
+        })
         .state('utilization', {
           url: '/utilization',
           templateUrl: 'modules/mediafusion/utilization/overAllUtilization.tpl.html',
