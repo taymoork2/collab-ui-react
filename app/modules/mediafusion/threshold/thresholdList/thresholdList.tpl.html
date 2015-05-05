@@ -21,13 +21,13 @@
     </div>
 
     <!--  Modal creation Starts for Add Button -->
-    <div class="modal fade" id="addThresholdRule" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addThresholdRule" tabindex="-1" role="dialog" aria-labelledby="addThresholdRuleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
 
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="exampleModalLabel">Threshold Management</h4>
+                    <h4 class="modal-title" id="addThresholdRuleModalLabel">Threshold Management</h4>
                 </div>
 
                 <div class="modal-body">
@@ -88,6 +88,10 @@
                                 <select class="faultRuleDiv-combo" ng-model="eventSelected" ng-options="event.eventName for event in events">
                                 </select>
                             </div>
+                            <div class="col-md-1 fault-blank-col"></div>
+                            <div class="col-md-1 fault-blank-col">
+                                <button type="button" class="btn btn-primary metrics-title" data-toggle="modal" data-target="#addEvent" data-whatever="@getbootstrap" ng-click="getSystemTypesList()">+</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,6 +107,69 @@
                 </div>
             </div>
         </div>
-        <!--  Modal creation Ends for Add Button -->
+        <!-- Add Threshold Rule Modal creation Ends for Add Button -->
+
+    <!--  Add Event Modal creation Starts for Add Button -->
+    <div class="modal fade" id="addEvent" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addEventModalLabel">Event Management</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row page-header">
+                    <div class="text-center col-md-1 faultRuleDiv"><label><h5>Event Name</h5></label></div>
+                    <div class="col-sm-1 fault-blank-col"></div>
+                    <div class="col-md-1 normalDiv">
+                      <input type="text" class="faultRuleDiv-combo" placeholder="Event Name" ng-model="eventName">
+                    </div>
+
+                    <div class="col-sm-1 fault-blank-col"></div>
+
+                    <div class="text-center col-md-1 faultRuleDiv"><label><h5>Alarm Name</h5></label></div>
+                    <div class="col-sm-1 fault-blank-col"></div>
+                    <div class="col-md-1 normalDiv">
+                      <input type="text" class="faultRuleDiv-combo" placeholder="Alarm Name" ng-model="alarmName">
+                    </div>
+                  </div>
+
+                  <div class="row page-header fault-blank-row"></div>
+
+                    <div class="row page-header">
+                    <div class="text-center col-md-1 faultRuleDiv"><label><h5>Event Severity</h5></label></div>
+                    <div class="col-md-1 fault-blank-col"></div>
+                    <div class="text-center col-md-1 normalDiv">
+                      <select class="faultRuleDiv-combo" ng-model="severitySelected" ng-options="severity.name for severity in severity">
+                    </select>
+                    </div>
+
+                    <div class="col-sm-1 fault-blank-col"></div>
+
+                    <div class="text-center col-md-1 faultRuleDiv"><label><h5>{{'faultPage.systemType' | translate}}</h5></label></div>
+                    <div class="col-sm-1 fault-blank-col"></div>
+                    <div class="text-center col-md-1 normalDiv">
+                      <select class="faultRuleDiv-combo" ng-model="sysTypeSelected" ng-selected="sysTypeSelected.systemType" ng-options="sysType.systemType for sysType in systemTypes" ng-change="getSystemsByType()">
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="row page-header">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-1 fourColumnDiv"></div>
+                        <button type="button" class="btn btn-primary col-md-1" ng-click="saveEvents()">Apply</button>
+                        <div class="col-md-1 fault-blank-col"></div>
+                        <button type="button" class="btn btn-primary col-md-1" data-dismiss="modal" ng-click="eventsCancel()">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--  Add Event Modal creation Ends for Add Button -->
 
     </div>

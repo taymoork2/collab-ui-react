@@ -118,6 +118,55 @@ angular.module('Mediafusion')
             });
         },
 
+        listEvents: function (callback) {
+
+          var eventNamesListUrl = Utils.sprintf(baseUrl + '/threshold/eventNames', [Authinfo.getOrgId()]);
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
+          $http.get(eventNamesListUrl)
+            .success(function (data, status) {
+              data.success = true;
+              data.status = status;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              var description = null;
+              var errors = data.Errors;
+              if (errors) {
+                description = errors[0].description;
+              }
+              Auth.handleStatus(status, description);
+            });
+        },
+
+        listSystemTypes: function (callback) {
+
+          var sysTypesListUrl = Utils.sprintf(baseUrl + '/threshold/allSystemTypes', [Authinfo.getOrgId()]);
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
+          $http.get(sysTypesListUrl)
+            .success(function (data, status) {
+              data.success = true;
+              data.status = status;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              var description = null;
+              var errors = data.Errors;
+              if (errors) {
+                description = errors[0].description;
+              }
+              Auth.handleStatus(status, description);
+            });
+        },
+
         addThreshold: function (threshold, callback) {
 
           var addThresholdUrl = Utils.sprintf(baseUrl + '/threshold/add', [Authinfo.getOrgId()]);
@@ -131,6 +180,25 @@ angular.module('Mediafusion')
             .error(function (data, status) {
               //data.success = false;
               //data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
+        },
+
+        addEvents: function (events, callback) {
+
+          var addEventsUrl = Utils.sprintf(baseUrl + '/threshold/addEvent', [Authinfo.getOrgId()]);
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
+          $http.post(addEventsUrl, events)
+            .success(function (data, status) {
+              //data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              //data.success = false;
+              //data.status = status;
+
               callback(data, status);
               Auth.handleStatus(status);
             });
