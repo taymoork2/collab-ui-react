@@ -62,7 +62,7 @@
                             </div>
                             <div class="col-md-1 fault-blank-col"></div>
                             <div class="text-center col-md-1 normalDiv">
-                                <select class="faultRuleDiv-combo" ng-model="metricCounterInsSelected" ng-options="metricInsCounter.counterInsName for metricInsCounter in metricInsCounters">
+                                <select class="faultRuleDiv-combo" ng-model="metricInsCounterSelected" ng-options="metricInsCounter.counterName for metricInsCounter in metricInsCounters">
                                 </select>
                             </div>
                         </div>
@@ -85,12 +85,12 @@
                             </div>
                             <div class="col-md-1 fault-blank-col"></div>
                             <div class="text-center col-md-1 normalDiv">
-                                <select class="faultRuleDiv-combo" ng-model="eventSelected" ng-options="event.eventName for event in events">
+                                <select class="faultRuleDiv-combo" ng-model="eventSelected" ng-options="event.name for event in events">
                                 </select>
                             </div>
                             <div class="col-md-1 fault-blank-col"></div>
                             <div class="col-md-1 fault-blank-col">
-                                <button type="button" class="btn btn-primary metrics-title" data-toggle="modal" data-target="#addEvent" data-whatever="@getbootstrap" ng-click="getSystemTypesList()">+</button>
+                                <button type="button" class="btn btn-primary metrics-title" data-toggle="modal" data-target="#addEvent" data-whatever="@getbootstrap">+</button>
                             </div>
                         </div>
                     </div>
