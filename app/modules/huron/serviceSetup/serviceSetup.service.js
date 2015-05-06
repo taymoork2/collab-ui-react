@@ -6,7 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService) {
+  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -59,6 +59,10 @@
         }, angular.bind(this, function (internalNumberRanges) {
           this.internalNumberRanges = internalNumberRanges;
         })).$promise;
+      },
+
+      getTimeZones: function () {
+        return TimeZoneService.query().$promise;
       }
     };
   }

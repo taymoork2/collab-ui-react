@@ -213,6 +213,10 @@
       sipendpointId: '@sipendpointId',
       endpointDnAssnId: '@endpointDnAssnId'
     });
+  })
+
+  .factory('TimeZoneService', function ($resource) {
+    return $resource('modules/huron/serviceSetup/timeZones.json', {}, {});
   });
 
 })();

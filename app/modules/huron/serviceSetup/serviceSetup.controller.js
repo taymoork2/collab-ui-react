@@ -16,32 +16,11 @@
     var DEFAULT_FROM = '5000';
     var DEFAULT_TO = '5999';
 
-    $scope.timeZones = [
-      "Pacific/Honolulu",
-      "America/Anchorage",
-      "America/Los_Angeles",
-      "America/Phoenix",
-      "America/Denver",
-      "America/Chicago",
-      "America/Mexico_City",
-      "America/Regina",
-      "America/Lima",
-      "Africa/Abidjan",
-      "America/Halifax",
-      "America/La_Paz",
-      "America/St_Johns",
-      "America/Sao_Paulo",
-      "America/Araguaina",
-      "America/Noronha",
-      "Atlantic/Azores",
-      "Etc/GMT"
-    ];
     $scope.steeringDigits = [
       "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
     ];
     $scope.site = {
       siteIndex: DEFAULT_SITE_INDEX,
-      timeZone: DEFAULT_TZ,
       steeringDigit: DEFAULT_SD,
       siteSteeringDigit: DEFAULT_SITE_SD,
       siteCode: DEFAULT_SITE_CODE
@@ -49,6 +28,13 @@
     $scope.globalMOH = DEFAULT_MOH;
     $scope.internalNumberRanges = [];
     $scope.firstTimeSetup = true;
+
+    var getTimezones = function () {
+      ServiceSetup.getTimeZones().then(function (timezones) {
+        $scope.timeZones = timezones;
+        $scope.site.timeZone = DEFAULT_TZ;
+      });
+    };
 
     var setSteeringDigit = function () {
       // sets firstTimeSetup to false if a site exists
@@ -175,6 +161,7 @@
     };
 
     HttpUtils.setTrackingID().then(function () {
+      getTimezones();
       setSteeringDigit();
       listInternalExtentionRanges();
     });

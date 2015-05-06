@@ -40,6 +40,7 @@ describe('Controller: ServiceSetup', function () {
       ServiceSetup.internalNumberRanges = internalNumberRanges;
       return $q.when();
     });
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when());
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
 
