@@ -24,8 +24,8 @@ angular.module('Core')
           });
 
           if (Authinfo.isSquaredUC()) {
-            $scope.menuItems.push({
-              link: 'servicesetup',
+            $scope.menuItems.splice(1, 0, {
+              link: '/servicesetup',
               title: serviceSetupText
             });
           }

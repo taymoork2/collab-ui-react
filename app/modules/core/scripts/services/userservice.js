@@ -59,14 +59,15 @@ angular.module('Core')
                       .then(function () {
                         data.success = true;
                         callback(data, status);
-                      }, function (error) {
-                        Log.error('Squared UC user remove unsuccessful: ' + error);
-                        //if the user does not exist in Squared UC do not report an error
-                        if (error.status === 404) {
-                          data.success = true;
-                        } else {
-                          data.success = false;
+                      }, function (response) {
+                        // If the user does not exist in Squared UC do not report an error
+                        if (response.status !== 404) {
+                          // Notify Huron error
+                          Notification.errorResponse(response);
                         }
+
+                        // Callback entitlement success
+                        data.success = true;
                         callback(data, status);
                       });
                   } else {
