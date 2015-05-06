@@ -37,6 +37,7 @@
     "exportUsers": "导出用户",
     "moreOptions": "更多操作",
     "cancel": "取消",
+    "save": "保存",
     "status": "状态",
     "pending": "邀请暂挂",
     "all": "全部",
@@ -82,12 +83,19 @@
     "groupColHeader": "群名称",
     "collabService": "选择应授予群用户的协作服务许可证。",
     "addEntitleError": "权限不足，无法添加用户或为用户授权。",
-    "freeMsg": "免费的团队房间",
-    "freeConf": "免费的 3 人会议",
+    "freeMsg": "免费 Spark 消息",
+    "freeConf": "免费第三方 Spark 会议",
     "freeComm": "免费网内 IP 语音和视频呼叫",
     "paidMsg": "标准团队房间",
     "paidConf": "25 人会议",
-    "paidComm": "高级通信"
+    "paidComm": "高级通信",
+    "freeSpark": "免费 Spark 消息",
+    "enterpriseEdition": "企业版",
+    "meetingCenter": "Meeting Center",
+    "supportCenter": "Support Center",
+    "trainingCenter": "Training Center",
+    "eventCenter": "Event Center",
+    "communication": "通信"
   },
   "usersPreview": {
     "groupPreview": "群：",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "管理呼叫驻留等呼叫路由功能",
     "mediaOnHoldTab": "媒体保持",
     "mediaOnHoldTabDesc": "媒体保持开发示例",
+    "metricsDetailsTab": "度量",
+    "metricsDetailsTabDesc": "度量管理",
+    "thresholdDetailsTab": "阈值",
+    "thresholdDetailsTabDesc": "阈值管理",
     "meetingDetailsTab": "会议",
     "meetingDetailsTabDesc": "会议管理",
     "vtsDetailsTab": "企业资源",
@@ -310,9 +322,12 @@
     "hideDetails": "隐藏详细信息",
     "problemReports": "问题报告",
     "reportingUrl": "报告 URL：",
-    "helpFaq": "帮助和常见问题解答",
+    "help": "帮助",
+    "faqs": "常见问题解答",
     "helpUrl": "帮助 URL：",
-    "sendFeedback": "Cisco 反馈"
+    "sendFeedback": "Cisco 反馈",
+    "sso": "SSO",
+    "roles": "角色"
   },
   "common": {
     "delete": "删除",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "最近 4 周",
     "activeUsers": "活动用户",
-    "calls": "呼叫",
+    "calls": "已发起的呼叫",
     "updated": "上次更新日期",
-    "conversations": "房间",
-    "contentShared": "共享内容总计",
-    "activity": "每月活动",
+    "conversations": "已创建的房间",
+    "contentShared": "已共享的文件",
+    "activity": "活动始自",
     "monitoring": "监控",
     "media": "媒体/呼叫",
     "mobile": "移动客户端",
@@ -370,7 +385,8 @@
     "searchLogsText": "搜索设备日志",
     "unlicensedDateText": "未授权的用户注册的日期",
     "unlicensedText": "未授权的用户",
-    "convertText": "查看和转换当前使用免费版本的用户"
+    "convertText": "查看和转换当前使用免费版本的用户",
+    "lastUpdated": "上次更新日期"
   },
   "inviteModal": {
     "title": "服务授权",
@@ -426,7 +442,8 @@
     "siteCode": "站点代码",
     "siteCodeDescription": "指定标识特定站点的唯一编号。",
     "internalExtensionRange": "内部分机范围",
-    "internalNumberRangeDescription": "指定内部号码的范围。建议长度为 4 到 5 个数字。",
+    "internalNumberRangeDescription": "指定内部号码的范围。长度必须为 4 位数字。",
+    "extensionError": "分机无效：",
     "to": "到",
     "addMoreExtensionRanges": "添加更多分机范围",
     "globalMOH": "全局媒体保持 (MOH)",
@@ -493,7 +510,8 @@
     "status401": "授权失败。服务器无法处理授权标记。您将在几秒钟后自动注销。",
     "serverDown": "授权失败。服务器可能出现故障，请联系系统管理员。您将在几秒钟后自动注销。",
     "expired": "您的会话已过期或未获授权。您将在几秒钟后自动注销。要继续使用该服务，请重新登录。",
-    "unsupported": "您使用的 Internet Explorer 版本<strong>已过期</strong>。请<a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>升级浏览器</a>至 V11 或更高版本。"
+    "unsupported": "您使用的 Internet Explorer 版本<strong>已过期</strong>。请<a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>升级浏览器</a>至 V11 或更高版本。",
+    "status404": "找不到请求的资源。"
   },
   "spacesPage": {
     "title": "设备",
@@ -502,6 +520,7 @@
     "addBtn": "生成激活码",
     "cancel": "取消",
     "delete": "删除",
+    "deleteActivationCode": "删除激活码",
     "done": "完成",
     "kindHeader": "类型",
     "nameHeader": "安装位置",
@@ -514,7 +533,9 @@
     "emptyDevices1": "添加新设备后，",
     "emptyDevices2": "设备将在这里列出。",
     "deleteDevice": "删除设备",
-    "deleteDeviceConfText": "确定要删除此设备吗？"
+    "deleteDeviceConfText": "确定要删除此设备吗？",
+    "videoQTitle": "潜在的视频质量损失",
+    "videoQMsg": "此设备通过 TCP 协议进行通信，这可能导致更高的延迟，从而降低媒体流体验。如果您的流媒体遇到问题，可以尝试打开 本地防火墙上的 UDP 端口 33434 来辅助解决媒体流问题。"
   },
   "hercules": {
     "page_title": "连接器管理",
@@ -540,7 +561,8 @@
       "registered": "已注册",
       "downloading": "正在下载",
       "uninstalling": "正在卸载",
-      "running": "正在运行"
+      "running": "正在运行",
+      "needs_attention": "需要注意"
     },
     "setup": {
       "label": "连接器管理",
@@ -629,17 +651,30 @@
     "highQuality": "质量最高的 5 个",
     "leastQuality": "质量最低的 5 个",
     "services": "所有服务",
-    "UsersOnboarded": "用户已在线",
+    "UsersOnboarded": "已在线用户",
     "AvgCallsPerUser": "每个用户的平均呼叫数",
-    "AvgRoomsPerUser": "每个用户的平均房间数",
-    "ActiveUsers": "活动用户",
-    "OneOnOneRooms": "一对一房间",
-    "GroupRooms": "群房间",
-    "VideoCalls": "视频通话",
-    "AvgDurationofCalls": "平均呼叫持续时间",
-    "ContentShared": "共享的内容",
-    "AmountofContentShared": "共享内容的数量",
-    "UserEngagement": "用户参与度"
+    "AvgRoomsPerUser": "本月每个用户的平均房间数",
+    "ActiveUsers": "本月的平均活动用户数",
+    "OneOnOneRooms": "本月的一对一房间数",
+    "GroupRooms": "本月的群房间数",
+    "VideoCalls": "本月的视频呼叫数",
+    "AvgDurationofCalls": "本月的平均呼叫持续时间",
+    "ContentShared": "本月共享的文件数",
+    "AmountofContentShared": "本月共享的内容大小 (GB)",
+    "UserEngagement": "用户参与度",
+    "weekOf": "周开始",
+    "numberOfCallsAxis": "呼叫数（总计）",
+    "numberOfRoomsAxis": "房间数（平均）",
+    "numberActiveAxis": "活动用户数（总计）",
+    "oneRoomAxis": "一对一房间数（总计）",
+    "groupRoomsAxis": "群房间数（总计）",
+    "videoCallsAxis": "视频呼叫数（总计）",
+    "avgCallsAxis": "呼叫持续时间（单位：分钟）（平均）",
+    "filesSharedAxis": "共享文件数（总计）",
+    "gbSharedAxis": "共享大小（单位：GB）（总计）",
+    "orgDsc": "组织中的用户总数。",
+    "onboardDsc": "已登录或已获授权使用 Spark 的用户总数。",
+    "activeDsc": "在过去一周发送/阅读消息或创建/进入房间的用户总数。"
   },
   "callRouting": {
     "title": "呼叫路由",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "线路配置",
     "success": "线路配置保存成功",
-    "error": "线路配置失败",
+    "error": "线路配置失败。",
     "directNumbers": "目录号码",
     "internalNumberLabel": "拨打下面列出的号码或分机号码来接通此线路。",
     "internalNumberExtension": "内部号码分机",
@@ -697,7 +732,11 @@
     "none": "无",
     "deleteConfirmation": "此操作无法撤消。确定要为 {{user}} 取消分配 {{line}} 吗？",
     "deleteLineTitle": "删除线路",
-    "disassociationSuccess": "为用户取消分配线路成功。"
+    "disassociationSuccess": "为用户取消分配线路成功。",
+    "alert": "警告",
+    "userError": "用户 {{user}} 未正确供应。",
+    "maxLines": "{{user}} 超出线路数量上限。在供应其他线路前请从此用户中删除线路。",
+    "confirm": "此页上有未保存的更改。是否继续？"
   },
   "callForwardPanel": {
     "title": "呼叫转移",
@@ -717,6 +756,15 @@
     "title": "呼叫者标识",
     "description": "<small>从此行开始更改呼叫的显示名称</small>"
   },
+  "sharedLinePanel": {
+    "title": "已共享线路",
+    "description": "呼叫此线路时，同时拨通其他用户的线路。",
+    "remove": "删除成员",
+    "invalidUser": "{{user}} 没有 Unified Communications 服务",
+    "member": "已共享线路成员",
+    "disassociateUser": "从共享线路成员中删除此用户将立即从其所有设备中删除此线路。确定要继续吗？",
+    "addMember": "添加成员"
+  },
   "singleNumberReachPanel": {
     "title": "单一号码存取",
     "description": "<small>可让用户利用其他分机号码来接听来电</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR 可以覆盖用户的所有线路，或限制为特定线路",
     "success": "单一号码存取配置保存成功",
     "removeSuccess": "单一号码存取配置移除成功",
-    "error": "单一号码存取配置失败",
+    "error": "单一号码存取配置失败。",
     "placeholder": "输入 SNR 号码"
   },
   "voicemailPanel": {
@@ -773,7 +821,7 @@
     "edit": "编辑",
     "saveSendReminder": "保存并发送提醒",
     "partnerHeading": "采用率和参与度",
-    "entitlementsTitle": "用户已在线",
+    "entitlementsTitle": "已在线用户",
     "activeUsersTitle": "每日活动用户数",
     "averageCallsTitle": "每个用户的平均呼叫数",
     "contentSharedTitle": "共享内容总计"
@@ -930,6 +978,30 @@
     "draganddrop": "拖放以重新排序音轨。这些音轨将循环。",
     "setActive": "设置为活动"
   },
+  "metricsPage": {
+    "metrics": "度量",
+    "metricsType": "度量类型",
+    "hostName": "主机名称",
+    "systemType": "系统类型",
+    "counters": "计数器",
+    "actions": "操作"
+  },
+  "thresholdPage": {
+    "threshold": "阈值",
+    "metrictype": "度量类型",
+    "thresholdname": "阈值名称",
+    "hostname": "主机名称",
+    "systemtype": "系统类型",
+    "metric": "度量",
+    "action": "操作"
+  },
+  "faultPage": {
+    "systemType": "系统类型",
+    "system": "系统",
+    "metrictype": "度量类型",
+    "thresholdname": "阈值名称",
+    "genericevent": "通用事件"
+  },
   "meetingsPage": {
     "manageMeetings": "会议",
     "webexMeetingId": "会议标识",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "尚未将您作为管理员供应至此站点。此过程可能需要一些时间。",
+    "defaultProcessError": "无法处理请求。",
     "defaultAccessError": "现在无法访问服务器"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "会话启动",
-    "handsOnLabAdminLabel": "上机实验室管理员（仅在上机实验室启用时生效）",
+    "handsOnLabAdminLabel": "上机实验室管理员（仅在启用上机实验室时有效）",
     "optimizeBandwidthUsageLabel": "已为同一网络中的与会者优化带宽使用",
     "videoSettingsLabel": "视频设置",
     "hiQualVideoLabel": "打开高质量视频 (360p)",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "电话权限",
     "callInTeleconfLabel": "呼入电话会议",
     "tollOnlyLabel": "收费",
-    "tollFreeOnlyLabel": "免费",
     "tollAndTollFreeLabel": "收费和免费",
     "teleconfViaGlobalCallinLabel": "允许通过全球呼入号码访问电话会议",
     "callBackTeleconfLabel": "回呼电话会议",
@@ -1084,13 +1156,13 @@
     "lastSynced": "上次同步：",
     "messagingTitle": "消息",
     "messagingSubtitle": "标准团队房间",
-    "messagingDesc": "消息许可证。",
+    "messagingDesc": "具有内容存储功能的团队房间可让您轻松与组织内外的任何设备或用户协作。",
     "communicationTitle": "通信",
     "communicationSubtitle": "高级统一",
-    "communicationDesc": "Cisco Unified Communication 许可证。",
+    "communicationDesc": "您的组织已启用基本外部呼叫和完全 Unified Communications。",
     "conferencingTitle": "会议",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Cisco Meeting Center 和会议许可证。"
+    "conferencingDesc": "在团队房间同步中加入最多 8 个同事或在 WebEx Meeting Center 中加入更多。"
   },
   "partnerProfile": {
     "link": "合作伙伴档案",

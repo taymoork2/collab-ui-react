@@ -37,6 +37,7 @@
     "exportUsers": "ekspor Pengguna",
     "moreOptions": "Tindakan Lainnya",
     "cancel": "Batalkan",
+    "save": "Simpan",
     "status": "Status",
     "pending": "Undangan Ditunda",
     "all": "Semua",
@@ -82,12 +83,19 @@
     "groupColHeader": "Nama Grup",
     "collabService": "Pilih lisensi layanan kolaborasi yang harus diberikan kepada pengguna di grup.",
     "addEntitleError": "hak untuk menambahkan atau menetapkan pengguna tidak memadai.",
-    "freeMsg": "Kamar tim gratis",
-    "freeConf": "Rapat 3 peserta gratis",
+    "freeMsg": "Pesan Spark Gratis",
+    "freeConf": "Rapat Spark 3 Orang Gratis",
     "freeComm": "Gratis panggilan suara dan video IP dalam jaringan",
     "paidMsg": "Kamar tim standar",
     "paidConf": "Rapat 25 peserta",
-    "paidComm": "Komunikasi Lanjut"
+    "paidComm": "Komunikasi Lanjut",
+    "freeSpark": "Pesan Spark Gratis",
+    "enterpriseEdition": "Edisi Perusahan",
+    "meetingCenter": "Pusat Rapat",
+    "supportCenter": "Pusat Dukungan",
+    "trainingCenter": "Pusat Pelatihan",
+    "eventCenter": "Pusat Peristiwa",
+    "communication": "Komunikasi"
   },
   "usersPreview": {
     "groupPreview": "Grup:",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "Kelola Fitur Pengarahan Panggilan Seperti Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Contoh Pengembangan Media On Hold",
+    "metricsDetailsTab": "Metrik",
+    "metricsDetailsTabDesc": "Manajemen Metrik",
+    "thresholdDetailsTab": "Batas",
+    "thresholdDetailsTabDesc": "Manajemen Batas",
     "meetingDetailsTab": "Rapat",
     "meetingDetailsTabDesc": "Manajemen Rapat",
     "vtsDetailsTab": "Sumber Daya Perusahaan",
@@ -310,9 +322,12 @@
     "hideDetails": "Sembunyikan Rincian",
     "problemReports": "Laporan Masalah",
     "reportingUrl": "URL Pelaporan:",
-    "helpFaq": "Bantuan dan Pertanyaan Umum",
+    "help": "Bantuan",
+    "faqs": "Pertanyaan Umum",
     "helpUrl": "URL Bantuan:",
-    "sendFeedback": "Masukan Cisco"
+    "sendFeedback": "Masukan Cisco",
+    "sso": "SSO",
+    "roles": "Jabatan"
   },
   "common": {
     "delete": "Hapus",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "4 pekan terakhir",
     "activeUsers": "Pengguna Aktif",
-    "calls": "Panggilan",
+    "calls": "Panggilan yang Dilakukan",
     "updated": "Terakhir Diperbarui",
-    "conversations": "Kamar",
-    "contentShared": "Total Konten yang Dibagikan",
-    "activity": "Aktivitas Bulanan",
+    "conversations": "Kamar yang Dibuat",
+    "contentShared": "File yang Dibagikan",
+    "activity": "Aktivitas Sejak",
     "monitoring": "Pemantauan",
     "media": "Media/Panggilan",
     "mobile": "Klien Seluler",
@@ -370,7 +385,8 @@
     "searchLogsText": "Cari log perangkat",
     "unlicensedDateText": "pengguna tidak berlisensi didaftarkan pada",
     "unlicensedText": "Pengguna Tidak Berlisensi",
-    "convertText": "Lihat dan konversi pengguna yang saat ini menggunakan versi gratis"
+    "convertText": "Lihat dan konversi pengguna yang saat ini menggunakan versi gratis",
+    "lastUpdated": "Terakhir Diperbarui"
   },
   "inviteModal": {
     "title": "Penetapan Layanan",
@@ -426,7 +442,8 @@
     "siteCode": "Kode situs",
     "siteCodeDescription": "Tentukan nomor unik untuk mengidentifikasi sebuah situs tertentu.",
     "internalExtensionRange": "Kisaran Ekstensi Internal",
-    "internalNumberRangeDescription": "Tetapkan kisaran nomor internal.  Disarankan panjang 4 atau 5 angka.",
+    "internalNumberRangeDescription": "Tentukan kisaran angka internal. Panjang harus 4 digit.",
+    "extensionError": "Ekstensi tidak valid: ",
     "to": "ke",
     "addMoreExtensionRanges": "Tambahkan Kisaran Ekstensi Lainnya",
     "globalMOH": "Media On Hold (MOH) Global",
@@ -493,7 +510,8 @@
     "status401": "Pengesahan gagal. Server tidak dapat memproses token pengesahan. Anda akan otomatis keluar dalam beberapa detik.",
     "serverDown": "Pengesahan gagal. Server mungkin mati, silakan hubungi administrator sistem. Anda akan otomatis keluar dalam beberapa detik.",
     "expired": "Sesi Anda sudah berakhir atau tidak sah. Anda akan otomatis keluar dalam beberapa detik. Silakan masuk kembali untuk terus menggunakan layanan.",
-    "unsupported": "Anda menggunakan versi Internet Explorer yang <strong>sudah kuno</strong>. Silakan <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade browser</a> Anda ke versi 11 atau yang lebih baru."
+    "unsupported": "Anda menggunakan versi Internet Explorer yang <strong>sudah kuno</strong>. Silakan <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade browser</a> Anda ke versi 11 atau yang lebih baru.",
+    "status404": "Sumber daya yang diminta tidak ditemukan."
   },
   "spacesPage": {
     "title": "Perangkat",
@@ -502,6 +520,7 @@
     "addBtn": "Buat kode aktivasi",
     "cancel": "Batalkan",
     "delete": "Hapus",
+    "deleteActivationCode": "Hapus Kode Aktivasi",
     "done": "Selesai",
     "kindHeader": "Tipe",
     "nameHeader": "Diinstal di",
@@ -514,7 +533,9 @@
     "emptyDevices1": "Setelah menambahkan perangkat baru,",
     "emptyDevices2": "Anda akan melihatnya dicantumkan di sini.",
     "deleteDevice": "Hapus Perangkat",
-    "deleteDeviceConfText": "Anda yakin ingin menghapus perangkat ini?"
+    "deleteDeviceConfText": "Anda yakin ingin menghapus perangkat ini?",
+    "videoQTitle": "Potensi Hilangnya Kualitas Video",
+    "videoQMsg": "Perangkat ini berkomunikasi melalui protokol TCP, yang dapat menyebabkan kelambatan jaringan dan oleh karena itu akan mengurangi kecepatan streaming media. Jika Anda mengalami masalah ini dengan streaming media, coba buka port UDP 33434 pada firewall lokal untuk membantu mengatasi masalah streaming media."
   },
   "hercules": {
     "page_title": "Manajemen konektor",
@@ -540,7 +561,8 @@
       "registered": "Terdaftar",
       "downloading": "Mengunduh",
       "uninstalling": "Menghapus",
-      "running": "Menjalankan"
+      "running": "Menjalankan",
+      "needs_attention": "Perlu perhatian"
     },
     "setup": {
       "label": "Manajemen konektor",
@@ -630,16 +652,29 @@
     "leastQuality": "5 kualitas terendah",
     "services": "Semua layanan",
     "UsersOnboarded": "Pengguna diikutsertakan",
-    "AvgCallsPerUser": "Rata-rata panggilan per pengguna",
-    "AvgRoomsPerUser": "Rata-rata kamar per pengguna",
-    "ActiveUsers": "Pengguna aktif",
-    "OneOnOneRooms": "Kamar satu-persatu",
-    "GroupRooms": "Kamar grup",
-    "VideoCalls": "Panggilan video",
-    "AvgDurationofCalls": "Rata-rata durasi panggilan",
-    "ContentShared": "Konten bersama",
-    "AmountofContentShared": "Jumlah konten bersama",
-    "UserEngagement": "Keterlibatan pengguna"
+    "AvgCallsPerUser": "Rerata Panggilan per pengguna",
+    "AvgRoomsPerUser": "Rerata Kamar per Pengguna Bulan ini",
+    "ActiveUsers": "Rerata Pengguna Aktif Bulan ini",
+    "OneOnOneRooms": "Kamar 1:1 Bulan ini",
+    "GroupRooms": "Kamar Grup Bulan ini",
+    "VideoCalls": "Panggilan Video Bulan ini",
+    "AvgDurationofCalls": "Rerata Durasi Panggilan Bulan ini",
+    "ContentShared": "File yang Dibagikan Bulan ini",
+    "AmountofContentShared": "GB Konten yang Dibagikan Bulan ini",
+    "UserEngagement": "Keterlibatan Pengguna",
+    "weekOf": "Dimulai Pekan",
+    "numberOfCallsAxis": "Jumlah Panggilan (Total)",
+    "numberOfRoomsAxis": "Jumlah Kamar (Rerata)",
+    "numberActiveAxis": "Jumlah Pengguna Aktif (Total)",
+    "oneRoomAxis": "Jumlah Kamar 1:1 (total)",
+    "groupRoomsAxis": "Jumlah Kamar Grup (Total)",
+    "videoCallsAxis": "Jumlah Panggilan Video (Total)",
+    "avgCallsAxis": "Durasi Panggilan dlm Menit (Rerata)",
+    "filesSharedAxis": "Jumlah File yang Dibagikan (Total)",
+    "gbSharedAxis": "Jumlah Gigabyte yang Dibagikan (Total)",
+    "orgDsc": "Jumlah total pengguna di organisasi.",
+    "onboardDsc": "Jumlah total pengguna yang masuk atau berhak mengakses Spark.",
+    "activeDsc": "Jumlah total pengguna yang mengirimkan/membaca pesan atau yang membuat/masuk ke kamar pekan lalu."
   },
   "callRouting": {
     "title": "Pengarahan Panggilan",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "Konfigurasi Jalur",
     "success": "Konfigurasi jalur berhasil disimpan",
-    "error": "Konfigurasi jalur gagal",
+    "error": "Konfigurasi saluran gagal.",
     "directNumbers": "Nomor Direktori",
     "internalNumberLabel": "Jangkau saluran ini dengan menghubungi nomor atau ekstensi yang tercantum di bawah ini.",
     "internalNumberExtension": "Ekstensi Nomor Internal",
@@ -697,7 +732,11 @@
     "none": "Tidak Ada",
     "deleteConfirmation": "Tindakan ini tidak dapat dibatalkan.  Anda yakin ingin menghapus {{line}} dari {{user}}?",
     "deleteLineTitle": "Hapus Saluran",
-    "disassociationSuccess": "Saluran berhasil dihapus dari pengguna."
+    "disassociationSuccess": "Saluran berhasil dihapus dari pengguna.",
+    "alert": "Peringatan",
+    "userError": "Pengguna {{user}} tidak ditetapkan dengan benar.",
+    "maxLines": "{{user}} melampaui jumlah maksimum saluran. Harap hapus salah satu saluran dari pengguna ini sebelum menetapkan saluran tambahan.",
+    "confirm": "Perubahan di halaman ini belum disimpan. Anda ingin melanjutkan?"
   },
   "callForwardPanel": {
     "title": "Penerusan Panggilan",
@@ -717,6 +756,15 @@
     "title": "ID Pemanggil",
     "description": "<small>Ganti nama layar untuk panggilan dari saluran ini</small>"
   },
+  "sharedLinePanel": {
+    "title": "Saluran Bersama",
+    "description": "Panggilan juga saluran pengguna lain ketika saluran ini dipanggil.",
+    "remove": "Hapus anggota",
+    "invalidUser": "{{user}} tidak memiliki layanan Komunikasi Gabungan",
+    "member": "Anggota Saluran Bersama",
+    "disassociateUser": "Menghapus pengguna ini dari anggota saluran bersama juga akan menghapus saluran ini dari semua perangkat pengguna. Anda yakin ingin melanjutkan?",
+    "addMember": "Tambah Anggota"
+  },
   "singleNumberReachPanel": {
     "title": "Menjangkau Satu Nomor",
     "description": "<small>Mengizinkan pengguna menjawab panggilan masuk ke ekstensinya ke nomor lain</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR capat menjangkau semua jalur pengguna atau terbatas untuk jalur tertentu",
     "success": "Konfigurasi Single Number Reach berhasil disimpan",
     "removeSuccess": "Konfigurasi Single Number Reach berhasil dihapus",
-    "error": "Konfigurasi Single Number Reach gagal",
+    "error": "Konfigurasi Single Number Reach gagal.",
     "placeholder": "Masukkan Nomor SNR"
   },
   "voicemailPanel": {
@@ -930,6 +978,30 @@
     "draganddrop": "Seret dan jatuhkan untuk mengurutkan kembali track. Track tersebut akan diputar.",
     "setActive": "Tetapkan Aktif"
   },
+  "metricsPage": {
+    "metrics": "Metrik",
+    "metricsType": "Jenis Metrik",
+    "hostName": "Nama Host",
+    "systemType": "Jenis Sistem",
+    "counters": "Penghitung",
+    "actions": "Tindakan"
+  },
+  "thresholdPage": {
+    "threshold": "Batas",
+    "metrictype": "Jenis Metrik",
+    "thresholdname": "Nama Batas",
+    "hostname": "Nama Host",
+    "systemtype": "Jenis Sistem",
+    "metric": "Metrik",
+    "action": "Tindakan"
+  },
+  "faultPage": {
+    "systemType": "Jenis Sistem",
+    "system": "Sistem",
+    "metrictype": "Jenis Metrik",
+    "thresholdname": "Nama Batas",
+    "genericevent": "Peristiwa Umum"
+  },
   "meetingsPage": {
     "manageMeetings": "Rapat",
     "webexMeetingId": "ID Rapat",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "Anda belum ditetapkan ke situs ini sebagai administrator. Proses ini dapat berlangsung beberapa saat.",
-    "defaultAccessError": "Tidak dapat mengakses server saat ini"
+    "defaultProcessError": "Tidak dapat memproses permintaan.",
+    "defaultAccessError": "Tidak dapat mengakses server pada saat ini"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Sesi Pemberdayaan",
-    "handsOnLabAdminLabel": "Admin Lab Hands-on (efektif hanya jika lab hands-on diaktifkan",
+    "handsOnLabAdminLabel": "Admin Lab Ponsel (hanya efektif jika lab ponsel diaktifkan)",
     "optimizeBandwidthUsageLabel": "Penggunaan bandwidth dioptimalkan untuk peserta dalam jaringan yang sama",
     "videoSettingsLabel": "Pengaturan Video",
     "hiQualVideoLabel": "Aktifkan video berkualitas tinggi (360p)",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "Panggilan telekonferensi",
     "callInTeleconfLabel": "Panggilan telekonferensi",
     "tollOnlyLabel": "Pulsa",
-    "tollFreeOnlyLabel": "Bebas pulsa",
     "tollAndTollFreeLabel": "Pulsa & Bebas pulsa",
     "teleconfViaGlobalCallinLabel": "Izinkan akses ke teleconferensi melalui nomor panggilan global",
     "callBackTeleconfLabel": "Panggilan kembali telekonferensi",
@@ -1084,13 +1156,13 @@
     "lastSynced": "Terakhir Diselaraskan:",
     "messagingTitle": "Pesan",
     "messagingSubtitle": "Kamar Tim Standar",
-    "messagingDesc": "Lisensi pesan.",
+    "messagingDesc": "Kamar Tim dengan penyimpanan konten memungkinkan Anda berkolaborasi dengan mudah dari perangkat apa pun bersama pengguna mana pun di dalam atau di luar organisasi Anda.",
     "communicationTitle": "Komunikasi",
     "communicationSubtitle": "Gabungan Lanjutan",
-    "communicationDesc": "Lisensi Komunikasi Gabungan (UC) Cisco.",
+    "communicationDesc": "Panggilan keluar dasar dan Komunikasi Gabungan Unified Communications enabled for your organization.",
     "conferencingTitle": "Konferensi",
     "conferencingSubtitle": "Pusat Rapat",
-    "conferencingDesc": "Lisensi Pusat Rapat dan Konferensi Cisco."
+    "conferencingDesc": "Bergabunglah hingga dengan 8 rekan kerja di Rapat Kamar Tim dan banyak lagi yang lainnya di Pusat Rapat WebEx."
   },
   "partnerProfile": {
     "link": "Profil Mitra",

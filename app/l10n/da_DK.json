@@ -37,6 +37,7 @@
     "exportUsers": "eksportér brugere",
     "moreOptions": "Flere handlinger",
     "cancel": "Annuller",
+    "save": "Gem",
     "status": "Status",
     "pending": "Inviter afventende",
     "all": "Alle",
@@ -82,12 +83,19 @@
     "groupColHeader": "Gruppenavn",
     "collabService": "Vælg de samarbejdstjenestelicenser, der skal gives til brugerne i gruppen.",
     "addEntitleError": "ikke tilstrækkelig privilegie til at tilføje eller give en bruger rettigheder.",
-    "freeMsg": "Gratis team-mødesteder",
-    "freeConf": "Mødesteder for 3 deltagere",
+    "freeMsg": "Gratis Spark-chat",
+    "freeConf": "Gratis tredjeparts Spark-møde",
     "freeComm": "Gratis IP-stemme og -videoopkald inden for netværket",
     "paidMsg": "Standard team-mødelokaler",
     "paidConf": "Mødesteder for 25 deltagere",
-    "paidComm": "Avanceret kommunikation"
+    "paidComm": "Avanceret kommunikation",
+    "freeSpark": "Gratis Spark-chat",
+    "enterpriseEdition": "Virksomhedsudgave",
+    "meetingCenter": "Meeting Center",
+    "supportCenter": "Support Center",
+    "trainingCenter": "Training Center",
+    "eventCenter": "Event Center",
+    "communication": "Kommunikation"
   },
   "usersPreview": {
     "groupPreview": "Gruppe:",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "Administrer funktioner til dirigering af opkald såsom Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold udviklingseksempel",
+    "metricsDetailsTab": "Metrik",
+    "metricsDetailsTabDesc": "Administration af metrik",
+    "thresholdDetailsTab": "Tærskel",
+    "thresholdDetailsTabDesc": "Administration af tærskel",
     "meetingDetailsTab": "Møder",
     "meetingDetailsTabDesc": "Administration af møder",
     "vtsDetailsTab": "Virksomhedsressourcer",
@@ -310,9 +322,12 @@
     "hideDetails": "Skjul detaljer",
     "problemReports": "Problemrapporter",
     "reportingUrl": "Rapporterings-URL:",
-    "helpFaq": "Hjælp og ofte stillede spørgsmål",
+    "help": "Hjælp",
+    "faqs": "Ofte stillede spørgsmål",
     "helpUrl": "Hjælp-URL:",
-    "sendFeedback": "Cisco-tilbagemelding"
+    "sendFeedback": "Cisco-tilbagemelding",
+    "sso": "SSO",
+    "roles": "Roller"
   },
   "common": {
     "delete": "Slet",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "Sidste 4 uger",
     "activeUsers": "Aktive brugere",
-    "calls": "Opkald",
+    "calls": "Udførte opkald",
     "updated": "Sidst opdateret",
-    "conversations": "Mødesteder",
-    "contentShared": "Samlet delt indhold",
-    "activity": "Månedlig aktivitet",
+    "conversations": "Oprettede mødesteder",
+    "contentShared": "Delte filer",
+    "activity": "Aktivitet siden",
     "monitoring": "Overvågning",
     "media": "Medie/ringer",
     "mobile": "Mobilklienter",
@@ -370,7 +385,8 @@
     "searchLogsText": "Søg i enhedslogge",
     "unlicensedDateText": "ikke-licenserede brugere registreret i",
     "unlicensedText": "Ikke-licenserede brugere",
-    "convertText": "Vis og konverter brugere, der aktuelt bruger den gratis version"
+    "convertText": "Vis og konverter brugere, der aktuelt bruger den gratis version",
+    "lastUpdated": "Sidst opdateret"
   },
   "inviteModal": {
     "title": "Tjenesteberettigelse",
@@ -426,7 +442,8 @@
     "siteCode": "Webstedets kode",
     "siteCodeDescription": "Angiv et unikt nummer til at identificere et specifikt websted.",
     "internalExtensionRange": "Interval for lokalnumre",
-    "internalNumberRangeDescription": "Specificer intervallet for interne numre. En længde på 4 eller 5 cifre anbefales.",
+    "internalNumberRangeDescription": "Angiv område for interne numre. De skal indeholde mindst 4 cifre.",
+    "extensionError": "Ugyldigt lokalnummer: ",
     "to": "til",
     "addMoreExtensionRanges": "Tilføj flere intervaller for lokalnumre",
     "globalMOH": "Global Media On Hold (MOH)",
@@ -493,7 +510,8 @@
     "status401": "Autorisering mislykkedes. Serveren kan ikke behandle autoriseringssymbolet. Du vil blive automatisk logget ud om få sekunder.",
     "serverDown": "Autorisering mislykkedes. Server kan være ude af drift. Kontakt venligst systemadministratoren. Du vil blive automatisk logget ud om få sekunder.",
     "expired": "Din session er udløbet eller ikke autoriseret. Du vil blive automatisk logget ud om få sekunder. Log venligst ind igen, og fortsæt brugen af tjenesten.",
-    "unsupported": "Du bruger en <strong>forældet</strong> version af Internet Explorer. <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>Opgrader venligst din browser</a> til version 11 eller højere."
+    "unsupported": "Du bruger en <strong>forældet</strong> version af Internet Explorer. <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>Opgrader venligst din browser</a> til version 11 eller højere.",
+    "status404": "Anmodet ressource ikke fundet."
   },
   "spacesPage": {
     "title": "Enheder",
@@ -502,6 +520,7 @@
     "addBtn": "Generer aktiveringskode",
     "cancel": "Annuller",
     "delete": "Slet",
+    "deleteActivationCode": "Slet aktiveringskode",
     "done": "Færdig",
     "kindHeader": "Type",
     "nameHeader": "Installeret i",
@@ -514,7 +533,9 @@
     "emptyDevices1": "Når du tilføjer en ny enhed,",
     "emptyDevices2": "vil du se den på listen her.",
     "deleteDevice": "Slet enhed",
-    "deleteDeviceConfText": "Er du sikker på, du vil slette denne enhed?"
+    "deleteDeviceConfText": "Er du sikker på, du vil slette denne enhed?",
+    "videoQTitle": "Muligt tab af videokvalitet",
+    "videoQMsg": "Denne enhed kommunikerer via TCP-protokollen, som kan medføre højere ventetid og derfor nedsat oplevelse af streaming af medier. Hvis du har problemer med streaming af medier, kan du prøve at åbne UDP port 33434 på din lokale firewall for at afhjælpe problemer med streaming af medier."
   },
   "hercules": {
     "page_title": "Administration af forbindelser",
@@ -540,7 +561,8 @@
       "registered": "Registreret",
       "downloading": "Henter",
       "uninstalling": "Afinstallerer",
-      "running": "Kører"
+      "running": "Kører",
+      "needs_attention": "Skal kontrolleres"
     },
     "setup": {
       "label": "Administration af forbindelser",
@@ -630,16 +652,29 @@
     "leastQuality": "5 laveste kvaliteter",
     "services": "Alle tjenester",
     "UsersOnboarded": "Brugere inkluderet",
-    "AvgCallsPerUser": "Gennemsnitligt antal opkald pr. bruger",
-    "AvgRoomsPerUser": "Gennemsnitligt antal lokaler pr. bruger",
-    "ActiveUsers": "Aktive brugere",
-    "OneOnOneRooms": "Én-til-én mødelokaler",
-    "GroupRooms": "Gruppemødelokaler",
-    "VideoCalls": "Videoopkald",
-    "AvgDurationofCalls": "Gennemsnitlig varighed af opkald",
-    "ContentShared": "Indhold delt",
-    "AmountofContentShared": "Mængde af delt indhold",
-    "UserEngagement": "Brugerengagement"
+    "AvgCallsPerUser": "Gns. opkald pr. bruger",
+    "AvgRoomsPerUser": "Gns. mødesteder pr. bruger for denne måned",
+    "ActiveUsers": "Gns. aktive brugere for denne måned",
+    "OneOnOneRooms": "1:1-mødesteder for denne måned",
+    "GroupRooms": "Gruppemødesteder for denne måned",
+    "VideoCalls": "Videoopkald for denne måned",
+    "AvgDurationofCalls": "Gns. varighed af opkald for denne måned",
+    "ContentShared": "Delte filer for denne måned",
+    "AmountofContentShared": "GB af delt indhold for denne måned",
+    "UserEngagement": "Bruger engagement",
+    "weekOf": "Uge der starter",
+    "numberOfCallsAxis": "Antal opkald (samlet)",
+    "numberOfRoomsAxis": "Antal mødesteder (gns.)",
+    "numberActiveAxis": "Antal aktive brugere (samlet)",
+    "oneRoomAxis": "Antal 1:1-mødesteder (samlet)",
+    "groupRoomsAxis": "Antal gruppemødesteder (samlet)",
+    "videoCallsAxis": "Antal videoopkald (samlet)",
+    "avgCallsAxis": "Varighed af opkald i minutter (gns.)",
+    "filesSharedAxis": "Antal delte filer (samlet)",
+    "gbSharedAxis": "Antal delte gigabytes (samlet)",
+    "orgDsc": "Det samlede antal brugere i en organisation.",
+    "onboardDsc": "Det samlede antal brugere, som har logget ind eller som har tilladelse til at bruge Spark.",
+    "activeDsc": "Det samlede antal brugere, som har sendt/læst en meddelelse, eller oprettet/indtastet et mødested i løbet af sidste uge."
   },
   "callRouting": {
     "title": "Dirigering af opkald",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "Linjekonfiguration",
     "success": "Linjekonfiguration blev gemt",
-    "error": "Linjekonfiguration mislykkedes",
+    "error": "Konfiguration af linje mislykkedes.",
     "directNumbers": "Registernumre",
     "internalNumberLabel": "Ring op til denne linje ved at indtaste numrene og lokalnumrene herunder",
     "internalNumberExtension": "Internt lokalnummer",
@@ -697,7 +732,11 @@
     "none": "Ingen",
     "deleteConfirmation": "Denne handling kan ikke fortrydes. Er du sikker på, du vil ophæve tildeling af {{line}} fra {{user}}?",
     "deleteLineTitle": "Fjern linje",
-    "disassociationSuccess": "Linjens tildeling til bruger blev ophævet."
+    "disassociationSuccess": "Linjens tildeling til bruger blev ophævet.",
+    "alert": "Advarsel",
+    "userError": "Brugeren {{user}} blev ikke bestemt korrekt.",
+    "maxLines": "{{user}} har overskredet det maksimale antal linjer. Fjern venligst en linje fra denne bruger før der tildeles flere linjer.",
+    "confirm": "Der er ændringer på siden, som ikke er gemt. Vil du fortsætte?"
   },
   "callForwardPanel": {
     "title": "Videresendelse af opkald",
@@ -717,6 +756,15 @@
     "title": "Opkalder-id",
     "description": "<small>Rediger det viste navn for opkald fra denne linje</small>"
   },
+  "sharedLinePanel": {
+    "title": "Delt linje",
+    "description": "Ring samtidigt til andre brugeres linjer, når der ringes til denne linje.",
+    "remove": "Fjern medlem",
+    "invalidUser": "{{user}} har ikke Unified Communications-tjenesteydelse",
+    "member": "Medlemmer af delt linje",
+    "disassociateUser": "Hvis denne bruger fjernes fra medlemmerne af den delte linje, fjernes denne linje omgående fra alle deres enheder. Vil du fortsætte?",
+    "addMember": "Tilføj medlem"
+  },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
     "description": "<small>Aktiver brugere til at besvare indgående opkald til deres lokalnummer via et andet nummer</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR kan dække alle brugerens linjer eller begrænses til specifikke linjer",
     "success": "Single Number Reach-konfiguration blev gemt",
     "removeSuccess": "Single Number Reach-konfiguration blev fjernet",
-    "error": "Single Number Reach-konfiguration mislykkedes",
+    "error": "Forbindelse til konfiguration af enkeltnummer mislykkedes.",
     "placeholder": "Indtast SNR-nummer"
   },
   "voicemailPanel": {
@@ -930,6 +978,30 @@
     "draganddrop": "Træk og slip for at ændre rækkefølgen på numre. Disse numre vil gentages.",
     "setActive": "Indstil aktiv"
   },
+  "metricsPage": {
+    "metrics": "Metrik",
+    "metricsType": "Metriktype",
+    "hostName": "Værtsnavn",
+    "systemType": "Systemtype",
+    "counters": "Tællere",
+    "actions": "Handlinger"
+  },
+  "thresholdPage": {
+    "threshold": "Tærskel",
+    "metrictype": "Metriktype",
+    "thresholdname": "Tærskelnavn",
+    "hostname": "Værtsnavn",
+    "systemtype": "Systemtype",
+    "metric": "Metrik",
+    "action": "Handling"
+  },
+  "faultPage": {
+    "systemType": "Systemtype",
+    "system": "System",
+    "metrictype": "Metriktype",
+    "thresholdname": "Tærskelnavn",
+    "genericevent": "Generisk begivenhed"
+  },
   "meetingsPage": {
     "manageMeetings": "Møder",
     "webexMeetingId": "Møde-ID",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "Du har endnu ikke fået tildelt administratortilladelser for dette websted. Denne proces kan tage et stykke tid.",
-    "defaultAccessError": "Kunne ikke opnå adgang til serveren på dette tidspunkt"
+    "defaultProcessError": "Kan ikke behandle anmodning.",
+    "defaultAccessError": "Kan ikke tilgå server på nuværende tidspunkt"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Sessionsaktivering",
-    "handsOnLabAdminLabel": "Praktisk laboratorieadministration (virker kun, når praktisk laboratorium er aktiveret)",
+    "handsOnLabAdminLabel": "Administration af praktisk laboratorium (kun aktiv når det praktiske laboratorium er aktiveret)",
     "optimizeBandwidthUsageLabel": "Optimeret båndbreddeforbrug for deltagere inden for det samme netværk",
     "videoSettingsLabel": "Videoindstillinger",
     "hiQualVideoLabel": "Slå højkvalitetsvideo til (360p)",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "Telefoniprivilegier",
     "callInTeleconfLabel": "Telekonference med indgående opkald",
     "tollOnlyLabel": "Betalt",
-    "tollFreeOnlyLabel": "Gratis",
     "tollAndTollFreeLabel": "Betalt og gratis",
     "teleconfViaGlobalCallinLabel": "Tillad adgang til telekonference via globale opkaldsnumre",
     "callBackTeleconfLabel": "Telekonference med tilbagekald",
@@ -1084,13 +1156,13 @@
     "lastSynced": "Sidst synkroniseret:",
     "messagingTitle": "Underretning",
     "messagingSubtitle": "Standard team-mødelokaler",
-    "messagingDesc": "Underretningslicenser.",
+    "messagingDesc": "Team-mødesteder med opbevaring af indhold tillader dig let at samarbejde fra enhver enhed, med enhver bruger, inden eller uden for din organisation.",
     "communicationTitle": "Kommunikation",
     "communicationSubtitle": "Avanceret samlet",
-    "communicationDesc": "Licenser til Cisco Unified Communication.",
+    "communicationDesc": "Grundlæggende eksterne opkald og fulde Unified Communications aktiveret for din organisation.",
     "conferencingTitle": "Konferencer",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Licenser til Cisco Meeting Center og konferencer."
+    "conferencingDesc": "Saml op til 8 kolleger i et team-mødested Sync-ups eller meget mere på et WebEx Meeting Center."
   },
   "partnerProfile": {
     "link": "Partnerprofil",

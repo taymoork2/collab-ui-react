@@ -37,6 +37,7 @@
     "exportUsers": "사용자 내보내기",
     "moreOptions": "추가 작업",
     "cancel": "취소",
+    "save": "저장",
     "status": "상태",
     "pending": "초대 보류 중",
     "all": "모두",
@@ -48,8 +49,8 @@
     "resend": "초대장 다시 보내기",
     "deleteUserSuccess": "사용자 {{email}} 성공적으로 삭제됨",
     "deleteUserError": "사용자 삭제 오류. 상태: {{status}}",
-    "onboardSuccess": "{{email}} 성공적으로 시작됨",
-    "onboardError": "{{email}} 시작되지 않음. 상태: {{status}}",
+    "onboardSuccess": "{{email}} 성공적으로 등록됨",
+    "onboardError": "{{email}} 등록되지 않음. 상태: {{status}}",
     "ciscoucError": "{{email}}이 Unified Communications을 구축하지 못했습니다."
   },
   "groupsPage": {
@@ -59,7 +60,7 @@
     "membersCountHeader": "멤버"
   },
   "onboardModal": {
-    "onboardUsers": "온보드 사용자",
+    "onboardUsers": "사용자 등록",
     "cancel": "취소",
     "addUsersDesc": "귀사에서 협업 서비스를 수신할 상대방의 이메일 주소를 입력하십시오. 해당 상대방은 가입 이메일 초대장을 받게 됩니다.",
     "addUserText": "추가하시겠습니까?",
@@ -69,7 +70,7 @@
     "enableCollabGroup": "그룹 멤버십에 기반하여 협업 서비스 활성화",
     "addUsersSelect": "사용자 추가:",
     "manageBtn": "그룹 관리",
-    "onboardBtn": "온보드",
+    "onboardBtn": "등록",
     "howToInvite": "어떤 방법으로 초대하시겠습니까?",
     "waitInvitation": "이메일 초대장을 보내고 서비스를 구축하기 전에 사용자가 수락할 때까지 기다리십시오.",
     "sendImmediate": "사용자를 위한 서비스를 즉시 구축하고 이메일 알림을 보냅니다.",
@@ -82,12 +83,19 @@
     "groupColHeader": "그룹 이름",
     "collabService": "그룹의 사용자에게 부여될 협업 서비스 라이센스를 선택하십시오.",
     "addEntitleError": "사용자 추가 또는 자격 부여를 위한 권한 충분하지 않음.",
-    "freeMsg": "무료 그룹 회의실",
-    "freeConf": "무료 3명 미팅",
+    "freeMsg": "무료 Spark 메시지",
+    "freeConf": "무료 제3자 Spark 미팅",
     "freeComm": "무료 네트워크내 IP 음성 및 화상 통화",
     "paidMsg": "표준 그룹 회의실",
     "paidConf": "25명 미팅",
-    "paidComm": "고급 통신"
+    "paidComm": "고급 통신",
+    "freeSpark": "무료 Spark 메시지",
+    "enterpriseEdition": "기업판",
+    "meetingCenter": "Meeting Center",
+    "supportCenter": "Support Center",
+    "trainingCenter": "Training Center",
+    "eventCenter": "Event Center",
+    "communication": "통신"
   },
   "usersPreview": {
     "groupPreview": "그룹:",
@@ -116,7 +124,7 @@
     "title": "메시지"
   },
   "settings": {
-    "title": "서비스 설치",
+    "title": "서비스 설정",
     "initialSetup": "초기 설치"
   },
   "tabs": {
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "통화 라우팅 기능 관리 (통화 대기 등)",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold 개발 예제",
+    "metricsDetailsTab": "Metrics",
+    "metricsDetailsTabDesc": "Metrics 관리",
+    "thresholdDetailsTab": "임계값",
+    "thresholdDetailsTabDesc": "임계값 관리",
     "meetingDetailsTab": "미팅",
     "meetingDetailsTabDesc": "미팅 관리",
     "vtsDetailsTab": "기업 리소스",
@@ -310,9 +322,12 @@
     "hideDetails": "세부 정보 숨기기",
     "problemReports": "문제점 보고서",
     "reportingUrl": "보고 URL:",
-    "helpFaq": "도움말 및 FAQ",
+    "help": "도움말",
+    "faqs": "FAQ",
     "helpUrl": "도움말 URL:",
-    "sendFeedback": "Cisco 피드백"
+    "sendFeedback": "Cisco 피드백",
+    "sso": "SSO",
+    "roles": "역할"
   },
   "common": {
     "delete": "삭제",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "지난 4주",
     "activeUsers": "활동중인 사용자",
-    "calls": "통화",
+    "calls": "통화 시작됨",
     "updated": "마지막 업데이트됨",
-    "conversations": "회의실",
-    "contentShared": "총 공유된 콘텐츠",
-    "activity": "월별 활동",
+    "conversations": "회의실 만들어짐",
+    "contentShared": "파일 공유됨",
+    "activity": "활동 시작:",
     "monitoring": "모니터링",
     "media": "미디어/통화",
     "mobile": "모바일 클라이언트",
@@ -370,7 +385,8 @@
     "searchLogsText": "장치 로그 검색",
     "unlicensedDateText": "라이센스 없는 사용자 등록됨:",
     "unlicensedText": "라이센스 없는 사용자",
-    "convertText": "현재 무료 버전을 사용하는 사용자를 확인하고 변환"
+    "convertText": "현재 무료 버전을 사용하는 사용자를 확인하고 변환",
+    "lastUpdated": "마지막 업데이트됨"
   },
   "inviteModal": {
     "title": "서비스 자격",
@@ -426,7 +442,8 @@
     "siteCode": "사이트 코드",
     "siteCodeDescription": "특정 사이트를 식별하기 위한 고유 번호를 지정하십시오.",
     "internalExtensionRange": "내부 확장 범위",
-    "internalNumberRangeDescription": "내부 번호의 범위를 지정하십시오.  4 또는 5자리 숫자를 권장합니다.",
+    "internalNumberRangeDescription": "내부 번호의 범위를 지정하십시오. 4자리 숫자이어야 합니다.",
+    "extensionError": "내선 올바르지 않음: ",
     "to": "-",
     "addMoreExtensionRanges": "추가 확장 범위 추가",
     "globalMOH": "글로벌 Media On Hold (MOH)",
@@ -493,7 +510,8 @@
     "status401": "인증 실패함. 서버에서 인증 토큰을 처리할 수 없습니다. 몇 초 후에 자동으로 로그아웃됩니다.",
     "serverDown": "인증 실패함. 서버가 다운되었을 수 있습니다. 시스템 관리자에게 문의하십시오. 몇 초 후에 자동으로 로그아웃됩니다.",
     "expired": "세션이 만료되었거나 인증되지 않았습니다. 몇 초 후에 자동으로 로그아웃됩니다. 서비스를 계속 사용하려면 다시 로그인하십시오.",
-    "unsupported": "<strong>오래된</strong> 버전의 Internet Explorer를 사용하고 있습니다. 버전 11 이상으로 <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>브라우저를 업그레이드</a>하십시오."
+    "unsupported": "<strong>오래된</strong> 버전의 Internet Explorer를 사용하고 있습니다. 버전 11 이상으로 <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>브라우저를 업그레이드</a>하십시오.",
+    "status404": "요청한 리소스 찾을 수 없음."
   },
   "spacesPage": {
     "title": "장치",
@@ -502,6 +520,7 @@
     "addBtn": "활성화 코드 생성",
     "cancel": "취소",
     "delete": "삭제",
+    "deleteActivationCode": "활성화 코드 삭제",
     "done": "완료",
     "kindHeader": "유형",
     "nameHeader": "설치됨:",
@@ -514,7 +533,9 @@
     "emptyDevices1": "새 장치를 추가하면,",
     "emptyDevices2": "여기에서 확인할 수 있습니다.",
     "deleteDevice": "장치 삭제",
-    "deleteDeviceConfText": "이 장치를 삭제하시겠습니까?"
+    "deleteDeviceConfText": "이 장치를 삭제하시겠습니까?",
+    "videoQTitle": "비디오 품질 손상 가능성",
+    "videoQMsg": "이 장치는 TCP 프로토콜을 통해 통신하고 있으며, 이는 보다 긴 대기 시간을 초래하여 미디어 스트리밍 환경을 악화시킬 수도 있습니다. 미디어 스트리밍에 문제가 있는 경우, 로컬 방화벽에서 UDP 포트 33434를 열어 미디어 스트리밍 문제를 개선할 수 있습니다."
   },
   "hercules": {
     "page_title": "커넥터 관리",
@@ -540,7 +561,8 @@
       "registered": "등록됨",
       "downloading": "다운로드 중",
       "uninstalling": "설치 제거 중",
-      "running": "실행 중"
+      "running": "실행 중",
+      "needs_attention": "주의 필요"
     },
     "setup": {
       "label": "커넥터 관리",
@@ -572,7 +594,7 @@
     "enterpriseSettingsSub": "글로벌 구성 설정",
     "planReviewDesc": "이 설치 마법사는 조직에서 협업 서비스를 빨리 확보하고 실행할 수 있도록 합니다. 각 단계에서 해야할 작업에 확신이 없는 경우에도 걱정하지 마십시오. 나중에 언제든지 변경할 수 있습니다.",
     "accountReview": "계정 재확인",
-    "serviceSetup": "서비스 설치",
+    "serviceSetup": "서비스 설정",
     "serviceSetupSub": "통합된 통신 설정",
     "unifiedCommunication": "Unified Communications",
     "addUsers": "사용자 추가",
@@ -629,17 +651,30 @@
     "highQuality": "5개 최고 품질",
     "leastQuality": "5개 최저 품질",
     "services": "모든 서비스",
-    "UsersOnboarded": "사용자 온보드됨",
+    "UsersOnboarded": "등록된 사용자",
     "AvgCallsPerUser": "사용자당 평균 통화",
-    "AvgRoomsPerUser": "사용자당 평균 회의실",
-    "ActiveUsers": "활동중인 사용자",
-    "OneOnOneRooms": "1대1 회의실",
-    "GroupRooms": "그룹 회의실",
-    "VideoCalls": "화상 통화",
-    "AvgDurationofCalls": "통화 평균 지속 시간",
-    "ContentShared": "콘텐츠 공유됨",
-    "AmountofContentShared": "공유된 콘텐츠 수",
-    "UserEngagement": "사용자 참여"
+    "AvgRoomsPerUser": "사용자당 평균 회의실 (이번 달)",
+    "ActiveUsers": "평균 활동중인 사용자 (이번 달)",
+    "OneOnOneRooms": "1:1 회의실 (이번 달)",
+    "GroupRooms": "그룹 회의실 (이번 달)",
+    "VideoCalls": "화상 통화 (이번 달)",
+    "AvgDurationofCalls": "통화 평균 지속 시간 (이번 달)",
+    "ContentShared": "공유된 파일 (이번 달)",
+    "AmountofContentShared": "공유된 콘텐츠 GB (이번 달)",
+    "UserEngagement": "사용자 참여",
+    "weekOf": "주 시작",
+    "numberOfCallsAxis": "통화 수 (총)",
+    "numberOfRoomsAxis": "회의실 수 (평균)",
+    "numberActiveAxis": "활동중인 사용자 수 (총)",
+    "oneRoomAxis": "1:1 회의실 수 (총)",
+    "groupRoomsAxis": "그룹 회의실 수 (총)",
+    "videoCallsAxis": "화상 통화 수 (총)",
+    "avgCallsAxis": "통화 지속 시간 (분) (평균)",
+    "filesSharedAxis": "공유된 파일 수 (총)",
+    "gbSharedAxis": "공유된 기가바이트 수 (총)",
+    "orgDsc": "조직의 총 사용자 수.",
+    "onboardDsc": "Spark에 로그인되었거나 자격이 주어진 총 사용자 수.",
+    "activeDsc": "지난 주에 메시지를 보낸/읽은 사용자 또는 회의실을 만든/입장한 총 사용자 수."
   },
   "callRouting": {
     "title": "통화 라우팅",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "라인 구성",
     "success": "라인 구성이 성공적으로 저장됨",
-    "error": "라인 구성 실패함",
+    "error": "라인 구성 실패함.",
     "directNumbers": "디렉토리 번호",
     "internalNumberLabel": "아래 나열된 번호 또는 내선으로 다이얼하여 이 라인에 연결하십시오.",
     "internalNumberExtension": "내부 번호 내선",
@@ -697,7 +732,11 @@
     "none": "없음",
     "deleteConfirmation": "이 작업은 실행 취소할 수 없습니다.  {{user}} 님의 {{line}}를 지정 해제하시겠습니까?",
     "deleteLineTitle": "라인 제거",
-    "disassociationSuccess": "사용자의 라인이 성공적으로 지정 해제되었습니다."
+    "disassociationSuccess": "사용자의 라인이 성공적으로 지정 해제되었습니다.",
+    "alert": "경고",
+    "userError": "사용자{{user}}가 올바르게 구축되지 않았습니다.",
+    "maxLines": "{{user}} 님이 최대 라인 수를 초과했습니다. 추가 라인을 구축하기 전에 이 사용자의 라인을 제거하십시오.",
+    "confirm": "페이지에 저장되지 않은 변경 내용이 있습니다. 계속하시겠습니까?"
   },
   "callForwardPanel": {
     "title": "통화 전달",
@@ -717,6 +756,15 @@
     "title": "호출자 ID",
     "description": "<small>이 라인의 통화 표시명 변경</small>"
   },
+  "sharedLinePanel": {
+    "title": "공유된 라인",
+    "description": "이 라인으로 호출될 때 다른 사용자의 라인도 동시에 울리기.",
+    "remove": "멤버 제거",
+    "invalidUser": "{{user}} 님은 Unified Communications 서비스를 갖고 있지 않습니다",
+    "member": "공유된 라인 멤버",
+    "disassociateUser": "공유된 라인 멤버에서 이 사용자를 제거하면 해당 사용자의 모든 장치에서 즉시 이 라인을 제거하게 됩니다. 계속 진행하시겠습니까?",
+    "addMember": "멤버 추가"
+  },
   "singleNumberReachPanel": {
     "title": "싱글 번호 연결",
     "description": "<small>사용자가 내선으로 걸려오는 전화를 다른 번호에서 응답할 수 있도록 허용</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR은 모든 사용자의 라인을 커버하거나 특정 라인으로 제한할 수 있습니다",
     "success": "싱글 번호 연결 구성이 성공적으로 저장됨",
     "removeSuccess": "싱글 번호 연결 구성이 성공적으로 제거됨",
-    "error": "싱글 번호 연결 구성 실패함",
+    "error": "싱글 번호 연결 구성 실패함.",
     "placeholder": "SNR 번호 입력"
   },
   "voicemailPanel": {
@@ -742,7 +790,7 @@
     "expiredHeading": "만료된 평가판",
     "addTrial": "새 평가판",
     "trialsCustomerName": "고객",
-    "trialsEndDate": "일 남음",
+    "trialsEndDate": "남은 일 수",
     "trialsNumUsers": "사용자/ 라이센스",
     "viewAll": "모든 평가판 보기",
     "expiredToday": "오늘 만료됨",
@@ -753,7 +801,7 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "평가판 지속 시간 (일)",
+    "duration": "평가판 지속 기간 (일)",
     "thirtyDays": "30일",
     "sixtyDays": "60일",
     "ninetyDays": "90",
@@ -772,8 +820,8 @@
     "name": "이름",
     "edit": "편집",
     "saveSendReminder": "저장 및 알림 보내기",
-    "partnerHeading": "채용 및 개입",
-    "entitlementsTitle": "사용자 온보드됨",
+    "partnerHeading": "채택 및 참여",
+    "entitlementsTitle": "등록된 사용자",
     "activeUsersTitle": "매일 활동중인 사용자",
     "averageCallsTitle": "사용자당 평균 통화",
     "contentSharedTitle": "총 공유된 콘텐츠"
@@ -930,6 +978,30 @@
     "draganddrop": "트랙의 순서를 재정렬하려면 드래그하고 드롭하십시오. 해당 트랙은 루프됩니다.",
     "setActive": "Active 설정"
   },
+  "metricsPage": {
+    "metrics": "Metrics",
+    "metricsType": "Metric 유형",
+    "hostName": "호스트 이름",
+    "systemType": "시스템 유형",
+    "counters": "카운터",
+    "actions": "작업"
+  },
+  "thresholdPage": {
+    "threshold": "임계값",
+    "metrictype": "Metric 유형",
+    "thresholdname": "임계값 이름",
+    "hostname": "호스트 이름",
+    "systemtype": "시스템 유형",
+    "metric": "Metrics",
+    "action": "작업"
+  },
+  "faultPage": {
+    "systemType": "시스템 유형",
+    "system": "시스템",
+    "metrictype": "Metric 유형",
+    "thresholdname": "임계값 이름",
+    "genericevent": "일반 이벤트"
+  },
   "meetingsPage": {
     "manageMeetings": "미팅",
     "webexMeetingId": "미팅 ID",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "귀하는 아직 관리자로서 이 사이트에 구축되지 않았습니다. 이 과정에는 시간이 걸릴 수도 있습니다.",
+    "defaultProcessError": "요청을 처리할 수 없음.",
     "defaultAccessError": "현재 서버에 액세스할 수 없음"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "세션 활성화",
-    "handsOnLabAdminLabel": "핸즈-온 랩 관리 (핸즈-온 랩이 활성화되었을 때에만 적용됨",
+    "handsOnLabAdminLabel": "핸즈-온 랩 관리 (핸즈-온 랩이 활성화된 경우에만 적용됨)",
     "optimizeBandwidthUsageLabel": "동일한 네트워크 내에서 참석자를 위해 최적화된 대역폭 사용량",
     "videoSettingsLabel": "비디오 설정",
     "hiQualVideoLabel": "고품질 비디오 켜기 (360p)",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "텔레포니 권한",
     "callInTeleconfLabel": "발신 다자간 전화회의",
     "tollOnlyLabel": "유료",
-    "tollFreeOnlyLabel": "무료",
     "tollAndTollFreeLabel": "유료 및 무료",
     "teleconfViaGlobalCallinLabel": "글로벌 발신 번호를 통한 다자간 전화회의 액세스 허용",
     "callBackTeleconfLabel": "수신 다자간 전화회의",
@@ -1084,13 +1156,13 @@
     "lastSynced": "마지막 동기화됨:",
     "messagingTitle": "메시지",
     "messagingSubtitle": "표준 그룹 회의실",
-    "messagingDesc": "메시지 라이센스.",
+    "messagingDesc": "콘텐츠 스토리지가 포함된 그룹 회의실은 조직 내/외부의 사용자와 어느 장치에서든 쉽게 협업할 수 있도록 합니다.",
     "communicationTitle": "통신",
     "communicationSubtitle": "Advanced Unified",
-    "communicationDesc": "Cisco Unified Communication 라이센스.",
+    "communicationDesc": "기본 외부 통화 및 전체 Unified Communications은 귀하의 조직에 대해 활성화되었습니다.",
     "conferencingTitle": "회의",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Cisco Meeting Center 및 회의 라이센스."
+    "conferencingDesc": "그룹 회의실 미팅으로 최대 8명의 사용자와 미팅하거나, WebEx Meeting Center에서 보다 많은 사용자와 미팅하십시오."
   },
   "partnerProfile": {
     "link": "파트너 프로필",
@@ -1101,7 +1173,7 @@
     "ciscoRep": "Cisco 담당자",
     "supportSetup": "문제 티켓 / 보고 위치",
     "save": "저장",
-    "supportInfo": "고객의 사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Spark 응용프로그램의 지원 옵션 아래에 표시됩니다.",
+    "supportInfo": "고객 사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Spark 응용프로그램의 지원 옵션 아래에 표시됩니다.",
     "lifeCycle": "아래 표시된 지원의 두 가지 유형을 모두 제공하려면 수명 주기 파트너가 필요합니다.",
     "supportOptions": "Cisco 지원 옵션",
     "seeExample": "예제를 참조하십시오.",
@@ -1111,15 +1183,15 @@
     "urlReport": "문제 보고 및 케이스 제출용 URL",
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "도움말 및 FAQ 위치",
-    "matchingTix": "일치하는 문제 티켓",
-    "matchingDescr": "문제 티켓을 보고서가 생성될 때 Cisco Spark 관리에 업로드한 로그와 일치하려면 로그ID 파라미터를 포함한 지원 URL을 첨부하십시오. (\"%%logID%%\") (따옴표 없음)",
+    "matchingTix": "문제 티켓 일치시키기",
+    "matchingDescr": "보고서가 생성될 때 Cisco Spark 관리에 업로드된 로그와 문제 티켓을 일치시키려면 로그ID 파라미터를 포함한 지원 URL을 첨부하십시오. (\"%%logID%%\" - 따옴표 생략)",
     "forExample": "예: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "지원 설정",
     "companyInfo": "기업 정보",
     "cancel": "취소",
     "partnerProblem": "파트너 문제점 보고 사이트",
     "partnerHelp": "파트너 도움말 사이트",
-    "ciscoProblem": "문제점 보고서가 Cisco 기술 지원에게 발송됩니다",
+    "ciscoProblem": "문제점 보고서가 Cisco 기술 지원 팀에게 발송됩니다",
     "ciscoHelp": "Cisco 도움말 사이트",
     "enterHelp": "도움말 콘텐츠의 위치를 입력하십시오.",
     "enterReports": "문제점 보고서: 문제점 보고 도구의 위치를 입력하십시오."

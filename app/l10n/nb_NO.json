@@ -37,6 +37,7 @@
     "exportUsers": "eksporter brukere",
     "moreOptions": "Flere handlinger",
     "cancel": "Avbryt",
+    "save": "Lagre",
     "status": "Status",
     "pending": "Invitasjon ventende",
     "all": "Alle",
@@ -82,12 +83,19 @@
     "groupColHeader": "Gruppenavn",
     "collabService": "Velg lisenser for samarbeidstjenestene som bør gis til brukerne i gruppen.",
     "addEntitleError": "utilstrekkelig rettighet å legge til eller gi rettigheter til en bruker.",
-    "freeMsg": "Gratis grupperom",
-    "freeConf": "Gratis møter for 3 deltakere",
+    "freeMsg": "Gratis Spark-meldinger",
+    "freeConf": "Gratis 3-parter Spark-møter",
     "freeComm": "Gratis tale- og videosamtaler innenfor nettverket",
     "paidMsg": "Standard teamrom",
     "paidConf": "Møter for 25 deltakere",
-    "paidComm": "Avanserte kommunikasjoner"
+    "paidComm": "Avanserte kommunikasjoner",
+    "freeSpark": "Gratis Spark-meldinger",
+    "enterpriseEdition": "Bedriftsversjon",
+    "meetingCenter": "Møtesenter",
+    "supportCenter": "Støttesenter",
+    "trainingCenter": "Opplæringssenter",
+    "eventCenter": "Hendelsessenter",
+    "communication": "Kommunikasjon"
   },
   "usersPreview": {
     "groupPreview": "Gruppe:",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "Administrer funksjoner for samtaleruting, slik som samtaleparkering",
     "mediaOnHoldTab": "Media på vent",
     "mediaOnHoldTabDesc": "Media på vent – eksempel på utvikling",
+    "metricsDetailsTab": "Metrisk type",
+    "metricsDetailsTabDesc": "Metrisk administrasjon",
+    "thresholdDetailsTab": "Terskel",
+    "thresholdDetailsTabDesc": "Terskeladministrasjon",
     "meetingDetailsTab": "Møter",
     "meetingDetailsTabDesc": "Møteadministrasjon",
     "vtsDetailsTab": "Bedriftsressurser",
@@ -310,9 +322,12 @@
     "hideDetails": "Skjul detaljer",
     "problemReports": "Problemrapporter",
     "reportingUrl": "Rapporterende URL:",
-    "helpFaq": "Hjelp og Ofte stilte spørsmål (FAQ)",
+    "help": "Hjelp",
+    "faqs": "FAQ-er",
     "helpUrl": "Hjelp-URL:",
-    "sendFeedback": "Cisco tilbakemelding"
+    "sendFeedback": "Cisco tilbakemelding",
+    "sso": "SSO",
+    "roles": "Roller"
   },
   "common": {
     "delete": "Slett",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "Siste 4 ukene",
     "activeUsers": "Aktive brukere",
-    "calls": "Anrop",
+    "calls": "Samtaler utført",
     "updated": "Sist oppdatert",
-    "conversations": "Rom",
-    "contentShared": "Delt innhold totalt",
-    "activity": "Månedlig aktivitet",
+    "conversations": "Opprettede rom",
+    "contentShared": "Delte filer",
+    "activity": "Aktivitet siden",
     "monitoring": "Overvåking",
     "media": "Media/ringer",
     "mobile": "Mobilklienter",
@@ -370,7 +385,8 @@
     "searchLogsText": "Søk enhetslogger",
     "unlicensedDateText": "brukere uten lisens registrert på",
     "unlicensedText": "Brukere uten lisens",
-    "convertText": "Vis og konverter brukere som for øyeblikket bruker gratisversjonen"
+    "convertText": "Vis og konverter brukere som for øyeblikket bruker gratisversjonen",
+    "lastUpdated": "Sist oppdatert"
   },
   "inviteModal": {
     "title": "Rettighet på tjeneste",
@@ -426,7 +442,8 @@
     "siteCode": "Nettstedskode",
     "siteCodeDescription": "Angi et unikt nummer som skal identifisere et bestemt nettsted.",
     "internalExtensionRange": "Spekter for internnummer",
-    "internalNumberRangeDescription": "Spesifiser spekter for internnummer. En lengde på 4 eller 5 siffer er anbefalt.",
+    "internalNumberRangeDescription": "Spesifiser område for interne numre. Lengden må være 4 sifre.",
+    "extensionError": "Internnummeret ugyldig: ",
     "to": "til",
     "addMoreExtensionRanges": "Legg til flere spekter for internnummer",
     "globalMOH": "Globale media på vent (MOH)",
@@ -493,7 +510,8 @@
     "status401": "Autorisasjon mislyktes. Server kan ikke behandle autorisasjonssymbol. Du blir automatisk logget ut om noen sekunder.",
     "serverDown": "Autorisasjon mislyktes. Serveren kan være nede, ta kontakt med systemadministrator. Du blir automatisk logget ut om noen sekunder.",
     "expired": "Denne økten er utløpt eller uautorisert. Du blir automatisk logget ut om noen sekunder. Logg inn igjen for å fortsette å bruke tjenesten.",
-    "unsupported": "Du bruker en <strong>foreldet</strong> versjon av Internet Explorer. <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>Oppgrader nettleseren din</a> til versjon 11 eller nyere."
+    "unsupported": "Du bruker en <strong>foreldet</strong> versjon av Internet Explorer. <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>Oppgrader nettleseren din</a> til versjon 11 eller nyere.",
+    "status404": "Forespurt ressurs ikke funnet."
   },
   "spacesPage": {
     "title": "Enheter",
@@ -502,6 +520,7 @@
     "addBtn": "Generer aktiveringskode",
     "cancel": "Avbryt",
     "delete": "Slett",
+    "deleteActivationCode": "Slette aktiveringskode",
     "done": "Ferdig",
     "kindHeader": "Type",
     "nameHeader": "Installert i",
@@ -514,7 +533,9 @@
     "emptyDevices1": "Når du legger til en ny enhet,",
     "emptyDevices2": "vil du se den oppført her.",
     "deleteDevice": "Slett enhet",
-    "deleteDeviceConfText": "Er du sikker på at du vil slette denne enheten?"
+    "deleteDeviceConfText": "Er du sikker på at du vil slette denne enheten?",
+    "videoQTitle": "Mulig tap av videokvalitet",
+    "videoQMsg": "Denne enheten kommuniserer via TCP-protokollen, noe som kan medføre mer ventetid (latens) og dermed redusert kvalitet på direkteavspilling (streaming). Hvis du har problemer med direkteavspillingen, kan du prøve å åpne UDP port 33434 i din lokale brannmur for å avhjelpe problemet."
   },
   "hercules": {
     "page_title": "Kontaktadministrasjon",
@@ -540,7 +561,8 @@
       "registered": "Registrert",
       "downloading": "Laster ned",
       "uninstalling": "Avinstallerer",
-      "running": "Kjører"
+      "running": "Kjører",
+      "needs_attention": "Trenger oppmerksomhet"
     },
     "setup": {
       "label": "Kontaktadministrasjon",
@@ -630,16 +652,29 @@
     "leastQuality": "5 lavest kvalitet",
     "services": "Alle tjenester",
     "UsersOnboarded": "Brukere som er ombord",
-    "AvgCallsPerUser": "Gj.sn. anrop per bruker",
-    "AvgRoomsPerUser": "Gj.sn. rom per bruker",
-    "ActiveUsers": "Aktive brukere",
-    "OneOnOneRooms": "En-til-en rom",
-    "GroupRooms": "Grupperom",
-    "VideoCalls": "Videosamtaler",
-    "AvgDurationofCalls": "Gj.sn. varighet av samtaler",
-    "ContentShared": "Delt innhold",
-    "AmountofContentShared": "Mengden av delt innhold",
-    "UserEngagement": "Brukerengasjement"
+    "AvgCallsPerUser": "Gj.snitt samtaler per bruker",
+    "AvgRoomsPerUser": "Gj.snitt rom per bruker denne måneden",
+    "ActiveUsers": "Gj.snitt aktive brukere denne måneden",
+    "OneOnOneRooms": "1:1 Rom denne måneden",
+    "GroupRooms": "Grupperom denne måneden",
+    "VideoCalls": "Videosamtaler denne måneden.",
+    "AvgDurationofCalls": "Gj.snitt varighet på samtaler denne måneden",
+    "ContentShared": "Filer delt denne måneden",
+    "AmountofContentShared": "GB innhold delt denne måneden",
+    "UserEngagement": "Brukerengasjement",
+    "weekOf": "Uke som begynner med",
+    "numberOfCallsAxis": "Antall samtaler (totalt)",
+    "numberOfRoomsAxis": "Antall rom (gj.snitt)",
+    "numberActiveAxis": "Antall aktive brukere (totalt)",
+    "oneRoomAxis": "Antall 1:1 rom (totalt)",
+    "groupRoomsAxis": "Antall grupperom (totalt)",
+    "videoCallsAxis": "Antall videosamtaler (totalt)",
+    "avgCallsAxis": "Samtalevarighet i minutter (gj.snitt)",
+    "filesSharedAxis": "Antall filer delt (totalt)",
+    "gbSharedAxis": "Antall Gigabytes delt (totalt)",
+    "orgDsc": "Det totale antallet brukere i en organisasjon.",
+    "onboardDsc": "Det totale antallet brukere som har logget inn eller har rettigheter til Spark.",
+    "activeDsc": "Det totale antallet brukere som har sendt/lest en melding eller opprettet/gått inn i et rom i løpet av foregående uke."
   },
   "callRouting": {
     "title": "Samtaleruting",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "Linjekonfigurasjon",
     "success": "Linjekonfigurasjon ble lagret",
-    "error": "Linjekonfigurasjon mislyktes",
+    "error": "Linjekonfigurasjon mislyktes.",
     "directNumbers": "Katalognumre",
     "internalNumberLabel": "Nå denne linjen ved å ringe numrene eller utvidelsene som er oppført nedenfor.",
     "internalNumberExtension": "Internnummer for biapparat",
@@ -697,7 +732,11 @@
     "none": "Ingen",
     "deleteConfirmation": "Denne handlingen kan ikke angres, er du sikker på at du vil fjerne tilordningen {{line}} fra {{user}}?",
     "deleteLineTitle": "Fjern linjen",
-    "disassociationSuccess": "Fjerning av linjen fra bruker var vellykket."
+    "disassociationSuccess": "Fjerning av linjen fra bruker var vellykket.",
+    "alert": "Advarsel",
+    "userError": "Brukeren {{user}} ble ikke behandlet korrekt.",
+    "maxLines": "{{user}} har overskredet maksimum antall linjer. Fjern en linje fra denne brukeren før du legger til flere linjer.",
+    "confirm": "Det er ulagrede endringer på siden. Vil du fortsette?"
   },
   "callForwardPanel": {
     "title": "Viderekobling av samtale",
@@ -717,6 +756,15 @@
     "title": "Innringer-ID",
     "description": "<small>Endre visningsnavnet for anrop fra denne linjen</small>"
   },
+  "sharedLinePanel": {
+    "title": "Delt linje",
+    "description": "Ring andre brukeres linjer samtidig når denne linjen ringes opp.",
+    "remove": "Fjerne medlem",
+    "invalidUser": "{{user}} har ikke tjenesten Samordnet kommunikasjon (Unified Communications)",
+    "member": "Delte linje-medlemmer",
+    "disassociateUser": "Fjerning av denne brukeren fra delte linje-medlemmer vil umiddelbart fjerne denne linjen fra alle enhetene deres. Er du sikker på at du vil fortsette?",
+    "addMember": "Legg til medlem"
+  },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
     "description": "<small>Lar brukere besvare innkommende anrop på et annet nummer som anropet er viderekoblet til</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR kan dekke alle brukerens linjer eller begrenset til bestemte linjer",
     "success": "Konfigurasjon av Single Number Reach ble lagret",
     "removeSuccess": "Konfigurasjon av Single Number Reach ble fjernet",
-    "error": "Konfigurasjon av Single Number Reach mislyktes",
+    "error": "Single Number Reach konfigurasjon feilet.",
     "placeholder": "Skriv inn SNR-nummer"
   },
   "voicemailPanel": {
@@ -930,6 +978,30 @@
     "draganddrop": "Dra og slipp for å endre rekkefølgen på sporene. Disse sporene vil gå i sløyfe.",
     "setActive": "Angi aktiv"
   },
+  "metricsPage": {
+    "metrics": "Metrisk",
+    "metricsType": "Metrisk type",
+    "hostName": "Vertsnavn",
+    "systemType": "Systemtype",
+    "counters": "Telleverk",
+    "actions": "Handlinger"
+  },
+  "thresholdPage": {
+    "threshold": "Terskel",
+    "metrictype": "Metrisk type",
+    "thresholdname": "Terskelnavn",
+    "hostname": "Vertsnavn",
+    "systemtype": "Systemtype",
+    "metric": "Metrisk",
+    "action": "Handling"
+  },
+  "faultPage": {
+    "systemType": "Systemtype",
+    "system": "System",
+    "metrictype": "Metrisk type",
+    "thresholdname": "Terskelnavn",
+    "genericevent": "Generell hendelse"
+  },
   "meetingsPage": {
     "manageMeetings": "Møter",
     "webexMeetingId": "Møte-ID",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "Du har ikke blitt gjort om til administrator for dette nettstedet ennå. Denne prosessen kan ta litt tid.",
-    "defaultAccessError": "Får ikke tilgang til serveren på dette tidspunktet"
+    "defaultProcessError": "Kan ikke behandle forespørselen.",
+    "defaultAccessError": "Får ikke tilgang til serveren nå"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Aktivering av økt",
-    "handsOnLabAdminLabel": "Administrator for praksis-lab (ikrafttrer kun når praksis-lab er aktivert",
+    "handsOnLabAdminLabel": "Praktisk Lab-admin (virker bare når praktisk lab er aktivert)",
     "optimizeBandwidthUsageLabel": "Optimalisert bruk av båndbredde for deltakere innenfor samme nettverk",
     "videoSettingsLabel": "Videoinnstillinger",
     "hiQualVideoLabel": "Sett på høykvalitetsvideo (360p)",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "Telefonirettigheter",
     "callInTeleconfLabel": "Telekonferanse med innringing",
     "tollOnlyLabel": "Avgift",
-    "tollFreeOnlyLabel": "Avgiftsfri",
     "tollAndTollFreeLabel": "Avgift og avgiftsfri",
     "teleconfViaGlobalCallinLabel": "Gi tilgang til telefonkonferanse via internasjonale innringernummer",
     "callBackTeleconfLabel": "Telekonferanse med tilbakeringing",
@@ -1084,13 +1156,13 @@
     "lastSynced": "Sist synkronisert:",
     "messagingTitle": "Meldinger",
     "messagingSubtitle": "Standard teamrom",
-    "messagingDesc": "Meldingslisenser.",
+    "messagingDesc": "Grupperom med lagret innhold lar deg samarbeide fra enhver enhet til en hvilken som helst bruker i eller utenfor din egen organisasjon.",
     "communicationTitle": "Kommunikasjon",
     "communicationSubtitle": "Avanser samlet",
-    "communicationDesc": "Cisco samlede kommunikasjonslisenser.",
+    "communicationDesc": "Enkle eksternsamtaler og komplette Samordnede kommunikasjonstjenester (Unified Communications) aktivert for virksomheten din.",
     "conferencingTitle": "Konferanser",
     "conferencingSubtitle": "Møtesenter",
-    "conferencingDesc": "Cisco møtesenter- og konferanselisenser."
+    "conferencingDesc": "Koble sammen inntil 8 kollegaer i en grupperom Sync-up eller flere i et WebEx-møtesenter."
   },
   "partnerProfile": {
     "link": "Partnerprofil",
@@ -1101,7 +1173,7 @@
     "ciscoRep": "Cisco-representant",
     "supportSetup": "Brukerstøttehenvendelse/rapporteringssted",
     "save": "Lagre",
-    "supportInfo": "Hvis du leverer brukerstøtte for dine kunders brukere, oppgi dine brukerstøtteparametre under. Disse parametrene vil vises under Brukerstøttevalg i Spark-applikasjonene.",
+    "supportInfo": "Hvis du gir brukerstøtte til dine kunders brukere, oppgi dine parametre for brukerstøtte under. Disse parametrene vil vises under valg for brukerstøtte i Spark-applikasjonene.",
     "lifeCycle": "Lifecycle-partnere er pålagt å tilby begge typene støtte som vist nedenfor.",
     "supportOptions": "Alternativer for Cisco-støtte",
     "seeExample": "se et eksempel.",
@@ -1114,7 +1186,7 @@
     "matchingTix": "Sammenligne problemforespørsler",
     "matchingDescr": "For å sammenligne problemforespørsler med logger som blir lastet opp til Cisco Spark Administrasjon når rapporter opprettes, legg til din URL for brukerstøtte med ditt logID-parameter som \"%%logID%%\" (uten anførselstegn).",
     "forExample": "For eksempel: http://www.acme.com/reportproblem?id=%%logID%%",
-    "supportTitle": "Oppsett for støtte",
+    "supportTitle": "Oppsett for brukerstøtte",
     "companyInfo": "Selskapsinformasjon",
     "cancel": "Avbryt",
     "partnerProblem": "Problemrapporteringsside for samarbeidspartner",
@@ -1127,7 +1199,7 @@
   "customerProfile": {
     "supportContacts": "Kundestøttekontakter",
     "partnerAdmin": "Partneradministratorer",
-    "supportInfo": "Hvis du leverer brukerstøtte for dine brukere, oppgi dine brukerstøtteparametre under. Disse parametrene vil vises under Brukerstøttevalg i Spark-applikasjonen;"
+    "supportInfo": "Hvis du gir brukerstøtte til dine kunders brukere, oppgi dine parametre for brukerstøtte under. Disse parametrene vil vises under valg for brukerstøtte i Spark-applikasjonene;"
   },
   "utilizationPage": {
     "entResUtilization": "Ressursutnyttelse for bedrift",

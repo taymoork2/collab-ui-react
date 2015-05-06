@@ -37,6 +37,7 @@
     "exportUsers": "exportera användare",
     "moreOptions": "Fler åtgärder",
     "cancel": "Avbryt",
+    "save": "Spara",
     "status": "Status",
     "pending": "Avvaktande inbjudan",
     "all": "Alla",
@@ -82,12 +83,19 @@
     "groupColHeader": "Gruppnamn",
     "collabService": "Välj vilka collaboration service-licenser som ska beviljas användarna i gruppen.",
     "addEntitleError": "otillräckliga privilegier för att lägga till eller berättiga en användare",
-    "freeMsg": "Kostnadsfria grupprum",
-    "freeConf": "Kostnadsfria möten för tre personer",
+    "freeMsg": "Kostnadsfria Spark-meddelanden",
+    "freeConf": "Kostnadsfria tredje parts Spark-möten",
     "freeComm": "Gratis interna röst- och videosamtal via IP",
     "paidMsg": "Standardgrupprum",
     "paidConf": "Möten för 25 personer",
-    "paidComm": "Avancerad kommunikation"
+    "paidComm": "Avancerad kommunikation",
+    "freeSpark": "Kostnadsfria Spark-meddelanden",
+    "enterpriseEdition": "Enterprise-versionen",
+    "meetingCenter": "Meeting Center",
+    "supportCenter": "Support Center",
+    "trainingCenter": "Training Center",
+    "eventCenter": "Event Center",
+    "communication": "Kommunikation"
   },
   "usersPreview": {
     "groupPreview": "Grupp:",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "Hantera samtalsomkopplingsfunktioner, t.ex. Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Utvecklarexempel av Media On Hold",
+    "metricsDetailsTab": "Metrik",
+    "metricsDetailsTabDesc": "Metrikhantering",
+    "thresholdDetailsTab": "Tröskel",
+    "thresholdDetailsTabDesc": "Tröskelhantering",
     "meetingDetailsTab": "Möten",
     "meetingDetailsTabDesc": "Möteshantering",
     "vtsDetailsTab": "Företagsresurser",
@@ -310,9 +322,12 @@
     "hideDetails": "Dölj detaljer",
     "problemReports": "Problemrapport",
     "reportingUrl": "Rapporterings-URL:",
-    "helpFaq": "Hjälp och vanliga frågor",
+    "help": "Hjälp",
+    "faqs": "Vanliga frågor",
     "helpUrl": "Hjälp-URL:",
-    "sendFeedback": "Cisco-feedback"
+    "sendFeedback": "Cisco-feedback",
+    "sso": "Enkel anslutning (SSO)",
+    "roles": "Roller"
   },
   "common": {
     "delete": "Ta bort",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "Senaste 4 veckorna",
     "activeUsers": "Aktiva användare",
-    "calls": "Samtal",
+    "calls": "Uppringda samtal",
     "updated": "Senast uppdaterad",
-    "conversations": "Rum",
-    "contentShared": "Totalt delat innehåll",
-    "activity": "Månadsaktivitet",
+    "conversations": "Skapade rum",
+    "contentShared": "Delade filer",
+    "activity": "Aktivitet sedan",
     "monitoring": "Bevakar",
     "media": "Media/samtal",
     "mobile": "Mobilklienter",
@@ -370,7 +385,8 @@
     "searchLogsText": "Sök enhetsloggar",
     "unlicensedDateText": "olicensierade användare registrerade på",
     "unlicensedText": "Olicensierade användare",
-    "convertText": "Visa och omvandla användare som för närvarande använder gratisversionen"
+    "convertText": "Visa och omvandla användare som för närvarande använder gratisversionen",
+    "lastUpdated": "Senast uppdaterad"
   },
   "inviteModal": {
     "title": "Serviceberättigande",
@@ -426,7 +442,8 @@
     "siteCode": "Webbplatskod",
     "siteCodeDescription": "Ange ett unikt nummer som identifierar en specifik plats.",
     "internalExtensionRange": "Internt anknytningsintervall",
-    "internalNumberRangeDescription": "Ange intervallet för interna nummer. Rekommenderad längd är 4 eller 5 siffror.",
+    "internalNumberRangeDescription": "Ange intervallet för interna nummer. Måste vara 4 siffror.",
+    "extensionError": "Anknytning ej giltig:",
     "to": "till",
     "addMoreExtensionRanges": "Lägg till fler anknytningsintervaller",
     "globalMOH": "Global Media On Hold (MOH)",
@@ -493,7 +510,8 @@
     "status401": "Autentiseringen misslyckades. Servern kunde inte behandla autentiseringsnyckeln. Du kommer att loggas ut automatiskt om några sekunder.",
     "serverDown": "Autentiseringen misslyckades. Servern kan vara nere. Kontakta systemadministratören. Du kommer att loggas ut automatiskt om några sekunder.",
     "expired": "Din session har upphört eller är inte autentiserad. Du kommer att loggas ut automatiskt om några sekunder. Logga in igen för att fortsätta använda tjänsten.",
-    "unsupported": "Du använder en <strong>gammal</strong> version av Internet Explorer. <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>Uppgradera din webbläsare</a> till version 11 eller senare."
+    "unsupported": "Du använder en <strong>gammal</strong> version av Internet Explorer. <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>Uppgradera din webbläsare</a> till version 11 eller senare.",
+    "status404": "Begärd resurs kunde inte hittas."
   },
   "spacesPage": {
     "title": "Enheter",
@@ -502,6 +520,7 @@
     "addBtn": "Generera aktiveringskod",
     "cancel": "Avbryt",
     "delete": "Ta bort",
+    "deleteActivationCode": "Ta bort aktiveringskod",
     "done": "Färdig",
     "kindHeader": "Typ",
     "nameHeader": "Installerad på",
@@ -514,7 +533,9 @@
     "emptyDevices1": "När du har lagt till en ny enhet",
     "emptyDevices2": "visas enheten i den här listan.",
     "deleteDevice": "Ta bort enhet",
-    "deleteDeviceConfText": "Vill du ta bort den här enheten?"
+    "deleteDeviceConfText": "Vill du ta bort den här enheten?",
+    "videoQTitle": "Potentiell videokvalitetsförlust",
+    "videoQMsg": "Den här enheten kommunicerar via TCP-protokollet, vilket kan orsaka högre latens och därför försämrad mediaströmningsupplevelse."
   },
   "hercules": {
     "page_title": "Anslutningshantering",
@@ -540,7 +561,8 @@
       "registered": "Registrerad",
       "downloading": "Hämtar",
       "uninstalling": "Avinstallerar",
-      "running": "Körs"
+      "running": "Körs",
+      "needs_attention": "Kräver åtgärd"
     },
     "setup": {
       "label": "Anslutningshantering",
@@ -630,16 +652,29 @@
     "leastQuality": "5 lägsta kvalitet",
     "services": "Alla tjänster",
     "UsersOnboarded": "Registrerade användare",
-    "AvgCallsPerUser": "Genomsnittligt antal samtal per användare",
-    "AvgRoomsPerUser": "Genomsnittligt antal rum per användare",
-    "ActiveUsers": "Aktiva användare",
-    "OneOnOneRooms": "En-till-en-rum",
-    "GroupRooms": "Grupprum",
-    "VideoCalls": "Videosamtal",
-    "AvgDurationofCalls": "Genomsnittlig varaktighet för samtal",
-    "ContentShared": "Innehåll delas",
-    "AmountofContentShared": "Mängd delat innehåll",
-    "UserEngagement": "Användarengagemang"
+    "AvgCallsPerUser": "Genomsn. samtal per användare",
+    "AvgRoomsPerUser": "Genomsn. rum per användare den här månaden",
+    "ActiveUsers": "Genomsn. aktiva användare den här månaden",
+    "OneOnOneRooms": "1:1-rum den här månaden",
+    "GroupRooms": "Grupprum den här månaden",
+    "VideoCalls": "Videosamtal den här månaden",
+    "AvgDurationofCalls": "Genomsn. varaktighet för samtal den här månaden",
+    "ContentShared": "Delade filer den här månaden",
+    "AmountofContentShared": "GB innehåll delat den här månaden",
+    "UserEngagement": "Användarengagemang",
+    "weekOf": "Vecka som börjar med",
+    "numberOfCallsAxis": "Antal samtal (idag)",
+    "numberOfRoomsAxis": "Antal rum (genomsn.)",
+    "numberActiveAxis": "Antal aktiva användare (totalt)",
+    "oneRoomAxis": "Antal 1:1-rum (totalt)",
+    "groupRoomsAxis": "Antal grupprum (totalt)",
+    "videoCallsAxis": "Antal videosamtal (totalt)",
+    "avgCallsAxis": "Varaktighet för samtal i minuter (genomsn.)",
+    "filesSharedAxis": "Antal delade filer (totalt)",
+    "gbSharedAxis": "Antal gigabyte delade (totalt)",
+    "orgDsc": "Totalt antal användare i en organisation.",
+    "onboardDsc": "Totalt antal användare som har loggat in eller som har Spark-behörighet.",
+    "activeDsc": "Totalt antal användare som har skickat/läst ett meddelande eller skapat/deltagit i ett rum under den senaste veckan."
   },
   "callRouting": {
     "title": "Samtalsomkoppling",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "Linjekonfiguration",
     "success": "Linjekonfigurationen sparades",
-    "error": "Linjekonfigurationen misslyckades",
+    "error": "Linjekonfigurationen misslyckades.",
     "directNumbers": "Katalognummer",
     "internalNumberLabel": "Nå denna linje genom att ringa numren eller anknytningarna som listas nedan.",
     "internalNumberExtension": "Intern nummeranknytning",
@@ -697,7 +732,11 @@
     "none": "Inget",
     "deleteConfirmation": "Denna åtgärd går inte att ångra. Är du säker på att du vill inaktivera {{line}} från {{user}}?",
     "deleteLineTitle": "Ta bort linje",
-    "disassociationSuccess": "Linjen har tagits bort från användaren."
+    "disassociationSuccess": "Linjen har tagits bort från användaren.",
+    "alert": "Varning",
+    "userError": "Användare {{user}} konfigurerades inte korrekt.",
+    "maxLines": "{{user}} har överskridit maximalt antal linjer. Ta bort en linje från den här användaren innan fler linjer tillhandahålls.",
+    "confirm": "Det finns ändringar som inte har sparats på sidan. Vill du fortsätta?"
   },
   "callForwardPanel": {
     "title": "Samtalsomkoppling",
@@ -717,6 +756,15 @@
     "title": "Inringar-ID",
     "description": "<small>Ändra visningsnamn för samtal från denna linje</small>"
   },
+  "sharedLinePanel": {
+    "title": "Delad linje",
+    "description": "Ring samtidigt till andra användares linjer vid samtal till den här linjen.",
+    "remove": "Ta bort medlem",
+    "invalidUser": "{{user}} har inte någon Unified Communications-tjänst",
+    "member": "Delade linjemedlemmar",
+    "disassociateUser": "Om den här användaren tas bort från medlemmarna på denna delade linje tas linjen omedelbart bort från alla av användarens enheter. Är du säker på att du vill fortsätta?",
+    "addMember": "Lägg till medlem"
+  },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
     "description": "<small>Gör det möjligt för användare att svara på inkommande samtal till sin anknytning på ett annat nummer</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR kan omfatta alla användarens linjer eller begränsas till utvalda linjer",
     "success": "Konfiguration av Single Number Reach sparades",
     "removeSuccess": "Konfiguration av Single Number Reach togs bort",
-    "error": "Konfiguration av Single Number Reach misslyckades",
+    "error": "Konfiguration av Single Number Reach misslyckades.",
     "placeholder": "Ange SNR-nummer"
   },
   "voicemailPanel": {
@@ -930,6 +978,30 @@
     "draganddrop": "Dra och släpp för att sortera om spåren. Spåren kommer att upprepas.",
     "setActive": "Gör aktiv"
   },
+  "metricsPage": {
+    "metrics": "Metrik",
+    "metricsType": "Metriktyp",
+    "hostName": "Värdnamn",
+    "systemType": "Systemtyp",
+    "counters": "Räknare",
+    "actions": "Åtgärder"
+  },
+  "thresholdPage": {
+    "threshold": "Tröskel",
+    "metrictype": "Metriktyp",
+    "thresholdname": "Tröskelnamn",
+    "hostname": "Värdnamn",
+    "systemtype": "Systemtyp",
+    "metric": "Metrik",
+    "action": "Åtgärd"
+  },
+  "faultPage": {
+    "systemType": "Systemtyp",
+    "system": "System",
+    "metrictype": "Metriktyp",
+    "thresholdname": "Tröskelnamn",
+    "genericevent": "Generisk händelse"
+  },
   "meetingsPage": {
     "manageMeetings": "Möten",
     "webexMeetingId": "Mötes-ID",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "Du har ännu inte blivit godkänd som administratör för den här platsen. Processen kan ta en stund.",
-    "defaultAccessError": "Kan inte komma åt servern för närvarande."
+    "defaultProcessError": "Begäran kunde inte behandlas.",
+    "defaultAccessError": "Servern kan för närvarande inte nås"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Sessionsaktivering",
-    "handsOnLabAdminLabel": "Admin, praktisk labbsession (gäller endast när praktisk labbsession är aktiverad",
+    "handsOnLabAdminLabel": "Administration av praktiska labbsessioner (effektivt först när praktiska labbsessioner är aktiverat)",
     "optimizeBandwidthUsageLabel": "Optimerad bandbreddsanvändning för deltagare på samma nätverk.",
     "videoSettingsLabel": "Videoinställningar",
     "hiQualVideoLabel": "Aktivera högkvalitetsvideo (360p)",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "Telefoniprivilegier",
     "callInTeleconfLabel": "Telekonferens med inringning",
     "tollOnlyLabel": "Avgift",
-    "tollFreeOnlyLabel": "Avgiftsfritt",
     "tollAndTollFreeLabel": "Avgift och avgiftsfritt",
     "teleconfViaGlobalCallinLabel": "Bevilja åtkomst till telekonferens via globala inringningsnummer",
     "callBackTeleconfLabel": "Telekonferens med återuppringning",
@@ -1083,14 +1155,14 @@
     "licenseUsage": "Licensanvändning",
     "lastSynced": "Synkades senast:",
     "messagingTitle": "Meddelanden",
-    "messagingSubtitle": "Standardteamrum",
-    "messagingDesc": "Meddelande-licenser.",
+    "messagingSubtitle": "Standardgrupprum",
+    "messagingDesc": "Grupprum med innehållslagring gör att du enkelt kan samarbeta från valfri enhet med alla användare inuti eller utanför din organisation.",
     "communicationTitle": "Kommunikation",
     "communicationSubtitle": "Advanced Unified",
-    "communicationDesc": "Cisco Unified Communication-licenser.",
+    "communicationDesc": "Grundläggande externa samtal och fullständig Unified Communications aktiveras för din organisation.",
     "conferencingTitle": "Konferens",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Cisco Meeting Center- och Conferencing-licenser."
+    "conferencingDesc": "Delta med upp till åtta kollegor i ett synkroniserat grupprum eller många fler i ett WebEx Meeting Center."
   },
   "partnerProfile": {
     "link": "Partnerprofil",
@@ -1102,7 +1174,7 @@
     "supportSetup": "Problemärende/rapportera plats",
     "save": "Spara",
     "supportInfo": "Om du ger dina kunders användare support anger du supportparametrarna nedan. Dessa parametrar visas under Supportalternativ i Spark-programmen.",
-    "lifeCycle": "Livscykelpartners måste tillhandahålla båda typer av support som visas nedan.",
+    "lifeCycle": "Livscykelpartners måste tillhandahålla båda supporttyperna som anges nedan.",
     "supportOptions": "Ciscos supportalternativ",
     "seeExample": "se ett exempel.",
     "yourSupportOptions": "Dina supportalternativ",
