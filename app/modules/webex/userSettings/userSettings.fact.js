@@ -631,7 +631,7 @@
           form
         ) {
 
-          userSettingsModel.errMsg = this.getErrMsg(errId);
+          userSettingsModel.errMsg = this.getErrMsg(errId, null);
           userSettingsModel.viewReady = false;
           userSettingsModel.hasLoadError = true;
           userSettingsModel.sessionTicketErr = sessionTicketErr;
@@ -821,7 +821,11 @@
           if ("" === resultJson.errId) {
             Notification.notify([successMsg], 'success');
           } else {
-            var notificationMsg = this.getErrMsg(resultJson.errId);
+            var notificationMsg = this.getErrMsg(
+              resultJson.errId,
+              resultJson.headerJson.serv_header.serv_response.serv_value
+            );
+
             Notification.notify([notificationMsg], 'error');
           }
         }, // processUpdateSuccessResult()
@@ -834,42 +838,80 @@
             result;
           $log.log(logMsg);
 
-          var errMsg = this.getErrMsg(null);
+          var errMsg = this.getErrMsg(null, null);
           Notification.notify([errMsg], 'error');
         }, // updateUserSettingsError()
 
-        getErrMsg: function (errId) {
-          var updateErrMsg = "";
+        getErrMsg: function (errId, errValue) {
+          var funcName = "getErrMsg()";
+          var logMsg = "";
+
+          logMsg = funcName + ": " + "\n" +
+            "errId=" + errId + "\n" +
+            "errValue=" + errValue;
+          $log.log(logMsg);
+
+          var errMsg = "";
 
           if (
             (null == errId) ||
             ("" === errId)
           ) {
-            updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.defaultAccessError');
+            errMsg = $translate.instant('webexUserSettingsAccessErrors.defaultAccessError');
           } else if (
             ("000000" === errId) ||
             ("000035" === errId) ||
             ("999999" === errId)
           ) {
-            updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.defaultProcessError');
+            errMsg = $translate.instant('webexUserSettingsAccessErrors.defaultProcessError');
           } else if ("030048" == errId) {
-            updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.defaultNotWebExAdminError');
+            errMsg = $translate.instant('webexUserSettingsAccessErrors.defaultNotWebExAdminError');
           } else if ("030001" == errId) {
             var familyName = this.getFamilyName();
             var givenName = this.getGivenName();
 
-            updateErrMsg = $translate.instant(
+            errMsg = $translate.instant(
               "webexUserSettingsAccessErrors.030001", {
                 givenName: givenName,
                 familyName: familyName
               }
             );
+          } else if ("110055" == errId) {
+            var sessionTypeName = "???";
+
+            userSettingsModel.sessionTypes.forEach(
+              function chkSessionType(sessionType) {
+                logMsg = funcName + ": " + "\n" +
+                  "sessionType=" + JSON.stringify(sessionType);
+                $log.log(logMsg);
+
+                if (sessionType.sessionTypeId == errValue) {
+                  sessionTypeName = sessionType.sessionDescription;
+                }
+              } // chkSessionType()
+            ); // userSettingsModel.sessionTypes.forEach()
+
+            logMsg = funcName + ": " + "\n" +
+              "errId=" + errId + "\n" +
+              "errValue=" + errValue + "\n" +
+              "sessionTypeName=" + sessionTypeName;
+            $log.log(logMsg);
+
+            errMsg = $translate.instant(
+              "webexUserSettingsAccessErrors.110055", {
+                sessionTypeName: sessionTypeName
+              }
+            );
           } else {
-            updateErrMsg = $translate.instant('webexUserSettingsAccessErrors.' + errId);
+            errMsg = $translate.instant('webexUserSettingsAccessErrors.' + errId);
           }
 
-          return updateErrMsg;
-        }, // setUpdateErrMsg()
+          logMsg = funcName + ": " + "\n" +
+            "errMsg=" + errMsg;
+          $log.log(logMsg);
+
+          return errMsg;
+        }, // getErrMsg()
 
         getSessionTicket: function (webexSiteUrl) {
           return XmlApiFact.getSessionTicket(webexSiteUrl);

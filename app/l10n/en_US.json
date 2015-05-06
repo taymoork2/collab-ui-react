@@ -1148,6 +1148,7 @@
     "039007": "Your Email address is not accepted by our site.",
     "039008": "039008",
     "039009": "039009",
+    "110055": "User limit exceeded for the session type \"{{sessionTypeName}}\".",
     "defaultProcessError": "Unable to process request.",
     "defaultAccessError": "Unable to access server at this time.",
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
