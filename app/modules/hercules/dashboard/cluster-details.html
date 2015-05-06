@@ -19,13 +19,13 @@
       <div class="sw-upgrade clearfix">
 
         <div ng-repeat="service in cluster.services" class="list">
-          <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" style="padding-bottom: 15px; display: block;" ng-class="service.status">
+          <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" style="padding-bottom: 15px; display: block;" ng-class="service.status" ng-show="service.state">
             <i class="fa fa-circle" />
             <span>{{service.display_name}}</span>
             <i class="icon icon-chevron-right pull-right" />
             <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
               <div>
-                <span translate="{{'hercules.status.' + (service.state || 'not_installed') }}"></span>
+                <span translate="{{'hercules.status.' + service.state }}"></span>
               </div>
               <div ng-show="service.software_upgrade_available" style="color: #00c1aa">
                 <i class="fa fa-cloud-upload" style="color: #00c1aa; margin-right: 2px;" />
