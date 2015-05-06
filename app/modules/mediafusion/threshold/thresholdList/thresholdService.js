@@ -92,7 +92,7 @@ angular.module('Mediafusion')
 
         listMetricInsCounters: function (metricType, metricCounter, callback) {
 
-          var queryParams = "?metricType=" + metricType + "&metricCounter=" + metricCounter;
+          var queryParams = "?metricType=" + metricType + "&counter=" + metricCounter;
 
           var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounterInstance', [Authinfo.getOrgId()]);
           metricCountersListUrl = metricCountersListUrl + queryParams;
@@ -120,7 +120,9 @@ angular.module('Mediafusion')
 
         listEvents: function (callback) {
 
-          var eventNamesListUrl = Utils.sprintf(baseUrl + '/threshold/eventNames', [Authinfo.getOrgId()]);
+          //var eventNamesListUrl = Utils.sprintf(baseUrl + '/threshold/eventNames', [Authinfo.getOrgId()]);
+
+          var eventNamesListUrl = Utils.sprintf("http://10.104.121.51:8080/faultrest/mediafusion/v1/eventcatalog/all", [Authinfo.getOrgId()]);
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
@@ -149,6 +151,34 @@ angular.module('Mediafusion')
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.get(sysTypesListUrl)
+            .success(function (data, status) {
+              data.success = true;
+              data.status = status;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+              var description = null;
+              var errors = data.Errors;
+              if (errors) {
+                description = errors[0].description;
+              }
+              Auth.handleStatus(status, description);
+            });
+        },
+
+        listSystems: function (systemType, callback) {
+
+          var queryParams = "?type=" + systemType;
+
+          var sysNamesListUrl = Utils.sprintf(baseUrl + '/threshold/system', [Authinfo.getOrgId()]);
+          sysNamesListUrl = sysNamesListUrl + queryParams;
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
+          $http.get(sysNamesListUrl)
             .success(function (data, status) {
               data.success = true;
               data.status = status;

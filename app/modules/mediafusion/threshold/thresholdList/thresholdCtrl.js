@@ -8,17 +8,20 @@ angular.module('Mediafusion')
       //Gridoptions describes about table structure and behaviour.
       $scope.test = ThresholdService.name;
       $scope.systemTypes = [];
+      $scope.systemNames = [];
       $scope.querythresholdmetric = [];
       $scope.metric = null;
       $scope.metricTypes = [];
       $scope.metricCounters = [];
       $scope.metricInsCounters = [];
       $scope.events = [];
-      $scope.sysTypeSelected = {
-        "orgId": "Cisco",
-        "systemType": "All"
-      };
+      $scope.sysTypeSelected = "";
+      /*{
+              "orgId": "Cisco",
+              "systemType": "All"
+            };*/
 
+      $scope.systemSelected = "All";
       $scope.metricTypeSelected = "";
       $scope.metricCounterSelected = "";
       $scope.metricInsCounterSelected = "";
@@ -27,6 +30,7 @@ angular.module('Mediafusion')
       $scope.valuePercentage = "";
       $scope.severitySelected = "";
       $scope.eventSelected = "";
+      $scope.tempThreshold = "";
 
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showThresholdDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
@@ -123,17 +127,6 @@ angular.module('Mediafusion')
         });
       };
 
-      var getThresholdinfo = function (threshold) {
-
-        ThresholdService.queryThresholdList(threshold, function (data, status) {
-          if (data.success) {
-            $scope.querythresholdmetric = data;
-          } else {
-            Log.debug('Query existing meetings failed. Status: ' + status);
-          }
-        });
-      };
-
       var getEventsList = function () {
 
         ThresholdService.listEvents(function (data, status) {
@@ -141,18 +134,38 @@ angular.module('Mediafusion')
         });
       };
 
-      $scope.getSystemTypesList = function () {
+      /*$scope.getSystemTypesList = function () {
         ThresholdService.listSystemTypes(function (data, status) {
           $scope.systemTypes = data;
         });
       };
 
+      $scope.getSystemsByType = function () {
+        console.log("scope.sysTypeSelected is : "+ $scope.sysTypeSelected.systemType);
+        ThresholdService.listSystems($scope.sysTypeSelected, function (data, status) {
+          $scope.systemNames = data;
+        });
+      };*/
+
       $scope.showThresholdDetails = function (threshold) {
-        $scope.currentThreshold = threshold;
-        $rootScope.metricstype = threshold.metricstype;
-        $scope.metric = threshold.metric;
         $scope.querythresholdmetric = threshold;
+
+        $scope.overriderule = threshold.counter.concat(threshold.operator);
+        $scope.thresholdRule = threshold.counter.concat(threshold.operator, threshold.value);
+        $scope.thresholdName = threshold.thresholdName;
+        $scope.eventName = threshold.eventName;
+        $scope.metricType = threshold.metricType;
+        $scope.counter = threshold.counter;
+        $scope.operator = threshold.operator;
+        $scope.orgId = threshold.orgId;
+        $scope.parentId = threshold.id;
+        $scope.id = threshold.id;
+        $scope.systemType = threshold.systemType;
+        $scope.hostName = threshold.hostName;
+        $scope.value = threshold.value;
+
         $state.go('threshold.preview');
+
       };
 
       $scope.getMetricTypes = function () {
@@ -185,14 +198,18 @@ angular.module('Mediafusion')
         var threshold = {
           "thresholdName": $scope.thresholdName,
           "metricType": $scope.metricTypeSelected.metricType,
-          "counter": $scope.metricCounterSelected.counterName,
-          "counterName": $scope.metricInsCounterSelected.counterName,
+          "counter": $scope.metricCounterSelected.counterName + "." + $scope.metricInsCounterSelected.counterName,
+          //"counterName": $scope.metricInsCounterSelected.counterName,
           "operator": operator,
           "value": $scope.valuePercentage,
-          "eventName": $scope.eventSelected.eventName
+          "eventName": $scope.eventSelected.name,
+          "systemType": "Any",
+          "hostName": "Any"
         };
 
-        ThresholdService.addThreshold(threshold, function (data, status) {});
+        ThresholdService.addThreshold(threshold, function (data, status) {
+          getThresholdList();
+        });
       };
 
       $scope.cancel = function () {
