@@ -11,6 +11,7 @@ angular.module('Core')
       $scope.status = null;
       $scope.currentDataPosition = 0;
       $scope.queryuserslist = [];
+      $scope.gridRefresh = true;
 
       $scope.activeFilter = 'all';
 
@@ -97,7 +98,7 @@ angular.module('Core')
       });
 
       var getUserList = function (startAt) {
-
+        $scope.gridRefresh = true;
         //clear currentUser if a new search begins
         var startIndex = startAt || 0;
         $scope.currentUser = null;
@@ -126,6 +127,7 @@ angular.module('Core')
         }, true);
 
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
+          $scope.gridRefresh = false;
           if (data.success) {
             $timeout(function () {
               $scope.load = true;
@@ -146,6 +148,7 @@ angular.module('Core')
             }
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
+            Notification.notify([$translate.instant('usersPage.userListError')], 'error');
           }
         });
 

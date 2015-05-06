@@ -9,14 +9,14 @@
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
-          <li class="filter" ng-class="{'active' : activeFilter === 'all'}" ng-click="setFilter('all')">
-            <a href="">
+          <li class="filter" ng-class="{'active' : activeFilter === 'all'}" >
+            <a href ng-click="setFilter('all')">
               <span class="name">{{'customerPage.all' | translate}}</span>
               <span class="count">{{totalOrgs}}</span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : activeFilter === 'trials'}" ng-click="setFilter('trials')">
-            <a href="">
+          <li class="filter" ng-class="{'active' : activeFilter === 'trials'}" >
+            <a href ng-click="setFilter('trials')">
               <span class="name">{{'customerPage.trial' | translate}}</span>
               <span class="count">{{totalTrials}}</span>
             </a>
@@ -41,11 +41,11 @@
       </div>
     </div>
   </div>
-  <div id="customerListPanel" class="row">
+  <div id="customerListPanel" class="row grid">
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
-  </div>
-  <div class="customer-refresh" ng-if="showManagedOrgsRefresh">
-    <i class='icon icon-spinner icon-2x'></i>
+    <div class="grid-refresh" ng-if="showManagedOrgsRefresh">
+      <i class='icon icon-spinner icon-2x'></i>
+    </div>
   </div>
 </div>
 <div ng-class="{preview: trialPreviewActive}" class="user-management">

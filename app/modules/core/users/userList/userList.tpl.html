@@ -9,20 +9,20 @@
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
-          <li class="filter" ng-class="{'active' : activeFilter === 'all'}" ng-click="setFilter('all')" ng-if="filterTotals.all != 0">
-            <a href="">
+          <li class="filter" ng-class="{'active' : activeFilter === 'all'}" ng-if="filterTotals.all != 0">
+            <a href ng-click="setFilter('all')">
               <span class="name">{{'usersPage.all' | translate}}</span>
               <span class="count">{{filterTotals.all}}</span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : activeFilter === 'administrators'}" ng-click="setFilter('administrators')" ng-if="filterTotals.admin != 0">
-            <a href="">
+          <li class="filter" ng-class="{'active' : activeFilter === 'administrators'}" ng-if="filterTotals.admin != 0">
+            <a href ng-click="setFilter('administrators')">
               <span class="name">{{'usersPage.administrators' | translate}}</span>
               <span class="count">{{filterTotals.admin}}</span>
             </a>
           </li>
-           <li class="filter" ng-class="{'active' : activeFilter === 'partners'}" ng-click="setFilter('partners')" ng-if="filterTotals.partner != 0">
-            <a href="" id="partnerFilter">
+           <li class="filter" ng-class="{'active' : activeFilter === 'partners'}" ng-if="filterTotals.partner != 0">
+            <a href ng-click="setFilter('partners')" id="partnerFilter">
               <span class="name">{{'usersPage.partners' | translate}}</span>
               <span class="count">{{filterTotals.partner}}</span>
             </a>
@@ -39,8 +39,11 @@
       </div>
     </div>
   </div>
-  <div id="usersListPanel" class="row">
+  <div id="usersListPanel" class="row grid">
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
+    <div class="grid-refresh" ng-if="gridRefresh">
+      <i class='icon icon-spinner icon-2x'></i>
+    </div>
   </div>
 </div>
 <div ng-class="{preview: userPreviewActive, details: userDetailsActive}" class="user-management">
