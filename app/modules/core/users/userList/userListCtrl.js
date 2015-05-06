@@ -90,7 +90,9 @@ angular.module('Core')
       $rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('users.list')) {
           $scope.currentUser = null;
-          $scope.gridOptions.$gridScope.toggleSelectAll(false, true);
+          if ($scope.gridOptions.$gridScope) {
+            $scope.gridOptions.$gridScope.toggleSelectAll(false, true);
+          }
         }
       });
 
