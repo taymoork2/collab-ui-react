@@ -37,6 +37,7 @@
     "exportUsers": "ユーザーのエクスポート",
     "moreOptions": "他のアクション",
     "cancel": "キャンセル",
+    "save": "保存",
     "status": "状況",
     "pending": "招待保留中",
     "all": "すべて",
@@ -82,12 +83,19 @@
     "groupColHeader": "グループ名",
     "collabService": "グループのユーザーに与えられるコラボレーションサービスのライセンスを選択してください。",
     "addEntitleError": "ユーザーの追加またはエンタイトルを行うには権限が不足しています。",
-    "freeMsg": "無料のチームルーム",
-    "freeConf": "無料の 3 人のミーティング",
+    "freeMsg": "無料Sparkメッセージ",
+    "freeConf": "無料3当事者Sparkミーティング",
     "freeComm": "無料ネットワーク内IP音声およびビデオ通話",
     "paidMsg": "標準チームルーム",
     "paidConf": "25 人のミーティング",
-    "paidComm": "高度なコミュニケーション"
+    "paidComm": "高度なコミュニケーション",
+    "freeSpark": "無料Sparkメッセージ",
+    "enterpriseEdition": "エンタープライズ編集",
+    "meetingCenter": "Meeting Center",
+    "supportCenter": "サポートセンター",
+    "trainingCenter": "トレーニングセンター",
+    "eventCenter": "イベントセンター",
+    "communication": "コミュニケーション"
   },
   "usersPreview": {
     "groupPreview": "グループ：",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "コールパークのような呼び出しルーティング機能を管理します。",
     "mediaOnHoldTab": "ホールド時メディア",
     "mediaOnHoldTabDesc": "ホールド時メディア開発の例",
+    "metricsDetailsTab": "メトリック",
+    "metricsDetailsTabDesc": "メトリック管理",
+    "thresholdDetailsTab": "閾値",
+    "thresholdDetailsTabDesc": "閾値管理",
     "meetingDetailsTab": "ミーティング",
     "meetingDetailsTabDesc": "ミーティング管理",
     "vtsDetailsTab": "ミーティングリソース",
@@ -310,9 +322,12 @@
     "hideDetails": "詳細を非表示",
     "problemReports": "問題のレポート",
     "reportingUrl": "レポートのURL:",
-    "helpFaq": "ヘルプとFAQ",
+    "help": "ヘルプ",
+    "faqs": "FAQ",
     "helpUrl": "ヘルプのURL:",
-    "sendFeedback": "Ciscoのフィードバック"
+    "sendFeedback": "Ciscoのフィードバック",
+    "sso": "SSO",
+    "roles": "役割"
   },
   "common": {
     "delete": "削除",
@@ -343,9 +358,9 @@
     "activeUsers": "アクティブなユーザー",
     "calls": "通話",
     "updated": "最終更新日",
-    "conversations": "部屋",
-    "contentShared": "共有コンテンツの総数",
-    "activity": "毎月の活動",
+    "conversations": "作成した会議室",
+    "contentShared": "共有したファイル",
+    "activity": "アクティビティの開始",
     "monitoring": "モニタリング",
     "media": "メディア / 呼び出し",
     "mobile": "モバイルクライアント",
@@ -370,7 +385,8 @@
     "searchLogsText": "デバイスログを検索",
     "unlicensedDateText": "未ライセンスのユーザーが登録されています",
     "unlicensedText": "未ライセンスのユーザー",
-    "convertText": "現在無料バージョンを使用しているユーザーの表示および転換"
+    "convertText": "現在無料バージョンを使用しているユーザーの表示および転換",
+    "lastUpdated": "最終更新日"
   },
   "inviteModal": {
     "title": "サービスエンタイトルメント",
@@ -426,7 +442,8 @@
     "siteCode": "サイトコード",
     "siteCodeDescription": "特定のサイトを指定するための一意な番号を指定します。",
     "internalExtensionRange": "内線番号の範囲",
-    "internalNumberRangeDescription": "内線番号の範囲を指定します。4 または 5 桁の長さにすることを推奨します。",
+    "internalNumberRangeDescription": "内部番号の範囲を指定してください。長さは4桁にする必要があります。",
+    "extensionError": "内線番号が無効: ",
     "to": "～",
     "addMoreExtensionRanges": "内線の範囲をさらに追加する",
     "globalMOH": "保留時のグローバルメディア（MOH）",
@@ -493,7 +510,8 @@
     "status401": "認証に失敗しました。サーバーは認証トークンを処理できません。数秒以内に自動的にログアウトされます。",
     "serverDown": "認証に失敗しました。サーバーがダウンしている可能性があります。システム管理者にお問い合わせください。数秒以内に自動的にログアウトされます。",
     "expired": "セッションの期限が切れているか、認証されていません。数秒以内に自動的にログアウトされます。もう一度ログインしてサービスの使用を継続してください。",
-    "unsupported": "Internet Explorer の<strong>古い</strong>バージョンを使用しています。バージョン 11 以降に<a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>ブラウザをアップデート</a>してください。"
+    "unsupported": "Internet Explorer の<strong>古い</strong>バージョンを使用しています。バージョン 11 以降に<a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>ブラウザをアップデート</a>してください。",
+    "status404": "申請されたリソースが見つかりません。"
   },
   "spacesPage": {
     "title": "デバイス",
@@ -502,6 +520,7 @@
     "addBtn": "アクティベーションコードの生成",
     "cancel": "キャンセル",
     "delete": "削除",
+    "deleteActivationCode": "アクティベーションコードの削除",
     "done": "完了",
     "kindHeader": "種類",
     "nameHeader": "インストール先",
@@ -514,7 +533,9 @@
     "emptyDevices1": "新しいデバイスを追加すると、",
     "emptyDevices2": "このリストで確認できます。",
     "deleteDevice": "デバイスの削除",
-    "deleteDeviceConfText": "このデバイスを削除してもよいですか ?"
+    "deleteDeviceConfText": "このデバイスを削除してもよいですか ?",
+    "videoQTitle": "ビデオ品質の低下",
+    "videoQMsg": "この機器はTCPプロトコルで通信しているため、遅延が長くなり、メディアストリーミングのエクスペリエンスが低下します。メディアストリーミングで問題が発生している場合、ローカルファイアウォールのUDPポート33434を開いて、メディアストリーミングの問題に対処してください。"
   },
   "hercules": {
     "page_title": "コネクタ管理",
@@ -540,7 +561,8 @@
       "registered": "登録済み",
       "downloading": "ダウンロード中",
       "uninstalling": "アンインストール中",
-      "running": "実行中"
+      "running": "実行中",
+      "needs_attention": "注意が必要"
     },
     "setup": {
       "label": "コネクタ管理",
@@ -631,15 +653,28 @@
     "services": "すべてのサービス",
     "UsersOnboarded": "オンボードのユーザー",
     "AvgCallsPerUser": "ユーザーごとの平均通話数",
-    "AvgRoomsPerUser": "ユーザーごとのルーム数",
-    "ActiveUsers": "アクティブなユーザー",
-    "OneOnOneRooms": "1:1ルーム",
-    "GroupRooms": "グループルーム",
-    "VideoCalls": "ビデオ通話",
-    "AvgDurationofCalls": "通話の平均時間",
-    "ContentShared": "共有コンテンツ",
-    "AmountofContentShared": "共有コンテンツの量",
-    "UserEngagement": "エンゲージしたユーザー"
+    "AvgRoomsPerUser": "今月のユーザーごとの平均会議室数",
+    "ActiveUsers": "今月の平均アクティブユーザー数",
+    "OneOnOneRooms": "今月の1:1会議室",
+    "GroupRooms": "今月のグループ会議室",
+    "VideoCalls": "今月のビデオ通話",
+    "AvgDurationofCalls": "今月の平均通話時間",
+    "ContentShared": "今月共有されたファイル",
+    "AmountofContentShared": "今月の共有コンテンツのGB数",
+    "UserEngagement": "ユーザーエンゲージメント",
+    "weekOf": "最初の週",
+    "numberOfCallsAxis": "通話数 (合計)",
+    "numberOfRoomsAxis": "会議室数 (平均)",
+    "numberActiveAxis": "アクティブユーザー数 (合計)",
+    "oneRoomAxis": "1:1会議室数 (合計)",
+    "groupRoomsAxis": "グループ会議室数 (合計)",
+    "videoCallsAxis": "ビデオ通話数 (合計)",
+    "avgCallsAxis": "平均通話時間 (分)",
+    "filesSharedAxis": "共有ファイル数 (合計)",
+    "gbSharedAxis": "共有ギガバイト数 (合計)",
+    "orgDsc": "組織内のユーザーの合計数",
+    "onboardDsc": "Sparkにログインした、または許可されたユーザーの合計数。",
+    "activeDsc": "先週にメッセージを送信および閲覧した、または会議室を作成、もしくは入室したユーザーの合計数。"
   },
   "callRouting": {
     "title": "呼び出しルーティング",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "回線の設定",
     "success": "回線の設定は正常に保存されました",
-    "error": "回線の設定に失敗しました",
+    "error": "回線の構成に失敗しました。",
     "directNumbers": "電話帳番号",
     "internalNumberLabel": "以下の数字または内線番号をダイアルすることで、この回線に接続してください。",
     "internalNumberExtension": "内線番号",
@@ -697,7 +732,11 @@
     "none": "なし",
     "deleteConfirmation": "この操作を取り消すことはできません。{{line}}の{{user}}への割り当てを解除してもよろしいですか？",
     "deleteLineTitle": "ラインの削除",
-    "disassociationSuccess": "ラインのユーザーへの割り当てが解除されました"
+    "disassociationSuccess": "ラインのユーザーへの割り当てが解除されました",
+    "alert": "警告",
+    "userError": "ユーザー {{user}} は適切にプロビジョニングされませんでした。",
+    "maxLines": "{{user}} は回線の上限を超過しました。他の回線のプロビジョニングを行う前にこのユーザーから回線を削除してください。",
+    "confirm": "ページ内に保存されていない変更があります。続行しますか？"
   },
   "callForwardPanel": {
     "title": "通話転送",
@@ -717,6 +756,15 @@
     "title": "発信元 ID",
     "description": "<small>この回線からの通話の表示名を変更する</small>"
   },
+  "sharedLinePanel": {
+    "title": "共有された回線",
+    "description": "この回線で通話したときに、他のユーザーの回線にも同時に通知します。",
+    "remove": "メンバーの削除",
+    "invalidUser": "{{user}} はUnified Communicationsサービスを利用できません。",
+    "member": "共有回線メンバー",
+    "disassociateUser": "このユーザーを共有回線メンバーから削除すると、即座にすべての機器からこの回線が削除されます。続行しますか？",
+    "addMember": "メンバーの追加"
+  },
   "singleNumberReachPanel": {
     "title": "単一番号リーチ",
     "description": "<small>他の番号の内線番号に対する受信コールにユーザーが応答できるようにする</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR はすべてのユーザーの回線に対応することも、特定の回線に制限することもできます",
     "success": "単一番号リーチの設定は正常に保存されました",
     "removeSuccess": "単一番号リーチの設定は正常に削除されました",
-    "error": "単一番号リーチの設定に失敗しました",
+    "error": "単一番号リーチの設定に失敗しました。",
     "placeholder": "SNR 番号の入力"
   },
   "voicemailPanel": {
@@ -930,6 +978,30 @@
     "draganddrop": "トラックを並べ替えるにはドラッグアンドドロップします。これらのトラックはループします。",
     "setActive": "アクティブに設定"
   },
+  "metricsPage": {
+    "metrics": "メトリック",
+    "metricsType": "メトリックの種類",
+    "hostName": "ホスト名",
+    "systemType": "システムの種類",
+    "counters": "カウンタ",
+    "actions": "アクション"
+  },
+  "thresholdPage": {
+    "threshold": "閾値",
+    "metrictype": "メトリックの種類",
+    "thresholdname": "閾値名",
+    "hostname": "ホスト名",
+    "systemtype": "システムの種類",
+    "metric": "メトリック",
+    "action": "アクション"
+  },
+  "faultPage": {
+    "systemType": "システムの種類",
+    "system": "システム",
+    "metrictype": "メトリックの種類",
+    "thresholdname": "閾値名",
+    "genericevent": "汎用イベント"
+  },
   "meetingsPage": {
     "manageMeetings": "ミーティング",
     "webexMeetingId": "ミーティングID",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "あなたはこのサイトではまだ管理者としてプロビジョニングされていません。この処理には時間がかかります。",
-    "defaultAccessError": "現時点ではサーバーにアクセスできません"
+    "defaultProcessError": "申請を処理できません。",
+    "defaultAccessError": "現時点ではサーバーにアクセスできません。"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "セッション使用権",
-    "handsOnLabAdminLabel": "現場のLab Admin (現場のラボが有効なときだけ有効",
+    "handsOnLabAdminLabel": "ハンズオンラボ (ハンズオンラボが有効になっているときだけ有効)",
     "optimizeBandwidthUsageLabel": "同じネットワークの参加者に対して最適化された帯域幅の使用",
     "videoSettingsLabel": "ビデオ設定",
     "hiQualVideoLabel": "高画質ビデオを有効化 (360p)",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "電話権限",
     "callInTeleconfLabel": "コールイン電話会議",
     "tollOnlyLabel": "有料通話",
-    "tollFreeOnlyLabel": "無料通話",
     "tollAndTollFreeLabel": "有料通話と無料通話",
     "teleconfViaGlobalCallinLabel": "グローバルコールイン番号で電話会議へのアクセスを許可",
     "callBackTeleconfLabel": "コールバック電話会議",
@@ -1084,13 +1156,13 @@
     "lastSynced": "最新の同期",
     "messagingTitle": "メッセージング",
     "messagingSubtitle": "標準チームルーム",
-    "messagingDesc": "メッセージのライセンス",
+    "messagingDesc": "コンテンツのストレージを含むチームルームを利用すれば、どの機器からでも、組織内外のユーザーと容易に協力できます。",
     "communicationTitle": "コミュニケーション",
     "communicationSubtitle": "Advanced Unified",
-    "communicationDesc": "Cisco Unified Communicationライセンス",
+    "communicationDesc": "組織は基本的な外部呼出しと完全なUnified Communicationsを利用できます。",
     "conferencingTitle": "カンファレンス",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Cisco Meeting Center and Conferencingライセンス"
+    "conferencingDesc": "Team Room Sync-upsでは最大8名まで参加でき、WebEx Meeting Centerではより多くの人が参加できます。"
   },
   "partnerProfile": {
     "link": "パートナーのプロファイル",

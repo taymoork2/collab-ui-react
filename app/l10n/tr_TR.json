@@ -37,6 +37,7 @@
     "exportUsers": "Kullanıcıları dışa aktar",
     "moreOptions": "Daha Fazla Eylem",
     "cancel": "İptal",
+    "save": "Kaydet",
     "status": "Durum",
     "pending": "Davet Bekliyor",
     "all": "Tümü",
@@ -82,12 +83,19 @@
     "groupColHeader": "Grup Adı",
     "collabService": "Gruptaki kullanıcılara verilmesi gereken işbirliği hizmeti lisanslarını seçin.",
     "addEntitleError": "kullanıcıyı eklemek veya yetkilendirmek için ayrıcalıklar yetersizler.",
-    "freeMsg": "Ücretsiz ekip odaları",
-    "freeConf": "Ücretsiz 3 taraflı toplantılar",
+    "freeMsg": "Ücretsiz Spark Mesajlaşma",
+    "freeConf": "Ücretsiz 3 Taraflı Spark Buluşması",
     "freeComm": "Ücretsiz ağ içi IP ses ve video çağrısı",
     "paidMsg": "Standart ekip odaları",
     "paidConf": "25 taraflı toplantılar",
-    "paidComm": "Gelişmiş iletişim"
+    "paidComm": "Gelişmiş iletişim",
+    "freeSpark": "Ücretsiz Spark Mesajlaşma",
+    "enterpriseEdition": "Kurumsal Sürüm",
+    "meetingCenter": "Meeting Center",
+    "supportCenter": "Support Center",
+    "trainingCenter": "Training Center",
+    "eventCenter": "Event Center",
+    "communication": "İletişim"
   },
   "usersPreview": {
     "groupPreview": "Grup:",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "Çağrı Bekletme Gibi Çağrı Yönlendirme Özelliklerini Yönetin",
     "mediaOnHoldTab": "Bekletilen Ortam",
     "mediaOnHoldTabDesc": "Bekletilen Ortam Geliştirme Örneği",
+    "metricsDetailsTab": "Ölçümler",
+    "metricsDetailsTabDesc": "Ölçüm Yönetimi",
+    "thresholdDetailsTab": "Eşik",
+    "thresholdDetailsTabDesc": "Eşik Yönetimi",
     "meetingDetailsTab": "Toplantılar",
     "meetingDetailsTabDesc": "Toplantı Yönetimi",
     "vtsDetailsTab": "Kurumsal Kaynaklar",
@@ -310,9 +322,12 @@
     "hideDetails": "Ayrıntıları Gizle",
     "problemReports": "Sorun Raporları",
     "reportingUrl": "Bildirim URL'si:",
-    "helpFaq": "Yardım ve SSS'ler",
+    "help": "Yardım",
+    "faqs": "SSS",
     "helpUrl": "Yardım URL'si:",
-    "sendFeedback": "Cisco Geribildirimi"
+    "sendFeedback": "Cisco Geribildirimi",
+    "sso": "SSO",
+    "roles": "Roller"
   },
   "common": {
     "delete": "Sil",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "Son 4 hafta",
     "activeUsers": "Etkin Kullanıcılar",
-    "calls": "Çağrılar",
+    "calls": "Yapılan Çağrılar",
     "updated": "Son Güncellenme Tarihi",
-    "conversations": "Odalar",
-    "contentShared": "Paylaşılan Toplam İçerik",
-    "activity": "Aylık Etkinlik",
+    "conversations": "Oluşturulan Odalar",
+    "contentShared": "Paylaşılan Dosyalar",
+    "activity": "Şu Tarihten İtibaren Etkinlik:",
     "monitoring": "İzleniyor",
     "media": "Ortam/Çağrı",
     "mobile": "Mobil İstemciler",
@@ -370,7 +385,8 @@
     "searchLogsText": "Cihaz günlüklerini ara",
     "unlicensedDateText": "kayıtlı lisanssız kullanıcılar",
     "unlicensedText": "Lisanssız Kullanıcılar",
-    "convertText": "Ücretsiz sürümü kullanmakta olan kullanıcıları görüntüle ve dönüştür"
+    "convertText": "Ücretsiz sürümü kullanmakta olan kullanıcıları görüntüle ve dönüştür",
+    "lastUpdated": "Son Güncellenme Tarihi"
   },
   "inviteModal": {
     "title": "Hizmet Yetkilendirmesi",
@@ -426,7 +442,8 @@
     "siteCode": "Site Kodu",
     "siteCodeDescription": "Belirli bir siteyi tanımlamak için benzersiz bir numara belirtin.",
     "internalExtensionRange": "Dahili Numara Aralığı",
-    "internalNumberRangeDescription": "Dahili numaraların aralığını belirtin.  4 veya 5 numaralık bir uzunluk önerilir.",
+    "internalNumberRangeDescription": "Dahili numara aralığı belirtin. Uzunluk 4 basamak olmalıdır.",
+    "extensionError": "Dahili numara geçerli değil:",
     "to": "-",
     "addMoreExtensionRanges": "Daha Fazla Dahili Numara Aralığı Ekle",
     "globalMOH": "Genel Bekletilen Ortam (MOH)",
@@ -493,7 +510,8 @@
     "status401": "Onaylama başarısız oldu. Sunucu onaylama belirtecini işleyemiyor. Oturumunuz birkaç saniye içinde otomatik olarak kapatılacak.",
     "serverDown": "Onaylama başarısız oldu. Sunucu arızalı olabilir, lütfen sistem yöneticisiyle iletişim kurun. Oturumunuz birkaç saniye içinde otomatik olarak kapatılacak.",
     "expired": "Oturumunuzun süresi dolmuş veya oturumunuz onaylanmamış. Oturumunuz birkaç saniye içinde otomatik olarak kapatılacak. Hizmeti kullanmaya devam etmek için lütfen yeniden oturum açın.",
-    "unsupported": "Internet Explorer'ın <strong>eski</strong> bir sürümünü kullanıyorsanız. Lütfen tarayıcınızı sürüm 11 veya üstüne <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>yükseltin</a>."
+    "unsupported": "Internet Explorer'ın <strong>eski</strong> bir sürümünü kullanıyorsanız. Lütfen tarayıcınızı sürüm 11 veya üstüne <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>yükseltin</a>.",
+    "status404": "İstenen kaynak bulunamadı."
   },
   "spacesPage": {
     "title": "Cihazlar",
@@ -502,6 +520,7 @@
     "addBtn": "Etkinleştirme kodu oluştur",
     "cancel": "İptal",
     "delete": "Sil",
+    "deleteActivationCode": "Etkinleştirme Kodunu Sil",
     "done": "Bitti",
     "kindHeader": "Tür",
     "nameHeader": "Yüklendiği yer",
@@ -514,7 +533,9 @@
     "emptyDevices1": "Yeni bir cihaz ekledikten sonra,",
     "emptyDevices2": "burada listelendiğini göreceksiniz.",
     "deleteDevice": "Cihazı Sil",
-    "deleteDeviceConfText": "Bu cihazı silmek istediğinizden emin misiniz?"
+    "deleteDeviceConfText": "Bu cihazı silmek istediğinizden emin misiniz?",
+    "videoQTitle": "Olası Video Kalitesi Kaybı",
+    "videoQMsg": "Bu cihaz, TCP protokolü üzerinden iletişim kurmaktadır; bu da daha yüksek gecikme süresine ve dolayısıyla daha kısıtlı bir ortam akışı deneyimine neden olabilmektedir. Ortam akışı sorunlarına yardımcı olması için, yerel güvenlik duvarınızda 33434 numaralı UDP bağlantı noktasını açmayı deneyebilirsiniz."
   },
   "hercules": {
     "page_title": "Bağlayıcı Yönetimi",
@@ -540,7 +561,8 @@
       "registered": "Kayıtlı",
       "downloading": "İndiriliyor",
       "uninstalling": "Kaldırılıyor",
-      "running": "Çalışıyor"
+      "running": "Çalışıyor",
+      "needs_attention": "İşlem gerektiriyor"
     },
     "setup": {
       "label": "Bağlayıcı Yönetimi",
@@ -630,16 +652,29 @@
     "leastQuality": "En düşük kaliteli 5",
     "services": "Tüm hizmetler",
     "UsersOnboarded": "Eklenen kullanıcılar",
-    "AvgCallsPerUser": "Kullanıcı başına ortalama çağrı",
-    "AvgRoomsPerUser": "Kullanıcı başına ortalama oda",
-    "ActiveUsers": "Etkin kullanıcılar",
-    "OneOnOneRooms": "Bire bir odalar",
-    "GroupRooms": "Grup odaları",
-    "VideoCalls": "Görüntülü çağrılar",
-    "AvgDurationofCalls": "Çağrıların ortalama süresi",
-    "ContentShared": "Paylaşılan içerik",
-    "AmountofContentShared": "Paylaşılan içerik miktarı",
-    "UserEngagement": "Kullanıcı etkileşimi"
+    "AvgCallsPerUser": "Kullanıcı başına Ort. Çağrı",
+    "AvgRoomsPerUser": "Bu Ay için Kullanıcı başına Ort. Oda",
+    "ActiveUsers": "Bu Ay için Ort. Etkin Kullanıcı",
+    "OneOnOneRooms": "Bu Ay için 1:1 Odaları",
+    "GroupRooms": "Bu Ay için Grup Odaları",
+    "VideoCalls": "Bu Ay için Video Çağrıları",
+    "AvgDurationofCalls": "Bu Ay için Ort. Çağrı Süresi",
+    "ContentShared": "Bu Ay için Paylaşılan Dosyalar",
+    "AmountofContentShared": "Bu Ay için GB cinsinden Paylaşılan İçerik",
+    "UserEngagement": "Kullanıcı Etkileşimi",
+    "weekOf": "Hafta Başlangıcı",
+    "numberOfCallsAxis": "Çağrı Sayısı (Toplam)",
+    "numberOfRoomsAxis": "Oda Sayısı (Ort.)",
+    "numberActiveAxis": "Etkin Kullanıcı Sayısı (Toplam)",
+    "oneRoomAxis": "1:1 Odası Sayısı (toplam)",
+    "groupRoomsAxis": "Grup Odası Sayısı (Toplam)",
+    "videoCallsAxis": "Video Çağrısı Sayısı (Toplam)",
+    "avgCallsAxis": "Dakika cinsinden Çağrı Süresi (Ort.)",
+    "filesSharedAxis": "Paylaşılan Dosya Sayısı (Toplam)",
+    "gbSharedAxis": "Paylaşılan Gigabayt Sayısı (Toplam)",
+    "orgDsc": "Bir kuruluştaki toplam kullanıcı sayısı.",
+    "onboardDsc": "Spark'ta oturum açan veya Spark için yetki sahibi olan toplam kullanıcı sayısı.",
+    "activeDsc": "Son bir hafta içinde mesaj gönderen/okuyan veya bir oda oluşturan/bir odaya giren toplam kullanıcı sayısı."
   },
   "callRouting": {
     "title": "Çağrı Yönlendirme",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "Hat Yapılandırması",
     "success": "Hat yapılandırması başarıyla kaydedildi",
-    "error": "Hat yapılandırması başarısız oldu",
+    "error": "Hat yapılandırması başarısız oldu.",
     "directNumbers": "Dizin Numaraları",
     "internalNumberLabel": "Aşağıda listelenen numaraları veya dahili numaraları arayarak bu hatta ulaşın.",
     "internalNumberExtension": "Dahili Numara",
@@ -697,7 +732,11 @@
     "none": "Hiçbiri",
     "deleteConfirmation": "Bu işlem geri alınamaz.  {{line}} öğesinin atamasını {{user}} kullanıcısından kaldırmak istediğinizden emin misiniz?",
     "deleteLineTitle": "Hattı Kaldır",
-    "disassociationSuccess": "Hat, kullanıcıdan başarıyla kaldırıldı."
+    "disassociationSuccess": "Hat, kullanıcıdan başarıyla kaldırıldı.",
+    "alert": "Uyarı",
+    "userError": "{{user}} kullanıcısı doğru şekilde sağlanmadı.",
+    "maxLines": "{{user}} kullanıcısı, maksimum hat sayısını aştı. Ek hatlar sağlamadan önce lütfen bir hattı bu kullanıcıdan kaldırın.",
+    "confirm": "Sayfa üzerinde kaydedilmemiş değişiklikler var. Devam etmek isityor musunuz?"
   },
   "callForwardPanel": {
     "title": "Çağrı İletme",
@@ -717,6 +756,15 @@
     "title": "Arayan Kimliği",
     "description": "<small>Bu hattan çağrılar için görünen adı değiştir</small>"
   },
+  "sharedLinePanel": {
+    "title": "Paylaşılan Hat",
+    "description": "Bu hatta çağrı yapıldığında, eşzamanlı olarak diğer kullanıcıların hatlarını ara.",
+    "remove": "Üyeyi kaldır",
+    "invalidUser": "{{user}} kullanıcısı Unified Communications hizmetine sahip değil",
+    "member": "Paylaşılan Hat Üyeleri",
+    "disassociateUser": "Bu kullanıcının paylaşılan hat üyelerinden kaldırılması, bu hattın derhal kullanıcının tüm cihazlarından kaldırılmasına neden olacaktır. Devam etmek istediğinizden emin misiniz?",
+    "addMember": "Üye Ekle"
+  },
   "singleNumberReachPanel": {
     "title": "Tek Numarayla Ulaşma",
     "description": "<small>Kullanıcıların, dahili numaralarına gelen çağrıları başka bir numarayla yanıtlamalarını sağlar</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR, kullanıcının tüm hatlarını kapsayabilir veya belirli hatlarla sınırlı olabilir",
     "success": "Tek Numarayla Ulaşma yapılandırması başarıyla kaydedildi",
     "removeSuccess": "Tek Numarayla Ulaşma yapılandırması başarıyla kaldırıldı",
-    "error": "Tek Numarayla Ulaşma yapılandırması başarısız oldu",
+    "error": "Tek Numarayla Ulaşma yapılandırması başarısız oldu.",
     "placeholder": "SNR Numarası Girin"
   },
   "voicemailPanel": {
@@ -930,6 +978,30 @@
     "draganddrop": "Parçaları yeniden sıralamak için sürükleyip bırakın. Bu parçalar döngüye alınacaktır.",
     "setActive": "Etkin Olarak Ayarla"
   },
+  "metricsPage": {
+    "metrics": "Ölçümler",
+    "metricsType": "Ölçüm Türü",
+    "hostName": "Toplantı Sahibinin Adı",
+    "systemType": "Sistem Türü",
+    "counters": "Sayaçlar",
+    "actions": "Eylemler"
+  },
+  "thresholdPage": {
+    "threshold": "Eşik",
+    "metrictype": "Ölçüm Türü",
+    "thresholdname": "Eşik Adı",
+    "hostname": "Toplantı Sahibinin Adı",
+    "systemtype": "Sistem Türü",
+    "metric": "Ölçümler",
+    "action": "Eylem"
+  },
+  "faultPage": {
+    "systemType": "Sistem Türü",
+    "system": "Sistem",
+    "metrictype": "Ölçüm Türü",
+    "thresholdname": "Eşik Adı",
+    "genericevent": "Genel Olay"
+  },
   "meetingsPage": {
     "manageMeetings": "Toplantılar",
     "webexMeetingId": "Toplantı Kimliği",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "Bu siteye henüz yönetici olarak sağlanmadınız. Bu işlem biraz zaman alabilir.",
-    "defaultAccessError": "Sunucuya şu anda erişilemiyor"
+    "defaultProcessError": "İstek işlenemiyor.",
+    "defaultAccessError": "Şu anda sunucuya erişilemiyor"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Oturum Etkinleştirme",
-    "handsOnLabAdminLabel": "Uygulamalı Laboratuvar Yöneticisi (yalnızca uygulamalı laboratuvar etkinleştirildiğinde geçerlidir)",
+    "handsOnLabAdminLabel": "Kendiliğinden Lab Yöneticisi (yalnızca kendiliğinden lab etkin olduğunda etkilidir)",
     "optimizeBandwidthUsageLabel": "Aynı ağdaki dinleyiciler için optimize bant genişliği kullanımı",
     "videoSettingsLabel": "Video Ayarları",
     "hiQualVideoLabel": "Yüksek kalite videoyu aç (360p)",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "Telefon Ayrıcalıkları",
     "callInTeleconfLabel": "Gelen çağrı telekonferansı",
     "tollOnlyLabel": "Ücretli",
-    "tollFreeOnlyLabel": "Ücretsiz",
     "tollAndTollFreeLabel": "Ücretli ve Ücretsiz",
     "teleconfViaGlobalCallinLabel": "Küresel gelen çağrı numaralarıyla telekonferansa erişime izin ver",
     "callBackTeleconfLabel": "Geri arama telekonferansı",
@@ -1084,13 +1156,13 @@
     "lastSynced": "Son Senkronizasyon Tarihi:",
     "messagingTitle": "Mesajlaşma",
     "messagingSubtitle": "Standart Ekip Odaları",
-    "messagingDesc": "Mesajlaşma lisansları.",
+    "messagingDesc": "İçerik depolama alanına sahip Ekip Odaları, herhangi bir cihazdan kuruluşunuz dahilindeki veya dışındaki herhangi bir kullanıcıyla kolayca işbirliği yapmanıza olanak tanır.",
     "communicationTitle": "İletişim",
     "communicationSubtitle": "Gelişmiş Unified",
-    "communicationDesc": "Cisco Unified Communication lisansları.",
+    "communicationDesc": "Temel harici çağrı ve tam Unified Communications kuruluşunuz için etkinleştirilmiştir.",
     "conferencingTitle": "Konferans",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Cisco Meeting Center ve Conferencing lisansları."
+    "conferencingDesc": "WebEx Meeting Center'da, Ekip Oda Senkronizasyonları veya daha fazlası kapsamında en fazla 8 çalışma arkadaşınıza katılın."
   },
   "partnerProfile": {
     "link": "Ortak Profili",

@@ -37,6 +37,7 @@
     "exportUsers": "Benutzer exportieren",
     "moreOptions": "Weitere Aktionen",
     "cancel": "Abbrechen",
+    "save": "Speichern",
     "status": "Status",
     "pending": "Ausstehende Einladung",
     "all": "Alle",
@@ -82,12 +83,19 @@
     "groupColHeader": "Gruppenname",
     "collabService": "Wählen Sie die Lizenzen für den Zusammenarbeitsdienst aus, die den Benutzern erteilt werden sollen.",
     "addEntitleError": "Keine Berechtigung vorhanden, um Benutzer hinzuzufügen oder diesen Berechtigungen zu erteilen.",
-    "freeMsg": "Kostenlose Teamräume",
-    "freeConf": "Kostenlose Meetings mit 3 Teilnehmern",
+    "freeMsg": "Kostenloser Spark Nachrichtendienst",
+    "freeConf": "Kostenloser Meetingdienst mit 3 Parteien",
     "freeComm": "Freie netzwerkinterne IP – Sprach- und Videoanrufe",
     "paidMsg": "Standard-Gruppenräume",
     "paidConf": "Meetings mit 25 Teilnehmern",
-    "paidComm": "Advanced Communications"
+    "paidComm": "Advanced Communications",
+    "freeSpark": "Kostenloser Spark Nachrichtendienst",
+    "enterpriseEdition": "Enterprise Edition",
+    "meetingCenter": "Meeting Center",
+    "supportCenter": "Support-Center",
+    "trainingCenter": "Schulungscenter",
+    "eventCenter": "Veranstaltungscenter",
+    "communication": "Kommunikation"
   },
   "usersPreview": {
     "groupPreview": "Gruppe:",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "Anrufverteilungsfunktionen wie „Anruf parken“ verwalten",
     "mediaOnHoldTab": "Medien angehalten",
     "mediaOnHoldTabDesc": "Entwicklungsbeispiel zu angehaltenen Medien",
+    "metricsDetailsTab": "Metriken",
+    "metricsDetailsTabDesc": "Verwaltung von Metriken",
+    "thresholdDetailsTab": "Grenzwert",
+    "thresholdDetailsTabDesc": "Verwaltung von Grenzwerten",
     "meetingDetailsTab": "Besprechungen",
     "meetingDetailsTabDesc": "Verwaltung von Besprechungen",
     "vtsDetailsTab": "Unternehmensressourcen",
@@ -310,9 +322,12 @@
     "hideDetails": "Details ausblenden",
     "problemReports": "Problemberichte",
     "reportingUrl": "Berichterstellungs-URL:",
-    "helpFaq": "Hilfe und FAQs",
+    "help": "Hilfe",
+    "faqs": "FAQs",
     "helpUrl": "Hilfe-URL:",
-    "sendFeedback": "Cisco-Feedback"
+    "sendFeedback": "Cisco-Feedback",
+    "sso": "SSO",
+    "roles": "Rollen"
   },
   "common": {
     "delete": "Löschen",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "Letzte 4 Wochen",
     "activeUsers": "Aktive Benutzer",
-    "calls": "Anrufe",
+    "calls": "Getätigte Anrufe",
     "updated": "Letzte Aktualisierung",
-    "conversations": "Räume",
-    "contentShared": "Insgesamt geteilte Inhalte",
-    "activity": "Monatliche Aktivität",
+    "conversations": "Erstellte Räume",
+    "contentShared": "Geteilte Dateien",
+    "activity": "Aktivität seit",
     "monitoring": "Überwachung",
     "media": "Medien/Anrufend",
     "mobile": "Mobile Clients",
@@ -370,7 +385,8 @@
     "searchLogsText": "Geräteprotokolle suchen",
     "unlicensedDateText": "Benutzer ohne Lizenz registriert auf",
     "unlicensedText": "Benutzer ohne Lizenz",
-    "convertText": "Benutzer anzeigen und konvertieren, die aktuell die kostenlose Version verwenden"
+    "convertText": "Benutzer anzeigen und konvertieren, die aktuell die kostenlose Version verwenden",
+    "lastUpdated": "Letzte Aktualisierung"
   },
   "inviteModal": {
     "title": "Dienstberechtigung",
@@ -426,7 +442,8 @@
     "siteCode": "Standort-Code",
     "siteCodeDescription": "Geben Sie eine Nummer an, mit der ein spezifischer Standort identifiziert werden kann.",
     "internalExtensionRange": "Bereich interner Anschlüsse",
-    "internalNumberRangeDescription": "Geben Sie den Bereich interner Nummern an. Es wird eine Länge von 4 oder 5 Nummern empfohlen.",
+    "internalNumberRangeDescription": "Legen Sie den Bereich für interne Nummern fest. Die Länge muss 4 Zeichen betragen.",
+    "extensionError": "Durchwahl nicht gültig: ",
     "to": "zu",
     "addMoreExtensionRanges": "Weitere Anschlussbereiche hinzufügen",
     "globalMOH": "Globale MOH (Media On Hold)",
@@ -493,7 +510,8 @@
     "status401": "Autorisierung fehlgeschlagen. Das Autorisierungs-Token konnte vom Server nicht verarbeitet werden. Sie werden in wenigen Sekunden automatisch abgemeldet.",
     "serverDown": "Autorisierung fehlgeschlagen. Der Server ist eventuell nicht aktiv. Sie werden in wenigen Sekunden automatisch abgemeldet.",
     "expired": "Ihre Sitzung ist abgelaufen oder nicht autorisiert. Sie werden in einigen Sekunden automatisch abgemeldet. Melden Sie sich mit dem Dienst erneut an.",
-    "unsupported": "Sie verwenden eine <strong>veraltete</strong> Version des Internet Explorer. Bitte <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>aktualisieren Sie Ihren Browser</a> auf Version 11 oder höher."
+    "unsupported": "Sie verwenden eine <strong>veraltete</strong> Version des Internet Explorer. Bitte <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>aktualisieren Sie Ihren Browser</a> auf Version 11 oder höher.",
+    "status404": "Angeforderte Ressource nicht gefunden."
   },
   "spacesPage": {
     "title": "Geräte",
@@ -502,6 +520,7 @@
     "addBtn": "Aktivierungscode erzeugen",
     "cancel": "Abbrechen",
     "delete": "Löschen",
+    "deleteActivationCode": "Aktivierungscode löschen",
     "done": "Fertig",
     "kindHeader": "Typ",
     "nameHeader": "Installiert in",
@@ -514,7 +533,9 @@
     "emptyDevices1": "Wenn Sie ein neues Gerät hinzufügen,",
     "emptyDevices2": "wird es hier aufgeführt.",
     "deleteDevice": "Gerät löschen",
-    "deleteDeviceConfText": "Möchten Sie dieses Gerät wirklich löschen?"
+    "deleteDeviceConfText": "Möchten Sie dieses Gerät wirklich löschen?",
+    "videoQTitle": "Möglicher Verlust der Videoqualität",
+    "videoQMsg": "Dieses Gerät kommuniziert über das TCP-Protokoll, was zu höherer Latenz und damit verringerter Streaming-Qualität führen kann. Wenn beim Streaming Probleme entstehen, versuchen Sie, UDP Port 33434 auf Ihrer lokalen Firewall zu öffnen, um Streaming-Probleme zu beheben."
   },
   "hercules": {
     "page_title": "Verbindungsmanagement",
@@ -540,7 +561,8 @@
       "registered": "Registriert",
       "downloading": "Wird heruntergeladen",
       "uninstalling": "Wird deinstalliert",
-      "running": "Läuft"
+      "running": "Läuft",
+      "needs_attention": "Erfordert Aufmerksamkeit"
     },
     "setup": {
       "label": "Verbindungsmanagement",
@@ -630,16 +652,29 @@
     "leastQuality": "5 mit geringster Qualität",
     "services": "All Services",
     "UsersOnboarded": "Aufgenommene Benutzer",
-    "AvgCallsPerUser": "Durchschnittliche Anrufe pro Benutzer",
-    "AvgRoomsPerUser": "Durchschnittliche Räume pro Benutzer",
-    "ActiveUsers": "Aktive Benutzer",
-    "OneOnOneRooms": "Private Räume",
-    "GroupRooms": "Gruppenräume",
-    "VideoCalls": "Videoanrufe",
-    "AvgDurationofCalls": "Durchschnittliche Anrufdauer",
-    "ContentShared": "Geteilte Inhalte",
-    "AmountofContentShared": "Insgesamt geteilte Inhalte",
-    "UserEngagement": "Benutzerengagement"
+    "AvgCallsPerUser": "Durchschn. Anrufe pro Benutzer",
+    "AvgRoomsPerUser": "Durchschn. Räume pro Benutzer diesen Monat",
+    "ActiveUsers": "Durchschn. aktive Benutzer diesen Monat",
+    "OneOnOneRooms": "Privaträume diesen Monat",
+    "GroupRooms": "Gruppenräume diesen Monat",
+    "VideoCalls": "Videoanrufe diesen Monat",
+    "AvgDurationofCalls": "Durchschn. Anrufdauer diesen Monat",
+    "ContentShared": "Geteilte Dateien diesen Monat",
+    "AmountofContentShared": "GB der geteilten Inhalte diesen Monat",
+    "UserEngagement": "Benutzerengagement",
+    "weekOf": "Startwoche",
+    "numberOfCallsAxis": "Anzahl Anrufe (gesamt)",
+    "numberOfRoomsAxis": "Anzahl Räume (gesamt)",
+    "numberActiveAxis": "Anzahl aktive Benutzer (gesamt)",
+    "oneRoomAxis": "Anzahl Privaträume (gesamt)",
+    "groupRoomsAxis": "Anzahl Gruppenräume (gesamt)",
+    "videoCallsAxis": "Anzahl Videoanrufe (gesamt)",
+    "avgCallsAxis": "Anrufdauer in Minuten (durchschn.)",
+    "filesSharedAxis": "Anzahl geteilte Dateien (gesamt)",
+    "gbSharedAxis": "Anzahl geteilte Gigabytes (gesamt)",
+    "orgDsc": "Die Gesamtanzahl der Benutzer in einer Organisation.",
+    "onboardDsc": "Die Gesamtanzahl der Benutzer, die angemeldet oder bei Spark registriert sind.",
+    "activeDsc": "Die Gesamtanzahl der Benutzer, die in der letzten Woche eine Nachricht gesendet/gelesen oder einen Raum erstellt/betreten haben."
   },
   "callRouting": {
     "title": "Anrufverteilung",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "Leitungskonfiguration",
     "success": "Leitungskonfiguration erfolgreich gespeichert",
-    "error": "Leitungskonfiguration fehlgeschlagen",
+    "error": "Konfiguration der Leitung fehlgeschlagen.",
     "directNumbers": "Verzeichnisnummern#",
     "internalNumberLabel": "Diese Verbindung mit Hilfe der unten aufgeführten Nummern oder Durchwahlen anwählen.",
     "internalNumberExtension": "Interne Anschlussnummer",
@@ -697,7 +732,11 @@
     "none": "Keine",
     "deleteConfirmation": "Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie die Zuweisung von {{line}} an {{user}} wirklich aufheben?",
     "deleteLineTitle": "Zeile entfernen",
-    "disassociationSuccess": "Zuweisung der Zeile zum Benutzer erfolgreich aufgehoben."
+    "disassociationSuccess": "Zuweisung der Zeile zum Benutzer erfolgreich aufgehoben.",
+    "alert": "Warnung",
+    "userError": "Leitungen von Benutzer {{user}} nicht korrekt.",
+    "maxLines": "{{user}} hat die maximale Anzahl an Leitungen überschritten. Entfernen Sie eine Leitung dieses Benutzers, bevor Sie zusätzliche Leitungen bereitstellen.",
+    "confirm": "Auf dieser Seite wurden ungespeicherte Änderungen vorgenommen. Möchten Sie fortfahren?"
   },
   "callForwardPanel": {
     "title": "Anrufweiterleitung",
@@ -717,6 +756,15 @@
     "title": "Anrufer-ID",
     "description": "<small>Ändern Sie den Anzeigenamen für Anrufe von dieser Leitung.</small>"
   },
+  "sharedLinePanel": {
+    "title": "Gemeinsam genutzte Leitung",
+    "description": "Gleichzeitig die Leitungen anderer Benutzer anrufen, wenn diese Leitung angerufen wird.",
+    "remove": "Mitglied entfernen",
+    "invalidUser": "{{user}} hat keinen Unified Communications-Service",
+    "member": "Mitglieder - gemeinsam genutzte Leitung",
+    "disassociateUser": "Durch Entfernen dieses Benutzers aus den Mitgliedern der gemeinsam genutzten Leitung wird diese Leitung sofort von allen Geräten entfernt. Sind Sie sicher, dass Sie fortfahren möchten?",
+    "addMember": "Mitglied hinzufügen"
+  },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
     "description": "<small>Ermöglicht es Benutzern, eingehende Anrufe für Ihren Anschluss unter einer anderen Nummer anzunehmen</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR kann auf alle oder nur bestimmte Benutzerleitungen angewendet werden",
     "success": "Single Number Reach-Konfiguration erfolgreich gespeichert",
     "removeSuccess": "Single Number Reach-Konfiguration erfolgreich entfernt",
-    "error": "Single Number Reach-Konfiguration fehlgeschlagen",
+    "error": "Konfiguration zum Anruf einzelner Leitungen fehlgeschlagen.",
     "placeholder": "SNR-Nummer eingeben"
   },
   "voicemailPanel": {
@@ -930,6 +978,30 @@
     "draganddrop": "Sie können Tracks durch Ziehen und Ablegen neu bestellen. Diese Tracks werden in die Schleife geleitet.",
     "setActive": "Auf aktiv setzen"
   },
+  "metricsPage": {
+    "metrics": "Metriken",
+    "metricsType": "Metriktyp",
+    "hostName": "Hostname",
+    "systemType": "Systemtyp",
+    "counters": "Zähler",
+    "actions": "Aktionen"
+  },
+  "thresholdPage": {
+    "threshold": "Grenzwert",
+    "metrictype": "Metriktyp",
+    "thresholdname": "Grenzwertname",
+    "hostname": "Hostname",
+    "systemtype": "Systemtyp",
+    "metric": "Metriken",
+    "action": "Aktion"
+  },
+  "faultPage": {
+    "systemType": "Systemtyp",
+    "system": "System",
+    "metrictype": "Metriktyp",
+    "thresholdname": "Grenzwertname",
+    "genericevent": "Allgemeines Event"
+  },
   "meetingsPage": {
     "manageMeetings": "Besprechungen",
     "webexMeetingId": "Besprechungs-ID",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "Sie wurden dieser Seite noch nicht als Administrator zugewiesen. Dieser Prozess kann einen Moment dauern.",
+    "defaultProcessError": "Anfrage kann nicht verarbeitet werden.",
     "defaultAccessError": "Zugriff auf Server aktuell nicht möglich"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Sitzungsaktivierung",
-    "handsOnLabAdminLabel": "Hands-on Lab Admin (nur gültig, wenn Hands-on Lag aktiviert ist",
+    "handsOnLabAdminLabel": "Hands-on Lab Admin (nur bei Aktivierung von Hands-on Lab)",
     "optimizeBandwidthUsageLabel": "Optimierte Bandbreitennutzung für Teilnehmer innerhalb des gleichen Netzwerks.",
     "videoSettingsLabel": "Videoeinstellungen",
     "hiQualVideoLabel": "High-Quality Video (360p) aktivieren",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "Telefonsonderrechte",
     "callInTeleconfLabel": "Call-In-Telekonferenz",
     "tollOnlyLabel": "kostenpflichtig",
-    "tollFreeOnlyLabel": "gebührenfrei",
     "tollAndTollFreeLabel": "kostenpflichtig & gebührenfrei",
     "teleconfViaGlobalCallinLabel": "Zugriff auf Telekonferenz über globale Call-In-Nummern",
     "callBackTeleconfLabel": "Rückruf-Telekonferenz",
@@ -1084,13 +1156,13 @@
     "lastSynced": "Letzte Synchronisierung:",
     "messagingTitle": "Messaging",
     "messagingSubtitle": "Standard-Teamräume",
-    "messagingDesc": "Messaging-Lizenzen.",
+    "messagingDesc": "Durch Teamräume mit Inhaltsspeicher können Sie einfach von jedem Gerät aus mit jedem Benutzer innerhalb oder außerhalb Ihrer Organisation zusammenarbeiten.",
     "communicationTitle": "Kommunikation",
     "communicationSubtitle": "Advanced Unified",
-    "communicationDesc": "Cisco Unified Communications-Lizenzen.",
+    "communicationDesc": "Grundeinstellungen für externe Anrufe und Unified Communications für Ihre Organsiation vollständig aktiviert.",
     "conferencingTitle": "Konferenzen",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Cisco Meeting Center- und Conferencing-Lizenzen."
+    "conferencingDesc": "Versammeln Sie bis zu 8 Kollegen mit einer Teamraumsynchronisierung oder viele weitere in einem WebEx Meeting Center."
   },
   "partnerProfile": {
     "link": "Partnerprofil",

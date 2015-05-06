@@ -37,6 +37,7 @@
     "exportUsers": "匯出使用者",
     "moreOptions": "更多動作",
     "cancel": "取消",
+    "save": "儲存",
     "status": "狀態",
     "pending": "邀請擱置中",
     "all": "全部",
@@ -82,12 +83,19 @@
     "groupColHeader": "群組名稱",
     "collabService": "選取應該授與群組中使用者的協同作業服務授權。",
     "addEntitleError": "專用權不足以新增使用者或向使用者授權。",
-    "freeMsg": "免費的小組會議室",
-    "freeConf": "免費的 3 人會議",
+    "freeMsg": "免費 Spark 傳訊",
+    "freeConf": "免費三方 Spark 會議",
     "freeComm": "免費的網路間 IP 語音與視訊通話",
     "paidMsg": "標準小組會議室",
     "paidConf": "25 人會議",
-    "paidComm": "進階通訊"
+    "paidComm": "進階通訊",
+    "freeSpark": "免費 Spark 傳訊",
+    "enterpriseEdition": "企業版",
+    "meetingCenter": "Meeting Center",
+    "supportCenter": "Support Center",
+    "trainingCenter": "Training Center",
+    "eventCenter": "Event Center",
+    "communication": "通訊"
   },
   "usersPreview": {
     "groupPreview": "群組：",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "管理呼叫駐留等通話路由功能",
     "mediaOnHoldTab": "媒體保留中",
     "mediaOnHoldTabDesc": "媒體保留中開發範例",
+    "metricsDetailsTab": "度量",
+    "metricsDetailsTabDesc": "度量管理",
+    "thresholdDetailsTab": "臨界值",
+    "thresholdDetailsTabDesc": "臨界值管理",
     "meetingDetailsTab": "會議",
     "meetingDetailsTabDesc": "會議管理",
     "vtsDetailsTab": "企業資源",
@@ -310,9 +322,12 @@
     "hideDetails": "隱藏詳細資料",
     "problemReports": "問題報告",
     "reportingUrl": "報告 URL：",
-    "helpFaq": "說明與常見問題及解答",
+    "help": " 說明 ",
+    "faqs": "常見問題",
     "helpUrl": "說明 URL：",
-    "sendFeedback": "Cisco 意見回饋"
+    "sendFeedback": "Cisco 意見回饋",
+    "sso": "SSO",
+    "roles": "角色"
   },
   "common": {
     "delete": "刪除",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "最近 4 週",
     "activeUsers": "使用中的使用者",
-    "calls": "通話",
+    "calls": "撥打的電話",
     "updated": "前次更新日期",
-    "conversations": "會議室",
-    "contentShared": "共用的內容總計：",
-    "activity": "每月活動",
+    "conversations": "建立的會議室",
+    "contentShared": "共用的檔案",
+    "activity": "活動開始時間：",
     "monitoring": "監控",
     "media": "媒體/通話",
     "mobile": "行動用戶端",
@@ -370,7 +385,8 @@
     "searchLogsText": "搜尋裝置日誌",
     "unlicensedDateText": "未授權使用者已登錄於",
     "unlicensedText": "未授權使用者",
-    "convertText": "檢視及轉換目前正在使用免費版本的使用者"
+    "convertText": "檢視及轉換目前正在使用免費版本的使用者",
+    "lastUpdated": "前次更新日期"
   },
   "inviteModal": {
     "title": "服務授權",
@@ -426,7 +442,8 @@
     "siteCode": "站點代碼",
     "siteCodeDescription": "請指定唯一號碼來識別特定站點。",
     "internalExtensionRange": "內部分機範圍",
-    "internalNumberRangeDescription": "請指定內部號碼的範圍。建議使用的長度為 4 到 5 個數字。",
+    "internalNumberRangeDescription": "請指定內部號碼的範圍。長度必須是 4 位數。",
+    "extensionError": "分機無效：",
     "to": "到",
     "addMoreExtensionRanges": "新增更多分機範圍",
     "globalMOH": "全域媒體保留中 (MOH)",
@@ -493,7 +510,8 @@
     "status401": "授權失敗。伺服器無法處理授權記號。您將在幾秒鐘後自動登出。",
     "serverDown": "授權失敗。伺服器已關閉，請聯絡系統管理員。您將在幾秒鐘後自動登出。",
     "expired": "階段作業已過期或未獲授權。您將在幾秒鐘後自動登出。請重新登入以繼續使用服務。",
-    "unsupported": "您使用的是<strong>已過時</strong>的 Internet Explorer 版本。請<a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>升級瀏覽器</a>至第 11 版或更高版本。"
+    "unsupported": "您使用的是<strong>已過時</strong>的 Internet Explorer 版本。請<a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>升級瀏覽器</a>至第 11 版或更高版本。",
+    "status404": "找不到要求的資源。"
   },
   "spacesPage": {
     "title": "裝置",
@@ -502,6 +520,7 @@
     "addBtn": "產生啟動碼",
     "cancel": "取消",
     "delete": "刪除",
+    "deleteActivationCode": "刪除啟動碼",
     "done": "完成",
     "kindHeader": "類型",
     "nameHeader": "安裝位置",
@@ -514,7 +533,9 @@
     "emptyDevices1": "新增裝置後，",
     "emptyDevices2": "裝置將在這裡列出。",
     "deleteDevice": "刪除裝置",
-    "deleteDeviceConfText": "確定要刪除此裝置嗎？"
+    "deleteDeviceConfText": "確定要刪除此裝置嗎？",
+    "videoQTitle": "可能會損失影片品質",
+    "videoQMsg": "此裝置透過 TCP 通訊協定進行通訊，這可能會增加延遲並因此降低媒體流式傳送體驗。如果遇到媒體流式傳送問題，則可以嘗試在本端防火牆上開啟 UDP 埠 33434 以協助解決媒體流式傳送問題。"
   },
   "hercules": {
     "page_title": "連接器管理",
@@ -540,7 +561,8 @@
       "registered": "已登錄",
       "downloading": "下載中",
       "uninstalling": "解除安裝",
-      "running": "執行中"
+      "running": "執行中",
+      "needs_attention": "需要注意"
     },
     "setup": {
       "label": "連接器管理",
@@ -631,15 +653,28 @@
     "services": "所有服務",
     "UsersOnboarded": "使用者已在線",
     "AvgCallsPerUser": "每個使用者的平均通話次數",
-    "AvgRoomsPerUser": "每個使用者的平均會議室數",
-    "ActiveUsers": "作用中的使用者",
-    "OneOnOneRooms": "一對一會議室",
-    "GroupRooms": "群組會議室",
-    "VideoCalls": "視訊通話",
-    "AvgDurationofCalls": "通話的平均持續時間",
-    "ContentShared": "共用的內容",
-    "AmountofContentShared": "共用的內容數量",
-    "UserEngagement": "使用者參與度"
+    "AvgRoomsPerUser": "本月每個使用者的平均會議室數",
+    "ActiveUsers": "本月活動使用者的平均數",
+    "OneOnOneRooms": "本月一對一會議室數",
+    "GroupRooms": "本月群組會議室數",
+    "VideoCalls": "本月視訊通話次數",
+    "AvgDurationofCalls": "本月通話的平均持續時間",
+    "ContentShared": "本月共用檔案數",
+    "AmountofContentShared": "本月共用內容 GB 數",
+    "UserEngagement": "使用者參與度",
+    "weekOf": "開始週",
+    "numberOfCallsAxis": "通話次數 (總計)",
+    "numberOfRoomsAxis": "會議室數 (平均值)",
+    "numberActiveAxis": "活動使用者數 (總計)",
+    "oneRoomAxis": "一對一會議室數 (總計)",
+    "groupRoomsAxis": "群組會議室數 (總計)",
+    "videoCallsAxis": "視訊通話次數 (總計)",
+    "avgCallsAxis": "通話持續分鐘數 (平均值)",
+    "filesSharedAxis": "共用檔案數 (總計)",
+    "gbSharedAxis": "共用 GB 數 (總計)",
+    "orgDsc": "組織中的使用者總數。",
+    "onboardDsc": "已登入或已獲授權使用 Spark 的使用者總數。",
+    "activeDsc": "在過去一週傳送/閱讀訊息或建立/進入會議室的使用者總數。"
   },
   "callRouting": {
     "title": "通話路由",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "線路設定",
     "success": "「線路」設定已成功儲存",
-    "error": "「線路」設定失敗",
+    "error": "「線路」設定失敗。",
     "directNumbers": "目錄號碼",
     "internalNumberLabel": "撥打下列號碼或分機來存取此線路。",
     "internalNumberExtension": "內部號碼分機",
@@ -697,7 +732,11 @@
     "none": "無",
     "deleteConfirmation": "此動作無法復原。確定要將 {{line}} 從 {{user}} 取消指派嗎？",
     "deleteLineTitle": "移除線路",
-    "disassociationSuccess": "已成功將線路從使用者取消指派。"
+    "disassociationSuccess": "已成功將線路從使用者取消指派。",
+    "alert": "警告",
+    "userError": "未正確供應使用者 {{user}}。",
+    "maxLines": "{{user}} 已超出線路數目上限。請將線路從此使用者移除，再供應其他線路。",
+    "confirm": "頁面上具有未儲存的變更。要繼續嗎？"
   },
   "callForwardPanel": {
     "title": "來電轉接",
@@ -717,6 +756,15 @@
     "title": "呼叫者 ID",
     "description": "<small>變更來自此線路之呼叫的顯示名稱</small>"
   },
+  "sharedLinePanel": {
+    "title": "共用線路",
+    "description": "呼叫此線路時，同時讓其他使用者的線路發出鈴聲。",
+    "remove": "移除成員",
+    "invalidUser": "{{user}} 不具有 Unified Communications 服務",
+    "member": "共用線路成員",
+    "disassociateUser": "將此使用者從共用線路成員移除會立即將此線路從其所有裝置中移除。確定要繼續嗎？",
+    "addMember": "新增成員"
+  },
   "singleNumberReachPanel": {
     "title": "單一號碼存取",
     "description": "<small>可讓使用者利用其他分機號碼來接聽傳入的呼叫</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR 可以涵蓋使用者的所有線路，或限制為特定線路",
     "success": "「單一號碼存取」設定已成功儲存",
     "removeSuccess": "「單一號碼存取」設定已成功移除",
-    "error": "「單一號碼存取」設定失敗",
+    "error": "「單一號碼存取」設定失敗。",
     "placeholder": "請輸入 SNR 號碼"
   },
   "voicemailPanel": {
@@ -930,6 +978,30 @@
     "draganddrop": "拖放以重新排序音軌。這些音軌將循環。",
     "setActive": "設為使用中"
   },
+  "metricsPage": {
+    "metrics": "度量",
+    "metricsType": "度量類型",
+    "hostName": "主機名稱",
+    "systemType": "系統類型",
+    "counters": "計數器",
+    "actions": "動作"
+  },
+  "thresholdPage": {
+    "threshold": "臨界值",
+    "metrictype": "度量類型",
+    "thresholdname": "臨界值名稱",
+    "hostname": "主機名稱",
+    "systemtype": "系統類型",
+    "metric": "度量",
+    "action": "動作"
+  },
+  "faultPage": {
+    "systemType": "系統類型",
+    "system": "系統",
+    "metrictype": "度量類型",
+    "thresholdname": "臨界值名稱",
+    "genericevent": "一般活動"
+  },
   "meetingsPage": {
     "manageMeetings": "會議",
     "webexMeetingId": "會議 ID",
@@ -1057,7 +1129,8 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "尚未將您作為管理員供應給此站點。此程序可能需要一段時間。",
-    "defaultAccessError": "此時無法存取伺服器"
+    "defaultProcessError": "無法處理請求。",
+    "defaultAccessError": "目前無法存取伺服器"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "階段作業啟用",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "電話特權",
     "callInTeleconfLabel": "撥入通信會議",
     "tollOnlyLabel": "付費",
-    "tollFreeOnlyLabel": "免費",
     "tollAndTollFreeLabel": "付費與免費",
     "teleconfViaGlobalCallinLabel": "允許透過全球撥入號碼接入通信會議",
     "callBackTeleconfLabel": "回撥通信會議",
@@ -1084,13 +1156,13 @@
     "lastSynced": "前次同步時間：",
     "messagingTitle": "傳訊",
     "messagingSubtitle": "標準小組會議室",
-    "messagingDesc": "傳訊授權。",
+    "messagingDesc": "具有內容儲存體的小組會議室可讓您輕鬆地從任何裝置，與組織內部或外部的任何使用者進行協作。",
     "communicationTitle": "通訊",
     "communicationSubtitle": "Advanced Unified",
-    "communicationDesc": "Cisco Unified Communication 授權。",
+    "communicationDesc": "組織啟用了基本的外部呼叫和完整的 Unified Communications。",
     "conferencingTitle": "會議",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Cisco Meeting Center 與 Conferencing 授權。"
+    "conferencingDesc": "小組會議室同步中最多可以加入 8 位同事，而 WebEx Meeting Center 中可以加入更多同事。"
   },
   "partnerProfile": {
     "link": "合作夥伴設定檔",

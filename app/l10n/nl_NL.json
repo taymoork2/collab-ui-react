@@ -37,6 +37,7 @@
     "exportUsers": "Gebruikers exporteren",
     "moreOptions": "Meer acties",
     "cancel": "Annuleren",
+    "save": "Opslaan",
     "status": "Status",
     "pending": "Uitnodiging in behandeling",
     "all": "Alles",
@@ -82,12 +83,19 @@
     "groupColHeader": "Groepnaam",
     "collabService": "Kies de collaboration service-licenties die aan de gebruikers in de groep dienen gegeven te worden.",
     "addEntitleError": "onvoldoende rechten om een gebruiker toe te voegen of te machtigen.",
-    "freeMsg": "Gratis teamruimtes",
-    "freeConf": "Gratis vergaderingen met 3 partijen",
+    "freeMsg": "Gratis Spark-berichtendienst",
+    "freeConf": "Gratis vergaderen met 3 partijen",
     "freeComm": "Gratis spraak- en videogesprekken via IP binnen uw netwerk",
     "paidMsg": "Standaard teamruimtes",
     "paidConf": "Vergaderingen met 25 partijen",
-    "paidComm": "Geavanceerde communicatie"
+    "paidComm": "Geavanceerde communicatie",
+    "freeSpark": "Gratis Spark-berichtendienst",
+    "enterpriseEdition": "Enterprise Edition",
+    "meetingCenter": "Meeting Center",
+    "supportCenter": "Support Center",
+    "trainingCenter": "Training Center",
+    "eventCenter": "Event Center",
+    "communication": "Communicatie"
   },
   "usersPreview": {
     "groupPreview": "Groep:",
@@ -136,6 +144,10 @@
     "callRoutingTabDesc": "Beheer functies voor gespreksomleiding, zoals 'Gesprek parkeren'",
     "mediaOnHoldTab": "Media in de wachtrij",
     "mediaOnHoldTabDesc": "Ontwikkelingsvoorbeeld voor 'Media in de wachtrij'",
+    "metricsDetailsTab": "Metriek",
+    "metricsDetailsTabDesc": "Metriekbeheer",
+    "thresholdDetailsTab": "Drempel",
+    "thresholdDetailsTabDesc": "Drempelbeheer",
     "meetingDetailsTab": "Vergaderingen",
     "meetingDetailsTabDesc": "Vergaderingbeheer",
     "vtsDetailsTab": "Enterprise Resources",
@@ -310,9 +322,12 @@
     "hideDetails": "Details verbergen",
     "problemReports": "Probleemmeldingen",
     "reportingUrl": "URL voor melding:",
-    "helpFaq": "Help en Veelgestelde vragen",
+    "help": "Help",
+    "faqs": "Veelgestelde vragen",
     "helpUrl": "Help-URL:",
-    "sendFeedback": "Cisco Feedback"
+    "sendFeedback": "Cisco Feedback",
+    "sso": "SSO",
+    "roles": "Rollen"
   },
   "common": {
     "delete": "Verwijderen",
@@ -341,11 +356,11 @@
   "homePage": {
     "overview": "Afgelopen 4 weken",
     "activeUsers": "Actieve gebruikers",
-    "calls": "Gesprekken",
+    "calls": "Geplaatste gesprekken",
     "updated": "Laatst bijgewerkt op",
-    "conversations": "Ruimtes",
-    "contentShared": "Totaal gedeelde inhoud",
-    "activity": "Activiteit per maand",
+    "conversations": "Gemaakte ruimtes",
+    "contentShared": "Gedeelde bestanden",
+    "activity": "Activiteit sinds",
     "monitoring": "Controle",
     "media": "Media/gesprekken",
     "mobile": "Mobiele clients",
@@ -370,7 +385,8 @@
     "searchLogsText": "Apparaatlogboeken zoeken",
     "unlicensedDateText": "gebruikers zonder licentie geregistreerd op",
     "unlicensedText": "Gebruikers zonder licentie",
-    "convertText": "Bekijk en zet gebruikers om die momenteel de gratis versie gebruiken"
+    "convertText": "Bekijk en zet gebruikers om die momenteel de gratis versie gebruiken",
+    "lastUpdated": "Laatst bijgewerkt op"
   },
   "inviteModal": {
     "title": "Recht op de service",
@@ -426,7 +442,8 @@
     "siteCode": "Locatiecode",
     "siteCodeDescription": "Geef een uniek cijfer op om een specifieke locatie aan te geven.",
     "internalExtensionRange": "Reeks voor interne toestelnummers",
-    "internalNumberRangeDescription": "Voer een reeks voor interne nummers op. Een reeks van 4 of 5 cijfers wordt aanbevolen.",
+    "internalNumberRangeDescription": "Specificeer het bereik van de interne nummers, die uit 4 cijfers moeten bestaan.",
+    "extensionError": "Toestel niet geldig:",
     "to": "tot",
     "addMoreExtensionRanges": "Meer toestelreeksen toevoegen",
     "globalMOH": "Algemene media in wachtrij (MOH)",
@@ -493,7 +510,8 @@
     "status401": "De autorisatie is mislukt: de server kan uw autorisatietoken niet verwerken. U wordt over een paar seconden automatisch afgemeld.",
     "serverDown": "De autorisatie is mislukt: de server is wellicht inactief. Neem contact op met uw systeembeheerder. U wordt over een paar seconden automatisch afgemeld.",
     "expired": "Uw sessie is verstreken of u bent niet gemachigd. U wordt over een paar seconden automatisch afgemeld. Meld u opnieuw aan om de service te blijven gebruiken.",
-    "unsupported": "U gebruikt een <strong>oude</strong> versie van Internet Explorer. Installeer <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>een nieuwere versie</a>, zoals versie 11 of nieuwer."
+    "unsupported": "U gebruikt een <strong>oude</strong> versie van Internet Explorer. Installeer <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>een nieuwere versie</a>, zoals versie 11 of nieuwer.",
+    "status404": "Gevraagde bron niet gevonden."
   },
   "spacesPage": {
     "title": "Apparaten",
@@ -502,6 +520,7 @@
     "addBtn": "Activeringscode genereren",
     "cancel": "Annuleren",
     "delete": "Verwijderen",
+    "deleteActivationCode": "Activeringscode wissen",
     "done": "Gereed",
     "kindHeader": "Type",
     "nameHeader": "Geïnstalleerd in",
@@ -514,7 +533,9 @@
     "emptyDevices1": "Nadat u een nieuw apparaat hebt toegevoegd,",
     "emptyDevices2": "vindt u het hier terug.",
     "deleteDevice": "Apparaat verwijderen",
-    "deleteDeviceConfText": "Weet u zeker dat u dit apparaat wilt verwijderen?"
+    "deleteDeviceConfText": "Weet u zeker dat u dit apparaat wilt verwijderen?",
+    "videoQTitle": "Mogelijk verlies van videokwaliteit",
+    "videoQMsg": "Dit apparaat communiceert via het TCP-protocol, wat hogere latentie zou kunnen veroorzaken en daardoor een slechtere mediastreamingervaring. Als u problemen ondervindt met uw mediastreaming, kunt u proberen UDP-poort 33434 te openen op uw lokale firewall om te helpen problemen met de mediastreaming op te lossen."
   },
   "hercules": {
     "page_title": "Connectorbeheer",
@@ -540,7 +561,8 @@
       "registered": "Geregistreerd",
       "downloading": "Bezig met downloaden",
       "uninstalling": "Bezig met de-installeren",
-      "running": "Gaande"
+      "running": "Gaande",
+      "needs_attention": "Vraagt bijzondere aandacht"
     },
     "setup": {
       "label": "Connectorbeheer",
@@ -631,15 +653,28 @@
     "services": "Alle services",
     "UsersOnboarded": "Gebruikers geïntegreerd",
     "AvgCallsPerUser": "Gem. aantal gesprekken per gebruiker",
-    "AvgRoomsPerUser": "Gem. aantal ruimtes per gebruiker",
-    "ActiveUsers": "Actieve gebruikers",
-    "OneOnOneRooms": "Eén-op-één-ruimtes",
-    "GroupRooms": "Groepsruimtes",
-    "VideoCalls": "Videogesprekken",
-    "AvgDurationofCalls": "Gem. gespreksduur",
-    "ContentShared": "Gedeelde inhoud",
-    "AmountofContentShared": "Hoeveelheid gedeelde inhoud",
-    "UserEngagement": "Activiteit gebruiker"
+    "AvgRoomsPerUser": "Gem. aantal ruimtes per gebruiker deze maand",
+    "ActiveUsers": "Gem. aantal actieve gebruikers deze maand",
+    "OneOnOneRooms": "1:1-ruimtes deze maand",
+    "GroupRooms": "Groepsruimtes deze maand",
+    "VideoCalls": "Videogesprekken deze maand",
+    "AvgDurationofCalls": "Gem. duur van gesprekken deze maand",
+    "ContentShared": "Gedeelde bestanden deze maand",
+    "AmountofContentShared": "GB gedeelde inhoud deze maand",
+    "UserEngagement": "Gebruikersengagement",
+    "weekOf": "Week die start",
+    "numberOfCallsAxis": "Aantal gesprekken (totaal)",
+    "numberOfRoomsAxis": "Aantal ruimtes (gem.)",
+    "numberActiveAxis": "Aantal actieve gebruikers (totaal)",
+    "oneRoomAxis": "Aantal 1:1-ruimtes (totaal)",
+    "groupRoomsAxis": "Aantal groepsruimtes (totaal)",
+    "videoCallsAxis": "Aantal videogesprekken (totaal)",
+    "avgCallsAxis": "Gespreksduur in minuten (gem.)",
+    "filesSharedAxis": "Aantal gedeelde bestanden (totaal)",
+    "gbSharedAxis": "Aantal gedeelde gigabytes (totaal)",
+    "orgDsc": "Het totaal aantal gebruikers in een organisatie.",
+    "onboardDsc": "Het totaal aantal gebruikers die zich aangemeld hebben of rechten hebben voor Spark.",
+    "activeDsc": "Het totaal aantal gebruikers die een bericht hebben verzonden/gelezen of een ruimte hebben gemaakt/betreden in de voorbije week."
   },
   "callRouting": {
     "title": "Gespreksomleiding",
@@ -683,7 +718,7 @@
   "directoryNumberPanel": {
     "title": "Lijnconfiguratie",
     "success": "De lijnconfiguratie is succesvol opgeslagen",
-    "error": "De lijnconfiguratie is mislukt",
+    "error": "Lijnconfiguratie mislukt.",
     "directNumbers": "Telefoonlijstnummers",
     "internalNumberLabel": "U bereikt deze lijn door de nummers of extensies die hieronder staan vermeld, te draaien.",
     "internalNumberExtension": "Intern toestelnummer",
@@ -697,7 +732,11 @@
     "none": "Geen",
     "deleteConfirmation": "U kunt deze actie niet ongedaan maken. Weet u zeker dat u {{line}} wilt loskoppelen van {{user}}?",
     "deleteLineTitle": "Lijn verwijderen",
-    "disassociationSuccess": "De lijn is met succes losgekoppeld van de gebruiker."
+    "disassociationSuccess": "De lijn is met succes losgekoppeld van de gebruiker.",
+    "alert": "Waarschuwing",
+    "userError": "Gebruiker {{user}} was niet correct voorzien.",
+    "maxLines": "{{user}} heeft het maximum aantal lijnen overschreden. Verwijder een lijn van deze gebruiker alvorens extra lijnen te voorzien.",
+    "confirm": "Er zijn wijzigingen op deze pagina die niet opgeslagen zijn. Wilt u verdergaan?"
   },
   "callForwardPanel": {
     "title": "Gesprekken doorschakelen",
@@ -717,6 +756,15 @@
     "title": "Beller-id",
     "description": "<small>Wijzig de weergavenaam voor gesprekken van deze lijn</small>"
   },
+  "sharedLinePanel": {
+    "title": "Gedeelde lijn",
+    "description": "Bel tegelijkertijd lijnen van andere gebruikers wanneer deze lijn bezet is.",
+    "remove": "Lid verwijderen",
+    "invalidUser": "{{user}} heeft geen Unified Communications-service",
+    "member": "Gedeelde lijnleden",
+    "disassociateUser": "Als u deze gebruiker uit de gedeelde lijnleden verwijdert, zal deze lijn onmiddellijk uit al hun apparaten worden verwijderd. Bent u zeker dat u wilt verdergaan?",
+    "addMember": "Lid toevoegen"
+  },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
     "description": "<small>Stelt gebruikers in staat binnenkomende gesprekken te beantwoorden op hun toestel met een ander nummer</small>",
@@ -724,7 +772,7 @@
     "snrNote": "SNR kan alle lijnen van de gebruiker dekken of beperkt worden tot specifieke lijnen",
     "success": "De configuratie van Single Number Reach is met succes opgeslagen",
     "removeSuccess": "De configuratie van Single Number Reach is met succes verwijderd",
-    "error": "De configuratie van Single Number Reach is mislukt",
+    "error": "Single Number Reach-configuratie mislukt.",
     "placeholder": "Voer een SNR-nummer in"
   },
   "voicemailPanel": {
@@ -930,6 +978,30 @@
     "draganddrop": "U kunt de volgorde van de nummers wijzigen door ze te verplaatsen. Deze nummers worden oneindig afgespeeld.",
     "setActive": "Als 'Actief' instellen"
   },
+  "metricsPage": {
+    "metrics": "Metriek",
+    "metricsType": "Type metriek",
+    "hostName": "Hostnaam",
+    "systemType": "Systeemtype",
+    "counters": "Tellers",
+    "actions": "Acties"
+  },
+  "thresholdPage": {
+    "threshold": "Drempel",
+    "metrictype": "Type metriek",
+    "thresholdname": "Drempelnaam",
+    "hostname": "Hostnaam",
+    "systemtype": "Systeemtype",
+    "metric": "Metriek",
+    "action": "Actie"
+  },
+  "faultPage": {
+    "systemType": "Systeemtype",
+    "system": "Systeem",
+    "metrictype": "Type metriek",
+    "thresholdname": "Drempelnaam",
+    "genericevent": "Algemene gebeurtenis"
+  },
   "meetingsPage": {
     "manageMeetings": "Vergaderingen",
     "webexMeetingId": "Vergaderings-id",
@@ -1057,11 +1129,12 @@
     "039008": "039008",
     "039009": "039009",
     "200006": "U bent nog niet voor deze locatie doorgevoerd als beheerder. Dit proces kan even duren.",
-    "defaultAccessError": "Toegang tot de server is momenteel niet mogelijk"
+    "defaultProcessError": "Kan verzoek niet verwerken",
+    "defaultAccessError": "Er is momenteel geen toegang tot de server"
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Inschakelen van sessies",
-    "handsOnLabAdminLabel": "Beheerder praktijklab (alleen actief wanneer praktijklab is ingeschakeld",
+    "handsOnLabAdminLabel": "Hands-on Lab Admin (alleen operationeel wanneer hands-on lab is ingeschakeld)",
     "optimizeBandwidthUsageLabel": "Geoptimaliseerd gebruik brandbreedte voor deelnemers binnen hetzelfde netwerk",
     "videoSettingsLabel": "Video-instellingen",
     "hiQualVideoLabel": "Video van hoge kwaliteit (360p) inschakelen",
@@ -1069,7 +1142,6 @@
     "telephonyPrivilegesLabel": "Telefonierechten",
     "callInTeleconfLabel": "Teleconferentie voor inbellen",
     "tollOnlyLabel": "Betaald",
-    "tollFreeOnlyLabel": "Gratis",
     "tollAndTollFreeLabel": "Betaald en gratis",
     "teleconfViaGlobalCallinLabel": "Toegang tot teleconferentie toestaan via wereldwijde inbelnummers",
     "callBackTeleconfLabel": "Teleconferentie met terugbellen",
@@ -1084,13 +1156,13 @@
     "lastSynced": "Laatst gesynchroniseerd op:",
     "messagingTitle": "Chatten",
     "messagingSubtitle": "Standaard teamruimtes",
-    "messagingDesc": "Chatlicenties.",
+    "messagingDesc": "Dankzij teamruimtes met inhoudopslag kunt u gemakkelijk samenwerken vanaf om het even welk apparaat voor gebruikers binnen of buiten uw organisatie.",
     "communicationTitle": "Communicatie",
     "communicationSubtitle": "Advanced Unified",
-    "communicationDesc": "Cisco Unified Communication-licenties.",
+    "communicationDesc": "Basis extern bellen en volledige Unified Communications ingeschakeld voor uw organisatie.",
     "conferencingTitle": "Conferentie",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Cisco Meeting Center and Conferencing-licenties."
+    "conferencingDesc": "Neem deel met tot 8 collega's in een synchronisatie van teamruimtes of veel meer in een WebEx Meeting Center."
   },
   "partnerProfile": {
     "link": "Partnerprofiel",
