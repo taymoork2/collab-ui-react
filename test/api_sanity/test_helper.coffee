@@ -1,4 +1,5 @@
-request = require('request')
+_       = require 'lodash'
+request = require 'request'
 
 auth =
   'sqtest-admin':
@@ -98,7 +99,11 @@ getSSOToken = (req, jar, creds, cb) ->
       console.error err, body
       throw new Error 'Failed to fetch SSO token from CI. Status: ' + res?.statusCode
 
-    token = res.headers['set-cookie'][0].match(/cisPRODAMAuthCookie=(.*); Domain/)[1]
+    cookie = _.find res.headers['set-cookie'], (c) ->
+      c.indexOf('cisPRODAMAuthCookie') isnt -1
+
+    token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1]
+
     jar.setCookie 'cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/'
 
     cb()
