@@ -825,7 +825,7 @@
               resultJson.errId,
               resultJson.headerJson.serv_header.serv_response.serv_value
             );
-            
+
             Notification.notify([notificationMsg], 'error');
           }
         }, // processUpdateSuccessResult()
