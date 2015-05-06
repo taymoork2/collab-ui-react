@@ -2,17 +2,23 @@
   <cs-accordion-group
     is-open="false"
     show-caret="true"
-    display-status="danger"
+    display-status="warning"
     heading="User activation not properly performed.">
 
-    <div ng-repeat="service in xsummary">
-      <div ng-show="service.activated == 0">
-        No users activated for {{service.display_name}}.
-      </div>
-      <div ng-show="service.error != 0">
-        {{service.error}} users in error for {{service.display_name}}.
+    <div style="margin: 0 0 10px;">
+      <div ng-repeat="service in xsummary">
+        <div ng-show="service.activated == 0">
+          No users activated for {{service.display_name}}.
+        </div>
+        <div ng-show="service.error != 0">
+          {{service.error}} users in error for {{service.display_name}}.
+        </div>
       </div>
     </div>
+
+    <p>
+      <button class="btn btn-primary" ng-click="navigateToUsers()">Manage users</button>
+    </p>
 
   </cs-accordion-group>
 </cs-accordion>

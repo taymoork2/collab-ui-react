@@ -1,0 +1,14 @@
+<cs-accordion ng-hide="dirsyncEnabled">
+  <cs-accordion-group
+    is-open="false"
+    show-caret="true"
+    display-status="warning"
+    heading="Directory syncronization not set up">
+
+    <p>You will have to perform a directory syncronization for the Calendar service to function properly.</p>
+    <p>
+      <button class="btn btn-primary" ng-click="navigateToDirsync()">Set up now</button>
+    </p>
+
+  </cs-accordion-group>
+</cs-accordion>

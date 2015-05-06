@@ -5,17 +5,12 @@
     .controller('UserActivationController',
 
       /* @ngInject */
-      function ($scope, ServiceDescriptor, USSService, XhrNotificationService) {
+      function ($scope, $state, ServiceDescriptor, USSService, XhrNotificationService) {
         ServiceDescriptor.services(function (error, services) {
           if (error) {
             XhrNotificationService.notify("Failed to fetch service status", error);
             return;
           }
-
-          var nameMap = _.reduce(services, function (map, service) {
-            map[service.service_id] = service.display_name;
-            return map;
-          }, {});
 
           USSService.getStatusesSummary(function (error, summary) {
             if (error) {
@@ -23,16 +18,28 @@
               return;
             }
 
-            $scope.xsummary = _.map(summary.summary, function (service) {
-              if (service.activated === 0 || service.error !== 0) {
+            $scope.xsummary = _.map(services, function (service) {
+              var summaryForService = _.find(summary.summary, function (summary) {
+                return service.service_id == summary.serviceId;
+              });
+              if (summaryForService.activated === 0 || summaryForService.error !== 0) {
                 $scope.showInfoPanel = true;
                 $scope.userActivationNotComplete = true;
               }
-              service.display_name = nameMap[service.serviceId] || service.serviceId;
-              return service;
+              return {
+                display_name: service.display_name,
+                error: summaryForService.error,
+                activated: summaryForService.activated
+              };
             });
+
           });
         });
+
+        $scope.navigateToUsers = function () {
+          $state.go('users.list');
+        };
+
       }
     )
     .directive('herculesUserActivation', [
