@@ -818,6 +818,7 @@ angular
             serviceType: {}
           }
         });
+
     }
   ]);
 
@@ -910,6 +911,12 @@ angular
           url: '/utilization',
           templateUrl: 'modules/mediafusion/utilization/overAllUtilization.tpl.html',
           controller: 'UtilizationCtrl',
+          parent: 'main'
+        })
+        .state('mediafusionconnector', {
+          url: '/mediafusionconnector',
+          templateUrl: 'modules/mediafusion/mediafusion-connector/mediafusionConnector.tpl.html',
+          controller: 'mediafusionConnectorCtrl',
           parent: 'main'
         });
     }

@@ -1,0 +1,107 @@
+<div id="fusion-root">
+
+  <!-- header -->
+  <div class="page-header row">
+    <div class="page-title clearfix">
+      <span class="title" translate="mediaFusion.page_title" />
+      <div style="float: right; white-space: nowrap">
+        
+        <button 
+          style="width: 60px;"
+          class="btn btn-primary"
+          ng-click="showInfoPanel = !showInfoPanel">
+          <i class="fa fa-info" />
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- content -->
+  <div class="row">
+    <div class="col-sm-12">
+      <!-- loader -->
+      <div ng-show="loading || pollHasFailed" style="text-align: center; padding-top: 60px;">
+        <p ng-show="pollHasFailed">Disconnected. Trying to reconnect...</p>
+        <i class="icon icon-spinner icon-2x"></i>
+      </div>
+
+      <div ng-show="!loading && !pollHasFailed" style="padding-bottom: 60px">
+        <mediafusion-dashboard-info-panel></mediafusion-dashboard-info-panel>
+
+        <mediafusion-dashboard-header></mediafusion-dashboard-header>
+
+        <!-- Media fusion  List Table creation Starts-->
+        <div ng-show="clusters.length != 0">
+          <div class="row">
+              <div gridscrollbar class="gridStyle col-md-12 grid-align" ng-grid="gridOptions"></div>
+          </div>
+        </div>
+        <!-- Threshol List Table creation Ends -->
+        <!-- old code
+        <div ng-show="clusters.length != 0">
+          <div class="container-fluid grid" style="margin-right: -30px; border: 3px solid rgb(60, 168, 232)">
+            <div class="row">
+            <B>
+              <div class="col-sm-2 col-xs-1" style="border: 3px solid rgb(60, 168, 232)">
+                Name
+              </div>
+              <div class="col-sm-2 col-xs-1">
+                IP Address
+              </div>
+              <div class="col-sm-1 col-xs-1">
+                Status
+              </div>
+              <div class="col-sm-2 col-xs-1">
+                Cluster
+              </div>
+              <div class="col-sm-3 col-xs-3">
+                Current Usage
+              </div>
+              <div class="col-sm-2 col-xs-1">
+                Actions
+              </div>
+            </B>
+            </div>
+            <div class="row" ng-repeat="cluster in clusters">
+              <div class="col-sm-2 col-xs-1">
+                {{cluster.hosts[0].host_name}}
+              </div>
+              <div class="col-sm-2 col-xs-1">
+                {{cluster.hosts[0].host_name}}
+              </div>
+              <div class="col-sm-1 col-xs-1">
+                <span ng-show="cluster.needs_attention" class="red">
+                  <i class="fa fa-circle" />
+                  <span class="hidden-xs">Stopped </span>
+                </span>
+                <span ng-hide="cluster.needs_attention" class="green">
+                  <i class="fa fa-circle" />
+                  <span class="hidden-xs">Active </span>
+                </span>
+              </div>
+               <div class="col-sm-2 col-xs-1">
+                {{cluster.name}}
+              </div>
+              <div class="col-sm-3 col-xs-3">
+                <div class="col-sm-1 col-xs-1">0%</div>
+                <div class="progress page-header" >
+                 <div class="progress-bar page-header " style="width:0%;"></div>
+                </div>
+              </div>
+              <div class="col-sm-1 col-xs-1">
+                  <span class="hidden-xs">...</span>
+                </div>
+              </div>
+            </div>
+
+        </div> old code ends -->
+
+        <div ng-show="clusters.length == 0">
+          <h3 style="text-align: center; padding: 20px 0; color: #ccc">
+            No Expressway Clusters Connected to Spark
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
