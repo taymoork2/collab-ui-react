@@ -23,7 +23,8 @@
     "statusHeader": "STATUS/TOOLS",
     "modify": "Modify",
     "existingUsers": "Existing Users",
-    "userInput": "Enter one or more email addresses separated by commas.",
+    "userInput": "Enter email addresses or group mailers separated by commas.",
+    "userInputDescription": "For example: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "active": "Active",
     "inactive": "",
     "validEmailInput": "Please enter valid user email(s).",
@@ -51,7 +52,9 @@
     "deleteUserError": "Error deleting user. Status: {{status}}",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
-    "ciscoucError": "{{email}} did not provision Unified Communications."
+    "ciscoucError": "{{email}} did not provision Unified Communications.",
+    "statusError": "Request failed with status: {{status}}.",
+    "messageError": "Message: {{message}}"
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -142,8 +145,6 @@
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
-    "MediafusionDetailsTab": "Media Fusion Management",
-    "MediafusionDetailsTabDesc": "Media Fusion Management",
     "callRoutingTab": "Call Routing",
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -164,7 +165,11 @@
     "entResUtilizationTabDesc": "Enterprise Resources Utilization",
     "servicesTab": "Services",
     "conferencing": "Conferencing",
-    "conferencingDesc": "List of Site Admins"
+    "conferencingDesc": "List of Site Admins",
+    "alarmsTab": "Alarms",
+    "alarmsTabDesc": "Alarm Management",
+    "eventsTab": "Events",
+    "eventsTabDesc": "Event Management"
   },
   "index": {
     "welcome": "Welcome!",
@@ -280,12 +285,13 @@
     "searching": "Searching...",
     "userLogs": "User Logs",
     "logEmailAddress": "Email Address",
-    "logDate": "Upload Time",
     "logLocusId": "Locus ID",
     "logCallStart": "Call Start Time",
     "logAction": "Client Logs",
+    "callflowLogsAction": "Call Logs",
     "callflowAction": "Callflow Charts",
     "callAction": "Call Info",
+    "callSummaryAction": "Call Summary",
     "errEmptyinput": "Search input cannot be empty.",
     "errLogQuery": "Failed to retrieve logs. Status: {{status}}",
     "inputPlaceholder": "Enter search term (Email address, user ID, Locus ID, etc.)",
@@ -455,9 +461,13 @@
     "ciscoDefault": "Cisco Default",
     "fall": "Fall",
     "winter": "Winter",
-    "addSuccess": " added successfully.",
     "emptyNumber": "Number cannot be empty",
-    "notANumber": " is not a valid number"
+    "notANumber": " is not a valid number",
+    "saveSuccess": "Unified Communications setup saved successfully",
+    "siteError": "Failed to create site.",
+    "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
+    "extensionDeleteError": "Failed to delete extension {{extension}}.",
+    "extensionAddError": "Failed to create extension {{extension}}."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -745,6 +755,7 @@
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
     "chooseNumber": "Choose a Number",
+    "searchNumber": "Search for a number...",
     "addNewNumber": "Add a New Number",
     "removeNumber": "Remove Line",
     "none": "None",
@@ -754,7 +765,8 @@
     "alert": "Warning",
     "userError": "User {{user}} was not correctly provisioned.",
     "maxLines": "{{user}} has exceeded the maximum number of lines. Please remove a line from this user before provisioning additional lines.",
-    "confirm": "There are unsaved changes on the page. Do you wish to continue?"
+    "confirm": "There are unsaved changes on the page. Do you wish to continue?",
+    "unassignedNumberError": "Could not retrieve an unassigned number."
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
@@ -914,31 +926,23 @@
     "none": "None"
   },
   "didAddModal": {
-    "title": "Add Phone Numbers",
-    "instructionsText": "The Company you are setting up needs to provide you with their existing Phone Numbers. This will initiate the porting request of the company's phone numbers.",
-    "processingText": "Adding Phone Numbers...",
-    "successText": "{{count}} new phone number(s) successfully added.",
-    "failText": "{{count}} phone number(s) already in the system.",
-    "sendEmail": "Notify Customer",
-    "notifyCustLater": "Notify Customer Later",
-    "emailSuccessText": "Email successfully sent to customer.",
-    "emailFailText": "Error sending email",
-    "inputPlacehoder": "Enter phone numbers separated by commas"
+    "title": "Add Phone Numbers (Optional)"
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
-    "instructionsText": "The Company you are setting up needs to provide you with their existing Phone Numbers. This will initiate the porting request of the company's phone numbers.",
-    "processingText": "Adding Phone Numbers...",
+    "instructionsText": "The company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers.",
+    "processingText": "Processing Phone Numbers...",
     "newDidText": "{{count}} new phone number(s) successfully added.",
     "existingDidText": "{{count}} phone number(s) already in the system.",
     "deleteDidText": "{{count}} phone number(s) were deleted.",
-    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s) ? It might impact end users if these numbers are assigned to user's lines.",
+    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s)?  It may impact end users if these numbers are assigned to user's lines.",
     "removeNumbers": "Remove Numbers",
     "sendEmail": "Notify Customer",
     "notifyCustLater": "Notify Customer Later",
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
-    "inputPlacehoder": "Enter phone numbers separated by commas"
+    "inputPlacehoder": "Enter phone numbers separated by commas",
+    "didFormatHelpText": "Example formats include: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Device Configuration",
@@ -1049,50 +1053,6 @@
     "cancel": "Cancel",
     "deleteResource": "Decomission Resource"
   },
-  "mediaFusion": {
-    "page_title": "Media Fusion Management",
-    "connectors": {
-      "group_by": "Group services by:",
-      "cluster_id": "Cluster",
-      "host_name": "Expressway Host",
-      "display_name": "Service Name",
-      "connector_type": "Connector Type",
-      "serial": "Serial",
-      "version": "Version",
-      "status": "Status",
-      "alarms": "Alarms"
-    },
-    "status": {
-      "unknown": "Status unknown. Please check the expressway for details",
-      "not_configured": "Not configured",
-      "installing": "Installing",
-      "disabled": "Disabled",
-      "not_installed": "Not installed",
-      "stopped": "Stopped",
-      "offline": "Offline",
-      "registered": "Registered",
-      "downloading": "Downloading",
-      "uninstalling": "Uninstalling",
-      "running": "Running",
-      "needs_attention": "Needs attention"
-    },
-    "setup": {
-      "label": "Connector Management",
-      "title": "Connector Management",
-      "desc": "Leverage your services on-premise"
-    },
-    "activationStatus": {
-      "not_entitled": "Not entitled",
-      "pending_deactivation": "Pending Deactivation",
-      "pending_activation": "Pending Activation",
-      "activated": "Activated",
-      "error": "Error"
-    },
-    "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusion Calendar"
-    }
-  },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
     "privilegesUpdateSuccess": "Privileges updated.",
@@ -1190,6 +1150,7 @@
     "039007": "Your Email address is not accepted by our site.",
     "039008": "039008",
     "039009": "039009",
+    "110055": "User limit exceeded for the session type \"{{sessionTypeName}}\".",
     "defaultProcessError": "Unable to process request.",
     "defaultAccessError": "Unable to access server at this time.",
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
@@ -1269,6 +1230,12 @@
     "overAllUtil": "Overall Utilization",
     "average": "Average",
     "bridgeUtilization": "Bridge By Bridge Utilization"
+  },
+  "alarmsPage": {
+    "alarms": "Alarms"
+  },
+  "eventsPage": {
+    "events": "Events"
   },
   "processOrderPage": {
     "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
