@@ -71,18 +71,24 @@
     };
 
     vm.pageForward = function () {
-      if (vm.activeButton[2] !== vm.activeUsersTotalPages) {
+      if ((vm.activeUserCurrentPage === vm.activeButton[2]) && (vm.activeButton[2] !== vm.activeUsersTotalPages)) {
         vm.activeButton[0] += 1;
         vm.activeButton[1] += 1;
         vm.activeButton[2] += 1;
       }
+      if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
+        vm.changePage(vm.activeUserCurrentPage + 1);
+      }
     };
 
     vm.pageBackward = function () {
-      if (vm.activeButton[0] !== 1) {
+      if ((vm.activeUserCurrentPage === vm.activeButton[0]) && (vm.activeButton[0] !== 1)) {
         vm.activeButton[0] -= 1;
         vm.activeButton[1] -= 1;
         vm.activeButton[2] -= 1;
+      }
+      if (vm.activeUserCurrentPage !== 1) {
+        vm.changePage(vm.activeUserCurrentPage - 1);
       }
     };
 

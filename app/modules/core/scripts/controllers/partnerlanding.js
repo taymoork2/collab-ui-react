@@ -189,6 +189,9 @@ angular.module('Core')
                   usage: 0,
                   licenses: 0,
                   licenseList: [],
+                  messaging: null,
+                  conferencing: null,
+                  communications: null,
                   daysUsed: 0,
                   percentUsed: 0,
                   duration: org.trialPeriod,
@@ -223,6 +226,10 @@ angular.module('Core')
                 }
 
                 orgObj.licenseList = org.licenses;
+                orgObj.messaging = $scope.getLicense(org.licenses, 'messaging');
+                orgObj.conferencing = $scope.getLicense(org.licenses, 'conferencing');
+                orgObj.communications = $scope.getLicense(org.licenses, 'communications');
+
                 var now = moment().format('MMM D, YYYY');
                 var then = edate;
                 var start = moment(org.startDate).format('MMM D, YYYY');
@@ -234,6 +241,31 @@ angular.module('Core')
 
                 var daysLeft = moment(then).diff(now, 'days');
                 orgObj.daysLeft = daysLeft;
+
+                if (orgObj.messaging === null) {
+                  orgObj.messaging = {
+                    status: orgObj.status
+                  };
+                }
+                orgObj.messaging.daysLeft = daysLeft;
+                orgObj.messaging.customerName = orgObj.customerName;
+
+                if (orgObj.conferencing === null) {
+                  orgObj.conferencing = {
+                    status: orgObj.status
+                  };
+                }
+                orgObj.conferencing.daysLeft = daysLeft;
+                orgObj.conferencing.customerName = orgObj.customerName;
+
+                if (orgObj.communications === null) {
+                  orgObj.communications = {
+                    status: orgObj.status
+                  };
+                }
+                orgObj.communications.daysLeft = daysLeft;
+                orgObj.communications.customerName = orgObj.customerName;
+
                 $scope.totalOrgsData.push(orgObj);
               }
               Log.debug('total managed orgs records found:' + $scope.totalOrgsData.length);
@@ -370,22 +402,26 @@ angular.module('Core')
           displayName: $translate.instant('customerPage.messaging'),
           width: '12%',
           cellTemplate: serviceTemplate,
-          headerClass: 'align-center'
+          headerClass: 'align-center',
+          sortFn: serviceSort
         }, {
           field: 'conferencing',
           displayName: $translate.instant('customerPage.conferencing'),
           width: '12%',
           cellTemplate: serviceTemplate,
-          headerClass: 'align-center'
+          headerClass: 'align-center',
+          sortFn: serviceSort
         }, {
           field: 'communications',
           displayName: $translate.instant('customerPage.communications'),
           width: '12%',
           cellTemplate: serviceTemplate,
-          headerClass: 'align-center'
+          headerClass: 'align-center',
+          sortFn: serviceSort
         }, {
           field: 'notes',
           displayName: $translate.instant('customerPage.notes'),
+          sortable: false,
           cellTemplate: notesTemplate,
         }, {
           field: 'action',
@@ -395,6 +431,66 @@ angular.module('Core')
           width: '90px'
         }]
       };
+
+      function serviceSort(a, b) {
+        if (a.status === 'SUSPENDED') { // If accounts are suspended, drop them to the bottom of the stack
+          if (b.status === 'SUSPENDED') {
+            return sortByName(a, b);
+          } else {
+            return 1;
+          }
+        } else if (b.status === 'SUSPENDED') {
+          return -1;
+        } else if ($scope.isLicenseATrial(a) && $scope.isLicenseATrial(b)) {
+          // if a and b are both trials and have the same status, sort by expiration length
+          if (a.status === b.status) {
+            return sortByDays(a, b);
+          } else if (a.status === 'ACTIVE') {
+            return 1;
+          } else {
+            return -1;
+          }
+        } else if (($scope.isLicenseActive(a) && $scope.isLicenseActive(b))) {
+          // if a & b are both active and have the same status, sort by name
+          if (a.status === b.status) {
+            return sortByName(a, b);
+          } else if (a.status === 'ACTIVE') {
+            return 1;
+          } else {
+            return -1;
+          }
+        } else if ($scope.isLicenseActive(a) || (!$scope.isLicenseActive(b) && $scope.isLicenseATrial(a))) {
+          return -1;
+        } else if ($scope.isLicenseActive(b) || $scope.isLicenseATrial(b)) {
+          return 1;
+        } else if (a.daysLeft > 0 && b.daysLeft > 0) {
+          // having daysLeft is indicative of an active 'free' option to go with a trial
+          return sortByDays(a, b);
+        } else if (a.daysLeft > 0) {
+          return -1;
+        } else if (b.daysLeft > 0) {
+          return 1;
+        }
+        return sortByName(a, b);
+      }
+
+      function sortByDays(a, b) {
+        if (a.daysLeft !== b.daysLeft) {
+          return a.daysLeft - b.daysLeft;
+        } else {
+          return sortByName(a, b);
+        }
+      }
+
+      function sortByName(a, b) {
+        if (a.customerName.toLowerCase() > b.customerName.toLowerCase()) {
+          return 1;
+        } else if (a.customerName.toLowerCase() < b.customerName.toLowerCase()) {
+          return -1;
+        } else {
+          return 0;
+        }
+      }
 
       $scope.showCustomerDetails = function (customer) {
         $scope.currentTrial = customer;
