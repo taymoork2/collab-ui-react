@@ -107,7 +107,7 @@
       }; // btnReset2()
 
       //----------------------------------------------------------------------//
-      
+
       $log.log("Show panel4");
 
       this.userSettingsModel = WebExUserSettingsFact.getUserSettingsModel();

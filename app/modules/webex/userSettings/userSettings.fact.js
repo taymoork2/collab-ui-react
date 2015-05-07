@@ -825,7 +825,7 @@
 
           var updateStatus = "success";
           var notificationMsg = $translate.instant(successMsg);
-          
+
           // verify whether the update request completed without error
           if ("" === resultJson.errId) {
             if (flushWaf) {
@@ -833,13 +833,13 @@
                 function flushWafCacheSuccess(result) { //success
                   $log.log("Flush success");
                 }, // flushWafCacheSuccess()
-                
+
                 function flushWafCacheError() { //fail
                   $log.log("Flush error");
                 } // flushWafCacheError()
               );
             }
-              
+
             form.$dirty = false;
             form.$setPristine();
           } else {
@@ -855,7 +855,7 @@
 
           userSettingsModel.disableCancel = false;
           userSettingsModel.disableCancel2 = false;
-          
+
           Notification.notify([notificationMsg], updateStatus);
         }, // processUpdateResponse()
 
