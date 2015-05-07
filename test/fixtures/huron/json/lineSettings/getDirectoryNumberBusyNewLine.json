@@ -1,6 +1,6 @@
 {
-  "uuid": "7876a8fa-613f-4047-9a5a-a8d2e54fd3db",
-  "pattern": "4000",
+  "uuid": "none",
+  "pattern": "",
   "alertingName": "currentUser@gmail.com",
   "callForwardAll": {
     "voicemailEnabled": "false",

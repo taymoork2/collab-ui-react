@@ -11,6 +11,11 @@ describe('Controller: LineSettingsCtrl', function () {
   var sharedLineEndpoints = [];
   var selectedUsers = [];
 
+  var errorResponse = {
+    message: 'error',
+    status: 500
+  };
+
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$state_, _$httpBackend_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
@@ -94,6 +99,7 @@ describe('Controller: LineSettingsCtrl', function () {
     //Sharedline
 
     spyOn(Notification, 'notify');
+    spyOn(Notification, 'errorResponse');
 
     controller = $controller('LineSettingsCtrl', {
       $scope: $scope,
@@ -127,6 +133,36 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(controller.directoryNumber).toEqual(getDirectoryNumber);
       expect(controller.forward).toBe('none');
       expect(controller.telephonyInfo.voicemail).toBe('On');
+    });
+
+    it('should call loadInternalNumberPool during init', function () {
+      TelephonyInfoService.getInternalNumberPool.and.returnValue([]);
+      controller.init();
+      $scope.$apply();
+      expect(Notification.errorResponse).not.toHaveBeenCalled();
+    });
+
+    it('should notify an error when loadInternalNumberPool fails', function () {
+      TelephonyInfoService.getInternalNumberPool.and.returnValue([]);
+      TelephonyInfoService.loadInternalNumberPool.and.returnValue($q.reject(errorResponse));
+      controller.init();
+      $scope.$apply();
+      expect(Notification.errorResponse).toHaveBeenCalled();
+    });
+
+    it('should call loadExternalNumberPool during init', function () {
+      TelephonyInfoService.getExternalNumberPool.and.returnValue([]);
+      controller.init();
+      $scope.$apply();
+      expect(Notification.errorResponse).not.toHaveBeenCalled();
+    });
+
+    it('should notify an error when loadExternalNumberPool fails', function () {
+      TelephonyInfoService.getExternalNumberPool.and.returnValue([]);
+      TelephonyInfoService.loadExternalNumberPool.and.returnValue($q.reject(errorResponse));
+      controller.init();
+      $scope.$apply();
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 
@@ -444,4 +480,39 @@ describe('Controller: LineSettingsCtrl', function () {
     });
   });
 
+  describe('saveDisabled', function () {
+    it('should return false when loadInternalNumberPool fails, but the line is not new', function () {
+      TelephonyInfoService.getInternalNumberPool.and.returnValue([]);
+      TelephonyInfoService.loadInternalNumberPool.and.returnValue($q.reject(errorResponse));
+      controller.init();
+      $scope.$apply();
+      expect(controller.saveDisabled()).toBeFalsy();
+    });
+
+    it('should return true when loadInternalNumberPool fails and the line is new', function () {
+      TelephonyInfoService.getInternalNumberPool.and.returnValue([]);
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
+      TelephonyInfoService.loadInternalNumberPool.and.returnValue($q.reject(errorResponse));
+      controller.init();
+      $scope.$apply();
+      expect(controller.saveDisabled()).toBeTruthy();
+    });
+
+    it('should return false when loadExternalNumberPool fails, but the line is not new', function () {
+      TelephonyInfoService.getExternalNumberPool.and.returnValue([]);
+      TelephonyInfoService.loadExternalNumberPool.and.returnValue($q.reject(errorResponse));
+      controller.init();
+      $scope.$apply();
+      expect(controller.saveDisabled()).toBeFalsy();
+    });
+
+    it('should return true when loadExternalNumberPool fails and the line is new', function () {
+      TelephonyInfoService.getExternalNumberPool.and.returnValue([]);
+      DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
+      TelephonyInfoService.loadExternalNumberPool.and.returnValue($q.reject(errorResponse));
+      controller.init();
+      $scope.$apply();
+      expect(controller.saveDisabled()).toBeTruthy();
+    });
+  });
 });

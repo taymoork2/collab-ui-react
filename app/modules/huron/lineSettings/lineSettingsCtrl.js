@@ -28,6 +28,7 @@
 
     vm.loadInternalNumberPool = loadInternalNumberPool;
     vm.loadExternalNumberPool = loadExternalNumberPool;
+    vm.saveDisabled = saveDisabled;
 
     // SharedLine Info ---
     vm.sharedLineBtn = false;
@@ -119,12 +120,18 @@
     function loadInternalNumberPool(pattern) {
       TelephonyInfoService.loadInternalNumberPool(pattern).then(function (internalNumberPool) {
         vm.internalNumberPool = internalNumberPool;
+      }).catch(function (response) {
+        vm.internalNumberPool = [];
+        Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
       });
     }
 
     function loadExternalNumberPool(pattern) {
       TelephonyInfoService.loadExternalNumberPool(pattern).then(function (externalNumberPool) {
         vm.externalNumberPool = externalNumberPool;
+      }).catch(function (response) {
+        vm.externalNumberPool = [];
+        Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
       });
     }
 
@@ -165,6 +172,9 @@
           if (vm.internalNumberPool.length === 0) {
             TelephonyInfoService.loadInternalNumberPool().then(function (internalNumberPool) {
               vm.internalNumberPool = internalNumberPool;
+            }).catch(function (response) {
+              vm.internalNumberPool = [];
+              Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
             });
           }
 
@@ -178,6 +188,9 @@
           if (vm.externalNumberPool.length === 0) {
             TelephonyInfoService.loadExternalNumberPool().then(function (externalNumberPool) {
               vm.externalNumberPool = externalNumberPool;
+            }).catch(function (response) {
+              vm.externalNumberPool = [];
+              Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
             });
           }
         }
@@ -833,6 +846,13 @@
       userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
       userName = (userName) ? userName : userId;
       return userName;
+    }
+
+    function saveDisabled() {
+      if ((vm.internalNumberPool.length === 0 || vm.externalNumberPool.length === 0) && (vm.assignedInternalNumber.uuid === 'none' || vm.assignedExternalNumber.uuid === 'none')) {
+        return true;
+      }
+      return false;
     }
 
     init();

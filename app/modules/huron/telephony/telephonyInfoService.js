@@ -188,7 +188,7 @@
         })
         .catch(function (response) {
           updateSnr({});
-          $q.reject(response);
+          return $q.reject(response);
         });
     }
 
@@ -246,7 +246,7 @@
         })
         .catch(function (response) {
           updateDirectoryNumbers(null);
-          $q.reject(response);
+          return $q.reject(response);
         });
     }
 
@@ -260,7 +260,7 @@
         })
         .catch(function (response) {
           updateUserServices([]);
-          $q.reject(response);
+          return $q.reject(response);
         });
     }
 
@@ -290,10 +290,9 @@
             internalNumberPool.push(telephonyInfo.currentDirectoryNumber);
           }
           return angular.copy(internalNumberPool);
-        })
-        .catch(function (response) {
+        }).catch(function (response) {
           internalNumberPool = [];
-          $q.reject(response);
+          return $q.reject(response);
         });
     }
 
@@ -326,10 +325,9 @@
             externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
           }
           return angular.copy(externalNumberPool);
-        })
-        .catch(function (response) {
+        }).catch(function (response) {
           externalNumberPool = [];
-          $q.reject(response);
+          return $q.reject(response);
         });
     }
   }
