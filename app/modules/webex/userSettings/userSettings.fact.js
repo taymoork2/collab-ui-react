@@ -680,23 +680,13 @@
 
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
-              form.$dirty = false;
-              form.$setPristine();
-
-              userSettingsModel.disableCancel = false;
-
               var successMsg = $translate.instant("webexUserSettings.sessionEnablementUpdateSuccess");
               _self.processUpdateSuccessResult(
+                form,
                 result,
-                successMsg);
-
-              //flush waf cache
-              XmlApiFact.flushWafCache(xmlApiInfo).then(function (result) { //success
-                  $log.log("Flush success");
-                }, //success
-                function () { //fail
-                  $log.log("Flush error");
-                }); //fail
+                true,
+                successMsg
+              );
             }, // updateUserSettingsSuccess()
 
             function updateUserSettingsError(result) {
@@ -704,7 +694,7 @@
 
               userSettingsModel.disableCancel = false;
 
-              _self.updateUserSettingsError(result);
+              _self.processUpdateErrorResult(result);
             } // updateUserSettingsError()
           );
         }, // updateUserSettings()
@@ -778,14 +768,11 @@
 
           XmlApiFact.updateUserSettings2(xmlApiInfo).then(
             function updateUserSettings2Success(result) {
-              form.$dirty = false;
-              form.$setPristine();
-
-              userSettingsModel.disableCancel2 = false;
-
               var successMsg = $translate.instant("webexUserSettings.privilegesUpdateSuccess");
               _self.processUpdateSuccessResult(
+                form,
                 result,
+                false,
                 successMsg);
             }, // updateUserSettings2Success()
 
@@ -794,17 +781,23 @@
 
               userSettingsModel.disableCancel2 = false;
 
-              _self.updateUserSettingsError(result);
+              _self.processUpdateErrorResult(result);
             } // updateUserSettings2Error()
           );
         }, // updateUserSettings2()
 
-        processUpdateSuccessResult: function (result, successMsg) {
+        processUpdateSuccessResult: function (
+          form,
+          result,
+          flushWaf,
+          successMsg
+        ) {
           var funcName = "processUpdateSuccessResult()";
           var logMsg = "";
 
-          logMsg = funcName + ": " + "result=" + "\n" +
-            result;
+          logMsg = funcName + ": " + "\n" +
+            "flushWaf=" + flushWaf + "\n" +
+            "result=" + "\n" + result;
           $log.log(logMsg);
 
           var resultJson = this.validateXmlData(
@@ -819,6 +812,20 @@
           $log.log(logMsg);
 
           if ("" === resultJson.errId) {
+            if (flushWaf) {
+              XmlApiFact.flushWafCache(xmlApiInfo).then(
+                function flushWafCacheSuccess(result) { //success
+                  $log.log("Flush success");
+                }, // flushWafCacheSuccess()
+                function flushWafCacheError() { //fail
+                  $log.log("Flush error");
+                } // flushWafCacheError()
+              );
+            }
+
+            form.$dirty = false;
+            form.$setPristine();
+
             Notification.notify([successMsg], 'success');
           } else {
             var notificationMsg = this.getErrMsg(
@@ -828,10 +835,16 @@
 
             Notification.notify([notificationMsg], 'error');
           }
+
+          angular.element('#saveBtn').button('reset');
+          angular.element('#saveBtn2').button('reset');
+
+          userSettingsModel.disableCancel = false;
+          userSettingsModel.disableCancel2 = false;
         }, // processUpdateSuccessResult()
 
-        updateUserSettingsError: function (result) {
-          var funcName = "updateUserSettingsError()";
+        processUpdateErrorResult: function (result) {
+          var funcName = "processUpdateErrorResult()";
           var logMsg = "";
 
           logMsg = funcName + ": " + "result=" + "\n" +
@@ -840,7 +853,7 @@
 
           var errMsg = this.getErrMsg(null, null);
           Notification.notify([errMsg], 'error');
-        }, // updateUserSettingsError()
+        }, // processUpdateErrorResult()
 
         getErrMsg: function (errId, errValue) {
           var funcName = "getErrMsg()";
