@@ -64,12 +64,14 @@
           var funcName = "validateXmlData()";
           var logMsg = "";
 
+          /*
           logMsg = funcName + ": " + "\n" +
             "commentText=" + commentText + "\n" +
             "infoXml=\n" + infoXml + "\n" +
             "startOfBodyStr=" + startOfBodyStr + "\n" +
             "endOfBodyStr=" + endOfBodyStr;
-          // $log.log(logMsg);
+          $log.log(logMsg);
+          */
 
           var headerJson = XmlApiFact.xml2JsonConvert(
             commentText + " Header",
@@ -172,17 +174,19 @@
           userSettingsModel.trainingCenter.isSiteEnabled = false;
           userSettingsModel.supportCenter.isSiteEnabled = false;
 
-          siteServiceTypes.forEach(function (siteServiceType) {
-            if (siteServiceType == userSettingsModel.meetingCenter.label) {
-              userSettingsModel.meetingCenter.isSiteEnabled = true;
-            } else if (siteServiceType == userSettingsModel.eventCenter.label) {
-              userSettingsModel.eventCenter.isSiteEnabled = true;
-            } else if (siteServiceType == userSettingsModel.trainingCenter.label) {
-              userSettingsModel.trainingCenter.isSiteEnabled = true;
-            } else if (siteServiceType == userSettingsModel.supportCenter.label) {
-              userSettingsModel.supportCenter.isSiteEnabled = true;
-            }
-          }); // siteServiceTypes.forEach()
+          siteServiceTypes.forEach(
+            function chkSiteServiceType(siteServiceType) {
+              if (siteServiceType == userSettingsModel.meetingCenter.label) {
+                userSettingsModel.meetingCenter.isSiteEnabled = true;
+              } else if (siteServiceType == userSettingsModel.eventCenter.label) {
+                userSettingsModel.eventCenter.isSiteEnabled = true;
+              } else if (siteServiceType == userSettingsModel.trainingCenter.label) {
+                userSettingsModel.trainingCenter.isSiteEnabled = true;
+              } else if (siteServiceType == userSettingsModel.supportCenter.label) {
+                userSettingsModel.supportCenter.isSiteEnabled = true;
+              }
+            } // chkSiteServiceType()
+          ); // siteServiceTypes.forEach()
           // End of center status update
 
           // Start of Session Types update
@@ -190,75 +194,85 @@
           if (null != meetingTypesInfoJson.mtgtype_meetingType) {
             var siteMeetingTypes = [].concat(meetingTypesInfoJson.mtgtype_meetingType);
 
-            siteMeetingTypes.forEach(function (siteMeetingType) {
-              var siteMtgServiceTypeID = siteMeetingType.mtgtype_meetingTypeID;
-              var siteMtgProductCodePrefix = siteMeetingType.mtgtype_productCodePrefix;
-              var siteMtgDisplayName = siteMeetingType.mtgtype_displayName;
-              var siteMtgServiceTypes = [].concat(siteMeetingType.mtgtype_serviceTypes.mtgtype_serviceType);
+            siteMeetingTypes.forEach(
+              function chkSiteMeetingType(siteMeetingType) {
+                var siteMtgServiceTypeID = siteMeetingType.mtgtype_meetingTypeID;
+                var siteMtgProductCodePrefix = siteMeetingType.mtgtype_productCodePrefix;
+                var siteMtgDisplayName = siteMeetingType.mtgtype_displayName;
+                var siteMtgServiceTypes = [].concat(siteMeetingType.mtgtype_serviceTypes.mtgtype_serviceType);
 
-              var meetingCenterApplicable = false;
-              var trainingCenterApplicable = false;
-              var eventCenterApplicable = false;
-              var supportCenterApplicable = false;
+                var meetingCenterApplicable = false;
+                var trainingCenterApplicable = false;
+                var eventCenterApplicable = false;
+                var supportCenterApplicable = false;
 
-              siteMtgServiceTypes.forEach(function (siteMtgServiceType) {
-                if (userSettingsModel.meetingCenter.serviceType == siteMtgServiceType) {
-                  meetingCenterApplicable = true;
-                } else if (userSettingsModel.eventCenter.serviceType == siteMtgServiceType) {
-                  if ("AUO" != siteMtgProductCodePrefix) {
-                    eventCenterApplicable = true;
-                  }
-                } else if (userSettingsModel.trainingCenter.serviceType == siteMtgServiceType) {
-                  if ("AUO" != siteMtgProductCodePrefix) {
-                    trainingCenterApplicable = true;
-                  }
-                } else if (userSettingsModel.supportCenter.serviceType == siteMtgServiceType) {
-                  if (
-                    ("SMT" != siteMtgProductCodePrefix) &&
-                    ("AUO" != siteMtgProductCodePrefix)
-                  ) {
-                    supportCenterApplicable = true;
-                  }
-                }
-              }); // siteMtgServiceTypes.forEach()
+                siteMtgServiceTypes.forEach(
+                  function chkSiteMtgServiceType(siteMtgServiceType) {
+                    if (userSettingsModel.meetingCenter.serviceType == siteMtgServiceType) {
+                      meetingCenterApplicable = true;
+                    } else if (userSettingsModel.eventCenter.serviceType == siteMtgServiceType) {
+                      if ("AUO" != siteMtgProductCodePrefix) {
+                        eventCenterApplicable = true;
+                      }
+                    } else if (userSettingsModel.trainingCenter.serviceType == siteMtgServiceType) {
+                      if ("AUO" != siteMtgProductCodePrefix) {
+                        trainingCenterApplicable = true;
+                      }
+                    } else if (userSettingsModel.supportCenter.serviceType == siteMtgServiceType) {
+                      if (
+                        ("SMT" != siteMtgProductCodePrefix) &&
+                        ("AUO" != siteMtgProductCodePrefix)
+                      ) {
+                        supportCenterApplicable = true;
+                      }
+                    }
+                  } // chkSiteMtgServiceType()
+                ); // siteMtgServiceTypes.forEach()
 
-              var sessionType = {
-                id: "sessionType-" + siteMtgServiceTypeID,
-                sessionTypeId: siteMtgServiceTypeID,
-                sessionName: siteMtgProductCodePrefix,
-                sessionDescription: siteMtgDisplayName,
-                meetingCenterApplicable: meetingCenterApplicable,
-                trainingCenterApplicable: trainingCenterApplicable,
-                eventCenterApplicable: eventCenterApplicable,
-                supportCenterApplicable: supportCenterApplicable,
-                sessionEnabled: false
-              }; // sessionType
+                var sessionType = {
+                  id: "sessionType-" + siteMtgServiceTypeID,
+                  sessionTypeId: siteMtgServiceTypeID,
+                  sessionName: siteMtgProductCodePrefix,
+                  sessionDescription: siteMtgDisplayName,
+                  meetingCenterApplicable: meetingCenterApplicable,
+                  trainingCenterApplicable: trainingCenterApplicable,
+                  eventCenterApplicable: eventCenterApplicable,
+                  supportCenterApplicable: supportCenterApplicable,
+                  sessionEnabled: false
+                }; // sessionType
 
-              sessionTypes.push(sessionType);
-            }); // siteMeetingTypes.forEach()
+                sessionTypes.push(sessionType);
+              } // chkSiteMeetingType()
+            ); // siteMeetingTypes.forEach()
           }
 
           userSettingsModel.sessionTypes = sessionTypes;
           var enabledSessionTypesIDs = [].concat(userInfoJson.use_meetingTypes.use_meetingType);
 
+          /*
           logMsg = funcName + ": " + "\n" +
             "enabledSessionTypesIDs=" + enabledSessionTypesIDs;
-          // $log.log(logMsg);
+          $log.log(logMsg);
+          */
 
-          enabledSessionTypesIDs.forEach(function (enabledSessionTypeID) { // loop through user's enabled session type
-            userSettingsModel.sessionTypes.forEach(function (sessionType) {
-              var sessionTypeId = sessionType.sessionTypeId;
+          enabledSessionTypesIDs.forEach(
+            function chkEnabledSessionTypeID(enabledSessionTypeID) { // loop through user's enabled session type
+              userSettingsModel.sessionTypes.forEach(function (sessionType) {
+                var sessionTypeId = sessionType.sessionTypeId;
 
-              logMsg = funcName + ": " + "\n" +
-                "enabledSessionTypeID=" + enabledSessionTypeID + "\n" +
-                "sessionTypeId=" + sessionTypeId;
-              // $log.log(logMsg);
+                /*
+                logMsg = funcName + ": " + "\n" +
+                  "enabledSessionTypeID=" + enabledSessionTypeID + "\n" +
+                  "sessionTypeId=" + sessionTypeId;
+                $log.log(logMsg);
+                */
 
-              if (sessionType.sessionTypeId == enabledSessionTypeID) {
-                sessionType.sessionEnabled = true;
-              }
-            }); // userSettingsModel.sessionTypes.forEach()
-          }); // enabledSessionTypesIDs.forEach()
+                if (sessionType.sessionTypeId == enabledSessionTypeID) {
+                  sessionType.sessionEnabled = true;
+                }
+              }); // userSettingsModel.sessionTypes.forEach()
+            } // chkEnabledSessionTypeID()
+          ); // enabledSessionTypesIDs.forEach()
           // End of Session Types update
         }, // updateUserSettingsModelPart1()
 
@@ -450,9 +464,11 @@
           var funcName = "initPanel()";
           var logMsg = "";
 
+          /*
           logMsg = funcName + ": " +
             "START";
-          // $log.log(logMsg);
+          $log.log(logMsg);
+          */
 
           angular.element('#reloadBtn').button('loading');
           angular.element('#reloadBtn2').button('loading');
@@ -481,9 +497,11 @@
               var funcName = "initPanel().getSessionTicketError()";
               var logMsg = "";
 
+              /*
               logMsg = funcName + ": " + "failed to get session ticket" + "\n" +
                 "errId=" + errId;
               $log.log(logMsg);
+              */
 
               _self.setLoadingErrorDisplay(
                 errId,
@@ -630,7 +648,6 @@
           allowRetry,
           form
         ) {
-
           userSettingsModel.errMsg = this.getErrMsg(errId, null);
           userSettingsModel.viewReady = false;
           userSettingsModel.hasLoadError = true;
@@ -667,34 +684,31 @@
           };
 
           // go through the session types
-          userSettingsModel.sessionTypes.forEach(function (sessionType) {
-            if (sessionType.sessionEnabled) {
-              userSettings.meetingTypes.push(sessionType.sessionTypeId);
-              if (userSettings.meetingCenter === "false") userSettings.meetingCenter = sessionType.meetingCenterApplicable ? "true" : "false";
-              if (userSettings.trainingCenter === "false") userSettings.trainingCenter = sessionType.trainingCenterApplicable ? "true" : "false";
-              if (userSettings.supportCenter === "false") userSettings.supportCenter = sessionType.supportCenterApplicable ? "true" : "false";
-              if (userSettings.eventCenter === "false") userSettings.eventCenter = sessionType.eventCenterApplicable ? "true" : "false";
-              if (userSettings.salesCenter === "false") userSettings.salesCenter = sessionType.salesCenterApplicable ? "true" : "false";
-            }
-          }); // userSettingsModel.sessionTypes.forEach()
+          userSettingsModel.sessionTypes.forEach(
+            function chkSessionType(sessionType) {
+              if (sessionType.sessionEnabled) {
+                userSettings.meetingTypes.push(sessionType.sessionTypeId);
+                if (userSettings.meetingCenter === "false") userSettings.meetingCenter = sessionType.meetingCenterApplicable ? "true" : "false";
+                if (userSettings.trainingCenter === "false") userSettings.trainingCenter = sessionType.trainingCenterApplicable ? "true" : "false";
+                if (userSettings.supportCenter === "false") userSettings.supportCenter = sessionType.supportCenterApplicable ? "true" : "false";
+                if (userSettings.eventCenter === "false") userSettings.eventCenter = sessionType.eventCenterApplicable ? "true" : "false";
+                if (userSettings.salesCenter === "false") userSettings.salesCenter = sessionType.salesCenterApplicable ? "true" : "false";
+              }
+            } // chkSessionType()
+          ); // userSettingsModel.sessionTypes.forEach()
 
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
-              var successMsg = $translate.instant("webexUserSettings.sessionEnablementUpdateSuccess");
-              _self.processUpdateSuccessResult(
+              _self.processUpdateResponse(
                 form,
                 result,
                 true,
-                successMsg
+                "webexUserSettings.sessionEnablementUpdateSuccess"
               );
             }, // updateUserSettingsSuccess()
 
             function updateUserSettingsError(result) {
-              angular.element('#saveBtn').button('reset');
-
-              userSettingsModel.disableCancel = false;
-
-              _self.processUpdateErrorResult(result);
+              _self.processNoUpdateResponse(result);
             } // updateUserSettingsError()
           );
         }, // updateUserSettings()
@@ -768,37 +782,35 @@
 
           XmlApiFact.updateUserSettings2(xmlApiInfo).then(
             function updateUserSettings2Success(result) {
-              var successMsg = $translate.instant("webexUserSettings.privilegesUpdateSuccess");
-              _self.processUpdateSuccessResult(
+              _self.processUpdateResponse(
                 form,
                 result,
                 false,
-                successMsg);
+                "webexUserSettings.privilegesUpdateSuccess"
+              );
             }, // updateUserSettings2Success()
 
             function updateUserSettings2Error(result) {
-              angular.element('#saveBtn2').button('reset');
-
-              userSettingsModel.disableCancel2 = false;
-
-              _self.processUpdateErrorResult(result);
+              _self.processNoUpdateResponse(result);
             } // updateUserSettings2Error()
           );
         }, // updateUserSettings2()
 
-        processUpdateSuccessResult: function (
+        processUpdateResponse: function (
           form,
           result,
           flushWaf,
           successMsg
         ) {
-          var funcName = "processUpdateSuccessResult()";
+          var funcName = "processUpdateResponse()";
           var logMsg = "";
 
+          /*
           logMsg = funcName + ": " + "\n" +
             "flushWaf=" + flushWaf + "\n" +
             "result=" + "\n" + result;
           $log.log(logMsg);
+          */
 
           var resultJson = this.validateXmlData(
             "Update user settings2 result",
@@ -811,29 +823,31 @@
             JSON.stringify(resultJson);
           $log.log(logMsg);
 
+          var updateStatus = "success";
+          var notificationMsg = $translate.instant(successMsg);
+          
+          // verify whether the update request completed without error
           if ("" === resultJson.errId) {
             if (flushWaf) {
               XmlApiFact.flushWafCache(xmlApiInfo).then(
                 function flushWafCacheSuccess(result) { //success
                   $log.log("Flush success");
                 }, // flushWafCacheSuccess()
+                
                 function flushWafCacheError() { //fail
                   $log.log("Flush error");
                 } // flushWafCacheError()
               );
             }
-
+              
             form.$dirty = false;
             form.$setPristine();
-
-            Notification.notify([successMsg], 'success');
           } else {
-            var notificationMsg = this.getErrMsg(
+            updateStatus = "error";
+            notificationMsg = this.getErrMsg(
               resultJson.errId,
               resultJson.headerJson.serv_header.serv_response.serv_value
             );
-
-            Notification.notify([notificationMsg], 'error');
           }
 
           angular.element('#saveBtn').button('reset');
@@ -841,19 +855,27 @@
 
           userSettingsModel.disableCancel = false;
           userSettingsModel.disableCancel2 = false;
-        }, // processUpdateSuccessResult()
+          
+          Notification.notify([notificationMsg], updateStatus);
+        }, // processUpdateResponse()
 
-        processUpdateErrorResult: function (result) {
-          var funcName = "processUpdateErrorResult()";
+        processNoUpdateResponse: function (result) {
+          var funcName = "processNoUpdateResponse()";
           var logMsg = "";
 
           logMsg = funcName + ": " + "result=" + "\n" +
             result;
           $log.log(logMsg);
 
+          angular.element('#saveBtn').button('reset');
+          angular.element('#saveBtn2').button('reset');
+
+          userSettingsModel.disableCancel = false;
+          userSettingsModel.disableCancel2 = false;
+
           var errMsg = this.getErrMsg(null, null);
           Notification.notify([errMsg], 'error');
-        }, // processUpdateErrorResult()
+        }, // processNoUpdateResponse()
 
         getErrMsg: function (errId, errValue) {
           var funcName = "getErrMsg()";

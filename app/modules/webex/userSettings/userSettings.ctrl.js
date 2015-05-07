@@ -60,6 +60,8 @@
 
       //----------------------------------------------------------------------//
 
+      $log.log("Show panel3");
+      
       this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
       this.initPanel();
