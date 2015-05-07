@@ -92,10 +92,25 @@
     });
 
     function updateUserTitleCard() {
-      vm.currentUser.titleCard =
-        (!!vm.currentUser.displayName) ? vm.currentUser.displayName :
-        (!!vm.currentUser.name) ? (vm.currentUser.name.givenName || '') + ' ' + (vm.currentUser.name.familyName || '') :
-        vm.currentUser.userName;
+      vm.currentUser.titleCard = '';
+      if (vm.currentUser.displayName) {
+        vm.currentUser.titleCard = vm.currentUser.displayName;
+      } else if (vm.currentUser.name) {
+        vm.currentUser.titleCard = (vm.currentUser.name.givenName || '') + ' ' + (vm.currentUser.name.familyName || '');
+      } else {
+        vm.currentUser.titleCard = vm.currentUser.userName;
+      }
+
+      vm.currentUser.subTitleCard = '';
+      if (vm.currentUser.title) {
+        vm.currentUser.subTitleCard = vm.currentUser.title;
+      }
+      if (angular.isArray(vm.currentUser.addresses) && vm.currentUser.addresses.length) {
+        vm.currentUser.subTitleCard += ' ' + (vm.currentUser.addresses[0].locality || '');
+      }
+      if (!vm.currentUser.subTitleCard && vm.currentUser.titleCard != vm.currentUser.userName) {
+        vm.currentUser.subTitleCard = vm.currentUser.userName;
+      }
     }
 
     function addGenerateAuthCodeLink() {
