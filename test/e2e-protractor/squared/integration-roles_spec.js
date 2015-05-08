@@ -40,6 +40,10 @@ describe('Org Entitlement flow', function () {
     utils.expectIsDisplayed(roles.displayNameInput);
   });
 
+  it('should display organization name', function () {
+    utils.expectIsDisplayed(users.headerOrganizationName);
+  });
+
   it('should edit last name and display name, roles & save', function () {
     roles.editLastName();
     roles.editDisplayName();

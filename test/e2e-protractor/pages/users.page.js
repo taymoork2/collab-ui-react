@@ -106,7 +106,7 @@ var UsersPage = function () {
   this.collabRadio2 = element(by.id('collabRadioLabel2'));
 
   this.rolesChevron = element(by.css('#rolesChevron .header-title'));
-
+  this.headerOrganizationName = element(by.css('.navbar-orgname'));
   this.messageLicenses = element(by.id('messaging'));
   this.conferenceLicenses = element(by.id('conference'));
   this.communicationLicenses = element(by.id('communication'));

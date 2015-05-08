@@ -6,6 +6,13 @@ angular.module('Core')
       var getAuthinfoData = function () {
         $scope.username = Authinfo.getUserName();
         $scope.orgname = Authinfo.getOrgName();
+        var roles = Authinfo.getRoles();
+        if (!roles || roles.length === 0) {
+          roles = ['User'];
+        }
+        var roleList = roles.sort().join(', ');
+        $scope.roles = roles;
+        $scope.roleList = roleList;
         $scope.orgId = Authinfo.getOrgId();
         $scope.isPartner = Authinfo.isPartnerAdmin();
       };
