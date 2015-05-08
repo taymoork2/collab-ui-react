@@ -726,7 +726,9 @@ angular.module('Core')
         ],
         'squared-fusion-cal': [
           'fusion',
-          'cluster-details',
+          'cluster-details'
+        ],
+        'squared-fusion-uc': [
           'devices'
         ],
         'squared-team-member': [

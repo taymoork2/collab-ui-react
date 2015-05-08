@@ -45,4 +45,17 @@ describe('App Configuration', function () {
     }
   });
 
+  describe('service states', function () {
+
+    it('squared-fusion-cal should contain fusion states', function () {
+      expect(Config.serviceStates['squared-fusion-cal'][0]).toBe('fusion');
+      expect(Config.serviceStates['squared-fusion-cal'][1]).toBe('cluster-details');
+    });
+
+    it('squared-fusion-uc should contain devices state', function () {
+      expect(Config.serviceStates['squared-fusion-uc'][0]).toBe('devices');
+    });
+
+  });
+
 });
