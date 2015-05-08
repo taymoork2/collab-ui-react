@@ -2,7 +2,7 @@
 
 describe('Service: Partner Reports Service', function () {
   var $httpBackend, PartnerReportService, Config, Notification;
-  var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl;
+  var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl;
 
   beforeEach(module('Core'));
 
@@ -16,6 +16,7 @@ describe('Service: Partner Reports Service', function () {
   var customerData = {
     'organizations': getJSONFixture('core/json/partnerReports/customerResponse.json')
   };
+  var mediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
 
   var error = {
     message: 'error'
@@ -70,6 +71,7 @@ describe('Service: Partner Reports Service', function () {
     var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
     mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
+    mediaQualityUrl = 'modules/core/partnerReports/callMetrics/mediaQualityFake.json';
   }));
 
   afterEach(function () {
@@ -163,4 +165,12 @@ describe('Service: Partner Reports Service', function () {
       $httpBackend.flush();
     });
   });
+
+  describe('Media Quality Services', function () {
+    it('should get MediaQuality Metrics', function () {
+      $httpBackend.whenGET(mediaQualityUrl).respond(mediaQualityGraphData);
+      expect(mediaQualityGraphData).toBeDefined();
+    });
+  });
+
 });

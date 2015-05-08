@@ -384,7 +384,10 @@ angular.module('Core')
           brandWhite: '#fff',
           grayDarkest: '#444',
           grayDarker: '#666',
-          grayLight: '#ccc'
+          grayLight: '#ccc',
+          brandInfo: '#00c1aa',
+          brandDanger: '#f05d3b',
+          brandWarning: '#f7c100'
         },
 
         confMap: {

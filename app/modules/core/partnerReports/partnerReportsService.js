@@ -14,10 +14,14 @@
     var mostRecentUpdate = "";
     var customerList = null;
 
+    var mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
+    var mediaQualityData = [];
+
     return {
       getActiveUserData: getActiveUserData,
       getCustomerList: getCustomerList,
-      getMostRecentUpdate: getMostRecentUpdate
+      getMostRecentUpdate: getMostRecentUpdate,
+      getMediaQualityMetrics: getMediaQualityMetrics
     };
 
     function getActiveUserData(customer, time) {
@@ -213,5 +217,30 @@
         return tableData;
       });
     }
+
+    function getMediaQualityMetrics() {
+      return $http.get(mediaQualityUrl).success(function (response) {
+        if (response.data !== null && response.data !== undefined) {
+          var graphData = response.data;
+          angular.forEach(graphData, function (index) {
+            index.data = modifyMediaQualityGraphData(index.data);
+          });
+          return graphData.data;
+        }
+      });
+    }
+
+    function modifyMediaQualityGraphData(data) {
+      angular.forEach(data, function (index) {
+        index.excellent = parseInt(index.details.excellent);
+        index.good = parseInt(index.details.good);
+        index.fair = parseInt(index.details.fair);
+        index.poor = parseInt(index.details.poor);
+        index.totalCalls = index.details.excellent + index.details.good + index.details.fair + index.details.poor;
+        index.modifiedDate = moment(index.date).format("MMM DD");
+      });
+      return data;
+    }
+
   }
 })();

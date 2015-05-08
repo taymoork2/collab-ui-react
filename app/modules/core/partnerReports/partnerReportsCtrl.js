@@ -28,6 +28,12 @@
     vm.customerOptions = [];
     vm.customerSelected = null;
 
+    vm.mediaQualityRefresh = 'refresh';
+    vm.mediaQualityFake = [];
+    var mediaQualityRefreshDiv = 'mediaQualityRefreshDiv';
+    var noMediaQualityDataDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
+    var isMediaQualityRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="mediaQuality-user-status icon icon-spinner icon-2x"></i>';
+
     vm.timeOptions = [{
       value: 0,
       label: $translate.instant('reportsPage.week')
@@ -109,6 +115,8 @@
         });
         promises.push(activeUserPromise);
 
+        var mediaQualityPromise = getMediaQualityReports();
+        promises.push(mediaQualityPromise);
         $q.all(promises).then(function () {
           vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
           setGraphResizing();
@@ -124,6 +132,7 @@
           label: org.customerName
         });
       });
+
       if (vm.customerOptions[0] !== null && vm.customerOptions[0] !== undefined) {
         vm.customerSelected = vm.customerOptions[0];
       } else {
@@ -168,6 +177,27 @@
           GraphService.invalidateActiveUserGraphSize();
         }
       });
+
+      angular.element('#qualityTab').on("click", function () {
+        if (vm.mediaQualityRefresh !== 'empty') {
+          GraphService.invalidateMediaQualityGraphSize();
+        }
+      });
+    }
+
+    function getMediaQualityReports() {
+      return PartnerReportService.getMediaQualityMetrics().then(function (response) {
+        var graphData = response.data;
+        GraphService.updateMediaQualityGraph(graphData);
+        if (graphData.length === 0) {
+          angular.element('#' + mediaQualityRefreshDiv).html(noMediaQualityDataDiv);
+          vm.mediaQualityRefresh = 'empty';
+        } else {
+          vm.mediaQualityRefresh = 'set';
+        }
+        return;
+      });
     }
   }
+
 })();

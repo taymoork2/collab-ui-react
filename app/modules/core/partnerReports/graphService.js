@@ -27,7 +27,9 @@
       'switchable': false,
       'fontSize': 13,
       'color': Config.chartColors.grayDarkest,
-      'markerLabelGap': 10
+      'markerLabelGap': 10,
+      'markerType': 'square',
+      'position': 'bottom'
     };
     var numFormatBase = {
       'precision': 0,
@@ -43,9 +45,13 @@
     var activeUsersTitle = $translate.instant('activeUsers.activeUsers');
     var activeUsersGraph = null;
 
+    var mediaQualityGraph = null;
+    var mediaQualityDiv = 'mediaQualityDiv';
     return {
       invalidateActiveUserGraphSize: invalidateActiveUserGraphSize,
-      updateActiveUsersGraph: updateActiveUsersGraph
+      updateActiveUsersGraph: updateActiveUsersGraph,
+      invalidateMediaQualityGraphSize: invalidateMediaQualityGraphSize,
+      updateMediaQualityGraph: updateMediaQualityGraph
     };
 
     function createActiveUserGraph(data) {
@@ -53,7 +59,6 @@
       if (data.length === 0) {
         data = dummyData(activeUserDiv);
       }
-
       var graphOne = angular.copy(columnBase);
       graphOne.title = usersTitle;
       graphOne.fillColors = Config.chartColors.brandSuccessLight;
@@ -78,13 +83,10 @@
       catAxis.gridPosition = 'start';
 
       var legend = angular.copy(legendBase);
-      legend.markerType = 'square';
       legend.labelText = '[[title]]';
-      legend.position = 'bottom';
-
       var numFormat = angular.copy(numFormatBase);
 
-      activeUsersGraph = createGraph(data, activeUserDiv, 'serial', graphs, valueAxes, catAxis, legend, numFormat);
+      activeUsersGraph = createGraph(data, activeUserDiv, 'serial', graphs, valueAxes, catAxis, legend, numFormat, true);
     }
 
     function invalidateActiveUserGraphSize() {
@@ -102,13 +104,12 @@
         } else {
           activeUsersGraph.dataProvider = data;
         }
-
         activeUsersGraph.validateData();
         invalidateActiveUserGraphSize();
       }
     }
 
-    function createGraph(data, div, chartType, graphs, valueAxes, catAxis, legend, numFormat) {
+    function createGraph(data, div, chartType, graphs, valueAxes, catAxis, legend, numFormat, autoMargins) {
       return AmCharts.makeChart(div, {
         'type': chartType,
         'theme': 'none',
@@ -130,10 +131,8 @@
         'numberFormatter': numFormat,
         'plotAreaBorderAlpha': 0,
         'plotAreaBorderColor': Config.chartColors.grayLight,
-        'marginTop': 20,
-        'marginRight': 20,
-        'marginLeft': 10,
-        'marginBottom': 10,
+        'autoMargins': autoMargins,
+        'marginTop': 60,
         'categoryField': 'modifiedDate',
         'categoryAxis': catAxis,
         'legend': legend,
@@ -164,8 +163,86 @@
         dataPoint.activeUsers = 0;
         dataPoint.percentage = 0;
       }
-
+      if (div === mediaQualityDiv) {
+        dataPoint.excellent = 0;
+        dataPoint.good = 0;
+        dataPoint.fair = 0;
+        dataPoint.poor = 0;
+        dataPoint.totalCalls = 0;
+      }
       return [dataPoint];
+    }
+
+    function createMediaQualityGraph(data) {
+      var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ' <span class="graph-number">[[totalCalls]]</span>';
+
+      var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good', 'mediaQuality.excellent'];
+      var values = ['poor', 'fair', 'good', 'excellent'];
+      var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue, Config.chartColors.brandInfo];
+      var graphs = [];
+
+      if (data.data.length === 0) {
+        data = dummyData(mediaQualityDiv);
+      } else {
+        data = data.data[0].data;
+      }
+      var total = values.length;
+      for (var i = 0; i < total; i++) {
+        graphs[i] = angular.copy(columnBase);
+        graphs[i].title = $translate.instant(titles[i]);
+        graphs[i].fillColors = colors[i];
+        graphs[i].colorField = colors[i];
+        graphs[i].valueField = values[i];
+        graphs[i].labelText = '[[value]]';
+        graphs[i].fontSize = 14;
+        graphs[i].title = $translate.instant(titles[i]);
+        graphs[i].legendColor = colors[i];
+        graphs[i].columnWidth = 0.6;
+        graphs[i].color = Config.chartColors.brandWhite;
+        if (i) {
+          graphs[i].clustered = false;
+        }
+      }
+      graphs[total - 1].balloonText = mediaQualityBalloonText;
+
+      var catAxis = angular.copy(axis);
+      catAxis.gridPosition = 'start';
+      var valueAxes = [angular.copy(axis)];
+      valueAxes[0].labelsEnabled = false;
+      valueAxes[0].stackType = 'regular';
+      valueAxes[0].axisAlpha = 0;
+
+      var legend = angular.copy(legendBase);
+      legend.labelText = '[[title]]';
+      legend.spacing = -20;
+      legend.align = 'center';
+      legend.autoMargins = true;
+      legend.valueWidth = 7;
+      legend.reversedOrder = true;
+
+      var numFormat = angular.copy(numFormatBase);
+      mediaQualityGraph = createGraph(data, mediaQualityDiv, 'serial', graphs, valueAxes, catAxis, legend, numFormat, false);
+    }
+
+    function invalidateMediaQualityGraphSize() {
+      if (mediaQualityGraph !== null) {
+        mediaQualityGraph.invalidateSize();
+      }
+    }
+
+    function updateMediaQualityGraph(data) {
+      if (mediaQualityGraph === null) {
+        createMediaQualityGraph(data);
+      } else {
+        if (data.length === 0) {
+          mediaQualityGraph.dataProvider = dummyData(mediaQualityDiv);
+        } else {
+          mediaQualityGraph.dataProvider = data;
+        }
+        mediaQualityGraph.validateData();
+        invalidateMediaQualityGraphSize();
+      }
+
     }
   }
 })();

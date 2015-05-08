@@ -1,0 +1,53 @@
+{
+  "data": [{
+    "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+    "orgName": "Test Org One",
+    "data": [{
+      "date": "2015-05-10T02:00:00.000-05:00",
+      "details": {
+        "poor": 2,
+        "fair": 14,
+        "good": 5,
+        "excellent": 14
+      }
+    }, {
+      "date": "2015-05-11T02:00:00.000-05:00",
+      "details": {
+        "poor": 8,
+        "fair": 5,
+        "good": 10,
+        "excellent": 10
+      }
+    }, {
+      "date": "2015-05-12T02:00:00.000-05:00",
+      "details": {
+        "poor": 15,
+        "fair": 0,
+        "good": 12,
+        "excellent": 20
+      }
+    }, {
+      "date": "2015-05-13T02:00:00.000-05:00",
+      "details": {
+        "poor": 8,
+        "fair": 5,
+        "good": 10,
+        "excellent": 10
+      }
+    }, {
+      "date": "2015-05-14T02:00:00.000-05:00",
+      "details": {
+        "poor": 15,
+        "fair": 0,
+        "good": 12,
+        "excellent": 20
+      }
+    }]
+  }],
+  "type": "mediaQuality",
+  "date": "2015-04-21T15:26:43.486Z",
+  "spanCount": 1,
+  "spanType": "day",
+  "intervalCount": 1,
+  "intervalType": "week"
+}

@@ -265,6 +265,16 @@
     "user": "User",
     "users": "Users"
   },
+  "mediaQuality": {
+    "mediaQuality": "Media Quality",
+    "totalCalls": "Total Calls",
+    "excellent": "Excellent",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor",
+    "description": "Media quality provides a breakdown of the quality of all connected calls during the selected period. For more information about media quality, see the {knowledge base}.",
+    "mediaQualityGraphError": "There was an error while loading media quality data."
+  },
   "profilePage": {
     "userProfile": "User Profile",
     "userDetails": "User Details",

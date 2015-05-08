@@ -1,0 +1,25 @@
+<div class="media-quality">
+  <div class="row">
+    <div class="graph-align">
+    	<h4 class="pull-left section-title" translate="mediaQuality.mediaQuality"></h4>
+    	<div class="actions-menu dropdown pull-right report-threedot-button">
+        <button class="actions-button btn-none">
+          <i class="icon icon-three-dots"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr class="title-break pull-right"></hr>
+  <div>
+    <div class="row ">
+      <div class="graph-align">
+        <div class="report-description" translate="mediaQuality.description"></div>
+        <div id="mediaQualityDiv" class="media-timechartDiv"></div>
+        <div id="mediaQualityRefreshDiv" class="spinner-position" ng-show="nav.isRefresh(nav.mediaQualityRefresh) || nav.isEmpty(nav.mediaQualityRefresh)">
+          <div class="media-timechartDiv clear-graph"></div>
+          <i class='media-quality-status icon icon-spinner icon-2x'></i>
+        </div>
+      </div>
+    </div>
+  </div> 
+</div>
