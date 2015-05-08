@@ -1,30 +1,18 @@
 <div class="fault">
 
-
-
     <div class="row page-header metrics-table">
         <div class="page-title col-md-8 col-sm-8">
             <h2 class=" metrics-title">{{'metricsPage.metrics' | translate}}</h2>
         </div>
     </div>
 
-     <!--div class="col-md-2 metrics-search">
-            <input type="text" class="metrics-input" placeholder="Search" ng-model="searchString">
-        </div>
-        <div class="col-sm-1 metrics-search">
-            <button type="button" class="btn btn-default btn-sm metrics-btn" ng-click="searchMetricsList()"><i class="icon icon-search metrics-btn-search">
-            </i></button>
-        </div -->
-
-    
-
    <!-- Threshold  List Table creation Starts-->
     <div class="row">
         <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
     </div>
 <!-- Threshol List Table creation Ends -->
-<div ng-class="{preview: metricsPreviewActive}" class="user-management">
+<!-- div ng-class="{preview: metricsPreviewActive}" class="user-management">
   <div ui-view class="outer-details-div" id="entire-slide"></div>
-</div>
+</div -->
 
 </div>
