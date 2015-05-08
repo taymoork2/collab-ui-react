@@ -11,9 +11,11 @@ angular.module('Mediafusion')
 
       var thresholdService = {
 
-        queryThresholdList: function (pgNo, callback) {
+        queryThresholdList: function (pgNo, parentId, callback) {
 
+          var queryParams = "?parentId=" + parentId;
           var thresholdListUrl = Utils.sprintf(baseUrl + '/threshold/allThreshold', [Authinfo.getOrgId()]);
+          thresholdListUrl = thresholdListUrl + queryParams;
 
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
@@ -217,7 +219,7 @@ angular.module('Mediafusion')
 
         addEvents: function (events, callback) {
 
-          var addEventsUrl = Utils.sprintf(baseUrl + '/threshold/addEvent', [Authinfo.getOrgId()]);
+          var addEventsUrl = Utils.sprintf('http://10.104.121.51:8080/faultrest/mediafusion/v1/eventcatalog/create', [Authinfo.getOrgId()]);
           $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.post(addEventsUrl, events)
@@ -232,7 +234,29 @@ angular.module('Mediafusion')
               callback(data, status);
               Auth.handleStatus(status);
             });
-        }
+        },
+
+        deleteThreshold: function (thresholdId, callback) {
+
+          var queryParams = "?id=" + thresholdId;
+
+          var deleteThresholdUrl = Utils.sprintf(baseUrl + '/threshold/deleteThreshold', [Authinfo.getOrgId()]);
+          deleteThresholdUrl = deleteThresholdUrl + queryParams;
+
+          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
+
+          $http.get(deleteThresholdUrl)
+            .success(function (data, status) {
+              //data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              //data.success = false;
+              //data.status = status;
+              callback(data, status);
+              Auth.handleStatus(status);
+            });
+        },
 
       };
 

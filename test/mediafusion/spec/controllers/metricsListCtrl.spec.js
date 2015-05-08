@@ -57,9 +57,9 @@ describe('Controller: MetricsCtrl', function () {
     expect(scope.queryMetricsList).toBeDefined();
   });
 
-  it('querymeetingslist should be defined', function () {
+  /*it('querymeetingslist should be defined', function () {
     expect(scope.showMetricsDetails).toBeDefined();
-  });
+  });*/
 
   it('Should have meeting data of size 5', function () {
     expect(scope.queryMetricsList.length).toBe(5);

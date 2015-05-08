@@ -29,6 +29,10 @@ angular.module('Mediafusion')
         });
       };
 
+      $scope.deleteThreshold = function () {
+        ThresholdService.deleteThreshold($scope.id, function (data, status) {});
+      };
+
       $scope.saveOverrideThreshold = function () {
 
         var threshold = {
@@ -44,6 +48,10 @@ angular.module('Mediafusion')
         };
 
         ThresholdService.addThreshold(threshold, function (data, status) {});
+
+        $scope.systemSelected = "";
+        $scope.valuePercentage = "";
+        $scope.sysTypeSelected = "";
       };
 
       $scope.overrideCancel = function () {
@@ -51,6 +59,5 @@ angular.module('Mediafusion')
         $scope.valuePercentage = "";
         $scope.sysTypeSelected = "";
       };
-
     }
   ]);
