@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -14,21 +14,49 @@
     vm.editTerms = true;
     vm.disableSquaredUCCheckBox = false;
     vm.offers = {};
-    vm.licenseDurationOptions = [{
-      label: $translate.instant('partnerHomePage.ninetyDays'),
-      value: 90,
-      name: 'licenseDuration',
-      id: 'licenseDuration90'
+
+    vm.trialTermsFields = [{
+      key: 'duration',
+      type: 'radio-list',
+      templateOptions: {
+        horizontal: true,
+        label: $translate.instant('partnerHomePage.duration'),
+        labelClass: 'col-xs-4',
+        inputClass: 'col-xs-7',
+        options: [{
+          label: $translate.instant('partnerHomePage.ninetyDays'),
+          value: 90,
+          id: 'trial90'
+        }, {
+          label: $translate.instant('partnerHomePage.onehundredtwentyDays'),
+          value: 120,
+          id: 'trial120'
+        }, {
+          label: $translate.instant('partnerHomePage.onehundredeightyDays'),
+          value: 180,
+          id: 'trial180'
+        }]
+      }
     }, {
-      label: $translate.instant('partnerHomePage.onehundredtwentyDays'),
-      value: 120,
-      name: 'licenseDuration',
-      id: 'licenseDuration120'
-    }, {
-      label: $translate.instant('partnerHomePage.onehundredeightyDays'),
-      value: 180,
-      name: 'licenseDuration',
-      id: 'licenseDuration180'
+      key: 'licenses',
+      type: 'input',
+      templateOptions: {
+        label: $translate.instant('partnerHomePage.numberOfLicenses'),
+        labelClass: 'col-xs-4',
+        inputClass: 'col-xs-3',
+        type: 'number',
+        required: true
+      },
+      validators: {
+        count: {
+          expression: function ($viewValue, $modelValue) {
+            return ValidationService.trialLicenseCount($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
+          }
+        }
+      }
     }];
 
     vm.isSquaredUC = Authinfo.isSquaredUC;

@@ -17,6 +17,7 @@ angular.module('Core', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
+  'ngMessages',
   'ui.bootstrap',
   'dialogs',
   'ngCsv',
@@ -27,8 +28,10 @@ angular.module('Core', [
   'ngGrid',
   'mgo-angular-wizard',
   'ngClipboard',
-  'cisco.ui',
-  'csDonut'
+  'csDonut',
+  'formly',
+  'formlyCisco',
+  'cisco.ui'
 ]);
 
 angular.module('Squared', ['Core']);

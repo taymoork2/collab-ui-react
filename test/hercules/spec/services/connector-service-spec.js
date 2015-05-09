@@ -3,8 +3,8 @@
 describe('Service: ConnectorService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $httpBackend, Service, converter, notification, win;
-  var rootPath = 'https://hercules-a.wbx2.com/v1';
+  var $httpBackend, $location, Service, converter, notification;
+  var rootPath = 'https://hercules-integration.wbx2.com/v1';
 
   beforeEach(function () {
     module(function ($provide) {
@@ -14,23 +14,18 @@ describe('Service: ConnectorService', function () {
       notification = {
         notify: sinon.stub()
       };
-      win = {
-        location: {
-          search: ''
-        }
-      };
       $provide.value('ConverterService', converter);
       $provide.value('XhrNotificationService', notification);
-      $provide.value('$window', win);
     });
   });
 
-  beforeEach(inject(function ($injector, _ConnectorService_) {
+  beforeEach(inject(function ($injector, _$location_, _ConnectorService_) {
     Service = _ConnectorService_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend
       .when('GET', 'l10n/en_US.json')
       .respond({});
+    $location = _$location_;
   }));
 
   afterEach(function () {
@@ -116,7 +111,8 @@ describe('Service: ConnectorService', function () {
   });
 
   it('should be possible to set mock backend', function () {
-    win.location.search = 'hercules-backend=mock';
+    // win.location.search = 'hercules-backend=mock';
+    $location.search('hercules-backend', 'mock');
     converter.convertClusters.returns('foo');
 
     var callback = sinon.stub();
@@ -132,7 +128,8 @@ describe('Service: ConnectorService', function () {
   });
 
   it('should be possible to set empty backend', function () {
-    win.location.search = 'hercules-backend=nodata';
+    // win.location.search = 'hercules-backend=nodata';
+    $location.search('hercules-backend', 'nodata');
 
     var callback = sinon.stub();
     Service.fetch(callback);

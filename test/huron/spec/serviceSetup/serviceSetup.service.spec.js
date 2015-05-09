@@ -139,7 +139,6 @@ describe('Service: ServiceSetup', function () {
         ServiceSetup.getTimeZones();
 
         $httpBackend.flush();
-
       });
     });
 

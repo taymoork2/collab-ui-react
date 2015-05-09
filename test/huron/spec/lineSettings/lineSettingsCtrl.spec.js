@@ -18,6 +18,11 @@ describe('Controller: LineSettingsCtrl', function () {
 
   beforeEach(module('Huron'));
 
+  var Config;
+  beforeEach(inject(function (_Config_) {
+    Config = _Config_;
+  }));
+
   beforeEach(inject(function (_$rootScope_, _$state_, _$httpBackend_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
     _UserListService_, _SharedLineInfoService_) {
     $rootScope = _$rootScope_;

@@ -1,15 +1,17 @@
 'use strict';
 
 angular.module('Hercules')
-  .service('ConnectorService', ['$http', '$window', 'ConnectorMock', 'ConverterService', 'ConfigService', 'XhrNotificationService',
-    function ConnectorService($http, $window, mock, converter, config, notification) {
+  .service('ConnectorService', ['$http', '$location', 'ConnectorMock', 'ConverterService', 'ConfigService', 'XhrNotificationService',
+    function ConnectorService($http, $location, mock, converter, config, notification) {
       var lastClusterResponse = [];
 
       var fetch = function (callback, opts) {
-        if ($window.location.search.match(/hercules-backend=mock/)) {
+        var searchObject = $location.search();
+        var backend = searchObject['hercules-backend'];
+        if (angular.isDefined(backend) && backend === 'mock') {
           return callback(null, converter.convertClusters(mock.mockData()));
         }
-        if ($window.location.search.match(/hercules-backend=nodata/)) {
+        if (angular.isDefined(backend) && backend === 'nodata') {
           return callback(null, []);
         }
 

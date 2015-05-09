@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('Core')
-  .factory('Config', ['$window', 'Utils', '$filter',
-    function ($window, Utils, $filter) {
+  .factory('Config', ['$location', 'Utils', '$filter',
+    function ($location, Utils, $filter) {
 
       var getCurrentHostname = function () {
-        return $window.location.hostname || '';
+        return $location.host() || '';
       };
 
       var config = {
@@ -403,7 +403,7 @@ angular.module('Core')
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
-          return currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost';
+          return currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server';
         },
 
         isIntegration: function () {

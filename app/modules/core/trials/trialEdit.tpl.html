@@ -1,5 +1,5 @@
 <!-- Edit Trial Modal -->
-<form name="trialForm" id="editTrialForm" class="form-horizontal">
+<form novalidate name="trialForm" id="editTrialForm" class="form-horizontal">
   <div class="modal-header">
     <button type="button" class="close" ng-click="$dismiss()">
       <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only" translate="common.close"></span>
@@ -75,20 +75,8 @@
       </div>
     </div>
     <div ng-show="!trial.editTerms || trial.showPartnerEdit">
-      <div class="form-group">
-        <fieldset>
-          <legend class="col-xs-4 control-label" translate="partnerHomePage.duration"></legend>
-          <div class="col-xs-8">
-            <cs-radiolist ng-model="trial.currentTrial.duration" options="trial.licenseDurationOptions" horizontal="true"></cs-radiolist>
-          </div>
-        </fieldset>
-      </div>
-      <div class="form-group">
-        <label for="editLicensesSelect" class="col-xs-4 control-label" translate="partnerHomePage.numberOfLicenses"></label>
-        <div class="col-xs-3" ng-class="{'has-error': trialForm.editLicensesSelect.$invalid}">
-          <input id="editLicensesSelect" name="editLicensesSelect" type="number" ng-pattern="/^[1-9][0-9]{0,2}$/" class="form-control" ng-model="trial.currentTrial.licenses" required>
-        </div>
-      </div>
+      <formly-form model="trial.currentTrial" fields="trial.trialTermsFields">
+      </formly-form>
     </div>
   </div>
   <div class="modal-footer">

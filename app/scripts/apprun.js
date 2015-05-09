@@ -1,8 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate', 'LogMetricsService', '$log',
-    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService, $log) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate', 'LogMetricsService', '$log', 'formlyValidationMessages',
+    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService, $log, formlyValidationMessages) {
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
       $rootScope.Utils = Utils;
@@ -100,6 +100,29 @@ angular
       $rootScope.$on('$stateChangeSuccess', function (event, toState) {
         HttpUtils.setTrackingID();
         LogMetricsService.logMetricsState(toState);
+      });
+
+      // This is where standard form field validation messages are defined.  Any overrides need to be
+      // done in individual controllers.  Using promise returned from $translate service to ensure
+      // translation file is loaded before adding messages to formly.
+      $translate('common.invalidRequired').then(function (requiredMessage) {
+        formlyValidationMessages.addStringMessage('required', requiredMessage);
+      });
+
+      $translate('common.invalidEmail').then(function (emailMessage) {
+        formlyValidationMessages.addStringMessage('email', emailMessage);
+      });
+
+      $translate('common.invalidUrl').then(function (urlMessage) {
+        formlyValidationMessages.addStringMessage('url', urlMessage);
+      });
+
+      $translate('common.invalidMinLength').then(function (minLengthMessage) {
+        formlyValidationMessages.addStringMessage('minlength', minLengthMessage);
+      });
+
+      $translate('common.invalidMaxLength').then(function (maxLengthMessage) {
+        formlyValidationMessages.addStringMessage('maxlength', maxLengthMessage);
       });
     }
   ]);

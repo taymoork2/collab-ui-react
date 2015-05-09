@@ -1,21 +1,21 @@
 'use strict';
 
 angular.module('Hercules')
-  .service('ConfigService', ['$window', 'Config',
-    function ConfigService($window, Config) {
+  .service('ConfigService', ['$location', 'Config',
+    function ConfigService($location, Config) {
 
       var baseHerculesUrl = Config.getHerculesUrl();
       var baseUssUrl = Config.getUssUrl();
 
       var getOverriddenUrl = function (queryParam) {
-        var regex = new RegExp(queryParam + "=([^&]*)");
-        var match = $window.location.search.match(regex);
-        if (match && match.length == 2) {
-          return decodeURIComponent(match[1]);
+        var searchObject = $location.search();
+        var override = searchObject[queryParam];
+        if (angular.isDefined(override) && override !== '') {
+          return decodeURIComponent(override);
         }
       };
       var getUrl = function () {
-        var overriddenUrl = getOverriddenUrl("hercules-url");
+        var overriddenUrl = getOverriddenUrl('hercules-url');
         if (overriddenUrl) {
           return overriddenUrl;
         } else {
@@ -23,7 +23,7 @@ angular.module('Hercules')
         }
       };
       var getUSSUrl = function () {
-        var overriddenUrl = getOverriddenUrl("uss-url");
+        var overriddenUrl = getOverriddenUrl('uss-url');
         if (overriddenUrl) {
           return overriddenUrl;
         } else {

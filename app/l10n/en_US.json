@@ -362,7 +362,12 @@
     "finish": "Finish",
     "language": "Language",
     "selectLanguage": "Select a language",
-    "select": "Select"
+    "select": "Select",
+    "invalidRequired": "This field is required.",
+    "invalidEmail": "This is not a valid Email Address.",
+    "invalidUrl": "This is not a valid URL.",
+    "invalidMinLength": "This entry is too short.",
+    "invalidMaxLength": "This entry is too long."
   },
   "notifications": {
     "success": "Success notifications",
@@ -860,7 +865,8 @@
     "entitlementsTitle": "Users Onboarded",
     "activeUsersTitle": "Daily Active Users",
     "averageCallsTitle": "Average Calls Per User",
-    "contentSharedTitle": "Files Shared"
+    "contentSharedTitle": "Files Shared",
+    "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
   },
   "trialModal": {
     "trialSuccess": "You have set up your trial successfully.",

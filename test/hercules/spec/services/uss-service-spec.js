@@ -4,22 +4,11 @@ describe('Service: USSService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $httpBackend, Service;
-  var rootPath = 'https://uss-a.wbx2.com/uss/api/v1/';
+  var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
 
-  beforeEach(function () {
-    module(function ($provide) {
-      var win = {
-        location: {
-          search: ''
-        }
-      };
-      $provide.value('$window', win);
-    });
-  });
-
-  beforeEach(inject(function ($injector, _USSService_) {
+  beforeEach(inject(function (_$httpBackend_, _USSService_) {
     Service = _USSService_;
-    $httpBackend = $injector.get('$httpBackend');
+    $httpBackend = _$httpBackend_;
     $httpBackend
       .when('GET', 'l10n/en_US.json')
       .respond({});

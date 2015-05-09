@@ -4,21 +4,11 @@ describe('Config', function () {
 
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var win;
-  beforeEach(function () {
-    module(function ($provide) {
-      win = {
-        location: {
-          href: ''
-        }
-      };
-      $provide.value('$window', win);
-    });
-  });
-
-  var Config;
-  beforeEach(inject(function (_Config_) {
+  var Config, $location;
+  beforeEach(inject(function (_$location_, _Config_) {
     Config = _Config_;
+    $location = _$location_;
+    spyOn($location, 'host');
   }));
 
   var devHost = 'localhost';
@@ -43,7 +33,7 @@ describe('Config', function () {
           if (!Config[fn]) {
             throw new Error("Unknown method " + fn);
           }
-          win.location.hostname = host;
+          $location.host.and.returnValue(host);
           var actual = Config[fn](arg);
 
           if (expected != actual) {
@@ -66,49 +56,49 @@ describe('Config', function () {
   };
 
   it('should detect dev environment', function () {
-    win.location.hostname = 'wbx2.com/bla';
+    $location.host.and.returnValue('wbx2.com/bla');
     expect(Config.isDev()).toBe(false);
 
-    win.location.hostname = '127.0.0.1';
+    $location.host.and.returnValue('127.0.0.1');
     expect(Config.isDev()).toBe(true);
 
-    win.location.hostname = '0.0.0.0';
+    $location.host.and.returnValue('0.0.0.0');
     expect(Config.isDev()).toBe(true);
 
-    win.location.hostname = 'localhost';
+    $location.host.and.returnValue('localhost');
     expect(Config.isDev()).toBe(true);
 
-    win.location.hostname = '10.12.32.12';
+    $location.host.and.returnValue('10.12.32.12');
     expect(Config.isDev()).toBe(false);
   });
 
   it('should detect integration environment', function () {
-    win.location.hostname = intHost;
+    $location.host.and.returnValue(intHost);
     expect(Config.isIntegration()).toBe(true);
 
-    win.location.hostname = devHost;
+    $location.host.and.returnValue(devHost);
     expect(Config.isIntegration()).toBe(false);
   });
 
   it('should detect production environment', function () {
-    win.location.hostname = intHost;
+    $location.host.and.returnValue(intHost);
     expect(Config.isProd()).toBe(false);
 
-    win.location.hostname = prodHost;
+    $location.host.and.returnValue(prodHost);
     expect(Config.isProd()).toBe(true);
   });
 
   it('should return env', function () {
-    win.location.hostname = intHost;
+    $location.host.and.returnValue(intHost);
     expect(Config.getEnv()).toBe('integration');
 
-    win.location.hostname = devHost;
+    $location.host.and.returnValue(devHost);
     expect(Config.getEnv()).toBe('dev');
 
-    win.location.hostname = prodHost;
+    $location.host.and.returnValue(prodHost);
     expect(Config.getEnv()).toBe('prod');
 
-    win.location.hostname = 'random-host-is-prod';
+    $location.host.and.returnValue('random-host-is-prod');
     expect(Config.getEnv()).toBe('prod');
   });
 
