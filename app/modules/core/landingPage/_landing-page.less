@@ -310,9 +310,71 @@ li.monitoring-cell {
 }
 
 #customerListPanel {
-  .badge {
-    width: 60px;
-    .text-overflow();
+  .ngRow {
+    .col1 .ngCellText, .col2 .ngCellText, .col3 .ngCellText {
+      padding-top: 11px;
+    }
+    .badge {
+      width: 60px;
+      .text-overflow();
+    }
+    .align-center {
+      text-align: center;
+    }
+    .badge-active {
+      .badge.badge-primary;
+    }
+    .badge-active-darker() {
+      background-color: @brand-primary-dark;
+    }
+    .badge-trial {
+      .badge.badge-warning;
+    }
+    .badge-disabled {
+      background-color: @gray-lightest;
+      color: @gray-lightest;
+    }
+    .badge-disabled-darker() {
+      background-color: @gray-lighter;
+      color: @gray-lighter;
+    }
+    .free {
+      color: @gray;
+    }
+    .free-white() {
+      color: @brand-white;
+    }
+    .free-disabled {
+      color: @gray-lighter;
+    }
+    .free-disabled-darker() {
+      color: @gray-light;
+    }
+    .red {
+      color: @brand-danger;
+    }
+    .red-white() {
+      color: @brand-white;
+    }
+    &.selected {
+      .badge-active {
+        .badge-active-darker;
+      }
+      .free {
+        .free-white;
+      }
+      .red {
+        .red-white;
+      }
+    }
+    &:hover {
+      .badge-disabled {
+        .badge-disabled-darker;
+      }
+      .free-disabled {
+        .free-disabled-darker;
+      }
+    }
   }
 }
 
@@ -324,19 +386,6 @@ li.monitoring-cell {
 }
 .yellow {
   color: @brand-warning;
-}
-
-.align-center {
-  text-align: center;
-}
-
-.free {
-  color: @gray;
-}
-
-.badge-disabled {
-  background-color: @gray-lightest;
-  color: @gray-lightest;
 }
 
 .reloaded-time{

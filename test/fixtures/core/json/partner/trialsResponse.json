@@ -1,0 +1,122 @@
+[{
+  "customerOrgId": "eaaab209-2994-4cce-803f-94d16f842ccb",
+  "startDate": "2015-03-06T00:00:00.000Z",
+  "trialPeriod": 90,
+  "offers": [{
+    "id": "COLLAB",
+    "licenseCount": 100,
+    "usageCount": 0
+  }, {
+    "id": "SQUAREDUC",
+    "licenseCount": 100,
+    "usageCount": 0
+  }],
+  "licenses": [{
+    "licenseId": "CO_7633c33b-7643-4242-acfc-5fee5219bc8b",
+    "offerName": "CO",
+    "licenseType": "COMMUNICATION",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "ciscouc"
+    ],
+    "volume": 100,
+    "trialId": "2ad010b7-218a-4ea5-b7a2-b109476f4c80",
+    "status": "ACTIVE"
+  }, {
+    "licenseId": "MS_31fa035f-9658-4085-a5de-2328902c7c29",
+    "offerName": "MS",
+    "licenseType": "MESSAGING",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "messenger-interop",
+      "webex-messenger",
+      "squared-room-moderation"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "2ad010b7-218a-4ea5-b7a2-b109476f4c80",
+    "status": "ACTIVE"
+  }, {
+    "licenseId": "CF_b72d14a9-d16b-46fc-bcdd-c46af3152fd8",
+    "offerName": "CF",
+    "licenseType": "CONFERENCING",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "squared-syncup"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "2ad010b7-218a-4ea5-b7a2-b109476f4c80",
+    "status": "ACTIVE"
+  }],
+  "state": "ACTIVE",
+  "createdBy": "a9b428a6-65a2-48c4-953d-7b45ad35f676",
+  "customerName": "adnanDaveTest1",
+  "customerEmail": "aprcic+2244@gmail.com",
+  "trialId": "2ad010b7-218a-4ea5-b7a2-b109476f4c80",
+  "createdDate": "2015-03-06T00:00:00.000Z"
+}, {
+  "customerOrgId": "b9a5d46e-4593-4bf0-8e97-d44ba7e98512",
+  "startDate": "2015-03-09T00:00:00.000Z",
+  "trialPeriod": 90,
+  "offers": [{
+    "id": "SQUAREDUC",
+    "licenseCount": 100,
+    "usageCount": 0
+  }, {
+    "id": "COLLAB",
+    "licenseCount": 100,
+    "usageCount": 0
+  }],
+  "licenses": [{
+    "licenseId": "MS_109810e7-7ffa-4b05-b41c-40a3ce4c0711",
+    "offerName": "MS",
+    "licenseType": "MESSAGING",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "messenger-interop",
+      "webex-messenger",
+      "squared-room-moderation"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "31068f45-59c6-48d1-8511-eef7f5996e59",
+    "status": "CANCELED"
+  }, {
+    "licenseId": "CF_a0387c3b-1c49-430f-acc0-c904ed08f5c2",
+    "offerName": "CF",
+    "licenseType": "CONFERENCING",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "squared-syncup"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "31068f45-59c6-48d1-8511-eef7f5996e59",
+    "status": "CANCELED"
+  }, {
+    "licenseId": "CO_b0c1b20f-fd27-462f-988f-ef1e694ccc40",
+    "offerName": "CO",
+    "licenseType": "COMMUNICATION",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "ciscouc"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "31068f45-59c6-48d1-8511-eef7f5996e59",
+    "status": "CANCELED"
+  }],
+  "state": "CANCELED",
+  "createdBy": "a9b428a6-65a2-48c4-953d-7b45ad35f676",
+  "customerName": "Atlas56i9p",
+  "customerEmail": "Atlas56i9p@gmail.com",
+  "trialId": "31068f45-59c6-48d1-8511-eef7f5996e59",
+  "createdDate": "2015-03-06T00:00:00.000Z"
+}]

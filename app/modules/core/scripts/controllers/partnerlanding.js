@@ -6,6 +6,16 @@ angular.module('Core')
 
     function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
 
+      var FREE = 0,
+        TRIAL = 1,
+        ACTIVE = 2,
+        CANCELED = 99,
+        NO_LICENSE = -1,
+        NOTE_EXPIRED = 0,
+        NOTE_EXPIRE_TODAY = 0,
+        NOTE_NO_LICENSE = 0,
+        NOTE_CANCELED = 0,
+        NOTE_NOT_EXPIRED = 99;
       $scope.load = true;
       $scope.currentDataPosition = 0;
       $scope.trialPreviewActive = false;
@@ -22,6 +32,7 @@ angular.module('Core')
       $scope.showTrialsRefresh = true;
       $scope.filter = 'ALL';
       $scope.isCustomerPartner = Authinfo.isCustomerPartner;
+      setNotesTextOrder();
 
       $scope.openAddTrialModal = function () {
         $state.go('trialAdd.info').then(function () {
@@ -61,96 +72,114 @@ angular.module('Core')
         }
       };
 
+      function loadRetrievedDataToList(retrievedData, list, isTrialData) {
+        for (var index in retrievedData) {
+          var data = retrievedData[index];
+          var edate = moment(data.startDate).add(data.trialPeriod, 'days').format('MMM D, YYYY');
+          var dataObj = {
+            trialId: data.trialId,
+            customerOrgId: data.customerOrgId,
+            customerName: data.customerName,
+            customerEmail: data.customerEmail,
+            endDate: edate,
+            numUsers: data.licenseCount,
+            daysLeft: 0,
+            usage: 0,
+            licenses: 0,
+            licenseList: [],
+            messaging: null,
+            conferencing: null,
+            communications: null,
+            daysUsed: 0,
+            percentUsed: 0,
+            duration: data.trialPeriod,
+            offer: '',
+            status: data.state,
+            state: data.state,
+            isAllowedToManage: true,
+            isSquaredUcOffer: false
+          };
+
+          if (data.offers) {
+            dataObj.offers = data.offers;
+            var offerNames = [];
+            for (var cnt in data.offers) {
+              var offer = data.offers[cnt];
+              if (!offer) {
+                continue;
+              }
+              switch (offer.id) {
+              case Config.trials.collab:
+                offerNames.push($translate.instant('trials.collab'));
+                break;
+              case Config.trials.squaredUC:
+                dataObj.isSquaredUcOffer = true;
+                offerNames.push($translate.instant('trials.squaredUC'));
+                break;
+              }
+              dataObj.usage = offer.usageCount;
+              dataObj.licenses = offer.licenseCount;
+            }
+            dataObj.offer = offerNames.join(', ');
+          }
+
+          dataObj.licenseList = data.licenses;
+          dataObj.messaging = getLicense(data.licenses, 'messaging');
+          dataObj.conferencing = getLicense(data.licenses, 'conferencing');
+          dataObj.communications = getLicense(data.licenses, 'communications');
+
+          var now = moment().format('MMM D, YYYY');
+          var then = edate;
+          var start = moment(data.startDate).format('MMM D, YYYY');
+
+          var daysDone = moment(now).diff(start, 'days');
+          dataObj.daysUsed = daysDone;
+          dataObj.percentUsed = Math.round((daysDone / data.trialPeriod) * 100);
+
+          var daysLeft = moment(then).diff(now, 'days');
+          dataObj.daysLeft = daysLeft;
+          if (isTrialData) {
+            if (daysLeft >= 0) {
+              $scope.activeList.push(dataObj);
+            } else {
+              dataObj.status = $translate.instant('customerPage.expired');
+              $scope.expiredList.push(dataObj);
+            }
+          }
+
+          var tmpServiceObj = {
+            status: dataObj.status,
+            daysLeft: daysLeft,
+            customerName: dataObj.customerName
+          };
+          angular.extend(dataObj.messaging, tmpServiceObj);
+          angular.extend(dataObj.conferencing, tmpServiceObj);
+          angular.extend(dataObj.communications, tmpServiceObj);
+          setServiceSortOrder(dataObj.messaging, dataObj.licenseList);
+          setServiceSortOrder(dataObj.conferencing, dataObj.licenseList);
+          setServiceSortOrder(dataObj.communications, dataObj.licenseList);
+
+          dataObj.notes = {};
+          setNotesSortOrder(dataObj);
+
+          list.push(dataObj);
+        }
+      }
+
       var getTrialsList = function () {
         $scope.showTrialsRefresh = true;
         $scope.activeList = [];
         $scope.expiredList = [];
         $scope.trialsList = [];
-        $scope.totalTrialsData = [];
         PartnerService.getTrialsList(function (data, status) {
           $scope.showTrialsRefresh = false;
-          if (data.success) {
-            $scope.totalTrials = data.trials.length;
-
+          if (data.success && data.trials) {
             if (data.trials.length > 0) {
-              for (var index in data.trials) {
-                var trial = data.trials[index];
-                var edate = moment(trial.startDate).add(trial.trialPeriod, 'days').format('MMM D, YYYY');
-                var trialObj = {
-                  trialId: trial.trialId,
-                  customerOrgId: trial.customerOrgId,
-                  customerName: trial.customerName,
-                  customerEmail: trial.customerEmail,
-                  endDate: edate,
-                  numUsers: trial.licenseCount,
-                  daysLeft: 0,
-                  usage: 0,
-                  licenses: 0,
-                  licenseList: [],
-                  daysUsed: 0,
-                  percentUsed: 0,
-                  duration: trial.trialPeriod,
-                  offer: '',
-                  status: null,
-                  isAllowedToManage: true,
-                  isSquaredUcOffer: false
-                };
-
-                if (trial.offers) {
-                  trialObj.offers = trial.offers;
-                  var offerNames = [];
-                  for (var cnt in trial.offers) {
-                    var offer = trial.offers[cnt];
-                    if (!offer) {
-                      continue;
-                    }
-                    switch (offer.id) {
-                    case Config.trials.collab:
-                      offerNames.push($translate.instant('trials.collab'));
-                      break;
-                    case Config.trials.squaredUC:
-                      trialObj.isSquaredUcOffer = true;
-                      offerNames.push($translate.instant('trials.squaredUC'));
-                      break;
-                    }
-                    trialObj.usage = offer.usageCount;
-                    trialObj.licenses = offer.licenseCount;
-                  }
-                  trialObj.offer = offerNames.join(', ');
-                }
-
-                trialObj.licenseList = trial.licenses;
-                var now = moment().format('MMM D, YYYY');
-                var then = edate;
-                var start = moment(trial.startDate).format('MMM D, YYYY');
-
-                var daysDone = moment(now).diff(start, 'days');
-                trialObj.daysUsed = daysDone;
-                trialObj.percentUsed = Math.round((daysDone / trial.trialPeriod) * 100);
-
-                var daysLeft = moment(then).diff(now, 'days');
-                trialObj.daysLeft = daysLeft;
-                trialObj.status = trial.state;
-                if (daysLeft >= 0) {
-                  $scope.activeList.push(trialObj);
-                } else {
-                  //trialObj.daysLeft = Math.abs(daysLeft);
-                  trialObj.status = $translate.instant('customerPage.expired');
-                  $scope.expiredList.push(trialObj);
-                }
-                $scope.totalTrialsData.push(trialObj);
-              }
+              loadRetrievedDataToList(data.trials, $scope.trialsList, true);
               $scope.showExpired = $scope.expiredList.length > 0;
               Log.debug('active trial records found:' + $scope.activeList.length);
-              Log.debug('total trial records found:' + $scope.totalTrialsData.length);
-              $scope.activeCount = $scope.activeList.length;
-              $scope.trialsList = $scope.totalTrialsData;
+              Log.debug('total trial records found:' + $scope.trialsList.length);
               $scope.totalTrials = $scope.trialsList.length;
-              if ($scope.activeFilter === 'all') {
-                $scope.gridData = $scope.managedOrgsList;
-              } else {
-                $scope.gridData = $scope.trialsList;
-              }
             } else {
               $scope.getPending = false;
               Log.debug('No trial records found');
@@ -168,119 +197,13 @@ angular.module('Core')
       var getManagedOrgsList = function () {
         $scope.showManagedOrgsRefresh = true;
         $scope.managedOrgsList = [];
-        $scope.totalOrgsData = [];
         PartnerService.getManagedOrgsList(function (data, status) {
           $scope.showManagedOrgsRefresh = false;
-          if (data.success) {
-            $scope.totalOrgs = data.organizations.length;
-
+          if (data.success && data.organizations) {
             if (data.organizations.length > 0) {
-              for (var index in data.organizations) {
-                var org = data.organizations[index];
-                var edate = moment(org.startDate).add(org.trialPeriod, 'days').format('MMM D, YYYY');
-                var orgObj = {
-                  trialId: org.trialId,
-                  customerOrgId: org.customerOrgId,
-                  customerName: org.customerName,
-                  customerEmail: org.customerEmail,
-                  endDate: edate,
-                  numUsers: org.licenseCount,
-                  daysLeft: 0,
-                  usage: 0,
-                  licenses: 0,
-                  licenseList: [],
-                  messaging: null,
-                  conferencing: null,
-                  communications: null,
-                  daysUsed: 0,
-                  percentUsed: 0,
-                  duration: org.trialPeriod,
-                  offer: '',
-                  status: null,
-                  isAllowedToManage: org.isAllowedToManage,
-                  state: org.state,
-                  isSquaredUcOffer: false
-                };
-
-                if (org.offers) {
-                  orgObj.offers = org.offers;
-                  var offerNames = [];
-                  for (var cnt in org.offers) {
-                    var offer = org.offers[cnt];
-                    if (!offer) {
-                      continue;
-                    }
-                    switch (offer.id) {
-                    case Config.trials.collab:
-                      offerNames.push($translate.instant('trials.collab'));
-                      break;
-                    case Config.trials.squaredUC:
-                      orgObj.isSquaredUcOffer = true;
-                      offerNames.push($translate.instant('trials.squaredUC'));
-                      break;
-                    }
-                    orgObj.usage = offer.usageCount;
-                    orgObj.licenses = offer.licenseCount;
-                  }
-                  orgObj.offer = offerNames.join(', ');
-                }
-
-                orgObj.licenseList = org.licenses;
-                orgObj.messaging = $scope.getLicense(org.licenses, 'messaging');
-                orgObj.conferencing = $scope.getLicense(org.licenses, 'conferencing');
-                orgObj.communications = $scope.getLicense(org.licenses, 'communications');
-
-                var now = moment().format('MMM D, YYYY');
-                var then = edate;
-                var start = moment(org.startDate).format('MMM D, YYYY');
-                orgObj.status = org.state;
-
-                var daysDone = moment(now).diff(start, 'days');
-                orgObj.daysUsed = daysDone;
-                orgObj.percentUsed = Math.round((daysDone / org.trialPeriod) * 100);
-
-                var daysLeft = moment(then).diff(now, 'days');
-                orgObj.daysLeft = daysLeft;
-
-                if (orgObj.messaging === null) {
-                  orgObj.messaging = {
-                    status: orgObj.status
-                  };
-                }
-                orgObj.messaging.daysLeft = daysLeft;
-                orgObj.messaging.customerName = orgObj.customerName;
-
-                if (orgObj.conferencing === null) {
-                  orgObj.conferencing = {
-                    status: orgObj.status
-                  };
-                }
-                orgObj.conferencing.daysLeft = daysLeft;
-                orgObj.conferencing.customerName = orgObj.customerName;
-
-                if (orgObj.communications === null) {
-                  orgObj.communications = {
-                    status: orgObj.status
-                  };
-                }
-                orgObj.communications.daysLeft = daysLeft;
-                orgObj.communications.customerName = orgObj.customerName;
-
-                $scope.totalOrgsData.push(orgObj);
-              }
-              Log.debug('total managed orgs records found:' + $scope.totalOrgsData.length);
-              if ($scope.activeList)
-                $scope.activeCount = $scope.activeList.length;
-              else
-                $scope.activeCount = 0;
-              $scope.managedOrgsList = $scope.totalOrgsData;
-
-              if ($scope.activeFilter === 'all') {
-                $scope.gridData = $scope.managedOrgsList;
-              } else {
-                $scope.gridData = $scope.trialsList;
-              }
-
+              loadRetrievedDataToList(data.organizations, $scope.managedOrgsList, false);
+              Log.debug('total managed orgs records found:' + $scope.managedOrgsList.length);
+              $scope.totalOrgs = $scope.managedOrgsList.length;
             } else {
               Log.debug('No managed orgs records found');
             }
@@ -293,32 +216,6 @@ angular.module('Core')
         });
       };
 
-      $scope.getDaysLeft = function (daysLeft) {
-        if (daysLeft < 0) {
-          return $translate.instant('customerPage.expired');
-        } else if (daysLeft === 0) {
-          return $translate.instant('customerPage.expiresToday');
-        } else {
-          return daysLeft;
-        }
-      };
-
-      $scope.getGridDaysLeft = function (daysLeft) {
-        if (daysLeft <= 0) {
-          return 0;
-        } else {
-          return daysLeft;
-        }
-      };
-
-      $scope.getDaysAgo = function (days) {
-        return Math.abs(days);
-      };
-
-      $scope.getUsagePercent = function (trial) {
-        return Math.round((trial.usage / trial.licenses) * 100);
-      };
-
       $scope.closeActionsDropdown = function () {
         angular.element('.open').removeClass('open');
       };
@@ -327,6 +224,16 @@ angular.module('Core')
         getTrialsList();
       }
       getManagedOrgsList();
+
+      $scope.activeCount = 0;
+      if ($scope.activeList) {
+        $scope.activeCount = $scope.activeList.length;
+      }
+      if ($scope.activeFilter === 'all') {
+        $scope.gridData = $scope.managedOrgsList;
+      } else {
+        $scope.gridData = $scope.trialsList;
+      }
 
       $scope.newTrialName = null;
       $scope.trialsGrid = {
@@ -363,22 +270,33 @@ angular.module('Core')
         '</ul>' +
         '</span>';
 
-      var rowTemplate = '<div id="{{row.entity.customerName}}" orgId="{{row.entity.customerOrgId}}" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
+      var rowTemplate = '<div id="{{row.entity.customerName}}" orgId="{{row.entity.customerOrgId}}" ng-style="{ \'cursor\': row.cursor }"' +
+        ' ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}"' +
+        ' ng-click="showCustomerDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
         '<div ng-cell></div>' +
         '</div>';
 
       var serviceTemplate = '<div class="ngCellText align-center">' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseActive(getLicense(row.entity.licenseList, col.field))" class="badge badge-primary" ng-class="{\'badge-disabled\': row.entity.status === \'SUSPENDED\'}" translate="customerPage.active"></span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseATrial(getLicense(row.entity.licenseList, col.field))" class="badge badge-warning" ng-class="{\'badge-disabled\': row.entity.status === \'SUSPENDED\'}" translate="customerPage.trial"></span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseFree(getLicense(row.entity.licenseList, col.field))" class="free" ng-class="{\'disabled\': row.entity.status === \'SUSPENDED\'}" translate="customerPage.free"></span></div>';
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeActive(row.entity, col.field)"' +
+        ' class="badge" ng-class="{\'badge-active\': row.entity.status != \'CANCELED\', \'badge-disabled\': row.entity.status === \'CANCELED\'}"' +
+        ' translate="customerPage.active"></span>' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeATrial(row.entity, col.field)"' +
+        ' class="badge" ng-class="{\'badge-trial\': row.entity.status != \'CANCELED\', \'badge-disabled\': row.entity.status === \'CANCELED\'}" translate="customerPage.trial"></span>' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeFree(row.entity, col.field)"' +
+        ' ng-class="{\'free\': row.entity.status != \'CANCELED\', \'free-disabled\': row.entity.status === \'CANCELED\'}" translate="customerPage.free"></span></div>';
 
       var notesTemplate = '<div class="ngCellText">' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft > 0" translate="customerPage.daysRemaining" translate-values="{count: row.entity.daysLeft}"></span>' +
-        '<span ng-if="isLicenseATrial(row.entity) && isisLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft == 0" class="red" translate="customerPage.expiringToday"></span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft < 0" class="red" translate="customerPage.expired"></span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'SUSPENDED\'" translate="customerPage.suspended"> </span>' +
-        '<span ng-if="!isLicenseInfoAvailable(row.entity.licenseList)" class="red" translate="customerPage.licenseInfoNotAvailable"></span></div>';
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft > 0"' +
+        ' translate="customerPage.daysRemaining" translate-values="{count: row.entity.daysLeft}"></span>' +
+        '<span ng-if="row.entity.isTrial && isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft === 0"' +
+        ' class="red" translate="customerPage.expiringToday"></span>' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft < 0"' +
+        ' class="red" translate="customerPage.expired"></span>' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'CANCELED\'"' +
+        ' translate="customerPage.suspended"> </span>' +
+        '<span ng-if="!isLicenseInfoAvailable(row.entity.licenseList)"' +
+        ' class="red" translate="customerPage.licenseInfoNotAvailable"></span></div>';
 
       $scope.gridOptions = {
         data: 'gridData',
@@ -421,8 +339,8 @@ angular.module('Core')
         }, {
           field: 'notes',
           displayName: $translate.instant('customerPage.notes'),
-          sortable: false,
           cellTemplate: notesTemplate,
+          sortFn: notesSort
         }, {
           field: 'action',
           displayName: $translate.instant('customerPage.actionHeader'),
@@ -432,46 +350,34 @@ angular.module('Core')
         }]
       };
 
-      function serviceSort(a, b) {
-        if (a.status === 'SUSPENDED') { // If accounts are suspended, drop them to the bottom of the stack
-          if (b.status === 'SUSPENDED') {
-            return sortByName(a, b);
+      var setServiceSortOrder = function (license, licenses) {
+        if (!licenses || licenses.length === 0) {
+          license.sortOrder = NO_LICENSE;
+        } else {
+          if (license.status === 'CANCELED') {
+            license.sortOrder = CANCELED;
+          } else if (isLicenseFree(license)) {
+            license.sortOrder = FREE;
+          } else if (isLicenseATrial(license)) {
+            license.sortOrder = TRIAL;
+          } else if (isLicenseActive(license)) {
+            license.sortOrder = ACTIVE;
           } else {
-            return 1;
+            license.sortOrder = NO_LICENSE;
           }
-        } else if (b.status === 'SUSPENDED') {
-          return -1;
-        } else if ($scope.isLicenseATrial(a) && $scope.isLicenseATrial(b)) {
-          // if a and b are both trials and have the same status, sort by expiration length
-          if (a.status === b.status) {
-            return sortByDays(a, b);
-          } else if (a.status === 'ACTIVE') {
-            return 1;
-          } else {
-            return -1;
-          }
-        } else if (($scope.isLicenseActive(a) && $scope.isLicenseActive(b))) {
-          // if a & b are both active and have the same status, sort by name
-          if (a.status === b.status) {
-            return sortByName(a, b);
-          } else if (a.status === 'ACTIVE') {
-            return 1;
-          } else {
-            return -1;
-          }
-        } else if ($scope.isLicenseActive(a) || (!$scope.isLicenseActive(b) && $scope.isLicenseATrial(a))) {
-          return -1;
-        } else if ($scope.isLicenseActive(b) || $scope.isLicenseATrial(b)) {
-          return 1;
-        } else if (a.daysLeft > 0 && b.daysLeft > 0) {
-          // having daysLeft is indicative of an active 'free' option to go with a trial
-          return sortByDays(a, b);
-        } else if (a.daysLeft > 0) {
-          return -1;
-        } else if (b.daysLeft > 0) {
-          return 1;
         }
-        return sortByName(a, b);
+      };
+
+      function serviceSort(a, b) {
+        if (a.sortOrder === TRIAL && b.sortOrder === TRIAL) {
+          // if a and b are both trials, sort by expiration length
+          return sortByDays(a, b);
+        } else if (a.sortOrder === b.sortOrder) {
+          // if a & b have the same sort order, sort by name
+          return sortByName(a, b);
+        } else {
+          return a.sortOrder - b.sortOrder;
+        }
       }
 
       function sortByDays(a, b) {
@@ -489,6 +395,69 @@ angular.module('Core')
           return -1;
         } else {
           return 0;
+        }
+      }
+
+      function setNotesTextOrder() {
+        var textSuspended = $translate.instant('customerPage.suspended'),
+          textExpiringToday = $translate.instant('customerPage.expiringToday'),
+          textExpired = $translate.instant('customerPage.expired'),
+          textLicenseInfoNotAvailable = $translate.instant('customerPage.licenseInfoNotAvailable');
+        var textArray = [
+          textSuspended,
+          textExpiringToday,
+          textExpired,
+          textLicenseInfoNotAvailable
+        ];
+        textArray.sort();
+        angular.forEach(textArray, function (text, index) {
+          if (text === textSuspended) {
+            NOTE_CANCELED = index;
+          } else if (text === textExpiringToday) {
+            NOTE_EXPIRE_TODAY = index;
+          } else if (text === textExpired) {
+            NOTE_EXPIRED = index;
+          } else if (text === textLicenseInfoNotAvailable) {
+            NOTE_NO_LICENSE = index;
+          }
+        });
+      }
+
+      var setNotesSortOrder = function (rowData) {
+        rowData.notes = {};
+        if ($scope.isLicenseInfoAvailable(rowData.licenseList)) {
+          if (rowData.status === 'CANCELED') {
+            rowData.notes.sortOrder = NOTE_CANCELED;
+            rowData.notes.text = $translate.instant('customerPage.suspended');
+          } else if (rowData.status === 'ACTIVE' && rowData.daysLeft > 0) {
+            rowData.notes.sortOrder = NOTE_NOT_EXPIRED;
+            rowData.notes.daysLeft = rowData.daysLeft;
+            rowData.notes.text = $translate.instant('customerPage.daysRemaining', {
+              count: rowData.daysLeft
+            });
+          } else if (rowData.isTrial && rowData.status === 'ACTIVE' && rowData.daysLeft === 0) {
+            rowData.notes.sortOrder = NOTE_EXPIRE_TODAY;
+            rowData.notes.daysLeft = 0;
+            rowData.notes.text = $translate.instant('customerPage.expiringToday');
+          } else if (rowData.status === 'ACTIVE' && rowData.daysLeft < 0) {
+            rowData.notes.sortOrder = NOTE_EXPIRED;
+            rowData.notes.daysLeft = -1;
+            rowData.notes.text = $translate.instant('customerPage.expired');
+          } else {
+            rowData.notes.sortOrder = NOTE_NO_LICENSE;
+            rowData.notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+          }
+        } else {
+          rowData.notes.sortOrder = NOTE_NO_LICENSE;
+          rowData.notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+        }
+      };
+
+      function notesSort(a, b) {
+        if (a.sortOrder === NOTE_NOT_EXPIRED && b.sortOrder === NOTE_NOT_EXPIRED) {
+          return a.daysLeft - b.daysLeft;
+        } else {
+          return a.sortOrder - b.sortOrder;
         }
       }
 
@@ -526,10 +495,8 @@ angular.module('Core')
       $scope.$on('ngGridEventScroll', function () {
         if ($scope.load) {
           $scope.currentDataPosition++;
-          //console.log($scope.currentDataPosition * Config.usersperpage + 1);
           $scope.load = false;
           getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
-          //console.log('Scrolled .. ');
         }
       });
 
@@ -545,7 +512,7 @@ angular.module('Core')
 
       $scope.filterList = function (filterBy) {
         $scope.filter = filterBy;
-        $scope.trialsList = filterBy === 'ALL' ? $scope.totalTrialsData : $scope.activeList;
+        $scope.trialsList = filterBy === 'ALL' ? $scope.trialsList : $scope.activeList;
       };
 
       $scope.setFilter = function (filter) {
@@ -557,7 +524,7 @@ angular.module('Core')
         }
       };
 
-      $scope.getLicense = function (licenses, licenseTypeField) {
+      var getLicense = function (licenses, licenseTypeField) {
         var offerNames;
         if (licenseTypeField === 'messaging') {
           offerNames = ['MS'];
@@ -576,23 +543,47 @@ angular.module('Core')
             }
           }
         }
-        return null;
+        return {};
       };
 
       $scope.isLicenseInfoAvailable = function (licenses) {
-        return angular.isDefined(licenses) && licenses !== null && angular.isDefined(licenses.length) && licenses.length > 0;
+        return angular.isArray(licenses) && licenses.length > 0;
       };
 
-      $scope.isLicenseATrial = function (license) {
-        return angular.isDefined(license) && license !== null && license.isTrial === true;
+      var isLicenseATrial = function (license) {
+        return license && license.isTrial === true;
       };
 
-      $scope.isLicenseActive = function (license) {
-        return angular.isDefined(license) && license !== null && license.isTrial === false;
+      var isLicenseActive = function (license) {
+        return license && license.isTrial === false;
       };
 
-      $scope.isLicenseFree = function (license) {
-        return angular.isUndefined(license) || license === null;
+      var isLicenseFree = function (license) {
+        return angular.isUndefined(license.isTrial);
+      };
+
+      var getLicenseObj = function (rowData, licenseTypeField) {
+        var license = null;
+        if (licenseTypeField === 'messaging') {
+          license = rowData.messaging;
+        } else if (licenseTypeField === 'conferencing') {
+          license = rowData.conferencing;
+        } else if (licenseTypeField === 'communications') {
+          license = rowData.communications;
+        }
+        return license;
+      };
+
+      $scope.isLicenseTypeATrial = function (rowData, licenseTypeField) {
+        return isLicenseATrial(getLicenseObj(rowData, licenseTypeField));
+      };
+
+      $scope.isLicenseTypeActive = function (rowData, licenseTypeField) {
+        return isLicenseActive(getLicenseObj(rowData, licenseTypeField));
+      };
+
+      $scope.isLicenseTypeFree = function (rowData, licenseTypeField) {
+        return isLicenseFree(getLicenseObj(rowData, licenseTypeField));
       };
 
       if ($state.current.name === "partnercustomers.list") {
