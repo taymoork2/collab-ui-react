@@ -109,9 +109,12 @@
     init();
 
     function init() {
-      setActiveUserReports();
-      setGraphResizing();
-      vm.qualityTab = 'set';
+      PartnerReportService.getCustomerList().then(function (response) {
+        updateCustomerFilter(response);
+        setActiveUserReports();
+        setGraphResizing();
+        vm.qualityTab = 'set';
+      });
     }
 
     function setGraphResizing() {
@@ -148,26 +151,6 @@
     }
 
     function updateCustomerFilter(orgsData) {
-      // if there are fewer than 5 orgs, then these options are unnecessary
-      if (orgsData.length > 5) {
-        vm.customerOptions.push({
-          value: 0,
-          label: $translate.instant('reportsPage.mostEngaged')
-        });
-        vm.customerOptions.push({
-          value: 1,
-          label: $translate.instant('reportsPage.leastEngaged')
-        });
-        vm.customerOptions.push({
-          value: 2,
-          label: $translate.instant('reportsPage.highQuality')
-        });
-        vm.customerOptions.push({
-          value: 3,
-          label: $translate.instant('reportsPage.leastQuality')
-        });
-      }
-
       // add all customer names to the customerOptions list
       angular.forEach(orgsData, function (org) {
         vm.customerOptions.push({
@@ -187,9 +170,7 @@
 
     function setActiveUserReports() {
       PartnerReportService.setActiveUsersData(vm.timeSelected).then(function () {
-        var list = PartnerReportService.getCustomerList();
-        updateCustomerFilter(list.customers);
-        vm.recentUpdate = list.recentUpdate;
+        vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
 
         PartnerReportService.getActiveUserData(vm.customerSelected.value, vm.customerSelected.label).then(function (response) {
           var graphData = response.graphData;

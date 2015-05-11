@@ -33,10 +33,8 @@ describe('Controller: Partner Reports', function () {
         graphData: dummyGraphData,
         tableData: dummyTableData
       }));
-      spyOn(PartnerReportService, 'getCustomerList').and.returnValue({
-        customers: dummyCustomers,
-        recentUpdate: date
-      });
+      spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(dummyCustomers));
+      spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(date);
       spyOn(PartnerReportService, 'setActiveUsersData').and.returnValue($q.when());
 
       spyOn(GraphService, 'createActiveUserGraph');
@@ -226,10 +224,8 @@ describe('Controller: Partner Reports', function () {
         graphData: [],
         tableData: []
       }));
-      spyOn(PartnerReportService, 'getCustomerList').and.returnValue({
-        customers: [],
-        recentUpdate: undefined
-      });
+      spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
+      spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(undefined);
       spyOn(PartnerReportService, 'setActiveUsersData').and.returnValue($q.when());
 
       spyOn(GraphService, 'createActiveUserGraph');

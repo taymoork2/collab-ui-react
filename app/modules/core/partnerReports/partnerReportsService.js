@@ -14,15 +14,12 @@
     var mostRecentUpdate = "";
     var timeFilter;
     var customerList = null;
-    var fiveMostActiveCustomers = [];
-    var fiveLeastActiveCustomers = [];
-    var fiveHighestQualityCustomers = [];
-    var fiveLowestQualityCustomers = [];
     var savedActiveUserData = [];
 
     return {
       getActiveUserData: getActiveUserData,
       getCustomerList: getCustomerList,
+      getMostRecentUpdate: getMostRecentUpdate,
       getPreviousFilter: getPreviousFilter,
       setActiveUsersData: setActiveUsersData
     };
@@ -37,11 +34,28 @@
       });
     }
 
+    function getMostRecentUpdate() {
+      return mostRecentUpdate;
+    }
+
     function getCustomerList() {
-      return {
-        customers: customerList,
-        recentUpdate: mostRecentUpdate
-      };
+      var orgPromise = $q.defer();
+      if (customerList === null) {
+        PartnerService.getManagedOrgsList(function (data, status) {
+          if (data.success) {
+            customerList = data.organizations;
+            orgPromise.resolve(customerList);
+          } else {
+            Log.debug('Failed to retrieve managed orgs information. Status: ' + status);
+            Notification.notify([$translate.instant('reportsPage.customerLoadError')], 'error');
+            orgPromise.reject([]);
+          }
+        });
+      } else {
+        orgPromise.resolve(customerList);
+      }
+
+      return orgPromise.promise;
     }
 
     function getPreviousFilter() {
@@ -63,33 +77,15 @@
       timeFilter = filter;
       var query = getQuery();
       var promises = [];
-
-      if (customerList === null) {
-        var orgPromise = $q.defer();
-        PartnerService.getManagedOrgsList(function (data, status) {
-          if (data.success) {
-            customerList = data.organizations;
-            orgPromise.resolve();
-          } else {
-            Log.debug('Failed to retrieve managed orgs information. Status: ' + status);
-            Notification.notify([$translate.instant('reportsPage.customerLoadError')], 'error');
-            orgPromise.reject();
-          }
-        });
-        promises.push(orgPromise.promise);
-      }
-
       var detailedData = [];
-      var detailedPromise = getService(detailed + activeUserUrl + query).then(function (response) {
+
+      return getService(detailed + activeUserUrl + query).then(function (response) {
         detailedData = response;
       }, function (error) {
         Log.debug('Loading active users failed.  Status: ' + error.status + ' Response: ' + error.message);
         Notification.notify([$translate.instant('activeUsers.activeUserGraphError')], 'error');
-      });
-
-      promises.push(detailedPromise);
-
-      return $q.all(promises).then(function () {
+      }).then(function () {
+        setMostRecentUpdate(detailedData);
         savedActiveUserData = [];
         if (detailedData.data !== null && detailedData.data !== undefined) {
           var graphData = detailedData.data.data;
@@ -99,9 +95,6 @@
           });
           savedActiveUserData = graphData;
         }
-
-        setMostRecentUpdate(detailedData);
-        identifyMostLeastActiveCustomers();
 
         return;
       });
@@ -127,82 +120,17 @@
       return data;
     }
 
-    function identifyMostLeastActiveCustomers() {
-      // reset to empty before sorting/resorting the customers
-      fiveMostActiveCustomers = [];
-      fiveLeastActiveCustomers = [];
-
-      angular.forEach(customerList, function (customer) {
-        var data = getActiveUserGraphData(customer.customerOrgId);
-        var totalActivity = 0;
-        if (data.length > 0) {
-          angular.forEach(data, function (index) {
-            totalActivity += parseInt(index.activeUsers);
-          });
-          addMostActive(customer.customerOrgId, customer.customerName, totalActivity);
-        }
-        addLeastActive(customer.customerOrgId, customer.customerName, totalActivity);
-      });
-    }
-
-    function addMostActive(orgId, orgName, activity) {
-      if (fiveMostActiveCustomers.length < 5) {
-        fiveMostActiveCustomers.push({
-          'orgId': orgId,
-          'activity': activity
-        });
-      } else {
-        for (var i = 0; i < fiveMostActiveCustomers.length; i++) {
-          var org = angular.copy(fiveMostActiveCustomers[i]);
-          if (org.activity < activity) {
-            fiveMostActiveCustomers[i].orgId = orgId;
-            fiveMostActiveCustomers[i].orgName = orgName;
-            fiveMostActiveCustomers[i].activity = activity;
-            return addMostActive(org.orgId, org.orgName, org.activity);
-          }
-        }
-      }
-    }
-
-    function addLeastActive(orgId, orgName, activity) {
-      if (fiveLeastActiveCustomers.length < 5) {
-        fiveLeastActiveCustomers.push({
-          'orgId': orgId,
-          'activity': activity
-        });
-      } else {
-        for (var i = 0; i < fiveLeastActiveCustomers.length; i++) {
-          var org = angular.copy(fiveLeastActiveCustomers[i]);
-          if (org.activity > activity) {
-            fiveLeastActiveCustomers[i].orgId = orgId;
-            fiveLeastActiveCustomers[i].orgName = orgName;
-            fiveLeastActiveCustomers[i].activity = activity;
-            return addLeastActive(org.orgId, org.orgName, org.activity);
-          }
-        }
-      }
-    }
-
     function getActiveUserGraphData(id) {
-      if (id === 0) {
-        return combineActiveUsersGraph(fiveMostActiveCustomers);
-      } else if (id === 1) {
-        return combineActiveUsersGraph(fiveLeastActiveCustomers);
-      } else if (id === 2) {
-        return combineActiveUsersGraph(fiveHighestQualityCustomers);
-      } else if (id === 3) {
-        return combineActiveUsersGraph(fiveLowestQualityCustomers);
-      } else {
-        for (var i = 0; i < savedActiveUserData.length; i++) {
-          if (savedActiveUserData[i].orgId === id) {
-            return savedActiveUserData[i].data;
-          }
+      for (var i = 0; i < savedActiveUserData.length; i++) {
+        if (savedActiveUserData[i].orgId === id) {
+          return savedActiveUserData[i].data;
         }
       }
 
       return [];
     }
 
+    // Keeping function for use when mult-org select functionality is added.
     function combineActiveUsersGraph(orgs) {
       var graphData = [];
       angular.forEach(orgs, function (org) {
@@ -246,16 +174,6 @@
     }
 
     function getActiveUserTableData(id, name) {
-      if (id === 0) {
-        return combineActiveUsersTable(fiveMostActiveCustomers);
-      } else if (id === 1) {
-        return combineActiveUsersTable(fiveLeastActiveCustomers);
-      } else if (id === 2) {
-        return combineActiveUsersTable(fiveHighestQualityCustomers);
-      } else if (id === 3) {
-        return combineActiveUsersTable(fiveLowestQualityCustomers);
-      }
-
       return getService(topn + activeUserUrl + getQuery() + "&orgId=" + id).then(function (response) {
         return modifyActiveUserTableData(response.data.data[0]);
       }, function (error) {
@@ -264,20 +182,6 @@
           customer: name
         })], 'error');
         return [];
-      });
-    }
-
-    function combineActiveUsersTable(orgs) {
-      var promises = [];
-      var tableData = [];
-      angular.forEach(orgs, function (org) {
-        var promise = getActiveUserTableData(org.orgId, org.orgName).then(function (response) {
-          tableData = tableData.concat(response);
-        });
-        promises.push(promise);
-      });
-      return $q.all(promises).then(function () {
-        return tableData;
       });
     }
 
@@ -290,6 +194,21 @@
         index.userName = index.details.userName;
       });
       return data.data;
+    }
+
+    // Keeping function for use when mult-org select functionality is added.
+    function combineActiveUsersTable(orgs) {
+      var promises = [];
+      var tableData = [];
+      angular.forEach(orgs, function (org) {
+        var promise = getActiveUserTableData(org.orgId, org.orgName).then(function (response) {
+          tableData = tableData.concat(response);
+        });
+        promises.push(promise);
+      });
+      return $q.all(promises).then(function () {
+        return tableData;
+      });
     }
   }
 })();

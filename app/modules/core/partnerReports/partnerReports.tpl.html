@@ -1,37 +1,38 @@
 <div class="partner-reports">
-	<div class="reports-header row page-header">
-		<div class="page-title col-md-6">
-			<h2 class="title" translate="reportsPage.pageTitle"></h2>
-			<span class="sync"><span translate="reportsPage.sync"></span>: {{nav.recentUpdate}}</span>
-		</div>
-		<div class="page-title col-md-6">
-      <cs-select class="pull-right report-filter-two" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions"
-        on-change-fn="nav.updateReports()" is-disabled="nav.isRefresh(nav.activeUsersRefresh)" filter="true"></cs-select>
-      <cs-select class="pull-right report-filter-one" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()"
-        is-disabled="nav.isRefresh(nav.activeUsersRefresh)"></cs-select>
-		</div>
-	</div>
-	<div class="report-tabs-container">
-		<section class="tab-reports background-white">
-		    <cs-tabset>
-			    <cs-tab id="engagementTab" ui-sref-active="current">
-			        <cs-tab-heading>
-			        	<h4 translate="reportsPage.engagementTab"></h4>
-			        </cs-tab-heading>
-			        <div id="engagementReport" class="tab-report engagement-reports report-column">
-			        	<uc-active-user class="report-section"></uc-active-user>
-			        </div>
-			    </cs-tab>
-			    <cs-tab id="qualityTab" ui-sref-active="current">
-			        <cs-tab-heading>
-			        	<h4 translate="reportsPage.qualityTab"></h4>
-			        </cs-tab-heading>
-			        <div id="qualityReport" class="tab-report quality-reports" ng-hide="nav.isRefresh(nav.qualityTab)">
-			        </div>
-			        <div id="qualityRefreshDiv" class="report-status" ng-show="nav.isRefresh(nav.qualityTab)">
-			        	<i class='icon icon-spinner icon-2x'></i>
-			        </div>
-			    </cs-tab>
-		</section>
-	</div>
+  <div class="reports-header row page-header">
+    <div class="page-title col-md-6">
+      <h2 class="title" translate="reportsPage.pageTitle"></h2>
+      <span class="sync"><span translate="reportsPage.sync"></span>: {{nav.recentUpdate}}</span>
+    </div>
+    <div class="page-title col-md-6">
+    <cs-select class="pull-right report-filter-two" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions"
+    on-change-fn="nav.updateReports()" is-disabled="nav.isRefresh(nav.activeUsersRefresh)" filter="true"></cs-select>
+    <cs-select class="pull-right report-filter-one" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()"
+    is-disabled="nav.isRefresh(nav.activeUsersRefresh)"></cs-select>
+    </div>
+  </div>
+  <div class="report-tabs-container">
+    <section class="tab-reports background-white">
+      <cs-tabset>
+        <cs-tab id="engagementTab" ui-sref-active="current">
+          <cs-tab-heading>
+            <h4 translate="reportsPage.engagementTab"></h4>
+          </cs-tab-heading>
+          <div id="engagementReport" class="tab-report report-column">
+            <uc-active-user class="report-section"></uc-active-user>
+            <div class="report-section pull-right"></div>
+          </div>
+        </cs-tab>
+        <cs-tab id="qualityTab" ui-sref-active="current">
+          <cs-tab-heading>
+            <h4 translate="reportsPage.qualityTab"></h4>
+          </cs-tab-heading>
+          <div id="qualityReport" class="tab-report quality-reports" ng-hide="nav.isRefresh(nav.qualityTab)">
+          </div>
+          <div id="qualityRefreshDiv" class="report-status" ng-show="nav.isRefresh(nav.qualityTab)">
+            <i class='icon icon-spinner icon-2x'></i>
+          </div>
+        </cs-tab>
+    </section>
+  </div>
 </div>

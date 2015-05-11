@@ -7,7 +7,6 @@ describe('Service: Partner Reports Service', function () {
   beforeEach(module('Core'));
 
   var dateFormat = "MMM DD, YYYY";
-  var customerGroup = 0;
   var timeFilter = {
     value: 0
   };
@@ -105,17 +104,7 @@ describe('Service: Partner Reports Service', function () {
   describe('Active User Services', function () {
     describe('should notify an error for setActiveUsersData', function () {
       it('when activeUsersDetailed does not return data', function () {
-        $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(500, error);
-        PartnerReportService.setActiveUsersData(timeFilter).then(function () {
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-        });
-        $httpBackend.flush();
-      });
-
-      it('when managedOrgs does not return data', function () {
-        $httpBackend.whenGET(managedOrgsUrl).respond(500, error);
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
         PartnerReportService.setActiveUsersData(timeFilter).then(function () {
           expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
         });
@@ -125,7 +114,6 @@ describe('Service: Partner Reports Service', function () {
 
     describe('should getActiveUserData', function () {
       beforeEach(function () {
-        $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
         $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
         $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[1].customerOrgId).respond(mostActiveUserData);
@@ -141,19 +129,10 @@ describe('Service: Partner Reports Service', function () {
         });
         $httpBackend.flush();
       });
-
-      it('for a customer group', function () {
-        PartnerReportService.getActiveUserData(customerGroup, "").then(function (response) {
-          expect(response.graphData[0]).toEqual(fiveCustomersDataPoint);
-          expect(response.tableData[0]).toEqual(fiveCustomerTableData);
-        });
-        $httpBackend.flush();
-      });
     });
 
     describe('should notify an error for getActiveUserData', function () {
       it('and return empty table data', function () {
-        $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
         $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
         PartnerReportService.setActiveUsersData(timeFilter);
@@ -168,7 +147,6 @@ describe('Service: Partner Reports Service', function () {
       });
 
       it('and return empty graph and table data', function () {
-        $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(500, error);
         $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
         PartnerReportService.setActiveUsersData(timeFilter);
@@ -186,16 +164,29 @@ describe('Service: Partner Reports Service', function () {
 
   describe('Helper Services', function () {
     beforeEach(function () {
-      $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
       $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
       PartnerReportService.setActiveUsersData(timeFilter);
       $httpBackend.flush();
     });
 
     it('getCustomerList should return a list of customers', function () {
-      var list = PartnerReportService.getCustomerList();
-      expect(list.customers).toEqual(customers);
-      expect(list.recentUpdate).toEqual(moment(activeUserDetailedData.date).format(dateFormat));
+      $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
+      PartnerReportService.getCustomerList().then(function (list) {
+        expect(list).toEqual(customers);
+      });
+      $httpBackend.flush();
+    });
+
+    it('getCustomerList should flag an error when managedOrgs does not return data', function () {
+      $httpBackend.whenGET(managedOrgsUrl).respond(500, error);
+      PartnerReportService.getCustomerList().then(function (list) {
+        expect(list).toEqual([]);
+      });
+      $httpBackend.flush();
+    });
+
+    it('getMostRecentUpdate should return the most recent update', function () {
+      expect(PartnerReportService.getMostRecentUpdate()).toEqual(moment(activeUserDetailedData.date).format(dateFormat));
     });
 
     it('getPreviousFilter should return the last timeFilter used to generate queries', function () {
