@@ -48,6 +48,7 @@
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
     "resend": "Resend Invitation",
+    "resendActivation": "Resend Activation",
     "deleteUserSuccess": "User {{email}} deleted successfully",
     "deleteUserError": "Error deleting user. Status: {{status}}",
     "onboardSuccess": "{{email}} onboarded successfully",
@@ -55,7 +56,9 @@
     "ciscoucError": "{{email}} did not provision Unified Communications.",
     "statusError": "Request failed with status: {{status}}.",
     "messageError": "Message: {{message}}",
-    "userListError": "Error retrieving the user list. Please try reloading the page."
+    "userListError": "Error retrieving the user list. Please try reloading the page.",
+    "emailSuccess": "Email sent successfully.",
+    "emailError": "Error sending email."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -850,7 +853,6 @@
     "numberOfLicenses": "Number of Licenses",
     "name": "Name",
     "edit": "Edit",
-    "saveSendReminder": "Save and Send Reminder",
     "partnerHeading": "Adoption and Engagement",
     "entitlementsTitle": "Users Onboarded",
     "activeUsersTitle": "Daily Active Users",

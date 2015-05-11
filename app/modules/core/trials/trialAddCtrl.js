@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config) {
+  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config, EmailService) {
     var vm = this;
 
     vm.customerOrgId = null;
@@ -89,6 +89,11 @@
                 angular.element('#startTrialButton').button('reset');
                 Notification.notify([$translate.instant('trialModal.squareducError')], 'error');
                 return $q.reject();
+              });
+          } else {
+            return EmailService.emailNotifyTrialCustomer(vm.customerEmail, vm.licenseDuration, vm.customerOrgId)
+              .catch(function (response) {
+                Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
               });
           }
         }).then(function () {

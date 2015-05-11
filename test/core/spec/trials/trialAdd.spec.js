@@ -1,12 +1,12 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer;
+  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer, EmailService;
 
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
@@ -14,10 +14,12 @@ describe('Controller: TrialAddCtrl', function () {
     Notification = _Notification_;
     TrialService = _TrialService_;
     HuronCustomer = _HuronCustomer_;
+    EmailService = _EmailService_;
 
     spyOn(Notification, 'notify');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn($state, 'go');
+    spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
 
     controller = $controller('TrialAddCtrl', {
       $scope: $scope,
@@ -25,7 +27,8 @@ describe('Controller: TrialAddCtrl', function () {
       $state: $state,
       TrialService: TrialService,
       HuronCustomer: HuronCustomer,
-      Notification: Notification
+      Notification: Notification,
+      EmailService: _EmailService_
     });
     $scope.$apply();
   }));
@@ -60,6 +63,10 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should not have closed the modal', function () {
         expect($state.modal.close).not.toHaveBeenCalled();
+      });
+
+      it('should send an email', function () {
+        expect(EmailService.emailNotifyTrialCustomer).toHaveBeenCalled();
       });
     });
 
@@ -100,6 +107,7 @@ describe('Controller: TrialAddCtrl', function () {
         $scope.$apply();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
         expect(Notification.notify.calls.count()).toEqual(1);
+        expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
       });
 
       it('error should notify error', function () {

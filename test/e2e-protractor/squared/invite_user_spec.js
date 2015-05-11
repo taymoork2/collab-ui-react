@@ -105,7 +105,7 @@ describe('Squared Invite User Flow', function () {
     it('should resend user invitation to pending user', function () {
       utils.click(users.userListAction);
       utils.click(users.resendInviteOption);
-      notifications.assertSuccess('Successfully resent invitation');
+      notifications.assertSuccess('Email sent successfully');
     });
 
     it('should log out', function () {
