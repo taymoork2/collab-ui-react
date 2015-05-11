@@ -13,6 +13,8 @@ angular.module('Squared')
         scope.$watch('lastUpdatedTime', function (newVal, oldVal) {
           if (newVal) {
             scope.currentTime = newVal;
+            var date = moment(scope.currentTime);
+            scope.currentTime = date.fromNow();
           }
         });
       }

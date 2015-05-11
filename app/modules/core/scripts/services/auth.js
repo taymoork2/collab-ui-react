@@ -179,7 +179,6 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
 
   auth.logout = function () {
     Storage.clear();
-    Log.debug('Redirecting to logout url.');
     $window.location.href = Config.getLogoutUrl();
   };
 

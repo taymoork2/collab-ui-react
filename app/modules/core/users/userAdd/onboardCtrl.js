@@ -19,16 +19,78 @@ angular.module('Core')
       }
 
       var userEnts = null;
+      var userLicenseIds = null;
+      $scope.cmrFeature = null;
       $scope.messageFeatures = [];
       $scope.conferenceFeatures = [];
       $scope.communicationFeatures = [];
+      $scope.licenses = [];
+
       $scope.messageFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
       $scope.conferenceFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
       $scope.communicationFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeComm'), 0, 'commRadio', new FakeLicense('advancedCommunication')));
       $scope.currentUser = $stateParams.currentUser;
+
       if ($scope.currentUser) {
         userEnts = $scope.currentUser.entitlements;
+        userLicenseIds = $scope.currentUser.licenseID;
       }
+
+      var populateConf = function () {
+        if (userLicenseIds) {
+          for (var ids in userLicenseIds) {
+            var currentId = userLicenseIds[ids];
+            for (var conf in $scope.confChk) {
+              var currentConf = $scope.confChk[conf];
+              if (currentConf.confFeature) {
+                if (currentConf.confFeature.license.licenseId === currentId) {
+                  currentConf.confModel = true;
+                }
+              }
+              if (currentConf.cmrFeature) {
+                if (currentConf.cmrFeature.license.licenseId === currentId) {
+                  currentConf.cmrModel = true;
+                }
+              }
+            }
+          }
+        }
+      };
+
+      $scope.radioStates = {
+        msgRadio: false,
+        confRadio: false,
+        commRadio: false
+      };
+
+      if (userEnts) {
+        for (var x = 0; x < userEnts.length; x++) {
+          if (userEnts[x] === 'ciscouc') {
+            $scope.radioStates.commRadio = true;
+          } else if (userEnts[x] === 'squared-room-moderation') {
+            $scope.radioStates.msgRadio = true;
+          }
+        }
+      }
+
+      var generateConfChk = function (conf, cmr) {
+        $scope.confChk = [];
+        for (var i in conf) {
+          var temp = {
+            confFeature: conf[i],
+            confModel: false,
+            confId: 'conf-' + i
+          };
+
+          if (cmr !== null && conf[i].license.offerName === 'MC') {
+            temp.cmrFeature = cmr;
+            temp.cmrModel = false;
+            temp.cmrId = 'cmr-' + i;
+          }
+          $scope.confChk.push(temp);
+        }
+        populateConf();
+      };
 
       var getAccountServices = function () {
         if (Authinfo.getMessageServices()) {
@@ -36,6 +98,8 @@ angular.module('Core')
         }
         if (Authinfo.getConferenceServices()) {
           $scope.conferenceFeatures = $scope.conferenceFeatures.concat(Authinfo.getConferenceServices());
+          $scope.cmrFeature = Authinfo.getCmrServices();
+          generateConfChk($scope.conferenceFeatures, $scope.cmrFeature);
         }
         if (Authinfo.getCommunicationServices()) {
           $scope.communicationFeatures = $scope.communicationFeatures.concat(Authinfo.getCommunicationServices());
@@ -97,23 +161,6 @@ angular.module('Core')
       };
 
       $scope.collabRadio = 1;
-      $scope.radioStates = {
-        msgRadio: false,
-        confRadio: false,
-        commRadio: false
-      };
-
-      if (userEnts) {
-        for (var x = 0; x < userEnts.length; x++) {
-          if (userEnts[x] === 'ciscouc') {
-            $scope.radioStates.commRadio = true;
-          } else if (userEnts[x] === 'squared-syncup') {
-            $scope.radioStates.confRadio = true;
-          } else if (userEnts[x] === 'squared-room-moderation') {
-            $scope.radioStates.msgRadio = true;
-          }
-        }
-      }
 
       var isUCSelected = function (list) {
         for (var x = 0; x < list.length; x++) {
@@ -151,20 +198,33 @@ angular.module('Core')
         return sqEnt;
       };
 
+      var getConfIdList = function () {
+        var confId = [];
+        for (var cf in $scope.confChk) {
+          var current = $scope.confChk[cf];
+          if (current.confModel === true) {
+            confId.push(current.confFeature.license.licenseId);
+          }
+          if (current.cmrModel === true) {
+            confId.push(current.cmrFeature.license.licenseId);
+          }
+        }
+        return confId;
+      };
+
       var getAccountLicenseIds = function () {
         var licenseIdList = [];
         if (Authinfo.hasAccount()) {
           var index = $scope.radioStates.msgRadio ? 1 : 0;
           var selMsgService = $scope.messageFeatures[index];
 
-          index = $scope.radioStates.confRadio ? 1 : 0;
-          var selConfService = $scope.conferenceFeatures[index];
+          var selConfService = getConfIdList();
 
           index = $scope.radioStates.commRadio ? 1 : 0;
           var selCommService = $scope.communicationFeatures[index];
 
           licenseIdList = getServiceLicenseIds(licenseIdList, selMsgService);
-          licenseIdList = getServiceLicenseIds(licenseIdList, selConfService);
+          licenseIdList = licenseIdList.concat(selConfService);
           licenseIdList = getServiceLicenseIds(licenseIdList, selCommService);
         }
         return licenseIdList.length === 0 ? null : licenseIdList;

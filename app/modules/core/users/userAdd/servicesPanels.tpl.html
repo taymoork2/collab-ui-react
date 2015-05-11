@@ -21,22 +21,30 @@
   <!-- Conferencing Bucket -->
   <div class="modal-body bucket-license middle-bucket" id="conference">
   <h4 class="text-center bucket-lic-header" translate="onboardModal.conferencing"></h4>
-    <div class="entitle-check-grp onboard-radio" ng-repeat="confFeature in conferenceFeatures">
-      <div ng-if="confFeature.license.licenseType === 'freeConferencing'">
+    <div class="entitle-check-grp onboard-radio" ng-repeat="cf in confChk">
+      <!-- Free Conferencing -->
+      <div ng-if="cf.confFeature.license.licenseType === 'freeConferencing'">
         <div class="service-check">
           <span class="icon icon-check onboard-check"></span>
         </div>
         <div class="service-label">
-          <span ng-click="setConfRadio(confFeature.value)" translate="{{confFeature.label}}"></span>
+          <span ng-click="setConfRadio(cf.confFeature.value)" translate="{{cf.confFeature.label}}"></span>
         </div>
       </div>
-      <div ng-if="confFeature.license.licenseType !== 'freeConferencing'">
-        <div ng-if="confFeature.license.siteUrl">
-          <cs-checkbox ckid="paid-conf" ng-model="radioStates.confRadio" label="{{confFeature.license.siteUrl}}"></cs-checkbox>
-          <p class="conf-desc" ng-if="confFeature.label">{{confFeature.label}}</p>
+      <!-- Paid Conferencing -->
+      <div ng-if="cf.confFeature.license.licenseType !== 'freeConferencing'">
+        <!-- Has Site Url -->
+        <div ng-if="cf.confFeature.license.siteUrl">
+          <cs-checkbox ckid="{{cf.confId}}" ng-click="licenseHandler(cf.confFeature.license.licenseId); cf.confModel === false ? cf.cmrModel = false : ''" ng-model="cf.confModel" label="{{cf.confFeature.license.siteUrl}}" isdsiabled="false"></cs-checkbox>
+          <p class="conf-desc" ng-class="cf.cmrFeature ? 'has-cmr' : ''" ng-if="cf.confFeature.label">{{cf.confFeature.label}}</p>
+          <!-- Has CMR With Meeting Center -->
+          <div ng-if="cf.cmrFeature">
+            <cs-checkbox ck-id="{{cf.cmrId}}" class="indentedCheckbox" ng-click="licenseHandler(cf.cmrFeature.license.licenseId); cf.confModel = true; cf.cmrModel = !cf.cmrModel" ng-model="cf.cmrModel" label="{{cf.cmrFeature.label}}" isdisabled="false"><cs-checkbox>
+          </div>
         </div>
-        <div ng-if="!confFeature.license.siteUrl">
-          <cs-checkbox ckid="paid-conf" ng-model="radioStates.confRadio" label="{{confFeature.label}}"></cs-checkbox>
+        <!-- No Site Url -->
+        <div ng-if="!cf.confFeature.license.siteUrl">
+          <cs-checkbox ckid="paid-conf" ng-model="cf.confModel" label="{{cf.confFeature.label}}" isdsiabled="false"></cs-checkbox>
         </div>
       </div>
     </div>

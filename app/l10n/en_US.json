@@ -104,7 +104,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
-    "cloudExtensions": "Cloud Extensions"
+    "cloudExtensions": "Cloud Extensions",
+    "cmr": "Collaboration Meeting Rooms"
   },
   "usersPreview": {
     "groupPreview": "Group:",

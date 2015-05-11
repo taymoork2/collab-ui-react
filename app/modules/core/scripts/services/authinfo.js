@@ -28,6 +28,7 @@ angular.module('Core')
         'messageServices': null,
         'conferenceServices': null,
         'communicationServices': null,
+        'cmrServices': null,
         'hasAccount': false,
         'email': null
       };
@@ -170,6 +171,7 @@ angular.module('Core')
             var msgLicenses = [];
             var confLicenses = [];
             var commLicenses = [];
+            var cmrLicenses = [];
             var accounts = data.accounts;
 
             if (accounts.length > 0) {
@@ -200,6 +202,9 @@ angular.module('Core')
                   service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
                   commLicenses.push(service);
                   break;
+                case 'CMR':
+                  service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
+                  cmrLicenses = service;
                 }
               } //end for
             } //end for
@@ -211,6 +216,9 @@ angular.module('Core')
             }
             if (commLicenses.length !== 0) {
               authData.communicationServices = commLicenses;
+            }
+            if (cmrLicenses.length !== 0) {
+              authData.cmrServices = cmrLicenses;
             }
             $rootScope.$broadcast('AccountinfoUpdated');
           } //end if
@@ -247,6 +255,9 @@ angular.module('Core')
         },
         getCommunicationServices: function () {
           return authData.communicationServices;
+        },
+        getCmrServices: function () {
+          return authData.cmrServices;
         },
         getRoles: function () {
           return authData.roles;

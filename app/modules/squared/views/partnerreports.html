@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="btn-group" dropdown is-open="db.isOpen">
-        <button id="customerDropdown" type="button" class="btn btn-primary dropdown-toggle" ng-disabled="db.disabled" data-loading-text="<i class='icon icon-spinner'></i>">
+        <button id="customerDropdown" type="button" class="btn btn-white dropdown-toggle" ng-disabled="db.disabled" data-loading-text="<i class='icon icon-spinner'></i>">
         <span>{{currentSelection | translate}}</span><span class="caret"></span>
         </button>
         <ul class="dropdown-menu reports-customer-dropdown" role="menu">
@@ -27,7 +27,7 @@
     </div>
     <div class ="all-reports col-xs-12 col-sm-6">
       <div id="activeUsersdiv" class="timechartDiv"></div>
-      <div id="active-users-refresh" class="metrics-refresh" ng-show="isRefresh('activeUsers')"><i ng-show="isRefresh('activeUsers')" class='icon icon-spinner icon-2x'/></div>
+      <div id="active-users-refresh" class="metrics-refresh" ng-show="isRefresh('activeUsers')"><i class='icon icon-spinner icon-2x'/></div>
     </div>
   </div>
   <div class="row">

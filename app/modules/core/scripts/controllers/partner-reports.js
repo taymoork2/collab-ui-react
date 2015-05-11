@@ -146,7 +146,7 @@ angular.module('Core')
           var chartObject = {
             'type': 'serial',
             'theme': 'none',
-            'fontFamily': 'CiscoSansTT Thin',
+            'fontFamily': 'CiscoSansTT Extra Light',
             'colors': [colors],
             'backgroundColor': '#ffffff',
             'backgroundAlpha': 1,
@@ -324,8 +324,8 @@ angular.module('Core')
         if (response.data.success) {
           var data;
           if (!isEmpty(response.data.data, title)) {
+            angular.element('#' + refreshDivName).html('<i class=\'icon icon-spinner icon-2x\'/>');
             $scope.reportStatus[property] = 'ready';
-            angular.element('#' + refreshDivName).html('');
             data = response.data.data;
           } else {
             $scope.reportStatus[property] = 'refresh';
