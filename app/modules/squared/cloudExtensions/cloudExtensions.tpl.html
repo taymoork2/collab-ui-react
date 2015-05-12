@@ -6,8 +6,9 @@
     <ul>
       <li class="feature" ng-repeat="extension in extensions">
         <a id="{{extension.name}}" ui-sref="{{extension.route}}">
-          <span class="feature-name">{{extension.name}}</span><span class="feature-state">{{extension.state}}</span>
+          <span class="feature-name">{{extension.name}}</span>
           <i class="feature-arrow"></i>
+          <span class="feature-status">{{extension.state}}</span>
         </a>
       </li>
     </ul>
