@@ -44,7 +44,7 @@ angular
               $previousState.memo(sidepanelMemo);
               $state.sidepanel = $modal.open({
                 template: '<cs-sidepanel></cs-sidepanel>',
-                windowTemplateUrl: 'src/sidepanel/sidepanel-modal.tpl.html',
+                windowTemplateUrl: 'sidepanel/sidepanel-modal.tpl.html',
                 backdrop: false,
                 keyboard: false
               });
