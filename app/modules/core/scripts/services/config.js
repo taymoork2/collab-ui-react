@@ -228,6 +228,11 @@ angular.module('Core')
             desc: 'tabs.fusionDetailsTabDesc',
             state: 'fusion',
             link: '#fusion'
+          }, {
+            title: 'tabs.MediafusionDetailsTab',
+            desc: 'tabs.MediafusionDetailsTabDesc',
+            state: 'mediafusionconnector',
+            link: '#mediafusionconnector'
           }]
         }, {
           tab: 'deviceTab',
@@ -726,7 +731,8 @@ angular.module('Core')
         ],
         'squared-fusion-cal': [
           'fusion',
-          'cluster-details'
+          'cluster-details',
+          'mediafusionconnector'
         ],
         'squared-fusion-uc': [
           'devices'
