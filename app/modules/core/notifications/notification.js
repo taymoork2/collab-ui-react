@@ -40,6 +40,8 @@
       }
       if (response && response.data && angular.isString(response.data.errorMessage)) {
         errorMsg += ' ' + response.data.errorMessage;
+      } else if (response && response.data && angular.isString(response.data.error)) {
+        errorMsg += ' ' + response.data.error;
       } else if (response && response.status === 404) {
         errorMsg += ' ' + $translate.instant('errors.status404');
       } else if (angular.isString(response)) {

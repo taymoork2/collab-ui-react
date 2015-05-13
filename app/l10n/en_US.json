@@ -53,7 +53,7 @@
     "deleteUserError": "Error deleting user. Status: {{status}}",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
-    "ciscoucError": "{{email}} did not provision Unified Communications.",
+    "ciscoucError": "{{email}} did not successfully onboard Unified Communications.",
     "statusError": "Request failed with status: {{status}}.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
