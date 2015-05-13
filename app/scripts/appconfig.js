@@ -247,6 +247,19 @@ angular
               templateUrl: 'modules/core/users/userOverview/userHeader.tpl.html'
             }
           },
+          resolve: {
+            currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo) {
+              var scimUrl = Config.getScimUrl();
+              var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]) + '/' + $stateParams.currentUser.id;
+
+              return $http.get(userUrl)
+                .then(function (response) {
+                  angular.copy(response.data, this.currentUser);
+                  this.entitlements = Utils.getSqEntitlements(this.currentUser);
+                  return response.data;
+                }.bind($stateParams));
+            }
+          },
           params: {
             currentUser: {},
             entitlements: {},

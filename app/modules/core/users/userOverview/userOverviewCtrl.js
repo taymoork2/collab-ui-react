@@ -14,6 +14,8 @@
     vm.queryuserslist = $stateParams.queryuserslist;
     vm.services = [];
     vm.dropDownItems = [];
+    vm.titleCard = '';
+    vm.subTitleCard = '';
     vm.addGenerateAuthCodeLink = addGenerateAuthCodeLink;
     vm.removeGenerateAuthCodeLink = removeGenerateAuthCodeLink;
     vm.hasAccount = Authinfo.hasAccount();
@@ -42,21 +44,20 @@
       return false;
     }
 
-    function init() {
+    function getCurrentUser() {
       var scimUrl = Config.getScimUrl();
       var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]) + '/' + vm.currentUser.id;
 
       $http.get(userUrl)
-        .success(function (data) {
-          // Copy updated user data into user list
-          angular.copy(data, vm.currentUser);
-        })
-        .finally(function () {
-          activate();
+        .then(function (response) {
+          angular.copy(response.data, vm.currentUser);
+          vm.entitlements = Utils.getSqEntitlements(vm.currentUser);
+          updateUserTitleCard();
+          init();
         });
     }
 
-    function activate() {
+    function init() {
       vm.services = [];
 
       var msgState = {
@@ -88,28 +89,30 @@
     }
 
     $scope.$on('USER_LIST_UPDATED', function () {
-      updateUserTitleCard();
+      getCurrentUser();
+    });
+
+    $scope.$on('entitlementsUpdated', function () {
+      getCurrentUser();
     });
 
     function updateUserTitleCard() {
-      vm.currentUser.titleCard = '';
       if (vm.currentUser.displayName) {
-        vm.currentUser.titleCard = vm.currentUser.displayName;
+        vm.titleCard = vm.currentUser.displayName;
       } else if (vm.currentUser.name) {
-        vm.currentUser.titleCard = (vm.currentUser.name.givenName || '') + ' ' + (vm.currentUser.name.familyName || '');
+        vm.titleCard = (vm.currentUser.name.givenName || '') + ' ' + (vm.currentUser.name.familyName || '');
       } else {
-        vm.currentUser.titleCard = vm.currentUser.userName;
+        vm.titleCard = vm.currentUser.userName;
       }
 
-      vm.currentUser.subTitleCard = '';
       if (vm.currentUser.title) {
-        vm.currentUser.subTitleCard = vm.currentUser.title;
+        vm.subTitleCard = vm.currentUser.title;
       }
       if (angular.isArray(vm.currentUser.addresses) && vm.currentUser.addresses.length) {
-        vm.currentUser.subTitleCard += ' ' + (vm.currentUser.addresses[0].locality || '');
+        vm.subTitleCard += ' ' + (vm.currentUser.addresses[0].locality || '');
       }
-      if (!vm.currentUser.subTitleCard && vm.currentUser.titleCard != vm.currentUser.userName) {
-        vm.currentUser.subTitleCard = vm.currentUser.userName;
+      if (!vm.subTitleCard && vm.titleCard != vm.currentUser.userName) {
+        vm.subTitleCard = vm.currentUser.userName;
       }
     }
 

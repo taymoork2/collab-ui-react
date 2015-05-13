@@ -45,14 +45,22 @@ describe('Controller: UserOverviewCtrl', function () {
   });
 
   describe('init', function () {
-    it('should reload the user data from identity response', function () {
+    it('should reload the user data from identity response when user list is updated', function () {
       expect(currentUser.entitlements.length).toEqual(2);
+      $scope.$broadcast('USER_LIST_UPDATED');
       $httpBackend.flush();
       expect(currentUser.entitlements.length).toEqual(3);
     });
-    it('should set the title to displayName', function () {
+
+    it('should reload the user data from identity response when entitlements are updated', function () {
+      expect(currentUser.entitlements.length).toEqual(2);
+      $scope.$broadcast('entitlementsUpdated');
       $httpBackend.flush();
-      expect(currentUser.titleCard).toEqual("Display Name");
+      expect(currentUser.entitlements.length).toEqual(3);
+    });
+
+    it('should set the title to displayName', function () {
+      expect(controller.titleCard).toEqual("Display Name");
     });
   });
 

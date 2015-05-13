@@ -2,8 +2,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$translate', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification', 'Orgservice', 'Authinfo', 'LogMetricsService',
-    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService) {
+  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$translate', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification', 'Orgservice', 'Authinfo', 'LogMetricsService', 'Utils',
+    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils) {
 
       //Initialize variables
       $scope.load = true;
@@ -313,17 +313,7 @@ angular.module('Core')
 
       $scope.showUserDetails = function (user) {
         //Service profile
-        $scope.entitlements = {};
-        for (var i = $rootScope.services.length - 1; i >= 0; i--) {
-          var service = $rootScope.services[i].sqService;
-          var ciService = $rootScope.services[i].ciService;
-          if (user.entitlements && user.entitlements.indexOf(ciService) > -1) {
-            $scope.entitlements[service] = true;
-            $scope.entitlements.webExSquared = true;
-          } else {
-            $scope.entitlements[service] = false;
-          }
-        }
+        $scope.entitlements = Utils.getSqEntitlements(user);
         $scope.currentUser = user;
         $scope.roles = user.roles;
         $scope.queryuserslist = $scope.gridData;

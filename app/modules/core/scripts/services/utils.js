@@ -224,6 +224,23 @@ angular.module('Core')
 
         getUUID: function () {
           return guid();
+        },
+
+        getSqEntitlements: function (user) {
+          var entitlements = {};
+          if (angular.isArray($rootScope.services)) {
+            for (var i = $rootScope.services.length - 1; i >= 0; i--) {
+              var service = $rootScope.services[i].sqService;
+              var ciService = $rootScope.services[i].ciService;
+              if (angular.isDefined(user) && angular.isArray(user.entitlements) && user.entitlements.indexOf(ciService) > -1) {
+                entitlements[service] = true;
+                entitlements.webExSquared = true;
+              } else {
+                entitlements[service] = false;
+              }
+            }
+          }
+          return entitlements;
         }
 
       };
