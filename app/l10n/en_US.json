@@ -592,8 +592,8 @@
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusion Calendar"
+      "squared-fusion-uc": "Call",
+      "squared-fusion-cal": "Calendar"
     }
   },
   "firstTimeWizard": {
