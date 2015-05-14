@@ -347,24 +347,10 @@ angular.module('Core')
         deactivateUser: function (deleteUserOrgId, deleteUserUuId, userData, callback) {
           var scimUrl = Config.getScimUrl() + '/' + deleteUserUuId;
           scimUrl = Utils.sprintf(scimUrl, [deleteUserOrgId]);
-
-          if (userData) {
-
-            $http({
-                method: 'PATCH',
-                url: scimUrl,
-                data: userData
-              })
-              .success(function (data, status) {
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                data.success = false;
-                data.status = status;
-                callback(data, status);
-              });
-          }
+          return $http({
+            method: 'DELETE',
+            url: scimUrl
+          });
         }
       };
     }

@@ -235,7 +235,7 @@ angular.module('Core')
         var state = null;
         for (var key in $scope.entitlements) {
           state = $scope.entitlements[key];
-          if (action === 'add' || (action === 'entitle' && state)) {
+          if ((action === 'add' && state) || (action === 'entitle' && state)) {
             entitleList.push(new Feature(key, state));
           }
         }
