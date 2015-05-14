@@ -5,9 +5,7 @@
 var config = require('./test.config.js');
 var request = require('request');
 
-exports.searchButton = element(by.css('.header-search-toggle'));
-
-exports.searchField = element(by.css('.search-form input'));
+exports.searchField = element(by.id('searchFilter'));
 
 exports.randomId = function () {
   return (Math.random() + 1).toString(36).slice(2);
@@ -265,7 +263,7 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 };
 
 exports.search = function (query) {
-  this.click(this.searchButton);
+  this.wait(this.searchField);
   this.expectIsDisplayed(this.searchField);
   this.clear(this.searchField);
   if (query) {

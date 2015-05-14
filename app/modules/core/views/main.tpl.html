@@ -4,9 +4,6 @@
       <div class="navbar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()"><div class="navbar-title">{{orgname}}</div></div>
     </cs-header-left>
     <cs-header-right>
-      <div class="header-search" ng-controller="SearchCtrl" ng-if="Utils.isAdminPage()">
-        <cs-headersearch></cs-headersearch>
-      </div>
       <div class="leaderboard-push-trigger" ng-controller="HeaderPushCtrl" ng-if="Utils.isAdminPage()">
         <cs-header-push-trigger state="state" label="label"></cs-header-push-trigger>
       </div>

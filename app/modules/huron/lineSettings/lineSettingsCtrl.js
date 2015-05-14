@@ -610,8 +610,6 @@
     // Sharedline starts from here........
     function getUserList() {
 
-      $rootScope.searchStr = '';
-
       //get all Users to search on
 
       UserListService.listUsers(vm.sort.startAt, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {

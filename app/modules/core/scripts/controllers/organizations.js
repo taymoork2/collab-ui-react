@@ -46,7 +46,6 @@ angular.module('Core')
       });
 
       $scope.exportCSV = function () {
-        $rootScope.searchStr = undefined;
         var promise = UserListService.exportCSV($scope);
         promise.then(null, function (error) {
           Notification.notify(Array.new(error), 'error');

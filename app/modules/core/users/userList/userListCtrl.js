@@ -12,8 +12,11 @@ angular.module('Core')
       $scope.currentDataPosition = 0;
       $scope.queryuserslist = [];
       $scope.gridRefresh = true;
+      $scope.searchStr = '';
+      $scope.timeoutVal = 1000;
+      $scope.timer = 0;
 
-      $scope.activeFilter = 'all';
+      $scope.activeFilter = '';
 
       $scope.userList = {
         allUsers: [],
@@ -21,11 +24,6 @@ angular.module('Core')
         partnerUsers: []
       };
 
-      $scope.filterTotals = {
-        all: 0,
-        admin: 0,
-        partner: 0
-      };
       $scope.currentUser = null;
       $scope.popup = Notification.popup;
       $scope.filterByAdmin = false;
@@ -55,10 +53,11 @@ angular.module('Core')
 
       $scope.setFilter = function (filter) {
         $scope.activeFilter = filter;
-        if (filter === 'all') {
+        if ((filter === '') || (filter === 'all')) {
           $scope.gridData = $scope.userList.allUsers;
         } else if (filter === 'administrators') {
           $scope.gridData = $scope.userList.adminUsers;
+          $scope.searchStr = 'administrators';
         } else if (filter === 'partners') {
           $scope.gridData = $scope.userList.partnerUsers;
         }
@@ -103,74 +102,69 @@ angular.module('Core')
         var startIndex = startAt || 0;
         $scope.currentUser = null;
 
+        //get the admin users
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
           if (data.success) {
             $timeout(function () {
               $scope.load = true;
             });
-            if ($rootScope.searchStr === searchStr) {
-              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
-              Log.debug('Returned data.', data.Resources);
-              $scope.filterTotals.admin = data.totalResults;
-              if (startIndex === 0) {
-                $scope.userList.adminUsers = data.Resources;
-              } else {
-                $scope.userList.adminUsers = $scope.userList.adminUsers.concat(data.Resources);
-              }
-              $scope.setFilter($scope.activeFilter);
+            Log.debug('Returned data.', data.Resources);
+            $scope.filters[0].count = data.totalResults;
+            if (startIndex === 0) {
+              $scope.userList.adminUsers = data.Resources;
             } else {
-              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+              $scope.userList.adminUsers = $scope.userList.adminUsers.concat(data.Resources);
             }
+            $scope.setFilter($scope.activeFilter);
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
           }
-        }, true);
+        }, $scope.searchStr, true);
 
+        //get the users I am searching for
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
           $scope.gridRefresh = false;
           if (data.success) {
             $timeout(function () {
               $scope.load = true;
             });
-            if ($rootScope.searchStr === searchStr) {
-              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+            if ($scope.searchStr === searchStr) {
+              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $scope.searchStr);
               Log.debug('Returned data.', data.Resources);
               // data.resources = getUserStatus(data.Resources);
-              $scope.filterTotals.all = data.totalResults;
+
+              $scope.placeholder.count = data.totalResults;
               if (startIndex === 0) {
                 $scope.userList.allUsers = data.Resources;
               } else {
                 $scope.userList.allUsers = $scope.userList.allUsers.concat(data.Resources);
               }
+
               $scope.setFilter($scope.activeFilter);
+
             } else {
-              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $scope.searchStr);
             }
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
             Notification.notify([$translate.instant('usersPage.userListError')], 'error');
           }
-        });
+        }, $scope.searchStr);
 
         UserListService.listPartners(Authinfo.getOrgId(), function (data, status, searchStr) {
           if (data.success) {
             $timeout(function () {
               $scope.load = true;
             });
-            if ($rootScope.searchStr === searchStr) {
-              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
-              Log.debug('Returned data.', data.Resources);
-              // data.resources = getUserStatus(data.Resources);
-              $scope.filterTotals.partner = data.partners.length;
-              if (startIndex === 0) {
-                $scope.userList.partnerUsers = data.partners;
-              } else {
-                $scope.userList.partnerUsers = $scope.userList.partnerUsers.concat(data.Resources);
-              }
-              $scope.setFilter($scope.activeFilter);
+            Log.debug('Returned data.', data.Resources);
+            // data.resources = getUserStatus(data.Resources);
+            $scope.filters[1].count = data.partners.length;
+            if (startIndex === 0) {
+              $scope.userList.partnerUsers = data.partners;
             } else {
-              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $rootScope.searchStr);
+              $scope.userList.partnerUsers = $scope.userList.partnerUsers.concat(data.Resources);
             }
+            $scope.setFilter($scope.activeFilter);
           } else {
             Log.debug('Query existing users failed. Status: ' + status);
           }
@@ -341,12 +335,6 @@ angular.module('Core')
 
       getUserList();
 
-      //Search users based on search criteria
-      $scope.$on('SEARCH_ITEM', function (e, str) {
-        Log.debug('got broadcast for search:' + str);
-        getUserList();
-      });
-
       //list users when we have authinfo data back, or new users have been added/activated
       $scope.$on('AuthinfoUpdated', function () {
         getUserList();
@@ -392,53 +380,38 @@ angular.module('Core')
         });
       };
 
-      // TODO: reevalute this logic and remove is not needed.
-      if ($rootScope.selectedSubTab === 'invite') {
-        $scope.inviteTabActive = true;
-      } else {
-        $scope.userTabActive = true;
-      }
-
-      var setTab = function (tab) {
-        if (tab === 'invite') {
-          $scope.userTabActive = false;
-          $scope.inviteTabActive = true;
-        } else {
-          $scope.userTabActive = true;
-          $scope.inviteTabActive = false;
-        }
-        $rootScope.selectedSubTab = null;
+      $scope.placeholder = {
+        name: $translate.instant('usersPage.all'),
+        filterValue: '',
+        count: 0
       };
-
-      $scope.changeTab = function (tab) {
-        setTab(tab);
-      };
-      // end TODO
-
       // Users Grid Filters
       $scope.filters = [{
-        name: 'Active',
-        search: 'active',
-        count: $scope.filterTotals.all
+        name: $translate.instant('usersPage.administrators'),
+        filterValue: 'administrators',
+        count: 0
       }, {
-        name: 'Invite Pending',
-        search: 'pending',
-        count: $scope.filterTotals.all
+        name: $translate.instant('usersPage.partners'),
+        filterValue: 'partners',
+        count: 0
       }];
 
       // On click, filter user list and set active filter
       $scope.filterList = function (str) {
-        $rootScope.searchStr = str;
-        $rootScope.$broadcast('SEARCH_ITEM', str);
-      };
+        if ($scope.timer) {
+          $timeout.cancel($scope.timer);
+          $scope.timer = 0;
+        }
 
-      $scope.isSearchFocused = false;
+        $scope.timer = $timeout(function () {
 
-      $scope.searchFocus = function () {
-        $scope.isSearchFocused = true;
-      };
-      $scope.searchBlur = function () {
-        $scope.isSearchFocused = false;
+          //CI requires search strings to be at least three characters
+          if (str.length >= 3 || str === '') {
+            $scope.searchStr = str;
+            getUserList();
+          }
+        }, $scope.timeoutVal);
+
       };
 
       if ($state.current.name === "users.list") {

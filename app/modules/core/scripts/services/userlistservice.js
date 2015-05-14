@@ -12,10 +12,9 @@ angular.module('Core')
 
       var userlistservice = {
 
-        listUsers: function (startIndex, count, sortBy, sortOrder, callback, getAdmins) {
+        listUsers: function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
 
           var listUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
-          var searchStr;
           var filter;
           var entitlement;
           var scimSearchUrl = null;
@@ -28,23 +27,25 @@ angular.module('Core')
             listUrl = listUrl + '&filter=active%20eq%20true';
           }
 
-          if (typeof entitlement !== 'undefined' && entitlement !== null && $rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
-            //It seems CI does not support 'ANDing' filters in this situation.
-            filter = searchFilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
-            scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
-            encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
-            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
-            searchStr = $rootScope.searchStr;
-          } else if ($rootScope.searchStr !== '' && typeof ($rootScope.searchStr) !== 'undefined') {
-            filter = searchFilter;
-            scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
-            encodedSearchStr = window.encodeURIComponent($rootScope.searchStr);
-            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
-            searchStr = $rootScope.searchStr;
-          } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
-            filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement);
-            scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
-            listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
+          if (!getAdmins) {
+            if (typeof entitlement !== 'undefined' && entitlement !== null && searchStr !== '' && typeof (searchStr) !== 'undefined') {
+              //It seems CI does not support 'ANDing' filters in this situation.
+              filter = searchFilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
+              scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
+              encodedSearchStr = window.encodeURIComponent(searchStr);
+              listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+              searchStr = searchStr;
+            } else if (searchStr !== '' && typeof (searchStr) !== 'undefined') {
+              filter = searchFilter;
+              scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
+              encodedSearchStr = window.encodeURIComponent(searchStr);
+              listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+
+            } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
+              filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement);
+              scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
+              listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
+            }
           }
 
           if (startIndex && startIndex > 0) {
@@ -89,6 +90,7 @@ angular.module('Core')
         },
 
         exportCSV: function (scope) {
+          var searchStr = '';
           var deferred = $q.defer();
           var users = [];
           var page = 0;
@@ -139,7 +141,7 @@ angular.module('Core')
                 Log.debug('Exporting users failed. Status ' + status);
                 deferred.reject('Exporting users failed. Status ' + status);
               }
-            }, entitlementFilter);
+            }, searchStr, entitlementFilter);
           };
 
           $('#export-icon').html('<i class=\'icon icon-spinner\'></i>');
