@@ -17,6 +17,7 @@ describe('Controller: TrialAddCtrl', function () {
     EmailService = _EmailService_;
 
     spyOn(Notification, 'notify');
+    spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
@@ -114,8 +115,8 @@ describe('Controller: TrialAddCtrl', function () {
         spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
         controller.startTrial();
         $scope.$apply();
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-        expect(Notification.notify.calls.count()).toEqual(1);
+        expect(Notification.errorResponse).toHaveBeenCalled();
+        expect(Notification.errorResponse.calls.count()).toEqual(1);
       });
     });
   });

@@ -80,15 +80,15 @@
           } else if ((response.data.message).indexOf('Admin User') > -1) {
             vm.emailError = true;
           }
-          return $q.reject();
+          return $q.reject(response);
         }).then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
           if (offersList.indexOf(Config.trials.squaredUC) !== -1) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
-              .catch(function () {
+              .catch(function (response) {
                 angular.element('#startTrialButton').button('reset');
-                Notification.notify([$translate.instant('trialModal.squareducError')], 'error');
-                return $q.reject();
+                Notification.errorResponse(response, 'trialModal.squareducError');
+                return $q.reject(response);
               });
           } else {
             return EmailService.emailNotifyTrialCustomer(vm.customerEmail, vm.licenseDuration, vm.customerOrgId)

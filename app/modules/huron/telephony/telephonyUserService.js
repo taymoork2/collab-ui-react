@@ -6,7 +6,7 @@
     .factory('HuronUser', HuronUser);
 
   /* @ngInject */
-  function HuronUser(Authinfo, UserServiceCommon, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, $q, LogMetricsService) {
+  function HuronUser(Authinfo, UserServiceCommon, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, $q, LogMetricsService, Notification) {
     var userProfile = Authinfo.getOrgId() + '_000001_UCUP';
     var userPayload = {
       'userName': null,
@@ -92,7 +92,8 @@
             })
             .catch(function (response) {
               LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), response.status || 409, moment(), 1);
-              return $q.reject(response);
+              //Notify email error, don't rethrow error
+              Notification.errorResponse(response, 'usersPage.emailError');
             });
         });
     }
