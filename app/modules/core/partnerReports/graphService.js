@@ -44,7 +44,6 @@
     var activeUsersGraph = null;
 
     return {
-      createActiveUserGraph: createActiveUserGraph,
       invalidateActiveUserGraphSize: invalidateActiveUserGraphSize,
       updateActiveUsersGraph: updateActiveUsersGraph
     };

@@ -12,21 +12,30 @@
     var activeUserUrl = '/managedOrgs/activeUsers';
     var dateFormat = "MMM DD, YYYY";
     var mostRecentUpdate = "";
-    var timeFilter;
     var customerList = null;
-    var savedActiveUserData = [];
 
     return {
       getActiveUserData: getActiveUserData,
       getCustomerList: getCustomerList,
-      getMostRecentUpdate: getMostRecentUpdate,
-      getPreviousFilter: getPreviousFilter,
-      setActiveUsersData: setActiveUsersData
+      getMostRecentUpdate: getMostRecentUpdate
     };
 
-    function getActiveUserData(id, name) {
-      var graphData = getActiveUserGraphData(id);
-      return getActiveUserTableData(id, name).then(function (tableData) {
+    function getActiveUserData(customer, time) {
+      var query = getQuery(time);
+      var promises = [];
+      var graphData = [];
+      var tableData = [];
+
+      var graphPromise = getActiveUserGraphData(customer, query).then(function (response) {
+        graphData = response;
+      });
+      var tablePromise = getActiveUserTableData(customer, query).then(function (response) {
+        tableData = response;
+      });
+      promises.push(graphPromise);
+      promises.push(tablePromise);
+
+      return $q.all(promises).then(function () {
         return {
           graphData: graphData,
           tableData: tableData
@@ -58,13 +67,19 @@
       return orgPromise.promise;
     }
 
-    function getPreviousFilter() {
-      return timeFilter;
-    }
-
     function getService(urlQuery) {
       var url = urlBase + urlQuery;
       return $http.get(url);
+    }
+
+    function getQuery(filter) {
+      if (filter.value === 0) {
+        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
+      } else if (filter.value === 1) {
+        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=week&cache=false';
+      } else {
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=false';
+      }
     }
 
     function setMostRecentUpdate(data) {
@@ -73,82 +88,63 @@
       }
     }
 
-    function setActiveUsersData(filter) {
-      timeFilter = filter;
-      var query = getQuery();
-      var promises = [];
-      var detailedData = [];
-
-      return getService(detailed + activeUserUrl + query).then(function (response) {
-        detailedData = response;
-      }, function (error) {
-        Log.debug('Loading active users failed.  Status: ' + error.status + ' Response: ' + error.message);
-        Notification.notify([$translate.instant('activeUsers.activeUserGraphError')], 'error');
-      }).then(function () {
-        setMostRecentUpdate(detailedData);
-        savedActiveUserData = [];
-        if (detailedData.data !== null && detailedData.data !== undefined) {
-          var graphData = detailedData.data.data;
-
-          angular.forEach(graphData, function (index) {
-            index.data = modifyActiveUserGraphData(index.data);
-          });
-          savedActiveUserData = graphData;
-        }
-
-        return;
-      });
-    }
-
-    function getQuery() {
-      if (timeFilter.value === 0) {
-        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
-      } else if (timeFilter.value === 1) {
-        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=week&cache=false';
+    function getActiveUserGraphData(customer, query) {
+      if (angular.isArray(customer)) {
+        return combineActiveUsersGraph(customer, query);
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=false';
+        return getService(detailed + activeUserUrl + query + "&orgId=" + customer.value).then(function (response) {
+          if (mostRecentUpdate === "") {
+            setMostRecentUpdate(response);
+          }
+          return modifyActiveUserGraphData(response.data.data[0]);
+        }, function (error) {
+          Log.debug('Loading active user graph data for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
+          Notification.notify([$translate.instant('activeUsers.activeUserGraphError', {
+            customer: customer.label
+          })], 'error');
+          return [];
+        });
       }
     }
 
     function modifyActiveUserGraphData(data) {
-      angular.forEach(data, function (index) {
-        index.percentage = Math.floor((parseInt(index.details.activeUsers) / parseInt(index.details.totalRegisteredUsers)) * 100);
-        index.activeUsers = parseInt(index.details.activeUsers);
-        index.totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
-        index.modifiedDate = moment(index.date).format(dateFormat);
-      });
-      return data;
-    }
-
-    function getActiveUserGraphData(id) {
-      for (var i = 0; i < savedActiveUserData.length; i++) {
-        if (savedActiveUserData[i].orgId === id) {
-          return savedActiveUserData[i].data;
-        }
+      if (data !== undefined && data !== null) {
+        angular.forEach(data.data, function (index) {
+          index.percentage = Math.floor((parseInt(index.details.activeUsers) / parseInt(index.details.totalRegisteredUsers)) * 100);
+          index.activeUsers = parseInt(index.details.activeUsers);
+          index.totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
+          index.modifiedDate = moment(index.date).format(dateFormat);
+        });
+        return data.data;
+      } else {
+        return [];
       }
-
-      return [];
     }
 
     // Keeping function for use when mult-org select functionality is added.
-    function combineActiveUsersGraph(orgs) {
+    function combineActiveUsersGraph(orgs, query) {
+      var promises = [];
       var graphData = [];
       angular.forEach(orgs, function (org) {
-        var orgData = getActiveUserGraphData(org.orgId);
-        angular.forEach(orgData, function (data) {
-          graphData = combineMatchingDates(graphData, data);
+        var promise = getActiveUserGraphData(org, query).then(function (orgData) {
+          angular.forEach(orgData, function (data) {
+            graphData = combineMatchingDates(graphData, data);
+          });
         });
+        promises.push(promise);
       });
 
-      // not all customers have active data for every day
-      // this can cause data to be out of order without sorting
-      return graphData.sort(function (a, b) {
-        if (a.date === b.date) {
-          return 0;
-        } else if (a.date > b.date) {
-          return 1;
-        }
-        return -1;
+      return $q.all(promises).then(function () {
+        // not all customers have active data for every day
+        // this can cause data to be out of order without sorting
+        return graphData.sort(function (a, b) {
+          if (a.date === b.date) {
+            return 0;
+          } else if (a.date > b.date) {
+            return 1;
+          }
+          return -1;
+        });
       });
     }
 
@@ -173,16 +169,23 @@
       return graphData;
     }
 
-    function getActiveUserTableData(id, name) {
-      return getService(topn + activeUserUrl + getQuery() + "&orgId=" + id).then(function (response) {
-        return modifyActiveUserTableData(response.data.data[0]);
-      }, function (error) {
-        Log.debug('Loading most active users for customer ' + name + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
-        Notification.notify([$translate.instant('activeUsers.activeUserTableError', {
-          customer: name
-        })], 'error');
-        return [];
-      });
+    function getActiveUserTableData(customer, query) {
+      if (angular.isArray(customer)) {
+        return combineActiveUsersTable(customer);
+      } else {
+        return getService(topn + activeUserUrl + query + "&orgId=" + customer.value).then(function (response) {
+          if (mostRecentUpdate === "") {
+            setMostRecentUpdate(response);
+          }
+          return modifyActiveUserTableData(response.data.data[0]);
+        }, function (error) {
+          Log.debug('Loading most active users for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
+          Notification.notify([$translate.instant('activeUsers.activeUserTableError', {
+            customer: customer.label
+          })], 'error');
+          return [];
+        });
+      }
     }
 
     function modifyActiveUserTableData(data) {

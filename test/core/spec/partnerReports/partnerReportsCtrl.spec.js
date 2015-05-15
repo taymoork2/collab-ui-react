@@ -35,14 +35,14 @@ describe('Controller: Partner Reports', function () {
       }));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(dummyCustomers));
       spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(date);
-      spyOn(PartnerReportService, 'setActiveUsersData').and.returnValue($q.when());
 
-      spyOn(GraphService, 'createActiveUserGraph');
       spyOn(GraphService, 'invalidateActiveUserGraphSize');
+      spyOn(GraphService, 'updateActiveUsersGraph');
 
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,
         $translate: $translate,
+        $q: $q,
         PartnerReportService: PartnerReportService,
         GraphService: GraphService
       });
@@ -53,11 +53,10 @@ describe('Controller: Partner Reports', function () {
       it('should be created successfully and all expected calls completed', function () {
         expect(controller).toBeDefined();
 
-        expect(PartnerReportService.setActiveUsersData).toHaveBeenCalledWith(controller.timeOptions[0]);
         expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
 
-        expect(GraphService.createActiveUserGraph).toHaveBeenCalled();
+        expect(GraphService.updateActiveUsersGraph).toHaveBeenCalled();
         expect(GraphService.invalidateActiveUserGraphSize).toHaveBeenCalled();
       });
 
@@ -67,12 +66,11 @@ describe('Controller: Partner Reports', function () {
         expect(controller.activeUserReverse).toBeTruthy();
         expect(controller.activeUsersTotalPages).toEqual(1);
         expect(controller.activeUserCurrentPage).toEqual(1);
-        expect(controller.activeUserPredicate).toEqual(activeUsersSort[2]);
+        expect(controller.activeUserPredicate).toEqual(activeUsersSort[3]);
         expect(controller.activeButton).toEqual([1, 2, 3]);
         expect(controller.mostActiveUsers).toEqual(dummyTableData);
 
         expect(controller.recentUpdate).toEqual(date);
-        expect(controller.qualityTab).toEqual('set');
         expect(controller.customerOptions).toEqual(customerOptions);
         expect(controller.customerSelected).toEqual(customerOptions[0]);
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
@@ -119,18 +117,6 @@ describe('Controller: Partner Reports', function () {
     });
 
     describe('mostActiveSort', function () {
-      it('should sort by calls', function () {
-        controller.mostActiveSort(2);
-        expect(controller.activeUserPredicate).toBe(activeUsersSort[2]);
-        expect(controller.activeUserReverse).toBeFalsy();
-      });
-
-      it('should sort by posts', function () {
-        controller.mostActiveSort(3);
-        expect(controller.activeUserPredicate).toBe(activeUsersSort[3]);
-        expect(controller.activeUserReverse).toBeTruthy();
-      });
-
       it('should sort by userName', function () {
         controller.mostActiveSort(0);
         expect(controller.activeUserPredicate).toBe(activeUsersSort[0]);
@@ -140,6 +126,18 @@ describe('Controller: Partner Reports', function () {
       it('should sort by orgName', function () {
         controller.mostActiveSort(1);
         expect(controller.activeUserPredicate).toBe(activeUsersSort[1]);
+        expect(controller.activeUserReverse).toBeFalsy();
+      });
+
+      it('should sort by calls', function () {
+        controller.mostActiveSort(2);
+        expect(controller.activeUserPredicate).toBe(activeUsersSort[2]);
+        expect(controller.activeUserReverse).toBeTruthy();
+      });
+
+      it('should sort by posts', function () {
+        controller.mostActiveSort(3);
+        expect(controller.activeUserPredicate).toBe(activeUsersSort[3]);
         expect(controller.activeUserReverse).toBeFalsy();
       });
     });
@@ -186,27 +184,10 @@ describe('Controller: Partner Reports', function () {
     });
 
     describe('updateReports', function () {
-      beforeEach(function () {
-        expect(PartnerReportService.setActiveUsersData).toHaveBeenCalledWith(controller.timeOptions[0]);
-        spyOn(PartnerReportService, 'getPreviousFilter').and.returnValue(controller.timeOptions[0]);
-        spyOn(GraphService, 'updateActiveUsersGraph');
-      });
-
-      it('should not call setActiveUsersData if timeSelected has not changed', function () {
+      it('should call updateActiveUsersGraph when updateReports is called', function () {
         controller.updateReports();
         $scope.$apply();
 
-        expect(PartnerReportService.getPreviousFilter).toHaveBeenCalled();
-        expect(GraphService.updateActiveUsersGraph).toHaveBeenCalled();
-      });
-
-      it('should call setActiveUsersData if timeSelected has not changed', function () {
-        controller.timeSelected = controller.timeOptions[1];
-        controller.updateReports();
-        $scope.$apply();
-
-        expect(PartnerReportService.getPreviousFilter).toHaveBeenCalled();
-        expect(PartnerReportService.setActiveUsersData).toHaveBeenCalledWith(controller.timeOptions[1]);
         expect(GraphService.updateActiveUsersGraph).toHaveBeenCalled();
       });
     });
@@ -226,14 +207,14 @@ describe('Controller: Partner Reports', function () {
       }));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
       spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(undefined);
-      spyOn(PartnerReportService, 'setActiveUsersData').and.returnValue($q.when());
 
-      spyOn(GraphService, 'createActiveUserGraph');
       spyOn(GraphService, 'invalidateActiveUserGraphSize');
+      spyOn(GraphService, 'updateActiveUsersGraph');
 
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,
         $translate: $translate,
+        $q: $q,
         PartnerReportService: PartnerReportService,
         GraphService: GraphService
       });
@@ -244,11 +225,10 @@ describe('Controller: Partner Reports', function () {
       it('should be created successfully and all expected calls completed', function () {
         expect(controller).toBeDefined();
 
-        expect(PartnerReportService.setActiveUsersData).toHaveBeenCalledWith(controller.timeOptions[0]);
         expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
 
-        expect(GraphService.createActiveUserGraph).toHaveBeenCalled();
+        expect(GraphService.updateActiveUsersGraph).toHaveBeenCalled();
         expect(GraphService.invalidateActiveUserGraphSize).toHaveBeenCalled();
       });
 

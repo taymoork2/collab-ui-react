@@ -45,62 +45,6 @@
         "totalRegisteredUsers": "116"
       }
     }]
-  }, {
-    "orgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
-    "orgName": "Test Org Two",
-    "data": [{
-      "date": "2015-04-08T02:00:00.000-05:00",
-      "details": {
-        "activeUsers": "0",
-        "totalRegisteredUsers": "1"
-      }
-    }]
-  }, {
-    "orgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
-    "orgName": "Test Org Three",
-    "data": [{
-      "date": "2015-04-08T02:00:00.000-05:00",
-      "details": {
-        "activeUsers": "29",
-        "totalRegisteredUsers": "46"
-      }
-    }, {
-      "date": "2015-04-10T02:00:00.000-05:00",
-      "details": {
-        "activeUsers": "28",
-        "totalRegisteredUsers": "46"
-      }
-    }, {
-      "date": "2015-04-11T02:00:00.000-05:00",
-      "details": {
-        "activeUsers": "28",
-        "totalRegisteredUsers": "46"
-      }
-    }, {
-      "date": "2015-04-12T02:00:00.000-05:00",
-      "details": {
-        "activeUsers": "28",
-        "totalRegisteredUsers": "46"
-      }
-    }, {
-      "date": "2015-04-13T02:00:00.000-05:00",
-      "details": {
-        "activeUsers": "28",
-        "totalRegisteredUsers": "46"
-      }
-    }, {
-      "date": "2015-04-14T02:00:00.000-05:00",
-      "details": {
-        "activeUsers": "28",
-        "totalRegisteredUsers": "46"
-      }
-    }, {
-      "date": "2015-04-15T02:00:00.000-05:00",
-      "details": {
-        "activeUsers": "28",
-        "totalRegisteredUsers": "46"
-      }
-    }]
   }],
   "type": "activeUsers",
   "date": "2015-04-21T15:26:43.486Z",

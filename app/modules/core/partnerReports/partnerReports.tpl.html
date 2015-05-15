@@ -19,18 +19,18 @@
             <h4 translate="reportsPage.engagementTab"></h4>
           </cs-tab-heading>
           <div id="engagementReport" class="tab-report report-column">
-            <uc-active-user class="report-section"></uc-active-user>
-            <div class="report-section pull-right"></div>
+            <div class="row">
+              <uc-active-user class="report-section col-md-5"></uc-active-user>
+              <div class="report-section col-md-5">
+              </div>
+            </div>
           </div>
         </cs-tab>
         <cs-tab id="qualityTab" ui-sref-active="current">
           <cs-tab-heading>
             <h4 translate="reportsPage.qualityTab"></h4>
           </cs-tab-heading>
-          <div id="qualityReport" class="tab-report quality-reports" ng-hide="nav.isRefresh(nav.qualityTab)">
-          </div>
-          <div id="qualityRefreshDiv" class="report-status" ng-show="nav.isRefresh(nav.qualityTab)">
-            <i class='icon icon-spinner icon-2x'></i>
+          <div id="qualityReport" class="tab-report quality-reports">
           </div>
         </cs-tab>
     </section>

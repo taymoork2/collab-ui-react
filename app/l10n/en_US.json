@@ -252,7 +252,7 @@
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
-    "activeUserGraphError": "There was an error while loading active user data.",
+    "activeUserGraphError": "There was an error while loading active user data for {{customer}}.",
     "activeUserTableError": "There was an error while loading data for most active users for {{customer}}.",
     "calls": "Calls",
     "customer": "Customer",

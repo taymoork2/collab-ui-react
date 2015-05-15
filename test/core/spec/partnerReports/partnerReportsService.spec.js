@@ -20,6 +20,10 @@ describe('Service: Partner Reports Service', function () {
   var error = {
     message: 'error'
   };
+  var customer = {
+    value: customers[0].customerOrgId,
+    label: customers[0].customerName
+  };
   var customerDatapoint = {
     modifiedDate: 'Apr 10, 2015',
     details: {
@@ -31,31 +35,7 @@ describe('Service: Partner Reports Service', function () {
     totalRegisteredUsers: 14,
     date: '2015-04-10T02:00:00.000-05:00'
   };
-  var fiveCustomersDataPoint = {
-    modifiedDate: 'Apr 08, 2015',
-    details: {
-      activeUsers: '0',
-      totalRegisteredUsers: '1'
-    },
-    percentage: 61,
-    activeUsers: 29,
-    totalRegisteredUsers: 47,
-    date: '2015-04-08T02:00:00.000-05:00'
-  };
   var customerTableDataPoint = {
-    details: {
-      numCalls: '5',
-      totalActivity: '14',
-      userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
-      userName: 'havard.nigardsoy@vijugroup.com'
-    },
-    orgName: 'Test Org One',
-    numCalls: 5,
-    totalActivity: 14,
-    userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
-    userName: 'havard.nigardsoy@vijugroup.com'
-  };
-  var fiveCustomerTableData = {
     details: {
       numCalls: '5',
       totalActivity: '14',
@@ -102,28 +82,14 @@ describe('Service: Partner Reports Service', function () {
   });
 
   describe('Active User Services', function () {
-    describe('should notify an error for setActiveUsersData', function () {
-      it('when activeUsersDetailed does not return data', function () {
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(500, error);
-        PartnerReportService.setActiveUsersData(timeFilter).then(function () {
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-        });
-        $httpBackend.flush();
-      });
-    });
-
     describe('should getActiveUserData', function () {
       beforeEach(function () {
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
         $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
-        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[1].customerOrgId).respond(mostActiveUserData);
-        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[2].customerOrgId).respond(mostActiveUserData);
-        PartnerReportService.setActiveUsersData(timeFilter);
-        $httpBackend.flush();
+        $httpBackend.whenGET(activeUsersDetailedUrl + "&orgId=" + customers[0].customerOrgId).respond(activeUserDetailedData);
       });
 
       it('for an existing customer', function () {
-        PartnerReportService.getActiveUserData(customers[0].customerOrgId, customers[0].customerName).then(function (response) {
+        PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
           expect(response.graphData[0]).toEqual(customerDatapoint);
           expect(response.tableData[0]).toEqual(customerTableDataPoint);
         });
@@ -133,12 +99,10 @@ describe('Service: Partner Reports Service', function () {
 
     describe('should notify an error for getActiveUserData', function () {
       it('and return empty table data', function () {
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
         $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
-        PartnerReportService.setActiveUsersData(timeFilter);
-        $httpBackend.flush();
+        $httpBackend.whenGET(activeUsersDetailedUrl + "&orgId=" + customers[0].customerOrgId).respond(activeUserDetailedData);
 
-        PartnerReportService.getActiveUserData(customers[0].customerOrgId, customers[0].customerName).then(function (response) {
+        PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
           expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
           expect(response.graphData[0]).toEqual(customerDatapoint);
           expect(response.tableData).toEqual([]);
@@ -146,13 +110,23 @@ describe('Service: Partner Reports Service', function () {
         $httpBackend.flush();
       });
 
-      it('and return empty graph and table data', function () {
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(500, error);
-        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
-        PartnerReportService.setActiveUsersData(timeFilter);
-        $httpBackend.flush();
+      it('and return empty graph data', function () {
+        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
+        $httpBackend.whenGET(activeUsersDetailedUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
 
-        PartnerReportService.getActiveUserData(customers[0].customerOrgId, customers[0].customerName).then(function (response) {
+        PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+          expect(response.graphData).toEqual([]);
+          expect(response.tableData[0]).toEqual(customerTableDataPoint);
+        });
+        $httpBackend.flush();
+      });
+
+      it('and return empty graph and table data', function () {
+        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
+        $httpBackend.whenGET(activeUsersDetailedUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
+
+        PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
           expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
           expect(response.graphData).toEqual([]);
           expect(response.tableData).toEqual([]);
@@ -163,12 +137,6 @@ describe('Service: Partner Reports Service', function () {
   });
 
   describe('Helper Services', function () {
-    beforeEach(function () {
-      $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
-      PartnerReportService.setActiveUsersData(timeFilter);
-      $httpBackend.flush();
-    });
-
     it('getCustomerList should return a list of customers', function () {
       $httpBackend.whenGET(managedOrgsUrl).respond(customerData);
       PartnerReportService.getCustomerList().then(function (list) {
@@ -186,12 +154,13 @@ describe('Service: Partner Reports Service', function () {
     });
 
     it('getMostRecentUpdate should return the most recent update', function () {
-      expect(PartnerReportService.getMostRecentUpdate()).toEqual(moment(activeUserDetailedData.date).format(dateFormat));
-    });
+      $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
+      $httpBackend.whenGET(activeUsersDetailedUrl + "&orgId=" + customers[0].customerOrgId).respond(activeUserDetailedData);
 
-    it('getPreviousFilter should return the last timeFilter used to generate queries', function () {
-      var filter = PartnerReportService.getPreviousFilter();
-      expect(filter).toEqual(timeFilter);
+      PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
+        expect(PartnerReportService.getMostRecentUpdate()).toEqual(moment(activeUserDetailedData.date).format(dateFormat));
+      });
+      $httpBackend.flush();
     });
   });
 });

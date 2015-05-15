@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $translate, PartnerReportService, GraphService) {
+  function PartnerReportCtrl($scope, $translate, $q, PartnerReportService, GraphService) {
     var vm = this;
 
     // variables for the active users section
@@ -20,12 +20,11 @@
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
-    vm.activeUserPredicate = activeUsersSort[2];
+    vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
     vm.mostActiveUsers = [];
 
     vm.recentUpdate = "";
-    vm.qualityTab = 'refresh';
     vm.customerOptions = [];
     vm.customerSelected = null;
 
@@ -94,16 +93,8 @@
 
     vm.updateReports = function () {
       vm.activeUsersRefresh = 'refresh';
-      var savedFilter = PartnerReportService.getPreviousFilter();
       angular.element('#' + activeUserRefreshDiv).html(isActiveUsersRefreshDiv);
-
-      if (savedFilter !== vm.timeSelected) {
-        PartnerReportService.setActiveUsersData(vm.timeSelected).then(function () {
-          updateActiveUserReports();
-        });
-      } else {
-        updateActiveUserReports();
-      }
+      getActiveUserReports();
     };
 
     init();
@@ -111,42 +102,17 @@
     function init() {
       PartnerReportService.getCustomerList().then(function (response) {
         updateCustomerFilter(response);
-        setActiveUserReports();
-        setGraphResizing();
-        vm.qualityTab = 'set';
-      });
-    }
 
-    function setGraphResizing() {
-      angular.element('#engagementTab').on("click", function () {
-        if (vm.activeUsersRefresh !== 'empty') {
+        var promises = [];
+        var activeUserPromise = getActiveUserReports().then(function () {
           GraphService.invalidateActiveUserGraphSize();
-        }
-      });
-    }
+        });
+        promises.push(activeUserPromise);
 
-    function updateActiveUserReports() {
-      PartnerReportService.getActiveUserData(vm.customerSelected.value, vm.customerSelected.label).then(function (response) {
-        var graphData = response.graphData;
-        GraphService.updateActiveUsersGraph(graphData);
-
-        vm.mostActiveUsers = response.tableData;
-
-        if (vm.mostActiveUsers !== undefined && vm.mostActiveUsers !== null) {
-          var totalUsers = vm.mostActiveUsers.length;
-          vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
-        } else {
-          vm.activeUsersTotalPages = 0;
-        }
-        vm.activeUserCurrentPage = 1;
-        vm.activeButton = [1, 2, 3];
-
-        if (graphData.length === 0) {
-          angular.element('#' + activeUserRefreshDiv).html(noActiveUserDataDiv);
-          vm.activeUsersRefresh = 'empty';
-        } else {
-          vm.activeUsersRefresh = 'set';
-        }
+        $q.all(promises).then(function () {
+          vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
+          setGraphResizing();
+        });
       });
     }
 
@@ -168,33 +134,39 @@
       }
     }
 
-    function setActiveUserReports() {
-      PartnerReportService.setActiveUsersData(vm.timeSelected).then(function () {
-        vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
+    function getActiveUserReports() {
+      return PartnerReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
+        var graphData = response.graphData;
+        GraphService.updateActiveUsersGraph(graphData);
 
-        PartnerReportService.getActiveUserData(vm.customerSelected.value, vm.customerSelected.label).then(function (response) {
-          var graphData = response.graphData;
-          GraphService.createActiveUserGraph(graphData);
+        vm.mostActiveUsers = response.tableData;
+
+        if (vm.mostActiveUsers !== undefined && vm.mostActiveUsers !== null) {
+          var totalUsers = vm.mostActiveUsers.length;
+          vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
+        } else {
+          vm.activeUsersTotalPages = 0;
+        }
+        vm.activeUserCurrentPage = 1;
+        vm.activeButton = [1, 2, 3];
+        vm.activeUserPredicate = activeUsersSort[3];
+
+        if (graphData.length === 0) {
+          angular.element('#' + activeUserRefreshDiv).html(noActiveUserDataDiv);
+          vm.activeUsersRefresh = 'empty';
+        } else {
+          vm.activeUsersRefresh = 'set';
+        }
+
+        return;
+      });
+    }
+
+    function setGraphResizing() {
+      angular.element('#engagementTab').on("click", function () {
+        if (vm.activeUsersRefresh !== 'empty') {
           GraphService.invalidateActiveUserGraphSize();
-
-          vm.mostActiveUsers = response.tableData;
-
-          if (vm.mostActiveUsers !== undefined && vm.mostActiveUsers !== null) {
-            var totalUsers = vm.mostActiveUsers.length;
-            vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
-          } else {
-            vm.activeUsersTotalPages = 0;
-          }
-          vm.activeUserCurrentPage = 1;
-          vm.activeButton = [1, 2, 3];
-
-          if (graphData.length === 0) {
-            angular.element('#' + activeUserRefreshDiv).html(noActiveUserDataDiv);
-            vm.activeUsersRefresh = 'empty';
-          } else {
-            vm.activeUsersRefresh = 'set';
-          }
-        });
+        }
       });
     }
   }

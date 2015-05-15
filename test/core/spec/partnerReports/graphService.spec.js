@@ -29,7 +29,7 @@ describe('Service: Graph Service', function () {
 
   describe('Active Users graph services', function () {
     beforeEach(function () {
-      GraphService.createActiveUserGraph(dummyGraphData);
+      GraphService.updateActiveUsersGraph(dummyGraphData);
     });
 
     it('should have created a graph', function () {
