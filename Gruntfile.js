@@ -764,6 +764,17 @@ module.exports = function (grunt) {
           }
         }
       },
+      mediafusion: {
+        options: {
+          // Don't fail on error
+          keepAlive: true,
+          args: {
+            specs: [
+              'test/e2e-protractor/mediafusion/TDB*_spec.js'
+            ]
+          }
+        }
+      },
       webex: {
         options: {
           // Don't fail on error
@@ -1030,6 +1041,11 @@ module.exports = function (grunt) {
     'protractor:hercules'
   ]);
 
+  grunt.registerTask('test-mediafusion', [
+    'test-setup',
+    'protractor:mediafusion'
+  ]);
+
   /**
     grunt.registerTask('test-webex', [
       'test-setup',
@@ -1042,7 +1058,8 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'test-setup:build',
         'protractor:squared',
-        'protractor:hercules'
+        'protractor:hercules',
+        'protractor:mediafusion'
       ]);
     } else if (target === 'coverage') {
       return grunt.task.run([
@@ -1058,7 +1075,8 @@ module.exports = function (grunt) {
       'continue:off',
       'test-setup:dist',
       'protractor:squared',
-      'protractor:hercules'
+      'protractor:hercules',
+      'protractor:mediafusion'
     ]);
   });
 

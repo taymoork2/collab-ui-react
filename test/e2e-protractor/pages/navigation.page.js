@@ -19,6 +19,7 @@ var Navigation = function () {
   this.developmentTab = element(by.css('li.developmentTab > a'));
   this.servicesTab = element(by.css('li.servicesTab > a'));
   this.meetingsTab = element(by.css('a[href="#meetings"]'));
+  this.mediaFusionMgmtTab = element(by.css('a[href="#mediafusionconnector"]'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
@@ -39,6 +40,12 @@ var Navigation = function () {
 
   this.clickServicesTab = function () {
     utils.click(this.servicesTab);
+  };
+
+  this.clickMediaFusionManagement = function () {
+    this.clickServicesTab();
+    utils.click(this.mediaFusionMgmtTab);
+    this.expectCurrentUrl('/mediafusionconnector');
   };
 
   this.clickHome = function () {

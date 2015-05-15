@@ -86,6 +86,8 @@ exports.config = {
     var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
     var BasicSettigsPage = require('./test/e2e-protractor/pages/webexbasicsettings.page.js');
     var OrgProfilePage = require('./test/e2e-protractor/pages/orgprofile.page.js');
+    var ManagementServicePage = require('./test/e2e-protractor/pages/managementService.page.js');
+   
 
 
     global.notifications = new Notifications();
@@ -112,6 +114,9 @@ exports.config = {
     global.meetings = new MeetingsPage();
     global.usersettings = new BasicSettigsPage();
     global.orgprofile = new OrgProfilePage();
+    global.management = new ManagementServicePage();
+    
+
   },
 
   jasmineNodeOpts: {
