@@ -43,7 +43,6 @@ describe('Squared UC Add User flow', function () {
     describe('Add a new Squared UC user', function () {
       it('should display input user email in results with success message', function () {
         utils.sendKeys(users.addUsersField, inputEmail);
-        utils.click(users.collabRadio1);
         utils.click(users.squaredUCCheckBox);
         utils.click(users.onboardButton);
         notifications.assertSuccess(inputEmail, 'onboarded successfully');

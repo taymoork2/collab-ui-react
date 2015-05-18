@@ -5,6 +5,7 @@
     "loading": "Loading"
   },
   "usersPage": {
+    "assignServices": "Assign Services",
     "inviteModalBtn": "Invite Users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",

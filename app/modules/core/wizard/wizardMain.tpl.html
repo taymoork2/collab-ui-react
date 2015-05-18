@@ -1,5 +1,5 @@
 <div class="wizard-main">
-    <div class="wizard-main-title"><span translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> | {{wizard.getSubTabTitle() | translate}}</span></div>
+    <div class="wizard-main-title"><span translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span class="title-separator-pipe">|</span> {{wizard.getSubTabTitle() | translate}}</span></div>
     <div class="wizard-main-content" ng-include="wizard.current.step.template" ng-controller="wizard.getController"></div>
     <div class="wizard-main-btns">
     	<div ng-if="wizard.isFirstStep()&&wizard.isFirstTime()&&!wizard.isCustomerPartner()&&!wizard.isFromPartnerLaunch()" id="terms-link"><cs-checkbox ckid="terms-checkbox" ng-model="wizard.termsCheckbox" cklabel="Terms and Conditions" ng-disabled></cs-checkbox> I have read and agree to these <a ng-click="wizard.openTermsAndConditions()">terms and conditions</a></div>

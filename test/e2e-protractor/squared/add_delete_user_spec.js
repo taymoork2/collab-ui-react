@@ -38,7 +38,6 @@ describe('Squared Add & Entitle User Flows', function () {
       utils.click(users.clearButton);
       utils.sendKeys(users.addUsersField, users.testUser.username);
       utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-      utils.click(users.collabRadio1);
       utils.click(users.onboardButton);
       notifications.assertError('already entitled/unentitled');
       notifications.clearNotifications();
@@ -50,7 +49,6 @@ describe('Squared Add & Entitle User Flows', function () {
       utils.click(users.clearButton);
       utils.sendKeys(users.addUsersField, inputEmail);
       utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-      utils.click(users.collabRadio1);
       utils.click(users.onboardButton);
       notifications.assertSuccess(inputEmail, 'onboarded successfully');
       notifications.clearNotifications();

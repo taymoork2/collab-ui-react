@@ -41,9 +41,6 @@ describe('Telephony Info', function () {
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
     utils.sendKeys(users.addUsersField, user2);
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-
-    utils.click(users.collabRadio1);
-
     utils.click(users.squaredUCCheckBox);
     utils.click(users.onboardButton);
     notifications.assertSuccess(user, 'onboarded successfully');

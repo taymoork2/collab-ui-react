@@ -39,7 +39,6 @@ describe('Invite User and Check Buckets', function () {
       });
 
       it('click on enable services individually', function () {
-        utils.click(users.collabRadio1);
         utils.expectIsDisplayed(users.messageLicenses);
         utils.expectIsDisplayed(users.conferenceLicenses);
         utils.expectIsDisplayed(users.communicationLicenses);
@@ -51,7 +50,6 @@ describe('Invite User and Check Buckets', function () {
         utils.click(users.clearButton);
         utils.sendKeys(users.addUsersField, addEmail);
         utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-        utils.click(users.collabRadio1);
         utils.click(users.onboardButton);
         notifications.assertSuccess(addEmail, 'sent successfully');
         notifications.clearNotifications();

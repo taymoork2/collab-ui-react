@@ -1,8 +1,13 @@
 <div id="servicePanel">
   <div class="modal-body onboard-block">
       <form>
-        <input class="form-control useradd-textbox" type="text" id="usersfield"/>
+        <div class="form-control-wrapper">
+          <input class="form-control useradd-textbox" type="text" id="usersfield"/>
+        </div>
         <label class="adduser-input-desc" for="usersfield-tokenfield" translate="usersPage.userInputDescription"/>
+
+		<h2 class="assign-svcs-subtitle" translate="usersPage.assignServices"></h2>
+
         <div ng-if="false">
           <input type="radio" name="collabRadio" id="collabRadio2" value="2" ng-model="collabRadio" >
           <span id="collabRadioLabel2" class="collab-radio" ng-click="setRadio(2)">{{collabRadio2.label}}</span>
@@ -17,8 +22,10 @@
           </div>
         </div>
 
-        <input type="radio" name="collabRadio" id="collabRadio1" value="1" ng-model="collabRadio">
-        <span id="collabRadioLabel1" class="collab-svc-radio" ng-click="setRadio(1)">{{collabRadio1.label}}</span>
+		<div ng-if="false">
+			<input type="radio" name="collabRadio" id="collabRadio1" value="1" ng-model="collabRadio">
+			<span id="collabRadioLabel1" class="collab-svc-radio" ng-click="setRadio(1)">{{collabRadio1.label}}</span>
+		</div>
       </form>
 
       <div id="licenseBlock" class="onboard-block license-block" ng-if="collabRadio === 1 && !hasAccount">
