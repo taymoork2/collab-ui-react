@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
-    function ($scope, $state, $stateParams, $q, $window, Log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
+    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
 
       $scope.hasAccount = Authinfo.hasAccount();
 
@@ -637,6 +637,10 @@ angular.module('Core')
           $rootScope.services = Authinfo.getServices();
         }
         setEntitlementList();
+      });
+
+      $scope.$on('wizard-add-users-event', function () {
+        onboardUsers();
       });
 
       $scope.isServiceAllowed = function (service) {

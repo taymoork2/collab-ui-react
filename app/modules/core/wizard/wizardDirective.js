@@ -33,7 +33,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams) {
+  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams, $state) {
     var vm = this;
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;
@@ -58,10 +58,13 @@
     vm.isFirstStep = isFirstStep;
     vm.isLastStep = isLastStep;
     vm.isFirstTime = isFirstTime;
+    vm.isWizardModal = isWizardModal;
 
     vm.getNextText = getNextText;
 
     vm.openTermsAndConditions = openTermsAndConditions;
+    vm.closeModal = closeModal;
+    vm.isCurrentTab = isCurrentTab;
 
     init();
 
@@ -188,16 +191,31 @@
 
     function nextStep() {
       new PromiseHook($scope, getStepName() + 'Next').then(function () {
-        var steps = getSteps();
-        if (angular.isArray(steps)) {
-          var index = steps.indexOf(getStep());
-          if (index + 1 < steps.length) {
-            setStep(steps[index + 1]);
-          } else if (index + 1 === steps.length) {
-            nextTab();
+        if (getTab().name === 'addUsers' && getStep().name === 'manualEntry') {
+          if (!_.isEmpty(angular.element('#usersfield').tokenfield('getTokensList'))) {
+            $rootScope.$broadcast('wizard-add-users-event');
+            $scope.$on('USER_LIST_UPDATED', function () {
+              updateStep();
+            });
+          } else {
+            updateStep();
           }
+        } else {
+          updateStep();
         }
       });
+    }
+
+    function updateStep() {
+      var steps = getSteps();
+      if (angular.isArray(steps)) {
+        var index = steps.indexOf(getStep());
+        if (index + 1 < steps.length) {
+          setStep(steps[index + 1]);
+        } else if (index + 1 === steps.length) {
+          nextTab();
+        }
+      }
     }
 
     function getRequiredTabs() {
@@ -238,6 +256,14 @@
       return $scope.isFirstTime;
     }
 
+    function isCurrentTab(tabName) {
+      return tabName === vm.current.tab.name;
+    }
+
+    function isWizardModal() {
+      return true;
+    }
+
     function getNextText() {
       if (isFirstTab() && isFirstStep()) {
         return 'firstTimeWizard.getStarted';
@@ -254,6 +280,10 @@
       var modalInstance = $modal.open({
         templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html'
       });
+    }
+
+    function closeModal() {
+      $state.modal.close();
     }
   }
 

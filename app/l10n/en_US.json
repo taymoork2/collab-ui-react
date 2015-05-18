@@ -96,7 +96,7 @@
     "freeConf": "Free 3 Party Spark Meet",
     "freeComm": "Free 1:1 Spark Call",
     "paidMsg": "Standard Team Rooms",
-    "paidConf": "25 Party Meetings",
+    "paidConf": "Party Meetings",
     "paidComm": "Advanced Spark Call",
     "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition",
@@ -892,7 +892,7 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
   "trials": {
-    "collab": "Standard Team Rooms + 25 Party Meetings",
+    "collab": "Standard Team Rooms + Party Meetings",
     "squaredUC": "Advanced Spark Call"
   },
   "status": {
