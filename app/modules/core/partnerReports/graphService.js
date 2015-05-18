@@ -71,6 +71,8 @@
 
       var graphs = [graphOne, graphTwo];
       var valueAxes = [angular.copy(axis)];
+      valueAxes[0].integersOnly = true;
+      valueAxes[0].minimum = 0;
 
       var catAxis = angular.copy(axis);
       catAxis.gridPosition = 'start';
