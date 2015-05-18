@@ -12,6 +12,12 @@
             prod: 'https://cmi.huron-dev.com/api/v1'
           },
 
+          cesUrl: {
+            dev: 'https://ces.hitest.huron-dev.com/api/v1',
+            integration: 'https://ces.hitest.huron-dev.com/api/v1',
+            prod: 'https://ces.huron-dev.com/api/v1'
+          },
+
           emailUrl: {
             dev: 'https://hermes.hitest.huron-dev.com/api/v1',
             integration: 'https://hermes.hitest.huron-dev.com/api/v1',
@@ -32,6 +38,16 @@
               return this.cmiUrl.integration;
             } else {
               return this.cmiUrl.prod;
+            }
+          },
+
+          getCesUrl: function () {
+            if (Config.isDev()) {
+              return this.cesUrl.dev;
+            } else if (Config.isIntegration()) {
+              return this.cesUrl.integration;
+            } else {
+              return this.cesUrl.prod;
             }
           },
 
