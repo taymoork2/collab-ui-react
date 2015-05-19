@@ -9,7 +9,7 @@
 /* global notifications */
 /* global deleteTrialUtils */
 
-xdescribe('Partner flow', function () {
+describe('Partner flow', function () {
   var orgId;
   var accessToken;
 
@@ -62,7 +62,7 @@ xdescribe('Partner flow', function () {
       partner.assertDisabled('startTrialButton');
 
       utils.expectIsDisplayed(partner.squaredTrialCheckbox);
-      utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
+      utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
@@ -73,6 +73,7 @@ xdescribe('Partner flow', function () {
     }, 60000);
 
     it('should find new trial', function (done) {
+      utils.click(partner.trialFilter);
       utils.expectIsDisplayed(partner.newTrialRow);
 
       partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
@@ -94,6 +95,7 @@ xdescribe('Partner flow', function () {
 
       notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
 
+      utils.click(partner.trialFilter);
       utils.expectIsDisplayed(partner.newTrialRow);
     }, 60000);
 
@@ -114,11 +116,20 @@ xdescribe('Partner flow', function () {
         utils.expectIsDisplayed(wizard.wizard);
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
-        utils.click(wizard.finishTab);
+
+        utils.expectText(wizard.mainviewTitle, 'Plan Review');
+        utils.click(wizard.beginBtn);
+
+        utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
+        utils.click(wizard.nextBtn);
+
+        utils.expectText(wizard.mainviewTitle, 'Add Users');
+        utils.click(wizard.nextBtn);
+        utils.click(wizard.finishBtn);
 
         utils.expectText(wizard.mainviewTitle, 'Get Started');
-        utils.expectIsDisplayed(wizard.mainviewTitle);
         utils.click(wizard.finishBtn);
+
         navigation.expectDriverCurrentUrl('overview');
         utils.expectIsDisplayed(navigation.tabs);
 
