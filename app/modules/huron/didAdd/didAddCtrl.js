@@ -346,9 +346,9 @@
     function emailNotifyTrialCustomer() {
       if (angular.isDefined($scope.trial)) {
         EmailService.emailNotifyTrialCustomer(
-            $scope.trial.customerEmail,
-            $scope.trial.licenseDuration,
-            $scope.trial.customerOrgId)
+            $scope.trial.model.customerEmail,
+            $scope.trial.model.licenseDuration,
+            $scope.trial.model.customerOrgId)
           .then(function (response) {
             Notification.notify([$translate.instant('didManageModal.emailSuccessText')], 'success');
           })

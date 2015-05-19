@@ -8,7 +8,6 @@
   function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config, EmailService, ValidationService) {
     var vm = this;
 
-    vm.customerOrgId = null;
     vm.nameError = false;
     vm.emailError = false;
     vm.startDate = new Date();
@@ -164,7 +163,7 @@
           }
           return $q.reject(response);
         }).then(function (response) {
-          vm.customerOrgId = response.data.customerOrgId;
+          vm.model.customerOrgId = response.data.customerOrgId;
           if (offersList.indexOf(Config.trials.squaredUC) !== -1) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
@@ -173,7 +172,7 @@
                 return $q.reject(response);
               });
           } else {
-            return EmailService.emailNotifyTrialCustomer(vm.customerEmail, vm.licenseDuration, vm.customerOrgId)
+            return EmailService.emailNotifyTrialCustomer(vm.model.customerEmail, vm.model.licenseDuration, vm.model.customerOrgId)
               .catch(function (response) {
                 Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
               });
@@ -189,7 +188,7 @@
             licenseDuration: vm.model.licenseDuration
           })];
           Notification.notify(successMessage, 'success');
-          return vm.customerOrgId;
+          return vm.model.customerOrgId;
         });
     }
   }

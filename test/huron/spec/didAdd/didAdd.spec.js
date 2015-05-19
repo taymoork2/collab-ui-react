@@ -33,9 +33,11 @@ describe('Controller: DidAddCtrl', function () {
   };
 
   var trial = {
-    customerEmail: 'flast@company.com',
-    licenseDuration: '90',
-    customerOrgId: '0000000000000001'
+    model: {
+      customerEmail: 'flast@company.com',
+      licenseDuration: '90',
+      customerOrgId: '0000000000000001'
+    }
   };
 
   beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _Config_, _EmailService_, $timeout) {
