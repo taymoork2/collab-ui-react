@@ -657,7 +657,7 @@
     "syncAgreementText": "users in sync agreement",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
-    "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invatation to sign up.",
+    "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "domainEntry": "Domain Entry",
     "domainSubDesc": "Enter the AD domain to sync with:",
     "connectorSteps": "Follow these steps in order to install the Cloud Connector:",
