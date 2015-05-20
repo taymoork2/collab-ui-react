@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Telephony Info', function () {
+xdescribe('Telephony Info', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });

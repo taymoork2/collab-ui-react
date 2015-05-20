@@ -3,7 +3,7 @@
 /* global describe */
 /* global it */
 
-describe('Squared UC Add User flow', function () {
+xdescribe('Squared UC Add User flow', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });

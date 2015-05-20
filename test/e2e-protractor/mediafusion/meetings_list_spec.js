@@ -6,7 +6,7 @@
 /* global browser */
 /* global expect */
 
-describe('List meetings flow', function () {
+xdescribe('List meetings flow', function () {
   var searchStr = 'Cloud';
   beforeEach(function () {
     this.addMatchers({

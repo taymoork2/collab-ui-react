@@ -6,7 +6,7 @@
 /* global browser */
 /* global expect */
 
-describe('utilization flow', function () {
+xdescribe('utilization flow', function () {
   beforeEach(function () {
     this.addMatchers({
       toBeLessThanOrEqualTo: function () {

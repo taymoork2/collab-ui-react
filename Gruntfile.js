@@ -56,7 +56,8 @@ module.exports = function (grunt) {
       coverage: 'coverage',
       dist: '<%= compile_dir %>',
       screenshots: 'screenshots',
-      test: '<%= e2e_dir %>/reports'
+      test: '<%= e2e_dir %>/reports',
+      karma: '<%= test_dir %>/karma*.js'
     },
 
     // Concatenate CSS and JS source files into single files
@@ -927,6 +928,7 @@ module.exports = function (grunt) {
   // Build files into the build folder for development
   grunt.registerTask('build', [
     'clean:build',
+    'clean:karma',
     'html2js',
     'js_beautify',
     'less',

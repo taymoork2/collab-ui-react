@@ -1,6 +1,6 @@
 'use strict';
 
-describe('List Resources Flow', function () {
+xdescribe('List Resources Flow', function () {
   beforeEach(function () {
     this.addMatchers({
       toBeLessThanOrEqualTo: function () {

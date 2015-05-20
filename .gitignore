@@ -18,3 +18,4 @@ test/karma-unit.js
 *.sublime*
 test/unit-test-results.xml
 test/unit-test-results.html
+plato

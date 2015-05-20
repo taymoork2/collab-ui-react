@@ -9,7 +9,7 @@
 /* global management */
 /* global utils */
 
-describe('List Media Fusion Servers', function () {
+xdescribe('List Media Fusion Servers', function () {
   //var searchStr = 'Cloud';
   beforeEach(function () {
     this.addMatchers({

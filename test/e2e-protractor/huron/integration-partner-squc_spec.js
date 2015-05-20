@@ -9,7 +9,7 @@
 /* global notifications */
 /* global deleteTrialUtils */
 
-describe('Spark UC Partner flow', function () {
+xdescribe('Spark UC Partner flow', function () {
   var orgId;
   var accessToken;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('First Time Wizard - CiscoUC Service Setup', function () {
+xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
   var pattern = servicesetup.getPattern();
 
   beforeEach(function () {

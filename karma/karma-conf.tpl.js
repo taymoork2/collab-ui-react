@@ -14,17 +14,7 @@ module.exports = function (config) {
     /**
      * This is the list of file patterns to load into the browser during testing.
      */
-    files: [ <% scripts.forEach(function (file) { %> '<%= file %>', <%
-      }); %>
-      'build/scripts/**/*.js',
-      'build/templates-app.js',
-      'build/modules/**/*.js',
-      'test/global.spec.js',
-      'test/core/**/*.js',
-      'test/huron/**/*.js',
-      'test/hercules/**/*.js',
-      'test/mediafusion/**/*.js',
-      'test/squared/**/*.js', {
+    files: [, {
         pattern: 'test/fixtures/**/*.json',
         watched: true,
         served: true,

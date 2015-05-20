@@ -15,14 +15,14 @@ function set_global_npm_path {
 echo "$PATH" | grep -q '/usr/local/bin' && echo "Global NPM path is set" || set_global_npm_path
 
 # Check if rvm is installed, otherwise install it
-rvm --version > /dev/null 2>&1
-RVM_RET=$?
-if [ $RVM_RET -ne 0 ]; then
-    echo "RVM not found, installing:"
-    \curl -sSL https://get.rvm.io | bash -s stable --ruby
-else
-    echo "RVM is already installed"
-fi
+# rvm --version > /dev/null 2>&1
+# RVM_RET=$?
+# if [ $RVM_RET -ne 0 ]; then
+#     echo "RVM not found, installing:"
+#     \curl -sSL https://get.rvm.io | bash -s stable --ruby
+# else
+#     echo "RVM is already installed"
+# fi
 
 # Check if brew is installed, otherwise install it
 brew --version > /dev/null 2>&1
@@ -67,6 +67,16 @@ else
   echo "grunt is already installed"
 fi
 
+# Check and install gulp
+which gulp > /dev/null 2>&1
+GULP_RET=$?
+if [ $GULP_RET -ne 0 ]; then
+  echo "gulp not found, installing:"
+  npm install -g gulp
+else
+  echo "gulp is already installed"
+fi
+
 # # Check for cleanup script and run
 # ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1
 # CLEANUP_RET=$?
@@ -78,7 +88,7 @@ fi
 # fi
 
 # Install dependecies
-bundle install
+# bundle install
 npm install
 npm update -g bower
 bower cache clean

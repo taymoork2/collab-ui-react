@@ -2,7 +2,7 @@
 
 /* global describe, it, expect, login */
 
-describe('WebEx user settings', function () {
+xdescribe('WebEx user settings', function () {
 
   it('should allow login as admin user', function () {
     login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
