@@ -24,7 +24,7 @@ auth =
 
   'pbr-admin-test':
     user: 'pbr-org-admin-test@wx2.example.com'
-    pass: 'C1sc0123!'
+    pass: 'C1sco123!'
     org:  '4214d345-7caf-4e32-b015-34de878d1158'
 
   'test-user':
