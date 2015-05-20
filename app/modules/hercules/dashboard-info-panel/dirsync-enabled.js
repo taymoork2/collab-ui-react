@@ -9,6 +9,7 @@
         $scope.dirsyncEnabled = true;
         DirSyncService.getDirSyncStatus(function (data) {
           $scope.dirsyncEnabled = data.success && data.serviceMode == 'ENABLED';
+          if (!$scope.dirsyncEnabled) $scope.showInfoPanel = true;
         });
 
         $scope.navigateToDirsync = function () {

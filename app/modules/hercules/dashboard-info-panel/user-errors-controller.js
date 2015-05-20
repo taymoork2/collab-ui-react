@@ -22,6 +22,7 @@
                 if (data.success) {
                   userStatus.displayName = data.displayName || data.userName;
                   $scope.userStatuses.push(userStatus);
+                  $scope.showInfoPanel = true;
                 } else {
                   Log.debug('Get user failed. Status: ' + status);
                 }
