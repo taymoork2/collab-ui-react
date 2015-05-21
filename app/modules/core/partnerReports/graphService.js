@@ -22,13 +22,13 @@
     };
     var legendBase = {
       'align': 'center',
-      'marginTop': 15,
       'autoMargins': false,
       'switchable': false,
       'fontSize': 13,
       'color': Config.chartColors.grayDarkest,
       'markerLabelGap': 10,
       'markerType': 'square',
+      'markerSize': 10,
       'position': 'bottom'
     };
     var numFormatBase = {
@@ -174,8 +174,7 @@
     }
 
     function createMediaQualityGraph(data) {
-      var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ' <span class="graph-number">[[totalCalls]]</span>';
-
+      var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalCalls]]</span></span>';
       var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good', 'mediaQuality.excellent'];
       var values = ['poor', 'fair', 'good', 'excellent'];
       var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue, Config.chartColors.brandInfo];
@@ -187,7 +186,9 @@
         data = data.data[0].data;
       }
       var total = values.length;
+      var balloonText;
       for (var i = 0; i < total; i++) {
+        balloonText = '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[value]]</span></span>';
         graphs[i] = angular.copy(columnBase);
         graphs[i].title = $translate.instant(titles[i]);
         graphs[i].fillColors = colors[i];
@@ -195,29 +196,31 @@
         graphs[i].valueField = values[i];
         graphs[i].labelText = '[[value]]';
         graphs[i].fontSize = 14;
-        graphs[i].title = $translate.instant(titles[i]);
         graphs[i].legendColor = colors[i];
         graphs[i].columnWidth = 0.6;
         graphs[i].color = Config.chartColors.brandWhite;
+        graphs[i].balloonText = mediaQualityBalloonText + balloonText;
         if (i) {
           graphs[i].clustered = false;
         }
       }
-      graphs[total - 1].balloonText = mediaQualityBalloonText;
 
       var catAxis = angular.copy(axis);
       catAxis.gridPosition = 'start';
+
       var valueAxes = [angular.copy(axis)];
+      valueAxes[0].totalColor = Config.chartColors.brandWhite;
       valueAxes[0].labelsEnabled = false;
       valueAxes[0].stackType = 'regular';
       valueAxes[0].axisAlpha = 0;
 
       var legend = angular.copy(legendBase);
-      legend.labelText = '[[title]]';
-      legend.spacing = -20;
-      legend.align = 'center';
-      legend.autoMargins = true;
-      legend.valueWidth = 7;
+      legend.autoMargins = false;
+      legend.equalWidths = false;
+      legend.horizontalGap = 5;
+      legend.valueAlign = 'left';
+      legend.valueWidth = 0;
+      legend.verticalGap = 20;
       legend.reversedOrder = true;
 
       var numFormat = angular.copy(numFormatBase);
@@ -231,18 +234,17 @@
     }
 
     function updateMediaQualityGraph(data) {
-      if (mediaQualityGraph === null) {
-        createMediaQualityGraph(data);
-      } else {
-        if (data.length === 0) {
-          mediaQualityGraph.dataProvider = dummyData(mediaQualityDiv);
-        } else {
-          mediaQualityGraph.dataProvider = data;
-        }
-        mediaQualityGraph.validateData();
-        invalidateMediaQualityGraphSize();
-      }
-
+      // TO-DO define Chart objects in controller
+      // if (mediaQualityGraph !== null) {
+      //   if (data.length === 0) {
+      //     mediaQualityGraph.dataProvider = dummyData(mediaQualityDiv);
+      //   } else {
+      //     mediaQualityGraph.dataProvider = data;
+      //   }
+      // }
+      createMediaQualityGraph(data);
+      invalidateMediaQualityGraphSize();
     }
+
   }
 })();

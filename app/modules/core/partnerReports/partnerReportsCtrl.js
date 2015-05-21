@@ -29,11 +29,9 @@
     vm.customerSelected = null;
 
     vm.mediaQualityRefresh = 'refresh';
-    vm.mediaQualityFake = [];
     var mediaQualityRefreshDiv = 'mediaQualityRefreshDiv';
     var noMediaQualityDataDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
-    var isMediaQualityRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="mediaQuality-user-status icon icon-spinner icon-2x"></i>';
-
+    var isMediaQualityRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="mediaQuality-status icon icon-spinner icon-2x"></i>';
     vm.timeOptions = [{
       value: 0,
       label: $translate.instant('reportsPage.week')
@@ -115,7 +113,9 @@
         });
         promises.push(activeUserPromise);
 
-        var mediaQualityPromise = getMediaQualityReports();
+        var mediaQualityPromise = getMediaQualityReports().then(function () {
+          GraphService.invalidateMediaQualityGraphSize();
+        });
         promises.push(mediaQualityPromise);
         $q.all(promises).then(function () {
           vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
@@ -188,6 +188,7 @@
     function getMediaQualityReports() {
       return PartnerReportService.getMediaQualityMetrics().then(function (response) {
         var graphData = response.data;
+
         GraphService.updateMediaQualityGraph(graphData);
         if (graphData.length === 0) {
           angular.element('#' + mediaQualityRefreshDiv).html(noMediaQualityDataDiv);

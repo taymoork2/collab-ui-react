@@ -71,7 +71,7 @@ describe('Service: Graph Service', function () {
 
     it('should update graph when updateActiveUsersGraph is called', function () {
       GraphService.updateMediaQualityGraph(mediaQualityGraphData);
-      expect(validateService.validate).toHaveBeenCalled();
+      expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.invalidate).toHaveBeenCalled();
     });
   });
