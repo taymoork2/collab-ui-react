@@ -61,7 +61,7 @@ describe('Squared Add & Entitle User Flows', function () {
       utils.expectIsNotDisplayed(users.manageDialog);
     });
 
-    xit('should soft delete added user used for entitle test and the user should not show up in search results', function () {
+    it('should soft delete added user used for entitle test and the user should not show up in search results', function () {
       utils.search(inputEmail);
       utils.click(users.userListAction);
       utils.click(users.deleteUserOption);
@@ -73,7 +73,7 @@ describe('Squared Add & Entitle User Flows', function () {
       users.assertResultsLength(0);
     });
 
-    it('should delete added user', function () {
+    xit('should delete added user', function () {
       deleteUtils.deleteUser(inputEmail);
     });
 

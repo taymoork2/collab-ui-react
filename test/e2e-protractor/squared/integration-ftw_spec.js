@@ -44,7 +44,7 @@ describe('First Time Wizard', function () {
     utils.expectText(wizard.mainviewSubtitle, 'Single Sign-On');
     utils.click(wizard.radiobuttons.last());
     utils.click(wizard.nextBtn);
-    utils.expectText(wizard.mainviewSubtitle, 'Export Cloud Metadata');
+    utils.expectText(wizard.mainviewSubtitle, 'Export Directory Metadata');
     utils.click(wizard.nextBtn);
     utils.expectText(wizard.mainviewSubtitle, 'Import IdP Metadata');
     utils.click(wizard.nextBtn);
@@ -76,7 +76,7 @@ describe('First Time Wizard', function () {
     utils.expectText(wizard.mainviewSubtitle, 'Domain Entry');
     utils.sendKeys(wizard.dirDomainInput, 'test_domain');
     utils.click(wizard.nextBtn);
-    utils.expectText(wizard.mainviewSubtitle, 'Install Cloud Connector');
+    utils.expectText(wizard.mainviewSubtitle, 'Install Directory Connector');
     utils.click(wizard.nextBtn);
     utils.expectText(wizard.mainviewSubtitle, 'Sync Status');
     utils.click(wizard.finishBtn);

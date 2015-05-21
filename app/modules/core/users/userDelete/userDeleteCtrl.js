@@ -8,35 +8,33 @@ angular.module('Core')
       $scope.deleteUserUuId = $stateParams.deleteUserUuId;
       $scope.deleteUsername = $stateParams.deleteUsername;
 
-      $scope.deactivateUser = function () {
+      function deleteSuccess() {
+        angular.element('#deleteButton').button('reset');
+        Notification.notify([$translate.instant('usersPage.deleteUserSuccess', {
+          email: $scope.deleteUsername
+        })], 'success');
 
-        Log.debug('Deactivating user: ' + $scope.deleteUserUuId + ' with data: ');
+        setTimeout(function () {
+          $rootScope.$broadcast('USER_LIST_UPDATED');
+        }, 500);
+      }
 
-        function deleteSuccess() {
-          angular.element('#deleteButton').button('reset');
-          Notification.notify([$translate.instant('usersPage.deleteUserSuccess', {
-            email: $scope.deleteUsername
-          })], 'success');
-
-          setTimeout(function () {
-            $rootScope.$broadcast('USER_LIST_UPDATED');
-          }, 500);
-        }
-
-        function deleteHuron() {
-          HuronUser.delete($scope.deleteUserUuId)
-            .then(function () {
+      function deleteHuron() {
+        HuronUser.delete($scope.deleteUserUuId)
+          .then(function () {
+            deleteSuccess();
+          })
+          .catch(function (response) {
+            if (response.status !== 404) {
+              Notification.errorResponse(response);
+            } else {
               deleteSuccess();
-            })
-            .catch(function (response) {
-              if (response.status !== 404) {
-                Notification.errorResponse(response);
-              } else {
-                deleteSuccess();
-              }
-            });
-        }
+            }
+          });
+      }
 
+      $scope.deactivateUser = function () {
+        Log.debug('Deactivating user: ' + $scope.deleteUserUuId + ' with data: ');
         Userservice.deactivateUser($scope.deleteUserOrgId, $scope.deleteUserUuId)
           .success(function (data, status) {
             deleteHuron();
