@@ -5,41 +5,48 @@
     .controller('UserActivationController',
 
       /* @ngInject */
-      function ($scope, $state, ServiceDescriptor, USSService, XhrNotificationService, $modal) {
+      function ($scope, $state, ServiceDescriptor, USSService, XhrNotificationService, $modal, ClusterProxy) {
         ServiceDescriptor.services(function (error, services) {
           if (error) {
             XhrNotificationService.notify("Failed to fetch service status", error);
             return;
           }
 
-          USSService.getStatusesSummary(function (error, summary) {
-            if (error) {
-              XhrNotificationService.notify("Failed to fetch user status summary", error);
-              return;
+          ClusterProxy.getClusters(function (err, clusters) {
+            var fusePerformed = err || (clusters && clusters.length);
+            if (!fusePerformed) {
+              return; // Don't show user status stuff if you haven't fused
             }
 
-            $scope.xsummary = _.map(services, function (service) {
-              var summaryForService = _.find(summary.summary, function (summary) {
-                return service.service_id == summary.serviceId;
-              });
-              var errors = 0;
-              var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
-              if (needsUserActivation) {
-                $scope.showInfoPanel = true;
-                $scope.userActivationNotComplete = true;
+            USSService.getStatusesSummary(function (error, summary) {
+              if (error) {
+                XhrNotificationService.notify("Failed to fetch user status summary", error);
+                return;
               }
-              if (summaryForService.error > 0) {
-                $scope.showInfoPanel = true;
-                $scope.servicesWithUserErrors = true;
-                errors = summaryForService.error;
-              }
-              return {
-                serviceId: service.service_id,
-                needsUserActivation: needsUserActivation,
-                errors: errors
-              };
-            });
 
+              $scope.xsummary = _.map(services, function (service) {
+                var summaryForService = _.find(summary.summary, function (summary) {
+                  return service.service_id == summary.serviceId;
+                });
+                var errors = 0;
+                var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
+                if (needsUserActivation) {
+                  $scope.showInfoPanel = true;
+                  $scope.userActivationNotComplete = true;
+                }
+                if (summaryForService.error > 0) {
+                  $scope.showInfoPanel = true;
+                  $scope.servicesWithUserErrors = true;
+                  errors = summaryForService.error;
+                }
+                return {
+                  serviceId: service.service_id,
+                  needsUserActivation: needsUserActivation,
+                  errors: errors
+                };
+              });
+
+            });
           });
         });
 

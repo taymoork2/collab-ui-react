@@ -17,6 +17,20 @@ angular.module('Hercules')
           });
       };
 
+      var allEntitledServices = function (callback) {
+        $http
+          .get(config.getUrl() + '/fusion_entitlements_status')
+          .success(function (data) {
+            var services = _.filter(data.fusion_services || [], function (service) {
+              return service.connector_type != 'c_mgmt' && service.connector_type != 'mf_mgmt';
+            });
+            callback(null, services);
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      };
+
       var isFusionEnabled = function (callback) {
         services(function (error, services) {
           if (error) {
@@ -27,9 +41,24 @@ angular.module('Hercules')
         });
       };
 
+      var setServiceEnabled = function (serviceId, enabled, callback) {
+        $http
+          .put(config.getUrl() + '/services/' + serviceId, {
+            enabled: enabled
+          })
+          .success(function () {
+            callback(null);
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      };
+
       return {
         services: services,
-        isFusionEnabled: isFusionEnabled
+        allEntitledServices: allEntitledServices,
+        isFusionEnabled: isFusionEnabled,
+        setServiceEnabled: setServiceEnabled
       };
 
     }
