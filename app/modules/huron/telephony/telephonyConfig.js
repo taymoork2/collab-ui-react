@@ -9,26 +9,26 @@
           cmiUrl: {
             dev: 'https://cmi.hitest.huron-dev.com/api/v1',
             integration: 'https://cmi.hitest.huron-dev.com/api/v1',
-            prod: 'https://cmi.huron-dev.com/api/v1'
+            prod: 'https://cmi.sc-tx2.huron-dev.com/api/v1'
           },
 
           cesUrl: {
             dev: 'https://ces.hitest.huron-dev.com/api/v1',
             integration: 'https://ces.hitest.huron-dev.com/api/v1',
-            prod: 'https://ces.huron-dev.com/api/v1'
+            prod: 'https://ces.sc-tx2.huron-dev.com/api/v1'
           },
 
           emailUrl: {
             dev: 'https://hermes.hitest.huron-dev.com/api/v1',
             integration: 'https://hermes.hitest.huron-dev.com/api/v1',
-            prod: 'https://hermes.huron-dev.com/api/v1'
+            prod: 'https://hermes.sc-tx2.huron-dev.com/api/v1'
           },
 
           // TODO: Point to Ocelot micro service when it's ready.
           ocelotUrl: {
             dev: 'https://hermes.hitest.huron-dev.com/api/v1',
             integration: 'https://hermes.hitest.huron-dev.com/api/v1',
-            prod: 'https://hermes.huron-dev.com/api/v1'
+            prod: 'https://hermes.sc-tx2.huron-dev.com/api/v1'
           },
 
           getCmiUrl: function () {
