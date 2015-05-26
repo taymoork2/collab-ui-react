@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config) {
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = false;
@@ -64,6 +64,7 @@
           angular.element(e.relatedTarget).addClass('invalid');
           vm.invalidcount++;
         } else {
+          DidService.addDid(e.attrs.value);
           if (!editMode && !firstValidDid) {
             firstValidDid = true;
             LogMetricsService.logMetrics('First valid DID number entered', LogMetricsService.getEventType('trialDidEntered'), LogMetricsService.getEventAction('keyInputs'), 200, moment(), 1);
@@ -73,6 +74,7 @@
         vm.submitBtnStatus = vm.checkForInvalidTokens();
       },
       removedtoken: function (e) {
+        DidService.removeDid(e.attrs.value);
         if (!validateDID(e.attrs.value)) {
           vm.invalidcount--;
         }
@@ -122,7 +124,15 @@
             });
           }
         });
+      } else {
+        var dids = DidService.getDidList();
+        $timeout(function () {
+          angular.forEach(dids, function (did) {
+            addToTokenField(did);
+          });
+        }, 100);
       }
+
     }
 
     activate();
@@ -137,12 +147,7 @@
     }
 
     function validateDID(input) {
-      var didregex = /^\+([0-9]){10,12}$/;
-      var valid = false;
-      if (didregex.test(input)) {
-        valid = true;
-      }
-      return valid;
+      return /^\+([0-9]){10,12}$/.test(input);
     }
 
     function checkForInvalidTokens() {
@@ -157,14 +162,12 @@
         didList = tokens.split(',');
       }
 
-      if (angular.isDefined(tokens) && angular.isDefined(tokens.length) && tokens.length !== 0) {
-        didList = tokens.split(',');
-      }
       return didList;
     }
 
     function populateDidArrays() {
       var didList = getDIDList();
+
       if (vm.didObjectsFromCmi.length > 0) {
         //look for DIDs that need to be removed
         var dids = vm.didObjectsFromCmi.slice();
@@ -362,5 +365,13 @@
         Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
       }
     }
+
+    // We want to capture the modal close event and clear didList from service.
+    if ($state.modal) {
+      $state.modal.result.finally(function () {
+        DidService.clearDidList();
+      });
+    }
+
   }
 })();

@@ -20,7 +20,10 @@ describe('Controller: DidAddCtrl', function () {
 
   var state = {
     modal: {
-      close: sinon.stub()
+      close: sinon.stub(),
+      result: {
+        finally: sinon.stub()
+      }
     },
   };
 
