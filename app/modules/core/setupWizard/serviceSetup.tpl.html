@@ -3,7 +3,7 @@
     <label for="timeZone" class="h3" translate="serviceSetupModal.timeZone"></label>
     <p translate="serviceSetupModal.tzDescription"></p>
     <div class="col-xs-5">
-      <select ng-disabled="!firstTimeSetup" class="form-control" ng-model="site.timeZone" ng-options="timeZone for timeZone in timeZones" id="timeZone"></select>
+      <select ng-disabled="!firstTimeSetup" class="form-control" ng-model="site.timeZone" ng-options="timeZone.value as timeZone.label for timeZone in timeZones" id="timeZone"></select>
     </div>
   </div>
   <div class="form-group row">
