@@ -43,18 +43,16 @@
     var activeUsersBalloonText = '<span class="graph-text">' + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     var usersTitle = $translate.instant('activeUsers.users');
     var activeUsersTitle = $translate.instant('activeUsers.activeUsers');
-    var activeUsersGraph = null;
 
-    var mediaQualityGraph = null;
     var mediaQualityDiv = 'mediaQualityDiv';
     return {
-      invalidateActiveUserGraphSize: invalidateActiveUserGraphSize,
+      createActiveUsersGraph: createActiveUsersGraph,
       updateActiveUsersGraph: updateActiveUsersGraph,
-      invalidateMediaQualityGraphSize: invalidateMediaQualityGraphSize,
+      createMediaQualityGraph: createMediaQualityGraph,
       updateMediaQualityGraph: updateMediaQualityGraph
     };
 
-    function createActiveUserGraph(data) {
+    function createActiveUsersGraph(data) {
       // if there are no active users for this user
       if (data.length === 0) {
         data = dummyData(activeUserDiv);
@@ -86,26 +84,17 @@
       legend.labelText = '[[title]]';
       var numFormat = angular.copy(numFormatBase);
 
-      activeUsersGraph = createGraph(data, activeUserDiv, 'serial', graphs, valueAxes, catAxis, legend, numFormat, true);
+      return createGraph(data, activeUserDiv, 'serial', graphs, valueAxes, catAxis, legend, numFormat, true);
     }
 
-    function invalidateActiveUserGraphSize() {
-      if (activeUsersGraph !== null) {
-        activeUsersGraph.invalidateSize();
-      }
-    }
-
-    function updateActiveUsersGraph(data) {
-      if (activeUsersGraph === null) {
-        createActiveUserGraph(data);
-      } else {
-        if (data.length === 0) {
-          activeUsersGraph.dataProvider = dummyData(activeUserDiv);
+    function updateActiveUsersGraph(data, activeUsersChart) {
+      if (activeUsersChart !== null) {
+        if (data === null || data === 'undefined' || data.length === 0) {
+          activeUsersChart.dataProvider = dummyData(activeUserDiv);
         } else {
-          activeUsersGraph.dataProvider = data;
+          activeUsersChart.dataProvider = data;
         }
-        activeUsersGraph.validateData();
-        invalidateActiveUserGraphSize();
+        activeUsersChart.validateData();
       }
     }
 
@@ -224,26 +213,18 @@
       legend.reversedOrder = true;
 
       var numFormat = angular.copy(numFormatBase);
-      mediaQualityGraph = createGraph(data, mediaQualityDiv, 'serial', graphs, valueAxes, catAxis, legend, numFormat, false);
+      return createGraph(data, mediaQualityDiv, 'serial', graphs, valueAxes, catAxis, legend, numFormat, false);
     }
 
-    function invalidateMediaQualityGraphSize() {
-      if (mediaQualityGraph !== null) {
-        mediaQualityGraph.invalidateSize();
+    function updateMediaQualityGraph(data, mediaQualityChart) {
+      if (mediaQualityChart !== null) {
+        if (data === null || data === 'undefined' || data.length === 0) {
+          mediaQualityChart.dataProvider = dummyData(mediaQualityDiv);
+        } else {
+          mediaQualityChart.dataProvider = data;
+        }
+        mediaQualityChart.validateData();
       }
-    }
-
-    function updateMediaQualityGraph(data) {
-      // TO-DO define Chart objects in controller
-      // if (mediaQualityGraph !== null) {
-      //   if (data.length === 0) {
-      //     mediaQualityGraph.dataProvider = dummyData(mediaQualityDiv);
-      //   } else {
-      //     mediaQualityGraph.dataProvider = data;
-      //   }
-      // }
-      createMediaQualityGraph(data);
-      invalidateMediaQualityGraphSize();
     }
 
   }

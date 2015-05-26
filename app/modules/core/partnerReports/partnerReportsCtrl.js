@@ -15,6 +15,9 @@
     var isActiveUsersRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="active-user-status icon icon-spinner icon-2x"></i>';
     var activeUsersSort = ['userName', 'orgName', 'numCalls', 'totalActivity'];
 
+    var activeUsersChart = null;
+    var mediaQualityChart = null;
+
     vm.activeUsersRefresh = 'refresh';
     vm.showMostActiveUsers = false;
     vm.activeUserReverse = true;
@@ -109,12 +112,12 @@
 
         var promises = [];
         var activeUserPromise = getActiveUserReports().then(function () {
-          GraphService.invalidateActiveUserGraphSize();
+          invalidateChartSize(activeUsersChart);
         });
         promises.push(activeUserPromise);
 
         var mediaQualityPromise = getMediaQualityReports().then(function () {
-          GraphService.invalidateMediaQualityGraphSize();
+          invalidateChartSize(mediaQualityChart);
         });
         promises.push(mediaQualityPromise);
         $q.all(promises).then(function () {
@@ -146,8 +149,13 @@
     function getActiveUserReports() {
       return PartnerReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
         var graphData = response.graphData;
-        GraphService.updateActiveUsersGraph(graphData);
 
+        if (activeUsersChart === null) {
+          activeUsersChart = GraphService.createActiveUsersGraph(graphData);
+        } else {
+          GraphService.updateActiveUsersGraph(graphData, activeUsersChart);
+          invalidateChartSize(activeUsersChart);
+        }
         vm.mostActiveUsers = response.tableData;
 
         if (vm.mostActiveUsers !== undefined && vm.mostActiveUsers !== null) {
@@ -174,13 +182,13 @@
     function setGraphResizing() {
       angular.element('#engagementTab').on("click", function () {
         if (vm.activeUsersRefresh !== 'empty') {
-          GraphService.invalidateActiveUserGraphSize();
+          invalidateChartSize(activeUsersChart);
         }
       });
 
       angular.element('#qualityTab').on("click", function () {
         if (vm.mediaQualityRefresh !== 'empty') {
-          GraphService.invalidateMediaQualityGraphSize();
+          invalidateChartSize(mediaQualityChart);
         }
       });
     }
@@ -188,8 +196,12 @@
     function getMediaQualityReports() {
       return PartnerReportService.getMediaQualityMetrics().then(function (response) {
         var graphData = response.data;
-
-        GraphService.updateMediaQualityGraph(graphData);
+        if (mediaQualityChart === null) {
+          mediaQualityChart = GraphService.createMediaQualityGraph(graphData);
+        } else {
+          GraphService.updateMediaQualityGraph(graphData, mediaQualityChart);
+          invalidateChartSize(mediaQualityChart);
+        }
         if (graphData.length === 0) {
           angular.element('#' + mediaQualityRefreshDiv).html(noMediaQualityDataDiv);
           vm.mediaQualityRefresh = 'empty';
@@ -199,6 +211,11 @@
         return;
       });
     }
-  }
 
+    function invalidateChartSize(chart) {
+      if (chart !== null && chart !== 'undefined') {
+        chart.invalidateSize();
+      }
+    }
+  }
 })();

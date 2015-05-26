@@ -8,6 +8,11 @@ describe('Controller: Partner Reports', function () {
   var dummyGraphData = getJSONFixture('core/json/partnerReports/dummyGraphData.json');
   var dummyTableData = getJSONFixture('core/json/partnerReports/dummyTableData.json');
   var dummyMediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
+  var activeUsersChart;
+  var mediaQualityChart;
+  var validateService = {
+    invalidate: function () {}
+  };
 
   var customerOptions = [{
     value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
@@ -38,11 +43,21 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(date);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
 
-      spyOn(GraphService, 'invalidateActiveUserGraphSize');
       spyOn(GraphService, 'updateActiveUsersGraph');
+      spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
+        'dataProvider': dummyGraphData,
+        invalidateSize: validateService.invalidate
+      });
+
+      activeUsersChart = GraphService.createActiveUsersGraph(dummyGraphData);
 
       spyOn(GraphService, 'updateMediaQualityGraph');
-      spyOn(GraphService, 'invalidateMediaQualityGraphSize');
+      spyOn(GraphService, 'createMediaQualityGraph').and.returnValue({
+        'dataProvider': dummyMediaQualityGraphData,
+        invalidateSize: validateService.invalidate
+      });
+
+      mediaQualityChart = GraphService.createMediaQualityGraph(dummyMediaQualityGraphData);
 
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,
@@ -61,11 +76,8 @@ describe('Controller: Partner Reports', function () {
         expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
-
-        expect(GraphService.updateActiveUsersGraph).toHaveBeenCalled();
-        expect(GraphService.invalidateActiveUserGraphSize).toHaveBeenCalled();
-
-        expect(GraphService.updateMediaQualityGraph).toHaveBeenCalled();
+        expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
+        expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
       });
 
       it('should set all page variables', function () {
@@ -216,11 +228,21 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
       spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(undefined);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
-      spyOn(GraphService, 'invalidateActiveUserGraphSize');
+
       spyOn(GraphService, 'updateActiveUsersGraph');
+      spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
+        'dataProvider': dummyGraphData,
+        invalidateSize: validateService.invalidate
+      });
+      activeUsersChart = GraphService.createActiveUsersGraph(dummyGraphData);
 
       spyOn(GraphService, 'updateMediaQualityGraph');
-      spyOn(GraphService, 'invalidateMediaQualityGraphSize');
+      spyOn(GraphService, 'createMediaQualityGraph').and.returnValue({
+        'dataProvider': dummyMediaQualityGraphData,
+        invalidateSize: validateService.invalidate
+      });
+
+      mediaQualityChart = GraphService.createMediaQualityGraph(dummyMediaQualityGraphData);
 
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,
@@ -240,10 +262,9 @@ describe('Controller: Partner Reports', function () {
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
 
-        expect(GraphService.updateActiveUsersGraph).toHaveBeenCalled();
-        expect(GraphService.invalidateActiveUserGraphSize).toHaveBeenCalled();
+        expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
 
-        expect(GraphService.updateMediaQualityGraph).toHaveBeenCalled();
+        expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
       });
 
       it('should set all page variables empty defaults', function () {

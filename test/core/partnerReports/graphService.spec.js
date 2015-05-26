@@ -2,8 +2,9 @@
 
 describe('Service: Graph Service', function () {
   var GraphService;
+  var activeUsersChart;
+  var mediaQualityChart;
   var validateService = {
-    invalidate: function () {},
     validate: function () {}
   };
 
@@ -15,7 +16,6 @@ describe('Service: Graph Service', function () {
   beforeEach(inject(function (_GraphService_) {
     GraphService = _GraphService_;
 
-    spyOn(validateService, 'invalidate');
     spyOn(validateService, 'validate');
 
   }));
@@ -28,25 +28,18 @@ describe('Service: Graph Service', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
         'dataProvider': dummyGraphData,
-        invalidateSize: validateService.invalidate,
         validateData: validateService.validate
       });
-      GraphService.updateActiveUsersGraph(dummyGraphData);
+      activeUsersChart = GraphService.createActiveUsersGraph(dummyGraphData);
     });
 
     it('should have created a graph', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
     });
 
-    it('should invalidate graph size when invalidateActiveUserGraphSize is called', function () {
-      GraphService.invalidateActiveUserGraphSize();
-      expect(validateService.invalidate).toHaveBeenCalled();
-    });
-
     it('should update graph when updateActiveUsersGraph is called', function () {
-      GraphService.updateActiveUsersGraph(dummyGraphData);
+      activeUsersChart = GraphService.updateActiveUsersGraph(dummyGraphData, activeUsersChart);
       expect(validateService.validate).toHaveBeenCalled();
-      expect(validateService.invalidate).toHaveBeenCalled();
     });
   });
 
@@ -54,25 +47,18 @@ describe('Service: Graph Service', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
         'dataProvider': mediaQualityGraphData,
-        invalidateSize: validateService.invalidate,
         validateData: validateService.validate
       });
-      GraphService.updateMediaQualityGraph(mediaQualityGraphData);
+      mediaQualityChart = GraphService.createMediaQualityGraph(mediaQualityGraphData);
     });
 
     it('should have created a graph', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
     });
 
-    it('should invalidate graph size when invalidateActiveUserGraphSize is called', function () {
-      GraphService.invalidateMediaQualityGraphSize();
-      expect(validateService.invalidate).toHaveBeenCalled();
-    });
-
-    it('should update graph when updateActiveUsersGraph is called', function () {
-      GraphService.updateMediaQualityGraph(mediaQualityGraphData);
-      expect(AmCharts.makeChart).toHaveBeenCalled();
-      expect(validateService.invalidate).toHaveBeenCalled();
+    it('should update graph when updateMediaQualityGraph is called', function () {
+      GraphService.updateMediaQualityGraph(mediaQualityGraphData, mediaQualityChart);
+      expect(validateService.validate).toHaveBeenCalled();
     });
   });
 });
