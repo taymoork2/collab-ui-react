@@ -23,7 +23,8 @@
     "statusHeader": "상태/도구",
     "modify": "수정",
     "existingUsers": "기존 사용자",
-    "userInput": "한 개 이상의 이메일 주소는 콤마로 구분하여 입력하십시오.",
+    "userInput": "이메일 주소 또는 그룹 메일은 콤마로 구분하여 입력하십시오.",
+    "userInputDescription": "예: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "active": "활동중",
     "inactive": "",
     "validEmailInput": "유효한 사용자 이메일을 입력하십시오.",
@@ -51,7 +52,10 @@
     "deleteUserError": "사용자 삭제 오류. 상태: {{status}}",
     "onboardSuccess": "{{email}} 성공적으로 등록됨",
     "onboardError": "{{email}} 등록되지 않음. 상태: {{status}}",
-    "ciscoucError": "{{email}}이 Unified Communications을 구축하지 못했습니다."
+    "ciscoucError": "{{email}}이 Unified Communications을 구축하지 못했습니다.",
+    "statusError": "요청 실패함. 상태: {{status}}.",
+    "messageError": "메시지: {{message}}",
+    "userListError": "사용자 목록 검색 오류. 페이지를 다시 로드하십시오."
   },
   "groupsPage": {
     "manageGroups": "그룹",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "사용자 등록",
     "cancel": "취소",
+    "clear": "지우기",
     "addUsersDesc": "귀사에서 협업 서비스를 수신할 상대방의 이메일 주소를 입력하십시오. 해당 상대방은 가입 이메일 초대장을 받게 됩니다.",
     "addUserText": "추가하시겠습니까?",
     "userInput": "이메일 주소 또는 그룹 메일러는 콤마로 구분하여 입력하십시오...",
@@ -85,17 +90,18 @@
     "addEntitleError": "사용자 추가 또는 자격 부여를 위한 권한 충분하지 않음.",
     "freeMsg": "무료 Spark 메시지",
     "freeConf": "무료 제3자 Spark 미팅",
-    "freeComm": "무료 네트워크내 IP 음성 및 화상 통화",
+    "freeComm": "무료 1:1 Spark 통화",
     "paidMsg": "표준 그룹 회의실",
     "paidConf": "25명 미팅",
-    "paidComm": "고급 통신",
+    "paidComm": "고급 Spark 통화",
     "freeSpark": "무료 Spark 메시지",
     "enterpriseEdition": "기업판",
-    "meetingCenter": "Meeting Center",
-    "supportCenter": "Support Center",
-    "trainingCenter": "Training Center",
-    "eventCenter": "Event Center",
-    "communication": "통신"
+    "meetingCenter": "Meeting Center {{capacity}}",
+    "supportCenter": "Support Center {{capacity}}",
+    "trainingCenter": "Training Center {{capacity}}",
+    "eventCenter": "Event Center {{capacity}}",
+    "communication": "통신",
+    "cloudExtensions": "클라우드 확장"
   },
   "usersPreview": {
     "groupPreview": "그룹:",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "기업 리소스 사용률",
     "servicesTab": "서비스",
     "conferencing": "회의",
-    "conferencingDesc": "사이트 관리 목록"
+    "conferencingDesc": "사이트 관리 목록",
+    "alarmsTab": "알람",
+    "alarmsTabDesc": "알람 관리",
+    "eventsTab": "이벤트",
+    "eventsTabDesc": "이벤트 관리"
   },
   "index": {
     "welcome": "환영합니다!",
@@ -231,13 +241,13 @@
     "leastEngaged": "5명 최소 참여함",
     "highQuality": "5개 최고 품질",
     "leastQuality": "5개 최저 품질",
-    "customerLoadError": "고객 목록을 로딩하는 중 오류가 발생했습니다.",
-    "userLoadError": "선택한 고객에 대한 사용자를 로드하는 중 오류가 발생했습니다."
+    "customerLoadError": "고객 목록을 로딩하는 중 오류가 발생했습니다."
   },
   "activeUsers": {
     "active": "활동중",
     "activeUsers": "활동중인 사용자",
-    "activeUserError": "활동중인 사용자 데이터를 로드하는 중 오류가 발생했습니다.",
+    "activeUserGraphError": "활동중인 사용자 데이터를 로드하는 중 오류가 발생했습니다.",
+    "activeUserTableError": "{{customer}} 님을 위해 가장 활동적인 사용자의 데이터를 로드하는 중 오류가 발생했습니다.",
     "calls": "통화",
     "customer": "고객",
     "hideActiveUsers": "가장 활동중인 사용자 숨기기",
@@ -276,12 +286,13 @@
     "searching": "검색 중...",
     "userLogs": "사용자 로그",
     "logEmailAddress": "이메일 주소",
-    "logDate": "업로드 시간",
     "logLocusId": "Locus ID",
     "logCallStart": "통화 시작 시간",
     "logAction": "클라이언트 로그",
+    "callflowLogsAction": "통화 로그",
     "callflowAction": "통화흐름 차트",
     "callAction": "통화 정보",
+    "callSummaryAction": "통화 요약",
     "errEmptyinput": "검색 입력은 비어 있을 수 없습니다.",
     "errLogQuery": "로그 검색 실패함. 상태: {{status}}",
     "inputPlaceholder": "검색 용어 입력 (이메일 주소, 사용자 ID, Locus ID 등)",
@@ -357,7 +368,7 @@
     "overview": "지난 4주",
     "activeUsers": "활동중인 사용자",
     "calls": "통화 시작됨",
-    "updated": "마지막 업데이트됨",
+    "updated": "마지막 동기화",
     "conversations": "회의실 만들어짐",
     "contentShared": "파일 공유됨",
     "activity": "활동 시작:",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "라이센스 없는 사용자 등록됨:",
     "unlicensedText": "라이센스 없는 사용자",
     "convertText": "현재 무료 버전을 사용하는 사용자를 확인하고 변환",
-    "lastUpdated": "마지막 업데이트됨"
+    "lastUpdated": "마지막 동기화"
   },
   "inviteModal": {
     "title": "서비스 자격",
@@ -451,9 +462,13 @@
     "ciscoDefault": "Cisco 기본값",
     "fall": "가을",
     "winter": "겨울",
-    "addSuccess": " 님이 성공적으로 추가했습니다.",
     "emptyNumber": "번호는 공백일 수 없습니다",
-    "notANumber": " 은(는) 유효한 번호가 아닙니다"
+    "notANumber": " 은(는) 유효한 번호가 아닙니다",
+    "saveSuccess": "Unified Communications 설정 성공적으로 저장됨",
+    "siteError": "사이트를 만들지 못했습니다.",
+    "extensionDeleteSuccess": "확장{{extension}}을 성공적으로 삭제했습니다.",
+    "extensionDeleteError": "확장{{extension}}을 삭제하지 못했습니다.",
+    "extensionAddError": "확장{{extension}}을 만들지 못했습니다."
   },
   "dirsyncModal": {
     "chooseSync": "동기화 선택",
@@ -589,13 +604,16 @@
     "advancedSub": "Active Directory에서 사용자 동기화",
     "needHelp": "도움이 필요하십니까?",
     "planReview": "계획 재확인",
+    "messaging": "메시지",
+    "conferencing": "회의",
+    "communications": "통신",
     "enterpriseSettings": "기업 설정",
     "planReviewSub": "협업 계획 개요",
     "enterpriseSettingsSub": "글로벌 구성 설정",
     "planReviewDesc": "이 설치 마법사는 조직에서 협업 서비스를 빨리 확보하고 실행할 수 있도록 합니다. 각 단계에서 해야할 작업에 확신이 없는 경우에도 걱정하지 마십시오. 나중에 언제든지 변경할 수 있습니다.",
     "accountReview": "계정 재확인",
-    "serviceSetup": "서비스 설정",
-    "serviceSetupSub": "통합된 통신 설정",
+    "serviceSetup": "통신",
+    "serviceSetupSub": "전화 관련 설정",
     "unifiedCommunication": "Unified Communications",
     "addUsers": "사용자 추가",
     "addUsersSimple": "사용자 추가 | 기본",
@@ -635,7 +653,13 @@
     "finishDesc": "설치 마법사를 완료했습니다. 단계를 건너뛰기했거나 설정을 변경해야 하는 경우, 페이지의 상단 오른쪽 모서리에 위치한 기어 아이콘을 클릭하여 다시 이 목록에 액세스합니다.",
     "finish": "마침",
     "finishSub": "설정 완료",
-    "completeRequired": "{{name}} 은 완료되어야 합니다."
+    "completeRequired": "{{name}} 은 완료되어야 합니다.",
+    "freeColumnHeader": "무료 무제한 공개 메시지",
+    "paidColumnHeader": "구입한 관리 메시지",
+    "quantity": "양:",
+    "trial": "평가판 {{number}}",
+    "startYourTrial": "새로운 {{days}}일 평가판을 시작하십시오.",
+    "trialDaysRemaining": "현재 평가판 사용 기간 {{days}}일 남았습니다."
   },
   "reports": {
     "title": "보고서",
@@ -651,8 +675,8 @@
     "highQuality": "5개 최고 품질",
     "leastQuality": "5개 최저 품질",
     "services": "모든 서비스",
-    "UsersOnboarded": "등록된 사용자",
-    "AvgCallsPerUser": "사용자당 평균 통화",
+    "UsersOnboarded": "등록된 사용자 (이번 달)",
+    "AvgCallsPerUser": "사용자당 평균 통화 (이번 달)",
     "AvgRoomsPerUser": "사용자당 평균 회의실 (이번 달)",
     "ActiveUsers": "평균 활동중인 사용자 (이번 달)",
     "OneOnOneRooms": "1:1 회의실 (이번 달)",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "그룹 회의실 수 (총)",
     "videoCallsAxis": "화상 통화 수 (총)",
     "avgCallsAxis": "통화 지속 시간 (분) (평균)",
+    "numberUsersAxis": "사용자 수 (총)",
+    "numberCallsAxis": "통화 수 (총)",
     "filesSharedAxis": "공유된 파일 수 (총)",
     "gbSharedAxis": "공유된 기가바이트 수 (총)",
     "orgDsc": "조직의 총 사용자 수.",
     "onboardDsc": "Spark에 로그인되었거나 자격이 주어진 총 사용자 수.",
-    "activeDsc": "지난 주에 메시지를 보낸/읽은 사용자 또는 회의실을 만든/입장한 총 사용자 수."
+    "activeDsc": "지난 주에 메시지를 보낸/읽은 사용자 또는 회의실을 만든/입장한 총 사용자 수.",
+    "allCustomers": "모든 고객"
   },
   "callRouting": {
     "title": "통화 라우팅",
@@ -721,12 +748,15 @@
     "error": "라인 구성 실패함.",
     "directNumbers": "디렉토리 번호",
     "internalNumberLabel": "아래 나열된 번호 또는 내선으로 다이얼하여 이 라인에 연결하십시오.",
-    "internalNumberExtension": "내부 번호 내선",
-    "internalNumberExtensionTooltip": "동일한 사이트에 위치한 기업 내에서 이 라인에 연결하려면 내부 번호를 사용하십시오.",
+    "internalNumberExtension": "내선",
+    "internalNumberExtensionTooltip": "동일한 사이트에 있는 기업 내에서는 내선 번호를 사용하여 이 라인에 연결하십시오.",
+    "internalNumberPoolError": "내선을 로드하지 못함.",
     "enterpriseSiteNumberLabel": "귀사에서 사이트 간 다이얼을 사용하는 경우:",
-    "externalNumberLabel": "외부 번호",
-    "externalNumberTooltip": "귀사 외부에서 이 라인에 연결하려면 외부 번호를 사용하십시오.",
+    "externalNumberLabel": "다이렉트 라인",
+    "externalNumberTooltip": "기업 외부에서는 다이렉트 라인을 사용하여 이 라인에 연결하십시오.",
+    "externalNumberPoolError": "다이렉트 라인을 로드하지 못함.",
     "chooseNumber": "번호 선택",
+    "searchNumber": "번호 검색...",
     "addNewNumber": "새 번호 추가",
     "removeNumber": "라인 제거",
     "none": "없음",
@@ -736,7 +766,8 @@
     "alert": "경고",
     "userError": "사용자{{user}}가 올바르게 구축되지 않았습니다.",
     "maxLines": "{{user}} 님이 최대 라인 수를 초과했습니다. 추가 라인을 구축하기 전에 이 사용자의 라인을 제거하십시오.",
-    "confirm": "페이지에 저장되지 않은 변경 내용이 있습니다. 계속하시겠습니까?"
+    "confirm": "페이지에 저장되지 않은 변경 내용이 있습니다. 계속하시겠습니까?",
+    "unassignedNumberError": "지정되지 않은 번호는 검색하지 못함."
   },
   "callForwardPanel": {
     "title": "통화 전달",
@@ -824,7 +855,7 @@
     "entitlementsTitle": "등록된 사용자",
     "activeUsersTitle": "매일 활동중인 사용자",
     "averageCallsTitle": "사용자당 평균 통화",
-    "contentSharedTitle": "총 공유된 콘텐츠"
+    "contentSharedTitle": "파일 공유됨"
   },
   "trialModal": {
     "trialSuccess": "평가판을 성공적으로 설정했습니다.",
@@ -840,7 +871,7 @@
   },
   "trials": {
     "collab": "표준 그룹 회의실 + 25명 미팅",
-    "squaredUC": "고급 통신"
+    "squaredUC": "고급 Spark 통화"
   },
   "status": {
     "noResults": "사용 가능한 결과 없음.",
@@ -896,31 +927,23 @@
     "none": "없음"
   },
   "didAddModal": {
-    "title": "전화 번호 추가",
-    "instructionsText": "현재 설정하고 있는 기업은 기존 전화 번호를 제공해야 합니다. 이는 기업 전화 번호의 요청 포트를 시작합니다.",
-    "processingText": "전화 번호 추가 중...",
-    "successText": "{{count}}개 새로운 전화 번호가 성공적으로 추가됨.",
-    "failText": "{{count}}개 전화 번호가 이미 시스템에 있음.",
-    "sendEmail": "고객에게 통지",
-    "notifyCustLater": "나중에 고객에게 알리기",
-    "emailSuccessText": "이메일이 고객에게 성공적으로 발송되었습니다.",
-    "emailFailText": "이메일 보내기 오류",
-    "inputPlacehoder": "전화 번호는 콤마로 구분하여 입력하십시오"
+    "title": "전화 번호 추가 (선택 사항)"
   },
   "didManageModal": {
     "title": "전화 번호 관리",
     "instructionsText": "현재 설정하고 있는 기업은 기존 전화 번호를 제공해야 합니다. 이는 기업 전화 번호의 요청 포트를 시작합니다.",
-    "processingText": "전화 번호 추가 중...",
+    "processingText": "전화 번호 처리 중...",
     "newDidText": "{{count}}개 새로운 전화 번호가 성공적으로 추가됨.",
     "existingDidText": "{{count}}개 전화 번호가 이미 시스템에 있음.",
     "deleteDidText": "{{count}}개 전화 번호가 삭제되었습니다.",
-    "deleteConfirmationText": "다음 {{count}}개 번호를 삭제하시겠습니까? 해당 번호가 사용자의 라인에 지정된 경우, 최종 사용자에게 영향을 미칠 수도 있습니다.",
+    "deleteConfirmationText": "다음 {{count}}개의 번호를 삭제하시겠습니까?  해당 번호가 사용자의 라인에 지정된 경우엔 최종 사용자에게 영향을 미칠 수도 있습니다.",
     "removeNumbers": "번호 제거",
     "sendEmail": "고객에게 통지",
     "notifyCustLater": "나중에 고객에게 알리기",
     "emailSuccessText": "이메일이 고객에게 성공적으로 발송되었습니다.",
     "emailFailText": "이메일 보내기 오류",
-    "inputPlacehoder": "전화 번호는 콤마로 구분하여 입력하십시오"
+    "inputPlacehoder": "전화 번호는 콤마로 구분하여 입력하십시오",
+    "didFormatHelpText": "예제 형식 포함: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "장치 구성",
@@ -1032,8 +1055,8 @@
     "deleteResource": "리소스 해제"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "세션 활성화 업데이트됨",
-    "privilegesUpdateSuccess": "권한 업데이트됨",
+    "sessionEnablementUpdateSuccess": "세션 유형 활성화 업데이트됨.",
+    "privilegesUpdateSuccess": "권한 업데이트됨.",
     "reload": "다시 시도",
     "cancel": "뒤로 이동"
   },
@@ -1128,12 +1151,13 @@
     "039007": "사이트에서 귀하의 이메일 주소를 수락하지 않았습니다.",
     "039008": "039008",
     "039009": "039009",
-    "200006": "귀하는 아직 관리자로서 이 사이트에 구축되지 않았습니다. 이 과정에는 시간이 걸릴 수도 있습니다.",
+    "110055": "사용자 제한이 세션 유형 \"{{sessionTypeName}}\"에 대해 초과했습니다.",
     "defaultProcessError": "요청을 처리할 수 없음.",
-    "defaultAccessError": "현재 서버에 액세스할 수 없음"
+    "defaultAccessError": "현재 서버에 액세스할 수 없음.",
+    "defaultNotWebExAdminError": "귀하는 아직 관리자로서 이 사이트에 구축되지 않았습니다. 이 과정에는 시간이 걸릴 수도 있습니다."
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "세션 활성화",
+    "sessionEnablementLabel": "세션 유형 활성화",
     "handsOnLabAdminLabel": "핸즈-온 랩 관리 (핸즈-온 랩이 활성화된 경우에만 적용됨)",
     "optimizeBandwidthUsageLabel": "동일한 네트워크 내에서 참석자를 위해 최적화된 대역폭 사용량",
     "videoSettingsLabel": "비디오 설정",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "수신 다자간 전화회의",
     "globalCallBackTeleconfLabel": "글로벌 수신 다자간 전화회의",
     "integratedVoIPLaabel": "통합된 VoIP",
+    "priviligesLable": "권한",
     "userPriviligesLabel": "사용자 권한",
     "advancedLinkLabel": "고급 설정"
   },
@@ -1158,7 +1183,7 @@
     "messagingSubtitle": "표준 그룹 회의실",
     "messagingDesc": "콘텐츠 스토리지가 포함된 그룹 회의실은 조직 내/외부의 사용자와 어느 장치에서든 쉽게 협업할 수 있도록 합니다.",
     "communicationTitle": "통신",
-    "communicationSubtitle": "Advanced Unified",
+    "communicationSubtitle": "고급 Spark 통화",
     "communicationDesc": "기본 외부 통화 및 전체 Unified Communications은 귀하의 조직에 대해 활성화되었습니다.",
     "conferencingTitle": "회의",
     "conferencingSubtitle": "Meeting Center",
@@ -1207,6 +1232,12 @@
     "average": "평균",
     "bridgeUtilization": "브리지별 사용률"
   },
+  "alarmsPage": {
+    "alarms": "알람"
+  },
+  "eventsPage": {
+    "events": "이벤트"
+  },
   "processOrderPage": {
     "errOrgCreation": "주문 # {{orderId}} 이(가) 처리되고 있습니다. 24시간 이후에 다시 확인하십시오.",
     "info": "상태",
@@ -1240,5 +1271,14 @@
     "licenseCount": "라이센스 수",
     "type": "유형",
     "launchSite": "사이트 관리 실행"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "클라우드 확장",
+    "calendar": "캘린더",
+    "on": "켜기",
+    "off": "끄기",
+    "calendarService": "캘린더 서비스",
+    "sparkDesc": "미팅 초대장에 @spark를 포함하면 자동으로 Spark 회의실을 만듭니다.",
+    "webexDesc": "미팅 초대장에 @webex를 포함하면 WebEx 미팅을 만들고, 해당 초대장에 정보를 첨부합니다."
   }
 }

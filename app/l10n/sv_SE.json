@@ -23,7 +23,8 @@
     "statusHeader": "STATUS/VERKTYG",
     "modify": "Ändra",
     "existingUsers": "Befintliga användare",
-    "userInput": "Ange en eller flera e-postadresser avgränsade med kommatecken.",
+    "userInput": "Ange e-postadresser eller adresslistor avgränsade med kommatecken.",
+    "userInputDescription": "Till exempel: Johan Andersson johan.andersson@exempel.com, Maria Holmberg maria.holmberg@exempel.com",
     "active": "Aktiv",
     "inactive": "",
     "validEmailInput": "Ange giltig(a) e-postadress(er) till användare",
@@ -51,7 +52,10 @@
     "deleteUserError": "Fel vid borttagning av användare. Status: {{status}}",
     "onboardSuccess": "{{email}} registrerades",
     "onboardError": "{{email}} inte registrerad. Status: {{status}}",
-    "ciscoucError": "{{email}} har inte godkänt Unified Communications."
+    "ciscoucError": "{{email}} har inte godkänt Unified Communications.",
+    "statusError": "Begäran misslyckades med status: {{status}}.",
+    "messageError": "Meddelande: {{message}}",
+    "userListError": "Fel vid hämtning av användarlistan. Försök att uppdatera sidan."
   },
   "groupsPage": {
     "manageGroups": "Grupper",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "Registrerade användare",
     "cancel": "Avbryt",
+    "clear": "Rensa",
     "addUsersDesc": "Ange e-postadresserna till personer i ditt företag som kommer att ta del av Collaboration Services. De får en e-postinbjudan om att registrera sig.",
     "addUserText": "Vem vill du lägga till?",
     "userInput": "Ange e-postadresser eller adresslistor avgränsade med kommatecken ...",
@@ -85,17 +90,18 @@
     "addEntitleError": "otillräckliga privilegier för att lägga till eller berättiga en användare",
     "freeMsg": "Kostnadsfria Spark-meddelanden",
     "freeConf": "Kostnadsfria tredje parts Spark-möten",
-    "freeComm": "Gratis interna röst- och videosamtal via IP",
+    "freeComm": "Fritt 1:1 Spark-samtal",
     "paidMsg": "Standardgrupprum",
-    "paidConf": "Möten för 25 personer",
-    "paidComm": "Avancerad kommunikation",
+    "paidConf": "Gruppmöte med 25 personer",
+    "paidComm": "Avancerat Spark-samtal",
     "freeSpark": "Kostnadsfria Spark-meddelanden",
     "enterpriseEdition": "Enterprise-versionen",
-    "meetingCenter": "Meeting Center",
-    "supportCenter": "Support Center",
-    "trainingCenter": "Training Center",
-    "eventCenter": "Event Center",
-    "communication": "Kommunikation"
+    "meetingCenter": "Meeting Center {{capacity}}",
+    "supportCenter": "Support Center {{capacity}}",
+    "trainingCenter": "Training Center {{capacity}}",
+    "eventCenter": "Event Center {{capacity}}",
+    "communication": "Kommunikation",
+    "cloudExtensions": "Cloud-anknytningar"
   },
   "usersPreview": {
     "groupPreview": "Grupp:",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "Använda Enterprise Resources",
     "servicesTab": "Tjänster",
     "conferencing": "Konferens",
-    "conferencingDesc": "Lista över webbplatsadmin"
+    "conferencingDesc": "Lista över webbplatsadmin",
+    "alarmsTab": "Larm",
+    "alarmsTabDesc": "Larmhantering",
+    "eventsTab": "Händelser",
+    "eventsTabDesc": "Hantering av händelser"
   },
   "index": {
     "welcome": "Välkommen!",
@@ -231,13 +241,13 @@
     "leastEngaged": "5 minst engagerade",
     "highQuality": "5 med högsta kvalitet",
     "leastQuality": "5 med lägsta kvalitet",
-    "customerLoadError": "Ett fel uppstod när kundlistan skulle läsas in.",
-    "userLoadError": "Ett fel uppstod när användare för den valda kunden skulle läsas in."
+    "customerLoadError": "Ett fel uppstod när kundlistan skulle läsas in."
   },
   "activeUsers": {
     "active": "Aktiv",
     "activeUsers": "Aktiva användare",
-    "activeUserError": "Ett fel uppstod när aktiva användardata skulle läsas in.",
+    "activeUserGraphError": "Ett fel uppstod när aktiva användardata skulle läsas in.",
+    "activeUserTableError": "Ett fel inträffade vid inläsning av data för de aktivaste användarna för {{customer}}.",
     "calls": "Samtal",
     "customer": "Kund",
     "hideActiveUsers": "Dölj mest aktiva användare",
@@ -276,12 +286,13 @@
     "searching": "Söker ...",
     "userLogs": "Användarloggar",
     "logEmailAddress": "E-postadress",
-    "logDate": "Överföringstid",
     "logLocusId": "Locus-ID",
     "logCallStart": "Samtalets starttid",
     "logAction": "Klientloggar",
+    "callflowLogsAction": "Samtalsloggar",
     "callflowAction": "Samtalsflödesdiagram",
     "callAction": "Samtalsinfo",
+    "callSummaryAction": "Sammanfattning av samtal",
     "errEmptyinput": "Sökfältet får inte vara tomt.",
     "errLogQuery": "Kunde inte hämta loggar. Status: {{status}}",
     "inputPlaceholder": "Ange sökterm (e-postadress, användar-ID, Locus-ID etc.)",
@@ -357,7 +368,7 @@
     "overview": "Senaste 4 veckorna",
     "activeUsers": "Aktiva användare",
     "calls": "Uppringda samtal",
-    "updated": "Senast uppdaterad",
+    "updated": "Senaste synkronisering",
     "conversations": "Skapade rum",
     "contentShared": "Delade filer",
     "activity": "Aktivitet sedan",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "olicensierade användare registrerade på",
     "unlicensedText": "Olicensierade användare",
     "convertText": "Visa och omvandla användare som för närvarande använder gratisversionen",
-    "lastUpdated": "Senast uppdaterad"
+    "lastUpdated": "Senaste synkronisering"
   },
   "inviteModal": {
     "title": "Serviceberättigande",
@@ -443,7 +454,7 @@
     "siteCodeDescription": "Ange ett unikt nummer som identifierar en specifik plats.",
     "internalExtensionRange": "Internt anknytningsintervall",
     "internalNumberRangeDescription": "Ange intervallet för interna nummer. Måste vara 4 siffror.",
-    "extensionError": "Anknytning ej giltig:",
+    "extensionError": "Anknytning ej giltig: ",
     "to": "till",
     "addMoreExtensionRanges": "Lägg till fler anknytningsintervaller",
     "globalMOH": "Global Media On Hold (MOH)",
@@ -451,9 +462,13 @@
     "ciscoDefault": "Cisco standard",
     "fall": "Höst",
     "winter": "Vinter",
-    "addSuccess": " lades till",
     "emptyNumber": "Nummerfältet får inte vara tomt",
-    "notANumber": " är inte ett giltigt nummer"
+    "notANumber": " är inte ett giltigt nummer",
+    "saveSuccess": "Inställningarna för enhetlig kommunikation har sparats.",
+    "siteError": "Platsen kunde inte skapas.",
+    "extensionDeleteSuccess": "Anknytningen {{extension}} har tagits bort.",
+    "extensionDeleteError": "Anknytningen {{extension}} kunde inte tas bort.",
+    "extensionAddError": "Anknytningen {{extension}} kunde inte tas bort."
   },
   "dirsyncModal": {
     "chooseSync": "Välj synkronisering",
@@ -589,13 +604,16 @@
     "advancedSub": "Synkronisera användare från Active Directory",
     "needHelp": "Behöver du hjälp?",
     "planReview": "Granska plan",
+    "messaging": "Meddelanden",
+    "conferencing": "Konferens",
+    "communications": "Kommunikation",
     "enterpriseSettings": "Företagsinställningar",
     "planReviewSub": "Översikt av din samarbetsplan",
     "enterpriseSettingsSub": "Konfigurera globala inställningar",
     "planReviewDesc": "Denna konfigurationsguide hjälper dig att snabbt komma igång med collaboration services i din organisation. Oroa dig inte om du är osäker på vad du ska välja vid ett visst steg - du kan alltid ändra inställningarna senare.",
     "accountReview": "Granska konto",
-    "serviceSetup": "Konfigurera tjänster",
-    "serviceSetupSub": "Konfigurera enhetlig kommunikation",
+    "serviceSetup": "Kommunikation",
+    "serviceSetupSub": "Telefonrelaterade inställningar",
     "unifiedCommunication": "Enhetlig kommunikation",
     "addUsers": "Lägg till användare",
     "addUsersSimple": "Lägg till användare | Grundläggande",
@@ -635,7 +653,13 @@
     "finishDesc": "Du har slutfört konfigurationsguiden. Om du hoppade över vissa steg eller vill ändra några inställningar klickar du på kugghjulet längst upp till höger på sidan för att komma till den här panelen igen.",
     "finish": "Slutför",
     "finishSub": "Slutför konfigurationen",
-    "completeRequired": "{{name}} måste fyllas i."
+    "completeRequired": "{{name}} måste fyllas i.",
+    "freeColumnHeader": "Kostnadsfria obegränsade offentliga meddelanden",
+    "paidColumnHeader": "Köpta hanterade meddelanden",
+    "quantity": "Antal:",
+    "trial": "Testperiod {{number}}",
+    "startYourTrial": "Starta din {{days}}-dagars testperiod.",
+    "trialDaysRemaining": "{{days}} dagar kvar på befintliga testperiod."
   },
   "reports": {
     "title": "Rapporter",
@@ -651,8 +675,8 @@
     "highQuality": "5 högsta kvalitet",
     "leastQuality": "5 lägsta kvalitet",
     "services": "Alla tjänster",
-    "UsersOnboarded": "Registrerade användare",
-    "AvgCallsPerUser": "Genomsn. samtal per användare",
+    "UsersOnboarded": "Användare registrerade denna månad",
+    "AvgCallsPerUser": "Genomsn. samtal per användare denna månad",
     "AvgRoomsPerUser": "Genomsn. rum per användare den här månaden",
     "ActiveUsers": "Genomsn. aktiva användare den här månaden",
     "OneOnOneRooms": "1:1-rum den här månaden",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "Antal grupprum (totalt)",
     "videoCallsAxis": "Antal videosamtal (totalt)",
     "avgCallsAxis": "Varaktighet för samtal i minuter (genomsn.)",
+    "numberUsersAxis": "Antal användare (totalt)",
+    "numberCallsAxis": "Antal samtal (idag)",
     "filesSharedAxis": "Antal delade filer (totalt)",
     "gbSharedAxis": "Antal gigabyte delade (totalt)",
     "orgDsc": "Totalt antal användare i en organisation.",
     "onboardDsc": "Totalt antal användare som har loggat in eller som har Spark-behörighet.",
-    "activeDsc": "Totalt antal användare som har skickat/läst ett meddelande eller skapat/deltagit i ett rum under den senaste veckan."
+    "activeDsc": "Totalt antal användare som har skickat/läst ett meddelande eller skapat/deltagit i ett rum under den senaste veckan.",
+    "allCustomers": "Alla kunder"
   },
   "callRouting": {
     "title": "Samtalsomkoppling",
@@ -721,12 +748,15 @@
     "error": "Linjekonfigurationen misslyckades.",
     "directNumbers": "Katalognummer",
     "internalNumberLabel": "Nå denna linje genom att ringa numren eller anknytningarna som listas nedan.",
-    "internalNumberExtension": "Intern nummeranknytning",
-    "internalNumberExtensionTooltip": "Använd det interna numret för att nå denna linje inom företaget på samma plats.",
+    "internalNumberExtension": "Intern anknytning",
+    "internalNumberExtensionTooltip": "Använd interna anknytningar för att nå denna linje inifrån företaget på samma plats.",
+    "internalNumberPoolError": "De interna anknytningarna kunde inte läsas in.",
     "enterpriseSiteNumberLabel": "Om ditt företag använder samtal från plats till plats:",
-    "externalNumberLabel": "Externt nummer",
-    "externalNumberTooltip": "Använd det externa numret för att nå denna linje från utanför företaget.",
+    "externalNumberLabel": "Direktlinje",
+    "externalNumberTooltip": "Använd direktlinjen för att nå denna linje från en plats utanför företaget.",
+    "externalNumberPoolError": "Direktlinjerna kunde inte läsas in.",
     "chooseNumber": "Välj ett nummer",
+    "searchNumber": "Sök efter ett nummer ...",
     "addNewNumber": "Lägg till nytt nummer",
     "removeNumber": "Ta bort linje",
     "none": "Inget",
@@ -736,7 +766,8 @@
     "alert": "Varning",
     "userError": "Användare {{user}} konfigurerades inte korrekt.",
     "maxLines": "{{user}} har överskridit maximalt antal linjer. Ta bort en linje från den här användaren innan fler linjer tillhandahålls.",
-    "confirm": "Det finns ändringar som inte har sparats på sidan. Vill du fortsätta?"
+    "confirm": "Det finns ändringar som inte har sparats på sidan. Vill du fortsätta?",
+    "unassignedNumberError": "Ett ej tilldelat nummer kunde inte hämtas."
   },
   "callForwardPanel": {
     "title": "Samtalsomkoppling",
@@ -824,7 +855,7 @@
     "entitlementsTitle": "Registrerade användare",
     "activeUsersTitle": "Dagliga aktiva användare",
     "averageCallsTitle": "Genomsnittligt antal samtal per användare",
-    "contentSharedTitle": "Totalt delat innehåll"
+    "contentSharedTitle": "Delade filer"
   },
   "trialModal": {
     "trialSuccess": "Du har konfigurerat din provperiod.",
@@ -839,8 +870,8 @@
     "editSuccess": "Du har ändrat en provperiod för {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dagar."
   },
   "trials": {
-    "collab": "Standardgrupprum + möten för 25 personer",
-    "squaredUC": "Avancerad kommunikation"
+    "collab": "Standardgrupprum + gruppmöten för 25 personer",
+    "squaredUC": "Avancerat Spark-samtal"
   },
   "status": {
     "noResults": "Inga träffar hittades.",
@@ -896,31 +927,23 @@
     "none": "Inget"
   },
   "didAddModal": {
-    "title": "Lägg till telefonnummer",
-    "instructionsText": "Företaget du konfigurerar måste tillhandahålla sina befintliga telefonnummer. Detta initierar porteringsbegäran om företagets telefonnummer.",
-    "processingText": "Lägger till telefonnummer ...",
-    "successText": "{{count}} nytt/nya telefonnummer lades till.",
-    "failText": "{{count}} telefonnummer finns redan i systemet.",
-    "sendEmail": "Underrätta kunden",
-    "notifyCustLater": "Avisera kunden senare",
-    "emailSuccessText": "E-postmeddelandet skickades till kunden.",
-    "emailFailText": "Kunde inte skicka e-postmeddelande",
-    "inputPlacehoder": "Ange telefonnummer avgränsade med kommatecken"
+    "title": "Lägg till telefonnummer (valfritt)"
   },
   "didManageModal": {
     "title": "Hantera telefonnummer",
-    "instructionsText": "Företaget du konfigurerar måste tillhandahålla sina befintliga telefonnummer. Detta initierar porteringsbegäran om företagets telefonnummer.",
-    "processingText": "Lägger till telefonnummer ...",
+    "instructionsText": "Företaget du konfigurerar behöver ge dig sina befintliga telefonnummer. Detta kommer att initiera portningsbegäran för företagets telefonnummer.",
+    "processingText": "Bearbetar telefonnummer ...",
     "newDidText": "{{count}} nytt/nya telefonnummer lades till.",
     "existingDidText": "{{count}} telefonnummer finns redan i systemet.",
     "deleteDidText": "{{count}} telefonnummer har tagits bort.",
-    "deleteConfirmationText": "Är du säker på att du vill ta bort följande {{count}} nummer? Om dessa nummer är tilldelade användares linjer kan det kan påverka slutanvändarna.",
+    "deleteConfirmationText": "Är du säker på att du vill ta bort följande {{count}} nummer? Det kan påverka slutanvändare om dessa nummer tilldelas till användares linjer.",
     "removeNumbers": "Ta bort nummer",
     "sendEmail": "Underrätta kunden",
     "notifyCustLater": "Avisera kunden senare",
     "emailSuccessText": "E-postmeddelandet skickades till kunden.",
     "emailFailText": "Kunde inte skicka e-postmeddelande",
-    "inputPlacehoder": "Ange telefonnummer avgränsade med kommatecken"
+    "inputPlacehoder": "Ange telefonnummer avgränsade med kommatecken",
+    "didFormatHelpText": "Exempelformat: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Enhetskonfiguration",
@@ -1032,8 +1055,8 @@
     "deleteResource": "Stäng ner resurs"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "Sessionsaktivering uppdaterad",
-    "privilegesUpdateSuccess": "Privilegier uppdaterade",
+    "sessionEnablementUpdateSuccess": "Aktiveringen av sessionstypen har uppdaterats.",
+    "privilegesUpdateSuccess": "Privilegierna har uppdaterats.",
     "reload": "Försök igen",
     "cancel": "Gå tillbaka"
   },
@@ -1128,12 +1151,13 @@
     "039007": "Din e-postadress godkänns inte av vår plats.",
     "039008": "039008",
     "039009": "039009",
-    "200006": "Du har ännu inte blivit godkänd som administratör för den här platsen. Processen kan ta en stund.",
+    "110055": "Användargräns överskriden för sessionstypen \"{{sessionTypeName}}\".",
     "defaultProcessError": "Begäran kunde inte behandlas.",
-    "defaultAccessError": "Servern kan för närvarande inte nås"
+    "defaultAccessError": "Servern kan för närvarande inte nås.",
+    "defaultNotWebExAdminError": "Du har ännu inte blivit godkänd som administratör för den här platsen. Processen kan ta en stund."
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "Sessionsaktivering",
+    "sessionEnablementLabel": "Aktivering av sessionstyp",
     "handsOnLabAdminLabel": "Administration av praktiska labbsessioner (effektivt först när praktiska labbsessioner är aktiverat)",
     "optimizeBandwidthUsageLabel": "Optimerad bandbreddsanvändning för deltagare på samma nätverk.",
     "videoSettingsLabel": "Videoinställningar",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "Telekonferens med återuppringning",
     "globalCallBackTeleconfLabel": "Telekonferens med global återuppringning",
     "integratedVoIPLaabel": "Integrerad internettelefoni (VoIP)",
+    "priviligesLable": "Privilegier",
     "userPriviligesLabel": "Användarprivilegier",
     "advancedLinkLabel": "Avancerade inställningar"
   },
@@ -1158,7 +1183,7 @@
     "messagingSubtitle": "Standardgrupprum",
     "messagingDesc": "Grupprum med innehållslagring gör att du enkelt kan samarbeta från valfri enhet med alla användare inuti eller utanför din organisation.",
     "communicationTitle": "Kommunikation",
-    "communicationSubtitle": "Advanced Unified",
+    "communicationSubtitle": "Avancerat Spark-samtal",
     "communicationDesc": "Grundläggande externa samtal och fullständig Unified Communications aktiveras för din organisation.",
     "conferencingTitle": "Konferens",
     "conferencingSubtitle": "Meeting Center",
@@ -1207,6 +1232,12 @@
     "average": "Genomsnitt",
     "bridgeUtilization": "Bridge By Bridge-användning"
   },
+  "alarmsPage": {
+    "alarms": "Larm"
+  },
+  "eventsPage": {
+    "events": "Händelser"
+  },
   "processOrderPage": {
     "errOrgCreation": "Beställningsnr. {{orderId}} behandlas. Kontrollera igen om 24 timmar.",
     "info": "Status",
@@ -1240,5 +1271,14 @@
     "licenseCount": "Licensräknare",
     "type": "Typ",
     "launchSite": "Starta webbplatsadmin"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "Cloud-anknytningar",
+    "calendar": "Kalender",
+    "on": "På",
+    "off": "Av",
+    "calendarService": "Kalendertjänst",
+    "sparkDesc": "Om @spark inkluderas i en mötesinbjudan skapas ett Spark-rum automatiskt.",
+    "webexDesc": "Om @webex inkluderas i mötesinbjudan skapas ett WebEx-möte och informationen bifogas i inbjudan."
   }
 }

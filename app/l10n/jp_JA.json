@@ -23,7 +23,8 @@
     "statusHeader": "状況 / ツール",
     "modify": "変更",
     "existingUsers": "既存のユーザー",
-    "userInput": "1 つ以上のメールアドレスをコンマで区切って入力してください。",
+    "userInput": "メールアドレスまたはグループメーラーをコンマで区切って入力してください。",
+    "userInputDescription": "例： John Doe john.doe@example.com、Kate Williams kate.williams@example.com",
     "active": "アクティブ",
     "inactive": "",
     "validEmailInput": "有効なユーザーのメールを入力してください。",
@@ -51,7 +52,10 @@
     "deleteUserError": "ユーザーの削除中にエラーが発生しました。ステータス: {{status}}",
     "onboardSuccess": "{{email}} が正常にオンボードしました",
     "onboardError": "{{email}} はオンボードされませんでした。ステータス: {{status}}",
-    "ciscoucError": "{{email}} は単一化されたコミュニケーションをプロビジョニングしませんでした。"
+    "ciscoucError": "{{email}} は単一化されたコミュニケーションをプロビジョニングしませんでした。",
+    "statusError": "リクエストに失敗し、ステータスが表示されました: {{status}}。",
+    "messageError": "メッセージ: {{message}}",
+    "userListError": "ユーザーリストの取得時にエラーが発生しました。ページを再ロードしてください。"
   },
   "groupsPage": {
     "manageGroups": "グループ",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "オンボードユーザー",
     "cancel": "キャンセル",
+    "clear": "クリア",
     "addUsersDesc": "会社でコラボレーションサービスを受ける人々のメールアドレスを入力してください。サインアップのためのメールの招待状が送られます。",
     "addUserText": "誰を追加しますか ?",
     "userInput": "メールアドレスまたはグループメーラーをコンマで区切って入力してください ...",
@@ -85,17 +90,18 @@
     "addEntitleError": "ユーザーの追加またはエンタイトルを行うには権限が不足しています。",
     "freeMsg": "無料Sparkメッセージ",
     "freeConf": "無料3当事者Sparkミーティング",
-    "freeComm": "無料ネットワーク内IP音声およびビデオ通話",
+    "freeComm": "無料の 1:1 Spark 通話",
     "paidMsg": "標準チームルーム",
-    "paidConf": "25 人のミーティング",
-    "paidComm": "高度なコミュニケーション",
+    "paidConf": "25 パーティミーティング",
+    "paidComm": "高度な Spark 通話",
     "freeSpark": "無料Sparkメッセージ",
     "enterpriseEdition": "エンタープライズ編集",
-    "meetingCenter": "Meeting Center",
-    "supportCenter": "サポートセンター",
-    "trainingCenter": "トレーニングセンター",
-    "eventCenter": "イベントセンター",
-    "communication": "コミュニケーション"
+    "meetingCenter": "Meeting Center {{capacity}}",
+    "supportCenter": "Support Center {{capacity}}",
+    "trainingCenter": "Training Center {{capacity}}",
+    "eventCenter": "Event Center {{capacity}}",
+    "communication": "コミュニケーション",
+    "cloudExtensions": "クラウド拡張機能"
   },
   "usersPreview": {
     "groupPreview": "グループ：",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "エンタープライズリソース利用状況",
     "servicesTab": "サービス",
     "conferencing": "カンファレンス",
-    "conferencingDesc": "サイト管理者一覧"
+    "conferencingDesc": "サイト管理者一覧",
+    "alarmsTab": "アラーム",
+    "alarmsTabDesc": "アラーム管理",
+    "eventsTab": "イベント",
+    "eventsTabDesc": "イベント管理"
   },
   "index": {
     "welcome": "ウェルカム !",
@@ -231,13 +241,13 @@
     "leastEngaged": "5つの最低のエンゲージ",
     "highQuality": "5つの最高のクオリティ",
     "leastQuality": "5つの最低のクオリティ",
-    "customerLoadError": "顧客一覧のロード中にエラーが発生しました",
-    "userLoadError": "選択した顧客に対してユーザーをロードしている間にエラーが発生しました。"
+    "customerLoadError": "顧客一覧のロード中にエラーが発生しました"
   },
   "activeUsers": {
     "active": "アクティブ",
     "activeUsers": "アクティブなユーザー",
-    "activeUserError": "アクティブユーザーのデータをロード中にエラーが発生しました。",
+    "activeUserGraphError": "アクティブユーザーのデータをロード中にエラーが発生しました。",
+    "activeUserTableError": "The{{customer}} のほとんどのアクティブなユーザーのデータをロードしている間にエラーが発生しました。",
     "calls": "通話",
     "customer": "カスタマ",
     "hideActiveUsers": "もっともアクティブなユーザーを非表示",
@@ -276,12 +286,13 @@
     "searching": "検索中 ...",
     "userLogs": "ユーザーログ",
     "logEmailAddress": "メールアドレス",
-    "logDate": "アップロード時間",
     "logLocusId": "Locus ID",
     "logCallStart": "通話開始時間",
     "logAction": "クライアントログ",
+    "callflowLogsAction": "通話ログ",
     "callflowAction": "コールフローチャート",
     "callAction": "通話情報",
+    "callSummaryAction": "通話サマリ",
     "errEmptyinput": "検索入力を空白にすることはできません。",
     "errLogQuery": "ログの取得に失敗しました。状況： {{status}}",
     "inputPlaceholder": "検索語を入力（メールアドレス、ユーザー ID、Locus ID など）",
@@ -357,7 +368,7 @@
     "overview": "直前の 4 週間",
     "activeUsers": "アクティブなユーザー",
     "calls": "通話",
-    "updated": "最終更新日",
+    "updated": "最新の同期",
     "conversations": "作成した会議室",
     "contentShared": "共有したファイル",
     "activity": "アクティビティの開始",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "未ライセンスのユーザーが登録されています",
     "unlicensedText": "未ライセンスのユーザー",
     "convertText": "現在無料バージョンを使用しているユーザーの表示および転換",
-    "lastUpdated": "最終更新日"
+    "lastUpdated": "最新の同期"
   },
   "inviteModal": {
     "title": "サービスエンタイトルメント",
@@ -451,9 +462,13 @@
     "ciscoDefault": "シスコのデフォルト",
     "fall": "秋",
     "winter": "冬",
-    "addSuccess": " 正常に追加されました。",
     "emptyNumber": "番号を空白にすることはできません",
-    "notANumber": " は有効な番号ではありません"
+    "notANumber": " は有効な番号ではありません",
+    "saveSuccess": "Unified Communications のセットアップが正常に保存されました",
+    "siteError": "サイトの作成に失敗しました。",
+    "extensionDeleteSuccess": "内線 {{extension}} を正常に削除しました。",
+    "extensionDeleteError": "内線 {{extension}} の削除に失敗しました。",
+    "extensionAddError": "内線 {{extension}} の作成に失敗しました。"
   },
   "dirsyncModal": {
     "chooseSync": "同期の選択",
@@ -589,13 +604,16 @@
     "advancedSub": "Active Directory からユーザーを同期化します",
     "needHelp": "ヘルプが必要ですか ?",
     "planReview": "プランのレビュー",
+    "messaging": "メッセージング",
+    "conferencing": "カンファレンス",
+    "communications": "コミュニケーション",
     "enterpriseSettings": "エンタープライズ設定",
     "planReviewSub": "コラボレーションプランの概要",
     "enterpriseSettingsSub": "グローバル設定のセットアップ",
     "planReviewDesc": "このセットアップウィザードを使えば、組織のコラボレーションサービスをすばやく設定して開始できます。どれかのステップで確信が持てなくても、心配は要りません。後ほどいつでも変更できます。",
     "accountReview": "アカウントのレビュー",
-    "serviceSetup": "サービスのセットアップ",
-    "serviceSetupSub": "単一化されたコミュニケーションをセットアップします",
+    "serviceSetup": "コミュニケーション",
+    "serviceSetupSub": "電話関連の設定",
     "unifiedCommunication": "単一化されたコミュニケーション",
     "addUsers": "ユーザーの追加",
     "addUsersSimple": "ユーザーの追加 | 基本",
@@ -635,7 +653,13 @@
     "finishDesc": "セットアップウィザードを完了しました。スキップしたステップがある場合、または設定のいずれかを変更する必要がある場合には、ページの右上隅の歯車のアイコンをクリックして、このパネルをもう一度表示してください。",
     "finish": "完了",
     "finishSub": "セットアップを完了します",
-    "completeRequired": "{{name}} は完了する必要があります。"
+    "completeRequired": "{{name}} は完了する必要があります。",
+    "freeColumnHeader": "無制限の公共メッセージング",
+    "paidColumnHeader": "管理対象のメッセージングを購入しました",
+    "quantity": "数量:",
+    "trial": "試用版 {{number}}",
+    "startYourTrial": "新しい {{days}} 日間の試用版を開始してください。",
+    "trialDaysRemaining": "現在の試用版の残り日数は {{days}} 日です。"
   },
   "reports": {
     "title": "レポート",
@@ -651,8 +675,8 @@
     "highQuality": "5つの最高のクオリティ",
     "leastQuality": "5つの最低のクオリティ",
     "services": "すべてのサービス",
-    "UsersOnboarded": "オンボードのユーザー",
-    "AvgCallsPerUser": "ユーザーごとの平均通話数",
+    "UsersOnboarded": "今月オンボードしたユーザー",
+    "AvgCallsPerUser": "今月のユーザーごとの平均通話数",
     "AvgRoomsPerUser": "今月のユーザーごとの平均会議室数",
     "ActiveUsers": "今月の平均アクティブユーザー数",
     "OneOnOneRooms": "今月の1:1会議室",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "グループ会議室数 (合計)",
     "videoCallsAxis": "ビデオ通話数 (合計)",
     "avgCallsAxis": "平均通話時間 (分)",
+    "numberUsersAxis": "ユーザー数 (合計)",
+    "numberCallsAxis": "通話数 (合計)",
     "filesSharedAxis": "共有ファイル数 (合計)",
     "gbSharedAxis": "共有ギガバイト数 (合計)",
     "orgDsc": "組織内のユーザーの合計数",
     "onboardDsc": "Sparkにログインした、または許可されたユーザーの合計数。",
-    "activeDsc": "先週にメッセージを送信および閲覧した、または会議室を作成、もしくは入室したユーザーの合計数。"
+    "activeDsc": "先週にメッセージを送信および閲覧した、または会議室を作成、もしくは入室したユーザーの合計数。",
+    "allCustomers": "全顧客"
   },
   "callRouting": {
     "title": "呼び出しルーティング",
@@ -721,12 +748,15 @@
     "error": "回線の構成に失敗しました。",
     "directNumbers": "電話帳番号",
     "internalNumberLabel": "以下の数字または内線番号をダイアルすることで、この回線に接続してください。",
-    "internalNumberExtension": "内線番号",
-    "internalNumberExtensionTooltip": "内線番号を使用して、同じサイトの会社内からこの回線に接続してください。",
+    "internalNumberExtension": "内線",
+    "internalNumberExtensionTooltip": "同じサイトで社内からこの回線にかけるためには、内線を使用してください。",
+    "internalNumberPoolError": "内線の読み込みに失敗しました。",
     "enterpriseSiteNumberLabel": "あなたの会社がサイト間のダイアルを使用する場合:",
-    "externalNumberLabel": "外線番号",
-    "externalNumberTooltip": "外線番号を使用して、会社外部からこの回線に接続してください。",
+    "externalNumberLabel": "直通回線",
+    "externalNumberTooltip": "直通回線を使用して、会社の外線からこの回線にかけてください。",
+    "externalNumberPoolError": "蝶通回線を読み込めませんでした。",
     "chooseNumber": "番号の選択",
+    "searchNumber": "番号の検索...",
     "addNewNumber": "新規番号の追加",
     "removeNumber": "ラインの削除",
     "none": "なし",
@@ -736,7 +766,8 @@
     "alert": "警告",
     "userError": "ユーザー {{user}} は適切にプロビジョニングされませんでした。",
     "maxLines": "{{user}} は回線の上限を超過しました。他の回線のプロビジョニングを行う前にこのユーザーから回線を削除してください。",
-    "confirm": "ページ内に保存されていない変更があります。続行しますか？"
+    "confirm": "ページ内に保存されていない変更があります。続行しますか？",
+    "unassignedNumberError": "割り当てられていない番号を取得できませんでした。"
   },
   "callForwardPanel": {
     "title": "通話転送",
@@ -824,7 +855,7 @@
     "entitlementsTitle": "オンボードのユーザー",
     "activeUsersTitle": "毎日のアクティブなユーザー",
     "averageCallsTitle": "ユーザーごとの平均通話数",
-    "contentSharedTitle": "共有コンテンツの総数"
+    "contentSharedTitle": "共有したファイル"
   },
   "trialModal": {
     "trialSuccess": "試用のセットアップが完了しました。",
@@ -839,8 +870,8 @@
     "editSuccess": "{{licenseDuration}} 日間の{{licenseCount}} ライセンスを持つ {{customerName}}に対するトライアルを編集しました。"
   },
   "trials": {
-    "collab": "標準チームルーム + 25 人のミーティング",
-    "squaredUC": "高度なコミュニケーション"
+    "collab": "標準チームルーム + 25 パーティミーティング",
+    "squaredUC": "高度な Spark 通話"
   },
   "status": {
     "noResults": "結果は利用できません",
@@ -896,31 +927,23 @@
     "none": "なし"
   },
   "didAddModal": {
-    "title": "電話番号の追加",
-    "instructionsText": "セットアップ中の会社は、既存の電話番号を提供する必要があります。これにより、会社の電話番号のポーティングリクエストが開始します。",
-    "processingText": "電話番号の追加 ...",
-    "successText": "{{count}} 件の電話番号が正常に追加されました。",
-    "failText": "{{count}} 件の電話番号はすでにシステムに含まれています。",
-    "sendEmail": "カスタマに通知",
-    "notifyCustLater": "カスタマに後ほど通知する",
-    "emailSuccessText": ".メールは正常にカスタマに送信されました。",
-    "emailFailText": "メール送信でエラー",
-    "inputPlacehoder": "コンマで区切られた電話番号を入力"
+    "title": "電話番号の追加 (オプション)"
   },
   "didManageModal": {
     "title": "電話番号の管理",
-    "instructionsText": "セットアップ中の会社は、既存の電話番号を提供する必要があります。これにより、会社の電話番号のポーティングリクエストが開始します。",
-    "processingText": "電話番号の追加 ...",
+    "instructionsText": "現在セットアップしている会社から、既存の電話番号を知らせてもらう必要があります。これにより、会社の電話番号の移行リクエストを開始します。",
+    "processingText": "電話番号の処理中...",
     "newDidText": "{{count}} 件の電話番号が正常に追加されました。",
     "existingDidText": "{{count}} 件の電話番号はすでにシステムに含まれています。",
     "deleteDidText": "{{count}} 件の電話番号が削除されました。",
-    "deleteConfirmationText": "以下の {{count}} 件の電話番号を本当に削除しますか？電話番号がユーザーのラインに割り当てられている場合、エンドユーザーに影響が出る可能性があります。",
+    "deleteConfirmationText": "以下の {{count}} 個の番号を削除してよろしいですか? これらの番号がユーザーの回線に割り当てられている場合は、エンドユーザーに影響する可能性があります。",
     "removeNumbers": "電話番号の削除",
     "sendEmail": "カスタマに通知",
     "notifyCustLater": "カスタマに後ほど通知する",
     "emailSuccessText": ".メールは正常にカスタマに送信されました。",
     "emailFailText": "メール送信でエラー",
-    "inputPlacehoder": "コンマで区切られた電話番号を入力"
+    "inputPlacehoder": "コンマで区切られた電話番号を入力",
+    "didFormatHelpText": "フォーマットの例: 15556667777、+15556667777、1-555-666-7777、15556667777、+1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "デバイス構成",
@@ -1032,8 +1055,8 @@
     "deleteResource": "コミッション解除リソース"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "セッション使用権が更新されました",
-    "privilegesUpdateSuccess": "権限が更新されました",
+    "sessionEnablementUpdateSuccess": "セッションの種類の権能割賦が更新されました。",
+    "privilegesUpdateSuccess": "権限が更新されました。",
     "reload": "再試行してください。",
     "cancel": "戻る"
   },
@@ -1128,12 +1151,13 @@
     "039007": "あなたの電子メールアドレスはこのサイトでは許可されません。",
     "039008": "039008",
     "039009": "039009",
-    "200006": "あなたはこのサイトではまだ管理者としてプロビジョニングされていません。この処理には時間がかかります。",
+    "110055": "このセッションタイプ \"{{sessionTypeName}}\" に対するユーザーの制限を超えました。",
     "defaultProcessError": "申請を処理できません。",
-    "defaultAccessError": "現時点ではサーバーにアクセスできません。"
+    "defaultAccessError": "現在、サーバーにアクセスできません。",
+    "defaultNotWebExAdminError": "あなたはこのサイトではまだ管理者としてプロビジョニングされていません。この処理には時間がかかります。"
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "セッション使用権",
+    "sessionEnablementLabel": "セッションの種類の機能割賦",
     "handsOnLabAdminLabel": "ハンズオンラボ (ハンズオンラボが有効になっているときだけ有効)",
     "optimizeBandwidthUsageLabel": "同じネットワークの参加者に対して最適化された帯域幅の使用",
     "videoSettingsLabel": "ビデオ設定",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "コールバック電話会議",
     "globalCallBackTeleconfLabel": "グローバルコールバック電話会議",
     "integratedVoIPLaabel": "統合VoIP",
+    "priviligesLable": "権限",
     "userPriviligesLabel": "ユーザー権限",
     "advancedLinkLabel": "詳細設定"
   },
@@ -1158,7 +1183,7 @@
     "messagingSubtitle": "標準チームルーム",
     "messagingDesc": "コンテンツのストレージを含むチームルームを利用すれば、どの機器からでも、組織内外のユーザーと容易に協力できます。",
     "communicationTitle": "コミュニケーション",
-    "communicationSubtitle": "Advanced Unified",
+    "communicationSubtitle": "高度な Spark 通話",
     "communicationDesc": "組織は基本的な外部呼出しと完全なUnified Communicationsを利用できます。",
     "conferencingTitle": "カンファレンス",
     "conferencingSubtitle": "Meeting Center",
@@ -1207,6 +1232,12 @@
     "average": "平均",
     "bridgeUtilization": "Bridge By Bridge 利用状況"
   },
+  "alarmsPage": {
+    "alarms": "アラーム"
+  },
+  "eventsPage": {
+    "events": "イベント"
+  },
   "processOrderPage": {
     "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
     "info": "状況",
@@ -1240,5 +1271,14 @@
     "licenseCount": "ライセンス数",
     "type": "種類",
     "launchSite": "サイト管理者の起動"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "クラウド拡張機能",
+    "calendar": "カレンダー",
+    "on": "オン",
+    "off": "オフ",
+    "calendarService": "カレンダーサービス",
+    "sparkDesc": "ミーティングの招待状に @spark を含めると、Spark ルームが自動的に作成されます。",
+    "webexDesc": "ミーティングの招待状に @webex を含めると、WebEx ミーティングが作成され、招待状に情報が追加されます。"
   }
 }

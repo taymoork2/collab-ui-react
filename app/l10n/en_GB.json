@@ -23,7 +23,8 @@
     "statusHeader": "STATUS/TOOLS",
     "modify": "Modify",
     "existingUsers": "Existing users",
-    "userInput": "Enter one or more e-mail addresses separated by commas",
+    "userInput": "Enter email addresses or group IDs separated by commas.",
+    "userInputDescription": "For example: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "active": "Active",
     "inactive": "",
     "validEmailInput": "Please enter valid user e-mail(s)",
@@ -49,9 +50,12 @@
     "resend": "Resend Invitation",
     "deleteUserSuccess": "User {{email}} deleted successfully",
     "deleteUserError": "Error deleting user. Status: {{status}}",
-    "onboardSuccess": "{{email}} onboarded successfully",
-    "onboardError": "{{email}} not onboarded. Status: {{status}}",
-    "ciscoucError": "{{email}} did not provision Unified Communications."
+    "onboardSuccess": "{{email}} on-boarded successfully",
+    "onboardError": "{{email}} not on-boarded. Status: {{status}}",
+    "ciscoucError": "{{email}} did not provision Unified Communications.",
+    "statusError": "Request failed with status: {{status}}.",
+    "messageError": "Message: {{message}}",
+    "userListError": "Error retrieving the user list. Please try reloading the page."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "On-board users",
     "cancel": "Cancel",
+    "clear": "Clear",
     "addUsersDesc": "Enter the e-mail addresses of persons in your company who will receive Collaboration Services. They will receive an e-mail invitation to sign up.",
     "addUserText": "Whom would you like to add?",
     "userInput": "Enter e-mail addresses or group mailers separated by commas...",
@@ -85,17 +90,18 @@
     "addEntitleError": "Insufficient privilege to add or entitle a user",
     "freeMsg": "Free Spark Messaging",
     "freeConf": "Free 3 Party Spark Meet",
-    "freeComm": "Free in-network IP voice and video calling",
+    "freeComm": "Free 1:1 Spark Call",
     "paidMsg": "Standard team rooms",
-    "paidConf": "25-party meetings",
-    "paidComm": "Advanced communications",
+    "paidConf": "25 Party Meetings",
+    "paidComm": "Advanced Spark Call",
     "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition",
-    "meetingCenter": "Meeting centre",
-    "supportCenter": "Support Centre",
-    "trainingCenter": "Training Centre",
-    "eventCenter": "Event Centre",
-    "communication": "Communication"
+    "meetingCenter": "Meeting Centre {{capacity}}",
+    "supportCenter": "Support Centre {{capacity}}",
+    "trainingCenter": "Training Centre {{capacity}}",
+    "eventCenter": "Event Centre {{capacity}}",
+    "communication": "Communication",
+    "cloudExtensions": "Cloud Extensions"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "Enterprise resources utilisation",
     "servicesTab": "Services",
     "conferencing": "Conferencing",
-    "conferencingDesc": "List of Site Admins"
+    "conferencingDesc": "List of Site Admins",
+    "alarmsTab": "Alarms",
+    "alarmsTabDesc": "Alarm Management",
+    "eventsTab": "Events",
+    "eventsTabDesc": "Event Management"
   },
   "index": {
     "welcome": "Welcome!",
@@ -231,13 +241,13 @@
     "leastEngaged": "5 least engaged",
     "highQuality": "5 highest quality",
     "leastQuality": "5 lowest quality",
-    "customerLoadError": "There was an error while loading the customer list.",
-    "userLoadError": "There was an error while loading the users for the selected customer."
+    "customerLoadError": "There was an error while loading the customer list."
   },
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active users",
-    "activeUserError": "There was an error while loading active user data.",
+    "activeUserGraphError": "There was an error while loading active user data.",
+    "activeUserTableError": "There was an error while loading data for active users for {{customer}}.",
     "calls": "Calls",
     "customer": "Customer",
     "hideActiveUsers": "Hide Most Active Users",
@@ -276,12 +286,13 @@
     "searching": "Searching...",
     "userLogs": "User logs",
     "logEmailAddress": "E-mail address",
-    "logDate": "Upload time",
     "logLocusId": "Locus ID",
     "logCallStart": "Call start time",
     "logAction": "Client logs",
+    "callflowLogsAction": "Call Logs",
     "callflowAction": "Callflow charts",
     "callAction": "Call info",
+    "callSummaryAction": "Call Summary",
     "errEmptyinput": "Search input cannot be empty",
     "errLogQuery": "Failed to retrieve logs. Status: {{status}}",
     "inputPlaceholder": "Enter search term (e-mail address, user ID, locus ID, etc.)",
@@ -357,7 +368,7 @@
     "overview": "Last 4 weeks",
     "activeUsers": "Active users",
     "calls": "Calls Placed",
-    "updated": "Last updated",
+    "updated": "Last sync",
     "conversations": "Rooms Created",
     "contentShared": "Files Shared",
     "activity": "Activity Since",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "Unlicensed users registered on",
     "unlicensedText": "Unlicensed users",
     "convertText": "View and convert users currently using the free version",
-    "lastUpdated": "Last updated"
+    "lastUpdated": "Last sync"
   },
   "inviteModal": {
     "title": "Service entitlement",
@@ -451,9 +462,13 @@
     "ciscoDefault": "Cisco default",
     "fall": "Autumn",
     "winter": "Winter",
-    "addSuccess": " added successfully.",
     "emptyNumber": "Number cannot be empty",
-    "notANumber": " is not a valid number"
+    "notANumber": " is not a valid number",
+    "saveSuccess": "Unified Communications setup saved successfully",
+    "siteError": "Failed to create site.",
+    "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
+    "extensionDeleteError": "Failed to delete extension {{extension}}.",
+    "extensionAddError": "Failed to create extension {{extension}}."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -589,13 +604,16 @@
     "advancedSub": "Synchronise users from Active Directory",
     "needHelp": "Need help?",
     "planReview": "Plan review",
+    "messaging": "Messaging",
+    "conferencing": "Conferencing",
+    "communications": "Communications",
     "enterpriseSettings": "Enterprise settings",
     "planReviewSub": "Overview of your collaboration plan",
     "enterpriseSettingsSub": "Set up global configurations",
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organisation. If you're not sure what to do in any given step, don't worry, you can always make changes later",
     "accountReview": "Account review",
-    "serviceSetup": "Service setup",
-    "serviceSetupSub": "Set up unified communications",
+    "serviceSetup": "Communication",
+    "serviceSetupSub": "Phone-related settings",
     "unifiedCommunication": "Unified communications",
     "addUsers": "Add users",
     "addUsersSimple": "Add users | Simple",
@@ -635,7 +653,13 @@
     "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the Gear icon in the upper right corner of the page to access this panel again",
     "finish": "Finish",
     "finishSub": "Complete your setup",
-    "completeRequired": "{{name}} must be completed"
+    "completeRequired": "{{name}} must be completed",
+    "freeColumnHeader": "Free Unlimited Public Messaging",
+    "paidColumnHeader": "Purchased Managed Messaging",
+    "quantity": "Qty:",
+    "trial": "Trial {{number}}",
+    "startYourTrial": "Start your new {{days}}-day trial.",
+    "trialDaysRemaining": "{{days}} Days left in current trial."
   },
   "reports": {
     "title": "Reports",
@@ -651,8 +675,8 @@
     "highQuality": "5 highest quality",
     "leastQuality": "5 lowest quality",
     "services": "All services",
-    "UsersOnboarded": "Users onboarded",
-    "AvgCallsPerUser": "Avg Calls per User",
+    "UsersOnboarded": "Users On-boarded this Month",
+    "AvgCallsPerUser": "Avg. Calls per User this Month",
     "AvgRoomsPerUser": "Avg. Rooms per User this Month",
     "ActiveUsers": "Avg. Active Users this month",
     "OneOnOneRooms": "1:1 Rooms this Month",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "Number of Group Rooms (Total)",
     "videoCallsAxis": "Number of Video Calls (Total)",
     "avgCallsAxis": "Call Duration in Minutes (Avg.)",
+    "numberUsersAxis": "Number of Users (Total)",
+    "numberCallsAxis": "Number of Calls (Total)",
     "filesSharedAxis": "Number of Files Shared (Total)",
     "gbSharedAxis": "Number of Gigabytes Shared (Total)",
     "orgDsc": "Total Number of Users in the Organisation",
     "onboardDsc": "Total Number of Users who have Logged In or have access to Spark.",
-    "activeDsc": "Total Number of Users who Sent/Read a Message or Created/Entered a Room in the Past Week"
+    "activeDsc": "Total Number of Users who Sent/Read a Message or Created/Entered a Room in the Past Week",
+    "allCustomers": "All Customers"
   },
   "callRouting": {
     "title": "Call routing",
@@ -720,13 +747,16 @@
     "success": "Line configuration saved successfully",
     "error": "Line configuration failed.",
     "directNumbers": "Directory numbers",
-    "internalNumberLabel": "Reach this line by dialing the numbers or extensions listed below.",
-    "internalNumberExtension": "Internal number extension",
-    "internalNumberExtensionTooltip": "Use the internal number to reach this line from within the company at the same site.",
-    "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
-    "externalNumberLabel": "External number",
-    "externalNumberTooltip": "Use the external number to reach this line from outside of the company.",
+    "internalNumberLabel": "Reach this line by dialling the numbers or extensions listed below.",
+    "internalNumberExtension": "Internal Extension",
+    "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
+    "internalNumberPoolError": "Internal extensions failed to load.",
+    "enterpriseSiteNumberLabel": "If your company uses site-to-site dialling:",
+    "externalNumberLabel": "Direct Line",
+    "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
+    "externalNumberPoolError": "Direct lines failed to load.",
     "chooseNumber": "Choose a number",
+    "searchNumber": "Search for a number...",
     "addNewNumber": "Add a new number",
     "removeNumber": "Remove line",
     "none": "None",
@@ -736,7 +766,8 @@
     "alert": "Warning",
     "userError": "User {{user}} was not correctly provisioned.",
     "maxLines": "{{user}} has exceeded the maximum number of lines. Please remove a line from this user before provisioning additional lines.",
-    "confirm": "There are unsaved changes on the page. Do you wish to continue?"
+    "confirm": "There are unsaved changes on the page. Do you wish to continue?",
+    "unassignedNumberError": "Could not retrieve an unassigned number."
   },
   "callForwardPanel": {
     "title": "Call forwarding",
@@ -821,10 +852,10 @@
     "edit": "Edit",
     "saveSendReminder": "Save and send reminder",
     "partnerHeading": "Adoption and engagement",
-    "entitlementsTitle": "Users onboarded",
+    "entitlementsTitle": "Users on-boarded",
     "activeUsersTitle": "Daily active users",
     "averageCallsTitle": "Average calls per user",
-    "contentSharedTitle": "Total content shared"
+    "contentSharedTitle": "Files Shared"
   },
   "trialModal": {
     "trialSuccess": "You have set up your trial successfully",
@@ -839,8 +870,8 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licences for {{licenseDuration}} days"
   },
   "trials": {
-    "collab": "Standard team rooms + 25 party meetings",
-    "squaredUC": "Advanced communications"
+    "collab": "Standard Team Rooms + 25 Party Meetings",
+    "squaredUC": "Advanced Spark Call"
   },
   "status": {
     "noResults": "No results available",
@@ -896,31 +927,23 @@
     "none": "None"
   },
   "didAddModal": {
-    "title": "Add phone numbers",
-    "instructionsText": "The Company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers",
-    "processingText": "Adding phone numbers...",
-    "successText": "{{count}} new phone number(s) successfully added",
-    "failText": "{{count}} phone number(s) already in the system",
-    "sendEmail": "Notify customer",
-    "notifyCustLater": "Notify customer later",
-    "emailSuccessText": "E-mail successfully sent to customer",
-    "emailFailText": "Error when sending the e-mail",
-    "inputPlacehoder": "Enter phone numbers separated by commas"
+    "title": "Add Phone Numbers (Optional)"
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
-    "instructionsText": "The Company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers",
-    "processingText": "Adding phone numbers...",
+    "instructionsText": "The company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers.",
+    "processingText": "Processing Phone Numbers...",
     "newDidText": "{{count}} new phone number(s) successfully added",
     "existingDidText": "{{count}} phone number(s) already in the system",
     "deleteDidText": "{{count}} phone number(s) were deleted.",
-    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s) ? It might impact end users if these numbers are assigned to users' lines.",
+    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s)?  It may impact end users if these numbers are assigned to user lines.",
     "removeNumbers": "Remove Numbers",
     "sendEmail": "Notify customer",
     "notifyCustLater": "Notify customer later",
     "emailSuccessText": "E-mail successfully sent to customer",
     "emailFailText": "Error when sending the e-mail",
-    "inputPlacehoder": "Enter phone numbers separated by commas"
+    "inputPlacehoder": "Enter phone numbers separated by commas",
+    "didFormatHelpText": "Example formats include: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Device configuration",
@@ -1032,8 +1055,8 @@
     "deleteResource": "Decommission resource"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "Session enablement updated",
-    "privilegesUpdateSuccess": "Privileges updated",
+    "sessionEnablementUpdateSuccess": "Session type enablement updated.",
+    "privilegesUpdateSuccess": "Privileges updated.",
     "reload": "Try again",
     "cancel": "Go Back"
   },
@@ -1115,7 +1138,7 @@
     "030074": "The user does not support external meeting.",
     "030075": "030075",
     "030076": "030076",
-    "030077": "Personal Conference meetings require the Meeting Center Pro meeting type.",
+    "030077": "Personal Conference meetings require the Meeting Centre Pro meeting type.",
     "030078": "030078",
     "030079": "030079",
     "039000": "039000",
@@ -1128,12 +1151,13 @@
     "039007": "Your Email address is not accepted by our site.",
     "039008": "039008",
     "039009": "039009",
-    "200006": "You have not yet been authorised on this site as an administrator. This process may take a moment.",
+    "110055": "User limit exceeded for the session type \"{{sessionTypeName}}\".",
     "defaultProcessError": "Unable to process request.",
-    "defaultAccessError": "Unable to access server at this time"
+    "defaultAccessError": "Unable to access server at this time.",
+    "defaultNotWebExAdminError": "You have not yet been authorised on this site as an administrator. This process may take a moment."
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "Session Enablement",
+    "sessionEnablementLabel": "Session Type Enablement",
     "handsOnLabAdminLabel": "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
     "optimizeBandwidthUsageLabel": "Optimized bandwidth usage for attendees within the same network",
     "videoSettingsLabel": "Video Settings",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "Call-back teleconferencing",
     "globalCallBackTeleconfLabel": "Global call-back teleconferencing",
     "integratedVoIPLaabel": "Integrated VoIP",
+    "priviligesLable": "Privileges",
     "userPriviligesLabel": "User Privileges",
     "advancedLinkLabel": "Advanced Settings"
   },
@@ -1158,7 +1183,7 @@
     "messagingSubtitle": "Standard team rooms",
     "messagingDesc": "Team Rooms with content storage allow you to easily collaborate from any device with any user inside or outside your organisation.",
     "communicationTitle": "Communication",
-    "communicationSubtitle": "Advanced unified",
+    "communicationSubtitle": "Advanced Spark Call",
     "communicationDesc": "Basic external calling and full Unified Communications enabled for your organisation.",
     "conferencingTitle": "Conferencing",
     "conferencingSubtitle": "Meeting centre",
@@ -1207,6 +1232,12 @@
     "average": "Average",
     "bridgeUtilization": "Bridge by bridge utilisation"
   },
+  "alarmsPage": {
+    "alarms": "Alarms"
+  },
+  "eventsPage": {
+    "events": "Events"
+  },
   "processOrderPage": {
     "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
     "info": "Status",
@@ -1240,5 +1271,14 @@
     "licenseCount": "License Count",
     "type": "Type",
     "launchSite": "Launch Site Admin"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "Cloud Extensions",
+    "calendar": "Calendar",
+    "on": "On",
+    "off": "Off",
+    "calendarService": "Calendar Service",
+    "sparkDesc": "Including @spark in a meeting invitation creates a Spark Room automatically.",
+    "webexDesc": "Including @webex in the meeting invitation creates a WebEx meeting and appends the information to the invitation."
   }
 }

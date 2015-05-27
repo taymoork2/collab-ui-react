@@ -23,7 +23,8 @@
     "statusHeader": "DURUM/ARAÇLAR",
     "modify": "Değiştir",
     "existingUsers": "Mevcut Kullanıcılar",
-    "userInput": "Virgülle ayırarak bir veya daha fazla e-posta adresi girin.",
+    "userInput": "E-posta adreslerini veya grup posta göndericilerini virgüllerle ayırarak girin.",
+    "userInputDescription": "Örneğin: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "active": "Etkin",
     "inactive": "",
     "validEmailInput": "Lütfen geçerli kullanıcı e-postası girin.",
@@ -51,7 +52,10 @@
     "deleteUserError": "Kullanıcı silinirken hata oluştu. Durum: {{status}}",
     "onboardSuccess": "{{email}} başarıyla eklendi",
     "onboardError": "{{email}} eklenmedi. Durum: {{status}}",
-    "ciscoucError": "{{email}} Birleşik İletişim sağlamadı."
+    "ciscoucError": "{{email}} Birleşik İletişim sağlamadı.",
+    "statusError": "İstek şu durumla başarısız oldu: {{status}}.",
+    "messageError": "Mesaj: {{message}}",
+    "userListError": "Kullanıcı listesi alınırken hata oluştu. Lütfen sayfayı yeniden yüklemeyi deneyin."
   },
   "groupsPage": {
     "manageGroups": "Gruplar",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "Kullanıcı Ekle",
     "cancel": "İptal",
+    "clear": "Temizle",
     "addUsersDesc": "Şirketinizde İşbirliği Hizmetleri alacak kişilerin e-posta adreslerini girin. Kaydolmak için bir e-posta daveti alacaklardır.",
     "addUserText": "Kimi eklemek istersiniz?",
     "userInput": "Virgülle ayırarak e-posta adresleri veya grup posta göndericileri girin...",
@@ -85,17 +90,18 @@
     "addEntitleError": "kullanıcıyı eklemek veya yetkilendirmek için ayrıcalıklar yetersizler.",
     "freeMsg": "Ücretsiz Spark Mesajlaşma",
     "freeConf": "Ücretsiz 3 Taraflı Spark Buluşması",
-    "freeComm": "Ücretsiz ağ içi IP ses ve video çağrısı",
-    "paidMsg": "Standart ekip odaları",
-    "paidConf": "25 taraflı toplantılar",
-    "paidComm": "Gelişmiş iletişim",
+    "freeComm": "Ücretsiz 1:1 Spark Çağrısı",
+    "paidMsg": "Standart Ekip Odaları",
+    "paidConf": "25 Taraflı Toplantılar",
+    "paidComm": "Gelişmiş Spark Çağrısı",
     "freeSpark": "Ücretsiz Spark Mesajlaşma",
     "enterpriseEdition": "Kurumsal Sürüm",
-    "meetingCenter": "Meeting Center",
-    "supportCenter": "Support Center",
-    "trainingCenter": "Training Center",
-    "eventCenter": "Event Center",
-    "communication": "İletişim"
+    "meetingCenter": "Meeting Center {{capacity}}",
+    "supportCenter": "Support Center {{capacity}}",
+    "trainingCenter": "Training Center {{capacity}}",
+    "eventCenter": "Event Center {{capacity}}",
+    "communication": "İletişim",
+    "cloudExtensions": "Bulut Uzantıları"
   },
   "usersPreview": {
     "groupPreview": "Grup:",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "Kurumsal Kaynakların Kullanımı",
     "servicesTab": "Hizmetler",
     "conferencing": "Konferans",
-    "conferencingDesc": "Site Yöneticilerinin Listesi"
+    "conferencingDesc": "Site Yöneticilerinin Listesi",
+    "alarmsTab": "Alarmlar",
+    "alarmsTabDesc": "Alarm Yönetimi",
+    "eventsTab": "Etkinlikler",
+    "eventsTabDesc": "Olay Yönetimi"
   },
   "index": {
     "welcome": "Hoş geldiniz!",
@@ -231,13 +241,13 @@
     "leastEngaged": "En Az Etkileşime Sahip Olan 5",
     "highQuality": "En Yüksek Kaliteli 5",
     "leastQuality": "En Düşük Kaliteli 5",
-    "customerLoadError": "Müşteri listesi yüklenirken bir hata oluştu.",
-    "userLoadError": "Kullanıcılar seçilen müşteri için yüklenirken bir hata oluştu."
+    "customerLoadError": "Müşteri listesi yüklenirken bir hata oluştu."
   },
   "activeUsers": {
     "active": "Etkin",
     "activeUsers": "Etkin Kullanıcılar",
-    "activeUserError": "Etkin kullanıcı verileri yüklenirken bir hata oluştu.",
+    "activeUserGraphError": "Etkin kullanıcı verileri yüklenirken bir hata oluştu.",
+    "activeUserTableError": "{{customer}} için en etkin kullanıcılara ilişkin veriler yüklenirken bir hata oluştu.",
     "calls": "Çağrılar",
     "customer": "Müşteri",
     "hideActiveUsers": "En Etkin Kullanıcıları Gizle",
@@ -276,12 +286,13 @@
     "searching": "Aranıyor...",
     "userLogs": "Kullanıcı Günlükleri",
     "logEmailAddress": "E-posta Adresi",
-    "logDate": "Yükleme Zamanı",
     "logLocusId": "Locus Kimliği",
     "logCallStart": "Çağrı Başlangıç Saati",
     "logAction": "İstemci Günlükleri",
+    "callflowLogsAction": "Çağrı Günlükleri",
     "callflowAction": "Çağrı Akışı Grafikleri",
     "callAction": "Çağrı Bilgisi",
+    "callSummaryAction": "Çağrı Özeti",
     "errEmptyinput": "Arama girişi boş olamaz.",
     "errLogQuery": "Günlükler alınamadı. Durum: {{status}}",
     "inputPlaceholder": "Arama terimini girin (E-posta adresi, kullanıcı kimliği, Locus kimliği, vb.)",
@@ -357,7 +368,7 @@
     "overview": "Son 4 hafta",
     "activeUsers": "Etkin Kullanıcılar",
     "calls": "Yapılan Çağrılar",
-    "updated": "Son Güncellenme Tarihi",
+    "updated": "Son senkronizasyon",
     "conversations": "Oluşturulan Odalar",
     "contentShared": "Paylaşılan Dosyalar",
     "activity": "Şu Tarihten İtibaren Etkinlik:",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "kayıtlı lisanssız kullanıcılar",
     "unlicensedText": "Lisanssız Kullanıcılar",
     "convertText": "Ücretsiz sürümü kullanmakta olan kullanıcıları görüntüle ve dönüştür",
-    "lastUpdated": "Son Güncellenme Tarihi"
+    "lastUpdated": "Son senkronizasyon"
   },
   "inviteModal": {
     "title": "Hizmet Yetkilendirmesi",
@@ -443,7 +454,7 @@
     "siteCodeDescription": "Belirli bir siteyi tanımlamak için benzersiz bir numara belirtin.",
     "internalExtensionRange": "Dahili Numara Aralığı",
     "internalNumberRangeDescription": "Dahili numara aralığı belirtin. Uzunluk 4 basamak olmalıdır.",
-    "extensionError": "Dahili numara geçerli değil:",
+    "extensionError": "Dahili numara geçerli değil: ",
     "to": "-",
     "addMoreExtensionRanges": "Daha Fazla Dahili Numara Aralığı Ekle",
     "globalMOH": "Genel Bekletilen Ortam (MOH)",
@@ -451,9 +462,13 @@
     "ciscoDefault": "Cisco Varsayılanı",
     "fall": "Sonbahar",
     "winter": "Kış",
-    "addSuccess": " başarıyla eklendi.",
     "emptyNumber": "Numara boş olamaz",
-    "notANumber": " geçerli bir numara değil"
+    "notANumber": " geçerli bir numara değil",
+    "saveSuccess": "Unified Communications kurulumu başarıyla kaydedildi",
+    "siteError": "Site oluşturulamadı.",
+    "extensionDeleteSuccess": "{{extension}} uzantısı başarıyla silindi.",
+    "extensionDeleteError": "{{extension}} uzantısı silinemedi.",
+    "extensionAddError": "{{extension}} uzantısı oluşturulamadı."
   },
   "dirsyncModal": {
     "chooseSync": "Senkronizasyon Seçin",
@@ -589,13 +604,16 @@
     "advancedSub": "Kullanıcıları Active Directory'den senkronize et",
     "needHelp": "Yardıma mı ihtiyacınız var?",
     "planReview": "Plan İncelemesi",
+    "messaging": "Mesajlaşma",
+    "conferencing": "Konferans",
+    "communications": "İletişim",
     "enterpriseSettings": "Kurumsal Ayarlar",
     "planReviewSub": "İşbirliği planınıza genel bakış",
     "enterpriseSettingsSub": "Genel yapılandırmalar ayarla",
     "planReviewDesc": "Bu kurulum sihirbazı, kuruluşunuz için işbirliği hizmetlerini hızla çalışır duruma getirmenizi sağlayacak. Belirli bir adımda ne yapacağınızdan emin olamazsanız endişelenmeyin, daha sonra istediğiniz zaman değişiklik yapabilirsiniz.",
     "accountReview": "Hesap İncelemesi",
-    "serviceSetup": "Hizmet Kurulumu",
-    "serviceSetupSub": "Birleşik iletişimi ayarla",
+    "serviceSetup": "İletişim",
+    "serviceSetupSub": "Telefonla ilgili ayarlar",
     "unifiedCommunication": "Birleşik İletişim",
     "addUsers": "Kullanıcı Ekle",
     "addUsersSimple": "Kullanıcı Ekle | Basit",
@@ -635,7 +653,13 @@
     "finishDesc": "Kurulum sihirbazını tamamladınız. Adımları atladıysanız veya ayarlardan herhangi birini değiştirmeniz gerekiyorsa, sağ üst köşedeki dişli simgesine tıklayarak bu panele yeniden erişin.",
     "finish": "Son",
     "finishSub": "Kurulumunuzu tamamlayın",
-    "completeRequired": "{{name}} doldurulmalıdır."
+    "completeRequired": "{{name}} doldurulmalıdır.",
+    "freeColumnHeader": "Ücretsiz Sınırsız Genel Mesajlaşma",
+    "paidColumnHeader": "Satın Alınan Yönetilen Mesajlaşma",
+    "quantity": "Mkt:",
+    "trial": "Deneme {{number}}",
+    "startYourTrial": "Yeni {{days}} günlük denemenizi başlatın.",
+    "trialDaysRemaining": "Geçerli deneme sürümünde {{days}} gün kaldı."
   },
   "reports": {
     "title": "Raporlar",
@@ -651,8 +675,8 @@
     "highQuality": "En yüksek kaliteli 5",
     "leastQuality": "En düşük kaliteli 5",
     "services": "Tüm hizmetler",
-    "UsersOnboarded": "Eklenen kullanıcılar",
-    "AvgCallsPerUser": "Kullanıcı başına Ort. Çağrı",
+    "UsersOnboarded": "Bu Ay Eklenen Kullanıcılar",
+    "AvgCallsPerUser": "Bu Ay Kullanıcı Başına Ort. Oda",
     "AvgRoomsPerUser": "Bu Ay için Kullanıcı başına Ort. Oda",
     "ActiveUsers": "Bu Ay için Ort. Etkin Kullanıcı",
     "OneOnOneRooms": "Bu Ay için 1:1 Odaları",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "Grup Odası Sayısı (Toplam)",
     "videoCallsAxis": "Video Çağrısı Sayısı (Toplam)",
     "avgCallsAxis": "Dakika cinsinden Çağrı Süresi (Ort.)",
+    "numberUsersAxis": "Kullanıcı Sayısı (Toplam)",
+    "numberCallsAxis": "Çağrı Sayısı (Toplam)",
     "filesSharedAxis": "Paylaşılan Dosya Sayısı (Toplam)",
     "gbSharedAxis": "Paylaşılan Gigabayt Sayısı (Toplam)",
     "orgDsc": "Bir kuruluştaki toplam kullanıcı sayısı.",
     "onboardDsc": "Spark'ta oturum açan veya Spark için yetki sahibi olan toplam kullanıcı sayısı.",
-    "activeDsc": "Son bir hafta içinde mesaj gönderen/okuyan veya bir oda oluşturan/bir odaya giren toplam kullanıcı sayısı."
+    "activeDsc": "Son bir hafta içinde mesaj gönderen/okuyan veya bir oda oluşturan/bir odaya giren toplam kullanıcı sayısı.",
+    "allCustomers": "Tüm Müşteriler"
   },
   "callRouting": {
     "title": "Çağrı Yönlendirme",
@@ -722,11 +749,14 @@
     "directNumbers": "Dizin Numaraları",
     "internalNumberLabel": "Aşağıda listelenen numaraları veya dahili numaraları arayarak bu hatta ulaşın.",
     "internalNumberExtension": "Dahili Numara",
-    "internalNumberExtensionTooltip": "Aynı sitedeki şirketten bu hatta ulaşmak için dahili numarayı kullanın.",
+    "internalNumberExtensionTooltip": "Bu hatta aynı sitede şirket içinden ulaşmak için dahili numarayı kullanın.",
+    "internalNumberPoolError": "Dahili numaralar yüklenemedi.",
     "enterpriseSiteNumberLabel": "Şirketiniz siteden siteye arama kullanıyorsa:",
-    "externalNumberLabel": "Harici Numara",
-    "externalNumberTooltip": "Şirketin dışından bu hatta ulaşmak için harici numarayı kullanın.",
+    "externalNumberLabel": "Doğrudan Hat",
+    "externalNumberTooltip": "Bu hatta şirketin dışından ulaşmak için doğrudan hattı kullanın.",
+    "externalNumberPoolError": "Doğrudan hatlar yüklenemedi.",
     "chooseNumber": "Numara Seçin",
+    "searchNumber": "Numara ara...",
     "addNewNumber": "Yeni Numara Ekle",
     "removeNumber": "Hattı Kaldır",
     "none": "Hiçbiri",
@@ -736,7 +766,8 @@
     "alert": "Uyarı",
     "userError": "{{user}} kullanıcısı doğru şekilde sağlanmadı.",
     "maxLines": "{{user}} kullanıcısı, maksimum hat sayısını aştı. Ek hatlar sağlamadan önce lütfen bir hattı bu kullanıcıdan kaldırın.",
-    "confirm": "Sayfa üzerinde kaydedilmemiş değişiklikler var. Devam etmek isityor musunuz?"
+    "confirm": "Sayfa üzerinde kaydedilmemiş değişiklikler var. Devam etmek isityor musunuz?",
+    "unassignedNumberError": "Atanmamış numara alınamadı."
   },
   "callForwardPanel": {
     "title": "Çağrı İletme",
@@ -824,7 +855,7 @@
     "entitlementsTitle": "Eklenen Kullanıcılar",
     "activeUsersTitle": "Günlük Etkin Kullanıcılar",
     "averageCallsTitle": "Kullanıcı Başına Ortalama Çağrı",
-    "contentSharedTitle": "Paylaşılan Toplam İçerik"
+    "contentSharedTitle": "Paylaşılan Dosyalar"
   },
   "trialModal": {
     "trialSuccess": "Deneme sürümünüzü başarıyla kurdunuz.",
@@ -839,8 +870,8 @@
     "editSuccess": "{{customerName}} için {{licenseDuration}} gün süreyle {{licenseCount}} lisansa yönelik deneme sürümünü başarıyla düzenlediniz."
   },
   "trials": {
-    "collab": "Standart ekip odaları + 25 taraflı toplantılar",
-    "squaredUC": "Gelişmiş İletişim"
+    "collab": "Standart Ekip Odaları + 25 Taraflı Toplantılar",
+    "squaredUC": "Gelişmiş Spark Çağrısı"
   },
   "status": {
     "noResults": "Sonuç yok.",
@@ -896,31 +927,23 @@
     "none": "Hiçbiri"
   },
   "didAddModal": {
-    "title": "Telefon Numaraları Ekle",
-    "instructionsText": "Ayarladığınız Şirketin size mevcut Telefon Numaralarını sağlaması gerekiyor. Bu, şirket telefon numaralarının taşınma isteğini başlatacaktır.",
-    "processingText": "Telefon Numaraları Ekleniyor...",
-    "successText": "{{count}} yeni telefon numarası başarıyla eklendi.",
-    "failText": "{{count}} telefon numarası zaten sistemde var.",
-    "sendEmail": "Müşteriye Bildir",
-    "notifyCustLater": "Müşteriyi Daha Sonra Bilgilendir",
-    "emailSuccessText": "E-posta müşteriye başarıyla gönderildi.",
-    "emailFailText": "E-posta gönderilirken hata oluştu",
-    "inputPlacehoder": "Telefon numaralarını virgülle ayırarak girin"
+    "title": "Telefon Numaraları Ekle (İsteğe Bağlı)"
   },
   "didManageModal": {
     "title": "Telefon Numaralarını Yönet",
-    "instructionsText": "Ayarladığınız Şirketin size mevcut Telefon Numaralarını sağlaması gerekiyor. Bu, şirket telefon numaralarının taşınma isteğini başlatacaktır.",
-    "processingText": "Telefon Numaraları Ekleniyor...",
+    "instructionsText": "Ayarladığınız şirketin size mevcut telefon numaralarını sağlaması gerekiyor. Bu, şirketin telefon numaralarının taşınma isteğini başlatacaktır.",
+    "processingText": "Telefon Numaraları İşleniyor...",
     "newDidText": "{{count}} yeni telefon numarası başarıyla eklendi.",
     "existingDidText": "{{count}} telefon numarası zaten sistemde var.",
     "deleteDidText": "{{count}} telefon numarası silindi.",
-    "deleteConfirmationText": "Aşağıdaki {{count}} numarayı silmek istediğinizden emin misiniz? Bu işlem, bu numaralar kullanıcının hatlarına atanırsa son kullanıcıları etkileyebilir.",
+    "deleteConfirmationText": "Aşağıdaki {{count}} numarayı silmek istediğinizden emin misiniz?  Bu, numalar kullanıcının hatlarına atanırsa son kullanıcıları etkileyebilir.",
     "removeNumbers": "Numaraları Kaldır",
     "sendEmail": "Müşteriye Bildir",
     "notifyCustLater": "Müşteriyi Daha Sonra Bilgilendir",
     "emailSuccessText": "E-posta müşteriye başarıyla gönderildi.",
     "emailFailText": "E-posta gönderilirken hata oluştu",
-    "inputPlacehoder": "Telefon numaralarını virgülle ayırarak girin"
+    "inputPlacehoder": "Telefon numaralarını virgülle ayırarak girin",
+    "didFormatHelpText": "Örnek formatlar şunlardır: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Cihaz Yapılandırması",
@@ -1032,8 +1055,8 @@
     "deleteResource": "Kaynağı Kullanımdan Kaldır"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "Oturum etkinleştirme güncellendi",
-    "privilegesUpdateSuccess": "Ayrıcalıklar güncellendi",
+    "sessionEnablementUpdateSuccess": "Oturum türü etkinleştirmesi güncellendi.",
+    "privilegesUpdateSuccess": "Ayrıcalıklar güncellendi.",
     "reload": "Tekrar Dene",
     "cancel": "Geri Git"
   },
@@ -1128,12 +1151,13 @@
     "039007": "E-posta adresiniz sitemiz tarafından kabul edilmiyor.",
     "039008": "039008",
     "039009": "039009",
-    "200006": "Bu siteye henüz yönetici olarak sağlanmadınız. Bu işlem biraz zaman alabilir.",
+    "110055": "\"{{sessionTypeName}}\" oturum türü için kullanıcı sınırı aşıldı.",
     "defaultProcessError": "İstek işlenemiyor.",
-    "defaultAccessError": "Şu anda sunucuya erişilemiyor"
+    "defaultAccessError": "Sunucuya şu anda erişilemiyor.",
+    "defaultNotWebExAdminError": "Bu siteye henüz yönetici olarak sağlanmadınız. Bu işlem biraz zaman alabilir."
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "Oturum Etkinleştirme",
+    "sessionEnablementLabel": "Oturum Türü Etkinleştirmesi",
     "handsOnLabAdminLabel": "Kendiliğinden Lab Yöneticisi (yalnızca kendiliğinden lab etkin olduğunda etkilidir)",
     "optimizeBandwidthUsageLabel": "Aynı ağdaki dinleyiciler için optimize bant genişliği kullanımı",
     "videoSettingsLabel": "Video Ayarları",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "Geri arama telekonferansı",
     "globalCallBackTeleconfLabel": "Küresel geri arama telekonferansı",
     "integratedVoIPLaabel": "Entegre VoIP",
+    "priviligesLable": "Ayrıcalıklar",
     "userPriviligesLabel": "Kullanıcı Ayrıcalıkları",
     "advancedLinkLabel": "Gelişmiş Ayarlar"
   },
@@ -1158,7 +1183,7 @@
     "messagingSubtitle": "Standart Ekip Odaları",
     "messagingDesc": "İçerik depolama alanına sahip Ekip Odaları, herhangi bir cihazdan kuruluşunuz dahilindeki veya dışındaki herhangi bir kullanıcıyla kolayca işbirliği yapmanıza olanak tanır.",
     "communicationTitle": "İletişim",
-    "communicationSubtitle": "Gelişmiş Unified",
+    "communicationSubtitle": "Gelişmiş Spark Çağrısı",
     "communicationDesc": "Temel harici çağrı ve tam Unified Communications kuruluşunuz için etkinleştirilmiştir.",
     "conferencingTitle": "Konferans",
     "conferencingSubtitle": "Meeting Center",
@@ -1207,6 +1232,12 @@
     "average": "Ortalama",
     "bridgeUtilization": "Köprü Bazlı Kullanım"
   },
+  "alarmsPage": {
+    "alarms": "Alarmlar"
+  },
+  "eventsPage": {
+    "events": "Etkinlikler"
+  },
   "processOrderPage": {
     "errOrgCreation": "Sipariş # {{orderId}} işleniyor. Lütfen 24 saat sonra kontrol edin.",
     "info": "Durum",
@@ -1240,5 +1271,14 @@
     "licenseCount": "Lisans Sayısı",
     "type": "Tür",
     "launchSite": "Site Yöneticisini Başlat"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "Bulut Uzantıları",
+    "calendar": "Takvim",
+    "on": "Açık",
+    "off": "Kapalı",
+    "calendarService": "Takvim Hizmeti",
+    "sparkDesc": "@spark\'ın toplantı davetinize dahil edilmesi, otomatik olarak bir Spark Odası oluşturur.",
+    "webexDesc": "@webex\'in toplantı davetine dahil edilmesi, WebEx toplantısı oluşturur ve bilgileri davete ekler."
   }
 }

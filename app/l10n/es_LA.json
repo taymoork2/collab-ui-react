@@ -23,7 +23,8 @@
     "statusHeader": "ESTADO/HERRAMIENTAS",
     "modify": "Modificar",
     "existingUsers": "Usuarios existentes",
-    "userInput": "Introduzca una o más direcciones de correo electrónico separadas por coma.",
+    "userInput": "Introduzca las direcciones de correo electrónico separadas por comas.",
+    "userInputDescription": "Por ejemplo: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "active": "Activo",
     "inactive": "",
     "validEmailInput": "Introduzca correos electrónicos de usuarios válidos.",
@@ -51,7 +52,10 @@
     "deleteUserError": "Error al eliminar el usuario. Estado: {{status}}",
     "onboardSuccess": "{{email}} incorporado correctamente",
     "onboardError": "{{email}} no incorporado. Estado: {{status}}",
-    "ciscoucError": "{{email}} no aprovisionó Unified Communications."
+    "ciscoucError": "{{email}} no aprovisionó Unified Communications.",
+    "statusError": "Error en la solicitud con estado: {{status}}.",
+    "messageError": "Mensaje: {{message}}",
+    "userListError": "Error al recuperar la lista de usuarios. Intente recargando la página."
   },
   "groupsPage": {
     "manageGroups": "Grupos",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "Incorporar usuarios",
     "cancel": "Cancelar",
+    "clear": "Borrar",
     "addUsersDesc": "Introduzca las direcciones de correo electrónico de las personas de su empresa que recibirán servicios de colaboración. Estas recibirán una invitación por correo electrónico para inscribirse.",
     "addUserText": "¿A quiénes le gustaría agregar?",
     "userInput": "Introducir direcciones de correo electrónico o remitentes de grupo separados por comas...",
@@ -85,17 +90,18 @@
     "addEntitleError": "privilegio insuficiente para agregar o autorizar a un usuario.",
     "freeMsg": "Mensajes Spark gratuitos",
     "freeConf": "Reunión Spark gratuita de 3 integrantes",
-    "freeComm": "Videollamadas y voz IP dentro de la red gratuitas",
+    "freeComm": "Llamada personal de Spark",
     "paidMsg": "Salas de equipo estándar",
-    "paidConf": "Reuniones de 25 personas",
-    "paidComm": "Comunicación avanzada",
+    "paidConf": "Reuniones de 25 partes",
+    "paidComm": "Llamada avanzada de Spark",
     "freeSpark": "Mensajes Spark gratuitos",
     "enterpriseEdition": "Enterprise Edition",
-    "meetingCenter": "Meeting Center",
-    "supportCenter": "Support Center",
-    "trainingCenter": "Training Center",
-    "eventCenter": "Event Center",
-    "communication": "Comunicación"
+    "meetingCenter": "Meeting Center {{capacity}}",
+    "supportCenter": "Support Center {{capacity}}",
+    "trainingCenter": "Training Center {{capacity}}",
+    "eventCenter": "Event Center {{capacity}}",
+    "communication": "Comunicación",
+    "cloudExtensions": "Extensiones de la nube"
   },
   "usersPreview": {
     "groupPreview": "Grupo:",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "Utilización de recursos empresariales",
     "servicesTab": "Servicios",
     "conferencing": "Conferencias",
-    "conferencingDesc": "Lista de los administradores del sitio"
+    "conferencingDesc": "Lista de los administradores del sitio",
+    "alarmsTab": "Alarmas",
+    "alarmsTabDesc": "Administración de alarmas",
+    "eventsTab": "Eventos",
+    "eventsTabDesc": "Administración de eventos"
   },
   "index": {
     "welcome": "¡Bienvenido!",
@@ -231,13 +241,13 @@
     "leastEngaged": "5 menos involucrados",
     "highQuality": "5 de la calidad más alta",
     "leastQuality": "5 de la calidad más baja",
-    "customerLoadError": "Se produjo un error al cargar la lista de clientes.",
-    "userLoadError": "Se produjo un error al cargar los usuarios para el cliente seleccionado."
+    "customerLoadError": "Se produjo un error al cargar la lista de clientes."
   },
   "activeUsers": {
     "active": "Activo",
     "activeUsers": "Usuarios activos",
-    "activeUserError": "Se produjo un error al cargar los datos de los usuarios activos.",
+    "activeUserGraphError": "Se produjo un error al cargar los datos de los usuarios activos.",
+    "activeUserTableError": "Se produjo un error al cargar los datos de los usuarios más activos para {{customer}}.",
     "calls": "Llamadas",
     "customer": "Cliente",
     "hideActiveUsers": "Ocultar los usuarios más activos",
@@ -276,12 +286,13 @@
     "searching": "Buscando...",
     "userLogs": "Registros del usuario",
     "logEmailAddress": "Dirección de correo electrónico",
-    "logDate": "Hora de la carga",
     "logLocusId": "ID de lugar",
     "logCallStart": "Hora de inicio de la llamada",
     "logAction": "Registros del cliente",
+    "callflowLogsAction": "Registros de llamadas",
     "callflowAction": "Gráficos de flujo de llamada",
     "callAction": "Información de llamada",
+    "callSummaryAction": "Resumen de llamadas",
     "errEmptyinput": "La entrada de búsqueda no puede estar vacía.",
     "errLogQuery": "Error al recuperar los registros. Estado: {{status}}",
     "inputPlaceholder": "Introducir término de búsqueda (dirección de correo electrónico, ID de usuario, ID de lugar, etc.)",
@@ -357,7 +368,7 @@
     "overview": "Últimas 4 semanas",
     "activeUsers": "Usuarios activos",
     "calls": "Llamadas realizadas",
-    "updated": "Última actualización",
+    "updated": "Última sincronización",
     "conversations": "Salas creadas",
     "contentShared": "Archivos compartidos",
     "activity": "Actividad desde",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "usuarios sin licencia inscriptos en",
     "unlicensedText": "Usuarios sin licencia",
     "convertText": "Vea y convierta a los usuario que actualmente usan la versión gratuita.",
-    "lastUpdated": "Última actualización"
+    "lastUpdated": "Última sincronización"
   },
   "inviteModal": {
     "title": "Autorización de servicio",
@@ -443,7 +454,7 @@
     "siteCodeDescription": "Especifique un número único para identificar un sitio específico.",
     "internalExtensionRange": "Intervalo de extensiones internas",
     "internalNumberRangeDescription": "Especifique el intervalo de números internos. Debe tener 4 dígitos.",
-    "extensionError": "Extensión no válida:",
+    "extensionError": "Extensión no válida: ",
     "to": "para",
     "addMoreExtensionRanges": "Agregar más intervalos de extensión",
     "globalMOH": "Medios globales en espera (Media On Hold, MOH)",
@@ -451,9 +462,13 @@
     "ciscoDefault": "Predeterminado de Cisco",
     "fall": "Otoño",
     "winter": "Invierno",
-    "addSuccess": " agregado correctamente.",
     "emptyNumber": "El número no puede estar vacío",
-    "notANumber": " no es un número válido"
+    "notANumber": " no es un número válido",
+    "saveSuccess": "La configuración de Unified Communications se guardó correctamente",
+    "siteError": "No se pudo crear el sitio.",
+    "extensionDeleteSuccess": "La extensión se eliminó correctamente {{extension}}.",
+    "extensionDeleteError": "No se pudo eliminar la extensión {{extension}}.",
+    "extensionAddError": "No se pudo crear la extensión {{extension}}."
   },
   "dirsyncModal": {
     "chooseSync": "Seleccionar sincronización",
@@ -589,13 +604,16 @@
     "advancedSub": "Sincronizar usuarios de Active Directory",
     "needHelp": "¿Necesita ayuda?",
     "planReview": "Revisión del plan",
+    "messaging": "Mensajería",
+    "conferencing": "Conferencias",
+    "communications": "Comunicación",
     "enterpriseSettings": "Configuración de la empresa",
     "planReviewSub": "Descripción general de su plan de colaboración",
     "enterpriseSettingsSub": "Configurar configuraciones globales",
     "planReviewDesc": "Este asistente de configuración le permitirá poner rápidamente en funcionamiento los servicios de colaboración para su organización. Si no está seguro de qué hacer en un paso dado, no se preocupe, siempre puede implementar cambios más tarde.",
     "accountReview": "Revisión de la cuenta",
-    "serviceSetup": "Configuración del servicio",
-    "serviceSetupSub": "Configurar comunicaciones unificadas",
+    "serviceSetup": "Comunicación",
+    "serviceSetupSub": "Configuración relacionada con el teléfono",
     "unifiedCommunication": "Unified Communications",
     "addUsers": "Agregar usuarios",
     "addUsersSimple": "Agregar usuarios | Simple",
@@ -635,7 +653,13 @@
     "finishDesc": "Completó el asistente de configuración. Si salteó pasos o necesita cambiar la configuración, haga clic en el ícono del engranaje en la esquina superior derecha de la página para obtener acceso a este panel nuevamente.",
     "finish": "Finalizar",
     "finishSub": "Completar la configuración",
-    "completeRequired": "{{name}} debe estar completo."
+    "completeRequired": "{{name}} debe estar completo.",
+    "freeColumnHeader": "Mensajería pública ilimitada gratuita",
+    "paidColumnHeader": "Mensajería administrada adquirida",
+    "quantity": "Cant.:",
+    "trial": "Prueba {{number}}",
+    "startYourTrial": "Inicie su nueva prueba de {{days}}.",
+    "trialDaysRemaining": "{{days}} Días restantes de la prueba actual."
   },
   "reports": {
     "title": "Informes",
@@ -651,8 +675,8 @@
     "highQuality": "5 de la mayor calidad",
     "leastQuality": "5 de la menor calidad",
     "services": "Todos los servicios",
-    "UsersOnboarded": "Usuarios incorporados",
-    "AvgCallsPerUser": "Llamadas promedio por usuario",
+    "UsersOnboarded": "Usuarios incorporados este mes",
+    "AvgCallsPerUser": "Llamadas promedio por usuario este mes",
     "AvgRoomsPerUser": "Salas promedio por usuario este mes",
     "ActiveUsers": "Usuarios activos promedio este mes",
     "OneOnOneRooms": "Salas de uno a uno este mes",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "Cantidad de salas grupales (total)",
     "videoCallsAxis": "Cantidad de videollamadas (Total)",
     "avgCallsAxis": "Duración de llamadas en minutos (promedio)",
+    "numberUsersAxis": "Cantidad de usuarios (Total)",
+    "numberCallsAxis": "Cantidad de llamadas (Total)",
     "filesSharedAxis": "Cantidad de archivos compartidos (Total)",
     "gbSharedAxis": "Cantidad de Gigabytes compartidos (Total)",
     "orgDsc": "Cantidad total de usuarios en una organización.",
     "onboardDsc": "La cantidad total de usuarios que se han conectado o accedido a Spark.",
-    "activeDsc": "Cantidad total de usuarios que han enviado/leído un mensaje o creado/entrado a una sala la semana pasada."
+    "activeDsc": "Cantidad total de usuarios que han enviado/leído un mensaje o creado/entrado a una sala la semana pasada.",
+    "allCustomers": "Todos los clientes"
   },
   "callRouting": {
     "title": "Enrutamiento de llamada",
@@ -721,12 +748,15 @@
     "error": "Error de configuración de la línea.",
     "directNumbers": "Números del directorio",
     "internalNumberLabel": "Para alcanzar esta línea, marque los números o las extensiones detallados a continuación.",
-    "internalNumberExtension": "Extensión de número interna",
-    "internalNumberExtensionTooltip": "Use el número interno para alcanzar esta línea desde la empresa en el mismo sitio.",
+    "internalNumberExtension": "Extensión interna",
+    "internalNumberExtensionTooltip": "Utilice la extensión interna para comunicarse con esta línea desde el interior de la empresa en el mismo sitio.",
+    "internalNumberPoolError": "No se pudieron cargar las extensiones internas.",
     "enterpriseSiteNumberLabel": "Si su empresa usa marcado de un sitio a otro:",
-    "externalNumberLabel": "Número externo",
-    "externalNumberTooltip": "Use el número externo para alcanzar esta línea desde fuera de la empresa.",
+    "externalNumberLabel": "Línea directa",
+    "externalNumberTooltip": "Utilice la línea directa para comunicarse con esta línea desde el exterior de la empresa.",
+    "externalNumberPoolError": "No se pudieron cargar las líneas directas.",
     "chooseNumber": "Seleccionar un número",
+    "searchNumber": "Buscar un número...",
     "addNewNumber": "Agregar un nuevo número",
     "removeNumber": "Eliminar línea",
     "none": "Ninguno",
@@ -736,7 +766,8 @@
     "alert": "Advertencia",
     "userError": "No se suministró el usuario {{user}} correctamente.",
     "maxLines": "{{user}} ha excedido la cantidad máxima de líneas. Elimine una línea de este usuario antes de suministrar má líneas.",
-    "confirm": "No se han guardado todos los cambios en la página. ¿Desea continuar?"
+    "confirm": "No se han guardado todos los cambios en la página. ¿Desea continuar?",
+    "unassignedNumberError": "No se pudo recuperar el número no asignado."
   },
   "callForwardPanel": {
     "title": "Reenvío de llamada",
@@ -824,7 +855,7 @@
     "entitlementsTitle": "Usuarios incorporados",
     "activeUsersTitle": "Usuarios diariamente activos",
     "averageCallsTitle": "Llamadas promedio por usuario",
-    "contentSharedTitle": "Contenido compartido total"
+    "contentSharedTitle": "Archivos compartidos"
   },
   "trialModal": {
     "trialSuccess": "Configuró la prueba correctamente.",
@@ -839,8 +870,8 @@
     "editSuccess": "Editó correctamente una prueba para {{customerName}} con {{licenseCount}} licencias para {{licenseDuration}} días."
   },
   "trials": {
-    "collab": "Salas de equipo estándar + salas de 25 personas",
-    "squaredUC": "Comunicación avanzada"
+    "collab": "Salas de equipos estándares y reuniones de 25 partes",
+    "squaredUC": "Llamada avanzada de Spark"
   },
   "status": {
     "noResults": "No hay resultados disponibles.",
@@ -896,31 +927,23 @@
     "none": "Ninguno"
   },
   "didAddModal": {
-    "title": "Agregar números de teléfono",
-    "instructionsText": "La empresa que usted está configurando debe proporcionarle sus números de teléfono existentes. Esto iniciará la solicitud de puerto de los números de teléfono de la empresa.",
-    "processingText": "Agregando números de teléfono...",
-    "successText": "Se agregaron correctamente {{count}} números de teléfono nuevos.",
-    "failText": "En el sistema ya hay {{count}} números de teléfono.",
-    "sendEmail": "Notificar cliente",
-    "notifyCustLater": "Notificar al cliente más tarde",
-    "emailSuccessText": "Se envió correctamente al cliente por correo electrónico.",
-    "emailFailText": "Error al enviar el correo electrónico",
-    "inputPlacehoder": "Introducir números de teléfono separados por comas"
+    "title": "Agregar números de teléfono (Opcional)"
   },
   "didManageModal": {
     "title": "Administrar números de teléfono",
-    "instructionsText": "La empresa que usted está configurando debe proporcionarle sus números de teléfono existentes. Esto iniciará la solicitud de puerto de los números de teléfono de la empresa.",
-    "processingText": "Agregando números de teléfono...",
+    "instructionsText": "La empresa que está configurando debe proporcionarle los números de teléfono existentes. Esto iniciará la solicitud de asignación de puertos de los números de teléfono de la empresa.",
+    "processingText": "Procesando números de teléfono...",
     "newDidText": "Se agregaron correctamente {{count}} números de teléfono nuevos.",
     "existingDidText": "En el sistema ya hay {{count}} números de teléfono.",
     "deleteDidText": "{{count}} número(s) de teléfono se eliminaron.",
-    "deleteConfirmationText": "¿Está seguro de que desea eliminar {{count}} número(s)? Puede afectar a los usuarios finales si dichos números están asignados a las líneas de los usuarios.",
+    "deleteConfirmationText": "¿Está seguro de que desea eliminar los siguientes números {{count}}?  Esto puede impactar en los usuarios finales si estos números están asignados a líneas de usuarios.",
     "removeNumbers": "Eliminar números",
     "sendEmail": "Notificar cliente",
     "notifyCustLater": "Notificar al cliente más tarde",
     "emailSuccessText": "Se envió correctamente al cliente por correo electrónico.",
     "emailFailText": "Error al enviar el correo electrónico",
-    "inputPlacehoder": "Introducir números de teléfono separados por comas"
+    "inputPlacehoder": "Introducir números de teléfono separados por comas",
+    "didFormatHelpText": "Entre los formatos de ejemplo se incluyen: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Configuración del dispositivo",
@@ -1032,8 +1055,8 @@
     "deleteResource": "Decomisar recurso"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "Activación de la sesión actualizada",
-    "privilegesUpdateSuccess": "Privilegios actualizados",
+    "sessionEnablementUpdateSuccess": "Se actualizó la autorización de tipo de sesión.",
+    "privilegesUpdateSuccess": "Se actualizaron los privilegios.",
     "reload": "Reintentar",
     "cancel": "Volver atrás"
   },
@@ -1128,12 +1151,13 @@
     "039007": "Nuestro sitio no acepta su dirección de correo electrónico.",
     "039008": "039008",
     "039009": "039009",
-    "200006": "Usted aún no fue aprovisionado a este sitio como administrador. Este proceso puede tomar un momento.",
+    "110055": "Se excedió el límite de usuarios para el tipo de sesión \"{{sessionTypeName}}\".",
     "defaultProcessError": "No es posible procesar la solicitud.",
-    "defaultAccessError": "No es posible acceder al servidor en este momento."
+    "defaultAccessError": "No se puede acceder al servidor en este momento.",
+    "defaultNotWebExAdminError": "Usted aún no fue aprovisionado a este sitio como administrador. Este proceso puede tomar un momento."
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "Activación de la sesión",
+    "sessionEnablementLabel": "Autorización de tipo de sesión",
     "handsOnLabAdminLabel": "Administración de laboratorios de prácticas (solo efectivas cuando el laboratorios de prácticas está habilitado)",
     "optimizeBandwidthUsageLabel": "Uso de ancho de banda optimizado para los asistentes dentro de la misma red",
     "videoSettingsLabel": "Configuración del vídeo",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "Teleconferencia con devolución de llamada",
     "globalCallBackTeleconfLabel": "Teleconferencia con devolución de llamada global",
     "integratedVoIPLaabel": "Voz sobre IP integrada",
+    "priviligesLable": "Privilegios",
     "userPriviligesLabel": "Privilegios de usuario",
     "advancedLinkLabel": "Configuración avanzada"
   },
@@ -1158,11 +1183,11 @@
     "messagingSubtitle": "Salas de equipo estándar",
     "messagingDesc": "Las salas grupales con contenido compartido le permiten colaborar fácilmente desde cualqueir dispositivo con cualquier otro usuario, ya sea de la organización o externo.",
     "communicationTitle": "Communication",
-    "communicationSubtitle": "Advanced Unified",
+    "communicationSubtitle": "Llamada avanzada de Spark",
     "communicationDesc": "Llamadas externas básicas y Unified Communications completas habilitadas para su organización.",
     "conferencingTitle": "Conferencias",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Pueden entrar hasta 8 colegas en las Salas grupales sincronizadas y muchos más con WebEx Meeting Center "
+    "conferencingDesc": "Pueden entrar hasta 8 colegas en las Salas grupales sincronizadas y muchos más con WebEx Meeting Center"
   },
   "partnerProfile": {
     "link": "Perfil del socio",
@@ -1207,6 +1232,12 @@
     "average": "Promedio",
     "bridgeUtilization": "Utilización puente por puente"
   },
+  "alarmsPage": {
+    "alarms": "Alarmas"
+  },
+  "eventsPage": {
+    "events": "Eventos"
+  },
   "processOrderPage": {
     "errOrgCreation": "La orden # {{orderId}} se está procesando. Vuelva a consultar después de 24 horas.",
     "info": "Estado",
@@ -1240,5 +1271,14 @@
     "licenseCount": "Número de licencias",
     "type": "Tipo",
     "launchSite": "Iniciar administración del sitio"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "Extensiones de la nube",
+    "calendar": "Calendario",
+    "on": "Activado",
+    "off": "Desactivado",
+    "calendarService": "Servicio de calendario",
+    "sparkDesc": "Si incluye @spark en la invitación a la reunión se crea una sala de Spark automáticamente.",
+    "webexDesc": "Si incluye @webex en la invitación a la reunión se crea una reunión de WebEx y se adjunta la información a la invitación."
   }
 }

@@ -23,7 +23,8 @@
     "statusHeader": "STATUS/VERKTØY",
     "modify": "Endre",
     "existingUsers": "Eksisterende brukere",
-    "userInput": "Oppgi én eller flere e-postadresser atskilt med komma.",
+    "userInput": "Oppgi e-post-adresser eller gruppesendinger separert av komma.",
+    "userInputDescription": "For eksempel: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "active": "Aktiv",
     "inactive": "",
     "validEmailInput": "Skriv inn gyldig(e) e-post(er) for bruker(e).",
@@ -51,7 +52,10 @@
     "deleteUserError": "Feil under sletting av bruker. Status: {{status}}",
     "onboardSuccess": "{{email}} ble tatt ombord",
     "onboardError": "{{email}} ble ikke tatt ombord. Status: {{status}}",
-    "ciscoucError": "{{email}} klargjorde ikke Unified Communications."
+    "ciscoucError": "{{email}} klargjorde ikke Unified Communications.",
+    "statusError": "Forespørsel mislyktes med status: {{status}}.",
+    "messageError": "Melding: {{message}}",
+    "userListError": "Feil ved henting av brukerliste. Prøv å laste siden på nytt."
   },
   "groupsPage": {
     "manageGroups": "Grupper",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "Brukere ombord",
     "cancel": "Avbryt",
+    "clear": "Nullstill",
     "addUsersDesc": "Skriv inn e-postadressene til personene i din bedrift som skal motta samarbeidstjenester. De vil motta en e-postinvitasjon til å registrere seg.",
     "addUserText": "Hvem ønsker du å legge til?",
     "userInput": "Skriv inn e-postadresser eller gruppe-e-post adskilt med komma ...",
@@ -85,17 +90,18 @@
     "addEntitleError": "utilstrekkelig rettighet å legge til eller gi rettigheter til en bruker.",
     "freeMsg": "Gratis Spark-meldinger",
     "freeConf": "Gratis 3-parter Spark-møter",
-    "freeComm": "Gratis tale- og videosamtaler innenfor nettverket",
+    "freeComm": "Gratis 1:1 Spark-samtale",
     "paidMsg": "Standard teamrom",
-    "paidConf": "Møter for 25 deltakere",
-    "paidComm": "Avanserte kommunikasjoner",
+    "paidConf": "Møter med 25 deltakere",
+    "paidComm": "Avansert Spark-samtale",
     "freeSpark": "Gratis Spark-meldinger",
     "enterpriseEdition": "Bedriftsversjon",
-    "meetingCenter": "Møtesenter",
-    "supportCenter": "Støttesenter",
-    "trainingCenter": "Opplæringssenter",
-    "eventCenter": "Hendelsessenter",
-    "communication": "Kommunikasjon"
+    "meetingCenter": "Meldingssenter {{capacity}}",
+    "supportCenter": "Brukerstøttesenter {{capacity}}",
+    "trainingCenter": "Treningssenter {{capacity}}",
+    "eventCenter": "Hendelsessenter {{capacity}}",
+    "communication": "Kommunikasjon",
+    "cloudExtensions": "Sky-utvidelser"
   },
   "usersPreview": {
     "groupPreview": "Gruppe:",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "Ressursutnyttelse for bedrift",
     "servicesTab": "Tjenester",
     "conferencing": "Konferanser",
-    "conferencingDesc": "Liste over administratorer for nettstedet"
+    "conferencingDesc": "Liste over administratorer for nettstedet",
+    "alarmsTab": "Alarmer",
+    "alarmsTabDesc": "Alarm-forvaltning",
+    "eventsTab": "Hendelser",
+    "eventsTabDesc": "Hendelsesforvaltning"
   },
   "index": {
     "welcome": "Velkommen!",
@@ -231,13 +241,13 @@
     "leastEngaged": "5 minst engasjerte",
     "highQuality": "5 høyest kvalitet",
     "leastQuality": "5 lavest kvalitet",
-    "customerLoadError": "Det oppstod en feil under innlasting av kundelisten.",
-    "userLoadError": "Det oppstod en feil under innlasting av brukerene for den valgte kunden."
+    "customerLoadError": "Det oppstod en feil under innlasting av kundelisten."
   },
   "activeUsers": {
     "active": "Aktiv",
     "activeUsers": "Aktive brukere",
-    "activeUserError": "Det oppstod en feil under innlasting av aktive brukerdata.",
+    "activeUserGraphError": "Det oppstod en feil under innlasting av aktive brukerdata.",
+    "activeUserTableError": "Det oppsto en feil under lasting av data for mest aktive brukere for {{customer}}.",
     "calls": "Anrop",
     "customer": "Kunde",
     "hideActiveUsers": "Skjul mest aktive brukere",
@@ -276,12 +286,13 @@
     "searching": "Søker ...",
     "userLogs": "Brukerlogger",
     "logEmailAddress": "E-postadresse",
-    "logDate": "Opplastingstid",
     "logLocusId": "Locus-ID",
     "logCallStart": "Starttid anrop",
     "logAction": "Klientlogger",
+    "callflowLogsAction": "Samtalelogger",
     "callflowAction": "Callflow-diagrammer",
     "callAction": "Samtaleinfo",
+    "callSummaryAction": "Oppsummering samtaler",
     "errEmptyinput": "Søkefeltet kan ikke være tomt.",
     "errLogQuery": "Kunne ikke hente logger. Status: {{status}}",
     "inputPlaceholder": "Skriv inn søkeordet (e-postadresse, bruker-ID, locus-ID, osv.)",
@@ -357,7 +368,7 @@
     "overview": "Siste 4 ukene",
     "activeUsers": "Aktive brukere",
     "calls": "Samtaler utført",
-    "updated": "Sist oppdatert",
+    "updated": "Forrige synkronisering",
     "conversations": "Opprettede rom",
     "contentShared": "Delte filer",
     "activity": "Aktivitet siden",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "brukere uten lisens registrert på",
     "unlicensedText": "Brukere uten lisens",
     "convertText": "Vis og konverter brukere som for øyeblikket bruker gratisversjonen",
-    "lastUpdated": "Sist oppdatert"
+    "lastUpdated": "Forrige synkronisering"
   },
   "inviteModal": {
     "title": "Rettighet på tjeneste",
@@ -451,9 +462,13 @@
     "ciscoDefault": "Cisco-standard",
     "fall": "Høst",
     "winter": "Vinter",
-    "addSuccess": " lagt til.",
     "emptyNumber": "Nummer kan ikke være tomt",
-    "notANumber": " er ikke et gyldig nummer"
+    "notANumber": " er ikke et gyldig nummer",
+    "saveSuccess": "Integrerte kommunikasjonstjenester (UC) vellykket lagret",
+    "siteError": "Kunne ikke opprette nettsted.",
+    "extensionDeleteSuccess": "Vellykket sletting av internnummer {{extension}}.",
+    "extensionDeleteError": "Kunne ikke opprette internnummer {{extension}}.",
+    "extensionAddError": "Kunne ikke opprette internnummer {{extension}}."
   },
   "dirsyncModal": {
     "chooseSync": "Velg synkronisering",
@@ -589,13 +604,16 @@
     "advancedSub": "Synkroniser brukere fra Active Directory",
     "needHelp": "Trenger du hjelp?",
     "planReview": "Plangjennomgang",
+    "messaging": "Meldinger",
+    "conferencing": "Konferanser",
+    "communications": "Kommunikasjoner",
     "enterpriseSettings": "Bedriftsinnstillinger",
     "planReviewSub": "Oversikt over din samarbeidsplan",
     "enterpriseSettingsSub": "Angi globale konfigurasjoner",
     "planReviewDesc": "Denne installasjonsveiviseren gjør at samarbeidstjenestene for din organisasjon raskt vil være oppe og gå. Hvis du er usikker på hva du skal gjøre på visse trinn, trenger du ikke bekymre deg – du kan alltid gjøre endringer senere.",
     "accountReview": "Gjennomgang av konto",
-    "serviceSetup": "Oppsett av tjeneste",
-    "serviceSetupSub": "Sett opp samordnet kommunikasjon",
+    "serviceSetup": "Kommunikasjon",
+    "serviceSetupSub": "Telefonrelaterte innstillinger",
     "unifiedCommunication": "Samordnet kommunikasjon",
     "addUsers": "Legg til brukere",
     "addUsersSimple": "Legg til brukere | Enkelt",
@@ -635,7 +653,13 @@
     "finishDesc": "Du har fullført konfigurasjonsveiviseren. Hvis du har hoppet over trinn eller trenger å endre noen av innstillingene, klikk på tannhjulikonet øverst i høyre hjørne på siden for å få tilgang til dette panelet igjen.",
     "finish": "Fullfør",
     "finishSub": "Fullfør oppsettet ditt",
-    "completeRequired": "{{name}} må fylles ut."
+    "completeRequired": "{{name}} må fylles ut.",
+    "freeColumnHeader": "Ubegrenset gratis offentlig meldingsformidling",
+    "paidColumnHeader": "Innkjøpt administrert meldingsformidling",
+    "quantity": "Ant.:",
+    "trial": "Forsøk {{number}}",
+    "startYourTrial": "Start din nye {{days}}-dagers utprøving.",
+    "trialDaysRemaining": "{{days}} gjenværende dager i nåværende utprøving."
   },
   "reports": {
     "title": "Rapporter",
@@ -651,8 +675,8 @@
     "highQuality": "5 høyest kvalitet",
     "leastQuality": "5 lavest kvalitet",
     "services": "Alle tjenester",
-    "UsersOnboarded": "Brukere som er ombord",
-    "AvgCallsPerUser": "Gj.snitt samtaler per bruker",
+    "UsersOnboarded": "Nye brukere denne måneden",
+    "AvgCallsPerUser": "Gj.snitt samtaler per bruker denne måneden",
     "AvgRoomsPerUser": "Gj.snitt rom per bruker denne måneden",
     "ActiveUsers": "Gj.snitt aktive brukere denne måneden",
     "OneOnOneRooms": "1:1 Rom denne måneden",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "Antall grupperom (totalt)",
     "videoCallsAxis": "Antall videosamtaler (totalt)",
     "avgCallsAxis": "Samtalevarighet i minutter (gj.snitt)",
+    "numberUsersAxis": "Antall brukere (totalt)",
+    "numberCallsAxis": "Antall samtaler (totalt)",
     "filesSharedAxis": "Antall filer delt (totalt)",
     "gbSharedAxis": "Antall Gigabytes delt (totalt)",
     "orgDsc": "Det totale antallet brukere i en organisasjon.",
     "onboardDsc": "Det totale antallet brukere som har logget inn eller har rettigheter til Spark.",
-    "activeDsc": "Det totale antallet brukere som har sendt/lest en melding eller opprettet/gått inn i et rom i løpet av foregående uke."
+    "activeDsc": "Det totale antallet brukere som har sendt/lest en melding eller opprettet/gått inn i et rom i løpet av foregående uke.",
+    "allCustomers": "Alle kunder"
   },
   "callRouting": {
     "title": "Samtaleruting",
@@ -721,12 +748,15 @@
     "error": "Linjekonfigurasjon mislyktes.",
     "directNumbers": "Katalognumre",
     "internalNumberLabel": "Nå denne linjen ved å ringe numrene eller utvidelsene som er oppført nedenfor.",
-    "internalNumberExtension": "Internnummer for biapparat",
-    "internalNumberExtensionTooltip": "Bruke det interne nummeret for å nå denne linjen innenfor selskapet på samme sted.",
+    "internalNumberExtension": "Internnummer",
+    "internalNumberExtensionTooltip": "Bruk internnummeret for å nå denne linjen fra internt i bedriften for samme lokasjon.",
+    "internalNumberPoolError": "Internnummer kunne ikke lastes.",
     "enterpriseSiteNumberLabel": "Hvis bedriften bruker nettsted-til-nettsted-oppringing:",
-    "externalNumberLabel": "Eksternt nummer",
-    "externalNumberTooltip": "Bruk det eksterne nummeret for å nå denne linjen fra utenfor selskapet.",
+    "externalNumberLabel": "Direktelinje",
+    "externalNumberTooltip": "Bruk direktelinjen for å nå denne linjen fra utenfor selskapet.",
+    "externalNumberPoolError": "Direktelinjer kunne ikke lastes.",
     "chooseNumber": "Velg et nummer",
+    "searchNumber": "Søk etter et nummer …",
     "addNewNumber": "Legg til et nytt nummer",
     "removeNumber": "Fjern linjen",
     "none": "Ingen",
@@ -736,7 +766,8 @@
     "alert": "Advarsel",
     "userError": "Brukeren {{user}} ble ikke behandlet korrekt.",
     "maxLines": "{{user}} har overskredet maksimum antall linjer. Fjern en linje fra denne brukeren før du legger til flere linjer.",
-    "confirm": "Det er ulagrede endringer på siden. Vil du fortsette?"
+    "confirm": "Det er ulagrede endringer på siden. Vil du fortsette?",
+    "unassignedNumberError": "Kunne ikke hente et ledig nummer."
   },
   "callForwardPanel": {
     "title": "Viderekobling av samtale",
@@ -824,7 +855,7 @@
     "entitlementsTitle": "Brukere som er ombord",
     "activeUsersTitle": "Daglig aktive brukere",
     "averageCallsTitle": "Gjennomsnittlige anrop per bruker",
-    "contentSharedTitle": "Delt innhold totalt"
+    "contentSharedTitle": "Delte filer"
   },
   "trialModal": {
     "trialSuccess": "Oppsett av din prøveperiode var vellykket.",
@@ -839,8 +870,8 @@
     "editSuccess": "Du har redigert en prøveperiode for {{customerName}} med {{licenseCount}} lisenser for {{licenseDuration}} dager."
   },
   "trials": {
-    "collab": "Standard grupperom + møter for 25 deltakere",
-    "squaredUC": "Avanserte kommunikasjoner"
+    "collab": "Standard Grupperom + møter med 25 deltakere",
+    "squaredUC": "Avansert Spark-samtale"
   },
   "status": {
     "noResults": "Ingen resultater tilgjengelig.",
@@ -896,31 +927,23 @@
     "none": "Ingen"
   },
   "didAddModal": {
-    "title": "Legg til telefonnumre",
-    "instructionsText": "Selskapet du setter opp må oppgi sine eksisterende telefonnumre. Dette vil starte porteringsforespørselen fra selskapets telefonnumre.",
-    "processingText": "Legger til telefonnumre ...",
-    "successText": "{{count}} nytt/nye telefonnummer/telefonnumre lagt til.",
-    "failText": "{{count}}  telefonnummer/telefonnumre allerede i systemet.",
-    "sendEmail": "Underrett kunden",
-    "notifyCustLater": "Varsle kunden senere",
-    "emailSuccessText": "E-post sendt til kunden.",
-    "emailFailText": "Feil under sending av e-post",
-    "inputPlacehoder": "Oppgi telefonnumre adskilt med komma"
+    "title": "Legg til telefonnumre (Valgfritt)"
   },
   "didManageModal": {
     "title": "Administrere telefonnumre",
-    "instructionsText": "Selskapet du setter opp må oppgi sine eksisterende telefonnumre. Dette vil starte porteringsforespørselen fra selskapets telefonnumre.",
-    "processingText": "Legger til telefonnumre ...",
+    "instructionsText": "Firmaet du setter opp må gi deg sine eksisterende telefonnumre. Dette vil initiere forespørsel om overføring av bedriftens telefonnumre.",
+    "processingText": "Behandler telefonnumre …",
     "newDidText": "{{count}} nytt/nye telefonnummer/telefonnumre lagt til.",
     "existingDidText": "{{count}}  telefonnummer/telefonnumre allerede i systemet.",
     "deleteDidText": "{{count}} telefonnummer(e) ble slettet.",
-    "deleteConfirmationText": "Er du sikker på at du vil slette følgende {{count}} nummer(e)? Det kan påvirke sluttbrukere hvis disse numrene tildeles brukerens linjer.",
+    "deleteConfirmationText": "Er du sikker på at du vil slette følgende {{count}} nummer/numre?  Det kan påvirke sluttbrukere dersom disse numrene utdeles til brukerlinjer.",
     "removeNumbers": "Fjerne numre",
     "sendEmail": "Underrett kunden",
     "notifyCustLater": "Varsle kunden senere",
     "emailSuccessText": "E-post sendt til kunden.",
     "emailFailText": "Feil under sending av e-post",
-    "inputPlacehoder": "Oppgi telefonnumre adskilt med komma"
+    "inputPlacehoder": "Oppgi telefonnumre adskilt med komma",
+    "didFormatHelpText": "Eksempelformater inkluderer: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Enhetskonfigurasjon",
@@ -1032,8 +1055,8 @@
     "deleteResource": "Avvikle ressurs"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "Aktivering av økt oppdatert",
-    "privilegesUpdateSuccess": "Brukerrettigheter oppdatert",
+    "sessionEnablementUpdateSuccess": "Sesjonstype aktivering oppdatert.",
+    "privilegesUpdateSuccess": "Oppdaterte privilegier.",
     "reload": "Prøv på nytt",
     "cancel": "Gå tilbake"
   },
@@ -1128,12 +1151,13 @@
     "039007": "Din e-postadresse er ikke akseptert av nettstedet vårt.",
     "039008": "039008",
     "039009": "039009",
-    "200006": "Du har ikke blitt gjort om til administrator for dette nettstedet ennå. Denne prosessen kan ta litt tid.",
+    "110055": "Maksimum antall brukere overskredet sesjonstypen \"{{sessionTypeName}}\".",
     "defaultProcessError": "Kan ikke behandle forespørselen.",
-    "defaultAccessError": "Får ikke tilgang til serveren nå"
+    "defaultAccessError": "Får ikke tilgang til serveren for øyeblikket.",
+    "defaultNotWebExAdminError": "Du har ikke blitt gjort om til administrator for dette nettstedet ennå. Denne prosessen kan ta litt tid."
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "Aktivering av økt",
+    "sessionEnablementLabel": "Sesjonstype aktivering",
     "handsOnLabAdminLabel": "Praktisk Lab-admin (virker bare når praktisk lab er aktivert)",
     "optimizeBandwidthUsageLabel": "Optimalisert bruk av båndbredde for deltakere innenfor samme nettverk",
     "videoSettingsLabel": "Videoinnstillinger",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "Telekonferanse med tilbakeringing",
     "globalCallBackTeleconfLabel": "Internasjonal telekonferanse med tilbakeringing",
     "integratedVoIPLaabel": "Integrert VoIP",
+    "priviligesLable": "Privilegier",
     "userPriviligesLabel": "Brukerrettigheter",
     "advancedLinkLabel": "Avanserte innstillinger"
   },
@@ -1158,7 +1183,7 @@
     "messagingSubtitle": "Standard teamrom",
     "messagingDesc": "Grupperom med lagret innhold lar deg samarbeide fra enhver enhet til en hvilken som helst bruker i eller utenfor din egen organisasjon.",
     "communicationTitle": "Kommunikasjon",
-    "communicationSubtitle": "Avanser samlet",
+    "communicationSubtitle": "Avansert Spark-samtale",
     "communicationDesc": "Enkle eksternsamtaler og komplette Samordnede kommunikasjonstjenester (Unified Communications) aktivert for virksomheten din.",
     "conferencingTitle": "Konferanser",
     "conferencingSubtitle": "Møtesenter",
@@ -1207,6 +1232,12 @@
     "average": "Gjennomsnitt",
     "bridgeUtilization": "Utnyttelse bridge for bridge"
   },
+  "alarmsPage": {
+    "alarms": "Alarmer"
+  },
+  "eventsPage": {
+    "events": "Hendelser"
+  },
   "processOrderPage": {
     "errOrgCreation": "Ordre # {{orderId}} blir behandlet. Sjekk på nytt etter 24 timer.",
     "info": "Status",
@@ -1240,5 +1271,14 @@
     "licenseCount": "Lisenstelling",
     "type": "Type",
     "launchSite": "Lanser administrator for nettstedet"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "Sky-utvidelser",
+    "calendar": "Kalender",
+    "on": "På",
+    "off": "Av",
+    "calendarService": "Kalender-tjeneste",
+    "sparkDesc": "Inkludering av @spark i en møteinvitasjon oppretter et Spark-rom automatisk.",
+    "webexDesc": "Inkludering av @webex i møteinvitasjonen oppretter et WebEx-møte og legger informasjon til invitasjonen."
   }
 }

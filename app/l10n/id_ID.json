@@ -23,7 +23,8 @@
     "statusHeader": "STATUS/ALAT",
     "modify": "Ubah",
     "existingUsers": "Pengguna yang Ada",
-    "userInput": "Masukkan satu atau beberapa alamat email yang dipisahkan dengan tanda koma.",
+    "userInput": "Masukkan alamat email atau email grup yang dipisahkan dengan tanda koma.",
+    "userInputDescription": "Misalnya: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "active": "Aktif",
     "inactive": "",
     "validEmailInput": "Masukkan email pengguna yang valid.",
@@ -51,7 +52,10 @@
     "deleteUserError": "Kesalahan menghapus pengguna. Status: {{Status}}",
     "onboardSuccess": "{{email}} berhasil dinaikkan",
     "onboardError": "{{Email}} tidak dinaikkan. Status: {{Status}}",
-    "ciscoucError": "{{Email}} tidak menetapkan Unified Communications."
+    "ciscoucError": "{{Email}} tidak menetapkan Unified Communications.",
+    "statusError": "Permintaan gagal dengan status: {{status}}.",
+    "messageError": "Pesan: {{message}}",
+    "userListError": "Kesalahan membuka daftar pengguna. Coba muat ulang halaman."
   },
   "groupsPage": {
     "manageGroups": "Grup",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "Pengguna Onboard",
     "cancel": "Batalkan",
+    "clear": "Hapus",
     "addUsersDesc": "Masukkan alamat email orang di perusahaan Anda yang akan menerima Layanan Kolaborasi. Mereka akan menerima email undangan untuk mendaftar.",
     "addUserText": "Siapa yang ingin Anda tambahkan?",
     "userInput": "Masukkan alamat email atau email grup yang dipisahkan dengan tanda koma...",
@@ -85,17 +90,18 @@
     "addEntitleError": "hak untuk menambahkan atau menetapkan pengguna tidak memadai.",
     "freeMsg": "Pesan Spark Gratis",
     "freeConf": "Rapat Spark 3 Orang Gratis",
-    "freeComm": "Gratis panggilan suara dan video IP dalam jaringan",
-    "paidMsg": "Kamar tim standar",
-    "paidConf": "Rapat 25 peserta",
-    "paidComm": "Komunikasi Lanjut",
+    "freeComm": "Gratis Panggilan Spark 1:1",
+    "paidMsg": "Kamar Tim Standar",
+    "paidConf": "Rapat 25 Orang",
+    "paidComm": "Panggilan Spark Lanjutan",
     "freeSpark": "Pesan Spark Gratis",
     "enterpriseEdition": "Edisi Perusahan",
-    "meetingCenter": "Pusat Rapat",
-    "supportCenter": "Pusat Dukungan",
-    "trainingCenter": "Pusat Pelatihan",
-    "eventCenter": "Pusat Peristiwa",
-    "communication": "Komunikasi"
+    "meetingCenter": "Pusat Rapat {{capacity}}",
+    "supportCenter": "Pusat Dukungan {{capacity}}",
+    "trainingCenter": "Pusat Pelatihan {{capacity}}",
+    "eventCenter": "Pusat Acara {{capacity}}",
+    "communication": "Komunikasi",
+    "cloudExtensions": "Ekstensi Cloud"
   },
   "usersPreview": {
     "groupPreview": "Grup:",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "Penggunaan Sumber Daya Perusahaan",
     "servicesTab": "Layanan",
     "conferencing": "Konferensi",
-    "conferencingDesc": "Daftar Admin Situs"
+    "conferencingDesc": "Daftar Admin Situs",
+    "alarmsTab": "Alarm",
+    "alarmsTabDesc": "Manajemen Alarm",
+    "eventsTab": "Acara",
+    "eventsTabDesc": "Manajemen Acara"
   },
   "index": {
     "welcome": "Selamat Datang!",
@@ -231,13 +241,13 @@
     "leastEngaged": "5 Paling Jarang Dihubungi",
     "highQuality": "5 Kualitas Terbaik",
     "leastQuality": "5 Kualitas Terburuk",
-    "customerLoadError": "Terjadi kesalahan saat memuat daftar pelanggan.",
-    "userLoadError": "Terjadi kesalahan saat memuat pengguna untuk pelanggan yang dipilih."
+    "customerLoadError": "Terjadi kesalahan saat memuat daftar pelanggan."
   },
   "activeUsers": {
     "active": "Aktif",
     "activeUsers": "Pengguna Aktif",
-    "activeUserError": "Ada kesalahan saat memuat data pengguna aktif.",
+    "activeUserGraphError": "Ada kesalahan saat memuat data pengguna aktif.",
+    "activeUserTableError": "Ada kesalahan ketika memuat data pengguna paling aktif untuk {{customer}}.",
     "calls": "Panggilan",
     "customer": "Pelanggan",
     "hideActiveUsers": "Sembunyikan Pengguna Paling Aktif",
@@ -276,12 +286,13 @@
     "searching": "Mencari...",
     "userLogs": "Log Pengguna",
     "logEmailAddress": "Alamat Email",
-    "logDate": "Waktu Unggah",
     "logLocusId": "ID Locus",
     "logCallStart": "Waktu Mulai Panggilan",
     "logAction": "Log Klien",
+    "callflowLogsAction": "Log Panggilan",
     "callflowAction": "Diagram Alir Panggilan",
     "callAction": "Info Panggilan",
+    "callSummaryAction": "Ringkasan Panggilan",
     "errEmptyinput": "Input pencarian tidak boleh kosong.",
     "errLogQuery": "Gagal membuka log. Status: {{status}}",
     "inputPlaceholder": "Masukkan kata pencarian (Alamat email, ID pengguna, ID Locus, dsb.)",
@@ -357,7 +368,7 @@
     "overview": "4 pekan terakhir",
     "activeUsers": "Pengguna Aktif",
     "calls": "Panggilan yang Dilakukan",
-    "updated": "Terakhir Diperbarui",
+    "updated": "Sync terakhir",
     "conversations": "Kamar yang Dibuat",
     "contentShared": "File yang Dibagikan",
     "activity": "Aktivitas Sejak",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "pengguna tidak berlisensi didaftarkan pada",
     "unlicensedText": "Pengguna Tidak Berlisensi",
     "convertText": "Lihat dan konversi pengguna yang saat ini menggunakan versi gratis",
-    "lastUpdated": "Terakhir Diperbarui"
+    "lastUpdated": "Sync terakhir"
   },
   "inviteModal": {
     "title": "Penetapan Layanan",
@@ -451,9 +462,13 @@
     "ciscoDefault": "Standar Cisco",
     "fall": "Musim Gugur",
     "winter": "Musim Dingin",
-    "addSuccess": " berhasil ditambahkan.",
     "emptyNumber": "Jumlah tidak boleh kosong",
-    "notANumber": " bukan angka yang valid"
+    "notANumber": " bukan angka yang valid",
+    "saveSuccess": "Persiapan Unified Communications berhasil disimpan",
+    "siteError": "Gagal membuat situs.",
+    "extensionDeleteSuccess": "Berhasil menghapus ekstensi {{extension}}.",
+    "extensionDeleteError": "Gagal menghapus ekstensi {{extension}}.",
+    "extensionAddError": "Gagal membuat ekstensi {{extension}}."
   },
   "dirsyncModal": {
     "chooseSync": "Pilih Penyelarasan",
@@ -589,13 +604,16 @@
     "advancedSub": "Selaraskan pengguna dari Direktori Aktif",
     "needHelp": "Perlu bantuan?",
     "planReview": "Tinjauan Rencana",
+    "messaging": "Pesan",
+    "conferencing": "Konferensi",
+    "communications": "Komunikasi",
     "enterpriseSettings": "Pengaturan Perusahaan",
     "planReviewSub": "Ikhtisar rencana kolaborasi",
     "enterpriseSettingsSub": "Atur konfigurasi global",
     "planReviewDesc": "Panduan pengaturan ini memungkinkan Anda mendapatkan layanan kolaborasi dengan cepat dan menjalankannya untuk organisasi Anda. Jika Anda tidak yakin apa yang harus dilakukan pada langkah-langkah yang dicantumkan, jangan khawatir, Anda dapat mengubahnya nanti.",
     "accountReview": "Tinjauan Akun",
-    "serviceSetup": "Pengaturan Layanan",
-    "serviceSetupSub": "Atur komunikasi terpadu",
+    "serviceSetup": "Komunikasi",
+    "serviceSetupSub": "Pengaturan terkait telepon",
     "unifiedCommunication": "Komunikasi Terpadu",
     "addUsers": "Tambah Pengguna",
     "addUsersSimple": "Tambah Pengguna | Sederhana",
@@ -635,7 +653,13 @@
     "finishDesc": "Anda telah menyelesaikan panduan pengaturan. Jika Anda melewati langkah-langkah atau ingin mengubah pengaturan, klik ikon roda di sudut kanan atas halaman untuk mengakses kembali panel ini.",
     "finish": "Selesai",
     "finishSub": "Lengkapi pengaturan",
-    "completeRequired": "{{name}} harus diisi."
+    "completeRequired": "{{name}} harus diisi.",
+    "freeColumnHeader": "Pesan Publik Gratis Tak Terbatas",
+    "paidColumnHeader": "Pesan Pengelolaan Pembelian",
+    "quantity": "Jml:",
+    "trial": "Percobaan {{number}}",
+    "startYourTrial": "Mulai percobaan baru untuk {{days}} hari.",
+    "trialDaysRemaining": "{{days}} Hari tersisa dalam percobaan saat ini."
   },
   "reports": {
     "title": "Laporan",
@@ -651,8 +675,8 @@
     "highQuality": "5 kualitas terendah",
     "leastQuality": "5 kualitas terendah",
     "services": "Semua layanan",
-    "UsersOnboarded": "Pengguna diikutsertakan",
-    "AvgCallsPerUser": "Rerata Panggilan per pengguna",
+    "UsersOnboarded": "Pengguna yang Mendaftar bulan Ini",
+    "AvgCallsPerUser": "Rerata Panggilan per Pengguna Bulan ini",
     "AvgRoomsPerUser": "Rerata Kamar per Pengguna Bulan ini",
     "ActiveUsers": "Rerata Pengguna Aktif Bulan ini",
     "OneOnOneRooms": "Kamar 1:1 Bulan ini",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "Jumlah Kamar Grup (Total)",
     "videoCallsAxis": "Jumlah Panggilan Video (Total)",
     "avgCallsAxis": "Durasi Panggilan dlm Menit (Rerata)",
+    "numberUsersAxis": "Jumlah Pengguna (Total)",
+    "numberCallsAxis": "Jumlah Panggilan (Total)",
     "filesSharedAxis": "Jumlah File yang Dibagikan (Total)",
     "gbSharedAxis": "Jumlah Gigabyte yang Dibagikan (Total)",
     "orgDsc": "Jumlah total pengguna di organisasi.",
     "onboardDsc": "Jumlah total pengguna yang masuk atau berhak mengakses Spark.",
-    "activeDsc": "Jumlah total pengguna yang mengirimkan/membaca pesan atau yang membuat/masuk ke kamar pekan lalu."
+    "activeDsc": "Jumlah total pengguna yang mengirimkan/membaca pesan atau yang membuat/masuk ke kamar pekan lalu.",
+    "allCustomers": "Semua Pelanggan"
   },
   "callRouting": {
     "title": "Pengarahan Panggilan",
@@ -721,12 +748,15 @@
     "error": "Konfigurasi saluran gagal.",
     "directNumbers": "Nomor Direktori",
     "internalNumberLabel": "Jangkau saluran ini dengan menghubungi nomor atau ekstensi yang tercantum di bawah ini.",
-    "internalNumberExtension": "Ekstensi Nomor Internal",
-    "internalNumberExtensionTooltip": "Gunakan nomor internal untuk menjangkau saluran ini dari dalam perusahaan di tempat yang sama.",
+    "internalNumberExtension": "Ekstensi Internal",
+    "internalNumberExtensionTooltip": "Gunakan ekstensi internal untuk menjangkau saluran ini dari perusahaan pada lokasi yang sama.",
+    "internalNumberPoolError": "Ekstensi internal gagat dimuat.",
     "enterpriseSiteNumberLabel": "Jika perusahaan Anda menggunakan panggilan situs-ke-situs:",
-    "externalNumberLabel": "Nomor Eksternal",
-    "externalNumberTooltip": "Gunakan nomor eksternal untuk menjangkau saluran ini dari luar perusahaan.",
+    "externalNumberLabel": "Saluran Langsung",
+    "externalNumberTooltip": "Gunakan saluran langsung untuk menjangkau saluran ini dari luar perusahaan.",
+    "externalNumberPoolError": "Saluran langsung gagal dimuat.",
     "chooseNumber": "Pilih Nomor",
+    "searchNumber": "Cari nomor...",
     "addNewNumber": "Tambah Nomor Baru",
     "removeNumber": "Hapus Saluran",
     "none": "Tidak Ada",
@@ -736,7 +766,8 @@
     "alert": "Peringatan",
     "userError": "Pengguna {{user}} tidak ditetapkan dengan benar.",
     "maxLines": "{{user}} melampaui jumlah maksimum saluran. Harap hapus salah satu saluran dari pengguna ini sebelum menetapkan saluran tambahan.",
-    "confirm": "Perubahan di halaman ini belum disimpan. Anda ingin melanjutkan?"
+    "confirm": "Perubahan di halaman ini belum disimpan. Anda ingin melanjutkan?",
+    "unassignedNumberError": "Tidak dapat membuka nomor yang tidak ditetapkan."
   },
   "callForwardPanel": {
     "title": "Penerusan Panggilan",
@@ -824,7 +855,7 @@
     "entitlementsTitle": "Pengguna Onboard",
     "activeUsersTitle": "Pengguna Aktif Harian",
     "averageCallsTitle": "Rerata Panggilan per Pengguna",
-    "contentSharedTitle": "Total Konten yang Dibagikan"
+    "contentSharedTitle": "File yang Dibagikan"
   },
   "trialModal": {
     "trialSuccess": "Anda berhasil mengatur percobaan.",
@@ -839,8 +870,8 @@
     "editSuccess": "Anda berhasil mengedit percobaan untuk {{customerName}} dengan {{licenseCount}} lisensi selama {{licenseDuration}}."
   },
   "trials": {
-    "collab": "Kamar tim standar + rapat 25 peserta",
-    "squaredUC": "Komunikasi Lanjut"
+    "collab": "Kamar Tim Standar + Rapat 25 Orang",
+    "squaredUC": "Panggilan Spark Lanjutan"
   },
   "status": {
     "noResults": "Tidak ada hasil yang tersedia.",
@@ -896,31 +927,23 @@
     "none": "Tidak Ada"
   },
   "didAddModal": {
-    "title": "Tambah Nomor Telepon",
-    "instructionsText": "Perusahaan yang Anda atur harus memberikan Nomor Telepon perusahaan yang aktif. Ini akan memulai permintaan penerusan dari nomor telepon perusahaan.",
-    "processingText": "Menambahkan Nomor Telepon...",
-    "successText": "{{count}} nomor telepon baru berhasil ditambahkan.",
-    "failText": "{{count}} nomor telepon sudah ada di sistem.",
-    "sendEmail": "Beritahu Pelanggan",
-    "notifyCustLater": "Beritahu Pelanggan Nanti",
-    "emailSuccessText": "Email berhasil dikirim kepada pelanggan.",
-    "emailFailText": "Kesalahan pengiriman email",
-    "inputPlacehoder": "Masukkan nomor telepon dipisahkan dengan tanda koma"
+    "title": "Tambahkan Nomor Telepon (Opsional)"
   },
   "didManageModal": {
     "title": "Atur Nomor Telepon",
-    "instructionsText": "Perusahaan yang Anda atur harus memberikan Nomor Telepon perusahaan yang aktif. Ini akan memulai permintaan penerusan dari nomor telepon perusahaan.",
-    "processingText": "Menambahkan Nomor Telepon...",
+    "instructionsText": "Perusahaan yang Anda siapkan harus memberikan nomor telepon yang dapat dihubungi. Ini akan menginisiasi permintaan porting nomor telepon perusahaan.",
+    "processingText": "Sedang Memproses Nomor Telepon...",
     "newDidText": "{{count}} nomor telepon baru berhasil ditambahkan.",
     "existingDidText": "{{count}} nomor telepon sudah ada di sistem.",
     "deleteDidText": "{{count}} nomor telepon telah dihapus.",
-    "deleteConfirmationText": "Anda yakin ingin menghapus {{count}} nomor telepon berikut? Ini mungkin akan memengaruhi pengguna akhir jika nomor tersebut ditetapkan ke saluran pengguna.",
+    "deleteConfirmationText": "Anda yakin ingin menghapus {{count}} nomor tersebut?  Ini dapat memengaruhi pengguna akhir jika nomor tersebut ditetapkan ke saluran pengguna.",
     "removeNumbers": "Hapus Nomor",
     "sendEmail": "Beritahu Pelanggan",
     "notifyCustLater": "Beritahu Pelanggan Nanti",
     "emailSuccessText": "Email berhasil dikirim kepada pelanggan.",
     "emailFailText": "Kesalahan pengiriman email",
-    "inputPlacehoder": "Masukkan nomor telepon dipisahkan dengan tanda koma"
+    "inputPlacehoder": "Masukkan nomor telepon dipisahkan dengan tanda koma",
+    "didFormatHelpText": "Contoh format meliputi: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Konfigurasi Perangkat",
@@ -1032,8 +1055,8 @@
     "deleteResource": "Hentikan Sumber Daya"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "Sesi pemberdayaan diperbarui",
-    "privilegesUpdateSuccess": "Hak istimewa diperbarui",
+    "sessionEnablementUpdateSuccess": "Pengaktifan jenis sesi telah diperbarui.",
+    "privilegesUpdateSuccess": "Hak istimewa telah diperbarui.",
     "reload": "Coba Lagi",
     "cancel": "Kembali"
   },
@@ -1128,12 +1151,13 @@
     "039007": "Alamat email Anda tidak diterima oleh situs kami.",
     "039008": "039008",
     "039009": "039009",
-    "200006": "Anda belum ditetapkan ke situs ini sebagai administrator. Proses ini dapat berlangsung beberapa saat.",
+    "110055": "Batasan pengguna terlampaui untuk jenis sesi \"{{sessionTypeName}}\".",
     "defaultProcessError": "Tidak dapat memproses permintaan.",
-    "defaultAccessError": "Tidak dapat mengakses server pada saat ini"
+    "defaultAccessError": "Tidak dapat mengakses server untuk saat ini.",
+    "defaultNotWebExAdminError": "Anda belum ditetapkan ke situs ini sebagai administrator. Proses ini dapat berlangsung beberapa saat."
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "Sesi Pemberdayaan",
+    "sessionEnablementLabel": "Pengaktifan Jenis Sesi",
     "handsOnLabAdminLabel": "Admin Lab Ponsel (hanya efektif jika lab ponsel diaktifkan)",
     "optimizeBandwidthUsageLabel": "Penggunaan bandwidth dioptimalkan untuk peserta dalam jaringan yang sama",
     "videoSettingsLabel": "Pengaturan Video",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "Panggilan kembali telekonferensi",
     "globalCallBackTeleconfLabel": "Panggilan kembali telekonferensi global",
     "integratedVoIPLaabel": "VoIP terpadu",
+    "priviligesLable": "Hak Istimewa",
     "userPriviligesLabel": "Hak istimewa pengguna",
     "advancedLinkLabel": "Pengaturan Lanjutan"
   },
@@ -1158,7 +1183,7 @@
     "messagingSubtitle": "Kamar Tim Standar",
     "messagingDesc": "Kamar Tim dengan penyimpanan konten memungkinkan Anda berkolaborasi dengan mudah dari perangkat apa pun bersama pengguna mana pun di dalam atau di luar organisasi Anda.",
     "communicationTitle": "Komunikasi",
-    "communicationSubtitle": "Gabungan Lanjutan",
+    "communicationSubtitle": "Panggilan Spark Lanjutan",
     "communicationDesc": "Panggilan keluar dasar dan Komunikasi Gabungan Unified Communications enabled for your organization.",
     "conferencingTitle": "Konferensi",
     "conferencingSubtitle": "Pusat Rapat",
@@ -1207,6 +1232,12 @@
     "average": "Rerata",
     "bridgeUtilization": "Penggunaan Bridge By Bridge"
   },
+  "alarmsPage": {
+    "alarms": "Alarm"
+  },
+  "eventsPage": {
+    "events": "Acara"
+  },
   "processOrderPage": {
     "errOrgCreation": "Permintaan # {{orderId}} sedang diproses. Silakan periksa kembali setelah 24 jam.",
     "info": "Status",
@@ -1240,5 +1271,14 @@
     "licenseCount": "Hitungan Lisensi",
     "type": "Tipe",
     "launchSite": "Peluncuran Situs Admin"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "Ekstensi Cloud",
+    "calendar": "Kalender",
+    "on": "Hidup",
+    "off": "Mati",
+    "calendarService": "Layanan Kalender",
+    "sparkDesc": "Menyertakan @spark dalam undangan rapat akan otomatis membuat Kamar Spark.",
+    "webexDesc": "Menyertakan @webex dalam undangan rapat akan membuat rapat WebEx dan melampirkan informasi ke undangan."
   }
 }

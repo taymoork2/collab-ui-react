@@ -23,7 +23,8 @@
     "statusHeader": "STATUS/TOOLS",
     "modify": "Wijzigen",
     "existingUsers": "Bestaande gebruikers",
-    "userInput": "Voer een of meer door komma's gescheiden e-mailadressen in.",
+    "userInput": "Voer door komma's gescheiden e-mailadressen of groepmailers in.",
+    "userInputDescription": "Bijvoorbeeld: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "active": "Actief",
     "inactive": "",
     "validEmailInput": "Voer een geldig gebruikerse-mailadres in.",
@@ -51,7 +52,10 @@
     "deleteUserError": "Fout bij het verwijderen van de gebruiker. Status {{status}}",
     "onboardSuccess": "{{email}} integreren is geslaagd",
     "onboardError": "{{email}} integreren is mislukt. Status: {{status}}",
-    "ciscoucError": "{{email}} heeft geen Unified Communications geleverd."
+    "ciscoucError": "{{email}} heeft geen Unified Communications geleverd.",
+    "statusError": "Aanvraag mislukt met status: {{status}}.",
+    "messageError": "Bericht: {{message}}",
+    "userListError": "Fout bij het ophalen van de lijst met gebruikers. Probeer de pagina opnieuw te laden."
   },
   "groupsPage": {
     "manageGroups": "Groepen",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "Gebruikers integreren",
     "cancel": "Annuleren",
+    "clear": "Wissen",
     "addUsersDesc": "Voer de e-mailadressen in van de personen in uw bedrijf die Collaboration Services zullen ontvangen. Ze zullen een e-mailuitnodiging krijgen om zich in te schrijven.",
     "addUserText": "Wie wilt u toevoegen?",
     "userInput": "Voer door komma's gescheiden e-mailadressen of groepmailers in.",
@@ -85,17 +90,18 @@
     "addEntitleError": "onvoldoende rechten om een gebruiker toe te voegen of te machtigen.",
     "freeMsg": "Gratis Spark-berichtendienst",
     "freeConf": "Gratis vergaderen met 3 partijen",
-    "freeComm": "Gratis spraak- en videogesprekken via IP binnen uw netwerk",
+    "freeComm": "Gratis 1:1 Spark-gesprek",
     "paidMsg": "Standaard teamruimtes",
     "paidConf": "Vergaderingen met 25 partijen",
-    "paidComm": "Geavanceerde communicatie",
+    "paidComm": "Gevanceerd Spark-gesprek",
     "freeSpark": "Gratis Spark-berichtendienst",
     "enterpriseEdition": "Enterprise Edition",
-    "meetingCenter": "Meeting Center",
-    "supportCenter": "Support Center",
-    "trainingCenter": "Training Center",
-    "eventCenter": "Event Center",
-    "communication": "Communicatie"
+    "meetingCenter": "Meeting Center {{capacity}}",
+    "supportCenter": "Support Center {{capacity}}",
+    "trainingCenter": "Training Center {{capacity}}",
+    "eventCenter": "Event Center {{capacity}}",
+    "communication": "Communicatie",
+    "cloudExtensions": "Toestelnummers in de cloud"
   },
   "usersPreview": {
     "groupPreview": "Groep:",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "Gebruik van Enterprise Resources",
     "servicesTab": "Services",
     "conferencing": "Conferentie",
-    "conferencingDesc": "Lijst met locatiebeheerders"
+    "conferencingDesc": "Lijst met locatiebeheerders",
+    "alarmsTab": "Alarmen",
+    "alarmsTabDesc": "Alarmbeheer",
+    "eventsTab": "Gebeurtenissen",
+    "eventsTabDesc": "Gebeurtenisbeheer"
   },
   "index": {
     "welcome": "Welkom!",
@@ -231,13 +241,13 @@
     "leastEngaged": "5 minst actieve klanten",
     "highQuality": "5 met hoogste kwaliteit",
     "leastQuality": "5 met slechtste kwaliteit",
-    "customerLoadError": "Er is een fout opgetreden bij het laden van de klantenlijst.",
-    "userLoadError": "Er is een fout opgetreden bij het laden van de gebruikers voor de geselecteerde klant."
+    "customerLoadError": "Er is een fout opgetreden bij het laden van de klantenlijst."
   },
   "activeUsers": {
     "active": "Actief",
     "activeUsers": "Actieve gebruikers",
-    "activeUserError": "Er is een fout opgetreden bij het laden van de actieve gebruikersgegevens.",
+    "activeUserGraphError": "Er is een fout opgetreden bij het laden van de actieve gebruikersgegevens.",
+    "activeUserTableError": "Er is een fout opgetreden bij het laden van de meeste actieve gebruikersgegevens voor {{customer}}.",
     "calls": "Gesprekken",
     "customer": "Klant",
     "hideActiveUsers": "Meest actieve gebruikers verbergen",
@@ -276,12 +286,13 @@
     "searching": "Bezig met zoeken...",
     "userLogs": "Gebruikerslogboeken",
     "logEmailAddress": "E-mailadres",
-    "logDate": "Uploadduur",
     "logLocusId": "Locus-id",
     "logCallStart": "Starttijd gesprek",
     "logAction": "Clientlogboeken",
+    "callflowLogsAction": "Gesprekslogboeken",
     "callflowAction": "Grafieken van gespreksverloop",
     "callAction": "Gespreksinformatie",
+    "callSummaryAction": "Gespreksoverzicht",
     "errEmptyinput": "U moet een zoekterm invoeren.",
     "errLogQuery": "De logboeken konden niet worden opgehaald. Status: {{status}}",
     "inputPlaceholder": "Voer een zoekterm in, zoals het e-mailadres, de gebruikers-id of de Locus-id",
@@ -357,7 +368,7 @@
     "overview": "Afgelopen 4 weken",
     "activeUsers": "Actieve gebruikers",
     "calls": "Geplaatste gesprekken",
-    "updated": "Laatst bijgewerkt op",
+    "updated": "Laatste synchronisatie",
     "conversations": "Gemaakte ruimtes",
     "contentShared": "Gedeelde bestanden",
     "activity": "Activiteit sinds",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "gebruikers zonder licentie geregistreerd op",
     "unlicensedText": "Gebruikers zonder licentie",
     "convertText": "Bekijk en zet gebruikers om die momenteel de gratis versie gebruiken",
-    "lastUpdated": "Laatst bijgewerkt op"
+    "lastUpdated": "Laatste synchronisatie"
   },
   "inviteModal": {
     "title": "Recht op de service",
@@ -443,7 +454,7 @@
     "siteCodeDescription": "Geef een uniek cijfer op om een specifieke locatie aan te geven.",
     "internalExtensionRange": "Reeks voor interne toestelnummers",
     "internalNumberRangeDescription": "Specificeer het bereik van de interne nummers, die uit 4 cijfers moeten bestaan.",
-    "extensionError": "Toestel niet geldig:",
+    "extensionError": "Toestel niet geldig: ",
     "to": "tot",
     "addMoreExtensionRanges": "Meer toestelreeksen toevoegen",
     "globalMOH": "Algemene media in wachtrij (MOH)",
@@ -451,9 +462,13 @@
     "ciscoDefault": "Standaardoptie van Cisco",
     "fall": "Herfst",
     "winter": "Winter",
-    "addSuccess": " is met succes toegevoegd.",
     "emptyNumber": "Nummer moet ingevuld zijn",
-    "notANumber": " is geen geldig nummer"
+    "notANumber": " is geen geldig nummer",
+    "saveSuccess": "Configuratie van Unified Communications met succes opgeslagen",
+    "siteError": "Kon site niet maken.",
+    "extensionDeleteSuccess": "Toestelnummer {{extension}} met succes verwijderd.",
+    "extensionDeleteError": "Toestelnummer {{extension}} kon niet verwijderd worden.",
+    "extensionAddError": "Toestelnummer {{extension}} kon niet gemaakt worden."
   },
   "dirsyncModal": {
     "chooseSync": "Synchronisatie kiezen",
@@ -589,13 +604,16 @@
     "advancedSub": "Gebruikers uit de Active Directory synchroniseren",
     "needHelp": "Hulp nodig?",
     "planReview": "Evaluatie plannen",
+    "messaging": "Chatten",
+    "conferencing": "Conferentie",
+    "communications": "Communicatie",
     "enterpriseSettings": "Bedrijfsbrede instellingen",
     "planReviewSub": "Overzicht van uw samenwerkingsplan",
     "enterpriseSettingsSub": "Algemene instellingen configureren",
     "planReviewDesc": "Via deze configuratiewizard kunt u uw samenwerkingsservices snel gebruiken. Weet u niet wat u bij een bepaalde instelling moet doen? Geen probleem, u kunt de configuratie altijd later wijzigen.",
     "accountReview": "Account controleren",
-    "serviceSetup": "Serviceconfiguratie",
-    "serviceSetupSub": "Unified Communications configureren",
+    "serviceSetup": "Communicatie",
+    "serviceSetupSub": "Instelling m.b.t. telefoon",
     "unifiedCommunication": "Unified Communications",
     "addUsers": "Gebruikers toevoegen",
     "addUsersSimple": "Gebruikers toevoegen | Eenvoudig",
@@ -635,7 +653,13 @@
     "finishDesc": "U hebt de configuratiewizard doorlopen. Hebt u stappen overgeslagen of wilt u instellingen wijzigen? Klik dan op het tandwieltje rechtsboven op de pagina om dit deelvenster opnieuw te openen.",
     "finish": "Voltooien",
     "finishSub": "Uw configuratie voltooien",
-    "completeRequired": "U moet {{name}} invullen."
+    "completeRequired": "U moet {{name}} invullen.",
+    "freeColumnHeader": "Gratis onbeperkt openbaar chatten",
+    "paidColumnHeader": "Purchased Managed Messaging",
+    "quantity": "Aantal:",
+    "trial": "Proef {{number}}",
+    "startYourTrial": "Start uw nieuwe {{days}}-daagse proefperiode.",
+    "trialDaysRemaining": "{{days}} dagen resterende in huidige proefversie."
   },
   "reports": {
     "title": "Rapporten",
@@ -651,8 +675,8 @@
     "highQuality": "5 hoogste kwaliteit",
     "leastQuality": "5 laagste kwaliteit",
     "services": "Alle services",
-    "UsersOnboarded": "Gebruikers geïntegreerd",
-    "AvgCallsPerUser": "Gem. aantal gesprekken per gebruiker",
+    "UsersOnboarded": "geïntegreerde gebruikers deze maand",
+    "AvgCallsPerUser": "Gemiddeld aantal gesprekken per gebruiker deze maand",
     "AvgRoomsPerUser": "Gem. aantal ruimtes per gebruiker deze maand",
     "ActiveUsers": "Gem. aantal actieve gebruikers deze maand",
     "OneOnOneRooms": "1:1-ruimtes deze maand",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "Aantal groepsruimtes (totaal)",
     "videoCallsAxis": "Aantal videogesprekken (totaal)",
     "avgCallsAxis": "Gespreksduur in minuten (gem.)",
+    "numberUsersAxis": "Aantal gebruikers (totaal)",
+    "numberCallsAxis": "Aantal gesprekken (totaal)",
     "filesSharedAxis": "Aantal gedeelde bestanden (totaal)",
     "gbSharedAxis": "Aantal gedeelde gigabytes (totaal)",
     "orgDsc": "Het totaal aantal gebruikers in een organisatie.",
     "onboardDsc": "Het totaal aantal gebruikers die zich aangemeld hebben of rechten hebben voor Spark.",
-    "activeDsc": "Het totaal aantal gebruikers die een bericht hebben verzonden/gelezen of een ruimte hebben gemaakt/betreden in de voorbije week."
+    "activeDsc": "Het totaal aantal gebruikers die een bericht hebben verzonden/gelezen of een ruimte hebben gemaakt/betreden in de voorbije week.",
+    "allCustomers": "Alle klanten"
   },
   "callRouting": {
     "title": "Gespreksomleiding",
@@ -722,11 +749,14 @@
     "directNumbers": "Telefoonlijstnummers",
     "internalNumberLabel": "U bereikt deze lijn door de nummers of extensies die hieronder staan vermeld, te draaien.",
     "internalNumberExtension": "Intern toestelnummer",
-    "internalNumberExtensionTooltip": "Gebruik het interne nummer om deze lijn intern vanaf dezelfde locatie binnen het bedrijf te bereiken.",
+    "internalNumberExtensionTooltip": "Gebruik het interne toestelnummer om deze lijn binnen het bedrijf van dezelfde vestiging te bereiken.",
+    "internalNumberPoolError": "Interne toestelnummers konden niet geladen worden.",
     "enterpriseSiteNumberLabel": "Als uw bedrijf bellen van locatie naar locatie gebruikt:",
-    "externalNumberLabel": "Extern nummer",
-    "externalNumberTooltip": "Gebruik het externe nummer om deze lijn extern (niet binnen het bedrijf) te bereiken.",
+    "externalNumberLabel": "Rechtstreekse lijn",
+    "externalNumberTooltip": "Gebruik de rechtstreekse lijn om deze lijn buiten het bedrijf te bereiken.",
+    "externalNumberPoolError": "Rechtstreekse lijnen konden niet geladen worden.",
     "chooseNumber": "Kies een nummer",
+    "searchNumber": "Zoeken naar een nummer...",
     "addNewNumber": "Een nieuw nummer toevoegen",
     "removeNumber": "Lijn verwijderen",
     "none": "Geen",
@@ -736,7 +766,8 @@
     "alert": "Waarschuwing",
     "userError": "Gebruiker {{user}} was niet correct voorzien.",
     "maxLines": "{{user}} heeft het maximum aantal lijnen overschreden. Verwijder een lijn van deze gebruiker alvorens extra lijnen te voorzien.",
-    "confirm": "Er zijn wijzigingen op deze pagina die niet opgeslagen zijn. Wilt u verdergaan?"
+    "confirm": "Er zijn wijzigingen op deze pagina die niet opgeslagen zijn. Wilt u verdergaan?",
+    "unassignedNumberError": "Kon geen niet-toegewezen nummer ophalen."
   },
   "callForwardPanel": {
     "title": "Gesprekken doorschakelen",
@@ -824,7 +855,7 @@
     "entitlementsTitle": "Geïntegreerde gebruikers",
     "activeUsersTitle": "Dagelijks actieve gebruikers",
     "averageCallsTitle": "Gemiddeld aantal gesprekken per gebruiker",
-    "contentSharedTitle": "Totaal gedeelde inhoud"
+    "contentSharedTitle": "Gedeelde bestanden"
   },
   "trialModal": {
     "trialSuccess": "Uw proefperiode is met succes aangevraagd.",
@@ -840,7 +871,7 @@
   },
   "trials": {
     "collab": "Standaard teamruimtes + vergaderingen met 25 partijen",
-    "squaredUC": "Geavanceerde communicatie"
+    "squaredUC": "Gevanceerd Spark-gesprek"
   },
   "status": {
     "noResults": "Er zijn geen resultaten beschikbaar.",
@@ -896,31 +927,23 @@
     "none": "Geen"
   },
   "didAddModal": {
-    "title": "Telefoonnummers toevoegen",
-    "instructionsText": "Het bedrijf waarvoor u de configuratie uitvoert, moet u de bestaande telefoonnummers geven. Vervolgens kunt u de telefoonnummers porteren.",
-    "processingText": "De telefoonnummers worden toegevoegd...",
-    "successText": "{{count}} nieuw(e) telefoonnummer(s) werd(en) met succes toegevoegd.",
-    "failText": "{{count}} telefoonnummer(s) bevond(en) zich al in het systeem.",
-    "sendEmail": "Klant waarschuwen",
-    "notifyCustLater": "Klant later waarschuwen",
-    "emailSuccessText": "De e-mail is met succes naar de klant verzonden.",
-    "emailFailText": "Er is een fout opgetreden tijdens het verzenden van de e-mail",
-    "inputPlacehoder": "Voer telefoonnummers in, gescheiden met een komma"
+    "title": "Telefoonnummers toevoegen (optioneel)"
   },
   "didManageModal": {
     "title": "Telefoonnummers beheren",
-    "instructionsText": "Het bedrijf waarvoor u de configuratie uitvoert, moet u de bestaande telefoonnummers geven. Vervolgens kunt u de telefoonnummers porteren.",
-    "processingText": "De telefoonnummers worden toegevoegd...",
+    "instructionsText": "Het bedrijf dat u configureert, moet u voorzien van hun bestaande telefoonnummers. Dit zal het porteerverzoek van de telefoonnummers van het bedrijf starten.",
+    "processingText": "Telefoonnummers worden verwerkt...",
     "newDidText": "{{count}} nieuw(e) telefoonnummer(s) werd(en) met succes toegevoegd.",
     "existingDidText": "{{count}} telefoonnummer(s) bevond(en) zich al in het systeem.",
     "deleteDidText": "{{count}} telefoonnummer(s) werd(en) verwijderd.",
-    "deleteConfirmationText": "Weet u zeker dat u het/de volgende {{count}} nummer(s) wilt verwijderen? Dit kan gevolgen hebben voor eindgebruikers als deze nummers toegekend worden aan gebruikerslijnen.",
+    "deleteConfirmationText": "Weet u zeker dat u het/de volgende {{count}} nummer(s) wilt verwijderen?  Dit kan gevolgen hebben voor de eindgebruikers als deze nummers toegewezen zijn aan de lijnen van de gebruikers.",
     "removeNumbers": "Nummers verwijderen",
     "sendEmail": "Klant waarschuwen",
     "notifyCustLater": "Klant later waarschuwen",
     "emailSuccessText": "De e-mail is met succes naar de klant verzonden.",
     "emailFailText": "Er is een fout opgetreden tijdens het verzenden van de e-mail",
-    "inputPlacehoder": "Voer telefoonnummers in, gescheiden met een komma"
+    "inputPlacehoder": "Voer telefoonnummers in, gescheiden met een komma",
+    "didFormatHelpText": "Voorbeeldopmaken zijn: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Apparaatconfiguratie",
@@ -1032,8 +1055,8 @@
     "deleteResource": "Resource uitschakelen"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "Inschakelen van sessies bijgewerkt",
-    "privilegesUpdateSuccess": "Rechten bijgewerkt",
+    "sessionEnablementUpdateSuccess": "Inschakeling sessietype bijgewerkt.",
+    "privilegesUpdateSuccess": "Rechten bijgewerkt.",
     "reload": "Probeer het opnieuw",
     "cancel": "Ga terug"
   },
@@ -1128,12 +1151,13 @@
     "039007": "Uw e-mailadres wordt niet geaccepteerd door onze locatie.",
     "039008": "039008",
     "039009": "039009",
-    "200006": "U bent nog niet voor deze locatie doorgevoerd als beheerder. Dit proces kan even duren.",
+    "110055": "Gebruikerslimiet overschreden voor het sessietype \"{{sessionTypeName}}\".",
     "defaultProcessError": "Kan verzoek niet verwerken",
-    "defaultAccessError": "Er is momenteel geen toegang tot de server"
+    "defaultAccessError": "Momenteel geen toegang tot deze server.",
+    "defaultNotWebExAdminError": "U bent nog niet voor deze locatie doorgevoerd als beheerder. Dit proces kan even duren."
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "Inschakelen van sessies",
+    "sessionEnablementLabel": "Inschakeling sessietype",
     "handsOnLabAdminLabel": "Hands-on Lab Admin (alleen operationeel wanneer hands-on lab is ingeschakeld)",
     "optimizeBandwidthUsageLabel": "Geoptimaliseerd gebruik brandbreedte voor deelnemers binnen hetzelfde netwerk",
     "videoSettingsLabel": "Video-instellingen",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "Teleconferentie met terugbellen",
     "globalCallBackTeleconfLabel": "Wereldwijde teleconferentie met terugbellen",
     "integratedVoIPLaabel": "Geïntegreerde VoIP",
+    "priviligesLable": "Rechten",
     "userPriviligesLabel": "Gebruikersrechten",
     "advancedLinkLabel": "Geavanceerde instellingen"
   },
@@ -1158,7 +1183,7 @@
     "messagingSubtitle": "Standaard teamruimtes",
     "messagingDesc": "Dankzij teamruimtes met inhoudopslag kunt u gemakkelijk samenwerken vanaf om het even welk apparaat voor gebruikers binnen of buiten uw organisatie.",
     "communicationTitle": "Communicatie",
-    "communicationSubtitle": "Advanced Unified",
+    "communicationSubtitle": "Gevanceerd Spark-gesprek",
     "communicationDesc": "Basis extern bellen en volledige Unified Communications ingeschakeld voor uw organisatie.",
     "conferencingTitle": "Conferentie",
     "conferencingSubtitle": "Meeting Center",
@@ -1207,6 +1232,12 @@
     "average": "Gemiddelde",
     "bridgeUtilization": "Gebruik van Bridge By Bridge"
   },
+  "alarmsPage": {
+    "alarms": "Alarmen"
+  },
+  "eventsPage": {
+    "events": "Gebeurtenissen"
+  },
   "processOrderPage": {
     "errOrgCreation": "Ordernr. {{orderId}} wordt verwerkt. Kom terug een kijkje nemen na 24 uur.",
     "info": "Status",
@@ -1240,5 +1271,14 @@
     "licenseCount": "Aantal licenties",
     "type": "Type",
     "launchSite": "Locatiebeheerder opstarten"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "Toestelnummers in de cloud",
+    "calendar": "Agenda",
+    "on": "Aan",
+    "off": "Uit",
+    "calendarService": "Agendaservice",
+    "sparkDesc": "@spark opnemen in een vergaderingsuitnodiging, maakt automatisch een Spark-ruimte aan.",
+    "webexDesc": "@webex opnemen in de vergaderingsuitnodiging maakt een WebEx-vergadering aan en voegt de informatie bij de uitnodiging."
   }
 }

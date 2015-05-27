@@ -23,7 +23,8 @@
     "statusHeader": "状态/工具",
     "modify": "修改",
     "existingUsers": "现有用户",
-    "userInput": "输入一个或多个电子邮件地址，以逗号分隔。",
+    "userInput": "输入电子邮件地址或群电子邮件发送器，以逗号分隔。",
+    "userInputDescription": "例如：John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "active": "活动",
     "inactive": "",
     "validEmailInput": "请输入有效的用户电子邮件。",
@@ -51,7 +52,10 @@
     "deleteUserError": "删除用户时出错。状态：{{status}}",
     "onboardSuccess": "{{email}} 已成功在线",
     "onboardError": "{{email}} 不在线。状态：{{status}}",
-    "ciscoucError": "{{email}} 未供应统一通信。"
+    "ciscoucError": "{{email}} 未供应统一通信。",
+    "statusError": "请求失败。状态：{{status}}。",
+    "messageError": "消息：{{message}}",
+    "userListError": "检索用户列表时出错。请尝试重新加载页面。"
   },
   "groupsPage": {
     "manageGroups": "群",
@@ -62,6 +66,7 @@
   "onboardModal": {
     "onboardUsers": "线上用户",
     "cancel": "取消",
+    "clear": "清除",
     "addUsersDesc": "输入公司中将接收协作服务的人员的电子邮件地址。这些人员将收到注册的电子邮件邀请。",
     "addUserText": "您想要添加谁？",
     "userInput": "输入电子邮件地址或群电子邮件发送器，以逗号分隔...",
@@ -85,17 +90,18 @@
     "addEntitleError": "权限不足，无法添加用户或为用户授权。",
     "freeMsg": "免费 Spark 消息",
     "freeConf": "免费第三方 Spark 会议",
-    "freeComm": "免费网内 IP 语音和视频呼叫",
+    "freeComm": "免费一对一 Spark 呼叫",
     "paidMsg": "标准团队房间",
-    "paidConf": "25 人会议",
-    "paidComm": "高级通信",
+    "paidConf": "25 方会议",
+    "paidComm": "高级 Spark 呼叫",
     "freeSpark": "免费 Spark 消息",
     "enterpriseEdition": "企业版",
-    "meetingCenter": "Meeting Center",
-    "supportCenter": "Support Center",
-    "trainingCenter": "Training Center",
-    "eventCenter": "Event Center",
-    "communication": "通信"
+    "meetingCenter": "Meeting Center {{capacity}}",
+    "supportCenter": "Support Center {{capacity}}",
+    "trainingCenter": "Training Center {{capacity}}",
+    "eventCenter": "Event Center {{capacity}}",
+    "communication": "通信",
+    "cloudExtensions": "云扩展"
   },
   "usersPreview": {
     "groupPreview": "群：",
@@ -160,7 +166,11 @@
     "entResUtilizationTabDesc": "企业资源利用率",
     "servicesTab": "服务",
     "conferencing": "会议",
-    "conferencingDesc": "站点管理员列表"
+    "conferencingDesc": "站点管理员列表",
+    "alarmsTab": "警报",
+    "alarmsTabDesc": "警报管理",
+    "eventsTab": "事件",
+    "eventsTabDesc": "事件管理"
   },
   "index": {
     "welcome": "欢迎！",
@@ -231,13 +241,13 @@
     "leastEngaged": "参与度最低的前 5 个",
     "highQuality": "质量最高的前 5 个",
     "leastQuality": "质量最低的前 5 个",
-    "customerLoadError": "加载客户列表时出错。",
-    "userLoadError": "加载所选客户的用户时出错。"
+    "customerLoadError": "加载客户列表时出错。"
   },
   "activeUsers": {
     "active": "活动",
     "activeUsers": "活动用户",
-    "activeUserError": "加载活动用户数据时出错。",
+    "activeUserGraphError": "加载活动用户数据时出错。",
+    "activeUserTableError": "为 {{customer}} 加载最活跃用户的数据时出错。",
     "calls": "呼叫",
     "customer": "客户",
     "hideActiveUsers": "隐藏最活跃的用户",
@@ -276,12 +286,13 @@
     "searching": "正在搜索...",
     "userLogs": "用户日志",
     "logEmailAddress": "电子邮件地址",
-    "logDate": "上传时间",
     "logLocusId": "Locus 标识",
     "logCallStart": "呼叫开始时间",
     "logAction": "客户端日志",
+    "callflowLogsAction": "呼叫日志",
     "callflowAction": "呼叫流程图",
     "callAction": "呼叫信息",
+    "callSummaryAction": "呼叫摘要",
     "errEmptyinput": "“搜索输入”不得为空。",
     "errLogQuery": "检索日志失败。状态：{{status}}",
     "inputPlaceholder": "输入搜索词（电子邮件地址、用户标识、Locus 标识等等）",
@@ -357,7 +368,7 @@
     "overview": "最近 4 周",
     "activeUsers": "活动用户",
     "calls": "已发起的呼叫",
-    "updated": "上次更新日期",
+    "updated": "上次同步",
     "conversations": "已创建的房间",
     "contentShared": "已共享的文件",
     "activity": "活动始自",
@@ -386,7 +397,7 @@
     "unlicensedDateText": "未授权的用户注册的日期",
     "unlicensedText": "未授权的用户",
     "convertText": "查看和转换当前使用免费版本的用户",
-    "lastUpdated": "上次更新日期"
+    "lastUpdated": "上次同步"
   },
   "inviteModal": {
     "title": "服务授权",
@@ -443,7 +454,7 @@
     "siteCodeDescription": "指定标识特定站点的唯一编号。",
     "internalExtensionRange": "内部分机范围",
     "internalNumberRangeDescription": "指定内部号码的范围。长度必须为 4 位数字。",
-    "extensionError": "分机无效：",
+    "extensionError": "分机无效： ",
     "to": "到",
     "addMoreExtensionRanges": "添加更多分机范围",
     "globalMOH": "全局媒体保持 (MOH)",
@@ -451,9 +462,13 @@
     "ciscoDefault": "Cisco 缺省值",
     "fall": "秋",
     "winter": "冬",
-    "addSuccess": " 添加成功。",
     "emptyNumber": "“数目”不得为空",
-    "notANumber": " 不是有效的数字"
+    "notANumber": " 不是有效的数字",
+    "saveSuccess": "Unified Communications 设置保存成功",
+    "siteError": "创建站点失败。",
+    "extensionDeleteSuccess": "删除分机 {{extension}} 成功。",
+    "extensionDeleteError": "删除分机 {{extension}} 失败。",
+    "extensionAddError": "创建分机 {{extension}} 失败。"
   },
   "dirsyncModal": {
     "chooseSync": "选择同步",
@@ -589,13 +604,16 @@
     "advancedSub": "从 Active Directory 同步用户",
     "needHelp": "需要帮助？",
     "planReview": "计划审核",
+    "messaging": "消息",
+    "conferencing": "会议",
+    "communications": "通信",
     "enterpriseSettings": "企业设置",
     "planReviewSub": "协作计划概览",
     "enterpriseSettingsSub": "设置全局配置",
     "planReviewDesc": "此设置向导可让您为组织快速启动并执行协作服务。如果不确定任何给定步骤中所要执行的操作，请不要担心，您稍后可以随时作出更改。",
     "accountReview": "帐户审核",
-    "serviceSetup": "服务设置",
-    "serviceSetupSub": "设置统一通信",
+    "serviceSetup": "通信",
+    "serviceSetupSub": "与电话有关的设置",
     "unifiedCommunication": "统一通信",
     "addUsers": "添加用户",
     "addUsersSimple": "添加用户 | 简单",
@@ -635,7 +653,13 @@
     "finishDesc": "您已完成设置向导。如果已跳过步骤或需要更改任何设置，请单击页面右上角的齿轮图标来再次访问这个面板。",
     "finish": "完成",
     "finishSub": "完成设置",
-    "completeRequired": "必须填写 {{name}}。"
+    "completeRequired": "必须填写 {{name}}。",
+    "freeColumnHeader": "免费无限公共消息",
+    "paidColumnHeader": "购买的受管消息",
+    "quantity": "数量：",
+    "trial": "试用 {{number}}",
+    "startYourTrial": "开始全新的 {{days}} 天试用。",
+    "trialDaysRemaining": "当前试用还剩 {{days}} 天。"
   },
   "reports": {
     "title": "报告",
@@ -651,8 +675,8 @@
     "highQuality": "质量最高的 5 个",
     "leastQuality": "质量最低的 5 个",
     "services": "所有服务",
-    "UsersOnboarded": "已在线用户",
-    "AvgCallsPerUser": "每个用户的平均呼叫数",
+    "UsersOnboarded": "本月已在线用户",
+    "AvgCallsPerUser": "本月每个用户的平均呼叫数",
     "AvgRoomsPerUser": "本月每个用户的平均房间数",
     "ActiveUsers": "本月的平均活动用户数",
     "OneOnOneRooms": "本月的一对一房间数",
@@ -670,11 +694,14 @@
     "groupRoomsAxis": "群房间数（总计）",
     "videoCallsAxis": "视频呼叫数（总计）",
     "avgCallsAxis": "呼叫持续时间（单位：分钟）（平均）",
+    "numberUsersAxis": "用户数（总计）",
+    "numberCallsAxis": "呼叫数（总计）",
     "filesSharedAxis": "共享文件数（总计）",
     "gbSharedAxis": "共享大小（单位：GB）（总计）",
     "orgDsc": "组织中的用户总数。",
     "onboardDsc": "已登录或已获授权使用 Spark 的用户总数。",
-    "activeDsc": "在过去一周发送/阅读消息或创建/进入房间的用户总数。"
+    "activeDsc": "在过去一周发送/阅读消息或创建/进入房间的用户总数。",
+    "allCustomers": "所有客户"
   },
   "callRouting": {
     "title": "呼叫路由",
@@ -721,12 +748,15 @@
     "error": "线路配置失败。",
     "directNumbers": "目录号码",
     "internalNumberLabel": "拨打下面列出的号码或分机号码来接通此线路。",
-    "internalNumberExtension": "内部号码分机",
-    "internalNumberExtensionTooltip": "在同一站点使用内部号码从公司内部接通此线路。",
+    "internalNumberExtension": "内部分机",
+    "internalNumberExtensionTooltip": "在同一站点使用内部分机从公司内部接通此线路。",
+    "internalNumberPoolError": "内部分机加载失败。",
     "enterpriseSiteNumberLabel": "如果您的公司使用站点对站点拨号：",
-    "externalNumberLabel": "外部号码",
-    "externalNumberTooltip": "使用外部号码从公司外部接通此线路。",
+    "externalNumberLabel": "直线",
+    "externalNumberTooltip": "使用直线从公司外部接通此线路。",
+    "externalNumberPoolError": "直线加载失败。",
     "chooseNumber": "选择号码",
+    "searchNumber": "搜索号码...",
     "addNewNumber": "添加新号码",
     "removeNumber": "删除线路",
     "none": "无",
@@ -736,7 +766,8 @@
     "alert": "警告",
     "userError": "用户 {{user}} 未正确供应。",
     "maxLines": "{{user}} 超出线路数量上限。在供应其他线路前请从此用户中删除线路。",
-    "confirm": "此页上有未保存的更改。是否继续？"
+    "confirm": "此页上有未保存的更改。是否继续？",
+    "unassignedNumberError": "无法检索未分配号码。"
   },
   "callForwardPanel": {
     "title": "呼叫转移",
@@ -824,7 +855,7 @@
     "entitlementsTitle": "已在线用户",
     "activeUsersTitle": "每日活动用户数",
     "averageCallsTitle": "每个用户的平均呼叫数",
-    "contentSharedTitle": "共享内容总计"
+    "contentSharedTitle": "已共享的文件"
   },
   "trialModal": {
     "trialSuccess": "设置试用成功。",
@@ -839,8 +870,8 @@
     "editSuccess": "已成功为 {{customerName}} 编辑试用，许可证数为 {{licenseCount}} 个，试用期为 {{licenseDuration}} 天。"
   },
   "trials": {
-    "collab": "标准团队房间 + 25 人会议",
-    "squaredUC": "高级通信"
+    "collab": "标准团队房间 + 25 方会议",
+    "squaredUC": "高级 Spark 呼叫"
   },
   "status": {
     "noResults": "无可用的结果。",
@@ -896,31 +927,23 @@
     "none": "无"
   },
   "didAddModal": {
-    "title": "添加电话号码",
-    "instructionsText": "您正在设置的公司需要向您提供其现有电话号码。这将启动公司电话号码的转移请求。",
-    "processingText": "正在添加电话号码...",
-    "successText": "{{count}} 个新电话号码添加成功。",
-    "failText": "{{count}} 个电话号码已存在于系统中。",
-    "sendEmail": "通知客户",
-    "notifyCustLater": "稍后通知客户",
-    "emailSuccessText": "电子邮件已成功发送给客户。",
-    "emailFailText": "发送电子邮件时出错",
-    "inputPlacehoder": "输入电话号码，以逗号分隔"
+    "title": "添加电话号码（可选）"
   },
   "didManageModal": {
     "title": "管理电话号码",
-    "instructionsText": "您正在设置的公司需要向您提供其现有电话号码。这将启动公司电话号码的转移请求。",
-    "processingText": "正在添加电话号码...",
+    "instructionsText": "您正在设置的公司需要向您提供现有电话号码。这将发起公司电话号码的移植请求。",
+    "processingText": "正在处理电话号码...",
     "newDidText": "{{count}} 个新电话号码添加成功。",
     "existingDidText": "{{count}} 个电话号码已存在于系统中。",
     "deleteDidText": "{{count}} 个电话号码已删除。",
-    "deleteConfirmationText": "确定要删除下列 {{count}} 个号码吗？如果将这些号码分配给用户的线路，可能会影响最终用户。",
+    "deleteConfirmationText": "确定要删除以下 {{count}} 个号码吗？如果将这些号码分配到用户的线路，可能会影响最终用户。",
     "removeNumbers": "删除号码",
     "sendEmail": "通知客户",
     "notifyCustLater": "稍后通知客户",
     "emailSuccessText": "电子邮件已成功发送给客户。",
     "emailFailText": "发送电子邮件时出错",
-    "inputPlacehoder": "输入电话号码，以逗号分隔"
+    "inputPlacehoder": "输入电话号码，以逗号分隔",
+    "didFormatHelpText": "示例格式包括：15556667777、+15556667777、1-555-666-7777、15556667777、+1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "设备配置",
@@ -1032,8 +1055,8 @@
     "deleteResource": "停用资源"
   },
   "webexUserSettings": {
-    "sessionEnablementUpdateSuccess": "会话启动已更新",
-    "privilegesUpdateSuccess": "权限已更新",
+    "sessionEnablementUpdateSuccess": "会话类型启用已更新。",
+    "privilegesUpdateSuccess": "权限已更新。",
     "reload": "请重试",
     "cancel": "返回"
   },
@@ -1128,12 +1151,13 @@
     "039007": "我们站点不接受您的电子邮件地址。",
     "039008": "039008",
     "039009": "039009",
-    "200006": "尚未将您作为管理员供应至此站点。此过程可能需要一些时间。",
+    "110055": "超出会话类型“{{sessionTypeName}}”的用户限制。",
     "defaultProcessError": "无法处理请求。",
-    "defaultAccessError": "现在无法访问服务器"
+    "defaultAccessError": "目前无法访问服务器。",
+    "defaultNotWebExAdminError": "尚未将您作为管理员供应至此站点。此过程可能需要一些时间。"
   },
   "webexUserSettingLabels": {
-    "sessionEnablementLabel": "会话启动",
+    "sessionEnablementLabel": "会话类型启用",
     "handsOnLabAdminLabel": "上机实验室管理员（仅在启用上机实验室时有效）",
     "optimizeBandwidthUsageLabel": "已为同一网络中的与会者优化带宽使用",
     "videoSettingsLabel": "视频设置",
@@ -1147,6 +1171,7 @@
     "callBackTeleconfLabel": "回呼电话会议",
     "globalCallBackTeleconfLabel": "全球回呼电话会议",
     "integratedVoIPLaabel": "集成 VoIP",
+    "priviligesLable": "权限",
     "userPriviligesLabel": "用户权限",
     "advancedLinkLabel": "高级设置"
   },
@@ -1158,7 +1183,7 @@
     "messagingSubtitle": "标准团队房间",
     "messagingDesc": "具有内容存储功能的团队房间可让您轻松与组织内外的任何设备或用户协作。",
     "communicationTitle": "通信",
-    "communicationSubtitle": "高级统一",
+    "communicationSubtitle": "高级 Spark 呼叫",
     "communicationDesc": "您的组织已启用基本外部呼叫和完全 Unified Communications。",
     "conferencingTitle": "会议",
     "conferencingSubtitle": "Meeting Center",
@@ -1207,6 +1232,12 @@
     "average": "平均",
     "bridgeUtilization": "Bridge By Bridge 利用率"
   },
+  "alarmsPage": {
+    "alarms": "警报"
+  },
+  "eventsPage": {
+    "events": "事件"
+  },
   "processOrderPage": {
     "errOrgCreation": "订单 # {{orderId}} 正在处理中。请于 24 小时后再来核对。",
     "info": "状态",
@@ -1240,5 +1271,14 @@
     "licenseCount": "许可证数量",
     "type": "类型",
     "launchSite": "启动站点管理员"
+  },
+  "cloudExtensions": {
+    "cloudExtensions": "云扩展",
+    "calendar": "日历",
+    "on": "开",
+    "off": "关",
+    "calendarService": "日历服务",
+    "sparkDesc": "在会议邀请中包括 @spark 将自动创建 Spark 房间。",
+    "webexDesc": "在会议邀请中包括 @webex 将创建 WebEx 会议并向邀请附加信息。"
   }
 }
