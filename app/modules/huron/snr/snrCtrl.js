@@ -11,6 +11,23 @@
     vm.saveSingleNumberReach = saveSingleNumberReach;
     vm.reset = reset;
 
+    vm.formFields = [{
+      key: 'destination',
+      type: 'input',
+      templateOptions: {
+        type: 'text',
+        placeholder: $translate.instant('singleNumberReachPanel.placeholder'),
+        inputClass: 'col-sm-12',
+        maxlength: 24,
+        required: true
+      },
+      expressionProperties: {
+        'hide': function ($viewValue, $modelValue, scope) {
+          return !scope.model.singleNumberReachEnabled;
+        }
+      }
+    }];
+
     vm.snrOptions = [{
       label: 'All Lines',
       line: 'all'
@@ -126,7 +143,7 @@
 
     function saveSingleNumberReach() {
       HttpUtils.setTrackingID().then(function () {
-        if (vm.telephonyInfo.snrInfo.remoteDestinations !== null && vm.telephonyInfo.snrInfo.remoteDestinations !== undefined && vm.telephonyInfo.snrInfo.remoteDestinations.length > 0) {
+        if (angular.isArray(vm.telephonyInfo.snrInfo.remoteDestinations) && vm.telephonyInfo.snrInfo.remoteDestinations.length > 0) {
           if (!vm.telephonyInfo.snrInfo.singleNumberReachEnabled) {
             deleteRemoteDestinationInfo(vm.currentUser).then(function () {
               resetForm();
@@ -136,7 +153,7 @@
               resetForm();
             });
           }
-        } else {
+        } else if (vm.telephonyInfo.snrInfo.singleNumberReachEnabled) {
           createRemoteDestinationInfo(vm.currentUser, vm.telephonyInfo.snrInfo.destination)
             .then(function (response) {
               processCreateRemoteDestionInfo(response);
@@ -146,6 +163,10 @@
             .catch(function () {
               processCreateRemoteDestionInfo(null);
             });
+        } else {
+          // Nothing to delete, notify success
+          resetForm();
+          Notification.notify([$translate.instant('singleNumberReachPanel.removeSuccess')], 'success');
         }
       });
     }

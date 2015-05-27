@@ -1,8 +1,6 @@
 <h4 translate="directoryNumberPanel.directNumbers"></h4>
 <div class="form-group">
-  <label for="internalNumber">
-    {{'directoryNumberPanel.internalNumberLabel' | translate}}
-  </label>
+  <span translate="directoryNumberPanel.internalNumberLabel"></span>
 </div>
 <div class="form-group">
   <label for="internalNumber">
@@ -38,8 +36,6 @@
       <i class="dn-help-icon"></i>
     </span>
   </label>
-  <!-- <select ng-model="lineSettings.assignedExternalNumber" class="form-control" id="externalNumber" ng-options="directoryNumber.pattern for directoryNumber in lineSettings.externalNumberPool track by directoryNumber.uuid">
-  </select> -->
   <cs-select
     name="externalNumber"
     ng-model="lineSettings.assignedExternalNumber"

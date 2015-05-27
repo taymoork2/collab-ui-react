@@ -149,6 +149,7 @@ exports.expectTextToBeSet = function (elem, text) {
 };
 
 exports.expectValueToBeSet = function (elem, value) {
+  this.wait(elem);
   browser.wait(function () {
     return elem.getAttribute('value').then(function (result) {
       return result !== undefined && result !== null && result === value;
@@ -159,6 +160,7 @@ exports.expectValueToBeSet = function (elem, value) {
 };
 
 exports.expectValueToContain = function (elem, value) {
+  this.wait(elem);
   browser.wait(function () {
     return elem.getAttribute('value').then(function (result) {
       return result !== undefined && result !== null && result.indexOf(value) > -1;

@@ -809,8 +809,8 @@
     "forwardNoCalls": "Do not forward calls",
     "forwardAllCalls": "Forward all calls",
     "forwardBusyNoAnswer": "Forward calls when line is busy or away",
-    "internalAndExternal": "For internal and external calls<br>",
-    "internalOnly": "Only for internal calls<br>",
+    "internalAndExternal": "For internal and external calls",
+    "internalOnly": "Only for internal calls",
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
@@ -1327,5 +1327,10 @@
     "calendarService": "Calendar Service",
     "sparkDesc": "Including @spark in a meeting invitation creates a Spark Room automatically.",
     "webexDesc": "Including @webex in the meeting invitation creates a WebEx meeting and appends the information to the invitation."
+  },
+  "validation": {
+    "nonPrintable": "This entry contains nonprintable characters.",
+    "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
+    "specialCharacters": "This entry contains special characters."
   }
 }

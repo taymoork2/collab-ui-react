@@ -136,7 +136,7 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       expect(TelephonyInfoService.getTelephonyInfo).toHaveBeenCalled();
       expect(controller.directoryNumber).toEqual(getDirectoryNumber);
-      expect(controller.forward).toBe('none');
+      expect(controller.cfModel.forward).toBe('none');
       expect(controller.telephonyInfo.voicemail).toBe('On');
     });
 
@@ -183,7 +183,7 @@ describe('Controller: LineSettingsCtrl', function () {
     beforeEach(function () {
       controller.callerIdInfo.selection = 'other';
       controller.callerIdInfo.otherName = 'Custom Name';
-      controller.forward = 'none';
+      controller.cfModel.forward = 'none';
       controller.saveLineSettings();
       $scope.$apply();
     });
@@ -200,7 +200,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('deletePrimaryLine', function () {
     beforeEach(function () {
-      controller.forward = 'none';
+      controller.cfModel.forward = 'none';
       modalDefer = $q.defer();
       spyOn($modal, 'open').and.returnValue({
         result: modalDefer.promise
@@ -222,8 +222,8 @@ describe('Controller: LineSettingsCtrl', function () {
       DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
       controller.init();
       $scope.$apply();
-      expect(controller.forward).toBe('busy');
-      expect(controller.forwardNABCalls).toBe('Voicemail');
+      expect(controller.cfModel.forward).toBe('busy');
+      expect(controller.cfModel.forwardNABCalls).toBe('Voicemail');
       expect(controller.telephonyInfo.voicemail).toBe('On');
     });
 
@@ -231,8 +231,8 @@ describe('Controller: LineSettingsCtrl', function () {
       DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusy));
       controller.init();
       $scope.$apply();
-      expect(controller.forward).toBe('busy');
-      expect(controller.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
+      expect(controller.cfModel.forward).toBe('busy');
+      expect(controller.cfModel.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
       expect(controller.telephonyInfo.voicemail).toBe('On');
     });
   });
@@ -243,7 +243,7 @@ describe('Controller: LineSettingsCtrl', function () {
       DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusyNewLine));
       controller.init();
       $scope.$apply();
-      expect(controller.forward).toBe('none');
+      expect(controller.cfModel.forward).toBe('none');
       expect(controller.telephonyInfo.voicemail).toBe('Off');
     });
 
@@ -252,15 +252,15 @@ describe('Controller: LineSettingsCtrl', function () {
       DirectoryNumber.getDirectoryNumber.and.returnValue($q.when(getDirectoryNumberBusy));
       controller.init();
       $scope.$apply();
-      expect(controller.forward).toBe('busy');
-      expect(controller.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
+      expect(controller.cfModel.forward).toBe('busy');
+      expect(controller.cfModel.forwardNABCalls).toBe(getDirectoryNumberBusy.callForwardBusy.intDestination);
       expect(controller.telephonyInfo.voicemail).toBe('Off');
     });
   });
 
   describe('deleteSecondLine', function () {
     beforeEach(function () {
-      controller.forward = 'none';
+      controller.cfModel.forward = 'none';
       modalDefer = $q.defer();
       spyOn($modal, 'open').and.returnValue({
         result: modalDefer.promise
@@ -283,7 +283,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('SharedLineUsers', function () {
     beforeEach(function () {
-      controller.forward = 'none';
+      controller.cfModel.forward = 'none';
       controller.selectedUsers.push(selectedUsers[0]);
       spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
       controller.saveLineSettings();
@@ -324,7 +324,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('update SharedLineDevices', function () {
     beforeEach(function () {
-      controller.forward = 'none';
+      controller.cfModel.forward = 'none';
       spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
       controller.selectedUsers = [];
       controller.devices = angular.copy(sharedLineEndpoints);
@@ -353,7 +353,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('Remove SharedLine Users', function () {
     beforeEach(function () {
-      controller.forward = 'none';
+      controller.cfModel.forward = 'none';
       spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
       controller.selectedUsers.push(selectedUsers[0]);
       controller.devices = sharedLineEndpoints;
@@ -372,7 +372,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('Remove SharedLine Member', function () {
     beforeEach(function () {
-      controller.forward = 'none';
+      controller.cfModel.forward = 'none';
       spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
       controller.selectedUsers.push(selectedUsers[0]);
       controller.devices = sharedLineEndpoints;
@@ -421,7 +421,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('addSharedLineUsersError', function () {
     beforeEach(function () {
-      controller.forward = 'none';
+      controller.cfModel.forward = 'none';
       spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(controller.maxlines));
       controller.selectedUsers.push(selectedUsers[0]);
       controller.saveLineSettings();

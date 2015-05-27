@@ -122,7 +122,7 @@ xdescribe('Telephony Info', function () {
 
       utils.expectIsDisplayed(telephony.forwardAll);
       utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
-      utils.expectInputValue(telephony.forwardAll, dropdownVariables.voicemail);
+      utils.expectValueToBeSet(telephony.forwardAll, dropdownVariables.voicemail);
     });
 
     it('should save call forward all to an outside number', function () {
@@ -135,7 +135,7 @@ xdescribe('Telephony Info', function () {
       utils.clickLastBreadcrumb();
       utils.click(telephony.directoryNumbers.first());
 
-      utils.expectInputValue(telephony.forwardAll, snrLine);
+      utils.expectValueToBeSet(telephony.forwardAll, snrLine);
     });
 
     xit('should save call forward busy/no answer to voicemail', function () {
@@ -154,7 +154,7 @@ xdescribe('Telephony Info', function () {
       utils.expectIsNotDisplayed(telephony.forwardAll);
       utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
       utils.expectIsDisplayed(telephony.forwardExternalCalls);
-      utils.expectInputValue(telephony.forwardBusyNoAnswer, dropdownVariables.voicemail);
+      utils.expectValueToBeSet(telephony.forwardBusyNoAnswer, dropdownVariables.voicemail);
     });
 
     it('should save call forward busy/no answer to an outside number', function () {
@@ -174,7 +174,7 @@ xdescribe('Telephony Info', function () {
       utils.expectIsNotDisplayed(telephony.forwardAll);
       utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
       utils.expectIsDisplayed(telephony.forwardExternalCalls);
-      utils.expectInputValue(telephony.forwardBusyNoAnswer, snrLine);
+      utils.expectValueToBeSet(telephony.forwardBusyNoAnswer, snrLine);
     });
 
     xit('should save external call forwarding to voicemail', function () {
@@ -190,7 +190,7 @@ xdescribe('Telephony Info', function () {
       utils.clickLastBreadcrumb();
       utils.click(telephony.directoryNumbers.first());
 
-      utils.expectInputValue(telephony.forwardExternalBusyNoAnswer, dropdownVariables.voicemail);
+      utils.expectValueToBeSet(telephony.forwardExternalBusyNoAnswer, dropdownVariables.voicemail);
     });
 
     it('should save external call forwarding to an outside number', function () {
@@ -204,7 +204,7 @@ xdescribe('Telephony Info', function () {
       utils.clickLastBreadcrumb();
       utils.click(telephony.directoryNumbers.first());
 
-      utils.expectInputValue(telephony.forwardExternalBusyNoAnswer, externalCFLine);
+      utils.expectValueToBeSet(telephony.forwardExternalBusyNoAnswer, externalCFLine);
     });
 
     it('should change caller id to custom display', function () {

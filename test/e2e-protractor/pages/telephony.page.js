@@ -38,13 +38,13 @@ var TelephonyPage = function () {
   this.forwardNoneRadio = element(by.cssContainingText("span", "Do not forward calls"));
   this.forwardAllRadio = element(by.cssContainingText("span", "Forward all calls"));
   this.forwardBusyNoAnswerRadio = element(by.cssContainingText("span", "Forward calls when line is busy or away"));
-  this.forwardAll = element(by.id('cfa'));
-  this.forwardBusyNoAnswer = element(by.id('cfbna'));
+  this.forwardAll = element(by.id('forwardAllCalls'));
+  this.forwardBusyNoAnswer = element(by.id('forwardNABCalls'));
   this.forwardExternalCalls = element(by.css('label[for="ckForwardExternalCalls"]'));
-  this.forwardExternalBusyNoAnswer = element(by.id('cfbnaExternal'));
+  this.forwardExternalBusyNoAnswer = element(by.id('forwardExternalNABCalls'));
 
   this.snrSwitch = element(by.css('label[for="enableSnr"]'));
-  this.snrNumber = element(by.id('number'));
+  this.snrNumber = element(by.id('destination'));
   this.snrStatus = this.snrFeature.element(by.css('.feature-status'));
 
   this.internalNumber = element(by.id('internalNumber'));
@@ -52,7 +52,7 @@ var TelephonyPage = function () {
 
   this.callerIdDefault = element(by.css('label[for="callerIdDefault"]'));
   this.callerIdCustom = element(by.css('label[for="callerIdOther"]'));
-  this.callerId = element(by.id('other'));
+  this.callerId = element(by.id('otherName'));
 
   this.esnTail = element(by.id('esnTail'));
 

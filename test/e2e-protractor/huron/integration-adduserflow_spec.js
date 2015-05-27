@@ -77,7 +77,7 @@ xdescribe('Squared UC Add User flow', function () {
           utils.expectIsDisplayed(telephony.lineConfigurationPanel);
         });
         it('should have call forwarding default to empty', function () {
-          utils.expectInputValue(telephony.forwardBusyNoAnswer, '');
+          utils.expectValueToBeSet(telephony.forwardBusyNoAnswer, '');
         });
         it('should navigate back to overview panel', function () {
           utils.clickFirstBreadcrumb();

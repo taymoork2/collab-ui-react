@@ -1,6 +1,6 @@
-<form name="snr.form" novalidate role="form">
+<form novalidate name="snr.form" novalidate role="form">
   <cs-sp-buttons ng-show="snr.form.$dirty">
-    <button class="btn-primary" translate="common.save" ng-click="snr.saveSingleNumberReach()" type="submit"></button>
+    <button class="btn-primary" translate="common.save" ng-click="snr.saveSingleNumberReach()" ng-disabled="snr.form.$invalid" type="submit"></button>
     <button class="btn-default" translate="common.cancel" ng-click="snr.reset(snr.form)"></button>
   </cs-sp-buttons>
   <cs-sp-container>
@@ -9,20 +9,15 @@
         <span class="section-name" translate="singleNumberReachPanel.title"></span>
       </div>
       <p translate="singleNumberReachPanel.description"></p>
-      <div>
-        <cs-toggle-switch ng-model="snr.telephonyInfo.snrInfo.singleNumberReachEnabled" toggle-id="enableSnr" name="enableSnr" size="small"></cs-toggle-switch><br><br>
-        <div class="form-group" ng-show="snr.telephonyInfo.snrInfo.singleNumberReachEnabled">
-          <div class="col-sm-8">
-            <input type="text" class="form-control" id="number" ng-model="snr.telephonyInfo.snrInfo.destination" ng-disabled="!snr.telephonyInfo.snrInfo.singleNumberReachEnabled" placeholder="{{'singleNumberReachPanel.placeholder' | translate}}">
-          </div>
-          <span class="asterix">*</span>
-        </div>
-        <div ng-show="false">
-          <p class="text-muted" translate="singleNumberReachPanel.snrNote"></p>
-          <br>
-          <cs-radiobutton choice="snr.snrLineOption" options="snr.snrOptions" label="label" value="line"></cs-radiobutton><br>
-          <div ng-show="snr.snrLineOption !== 'all'">
-          </div>
+      <cs-toggle-switch ng-model="snr.telephonyInfo.snrInfo.singleNumberReachEnabled" toggle-id="enableSnr" name="enableSnr" size="small"></cs-toggle-switch>
+
+      <formly-form model="snr.telephonyInfo.snrInfo" fields="snr.formFields"></formly-form>
+
+      <div ng-show="false">
+        <p class="text-muted" translate="singleNumberReachPanel.snrNote"></p>
+        <br>
+        <cs-radiobutton choice="snr.snrLineOption" options="snr.snrOptions" label="label" value="line"></cs-radiobutton><br>
+        <div ng-show="snr.snrLineOption !== 'all'">
         </div>
       </div>
     </cs-sp-section>

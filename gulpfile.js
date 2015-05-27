@@ -23,6 +23,10 @@ var runSeq = require('run-sequence');
 var testFiles = [];
 var changedFiles = [];
 
+function isLinux() {
+  return process.platform === 'linux';
+}
+
 //============================================
 // GULP MAIN TASKS
 //============================================
@@ -663,13 +667,21 @@ gulp.task('browser-sync', function() {
   };
 
   if (args.browserall) {
-    browser = ['google chrome', 'firefox', 'safari'];
+    if (isLinux()) {
+      browser = ['google-chrome', 'firefox', 'safari'];
+    } else {
+      browser = ['google chrome', 'firefox', 'safari'];
+    }
   } else if (args.firefox) {
     browser = ['firefox'];
   } else if (args.safari) {
     browser = ['safari'];
   } else {
-    browser = ['google chrome'];
+    if (isLinux()) {
+      browser = ['google-chrome'];
+    } else {
+      browser = ['google chrome'];
+    }
   }
 
   var options = {
@@ -678,7 +690,7 @@ gulp.task('browser-sync', function() {
     server: {
       baseDir: baseDir
     },
-    ghostMode: ghostMode,
+    ghostMode: args.browserall ? ghostMode : false,
     injectChanges: true,
     logFileChanges: true,
     logLevel: 'info',
