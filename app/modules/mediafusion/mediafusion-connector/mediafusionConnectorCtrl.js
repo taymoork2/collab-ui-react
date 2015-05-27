@@ -27,9 +27,10 @@ angular.module('Mediafusion')
         rowHeight: 44,
         headerRowHeight: 40,
         useExternalSorting: false,
+        enableVerticalScrollbar: 0,
 
         columnDefs: [{
-          field: 'hosts[0].host_name',
+          field: 'name',
           displayName: 'Name'
         }, {
           field: 'hosts[0].host_name',
