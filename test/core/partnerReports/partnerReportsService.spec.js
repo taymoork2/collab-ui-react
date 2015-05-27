@@ -2,7 +2,7 @@
 
 describe('Service: Partner Reports Service', function () {
   var $httpBackend, PartnerReportService, Config, Notification;
-  var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl;
+  var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl, callMetricsUrl;
 
   beforeEach(module('Core'));
 
@@ -17,6 +17,7 @@ describe('Service: Partner Reports Service', function () {
     'organizations': getJSONFixture('core/json/partnerReports/customerResponse.json')
   };
   var mediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
+  var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
 
   var error = {
     message: 'error'
@@ -71,7 +72,8 @@ describe('Service: Partner Reports Service', function () {
     var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
     mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
-    mediaQualityUrl = 'modules/core/partnerReports/callMetrics/mediaQualityFake.json';
+    mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
+    callMetricsUrl = 'modules/core/partnerReports/callMetrics/callMetricsTemp.json';
   }));
 
   afterEach(function () {
@@ -170,6 +172,24 @@ describe('Service: Partner Reports Service', function () {
     it('should get MediaQuality Metrics', function () {
       $httpBackend.whenGET(mediaQualityUrl).respond(mediaQualityGraphData);
       expect(mediaQualityGraphData).toBeDefined();
+    });
+  });
+
+  describe('Call Metrics Services', function () {
+    it('should get Call Metrics', function () {
+      $httpBackend.whenGET(callMetricsUrl).respond(callMetricsData);
+      PartnerReportService.getCallMetricsData().then(function (data) {
+        expect(data.dataProvider.length).toBe(3);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should get empty array for GET failure', function () {
+      $httpBackend.whenGET(callMetricsUrl).respond(500, error);
+      PartnerReportService.getCallMetricsData().then(function (data) {
+        expect(data).toEqual([]);
+      });
+      $httpBackend.flush();
     });
   });
 

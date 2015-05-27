@@ -1,0 +1,25 @@
+<div class="call-metrics">
+  <div class="row">
+    <div class="graph-match">
+      <h4 class="pull-left section-title" translate="callMetrics.callMetrics"></h4>
+      <div class="actions-menu dropdown pull-right report-threedot-button">
+        <button class="actions-button btn-none">
+          <i class="icon icon-three-dots"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr class="title-break pull-left"></hr>
+  <div class="row">
+    <p class="graph-match description">
+      <span translate="callMetrics.callMetricsDesc"></span>
+    </p>
+  </div>
+  <div class="row">
+    <div id="callMetricsDiv" class="timechartDiv"></div>
+    <div id="callMetricsRefreshDiv" class="spinner-position" ng-show="nav.isRefresh(nav.callMetricsRefresh) || nav.isEmpty(nav.callMetricsRefresh)">
+      <div class="timechartDiv clear-graph"></div>
+      <i class='call-metrics-status icon icon-spinner icon-2x'></i>
+    </div>
+  </div>
+</div>

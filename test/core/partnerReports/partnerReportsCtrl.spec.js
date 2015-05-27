@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Partner Reports', function () {
-  var controller, $scope, $q, $translate, PartnerReportService, GraphService;
+  var controller, $scope, $q, $translate, PartnerReportService, GraphService, DonutChartService;
   var date = "March 17, 2015";
   var activeUsersSort = ['userName', 'orgName', 'numCalls', 'totalActivity'];
   var dummyCustomers = getJSONFixture('core/json/partnerReports/customerResponse.json');
@@ -13,6 +13,7 @@ describe('Controller: Partner Reports', function () {
   var validateService = {
     invalidate: function () {}
   };
+  var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
 
   var customerOptions = [{
     value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
@@ -28,12 +29,13 @@ describe('Controller: Partner Reports', function () {
   beforeEach(module('Core'));
 
   describe('PartnerReportCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_) {
+    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_) {
       $scope = $rootScope.$new();
       $q = _$q_;
       $translate = _$translate_;
       PartnerReportService = _PartnerReportService_;
       GraphService = _GraphService_;
+      DonutChartService = _DonutChartService_;
 
       spyOn(PartnerReportService, 'getActiveUserData').and.returnValue($q.when({
         graphData: dummyGraphData,
@@ -42,6 +44,9 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(dummyCustomers));
       spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(date);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
+      spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
+        data: callMetricsData
+      }));
 
       spyOn(GraphService, 'updateActiveUsersGraph');
       spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
@@ -59,12 +64,18 @@ describe('Controller: Partner Reports', function () {
 
       mediaQualityChart = GraphService.createMediaQualityGraph(dummyMediaQualityGraphData);
 
+      spyOn(DonutChartService, 'createCallMetricsDonutChart').and.returnValue({
+        invalidateSize: validateService.invalidate
+      });
+      spyOn(DonutChartService, 'updateCallMetricsDonutChart');
+
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,
         $translate: $translate,
         $q: $q,
         PartnerReportService: PartnerReportService,
-        GraphService: GraphService
+        GraphService: GraphService,
+        DonutChartService: DonutChartService
       });
       $scope.$apply();
     }));
@@ -78,6 +89,7 @@ describe('Controller: Partner Reports', function () {
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
         expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
         expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
+        expect(DonutChartService.createCallMetricsDonutChart).toHaveBeenCalled();
       });
 
       it('should set all page variables', function () {
@@ -214,12 +226,13 @@ describe('Controller: Partner Reports', function () {
   });
 
   describe('PartnerReportCtrl - loading failed', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_) {
+    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_) {
       $scope = $rootScope.$new();
       $q = _$q_;
       $translate = _$translate_;
       PartnerReportService = _PartnerReportService_;
       GraphService = _GraphService_;
+      DonutChartService = _DonutChartService_;
 
       spyOn(PartnerReportService, 'getActiveUserData').and.returnValue($q.when({
         graphData: [],
@@ -229,6 +242,9 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(undefined);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
 
+      spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
+        data: callMetricsData
+      }));
       spyOn(GraphService, 'updateActiveUsersGraph');
       spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
         'dataProvider': dummyGraphData,
@@ -243,13 +259,15 @@ describe('Controller: Partner Reports', function () {
       });
 
       mediaQualityChart = GraphService.createMediaQualityGraph(dummyMediaQualityGraphData);
+      spyOn(DonutChartService, 'createCallMetricsDonutChart');
 
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,
         $translate: $translate,
         $q: $q,
         PartnerReportService: PartnerReportService,
-        GraphService: GraphService
+        GraphService: GraphService,
+        DonutChartService: DonutChartService
       });
       $scope.$apply();
     }));
@@ -265,6 +283,7 @@ describe('Controller: Partner Reports', function () {
         expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
 
         expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
+        expect(DonutChartService.createCallMetricsDonutChart).toHaveBeenCalled();
       });
 
       it('should set all page variables empty defaults', function () {

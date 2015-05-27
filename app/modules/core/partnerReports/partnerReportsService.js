@@ -17,11 +17,29 @@
     var mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
     var mediaQualityData = [];
 
+    var callMetricsData = {
+      dataProvider: [{
+        "callCondition": $translate.instant('callMetrics.callConditionFail'),
+        "numCalls": 0
+      }, {
+        "callCondition": $translate.instant('callMetrics.callConditionPoorMedia'),
+        "numCalls": 0
+      }, {
+        "callCondition": $translate.instant('callMetrics.callConditionSuccessful'),
+        "numCalls": 0
+      }],
+      labelData: {
+        "numTotalCalls": 0,
+        "numTotalMinutes": 0
+      }
+    };
+
     return {
       getActiveUserData: getActiveUserData,
       getCustomerList: getCustomerList,
       getMostRecentUpdate: getMostRecentUpdate,
-      getMediaQualityMetrics: getMediaQualityMetrics
+      getMediaQualityMetrics: getMediaQualityMetrics,
+      getCallMetricsData: getCallMetricsData
     };
 
     function getActiveUserData(customer, time) {
@@ -242,5 +260,40 @@
       return data;
     }
 
+    function getCallMetricsData() {
+      var getMetricsUrl = 'modules/core/partnerReports/callMetrics/callMetricsTemp.json';
+      return $http.get(getMetricsUrl).then(function (response) {
+        if (angular.isArray(response.data.data) && response.data.data.length !== 0) {
+          return transformRawCallMetricsData(response.data.data[0]);
+        } else {
+          return [];
+        }
+      }, function (error) {
+        return [];
+      });
+    }
+
+    function transformRawCallMetricsData(data) {
+      var transformData = angular.copy(callMetricsData);
+      var numCalls = 0;
+      var numMinutes = 0;
+
+      angular.forEach(data.data, function (index) {
+        if (index.details.type === "fail") {
+          transformData.dataProvider[0].numCalls = index.details.numCalls;
+        } else if (index.details.type === "poor") {
+          transformData.dataProvider[1].numCalls = index.details.numCalls;
+        } else if (index.details.type === "success") {
+          transformData.dataProvider[2].numCalls = index.details.numCalls;
+        }
+
+        numCalls = numCalls + parseInt(index.details.numCalls);
+        numMinutes = numMinutes + parseInt(index.details.numMinutes);
+      });
+
+      transformData.labelData.numTotalCalls = numCalls;
+      transformData.labelData.numTotalMinutes = numMinutes;
+      return transformData;
+    }
   }
 })();

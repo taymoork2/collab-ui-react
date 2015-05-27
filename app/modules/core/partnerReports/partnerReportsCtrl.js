@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $translate, $q, PartnerReportService, GraphService) {
+  function PartnerReportCtrl($scope, $translate, $q, PartnerReportService, GraphService, DonutChartService) {
     var vm = this;
 
     // variables for the active users section
@@ -17,6 +17,7 @@
 
     var activeUsersChart = null;
     var mediaQualityChart = null;
+    var callMetricsDonutChart = null;
 
     vm.activeUsersRefresh = 'refresh';
     vm.showMostActiveUsers = false;
@@ -35,6 +36,11 @@
     var mediaQualityRefreshDiv = 'mediaQualityRefreshDiv';
     var noMediaQualityDataDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
     var isMediaQualityRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="mediaQuality-status icon icon-spinner icon-2x"></i>';
+    vm.callMetricsRefresh = 'refresh';
+    var callMetricsRefreshDiv = 'callMetricsRefreshDiv';
+    var noCallMetricsRefreshDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
+    var isCallMetricsRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="call-metrics-status icon icon-spinner icon-2x"></i>';
+
     vm.timeOptions = [{
       value: 0,
       label: $translate.instant('reportsPage.week')
@@ -102,6 +108,9 @@
       vm.activeUsersRefresh = 'refresh';
       angular.element('#' + activeUserRefreshDiv).html(isActiveUsersRefreshDiv);
       getActiveUserReports();
+      vm.callMetricsRefresh = 'refresh';
+      angular.element('#' + callMetricsRefreshDiv).html(isCallMetricsRefreshDiv);
+      getCallMetricsReports();
     };
 
     init();
@@ -120,6 +129,8 @@
           invalidateChartSize(mediaQualityChart);
         });
         promises.push(mediaQualityPromise);
+        var callMetricsPromise = getCallMetricsReports();
+        promises.push(callMetricsPromise);
         $q.all(promises).then(function () {
           vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
           setGraphResizing();
@@ -190,6 +201,10 @@
         if (vm.mediaQualityRefresh !== 'empty') {
           invalidateChartSize(mediaQualityChart);
         }
+
+        if (vm.callMetricsRefresh !== 'empty') {
+          invalidateChartSize(callMetricsDonutChart);
+        }
       });
     }
 
@@ -212,8 +227,27 @@
       });
     }
 
+    function getCallMetricsReports() {
+      return PartnerReportService.getCallMetricsData().then(function (data) {
+        if (callMetricsDonutChart === null) {
+          callMetricsDonutChart = DonutChartService.createCallMetricsDonutChart(data);
+        } else {
+          DonutChartService.updateCallMetricsDonutChart(data, callMetricsDonutChart);
+          invalidateChartSize(callMetricsDonutChart);
+        }
+
+        if (angular.isArray(data) && data.length === 0) {
+          angular.element('#' + callMetricsRefreshDiv).html(noCallMetricsRefreshDiv);
+          vm.callMetricsRefresh = 'empty';
+        } else {
+          vm.callMetricsRefresh = 'set';
+        }
+        return;
+      });
+    }
+
     function invalidateChartSize(chart) {
-      if (chart !== null && chart !== 'undefined') {
+      if (chart !== null && chart !== undefined) {
         chart.invalidateSize();
       }
     }
