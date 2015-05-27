@@ -91,11 +91,10 @@ angular.module('Hercules')
         if (cluster.provisioning_data) {
           service.installed = service.connectors.length > 0;
           var not_approved_package = getAvailableSoftwareUpgradeForService(service, cluster);
-          if (not_approved_package) {
+          if (not_approved_package && service.installed) {
             service.software_upgrade_available = true;
             cluster.software_upgrade_available = true;
             service.not_approved_package = not_approved_package;
-            service.install_available = !service.installed && !anyApprovedPackagesForService(service, cluster);
           }
         }
       };

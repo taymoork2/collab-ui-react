@@ -186,12 +186,10 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].service_type).toBe('c_mgmt');
     expect(converted[0].services[0].software_upgrade_available).toBeFalsy();
     expect(converted[0].services[0].installed).toBeTruthy();
-    expect(converted[0].services[0].install_available).toBeFalsy();
 
     expect(converted[0].services[1].service_type).toBe('c_cal');
     expect(converted[0].services[1].software_upgrade_available).toBeTruthy();
     expect(converted[0].services[1].installed).toBeTruthy();
-    expect(converted[0].services[1].install_available).toBeFalsy();
 
     expect(converted[0].software_upgrade_available).toBeTruthy();
   });
@@ -225,11 +223,10 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].service_type).toBe('c_cal');
     expect(converted[0].services[0].software_upgrade_available).toBeTruthy();
     expect(converted[0].services[0].installed).toBeTruthy();
-    expect(converted[0].services[0].install_available).toBeFalsy();
     expect(converted[0].software_upgrade_available).toBeTruthy();
   });
 
-  it('install available should be available if service isn\'t installed and service has no approved packages', function () {
+  it('should not show sw update details if service are not installed', function () {
     var mockData = [{
       "provisioning_data": {
         "not_approved_packages": [{
@@ -243,17 +240,12 @@ describe('ConverterService', function () {
       },
       "services": [{
         "service_type": "c_cal",
-        "display_name": "Calendar Service",
         "connectors": []
       }]
     }];
 
     var converted = Service.convertClusters(mockData);
-    expect(converted[0].services[0].service_type).toBe('c_cal');
-    expect(converted[0].services[0].software_upgrade_available).toBeTruthy();
-    expect(converted[0].services[0].installed).toBeFalsy();
-    expect(converted[0].services[0].install_available).toBeTruthy();
-    expect(converted[0].software_upgrade_available).toBeTruthy();
+    expect(converted[0].software_upgrade_available).toBeFalsy();
   });
 
   it('should show sw update details if one service is running', function () {
@@ -297,34 +289,6 @@ describe('ConverterService', function () {
     expect(converted[0].services[0].not_approved_package).toBeTruthy();
     expect(converted[0].services[0].software_upgrade_available).toBeTruthy();
     expect(converted[0].services[0].installed).toBeTruthy();
-    expect(converted[0].services[0].install_available).toBeFalsy();
-    expect(converted[0].software_upgrade_available).toBeTruthy();
-  });
-
-  it('should show sw update details if service is not installed and there are no approved_packages', function () {
-    var mockData = [{
-      "provisioning_data": {
-        "not_approved_packages": [{
-          "service": {
-            "service_type": "c_cal",
-            "display_name": "Calendar Service"
-          },
-          "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
-          "version": "8.2-2.1"
-        }]
-      },
-      "services": [{
-        "service_type": "c_cal",
-        "display_name": "Calendar Service",
-        "connectors": []
-      }]
-    }];
-
-    var converted = Service.convertClusters(mockData);
-    expect(converted[0].services[0].not_approved_package).toBeTruthy();
-    expect(converted[0].services[0].installed).toBeFalsy();
-    expect(converted[0].services[0].install_available).toBeTruthy();
-    expect(converted[0].services[0].software_upgrade_available).toBeTruthy();
     expect(converted[0].software_upgrade_available).toBeTruthy();
   });
 
