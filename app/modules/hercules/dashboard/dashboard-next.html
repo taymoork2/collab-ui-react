@@ -5,13 +5,13 @@
     <div class="page-title clearfix">
       <span class="title" translate="hercules.page_title" />
       <div style="float: right; white-space: nowrap">
-        <button 
+        <button
           style="width: 60px;"
-          class="btn btn-info" 
+          class="btn btn-info"
           ng-click="showNotificationConfigDialog()">
           <i class="fa fa-bell" />
         </button>
-        <button 
+        <button
           style="width: 60px;"
           class="btn btn-primary"
           ng-click="showInfoPanel = !showInfoPanel">
@@ -20,7 +20,8 @@
       </div>
     </div>
   </div>
-  
+
+
   <!-- content -->
   <div class="row">
     <div class="col-sm-12">
@@ -30,10 +31,14 @@
         <i class="icon icon-spinner icon-2x"></i>
       </div>
 
-      <div ng-show="!loading && !pollHasFailed" style="padding-bottom: 60px">
-        <hercules-dashboard-info-panel></hercules-dashboard-info-panel>
+      <div ng-show="shouldShowWelcomeScreen()" style="padding: 20px 40px">
+        <hercules-fusion-welcome />
+      </div>
 
-        <hercules-dashboard-header></hercules-dashboard-header>
+      <div ng-show="!loading && !pollHasFailed && !shouldShowWelcomeScreen()" style="padding-bottom: 60px">
+        <hercules-dashboard-info-panel> </hercules-dashboard-info-panel>
+
+        <hercules-dashboard-header> </hercules-dashboard-header>
 
         <div ng-show="clusters.length != 0">
           <h3 style="padding-left: 20px">Expressway Clusters: {{clusters.length}}</h3>

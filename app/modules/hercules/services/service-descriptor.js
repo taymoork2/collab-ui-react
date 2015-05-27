@@ -1,34 +1,29 @@
 'use strict';
 
 angular.module('Hercules')
-  .service('ServiceDescriptor', ['$http', 'ConfigService', 'XhrNotificationService',
-    function ServiceDescriptor($http, config, notification) {
+  .service('ServiceDescriptor', ['$http', 'ConfigService',
+    function ServiceDescriptor($http, config) {
       var services = function (callback) {
         $http
           .get(config.getUrl() + '/fusion_entitlements_status')
           .success(function (data) {
-            var services = _.filter(data.fusion_services || [], function (service) {
-              return service.connector_type != 'c_mgmt' && service.enabled;
-            });
-            callback(null, services);
+            callback(null, data.fusion_services || []);
           })
           .error(function () {
             callback(arguments);
           });
       };
 
-      var allEntitledServices = function (callback) {
-        $http
-          .get(config.getUrl() + '/fusion_entitlements_status')
-          .success(function (data) {
-            var services = _.filter(data.fusion_services || [], function (service) {
-              return service.connector_type != 'c_mgmt' && service.connector_type != 'mf_mgmt';
-            });
-            callback(null, services);
-          })
-          .error(function () {
-            callback(arguments);
-          });
+      var filterEnabledServices = function (services) {
+        return _.filter(services, function (service) {
+          return service.connector_type != 'c_mgmt' && service.enabled;
+        });
+      };
+
+      var filterAllExceptManagement = function (services) {
+        return _.filter(services, function (service) {
+          return service.connector_type != 'c_mgmt' && service.connector_type != 'mf_mgmt';
+        });
       };
 
       var isFusionEnabled = function (callback) {
@@ -56,7 +51,8 @@ angular.module('Hercules')
 
       return {
         services: services,
-        allEntitledServices: allEntitledServices,
+        filterEnabledServices: filterEnabledServices,
+        filterAllExceptManagement: filterAllExceptManagement,
         isFusionEnabled: isFusionEnabled,
         setServiceEnabled: setServiceEnabled
       };

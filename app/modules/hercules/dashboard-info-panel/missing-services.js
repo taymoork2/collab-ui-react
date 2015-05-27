@@ -5,17 +5,14 @@
     .controller('MissingServicesController',
 
       /* @ngInject */
-      function ($scope, ServiceDescriptor, XhrNotificationService) {
-        ServiceDescriptor.services(function (error, services) {
-          $scope.services = services || [];
+      function ($scope) {
+        $scope.$watch('services', function (services) {
           $scope.servicesMissing = _.find(services, function (service) {
             return service.status == 'error';
           });
-          if (error) XhrNotificationService.notify("Failed to fetch service status", error);
           if ($scope.servicesMissing) $scope.showInfoPanel = true;
         });
       }
-
     )
     .directive('herculesMissingServices', [
       function () {
