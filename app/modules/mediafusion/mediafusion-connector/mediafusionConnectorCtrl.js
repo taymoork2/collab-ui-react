@@ -4,7 +4,7 @@ angular.module('Mediafusion')
   .controller('mediafusionConnectorCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $interval, $http, $modal, ClusterProxy, Authinfo, Log) {
+    function ($scope, $state, $interval, $http, $modal, MediafusionProxy, Authinfo, Log) {
       $scope.loading = true;
       $scope.pollHasFailed = false;
       $scope.showInfoPanel = true;
@@ -41,7 +41,7 @@ angular.module('Mediafusion')
           cellFilter: 'status',
           displayName: 'Status'
         }, {
-          field: 'name',
+          field: '',
           displayName: 'Cluster'
         }, {
           field: 'name',
@@ -54,11 +54,11 @@ angular.module('Mediafusion')
         }]
       };
 
-      ClusterProxy.startPolling(function (err, data) {
+      MediafusionProxy.startPolling(function (err, data) {
         $scope.loading = false;
       });
 
-      $scope.$watch(ClusterProxy.getClusters, function (data) {
+      $scope.$watch(MediafusionProxy.getClusters, function (data) {
         $scope.clusters = data.clusters || [];
         Log.debug("prinitng cluster length" + data.clusters.length);
         Log.debug("start cluster length");
@@ -69,7 +69,7 @@ angular.module('Mediafusion')
       }, true);
 
       $scope.$on('$destroy', function () {
-        ClusterProxy.stopPolling();
+        MediafusionProxy.stopPolling();
       });
     }
   );
