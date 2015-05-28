@@ -6,6 +6,7 @@
 
       /* @ngInject */
       function ($scope) {
+        $scope.noServicesSelected = false;
         $scope.$watch('services', function (services) {
           $scope.noServicesSelected = _.every(services.allExceptManagement, function (service) {
             return !service.enabled;

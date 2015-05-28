@@ -8,36 +8,35 @@
       function ($scope, $state, ServiceDescriptor, USSService, XhrNotificationService, $modal, ClusterProxy) {
         $scope.statusSummary = [];
         var updateSummary = function () {
-          if (!$scope.clusters || $scope.clusters.length === 0 || !$scope.services.enabledOnly || $scope.services.enabledOnly.length === 0) {
-            $scope.userActivationNotComplete = false;
-            $scope.servicesWithUserErrors = false;
-            return;
-          }
-          $scope.xsummary = _.map($scope.services.enabledOnly, function (service) {
-            var summaryForService = _.find($scope.statusSummary, function (summary) {
-              return service.service_id == summary.serviceId;
+          var userActivationNotComplete = false;
+          var servicesWithUserErrors = false;
+          if ($scope.clusters && $scope.clusters.length !== 0 && $scope.services && $scope.services.enabledOnly.length !== 0) {
+            $scope.xsummary = _.map($scope.services.enabledOnly, function (service) {
+              var summaryForService = _.find($scope.statusSummary, function (summary) {
+                return service.service_id == summary.serviceId;
+              });
+              var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
+              if (needsUserActivation) {
+                userActivationNotComplete = true;
+              }
+
+              var errors = 0;
+              if (summaryForService && summaryForService.error > 0) {
+                servicesWithUserErrors = true;
+                errors = summaryForService.error;
+              }
+              return {
+                serviceId: service.service_id,
+                needsUserActivation: needsUserActivation,
+                errors: errors
+              };
             });
-            var errors = 0;
-            var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
-            if (needsUserActivation) {
-              $scope.showInfoPanel = true;
-              $scope.userActivationNotComplete = true;
-            } else {
-              $scope.userActivationNotComplete = false;
-            }
-            if (summaryForService && summaryForService.error > 0) {
-              $scope.showInfoPanel = true;
-              $scope.servicesWithUserErrors = true;
-              errors = summaryForService.error;
-            } else {
-              $scope.servicesWithUserErrors = false;
-            }
-            return {
-              serviceId: service.service_id,
-              needsUserActivation: needsUserActivation,
-              errors: errors
-            };
-          });
+          }
+          $scope.userActivationNotComplete = userActivationNotComplete;
+          $scope.servicesWithUserErrors = servicesWithUserErrors;
+          if (userActivationNotComplete || servicesWithUserErrors) {
+            $scope.showInfoPanel = true;
+          }
         };
 
         $scope.$watch('services', function () {
