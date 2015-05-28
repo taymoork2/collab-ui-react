@@ -29,12 +29,10 @@ describe('ServiceDescriptor', function () {
         }, {
           connector_type: 'c_mgmt',
           enabled: true
-        }, {
-          enabled: false
         }]
       });
     Service.services(function (error, services) {
-      expect(services.length).toEqual(1);
+      expect(services.length).toEqual(2);
       expect(services[0].foo).toEqual('bar');
       done();
     });

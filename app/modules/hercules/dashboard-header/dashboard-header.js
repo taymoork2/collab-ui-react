@@ -31,8 +31,8 @@
           }
         };
 
-        ServiceDescriptor.services(function (error, _services) {
-          services = _services;
+        $scope.$watch('services', function (_services) {
+          services = _services.enabledOnly;
           updateServiceAggregates();
         });
 

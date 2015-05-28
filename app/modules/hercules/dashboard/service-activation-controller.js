@@ -9,22 +9,20 @@
         $scope.loading = true;
         $scope.confirmUpdate = false;
 
-        ServiceDescriptor.allEntitledServices(function (error, services) {
-          $scope.services = services || [];
-          if (error) {
-            Log.error("Failed to fetch services" + error);
+        ServiceDescriptor.services(function (error, services) {
+          if (!error) {
+            $scope.setServices(services);
           }
           $scope.loading = false;
         });
 
         $scope.save = function () {
           $scope.saving = true;
-          ServiceDescriptor.allEntitledServices(function (error, services) {
-            services = services || [];
+          ServiceDescriptor.services(function (error, services) {
             if (error) {
               Log.error("Failed to fetch services" + error);
             } else {
-              var updatedServices = $scope.services.filter(function (updated) {
+              var updatedServices = $scope.services.allExceptManagement.filter(function (updated) {
                 return services.some(function (original) {
                   return updated.service_id === original.service_id && updated.enabled !== original.enabled;
                 });
@@ -52,8 +50,15 @@
             ServiceDescriptor.setServiceEnabled(service.service_id, service.enabled, function (error) {
               if (error) {
                 return XhrNotificationService.notify("Failed to update service: " + error);
+              } else {
+                // Refresh the services
+                ServiceDescriptor.services(function (error, services) {
+                  if (!error) {
+                    $scope.setServices(services);
+                  }
+                });
+                $scope.$parent.modal.close();
               }
-              $scope.$parent.modal.close();
             });
           });
         };

@@ -2,18 +2,7 @@
   'use strict';
   angular
     .module('Hercules')
-    .controller('FuseNotPerformedController',
-
-      /* @ngInject */
-      function ($scope, ClusterProxy) {
-        $scope.fusePerformed = false;
-        ClusterProxy.getClusters(function (err, clusters) {
-          $scope.fusePerformed = err || (clusters && clusters.length);
-          if (!$scope.fusePerformed) $scope.showInfoPanel = true;
-        });
-      }
-
-    )
+    .controller('FuseNotPerformedController', function ($scope) {})
     .directive('herculesFuseNotPerformed', [
       function () {
         return {

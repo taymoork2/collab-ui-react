@@ -6,12 +6,10 @@ angular.module('Hercules')
       var lastClusterResponse = [];
 
       var fetch = function (callback, opts) {
-        var searchObject = $location.search();
-        var backend = searchObject['hercules-backend'];
-        if (angular.isDefined(backend) && backend === 'mock') {
+        if ($location.absUrl().match(/hercules-backend=mock/)) {
           return callback(null, converter.convertClusters(mock.mockData()));
         }
-        if (angular.isDefined(backend) && backend === 'nodata') {
+        if ($location.absUrl().match(/hercules-backend=nodata/)) {
           return callback(null, []);
         }
 

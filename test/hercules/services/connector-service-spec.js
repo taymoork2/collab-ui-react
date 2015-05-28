@@ -111,7 +111,6 @@ describe('Service: ConnectorService', function () {
   });
 
   it('should be possible to set mock backend', function () {
-    // win.location.search = 'hercules-backend=mock';
     $location.search('hercules-backend', 'mock');
     converter.convertClusters.returns('foo');
 
@@ -128,7 +127,6 @@ describe('Service: ConnectorService', function () {
   });
 
   it('should be possible to set empty backend', function () {
-    // win.location.search = 'hercules-backend=nodata';
     $location.search('hercules-backend', 'nodata');
 
     var callback = sinon.stub();

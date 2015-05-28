@@ -2,19 +2,7 @@
   'use strict';
   angular
     .module('Hercules')
-    .controller('EntitledServicesController',
-
-      /* @ngInject */
-      function ($scope, ServiceDescriptor, XhrNotificationService) {
-        ServiceDescriptor.services(function (error, services) {
-          $scope.services = services || [];
-          if (error) {
-            XhrNotificationService.notify("Failed to fetch service status", error);
-          }
-        });
-      }
-
-    )
+    .controller('EntitledServicesController', function ($scope) {})
     .directive('herculesEntitledServices', [
       function () {
         return {
