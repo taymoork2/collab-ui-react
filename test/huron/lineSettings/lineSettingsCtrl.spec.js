@@ -444,8 +444,9 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.sharedLineUsers = [];
       controller.selectSharedLineUser(userList[0]);
     });
+
     it('should test getUserList', function () {
-      $rootScope.searchStr = 'ray';
+      controller.getUserList('ray');
       expect(UserListService.listUsers).toHaveBeenCalled();
     });
 

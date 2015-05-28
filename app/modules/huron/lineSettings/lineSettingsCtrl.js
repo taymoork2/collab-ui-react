@@ -47,10 +47,9 @@
     vm.sort = {
       by: 'name',
       order: 'ascending',
-      maxCount: 10000,
+      maxCount: 10,
       startAt: 0
     };
-    vm.disableTypeahead = true;
     // end SharedLine Info ---
 
     // Caller ID Radio Button Model
@@ -74,6 +73,7 @@
     vm.deleteLineSettings = deleteLineSettings;
     vm.resetLineSettings = resetLineSettings;
     vm.initNewForm = initNewForm;
+    vm.getUserList = getUserList;
     vm.init = init;
 
     vm.disassociateSharedLineUser = disassociateSharedLineUser;
@@ -393,9 +393,6 @@
         // line exists
         listSharedLineUsers(directoryNumber.uuid);
       }
-
-      getUserList();
-
     }
 
     function initDirectoryNumber(directoryNumber) {
@@ -780,16 +777,19 @@
     }
 
     // Sharedline starts from here........
-    function getUserList() {
+    function getUserList($searchStr) {
 
-      //get all Users to search on
+      var defer = $q.defer();
 
       UserListService.listUsers(vm.sort.startAt, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
         if (data.success) {
-          vm.users = data.Resources;
-          vm.disableTypeahead = false;
+          defer.resolve(data.Resources);
+        } else {
+          defer.reject();
         }
-      });
+      }, $searchStr);
+
+      return defer.promise;
     }
 
     vm.selectSharedLineUser = function ($item) {
