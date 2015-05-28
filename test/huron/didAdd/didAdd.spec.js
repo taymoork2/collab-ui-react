@@ -1,13 +1,9 @@
 'use strict';
 
 describe('Controller: DidAddCtrl', function () {
-  var controller, $q, $scope, $state, $httpBackend, HuronConfig, Notification, Config, EmailService;
+  var controller, $q, $scope, $state, $httpBackend, $window, HuronConfig, Notification, Config, EmailService;
 
-  beforeEach(module('ui.bootstrap'));
-  beforeEach(module('ui.router'));
-  beforeEach(module('ngResource'));
   beforeEach(module('Huron'));
-  beforeEach(module('uc.didadd'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),
@@ -17,15 +13,6 @@ describe('Controller: DidAddCtrl', function () {
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
-
-  var state = {
-    modal: {
-      close: sinon.stub(),
-      result: {
-        finally: sinon.stub()
-      }
-    },
-  };
 
   var stateParams = {
     currentOrg: {
@@ -43,13 +30,20 @@ describe('Controller: DidAddCtrl', function () {
     }
   };
 
-  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _Config_, _EmailService_, $timeout) {
+  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _Config_, _EmailService_, $timeout, _$window_, _$state_) {
     $q = _$q_;
     $scope = $rootScope.$new();
     $scope.trial = trial;
 
     $httpBackend = _$httpBackend_;
-    $state = state;
+    $window = _$window_;
+    $state = _$state_;
+    $state.modal = {
+      close: sinon.stub(),
+      result: {
+        finally: sinon.stub()
+      }
+    };
     HuronConfig = _HuronConfig_;
     Config = _Config_;
     Notification = _Notification_;
@@ -65,7 +59,8 @@ describe('Controller: DidAddCtrl', function () {
     controller = $controller('DidAddCtrl', {
       $scope: $scope,
       $state: $state,
-      $stateParams: stateParams
+      $stateParams: stateParams,
+      $window: $window
     });
     controller.unsavedTokens = '+9999999999,+8888888888,+7777777777,+6666666666,+5555555555';
     controller.successCount = 0;
@@ -78,12 +73,29 @@ describe('Controller: DidAddCtrl', function () {
 
     spyOn(EmailService, 'emailNotifyTrialCustomer');
     spyOn(Notification, "notify");
-
+    spyOn($window, 'open');
+    spyOn($state, 'href').and.callThrough();
   }));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  describe('launchCustomerPortal', function () {
+    beforeEach(function () {
+      controller.launchCustomerPortal();
+    });
+    it('should create proper url', function () {
+      expect($state.href).toHaveBeenCalledWith('login_swap', {
+        customerOrgId: trial.model.customerOrgId,
+        customerOrgName: trial.model.customerName
+      });
+    });
+
+    it('should call $window.open', function () {
+      expect($window.open).toHaveBeenCalled();
+    });
   });
 
   describe('DidAddCtrl controller', function () {

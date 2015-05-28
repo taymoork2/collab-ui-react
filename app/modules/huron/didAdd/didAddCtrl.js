@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService) {
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, $window, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = false;
@@ -103,6 +103,8 @@
     vm.backtoEditTrial = backtoEditTrial;
     vm.currentOrg = $stateParams.currentOrg;
     vm.emailNotifyTrialCustomer = emailNotifyTrialCustomer;
+    vm.launchCustomerPortal = launchCustomerPortal;
+
     if ($stateParams.editMode === undefined || $stateParams.editMode === null) {
       editMode = false;
     } else {
@@ -363,6 +365,15 @@
           });
       } else {
         Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
+      }
+    }
+
+    function launchCustomerPortal() {
+      if (angular.isDefined($scope.trial)) {
+        $window.open($state.href('login_swap', {
+          customerOrgId: $scope.trial.model.customerOrgId,
+          customerOrgName: $scope.trial.model.customerName
+        }));
       }
     }
 
