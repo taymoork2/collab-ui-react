@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber) {
+  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer) {
 
     var broadcastEvent = "telephonyInfoUpdated";
 
@@ -33,7 +33,8 @@
         singleNumberReachEnabled: false
       },
       siteSteeringDigit: '',
-      siteCode: ''
+      siteCode: '',
+      hasCustomerVoicemail: undefined
     };
 
     var internalNumberPool = [];
@@ -78,6 +79,10 @@
           }
         });
       }
+      if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
+        checkCustomerVoicemail();
+      }
+
       return telephonyInfo;
     }
 
@@ -330,5 +335,19 @@
           return $q.reject(response);
         });
     }
+
+    function checkCustomerVoicemail() {
+      HuronCustomer.get().then(function (customer) {
+        angular.forEach(customer.links, function (service) {
+          if (service.rel === 'voicemail') {
+            telephonyInfo.hasCustomerVoicemail = true;
+          }
+        });
+      });
+      if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
+        telephonyInfo.hasCustomerVoicemail = false;
+      }
+    }
+
   }
 })();

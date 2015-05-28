@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: TelephonyInfoService', function () {
-  var $httpBackend, $q, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber;
+  var $httpBackend, $q, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer;
 
   var internalNumbers, externalNumbers, getExternalNumberPool;
 
@@ -11,17 +11,34 @@ describe('Service: TelephonyInfoService', function () {
     getOrgId: sinon.stub().returns('1')
   };
 
+  var customer = {
+    "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
+    "name": "Atlas_Test_JP650",
+    "servicePackage": "DEMO_STANDARD",
+    "links": [{
+      "rel": "common",
+      "href": "/api/v1/common/customers/84562afa-2f35-474f-ba0f-2def42864e12"
+    }, {
+      "rel": "voicemail",
+      "href": "/api/v1/voicemail/customers/84562afa-2f35-474f-ba0f-2def42864e12"
+    }, {
+      "rel": "voice",
+      "href": "/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12"
+    }]
+  };
+
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     HuronConfig = _HuronConfig_;
     TelephonyInfoService = _TelephonyInfoService_;
     ServiceSetup = _ServiceSetup_;
     DirectoryNumber = _DirectoryNumber_;
+    HuronCustomer = _HuronCustomer_;
 
     internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
@@ -33,6 +50,7 @@ describe('Service: TelephonyInfoService', function () {
 
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
     spyOn(DirectoryNumber, 'getAlternateNumbers').and.returnValue($q.when([]));
+    spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
   }));
 
   afterEach(function () {
@@ -49,9 +67,10 @@ describe('Service: TelephonyInfoService', function () {
       expect(TelephonyInfoService.getTelephonyInfo).toBeDefined();
     });
 
-    it('should call listSites', function () {
+    it('should call listSites and checkCustomerVoicemail', function () {
       TelephonyInfoService.getTelephonyInfo();
       expect(ServiceSetup.listSites).toHaveBeenCalled();
+      expect(HuronCustomer.get).toHaveBeenCalled();
     });
   });
 

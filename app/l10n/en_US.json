@@ -494,6 +494,8 @@
     "internalExtensionRange": "Internal Extension Range",
     "internalNumberRangeDescription": "Specify range of internal numbers. Length must be 4 digits.",
     "extensionError": "Extension not valid: ",
+    "companyVoicemail": "Company Voicemail",
+    "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",
     "to": "to",
     "addMoreExtensionRanges": "Add More Extension Ranges",
     "globalMOH": "Global Media On Hold (MOH)",
@@ -505,6 +507,9 @@
     "notANumber": " is not a valid number",
     "saveSuccess": "Unified Communications setup saved successfully",
     "siteError": "Failed to create site.",
+    "customerGetError": "Failed to get customer services.",
+    "voicemailGetError": "Failed to get company voicemail number.",
+    "voicemailUpdateError": "Failed to update company voicemail number.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}."

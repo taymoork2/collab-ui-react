@@ -12,14 +12,17 @@
   function PromiseHook($q) {
     return factory;
 
-    function factory(scope, name) {
+    function factory(scope, name, controllerAs) {
       var promises = [];
       (function traverse(scope) {
         if (!scope) {
           return;
         }
 
-        if (scope[name]) {
+        if (controllerAs && scope[controllerAs] && scope[controllerAs][name]) {
+          promises.push($q.when(scope[controllerAs][name]()));
+          return;
+        } else if (scope[name]) {
           promises.push($q.when(scope[name]()));
           return;
         }
@@ -190,7 +193,7 @@
     }
 
     function nextStep() {
-      new PromiseHook($scope, getStepName() + 'Next').then(function () {
+      new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs).then(function () {
         if (getTab().name === 'addUsers' && getStep().name === 'manualEntry') {
           if (!_.isEmpty(angular.element('#usersfield').tokenfield('getTokensList'))) {
             $rootScope.$broadcast('wizard-add-users-event');

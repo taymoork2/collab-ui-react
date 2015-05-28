@@ -6,27 +6,35 @@
     .factory('HuronCustomer', HuronCustomer);
 
   /* @ngInject */
-  function HuronCustomer(CustomerCommonService) {
+  function HuronCustomer(Authinfo, CustomerCommonService) {
     var domainRegex = /[^A-Za-z0-9\-]/g;
 
     var customerPayload = {
       'uuid': null,
       'name': null,
-      'servicePackage': 'VOICE_ONLY'
+      'servicePackage': 'DEMO_STANDARD',
+      'voicemail': {
+        'pilotNumber': ''
+      }
     };
 
-    var factory = {
-      create: create
+    return {
+      create: function (uuid, name, email) {
+        var customer = angular.copy(customerPayload);
+        customer.uuid = uuid;
+        customer.name = name;
+
+        // Set customer.voicemail.pilotNumber to customer's uuid, so that it is unique.
+        // The pilot number will be set in service setup.
+        customer.voicemail.pilotNumber = uuid;
+        return CustomerCommonService.save({}, customer).$promise;
+      },
+
+      get: function () {
+        return CustomerCommonService.get({
+          customerId: Authinfo.getOrgId()
+        }).$promise;
+      }
     };
-
-    return factory;
-
-    function create(uuid, name, email) {
-      var customer = angular.copy(customerPayload);
-      customer.uuid = uuid;
-      customer.name = name;
-
-      return CustomerCommonService.save({}, customer).$promise;
-    }
   }
 })();

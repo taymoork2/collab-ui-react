@@ -3,35 +3,35 @@
     <label for="timeZone" class="h3" translate="serviceSetupModal.timeZone"></label>
     <p translate="serviceSetupModal.tzDescription"></p>
     <div class="col-xs-5">
-      <select ng-disabled="!firstTimeSetup" class="form-control" ng-model="site.timeZone" ng-options="timeZone.value as timeZone.label for timeZone in timeZones" id="timeZone"></select>
+      <select ng-disabled="!serviceSetup.firstTimeSetup" class="form-control" ng-model="serviceSetup.site.timeZone" ng-options="timeZone.value as timeZone.label for timeZone in serviceSetup.timeZones" id="timeZone"></select>
     </div>
   </div>
   <div class="form-group row">
     <label for="steeringDigit" class="h3" translate="serviceSetupModal.steeringDigit"></label>
     <p translate="serviceSetupModal.steeringDigitDescription"></p>
     <div class="col-xs-2">
-      <select ng-disabled="!firstTimeSetup" class="form-control" ng-model="site.steeringDigit" ng-options="steeringDigit for steeringDigit in steeringDigits" id="steeringDigit"></select>
+      <select ng-disabled="!serviceSetup.firstTimeSetup" class="form-control" ng-model="serviceSetup.site.steeringDigit" ng-options="steeringDigit for steeringDigit in serviceSetup.steeringDigits" id="steeringDigit"></select>
     </div>
   </div>
   <div class="form-group row">
     <label for="siteSteeringDigit" class="h3" translate="serviceSetupModal.siteSteeringDigit"></label>
     <p translate="serviceSetupModal.siteSteeringDigitDescription"></p>
     <div class="col-xs-2">
-      <select ng-disabled="!firstTimeSetup" class="form-control" ng-model="site.siteSteeringDigit" ng-options="siteSteeringDigit for siteSteeringDigit in steeringDigits" id="siteSteeringDigit"></select>
+      <select ng-disabled="!serviceSetup.firstTimeSetup" class="form-control" ng-model="serviceSetup.site.siteSteeringDigit" ng-options="siteSteeringDigit for siteSteeringDigit in serviceSetup.steeringDigits" id="siteSteeringDigit"></select>
     </div>
   </div>
   <div class="form-group row">
     <label for="siteCode" class="h3" translate="serviceSetupModal.siteCode"></label>
     <p translate="serviceSetupModal.siteCodeDescription"></p>
     <div class="col-xs-2">
-      <input ng-disabled="!firstTimeSetup" class="form-control" type="text" ng-model="site.siteCode" maxlength="5" id="siteCode" required/>
+      <input ng-disabled="!serviceSetup.firstTimeSetup" class="form-control" type="text" ng-model="serviceSetup.site.siteCode" maxlength="5" id="siteCode" required/>
     </div>
   </div>
   <div class="form-group row">
     <label for="ID0" class="h3" translate="serviceSetupModal.internalExtensionRange"></label>
     <p translate="serviceSetupModal.internalNumberRangeDescription"></p>
     <div class="container-fluid">
-      <div class="row  wizard-row-padding" ng-repeat="internalNumberRange in internalNumberRanges">
+      <div class="row  wizard-row-padding" ng-repeat="internalNumberRange in serviceSetup.internalNumberRanges">
           <div class="col-xs-2">
             <input ng-disabled="internalNumberRange.uuid" class="form-control" type="text" ng-model="internalNumberRange.beginNumber" maxlength="4" id="ID{{$index}}" required/>
           </div>
@@ -40,21 +40,40 @@
             <input ng-disabled="internalNumberRange.uuid" class="form-control" type="text" ng-model="internalNumberRange.endNumber" maxlength="4" required/>
           </div>
           <div class="col-xs-2 wizard-top-padding">
-            <a ng-show="internalNumberRanges.indexOf(internalNumberRange) != 0 || !firstTimeSetup" ng-click="deleteInternalNumberRange(internalNumberRanges.indexOf(internalNumberRange), internalNumberRange)" translate="common.delete"></a>
+            <a ng-show="serviceSetup.internalNumberRanges.indexOf(internalNumberRange) != 0 || !serviceSetup.firstTimeSetup" ng-click="serviceSetup.deleteInternalNumberRange(serviceSetup.internalNumberRanges.indexOf(internalNumberRange), internalNumberRange)" translate="common.delete"></a>
           </div>
       </div>
-      <div ng-show="internalNumberRanges.length < 10" class="row wizard-top-padding">
+      <div ng-show="serviceSetup.internalNumberRanges.length < 10" class="row wizard-top-padding">
         <div class="col-md-7">
-          <a ng-click="addNewInternalNumberRange()" translate="serviceSetupModal.addMoreExtensionRanges"></a>
+          <a ng-click="serviceSetup.addNewInternalNumberRange()" translate="serviceSetupModal.addMoreExtensionRanges"></a>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="form-group row" ng-hide="!serviceSetup.hasVoicemailService">
+    <label for="companyVoicemail" class="h3" translate="serviceSetupModal.companyVoicemail"></label>
+    <p translate="serviceSetupModal.companyVoicemailDescription"></p>
+    <div class="col-xs-3">
+      <cs-select
+        is-disabled="!serviceSetup.firstTimeSetup"
+        name="companyVoicemail"
+        ng-model="serviceSetup.pilotNumberSelected"
+        options="serviceSetup.externalNumberPool"
+        refresh-data-fn="serviceSetup.loadExternalNumberPool(filter)"
+        wait-time="0"
+        input-placeholder="serviceSetup.inputPlaceholder"
+        labelfield="pattern"
+        valuefield="uuid"
+        required="true"
+        filter="true">
+      </cs-select>
     </div>
   </div>
   <div class="form-group row" ng-hide="isFirstTime">
     <label for="globalMOH" class="h3" translate="serviceSetupModal.globalMOH"></label>
     <p translate="serviceSetupModal.mohDescription"></p>
     <div class="col-xs-4">
-      <select ng-disabled="!firstTimeSetup" class="form-control" id="globalMOH" ng-model="globalMOH">
+      <select ng-disabled="!serviceSetup.firstTimeSetup" class="form-control" id="globalMOH" ng-model="serviceSetup.globalMOH">
         <option value="fall" translate="serviceSetupModal.fall"></option>
         <option value="winter" translate="serviceSetupModal.winter"></option>
         <option value="ciscoDefault" translate="serviceSetupModal.ciscoDefault"></option>

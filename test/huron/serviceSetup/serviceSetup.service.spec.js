@@ -56,7 +56,7 @@ describe('Service: ServiceSetup', function () {
 
   describe('getSite', function () {
     var site = {
-      uuid: '777-888-666',
+      uuid: '1234567890',
       steeringDigit: '5',
       siteSteeringDigit: '6'
     };
@@ -68,6 +68,60 @@ describe('Service: ServiceSetup', function () {
     it('should get site', function () {
       ServiceSetup.getSite(site.uuid).then(function (response) {
         expect(angular.equals(response, site)).toBe(true);
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('loadExternalNumberPool', function () {
+    var extNumPool = [{
+      uuid: '777-888-666',
+      pattern: '+11234567890'
+    }];
+
+    beforeEach(function () {
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(extNumPool);
+    });
+
+    it('should list external number pool', function () {
+      ServiceSetup.loadExternalNumberPool();
+      $httpBackend.flush();
+
+      expect(angular.equals(ServiceSetup.externalNumberPool, extNumPool)).toBe(true);
+    });
+  });
+
+  describe('updateCustomerVoicemailPilotNumber', function () {
+    var customer = [{
+      uuid: '1234567890',
+      voicemail: {
+        pilotNumber: '+11234567890'
+      }
+    }];
+
+    beforeEach(function () {
+      $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/common/customers/1').respond(201);
+    });
+
+    it('should save customer', function () {
+      ServiceSetup.updateCustomerVoicemailPilotNumber(customer);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getVoicemailPilotNumber', function () {
+    var voicemail = {
+      pilotNumber: '+1234567890',
+      uuid: '1234567890'
+    };
+
+    beforeEach(function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voicemail/customers/1').respond(voicemail);
+    });
+
+    it('should get voicemail pilot number', function () {
+      ServiceSetup.getVoicemailPilotNumber().then(function (response) {
+        expect(angular.equals(response, voicemail)).toBe(true);
       });
       $httpBackend.flush();
     });

@@ -21,7 +21,7 @@
              <span class="feature-status">{{directoryNumber.dnSharedUsage}}</span>
           </a>
         </li>
-        <li class="feature">
+        <li class="feature" ng-if="telephonyOverview.telephonyInfo.hasCustomerVoicemail">
           <a ui-sref="user-overview.communication.voicemail">
             <span class="feature-name" translate="telephonyPreview.voicemail"></span>
             <i class="feature-arrow"></i>

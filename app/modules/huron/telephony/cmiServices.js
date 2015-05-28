@@ -72,7 +72,13 @@
   })
 
   .factory('CustomerCommonService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId');
+    return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId', {
+      customerId: '@customerId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
   })
 
   .factory('UserServiceCommon', function ($resource, HuronConfig) {
@@ -87,6 +93,12 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId', {
       customerId: '@customerId',
       userId: '@userId'
+    });
+  })
+
+  .factory('VoicemailService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
+      customerId: '@customerId'
     });
   })
 

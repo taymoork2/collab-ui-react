@@ -31,7 +31,8 @@
       function getAll(_customerId) {
         var customerId = _customerId;
         return ExternalNumberPoolService.query({
-          customerId: customerId
+          customerId: customerId,
+          order: 'pattern'
         }).$promise;
       }
 

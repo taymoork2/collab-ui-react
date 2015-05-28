@@ -48,7 +48,7 @@ describe('Controller: DidAddCtrl', function () {
     Config = _Config_;
     Notification = _Notification_;
     EmailService = _EmailService_;
-    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools').respond(200, [{
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
       'pattern': '+9999999991',
       'uuid': '9999999991-id'
     }, {

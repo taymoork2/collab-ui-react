@@ -6,10 +6,12 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService) {
+  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailService, CustomerCommonService) {
+
     return {
       internalNumberRanges: [],
       sites: [],
+      externalNumberPool: [],
 
       createSite: function (site) {
         return SiteService.save({
@@ -30,6 +32,37 @@
           customerId: Authinfo.getOrgId(),
           siteId: siteUuid
         }).$promise;
+      },
+
+      loadExternalNumberPool: function (pattern) {
+        var extNumPool = [];
+        var patternQuery = pattern ? '%' + pattern + '%' : undefined;
+        return ExternalNumberPoolService.query({
+          customerId: Authinfo.getOrgId(),
+          directorynumber: '',
+          order: 'pattern',
+          pattern: patternQuery
+        }, angular.bind(this, function (extPool) {
+          angular.forEach(extPool, function (extNum) {
+            extNumPool.push({
+              uuid: extNum.uuid,
+              pattern: extNum.pattern
+            });
+          });
+          this.externalNumberPool = extNumPool;
+        })).$promise;
+      },
+
+      getVoicemailPilotNumber: function () {
+        return VoicemailService.get({
+          customerId: Authinfo.getOrgId()
+        }).$promise;
+      },
+
+      updateCustomerVoicemailPilotNumber: function (customer) {
+        return CustomerCommonService.update({
+          customerId: Authinfo.getOrgId()
+        }, customer).$promise;
       },
 
       createInternalNumberRange: function (internalNumberRange) {
