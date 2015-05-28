@@ -114,6 +114,6 @@
   },
   "scripts": {
     "test": "gulp e2e",
-    "postinstall": "./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update && ./node_modules/grunt-protractor-coverage/node_modules/protractor/bin/webdriver-manager update && ./node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager update"
+    "postinstall": "cd node_modules/grunt-protractor-coverage && npm install && cd - && ./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update && ./node_modules/grunt-protractor-coverage/node_modules/protractor/bin/webdriver-manager update && ./node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager update"
   }
 }
