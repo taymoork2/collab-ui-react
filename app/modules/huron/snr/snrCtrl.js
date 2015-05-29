@@ -10,6 +10,7 @@
     vm.currentUser = $stateParams.currentUser;
     vm.saveSingleNumberReach = saveSingleNumberReach;
     vm.reset = reset;
+    vm.telephonyInfo = {};
 
     vm.formFields = [{
       key: 'destination',
@@ -44,7 +45,7 @@
     });
 
     function init() {
-      vm.telephonyInfo = angular.copy(TelephonyInfoService.getTelephonyInfo());
+      angular.extend(vm.telephonyInfo, TelephonyInfoService.getTelephonyInfo());
     }
 
     function resetForm() {
