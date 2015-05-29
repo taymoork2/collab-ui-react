@@ -8,6 +8,9 @@
       function ($scope) {
         $scope.noServicesSelected = false;
         $scope.$watch('services', function (services) {
+          if (!services || !services.allExceptManagement) {
+            return;
+          }
           $scope.noServicesSelected = _.every(services.allExceptManagement, function (service) {
             return !service.enabled;
           });

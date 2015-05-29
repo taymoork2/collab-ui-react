@@ -5,17 +5,12 @@
     display-status="warning"
     heading="Service Entitlements Missing.">
 
-    <div ng-repeat="service in services.enabledOnly">
-      <div ng-show="service.status == 'error'">
-        There is a problem with dependent services for {{service.display_name}},
-        your organization is missing the following needed services:
-        <ul>
-          <li ng-repeat="entitlement in service.missing_entitlements">
-            {{entitlement}}
-          </li>
-        </ul>
-      </div>
-    </div>
+    <p>Your organization is missing required entitlements for the listed services. These entitlements must be added to your organization:</p>
+    <ul>
+      <li ng-repeat="service in services.enabledOnly | filter: { status: 'error' }">
+        <span translate="hercules.serviceNames.{{service.service_id}}"/>: <span ng-repeat="entitlement in service.missing_entitlements">{{entitlement}}{{$last ? '' : ', '}}</span>
+      </li>
+    </ul>
 
   </cs-accordion-group>
 </cs-accordion>
