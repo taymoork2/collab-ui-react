@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Huron Call Routing', function () {
+xdescribe('Huron Call Routing', function () {
   var pattern = callrouting.getPattern();
 
   beforeEach(function () {
