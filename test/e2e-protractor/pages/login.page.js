@@ -42,25 +42,19 @@ var LoginPage = function () {
   this.loginButton = element(by.cssContainingText('span[role="button"]', 'Login'));
 
   this.login = function (username, expectedUrl) {
-    var cred = helper.auth[username];
-
-    this.loginThroughGui(cred.user, cred.pass, expectedUrl);
-
-    // TODO: Comment out the following and call this.loginThroughGui instead because the build failed.
-    //       Looks like the idbroker changed their code that caused this problem. Needs to look at why later.
-    // var bearer;
-    // browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
-    // navigation.expectDriverCurrentUrl('login');
-    // helper.getBearerToken(username, function (_bearer) {
-    //   bearer = _bearer;
-    //   expect(bearer).not.toBeNull();
-    //   browser.executeScript("localStorage.accessToken='" + bearer + "'");
-    //   browser.refresh();
-    //   navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
-    // });
-    // browser.wait(function () {
-    //   return bearer;
-    // }, 10000, 'Could not retrieve bearer token to login');
+    var bearer;
+    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
+    navigation.expectDriverCurrentUrl('login');
+    helper.getBearerToken(username, function (_bearer) {
+      bearer = _bearer;
+      expect(bearer).not.toBeNull();
+      browser.executeScript("localStorage.accessToken='" + bearer + "'");
+      browser.refresh();
+      navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+    });
+    browser.wait(function () {
+      return bearer;
+    }, 10000, 'Could not retrieve bearer token to login');
   };
 
   this.loginUnauthorized = function (username, expectedUrl) {

@@ -65,7 +65,7 @@
       },
       expressionProperties: {
         'hide': function () {
-          return !vm.isSquaredUC;
+          return !vm.isSquaredUC();
         }
       }
     }, {

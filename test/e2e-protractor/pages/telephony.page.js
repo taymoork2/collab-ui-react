@@ -38,17 +38,19 @@ var TelephonyPage = function () {
   this.forwardNoneRadio = element(by.cssContainingText("span", "Do not forward calls"));
   this.forwardAllRadio = element(by.cssContainingText("span", "Forward all calls"));
   this.forwardBusyNoAnswerRadio = element(by.cssContainingText("span", "Forward calls when line is busy or away"));
-  this.forwardAll = element(by.id('forwardAllCalls'));
-  this.forwardBusyNoAnswer = element(by.id('forwardNABCalls'));
+  this.forwardAll = element(by.css('cs-combobox[name="forwardAllCalls"]'));
+  this.forwardBusyNoAnswer = element(by.css('cs-combobox[name="forwardNABCalls"]'));
   this.forwardExternalCalls = element(by.css('label[for="ckForwardExternalCalls"]'));
-  this.forwardExternalBusyNoAnswer = element(by.id('forwardExternalNABCalls'));
+  this.forwardExternalBusyNoAnswer = element(by.css('cs-combobox[name="forwardExternalNABCalls"]'));
 
   this.snrSwitch = element(by.css('label[for="enableSnr"]'));
   this.snrNumber = element(by.id('destination'));
   this.snrStatus = this.snrFeature.element(by.css('.feature-status'));
 
-  this.internalNumber = element(by.id('internalNumber'));
-  this.externalNumber = element(by.id('externalNumber'));
+  this.internalNumber = element(by.css('.select-list[name="internalNumber"] a.select-toggle'));
+  this.internalNumberOptions = element(by.css('.select-list[name="internalNumber"]')).all(by.repeater('option in csSelect.options')).all(by.tagName('a'));
+  this.externalNumber = element(by.css('.select-list[name="externalNumber"] a.select-toggle'));
+  this.externalNumberOptions = element(by.css('.select-list[name="externalNumber"]')).all(by.repeater('option in csSelect.options')).all(by.tagName('a'));;
 
   this.callerIdDefault = element(by.css('label[for="callerIdDefault"]'));
   this.callerIdCustom = element(by.css('label[for="callerIdOther"]'));
@@ -66,19 +68,24 @@ var TelephonyPage = function () {
     return accordion;
   };
 
+  this.selectSharedLineOption = function (user) {
+    var selected = element(by.cssContainingText('.shared-line .dropdown-menu li', user));
+    utils.click(selected);
+  };
+
   this.selectSharedLineUser = function (user) {
-    var selected = element(by.id(user + '-AccordionGroup'));
+    var selected = element(by.id(user + '-AccordionGroup')).element(by.css('.accordion-toggle'));
     utils.click(selected);
   };
 
   this.retrieveInternalNumber = function () {
     utils.wait(this.internalNumber);
-    return this.internalNumber.evaluate('lineSettings.assignedInternalNumber.pattern');
+    return this.internalNumber.evaluate('csSelect.selected.pattern');
   };
 
   this.retrieveExternalNumber = function () {
     utils.wait(this.externalNumber);
-    return this.externalNumber.evaluate('lineSettings.assignedExternalNumber.pattern');
+    return this.externalNumber.evaluate('csSelect.selected.pattern');
   };
 
   this.selectOption = function (dropdown, option) {

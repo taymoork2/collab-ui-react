@@ -3,7 +3,7 @@
 /* global describe */
 /* global it */
 
-xdescribe('Squared UC Add User flow', function () {
+describe('Squared UC Add User flow', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
@@ -66,9 +66,12 @@ xdescribe('Squared UC Add User flow', function () {
       it('should have a line/directory number', function () {
         utils.expectCount(telephony.directoryNumbers, 1);
       });
-      it('should have voicemail off', function () {
+      xit('should have voicemail off', function () {
         utils.expectIsDisplayed(telephony.voicemailFeature);
         utils.expectText(telephony.voicemailStatus, 'Off');
+      });
+      it('should not have voicemail if org doesn\'t have voicemail', function () {
+        utils.expectIsNotDisplayed(telephony.voicemailFeature);
       });
 
       describe('Verify call forwarding defaults', function () {
@@ -76,8 +79,9 @@ xdescribe('Squared UC Add User flow', function () {
           utils.click(telephony.directoryNumbers.first());
           utils.expectIsDisplayed(telephony.lineConfigurationPanel);
         });
-        it('should have call forwarding default to empty', function () {
-          utils.expectValueToBeSet(telephony.forwardBusyNoAnswer, '');
+        it('should have call forwarding default to none', function () {
+          utils.expectIsNotDisplayed(telephony.forwardAll);
+          utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
         });
         it('should navigate back to overview panel', function () {
           utils.clickFirstBreadcrumb();
@@ -92,12 +96,8 @@ xdescribe('Squared UC Add User flow', function () {
         utils.click(telephony.saveEntitlements);
         notifications.assertSuccess('entitlements were updated successfully');
       });
-      it('should not have line or voicemail visible', function () {
-        utils.click(users.closeSidePanel);
-
-        navigation.clickHome();
-        navigation.clickUsers();
-        utils.searchAndClick(inputEmail);
+      it('should not have communications visible', function () {
+        utils.clickLastBreadcrumb();
         utils.expectIsNotDisplayed(users.communicationsService);
       });
     });
@@ -110,11 +110,7 @@ xdescribe('Squared UC Add User flow', function () {
         notifications.assertSuccess('entitlements were updated successfully');
       });
       it('should show the Communications service', function () {
-        utils.click(users.closeSidePanel);
-
-        navigation.clickHome();
-        navigation.clickUsers();
-        utils.searchAndClick(inputEmail);
+        utils.clickLastBreadcrumb();
         utils.expectIsDisplayed(users.communicationsService);
       });
       it('should have a line/directory number again', function () {
@@ -122,9 +118,12 @@ xdescribe('Squared UC Add User flow', function () {
         utils.expectIsDisplayed(telephony.communicationPanel);
         utils.expectCount(telephony.directoryNumbers, 1);
       });
-      it('should have voicemail off', function () {
+      xit('should have voicemail off', function () {
         utils.expectIsDisplayed(telephony.voicemailFeature);
         utils.expectText(telephony.voicemailStatus, 'Off');
+      });
+      it('should not have voicemail if org doesn\'t have voicemail', function () {
+        utils.expectIsNotDisplayed(telephony.voicemailFeature);
       });
     });
 

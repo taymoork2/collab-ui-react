@@ -13,6 +13,7 @@ var concat = require('gulp-concat');
 var config = require('./gulp.config')();
 var del = require('del');
 var glob = require('glob');
+var hmac = require('crypto-js/hmac-md5');
 var karma = require('karma').server;
 var log = $.util.log;
 var path = require('path');
@@ -20,11 +21,34 @@ var pkg = require('./package.json');
 var protractor = require('gulp-protractor').protractor;
 var reload = browserSync.reload;
 var runSeq = require('run-sequence');
+var uuid = require('uuid');
 var testFiles = [];
 var changedFiles = [];
+var _uuid;
 
 function isLinux() {
   return process.platform === 'linux';
+}
+
+function sourceSauce() {
+  $.env({
+    file: './test/env/sauce.json',
+    vars: {
+      "SC_TUNNEL_IDENTIFIER": _uuid || (_uuid = uuid.v4())
+    }
+  });
+}
+
+function sourceIntegration() {
+  $.env({
+    file: './test/env/integration.json'
+  });
+}
+
+function sourceProduction() {
+  $.env({
+    file: './test/env/production.json'
+  });
 }
 
 //============================================
@@ -197,7 +221,7 @@ gulp.task('copy:build-vendor-css', function() {
 });
 
 gulp.task('copy:build-vendor-fonts', function() {
-  messageLogger('opying vendor Font files', config.vendorFiles.fonts);
+  messageLogger('Copying vendor Font files', config.vendorFiles.fonts);
   return gulp
     .src(config.vendorFiles.fonts)
     .pipe($.if(args.verbose, $.print()))
@@ -344,7 +368,7 @@ gulp.task('unsupported:build', function() {
     config.vendorFiles.unsupported,
     config.unsupportedDir + '/scripts/**/*.js'
   );
-  messageLogger('njecting dependancies into unsupported.html', jsFiles);
+  messageLogger('Injecting dependancies into unsupported.html', jsFiles);
   return gulp
     .src(config.unsupportedDir + '/unsupported2.html')
     .pipe($.if(args.verbose, $.print()))
@@ -871,14 +895,43 @@ gulp.task('karma-watch', ['karma-config-watch'], function(done) {
  * E2E testing task
  * Usage: gulp e2e      Runs tests against the dist directory
  * Options:
- * --specs=squared      Runs only tests in test/squared directory
- * --specs=huron        Runs only tests in test/huron directory
- * --specs=hercules     Runs only tests in test/hercules directory
- * --specs=mediafusion  Runs only tests in test/mediafusion directory
- * --specs=filepath     Runs only tests in specified file
+ * --sauce              Runs tests against SauceLabs
+ * --int                Runs tests against integration atlas
+ * --prod               Runs tests against production atlas
+ * --nosetup            Runs tests without serving the app
+ * --specs              Runs tests against specific files or modules
  * --build              Runs tests against the build directory
  *************************************************************************/
-gulp.task('e2e', ['e2e:setup'], function() {
+gulp.task('e2e', function(done) {
+  if (args.sauce && !(args.int || args.prod)) {
+    runSeq(
+      'e2e:setup',
+      'sauce:start',
+      'protractor',
+      'sauce:stop',
+      done
+    );
+  } else {
+    runSeq(
+      'e2e:setup',
+      'protractor',
+      done
+    );
+  }
+});
+
+/*************************************************************************
+ * E2E testing task
+ * Usage: gulp protractor   Runs tests against the dist directory
+ * Options:
+ * --specs=squared          Runs only tests in test/squared directory
+ * --specs=huron            Runs only tests in test/huron directory
+ * --specs=hercules         Runs only tests in test/hercules directory
+ * --specs=mediafusion      Runs only tests in test/mediafusion directory
+ * --specs=filepath         Runs only tests in specified file
+ * --build                  Runs tests against the build directory
+ *************************************************************************/
+gulp.task('protractor', ['set-env'], function() {
   var debug = args.debug ? true : false;
   var opts = {
     configFile: 'protractor-config.js',
@@ -888,34 +941,92 @@ gulp.task('e2e', ['e2e:setup'], function() {
   var tests = [];
   if (args.specs) {
     var specs = args.specs;
-    if (!specs.match(/_spec.js$/)) {
+    if (!specs.match(/_spec.js/)) {
       tests = 'test/e2e-protractor/' + specs + '/**/*_spec.js';
-      messageLogger('Running End 2 End tests from module' + $.util.colors.red(specs));
+      messageLogger('Running End 2 End tests from module: ' + $.util.colors.red(specs));
       // log($.util.colors.green('Running End 2 End tests from module: ') + $.util.colors.red(specs));
     } else {
-      tests = specs;
-      messageLogger('Running End 2 End tests from file:' + $.util.colors.red(specs));
+      tests = specs.split(',');
+      messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(specs));
       // log($.util.colors.green('Running End 2 End tests from file: ') + $.util.colors.red(specs));
     }
   } else {
-    tests = 'test/e2e-protractor/**/*_spec.js';
-    // tests = [].concat(
-    //     config.testFiles.e2e.spark,
-    //     config.testFiles.e2e.hercules,
-    //     config.testFiles.e2e.mediafusion
-    //   );
+    // tests = 'test/e2e-protractor/**/*_spec.js';
+    tests = [].concat(
+        config.testFiles.e2e.squared,
+        config.testFiles.e2e.hercules
+      );
     messageLogger('Running End 2 End tests from all modules.');
   }
 
-  gulp.src(tests)
+  return gulp.src(tests)
     .pipe(protractor(opts))
     .on('error', function(e) {
-      $.connect.serverClose();
+      if (args.sauce) {
+        //stop on error because gulp-protractor exits the stream
+        gulp.src('')
+          .pipe($.shell('./sauce/stop.sh'));
+      }
+      if (!args.nosetup) {
+        $.connect.serverClose();
+      }
       throw e;
     })
     .on('end', function() {
-      $.connect.serverClose();
+      if (!args.nosetup) {
+        $.connect.serverClose();
+      }
     });
+});
+
+gulp.task('set-env', function () {
+  if (args.sauce) {
+    sourceSauce();
+  }
+  if (args.prod) {
+    sourceProduction();
+  } else if (args.int) {
+    sourceIntegration();
+  }
+})
+
+//============================================
+// SAUCELABS TASKS
+//============================================
+
+/*********************************************************
+ * Start a sauce connect tunnel for testing a local app
+ * Usage: gulp sauce:start
+ *********************************************************/
+
+gulp.task('sauce:start', function() {
+  sourceSauce();
+  return gulp.src('')
+    .pipe($.shell('./sauce/start.sh'));
+});
+
+/*********************************************************
+ * Stop a sauce connect tunnel
+ * Usage: gulp sauce:stop
+ *********************************************************/
+
+gulp.task('sauce:stop', function() {
+  sourceSauce();
+  return gulp.src('')
+    .pipe($.shell('./sauce/stop.sh'));
+});
+
+/*********************************************************
+ * Get an authenticated url for sauce job results
+ * Usage: gulp sauce:job --http://saucelabs.com/jobs/<id>
+ *********************************************************/
+
+gulp.task('sauce:job', function () {
+  sourceSauce();
+  var arg = process.argv.pop();
+  var message = arg.split('/').pop();
+  var auth = hmac(message, process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY);
+  log(arg.replace('--','') + '?auth=' + auth);
 });
 
 /*********************************************

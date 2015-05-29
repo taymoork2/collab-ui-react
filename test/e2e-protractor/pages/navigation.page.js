@@ -19,6 +19,8 @@ var Navigation = function () {
   this.servicesTab = element(by.css('li.servicesTab > a'));
   this.meetingsTab = element(by.css('a[href="#meetings"]'));
   this.mediaFusionMgmtTab = element(by.css('a[href="#mediafusionconnector"]'));
+  this.enterpriseResourcesTab = element(by.css('a[href="#vts"]'));
+  this.utilizationTab = element(by.css('a[href="#utilization"]'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
@@ -107,6 +109,18 @@ var Navigation = function () {
     this.expectCurrentUrl('/meetings');
   };
 
+  this.clickEnterpriseResource = function () {
+    this.clickDevelopmentTab();
+    utils.click(this.enterpriseResourcesTab);
+    this.expectCurrentUrl('/vts');
+  };
+
+  this.clickUtilization = function () {
+    this.clickDevelopmentTab();
+    utils.click(this.utilizationTab);
+    this.expectCurrentUrl('/utilization');
+  };
+
   this.clickFirstTimeWizard = function () {
     utils.click(this.settingsMenu);
     utils.click(this.dropdownItems.get(0));
@@ -154,7 +168,12 @@ var Navigation = function () {
   this.logout = function () {
     utils.click(this.userInfoButton);
     utils.click(this.logoutButton);
-    this.expectDriverCurrentUrl('idbroker.webex.com');
+    if (process.env.LAUNCH_URL) {
+      this.expectDriverCurrentUrl('/login');
+    } else {
+      this.expectDriverCurrentUrl('idbroker.webex.com');
+    }
+
   };
 
   this.sendFeedback = function () {

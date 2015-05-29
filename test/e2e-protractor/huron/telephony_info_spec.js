@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('Telephony Info', function () {
+describe('Telephony Info', function () {
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
@@ -91,6 +91,38 @@ xdescribe('Telephony Info', function () {
       utils.expectIsNotDisplayed(telephony.lineConfigurationActionButton);
     });
 
+    it('should save call forward all to an outside number', function () {
+      utils.click(telephony.forwardAllRadio);
+      telephony.selectOption(telephony.forwardAll, dropdownVariables.addNew);
+      telephony.setNumber(telephony.forwardAll, snrLine);
+      utils.click(telephony.saveButton);
+      notifications.assertSuccess('Line configuration saved successfully');
+
+      utils.clickLastBreadcrumb();
+      utils.click(telephony.directoryNumbers.first());
+
+      utils.expectInputValue(telephony.forwardAll, snrLine);
+    });
+
+    xit('should save call forward busy/no answer to voicemail', function () {
+      utils.click(telephony.forwardBusyNoAnswerRadio);
+      utils.expectIsNotDisplayed(telephony.forwardAll);
+      utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
+      utils.expectIsDisplayed(telephony.forwardExternalCalls);
+
+      telephony.selectOption(telephony.forwardBusyNoAnswer, dropdownVariables.voicemail);
+      utils.click(telephony.saveButton);
+      notifications.assertSuccess('Line configuration saved successfully');
+
+      utils.clickLastBreadcrumb();
+      utils.click(telephony.directoryNumbers.first());
+
+      utils.expectIsNotDisplayed(telephony.forwardAll);
+      utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
+      utils.expectIsDisplayed(telephony.forwardExternalCalls);
+      utils.expectInputValue(telephony.forwardBusyNoAnswer, dropdownVariables.voicemail);
+    });
+
     it('should save call forward none selection', function () {
       utils.click(telephony.forwardNoneRadio);
       utils.expectIsNotDisplayed(telephony.forwardAll);
@@ -122,43 +154,12 @@ xdescribe('Telephony Info', function () {
 
       utils.expectIsDisplayed(telephony.forwardAll);
       utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
-      utils.expectValueToBeSet(telephony.forwardAll, dropdownVariables.voicemail);
-    });
-
-    it('should save call forward all to an outside number', function () {
-      utils.click(telephony.forwardAllRadio);
-      telephony.selectOption(telephony.forwardAll, dropdownVariables.addNew);
-      telephony.setNumber(telephony.forwardAll, snrLine);
-      utils.click(telephony.saveButton);
-      notifications.assertSuccess('Line configuration saved successfully');
-
-      utils.clickLastBreadcrumb();
-      utils.click(telephony.directoryNumbers.first());
-
-      utils.expectValueToBeSet(telephony.forwardAll, snrLine);
-    });
-
-    xit('should save call forward busy/no answer to voicemail', function () {
-      utils.click(telephony.forwardBusyNoAnswerRadio);
-      utils.expectIsNotDisplayed(telephony.forwardAll);
-      utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
-      utils.expectIsDisplayed(telephony.forwardExternalCalls);
-
-      telephony.selectOption(telephony.forwardBusyNoAnswer, dropdownVariables.voicemail);
-      utils.click(telephony.saveButton);
-      notifications.assertSuccess('Line configuration saved successfully');
-
-      utils.clickLastBreadcrumb();
-      utils.click(telephony.directoryNumbers.first());
-
-      utils.expectIsNotDisplayed(telephony.forwardAll);
-      utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
-      utils.expectIsDisplayed(telephony.forwardExternalCalls);
-      utils.expectValueToBeSet(telephony.forwardBusyNoAnswer, dropdownVariables.voicemail);
+      utils.expectInputValue(telephony.forwardAll, dropdownVariables.voicemail);
     });
 
     it('should save call forward busy/no answer to an outside number', function () {
       utils.click(telephony.forwardBusyNoAnswerRadio);
+
       utils.expectIsNotDisplayed(telephony.forwardAll);
       utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
       utils.expectIsDisplayed(telephony.forwardExternalCalls);
@@ -174,7 +175,7 @@ xdescribe('Telephony Info', function () {
       utils.expectIsNotDisplayed(telephony.forwardAll);
       utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
       utils.expectIsDisplayed(telephony.forwardExternalCalls);
-      utils.expectValueToBeSet(telephony.forwardBusyNoAnswer, snrLine);
+      utils.expectInputValue(telephony.forwardBusyNoAnswer, snrLine);
     });
 
     xit('should save external call forwarding to voicemail', function () {
@@ -190,12 +191,13 @@ xdescribe('Telephony Info', function () {
       utils.clickLastBreadcrumb();
       utils.click(telephony.directoryNumbers.first());
 
-      utils.expectValueToBeSet(telephony.forwardExternalBusyNoAnswer, dropdownVariables.voicemail);
+      utils.expectInputValue(telephony.forwardExternalBusyNoAnswer, dropdownVariables.voicemail);
     });
 
     it('should save external call forwarding to an outside number', function () {
       utils.click(telephony.forwardBusyNoAnswerRadio);
       utils.click(telephony.forwardExternalCalls);
+
       telephony.selectOption(telephony.forwardExternalBusyNoAnswer, dropdownVariables.addNew);
       telephony.setNumber(telephony.forwardExternalBusyNoAnswer, externalCFLine);
       utils.click(telephony.saveButton);
@@ -204,7 +206,7 @@ xdescribe('Telephony Info', function () {
       utils.clickLastBreadcrumb();
       utils.click(telephony.directoryNumbers.first());
 
-      utils.expectValueToBeSet(telephony.forwardExternalBusyNoAnswer, externalCFLine);
+      utils.expectInputValue(telephony.forwardExternalBusyNoAnswer, externalCFLine);
     });
 
     it('should change caller id to custom display', function () {
@@ -238,12 +240,10 @@ xdescribe('Telephony Info', function () {
     });
 
     it('should add the second user to the first users shared line', function () {
-      utils.waitUntilEnabled(telephony.userInput);
-
       utils.click(telephony.userInput);
 
       utils.sendKeys(telephony.userInput, user2);
-      utils.sendKeys(telephony.userInput, protractor.Key.ENTER);
+      telephony.selectSharedLineOption(user2);
 
       utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
 
@@ -258,8 +258,6 @@ xdescribe('Telephony Info', function () {
 
       telephony.selectSharedLineUser(user2);
       utils.click(telephony.removeMemberLink);
-
-      utils.expectIsDisplayed(telephony.removeMemberBtn);
       utils.click(telephony.removeMemberBtn);
 
       utils.expectIsNotDisplayed(telephony.userAccordionGroup(user2));
@@ -299,8 +297,7 @@ xdescribe('Telephony Info', function () {
 
     it('should update directory number', function () {
       utils.click(telephony.internalNumber);
-      utils.sendKeys(telephony.internalNumber, protractor.Key.ARROW_UP);
-      utils.sendKeys(telephony.internalNumber, protractor.Key.ENTER);
+      utils.click(telephony.internalNumberOptions.first());
       telephony.retrieveInternalNumber().then(function (number) {
         utils.click(telephony.saveButton);
         notifications.assertSuccess('Line configuration saved successfully');
@@ -317,8 +314,7 @@ xdescribe('Telephony Info', function () {
     it('should save adding an external number', function () {
       telephony.retrieveExternalNumber().then(function (originalNumber) {
         utils.click(telephony.externalNumber);
-        utils.sendKeys(telephony.externalNumber, protractor.Key.ARROW_DOWN);
-        utils.sendKeys(telephony.externalNumber, protractor.Key.ENTER);
+        utils.click(telephony.externalNumberOptions.last());
         telephony.retrieveExternalNumber().then(function (number) {
           if (number !== originalNumber) {
             utils.click(telephony.saveButton);
@@ -347,14 +343,17 @@ xdescribe('Telephony Info', function () {
   });
 
   describe('Voicemail', function () {
+    it('should not have voicemail if org doesn\'t have voicemail', function () {
+      utils.expectIsNotDisplayed(telephony.voicemailFeature);
+    });
 
-    it('should go to the Voicemail Panel', function () {
+    xit('should go to the Voicemail Panel', function () {
       utils.expectText(telephony.voicemailStatus, 'Off');
       utils.click(telephony.voicemailFeature);
       utils.expectIsDisplayed(telephony.voicemailTitle);
     });
 
-    it('should cancel changes', function () {
+    xit('should cancel changes', function () {
       utils.click(telephony.voicemailSwitch);
       utils.expectIsDisplayed(telephony.voicemailCancel);
       utils.expectIsDisplayed(telephony.voicemailSave);

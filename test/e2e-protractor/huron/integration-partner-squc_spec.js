@@ -65,6 +65,7 @@ xdescribe('Spark UC Partner flow', function () {
     }, 60000);
 
     it('should find new trial', function (done) {
+      utils.click(partner.trialFilter);
       utils.expectIsDisplayed(partner.newSqUCTrialRow);
 
       partner.retrieveOrgId(partner.newSqUCTrialRow).then(function (_orgId) {
@@ -95,6 +96,7 @@ xdescribe('Spark UC Partner flow', function () {
     }, 60000);
 
     it('should add new did to the trial', function () {
+      utils.click(partner.trialFilter);
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);

@@ -7,7 +7,7 @@ var ServiceSetup = function () {
   this.siteCode = element(by.id('siteCode'));
   this.globalMOH = element(by.id('globalMOH'));
   this.addNumberRange = element(by.linkText('Add More Extension Ranges'));
-  this.numberRanges = element.all(by.repeater('internalNumberRange in internalNumberRanges'));
+  this.numberRanges = element.all(by.repeater('internalNumberRange in serviceSetup.internalNumberRanges'));
   this.save = element(by.buttonText('Save'));
 
   this.newRange = this.numberRanges.last();

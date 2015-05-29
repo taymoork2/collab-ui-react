@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('Huron Call Routing', function () {
+describe('Huron Call Routing', function () {
   var pattern = callrouting.getPattern();
 
   beforeEach(function () {
@@ -12,7 +12,7 @@ xdescribe('Huron Call Routing', function () {
   });
 
   it('should login', function () {
-    login.login('huron-int1');
+    login.login('huron-e2e');
   });
 
   it('should navigate to the Call Park page', function () {

@@ -50,16 +50,6 @@
       <button id="editTrialButton" class="btn btn-primary" ng-click="trial.editTerms = false" translate="partnerHomePage.edit"></button>
     </div>
     <h4 class="section-title" translate="partnerHomePage.termsOfTrial"></h4>
-    <div class="row">
-      <div class="col-xs-8 col-xs-offset-4">
-        <cs-checkbox ckid="squaredTrial" ng-model="trial.offers['COLLAB']" label="{{'trials.collab' | translate}}" isdisabled="true"></cs-checkbox>
-      </div>
-    </div>
-    <div class="row" ng-if="trial.isSquaredUC()">
-      <div class="col-xs-8 col-xs-offset-4">
-        <cs-checkbox ckid="squaredUCTrial" ng-model="trial.offers['SQUAREDUC']" label="{{'trials.squaredUC' | translate}}" isdisabled="trial.disableSquaredUCCheckBox || (!trial.showPartnerEdit && trial.editTerms)"></cs-checkbox>
-      </div>
-    </div>
     <div ng-show="trial.editTerms && !trial.showPartnerEdit">
       <div class="form-group">
         <label class="col-xs-4 control-label" translate="partnerHomePage.duration"></label>

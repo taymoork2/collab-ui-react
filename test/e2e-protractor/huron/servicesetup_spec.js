@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
+describe('First Time Wizard - CiscoUC Service Setup', function () {
   var pattern = servicesetup.getPattern();
 
   beforeEach(function () {
@@ -38,13 +38,13 @@ xdescribe('First Time Wizard - CiscoUC Service Setup', function () {
     utils.sendKeys(servicesetup.newBeginRange, pattern);
     utils.sendKeys(servicesetup.newEndRange, pattern);
     utils.click(servicesetup.save);
-    notifications.assertSuccess('added successfully');
+    notifications.assertSuccess('saved successfully');
   });
 
   it('should delete the number range', function () {
     wizard.clickServiceSetup();
     servicesetup.deleteNumberRange(pattern);
-    notifications.assertSuccess('deleted successfully');
+    notifications.assertSuccess('Successfully deleted');
   });
 
   it('should close the first time wizard and log out', function () {

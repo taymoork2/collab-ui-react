@@ -3,20 +3,26 @@
 exports.config = {
   framework: "jasmine2",
 
-  directConnect: true,
+  sauceUser: process.env.SAUCE_USERNAME,
+  sauceKey: process.env.SAUCE_ACCESS_KEY,
 
   capabilities: {
     'browserName': 'chrome',
+    "screenResolution": "1680x1050",
+    'platform': process.env.SAUCE_USERNAME ? 'Windows 7' : undefined,
+    'tunnelIdentifier': process.env.LAUNCH_URL ? undefined : process.env.SC_TUNNEL_IDENTIFIER,
+    'name': 'wx2-admin-web-client',
+
     'chromeOptions': {
       'args': ['--disable-extensions', '--start-fullscreen']
     },
     shardTestFiles: true,
-    maxInstances: 1
+    maxInstances: process.env.SAUCE_USERNAME ? 8 : 1
   },
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: 'http://127.0.0.1:8000',
+  baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
 
   onPrepare: function() {
     var jasmineReporters = require('jasmine-reporters');
@@ -87,7 +93,9 @@ exports.config = {
     var BasicSettigsPage = require('./test/e2e-protractor/pages/webexbasicsettings.page.js');
     var OrgProfilePage = require('./test/e2e-protractor/pages/orgprofile.page.js');
     var ManagementServicePage = require('./test/e2e-protractor/pages/managementService.page.js');
-   
+    var EnterpriseResourcePage = require('./test/e2e-protractor/pages/enterpriseResource.page.js');
+    var UtilizationPage = require('./test/e2e-protractor/pages/utilization.page.js');
+    var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
 
 
     global.notifications = new Notifications();
@@ -115,8 +123,9 @@ exports.config = {
     global.usersettings = new BasicSettigsPage();
     global.orgprofile = new OrgProfilePage();
     global.management = new ManagementServicePage();
-    
-
+    global.enterpriseResource = new EnterpriseResourcePage();
+    global.utilization = new UtilizationPage();
+    global.meetings = new MeetingsPage();
   },
 
   jasmineNodeOpts: {

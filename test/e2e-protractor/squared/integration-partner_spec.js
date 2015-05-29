@@ -62,7 +62,7 @@ describe('Partner flow', function () {
       partner.assertDisabled('startTrialButton');
 
       utils.expectIsDisplayed(partner.squaredTrialCheckbox);
-      utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
+      utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);

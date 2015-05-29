@@ -16,6 +16,33 @@
     vm.offers = {};
 
     vm.trialTermsFields = [{
+      key: 'COLLAB',
+      type: 'checkbox',
+      model: vm.offers,
+      templateOptions: {
+        disabled: true,
+        label: $translate.instant('trials.collab'),
+        id: 'squaredTrial',
+        class: 'col-xs-8 col-xs-offset-4'
+      }
+    }, {
+      key: 'SQUAREDUC',
+      type: 'checkbox',
+      model: vm.offers,
+      templateOptions: {
+        label: $translate.instant('trials.squaredUC'),
+        id: 'squaredUCTrial',
+        class: 'col-xs-8 col-xs-offset-4'
+      },
+      expressionProperties: {
+        'hide': function () {
+          return !vm.isSquaredUC();
+        },
+        'templateOptions.disabled': function () {
+          return vm.disableSquaredUCCheckBox || (!vm.showPartnerEdit && vm.editTerms);
+        }
+      }
+    }, {
       key: 'duration',
       type: 'radio-list',
       templateOptions: {

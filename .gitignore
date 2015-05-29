@@ -19,3 +19,4 @@ test/karma-unit.js
 test/unit-test-results.xml
 test/unit-test-results.html
 plato
+.sauce

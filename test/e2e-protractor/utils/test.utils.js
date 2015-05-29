@@ -8,7 +8,7 @@ var request = require('request');
 exports.searchField = element(by.id('searchFilter'));
 
 exports.randomId = function () {
-  return (Math.random() + 1).toString(36).slice(2);
+  return (Math.random() + 1).toString(36).slice(2, 12);
 };
 
 exports.randomDid = function () {

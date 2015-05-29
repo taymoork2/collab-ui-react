@@ -85,11 +85,11 @@ module.exports = function () {
         '!' + test + '/e2e-protractor/**/*'
       ],
       e2e: {
-        core: e2e + '/core/**/*_spec.js',
-        spark: e2e + '/squared/**/*_spec.js',
         hercules: e2e + '/hercules/**/*_spec.js',
         huron: e2e + '/huron/**/*_spec.js',
-        mediafusion: e2e + '/mediafusion/**/*_spec.js'
+        mediafusion: e2e + '/mediafusion/**/*_spec.js',
+        squared: e2e + '/squared/**/*_spec.js',
+        webex: e2e + '/webex/**/*_spec.js'
       }
     },
 
