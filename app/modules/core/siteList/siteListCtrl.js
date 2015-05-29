@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('SiteListCtrl', ['$translate', 'Authinfo', 'Config',
-    function ($translate, Authinfo, Config) {
+  .controller('SiteListCtrl', ['$translate', 'Authinfo', 'Config', '$log', '$scope', 'Userservice',
+    function ($translate, Authinfo, Config, $log, $scope, Userservice) {
       var vm = this;
 
       vm.siteLaunch = {
@@ -10,6 +10,17 @@ angular.module('Core')
         advancedSettings: null,
         userEmailParam: null,
       };
+
+      if (_.isUndefined(Authinfo.getPrimaryEmail())) {
+        Userservice.getUser('me', function (data, status) {
+          if (data.success) {
+            if (data.emails) {
+              Authinfo.setEmail(data.emails);
+              vm.siteLaunch.adminEmailParam = Authinfo.getPrimaryEmail();
+            }
+          }
+        });
+      }
 
       vm.gridData = Authinfo.getConferenceServices();
 
