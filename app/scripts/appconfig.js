@@ -382,26 +382,6 @@ angular
             displayName: 'Roles'
           }
         })
-        .state('device-overview', {
-          parent: 'sidepanel',
-          views: {
-            'sidepanel@': {
-              controller: 'DeviceOverviewCtrl',
-              controllerAs: 'deviceOverview',
-              templateUrl: 'modules/squared/deviceOverview/deviceOverview.tpl.html'
-            },
-            'header@device-overview': {
-              templateUrl: 'modules/squared/deviceOverview/deviceHeader.tpl.html'
-            }
-          },
-          params: {
-            currentDevice: {},
-            querydeviceslist: {}
-          },
-          data: {
-            displayName: ''
-          }
-        })
         // .state('users.list.preview', {
         //     templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
         //     controller: 'UserPreviewCtrl'
@@ -487,14 +467,70 @@ angular
           controller: 'SupportCtrl',
           parent: 'main'
         })
-        .state('devices', {
+
+      /*
+        devices
+      */
+      .state('devices', {
           url: '/devices',
           templateUrl: 'modules/squared/devices/devices.html',
           controller: 'SpacesCtrl',
           controllerAs: 'sc',
           parent: 'main'
         })
-        .state('partneroverview', {
+        .state('device-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'DeviceOverviewCtrl',
+              controllerAs: 'deviceOverview',
+              templateUrl: 'modules/squared/deviceOverview/deviceOverview.tpl.html'
+            },
+            'header@device-overview': {
+              templateUrl: 'modules/squared/deviceOverview/deviceHeader.tpl.html'
+            }
+          },
+          params: {
+            currentDevice: {},
+            querydeviceslist: {}
+          },
+          data: {
+            displayName: ''
+          }
+        })
+
+      /*
+        devices redux
+      */
+      .state('devices-redux', {
+          url: '/devices-redux',
+          templateUrl: 'modules/squared/devicesRedux/devices.html',
+          controller: 'DevicesCtrlRedux',
+          controllerAs: 'sc',
+          parent: 'main'
+        })
+        .state('device-overview-redux', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'DeviceOverviewCtrlRedux',
+              controllerAs: 'deviceOverview',
+              templateUrl: 'modules/squared/deviceOverviewRedux/deviceOverview.tpl.html'
+            },
+            'header@device-overview-redux': {
+              templateUrl: 'modules/squared/deviceOverviewRedux/deviceHeader.tpl.html'
+            }
+          },
+          params: {
+            currentDevice: {},
+            querydeviceslist: {}
+          },
+          data: {
+            displayName: ''
+          }
+        })
+
+      .state('partneroverview', {
           parent: 'partner',
           url: '/overview',
           templateUrl: 'modules/core/views/partnerlanding.html',

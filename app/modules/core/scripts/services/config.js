@@ -693,6 +693,7 @@ angular.module('Core')
           'users',
           'user-overview',
           'device-overview',
+          'device-overview-redux',
           'userprofile',
           'reports',
           'setupwizardmodal',
@@ -738,7 +739,8 @@ angular.module('Core')
           'mediafusionconnector'
         ],
         'squared-fusion-uc': [
-          'devices'
+          'devices',
+          'devices-redux',
         ],
         'squared-team-member': [
           'organization'

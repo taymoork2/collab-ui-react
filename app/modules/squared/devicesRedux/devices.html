@@ -1,0 +1,106 @@
+<div class="shared-spaces">
+  <div class="row page-header">
+    <div class="page-title col-md-6 col-sm-6">
+      <span class="title">
+        {{'spacesPage.title' | translate}}&nbsp;&nbsp;
+        <small class="count">{{sc.roomData.length}}</small>
+      </span>
+    </div>
+    <div class="col-md-6 col-sm-6" ng-show="Utils.isAdminPage()">
+      <div class="page-option-buttons">
+        <button id="addRooms" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addRoomDialog" ng-click="sc.resetAddDevice()">
+          <span translate="spacesPage.add"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div ng-hide="sc.roomData.length" windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
+      <div class="empty-devices-content">
+        <img ng-src="images/devices/cisco_sx10.png" style="height: 60px; width: 60px" />
+        <h2 class="empty-device-message" translate="spacesPage.emptyDevices1"></h2>
+        <h2 class="empty-device-message" translate="spacesPage.emptyDevices2"></h2>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container-fluid grid" ng-show="sc.roomData.length">  
+    <div class="row" ng-repeat="device in sc.roomData" ng-click="sc.showDeviceDetails(device)">
+      <div class="col-sm-4">
+        <img ng-src="images/devices/cisco_{{device.product.toLowerCase()}}.png" style="height: 60px; width: 60px" />
+        <span style="padding-left: 10px">{{device.product}}</span>
+      </div>
+      <div class="col-sm-4">{{device.displayName}}</div>
+      <div class="col-sm-4">
+        <i class="fa fa-circle" ng-class="device.color" />
+        <span>{{device.stateFormatted}}</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Add Room Modal -->
+<div class="modal fade" id="addRoomDialog" tabindex="-1" role="dialog" aria-labelledby="addRoomTitle" aria-hidden="true">
+  <div class="modal-dialog add-device-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="device-modal-close" type="button" class="close" data-dismiss="modal">
+          <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+        </button>
+        <h3 class="modal-title" id="addRoomTitle" translate="spacesPage.modalTitle"></h3>
+      </div>
+      <div class="modal-body">
+
+        <h4 translate="spacesPage.addDeviceStep1" class="adddevice-stepheader"></h4>
+        <p translate="spacesPage.addDeviceStep1Desc" class="adddevice-desc"></p>
+
+        <div ng-show="sc.showAdd">
+          <input class="form-control profile-input adddevice-desc add-device-textbox" name="roomName" ng-model="sc.newRoomName" type="text" id="newRoom" required></input>
+
+          <button id="btnAdd" type="button" class="btn btn-primary btn-lg add-device-btn" ng-click="sc.addDevice()" ng-disabled="!sc.newRoomName.length">
+          <span translate="spacesPage.addBtn"></span>
+          </button>
+        </div>
+
+        <div id="deviceAddCard" class="modal-deviceadd-card" ng-show="!sc.showAdd">
+          <img src="images/SX10.png" class="pull-left"/>
+          <p class="adddevice-desc device-card-content-name pull-left">SX10</p>
+          <p id="confirmDeviceName" class="adddevice-desc device-card-content pull-left">{{sc.newRoomName}}</p>
+          <p class="adddevice-desc device-card-content pull-left">{{sc.newActivationCode}}</p>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+          <button type="button" id="doneDevicesButton" class="btn btn-primary" data-dismiss="modal" ng-disabled="sc.showAdd" translate="spacesPage.done"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Room Modal -->
+<div class="modal fade" id="deleteDeviceModal" tabindex="-1" role="dialog" aria-labelledby="deleteRoomTitle" aria-hidden="true">
+  <div class="modal-dialog delete-device-modal">
+    <div class="modal-content" modal-transclude="">
+      <div class="modal-header">
+        <button id="device-modal-close" type="button" class="close" ng-click="sc.cancelDelete()"  data-dismiss="modal">
+          <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+        </button>
+        <h3 class="modal-title">
+            <span translate="spacesPage.deleteDevice"></span>
+        </h3>
+      </div>
+      <div class="modal-body">
+        <p><span translate="spacesPage.deleteDeviceConfText"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelButton" class="btn btn-default" ng-click="sc.cancelDelete()" data-dismiss="modal">
+          <span translate="spacesPage.cancel"></span>
+        </button>
+        <button id="deleteButton" class="btn btn-primary" ng-click="sc.deleteDevice(sc.deleteDeviceUuid, sc.deleteRoom)" data-dismiss="modal">
+          <span translate="spacesPage.deleteDevice"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
