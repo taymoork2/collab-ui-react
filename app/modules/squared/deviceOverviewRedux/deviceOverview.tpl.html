@@ -1,0 +1,75 @@
+<div ui-view="header"></div>
+
+<cs-sp-container>
+
+  <cs-sp-section ng-if="deviceOverview.needsActivation">
+    <div class="feature-list">
+      <p>
+        <i class="fa fa-circle device-status-yellow"></i>
+        <a>{{deviceOverview.currentDevice.stateFormatted}}</a>
+      </p>
+      <p>
+        To activate a device for {{deviceOverview.currentDevice.displayName}}, use this activation code during the setup:
+      </p>
+      <h3>
+        {{deviceOverview.currentDevice.activationCodeFormatted}}
+      </h3>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="!deviceOverview.needsActivation">
+    <div class="feature-list">
+      <p>
+        <i class="fa fa-circle device-status-green" ng-if="deviceOverview.active"></i>
+        <i class="fa fa-circle device-status-gray" ng-if="deviceOverview.offline"></i>
+        <i class="fa fa-circle device-status-red" ng-if="deviceOverview.issuesDetected"></i>
+        <span> {{deviceOverview.currentDevice.stateFormatted}} </span>
+      </p>
+      <div>
+        <div ng-repeat="event in deviceOverview.diagEvents">
+          <p>{{event.type}}</p>
+          <p>{{event.message}}</p>
+        </div>
+      </div>
+      <table class="table">
+        <tbody>
+          <tr>
+            <td style="border:none">Type</td>
+            <td style="border:none">{{deviceOverview.currentDevice.product}}</td>
+          </tr>
+          <tr>
+            <td style="border:none">Software</td>
+            <td style="border:none">{{deviceOverview.software}}</td>
+          </tr>
+          <tr>
+            <td style="border:none">Serial</td>
+            <td style="border:none; text-overflow: ellipsis;">{{deviceOverview.currentDevice.serial}}</td>
+          </tr>
+          <tr>
+            <td style="border:none">IP Address</td>
+            <td style="border:none">{{deviceOverview.ip}}</td>
+          </tr>
+          <tr>
+            <td style="border:none">MAC Address</td>
+            <td style="border:none">{{deviceOverview.currentDevice.mac}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div style="margin-top: 10px">
+      <button id="deviceDeleteButton" class="btn btn-lg btn-default" ng-click="">
+        <span translate="spacesPage.deleteActivationCode"></span>
+      </button>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div style="margin-top: 10px">
+      <pre>{{deviceOverview.currentDeviceFormatted}}</pre>
+    </div>
+  </cs-sp-section>
+
+</cs-sp-container>
