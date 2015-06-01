@@ -63,6 +63,13 @@ angular.module('Core')
           prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
 
+        csdmServiceUrl: {
+          dev: 'http://localhost:8080/csdm-server/csdm/api/v1',
+          integration: 'https://csdm-integration.wbx2.com/csdm/api/v1',
+          prod: 'https://csdm-a.wbx2.com/csdm/api/v1',
+          cfe: 'https://csdm-e.wbx2.com/csdm/api/v1'
+        },
+
         oauthClientRegistration: {
           atlas: {
             id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
@@ -461,6 +468,18 @@ angular.module('Core')
           }
         },
 
+        getCsdmServiceUrl: function () {
+          if (this.isDev()) {
+            return this.csdmServiceUrl.integration;
+          } else if (this.isCfe()) {
+            return this.csdmServiceUrl.cfe;
+          } else if (this.isIntegration()) {
+            return this.csdmServiceUrl.integration;
+          } else {
+            return this.csdmServiceUrl.prod;
+          }
+        },
+
         getLocusServiceUrl: function () {
           return this.locusServiceUrl.integration;
         },
@@ -693,6 +712,7 @@ angular.module('Core')
           'users',
           'user-overview',
           'device-overview',
+          'devices2-overview',
           'device-overview-redux',
           'userprofile',
           'reports',
@@ -741,6 +761,7 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'devices-redux',
+          'devices2'
         ],
         'squared-team-member': [
           'organization'

@@ -1,0 +1,59 @@
+<div ui-view="header"></div>
+<cs-sp-container>
+  <cs-sp-section ng-if="devices2Overview.needsActivation">
+    <div class="feature-list">
+      <p><i class="fa fa-circle device-status-yellow"></i>
+      <a> {{devices2Overview.currentEntity.displayStatus}} </a></p>
+      <p>To activate a device for {{devices2Overview.currentEntity.displayName}}, use this activation code during the setup:<p>
+      <p>{{devices2Overview.currentEntity.formattedActivationCode}}<p>
+      <!-- <p>If this activation is no longer needed:<p> -->
+      <!-- <button id="deviceDeleteButton" class="btn btn-lg btn-default pull-left" ng-click="">
+        <span translate="spacesPage.deleteActivationCode"></span>
+      </button><br><br> -->
+    </div>
+  </cs-sp-section>
+  <cs-sp-section ng-if="!devices2Overview.needsActivation">
+    <div class="feature-list">
+      <p>
+        <i class="fa fa-circle device-status-green" ng-if="devices2Overview.active"></i>
+        <i class="fa fa-circle device-status-gray" ng-if="devices2Overview.offline"></i>
+        <i class="fa fa-circle device-status-red" ng-if="devices2Overview.issuesDetected"></i>
+        <a> {{devices2Overview.currentEntity.displayStatus}} </a>
+      </p>
+      <div>
+        <div ng-repeat="event in devices2Overview.diagEvents">
+          <p>{{event.type}}</p>
+          <p>{{event.message}}</p>
+        </div>
+      </div>
+      <table class="table">
+        <tbody>
+          <tr>
+            <td style="border:none">
+              <div class="device-img">
+                <img ng-src="images/SX10.png" />
+              </div>
+            </td>
+            <td style="border:none">Cisco SX10</td>
+          </tr>
+          <tr>
+            <td style="border:none">Software</td>
+            <td style="border:none">{{devices2Overview.software}}</td>
+          </tr>
+          <tr>
+            <td style="border:none">Serial</td>
+            <td style="border:none">{{devices2Overview.currentEntity.serial}}</td>
+          </tr>
+          <tr>
+            <td style="border:none">IP Address</td>
+            <td style="border:none">{{devices2Overview.ip}}</td>
+          </tr>
+          <tr>
+            <td style="border:none">MAC Address</td>
+            <td style="border:none">{{devices2Overview.currentEntity.mac}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </cs-sp-section>
+</cs-sp-container>

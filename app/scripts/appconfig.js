@@ -382,6 +382,7 @@ angular
             displayName: 'Roles'
           }
         })
+        
         // .state('users.list.preview', {
         //     templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
         //     controller: 'UserPreviewCtrl'
@@ -530,7 +531,34 @@ angular
           }
         })
 
-      .state('partneroverview', {
+        .state('devices2', {
+          url: '/devices2',
+          templateUrl: 'modules/squared/devices2/devices2.html',
+          controller: 'Devices2Ctrl',
+          controllerAs: 'dc',
+          parent: 'main'
+        })
+        .state('devices2-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'Devices2OverviewCtrl',
+              controllerAs: 'devices2Overview',
+              templateUrl: 'modules/squared/deviceOverview2/devices2Overview.tpl.html'
+            },
+            'header@devices2-overview': {
+              templateUrl: 'modules/squared/deviceOverview2/devices2Header.tpl.html'
+            }
+          },
+          params: {
+            currentEntity: {},
+            querydeviceslist: {}
+          },
+          data: {
+            displayName: ''
+          }
+        })
+        .state('partneroverview', {
           parent: 'partner',
           url: '/overview',
           templateUrl: 'modules/core/views/partnerlanding.html',

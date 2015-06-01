@@ -582,7 +582,11 @@
     "deleteDevice": "Delete Device",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
     "videoQTitle": "Potential Loss of Video Quality",
-    "videoQMsg": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+    "videoQMsg": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues.",
+    "needsActivation": "Needs Activation",
+    "active": "Active",
+    "offline": "Offline",
+    "issuesDetected": "Issues Detected"
   },
   "hercules": {
     "page_title": "Connector Management",
