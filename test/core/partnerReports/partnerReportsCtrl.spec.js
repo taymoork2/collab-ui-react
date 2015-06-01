@@ -26,6 +26,14 @@ describe('Controller: Partner Reports', function () {
     label: 'Test Org Three'
   }];
 
+  var endpointResponse = [{
+    customer: 'Test Org One',
+    endpoints: 45,
+    trend: '+30',
+    direction: 'positive',
+    pending: ''
+  }];
+
   beforeEach(module('Core'));
 
   describe('PartnerReportCtrl - Expected Responses', function () {
@@ -47,6 +55,7 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
         data: callMetricsData
       }));
+      spyOn(PartnerReportService, 'getRegesteredEndpoints').and.returnValue($q.when(endpointResponse));
 
       spyOn(GraphService, 'updateActiveUsersGraph');
       spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
@@ -87,6 +96,8 @@ describe('Controller: Partner Reports', function () {
         expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
+        expect(PartnerReportService.getRegesteredEndpoints).toHaveBeenCalled();
+
         expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
         expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
         expect(DonutChartService.createCallMetricsDonutChart).toHaveBeenCalled();
@@ -241,10 +252,11 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
       spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(undefined);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
-
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
         data: callMetricsData
       }));
+      spyOn(PartnerReportService, 'getRegesteredEndpoints').and.returnValue($q.when([]));
+
       spyOn(GraphService, 'updateActiveUsersGraph');
       spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
         'dataProvider': dummyGraphData,
@@ -279,9 +291,9 @@ describe('Controller: Partner Reports', function () {
         expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
+        expect(PartnerReportService.getRegesteredEndpoints).toHaveBeenCalled();
 
         expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
-
         expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
         expect(DonutChartService.createCallMetricsDonutChart).toHaveBeenCalled();
       });

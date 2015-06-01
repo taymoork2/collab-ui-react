@@ -2,7 +2,7 @@
 
 describe('Service: Partner Reports Service', function () {
   var $httpBackend, PartnerReportService, Config, Notification;
-  var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl, callMetricsUrl;
+  var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl, callMetricsUrl, registeredEndpointsUrl;
 
   beforeEach(module('Core'));
 
@@ -18,6 +18,7 @@ describe('Service: Partner Reports Service', function () {
   };
   var mediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
   var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
+  var registeredEndpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
 
   var error = {
     message: 'error'
@@ -50,6 +51,20 @@ describe('Service: Partner Reports Service', function () {
     userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
     userName: 'havard.nigardsoy@vijugroup.com'
   };
+  var posEndpointResponse = [{
+    customer: 'Test Org One',
+    endpoints: 45,
+    trend: '+30',
+    direction: 'positive',
+    pending: ''
+  }];
+  var negEndpointResponse = [{
+    customer: 'Test Org One',
+    endpoints: 15,
+    trend: '-30',
+    direction: 'negative',
+    pending: ''
+  }];
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
@@ -74,6 +89,7 @@ describe('Service: Partner Reports Service', function () {
     mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
     mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
     callMetricsUrl = 'modules/core/partnerReports/callMetrics/callMetricsTemp.json';
+    registeredEndpointsUrl = 'modules/core/partnerReports/registeredEndpoints/fakeData.json';
   }));
 
   afterEach(function () {
@@ -193,4 +209,33 @@ describe('Service: Partner Reports Service', function () {
     });
   });
 
+  describe('Registered Endpoint Service', function () {
+    it('should get registered endpoints for a customer with positive response', function () {
+      $httpBackend.whenGET(registeredEndpointsUrl).respond({
+        data: [registeredEndpointsData.data[0]]
+      });
+      PartnerReportService.getRegesteredEndpoints(customer).then(function (response) {
+        expect(response).toEqual(posEndpointResponse);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should get registered endpoints for a customer with positive response', function () {
+      $httpBackend.whenGET(registeredEndpointsUrl).respond({
+        data: [registeredEndpointsData.data[1]]
+      });
+      PartnerReportService.getRegesteredEndpoints(customer).then(function (response) {
+        expect(response).toEqual(negEndpointResponse);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should return an empty array on error response', function () {
+      $httpBackend.whenGET(registeredEndpointsUrl).respond(500);
+      PartnerReportService.getRegesteredEndpoints(customer).then(function (response) {
+        expect(response).toEqual([]);
+      });
+      $httpBackend.flush();
+    });
+  });
 });

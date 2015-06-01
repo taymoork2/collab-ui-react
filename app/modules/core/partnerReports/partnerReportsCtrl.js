@@ -36,10 +36,14 @@
     var mediaQualityRefreshDiv = 'mediaQualityRefreshDiv';
     var noMediaQualityDataDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
     var isMediaQualityRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="mediaQuality-status icon icon-spinner icon-2x"></i>';
+
     vm.callMetricsRefresh = 'refresh';
     var callMetricsRefreshDiv = 'callMetricsRefreshDiv';
     var noCallMetricsRefreshDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
     var isCallMetricsRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="call-metrics-status icon icon-spinner icon-2x"></i>';
+
+    vm.regesteredEndpoints = [];
+    vm.endpointRefresh = 'refresh';
 
     vm.timeOptions = [{
       value: 0,
@@ -108,9 +112,14 @@
       vm.activeUsersRefresh = 'refresh';
       angular.element('#' + activeUserRefreshDiv).html(isActiveUsersRefreshDiv);
       getActiveUserReports();
+
       vm.callMetricsRefresh = 'refresh';
       angular.element('#' + callMetricsRefreshDiv).html(isCallMetricsRefreshDiv);
       getCallMetricsReports();
+
+      vm.endpointRefresh = 'refresh';
+      vm.regesteredEndpoints = [];
+      getRegisteredEndpoints();
     };
 
     init();
@@ -129,8 +138,12 @@
           invalidateChartSize(mediaQualityChart);
         });
         promises.push(mediaQualityPromise);
+
         var callMetricsPromise = getCallMetricsReports();
         promises.push(callMetricsPromise);
+
+        getRegisteredEndpoints();
+
         $q.all(promises).then(function () {
           vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
           setGraphResizing();
@@ -250,6 +263,17 @@
       if (chart !== null && chart !== undefined) {
         chart.invalidateSize();
       }
+    }
+
+    function getRegisteredEndpoints() {
+      PartnerReportService.getRegesteredEndpoints(vm.customerSelected).then(function (response) {
+        vm.regesteredEndpoints = response;
+        if (!angular.isArray(response) || response.length === 0) {
+          vm.endpointRefresh = "empty";
+        } else {
+          vm.endpointRefresh = "set";
+        }
+      });
     }
   }
 })();

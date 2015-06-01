@@ -285,6 +285,13 @@
     "totalCalls": "Total Calls",
     "totalCallMinutes": "Total Call Minutes"
   },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Registered Endpoints",
+    "company": "Company",
+    "pendingActivations": "Pending Activations",
+    "trend": "Trend (%)",
+    "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}."
+  },
   "profilePage": {
     "userProfile": "User Profile",
     "userDetails": "User Details",

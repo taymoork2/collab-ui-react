@@ -3,6 +3,9 @@
 describe('Service: Donut Chart Service', function () {
   var DonutChartService;
   var donutChart = null;
+  var validateService = {
+    validateNow: function (varOne, varTwo) {}
+  };
   var processedCallMetricsData = {
     dataProvider: [{
       "callCondition": "Fail",
@@ -24,6 +27,12 @@ describe('Service: Donut Chart Service', function () {
 
   beforeEach(inject(function (_DonutChartService_) {
     DonutChartService = _DonutChartService_;
+
+    spyOn(AmCharts, 'makeChart').and.returnValue({
+      'dataProvider': processedCallMetricsData,
+      validateNow: validateService.validateNow
+    });
+    spyOn(validateService, 'validateNow');
   }));
 
   it('should exist', function () {

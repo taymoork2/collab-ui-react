@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: ucActiveUser', function () {
+describe('Directive: ucRegisteredEndpoints', function () {
   var $compile, $rootScope;
 
   beforeEach(module('Core'));
@@ -12,9 +12,9 @@ describe('Directive: ucActiveUser', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<uc-active-user/>")($rootScope);
+    var element = $compile("<uc-registered-endpoints/>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("active-user");
+    expect(element.html()).toContain("registeredEndpoints");
   });
 });
