@@ -11,50 +11,41 @@
     <div ng-show="loading" style="text-align: center; padding: 60px;">
       <i class="icon icon-spinner icon-2x"></i>
     </div>
-    <div ng-hide="loading || confirmUpdate">
-      <p>Select the Cloud Extension Services you want to turn on for your organization. This will enable you to configure the selected Services on your on premise devices and to turn the features on for your users.</p>
+    <div ng-hide="loading || confirmRemove">
+      <p>Select the Cloud Extension Services you want to turn on for your organization. This step lets you configure the selected Services on your on-premises devices and turn on related functionality for your users.</p>
       <div ng-repeat="service in services.allExceptManagement" style="margin-top: 20px;">
         <span><cs-checkbox ckid="{{service.service_id}}" ng-model="service.enabled" label=""/></span> <i ng-class="serviceIcon(service.service_id)" style="font-size: 25px; vertical-align: middle;" /> <span translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 600; margin-left: 10px;"/>
         <p>{{service.description}}</p>
       </div>
-      <p>Note! De-selecting a service will remove any service related functionality from your users. Additional steps to remove the service from your on premise devices are required. See documentation for guidance and further instructions.</p>
+      <p>Note! Deselecting a service (requires another confirm step) will remove any related functionality from your users. Additional steps to remove the service from your on-premises devices are required. See documentation for guidance and further instructions. </p>
     </div>
 
-    <div ng-show="!loading && confirmUpdate">
-      <div ng-show="servicesToBeAdded.length > 0">
-        <p><b>Adding Services:</b></p>
-        <div ng-repeat="service in servicesToBeAdded" style="margin-top: 20px;">
-          <p><i ng-class="serviceIcon(service.service_id)" style="font-size: 25px; vertical-align: middle;"/> <span translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 500; margin-left: 10px;"/></p>
-        </div>
+    <div ng-show="!loading && confirmRemove">
+      <div class="alert alert-danger" role="alert" style="margin-left: 0px; margin-right: 0px;">
+        You are about to remove the following Cloud Extension Services for your organization. This will also remove any related functionality from your users.
       </div>
-      <div ng-show="servicesToBeRemoved.length > 0">
-        <p><b>Removing Services:</b></p>
-        <div ng-repeat="service in servicesToBeRemoved" style="margin-top: 20px;">
-          <p><i ng-class="serviceIcon(service.service_id)" style="font-size: 25px; vertical-align: middle;"/> <span translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 500; margin-left: 10px;"/></p>
-        </div>
-      </div>
-      <div class="alert alert-danger" role="alert" ng-show="servicesToBeRemoved.length > 0" style="margin-left: 0px; margin-right: 0px;">
-        Removing Cloud Extension Services for your organization will remove any service related functionality from your users.
+      <div ng-repeat="service in servicesToBeRemoved" style="margin-top: 20px;">
+        <p><i ng-class="serviceIcon(service.service_id)" style="font-size: 25px; vertical-align: middle;"/> <span translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 500; margin-left: 10px;"/></p>
       </div>
       <p>Are you sure?</p>
     </div>
   </div>
   <div class="modal-footer">
-    <button ng-disabled="loading || saving" ng-hide="confirmUpdate" id="convertActionButton" class="btn btn-primary pull-right" ng-click="save()">
+    <button ng-disabled="loading || saving" ng-hide="confirmRemove" id="convertActionButton" class="btn btn-primary pull-right" ng-click="save()">
       <span ng-hide="saving">Save</span>
       <span ng-show="saving">
         <i class="icon icon-spinner" />
       </span>
     </button>
-    <button ng-disabled="loading || saving" ng-show="confirmUpdate" id="confirmButton" class="btn btn-danger pull-right" ng-click="confirm()">
+    <button ng-disabled="loading || saving" ng-show="confirmRemove" id="confirmButton" class="btn btn-danger pull-right" ng-click="confirm()">
       <span ng-hide="saving">Confirm</span>
       <span ng-show="saving">
         <i class="icon icon-spinner" />
       </span>
     </button>
     <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
-      <span ng-hide="confirmUpdate">Close</span>
-      <span ng-show="confirmUpdate">Cancel</span>
+      <span ng-hide="confirmRemove">Close</span>
+      <span ng-show="confirmRemove">Cancel</span>
     </button>
   </div>
 </div>
