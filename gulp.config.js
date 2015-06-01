@@ -150,7 +150,7 @@ module.exports = function () {
         vendor + '/d3/d3.min.js'
       ],
       less: [
-        vendor + '/bootstrap-cisco/less'
+        vendor + '/bootstrap-cisco/less/**/*.less'
       ],
       css: [
         vendor + '/alertify.js/themes/alertify.core.css',
