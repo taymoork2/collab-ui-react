@@ -68,23 +68,23 @@
         if (success === true) {
           if (data.url === vm.currentEntity.url) {
             vm.currentEntity = data;
-              if (vm.currentEntity.status !== undefined) {
-                if (vm.currentEntity.status.connectionStatus === 'connected') {
-                  if (vm.currentEntity.status.level === 'ok') {
-                    vm.currentEntity.color = 'device-status-green';
-                    vm.currentEntity.displayStatus = 'online';
-                  } else {
-                    vm.currentEntity.color = 'device-status-red';
-                    vm.currentEntity.displayStatus = 'Issues Detected';
-                  }
+            if (vm.currentEntity.status !== undefined) {
+              if (vm.currentEntity.status.connectionStatus === 'connected') {
+                if (vm.currentEntity.status.level === 'ok') {
+                  vm.currentEntity.color = 'device-status-green';
+                  vm.currentEntity.displayStatus = 'online';
                 } else {
-                  vm.currentEntity.color = 'device-status-gray';
-                  vm.currentEntity.displayStatus = 'offline';
+                  vm.currentEntity.color = 'device-status-red';
+                  vm.currentEntity.displayStatus = 'Issues Detected';
                 }
               } else {
                 vm.currentEntity.color = 'device-status-gray';
                 vm.currentEntity.displayStatus = 'offline';
               }
+            } else {
+              vm.currentEntity.color = 'device-status-gray';
+              vm.currentEntity.displayStatus = 'offline';
+            }
             setupDiagnosticsDisplay();
           } else {
             Log.error('wrong response');

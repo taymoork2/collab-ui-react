@@ -56,7 +56,7 @@ angular.module('Squared')
         });
       };
 
-      var updateDeviceList = function(codes, devices) {
+      var updateDeviceList = function (codes, devices) {
         vm.deviceData = devices.concat(codes);
         vm.totalResults = vm.deviceData.length;
       }
@@ -196,7 +196,7 @@ angular.module('Squared')
             //   successMessage = successMessage + '<br><p style="font-size:xx-small">Notifications failed.</p>';
             // }
             Notification.notify([successMessage], 'success');
-            
+
             var code = data;
             code.color = 'device-status-yellow';
             code.displayStatus = 'Needs Activation';

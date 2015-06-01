@@ -84,7 +84,7 @@ angular.module('Squared')
             callback('No valid device available.');
           }
         },
-        
+
         getEntity: function (url, callback) {
           if ((url !== null) && (url.length > 0)) {
             $http.get(url)
