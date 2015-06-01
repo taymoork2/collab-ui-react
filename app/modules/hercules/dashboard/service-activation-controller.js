@@ -7,7 +7,7 @@
       function ($scope, ServiceDescriptor, Log, XhrNotificationService) {
         $scope.saving = false;
         $scope.loading = true;
-        $scope.confirmUpdate = false;
+        $scope.confirmRemove = false;
 
         ServiceDescriptor.services(function (error, services) {
           if (!error) {
@@ -15,6 +15,23 @@
           }
           $scope.loading = false;
         });
+
+        var updateServices = function (updatedServices) {
+          _.forEach(updatedServices, function (service) {
+            ServiceDescriptor.setServiceEnabled(service.service_id, service.enabled, function (error) {
+              if (error) {
+                return XhrNotificationService.notify("Failed to update service: " + error);
+              } else {
+                // Refresh the services
+                ServiceDescriptor.services(function (error, services) {
+                  if (!error) {
+                    $scope.setServices(services);
+                  }
+                });
+              }
+            });
+          });
+        };
 
         $scope.save = function () {
           $scope.saving = true;
@@ -28,14 +45,18 @@
                 });
               });
               if (updatedServices.length > 0) {
-                $scope.confirmUpdate = true;
-                $scope.updatedServices = updatedServices;
                 $scope.servicesToBeRemoved = updatedServices.filter(function (service) {
                   return !service.enabled;
                 });
-                $scope.servicesToBeAdded = updatedServices.filter(function (service) {
+                var servicesToBeAdded = updatedServices.filter(function (service) {
                   return service.enabled;
                 });
+                updateServices(servicesToBeAdded);
+                if ($scope.servicesToBeRemoved.length > 0) {
+                  $scope.confirmRemove = true;
+                } else {
+                  $scope.$parent.modal.close();
+                }
               } else {
                 $scope.$parent.modal.close();
               }
@@ -46,21 +67,8 @@
 
         $scope.confirm = function () {
           $scope.saving = true;
-          _.forEach($scope.updatedServices, function (service) {
-            ServiceDescriptor.setServiceEnabled(service.service_id, service.enabled, function (error) {
-              if (error) {
-                return XhrNotificationService.notify("Failed to update service: " + error);
-              } else {
-                // Refresh the services
-                ServiceDescriptor.services(function (error, services) {
-                  if (!error) {
-                    $scope.setServices(services);
-                  }
-                });
-                $scope.$parent.modal.close();
-              }
-            });
-          });
+          updateServices($scope.servicesToBeRemoved);
+          $scope.$parent.modal.close();
         };
       });
 })();
