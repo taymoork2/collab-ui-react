@@ -704,7 +704,8 @@ gulp.task('browser-sync', function() {
 
   if (!args.dist) {
     gulp.watch([
-        '**/*.less',
+        config.app + '/**/*.less',
+        config.vendorFiles.less
       ], [
         'less:build'
       ])

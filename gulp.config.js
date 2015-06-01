@@ -149,6 +149,9 @@ module.exports = function () {
         vendor + '/zeroclipboard/dist/ZeroClipboard.js',
         vendor + '/d3/d3.min.js'
       ],
+      less: [
+        vendor + '/bootstrap-cisco/less'
+      ],
       css: [
         vendor + '/alertify.js/themes/alertify.core.css',
         vendor + '/alertify.js/themes/alertify.default.css',
