@@ -7,7 +7,10 @@
       /* @ngInject */
       function ($scope) {
         $scope.$watch('services', function (services) {
-          $scope.servicesMissing = _.find(services, function (service) {
+          if (!services || !services.enabledOnly) {
+            return;
+          }
+          $scope.servicesMissing = _.find(services.enabledOnly, function (service) {
             return service.status == 'error';
           });
           if ($scope.servicesMissing) $scope.showInfoPanel = true;
