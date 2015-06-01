@@ -45,15 +45,15 @@
           if (!serviceId) {
             return 'icon icon-circle-question';
           }
-          switch(serviceId) {
-            case 'squared-fusion-cal':
-              return 'icon icon-circle-calendar';
-            case 'squared-fusion-uc':
-              return 'icon icon-circle-call';
-            case 'squared-fusion-media':
-              return 'icon icon-circle-telepresence';
-            default:
-              return 'icon icon-circle-question';
+          switch (serviceId) {
+          case 'squared-fusion-cal':
+            return 'icon icon-circle-calendar';
+          case 'squared-fusion-uc':
+            return 'icon icon-circle-call';
+          case 'squared-fusion-media':
+            return 'icon icon-circle-telepresence';
+          default:
+            return 'icon icon-circle-question';
           }
         };
       }
