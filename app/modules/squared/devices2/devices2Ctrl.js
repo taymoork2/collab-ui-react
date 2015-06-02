@@ -34,14 +34,15 @@ angular.module('Squared')
 
       vm.delete = function (entity) {
         DevicesService.deleteUrl(entity.url, function (success, status) {
+          var ind;
           if (success === true) {
             if (entity.state === 'UNCLAIMED') {
-              var ind = vm.codes.indexOf(entity);
+              ind = vm.codes.indexOf(entity);
               if (ind > -1) {
                 vm.codes.splice(ind, 1);
               }
             } else {
-              var ind = vm.devices.indexOf(entity);
+              ind = vm.devices.indexOf(entity);
               if (ind > -1) {
                 vm.devices.splice(ind, 1);
               }
@@ -59,7 +60,7 @@ angular.module('Squared')
       var updateDeviceList = function (codes, devices) {
         vm.deviceData = devices.concat(codes);
         vm.totalResults = vm.deviceData.length;
-      }
+      };
 
       var getAllDevices = function () {
         vm.devices = [];

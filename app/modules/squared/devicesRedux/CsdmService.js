@@ -5,8 +5,8 @@ angular.module('Squared').service('CsdmService',
   /* @ngInject  */
   function ($rootScope, $http, Authinfo) {
 
-    var codesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/' + Authinfo.getOrgId() + '/codes'
-    var devicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/' + Authinfo.getOrgId() + '/devices'
+    var codesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/' + Authinfo.getOrgId() + '/codes';
+    var devicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/' + Authinfo.getOrgId() + '/devices';
 
     return {
       listDevices: function (callback) {

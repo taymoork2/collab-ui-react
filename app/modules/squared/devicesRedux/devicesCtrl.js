@@ -58,8 +58,6 @@ angular.module('Squared')
 
           vm.roomData = _.map(data, function (device, id) {
 
-            console.log(device);
-
             if (device.activationTime) {
               device.activationTimeFormatted = moment.utc(device.activationTime).local().format('MMM D YYYY, h:mm a');
             }
