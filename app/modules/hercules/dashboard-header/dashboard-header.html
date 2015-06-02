@@ -1,12 +1,12 @@
 <div>
-  <h3 style="padding-left: 20px">Status</h3>
+  <h3 style="padding-left: 20px">Services</h3>
   <div class="dashboard-header row">
     <div class="col-sm-5  col-md-4" ng-repeat="(type, service) in serviceAggregates.services">
       <div class="item">
         <i ng-class="serviceIcon(service.service_id)" />
         <hercules-uc-config-button style="float: right" ng-show="service.type == 'c_ucmc'"></hercules-uc-config-button>
         <div class="content clearfix">
-          <h4>{{service.name}}</h4>
+          <h4><span translate="hercules.serviceNames.{{service.service_id}}"/></h4>
           <div>
             <div>
               <span ng-show="service.running == 1">
