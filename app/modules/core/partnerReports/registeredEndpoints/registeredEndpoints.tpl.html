@@ -1,0 +1,35 @@
+<div class="registeredEndpoints">
+  <h4 class="pull-left section-title" translate="registeredEndpoints.registeredEndpoints"></h4>
+  <div class="actions-menu dropdown pull-right report-threedot-button">
+    <button class="actions-button btn-none">
+      <i class="icon icon-three-dots"></i>
+    </button>
+  </div>
+  <hr class="title-break pull-left"></hr>
+  <div class="row endpointTable">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td class="vertical-center col-md-4 bold" translate="registeredEndpoints.company"></td>
+          <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.registeredEndpoints"></td>
+          <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.pendingActivations"></td>
+          <td class="vertical-center horizontal-center col-md-2 bold" translate="registeredEndpoints.trend"></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="customer in nav.regesteredEndpoints">
+          <td class="vertical-center">{{customer.customer}}</td>
+          <td class="vertical-center horizontal-center">{{customer.endpoints}}</td>
+          <td class="vertical-center horizontal-center">{{customer.pending}}</td>
+          <td class="vertical-center horizontal-center {{customer.direction}}">{{customer.trend}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="activeUsersRefreshDiv" ng-show="nav.isRefresh(nav.endpointRefresh)">
+      <i class='spinner-position icon icon-spinner icon-2x'></i>
+    </div>
+    <div ng-show="nav.isEmpty(nav.endpointRefresh)">
+      <h3 class="no-data" translate='reportsPage.noData'></h3>
+    </div>
+  </div>
+</div>

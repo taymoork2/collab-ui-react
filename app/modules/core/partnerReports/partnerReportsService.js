@@ -39,7 +39,8 @@
       getCustomerList: getCustomerList,
       getMostRecentUpdate: getMostRecentUpdate,
       getMediaQualityMetrics: getMediaQualityMetrics,
-      getCallMetricsData: getCallMetricsData
+      getCallMetricsData: getCallMetricsData,
+      getRegesteredEndpoints: getRegesteredEndpoints
     };
 
     function getActiveUserData(customer, time) {
@@ -89,9 +90,8 @@
       return orgPromise.promise;
     }
 
-    function getService(urlQuery) {
-      var url = urlBase + urlQuery;
-      return $http.get(url);
+    function getService(url) {
+      return $http.get(urlBase + url);
     }
 
     function getQuery(filter) {
@@ -294,6 +294,52 @@
       transformData.labelData.numTotalCalls = numCalls;
       transformData.labelData.numTotalMinutes = numMinutes;
       return transformData;
+    }
+
+    function getRegesteredEndpoints(customer) {
+      if (angular.isArray(customer)) {
+        var returnArray = [];
+        var promises = [];
+
+        angular.forEach(customer, function (index) {
+          var promise = getRegesteredEndpoints(index).then(function (response) {
+            returnArray.concat(response);
+          });
+          promises.push(promise);
+        });
+
+        return $q.all(promises).then(function () {
+          return returnArray;
+        });
+      } else {
+        return $http.get('modules/core/partnerReports/registeredEndpoints/fakeData.json').then(function (response) {
+          var data = response.data.data[0].data[0].details;
+          var change = data.current - data.previous;
+          if (change < 0) {
+            return [{
+              customer: customer.label,
+              endpoints: data.current,
+              trend: '-' + Math.abs(change),
+              direction: "negative",
+              pending: ''
+            }];
+          } else {
+            return [{
+              customer: customer.label,
+              endpoints: data.current,
+              trend: "+" + change,
+              direction: "positive",
+              pending: ''
+            }];
+          }
+        }, function (error) {
+          Log.debug('Loading regestered endpoints for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
+          Notification.notify([$translate.instant('registeredEndpoints.registeredEndpointsError', {
+            customer: customer.label
+          })], 'error');
+          return [];
+        });
+      }
     }
   }
 })();
