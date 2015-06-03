@@ -66,7 +66,7 @@
       if (vm.currentDevice.code && vm.currentDevice.code !== '') {
         setActivation();
       }
-      if (vm.currentDevice.status.events && vm.currentDevice.status.events.length > 0) {
+      if (vm.currentDevice.status && vm.currentDevice.status.events && vm.currentDevice.status.events.length > 0) {
         for (var i = 0; i < vm.currentDevice.status.events.length; i++) {
           var event = vm.currentDevice.status.events[i];
           if (event.type.toLowerCase() === 'tcpfallback' && event.level.toLowerCase() != 'ok') {
