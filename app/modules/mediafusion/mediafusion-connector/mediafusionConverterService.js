@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('Hercules')
+angular.module('Mediafusion')
   .service('MediafusionConverterService', [
     function MediafusionConverterService() {
 

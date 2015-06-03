@@ -1,0 +1,39 @@
+<div ui-view="header"></div>
+
+<cs-sp-container>
+
+  <!-- cluster overview -->
+  <cs-sp-section>
+    <div class="sw-upgrade" style="font-size: xs"> 
+      <div>Cluster consists of {{connector.hosts.length}} {{connector.hosts.length == 1 ? 'host' : 'hosts'}}.</div>
+      <div>Status: {{connector.needs_attention ? 'Needs attention' : 'Running'}}.</div>
+    </div>
+  </cs-sp-section> 
+
+  <!-- Unresolved alarms -->
+  <cs-sp-section>
+    <div class="section-name" style="padding: 15px 0;">
+      Alarms
+    </div>
+    <div class="sw-upgrade" style="font-size: xs">
+      <a ui-sref="connector-details.hosts({connectorId: connector.id})" style="padding-top: 1.4rem; display: block;" class="red">
+        <i class="fa fa-circle" />
+        <span>{{connector.services.connectors[0].alarms.lemgth}} Unresolved Alarms</span>
+        <i class="icon icon-chevron-right pull-right" />
+      </a>
+    </div> 
+  </cs-sp-section>
+  
+
+  <!-- Software Upgrades --> 
+  <cs-sp-section>
+    <div class="section-name" style="padding: 15px 0;">
+      Software upgrades
+    </div>
+    <div class="sw-upgrade" style="font-size: xs"> 
+      <div>A new software version is available:</div>  
+    </div>
+  </cs-sp-section>
+
+
+</cs-sp-container>

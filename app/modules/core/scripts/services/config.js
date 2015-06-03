@@ -744,7 +744,9 @@ angular.module('Core')
         'squared-fusion-cal': [
           'fusion',
           'cluster-details',
-          'mediafusionconnector'
+          'mediafusionconnector',
+          'connector-details'
+
         ],
         'squared-fusion-uc': [
           'devices',

@@ -994,7 +994,25 @@ angular
           templateUrl: 'modules/mediafusion/mediafusion-connector/mediafusionConnector.tpl.html',
           controller: 'mediafusionConnectorCtrl',
           parent: 'main'
-        });
+        })
+        .state('connector-details', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'ConnectorDetailsController',
+              templateUrl: 'modules/mediafusion/mediafusion-connector/connector-details.html'
+            },
+            'header@connector-details': {
+              templateUrl: 'modules/mediafusion/mediafusion-connector/connector-header.html'
+            }
+          },
+          data: {
+            displayName: 'Overview'
+          },
+          params: {
+            connectorId: {}
+          }
+        });  
     }
   ]);
 
