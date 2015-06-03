@@ -3,7 +3,7 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('OrganizationsCtrl', ['$rootScope', '$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
+  .controller('OrganizationOverviewCtrl', ['$rootScope', '$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
     function ($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
 
       $scope.orgName = Authinfo.getOrgName();
@@ -63,14 +63,14 @@ angular.module('Core')
       };
 
       $scope.enableSSO = function () {
-        var dlg = $dialogs.create('modules/core/views/setupsso.html', 'setupSSODialogCtrl');
+        var dlg = $dialogs.create('modules/core/organizations/organizationOverview/setupsso.html', 'setupSSODialogCtrl');
         dlg.result.then(function () {
 
         });
       };
 
       $scope.popupDirsync = function () {
-        var dlg = $dialogs.create('modules/core/views/setupdirsync.html', 'setupDirSyncDialogCtrl');
+        var dlg = $dialogs.create('modules/core/organizations/organizationOverview/setupdirsync.html', 'setupDirSyncDialogCtrl');
         dlg.result.then(function () {
 
         });

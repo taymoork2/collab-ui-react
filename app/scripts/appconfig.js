@@ -433,8 +433,8 @@ angular
         })
         .state('organization', {
           url: '/organization',
-          templateUrl: 'modules/core/views/organizations.html',
-          controller: 'OrganizationsCtrl',
+          templateUrl: 'modules/core/organizations/organizationOverview/organizationOverview.tpl.html',
+          controller: 'OrganizationOverviewCtrl',
           parent: 'main'
         })
         .state('site-list', {
