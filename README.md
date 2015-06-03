@@ -23,26 +23,26 @@ Technology
 Pull the code from the repository
 ---------------------------------
 
-* git clone git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git
-* Once you have the repository you should be able to run: gulp serve from the root directory of the repo.
-  If that doesnt work, you can manually install the necessary components for gulp in the next step
+* `git clone git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git`
+* Once you have the repository you should be able to run `gulp serve` from the root directory of the repo.
+  If that doesn't work, you can manually install the necessary components for gulp in the next step.
 
 Setup the environment (If necessary)
 ------------------------------------
 
-* Use setup.sh or (if it fails):
+* Run `./setup.sh` (found in the root directory) or, if it fails:
 * install node.js version <= v0.10.28 (for npm): http://nodejs.org/download/
 * Run package managers in the cloned project to pull dependencies:
-* `$ npm install && bower install`
-* Launch the app: `$ gulp serve`
+* `npm install && bower install`
+* Launch the app: `gulp serve`
 * Before pushing any code to jenkins, always use `git pull --rebase`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
 
 Project structure
 -----------------
 
-* Every functional group has a directory structure under app/modules
-* There is no need to edit the index.html file, all dependencies are managed through gulp.config.js
+* Every functional group has a directory structure under `app/modules`
+* There is no need to edit the index.html file, all dependencies are managed through `gulp.config.js`
 * Each module has a feature directory that contains the following content:
   - html template files
   - javacript controllers
@@ -74,29 +74,29 @@ Adding a simple page ("Hello World")
   https://cisco.webex.com/ciscosales/lsr.php?RCID=10b20fbacd884535bcbcffbf06d458d6 
 
 * clone the repo
-* add a folder under the app/modules directory
+* add a folder under the `app/modules` directory
 * add a feature directory under the module directory you created
-* add a unit test folder for your module under test/[your module]
-* add functional test folder for your module under test/e2e-protractor
-* create a html template file to write <span> {{hello}} </span>
-* create the controller js file that writes "Hello World" to the scope: $scope.hello = 'Hello World!';
-* add a module to bootstrap to the app in: app/scripts/app.js
-* add a state for the route to your page in: app/scripts/appconfig.js for your module
-* add a menu option by adding a tab to config.js -> tabs array under: app/modules/core/scripts/services/config.js
-* write unit tests and place them under: test/[your module]
-* write an end to end protractor test and place it under: test/e2e-protractor/[your module]
-* run the app using: gulp serve
+* add a unit test folder for your module under `test/[your module]`
+* add functional test folder for your module under `test/e2e-protractor`
+* create a html template file to write `<span>{{hello}}</span>`
+* create the controller js file that writes "Hello World" to the scope: `$scope.hello = 'Hello World!';`
+* add a module to bootstrap to the app in: `app/scripts/app.js`
+* add a state for the route to your page in: `app/scripts/appconfig.js` for your module
+* add a menu option by adding a tab to `config.js` -> tabs array under: `app/modules/core/scripts/services/config.js`
+* write unit tests and place them under: `test/[your module]`
+* write an end to end protractor test and place it under: `test/e2e-protractor/[your module]`
+* run the app using: `gulp serve`
 * you should see your new menu and when you click on it you should see the hello world page
-* test the app using gulp e2e --specs=[your module], this will test your module
-* test the entire suite by running: gulp e2e
+* test the app using `gulp e2e --specs=[your module]`, this will test your module
+* test the entire suite by running: `gulp e2e`
 
 
 Adding External Dependencies
 ----------------------------
 
 * Dependencies are added to the project through Bower
-* Add dependencies with $ bower install &lt;package name&gt; --save
-* Dependencies added to the 'gulp.config.js' file will be automatically added to index.html and karma.conf.js files
+* Add dependencies with `bower install package_name --save`
+* Dependencies added to the `gulp.config.js` file will be automatically added to `index.html` and `karma.conf.js` files
 
 Gulp.js Tasks
 -------------
@@ -105,11 +105,11 @@ Gulp.js Tasks
 
 There are several arguments that can be added to the gulp tasks. Arguments are listed after the Mian tasks.
 
-### `$ gulp`
+### `gulp`
 
 * Default task runs the 'help' task which lists all of the available tasks
 
-### `$ gulp build`
+### `gulp build`
 
 * Cleans (deletes) friles in the 'build' & 'dist' directories
 * Builds (copies) files from the development (app) folder into the staging (build) folder
@@ -118,12 +118,12 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 * Runs Karma Unit Tests on build folder
 
 (Optional arguments)
-* --verbose
-* --nounit
+* `--verbose`
+* `--nounit`
 
-### `$ gulp dist`
+### `gulp dist`
 
-* Runs `$ gulp build` task first
+* Runs `gulp build` task first
 * Compresses the images and copies them to the production (dist) directory
 * Processes Angular files and makes them safe for minification (ng-annotate)
 * Combines all CSS files into a single file for production (concat)
@@ -138,66 +138,66 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 * --verbose
 * --nounit
 
-### `$ gulp serve`
+### `gulp serve`
 
-* Runs `$ gulp build` and starts a Browsersync server from the build folder
+* Runs `gulp build` and starts a Browsersync server from the build folder
 * Starts a watch task that watches all of the files in the development (app) folder for changes
 * Changes to files triggers tasks that copy updated files to the build folder and reloads the browser
 * LESS file changes are compiled and injected into the browser WITHOUT reloading the app
 * The default browser is Google Chrome
-* When using the --browserall arg, all browsers will be kept in-sync (i.e. clicks, scrolls, typing, etc.)
+* When using the `--browserall` arg, all browsers will be kept in-sync (i.e. clicks, scrolls, typing, etc.)
 
 (Optional arguments)
-* --verbose
-* --nounit
-* --browserall
-* --firefox
-* --safari
-* --dist
+* `--verbose`
+* `--nounit`
+* `--browserall`
+* `--firefox`
+* `--safari`
+* `--dist`
 
-### `$ gulp clean`
+### `gulp clean`
 
-* Cleans/deletes all files in the staging(build) and production(dist) directories
+* Cleans/deletes all files in the staging (build) and production (dist) directories
 
-### `$ gulp analyze`
+### `gulp analyze`
 
-* Runs `$ gulp analyze:jshint, analyze:jslint` and `$ gulp plato tasks`
+* Runs `gulp analyze:jshint, analyze:jslint` and `gulp plato tasks`
 * Creates an analysis report of the JavaScript code using the plato analyzer tool
-* Creates an HTML report at /report/plato/index.html of the results
+* Creates an HTML report at `/report/plato/index.html` of the results
 
-### `$ gulp jsb`
+### `gulp jsb`
 
-* Runs `$ gulp analyze:jshint` and `$ gulp jsBeautifier:beautify` tasks
+* Runs `gulp analyze:jshint` and `gulp jsBeautifier:beautify` tasks
 
 Run the protractor e2e test:
 ----------------------------
 
-* Configurations are located in protractor-config.js
-* Test files are located at `test/e2e-protractor/<test-file>\_spec.js`
-* Page objects are located at `test/e2e-protractor/pages/\*.page.js`
+* Configurations are located in `protractor-config.js`
+* Test files are located at `test/e2e-protractor/<test-file>_spec.js`
+* Page objects are located at `test/e2e-protractor/pages/*.page.js`
 * See `test/README.md` for guidelines
 
-### `$ gulp e2e`
+### `gulp e2e`
 
 * Runs setup tasks (build/dist and connect)
 * Then runs E2E tests on the dist folder
 
 ###### Optional e2e Arguments
 
-##### `$ gulp e2e --specs=[your module]`
+##### `gulp e2e --specs=[your module]`
 * Runs only tests from the module folder specified
 
-##### `$ gulp e2e --specs=test/directoryname/filepath_spec.js`
+##### `gulp e2e --specs=test/directoryname/filepath_spec.js`
 * Runs only the test from the file specified
 
-##### `$ gulp e2e --nounit`
+##### `gulp e2e --nounit`
 * Skips unit testing during the e2e setup task
 
-##### `$ gulp e2e --nosetup`
+##### `gulp e2e --nosetup`
 * Skips the e2e setup task
-* You will need to have started a server manually using the 'gulp connect' task
+* You will need to have started a server manually using the `gulp connect` task
 
-##### `$ gulp e2e --debug`
+##### `gulp e2e --debug`
 * Runs protractor in 'debug' mode
 * See [Debugging Protractor Tests](https://github.com/angular/protractor/blob/master/docs/debugging.md) for details
 
@@ -205,64 +205,64 @@ Run the protractor e2e test:
 * Runs the e2e tests from the staging(build) directory
 
 ##### You can add any combination of the optional arguments when running the e2e testing task
-* For example: `$ gulp e2e --specs=squared --nounit --build`
+* For example: `gulp e2e --specs=squared --nounit --build`
 
-### `$ gulp connect`
+### `gulp connect`
 
 * Starts a simple server from the production(dist) directory
 * Used be the e2e task for running protractor tests
 * Does not include watch or livereload functionality (use gulp serve for these)
 
 (Optional Arguments)
-* --build
+* `--build`
 
 List of All Optional Arguments
 ------------------------------
 
-### --build
+### `--build`
 
 * Applies the task to the build directory
 
-### --dist
+### `--dist`
 
 * Applies the task to the dist or production directory
 
-### --verbose
+### `--verbose`
 
 * Prints file names from the source streams to the terminal during the task process as well as in the task comments
 
-### --nounit
+### `--nounit`
 
 * Runs the task without running the unit tests
 
-### --nosetup
+### `--nosetup`
 
 * Specific to the 'e2e' testing task, runs the task without running the build and connect setup tasks
 
-### --specs
+### `--specs`
 
 * Runs a specific set of E2E tests
-* You can run a specific test module i.e. --specs=squared
-* You can also run a specific test file, i.e. --specs=test/e2e-protractor/squared/activate\_spec.js
+* You can run a specific test module i.e. `--specs=squared`
+* You can also run a specific test file, i.e. `--specs=test/e2e-protractor/squared/activate_spec.js`
 
-### --debug
+### `--debug`
 
 * Runs protractor in 'debug' mode see [Debugging Protractor Tests](https://github.com/angular/protractor/blob/master/docs/debugging.md) for details
 
-### --browserall
+### `--browserall`
 
-* 'gulp serve' specific.
-* When running 'gulp serve', use --browserall to open Google Chrome, Firefox and Safari all in-sync
+* `gulp serve` specific.
+* When running 'gulp serve', use `--browserall` to open Google Chrome, Firefox and Safari all in-sync
 
-### --firefox
+### `--firefox`
 
-* 'gulp serve' specific.
-* When running 'gulp serve', use --firefox to open Firefox
+* `gulp serve` specific.
+* When running 'gulp serve', use `--firefox` to open Firefox
 
-### --safari
+### `--safari`
 
-* 'gulp serve' specific.
-* When running 'gulp serve', use --safari to open Safari
+* `gulp serve` specific.
+* When running 'gulp serve', use `--safari` to open Safari
 
 Grunt Tasks:
 ------------
