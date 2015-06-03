@@ -14,7 +14,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-hide="sc.loading">
     <div ng-hide="sc.roomData.length" windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
       <div class="empty-devices-content">
         <img ng-src="images/devices/cisco_sx10.png" style="height: 60px; width: 60px" />
@@ -23,19 +23,14 @@
       </div>
     </div>
   </div>
-  <!-- <div class="container-fluid grid" ng-show="sc.roomData.length">  
-    <div class="row" ng-repeat="device in sc.roomData" ng-click="sc.showDeviceDetails(device)">
-      <div class="col-sm-4">
-        <img ng-src="images/devices/cisco_{{device.product.toLowerCase()}}.png" style="height: 60px; width: 60px" />
-        <span style="padding-left: 10px">{{device.product}}</span>
-      </div>
-      <div class="col-sm-4">{{device.displayName}}</div>
-      <div class="col-sm-4">
-        <i class="fa fa-circle" ng-class="device.color" />
-        <span>{{device.stateFormatted}}</span>
+  <div class="row" ng-show="sc.loading">
+    <div windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
+      <div class="empty-devices-content">
+        <i class="icon icon-2x icon-spinner" />
       </div>
     </div>
-  </div> -->
+  </div>
+
   <div id="roomsListPanel" class="row">
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="sc.gridOptions"></div>
   </div>
@@ -57,24 +52,31 @@
         <h4 translate="spacesPage.addDeviceStep1" class="adddevice-stepheader"></h4>
         <p translate="spacesPage.addDeviceStep1Desc" class="adddevice-desc"></p>
 
-        <div ng-show="sc.showAdd">
-          <input class="form-control profile-input adddevice-desc add-device-textbox" name="roomName" ng-model="sc.newRoomName" type="text" id="newRoom" required></input>
+        <form ng-submit="sc.addDevice()">
+          <div ng-show="sc.showAdd">
+            <input class="form-control profile-input adddevice-desc add-device-textbox" name="roomName" ng-model="sc.newRoomName" type="text" id="newRoom" required autofocus placeholder="Room or shared space name"></input>
 
-          <button id="btnAdd" type="button" class="btn btn-primary btn-lg add-device-btn" ng-click="sc.addDevice()" ng-disabled="!sc.newRoomName.length">
-          <span translate="spacesPage.addBtn"></span>
-          </button>
-        </div>
+            <button id="btnAdd" type="button" class="btn btn-primary btn-lg add-device-btn" ng-click="sc.addDevice()" ng-disabled="!sc.newRoomName.length || sc.addDeviceInProgress">
+              <span ng-hide="sc.addDeviceInProgress" translate="spacesPage.addBtn"></span>
+              <i ng-show="sc.addDeviceInProgress" class="icon icon-spinner" />
+            </button>
+          </div>
+        </form>
 
         <div id="deviceAddCard" class="modal-deviceadd-card" ng-show="!sc.showAdd">
           <img src="images/SX10.png" class="pull-left"/>
           <p class="adddevice-desc device-card-content-name pull-left">SX10</p>
           <p id="confirmDeviceName" class="adddevice-desc device-card-content pull-left">{{sc.newRoomName}}</p>
           <p class="adddevice-desc device-card-content pull-left">{{sc.newActivationCode}}</p>
+          <a href="#" id="copyCodeToClipboardButton" class="adddevice-desc device-card-content pull-left" clip-copy="sc.newActivationCode" clip-click="sc.showCopiedToClipboardMessage()">
+            <i class="fa fa-clipboard" data-original-title="Copied to clipboard" />
+          </a>
         </div>
 
       </div>
       <div class="modal-footer">
-          <button type="button" id="doneDevicesButton" class="btn btn-primary" data-dismiss="modal" ng-disabled="sc.showAdd" translate="spacesPage.done"></button>
+        <button type="button" class="btn" ng-hide="sc.showAdd" ng-click="sc.resetAddDevice()">Add another</button>
+        <button type="button" id="doneDevicesButton" class="btn btn-primary" data-dismiss="modal" ng-hide="sc.showAdd" translate="spacesPage.done"></button>
       </div>
     </div>
   </div>

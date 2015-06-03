@@ -12,6 +12,7 @@ angular.module('Squared')
       vm.showAdd = true;
       vm.emptyDevices = true;
       vm.roomData = null;
+      vm.loading = true;
 
       var formatActivationCode = function (activationCode) {
         var acode = '';
@@ -52,6 +53,8 @@ angular.module('Squared')
 
       var getAllDevices = function () {
         CsdmService.listCodesAndDevices(function (err, data) {
+          vm.loading = false;
+
           if (err) {
             return Log.error('Error getting rooms. Err: ' + err);
           }
@@ -162,63 +165,6 @@ angular.module('Squared')
         }]
       }
 
-      // var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="sc.showDeviceDetails(row.entity)">' +
-      //   '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-      //   '<div ng-cell></div>' +
-      //   '</div>';
-
-      // var roomTemplate = '<div class="ngCellText"><div class="device-name-desc">{{row.getProperty(col.field)}}</div></div>';
-
-      // var deviceCellTemplate = '<div class="ngCellText"><img class="device-img" src="images/SX10.png"/><div class="device-icon-desc">SX10</div></div>';
-
-      // var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="row.getProperty(\'color\')"></i>' +
-      //   '<div ng-class="{\'device-status-nocode\': row.getProperty(col.field)!==\'Needs Activation\', \'ngCellText ngCellTextCustom\': row.getProperty(col.field) === \'Needs Activation\'}"><p class="device-status-pending">{{row.getProperty(col.field)}}</p>' +
-      //   '<p ng-if="row.getProperty(col.field) === \'Needs Activation\'">{{row.getProperty(\'code\')}}</p></div>';
-
-      // var actionsTemplate = '<span dropdown class="device-align-ellipses">' +
-      //   '<button id="actionlink" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
-      //   '<i class="icon icon-three-dots"></i>' +
-      //   '</button>' +
-      //   '<ul class="dropdown-menu dropdown-primary" role="menu">' +
-      //   '<li id="deleteDeviceAction"><a data-toggle="modal" data-target="#deleteDeviceModal" ng-click="sc.setDeleteDevice(row.entity.deviceUuid, row.entity.room)"><span translate="spacesPage.delete"></span></a></li>' +
-      //   '</ul>' +
-      //   '</span>';
-
-      // vm.newRoomName = null;
-      // vm.gridOptions = {
-      //   data: 'sc.roomData',
-      //   multiSelect: false,
-      //   showFilter: false,
-      //   rowHeight: 75,
-      //   headerRowHeight: 44,
-      //   rowTemplate: rowTemplate,
-      //   sortInfo: {
-      //     fields: ['status'],
-      //     directions: ['asc']
-      //   },
-
-      //   columnDefs: [{
-      //     field: 'kind',
-      //     displayName: $filter('translate')('spacesPage.kindHeader'),
-      //     width: 260,
-      //     cellTemplate: deviceCellTemplate,
-      //     sortable: false
-      //   }, {
-      //     field: 'room',
-      //     displayName: $filter('translate')('spacesPage.nameHeader'),
-      //     cellTemplate: roomTemplate
-      //   }, {
-      //     field: 'status',
-      //     displayName: $filter('translate')('spacesPage.statusHeader'),
-      //     cellTemplate: statusTemplate
-      //   }, {
-      //     field: 'action',
-      //     displayName: $filter('translate')('spacesPage.actionsHeader'),
-      //     sortable: false,
-      //     cellTemplate: actionsTemplate
-      //   }]
-      // };
-
       vm.showDeviceDetails = function (device) {
         vm.currentDevice = device;
         vm.querydeviceslist = vm.roomData;
@@ -231,11 +177,26 @@ angular.module('Squared')
       vm.resetAddDevice = function () {
         vm.showAdd = true;
         $('#newRoom').val('');
+        window.setTimeout(function () {
+          $('#newRoom').focus();
+        }, 500);
         vm.newRoomName = null;
       };
 
+      vm.showCopiedToClipboardMessage = function () {
+        $('#copyCodeToClipboardButton i').tooltip('show');
+        setTimeout(function () {
+          $('#copyCodeToClipboardButton i').tooltip('destroy');
+        }, 1000);
+      };
+
       vm.addDevice = function () {
+        if (!vm.newRoomName) {
+          return;
+        }
+        vm.addDeviceInProgress = true;
         SpacesService.addDevice(vm.newRoomName, function (data, status) {
+          vm.addDeviceInProgress = false;
           if (data.success === true) {
             vm.showAdd = false;
             if (data.activationCode && data.activationCode.length > 0) {
