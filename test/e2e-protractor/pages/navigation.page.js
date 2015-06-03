@@ -7,7 +7,6 @@ var Navigation = function () {
   this.homeTab = element(by.css('li.overviewTab > a'));
   this.usersTab = element(by.css('li.userTab > a'));
   this.accountTab = element(by.css('li.accountTab > a'));
-  this.listUsersTab = element(by.css('a[href="#users"]'));
   this.orgTab = element(by.css('a[href="#organization"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
@@ -66,7 +65,6 @@ var Navigation = function () {
 
   this.clickUsers = function () {
     utils.click(this.usersTab);
-    utils.click(this.listUsersTab);
     this.expectCurrentUrl('/users');
   };
 
