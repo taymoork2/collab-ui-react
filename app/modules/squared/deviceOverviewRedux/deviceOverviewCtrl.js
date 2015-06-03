@@ -66,9 +66,9 @@
       if (vm.currentDevice.code && vm.currentDevice.code !== '') {
         setActivation();
       }
-      if (vm.currentDevice.events && vm.currentDevice.events.length > 0) {
-        for (var i = 0; i < vm.currentDevice.events.length; i++) {
-          var event = vm.currentDevice.events[i];
+      if (vm.currentDevice.status.events && vm.currentDevice.status.events.length > 0) {
+        for (var i = 0; i < vm.currentDevice.status.events.length; i++) {
+          var event = vm.currentDevice.status.events[i];
           if (event.type.toLowerCase() === 'tcpfallback' && event.level.toLowerCase() != 'ok') {
             vm.diagEvents.push({
               'type': $translate.instant('spacesPage.videoQTitle'),
