@@ -117,12 +117,19 @@ angular
         formlyValidationMessages.addStringMessage('url', urlMessage);
       });
 
-      $translate('common.invalidMinLength').then(function (minLengthMessage) {
-        formlyValidationMessages.addStringMessage('minlength', minLengthMessage);
-      });
+      formlyValidationMessages.messages.minlength = getMinLengthMessage;
+      formlyValidationMessages.messages.maxlength = getMaxLengthMessage;
 
-      $translate('common.invalidMaxLength').then(function (maxLengthMessage) {
-        formlyValidationMessages.addStringMessage('maxlength', maxLengthMessage);
-      });
+      function getMinLengthMessage($viewValue, $modelValue, scope) {
+        return $translate.instant('common.invalidMinLength', {
+          min: scope.options.templateOptions.minlength
+        });
+      }
+
+      function getMaxLengthMessage($viewValue, $modelValue, scope) {
+        return $translate.instant('common.invalidMaxLength', {
+          max: scope.options.templateOptions.maxlength
+        });
+      }
     }
   ]);
