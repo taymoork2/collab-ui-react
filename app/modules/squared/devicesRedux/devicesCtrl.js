@@ -176,35 +176,5 @@ angular.module('Squared')
           $('#copyCodeToClipboardButton i').tooltip('destroy');
         }, 1000);
       };
-
-      // todo: smu will delete me soon
-      vm.addDevice = function () {
-        if (!vm.newRoomName) {
-          return;
-        }
-        vm.addDeviceInProgress = true;
-        CsdmService.createCode(vm.newRoomName, function (data, status) {
-          vm.addDeviceInProgress = false;
-          if (data.success === true) {
-            vm.showAdd = false;
-            if (data.activationCode && data.activationCode.length > 0) {
-              vm.newActivationCode = formatActivationCode(data.activationCode);
-            }
-            var successMessage = vm.newRoomName + ' added successfully.';
-            // Notification requires change to accomodate displaying 2nd line with different font size.
-            // for now change the font inline in the message.
-            //if (data.emailConfCode === undefined && data.conversationId === undefined) {
-            //  successMessage = successMessage + '<br><p style="font-size:xx-small">Notifications failed.</p>';
-            //}
-            Notification.notify([successMessage], 'success');
-            setTimeout(function () {
-              getAllDevices();
-            }, 1000);
-          } else {
-            var errorMessage = ['Error adding ' + vm.newRoomName + '. Status: ' + status];
-            Notification.notify(errorMessage, 'error');
-          }
-        });
-      };
     }
   );

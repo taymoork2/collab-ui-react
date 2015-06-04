@@ -13,7 +13,7 @@
       */
 
       /* @ngInject */
-      function ($scope, Notification) {
+      function ($scope, Notification, CsdmService) {
 
         $scope.deviceName = '';
         $scope.activationCode = '';
@@ -36,11 +36,11 @@
 
           $scope.addDeviceInProgress = true;
 
-          SpacesService.addDevice($scope.deviceName, function (data, status) {
+          CsdmService.createCode($scope.deviceName, function (data, status) {
             $scope.addDeviceInProgress = false;
 
             if (data.success === true) {
-              vm.showAdd = false;
+              $scope.showAdd = false;
 
               if (data.activationCode && data.activationCode.length > 0) {
                 $scope.activationCode = formatActivationCode(data.activationCode);
