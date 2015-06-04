@@ -9,9 +9,9 @@
         <span class="section-name" translate="singleNumberReachPanel.title"></span>
       </div>
       <p translate="singleNumberReachPanel.description"></p>
-      <cs-toggle-switch ng-model="snr.telephonyInfo.snrInfo.singleNumberReachEnabled" toggle-id="enableSnr" name="enableSnr" size="small"></cs-toggle-switch>
+      <cs-toggle-switch ng-model="snr.snrInfo.singleNumberReachEnabled" toggle-id="enableSnr" name="enableSnr" size="small"></cs-toggle-switch>
 
-      <formly-form model="snr.telephonyInfo.snrInfo" fields="snr.formFields"></formly-form>
+      <formly-form model="snr.snrInfo" fields="snr.formFields"></formly-form>
 
       <div ng-show="false">
         <p class="text-muted" translate="singleNumberReachPanel.snrNote"></p>

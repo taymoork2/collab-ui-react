@@ -145,7 +145,7 @@
     }
 
     function updateSnr(snr) {
-      telephonyInfo.snrInfo = snr;
+      telephonyInfo.snrInfo = angular.copy(snr);
       telephonyInfo.singleNumberReach = (telephonyInfo.snrInfo.singleNumberReachEnabled === true) ? 'On' : 'Off';
       $rootScope.$broadcast(broadcastEvent);
     }
