@@ -1,6 +1,6 @@
 <div class="wizard-main">
     <div class="wizard-main-title"><span translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span class="title-separator-pipe">|</span> {{wizard.getSubTabTitle() | translate}}</span>
-    <span class="cancel cancel-btn pull-right" ng-click="wizard.closeModal()">
+    <span class="cancel cancel-btn pull-right" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()">
       <i class="icon icon-close"></i>
     </span>
   </div>
