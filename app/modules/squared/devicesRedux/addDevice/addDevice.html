@@ -1,0 +1,108 @@
+<div 
+  tabindex="-1" 
+  role="dialog" 
+  class="modal fade" 
+  id="addRoomDialog" 
+  aria-hidden="true"
+  aria-labelledby="addRoomTitle" >
+
+  <div class="modal-dialog add-device-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="device-modal-close" type="button" class="close" data-dismiss="modal">
+          <i class="icon icon-close" aria-hidden="true"></i>
+          <span class="sr-only">Close</span>
+        </button>
+        <h3 class="modal-title" id="addRoomTitle" translate="spacesPage.modalTitle"></h3>
+      </div>
+      <div class="modal-body">
+
+        <h4 translate="spacesPage.addDeviceStep1" class="adddevice-stepheader"></h4>
+        <p translate="spacesPage.addDeviceStep1Desc" class="adddevice-desc"></p>
+
+        <form ng-submit="addDevice()">
+          <div ng-show="sc.showAdd">
+            <input 
+              required
+              autofocus
+              type="text"
+              id="newRoom"
+              name="roomName"
+              ng-model="deviceName"
+              placeholder="Room or shared space name"
+              class="form-control profile-input adddevice-desc add-device-textbox">
+            </input>
+
+            <button 
+              id="btnAdd" 
+              type="button" 
+              ng-click="addDevice()" 
+              class="btn btn-primary btn-lg add-device-btn" 
+              ng-disabled="!deviceName.length || addDeviceInProgress">
+              <span 
+                ng-hide="addDeviceInProgress" 
+                translate="spacesPage.addBtn">
+              </span>
+              <i 
+                ng-show="addDeviceInProgress" 
+                class="icon icon-spinner">
+              </i>
+            </button>
+          </div>
+        </form>
+
+        <div 
+          id="deviceAddCard" 
+          ng-show="!sc.showAdd"
+          class="modal-deviceadd-card" >
+          <img 
+            src="images/SX10.png" 
+            class="pull-left"
+          />
+          <p 
+            class="adddevice-desc device-card-content-name pull-left">
+            SX10
+          </p>
+          <p 
+            id="confirmDeviceName" 
+            class="adddevice-desc device-card-content pull-left">
+            {{deviceName}}
+          </p>
+          <p 
+            class="adddevice-desc device-card-content pull-left">
+            {{activationCode}}
+          </p>
+          <a 
+            href="#"
+            clip-copy="activationCode"
+            id="copyCodeToClipboardButton"
+            clip-click="sc.showCopiedToClipboardMessage()"
+            class="adddevice-desc device-card-content pull-left">
+            <i 
+              class="fa fa-clipboard" 
+              data-original-title="Copied to clipboard">
+            </i>
+          </a>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn" 
+          ng-hide="sc.showAdd" 
+          ng-click="sc.resetAddDevice()">
+          Add another
+        </button>
+        <button 
+          type="button" 
+          id="doneDevicesButton" 
+          class="btn btn-primary" 
+          data-dismiss="modal" 
+          ng-hide="sc.showAdd" 
+          translate="spacesPage.done">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

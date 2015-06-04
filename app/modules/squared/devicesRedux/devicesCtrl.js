@@ -5,7 +5,7 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($state, $location, Storage, Log, Utils, $filter, SpacesService, Notification, $log, $translate, CsdmService) {
+    function ($state, $location, $templateCache, Storage, Log, Utils, $filter, SpacesService, Notification, $log, $translate, CsdmService) {
       var vm = this;
 
       vm.totalResults = null;
@@ -123,47 +123,34 @@ angular.module('Squared')
         }
       };
 
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="sc.showDeviceDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"></div>' +
-        '<div ng-cell></div>' +
-        '</div>';
-
-      var roomTemplate = '<div class="ngCellText"><div class="device-name-desc">{{row.getProperty(col.field)}}</div></div>';
-
-      var deviceCellTemplate = '<div class="ngCellText"><img class="device-img" src="images/SX10.png"/><div class="device-icon-desc">SX10</div></div>';
-
-      var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="row.getProperty(\'color\')"></i>' +
-        '<div ng-class="{\'device-status-nocode\': row.getProperty(col.field)!==\'Needs Activation\', \'ngCellText ngCellTextCustom\': row.getProperty(col.field) === \'Needs Activation\'}"><p class="device-status-pending">{{row.getProperty(col.field)}}</p>' +
-        '<p ng-if="row.getProperty(col.field) === \'Needs Activation\'">{{row.getProperty(\'activationCodeFormatted\')}}</p></div>';
-
       vm.gridOptions = {
         data: 'sc.roomData',
-        multiSelect: false,
-        showFilter: false,
         rowHeight: 75,
+        showFilter: false,
+        multiSelect: false,
         headerRowHeight: 44,
-        rowTemplate: rowTemplate,
         sortInfo: {
-          fields: ['displayStatus'],
-          directions: ['asc']
+          directions: ['asc'],
+          fields: ['displayStatus']
         },
+        rowTemplate: $templateCache.get('modules/squared/devicesRedux/_rowTpl.html'),
 
         columnDefs: [{
-          field: 'kind',
-          displayName: $filter('translate')('spacesPage.kindHeader'),
           width: 260,
-          cellTemplate: deviceCellTemplate,
-          sortable: false
+          field: 'kind',
+          sortable: false,
+          displayName: $filter('translate')('spacesPage.kindHeader'),
+          cellTemplate: $templateCache.get('modules/squared/devicesRedux/_deviceCellTpl.html')
         }, {
           field: 'displayName',
           displayName: $filter('translate')('spacesPage.nameHeader'),
-          cellTemplate: roomTemplate
+          cellTemplate: $templateCache.get('modules/squared/devicesRedux/_roomTpl.html')
         }, {
           field: 'stateFormatted',
           displayName: $filter('translate')('spacesPage.statusHeader'),
-          cellTemplate: statusTemplate
+          cellTemplate: $templateCache.get('modules/squared/devicesRedux/_statusTpl.html')
         }]
-      }
+      };
 
       vm.showDeviceDetails = function (device) {
         vm.currentDevice = device;
@@ -190,6 +177,7 @@ angular.module('Squared')
         }, 1000);
       };
 
+      // todo: smu will delete me soon
       vm.addDevice = function () {
         if (!vm.newRoomName) {
           return;
