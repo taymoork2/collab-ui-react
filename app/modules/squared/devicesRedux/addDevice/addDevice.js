@@ -13,8 +13,9 @@
       */
 
       /* @ngInject */
-      function ($scope, Notification, CsdmService) {
+      function ($scope, Notification, CsdmService, XhrNotificationService) {
 
+        $scope.showAdd = true;
         $scope.deviceName = '';
         $scope.activationCode = '';
         $scope.addDeviceInProgress = false;
@@ -31,36 +32,49 @@
           return acode;
         };
 
+        $scope.resetAddDevice = function () {
+          $scope.showAdd = true;
+          $scope.deviceName = '';
+          $scope.notificationsFailed = false;
+
+          window.setTimeout(function () {
+            $('#newRoom').focus();
+          }, 500);
+        };
+
+        $scope.showCopiedToClipboardMessage = function () {
+          $('#copyCodeToClipboardButton i').tooltip('show');
+          setTimeout(function () {
+            $('#copyCodeToClipboardButton i').tooltip('destroy');
+          }, 1000);
+        };
+
         $scope.addDevice = function () {
           if (!$scope.deviceName) return;
 
           $scope.addDeviceInProgress = true;
 
-          CsdmService.createCode($scope.deviceName, function (data, status) {
+          CsdmService.createCode($scope.deviceName, function (err, data) {
+            if (err) {
+              return XhrNotificationService.notify(err);
+            }
+
             $scope.addDeviceInProgress = false;
 
-            if (data.success === true) {
-              $scope.showAdd = false;
+            $scope.showAdd = false;
 
-              if (data.activationCode && data.activationCode.length > 0) {
-                $scope.activationCode = formatActivationCode(data.activationCode);
-              }
-
-              var successMessage = $scope.deviceName + ' added successfully.';
-              // Notification requires change to accomodate displaying 2nd line with different font size.
-              // for now change the font inline in the message.
-              if (data.emailConfCode === undefined && data.conversationId === undefined) {
-                successMessage = successMessage + '<br><p style="font-size:xx-small">Notifications failed.</p>';
-              }
-              Notification.notify([successMessage], 'success');
-
-              // setTimeout(function () {
-              //   getAllDevices();
-              // }, 1000);
-
-            } else {
-              Notification.notify(['Error adding ' + $scope.deviceName + '. Status: ' + status], 'error');
+            if (data.activationCode && data.activationCode.length > 0) {
+              $scope.activationCode = formatActivationCode(data.activationCode);
             }
+
+            if (!data.emailConfCode && !data.conversationId) {
+              $scope.notificationsFailed = true;
+            }
+
+            // setTimeout(function () {
+            //   getAllDevices();
+            // }, 1000);
+
           });
         };
 

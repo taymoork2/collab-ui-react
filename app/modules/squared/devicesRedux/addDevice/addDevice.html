@@ -15,13 +15,19 @@
         </button>
         <h3 class="modal-title" id="addRoomTitle" translate="spacesPage.modalTitle"></h3>
       </div>
+
+      <div ng-show="notificationsFailed" class="alert alert-warning">
+        Activation Code created sucessfully, but notifications failed to transmit.
+      </div>
+
       <div class="modal-body">
 
         <h4 translate="spacesPage.addDeviceStep1" class="adddevice-stepheader"></h4>
         <p translate="spacesPage.addDeviceStep1Desc" class="adddevice-desc"></p>
 
         <form ng-submit="addDevice()">
-          <div ng-show="sc.showAdd">
+          <div ng-show="showAdd">
+
             <input 
               required
               autofocus
@@ -53,7 +59,7 @@
 
         <div 
           id="deviceAddCard" 
-          ng-show="!sc.showAdd"
+          ng-show="!showAdd"
           class="modal-deviceadd-card" >
           <img 
             src="images/SX10.png" 
@@ -76,7 +82,7 @@
             href="#"
             clip-copy="activationCode"
             id="copyCodeToClipboardButton"
-            clip-click="sc.showCopiedToClipboardMessage()"
+            clip-click="showCopiedToClipboardMessage()"
             class="adddevice-desc device-card-content pull-left">
             <i 
               class="fa fa-clipboard" 
@@ -90,8 +96,8 @@
         <button 
           type="button" 
           class="btn" 
-          ng-hide="sc.showAdd" 
-          ng-click="sc.resetAddDevice()">
+          ng-hide="showAdd" 
+          ng-click="resetAddDevice()">
           Add another
         </button>
         <button 
@@ -99,7 +105,7 @@
           id="doneDevicesButton" 
           class="btn btn-primary" 
           data-dismiss="modal" 
-          ng-hide="sc.showAdd" 
+          ng-hide="showAdd" 
           translate="spacesPage.done">
         </button>
       </div>

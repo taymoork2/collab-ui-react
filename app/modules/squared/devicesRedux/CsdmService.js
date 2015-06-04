@@ -49,25 +49,19 @@ angular.module('Squared').service('CsdmService',
             callback(arguments);
           });
       },
-      createCode: function (newDeviceName, callback) {
+
+      createCode: function (name, callback) {
         var deviceData = {
-          'name': newDeviceName
+          'name': name
         };
 
-        if (deviceData.name.length > 0) {
-          $http.post(codesUrl, deviceData)
-            .success(function (data, status) {
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
-        } else {
-          callback('No valid device name entered.');
-        }
+        $http.post(codesUrl, deviceData)
+          .success(function (data) {
+            callback(null, data);
+          })
+          .error(function () {
+            callback(arguments);
+          });
 
       }
     };

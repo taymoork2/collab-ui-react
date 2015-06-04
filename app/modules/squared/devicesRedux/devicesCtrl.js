@@ -161,6 +161,7 @@ angular.module('Squared')
         });
       };
 
+      // todo: delete me!
       vm.resetAddDevice = function () {
         vm.showAdd = true;
         $('#newRoom').val('');
@@ -170,6 +171,7 @@ angular.module('Squared')
         vm.newRoomName = null;
       };
 
+      // todo: delete me!
       vm.showCopiedToClipboardMessage = function () {
         $('#copyCodeToClipboardButton i').tooltip('show');
         setTimeout(function () {
