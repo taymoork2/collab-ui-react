@@ -1,12 +1,13 @@
 'use strict';
 
-angular.module('Squared').service('CsdmService',
+angular.module('Squared').service('CsdmService', 
 
   /* @ngInject  */
-  function ($rootScope, $http, Authinfo) {
+  function ($rootScope, $http, Authinfo, Config) {
 
-    var codesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/' + Authinfo.getOrgId() + '/codes';
-    var devicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/' + Authinfo.getOrgId() + '/devices';
+    var baseUrl = Config.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId();
+    var devicesUrl = baseUrl + '/devices';
+    var codesUrl = baseUrl + '/codes';
 
     return {
       listDevices: function (callback) {
@@ -47,7 +48,28 @@ angular.module('Squared').service('CsdmService',
           .error(function () {
             callback(arguments);
           });
-      }
+      },
+      createCode: function (newDeviceName, callback) {
+          var deviceData = {
+            'name': newDeviceName
+          };
+
+          if (deviceData.name.length > 0) {
+            $http.post(codesUrl, deviceData)
+              .success(function (data, status) {
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function (data, status) {
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          } else {
+            callback('No valid device name entered.');
+          }
+
+        }
     };
 
   }

@@ -183,7 +183,7 @@ angular.module('Squared')
           return;
         }
         vm.addDeviceInProgress = true;
-        SpacesService.addDevice(vm.newRoomName, function (data, status) {
+        CsdmService.createCode(vm.newRoomName, function (data, status) {
           vm.addDeviceInProgress = false;
           if (data.success === true) {
             vm.showAdd = false;
@@ -193,9 +193,9 @@ angular.module('Squared')
             var successMessage = vm.newRoomName + ' added successfully.';
             // Notification requires change to accomodate displaying 2nd line with different font size.
             // for now change the font inline in the message.
-            if (data.emailConfCode === undefined && data.conversationId === undefined) {
-              successMessage = successMessage + '<br><p style="font-size:xx-small">Notifications failed.</p>';
-            }
+            //if (data.emailConfCode === undefined && data.conversationId === undefined) {
+            //  successMessage = successMessage + '<br><p style="font-size:xx-small">Notifications failed.</p>';
+            //}
             Notification.notify([successMessage], 'success');
             setTimeout(function () {
               getAllDevices();
