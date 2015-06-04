@@ -25,8 +25,6 @@ angular.module('Mediafusion')
                 console.log("Printing individual cluster" + cluster);
             });
 
-
-
             MediafusionProxy.startPolling(function(err, data) {
                 $scope.loading = false;
             });
@@ -89,9 +87,6 @@ angular.module('Mediafusion')
                 }, 100);
             };
 
-            //console.log("Paginationss");
-
-
             $scope.$watch('pagingOptions', function(newVal, oldVal) {
                 if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
                     $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
@@ -102,8 +97,6 @@ angular.module('Mediafusion')
                     $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
                 }
             }, true);
-
-
 
             $scope.gridOptions = {
                 data: 'myData',
@@ -156,6 +149,5 @@ angular.module('Mediafusion')
                 });
                 console.log("exiting showConnectorsDetails");
             };
-
         }
     );
