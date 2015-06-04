@@ -906,9 +906,6 @@ angular
         .state('meetings', {
           abstract: true,
           template: '<div ui-view></div>',
-          //url: '/meetings',
-          //templateUrl: 'modules/mediafusion/meetings/meetingList/meetingList.tpl.html',
-          //controller: 'ListMeetingsCtrl',
           parent: 'main'
         })
         .state('meetings.list', {
