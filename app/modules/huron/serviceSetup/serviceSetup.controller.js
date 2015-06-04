@@ -28,7 +28,7 @@
       steeringDigit: DEFAULT_SD,
       siteSteeringDigit: DEFAULT_SITE_SD,
       siteCode: DEFAULT_SITE_CODE,
-      voicemailPilotNumber: ''
+      voicemailPilotNumber: undefined
     };
     vm.globalMOH = DEFAULT_MOH;
     vm.internalNumberRanges = [];
@@ -71,13 +71,13 @@
                   // if the pilotNumber == customer org uuid, then voicemail is not set
                   if (voicemail.pilotNumber === Authinfo.getOrgId()) {
                     vm.externalNumberPool = [];
-                    vm.pilotNumberSelected = undefined;
+                    vm.site.voicemailPilotNumber = vm.pilotNumberSelected = undefined;
                   } else {
-                    vm.externalNumberPool = [{
+                    vm.site.voicemailPilotNumber = voicemail.pilotNumber;
+                    vm.pilotNumberSelected = {
                       uuid: voicemail.name,
                       pattern: voicemail.pilotNumber
-                    }];
-                    vm.pilotNumberSelected = vm.externalNumberPool[0];
+                    };
                   }
                 }).catch(function (response) {
                   vm.externalNumberPool = [];
@@ -99,8 +99,18 @@
     function loadExternalNumberPool(pattern) {
       ServiceSetup.loadExternalNumberPool(pattern).then(function () {
         vm.externalNumberPool = ServiceSetup.externalNumberPool;
-        if (vm.externalNumberPool.length > 0 && !vm.pilotNumberSelected) {
-          vm.pilotNumberSelected = vm.externalNumberPool[0];
+        // if there's nothing selected yet, make the first of list selected
+        if (vm.externalNumberPool.length > 0) {
+          if (!vm.pilotNumberSelected) {
+            vm.pilotNumberSelected = vm.externalNumberPool[0];
+          }
+        }
+        // put the existing pilot number to the end of list
+        if (vm.site.voicemailPilotNumber) {
+          vm.externalNumberPool.push({
+            uuid: '',
+            pattern: vm.site.voicemailPilotNumber
+          });
         }
       }).catch(function (response) {
         vm.externalNumberPool = [];
@@ -195,14 +205,21 @@
                 voicemail: {
                   pilotNumber: vm.pilotNumberSelected.pattern
                 }
-              }).then(function () {
-                vm.firstTimeSetup = false;
               }).catch(function (response) {
                 errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
               });
             }
           }).catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
+          });
+          deferreds.push(promise);
+        } else if (vm.pilotNumberSelected.pattern !== vm.site.voicemailPilotNumber) {
+          var promise = ServiceSetup.updateCustomerVoicemailPilotNumber({
+            voicemail: {
+              pilotNumber: vm.pilotNumberSelected.pattern
+            }
+          }).catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
           });
           deferreds.push(promise);
         }

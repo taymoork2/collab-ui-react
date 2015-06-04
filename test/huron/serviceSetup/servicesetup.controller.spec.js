@@ -16,7 +16,9 @@ describe('Controller: ServiceSetup', function () {
     site = {
       uuid: '777-888-666',
       steeringDigit: '5',
-      siteSteeringDigit: '6'
+      siteSteeringDigit: '6',
+      siteCode: '200',
+      voicemailPilotNumber: 'something'
     };
     customer = {
       "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -130,11 +132,14 @@ describe('Controller: ServiceSetup', function () {
 
   describe('initNext', function () {
 
-    it('should notify on success', function () {
+    it('should notify on success when not firstTimeSetup', function () {
+      controller.firstTimeSetup = false;
+      controller.pilotNumberSelected = externalNumberPool[0];
       controller.initNext();
       $scope.$apply();
 
       expect(ServiceSetup.createSite).not.toHaveBeenCalled();
+      expect(ServiceSetup.updateCustomerVoicemailPilotNumber).toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });

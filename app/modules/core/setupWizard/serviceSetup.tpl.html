@@ -55,7 +55,7 @@
     <p translate="serviceSetupModal.companyVoicemailDescription"></p>
     <div class="col-xs-3">
       <cs-select
-        is-disabled="!serviceSetup.firstTimeSetup"
+        id="companyVoicemail"
         name="companyVoicemail"
         ng-model="serviceSetup.pilotNumberSelected"
         options="serviceSetup.externalNumberPool"
