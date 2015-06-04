@@ -47,6 +47,7 @@
     }
 
     function initServiceSetup() {
+      var errors = [];
       HuronCustomer.get().then(function (customer) {
         angular.forEach(customer.links, function (service) {
           if (service.rel === 'voicemail') {

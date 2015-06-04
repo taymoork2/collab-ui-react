@@ -19,7 +19,7 @@ angular.module('Squared').service('CsdmService',
         .error(function () {
           callback(arguments);
         });
-    }
+    };
 
     var listCodes = function (callback) {
       $http.get(codesUrl)
@@ -29,7 +29,7 @@ angular.module('Squared').service('CsdmService',
         .error(function () {
           callback(arguments);
         });
-    }
+    };
 
     var fetchCodesAndDevices = function (callback) {
       listCodes(function (err, codes) {
@@ -39,17 +39,17 @@ angular.module('Squared').service('CsdmService',
           callback(null, _.extend(codes, devices));
         });
       }.bind(this));
-    }
+    };
 
     var fillCodesAndDevicesCache = function (callback) {
-      fetchCodesAndDevices(function (err, data)  {
+      fetchCodesAndDevices(function (err, data) {
         if (err) return callback(err);
         codesAndDevicesCache = _.map(data, function (v) {
           return v;
         });
         callback(null);
       });
-    }
+    };
 
     return {
 

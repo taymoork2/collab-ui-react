@@ -5,10 +5,10 @@
       <span class="sync"><span translate="reportsPage.sync"></span>: {{nav.recentUpdate}}</span>
     </div>
     <div class="page-title col-md-6">
-    <cs-select class="pull-right report-filter-two" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions"
-    on-change-fn="nav.updateReports()" is-disabled="nav.isRefresh(nav.activeUsersRefresh)" filter="true"></cs-select>
-    <cs-select class="pull-right report-filter-one" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()"
-    is-disabled="nav.isRefresh(nav.activeUsersRefresh)"></cs-select>
+      <cs-select class="pull-right report-filter-two" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions"
+      on-change-fn="nav.updateReports()" is-disabled="nav.isRefresh(nav.activeUsersRefresh)" filter="true"></cs-select>
+      <cs-select class="pull-right report-filter-one" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()"
+      is-disabled="nav.isRefresh(nav.activeUsersRefresh)"></cs-select>
     </div>
   </div>
   <div class="report-tabs-container">
@@ -23,6 +23,7 @@
               <uc-active-user class="report-section report-left col-md-5"></uc-active-user>
               <div class="report-section report-right col-md-5">
                 <uc-registered-endpoints></uc-registered-endpoints>
+                <uc-active-user-population></uc-active-user-population>
               </div>
             </div>
           </div>

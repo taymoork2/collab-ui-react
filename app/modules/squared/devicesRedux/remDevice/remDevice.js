@@ -11,9 +11,9 @@
             if (err) {
               return XhrNotificationService.notify(err);
             }
-            $state.sidepanel.close()
+            $state.sidepanel.close();
           });
-        }
+        };
       }
 
     )

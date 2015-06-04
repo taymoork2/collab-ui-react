@@ -1,0 +1,33 @@
+<div class="active-user-population">
+  <div class="row header">
+    <div class="graph-match">
+      <h4 class="pull-left section-title" translate="activeUserPopulation.titleByCompany"></h4>
+      <div class="actions-menu dropdown pull-right report-threedot-button">
+        <button class="actions-button btn-none">
+          <i class="icon icon-three-dots"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <hr class="title-break pull-left"/>
+    <div id="activeUserPopulationDiv">
+      <div class="graph-align full-width">
+        <div class="description-div">
+          <span class="report-description" translate="activeUserPopulation.description1"></span>
+          <span class="report-description">{{nav.activeUserPopulationAverage}}%</span>
+          <span class="report-description" translate="activeUserPopulation.description2"></span>
+        </div>
+        <div class="average-div">
+          <span class="percent-large">{{nav.activeUserPopulationAverage}}%</span>
+          <span class="percent-label" translate="activeUserPopulation.averageLabel"></span>
+        </div>
+        <div id="activeUserPopulationChart"></div>
+      </div>
+      <div id="activeUserPopulationRefreshDiv" class="spinner-position" ng-show="nav.isRefresh(nav.activeUserPopulationRefresh)">
+        <div class="clear-graph"></div>
+        <i class='icon icon-spinner icon-2x'></i>
+      </div>
+    </div>
+  </div> 
+</div>
