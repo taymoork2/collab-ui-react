@@ -6,17 +6,11 @@
     .factory('HuronUser', HuronUser);
 
   /* @ngInject */
-  function HuronUser(Authinfo, UserServiceCommon, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, $q, LogMetricsService, Notification) {
-    var userProfile = Authinfo.getOrgId() + '_000001_UCUP';
+  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, $q, LogMetricsService, Notification) {
     var userPayload = {
       'userName': null,
       'firstName': null,
-      'lastName': null,
-      'voice': {
-        'userProfile': userProfile
-      },
-      'services': ['VOICE'],
-      'voicemail': {}
+      'lastName': null
     };
 
     function deleteUser(uuid) {
@@ -60,30 +54,26 @@
         'expiresOn': null
       };
 
-      return UserServiceCommon.save({
+      return UserServiceCommonV2.save({
           customerId: Authinfo.getOrgId()
         }, user).$promise
         .then(function () {
-          return HuronAssignedLine.assignDirectoryNumber(user.uuid, 'Primary')
-            .then(function (directoryNumber) {
-              emailInfo.phoneNumber = directoryNumber ? directoryNumber.pattern : '';
-              delete user.uuid;
-              // TO-DO
-              // the following is commented out to disable Voicemail setting while adding new users,
-              // in order to upgrade Unity to 11.0. Needs to turn it back on when the upgrade is done.
-              //
-              //   user.services.push('VOICEMAIL');
-              //   user.voicemail = {
-              //     'dtmfAccessId': directoryNumber.pattern
-              //   };
-              //   return UserServiceCommon.update({
-              //     customerId: Authinfo.getOrgId(),
-              //     userId: uuid
-              //   }, user).$promise;
+          return UserDirectoryNumberService.query({
+              customerId: Authinfo.getOrgId(),
+              userId: user.uuid
+            }).$promise
+            .then(function (userDnInfo) {
+              if (userDnInfo && userDnInfo[0] && userDnInfo[0].directoryNumber && userDnInfo[0].directoryNumber.pattern) {
+                emailInfo.phoneNumber = userDnInfo[0].directoryNumber.pattern;
+              } else {
+                emailInfo.phoneNumber = "1111";
+              }
             });
-        }).then(function () {
+        })
+        .then(function () {
           return acquireOTP(user.userName);
-        }).then(function (otpInfo) {
+        })
+        .then(function (otpInfo) {
           emailInfo.oneTimePassword = otpInfo.password;
           emailInfo.expiresOn = otpInfo.expiresOn;
           return HuronEmailService.save({}, emailInfo).$promise

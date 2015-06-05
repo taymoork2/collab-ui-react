@@ -89,6 +89,14 @@
     });
   })
 
+  .factory('UserServiceCommonV2', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId', {}, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  })
+
   .factory('UserServiceVoice', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId', {
       customerId: '@customerId',
