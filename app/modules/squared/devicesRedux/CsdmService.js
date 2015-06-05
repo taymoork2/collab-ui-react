@@ -71,6 +71,17 @@ angular.module('Squared').service('CsdmService',
           });
       },
 
+      deleteUrl: function (url, callback) {
+        $http.delete(url)
+          .success(function (status) {
+            fillCodesAndDevicesCache(function () {});
+            callback(null, status);
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      },
+
       createCode: function (name, callback) {
         var deviceData = {
           'name': name
