@@ -5,7 +5,7 @@
 /* global browser */
 /* global expect */
 
-xdescribe('CS Admin flow', function () {
+describe('CS Admin flow', function () {
 
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -16,7 +16,7 @@ xdescribe('CS Admin flow', function () {
   });
 
   it('should just login', function () {
-    login.login('customer-support-admin');
+    login.login('customer-support-admin', '#/partner/customers');
   });
 
   // Navigation bar
@@ -30,21 +30,20 @@ xdescribe('CS Admin flow', function () {
       utils.expectIsDisplayed(navigation.supportTab);
     });
 
-    it('clicking on customers tab should change the view', function () {
-      navigation.clickCustomers();
+    it('customer page should not have add button', function () {
       utils.expectIsDisplayed(partner.customerList);
       utils.expectIsNotDisplayed(partner.addButton);
-      utils.expectIsDisplayed(partner.adminCustomerOrgId);
-      utils.expectIsDisplayed(partner.regularCustomerOrgId);
     });
 
-    it('clicking on customers should enable/disable ability to launch appropriately', function () {
+    it('clicking on admin customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.adminCustomerOrgId);
-      utils.expectIsDisplayed(partner.launchCustomerPanelButton);
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
+    });
+
+    it('clicking on regular customer should enable/disable ability to launch appropriately', function () {
+      utils.click(partner.customerNameHeader);
       utils.click(partner.regularCustomerOrgId);
-      utils.expectIsDisplayed(partner.launchCustomerPanelButton);
-      utils.expectIsDisabled(partner.launchCustomerPanelButton);
+      utils.expectIsEnabled(partner.launchCustomerPanelButton);
     });
 
   });
@@ -58,7 +57,7 @@ xdescribe('CS Admin flow', function () {
 
 });
 
-xdescribe('CS User flow', function () {
+describe('CS User flow', function () {
 
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -69,7 +68,7 @@ xdescribe('CS User flow', function () {
   });
 
   it('should just login', function () {
-    login.login('customer-support-user');
+    login.login('customer-support-user', '#/partner/customers');
   });
 
   // Navigation bar
@@ -82,21 +81,20 @@ xdescribe('CS User flow', function () {
       utils.expectIsNotDisplayed(navigation.supportTab);
     });
 
-    it('clicking on customers tab should change the view', function () {
-      navigation.clickCustomers();
+    it('customer page should not have add button', function () {
       utils.expectIsDisplayed(partner.customerList);
       utils.expectIsNotDisplayed(partner.addButton);
-      utils.expectIsDisplayed(partner.adminCustomerOrgId);
-      utils.expectIsDisplayed(partner.regularCustomerOrgId);
     });
 
-    it('clicking on customers should enable/disable ability to launch appropriately', function () {
-      utils.click(partner.regularCustomerOrgId);
-      utils.expectIsDisplayed(partner.launchCustomerPanelButton);
-      utils.expectIsEnabled(partner.launchCustomerPanelButton);
+    it('clicking on admin customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.adminCustomerOrgId);
-      utils.expectIsDisplayed(partner.launchCustomerPanelButton);
-      utils.expectIsDisabled(partner.launchCustomerPanelButton);
+      utils.expectIsEnabled(partner.launchCustomerPanelButton);
+    });
+
+    it('clicking on regular customer should enable/disable ability to launch appropriately', function () {
+      utils.click(partner.customerNameHeader);
+      utils.click(partner.regularCustomerOrgId);
+      utils.expectIsEnabled(partner.launchCustomerPanelButton);
     });
 
   });

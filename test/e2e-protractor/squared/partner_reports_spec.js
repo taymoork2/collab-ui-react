@@ -1,30 +1,30 @@
 'use strict';
 
 // Waiting for new page to go active before turning on tests
-xdescribe('Partner Reports', function () {
+describe('Partner Reports', function () {
   describe('Log In', function () {
     var squaredPartner = {
       'user': 'admin@squareduc-partner.com',
       'pass': 'Cisco123!'
     };
 
-    it('should login', function () {
+    xit('should login', function () {
       login.loginThroughGui(squaredPartner.user, squaredPartner.pass);
     });
   });
 
   describe('Reports Page', function () {
-    it('should navigate to partner reports page', function () {
+    xit('should navigate to partner reports page', function () {
       navigation.clickNewReports();
       utils.expectIsPresent(reports.pageTitle);
     });
 
-    it('should verify report tabs', function () {
+    xit('should verify report tabs', function () {
       reports.verifyReportTab('Engagement');
       reports.verifyReportTab('Quality');
     });
 
-    it('should verify customer dropdown', function () {
+    xit('should verify customer dropdown', function () {
       utils.waitUntilEnabled(reports.customerSelect);
       utils.click(reports.customerSelect);
       reports.numOptions(reports.customerSelect).then(function (totalOptions) {
@@ -38,7 +38,7 @@ xdescribe('Partner Reports', function () {
       });
     });
 
-    it('should verify time dropdown', function () {
+    xit('should verify time dropdown', function () {
       utils.click(reports.timeSelect);
       reports.verifyOption(reports.timeSelect, 'Last Week');
       reports.verifyOption(reports.timeSelect, 'Last Month');
@@ -47,7 +47,7 @@ xdescribe('Partner Reports', function () {
   });
 
   describe('Active Users', function () {
-    it('should verify active users graph is visible', function () {
+    xit('should verify active users graph is visible', function () {
       utils.expectIsDisplayed(reports.activeUserGraph);
       reports.verifyLegend('Users');
       reports.verifyLegend('Active Users');
@@ -55,7 +55,7 @@ xdescribe('Partner Reports', function () {
       utils.expectIsNotDisplayed(reports.activeUserRefresh);
     });
 
-    it('should Show Most Active Users', function () {
+    xit('should Show Most Active Users', function () {
       utils.expectText(reports.mostActiveButton, 'Show Most Active Users');
       utils.click(reports.mostActiveButton);
       utils.expectIsDisplayed(reports.activeUsersTable);
@@ -64,7 +64,7 @@ xdescribe('Partner Reports', function () {
       utils.expectText(reports.mostActiveButton, 'Hide Most Active Users');
     });
 
-    it('should reload on time change', function () {
+    xit('should reload on time change', function () {
       utils.click(reports.timeSelect);
       utils.click(reports.getOptions(reports.timeSelect, 1));
       utils.expectIsNotDisplayed(reports.activeUsersTable);
@@ -77,7 +77,7 @@ xdescribe('Partner Reports', function () {
       utils.expectAllDisplayed(reports.activeCarousel);
     });
 
-    it('should reload on customer change', function () {
+    xit('should reload on customer change', function () {
       utils.click(reports.customerSelect);
       utils.click(reports.getOptions(reports.customerSelect, 5));
       utils.waitUntilEnabled(reports.timeSelect);
@@ -89,7 +89,7 @@ xdescribe('Partner Reports', function () {
       utils.expectAllNotDisplayed(reports.activeCarousel);
     });
 
-    it('should Hide Most Active Users', function () {
+    xit('should Hide Most Active Users', function () {
       utils.expectText(reports.mostActiveButton, 'Hide Most Active Users');
       utils.click(reports.mostActiveButton);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
@@ -99,7 +99,7 @@ xdescribe('Partner Reports', function () {
 
   // Log Out
   describe('Log Out', function () {
-    it('should log out', function () {
+    xit('should log out', function () {
       navigation.logout();
     });
   });

@@ -40,7 +40,7 @@ var Notifications = function () {
       }, function () {
         return true;
       });
-    });
+    }, TIMEOUT);
   };
 };
 

@@ -15,7 +15,7 @@ describe('Invite User and Check Buckets', function () {
   });
 
   //log in as admin with an account
-  xdescribe('Account Add User', function () {
+  describe('Account Add User', function () {
     var addEmail = utils.randomTestGmail();
 
     it('should login', function () {
@@ -35,7 +35,7 @@ describe('Invite User and Check Buckets', function () {
       it('should clear user input field and error message', function () {
         utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
         utils.click(users.clearButton);
-        utils.expectText(users.addUsersField, '');
+        utils.expectTextToBeSet(users.addUsersField, '');
       });
 
       it('click on enable services individually', function () {
@@ -51,7 +51,7 @@ describe('Invite User and Check Buckets', function () {
         utils.sendKeys(users.addUsersField, addEmail);
         utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
         utils.click(users.onboardButton);
-        notifications.assertSuccess(addEmail, 'sent successfully');
+        notifications.assertSuccess(addEmail, 'onboarded successfully');
         notifications.clearNotifications();
       });
       it('clicking on cancel button should close the modal', function () {

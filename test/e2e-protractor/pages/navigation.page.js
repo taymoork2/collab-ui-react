@@ -141,7 +141,7 @@ var Navigation = function () {
       return browser.getCurrentUrl().then(function (currentUrl) {
         return currentUrl.indexOf(url) !== -1;
       });
-    });
+    }, TIMEOUT);
   };
 
   this.expectDriverCurrentUrl = function (url) {
@@ -149,7 +149,7 @@ var Navigation = function () {
       return browser.driver.getCurrentUrl().then(function (currentUrl) {
         return currentUrl.indexOf(url) !== -1;
       });
-    });
+    }, TIMEOUT);
   };
 
   this.expectAdminSettingsNotDisplayed = function () {

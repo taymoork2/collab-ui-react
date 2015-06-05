@@ -6,6 +6,8 @@ exports.config = {
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
 
+  directConnect: process.env.SAUCE_USERNAME ? false : true,
+
   capabilities: {
     'browserName': 'chrome',
     "screenResolution": "1680x1050",
@@ -53,11 +55,7 @@ exports.config = {
       })
     );
 
-    browser.getCapabilities().then(function (capabilities) {
-      if (capabilities.caps_.browserName === 'firefox') {
-        browser.driver.manage().window().maximize();
-      }
-    });
+    global.TIMEOUT = 30000;
 
     global.baseUrl = exports.config.baseUrl;
 
@@ -126,6 +124,12 @@ exports.config = {
     global.enterpriseResource = new EnterpriseResourcePage();
     global.utilization = new UtilizationPage();
     global.meetings = new MeetingsPage();
+
+    return browser.getCapabilities().then(function (capabilities) {
+      if (capabilities.caps_.browserName === 'firefox') {
+        browser.driver.manage().window().maximize();
+      }
+    });
   },
 
   jasmineNodeOpts: {

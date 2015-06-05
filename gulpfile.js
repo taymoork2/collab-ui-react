@@ -19,6 +19,7 @@ var log = $.util.log;
 var path = require('path');
 var pkg = require('./package.json');
 var protractor = require('gulp-protractor').protractor;
+var webdriverUpdate = require('gulp-protractor').webdriver_update;
 var reload = browserSync.reload;
 var runSeq = require('run-sequence');
 var uuid = require('uuid');
@@ -939,7 +940,7 @@ gulp.task('e2e', function(done) {
  * --specs=filepath         Runs only tests in specified file
  * --build                  Runs tests against the build directory
  *************************************************************************/
-gulp.task('protractor', ['set-env'], function() {
+gulp.task('protractor', ['set-env', 'protractor:update'], function() {
   var debug = args.debug ? true : false;
   var opts = {
     configFile: 'protractor-config.js',
@@ -986,6 +987,8 @@ gulp.task('protractor', ['set-env'], function() {
       }
     });
 });
+
+gulp.task('protractor:update', webdriverUpdate);
 
 gulp.task('set-env', function () {
   if (args.sauce) {

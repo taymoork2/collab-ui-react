@@ -7,7 +7,7 @@ var InvitePage = function () {
   this.expectWebClient = function (urlparams) {
     browser.driver.wait(function () {
       return browser.driver.isElementPresent(by.id('sign-in-button'));
-    });
+    }, TIMEOUT);
     expect(browser.driver.getCurrentUrl()).toContain(config.webClientURL);
     if (urlparams) {
       expect(browser.driver.getCurrentUrl()).toContain(urlparams);
@@ -21,7 +21,7 @@ var InvitePage = function () {
           return currentUrl.indexOf(squaredUrl) !== -1;
         });
       });
-    });
+    }, TIMEOUT);
   };
 };
 

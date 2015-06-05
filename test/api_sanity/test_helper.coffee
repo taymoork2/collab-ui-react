@@ -39,7 +39,7 @@ auth =
 
   'huron-e2e':
     user: 'admin@uc.e2e.huron-alpha.com'
-    pass: 'C1sco123!'
+    pass: 'Cisco123!'
     org:  '40c419e0-c74e-4f50-bcac-cc5581f9db6d'
 
   'account-admin':

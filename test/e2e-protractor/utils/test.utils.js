@@ -76,19 +76,19 @@ exports.scrollTop = function () {
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action
 exports.wait = function (elem) {
-  browser.wait(function () {
+  return browser.wait(function () {
     return elem.isDisplayed().then(function (isDisplayed) {
       return isDisplayed;
     }, function () {
       return false;
     });
-  }, 40000, 'Waiting for: ' + elem.locator());
+  }, TIMEOUT, 'Waiting for: ' + elem.locator());
 };
 
 exports.waitUntilEnabled = function (elem) {
   browser.wait(function () {
     return elem.isEnabled();
-  }, 40000, 'Waiting for: ' + elem.locator());
+  }, TIMEOUT, 'Waiting for: ' + elem.locator());
 };
 
 exports.expectIsDisplayed = function (elem) {
@@ -135,7 +135,7 @@ exports.expectIsNotDisplayed = function (elem) {
     }, function () {
       return true;
     });
-  }, 40000, 'Waiting for: ' + elem.locator());
+  }, TIMEOUT, 'Waiting for: ' + elem.locator());
 };
 
 exports.expectTextToBeSet = function (elem, text) {
@@ -145,7 +145,7 @@ exports.expectTextToBeSet = function (elem, text) {
     }, function () {
       return false;
     });
-  }, 40000, 'Waiting for: ' + elem.locator());
+  }, TIMEOUT, 'Waiting for: ' + elem.locator());
 };
 
 exports.expectValueToBeSet = function (elem, value) {
@@ -156,7 +156,7 @@ exports.expectValueToBeSet = function (elem, value) {
     }, function () {
       return false;
     });
-  }, 40000, 'Waiting for: ' + elem.locator());
+  }, TIMEOUT, 'Waiting for: ' + elem.locator());
 };
 
 exports.expectValueToContain = function (elem, value) {
@@ -167,37 +167,38 @@ exports.expectValueToContain = function (elem, value) {
     }, function () {
       return false;
     });
-  }, 40000, 'Waiting for: ' + elem.locator());
+  }, TIMEOUT, 'Waiting for: ' + elem.locator());
 };
 
 exports.expectInputValue = function (elem, value) {
-  this.wait(elem);
   this.expectValueToBeSet(elem.element(by.tagName('input')), value);
 };
 
 exports.click = function (elem, maxRetry) {
-  this.wait(elem);
-  if (typeof maxRetry === 'undefined') {
-    maxRetry = 10;
-  }
-  if (maxRetry === 0) {
-    //console.error('Could not click: ' + elem.locator());
-    elem.click();
-  } else {
-    elem.click().then(function () {}, function () {
-      exports.click(elem, --maxRetry);
-    });
-  }
+  return this.wait(elem).then(function () {
+    if (typeof maxRetry === 'undefined') {
+      maxRetry = 10;
+    }
+    if (maxRetry === 0) {
+      elem.click();
+    } else {
+      elem.click().then(function () {}, function () {
+        exports.click(elem, --maxRetry);
+      });
+    }
+  });
 };
 
 exports.clear = function (elem) {
-  this.wait(elem);
-  elem.clear();
+  this.wait(elem).then(function () {
+    elem.clear();
+  });
 };
 
 exports.sendKeys = function (elem, value) {
-  this.wait(elem);
-  elem.sendKeys(value);
+  this.wait(elem).then(function () {
+    elem.sendKeys(value);
+  });
 };
 
 exports.expectAttribute = function (elem, attr, value) {
@@ -233,9 +234,10 @@ exports.expectTruthy = function (elem) {
 };
 
 exports.expectClass = function (elem, cls) {
-  this.wait(elem);
-  return elem.getAttribute('class').then(function (classes) {
-    return classes.split(' ').indexOf(cls) !== -1;
+  return this.wait(elem).then(function () {
+    return elem.getAttribute('class').then(function (classes) {
+      return classes.split(' ').indexOf(cls) !== -1;
+    });
   });
 };
 
@@ -244,9 +246,10 @@ exports.clickEscape = function () {
 };
 
 exports.expectSwitchState = function (elem, value) {
-  this.wait(elem);
-  return elem.element(by.tagName('input')).getAttribute('ng-model').then(function (ngModel) {
-    return elem.evaluate(ngModel);
+  return this.wait(elem).then(function () {
+    return elem.element(by.tagName('input')).getAttribute('ng-model').then(function (ngModel) {
+      return elem.evaluate(ngModel);
+    });
   });
 };
 
@@ -265,8 +268,6 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 };
 
 exports.search = function (query) {
-  this.wait(this.searchField);
-  this.expectIsDisplayed(this.searchField);
   this.clear(this.searchField);
   if (query) {
     this.sendKeys(this.searchField, query);
@@ -277,6 +278,10 @@ exports.search = function (query) {
 exports.searchAndClick = function (query) {
   this.search(query);
   this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
+};
+
+exports.expectRowIsNotDisplayed = function (text) {
+  this.expectIsNotDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', text)).first());
 };
 
 exports.dumpConsoleErrors = function () {
@@ -312,4 +317,18 @@ exports.clickFirstBreadcrumb = function () {
 exports.clickLastBreadcrumb = function () {
   this.scrollTop();
   this.click(element.all(by.css('.side-panel-container')).last().all(by.css('li[ng-repeat="crumb in breadcrumbs"] a')).last());
+};
+
+exports.switchToNewWindow = function () {
+  return browser.wait(function () {
+    return browser.getAllWindowHandles().then(function (handles) {
+      if (handles && handles.length > 1) {
+        var newWindow = handles[1];
+        browser.switchTo().window(newWindow);
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }, 40000, 'Waiting for a new window');
 };

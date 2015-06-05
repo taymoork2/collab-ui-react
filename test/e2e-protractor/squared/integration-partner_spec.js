@@ -107,11 +107,9 @@ describe('Partner flow', function () {
       var appWindow = browser.getWindowHandle();
 
       utils.click(partner.newTrialRow);
+      utils.expectIsDisplayed(partner.previewPanel);
       utils.click(partner.launchCustomerPanelButton);
-
-      browser.getAllWindowHandles().then(function (handles) {
-        var newWindowHandle = handles[1];
-        browser.switchTo().window(newWindowHandle);
+      utils.switchToNewWindow().then(function () {
 
         utils.expectIsDisplayed(wizard.wizard);
         utils.expectIsDisplayed(wizard.leftNav);
@@ -134,8 +132,9 @@ describe('Partner flow', function () {
         navigation.expectDriverCurrentUrl('overview');
         utils.expectIsDisplayed(navigation.tabs);
 
-        browser.driver.close();
+        browser.close();
         browser.switchTo().window(appWindow);
+
       });
     });
 
@@ -147,17 +146,20 @@ describe('Partner flow', function () {
 
       utils.click(partner.actionsButton);
       utils.click(partner.launchCustomerButton);
+      utils.switchToNewWindow().then(function () {
 
-      browser.getAllWindowHandles().then(function (handles) {
-        var newWindowHandle = handles[1];
-        browser.switchTo().window(newWindowHandle);
         utils.expectIsDisplayed(navigation.tabs);
 
-        browser.driver.close();
+        browser.close();
         browser.switchTo().window(appWindow);
+
       });
     });
 
+  });
+
+  it('should delete an exisiting org thus deleting trial', function () {
+    deleteTrialUtils.deleteOrg(orgId, accessToken);
   });
 
   describe('Partner launches its orgs portal', function () {
@@ -168,25 +170,22 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(navigation.userInfoButton);
       navigation.launchPartnerOrgPortal();
 
-      browser.getAllWindowHandles().then(function (handles) {
-        var newWindowHandle = handles[1];
-        browser.switchTo().window(newWindowHandle);
+      utils.switchToNewWindow().then(function () {
+
         navigation.expectDriverCurrentUrl('true');
         utils.expectIsDisplayed(navigation.tabs);
 
         navigation.expectDriverCurrentUrl('overview');
-        browser.driver.close();
+
+        browser.close();
         browser.switchTo().window(appWindow);
+
       });
     });
 
   });
 
   describe('Partner landing page reports', function () {
-
-    it('should delete an exisiting org thus deleting trial', function () {
-      deleteTrialUtils.deleteOrg(orgId, accessToken);
-    });
 
     it('should show the reports', function () {
       navigation.clickHome();

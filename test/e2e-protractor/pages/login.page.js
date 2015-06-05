@@ -44,7 +44,6 @@ var LoginPage = function () {
   this.login = function (username, expectedUrl) {
     var bearer;
     browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
-    navigation.expectDriverCurrentUrl('login');
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
@@ -60,7 +59,6 @@ var LoginPage = function () {
   this.loginUnauthorized = function (username, expectedUrl) {
     var bearer;
     browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
-    navigation.expectDriverCurrentUrl('login');
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
@@ -76,10 +74,10 @@ var LoginPage = function () {
   this.loginThroughGui = function (username, password, expectedUrl) {
     browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
     utils.click(this.loginButton);
-    browser.driver.wait(this.isLoginUsernamePresent);
+    browser.driver.wait(this.isLoginUsernamePresent, TIMEOUT);
     this.setLoginUsername(username);
     this.clickLoginNext();
-    browser.driver.wait(this.isLoginPasswordPresent);
+    browser.driver.wait(this.isLoginPasswordPresent, TIMEOUT);
     this.setLoginPassword(password);
     this.clickLoginSubmit();
     navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');

@@ -100,6 +100,7 @@ var PartnerHomePage = function () {
   this.partnerEmail = element.all(by.binding('userName'));
   this.squaredTrialCheckbox = element(by.css('label[for="squaredTrial"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
+  this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));

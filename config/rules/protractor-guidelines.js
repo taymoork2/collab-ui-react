@@ -11,7 +11,7 @@ module.exports = function(context) {
 
   var allowedPageElementMethods = ['first', 'last', 'then'];
 
-  var allowedBrowserMethods = ['get', 'getWindowHandle', 'getAllWindowHandles', 'switchTo', 'executeScript'];
+  var allowedBrowserMethods = ['get', 'getWindowHandle', 'getAllWindowHandles', 'switchTo', 'executeScript', 'close'];
 
   return {
     CallExpression: function(node) {

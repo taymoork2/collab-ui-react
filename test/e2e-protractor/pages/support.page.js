@@ -46,8 +46,8 @@ var SupportPage = function () {
 
   this.searchAndVerifyResult = function (query, assertion) {
     assertion = assertion || query;
-    this.logSearchField.clear();
-    this.logSearchField.sendKeys(query);
+    utils.clear(support.logSearchField);
+    utils.sendKeys(support.logSearchField, query);
     utils.click(support.logSearchBtn);
     utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', assertion)));
   };

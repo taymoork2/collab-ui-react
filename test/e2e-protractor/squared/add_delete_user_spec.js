@@ -70,7 +70,7 @@ describe('Squared Add & Entitle User Flows', function () {
       notifications.assertSuccess(inputEmail, 'deleted successfully');
       utils.expectIsNotDisplayed(users.deleteUserModal);
       notifications.clearNotifications();
-      users.assertResultsLength(0);
+      utils.expectRowIsNotDisplayed(inputEmail);
     });
 
     xit('should delete added user', function () {
