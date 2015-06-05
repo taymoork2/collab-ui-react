@@ -1,7 +1,7 @@
 <cs-sp-container>
   <cs-sp-section>
-   <div class="section-title-row">
-      <span class="section-name" translate="telephonyPreview.squareduc"></span>
+    <div class="section-title-row">
+      <span class="section-name" translate="telephonyPreview.lines"></span>
       <span class="actions-menu dropdown pull-right">
         <button class="actions-button btn-none dropdown-toggle">
           <i class="icon icon-three-dots"></i>
@@ -21,6 +21,15 @@
              <span class="feature-status">{{directoryNumber.dnSharedUsage}}</span>
           </a>
         </li>
+      </ul>
+    </div>
+  </cs-sp-section>
+  <cs-sp-section>
+    <div class="section-title-row">
+      <span class="section-name" translate="telephonyPreview.features"></span>
+    </div>
+    <div class="feature-list">
+      <ul>
         <li class="feature" ng-if="telephonyOverview.telephonyInfo.hasCustomerVoicemail">
           <a ui-sref="user-overview.communication.voicemail">
             <span class="feature-name" translate="telephonyPreview.voicemail"></span>

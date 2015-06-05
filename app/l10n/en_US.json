@@ -792,7 +792,8 @@
     "createButton": "Create Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Lines",
+    "features": "Features",
     "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
