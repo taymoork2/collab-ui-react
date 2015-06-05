@@ -9,6 +9,10 @@
   function PartnerReportCtrl($scope, $translate, $q, PartnerReportService, GraphService, DonutChartService) {
     var vm = this;
 
+    var REFRESH = 'refresh';
+    var SET = 'set';
+    var EMPTY = 'empty';
+
     // variables for the active users section
     var activeUserRefreshDiv = 'activeUsersRefreshDiv';
     var noActiveUserDataDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
@@ -18,8 +22,9 @@
     var activeUsersChart = null;
     var mediaQualityChart = null;
     var callMetricsDonutChart = null;
+    var activeUserPopulationChart = null;
 
-    vm.activeUsersRefresh = 'refresh';
+    vm.activeUsersRefresh = REFRESH;
     vm.showMostActiveUsers = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
@@ -32,18 +37,21 @@
     vm.customerOptions = [];
     vm.customerSelected = null;
 
-    vm.mediaQualityRefresh = 'refresh';
+    vm.mediaQualityRefresh = REFRESH;
     var mediaQualityRefreshDiv = 'mediaQualityRefreshDiv';
     var noMediaQualityDataDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
     var isMediaQualityRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="mediaQuality-status icon icon-spinner icon-2x"></i>';
 
-    vm.callMetricsRefresh = 'refresh';
+    vm.callMetricsRefresh = REFRESH;
     var callMetricsRefreshDiv = 'callMetricsRefreshDiv';
     var noCallMetricsRefreshDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
     var isCallMetricsRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="call-metrics-status icon icon-spinner icon-2x"></i>';
 
     vm.regesteredEndpoints = [];
-    vm.endpointRefresh = 'refresh';
+    vm.endpointRefresh = REFRESH;
+
+    vm.activeUserPopulationRefresh = REFRESH;
+    vm.activeUserPopulationAverage = 0;
 
     vm.timeOptions = [{
       value: 0,
@@ -66,11 +74,11 @@
     };
 
     vm.isRefresh = function (tab) {
-      return tab === 'refresh';
+      return tab === REFRESH;
     };
 
     vm.isEmpty = function (tab) {
-      return tab === 'empty';
+      return tab === EMPTY;
     };
 
     vm.mostActiveSort = function (num) {
@@ -109,17 +117,19 @@
     };
 
     vm.updateReports = function () {
-      vm.activeUsersRefresh = 'refresh';
+      vm.activeUsersRefresh = REFRESH;
       angular.element('#' + activeUserRefreshDiv).html(isActiveUsersRefreshDiv);
       getActiveUserReports();
 
-      vm.callMetricsRefresh = 'refresh';
+      vm.callMetricsRefresh = REFRESH;
       angular.element('#' + callMetricsRefreshDiv).html(isCallMetricsRefreshDiv);
       getCallMetricsReports();
 
-      vm.endpointRefresh = 'refresh';
+      vm.endpointRefresh = REFRESH;
       vm.regesteredEndpoints = [];
       getRegisteredEndpoints();
+
+      getActiveUserPopulationReports();
     };
 
     init();
@@ -134,6 +144,13 @@
         });
         promises.push(activeUserPromise);
 
+        getRegisteredEndpoints();
+
+        var activeUserPopulationPromise = getActiveUserPopulationReports().then(function () {
+          invalidateChartSize(activeUserPopulationChart);
+        });
+        promises.push(activeUserPopulationPromise);
+
         var mediaQualityPromise = getMediaQualityReports().then(function () {
           invalidateChartSize(mediaQualityChart);
         });
@@ -141,8 +158,6 @@
 
         var callMetricsPromise = getCallMetricsReports();
         promises.push(callMetricsPromise);
-
-        getRegisteredEndpoints();
 
         $q.all(promises).then(function () {
           vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
@@ -194,9 +209,9 @@
 
         if (graphData.length === 0) {
           angular.element('#' + activeUserRefreshDiv).html(noActiveUserDataDiv);
-          vm.activeUsersRefresh = 'empty';
+          vm.activeUsersRefresh = EMPTY;
         } else {
-          vm.activeUsersRefresh = 'set';
+          vm.activeUsersRefresh = SET;
         }
 
         return;
@@ -205,17 +220,18 @@
 
     function setGraphResizing() {
       angular.element('#engagementTab').on("click", function () {
-        if (vm.activeUsersRefresh !== 'empty') {
+        if (vm.activeUsersRefresh !== EMPTY) {
           invalidateChartSize(activeUsersChart);
+          invalidateChartSize(activeUserPopulationChart);
         }
       });
 
       angular.element('#qualityTab').on("click", function () {
-        if (vm.mediaQualityRefresh !== 'empty') {
+        if (vm.mediaQualityRefresh !== EMPTY) {
           invalidateChartSize(mediaQualityChart);
         }
 
-        if (vm.callMetricsRefresh !== 'empty') {
+        if (vm.callMetricsRefresh !== EMPTY) {
           invalidateChartSize(callMetricsDonutChart);
         }
       });
@@ -232,9 +248,9 @@
         }
         if (graphData.length === 0) {
           angular.element('#' + mediaQualityRefreshDiv).html(noMediaQualityDataDiv);
-          vm.mediaQualityRefresh = 'empty';
+          vm.mediaQualityRefresh = EMPTY;
         } else {
-          vm.mediaQualityRefresh = 'set';
+          vm.mediaQualityRefresh = SET;
         }
         return;
       });
@@ -251,9 +267,28 @@
 
         if (angular.isArray(data) && data.length === 0) {
           angular.element('#' + callMetricsRefreshDiv).html(noCallMetricsRefreshDiv);
-          vm.callMetricsRefresh = 'empty';
+          vm.callMetricsRefresh = EMPTY;
         } else {
-          vm.callMetricsRefresh = 'set';
+          vm.callMetricsRefresh = SET;
+        }
+        return;
+      });
+    }
+
+    function getActiveUserPopulationReports() {
+      vm.activeUserPopulationRefresh = REFRESH;
+      vm.activeUserPopulationAverage = 0;
+      return PartnerReportService.getActiveUserPopulationData().then(function (data) {
+        if (activeUserPopulationChart === null) {
+          activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(data);
+        } else {
+          GraphService.updateActiveUserPopulationGraph(data, activeUserPopulationChart);
+          invalidateChartSize(activeUserPopulationChart);
+        }
+        vm.activeUserPopulationRefresh = EMPTY;
+        if (angular.isArray(data.data) && data.data.length !== 0) {
+          vm.activeUserPopulationRefresh = SET;
+          vm.activeUserPopulationAverage = data.data[0].averagePrecent;
         }
         return;
       });
@@ -269,9 +304,9 @@
       PartnerReportService.getRegesteredEndpoints(vm.customerSelected).then(function (response) {
         vm.regesteredEndpoints = response;
         if (!angular.isArray(response) || response.length === 0) {
-          vm.endpointRefresh = "empty";
+          vm.endpointRefresh = EMPTY;
         } else {
-          vm.endpointRefresh = "set";
+          vm.endpointRefresh = SET;
         }
       });
     }

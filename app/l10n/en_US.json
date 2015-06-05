@@ -292,6 +292,12 @@
     "trend": "Trend (%)",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}."
   },
+  "activeUserPopulation": {
+    "titleByCompany": "Active User Population by Company",
+    "description1": "Across all your customers, ",
+    "description2": " of their employees have placed at least one Squared UC call over [Time period filter selection]. Here is how the [Filter Selection] compare to that average.",
+    "averageLabel": "Average Engagement"
+  },
   "profilePage": {
     "userProfile": "User Profile",
     "userDetails": "User Details",

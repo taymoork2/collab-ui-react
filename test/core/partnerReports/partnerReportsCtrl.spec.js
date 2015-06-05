@@ -8,12 +8,16 @@ describe('Controller: Partner Reports', function () {
   var dummyGraphData = getJSONFixture('core/json/partnerReports/dummyGraphData.json');
   var dummyTableData = getJSONFixture('core/json/partnerReports/dummyTableData.json');
   var dummyMediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
+  var dummycallMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
+  var dummyActiveUserPopulation = getJSONFixture('core/json/partnerReports/activeUserPopulationFake.json');
+
   var activeUsersChart;
   var mediaQualityChart;
+  var activeUserPopulationChart;
+
   var validateService = {
     invalidate: function () {}
   };
-  var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
 
   var customerOptions = [{
     value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
@@ -53,16 +57,16 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(date);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
-        data: callMetricsData
+        data: dummycallMetricsData
       }));
       spyOn(PartnerReportService, 'getRegesteredEndpoints').and.returnValue($q.when(endpointResponse));
+      spyOn(PartnerReportService, 'getActiveUserPopulationData').and.returnValue($q.when(dummyActiveUserPopulation));
 
       spyOn(GraphService, 'updateActiveUsersGraph');
       spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
         'dataProvider': dummyGraphData,
         invalidateSize: validateService.invalidate
       });
-
       activeUsersChart = GraphService.createActiveUsersGraph(dummyGraphData);
 
       spyOn(GraphService, 'updateMediaQualityGraph');
@@ -70,13 +74,19 @@ describe('Controller: Partner Reports', function () {
         'dataProvider': dummyMediaQualityGraphData,
         invalidateSize: validateService.invalidate
       });
-
       mediaQualityChart = GraphService.createMediaQualityGraph(dummyMediaQualityGraphData);
 
+      spyOn(GraphService, 'updateActiveUserPopulationGraph');
+      spyOn(GraphService, 'createActiveUserPopulationGraph').and.returnValue({
+        'dataProvider': dummyActiveUserPopulation,
+        invalidateSize: validateService.invalidate
+      });
+      activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(dummyActiveUserPopulation);
+
+      spyOn(DonutChartService, 'updateCallMetricsDonutChart');
       spyOn(DonutChartService, 'createCallMetricsDonutChart').and.returnValue({
         invalidateSize: validateService.invalidate
       });
-      spyOn(DonutChartService, 'updateCallMetricsDonutChart');
 
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,
@@ -97,9 +107,11 @@ describe('Controller: Partner Reports', function () {
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
         expect(PartnerReportService.getRegesteredEndpoints).toHaveBeenCalled();
+        expect(PartnerReportService.getActiveUserPopulationData).toHaveBeenCalled();
 
         expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
         expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
+        expect(GraphService.createActiveUserPopulationGraph).toHaveBeenCalled();
         expect(DonutChartService.createCallMetricsDonutChart).toHaveBeenCalled();
       });
 
@@ -253,9 +265,10 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(undefined);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
-        data: callMetricsData
+        data: dummycallMetricsData
       }));
       spyOn(PartnerReportService, 'getRegesteredEndpoints').and.returnValue($q.when([]));
+      spyOn(PartnerReportService, 'getActiveUserPopulationData').and.returnValue($q.when(dummyActiveUserPopulation));
 
       spyOn(GraphService, 'updateActiveUsersGraph');
       spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({

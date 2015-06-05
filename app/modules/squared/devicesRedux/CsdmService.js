@@ -9,41 +9,73 @@ angular.module('Squared').service('CsdmService',
     var devicesUrl = baseUrl + '/devices';
     var codesUrl = baseUrl + '/codes';
 
-    return {
-      listDevices: function (callback) {
-        $http.get(devicesUrl)
-          .success(function (data) {
-            callback(null, data);
-          })
-          .error(function () {
-            callback(arguments);
-          });
-      },
+    var codesAndDevicesCache = null;
 
-      listCodes: function (callback) {
-        $http.get(codesUrl)
-          .success(function (data) {
-            callback(null, data);
-          })
-          .error(function () {
-            callback(arguments);
-          });
-      },
+    var listDevices = function (callback) {
+      $http.get(devicesUrl)
+        .success(function (data) {
+          callback(null, data);
+        })
+        .error(function () {
+          callback(arguments);
+        });
+    };
 
-      listCodesAndDevices: function (callback) {
-        this.listCodes(function (err, codes) {
+    var listCodes = function (callback) {
+      $http.get(codesUrl)
+        .success(function (data) {
+          callback(null, data);
+        })
+        .error(function () {
+          callback(arguments);
+        });
+    };
+
+    var fetchCodesAndDevices = function (callback) {
+      listCodes(function (err, codes) {
+        if (err) return callback(err);
+        listDevices(function (err, devices) {
           if (err) return callback(err);
-          this.listDevices(function (err, devices) {
-            if (err) return callback(err);
-            callback(null, _.extend(codes, devices));
-          });
-        }.bind(this));
+          callback(null, _.extend(codes, devices));
+        });
+      }.bind(this));
+    };
+
+    var fillCodesAndDevicesCache = function (callback) {
+      fetchCodesAndDevices(function (err, data) {
+        if (err) return callback(err);
+        codesAndDevicesCache = _.map(data, function (v) {
+          return v;
+        });
+        callback(null);
+      });
+    };
+
+    return {
+
+      fillCodesAndDevicesCache: function (callback) {
+        fillCodesAndDevicesCache(callback);
+      },
+
+      listCodesAndDevices: function () {
+        return codesAndDevicesCache;
       },
 
       getDeviceStatus: function (deviceUrl, callback) {
         $http.get(deviceUrl)
           .success(function (data) {
             callback(null, data);
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      },
+
+      deleteUrl: function (url, callback) {
+        $http.delete(url)
+          .success(function (status) {
+            fillCodesAndDevicesCache(function () {});
+            callback(null, status);
           })
           .error(function () {
             callback(arguments);
@@ -57,12 +89,12 @@ angular.module('Squared').service('CsdmService',
 
         $http.post(codesUrl, deviceData)
           .success(function (data) {
+            codesAndDevicesCache.push(data);
             callback(null, data);
           })
           .error(function () {
             callback(arguments);
           });
-
       }
     };
 

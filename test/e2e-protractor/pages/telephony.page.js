@@ -50,7 +50,7 @@ var TelephonyPage = function () {
   this.internalNumber = element(by.css('.select-list[name="internalNumber"] a.select-toggle'));
   this.internalNumberOptions = element(by.css('.select-list[name="internalNumber"]')).all(by.repeater('option in csSelect.options')).all(by.tagName('a'));
   this.externalNumber = element(by.css('.select-list[name="externalNumber"] a.select-toggle'));
-  this.externalNumberOptions = element(by.css('.select-list[name="externalNumber"]')).all(by.repeater('option in csSelect.options')).all(by.tagName('a'));;
+  this.externalNumberOptions = element(by.css('.select-list[name="externalNumber"]')).all(by.repeater('option in csSelect.options')).all(by.tagName('a'));
 
   this.callerIdDefault = element(by.css('label[for="callerIdDefault"]'));
   this.callerIdCustom = element(by.css('label[for="callerIdOther"]'));

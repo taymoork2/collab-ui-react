@@ -40,7 +40,8 @@
       getMostRecentUpdate: getMostRecentUpdate,
       getMediaQualityMetrics: getMediaQualityMetrics,
       getCallMetricsData: getCallMetricsData,
-      getRegesteredEndpoints: getRegesteredEndpoints
+      getRegesteredEndpoints: getRegesteredEndpoints,
+      getActiveUserPopulationData: getActiveUserPopulationData
     };
 
     function getActiveUserData(customer, time) {
@@ -340,6 +341,19 @@
           return [];
         });
       }
+    }
+
+    function getActiveUserPopulationData() {
+      var getActiveUserPopulationUrl = 'modules/core/partnerReports/activeUserPopulation/activeUserPopulationFake.json';
+      return $http.get(getActiveUserPopulationUrl).then(function (response) {
+        if (angular.isArray(response.data.data) && response.data.data.length !== 0) {
+          return response.data;
+        } else {
+          return [];
+        }
+      }, function (error) {
+        return [];
+      });
     }
   }
 })();

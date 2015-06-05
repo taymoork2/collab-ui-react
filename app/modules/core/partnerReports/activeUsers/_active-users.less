@@ -17,18 +17,18 @@
 
   .spinner-position {
     position: relative;
-    top: -450px;
+    top: -400px;
   }
 
   .clear-graph {
     background-color: @brand-white;
     position: relative;
-    top: 5px;
+    top: -35px;
   }
 
   .active-user-status {
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
@@ -62,9 +62,9 @@
   }
 
   .no-data-center {
-    height: 450px;
+    top: 115px;
     left: 35%;
-    position: absolute;
+    position: relative;
     transform: translate(0%, 35%);
 
     .no-data {
@@ -72,5 +72,31 @@
       font-family: "CiscoSansTT Light";
       font-size: 46px;
     }
+  }
+
+  #activeUsersdiv {
+    position: relative;
+    overflow: visible !important;
+    top: -40px;
+
+    .amcharts-main-div {
+      height: 100% !important;
+
+      .amcharts-chart-div {
+        overflow: visible !important;
+
+        svg {
+          top: 50px !important;
+        }
+      }
+    }
+  }
+
+  .amcharts-legend-div {
+    top: 50px;
+  }
+
+  .amcharts-balloon-div {
+    margin-top: 50px !important;
   }
 }
