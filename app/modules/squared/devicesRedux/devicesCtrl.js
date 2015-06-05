@@ -5,7 +5,7 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($state, $location, $templateCache, Storage, Log, Utils, $filter, SpacesService, Notification, $log, $translate, CsdmService) {
+    function ($scope, $state, $location, $templateCache, Storage, Log, Utils, $filter, SpacesService, Notification, $log, $translate, CsdmService) {
       var vm = this;
 
       vm.totalResults = null;
@@ -41,9 +41,9 @@ angular.module('Squared')
           if (data.success === true) {
             var successMessage = device + ' deleted successfully.';
             Notification.notify([successMessage], 'success');
-            setTimeout(function () {
-              getAllDevices();
-            }, 1000);
+            // setTimeout(function () {
+            //   getAllDevices();
+            // }, 1000);
           } else {
             var errorMessage = ['Error deleting ' + device + '. Status: ' + status];
             Notification.notify(errorMessage, 'error');
@@ -51,40 +51,31 @@ angular.module('Squared')
         });
       };
 
-      var getAllDevices = function () {
-        CsdmService.listCodesAndDevices(function (err, data) {
-          vm.loading = false;
+      CsdmService.fillCodesAndDevicesCache(function(){
+        vm.loading = false;        
+      });
 
-          if (err) {
-            return Log.error('Error getting rooms. Err: ' + err);
+      $scope.$watchCollection(CsdmService.listCodesAndDevices, function (data) {
+        console.log("Data changed....")
+        vm.roomData = _.map(data, function (device) {
+          if (device.activationTime) {
+            device.activationTimeFormatted = moment.utc(device.activationTime).local().format('MMM D YYYY, h:mm a');
           }
 
-          vm.roomData = _.map(data, function (device, id) {
+          if (device.activationCode) {
+            device.activationCodeFormatted = formatActivationCode(device.activationCode);
+          }
 
-            if (device.activationTime) {
-              device.activationTimeFormatted = moment.utc(device.activationTime).local().format('MMM D YYYY, h:mm a');
-            }
+          if (device.state === 'CLAIMED') {
+            device.stateFormatted = 'Offline';
+          } else if (device.state === 'UNCLAIMED') {
+            device.stateFormatted = 'Needs Activation';
+            device.color = 'device-status-yellow';
+          }
 
-            if (device.activationCode) {
-              device.activationCodeFormatted = formatActivationCode(device.activationCode);
-            }
-
-            if (device.state === 'CLAIMED') {
-              device.stateFormatted = 'Offline';
-            } else if (device.state === 'UNCLAIMED') {
-              device.stateFormatted = 'Needs Activation';
-              device.color = 'device-status-yellow';
-            }
-
-            return device;
-          });
-
-          // getDevicesStatus();
-
+          return device;
         });
-      };
-
-      getAllDevices();
+      });
 
       var getDevicesStatus = function () {
         for (var i = 0; i < vm.roomData.length; i++) {
