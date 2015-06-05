@@ -51,8 +51,8 @@ angular.module('Squared')
         });
       };
 
-      CsdmService.fillCodesAndDevicesCache(function(){
-        vm.loading = false;        
+      CsdmService.fillCodesAndDevicesCache(function () {
+        vm.loading = false;
       });
 
       $scope.$watchCollection(CsdmService.listCodesAndDevices, function (data) {
