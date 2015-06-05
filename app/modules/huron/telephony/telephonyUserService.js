@@ -51,7 +51,9 @@
         'firstName': user.lastName,
         'phoneNumber': null,
         'oneTimePassword': null,
-        'expiresOn': null
+        'expiresOn': null,
+        'userId': uuid,
+        'customerId': Authinfo.getOrgId()
       };
 
       return UserServiceCommonV2.save({
