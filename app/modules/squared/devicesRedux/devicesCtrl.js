@@ -56,7 +56,6 @@ angular.module('Squared')
       });
 
       $scope.$watchCollection(CsdmService.listCodesAndDevices, function (data) {
-        console.log("Data changed....")
         vm.roomData = _.map(data, function (device) {
           if (device.activationTime) {
             device.activationTimeFormatted = moment.utc(device.activationTime).local().format('MMM D YYYY, h:mm a');

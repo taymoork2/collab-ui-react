@@ -32,7 +32,6 @@ angular.module('Squared').service('CsdmService',
     }
 
     var fetchCodesAndDevices = function (callback) {
-      console.log("Updating cache");
       listCodes(function (err, codes) {
         if (err) return callback(err);
         listDevices(function (err, devices) {
