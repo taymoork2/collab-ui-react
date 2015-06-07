@@ -400,8 +400,8 @@
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
-    "invalidMinLength": "This entry is too short.",
-    "invalidMaxLength": "This entry is too long."
+    "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
+    "invalidMaxLength": "This entry is too long. Maximum length is {{max}}."
   },
   "notifications": {
     "success": "Success notifications",

@@ -64,7 +64,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
       TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithSnr);
       $scope.$broadcast('telephonyInfoUpdated');
       $scope.$apply();
-      controller.telephonyInfo.snrInfo.singleNumberReachEnabled = false;
+      controller.snrInfo.singleNumberReachEnabled = false;
       controller.saveSingleNumberReach();
       $httpBackend.flush();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');

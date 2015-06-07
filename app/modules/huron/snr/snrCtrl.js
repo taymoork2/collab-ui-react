@@ -10,7 +10,7 @@
     vm.currentUser = $stateParams.currentUser;
     vm.saveSingleNumberReach = saveSingleNumberReach;
     vm.reset = reset;
-    vm.telephonyInfo = {};
+    vm.snrInfo = angular.copy(TelephonyInfoService.getTelephonyInfo().snrInfo);
 
     vm.formFields = [{
       key: 'destination',
@@ -23,9 +23,7 @@
         required: true
       },
       expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
-          return !scope.model.singleNumberReachEnabled;
-        }
+        'hide': '!model.singleNumberReachEnabled'
       }
     }];
 
@@ -38,14 +36,15 @@
     }];
     vm.snrLineOption = vm.snrOptions[0];
 
-    init();
-
     $scope.$on('telephonyInfoUpdated', function () {
       init();
     });
 
     function init() {
-      angular.extend(vm.telephonyInfo, TelephonyInfoService.getTelephonyInfo());
+      var snrInfo = TelephonyInfoService.getTelephonyInfo().snrInfo;
+      vm.snrInfo.singleNumberReachEnabled = snrInfo.singleNumberReachEnabled;
+      vm.snrInfo.destination = snrInfo.destination;
+      vm.snrInfo.remoteDestinations = snrInfo.remoteDestinations;
     }
 
     function resetForm() {
@@ -76,6 +75,8 @@
           userId: user.id
         }, rdBean,
         function () {
+          TelephonyInfoService.updateSnr(vm.snrInfo);
+
           result.msg = $translate.instant('singleNumberReachPanel.success');
           result.type = 'success';
           Notification.notify([result.msg], result.type);
@@ -83,12 +84,6 @@
         function (response) {
           Notification.errorResponse(response, 'singleNumberReachPanel.error');
         }).$promise;
-    }
-
-    function processCreateRemoteDestionInfo(response) {
-      if (response !== null && response !== undefined) {
-        vm.telephonyInfo.singleNumberReach = 'On';
-      }
     }
 
     function deleteRemoteDestinationInfo(user) {
@@ -100,12 +95,13 @@
       return RemoteDestinationService.delete({
           customerId: user.meta.organizationID,
           userId: user.id,
-          remoteDestId: vm.telephonyInfo.snrInfo.remoteDestinations[0].uuid
+          remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
         },
         function () {
-          vm.telephonyInfo.snrInfo.destination = null;
-          vm.telephonyInfo.snrInfo.remoteDestinations = null;
-          TelephonyInfoService.updateSnr(vm.telephonyInfo.snrInfo);
+          vm.snrInfo.destination = null;
+          vm.snrInfo.remoteDestinations = null;
+          vm.snrInfo.singleNumberReachEnabled = false;
+          TelephonyInfoService.updateSnr(vm.snrInfo);
 
           result.msg = $translate.instant('singleNumberReachPanel.removeSuccess');
           result.type = 'success';
@@ -128,10 +124,10 @@
       return RemoteDestinationService.update({
           customerId: user.meta.organizationID,
           userId: user.id,
-          remoteDestId: vm.telephonyInfo.snrInfo.remoteDestinations[0].uuid
+          remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
         }, rdBean,
         function () {
-          TelephonyInfoService.updateSnr(vm.telephonyInfo.snrInfo);
+          TelephonyInfoService.updateSnr(vm.snrInfo);
 
           result.msg = $translate.instant('singleNumberReachPanel.success');
           result.type = 'success';
@@ -144,25 +140,21 @@
 
     function saveSingleNumberReach() {
       HttpUtils.setTrackingID().then(function () {
-        if (angular.isArray(vm.telephonyInfo.snrInfo.remoteDestinations) && vm.telephonyInfo.snrInfo.remoteDestinations.length > 0) {
-          if (!vm.telephonyInfo.snrInfo.singleNumberReachEnabled) {
+        if (angular.isArray(vm.snrInfo.remoteDestinations) && vm.snrInfo.remoteDestinations.length > 0) {
+          if (!vm.snrInfo.singleNumberReachEnabled) {
             deleteRemoteDestinationInfo(vm.currentUser).then(function () {
               resetForm();
             });
           } else {
-            updateRemoteDestinationInfo(vm.currentUser, vm.telephonyInfo.snrInfo.destination).then(function () {
+            updateRemoteDestinationInfo(vm.currentUser, vm.snrInfo.destination).then(function () {
               resetForm();
             });
           }
-        } else if (vm.telephonyInfo.snrInfo.singleNumberReachEnabled) {
-          createRemoteDestinationInfo(vm.currentUser, vm.telephonyInfo.snrInfo.destination)
+        } else if (vm.snrInfo.singleNumberReachEnabled) {
+          createRemoteDestinationInfo(vm.currentUser, vm.snrInfo.destination)
             .then(function (response) {
-              processCreateRemoteDestionInfo(response);
               TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
               resetForm();
-            })
-            .catch(function () {
-              processCreateRemoteDestionInfo(null);
             });
         } else {
           // Nothing to delete, notify success

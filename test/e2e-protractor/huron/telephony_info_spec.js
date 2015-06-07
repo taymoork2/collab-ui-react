@@ -414,6 +414,10 @@ describe('Telephony Info', function () {
       utils.click(telephony.snrSwitch);
       utils.expectIsDisplayed(telephony.snrNumber);
 
+      utils.click(telephony.cancelButton);
+      utils.expectIsNotDisplayed(telephony.snrNumber);
+      utils.click(telephony.snrSwitch);
+
       utils.sendKeys(telephony.snrNumber, snrLine);
       utils.click(telephony.saveButton);
       notifications.assertSuccess('Single Number Reach configuration saved successfully');
@@ -428,6 +432,11 @@ describe('Telephony Info', function () {
 
       utils.click(telephony.snrSwitch);
       utils.expectIsNotDisplayed(telephony.snrNumber);
+
+      utils.click(telephony.cancelButton);
+      utils.expectIsDisplayed(telephony.snrNumber);
+      utils.expectValueToBeSet(telephony.snrNumber, snrLine);
+      utils.click(telephony.snrSwitch);
 
       utils.click(telephony.saveButton);
       notifications.assertSuccess('Single Number Reach configuration removed successfully');

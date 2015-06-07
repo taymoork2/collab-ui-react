@@ -81,7 +81,7 @@ gulp.task('build', ['clean'], function(done) {
     ],
     'processHtml:build',
     'karma-config',
-    'karma-continuous',
+    'karma',
     done
   );
 });
@@ -862,14 +862,22 @@ gulp.task('karma-config-watch', function() {
 
 /*********************************************
  * Run test once and exit
- * Usage: gulp karma-continuous
+ * Usage: gulp karma
+ *        gulp karma --debug
  ********************************************/
-gulp.task('karma-continuous', function(done) {
+gulp.task('karma', function(done) {
   if (!args.nounit) {
-    karma.start({
-      configFile: __dirname + '/test/karma-unit.js',
-      singleRun: true
-    }, done);
+    var options = {
+      configFile: __dirname + '/test/karma-unit.js'
+    };
+    if (args.debug) {
+      options.browsers = ['Chrome'];
+      options.preprocessors = {};
+      options.browserNoActivityTimeout = 600000;
+    } else {
+      options.singleRun = true;
+    }
+    karma.start(options, done);
   } else {
     log($.util.colors.red('--nounit **Skipping Karma Tests'));
     return done();
