@@ -1,6 +1,6 @@
 [{
   "customerOrgId": "eaaab209-2994-4cce-803f-94d16f842ccb",
-  "startDate": "2015-03-06T00:00:00.000Z",
+  "startDate": "2020-03-06T00:00:00.000Z",
   "trialPeriod": 90,
   "offers": [{
     "id": "COLLAB",
@@ -60,7 +60,7 @@
   "createdDate": "2015-03-06T00:00:00.000Z"
 }, {
   "customerOrgId": "b9a5d46e-4593-4bf0-8e97-d44ba7e98512",
-  "startDate": "2015-03-09T00:00:00.000Z",
+  "startDate": "2020-03-09T00:00:00.000Z",
   "trialPeriod": 90,
   "offers": [{
     "id": "SQUAREDUC",
