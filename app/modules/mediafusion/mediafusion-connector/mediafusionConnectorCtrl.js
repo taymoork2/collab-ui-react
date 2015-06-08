@@ -54,10 +54,8 @@ angular.module('Mediafusion')
         currentPage: 1
       };
       $scope.setPagingData = function (data, page, pageSize) {
-        //console.log("inside setPagingData data length:" + data.length);
         var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
         $scope.myData = pagedData;
-        //console.log("mydata " + $scope.mydata);
         $scope.totalServerItems = data.length;
         if (!$scope.$$phase) {
           $scope.$apply();
@@ -84,7 +82,7 @@ angular.module('Mediafusion')
       };
 
       $scope.$watch('pagingOptions', function (newVal, oldVal) {
-        if (newVal !== oldVal) {//} && newVal.currentPage !== oldVal.currentPage) {
+        if (newVal !== oldVal) {
           $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }
       }, true);
@@ -102,8 +100,6 @@ angular.module('Mediafusion')
         headerRowHeight: 40,
         rowTemplate: rowTemplate,
         useExternalSorting: false,
-        //enableVerticalScrollbar: 0,
-        //enableHorizontalScrollbar: 0,
         enablePaging: true,
         showFooter: true,
         totalServerItems: 'totalServerItems',
@@ -136,13 +132,11 @@ angular.module('Mediafusion')
       };
 
       $scope.showConnectorsDetails = function (connector) {
-        //console.log("entering showConnectorsDetails");
         $scope.connector = connector;
         $scope.connectorId = connector.id;
         $state.go('connector-details', {
           connectorId: connector.id
         });
-        //console.log("exiting showConnectorsDetails");
       };
     }
   );
