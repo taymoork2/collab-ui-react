@@ -183,13 +183,15 @@
       } else {
         var deferreds = [];
         var errors = [];
+        var promise;
+
         if (vm.firstTimeSetup) {
           if (vm.pilotNumberSelected) {
             vm.site.voicemailPilotNumber = vm.pilotNumberSelected.pattern;
           } else {
             delete vm.site.voicemailPilotNumber;
           }
-          var promise = ServiceSetup.createSite(vm.site).then(function () {
+          promise = ServiceSetup.createSite(vm.site).then(function () {
             if (vm.pilotNumberSelected) {
               ServiceSetup.updateCustomerVoicemailPilotNumber({
                 voicemail: {
@@ -209,7 +211,7 @@
 
         if (angular.isArray(vm.internalNumberRanges)) {
           angular.forEach(vm.internalNumberRanges, function (internalNumberRange) {
-            var promise = ServiceSetup.createInternalNumberRange(internalNumberRange)
+            promise = ServiceSetup.createInternalNumberRange(internalNumberRange)
               .catch(function (response) {
                 var error = Notification.processErrorResponse(response, 'serviceSetupModal.extensionAddError', {
                   extension: this.name

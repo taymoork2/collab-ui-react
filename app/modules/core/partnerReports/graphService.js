@@ -245,9 +245,8 @@
       }
     }
 
-    function createActiveUserPopulationGraph(data) {
+    function createActiveUserPopulationDataProvider(data) {
       var dataProvider = [];
-
       if (data.data[0].data.length === 0) {
         dataProvider = dummyData(activeUserPopulationChartId);
       } else {
@@ -264,6 +263,11 @@
           }
         }
       }
+      return dataProvider;
+    }
+
+    function createActiveUserPopulationGraph(data) {
+      var dataProvider = createActiveUserPopulationDataProvider(data);
 
       var graph = angular.copy(columnBase);
       graph.type = 'column';
@@ -296,7 +300,7 @@
         if (data === null || data === 'undefined' || data.length === 0) {
           activeUserPopulationChart.dataProvider = dummyData(activeUserPopulationChartId);
         } else {
-          activeUserPopulationChart.dataProvider = data;
+          activeUserPopulationChart.dataProvider = createActiveUserPopulationDataProvider(data);
         }
         activeUserPopulationChart.validateData();
       }
