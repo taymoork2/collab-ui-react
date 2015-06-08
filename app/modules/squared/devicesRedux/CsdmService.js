@@ -3,11 +3,26 @@
 angular.module('Squared').service('CsdmService',
 
   /* @ngInject  */
-  function ($rootScope, $http, Authinfo, Config) {
+  function ($window, $rootScope, $http, Authinfo, Config) {
 
-    var baseUrl = Config.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId();
-    var devicesUrl = baseUrl + '/devices';
-    var codesUrl = baseUrl + '/codes';
+    var getUrl = function () {
+      var getOverriddenUrl = function (queryParam) {
+        var regex = new RegExp(queryParam + "=([^&]*)");
+        var match = $window.location.search.match(regex);
+        if (match && match.length == 2) {
+          return decodeURIComponent(match[1]);
+        }
+      };
+      var overriddenUrl = getOverriddenUrl('csdm-url');
+      if (overriddenUrl) {
+        return overriddenUrl;
+      } else {
+        return Config.getCsdmServiceUrl();
+      }
+    };
+
+    var codesUrl = getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
+    var devicesUrl = getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
 
     var codesAndDevicesCache = null;
 
