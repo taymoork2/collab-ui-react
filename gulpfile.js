@@ -999,7 +999,7 @@ gulp.task('set-env', function () {
   } else if (args.int) {
     sourceIntegration();
   }
-})
+});
 
 //============================================
 // SAUCELABS TASKS
@@ -1037,7 +1037,7 @@ gulp.task('sauce:job', function () {
   var arg = process.argv.pop();
   var message = arg.split('/').pop();
   var auth = hmac(message, process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY);
-  log(arg.replace('--','') + '?auth=' + auth);
+  log(arg.replace('--', '') + '?auth=' + auth);
 });
 
 /*********************************************
@@ -1127,6 +1127,7 @@ function errorLogger(error) {
   log($.util.colors.red('*** Start of Error ***'));
   log(error);
   log($.util.colors.red('*** End of Error ***'));
+  /* jshint validthis:true */
   this.emit('end');
 }
 
