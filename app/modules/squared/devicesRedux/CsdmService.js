@@ -24,7 +24,7 @@ angular.module('Squared').service('CsdmService',
     var codesUrl = getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
     var devicesUrl = getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
 
-    var codesAndDevicesCache = null;
+    var codesAndDevicesCache = {};
 
     var listDevices = function (callback) {
       $http.get(devicesUrl)
@@ -57,11 +57,9 @@ angular.module('Squared').service('CsdmService',
     };
 
     var fillCodesAndDevicesCache = function (callback) {
-      fetchCodesAndDevices(function (err, data) {
-        if (err) return callback(err);
-        codesAndDevicesCache = _.map(data, function (v) {
-          return v;
-        });
+      fetchCodesAndDevices(function (err, data)  {
+        if (err) return callback(err, data);
+        codesAndDevicesCache = data;
         callback(null);
       });
     };
@@ -73,7 +71,7 @@ angular.module('Squared').service('CsdmService',
       },
 
       listCodesAndDevices: function () {
-        return codesAndDevicesCache;
+        return _.values(codesAndDevicesCache);
       },
 
       getDeviceStatus: function (deviceUrl, callback) {
@@ -89,7 +87,7 @@ angular.module('Squared').service('CsdmService',
       deleteUrl: function (url, callback) {
         $http.delete(url)
           .success(function (status) {
-            fillCodesAndDevicesCache(function () {});
+            delete codesAndDevicesCache[url];
             callback(null, status);
           })
           .error(function () {
@@ -104,7 +102,7 @@ angular.module('Squared').service('CsdmService',
 
         $http.post(codesUrl, deviceData)
           .success(function (data) {
-            codesAndDevicesCache.push(data);
+            codesAndDevicesCache[data.url] = data;
             callback(null, data);
           })
           .error(function () {

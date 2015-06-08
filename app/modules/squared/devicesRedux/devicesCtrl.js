@@ -51,11 +51,15 @@ angular.module('Squared')
         });
       };
 
-      CsdmService.fillCodesAndDevicesCache(function () {
+      CsdmService.fillCodesAndDevicesCache(function (err, data) {
+        if (err) {
+          return XhrNotificationService.notify(err);
+        }
         vm.loading = false;
       });
 
       $scope.$watchCollection(CsdmService.listCodesAndDevices, function (data) {
+        if (!data) return;
         vm.roomData = _.map(data, function (device) {
           if (device.activationTime) {
             device.activationTimeFormatted = moment.utc(device.activationTime).local().format('MMM D YYYY, h:mm a');

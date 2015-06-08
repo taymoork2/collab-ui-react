@@ -70,11 +70,6 @@
             if (!data.emailConfCode && !data.conversationId) {
               $scope.notificationsFailed = true;
             }
-
-            // setTimeout(function () {
-            //   getAllDevices();
-            // }, 1000);
-
           });
         };
 
