@@ -84,7 +84,7 @@ angular.module('Mediafusion')
       };
 
       $scope.$watch('pagingOptions', function (newVal, oldVal) {
-        if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
+        if (newVal !== oldVal) {//} && newVal.currentPage !== oldVal.currentPage) {
           $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }
       }, true);
@@ -102,8 +102,8 @@ angular.module('Mediafusion')
         headerRowHeight: 40,
         rowTemplate: rowTemplate,
         useExternalSorting: false,
-        enableVerticalScrollbar: 0,
-        enableHorizontalScrollbar: 0,
+        //enableVerticalScrollbar: 0,
+        //enableHorizontalScrollbar: 0,
         enablePaging: true,
         showFooter: true,
         totalServerItems: 'totalServerItems',
