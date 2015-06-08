@@ -241,52 +241,9 @@
               </cs-checkbox>
             </div>
           </div>
-    
           <hr>
         </div>
-        <!-- End of Video section -->
-    
-        <!-- Start of Event Center section -->
-        <div id="eventCenterPrivileges"
-             name="eventCenterPrivileges"
-             ng-if="WebExUserSettings2.userSettingsModel.eventCenter.isSiteEnabled && WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled">
-    
-          <p>
-            <b>
-              {{WebExUserSettings2.userSettingsModel.eventCenter.label}}
-            </b>
-          </p>
-    
-          <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.id}}
-                       name={{WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.id}}
-                       label={{WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.label}}
-                       ng-model="WebExUserSettings2.userSettingsModel.eventCenter.optimizeBandwidthUsage.value">
-          </cs-checkbox>
-    
-          <hr>
-        </div>
-        <!-- End of Event Center section -->
-    
-        <!-- Start of Training Center section -->
-        <div id="trainingCenterPrivleges"
-             name="trainingCenterPrivleges"
-             ng-if="WebExUserSettings2.userSettingsModel.trainingCenter.isSiteEnabled && WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled">
-             
-          <p>
-            <b>
-              {{WebExUserSettings2.userSettingsModel.trainingCenter.label}}
-            </b>
-          </p>
-    
-          <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
-                       name={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.id}}
-                       label={{WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.label}}
-                       ng-model="WebExUserSettings2.userSettingsModel.trainingCenter.handsOnLabAdmin.value">
-          </cs-checkbox>
-    
-          <hr>
-        </div>
-        <!-- End of Training Center section -->
+        <!-- End of Other Privileges -->
         
         <a href="" onClick="document.getElementById('hiddenButton').click();">
           <p class="popout-link">

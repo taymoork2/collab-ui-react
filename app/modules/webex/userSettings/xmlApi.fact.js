@@ -183,14 +183,6 @@
               "                <use:voiceOverIp>{{integratedVoIP}}</use:voiceOverIp>" + "\n";
           }
 
-          if (
-            (xmlApiAccessInfo.trainingCenterSiteEnabled) &&
-            (xmlApiAccessInfo.handsOnLabAdminSiteEnabled)
-          ) {
-            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-              "                <use:labAdmin>{{handsOnLabAdmin}}</use:labAdmin>" + "\n";
-          }
-
           if (xmlApiAccessInfo.isEnablePMR) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
               "                <use:isEnablePMR>{{isEnablePMR}}</use:isEnablePMR>" + "\n";
@@ -209,16 +201,6 @@
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
             "            </use:privilege>" + "\n";
           // End of use:privilege
-
-          if (
-            (xmlApiAccessInfo.eventCenterSiteEnabled) &&
-            (xmlApiAccessInfo.optimizeBandwidthUsageSiteEnabled)
-          ) {
-            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
-              "            <use:eventCenter>" + "\n " +
-              "                <use:optimizeAttendeeBandwidthUsage>{{optimizeBandwidthUsage}}</use:optimizeAttendeeBandwidthUsage>" + "\n" +
-              "            </use:eventCenter>" + "\n ";
-          }
 
           updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
             "        </bodyContent>" + "\n" +
