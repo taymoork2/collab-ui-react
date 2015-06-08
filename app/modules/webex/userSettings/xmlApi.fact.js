@@ -158,6 +158,11 @@
               "                <use:teleConfCallInInternational>{{teleconfViaGlobalCallIn}}</use:teleConfCallInInternational>" + "\n";
           }
 
+          if (xmlApiAccessInfo.teleCLIAuthEnabledSiteEnabled) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:teleCLIAuthEnabled>{{teleCLIAuthEnabled}}</use:teleCLIAuthEnabled>" + "\n";
+          }
+
           if (xmlApiAccessInfo.callBackTeleconfSiteEnabled) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
               "                <use:teleConfCallOut>{{callBackTeleconf}}</use:teleConfCallOut>" + "\n";
@@ -184,6 +189,11 @@
           ) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
               "                <use:labAdmin>{{handsOnLabAdmin}}</use:labAdmin>" + "\n";
+          }
+
+          if (xmlApiAccessInfo.isEnablePMR) {
+            updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
+              "                <use:isEnablePMR>{{isEnablePMR}}</use:isEnablePMR>" + "\n";
           }
 
           if (xmlApiAccessInfo.hiQualVideoSitenEnabled) {

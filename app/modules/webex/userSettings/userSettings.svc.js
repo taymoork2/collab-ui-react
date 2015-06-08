@@ -48,6 +48,17 @@ angular.module('WebExUserSettings')
           isSiteEnabled: false
         }, // supportCenter
 
+        pmr: {
+          id: "PMR",
+          label: "Personal Room",
+          isSiteEnabled: false,
+          value: false
+        },
+
+        otherPrivilegesSection: {
+          label: "Other Privileges"
+        },
+
         videoSettings: {
           label: "",
 
@@ -104,6 +115,12 @@ angular.module('WebExUserSettings')
               isSiteEnabled: false,
               value: false
             },
+            teleCLIAuthEnabled: {
+              id: "teleCLIAuthEnabled",
+              label: "",
+              isSiteEnabled: false,
+              value: false
+            }
           }, // callInTeleconf
 
           callBackTeleconf: {

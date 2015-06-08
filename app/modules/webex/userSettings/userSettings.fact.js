@@ -130,6 +130,8 @@
 
           userSettingsModel.eventCenter.optimizeBandwidthUsage.label = $translate.instant("webexUserSettingLabels.optimizeBandwidthUsageLabel");
 
+          userSettingsModel.otherPrivilegesSection.label = $translate("webexUserSettingLabels.OtherPrivilegesLabel");
+          userSettingsModel.pmr.label = $translate.instant("webexUserSettingLabels.pmrLabel");
           userSettingsModel.videoSettings.label = $translate.instant("webexUserSettingLabels.videoSettingsLabel");
           userSettingsModel.videoSettings.hiQualVideo.label = $translate.instant("webexUserSettingLabels.hiQualVideoLabel");
           userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.label = $translate.instant("webexUserSettingLabels.hiDefVideoLabel");
@@ -139,6 +141,7 @@
           userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label = $translate.instant("webexUserSettingLabels.tollOnlyLabel");
           userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label = $translate.instant("webexUserSettingLabels.tollAndTollFreeLabel");
           userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.label = $translate.instant("webexUserSettingLabels.teleconfViaGlobalCallinLabel");
+          userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.label = $translate.instant("webexUserSettingLabels.teleCLIAuthEnabledLabel");
           userSettingsModel.telephonyPriviledge.callBackTeleconf.label = $translate.instant("webexUserSettingLabels.callBackTeleconfLabel");
           userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label = $translate.instant("webexUserSettingLabels.globalCallBackTeleconfLabel");
           userSettingsModel.telephonyPriviledge.integratedVoIP.label = $translate.instant("webexUserSettingLabels.integratedVoIPLaabel");
@@ -324,6 +327,14 @@
             "true" == userInfoJson.use_privilege.use_teleConfCallInInternational
           ) ? true : false;
 
+          userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.isSiteEnabled = (
+            "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_teleCLIAuthEnabled
+          ) ? true : false;
+
+          userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.value = (
+            "true" == userInfoJson.use_privilege.use_teleCLIAuthEnabled
+          ) ? true : false;
+
           logMsg = funcName + ": " + "\n" +
             "ns1_callInTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing + "\n" +
             "ns1_tollFreeCallinTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing + "\n" +
@@ -386,6 +397,14 @@
           var userInfoJson = userSettingsModel.userInfo.bodyJson;
           var siteInfoJson = userSettingsModel.siteInfo.bodyJson;
           var meetingTypesInfoJson = userSettingsModel.meetingTypesInfo.bodyJson;
+
+          //console.log("HERE -------");
+          //var enablePMRSiteLevel = siteInfoJson.ns1_siteInstance.ns1_siteCommonOptions.ns1_enablePersonalMeetingRoom;
+          //console.log("ENABLE PMR SITE LEVEL=" + enablePMRSiteLevel);
+          userSettingsModel.pmr.isSiteEnabled = (
+            //"true" == enablePMRSiteLevel
+            true
+          ) ? true : false;
 
           // Start of Video privileges
           userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = (
@@ -754,6 +773,9 @@
           xmlApiInfo.teleconfViaGlobalCallInSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled;
           xmlApiInfo.teleconfViaGlobalCallIn = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value;
 
+          xmlApiInfo.teleCLIAuthEnabledSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.isSiteEnabled;
+          xmlApiInfo.teleCLIAuthEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.value;
+
           xmlApiInfo.callBackTeleconfSiteEnabled = userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled;
           xmlApiInfo.callBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.value;
 
@@ -765,6 +787,9 @@
 
           xmlApiInfo.integratedVoIPSiteEnabled = userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled;
           xmlApiInfo.integratedVoIP = userSettingsModel.telephonyPriviledge.integratedVoIP.value;
+
+          xmlApiInfo.isEnablePMRSiteEnabled = userSettingsModel.pmr.isSiteEnabled;
+          xmlApiInfo.isEnablePMR = userSettingsModel.pmr.value;
 
           xmlApiInfo.hiQualVideoSitenEnabled = userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled;
           xmlApiInfo.hiQualVideo = userSettingsModel.videoSettings.hiQualVideo.value;

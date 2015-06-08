@@ -136,6 +136,19 @@
                              isdisabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value">
                 </cs-checkbox>
               </div>
+
+              <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.isSiteEnabled">
+
+                  <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.id}}
+                              name={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.id}}
+                              label={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.label}}
+                              ng-model="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.value"
+                              isdisabled="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value">
+                  </cs-checkbox>
+
+              </div>  
+
+
             </div>
           </div>
           <!-- End of Call-in -->
@@ -180,15 +193,34 @@
         <!-- End of Telephony section -->
     
         <!-- Start of Video section -->
+
+        <p>
+            <b>
+              {{}}
+              {{}}
+              {{}}
+              {{WebExUserSettings2.userSettingsModel.videoSettings.label}}
+            </b>
+          </p>
+
+        <div id="pmr"
+             name="pmrenabled"
+             ng-if="WebExUserSettings2.userSettingsModel.pmr.isSiteEnabled">
+
+                <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.pmr.id}}
+                         name={{WebExUserSettings2.userSettingsModel.pmr.id}}
+                         label={{WebExUserSettings2.userSettingsModel.pmr.label}}
+                         ng-model="WebExUserSettings2.userSettingsModel.pmr.value"
+                         >
+            </cs-checkbox>
+
+        </div>
+
         <div id="videoPrivileges"
              name="videoPrivileges"
              ng-if="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled">
     
-          <p>
-            <b>
-              {{WebExUserSettings2.userSettingsModel.videoSettings.label}}
-            </b>
-          </p>
+          
     
           <div ng-if="WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled">
             <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.videoSettings.hiQualVideo.id}}
