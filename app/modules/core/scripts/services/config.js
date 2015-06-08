@@ -346,6 +346,11 @@ angular.module('Core')
           squaredUC: 'SQUAREDUC'
         },
 
+        organizations: {
+          collab: 'COLLAB',
+          squaredUC: 'SQUAREDUC'
+        },
+
         backend_roles: { // as stored in the ci
           full_admin: 'id_full_admin',
           all: 'atlas-portal.all',
@@ -754,7 +759,8 @@ angular.module('Core')
           'devices2'
         ],
         'squared-team-member': [
-          'organization'
+          'organization',
+          'organizationAdd'
         ],
         'squared-fusion-media': [
           'meetings',

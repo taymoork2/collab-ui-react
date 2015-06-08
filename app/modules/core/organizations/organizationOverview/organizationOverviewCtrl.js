@@ -3,8 +3,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('OrganizationOverviewCtrl', ['$rootScope', '$scope', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
-    function ($rootScope, $scope, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
+  .controller('OrganizationOverviewCtrl', ['$rootScope', '$scope', '$state', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
+    function ($rootScope, $scope, $state, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
 
       $scope.orgName = Authinfo.getOrgName();
 
@@ -73,6 +73,13 @@ angular.module('Core')
         var dlg = $dialogs.create('modules/core/organizations/organizationOverview/setupdirsync.html', 'setupDirSyncDialogCtrl');
         dlg.result.then(function () {
 
+        });
+      };
+
+      $scope.openAddOrganizationModal = function () {
+        $state.go('organizationAdd.info').then(function () {
+          $state.modal.result.then(function () {
+          });
         });
       };
     }

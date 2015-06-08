@@ -437,6 +437,29 @@ angular
           controller: 'OrganizationOverviewCtrl',
           parent: 'main'
         })
+        .state('organizationAdd', {
+          abstract: true,
+          parent: 'modal',
+          views: {
+            'modal@': {
+              template: '<div ui-view></div>',
+              controller: 'OrganizationAddCtrl',
+              controllerAs: 'organization'
+            }
+          }
+        })
+        .state('organizationAdd.info', {
+          templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
+        })
+        .state('organizationAdd.addNumbers', {
+          templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
+          controller: 'DidAddCtrl',
+          controllerAs: 'didAdd',
+          params: {
+            currentTrial: {},
+            currentOrg: {}
+          }
+        })
         .state('site-list', {
           url: '/site-list',
           templateUrl: 'modules/core/siteList/siteList.tpl.html',

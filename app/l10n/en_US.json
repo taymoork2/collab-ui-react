@@ -225,7 +225,24 @@
     "update": "Update",
     "reset": "Refresh",
     "dirSync": "Dirsync Enabled",
-    "sso": "SSO Enabled"
+    "sso": "SSO Enabled",
+    "addOrganization": "Add Organization",
+    "companyPartnerName": "Company / Partner Name",
+    "adminEmail": "Administrator Email",
+    "collab": "Standard Team Rooms + Party Meetings",
+    "squaredUC": "Advanced Spark Call",
+    "duration": "Trial Duration (days)",
+    "ninetyDays": "90",
+    "onehundredtwentyDays": "120",
+    "onehundredeightyDays": "180",
+    "numberOfLicenses": "Number of Licenses",
+    "invalidOrganizationLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "organizationInformation": "Organization Information",
+    "createOrganization": "Create Organization",
+    "cancel": "Cancel",
+    "termsOfOrganization": "Terms of Organization",
+    "isPartner": "Is this organization a partner?",
+    "beId": "BeID"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"

@@ -2,7 +2,7 @@
 
 angular
   .module('Core')
-  .service('AccountService', ['$http', '$rootScope', 'Config',
+  .service('AccountOrgService', ['$http', '$rootScope', 'Config',
     function ($http, $rootScope, Config) {
       var accountUrl = Config.getAdminServiceUrl();
       return {
