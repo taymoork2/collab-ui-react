@@ -3,25 +3,37 @@
 describe('ConfigService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var Service, $location;
-  var rootPath = 'https://hercules-integration.wbx2.com';
+  var Service, win;
+  var rootPath;
 
-  beforeEach(inject(function ($injector, _$location_, _ConfigService_) {
+  beforeEach(function () {
+    module(function ($provide) {
+      win = {
+        location: {
+          search: ''
+        },
+        document: window.document
+      };
+      $provide.value('$window', win);
+    });
+  });
+
+  beforeEach(inject(function ($injector, _ConfigService_, Config) {
     Service = _ConfigService_;
-    $location = _$location_;
+    rootPath = Config.getHerculesUrl();
   }));
 
   it('should return the correct url', function () {
-    expect(Service.getUrl()).toBe(rootPath + '/v1');
+    expect(Service.getUrl()).toBe(rootPath + 'v1');
   });
 
   it('should be possible to override url', function () {
-    $location.search('hercules-url', 'fake-url');
+    win.location.search = 'hercules-url=fake-url';
     expect(Service.getUrl()).toBe('fake-url');
   });
 
   it('should return a decoded overridden url', function () {
-    $location.search('hercules-url', 'this%20is%21an%2Bencoded%25url');
+    win.location.search = 'hercules-url=this%20is%21an%2Bencoded%25url';
     expect(Service.getUrl()).toBe('this is!an+encoded%url');
   });
 
@@ -30,7 +42,7 @@ describe('ConfigService', function () {
   });
 
   it('should be possible to override USS url', function () {
-    $location.search('uss-url', 'fake-url');
+    win.location.search = 'uss-url=fake-url';
     expect(Service.getUSSUrl()).toBe('fake-url');
   });
 });
