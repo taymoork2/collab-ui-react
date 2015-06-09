@@ -123,15 +123,6 @@
   font-size: 12px;
 }
 
-.wizard-row-padding {
-  padding-top:5px;
-}
-
-.wizard-top-padding {
-  padding-top:7px;
-  width: auto;
-}
-
 .wizard-onboard-container {
   top: 2em;
   width: 100%;
@@ -184,5 +175,76 @@
   }
   .domain {
     margin-left: 15px;
+  }
+}
+
+.service-setup-container {
+  padding-left: 20px;
+
+  .form-group {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .has-feedback .form-control-feedback {
+    right: 0;
+  }
+
+  .service-setup {
+    label {
+      font-size: 24px;
+    }
+
+    .hide-delete {
+      visibility: hidden;
+    }
+
+    .service-setup-timezone {
+      .formly-input-wrapper {
+        width: 50%
+      }
+    }
+
+    .service-setup-steering-digit {
+      .formly-input-wrapper {
+        width: 10%
+      }
+    }
+
+    .service-setup-site-code {
+      .formly-input-wrapper {
+        width: 15%
+      }
+    }
+
+    &.service-setup-extension {
+      .formly-field-group {
+        margin-bottom: 10px;
+      }
+
+      .form-group {
+        margin-bottom: 5px;
+      }
+    }
+
+    .service-setup-extension-range {
+      width: 55%;
+    }
+
+    .service-setup-extension-range-to {
+      margin-right: 30px;
+    }
+
+    .service-setup-company-voicemail {
+      margin-top: 15px;
+
+      .col-xs-3 {
+        padding-left: 0;
+      }
+    }
+
+    .service-setup-moh {
+      width: 50%;
+    }
   }
 }

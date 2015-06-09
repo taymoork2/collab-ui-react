@@ -513,6 +513,7 @@
   },
   "serviceSetupModal": {
     "timeZone": "Time Zone",
+    "searchTimeZone": "Search for a time zone...",
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
@@ -541,7 +542,8 @@
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
-    "extensionAddError": "Failed to create extension {{extension}}."
+    "extensionAddError": "Failed to create extension {{extension}}.",
+    "greaterThanLessThan": "{{beginNumber}}  must be less than or equal to {{endNumber}}."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1382,7 +1384,8 @@
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
     "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
-    "specialCharacters": "This entry contains special characters."
+    "specialCharacters": "This entry contains special characters.",
+    "numeric": "Field can contain digits 0 to 9."
   },
   "CsdmStatus": {
     "Online": "Online",

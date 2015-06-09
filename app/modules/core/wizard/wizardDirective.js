@@ -294,6 +294,7 @@
     function closeModal() {
       $state.modal.close();
     }
+
   }
 
   function crWizard() {

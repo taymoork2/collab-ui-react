@@ -700,7 +700,10 @@ angular
         .state('firsttimewizard', {
           parent: 'firsttimesplash',
           template: '<cr-wizard tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
-          controller: 'SetupWizardCtrl'
+          controller: 'SetupWizardCtrl',
+          data: {
+            firstTimeSetup: true
+          }
         })
         .state('setupwizardmodal', {
           parent: 'wizardmodal',
@@ -712,6 +715,9 @@ angular
           },
           params: {
             currentTab: {}
+          },
+          data: {
+            firstTimeSetup: false
           }
         });
     }
