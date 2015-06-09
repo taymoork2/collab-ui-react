@@ -91,4 +91,3 @@ angular.module('Core')
       }
     }
   ]);
-

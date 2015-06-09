@@ -78,8 +78,7 @@ angular.module('Core')
 
       $scope.openAddOrganizationModal = function () {
         $state.go('organizationAdd.info').then(function () {
-          $state.modal.result.then(function () {
-          });
+          $state.modal.result.then(function () {});
         });
       };
     }

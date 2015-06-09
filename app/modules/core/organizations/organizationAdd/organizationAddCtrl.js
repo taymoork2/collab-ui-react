@@ -15,7 +15,7 @@
     vm.offers = {};
     vm.model = {
       licenseCount: 100,
-      duration: 90,
+      duration: 90
     };
 
     vm.orgInfoFields = [{
@@ -41,8 +41,7 @@
       }
     }];
 
-    vm.organizationTermsFields = [
-    {
+    vm.organizationTermsFields = [{
       key: 'isPartner',
       type: 'checkbox',
       templateOptions: {
