@@ -1,6 +1,5 @@
 'use strict';
 
-
 describe('Service: CsdmService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
@@ -12,7 +11,11 @@ describe('Service: CsdmService', function () {
       notification = {
         notify: sinon.stub()
       };
-      $provide.value('Authinfo', {getOrgId: function(){return 'myyoloorg';}});
+      $provide.value('Authinfo', {
+        getOrgId: function () {
+          return 'myyoloorg';
+        }
+      });
       $provide.value('XhrNotificationService', notification);
     });
   });
@@ -33,10 +36,18 @@ describe('Service: CsdmService', function () {
   it('should fetch data when fill cache is called', function () {
     $httpBackend
       .when('GET', rootPath + '/organization/myyoloorg/devices')
-      .respond({"device": {foo: "bar"}});
+      .respond({
+        "device": {
+          foo: "bar"
+        }
+      });
     $httpBackend
       .when('GET', rootPath + '/organization/myyoloorg/codes')
-      .respond({"code": {bar: "baz"}});
+      .respond({
+        "code": {
+          bar: "baz"
+        }
+      });
 
     var callback = sinon.stub();
     Service.fillCodesAndDevicesCache(callback);
@@ -44,8 +55,11 @@ describe('Service: CsdmService', function () {
 
     expect(callback.callCount).toBe(1);
     expect(Service.listCodesAndDevices().length).toBe(2);
-    expect(Service.listCodesAndDevices()[0]).toEqual({bar: "baz"});
-    expect(Service.listCodesAndDevices()[1]).toEqual({foo: "bar"});
+    expect(Service.listCodesAndDevices()[0]).toEqual({
+      bar: "baz"
+    });
+    expect(Service.listCodesAndDevices()[1]).toEqual({
+      foo: "bar"
+    });
   });
 });
-
