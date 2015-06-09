@@ -76,6 +76,10 @@ angular.module('Hercules')
             }
           }
 
+          if (connector.state != 'disabled' && service.service_type != 'c_mgmt') {
+            cluster.any_service_connectors_enabled = true;
+          }
+
         });
         if (service.running_hosts) {
           cluster.running_hosts = true;
