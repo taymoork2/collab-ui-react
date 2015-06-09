@@ -1,0 +1,14 @@
+<cs-accordion id="noServiceConnectorsEnabledAction" ng-show="clustersWithoutServiceConnectorsEnabled">
+  <cs-accordion-group
+    is-open="false"
+    show-caret="true"
+    display-status="warning"
+    heading="No Service Connectors Enabled.">
+
+    <div style="margin: 0 0 10px;">
+      <p>The are Expressway cluster(s) that have no Service Connectors enabled.</p>
+      <p>Sign in to the Expressway (master peer if clustered) and go to Applications > Cloud Extensions > Cloud Extensions Connectors to configure and enable a Connector.</p>
+    </div>
+
+  </cs-accordion-group>
+</cs-accordion>

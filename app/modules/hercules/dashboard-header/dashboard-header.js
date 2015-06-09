@@ -52,6 +52,8 @@
             return 'icon icon-circle-call';
           case 'squared-fusion-media':
             return 'icon icon-circle-telepresence';
+          case 'contact-center-context':
+            return 'icon icon-circle-world';
           default:
             return 'icon icon-circle-question';
           }

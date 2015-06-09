@@ -648,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Call",
       "squared-fusion-cal": "Calendar",
-      "squared-fusion-media": "Media"
+      "squared-fusion-media": "Media",
+      "contact-center-context": "Context Center"
     }
   },
   "firstTimeWizard": {
