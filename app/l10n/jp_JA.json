@@ -5,6 +5,7 @@
     "loading": "ロード中"
   },
   "usersPage": {
+    "assignServices": "サービスの割り当て",
     "inviteModalBtn": "ユーザーを招待する",
     "manageUsers": "ユーザー",
     "subTitleAdd": "ユーザーの管理",
@@ -48,14 +49,17 @@
     "deleteUser": "ユーザーの削除",
     "deleteUserConfText": "このデバイス{{email}}を削除してもよいですか ?",
     "resend": "招待の再送信",
+    "resendActivation": "アクティブ化の再送信",
     "deleteUserSuccess": "ユーザー {{email}} は正常に削除されました",
     "deleteUserError": "ユーザーの削除中にエラーが発生しました。ステータス: {{status}}",
     "onboardSuccess": "{{email}} が正常にオンボードしました",
     "onboardError": "{{email}} はオンボードされませんでした。ステータス: {{status}}",
-    "ciscoucError": "{{email}} は単一化されたコミュニケーションをプロビジョニングしませんでした。",
+    "ciscoucError": "{{email}} は Unified Communications に参加できませんでした。",
     "statusError": "リクエストに失敗し、ステータスが表示されました: {{status}}。",
     "messageError": "メッセージ: {{message}}",
-    "userListError": "ユーザーリストの取得時にエラーが発生しました。ページを再ロードしてください。"
+    "userListError": "ユーザーリストの取得時にエラーが発生しました。ページを再ロードしてください。",
+    "emailSuccess": "メールは正常に送信されました",
+    "emailError": "電子メールの送信中にエラーが発生しました"
   },
   "groupsPage": {
     "manageGroups": "グループ",
@@ -92,7 +96,7 @@
     "freeConf": "無料3当事者Sparkミーティング",
     "freeComm": "無料の 1:1 Spark 通話",
     "paidMsg": "標準チームルーム",
-    "paidConf": "25 パーティミーティング",
+    "paidConf": "パーティミーティング",
     "paidComm": "高度な Spark 通話",
     "freeSpark": "無料Sparkメッセージ",
     "enterpriseEdition": "エンタープライズ編集",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "コミュニケーション",
-    "cloudExtensions": "クラウド拡張機能"
+    "cloudExtensions": "クラウド拡張機能",
+    "cmr": "コラボレーションミーティングルーム"
   },
   "usersPreview": {
     "groupPreview": "グループ：",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "組織の詳細の管理、割り当てサービスの表示、ツールへのアクセスを行います。",
     "fusionDetailsTab": "コネクタ管理",
     "fusionDetailsTabDesc": "コネクタ管理",
+    "MediafusionDetailsTab": "ミーティングフュージョン管理",
+    "MediafusionDetailsTabDesc": "ミーティングフュージョン管理",
     "callRoutingTab": "呼び出しルーティング",
     "callRoutingTabDesc": "コールパークのような呼び出しルーティング機能を管理します。",
     "mediaOnHoldTab": "ホールド時メディア",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "アクティブ",
     "activeUsers": "アクティブなユーザー",
-    "activeUserGraphError": "アクティブユーザーのデータをロード中にエラーが発生しました。",
+    "activeUserGraphError": "{{customer}} に対しアクティブユーザーデータをロードしている間にエラーが発生しました。",
     "activeUserTableError": "The{{customer}} のほとんどのアクティブなユーザーのデータをロードしている間にエラーが発生しました。",
     "calls": "通話",
     "customer": "カスタマ",
@@ -257,6 +264,16 @@
     "squaredActivity": "Squaredアクティビティ",
     "user": "ユーザー",
     "users": "ユーザー"
+  },
+  "mediaQuality": {
+    "mediaQuality": "メディアクオリティ",
+    "totalCalls": "トータルコール",
+    "excellent": "素晴らしい",
+    "good": "良くできました",
+    "fair": "公平",
+    "poor": "不良",
+    "description": "メディアクオリティは、選択した期間中の接続された通話すべての品質の内訳を提供します。メディアクオリティの詳細は、{knowledge base} を参照してください。",
+    "mediaQualityGraphError": "メディアクオリティデータのロード中にエラーが発生しました。"
   },
   "profilePage": {
     "userProfile": "ユーザーのプロファイル",
@@ -356,7 +373,12 @@
     "finish": "完了",
     "language": "言語",
     "selectLanguage": "言語の選択",
-    "select": "選択"
+    "select": "選択",
+    "invalidRequired": "このフィールドは必須です。",
+    "invalidEmail": "これは有効な電子メールアドレスではありません。",
+    "invalidUrl": "これは有効なURLではありません。",
+    "invalidMinLength": "この入力内容は短すぎます。",
+    "invalidMaxLength": "この入力内容は長すぎます。"
   },
   "notifications": {
     "success": "成功の通知",
@@ -411,7 +433,7 @@
     "enableSSO": "サードパーティのアイデンティティ・プロバイダを統合。(Advanced)",
     "disableSSO": "内蔵のアイデンティティ・サービスを認証に利用。(Simple)",
     "importMetadataTitle": "IdP メタデータのインポート",
-    "exportMetadataTitle": "クラウドメタデータのエクスポート",
+    "exportMetadataTitle": "ディレクトリメタデータのエクスポート",
     "testSSOSetupTitle": "SSO セットアップのテスト",
     "enableSSOTitle": "SSO を有効にする",
     "importMetadataDesc": "IdP から信頼メタデータファイルを取得して、ここにアップロードすることにより、自分の ID プロバイダ（IdP）とシスココラボレーションクラウドの間での信頼関係の設定を開始します。",
@@ -479,7 +501,7 @@
     "title": "ディレクトリの同期",
     "manualTitle": "ユーザーの入力",
     "yourDomainTitle": "自分のドメイン",
-    "installTitle": "クラウドコネクタのインストール",
+    "installTitle": "Directory Connector のインストール",
     "syncStatus": "同期の状況",
     "grantServices": "サービスの提供",
     "connectionTitle": "接続",
@@ -488,7 +510,7 @@
     "domain": "ドメイン",
     "defaultPlaceholder": "デフォルト",
     "domainDesc": "同期の対象とする Active Directory のドメインを識別します。",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> エンタープライズで Cisco Cloud Connector をダウンロード</a>し、インストールします。",
+    "installStep1": "1. あなたの会社で Cisco Directory Connector を <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> ダウンロードして </a> インストールします。",
     "installStep2": "2. Active Directory の同期の合意を設定します。",
     "installStep3": "3. 同期の合意をテストします。",
     "nextSteps": "ID 情報が同期中であることを確認する準備ができたら [次へ] ボタンをクリックします。",
@@ -592,8 +614,9 @@
       "error": "エラー"
     },
     "serviceNames": {
-      "squared-fusion-uc": "フュージョンUC",
-      "squared-fusion-cal": "フュージョンカレンダー"
+      "squared-fusion-uc": "通話",
+      "squared-fusion-cal": "カレンダー",
+      "squared-fusion-media": "メディア"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Active Directory の同期",
     "manualTitle": "ユーザーの入力",
     "yourDomainTitle": "自分のドメイン",
-    "installTitle": "クラウドコネクタのインストール",
+    "installTitle": "Directory Connector のインストール",
     "syncStatus": "同期の状況",
     "domain": "ドメイン",
     "defaultPlaceholder": "デフォルト",
     "domainDesc": "同期の対象とする Active Directory のドメインを識別します。",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> エンタープライズで Cisco Cloud Connector をダウンロード</a>し、インストールします。",
+    "installStep1": "1. あなたの会社で Cisco Directory Connector を <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> ダウンロードして </a> インストールします。",
     "installStep2": "2. Active Directory の同期の合意を設定します。",
     "installStep3": "3. 同期の合意をテストします。",
     "nextSteps": "ID 情報が同期中であることを確認する準備ができたら [次へ] ボタンをクリックします。",
@@ -648,7 +671,7 @@
     "manualInvite": "会社でコラボレーションサービスを受ける人々のメールアドレスを入力してください。サインアップのためのメールの招待状が送られます。",
     "domainEntry": "ドメインの入力",
     "domainSubDesc": "同期先の AD ドメインを入力してください：",
-    "connectorSteps": "クラウドコネクタをインストールするにはこれらの手順に従ってください。",
+    "connectorSteps": "Directory Connector をインストールするには以下のステップに従ってください。",
     "readyToGo": "始めましょう !",
     "finishDesc": "セットアップウィザードを完了しました。スキップしたステップがある場合、または設定のいずれかを変更する必要がある場合には、ページの右上隅の歯車のアイコンをクリックして、このパネルをもう一度表示してください。",
     "finish": "完了",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "ライセンス数",
     "name": "名前",
     "edit": "編集",
-    "saveSendReminder": "保存してリマインダを送信",
     "partnerHeading": "採用と契約",
     "entitlementsTitle": "オンボードのユーザー",
     "activeUsersTitle": "毎日のアクティブなユーザー",
     "averageCallsTitle": "ユーザーごとの平均通話数",
-    "contentSharedTitle": "共有したファイル"
+    "contentSharedTitle": "共有したファイル",
+    "invalidTrialLicenseCount": "ライセンスの数は 0 より大きく、1000 より小さいです。"
   },
   "trialModal": {
     "trialSuccess": "試用のセットアップが完了しました。",
@@ -870,7 +893,7 @@
     "editSuccess": "{{licenseDuration}} 日間の{{licenseCount}} ライセンスを持つ {{customerName}}に対するトライアルを編集しました。"
   },
   "trials": {
-    "collab": "標準チームルーム + 25 パーティミーティング",
+    "collab": "標準チームルーム + パーティミーティング",
     "squaredUC": "高度な Spark 通話"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": ".メールは正常にカスタマに送信されました。",
     "emailFailText": "メール送信でエラー",
     "inputPlacehoder": "コンマで区切られた電話番号を入力",
-    "didFormatHelpText": "フォーマットの例: 15556667777、+15556667777、1-555-666-7777、15556667777、+1 (555) 666-7777"
+    "didFormatHelpText": "例: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "デバイス構成",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "クラウドから切断され、オフラインになります",
     "cancel": "キャンセル",
     "deleteResource": "コミッション解除リソース"
+  },
+  "mediaFusion": {
+    "page_title": "ミーティングフュージョン管理",
+    "connectors": {
+      "group_by": "グループサービス：",
+      "cluster_id": "クラスタ",
+      "host_name": "Expressway ホスト",
+      "display_name": "サービス名",
+      "connector_type": "接続種類",
+      "serial": "シリアル",
+      "version": "バージョン",
+      "status": "状況",
+      "alarms": "アラーム"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "セッションの種類の権能割賦が更新されました。",

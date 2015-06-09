@@ -5,6 +5,7 @@
     "loading": "Wird geladen"
   },
   "usersPage": {
+    "assignServices": "Dienste zuweisen",
     "inviteModalBtn": "Benutzer einladen",
     "manageUsers": "Benutzer",
     "subTitleAdd": "Benutzer verwalten",
@@ -48,14 +49,17 @@
     "deleteUser": "Benutzer löschen",
     "deleteUserConfText": "Sind Sie sicher, dass Sie {{email}} löschen möchten?",
     "resend": "Einladung erneut versenden",
+    "resendActivation": "Aktivierung erneut versenden",
     "deleteUserSuccess": "Benutzer {{email}} erfolgreich gelöscht",
     "deleteUserError": "Fehler beim Löschen des Benutzers. Status: {{status}}",
     "onboardSuccess": "{{email}} erfolgreich aufgenommen",
     "onboardError": "{{email}} nicht aufgenommen. Status: {{status}}",
-    "ciscoucError": "{{email}} hat keine einheitliche Kommunikation bereitgestellt.",
+    "ciscoucError": "{{email}} konnte sich nicht erfolgreich bei Unified Communications anmelden.",
     "statusError": "Anforderung fehlgeschlagen mit Status: {{status}}.",
     "messageError": "Nachricht: {{message}}",
-    "userListError": "Fehler beim Abrufen der Benutzerliste. Laden Sie die Seite erneut hoch."
+    "userListError": "Fehler beim Abrufen der Benutzerliste. Laden Sie die Seite erneut hoch.",
+    "emailSuccess": "E-Mail erfolgreich versendet.",
+    "emailError": "Fehler beim Versenden der E-Mail."
   },
   "groupsPage": {
     "manageGroups": "Gruppen",
@@ -92,7 +96,7 @@
     "freeConf": "Kostenloser Meetingdienst mit 3 Parteien",
     "freeComm": "Kostenfreier 1:1-Spark-Anruf",
     "paidMsg": "Standard-Teamräume",
-    "paidConf": "Meetings mit 25 Parteien",
+    "paidConf": "Teilnehmerbesprechungen",
     "paidComm": "Erweiterter Spark-Anruf",
     "freeSpark": "Kostenloser Spark Nachrichtendienst",
     "enterpriseEdition": "Enterprise Edition",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Kommunikation",
-    "cloudExtensions": "Cloud-Erweiterungen"
+    "cloudExtensions": "Cloud-Erweiterungen",
+    "cmr": "Meeting-Räume für die Zusammenarbeit"
   },
   "usersPreview": {
     "groupPreview": "Gruppe:",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "Organisationsdetails verwalten, zugewiesene Dienste und Zugriffstools anzeigen.",
     "fusionDetailsTab": "Verbindungsmanagement",
     "fusionDetailsTabDesc": "Verbindungsmanagement",
+    "MediafusionDetailsTab": "Media Fusion Management",
+    "MediafusionDetailsTabDesc": "Media Fusion Management",
     "callRoutingTab": "Anrufverteilung",
     "callRoutingTabDesc": "Anrufverteilungsfunktionen wie „Anruf parken“ verwalten",
     "mediaOnHoldTab": "Medien angehalten",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "Aktiv",
     "activeUsers": "Aktive Benutzer",
-    "activeUserGraphError": "Beim Laden der aktiven Benutzerdaten ist ein Fehler aufgetreten.",
+    "activeUserGraphError": "Beim Laden der Daten zu aktiven Benutzern bei {{customer}} ist ein Fehler aufgetreten.",
     "activeUserTableError": "Beim Laden der Daten zu Benutzern mit der höchsten Aktivität bei {{customer}} ist ein Fehler aufgetreten.",
     "calls": "Anrufe",
     "customer": "Kunde",
@@ -257,6 +264,16 @@
     "squaredActivity": "Squared Aktivität",
     "user": "Benutzer",
     "users": "Benutzer"
+  },
+  "mediaQuality": {
+    "mediaQuality": "Medienqualität",
+    "totalCalls": "Anrufe insgesamt",
+    "excellent": "Hervorragend",
+    "good": "Gut",
+    "fair": "Zufriedenstellend",
+    "poor": "Schlecht",
+    "description": "Die Medienqualität liefert eine Übersicht über die Qualität aller verbundenen Anrufe während des ausgewählten Zeitraums. Weitere Informationen zur Medienqualität finden Sie in der {knowledge base}.",
+    "mediaQualityGraphError": "Beim Laden der Medienqualitätsdaten ist ein Fehler aufgetreten."
   },
   "profilePage": {
     "userProfile": "Benutzerprofil",
@@ -356,7 +373,12 @@
     "finish": "Beenden",
     "language": "Sprache",
     "selectLanguage": "Sprache auswählen",
-    "select": "Auswählen"
+    "select": "Auswählen",
+    "invalidRequired": "Dieses Feld muss ausgefüllt werden.",
+    "invalidEmail": "Dies ist eine gültige E-Mail-Adresse.",
+    "invalidUrl": "Dies ist keine gültige URL.",
+    "invalidMinLength": "Dieser Eintrag ist zu kurz.",
+    "invalidMaxLength": "Dieser Eintrag ist zu lang."
   },
   "notifications": {
     "success": "Erfolgsmeldungen",
@@ -411,7 +433,7 @@
     "enableSSO": "Drittanbieter-Identity Provider integrieren . (Fortgeschritten)",
     "disableSSO": "Integrierten Identity Service für die Benutzerauthentifizierung verwenden. (Einfach)",
     "importMetadataTitle": "IdP-Metadaten importieren",
-    "exportMetadataTitle": "Cloud-Metadaten exportieren",
+    "exportMetadataTitle": "Verzeichnis-Metadaten exportieren",
     "testSSOSetupTitle": "SSO-Einrichtung prüfen",
     "enableSSOTitle": "SSO aktivieren",
     "importMetadataDesc": "Beginnen Sie mit der Konfiguration der Vertrauensstellung zwischen Ihrem Identitätsanbieter (IdP) und der Cisco Collaboration Cloud, indem Sie bei Ihrem IdP eine Vertrauensmetadaten-Datei abrufen und hier hochladen.",
@@ -479,7 +501,7 @@
     "title": "Directory Sync",
     "manualTitle": "Benutzereintrag",
     "yourDomainTitle": "Ihre Domäne",
-    "installTitle": "Cloud Connector installieren",
+    "installTitle": "Directory Connector installieren",
     "syncStatus": "Synchronisierungsstatus",
     "grantServices": "Dienste gewähren",
     "connectionTitle": "Verbindung",
@@ -488,7 +510,7 @@
     "domain": "Domäne",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Geben Sie die Active Directory-Domäne an, die Sie synchronisieren möchten.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Herunterladen </a> und Installation von Cisco Cloud Connector in Ihrem Unternehmen.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> </a>Laden Sie den Cisco Directory Connector herunter, um ihn in Ihrem Unternehmen zu installieren.",
     "installStep2": "2. Die Vereinbarung zur Active Directory-Synchronisierung konfigurieren.",
     "installStep3": "3. Die Synchronisierungsvereinbarung prüfen.",
     "nextSteps": "Drücken Sie auf die Schaltfläche „Weiter“, sobald Sie zur Überprüfung der Synchronisierung der Identitätsdaten bereit sind.",
@@ -592,8 +614,9 @@
       "error": "Fehler"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusion-Kalender"
+      "squared-fusion-uc": "Anruf",
+      "squared-fusion-cal": "Kalender",
+      "squared-fusion-media": "Medien"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Active Directory Sync",
     "manualTitle": "Benutzereintrag",
     "yourDomainTitle": "Ihre Domäne",
-    "installTitle": "Cloud Connector installieren",
+    "installTitle": "Directory Connector installieren",
     "syncStatus": "Synchronisierungsstatus",
     "domain": "Domäne",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Geben Sie die Active Directory-Domäne an, die Sie synchronisieren möchten.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Herunterladen </a> und Installation von Cisco Cloud Connector in Ihrem Unternehmen.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> </a>Laden Sie den Cisco Directory Connector herunter, um ihn in Ihrem Unternehmen zu installieren.",
     "installStep2": "2. Die Vereinbarung zur Active Directory-Synchronisierung konfigurieren.",
     "installStep3": "3. Die Synchronisierungsvereinbarung prüfen.",
     "nextSteps": "Drücken Sie auf die Schaltfläche „Weiter“, sobald Sie zur Überprüfung der Synchronisierung der Identitätsdaten bereit sind.",
@@ -648,7 +671,7 @@
     "manualInvite": "Geben Sie die E-Mail-Adresse der Mitarbeiter in Ihrem Unternehmen ein, die Collaboration Services erhalten. Diese erhalten eine E-Mail zur Anmeldung.",
     "domainEntry": "Domäneneintrag",
     "domainSubDesc": "Geben Sie die zu synchronisierende AD-Domäne an:",
-    "connectorSteps": "Führen Sie folgende Schritte aus, um den Cloud Connector zu installieren:",
+    "connectorSteps": "Führen Sie folgende Schritte aus, um den Directory Connector zu installieren:",
     "readyToGo": "Jetzt können Sie loslegen!",
     "finishDesc": "Sie haben den Einrichtungsassistenten abgeschlossen. Wenn Sie Schritte übersprungen haben oder noch Einstellungen ändern müssen, klicken Sie auf das Symbol „Antrieb“ rechts oben auf der Seite, um dieses Schema erneut aufzurufen.",
     "finish": "Beenden",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "Anzahl Lizenzen",
     "name": "Name",
     "edit": "Bearbeiten",
-    "saveSendReminder": "Speichern und Erinnerung senden",
     "partnerHeading": "Umsetzung und Engagement",
     "entitlementsTitle": "Aufgenommene Benutzer",
     "activeUsersTitle": "Täglich aktive Benutzer",
     "averageCallsTitle": "Durchschnittliche Anrufe pro Benutzer",
-    "contentSharedTitle": "Geteilte Dateien"
+    "contentSharedTitle": "Geteilte Dateien",
+    "invalidTrialLicenseCount": "Die Anzahl der Lizenzen sollte über 0 und unter 1000 liegen."
   },
   "trialModal": {
     "trialSuccess": "Sie haben den Test erfolgreich eingerichtet.",
@@ -870,7 +893,7 @@
     "editSuccess": "Sie haben einen Test für {{customerName}} mit {{licenseCount}} Lizenzen für {{licenseDuration}} Tage erfolgreich bearbeitet."
   },
   "trials": {
-    "collab": "Standard-Teamräume für Meetings mit mehr als 25 Parteien",
+    "collab": "Standard-Teamräume + Teilnehmer-Meetings",
     "squaredUC": "Erweiterter Spark-Anruf"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "E-Mail erfolgreich an Kunden versendet.",
     "emailFailText": "Fehler beim Versenden der E-Mail",
     "inputPlacehoder": "Telefonnummern durch Kommas getrennt eingeben",
-    "didFormatHelpText": "Beispielformate: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "Beispiele: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Gerätekonfiguration",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "Sie wird von der Cloud getrennt und offline gestellt.",
     "cancel": "Abbrechen",
     "deleteResource": "Ressource deaktivieren"
+  },
+  "mediaFusion": {
+    "page_title": "Media Fusion Management",
+    "connectors": {
+      "group_by": "Dienste gruppieren nach:",
+      "cluster_id": "Cluster",
+      "host_name": "Expressway-Host",
+      "display_name": "Dienstname",
+      "connector_type": "Steckverbindertyp",
+      "serial": "Seriell",
+      "version": "Version",
+      "status": "Status",
+      "alarms": "Alarme"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Sitzungstyp-Aktivierung aktualisiert.",

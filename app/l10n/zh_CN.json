@@ -5,6 +5,7 @@
     "loading": "正在加载"
   },
   "usersPage": {
+    "assignServices": "分配服务",
     "inviteModalBtn": "邀请用户",
     "manageUsers": "用户",
     "subTitleAdd": "管理用户",
@@ -48,14 +49,17 @@
     "deleteUser": "删除用户",
     "deleteUserConfText": "确定要删除 {{email}} 吗？",
     "resend": "重新发送邀请",
+    "resendActivation": "重新发送激活",
     "deleteUserSuccess": "用户 {{email}} 已成功删除",
     "deleteUserError": "删除用户时出错。状态：{{status}}",
     "onboardSuccess": "{{email}} 已成功在线",
     "onboardError": "{{email}} 不在线。状态：{{status}}",
-    "ciscoucError": "{{email}} 未供应统一通信。",
+    "ciscoucError": "{{email}} 未成功登录 Unified Communications。",
     "statusError": "请求失败。状态：{{status}}。",
     "messageError": "消息：{{message}}",
-    "userListError": "检索用户列表时出错。请尝试重新加载页面。"
+    "userListError": "检索用户列表时出错。请尝试重新加载页面。",
+    "emailSuccess": "电子邮件发送成功。",
+    "emailError": "发送电子邮件时出错。"
   },
   "groupsPage": {
     "manageGroups": "群",
@@ -92,7 +96,7 @@
     "freeConf": "免费第三方 Spark 会议",
     "freeComm": "免费一对一 Spark 呼叫",
     "paidMsg": "标准团队房间",
-    "paidConf": "25 方会议",
+    "paidConf": "多方会议",
     "paidComm": "高级 Spark 呼叫",
     "freeSpark": "免费 Spark 消息",
     "enterpriseEdition": "企业版",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "通信",
-    "cloudExtensions": "云扩展"
+    "cloudExtensions": "云扩展",
+    "cmr": "协作会议室"
   },
   "usersPreview": {
     "groupPreview": "群：",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "管理组织详情、查看分配的服务，以及访问工具。",
     "fusionDetailsTab": "连接器管理",
     "fusionDetailsTabDesc": "连接器管理",
+    "MediafusionDetailsTab": "媒体 Fusion 管理",
+    "MediafusionDetailsTabDesc": "媒体 Fusion 管理",
     "callRoutingTab": "呼叫路由",
     "callRoutingTabDesc": "管理呼叫驻留等呼叫路由功能",
     "mediaOnHoldTab": "媒体保持",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "活动",
     "activeUsers": "活动用户",
-    "activeUserGraphError": "加载活动用户数据时出错。",
+    "activeUserGraphError": "为 {{customer}} 加载活跃用户数据时出错。",
     "activeUserTableError": "为 {{customer}} 加载最活跃用户的数据时出错。",
     "calls": "呼叫",
     "customer": "客户",
@@ -257,6 +264,16 @@
     "squaredActivity": "Squared 活动",
     "user": "用户",
     "users": "用户"
+  },
+  "mediaQuality": {
+    "mediaQuality": "媒体质量",
+    "totalCalls": "呼叫总数",
+    "excellent": "优",
+    "good": "良",
+    "fair": "中",
+    "poor": "差",
+    "description": "媒体质量详细分析了选定时间段内连接的所有呼叫的质量。有关媒体质量的更多信息，请参阅 {knowledge base}。",
+    "mediaQualityGraphError": "加载媒体质量数据时出错。"
   },
   "profilePage": {
     "userProfile": "用户档案",
@@ -356,7 +373,12 @@
     "finish": "完成",
     "language": "语言",
     "selectLanguage": "选择语言",
-    "select": "选择"
+    "select": "选择",
+    "invalidRequired": "此字段为必填项。",
+    "invalidEmail": "此电子邮件地址无效。",
+    "invalidUrl": "此 URL 无效。",
+    "invalidMinLength": "您输入的内容过短。",
+    "invalidMaxLength": "您输入的内容过长。"
   },
   "notifications": {
     "success": "成功通知数",
@@ -411,7 +433,7 @@
     "enableSSO": "集成第三方身份提供程序。（高级）",
     "disableSSO": "将内置身份识别服务用于用户验证。（简单）",
     "importMetadataTitle": "导入 IdP 元数据",
-    "exportMetadataTitle": "导出云端元数据",
+    "exportMetadataTitle": "导出 Directory 元数据",
     "testSSOSetupTitle": "测试 SSO 设置",
     "enableSSOTitle": "启用 SSO",
     "importMetadataDesc": "开始配置身份提供程序 (IdP) 和 Cisco Collaboration Cloud 之间的信任关系，方法是从 IdP 取得信任元数据文件并在此上传。",
@@ -479,7 +501,7 @@
     "title": "目录同步",
     "manualTitle": "输入用户",
     "yourDomainTitle": "域",
-    "installTitle": "安装 Cloud Connector",
+    "installTitle": "安装 Directory Connector",
     "syncStatus": "同步状态",
     "grantServices": "授予服务权限",
     "connectionTitle": "连接",
@@ -488,7 +510,7 @@
     "domain": "域",
     "defaultPlaceholder": "缺省值",
     "domainDesc": "识别要同步的 Active Directory 域。",
-    "installStep1": "1. 在企业中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下载</a>并安装 Cisco Cloud Connector。",
+    "installStep1": "1. 在企业中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下载</a>并安装 Cisco Directory Connector。",
     "installStep2": "2. 配置 Active Directory 同步协议。",
     "installStep3": "3. 测试同步协议。",
     "nextSteps": "准备好验证要同步的身份信息后，请按“下一步”按钮。",
@@ -592,8 +614,9 @@
       "error": "错误"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusion 日历"
+      "squared-fusion-uc": "呼叫",
+      "squared-fusion-cal": "日历",
+      "squared-fusion-media": "媒体"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Active Directory 同步",
     "manualTitle": "输入用户",
     "yourDomainTitle": "域",
-    "installTitle": "安装 Cloud Connector",
+    "installTitle": "安装 Directory Connector",
     "syncStatus": "同步状态",
     "domain": "域",
     "defaultPlaceholder": "缺省值",
     "domainDesc": "识别要同步的 Active Directory 域。",
-    "installStep1": "1. 在企业中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下载</a>并安装 Cisco Cloud Connector。",
+    "installStep1": "1. 在企业中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下载</a>并安装 Cisco Directory Connector。",
     "installStep2": "2. 配置 Active Directory 同步协议。",
     "installStep3": "3. 测试同步协议。",
     "nextSteps": "准备好验证要同步的身份信息后，请按“下一步”按钮。",
@@ -648,7 +671,7 @@
     "manualInvite": "输入公司中将接收协作服务的人员的电子邮件地址。这些人员将收到注册的电子邮件邀请。",
     "domainEntry": "输入域",
     "domainSubDesc": "输入要与其进行同步的 AD 域：",
-    "connectorSteps": "遵循这些步骤以安装 Cloud Connector：",
+    "connectorSteps": "遵循这些步骤以安装 Directory Connector：",
     "readyToGo": "您已准备好开始！",
     "finishDesc": "您已完成设置向导。如果已跳过步骤或需要更改任何设置，请单击页面右上角的齿轮图标来再次访问这个面板。",
     "finish": "完成",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "许可证数",
     "name": "名称",
     "edit": "编辑",
-    "saveSendReminder": "保存并发送提醒",
     "partnerHeading": "采用率和参与度",
     "entitlementsTitle": "已在线用户",
     "activeUsersTitle": "每日活动用户数",
     "averageCallsTitle": "每个用户的平均呼叫数",
-    "contentSharedTitle": "已共享的文件"
+    "contentSharedTitle": "已共享的文件",
+    "invalidTrialLicenseCount": "许可证数应大于 0 并小于 1000。"
   },
   "trialModal": {
     "trialSuccess": "设置试用成功。",
@@ -870,7 +893,7 @@
     "editSuccess": "已成功为 {{customerName}} 编辑试用，许可证数为 {{licenseCount}} 个，试用期为 {{licenseDuration}} 天。"
   },
   "trials": {
-    "collab": "标准团队房间 + 25 方会议",
+    "collab": "标准团队房间 + 多方会议",
     "squaredUC": "高级 Spark 呼叫"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "电子邮件已成功发送给客户。",
     "emailFailText": "发送电子邮件时出错",
     "inputPlacehoder": "输入电话号码，以逗号分隔",
-    "didFormatHelpText": "示例格式包括：15556667777、+15556667777、1-555-666-7777、15556667777、+1 (555) 666-7777"
+    "didFormatHelpText": "例如：15556667777、+15556667777、1-555-666-7777、+1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "设备配置",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "它将与云断开连接并变为离线状态。",
     "cancel": "取消",
     "deleteResource": "停用资源"
+  },
+  "mediaFusion": {
+    "page_title": "媒体 Fusion 管理",
+    "connectors": {
+      "group_by": "服务分组依据：",
+      "cluster_id": "集群",
+      "host_name": "Expressway 主机",
+      "display_name": "服务名称",
+      "connector_type": "连接器类型",
+      "serial": "序列",
+      "version": "版本",
+      "status": "状态",
+      "alarms": "警报"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "会话类型启用已更新。",

@@ -5,6 +5,7 @@
     "loading": "載入中"
   },
   "usersPage": {
+    "assignServices": "指定服務",
     "inviteModalBtn": "邀請使用者",
     "manageUsers": "使用者",
     "subTitleAdd": "管理使用者",
@@ -48,14 +49,17 @@
     "deleteUser": "刪除使用者",
     "deleteUserConfText": "確定要刪除 {{email}} 嗎？",
     "resend": "重新傳送邀請",
+    "resendActivation": "重新傳送啟動",
     "deleteUserSuccess": "已成功刪除使用者 {{email}}",
     "deleteUserError": "刪除使用者時發生錯誤。狀態：{{status}}",
     "onboardSuccess": "已使 {{email}} 成功在線",
     "onboardError": "{{email}} 不在線。狀態：{{status}}",
-    "ciscoucError": "{{email}} 未供應 Unified Communications。",
+    "ciscoucError": "{{email}} 未成功連線 Unified Communications。",
     "statusError": "請求失敗，狀態為：{{status}}。",
     "messageError": "訊息：{{message}}",
-    "userListError": "擷取使用者清單時發生錯誤。請嘗試重新載入頁面。"
+    "userListError": "擷取使用者清單時發生錯誤。請嘗試重新載入頁面。",
+    "emailSuccess": "電子郵件已成功傳送。",
+    "emailError": "傳送電子郵件時發生錯誤。"
   },
   "groupsPage": {
     "manageGroups": "群組",
@@ -92,7 +96,7 @@
     "freeConf": "免費三方 Spark 會議",
     "freeComm": "免費的一對一 Spark 通話",
     "paidMsg": "標準小組會議室",
-    "paidConf": "25 人會議",
+    "paidConf": "多人會議",
     "paidComm": "進階 Spark 通話",
     "freeSpark": "免費 Spark 傳訊",
     "enterpriseEdition": "企業版",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "通訊",
-    "cloudExtensions": "雲端延伸"
+    "cloudExtensions": "雲端延伸",
+    "cmr": "協作會議室"
   },
   "usersPreview": {
     "groupPreview": "群組：",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "管理組織詳細資料、檢視指派的服務及存取工具。",
     "fusionDetailsTab": "連接器管理",
     "fusionDetailsTabDesc": "連接器管理",
+    "MediafusionDetailsTab": "媒體 Fusion 管理",
+    "MediafusionDetailsTabDesc": "媒體 Fusion 管理",
     "callRoutingTab": "通話路由",
     "callRoutingTabDesc": "管理呼叫駐留等通話路由功能",
     "mediaOnHoldTab": "媒體保留中",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "使用中",
     "activeUsers": "使用中的使用者",
-    "activeUserGraphError": "載入作用中的使用者資料時發生錯誤。",
+    "activeUserGraphError": "載入 {{customer}} 的作用中使用者資料時發生錯誤。",
     "activeUserTableError": "載入 {{customer}} 活動次數最多之使用者的資料時發生錯誤。",
     "calls": "通話",
     "customer": "客戶",
@@ -257,6 +264,16 @@
     "squaredActivity": "Squared 活動",
     "user": "使用者",
     "users": "使用者"
+  },
+  "mediaQuality": {
+    "mediaQuality": "媒體品質",
+    "totalCalls": "通話總數",
+    "excellent": "極好",
+    "good": "良好",
+    "fair": "一般",
+    "poor": "差",
+    "description": "媒體品質對所選期間內的所有連線通話之品質進行了分類。如需媒體品質的相關資訊，請參閱 {knowledge base}。",
+    "mediaQualityGraphError": "載入媒體品質資料時發生錯誤。"
   },
   "profilePage": {
     "userProfile": "使用者設定檔",
@@ -333,7 +350,7 @@
     "hideDetails": "隱藏詳細資料",
     "problemReports": "問題報告",
     "reportingUrl": "報告 URL：",
-    "help": " 說明",
+    "help": "說明",
     "faqs": "常見問題",
     "helpUrl": "說明 URL：",
     "sendFeedback": "Cisco 意見回饋",
@@ -356,7 +373,12 @@
     "finish": "完成",
     "language": "語言",
     "selectLanguage": "請選取語言",
-    "select": "選取"
+    "select": "選取",
+    "invalidRequired": "這是必填欄位。",
+    "invalidEmail": "這不是有效的電子郵件地址。",
+    "invalidUrl": "這不是有效的 URL。",
+    "invalidMinLength": "此項目太短。",
+    "invalidMaxLength": "此項目太長。"
   },
   "notifications": {
     "success": "成功通知數",
@@ -411,7 +433,7 @@
     "enableSSO": "整合協力廠商身分識別提供者。（進階）",
     "disableSSO": "使用內建身分服務進行使用者驗證。（簡式）",
     "importMetadataTitle": "匯入 IdP 中繼資料",
-    "exportMetadataTitle": "匯出雲端中繼資料",
+    "exportMetadataTitle": "匯出目錄中繼資料",
     "testSSOSetupTitle": "測試 SSO 設定",
     "enableSSOTitle": "啟用 SSO",
     "importMetadataDesc": "透過從身分識別提供者 (IdP) 取得信任中繼資料檔案並在這裡上傳，開始設定 IdP 與 Cisco 協同作業雲端之間的信任關係。",
@@ -479,7 +501,7 @@
     "title": "目錄同步",
     "manualTitle": "輸入使用者",
     "yourDomainTitle": "網域",
-    "installTitle": "安裝 Cloud Connector",
+    "installTitle": "安裝 Directory Connector",
     "syncStatus": "同步狀態",
     "grantServices": "授與服務權限",
     "connectionTitle": "連線",
@@ -488,7 +510,7 @@
     "domain": "網域",
     "defaultPlaceholder": "預設值",
     "domainDesc": "識別您將同步的 Active Directory 網域。",
-    "installStep1": "1. 在企業中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下載</a>並安裝 Cisco Cloud Connector。",
+    "installStep1": "1. 在企業中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下載</a>並安裝 Cisco Directory Connector。",
     "installStep2": "2. 設定 Active Directory 同步協議。",
     "installStep3": "3. 測試同步協議。",
     "nextSteps": "準備好確認正在同步身分資訊時按「下一步」按鈕。",
@@ -592,8 +614,9 @@
       "error": "錯誤"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusion 行事曆"
+      "squared-fusion-uc": "呼叫",
+      "squared-fusion-cal": "行事曆",
+      "squared-fusion-media": "媒體"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Active Directory 同步",
     "manualTitle": "輸入使用者",
     "yourDomainTitle": "網域",
-    "installTitle": "安裝 Cloud Connector",
+    "installTitle": "安裝 Directory Connector",
     "syncStatus": "同步狀態",
     "domain": "網域",
     "defaultPlaceholder": "預設值",
     "domainDesc": "識別您將同步的 Active Directory 網域。",
-    "installStep1": "1. 在企業中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下載</a>並安裝 Cisco Cloud Connector。",
+    "installStep1": "1. 在企業中<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>下載</a>並安裝 Cisco Directory Connector。",
     "installStep2": "2. 設定 Active Directory 同步協議。",
     "installStep3": "3. 測試同步協議。",
     "nextSteps": "準備好確認正在同步身分資訊時按「下一步」按鈕。",
@@ -648,7 +671,7 @@
     "manualInvite": "請輸入公司中將接收協作服務的人員電子郵件地址。這些人員將收到註冊的電子郵件邀請。",
     "domainEntry": "輸入網域",
     "domainSubDesc": "請輸入要與其進行同步的 AD 網域：",
-    "connectorSteps": "請遵循這些步驟以安裝 Cloud Connector：",
+    "connectorSteps": "請遵循這些步驟以安裝 Directory Connector：",
     "readyToGo": "您已準備好開始！",
     "finishDesc": "您已完成設定精靈。如果已跳過步驟或者需要變更任何設定，請按一下頁面右上角的齒輪圖示以再次存取這個面板。",
     "finish": "完成",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "授權數目",
     "name": "名稱",
     "edit": "編輯",
-    "saveSendReminder": "儲存並傳送提醒",
     "partnerHeading": "採用及參與度",
     "entitlementsTitle": "使用者已在線",
     "activeUsersTitle": "每日的使用中使用者",
     "averageCallsTitle": "每個使用者的平均通話次數",
-    "contentSharedTitle": "共用的檔案"
+    "contentSharedTitle": "共用的檔案",
+    "invalidTrialLicenseCount": "授權數應該大於 0 小於 1000。"
   },
   "trialModal": {
     "trialSuccess": "您已成功設定試用時間。",
@@ -870,7 +893,7 @@
     "editSuccess": "已成功編輯 {{customerName}} 的試用服務，共 {{licenseCount}} 個授權，時間為 {{licenseDuration}} 天。"
   },
   "trials": {
-    "collab": "標準小組會議室 + 25 人會議",
+    "collab": "標準小組會議室 + 多人會議",
     "squaredUC": "進階 Spark 通話"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "電子郵件已成功傳送給客戶。",
     "emailFailText": "傳送電子郵件時發生錯誤",
     "inputPlacehoder": "輸入電話號碼並用逗號分隔",
-    "didFormatHelpText": "範例格式包括：15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "例如：15556667777、+15556667777、1-555-666-7777、+1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "裝置設定",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "它將中斷與雲端的連線，並且離線。",
     "cancel": "取消",
     "deleteResource": "解除資源的任務"
+  },
+  "mediaFusion": {
+    "page_title": "媒體 Fusion 管理",
+    "connectors": {
+      "group_by": "服務分組方式：",
+      "cluster_id": "叢集",
+      "host_name": "Expressway 主機",
+      "display_name": "服務名稱",
+      "connector_type": "連接器類型",
+      "serial": "序列",
+      "version": "版本",
+      "status": "狀態",
+      "alarms": "警報"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "階段作業類型啟用已更新。",

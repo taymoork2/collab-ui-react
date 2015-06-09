@@ -5,6 +5,7 @@
     "loading": "Memuat"
   },
   "usersPage": {
+    "assignServices": "Tetapkan Layanan",
     "inviteModalBtn": "Undang Pengguna",
     "manageUsers": "Pengguna",
     "subTitleAdd": "Kelola pengguna",
@@ -48,14 +49,17 @@
     "deleteUser": "Hapus Pengguna",
     "deleteUserConfText": "Anda yakin ingin menghapus {{email}}?",
     "resend": "Kirim Ulang Undangan",
+    "resendActivation": "Kirim Ulang Aktivasi",
     "deleteUserSuccess": "{{email}} pengguan berhasil dihapus",
     "deleteUserError": "Kesalahan menghapus pengguna. Status: {{Status}}",
     "onboardSuccess": "{{email}} berhasil dinaikkan",
     "onboardError": "{{Email}} tidak dinaikkan. Status: {{Status}}",
-    "ciscoucError": "{{Email}} tidak menetapkan Unified Communications.",
+    "ciscoucError": "{{email}} tidak berhasil didaftarkan ke Komunikasi Gabungan.",
     "statusError": "Permintaan gagal dengan status: {{status}}.",
     "messageError": "Pesan: {{message}}",
-    "userListError": "Kesalahan membuka daftar pengguna. Coba muat ulang halaman."
+    "userListError": "Kesalahan membuka daftar pengguna. Coba muat ulang halaman.",
+    "emailSuccess": "Email berhasil dikirim.",
+    "emailError": "Kesalahan pengiriman email."
   },
   "groupsPage": {
     "manageGroups": "Grup",
@@ -92,7 +96,7 @@
     "freeConf": "Rapat Spark 3 Orang Gratis",
     "freeComm": "Gratis Panggilan Spark 1:1",
     "paidMsg": "Kamar Tim Standar",
-    "paidConf": "Rapat 25 Orang",
+    "paidConf": "Rapat Berkelompok",
     "paidComm": "Panggilan Spark Lanjutan",
     "freeSpark": "Pesan Spark Gratis",
     "enterpriseEdition": "Edisi Perusahan",
@@ -101,7 +105,8 @@
     "trainingCenter": "Pusat Pelatihan {{capacity}}",
     "eventCenter": "Pusat Acara {{capacity}}",
     "communication": "Komunikasi",
-    "cloudExtensions": "Ekstensi Cloud"
+    "cloudExtensions": "Ekstensi Cloud",
+    "cmr": "Kamar Rapat Kolaborasi"
   },
   "usersPreview": {
     "groupPreview": "Grup:",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "Kelola Rincian Organisasi, Lihat Layanan yang Ditetapkan, dan Alat Akses.",
     "fusionDetailsTab": "Manajemen konektor",
     "fusionDetailsTabDesc": "Manajemen konektor",
+    "MediafusionDetailsTab": "Manajemen Gabungan Media",
+    "MediafusionDetailsTabDesc": "Manajemen Gabungan Media",
     "callRoutingTab": "Pengarahan Panggilan",
     "callRoutingTabDesc": "Kelola Fitur Pengarahan Panggilan Seperti Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "Aktif",
     "activeUsers": "Pengguna Aktif",
-    "activeUserGraphError": "Ada kesalahan saat memuat data pengguna aktif.",
+    "activeUserGraphError": "Terjadi kesalahan ketika memuat data pengguna aktif untuk {{customer}}.",
     "activeUserTableError": "Ada kesalahan ketika memuat data pengguna paling aktif untuk {{customer}}.",
     "calls": "Panggilan",
     "customer": "Pelanggan",
@@ -257,6 +264,16 @@
     "squaredActivity": "Kegiatan kuadrat",
     "user": "Pengguna",
     "users": "Pengguna"
+  },
+  "mediaQuality": {
+    "mediaQuality": "Kualitas Media",
+    "totalCalls": "Total Panggilan",
+    "excellent": "Unggul",
+    "good": "Baik",
+    "fair": "Cukup",
+    "poor": "Buruk",
+    "description": "Kualitas media memberikan rincian tentang kualitas semua panggilan yang disambungkan selama periode waktu terpilih. Untuk informasi lengkap tentang kualitas media, lihat {knowledge base}.",
+    "mediaQualityGraphError": "Terjadi kesalahan ketika memuat data kualitas media."
   },
   "profilePage": {
     "userProfile": "Profil Pengguna",
@@ -356,7 +373,12 @@
     "finish": "Selesai",
     "language": "Bahasa",
     "selectLanguage": "Pilih bahasa",
-    "select": "Pilih"
+    "select": "Pilih",
+    "invalidRequired": "Kolom ini wajib diisi.",
+    "invalidEmail": "Alamat Email ini tidak valid.",
+    "invalidUrl": "URL ini tidak valid.",
+    "invalidMinLength": "Entri ini terlalu pendek.",
+    "invalidMaxLength": "Entri ini terlalu panjang."
   },
   "notifications": {
     "success": "Pemberitahuan berhasil",
@@ -411,7 +433,7 @@
     "enableSSO": "Gabungkan penyedia identitas pihak ke-3. (Lanjutan)",
     "disableSSO": "Gunakan layanan identitas internal untuk otentikasi pengguna. (Sederhana)",
     "importMetadataTitle": "Impor Metadata IdP",
-    "exportMetadataTitle": "Ekspor Metadata Cloud",
+    "exportMetadataTitle": "Ekspor Metadata Direktori",
     "testSSOSetupTitle": "Tes Pengaturan SSO",
     "enableSSOTitle": "Aktifkan SSO",
     "importMetadataDesc": "Mulai mengonfigurasikan hubungan kepercayaan antara penyedia identitas/ identity provider (IdP) Anda dan Cloud Kolaborasi Cisco dengan mendapatkan file metadata kepercayaan dari IdP dan mengunggahnya ke sini.",
@@ -479,7 +501,7 @@
     "title": "Penyelarasan Direktori",
     "manualTitle": "Entri Pengguna",
     "yourDomainTitle": "Domain Anda",
-    "installTitle": "Instal Konektor Cloud",
+    "installTitle": "Instal Konektor Direktori",
     "syncStatus": "Status Penyelarasan",
     "grantServices": "Izinkan Layanan",
     "connectionTitle": "Koneksi",
@@ -488,7 +510,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Standar",
     "domainDesc": "Identifikasi domain Direktori Aktif yang akan diselaraskan.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Unduh </a> dan Instal Cisco Cloud Connector di perusahaan Anda.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Unduh </a> dan instal Konektor Direktori Cisco di perusahaan Anda.",
     "installStep2": "2. Konfigurasikan perjanjian penyelarasan Direktori Aktif.",
     "installStep3": "3. Tes perjanjian penyelarasan.",
     "nextSteps": "Tekan tombol Selanjutnya setelah Anda siap memverifikasi bahwa informasi identitas sedang diselaraskan.",
@@ -592,8 +614,9 @@
       "error": "Kesalahan"
     },
     "serviceNames": {
-      "squared-fusion-uc": "UC Gabungan",
-      "squared-fusion-cal": "Kalender Gabungan"
+      "squared-fusion-uc": "Panggil",
+      "squared-fusion-cal": "Kalender",
+      "squared-fusion-media": "Media"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Penyelarasan Direktori Aktif",
     "manualTitle": "Entri Pengguna",
     "yourDomainTitle": "Domain Anda",
-    "installTitle": "Instal Konektor Cloud",
+    "installTitle": "Instal Konektor Direktori",
     "syncStatus": "Status Penyelarasan",
     "domain": "Domain",
     "defaultPlaceholder": "Standar",
     "domainDesc": "Identifikasi domain Direktori Aktif yang akan diselaraskan.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Unduh </a> dan Instal Cisco Cloud Connector di perusahaan Anda.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Unduh </a> dan instal Konektor Direktori Cisco di perusahaan Anda.",
     "installStep2": "2. Konfigurasikan perjanjian penyelarasan Direktori Aktif.",
     "installStep3": "3. Tes perjanjian penyelarasan.",
     "nextSteps": "Tekan tombol Selanjutnya setelah Anda siap memverifikasi bahwa informasi identitas sedang diselaraskan.",
@@ -648,7 +671,7 @@
     "manualInvite": "Masukkan alamat email orang di perusahaan Anda yang akan menerima Layanan Kolaborasi. Mereka akan menerima email undangan untuk mendaftar.",
     "domainEntry": "Entri Domain",
     "domainSubDesc": "Masukkan domain AD untuk diselaraskan dengan:",
-    "connectorSteps": "Ikuti langkah-langkah berikut untuk menginstal Konektor Cloud:",
+    "connectorSteps": "Ikuti langkah-langkah berikut untuk menginstal Konektor Direktori:",
     "readyToGo": "Anda sudah siap!",
     "finishDesc": "Anda telah menyelesaikan panduan pengaturan. Jika Anda melewati langkah-langkah atau ingin mengubah pengaturan, klik ikon roda di sudut kanan atas halaman untuk mengakses kembali panel ini.",
     "finish": "Selesai",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "Jumlah Lisensi",
     "name": "Nama",
     "edit": "Edit",
-    "saveSendReminder": "Simpan dan Kirim Pengingat",
     "partnerHeading": "Adopsi dan Kesibukan",
     "entitlementsTitle": "Pengguna Onboard",
     "activeUsersTitle": "Pengguna Aktif Harian",
     "averageCallsTitle": "Rerata Panggilan per Pengguna",
-    "contentSharedTitle": "File yang Dibagikan"
+    "contentSharedTitle": "File yang Dibagikan",
+    "invalidTrialLicenseCount": "Jumlah Lisensi harus lebih dari 0 dan kurang dari 1000."
   },
   "trialModal": {
     "trialSuccess": "Anda berhasil mengatur percobaan.",
@@ -870,7 +893,7 @@
     "editSuccess": "Anda berhasil mengedit percobaan untuk {{customerName}} dengan {{licenseCount}} lisensi selama {{licenseDuration}}."
   },
   "trials": {
-    "collab": "Kamar Tim Standar + Rapat 25 Orang",
+    "collab": "Kamar Tim Standar + Rapat Berkelompok",
     "squaredUC": "Panggilan Spark Lanjutan"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "Email berhasil dikirim kepada pelanggan.",
     "emailFailText": "Kesalahan pengiriman email",
     "inputPlacehoder": "Masukkan nomor telepon dipisahkan dengan tanda koma",
-    "didFormatHelpText": "Contoh format meliputi: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "Misalnya: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Konfigurasi Perangkat",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "Sambungan akan diputus dari awan dan dijadikan offline.",
     "cancel": "Batalkan",
     "deleteResource": "Hentikan Sumber Daya"
+  },
+  "mediaFusion": {
+    "page_title": "Manajemen Gabungan Media",
+    "connectors": {
+      "group_by": "Layanan grup oleh:",
+      "cluster_id": "Klaster",
+      "host_name": "Host Bebas Hambatan",
+      "display_name": "Nama Layanan",
+      "connector_type": "Tipe Konektor",
+      "serial": "Seri",
+      "version": "Versi",
+      "status": "Status",
+      "alarms": "Alarm"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Pengaktifan jenis sesi telah diperbarui.",

@@ -5,6 +5,7 @@
     "loading": "로드 중"
   },
   "usersPage": {
+    "assignServices": "서비스 지정",
     "inviteModalBtn": "사용자 초대",
     "manageUsers": "사용자",
     "subTitleAdd": "사용자 관리",
@@ -48,14 +49,17 @@
     "deleteUser": "사용자 삭제",
     "deleteUserConfText": "{{email}}을 삭제하시겠습니까?",
     "resend": "초대장 다시 보내기",
+    "resendActivation": "활성화 다시 보내기",
     "deleteUserSuccess": "사용자 {{email}} 성공적으로 삭제됨",
     "deleteUserError": "사용자 삭제 오류. 상태: {{status}}",
     "onboardSuccess": "{{email}} 성공적으로 등록됨",
     "onboardError": "{{email}} 등록되지 않음. 상태: {{status}}",
-    "ciscoucError": "{{email}}이 Unified Communications을 구축하지 못했습니다.",
+    "ciscoucError": "{{email}}에서 성공적으로 Unified Communications을 등록하지 못했습니다.",
     "statusError": "요청 실패함. 상태: {{status}}.",
     "messageError": "메시지: {{message}}",
-    "userListError": "사용자 목록 검색 오류. 페이지를 다시 로드하십시오."
+    "userListError": "사용자 목록 검색 오류. 페이지를 다시 로드하십시오.",
+    "emailSuccess": "이메일 성공적으로 발송됨.",
+    "emailError": "이메일 보내기 오류."
   },
   "groupsPage": {
     "manageGroups": "그룹",
@@ -92,7 +96,7 @@
     "freeConf": "무료 제3자 Spark 미팅",
     "freeComm": "무료 1:1 Spark 통화",
     "paidMsg": "표준 그룹 회의실",
-    "paidConf": "25명 미팅",
+    "paidConf": "다수 미팅",
     "paidComm": "고급 Spark 통화",
     "freeSpark": "무료 Spark 메시지",
     "enterpriseEdition": "기업판",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "통신",
-    "cloudExtensions": "클라우드 확장"
+    "cloudExtensions": "클라우드 확장",
+    "cmr": "협업 미팅 회의실"
   },
   "usersPreview": {
     "groupPreview": "그룹:",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "조직 세부 사항 관리, 지정된 서비스 보기 및 도구에 액세스.",
     "fusionDetailsTab": "커넥터 관리",
     "fusionDetailsTabDesc": "커넥터 관리",
+    "MediafusionDetailsTab": "Media Fusion 관리",
+    "MediafusionDetailsTabDesc": "Media Fusion 관리",
     "callRoutingTab": "통화 라우팅",
     "callRoutingTabDesc": "통화 라우팅 기능 관리 (통화 대기 등)",
     "mediaOnHoldTab": "Media On Hold",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "활동중",
     "activeUsers": "활동중인 사용자",
-    "activeUserGraphError": "활동중인 사용자 데이터를 로드하는 중 오류가 발생했습니다.",
+    "activeUserGraphError": "{{customer}} 님을 위해 활동중인 사용자 데이터를 로드하는 동안 오류가 발생했습니다.",
     "activeUserTableError": "{{customer}} 님을 위해 가장 활동적인 사용자의 데이터를 로드하는 중 오류가 발생했습니다.",
     "calls": "통화",
     "customer": "고객",
@@ -257,6 +264,16 @@
     "squaredActivity": "Squared 활동",
     "user": "사용자",
     "users": "사용자"
+  },
+  "mediaQuality": {
+    "mediaQuality": "미디어 품질",
+    "totalCalls": "총 통화",
+    "excellent": "훌륭함",
+    "good": "양호",
+    "fair": "보통",
+    "poor": "나쁨",
+    "description": "미디어 품질은 선택한 기간 중에 연결된 모든 통화의 품질을 세분화한 자료를 제공합니다. 미디어 품질에 대한 자세한 정보는 {knowledge base}를 참조하십시오.",
+    "mediaQualityGraphError": "미디어 품질 데이터를 로드하는 중 오류가 발생했습니다."
   },
   "profilePage": {
     "userProfile": "사용자 프로필",
@@ -356,7 +373,12 @@
     "finish": "마침",
     "language": "언어",
     "selectLanguage": "언어 선택",
-    "select": "선택"
+    "select": "선택",
+    "invalidRequired": "이 필드는 필수입니다.",
+    "invalidEmail": "이는 올바른 이메일 주소가 아닙니다.",
+    "invalidUrl": "이는 올바른 URL이 아닙니다.",
+    "invalidMinLength": "이 입력값은 너무 짧습니다.",
+    "invalidMaxLength": "이 입력값은 너무 깁니다."
   },
   "notifications": {
     "success": "알림 성공",
@@ -411,7 +433,7 @@
     "enableSSO": "제3자 ID 제공자를 통합합니다. (고급)",
     "disableSSO": "사용자 인증을 위해 기본 제공된 ID 서비스를 사용합니다. (기본)",
     "importMetadataTitle": "IdP 메타데이터 가져오기",
-    "exportMetadataTitle": "클라우드 메타데이터 내보내기",
+    "exportMetadataTitle": "디렉토리 메타데이터 내보내기",
     "testSSOSetupTitle": "SSO 설정 테스트",
     "enableSSOTitle": "SSO 활성화",
     "importMetadataDesc": "IdP에서 신뢰할 수 있는 메타데이터 파일을 확보하고 여기에 업로드하여 ID 제공자(IdP)와 Cisco 협업 클라우드 사이에 신뢰할 수 있는 관계를 구성하기 시작하십시오.",
@@ -479,7 +501,7 @@
     "title": "디렉토리 동기화",
     "manualTitle": "사용자 입력",
     "yourDomainTitle": "귀하의 도메인",
-    "installTitle": "클라우드 커넥터 설치",
+    "installTitle": "디렉토리 커넥터 설치",
     "syncStatus": "동기화 상태",
     "grantServices": "서비스 부여",
     "connectionTitle": "연결",
@@ -488,7 +510,7 @@
     "domain": "도메인",
     "defaultPlaceholder": "기본값",
     "domainDesc": "동기화할 Active Directory 도메인을 식별하십시오.",
-    "installStep1": "1. 기업에 Cisco Cloud Connector를<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> 다운로드</a>하고 설치합니다.",
+    "installStep1": "1. 귀사에 Cisco 디렉토리 커넥터를 <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> 다운로드</a>하고 설치합니다.",
     "installStep2": "2. Active Directory 동기화 동의를 구성합니다.",
     "installStep3": "3. 동기화 동의를 테스트합니다.",
     "nextSteps": "ID 정보가 동기화되고 있는지 확인할 준비가 되면 다음 버튼을 누릅니다.",
@@ -592,8 +614,9 @@
       "error": "오류"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusion 캘린더"
+      "squared-fusion-uc": "통화",
+      "squared-fusion-cal": "캘린더",
+      "squared-fusion-media": "미디어"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Active Directory 동기화",
     "manualTitle": "사용자 입력",
     "yourDomainTitle": "귀하의 도메인",
-    "installTitle": "클라우드 커넥터 설치",
+    "installTitle": "디렉토리 커넥터 설치",
     "syncStatus": "동기화 상태",
     "domain": "도메인",
     "defaultPlaceholder": "기본값",
     "domainDesc": "동기화할 Active Directory 도메인을 식별하십시오.",
-    "installStep1": "1. 기업에 Cisco Cloud Connector를<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> 다운로드</a>하고 설치합니다.",
+    "installStep1": "1. 귀사에 Cisco 디렉토리 커넥터를 <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> 다운로드</a>하고 설치합니다.",
     "installStep2": "2. Active Directory 동기화 동의를 구성합니다.",
     "installStep3": "3. 동기화 동의를 테스트합니다.",
     "nextSteps": "ID 정보가 동기화되고 있는지 확인할 준비가 되면 다음 버튼을 누릅니다.",
@@ -648,7 +671,7 @@
     "manualInvite": "귀사에서 협업 서비스를 수신할 상대방의 이메일 주소를 입력하십시오. 해당 상대방은 가입 이메일 초대장을 받게 됩니다.",
     "domainEntry": "도메인 입력",
     "domainSubDesc": "동기화할 AD 도메인 입력:",
-    "connectorSteps": "클라우드 커넥터를 설치하려면 다음 단계를 따르십시오.",
+    "connectorSteps": "디렉토리 커넥터를 설치하려면 다음 단계를 따르십시오.",
     "readyToGo": "준비가 완료되었습니다!",
     "finishDesc": "설치 마법사를 완료했습니다. 단계를 건너뛰기했거나 설정을 변경해야 하는 경우, 페이지의 상단 오른쪽 모서리에 위치한 기어 아이콘을 클릭하여 다시 이 목록에 액세스합니다.",
     "finish": "마침",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "라이센스 수",
     "name": "이름",
     "edit": "편집",
-    "saveSendReminder": "저장 및 알림 보내기",
     "partnerHeading": "채택 및 참여",
     "entitlementsTitle": "등록된 사용자",
     "activeUsersTitle": "매일 활동중인 사용자",
     "averageCallsTitle": "사용자당 평균 통화",
-    "contentSharedTitle": "파일 공유됨"
+    "contentSharedTitle": "파일 공유됨",
+    "invalidTrialLicenseCount": "라이센스 수는 0 ~ 1000 사이이어야 합니다."
   },
   "trialModal": {
     "trialSuccess": "평가판을 성공적으로 설정했습니다.",
@@ -870,7 +893,7 @@
     "editSuccess": "{{customerName}} 님을 위한 평가판을 성공적으로 편집했습니다. ({{licenseCount}}개 라이센스, {{licenseDuration}}일 동안)"
   },
   "trials": {
-    "collab": "표준 그룹 회의실 + 25명 미팅",
+    "collab": "표준 그룹 회의실 + 다수 미팅",
     "squaredUC": "고급 Spark 통화"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "이메일이 고객에게 성공적으로 발송되었습니다.",
     "emailFailText": "이메일 보내기 오류",
     "inputPlacehoder": "전화 번호는 콤마로 구분하여 입력하십시오",
-    "didFormatHelpText": "예제 형식 포함: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "예: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "장치 구성",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "클라우드의 연결이 끊기고 오프라인으로 지정됩니다.",
     "cancel": "취소",
     "deleteResource": "리소스 해제"
+  },
+  "mediaFusion": {
+    "page_title": "Media Fusion 관리",
+    "connectors": {
+      "group_by": "그룹 서비스 제공자:",
+      "cluster_id": "클러스터",
+      "host_name": "Expressway 호스트",
+      "display_name": "서비스 이름",
+      "connector_type": "커넥터 유형",
+      "serial": "시리얼",
+      "version": "버전",
+      "status": "상태",
+      "alarms": "알람"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "세션 유형 활성화 업데이트됨.",

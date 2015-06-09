@@ -5,6 +5,7 @@
     "loading": "Yükleniyor"
   },
   "usersPage": {
+    "assignServices": "Hizmetleri Ata",
     "inviteModalBtn": "Kullanıcıları Davet Et",
     "manageUsers": "Kullanıcılar",
     "subTitleAdd": "Kullanıcıları yönet",
@@ -48,14 +49,17 @@
     "deleteUser": "Kullanıcıyı Sil",
     "deleteUserConfText": "{{email}} e-postasını silmek istediğinizden emin misiniz?",
     "resend": "Davetiyeyi Yeniden Gönder",
+    "resendActivation": "Etkinleştirmeyi Yeniden Gönder",
     "deleteUserSuccess": "Kullanıcı {{email}} başarıyla silindi",
     "deleteUserError": "Kullanıcı silinirken hata oluştu. Durum: {{status}}",
     "onboardSuccess": "{{email}} başarıyla eklendi",
     "onboardError": "{{email}} eklenmedi. Durum: {{status}}",
-    "ciscoucError": "{{email}} Birleşik İletişim sağlamadı.",
+    "ciscoucError": "{{email}} Unified Communications'ı başarıyla ekleyemedi.",
     "statusError": "İstek şu durumla başarısız oldu: {{status}}.",
     "messageError": "Mesaj: {{message}}",
-    "userListError": "Kullanıcı listesi alınırken hata oluştu. Lütfen sayfayı yeniden yüklemeyi deneyin."
+    "userListError": "Kullanıcı listesi alınırken hata oluştu. Lütfen sayfayı yeniden yüklemeyi deneyin.",
+    "emailSuccess": "E-posta başarıyla gönderildi.",
+    "emailError": "E-posta gönderilirken hata oluştu."
   },
   "groupsPage": {
     "manageGroups": "Gruplar",
@@ -92,7 +96,7 @@
     "freeConf": "Ücretsiz 3 Taraflı Spark Buluşması",
     "freeComm": "Ücretsiz 1:1 Spark Çağrısı",
     "paidMsg": "Standart Ekip Odaları",
-    "paidConf": "25 Taraflı Toplantılar",
+    "paidConf": "Parti Toplantıları",
     "paidComm": "Gelişmiş Spark Çağrısı",
     "freeSpark": "Ücretsiz Spark Mesajlaşma",
     "enterpriseEdition": "Kurumsal Sürüm",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "İletişim",
-    "cloudExtensions": "Bulut Uzantıları"
+    "cloudExtensions": "Bulut Uzantıları",
+    "cmr": "İşbirliği Toplantı Odaları"
   },
   "usersPreview": {
     "groupPreview": "Grup:",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "Kuruluş Ayrıntılarını Yönetin, Atanan Hizmetleri Görüntüleyin ve Araçlara Erişin.",
     "fusionDetailsTab": "Bağlayıcı Yönetimi",
     "fusionDetailsTabDesc": "Bağlayıcı Yönetimi",
+    "MediafusionDetailsTab": "Media Fusion Yönetimi",
+    "MediafusionDetailsTabDesc": "Media Fusion Yönetimi",
     "callRoutingTab": "Çağrı Yönlendirme",
     "callRoutingTabDesc": "Çağrı Bekletme Gibi Çağrı Yönlendirme Özelliklerini Yönetin",
     "mediaOnHoldTab": "Bekletilen Ortam",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "Etkin",
     "activeUsers": "Etkin Kullanıcılar",
-    "activeUserGraphError": "Etkin kullanıcı verileri yüklenirken bir hata oluştu.",
+    "activeUserGraphError": "{{customer}} için etkin kullanıcı verileri yüklenirken bir hata oluştu.",
     "activeUserTableError": "{{customer}} için en etkin kullanıcılara ilişkin veriler yüklenirken bir hata oluştu.",
     "calls": "Çağrılar",
     "customer": "Müşteri",
@@ -257,6 +264,16 @@
     "squaredActivity": "Squared Etkinliği",
     "user": "Kullanıcı",
     "users": "Kullanıcılar"
+  },
+  "mediaQuality": {
+    "mediaQuality": "Ortam Kalitesi",
+    "totalCalls": "Toplam Çağrı Sayısı",
+    "excellent": "Harika",
+    "good": "İyi",
+    "fair": "Orta",
+    "poor": "Kötü",
+    "description": "Ortam kalitesi, seçilen dönemde bağlı tüm çağrıların kalitesine ilişkin bir döküm sağlar. Ortam kalitesi hakkında daha fazla bilgi için {knowledge base} bölümüne bakın.",
+    "mediaQualityGraphError": "Ortam kalitesi verileri yüklenirken bir hata oluştu."
   },
   "profilePage": {
     "userProfile": "Kullanıcı Profili",
@@ -356,7 +373,12 @@
     "finish": "Son",
     "language": "Dil",
     "selectLanguage": "Dil seçin",
-    "select": "Seç"
+    "select": "Seç",
+    "invalidRequired": "Bu alan gereklidir.",
+    "invalidEmail": "Bu, geçerli bir E-posta Adresi değil.",
+    "invalidUrl": "Bu, geçerli bir URL değil.",
+    "invalidMinLength": "Bu giriş çok kısa.",
+    "invalidMaxLength": "Bu giriş çok uzun."
   },
   "notifications": {
     "success": "Başarı bildirimleri",
@@ -411,7 +433,7 @@
     "enableSSO": "Bir 3. taraf kimlik sağlayıcı entegre edin. (Gelişmiş)",
     "disableSSO": "Kullanıcı kimlik doğrulaması için yerleşik kimlik hizmetini kullanın. (Basit)",
     "importMetadataTitle": "IdP Meta Verilerini İçe Aktar",
-    "exportMetadataTitle": "Bulut Meta Verilerini Dışa Aktar",
+    "exportMetadataTitle": "Dizin Meta Verilerini Dışa Aktar",
     "testSSOSetupTitle": "SSO Kurulumunu Test Et",
     "enableSSOTitle": "SSO'yu Etkinleştir",
     "importMetadataDesc": "IdP'nizden bir güven meta veri dosyası alarak ve buraya yükleyerek kimlik sağlayıcınız (IdP) ile Cisco İşbirliği Bulutu arasındaki güven ilişkisini yapılandırmaya başlayın.",
@@ -479,7 +501,7 @@
     "title": "Dizin Senkronizasyonu",
     "manualTitle": "Kullanıcı Girişi",
     "yourDomainTitle": "Etki Alanınız",
-    "installTitle": "Bulut Bağlayıcı'yı Yükle",
+    "installTitle": "Directory Connector'ı Yükle",
     "syncStatus": "Senkronizasyon Durumu",
     "grantServices": "Hizmetlere İzin Ver",
     "connectionTitle": "Bağlantı",
@@ -488,7 +510,7 @@
     "domain": "Etki Alanı",
     "defaultPlaceholder": "Varsayılan",
     "domainDesc": "Senkronize edeceğiniz Active Directory etki alanını belirleyin.",
-    "installStep1": "1. Kuruluşunuz için Cisco Cloud Connector'ı <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> İndirin </a> ve Yükleyin.",
+    "installStep1": "1. Kuruluşunuzda Cisco Directory Connector'ı <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> indirin </a> ve yükleyin.",
     "installStep2": "2. Active Directory senkronizasyon anlaşmasını yapılandırın.",
     "installStep3": "3. Senkronizasyon anlaşmasını test edin.",
     "nextSteps": "Kimlik bilgilerinin senkronize edildiğini doğrulamak için hazır olduğunuzda İleri düğmesine basın.",
@@ -592,8 +614,9 @@
       "error": "Hata"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusion Takvimi"
+      "squared-fusion-uc": "Çağrı",
+      "squared-fusion-cal": "Takvim",
+      "squared-fusion-media": "Ortam"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Active Directory Senkronizasyonu",
     "manualTitle": "Kullanıcı Girişi",
     "yourDomainTitle": "Etki Alanınız",
-    "installTitle": "Bulut Bağlayıcı'yı Yükle",
+    "installTitle": "Directory Connector'ı Yükle",
     "syncStatus": "Senkronizasyon Durumu",
     "domain": "Etki Alanı",
     "defaultPlaceholder": "Varsayılan",
     "domainDesc": "Senkronize edeceğiniz Active Directory etki alanını belirleyin.",
-    "installStep1": "1. Kuruluşunuz için Cisco Cloud Connector'ı <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> İndirin </a> ve Yükleyin.",
+    "installStep1": "1. Kuruluşunuzda Cisco Directory Connector'ı <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> indirin </a> ve yükleyin.",
     "installStep2": "2. Active Directory senkronizasyon anlaşmasını yapılandırın.",
     "installStep3": "3. Senkronizasyon anlaşmasını test edin.",
     "nextSteps": "Kimlik bilgilerinin senkronize edildiğini doğrulamak için hazır olduğunuzda İleri düğmesine basın.",
@@ -648,7 +671,7 @@
     "manualInvite": "Şirketinizde İşbirliği Hizmetleri alacak kişilerin e-posta adreslerini girin. Kaydolmak için bir e-posta daveti alacaklardır.",
     "domainEntry": "Etki Alanı Girişi",
     "domainSubDesc": "Senkronize edilecek AD etki alanını girin:",
-    "connectorSteps": "Bulut Bağlayıcı'yı yüklemek için şu adımları uygulayın:",
+    "connectorSteps": "Directory Connector'ı yüklemek için bu adımları uygulayın:",
     "readyToGo": "Başlamak için hazırsınız!",
     "finishDesc": "Kurulum sihirbazını tamamladınız. Adımları atladıysanız veya ayarlardan herhangi birini değiştirmeniz gerekiyorsa, sağ üst köşedeki dişli simgesine tıklayarak bu panele yeniden erişin.",
     "finish": "Son",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "Lisans Sayısı",
     "name": "Ad",
     "edit": "Düzenle",
-    "saveSendReminder": "Kaydet ve Anımsatıcı Gönder",
     "partnerHeading": "Benimseme ve Etkileşim",
     "entitlementsTitle": "Eklenen Kullanıcılar",
     "activeUsersTitle": "Günlük Etkin Kullanıcılar",
     "averageCallsTitle": "Kullanıcı Başına Ortalama Çağrı",
-    "contentSharedTitle": "Paylaşılan Dosyalar"
+    "contentSharedTitle": "Paylaşılan Dosyalar",
+    "invalidTrialLicenseCount": "Lisans sayısı 0'dan büyük ve 1000'den küçük olmalıdır."
   },
   "trialModal": {
     "trialSuccess": "Deneme sürümünüzü başarıyla kurdunuz.",
@@ -870,7 +893,7 @@
     "editSuccess": "{{customerName}} için {{licenseDuration}} gün süreyle {{licenseCount}} lisansa yönelik deneme sürümünü başarıyla düzenlediniz."
   },
   "trials": {
-    "collab": "Standart Ekip Odaları + 25 Taraflı Toplantılar",
+    "collab": "Standart Ekip Odaları + Parti Toplantıları",
     "squaredUC": "Gelişmiş Spark Çağrısı"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "E-posta müşteriye başarıyla gönderildi.",
     "emailFailText": "E-posta gönderilirken hata oluştu",
     "inputPlacehoder": "Telefon numaralarını virgülle ayırarak girin",
-    "didFormatHelpText": "Örnek formatlar şunlardır: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "Örneğin: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Cihaz Yapılandırması",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "Kaynağın bulutla olan bağlantısı kesilecek ve kaynak çevrimdışına alınacak.",
     "cancel": "İptal",
     "deleteResource": "Kaynağı Kullanımdan Kaldır"
+  },
+  "mediaFusion": {
+    "page_title": "Media Fusion Yönetimi",
+    "connectors": {
+      "group_by": "Hizmetleri gruplandırma ölçütü:",
+      "cluster_id": "Küme",
+      "host_name": "Expressway Ana Bilgisayarı",
+      "display_name": "Hizmet Adı",
+      "connector_type": "Bağlayıcı Türü",
+      "serial": "Seri",
+      "version": "Sürüm",
+      "status": "Durum",
+      "alarms": "Alarmlar"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Oturum türü etkinleştirmesi güncellendi.",

@@ -5,6 +5,7 @@
     "loading": "Загрузка"
   },
   "usersPage": {
+    "assignServices": "Назначить службы",
     "inviteModalBtn": "Пригласить пользователей",
     "manageUsers": "Пользователи",
     "subTitleAdd": "Управление пользователями",
@@ -48,14 +49,17 @@
     "deleteUser": "Удалить пользователя",
     "deleteUserConfText": "Действительно удалить {{email}}?",
     "resend": "Повторно отправить приглашение",
+    "resendActivation": "Повторно отправить активацию",
     "deleteUserSuccess": "Пользователь {{email}} успешно удален",
     "deleteUserError": "Ошибка удаления пользователя. Состояние: {{status}}",
     "onboardSuccess": "Пользователь {{email}} принят успешно",
     "onboardError": "Пользователь {{email}} не принят. Состояние: {{status}}",
-    "ciscoucError": "У пользователя {{email}} не подготовлено Unified Communications.",
+    "ciscoucError": "Для пользователя {{email}} не удалось успешно установить Unified Communications.",
     "statusError": "Сбой запроса с состоянием: {{status}}.",
     "messageError": "Сообщение: {{message}}",
-    "userListError": "Ошибка получения списка пользователей. Перезагрузите страницу."
+    "userListError": "Ошибка получения списка пользователей. Перезагрузите страницу.",
+    "emailSuccess": "Электронное сообщение успешно отправлено.",
+    "emailError": "Ошибка отправки электронного сообщения."
   },
   "groupsPage": {
     "manageGroups": "Группы",
@@ -92,7 +96,7 @@
     "freeConf": "Бесплатные трехсторонние встречи Spark",
     "freeComm": "Бесплатный вызов Spark 1:1",
     "paidMsg": "Стандартные групповые комнаты",
-    "paidConf": "25 групповых совещаний",
+    "paidConf": "Групповые совещания",
     "paidComm": "Расширенный вызов Spark",
     "freeSpark": "Бесплатный обмен сообщениями в Spark",
     "enterpriseEdition": "Корпоративная редакция",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Связь",
-    "cloudExtensions": "Добавочные номера в облаке"
+    "cloudExtensions": "Добавочные номера в облаке",
+    "cmr": "Совместные комнаты совещания"
   },
   "usersPreview": {
     "groupPreview": "Группа:",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "Управляйте деталями организации, просматривайте назначенные услуги и получайте доступ к инструментам.",
     "fusionDetailsTab": "Управление соединителем",
     "fusionDetailsTabDesc": "Управление соединителем",
+    "MediafusionDetailsTab": "Управление Media Fusion",
+    "MediafusionDetailsTabDesc": "Управление потоками данных",
     "callRoutingTab": "Маршрутизация вызовов",
     "callRoutingTabDesc": "Управляйте функциями маршрутизации вызовов, такими как парковка вызовов",
     "mediaOnHoldTab": "Медиа в режиме удержания",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "Активный",
     "activeUsers": "Активные пользователи",
-    "activeUserGraphError": "Во время загрузки данных активного пользователя произошла ошибка.",
+    "activeUserGraphError": "Во время загрузки данных активных пользователей для клиента {{customer}} произошла ошибка.",
     "activeUserTableError": "Во время загрузки данных для наиболее активных пользователей для клиента {{customer}} произошла ошибка.",
     "calls": "Вызовы",
     "customer": "Клиент",
@@ -257,6 +264,16 @@
     "squaredActivity": "Деятельность Squared",
     "user": "Пользователь",
     "users": "Пользователи"
+  },
+  "mediaQuality": {
+    "mediaQuality": "Качество связи",
+    "totalCalls": "Все вызовы",
+    "excellent": "Отлично",
+    "good": "Хорошо",
+    "fair": "Удовлетворительно",
+    "poor": "Неудовлетворительно",
+    "description": "Качество связи подразумевает разбивку характеристик качества для всех вызовов с установленным соединением, совершенных в течение указанного периода. Более подробную информацию о качестве связи см. тут: {knowledge base}.",
+    "mediaQualityGraphError": "Во время загрузки данных о качестве связи произошла ошибка."
   },
   "profilePage": {
     "userProfile": "Профиль пользователя",
@@ -356,7 +373,12 @@
     "finish": "Завершить",
     "language": "Язык",
     "selectLanguage": "Выберите язык",
-    "select": "Выбрать"
+    "select": "Выбрать",
+    "invalidRequired": "Это обязательное для заполнения поле.",
+    "invalidEmail": "Недопустимый адрес электронной почты.",
+    "invalidUrl": "Недопустимый URL.",
+    "invalidMinLength": "Эта запись слишком короткая.",
+    "invalidMaxLength": "Эта запись слишком длинная."
   },
   "notifications": {
     "success": "Уведомления об удачном выполнении",
@@ -411,7 +433,7 @@
     "enableSSO": "Интеграция со сторонним поставщиком удостоверений (расширенная).",
     "disableSSO": "Использование встроенной службы удостоверений для аутентификации пользователей (упрощенное).",
     "importMetadataTitle": "Импортировать метаданные поставщика удостоверений",
-    "exportMetadataTitle": "Экспортировать метаданные облака",
+    "exportMetadataTitle": "Экспортировать метаданные каталога",
     "testSSOSetupTitle": "Проверить настройку технологии единого входа",
     "enableSSOTitle": "Включить технологию единого входа",
     "importMetadataDesc": "Начните настройку доверительных отношений между вашим поставщиком удостоверений (IdP) и Cisco Collaboration Cloud, получив файл доверенных метаданных от своего IdP и загрузив его здесь.",
@@ -479,7 +501,7 @@
     "title": "Синхронизация каталогов",
     "manualTitle": "Ввод пользователя",
     "yourDomainTitle": "Ваш домен",
-    "installTitle": "Установить Cloud Connector",
+    "installTitle": "Установить соединитель каталога",
     "syncStatus": "Состояние синхронизации",
     "grantServices": "Предоставить службы",
     "connectionTitle": "Соединение",
@@ -488,7 +510,7 @@
     "domain": "Домен",
     "defaultPlaceholder": "По умолчанию",
     "domainDesc": "Определите домен Active Directory, который вы будете синхронизировать.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Скачайте </a> и установите Cisco Cloud Connector на предприятии.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Скачайте </a> и установите соединитель каталога Cisco на устройствах своей организации.",
     "installStep2": "2. Настройте соглашение о синхронизации Active Directory.",
     "installStep3": "3. Проверьте соглашение о синхронизации.",
     "nextSteps": "Нажмите кнопку \"Далее\", когда будете готовы подтвердить, что идентификационная информация синхронизируется.",
@@ -592,8 +614,9 @@
       "error": "Ошибка"
     },
     "serviceNames": {
-      "squared-fusion-uc": "UC слияния",
-      "squared-fusion-cal": "Календарь слияния"
+      "squared-fusion-uc": "Вызов",
+      "squared-fusion-cal": "Календарь",
+      "squared-fusion-media": "Связь"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Синхронизация Active Directory",
     "manualTitle": "Ввод пользователя",
     "yourDomainTitle": "Ваш домен",
-    "installTitle": "Установить Cloud Connector",
+    "installTitle": "Установить Directory Connector",
     "syncStatus": "Состояние синхронизации",
     "domain": "Домен",
     "defaultPlaceholder": "По умолчанию",
     "domainDesc": "Определите домен Active Directory, который вы будете синхронизировать.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Скачайте </a> и установите Cisco Cloud Connector на предприятии.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Скачайте </a> и установите Cisco Directory Connector на устройствах своей организации.",
     "installStep2": "2. Настройте соглашение о синхронизации Active Directory.",
     "installStep3": "3. Проверьте соглашение о синхронизации.",
     "nextSteps": "Нажмите кнопку \"Далее\", когда будете готовы подтвердить, что идентификационная информация синхронизируется.",
@@ -648,7 +671,7 @@
     "manualInvite": "Введите адреса электронной почты сотрудников вашей компании, которые будут пользоваться службами совместной работы. Они получат электронное приглашение для регистрации.",
     "domainEntry": "Ввод домена",
     "domainSubDesc": "Введите домен AD, с которым нужно синхронизироваться:",
-    "connectorSteps": "Выполните следующие шаги для установки Cloud Connector.",
+    "connectorSteps": "Следуйте этим инструкциям, чтобы установить соединитель каталога:",
     "readyToGo": "Вы готовы начать!",
     "finishDesc": "Вы завершили настройку с помощью мастера. Если вы пропустили шаги или вам необходимо изменить какие-либо настройки, щелкните пиктограмму звездочки в правом верхнем углу страницы, чтобы снова перейти на эту панель.",
     "finish": "Завершить",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "Количество лицензий",
     "name": "Имя",
     "edit": "Редактировать",
-    "saveSendReminder": "Сохранить и отправить напоминание",
     "partnerHeading": "Принятие и вовлечение",
     "entitlementsTitle": "Привлеченные пользователи",
     "activeUsersTitle": "Активные пользователи за день",
     "averageCallsTitle": "Среднее количество вызовов на пользователя",
-    "contentSharedTitle": "Предоставлено совместный доступ к файлам"
+    "contentSharedTitle": "Предоставлено совместный доступ к файлам",
+    "invalidTrialLicenseCount": "Количество лицензий должно находиться в пределах от 0 до 1000."
   },
   "trialModal": {
     "trialSuccess": "Пробный период успешно настроен.",
@@ -870,7 +893,7 @@
     "editSuccess": "Вы успешно изменили пробный период для клиента {{customerName}} с лицензиями ({{licenseCount}}) на следующее количество дней: {{licenseDuration}}."
   },
   "trials": {
-    "collab": "Стандартные групповые комнаты + 25 групповых совещаний",
+    "collab": "Стандартные групповые комнаты и групповые совещания",
     "squaredUC": "Расширенный вызов Spark"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "Электронное сообщение успешно отправлено клиенту.",
     "emailFailText": "Ошибка при отправке электронного сообщения",
     "inputPlacehoder": "Введите номера телефонов, разделяя их запятыми",
-    "didFormatHelpText": "Примеры форматов: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "Например: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Настройка устройства",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "Он будет отключен от облака и от сети.",
     "cancel": "Отмена",
     "deleteResource": "Перевести ресурс в резерв"
+  },
+  "mediaFusion": {
+    "page_title": "Управление потоками данных",
+    "connectors": {
+      "group_by": "Группировать службы по:",
+      "cluster_id": "Кластер",
+      "host_name": "Хост Expressway",
+      "display_name": "Имя службы",
+      "connector_type": "Тип соединителя",
+      "serial": "Серийный",
+      "version": "Версия",
+      "status": "Состояние",
+      "alarms": "Сигналы"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Возможность включения типа сеанса обновлена.",

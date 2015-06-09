@@ -5,6 +5,7 @@
     "loading": "Läser in"
   },
   "usersPage": {
+    "assignServices": "Tilldela tjänster",
     "inviteModalBtn": "Bjud in användare",
     "manageUsers": "Användare",
     "subTitleAdd": "Hantera användare",
@@ -48,14 +49,17 @@
     "deleteUser": "Radera användare",
     "deleteUserConfText": "Vill du ta bort {{email}}?",
     "resend": "Skicka inbjudan igen",
+    "resendActivation": "Skicka aktivering igen",
     "deleteUserSuccess": "Användare {{email}} togs bort",
     "deleteUserError": "Fel vid borttagning av användare. Status: {{status}}",
     "onboardSuccess": "{{email}} registrerades",
     "onboardError": "{{email}} inte registrerad. Status: {{status}}",
-    "ciscoucError": "{{email}} har inte godkänt Unified Communications.",
+    "ciscoucError": "{{email}} kunde inte implementeras i Unified Communications.",
     "statusError": "Begäran misslyckades med status: {{status}}.",
     "messageError": "Meddelande: {{message}}",
-    "userListError": "Fel vid hämtning av användarlistan. Försök att uppdatera sidan."
+    "userListError": "Fel vid hämtning av användarlistan. Försök att uppdatera sidan.",
+    "emailSuccess": "E-postmeddelandet skickades.",
+    "emailError": "Kunde inte skicka e-postmeddelande."
   },
   "groupsPage": {
     "manageGroups": "Grupper",
@@ -92,7 +96,7 @@
     "freeConf": "Kostnadsfria tredje parts Spark-möten",
     "freeComm": "Fritt 1:1 Spark-samtal",
     "paidMsg": "Standardgrupprum",
-    "paidConf": "Gruppmöte med 25 personer",
+    "paidConf": "Samlingsmöten",
     "paidComm": "Avancerat Spark-samtal",
     "freeSpark": "Kostnadsfria Spark-meddelanden",
     "enterpriseEdition": "Enterprise-versionen",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Kommunikation",
-    "cloudExtensions": "Cloud-anknytningar"
+    "cloudExtensions": "Cloud-anknytningar",
+    "cmr": "Mötesrum för samarbete"
   },
   "usersPreview": {
     "groupPreview": "Grupp:",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "Hantera organisationsuppgifter, visa tilldelade tjänster och öppna verktyg.",
     "fusionDetailsTab": "Anslutningshantering",
     "fusionDetailsTabDesc": "Anslutningshantering",
+    "MediafusionDetailsTab": "Media Fusion Management",
+    "MediafusionDetailsTabDesc": "Media Fusion Management",
     "callRoutingTab": "Samtalsomkoppling",
     "callRoutingTabDesc": "Hantera samtalsomkopplingsfunktioner, t.ex. Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "Aktiv",
     "activeUsers": "Aktiva användare",
-    "activeUserGraphError": "Ett fel uppstod när aktiva användardata skulle läsas in.",
+    "activeUserGraphError": "Ett fel inträffade vid inläsning av aktiv data för användaren {{customer}}.",
     "activeUserTableError": "Ett fel inträffade vid inläsning av data för de aktivaste användarna för {{customer}}.",
     "calls": "Samtal",
     "customer": "Kund",
@@ -257,6 +264,16 @@
     "squaredActivity": "Squared-aktivitet",
     "user": "Användare",
     "users": "Användare"
+  },
+  "mediaQuality": {
+    "mediaQuality": "Mediakvalitet",
+    "totalCalls": "Totalt antal samtal",
+    "excellent": "Utmärkt",
+    "good": "Bra",
+    "fair": "Godkänt",
+    "poor": "Dåligt",
+    "description": "Mediakvalitet tillhandahåller en sammanställning av kvaliteten på alla kopplade samtal under den valda perioden. Se {knowledge base} för mer information om mediakvalitet.",
+    "mediaQualityGraphError": "Ett fel inträffade vid inläsning av mediakvalitetsdata."
   },
   "profilePage": {
     "userProfile": "Användarprofil",
@@ -356,7 +373,12 @@
     "finish": "Slutför",
     "language": "Språk",
     "selectLanguage": "Välj ett språk",
-    "select": "Välj"
+    "select": "Välj",
+    "invalidRequired": "Detta fält är obligatoriskt.",
+    "invalidEmail": "Detta är inte en giltig e-postadress.",
+    "invalidUrl": "Detta är inte en giltig URL.",
+    "invalidMinLength": "Inmatningen är för kort.",
+    "invalidMaxLength": "Inmatningen är för lång."
   },
   "notifications": {
     "success": "Aviseringar om slutförda åtgärder",
@@ -411,7 +433,7 @@
     "enableSSO": "Integrera en tredjeparts identitetsleverantör. (Avancerat)",
     "disableSSO": "Använd den inbyggda identitetstjänsten för användarautentisering. (Grundläggande)",
     "importMetadataTitle": "Importera IdP-metadata",
-    "exportMetadataTitle": "Exportera moln-metadata",
+    "exportMetadataTitle": "Exportera katalogmetadata",
     "testSSOSetupTitle": "Testa SSO-konfiguration",
     "enableSSOTitle": "Aktivera SSO",
     "importMetadataDesc": "Börja med att konfigurera en pålitlig anslutning mellan din identitetsleverantör (IdP) och Cisco Collaboration Cloud genom att hämta en pålitlig metadatafil från din IdP och överföra den här.",
@@ -479,7 +501,7 @@
     "title": "Directory Sync",
     "manualTitle": "Ange användare",
     "yourDomainTitle": "Din domän",
-    "installTitle": "Installera Cloud Connector",
+    "installTitle": "Installera Directory Connector",
     "syncStatus": "Synkroniseringsstatus",
     "grantServices": "Bevilja tjänster",
     "connectionTitle": "Anslutning",
@@ -488,7 +510,7 @@
     "domain": "Domän",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Identifiera den Active Directory-domän som ska synkroniseras.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hämta </a> och installera Cisco Cloud Connector på ditt företag.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hämta </a> och installera Cisco Directory Connector till din verksamhet.",
     "installStep2": "2. Konfigurera synkroniseringsavtalet för Active Directory.",
     "installStep3": "3. Testa synkroniseringsavtalet.",
     "nextSteps": "Tryck på Nästa när du är redo att verifiera att identitetsinformationen är synkroniserad.",
@@ -592,8 +614,9 @@
       "error": "Fel"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusions-UC",
-      "squared-fusion-cal": "Fusionskalender"
+      "squared-fusion-uc": "Samtal",
+      "squared-fusion-cal": "Kalender",
+      "squared-fusion-media": "Media"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Synkronisera från Active Directory",
     "manualTitle": "Ange användare",
     "yourDomainTitle": "Din domän",
-    "installTitle": "Installera Cloud Connector",
+    "installTitle": "Installera Directory Connector",
     "syncStatus": "Synkroniseringsstatus",
     "domain": "Domän",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Identifiera den Active Directory-domän som ska synkroniseras.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hämta </a> och installera Cisco Cloud Connector på ditt företag.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hämta </a> och installera Cisco Directory Connector till din verksamhet.",
     "installStep2": "2. Konfigurera synkroniseringsavtalet för Active Directory.",
     "installStep3": "3. Testa synkroniseringsavtalet.",
     "nextSteps": "Tryck på Nästa när du är redo att verifiera att identitetsinformationen är synkroniserad.",
@@ -648,7 +671,7 @@
     "manualInvite": "Ange e-postadresserna till personer i ditt företag som kommer att ta del av Collaboration Services. De får en e-postinbjudan om att registrera sig.",
     "domainEntry": "Ange domän",
     "domainSubDesc": "Ange den AD-domän som ska synkroniseras:",
-    "connectorSteps": "Följ dessa steg för att installera Cloud Connector:",
+    "connectorSteps": "Följ dessa steg för att installera Directory Connector:",
     "readyToGo": "Du är klar!",
     "finishDesc": "Du har slutfört konfigurationsguiden. Om du hoppade över vissa steg eller vill ändra några inställningar klickar du på kugghjulet längst upp till höger på sidan för att komma till den här panelen igen.",
     "finish": "Slutför",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "Antal licenser",
     "name": "Namn",
     "edit": "Redigera",
-    "saveSendReminder": "Spara och skicka påminnelse",
     "partnerHeading": "Implementering och engagemang",
     "entitlementsTitle": "Registrerade användare",
     "activeUsersTitle": "Dagliga aktiva användare",
     "averageCallsTitle": "Genomsnittligt antal samtal per användare",
-    "contentSharedTitle": "Delade filer"
+    "contentSharedTitle": "Delade filer",
+    "invalidTrialLicenseCount": "Antalet licenser måste vara fler än 0 men färre än 1 000."
   },
   "trialModal": {
     "trialSuccess": "Du har konfigurerat din provperiod.",
@@ -870,7 +893,7 @@
     "editSuccess": "Du har ändrat en provperiod för {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dagar."
   },
   "trials": {
-    "collab": "Standardgrupprum + gruppmöten för 25 personer",
+    "collab": "Standardgrupprum + samlingsmöten",
     "squaredUC": "Avancerat Spark-samtal"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "E-postmeddelandet skickades till kunden.",
     "emailFailText": "Kunde inte skicka e-postmeddelande",
     "inputPlacehoder": "Ange telefonnummer avgränsade med kommatecken",
-    "didFormatHelpText": "Exempelformat: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "Till exempel: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Enhetskonfiguration",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "Den kommer att kopplas bort från molnet och bli offline.",
     "cancel": "Avbryt",
     "deleteResource": "Stäng ner resurs"
+  },
+  "mediaFusion": {
+    "page_title": "Media Fusion Management",
+    "connectors": {
+      "group_by": "Grupptjänster efter:",
+      "cluster_id": "Kluster",
+      "host_name": "Expressway Host",
+      "display_name": "Namn på tjänst",
+      "connector_type": "Anslutningstyp",
+      "serial": "Serienummer",
+      "version": "Version",
+      "status": "Status",
+      "alarms": "Larm"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Aktiveringen av sessionstypen har uppdaterats.",

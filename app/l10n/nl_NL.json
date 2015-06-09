@@ -5,6 +5,7 @@
     "loading": "Wordt geladen"
   },
   "usersPage": {
+    "assignServices": "Services toewijzen",
     "inviteModalBtn": "Gebruikers uitnodigen",
     "manageUsers": "Gebruikers",
     "subTitleAdd": "Gebruikers beheren",
@@ -48,14 +49,17 @@
     "deleteUser": "Gebruiker verwijderen",
     "deleteUserConfText": "Weet u zeker dat u {{email}} wilt verwijderen?",
     "resend": "Uitnodiging opnieuw verzenden",
+    "resendActivation": "Activering opnieuw versturen",
     "deleteUserSuccess": "Gebruiker {{email}} verwijderen is geslaagd",
     "deleteUserError": "Fout bij het verwijderen van de gebruiker. Status {{status}}",
     "onboardSuccess": "{{email}} integreren is geslaagd",
     "onboardError": "{{email}} integreren is mislukt. Status: {{status}}",
-    "ciscoucError": "{{email}} heeft geen Unified Communications geleverd.",
+    "ciscoucError": "{{email}} is niet met succes geregistreerd voor Unified Communications.",
     "statusError": "Aanvraag mislukt met status: {{status}}.",
     "messageError": "Bericht: {{message}}",
-    "userListError": "Fout bij het ophalen van de lijst met gebruikers. Probeer de pagina opnieuw te laden."
+    "userListError": "Fout bij het ophalen van de lijst met gebruikers. Probeer de pagina opnieuw te laden.",
+    "emailSuccess": "De e-mail is met succes verzonden.",
+    "emailError": "Er is een fout opgetreden tijdens het verzenden van de e-mail"
   },
   "groupsPage": {
     "manageGroups": "Groepen",
@@ -92,7 +96,7 @@
     "freeConf": "Gratis vergaderen met 3 partijen",
     "freeComm": "Gratis 1:1 Spark-gesprek",
     "paidMsg": "Standaard teamruimtes",
-    "paidConf": "Vergaderingen met 25 partijen",
+    "paidConf": "Vergaderingen met partijen",
     "paidComm": "Gevanceerd Spark-gesprek",
     "freeSpark": "Gratis Spark-berichtendienst",
     "enterpriseEdition": "Enterprise Edition",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communicatie",
-    "cloudExtensions": "Toestelnummers in de cloud"
+    "cloudExtensions": "Toestelnummers in de cloud",
+    "cmr": "Collaboration Meeting Rooms"
   },
   "usersPreview": {
     "groupPreview": "Groep:",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "Beheer organisatiegegevens, bekijk toegewezen services en open tools.",
     "fusionDetailsTab": "Connectorbeheer",
     "fusionDetailsTabDesc": "Connectorbeheer",
+    "MediafusionDetailsTab": "Media Fusion Management",
+    "MediafusionDetailsTabDesc": "Media Fusion Management",
     "callRoutingTab": "Gespreksomleiding",
     "callRoutingTabDesc": "Beheer functies voor gespreksomleiding, zoals 'Gesprek parkeren'",
     "mediaOnHoldTab": "Media in de wachtrij",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "Actief",
     "activeUsers": "Actieve gebruikers",
-    "activeUserGraphError": "Er is een fout opgetreden bij het laden van de actieve gebruikersgegevens.",
+    "activeUserGraphError": "Er is een fout opgetreden bij het laden van de actieve gebruikersgegevens voor {{customer}}.",
     "activeUserTableError": "Er is een fout opgetreden bij het laden van de meeste actieve gebruikersgegevens voor {{customer}}.",
     "calls": "Gesprekken",
     "customer": "Klant",
@@ -257,6 +264,16 @@
     "squaredActivity": "Activiteiten in blokken",
     "user": "Gebruiker",
     "users": "Gebruikers"
+  },
+  "mediaQuality": {
+    "mediaQuality": "Mediakwaliteit",
+    "totalCalls": "Totaal aantal gesprekken",
+    "excellent": "Uitstekend",
+    "good": "Goed",
+    "fair": "Matig",
+    "poor": "Slecht",
+    "description": "'Mediakwaliteit' biedt een overzicht van de kwaliteit van alle gesprekken tijdens de geselecteerde periode. Raadpleeg de {knowledge base} voor meer informatie over mediakwaliteit.",
+    "mediaQualityGraphError": "Er is een fout opgetreden tijdens het laden van de gegevens over de mediakwaliteit."
   },
   "profilePage": {
     "userProfile": "Gebruikersprofiel",
@@ -356,7 +373,12 @@
     "finish": "Voltooien",
     "language": "Taal",
     "selectLanguage": "Kies een taal",
-    "select": "Selecteren"
+    "select": "Selecteren",
+    "invalidRequired": "Dit is een verplicht veld.",
+    "invalidEmail": "Dit e-mailadres is ongeldig.",
+    "invalidUrl": "Deze URL is ongeldig.",
+    "invalidMinLength": "De ingevoerde tekst bevat te weinig tekens.",
+    "invalidMaxLength": "De ingevoerde tekst bevat te veel tekens."
   },
   "notifications": {
     "success": "Succesmeldingen",
@@ -411,7 +433,7 @@
     "enableSSO": "Integreer een externe identiteitsprovider. (Geavanceerd)",
     "disableSSO": "Gebruik de ingebouwde identiteitsservice voor gebruikersverificatie. (Eenvoudig)",
     "importMetadataTitle": "Metagegevens van de identiteitsprovider importeren",
-    "exportMetadataTitle": "Metagegevens van de cloud exporteren",
+    "exportMetadataTitle": "Metagegevens voor adreslijst exporteren",
     "testSSOSetupTitle": "SSO-configuratie testen",
     "enableSSOTitle": "Eenmalige aanmelding (SSO) inschakelen",
     "importMetadataDesc": "Begin de vertrouwensrelatie tussen uw identiteitsprovider (IdP) en de Collaboration Cloud van Cisco te configureren door een bestand met vertrouwde metagegevens van uw identiteitsprovider te uploaden.",
@@ -479,7 +501,7 @@
     "title": "Synchroniseren met Directory",
     "manualTitle": "Gebruiker toevoegen",
     "yourDomainTitle": "Uw domein",
-    "installTitle": "Cloud Connector installeren",
+    "installTitle": "Directory Connector installeren",
     "syncStatus": "Synchronisatiestatus",
     "grantServices": "Services verlenen",
     "connectionTitle": "Verbinding",
@@ -488,7 +510,7 @@
     "domain": "Domein",
     "defaultPlaceholder": "Standaard",
     "domainDesc": "Geef op met welk Active Directory-domein u wilt synchroniseren.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> en installeer de Cisco Cloud Connector in uw onderneming.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> en installeer Cisco Directory Connector binnen uw zakelijke omgeving.",
     "installStep2": "2. Configureeer de synchronisatieovereenkomst voor Active Directory.",
     "installStep3": "3. Test de synchronisatieovereenkomst.",
     "nextSteps": "Druk op Volgende wanneer u klaar bent om te controleren of de identiteitsgegevens worden gesynchroniseerd.",
@@ -592,8 +614,9 @@
       "error": "Fout"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusion-agenda"
+      "squared-fusion-uc": "Bellen",
+      "squared-fusion-cal": "Agenda",
+      "squared-fusion-media": "Media"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Synchroniseren met Active Directory",
     "manualTitle": "Gebruiker toevoegen",
     "yourDomainTitle": "Uw domein",
-    "installTitle": "Cloud Connector installeren",
+    "installTitle": "Directory Connector installeren",
     "syncStatus": "Synchronisatiestatus",
     "domain": "Domein",
     "defaultPlaceholder": "Standaard",
     "domainDesc": "Geef op met welk Active Directory-domein u wilt synchroniseren.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> en installeer de Cisco Cloud Connector in uw onderneming.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> en installeer Cisco Directory Connector binnen uw zakelijke omgeving.",
     "installStep2": "2. Configureeer de synchronisatieovereenkomst voor Active Directory.",
     "installStep3": "3. Test de synchronisatieovereenkomst.",
     "nextSteps": "Druk op Volgende wanneer u klaar bent om te controleren of de identiteitsgegevens worden gesynchroniseerd.",
@@ -648,7 +671,7 @@
     "manualInvite": "Voer de e-mailadressen in van de personen in uw bedrijf die Collaboration Services zullen ontvangen. Ze zullen een e-mailuitnodiging krijgen om zich in te schrijven.",
     "domainEntry": "Domeininvoer",
     "domainSubDesc": "Voer het Active Directory-domein waarmee u wilt synchroniseren:",
-    "connectorSteps": "Volg deze stappen om de Cloud Connector te installeren:",
+    "connectorSteps": "Volg de onderstaande stappen om de Directory Connector te installeren:",
     "readyToGo": "U bent nu klaar!",
     "finishDesc": "U hebt de configuratiewizard doorlopen. Hebt u stappen overgeslagen of wilt u instellingen wijzigen? Klik dan op het tandwieltje rechtsboven op de pagina om dit deelvenster opnieuw te openen.",
     "finish": "Voltooien",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "Aantal licenties",
     "name": "Naam",
     "edit": "Bewerken",
-    "saveSendReminder": "Opslaan en herinnering versturen",
     "partnerHeading": "Aanname en activiteit",
     "entitlementsTitle": "Geïntegreerde gebruikers",
     "activeUsersTitle": "Dagelijks actieve gebruikers",
     "averageCallsTitle": "Gemiddeld aantal gesprekken per gebruiker",
-    "contentSharedTitle": "Gedeelde bestanden"
+    "contentSharedTitle": "Gedeelde bestanden",
+    "invalidTrialLicenseCount": "U dient meer dan 0 en minder dan 1000 licenties te selecteren."
   },
   "trialModal": {
     "trialSuccess": "Uw proefperiode is met succes aangevraagd.",
@@ -870,7 +893,7 @@
     "editSuccess": "U hebt met succes het proefabonnement van {{customerName}} met {{licenseCount}} licenties gewijzigd. De proefperiode duurt {{licenseDuration}} dagen."
   },
   "trials": {
-    "collab": "Standaard teamruimtes + vergaderingen met 25 partijen",
+    "collab": "Standaard teamruimtes + vergaderingen met partijen",
     "squaredUC": "Gevanceerd Spark-gesprek"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "De e-mail is met succes naar de klant verzonden.",
     "emailFailText": "Er is een fout opgetreden tijdens het verzenden van de e-mail",
     "inputPlacehoder": "Voer telefoonnummers in, gescheiden met een komma",
-    "didFormatHelpText": "Voorbeeldopmaken zijn: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "Bijvoorbeeld: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Apparaatconfiguratie",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "De resource heeft dan geen verbinding meer met de cloud en wordt offline gehaald.",
     "cancel": "Annuleren",
     "deleteResource": "Resource uitschakelen"
+  },
+  "mediaFusion": {
+    "page_title": "Media Fusion Management",
+    "connectors": {
+      "group_by": "Services groeperen op:",
+      "cluster_id": "Cluster",
+      "host_name": "Expressway-host",
+      "display_name": "Naam van de service",
+      "connector_type": "Soort aansluiting",
+      "serial": "Serienummer",
+      "version": "Versie",
+      "status": "Status",
+      "alarms": "Alarmen"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Inschakeling sessietype bijgewerkt.",

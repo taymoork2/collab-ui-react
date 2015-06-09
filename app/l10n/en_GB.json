@@ -5,6 +5,7 @@
     "loading": "Loading"
   },
   "usersPage": {
+    "assignServices": "Assign Services",
     "inviteModalBtn": "Invite users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",
@@ -48,14 +49,17 @@
     "deleteUser": "Delete user",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
     "resend": "Resend Invitation",
+    "resendActivation": "Resend Activation",
     "deleteUserSuccess": "User {{email}} deleted successfully",
     "deleteUserError": "Error deleting user. Status: {{status}}",
     "onboardSuccess": "{{email}} on-boarded successfully",
     "onboardError": "{{email}} not on-boarded. Status: {{status}}",
-    "ciscoucError": "{{email}} did not provision Unified Communications.",
+    "ciscoucError": "{{email}} did not successfully onboard Unified Communications.",
     "statusError": "Request failed with status: {{status}}.",
     "messageError": "Message: {{message}}",
-    "userListError": "Error retrieving the user list. Please try reloading the page."
+    "userListError": "Error retrieving the user list. Please try reloading the page.",
+    "emailSuccess": "E-mail sent successfully",
+    "emailError": "Error sending email."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -92,7 +96,7 @@
     "freeConf": "Free 3 Party Spark Meet",
     "freeComm": "Free 1:1 Spark Call",
     "paidMsg": "Standard team rooms",
-    "paidConf": "25 Party Meetings",
+    "paidConf": "Party Meetings",
     "paidComm": "Advanced Spark Call",
     "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Centre {{capacity}}",
     "eventCenter": "Event Centre {{capacity}}",
     "communication": "Communication",
-    "cloudExtensions": "Cloud Extensions"
+    "cloudExtensions": "Cloud Extensions",
+    "cmr": "Collaboration Meeting Rooms"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "Manage organisation details, view assigned services, and access tools",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
+    "MediafusionDetailsTab": "Media Fusion Management",
+    "MediafusionDetailsTabDesc": "Media Fusion Management",
     "callRoutingTab": "Call routing",
     "callRoutingTabDesc": "Manage call routing features, such as call park",
     "mediaOnHoldTab": "Media on hold",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active users",
-    "activeUserGraphError": "There was an error while loading active user data.",
+    "activeUserGraphError": "There was an error while loading active user data for {{customer}}.",
     "activeUserTableError": "There was an error while loading data for active users for {{customer}}.",
     "calls": "Calls",
     "customer": "Customer",
@@ -257,6 +264,16 @@
     "squaredActivity": "Squared Activity",
     "user": "User",
     "users": "Users"
+  },
+  "mediaQuality": {
+    "mediaQuality": "Media Quality",
+    "totalCalls": "Total Calls",
+    "excellent": "Excellent",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor",
+    "description": "Media quality provides a breakdown of the quality of all connected calls during the selected period. For more information about media quality, see the {knowledge base}.",
+    "mediaQualityGraphError": "There was an error while loading the media quality data."
   },
   "profilePage": {
     "userProfile": "User profile",
@@ -356,7 +373,12 @@
     "finish": "Finish",
     "language": "Language",
     "selectLanguage": "Select a language",
-    "select": "Select"
+    "select": "Select",
+    "invalidRequired": "This field is required.",
+    "invalidEmail": "This is not a valid Email Address.",
+    "invalidUrl": "This is not a valid URL.",
+    "invalidMinLength": "This entry is too short.",
+    "invalidMaxLength": "This entry is too long."
   },
   "notifications": {
     "success": "Success notifications",
@@ -411,7 +433,7 @@
     "enableSSO": "Integrate a third-party identity provider (advanced)",
     "disableSSO": "Use the built-in identity service for user authentication (simple)",
     "importMetadataTitle": "Import IdP metadata",
-    "exportMetadataTitle": "Export cloud metadata",
+    "exportMetadataTitle": "Export Directory Metadata",
     "testSSOSetupTitle": "Test SSO setup",
     "enableSSOTitle": "Enable SSO",
     "importMetadataDesc": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Collaboration Cloud by obtaining a trust metadata file from your IdP and uploading it here",
@@ -479,7 +501,7 @@
     "title": "Directory Sync",
     "manualTitle": "User entry",
     "yourDomainTitle": "Your domain",
-    "installTitle": "Install Cloud Connector",
+    "installTitle": "Install Directory Connector",
     "syncStatus": "Sync status",
     "grantServices": "Grant services",
     "connectionTitle": "Connection",
@@ -488,7 +510,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Default",
     "domainDesc": "Identify the Active Directory domain you will be syncing",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Directory Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronisation agreement",
     "installStep3": "3. Test the synchronisation agreement",
     "nextSteps": "Press the Next button when you're ready to verify that the identity information is being synchronised",
@@ -592,8 +614,9 @@
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusion Calendar"
+      "squared-fusion-uc": "Call",
+      "squared-fusion-cal": "Calendar",
+      "squared-fusion-media": "Media"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Active Directory Sync",
     "manualTitle": "User entry",
     "yourDomainTitle": "Your domain",
-    "installTitle": "Install Cloud Connector",
+    "installTitle": "Install Directory Connector",
     "syncStatus": "Sync status",
     "domain": "Domain",
     "defaultPlaceholder": "Default",
     "domainDesc": "Identify the Active Directory domain you will be syncing",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Directory Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronisation agreement",
     "installStep3": "3. Test the synchronisation agreement",
     "nextSteps": "Press the Next button when you're ready to verify that the identity information is being synchronised",
@@ -645,10 +668,10 @@
     "syncAgreementText": "Users in sync agreement",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration",
-    "manualInvite": "Enter the e-mail addresses of persons in your company who will receive Collaboration Services. They will receive an e-mail invitation to sign up",
+    "manualInvite": "Enter the email addresses of those who should receive Collaboration Services. They will receive an email invitation to sign up.",
     "domainEntry": "Domain entry",
     "domainSubDesc": "Enter the AD domain to sync with:",
-    "connectorSteps": "Follow these steps in order to install the Cloud Connector:",
+    "connectorSteps": "Follow these steps to install the Directory Connector:",
     "readyToGo": "You're ready to go!",
     "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the Gear icon in the upper right corner of the page to access this panel again",
     "finish": "Finish",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "Number of licences",
     "name": "Name",
     "edit": "Edit",
-    "saveSendReminder": "Save and send reminder",
     "partnerHeading": "Adoption and engagement",
     "entitlementsTitle": "Users on-boarded",
     "activeUsersTitle": "Daily active users",
     "averageCallsTitle": "Average calls per user",
-    "contentSharedTitle": "Files Shared"
+    "contentSharedTitle": "Files Shared",
+    "invalidTrialLicenseCount": "Number of licences should be greater than 0 and less than 1000."
   },
   "trialModal": {
     "trialSuccess": "You have set up your trial successfully",
@@ -870,7 +893,7 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licences for {{licenseDuration}} days"
   },
   "trials": {
-    "collab": "Standard Team Rooms + 25 Party Meetings",
+    "collab": "Standard Team Rooms + Party Meetings",
     "squaredUC": "Advanced Spark Call"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "E-mail successfully sent to customer",
     "emailFailText": "Error when sending the e-mail",
     "inputPlacehoder": "Enter phone numbers separated by commas",
-    "didFormatHelpText": "Example formats include: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Device configuration",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "It will be disconnected from the cloud and taken offline",
     "cancel": "Cancel",
     "deleteResource": "Decommission resource"
+  },
+  "mediaFusion": {
+    "page_title": "Media Fusion Management",
+    "connectors": {
+      "group_by": "Group services by:",
+      "cluster_id": "Cluster",
+      "host_name": "Expressway host",
+      "display_name": "Service name",
+      "connector_type": "Connector type",
+      "serial": "Serial",
+      "version": "Version",
+      "status": "Status",
+      "alarms": "Alarms"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",

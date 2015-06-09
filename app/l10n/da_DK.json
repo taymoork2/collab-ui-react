@@ -5,6 +5,7 @@
     "loading": "Indlæser"
   },
   "usersPage": {
+    "assignServices": "Tildel tjenester",
     "inviteModalBtn": "Inviter brugere",
     "manageUsers": "Brugere",
     "subTitleAdd": "Administrer brugere",
@@ -48,14 +49,17 @@
     "deleteUser": "Slet bruger",
     "deleteUserConfText": "Er du sikker på, du vil slette {{email}}?",
     "resend": "Send invitation igen",
+    "resendActivation": "Gensend aktivering",
     "deleteUserSuccess": "Bruger {{email}} slettet korrekt",
     "deleteUserError": "Fejl under sletning af bruger. Status: {{status}}",
     "onboardSuccess": "{{email}} inkluderet korrekt",
     "onboardError": "{{email}} ikke inkluderet. Status: {{status}}",
-    "ciscoucError": "{{email}} hentede ikke samlet kommunikation.",
+    "ciscoucError": "{{email}} fik ikke Unified Communications indbygget.",
     "statusError": "Anmodning mislykkedes med status: {{status}}.",
     "messageError": "Meddelelse: {{message}}",
-    "userListError": "Fejl under hentning af brugerliste. Genindlæs venligst siden."
+    "userListError": "Fejl under hentning af brugerliste. Genindlæs venligst siden.",
+    "emailSuccess": "E-mail blev sendt.",
+    "emailError": "Fejl under afsending af e-mail."
   },
   "groupsPage": {
     "manageGroups": "Grupper",
@@ -92,7 +96,7 @@
     "freeConf": "Gratis tredjeparts Spark-møde",
     "freeComm": "Gratis 1:1 Spark-opkald",
     "paidMsg": "Standard team-mødelokaler",
-    "paidConf": "25 festmøder",
+    "paidConf": "Partimøder",
     "paidComm": "Avanceret Spark-opkald",
     "freeSpark": "Gratis Spark-chat",
     "enterpriseEdition": "Virksomhedsudgave",
@@ -101,7 +105,8 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Kommunikation",
-    "cloudExtensions": "Forlængelser af sky"
+    "cloudExtensions": "Forlængelser af sky",
+    "cmr": "Mødesteder til samarbejde"
   },
   "usersPreview": {
     "groupPreview": "Gruppe:",
@@ -146,6 +151,8 @@
     "organizationTabDesc": "Administrer organisationsoplysninger, se tildelte tjenester og benyt værktøj.",
     "fusionDetailsTab": "Administration af forbindelser",
     "fusionDetailsTabDesc": "Administration af forbindelser",
+    "MediafusionDetailsTab": "Mediefusionstyring",
+    "MediafusionDetailsTabDesc": "Mediefusionstyring",
     "callRoutingTab": "Dirigering af opkald",
     "callRoutingTabDesc": "Administrer funktioner til dirigering af opkald såsom Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -246,7 +253,7 @@
   "activeUsers": {
     "active": "Aktiv",
     "activeUsers": "Aktive brugere",
-    "activeUserGraphError": "Der opstod en fejl under indlæsning af aktive brugeroplysninger.",
+    "activeUserGraphError": "Der opstod en fejl under indlæsning af aktiv brugerdata for {{customer}}.",
     "activeUserTableError": "Der opstod en fejl under indlæsning af data for de mest aktive brugere for {{customer}}.",
     "calls": "Opkald",
     "customer": "Kunde",
@@ -257,6 +264,16 @@
     "squaredActivity": "Squared-aktivitet",
     "user": "Bruger",
     "users": "Brugere"
+  },
+  "mediaQuality": {
+    "mediaQuality": "Mediekvalitet",
+    "totalCalls": "Samlede opkald",
+    "excellent": "Glimrende",
+    "good": "God",
+    "fair": "Rimelig",
+    "poor": "Dårlig",
+    "description": "Mediekvalitet giver en oversigt over kvaliteten af alle tilkoblede opkald i den valgte periode. For mere information om mediekvalitet se {knowledge base}.",
+    "mediaQualityGraphError": "Der opstod en fejl under indlæsning af mediekvalitetsdata."
   },
   "profilePage": {
     "userProfile": "Brugerprofil",
@@ -356,7 +373,12 @@
     "finish": "Afslut",
     "language": "Sprog",
     "selectLanguage": "Vælg et sprog",
-    "select": "Vælg"
+    "select": "Vælg",
+    "invalidRequired": "Dette felt skal udfyldes.",
+    "invalidEmail": "Dette er ikke en gyldig e-mailadresse.",
+    "invalidUrl": "Dette er ikke en gyldig URL.",
+    "invalidMinLength": "Indtastningen er for kort.",
+    "invalidMaxLength": "Indtastningen er for lang."
   },
   "notifications": {
     "success": "Succesmeddelelser",
@@ -411,7 +433,7 @@
     "enableSSO": "Integrer en tredjepart identitetsudbyder. (Avanceret)",
     "disableSSO": "Brug den indbyggede identitetstjeneste til brugerautentificering. (Simpelt)",
     "importMetadataTitle": "Importér IdP-metadata",
-    "exportMetadataTitle": "Eksporter sky-metadata",
+    "exportMetadataTitle": "Eksporter mappens metadata",
     "testSSOSetupTitle": "Afprøv SSO-opsætning",
     "enableSSOTitle": "Aktivér SSO",
     "importMetadataDesc": "Begynd konfiguration af tillidsforholdet mellem din identitetsudbyder (IdP) og Cisco Collaboration Cloud ved at modtage en tillids-metadatafil fra din IdP og sende den hertil.",
@@ -479,7 +501,7 @@
     "title": "Directory Sync",
     "manualTitle": "Brugerindtastning",
     "yourDomainTitle": "Dit domæne",
-    "installTitle": "Installer Cloud Connector",
+    "installTitle": "Installer Directory Connector",
     "syncStatus": "Synkroniseringsstatus",
     "grantServices": "Tildel tjenester",
     "connectionTitle": "Forbindelse",
@@ -488,7 +510,7 @@
     "domain": "Domæne",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Identificer det Active Directory-domæne, du vil synkronisere.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hent  </a> og installer Cisco Cloud Connector i din virksomhed.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hent </a> og installer Cisco Directory Connector i din virksomhed.",
     "installStep2": "2. Konfigurer Active Directory-synkroniseringsaftalen.",
     "installStep3": "3. Afprøv synkroniseringsaftalen.",
     "nextSteps": "Tryk Næste, når du er klar til at bekræfte, at identitetsinformation bliver synkroniseret.",
@@ -592,8 +614,9 @@
       "error": "Fejl"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Fusion UC",
-      "squared-fusion-cal": "Fusionskalender"
+      "squared-fusion-uc": "Ring",
+      "squared-fusion-cal": "Kalender",
+      "squared-fusion-media": "Medie"
     }
   },
   "firstTimeWizard": {
@@ -632,12 +655,12 @@
     "chooseADSyncDesc": "Active Directory Sync",
     "manualTitle": "Brugerindtastning",
     "yourDomainTitle": "Dit domæne",
-    "installTitle": "Installer Cloud Connector",
+    "installTitle": "Installer Directory Connector",
     "syncStatus": "Synkroniseringsstatus",
     "domain": "Domæne",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Identificer det Active Directory-domæne, du vil synkronisere.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hent  </a> og installer Cisco Cloud Connector i din virksomhed.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hent </a> og installer Cisco Directory Connector i din virksomhed.",
     "installStep2": "2. Konfigurer Active Directory-synkroniseringsaftalen.",
     "installStep3": "3. Afprøv synkroniseringsaftalen.",
     "nextSteps": "Tryk Næste, når du er klar til at bekræfte, at identitetsinformation bliver synkroniseret.",
@@ -648,7 +671,7 @@
     "manualInvite": "Indtast e-mailadresser for de personer i dit selskab, som vil modtage Collaboration Services. De vil modtage en e-mailinvitation til tilmelding.",
     "domainEntry": "Domæneindtastning",
     "domainSubDesc": "Indtast det AD-domæne, der skal synkroniseres med:",
-    "connectorSteps": "Følg disse trin for at installere Cloud Connector:",
+    "connectorSteps": "Følg disse trin for at installere Directory Connector:",
     "readyToGo": "Så er du klar!",
     "finishDesc": "Du har gennemgået opsætningsguiden. Hvis du har sprunget over trin eller har brug for at ændre nogle af indstillingerne, så klik på tandhjulsikonet i øverste højre hjørne på siden for at få adgang til dette panel igen.",
     "finish": "Afslut",
@@ -850,12 +873,12 @@
     "numberOfLicenses": "Antal licenser",
     "name": "Navn",
     "edit": "Rediger",
-    "saveSendReminder": "Gem og send påmindelse",
     "partnerHeading": "Indførelse og engagement",
     "entitlementsTitle": "Brugere taget indenbords",
     "activeUsersTitle": "Daglige aktive brugere",
     "averageCallsTitle": "Gennemsnitlige opkald per bruger",
-    "contentSharedTitle": "Delte filer"
+    "contentSharedTitle": "Delte filer",
+    "invalidTrialLicenseCount": "Antal licenser bør være større end 0 og mindre end 1000."
   },
   "trialModal": {
     "trialSuccess": "Du har oprettet din prøveperiode korrekt.",
@@ -870,7 +893,7 @@
     "editSuccess": "Du har redigeret en prøveperiode for {{customerName}} med {{licenseCount}} licenser i {{licenseDuration}} dage."
   },
   "trials": {
-    "collab": "Standard team-mødelokaler + 25 festmøder",
+    "collab": "Standard mødelokaler for arbejdshold + partimøder",
     "squaredUC": "Avanceret Spark-opkald"
   },
   "status": {
@@ -943,7 +966,7 @@
     "emailSuccessText": "E-mail blev sendt til kunden.",
     "emailFailText": "Fejl under afsending af e-mail",
     "inputPlacehoder": "Indtast telefonnumre adskilt med kommaer",
-    "didFormatHelpText": "Eksempelformater inkluderer: 15556667777, +15556667777, 1-555-666-7777, 15556667777, +1 (555) 666-7777"
+    "didFormatHelpText": "For eksempel: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
   },
   "deviceDetailPage": {
     "deviceConfig": "Enhedskonfiguration",
@@ -1053,6 +1076,20 @@
     "deleteResourceConfText2": "Den vil blive frakoblet fra skyen og gå offline.",
     "cancel": "Annuller",
     "deleteResource": "Afvikl ressource"
+  },
+  "mediaFusion": {
+    "page_title": "Mediefusionstyring",
+    "connectors": {
+      "group_by": "Gruppetjenester af:",
+      "cluster_id": "Klynge",
+      "host_name": "Vært for ekspresrute",
+      "display_name": "Navn på tjeneste",
+      "connector_type": "Forbindelsestype",
+      "serial": "Seriel",
+      "version": "Version",
+      "status": "Status",
+      "alarms": "Alarmer"
+    }
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Sessionstypeaktivering opdateret.",
