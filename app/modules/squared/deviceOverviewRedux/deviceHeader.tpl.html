@@ -1,14 +1,19 @@
 <cs-sp-header>
   <div class="header-image">
     <div class="device-img">
-      <img ng-src="images/devices/cisco_{{deviceOverview.currentDevice.product.toLowerCase()}}.png" style="height: 60px; width: 60px" />
+      <img 
+        style="height: 60px; width: 60px" 
+        ng-src="images/devices/cisco_{{deviceOverview.currentDevice.product.toLowerCase()}}.png" 
+      />
     </div>
   </div>
   <div class="header-info">
     <div class="header-info-wrap">
-      <a>
-        <div class="header-title" title="">{{deviceOverview.currentDevice.displayName}}</div>
-      </a>
+      <div class="header-title">{{deviceOverview.currentDevice.displayName}}</div>
+      <div class="header-sub-info">
+        <i class="fa fa-circle" ng-class="deviceOverview.currentDevice.cssColorClass"></i>
+        <span>{{deviceOverview.currentDevice.readableState}}</span>
+      </div>
     </div>
   </div>
 </cs-sp-header>

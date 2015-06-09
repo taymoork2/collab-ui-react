@@ -41,10 +41,10 @@ angular.module('Squared').service('CsdmService',
     };
 
     var fillCodesAndDevicesCache = function (callback) {
-      fetchCodesAndDevices(function (err, data)  {
+      fetchCodesAndDevices(function (err, data) {
         if (err) return callback(err, data);
         codesAndDevicesCache = data;
-        callback(null);
+        callback();
       });
     };
 

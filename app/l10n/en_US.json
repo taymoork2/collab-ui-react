@@ -1359,5 +1359,11 @@
     "nonPrintable": "This entry contains nonprintable characters.",
     "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
     "specialCharacters": "This entry contains special characters."
+  },
+  "CsdmStatus": {
+    "Online": "Online",
+    "Offline": "Offline",
+    "Unknown": "Unknown",
+    "NeedsActivation": "Needs Activation"
   }
 }

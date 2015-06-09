@@ -61,6 +61,7 @@ describe('Service: CsdmService', function () {
     expect(Service.listCodesAndDevices()[1]).toEqual({
       foo: "bar"
     });
+
     var statusCallback = sinon.stub();
     Service.getDeviceStatus("device", statusCallback);
     expect(statusCallback.callCount).toBe(1);

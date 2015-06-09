@@ -523,8 +523,7 @@ angular
             }
           },
           params: {
-            currentDevice: {},
-            querydeviceslist: {}
+            currentDevice: {}
           },
           data: {
             displayName: ''
