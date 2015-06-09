@@ -72,26 +72,41 @@ gulp.task('help', $.taskListing);
  * Run tasks for Build/Development directory
  * Usage: gulp build
  ********************************************/
-gulp.task('build', ['clean'], function(done) {
-  runSeq(
-    [
-      'template-cache',
-      'analyze:jshint',
-      'less:build',
-      'copy:build'
-    ],
-    'processHtml:build',
-    'karma-config',
-    'karma',
-    done
-  );
+gulp.task('build', ['clean'], function (done) {
+  if (args.nolint) {
+    runSeq(
+      [
+        'template-cache',
+        'analyze:jshint',
+        'less:build',
+        'copy:build'
+      ],
+      'processHtml:build',
+      'karma-config',
+      'karma',
+      done
+    );
+  } else {
+    runSeq(
+      'jsb', [
+        'template-cache',
+        'analyze:jshint',
+        'less:build',
+        'copy:build'
+      ],
+      'processHtml:build',
+      'karma-config',
+      'karma',
+      done
+    );
+  }
 });
 
 /*********************************************
  * Run tasks for Dist/Production directory
  * Usage: gulp dist
  ********************************************/
-gulp.task('dist', ['build'], function(done) {
+gulp.task('dist', ['build'], function (done) {
   runSeq(
     [
       'image-min',
@@ -116,7 +131,7 @@ gulp.task('clean', ['clean:build', 'clean:dist', 'clean:karma']);
  * Delete dist directory files
  * Usage: gulp clean:dist
  ********************************************/
-gulp.task('clean:dist', function(done) {
+gulp.task('clean:dist', function (done) {
   var files = config.dist;
   messageLogger('Cleaning dist directory', files);
   del(files, done);
@@ -126,7 +141,7 @@ gulp.task('clean:dist', function(done) {
  * Delete build directory files
  * Usage: gulp clean:build
  ********************************************/
-gulp.task('clean:build', function(done) {
+gulp.task('clean:build', function (done) {
   var files = config.build;
   messageLogger('Cleaning build directory', files);
   del(files, done);
@@ -136,7 +151,7 @@ gulp.task('clean:build', function(done) {
  * Delete build directory files
  * Usage: gulp clean:build
  ********************************************/
-gulp.task('clean:karma', function(done) {
+gulp.task('clean:karma', function (done) {
   var files = config.test + '/karma*.js';
   messageLogger('Cleaning build directory', files);
   del(files, done);
@@ -145,7 +160,7 @@ gulp.task('clean:karma', function(done) {
 /*********************************************
  * Delete files from individual build sub-directories
  ********************************************/
-gulp.task('clean:css', function(done) {
+gulp.task('clean:css', function (done) {
   var files = [
     config.build + '/**/*.css'
   ];
@@ -161,7 +176,7 @@ gulp.task('clean:css', function(done) {
  * Copy files for the build directory
  * Usage: gulp copy:build
  ********************************************/
-gulp.task('copy:build', function(done) {
+gulp.task('copy:build', function (done) {
   messageLogger('Copying Build Files');
   runSeq([
       'copy:build-app-files',
@@ -174,7 +189,7 @@ gulp.task('copy:build', function(done) {
     done);
 });
 
-gulp.task('copy:build-app-files', function() {
+gulp.task('copy:build-app-files', function () {
   var files = [].concat(
     config.app + '/*.{ico,png,txt,html}',
     '!index.html',
@@ -195,7 +210,7 @@ gulp.task('copy:build-app-files', function() {
     }));
 });
 
-gulp.task('copy:build-unsupported-js', function() {
+gulp.task('copy:build-unsupported-js', function () {
   messageLogger('Copying unsupported JS files', config.unsupported.js);
   return gulp
     .src(config.unsupported.js, {
@@ -208,7 +223,7 @@ gulp.task('copy:build-unsupported-js', function() {
     }));
 });
 
-gulp.task('copy:build-vendor-css', function() {
+gulp.task('copy:build-vendor-css', function () {
   messageLogger('Copying vendor CSS files', config.vendorFiles.css);
   return gulp
     .src(config.vendorFiles.css, {
@@ -221,7 +236,7 @@ gulp.task('copy:build-vendor-css', function() {
     }));
 });
 
-gulp.task('copy:build-vendor-fonts', function() {
+gulp.task('copy:build-vendor-fonts', function () {
   messageLogger('Copying vendor Font files', config.vendorFiles.fonts);
   return gulp
     .src(config.vendorFiles.fonts)
@@ -232,7 +247,7 @@ gulp.task('copy:build-vendor-fonts', function() {
     }));
 });
 
-gulp.task('copy:build-vendor-images', function() {
+gulp.task('copy:build-vendor-images', function () {
   messageLogger('Copying vendor Image files', config.vendorFiles.images);
   return gulp
     .src(config.vendorFiles.images)
@@ -243,7 +258,7 @@ gulp.task('copy:build-vendor-images', function() {
     }));
 });
 
-gulp.task('copy:build-vendor-js', function() {
+gulp.task('copy:build-vendor-js', function () {
   messageLogger('Copying vendor CSS files', config.vendorFiles.js);
   return gulp
     .src(config.vendorFiles.js, {
@@ -256,8 +271,8 @@ gulp.task('copy:build-vendor-js', function() {
     }));
 });
 
-gulp.task('copy:changed-js', function() {
-  messageLogger('Copying changed JS files', changedFiles);
+gulp.task('copy:changed-files', function () {
+  messageLogger('Copying changed files', changedFiles);
   return gulp
     .src(changedFiles, {
       base: config.app
@@ -273,7 +288,7 @@ gulp.task('copy:changed-js', function() {
  * Copy files for the dist directory
  * Usage: gulp copy:dist
  ********************************************/
-gulp.task('copy:dist', function(done) {
+gulp.task('copy:dist', function (done) {
   runSeq([
       'copy:dist-appfiles',
       'copy:dist-vendor-fonts'
@@ -282,7 +297,7 @@ gulp.task('copy:dist', function(done) {
   );
 });
 
-gulp.task('copy:dist-appfiles', function() {
+gulp.task('copy:dist-appfiles', function () {
   var files = [].concat(
     '*.{txt,html}',
     '!index.html',
@@ -299,7 +314,7 @@ gulp.task('copy:dist-appfiles', function() {
     .pipe(gulp.dest(config.dist));
 });
 
-gulp.task('copy:dist-vendor-fonts', function() {
+gulp.task('copy:dist-vendor-fonts', function () {
   messageLogger('Copying vendor fonts files', config.vendorFiles.fonts);
   return gulp
     .src(config.vendorFiles.fonts)
@@ -311,7 +326,7 @@ gulp.task('copy:dist-vendor-fonts', function() {
 // HTML BUILDING TASKS
 //============================================
 
-gulp.task('processHtml:build', function(done) {
+gulp.task('processHtml:build', function (done) {
   runSeq(['index:build', 'unsupported:build'], done);
 });
 
@@ -319,7 +334,7 @@ gulp.task('processHtml:build', function(done) {
  * Inject dependancies into index.html
  * Usage: gulp index:build
  ********************************************/
-gulp.task('index:build', function() {
+gulp.task('index:build', function () {
   var jsFiles = [].concat(
     config.vendorFiles.js,
     config.build + '/scripts/**/*.js',
@@ -364,7 +379,7 @@ gulp.task('index:build', function() {
  * Inject dependancies into unsupported.html
  * Usage: gulp unsupported:build
  ********************************************/
-gulp.task('unsupported:build', function() {
+gulp.task('unsupported:build', function () {
   var jsFiles = [].concat(
     config.vendorFiles.unsupported,
     config.unsupportedDir + '/scripts/**/*.js'
@@ -393,7 +408,7 @@ gulp.task('unsupported:build', function() {
 /*********************************************
  * Usage: gulp image-min
  ********************************************/
-gulp.task('image-min', function() {
+gulp.task('image-min', function () {
   messageLogger('Compressing images for dist');
   gulp.src(config.build + '/**/*.{ico,png,jpg,gif}')
     .pipe($.imagemin({
@@ -413,7 +428,7 @@ gulp.task('image-min', function() {
  * gulp format-js-verify
  * gulp format-js
  ********************************************/
-gulp.task('jsBeautifier:verify', function() {
+gulp.task('jsBeautifier:verify', function () {
   var files = [
     config.app + '/**/*.js',
     config.app + '/**/*.json',
@@ -421,18 +436,20 @@ gulp.task('jsBeautifier:verify', function() {
     config.test + '/**/*.json',
     '!test/karma-unit.js',
     'karma.conf.js',
-    'Gruntfile.js'
+    'gulpfile.js'
   ];
+  var logSuccess = args.verbose ? true : false;
   messageLogger('Verifying JS files formatting', files);
   return gulp
     .src(files)
     .pipe($.jsbeautifier({
       config: '.jsbeautifyrc',
-      mode: 'VERIFY_ONLY'
+      mode: 'VERIFY_ONLY',
+      logSuccess: logSuccess
     }));
 });
 
-gulp.task('jsBeautifier:beautify', function() {
+gulp.task('jsBeautifier:beautify', function () {
   var files = [
     config.app + '/**/*.js',
     config.app + '/**/*.json',
@@ -440,8 +457,9 @@ gulp.task('jsBeautifier:beautify', function() {
     config.test + '/**/*.json',
     '!test/karma-unit.js',
     'karma.conf.js',
-    'Gruntfile.js'
+    'gulpfile.js'
   ];
+  var logSuccess = args.verbose ? true : false;
   messageLogger('Formatting JS files', files);
   return gulp
     .src(files, {
@@ -450,7 +468,7 @@ gulp.task('jsBeautifier:beautify', function() {
     .pipe($.jsbeautifier({
       config: '.jsbeautifyrc',
       mode: 'VERIFY_AND_WRITE',
-      logSuccess: false
+      logSuccess: logSuccess
     }))
     .pipe(gulp.dest('./'));
 });
@@ -463,7 +481,7 @@ gulp.task('jsBeautifier:beautify', function() {
  * Process LESS files for the build directory
  * Usage: gulp less:build
  ********************************************/
-gulp.task('less:build', ['clean:css'], function() {
+gulp.task('less:build', ['clean:css'], function () {
   messageLogger('Compiling LESS --> CSS');
   return gulp
     .src('app/styles/app.less')
@@ -489,7 +507,7 @@ gulp.task('less:build', ['clean:css'], function() {
 // OPTIMIZATION TASKS
 //============================================
 
-gulp.task('optimize', function(done) {
+gulp.task('optimize', function (done) {
   runSeq(
     [
       'optimize:app',
@@ -503,7 +521,7 @@ gulp.task('optimize', function(done) {
  * Optimize files for production/dist
  * Usage: gulp optimize:app
  ********************************************/
-gulp.task('optimize:app', function() {
+gulp.task('optimize:app', function () {
   messageLogger('Optimizing the JavaScript, CSS, and HTML for production index.html');
   var assets = $.useref.assets({
     searchPath: config.build
@@ -546,7 +564,7 @@ gulp.task('optimize:app', function() {
  * Optimize files for production/dist
  * Usage: gulp optimize:unsupported
  ********************************************/
-gulp.task('optimize:unsupported', function() {
+gulp.task('optimize:unsupported', function () {
   messageLogger('Optimizing the JavaScript, CSS, and HTML for production unsupported.html');
   var assets = $.useref.assets({
     searchPath: config.build
@@ -582,7 +600,7 @@ gulp.task('optimize:unsupported', function() {
  * added to Angular's template cache.
  * Usage: gulp template-cache
  ********************************************/
-gulp.task('template-cache', function() {
+gulp.task('template-cache', function () {
   messageLogger('Creating Angular $templatecache');
   return gulp.src(config.appFiles.tpl)
     .pipe($.angularTemplatecache(
@@ -602,7 +620,7 @@ gulp.task('template-cache', function() {
  * vet the code and create coverage report
  ********************************************/
 
-gulp.task('analyze', ['jsBeautifier:beautify'], function(done) {
+gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
   messageLogger('Analyzing source with JSHint, JSCS, and Plato');
   runSeq([
     'analyze:jscs',
@@ -611,23 +629,25 @@ gulp.task('analyze', ['jsBeautifier:beautify'], function(done) {
   ], done);
 });
 
-gulp.task('analyze:jshint', function() {
+gulp.task('analyze:jshint', function () {
   var files = [].concat(
     config.appFiles.js,
-    config.testFiles.spec
+    config.unsupportedDir + '/' + config.unsupported.file,
+    config.testFiles.spec,
+    'gulpfile.js'
   );
   messageLogger('Running JSHint on JavaScript files', files);
   return gulp
     .src(files)
     .pipe($.if(args.verbose, $.print()))
-    .pipe($.jshint());
-  // .pipe($.jshint.reporter('jshint-stylish', {
-  //   verbose: true
-  // }))
-  // .pipe($.jshint.reporter('fail'));
+    .pipe($.jshint())
+    .pipe($.jshint.reporter('jshint-stylish', {
+      verbose: true
+    }))
+    .pipe($.jshint.reporter('fail'));
 });
 
-gulp.task('analyze:jscs', function() {
+gulp.task('analyze:jscs', function () {
   messageLogger('Running JSCS on JavaScript files', config.appFiles.js);
   return gulp
     .src(config.appFiles.js)
@@ -636,7 +656,7 @@ gulp.task('analyze:jscs', function() {
     .on('error', errorLogger);
 });
 
-gulp.task('eslint:e2e', function() {
+gulp.task('eslint:e2e', function () {
   var files = [].concat(
     config.test + '/e2e-protractor/squared/*_spec.js',
     config.test + '/e2e-protractor/huron/*_spec.js'
@@ -655,7 +675,7 @@ gulp.task('eslint:e2e', function() {
 /*********************************************
  * Create a visualizer report
  ********************************************/
-gulp.task('plato', function(done) {
+gulp.task('plato', function (done) {
   messageLogger('Analyzing source with Plato');
   log('Browse to /report/plato/index.html to see Plato results');
   startPlatoVisualizer(done);
@@ -668,7 +688,7 @@ gulp.task('plato', function(done) {
 /*********************************************
  * Usage: gulp serve
  ********************************************/
-gulp.task('serve', function(done) {
+gulp.task('serve', function (done) {
   var preTask = args.dist ? 'dist' : 'build';
   runSeq(
     preTask,
@@ -677,7 +697,7 @@ gulp.task('serve', function(done) {
   );
 });
 
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', function () {
   if (browserSync.active) {
     return;
   }
@@ -740,7 +760,7 @@ gulp.task('browser-sync', function() {
       gulp.watch([
           config.appFiles.js
         ], [
-          'copy:changed-js',
+          'copy:changed-files',
           'index:build'
         ])
         .on('change', logWatch);
@@ -769,6 +789,14 @@ gulp.task('browser-sync', function() {
         'template-cache'
       ])
       .on('change', logWatch);
+
+    gulp.watch([
+        config.appFiles.lang
+      ], [
+        'copy:changed-files'
+      ])
+      .on('change', logWatch);
+
   }
 
   function logWatch(event) {
@@ -792,7 +820,7 @@ gulp.task('browser-sync', function() {
  * to its file array aren't managed manually
  * Usage: gulp karma-config
  ********************************************/
-gulp.task('karma-config', function(done) {
+gulp.task('karma-config', function (done) {
   if (!args.nounit) {
     var unitTestFiles = [].concat(
       config.vendorFiles.js,
@@ -809,7 +837,7 @@ gulp.task('karma-config', function(done) {
         addRootSlash: false,
         starttag: 'files: [',
         endtag: ',',
-        transform: function(filepath, file, i, length) {
+        transform: function (filepath, file, i, length) {
           return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
         }
       }))
@@ -834,7 +862,7 @@ gulp.task('karma-config', function(done) {
  * with the test files of the changed directory
  * Usage: gulp karma-config-watch
  ********************************************/
-gulp.task('karma-config-watch', function() {
+gulp.task('karma-config-watch', function () {
   var unitTestFiles = [].concat(
     config.vendorFiles.js,
     config.testFiles.js,
@@ -850,7 +878,7 @@ gulp.task('karma-config-watch', function() {
       addRootSlash: false,
       starttag: 'files: [',
       endtag: ',',
-      transform: function(filepath, file, i, length) {
+      transform: function (filepath, file, i, length) {
         return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
       }
     }))
@@ -866,7 +894,7 @@ gulp.task('karma-config-watch', function() {
  * Usage: gulp karma
  *        gulp karma --debug
  ********************************************/
-gulp.task('karma', function(done) {
+gulp.task('karma', function (done) {
   if (!args.nounit) {
     var options = {
       configFile: __dirname + '/test/karma-unit.js'
@@ -889,7 +917,7 @@ gulp.task('karma', function(done) {
  * Run test once and exit
  * Usage: gulp karma-watch
  ********************************************/
-gulp.task('karma-watch', ['karma-config-watch'], function(done) {
+gulp.task('karma-watch', ['karma-config-watch'], function (done) {
   karma.start({
     configFile: __dirname + '/test/karma-watch.js',
     singleRun: true
@@ -911,7 +939,7 @@ gulp.task('karma-watch', ['karma-config-watch'], function(done) {
  * --specs              Runs tests against specific files or modules
  * --build              Runs tests against the build directory
  *************************************************************************/
-gulp.task('e2e', function(done) {
+gulp.task('e2e', function (done) {
   if (args.sauce && !(args.int || args.prod)) {
     runSeq(
       'e2e:setup',
@@ -940,7 +968,7 @@ gulp.task('e2e', function(done) {
  * --specs=filepath         Runs only tests in specified file
  * --build                  Runs tests against the build directory
  *************************************************************************/
-gulp.task('protractor', ['set-env', 'protractor:update'], function() {
+gulp.task('protractor', ['set-env', 'protractor:update'], function () {
   var debug = args.debug ? true : false;
   var opts = {
     configFile: 'protractor-config.js',
@@ -962,15 +990,15 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function() {
   } else {
     // tests = 'test/e2e-protractor/**/*_spec.js';
     tests = [].concat(
-        config.testFiles.e2e.squared,
-        config.testFiles.e2e.hercules
-      );
+      config.testFiles.e2e.squared,
+      config.testFiles.e2e.hercules
+    );
     messageLogger('Running End 2 End tests from all modules.');
   }
 
   return gulp.src(tests)
     .pipe(protractor(opts))
-    .on('error', function(e) {
+    .on('error', function (e) {
       if (args.sauce) {
         //stop on error because gulp-protractor exits the stream
         gulp.src('')
@@ -981,7 +1009,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function() {
       }
       throw e;
     })
-    .on('end', function() {
+    .on('end', function () {
       if (!args.nosetup) {
         $.connect.serverClose();
       }
@@ -1010,7 +1038,7 @@ gulp.task('set-env', function () {
  * Usage: gulp sauce:start
  *********************************************************/
 
-gulp.task('sauce:start', function() {
+gulp.task('sauce:start', function () {
   sourceSauce();
   return gulp.src('')
     .pipe($.shell('./sauce/start.sh'));
@@ -1021,7 +1049,7 @@ gulp.task('sauce:start', function() {
  * Usage: gulp sauce:stop
  *********************************************************/
 
-gulp.task('sauce:stop', function() {
+gulp.task('sauce:stop', function () {
   sourceSauce();
   return gulp.src('')
     .pipe($.shell('./sauce/stop.sh'));
@@ -1043,7 +1071,7 @@ gulp.task('sauce:job', function () {
 /*********************************************
  * Test and document API perfomance
  ********************************************/
-gulp.task('test:api', function() {
+gulp.task('test:api', function () {
   var opts = {
     reporter: 'spec',
     timeout: 30000,
@@ -1060,7 +1088,7 @@ gulp.task('test:api', function() {
 /*********************************************
  * E2E Setup tasks
  ********************************************/
-gulp.task('e2e:setup', function(done) {
+gulp.task('e2e:setup', function (done) {
   var buildTask = args.build ? 'build' : 'dist';
   if (!args.nosetup) {
     runSeq(
@@ -1079,7 +1107,7 @@ gulp.task('e2e:setup', function(done) {
 /*********************************************
  * Connect server for E2E Tests
  ********************************************/
-gulp.task('connect', function() {
+gulp.task('connect', function () {
   var rootDir = args.build ? config.build : config.dist;
   messageLogger('Connecting server from the ' + rootDir + ' directory.');
   $.connect.server({
@@ -1093,9 +1121,23 @@ gulp.task('connect', function() {
 // GRUNT ALIASES
 //============================================
 
-gulp.task('jsb', ['jsBeautifier:beautify']);
+gulp.task('jsb', function (done) {
+  runSeq(
+    'jsBeautifier:beautify',
+    'analyze:jshint',
+    done
+  );
+});
 
-gulp.task('compile', function() {
+gulp.task('jsb:verify', function (done) {
+  runSeq(
+    'jsBeautifier:verify',
+    'analyze:jshint',
+    done
+  );
+});
+
+gulp.task('compile', function () {
   log($.util.colors.yellow('*************************************'));
   log($.util.colors.yellow('* The `compile` task is depreciated. '));
   log($.util.colors.green('* Use `gulp dist` instead.'));
@@ -1103,7 +1145,7 @@ gulp.task('compile', function() {
   gulp.start('dist');
 });
 
-gulp.task('server', function() {
+gulp.task('server', function () {
   log($.util.colors.yellow('***************************************'));
   log($.util.colors.red('* The `server` task has been deprecated.'));
   log($.util.colors.green('* Use `gulp serve` to start a server.'));
@@ -1111,7 +1153,7 @@ gulp.task('server', function() {
   gulp.start('serve');
 });
 
-gulp.task('test', function() {
+gulp.task('test', function () {
   log($.util.colors.yellow('*****************************************'));
   log($.util.colors.red('* The `test` task has been deprecated.'));
   log($.util.colors.green('* Use `gulp e2e` to run functional tests.'));

@@ -4,9 +4,8 @@
 ./setup.sh
 
 # Build
-grunt clean || exit $?
-grunt js_verify || exit $?
-grunt build || exit $?
+gulp clean || exit $?
+gulp build || exit $?
 
 # Check build number
 if [ -n "$BUILD_NUMBER" ]; then

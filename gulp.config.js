@@ -40,11 +40,13 @@ module.exports = function () {
       tpl: [app + '/modules/**/*.html'],
       html: [app + '/*.html'],
       less: ['styles/app.less'],
-      images: [app + '/images']
+      images: [app + '/images'],
+      lang: [app + '/l10n/*.json']
     },
 
     unsupported: {
       dir: 'unsupported',
+      file: 'unsupportedApp.js',
       js: [
         app + '/unsupported/**/*.js'
       ],

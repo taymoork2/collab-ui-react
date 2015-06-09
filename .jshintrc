@@ -108,6 +108,7 @@
     "notifications": true,
     "getJSONFixture": true,
     "enterpriseResource": true,
-    "orgprofile": true
+    "orgprofile": true,
+    "TIMEOUT": true
   }
 }

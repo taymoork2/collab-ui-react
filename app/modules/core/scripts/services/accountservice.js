@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('AccountService', ['$http', '$rootScope', '$location',
-    function ($http, $rootScope, $location) {
+  .service('AccountService', ['$http', '$rootScope', '$location', 'Config', 'LogMetricsService', 'Log',
+    function ($http, $rootScope, $location, Config, LogMetricsService, Log) {
       return {
         createAccount: function (customerOrgName, customerAdminEmail, partnerAdminEmail, isPartner, beId, begeoId, duration, licenseCount, offers, startDate) {
           var accountUrl = Config.getAdminServiceUrl() + 'accounts';
@@ -88,6 +88,6 @@ angular.module('Core')
               callback(data, status);
             });
         }
-      }
+      };
     }
   ]);
