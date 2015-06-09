@@ -5,7 +5,7 @@
     .controller('DashboardHeaderController',
 
       /* @ngInject */
-      function ($scope, ServiceDescriptor, DashboardAggregator, USSService) {
+      function ($scope, ServiceDescriptor, DashboardAggregator, USSService, $modal) {
         var services = null;
         var clusters = null;
 
@@ -19,8 +19,9 @@
               });
             }
             return summary || {
-              activated: 0,
-              notActivated: 0
+                activated: 0,
+                notActivated: 0,
+                error: 0
             };
           };
         });
@@ -57,6 +58,15 @@
           default:
             return 'icon icon-circle-question';
           }
+        };
+
+        $scope.openUserStatusReportModal = function (serviceId) {
+          $scope.selectedServiceId = serviceId;
+          $scope.modal = $modal.open({
+            scope: $scope,
+            controller: 'ExportUserStatusesController',
+            templateUrl: 'modules/hercules/dashboard-header/export-user-statuses.html'
+          });
         };
       }
     )

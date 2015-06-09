@@ -1,0 +1,33 @@
+<div>
+  <div class="modal-header">
+    <button id="convertModalClose" type="button" class="close" ng-click="$parent.modal.close()">
+      <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title">
+      <span><span translate="hercules.serviceNames.{{selectedServiceId}}"/>: User Status Report</span>
+    </h3>
+  </div>
+  <div class="modal-body">
+    <div ng-show="loading" style="text-align: center; padding: 60px;">
+      <i class="icon icon-spinner icon-2x"></i>
+    </div>
+    <div ng-hide="loading">
+      <p>Select users for CSV export.</p>
+      <p>Note: exporting a lot of users will take time!</p>
+      <div><cs-checkbox ckid="exportActivated" ng-model="exportActivated" label="Successfully Activated"></cs-checkbox><span class="brand-primary" style="padding-left: 10px;">{{summary.activated}}</span></div>
+      <div><cs-checkbox ckid="exportPending" ng-model="exportPending" label="Pending Activation"/></cs-checkbox><span class="brand-primary" style="padding-left: 10px;">{{summary.notActivated}}</span></div>
+      <div><cs-checkbox ckid="exportError" ng-model="exportError" label="Users in Error"/></cs-checkbox><span class="brand-primary" style="padding-left: 10px;">{{summary.error}}</span></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button ng-disabled="loading || exportingUserStatusReport" id="convertActionButton" class="btn btn-primary pull-right" ng-click="exportCsv()">
+      <span ng-hide="exportingUserStatusReport">Export to CSV</span>
+      <span ng-show="exportingUserStatusReport">
+        <i class="icon icon-spinner" />
+      </span>
+    </button>
+    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
+      <span>Close</span>
+    </button>
+  </div>
+</div>

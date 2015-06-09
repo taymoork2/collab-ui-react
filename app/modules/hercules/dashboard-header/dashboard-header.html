@@ -1,7 +1,7 @@
 <div>
   <h3 style="padding-left: 20px">Services</h3>
   <div class="dashboard-header row">
-    <div class="col-sm-5  col-md-4" ng-repeat="(type, service) in serviceAggregates.services">
+    <div class="col-sm-5  col-md-3" ng-repeat="(type, service) in serviceAggregates.services">
       <div class="item">
         <i ng-class="serviceIcon(service.service_id)" />
         <hercules-uc-config-button style="float: right" ng-show="service.type == 'c_ucmc'"></hercules-uc-config-button>
@@ -9,12 +9,13 @@
           <h4><span translate="hercules.serviceNames.{{service.service_id}}"/></h4>
           <div>
             <div>
-              <span ng-show="service.running == 1">
-                Running on {{service.running}} cluster. {{summary(service.service_id).activated}} users activated.
-              </span>
-              <span ng-hide="service.running == 1">
-                Running on {{service.running}} clusters. {{summary(service.service_id).activated}} users activated.
-              </span>
+              Clusters: {{service.running}} running.
+              <span ng-show="service.needs_attention > 0">{{service.needs_attention}} needs attention.</span>
+            </div>
+            <div>
+              Users: {{summary(service.service_id).activated}} activated.
+              <span ng-show="summary(service.service_id).error > 0">{{summary(service.service_id).error}} in error.</span>
+              <span ng-hide="true" class="export-users-statuses-icon" tooltip-placement="top" tooltip="User Status Report" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share" ng-click="openUserStatusReportModal(service.service_id)"></i></span>
             </div>
           </div>
         </div>
@@ -23,7 +24,7 @@
     <div class="addRemove">
       <div class="addRemoveItem" ng-click="showServiceActivationDialog()">
         <i class="icon icon-plus" /><br>
-        <span>Add/Remove Services</span>
+        <div style="padding-top: 10px;">Add/Remove Services</div>
       </div>
     </div>
   </div>
