@@ -35,12 +35,12 @@ auth =
   'huron-int1':
     user: 'admin@int1.huron-alpha.com'
     pass: 'Cisco123!'
-    org:  '6662df48-b367-4c1e-9c3c-aa408aaa79a1'
+    org:  '7e88d491-d6ca-4786-82ed-cbe9efb02ad2'
 
   'huron-e2e':
     user: 'admin@uc.e2e.huron-alpha.com'
     pass: 'Cisco123!'
-    org:  '40c419e0-c74e-4f50-bcac-cc5581f9db6d'
+    org:  '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79'
 
   'account-admin':
     user: 'nkamboh+acc2@gmail.com'

@@ -1,7 +1,7 @@
 'use strict';
 
 var TelephonyPage = function () {
-  this.communicationPanel = element(by.cssContainingText('.section-title-row', 'Spark UC'));
+  this.communicationPanel = element(by.cssContainingText('.section-title-row', 'Lines'));
   this.lineConfigurationPanel = element(by.cssContainingText('.section-title-row', 'Line Configuration'));
   this.close = element(by.id('close-preview-button'));
 
@@ -19,7 +19,7 @@ var TelephonyPage = function () {
   this.disableVoicemailtitle = element(by.cssContainingText('h3', 'Disable Voicemail'));
   this.disableVoicemailCancel = element(by.css('.modal-footer')).element(by.buttonText('Cancel'));
   this.disableVoicemailSave = element(by.css('.modal-footer')).element(by.buttonText('Disable'));
-  this.voicemailTitle = element(by.cssContainingText('.section-name', 'Voicemail'));
+  this.voicemailTitle = element(by.cssContainingText('.section-title-row', 'Voicemail'));
   this.voicemailSwitch = element(by.css('label[for="enableVoicemail"]'));
 
   this.directoryNumbers = element.all(by.repeater('directoryNumber in telephonyOverview.telephonyInfo.directoryNumbers track by directoryNumber.uuid')).all(by.tagName('a'));
@@ -43,6 +43,7 @@ var TelephonyPage = function () {
   this.forwardExternalCalls = element(by.css('label[for="ckForwardExternalCalls"]'));
   this.forwardExternalBusyNoAnswer = element(by.css('cs-combobox[name="forwardExternalNABCalls"]'));
 
+  this.snrTitle = element(by.cssContainingText('.section-title-row', 'Single Number Reach'));
   this.snrSwitch = element(by.css('label[for="enableSnr"]'));
   this.snrNumber = element(by.id('destination'));
   this.snrStatus = this.snrFeature.element(by.css('.feature-status'));

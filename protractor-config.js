@@ -12,7 +12,7 @@ exports.config = {
     'browserName': 'chrome',
     "screenResolution": "1680x1050",
     'platform': process.env.SAUCE_USERNAME ? 'Windows 7' : undefined,
-    'tunnelIdentifier': process.env.LAUNCH_URL ? undefined : process.env.SC_TUNNEL_IDENTIFIER,
+    'tunnelIdentifier': process.env.SC_TUNNEL_IDENTIFIER,
     'name': 'wx2-admin-web-client',
 
     'chromeOptions': {

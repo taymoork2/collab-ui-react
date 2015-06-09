@@ -86,9 +86,19 @@ exports.wait = function (elem) {
 };
 
 exports.waitUntilEnabled = function (elem) {
-  browser.wait(function () {
-    return elem.isEnabled();
-  }, TIMEOUT, 'Waiting for: ' + elem.locator());
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.isEnabled();
+    }, TIMEOUT, 'Waiting until enabled: ' + elem.locator());
+  });
+};
+
+exports.waitUntilDisabled = function (elem) {
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.isEnabled() === false;
+    }, TIMEOUT, 'Waiting until disabled: ' + elem.locator());
+  });
 };
 
 exports.expectIsDisplayed = function (elem) {
@@ -247,14 +257,15 @@ exports.clickEscape = function () {
 
 exports.expectSwitchState = function (elem, value) {
   return this.wait(elem).then(function () {
-    return elem.element(by.tagName('input')).getAttribute('ng-model').then(function (ngModel) {
-      return elem.evaluate(ngModel);
-    });
+    return browser.wait(function () {
+      var input = elem.element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        return input.evaluate(ngModel).then(function (_value) {
+          return value === _value;
+        });
+      });
+    }, TIMEOUT, 'Waiting for switch state to be ' + value + ': ' + elem.locator());
   });
-};
-
-exports.getSwitchState = function (elem) {
-  return elem.isSelected();
 };
 
 exports.findDirectoryNumber = function (message, lineNumber) {
@@ -277,7 +288,7 @@ exports.search = function (query) {
 
 exports.searchAndClick = function (query) {
   this.search(query);
-  this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
+  return this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
