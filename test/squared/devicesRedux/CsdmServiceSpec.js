@@ -62,4 +62,29 @@ describe('Service: CsdmService', function () {
       foo: "bar"
     });
   });
+
+  it('updates the cache on create and delete', function () {
+    $httpBackend
+      .when(
+        'POST',
+        rootPath + '/organization/myyoloorg/codes'
+      )
+      .respond({
+        url: "url"
+      });
+    $httpBackend
+      .when(
+        'DELETE',
+        "url"
+      )
+      .respond(204);
+
+    expect(Service.listCodesAndDevices().length).toBe(0);
+    Service.createCode("codeName", sinon.stub());
+    $httpBackend.flush();
+    expect(Service.listCodesAndDevices().length).toBe(1);
+    Service.deleteUrl("url", sinon.stub());
+    $httpBackend.flush();
+    expect(Service.listCodesAndDevices().length).toBe(0);
+  });
 });
