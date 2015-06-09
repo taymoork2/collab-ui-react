@@ -43,7 +43,9 @@ describe('Service: CsdmService', function () {
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
-
+    expect(Service.listCodesAndDevices().length).toBe(2);
+    expect(Service.listCodesAndDevices()[0]).toEqual({bar: "baz"});
+    expect(Service.listCodesAndDevices()[1]).toEqual({foo: "bar"});
   });
 });
 
