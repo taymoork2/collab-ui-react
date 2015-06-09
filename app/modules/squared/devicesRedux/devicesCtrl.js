@@ -70,7 +70,12 @@ angular.module('Squared')
           }
 
           if (device.state === 'CLAIMED') {
-            device.stateFormatted = 'Offline';
+            if (device.status && 'CONNECTED' === device.status.connectionStatus) {
+              device.stateFormatted = 'Active';
+              device.color = 'device-status-green';
+            } else {
+              device.stateFormatted = 'Offline';
+            }
           } else if (device.state === 'UNCLAIMED') {
             device.stateFormatted = 'Needs Activation';
             device.color = 'device-status-yellow';
