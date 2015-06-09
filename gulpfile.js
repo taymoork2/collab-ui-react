@@ -77,7 +77,6 @@ gulp.task('build', ['clean'], function (done) {
     runSeq(
       [
         'template-cache',
-        'analyze:jshint',
         'less:build',
         'copy:build'
       ],
@@ -90,7 +89,6 @@ gulp.task('build', ['clean'], function (done) {
     runSeq(
       'jsb', [
         'template-cache',
-        'analyze:jshint',
         'less:build',
         'copy:build'
       ],
@@ -769,7 +767,7 @@ gulp.task('browser-sync', function () {
           config.appFiles.js
         ], [
           'karma-watch',
-          'copy:changed-js',
+          'copy:changed-files',
           'index:build'
         ])
         .on('change', logWatch);
