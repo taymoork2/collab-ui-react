@@ -29,6 +29,8 @@ angular.module('Core')
           trialDidPage: 'TRIALDIDPAGE',
           trialDidEntered: 'TRIALDIDENTERED',
           trialStarted: 'TRIALSTARTED',
+          organizationPage: 'ORGANIZATIONPAGE',
+          organizationCreated: 'ORGANIZATIONCREATED',
           customerLogin: 'CUSTOMERLOGIN',
           customerOverviewPage: 'CUSTOMEROVERVIEWPAGE',
           customerUsersListPage: 'CUSTOMERUSERSLISTPAGE',
@@ -85,6 +87,10 @@ angular.module('Core')
           case 'trialAdd.addNumbers':
             msg = "In trial DID page";
             eType = this.getEventType('trialDidPage');
+            break;
+          case 'organizationAdd.info':
+            msg = "In organization creation page";
+            eType = this.getEventType('organizationPage');
             break;
           case 'overview':
             msg = "In customer overview page";

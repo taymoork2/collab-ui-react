@@ -15,25 +15,25 @@
     vm.offers = {};
     vm.model = {
       licenseCount: 100,
-      licenseDuration: 90,
+      duration: 90,
     };
 
     vm.orgInfoFields = [{
-      key: 'companyPartnerName',
+      key: 'customerOrgName',
       type: 'input',
       templateOptions: {
-        label: $translate.instant('orgsPage.companyPartnerName'),
+        label: $translate.instant('organizationsPage.customerOrgName'),
         labelClass: 'col-xs-4',
         inputClass: 'col-xs-7',
         type: 'text',
         required: true
       }
     }, {
-      key: 'adminEmail',
+      key: 'customerAdminEmail',
       type: 'input',
       className: 'last-field',
       templateOptions: {
-        label: $translate.instant('orgsPage.adminEmail'),
+        label: $translate.instant('organizationsPage.customerAdminEmail'),
         labelClass: 'col-xs-4',
         inputClass: 'col-xs-7',
         type: 'email',
@@ -46,15 +46,42 @@
       key: 'isPartner',
       type: 'checkbox',
       templateOptions: {
-        label: $translate.instant('orgsPage.isPartner'),
+        label: $translate.instant('organizationsPage.isPartner'),
         id: 'isPartner',
         class: 'col-xs-8 col-xs-offset-4'
+      }
+    }, {
+      key: 'partnerAdminEmail',
+      type: 'input',
+      className: 'last-field',
+      templateOptions: {
+        label: $translate.instant('organizationsPage.partnerAdminEmail'),
+        labelClass: 'col-xs-4',
+        inputClass: 'col-xs-7',
+        type: 'email',
+        required: true
+      },
+      expressionProperties: {
+        'hide': '!model.isPartner'
       }
     }, {
       key: 'beId',
       type: 'input',
       templateOptions: {
-        label: $translate.instant('orgsPage.beId'),
+        label: $translate.instant('organizationsPage.beId'),
+        labelClass: 'col-xs-4',
+        inputClass: 'col-xs-7',
+        type: 'text',
+        required: true
+      },
+      expressionProperties: {
+        'hide': '!model.isPartner'
+      }
+    }, {
+      key: 'begeoId',
+      type: 'input',
+      templateOptions: {
+        label: $translate.instant('organizationsPage.begeoId'),
         labelClass: 'col-xs-4',
         inputClass: 'col-xs-7',
         type: 'text',
@@ -68,7 +95,7 @@
       type: 'checkbox',
       model: vm.offers,
       templateOptions: {
-        label: $translate.instant('orgsPage.collab'),
+        label: $translate.instant('organizationsPage.collab'),
         id: 'squaredOrganization',
         class: 'col-xs-8 col-xs-offset-4'
       },
@@ -82,7 +109,7 @@
       type: 'checkbox',
       model: vm.offers,
       templateOptions: {
-        label: $translate.instant('orgsPage.squaredUC'),
+        label: $translate.instant('organizationsPage.squaredUC'),
         id: 'squaredUCOrganization',
         class: 'col-xs-8 col-xs-offset-4'
       },
@@ -92,23 +119,23 @@
         }
       }
     }, {
-      key: 'licenseDuration',
+      key: 'duration',
       type: 'radio-list',
       templateOptions: {
         horizontal: true,
-        label: $translate.instant('orgsPage.duration'),
+        label: $translate.instant('organizationsPage.duration'),
         labelClass: 'col-xs-4',
         inputClass: 'col-xs-7',
         options: [{
-          label: $translate.instant('orgsPage.ninetyDays'),
+          label: $translate.instant('organizationsPage.ninetyDays'),
           value: 90,
           id: 'organization90'
         }, {
-          label: $translate.instant('orgsPage.onehundredtwentyDays'),
+          label: $translate.instant('organizationsPage.onehundredtwentyDays'),
           value: 120,
           id: 'organization120'
         }, {
-          label: $translate.instant('orgsPage.onehundredeightyDays'),
+          label: $translate.instant('organizationsPage.onehundredeightyDays'),
           value: 180,
           id: 'organization180'
         }]
@@ -118,7 +145,7 @@
       type: 'input',
       className: 'last-field',
       templateOptions: {
-        label: $translate.instant('orgsPage.numberOfLicenses'),
+        label: $translate.instant('organizationsPage.numberOfLicenses'),
         labelClass: 'col-xs-4',
         inputClass: 'col-xs-3',
         type: 'number',
@@ -130,7 +157,7 @@
             return ValidationService.trialLicenseCount($viewValue, $modelValue);
           },
           message: function () {
-            return $translate.instant('orgsPage.invalidOrganizationLicenseCount');
+            return $translate.instant('organizationsPage.invalidOrganizationLicenseCount');
           }
         }
       }
@@ -170,7 +197,7 @@
         }
       }
 
-      return AccountService.createAccount(offersList, vm.model.companyPartnerName, vm.model.adminEmail, vm.model.licenseDuration, vm.model.licenseCount, vm.startDate, offersList)
+      return AccountService.createAccount(vm.model.customerOrgName, vm.model.customerAdminEmail, vm.model.partnerAdminEmail, vm.model.isPartner, vm.model.beId, vm.model.begeoId, vm.model.duration, vm.model.licenseCount, offersList, vm.startDate)
         .catch(function (response) {
           angular.element('#startOrganizationButton').button('reset');
           Notification.notify([response.data.message], 'error');
@@ -183,14 +210,14 @@
         }).then(function (response) {
           vm.model.customerOrgId = response.data.customerOrgId;
           if (offersList.indexOf(Config.organizations.squaredUC) !== -1) {
-            return HuronCustomer.create(response.data.customerOrgId, response.data.companyPartnerName, response.data.adminEmail)
+            return HuronCustomer.create(response.data.customerOrgId, response.data.customerOrgName, response.data.customerAdminEmail)
               .catch(function (response) {
                 angular.element('#startOrganizationButton').button('reset');
                 Notification.errorResponse(response, 'organizationModal.squareducError');
                 return $q.reject(response);
               });
           } else {
-            return EmailService.emailNotifyOrganizationCustomer(vm.model.adminEmail, vm.model.licenseDuration, vm.model.customerOrgId)
+            return EmailService.emailNotifyOrganizationCustomer(vm.model.customerAdminEmail, vm.model.duration, vm.model.customerOrgId)
               .catch(function (response) {
                 Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
               });
@@ -201,9 +228,9 @@
             $state.modal.close();
           }
           var successMessage = [$translate.instant('organizationModal.addSuccess', {
-            companyPartnerName: vm.model.companyPartnerName,
+            customerOrgName: vm.model.customerOrgName,
             licenseCount: vm.model.licenseCount,
-            licenseDuration: vm.model.licenseDuration
+            duration: vm.model.duration
           })];
           Notification.notify(successMessage, 'success');
           return vm.model.customerOrgId;

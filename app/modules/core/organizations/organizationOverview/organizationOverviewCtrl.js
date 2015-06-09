@@ -31,12 +31,12 @@ angular.module('Core')
       $('#btncover').hide();
 
       $scope.exportBtn = {
-        title: $filter('translate')('orgsPage.exportBtn'),
+        title: $filter('translate')('organizationsPage.exportBtn'),
         disabled: false
       };
 
       if ($rootScope.exporting === true) {
-        $scope.exportBtn.title = $filter('translate')('orgsPage.loadingMsg');
+        $scope.exportBtn.title = $filter('translate')('organizationsPage.loadingMsg');
         $scope.exportBtn.disabled = true;
         $('#btncover').show();
       }

@@ -209,7 +209,7 @@
     "addAdminEmailText": "Admin email address: ",
     "create": "Process Order"
   },
-  "orgsPage": {
+  "organizationsPage": {
     "title": "MANAGE ORGANIZATIONS",
     "subTitleOrgs": "Organizations Tools",
     "exportBtn": "Export Users",
@@ -227,8 +227,9 @@
     "dirSync": "Dirsync Enabled",
     "sso": "SSO Enabled",
     "addOrganization": "Add Organization",
-    "companyPartnerName": "Company / Partner Name",
-    "adminEmail": "Administrator Email",
+    "customerOrgName": "Company / Partner Name",
+    "customerAdminEmail": "Administrator Email",
+    "partnerAdminEmail": "Partner Admin Email",
     "collab": "Standard Team Rooms + Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "duration": "Trial Duration (days)",
@@ -242,7 +243,8 @@
     "cancel": "Cancel",
     "termsOfOrganization": "Terms of Organization",
     "isPartner": "Is this organization a partner?",
-    "beId": "BeID"
+    "beId": "BeID",
+    "begeoId": "BegeoId"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"

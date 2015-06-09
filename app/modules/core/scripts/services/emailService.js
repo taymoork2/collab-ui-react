@@ -10,7 +10,8 @@
     var emailUrl = Config.getAdminServiceUrl() + 'email';
 
     var factory = {
-      emailNotifyTrialCustomer: emailNotifyTrialCustomer
+      emailNotifyTrialCustomer: emailNotifyTrialCustomer,
+      emailNotifyOrganizationCustomer: emailNotifyOrganizationCustomer
     };
 
     return factory;
@@ -21,6 +22,18 @@
         'properties': {
           'CustomerEmail': customerEmail,
           'TrialPeriod': trialPeriod,
+          'OrganizationId': organizationId
+        }
+      };
+      return email(emailData);
+    }
+
+    function emailNotifyOrganizationCustomer(customerAdminEmail, duration, organizationId) {
+      var emailData = {
+        'type': '1',
+        'properties': {
+          'CustomerEmail': customerAdminEmail,
+          'TrialPeriod': duration,
           'OrganizationId': organizationId
         }
       };

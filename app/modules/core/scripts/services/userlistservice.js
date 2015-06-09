@@ -109,7 +109,7 @@ angular.module('Core')
               } else if (status === 500 || data.Resources.length <= 0) {
                 Log.debug('No more users to return. Exporting to file... ');
                 $('#export-icon').html('<i class=\'icon icon-content-share\'></i>');
-                $compile(angular.element('#global-export-btn').html($filter('translate')('orgsPage.exportBtn')))(scope);
+                $compile(angular.element('#global-export-btn').html($filter('translate')('organizationsPage.exportBtn')))(scope);
                 $rootScope.exporting = false;
                 $rootScope.$broadcast('EXPORT_FINISHED');
                 if (scope.exportBtn) {
@@ -145,7 +145,7 @@ angular.module('Core')
           };
 
           $('#export-icon').html('<i class=\'icon icon-spinner\'></i>');
-          $compile(angular.element('#global-export-btn').html($filter('translate')('orgsPage.loadingMsg')))(scope);
+          $compile(angular.element('#global-export-btn').html($filter('translate')('organizationsPage.loadingMsg')))(scope);
           $rootScope.exporting = true;
           if (scope.exportBtn) {
             scope.exportBtn.disabled = true;

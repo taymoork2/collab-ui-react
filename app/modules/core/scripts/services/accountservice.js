@@ -4,7 +4,7 @@ angular.module('Core')
   .service('AccountService', ['$http', '$rootScope', '$location',
     function ($http, $rootScope, $location) {
       return {
-        createAccount: function (offers, customerOrgId, customerErpId, customerAdminEmail, isTrial, callback) {
+        createAccount: function (customerOrgName, customerAdminEmail, partnerAdminEmail, isPartner, beId, begeoId, duration, licenseCount, offers, startDate) {
           var accountUrl = Config.getAdminServiceUrl() + 'accounts';
           var accountRequest = {
             'offers': []
@@ -22,21 +22,23 @@ angular.module('Core')
             }
           }
 
-          accountRequest.customerOrgId = customerOrgId;
-          accountRequest.customerErpId = customerErpId;
+          accountRequest.customerOrgName = customerOrgName;
           accountRequest.customerAdminEmail = customerAdminEmail;
-          accountRequest.isTrial = isTrial;
+          accountRequest.partnerAdminEmail = partnerAdminEmail;
+          accountRequest.isTrial = true;
+          accountRequest.isPartner = isPartner;
+          accountRequest.beId = beId;
+          accountRequest.begeoId = begeoId;
+          accountRequest.duration = duration;
+          accountRequest.startDate = startDate;
 
-          if (accountRequest.customerOrgId !== '' && accountRequest.customerAdminEmail !== '' && accountRequest.offers.length > 0) {
+          if (customerOrgName.length > 0 && customerAdminEmail.length > 0 && offers.length > 0) {
             $http.post(accountUrl, accountRequest)
               .success(function (data, status) {
-                data.success = true;
-                callback(data, status);
+                LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1);
               })
               .error(function (data, status) {
-                data.success = false;
-                data.status = status;
-                callback(data, status);
+                LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1);
               });
           }
         },
