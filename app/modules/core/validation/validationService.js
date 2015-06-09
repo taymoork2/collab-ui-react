@@ -34,7 +34,7 @@
 
     function callForward(viewValue, modelValue) {
       var value = modelValue || viewValue;
-      return /^[0-9*#+X]{0,}$/.test(value);
+      return /^[0-9*#+X]{0,}$/.test(value) || /^Voicemail$/.test(value);
     }
   }
 })();
