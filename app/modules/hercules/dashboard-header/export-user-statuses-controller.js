@@ -18,10 +18,10 @@
             });
           }
           $scope.summary = summary || {
-              activated: 0,
-              notActivated: 0,
-              error: 0
-            };
+            activated: 0,
+            notActivated: 0,
+            error: 0
+          };
           $scope.loading = false;
         });
 
