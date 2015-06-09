@@ -75,13 +75,7 @@ angular.module('Squared').service('CsdmService',
       },
 
       getDeviceStatus: function (deviceUrl, callback) {
-        $http.get(deviceUrl)
-          .success(function (data) {
-            callback(null, data);
-          })
-          .error(function () {
-            callback(arguments);
-          });
+        callback(null, codesAndDevicesCache[deviceUrl]);
       },
 
       deleteUrl: function (url, callback) {

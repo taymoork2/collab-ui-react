@@ -61,6 +61,13 @@ describe('Service: CsdmService', function () {
     expect(Service.listCodesAndDevices()[1]).toEqual({
       foo: "bar"
     });
+    var statusCallback = sinon.stub();
+    Service.getDeviceStatus("device", statusCallback);
+    expect(statusCallback.callCount).toBe(1);
+    expect(statusCallback.args[0][0]).toBe(null);
+    expect(statusCallback.args[0][1]).toEqual({
+      foo: "bar"
+    });
   });
 
   it('updates the cache on create and delete', function () {
