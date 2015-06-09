@@ -96,7 +96,7 @@
     "freeConf": "Free 3 Party Spark Meet",
     "freeComm": "Free 1:1 Spark Call",
     "paidMsg": "Standard Team Rooms",
-    "paidConf": "Party Meetings",
+    "paidConf": "25 Party Meetings",
     "paidComm": "Advanced Spark Call",
     "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition",
@@ -230,7 +230,7 @@
     "customerOrgName": "Company / Partner Name",
     "customerAdminEmail": "Administrator Email",
     "partnerAdminEmail": "Partner Admin Email",
-    "collab": "Standard Team Rooms + Party Meetings",
+    "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "duration": "Trial Duration (days)",
     "ninetyDays": "90",
@@ -682,7 +682,11 @@
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
+    "communicationsSub": "Setup calling service",
+    "claimSipUrl": "Claim SIP URI Domain",
     "enterpriseSettings": "Enterprise Settings",
+    "messagingSetup": "Messaging Setup",
+    "messagingSetupSub": "Setup messaging service",
     "planReviewSub": "Overview of your collaboration plan",
     "enterpriseSettingsSub": "Set up global configurations",
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
@@ -946,7 +950,7 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
   "trials": {
-    "collab": "Standard Team Rooms + Party Meetings",
+    "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call"
   },
   "status": {

@@ -88,11 +88,9 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.previewPanel);
       utils.click(partner.editLink);
 
-      utils.expectIsDisplayed(partner.editTrialForm);
-
       utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
-      utils.click(partner.saveUpdateButton);
 
+      utils.click(partner.saveUpdateButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
 
       utils.click(partner.trialFilter);
@@ -117,6 +115,8 @@ describe('Partner flow', function () {
 
         utils.expectText(wizard.mainviewTitle, 'Plan Review');
         utils.click(wizard.beginBtn);
+        utils.click(wizard.saveBtn);
+        utils.click(wizard.saveBtn);
 
         utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
         utils.click(wizard.nextBtn);

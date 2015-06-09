@@ -16,6 +16,28 @@ angular.module('Core')
           template: 'modules/core/setupWizard/planReview.tpl.html'
         }]
       }, {
+        name: 'messagingSetup',
+        label: 'firstTimeWizard.messaging',
+        description: 'firstTimeWizard.messagingSetupSub',
+        icon: 'icon-convo',
+        title: 'firstTimeWizard.messagingSetup',
+        controller: 'MessagingSetupCtrl as msgSetup',
+        steps: [{
+          name: 'setup',
+          template: 'modules/core/setupWizard/messagingSetup.tpl.html'
+        }]
+      }, {
+        name: 'communications',
+        label: 'firstTimeWizard.communications',
+        description: 'firstTimeWizard.communicationsSub',
+        icon: 'icon-phone',
+        title: 'firstTimeWizard.claimSipUrl',
+        controller: 'CommunicationsCtrl as communicationsCtrl',
+        steps: [{
+          name: 'claimSipUrl',
+          template: 'modules/core/setupWizard/claimSipUrl.tpl.html'
+        }]
+      }, {
         name: 'enterpriseSettings',
         label: 'firstTimeWizard.enterpriseSettings',
         description: 'firstTimeWizard.enterpriseSettingsSub',
