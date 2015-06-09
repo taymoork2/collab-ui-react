@@ -1,4 +1,10 @@
 <div class="ngCellText">
-	<img class="device-img" src="images/SX10.png"/>
-	<div class="device-icon-desc">SX10</div>
+	<img 
+    class="device-img" 
+    style="height: 60px; width: 60px"
+    src="images/devices/cisco_{{row.getProperty('product').toLowerCase()}}.png" />
+	<div 
+    class="device-icon-desc">
+    {{row.getProperty('product')}}
+  </div>
 </div>

@@ -14,7 +14,7 @@
       </div>
     </div>
   </div>
-  <div class="row" ng-hide="sc.loading">
+  <div class="row" ng-show="sc.dataLoaded">
     <div ng-hide="sc.roomData.length" windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
       <div class="empty-devices-content">
         <img ng-src="images/devices/cisco_sx10.png" style="height: 60px; width: 60px" />
@@ -23,7 +23,7 @@
       </div>
     </div>
   </div>
-  <div class="row" ng-show="sc.loading">
+  <div class="row" ng-hide="sc.dataLoaded">
     <div windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
       <div class="empty-devices-content">
         <i class="icon icon-2x icon-spinner" />

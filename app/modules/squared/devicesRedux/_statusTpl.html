@@ -1,8 +1,9 @@
 <i 
-  ng-class="row.getProperty('color')"
+  ng-class="row.getProperty('cssColorClass')"
   class="fa fa-circle device-status-icon ngCellText">
 </i>
-<div 
+<!-- todo: this is broken -->
+<div
   ng-class="{
     'device-status-nocode': row.getProperty(col.field) != 'Needs Activation', 
     'ngCellText ngCellTextCustom': row.getProperty(col.field) == 'Needs Activation'
@@ -13,6 +14,6 @@
   </p>
   <p 
     ng-if="row.getProperty(col.field) == 'Needs Activation'">
-    {{row.getProperty('activationCodeFormatted')}}
+    {{row.getProperty('readableActivationCode')}}
   </p>
 </div>
