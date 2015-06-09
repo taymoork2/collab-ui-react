@@ -23,7 +23,6 @@
     }
   }
 }
-
 .callpark-tile {
   @include tile;
   .callpark-name {
@@ -41,11 +40,94 @@
   }
 }
 
-.callpark-range-box{
-  width: 100%;
-}
+.call-park-detail {
 
-.callpark-range-row{
-  margin-left: 30px;
-  width: 100%;
+  .form-horizontal .control-label {
+    text-align: left;
+    margin-right: 20px;
+    margin-left: 5px;
+    font-size: 18px;
+  }
+
+  .name-align {
+    margin-right: 20px;
+  }
+
+  .section-description {
+    color: $gray-darker;
+    font-size: 13px;
+  }
+
+  .modal-body .form-group:last-of-type {
+    padding-bottom: 0;
+  }
+
+  .col-xs-10 {
+    padding-right: 0;
+  }
+
+  .form-group {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .modal-body .formly-field {
+    padding-top: 5px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .text-form-padding {
+    padding-bottom: 17px;
+  }
+
+  .row-callpark {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: -15px;
+
+  }
+
+  .align-to {
+    margin-top: 8px;
+    margin-right: 2px;
+    padding-left: 0px;
+    margin-left: -20px;
+  }
+  
+  .align-radio {
+    margin-top: 8px;
+  }
+  
+  .align-reversion-number {
+    margin-left : -10px;
+    margin-top: -8px;
+    margin-bottom: 0;
+  }
+
+  .align-number-input {
+    margin-left: -15px;
+  }
+
+  .align-number {
+    margin-left: -15px;
+    margin-top: -8px;
+  }
+
+  .align-prefix {
+    margin-left: 6px;
+  }
+
+  .title-margin {
+    margin-top: 0px;
+    margin-bottom: 5px;
+  }
+
+  .section-padding {
+    padding-bottom: 10px;
+  }
+
+  .section-padding-reversion {
+    padding-bottom: 5px;
+  }
 }

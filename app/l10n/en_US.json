@@ -821,19 +821,22 @@
     "createTitle": "Create New Call Park",
     "createDescription": "Allow users to place a call on hold so that it can be retrieved from another endpoint",
     "name": "Name",
-    "numbers": "Number(s)",
-    "numbersDescription": "The system will dynamically assign a call park number for the user. Alternatively, you can select specific number(s).",
+    "enterName": "Enter Name",
+    "numbers": "Call Park Number(s)",
+    "numbersDescription": "The system will dynamically assign a Call Park Number for the user. Alternatively, you can select specific number(s).",
     "patternRange": "Number Range",
     "patternSingle": "Single Number",
     "retrievalPrefix": "Retrieval Prefix",
-    "retrievalPrefixDescription": "Dial this number before the call park number to retreive a parked call. No alpha characters.",
+    "retrievalPrefixDescription": "Dial this number before the Call Park Number to retreive a parked call.",
     "callReversion": "Call Reversion Rule",
-    "callReversionDescription": "This defines the routing of the call when it is not picked up",
-    "owner": "Person who parked the call",
+    "callReversionDescription": "If the call is not answered, send it to this destination.",
+    "callparkInitLine": "Line Number that initiated the Call Park",
     "namePlaceholder": "Type the Name",
     "numberPlaceholder": "Enter Number",
     "singleNumberPlaceholder": "Enter Single Number",
-    "createButton": "Create Call Park"
+    "to": "to",
+    "greaterThanLessThan": "{{minRange}}  must be less than or equal to {{maxRange}}."
+
   },
   "telephonyPreview": {
     "lines": "Lines",
