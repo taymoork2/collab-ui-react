@@ -60,15 +60,11 @@
           &nbsp;
         </h4>
         
-        <p>
-          <b>
-            <span translate="webexUserSettingLabels.sessionEnablementLabel"></span>
-          </b>
-        </p>
+        
   
         <!-- Start of Meeting Center -->
         <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
-          {{WebExUserSettings.userSettingsModel.meetingCenter.label}}
+          <p><b>{{WebExUserSettings.userSettingsModel.meetingCenter.label}}</b><p>
           
           <table id="MC"
                  name="MC">
@@ -89,20 +85,20 @@
               </td>
   
               <td>
-                <span ng-if="sessionType.sessionName != 'AUO'">
-                  {{WebExUserSettings.userSettingsModel.meetingCenter.label}}
-                </span>
+                
                 
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
           </table>
+          <hr>
         </div>
+        
         <!-- End of Meeting Center -->
   
         <!-- Start of Event Center -->
         <div ng-if="WebExUserSettings.userSettingsModel.eventCenter.isSiteEnabled">
-          {{WebExUserSettings.userSettingsModel.eventCenter.label}}
+          <p><b>{{WebExUserSettings.userSettingsModel.eventCenter.label}}</b></p>
           <table id="EC"
                  name="EC">
   
@@ -122,20 +118,20 @@
               </td>
   
               <td>
-                <span ng-if="sessionType.sessionName != 'AUO'">
-                  {{WebExUserSettings.userSettingsModel.eventCenter.label}}
-                </span>
+                
                 
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
           </table>
+          <hr>
         </div>
+        
         <!-- End of Event Center -->
   
         <!-- Start of Support Center -->
         <div ng-if="WebExUserSettings.userSettingsModel.supportCenter.isSiteEnabled">
-          {{WebExUserSettings.userSettingsModel.supportCenter.label}}
+          <p><b>{{WebExUserSettings.userSettingsModel.supportCenter.label}}</p></b>
           <table id="SC"
                  name="SC">
   
@@ -155,20 +151,20 @@
               </td>
   
               <td>
-                <span ng-if="sessionType.sessionName != 'AUO'">
-                  {{WebExUserSettings.userSettingsModel.supportCenter.label}}
-                </span>
+                
                 
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
           </table>
+          <hr>
         </div>
+        
         <!-- End of Support Center -->
   
         <!-- Start of Training Center -->
         <div ng-if="WebExUserSettings.userSettingsModel.trainingCenter.isSiteEnabled">
-          {{WebExUserSettings.userSettingsModel.trainingCenter.label}}
+          <p><b>{{WebExUserSettings.userSettingsModel.trainingCenter.label}}</b></p>
           <table id="TC"
                  name="TC">
   
@@ -188,15 +184,15 @@
               </td>
   
               <td>
-                <span ng-if="sessionType.sessionName != 'AUO'">
-                  {{WebExUserSettings.userSettingsModel.trainingCenter.label}}
-                </span>
+                
                 
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
           </table>
+          
         </div>
+
         <!-- End of Training Center -->
   
         <div id="privLinkSection"
