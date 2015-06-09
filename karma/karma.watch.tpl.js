@@ -17,12 +17,12 @@ module.exports = function (karma) {
 
     exclude: [],
 
-    frameworks: [
-      'jasmine'
-    ],
+    // testing framework to use (jasmine/mocha/qunit/...)
+    frameworks: ['jasmine', 'sinon'],
 
     plugins: [
       'karma-jasmine',
+      'karma-sinon',
       'karma-phantomjs-launcher'
     ],
 
@@ -53,8 +53,6 @@ module.exports = function (karma) {
      * default, but other browser names include:
      * Chrome, ChromeCanary, Firefox, Opera, Safari, PhantomJS
      */
-    browsers: [
-      'PhantomJS'
-    ]
+     browsers: [process.env.atlas_karma_browser || 'PhantomJS'],
   });
 };

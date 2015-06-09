@@ -824,6 +824,7 @@ gulp.task('karma-config', function (done) {
       config.vendorFiles.js,
       config.testFiles.js,
       config.testFiles.app,
+      config.testFiles.global,
       config.testFiles.spec
     );
 
@@ -865,6 +866,7 @@ gulp.task('karma-config-watch', function () {
     config.vendorFiles.js,
     config.testFiles.js,
     config.testFiles.app,
+    config.testFiles.global,
     testFiles
   );
 

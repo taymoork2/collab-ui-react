@@ -3,14 +3,14 @@
  */
 'use strict';
 
-module.exports = function () {
+module.exports = function() {
   var pkg = require('./package.json');
 
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
   var test = 'test';
-  var e2e =  test + '/e2e-protractor';
+  var e2e = test + '/e2e-protractor';
   var vendor = 'bower_components';
   var now = new Date();
   var year = now.getFullYear();
@@ -77,8 +77,10 @@ module.exports = function () {
         vendor + '/sinon-ng/sinon-ng.js',
         vendor + '/es5-shim/es5-shim.js'
       ],
+      global: [
+        test + '/global.spec.js'
+      ],
       spec: [
-        test + '/global.spec.js',
         test + '/core/**/*.js',
         test + '/huron/**/*.js',
         test + '/hercules/**/*.js',
