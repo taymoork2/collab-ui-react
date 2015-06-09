@@ -58,7 +58,7 @@
               sipEndpointId: device.uuid,
               status: true
             }).$promise.then(function (endpoint) {
-              if (angular.isDefined(endpoint.registrationStatus) && endpoint.registrationStatus === 'registered') {
+              if (angular.isDefined(endpoint.registrationStatus) && angular.lowercase(endpoint.registrationStatus) === 'registered') {
                 this.deviceStatus.status = 'Online';
               } else {
                 this.deviceStatus.status = 'Offline';
