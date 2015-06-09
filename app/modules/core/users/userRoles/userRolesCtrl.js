@@ -1,12 +1,13 @@
 'use strict';
 angular.module('Squared')
-  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams',
-    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams) {
-
+  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$log',
+    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $log) {
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
         $scope.roles = $scope.currentUser.roles;
       }
+
+  //    $log.log($scope.currentUser);
 
       $scope.rolesObj = {};
 
@@ -81,6 +82,18 @@ angular.module('Squared')
         name: 'adminRoles',
         id: 'partialAdmin'
       };
+
+
+      $scope.sipAddr = "";
+//      $log.log($scope.currentUser);
+      if($scope.currentUser.sipAddresses){
+        for(var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
+//         $log.log($scope.currentUser.sipAddresses[x]);
+          if($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
+            $scope.sipAddr = $scope.currentUser.sipAddresses[x].value; 
+          }
+        }
+      }
 
       var checkPartialRoles = function (roleEnabled) {
         if (roleEnabled) {
