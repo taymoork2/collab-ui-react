@@ -6,28 +6,33 @@
     </div>
 
     <!-- connectors -->
-    <div ng-repeat="connector in service.connectors" class="list" style="padding-bottom: 10px">
-      <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: connector.host.serial})" ng-class="connector.status">
-        <i class="fa fa-circle" />
-        <span>{{connector.host.host_name}}</span>
-        <i class="icon icon-chevron-right pull-right" />
-        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
-          <span translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
-        </div>
-        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
-          Version: {{connector.version}}.
-          <span ng-show="connector.software_upgrade_pending">
-            Pending software upgrade to {{connector.software_upgrade_pending}}
-          </span>
-        </div>
-      </a>
+    <div class="feature-list">
+      <ul>
+        <li class="feature" ng-repeat="connector in service.connectors" ng-class="{'list-item': !$first}">
+          <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: connector.host.serial})">
+            <i class="fa fa-circle status-icon" ng-class="connector.status"/>
+            <span class="feature-name">{{connector.host.host_name}}</span>
+            <i class="feature-arrow"></i>
+            <span class="feature-status" translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
+          </a>
+          <div class="clearfix status-info">
+              Version: {{connector.version}}.
+            <span ng-show="connector.software_upgrade_pending">
+              Pending software upgrade to {{connector.software_upgrade_pending}}
+            </span>
+          </div>
+        </li>
+      </ul>
     </div>
-    <div ng-hide="service.connectors.length" class="list">
-      <div class="disabled">
-        <i class="fa fa-circle" />
-        <span>Not installed on any hosts.</span>
-      </div>
+    <div ng-hide="service.connectors.length" class="feature-list">
+      <ul>
+        <li class="feature">
+          <i class="fa fa-circle status-icon disabled" />
+          <span>Not installed on any hosts.</span>
+        </li>
+      </ul>
     </div>
+
   </cs-sp-section>
 
   <!-- connectors -->
@@ -48,8 +53,8 @@
           <span>{{alarm.description}}</span>
         </div>
 
-        <a target="_blank" ng-href="https://{{connector.host.host_name}}/alarms" class="btn btn-primary btn-sm" style="color: white; padding-bottom: 5px">
-          Manage alarms
+        <a target="_blank" ng-href="https://{{connector.host.host_name}}/alarms" class="btn btn-primary btn-sm" style="color: white; padding-bottom: 5px;">
+          Go to Host
         </a>
 
       </div>
