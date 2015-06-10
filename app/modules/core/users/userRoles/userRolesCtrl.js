@@ -7,7 +7,7 @@ angular.module('Squared')
         $scope.roles = $scope.currentUser.roles;
       }
 
-  //    $log.log($scope.currentUser);
+      //    $log.log($scope.currentUser);
 
       $scope.rolesObj = {};
 
@@ -83,14 +83,13 @@ angular.module('Squared')
         id: 'partialAdmin'
       };
 
-
       $scope.sipAddr = "";
-//      $log.log($scope.currentUser);
-      if($scope.currentUser.sipAddresses){
-        for(var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
-//         $log.log($scope.currentUser.sipAddresses[x]);
-          if($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
-            $scope.sipAddr = $scope.currentUser.sipAddresses[x].value; 
+      //      $log.log($scope.currentUser);
+      if ($scope.currentUser.sipAddresses) {
+        for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
+          //         $log.log($scope.currentUser.sipAddresses[x]);
+          if ($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
+            $scope.sipAddr = $scope.currentUser.sipAddresses[x].value;
           }
         }
       }

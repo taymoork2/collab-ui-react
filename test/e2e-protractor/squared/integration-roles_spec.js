@@ -38,6 +38,7 @@ describe('Org Entitlement flow', function () {
     utils.expectIsDisplayed(roles.emailInput);
     utils.expectIsDisabled(roles.emailInput);
     utils.expectIsDisplayed(roles.displayNameInput);
+    utils.expectIsDisplayed(roles.sipAddressesInput);
   });
 
   it('should display organization name', function () {

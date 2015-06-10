@@ -11,6 +11,7 @@ var RolesPage = function () {
   this.saveButton = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
   this.noAdmin = element(by.id('no-admin-options')).element(by.css('.ng-valid'));
   this.closeButton = element(by.css('.close-row'));
+  this.sipAddressesInput = element(by.id('sipAddressesInput'));
 
   this.editLastName = function () {
     utils.expectIsDisplayed(this.lastNameInput);
