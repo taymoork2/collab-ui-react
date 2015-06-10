@@ -59,15 +59,28 @@
   background: @gray-lighter;
 }
 
-.list {
-  i {
-    color: #f05d3b;
-    margin-right: 10px;
-  }
-  .disabled i {
-    color: #999;
-  }
-  .running i {
-    color: #7cc153;
-  }
+.status-icon {
+  color: #f05d3b;
+  margin-right: 10px;
+}
+
+.list-item {
+  padding-top: 10px;
+}
+
+.disabled {
+  color: #999;
+}
+.running {
+  color: #7cc153;
+}
+.error {
+  color: #f05d3b;
+}
+
+.status-info {
+  color: #999;
+  font-size: 12px;
+  padding-left: 27px;
+  line-height: normal;
 }

@@ -639,7 +639,7 @@
       "alarms": "Alarms"
     },
     "status": {
-      "unknown": "Status unknown. Please check the expressway for details",
+      "unknown": "Status unknown",
       "not_configured": "Not configured",
       "installing": "Installing",
       "disabled": "Disabled",

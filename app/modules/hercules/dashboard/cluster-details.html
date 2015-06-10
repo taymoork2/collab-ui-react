@@ -16,32 +16,32 @@
     </div>
     <div>
       <div class="sw-upgrade clearfix">
-
-        <div ng-repeat="service in cluster.services" class="list">
-          <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" style="padding-bottom: 15px; display: block;" ng-class="service.status" ng-show="service.state">
-            <i class="fa fa-circle" />
-            <span>{{service.display_name}}</span>
-            <i class="icon icon-chevron-right pull-right" />
-            <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
-              <div>
-                <span translate="{{'hercules.status.' + service.state }}"></span>
+        <div class="feature-list">
+          <ul>
+            <li class="feature" ng-repeat="service in cluster.services" ng-class="{'list-item': !$first}">
+              <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-show="service.state">
+                <i class="fa fa-circle status-icon" ng-class="service.status"/>
+                <span class="feature-name">{{service.display_name}}</span>
+                <i class="feature-arrow"></i>
+                <span class="feature-status" translate="{{'hercules.status.' + service.state }}"></span>
+              </a>
+              <div class="clearfix status-info">
+                <div ng-show="service.software_upgrade_available" style="color: #00c1aa">
+                  <i class="fa fa-cloud-upload" style="color: #00c1aa; margin-right: 2px;" />
+                  Software upgrade available.
+                </div>
+                <div class="clearfix" ng-show="service.alarm_count">
+                  <span ng-show="service.alarm_count==1">
+                    {{service.alarm_count}} reported alarm.
+                  </span>
+                  <span ng-hide="service.alarm_count==1">
+                    {{service.alarm_count}} reported alarms.
+                  </span>
+                </div>
               </div>
-              <div ng-show="service.software_upgrade_available" style="color: #00c1aa">
-                <i class="fa fa-cloud-upload" style="color: #00c1aa; margin-right: 2px;" />
-                Software upgrade available.
-              </div>
-              <div class="clearfix" ng-show="service.alarm_count">
-                <span ng-show="service.alarm_count==1">
-                  {{service.alarm_count}} reported alarm.
-                </span>
-                <span ng-hide="service.alarm_count==1">
-                  {{service.alarm_count}} reported alarms.
-                </span>
-              </div>
-            </div>
-          </a>
+            </li>
+          </ul>
         </div>
-
       </div>
     </div>
   </cs-sp-section>
@@ -49,22 +49,20 @@
   <!-- hosts -->
   <cs-sp-section>
     <div class="section-name" style="padding-top: 15px;">
-      Expressway Hosts
+      Hosts
     </div>
-
-    <div ng-repeat="host in cluster.hosts" style="padding-bottom: 10px" class="list">
-      <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: host.serial})" style="padding-top: 1.4rem; display: block;" ng-class="host.status">
-        <i class="fa fa-circle" />
-        <span>{{host.host_name}}</span>
-        <i class="icon icon-chevron-right pull-right" />
-        <div class="clearfix" style="color: #999; font-size: 9px; padding-left: 27px;">
-          <span translate="{{'hercules.status.' + (host.state || 'unknown') }}"></span>
-        </div>
-      </a>
+    <div class="feature-list">
+      <ul>
+        <li class="feature" ng-repeat="host in cluster.hosts" ng-class="{'list-item': !$first}">
+          <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: host.serial})" style="padding-top: 1.4rem; display: block;">
+            <i class="fa fa-circle status-icon" ng-class="host.status"/>
+            <span class="feature-name">{{host.host_name}}</span>
+            <i class="feature-arrow"></i>
+            <span class="feature-status" translate="{{'hercules.status.' + (host.state || 'unknown') }}"></span>
+          </a>
+        </li>
+      </ul>
     </div>
-
-
   </cs-sp-section>
-
 
 </cs-sp-container>
