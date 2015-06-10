@@ -3,20 +3,9 @@
 
   <cs-sp-container>
 
-    <cs-sp-section ng-show="deviceOverview.currentDevice.needsActivation">
-      <div class="feature-list activation-code-pane">
-        <p>
-          To activate this device, use this activation code during setup:
-        </p>
-        <h3>
-          {{deviceOverview.currentDevice.readableActivationCode}}
-        </h3>
-      </div>
-    </cs-sp-section>
+    <cs-sp-section>
 
-    <cs-sp-section ng-hide="deviceOverview.currentDevice.needsActivation">
       <div class="feature-list">
-
         <table>
           <tbody>
             <tr ng-show="deviceOverview.currentDevice.product">
@@ -40,27 +29,36 @@
                 <span>{{deviceOverview.currentDevice.readableState}}</span>
               </td>
             </tr>
-            <tr>
+            <tr ng-show="deviceOverview.currentDevice.software">
               <td>Software</td>
               <td>{{deviceOverview.software}}</td>
             </tr>
-            <tr>
+            <tr ng-show="deviceOverview.currentDevice.ip">
               <td>IP Address</td>
               <td>{{deviceOverview.ip}}</td>
             </tr>
-            <tr>
+            <tr ng-show="deviceOverview.currentDevice.serial">
               <td>Serial</td>
-              <td style="text-overflow: ellipsis;">
+              <td>
                 {{deviceOverview.currentDevice.serial}}
               </td>
             </tr>
-            <tr>
+            <tr ng-show="deviceOverview.currentDevice.mac">
               <td>MAC Address</td>
               <td>{{deviceOverview.currentDevice.mac}}</td>
             </tr>
           </tbody>
         </table>
-
+      </div>
+      <div 
+        class="feature-list activation-code-pane"
+        ng-show="deviceOverview.currentDevice.needsActivation">
+        <p>
+          To activate this device, use this activation code during setup:
+        </p>
+        <h3>
+          {{deviceOverview.currentDevice.readableActivationCode}}
+        </h3>
       </div>
     </cs-sp-section>
 
