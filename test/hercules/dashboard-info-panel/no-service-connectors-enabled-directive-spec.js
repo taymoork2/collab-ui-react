@@ -84,6 +84,40 @@ describe('NoServiceConnectorsEnabledDirective', function () {
     var element = $compile("<hercules-no-service-connectors-enabled>")($scope);
     $scope.$digest();
     expect(element.find('#noServiceConnectorsEnabledAction').hasClass('ng-hide')).toBe(false);
-    expect(element.html()).toContain("No Service Connectors Enabled");
+    expect(element.html()).toContain("Add a Service Connector to Expressway");
+  });
+
+  it('hides the element when not a c_mgmt cluster', function () {
+    $scope.clusters = converterService.convertClusters([{
+      "id": "d5b78711-b132-11e4-8a66-005056000340",
+      "cluster_type": "mf_mgmt",
+      "name": "gwydlvm340",
+      "services": [{
+        "service_type": "c_mgmt",
+        "enabled": true,
+        "display_name": "Management Connector",
+        "connectors": [{
+          "host": {
+            "host_name": "hostname.cisco.com",
+            "serial": "12345"
+          },
+          "state": "running"
+        }]
+      }, {
+        "service_type": "c_cal",
+        "enabled": true,
+        "display_name": "Calendar Connector",
+        "connectors": [{
+          "host": {
+            "host_name": "hostname.cisco.com",
+            "serial": "12345"
+          },
+          "state": "disabled"
+        }]
+      }]
+    }]);
+    var element = $compile("<hercules-no-service-connectors-enabled>")($scope);
+    $scope.$digest();
+    expect(element.find('#noServiceConnectorsEnabledAction').hasClass('ng-hide')).toBe(true);
   });
 });

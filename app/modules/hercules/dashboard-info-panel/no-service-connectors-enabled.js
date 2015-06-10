@@ -6,7 +6,7 @@
       $scope.$watch('clusters', function () {
         if ($scope.clusters && $scope.clusters.length > 0) {
           $scope.clustersWithoutServiceConnectorsEnabled = $scope.clusters.some(function (cluster) {
-            return !cluster.any_service_connectors_enabled;
+            return !cluster.any_service_connectors_enabled && cluster.cluster_type === 'c_mgmt';
           });
         } else {
           $scope.clustersWithoutServiceConnectorsEnabled = false;
