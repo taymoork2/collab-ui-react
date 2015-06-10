@@ -36,7 +36,9 @@ describe('Org Entitlement flow', function () {
   it('should display subdetails panel', function () {
     utils.expectIsDisplayed(users.rolesChevron);
     utils.click(users.rolesChevron);
-    utils.expectIsDisplayed(roles.rolesDetailsPanel, roles.emailInput, roles.displayNameInput);
+    utils.expectIsDisplayed(roles.rolesDetailsPanel);
+    utils.expectIsDisplayed(roles.emailInput);
+    utils.expectIsDisplayed(roles.displayNameInput);
     utils.expectIsDisabled(roles.emailInput);
   });
 
