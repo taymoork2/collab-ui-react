@@ -60,17 +60,6 @@
         <h3>
           {{deviceOverview.currentDevice.readableActivationCode}}
         </h3>
-        <div class="qr-code">
-          <p>
-            To activate, connect the device. When prompted, enter the activation code or scan the QR code. To scan a QR code, activate the device camera function and place the QR code in view.
-          </p>
-          <div class="code">
-            <qrcode 
-              size="200"
-              data="{{deviceOverview.currentDevice.readableActivationCode}}">
-            </qrcode>
-          </div>
-        </div>
       </div>
     </cs-sp-section>
 
