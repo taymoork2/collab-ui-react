@@ -17,32 +17,42 @@
     <cs-sp-section ng-hide="deviceOverview.currentDevice.needsActivation">
       <div class="feature-list">
 
-<!-- 
-        <div>
-          <div ng-repeat="event in deviceOverview.diagEvents">
-            <p>{{event.type}}</p>
-            <p>{{event.message}}</p>
-          </div>
-        </div>
- -->        
-
-        <table style="border: 0">
+        <table>
           <tbody>
+            <tr ng-show="deviceOverview.currentDevice.product">
+              <td style="font-weight: bold">
+                {{deviceOverview.currentDevice.product}}
+              </td>
+              <td>
+                <img 
+                  style="width: 60px; height: 60px"
+                  src="images/devices/cisco_{{deviceOverview.currentDevice.product.toLowerCase()}}.png" 
+                />
+              </td>
+            </tr>
             <tr>
-              <td>Type</td>
-              <td>{{deviceOverview.currentDevice.product}}</td>
+              <td>Status</td>
+              <td>
+                <i 
+                  class="fa fa-circle device-status device-status" 
+                  ng-class="deviceOverview.currentDevice.cssColorClass">
+                </i>
+                <span>{{deviceOverview.currentDevice.readableState}}</span>
+              </td>
             </tr>
             <tr>
               <td>Software</td>
               <td>{{deviceOverview.software}}</td>
             </tr>
             <tr>
-              <td>Serial</td>
-              <td style="text-overflow: ellipsis;">{{deviceOverview.currentDevice.serial}}</td>
-            </tr>
-            <tr>
               <td>IP Address</td>
               <td>{{deviceOverview.ip}}</td>
+            </tr>
+            <tr>
+              <td>Serial</td>
+              <td style="text-overflow: ellipsis;">
+                {{deviceOverview.currentDevice.serial}}
+              </td>
             </tr>
             <tr>
               <td>MAC Address</td>
@@ -59,7 +69,7 @@
         <button 
           data-toggle="modal" 
           id="deviceDeleteButton" 
-          class="btn btn-lg btn-default" 
+          class="btn btn-lg btn-primary" 
           data-target="#deleteDeviceModal">
           <span 
             translate="spacesPage.delete">

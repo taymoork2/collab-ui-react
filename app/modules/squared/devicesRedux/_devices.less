@@ -9,19 +9,28 @@
   .activation-code-pane {
     padding-top: 20px;
   }
+}
 
-  ol.breadcrumb {
+.devices-redux {
+  .add-device-modal .alert {
+    border: 0;
+    padding: 15px;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+  .ngVerticalBar {
     display: none;
   }
 }
 
-.add-device-modal .alert {
-  border: 0;
-  padding: 15px;
-  border-radius: 0;
-  margin-bottom: 0;
-}
-
-.needs-activation {
-  opacity: .3;
+.devices-redux, .devices-overview-redux {
+  .needs-activation {
+    opacity: .3;
+  }
+  i.device-status {
+    padding-right: 10px;
+  }
+  td {
+    font-family: "CiscoSansTT Light", Helvetica, Arial, sans-serif, sans-serif;
+  }
 }
