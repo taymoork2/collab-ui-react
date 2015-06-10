@@ -31,7 +31,8 @@ angular.module('Core', [
   'csDonut',
   'formly',
   'formlyCisco',
-  'cisco.ui'
+  'cisco.ui',
+  'monospaced.qrcode'
 ]);
 
 angular.module('Squared', ['Core']);

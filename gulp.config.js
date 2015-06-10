@@ -151,7 +151,9 @@ module.exports = function() {
         vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
         vendor + '/ng-clip/src/ngClip.js',
         vendor + '/zeroclipboard/dist/ZeroClipboard.js',
-        vendor + '/d3/d3.min.js'
+        vendor + '/d3/d3.min.js',
+        vendor + '/angular-qrcode/qrcode.js',
+        vendor + '/qrcode-generator/js/qrcode.js'
       ],
       less: [
         vendor + '/bootstrap-cisco/less/**/*.less'
