@@ -539,10 +539,10 @@ angular
             'sidepanel@': {
               controller: 'DeviceOverviewCtrlRedux',
               controllerAs: 'deviceOverview',
-              templateUrl: 'modules/squared/deviceOverviewRedux/deviceOverview.tpl.html'
+              templateUrl: 'modules/squared/devicesRedux/overview/deviceOverview.tpl.html'
             },
             'header@device-overview-redux': {
-              templateUrl: 'modules/squared/deviceOverviewRedux/deviceHeader.tpl.html'
+              templateUrl: 'modules/squared/devicesRedux/overview/deviceHeader.tpl.html'
             }
           },
           params: {

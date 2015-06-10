@@ -1,9 +1,10 @@
 <cs-sp-header>
   <div class="header-image">
     <div class="device-img">
-      <img 
-        style="height: 60px; width: 60px" 
-        ng-src="images/devices/cisco_{{deviceOverview.currentDevice.product.toLowerCase()}}.png" 
+      <i 
+        style="top: 15px"
+        class="icon icon-3x icon-circle-telepresence" 
+        ng-class="{'needs-activation': deviceOverview.currentDevice.needsActivation}"
       />
     </div>
   </div>

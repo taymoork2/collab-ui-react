@@ -75,7 +75,7 @@ angular.module('Squared').service('CsdmService',
 
       createCode: function (name, callback) {
         var deviceData = {
-          'name': name
+          name: name
         };
 
         $http.post(codesUrl, deviceData)

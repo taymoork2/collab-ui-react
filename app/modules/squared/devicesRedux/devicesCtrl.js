@@ -8,6 +8,10 @@ angular.module('Squared')
     function ($scope, $state, $templateCache, $filter, CsdmService, CsdmConverter, XhrNotificationService) {
       var vm = this;
 
+      var getTemplate = function (name) {
+        return $templateCache.get('modules/squared/devicesRedux/templates/' + name + '.html');
+      };
+
       CsdmService.fillCodesAndDevicesCache(function (err, data) {
         vm.dataLoaded = true;
         if (err) return XhrNotificationService.notify(err);
@@ -27,21 +31,21 @@ angular.module('Squared')
           directions: ['asc'],
           fields: ['displayStatus']
         },
-        rowTemplate: $templateCache.get('modules/squared/devicesRedux/_rowTpl.html'),
+        rowTemplate: getTemplate('_rowTpl'),
 
         columnDefs: [{
           width: 260,
-          field: 'product',
-          displayName: $filter('translate')('spacesPage.kindHeader'),
-          cellTemplate: $templateCache.get('modules/squared/devicesRedux/_deviceCellTpl.html')
-        }, {
           field: 'displayName',
-          displayName: $filter('translate')('spacesPage.nameHeader'),
-          cellTemplate: $templateCache.get('modules/squared/devicesRedux/_roomTpl.html')
+          displayName: 'Belongs to',
+          cellTemplate: getTemplate('_nameTpl')
         }, {
           field: 'readableState',
-          displayName: $filter('translate')('spacesPage.statusHeader'),
-          cellTemplate: $templateCache.get('modules/squared/devicesRedux/_statusTpl.html')
+          displayName: 'Status',
+          cellTemplate: getTemplate('_statusTpl')
+        }, {
+          field: 'product',
+          displayName: 'Type',
+          cellTemplate: getTemplate('_productTpl')
         }]
       };
 

@@ -23,6 +23,13 @@ describe('CsdmConverterSpec', function () {
     expect(converter.convert(arr)[0].needsActivation).toBeTruthy();
   });
 
+  it('unknown product should be cleared', function () {
+    var arr = [{
+      product: 'UNKNOWN'
+    }];
+    expect(converter.convert(arr)[0].product).toBe('');
+  });
+
   describe('pass thru fields', function () {
 
     it('displayName', function () {
@@ -89,6 +96,14 @@ describe('CsdmConverterSpec', function () {
         status: {
           connectionStatus: 'UNKNOWN'
         }
+      }];
+      expect(converter.convert(arr)[0].readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convert(arr)[0].cssColorClass).toBe('device-status-gray');
+    });
+
+    it('should convert state CLAIMED and no connection status to Offline and gray', function () {
+      var arr = [{
+        state: 'CLAIMED'
       }];
       expect(converter.convert(arr)[0].readableState).toBe('CsdmStatus.Offline');
       expect(converter.convert(arr)[0].cssColorClass).toBe('device-status-gray');

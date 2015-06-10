@@ -11,7 +11,7 @@ angular.module('Squared').service('CsdmConverter',
           url: obj.url,
           mac: obj.mac,
           serial: obj.serial,
-          product: obj.product,
+          product: getProduct(obj),
           displayName: obj.displayName,
           cssColorClass: getCssColorClass(obj),
           readableState: getReadableState(obj),
@@ -19,6 +19,10 @@ angular.module('Squared').service('CsdmConverter',
           readableActivationCode: getReadableActivationCode(obj) // pyramidsort ftw!
         };
       });
+    };
+
+    var getProduct = function (obj) {
+      return obj.product == 'UNKNOWN' ? '' : obj.product;
     };
 
     var getNeedsActivation = function (obj) {
@@ -39,7 +43,7 @@ angular.module('Squared').service('CsdmConverter',
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
           return t('CsdmStatus.Online');
-        case 'UNKNOWN':
+        default:
           return t('CsdmStatus.Offline');
         }
       }
@@ -54,7 +58,7 @@ angular.module('Squared').service('CsdmConverter',
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
           return 'device-status-green';
-        case 'UNKNOWN':
+        default:
           return 'device-status-gray';
         }
       }
