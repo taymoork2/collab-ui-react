@@ -101,9 +101,11 @@ exports.waitUntilDisabled = function (elem) {
   });
 };
 
-exports.expectIsDisplayed = function (elem) {
-  this.wait(elem);
-  expect(elem.isDisplayed()).toBeTruthy();
+exports.expectIsDisplayed = function () {
+  for (var i = 0; i < arguments.length; i++) {
+    this.wait(arguments[i]);
+    expect(arguments[i].isDisplayed()).toBeTruthy();
+  }
 };
 
 exports.expectAllDisplayed = function (elems) {

@@ -1062,6 +1062,7 @@
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",
     "partialAdmin": "Some administrator privileges",
+    "salesAdmin": "Sales administrator privileges",
     "noAdmin": "No administrator privileges",
     "userAdmin": "User Administrator",
     "billingAdmin": "Billing Administrator",

@@ -41,8 +41,12 @@
               <cs-radio label="noAdmin.label" value="noAdmin.value" name="noAdmin.name" id="noAdmin.id" ng-click="clearCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
             </div>
             <div class="admin-options" id="full-admin-options">
-              <cs-radio ng-click="clearCheckboxes();" label="fullAdmin.label" value="fullAdmin.value" name="fullAdmin.name" id="fullAdmin.id" ng-model="rolesObj.adminRadioValue"></cs-radio>
+              <cs-radio label="fullAdmin.label" value="fullAdmin.value" name="fullAdmin.name" id="fullAdmin.id" ng-click="clearCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
               <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-check'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
+            </div>
+            <div class="admin-options" id="sales-admin-options" ng-show="isPartner()">
+              <cs-radio label="salesAdmin.label" value="salesAdmin.value" name="salesAdmin.name" id="salesAdmin.id" ng-click="clearCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
+              <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>Customer Management</li><li><i class='icon icon-check'></i>Overview & Reports</li><li><i class='icon icon-remove'></i>Organization Management</li><li><i class='icon icon-check'></i>Trials Management</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
             <cs-radio label="partialAdmin.label" value="partialAdmin.value" name="partialAdmin.name" id="partialAdmin.id" ng-model="rolesObj.adminRadioValue"></cs-radio>
           </fieldset>

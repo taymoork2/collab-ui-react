@@ -6,6 +6,8 @@
 /* global browser */
 
 describe('Org Entitlement flow', function () {
+  var newLastName = 'Doe';
+  var newDisplayName = 'John Doe ' + utils.randomId();
   var searchStr = 'joshkuiros@gmail.com';
 
   beforeEach(function () {
@@ -34,19 +36,13 @@ describe('Org Entitlement flow', function () {
   it('should display subdetails panel', function () {
     utils.expectIsDisplayed(users.rolesChevron);
     utils.click(users.rolesChevron);
-    utils.expectIsDisplayed(roles.rolesDetailsPanel);
-    utils.expectIsDisplayed(roles.emailInput);
+    utils.expectIsDisplayed(roles.rolesDetailsPanel, roles.emailInput, roles.displayNameInput);
     utils.expectIsDisabled(roles.emailInput);
-    utils.expectIsDisplayed(roles.displayNameInput);
-  });
-
-  it('should display organization name', function () {
-    utils.expectIsDisplayed(users.headerOrganizationName);
   });
 
   it('should edit last name and display name, roles & save', function () {
-    roles.editLastName();
-    roles.editDisplayName();
+    roles.setLastName(newLastName);
+    roles.setDisplayName(newDisplayName);
     utils.click(roles.fullAdmin);
     utils.click(roles.saveButton);
 
@@ -65,7 +61,7 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should verify user name change', function () {
-    var user = roles.getCreatedUser();
+    var user = roles.getDisplayName();
     utils.search(user);
     utils.expectText(users.userListDisplayName, user);
   });
