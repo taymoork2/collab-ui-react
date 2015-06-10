@@ -746,12 +746,11 @@ angular.module('Core')
           'didadd',
           'newpartnerreports'
         ],
-        'squared-fusion-cal': [
+        'squared-fusion-mgmt': [
           'fusion',
           'cluster-details',
           'mediafusionconnector',
           'connector-details'
-
         ],
         'squared-fusion-uc': [
           'devices',
