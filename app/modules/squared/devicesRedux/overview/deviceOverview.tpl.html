@@ -8,22 +8,22 @@
       <div class="feature-list">
         <table>
           <tbody>
-            <tr ng-show="deviceOverview.currentDevice.product">
+            <tr ng-if="deviceOverview.currentDevice.product">
               <td style="font-weight: bold">
                 {{deviceOverview.currentDevice.product}}
               </td>
               <td>
-                <img 
+                <img
                   style="width: 60px; height: 60px"
-                  src="images/devices/cisco_{{deviceOverview.currentDevice.product.toLowerCase()}}.png" 
+                  ng-src="images/devices/cisco_{{deviceOverview.currentDevice.product.toLowerCase()}}.png"
                 />
               </td>
             </tr>
             <tr>
               <td>Status</td>
               <td>
-                <i 
-                  class="fa fa-circle device-status device-status" 
+                <i
+                  class="fa fa-circle device-status device-status"
                   ng-class="deviceOverview.currentDevice.cssColorClass">
                 </i>
                 <span>{{deviceOverview.currentDevice.readableState}}</span>
@@ -51,7 +51,7 @@
         </table>
       </div>
 
-      <div 
+      <div
         class="feature-list activation-code-pane"
         ng-show="deviceOverview.currentDevice.needsActivation">
         <p>
@@ -65,12 +65,12 @@
 
     <cs-sp-section>
       <div style="margin-top: 10px">
-        <button 
-          data-toggle="modal" 
-          id="deviceDeleteButton" 
-          class="btn btn-lg btn-primary" 
+        <button
+          data-toggle="modal"
+          id="deviceDeleteButton"
+          class="btn btn-lg btn-primary"
           data-target="#deleteDeviceModal">
-          <span 
+          <span
             translate="spacesPage.delete">
           </span>
         </button>
