@@ -5,19 +5,25 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, $filter, CsdmService, CsdmConverter, XhrNotificationService) {
+    function ($scope, $state, $templateCache, $filter, CsdmPoller, CsdmConverter, XhrNotificationService) {
       var vm = this;
+
+      // todo: this file is untested!!
 
       var getTemplate = function (name) {
         return $templateCache.get('modules/squared/devicesRedux/templates/' + name + '.html');
       };
 
-      CsdmService.fillCodesAndDevicesCache(function (err, data) {
+      CsdmPoller.startPolling(function (err, data) {
         vm.dataLoaded = true;
         if (err) return XhrNotificationService.notify(err);
       });
 
-      $scope.$watchCollection(CsdmService.listCodesAndDevices, function (data) {
+      $scope.$on('$destroy', function () {
+        CsdmPoller.stopPolling();
+      });
+
+      $scope.$watchCollection(CsdmPoller.listCodesAndDevices, function (data) {
         vm.roomData = CsdmConverter.convert(data) || [];
       });
 

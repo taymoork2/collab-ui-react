@@ -3,7 +3,7 @@
 angular.module('Squared').service('CsdmService',
 
   /* @ngInject  */
-  function ($window, $rootScope, $http, Authinfo, Config, CsdmConfigService) {
+  function ($window, $rootScope, $http, Authinfo, Config, CsdmConfigService, CsdmCacheUpdater) {
 
     var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
@@ -43,7 +43,7 @@ angular.module('Squared').service('CsdmService',
     var fillCodesAndDevicesCache = function (callback) {
       fetchCodesAndDevices(function (err, data) {
         if (err) return callback(err, data);
-        codesAndDevicesCache = data;
+        CsdmCacheUpdater.updateCacheWithChanges(codesAndDevicesCache, data);
         callback();
       });
     };
