@@ -58,14 +58,14 @@ describe('Org Entitlement flow', function () {
 
     notifications.assertSuccess('User successfully updated.');
     notifications.clearNotifications();
-
-    utils.click(users.closeSidePanel);
   });
 
   it('should verify user name change', function () {
-    var user = roles.getDisplayName();
-    utils.search(user);
-    utils.expectText(users.userListDisplayName, user);
+    roles.getDisplayName().then(function (userName) {
+      utils.click(users.closeSidePanel);
+      utils.search(searchStr);
+      utils.expectText(users.userListDisplayName, userName);
+    });
   });
 
   it('should log out', function () {

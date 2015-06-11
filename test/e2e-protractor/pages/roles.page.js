@@ -33,19 +33,19 @@ var RolesPage = function () {
   };
 
   this.getFirstName = function () {
-    return this.firstNameInput.getText();
+    return this.firstNameInput.getAttribute('value');
   };
 
   this.getLastName = function () {
-    return this.lastNameInput.getText();
+    return this.lastNameInput.getAttribute('value');
   };
 
   this.getDisplayName = function () {
-    return this.displayNameInput.getText();
+    return this.displayNameInput.getAttribute('value');
   };
 
   this.getEmail = function () {
-    return this.emailInput.getText();
+    return this.emailInput.getAttribute('value');
   };
 };
 
