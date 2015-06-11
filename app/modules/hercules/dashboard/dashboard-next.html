@@ -53,11 +53,11 @@
                   <i class="fa fa-circle" />
                   <span class="hidden-xs">Cluster needs attention. </span>
                 </span>
-                <span ng-hide="cluster.needs_attention || !cluster.any_service_connectors_running" class="green">
+                <span ng-hide="cluster.needs_attention || !cluster.any_service_connectors_enabled" class="green">
                   <i class="fa fa-circle" />
                   <span class="hidden-xs">Running. </span>
                 </span>
-                <span ng-hide="cluster.needs_attention || cluster.any_service_connectors_running" class="yellow">
+                <span ng-hide="cluster.needs_attention || cluster.any_service_connectors_enabled" class="yellow">
                   <i class="fa fa-circle" />
                   <span class="hidden-xs">No service connectors enabled.</span>
                 </span>
