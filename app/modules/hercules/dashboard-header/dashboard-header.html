@@ -10,11 +10,11 @@
           <div>
             <div>
               Clusters: {{service.running}} running.
-              <span ng-show="service.needs_attention > 0">{{service.needs_attention}} needs attention.</span>
+              <span class="error" ng-show="service.needs_attention > 0">{{service.needs_attention}} needs attention.</span>
             </div>
             <div>
               Users: {{summary(service.service_id).activated}} activated.
-              <span ng-show="summary(service.service_id).error > 0">{{summary(service.service_id).error}} in error.</span>
+              <span class="error" ng-show="summary(service.service_id).error > 0">{{summary(service.service_id).error}} in error.</span>
               <span ng-hide="true" class="export-users-statuses-icon" tooltip-placement="top" tooltip="User Status Report" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share" ng-click="openUserStatusReportModal(service.service_id)"></i></span>
             </div>
           </div>

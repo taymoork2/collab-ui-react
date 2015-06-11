@@ -333,11 +333,24 @@ angular
             service: 'MESSAGING'
           }
         })
-        .state('user-overview.calendar', {
-          templateUrl: 'modules/squared/cloudExtensions/calendar/calendarPreview.tpl.html',
-          controller: 'CalendarPreviewCtrl',
+        .state('user-overview.cloudExtension-squared-fusion-cal', {
+          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
+          controller: 'CloudExtensionPreviewCtrl',
           data: {
-            displayName: 'Calendar'
+            displayName: 'Calendar Service'
+          },
+          params: {
+            extensionId: {}
+          }
+        })
+        .state('user-overview.cloudExtension-squared-fusion-uc', {
+          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
+          controller: 'CloudExtensionPreviewCtrl',
+          data: {
+            displayName: 'Call Service'
+          },
+          params: {
+            extensionId: {}
           }
         })
         .state('user-overview.conferencing', {
@@ -910,7 +923,7 @@ angular
           templateUrl: 'modules/hercules/dashboard/service-details.html',
           controller: 'ServiceDetailsController',
           data: {
-            displayName: 'Service'
+            displayName: 'Connectors'
           },
           params: {
             clusterId: {},

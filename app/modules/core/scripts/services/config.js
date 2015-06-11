@@ -338,7 +338,8 @@ angular.module('Core')
           squared: 'webex-squared',
           fusion_uc: 'squared-fusion-uc',
           fusion_cal: 'squared-fusion-cal',
-          mediafusion: 'squared-fusion-media'
+          mediafusion: 'squared-fusion-media',
+          fusion_mgmt: 'squared-fusion-mgmt'
         },
 
         trials: {

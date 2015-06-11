@@ -420,7 +420,9 @@
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
     "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
-    "invalidMaxLength": "This entry is too long. Maximum length is {{max}}."
+    "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
+    "on": "On",
+    "off": "Off"
   },
   "notifications": {
     "success": "Success notifications",
@@ -658,17 +660,16 @@
       "desc": "Leverage your services on-premise"
     },
     "activationStatus": {
-      "not_entitled": "Not entitled",
-      "pending_deactivation": "Pending Deactivation",
+      "not_entitled": "Off",
       "pending_activation": "Pending Activation",
       "activated": "Activated",
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Call",
-      "squared-fusion-cal": "Calendar",
-      "squared-fusion-media": "Media",
-      "contact-center-context": "Context Center"
+      "squared-fusion-uc": "Call Service",
+      "squared-fusion-cal": "Calendar Service",
+      "squared-fusion-media": "Media Service",
+      "contact-center-context": "Context Center Service"
     }
   },
   "firstTimeWizard": {
@@ -1372,12 +1373,9 @@
   },
   "cloudExtensions": {
     "cloudExtensions": "Cloud Extensions",
-    "calendar": "Calendar",
-    "on": "On",
-    "off": "Off",
-    "calendarService": "Calendar Service",
-    "sparkDesc": "Including @spark in a meeting invitation creates a Spark Room automatically.",
-    "webexDesc": "Including @webex in the meeting invitation creates a WebEx meeting and appends the information to the invitation."
+    "enableService": "Enable service for this user",
+    "status": "Status",
+    "host": "Host"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
