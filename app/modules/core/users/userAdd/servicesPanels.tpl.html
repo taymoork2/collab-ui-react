@@ -9,7 +9,7 @@
                 </div>
                 <div class="bucket-row">
                     <div class="entitle-check-grp onboard-radio" ng-repeat="msgFeature in messageFeatures">
-                        <div class="bucket-row-inner top-row" ng-if="msgFeature.license.licenseType === 'freeTeamRoom'">
+                        <div class="bucket-row-inner top-row" ng-if="msgFeature.license && msgFeature.license.licenseType === 'freeTeamRoom'">
                             <div class="service-check">
                                 <span class="icon icon-check onboard-check"></span>
                             </div>
@@ -33,20 +33,20 @@
                 </div>
                 <div class="bucket-row">
                     <div class="entitle-check-grp onboard-radio" ng-repeat="cf in confChk">
-						<!-- Free Conferencing -->
+                        <!-- Free Conferencing -->
                         <div class="bucket-row-inner top-row" ng-if="cf.confFeature.license.licenseType === 'freeConferencing'">
                             <div class="service-check">
                                 <span class="icon icon-check onboard-check"></span>
                             </div>
                             <div class="service-label">
-								<span ng-click="setConfRadio(cf.confFeature.value)" translate="{{cf.confFeature.label}}"></span>
+                                <span ng-click="setConfRadio(cf.confFeature.value)" translate="{{cf.confFeature.label}}"></span>
                             </div>
                         </div>
 						<!-- Paid Conferencing -->
 						<div class="bucket-row-inner" ng-if="cf.confFeature.license.licenseType !== 'freeConferencing'">
 							<!-- Has Site Url -->
 							<div ng-if="cf.confFeature.license.siteUrl">
-								<cs-checkbox ckid="{{cf.confId}}" ng-click="licenseHandler(cf.confFeature.license.licenseId); cf.confModel === false ? cf.cmrModel = false : ''" ng-model="cf.confModel" label="{{cf.confFeature.license.siteUrl}}" isdsiabled="false"></cs-checkbox>
+								<cs-checkbox ckid="{{cf.confId}}" ng-click="licenseHandler(cf.confFeature.license.licenseId); cf.confModel === false ? cf.cmrModel = false : ''" ng-model="cf.confModel" label="{{cf.confFeature.license.siteUrl}}" isdisabled="false"></cs-checkbox>
 								<p class="conf-desc" ng-class="cf.cmrFeature ? 'has-cmr' : ''" ng-if="cf.confFeature.label">{{cf.confFeature.label}}</p>
 								<!-- Has CMR With Meeting Center -->
 								<div ng-if="cf.cmrFeature">
