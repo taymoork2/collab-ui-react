@@ -17,9 +17,26 @@
                                 <span class="onboard-radio" ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
                             </div>
                         </div>
-						<div class="bucket-row-inner" ng-if="msgFeature.license.licenseType !== 'freeTeamRoom'">
-							<cs-checkbox ckid="paid-msg" ng-model="radioStates.msgRadio" label="{{msgFeature.label}}"></cs-checkbox>
-						</div>
+                        <div class="bucket-row-inner" ng-if="msgFeature.licenses">
+                            <div ng-if="msgFeature.licenses.length === 1">
+                                <span class="onboard-radio" ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
+                            </div>
+                            <fieldset ng-if="msgFeature.licenses.length > 1">
+                                <!-- <pre ng-repeat="license in msgFeature.licenses">{{license | json}}</pre> -->
+                                <!-- TODO (tohagema): remove cruft, call licenseHandler, checkbox? -->
+                                <span class="onboard-radio" ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
+                                <label class="cs-radio" for="license.licenseId"
+                                        ng-repeat="license in msgFeature.licenses">
+                                    <input id="license.licenseId" type="radio"
+                                            ng-disabled="license.status !== 'ACTIVE'"
+                                            ng-model="msgFeature.licenseModel"
+                                            ng-value="license.licenseId" />
+                                    <span>{{license.billingServiceId}} ({{license.volume}})</span>
+                                </label>
+                            </fieldset>
+                            <span>Selected License ID:</span>
+                            <pre ng-bind="msgFeature.licenseModel | json"></pre>
+                        </div>
                     </div>
                 </div>
             </div>

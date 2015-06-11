@@ -92,6 +92,33 @@ angular.module('Core')
         populateConf();
       };
 
+      // Array[Service] -> Array[Service] (merges Service[s] w/ same license)
+      var mergeMultipleLicenseSubscriptions = function (fetched) {
+        // Construct a mapping from License to (array of) Service object(s)
+        var services = fetched.reduce(function (object, service) {
+          var key = service.license.licenseType;
+          if (key in object) {
+            object[key].push(service);
+          } else {
+            object[key] = [service];
+          }
+          return object;
+        }, {});
+        // Merge all services with the same License into a single Service
+        return _.values(services).map(function (array) {
+          var result = {licenses: []};
+          array.forEach(function (service) {
+            var copy = angular.copy(service);
+            copy.licenses = [copy.license];
+            delete copy.license; // avoid copy?
+            _.merge(result, copy, function (left, right) {
+              if (_.isArray(left)) return left.concat(right);
+            });
+          });
+          return result;
+        });
+      };
+
       var getAccountServices = function () {
         if (Authinfo.getMessageServices()) {
           $scope.messageFeatures = $scope.messageFeatures.concat(Authinfo.getMessageServices());
