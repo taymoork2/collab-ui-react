@@ -926,7 +926,7 @@
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
-    "customerEmail": "Email",
+    "customerEmail": "Administrator Email Address",
     "startDate": "Start Date",
     "numberOfLicenses": "Number of Licenses",
     "name": "Name",
