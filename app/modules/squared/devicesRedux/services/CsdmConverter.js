@@ -19,7 +19,8 @@ angular.module('Squared').service('CsdmConverter',
           readableState: getReadableState(obj),
           needsActivation: getNeedsActivation(obj),
           readableActivationCode: getReadableActivationCode(obj), // pyramidsort ftw!
-          diagnosticsEvents: getDiagnosticsEvents(obj)
+          diagnosticsEvents: getDiagnosticsEvents(obj),
+          hasIssues: hasIssues(obj)
         };
       });
     };
@@ -48,6 +49,10 @@ angular.module('Squared').service('CsdmConverter',
         .pluck('description')
         .first()
         .value();
+    };
+
+    var hasIssues = function (obj) {
+      return (obj.status && obj.status.level && obj.status.level != 'OK');
     };
 
     var getDiagnosticsEvents = function (obj) {
@@ -87,6 +92,9 @@ angular.module('Squared').service('CsdmConverter',
     };
 
     var getReadableState = function (obj) {
+      if (hasIssues(obj)) {
+        return t('CsdmStatus.issuesDetected');
+      };
       switch (obj.state) {
       case 'UNCLAIMED':
         return t('CsdmStatus.NeedsActivation');
@@ -102,6 +110,9 @@ angular.module('Squared').service('CsdmConverter',
     };
 
     var getCssColorClass = function (obj) {
+      if (hasIssues(obj)) {
+        return 'device-status-red';
+      };
       switch (obj.state) {
       case 'UNCLAIMED':
         return 'device-status-yellow';

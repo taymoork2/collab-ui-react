@@ -70,6 +70,17 @@ describe('CsdmConverterSpec', function () {
   }); // pass thru fields
 
   describe('readableState and cssColorClass', function () {
+    it('should convert device with issues to Has Issues and red', function() {
+      var arr = [{
+        state: 'CLAIMED',
+        status: {
+          level: "error",
+          connectionStatus: 'CONNECTED'
+        }
+      }];
+      expect(converter.convert(arr)[0].readableState).toBe('CsdmStatus.issuesDetected');
+      expect(converter.convert(arr)[0].cssColorClass).toBe('device-status-red');
+    });
 
     it('should convert state UNCLAIMED to Needs Activation and yellow', function () {
       var arr = [{
@@ -189,4 +200,24 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convert(arr)[0].hasIssues).toBeFalsy();
     });
   });
+
+  describe("has issues", function () {
+    it('has issues when status.level is not ok', function() {
+      var arr = [{
+        status: {
+          level: 'not_ok'
+        }
+      }];
+      expect(converter.convert(arr)[0].hasIssues).toBeTruthy();
+    });
+
+    it('has does not have issues when status.level is ok', function() {
+      var arr = [{
+        status: {
+          level: 'OK'
+        }
+      }];
+      expect(converter.convert(arr)[0].hasIssues).toBeFalsy();
+    })
+  })
 });
