@@ -1,25 +1,35 @@
 <div class="shared-spaces devices-redux">
   <div class="row page-header">
-    <div class="page-title col-md-6 col-sm-6">
+    <div class="page-title col-md-12 col-sm-12">
       <span class="title">
-        {{'spacesPage.title' | translate}}&nbsp;&nbsp;
-        <small class="count">{{sc.roomData.length}}</small>
+        {{'spacesPage.title' | translate}}
       </span>
-    </div>
-    <div class="col-md-6 col-sm-6" ng-show="Utils.isAdminPage()">
-      <div class="page-option-buttons">
-        <button id="addRooms" class="btn btn-lg btn-info add-button" data-toggle="modal" data-target="#addRoomDialog" ng-click="sc.resetAddDevice()">
-          <span>Add Device</span>
-        </button>
-      </div>
+
+      <cs-searchfilter
+        ng-model="count"
+        filters="filters"
+        placeholder-text=""
+        search-item-fn="search(searchStr)"
+        set-filter-fn="setFilter(filter.filterValue)">
+      </cs-searchfilter>
+
+      <button
+        id="addRooms"
+        class="btn btn-lg btn-info add-button"
+        data-toggle="modal"
+        data-target="#addRoomDialog"
+        ng-click="sc.resetAddDevice()">
+        Add Device
+      </button>
     </div>
   </div>
   <div class="row" ng-show="sc.dataLoaded">
     <div ng-hide="sc.roomData.length" windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
       <div class="empty-devices-content">
         <img ng-src="images/devices/cisco_sx10.png" style="height: 60px; width: 60px" />
-        <h2 class="empty-device-message" translate="spacesPage.emptyDevices1"></h2>
-        <h2 class="empty-device-message" translate="spacesPage.emptyDevices2"></h2>
+        <h2 class="empty-device-message">
+          No devices found...
+        </h2>
       </div>
     </div>
   </div>
