@@ -6,6 +6,12 @@
     <cs-sp-section>
 
       <div class="feature-list">
+        <div>
+        <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents">
+          <p>{{event.type}}</p>
+          <p>{{event.message}}</p>
+        </div>
+      </div>
         <table>
           <tbody>
             <tr ng-if="deviceOverview.currentDevice.product">
@@ -31,11 +37,11 @@
             </tr>
             <tr ng-show="deviceOverview.currentDevice.software">
               <td>Software</td>
-              <td>{{deviceOverview.software}}</td>
+              <td>{{deviceOverview.currentDevice.software}}</td>
             </tr>
             <tr ng-show="deviceOverview.currentDevice.ip">
               <td>IP Address</td>
-              <td>{{deviceOverview.ip}}</td>
+              <td>{{deviceOverview.currentDevice.ip}}</td>
             </tr>
             <tr ng-show="deviceOverview.currentDevice.serial">
               <td>Serial</td>

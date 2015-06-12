@@ -11,18 +11,63 @@ angular.module('Squared').service('CsdmConverter',
           url: obj.url,
           mac: obj.mac,
           serial: obj.serial,
+          software: getSoftware(obj),
+          ip: getIp(obj),
           product: getProduct(obj),
           displayName: obj.displayName,
           cssColorClass: getCssColorClass(obj),
           readableState: getReadableState(obj),
           needsActivation: getNeedsActivation(obj),
-          readableActivationCode: getReadableActivationCode(obj) // pyramidsort ftw!
+          readableActivationCode: getReadableActivationCode(obj), // pyramidsort ftw!
+          diagnosticsEvents: getDiagnosticsEvents(obj)
         };
       });
     };
 
     var getProduct = function (obj) {
       return obj.product == 'UNKNOWN' ? '' : obj.product;
+    };
+
+    var getSoftware = function (obj) {
+      return _.chain(getEvents(obj))
+        .where({
+          type: 'software',
+          level: 'INFO'
+        })
+        .pluck('description')
+        .first()
+        .value();
+    };
+
+    var getIp = function (obj) {
+      return _.chain(getEvents(obj))
+        .where({
+          type: 'ip',
+          level: 'INFO'
+        })
+        .pluck('description')
+        .first()
+        .value();
+    };
+
+    var getDiagnosticsEvents = function (obj) {
+      return _.map(getNotOkEvents(obj), function (e) {
+        // todo lookup in translate based on type when we have that!
+        return {
+          type: $translate.instant('spacesPage.videoQTitle'),
+          message: $translate.instant('spacesPage.videoQMsg')
+        };
+      });
+    };
+
+    var getNotOkEvents = function (obj) {
+      return _.reject(getEvents(obj), function (e) {
+        return (e.level == 'OK' || e.type == 'ip' || e.type == 'software');
+      });
+    };
+
+    var getEvents = function (obj) {
+      return (obj.status && obj.status.events) || [];
     };
 
     var getNeedsActivation = function (obj) {

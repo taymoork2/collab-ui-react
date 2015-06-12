@@ -117,4 +117,55 @@ describe('CsdmConverterSpec', function () {
 
   }); // aggregatedState & cssColorClass
 
+  describe("software event", function () {
+    it('should convert software', function () {
+      var arr = [{
+        status: {
+          events: [{
+            type: 'software',
+            level: 'INFO',
+            description: 'sw_version'
+          }]
+        }
+      }];
+      expect(converter.convert(arr)[0].software).toBe('sw_version');
+    });
+
+    it('should not fail when no software events', function () {
+      var arr = [{
+        status: {}
+      }];
+      expect(converter.convert(arr)[0].software).toBeFalsy();
+    });
+  });
+
+  describe("ip event", function () {
+    it('should convert ip', function () {
+      var arr = [{
+        status: {
+          events: [{
+            type: 'ip',
+            level: 'INFO',
+            description: 'ip_addr'
+          }]
+        }
+      }];
+      expect(converter.convert(arr)[0].ip).toBe('ip_addr');
+    });
+  });
+
+  fdescribe("diagnostics events", function () {
+    it('should show localized tcpfallback', function () {
+      var arr = [{
+        status: {
+          events: [{
+            type: 'tcpfallback',
+            level: 'warn',
+            description: 'tcpfallback'
+          }]
+        }
+      }];
+      expect(converter.convert(arr)[0].diagnosticsEvents[0].type).toBe('spacesPage.videoQTitle');
+    });
+  });
 });
