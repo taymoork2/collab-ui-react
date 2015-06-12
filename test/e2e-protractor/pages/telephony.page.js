@@ -49,9 +49,9 @@ var TelephonyPage = function () {
   this.snrStatus = this.snrFeature.element(by.css('.feature-status'));
 
   this.internalNumber = element(by.css('.select-list[name="internalNumber"] a.select-toggle'));
-  this.internalNumberOptions = element(by.css('.select-list[name="internalNumber"]')).all(by.repeater('option in csSelect.options')).all(by.tagName('a'));
+  this.internalNumberOptionFirst = element(by.css('.select-list[name="internalNumber"]')).all(by.repeater('option in csSelect.options')).first().element(by.tagName('a'));
   this.externalNumber = element(by.css('.select-list[name="externalNumber"] a.select-toggle'));
-  this.externalNumberOptions = element(by.css('.select-list[name="externalNumber"]')).all(by.repeater('option in csSelect.options')).all(by.tagName('a'));
+  this.externalNumberOptionLast = element(by.css('.select-list[name="externalNumber"]')).all(by.repeater('option in csSelect.options')).last().element(by.tagName('a'));
 
   this.callerIdDefault = element(by.css('label[for="callerIdDefault"]'));
   this.callerIdCustom = element(by.css('label[for="callerIdOther"]'));

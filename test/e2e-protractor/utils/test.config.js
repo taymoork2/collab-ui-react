@@ -15,9 +15,9 @@ exports.adminServiceUrl = {
 };
 
 exports.squaredUCServiceUrl = {
-  dev: 'https://cmi.hitest.huron-dev.com/api/v1/',
-  integration: 'https://cmi.hitest.huron-dev.com/api/v1/',
-  prod: 'https://cmi.huron-dev.com/api/v1/'
+  dev: 'https://cmi.hptx1.huron-dev.com/api/v1/',
+  integration: 'https://cmi.hptx1.huron-dev.com/api/v1/',
+  prod: 'https://cmi.sc-tx2.huron-dev.com/api/v1/'
 };
 
 exports.deviceUserAgent = {

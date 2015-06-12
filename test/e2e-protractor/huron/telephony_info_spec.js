@@ -297,7 +297,7 @@ describe('Telephony Info', function () {
 
     it('should update directory number', function () {
       utils.click(telephony.internalNumber);
-      utils.click(telephony.internalNumberOptions.first());
+      utils.click(telephony.internalNumberOptionFirst);
       telephony.retrieveInternalNumber().then(function (number) {
         utils.click(telephony.saveButton);
         notifications.assertSuccess('Line configuration saved successfully');
@@ -314,7 +314,7 @@ describe('Telephony Info', function () {
     it('should save adding an external number', function () {
       telephony.retrieveExternalNumber().then(function (originalNumber) {
         utils.click(telephony.externalNumber);
-        utils.click(telephony.externalNumberOptions.last());
+        utils.click(telephony.externalNumberOptionLast);
         telephony.retrieveExternalNumber().then(function (number) {
           if (number !== originalNumber) {
             utils.click(telephony.saveButton);
