@@ -194,6 +194,7 @@ gulp.task('copy:build-app-files', function () {
     config.app + '/' + config.images + '/**/*',
     config.appFiles.js,
     config.appFiles.json,
+    config.appFiles.csv,
     config.app + '/.htaccess'
   );
   messageLogger('Copying application files', files);
@@ -301,6 +302,7 @@ gulp.task('copy:dist-appfiles', function () {
     '!index.html',
     '!index2.html',
     '**/*.json',
+    '**/*.csv',
     '.htaccess'
   );
   messageLogger('Copying application files', files);
