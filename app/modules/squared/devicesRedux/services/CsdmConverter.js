@@ -74,7 +74,7 @@ angular.module('Squared').service('CsdmConverter',
 
     var getNotOkEvents = function (obj) {
       return _.reject(getEvents(obj), function (e) {
-        return (e.level == 'OK' || e.type == 'ip' || e.type == 'software');
+        return (e.level == 'INFO' && (e.type == 'ip' || e.type == 'software'));
       });
     };
 
