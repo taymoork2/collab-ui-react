@@ -83,7 +83,6 @@ angular.module('Squared')
         id: 'partialAdmin'
       };
 
-
       var checkPartialRoles = function (roleEnabled) {
         if (roleEnabled) {
           return Config.roleState.active;
