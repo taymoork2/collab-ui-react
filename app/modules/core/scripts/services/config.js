@@ -281,11 +281,11 @@ angular.module('Core')
             state: 'organization',
             link: '#organization'
           }, {
-//            title: 'tabs.addOrganizationTab',
-//            desc: 'tabs.addOrganizationTabDesc',
-//            state: 'organizationAdd',
-//            link: '#add-organization'
- //         }, {
+            //            title: 'tabs.addOrganizationTab',
+            //            desc: 'tabs.addOrganizationTabDesc',
+            //            state: 'organizationAdd',
+            //            link: '#add-organization'
+            //         }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
             state: 'callrouting',
