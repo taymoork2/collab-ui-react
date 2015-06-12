@@ -57,18 +57,19 @@ angular.module('Squared').service('CsdmConverter',
 
     var getDiagnosticsEvents = function (obj) {
       return _.map(getNotOkEvents(obj), function (e) {
-        // todo lookup in translate based on type when we have that!
         return {
-          type: ($translate.instant('CsdmStatus.errorCodes.' + e.type + '.type') 
-            != 'CsdmStatus.errorCodes.' + e.type + '.type') 
-            ? $translate.instant('CsdmStatus.errorCodes.' + e.type + '.type')
-            : e.type,
-          message: ($translate.instant('CsdmStatus.errorCodes.' + e.type + '.message') 
-            != 'CsdmStatus.errorCodes.' + e.type + '.message') 
-            ? $translate.instant('CsdmStatus.errorCodes.' + e.type + '.message')
-            : e.description
+          type: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.type', e.type),
+          message: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description)
         };
       });
+    };
+
+    var translateOrDefault = function (translateString, defaultValue) {
+      if ($translate.instant(translateString) !== translateString) {
+        return $translate.instant(translateString);
+      } else {
+        return defaultValue;
+      }
     };
 
     var getNotOkEvents = function (obj) {
@@ -94,7 +95,7 @@ angular.module('Squared').service('CsdmConverter',
     var getReadableState = function (obj) {
       if (hasIssues(obj)) {
         return t('CsdmStatus.issuesDetected');
-      };
+      }
       switch (obj.state) {
       case 'UNCLAIMED':
         return t('CsdmStatus.NeedsActivation');
@@ -112,7 +113,7 @@ angular.module('Squared').service('CsdmConverter',
     var getCssColorClass = function (obj) {
       if (hasIssues(obj)) {
         return 'device-status-red';
-      };
+      }
       switch (obj.state) {
       case 'UNCLAIMED':
         return 'device-status-yellow';

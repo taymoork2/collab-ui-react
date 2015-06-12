@@ -70,7 +70,7 @@ describe('CsdmConverterSpec', function () {
   }); // pass thru fields
 
   describe('readableState and cssColorClass', function () {
-    it('should convert device with issues to Has Issues and red', function() {
+    it('should convert device with issues to Has Issues and red', function () {
       var arr = [{
         state: 'CLAIMED',
         status: {
@@ -202,7 +202,7 @@ describe('CsdmConverterSpec', function () {
   });
 
   describe("has issues", function () {
-    it('has issues when status.level is not ok', function() {
+    it('has issues when status.level is not ok', function () {
       var arr = [{
         status: {
           level: 'not_ok'
@@ -211,13 +211,13 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convert(arr)[0].hasIssues).toBeTruthy();
     });
 
-    it('has does not have issues when status.level is ok', function() {
+    it('has does not have issues when status.level is ok', function () {
       var arr = [{
         status: {
           level: 'OK'
         }
       }];
       expect(converter.convert(arr)[0].hasIssues).toBeFalsy();
-    })
-  })
+    });
+  });
 });

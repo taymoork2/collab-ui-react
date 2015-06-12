@@ -1391,7 +1391,7 @@
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "errorCodes": {
-      "tcpfallback": { 
+      "tcpfallback": {
         "type": "Potential Loss of Video Quality",
         "message": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
       }
