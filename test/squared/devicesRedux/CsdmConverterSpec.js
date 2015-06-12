@@ -154,7 +154,7 @@ describe('CsdmConverterSpec', function () {
     });
   });
 
-  fdescribe("diagnostics events", function () {
+  describe("diagnostics events", function () {
     it('should show localized tcpfallback', function () {
       var arr = [{
         status: {
