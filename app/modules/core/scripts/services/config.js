@@ -281,6 +281,11 @@ angular.module('Core')
             state: 'organization',
             link: '#organization'
           }, {
+            //            title: 'tabs.addOrganizationTab',
+            //            desc: 'tabs.addOrganizationTabDesc',
+            //            state: 'organizationAdd',
+            //            link: '#add-organization'
+            //         }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
             state: 'callrouting',
@@ -338,7 +343,8 @@ angular.module('Core')
           squared: 'webex-squared',
           fusion_uc: 'squared-fusion-uc',
           fusion_cal: 'squared-fusion-cal',
-          mediafusion: 'squared-fusion-media'
+          mediafusion: 'squared-fusion-media',
+          fusion_mgmt: 'squared-fusion-mgmt'
         },
 
         trials: {
@@ -357,7 +363,8 @@ angular.module('Core')
           billing: 'atlas-portal.billing',
           support: 'atlas-portal.support',
           application: 'atlas-portal.application',
-          reports: 'atlas-portal.reports'
+          reports: 'atlas-portal.reports',
+          sales: 'atlas-portal.partner.salesadmin'
         },
 
         roles: {
@@ -366,7 +373,8 @@ angular.module('Core')
           billing: 'Billing',
           support: 'Support',
           application: 'Application',
-          reports: 'Reports'
+          reports: 'Reports',
+          sales: 'Sales_Admin'
         },
 
         roleState: {

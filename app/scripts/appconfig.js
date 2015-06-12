@@ -333,11 +333,24 @@ angular
             service: 'MESSAGING'
           }
         })
-        .state('user-overview.calendar', {
-          templateUrl: 'modules/squared/cloudExtensions/calendar/calendarPreview.tpl.html',
-          controller: 'CalendarPreviewCtrl',
+        .state('user-overview.cloudExtension-squared-fusion-cal', {
+          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
+          controller: 'CloudExtensionPreviewCtrl',
           data: {
-            displayName: 'Calendar'
+            displayName: 'Calendar Service'
+          },
+          params: {
+            extensionId: {}
+          }
+        })
+        .state('user-overview.cloudExtension-squared-fusion-uc', {
+          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
+          controller: 'CloudExtensionPreviewCtrl',
+          data: {
+            displayName: 'Call Service'
+          },
+          params: {
+            extensionId: {}
           }
         })
         .state('user-overview.conferencing', {
@@ -438,15 +451,11 @@ angular
           parent: 'main'
         })
         .state('organizationAdd', {
-          abstract: true,
-          parent: 'modal',
-          views: {
-            'modal@': {
-              template: '<div ui-view></div>',
-              controller: 'OrganizationAddCtrl',
-              controllerAs: 'organization'
-            }
-          }
+          url: '/add-organization',
+          templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html',
+          controller: 'OrganizationAddCtrl',
+          controllerAs: 'orgAdd',
+          parent: 'main'
         })
         .state('organizationAdd.info', {
           templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
@@ -691,7 +700,10 @@ angular
         .state('firsttimewizard', {
           parent: 'firsttimesplash',
           template: '<cr-wizard tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
-          controller: 'SetupWizardCtrl'
+          controller: 'SetupWizardCtrl',
+          data: {
+            firstTimeSetup: true
+          }
         })
         .state('setupwizardmodal', {
           parent: 'wizardmodal',
@@ -703,6 +715,9 @@ angular
           },
           params: {
             currentTab: {}
+          },
+          data: {
+            firstTimeSetup: false
           }
         });
     }
@@ -910,7 +925,7 @@ angular
           templateUrl: 'modules/hercules/dashboard/service-details.html',
           controller: 'ServiceDetailsController',
           data: {
-            displayName: 'Service'
+            displayName: 'Connectors'
           },
           params: {
             clusterId: {},

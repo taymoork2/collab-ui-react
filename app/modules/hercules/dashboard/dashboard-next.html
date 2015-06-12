@@ -51,15 +51,15 @@
               <div class="col-sm-4 col-xs-1">
                 <span ng-show="cluster.needs_attention" class="red">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">Cluster needs attention. </span>
+                  <span class="hidden-xs">Needs attention. </span>
                 </span>
-                <span ng-hide="cluster.needs_attention || !cluster.any_service_connectors_running" class="green">
+                <span ng-hide="cluster.needs_attention || !cluster.any_service_connectors_enabled" class="green">
                   <i class="fa fa-circle" />
                   <span class="hidden-xs">Running. </span>
                 </span>
-                <span ng-hide="cluster.needs_attention || cluster.any_service_connectors_running" class="yellow">
+                <span ng-hide="cluster.needs_attention || cluster.any_service_connectors_enabled" class="yellow">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">No service connectors enabled.</span>
+                  <span class="hidden-xs">No service connectors enabled. </span>
                 </span>
               </div>
               <div class="col-sm-4 col-xs-1">

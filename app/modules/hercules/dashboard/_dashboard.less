@@ -60,7 +60,7 @@
 }
 
 .status-icon {
-  color: #f05d3b;
+  color: @brand-danger;
   margin-right: 10px;
 }
 
@@ -68,18 +68,20 @@
   padding-top: 10px;
 }
 
-.disabled {
-  color: #999;
-}
-.running {
-  color: #7cc153;
-}
 .error {
-  color: #f05d3b;
+  color: @brand-danger;
+}
+
+.disabled {
+  color: @gray-dark;
+}
+
+.running {
+  color: @brand-success;
 }
 
 .status-info {
-  color: #999;
+  color: @gray-dark;
   font-size: 12px;
   padding-left: 27px;
   line-height: normal;

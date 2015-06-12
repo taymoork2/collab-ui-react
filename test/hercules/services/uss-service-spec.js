@@ -216,12 +216,12 @@ describe('Service: USSService', function () {
           entitled: false,
           state: 'activated'
         });
-        expect(status).toBe('pending_deactivation');
+        expect(status).toBe('not_entitled');
       });
 
       it('other state is unknown', function () {
         var status = Service.decorateWithStatus({
-          entitled: false,
+          entitled: true,
           state: 'other'
         });
         expect(status).toBe('unknown');

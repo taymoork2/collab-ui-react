@@ -12,6 +12,11 @@ describe('Squared UC Add User flow', function () {
     browser.ignoreSynchronization = false;
   });
 
+  var dropdownVariables = {
+    'voicemail': 'Voicemail',
+    'addNew': 'Add New'
+  };
+
   var currentUser;
   describe('Add and Entitle User Flows', function () {
     var inputEmail = utils.randomTestGmail();
@@ -50,28 +55,28 @@ describe('Squared UC Add User flow', function () {
       });
 
       it('should verify the created user', function (done) {
-        utils.searchAndClick(inputEmail);
-        users.retrieveCurrentUser().then(function (_currentUser) {
-          currentUser = _currentUser;
-          done();
+        utils.searchAndClick(inputEmail).then(function () {
+          return users.retrieveCurrentUser().then(function (_currentUser) {
+            currentUser = _currentUser;
+            done();
+          });
         });
       });
     });
 
     describe('Verify communcation defaults', function () {
       it('should show the Communication panel', function () {
+        utils.expectIsDisplayed(users.rolesChevron);
         utils.click(users.communicationsService);
         utils.expectIsDisplayed(telephony.communicationPanel);
       });
       it('should have a line/directory number', function () {
+        utils.expectIsDisplayed(telephony.directoryNumbers.first());
         utils.expectCount(telephony.directoryNumbers, 1);
       });
-      xit('should have voicemail off', function () {
+      it('should have voicemail on', function () {
         utils.expectIsDisplayed(telephony.voicemailFeature);
-        utils.expectText(telephony.voicemailStatus, 'Off');
-      });
-      it('should not have voicemail if org doesn\'t have voicemail', function () {
-        utils.expectIsNotDisplayed(telephony.voicemailFeature);
+        utils.expectText(telephony.voicemailStatus, 'On');
       });
 
       describe('Verify call forwarding defaults', function () {
@@ -81,7 +86,8 @@ describe('Squared UC Add User flow', function () {
         });
         it('should have call forwarding default to none', function () {
           utils.expectIsNotDisplayed(telephony.forwardAll);
-          utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
+          utils.expectInputValue(telephony.forwardBusyNoAnswer, dropdownVariables.voicemail);
+          utils.expectIsNotDisplayed(telephony.forwardExternalBusyNoAnswer);
         });
         it('should navigate back to overview panel', function () {
           utils.clickFirstBreadcrumb();
@@ -116,14 +122,12 @@ describe('Squared UC Add User flow', function () {
       it('should have a line/directory number again', function () {
         utils.click(users.communicationsService);
         utils.expectIsDisplayed(telephony.communicationPanel);
+        utils.expectIsDisplayed(telephony.directoryNumbers.first());
         utils.expectCount(telephony.directoryNumbers, 1);
       });
-      xit('should have voicemail off', function () {
+      it('should have voicemail on', function () {
         utils.expectIsDisplayed(telephony.voicemailFeature);
-        utils.expectText(telephony.voicemailStatus, 'Off');
-      });
-      it('should not have voicemail if org doesn\'t have voicemail', function () {
-        utils.expectIsNotDisplayed(telephony.voicemailFeature);
+        utils.expectText(telephony.voicemailStatus, 'On');
       });
     });
 

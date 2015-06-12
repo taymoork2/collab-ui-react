@@ -203,6 +203,12 @@
           } else {
             updateStep();
           }
+        } else if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
+          $rootScope.$broadcast('wizard-messenger-setup-event');
+          updateStep();
+        } else if (getTab().name === 'communications' && getStep().name === 'claimSipUrl') {
+          $rootScope.$broadcast('wizard-claim-sip-uri-event');
+          updateStep();
         } else {
           updateStep();
         }
@@ -288,6 +294,7 @@
     function closeModal() {
       $state.modal.close();
     }
+
   }
 
   function crWizard() {

@@ -96,7 +96,7 @@
     "freeConf": "Free 3 Party Spark Meet",
     "freeComm": "Free 1:1 Spark Call",
     "paidMsg": "Standard Team Rooms",
-    "paidConf": "Party Meetings",
+    "paidConf": "25 Party Meetings",
     "paidComm": "Advanced Spark Call",
     "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition",
@@ -149,6 +149,8 @@
     "developmentTab": "Development",
     "organizationTab": "Organization",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
+    "addOrganizationTab": "Create an Organization",
+    "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
     "MediafusionDetailsTab": "Media Fusion Management",
@@ -230,7 +232,7 @@
     "customerOrgName": "Company / Partner Name",
     "customerAdminEmail": "Administrator Email",
     "partnerAdminEmail": "Partner Admin Email",
-    "collab": "Standard Team Rooms + Party Meetings",
+    "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "duration": "Trial Duration (days)",
     "ninetyDays": "90",
@@ -420,7 +422,9 @@
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
     "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
-    "invalidMaxLength": "This entry is too long. Maximum length is {{max}}."
+    "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
+    "on": "On",
+    "off": "Off"
   },
   "notifications": {
     "success": "Success notifications",
@@ -509,6 +513,7 @@
   },
   "serviceSetupModal": {
     "timeZone": "Time Zone",
+    "searchTimeZone": "Search for a time zone...",
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
@@ -537,7 +542,8 @@
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
-    "extensionAddError": "Failed to create extension {{extension}}."
+    "extensionAddError": "Failed to create extension {{extension}}.",
+    "greaterThanLessThan": "{{beginNumber}}  must be less than or equal to {{endNumber}}."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -658,17 +664,16 @@
       "desc": "Leverage your services on-premise"
     },
     "activationStatus": {
-      "not_entitled": "Not entitled",
-      "pending_deactivation": "Pending Deactivation",
+      "not_entitled": "Off",
       "pending_activation": "Pending Activation",
       "activated": "Activated",
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Call",
-      "squared-fusion-cal": "Calendar",
-      "squared-fusion-media": "Media",
-      "contact-center-context": "Context Center"
+      "squared-fusion-uc": "Call Service",
+      "squared-fusion-cal": "Calendar Service",
+      "squared-fusion-media": "Media Service",
+      "contact-center-context": "Context Center Service"
     }
   },
   "firstTimeWizard": {
@@ -682,7 +687,11 @@
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
+    "communicationsSub": "Setup calling service",
+    "claimSipUrl": "Claim SIP URI Domain",
     "enterpriseSettings": "Enterprise Settings",
+    "messagingSetup": "Messaging Setup",
+    "messagingSetupSub": "Setup messaging service",
     "planReviewSub": "Overview of your collaboration plan",
     "enterpriseSettingsSub": "Set up global configurations",
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
@@ -921,7 +930,7 @@
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
-    "customerEmail": "Email",
+    "customerEmail": "Administrator Email Address",
     "startDate": "Start Date",
     "numberOfLicenses": "Number of Licenses",
     "name": "Name",
@@ -946,7 +955,7 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
   "trials": {
-    "collab": "Standard Team Rooms + Party Meetings",
+    "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call"
   },
   "status": {
@@ -1063,6 +1072,7 @@
     "fullAdmin": "Full administrator privileges",
     "partialAdmin": "Some administrator privileges",
     "noAdmin": "No administrator privileges",
+    "salesAdmin": "Sales Administrator",
     "userAdmin": "User Administrator",
     "billingAdmin": "Billing Administrator",
     "supportAdmin": "Support Administrator",
@@ -1252,7 +1262,7 @@
     "optimizeBandwidthUsageLabel": "Optimized bandwidth usage for attendees within the same network",
     "videoSettingsLabel": "Other Privileges",
     "hiQualVideoLabel": "High-quality video (360p)",
-    "hiDefVideoLabel": "High-definition video video (720p)",
+    "hiDefVideoLabel": "High-definition video (720p)",
     "telephonyPrivilegesLabel": "Telephony",
     "callInTeleconfLabel": "Call-in teleconferencing",
     "tollOnlyLabel": "Toll",
@@ -1367,22 +1377,27 @@
   },
   "cloudExtensions": {
     "cloudExtensions": "Cloud Extensions",
-    "calendar": "Calendar",
-    "on": "On",
-    "off": "Off",
-    "calendarService": "Calendar Service",
-    "sparkDesc": "Including @spark in a meeting invitation creates a Spark Room automatically.",
-    "webexDesc": "Including @webex in the meeting invitation creates a WebEx meeting and appends the information to the invitation."
+    "enableService": "Enable service for this user",
+    "status": "Status",
+    "host": "Host"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
     "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
-    "specialCharacters": "This entry contains special characters."
+    "specialCharacters": "This entry contains special characters.",
+    "numeric": "Field can contain digits 0 to 9."
   },
   "CsdmStatus": {
     "Online": "Online",
     "Offline": "Offline",
     "Unknown": "Unknown",
-    "NeedsActivation": "Needs Activation"
+    "NeedsActivation": "Needs Activation",
+    "issuesDetected": "Issues Detected",
+    "errorCodes": {
+      "tcpfallback": {
+        "type": "Potential Loss of Video Quality",
+        "message": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+      }
+    }
   }
 }

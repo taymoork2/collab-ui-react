@@ -332,7 +332,7 @@ angular.module('Core')
           return isEntitled(Config.entitlements.huron);
         },
         isFusion: function () {
-          return isEntitled(Config.entitlements.fusion_uc) || isEntitled(Config.entitlements.fusion_cal);
+          return isEntitled(Config.entitlements.fusion_mgmt);
         },
         isFusionUC: function () {
           return isEntitled(Config.entitlements.fusion_uc);
@@ -345,6 +345,9 @@ angular.module('Core')
         },
         isCisco: function () {
           return this.getOrgId() === Config.ciscoOrgId;
+        },
+        isEntitled: function (entitlement) {
+          return isEntitled(entitlement);
         }
       };
     }

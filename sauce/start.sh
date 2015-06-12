@@ -42,7 +42,7 @@ while [ "$i" -lt 3 ]; do
   echo "Sauce Connect startup attempt ${i}"
   i=$((i+1))
   bin/sc \
-    -D atlas-a.wbx2.com,atlas-integration.wbx2.com,identity.webex.com,idbroker.webex.com,cmi.sc-tx2.huron-dev.com,cmi.hermes-tx2.huron-dev.com,locus-a.wbx2.com,metrics-a.wbx2.com \
+    -D atlas-a.wbx2.com,atlas-integration.wbx2.com,identity.webex.com,idbroker.webex.com,cmi.sc-tx2.huron-dev.com,hermes.sc-tx2.huron-dev.com,locus-a.wbx2.com,metrics-a.wbx2.com \
     -vv \
     -l sauce_connect.log \
     --pidfile $PID_FILE \

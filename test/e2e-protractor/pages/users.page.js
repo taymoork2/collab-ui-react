@@ -40,6 +40,7 @@ var UsersPage = function () {
   this.messagingService = element(by.id('Messaging'));
   this.communicationsService = element(by.id('Communications'));
   this.conferencingService = element(by.css('#Conferencing'));
+  this.serviceList = element.all(by.model('service in userOverview.services'));
 
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield-tokenfield'));

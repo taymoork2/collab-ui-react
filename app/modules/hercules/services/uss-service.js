@@ -29,28 +29,20 @@ angular.module('Hercules')
             });
         },
         decorateWithStatus: function (status) {
-          switch (status.entitled) {
-          case false:
-            switch (status.state) {
-            case 'error':
-            case 'deactivated':
-            case 'notActivated':
-              return 'not_entitled';
-            case 'activated':
-              return 'pending_deactivation';
-            }
-            /* falls through */
-          case true:
-            switch (status.state) {
-            case 'error':
-              return 'error';
-            case 'deactivated':
-            case 'notActivated':
-              return 'pending_activation';
-            case 'activated':
-              return 'activated';
-            }
-            /* falls through */
+          if (!status) {
+            return 'unknown';
+          }
+          if (!status.entitled) {
+            return 'not_entitled';
+          }
+          switch (status.state) {
+          case 'error':
+            return 'error';
+          case 'deactivated':
+          case 'notActivated':
+            return 'pending_activation';
+          case 'activated':
+            return 'activated';
           default:
             return 'unknown';
           }

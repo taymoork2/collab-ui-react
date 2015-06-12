@@ -940,7 +940,7 @@ gulp.task('karma-watch', ['karma-config-watch'], function (done) {
  * --build              Runs tests against the build directory
  *************************************************************************/
 gulp.task('e2e', function (done) {
-  if (args.sauce && !(args.int || args.prod)) {
+  if (args.sauce) {
     runSeq(
       'e2e:setup',
       'sauce:start',

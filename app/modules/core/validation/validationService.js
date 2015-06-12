@@ -12,7 +12,8 @@
       trialLicenseCount: trialLicenseCount,
       nonPrintable: nonPrintable,
       alertingName: alertingName,
-      callForward: callForward
+      callForward: callForward,
+      numeric: numeric
     };
 
     return factory;
@@ -35,6 +36,11 @@
     function callForward(viewValue, modelValue) {
       var value = modelValue || viewValue;
       return /^[0-9*#+X]{0,}$/.test(value) || /^Voicemail$/.test(value);
+    }
+
+    function numeric(viewValue, modelValue) {
+      var value = modelValue || viewValue;
+      return /^[0-9]/.test(value);
     }
   }
 })();

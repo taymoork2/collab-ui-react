@@ -1,34 +1,53 @@
 'use strict';
 
 var RolesPage = function () {
-  var randomId = utils.randomId();
-
   this.rolesDetailsPanel = element(by.id('rolesDetailsPanel'));
+  this.firstNameInput = element(by.id('firstNameInput'));
   this.lastNameInput = element(by.id('lastNameInput'));
   this.displayNameInput = element(by.id('displayNameInput'));
   this.emailInput = element(by.id('customerEmailInput'));
+
   this.fullAdmin = element(by.id('full-admin-options')).element(by.css('.ng-valid'));
-  this.saveButton = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
+  this.salesAdmin = element(by.id('sales-admin-options')).element(by.css('.ng-valid'));
   this.noAdmin = element(by.id('no-admin-options')).element(by.css('.ng-valid'));
+
+  this.saveButton = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
   this.closeButton = element(by.css('.close-row'));
   this.sipAddressesInput = element(by.id('sipAddressesInput'));
 
-  this.editLastName = function () {
+  this.setFirstName = function (newFirstName) {
+    utils.expectIsDisplayed(this.firstNameInput);
+    this.firstNameInput.clear();
+    this.firstNameInput.sendKeys(newFirstName);
+  };
+
+  this.setLastName = function (newLastName) {
     utils.expectIsDisplayed(this.lastNameInput);
     this.lastNameInput.clear();
-    this.lastNameInput.sendKeys(randomId);
+    this.lastNameInput.sendKeys(newLastName);
   };
 
-  this.editDisplayName = function () {
+  this.setDisplayName = function (newDisplayName) {
     utils.expectIsDisplayed(this.displayNameInput);
-    utils.clear(this.displayNameInput);
-    utils.sendKeys(this.displayNameInput, randomId);
+    this.displayNameInput.clear();
+    this.displayNameInput.sendKeys(newDisplayName);
   };
 
-  this.getCreatedUser = function () {
-    return randomId;
+  this.getFirstName = function () {
+    return this.firstNameInput.getAttribute('value');
   };
 
+  this.getLastName = function () {
+    return this.lastNameInput.getAttribute('value');
+  };
+
+  this.getDisplayName = function () {
+    return this.displayNameInput.getAttribute('value');
+  };
+
+  this.getEmail = function () {
+    return this.emailInput.getAttribute('value');
+  };
 };
 
 module.exports = RolesPage;

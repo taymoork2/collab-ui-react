@@ -62,6 +62,16 @@ angular.module('Hercules')
           .error(createErrorHandler('Unable to delete host', callback));
       };
 
+      var getConnector = function (connectorId, callback) {
+        var url = config.getUrl() + '/connectors/' + connectorId;
+        $http
+          .get(url)
+          .success(function (data) {
+            callback(null, data);
+          })
+          .error(createErrorHandler('Unable to read connector', callback));
+      };
+
       var createSuccessCallback = function (callback) {
         return function (data) {
           callback(null, data);
@@ -78,7 +88,8 @@ angular.module('Hercules')
       return {
         fetch: fetch,
         deleteHost: deleteHost,
-        upgradeSoftware: upgradeSoftware
+        upgradeSoftware: upgradeSoftware,
+        getConnector: getConnector
       };
     }
   ]);

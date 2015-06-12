@@ -9,12 +9,16 @@ angular.module('Core')
       var enterpriseSettingsText = $translate.instant('firstTimeWizard.enterpriseSettings');
       var addUsersText = $translate.instant('firstTimeWizard.addUsers');
       var serviceSetupText = $translate.instant('firstTimeWizard.serviceSetup');
+      var messagingSetupText = $translate.instant('firstTimeWizard.messaging');
 
       var getAuthinfoData = function () {
         if (Authinfo.isCustomerAdmin()) {
           $scope.menuItems.push({
             link: '/planreview',
             title: planReviewText
+          }, {
+            link: '/messagingsetup',
+            title: messagingSetupText
           }, {
             link: '/enterprisesettings',
             title: enterpriseSettingsText
@@ -48,6 +52,10 @@ angular.module('Core')
         } else if (path === '/enterprisesettings') {
           $state.go('setupwizardmodal', {
             currentTab: 'enterpriseSettings'
+          });
+        } else if (path === '/messagingsetup') {
+          $state.go('setupwizardmodal', {
+            currentTab: 'messagingSetup'
           });
         } else if (path === '/addusers') {
           $state.go('setupwizardmodal', {

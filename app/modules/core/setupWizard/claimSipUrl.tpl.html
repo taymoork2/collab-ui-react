@@ -1,0 +1,18 @@
+<div class="sipurl-setup">
+	<div class="title">
+		<p>Customize your company’s SIP URI domain name. This domain will be used to
+create a universally reachable URI for each user in your company.</p>
+<p>This URI is used to receive calls from any standards-based SIP calling service.
+(e.g. myuser@mycompany.ciscospark.com).</p>
+	</div>
+	<div class="sip-content" ng-show="communicationsCtrl.isTestOrg">
+		<h4 class="warning">This cannot be edited later.</h4>
+		<h4>SIP URI Domain</h4>
+		<div class="col-md-12 sip-field">
+		<input class="sip-input form-control" id="sip-url" type="text" placeholder="input a unique domain" ng-model="communicationsCtrl.cloudSipUriField"/><span class="domain">.ciscospark.com</span>
+		</div>
+	</div>
+	<div ng-show="!communicationsCtrl.isTestOrg">
+		<p>This feature is currently available only for test orgs. Please proceed to next step.</p>
+	</div>
+</div>

@@ -1,0 +1,18 @@
+<div class="messaging-setup">
+	<div class="title">
+		<h4>Webex Messenger Integration</h4>
+		<p>Webex Messenger (Jabber) users are able to send messages to Spark users in your organization.</p>
+	</div>
+	<cs-checkbox ckid="chk-messenger-int" ng-model="msgSetup.msgIntegration" label="Enable Messenger Integration"></cs-checkbox>
+	<div class="dr-content">
+		<h4>Data Retention (after deletion of org)</h4>
+		<p>Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?</p>
+		<div class="col-md-4 dr-selector">
+			<cs-select ng-model="msgSetup.selected" options="msgSetup.options" placeholder="msgSetup.placeholder" labelField="label" valueField="value"></cs-select>
+		</div>
+	</div>
+	<div class="data-share">
+		<h4>Usage Data Sent to Cisco Partner</h4>
+		<cs-checkbox ckid="chk-data-share" ng-model="msgSetup.dataShare" label="Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."></cs-checkbox>
+	</div>
+</div>
