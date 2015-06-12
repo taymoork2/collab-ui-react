@@ -74,7 +74,7 @@ angular.module('Core')
           atlas: {
             id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
             secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',
-            scope: 'webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization'
+            scope: 'webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization%20cloudMeetings%3Alogin'
           },
           cfe: {
             id: 'C5469b72a6de8f8f0c5a23e50b073063ea872969fc74bb461d0ea0438feab9c03',
