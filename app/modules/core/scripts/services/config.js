@@ -279,7 +279,12 @@ angular.module('Core')
             title: 'tabs.organizationTab',
             desc: 'tabs.organizationTabDesc',
             state: 'organization',
-            link: '#organization'
+            link: '#/organization'
+          }, {
+            title: 'tabs.addOrganizationTab',
+            desc: 'tabs.addOrganizationTabDesc',
+            state: 'organizationAdd',
+            link: '#/add-organization'
           }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',

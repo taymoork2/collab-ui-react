@@ -451,15 +451,11 @@ angular
           parent: 'main'
         })
         .state('organizationAdd', {
-          abstract: true,
-          parent: 'modal',
-          views: {
-            'modal@': {
-              template: '<div ui-view></div>',
-              controller: 'OrganizationAddCtrl',
-              controllerAs: 'organization'
-            }
-          }
+          url: '/add-organization',
+          templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html',
+          controller: 'OrganizationAddCtrl',
+          controllerAs: 'orgAdd',
+          parent: 'main'
         })
         .state('organizationAdd.info', {
           templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'

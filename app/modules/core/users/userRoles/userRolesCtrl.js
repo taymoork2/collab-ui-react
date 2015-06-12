@@ -1,7 +1,7 @@
 'use strict';
 angular.module('Squared')
-  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams',
-    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams) {
+  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams',
+    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams) {
 
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
@@ -35,8 +35,6 @@ angular.module('Squared')
         if ($scope.roles) {
           if (isEqualArrays($scope.roles, roles)) {
             return 1;
-          } else if (isEqualArrays($scope.roles, [Config.backend_roles.sales])) {
-            return 3;
           } else {
             return 2;
           }
@@ -59,6 +57,7 @@ angular.module('Squared')
 
       $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
       //$scope.userAdminValue = checkSubRoles(Config.backend_roles.full_admin, Config.backend_roles.all);
+      $scope.rolesObj.salesAdminValue = checkSubRoles(Config.backend_roles.sales);
       $scope.rolesObj.billingAdminValue = checkSubRoles(Config.backend_roles.billing);
       $scope.rolesObj.supportAdminValue = checkSubRoles(Config.backend_roles.support);
       $scope.rolesObj.cloudAdminValue = checkSubRoles(Config.backend_roles.application);
@@ -84,12 +83,6 @@ angular.module('Squared')
         id: 'partialAdmin'
       };
 
-      $scope.salesAdmin = {
-        label: $filter('translate')('rolesPanel.salesAdmin'),
-        value: 3,
-        name: 'adminRoles',
-        id: 'salesAdmin'
-      };
 
       var checkPartialRoles = function (roleEnabled) {
         if (roleEnabled) {
@@ -100,7 +93,7 @@ angular.module('Squared')
       };
 
       $scope.isPartner = function () {
-        return Authinfo.isPartner();
+        return SessionStorage.get('partnerOrgId');
       };
 
       $scope.updateRoles = function () {
@@ -127,7 +120,7 @@ angular.module('Squared')
               'roleName': Config.roles.all,
               'roleState': Config.roleState.inactive
             });
-          } else if ($scope.rolesObj.adminRadioValue === 2) {
+          } else {
             roles.push({
               'roleName': Config.roles.full_admin,
               'roleState': checkPartialRoles($scope.userAdminValue)
@@ -137,22 +130,12 @@ angular.module('Squared')
               'roleName': Config.roles.all,
               'roleState': Config.roleState.inactive
             });
-          } else {
-            roles.push({
-              'roleName': Config.roles.full_admin,
-              'roleState': Config.roleState.inactive
-            });
-
-            roles.push({
-              'roleName': Config.roles.all,
-              'roleState': Config.roleState.inactive
-            });
-
-            roles.push({
-              'roleName': Config.roles.sales,
-              'roleState': Config.roleState.active
-            });
           }
+
+          roles.push({
+            'roleName': Config.roles.sales,
+            'roleState': checkPartialRoles($scope.rolesObj.salesAdminValue)
+          });
 
           roles.push({
             'roleName': Config.roles.billing,
@@ -219,6 +202,7 @@ angular.module('Squared')
         $scope.rolesObj.userAdminValue = false;
         $scope.rolesObj.billingAdminValue = false;
         $scope.rolesObj.supportAdminValue = false;
+        $scope.rolesObj.salesAdminValue = false;
       };
 
       $scope.radioHandler = function () {
