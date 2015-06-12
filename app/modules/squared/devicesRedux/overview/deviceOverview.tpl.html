@@ -6,12 +6,6 @@
     <cs-sp-section>
 
       <div class="feature-list">
-        <div>
-        <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents">
-          <p>{{event.type}}</p>
-          <p>{{event.message}}</p>
-        </div>
-      </div>
         <table>
           <tbody>
             <tr ng-if="deviceOverview.currentDevice.product">
@@ -56,7 +50,6 @@
           </tbody>
         </table>
       </div>
-
       <div
         class="feature-list activation-code-pane"
         ng-show="deviceOverview.currentDevice.needsActivation">
@@ -66,6 +59,16 @@
         <h3>
           {{deviceOverview.currentDevice.readableActivationCode}}
         </h3>
+      </div>
+    </cs-sp-section>
+    
+    <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
+      <div style="margin-top: 10px">
+        <h4>Issues</h4>
+        <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents">
+          <p>{{event.type}}</p>
+          <p>{{event.message}}</p>
+        </div>
       </div>
     </cs-sp-section>
 

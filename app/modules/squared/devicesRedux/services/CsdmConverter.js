@@ -54,8 +54,14 @@ angular.module('Squared').service('CsdmConverter',
       return _.map(getNotOkEvents(obj), function (e) {
         // todo lookup in translate based on type when we have that!
         return {
-          type: $translate.instant('spacesPage.videoQTitle'),
-          message: $translate.instant('spacesPage.videoQMsg')
+          type: ($translate.instant('CsdmStatus.errorCodes.' + e.type + '.type') 
+            != 'CsdmStatus.errorCodes.' + e.type + '.type') 
+            ? $translate.instant('CsdmStatus.errorCodes.' + e.type + '.type')
+            : e.type,
+          message: ($translate.instant('CsdmStatus.errorCodes.' + e.type + '.message') 
+            != 'CsdmStatus.errorCodes.' + e.type + '.message') 
+            ? $translate.instant('CsdmStatus.errorCodes.' + e.type + '.message')
+            : e.description
         };
       });
     };

@@ -159,13 +159,34 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         status: {
           events: [{
-            type: 'tcpfallback',
+            type: 'tcpfallback_type',
             level: 'warn',
-            description: 'tcpfallback'
+            description: 'tcpfallback_description'
           }]
         }
       }];
-      expect(converter.convert(arr)[0].diagnosticsEvents[0].type).toBe('spacesPage.videoQTitle');
+      expect(converter.convert(arr)[0].diagnosticsEvents[0].type).toBe('tcpfallback_type');
+      expect(converter.convert(arr)[0].diagnosticsEvents[0].message).toBe('tcpfallback_description');
+    });
+  });
+
+  describe("has issues", function () {
+    it('has issues when status.level is not ok', function () {
+      var arr = [{
+        status: {
+          level: 'not_ok'
+        }
+      }];
+      expect(converter.convert(arr)[0].hasIssues).toBeTruthy();
+    });
+
+    it('has does not have issues when status.level is ok', function () {
+      var arr = [{
+        status: {
+          level: 'OK'
+        }
+      }];
+      expect(converter.convert(arr)[0].hasIssues).toBeFalsy();
     });
   });
 });
