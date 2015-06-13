@@ -18,24 +18,23 @@
                             </div>
                         </div>
                         <div class="bucket-row-inner" ng-if="msgFeature.licenses">
-                            <div ng-if="msgFeature.licenses.length === 1">
+                            <div class="service-label" ng-if="msgFeature.licenses.length === 1">
                                 <span class="onboard-radio" ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
                             </div>
                             <fieldset ng-if="msgFeature.licenses.length > 1">
-                                <!-- <pre ng-repeat="license in msgFeature.licenses">{{license | json}}</pre> -->
-                                <!-- TODO (tohagema): remove cruft, call licenseHandler, checkbox? -->
-                                <span class="onboard-radio" ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
-                                <label class="cs-radio" for="license.licenseId"
+                                <div class="service-label">
+                                    <span class="onboard-radio">{{msgFeature.label}}</span>
+                                </div>
+                                <label class="cs-radio" for="{{license.licenseId}}"
                                         ng-repeat="license in msgFeature.licenses">
-                                    <input id="license.licenseId" type="radio"
-                                            ng-disabled="license.status !== 'ACTIVE'"
-                                            ng-model="msgFeature.licenseModel"
+                                    <input id="{{license.licenseId}}" name="{{license.licenseType}}" type="radio"
+                                            ng-click="licenseHandler(license.licenseId)"
+                                            ng-disabled="license.status !== 'ACTIVE' && license.status !== 'PENDING'"
+                                            ng-model="$parent.msgFeature.licenseModel"
                                             ng-value="license.licenseId" />
                                     <span>{{license.billingServiceId}} ({{license.volume}})</span>
                                 </label>
                             </fieldset>
-                            <span>Selected License ID:</span>
-                            <pre ng-bind="msgFeature.licenseModel | json"></pre>
                         </div>
                     </div>
                 </div>

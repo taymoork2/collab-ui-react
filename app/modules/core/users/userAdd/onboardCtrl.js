@@ -94,6 +94,7 @@ angular.module('Core')
 
       // Array[Service] -> Array[Service] (merges Service[s] w/ same license)
       var mergeMultipleLicenseSubscriptions = function (fetched) {
+
         // Construct a mapping from License to (array of) Service object(s)
         var services = fetched.reduce(function (object, service) {
           var key = service.license.licenseType;
@@ -104,12 +105,16 @@ angular.module('Core')
           }
           return object;
         }, {});
+
         // Merge all services with the same License into a single Service
         return _.values(services).map(function (array) {
-          var result = {licenses: []};
+          var result = {
+            licenses: []
+          };
           array.forEach(function (service) {
             var copy = angular.copy(service);
             copy.licenses = [copy.license];
+            copy.licenseModel = ''; // default?
             delete copy.license; // avoid copy?
             _.merge(result, copy, function (left, right) {
               if (_.isArray(left)) return left.concat(right);
@@ -117,19 +122,26 @@ angular.module('Core')
           });
           return result;
         });
+
       };
 
       var getAccountServices = function () {
-        if (Authinfo.getMessageServices()) {
-          $scope.messageFeatures = $scope.messageFeatures.concat(Authinfo.getMessageServices());
+        var services = {
+          message: Authinfo.getMessageServices(),
+          conference: Authinfo.getConferenceServices(),
+          communication: Authinfo.getCommunicationServices()
+        };
+        if (services.message) {
+          services.message = mergeMultipleLicenseSubscriptions(services.message);
+          $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
         }
-        if (Authinfo.getConferenceServices()) {
-          $scope.conferenceFeatures = $scope.conferenceFeatures.concat(Authinfo.getConferenceServices());
+        if (services.conference) {
           $scope.cmrFeature = Authinfo.getCmrServices();
+          $scope.conferenceFeatures = $scope.conferenceFeatures.concat(services.conference);
           generateConfChk($scope.conferenceFeatures, $scope.cmrFeature);
         }
-        if (Authinfo.getCommunicationServices()) {
-          $scope.communicationFeatures = $scope.communicationFeatures.concat(Authinfo.getCommunicationServices());
+        if (services.communication) {
+          $scope.communicationFeatures = $scope.communicationFeatures.concat(services.communication);
         }
       };
 
