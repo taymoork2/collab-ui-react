@@ -8,7 +8,7 @@
   /* @ngInject */
   function CommunicationsCtrl($log, $scope, AccountOrgService, Authinfo, Notification, Orgservice) {
     var vm = this;
-    var cloudSipFlag = false;
+    vm.cloudSipFlag = false;
     vm.isTestOrg = false;
     /*jshint validthis: true */
 
@@ -19,8 +19,8 @@
           return obj.key == 'orgCloudSipUri';
         });
         if (index > -1) {
-          vm.cloudSipUriField = data.settings[index].value;
-          cloudSipFlag = true;
+          vm.cloudSipUriField = data.settings[index].value.replace('.ciscospark.com', '');
+          vm.cloudSipFlag = true;
         }
       }
     });
@@ -34,7 +34,8 @@
     $scope.$on('wizard-claim-sip-uri-event', function () {
 
       var orgId = Authinfo.getOrgId();
-      if (!_.isEmpty(vm.cloudSipUriField) && !cloudSipFlag) {
+
+      if (!_.isEmpty(vm.cloudSipUriField) && !vm.cloudSipFlag) {
 
         AccountOrgService.addOrgCloudSipUri(orgId, vm.cloudSipUriField, function (data, status) {
           if (status === 204) {

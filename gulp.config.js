@@ -37,6 +37,7 @@ module.exports = function() {
         app + '/scripts/**/*.js'
       ],
       json: [app + '/**/*.json'],
+      csv: [app + '/**/*.csv'],
       tpl: [app + '/modules/**/*.html'],
       html: [app + '/*.html'],
       less: ['styles/app.less'],

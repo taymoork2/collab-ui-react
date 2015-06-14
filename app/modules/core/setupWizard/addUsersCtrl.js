@@ -15,6 +15,12 @@ angular.module('Core')
         name: 'syncOptions',
         id: 'syncSimple'
       };
+      $scope.syncUpload = {
+        label: $translate.instant('firstTimeWizard.upload'),
+        value: 2,
+        name: 'syncOptions',
+        id: 'syncUpload'
+      };
       $scope.syncAdvanced = {
         label: $translate.instant('firstTimeWizard.advanced'),
         value: 1,

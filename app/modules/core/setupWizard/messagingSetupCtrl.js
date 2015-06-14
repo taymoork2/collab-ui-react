@@ -78,9 +78,9 @@
       if (!_.isEmpty(vm.selected.value) && CurrentDataRetentionPeriod && CurrentDataRetentionPeriod !== vm.selected.value) {
         AccountOrgService.modifyOrgDataRetentionPeriodDays(orgId, vm.selected.value, function (data, status) {
           if (status === 200) {
-            Notification.notify(['Successfully added retention period setting.'], 'success');
+            Notification.notify(['Successfully changed retention period setting.'], 'success');
           } else {
-            Notification.notify(['Failed to add retention period setting.'], 'error');
+            Notification.notify(['Failed to change retention period setting.'], 'error');
           }
         });
       }
@@ -89,9 +89,9 @@
 
         AccountOrgService.addMessengerInterop(orgId, function (data, status) {
           if (status === 204) {
-            Notification.notify(['Successfully added MessengerInterop.'], 'success');
+            Notification.notify(['Successfully enabled Webex Messenger Integration.'], 'success');
           } else {
-            Notification.notify(['Failed to add MessengerInterop.'], 'error');
+            Notification.notify(['Failed to enable Webex Messenger Integration.'], 'error');
           }
         });
 
@@ -99,9 +99,9 @@
 
         AccountOrgService.deleteMessengerInterop(orgId, function (data, status) {
           if (status === 204) {
-            Notification.notify(['Successfully removed MessengerInterop.'], 'success');
+            Notification.notify(['Successfully disabled Webex Messenger Integration.'], 'success');
           } else {
-            Notification.notify(['Failed to remove MessengerInterop.'], 'error');
+            Notification.notify(['Failed to disable Webex Messenger Integration.'], 'error');
           }
         });
       }

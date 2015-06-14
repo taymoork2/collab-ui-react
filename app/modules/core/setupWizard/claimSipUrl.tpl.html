@@ -9,7 +9,7 @@ create a universally reachable URI for each user in your company.</p>
 		<h4 class="warning">This cannot be edited later.</h4>
 		<h4>SIP URI Domain</h4>
 		<div class="col-md-12 sip-field">
-		<input class="sip-input form-control" id="sip-url" type="text" placeholder="input a unique domain" ng-model="communicationsCtrl.cloudSipUriField"/><span class="domain">.ciscospark.com</span>
+		<input class="sip-input form-control" id="sip-url" type="text" placeholder="input a unique domain" ng-model="communicationsCtrl.cloudSipUriField" ng-disabled="communicationsCtrl.cloudSipFlag"/><span class="domain">.ciscospark.com</span>
 		</div>
 	</div>
 	<div ng-show="!communicationsCtrl.isTestOrg">
