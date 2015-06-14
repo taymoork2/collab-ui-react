@@ -82,7 +82,7 @@ angular.module('Core')
             confId: 'conf-' + i
           };
 
-          if (cmr !== null && conf[i].license.offerName === 'MC') {
+          if (cmr !== null && conf[i].license.siteUrl !== undefined && cmr.license.siteUrl === conf[i].license.siteUrl) {
             temp.cmrFeature = cmr;
             temp.cmrModel = false;
             temp.cmrId = 'cmr-' + i;
