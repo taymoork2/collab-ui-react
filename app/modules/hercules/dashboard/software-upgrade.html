@@ -1,9 +1,18 @@
 <div ng-show="service.installed">
   <div style="padding-bottom: 10px" class="clearfix">
     <p>A software upgrade is available:</p>
-    <span ng-show="service.connectors[0].version">Current version: <span style="float: right">{{service.connectors[0].version}}</span></span>
-    <br>
-    <span ng-show="service.not_approved_package.version">New version: <span style="float: right">{{service.not_approved_package.version}}</span></span>
+    <div class="feature-list">
+      <ul>
+        <li class="feature" ng-show="service.connectors[0].version">
+            <span ng-show="service.connectors[0].version" class="feature-name">Current version</span>
+            <span class="feature-status">{{service.connectors[0].version}}</span>
+        </li>
+        <li class="feature" ng-show="service.not_approved_package.version">
+          <span ng-show="service.connectors[0].version" class="feature-name">New version</span>
+          <span class="feature-status">{{service.not_approved_package.version}}</span>
+        </li>
+      </ul>
+    </div>
   </div>
   <button class="btn btn-info btn-sm" ng-click="showUpgradeDialog(service.not_approved_package, cluster, service.connectors[0].version)">
     <span>
