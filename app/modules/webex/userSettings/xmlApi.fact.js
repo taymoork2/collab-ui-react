@@ -183,7 +183,7 @@
               "                <use:voiceOverIp>{{integratedVoIP}}</use:voiceOverIp>" + "\n";
           }
 
-          if (xmlApiAccessInfo.isEnablePMR) {
+          if (xmlApiAccessInfo.isEnablePMRSiteEnabled) {
             updateUserSettings2XmlMsg = updateUserSettings2XmlMsg +
               "                <use:isEnablePMR>{{isEnablePMR}}</use:isEnablePMR>" + "\n";
           }
