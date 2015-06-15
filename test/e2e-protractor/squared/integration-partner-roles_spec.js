@@ -25,10 +25,7 @@ describe('Org Entitlement flow', function () {
 
   it('should launch partner organization portal', function () {
     navigation.launchPartnerOrgPortal();
-  });
-
-  describe('without sync', function () {
-    it('clicking on users tab should change the view', function () {
+    utils.switchToNewWindow().then(function () {
       navigation.clickUsers();
     });
   });
