@@ -63,10 +63,17 @@
     </cs-sp-section>
     
     <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
-      <div style="margin-top: 10px">
-        <h4>Issues</h4>
-        <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents">
-          <p>{{event.type}}</p>
+      <div class="section-name" style="padding: 15px 0;">
+        Issues
+      </div>      
+      <div>
+        <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents" style="padding-bottom: 10px">
+          <p>
+            <i 
+              class="fa fa-circle device-status device-status-red">
+            </i>
+            {{event.type}}
+          </p>
           <p>{{event.message}}</p>
         </div>
       </div>
