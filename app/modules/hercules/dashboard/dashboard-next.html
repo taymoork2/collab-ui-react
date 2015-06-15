@@ -5,17 +5,24 @@
     <div class="page-title clearfix">
       <span class="title" translate="hercules.page_title" />
       <div ng-hide="shouldShowWelcomeScreen()" style="float: right; white-space: nowrap">
+        <div  style="border-right: solid 1px #dddddd; padding-right: 15px; margin-right: 10px; display: inline-block;">
+          <button
+            class="btn btn-info"
+            ng-click="showServiceActivationDialog()">
+            Add/Remove Services
+          </button>
+        </div>
         <button
           style="width: 60px;"
-          class="btn btn-info"
-          ng-click="showNotificationConfigDialog()">
+          class="btn btn-primary"
+          ng-click="showInfoPanel = !showInfoPanel">
           <i class="fa fa-bell" />
         </button>
         <button
           style="width: 60px;"
           class="btn btn-primary"
-          ng-click="showInfoPanel = !showInfoPanel">
-          <i class="fa fa-info" />
+          ng-click="showNotificationConfigDialog()">
+          <i class="icon icon-settings" />
         </button>
       </div>
     </div>
@@ -73,9 +80,10 @@
         </div>
 
         <div ng-show="clusters.length == 0">
-          <h3 style="text-align: center; padding: 20px 0; color: #ccc">
+          <h3 style="padding-left: 20px">Expressway Clusters</h3>
+          <h4 style="padding-left: 20px; color: #ccc">
             No Expressway Clusters Connected to Spark
-          </h3>
+          </h4>
         </div>
       </div>
     </div>

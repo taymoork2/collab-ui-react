@@ -674,6 +674,12 @@
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service"
+    },
+    "serviceDescriptions": {
+      "squared-fusion-uc": "Effortlessly share your desktop with Spark while you are on your work phone. Answer your work phone or call your coworkers from Spark.",
+      "squared-fusion-cal": "Collaborate instantly. Just add @spark to an invitation to create a Spark room for your meeting. Add @webex to attach your WebEx CMR.",
+      "squared-fusion-media": "",
+      "contact-center-context": ""
     }
   },
   "firstTimeWizard": {

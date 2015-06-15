@@ -1,6 +1,6 @@
 <div>
   <h3 style="padding-left: 20px">Services</h3>
-  <div class="dashboard-header row">
+  <div class="dashboard-header row" ng-hide="noServicesEnabled">
     <div class="col-sm-6 col-md-5 col-lg-4" ng-repeat="(type, service) in serviceAggregates.services">
       <div class="item">
         <i ng-class="serviceIcon(service.service_id)" />
@@ -21,11 +21,8 @@
         </div>
       </div>
     </div>
-    <div class="addRemove">
-      <div class="addRemoveItem" ng-click="showServiceActivationDialog()">
-        <i class="icon icon-plus" /><br>
-        <div style="padding-top: 10px;">Add/Remove Services</div>
-      </div>
-    </div>
   </div>
+  <h4 style="padding-left: 20px; color: #ccc" ng-show="noServicesEnabled">
+    No Services Added
+  </h4>
 </div>
