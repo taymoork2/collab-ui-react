@@ -15,7 +15,7 @@
       <p>Select the Cloud Extension Services you want to turn on for your organization. This step lets you configure the selected Services on your on-premises devices and turn on related functionality for your users.</p>
       <div ng-repeat="service in services.allExceptManagement" style="margin-top: 20px;">
         <span><cs-checkbox ckid="{{service.service_id}}" ng-model="service.enabled" label=""/></span> <i ng-class="serviceIcon(service.service_id)" style="font-size: 25px; vertical-align: middle;" /> <span translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 600; margin-left: 10px;"/>
-        <p>{{service.description}}</p>
+        <p><span translate="hercules.serviceDescriptions.{{service.service_id}}"/></p>
       </div>
       <p>Note! Deselecting a service (requires another confirm step) will remove any related functionality from your users. Additional steps to remove the service from your on-premises devices are required. See documentation for guidance and further instructions. </p>
     </div>

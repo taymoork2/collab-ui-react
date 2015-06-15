@@ -1,6 +1,6 @@
 <div class="entitled-services">
   <div ng-repeat="service in services.allExceptManagement" style="margin-top: 25px;">
     <h4 style="margin-bottom: 0px;"><i ng-class="serviceIcon(service.service_id)" style="font-size: 30px; vertical-align: middle;" /> <span translate="hercules.serviceNames.{{service.service_id}}" style="margin-left: 10px;"/></h4>
-    <p style="margin-left: 44px;">{{service.description}}</p>
+    <p style="margin-left: 44px;"><span translate="hercules.serviceDescriptions.{{service.service_id}}"/></p>
   </div>
 </div>

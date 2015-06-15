@@ -34,6 +34,7 @@
 
         $scope.$watch('services', function (_services) {
           services = _services.enabledOnly;
+          $scope.noServicesEnabled = !services || services.length == 0;
           updateServiceAggregates();
         });
 
