@@ -166,7 +166,7 @@
           }, {
             className: 'form-inline formly-field service-setup-extension-range-to',
             noFormControl: true,
-            template: '<div>to</div>'
+            template: '<div>' + $translate.instant('serviceSetupModal.to') + '</div>'
           }, {
             className: 'form-inline formly-field formly-field-input',
             type: 'input',
