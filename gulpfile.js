@@ -5,6 +5,8 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')({
   lazy: true
 });
+
+var sourcemaps = require('gulp-sourcemaps');
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var coffee = require('coffee-script/register');
@@ -485,6 +487,7 @@ gulp.task('less:build', ['clean:css'], function () {
   messageLogger('Compiling LESS --> CSS');
   return gulp
     .src('app/styles/app.less')
+    .pipe($.sourcemaps.init())
     .pipe($.plumber())
     .pipe($.less())
     .on('error', errorLogger)
@@ -497,6 +500,7 @@ gulp.task('less:build', ['clean:css'], function () {
       extname: '.css'
     }))
     .pipe($.if(args.verbose, $.print()))
+    .pipe($.sourcemaps.write('/'))
     .pipe(gulp.dest(config.build))
     .pipe(reload({
       stream: true
