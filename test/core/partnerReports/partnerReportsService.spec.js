@@ -88,7 +88,7 @@ describe('Service: Partner Reports Service', function () {
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
     mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
     mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
-    callMetricsUrl = 'modules/core/partnerReports/callMetrics/callMetricsTemp.json';
+    callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=1&intervalType=week&spanCount=1&spanType=week&cache=false';
     registeredEndpointsUrl = 'modules/core/partnerReports/registeredEndpoints/fakeData.json';
   }));
 
@@ -193,16 +193,16 @@ describe('Service: Partner Reports Service', function () {
 
   describe('Call Metrics Services', function () {
     it('should get Call Metrics', function () {
-      $httpBackend.whenGET(callMetricsUrl).respond(callMetricsData);
-      PartnerReportService.getCallMetricsData().then(function (data) {
-        expect(data.dataProvider.length).toBe(3);
+      $httpBackend.whenGET(callMetricsUrl + "&orgId=" + customers[0].customerOrgId).respond(callMetricsData);
+      PartnerReportService.getCallMetricsData(customer, timeFilter).then(function (data) {
+        expect(data.dataProvider.length).toBe(2);
       });
       $httpBackend.flush();
     });
 
     it('should get empty array for GET failure', function () {
-      $httpBackend.whenGET(callMetricsUrl).respond(500, error);
-      PartnerReportService.getCallMetricsData().then(function (data) {
+      $httpBackend.whenGET(callMetricsUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
+      PartnerReportService.getCallMetricsData(customer, timeFilter).then(function (data) {
         expect(data).toEqual([]);
       });
       $httpBackend.flush();

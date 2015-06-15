@@ -8,9 +8,8 @@
   function DonutChartService($translate, Config) {
     // variables for the call metrics section
     var callConditionFailColor = Config.chartColors.grayDarkest;
-    var callConditionPoorMediaColor = Config.chartColors.brandWarning;
     var callConditionSuccessfulColor = Config.chartColors.brandInfo;
-    var callMetricsColors = [callConditionFailColor, callConditionPoorMediaColor, callConditionSuccessfulColor];
+    var callMetricsColors = [callConditionFailColor, callConditionSuccessfulColor];
     var callMetricsLabels = [{
       "align": "center",
       "color": Config.chartColors.grayDarkest,

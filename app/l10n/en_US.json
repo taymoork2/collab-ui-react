@@ -302,6 +302,7 @@
     "callConditionPoorMedia": "Poor Media",
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
+    "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
     "callMetricsDesc": "Call metrics show the total number of calls made, and the number of minutes those calls totaled during the selected period.  Call metrics also breaks down the percentage of calls that were successfully connected and had good or excellent media throughout the duration, the percentage of calls that were connected but had poor media quality, and the percentage of calls that failed to connect.",
     "totalCalls": "Total Calls",
     "totalCallMinutes": "Total Call Minutes"

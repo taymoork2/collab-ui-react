@@ -11,11 +11,8 @@ describe('Service: Donut Chart Service', function () {
       "callCondition": "Fail",
       "numCalls": 1
     }, {
-      "callCondition": "Poor Media",
-      "numCalls": 6
-    }, {
       "callCondition": "Successful",
-      "numCalls": 93
+      "numCalls": 99
     }],
     labelData: {
       "numTotalCalls": 100,

@@ -10,6 +10,7 @@
     var detailed = 'detailed';
     var topn = 'topn';
     var activeUserUrl = '/managedOrgs/activeUsers';
+    var callMetricsUrl = '/managedOrgs/callMetrics';
     var dateFormat = "MMM DD, YYYY";
     var mostRecentUpdate = "";
     var customerList = null;
@@ -20,9 +21,6 @@
     var callMetricsData = {
       dataProvider: [{
         "callCondition": $translate.instant('callMetrics.callConditionFail'),
-        "numCalls": 0
-      }, {
-        "callCondition": $translate.instant('callMetrics.callConditionPoorMedia'),
         "numCalls": 0
       }, {
         "callCondition": $translate.instant('callMetrics.callConditionSuccessful'),
@@ -102,6 +100,16 @@
         return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=week&cache=false';
       } else {
         return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=false';
+      }
+    }
+
+    function getQueryForOnePeriod(filter) {
+      if (filter.value === 0) {
+        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=week&cache=false';
+      } else if (filter.value === 1) {
+        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=month&cache=false';
+      } else {
+        return '?&intervalCount=3&intervalType=month&spanCount=3&spanType=month&cache=false';
       }
     }
 
@@ -261,40 +269,47 @@
       return data;
     }
 
-    function getCallMetricsData() {
-      var getMetricsUrl = 'modules/core/partnerReports/callMetrics/callMetricsTemp.json';
-      return $http.get(getMetricsUrl).then(function (response) {
+    function getCallMetricsData(customer, time) {
+      var query = getQueryForOnePeriod(time);
+
+      return getService(detailed + callMetricsUrl + query + "&orgId=" + customer.value).then(function (response) {
+        if (mostRecentUpdate === "") {
+          setMostRecentUpdate(response);
+        }
+
         if (angular.isArray(response.data.data) && response.data.data.length !== 0) {
           return transformRawCallMetricsData(response.data.data[0]);
         } else {
           return [];
         }
       }, function (error) {
+        Log.debug('Loading call metrics data for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
+        Notification.notify([$translate.instant('callMetrics.callMetricsChartError', {
+          customer: customer.label
+        })], 'error');
         return [];
       });
     }
 
     function transformRawCallMetricsData(data) {
-      var transformData = angular.copy(callMetricsData);
-      var numCalls = 0;
-      var numMinutes = 0;
+      if (angular.isArray(data.data) && data.data.length !== 0 && data.data[0].details !== undefined && data.data[0].details !== null) {
+        var details = data.data[0].details;
+        var transformData = angular.copy(callMetricsData);
+        // For now, Questionable calls are not counted in the total and it is not part of the chart display.
+        var totalCalls = parseInt(details.totalCalls, 10) - parseInt(details.totalQuestionableCalls, 10);
 
-      angular.forEach(data.data, function (index) {
-        if (index.details.type === "fail") {
-          transformData.dataProvider[0].numCalls = index.details.numCalls;
-        } else if (index.details.type === "poor") {
-          transformData.dataProvider[1].numCalls = index.details.numCalls;
-        } else if (index.details.type === "success") {
-          transformData.dataProvider[2].numCalls = index.details.numCalls;
+        if (totalCalls < 0) {
+          totalCalls = 0;
         }
 
-        numCalls = numCalls + parseInt(index.details.numCalls);
-        numMinutes = numMinutes + parseInt(index.details.numMinutes);
-      });
-
-      transformData.labelData.numTotalCalls = numCalls;
-      transformData.labelData.numTotalMinutes = numMinutes;
-      return transformData;
+        transformData.dataProvider[0].numCalls = details.totalFailedCalls;
+        transformData.dataProvider[1].numCalls = details.totalSuccessfulCalls;
+        transformData.labelData.numTotalCalls = totalCalls;
+        transformData.labelData.numTotalMinutes = Math.round(parseFloat(details.totalAudioDuration));
+        return transformData;
+      } else {
+        return [];
+      }
     }
 
     function getRegesteredEndpoints(customer) {

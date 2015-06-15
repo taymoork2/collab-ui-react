@@ -257,7 +257,7 @@
     }
 
     function getCallMetricsReports() {
-      return PartnerReportService.getCallMetricsData().then(function (data) {
+      return PartnerReportService.getCallMetricsData(vm.customerSelected, vm.timeSelected).then(function (data) {
         if (callMetricsDonutChart === null) {
           callMetricsDonutChart = DonutChartService.createCallMetricsDonutChart(data);
         } else {
