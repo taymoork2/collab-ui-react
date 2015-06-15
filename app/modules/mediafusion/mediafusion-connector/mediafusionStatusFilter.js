@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('Mediafusion').filter('status', function () {
+angular.module('Mediafusion').filter('devStatus', function () {
   return function (mgmtStatus) {
-    ////console.log("statusFilter mgmtStatus = " + mgmtStatus);
+    ////console.log("devStatus statusFilter mgmtStatus = " + mgmtStatus);
     return (mgmtStatus) ? 'Stopped' : 'Active';
   };
 });

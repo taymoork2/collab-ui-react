@@ -12,7 +12,7 @@ angular.module('Mediafusion')
       var actionsTemplate = '<i style="top:13px" class="icon icon-three-dots"></i>';
 
       var statusTemplate = '<div><i class="fa fa-circle device-status-icon ngCellText" style="margin-top:0px;" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'true\', \'device-status-red\': row.getProperty(col.field) !== \'true\'}"></i></div>' +
-        '<div ng-class="\'device-status-nocode\'" style="top:13px">{{row.getProperty(col.field)|status}}</div>';
+        '<div ng-class="\'device-status-nocode\'" style="top:13px">{{row.getProperty(col.field)|devStatus}}</div>';
 
       var usageTemplate = '<div style="top:13px" class="col-md-1"><label>0%</label></div><div class="progress page-header col-md-8" style="top:16px"><div class="progress-bar page-header" style="width:0%;"></div></div>';
 
@@ -21,101 +21,27 @@ angular.module('Mediafusion')
         '<div ng-cell></div>' +
         '</div>';
 
-      MediafusionProxy.startPolling(function (err, data) {
-        $scope.loading = false;
-      });
-
-      $scope.$watch(MediafusionProxy.getClusters, function (data) {
-        $scope.clusters = data.clusters || [];
-
-        //console.log("prinitng cluster length" + data.clusters.length);
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        Log.debug("start cluster length");
-        angular.forEach($scope.clusters, function (cluster) {
-          Log.debug("Printing individual cluster" + cluster);
-        });
-        $scope.pollHasFailed = data.error;
-      }, true);
-
-      $scope.$on('$destroy', function () {
-        MediafusionProxy.stopPolling();
-      });
-
-      //Pagination
-
-      $scope.filterOptions = {
-        filterText: "",
-        useExternalFilter: true
-      };
-      $scope.totalServerItems = 0;
-      $scope.pagingOptions = {
-        pageSizes: [5, 10, 20],
-        pageSize: 5,
-        currentPage: 1
-      };
-      $scope.setPagingData = function (data, page, pageSize) {
-        var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
-        $scope.myData = pagedData;
-        $scope.totalServerItems = data.length;
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      };
-      $scope.getPagedDataAsync = function (pageSize, page, searchText) {
-
-        setTimeout(function () {
-          var data;
-          var largeLoad;
-          if (searchText) {
-            var ft = searchText.toLowerCase();
-            largeLoad = MediafusionProxy.getClusters().clusters;
-            data = largeLoad.filter(function (item) {
-              $scope.setPagingData(data, page, pageSize);
-              return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
-            });
-          } else {
-            largeLoad = MediafusionProxy.getClusters().clusters;
-            $scope.setPagingData(largeLoad, page, pageSize);
-
-          }
-        }, 100);
-      };
-
-      $scope.$watch('pagingOptions', function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-        }
-      }, true);
-      $scope.$watch('filterOptions', function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-        }
-      }, true);
-
       $scope.gridOptions = {
-        data: 'myData',
+        data: 'clusters',
         multiSelect: false,
         showFilter: true,
         rowHeight: 44,
         headerRowHeight: 40,
         rowTemplate: rowTemplate,
         useExternalSorting: false,
-        enablePaging: true,
-        showFooter: true,
-        totalServerItems: 'totalServerItems',
-        pagingOptions: $scope.pagingOptions,
-        filterOptions: $scope.filterOptions,
+        enableVerticalScrollbar: 0,
+        enableColumnResizing: true,
 
         columnDefs: [{
           field: 'name',
           displayName: 'Name'
         }, {
           field: 'hosts[0].host_name',
-          displayName: 'IP Address'
+          displayName: 'Host Name / IP Address'
         }, {
           field: 'needs_attention',
           cellTemplate: statusTemplate,
-          cellFilter: 'status',
+          cellFilter: 'devStatus',
           displayName: 'Status'
         }, {
           field: '',
@@ -130,6 +56,19 @@ angular.module('Mediafusion')
           displayName: 'Actions'
         }]
       };
+
+      MediafusionProxy.startPolling(function (err, data) {
+        $scope.loading = false;
+      });
+
+      $scope.$watch(MediafusionProxy.getClusters, function (data) {
+        $scope.clusters = data.clusters || [];
+        $scope.pollHasFailed = data.error;
+      }, true);
+
+      $scope.$on('$destroy', function () {
+        MediafusionProxy.stopPolling();
+      });
 
       $scope.showConnectorsDetails = function (connector) {
         $scope.connector = connector;

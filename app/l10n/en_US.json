@@ -153,8 +153,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
-    "MediafusionDetailsTab": "Media Fusion Management",
-    "MediafusionDetailsTabDesc": "Media Fusion Management",
+    "MediafusionDetailsTab": "Media Service Management",
+    "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -1146,7 +1146,7 @@
     "deleteResource": "Decomission Resource"
   },
   "mediaFusion": {
-    "page_title": "Media Fusion Management",
+    "page_title": "Media Service Management",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
