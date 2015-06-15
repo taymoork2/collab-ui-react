@@ -3,10 +3,47 @@
 describe('Controller: CallParkCtrl', function () {
   var controller, $rootScope, $scope, $modal, $q, CallPark, modalDefer;
 
-  var callParks = [{
-    pattern: '111'
-  }, {
-    pattern: '222'
+  var rangedCallParks = [{
+    "retrievalPrefix": "*",
+    "pattern": "1005 - 1007",
+    "description": "Bay View North",
+    "data": [{
+      "retrievalPrefix": "*",
+      "pattern": "1005",
+      "description": "Bay View North",
+      "routePartition": null,
+      "uuid": "e2664243-537a-4124-bf42-8b5c8698a6f0",
+      "revertCss": null,
+      "reversionPattern": null,
+      "links": [{
+        "rel": "voice",
+        "href": "/api/v1/voice/customers/ff78e1be-d2ff-45db-bf4f-b3c95416c311/directedcallparks/e2664243-537a-4124-bf42-8b5c8698a6f0"
+      }]
+    }, {
+      "retrievalPrefix": "*",
+      "pattern": "1006",
+      "description": "Bay View North",
+      "routePartition": null,
+      "uuid": "3e378179-b155-47c8-83dd-ca48ccfb79c3",
+      "revertCss": null,
+      "reversionPattern": null,
+      "links": [{
+        "rel": "voice",
+        "href": "/api/v1/voice/customers/ff78e1be-d2ff-45db-bf4f-b3c95416c311/directedcallparks/3e378179-b155-47c8-83dd-ca48ccfb79c3"
+      }]
+    }, {
+      "retrievalPrefix": "*",
+      "pattern": "1007",
+      "description": "Bay View North",
+      "routePartition": null,
+      "uuid": "80937dac-f13e-4b01-98a9-6a279cb39bfa",
+      "revertCss": null,
+      "reversionPattern": null,
+      "links": [{
+        "rel": "voice",
+        "href": "/api/v1/voice/customers/ff78e1be-d2ff-45db-bf4f-b3c95416c311/directedcallparks/80937dac-f13e-4b01-98a9-6a279cb39bfa"
+      }]
+    }]
   }];
 
   beforeEach(module('uc.callpark'));
@@ -47,13 +84,13 @@ describe('Controller: CallParkCtrl', function () {
     });
 
     it('should list some call parks', function () {
-      CallPark.list.and.returnValue($q.when(callParks));
+      CallPark.list.and.returnValue($q.when(rangedCallParks));
       controller.listCallParks();
       $scope.$apply();
       expect(controller.showInformation).toBe(false);
       expect($rootScope.$broadcast).toHaveBeenCalledWith('callrouting-update', {
         state: 'callpark',
-        count: 2
+        count: 3
       });
     });
   });

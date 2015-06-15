@@ -20,10 +20,16 @@
     function listCallParks() {
       CallPark.list().then(function (callParks) {
         vm.callParks = callParks;
-        vm.showInformation = vm.callParks.length === 0 ? true : false;
+        vm.showInformation = vm.callParks.length === 0;
+        var totalLength = 0;
+        for (var i = 0; i < vm.callParks.length; i++) {
+          if (angular.isDefined(vm.callParks[i].data) && angular.isArray(vm.callParks[i].data)) {
+            totalLength += vm.callParks[i].data.length;
+          }
+        }
         $rootScope.$broadcast('callrouting-update', {
           state: 'callpark',
-          count: vm.callParks.length
+          count: totalLength
         });
       });
     }

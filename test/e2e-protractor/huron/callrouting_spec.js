@@ -86,15 +86,13 @@ describe('Huron Call Routing', function () {
     });
 
     it('should delete the previously created call parks', function () {
+      //Delete the single call park with the name equal to pattern variable value
       callrouting.clickDeleteIcon(pattern);
       utils.click(callrouting.deleteButton);
       notifications.assertSuccess('deleted successfully');
 
-      callrouting.clickDeleteIcon(pattern + 1);
-      utils.click(callrouting.deleteButton);
-      notifications.assertSuccess('deleted successfully');
-
-      callrouting.clickDeleteIcon(pattern + 2);
+      //Delete the range of call parks
+      callrouting.clickDeleteIcon((pattern + 1) + ' - ' + (pattern + 2));
       utils.click(callrouting.deleteButton);
       notifications.assertSuccess('deleted successfully');
     });
