@@ -10,17 +10,18 @@ angular.module('Squared').service('CsdmConverter',
         return {
           url: obj.url,
           mac: obj.mac,
-          serial: obj.serial,
-          software: getSoftware(obj),
           ip: getIp(obj),
+          serial: obj.serial,
           product: getProduct(obj),
+          hasIssues: hasIssues(obj),
+          software: getSoftware(obj),
+          isOnline: getIsOnline(obj),
           displayName: obj.displayName,
           cssColorClass: getCssColorClass(obj),
           readableState: getReadableState(obj),
           needsActivation: getNeedsActivation(obj),
-          readableActivationCode: getReadableActivationCode(obj), // pyramidsort ftw!
           diagnosticsEvents: getDiagnosticsEvents(obj),
-          hasIssues: hasIssues(obj)
+          readableActivationCode: getReadableActivationCode(obj) // pyramidsort ftw!
         };
       });
     };
@@ -52,7 +53,7 @@ angular.module('Squared').service('CsdmConverter',
     };
 
     var hasIssues = function (obj) {
-      return (obj.status && obj.status.level && obj.status.level != 'OK');
+      return obj.status && obj.status.level && obj.status.level != 'OK';
     };
 
     var getDiagnosticsEvents = function (obj) {
@@ -74,7 +75,7 @@ angular.module('Squared').service('CsdmConverter',
 
     var getNotOkEvents = function (obj) {
       return _.reject(getEvents(obj), function (e) {
-        return (e.level == 'INFO' && (e.type == 'ip' || e.type == 'software'));
+        return e.level == 'INFO' && (e.type == 'ip' || e.type == 'software');
       });
     };
 
@@ -90,6 +91,10 @@ angular.module('Squared').service('CsdmConverter',
       if (obj.activationCode) {
         return obj.activationCode.match(/.{4}/g).join(' ');
       }
+    };
+
+    var getIsOnline = function (obj) {
+      return (obj.status || {}).connectionStatus == 'CONNECTED';
     };
 
     var getReadableState = function (obj) {

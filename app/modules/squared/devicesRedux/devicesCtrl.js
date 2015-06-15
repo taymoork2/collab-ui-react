@@ -5,88 +5,29 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, $filter, CsdmPoller, CsdmConverter, XhrNotificationService) {
+    function ($scope, $state, $templateCache, $filter, CsdmPoller, CsdmConverter, XhrNotificationService, DeviceFilter) {
       var vm = this;
 
-      // filter stuff
-
-      $scope.currentFilter = '';
-
-      $scope.filters = [{
-        count: 0,
-        name: 'All',
-        filterValue: 'all'
-      }, {
-        count: 0,
-        name: 'Active',
-        filterValue: 'devices'
-      }, {
-        count: 0,
-        name: 'Inactive',
-        filterValue: 'codes'
-      }];
-
-      $scope.placeholder = {
-        count: 0,
-        name: 'All',
-        filterValue: ''
-      };
+      // todo: this file is untested!!
 
       $scope.count = '';
+      $scope.currentFilter = '';
+      $scope.filters = DeviceFilter.getFilters();
 
       $scope.search = function (query) {
-        $scope.currentSearch = query.toLowerCase();
+        DeviceFilter.setCurrentSearch(query);
         updateListAndFilter();
       };
 
       $scope.setFilter = function (filter) {
-        $scope.currentFilter = filter.toLowerCase();
+        DeviceFilter.setCurrentFilter(filter);
         updateListAndFilter();
-      };
-
-      // todo: this file is untested!!
-
-      var getTemplate = function (name) {
-        return $templateCache.get('modules/squared/devicesRedux/templates/' + name + '.html');
       };
 
       var updateListAndFilter = function (data) {
         var converted = CsdmConverter.convert(data || CsdmPoller.listCodesAndDevices());
 
-        vm.roomData = getFilteredList(converted);
-
-        $scope.filters[1].count = _.filter(converted, function (item) {
-          return !item.needsActivation && matchesSearch(item);
-        }).length;
-
-        $scope.filters[2].count = _.filter(converted, function (item) {
-          return item.needsActivation && matchesSearch(item);
-        }).length;
-
-        $scope.filters[0].count = $scope.filters[1].count + $scope.filters[2].count;
-      };
-
-      var getFilteredList = function (data) {
-        return _.filter(data, function (item) {
-          return matchesSearch(item) && matchesFilter(item);
-        });
-      };
-
-      var matchesSearch = function (item) {
-        return item.displayName.toLowerCase().indexOf($scope.currentSearch || '') != -1;
-      };
-
-      var matchesFilter = function (item) {
-        switch ($scope.currentFilter) {
-        case 'all':
-          return true;
-        case 'codes':
-          return item.needsActivation;
-        case 'devices':
-          return !item.needsActivation;
-        default:
-          return true;
-        }
+        vm.roomData = DeviceFilter.getFilteredList(converted);
       };
 
       CsdmPoller.startPolling(function (err, data) {
@@ -101,6 +42,10 @@ angular.module('Squared')
       $scope.$watchCollection(CsdmPoller.listCodesAndDevices, function (data) {
         updateListAndFilter(data);
       });
+
+      var getTemplate = function (name) {
+        return $templateCache.get('modules/squared/devicesRedux/templates/' + name + '.html');
+      };
 
       vm.gridOptions = {
         data: 'sc.roomData',
@@ -131,9 +76,7 @@ angular.module('Squared')
       };
 
       vm.showDeviceDetails = function (device) {
-        // fixme: this state is needed by modals... :/
-        vm.currentDevice = device;
-
+        vm.currentDevice = device; // fixme: modals depend on state set here
         $state.go('device-overview-redux', {
           currentDevice: device
         });

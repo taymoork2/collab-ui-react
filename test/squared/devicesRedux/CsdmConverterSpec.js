@@ -30,6 +30,24 @@ describe('CsdmConverterSpec', function () {
     expect(converter.convert(arr)[0].product).toBe('');
   });
 
+  it('should set isOnline when status is CONNECTED', function () {
+    var arr = [{
+      status: {
+        connectionStatus: 'CONNECTED'
+      }
+    }];
+    expect(converter.convert(arr)[0].isOnline).toBeTruthy();
+  });
+
+  it('should not set isOnline when status isnt CONNECTED', function () {
+    var arr = [{
+      status: {
+        connectionStatus: 'foo'
+      }
+    }];
+    expect(converter.convert(arr)[0].isOnline).toBeFalsy();
+  });
+
   describe('pass thru fields', function () {
 
     it('displayName', function () {
