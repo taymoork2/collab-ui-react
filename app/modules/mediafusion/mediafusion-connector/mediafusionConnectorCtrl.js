@@ -34,26 +34,32 @@ angular.module('Mediafusion')
 
         columnDefs: [{
           field: 'name',
-          displayName: 'Name'
+          displayName: 'Name',
+          width: "18%"
         }, {
           field: 'hosts[0].host_name',
-          displayName: 'Host Name / IP Address'
+          displayName: 'Host Name / IP Address',
+          width: "18%"
         }, {
           field: 'needs_attention',
           cellTemplate: statusTemplate,
           cellFilter: 'devStatus',
-          displayName: 'Status'
+          displayName: 'Status',
+          width: "18%"
         }, {
           field: '',
-          displayName: 'Cluster'
+          displayName: 'Cluster',
+          width: "10%"
         }, {
           field: 'name',
           cellTemplate: usageTemplate,
-          displayName: 'Current Usage'
+          displayName: 'Current Usage',
+          width: "18%"
         }, {
           field: 'action',
           cellTemplate: actionsTemplate,
-          displayName: 'Actions'
+          displayName: 'Actions',
+          width: "18%"
         }]
       };
 
