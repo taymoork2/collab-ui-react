@@ -202,7 +202,7 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         status: {
           events: [{
-            type: 'tcpfallback_type',
+            type: 'foo',
             level: 'warn'
           }]
         }
