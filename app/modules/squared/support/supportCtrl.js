@@ -418,7 +418,7 @@ angular.module('Squared')
             window.location.assign(data.tempURL);
           } else {
             Log.debug('Failed to download log: ' + filename + '. Status: ' + status);
-            Notification.notify(['Failed to download log: ' + filename + '. Status: ' + status], 'error');
+            Notification.notify([$translate.instant('supportPage.downloadLogFailed') + ': ' + filename + '. ' + $translate.instant('supportPage.status') + ': ' + status], 'error');
           }
         });
       };
@@ -441,7 +441,7 @@ angular.module('Squared')
               window.location.assign(data.resultsUrl);
             } else {
               Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
-              Notification.notify(['Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status], 'error');
+              Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');
             }
           });
         } else {

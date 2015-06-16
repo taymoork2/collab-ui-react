@@ -36,11 +36,11 @@ angular.module('Core')
       };
 
       // strings to be translated as placeholders, need to be used as values
-      $scope.grant = 'Grant support access to Cisco\'s Customer Success team.';
-      $scope.troubleUrl = 'Your trouble reporting site URL';
-      $scope.troubleText = 'Provide optional text to give people an idea of where the URL will take them and what they can expect to do there.';
-      $scope.helpUrlText = 'Your help site URL';
-      $scope.partnerProvidedText = 'Text provided by the partner.';
+      $scope.grant = $translate.instant('partnerProfile.grant');
+      $scope.troubleUrl = $translate.instant('partnerProfile.troubleUrl');
+      $scope.troubleText = $translate.instant('partnerProfile.troubleText');
+      $scope.helpUrlText = $translate.instant('partnerProfile.helpUrlText');
+      $scope.partnerProvidedText = $translate.instant('partnerProfile.partnerProvidedText');
 
       // ci api calls will go in here
       $scope.init = function () {
@@ -151,19 +151,19 @@ angular.module('Core')
 
             if (numOrgs === 1) {
               if (numFailed === 0) {
-                Notification.notify(['orgSettings updated successfully for organization: <br/>' + orgs.toString()], 'success');
+                Notification.notify([$translate.instant('partnerProfile.orgSettingsSuccess') + ':<br/>' + orgs.toString()], 'success');
               } else {
-                Notification.notify(['update orgSettings failed for organization: <br/>' + failedOrgs.toString()], 'error');
+                Notification.notify([$translate.instant('partnerProfile.orgSettingsError') + ':<br/>' + failedOrgs.toString()], 'error');
               }
             } else {
               if (numFailed === 0) {
-                Notification.notify(['orgSettings updated successfully for partner and his managedOrgs: <br/>' + orgs.toString()], 'success');
+                Notification.notify([$translate.instant('partnerProfile.orgSettingsForPartnerSuccess') + ':<br/>' + orgs.toString()], 'success');
               } else {
-                Notification.notify(['update orgSettings failed for partner and his managedOrgs: <br/>' + failedOrgs.toString()], 'error');
+                Notification.notify([$translate.instant('partnerProfile.orgSettingsForPartnerError') + ':<br/>' + failedOrgs.toString()], 'error');
               }
             }
           } else {
-            Notification.notify(['update orgSettings failed for organization: <br/>' + orgId], 'error');
+            Notification.notify([$translate.instant('partnerProfile.orgSettingsForPartnerError') + ':<br/>' + orgId], 'error');
           }
           angular.element('#orgProfileSaveBtn').button('reset');
         });

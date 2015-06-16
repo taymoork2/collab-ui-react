@@ -402,7 +402,10 @@
     "helpUrl": "Help URL:",
     "sendFeedback": "Cisco Feedback",
     "sso": "SSO",
-    "roles": "Roles"
+    "roles": "Roles",
+    "downloadLogFailed": "Failed to download log",
+    "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
+    "status": "Status"
   },
   "common": {
     "delete": "Delete",
@@ -742,6 +745,16 @@
     "nextSteps": "Press the Next button when you're ready to verify that identity information is being synchronized.",
     "results": "Results",
     "syncAgreementText": "users in sync agreement",
+    "cloudSipSuccess": "Successfully added Cloud SIP URI.",
+    "cloudSipError": "Failed to add Cloud SIP URI.",
+    "messengerRetentionSuccess": "Successfully added retention period setting.",
+    "messengerRetentionError": "Failed to add retention period setting.",
+    "messengerRetentionEditSuccess": "Successfully changed retention period setting.",
+    "messengerRetentionEditError": "Failed to change retention period setting.",
+    "messengerEnableWebexSuccess": "Successfully enabled Webex Messenger Integration.",
+    "messengerEnableWebexError": "Failed to enable Webex Messenger Integration.",
+    "messengerDisableWebexSuccess": "Successfully disabled Webex Messenger Integration.",
+    "messengerDisableWebexError": "Failed to disable Webex Messenger Integration.",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
@@ -1340,7 +1353,16 @@
     "ciscoProblem": "Problem reporting will be sent to Cisco Technical Support",
     "ciscoHelp": "Cisco help site",
     "enterHelp": "Enter the location of your help content.",
-    "enterReports": "Problem Reports: enter the location of your problem reporting tool."
+    "enterReports": "Problem Reports: enter the location of your problem reporting tool.",
+    "grant": "Grant support access to Cisco's Customer Success team.",
+    "troubleUrl": "Your trouble reporting site URL",
+    "troubleText": "Provide optional text to give people an idea of where the URL will take them and what they can expect to do there.",
+    "helpUrlText": "Your help site URL",
+    "partnerProvidedText": "Text provided by the partner.",
+    "orgSettingsSuccess": "orgSettings updated successfully for organization",
+    "orgSettingsError": "update orgSettings failed for organization",
+    "orgSettingsForPartnerSuccess": "orgSettings updated successfully for partner and his managedOrgs",
+    "orgSettingsForPartnerError": "update orgSettings failed for partner and his managedOrgs"
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",

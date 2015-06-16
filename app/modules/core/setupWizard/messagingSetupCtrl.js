@@ -6,7 +6,7 @@
     .controller('MessagingSetupCtrl', MessagingSetupCtrl);
 
   /* @ngInject */
-  function MessagingSetupCtrl($log, $scope, AccountOrgService, Authinfo, Notification) {
+  function MessagingSetupCtrl($log, $scope, $translate, AccountOrgService, Authinfo, Notification) {
     /*jshint validthis: true */
     var vm = this;
     var msgIntFlag = false;
@@ -68,9 +68,9 @@
       if (!_.isEmpty(vm.selected.value) && !CurrentDataRetentionPeriod) {
         AccountOrgService.addOrgDataRetentionPeriodDays(orgId, vm.selected.value, function (data, status) {
           if (status === 204) {
-            Notification.notify(['Successfully added retention period setting.'], 'success');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionSuccess')], 'success');
           } else {
-            Notification.notify(['Failed to add retention period setting.'], 'error');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionError')], 'error');
           }
         });
       }
@@ -78,9 +78,9 @@
       if (!_.isEmpty(vm.selected.value) && CurrentDataRetentionPeriod && CurrentDataRetentionPeriod !== vm.selected.value) {
         AccountOrgService.modifyOrgDataRetentionPeriodDays(orgId, vm.selected.value, function (data, status) {
           if (status === 200) {
-            Notification.notify(['Successfully changed retention period setting.'], 'success');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditSuccess')], 'success');
           } else {
-            Notification.notify(['Failed to change retention period setting.'], 'error');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditError')], 'error');
           }
         });
       }
@@ -89,9 +89,9 @@
 
         AccountOrgService.addMessengerInterop(orgId, function (data, status) {
           if (status === 204) {
-            Notification.notify(['Successfully enabled Webex Messenger Integration.'], 'success');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexSuccess')], 'success');
           } else {
-            Notification.notify(['Failed to enable Webex Messenger Integration.'], 'error');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexError')], 'error');
           }
         });
 
@@ -99,9 +99,9 @@
 
         AccountOrgService.deleteMessengerInterop(orgId, function (data, status) {
           if (status === 204) {
-            Notification.notify(['Successfully disabled Webex Messenger Integration.'], 'success');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'success');
           } else {
-            Notification.notify(['Failed to disable Webex Messenger Integration.'], 'error');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'error');
           }
         });
       }
