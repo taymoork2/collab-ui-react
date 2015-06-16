@@ -55,7 +55,7 @@ angular.module('Squared')
         headerRowHeight: 44,
         sortInfo: {
           directions: ['asc'],
-          fields: ['displayStatus']
+          fields: ['readableState']
         },
         rowTemplate: getTemplate('_rowTpl'),
 
