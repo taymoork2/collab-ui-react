@@ -105,11 +105,11 @@
 
     function getQueryForOnePeriod(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=week&cache=false';
+        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=false';
       } else if (filter.value === 1) {
-        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=month&cache=false';
+        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=false';
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=3&spanType=month&cache=false';
+        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=false';
       }
     }
 

@@ -88,7 +88,7 @@ describe('Service: Partner Reports Service', function () {
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
     mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
     mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
-    callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=1&intervalType=week&spanCount=1&spanType=week&cache=false';
+    callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=false';
     registeredEndpointsUrl = 'modules/core/partnerReports/registeredEndpoints/fakeData.json';
   }));
 
