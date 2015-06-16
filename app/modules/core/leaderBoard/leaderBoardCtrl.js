@@ -6,59 +6,72 @@ angular.module('Core')
 
       $scope.buckets = {
         messaging: {
-          title: $filter('translate')('leaderBoard.messagingTitle'),
-          subtitle: $filter('translate')('leaderBoard.messagingSubtitle'),
           currentCount: 0,
-          totalCount: 0,
           description: $filter('translate')('leaderBoard.messagingDesc'),
-          visible: false,
-          unlimited: false
-        },
-        communication: {
-          title: $filter('translate')('leaderBoard.communicationTitle'),
-          subtitle: $filter('translate')('leaderBoard.communicationSubtitle'),
-          currentCount: 0,
+          subtitle: $filter('translate')('leaderBoard.messagingSubtitle'),
+          title: $filter('translate')('leaderBoard.messagingTitle'),
           totalCount: 0,
-          description: $filter('translate')('leaderBoard.communicationDesc'),
-          visible: false,
-          unlimited: false
+          unlimited: false,
+          visible: false
         },
         conferencing: {
-          title: $filter('translate')('leaderBoard.conferencingTitle'),
-          subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
           currentCount: 0,
-          totalCount: 0,
           description: $filter('translate')('leaderBoard.conferencingDesc'),
-          visible: false,
-          unlimited: false
+          subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
+          title: $filter('translate')('leaderBoard.conferencingTitle'),
+          totalCount: 0,
+          unlimited: false,
+          visible: false
+        },
+        communication: {
+          currentCount: 0,
+          description: $filter('translate')('leaderBoard.communicationDesc'),
+          subtitle: $filter('translate')('leaderBoard.communicationSubtitle'),
+          title: $filter('translate')('leaderBoard.communicationTitle'),
+          totalCount: 0,
+          unlimited: false,
+          visible: false
         }
       };
 
-      $scope.bucketKeys = Object.keys($scope.buckets);
+      // for explicit ordering:
+      $scope.bucketKeys = [
+        'messaging',
+        'conferencing',
+        'communication'
+      ];
+
+      var isCounted = function (license) {
+        if (license.licenseType === 'CONFERENCING') {
+          if (_.startsWith(license.licenseId, 'CMR')) return false; // skip
+        }
+        return (license.status === 'ACTIVE' || license.status === 'PENDING');
+        // any license with a status not ACTIVE or PENDING should be ignored
+      };
 
       var getLicenses = function () {
         Orgservice.getAdminOrg(function (data, status) {
-          if (data.success) {
-            if (data.licenses.length === 0) {
-              $scope.buckets.messaging.unlimited = true;
-              $scope.buckets.conferencing.unlimited = true;
-              $scope.buckets.communication.unlimited = true;
-            } else {
-              for (var i = 0; i < data.licenses.length; i++) {
-                if (data.licenses[i].licenseType === 'MESSAGING') {
-                  $scope.buckets.messaging.totalCount = data.licenses[i].volume;
-                  $scope.buckets.messaging.currentCount = data.licenses[i].usage;
-                } else if (data.licenses[i].licenseType === 'CONFERENCING') {
-                  $scope.buckets.conferencing.totalCount = data.licenses[i].volume;
-                  $scope.buckets.conferencing.currentCount = data.licenses[i].usage;
-                } else if (data.licenses[i].licenseType === 'COMMUNICATION') {
-                  $scope.buckets.communication.totalCount = data.licenses[i].volume;
-                  $scope.buckets.communication.currentCount = data.licenses[i].usage;
-                }
-              }
-            }
-          } else {
+          if (!data.success) {
             Log.debug('Get existing admin org failed. Status: ' + status);
+            return;
+          }
+          if (data.licenses.length === 0) {
+            $scope.bucketKeys.forEach(function (bucket) {
+              $scope.buckets[bucket].unlimited = true;
+            });
+          } else {
+            $scope.bucketKeys.forEach(function (bucket) {
+              $scope.buckets[bucket].totalCount = 0;
+              $scope.buckets[bucket].currentCount = 0;
+            });
+            data.licenses.forEach(function (license) {
+              var bucket = license.licenseType.toLowerCase(); // cleaner than:
+              //var bucket = ''.toLowerCase.call(license.licenseType || '');
+              if ($scope.buckets[bucket] && isCounted(license)) {
+                $scope.buckets[bucket].totalCount += license.volume;
+                $scope.buckets[bucket].currentCount += license.usage;
+              }
+            });
           }
         });
       };
