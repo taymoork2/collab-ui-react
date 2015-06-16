@@ -108,13 +108,13 @@ angular.module('Squared').service('DeviceFilter',
       case 'all':
         return true;
       case 'codes':
-        return item.needsActivation;
+        return isActivationCode(item);
       case 'issues':
-        return item.hasIssues;
+        return hasIssues(item);
       case 'online':
-        return item.isOnline;
+        return isOnline(item);
       case 'offline':
-        return !item.isOnline && !item.needsActivation;
+        return isOffline(item);
       default:
         return true;
       }
