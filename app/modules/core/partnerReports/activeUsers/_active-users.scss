@@ -1,0 +1,89 @@
+.active-user {
+  min-width: 520px;
+  position: relative;
+  padding-right: 15px;
+  .header {
+    margin: 0;
+  }
+  .graph-match {
+    margin: 0 15px;
+  }
+  .carousel-container {
+    margin-top: 20px;
+  }
+  .spinner-position {
+    position: relative;
+    top: -400px;
+  }
+  .clear-graph {
+    background-color: $brand-white;
+    position: relative;
+    top: -35px;
+  }
+  .active-user-status {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .most-active-btn {
+    font-family: "Arial";
+    font-size: 13px;
+    line-height: 18px;
+    color: $gray-darkest;
+    text-align: left;
+    padding: 0;
+  }
+  .most-active-btn:hover,
+  .most-active-btn:focus,
+  .most-active-btn:active,
+  .carousel-btn:hover {
+    border-color: transparent;
+    box-shadow: none;
+  }
+  .active-users-table {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .carousel-btn {
+    border-color: #878787;
+    color: #878787;
+  }
+  .carousel-btn:hover,
+  btn-none:focus,
+  .btn-none:hover {
+    border-color: transparent;
+  }
+  .no-data-center {
+    top: 115px;
+    left: 35%;
+    position: relative;
+    transform: translate(0%, 35%);
+    .no-data {
+      color: $gray-light;
+      font-family: "CiscoSansTT Light";
+      font-size: 46px;
+    }
+  }
+  #activeUsersdiv {
+    position: relative;
+    overflow: visible !important;
+    top: -40px;
+    .amcharts-main-div {
+      height: 100% !important;
+      .amcharts-chart-div {
+        overflow: visible !important;
+        svg {
+          top: 45px !important;
+          position: relative !important;
+        }
+      }
+    }
+  }
+  .amcharts-legend-div {
+    top: 50px;
+  }
+  .amcharts-balloon-div {
+    margin-top: 65px !important;
+  }
+}

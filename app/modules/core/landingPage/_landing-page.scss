@@ -1,0 +1,380 @@
+/******** Home page styles ********/
+
+.landing-page {
+  padding-left: 15px;
+}
+
+.landing-content {
+  padding-left: 15px;
+  padding-top: 15px;
+}
+
+// Analytics Charts
+.overview-updated {
+  cursor: pointer;
+  font-family: Arial;
+  color: $gray-darker;
+  .icon-refresh {
+    font-size: 12px;
+    color: $gray-darker;
+    line-height: 24px;
+    vertical-align: top;
+  }
+}
+
+.analytics-charts {
+  h3 {
+    font-family: $brand-font-cisco-TT-Thin;
+  }
+}
+
+#activeUsersChart {
+  width: 100%;
+  height: 330px;
+  font-size: 11px;
+  margin-left: -14px;
+}
+
+.chartBackground {
+  background-color: $brand-white;
+  height: 285px;
+  width: calc(95% - 98px);
+  position: absolute;
+  bottom: 0;
+  margin: 35px 0 35px 35px;
+}
+
+.au-graph-refresh {
+  position: absolute;
+  top: 225px;
+  text-align: center;
+  width: 775px;
+  z-index: 1;
+}
+
+.chart-border {
+  border: none;
+}
+
+// Monitoring Section
+.landing-content {
+  h4 {
+    color: $gray-darker;
+    font-size: 15px;
+    border-bottom: 1px solid $hr-border;
+    padding-bottom: 7px;
+    text-transform: uppercase;
+  }
+  section {
+    margin-bottom: 40px;
+  }
+  .background-white {
+    background-color: rgb(255, 255, 255);
+  }
+  .tab-reports {
+    background-color: transparent;
+  }
+  .report {
+    height: 250px;
+  }
+  .tab-report {
+    background-color: rgba(255, 255, 255, 1);
+    padding-top: 15px;
+  }
+  .tab-report {
+    height: 300px;
+  }
+  .tab-report + .report-status {
+    text-align: center;
+    width: 100%;
+    position: relative;
+    bottom: 200px;
+    float: left;
+  }
+  .tab-reports .nav-tabs li .total {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: $screen-md-min) {
+  .widgets {
+    margin-top: 45px;
+  }
+}
+
+.monitoring-list {
+  &ul, ul, li {
+    list-style: none;
+    padding-left: 0;
+    font-size: 13px;
+  }
+  span {
+    margin-left: 9px;
+  }
+  a.red:hover {
+    color: $brand-danger;
+  }
+  a.yellow:hover {
+    color: $brand-warning;
+  }
+}
+
+i {
+  .green & {
+    color: $brand-success;
+  }
+  .red & {
+    color: $brand-danger;
+  }
+  .yellow & {
+    color: $brand-warning;
+  }
+}
+
+span {
+  .red & {
+    color: $brand-danger;
+  }
+  .yellow & {
+    color: $brand-warning;
+  }
+}
+
+.monitoring-sections {
+  margin-bottom: 12px;
+}
+
+li.monitoring-cell {
+  font-size: 10px;
+  margin: 9px 0;
+  .fa {
+    font-size: 8px;
+    margin-left: 2px;
+  }
+  span {
+    margin-left: 11px;
+  }
+}
+
+.help {
+  margin-bottom: 20px;
+}
+
+.quick-links {
+  .list-group-item {
+    font-size: 13px;
+    color: $brand-primary;
+    padding: 5px 0;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+  }
+}
+
+.cta {
+  background-color: $brand-white;
+  padding: 20px 15px;
+  border-bottom: 1px solid $gray-dark;
+  font-family: $brand-font-cisco-TT-Extra-Light;
+  section {
+    min-height: 115px;
+  }
+  h3 {
+    font-size: 21px;
+    color: $gray-darker;
+    margin-top: 5px;
+  }
+  p {
+    font-family: $brand-font-cisco-TT-Extra-Light;
+  }
+  .progress {
+    margin-bottom: 6px;
+  }
+  .btn {
+    margin-top: 7px;
+  }
+}
+
+.unlicensed-users {
+  .users-info {
+    padding-top: 8px;
+  }
+  h3 {
+    margin-top: 2px;
+    margin-bottom: 16px;
+  }
+  span {
+    display: inline-block;
+  }
+  .number {
+    font-size: 40px;
+    line-height: 35px;
+    vertical-align: top;
+  }
+  .text {
+    font-size: 14px;
+    color: lighten($gray, 10%);
+    width: 55%;
+    line-height: 1.1;
+    vertical-align: middle;
+  }
+}
+
+.licenses {
+  padding-right: 30px;
+}
+
+.licenses,
+.unlicensed-users,
+.devices {
+  margin-top: 30px;
+  position: relative;
+}
+
+.packages {
+  border-right: 1px solid $gray-dark;
+  padding-right: 30px;
+  position: relative;
+}
+
+.devices {
+  border-left: none;
+}
+
+.device-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+  margin-bottom: 14px;
+  .device-item {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 16px;
+    .number {
+      color: $brand-primary;
+      font-weight: bold;
+      margin-right: 3px;
+    }
+  }
+}
+
+.no-cases {
+  font-size: 13px;
+  color: $gray-dark;
+}
+
+@media (min-width: $screen-sm-min) {
+  .devices {
+    margin-top: 0;
+  }
+}
+
+@media (min-width: $screen-md-min) {
+  .devices {
+    float: right;
+    border-left: 1px solid $gray-dark;
+  }
+  .licenses,
+  .unlicensed-users {
+    margin-top: 0;
+  }
+}
+
+.fix-btn-pos {
+  position: absolute;
+  bottom: 0px;
+}
+
+#customerListPanel {
+  .ngRow {
+    .col1 .ngCellText, .col2 .ngCellText, .col3 .ngCellText {
+      padding-top: 11px;
+    }
+    .badge {
+      width: 60px;
+      @include text-overflow();
+    }
+    .align-center {
+      text-align: center;
+    }
+    .badge-active {
+      @extend .badge.badge-primary;
+    }
+    @mixin badge-active-darker() {
+      background-color: $brand-primary-dark;
+    }
+    .badge-trial {
+      @extend .badge.badge-warning;
+    }
+    .badge-disabled {
+      background-color: $gray-lightest;
+      color: $gray-lightest;
+    }
+    @mixin badge-disabled-darker() {
+      background-color: $gray-lighter;
+      color: $gray-lighter;
+    }
+    .free {
+      color: $gray;
+    }
+    @mixin free-white() {
+      color: $brand-white;
+    }
+    .free-disabled {
+      color: $gray-lighter;
+    }
+    @mixin free-disabled-darker() {
+      color: $gray-light;
+    }
+    .red {
+      color: $brand-danger;
+    }
+    @mixin red-white() {
+      color: $brand-white;
+    }
+    &.selected {
+      .badge-active {
+        @include badge-active-darker;
+      }
+      .free {
+        @include free-white;
+      }
+      .red {
+        @include red-white;
+      }
+    }
+    &:hover {
+      .badge-disabled {
+        @incluce badge-disabled-darker;
+      }
+      .free-disabled {
+        @include free-disabled-darker;
+      }
+    }
+  }
+}
+
+.blue {
+  color: $brand-primary;
+}
+
+.red {
+  color: $brand-danger;
+}
+
+.yellow {
+  color: $brand-warning;
+}
+
+.reloaded-time {
+  .icon-refresh {
+    padding-left: 5px;
+  }
+}
+
+.reloaded-time:hover {
+  color: $brand-primary;
+  .icon-refresh {
+    color: $brand-primary;
+  }
+}

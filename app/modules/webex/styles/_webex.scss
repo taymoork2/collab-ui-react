@@ -1,0 +1,14 @@
+@import '../userSettings/usersettings';
+
+.popout-link {
+  color: $link-color;
+  cursor: pointer;
+  border-radius: 0;
+
+  &:hover,
+  &:focus {
+    color: $link-hover-color;
+    text-decoration: none;
+    background-color: transparent;
+  }
+}

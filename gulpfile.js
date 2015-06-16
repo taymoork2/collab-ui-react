@@ -79,7 +79,7 @@ gulp.task('build', ['clean'], function (done) {
     runSeq(
       [
         'template-cache',
-        'less:build',
+        'scss:build',
         'copy:build'
       ],
       'processHtml:build',
@@ -91,7 +91,7 @@ gulp.task('build', ['clean'], function (done) {
     runSeq(
       'jsb', [
         'template-cache',
-        'less:build',
+        'scss:build',
         'copy:build'
       ],
       'processHtml:build',
@@ -476,20 +476,20 @@ gulp.task('jsBeautifier:beautify', function () {
 });
 
 //============================================
-// LESS TASKS
+// CSS TASKS
 //============================================
 
 /*********************************************
- * Process LESS files for the build directory
- * Usage: gulp less:build
+ * Process SCSS files for the build directory
+ * Usage: gulp scss:build
  ********************************************/
-gulp.task('less:build', ['clean:css'], function () {
-  messageLogger('Compiling LESS --> CSS');
+gulp.task('scss:build', ['clean:css'], function () {
+  messageLogger('Compiling SCSS --> CSS');
   return gulp
-    .src('app/styles/app.less')
+    .src('app/styles/app.scss')
     .pipe($.sourcemaps.init())
     .pipe($.plumber())
-    .pipe($.less())
+    .pipe($.sass())
     .on('error', errorLogger)
     .pipe($.autoprefixer({
       browsers: ['last 2 versions', '> 5%']
@@ -753,10 +753,10 @@ gulp.task('browser-sync', function () {
 
   if (!args.dist) {
     gulp.watch([
-        config.app + '/**/*.less',
-        config.vendorFiles.less
+        config.app + '/**/*.scss',
+        config.vendorFiles.scss
       ], [
-        'less:build'
+        'scss:build'
       ])
       .on('change', logWatch);
 

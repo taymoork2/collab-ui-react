@@ -40,7 +40,7 @@ module.exports = function() {
       csv: [app + '/**/*.csv'],
       tpl: [app + '/modules/**/*.html'],
       html: [app + '/*.html'],
-      less: ['styles/app.less'],
+      scss: ['styles/app.scss'],
       images: [app + '/images'],
       lang: [app + '/l10n/*.json']
     },
@@ -154,8 +154,8 @@ module.exports = function() {
         vendor + '/zeroclipboard/dist/ZeroClipboard.js',
         vendor + '/d3/d3.min.js'
       ],
-      less: [
-        vendor + '/bootstrap-cisco/less/**/*.less'
+      scss: [
+        vendor + '/bootstrap-cisco/scss/**/*.scss'
       ],
       css: [
         vendor + '/alertify.js/themes/alertify.core.css',

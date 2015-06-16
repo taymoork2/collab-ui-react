@@ -1,0 +1,14 @@
+.dashboard-info-panel {
+  &:first-child {
+    background: $brand-white;
+    padding: 20px 20px 0 20px;
+    margin: 0 10px 20px 20px;
+  }
+  .panel,
+  .panel-group {
+    margin: 0;
+  }
+  .panel {
+    margin-bottom: 20px;
+  }
+}

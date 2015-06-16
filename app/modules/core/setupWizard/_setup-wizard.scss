@@ -1,0 +1,252 @@
+.wizard-plan-review {
+  min-height: 515px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  .flex-row {
+    @extend .row;
+    display: flex;
+    .col-sm-4 {
+      margin-right: 3px;
+      padding-bottom: 10px;
+    }
+    .col-free {
+      background: $gray-lightest;
+      min-height: 50px;
+      padding-top: 15px;
+    }
+    .col-paid {
+      background: $gray-lightest;
+      padding: 0;
+    }
+    .col-trial {
+      background: $brand-warning;
+      padding: 0;
+    }
+    .col-trial-header {
+      padding: 20px 15px 0 15px;
+      background: $brand-warning-dark;
+      height: 100px;
+      font-family: $brand-font-cisco-TT-Extra-Light;
+      font-size: 26px;
+      line-height: 32px;
+      color: $brand-white;
+    }
+    &:last-child {
+      flex: 1;
+    }
+  }
+  .column-header {
+    text-align: center;
+    h3 {
+      margin-top: 10px;
+      font-family: $brand-font-cisco-TT-Extra-Light;
+    }
+    .icon {
+      font-size: 65px;
+    }
+  }
+  .column-title {
+    margin-top: 13px;
+    h5 {
+      margin-bottom: 2px;
+      font-family: Arial
+    }
+  }
+  .item-free {
+    color: $text-color;
+  }
+  .item-paid {
+    color: $text-color;
+    padding: 20px 15px 10px 15px;
+    .sub-item {
+      padding-top: 5px;
+      font-family: Arial;
+      font-size: 13px;
+      color: $gray-darker;
+    }
+    .quantity {
+      font-family: Arial;
+      font-size: 13px;
+      color: $gray-darker;
+      .quantity-padding {
+        padding-right: 5px;
+      }
+      .badge {
+        padding: 3px 9px 3px;
+      }
+      .badge.badge-warning {
+        background: $brand-warning-dark;
+      }
+    }
+  }
+}
+
+.wizard-trial-progress {
+  .col-sm-12 {
+    margin-top: 3px;
+    padding-left: 1px;
+    padding-right: 4px;
+  }
+  .progress {
+    margin-bottom: 5px;
+  }
+  .progress-bar-warning {
+    background-color: $brand-warning-dark;
+  }
+}
+
+.wizard-trial-progress-text {
+  font-family: Arial;
+  font-size: 12px;
+}
+
+.wizard-onboard-container {
+  top: 2em;
+  width: 100%;
+}
+
+.onboard-label {
+  width: 700px;
+  margin-top: 15px;
+}
+
+.wiz-onboard-btn {
+  margin-left: 5px !important;
+  margin-right: 5px !important;
+}
+
+.messaging-setup {
+  margin-left: 3px;
+  .title {
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+  .dr-content {
+    margin-bottom: 20px;
+    margin-top: 40px;
+  }
+  .dr-selector {
+    padding: 0;
+    margin-left: 3px;
+  }
+  .data-share {
+    margin-top: 100px;
+  }
+}
+
+.sipurl-setup {
+  .title {
+    margin-bottom: 40px;
+    margin-top: 20px;
+    font-size: 16px;
+  }
+  .warning {
+    margin-bottom: 40px;
+  }
+  .sip-field {
+    padding-left: 2px;
+  }
+  .sip-input {
+    width: 250px;
+    display: inline;
+  }
+  .domain {
+    margin-left: 15px;
+  }
+}
+
+.add-user-container {
+  .title-desc {
+    color: $gray-darker;
+    font-size: 16px;
+    padding-bottom: 5px;
+  }
+  .form-group {
+    margin-top: 15px;
+    label {
+      color: $gray-darkest;
+      font-size: 18px;
+      line-height: 24px;
+      padding-top: 20px;
+    }
+    p {
+      color: $gray-darker;
+      font-size: 14px;
+    }
+  }
+  .wizard-inline-block {
+    display: inline-block;
+  }
+}
+
+.service-setup-container {
+  padding-left: 20px;
+
+  .form-group {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .has-feedback .form-control-feedback {
+    right: 0;
+  }
+
+  .service-setup {
+    label {
+      font-size: 24px;
+    }
+
+    .hide-delete {
+      visibility: hidden;
+    }
+
+    .service-setup-timezone {
+      .formly-input-wrapper {
+        width: 50%
+      }
+    }
+
+    .service-setup-steering-digit {
+      .formly-input-wrapper {
+        width: 100px;
+      }
+    }
+
+    .service-setup-site-code {
+      .formly-input-wrapper {
+        width: 100px;
+      }
+    }
+
+    &.service-setup-extension {
+      .formly-field-group {
+        margin-bottom: 10px;
+      }
+
+      .form-group {
+        margin-bottom: 5px;
+      }
+    }
+
+    .service-setup-extension-range {
+      width: 310px;
+    }
+
+    .service-setup-extension-range-to {
+      margin-right: 30px;
+    }
+
+    .service-setup-company-voicemail {
+      margin-top: 15px;
+
+      .col-xs-3 {
+        padding-left: 0;
+      }
+    }
+
+    .service-setup-moh {
+      width: 50%;
+    }
+  }
+}

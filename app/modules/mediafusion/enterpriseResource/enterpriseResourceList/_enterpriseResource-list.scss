@@ -1,0 +1,18 @@
+.vts-list {
+  .ngHeaderText.colt2 {
+    text-align: right;
+  }
+  .ngCell.colt2 {
+    overflow: visible;
+    .dropdown-menu {
+      right: 50px;
+      left: auto;
+      top: 33%;
+    }
+  }
+  .dropdown-primary {
+    background-color: $brand-primary;
+    color: $brand-white;
+    border: none;
+  }
+}
