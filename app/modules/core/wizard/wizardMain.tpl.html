@@ -1,14 +1,14 @@
 <div class="wizard-main">
-    <div class="wizard-main-title"><span translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span class="title-separator-pipe">|</span> {{wizard.getSubTabTitle() | translate}}</span>
-    <span class="cancel cancel-btn pull-right" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()">
-      <i class="icon icon-close"></i>
-    </span>
+  <div class="wizard-main-title"><span translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span class="title-separator-pipe">|</span> {{wizard.getSubTabTitle() | translate}}</span>
+  <span class="cancel cancel-btn pull-right" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()">
+    <i class="icon icon-close"></i>
+  </span>
+</div>
+<div class="wizard-main-content" ng-include="wizard.current.step.template" ng-controller="wizard.getController"></div>
+<div class="wizard-main-btns">
+  <div ng-if="wizard.isFirstTab()&&wizard.isFirstTime()" id="terms-link"><cs-checkbox ckid="terms-checkbox" ng-model="wizard.termsCheckbox" cklabel="Terms and Conditions" ng-disabled></cs-checkbox> I have read and agree to these <a ng-click="wizard.openTermsAndConditions()">terms and conditions</a></div>
+    <button type="button" class="btn btn-default" ng-if="!wizard.isFirstStep()" ng-click="wizard.previousStep()" translate="common.back"></button>
+    <button type="button" class="btn btn-default" ng-if="wizard.isFirstStep()&&!wizard.isFirstTab()" ng-click="wizard.previousTab()" translate="common.back"></button>
+    <button type="button" class="btn btn-primary" ng-click="wizard.nextStep()" translate="{{wizard.getNextText()}}" ng-disabled="!wizard.termsCheckbox && !wizard.isFromPartnerLaunch()&&!wizard.isCustomerPartner()&&wizard.isFirstTime()"></button>
   </div>
-    <div class="wizard-main-content" ng-include="wizard.current.step.template" ng-controller="wizard.getController"></div>
-    <div class="wizard-main-btns">
-    	<div ng-if="wizard.isFirstStep()&&wizard.isFirstTime()&&!wizard.isCustomerPartner()&&!wizard.isFromPartnerLaunch()" id="terms-link"><cs-checkbox ckid="terms-checkbox" ng-model="wizard.termsCheckbox" cklabel="Terms and Conditions" ng-disabled></cs-checkbox> I have read and agree to these <a ng-click="wizard.openTermsAndConditions()">terms and conditions</a></div>
-      <button type="button" class="btn btn-default" ng-if="!wizard.isFirstStep()" ng-click="wizard.previousStep()" translate="common.back"></button>
-      <button type="button" class="btn btn-default" ng-if="wizard.isFirstStep()&&!wizard.isFirstTab()" ng-click="wizard.previousTab()" translate="common.back"></button>
-      <button type="button" class="btn btn-primary" ng-click="wizard.nextStep()" translate="{{wizard.getNextText()}}" ng-disabled="!wizard.termsCheckbox && !wizard.isFromPartnerLaunch()&&!wizard.isCustomerPartner()&&wizard.isFirstTime()"></button>
-    </div>
 </div>

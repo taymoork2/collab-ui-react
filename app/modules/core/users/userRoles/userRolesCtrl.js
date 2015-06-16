@@ -201,11 +201,15 @@ angular.module('Squared')
               });
             } else {
               $rootScope.$broadcast('USER_LIST_UPDATED');
-              Notification.notify(['Successfully updated user\'s roles.'], 'success');
+              var successMessage = [];
+              successMessage.push($filter('translate')('profilePage.rolesSuccess'));
+              Notification.notify(successMessage, 'success');
             }
           } else {
             Log.debug('Updating user\'s roles failed. Status: ' + status);
-            Notification.notify(['Error updating user\'s roles.'], 'error');
+            var errorMessage = [];
+            errorMessage.push($filter('translate')('profilePage.rolesError'));
+            Notification.notify(errorMessage, 'error');
           }
         });
       };

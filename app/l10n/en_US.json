@@ -338,7 +338,9 @@
     "modDate": "Last Modification Date",
     "save": "Save",
     "success": "User successfully updated.",
-    "error": "Update user failed."
+    "rolesSuccess": "Successfully updated user's roles.",
+    "error": "Update user failed.",
+    "rolesError": "Error updating user's roles."
   },
   "supportPage": {
     "title": "Support",
