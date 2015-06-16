@@ -1411,6 +1411,11 @@
       "tcpfallback": {
         "type": "Potential Loss of Video Quality",
         "message": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+      },
+      "unknown": {
+        "type": "Unknown Error Occurred",
+        "message": "The device reported an unknown error and there is no description available. Error code is: {{errorCode}}",
+        "message_with_description": "The device reported an unknown error. Error code is: {{errorCode}}. Description provided: {{description}}"
       }
     }
   }

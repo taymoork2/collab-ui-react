@@ -58,19 +58,44 @@ angular.module('Squared').service('CsdmConverter',
 
     var getDiagnosticsEvents = function (obj) {
       return _.map(getNotOkEvents(obj), function (e) {
+        return diagnosticsEventTranslated(e);
+      });
+    };
+
+    var diagnosticsEventTranslated = function (e) {
+      if (isTranslatable('CsdmStatus.errorCodes.' + e.type + '.type')) {
         return {
           type: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.type', e.type),
           message: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description)
         };
-      });
+      } else if (e.description) {
+        return {
+          type: $translate.instant('CsdmStatus.errorCodes.unknown.type'),
+          message: $translate.instant('CsdmStatus.errorCodes.unknown.message_with_description', {
+            errorCode: e.type,
+            description: e.description
+          })
+        };
+      } else {
+        return {
+          type: $translate.instant('CsdmStatus.errorCodes.unknown.type'),
+          message: $translate.instant('CsdmStatus.errorCodes.unknown.message', {
+            errorCode: e.type
+          })
+        };
+      }
     };
 
     var translateOrDefault = function (translateString, defaultValue) {
-      if ($translate.instant(translateString) !== translateString) {
+      if (isTranslatable(translateString)) {
         return $translate.instant(translateString);
       } else {
         return defaultValue;
       }
+    };
+
+    var isTranslatable = function (key) {
+      return $translate.instant(key) !== key;
     };
 
     var getNotOkEvents = function (obj) {
