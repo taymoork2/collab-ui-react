@@ -60,6 +60,15 @@ angular.module('Hercules')
         });
       };
 
+      $scope.showUserServiceStatusDialog = function (serviceId) {
+        $scope.selectedServiceId = serviceId;
+        $scope.modal = $modal.open({
+          scope: $scope,
+          controller: 'UserServiceStatusController',
+          templateUrl: 'modules/hercules/dashboard/user-service-status.html'
+        });
+      };
+
       $scope.startSetup = function () {
         $scope.startSetupClicked = true;
       };

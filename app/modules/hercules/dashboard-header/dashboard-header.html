@@ -15,7 +15,7 @@
             <div>
               Users: {{summary(service.service_id).activated}} activated.
               <span class="error" ng-show="summary(service.service_id).error > 0">{{summary(service.service_id).error}} in error.</span>
-              <span ng-hide="true" class="export-users-statuses-icon" tooltip-placement="top" tooltip="User Status Report" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share" ng-click="openUserStatusReportModal(service.service_id)"></i></span>
+              <span ng-hide="false" class="export-users-statuses-icon" tooltip-placement="top" tooltip="User Status Report" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share" ng-click="openUserStatusReportModal(service.service_id)"></i></span>
             </div>
           </div>
         </div>

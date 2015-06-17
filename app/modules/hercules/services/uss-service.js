@@ -3,6 +3,10 @@
 angular.module('Hercules')
   .service('USSService', ['$http', 'ConfigService',
     function USSService($http, ConfigService) {
+      var statusesParameterRequestString = function (serviceId, state, limit) {
+        var statefilter = state ? "&state=" + state : "";
+        return 'serviceId=' + serviceId + statefilter + '&limit=' + limit;
+      };
       return {
         getStatusesForUser: function (userId, callback) {
           $http
@@ -79,7 +83,7 @@ angular.module('Hercules')
         },
         getStatuses: function (callback, serviceId, state, limit) {
           $http
-            .get(ConfigService.getUSSUrl() + '/userStatuses?serviceId=' + serviceId + "&state=" + state + "&limit=" + limit)
+            .get(ConfigService.getUSSUrl() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit))
             .success(function (data) {
               callback(null, data);
             })

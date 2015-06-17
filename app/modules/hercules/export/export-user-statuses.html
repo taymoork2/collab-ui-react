@@ -1,0 +1,41 @@
+<div>
+  <div class="modal-header">
+    <button id="convertModalClose" type="button" class="close" ng-click="$parent.modal.close()">
+      <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title">
+      <span><span translate="hercules.serviceNames.{{selectedServiceId}}"/>: User Status Report</span>
+    </h3>
+  </div>
+  <div class="modal-body">
+    <div ng-show="loading" style="text-align: center; padding: 60px;">
+      <i class="icon icon-spinner icon-2x"></i>
+    </div>
+    <div ng-hide="loading">
+    <p>The exported report will be a comma separated list of users, their state, and associated details. </p>
+    <p>Select which user states should be included in the report:</p>
+      <div ng-repeat="item in statusTypes" style="margin-top: 20px;">
+        <div ng-if="!item.hide">
+        <span ng-show="!item.unselectable"><cs-checkbox ng-click="selectedStateChanged()" ng-disabled="unselectable" ckid="{{item.stateType}}" ng-model="item.selected" label=""/></span>
+        <span ng-show="item.unselectable" style="margin-left:34px"/>
+        <span ng-show="item.progress && exportingUserStatusReport">(<i class="icon icon-spinner" style="top:4px"/>Processing {{item.progress}} of {{item.count}}) users</span>
+        <span ng-hide="item.progress && exportingUserStatusReport">{{item.count}} users</span>
+        <span translate="{{item.text}}"/>
+        </div>
+      </div>
+      <div ng-show="exportError"><div>Problems</div><div>{{exportError}}</div></div>
+      <br>
+      <p>Note: Time required to generate report increases with number of users.</p>
+  </div>
+  <div class="modal-footer">
+    <button ng-csv="exportCSV()" csv-header="getHeader()" filename="{{'user_status_report' | translate}}" ng-disabled="loading || exportingUserStatusReport || nothingToExport" id="convertActionButton" class="btn btn-primary pull-right">
+      <span ng-hide="exportingUserStatusReport">Export to CSV</span>
+      <span ng-show="exportingUserStatusReport">
+        <i class="icon icon-spinner" />
+      </span>
+    </button>
+    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
+      <span>Close</span>
+    </button>
+  </div>
+</div>

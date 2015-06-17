@@ -66,7 +66,7 @@
           $scope.modal = $modal.open({
             scope: $scope,
             controller: 'ExportUserStatusesController',
-            templateUrl: 'modules/hercules/dashboard-header/export-user-statuses.html'
+            templateUrl: 'modules/hercules/export/export-user-statuses.html'
           });
         };
       }
