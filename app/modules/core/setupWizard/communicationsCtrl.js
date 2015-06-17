@@ -6,7 +6,7 @@
     .controller('CommunicationsCtrl', CommunicationsCtrl);
 
   /* @ngInject */
-  function CommunicationsCtrl($log, $scope, AccountOrgService, Authinfo, Notification, Orgservice) {
+  function CommunicationsCtrl($log, $scope, $translate, AccountOrgService, Authinfo, Notification, Orgservice) {
     var vm = this;
     vm.cloudSipFlag = false;
     vm.isTestOrg = false;
@@ -39,9 +39,9 @@
 
         AccountOrgService.addOrgCloudSipUri(orgId, vm.cloudSipUriField, function (data, status) {
           if (status === 204) {
-            Notification.notify(['Successfully added Cloud Sip URI.'], 'success');
+            Notification.notify([$translate.instant('firstTimeWizard.cloudSipSuccess')], 'success');
           } else {
-            Notification.notify(['Failed to add Cloud Sip URI.'], 'error');
+            Notification.notify([$translate.instant('firstTimeWizard.cloudSipError')], 'error');
           }
         });
       }
