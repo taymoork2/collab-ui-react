@@ -9,12 +9,13 @@
           <h4><span translate="hercules.serviceNames.{{service.service_id}}"/></h4>
           <div>
             <div>
-              Clusters: {{service.running}} running.
-              <span class="error" ng-show="service.needs_attention > 0">{{service.needs_attention}} needs attention.</span>
+              Clusters: {{service.running}} running
+              <span class="error border-left" ng-show="service.needs_attention > 0">{{service.needs_attention}} needs attention</span>
             </div>
             <div>
-              Users: {{summary(service.service_id).activated}} activated.
-              <span class="error" ng-show="summary(service.service_id).error > 0 && clusters && clusters.length > 0">{{summary(service.service_id).error}} in error.</span>
+              Users: {{summary(service.service_id).activated}} activated
+              <span class="border-left" ng-show="summary(service.service_id).notActivated > 0"><span class="disabled">{{summary(service.service_id).notActivated}} pending</span></a></span>
+              <span class="border-left" ng-show="summary(service.service_id).error > 0 && clusters && clusters.length > 0"><a href ng-click="showUserStatusesDialog(service.service_id)"><span class="error">{{summary(service.service_id).error}} in error</span></a></span>
               <span class="export-users-statuses-icon" tooltip-placement="top" tooltip="User Status Report" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share" ng-click="openUserStatusReportModal(service.service_id)"></i></span>
             </div>
           </div>

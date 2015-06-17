@@ -32,7 +32,7 @@
       <p>There are users with service activation errors:</p>
       <ul>
         <li ng-repeat="service in xsummary | filter: { errors: '!0' }">
-          <span translate="hercules.serviceNames.{{service.serviceId}}"/>: <a href ng-click="showUserStatusesDialog('squared-fusion-cal')">{{service.errors}} users.</a>
+          <span translate="hercules.serviceNames.{{service.serviceId}}"/>: <a href ng-click="showUserStatusesDialog(service.serviceId)"><span class="error">{{service.errors}} in error.</span></a>
         </li>
       </ul>
     </div>

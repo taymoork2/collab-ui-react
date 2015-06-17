@@ -28,51 +28,30 @@
         };
 
         USSService.getStatusesSummary(function (err, userStatusesSummary) {
-          //console.log(userStatusesSummary);
           userStatusesSummary = userStatusesSummary.summary;
           var service = $.grep(userStatusesSummary, function (service) {
             return service.serviceId == $scope.selectedServiceId;
           });
-          Log.debug("summary", userStatusesSummary);
           $scope.statusTypes = [{
-            "stateType": "error",
-            "text": "in Error",
-            "count": service[0].error.toString(),
-            "selected": false,
-            "hide": false,
-            "unselectable": service[0].error === 0 ? true : false,
-            "progress": 0
-          }, {
             "stateType": "activated",
-            "text": "Successfully Activated",
+            "text": "activated",
             "count": service[0].activated.toString(),
             "selected": false,
-            "hide": false,
             "unselectable": service[0].activated === 0 ? true : false,
             "progress": 0
           }, {
-            "stateType": "notEntitled",
-            "text": "Not Entitled",
-            "count": service[0].notEntitled.toString(),
+            "stateType": "error",
+            "text": "in error",
+            "count": service[0].error.toString(),
             "selected": false,
-            "hide": false,
-            "unselectable": service[0].notEntitled === 0 ? true : false,
+            "unselectable": service[0].error === 0 ? true : false,
             "progress": 0
           }, {
             "stateType": "notActivated",
-            "text": "Not Activated",
+            "text": "pending activation",
             "count": service[0].notActivated.toString(),
             "selected": false,
-            "hide": true,
             "unselectable": service[0].notActivated === 0 ? true : false,
-            "progress": 0
-          }, {
-            "stateType": "deactivated",
-            "text": "Deactivated",
-            "count": service[0].deactivated.toString(),
-            "selected": false,
-            "hide": true,
-            "unselectable": service[0].deactivated === 0 ? true : false,
             "progress": 0
           }];
 

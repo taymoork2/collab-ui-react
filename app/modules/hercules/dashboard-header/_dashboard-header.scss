@@ -23,29 +23,6 @@
     padding: 0px;
   }
 
-  .addRemove {
-    padding: 0px 15px 0px 15px;
-    float: left;
-    width: 150px;
-  }
-
-  .addRemoveItem {
-    padding: 10px 20px;
-    background-color: $brand-white;
-    height: 95px;
-    text-align: center;
-    cursor: pointer;
-  }
-
-  .addRemoveItem > i {
-    border-radius: 100px;
-    color: white;
-    background: $gray-lighter;
-    height: 20px;
-    width: 20px;
-    font-size: 20px;
-  }
-
   .uc-config-button i {
     color: gray;
     font-size: 20px;
@@ -73,6 +50,12 @@
       text-decoration: none;
     }
   }
+
+  .border-left {
+    border-left: solid 1px #dddddd;
+    padding-left: 8px; margin-left: 3px;
+  }
+
 }
 
 .brand-primary {
