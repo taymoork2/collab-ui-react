@@ -640,7 +640,7 @@
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
-      "host_name": "Expressway Host",
+      "host_name": "Host",
       "display_name": "Service Name",
       "connector_type": "Connector Type",
       "serial": "Serial",
@@ -1160,7 +1160,7 @@
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
-      "host_name": "Expressway Host",
+      "host_name": "Host",
       "display_name": "Service Name",
       "connector_type": "Connector Type",
       "serial": "Serial",

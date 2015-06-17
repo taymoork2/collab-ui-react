@@ -15,7 +15,7 @@ describe('FusionWelcomeDirective', function () {
     var element = $compile("<hercules-fuse-not-performed>")($scope);
     $scope.$digest();
     expect(element.find('#fuseNotPerformedAction').hasClass('ng-hide')).toBe(false);
-    expect(element.html()).toContain("Register Cisco Expressways for Cloud Extensions");
+    expect(element.html()).toContain("Register Cisco VCS for Cloud Extensions");
   });
 
   it('replaces the element with the appropriate content when there are clusters fused', function () {

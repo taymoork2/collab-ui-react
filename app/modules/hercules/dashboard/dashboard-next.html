@@ -46,7 +46,7 @@
         <hercules-dashboard-header> </hercules-dashboard-header>
 
         <div ng-show="clusters.length != 0">
-          <h3 style="padding-left: 20px">Expressway Clusters: {{clusters.length}}</h3>
+          <h3 style="padding-left: 20px">Cisco VCS Clusters: {{clusters.length}}</h3>
           <div class="container-fluid grid" style="margin-right: -30px;">
             <div class="row" ng-repeat="cluster in clusters" ng-click="showClusterDetails(cluster)">
               <div class="col-sm-4 col-xs-10">
@@ -78,9 +78,9 @@
         </div>
 
         <div ng-show="clusters.length == 0">
-          <h3 style="padding-left: 20px">Expressway Clusters</h3>
+          <h3 style="padding-left: 20px">Cisco VCS Clusters</h3>
           <h4 style="padding-left: 20px; color: #ccc">
-            No Expressway Clusters Connected to Spark
+            No Clusters Connected to Spark
           </h4>
         </div>
       </div>

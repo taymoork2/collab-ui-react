@@ -84,7 +84,7 @@ describe('NoServiceConnectorsEnabledDirective', function () {
     var element = $compile("<hercules-no-service-connectors-enabled>")($scope);
     $scope.$digest();
     expect(element.find('#noServiceConnectorsEnabledAction').hasClass('ng-hide')).toBe(false);
-    expect(element.html()).toContain("Add a Service Connector to Expressway");
+    expect(element.html()).toContain("Add a Service Connector to Cisco VCS");
   });
 
   it('hides the element when not a c_mgmt cluster', function () {
