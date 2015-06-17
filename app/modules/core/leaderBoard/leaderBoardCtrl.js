@@ -41,14 +41,6 @@ angular.module('Core')
         'communication'
       ];
 
-      var isCounted = function (license) {
-        if (license.licenseType === 'CONFERENCING') {
-          if (_.startsWith(license.licenseId, 'CMR')) return false; // skip
-        }
-        return (license.status === 'ACTIVE' || license.status === 'PENDING');
-        // any license with a status not ACTIVE or PENDING should be ignored
-      };
-
       var getLicenses = function () {
         Orgservice.getAdminOrg(function (data, status) {
           if (!data.success) {
@@ -65,9 +57,10 @@ angular.module('Core')
               $scope.buckets[bucket].currentCount = 0;
             });
             data.licenses.forEach(function (license) {
-              var bucket = license.licenseType.toLowerCase(); // cleaner than:
-              //var bucket = ''.toLowerCase.call(license.licenseType || '');
-              if ($scope.buckets[bucket] && isCounted(license)) {
+              // skip CMR licenses; these should not contribute toward counts
+              if (license.licenseId.lastIndexOf('CMR', 0) === 0) return;
+              var bucket = license.licenseType.toLowerCase();
+              if ($scope.buckets[bucket]) {
                 $scope.buckets[bucket].totalCount += license.volume;
                 $scope.buckets[bucket].currentCount += license.usage;
               }
