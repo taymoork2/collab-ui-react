@@ -61,10 +61,12 @@ angular.module('Squared').service('CsdmService',
         });
     };
 
-    var uploadLogs = function (deviceUrl, callback) {
+    var uploadLogs = function (deviceUrl, feedbackId, email, callback) {
       $http.post(deviceUrl + '/notify', {
           command: "logUpload",
-          eventType: "room.request_logs"
+          eventType: "room.request_logs",
+          feedbackId: feedbackId,
+          email: email
         })
         .success(function (status) {
           callback(null, status);

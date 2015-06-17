@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrlRedux', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($scope, XhrNotificationService, $stateParams, $translate, Authinfo, CsdmService, Log, Notification) {
+  function DeviceOverviewCtrl($scope, XhrNotificationService, $stateParams, $translate, Authinfo, FeedbackService, CsdmService, Utils, $window, Notification) {
     var vm = this;
     vm.currentDevice = $stateParams.currentDevice;
     $scope.editorEnabled = false;
@@ -26,12 +26,19 @@
       $scope.disableEditor();
     };
 
-    $scope.uploadLogs = function (device) {
-      CsdmService.uploadLogs(device.url, function (err, data) {
+    $scope.sendFeedback = function (device) {
+      var feedbackId = Utils.getUUID();
+      CsdmService.uploadLogs(device.url, feedbackId, Authinfo.getPrimaryEmail(), function (err, data) {
         if (err) {
           return XhrNotificationService.notify(err);
         } else {
-          return Notification.notify("Logs uploaded for device " + device.displayName, "success");
+          var appType = 'Atlas_' + $window.navigator.userAgent;
+          FeedbackService.getFeedbackUrl(appType, feedbackId, function (data, status) {
+            if (data.success) {
+              $window.open(data.url, '_blank');
+            }
+          });
+          return Notification.notify("Logs uploaded for device " + device.displayName + " feedbackId: " + feedbackId, "success");
         }
       });
     };

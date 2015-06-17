@@ -124,10 +124,12 @@ describe('Service: CsdmService', function () {
     $httpBackend
       .when('POST', 'device/notify', {
         command: "logUpload",
-        eventType: "room.request_logs"
+        eventType: "room.request_logs",
+        feedbackId: "id",
+        email: "email"
       })
       .respond(200);
-    Service.uploadLogs('device', sinon.stub());
+    Service.uploadLogs('device', "id", "email", sinon.stub());
     $httpBackend.flush();
   });
 });
