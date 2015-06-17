@@ -76,6 +76,11 @@ angular.module('Mediafusion')
             }
           }
 
+          if (service.status != 'needs_attention') {
+            cluster.needs_attention = false;
+            service.needs_attention = false;
+          }
+
         });
         if (service.running_hosts) {
           cluster.running_hosts = true;

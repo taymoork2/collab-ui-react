@@ -11,7 +11,7 @@ angular.module('Mediafusion')
 
       var actionsTemplate = '<i style="top:13px" class="icon icon-three-dots"></i>';
 
-      var statusTemplate = '<div><i class="fa fa-circle device-status-icon ngCellText" style="margin-top:0px;" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'true\', \'device-status-red\': row.getProperty(col.field) !== \'true\'}"></i></div>' +
+      var statusTemplate = '<div><i class="fa fa-circle device-status-icon ngCellText" style="margin-top:0px;" ng-class="{\'device-status-green\': row.getProperty(col.field)===false, \'device-status-red\': row.getProperty(col.field) === true}"></i></div>' +
         '<div ng-class="\'device-status-nocode\'" style="top:13px">{{row.getProperty(col.field)|devStatus}}</div>';
 
       var usageTemplate = '<div style="top:13px" class="col-md-1"><label>0%</label></div><div class="progress page-header col-md-8" style="top:16px"><div class="progress-bar page-header" style="width:0%;"></div></div>';
@@ -59,7 +59,7 @@ angular.module('Mediafusion')
           field: 'action',
           cellTemplate: actionsTemplate,
           displayName: 'Actions',
-          width: "18%"
+          width: "15%"
         }]
       };
 
@@ -83,5 +83,6 @@ angular.module('Mediafusion')
           connectorId: connector.id
         });
       };
+
     }
   );
