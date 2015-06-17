@@ -1391,7 +1391,7 @@
   },
   "cloudExtensions": {
     "cloudExtensions": "Cloud Extensions",
-    "enableService": "Enable service for this user",
+    "enableService": "Activate service for this user",
     "status": "Status",
     "host": "Host"
   },

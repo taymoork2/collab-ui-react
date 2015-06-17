@@ -1,18 +1,18 @@
 .cloud-extensions {
 
   .error {
-    color: @brand-danger;
+    color: $brand-danger;
   }
 
   .notActivated {
-    color: @gray-dark;
+    color: $gray-dark;
   }
 
   .activated {
-    color: @brand-success;
+    color: $brand-success;
   }
 
   .deactivated {
-    color: @gray-dark;
+    color: $gray-dark;
   }
 }
