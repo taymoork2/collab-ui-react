@@ -275,6 +275,29 @@
     "description": "媒體品質對所選期間內的所有連線通話之品質進行了分類。如需媒體品質的相關資訊，請參閱 {knowledge base}。",
     "mediaQualityGraphError": "載入媒體品質資料時發生錯誤。"
   },
+  "callMetrics": {
+    "calls": "通話",
+    "callConditionFail": "失敗",
+    "callConditionPoorMedia": "媒體品質不佳",
+    "callConditionSuccessful": "成功",
+    "callMetrics": "通話度量值",
+    "callMetricsDesc": "通話度量值顯示所進行通話的總數，及所選時段內這些通話的總時間（分鐘）。通話度量值也會對成功連線且在期間內具有良好或出色媒體品質的通話次數百分比、已連線但媒體品質不佳的通話次數百分比，以及無法連線的通話次數百分比進行分類。",
+    "totalCalls": "通話總數",
+    "totalCallMinutes": "通話總時間（分鐘）"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "已登錄的端點",
+    "company": "公司",
+    "pendingActivations": "擱置的啟動",
+    "trend": "趨勢 (%)",
+    "registeredEndpointsError": "載入 {{customer}} 的已登錄端點時發生錯誤。"
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "使用中使用者數量（依公司）",
+    "description1": "在您的所有客戶中，有 ",
+    "description2": " 個員工在 [時段過濾器選項] 內至少進行了一次 Squared UC 通話。這裡是 [過濾器選項] 與該平均值的比較。",
+    "averageLabel": "平均參與度"
+  },
   "profilePage": {
     "userProfile": "使用者設定檔",
     "userDetails": "使用者詳細資料",
@@ -377,8 +400,8 @@
     "invalidRequired": "這是必填欄位。",
     "invalidEmail": "這不是有效的電子郵件地址。",
     "invalidUrl": "這不是有效的 URL。",
-    "invalidMinLength": "此項目太短。",
-    "invalidMaxLength": "此項目太長。"
+    "invalidMinLength": "此項目太短。最小長度為 {{min}}",
+    "invalidMaxLength": "此項目太長。最大長度為 {{max}}。"
   },
   "notifications": {
     "success": "成功通知數",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "內部分機範圍",
     "internalNumberRangeDescription": "請指定內部號碼的範圍。長度必須是 4 位數。",
     "extensionError": "分機無效： ",
+    "companyVoicemail": "公司語音郵件",
+    "companyVoicemailDescription": "選取使用者可以用來通話以檢查其語音郵件的號碼。",
     "to": "到",
     "addMoreExtensionRanges": "新增更多分機範圍",
     "globalMOH": "全域媒體保留中 (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " 不是有效的數目",
     "saveSuccess": "已成功儲存 Unified Communications 設定",
     "siteError": "建立站點失敗。",
+    "customerGetError": "取得客戶服務失敗。",
+    "voicemailGetError": "取得公司語音郵件號碼失敗。",
+    "voicemailUpdateError": "更新公司語音郵件號碼失敗。",
     "extensionDeleteSuccess": "已成功刪除延伸 {{extension}}。",
     "extensionDeleteError": "刪除延伸 {{extension}} 失敗。",
     "extensionAddError": "建立延伸 {{extension}} 失敗。"
@@ -572,7 +600,11 @@
     "deleteDevice": "刪除裝置",
     "deleteDeviceConfText": "確定要刪除此裝置嗎？",
     "videoQTitle": "可能會損失影片品質",
-    "videoQMsg": "此裝置透過 TCP 通訊協定進行通訊，這可能會增加延遲並因此降低媒體流式傳送體驗。如果遇到媒體流式傳送問題，則可以嘗試在本端防火牆上開啟 UDP 埠 33434 以協助解決媒體流式傳送問題。"
+    "videoQMsg": "此裝置透過 TCP 通訊協定進行通訊，這可能會增加延遲並因此降低媒體流式傳送體驗。如果遇到媒體流式傳送問題，則可以嘗試在本端防火牆上開啟 UDP 埠 33434 以協助解決媒體流式傳送問題。",
+    "needsActivation": "需要啟動",
+    "active": "使用中",
+    "offline": "離線",
+    "issuesDetected": "偵測到問題"
   },
   "hercules": {
     "page_title": "連接器管理",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "呼叫",
       "squared-fusion-cal": "行事曆",
-      "squared-fusion-media": "媒體"
+      "squared-fusion-media": "媒體",
+      "contact-center-context": "環境中心"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "建立呼叫駐留"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "線路",
+    "features": "功能",
     "or": "或",
     "voicemail": "語音郵件",
     "singleNumberReach": "單一號碼存取"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "不進行呼叫轉移",
     "forwardAllCalls": "轉接所有來電",
     "forwardBusyNoAnswer": "線路忙或離開時轉接來電",
-    "internalAndExternal": "適用於內部及外部來電<br>",
-    "internalOnly": "僅適用於內部來電<br>",
+    "internalAndExternal": "適用於內部及外部來電",
+    "internalOnly": "僅適用於內部來電",
     "forwardBusy": "線路忙時，傳送來電至：",
     "forwardNoAnswer": "未接聽時，傳送來電至：",
     "forwardExternal": "以不同方式轉接外部來電",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} 不具有 Unified Communications 服務",
     "member": "共用線路成員",
     "disassociateUser": "將此使用者從共用線路成員移除會立即將此線路從其所有裝置中移除。確定要繼續嗎？",
-    "addMember": "新增成員"
+    "addMember": "新增成員（依姓名或電子郵件）"
   },
   "singleNumberReachPanel": {
     "title": "單一號碼存取",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "階段作業類型啟用",
     "handsOnLabAdminLabel": "上機實驗室管理（僅當上機實驗室啟用時有效）",
     "optimizeBandwidthUsageLabel": "已優化同一網路中出席者的頻寬使用",
-    "videoSettingsLabel": "視訊設定",
-    "hiQualVideoLabel": "開啟高品質視訊 (360p)",
-    "hiDefVideoLabel": "開啟高解析度視訊 (720p)",
+    "videoSettingsLabel": "其他特權",
+    "hiQualVideoLabel": "高品質視訊 (360p)",
+    "hiDefVideoLabel": "高解析度視訊 (720p)",
     "telephonyPrivilegesLabel": "電話特權",
     "callInTeleconfLabel": "撥入通信會議",
     "tollOnlyLabel": "付費",
     "tollAndTollFreeLabel": "付費與免費",
     "teleconfViaGlobalCallinLabel": "允許透過全球撥入號碼接入通信會議",
     "callBackTeleconfLabel": "回撥通信會議",
-    "globalCallBackTeleconfLabel": "全球回撥通信會議",
+    "globalCallBackTeleconfLabel": "全球回撥",
     "integratedVoIPLaabel": "整合的 VoIP",
     "priviligesLable": "特權",
     "userPriviligesLabel": "使用者特權",
+    "teleCLIAuthEnabledLabel": "呼叫線路識別 (CLI)",
+    "pmrLabel": "個人會議室",
+    "OtherPrivilegesLabel": "其他特權",
     "advancedLinkLabel": "進階設定"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "行事曆服務",
     "sparkDesc": "在會議邀請中併入 @spark 會自動建立 Spark 會議室。",
     "webexDesc": "在會議邀請中併入 @webex 會建立 WebEx 會議，並將資訊附加到邀請。"
+  },
+  "validation": {
+    "nonPrintable": "此項目包含不可列印的字元。",
+    "callForward": "欄位可以包含數字 0 到 9、*、#、X 及 +。",
+    "specialCharacters": "此項目包含特殊字元。"
   }
 }

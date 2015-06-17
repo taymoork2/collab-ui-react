@@ -96,7 +96,7 @@
     "freeConf": "Réunion Spark gratuite pour 3 personnes",
     "freeComm": "Appel Spark 1 à 1 gratuit",
     "paidMsg": "Salles d'équipes standard",
-    "paidConf": "Réunions de la partie ",
+    "paidConf": "Réunions de la partie",
     "paidComm": "Appel Spark avancé",
     "freeSpark": "Messagerie gratuite Spark",
     "enterpriseEdition": "Édition Enterprise",
@@ -275,6 +275,29 @@
     "description": "La qualité média offre un  {knowledge base}.",
     "mediaQualityGraphError": "Une erreur s'est produite lors du chargement des données de qualité média"
   },
+  "callMetrics": {
+    "calls": "Appels",
+    "callConditionFail": "Échec",
+    "callConditionPoorMedia": "Média médiocre",
+    "callConditionSuccessful": "Réussi",
+    "callMetrics": "Métriques d'appel",
+    "callMetricsDesc": "Les métriques d'appel indiquent le nombre total d'appel passés et le nombre de minutes totalisées par ces appels au cours de la période sélectionnée. Les métriques d'appel distinguent le pourcentage d'appels qui ont été passés avec succès avec une bonne ou excellente qualité média sur toute leur durée, le pourcentage d'appels passés mais dont la qualité média était médiocre, ainsi que le pourcentage d'appels n'ayant pas abouti.",
+    "totalCalls": "Total des appels",
+    "totalCallMinutes": "Total des minutes d'appel"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Points de destination enregistrés",
+    "company": "Société",
+    "pendingActivations": "Activations en attente",
+    "trend": "Tendance (%)",
+    "registeredEndpointsError": "Une erreur s'est produite lors du chargement des points de destination enregistrés pour {{customer}}."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Population active d'utilisateurs par société",
+    "description1": "Parmi tous vos clients, ",
+    "description2": " de leurs employés ont passé au moins un appel Squared UC sur [Time period filter selection]. Voici comment le [Filter Selection] est comparé par rapport à cette moyenne.",
+    "averageLabel": "Moyenne de motivation"
+  },
   "profilePage": {
     "userProfile": "Profil de l'utilisateur",
     "userDetails": "Détails de l'utilisateur",
@@ -377,8 +400,8 @@
     "invalidRequired": "Ce champ est obligatoire.",
     "invalidEmail": "Ceci n'est pas une adresse électronique valide.",
     "invalidUrl": "Cette URL n'est pas valide.",
-    "invalidMinLength": "Cette saisie est trop courte.",
-    "invalidMaxLength": "Cette saisie est trop longue."
+    "invalidMinLength": "Cette saisie est trop courte. La longueur minimum est {{min}}",
+    "invalidMaxLength": "Cette saisie est trop longue. La longueur maximum est {{max}}."
   },
   "notifications": {
     "success": "Notifications de réussite",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Plage d'extension interne",
     "internalNumberRangeDescription": "Spécifier la plage des numéros internes. La longueur doit être de 4 chiffres.",
     "extensionError": "Extension non valide : ",
+    "companyVoicemail": "Messagerie vocale de la société",
+    "companyVoicemailDescription": "Sélectionnez un numéro que les utilisateurs peuvent appeler pour consulter leur boite vocale.",
     "to": "pour",
     "addMoreExtensionRanges": "Ajouter plus de plages d'extension",
     "globalMOH": "Média Général en attente (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " n'est pas un nombre valide",
     "saveSuccess": "La configuration de Unified Communications a été enregistrée avec succès",
     "siteError": "Échec de la création du site.",
+    "customerGetError": "Impossible d'obtenir les services à la clientèle.",
+    "voicemailGetError": "Impossible d'obtenir le numéro de la boite vocale de la société.",
+    "voicemailUpdateError": "Impossible de modifier le numéro de la boite vocale de la société.",
     "extensionDeleteSuccess": "L'extension {{extension}} a été supprimée avec succès.",
     "extensionDeleteError": "Impossible de supprimer l'extension {{extension}}.",
     "extensionAddError": "Impossible de créer l'extension {{extension}}."
@@ -572,7 +600,11 @@
     "deleteDevice": "Supprimer le périphérique",
     "deleteDeviceConfText": "Êtes-vous sûr(e) de vouloir supprimer ce périphérique ?",
     "videoQTitle": "Perte potentielle de qualité vidéo",
-    "videoQMsg": "Ce périphérique communique via le protocole TCP, ce qui peut causer une haute latence et donc une expérience de diffusion média plus lente. Si vous rencontrez des problèmes avec votre diffusion média, vous pouvez essayer d'ouvrir le port UDP 33434 sur votre parefeu local pour faciliter la résolution des problèmes de diffusion média."
+    "videoQMsg": "Ce périphérique communique via le protocole TCP, ce qui peut causer une haute latence et donc une expérience de diffusion média plus lente. Si vous rencontrez des problèmes avec votre diffusion média, vous pouvez essayer d'ouvrir le port UDP 33434 sur votre parefeu local pour faciliter la résolution des problèmes de diffusion média.",
+    "needsActivation": "Activation nécessaire",
+    "active": "Actif",
+    "offline": "Hors-ligne",
+    "issuesDetected": "Problèmes détectés"
   },
   "hercules": {
     "page_title": "Gestion du connecteur",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Appeler",
       "squared-fusion-cal": "Calendrier",
-      "squared-fusion-media": "Média"
+      "squared-fusion-media": "Média",
+      "contact-center-context": "Centre du contexte"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Créer un parcage d'appels"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Lignes",
+    "features": "Fonctionnalités",
     "or": "ou",
     "voicemail": "Messagerie vocale",
     "singleNumberReach": "Portée du numéro individuel"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Ne pas transférer les appels",
     "forwardAllCalls": "Transférer tous les appels",
     "forwardBusyNoAnswer": "Transférer les appels lorsque la ligne est occupée ou coupée",
-    "internalAndExternal": "Pour les appels internes et externes<br>",
-    "internalOnly": "Uniquement pour les appels internes<br>",
+    "internalAndExternal": "Pour les appels internes et externes",
+    "internalOnly": "Uniquement pour les appels internes",
     "forwardBusy": "Lorsque la ligne est occupée, envoyer les appels à :",
     "forwardNoAnswer": "Lorsqu'il n'y a aucune réponse, envoyer les appels à :",
     "forwardExternal": "Transférer les appels externes différemment",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} n'a pas le service Unified Communications (Communications unifiées)",
     "member": "Membres de la ligne partagée",
     "disassociateUser": "Supprimer cet utilisateur des membres de la ligne partagée supprimera cette ligne immédiatement sur tous leurs périphériques. Êtes-vous sûr(e) de vouloir continuer ?",
-    "addMember": "Ajouter un membre"
+    "addMember": "Ajouter un membre (par le nom ou l'adresse électronique)"
   },
   "singleNumberReachPanel": {
     "title": "Portée du numéro individuel",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Activation du type d'événement",
     "handsOnLabAdminLabel": "Admin de la session de laboratoire (effectif uniquement lorsque les laboratoires sont activés)",
     "optimizeBandwidthUsageLabel": "Utilisation optimisée de la bande passante pour les invités qui se trouvent sur le même réseau",
-    "videoSettingsLabel": "Paramètres vidéo",
-    "hiQualVideoLabel": "Activer la vidéo de haute qualité (360p)",
-    "hiDefVideoLabel": "Activer la vidéo haute définition (720p)",
+    "videoSettingsLabel": "Autres privilèges",
+    "hiQualVideoLabel": "Vidéo de haute qualité (360p)",
+    "hiDefVideoLabel": "Vidéo haute définition (720p)",
     "telephonyPrivilegesLabel": "Privilèges téléphoniques",
     "callInTeleconfLabel": "Appel de la téléconférence",
     "tollOnlyLabel": "Payant",
     "tollAndTollFreeLabel": "Payant & Gratuit",
     "teleconfViaGlobalCallinLabel": "Autoriser l'accès à la conférence via les numéros d'appel internationaux",
     "callBackTeleconfLabel": "Rappeler la téléconférence",
-    "globalCallBackTeleconfLabel": "Rappel international de la téléconférence",
+    "globalCallBackTeleconfLabel": "Rappel international",
     "integratedVoIPLaabel": "VoIP intégrée",
     "priviligesLable": "Privilèges",
     "userPriviligesLabel": "Privilèges des utilisateurs",
+    "teleCLIAuthEnabledLabel": "Identification de l'appelant (CLI)",
+    "pmrLabel": "Salle personnelle",
+    "OtherPrivilegesLabel": "Autres privilèges",
     "advancedLinkLabel": "Paramètres avancés"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Service du calendrier",
     "sparkDesc": "Inclure @spark dans une invitation à une réunion crée une salle Spark automatiquement.",
     "webexDesc": "Inclure @webex dans l'invitation de la réunion crée une réunion WebEx et joint les informations à l'invitation."
+  },
+  "validation": {
+    "nonPrintable": "Cette saisie contient des caractères non imprimables.",
+    "callForward": "Ce champ peut contenir les chiffres de 0 à 9, *, #, X et +.",
+    "specialCharacters": "Cette saisie contient des caractères spéciaux."
   }
 }

@@ -275,6 +275,29 @@
     "description": "Kualitas media memberikan rincian tentang kualitas semua panggilan yang disambungkan selama periode waktu terpilih. Untuk informasi lengkap tentang kualitas media, lihat {knowledge base}.",
     "mediaQualityGraphError": "Terjadi kesalahan ketika memuat data kualitas media."
   },
+  "callMetrics": {
+    "calls": "Panggilan",
+    "callConditionFail": "Gagal",
+    "callConditionPoorMedia": "Media Buruk",
+    "callConditionSuccessful": "Berhasil",
+    "callMetrics": "Metrik Panggilan",
+    "callMetricsDesc": "Metrik panggilan menunjukkan jumlah total panggilan yang dilakukan, dan total jumlah menit panggilan selama periode yang dipilih. Metrik panggilan juga mencantumkan rincian persentase panggilan yang berhasil disambungkan dan memiliki kualitas media yang baik atau sempurna selama durasi panggilan, persentase panggilan yang disambungkan dengan kualitas media yang buruk, dan persentase panggilan yang gagal disambungkan.",
+    "totalCalls": "Total Panggilan",
+    "totalCallMinutes": "Total Menit Panggilan"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Endpoint Terdaftar",
+    "company": "Perusahaan",
+    "pendingActivations": "Aktivasi Tertunda",
+    "trend": "Tren (%)",
+    "registeredEndpointsError": "Terjadi kesalahan ketika memuat data endpoint terdaftar untuk {{customer}}."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Populasi Pengguna Aktif Berdasarkan Perusahaan",
+    "description1": "Dari seluruh pelanggan, ",
+    "description2": " dari karyawan yang melakukan setidaknya satu panggilan Squared UC selama [Pemilihan filter periode waktu]. Berikut adalah perbandingan [Pemilihan Filter] terhadap rerata.",
+    "averageLabel": "Rerata Sambungan"
+  },
   "profilePage": {
     "userProfile": "Profil Pengguna",
     "userDetails": "Rincian Pengguna",
@@ -377,8 +400,8 @@
     "invalidRequired": "Kolom ini wajib diisi.",
     "invalidEmail": "Alamat Email ini tidak valid.",
     "invalidUrl": "URL ini tidak valid.",
-    "invalidMinLength": "Entri ini terlalu pendek.",
-    "invalidMaxLength": "Entri ini terlalu panjang."
+    "invalidMinLength": "Entri ini terlalu pendek. Panjang minimal adalah {{min}}",
+    "invalidMaxLength": "Entri ini terlalu panjang. Panjang maksimal adalah {{max}}."
   },
   "notifications": {
     "success": "Pemberitahuan berhasil",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Kisaran Ekstensi Internal",
     "internalNumberRangeDescription": "Tentukan kisaran angka internal. Panjang harus 4 digit.",
     "extensionError": "Ekstensi tidak valid: ",
+    "companyVoicemail": "Surat Suara Perusahaan",
+    "companyVoicemailDescription": "Pilih nomor yang dapat dipanggil pengguna untuk memeriksa surat suara.",
     "to": "ke",
     "addMoreExtensionRanges": "Tambahkan Kisaran Ekstensi Lainnya",
     "globalMOH": "Media On Hold (MOH) Global",
@@ -488,6 +513,9 @@
     "notANumber": " bukan angka yang valid",
     "saveSuccess": "Persiapan Unified Communications berhasil disimpan",
     "siteError": "Gagal membuat situs.",
+    "customerGetError": "Gagal mendapatkan layanan pelanggan.",
+    "voicemailGetError": "Gagal mendapatkan nomor surat suara perusahaan.",
+    "voicemailUpdateError": "Gagal memperbarui nomor surat suara perusahaan.",
     "extensionDeleteSuccess": "Berhasil menghapus ekstensi {{extension}}.",
     "extensionDeleteError": "Gagal menghapus ekstensi {{extension}}.",
     "extensionAddError": "Gagal membuat ekstensi {{extension}}."
@@ -572,7 +600,11 @@
     "deleteDevice": "Hapus Perangkat",
     "deleteDeviceConfText": "Anda yakin ingin menghapus perangkat ini?",
     "videoQTitle": "Potensi Hilangnya Kualitas Video",
-    "videoQMsg": "Perangkat ini berkomunikasi melalui protokol TCP, yang dapat menyebabkan kelambatan jaringan dan oleh karena itu akan mengurangi kecepatan streaming media. Jika Anda mengalami masalah ini dengan streaming media, coba buka port UDP 33434 pada firewall lokal untuk membantu mengatasi masalah streaming media."
+    "videoQMsg": "Perangkat ini berkomunikasi melalui protokol TCP, yang dapat menyebabkan kelambatan jaringan dan oleh karena itu akan mengurangi kecepatan streaming media. Jika Anda mengalami masalah ini dengan streaming media, coba buka port UDP 33434 pada firewall lokal untuk membantu mengatasi masalah streaming media.",
+    "needsActivation": "Memerlukan Aktivasi",
+    "active": "Aktif",
+    "offline": "Offline",
+    "issuesDetected": "Masalah Terdeteksi"
   },
   "hercules": {
     "page_title": "Manajemen konektor",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Panggil",
       "squared-fusion-cal": "Kalender",
-      "squared-fusion-media": "Media"
+      "squared-fusion-media": "Media",
+      "contact-center-context": "Pusat Konteks"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Buat Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Saluran",
+    "features": "Fitur",
     "or": "atau",
     "voicemail": "Surat Suara",
     "singleNumberReach": "Menjangkau Satu Nomor"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Jangan teruskan panggilan",
     "forwardAllCalls": "Teruskan semua panggilan",
     "forwardBusyNoAnswer": "Teruskan panggilan ketika jalur sibuk atau tidak terjangkau",
-    "internalAndExternal": "Untuk panggilan internal dan eksternal<br>",
-    "internalOnly": "Hanya untuk panggilan internal<br>",
+    "internalAndExternal": "Untuk panggilan internal dan eksternal",
+    "internalOnly": "Hanya untuk panggilan internal",
     "forwardBusy": "Ketika jalur sibuk, kirim panggilan ke:",
     "forwardNoAnswer": "Jika tidak ada jawaban, kirim panggilan ke:",
     "forwardExternal": "Teruskan panggilan eksternal ke nomor berbeda",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} tidak memiliki layanan Komunikasi Gabungan",
     "member": "Anggota Saluran Bersama",
     "disassociateUser": "Menghapus pengguna ini dari anggota saluran bersama juga akan menghapus saluran ini dari semua perangkat pengguna. Anda yakin ingin melanjutkan?",
-    "addMember": "Tambah Anggota"
+    "addMember": "Tambah Anggota (dengan nama atau email)"
   },
   "singleNumberReachPanel": {
     "title": "Menjangkau Satu Nomor",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Pengaktifan Jenis Sesi",
     "handsOnLabAdminLabel": "Admin Lab Ponsel (hanya efektif jika lab ponsel diaktifkan)",
     "optimizeBandwidthUsageLabel": "Penggunaan bandwidth dioptimalkan untuk peserta dalam jaringan yang sama",
-    "videoSettingsLabel": "Pengaturan Video",
-    "hiQualVideoLabel": "Aktifkan video berkualitas tinggi (360p)",
-    "hiDefVideoLabel": "Aktifkan video definisi tinggi (720p)",
+    "videoSettingsLabel": "Hak Lainnya",
+    "hiQualVideoLabel": "Video berkualitas tinggi (360p)",
+    "hiDefVideoLabel": "Video definisi tinggi (720p)",
     "telephonyPrivilegesLabel": "Panggilan telekonferensi",
     "callInTeleconfLabel": "Panggilan telekonferensi",
     "tollOnlyLabel": "Pulsa",
     "tollAndTollFreeLabel": "Pulsa & Bebas pulsa",
     "teleconfViaGlobalCallinLabel": "Izinkan akses ke teleconferensi melalui nomor panggilan global",
     "callBackTeleconfLabel": "Panggilan kembali telekonferensi",
-    "globalCallBackTeleconfLabel": "Panggilan kembali telekonferensi global",
+    "globalCallBackTeleconfLabel": "Panggilan kembali global",
     "integratedVoIPLaabel": "VoIP terpadu",
     "priviligesLable": "Hak Istimewa",
     "userPriviligesLabel": "Hak istimewa pengguna",
+    "teleCLIAuthEnabledLabel": "Calling Line Identification (CLI)",
+    "pmrLabel": "Kamar Pribadi",
+    "OtherPrivilegesLabel": "Hak Lainnya",
     "advancedLinkLabel": "Pengaturan Lanjutan"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Layanan Kalender",
     "sparkDesc": "Menyertakan @spark dalam undangan rapat akan otomatis membuat Kamar Spark.",
     "webexDesc": "Menyertakan @webex dalam undangan rapat akan membuat rapat WebEx dan melampirkan informasi ke undangan."
+  },
+  "validation": {
+    "nonPrintable": "Entri ini berisi karakter yang tidak dapat dicetak.",
+    "callForward": "Kolom dapat diisi angka 0 hingga 9, *, #, X dan +.",
+    "specialCharacters": "Entri ini berisi karakter khusus."
   }
 }

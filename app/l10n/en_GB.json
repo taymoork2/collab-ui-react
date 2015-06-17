@@ -275,6 +275,29 @@
     "description": "Media quality provides a breakdown of the quality of all connected calls during the selected period. For more information about media quality, see the {knowledge base}.",
     "mediaQualityGraphError": "There was an error while loading the media quality data."
   },
+  "callMetrics": {
+    "calls": "Calls",
+    "callConditionFail": "Fail",
+    "callConditionPoorMedia": "Poor Media",
+    "callConditionSuccessful": "Successful",
+    "callMetrics": "Call Metrics",
+    "callMetricsDesc": "Call metrics show the total number of calls made during a selected period and the duration of those calls (in minutes).  Call metrics also break down the percentage of calls that were successfully connected and had good or excellent media throughout the duration, the percentage of calls that were connected but had poor media quality and the percentage of calls that failed to connect.",
+    "totalCalls": "Total Calls",
+    "totalCallMinutes": "Total Call Minutes"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Registered Endpoints",
+    "company": "Company",
+    "pendingActivations": "Pending Activations",
+    "trend": "Trend (%)",
+    "registeredEndpointsError": "There was an error while loading the registered endpoints for {{customer}}."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Active User Population by Company",
+    "description1": "Across all your customers, ",
+    "description2": " of their employees have placed at least one Squared UC call over [Time period filter selection]. Here is how the [Filter Selection] compare to that average.",
+    "averageLabel": "Average Engagement"
+  },
   "profilePage": {
     "userProfile": "User profile",
     "userDetails": "User details",
@@ -377,8 +400,8 @@
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
-    "invalidMinLength": "This entry is too short.",
-    "invalidMaxLength": "This entry is too long."
+    "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
+    "invalidMaxLength": "This entry is too long. Maximum length is {{max}}."
   },
   "notifications": {
     "success": "Success notifications",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Internal extension range",
     "internalNumberRangeDescription": "Specify range of internal numbers. Length must be 4 digits.",
     "extensionError": "Extension not valid: ",
+    "companyVoicemail": "Company Voicemail",
+    "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",
     "to": "To",
     "addMoreExtensionRanges": "Add more extension ranges",
     "globalMOH": "Global Media On Hold (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " is not a valid number",
     "saveSuccess": "Unified Communications setup saved successfully",
     "siteError": "Failed to create site.",
+    "customerGetError": "Failed to reach customer services.",
+    "voicemailGetError": "Failed to get company voicemail number.",
+    "voicemailUpdateError": "Failed to update company voicemail number.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}."
@@ -572,7 +600,11 @@
     "deleteDevice": "Delete device",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
     "videoQTitle": "Potential Loss of Video Quality",
-    "videoQMsg": "This device communicates via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, try to open UDP port 33434 on your local firewall to aid media streaming issues."
+    "videoQMsg": "This device communicates via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, try to open UDP port 33434 on your local firewall to aid media streaming issues.",
+    "needsActivation": "Needs Activation",
+    "active": "Active",
+    "offline": "Offline",
+    "issuesDetected": "Issues Detected"
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Call",
       "squared-fusion-cal": "Calendar",
-      "squared-fusion-media": "Media"
+      "squared-fusion-media": "Media",
+      "contact-center-context": "Context Centre"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Create a Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Lines",
+    "features": "Features",
     "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Do not forward calls",
     "forwardAllCalls": "Forward all calls",
     "forwardBusyNoAnswer": "Forward calls when line is busy or away",
-    "internalAndExternal": "For internal and external calls<br>",
-    "internalOnly": "Only for internal calls<br>",
+    "internalAndExternal": "For internal and external calls",
+    "internalOnly": "Only for internal calls",
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} does not have Unified Communications service",
     "member": "Shared Line Members",
     "disassociateUser": "Removing this user from the shared line members will immediately remove this line from all of their devices. Are you sure you want to proceed?",
-    "addMember": "Add Member"
+    "addMember": "Add Member (by name or email)"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Session Type Enablement",
     "handsOnLabAdminLabel": "Hands-on Lab Admin (effective only when hands-on lab is enabled)",
     "optimizeBandwidthUsageLabel": "Optimized bandwidth usage for attendees within the same network",
-    "videoSettingsLabel": "Video Settings",
-    "hiQualVideoLabel": "Turn on high-quality video (360p)",
-    "hiDefVideoLabel": "Turn on high-definition video (720p)",
+    "videoSettingsLabel": "Other Privileges",
+    "hiQualVideoLabel": "High-quality video (360p)",
+    "hiDefVideoLabel": "High-definition video (720p)",
     "telephonyPrivilegesLabel": "Telephony Privileges",
     "callInTeleconfLabel": "Call-in teleconferencing",
     "tollOnlyLabel": "Toll",
     "tollAndTollFreeLabel": "Toll & Toll free",
     "teleconfViaGlobalCallinLabel": "Allow access to teleconference via global call-in numbers",
     "callBackTeleconfLabel": "Call-back teleconferencing",
-    "globalCallBackTeleconfLabel": "Global call-back teleconferencing",
+    "globalCallBackTeleconfLabel": "Global call-back",
     "integratedVoIPLaabel": "Integrated VoIP",
     "priviligesLable": "Privileges",
     "userPriviligesLabel": "User Privileges",
+    "teleCLIAuthEnabledLabel": "Calling Line Identification (CLI)",
+    "pmrLabel": "Personal Room",
+    "OtherPrivilegesLabel": "Other Privileges",
     "advancedLinkLabel": "Advanced Settings"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Calendar Service",
     "sparkDesc": "Including @spark in a meeting invitation creates a Spark Room automatically.",
     "webexDesc": "Including @webex in the meeting invitation creates a WebEx meeting and appends the information to the invitation."
+  },
+  "validation": {
+    "nonPrintable": "This entry contains nonprintable characters.",
+    "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
+    "specialCharacters": "This entry contains special characters."
   }
 }

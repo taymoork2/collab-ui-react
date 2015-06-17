@@ -275,6 +275,29 @@
     "description": "媒体质量详细分析了选定时间段内连接的所有呼叫的质量。有关媒体质量的更多信息，请参阅 {knowledge base}。",
     "mediaQualityGraphError": "加载媒体质量数据时出错。"
   },
+  "callMetrics": {
+    "calls": "呼叫",
+    "callConditionFail": "失败",
+    "callConditionPoorMedia": "媒体质量不佳",
+    "callConditionSuccessful": "不成功",
+    "callMetrics": "呼叫度量",
+    "callMetricsDesc": "呼叫度量显示发出的呼叫总数以及这些呼叫在选定时间段内的总计持续时间（分钟）。呼叫度量还会细分已成功连接且在整个过程中拥有良好或极佳媒体质量的呼叫所占的百分比、已连接但媒体质量不佳的呼叫所占的百分比，以及连接失败的呼叫所占的百分比。",
+    "totalCalls": "呼叫总数",
+    "totalCallMinutes": "总计呼叫持续时间（分钟）"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "已注册终端",
+    "company": "公司",
+    "pendingActivations": "待激活",
+    "trend": "趋势 (%)",
+    "registeredEndpointsError": "为 {{customer}} 加载已注册终端时出错。"
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "按公司列出的活跃用户数量",
+    "description1": "在所有的客户中， ",
+    "description2": " 有 位员工在 [时间段过滤器选择] 内已发出至少一个 Squared UC 呼叫。[过滤器选择] 与该平均值的对比情况如下所示。",
+    "averageLabel": "平均参与度"
+  },
   "profilePage": {
     "userProfile": "用户档案",
     "userDetails": "用户详情",
@@ -377,8 +400,8 @@
     "invalidRequired": "此字段为必填项。",
     "invalidEmail": "此电子邮件地址无效。",
     "invalidUrl": "此 URL 无效。",
-    "invalidMinLength": "您输入的内容过短。",
-    "invalidMaxLength": "您输入的内容过长。"
+    "invalidMinLength": "此条目过短。最小时长为 {{min}}",
+    "invalidMaxLength": "此条目过长。最大时长为 {{max}}。"
   },
   "notifications": {
     "success": "成功通知数",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "内部分机范围",
     "internalNumberRangeDescription": "指定内部号码的范围。长度必须为 4 位数字。",
     "extensionError": "分机无效： ",
+    "companyVoicemail": "公司语音邮件",
+    "companyVoicemailDescription": "选择用户可呼叫以检查语音邮件的号码。",
     "to": "到",
     "addMoreExtensionRanges": "添加更多分机范围",
     "globalMOH": "全局媒体保持 (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " 不是有效的数字",
     "saveSuccess": "Unified Communications 设置保存成功",
     "siteError": "创建站点失败。",
+    "customerGetError": "获取客户服务失败。",
+    "voicemailGetError": "获取公司语音邮件号码失败。",
+    "voicemailUpdateError": "更新公司语音邮件号码失败。",
     "extensionDeleteSuccess": "删除分机 {{extension}} 成功。",
     "extensionDeleteError": "删除分机 {{extension}} 失败。",
     "extensionAddError": "创建分机 {{extension}} 失败。"
@@ -572,7 +600,11 @@
     "deleteDevice": "删除设备",
     "deleteDeviceConfText": "确定要删除此设备吗？",
     "videoQTitle": "潜在的视频质量损失",
-    "videoQMsg": "此设备通过 TCP 协议进行通信，这可能导致更高的延迟，从而降低媒体流体验。如果您的流媒体遇到问题，可以尝试打开 本地防火墙上的 UDP 端口 33434 来辅助解决媒体流问题。"
+    "videoQMsg": "此设备通过 TCP 协议进行通信，这可能导致更高的延迟，从而降低媒体流体验。如果您的流媒体遇到问题，可以尝试打开 本地防火墙上的 UDP 端口 33434 来辅助解决媒体流问题。",
+    "needsActivation": "需要激活",
+    "active": "活动",
+    "offline": "离线",
+    "issuesDetected": "检测到问题"
   },
   "hercules": {
     "page_title": "连接器管理",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "呼叫",
       "squared-fusion-cal": "日历",
-      "squared-fusion-media": "媒体"
+      "squared-fusion-media": "媒体",
+      "contact-center-context": "环境中心"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "创建呼叫驻留"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "线路",
+    "features": "功能",
     "or": "或",
     "voicemail": "语音邮件",
     "singleNumberReach": "单一号码存取"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "不转移呼叫",
     "forwardAllCalls": "转移所有呼叫",
     "forwardBusyNoAnswer": "线路忙或离开时转移呼叫",
-    "internalAndExternal": "用于内部和外部呼叫<br>",
-    "internalOnly": "仅用于内部呼叫<br>",
+    "internalAndExternal": "适用于内部和外部呼叫",
+    "internalOnly": "仅适用于内部呼叫",
     "forwardBusy": "线路忙时，发送呼叫至：",
     "forwardNoAnswer": "无应答时，发送呼叫至：",
     "forwardExternal": "以不同方式转移外部呼叫",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} 没有 Unified Communications 服务",
     "member": "已共享线路成员",
     "disassociateUser": "从共享线路成员中删除此用户将立即从其所有设备中删除此线路。确定要继续吗？",
-    "addMember": "添加成员"
+    "addMember": "添加成员（通过姓名或电子邮件）"
   },
   "singleNumberReachPanel": {
     "title": "单一号码存取",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "会话类型启用",
     "handsOnLabAdminLabel": "上机实验室管理员（仅在启用上机实验室时有效）",
     "optimizeBandwidthUsageLabel": "已为同一网络中的与会者优化带宽使用",
-    "videoSettingsLabel": "视频设置",
-    "hiQualVideoLabel": "打开高质量视频 (360p)",
-    "hiDefVideoLabel": "打开高清视频 (720p)",
+    "videoSettingsLabel": "其他权限",
+    "hiQualVideoLabel": "高质量视频 (360p)",
+    "hiDefVideoLabel": "高清视频 (720p)",
     "telephonyPrivilegesLabel": "电话权限",
     "callInTeleconfLabel": "呼入电话会议",
     "tollOnlyLabel": "收费",
     "tollAndTollFreeLabel": "收费和免费",
     "teleconfViaGlobalCallinLabel": "允许通过全球呼入号码访问电话会议",
     "callBackTeleconfLabel": "回呼电话会议",
-    "globalCallBackTeleconfLabel": "全球回呼电话会议",
+    "globalCallBackTeleconfLabel": "全球回呼",
     "integratedVoIPLaabel": "集成 VoIP",
     "priviligesLable": "权限",
     "userPriviligesLabel": "用户权限",
+    "teleCLIAuthEnabledLabel": "呼叫线路识别 (CLI)",
+    "pmrLabel": "个人房间",
+    "OtherPrivilegesLabel": "其他权限",
     "advancedLinkLabel": "高级设置"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "日历服务",
     "sparkDesc": "在会议邀请中包括 @spark 将自动创建 Spark 房间。",
     "webexDesc": "在会议邀请中包括 @webex 将创建 WebEx 会议并向邀请附加信息。"
+  },
+  "validation": {
+    "nonPrintable": "此条目包含不可打印的字符。",
+    "callForward": "字段不能包含数字 0 到 9、*、#、X 和 +。",
+    "specialCharacters": "此条目包含特殊字符。"
   }
 }

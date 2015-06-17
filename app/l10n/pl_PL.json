@@ -275,6 +275,29 @@
     "description": "Funkcja jakości multimediów zapewnia podział jakości wszystkich nawiązanych połączeń w wybranym okresie. Więcej informacji na temat jakości multimediów zawiera {knowledge base}.",
     "mediaQualityGraphError": "Wystąpił błąd podczas ładowania danych dotyczących jakości multimediów."
   },
+  "callMetrics": {
+    "calls": "Połączenia",
+    "callConditionFail": "Nieudane",
+    "callConditionPoorMedia": "Niska jakość multimediów",
+    "callConditionSuccessful": "Udane",
+    "callMetrics": "Metryki połączeń",
+    "callMetricsDesc": "Metryki połączeń wskazują łączną liczbę wykonanych połączeń oraz całkowitą liczbę minut w wybranym okresie. Metryki zawierają również procentowy podział pomyślnie nawiązanych połączeń o dobrej lub znakomitej jakości multimediów, nawiązanych połączeń o niskiej jakości multimediów oraz połączeń, których nie udało się nawiązać.",
+    "totalCalls": "Łączna liczba połączeń",
+    "totalCallMinutes": "Łączny czas połączeń w minutach"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Zarejestrowane urządzenia końcowe",
+    "company": "Firma",
+    "pendingActivations": "Oczekujące aktywacje",
+    "trend": "Trend (%)",
+    "registeredEndpointsError": "Wystąpił błąd podczas ładowania zarejestrowanych urządzeń końcowych dla klienta {{customer}}."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Liczba aktywnych użytkowników wg firmy",
+    "description1": "U wszystkich klientów ",
+    "description2": " pracowników nawiązało co najmniej jedno połączenie Squared UC w okresie [Time period filter selection]. Poniżej przedstawiono porównanie wyników dla [Filter Selection] z tą średnią.",
+    "averageLabel": "Średnie zaangażowanie"
+  },
   "profilePage": {
     "userProfile": "Profil użytkownika",
     "userDetails": "Szczegóły użytkownika",
@@ -377,8 +400,8 @@
     "invalidRequired": "To pole jest wymagane.",
     "invalidEmail": "To nie jest poprawny adres e-mail.",
     "invalidUrl": "To nie jest poprawny adres URL.",
-    "invalidMinLength": "Ten wpis jest za krótki.",
-    "invalidMaxLength": "Ten wpis jest za długi."
+    "invalidMinLength": "Wpis jest zbyt krótki. Minimalna długość to {{min}}",
+    "invalidMaxLength": "Wpis jest zbyt długi. Maksymalna długość to {{max}}."
   },
   "notifications": {
     "success": "Powiadomienia o powodzeniu",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Zakres numerów wewnętrznych",
     "internalNumberRangeDescription": "Określ zakres numerów wewnętrznych. Muszą mieć 4 cyfry długości.",
     "extensionError": "Nieprawidłowy numer wewnętrzny: ",
+    "companyVoicemail": "Firmowa poczta głosowa",
+    "companyVoicemailDescription": "Wybierz numer, z którym użytkownicy mogą się łączyć, aby sprawdzać pocztę głosową.",
     "to": "do",
     "addMoreExtensionRanges": "Dodaj więcej zakresów numerów zewnętrznych",
     "globalMOH": "Globalne multimedia podczas wstrzymania połączenia",
@@ -488,6 +513,9 @@
     "notANumber": " nie jest prawidłową liczbą",
     "saveSuccess": "Konfiguracja Unified Communications została zapisana pomyślnie",
     "siteError": "Nie można utworzyć lokalizacji.",
+    "customerGetError": "Nie można uzyskać usług klienta.",
+    "voicemailGetError": "Nie można uzyskać numeru firmowej poczty głosowej.",
+    "voicemailUpdateError": "Nie można zaktualizować numeru firmowej poczty głosowej.",
     "extensionDeleteSuccess": "Numer wewnętrzny {{extension}} został usunięty pomyślnie.",
     "extensionDeleteError": "Nie można usunąć numeru wewnętrznego {{extension}}.",
     "extensionAddError": "Nie można utworzyć numeru wewnętrznego {{extension}}."
@@ -572,7 +600,11 @@
     "deleteDevice": "Usuń urządzenie",
     "deleteDeviceConfText": "Czy na pewno chcesz usunąć to urządzenie?",
     "videoQTitle": "Możliwość obniżenia jakości wideo",
-    "videoQMsg": "To urządzenie używa do komunikacji protokołu TCP, który może zwiększać opóźnienia, powodując obniżenie jakości przesyłanych strumieniowo multimediów. W przypadku problemów z przesyłaniem strumieniowym multimediów możesz spróbować je rozwiązać przez otwarcie portu UDP 33434 w lokalnej zaporze sieciowej."
+    "videoQMsg": "To urządzenie używa do komunikacji protokołu TCP, który może zwiększać opóźnienia, powodując obniżenie jakości przesyłanych strumieniowo multimediów. W przypadku problemów z przesyłaniem strumieniowym multimediów możesz spróbować je rozwiązać przez otwarcie portu UDP 33434 w lokalnej zaporze sieciowej.",
+    "needsActivation": "Wymagana aktywacja",
+    "active": "Aktywny",
+    "offline": "Offline",
+    "issuesDetected": "Wykryto problemy"
   },
   "hercules": {
     "page_title": "Zarządzanie łącznikami",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Połącz",
       "squared-fusion-cal": "Kalendarz",
-      "squared-fusion-media": "Multimedia"
+      "squared-fusion-media": "Multimedia",
+      "contact-center-context": "Context Center"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Utwórz parkowanie połączenia"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Linie",
+    "features": "Funkcje",
     "or": "lub",
     "voicemail": "Poczta głosowa",
     "singleNumberReach": "Zasięg pojedynczego numeru"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Nie przekazuj połączeń",
     "forwardAllCalls": "Przekazuj wszystkie połączenia",
     "forwardBusyNoAnswer": "Przekazuj połączenia, kiedy linia jest zajęta lub wyłączona",
-    "internalAndExternal": "Połączenia wewnętrzne i zewnętrzne<br>",
-    "internalOnly": "Tylko połączenia wewnętrzne<br>",
+    "internalAndExternal": "Dla połączeń wewnętrznych i zewnętrznych",
+    "internalOnly": "Tylko dla połączeń wewnętrznych",
     "forwardBusy": "Kiedy linia jest zajęta, wysyłaj połączenia do:",
     "forwardNoAnswer": "Kiedy nie ma odpowiedzi, wysyłaj połączenia do:",
     "forwardExternal": "Przekazuj połączenia zewnętrzne w inny sposób",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} nie ma usługi Unified Communications",
     "member": "Użytkownicy współużytkowanej linii",
     "disassociateUser": "Usunięcie tego użytkownika z listy użytkowników współużytkowanej linii spowoduje natychmiastowe usunięcie tej linii ze wszystkich urządzeń tych użytkowników. Czy na pewno chcesz kontynuować?",
-    "addMember": "Dodaj użytkownika"
+    "addMember": "Dodaj członka (wg nazwy lub adresu e-mail)"
   },
   "singleNumberReachPanel": {
     "title": "Zasięg pojedynczego numeru",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Włączenie typu sesji",
     "handsOnLabAdminLabel": "Administrator ćwiczenia praktycznego (ma skutek tylko wówczas, gdy ćwiczenie praktyczne jest włączone)",
     "optimizeBandwidthUsageLabel": "Optymalizacja wykorzystania przepustowości dla uczestników w tej samej sieci",
-    "videoSettingsLabel": "Ustawienia wideo",
-    "hiQualVideoLabel": "Włącz wideo o wysokiej jakości (360p)",
-    "hiDefVideoLabel": "Włącz wideo HD (720p)",
+    "videoSettingsLabel": "Inne uprawnienia",
+    "hiQualVideoLabel": "Wideo wysokiej jakości (360p)",
+    "hiDefVideoLabel": "Wideo wysokiej rozdzielczości (720p)",
     "telephonyPrivilegesLabel": "Uprawnienia do telefonii",
     "callInTeleconfLabel": "Telekonferencje z wdzwanianiem",
     "tollOnlyLabel": "Płatne",
     "tollAndTollFreeLabel": "Płatne i bezpłatne",
     "teleconfViaGlobalCallinLabel": "Zezwól na dostęp do telekonferencji za pośrednictwem krajowych numerów dostępowych",
     "callBackTeleconfLabel": "Telekonferencje z oddzwanianiem",
-    "globalCallBackTeleconfLabel": "Telekonferencje z oddzwanianiem krajowym",
+    "globalCallBackTeleconfLabel": "Globalne oddzwanianie",
     "integratedVoIPLaabel": "Zintegrowany VoIP",
     "priviligesLable": "Uprawnienia",
     "userPriviligesLabel": "Uprawnienia użytkownika",
+    "teleCLIAuthEnabledLabel": "Identyfikacja linii dzwoniącej (CLI)",
+    "pmrLabel": "Osobisty pokój",
+    "OtherPrivilegesLabel": "Inne uprawnienia",
     "advancedLinkLabel": "Ustawienia zaawansowane"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Usługa kalendarza",
     "sparkDesc": "Umieszczenie wpisu @spark w zaproszeniu na spotkanie powoduje automatyczne utworzenie pokoju Spark.",
     "webexDesc": "Umieszczenie wpisu @webex w zaproszeniu na spotkanie powoduje automatyczne utworzenie spotkania WebEx i dołączenie informacji na ten temat do zaproszenia."
+  },
+  "validation": {
+    "nonPrintable": "Ten wpis zawiera znaki niedrukowalne.",
+    "callForward": "Pole może zawierać cyfry od 0 do 9 oraz znaki *, #, X i +.",
+    "specialCharacters": "Ten wpis zawiera znaki specjalne."
   }
 }

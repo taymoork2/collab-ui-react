@@ -275,6 +275,29 @@
     "description": "'Mediakwaliteit' biedt een overzicht van de kwaliteit van alle gesprekken tijdens de geselecteerde periode. Raadpleeg de {knowledge base} voor meer informatie over mediakwaliteit.",
     "mediaQualityGraphError": "Er is een fout opgetreden tijdens het laden van de gegevens over de mediakwaliteit."
   },
+  "callMetrics": {
+    "calls": "Gesprekken",
+    "callConditionFail": "Mislukt",
+    "callConditionPoorMedia": "Slechte media",
+    "callConditionSuccessful": "Gelukt",
+    "callMetrics": "Gespreksstatistieken",
+    "callMetricsDesc": "Met Gespreksstatistieken kunt u het totale aantal gesprekken weergeven en het totale aantal minuten van deze gesprekken tijdens de geselecteerde periode. Ook kunt u met Gespreksstatistieken een uitsplitsing weergeven van het percentage gesprekken waarvoor een verbinding kon worden ingesteld en de media gedurende het volledige gesprek goed of uitstekend was, het percentage gesprekken waarvoor een verbinding kon worden ingesteld maar de mediakwaliteit slecht was en het percentage gesprekken waarvoor geen verbinding kon worden ingesteld.",
+    "totalCalls": "Totaal aantal gesprekken",
+    "totalCallMinutes": "Totaal aantal minuten van gesprekken"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Geregistreerde eindpunten",
+    "company": "Bedrijf",
+    "pendingActivations": "Activeringen in behandeling",
+    "trend": "Trend (%)",
+    "registeredEndpointsError": "Er is een fout opgetreden bij het laden van de geregistreerde eindpunten voor {{customer}}."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Actieve gebruikerspopulatie per bedrijf",
+    "description1": "Voor al uw klanten heeft ",
+    "description2": " van de werknemers ten minste één Squared UC-gesprek gevoerd gedurende [Time period filter selection]. [Filter Selection] verhoudt zich als volgt tot dit gemiddelde.",
+    "averageLabel": "Gemiddelde interactie"
+  },
   "profilePage": {
     "userProfile": "Gebruikersprofiel",
     "userDetails": "Gebruikersgegevens",
@@ -377,8 +400,8 @@
     "invalidRequired": "Dit is een verplicht veld.",
     "invalidEmail": "Dit e-mailadres is ongeldig.",
     "invalidUrl": "Deze URL is ongeldig.",
-    "invalidMinLength": "De ingevoerde tekst bevat te weinig tekens.",
-    "invalidMaxLength": "De ingevoerde tekst bevat te veel tekens."
+    "invalidMinLength": "Deze invoer is te kort. De minimumlengte is {{min}}",
+    "invalidMaxLength": "Deze invoer is te lang. De maximumlengte is {{max}}."
   },
   "notifications": {
     "success": "Succesmeldingen",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Reeks voor interne toestelnummers",
     "internalNumberRangeDescription": "Specificeer het bereik van de interne nummers, die uit 4 cijfers moeten bestaan.",
     "extensionError": "Toestel niet geldig: ",
+    "companyVoicemail": "Bedrijfsvoicemail",
+    "companyVoicemailDescription": "Selecteer een nummer dat gebruikers kunnen bellen om hun voicemail te controleren.",
     "to": "tot",
     "addMoreExtensionRanges": "Meer toestelreeksen toevoegen",
     "globalMOH": "Algemene media in wachtrij (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " is geen geldig nummer",
     "saveSuccess": "Configuratie van Unified Communications met succes opgeslagen",
     "siteError": "Kon site niet maken.",
+    "customerGetError": "Kan klantenservice niet ophalen.",
+    "voicemailGetError": "Kan nummer voor bedrijfsvoicemail niet ophalen.",
+    "voicemailUpdateError": "Kan nummer voor bedrijfsvoicemail niet bijwerken.",
     "extensionDeleteSuccess": "Toestelnummer {{extension}} met succes verwijderd.",
     "extensionDeleteError": "Toestelnummer {{extension}} kon niet verwijderd worden.",
     "extensionAddError": "Toestelnummer {{extension}} kon niet gemaakt worden."
@@ -572,7 +600,11 @@
     "deleteDevice": "Apparaat verwijderen",
     "deleteDeviceConfText": "Weet u zeker dat u dit apparaat wilt verwijderen?",
     "videoQTitle": "Mogelijk verlies van videokwaliteit",
-    "videoQMsg": "Dit apparaat communiceert via het TCP-protocol, wat hogere latentie zou kunnen veroorzaken en daardoor een slechtere mediastreamingervaring. Als u problemen ondervindt met uw mediastreaming, kunt u proberen UDP-poort 33434 te openen op uw lokale firewall om te helpen problemen met de mediastreaming op te lossen."
+    "videoQMsg": "Dit apparaat communiceert via het TCP-protocol, wat hogere latentie zou kunnen veroorzaken en daardoor een slechtere mediastreamingervaring. Als u problemen ondervindt met uw mediastreaming, kunt u proberen UDP-poort 33434 te openen op uw lokale firewall om te helpen problemen met de mediastreaming op te lossen.",
+    "needsActivation": "Moet worden geactiveerd",
+    "active": "Actief",
+    "offline": "Offline",
+    "issuesDetected": "Problemen gedetecteerd"
   },
   "hercules": {
     "page_title": "Connectorbeheer",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Bellen",
       "squared-fusion-cal": "Agenda",
-      "squared-fusion-media": "Media"
+      "squared-fusion-media": "Media",
+      "contact-center-context": "Context Center"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Geparkeerd gesprek maken"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Lijnen",
+    "features": "Functies",
     "or": "of",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Gesprekken niet doorschakelen",
     "forwardAllCalls": "Alle gesprekken doorschakelen",
     "forwardBusyNoAnswer": "Gesprekken doorschakelen wanneer de lijn bezet is of wanneer er niemand aanwezig is",
-    "internalAndExternal": "Voor interne en externe gesprekken<br>",
-    "internalOnly": "Alleen voor interne gesprekken<br>",
+    "internalAndExternal": "Voor interne en externe gesprekken",
+    "internalOnly": "Alleen voor interne gesprekken",
     "forwardBusy": "Gesprekken doorsturen naar het volgende nummer wanneer de lijn bezet is:",
     "forwardNoAnswer": "Gesprekken doorsturen naar het volgende nummer wanneer ze niet worden beantwoord:",
     "forwardExternal": "Externe gesprekken anders doorsturen",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} heeft geen Unified Communications-service",
     "member": "Gedeelde lijnleden",
     "disassociateUser": "Als u deze gebruiker uit de gedeelde lijnleden verwijdert, zal deze lijn onmiddellijk uit al hun apparaten worden verwijderd. Bent u zeker dat u wilt verdergaan?",
-    "addMember": "Lid toevoegen"
+    "addMember": "Lid toevoegen (op naam of e-mailadres)"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Inschakeling sessietype",
     "handsOnLabAdminLabel": "Hands-on Lab Admin (alleen operationeel wanneer hands-on lab is ingeschakeld)",
     "optimizeBandwidthUsageLabel": "Geoptimaliseerd gebruik brandbreedte voor deelnemers binnen hetzelfde netwerk",
-    "videoSettingsLabel": "Video-instellingen",
-    "hiQualVideoLabel": "Video van hoge kwaliteit (360p) inschakelen",
-    "hiDefVideoLabel": "High-definition video (720p) inschakelen",
+    "videoSettingsLabel": "Andere rechten",
+    "hiQualVideoLabel": "Video van hoge kwaliteit (360p)",
+    "hiDefVideoLabel": "Video van hd-kwaliteit (720p)",
     "telephonyPrivilegesLabel": "Telefonierechten",
     "callInTeleconfLabel": "Teleconferentie voor inbellen",
     "tollOnlyLabel": "Betaald",
     "tollAndTollFreeLabel": "Betaald en gratis",
     "teleconfViaGlobalCallinLabel": "Toegang tot teleconferentie toestaan via wereldwijde inbelnummers",
     "callBackTeleconfLabel": "Teleconferentie met terugbellen",
-    "globalCallBackTeleconfLabel": "Wereldwijde teleconferentie met terugbellen",
+    "globalCallBackTeleconfLabel": "Algemeen terugbelnummer",
     "integratedVoIPLaabel": "Geïntegreerde VoIP",
     "priviligesLable": "Rechten",
     "userPriviligesLabel": "Gebruikersrechten",
+    "teleCLIAuthEnabledLabel": "CLI (Calling Line Identification)",
+    "pmrLabel": "Persoonlijke ruimte",
+    "OtherPrivilegesLabel": "Andere rechten",
     "advancedLinkLabel": "Geavanceerde instellingen"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Agendaservice",
     "sparkDesc": "@spark opnemen in een vergaderingsuitnodiging, maakt automatisch een Spark-ruimte aan.",
     "webexDesc": "@webex opnemen in de vergaderingsuitnodiging maakt een WebEx-vergadering aan en voegt de informatie bij de uitnodiging."
+  },
+  "validation": {
+    "nonPrintable": "Deze invoer bevat niet-afdrukbare tekens.",
+    "callForward": "Het veld kan de cijfers 0 tot 9, *, #, X en + bevatten.",
+    "specialCharacters": "Deze invoer bevat speciale tekens."
   }
 }

@@ -275,6 +275,29 @@
     "description": "A qualidade de mídia fornece uma divisão da qualidade de todas as chamadas conectadas durante o período selecionado. Para obter mais informações sobre a qualidade de mídia, consulte a {knowledge base}.",
     "mediaQualityGraphError": "Houve um erro ao carregar os dados de qualidade de mídia."
   },
+  "callMetrics": {
+    "calls": "Chamadas",
+    "callConditionFail": "Falha",
+    "callConditionPoorMedia": "Mídia ruim",
+    "callConditionSuccessful": "Êxito",
+    "callMetrics": "Métricas de chamada",
+    "callMetricsDesc": "As métricas de chamada mostram o número total de chamadas realizadas e o número de minutos totalizados destas chamadas durante o período selecionado. As métricas de chamada também desmembram a porcentagem de chamadas que foram conectadas com êxito e tiveram qualidade de mídia boa ou excelente no período de duração, a porcentagem de chamadas que foram conectadas, mas tiveram qualidade de mídia ruim e a porcentagem de chamadas que tiveram falha de conexão.",
+    "totalCalls": "Total de chamadas",
+    "totalCallMinutes": "Total de minutos na chamada"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Terminais registrados",
+    "company": "Empresa",
+    "pendingActivations": "Ativações pendentes",
+    "trend": "Tendência (%)",
+    "registeredEndpointsError": "Houve um erro ao carregar os terminais registrados para {{customer}}."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "População de usuários ativos por empresa",
+    "description1": "Entre todos os seus clientes, ",
+    "description2": " de seus funcionários fizeram pelo menos uma chamada Squared UC durante [seleção do filtro de período de tempo]. Aqui está como o [seleção do filtro] compara esta média.",
+    "averageLabel": "Compromisso de média"
+  },
   "profilePage": {
     "userProfile": "Perfil do usuário",
     "userDetails": "Detalhes do usuário",
@@ -377,8 +400,8 @@
     "invalidRequired": "Este campo é obrigatório.",
     "invalidEmail": "Este endereço de e-mail é invalido.",
     "invalidUrl": "Esta URL é inválida.",
-    "invalidMinLength": "Esta entrada é muito curta.",
-    "invalidMaxLength": "Esta entrada é muito longa."
+    "invalidMinLength": "Este registro é muito curto. O tamanho mínimo é {{min}}",
+    "invalidMaxLength": "Este registro é muito longo. O tamanho máximo é {{max}}."
   },
   "notifications": {
     "success": "Notificações de êxito",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Faixa de ramal interno",
     "internalNumberRangeDescription": "Especificar faixa de números internos. Deve possuir 4 dígitos.",
     "extensionError": "Ramal inválido: ",
+    "companyVoicemail": "Correio de voz da empresa",
+    "companyVoicemailDescription": "Selecione um número para o qual os usuários podem ligar para verificarem o correio de voz.",
     "to": "para",
     "addMoreExtensionRanges": "Adicionar mais faixas de ramais.",
     "globalMOH": "Mídia global em espera (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " não é um número válido",
     "saveSuccess": "Configuração das comunicações unificadas salva com êxito",
     "siteError": "Falha ao criar site.",
+    "customerGetError": "Falha ao obter atendimento ao cliente.",
+    "voicemailGetError": "Falha ao obter o número de correio de voz da empresa.",
+    "voicemailUpdateError": "Falha ao atualizar o número de correio de voz da empresa.",
     "extensionDeleteSuccess": "Ramal {{extension}} excluído com êxito.",
     "extensionDeleteError": "Falha ao excluir o ramal {{extension}}.",
     "extensionAddError": "Falha ao criar o ramal {{extension}}."
@@ -572,7 +600,11 @@
     "deleteDevice": "Excluir dispositivo.",
     "deleteDeviceConfText": "Tem certeza que deseja excluir este dispositivo?",
     "videoQTitle": "Perda potencial de qualidade do vídeo",
-    "videoQMsg": "Este dispositivo está se comunicando por meio do protocolo TCP, o que pode causar uma latência maior e, assim, reduzir a experiência de compartilhamento de mídia. Se estiver enfrentando problemas com seu compartilhamento de mídia, tente abrir a porta UDP 33434 em seu firewall local para solucionar os problemas de compartilhamento de mídia."
+    "videoQMsg": "Este dispositivo está se comunicando por meio do protocolo TCP, o que pode causar uma latência maior e, assim, reduzir a experiência de compartilhamento de mídia. Se estiver enfrentando problemas com seu compartilhamento de mídia, tente abrir a porta UDP 33434 em seu firewall local para solucionar os problemas de compartilhamento de mídia.",
+    "needsActivation": "Necessita ativação",
+    "active": "Ativo",
+    "offline": "Offline",
+    "issuesDetected": "Problemas detectados"
   },
   "hercules": {
     "page_title": "Gestão do conector",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Chamada",
       "squared-fusion-cal": "Calendário",
-      "squared-fusion-media": "Mídia"
+      "squared-fusion-media": "Mídia",
+      "contact-center-context": "Centro de contexto"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Criar novo estacionamento de chamada"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Linhas",
+    "features": "Funcionalidades",
     "or": "ou",
     "voicemail": "Correio de voz",
     "singleNumberReach": "Alcance de número individual"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Não encaminhar chamadas",
     "forwardAllCalls": "Encaminhar todas as chamadas",
     "forwardBusyNoAnswer": "Encaminhar chamadas quando a linha estiver ocupada ou longe",
-    "internalAndExternal": "Para chamadas internas e externas<br>",
-    "internalOnly": "Somente para chamadas internas<br>",
+    "internalAndExternal": "Para chamadas internas e externas",
+    "internalOnly": "Somente para chamadas internas",
     "forwardBusy": "Quando a linha estiver ocupada, envie chamadas para:",
     "forwardNoAnswer": "Quando não houver resposta, envie chamadas para:",
     "forwardExternal": "Encaminhar chamadas externas de forma diferente",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} Não possui o serviço Unified Communications",
     "member": "Membros da linha compartilhada",
     "disassociateUser": "Remover este usuário dos membros da linha compartilhada fará com que esta linha seja automaticamente removida de todos os outros dispositivos. Tem certeza que deseja proceder?",
-    "addMember": "Adicionar membro"
+    "addMember": "Adicionar membro (por nome ou e-mail)"
   },
   "singleNumberReachPanel": {
     "title": "Alcance de número individual",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Habilitação do tipo de sessão",
     "handsOnLabAdminLabel": "Administração do laboratório de abordagem (válido somente quando o laboratório de abordagem está ativado)",
     "optimizeBandwidthUsageLabel": "Uso de largura de banda otimizada para participantes na mesma rede",
-    "videoSettingsLabel": "Configurações de vídeo",
-    "hiQualVideoLabel": "Ligar vídeo em alta qualidade (360p)",
-    "hiDefVideoLabel": "Ligar vídeo em alta definição (720p)",
+    "videoSettingsLabel": "Outros privilégios",
+    "hiQualVideoLabel": "Vídeo em alta qualidade (360p)",
+    "hiDefVideoLabel": "Vídeo em alta definição (720p)",
     "telephonyPrivilegesLabel": "Privilégios de telefonia",
     "callInTeleconfLabel": "Teleconferência de chamada",
     "tollOnlyLabel": "Chamada",
     "tollAndTollFreeLabel": "Chamada e chamada gratuita",
     "teleconfViaGlobalCallinLabel": "Permite acesso à teleconferência por meio de números de chamadas globais",
     "callBackTeleconfLabel": "Teleconferência de rechamada",
-    "globalCallBackTeleconfLabel": "Teleconferência de rechamada global",
+    "globalCallBackTeleconfLabel": "Retorno de chamada global",
     "integratedVoIPLaabel": "VoIP integrado",
     "priviligesLable": "Privilégios",
     "userPriviligesLabel": "Privilégios de usuário",
+    "teleCLIAuthEnabledLabel": "Identificação de chamadas (CLI)",
+    "pmrLabel": "Sala pessoal",
+    "OtherPrivilegesLabel": "Outros privilégios",
     "advancedLinkLabel": "Configurações avançadas"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Serviço de calendário",
     "sparkDesc": "Ao incluir @spark em um convite de reunião, uma sala Spark será criada automaticamente.",
     "webexDesc": "Ao incluir @webex no convite de reunião, uma reunião WebEx será criada e as informações serão anexadas ao convite."
+  },
+  "validation": {
+    "nonPrintable": "Este registro contém caracteres não-imprimíveis.",
+    "callForward": "O campo pode conter os dígitos 0 a 9, *, #, X e +.",
+    "specialCharacters": "Este registro contém caracteres especiais."
   }
 }

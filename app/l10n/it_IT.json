@@ -275,6 +275,29 @@
     "description": "La qualità multimediale fornisce un rapporto della qualità di tutte le chiamate connesse durante il periodo di tempo selezionato. Per ulteriori informazioni sulla qualità multimediale, vedere {knowledge base}.",
     "mediaQualityGraphError": "Errore nel caricamento dei dati della qualità multimediale."
   },
+  "callMetrics": {
+    "calls": "Chiamate",
+    "callConditionFail": "Fail",
+    "callConditionPoorMedia": "Poor Media",
+    "callConditionSuccessful": "Successful",
+    "callMetrics": "Call Metrics",
+    "callMetricsDesc": "Call metrics show the total number of calls made, and the number of minutes those calls totaled during the selected period.  Call metrics also breaks down the percentage of calls that were successfully connected and had good or excellent media throughout the duration, the percentage of calls that were connected but had poor media quality, and the percentage of calls that failed to connect.",
+    "totalCalls": "Chiamate totali",
+    "totalCallMinutes": "Total Call Minutes"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Registered Endpoints",
+    "company": "Company",
+    "pendingActivations": "Pending Activations",
+    "trend": "Trend (%)",
+    "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Active User Population by Company",
+    "description1": "Across all your customers, ",
+    "description2": " of their employees have placed at least one Squared UC call over [Time period filter selection]. Here is how the [Filter Selection] compare to that average.",
+    "averageLabel": "Average Engagement"
+  },
   "profilePage": {
     "userProfile": "Profilo utente",
     "userDetails": "Dettagli utente",
@@ -377,8 +400,8 @@
     "invalidRequired": "Campo obbligatorio.",
     "invalidEmail": "Indirizzo e-mail non valido.",
     "invalidUrl": "URL non valido.",
-    "invalidMinLength": "Voce troppo corta.",
-    "invalidMaxLength": "Voce troppo lunga."
+    "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
+    "invalidMaxLength": "This entry is too long. Maximum length is {{max}}."
   },
   "notifications": {
     "success": "Notifiche operazioni corrette",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Intervallo interni",
     "internalNumberRangeDescription": "Specificare l'intervallo di numeri interi. La lunghezza deve essere di 4 cifre.",
     "extensionError": "Interno non valido: ",
+    "companyVoicemail": "Company Voicemail",
+    "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",
     "to": "a",
     "addMoreExtensionRanges": "Aggiungi altri intervalli di interni",
     "globalMOH": "MOH globale",
@@ -488,6 +513,9 @@
     "notANumber": " non è un numero valido",
     "saveSuccess": "Configurazione Unified Communications salvata correttamente",
     "siteError": "Impossibile creare sito.",
+    "customerGetError": "Failed to get customer services.",
+    "voicemailGetError": "Failed to get company voicemail number.",
+    "voicemailUpdateError": "Failed to update company voicemail number.",
     "extensionDeleteSuccess": "Interno eliminato correttamente {{extension}}.",
     "extensionDeleteError": "Impossibile eliminare interno {{extension}}.",
     "extensionAddError": "Impossibile creare estensione {{extension}}."
@@ -572,7 +600,11 @@
     "deleteDevice": "Elimina dispositivo",
     "deleteDeviceConfText": "Eliminare questo dispositivo?",
     "videoQTitle": "Perdita potenziale di qualità video",
-    "videoQMsg": "Questo dispositivo comunica attraverso il protocollo TCP, che può provocare una latenza più elevata incidendo sullo streaming multimediale. Se si verificano problemi con lo streaming multimediale, è possibile provare ad aprire la porta UDP 33434 sul firewall locale."
+    "videoQMsg": "Questo dispositivo comunica attraverso il protocollo TCP, che può provocare una latenza più elevata incidendo sullo streaming multimediale. Se si verificano problemi con lo streaming multimediale, è possibile provare ad aprire la porta UDP 33434 sul firewall locale.",
+    "needsActivation": "Needs Activation",
+    "active": "Attivo",
+    "offline": "Offline",
+    "issuesDetected": "Issues Detected"
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Chiama",
       "squared-fusion-cal": "Calendario",
-      "squared-fusion-media": "Multimediale"
+      "squared-fusion-media": "Multimediale",
+      "contact-center-context": "Context Center"
     }
   },
   "firstTimeWizard": {
@@ -660,7 +693,7 @@
     "domain": "Dominio",
     "defaultPlaceholder": "Predefinito",
     "domainDesc": "Identificare il dominio Active Directory per la sincronizzazione.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Scaricare </a>e installare Cisco Directory Connector nella propria azienda.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Scaricare</a> e installare Cisco Directory Connector nella propria azienda.",
     "installStep2": "2. Configurare il contratto di sincronizzazione Active Directory.",
     "installStep3": "3. Testare il contratto di sincronizzazione.",
     "nextSteps": "Premere il pulsante Avanti una volta pronti a verificare che le informazioni di identità vengano sincronizzate.",
@@ -760,7 +793,8 @@
     "createButton": "Crea parcheggio chiamata"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Lines",
+    "features": "Features",
     "or": "o",
     "voicemail": "Segreteria telefonica",
     "singleNumberReach": "Portata numero singolo"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Non inoltrare le chiamate",
     "forwardAllCalls": "Inoltra tutte le chiamate",
     "forwardBusyNoAnswer": "Inoltra chiamate quando linea occupata o assente",
-    "internalAndExternal": "Per chiamate interne ed esterne<br>",
-    "internalOnly": "Solo per chiamate interne<br>",
+    "internalAndExternal": "For internal and external calls",
+    "internalOnly": "Only for internal calls",
     "forwardBusy": "In caso di linea occupata, inviare chiamate a:",
     "forwardNoAnswer": "In caso di nessuna risposta, inviare chiamate a:",
     "forwardExternal": "Inoltra chiamate esterne in modo diverso",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} non dispone di un servizio Unified Communications",
     "member": "Membri linea condivisa",
     "disassociateUser": "Se si rimuove questo utente dai membri della linea condivisa, questa linea verrà rimossa da tutti i relativi dispositivi. Continuare?",
-    "addMember": "Aggiungi membro"
+    "addMember": "Add Member (by name or email)"
   },
   "singleNumberReachPanel": {
     "title": "Portata numero singolo",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Abilitazione tipo di sessione",
     "handsOnLabAdminLabel": "Amministrazione laboratorio pratico (valido solo quando è abilitato il laboratorio pratico)",
     "optimizeBandwidthUsageLabel": "Utilizzo larghezza di banda ottimizzato per i partecipanti sulla stessa rete",
-    "videoSettingsLabel": "Impostazioni video",
-    "hiQualVideoLabel": "Attiva video di alta qualità (360p)",
-    "hiDefVideoLabel": "Attiva video ad alta definizione (720p)",
+    "videoSettingsLabel": "Other Privileges",
+    "hiQualVideoLabel": "High-quality video (360p)",
+    "hiDefVideoLabel": "High-definition video video (720p)",
     "telephonyPrivilegesLabel": "Privilegi telefonia",
     "callInTeleconfLabel": "Teleconferenza con chiamata in ingresso",
     "tollOnlyLabel": "A pagamento",
     "tollAndTollFreeLabel": "Gratuito e a pagamento",
     "teleconfViaGlobalCallinLabel": "Consenti accesso a teleconferenza tramite numeri di chiamata in ingresso globali",
     "callBackTeleconfLabel": "Teleconferenza con richiamata",
-    "globalCallBackTeleconfLabel": "Teleconferenza con richiamata globale",
+    "globalCallBackTeleconfLabel": "Global call-back",
     "integratedVoIPLaabel": "VoIP integrato",
     "priviligesLable": "Privilegi",
     "userPriviligesLabel": "Privilegi utente",
+    "teleCLIAuthEnabledLabel": "Calling Line Identification (CLI)",
+    "pmrLabel": "Personal Room",
+    "OtherPrivilegesLabel": "Other Privileges",
     "advancedLinkLabel": "Impostazioni avanzate"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Servizio Calendario",
     "sparkDesc": "Includendo @spark in un invito alla riunione viene creata automaticamente una sala Spark.",
     "webexDesc": "Includendo @webex nell'invito alla riunione, viene creata una riunione WebEx e le informazioni vengono aggiunte all'invito."
+  },
+  "validation": {
+    "nonPrintable": "This entry contains nonprintable characters.",
+    "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
+    "specialCharacters": "This entry contains special characters."
   }
 }

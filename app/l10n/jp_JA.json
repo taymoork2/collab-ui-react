@@ -275,6 +275,29 @@
     "description": "メディアクオリティは、選択した期間中の接続された通話すべての品質の内訳を提供します。メディアクオリティの詳細は、{knowledge base} を参照してください。",
     "mediaQualityGraphError": "メディアクオリティデータのロード中にエラーが発生しました。"
   },
+  "callMetrics": {
+    "calls": "通話",
+    "callConditionFail": "失敗",
+    "callConditionPoorMedia": "低品質メディア",
+    "callConditionSuccessful": "成功",
+    "callMetrics": "コールメトリック",
+    "callMetricsDesc": "コールメトリックは実行したコールの合計数と、選択した期間におけるコールの合計時間を分単位で表示します。コールメトリックは、接続に成功し、期間全体を通して良いまたは非常に良いメディアを持ったコールのパーセンテージ、接続されたがメディアの品質が良くなかったコールのパーセンテージ、および、接続に失敗したコールのパーセンテージに分解されます。",
+    "totalCalls": "トータルコール",
+    "totalCallMinutes": "合計コール時間 (分)"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "登録済エンドポイント",
+    "company": "会社",
+    "pendingActivations": "保留中のアクティブ化",
+    "trend": "トレンド (%)",
+    "registeredEndpointsError": "{{customer}} の登録済エンドポイントをロードしている間にエラーが発生しました。"
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "会社ごとのアクティブユーザーの数",
+    "description1": "顧客全体。 ",
+    "description2": " 従業員が少なくとも 1 つの Squared UC コールを [期間フィルタ選択] にわたり行いました。[フィルタ選択] がその平均と比較する方法を示します。",
+    "averageLabel": "平均のエンゲージメント"
+  },
   "profilePage": {
     "userProfile": "ユーザーのプロファイル",
     "userDetails": "ユーザーの詳細",
@@ -377,8 +400,8 @@
     "invalidRequired": "このフィールドは必須です。",
     "invalidEmail": "これは有効な電子メールアドレスではありません。",
     "invalidUrl": "これは有効なURLではありません。",
-    "invalidMinLength": "この入力内容は短すぎます。",
-    "invalidMaxLength": "この入力内容は長すぎます。"
+    "invalidMinLength": "このエントリは短すぎます。最小長は {{min}} です。",
+    "invalidMaxLength": "このエントリは長すぎます。最大長は {{max}} です。"
   },
   "notifications": {
     "success": "成功の通知",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "内線番号の範囲",
     "internalNumberRangeDescription": "内部番号の範囲を指定してください。長さは4桁にする必要があります。",
     "extensionError": "内線番号が無効: ",
+    "companyVoicemail": "会社のボイスメール",
+    "companyVoicemailDescription": "ユーザーがボイスメールをチェックするためにコールできる数を選択します。",
     "to": "～",
     "addMoreExtensionRanges": "内線の範囲をさらに追加する",
     "globalMOH": "保留時のグローバルメディア（MOH）",
@@ -488,6 +513,9 @@
     "notANumber": " は有効な番号ではありません",
     "saveSuccess": "Unified Communications のセットアップが正常に保存されました",
     "siteError": "サイトの作成に失敗しました。",
+    "customerGetError": "顧客サービスの取得に失敗しました",
+    "voicemailGetError": "会社のボイスメール番号を取得するのに失敗しました",
+    "voicemailUpdateError": "会社のボイスメール番号を更新するのに失敗しました",
     "extensionDeleteSuccess": "内線 {{extension}} を正常に削除しました。",
     "extensionDeleteError": "内線 {{extension}} の削除に失敗しました。",
     "extensionAddError": "内線 {{extension}} の作成に失敗しました。"
@@ -572,7 +600,11 @@
     "deleteDevice": "デバイスの削除",
     "deleteDeviceConfText": "このデバイスを削除してもよいですか ?",
     "videoQTitle": "ビデオ品質の低下",
-    "videoQMsg": "この機器はTCPプロトコルで通信しているため、遅延が長くなり、メディアストリーミングのエクスペリエンスが低下します。メディアストリーミングで問題が発生している場合、ローカルファイアウォールのUDPポート33434を開いて、メディアストリーミングの問題に対処してください。"
+    "videoQMsg": "この機器はTCPプロトコルで通信しているため、遅延が長くなり、メディアストリーミングのエクスペリエンスが低下します。メディアストリーミングで問題が発生している場合、ローカルファイアウォールのUDPポート33434を開いて、メディアストリーミングの問題に対処してください。",
+    "needsActivation": "アクティブ化が必要",
+    "active": "アクティブ",
+    "offline": "オフライン",
+    "issuesDetected": "検出された問題"
   },
   "hercules": {
     "page_title": "コネクタ管理",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "通話",
       "squared-fusion-cal": "カレンダー",
-      "squared-fusion-media": "メディア"
+      "squared-fusion-media": "メディア",
+      "contact-center-context": "コンテキストセンター"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "コールパークの作成"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "行",
+    "features": "特徴",
     "or": "または",
     "voicemail": "ボイスメール",
     "singleNumberReach": "単一番号リーチ"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "コールを転送しない",
     "forwardAllCalls": "すべての通話を転送",
     "forwardBusyNoAnswer": "回線が使用中または離席中の場合に通話を転送",
-    "internalAndExternal": "内部通話および外部通話<br>",
-    "internalOnly": "内部通話のみ<br>",
+    "internalAndExternal": "社内および社外のコールFor internal and external calls",
+    "internalOnly": "社内コールのみ",
     "forwardBusy": "回線が使用中の場合の転送先：",
     "forwardNoAnswer": "応答がない場合の転送先：",
     "forwardExternal": "外線通話の転送は別にする",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} はUnified Communicationsサービスを利用できません。",
     "member": "共有回線メンバー",
     "disassociateUser": "このユーザーを共有回線メンバーから削除すると、即座にすべての機器からこの回線が削除されます。続行しますか？",
-    "addMember": "メンバーの追加"
+    "addMember": "メンバーを追加 (名前または電子メールアドレスを使用)"
   },
   "singleNumberReachPanel": {
     "title": "単一番号リーチ",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "セッションの種類の機能割賦",
     "handsOnLabAdminLabel": "ハンズオンラボ (ハンズオンラボが有効になっているときだけ有効)",
     "optimizeBandwidthUsageLabel": "同じネットワークの参加者に対して最適化された帯域幅の使用",
-    "videoSettingsLabel": "ビデオ設定",
-    "hiQualVideoLabel": "高画質ビデオを有効化 (360p)",
-    "hiDefVideoLabel": "高解像度ビデオを有効化 (720p)",
+    "videoSettingsLabel": "他の権限",
+    "hiQualVideoLabel": "高品質ビデオ (360p)",
+    "hiDefVideoLabel": "高解像度ビデオ (720p)",
     "telephonyPrivilegesLabel": "電話権限",
     "callInTeleconfLabel": "コールイン電話会議",
     "tollOnlyLabel": "有料通話",
     "tollAndTollFreeLabel": "有料通話と無料通話",
     "teleconfViaGlobalCallinLabel": "グローバルコールイン番号で電話会議へのアクセスを許可",
     "callBackTeleconfLabel": "コールバック電話会議",
-    "globalCallBackTeleconfLabel": "グローバルコールバック電話会議",
+    "globalCallBackTeleconfLabel": "グローバルコールバック",
     "integratedVoIPLaabel": "統合VoIP",
     "priviligesLable": "権限",
     "userPriviligesLabel": "ユーザー権限",
+    "teleCLIAuthEnabledLabel": "コール回線識別子 (CLI)",
+    "pmrLabel": "個人用会議室",
+    "OtherPrivilegesLabel": "他の権限",
     "advancedLinkLabel": "詳細設定"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "カレンダーサービス",
     "sparkDesc": "ミーティングの招待状に @spark を含めると、Spark ルームが自動的に作成されます。",
     "webexDesc": "ミーティングの招待状に @webex を含めると、WebEx ミーティングが作成され、招待状に情報が追加されます。"
+  },
+  "validation": {
+    "nonPrintable": "このエントリには印刷できない文字が含まれます。",
+    "callForward": "フィールドには、0 から 9 の数字、*、#、X、+ を含められます。",
+    "specialCharacters": "このエントリには特殊文字が含まれます。"
   }
 }

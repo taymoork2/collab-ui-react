@@ -275,6 +275,29 @@
     "description": "Ortam kalitesi, seçilen dönemde bağlı tüm çağrıların kalitesine ilişkin bir döküm sağlar. Ortam kalitesi hakkında daha fazla bilgi için {knowledge base} bölümüne bakın.",
     "mediaQualityGraphError": "Ortam kalitesi verileri yüklenirken bir hata oluştu."
   },
+  "callMetrics": {
+    "calls": "Çağrılar",
+    "callConditionFail": "Başarısız",
+    "callConditionPoorMedia": "Kötü Ortam",
+    "callConditionSuccessful": "Başarılı",
+    "callMetrics": "Çağrı Ölçümleri",
+    "callMetricsDesc": "Çağrı ölçümleri, yapılan çağrıların toplam sayısını ve seçilen dönemde bu çağrıların toplam kaç dakika sürdüğünü gösterir. Çağrı ölçümleri, başarıyla bağlanan ve süre boyunca iyi veya mükemmel ortama sahip çağrıların yüzdesi ve bağlanamayan çağrıların yüzdesi için de döküm sağlar.",
+    "totalCalls": "Toplam Çağrı Sayısı",
+    "totalCallMinutes": "Toplam Çağrı Dakikası"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Kayıtlı Uç Noktalar",
+    "company": "Şirket",
+    "pendingActivations": "Bekleyen Etkinleştirmeler",
+    "trend": "Eğilim (%)",
+    "registeredEndpointsError": "{{customer}} için kayıtlı uç noktaları yüklenirken bir hata oluştu."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Şirkete göre Etkin Kullanıcı Nüfusu",
+    "description1": "Tüm müşterileriniz arasında, ",
+    "description2": " çalışanları [Zaman dilimi filtre seçimi] içinde en az bir Squared UC çağrısı yaptı. [Filtre Seçimi] ile ortalamanın karşılaştırılması aşağıdaki gibidir.",
+    "averageLabel": "Ortalama Etkileşim"
+  },
   "profilePage": {
     "userProfile": "Kullanıcı Profili",
     "userDetails": "Kullanıcı Ayrıntıları",
@@ -377,8 +400,8 @@
     "invalidRequired": "Bu alan gereklidir.",
     "invalidEmail": "Bu, geçerli bir E-posta Adresi değil.",
     "invalidUrl": "Bu, geçerli bir URL değil.",
-    "invalidMinLength": "Bu giriş çok kısa.",
-    "invalidMaxLength": "Bu giriş çok uzun."
+    "invalidMinLength": "Bu giriş çok kısa. Minimum uzunluk: {{min}}",
+    "invalidMaxLength": "Bu giriş çok uzun. Maksimum uzunluk: {{max}}."
   },
   "notifications": {
     "success": "Başarı bildirimleri",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Dahili Numara Aralığı",
     "internalNumberRangeDescription": "Dahili numara aralığı belirtin. Uzunluk 4 basamak olmalıdır.",
     "extensionError": "Dahili numara geçerli değil: ",
+    "companyVoicemail": "Şirket Sesli Mesajı",
+    "companyVoicemailDescription": "Kullanıcıların sesli mesajlarını kontrol etmek için arayabileceği bir numara seçin.",
     "to": "-",
     "addMoreExtensionRanges": "Daha Fazla Dahili Numara Aralığı Ekle",
     "globalMOH": "Genel Bekletilen Ortam (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " geçerli bir numara değil",
     "saveSuccess": "Unified Communications kurulumu başarıyla kaydedildi",
     "siteError": "Site oluşturulamadı.",
+    "customerGetError": "Müşteri hizmetleri alınamadı.",
+    "voicemailGetError": "Şirket sesli mesaj numarası alınamadı.",
+    "voicemailUpdateError": "Şirket sesli mesaj numarası alınamadı.",
     "extensionDeleteSuccess": "{{extension}} uzantısı başarıyla silindi.",
     "extensionDeleteError": "{{extension}} uzantısı silinemedi.",
     "extensionAddError": "{{extension}} uzantısı oluşturulamadı."
@@ -572,7 +600,11 @@
     "deleteDevice": "Cihazı Sil",
     "deleteDeviceConfText": "Bu cihazı silmek istediğinizden emin misiniz?",
     "videoQTitle": "Olası Video Kalitesi Kaybı",
-    "videoQMsg": "Bu cihaz, TCP protokolü üzerinden iletişim kurmaktadır; bu da daha yüksek gecikme süresine ve dolayısıyla daha kısıtlı bir ortam akışı deneyimine neden olabilmektedir. Ortam akışı sorunlarına yardımcı olması için, yerel güvenlik duvarınızda 33434 numaralı UDP bağlantı noktasını açmayı deneyebilirsiniz."
+    "videoQMsg": "Bu cihaz, TCP protokolü üzerinden iletişim kurmaktadır; bu da daha yüksek gecikme süresine ve dolayısıyla daha kısıtlı bir ortam akışı deneyimine neden olabilmektedir. Ortam akışı sorunlarına yardımcı olması için, yerel güvenlik duvarınızda 33434 numaralı UDP bağlantı noktasını açmayı deneyebilirsiniz.",
+    "needsActivation": "Etkinleştirme Gerekiyor",
+    "active": "Etkin",
+    "offline": "Çevrimdışı",
+    "issuesDetected": "Algılanan Sorunlar"
   },
   "hercules": {
     "page_title": "Bağlayıcı Yönetimi",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Çağrı",
       "squared-fusion-cal": "Takvim",
-      "squared-fusion-media": "Ortam"
+      "squared-fusion-media": "Ortam",
+      "contact-center-context": "İçerik Merkezi"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Çağrı Bekletme Oluştur"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Satırlar",
+    "features": "Özellikler",
     "or": "veya",
     "voicemail": "Sesli Mesaj",
     "singleNumberReach": "Tek Numarayla Ulaşma"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Çağrıları yönlendirme",
     "forwardAllCalls": "Tüm çağrıları ilet",
     "forwardBusyNoAnswer": "Hat meşgul olduğunda veya hatta ulaşılamadığında çağrıları ilet",
-    "internalAndExternal": "Dahili ve harici çağrılar için<br>",
-    "internalOnly": "Yalnızca dahili çağrılar için<br>",
+    "internalAndExternal": "Dahili ve harici çağrılar için",
+    "internalOnly": "Yalnızca dahili çağrılar için",
     "forwardBusy": "Hat meşgul olduğunda çağrıları şuraya gönder:",
     "forwardNoAnswer": "Yanıt olmadığında çağrıları şuraya gönder:",
     "forwardExternal": "Harici çağrıları farklı bir şekilde ilet",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} kullanıcısı Unified Communications hizmetine sahip değil",
     "member": "Paylaşılan Hat Üyeleri",
     "disassociateUser": "Bu kullanıcının paylaşılan hat üyelerinden kaldırılması, bu hattın derhal kullanıcının tüm cihazlarından kaldırılmasına neden olacaktır. Devam etmek istediğinizden emin misiniz?",
-    "addMember": "Üye Ekle"
+    "addMember": "Üye Ekle (ada veya e-postaya göre)"
   },
   "singleNumberReachPanel": {
     "title": "Tek Numarayla Ulaşma",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Oturum Türü Etkinleştirmesi",
     "handsOnLabAdminLabel": "Kendiliğinden Lab Yöneticisi (yalnızca kendiliğinden lab etkin olduğunda etkilidir)",
     "optimizeBandwidthUsageLabel": "Aynı ağdaki dinleyiciler için optimize bant genişliği kullanımı",
-    "videoSettingsLabel": "Video Ayarları",
-    "hiQualVideoLabel": "Yüksek kalite videoyu aç (360p)",
-    "hiDefVideoLabel": "Yüksek çözünürlüklü videoyu aç (720p)",
+    "videoSettingsLabel": "Diğer Ayrıcalıklar",
+    "hiQualVideoLabel": "Yüksek kaliteli video (360p)",
+    "hiDefVideoLabel": "Yüksek tanımlı video (720p)",
     "telephonyPrivilegesLabel": "Telefon Ayrıcalıkları",
     "callInTeleconfLabel": "Gelen çağrı telekonferansı",
     "tollOnlyLabel": "Ücretli",
     "tollAndTollFreeLabel": "Ücretli ve Ücretsiz",
     "teleconfViaGlobalCallinLabel": "Küresel gelen çağrı numaralarıyla telekonferansa erişime izin ver",
     "callBackTeleconfLabel": "Geri arama telekonferansı",
-    "globalCallBackTeleconfLabel": "Küresel geri arama telekonferansı",
+    "globalCallBackTeleconfLabel": "Küresel geri arama",
     "integratedVoIPLaabel": "Entegre VoIP",
     "priviligesLable": "Ayrıcalıklar",
     "userPriviligesLabel": "Kullanıcı Ayrıcalıkları",
+    "teleCLIAuthEnabledLabel": "Arayan Numaranın Tanınması (CLI)",
+    "pmrLabel": "Kişisel Oda",
+    "OtherPrivilegesLabel": "Diğer Ayrıcalıklar",
     "advancedLinkLabel": "Gelişmiş Ayarlar"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Takvim Hizmeti",
     "sparkDesc": "@spark\'ın toplantı davetinize dahil edilmesi, otomatik olarak bir Spark Odası oluşturur.",
     "webexDesc": "@webex\'in toplantı davetine dahil edilmesi, WebEx toplantısı oluşturur ve bilgileri davete ekler."
+  },
+  "validation": {
+    "nonPrintable": "Bu giriş yazdırılamayan karakterler içeriyor.",
+    "callForward": "Alan 0 ile 9 arasında sayılar, *, #, X ve + içerebilir.",
+    "specialCharacters": "Bu giriş özel karakterler içeriyor."
   }
 }

@@ -275,6 +275,29 @@
     "description": "Mediakvalitet tillhandahåller en sammanställning av kvaliteten på alla kopplade samtal under den valda perioden. Se {knowledge base} för mer information om mediakvalitet.",
     "mediaQualityGraphError": "Ett fel inträffade vid inläsning av mediakvalitetsdata."
   },
+  "callMetrics": {
+    "calls": "Samtal",
+    "callConditionFail": "Misslyckades",
+    "callConditionPoorMedia": "Dålig media",
+    "callConditionSuccessful": "Lyckades",
+    "callMetrics": "Samtalsstatistik",
+    "callMetricsDesc": "Samtalsstatistiken visar antalet ringda samtal och antalet minuter som dessa samtal pågick under den valda perioden. Samtalsstatistiken visar även procentandelen av samtal som kopplades fram utan problem och vars mediavisning var utmärkt under hela varaktigheten, procentandelen av samtal som kopplades fram men vars mediakvalitet var dålig samt procentandelen av samtal som inte kopplades fram.",
+    "totalCalls": "Totalt antal samtal",
+    "totalCallMinutes": "Totala samtalsminuter"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Registrerade slutpunkter",
+    "company": "Företag",
+    "pendingActivations": "Pågående aktiveringar",
+    "trend": "Trend (%)",
+    "registeredEndpointsError": "Ett fel inträffade vid inläsning av registrerade slutpunkter för {{customer}}."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Aktiv användarbas efter företag",
+    "description1": "Fördelat på alla dina kunder. ",
+    "description2": " av deras anställda har ringt minst ett Squared UC-samtal under [Time period filter selection]. Här hamnar [Filter Selection] i jämförelse med detta genomsnitt.",
+    "averageLabel": "Genomsnittligt engagemang"
+  },
   "profilePage": {
     "userProfile": "Användarprofil",
     "userDetails": "Användaruppgifter",
@@ -348,7 +371,7 @@
     "supportResources": "Supportresurser",
     "showDetails": "Visa detaljer",
     "hideDetails": "Dölj detaljer",
-    "problemReports": "Problemrapport",
+    "problemReports": "Problemrapporter",
     "reportingUrl": "Rapporterings-URL:",
     "help": "Hjälp",
     "faqs": "Vanliga frågor",
@@ -377,8 +400,8 @@
     "invalidRequired": "Detta fält är obligatoriskt.",
     "invalidEmail": "Detta är inte en giltig e-postadress.",
     "invalidUrl": "Detta är inte en giltig URL.",
-    "invalidMinLength": "Inmatningen är för kort.",
-    "invalidMaxLength": "Inmatningen är för lång."
+    "invalidMinLength": "Detta inlägg är för kort. Lägsta tillåtna längd är {{min}}",
+    "invalidMaxLength": "Detta inlägg är för långt. Högsta tillåtna längd är {{max}}."
   },
   "notifications": {
     "success": "Aviseringar om slutförda åtgärder",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Internt anknytningsintervall",
     "internalNumberRangeDescription": "Ange intervallet för interna nummer. Måste vara 4 siffror.",
     "extensionError": "Anknytning ej giltig: ",
+    "companyVoicemail": "Företagsröstbrevlåda",
+    "companyVoicemailDescription": "Välj ett nummer som användarna kan ringa till för att lyssna av sina röstbrevlådor.",
     "to": "till",
     "addMoreExtensionRanges": "Lägg till fler anknytningsintervaller",
     "globalMOH": "Global Media On Hold (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " är inte ett giltigt nummer",
     "saveSuccess": "Inställningarna för enhetlig kommunikation har sparats.",
     "siteError": "Platsen kunde inte skapas.",
+    "customerGetError": "Kunde inte hämta kundtjänst.",
+    "voicemailGetError": "Kunde inte hämta numret till företagets röstbrevlåda.",
+    "voicemailUpdateError": "Kunde inte uppdatera numret till företagets röstbrevlåda.",
     "extensionDeleteSuccess": "Anknytningen {{extension}} har tagits bort.",
     "extensionDeleteError": "Anknytningen {{extension}} kunde inte tas bort.",
     "extensionAddError": "Anknytningen {{extension}} kunde inte tas bort."
@@ -572,7 +600,11 @@
     "deleteDevice": "Ta bort enhet",
     "deleteDeviceConfText": "Vill du ta bort den här enheten?",
     "videoQTitle": "Potentiell videokvalitetsförlust",
-    "videoQMsg": "Den här enheten kommunicerar via TCP-protokollet, vilket kan orsaka högre latens och därför försämrad mediaströmningsupplevelse."
+    "videoQMsg": "Den här enheten kommunicerar via TCP-protokollet, vilket kan orsaka högre latens och därför försämrad mediaströmningsupplevelse.",
+    "needsActivation": "Kräver aktivering",
+    "active": "Aktiv",
+    "offline": "Offline",
+    "issuesDetected": "Fel upptäckta"
   },
   "hercules": {
     "page_title": "Anslutningshantering",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Samtal",
       "squared-fusion-cal": "Kalender",
-      "squared-fusion-media": "Media"
+      "squared-fusion-media": "Media",
+      "contact-center-context": "Kopplingscentral"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Skapa Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Linjer",
+    "features": "Funktioner",
     "or": "eller",
     "voicemail": "Röstbrevlåda",
     "singleNumberReach": "Single Number Reach"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Koppla inte om samtal",
     "forwardAllCalls": "Koppla om alla samtal",
     "forwardBusyNoAnswer": "Koppla om samtal när linjen är upptagen eller obevakad",
-    "internalAndExternal": "För interna och externa samtal<br>",
-    "internalOnly": "Endast för interna samtal<br>",
+    "internalAndExternal": "För interna och externa samtal",
+    "internalOnly": "Endast för interna samtal",
     "forwardBusy": "Om linjen är upptagen, koppla samtalet till:",
     "forwardNoAnswer": "Om ingen svarar, koppla samtalet till:",
     "forwardExternal": "Koppla om externa samtal annorlunda",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} har inte någon Unified Communications-tjänst",
     "member": "Delade linjemedlemmar",
     "disassociateUser": "Om den här användaren tas bort från medlemmarna på denna delade linje tas linjen omedelbart bort från alla av användarens enheter. Är du säker på att du vill fortsätta?",
-    "addMember": "Lägg till medlem"
+    "addMember": "Lägg till medlem (via namn eller e-post)"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Aktivering av sessionstyp",
     "handsOnLabAdminLabel": "Administration av praktiska labbsessioner (effektivt först när praktiska labbsessioner är aktiverat)",
     "optimizeBandwidthUsageLabel": "Optimerad bandbreddsanvändning för deltagare på samma nätverk.",
-    "videoSettingsLabel": "Videoinställningar",
-    "hiQualVideoLabel": "Aktivera högkvalitetsvideo (360p)",
-    "hiDefVideoLabel": "Aktivera högdefinitionsvideo (720p)",
+    "videoSettingsLabel": "Övriga privilegier",
+    "hiQualVideoLabel": "Högkvalitetsvideo (360p)",
+    "hiDefVideoLabel": "Högupplöst video (720p)",
     "telephonyPrivilegesLabel": "Telefoniprivilegier",
     "callInTeleconfLabel": "Telekonferens med inringning",
     "tollOnlyLabel": "Avgift",
     "tollAndTollFreeLabel": "Avgift och avgiftsfritt",
     "teleconfViaGlobalCallinLabel": "Bevilja åtkomst till telekonferens via globala inringningsnummer",
     "callBackTeleconfLabel": "Telekonferens med återuppringning",
-    "globalCallBackTeleconfLabel": "Telekonferens med global återuppringning",
+    "globalCallBackTeleconfLabel": "Global återuppringning",
     "integratedVoIPLaabel": "Integrerad internettelefoni (VoIP)",
     "priviligesLable": "Privilegier",
     "userPriviligesLabel": "Användarprivilegier",
+    "teleCLIAuthEnabledLabel": "Samtalslinjeidentifikation (CLI)",
+    "pmrLabel": "Personligt rum",
+    "OtherPrivilegesLabel": "Övriga privilegier",
     "advancedLinkLabel": "Avancerade inställningar"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Kalendertjänst",
     "sparkDesc": "Om @spark inkluderas i en mötesinbjudan skapas ett Spark-rum automatiskt.",
     "webexDesc": "Om @webex inkluderas i mötesinbjudan skapas ett WebEx-möte och informationen bifogas i inbjudan."
+  },
+  "validation": {
+    "nonPrintable": "Detta inlägg innehåller tecken som inte går att skriva ut.",
+    "callForward": "Fältet får innehålla siffrorna 0 till 9, *, #, X och +.",
+    "specialCharacters": "Detta inlägg innehåller specialtecken."
   }
 }

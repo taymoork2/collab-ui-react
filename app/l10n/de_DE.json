@@ -275,6 +275,29 @@
     "description": "Die Medienqualität liefert eine Übersicht über die Qualität aller verbundenen Anrufe während des ausgewählten Zeitraums. Weitere Informationen zur Medienqualität finden Sie in der {knowledge base}.",
     "mediaQualityGraphError": "Beim Laden der Medienqualitätsdaten ist ein Fehler aufgetreten."
   },
+  "callMetrics": {
+    "calls": "Anrufe",
+    "callConditionFail": "Fehlgeschlagen",
+    "callConditionPoorMedia": "Schlechte Medienqualität",
+    "callConditionSuccessful": "Erfolgreich",
+    "callMetrics": "Anrufmetriken",
+    "callMetricsDesc": "In den Anrufmetriken wird die Gesamtzahl der getätigten Anrufe sowie die Gesamtdauer dieser Anrufe in Minuten während des ausgewählten Zeitraums angezeigt. Die Anrufmetriken lassen auch den Prozentsatz der erfolgreich verbundenen Anrufe mit guter oder hervorragender Medienqualität, der verbundenen Anrufe mit schlechter Medienqualität sowie die der Anrufe, bei denen keine Verbindung hergestellt werden konnte, erkennen.",
+    "totalCalls": "Anrufe insgesamt",
+    "totalCallMinutes": "Gesprächsminuten insgesamt"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Registrierte Endpunkte",
+    "company": "Unternehmen",
+    "pendingActivations": "Ausstehende Aktivierungen",
+    "trend": "Trend (%)",
+    "registeredEndpointsError": "Beim Laden der registrierten Endpunkte für {{customer}} ist ein Fehler aufgetreten."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Anzahl aktiver Benutzer nach Unternehmen",
+    "description1": "Bei allen Ihren Kunden ",
+    "description2": " ihrer Mitarbeiter haben mindestens einen Squared UC-Anruf im Zeitraum [Time period filter selection] getätigt. So schneidet [Filter Selection] dabei im Vergleich zum Durchschnitt ab.",
+    "averageLabel": "Durchschnittliche Nutzung"
+  },
   "profilePage": {
     "userProfile": "Benutzerprofil",
     "userDetails": "Benutzerdetails",
@@ -377,8 +400,8 @@
     "invalidRequired": "Dieses Feld muss ausgefüllt werden.",
     "invalidEmail": "Dies ist eine gültige E-Mail-Adresse.",
     "invalidUrl": "Dies ist keine gültige URL.",
-    "invalidMinLength": "Dieser Eintrag ist zu kurz.",
-    "invalidMaxLength": "Dieser Eintrag ist zu lang."
+    "invalidMinLength": "Dieser Eintrag ist zu kurz. Die minimale Länge beträgt {{max}}.",
+    "invalidMaxLength": "Dieser Eintrag ist zu lang. Die maximale Länge beträgt {{max}}."
   },
   "notifications": {
     "success": "Erfolgsmeldungen",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Bereich interner Anschlüsse",
     "internalNumberRangeDescription": "Legen Sie den Bereich für interne Nummern fest. Die Länge muss 4 Zeichen betragen.",
     "extensionError": "Durchwahl nicht gültig: ",
+    "companyVoicemail": "Unternehmens-Voicemail",
+    "companyVoicemailDescription": "Wählen Sie eine Nummer, die Nutzer anrufen können, um ihre Voicemail abzuhören.",
     "to": "zu",
     "addMoreExtensionRanges": "Weitere Anschlussbereiche hinzufügen",
     "globalMOH": "Globale MOH (Media On Hold)",
@@ -488,6 +513,9 @@
     "notANumber": " #ist keine gültige Nummer.",
     "saveSuccess": "Unified Communications Einstellung gespeichert",
     "siteError": "Erstellung der Site fehlgeschlagen.",
+    "customerGetError": "Der Kundendienst konnte nicht erreicht werden.",
+    "voicemailGetError": "Die Voicemail-Nummer des Unternehmens konnte nicht ermittelt werden.",
+    "voicemailUpdateError": "Die Voicemail-Nummer des Unternehmens konnte nicht aktualisiert werden.",
     "extensionDeleteSuccess": "Erweiterung {{extension}} gelöscht.",
     "extensionDeleteError": "Erweiterung {{extension}} konnte nicht gelöscht werden.",
     "extensionAddError": "Erweiterung {{extension}} konnte nicht erstellt werden."
@@ -572,7 +600,11 @@
     "deleteDevice": "Gerät löschen",
     "deleteDeviceConfText": "Möchten Sie dieses Gerät wirklich löschen?",
     "videoQTitle": "Möglicher Verlust der Videoqualität",
-    "videoQMsg": "Dieses Gerät kommuniziert über das TCP-Protokoll, was zu höherer Latenz und damit verringerter Streaming-Qualität führen kann. Wenn beim Streaming Probleme entstehen, versuchen Sie, UDP Port 33434 auf Ihrer lokalen Firewall zu öffnen, um Streaming-Probleme zu beheben."
+    "videoQMsg": "Dieses Gerät kommuniziert über das TCP-Protokoll, was zu höherer Latenz und damit verringerter Streaming-Qualität führen kann. Wenn beim Streaming Probleme entstehen, versuchen Sie, UDP Port 33434 auf Ihrer lokalen Firewall zu öffnen, um Streaming-Probleme zu beheben.",
+    "needsActivation": "Aktivierung erforderlich",
+    "active": "Aktiv",
+    "offline": "Offline",
+    "issuesDetected": "Probleme erkannt"
   },
   "hercules": {
     "page_title": "Verbindungsmanagement",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Anruf",
       "squared-fusion-cal": "Kalender",
-      "squared-fusion-media": "Medien"
+      "squared-fusion-media": "Medien",
+      "contact-center-context": "Context Center"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Geparkten Anruf erstellen"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Leitungen",
+    "features": "Merkmale",
     "or": "oder",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Anrufe nicht weiterleiten",
     "forwardAllCalls": "Alle Anrufe weiterleiten",
     "forwardBusyNoAnswer": "Anruf bei besetzter oder nicht verfügbarer Leitung weiterleiten",
-    "internalAndExternal": "Für interne und externe Anrufe<br>",
-    "internalOnly": "Nur für interne Anrufe<br>",
+    "internalAndExternal": "Für interne und externe Anrufe",
+    "internalOnly": "Nur für interne Anrufe",
     "forwardBusy": "Bei belegter Leitung Anrufe senden an:",
     "forwardNoAnswer": "Wenn niemand antwortet, Anrufe senden an:",
     "forwardExternal": "Externe Anrufe anders weiterleiten",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} hat keinen Unified Communications-Service",
     "member": "Mitglieder - gemeinsam genutzte Leitung",
     "disassociateUser": "Durch Entfernen dieses Benutzers aus den Mitgliedern der gemeinsam genutzten Leitung wird diese Leitung sofort von allen Geräten entfernt. Sind Sie sicher, dass Sie fortfahren möchten?",
-    "addMember": "Mitglied hinzufügen"
+    "addMember": "Mitglied hinzufügen (mit Namen oder E-Mail-Adresse)"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Sitzungstyp-Aktivierung",
     "handsOnLabAdminLabel": "Hands-on Lab Admin (nur bei Aktivierung von Hands-on Lab)",
     "optimizeBandwidthUsageLabel": "Optimierte Bandbreitennutzung für Teilnehmer innerhalb des gleichen Netzwerks.",
-    "videoSettingsLabel": "Videoeinstellungen",
-    "hiQualVideoLabel": "High-Quality Video (360p) aktivieren",
-    "hiDefVideoLabel": "High-Definition Video (720p) aktivieren",
+    "videoSettingsLabel": "Weitere Berechtigungen",
+    "hiQualVideoLabel": "Hochwertiges Video (360p)",
+    "hiDefVideoLabel": "HD-Video (720p)",
     "telephonyPrivilegesLabel": "Telefonsonderrechte",
     "callInTeleconfLabel": "Call-In-Telekonferenz",
     "tollOnlyLabel": "kostenpflichtig",
     "tollAndTollFreeLabel": "kostenpflichtig & gebührenfrei",
     "teleconfViaGlobalCallinLabel": "Zugriff auf Telekonferenz über globale Call-In-Nummern",
     "callBackTeleconfLabel": "Rückruf-Telekonferenz",
-    "globalCallBackTeleconfLabel": "Globale Rückruf-Telekonferenz",
+    "globalCallBackTeleconfLabel": "Globaler Rückruf",
     "integratedVoIPLaabel": "Integrierte VoIP",
     "priviligesLable": "Berechtigungen",
     "userPriviligesLabel": "Benutzervorrechte",
+    "teleCLIAuthEnabledLabel": "CLI (Calling Line Identification)",
+    "pmrLabel": "Persönlicher Raum",
+    "OtherPrivilegesLabel": "Weitere Berechtigungen",
     "advancedLinkLabel": "Erweiterte Einstellungen"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Kalender-Service",
     "sparkDesc": "Durch Einfügen von @spark in eine Meeting-Einladung wird automatisch ein Spark-Raum erstellt.",
     "webexDesc": "Durch Einfügen von @webex in die Meeting-Einladung wird ein WebEx-Meeting erstellt und die Informationen werden der Einladung angehängt."
+  },
+  "validation": {
+    "nonPrintable": "Dieser Eintrag enthält Zeichen, die nicht gedruckt werden können.",
+    "callForward": "Das Feld kann die Ziffern 0 bis 9 sowie die Zeichen *, #, X und + enthalten.",
+    "specialCharacters": "Dieser Eintrag enthält Sonderzeichen."
   }
 }

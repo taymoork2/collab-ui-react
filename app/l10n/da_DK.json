@@ -275,6 +275,29 @@
     "description": "Mediekvalitet giver en oversigt over kvaliteten af alle tilkoblede opkald i den valgte periode. For mere information om mediekvalitet se {knowledge base}.",
     "mediaQualityGraphError": "Der opstod en fejl under indlæsning af mediekvalitetsdata."
   },
+  "callMetrics": {
+    "calls": "Opkald",
+    "callConditionFail": "Mislykkedes",
+    "callConditionPoorMedia": "Dårligt medie",
+    "callConditionSuccessful": "Udført",
+    "callMetrics": "Opkaldsmålinger",
+    "callMetricsDesc": "Opkaldsmålinger viser det samlede antal udførte opkald og samlede antal minutter under den valgte periode. Opkaldsmålinger analyserer også procentdelen af opkald som blev tilsluttet, og som havde godt eller fremragende medie under hele dets varighed, procentdelen af opkald som blev tilsluttet, men som havde dårlig mediekvalitet, og procentdelen af mislykkedes opkald.",
+    "totalCalls": "Samlede opkald",
+    "totalCallMinutes": "Samlede opkaldsminutter"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "Registrerede slutpunkter",
+    "company": "Virksomhed",
+    "pendingActivations": "Afventende aktiveringer",
+    "trend": "Tendens (%)",
+    "registeredEndpointsError": "Der opstod en fejl under indlæsning af registrerede slutpunkter for {{customer}}."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "Aktiv brugerudfyldning af virksomhed",
+    "description1": "På tværs af alle dine kunder. ",
+    "description2": " af deres medarbejdere har placeret mindst et Squared UC-opkald over [Tidsperiode filtervalg]. Her vises, hvordan [Filtervalg] sammenlignes til dette gennemsnit.",
+    "averageLabel": "Gennemsnitlig forpligtelse"
+  },
   "profilePage": {
     "userProfile": "Brugerprofil",
     "userDetails": "Brugeroplysninger",
@@ -377,8 +400,8 @@
     "invalidRequired": "Dette felt skal udfyldes.",
     "invalidEmail": "Dette er ikke en gyldig e-mailadresse.",
     "invalidUrl": "Dette er ikke en gyldig URL.",
-    "invalidMinLength": "Indtastningen er for kort.",
-    "invalidMaxLength": "Indtastningen er for lang."
+    "invalidMinLength": "Denne indtastning er for kort. Den skal mindst være {{min}} lang",
+    "invalidMaxLength": "Denne indtastning er for lang. Den maksimale længde er {{maks}}."
   },
   "notifications": {
     "success": "Succesmeddelelser",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "Interval for lokalnumre",
     "internalNumberRangeDescription": "Angiv område for interne numre. De skal indeholde mindst 4 cifre.",
     "extensionError": "Ugyldigt lokalnummer: ",
+    "companyVoicemail": "Telefonsvarer for virksomhed",
+    "companyVoicemailDescription": "Vælg et nummer, som brugere kan ringe til for at kontrollere deres telefonsvarer.",
     "to": "til",
     "addMoreExtensionRanges": "Tilføj flere intervaller for lokalnumre",
     "globalMOH": "Global Media On Hold (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " er ikke et gyldigt nummer",
     "saveSuccess": "Opsætning af Unified Communications er gemt",
     "siteError": "Kunne ikke oprette websted.",
+    "customerGetError": "Kunne ikke opnå kundetjenesteydelser.",
+    "voicemailGetError": "Kunne ikke opnå virksomhedens nummer til telefonsvarer.",
+    "voicemailUpdateError": "Kunne ikke opdatere nummer til virksomhedens telefonsvarer.",
     "extensionDeleteSuccess": "Forlængelse er slettet {{extension}}.",
     "extensionDeleteError": "Kunne ikke slette forlængelse {{extension}}.",
     "extensionAddError": "Kunne ikke oprette forlængelse {{extension}}."
@@ -572,7 +600,11 @@
     "deleteDevice": "Slet enhed",
     "deleteDeviceConfText": "Er du sikker på, du vil slette denne enhed?",
     "videoQTitle": "Muligt tab af videokvalitet",
-    "videoQMsg": "Denne enhed kommunikerer via TCP-protokollen, som kan medføre højere ventetid og derfor nedsat oplevelse af streaming af medier. Hvis du har problemer med streaming af medier, kan du prøve at åbne UDP port 33434 på din lokale firewall for at afhjælpe problemer med streaming af medier."
+    "videoQMsg": "Denne enhed kommunikerer via TCP-protokollen, som kan medføre højere ventetid og derfor nedsat oplevelse af streaming af medier. Hvis du har problemer med streaming af medier, kan du prøve at åbne UDP port 33434 på din lokale firewall for at afhjælpe problemer med streaming af medier.",
+    "needsActivation": "Skal aktiveres",
+    "active": "Aktiv",
+    "offline": "Offline",
+    "issuesDetected": "Fundne problemer"
   },
   "hercules": {
     "page_title": "Administration af forbindelser",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "Ring",
       "squared-fusion-cal": "Kalender",
-      "squared-fusion-media": "Medie"
+      "squared-fusion-media": "Medie",
+      "contact-center-context": "Kontekstcenter"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "Opret Call Park"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "Linjer",
+    "features": "Funktioner",
     "or": "eller",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "Videresend ikke opkald.",
     "forwardAllCalls": "Videresend alle opkald",
     "forwardBusyNoAnswer": "Videresend opkald når linjen er optaget eller borte",
-    "internalAndExternal": "Kun til interne og eksterne opkald<br>",
-    "internalOnly": "Kun til interne opkald<br>",
+    "internalAndExternal": "Til interne og eksterne opkald",
+    "internalOnly": "Kun til interne opkald",
     "forwardBusy": "Når linjen er optaget, send opkald til:",
     "forwardNoAnswer": "Når der ikke svares, send opkald til:",
     "forwardExternal": "Videresend eksterne opkald anderledes",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} har ikke Unified Communications-tjenesteydelse",
     "member": "Medlemmer af delt linje",
     "disassociateUser": "Hvis denne bruger fjernes fra medlemmerne af den delte linje, fjernes denne linje omgående fra alle deres enheder. Vil du fortsætte?",
-    "addMember": "Tilføj medlem"
+    "addMember": "Tilføj medlem (via navn eller e-mail)"
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "Aktivering af sessionstype",
     "handsOnLabAdminLabel": "Administration af praktisk laboratorium (kun aktiv når det praktiske laboratorium er aktiveret)",
     "optimizeBandwidthUsageLabel": "Optimeret båndbreddeforbrug for deltagere inden for det samme netværk",
-    "videoSettingsLabel": "Videoindstillinger",
-    "hiQualVideoLabel": "Slå højkvalitetsvideo til (360p)",
-    "hiDefVideoLabel": "Slå højdefinitionsvideo til (720p)",
+    "videoSettingsLabel": "Andre privilegier",
+    "hiQualVideoLabel": "Højkvalitetsvideo (360 p)",
+    "hiDefVideoLabel": "Højdefinitionsvideo (720 p)",
     "telephonyPrivilegesLabel": "Telefoniprivilegier",
     "callInTeleconfLabel": "Telekonference med indgående opkald",
     "tollOnlyLabel": "Betalt",
     "tollAndTollFreeLabel": "Betalt og gratis",
     "teleconfViaGlobalCallinLabel": "Tillad adgang til telekonference via globale opkaldsnumre",
     "callBackTeleconfLabel": "Telekonference med tilbagekald",
-    "globalCallBackTeleconfLabel": "Global telekonference med tilbagekald",
+    "globalCallBackTeleconfLabel": "Globalt tilbagekald",
     "integratedVoIPLaabel": "Integreret VoIP",
     "priviligesLable": "Privilegier",
     "userPriviligesLabel": "Brugerprivilegier",
+    "teleCLIAuthEnabledLabel": "Identificering af opkaldende nummer (CLI)",
+    "pmrLabel": "Personligt lokale",
+    "OtherPrivilegesLabel": "Andre privilegier",
     "advancedLinkLabel": "Avancerede indstillinger"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "Kalenderservice",
     "sparkDesc": "Hvis @spark inkluderes i en mødeinvitation oprettes et Spark-mødelokale automatisk.",
     "webexDesc": "Hvis @webex inkluderes i mødeinvitationen oprettes et WebEx-møde og vedhæfter oplysningerne til invitationen."
+  },
+  "validation": {
+    "nonPrintable": "Denne indtastning indeholder skrifttegn, der ikke kan udskrives.",
+    "callForward": "Felter kan indeholde tal mellem 0 til 9, *, #, X og +.",
+    "specialCharacters": "Denne indtastning indeholder specialtegn."
   }
 }

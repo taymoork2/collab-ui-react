@@ -275,6 +275,29 @@
     "description": "미디어 품질은 선택한 기간 중에 연결된 모든 통화의 품질을 세분화한 자료를 제공합니다. 미디어 품질에 대한 자세한 정보는 {knowledge base}를 참조하십시오.",
     "mediaQualityGraphError": "미디어 품질 데이터를 로드하는 중 오류가 발생했습니다."
   },
+  "callMetrics": {
+    "calls": "통화",
+    "callConditionFail": "실패",
+    "callConditionPoorMedia": "양호하지 않은 미디어",
+    "callConditionSuccessful": "성공",
+    "callMetrics": "통화 메트릭스",
+    "callMetricsDesc": "통화 메트릭스는 실행된 총 통화의 수 및 선택한 기간 동안 해당 통화의 지속 시간(분)을 표시합니다. 또한 통화 메트릭스는 해당 기간 동안 성공적으로 연결된 양호/훌륭한 미디어 통화의 백분율, 연결은 되었으나 양호하지 못한 미디어 품질 통화의 백분율 및 연결하지 못한 통화의 백분율을 세분화합니다.",
+    "totalCalls": "총 통화",
+    "totalCallMinutes": "총 통화 시간(분)"
+  },
+  "registeredEndpoints": {
+    "registeredEndpoints": "등록된 종료점",
+    "company": "기업",
+    "pendingActivations": "보류 중인 활성화",
+    "trend": "트렌드 (%)",
+    "registeredEndpointsError": "{{customer}} 님을 위해 등록된 종료점을 로드하는 중 오류가 발생했습니다."
+  },
+  "activeUserPopulation": {
+    "titleByCompany": "기업에서 생성한 활동중인 사용자",
+    "description1": "모든 고객을 통틀어, ",
+    "description2": " [Time period filter selection] 기간 동안 직원들은 최소한 한 통의 Squared UC 통화를 실행했습니다. 다음은 평균과 비교한 [Filter Selection]입니다.",
+    "averageLabel": "평균 참여"
+  },
   "profilePage": {
     "userProfile": "사용자 프로필",
     "userDetails": "사용자 세부 사항",
@@ -377,8 +400,8 @@
     "invalidRequired": "이 필드는 필수입니다.",
     "invalidEmail": "이는 올바른 이메일 주소가 아닙니다.",
     "invalidUrl": "이는 올바른 URL이 아닙니다.",
-    "invalidMinLength": "이 입력값은 너무 짧습니다.",
-    "invalidMaxLength": "이 입력값은 너무 깁니다."
+    "invalidMinLength": "이 입력값은 너무 짧습니다. 최소 길이는 {{min}}입니다.",
+    "invalidMaxLength": "이 입력값은 너무 깁니다. 최대 길이는 {{max}}입니다."
   },
   "notifications": {
     "success": "알림 성공",
@@ -477,6 +500,8 @@
     "internalExtensionRange": "내부 확장 범위",
     "internalNumberRangeDescription": "내부 번호의 범위를 지정하십시오. 4자리 숫자이어야 합니다.",
     "extensionError": "내선 올바르지 않음: ",
+    "companyVoicemail": "기업 보이스메일",
+    "companyVoicemailDescription": "사용자가 보이스메일을 확인하기 위해 전화할 수 있는 번호를 선택하십시오.",
     "to": "-",
     "addMoreExtensionRanges": "추가 확장 범위 추가",
     "globalMOH": "글로벌 Media On Hold (MOH)",
@@ -488,6 +513,9 @@
     "notANumber": " 은(는) 유효한 번호가 아닙니다",
     "saveSuccess": "Unified Communications 설정 성공적으로 저장됨",
     "siteError": "사이트를 만들지 못했습니다.",
+    "customerGetError": "고객 서비스를 불러오지 못했습니다.",
+    "voicemailGetError": "기업 보이스메일 번호를 불러오지 못했습니다.",
+    "voicemailUpdateError": "기업 보이스메일 번호를 업데이트하지 못했습니다.",
     "extensionDeleteSuccess": "확장{{extension}}을 성공적으로 삭제했습니다.",
     "extensionDeleteError": "확장{{extension}}을 삭제하지 못했습니다.",
     "extensionAddError": "확장{{extension}}을 만들지 못했습니다."
@@ -572,7 +600,11 @@
     "deleteDevice": "장치 삭제",
     "deleteDeviceConfText": "이 장치를 삭제하시겠습니까?",
     "videoQTitle": "비디오 품질 손상 가능성",
-    "videoQMsg": "이 장치는 TCP 프로토콜을 통해 통신하고 있으며, 이는 보다 긴 대기 시간을 초래하여 미디어 스트리밍 환경을 악화시킬 수도 있습니다. 미디어 스트리밍에 문제가 있는 경우, 로컬 방화벽에서 UDP 포트 33434를 열어 미디어 스트리밍 문제를 개선할 수 있습니다."
+    "videoQMsg": "이 장치는 TCP 프로토콜을 통해 통신하고 있으며, 이는 보다 긴 대기 시간을 초래하여 미디어 스트리밍 환경을 악화시킬 수도 있습니다. 미디어 스트리밍에 문제가 있는 경우, 로컬 방화벽에서 UDP 포트 33434를 열어 미디어 스트리밍 문제를 개선할 수 있습니다.",
+    "needsActivation": "활성화 필요",
+    "active": "활동중",
+    "offline": "오프라인",
+    "issuesDetected": "문제 발견됨"
   },
   "hercules": {
     "page_title": "커넥터 관리",
@@ -616,7 +648,8 @@
     "serviceNames": {
       "squared-fusion-uc": "통화",
       "squared-fusion-cal": "캘린더",
-      "squared-fusion-media": "미디어"
+      "squared-fusion-media": "미디어",
+      "contact-center-context": "컨텍스트 센터"
     }
   },
   "firstTimeWizard": {
@@ -760,7 +793,8 @@
     "createButton": "통화 대기 만들기"
   },
   "telephonyPreview": {
-    "squareduc": "Spark UC",
+    "lines": "라인",
+    "features": "기능",
     "or": "또는",
     "voicemail": "보이스메일",
     "singleNumberReach": "싱글 번호 연결"
@@ -799,8 +833,8 @@
     "forwardNoCalls": "통화 전달하지 않기",
     "forwardAllCalls": "모든 통화 전달",
     "forwardBusyNoAnswer": "통화중이거나 부재중일 때 통화 전달",
-    "internalAndExternal": "내부 및 외부 통화용<br>",
-    "internalOnly": "내부 통화 전용<br>",
+    "internalAndExternal": "내부 및 외부 통화용",
+    "internalOnly": "내부 통화 전용",
     "forwardBusy": "통화 중일 때 통화 보내기:",
     "forwardNoAnswer": "응답이 없을 때 통화 보내기:",
     "forwardExternal": "외부 통화는 다른 방법으로 전달",
@@ -817,7 +851,7 @@
     "invalidUser": "{{user}} 님은 Unified Communications 서비스를 갖고 있지 않습니다",
     "member": "공유된 라인 멤버",
     "disassociateUser": "공유된 라인 멤버에서 이 사용자를 제거하면 해당 사용자의 모든 장치에서 즉시 이 라인을 제거하게 됩니다. 계속 진행하시겠습니까?",
-    "addMember": "멤버 추가"
+    "addMember": "(이름 또는 이메일로) 멤버 추가"
   },
   "singleNumberReachPanel": {
     "title": "싱글 번호 연결",
@@ -1197,19 +1231,22 @@
     "sessionEnablementLabel": "세션 유형 활성화",
     "handsOnLabAdminLabel": "핸즈-온 랩 관리 (핸즈-온 랩이 활성화된 경우에만 적용됨)",
     "optimizeBandwidthUsageLabel": "동일한 네트워크 내에서 참석자를 위해 최적화된 대역폭 사용량",
-    "videoSettingsLabel": "비디오 설정",
-    "hiQualVideoLabel": "고품질 비디오 켜기 (360p)",
-    "hiDefVideoLabel": "고화질 비디오 켜기 (720p)",
+    "videoSettingsLabel": "기타 권한",
+    "hiQualVideoLabel": "고품질 비디오 (360p)",
+    "hiDefVideoLabel": "고화질 비디오 (720p)",
     "telephonyPrivilegesLabel": "텔레포니 권한",
     "callInTeleconfLabel": "발신 다자간 전화회의",
     "tollOnlyLabel": "유료",
     "tollAndTollFreeLabel": "유료 및 무료",
     "teleconfViaGlobalCallinLabel": "글로벌 발신 번호를 통한 다자간 전화회의 액세스 허용",
     "callBackTeleconfLabel": "수신 다자간 전화회의",
-    "globalCallBackTeleconfLabel": "글로벌 수신 다자간 전화회의",
+    "globalCallBackTeleconfLabel": "글로벌 응답 수신",
     "integratedVoIPLaabel": "통합된 VoIP",
     "priviligesLable": "권한",
     "userPriviligesLabel": "사용자 권한",
+    "teleCLIAuthEnabledLabel": "Calling Line Identification (CLI)",
+    "pmrLabel": "개인 룸",
+    "OtherPrivilegesLabel": "기타 권한",
     "advancedLinkLabel": "고급 설정"
   },
   "leaderBoard": {
@@ -1317,5 +1354,10 @@
     "calendarService": "캘린더 서비스",
     "sparkDesc": "미팅 초대장에 @spark를 포함하면 자동으로 Spark 회의실을 만듭니다.",
     "webexDesc": "미팅 초대장에 @webex를 포함하면 WebEx 미팅을 만들고, 해당 초대장에 정보를 첨부합니다."
+  },
+  "validation": {
+    "nonPrintable": "이 입력값에 인쇄할 수 없는 문자가 포함되어 있습니다.",
+    "callForward": "필드에는 0~9의 숫자, *, #, X 및 +를 포함할 수 있습니다.",
+    "specialCharacters": "이 입력값에 특수 문자가 포함되어 있습니다."
   }
 }
