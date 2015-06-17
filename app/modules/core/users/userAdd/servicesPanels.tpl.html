@@ -18,23 +18,25 @@
                             </div>
                         </div>
                         <div class="bucket-row-inner" ng-if="msgFeature.licenses">
-                            <div class="service-label" ng-if="msgFeature.licenses.length === 1">
-                                <span class="onboard-radio" ng-click="setMsgRadio(msgFeature.value)">{{msgFeature.label}}</span>
+                            <cs-checkbox ckid="paid-msg"
+                                ng-if="msgFeature.licenses.length === 1"
+                                ng-model="radioStates.msgRadio"
+                                label="{{msgFeature.label}}">
+                            </cs-checkbox>
+                            <div ng-if="msgFeature.licenses.length > 1">
+                                <span>{{msgFeature.label}}</span>
+                                <fieldset class="onboard-fieldset">
+                                    <label class="cs-radio" for="{{license.licenseId}}"
+                                            ng-repeat="license in msgFeature.licenses">
+                                        <input id="{{license.licenseId}}" name="{{license.licenseType}}" type="radio"
+                                                ng-change="licenseHandler(license.licenseId)"
+                                                ng-disabled="license.status !== 'ACTIVE' && license.status !== 'PENDING'"
+                                                ng-model="$parent.$parent.licenseSubscriptionModels[$parent.msgFeature.value]"
+                                                ng-value="license.licenseId" />
+                                        <span>{{license.billingServiceId}} ({{license.volume}})</span>
+                                    </label>
+                                </fieldset>
                             </div>
-                            <fieldset ng-if="msgFeature.licenses.length > 1">
-                                <div class="service-label">
-                                    <span class="onboard-radio">{{msgFeature.label}}</span>
-                                </div>
-                                <label class="cs-radio" for="{{license.licenseId}}"
-                                        ng-repeat="license in msgFeature.licenses">
-                                    <input id="{{license.licenseId}}" name="{{license.licenseType}}" type="radio"
-                                            ng-click="licenseHandler(license.licenseId)"
-                                            ng-disabled="license.status !== 'ACTIVE' && license.status !== 'PENDING'"
-                                            ng-model="$parent.msgFeature.licenseModel"
-                                            ng-value="license.licenseId" />
-                                    <span>{{license.billingServiceId}} ({{license.volume}})</span>
-                                </label>
-                            </fieldset>
                         </div>
                     </div>
                 </div>

@@ -92,6 +92,8 @@ angular.module('Core')
         populateConf();
       };
 
+      $scope.licenseSubscriptionModels = {};
+
       // Array[Service] -> Array[Service] (merges Service[s] w/ same license)
       var mergeMultipleLicenseSubscriptions = function (fetched) {
 
@@ -114,8 +116,7 @@ angular.module('Core')
           array.forEach(function (service) {
             var copy = angular.copy(service);
             copy.licenses = [copy.license];
-            copy.licenseModel = ''; // default?
-            delete copy.license; // avoid copy?
+            delete copy.license;
             _.merge(result, copy, function (left, right) {
               if (_.isArray(left)) return left.concat(right);
             });
