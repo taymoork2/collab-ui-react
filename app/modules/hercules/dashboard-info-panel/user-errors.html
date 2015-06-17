@@ -4,7 +4,7 @@
       <i class="icon icon-close" aria-hidden="true"></i><span class="sr-only">Close</span>
     </button>
     <h3 class="modal-title">
-      <span><span translate="hercules.serviceNames.{{selectedServiceId}}"/> Activation Errors</span>
+      <span><span translate="hercules.serviceNames.{{selectedServiceId}}"/>: Activation Errors</span>
     </h3>
   </div>
   <div class="modal-body">
@@ -12,9 +12,15 @@
       <i class="icon icon-spinner icon-2x"></i>
     </div>
     <div ng-hide="loading">
-      <p>Showing {{totalCount > limit ? limit : totalCount}} out of {{totalCount}} service activation errors.</p>
+      <p>Showing {{totalCount > limit ? limit : totalCount}} out of {{totalCount}} errors.</p>
       <p ng-repeat="status in userStatuses">
-        <span style="text-decoration: underline;">{{status.displayName}}</span> <br><span class="error">{{status.description.defaultMessage}}</span>
+        <span style="text-decoration: underline;">{{status.displayName}}</span>
+        <br>
+        <span ng-show="status.connector">
+          Host: <a href="https://{{status.connector.host_name}}" target="_blank" style="color: #3ca8e8">{{status.connector.host_name}}</a>
+        </span>
+        <br>
+        <span class="error">{{status.description.defaultMessage}}</span>
       </p>
     </div>
   </div>
