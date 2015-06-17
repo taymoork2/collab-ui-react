@@ -21,7 +21,7 @@
 
             _.forEach(statuses.userStatuses, function (userStatus) {
               if (userStatus.connectorId && !_.contains(connectorIds, userStatus.connectorId)) {
-                connectorIds.push(userStatus.connectorId)
+                connectorIds.push(userStatus.connectorId);
               }
               Userservice.getUser(userStatus.userId, function (data, status) {
                 if (data.success) {
