@@ -112,6 +112,8 @@
           return result;
         }, // validateXmlData()
 
+        //pmrRequiresMeetingCenterPROorSTD
+
         getUserSettingsModel: function () {
           return userSettingsModel;
         }, // getUserSettingsModel()
@@ -160,6 +162,35 @@
           xmlApiInfo.webexAdminSessionTicket = webexAdminSessionTicket;
           xmlApiInfo.webexUserId = $stateParams.currentUser.userName;
         }, // initXmlApiInfo()
+
+        //returns true if pro or std meeting center or both are checked.
+        //N.B. Purpose: If neither are checked, and PMR is on, 
+        //then show error.  
+        hasProOrStdMeetingCenter: function (sessionTypes) {
+          $log.log("YURE sessionTypes=" + JSON.stringify(sessionTypes));
+          var hasProOrStdMeetingCenter = false;
+          sessionTypes.forEach(function (item) {
+            var mca = item.meetingCenterApplicable;
+            var sn = item.sessionName;
+            var sessionNameisSTDorPRO =
+              (sn === "PRO" ||
+                sn === "STD");
+            var sessionEnabled = item.sessionEnabled;
+            $log.log("DESS sessionEnabled=" + sessionEnabled);
+            $log.log("DESSN sessionName=" + sn + " mca=" + mca);
+            if (sessionEnabled && sessionNameisSTDorPRO && mca) {
+              hasProOrStdMeetingCenter = true;
+            }
+          });
+          return hasProOrStdMeetingCenter;
+
+        }, //hasProOrStdMeetingCenter
+
+        isUserLevelPMREnabled: function () {
+          var user = this.getUserSettingsModel();
+          var hasPMR = user.pmr.value;
+          return hasPMR;
+        }, //isUserLevelPMREnabled.
 
         updateUserSettingsModelPart1: function () {
           var funcName = "updateUserSettingsModelPart1()";
@@ -715,6 +746,20 @@
               }
             } // chkSessionType()
           ); // userSettingsModel.sessionTypes.forEach()
+
+          //so this is true if he has PMR but does not have PRO or STD.
+          var blockDueToPMR = _self.isUserLevelPMREnabled() &&
+            !_self.hasProOrStdMeetingCenter(userSettingsModel.sessionTypes);
+          $log.log("DURE blockDueToPMR=" + blockDueToPMR);
+          if (blockDueToPMR) {
+
+            angular.element('#saveBtn').button('reset');
+            angular.element('#saveBtn2').button('reset');
+            userSettingsModel.disableCancel = false;
+            userSettingsModel.disableCancel2 = false;
+            Notification.notify(["You have personal meeting room enabled. You must either have a STD or PRO meeting session type."], 'error');
+            return;
+          }
 
           XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
