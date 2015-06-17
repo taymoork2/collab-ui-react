@@ -62,7 +62,7 @@
     vm.numberFields = [{
       className: 'row row-callpark',
       fieldGroup: [{
-        className: 'col-xs-4 align-radio',
+        className: 'col-xs-4 align-radio margin-radio',
         key: 'range',
         type: 'radio',
         templateOptions: {
@@ -132,7 +132,7 @@
     }, {
       className: 'row row-callpark',
       fieldGroup: [{
-        className: 'col-xs-4',
+        className: 'col-xs-4 margin-radio',
         key: 'single',
         type: 'radio',
         templateOptions: {
@@ -168,7 +168,7 @@
     vm.reversionFields = [{
       className: 'row row-callpark',
       fieldGroup: [{
-        className: 'col-xs-8',
+        className: 'col-xs-8 margin-radio',
         key: 'callparkInitLine',
         type: 'radio',
         templateOptions: {
@@ -180,7 +180,7 @@
     }, {
       className: 'row row-callpark',
       fieldGroup: [{
-        className: 'col-xs-1',
+        className: 'col-xs-1 margin-radio',
         key: 'reversionOption',
         type: 'radio',
         templateOptions: {
