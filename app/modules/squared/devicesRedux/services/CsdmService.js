@@ -48,6 +48,19 @@ angular.module('Squared').service('CsdmService',
       });
     };
 
+    var updateDeviceName = function (deviceUrl, newName, callback) {
+      codesAndDevicesCache[deviceUrl].displayName = newName;
+      $http.patch(deviceUrl, {
+          name: newName
+        })
+        .success(function (status) {
+          callback(null, status);
+        })
+        .error(function () {
+          callback(arguments);
+        });
+    };
+
     return {
 
       fillCodesAndDevicesCache: function (callback) {
@@ -86,8 +99,11 @@ angular.module('Squared').service('CsdmService',
           .error(function () {
             callback(arguments);
           });
+      },
+
+      updateDeviceName: function (deviceUrl, name, callback) {
+        updateDeviceName(deviceUrl, name, callback);
       }
     };
-
   }
 );

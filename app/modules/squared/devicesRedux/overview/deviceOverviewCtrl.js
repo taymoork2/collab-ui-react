@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrlRedux', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($stateParams, $translate, Authinfo, CsdmService, Log) {
+  function DeviceOverviewCtrl($scope, XhrNotificationService, $stateParams, $translate, Authinfo, CsdmService, Log) {
     var vm = this;
 
     vm.currentDevice = $stateParams.currentDevice;
@@ -69,5 +69,22 @@
     //   // todo: needed? 
     //   // getDiagnosticsDevice();
     // }
+
+    $scope.editorEnabled = false;
+
+    $scope.enableEditor = function () {
+      $scope.editorEnabled = true;
+    };
+
+    $scope.disableEditor = function () {
+      $scope.editorEnabled = false;
+    };
+
+    $scope.save = function () {
+      CsdmService.updateDeviceName(vm.currentDevice.url, vm.currentDevice.displayName, function (err, data) {
+        if (err) return XhrNotificationService.notify(err);
+      });
+      $scope.disableEditor();
+    };
   }
 })();

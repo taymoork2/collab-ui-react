@@ -26,14 +26,6 @@ describe('Service: CsdmService', function () {
     $httpBackend
       .when('GET', 'l10n/en_US.json')
       .respond({});
-  }));
-
-  afterEach(function () {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  it('should fetch data when fill cache is called', function () {
     $httpBackend
       .when('GET', rootPath + '/organization/myyoloorg/devices')
       .respond({
@@ -48,7 +40,14 @@ describe('Service: CsdmService', function () {
           bar: "baz"
         }
       });
+  }));
 
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should fetch data when fill cache is called', function () {
     var callback = sinon.stub();
     Service.fillCodesAndDevicesCache(callback);
     $httpBackend.flush();
@@ -94,5 +93,26 @@ describe('Service: CsdmService', function () {
     Service.deleteUrl("url", sinon.stub());
     $httpBackend.flush();
     expect(Service.listCodesAndDevices().length).toBe(0);
+  });
+
+  it('can update the device name', function () {
+    var callback = sinon.stub();
+    Service.fillCodesAndDevicesCache(callback);
+    $httpBackend.flush();
+
+    $httpBackend
+      .when('PATCH', 'device', {
+        name: "newname"
+      })
+      .respond({
+        name: "newname"
+      });
+    Service.updateDeviceName('device', 'newname', sinon.stub());
+    $httpBackend.flush();
+    expect(Service.listCodesAndDevices()[1]).toEqual({
+      foo: "bar",
+      displayName: "newname"
+    });
+
   });
 });
