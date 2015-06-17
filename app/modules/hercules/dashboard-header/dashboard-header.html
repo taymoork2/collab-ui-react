@@ -16,7 +16,14 @@
               Users: {{summary(service.service_id).activated}} activated
               <span class="border-left" ng-show="summary(service.service_id).notActivated > 0"><span class="disabled">{{summary(service.service_id).notActivated}} pending</span></a></span>
               <span class="border-left" ng-show="summary(service.service_id).error > 0 && clusters && clusters.length > 0"><a href ng-click="showUserStatusesDialog(service.service_id)"><span class="error">{{summary(service.service_id).error}} in error</span></a></span>
-              <span class="export-users-statuses-icon" tooltip-placement="top" tooltip="User Status Report" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share" ng-click="openUserStatusReportModal(service.service_id)"></i></span>
+              <span ng-show="summary(service.service_id).notActivated > 0 || summary(service.service_id).activated > 0 || summary(service.service_id).error > 0"
+                    class="export-users-statuses-icon"
+                    tooltip-placement="top"
+                    tooltip="User Status Report"
+                    tooltip-animation="false"
+                    tooltip-append-to-body="true">
+                <i class="icon icon-content-share" ng-click="openUserStatusReportModal(service.service_id)"></i>
+              </span>
             </div>
           </div>
         </div>
