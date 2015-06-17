@@ -7,7 +7,7 @@
       /* @ngInject */
       function ($scope, $state, DirSyncService) {
         $scope.dirsyncEnabled = true;
-        DirSyncService.getDirSyncStatus(function (data) {
+        DirSyncService.getDirSyncDomain(function (data) {
           $scope.dirsyncEnabled = data.success && data.serviceMode == 'ENABLED';
           if (!$scope.dirsyncEnabled) $scope.showInfoPanel = true;
         });
