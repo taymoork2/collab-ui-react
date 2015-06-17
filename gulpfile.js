@@ -502,8 +502,8 @@ gulp.task('scss:build', ['clean:css'], function () {
     .pipe($.if(args.verbose, $.print()))
     .pipe($.sourcemaps.write('/'))
     .pipe(gulp.dest(config.build))
-    .pipe(reload({
-      stream: true
+    .pipe(browserSync.stream({
+      match: '**/*.css'
     }));
 });
 
@@ -753,12 +753,12 @@ gulp.task('browser-sync', function () {
 
   if (!args.dist) {
     gulp.watch([
-        config.app + '/**/*.scss',
-        config.vendorFiles.scss
-      ], [
-        'scss:build'
-      ])
-      .on('change', logWatch);
+      config.app + '/**/*.scss',
+      config.vendorFiles.scss
+    ], [
+      'scss:build'
+    ]);
+    // .on('change', logWatch);
 
     if (args.nounit) {
       gulp.watch([
