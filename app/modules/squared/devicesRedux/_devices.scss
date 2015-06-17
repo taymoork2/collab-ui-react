@@ -58,3 +58,34 @@
     font-family: "CiscoSansTT Light", Helvetica, Arial, sans-serif, sans-serif;
   }
 }
+
+/* widgets */
+
+.editable-input {
+  i {
+    cursor: pointer;
+    color: #999;
+  }
+  i:hover,
+  .read-only-value:hover i {
+    color: #000;
+  }
+  i.edit-button {
+    float: left;
+    padding-top: 5px;
+    padding-left: 10px;
+  }
+  i.save-in-progress-icon {
+    display: inline-block;
+    top: 6px;
+  }
+  .read-only-value span {
+    float: left;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 260px;
+  }
+}

@@ -1,0 +1,33 @@
+<div class="editable-input">
+  <div
+    class="read-only-value"
+    ng-hide="editorEnabled" 
+    ng-click="enableEditor()">
+    <span>
+      {{value}}
+    </span>
+    <i class="edit-button icon icon-edit" />
+  </div>
+  <div ng-show="editorEnabled">
+    <form ng-submit="saveClicked()">
+      <input
+        ng-model="value"
+        style="width: 220px"
+        ng-show="editorEnabled" 
+        focus-on="editorEnabled"
+        ng-disabled="saveInProgress"
+        ng-keydown="keyPressed($event)" />
+      <i
+        ng-hide="saveInProgress"
+        ng-click="saveClicked()" 
+        class="save-button icon icon-check" />
+      <i
+        ng-hide="saveInProgress"
+        ng-click="cancelClicked()"
+        class="cancel-button icon icon-remove" />
+      <i
+        ng-show="saveInProgress"
+        class="save-in-progress-icon icon icon-spinner" />
+    </form>
+  </div>
+</div>

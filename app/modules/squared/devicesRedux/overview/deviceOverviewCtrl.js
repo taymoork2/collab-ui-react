@@ -9,21 +9,16 @@
   function DeviceOverviewCtrl($scope, XhrNotificationService, $stateParams, $translate, Authinfo, FeedbackService, CsdmService, Utils, $window, Notification) {
     var vm = this;
     vm.currentDevice = $stateParams.currentDevice;
-    $scope.editorEnabled = false;
 
-    $scope.enableEditor = function () {
-      $scope.editorEnabled = true;
-    };
-
-    $scope.disableEditor = function () {
-      $scope.editorEnabled = false;
-    };
-
-    $scope.save = function () {
+    $scope.save = function (success, error) {
       CsdmService.updateDeviceName(vm.currentDevice.url, vm.currentDevice.displayName, function (err, data) {
-        if (err) return XhrNotificationService.notify(err);
+        if (err) {
+          XhrNotificationService.notify(err);
+          error();
+        } else {
+          success();
+        }
       });
-      $scope.disableEditor();
     };
 
     $scope.sendFeedback = function (device) {
@@ -42,5 +37,6 @@
         }
       });
     };
+
   }
 })();

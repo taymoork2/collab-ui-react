@@ -10,13 +10,11 @@
   </div>
   <div class="header-info">
     <div class="header-info-wrap">
-      <div class="header-title" ng-hide="editorEnabled" ng-click="enableEditor()">
-      {{deviceOverview.currentDevice.displayName}} <i class="icon icon-edit"/>
-      </div>
-      <div ng-show="editorEnabled">
-        <form ng-submit="save()">
-          <input class="header-title" ng-model="deviceOverview.currentDevice.displayName" placeholder="{{deviceOverview.currentDevice.displayName}}" ng-show="editorEnabled">
-        </form>
+      <div class="header-title">
+        <sq-editable-input
+          save="save"
+          value="deviceOverview.currentDevice.displayName">
+        </sq-editable-input>
       </div>
     </div>
   </div>
