@@ -5,10 +5,10 @@
     display-status="warning"
     heading="Service Entitlements Missing.">
 
-    <p>Your organization is missing required entitlements for the listed services. These entitlements must be added to your organization:</p>
+    <p>Your organization is missing required entitlements. The missing entitlements must be added to your organization for these services to operate correctly:</p>
     <ul>
       <li ng-repeat="service in services.enabledOnly | filter: { status: 'error' }">
-        <span translate="hercules.serviceNames.{{service.service_id}}"/>: <span ng-repeat="entitlement in service.missing_entitlements">{{entitlement}}{{$last ? '' : ', '}}</span>
+        <span translate="hercules.serviceNames.{{service.service_id}}"/></span>
       </li>
     </ul>
 
