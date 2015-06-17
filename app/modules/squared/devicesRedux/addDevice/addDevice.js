@@ -4,21 +4,25 @@
     .module('Squared')
     .controller('AddDeviceController',
 
-      /*
-        todo: 
-          - use csdm
-          - move vm.showAdd here
-          - remove all sc.* in the view
-          - remove unused code from devicesCtrl
-      */
-
       /* @ngInject */
-      function ($scope, Notification, CsdmService, XhrNotificationService) {
+      function ($scope, Notification, CsdmService, XhrNotificationService, $timeout) {
 
         $scope.showAdd = true;
         $scope.deviceName = '';
         $scope.activationCode = '';
         $scope.addDeviceInProgress = false;
+
+        $('#addRoomDialog').on('shown.bs.modal', function () {
+          $('#newRoom').focus();
+        });
+
+        $scope.$watch('showAdd', function (shown) {
+          if (shown) {
+            $timeout(function () {
+              $('#newRoom').focus();
+            });
+          }
+        });
 
         var formatActivationCode = function (activationCode) {
           var acode = '';
@@ -36,17 +40,13 @@
           $scope.showAdd = true;
           $scope.deviceName = '';
           $scope.notificationsFailed = false;
-
-          window.setTimeout(function () {
-            $('#newRoom').focus();
-          }, 500);
         };
 
         $scope.showCopiedToClipboardMessage = function () {
           $('#copyCodeToClipboardButton i').tooltip('show');
           setTimeout(function () {
             $('#copyCodeToClipboardButton i').tooltip('destroy');
-          }, 1000);
+          }, 3000);
         };
 
         $scope.addDevice = function () {
