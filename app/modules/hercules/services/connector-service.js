@@ -69,7 +69,9 @@ angular.module('Hercules')
           .success(function (data) {
             callback(null, data);
           })
-          .error(createErrorHandler('Unable to read connector', callback));
+          .error(function () {
+            callback(arguments, null);
+          });
       };
 
       var createSuccessCallback = function (callback) {
