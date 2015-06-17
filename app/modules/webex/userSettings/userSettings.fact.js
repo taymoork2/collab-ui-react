@@ -437,6 +437,16 @@
             true
           ) ? true : false;
 
+          userSettingsModel.pmr.value = (
+            "true" == userInfoJson.use_privilege.use_isEnablePMR
+          ) ? true : false;
+          $log.log("----> PMR = " + userSettingsModel.pmr.value);
+
+          userSettingsModel.cmr.value = (
+            "true" == userInfoJson.use_privilege.use_isEnableCET
+          ) ? true : false;
+          $log.log("----> CMR = " + userSettingsModel.cmr.value);
+
           // Start of Video privileges
           userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HQvideo
@@ -850,20 +860,29 @@
           xmlApiInfo.handsOnLabAdminSiteEnabled = userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled;
           xmlApiInfo.handsOnLabAdmin = userSettingsModel.trainingCenter.handsOnLabAdmin.value;
 
-          XmlApiFact.updateUserSettings2(xmlApiInfo).then(
-            function updateUserSettings2Success(result) {
-              _self.processUpdateResponse(
-                form,
-                result,
-                false,
-                "webexUserSettings.privilegesUpdateSuccess"
-              );
-            }, // updateUserSettings2Success()
+          if ((userSettingsModel.pmr.value === true) && (userSettingsModel.cmr.value === true) && (userSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) {
+            var updateStatus = "error";
+            var notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges");
+            Notification.notify([notificationMsg], updateStatus);
+            angular.element('#saveBtn2').button('reset');
+            userSettingsModel.disableCancel2 = false;
+          } else {
 
-            function updateUserSettings2Error(result) {
-              _self.processNoUpdateResponse(result);
-            } // updateUserSettings2Error()
-          );
+            XmlApiFact.updateUserSettings2(xmlApiInfo).then(
+              function updateUserSettings2Success(result) {
+                _self.processUpdateResponse(
+                  form,
+                  result,
+                  false,
+                  "webexUserSettings.privilegesUpdateSuccess"
+                );
+              }, // updateUserSettings2Success()
+
+              function updateUserSettings2Error(result) {
+                _self.processNoUpdateResponse(result);
+              } // updateUserSettings2Error()
+            );
+          }
         }, // updateUserSettings2()
 
         processUpdateResponse: function (

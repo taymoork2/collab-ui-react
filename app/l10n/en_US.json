@@ -1188,6 +1188,7 @@
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
     "privilegesUpdateSuccess": "Privileges updated.",
+    "pmrErrorTelephonyPrivileges": "Before you can create a Personal Room, set up telephony privileges for this user.",
     "reload": "Try Again",
     "cancel": "Go Back"
   },

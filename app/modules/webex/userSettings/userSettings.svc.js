@@ -55,6 +55,10 @@ angular.module('WebExUserSettings')
           value: false
         },
 
+        cmr: {
+          value: false
+        },
+
         otherPrivilegesSection: {
           label: "Other Privileges"
         },
