@@ -5,7 +5,8 @@ describe('Controller: CallParkDetailCtrl', function () {
 
   beforeEach(module('uc.callpark'));
   beforeEach(module('Huron'));
-
+  var callParkModel = getJSONFixture('huron/json/callpark/callpark.json');
+  var callParkError = getJSONFixture('huron/json/callpark/callparkerror.json');
   beforeEach(inject(function ($rootScope, $controller, _$q_, _CallPark_) {
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -26,14 +27,15 @@ describe('Controller: CallParkDetailCtrl', function () {
 
   describe('addCallPark', function () {
     it('should close modal on success', function () {
-      controller.addCallPark();
+      controller.addCallPark(callParkModel);
       $scope.$apply();
       expect($modalInstance.close).toHaveBeenCalled();
     });
 
     it('should dismiss modal on error', function () {
       CallPark.create.and.returnValue($q.reject());
-      controller.addCallPark();
+
+      controller.addCallPark(callParkError);
       $scope.$apply();
       expect($modalInstance.dismiss).toHaveBeenCalled();
     });
@@ -41,14 +43,14 @@ describe('Controller: CallParkDetailCtrl', function () {
 
   describe('addCallParkByRange', function () {
     it('should close modal on success', function () {
-      controller.addCallParkByRange();
+      controller.addCallParkByRange(callParkModel, '1234567', '1234568');
       $scope.$apply();
       expect($modalInstance.close).toHaveBeenCalled();
     });
 
     it('should dismiss modal on error', function () {
       CallPark.createByRange.and.returnValue($q.reject());
-      controller.addCallParkByRange();
+      controller.addCallParkByRange(callParkModel, '1234567', '1234568');
       $scope.$apply();
       expect($modalInstance.dismiss).toHaveBeenCalled();
     });

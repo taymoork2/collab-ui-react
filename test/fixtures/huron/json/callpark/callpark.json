@@ -1,0 +1,7 @@
+{
+  "description": "callParkTest",
+  "retrievalPrefix": "*",
+  "pattern": 1234566,
+  "patternOption": "single",
+  "reversionPattern": 1234
+}
