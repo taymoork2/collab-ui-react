@@ -90,6 +90,15 @@
             translate="spacesPage.delete">
           </span>
         </button>
+        <button
+          ng-if="deviceOverview.currentDevice.product"
+          id="deviceLogUploadButton"
+          class="btn btn-lg btn-primary"
+          ng-click="uploadLogs(deviceOverview.currentDevice)">
+          <span
+            translate="spacesPage.uploadLogs">
+          </span>
+        </button>
       </div>
     </cs-sp-section>
   </cs-sp-container>

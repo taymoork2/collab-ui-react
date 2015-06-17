@@ -115,4 +115,19 @@ describe('Service: CsdmService', function () {
     });
 
   });
+
+  it('can tell the device to upload its logs', function () {
+    var callback = sinon.stub();
+    Service.fillCodesAndDevicesCache(callback);
+    $httpBackend.flush();
+
+    $httpBackend
+      .when('POST', 'device/notify', {
+        command: "logUpload",
+        eventType: "room.request_logs"
+      })
+      .respond(200);
+    Service.uploadLogs('device', sinon.stub());
+    $httpBackend.flush();
+  });
 });

@@ -61,6 +61,19 @@ angular.module('Squared').service('CsdmService',
         });
     };
 
+    var uploadLogs = function (deviceUrl, callback) {
+      $http.post(deviceUrl + '/notify', {
+          command: "logUpload",
+          eventType: "room.request_logs"
+        })
+        .success(function (status) {
+          callback(null, status);
+        })
+        .error(function () {
+          callback(arguments);
+        });
+    };
+
     return {
 
       fillCodesAndDevicesCache: function (callback) {
@@ -100,10 +113,8 @@ angular.module('Squared').service('CsdmService',
             callback(arguments);
           });
       },
-
-      updateDeviceName: function (deviceUrl, name, callback) {
-        updateDeviceName(deviceUrl, name, callback);
-      }
+      updateDeviceName: updateDeviceName,
+      uploadLogs: uploadLogs
     };
   }
 );
