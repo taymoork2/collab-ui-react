@@ -93,6 +93,7 @@ angular.module('Core')
       }];
 
       if (Authinfo.isSquaredUC()) {
+        $scope.tabs.splice(2, 1);
         $scope.tabs.splice(1, 0, {
           name: 'serviceSetup',
           required: true,
@@ -103,6 +104,9 @@ angular.module('Core')
           controller: 'ServiceSetupCtrl as squaredUcSetup',
           controllerAs: 'squaredUcSetup',
           steps: [{
+            name: 'claimSipUrl',
+            template: 'modules/core/setupWizard/claimSipUrl.tpl.html'
+          }, {
             name: 'init',
             template: 'modules/core/setupWizard/serviceSetup.tpl.html'
           }]
