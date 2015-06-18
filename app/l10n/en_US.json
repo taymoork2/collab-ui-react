@@ -687,6 +687,10 @@
       "squared-fusion-cal": "Collaborate instantly. Just add @spark to an invitation to create a Spark room for your meeting. Add @webex to attach your WebEx CMR.",
       "squared-fusion-media": "",
       "contact-center-context": ""
+    },
+    "errors": {
+      "enableServiceEntitlementFailure": "Adding the {{serviceName}} failed because of missing organization entitlements. Call support for help addressing this issue.",
+      "enableServiceFailure": "Adding the {{serviceName}} failed."
     }
   },
   "firstTimeWizard": {
