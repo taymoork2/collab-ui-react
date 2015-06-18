@@ -22,9 +22,13 @@
               if (error) {
                 var serviceName = $translate.instant('hercules.serviceNames.' + service.service_id);
                 if (error[1] === 403) {
-                  Notification.notify($translate.instant('hercules.errors.enableServiceEntitlementFailure', {serviceName: serviceName}), 'error');
+                  Notification.notify($translate.instant('hercules.errors.enableServiceEntitlementFailure', {
+                    serviceName: serviceName
+                  }), 'error');
                 } else {
-                  Notification.notify($translate.instant('hercules.errors.enableServiceFailure', {serviceName: serviceName}), 'error');
+                  Notification.notify($translate.instant('hercules.errors.enableServiceFailure', {
+                    serviceName: serviceName
+                  }), 'error');
                 }
               } else {
                 // Refresh the services
