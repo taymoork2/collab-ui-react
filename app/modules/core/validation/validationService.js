@@ -40,7 +40,7 @@
 
     function numeric(viewValue, modelValue) {
       var value = modelValue || viewValue;
-      return /^[0-9]/.test(value);
+      return /^\d*$/.test(value);
     }
   }
 })();

@@ -27,4 +27,18 @@ describe('Service: ValidationService', function () {
     });
   });
 
+  describe('Validate Numeric', function () {
+    it('should accept 1234567890 as valid', function () {
+      expect(ValidationService.numeric(1234567890)).toBe(true);
+    });
+
+    it('should reject duckeroo as invalid', function () {
+      expect(ValidationService.numeric('duckeroo')).toBe(false);
+    });
+
+    it('should reject 00ducker00 as invalid', function () {
+      expect(ValidationService.numeric('00ducker00')).toBe(false);
+    });
+  });
+
 });
