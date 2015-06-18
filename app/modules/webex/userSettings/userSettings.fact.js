@@ -767,7 +767,8 @@
             angular.element('#saveBtn2').button('reset');
             userSettingsModel.disableCancel = false;
             userSettingsModel.disableCancel2 = false;
-            Notification.notify(["You have personal meeting room enabled. You must either have a STD or PRO meeting session type."], 'error');
+            var errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            Notification.notify([errMessage], 'error');
             return;
           }
 
