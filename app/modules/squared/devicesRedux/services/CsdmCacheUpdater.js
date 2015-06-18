@@ -5,7 +5,7 @@ angular.module('Squared').service('CsdmCacheUpdater',
   /* @ngInject  */
   function () {
 
-    var update = function (current, updated) {
+    var addAndUpdate = function (current, updated) {
       _.each(updated, function (updatedObj, updatedUrl) {
         if (!current[updatedUrl]) {
           current[updatedUrl] = updatedObj;
@@ -15,6 +15,9 @@ angular.module('Squared').service('CsdmCacheUpdater',
           }
         }
       });
+    };
+
+    var removeDeleted = function (current, updated) {
       _.each(_.difference(_.keys(current), _.keys(updated)), function (deletedUrl) {
         delete current[deletedUrl];
       });
@@ -25,7 +28,13 @@ angular.module('Squared').service('CsdmCacheUpdater',
     };
 
     return {
-      updateCacheWithChanges: update
+      addUpdateAndRemove: function (current, updated) {
+        addAndUpdate(current, updated);
+        removeDeleted(current, updated);
+      },
+      addAndUpdate: function (current, updated) {
+        addAndUpdate(current, updated);
+      }
     };
 
   }

@@ -23,7 +23,7 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
 
     var aRef = a.foo;
 
-    Updater.updateCacheWithChanges(a, b);
+    Updater.addUpdateAndRemove(a, b);
     expect(a.foo == aRef).toBeTruthy();
     expect(a.foo.a).toBe(1);
   });
@@ -41,7 +41,7 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
     };
     var aRef = a.foo;
 
-    Updater.updateCacheWithChanges(a, b);
+    Updater.addUpdateAndRemove(a, b);
 
     expect(a.foo == aRef).toBeFalsy();
     expect(a.foo.a).toBe(2);
@@ -61,7 +61,7 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
     };
     var aRef = a.foo;
 
-    Updater.updateCacheWithChanges(a, b);
+    Updater.addUpdateAndRemove(a, b);
 
     expect(a.foo == aRef).toBeTruthy();
     expect(a.bar).toBeTruthy();
@@ -81,7 +81,7 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
     };
     var aRef = a.foo;
 
-    Updater.updateCacheWithChanges(a, b);
+    Updater.addUpdateAndRemove(a, b);
 
     expect(a.foo == aRef).toBeTruthy();
     expect(a.bar).toBeFalsy();
@@ -103,7 +103,7 @@ describe('Service: CsdmCacheUpdaterSpec', function () {
     };
     var aRef = a.foo;
 
-    Updater.updateCacheWithChanges(a, b);
+    Updater.addUpdateAndRemove(a, b);
 
     expect(a.foo == aRef).toBeFalsy();
   });

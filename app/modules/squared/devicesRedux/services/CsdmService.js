@@ -30,30 +30,26 @@ angular.module('Squared').service('CsdmService',
         });
     };
 
-    var fetchCodesAndDevices = function (callback) {
+    var fillCodesAndDevicesCache = function (callback) {
       listCodes(function (err, codes) {
         if (err) return callback(err);
+        CsdmCacheUpdater.addAndUpdate(codesAndDevicesCache, codes);
+        callback(null, listCodesAndDevices());
+
         listDevices(function (err, devices) {
           if (err) return callback(err);
-          callback(null, _.extend(codes, devices));
+          CsdmCacheUpdater.addUpdateAndRemove(codesAndDevicesCache, _.extend(codes, devices));
+          callback(null, listCodesAndDevices());
         });
-      }.bind(this));
-    };
-
-    var fillCodesAndDevicesCache = function (callback) {
-      fetchCodesAndDevices(function (err, data) {
-        if (err) return callback(err, data);
-        CsdmCacheUpdater.updateCacheWithChanges(codesAndDevicesCache, data);
-        callback();
       });
     };
 
     var updateDeviceName = function (deviceUrl, newName, callback) {
-      codesAndDevicesCache[deviceUrl].displayName = newName;
       $http.patch(deviceUrl, {
           name: newName
         })
         .success(function (status) {
+          codesAndDevicesCache[deviceUrl].displayName = newName;
           callback(null, status);
         })
         .error(function () {
@@ -76,19 +72,15 @@ angular.module('Squared').service('CsdmService',
         });
     };
 
+    var listCodesAndDevices = function () {
+      return _.values(codesAndDevicesCache);
+    };
+
     return {
-
-      fillCodesAndDevicesCache: function (callback) {
-        fillCodesAndDevicesCache(callback);
-      },
-
-      listCodesAndDevices: function () {
-        return _.values(codesAndDevicesCache);
-      },
-
-      getDeviceStatus: function (deviceUrl, callback) {
-        callback(null, codesAndDevicesCache[deviceUrl]);
-      },
+      uploadLogs: uploadLogs,
+      updateDeviceName: updateDeviceName,
+      listCodesAndDevices: listCodesAndDevices,
+      fillCodesAndDevicesCache: fillCodesAndDevicesCache,
 
       deleteUrl: function (url, callback) {
         $http.delete(url)
@@ -102,11 +94,9 @@ angular.module('Squared').service('CsdmService',
       },
 
       createCode: function (name, callback) {
-        var deviceData = {
-          name: name
-        };
-
-        $http.post(codesUrl, deviceData)
+        $http.post(codesUrl, {
+            name: name
+          })
           .success(function (data) {
             codesAndDevicesCache[data.url] = data;
             callback(null, data);
@@ -114,9 +104,7 @@ angular.module('Squared').service('CsdmService',
           .error(function () {
             callback(arguments);
           });
-      },
-      updateDeviceName: updateDeviceName,
-      uploadLogs: uploadLogs
+      }
     };
   }
 );

@@ -52,20 +52,13 @@ describe('Service: CsdmService', function () {
     Service.fillCodesAndDevicesCache(callback);
     $httpBackend.flush();
 
-    expect(callback.callCount).toBe(1);
+    expect(callback.callCount).toBe(2);
+
     expect(Service.listCodesAndDevices().length).toBe(2);
     expect(Service.listCodesAndDevices()[0]).toEqual({
       bar: "baz"
     });
     expect(Service.listCodesAndDevices()[1]).toEqual({
-      foo: "bar"
-    });
-
-    var statusCallback = sinon.stub();
-    Service.getDeviceStatus("device", statusCallback);
-    expect(statusCallback.callCount).toBe(1);
-    expect(statusCallback.args[0][0]).toBe(null);
-    expect(statusCallback.args[0][1]).toEqual({
       foo: "bar"
     });
   });
@@ -96,8 +89,7 @@ describe('Service: CsdmService', function () {
   });
 
   it('can update the device name', function () {
-    var callback = sinon.stub();
-    Service.fillCodesAndDevicesCache(callback);
+    Service.fillCodesAndDevicesCache(sinon.stub());
     $httpBackend.flush();
 
     $httpBackend
@@ -107,13 +99,13 @@ describe('Service: CsdmService', function () {
       .respond({
         name: "newname"
       });
+
     Service.updateDeviceName('device', 'newname', sinon.stub());
     $httpBackend.flush();
     expect(Service.listCodesAndDevices()[1]).toEqual({
       foo: "bar",
       displayName: "newname"
     });
-
   });
 
   it('can tell the device to upload its logs', function () {
