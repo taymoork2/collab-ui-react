@@ -1189,6 +1189,7 @@
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
     "privilegesUpdateSuccess": "Privileges updated.",
     "pmrErrorTelephonyPrivileges": "Before you can create a Personal Room, set up telephony privileges for this user.",
+    "mustHavePROorSTDifPMRenabled": "To create a Personal Room for this user, select the correct Meeting Center meeting type for Personal Room.",
     "reload": "Try Again",
     "cancel": "Go Back"
   },
