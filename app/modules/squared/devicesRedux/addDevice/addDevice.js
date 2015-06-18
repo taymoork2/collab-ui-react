@@ -10,7 +10,6 @@
         $scope.showAdd = true;
         $scope.deviceName = '';
         $scope.activationCode = '';
-        $scope.addDeviceInProgress = false;
 
         $('#addRoomDialog').on('shown.bs.modal', function () {
           $('#newRoom').focus();
@@ -49,19 +48,16 @@
           }, 3000);
         };
 
-        $scope.addDevice = function () {
-          if (!$scope.deviceName) return;
-
-          $scope.addDeviceInProgress = true;
+        $scope.addDevice = function (callback) {
+          if (!$scope.deviceName) return callback.call();
 
           CsdmService.createCode($scope.deviceName, function (err, data) {
+            callback.call();
+            $scope.showAdd = false;
+
             if (err) {
               return XhrNotificationService.notify(err);
             }
-
-            $scope.addDeviceInProgress = false;
-
-            $scope.showAdd = false;
 
             if (data.activationCode && data.activationCode.length > 0) {
               $scope.activationCode = formatActivationCode(data.activationCode);

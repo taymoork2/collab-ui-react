@@ -21,19 +21,18 @@
       });
     };
 
-    $scope.sendFeedback = function (device) {
+    $scope.sendFeedback = function (callback) {
       var feedbackId = Utils.getUUID();
-      CsdmService.uploadLogs(device.url, feedbackId, Authinfo.getPrimaryEmail(), function (err, data) {
+      CsdmService.uploadLogs(vm.currentDevice.url, feedbackId, Authinfo.getPrimaryEmail(), function (err, data) {
         if (err) {
-          return XhrNotificationService.notify(err);
+          XhrNotificationService.notify(err);
         } else {
           var appType = 'Atlas_' + $window.navigator.userAgent;
           FeedbackService.getFeedbackUrl(appType, feedbackId, function (data, status) {
-            if (data.success) {
-              $window.open(data.url, '_blank');
-            }
+            if (data.success) $window.open(data.url, '_blank');
           });
         }
+        callback();
       });
     };
 

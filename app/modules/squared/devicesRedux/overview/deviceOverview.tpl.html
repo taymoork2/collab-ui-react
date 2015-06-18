@@ -82,21 +82,19 @@
         <button
           data-toggle="modal"
           id="deviceDeleteButton"
-          class="btn btn-lg btn-primary"
+          class="btn btn-primary"
           data-target="#deleteDeviceModal">
           <span
             translate="spacesPage.delete">
           </span>
         </button>
-        <button
-          ng-if="deviceOverview.currentDevice.product"
-          id="deviceLogUploadButton"
-          class="btn btn-lg btn-primary"
-          ng-click="sendFeedback(deviceOverview.currentDevice)">
-          <span
-            translate="spacesPage.reportProblem">
-          </span>
-        </button>
+
+        <sq-loader-button
+          click="sendFeedback"
+          ng-if="!deviceOverview.currentDevice.needsActivation">
+          <span translate="spacesPage.reportProblem"></span>
+        </sq-loader-button>
+
       </div>
     </cs-sp-section>
   </cs-sp-container>

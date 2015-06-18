@@ -38,21 +38,15 @@
               class="form-control profile-input adddevice-desc add-device-textbox">
             </input>
 
-            <button 
-              id="btnAdd" 
-              type="button" 
-              ng-click="addDevice()" 
-              class="btn btn-primary btn-lg add-device-btn" 
-              ng-disabled="!deviceName.length || addDeviceInProgress">
+            <sq-loader-button
+              click="addDevice"
+              class="btn-lg"
+              ng-disabled="!deviceName.length">
               <span 
-                ng-hide="addDeviceInProgress" 
-                translate="spacesPage.addBtn">
+                translate="spacesPage.reportProblem">
               </span>
-              <i 
-                ng-show="addDeviceInProgress" 
-                class="icon icon-spinner">
-              </i>
-            </button>
+            </sq-loader-button>
+
           </div>
         </form>
 
