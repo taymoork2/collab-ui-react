@@ -6,15 +6,18 @@ angular.module('Core')
       $log.log($scope.licenses.unlicensedUsersList);
       $scope.convertUsers = function () {
         Userservice.migrateUsers($scope.gridOptions.$gridScope.selectedItems, function (data, status) {
-          if (data.success) {
-            var successMessage = [];
-            successMessage.push('Users successfully converted.');
-            Notification.notify(successMessage, 'success');
-          } else {
-            var errorMessage = ['Converting users failed. Status: ' + status];
-            errorMessage.push();
-            Notification.notify(errorMessage, 'error');
+          var errorMessages = [];
+          var successMessages = [];
+          for (var i = 0; i < data.userResponse.length; i++) {
+            if (data.userResponse[i].status !== 200) {
+              errorMessages.push(data.userResponse[i].message.replace(/user/gi, data.userResponse[i].email) + '.');
+            } else {
+              successMessages.push(data.userResponse[i].email + ' ' + $translate.instant('usersPage.convertUserSuccess'));
+            }
           }
+
+          Notification.notify(errorMessages, 'error');
+          Notification.notify(successMessages, 'success');
         });
         $scope.convertModalInstance.close();
       };

@@ -73,6 +73,10 @@ exports.scrollTop = function () {
   browser.executeScript('window.scrollTo(0,0);');
 };
 
+exports.scrollBottom = function (selector) {
+  browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
+}
+
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action
 exports.wait = function (elem) {
@@ -288,6 +292,10 @@ exports.search = function (query) {
 
 exports.searchAndClick = function (query) {
   this.search(query);
+  return this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
+};
+
+exports.convertUsersSearchAndClick = function (query) {
   return this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
 };
 

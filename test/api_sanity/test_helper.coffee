@@ -82,7 +82,7 @@ auth =
     pass: 'C1sc0123!'
     org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
-  'license-subscriptions':
+  'multiple-subscription-user':
     user: 'int-esub-1@mailinator.com'
     pass: 'C1sc0123!'
     org:  '9d173ec9-198e-430d-9363-688a333bdee7'

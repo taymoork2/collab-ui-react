@@ -23,6 +23,7 @@ var UsersPage = function () {
     password: 'C1sc0123!',
   };
 
+  this.servicesPanelCommunicationsCheckbox = element(by.css('.bucket-row-inner .indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));
   this.manageDialog = element(by.id('modalContent'));
   this.deleteUserModal = element(by.id('deleteUserModal'));
@@ -167,6 +168,7 @@ var UsersPage = function () {
       return currentUser;
     });
   };
+
 };
 
 module.exports = UsersPage;

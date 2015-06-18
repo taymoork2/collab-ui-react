@@ -59,7 +59,9 @@
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
     "emailSuccess": "Email sent successfully.",
-    "emailError": "Error sending email."
+    "emailError": "Error sending email.",
+    "convertUserSuccess": "successfully converted.",
+    "convertUserError": "Failed to convert"
   },
   "groupsPage": {
     "manageGroups": "Groups",

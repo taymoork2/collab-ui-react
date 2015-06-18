@@ -57,6 +57,10 @@ var LandingPage = function () {
   this.convertCancelButton = element(by.id('convertModalClose'));
   this.convertActionButton = element(by.id('convertActionButton'));
   this.unlicensedUserRow = element(by.css('.ngRow'));
+
+  function convertUsersSearch(query) {
+    return element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first();
+  };
 };
 
 module.exports = LandingPage;
