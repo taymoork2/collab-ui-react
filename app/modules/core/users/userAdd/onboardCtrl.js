@@ -220,9 +220,16 @@ angular.module('Core')
       var usersList = [];
 
       var getServiceLicenseIds = function (list, service) {
-        if (service.license.licenseId) {
-          list.push(service.license.licenseId);
+        if (angular.isArray(service.licenses)) {
+          angular.forEach(service.licenses, function (license) {
+            list.push(license.licenseId);
+          });
+        } else {
+          if (service.license.licenseId) {
+            list.push(service.license.licenseId);
+          }
         }
+
         return list;
       };
 
