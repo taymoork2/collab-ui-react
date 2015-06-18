@@ -4,7 +4,7 @@
     .module('Hercules')
     .controller('ServiceActivationController',
       /* @ngInject */
-      function ($scope, ServiceDescriptor, Log, XhrNotificationService) {
+      function ($scope, ServiceDescriptor, Log, Notification, $translate) {
         $scope.saving = false;
         $scope.loading = true;
         $scope.confirmRemove = false;
@@ -20,7 +20,16 @@
           _.forEach(updatedServices, function (service) {
             ServiceDescriptor.setServiceEnabled(service.service_id, service.enabled, function (error) {
               if (error) {
-                return XhrNotificationService.notify("Failed to update service: " + error);
+                var serviceName = $translate.instant('hercules.serviceNames.' + service.service_id);
+                if (error[1] === 403) {
+                  Notification.notify($translate.instant('hercules.errors.enableServiceEntitlementFailure', {
+                    serviceName: serviceName
+                  }), 'error');
+                } else {
+                  Notification.notify($translate.instant('hercules.errors.enableServiceFailure', {
+                    serviceName: serviceName
+                  }), 'error');
+                }
               } else {
                 // Refresh the services
                 ServiceDescriptor.services(function (error, services) {
