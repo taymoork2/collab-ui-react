@@ -19,5 +19,5 @@ fi
 # Package
 rm -f wx2-admin-web-client.*.tar.gz
 tar -zcvf wx2-admin-web-client.$BUILD_NUMBER.tar.gz dist/*
-tar -zcvf wx2-admin-web-client.coverage.$BUILD_NUMBER.tar.gz coverage/unit/*
+tar -zcvf wx2-admin-web-client-coverage.$BUILD_NUMBER.tar.gz coverage/unit/*
 exit $?
