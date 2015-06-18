@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrlRedux', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($scope, XhrNotificationService, $stateParams, $translate, Authinfo, FeedbackService, CsdmService, Utils, $window, Notification) {
+  function DeviceOverviewCtrl($scope, XhrNotificationService, $stateParams, Authinfo, FeedbackService, CsdmService, Utils, $window) {
     var vm = this;
     vm.currentDevice = $stateParams.currentDevice;
 
@@ -33,7 +33,6 @@
               $window.open(data.url, '_blank');
             }
           });
-          return Notification.notify("Logs uploaded for device " + device.displayName + " feedbackId: " + feedbackId, "success");
         }
       });
     };
