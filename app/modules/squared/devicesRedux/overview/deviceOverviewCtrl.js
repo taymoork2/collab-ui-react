@@ -26,13 +26,14 @@
       CsdmService.uploadLogs(vm.currentDevice.url, feedbackId, Authinfo.getPrimaryEmail(), function (err, data) {
         if (err) {
           XhrNotificationService.notify(err);
+          callback();
         } else {
           var appType = 'Atlas_' + $window.navigator.userAgent;
           FeedbackService.getFeedbackUrl(appType, feedbackId, function (data, status) {
+            callback();
             if (data.success) $window.open(data.url, '_blank');
           });
         }
-        callback();
       });
     };
 
