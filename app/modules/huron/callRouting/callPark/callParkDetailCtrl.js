@@ -6,7 +6,7 @@
     .controller('CallParkDetailCtrl', CallParkDetailCtrl);
 
   /* @ngInject */
-  function CallParkDetailCtrl($modalInstance, CallPark, $translate, ValidationService, Notification) {
+  function CallParkDetailCtrl($modalInstance, CallPark, $translate, ValidationService) {
     var vm = this;
 
     vm.callPark = {
@@ -75,7 +75,8 @@
         key: 'rangeMin',
         type: 'input',
         templateOptions: {
-          placeholder: 1200
+          placeholder: 1200,
+          required: true
         },
         validators: {
           numeric: {
@@ -100,11 +101,12 @@
           }
         }
       }, {
-        className: 'col-xs-3 align-number-input',
+        className: 'col-xs-3',
         key: 'rangeMax',
         type: 'input',
         templateOptions: {
-          placeholder: 1230
+          placeholder: 1230,
+          required: true
         },
         validators: {
           numeric: {
@@ -147,6 +149,7 @@
         templateOptions: {
           placeholder: $translate.instant('callPark.singleNumberPlaceholder'),
           type: 'text',
+          required: true,
           model: 'callPark'
         },
         validators: {

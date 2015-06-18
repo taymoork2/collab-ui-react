@@ -49,6 +49,10 @@
     font-size: 18px;
   }
 
+  .form-horizontal .has-feedback .form-control-feedback {
+    right: 5px;
+  }
+
   .name-align {
     margin-right: 20px;
   }
@@ -86,9 +90,8 @@
 
   .align-to {
     margin-top: 8px;
-    margin-right: 10px;
+    margin-right: 6px;
     padding-left: 0px;
-    margin-left: -10px;
   }
   
   .margin-radio {
@@ -107,11 +110,11 @@
   }
 
   .align-number-input {
-    margin-left: -15px;
+    margin-left: -25px;
   }
 
   .align-number {
-    margin-left: -15px;
+    margin-left: -25px;
     margin-top: -8px;
   }
 
@@ -130,5 +133,9 @@
 
   .section-padding-reversion {
     padding-bottom: 5px;
+  }
+
+  .name-padding {
+    padding-top: 15px;
   }
 }

@@ -848,7 +848,7 @@
     "numberPlaceholder": "Enter Number",
     "singleNumberPlaceholder": "Enter Single Number",
     "to": "to",
-    "greaterThanLessThan": "{{minRange}}  must be less than or equal to {{maxRange}}."
+    "greaterThanLessThan": "{{rangeMin}}  must be less than or equal to {{rangeMax}}."
 
   },
   "telephonyPreview": {
