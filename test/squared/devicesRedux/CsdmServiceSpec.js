@@ -99,6 +99,12 @@ describe('Service: CsdmService', function () {
       .respond({
         name: "newname"
       });
+    $httpBackend
+      .when('POST', 'device/notify', {
+        command: "identityDataChanged",
+        eventType: "room.identityDataChanged"
+      })
+      .respond(200);
 
     Service.updateDeviceName('device', 'newname', sinon.stub());
     $httpBackend.flush();
