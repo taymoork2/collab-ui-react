@@ -1,7 +1,7 @@
 <div>
   <h3 style="padding-left: 20px">Services</h3>
   <div class="dashboard-header row" ng-hide="noServicesEnabled">
-    <div class="col-sm-6 col-md-5 col-lg-4" ng-repeat="(type, service) in serviceAggregates.services">
+    <div class="col-sm-6" ng-repeat="(type, service) in serviceAggregates.services">
       <div class="item">
         <i ng-class="serviceIcon(service.service_id)" />
         <hercules-uc-config-button style="float: right" ng-show="service.type == 'c_ucmc'"></hercules-uc-config-button>

@@ -1,4 +1,7 @@
 .dashboard-info-panel {
+  background: white;
+  margin-right: -20px;
+
   &:first-child {
     background: $brand-white;
     padding: 20px 20px 0 20px;
@@ -10,5 +13,41 @@
   }
   .panel {
     margin-bottom: 20px;
+  }
+
+  .panel-heading, .panel-heading:hover {
+    border: 0;
+    color: #333;
+    background: white;
+    h4 {
+      font-size: 16px;
+      font-family: 'CiscoSansTT Thin';
+    }
+  }
+  *:focus {
+    border-color: inherit;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    outline: none;
+  }
+  .panel-heading:hover a {
+    color: #333;
+  }
+  .panel-body, .panel-group .panel-heading + .panel-collapse .panel-body {
+    border: 0;
+    margin-top: 0;
+    padding: 20px 135px;
+  }
+  .panel-heading .badge.badge-custom-warn {
+    width: 80px;
+    color: white;
+    padding-top: 6px;
+    background: #f7c100;
+  }
+  .panel-heading .badge.badge-custom-info {
+    width: 80px;
+    color: white;
+    padding-top: 6px;
+    background: #0096D6;
   }
 }

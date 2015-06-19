@@ -2,8 +2,12 @@
   <cs-accordion-group
     is-open="false"
     show-caret="true"
-    display-status="warning"
-    heading="Enable Services for Users.">
+    display-status="warning">
+
+    <cs-accordion-heading style="background: white;">
+      <span class="badge badge-custom-warn">TODO</span>
+      <span>Enable Services for Users</span>
+    </cs-accordion-heading>
 
     <div style="margin: 0 0 10px;">
       <p>The following Services have not been turned on for any users: <span ng-repeat="service in xsummary | filter: { needsUserActivation: true }"><span translate="hercules.serviceNames.{{service.serviceId}}"/>{{$last ? '' : ', '}}</span>.</p>
@@ -25,8 +29,12 @@
   <cs-accordion-group
     is-open="false"
     show-caret="true"
-    display-status="warning"
-    heading="Review Service Activation Errors.">
+    display-status="warning">
+
+    <cs-accordion-heading style="background: white;">
+      <span class="badge badge-custom-warn">TODO</span>
+      <span>Review Service Activation Errors</span>
+    </cs-accordion-heading>
 
     <div style="margin: 0 0 10px;">
       <p>There are users with service activation errors:</p>

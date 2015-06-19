@@ -2,12 +2,16 @@
   <cs-accordion-group
     is-open="false"
     show-caret="true"
-    display-status="warning"
-    heading="Select and add Services.">
+    display-status="warning">
+
+    <cs-accordion-heading style="background: white;">
+      <span class="badge badge-custom-warn">TODO</span>
+      <span>Select and add Services</span>
+    </cs-accordion-heading>
 
     <p>Select the Cloud Extension Services you want to turn on for your organization.</p>
     <p>
-      <button class="btn btn-primary" ng-click="showServiceActivationDialog()">Add Services</button>
+      <a href ng-click="showServiceActivationDialog()">Add Services</a>
     </p>
 
   </cs-accordion-group>

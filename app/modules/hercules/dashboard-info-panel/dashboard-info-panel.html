@@ -1,16 +1,19 @@
-<div class="dashboard-info-panel" ng-show="showInfoPanel">
-  <div class="clearfix">
+<div ng-show="showInfoPanel" class="clearfix">
+    <h3 style="padding-left: 20px">Notifications</h3>
+    <div class="dashboard-info-panel">
+      <div>
 
-    <!-- warning -->
-    <hercules-select-services></hercules-select-services>
-    <hercules-missing-services></hercules-missing-services>
-    <hercules-dirsync-enabled></hercules-dirsync-enabled>
-    <hercules-fuse-not-performed></hercules-fuse-not-performed>
-    <hercules-no-service-connectors-enabled></hercules-no-service-connectors-enabled>
-    <hercules-user-activation></hercules-user-activation>
+        <!-- warning -->
+        <hercules-select-services></hercules-select-services>
+        <hercules-missing-services></hercules-missing-services>
+        <hercules-dirsync-enabled></hercules-dirsync-enabled>
+        <hercules-fuse-not-performed></hercules-fuse-not-performed>
+        <hercules-no-service-connectors-enabled></hercules-no-service-connectors-enabled>
+        <hercules-user-activation></hercules-user-activation>
 
-    <!-- info -->
-    <hercules-fusion-information></hercules-fusion-information>
+        <!-- info -->
+        <hercules-fusion-information></hercules-fusion-information>
 
-  </div>
+      </div>
+    </div>
 </div>
