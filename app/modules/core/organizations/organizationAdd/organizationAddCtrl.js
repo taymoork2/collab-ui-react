@@ -200,33 +200,11 @@
         .catch(function (response) {
           angular.element('#startOrganizationButton').button('reset');
           Notification.notify([response.data.message], 'error');
-          if ((response.data.message).indexOf('Org') > -1) {
-            vm.nameError = true;
-          } else if ((response.data.message).indexOf('Admin User') > -1) {
-            vm.emailError = true;
-          }
           return $q.reject(response);
-        }).then(function (response) {
-          vm.model.customerOrgId = response.data.customerOrgId;
-          if (offersList.indexOf(Config.organizations.squaredUC) !== -1) {
-            return HuronCustomer.create(response.data.customerOrgId, response.data.customerOrgName, response.data.customerAdminEmail)
-              .catch(function (response) {
-                angular.element('#startOrganizationButton').button('reset');
-                Notification.errorResponse(response, 'organizationModal.squareducError');
-                return $q.reject(response);
-              });
-          } else {
-            return EmailService.emailNotifyOrganizationCustomer(vm.model.customerAdminEmail, vm.model.duration, vm.model.customerOrgId)
-              .catch(function (response) {
-                Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
-              });
-          }
-        }).then(function () {
+        })
+        .then(function () {
           angular.element('#startOrganizationButton').button('reset');
-          if (!keepModal) {
-            $state.modal.close();
-          }
-          var successMessage = [$translate.instant('organizationModal.addSuccess', {
+          var successMessage = [$translate.instant('organizationsPage.addSuccess', {
             customerOrgName: vm.model.customerOrgName,
             licenseCount: vm.model.licenseCount,
             duration: vm.model.duration

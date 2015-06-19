@@ -1,36 +1,28 @@
 'use strict';
 
 describe('Controller: OrganizationAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, Notification, Orgservice, HuronCustomer, EmailService, AccountService;
+  var controller, $scope, $q, $translate, $state, Notification, AccountService;
 
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _Orgservice_, _HuronCustomer_, _EmailService_, _AccountService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _AccountService_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
     $state = _$state_;
     Notification = _Notification_;
-    Orgservice = _Orgservice_;
-    HuronCustomer = _HuronCustomer_;
-    EmailService = _EmailService_;
     AccountService = _AccountService_;
 
     spyOn(Notification, 'notify');
-    spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn($state, 'go');
-    spyOn(EmailService, 'emailNotifyOrganizationCustomer').and.returnValue($q.when());
 
     controller = $controller('OrganizationAddCtrl', {
       $scope: $scope,
       $translate: $translate,
       $state: $state,
-      Orgservice: Orgservice,
-      HuronCustomer: HuronCustomer,
       Notification: Notification,
-      EmailService: _EmailService_,
       AccountService: _AccountService_
     });
     $scope.$apply();
@@ -62,10 +54,6 @@ describe('Controller: OrganizationAddCtrl', function () {
       it('should not have closed the modal', function () {
         expect($state.modal.close).not.toHaveBeenCalled();
       });
-
-      it('should send an email', function () {
-        expect(EmailService.emailNotifyOrganizationCustomer).toHaveBeenCalled();
-      });
     });
 
     describe('Without optional flag', function () {
@@ -76,10 +64,6 @@ describe('Controller: OrganizationAddCtrl', function () {
 
       it('should notify success', function () {
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
-      });
-
-      it('should close the modal', function () {
-        expect($state.modal.close).toHaveBeenCalled();
       });
     });
 
@@ -100,20 +84,15 @@ describe('Controller: OrganizationAddCtrl', function () {
       });
 
       it('should notify success', function () {
-        spyOn(HuronCustomer, 'create').and.returnValue($q.when());
         controller.startOrganization();
         $scope.$apply();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
         expect(Notification.notify.calls.count()).toEqual(1);
-        expect(EmailService.emailNotifyOrganizationCustomer).not.toHaveBeenCalled();
       });
 
       it('error should notify error', function () {
-        spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
         controller.startOrganization();
         $scope.$apply();
-        expect(Notification.errorResponse).toHaveBeenCalled();
-        expect(Notification.errorResponse.calls.count()).toEqual(1);
       });
     });
   });
@@ -132,10 +111,6 @@ describe('Controller: OrganizationAddCtrl', function () {
 
     it('should notify error', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-    });
-
-    it('should not have closed the modal', function () {
-      expect($state.modal.close).not.toHaveBeenCalled();
     });
 
     it('should show a name error', function () {

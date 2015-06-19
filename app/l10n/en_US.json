@@ -248,7 +248,8 @@
     "termsOfOrganization": "Terms of Organization",
     "isPartner": "Is this organization a partner?",
     "beId": "BeID",
-    "begeoId": "BegeoId"
+    "begeoId": "BegeoId",
+    "addSuccess": "An organization was successfully started for {{customerOrgName}} with {{licenseCount}} licenses for {{duration}} days."
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"
