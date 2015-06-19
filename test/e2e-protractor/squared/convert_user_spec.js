@@ -36,7 +36,7 @@ describe('Convert Users', function () {
       utils.convertUsersSearchAndClick(testEmail);
       utils.scrollBottom('.modal');
       utils.click(landing.convertActionButton);
-      notifications.assertError('non');
+      notifications.assertError('not');
     });
   });
 

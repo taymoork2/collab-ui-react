@@ -10,7 +10,7 @@ angular.module('Core')
           var successMessages = [];
           for (var i = 0; i < data.userResponse.length; i++) {
             if (data.userResponse[i].status !== 200) {
-              errorMessages.push(data.userResponse[i].message.replace(/user/gi, data.userResponse[i].email) + '.');
+              errorMessages.push(data.userResponse[i].email + ' could not be converted. Contact support for assistance converting this user.');
             } else {
               successMessages.push(data.userResponse[i].email + ' ' + $translate.instant('usersPage.convertUserSuccess'));
             }
