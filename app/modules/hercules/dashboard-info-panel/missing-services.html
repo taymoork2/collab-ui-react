@@ -3,14 +3,15 @@
     is-open="false"
     show-caret="true"
     display-status="warning"
-    heading="Service Entitlements Missing.">
+    heading="Contact Support to Fix Service Entitlements.">
 
-    <p>Your organization is missing required entitlements. The missing entitlements must be added to your organization for these services to operate correctly:</p>
+    <p>Your organization is missing entitlements that are needed to run the following services:</p>
     <ul>
       <li ng-repeat="service in services.enabledOnly | filter: { status: 'error' }">
         <span translate="hercules.serviceNames.{{service.service_id}}"/></span>
       </li>
     </ul>
+    <p>Contact your support representative to fix this.</p>
 
   </cs-accordion-group>
 </cs-accordion>
