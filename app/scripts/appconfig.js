@@ -752,8 +752,53 @@ angular
         })
         .state('autoattendant', {
           url: '/autoattendant',
+          abstract: true,
           parent: 'callrouting',
-          template: '<div></div>'
+          template: '<div> <div ui-view></div> </div>'
+        })
+        .state('autoattendant.landing', {
+          url: '/landing',
+          parent: 'autoattendant',
+          templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantLanding.tpl.html',
+          controller: 'AutoAttendantLandingCtrl',
+          controllerAs: 'aaLanding'
+        })
+        .state('autoattendant.main', {
+          abstract: true,
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'AutoAttendantMainCtrl',
+              templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantMain.tpl.html',
+              controllerAs: 'aaMain'
+            }
+          }
+        })
+        .state('autoattendant.main.general', {
+          parent: 'autoattendant.main',
+          params: {
+            aaName: ''
+          },
+          views: {
+            'tabContent': {
+              templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantGeneral.tpl.html',
+              controller: 'AutoAttendantGeneralCtrl',
+              controllerAs: 'aaGeneral'
+            }
+          }
+        })
+        .state('autoattendant.main.aa', {
+          parent: 'autoattendant.main',
+          params: {
+            aaName: ''
+          },
+          views: {
+            'tabContent': {
+              templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantMenu.tpl.html',
+              controller: 'AutoAttendantMenuCtrl',
+              controllerAs: 'aaMenu'
+            }
+          }
         })
         .state('callpark', {
           url: '/callpark',

@@ -1,0 +1,42 @@
+{
+  "callExperienceName": "AAA2",
+  "assignedResources": [{
+    "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
+    "type": "directoryNumber",
+    "trigger": "incomingCall"
+  }],
+  "actionSets": [{
+    "name": "regularOpenActions",
+    "actions": [{
+      "play": {
+        "url": "file1.avi"
+      }
+    }, {
+      "runActionsOnInput": {
+        "description": "",
+        "prompts": {
+          "description": "",
+          "playList": [{
+            "url": "file2.avi"
+          }]
+        },
+        "timeoutInSeconds": 30,
+        "inputs": [{
+          "description": "operator",
+          "input": "1",
+          "actions": [{
+            "route": {
+              "destination": "1111"
+            }
+          }]
+        }, {
+          "description": "",
+          "input": "default",
+          "actions": [{
+            "repeatActionsOnInput": {}
+          }]
+        }]
+      }
+    }]
+  }]
+}

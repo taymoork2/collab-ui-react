@@ -4,26 +4,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
   var AutoAttendantCeInfoModelService;
   // require('jasmine-collection-matchers');
 
-  var callExperienceInfos = [{
-    "callExperienceName": "Oleg's Call Experience 1",
-    "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b",
-    "assignedResources": [{
-      "id": "212b075f-0a54-4040-bd94-d2aa247bd9f9",
-      "type": "directoryNumber",
-      "trigger": "incomingCall",
-      "number": ""
-    }]
-  }, {
-    "callExperienceName": "AA2",
-    "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/0c192613-a960-43bb-9101-b9bc80be049c",
-    "assignedResources": [{
-      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
-      "type": "directoryNumber",
-      "trigger": "incomingCall",
-      "number": ""
-    }]
-  }];
-
+  var callExperienceInfos = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
   var ceInfos = [];
   var rawCeInfos = [{
     "name": "Oleg's Call Experience 1",
@@ -31,7 +12,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       "id": "212b075f-0a54-4040-bd94-d2aa247bd9f9",
       "trigger": "incomingCall",
       "type": "directoryNumber",
-      "number": ""
+      "number": "1111"
     }],
     "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b"
   }, {
@@ -40,54 +21,10 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
       "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
       "trigger": "incomingCall",
       "type": "directoryNumber",
-      "number": ""
+      "number": "1112"
     }],
     "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/0c192613-a960-43bb-9101-b9bc80be049c"
   }];
-
-  var callExperience = {
-    "callExperienceName": "AA2",
-    "assignedResources": [{
-      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
-      "type": "directoryNumber",
-      "trigger": "incomingCall",
-      "number": ""
-    }],
-    "actionSets": [{
-      "name": "regularOpenActions",
-      "actions": [{
-        "play": {
-          "url": "file1.avi"
-        }
-      }, {
-        "runActionsOnInput": {
-          "description": "",
-          "prompts": {
-            "description": "",
-            "playList": [{
-              "url": "file2.avi"
-            }]
-          },
-          "timeoutInSeconds": 30,
-          "inputs": [{
-            "description": "operator",
-            "input": "1",
-            "actions": [{
-              "route": {
-                "destination": "1111"
-              }
-            }]
-          }, {
-            "description": "",
-            "input": "default",
-            "actions": [{
-              "repeatActionsOnInput": {}
-            }]
-          }]
-        }
-      }]
-    }]
-  };
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));

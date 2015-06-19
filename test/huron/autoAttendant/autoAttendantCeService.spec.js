@@ -7,66 +7,8 @@ describe('Service: AutoAttendantCeService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  var callExperiences = [{
-    "callExperienceName": "Oleg's Call Experience 1",
-    "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b",
-    "assignedResources": [{
-      "id": "212b075f-0a54-4040-bd94-d2aa247bd9f9",
-      "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
-  }, {
-    "callExperienceName": "AA2",
-    "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/0c192613-a960-43bb-9101-b9bc80be049c",
-    "assignedResources": [{
-      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
-      "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }]
-  }];
-
-  var callExperience = {
-    "callExperienceName": "AAA2",
-    "assignedResources": [{
-      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
-      "type": "directoryNumber",
-      "trigger": "incomingCall"
-    }],
-    "actionSets": [{
-      "name": "regularOpenActions",
-      "actions": [{
-        "play": {
-          "url": "file1.avi"
-        }
-      }, {
-        "runActionsOnInput": {
-          "description": "",
-          "prompts": {
-            "description": "",
-            "playList": [{
-              "url": "file2.avi"
-            }]
-          },
-          "timeoutInSeconds": 30,
-          "inputs": [{
-            "description": "operator",
-            "input": "1",
-            "actions": [{
-              "route": {
-                "destination": "1111"
-              }
-            }]
-          }, {
-            "description": "",
-            "input": "default",
-            "actions": [{
-              "repeatActionsOnInput": {}
-            }]
-          }]
-        }
-      }]
-    }]
-  };
+  var callExperiences = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
+  var callExperience = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
 
   var successSpy;
   var failureSpy;

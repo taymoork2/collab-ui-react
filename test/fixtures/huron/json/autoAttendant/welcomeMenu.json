@@ -29,6 +29,7 @@
       "description": "",
       "isConfigured": true,
       "type": "",
+      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "play",
@@ -43,6 +44,7 @@
       "description": "",
       "isConfigured": true,
       "type": "",
+      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "route",

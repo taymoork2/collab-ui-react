@@ -1,0 +1,236 @@
+.aa-validation .popover {
+  white-space: nowrap;
+}
+
+.aa-action-input .form-control-feedback {
+  top: 3px; //25px
+}
+
+.aa-number-tile {
+  height: 72px !important; // override .tile mixin from call-park
+  padding: 8px 8px !important; // override .tile mixin from call-park
+  margin: 8px 8px 8px 0px;
+  margin: 8px 8px 8px 0px !important;
+  @include tile;
+  .aa-number-name {
+    font-family: $brand-font-cisco-TT-Light;
+    font-size: 16px;
+    color: $brand-primary;
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+.aa-number-add-icon {
+  float: left;
+  text-align: left;
+  color: $brand-default;
+  .add-icon {
+    @extend .icon;
+    @extend .icon-plus;
+    @extend .icon-2x;
+    &:hover {
+      cursor: pointer;
+      color: $brand-primary;
+    }
+  }
+}
+
+// center tabs
+.centered-pills {
+  text-align: center;
+  margin: 5px auto;
+  padding: 0;
+  width: 400px;
+}
+
+.centered-pills ul.nav-pills {
+  display: inline-block
+}
+
+.centered-pills li {
+  display: inline
+}
+
+.centered-pills a {
+  float: left
+}
+
+* html .centered-pills ul.nav-pills,
+*+html .centered-pills ul.nav-pills {
+  display: inline
+}
+
+div.aa-general-tab {
+  padding-top: 10px;
+  display: block;
+  min-height: 400px;
+  .panel-body {
+    padding: 14px;
+  }
+}
+
+div.aa-menu-tab {
+  padding-top: 10px;
+  min-height: 400px;
+  //overflow: auto;
+  //overflow-x: visible;
+  //overflow-y: scroll;
+}
+
+div.aaMenu {
+  //width: 98%;
+  //margin: 1%;
+}
+
+table.aa-menu-table {
+  @extend .table;
+  @extend .table-hover;
+  @extend .table-condensed;
+  width: 400px;
+  background-color: $brand-white;
+  text-align: left;
+  table-layout: fixed;
+  overflow: auto;
+  tr, td, th {
+    text-align: left;
+    background-color: $brand-white;
+    word-wrap: break-word;
+  }
+}
+
+tr.aa-menu-has-error {
+  border-style: solid;
+  border-color: $brand-danger-light;
+  border-top-width: 3px; //thicker to cover header row
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-left-width: 2px
+}
+
+.aa-modal-content {
+  border: 1px solid $gray-light;
+}
+
+.aa-modal-dialog {
+  width: 360px;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+.aa-key {
+  // background-color: #eee;
+  // height: 100%;
+  // vertical-align: middle;
+  // height: 100%;
+  // position: absolute;
+  position: relative;
+  top: 15px;
+}
+
+#aaAddMenuOptionDialog .modal-dialog {
+  width: 250px;
+}
+
+#aaAddMenuOptionDialog .modal-title {
+  font-size: 23px;
+}
+
+#aaAddMenuOptionDialog .modal-body {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.dropdown-menu {
+  // right: 25px;
+  // left: auto;
+  // top: 40%;
+}
+
+a.dropdown-toggle:focus {
+  /* outline: 0; */
+
+  box-shadow: 0 0 0 0px;
+}
+
+.aa-menu-dropdown-icon {
+  float: right;
+  text-align: left;
+  .menu-dropdown-icon {
+    @extend .icon;
+    @extend .icon-plus;
+    @extend .icon-2x;
+    &:hover {
+      cursor: pointer;
+      color: $brand-primary;
+    }
+  }
+}
+
+.aa-menu-launch-icon {
+  float: right;
+  text-align: right;
+  .menu-launch-icon {
+    @extend .icon;
+    @extend .icon-three-dots;
+    &:hover {
+      cursor: pointer;
+      color: $brand-primary;
+    }
+  }
+}
+
+.aa-menu-delete-icon {
+  float: left;
+  text-align: left;
+  .menu-delete-icon {
+    @extend .icon;
+    @extend .icon-close;
+    &:hover {
+      cursor: pointer;
+      color: $brand-primary;
+    }
+  }
+}
+
+.aa-menu-delete-icon-md {
+  float: left;
+  text-align: left;
+  .menu-delete-icon-md {
+    @extend .icon;
+    @extend .icon-close;
+    font-size: 20px;
+    &:hover {
+      cursor: pointer;
+      color: $brand-primary;
+    }
+  }
+}
+
+.aa-tooltip-wrapper {
+  display: inline-block;
+}
+
+.aa-tooltip .tooltip {
+  white-space: pre;
+}
+
+.aa-tooltip .tooltip-inner {
+  max-width: 100%;
+  background-color: $brand-info;
+  color: $brand-white;
+  text-align: left;
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+.aa-tooltip .tooltip-arrow {
+  border-top-color: transparent !important;
+}
+
+.aa-tooltip .tooltip.top {
+  border-top-color: transparent !important;
+}

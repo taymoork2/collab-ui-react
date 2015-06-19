@@ -10,7 +10,7 @@
     var vm = this;
     vm.tabs = [{
       title: 'callRouting.autoAttendantTitle',
-      state: 'autoattendant'
+      state: 'autoattendant.landing'
     }, {
       title: 'callRouting.callParkTitle',
       state: 'callpark'

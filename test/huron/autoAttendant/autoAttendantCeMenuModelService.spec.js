@@ -218,7 +218,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _aaRecord = AutoAttendantCeMenuModelService.newAARecord();
       expect(_aaRecord.callExperienceName).toBe("");
       expect(_aaRecord.assignedResources.length).toBe(0);
-      expect(_aaRecord.actionSets.length).toBe(0);
+      expect(_aaRecord.actionSets.length).toBe(1);
+      expect(_aaRecord.actionSets[0].actions.length).toBe(0);
+      expect(_aaRecord.actionSets[0].name).toBe("regularOpenActions");
     });
   });
 

@@ -152,7 +152,9 @@
           resource.setTrigger(iResource.trigger);
           resource.setId(iResource.id);
           resource.setType(iResource.type);
-          resource.setNumber(iResource.number);
+          if (angular.isDefined(iResource.number)) {
+            resource.setNumber(iResource.number);
+          }
           ceInfo.addResource(resource);
         }
       }

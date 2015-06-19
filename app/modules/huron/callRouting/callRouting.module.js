@@ -2,5 +2,5 @@
   'use strict';
 
   angular
-    .module('uc.callrouting', ['uc.callpark']);
+    .module('uc.callrouting', ['uc.callpark', 'uc.autoattendant']);
 })();
