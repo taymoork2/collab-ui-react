@@ -14,6 +14,9 @@
     var dateFormat = "MMM DD, YYYY";
     var mostRecentUpdate = "";
     var customerList = null;
+    var overallPopulation = 0;
+    var timeFilter = null;
+    var activeUserCustomerGraphs = {};
 
     var mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
     var mediaQualityData = [];
@@ -33,34 +36,94 @@
     };
 
     return {
+      getOverallActiveUserData: getOverallActiveUserData,
       getActiveUserData: getActiveUserData,
       getCustomerList: getCustomerList,
       getMostRecentUpdate: getMostRecentUpdate,
       getMediaQualityMetrics: getMediaQualityMetrics,
       getCallMetricsData: getCallMetricsData,
-      getRegesteredEndpoints: getRegesteredEndpoints,
-      getActiveUserPopulationData: getActiveUserPopulationData
+      getRegesteredEndpoints: getRegesteredEndpoints
     };
+
+    function getOverallActiveUserData(time) {
+      timeFilter = time.value;
+      var query = getQuery(time);
+      activeUserCustomerGraphs = {};
+
+      return getService(detailed + activeUserUrl + query).then(function (response) {
+        if (response.data !== null && response.data !== undefined && angular.isArray(response.data.data)) {
+          var overallActive = 0;
+          var overallRegistered = 0;
+
+          angular.forEach(response.data.data, function (customer) {
+            // compile the information for both active user bar graphs.
+            var graphData = [];
+            var populationData = [];
+            var totalActive = 0;
+            var totalRegistered = 0;
+
+            if (angular.isArray(customer.data)) {
+              angular.forEach(customer.data, function (index) {
+                index.percentage = Math.round((parseInt(index.details.activeUsers) / parseInt(index.details.totalRegisteredUsers)) * 100);
+                index.activeUsers = parseInt(index.details.activeUsers);
+                index.totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
+                index.modifiedDate = moment(index.date).format(dateFormat);
+
+                totalActive += index.activeUsers;
+                totalRegistered += index.totalRegisteredUsers;
+              });
+              graphData = customer.data;
+
+              populationData.push({
+                customerName: customer.orgName,
+                customerId: customer.orgId,
+                percentage: Math.round((totalActive / totalRegistered) * 100)
+              });
+            }
+
+            // save data to be retrieved on a per customer basis
+            activeUserCustomerGraphs[customer.orgId] = {
+              'graphData': graphData,
+              'populationData': populationData
+            };
+
+            overallActive += totalActive;
+            overallRegistered += totalRegistered;
+          });
+
+          // compute overall population percentage for all customers with active users
+          overallPopulation = Math.round((overallActive / overallRegistered) * 100);
+          return;
+        }
+        overallPopulation = 0;
+      }, function (error) {
+        Log.debug('Loading overall active user population data failed.  Status: ' + error.status + ' Response: ' + error.message);
+        Notification.notify([$translate.instant('activeUsers.overallActiveUserGraphError')], 'error');
+        overallPopulation = 0;
+        return;
+      });
+    }
 
     function getActiveUserData(customer, time) {
       var query = getQuery(time);
       var promises = [];
-      var graphData = [];
       var tableData = [];
 
-      var graphPromise = getActiveUserGraphData(customer, query).then(function (response) {
-        graphData = response;
-      });
+      if (overallPopulation === 0 || time.value !== timeFilter) {
+        promises.push(getOverallActiveUserData(time));
+      }
+
       var tablePromise = getActiveUserTableData(customer, query).then(function (response) {
         tableData = response;
       });
-      promises.push(graphPromise);
       promises.push(tablePromise);
 
       return $q.all(promises).then(function () {
         return {
-          graphData: graphData,
-          tableData: tableData
+          graphData: getActiveUserGraphData(customer),
+          tableData: tableData,
+          populationGraph: getPopulationGraph(customer),
+          overallPopulation: overallPopulation
         };
       });
     }
@@ -119,55 +182,36 @@
       }
     }
 
-    function getActiveUserGraphData(customer, query) {
+    function getPopulationGraph(customer) {
       if (angular.isArray(customer)) {
-        return combineActiveUsersGraph(customer, query);
-      } else {
-        return getService(detailed + activeUserUrl + query + "&orgId=" + customer.value).then(function (response) {
-          if (mostRecentUpdate === "") {
-            setMostRecentUpdate(response);
-          }
-          return modifyActiveUserGraphData(response.data.data[0]);
-        }, function (error) {
-          Log.debug('Loading active user graph data for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
-          Notification.notify([$translate.instant('activeUsers.activeUserGraphError', {
-            customer: customer.label
-          })], 'error');
-          return [];
+        var data = [];
+        angular.forEach(customer, function (item) {
+          data.concat(getPopulationGraph(item));
         });
-      }
-    }
-
-    function modifyActiveUserGraphData(data) {
-      if (data !== undefined && data !== null) {
-        angular.forEach(data.data, function (index) {
-          index.percentage = Math.floor((parseInt(index.details.activeUsers) / parseInt(index.details.totalRegisteredUsers)) * 100);
-          index.activeUsers = parseInt(index.details.activeUsers);
-          index.totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
-          index.modifiedDate = moment(index.date).format(dateFormat);
-        });
-        return data.data;
-      } else {
+        return data;
+      } else if (customer.value === 0) {
         return [];
+      } else {
+        if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
+          return activeUserCustomerGraphs[customer.value].populationData;
+        }
+        return [{
+          customerName: customer.label,
+          customerId: customer.value,
+          percentage: 0
+        }];
       }
     }
 
-    // Keeping function for use when mult-org select functionality is added.
-    function combineActiveUsersGraph(orgs, query) {
-      var promises = [];
-      var graphData = [];
-      angular.forEach(orgs, function (org) {
-        var promise = getActiveUserGraphData(org, query).then(function (orgData) {
-          angular.forEach(orgData, function (data) {
-            graphData = combineMatchingDates(graphData, data);
-          });
+    function getActiveUserGraphData(customer) {
+      if (angular.isArray(customer)) {
+        var graphData = [];
+        angular.forEach(customer, function (org) {
+          graphData = combineMatchingDates(graphData, getActiveUserGraphData(org));
         });
-        promises.push(promise);
-      });
 
-      return $q.all(promises).then(function () {
         // not all customers have active data for every day
-        // this can cause data to be out of order without sorting
+        // this can cause data to require sorting
         return graphData.sort(function (a, b) {
           if (a.date === b.date) {
             return 0;
@@ -176,7 +220,12 @@
           }
           return -1;
         });
-      });
+      } else {
+        if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
+          return activeUserCustomerGraphs[customer.value].graphData;
+        }
+        return [];
+      }
     }
 
     function combineMatchingDates(graphData, dateData) {
@@ -202,7 +251,19 @@
 
     function getActiveUserTableData(customer, query) {
       if (angular.isArray(customer)) {
-        return combineActiveUsersTable(customer);
+        var promises = [];
+        var tableData = [];
+        angular.forEach(customer, function (org) {
+          var promise = getActiveUserTableData(org, query).then(function (response) {
+            tableData = tableData.concat(response);
+          });
+          promises.push(promise);
+        });
+        return $q.all(promises).then(function () {
+          return tableData;
+        });
+      } else if (customer.value === 0) {
+        return $q.when([]);
       } else {
         return getService(topn + activeUserUrl + query + "&orgId=" + customer.value).then(function (response) {
           if (mostRecentUpdate === "") {
@@ -230,21 +291,6 @@
       return data.data;
     }
 
-    // Keeping function for use when mult-org select functionality is added.
-    function combineActiveUsersTable(orgs) {
-      var promises = [];
-      var tableData = [];
-      angular.forEach(orgs, function (org) {
-        var promise = getActiveUserTableData(org.orgId, org.orgName).then(function (response) {
-          tableData = tableData.concat(response);
-        });
-        promises.push(promise);
-      });
-      return $q.all(promises).then(function () {
-        return tableData;
-      });
-    }
-
     function getMediaQualityMetrics() {
       return $http.get(mediaQualityUrl).success(function (response) {
         if (response.data !== null && response.data !== undefined) {
@@ -264,7 +310,7 @@
         index.fair = parseInt(index.details.fair);
         index.poor = parseInt(index.details.poor);
         index.totalCalls = index.details.excellent + index.details.good + index.details.fair + index.details.poor;
-        index.modifiedDate = moment(index.date).format("MMM DD");
+        index.modifiedDate = moment(index.date).format(dateFormat);
       });
       return data;
     }
@@ -356,19 +402,6 @@
           return [];
         });
       }
-    }
-
-    function getActiveUserPopulationData() {
-      var getActiveUserPopulationUrl = 'modules/core/partnerReports/activeUserPopulation/activeUserPopulationFake.json';
-      return $http.get(getActiveUserPopulationUrl).then(function (response) {
-        if (angular.isArray(response.data.data) && response.data.data.length !== 0) {
-          return response.data;
-        } else {
-          return [];
-        }
-      }, function (error) {
-        return [];
-      });
     }
   }
 })();

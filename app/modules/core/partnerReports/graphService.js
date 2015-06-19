@@ -57,11 +57,10 @@
       updateActiveUserPopulationGraph: updateActiveUserPopulationGraph,
     };
 
-    function createGraph(data, div, chartType, chartTheme, marginTop, graphs, valueAxes, catAxis, categoryField, legend, numFormat, autoMargins) {
+    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat) {
 
       var chartData = {
-        'type': chartType,
-        'theme': chartTheme,
+        'type': 'serial',
         'addClassNames': true,
         'fontFamily': 'Arial',
         'backgroundColor': Config.chartColors.brandWhite,
@@ -79,8 +78,8 @@
         },
         'plotAreaBorderAlpha': 0,
         'plotAreaBorderColor': Config.chartColors.grayLight,
-        'autoMargins': autoMargins,
-        'marginTop': marginTop,
+        'autoMargins': false,
+        'marginTop': 60,
         'categoryField': categoryField,
         'categoryAxis': catAxis,
         'usePrefixes': true,
@@ -127,9 +126,10 @@
         dataPoint.totalCalls = 0;
       }
       if (div === activeUserPopulationChartId) {
-        dataPoint.company = 'dummy company';
-        dataPoint.label = '75%';
-        dataPoint.value = 25;
+        dataPoint.customerName = "";
+        dataPoint.percentage = 0;
+        dataPoint.color = Config.chartColors.brandWhite;
+        dataPoint.comparison = 0;
       }
       return [dataPoint];
     }
@@ -145,6 +145,7 @@
       graphOne.colorField = Config.chartColors.brandSuccessLight;
       graphOne.valueField = 'totalRegisteredUsers';
       graphOne.balloonText = activeUsersBalloonText;
+      graphOne.columnWidth = 0.6;
 
       var graphTwo = angular.copy(columnBase);
       graphTwo.title = activeUsersTitle;
@@ -153,6 +154,7 @@
       graphTwo.valueField = 'activeUsers';
       graphTwo.balloonText = activeUsersBalloonText;
       graphTwo.clustered = false;
+      graphTwo.columnWidth = 0.6;
 
       var graphs = [graphOne, graphTwo];
       var valueAxes = [angular.copy(axis)];
@@ -166,7 +168,7 @@
       legend.labelText = '[[title]]';
       var numFormat = angular.copy(numFormatBase);
 
-      return createGraph(data, activeUserDiv, 'serial', 'none', 60, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat, true);
+      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat);
     }
 
     function updateActiveUsersGraph(data, activeUsersChart) {
@@ -231,7 +233,7 @@
       legend.reversedOrder = true;
 
       var numFormat = angular.copy(numFormatBase);
-      return createGraph(data, mediaQualityDiv, 'serial', 'none', 60, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat, false);
+      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat);
     }
 
     function updateMediaQualityGraph(data, mediaQualityChart) {
@@ -245,45 +247,26 @@
       }
     }
 
-    function createActiveUserPopulationDataProvider(data) {
-      var dataProvider = [];
-      if (data.data[0].data.length === 0) {
-        dataProvider = dummyData(activeUserPopulationChartId);
+    function createActiveUserPopulationGraph(data, overallPopulation) {
+      if (data === null || data === 'undefined' || data.length === 0) {
+        data = dummyData(activeUserPopulationChartId);
       } else {
-        var populationAverage = data.data[0].averagePrecent;
-        for (var i = 0; i < data.data[0].data.length; i++) {
-          dataProvider[i] = {};
-          dataProvider[i].company = data.data[0].data[i].details.orgName;
-          dataProvider[i].label = data.data[0].data[i].details.percent + '%';
-          dataProvider[i].value = data.data[0].data[i].details.percent - populationAverage;
-          if (dataProvider[i].value < 0) {
-            dataProvider[i].color = Config.chartColors.brandDanger;
-          } else {
-            dataProvider[i].color = Config.chartColors.brandInfo;
-          }
-        }
+        data = modifyPopulation(data, overallPopulation);
       }
-      return dataProvider;
-    }
-
-    function createActiveUserPopulationGraph(data) {
-      var dataProvider = createActiveUserPopulationDataProvider(data);
 
       var graph = angular.copy(columnBase);
       graph.type = 'column';
-      graph.valueField = 'value';
       graph.fillColors = 'color';
       graph.colorField = 'color';
       graph.labelColorField = 'color';
-      graph.labelText = '[[label]]';
+      graph.labelText = '[[percentage]]%';
       graph.fontSize = 26;
-      graph.balloonText = '';
-      graph.showBalloon = false;
-      var graphs = [graph];
+      graph.balloonText = '<span class="graph-text"><span class="graph-population" style="color:[[color]];">[[absCompare]]%</span> [[balloonText]]</span>';
+      graph.valueField = 'comparison';
+      graph.columnWidth = 0.6;
 
       var categoryAxis = angular.copy(axis);
       categoryAxis.axisAlpha = 0;
-      categoryAxis.gridAlpha = 0;
       categoryAxis.fontSize = 15;
       categoryAxis.autoWrap = true;
 
@@ -291,19 +274,44 @@
       valueAxes[0].labelsEnabled = false;
       valueAxes[0].axisAlpha = 0;
       valueAxes[0].autoGridCount = false;
+      valueAxes[0].minimum = -overallPopulation;
+      valueAxes[0].maximum = 100 - overallPopulation;
 
-      return createGraph(dataProvider, activeUserPopulationChartId, 'serial', 'light', 20, graphs, valueAxes, categoryAxis, 'company', null, null, true);
+      return createGraph(data, activeUserPopulationChartId, [graph], valueAxes, categoryAxis, 'customerName', null, null);
     }
 
-    function updateActiveUserPopulationGraph(data, activeUserPopulationChart) {
+    function updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation) {
       if (activeUserPopulationChart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
           activeUserPopulationChart.dataProvider = dummyData(activeUserPopulationChartId);
         } else {
-          activeUserPopulationChart.dataProvider = createActiveUserPopulationDataProvider(data);
+          activeUserPopulationChart.dataProvider = modifyPopulation(data, overallPopulation);
         }
+
+        activeUserPopulationChart.valueAxes[0].maximum = 100 - overallPopulation;
+        activeUserPopulationChart.valueAxes[0].minimum = -overallPopulation;
         activeUserPopulationChart.validateData();
       }
+
+      return activeUserPopulationChart;
+    }
+
+    function modifyPopulation(data, overallPopulation) {
+      if (angular.isArray(data)) {
+        angular.forEach(data, function (item) {
+          item.comparison = item.percentage - overallPopulation;
+          item.absCompare = Math.abs(item.comparison);
+          if (item.comparison >= 0) {
+            item.color = Config.chartColors.brandInfo;
+            item.balloonText = $translate.instant('activeUserPopulation.aboveAverage');
+          } else {
+            item.color = Config.chartColors.brandDanger;
+            item.balloonText = $translate.instant('activeUserPopulation.belowAverage');
+          }
+        });
+      }
+
+      return data;
     }
 
   }

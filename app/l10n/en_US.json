@@ -266,8 +266,11 @@
     "activeUsers": "Active Users",
     "noData": "No Data",
     "week": "Last Week",
+    "week2": "last week",
     "month": "Last Month",
+    "month2": "last month",
     "threeMonths": "Last 3 Months",
+    "threeMonths2": "last three months",
     "mostEngaged": "5 Most Engaged",
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
@@ -277,8 +280,8 @@
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
-    "activeUserGraphError": "There was an error while loading active user data for {{customer}}.",
-    "activeUserTableError": "There was an error while loading data for most active users for {{customer}}.",
+    "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
+    "activeUserTableError": "There was an error while loading most active user data for {{customer}}.",
     "calls": "Calls",
     "customer": "Customer",
     "hideActiveUsers": "Hide Most Active Users",
@@ -319,9 +322,10 @@
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
-    "description1": "Across all your customers, ",
-    "description2": " of their employees have placed at least one Squared UC call over [Time period filter selection]. Here is how the [Filter Selection] compare to that average.",
-    "averageLabel": "Average Engagement"
+    "description": "Across all your customers, {{percentage}}% of their employees have placed at least one Squared UC call over the {{time}}. Here is how {{customer}} compares to that average.",
+    "averageLabel": "Average Engagement",
+    "belowAverage": "Below Average",
+    "aboveAverage": "Above Average"
   },
   "profilePage": {
     "userProfile": "User Profile",

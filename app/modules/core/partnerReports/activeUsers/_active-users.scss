@@ -13,12 +13,7 @@
   }
   .spinner-position {
     position: relative;
-    top: -400px;
-  }
-  .clear-graph {
-    background-color: $brand-white;
-    position: relative;
-    top: -35px;
+    top: 200px;
   }
   .active-user-status {
     position: absolute;
@@ -55,7 +50,7 @@
     border-color: transparent;
   }
   .no-data-center {
-    top: 115px;
+    top: -275px;
     left: 35%;
     position: relative;
     transform: translate(0%, 35%);
@@ -76,12 +71,13 @@
         svg {
           top: 45px !important;
           position: relative !important;
+          overflow: visible;
         }
       }
     }
   }
   .amcharts-legend-div {
-    top: 50px;
+    top: 60px !important;
   }
   .amcharts-balloon-div {
     margin-top: 65px !important;
