@@ -5,7 +5,7 @@ angular.module('Hercules')
     function ServiceDescriptor($http, config) {
       var services = function (callback) {
         $http
-          .get(config.getUrl() + '/fusion_entitlements_status')
+          .get(config.getUrl() + '/services')
           .success(function (data) {
             callback(null, data.fusion_services || []);
           })

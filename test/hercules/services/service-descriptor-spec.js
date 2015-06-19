@@ -21,7 +21,7 @@ describe('ServiceDescriptor', function () {
 
   it('should fetch services', function (done) {
     $httpBackend
-      .when('GET', 'https://hercules-integration.wbx2.com/v1/fusion_entitlements_status')
+      .when('GET', 'https://hercules-integration.wbx2.com/v1/services')
       .respond({
         fusion_services: [{
           foo: 'bar',
