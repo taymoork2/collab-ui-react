@@ -50,6 +50,20 @@ angular.module('Squared').service('CsdmService',
         })
         .success(function (status) {
           codesAndDevicesCache[deviceUrl].displayName = newName;
+
+          notifyDevice(deviceUrl, {
+            command: "identityDataChanged",
+            eventType: "room.identityDataChanged"
+          }, callback);
+        })
+        .error(function () {
+          callback(arguments);
+        });
+    };
+
+    var notifyDevice = function (deviceUrl, message, callback) {
+      $http.post(deviceUrl + '/notify', message)
+        .success(function (status) {
           callback(null, status);
         })
         .error(function () {
@@ -58,18 +72,12 @@ angular.module('Squared').service('CsdmService',
     };
 
     var uploadLogs = function (deviceUrl, feedbackId, email, callback) {
-      $http.post(deviceUrl + '/notify', {
-          command: "logUpload",
-          eventType: "room.request_logs",
-          feedbackId: feedbackId,
-          email: email
-        })
-        .success(function (status) {
-          callback(null, status);
-        })
-        .error(function () {
-          callback(arguments);
-        });
+      notifyDevice(deviceUrl, {
+        command: "logUpload",
+        eventType: "room.request_logs",
+        feedbackId: feedbackId,
+        email: email
+      }, callback);
     };
 
     var listCodesAndDevices = function () {
