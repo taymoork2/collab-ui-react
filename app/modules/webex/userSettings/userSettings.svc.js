@@ -84,6 +84,14 @@ angular.module('WebExUserSettings')
         telephonyPriviledge: {
           label: "",
 
+          hybridAudio: {
+            isSiteEnabled: false
+          },
+
+          telephonyType: {
+            isWebExAudio: false
+          },
+
           callInTeleconf: {
             id: "callInTeleconf",
             label: "",

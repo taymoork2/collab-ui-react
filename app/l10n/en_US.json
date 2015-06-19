@@ -1286,6 +1286,7 @@
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
     "privilegesUpdateSuccess": "Privileges updated.",
     "pmrErrorTelephonyPrivileges": "Before you can create a Personal Room, set up telephony privileges for this user.",
+    "pmrErrorHybridAudio": "Before you can create a Personal Room, WebEx Audio must be enabled. Contact WebEx support for more information.",
     "mustHavePROorSTDifPMRenabled": "To create a Personal Room for this user, select the correct Meeting Center meeting type for Personal Room.",
     "reload": "Try Again",
     "cancel": "Go Back"
@@ -1381,6 +1382,7 @@
     "039007": "Your Email address is not accepted by our site.",
     "039008": "039008",
     "039009": "039009",
+    "010086": "The site does not support hybrid audio",
     "110055": "User limit exceeded for the session type \"{{sessionTypeName}}\".",
     "defaultProcessError": "Unable to process request.",
     "defaultAccessError": "Unable to access server at this time.",

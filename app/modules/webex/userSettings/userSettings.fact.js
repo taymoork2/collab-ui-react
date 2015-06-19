@@ -319,6 +319,14 @@
           var meetingTypesInfoJson = userSettingsModel.meetingTypesInfo.bodyJson;
 
           // Start of Telephony privileges
+          userSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled = (
+            "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference
+          ) ? true : false;
+          $log.log("Hybrid audio = " + userSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled);
+
+          userSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "false" && //not TSP audio
+            siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_meetingPlace.ns1_persistentTSP == "false") ? true : false; // not MP audio
+          $log.log("WebEx audio = " + userSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio);
 
           // Start of call-in teleconf
           userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled = (
@@ -440,12 +448,12 @@
           userSettingsModel.pmr.value = (
             "true" == userInfoJson.use_privilege.use_isEnablePMR
           ) ? true : false;
-          $log.log("----> PMR = " + userSettingsModel.pmr.value);
+          $log.log("PMR = " + userSettingsModel.pmr.value);
 
           userSettingsModel.cmr.value = (
             "true" == userInfoJson.use_privilege.use_isEnableCET
           ) ? true : false;
-          $log.log("----> CMR = " + userSettingsModel.cmr.value);
+          $log.log("CMR = " + userSettingsModel.cmr.value);
 
           // Start of Video privileges
           userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = (
@@ -861,14 +869,24 @@
           xmlApiInfo.handsOnLabAdminSiteEnabled = userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled;
           xmlApiInfo.handsOnLabAdmin = userSettingsModel.trainingCenter.handsOnLabAdmin.value;
 
+          var okToUpdate = true;
+          var notificationMsg;
           if ((userSettingsModel.pmr.value === true) && (userSettingsModel.cmr.value === true) && (userSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) {
-            var updateStatus = "error";
-            var notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges");
-            Notification.notify([notificationMsg], updateStatus);
-            angular.element('#saveBtn2').button('reset');
-            userSettingsModel.disableCancel2 = false;
-          } else {
+            notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges");
+            _self.notifyError(notificationMsg);
+            okToUpdate = false;
+          }
 
+          if ((userSettingsModel.pmr.value === true) && (userSettingsModel.cmr.value === true) &&
+            userSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio &&
+            !userSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled) {
+            notificationMsg = $translate.instant("webexUserSettings.pmrErrorHybridAudio");
+            userSettingsModel.pmr.value = false; //un-check the PMR option
+            _self.notifyError(notificationMsg);
+            okToUpdate = false;
+          }
+
+          if (okToUpdate) {
             XmlApiFact.updateUserSettings2(xmlApiInfo).then(
               function updateUserSettings2Success(result) {
                 _self.processUpdateResponse(
@@ -885,6 +903,13 @@
             );
           }
         }, // updateUserSettings2()
+
+        notifyError: function (notificationMsg) {
+          var updateStatus = "error";
+          Notification.notify([notificationMsg], updateStatus);
+          angular.element('#saveBtn2').button('reset');
+          userSettingsModel.disableCancel2 = false;
+        },
 
         processUpdateResponse: function (
           form,
