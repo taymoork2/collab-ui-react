@@ -50,11 +50,13 @@ angular.module('Squared').service('CsdmService',
         })
         .success(function (status) {
           codesAndDevicesCache[deviceUrl].displayName = newName;
-
-          notifyDevice(deviceUrl, {
-            command: "identityDataChanged",
-            eventType: "room.identityDataChanged"
-          }, callback);
+          var device = codesAndDevicesCache[deviceUrl];
+          if (device.status && device.status.webSocketUrl) {
+            notifyDevice(deviceUrl, {
+              command: "identityDataChanged",
+              eventType: "room.identityDataChanged"
+            }, callback);
+          }
         })
         .error(function () {
           callback(arguments);
