@@ -230,9 +230,9 @@ angular.module('Core')
           var entitlements = {};
           if (angular.isArray($rootScope.services)) {
             for (var i = $rootScope.services.length - 1; i >= 0; i--) {
-              var service = $rootScope.services[i].sqService;
-              var ciService = $rootScope.services[i].ciService;
-              if (angular.isDefined(user) && angular.isArray(user.entitlements) && user.entitlements.indexOf(ciService) > -1) {
+              var service = $rootScope.services[i].serviceId;
+              var ciName = $rootScope.services[i].ciName;
+              if (angular.isDefined(user) && angular.isArray(user.entitlements) && user.entitlements.indexOf(ciName) > -1) {
                 entitlements[service] = true;
                 entitlements.webExSquared = true;
               } else {

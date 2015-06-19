@@ -75,7 +75,11 @@ exports.scrollTop = function () {
 
 exports.scrollBottom = function (selector) {
   browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
-}
+};
+
+exports.refresh = function () {
+  return browser.refresh();
+};
 
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action
@@ -190,17 +194,35 @@ exports.expectInputValue = function (elem, value) {
 
 exports.click = function (elem, maxRetry) {
   return this.wait(elem).then(function () {
+    var deferred = protractor.promise.defer();
     if (typeof maxRetry === 'undefined') {
       maxRetry = 10;
     }
     if (maxRetry === 0) {
-      elem.click();
+      return elem.click().then(deferred.fulfill, deferred.reject);
     } else {
-      elem.click().then(function () {}, function () {
-        exports.click(elem, --maxRetry);
+      return elem.click().then(deferred.fulfill, function () {
+        return exports.click(elem, --maxRetry);
       });
     }
+    return deferred.promise;
   });
+};
+
+exports.isSelected = function (elem) {
+  this.wait(elem);
+  return elem.isSelected();
+};
+
+exports.expectSelected = function (selected, state) {
+  if (state === undefined) {
+    state = true;
+  }
+  if (state) {
+    expect(selected).toBeTruthy();
+  } else {
+    expect(selected).toBeFalsy();
+  }
 };
 
 exports.clear = function (elem) {
@@ -350,4 +372,8 @@ exports.switchToNewWindow = function () {
       }
     });
   }, 40000, 'Waiting for a new window');
+};
+
+exports.getInnerElementByTagName = function (outerElement, tagName) {
+  return outerElement.element(by.tagName(tagName));
 };

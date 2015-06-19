@@ -230,8 +230,8 @@ angular.module('Core')
         var orgServices = Authinfo.getServices();
         for (var n = 0; n < orgServices.length; n++) {
           var service = orgServices[n];
-          if (key === service.ciService) {
-            return service.sqService;
+          if (key === service.ciName) {
+            return service.serviceId;
           }
         }
         return sqEnt;
@@ -667,7 +667,7 @@ angular.module('Core')
       $scope.entitlements = {};
       var setEntitlementList = function () {
         for (var i = 0; i < $rootScope.services.length; i++) {
-          var svc = $rootScope.services[i].sqService;
+          var svc = $rootScope.services[i].serviceId;
 
           $scope.entitlements[svc] = false;
           if (svc === 'webExSquared') {
@@ -695,7 +695,7 @@ angular.module('Core')
       $scope.getServiceName = function (service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
-          if (svc.sqService === service) {
+          if (svc.serviceId === service) {
             return svc.displayName;
           }
         }

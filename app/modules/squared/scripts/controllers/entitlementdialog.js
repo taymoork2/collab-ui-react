@@ -8,9 +8,9 @@ angular.module('Squared')
       $scope.username = data.userName;
       $scope.entitlements = {};
       for (var i = 0; i < $rootScope.services.length; i++) {
-        var service = $rootScope.services[i].sqService;
-        var ciService = $rootScope.services[i].ciService;
-        if (data.entitlements && data.entitlements.indexOf(ciService) > -1) {
+        var service = $rootScope.services[i].serviceId;
+        var ciName = $rootScope.services[i].ciName;
+        if (data.entitlements && data.entitlements.indexOf(ciName) > -1) {
           $scope.entitlements[service] = true;
         } else {
           $scope.entitlements[service] = false;
@@ -45,7 +45,7 @@ angular.module('Squared')
       $scope.getServiceName = function (service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
-          if (svc.sqService === service) {
+          if (svc.serviceId === service) {
             return svc.displayName;
           }
         }

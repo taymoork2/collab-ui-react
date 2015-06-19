@@ -39,31 +39,94 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     } else {
       authUrl = auth.authorizeUrl + 'userauthinfo';
     }
-    return $http.get(authUrl)
-      .then(function (response) {
-        Authinfo.initialize(response.data);
-        if (Authinfo.isAdmin()) {
-          return auth.getAccount(Authinfo.getOrgId())
-            .success(function (data, status) {
-              Authinfo.updateAccountInfo(data, status);
-              Authinfo.initializeTabs();
-            });
-        } else {
-          Authinfo.initializeTabs();
-        }
-      })
-      .catch(function (response) {
-        Authinfo.clear();
-        var error = $translate.instant('errors.serverDown');
-        if (response) {
-          if (response.status === 403) {
-            error = $translate.instant('errors.status403');
-          } else if (response.status === 401) {
-            error = $translate.instant('errors.status401');
+
+    //Return data from the /userauthinfo API, with data from the /services API
+    //grafted onto it if the user has access to /services (instead of the native
+    //"services" field from the /userauthinfo response.) This allows us to expose
+    //the "isConfigurable" flag in objects that appear in the /services API response.
+    var getAuthData = function () {
+      var result;
+      return $http.get(authUrl).then(function (authResponse) {
+
+          //We'll need to explicitly use values from the response instead of
+          //using Authinfo, since Authinfo.initialize() hasn't been called yet
+
+          result = angular.copy(authResponse.data);
+
+          //Figure out whether this user is allowed to access the /services API
+          var doServicesRequest = (result.roles && _.isArray(result.roles)) ?
+            _.any(['Full_Admin', 'PARTNER_ADMIN', 'PARTNER_USER'], function (role) {
+              return result.roles.indexOf(role) > -1;
+            }) : false;
+
+          //Do the /services requset if the user is allowed to;
+          //otherwise, explicitly return null
+          if (doServicesRequest) {
+            var servicesUrl = auth.authorizeUrl + 'organizations/' + result.orgId + '/services';
+            return $http.get(servicesUrl);
+          } else {
+            return $q.when(null);
           }
-        }
-        return $q.reject(error);
-      });
+
+        })
+        .then(function (servicesResponse) {
+
+          //If we received data from the /services API (not null)...
+          if (servicesResponse) {
+
+            //Replace the value of the "services" field in the /userauthinfo API response
+            //with the related/more detailed data provided by the /services API
+            result.services = angular.copy(servicesResponse.data.entitlements);
+
+            //If we did NOT receive data from the /services API,
+            //Change some relevant key names in the /userauthinfo API response's
+            //"services" field to match the format of the /services API, so that
+            //consuming code doesn't have to know about two sets of key names
+          } else if (_.isArray(result.services)) {
+
+            result.services = result.services.map(function (service) {
+              service = angular.copy(service);
+              if (service.ciService) {
+                service.ciName = service.ciService;
+                delete service.ciService;
+              }
+              if (service.sqService) {
+                service.serviceId = service.sqService;
+                delete service.sqService;
+              }
+              return service;
+            });
+          }
+
+          return result;
+        })
+        .catch(function (response) {
+          Authinfo.clear();
+          var error = $translate.instant('errors.serverDown');
+          if (response) {
+            if (response.status === 403) {
+              error = $translate.instant('errors.status403');
+            } else if (response.status === 401) {
+              error = $translate.instant('errors.status401');
+            }
+          }
+          return $q.reject(error);
+        });
+    };
+
+    return getAuthData().then(function (authData) {
+      Authinfo.initialize(authData);
+      if (Authinfo.isAdmin()) {
+        return auth.getAccount(Authinfo.getOrgId())
+          .success(function (data, status) {
+            Authinfo.updateAccountInfo(data, status);
+            Authinfo.initializeTabs();
+          });
+      } else {
+        return Authinfo.initializeTabs();
+      }
+    });
+
   };
 
   auth.getFromGetParams = function (url) {

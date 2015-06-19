@@ -5,65 +5,21 @@ angular.module('Squared')
     function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, $log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, HttpUtils) {
       $scope.hasAccount = Authinfo.hasAccount();
 
-      var getSqEntitlement = function (key) {
-        var sqEnt = null;
-        var orgServices = Authinfo.getServices();
-        for (var n = 0; n < orgServices.length; n++) {
-          var service = orgServices[n];
-          if (key === service.ciService) {
-            return service.sqService;
-          }
-        }
-        return sqEnt;
-      };
+      //TODO: In the hasAccount case, come up with a better UX for a license category
+      //that has no configurable entitlements, intead of an empty pane with a disabled
+      //save button.
 
-      var getServiceEntitlements = function (list) {
-        var ents = [];
-        for (var x = 0; x < list.length; x++) {
-          var serviceFeature = list[x];
-          if (serviceFeature && serviceFeature.license.features) {
-            for (var y = 0; y < serviceFeature.license.features.length; y++) {
-              var entitlement = serviceFeature.license.features[y];
-              ents.push(getSqEntitlement(entitlement));
-            }
-          }
-        }
-        return ents;
-      };
+      var services = Authinfo.getServices();
 
-      if (!Authinfo.hasAccount()) {
-        $scope.entitlementsKeys = Object.keys($scope.entitlements).sort().reverse();
-      } else if ($scope.service && Authinfo.hasAccount()) {
-        var entList = [];
-        switch ($scope.service) {
-        case 'CONFERENCING':
-          var confService = Authinfo.getConferenceServices();
-          entList = getServiceEntitlements(confService);
-          break;
-        case 'MESSAGING':
-          var msgService = Authinfo.getMessageServices();
-          entList = getServiceEntitlements(msgService);
-          break;
-        case 'COMMUNICATION':
-          var commService = Authinfo.getCommunicationServices();
-          entList = getServiceEntitlements(commService);
-          break;
-        }
-        $scope.entitlementsKeys = entList;
-      } else {
-        $scope.entitlementsKeys = Object.keys($scope.entitlements).sort().reverse();
+      if ($scope.service && $scope.hasAccount) {
+        services = services.filter(function (service) {
+          return service.isConfigurable && service.licenseType === $scope.service;
+        });
       }
+
+      $scope.entitlementsKeys = _.pluck(services, 'serviceId').sort().reverse();
 
       $scope.saveDisabled = true;
-
-      function Feature(name, state) {
-        this.entitlementName = name;
-        this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
-      }
-
-      function getFeature(service, state) {
-        return new Feature(service, state);
-      }
 
       $scope.isServiceAllowed = function (service) {
         return Authinfo.isServiceAllowed(service);
@@ -72,7 +28,7 @@ angular.module('Squared')
       $scope.getServiceName = function (service) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i];
-          if (svc.sqService === service) {
+          if (svc.serviceId === service) {
             return svc.displayName;
           }
         }
@@ -82,13 +38,14 @@ angular.module('Squared')
         return key !== reference;
       };
 
-      var getUserEntitlementList = function (entitlements) {
-        var entList = [];
-        for (var i = 0; i < $rootScope.services.length; i++) {
-          var service = $rootScope.services[i].sqService;
-          entList.push(getFeature(service, entitlements[service]));
-        }
-        return entList;
+      var getUserEntitlementList = function () {
+        return $rootScope.services.map(function (service) {
+          var serviceId = service.serviceId;
+          return {
+            entitlementName: serviceId,
+            entitlementState: $scope.entitlements[serviceId] ? 'ACTIVE' : 'INACTIVE'
+          };
+        });
       };
 
       var watchCheckboxes = function () {
@@ -127,6 +84,15 @@ angular.module('Squared')
         });
       };
 
+      /**
+       * TODO: All entitlements are currently sent in the PATCH request in all cases,
+       * even if the bucketed checkboxes are the only ones that are visible
+       * (isConfigurable && hasAccount.) This works, but could be changed to
+       * send only the entitlements whose values actually changed, instead of
+       * all entitelments. The !hasAccount case should most likely keep the
+       * current behavior of sending all entitlements, even when their values
+       * didn't change.
+       */
       $scope.changeEntitlement = function (user) {
         Log.debug('Entitling user.', user);
         HttpUtils.setTrackingID().then(function () {
@@ -141,7 +107,7 @@ angular.module('Squared')
             'address': user.userName,
             'givenName': givenName,
             'familyName': familyName
-          }], null, getUserEntitlementList($scope.entitlements), function (data) {
+          }], null, getUserEntitlementList(), function (data) {
             var entitleResult = {
               msg: null,
               type: 'null'
@@ -174,12 +140,12 @@ angular.module('Squared')
               }).indexOf($scope.currentUser.id);
               var updatedUser = $scope.queryuserslist[index];
               for (var i = 0; i < $rootScope.services.length; i++) {
-                var service = $rootScope.services[i].sqService;
-                var ciService = $rootScope.services[i].ciService;
-                if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciService) === -1) {
-                  updatedUser.entitlements.push(ciService);
-                } else if ($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciService) > -1) {
-                  updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciService), 1);
+                var service = $rootScope.services[i].serviceId;
+                var ciName = $rootScope.services[i].ciName;
+                if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciName) === -1) {
+                  updatedUser.entitlements.push(ciName);
+                } else if ($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciName) > -1) {
+                  updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciName), 1);
                 }
               }
               $rootScope.$broadcast('entitlementsUpdated');

@@ -13,7 +13,7 @@ describe('ExportUserStatusesController', function () {
     Authinfo = {
       getServices: function () {
         return [{
-          "ciService": "squared-fusion-cal",
+          "ciName": "squared-fusion-cal",
           "displayName": "myService"
         }];
       }

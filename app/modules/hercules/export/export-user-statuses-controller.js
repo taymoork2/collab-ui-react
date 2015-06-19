@@ -25,7 +25,7 @@
 
         $scope.getHeader = function () {
           var service = $.grep(Authinfo.getServices(), function (s) {
-            return s.ciService === $scope.selectedServiceId;
+            return s.ciName === $scope.selectedServiceId;
           });
           return ["id", "email", service[0].displayName, "state", "message"];
         };

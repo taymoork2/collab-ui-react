@@ -56,7 +56,7 @@ angular.module('Core')
           if (services) {
             for (var j in services) {
               var service = services[j];
-              if (service && Config.serviceStates[service.ciService] && Config.serviceStates[service.ciService].indexOf(parentState[0]) !== -1) {
+              if (service && Config.serviceStates[service.ciName] && Config.serviceStates[service.ciName].indexOf(parentState[0]) !== -1) {
                 return true;
               }
             }
@@ -100,7 +100,7 @@ angular.module('Core')
         if (services) {
           for (var i = 0; i < services.length; i++) {
             var service = services[i];
-            if (service && service.ciService === entitlement) {
+            if (service && service.ciName === entitlement) {
               return true;
             }
           }
