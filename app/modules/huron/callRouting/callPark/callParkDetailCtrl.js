@@ -20,7 +20,7 @@
     vm.validations = {
       greaterThanLessThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
-        return value >= scope.model.rangeMin && value.length == scope.model.rangeMin.length;
+        return value >= scope.model.rangeMin;
       }
     };
     vm.nameFields = [{
