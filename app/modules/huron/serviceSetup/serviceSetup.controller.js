@@ -57,7 +57,12 @@
     vm.validations = {
       greaterThanLessThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
-        return value >= scope.model.beginNumber;
+        // we only validate this if beginNumber is valid or populated
+        if (angular.isUndefined(scope.model.beginNumber) || scope.model.beginNumber === "") {
+          return true;
+        } else {
+          return value >= scope.model.beginNumber;
+        }
       }
     };
 
@@ -196,6 +201,11 @@
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
                 return angular.isDefined(scope.model.uuid);
+              },
+              // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
+              // it retriggers validation
+              'data.validate': function (viewValue, modelValue, scope) {
+                return scope.fc && scope.fc.$validate();
               }
             }
           }, {
