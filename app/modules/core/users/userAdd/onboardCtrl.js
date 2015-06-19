@@ -92,9 +92,13 @@ angular.module('Core')
         populateConf();
       };
 
+      $scope.hasAvailability = function (license) {
+        return (license.volume > 0);
+      };
+
       $scope.licenseSubscriptionModels = {};
 
-      // Array[Service] -> Array[Service] (merges Service[s] w/ same license)
+      // [Services] -> [Services] (merges Service[s] w/ same license)
       var mergeMultipleLicenseSubscriptions = function (fetched) {
 
         // Construct a mapping from License to (array of) Service object(s)

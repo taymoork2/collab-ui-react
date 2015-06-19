@@ -27,7 +27,7 @@
                                 <span>{{msgFeature.label}}</span>
                                 <fieldset class="onboard-fieldset">
                                     <label class="cs-radio" for="{{license.licenseId}}"
-                                            ng-repeat="license in msgFeature.licenses">
+                                            ng-repeat="license in msgFeature.licenses | filter:hasAvailability | orderBy:'billingServiceId'">
                                         <input id="{{license.licenseId}}" name="{{license.licenseType}}" type="radio"
                                                 ng-change="licenseHandler(license.licenseId)"
                                                 ng-disabled="license.status !== 'ACTIVE' && license.status !== 'PENDING'"
