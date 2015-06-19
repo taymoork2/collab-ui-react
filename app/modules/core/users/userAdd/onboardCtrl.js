@@ -58,9 +58,10 @@ angular.module('Core')
       };
 
       $scope.radioStates = {
-        msgRadio: false,
+        commRadio: false,
         confRadio: false,
-        commRadio: false
+        msgRadio: false,
+        subLicense: {}
       };
 
       if (userEnts) {
@@ -92,11 +93,12 @@ angular.module('Core')
         populateConf();
       };
 
-      $scope.hasAvailability = function (license) {
-        return (license.volume > 0);
+      $scope.isSubscribeable = function (license) {
+        if (license.status === 'ACTIVE' || license.status === 'PENDING') {
+          return (license.volume > 0);
+        }
+        return false;
       };
-
-      $scope.licenseSubscriptionModels = {};
 
       // [Services] -> [Services] (merges Service[s] w/ same license)
       var mergeMultipleLicenseSubscriptions = function (fetched) {
@@ -223,20 +225,6 @@ angular.module('Core')
 
       var usersList = [];
 
-      var getServiceLicenseIds = function (list, service) {
-        if (angular.isArray(service.licenses)) {
-          angular.forEach(service.licenses, function (license) {
-            list.push(license.licenseId);
-          });
-        } else {
-          if (service.license.licenseId) {
-            list.push(service.license.licenseId);
-          }
-        }
-
-        return list;
-      };
-
       var getSqEntitlement = function (key) {
         var sqEnt = null;
         var orgServices = Authinfo.getServices();
@@ -266,17 +254,22 @@ angular.module('Core')
       var getAccountLicenseIds = function () {
         var licenseIdList = [];
         if (Authinfo.hasAccount()) {
-          var index = $scope.radioStates.msgRadio ? 1 : 0;
-          var selMsgService = $scope.messageFeatures[index];
-
-          var selConfService = getConfIdList();
-
-          index = $scope.radioStates.commRadio ? 1 : 0;
-          var selCommService = $scope.communicationFeatures[index];
-
-          licenseIdList = getServiceLicenseIds(licenseIdList, selMsgService);
-          licenseIdList = licenseIdList.concat(selConfService);
-          licenseIdList = getServiceLicenseIds(licenseIdList, selCommService);
+          // Messaging: prefer selected subscription, if specified
+          var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
+          var selMsgService = $scope.messageFeatures[msgIndex];
+          if ('licenseId' in $scope.radioStates.subLicense) {
+            licenseIdList.push($scope.radioStates.subLicense.licenseId);
+          } else if ('licenseId' in selMsgService.license) {
+            licenseIdList.push(selMsgService.license.licenseId);
+          }
+          // Conferencing: depends on model (standard vs. CMR)
+          licenseIdList = licenseIdList.concat(getConfIdList());
+          // Communication: straightforward license, for now
+          var commIndex = $scope.radioStates.commRadio ? 1 : 0;
+          var selCommService = $scope.communicationFeatures[commIndex];
+          if ('licenseId' in selCommService.license) {
+            licenseIdList.push(selCommService.license.licenseId);
+          }
         }
         return licenseIdList.length === 0 ? null : licenseIdList;
       };
@@ -435,6 +428,7 @@ angular.module('Core')
 
       $scope.clearPanel = function () {
         resetUsersfield();
+        $scope.radioStates.subLicense = {};
         $scope.results = null;
       };
 
