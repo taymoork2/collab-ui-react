@@ -255,12 +255,14 @@ angular.module('Core')
         var licenseIdList = [];
         if (Authinfo.hasAccount()) {
           // Messaging: prefer selected subscription, if specified
-          var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
-          var selMsgService = $scope.messageFeatures[msgIndex];
           if ('licenseId' in $scope.radioStates.subLicense) {
             licenseIdList.push($scope.radioStates.subLicense.licenseId);
-          } else if ('licenseId' in selMsgService.license) {
-            licenseIdList.push(selMsgService.license.licenseId);
+          } else {
+            var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
+            var selMsgService = $scope.messageFeatures[msgIndex];
+            // TODO (tohagema): clean up messageFeatures license(s) model :/
+            var license = selMsgService.license || selMsgService.licenses[0];
+            if ('licenseId' in license) licenseIdList.push(license.licenseId);
           }
           // Conferencing: depends on model (standard vs. CMR)
           licenseIdList = licenseIdList.concat(getConfIdList());
