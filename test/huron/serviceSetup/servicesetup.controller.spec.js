@@ -2,7 +2,7 @@
 
 describe('Controller: ServiceSetup', function () {
   var controller, $scope, $state, $q, ServiceSetup, Notification, HuronCustomer;
-  var model, customer, voicemail, externalNumberPool, form;
+  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone;
 
   beforeEach(module('Huron'));
 
@@ -38,7 +38,8 @@ describe('Controller: ServiceSetup', function () {
         voicemailPilotNumber: "+16506679080",
         timeZone: {
           value: 'America/Los_Angeles',
-          label: '(GMT-08:00) Pacific Time (US & Canada)'
+          label: '(GMT-08:00) Pacific Time (US & Canada)',
+          timezoneid: '4'
         }
       },
       numberRanges: [{
@@ -50,10 +51,20 @@ describe('Controller: ServiceSetup', function () {
         endNumber: '6999'
       }]
     };
+    timeZone = [{
+      value: 'America/Los_Angeles',
+      label: '(GMT-08:00) Pacific Time (US & Canada)',
+      timezoneid: '4'
+    }];
     voicemail = {
       name: "Simon",
       pilotNumber: "+16506679080"
     };
+    usertemplate = [{
+      timeZone: '4',
+      alias: '1',
+      objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
+    }];
     externalNumberPool = [{
       directoryNumber: null,
       pattern: "+14084744518",
@@ -82,6 +93,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
 
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
+    spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.when(usertemplate));
     spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
     spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
     spyOn(ServiceSetup, 'updateCustomerVoicemailPilotNumber').and.returnValue($q.when());
@@ -91,7 +103,7 @@ describe('Controller: ServiceSetup', function () {
       return $q.when();
     });
 
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
 

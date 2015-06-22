@@ -6,7 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailService, CustomerCommonService) {
+  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService) {
 
     return {
       internalNumberRanges: [],
@@ -51,6 +51,22 @@
           });
           this.externalNumberPool = extNumPool;
         })).$promise;
+      },
+
+      listVoicemailTimezone: function () {
+        return VoicemailTimezoneService.query({
+          query: '(alias startswith ' + Authinfo.getOrgId() + ')',
+          customerId: Authinfo.getOrgId()
+        }).$promise;
+      },
+
+      updateVoicemailTimezone: function (timeZone, objectId) {
+        return VoicemailTimezoneService.update({
+          customerId: Authinfo.getOrgId(),
+          objectId: objectId
+        }, {
+          timeZone: timeZone
+        }).$promise;
       },
 
       getVoicemailPilotNumber: function () {

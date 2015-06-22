@@ -60,7 +60,7 @@ module.exports = function (config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: [process.env.atlas_karma_browser || 'PhantomJS'],
-    // browsers: ['Chrome'],
+     //browsers: ['Chrome'],
 
     // Which plugins to enable
     plugins: [
