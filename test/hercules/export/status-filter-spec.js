@@ -3,10 +3,13 @@
 describe('Service: StatusFilter', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var StatusFilter;
+  var StatusFilter, Utils, Authinfo, Config;
 
-  beforeEach(inject(function (_StatusFilter_) {
+  beforeEach(inject(function (_StatusFilter_, _Utils_, _Authinfo_, _Config_) {
     StatusFilter = _StatusFilter_;
+    Utils = _Utils_;
+    Authinfo = _Authinfo_;
+    Config = _Config_;
   }));
 
   it('In UI, service state entitled=false should override state value', function () {

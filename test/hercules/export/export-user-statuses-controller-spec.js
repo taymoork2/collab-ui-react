@@ -3,20 +3,33 @@
 describe('ExportUserStatusesController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var service, controller, $scope;
+  var Authinfo, service, controller, $scope, $httpBackend, UssService;
 
   beforeEach(inject(function (_$controller_) {
+
     $scope = {
       $watch: sinon.stub()
     };
+    Authinfo = {
+      getServices: function () {
+        return [{
+          "ciService": "squared-fusion-cal",
+          "displayName": "myService"
+        }];
+      }
+    };
+
     controller = _$controller_('ExportUserStatusesController', {
-      $scope: $scope,
-      ExportUserStatusesController: service,
+      Authinfo: Authinfo,
+      UssService: UssService,
+      $scope: $scope
     });
   }));
 
-  it('export header has correct names', function () {
-    $scope.selectedServiceId = "myService";
+  it('column title for service name is based on authinfo displayname', function () {
+    $scope.selectedServiceId = "squared-fusion-cal";
+    $scope.getHeader();
+    expect($scope.loading).toBe(true);
     expect($scope.getHeader()).toEqual(["id", "email", "myService", "state", "message"]);
   });
 

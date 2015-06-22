@@ -3,7 +3,7 @@
 angular.module('Hercules').service('StatusFilter',
 
   /* @ngInject  */
-  function () {
+  function (Log) {
 
     var convertToUiState = function (serviceStateInfo) {
       return serviceStateInfo.entitled ? serviceStateInfo.state : "notEntitled";
