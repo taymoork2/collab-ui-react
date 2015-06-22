@@ -23,11 +23,11 @@ describe('Controller: Partner Reports', function () {
     value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
     label: 'Test Org One'
   }, {
-    value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
-    label: 'Test Org Two'
-  }, {
     value: '1896f9dc-c5a4-4041-8257-b3adfe3cf9a4',
     label: 'Test Org Three'
+  }, {
+    value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
+    label: 'Test Org Two'
   }];
 
   var endpointResponse = [{

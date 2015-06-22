@@ -75,7 +75,6 @@
               graphData = customer.data;
 
               populationData.push({
-                customerName: customer.orgName,
                 customerId: customer.orgId,
                 percentage: Math.round((totalActive / totalRegistered) * 100)
               });
@@ -193,7 +192,9 @@
         return [];
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
-          return activeUserCustomerGraphs[customer.value].populationData;
+          var graph = activeUserCustomerGraphs[customer.value].populationData;
+          graph[0].customerName = customer.label;
+          return graph;
         }
         return [{
           customerName: customer.label,
@@ -269,7 +270,7 @@
           if (mostRecentUpdate === "") {
             setMostRecentUpdate(response);
           }
-          return modifyActiveUserTableData(response.data.data[0]);
+          return modifyActiveUserTableData(response.data.data[0], customer);
         }, function (error) {
           Log.debug('Loading most active users for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
           Notification.notify([$translate.instant('activeUsers.activeUserTableError', {
@@ -280,9 +281,9 @@
       }
     }
 
-    function modifyActiveUserTableData(data) {
+    function modifyActiveUserTableData(data, customer) {
       angular.forEach(data.data, function (index) {
-        index.orgName = data.orgName;
+        index.orgName = customer.label;
         index.numCalls = parseInt(index.details.numCalls);
         index.totalActivity = parseInt(index.details.totalActivity);
         index.userId = index.details.userId;

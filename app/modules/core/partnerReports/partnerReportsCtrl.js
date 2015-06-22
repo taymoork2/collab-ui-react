@@ -170,12 +170,17 @@
     }
 
     function updateCustomerFilter(orgsData) {
+      var customers = [];
       // add all customer names to the customerOptions list
       angular.forEach(orgsData, function (org) {
-        vm.customerOptions.push({
+        customers.push({
           value: org.customerOrgId,
           label: org.customerName
         });
+      });
+
+      vm.customerOptions = customers.sort(function (a, b) {
+        return a.label.localeCompare(b.label);
       });
 
       if (vm.customerOptions[0] !== null && vm.customerOptions[0] !== undefined) {

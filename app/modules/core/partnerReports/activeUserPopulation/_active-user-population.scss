@@ -79,8 +79,13 @@
 
     svg {
       height: 460px !important;
+      top: 50px !important;
     }
-  }  
+  } 
+
+  .amcharts-balloon-div {
+    top: 75px !important;
+  } 
 }
 
 #activeUserPopulationRefreshDiv {
