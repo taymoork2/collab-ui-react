@@ -34,6 +34,8 @@ describe('Controller: ServiceSetup', function () {
         uuid: '777-888-666',
         steeringDigit: '5',
         siteSteeringDigit: '6',
+        siteCode: '200',
+        voicemailPilotNumber: "+16506679080",
         timeZone: {
           value: 'America/Los_Angeles',
           label: '(GMT-08:00) Pacific Time (US & Canada)'
@@ -48,10 +50,10 @@ describe('Controller: ServiceSetup', function () {
         endNumber: '6999'
       }]
     };
-    voicemail = [{
+    voicemail = {
       name: "Simon",
       pilotNumber: "+16506679080"
-    }];
+    };
     externalNumberPool = [{
       directoryNumber: null,
       pattern: "+14084744518",
@@ -152,11 +154,14 @@ describe('Controller: ServiceSetup', function () {
 
   describe('initNext', function () {
 
-    it('should notify on success', function () {
+    it('should notify on success when not firstTimeSetup', function () {
+      controller.firstTimeSetup = false;
+      controller.pilotNumberSelected = externalNumberPool[0];
       controller.initNext();
       $scope.$apply();
 
       expect(ServiceSetup.createSite).not.toHaveBeenCalled();
+      expect(ServiceSetup.updateCustomerVoicemailPilotNumber).toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });

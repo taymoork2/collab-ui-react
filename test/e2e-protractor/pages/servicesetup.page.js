@@ -6,6 +6,8 @@ var ServiceSetup = function () {
   this.siteSteeringDigit = element(by.css('.select-list[name="siteSteeringDigit"] a.select-toggle'));
   this.siteCode = element(by.id('siteCode'));
   this.globalMOH = element(by.css('.select-list[name="globalMOH"] a.select-toggle'));
+  this.siteCode = element(by.id('siteCode'));
+  this.companyVoicemail = element(by.id('companyVoicemail'));
   this.addNumberRange = element(by.buttonText('Add More Extension Ranges'));
   this.numberRanges = element.all(by.repeater('element in model[options.key]'));
   this.save = element(by.buttonText('Save'));
