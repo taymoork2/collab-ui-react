@@ -737,7 +737,8 @@ angular.module('Core')
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
         PARTNER_USER: ['partnercustomers', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers'],
-        Site_Admin: ['site-list']
+        Site_Admin: ['site-list'],
+        Application: ['organizationAdd']
       };
 
       config.serviceStates = {
@@ -766,8 +767,7 @@ angular.module('Core')
           'devices2'
         ],
         'squared-team-member': [
-          'organization',
-          'organizationAdd'
+          'organization'
         ],
         'squared-fusion-media': [
           'meetings',

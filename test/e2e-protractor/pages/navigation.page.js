@@ -8,6 +8,7 @@ var Navigation = function () {
   this.usersTab = element(by.css('li.userTab > a'));
   this.accountTab = element(by.css('li.accountTab > a'));
   this.orgTab = element(by.css('a[href="#organization"]'));
+  this.orgAddTab = element(by.css('a[href="#add-organization"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.newReportsTab = element(by.cssContainingText('span', 'New Reports'));
