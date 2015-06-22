@@ -5,8 +5,9 @@
   <!-- cluster overview -->
   <cs-sp-section>
     <div class="sw-upgrade" style="font-size: xs"> 
-      <div>Cluster consists of {{connector.hosts.length}} {{connector.hosts.length == 1 ? 'host' : 'hosts'}}.</div>
-      <div>Status: {{connector.needs_attention ? 'Needs attention' : 'Running'}}.</div>
+      <div>Host Name / IP Address: {{connector.hosts[0].host_name}}</div>
+      <div>Status: {{connector.needs_attention ? 'Needs attention' : 'Running'}}</div>
+      <div>Software Version: {{connector.version}}</div>
     </div>
   </cs-sp-section> 
 

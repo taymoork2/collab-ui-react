@@ -9,6 +9,7 @@ angular.module('Mediafusion')
       $scope.pollHasFailed = false;
       $scope.showInfoPanel = true;
 
+      /*
       var actionsTemplate = '<i style="top:13px" class="icon icon-three-dots"></i>';
 
       var statusTemplate = '<div><i class="fa fa-circle device-status-icon ngCellText" style="margin-top:0px;" ng-class="{\'device-status-green\': row.getProperty(col.field)===false, \'device-status-red\': row.getProperty(col.field) === true}"></i></div>' +
@@ -61,7 +62,7 @@ angular.module('Mediafusion')
           displayName: 'Actions',
           width: "15%"
         }]
-      };
+      }; */
 
       MediafusionProxy.startPolling(function (err, data) {
         $scope.loading = false;
