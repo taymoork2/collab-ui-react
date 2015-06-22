@@ -11,7 +11,8 @@
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       value: 'America/Los_Angeles',
-      label: '(GMT-08:00) Pacific Time (US & Canada)'
+      label: '(GMT-08:00) Pacific Time (US & Canada)',
+      timezoneid: '4'
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -79,14 +80,11 @@
           options: [],
           labelfield: 'label',
           valuefield: 'value',
-          idfield: 'timezoneid',
           inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
           filter: true
         },
         controller: /* @ngInject */ function ($scope, ServiceSetup) {
-          ServiceSetup.getTimeZones().then(function (timezones) {
-            $scope.to.options = timezones;
-          });
+          $scope.to.options = vm.timeZoneOptions;
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -350,6 +348,24 @@
       });
     }
 
+    function initTimeZone() {
+      return ServiceSetup.getTimeZones().then(function (timezones) {
+        vm.timeZoneOptions = timezones;
+        return ServiceSetup.listVoicemailTimezone().then(function (usertemplates) {
+          if ((angular.isArray(usertemplates)) && (usertemplates.length > 0)) {
+            vm.timeZone = '' + usertemplates[0].timeZone;
+            vm.objectId = usertemplates[0].objectId;
+            var currentTimeZone = timezones.filter(function (timezone) {
+              return timezone.timezoneid === vm.timeZone;
+            });
+            if (currentTimeZone.length > 0) {
+              vm.model.site.timeZone = currentTimeZone[0];
+            }
+          }
+        });
+      });
+    }
+
     function listInternalExtentionRanges() {
       return ServiceSetup.listInternalNumberRanges().then(function () {
         vm.model.numberRanges = ServiceSetup.internalNumberRanges;
@@ -419,15 +435,16 @@
         var deferreds = [];
         var errors = [];
         var promise;
-
+        var currentSite;
         if (vm.firstTimeSetup) {
           if (vm.pilotNumberSelected) {
             vm.model.site.voicemailPilotNumber = vm.pilotNumberSelected.pattern;
           } else {
             delete vm.model.site.voicemailPilotNumber;
           }
-          vm.model.site.timeZone = vm.model.site.timeZone.value;
-          promise = ServiceSetup.createSite(vm.model.site).then(function () {
+          currentSite = angular.copy(vm.model.site);
+          currentSite.timeZone = currentSite.timeZone.value;
+          promise = ServiceSetup.createSite(currentSite).then(function () {
             if (vm.pilotNumberSelected) {
               return ServiceSetup.updateCustomerVoicemailPilotNumber({
                 voicemail: {
@@ -435,6 +452,11 @@
                 }
               }).catch(function (response) {
                 errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
+              });
+            }
+            if (vm.model.site.timeZone !== DEFAULT_TZ.value) {
+              return ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.objectId).catch(function (response) {
+                errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
               });
             }
           }).catch(function (response) {
@@ -483,6 +505,7 @@
       var promises = [];
       promises.push(initServiceSetup());
       promises.push(listInternalExtentionRanges());
+      promises.push(initTimeZone());
       $q.all(promises).finally(function () {
         vm.processing = false;
       });
