@@ -692,7 +692,7 @@
       "contact-center-context": ""
     },
     "errors": {
-      "enableServiceEntitlementFailure": "Adding the {{serviceName}} failed because of missing organization entitlements. Call support for help addressing this issue.",
+      "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed."
     }
   },

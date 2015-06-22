@@ -9,7 +9,7 @@
       <span>Contact Support to Fix Service Entitlements</span>
     </cs-accordion-heading>
 
-    <p>Your organization is missing entitlements that are needed to run the following services:</p>
+    <p>Your organization is missing entitlements that are needed to add the following services:</p>
     <ul>
       <li ng-repeat="service in services.enabledOnly | filter: { status: 'error' }">
         <span translate="hercules.serviceNames.{{service.service_id}}"/></span>
