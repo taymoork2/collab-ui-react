@@ -75,7 +75,11 @@
                   <i class="fa fa-circle" />
                   <span class="hidden-xs">Offline </span>
                 </span>
-                <span ng-hide="cluster.needs_attention" class="green">
+                <span ng-show="!cluster.needs_attention &&  !cluster.alarms_present" class="green">
+                  <i class="fa fa-circle" />
+                  <span class="hidden-xs">Active </span>
+                </span>
+                <span ng-show="!cluster.needs_attention &&  cluster.alarms_present" class="yellow">
                   <i class="fa fa-circle" />
                   <span class="hidden-xs">Active </span>
                 </span>

@@ -37,6 +37,7 @@ angular.module('Mediafusion')
 
       var updateServiceStatus = function (service, cluster) {
         service.alarm_count = 0;
+        cluster.alarms = [];
 
         service.running_hosts = _.reduce(service.connectors, function (num, con) {
           if (con.state == 'running') {
@@ -56,6 +57,7 @@ angular.module('Mediafusion')
           }
 
           service.alarm_count += connector.alarms ? connector.alarms.length : 0;
+          //cluster.alarm_count =  service.alarm_count;
 
           if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
             serviceAndClusterNeedsAttention(service, cluster);
@@ -79,6 +81,20 @@ angular.module('Mediafusion')
           if (service.status != 'needs_attention') {
             cluster.needs_attention = false;
             service.needs_attention = false;
+          }
+
+          // update version
+          cluster.version = connector.version;
+          cluster.state = connector.state;
+
+          // update alarm flag
+          if (connector.alarms && connector.alarms.length > 0) {
+            cluster.alarms_present = true;
+            cluster.alarm_count = connector.alarms.length;
+            cluster.alarms = cluster.alarms.concat(connector.alarms);
+          } else {
+            cluster.alarms_present = false;
+            cluster.alarm_count = 0;
           }
 
         });

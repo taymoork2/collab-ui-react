@@ -1094,6 +1094,16 @@ angular
           params: {
             connectorId: {}
           }
+        })
+        .state('connector-details.alarms', {
+          templateUrl: 'modules/mediafusion/mediafusion-connector/alarms-details.html',
+          controller: 'AlarmsDetailsController',
+          data: {
+            displayName: 'Alarms'
+          },
+          params: {
+            cconnectorId: {}
+          }
         });
     }
   ]);
