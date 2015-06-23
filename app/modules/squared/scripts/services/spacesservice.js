@@ -10,10 +10,12 @@ angular.module('Squared')
         listDevices: function (callback) {
           $http.get(deviceUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -28,10 +30,12 @@ angular.module('Squared')
           if (deviceData.name.length > 0) {
             $http.post(deviceUrl, deviceData)
               .success(function (data, status) {
+                data = data || {};
                 data.success = true;
                 callback(data, status);
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -48,10 +52,12 @@ angular.module('Squared')
             var deleteUrl = deviceUrl + '/' + deviceUuid;
             $http.delete(deleteUrl)
               .success(function (data, status) {
+                data = data || {};
                 data.success = true;
                 callback(data, status);
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -68,10 +74,12 @@ angular.module('Squared')
             $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
             $http.get(getStatusUrl)
               .success(function (data, status) {
+                data = data || {};
                 data.success = true;
                 callback(data, i, status);
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
                 callback(data, i, status);

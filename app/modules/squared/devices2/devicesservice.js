@@ -38,10 +38,12 @@ angular.module('Squared')
           if (deviceData.name.length > 0) {
             $http.post(codeUrl, deviceData)
               .success(function (data, status) {
+                data = data || {};
                 data.success = true;
                 callback(data, status);
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -71,10 +73,12 @@ angular.module('Squared')
             var getStatusUrl = url + '/status';
             $http.get(getStatusUrl)
               .success(function (data, status) {
+                data = data || {};
                 data.success = true;
                 callback(data, url, status);
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
                 callback(data, url, status);

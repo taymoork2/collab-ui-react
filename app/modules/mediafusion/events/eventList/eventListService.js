@@ -34,6 +34,7 @@ angular.module('Mediafusion')
           //Actual rest call to get event info from server and also error case is handeled.
           $http.get(eventListUrl)
             .success(function (data, status) {
+              data = data || {};
               //console.log("Returned data is"+data);
               data.events = data;
               data.success = true;
@@ -41,6 +42,7 @@ angular.module('Mediafusion')
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);

@@ -22,11 +22,13 @@ angular.module('Mediafusion')
           //Actual rest call to get meeting info from server and also error case is handeled.
           $http.get(thresholdListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -47,11 +49,13 @@ angular.module('Mediafusion')
 
           $http.get(metricTypesListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -75,11 +79,13 @@ angular.module('Mediafusion')
 
           $http.get(metricCountersListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -103,11 +109,13 @@ angular.module('Mediafusion')
 
           $http.get(metricCountersListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -130,11 +138,13 @@ angular.module('Mediafusion')
 
           $http.get(eventNamesListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -154,11 +164,13 @@ angular.module('Mediafusion')
 
           $http.get(sysTypesListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -182,11 +194,13 @@ angular.module('Mediafusion')
 
           $http.get(sysNamesListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -206,10 +220,12 @@ angular.module('Mediafusion')
 
           $http.post(addThresholdUrl, threshold)
             .success(function (data, status) {
+              //data = data || {};
               //data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              //data = data || {};
               //data.success = false;
               //data.status = status;
               callback(data, status);
@@ -224,10 +240,12 @@ angular.module('Mediafusion')
 
           $http.post(addEventsUrl, events)
             .success(function (data, status) {
+              //data = data || {};
               //data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              //data = data || {};
               //data.success = false;
               //data.status = status;
 
@@ -247,10 +265,12 @@ angular.module('Mediafusion')
 
           $http.get(deleteThresholdUrl)
             .success(function (data, status) {
+              //data = data || {};
               //data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              //data = data || {};
               //data.success = false;
               //data.status = status;
               callback(data, status);

@@ -21,6 +21,7 @@ angular
                 data: feedbackData
               })
               .success(function (data, status) {
+                data = data || {};
                 data.success = true;
                 callback(data, status);
               })
@@ -38,6 +39,7 @@ angular
               url: url
             })
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               callback(data, status);
             })

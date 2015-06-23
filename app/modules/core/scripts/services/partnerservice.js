@@ -20,11 +20,13 @@
     function getTrialsList(callback) {
       $http.get(trialsUrl)
         .success(function (data, status) {
+          data = data || {};
           data.success = true;
           Log.debug('Retrieved trials list');
           callback(data, status);
         })
         .error(function (data, status) {
+          data = data || {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -34,11 +36,13 @@
     function getManagedOrgsList(callback) {
       $http.get(managedOrgsUrl)
         .success(function (data, status) {
+          data = data || {};
           data.success = true;
           Log.debug('Retrieved managed orgs list');
           callback(data, status);
         })
         .error(function (data, status) {
+          data = data || {};
           data.success = false;
           data.status = status;
           callback(data, status);

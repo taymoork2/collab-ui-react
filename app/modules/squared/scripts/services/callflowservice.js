@@ -23,6 +23,7 @@ angular.module('Squared')
 
           $http.get(callflowChartsUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Retrieved callflow charts corresponding to client logs: ' + data.resultsUrl);
               callback(data, status);

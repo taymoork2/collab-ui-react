@@ -19,11 +19,13 @@ angular.module('Mediafusion')
           //Actual rest call to get OverallUtilization info from server and also error case is handeled.
           $http.get(overallUtilizationUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -45,11 +47,13 @@ angular.module('Mediafusion')
           //Actual rest call to get realTimeBridgeUtilizationUrl info from server and also error case is handeled.
           $http.get(realTimeBridgeUtilizationUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);

@@ -66,7 +66,7 @@ angular.module('Squared')
         vm.devices = [];
         vm.codes = [];
         DevicesService.listDevices(function (data, status, success) {
-          if (success === true) {
+          if (success) {
             vm.devices = _.map(data, function (device, url) {
               if (device.status !== undefined) {
                 if (device.status.connectionStatus === 'connected') {
@@ -93,7 +93,7 @@ angular.module('Squared')
           }
         });
         DevicesService.listCodes(function (data, status, success) {
-          if (success === true) {
+          if (success) {
             vm.codes = _.map(data, function (code, url) {
               code.color = 'device-status-yellow';
               code.displayStatus = 'Needs Activation';
@@ -185,7 +185,7 @@ angular.module('Squared')
 
       vm.addCode = function () {
         DevicesService.createCode(vm.newRoomName, function (data, status) {
-          if (data.success === true) {
+          if (data.success) {
             vm.showAdd = false;
             if (data.activationCode && data.activationCode.length > 0) {
               vm.newActivationCode = formatActivationCode(data.activationCode);

@@ -32,6 +32,7 @@ angular.module('Core')
                 data: userData
               })
               .success(function (data, status) {
+                data = data || {};
                 // This code is being added temporarily to add/remove users from Squared UC
                 // Discussions are ongoing concerning how these common functions should be
                 // integrated.
@@ -78,6 +79,7 @@ angular.module('Core')
                 }
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -111,10 +113,12 @@ angular.module('Core')
 
             $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users', userData)
               .success(function (data, status) {
+                data = data || {};
                 data.success = true;
                 callback(data, status);
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
 
@@ -131,10 +135,12 @@ angular.module('Core')
 
           $http.get(userUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -153,6 +159,7 @@ angular.module('Core')
                 data: userData
               })
               .success(function (data, status) {
+                data = data || {};
                 // This code is being added temporarily to update users on Squared UC
                 // Discussions are ongoing concerning how these common functions should be
                 // integrated.
@@ -175,6 +182,7 @@ angular.module('Core')
                 }
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -222,10 +230,12 @@ angular.module('Core')
 
             $http.post(apiUrl, userData)
               .success(function (data, status) {
+                data = data || {};
                 data.success = true;
                 callback(data, status);
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
                 callback(data, status);
@@ -242,10 +252,12 @@ angular.module('Core')
           };
           $http.post(userUrl + 'user/mail/provisioning', requestBody)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -269,10 +281,12 @@ angular.module('Core')
               data: requestBody
             })
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -293,10 +307,12 @@ angular.module('Core')
 
           $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -330,10 +346,12 @@ angular.module('Core')
 
             $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userData)
               .success(function (data, status) {
+                data = data || {};
                 data.success = true;
                 callback(data, status);
               })
               .error(function (data, status) {
+                data = data || {};
                 data.success = false;
                 data.status = status;
 

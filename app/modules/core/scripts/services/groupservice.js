@@ -12,11 +12,13 @@ angular.module('Core')
 
           $http.get(groupssUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Retrieved group list');
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               callback(data, status);
             });

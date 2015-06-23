@@ -138,11 +138,13 @@ angular.module('Squared')
 
           return $http.get(metricUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Callback for ' + metricType + ' for org=' + Authinfo.getOrgId());
               sendChartResponse(data, status, metricType);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               data.errorMsg = data;
@@ -206,11 +208,13 @@ angular.module('Squared')
 
           $http.get(logInfoUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Retrieved call info for : ' + locusId + ' startTime : ' + startTime);
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -222,11 +226,13 @@ angular.module('Squared')
 
           $http.get(callSummaryUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Retrieved call summary for : ' + locusId + ' startTime : ' + startTime);
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -236,6 +242,7 @@ angular.module('Squared')
         healthMonitor: function (callback) {
           $http.get(healthUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Callback for healthMonitor');
               callback(data, status);

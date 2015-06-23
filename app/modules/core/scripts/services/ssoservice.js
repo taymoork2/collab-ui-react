@@ -10,11 +10,13 @@ angular.module('Core')
 
           $http.get(remoteIdpUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Retrieved meta url');
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -33,11 +35,13 @@ angular.module('Core')
 
           $http.post(remoteIdpUrl, payload)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Posted metadataXml: ' + metadataXmlContent);
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -57,11 +61,13 @@ angular.module('Core')
               data: payload
             })
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Posted metadataXml: ' + metadataXmlContent);
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -80,10 +86,12 @@ angular.module('Core')
               data: payload
             })
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -107,11 +115,13 @@ angular.module('Core')
           var hostedSpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/hosted/sp';
           $http.get(hostedSpUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Retrieved metadata file');
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);

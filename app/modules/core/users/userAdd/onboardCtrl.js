@@ -158,7 +158,7 @@ angular.module('Core')
 
       $scope.groups = [];
       GroupService.getGroupList(function (data, status) {
-        if (data.success === true) {
+        if (data.success) {
           $scope.groups = data.groups;
           if (data.groups && data.groups.length === 0) {
             var defaultGroup = {

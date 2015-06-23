@@ -17,11 +17,13 @@ angular.module('Mediafusion')
 
           $http.get(sysTypesListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -45,11 +47,13 @@ angular.module('Mediafusion')
 
           $http.get(sysNamesListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -73,11 +77,13 @@ angular.module('Mediafusion')
 
           $http.get(metricTypesListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -101,11 +107,13 @@ angular.module('Mediafusion')
 
           $http.get(metricCountersListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);

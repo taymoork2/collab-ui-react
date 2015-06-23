@@ -66,6 +66,7 @@ angular.module('Core')
 
           $http.get(listUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               // var activeUsers = [];
               // for (var i = 0; i < data.Resources.length; i++) {
@@ -78,6 +79,7 @@ angular.module('Core')
               callback(data, status, searchStr);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status, searchStr);
@@ -162,10 +164,12 @@ angular.module('Core')
 
           $http.get(adminUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -184,11 +188,13 @@ angular.module('Core')
 
           $http.get(getUserUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Retrieved user successfully.');
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);

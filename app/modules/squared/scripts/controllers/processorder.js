@@ -16,7 +16,7 @@ angular.module('Squared')
 
       Orgservice.createOrg($scope.enc, function (data, status) {
         $scope.isProcessing = false;
-        if (data.success === true) {
+        if (data.success) {
           $window.location.href = data.redirectUrl;
         } else {
           $('#processOrderErrorModal').modal('show');

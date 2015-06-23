@@ -32,11 +32,13 @@ angular.module('Mediafusion')
           //Actual rest call to get meeting info from server and also error case is handeled.
           $http.get(meetingListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -55,11 +57,13 @@ angular.module('Mediafusion')
           //Actual rest call to get additional meeting info from server and also error case is handeled.
           $http.get(meetinginfolistUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status, $rootScope.meetingid);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status, $rootScope.meetingid);
@@ -77,11 +81,13 @@ angular.module('Mediafusion')
           //Actual rest call to get participant info from server and also error case is handeled.
           $http.get(participantlistUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status, $rootScope.meetingid);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status, $rootScope.meetingid);
@@ -105,11 +111,13 @@ angular.module('Mediafusion')
           //Actual rest call to get meeting chart info from server and also error case is handeled.
           $http.get(meetingChartUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);

@@ -88,7 +88,7 @@
 
     function getDiagnosticsDevice() {
       SpacesService.getDeviceStatus(vm.currentDevice.deviceUuid, 0, function (data, i, status) {
-        if (data.success === true) {
+        if (data.success) {
           if (data.cisUuid === vm.currentDevice.deviceUuid) {
             vm.currentDevice.events = data.events;
             if (data.status === 'reachable') {

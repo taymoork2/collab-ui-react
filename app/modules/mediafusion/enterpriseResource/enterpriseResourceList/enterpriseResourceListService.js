@@ -15,11 +15,13 @@ angular.module('Mediafusion')
 
         $http.get(listUrl)
           .success(function (data, status) {
+            data = data || {};
             data.success = true;
             //console.log("inside http success");
             callback(data, status);
           })
           .error(function (data, status) {
+            data = data || {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -40,11 +42,13 @@ angular.module('Mediafusion')
 
         $http.delete(deleteUrl)
           .success(function (data, status) {
+            data = data || {};
             data.success = true;
             //console.log("inside http success");
             callback(data, status);
           })
           .error(function (data, status) {
+            data = data || {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -71,12 +75,14 @@ angular.module('Mediafusion')
 
         $http.put(changeStateUrl)
           .success(function (data, status) {
+            data = data || {};
             data.success = true;
             data.status = status;
             //console.log("inside http changeState success");
             callback(data, status);
           })
           .error(function (data, status) {
+            data = data || {};
             data.success = false;
             data.status = status;
             callback(data, status);

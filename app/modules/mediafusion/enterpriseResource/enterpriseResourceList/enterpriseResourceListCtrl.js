@@ -15,8 +15,8 @@ angular.module('Mediafusion')
         $scope.vtsPreview = false;
         //console.log("Calling service ");
         vtslistservice.listVts(function (data) {
-          $scope.queryvtslist = data;
-          $scope.totalResults = data.length;
+          $scope.queryvtslist = data || {};
+          $scope.totalResults = data.length || 0;
           /*if (data.success) {
 			//console.log("callback listMFC data " +data);
 			$scope.querymfclist = data.devices;

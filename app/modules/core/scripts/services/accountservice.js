@@ -43,10 +43,12 @@ angular.module('Core')
 
           $http.get(accountUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
@@ -73,11 +75,13 @@ angular.module('Core')
               data: payload
             })
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               Log.debug('Posted orgDataForAccount: ' + payload);
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);

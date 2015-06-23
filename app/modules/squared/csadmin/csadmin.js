@@ -32,7 +32,7 @@ angular.module('Squared')
 
       var addCsAdminToCustomer = function (encryptedParam) {
         csadminservice.setCsAdmin(encryptedParam, function (data, status) {
-          if (data.success === true) {
+          if (data.success) {
             $scope.result.orgId = data.orgId;
             $scope.result.customerName = data.customerName;
             // $scope.result.contactName = data.customerAdminName;

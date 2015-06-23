@@ -36,11 +36,13 @@ angular.module('Mediafusion')
           //Actual rest call to get meeting info from server and also error case is handeled.
           $http.get(metricsListUrl)
             .success(function (data, status) {
+              data = data || {};
               data.success = true;
               data.status = status;
               callback(data, status);
             })
             .error(function (data, status) {
+              data = data || {};
               data.success = false;
               data.status = status;
               callback(data, status);
