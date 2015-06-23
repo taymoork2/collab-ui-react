@@ -33,6 +33,7 @@ var UsersPage = function () {
   this.endpointPanel = element(by.id('endpointPanel'));
   this.previewPanel = element(by.id('details-panel'));
   this.previewName = element(by.id('name-preview'));
+  this.assignServices = element(by.css('.license-wrapper'));
 
   this.nextButton = element(by.id('next-button'));
   this.rolesPanel = element(by.id('roles-panel'));
@@ -48,6 +49,13 @@ var UsersPage = function () {
   this.closeAddUsers = element(by.id('closeAddUser'));
   this.invalid = element(by.css('.invalid'));
   this.close = element(by.css('.close'));
+
+  this.emailAddressRadio = element(by.cssContainingText("span", "Email address"));
+  this.nameAndEmailRadio = element(by.cssContainingText("span", "Names and Email address"));
+  this.firstName = element(by.id('firstName'));
+  this.lastName = element(by.id('lastName'));
+  this.emailAddress = element(by.id('emailAddress'));
+  this.plusIcon = element(by.css('.plus-icon-active'));
 
   this.manageCallInitiation = element(by.css('label[for="chk_squaredCallInitiation"]')); // on add users
   this.manageSquaredTeamMember = element(by.css('label[for="chk_squaredTeamMember"]'));
@@ -72,6 +80,8 @@ var UsersPage = function () {
   this.saveButton = element(by.id('btn-save'));
 
   this.clearButton = element(by.id('btnClear'));
+  this.backButton = element(by.buttonText('Clear'));
+  this.nextButton = element(by.buttonText('Next'));
 
   this.currentPage = element(by.css('.pagination-current a'));
   this.queryCount = element(by.binding('totalResults'));

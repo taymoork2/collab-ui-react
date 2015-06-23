@@ -31,9 +31,11 @@ describe('CMR shown under Enterprise Edition', function () {
 
   describe('should show CMR under EE', function () {
     it('if there is EE should show CMR option', function () {
+      utils.sendKeys(users.addUsersField, utils.randomTestGmail());
+      utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+      utils.click(users.nextButton);
       utils.expectIsDisplayed(users.servicesPanelCommunicationsCheckbox);
       utils.click(users.servicesPanelCommunicationsCheckbox);
-      // utils.expectIsDisplayed(users.getMyThing());
     });
 
     it('clicking on cancel button should close the modal', function () {

@@ -1,57 +1,18 @@
-<div id="servicePanel">
-  <div class="modal-body onboard-block">
-      <form>
-        <div class="form-control-wrapper">
-          <input class="form-control useradd-textbox" type="text" id="usersfield"/>
-        </div>
-        <label class="adduser-input-desc" for="usersfield-tokenfield" translate="usersPage.userInputDescription"/>
-
-		<h4 class="assign-svcs-subtitle" translate="usersPage.assignServices"></h4>
-
-        <div class="collab-options" ng-if="false">
-          <input type="radio" name="collabRadio" id="collabRadio2" value="2" ng-model="collabRadio" >
-          <span id="collabRadioLabel2" class="collab-radio" ng-click="setRadio(2)">{{collabRadio2.label}}</span>
-
-          <div class="select-grp">
-            <select ng-model="selectedGroup"
-              ng-options="group as group.displayName for group in groups">
-            </select>
-            <a href="" class="manage-groups">
-              <span id="btnManage" translate="onboardModal.manageBtn"></span>
-            </a>
-          </div>
-        </div>
-
-		<div class="collab-options" ng-if="false">
-			<input type="radio" name="collabRadio" id="collabRadio1" value="1" ng-model="collabRadio">
-			<span id="collabRadioLabel1" class="collab-svc-radio" ng-click="setRadio(1)">{{collabRadio1.label}}</span>
-		</div>
-      </form>
-
-      <div id="licenseBlock" class="onboard-block license-block" ng-if="collabRadio === 1 && !hasAccount">
-      <div class="bold">
-        <span translate="onboardModal.entitlements"></span>
-        <hr class="onboard-divider"/>
-      </div>
-
-      <div class="license-block">
-        <div class="entitle-check-grp" ng-repeat="key in entitlementsKeys" ng-if="isServiceAllowed(key)">
-          <cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared')}" ckid="{{'chk_'+key}}" ng-model="entitlements[key]" label="{{getServiceName(key)}}"></cs-checkbox>
-        </div>
-      </div>
+<form name="model.userForm" class="onboard-users">
+  <div class="user-input-option-radio-group">
+    <cs-radiolist options="userInputOptions" ng-model="model.userInputOption" horizontal="true"></cs-radiolist>
+  </div>
+  <div ng-if="model.userInputOption === 0">
+    <cs-token-field tokens="model.userList" tokenfieldid="tokenfieldid" tokenoptions="tokenoptions" tokenmethods="tokenmethods" tokenplaceholder="tokenplaceholder" ng-init="validateTokens()"></cs-token-field>
+    <label class="adduser-input-desc" for="usersfield-tokenfield" translate="usersPage.userInputDescription"/>
+  </div>
+  <div ng-if="model.userInputOption === 1">
+    <div class="form-group user-name-email-input" >
+      <input required type="text" class="form-control flex1 input-lg" ng-model="model.firstName" id="firstName" placeholder="{{::strFirstName}}" ng-keypress="onEnterKey($event)">
+      <input required type="text" class="form-control flex2 input-lg" ng-model="model.lastName" id="lastName" placeholder="{{::strLastName}}" ng-keypress="onEnterKey($event)">
+      <input required type="text" class="form-control flex2 input-lg" ng-model="model.emailAddress" id="emailAddress" placeholder="{{::strEmailAddress}}" ng-change="validateEmailField()" ng-keypress="onEnterKey($event)">
+      <i class="plus-icon" ng-class="{'plus-icon-inactive': model.userForm.$invalid || !model.userInfoValid, 'plus-icon-active': model.userForm.$valid && model.userInfoValid}" ng-click="addToUsersfield()"></i>
     </div>
+    <cs-token-field tokens="model.userList" tokenfieldid="tokenfieldid" tokenoptions="tokenoptions" tokenmethods="tokenmethods" static="true" ng-init="validateTokens()"></cs-token-field>
   </div>
-
-  </div>
-
-  <cr-services-panels ng-if="collabRadio === 1 && hasAccount" radioStates="radioStates"></cr-services-panels>
-
-  <div ng-hide="wizard.isWizardModal()" class="modal-footer">
-   <button type="button" id="btnClear" class="btn btn-default" ng-click="clearPanel()"><span translate="onboardModal.clear"></span>
-    </button>
-    <button type="button" id="btnOnboard" class="btn btn-primary" ng-click="onboardUsers()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="onboardModal.saveBtn"></span></button>
-  </div>
-
-</div>
-
-
+</form>

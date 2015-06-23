@@ -123,6 +123,7 @@ describe('Partner flow', function () {
 
         utils.expectText(wizard.mainviewTitle, 'Add Users');
         utils.click(wizard.nextBtn);
+        utils.click(wizard.nextBtn);
         utils.click(wizard.finishBtn);
         notifications.clearNotifications();
 

@@ -6,7 +6,8 @@
     .controller('WizardCtrl', WizardCtrl)
     .directive('crWizard', crWizard)
     .directive('crWizardNav', crWizardNav)
-    .directive('crWizardMain', crWizardMain);
+    .directive('crWizardMain', crWizardMain)
+    .directive('crWizardButtons', crWizardButtons);
 
   /* @ngInject */
   function PromiseHook($q) {
@@ -31,6 +32,10 @@
         traverse(scope.$$nextSibling);
       })(scope.$$childHead);
 
+      // If we need to wait for a promise, make the button spin
+      if (promises.length > 0) {
+        angular.element('#wizardNext').button('loading');
+      }
       return $q.all(promises);
     }
   }
@@ -44,7 +49,8 @@
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
 
-    vm.getController = getController;
+    vm.getTabController = getTabController;
+    vm.getSubTabController = getSubTabController;
     vm.getSubTabTitle = getSubTabTitle;
 
     vm.setSubTab = setSubTab;
@@ -89,8 +95,8 @@
         return tab.steps;
       } else if (tab.subTabs) {
         for (var i = 0; i < tab.subTabs.length; i++) {
-          if (angular.isUndefined(getSubTab()) || tab.subTabs[i].name === getSubTab()) {
-            vm.current.subTab = tab.subTabs[i].name;
+          if (angular.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
+            vm.current.subTab = tab.subTabs[i];
             return tab.subTabs[i].steps;
           }
         }
@@ -148,10 +154,19 @@
       }
     }
 
-    function getController($scope) {
+    function getTabController($scope) {
       var tab = getTab();
       if (tab && tab.controller) {
         return $controller(tab.controller, {
+          $scope: $scope
+        });
+      }
+    }
+
+    function getSubTabController($scope) {
+      var subTab = getSubTab();
+      if (subTab && subTab.controller) {
+        return $controller(subTab.controller, {
           $scope: $scope
         });
       }
@@ -194,16 +209,8 @@
 
     function nextStep() {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs).then(function () {
-        if (getTab().name === 'addUsers' && getStep().name === 'manualEntry') {
-          if (!_.isEmpty(angular.element('#usersfield').tokenfield('getTokensList'))) {
-            $rootScope.$broadcast('wizard-add-users-event');
-            $scope.$on('USER_LIST_UPDATED', function () {
-              updateStep();
-            });
-          } else {
-            updateStep();
-          }
-        } else if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
+        //TODO remove these broadcasts
+        if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
           $rootScope.$broadcast('wizard-messenger-setup-event');
           updateStep();
         } else if (getTab().name === 'communications' && getStep().name === 'claimSipUrl') {
@@ -212,6 +219,8 @@
         } else {
           updateStep();
         }
+      }).finally(function () {
+        angular.element('#wizardNext').button('reset');
       });
     }
 
@@ -338,11 +347,39 @@
     function link(scope, element) {
 
       var cancelTabWatch = scope.$watch('wizard.current.tab', recompile);
-      var cancelStepWatch = scope.$watch('wizard.current.step', recompile);
+      var cancelSubTabWatch = scope.$watch('wizard.current.subTab', recompile);
 
       function recompile(newValue, oldValue) {
         if (newValue !== oldValue) {
           cancelTabWatch();
+          cancelSubTabWatch();
+          $timeout(function () {
+            var parentScope = scope.$parent;
+            scope.$destroy();
+            element.replaceWith($compile(element)(parentScope));
+          });
+        }
+      }
+    }
+  }
+
+  /* @ngInject */
+  function crWizardButtons($compile, $timeout) {
+    var directive = {
+      restrict: 'AE',
+      scope: true,
+      templateUrl: 'modules/core/wizard/wizardButtons.tpl.html',
+      link: link
+    };
+
+    return directive;
+
+    function link(scope, element) {
+
+      var cancelStepWatch = scope.$watch('wizard.current.step', recompile);
+
+      function recompile(newValue, oldValue) {
+        if (newValue !== oldValue) {
           cancelStepWatch();
           $timeout(function () {
             var parentScope = scope.$parent;

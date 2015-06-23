@@ -219,7 +219,18 @@ angular
           parent: 'modalLarge',
           views: {
             'modal@': {
-              template: '<cr-add-users></cr-add-users>'
+              controller: 'OnboardCtrl',
+              template: '<div ui-view="usersAdd"></div>'
+            },
+            'usersAdd@users.add': {
+              templateUrl: 'modules/core/users/userAdd/add-users.html'
+            }
+          }
+        })
+        .state('users.add.services', {
+          views: {
+            'usersAdd@users.add': {
+              templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html'
             }
           }
         })

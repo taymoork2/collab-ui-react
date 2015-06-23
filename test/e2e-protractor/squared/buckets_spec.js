@@ -31,29 +31,29 @@ describe('Invite User and Check Buckets', function () {
       utils.expectIsDisplayed(users.manageDialog);
     });
 
-    describe('check account buckets', function () {
+    describe('Add users', function () {
       it('should clear user input field and error message', function () {
         utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
         utils.click(users.clearButton);
         utils.expectTextToBeSet(users.addUsersField, '');
+        utils.expectIsDisabled(users.nextButton);
       });
 
       it('click on enable services individually', function () {
+        utils.sendKeys(users.addUsersField, addEmail);
+        utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+        utils.click(users.nextButton);
         utils.expectIsDisplayed(users.messageLicenses);
         utils.expectIsDisplayed(users.conferenceLicenses);
         utils.expectIsDisplayed(users.communicationLicenses);
       });
-    });
 
-    describe('Add users', function () {
       it('should add users successfully', function () {
-        utils.click(users.clearButton);
-        utils.sendKeys(users.addUsersField, addEmail);
-        utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
         utils.click(users.onboardButton);
         notifications.assertSuccess(addEmail, 'onboarded successfully');
         notifications.clearNotifications();
       });
+
       it('clicking on cancel button should close the modal', function () {
         utils.click(users.closeAddUsers);
         utils.expectIsNotDisplayed(users.manageDialog);

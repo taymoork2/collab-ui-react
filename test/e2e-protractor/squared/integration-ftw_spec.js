@@ -60,6 +60,8 @@ describe('First Time Wizard', function () {
     utils.click(wizard.radiobuttons.first());
     utils.click(wizard.nextBtn);
     utils.expectIsDisplayed(users.addUsersField);
+    utils.click(wizard.nextBtn);
+    utils.click(wizard.finishBtn);
     utils.clickEscape();
     utils.expectIsNotDisplayed(wizard.wizard);
   }, 60000);

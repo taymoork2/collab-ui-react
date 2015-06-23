@@ -1,10 +1,39 @@
 'use strict';
 
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$filter', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
-    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $filter, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
+    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
 
       $scope.hasAccount = Authinfo.hasAccount();
+
+      // model can be removed after switching to controllerAs
+      $scope.model = {
+        userInputOption: 0,
+        nextButtonDisabled: true
+      };
+
+      $scope.strFirstName = $translate.instant('usersPage.firstNamePlaceHolder');
+      $scope.strLastName = $translate.instant('usersPage.lastNamePlaceHolder');
+      $scope.strEmailAddress = $translate.instant('usersPage.emailAddressPlaceHolder');
+      var strNameAndEmailAdress = $translate.instant('usersPage.nameAndEmailAddress');
+      $scope.userInputOptions = [{
+        label: $scope.strEmailAddress,
+        value: 0,
+        name: 'radioOption',
+        id: 'radioEmail'
+      }, {
+        label: strNameAndEmailAdress,
+        value: 1,
+        name: 'radioOption',
+        id: 'radioNamesAndEmail'
+      }];
+
+      function clearNameAndEmailFields() {
+        $scope.model.firstName = '';
+        $scope.model.lastName = '';
+        $scope.model.emailAddress = '';
+        $scope.model.userInfoValid = false;
+      }
 
       function ServiceFeature(label, value, name, license) {
         this.label = label;
@@ -26,9 +55,9 @@ angular.module('Core')
       $scope.communicationFeatures = [];
       $scope.licenses = [];
 
-      $scope.messageFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
-      $scope.conferenceFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
-      $scope.communicationFeatures.push(new ServiceFeature($filter('translate')('onboardModal.freeComm'), 0, 'commRadio', new FakeLicense('advancedCommunication')));
+      $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
+      $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
+      $scope.communicationFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeComm'), 0, 'commRadio', new FakeLicense('advancedCommunication')));
       $scope.currentUser = $stateParams.currentUser;
 
       if ($scope.currentUser) {
@@ -176,14 +205,14 @@ angular.module('Core')
       });
 
       $scope.collabRadio1 = {
-        label: $filter('translate')('onboardModal.enableCollab'),
+        label: $translate.instant('onboardModal.enableCollab'),
         value: 1,
         name: 'collabRadio',
         id: 'collabRadio1'
       };
 
       $scope.collabRadio2 = {
-        label: $filter('translate')('onboardModal.enableCollabGroup'),
+        label: $translate.instant('onboardModal.enableCollabGroup'),
         value: 2,
         name: 'collabRadio',
         id: 'collabRadio2'
@@ -201,7 +230,7 @@ angular.module('Core')
 
         columnDefs: [{
           field: 'displayName',
-          displayName: $filter('translate')('onboardModal.groupColHeader'),
+          displayName: $translate.instant('onboardModal.groupColHeader'),
           sortable: true
         }]
       };
@@ -219,9 +248,7 @@ angular.module('Core')
         return false;
       };
 
-      $scope.onboardUsers = function () {
-        onboardUsers();
-      };
+      $scope.onboardUsers = onboardUsers;
 
       var usersList = [];
 
@@ -326,10 +353,6 @@ angular.module('Core')
         this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
       }
 
-      $scope.init = function () {
-        setPlaceholder();
-      };
-
       $scope.isAddEnabled = function () {
         return Authinfo.isAddUserEnabled();
       };
@@ -356,74 +379,99 @@ angular.module('Core')
         return valid;
       };
 
-      var checkButtons = function () {
-        if (invalidcount > 0) {
-          angular.element('#btnOnboard').prop('disabled', true);
-        } else {
-          angular.element('#btnOnboard').prop('disabled', false);
-        }
+      var checkNextButtonStatus = function () {
+        $scope.model.nextButtonDisabled = invalidcount > 0;
       };
 
-      $scope.setupTokenfield = function () {
-        //tokenfield setup - Should make it into a directive later.
-        angular.element('#usersfield').tokenfield({
-            delimiter: [',', ';'],
-            createTokensOnBlur: true
-          })
-          .on('tokenfield:createtoken', function (e) {
-            //Removing anything in brackets from user data
-            var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
-            e.attrs.value = value;
-          })
-          .on('tokenfield:createdtoken', function (e) {
-            if (!validateEmail(e.attrs.value)) {
-              angular.element(e.relatedTarget).addClass('invalid');
-              invalidcount++;
-            }
-            checkButtons();
-            checkPlaceholder();
-          })
-          .on('tokenfield:edittoken', function (e) {
-            if (!validateEmail(e.attrs.value)) {
-              invalidcount--;
-            }
-          })
-          .on('tokenfield:removedtoken', function (e) {
-            if (!validateEmail(e.attrs.value)) {
-              invalidcount--;
-            }
-            checkButtons();
-            checkPlaceholder();
-          });
-
-        angular.element('#usersfield-tokenfield').css('width', '100%');
-        checkPlaceholder();
+      $scope.tokenfieldid = "usersfield";
+      $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
+      $scope.tokenoptions = {
+        delimiter: [',', ';'],
+        createTokensOnBlur: true
+      };
+      $scope.tokenmethods = {
+        createtoken: function (e) {
+          //Removing anything in brackets from user data
+          var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
+          e.attrs.value = value;
+        },
+        createdtoken: function (e) {
+          if (!validateEmail(e.attrs.value)) {
+            angular.element(e.relatedTarget).addClass('invalid');
+            invalidcount++;
+          }
+          checkNextButtonStatus();
+          checkPlaceholder();
+        },
+        edittoken: function (e) {
+          if (!validateEmail(e.attrs.value)) {
+            invalidcount--;
+          }
+        },
+        removedtoken: function (e) {
+          if (!validateEmail(e.attrs.value)) {
+            invalidcount--;
+          }
+          checkNextButtonStatus();
+          checkPlaceholder();
+        }
       };
 
       var invalidcount = 0;
       var startLog;
 
-      var setPlaceholder = function () {
-        var placeholder = $filter('translate')('usersPage.userInput');
-        angular.element('#usersfield-tokenfield').css('width', '100%');
-        angular.element('#usersfield-tokenfield').attr('placeholder', placeholder);
+      var setPlaceholder = function (placeholder) {
+        angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
       };
 
       //placeholder logic
       var checkPlaceholder = function () {
         if (angular.element('.token-label').length > 0) {
-          angular.element('#usersfield-tokenfield').attr('placeholder', '');
+          setPlaceholder('');
         } else {
-          setPlaceholder();
+          setPlaceholder($translate.instant('usersPage.userInput'));
         }
       };
 
       var getUsersList = function () {
-        return $window.addressparser.parse(angular.element('#usersfield').tokenfield('getTokensList'));
+        return $window.addressparser.parse($scope.model.userList);
+      };
+
+      $scope.validateTokens = function () {
+        $timeout(function () {
+          var tokenfield = angular.element('#usersfield');
+          //reset the invalid count
+          invalidcount = 0;
+          angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
+        }, 100);
+      };
+
+      $scope.addToUsersfield = function () {
+        if ($scope.model.userForm.$valid && $scope.model.userInfoValid) {
+          var userInfo = $scope.model.firstName + ' ' + $scope.model.lastName + '  ' + $scope.model.emailAddress;
+          angular.element('#usersfield').tokenfield('createToken', userInfo);
+          clearNameAndEmailFields();
+          angular.element('#firstName').focus();
+        }
+      };
+
+      $scope.validateEmailField = function () {
+        if ($scope.model.emailAddress) {
+          $scope.model.userInfoValid = validateEmail($scope.model.emailAddress);
+        } else {
+          $scope.model.userInfoValid = false;
+        }
+      };
+
+      $scope.onEnterKey = function (keyEvent) {
+        if (keyEvent.which === 13) {
+          $scope.addToUsersfield();
+        }
       };
 
       var resetUsersfield = function () {
         angular.element('#usersfield').tokenfield('setTokens', ' ');
+        $scope.model.userList = '';
         checkPlaceholder();
         invalidcount = 0;
       };
@@ -434,7 +482,8 @@ angular.module('Core')
         $scope.results = null;
       };
 
-      var onboardUsers = function () {
+      function onboardUsers(optionalOnboard) {
+        var deferred = $q.defer();
         $scope.results = {
           resultList: []
         };
@@ -516,6 +565,7 @@ angular.module('Core')
                 angular.element('#btnOnboard').button('reset');
                 Notification.notify(successes, 'success');
                 Notification.notify(errors, 'error');
+                deferred.resolve();
               }
             });
 
@@ -541,6 +591,7 @@ angular.module('Core')
             Notification.notify([error], 'error');
             isComplete = false;
             angular.element('#btnOnboard').button('reset');
+            deferred.reject();
           }
 
           if (isComplete) {
@@ -549,7 +600,7 @@ angular.module('Core')
 
         };
 
-        if (typeof usersList !== 'undefined' && usersList.length > 0) {
+        if (angular.isArray(usersList) && usersList.length > 0) {
           angular.element('#btnOnboard').button('loading');
 
           var i, temparray, chunk = Config.batchSize;
@@ -565,13 +616,16 @@ angular.module('Core')
             }
             Userservice.onboardUsers(temparray, entitleList, licenseList, callback);
           }
-        } else {
+        } else if (!optionalOnboard) {
           Log.debug('No users entered.');
-          var error = [$filter('translate')('usersPage.validEmailInput')];
+          var error = [$translate.instant('usersPage.validEmailInput')];
           Notification.notify(error, 'error');
+          deferred.reject();
+        } else {
+          deferred.resolve();
         }
-
-      };
+        return deferred.promise;
+      }
 
       var entitleUserCallback = function (data, status) {
         $scope.results = {
@@ -686,9 +740,24 @@ angular.module('Core')
         setEntitlementList();
       });
 
-      $scope.$on('wizard-add-users-event', function () {
-        onboardUsers();
-      });
+      // Wizard hook for next button
+      $scope.manualEntryNext = function () {
+        var deferred = $q.defer();
+
+        if (invalidcount === 0) {
+          deferred.resolve();
+        } else {
+          var error = [$translate.instant('usersPage.validEmailInput')];
+          Notification.notify(error, 'error');
+          deferred.reject();
+        }
+
+        return deferred.promise;
+      };
+      // Wizard hook for save button
+      $scope.assignServicesNext = function () {
+        return onboardUsers(true);
+      };
 
       $scope.isServiceAllowed = function (service) {
         return Authinfo.isServiceAllowed(service);
@@ -733,11 +802,9 @@ angular.module('Core')
         });
       };
 
-      $scope.setupTokenfield();
       //set intitially when loading the page
       //on initial login the AuthinfoUpdated broadcast may not be caught if not on user page
       setEntitlementList();
       watchCheckboxes();
-
     }
   ]);

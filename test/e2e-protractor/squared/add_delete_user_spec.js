@@ -33,22 +33,12 @@ describe('Squared Add & Entitle User Flows', function () {
 
   });
 
-  describe('Add an existing user', function () {
-    xit('should display input user email in results with already exists message', function () {
-      utils.click(users.clearButton);
-      utils.sendKeys(users.addUsersField, users.testUser.username);
-      utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-      utils.click(users.onboardButton);
-      notifications.assertError('already entitled/unentitled');
-      notifications.clearNotifications();
-    });
-  });
-
   describe('Add a new user', function () {
     it('should display input user email in results with success message', function () {
       utils.click(users.clearButton);
       utils.sendKeys(users.addUsersField, inputEmail);
       utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+      utils.click(users.nextButton);
       utils.click(users.onboardButton);
       notifications.assertSuccess(inputEmail, 'onboarded successfully');
       notifications.clearNotifications();
@@ -71,10 +61,6 @@ describe('Squared Add & Entitle User Flows', function () {
       utils.expectIsNotDisplayed(users.deleteUserModal);
       notifications.clearNotifications();
       utils.expectRowIsNotDisplayed(inputEmail);
-    });
-
-    xit('should delete added user', function () {
-      deleteUtils.deleteUser(inputEmail);
     });
 
     it('should log out', function () {

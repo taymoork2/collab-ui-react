@@ -32,9 +32,9 @@ angular.module('Core')
         var deferred = $q.defer();
         if (angular.isDefined($scope.options.addUsers) && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
           if ($scope.options.addUsers === 0) {
-            $scope.wizard.setSubTab('simple');
+            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[0]);
           } else if ($scope.options.addUsers === 1) {
-            $scope.wizard.setSubTab('advanced');
+            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
           }
           deferred.resolve();
         } else {

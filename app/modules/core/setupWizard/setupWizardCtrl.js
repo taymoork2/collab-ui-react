@@ -66,12 +66,18 @@ angular.module('Core')
         subTabs: [{
           name: 'simple',
           title: 'firstTimeWizard.simple',
+          controller: 'OnboardCtrl',
           steps: [{
             name: 'init',
             template: 'modules/core/setupWizard/addUsers.init.tpl.html'
           }, {
             name: 'manualEntry',
-            template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html'
+            template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html',
+            title: 'firstTimeWizard.manualEntryStep'
+          }, {
+            name: 'assignServices',
+            template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
+            title: 'firstTimeWizard.assignServicesStep'
           }]
         }, {
           name: 'advanced',
