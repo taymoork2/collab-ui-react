@@ -1,8 +1,6 @@
 <div ng-show="showInfoPanel" class="clearfix">
-    <h3 style="padding-left: 20px">Notifications</h3>
-    <div class="dashboard-info-panel">
-      <div>
-
+  <div class="dashboard-info-panel" ng-show="showInfoPanel">
+    <div class="clearfix">
         <!-- warning -->
         <hercules-select-services></hercules-select-services>
         <hercules-missing-services></hercules-missing-services>
@@ -13,7 +11,5 @@
 
         <!-- info -->
         <hercules-fusion-information></hercules-fusion-information>
-
       </div>
-    </div>
 </div>

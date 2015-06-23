@@ -1,28 +1,23 @@
 .dashboard-info-panel {
   background: white;
-  margin-right: -20px;
 
   &:first-child {
     background: $brand-white;
-    padding: 20px 20px 0 20px;
-    margin: 0 10px 20px 20px;
+    padding: 20px 10px 10px 10px;
+    margin: 0 10px 10px 20px;
   }
   .panel,
   .panel-group {
     margin: 0;
   }
   .panel {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+    box-shadow: none;
   }
-
-  .panel-heading, .panel-heading:hover {
+  .panel-heading,.panel-heading:hover {
     border: 0;
     color: #333;
     background: white;
-    h4 {
-      font-size: 16px;
-      font-family: 'CiscoSansTT Thin';
-    }
   }
   *:focus {
     border-color: inherit;
@@ -31,23 +26,27 @@
     outline: none;
   }
   .panel-heading:hover a {
-    color: #333;
+    color: $brand-primary;
   }
   .panel-body, .panel-group .panel-heading + .panel-collapse .panel-body {
     border: 0;
     margin-top: 0;
-    padding: 20px 135px;
+    padding: 0px 0px 0px 106px;
   }
   .panel-heading .badge.badge-custom-warn {
-    width: 80px;
+    width: 55px;
+    height: 25px;
     color: white;
     padding-top: 6px;
-    background: #f7c100;
+    background: $brand-warning;
+    font-size: 12px;
   }
   .panel-heading .badge.badge-custom-info {
-    width: 80px;
+    width: 55px;
+    height: 25px;
     color: white;
     padding-top: 6px;
-    background: #0096D6;
+    background: $brand-primary;
+    font-size: 12px;
   }
 }
