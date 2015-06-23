@@ -2,8 +2,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$translate', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification', 'Orgservice', 'Authinfo', 'LogMetricsService', 'Utils',
-    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils) {
+  .controller('ListUsersCtrl', ['$scope', '$rootScope', '$state', '$location', '$dialogs', '$timeout', '$translate', 'Userservice', 'UserListService', 'Log', 'Storage', 'Config', 'Notification', 'Orgservice', 'Authinfo', 'LogMetricsService', 'Utils', 'HuronUser',
+    function ($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
 
       //Initialize variables
       $scope.load = true;
@@ -179,14 +179,30 @@ angular.module('Core')
         });
       };
 
-      $scope.resendInvitation = function (userEmail, userName) {
+      $scope.resendInvitation = function (userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+
+        if (userStatus === 'pending') {
+          sendSparkWelcomeEmail(userEmail, userName);
+        } else if ($scope.isHuronUser(entitlements) && !dirsyncEnabled) {
+          HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false)
+            .then(function () {
+              Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
+            }, function (error) {
+              Notification.errorResponse(error, 'usersPage.emailError');
+            });
+        }
+
+        angular.element('.open').removeClass('open');
+
+      };
+
+      var sendSparkWelcomeEmail = function (userEmail, userName) {
         var userData = [{
           'address': userEmail,
           'name': userName
         }];
 
         Userservice.inviteUsers(userData, null, true, function (data) {
-
           if (data.success) {
             Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
           } else {
@@ -195,8 +211,6 @@ angular.module('Core')
             angular.element('#btnSave').button('reset');
           }
         });
-
-        angular.element('.open').removeClass('open');
 
       };
 
@@ -223,7 +237,7 @@ angular.module('Core')
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
-        '<li ng-if="row.entity.userStatus === \'pending\'" id="resendInviteOption"><a ng-click="$event.stopPropagation(); resendInvitation(row.entity.userName, row.entity.name.givenName); "><span translate="usersPage.resend"></span></a></li>' +
+        '<li ng-if="row.entity.userStatus === \'pending\' || isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';

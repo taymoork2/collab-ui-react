@@ -6,7 +6,7 @@
     .factory('HuronUser', HuronUser);
 
   /* @ngInject */
-  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, $q, LogMetricsService, Notification) {
+  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, UserOTPService, $q, LogMetricsService, Notification) {
     var userPayload = {
       'userName': null,
       'firstName': null,
@@ -46,34 +46,65 @@
         user.uuid = uuid;
       }
 
-      var emailInfo = {
-        'email': user.userName,
-        'firstName': user.lastName,
-        'phoneNumber': null,
-        'oneTimePassword': null,
-        'expiresOn': null,
-        'userId': uuid,
-        'customerId': Authinfo.getOrgId()
-      };
-
       return UserServiceCommonV2.save({
           customerId: Authinfo.getOrgId()
         }, user).$promise
         .then(function () {
-          return UserDirectoryNumberService.query({
-              customerId: Authinfo.getOrgId(),
-              userId: user.uuid
-            }).$promise
-            .then(function (userDnInfo) {
-              if (userDnInfo && userDnInfo[0] && userDnInfo[0].directoryNumber && userDnInfo[0].directoryNumber.pattern) {
-                emailInfo.phoneNumber = userDnInfo[0].directoryNumber.pattern;
-              } else {
-                emailInfo.phoneNumber = "1111";
-              }
-            });
+          return sendWelcomeEmail(user.userName, user.lastName, uuid, Authinfo.getOrgId(), true);
+        });
+    }
+
+    function sendWelcomeEmail(userName, lastName, uuid, customerId, acquireOTPFlg) {
+
+      var emailInfo = {
+        'email': userName,
+        'firstName': lastName,
+        'phoneNumber': null,
+        'oneTimePassword': null,
+        'expiresOn': null,
+        'userId': uuid,
+        'customerId': customerId
+      };
+      return UserDirectoryNumberService.query({
+          customerId: customerId,
+          userId: uuid
+        }).$promise
+        .then(function (userDnInfo) {
+          if (userDnInfo && userDnInfo[0] && userDnInfo[0].directoryNumber && userDnInfo[0].directoryNumber.pattern) {
+            emailInfo.phoneNumber = userDnInfo[0].directoryNumber.pattern;
+          } else {
+            emailInfo.phoneNumber = "1111";
+          }
         })
         .then(function () {
-          return acquireOTP(user.userName);
+          if (acquireOTPFlg) {
+            return acquireOTP(userName);
+          } else {
+            return UserOTPService.query({
+                customerId: customerId,
+                userId: uuid
+              }).$promise
+              .then(function (otps) {
+                var otpList = [];
+                for (var i = 0; i < otps.length; i++) {
+                  if (otps[i].expires.status === "valid") {
+                    var otp = {
+                      password: otps[i].activationCode,
+                      expiresOn: otps[i].expires.time,
+                      valid: otps[i].expires.status
+                    };
+                    otpList.push(otp);
+                  }
+                }
+
+                if (otpList.length > 0) {
+                  return otpList[0];
+                } else {
+                  return acquireOTP(userName);
+                }
+
+              });
+          }
         })
         .then(function (otpInfo) {
           emailInfo.oneTimePassword = otpInfo.password;
@@ -125,7 +156,8 @@
       acquireOTP: acquireOTP,
       create: create,
       update: update,
-      updateDtmfAccessId: updateDtmfAccessId
+      updateDtmfAccessId: updateDtmfAccessId,
+      sendWelcomeEmail: sendWelcomeEmail
     };
 
   }
