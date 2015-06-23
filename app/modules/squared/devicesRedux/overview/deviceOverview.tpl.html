@@ -89,12 +89,12 @@
           </span>
         </button>
 
-        <sq-loader-button
-          click="sendFeedback"
+        <button
+          class="btn btn-primary"
+          sq-click-promise="reportProblem()"
           ng-if="!deviceOverview.currentDevice.needsActivation">
           <span translate="spacesPage.reportProblem"></span>
-        </sq-loader-button>
-
+        </button>
       </div>
     </cs-sp-section>
   </cs-sp-container>

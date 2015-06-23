@@ -38,9 +38,9 @@
               class="form-control profile-input adddevice-desc add-device-textbox">
             </input>
 
-            <sq-loader-button
-              click="addDevice"
-              class="btn-lg"
+            <button
+              sq-click-promise="addDevice()"
+              class="btn btn-primary btn-lg"
               ng-disabled="!deviceName.length">
               <span 
                 translate="spacesPage.add">

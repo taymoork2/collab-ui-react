@@ -5,7 +5,7 @@
     .controller('AddDeviceController',
 
       /* @ngInject */
-      function ($scope, Notification, CsdmService, XhrNotificationService, $timeout) {
+      function ($scope, $q, Notification, CsdmService, XhrNotificationService, $timeout) {
 
         $scope.showAdd = true;
         $scope.deviceName = '';
@@ -49,15 +49,19 @@
         };
 
         $scope.addDevice = function (callback) {
-          if (!$scope.deviceName) return callback.call();
+          var deferred = $q.defer();
+
+          if (!$scope.deviceName) return deferred.reject();
 
           CsdmService.createCode($scope.deviceName, function (err, data) {
-            callback.call();
             $scope.showAdd = false;
 
             if (err) {
-              return XhrNotificationService.notify(err);
+              XhrNotificationService.notify(err);
+              return deferred.reject();
             }
+
+            deferred.resolve();
 
             if (data.activationCode && data.activationCode.length > 0) {
               $scope.activationCode = formatActivationCode(data.activationCode);
@@ -67,6 +71,8 @@
               $scope.notificationsFailed = true;
             }
           });
+
+          return deferred.promise;
         };
 
       }
