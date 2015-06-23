@@ -104,17 +104,6 @@
     });
   })
 
-  .factory('VoicemailTimezoneService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:objectId', {
-      customerId: '@customerId',
-      objectId: '@objectId'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  })
-
   .factory('VoicemailService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
       customerId: '@customerId'

@@ -109,24 +109,6 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
-  describe('listVoicemailTimezone', function () {
-    var usertemplate = [{
-      timeZone: '20',
-      objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
-    }];
-    beforeEach(function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voicemail/customers/1/usertemplates?query=(alias+startswith+1)').respond(usertemplate);
-    });
-
-    it('should update timezone', function () {
-      ServiceSetup.listVoicemailTimezone().then(function (response) {
-        expect(angular.equals(response, usertemplate)).toBe(true);
-
-      });
-      $httpBackend.flush();
-    });
-  });
-
   describe('getVoicemailPilotNumber', function () {
     var voicemail = {
       pilotNumber: '+1234567890',
