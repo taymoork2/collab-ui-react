@@ -1,7 +1,7 @@
 {
-  "description": " ",
+  "name": " ",
   "retrievalPrefix": "1",
   "pattern": "",
-  "patternOption": "single",
+  "patternOption": "singleNumber",
   "reversionPattern": 1234
 }

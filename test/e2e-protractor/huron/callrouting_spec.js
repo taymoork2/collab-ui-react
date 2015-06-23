@@ -25,20 +25,17 @@ describe('Huron Call Routing', function () {
   describe('Call Park feature', function () {
     it('should cancel creating a new call park', function () {
       utils.click(callrouting.addCallParkButton);
-      utils.expectIsDisplayed(callrouting.name);
-
+      utils.expectIsDisplayed(callrouting.cancelButton);
       utils.click(callrouting.cancelButton);
-      utils.expectIsNotDisplayed(callrouting.name);
+      utils.expectIsNotDisplayed(callrouting.cancelButton);
     });
 
     it('should create a new call park with single number', function () {
       utils.click(callrouting.addCallParkButton);
-
-      utils.expectIsDisplayed(callrouting.name);
       utils.sendKeys(callrouting.name, pattern);
       utils.click(callrouting.singleNumber);
+      utils.click(callrouting.pattern);
       utils.sendKeys(callrouting.pattern, pattern);
-      utils.sendKeys(callrouting.retrievalPrefix, pattern);
       utils.sendKeys(callrouting.reversionPattern, pattern);
       utils.click(callrouting.createButton);
 
@@ -50,12 +47,11 @@ describe('Huron Call Routing', function () {
 
       utils.expectIsDisplayed(callrouting.name);
       utils.sendKeys(callrouting.name, (pattern + 1) + ' through ' + (pattern + 2));
+      utils.click(callrouting.range);
       utils.click(callrouting.rangeMin);
       utils.sendKeys(callrouting.rangeMin, (pattern + 1));
       utils.click(callrouting.rangeMax);
       utils.sendKeys(callrouting.rangeMax, (pattern + 2));
-      utils.click(callrouting.retrievalPrefix);
-      utils.sendKeys(callrouting.retrievalPrefix, pattern);
       utils.click(callrouting.reversionPattern);
       utils.sendKeys(callrouting.reversionPattern, pattern);
       utils.click(callrouting.createButton);

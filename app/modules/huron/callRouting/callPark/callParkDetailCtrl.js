@@ -12,19 +12,33 @@
     vm.callPark = {
       retrievalPrefix: '*',
       pattern: '',
-      description: '',
+      name: '',
       patternOption: '',
       reversionOption: 'callparkInitLine',
       reversionPattern: ''
     };
     vm.validations = {
-      greaterThanLessThan: function (viewValue, modelValue, scope) {
+      greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
-        return value >= scope.model.rangeMin;
+        // we only validate this if rangeMin is valid or populated
+        if (angular.isUndefined(scope.model.rangeMin) || scope.model.rangeMin === "" || !ValidationService.numeric(viewValue, modelValue)) {
+          return true;
+        } else {
+          return parseInt(value) >= parseInt(scope.model.rangeMin);
+        }
+      },
+      lessThan: function (viewValue, modelValue, scope) {
+        var value = modelValue || viewValue;
+        // we only validate this if rangeMin is valid or populated
+        if (angular.isUndefined(scope.model.rangeMax) || scope.model.rangeMax === "" || !ValidationService.numeric(viewValue, modelValue)) {
+          return true;
+        } else {
+          return parseInt(value) <= parseInt(scope.model.rangeMax);
+        }
       }
     };
     vm.nameFields = [{
-      key: 'description',
+      key: 'name',
       type: 'input',
       templateOptions: {
         className: 'name-align',
@@ -45,7 +59,6 @@
         valuefield: 'value',
         inputClass: 'col-xs-3',
         required: true,
-
         options: [{
           name: '#',
           value: '#'
@@ -69,6 +82,7 @@
           label: $translate.instant('callPark.patternRange'),
           value: 'range',
           model: 'patternOption',
+          required: true
         }
       }, {
         className: 'col-xs-3 align-number-input',
@@ -83,6 +97,15 @@
             expression: ValidationService.numeric,
             message: function () {
               return $translate.instant('validation.numeric');
+            }
+          },
+          lessThan: {
+            expression: vm.validations.lessThan,
+            message: function ($viewValue, $modelValue, scope) {
+              return $translate.instant('callPark.greaterThanLessThan', {
+                'rangeMax': scope.model.rangeMax,
+                'rangeMin': $viewValue
+              });
             }
           }
         },
@@ -115,8 +138,8 @@
               return $translate.instant('validation.numeric');
             }
           },
-          greaterThanLessThan: {
-            expression: vm.validations.greaterThanLessThan,
+          greaterThan: {
+            expression: vm.validations.greaterThan,
             message: function ($viewValue, $modelValue, scope) {
               return $translate.instant('callPark.greaterThanLessThan', {
                 'rangeMin': scope.model.rangeMin,
@@ -128,19 +151,20 @@
         expressionProperties: {
           'hide': function ($viewValue, $modelValue, scope) {
             return scope.model.patternOption !== 'range';
-          }
+          },
         }
       }]
     }, {
       className: 'row row-callpark',
       fieldGroup: [{
         className: 'col-xs-4 margin-radio',
-        key: 'single',
+        key: 'singleNumber',
         type: 'radio',
         templateOptions: {
           label: $translate.instant('callPark.patternSingle'),
-          value: 'single',
-          model: 'patternOption'
+          value: 'singleNumber',
+          model: 'patternOption',
+          required: true
         }
       }, {
         className: 'col-xs-6 align-number',
@@ -150,7 +174,7 @@
           placeholder: $translate.instant('callPark.singleNumberPlaceholder'),
           type: 'text',
           required: true,
-          model: 'callPark'
+          model: 'pattern'
         },
         validators: {
           numeric: {
@@ -162,7 +186,7 @@
         },
         expressionProperties: {
           'hide': function ($viewValue, $modelValue, scope) {
-            return scope.model.patternOption !== 'single';
+            return scope.model.patternOption !== 'singleNumber';
           }
         }
       }]
@@ -199,6 +223,14 @@
           placeholder: $translate.instant('callPark.numberPlaceholder'),
           type: 'text',
           model: 'reversionPattern'
+        },
+        validators: {
+          numeric: {
+            expression: ValidationService.numeric,
+            message: function () {
+              return $translate.instant('validation.numeric');
+            }
+          }
         }
       }]
     }];
@@ -219,12 +251,12 @@
     function addCallPark(callParkModel) {
 
       var callPark = {
-        description: callParkModel.description,
+        description: callParkModel.name,
         retrievalPrefix: callParkModel.retrievalPrefix,
         pattern: callParkModel.pattern,
         reversionPattern: callParkModel.reversionPattern
       };
-      if (callParkModel.patternOption === 'single') {
+      if (callParkModel.patternOption === 'singleNumber') {
         CallPark.create(callPark)
           .then(function () {
             $modalInstance.close();

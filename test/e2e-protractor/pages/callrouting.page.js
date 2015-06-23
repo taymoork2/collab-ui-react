@@ -9,16 +9,18 @@ var CallRoutingPage = function () {
   this.callParkInfoTextTwo = element(by.css('.callrouting-main-information')).element(by.cssContainingText('p', 'You can define'));
 
   this.name = element(by.id('name'));
-  this.singleNumber = element(by.cssContainingText('.radio-inline', 'Single Number'));
+  this.singleNumber = element(by.cssContainingText('.cs-radio', 'Single Number'));
+  this.range = element(by.cssContainingText('.cs-radio', 'Number Range'));
   this.rangeMin = element(by.id('rangeMin'));
   this.rangeMax = element(by.id('rangeMax'));
   this.pattern = element(by.id('pattern'));
   this.retrievalPrefix = element(by.id('retrievalPrefix'));
   this.reversionPattern = element(by.id('reversionPattern'));
   this.callParks = element.all(by.repeater('callPark in cp.callParks'));
-  this.createButton = element(by.buttonText('Create Call Park'));
+  this.createButton = element(by.buttonText('Save'));
   this.deleteButton = element(by.buttonText('Delete'));
   this.cancelButton = element(by.buttonText('Cancel'));
+
   this.callParkCount = element(by.cssContainingText('.callrouting-nav-menuitem', 'Park')).element(by.css('.count'));
 
   this.getPattern = function () {

@@ -153,7 +153,7 @@ exports.expectIsNotDisplayed = function (elem) {
     }, function () {
       return true;
     });
-  }, TIMEOUT, 'Waiting for: ' + elem.locator());
+  }, TIMEOUT, 'Waiting for Not Displayed: ' + elem.locator());
 };
 
 exports.expectTextToBeSet = function (elem, text) {
@@ -163,7 +163,7 @@ exports.expectTextToBeSet = function (elem, text) {
     }, function () {
       return false;
     });
-  }, TIMEOUT, 'Waiting for: ' + elem.locator());
+  }, TIMEOUT, 'Waiting for Text to be set: ' + elem.locator());
 };
 
 exports.expectValueToBeSet = function (elem, value) {

@@ -1,5 +1,5 @@
 {
-  "description": "callParkTest",
+  "name": "callParkTest",
   "retrievalPrefix": "*",
   "pattern": 1234566,
   "patternOption": "single",
