@@ -25,7 +25,7 @@
         return;
       }
       type = (type == 'success') ? type : 'error';
-      alertify.log(notifications.join('<br/>'), type, 0);
+      alertify.log(notifications.join('<br/>'), type, type == 'success' ? 3000 : 0);
     }
 
     function errorResponse(response, errorKey, errorParams) {
