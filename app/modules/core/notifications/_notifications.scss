@@ -12,25 +12,59 @@ cr-notification {
 }
 
 .alertify-log {
-  text-shadow: none;
+  &:after {
+    content: $icon-close;
+    top: 13px;
+    right: 12px;
+    position: absolute;
+    font-size: 17px;
+    line-height: 22px;
+    height: 17px;
+    width: 17px;
+  }
   &:hover {
     cursor: pointer;
   }
-  text-align: center;
-  opacity: 0.95;
-  line-height: 1;
+  text-shadow: none;
+  text-align: left;
+  line-height: 20px;
+  font-family: Arial, "Cisco_Toolkit_Icons";
+  font-size: 14px;
+  padding-left: 40px;
+  padding-right: 34px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 .alertify-log-error {
+  &:before {
+    content: $icon-error;
+    top: 13px;
+    left: 12px;
+    position: absolute;
+    font-size: 17px;
+    line-height: 22px;
+    height: 17px;
+    width: 17px;
+  }
   background-color: $brand-danger;
   color: $brand-white;
-  border: 1px solid $brand-danger-dark;
 }
 
 .alertify-log-success {
+  &:before {
+    content: $icon-check;
+    top: 12px;
+    left: 12px;
+    position: absolute;
+    font-size: 37px;
+    line-height: 25px;
+    height: 17px;
+    width: 17px;
+    text-indent: -14px;
+  }
   background-color: $brand-success;
   color: $brand-white;
-  border: 1px solid $brand-success-dark;
 }
 
 .notification-panel {
