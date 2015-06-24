@@ -1,10 +1,11 @@
 .dashboard-info-panel {
   background: white;
+  border: 1px solid $gray-lighter;
 
   &:first-child {
     background: $brand-white;
     padding: 20px 10px 10px 10px;
-    margin: 0 10px 10px 20px;
+    margin: 0px 0px 10px 20px;
   }
   .panel,
   .panel-group {
@@ -54,4 +55,29 @@
     background: $brand-danger;
     font-size: 12px;
   }
+}
+
+.dashboard-info-panel:after {
+  content: "";
+  position: absolute;
+  border-left: 17px solid transparent;
+  border-right: 17px solid transparent;
+  bottom: 100%;
+  right: 88px;
+  border-bottom: 17px solid #FFF;
+  margin-top: 0px;
+  z-index: 1;
+  margin-bottom: -1px;
+}
+
+.dashboard-info-panel:before {
+  content: "";
+  position: absolute;
+  border-left: 17px solid transparent;
+  border-right: 17px solid transparent;
+  bottom: 100%;
+  right: 88px;
+  margin-top: 0px;
+  z-index: 1;
+  border-bottom: 17px solid $gray-lighter;
 }

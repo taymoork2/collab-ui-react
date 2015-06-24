@@ -1,5 +1,5 @@
 .dashboard-header {
-  margin-left: 2px;
+  margin-left: 5px;
   font-family: $brand-font-extra-light;
   h4 {
     margin-top: 5px;
@@ -7,9 +7,10 @@
   }
   .item {
     padding: 10px 20px;
-    margin: 0 10px 10px 0;
+    margin: 0px 0px 10px 0px;
     background-color: $brand-white;
     min-height: 100px;
+    border: 1px solid $gray-lighter;
   }
   .header-stat {
     font-size: 36px;
