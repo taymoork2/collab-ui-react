@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl(Authinfo, TrialService, Log) {
+  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate) {
     /*jshint validthis: true */
     var vm = this;
     vm.messagingServices = {
@@ -21,7 +21,15 @@
 
     // AFAIK webex conferencing will never have trials
     // so no need to check if it's a new trial.
-    vm.confServices = {};
+    vm.confServices = {
+      isNewTrial: false,
+      services: []
+    };
+
+    vm.cmrServices = {
+      isNewTrial: false,
+      services: []
+    };
 
     vm.trialId = '';
     vm.trial = {};
@@ -61,17 +69,55 @@
 
       // AFAIK webex conferencing will never have trials
       // so no need to check if it's a new trial.
-      vm.confServices = Authinfo.getConferenceServices();
-
-      if (vm.trialExists) {
-        vm.processing = true;
-        TrialService.getTrial(vm.trialId).then(function (trial) {
-          populateTrialData(trial);
-        }).finally(function () {
-          vm.processing = false;
+      vm.confServices.services = Authinfo.getConferenceServices();
+      if (vm.confServices.services) {
+        angular.forEach(vm.confServices.services, function (service) {
+          if (service.license.isTrial) {
+            vm.trialExists = true;
+            vm.trialId = service.license.trialId;
+            if (service.license.status === 'PENDING') {
+              vm.confServices.isNewTrial = true;
+            }
+          }
         });
       }
 
+      vm.cmrServices.services = Authinfo.getCmrServices();
+
+      vm.sites = {};
+      var lastservice = {};
+      angular.forEach(vm.confServices.services, function (service) {
+        if (service.license) {
+          if (service.license.siteUrl) {
+            if (!vm.sites[service.license.siteUrl]) {
+              vm.sites[service.license.siteUrl] = [];
+            }
+            vm.sites[service.license.siteUrl].push(service);
+          }
+        }
+      });
+      if (Object.prototype.toString.call(vm.cmrServices.services) == '[object Array]') {
+        angular.forEach(vm.cmrServices.services, function (service) {
+          if (service.license) {
+            if (service.license.siteUrl) {
+              if (!vm.sites[service.license.siteUrl]) {
+                vm.sites[service.license.siteUrl] = [];
+              }
+              service.label = $translate.instant('onboardModal.cmr');
+              vm.sites[service.license.siteUrl].push(service);
+            }
+          }
+        });
+      } else {
+        var cmrService = vm.cmrServices.services;
+        if (cmrService && cmrService.license) {
+          if (!vm.sites[cmrService.license.siteUrl]) {
+            vm.sites[cmrService.license.siteUrl] = [];
+          }
+          cmrService.label = $translate.instant('onboardModal.cmr');
+          vm.sites[cmrService.license.siteUrl].push(cmrService);
+        }
+      }
     }
 
     activate();

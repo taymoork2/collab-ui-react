@@ -1,0 +1,18 @@
+[{
+  "isCustomerPartner": false,
+  "label": "Training Center 100",
+  "license": {
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "cloudmeetings"
+    ],
+    "isTrial": true,
+    "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+    "licenseId": "MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0",
+    "licenseType": "CONFERENCING",
+    "offerName": "TC",
+    "status": "ACTIVE",
+    "volume": 100
+  }
+}]
