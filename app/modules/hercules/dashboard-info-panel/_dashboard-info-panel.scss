@@ -49,4 +49,12 @@
     background: $brand-primary;
     font-size: 12px;
   }
+  .panel-heading .badge.badge-custom-error {
+    width: 55px;
+    height: 25px;
+    color: white;
+    padding-top: 6px;
+    background: $brand-danger;
+    font-size: 12px;
+  }
 }
