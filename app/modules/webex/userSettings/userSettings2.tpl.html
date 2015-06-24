@@ -282,9 +282,10 @@
          ng-model="advancedSettings.locale"
          value="{{localeParam}}" />
   
-  <button id='hiddenButton'
+  <button id="hiddenButton"
           type="submit"
-          style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;">
+          style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;"
+          onclick="this.parentElement.submit();">
   </button>
 </form>
 <!-- End of WebEx advanced linkout form -->
