@@ -489,7 +489,9 @@ gulp.task('scss:build', ['clean:css'], function () {
     .src('app/styles/app.scss')
     .pipe($.sourcemaps.init())
     .pipe($.plumber())
-    .pipe($.sass())
+    .pipe($.sass({
+      outputStyle: 'compact'
+    }))
     .on('error', errorLogger)
     .pipe($.autoprefixer({
       browsers: ['last 2 versions', '> 5%']
@@ -543,7 +545,7 @@ gulp.task('optimize:app', function () {
     .pipe(assets)
     .pipe($.sourcemaps.init())
     .pipe(cssFilter)
-    .pipe($.csso())
+    .pipe($.minifyCss())
     .pipe(cssFilter.restore())
     .pipe(jsFilter)
     .pipe($.ngAnnotate({
