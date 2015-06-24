@@ -64,13 +64,13 @@
             </B>
             </div>
             <div class="row" ng-repeat="cluster in clusters" ng-click="showConnectorsDetails(cluster)">
-              <div class="col-sm-2 col-xs-1">
+              <div class="col-sm-2 col-xs-1" style="overflow: hidden">
                 {{cluster.name}}
               </div>
-              <div class="col-sm-2 col-xs-1">
+              <div class="col-sm-2 col-xs-1" style="overflow: hidden">
                 {{cluster.hosts[0].host_name}}
               </div>
-              <div class="col-sm-1 col-xs-1">
+              <div class="col-sm-1 col-xs-1" style="overflow: hidden">
                 <span ng-show="cluster.needs_attention" class="red">
                   <i class="fa fa-circle" />
                   <span class="hidden-xs">Offline </span>
@@ -84,16 +84,16 @@
                   <span class="hidden-xs">Active </span>
                 </span>
               </div>
-               <div class="col-sm-2 col-xs-1">
+               <div class="col-sm-2 col-xs-1" style="overflow: hidden">
                
               </div>
-              <div class="col-sm-3 col-xs-3">
+              <div class="col-sm-3 col-xs-3" style="overflow: hidden">
                 <div class="col-md-1" style="top:-4px">0%  </div>
                 <div class="progress page-header col-md-8">
                  <div class="progress-bar page-header " style="width:0%;"></div>
                 </div>
               </div>
-              <div class="col-sm-1 col-xs-1">
+              <div class="col-sm-1 col-xs-1" style="overflow: hidden">
                   <span class="hidden-xs"><b>...</b></span>
                 </div>
               </div>

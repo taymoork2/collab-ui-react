@@ -18,7 +18,6 @@ angular.module('Mediafusion')
         //$scope.host = _.find(cluster.hosts, function (h) {
         //return h.serial == $stateParams.hostSerial;
         //});
-
         //if (!$scope.host) return $state.sidepanel.close();
       }, true);
 

@@ -5,7 +5,6 @@ angular.module('Mediafusion')
 
     /* @ngInject */
     function ($scope, $state, $stateParams, MediafusionProxy) {
-      //console.log("entered connector details controller");
       $scope.visibleAlarm = {};
       $scope.$watch(MediafusionProxy.getClusters, function (data) {
         $scope.connector = _.find(data.clusters || [], function (c) {
