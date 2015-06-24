@@ -470,7 +470,7 @@
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
           });
           deferreds.push(promise);
-        } else if (vm.pilotNumberSelected.pattern !== vm.model.site.voicemailPilotNumber) {
+        } else if (vm.pilotNumberSelected && vm.pilotNumberSelected.pattern !== vm.model.site.voicemailPilotNumber) {
           promise = ServiceSetup.updateCustomerVoicemailPilotNumber({
             voicemail: {
               pilotNumber: vm.pilotNumberSelected.pattern
