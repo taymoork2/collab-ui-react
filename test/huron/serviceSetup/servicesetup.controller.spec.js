@@ -97,6 +97,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
     spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
     spyOn(ServiceSetup, 'updateCustomerVoicemailPilotNumber').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
 
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.callFake(function () {
       ServiceSetup.internalNumberRanges = model.numberRanges;
@@ -174,6 +175,7 @@ describe('Controller: ServiceSetup', function () {
 
       expect(ServiceSetup.createSite).not.toHaveBeenCalled();
       expect(ServiceSetup.updateCustomerVoicemailPilotNumber).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
@@ -186,6 +188,7 @@ describe('Controller: ServiceSetup', function () {
 
       expect(ServiceSetup.createSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomerVoicemailPilotNumber).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });

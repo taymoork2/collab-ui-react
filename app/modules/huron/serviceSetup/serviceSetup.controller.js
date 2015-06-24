@@ -346,7 +346,7 @@
               vm.externalNumberPool.splice(index, 1);
             }
           });
-          vm.externalNumberPool.push(selectedVoicemailObject);
+          vm.externalNumberPool.push(selectedVoicemailObject || vm.pilotNumberSelected);
         }
       }).catch(function (response) {
         vm.externalNumberPool = [];
@@ -451,20 +451,23 @@
           currentSite = angular.copy(vm.model.site);
           currentSite.timeZone = currentSite.timeZone.value;
           promise = ServiceSetup.createSite(currentSite).then(function () {
+            var promises = [];
             if (vm.pilotNumberSelected) {
-              return ServiceSetup.updateCustomerVoicemailPilotNumber({
+              promises.push(ServiceSetup.updateCustomerVoicemailPilotNumber({
                 voicemail: {
                   pilotNumber: vm.pilotNumberSelected.pattern
                 }
               }).catch(function (response) {
                 errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
-              });
+              }));
             }
             if (vm.model.site.timeZone !== DEFAULT_TZ.value) {
-              return ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.objectId).catch(function (response) {
-                errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
-              });
+              promises.push(ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.objectId)
+                .catch(function (response) {
+                  errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
+                }));
             }
+            return $q.all(promises);
           }).catch(function (response) {
             vm.firstTimeSetup = true;
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
