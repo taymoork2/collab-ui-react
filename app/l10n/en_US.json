@@ -557,7 +557,11 @@
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
-    "greaterThanLessThan": "{{beginNumber}}  must be less than or equal to {{endNumber}}."
+    "greaterThan": "{{endNumber}} must be greater than or equal to {{beginNumber}}.",
+    "lessThan": "{{beginNumber}} must be less than or equal to {{endNumber}}.",
+    "rangeOverlap": "Extension Ranges must not overlap.",
+    "rangeDuplicate": "Extension Ranges cannot have duplicates.",
+    "fieldValidationFailed": "Errors exist on the page.  Please correct and try again."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",

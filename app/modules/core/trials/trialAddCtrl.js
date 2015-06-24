@@ -25,7 +25,8 @@
         labelClass: 'col-xs-4',
         inputClass: 'col-xs-7',
         type: 'text',
-        required: true
+        required: true,
+        maxlength: 50
       }
     }, {
       key: 'customerEmail',

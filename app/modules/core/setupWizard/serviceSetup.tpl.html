@@ -5,7 +5,6 @@
 <div class="container-fluid service-setup-container" ng-if="!squaredUcSetup.processing">
   <form novalidate class="form-horizontal">
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.fields" form="squaredUcSetup.form"></formly-form>
-    <!-- <formly-form model="squaredUcSetup.internalNumbers" fields="squaredUcSetup.rangeFields" form="squaredUcSetup.form"></formly-form> -->
     <div class="form-group service-setup" ng-hide="!squaredUcSetup.hasVoicemailService">
       <label for="companyVoicemail" translate="serviceSetupModal.companyVoicemail"></label>
       <p translate="serviceSetupModal.companyVoicemailDescription"></p>
@@ -29,5 +28,5 @@
     </div>
 
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.additionalFields" form="squaredUcSetup.form"></formly-form>
-  </form>
+  </form>    
 </div>

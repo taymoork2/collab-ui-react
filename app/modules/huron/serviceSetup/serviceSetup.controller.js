@@ -56,13 +56,74 @@
     vm.hasVoicemailService = false;
 
     vm.validations = {
-      greaterThanLessThan: function (viewValue, modelValue, scope) {
+      greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
         // we only validate this if beginNumber is valid or populated
         if (angular.isUndefined(scope.model.beginNumber) || scope.model.beginNumber === "") {
           return true;
         } else {
           return value >= scope.model.beginNumber;
+        }
+      },
+      lessThan: function (viewValue, modelValue, scope) {
+        var value = modelValue || viewValue;
+        // we only validate this if endNumber is valid or populated
+        if (angular.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
+          // trigger validation on endNumber field
+          scope.fields[2].formControl.$validate();
+          return true;
+        } else {
+          return value <= scope.model.endNumber;
+        }
+      },
+      rangeOverlap: function (viewValue, modelValue, scope) {
+        var value = modelValue || viewValue;
+        var result = true;
+        for (var i in vm.model.numberRanges) {
+          // Don't validate ranges already in the model, ie. those that are already in the system
+          if (angular.isUndefined(scope.model.uuid) && !angular.equals(scope.model.uuid, '')) {
+            var beginNumber, endNumber;
+            if (scope.index === 0) {
+              beginNumber = value;
+              endNumber = scope.fields[2].formControl.$viewValue;
+            } else {
+              beginNumber = scope.fields[0].formControl.$viewValue;
+              endNumber = value;
+            }
+            // Skip current range under validation if it's valid, otherwise we get into a validation loop
+            if ((beginNumber === vm.model.numberRanges[i].beginNumber) && (endNumber === vm.model.numberRanges[i].endNumber)) {
+              continue;
+            } else if (isOverlapping(beginNumber, endNumber, vm.model.numberRanges[i].beginNumber, vm.model.numberRanges[i].endNumber)) {
+              result = false;
+            }
+          }
+        }
+        return result;
+      },
+      duplicate: function (viewValue, modelValue, scope) {
+        var value = modelValue || viewValue;
+        var property;
+        if (scope.index === 0) {
+          property = 'beginNumber';
+        } else {
+          property = 'endNumber';
+        }
+
+        if (angular.isDefined(scope.model[property])) {
+          return true;
+        } else {
+          var found = false;
+          angular.forEach(vm.model.numberRanges, function (range) {
+            if (range[property] === value) {
+              found = true;
+            }
+          });
+
+          if (found) {
+            return false;
+          } else {
+            return true;
+          }
         }
       }
     };
@@ -155,6 +216,21 @@
                 message: function () {
                   return $translate.instant('validation.numeric');
                 }
+              },
+              lessThan: {
+                expression: vm.validations.lessThan,
+                message: function ($viewValue, $modelValue, scope) {
+                  return $translate.instant('serviceSetupModal.lessThan', {
+                    'beginNumber': $viewValue,
+                    'endNumber': scope.model.endNumber
+                  });
+                }
+              },
+              duplicate: {
+                expression: vm.validations.duplicate,
+                message: function () {
+                  return $translate.instant('serviceSetupModal.rangeDuplicate');
+                }
               }
             },
             templateOptions: {
@@ -182,13 +258,25 @@
                   return $translate.instant('validation.numeric');
                 }
               },
-              greaterThanLessThan: {
-                expression: vm.validations.greaterThanLessThan,
+              greaterThan: {
+                expression: vm.validations.greaterThan,
                 message: function ($viewValue, $modelValue, scope) {
-                  return $translate.instant('serviceSetupModal.greaterThanLessThan', {
+                  return $translate.instant('serviceSetupModal.greaterThan', {
                     'beginNumber': scope.model.beginNumber,
                     'endNumber': $viewValue
                   });
+                }
+              },
+              rangeOverlap: {
+                expression: vm.validations.rangeOverlap,
+                message: function () {
+                  return $translate.instant('serviceSetupModal.rangeOverlap');
+                }
+              },
+              duplicate: {
+                expression: vm.validations.duplicate,
+                message: function () {
+                  return $translate.instant('serviceSetupModal.rangeDuplicate');
                 }
               }
             },
@@ -269,6 +357,10 @@
     vm.deleteInternalNumberRange = deleteInternalNumberRange;
     vm.loadExternalNumberPool = loadExternalNumberPool;
     vm.initNext = initNext;
+
+    function isOverlapping(x1, x2, y1, y2) {
+      return Math.max(x1, y1) <= Math.min(x2, y2);
+    }
 
     function initServiceSetup() {
       var errors = [];
@@ -436,6 +528,7 @@
 
     function initNext() {
       if (vm.form.$invalid) {
+        Notification.notify([$translate.instant('serviceSetupModal.fieldValidationFailed')], 'error');
         return $q.reject('Field validation failed.');
       } else {
         var deferreds = [];
