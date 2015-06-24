@@ -278,6 +278,12 @@
             vm.hasVoicemailService = true;
           }
         });
+      }).then(function () {
+        // TODO BLUE-1221 - make /customer requests synchronous until fixed
+        return initTimeZone();
+      }).then(function () {
+        // TODO BLUE-1221 - make /customer requests synchronous until fixed
+        return listInternalExtentionRanges();
       }).catch(function (response) {
         errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
@@ -313,7 +319,7 @@
             });
           } else {
             if (vm.hasVoicemailService) {
-              vm.loadExternalNumberPool();
+              return loadExternalNumberPool();
             }
           }
         });
@@ -504,8 +510,6 @@
     HttpUtils.setTrackingID().then(function () {
       var promises = [];
       promises.push(initServiceSetup());
-      promises.push(listInternalExtentionRanges());
-      promises.push(initTimeZone());
       $q.all(promises).finally(function () {
         vm.processing = false;
       });
