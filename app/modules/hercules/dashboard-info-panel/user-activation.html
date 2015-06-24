@@ -11,15 +11,8 @@
 
     <div style="margin: 0 0 10px;">
       <p>The following Services have not been turned on for any users: <span ng-repeat="service in xsummary | filter: { needsUserActivation: true }"><span translate="hercules.serviceNames.{{service.serviceId}}"/>{{$last ? '' : ', '}}</span>.</p>
-      <div>
-        <p>To enable Cloud Extensions for your users:</p>
-        <ol>
-          <li>Go to the Users > <a href ng-click="navigateToUsers()">List Users</a> page.</li>
-          <li>Select a specific user.</li>
-          <li>In the user’s Overview pane, select the Cloud Extension Service you want to turn on.</li>
-        </ol>
-        <p>Note! It might take a few minutes for the Service to be fully activated.</p>
-      </div>
+      <p>Click on a user in the Spark Management <a href ng-click="navigateToUsers()">Users</a> list to bring up the Overview pane where you can enable Cloud Extension services.</p>
+      <p>It can take a few minutes for the service to be fully activated.</p>
     </div>
 
   </cs-accordion-group>

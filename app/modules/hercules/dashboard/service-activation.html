@@ -22,7 +22,7 @@
 
     <div ng-show="!loading && confirmRemove">
       <div class="alert alert-danger" role="alert" style="margin-left: 0px; margin-right: 0px;">
-        You are about to remove the following Cloud Extension Services for your organization. This will also remove any related functionality from your users.
+        You are about to remove the following Cloud Extension services for your organization. Your users will no longer be able to use these services.
       </div>
       <div ng-repeat="service in servicesToBeRemoved" style="margin-top: 20px;">
         <p><i ng-class="serviceIcon(service.service_id)" style="font-size: 25px; vertical-align: middle;"/> <span translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 500; margin-left: 10px;"/></p>
