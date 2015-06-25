@@ -5,7 +5,7 @@
     .controller('UserActivationController',
 
       /* @ngInject */
-    function ($scope, $state, ServiceDescriptor, $modal) {
+      function ($scope, $state, ServiceDescriptor, $modal) {
         $scope.statusSummary = [];
         var updateSummary = function () {
           var userActivationNotComplete = false;
