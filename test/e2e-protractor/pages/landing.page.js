@@ -60,7 +60,7 @@ var LandingPage = function () {
 
   function convertUsersSearch(query) {
     return element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first();
-  };
+  }
 };
 
 module.exports = LandingPage;
