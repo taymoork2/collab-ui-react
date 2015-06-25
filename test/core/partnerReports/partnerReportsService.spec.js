@@ -10,6 +10,14 @@ describe('Service: Partner Reports Service', function () {
   var timeFilter = {
     value: 0
   };
+
+  var adjustDates = function (detailedData) {
+    detailedData.data[0].data.forEach(function (item, index) {
+      item.date = moment().subtract(index, 'day').format();
+    });
+    return detailedData;
+  };
+
   var customers = getJSONFixture('core/json/partnerReports/customerResponse.json');
   var activeUserDetailedData = getJSONFixture('core/json/partnerReports/activeUserDetailedResponse.json');
   var mostActiveUserData = getJSONFixture('core/json/partnerReports/mostActiveUserResponse.json');
@@ -32,15 +40,10 @@ describe('Service: Partner Reports Service', function () {
     label: ""
   };
   var customerDatapoint = {
-    modifiedDate: 'Apr 10, 2015',
-    details: {
-      activeUsers: '14',
-      totalRegisteredUsers: '14'
-    },
-    percentage: 100,
-    activeUsers: 14,
-    totalRegisteredUsers: 14,
-    date: '2015-04-10T02:00:00.000-05:00'
+    modifiedDate: moment().subtract(6, 'day').format(dateFormat),
+    totalRegisteredUsers: 116,
+    activeUsers: 111,
+    percentage: 95
   };
   var customerPopulation = {
     customerName: 'Test Org One',
@@ -118,7 +121,7 @@ describe('Service: Partner Reports Service', function () {
   describe('Active User Services', function () {
     describe('should getOverallActiveUserData', function () {
       beforeEach(function () {
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
       });
 
       it('just the detailed data', function () {
@@ -132,12 +135,16 @@ describe('Service: Partner Reports Service', function () {
     describe('should getActiveUserData', function () {
       beforeEach(function () {
         $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
       });
 
       it('for an existing customer', function () {
         PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
-          expect(response.graphData[0]).toEqual(customerDatapoint);
+          expect(response.graphData[0].modifiedDate).toEqual(customerDatapoint.modifiedDate);
+          expect(response.graphData[0].totalRegisteredUsers).toEqual(customerDatapoint.totalRegisteredUsers);
+          expect(response.graphData[0].activeUsers).toEqual(customerDatapoint.activeUsers);
+          expect(response.graphData[0].percentage).toEqual(customerDatapoint.percentage);
+
           expect(response.tableData[0]).toEqual(customerTableDataPoint);
           expect(response.populationGraph[0]).toEqual(customerPopulation);
           expect(response.overallPopulation).toEqual(99);
@@ -149,11 +156,16 @@ describe('Service: Partner Reports Service', function () {
     describe('should notify an error for getActiveUserData', function () {
       it('and return empty table data', function () {
         $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
 
         PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
           expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-          expect(response.graphData[0]).toEqual(customerDatapoint);
+
+          expect(response.graphData[0].modifiedDate).toEqual(customerDatapoint.modifiedDate);
+          expect(response.graphData[0].totalRegisteredUsers).toEqual(customerDatapoint.totalRegisteredUsers);
+          expect(response.graphData[0].activeUsers).toEqual(customerDatapoint.activeUsers);
+          expect(response.graphData[0].percentage).toEqual(customerDatapoint.percentage);
+
           expect(response.tableData).toEqual([]);
           expect(response.populationGraph[0]).toEqual(customerPopulation);
           expect(response.overallPopulation).toEqual(99);
@@ -209,7 +221,7 @@ describe('Service: Partner Reports Service', function () {
 
     it('getMostRecentUpdate should return the most recent update', function () {
       $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
-      $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+      $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
 
       PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
         expect(PartnerReportService.getMostRecentUpdate()).toEqual(moment(mostActiveUserData.date).format(dateFormat));

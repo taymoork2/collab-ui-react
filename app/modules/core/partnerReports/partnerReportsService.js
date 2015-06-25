@@ -35,6 +35,13 @@
       }
     };
 
+    // Promise Tracking
+    var ABORT = 'ABORT';
+    var activeUserDetailedPromise = null;
+    var activeUserCancelPromise = null;
+    var activeTableCancelPromise = null;
+    var callMetricsCancelPromise = null;
+
     return {
       getOverallActiveUserData: getOverallActiveUserData,
       getActiveUserData: getActiveUserData,
@@ -49,8 +56,14 @@
       timeFilter = time.value;
       var query = getQuery(time);
       activeUserCustomerGraphs = {};
+      overallPopulation = 0;
 
-      return getService(detailed + activeUserUrl + query).then(function (response) {
+      if (activeUserCancelPromise !== null && activeUserCancelPromise !== undefined) {
+        activeUserCancelPromise.resolve();
+      }
+      activeUserCancelPromise = $q.defer();
+
+      activeUserDetailedPromise = getService(detailed + activeUserUrl + query, activeUserCancelPromise).then(function (response) {
         if (response.data !== null && response.data !== undefined && angular.isArray(response.data.data)) {
           var overallActive = 0;
           var overallRegistered = 0;
@@ -96,11 +109,15 @@
         }
         overallPopulation = 0;
       }, function (error) {
-        Log.debug('Loading overall active user population data failed.  Status: ' + error.status + ' Response: ' + error.message);
-        Notification.notify([$translate.instant('activeUsers.overallActiveUserGraphError')], 'error');
-        overallPopulation = 0;
+        if (error.status !== 0) {
+          Log.debug('Loading overall active user population data failed.  Status: ' + error.status + ' Response: ' + error.message);
+          Notification.notify([$translate.instant('activeUsers.overallActiveUserGraphError')], 'error');
+          timeFilter = null;
+        }
         return;
       });
+
+      return activeUserDetailedPromise;
     }
 
     function getActiveUserData(customer, time) {
@@ -108,16 +125,23 @@
       var promises = [];
       var tableData = [];
 
-      if (overallPopulation === 0 || time.value !== timeFilter) {
+      if (time.value !== timeFilter || activeUserDetailedPromise === null) {
         promises.push(getOverallActiveUserData(time));
+      } else {
+        promises.push(activeUserDetailedPromise);
       }
 
-      var tablePromise = getActiveUserTableData(customer, query).then(function (response) {
+      if (activeTableCancelPromise !== null && activeTableCancelPromise !== undefined) {
+        activeTableCancelPromise.resolve();
+      }
+      activeTableCancelPromise = $q.defer();
+      var tablePromise = getActiveUserTableData(customer, query, activeTableCancelPromise).then(function (response) {
         tableData = response;
       });
       promises.push(tablePromise);
 
       return $q.all(promises).then(function () {
+
         return {
           graphData: getActiveUserGraphData(customer),
           tableData: tableData,
@@ -151,8 +175,14 @@
       return orgPromise.promise;
     }
 
-    function getService(url) {
-      return $http.get(urlBase + url);
+    function getService(url, canceler) {
+      if (canceler === null || canceler === undefined) {
+        return $http.get(urlBase + url);
+      } else {
+        return $http.get(urlBase + url, {
+          timeout: canceler.promise
+        });
+      }
     }
 
     function getQuery(filter) {
@@ -205,52 +235,91 @@
     }
 
     function getActiveUserGraphData(customer) {
+      var graphData = getDateBase();
       if (angular.isArray(customer)) {
-        var graphData = [];
         angular.forEach(customer, function (org) {
           graphData = combineMatchingDates(graphData, getActiveUserGraphData(org));
         });
-
-        // not all customers have active data for every day
-        // this can cause data to require sorting
-        return graphData.sort(function (a, b) {
-          if (a.date === b.date) {
-            return 0;
-          } else if (a.date > b.date) {
-            return 1;
-          }
-          return -1;
-        });
+        return graphData.sort(dateSort);
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
-          return activeUserCustomerGraphs[customer.value].graphData;
+          return combineMatchingDates(graphData, activeUserCustomerGraphs[customer.value].graphData).sort(dateSort);
         }
         return [];
       }
     }
 
-    function combineMatchingDates(graphData, dateData) {
-      var updated = false;
+    function dateSort(a, b) {
+      if (a.date === b.date) {
+        return 0;
+      } else if (a.date > b.date) {
+        return 1;
+      }
+      return -1;
+    }
 
-      if (graphData.length > 0) {
-        for (var i = 0; i < graphData.length; i++) {
-          if (graphData[i].modifiedDate.indexOf(dateData.modifiedDate) !== -1) {
-            graphData[i].totalRegisteredUsers += dateData.totalRegisteredUsers;
-            graphData[i].activeUsers += dateData.activeUsers;
-            graphData[i].percentage = Math.floor((graphData[i].activeUsers / graphData[i].totalRegisteredUsers) * 100);
-            updated = true;
-            break;
-          }
+    function getDateBase() {
+      var graph = [];
+      if (timeFilter === 0) {
+        for (var i = 6; i >= 0; i--) {
+          graph.push({
+            date: moment().subtract(i, 'day').format(),
+            modifiedDate: moment().subtract(i, 'day').format(dateFormat),
+            totalRegisteredUsers: 0,
+            activeUsers: 0,
+            percentage: 0
+          });
+        }
+      } else if (timeFilter === 1) {
+        for (var x = 3; x >= 0; x--) {
+          graph.push({
+            date: moment().day(0 - (x * 7)).format(),
+            modifiedDate: moment().day(0 - (x * 7)).format(dateFormat),
+            totalRegisteredUsers: 0,
+            activeUsers: 0,
+            percentage: 0
+          });
+        }
+      } else {
+        for (var y = 2; y >= 0; y--) {
+          graph.push({
+            date: moment().subtract(y, 'month').startOf('month').format(),
+            modifiedDate: moment().subtract(y, 'month').startOf('month').format(dateFormat),
+            totalRegisteredUsers: 0,
+            activeUsers: 0,
+            percentage: 0
+          });
         }
       }
 
-      if (!updated) {
-        graphData.push(angular.copy(dateData));
-      }
+      return graph;
+    }
+
+    function combineMatchingDates(graphData, customerData) {
+      angular.forEach(customerData, function (dateData) {
+        var updated = false;
+
+        if (graphData.length > 0) {
+          for (var i = 0; i < graphData.length; i++) {
+            if (graphData[i].modifiedDate.indexOf(dateData.modifiedDate) !== -1) {
+              graphData[i].totalRegisteredUsers += dateData.totalRegisteredUsers;
+              graphData[i].activeUsers += dateData.activeUsers;
+              graphData[i].percentage = Math.floor((graphData[i].activeUsers / graphData[i].totalRegisteredUsers) * 100);
+              updated = true;
+              break;
+            }
+          }
+        }
+
+        if (!updated && dateData.length > 0) {
+          graphData.push(angular.copy(dateData));
+        }
+      });
+
       return graphData;
     }
 
-    function getActiveUserTableData(customer, query) {
+    function getActiveUserTableData(customer, query, canceler) {
       if (angular.isArray(customer)) {
         var promises = [];
         var tableData = [];
@@ -266,17 +335,24 @@
       } else if (customer.value === 0) {
         return $q.when([]);
       } else {
-        return getService(topn + activeUserUrl + query + "&orgId=" + customer.value).then(function (response) {
-          if (mostRecentUpdate === "") {
-            setMostRecentUpdate(response);
+        return getService(topn + activeUserUrl + query + "&orgId=" + customer.value, canceler).then(function (response) {
+          if (response !== null && response !== undefined) {
+            if (mostRecentUpdate === "") {
+              setMostRecentUpdate(response);
+            }
+            return modifyActiveUserTableData(response.data.data[0], customer);
           }
-          return modifyActiveUserTableData(response.data.data[0], customer);
-        }, function (error) {
-          Log.debug('Loading most active users for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
-          Notification.notify([$translate.instant('activeUsers.activeUserTableError', {
-            customer: customer.label
-          })], 'error');
           return [];
+        }, function (error) {
+          if (error.status !== 0) {
+            Log.debug('Loading most active users for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
+            Notification.notify([$translate.instant('activeUsers.activeUserTableError', {
+              customer: customer.label
+            })], 'error');
+            return [];
+          } else {
+            return ABORT;
+          }
         });
       }
     }
@@ -319,7 +395,12 @@
     function getCallMetricsData(customer, time) {
       var query = getQueryForOnePeriod(time);
 
-      return getService(detailed + callMetricsUrl + query + "&orgId=" + customer.value).then(function (response) {
+      if (callMetricsCancelPromise !== null && callMetricsCancelPromise !== undefined) {
+        callMetricsCancelPromise.resolve();
+      }
+      callMetricsCancelPromise = $q.defer();
+
+      return getService(detailed + callMetricsUrl + query + "&orgId=" + customer.value, callMetricsCancelPromise).then(function (response) {
         if (mostRecentUpdate === "") {
           setMostRecentUpdate(response);
         }
@@ -330,11 +411,15 @@
           return [];
         }
       }, function (error) {
-        Log.debug('Loading call metrics data for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
-        Notification.notify([$translate.instant('callMetrics.callMetricsChartError', {
-          customer: customer.label
-        })], 'error');
-        return [];
+        if (error.status !== 0) {
+          Log.debug('Loading call metrics data for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
+          Notification.notify([$translate.instant('callMetrics.callMetricsChartError', {
+            customer: customer.label
+          })], 'error');
+          return [];
+        } else {
+          return ABORT;
+        }
       });
     }
 
