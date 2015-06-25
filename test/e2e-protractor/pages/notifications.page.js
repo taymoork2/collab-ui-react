@@ -2,11 +2,7 @@
 
 var assertDisplayed = function (cssSelector, message) {
   if (!message) return;
-  utils.expectIsDisplayed(
-    element.all(
-      by.cssContainingText(cssSelector, message)
-    ).first()
-  );
+  expect(element.all(by.cssContainingText(cssSelector, message)).first().isDisplayed()).toBeTruthy();
 };
 
 var Notifications = function () {
@@ -15,17 +11,19 @@ var Notifications = function () {
   this.successAlert = element(by.css('.alertify-log-success'));
 
   this.assertError = function (msg1, msg2) {
-    utils.expectIsDisplayed(this.errorAlert);
-    assertDisplayed('.alertify-log-error', msg1);
-    assertDisplayed('.alertify-log-error', msg2);
-    utils.click(this.errorAlert);
+    utils.wait(this.errorAlert).then(function () {
+      assertDisplayed('.alertify-log-error', msg1);
+      assertDisplayed('.alertify-log-error', msg2);
+      this.errorAlert.click();
+    }.bind(this));
   };
 
   this.assertSuccess = function (msg1, msg2) {
-    utils.expectIsDisplayed(this.successAlert);
-    assertDisplayed('.alertify-log-success', msg1);
-    assertDisplayed('.alertify-log-success', msg2);
-    utils.click(this.successAlert);
+    utils.wait(this.successAlert).then(function () {
+      assertDisplayed('.alertify-log-success', msg1);
+      assertDisplayed('.alertify-log-success', msg2);
+      this.successAlert.click();
+    }.bind(this));
   };
 
   this.clearNotifications = function () {
