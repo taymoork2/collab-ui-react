@@ -4,10 +4,14 @@ angular.module('Mediafusion')
   .controller('mediafusionConnectorCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $interval, $http, $modal, MediafusionProxy, Authinfo, Log) {
+    function ($scope, $state, $interval, $http, $modal, MediafusionProxy, Authinfo, Log, $translate) {
       $scope.loading = true;
       $scope.pollHasFailed = false;
       $scope.showInfoPanel = true;
+      $scope.deleteClusterId = null;
+      $scope.deleteSerial = null;
+      $scope.showPreview = true;
+      $scope.deleteConnectorName = null;
 
       /*
       var actionsTemplate = '<i style="top:13px" class="icon icon-three-dots"></i>';
@@ -80,10 +84,50 @@ angular.module('Mediafusion')
       $scope.showConnectorsDetails = function (connector) {
         $scope.connector = connector;
         $scope.connectorId = connector.id;
-        $state.go('connector-details', {
-          connectorId: connector.id
-        });
+        if ($scope.showPreview) {
+          $state.go('connector-details', {
+            connectorId: connector.id
+          });
+        }
+        $scope.showPreview = true;
+
       };
 
+      $scope.setDeleteConnector = function (clusterId, serial, connectorName) {
+        $scope.showPreview = false;
+        $scope.deleteClusterId = clusterId;
+        $scope.deleteSerial = serial;
+        $scope.deleteConnectorName = connectorName;
+      };
+
+      $scope.cancelDelete = function () {
+        $scope.deleteClusterId = null;
+        $scope.deleteSerial = null;
+        $scope.deleteConnectorName = null;
+        $state.go('mediafusionconnector');
+      };
+
+      $scope.deleteConnector = function (deleteClusterId, deleteSerial) {
+        MediafusionProxy.deleteHost($scope.deleteClusterId, $scope.deleteSerial) // function (data, status) {
+          .success(function (data, status) {
+            deleteSuccess();
+          })
+          .error(function (response) {
+            Notification.errorResponse(response);
+          });
+      };
+
+      function deleteSuccess() {
+        angular.element('#deleteButton').button('reset');
+        //Notification.notify([$translate.instant('mediaFusion.deleteConnectorSuccess', {
+          //hostname: $scope.deleteConnectorName
+        //})], 'success');
+        Notification.notify('Connector ' + $scope.deleteConnectorName + ' deleted successfully', 'success');
+
+        setTimeout(function () {
+          MediafusionProxy.getClusters();
+        }, 500);
+      }
     }
+
   );

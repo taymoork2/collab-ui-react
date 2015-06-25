@@ -1286,7 +1286,14 @@
       "version": "Version",
       "status": "Status",
       "alarms": "Alarms"
-    }
+    },
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "actionsHeader": "Actions",
+    "deleteConnector": "Delete Connector",
+    "deleteConnectorConfText1": "Are you sure you want to delete connector {{hostname}}?",
+    "deleteConnectorSuccess": "Connector {{hostname}} deleted successfully",
+    "deleteConnectorError": "Error deleting connector"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
