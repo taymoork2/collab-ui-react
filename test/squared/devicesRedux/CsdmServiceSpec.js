@@ -52,7 +52,7 @@ describe('Service: CsdmService', function () {
     Service.fillCodesAndDevicesCache(callback);
     $httpBackend.flush();
 
-    expect(callback.callCount).toBe(2);
+    expect(callback.callCount).toBe(1);
 
     expect(Service.listCodesAndDevices().length).toBe(2);
     expect(Service.listCodesAndDevices()[0]).toEqual({
