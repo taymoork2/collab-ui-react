@@ -40,6 +40,10 @@ angular
               $scope.isEnabled = true;
             }
           });
+          if ($scope.isEnabled) {
+            // Only poll for statuses if there are enabled extensions
+            updateStatusForUser();
+          }
         }
       });
 
@@ -56,11 +60,12 @@ angular
           delayedUpdateStatusForUser();
         });
       };
-      updateStatusForUser();
 
-      var delayedUpdateTimer;
       var delayedUpdateStatusForUser = function () {
-        delayedUpdateTimer = $timeout(function () {
+        if ($scope.stopDelayedUpdates) {
+          return;
+        }
+        $scope.delayedUpdateTimer = $timeout(function () {
           updateStatusForUser();
         }, 3000);
       };
@@ -70,8 +75,9 @@ angular
       };
 
       $scope.$on('$destroy', function () {
-        if (delayedUpdateTimer) {
-          $timeout.cancel(delayedUpdateTimer);
+        $scope.stopDelayedUpdates = true;
+        if ($scope.delayedUpdateTimer) {
+          $timeout.cancel($scope.delayedUpdateTimer);
         }
       });
     }
