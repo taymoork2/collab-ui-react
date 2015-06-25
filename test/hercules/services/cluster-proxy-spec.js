@@ -56,17 +56,17 @@ describe('ClusterProxy', function () {
   });
 
   it('should poll', function () {
-    $interval.flush(1000);
+    $interval.flush(2000);
     expect(connectorService.fetch.callCount).toBe(0);
 
     clusterProxy.startPolling();
-    $interval.flush(1000);
+    $interval.flush(2000);
     expect(connectorService.fetch.callCount).toBe(1);
     connectorService.fetch.callArgWith(0, null, [{
       id: 'foo'
     }]);
 
-    $interval.flush(1000);
+    $interval.flush(2000);
     expect(connectorService.fetch.callCount).toBe(2);
   });
 
@@ -94,7 +94,7 @@ describe('ClusterProxy', function () {
     var cb = sinon.stub();
     clusterProxy.startPolling(cb);
 
-    $interval.flush(1000);
+    $interval.flush(2000);
     connectorService.fetch.callArgWith(0, null, [{}]);
 
     expect(cb.callCount).toBe(1);

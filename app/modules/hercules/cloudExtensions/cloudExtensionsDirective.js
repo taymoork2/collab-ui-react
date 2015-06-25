@@ -58,8 +58,9 @@ angular
       };
       updateStatusForUser();
 
+      var delayedUpdateTimer;
       var delayedUpdateStatusForUser = function () {
-        $timeout(function () {
+        delayedUpdateTimer = $timeout(function () {
           updateStatusForUser();
         }, 3000);
       };
@@ -67,6 +68,12 @@ angular
       $scope.getStatus = function (status) {
         return USSService.decorateWithStatus(status);
       };
+
+      $scope.$on('$destroy', function () {
+        if (delayedUpdateTimer) {
+          $timeout.cancel(delayedUpdateTimer);
+        }
+      });
     }
   ])
   .directive('herculesCloudExtensions', [

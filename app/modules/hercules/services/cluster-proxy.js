@@ -8,7 +8,7 @@ angular.module('Hercules')
         clusters = [],
         callbacks = [],
         pollCount = 0,
-        pollDelay = 1000,
+        pollDelay = 2000,
         pollInFlight = false;
 
       var start = function (callback) {
