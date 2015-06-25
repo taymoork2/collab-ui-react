@@ -36,7 +36,6 @@ describe('Huron Call Routing', function () {
       utils.click(callrouting.singleNumber);
       utils.click(callrouting.pattern);
       utils.sendKeys(callrouting.pattern, pattern);
-      utils.sendKeys(callrouting.reversionPattern, pattern);
       utils.click(callrouting.createButton);
 
       notifications.assertSuccess(pattern + ' added successfully');
@@ -52,6 +51,7 @@ describe('Huron Call Routing', function () {
       utils.sendKeys(callrouting.rangeMin, (pattern + 1));
       utils.click(callrouting.rangeMax);
       utils.sendKeys(callrouting.rangeMax, (pattern + 2));
+      utils.click(callrouting.reversionOption);
       utils.click(callrouting.reversionPattern);
       utils.sendKeys(callrouting.reversionPattern, pattern);
       utils.click(callrouting.createButton);

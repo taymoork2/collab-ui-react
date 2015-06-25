@@ -15,6 +15,7 @@ var CallRoutingPage = function () {
   this.rangeMax = element(by.id('rangeMax'));
   this.pattern = element(by.id('pattern'));
   this.retrievalPrefix = element(by.id('retrievalPrefix'));
+  this.reversionOption = element(by.css('label[for="reversionOption"]'));
   this.reversionPattern = element(by.id('reversionPattern'));
   this.callParks = element.all(by.repeater('callPark in cp.callParks'));
   this.createButton = element(by.buttonText('Save'));

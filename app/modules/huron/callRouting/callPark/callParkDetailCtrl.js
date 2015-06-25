@@ -231,6 +231,11 @@
               return $translate.instant('validation.numeric');
             }
           }
+        },
+        expressionProperties: {
+          'templateOptions.disabled': function () {
+            return vm.callPark.reversionOption !== 'number';
+          }
         }
       }]
     }];
