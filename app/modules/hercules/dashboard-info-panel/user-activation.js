@@ -5,7 +5,7 @@
     .controller('UserActivationController',
 
       /* @ngInject */
-      function ($scope, $state, ServiceDescriptor, USSService, XhrNotificationService, $modal, ClusterProxy) {
+    function ($scope, $state, ServiceDescriptor, $modal) {
         $scope.statusSummary = [];
         var updateSummary = function () {
           var userActivationNotComplete = false;
@@ -47,13 +47,11 @@
           updateSummary();
         });
 
-        USSService.getStatusesSummary(function (error, summary) {
-          if (error) {
-            XhrNotificationService.notify("Failed to fetch user status summary", error);
-            return;
+        $scope.$watch('userStatusesSummary', function (userStatusesSummary) {
+          if (userStatusesSummary && userStatusesSummary.summary) {
+            $scope.statusSummary = userStatusesSummary.summary;
+            updateSummary();
           }
-          $scope.statusSummary = summary.summary;
-          updateSummary();
         });
 
         $scope.navigateToUsers = function () {
