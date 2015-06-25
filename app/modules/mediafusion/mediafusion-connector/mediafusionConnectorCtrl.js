@@ -108,7 +108,8 @@ angular.module('Mediafusion')
       };
 
       $scope.deleteConnector = function (deleteClusterId, deleteSerial) {
-        MediafusionProxy.deleteHost($scope.deleteClusterId, $scope.deleteSerial) // function (data, status) {
+        MediafusionProxy.deleteHost($scope.deleteClusterId, $scope.deleteSerial)
+          // function (data, status) {
           .success(function (data, status) {
             deleteSuccess();
           })
@@ -119,10 +120,10 @@ angular.module('Mediafusion')
 
       function deleteSuccess() {
         angular.element('#deleteButton').button('reset');
-        //Notification.notify([$translate.instant('mediaFusion.deleteConnectorSuccess', {
-          //hostname: $scope.deleteConnectorName
-        //})], 'success');
-        Notification.notify('Connector ' + $scope.deleteConnectorName + ' deleted successfully', 'success');
+        Notification.notify([$translate.instant('mediaFusion.deleteConnectorSuccess', {
+          hostname: $scope.deleteConnectorName
+        })], 'success');
+        //Notification.notify('Connector ' + $scope.deleteConnectorName + ' deleted successfully', 'success');
 
         setTimeout(function () {
           MediafusionProxy.getClusters();
