@@ -10,7 +10,10 @@
     var vm = this;
 
     vm.callPark = {
-      retrievalPrefix: '*',
+      retrievalPrefix: {
+        name: '*',
+        value: '*'
+      },
       pattern: '',
       name: '',
       patternOption: '',
@@ -257,7 +260,7 @@
 
       var callPark = {
         description: callParkModel.name,
-        retrievalPrefix: callParkModel.retrievalPrefix,
+        retrievalPrefix: callParkModel.retrievalPrefix.value,
         pattern: callParkModel.pattern,
         reversionPattern: callParkModel.reversionPattern
       };
