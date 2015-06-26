@@ -1,6 +1,5 @@
-'use strict';
-
 (function () {
+  'use strict';
   /* @ngInject  */
   function CsdmEventStream($timeout, CsdmService) {
     var subscriptions = {};
@@ -11,39 +10,46 @@
     function poll() {
       CsdmService.fillCodesAndDevicesCache(function (err, devices) {
         _.forEach(subscriptions, function (subscription) {
-          if (!err) {
-            subscription(devices);
-          }
+          subscription.doIt(err, devices);
         });
         pollPromise = $timeout(poll, pollDelay);
       });
     }
 
-    function cancelSubscription(subscriptionId) {
-      delete subscriptions[subscriptionId];
-      activeSubscriptionsCount--;
-      if (activeSubscriptionsCount === 0) {
-        $timeout.cancel(pollPromise);
-      }
-    }
-
     function subscribe(callback, options) {
       options = options || {};
-      var subscriptionId = subscriptionCount++;
-      subscriptions[subscriptionId] = callback;
+      var subscription = new Subscription(subscriptionCount++, callback);
+      subscriptions[subscription.id] = subscription;
       if (activeSubscriptionsCount === 0) {
         poll();
       }
       activeSubscriptionsCount++;
-      var cancel = _.bind(cancelSubscription, subscriptionId);
       if (options.scope) {
-        options.scope.$on('$destroy', cancel);
+        options.scope.$on('$destroy', subscription.cancel);
       }
-      return {
-        count: function () {
-          throw "Not implemented";
-        },
-        cancel: cancel
+      return subscription;
+    }
+
+    function Subscription(id, callback) {
+      this.id = id;
+      this.callback = callback;
+      this.eventCount = 0;
+      this.currentError = null;
+
+      this.doIt = function (err, devices) {
+        this.eventCount++;
+        this.currentError = err;
+        if (!err) {
+          this.callback(devices);
+        }
+      };
+
+      this.cancel = function () {
+        delete subscriptions[this.id];
+        activeSubscriptionsCount--;
+        if (activeSubscriptionsCount === 0) {
+          $timeout.cancel(pollPromise);
+        }
       };
     }
 

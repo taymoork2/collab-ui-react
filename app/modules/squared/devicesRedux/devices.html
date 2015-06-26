@@ -24,7 +24,22 @@
 
     </div>
   </div>
-  <div class="row" ng-show="sc.dataLoaded">
+  
+  <div ng-if="sc.subscription.eventCount == 0">
+    <div windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
+      <div class="empty-devices-content">
+        <i class="icon icon-2x icon-spinner" />
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="sc.subscription.currentError">
+    <div class="error-spinner">
+      <i class="icon icon-2x icon-spinner" />
+    </div>
+  </div>
+
+  <div ng-if="sc.subscription.eventCount > 0">
     <div ng-hide="sc.roomData.length" windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
       <div class="empty-devices-content">
         <img ng-src="images/devices/cisco_sx10.png" style="height: 60px; width: 60px" />
@@ -33,17 +48,9 @@
         </h2>
       </div>
     </div>
-  </div>
-  <div class="row" ng-hide="sc.dataLoaded">
-    <div windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
-      <div class="empty-devices-content">
-        <i class="icon icon-2x icon-spinner" />
-      </div>
+    <div id="roomsListPanel" class="row">
+      <div gridscrollbar class="gridStyle col-md-12" ng-grid="sc.gridOptions"></div>
     </div>
-  </div>
-
-  <div id="roomsListPanel" class="row">
-    <div gridscrollbar class="gridStyle col-md-12" ng-grid="sc.gridOptions"></div>
   </div>
 
   <squared-add-device></squared-add-device>

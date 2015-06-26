@@ -40,6 +40,17 @@
     right: 10px
   }
 
+  .error-spinner {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+    background: white;
+    border-radius: 100px;
+    box-shadow: 1px 1px 5px #666;
+    padding: 9px 10px 6px 10px;
+  }
+
 }
 
 .devices-redux, .devices-overview-redux {
