@@ -79,30 +79,30 @@
 
     vm.disconnectBusy = {
       label: $translate.instant('autoAttendant.disconnectBusy'),
-      value: 1,
+      value: 'busy',
       name: 'radioBusy',
       id: 'radioBusy'
     };
     vm.disconnectTone = {
       label: $translate.instant('autoAttendant.disconnectTone'),
-      value: 2,
+      value: 'reorder',
       name: 'radioTone',
       id: 'radioTone'
     };
     vm.disconnectNone = {
       label: $translate.instant('autoAttendant.disconnectNone'),
-      value: 3,
+      value: 'none',
       name: 'radioNone',
       id: 'radioNone'
     };
-    vm.disconnectSelected = 2;
+    vm.disconnectDefault = 'reorder';
 
     vm.deleteMenu = deleteMenu;
     vm.addMenuOption = addMenuOption;
     vm.deleteMenuOption = deleteMenuOption;
     vm.copyMenuOption = copyMenuOption;
     vm.saveMenuOption = saveMenuOption;
-    vm.touchCurrentMenuOption = touchCurrentMenuOption;
+    vm.closeMenuOption = closeMenuOption;
 
     /////////////////////
 
@@ -147,12 +147,14 @@
 
       vm.optionDialogMenuEntry.file = '';
       vm.optionDialogMenuEntry.number = '';
-
+      vm.optionDialogMenuEntry.treatment = vm.disconnectDefault;
       if (menuEntry.actions[0].name === 'play') {
         vm.optionDialogMenuEntry.file = menuEntry.actions[0].value;
       } else if (menuEntry.actions[0].name === 'route' ||
         menuEntry.actions[0].name === 'routeToMailbox') {
         vm.optionDialogMenuEntry.number = menuEntry.actions[0].value;
+      } else if (menuEntry.actions[0].name == 'disconnect') {
+        vm.optionDialogMenuEntry.treatment = menuEntry.actions[0].value;
       }
 
       if (menuEntry.getType() === 'MENU_OPTION_ANNOUNCEMENT') {
@@ -212,8 +214,14 @@
 
     }
 
-    function touchCurrentMenuOption() {
+    function closeMenuOption() {
+      // mark touched for validation purposes
       vm.currentMenuEntry.isTouched = true;
+
+      // additional code to handle stacked modals
+      // keep scrolling enabled for main modal after closing this one
+      $("#aaOptionMenuDialog").modal("hide");
+      $("body").addClass("modal-open");
     }
 
     function saveMenuOption(dMenuEntry) {
@@ -256,7 +264,7 @@
             // disconnect
           } else {
             vm.currentMenuEntry.actions[0].name = vm.selectedAction.name;
-            vm.currentMenuEntry.actions[0].value = '';
+            vm.currentMenuEntry.actions[0].value = dMenuEntry.treatment;
           }
         }
       }

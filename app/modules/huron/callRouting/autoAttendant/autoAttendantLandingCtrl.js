@@ -100,7 +100,10 @@
         },
         function (response) {
           if (response.status != 404) {
-            Notification.notify([$translate.instant('autoAttendant.listCesError') + ' ' + response.statusText + ' ' + response.status], 'error');
+            Notification.notify([$translate.instant('autoAttendant.errorListCes', {
+              statusText: response.statusText,
+              status: response.status
+            })], 'error');
           }
         }
       );

@@ -18,10 +18,10 @@
       title: $translate.instant('autoAttendant.mainMenu'),
       invoke: addOptionMenu
     }, {
-      title: $translate.instant('autoAttendant.routeCaller'),
+      title: $translate.instant('autoAttendant.routeToNumber'),
       invoke: addWelcomeMenuRouteCaller
     }, {
-      title: $translate.instant('autoAttendant.disconnectCaller'),
+      title: $translate.instant('autoAttendant.disconnect'),
       invoke: addWelcomeMenuDisconnectCaller
         /*}, {
           title: $translate.instant('autoAttendant.customMenu'),
@@ -32,28 +32,29 @@
 
     vm.disconnectBusy = {
       label: $translate.instant('autoAttendant.disconnectBusy'),
-      value: 1,
+      value: 'busy',
       name: 'radioBusy',
       id: 'radioBusy'
     };
     vm.disconnectTone = {
       label: $translate.instant('autoAttendant.disconnectTone'),
-      value: 2,
+      value: 'reorder',
       name: 'radioTone',
       id: 'radioTone'
     };
     vm.disconnectNone = {
       label: $translate.instant('autoAttendant.disconnectNone'),
-      value: 3,
+      value: 'none',
       name: 'radioNone',
       id: 'radioNone'
     };
-    vm.disconnectSelected = 2;
+    vm.disconnectDefault = 'reorder';
 
     vm.deleteMenu = deleteMenu;
     vm.deleteMenuOption = deleteMenuOption;
     vm.copyMenuOption = copyMenuOption;
     vm.saveMenuOption = saveMenuOption;
+    vm.closeMenuOption = closeMenuOption;
 
     /////////////////////
 
@@ -93,6 +94,16 @@
       AutoAttendantCeMenuModelService.updateMenu(vm.aaModel.aaRecord, 'regularOpenActions', vm.currentMenu);
     }
 
+    function closeMenuOption() {
+      // mark touched for validation purposes
+      vm.currentMenuEntry.isTouched = true;
+
+      // additional code to handle stacked modals
+      // keep scrolling enabled for main modal after closing this one
+      $("#aaWelcomeMenuDialog").modal("hide");
+      $("body").addClass("modal-open");
+    }
+
     //
     // Menu operation
     //
@@ -114,7 +125,7 @@
 
     function addWelcomeMenuDisconnectCaller() {
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      var menuAction = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
+      var menuAction = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', vm.disconnectDefault);
       menuEntry.isConfigured = false;
       menuEntry.addAction(menuAction);
       vm.ui.welcomeMenu.addEntry(menuEntry);

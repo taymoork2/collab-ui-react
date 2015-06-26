@@ -1,88 +1,97 @@
 <!-- AA Option Menu -->
-<div class="aa-menu row">
-  <div class="col-md-1"><!--placeholder--></div>
-  <div class="col-md-10">
-    <table id="aaMenuOptionTable" class="aa-menu-table" ng-show="aaOption.ui.showOptionMenu">
-      <thead>
-        <tr>
-          <th class="col-md-1">
-            <div class="aa-menu-delete-icon-md">
-            <a ng-click="aaOption.deleteMenu(aaOption.ui.optionMenu)">
-              <i class="menu-delete-icon-md"></i>
-              <!-- span sr-only deleteMenu-->
-            </a>
-            </div>
-          </th>
-          <th class="col-md-1"><!--placeholder--></th>
-          <th class="col-md-8"><h5 translate="autoAttendant.mainMenu"></h5></th>
-          <th class="col-md-2">
-            <div class="dropdown aa-menu-dropdown-icon">
-              <span>
-                <a href class="dropdown-toggle">
-                  <i class="menu-dropdown-icon"></i>
-                </a>
-              </span>
-              <ul class="dropdown-menu" role="menu">
-                <li ng-repeat="choice in aaOption.optionMenuDropdownItems">
-                  <a href ng-click="aaOption.addMenuOption()">{{choice}}</a>
-                </li>
-              </ul>
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="menuOption in aaOption.ui.optionMenu.headers" ng-class="{ 'aa-menu-has-error' : !menuOption.isConfigured && menuOption.isTouched }" popover="{{ !menuOption.isConfigured && menuOption.isTouched ? ( 'autoAttendant.invalidMenuOptionRequired' | translate ) : '' }}" popover-trigger="mouseenter" tooltip-append-to-body="true" popover-animation="false" popover-popup-delay='600'>
-          <td class="col-md-1"><!--placeholder--></td>
-          <td class="col-md-1"><!--placeholder--></td>
-          <td class="col-md-9" ng-class="{ 'text-muted' : !menuOption.isConfigured }"> {{ menuOption | displayNameTitle | translate }}<br>
-          {{ menuOption.actions[0].name | displayNameAction | translate }} {{ ' ' + menuOption.actions[0].value }}<br></td>
-          <td class="col-md-2">
-            <div class="aa-menu-launch-icon">
-              <span>
-                <a ng-click="aaOption.copyMenuOption(aaOption.ui.optionMenu,menuOption)" data-toggle="modal" data-backdrop="false" data-target="#aaOptionMenuDialog">
-                  <i class="menu-launch-icon"></i>
-                  <!-- span sr-only edit menu option-->
-                </a>
-              </span>
-            </div>
-          </td>
-        </tr>
-        <tr ng-repeat="menuOption in aaOption.ui.optionMenu.entries" ng-class="{ 'aa-menu-has-error' : !menuOption.isConfigured && menuOption.isTouched && aaOption.ui.optionMenu.entries[0] === menuOption}" popover="{{ !menuOption.isConfigured && menuOption.isTouched && aaOption.ui.optionMenu.entries[0] === menuOption ? ( 'autoAttendant.invalidMenuOptionRequired' | translate ) : '' }}" popover-trigger="mouseenter" tooltip-append-to-body="true" popover-animation="false" popover-popup-delay='600'>
-          <td class="col-md-1">
-            <div class="aa-menu-delete-icon">
-              <span>
-                <a ng-click="aaOption.deleteMenuOption(aaOption.ui.optionMenu,menuOption)">
-                  <i class="menu-delete-icon"></i>
-                  <!-- span sr-only delete menu option -->
-                </a>
-              </span>
-            </div>
-          </td>
-          <td class="col-md-1"> {{menuOption.key}} </td>
-          <td class="col-md-9" ng-class="{ 'text-muted' : !menuOption.isConfigured }"> {{ menuOption | displayNameTitle | translate }} {{ ' ' + menuOption.actions[0].value }}<br>{{ menuOption.description }}<br></td>
-          <td class="col-md-2">
-            <div class="aa-menu-launch-icon">
-              <span>
-                <a ng-click="aaOption.copyMenuOption(aaOption.ui.optionMenu,menuOption)" data-toggle="modal" data-backdrop="false" data-target="#aaOptionMenuDialog">
-                  <i class="menu-launch-icon" ></i>
-                  <!-- span sr-only edit menu option -->
-                </a>
-              </span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<div class="aa-menu">
+  <table id="aaMenuOptionTable" class="aa-menu-table" ng-show="aaOption.ui.showOptionMenu">
+    <thead>
+      <tr>
+        <th class="col-md-1">
+          <div class="aa-menu-delete-icon-md">
+          <a ng-click="aaOption.deleteMenu(aaOption.ui.optionMenu)">
+            <i class="menu-delete-icon-md"></i>
+            <!-- span sr-only deleteMenu-->
+          </a>
+          </div>
+        </th>
+        <th class="col-md-1"><!--placeholder--></th>
+        <th class="col-md-8"><h5 translate="autoAttendant.mainMenu"></h5></th>
+        <th class="col-md-2">
+          <div class="dropdown aa-menu-dropdown-icon">
+            <span>
+              <a href class="dropdown-toggle">
+                <i class="menu-dropdown-icon"></i>
+              </a>
+            </span>
+            <ul class="dropdown-menu" role="menu">
+              <li ng-repeat="choice in aaOption.optionMenuDropdownItems">
+                <a href ng-click="aaOption.addMenuOption()">{{choice}}</a>
+              </li>
+            </ul>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="menuOption in aaOption.ui.optionMenu.headers" ng-class="{ 'aa-menu-has-error' : !menuOption.isConfigured && menuOption.isTouched }" popover="{{ !menuOption.isConfigured && menuOption.isTouched ? ( 'autoAttendant.invalidMenuOptionRequired' | translate ) : '' }}" popover-trigger="mouseenter" tooltip-append-to-body="true" popover-animation="false" popover-popup-delay='600'>
+        <td class="col-md-1"><!--placeholder--></td>
+        <td class="col-md-1"><!--placeholder--></td>
+        <td class="col-md-9" ng-class="{ 'text-muted' : !menuOption.isConfigured }">
+          <dl class="aa-menu-option">
+            <dd ng-class="{ 'small' : menuOption.isConfigured }">{{ menuOption | displayNameTitle }}</dd>
+            <dd> {{ menuOption | displayNameAction }} </dd>
+            <dd ng-if="menuOption.actions[0].description" class="small">{{ menuOption.actions[0].description }}</dd>
+            <dd ng-if="!menuOption.actions[0].description"><br></dd>
+          </dl>
+        </td>
+        <td class="col-md-2">
+          <div class="aa-menu-launch-icon">
+            <span>
+              <a ng-click="aaOption.copyMenuOption(aaOption.ui.optionMenu,menuOption)" data-toggle="modal" data-backdrop="false" data-target="#aaOptionMenuDialog">
+                <i class="menu-launch-icon"></i>
+                <!-- span sr-only edit menu option-->
+              </a>
+            </span>
+          </div>
+        </td>
+      </tr>
+      <tr ng-repeat="menuOption in aaOption.ui.optionMenu.entries" ng-class="{ 'aa-menu-has-error' : !menuOption.isConfigured && menuOption.isTouched && aaOption.ui.optionMenu.entries[0] === menuOption}" popover="{{ !menuOption.isConfigured && menuOption.isTouched && aaOption.ui.optionMenu.entries[0] === menuOption ? ( 'autoAttendant.invalidMenuOptionRequired' | translate ) : '' }}" popover-trigger="mouseenter" tooltip-append-to-body="true" popover-animation="false" popover-popup-delay='600'>
+        <td class="col-md-1">
+          <div class="aa-menu-delete-icon">
+            <span>
+              <a ng-click="aaOption.deleteMenuOption(aaOption.ui.optionMenu,menuOption)">
+                <i class="menu-delete-icon"></i>
+                <!-- span sr-only delete menu option -->
+              </a>
+            </span>
+          </div>
+        </td>
+        <td class="col-md-1"> {{menuOption.key}} </td>
+        <td class="col-md-9" ng-class="{ 'text-muted' : !menuOption.isConfigured }">
+          <dl class="aa-menu-option">
+            <dd ng-if="!menuOption.isConfigured">{{ menuOption | displayNameTitle }}</dd>
+            <dd ng-if="menuOption.isConfigured">{{ menuOption | displayNameAction }}</dd>
+            <dd ng-if="!menuOption.description"><br></dd>
+            <dd ng-if="menuOption.description" class="small">{{ menuOption.description }}</dd>
+          </dl>
+        </td>
+        <td class="col-md-2">
+          <div class="aa-menu-launch-icon">
+            <span>
+              <a ng-click="aaOption.copyMenuOption(aaOption.ui.optionMenu,menuOption)" data-toggle="modal" data-backdrop="false" data-target="#aaOptionMenuDialog">
+                <i class="menu-launch-icon" ></i>
+                <!-- span sr-only edit menu option -->
+              </a>
+            </span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 <!-- Option Menu Modal Dialog -->
 <div class="modal" id="aaOptionMenuDialog" tabindex="-1" role="dialog" aria-labelledby="deleteRoomTitle" aria-hidden="true">
   <div class="modal-dialog aa-modal-dialog">
     <div class="modal-content aa-modal-content">
       <div class="modal-header">
-        <button id="device-modal-close" type="button" class="close" ng-click="optionForm.$setUntouched();optionForm.$setPristine();aaOption.touchCurrentMenuOption();cancelDelete()" data-dismiss="modal">
-          
+        <button id="device-modal-close" type="button" class="close" ng-click="optionForm.$setUntouched();optionForm.$setPristine();aaOption.touchCurrentMenuOption();aaOption.closeMenuOption()">
           <span class="sr-only" translate="common.close"></span>
         </button>
         <h3 class="modal-title" translate="{{ aaOption.optionDialogMenuEntry | displayNameTitle }}"></h3>
@@ -128,9 +137,9 @@
           <!--disconnect-->
           <div class="form-group" ng-if="aaOption.selectedAction.value === 6">
              <fieldset >
-              <cs-radio label="aaOption.disconnectBusy.label" value="aaOption.disconnectBusy.value" name="disconnectRadio" id="aaOption.disconnectBusy.id" ng-model="aaOption.disconnectSelected"></cs-radio>
-              <cs-radio label="aaOption.disconnectTone.label" value="aaOption.disconnectTone.value" name="disconnectRadio" id="aaOption.disconnectTone.id" ng-model="aaOption.disconnectSelected"></cs-radio>
-              <cs-radio label="aaOption.disconnectNone.label" value="aaOption.disconnectNone.value" name="disconnectRadio" id="aaOption.disconnectNone.id" ng-model="aaOption.disconnectSelected"></cs-radio>
+              <cs-radio label="aaOption.disconnectBusy.label" value="aaOption.disconnectBusy.value" name="disconnectRadio" id="aaOption.disconnectBusy.id" ng-model="aaOption.optionDialogMenuEntry.treatment" isdisabled="aaOption.disconnectBusy.isDisabled"></cs-radio>
+              <cs-radio label="aaOption.disconnectTone.label" value="aaOption.disconnectTone.value" name="disconnectRadio" id="aaOption.disconnectTone.id" ng-model="aaOption.optionDialogMenuEntry.treatment" isdisabled="aaOption.disconnectTone.isDisabled"></cs-radio>
+              <cs-radio label="aaOption.disconnectNone.label" value="aaOption.disconnectNone.value" name="disconnectRadio" id="aaOption.disconnectNone.id" ng-model="aaOption.optionDialogMenuEntry.treatment" isdisabled="aaOption.disconnectNone.isDisabled"></cs-radio>
             </fieldset>
           </div>
           <!--description-->
@@ -144,10 +153,10 @@
           </div>
         </div>
         <div class="modal-footer aa-tooltip">
-          <button id="cancelButton" class="btn btn-default" type="button" ng-click="optionForm.$setUntouched();optionForm.$setPristine();aaOption.touchCurrentMenuOption();cancelDelete()" data-dismiss="modal" translate="common.cancel"></button>
+          <button id="cancelButton" class="btn btn-default" type="button" ng-click="optionForm.$setUntouched();optionForm.$setPristine();aaOption.closeMenuOption()" translate="common.cancel"></button>
           <div class="aa-tooltip-wrapper" tooltip-html-unsafe="{{optionForm.$invalid ? ('autoAttendant.invalidRequiredFields'| translate) : '' }}" tooltip-trigger="mouseenter" tooltip-popup-delay='800' tooltip-placement="top">
           <!---optionForm.$pristine not used for ng-disabled since disconnect already has option selected -->
-          <button id="aaSaveButton" class="btn btn-primary btn-save" type="submit" ng-click="aaOption.saveMenuOption(aaOption.optionDialogMenuEntry);optionForm.$setUntouched();optionForm.$setPristine()" ng-disabled="optionForm.$invalid" data-dismiss="modal" translate="common.save"></button>
+          <button id="aaSaveButton" class="btn btn-primary btn-save" type="submit" ng-click="aaOption.saveMenuOption(aaOption.optionDialogMenuEntry);optionForm.$setUntouched();optionForm.$setPristine();aaOption.closeMenuOption()" ng-disabled="optionForm.$invalid" translate="common.save"></button>
           </div>
         </div>
       </form>

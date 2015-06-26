@@ -1,44 +1,55 @@
 'use strict';
 
 angular.module('uc.autoattendant')
-  .filter('displayNameAction', function () {
-
-    var configuredDisplayNameMap = {
+  .filter('displayNameAction', function ($translate) {
+    var displayNameActionMap = {
       "play": "common.play",
       "disconnect": "autoAttendant.disconnect",
       "route": "autoAttendant.routeToNumber",
-      "routeToDialed": "autoAttendant.routeDialedNumber",
-      "routeToMailbox": "autoAttendant.routeMailbox",
-      "routeToDialedMailbox": "autoAttendant.routeDialedMailbox",
-      "routeToCollectedNumber": "autoAttendant.routeCollectedNumber",
+      "routeToDialed": "autoAttendant.routeToDialedNumber",
+      "routeToMailbox": "autoAttendant.routeToMailbox",
+      "routeToDialedMailbox": "autoAttendant.routeToDialedMailbox",
+      "routeToCollectedNumber": "autoAttendant.routeToCollectedNumber",
       "repeatActionsOnInput": "autoAttendant.repeatMenu",
+      "busy": "autoAttendant.disconnectBusy",
+      "reorder": "autoAttendant.disconnectTone",
+      "none": "autoAttendant.disconnectNone",
     };
 
-    return function (name) {
+    return function (menuEntry) {
       var displayName = '';
-      if (angular.isUndefined(name))
+      if (angular.isUndefined(menuEntry) || angular.isUndefined(menuEntry.actions[0]) || angular.isUndefined(menuEntry.actions[0].name))
         return displayName;
 
-      displayName = configuredDisplayNameMap[name];
+      // set the display name for this action
+      displayName = $translate.instant(displayNameActionMap[menuEntry.actions[0].name]);
+
+      // add any input value for this action
+      if (displayName && menuEntry.actions[0].value) {
+        if (menuEntry.actions[0].name === "disconnect") {
+          displayName = displayName.concat(" ").concat($translate.instant(displayNameActionMap[menuEntry.actions[0].value]));
+        } else {
+          displayName = displayName.concat(" ").concat(menuEntry.actions[0].value);
+        }
+      }
 
       return displayName;
     };
   })
-  .filter('displayNameTitle', function () {
-    var configuredDisplayNameMap = {
-      "play": "common.play",
+  .filter('displayNameTitle', function ($translate, displayNameActionFilter) {
+    var displayNameTitleMap = {
+      "play": "autoAttendant.announcement",
       "disconnect": "autoAttendant.disconnect",
       "route": "autoAttendant.routeToNumber",
-      "routeToDialed": "autoAttendant.routeDialedNumber",
-      "routeToMailbox": "autoAttendant.routeMailbox",
-      "routeToDialedMailbox": "autoAttendant.routeDialedMailbox",
-      "routeToCollectedNumber": "autoAttendant.routeCollectedNumber",
+      "routeToDialed": "autoAttendant.routeToDialedNumber",
+      "routeToMailbox": "autoAttendant.routeToMailbox",
+      "routeToDialedMailbox": "autoAttendant.routeToDialedMailbox",
+      "routeToCollectedNumber": "autoAttendant.routeToCollectedNumber",
       "repeatActionsOnInput": "autoAttendant.repeatMenu",
-      "configureMenuOption": "autoAttendant.configureMenuOption",
     };
 
-    var placeholderDisplayNameMap = {
-      "play": "autoAttendant.playPlaceholder",
+    var displayNamePlaceholderMap = {
+      "play": "autoAttendant.announcementPlaceholder",
       "disconnect": "autoAttendant.disconnectPlaceholder",
       "route": "autoAttendant.routeToNumberPlaceholder",
       "routeToDialed": "autoAttendant.routeToDialedNumberPlaceholder",
@@ -46,7 +57,6 @@ angular.module('uc.autoattendant')
       "routeToDialedMailbox": "autoAttendant.routeToDialedMailboxPlaceholder",
       "routeToCollectedNumber": "autoAttendant.routeToCollectedNumberPlaceholder",
       "repeatActionsOnInput": "autoAttendant.repeatMenuPlaceholder",
-      "configureMenuOption": "autoAttendant.configureMenuOption",
     };
 
     return function (menuEntry) {
@@ -55,38 +65,48 @@ angular.module('uc.autoattendant')
         return displayName;
       }
 
+      // title by entry type
       var type = menuEntry.type;
       switch (type) {
       case 'MENU_OPTION_DEFAULT':
         if (menuEntry.isConfigured) {
-          displayName = "autoAttendant.optionForInvalidInput";
+          displayName = $translate.instant("autoAttendant.optionForInvalidInput");
         } else {
-          displayName = "autoAttendant.optionForInvalidInputPlaceholder";
+          displayName = $translate.instant("autoAttendant.optionForInvalidInputPlaceholder");
         }
         break;
 
       case 'MENU_OPTION_TIMEOUT':
         if (menuEntry.isConfigured) {
-          displayName = "autoAttendant.timeoutOption";
+          displayName = $translate.instant("autoAttendant.timeoutOption");
         } else {
-          displayName = "autoAttendant.timeoutOptionPlaceholder";
+          displayName = $translate.instant("autoAttendant.timeoutOptionPlaceholder");
         }
         break;
 
       case 'MENU_OPTION_ANNOUNCEMENT':
         if (menuEntry.isConfigured) {
-          displayName = "autoAttendant.announcement";
+          displayName = $translate.instant("autoAttendant.announcementMenu");
         } else {
-          displayName = "autoAttendant.announcementPlaceholder";
+          displayName = $translate.instant("autoAttendant.announcementMenuPlaceholder");
+        }
+        break;
+
+      case 'MENU_OPTION':
+        if (menuEntry.isConfigured) {
+          displayName = $translate.instant("autoAttendant.menuOption");
+        } else {
+          displayName = $translate.instant("autoAttendant.configureMenuOption");
         }
         break;
 
       default:
+        // title by action name
         if (menuEntry.actions !== undefined && menuEntry.actions.length > 0) {
           if (menuEntry.isConfigured) {
-            displayName = configuredDisplayNameMap[menuEntry.actions[0].name];
+            displayName = $translate.instant(displayNameTitleMap[menuEntry.actions[0].name]);
           } else {
-            displayName = placeholderDisplayNameMap[menuEntry.actions[0].name];
+            displayName = $translate.instant(displayNamePlaceholderMap[menuEntry.actions[0].name]);
           }
         }
       }

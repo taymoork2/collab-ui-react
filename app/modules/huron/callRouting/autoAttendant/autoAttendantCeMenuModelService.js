@@ -368,6 +368,11 @@
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.disconnect)) {
         action = new Action('disconnect', '');
+        if (angular.isDefined(inAction.disconnect.treatment)) {
+          action.setValue(inAction.disconnect.treatment);
+        } else {
+          action.setValue('none');
+        }
         if (angular.isDefined(inAction.disconnect.description)) {
           action.setDescription(inAction.disconnect.description);
         }
@@ -655,6 +660,10 @@
           newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
         } else if (actionName === 'routeToMailbox') {
           newActionArray[i][actionName].mailbox = menuEntry.actions[0].getValue();
+        } else if (actionName === 'disconnect') {
+          if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
+            newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
+          }
         }
       }
       var len = aaActionArray.length;
@@ -698,6 +707,10 @@
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToMailbox') {
           newActionArray[i][actionName].mailbox = val;
+        } else if (actionName === 'disconnect') {
+          if (val && val !== 'none') {
+            newActionArray[i][actionName].treatment = val;
+          }
         }
         if (angular.isDefined(actions[i].description) && actions[i].description.length > 0) {
           newActionArray[i][actionName].description = actions[i].description;

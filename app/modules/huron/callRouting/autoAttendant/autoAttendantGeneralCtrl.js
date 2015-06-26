@@ -61,17 +61,36 @@
 
       var resources = vm.ui.ceInfo.getResources();
 
-      // already on the resource list
-      for (var i = 0; i < resources.length; i++) {
-        if (resources[i].getNumber() === vm.inputNumber.number) {
-          Notification.notify([$translate.instant('autoAttendant.errorAddNumberInUse', {
-            number: vm.inputNumber.number
-          })], 'error');
-          return;
-        }
+      // already added to this AA
+      var isNumberInUse = vm.ui.ceInfo.getResources().some(function (resource) {
+        return resource.getNumber() === vm.inputNumber.number;
+      });
+      if (isNumberInUse) {
+        Notification.notify([$translate.instant('autoAttendant.errorAddNumberInUse', {
+          number: vm.inputNumber.number
+        })], 'error');
+        return;
       }
 
-      // new resource to add
+      // already on resource list for another AA
+      var otherAAName = '';
+      var isNumberInUseOtherAA = vm.aaModel.aaRecords.some(function (record) {
+        otherAAName = record.callExperienceName;
+        if (otherAAName !== vm.ui.ceInfo.getName()) {
+          return record.assignedResources.some(function (resource) {
+            return resource.number === vm.inputNumber.number;
+          });
+        }
+      });
+      if (isNumberInUseOtherAA) {
+        Notification.notify([$translate.instant('autoAttendant.errorAddNumberInUseOtherAA', {
+          name: otherAAName,
+          number: vm.inputNumber.number
+        })], 'error');
+        return;
+      }
+
+      // check if it exists in system and get the id
       $q.all([setInputNumberId(vm.inputNumber.number)])
         .then(function (result) {
           if (vm.inputNumber.id === '') {
@@ -90,6 +109,7 @@
             resources.push(resource);
 
             AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
+            resetInputNumber();
           }
         });
     }
@@ -107,6 +127,11 @@
             vm.inputNumber.id = '';
           }
         });
+    }
+
+    function resetInputNumber() {
+      vm.inputNumber.number = '';
+      vm.inputNumber.id = '';
     }
 
     function deleteAAResource(number) {

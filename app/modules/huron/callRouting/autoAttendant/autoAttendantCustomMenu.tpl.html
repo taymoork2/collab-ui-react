@@ -1,39 +1,32 @@
 <!-- AA Custom Menu -->
-<div class="aa-menu row">
-  <div class="col-md-1">
-    <!--placeholder-->
-  </div>
-  <div class="col-md-10">
-    <table id="aaMenuCustomTable" class="aa-menu-table" ng-show="aaCustom.ui.showCustomMenu">
-      <thead>
-        <tr>
-          <th class="col-md-1 aa-menu-delete-icon-md">
-            <a ng-click="aaCustom.deleteMenu(aaCustom.ui.customMenu)">
-              <i class="menu-delete-icon-md"></i>
-              <span class="sr-only" translate="common.delete"></span>
-            </a>
-          </th>
-          <th class="col-md-1">
-            <!--placeholder-->
-          </th>
-          <th class="col-md-8">
-            <h5 translate="autoAttendant.customMenu"></h5>
-            <h5 ng-if="aaCustom.ui.customMenu.entries[0].getUrl()">{{ aaCustom.ui.customMenu.entries[0].getUrl() }}</h5>
-          </th>
-          <th class="col-md-2">
-            <div class="aa-menu-launch-icon">
-              <span>
-                <a data-toggle="modal" data-backdrop="false" data-target="#aaCustomMenuDialog" ng-click="aaCustom.copyMenuOption(aaCustom.ui.customMenu,aaCustom.ui.customMenu.entries[0])">
-                  <i class="menu-launch-icon"></i>
-                  <span class="sr-only" translate="autoAttendant.customEdit"></span>
+<div class="aa-menu">
+  <table id="aaMenuCustomTable" class="aa-menu-table" ng-show="aaCustom.ui.showCustomMenu">
+    <thead>
+      <tr>
+        <th class="col-md-1 aa-menu-delete-icon-md">
+          <a ng-click="aaCustom.deleteMenu(aaCustom.ui.customMenu)">
+            <i class="menu-delete-icon-md"></i>
+            <span class="sr-only" translate="common.delete"></span>
+          </a>
+        </th>
+        <th class="col-md-1"><!--placeholder--></th>
+        <th class="col-md-8">
+          <h5 translate="autoAttendant.customMenu"></h5>
+          <h5 ng-if="aaCustom.ui.customMenu.entries[0].getUrl()">{{ aaCustom.ui.customMenu.entries[0].getUrl() }}</h5>
+        </th>
+        <th class="col-md-2">
+          <div class="aa-menu-launch-icon">
+            <span>
+              <a data-toggle="modal" data-backdrop="false" data-target="#aaCustomMenuDialog" ng-click="aaCustom.copyMenuOption(aaCustom.ui.customMenu,aaCustom.ui.customMenu.entries[0])">
+                <i class="menu-launch-icon"></i>
+                <span class="sr-only" translate="autoAttendant.customEdit"></span>
               </a>
-              </span>
-            </div>
-          </th>
-        </tr>
-      </thead>
-    </table>
-  </div>
+            </span>
+          </div>
+        </th>
+      </tr>
+    </thead>
+  </table>
 </div>
 <!-- Custom Menu Modal Dialog -->
 <div class="modal" id="aaCustomMenuDialog" tabindex="-1" role="dialog" aria-labelledby="deleteRoomTitle" aria-hidden="true">
