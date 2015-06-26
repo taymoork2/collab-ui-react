@@ -79,7 +79,8 @@
           <span ng-if="service.license.isTrial && !planReview.confServices.isNewTrial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial" translate-values="{number: service.license.volume}"></span>
               </div>
             </div>
-          <div ng-show="!$last" class="sub-line">
+
+          <div ng-class="{'sub-line':!$last}">
           </div>
         </div>
       </div>
