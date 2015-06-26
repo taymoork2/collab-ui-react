@@ -223,7 +223,7 @@ angular
               template: '<div ui-view="usersAdd"></div>'
             },
             'usersAdd@users.add': {
-              templateUrl: 'modules/core/users/userAdd/add-users.html'
+              templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html'
             }
           }
         })
