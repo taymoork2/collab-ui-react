@@ -519,15 +519,27 @@ angular.module('Core')
               if (userStatus === 200) {
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
+                var promise;
                 if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
                   var userData = {
                     'email': data.userResponse[i].email
                   };
-                  var promise = HuronUser.create(data.userResponse[i].uuid, userData)
+                  promise = HuronUser.create(data.userResponse[i].uuid, userData)
                     .catch(function (response) {
                       this.alertType = 'danger';
                       this.message = Notification.processErrorResponse(response, 'usersPage.ciscoucError', this);
                     }.bind(userResult));
+                  promises.push(promise);
+                }
+                if (data.userResponse[i].unentitled && data.userResponse[i].unentitled.indexOf(Config.entitlements.huron) !== -1) {
+                  promise = HuronUser.delete(data.userResponse[i].uuid)
+                    .catch(function (response) {
+                      // If the user does not exist in Squared UC do not report an error
+                      if (response.status !== 404) {
+                        // Notify Huron error
+                        Notification.errorResponse(response);
+                      }
+                    });
                   promises.push(promise);
                 }
               } else if (userStatus === 409) {
