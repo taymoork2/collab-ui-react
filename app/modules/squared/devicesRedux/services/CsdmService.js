@@ -34,8 +34,6 @@ angular.module('Squared').service('CsdmService',
       listCodes(function (err, codes) {
         if (err) return callback(err);
         CsdmCacheUpdater.addAndUpdate(codesAndDevicesCache, codes);
-        callback(null, listCodesAndDevices());
-
         listDevices(function (err, devices) {
           if (err) return callback(err);
           CsdmCacheUpdater.addUpdateAndRemove(codesAndDevicesCache, _.extend(codes, devices));

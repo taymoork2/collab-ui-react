@@ -5,7 +5,7 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, $filter, CsdmPoller, CsdmConverter, XhrNotificationService, DeviceFilter) {
+    function ($scope, $state, $templateCache, $filter, CsdmEventStream, CsdmConverter, XhrNotificationService, DeviceFilter) {
       var vm = this;
 
       // todo: this file is untested!!
@@ -25,22 +25,13 @@ angular.module('Squared')
       };
 
       var updateListAndFilter = function (data) {
-        var converted = CsdmConverter.convert(data || CsdmPoller.listCodesAndDevices());
-
+        var converted = CsdmConverter.convert(data);
         vm.roomData = DeviceFilter.getFilteredList(converted);
+        vm.dataLoaded = true;
       };
 
-      CsdmPoller.startPolling(function (err, data) {
-        vm.dataLoaded = true;
-        if (err) return XhrNotificationService.notify(err);
-      });
-
-      $scope.$on('$destroy', function () {
-        CsdmPoller.stopPolling();
-      });
-
-      $scope.$watchCollection(CsdmPoller.listCodesAndDevices, function (data) {
-        updateListAndFilter(data);
+      vm.subscription = CsdmEventStream.subscribe(updateListAndFilter, {
+        scope: $scope
       });
 
       var getTemplate = function (name) {
