@@ -40,6 +40,8 @@
       var locale = $translate.use();
       if (locale == "jp_JA") {
         locale = "ja_JP";
+      } else if (locale == "es_LA") { //latin american spanish
+        locale = "es_MX"; //mexican spanish
       }
       $scope.localeParam = locale;
 
