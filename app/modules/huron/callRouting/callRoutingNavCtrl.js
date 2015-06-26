@@ -6,11 +6,11 @@
     .controller('CallRoutingNavCtrl', CallRoutingNavCtrl);
 
   /* @ngInject */
-  function CallRoutingNavCtrl($scope, CallPark) {
+  function CallRoutingNavCtrl($scope, CallPark, Config) {
     var vm = this;
     vm.tabs = [{
       title: 'callRouting.autoAttendantTitle',
-      state: 'autoattendant.landing'
+      state: 'autoattendant'
     }, {
       title: 'callRouting.callParkTitle',
       state: 'callpark'
@@ -33,6 +33,18 @@
     function init() {
       updateCurrentCount();
       getCallParkCount();
+      enableAA();
+    }
+
+    function enableAA() {
+      if (Config.getEnv() === 'integration' || Config.getEnv() === 'dev') {
+        for (var i = 0; i < vm.tabs.length; i++) {
+          if (vm.tabs[i].title === 'callRouting.autoAttendantTitle') {
+            vm.tabs[i].state = 'autoattendant.landing';
+            return;
+          }
+        }
+      }
     }
 
     function updateCurrentCount() {

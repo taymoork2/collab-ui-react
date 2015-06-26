@@ -752,12 +752,11 @@ angular
         })
         .state('autoattendant', {
           url: '/autoattendant',
-          abstract: true,
+          abstract: false,
           parent: 'callrouting',
           template: '<div> <div ui-view></div> </div>'
         })
         .state('autoattendant.landing', {
-          url: '/landing',
           parent: 'autoattendant',
           templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantLanding.tpl.html',
           controller: 'AutoAttendantLandingCtrl',
