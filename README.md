@@ -11,8 +11,8 @@ Technology
 * Modules are developed using directives, here is a good read on the topic:
   http://briantford.com/blog/angular-bower
 * The backend of the application are written in Java Web Services, the ui services call the REST APIs
-* Styling the application is done using LESS:
-  http://webdesign.tutsplus.com/articles/get-into-less-the-programmable-stylesheet-language--webdesign-5216
+* Styling the application is done using SASS:
+  http://sass-lang.com/
 * Styling is based on Bootstrap CSS, a custom Cisco Bootstrap CSS is used for the portal:
   http://collab-lib.cisco.com/dist/#/overview
 * Localization is done using angular translation
