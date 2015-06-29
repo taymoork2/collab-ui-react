@@ -1,24 +1,25 @@
 /*************************************
  *      Atlas Core Style imports
  ************************************/
-@import '../convertUsers/_convertUsersModal';
-@import '../groups/groupList/_group-list';
-@import '../groups/groupPreview/_group-preview';
-@import '../customers/customerList/_customer-list';
-@import '../customers/customerPreview/_customer-preview';
-@import '../landingPage/_landing-page';
-@import '../login/_login';
-@import '../notifications/_notifications';
-@import '../partnerLanding/_partner-home';
-@import '../partnerReports/_partner-reports';
-@import '../setupWizard/_setup-wizard';
-@import '../trials/_trials';
-@import '../users/userList/_user-list';
-@import '../users/userAdd/_user-add';
-@import '../users/userPreview/_user-preview';
-@import '../users/userDetails/_user-details';
-@import '../users/userRoles/_user-roles';
-@import '../wizard/_wizard';
-@import '../convertUsers/_convertUsersModal';
-@import '../leaderBoard/_leaderBoard';
-@import '../partnerProfile/_partnerProfile';
+@import '../convertUsers/convertUsersModal';
+@import '../groups/groupList/group-list';
+@import '../groups/groupPreview/group-preview';
+@import '../customers/customerList/customer-list';
+@import '../customers/customerPreview/customer-preview';
+@import '../landingPage/landing-page';
+@import '../login/login';
+@import '../notifications/notifications';
+@import '../partnerLanding/partner-home';
+@import '../partnerReports/partner-reports';
+@import '../setupWizard/setup-wizard';
+@import '../trials/trials';
+@import '../users/userList/user-list';
+@import '../users/userOverview/user-overview';
+@import '../users/userAdd/user-add';
+@import '../users/userPreview/user-preview';
+@import '../users/userDetails/user-details';
+@import '../users/userRoles/user-roles';
+@import '../wizard/wizard';
+@import '../convertUsers/convertUsersModal';
+@import '../leaderBoard/leaderBoard';
+@import '../partnerProfile/partnerProfile';

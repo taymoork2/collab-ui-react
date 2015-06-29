@@ -17,8 +17,9 @@
           <a id="{{directoryNumber.uuid}}" ui-sref="user-overview.communication.directorynumber({directoryNumber: directoryNumber})">
             <span class="feature-name">{{directoryNumber.pattern}}</span>
             <span class="feature-name" ng-if="directoryNumber.altDnPattern !== ''"> {{'telephonyPreview.or' | translate}} {{directoryNumber.altDnPattern}}</span>
-            <i class="feature-arrow"></i>
              <span class="feature-status">{{directoryNumber.dnSharedUsage}}</span>
+             <i class="feature-arrow"></i>
+
           </a>
         </li>
       </ul>
@@ -33,15 +34,15 @@
         <li class="feature" ng-if="telephonyOverview.telephonyInfo.hasCustomerVoicemail">
           <a ui-sref="user-overview.communication.voicemail">
             <span class="feature-name" translate="telephonyPreview.voicemail"></span>
-            <i class="feature-arrow"></i>
             <span class="feature-status">{{telephonyOverview.telephonyInfo.voicemail}}</span>
+            <i class="feature-arrow"></i>
           </a>
         </li>
         <li class="feature">
           <a ui-sref="user-overview.communication.snr">
             <span class="feature-name" translate="telephonyPreview.singleNumberReach"></span>
-            <i class="feature-arrow"></i>
             <span class="feature-status">{{telephonyOverview.telephonyInfo.singleNumberReach}}</span>
+            <i class="feature-arrow"></i>
           </a>
         </li>
       </ul>

@@ -16,7 +16,9 @@
       <ul>
         <li class="feature" ng-repeat="service in userOverview.services">
           <a id="{{service.name}}" ui-sref="{{service.state}}">
+            <i class="feature-icon"></i>
             <span class="feature-name">{{service.name}}</span>
+            <span class="feature-status">{{service.detail}}</span>
             <i class="feature-arrow"></i>
           </a>
         </li>

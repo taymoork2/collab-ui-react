@@ -437,7 +437,7 @@ gulp.task('jsBeautifier:verify', function () {
     config.test + '/**/*.js',
     config.test + '/**/*.json',
     '!test/karma-unit.js',
-    'karma.conf.js',
+    '!karma.conf.js',
     'gulpfile.js'
   ];
   var logSuccess = args.verbose ? true : false;
@@ -458,7 +458,7 @@ gulp.task('jsBeautifier:beautify', function () {
     config.test + '/**/*.js',
     config.test + '/**/*.json',
     '!test/karma-unit.js',
-    'karma.conf.js',
+    '!karma.conf.js',
     'gulpfile.js'
   ];
   var logSuccess = args.verbose ? true : false;

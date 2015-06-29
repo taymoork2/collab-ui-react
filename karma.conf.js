@@ -1,7 +1,7 @@
 // Karma configuration
 // http://karma-runner.github.io/0.10/config/configuration-file.html
 
-module.exports = function (config) {
+module.exports = function(config) {
   'use strict';
 
   config.set({
@@ -14,7 +14,7 @@ module.exports = function (config) {
     /**
      * This is the list of file patterns to load into the browser during testing.
      */
-    files: [ <% scripts.forEach(function (file) { %> '<%= file %>', <%
+    files: [ <% scripts.forEach(function(file) { %> '<%= file %>', <%
       }); %>
       'build/scripts/**/*.js',
       'build/templates-app.js',

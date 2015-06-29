@@ -25,6 +25,48 @@
 
     init();
 
+    function init() {
+      vm.services = [];
+
+      var msgState = {
+        name: $translate.instant('onboardModal.messaging'),
+        state: 'user-overview.messaging',
+        detail: $translate.instant('onboardModal.freeMsg')
+      };
+
+      var commState = {
+        name: $translate.instant('onboardModal.communications'),
+        state: 'user-overview.communication',
+        detail: $translate.instant('onboardModal.freeConf')
+      };
+
+      var confState = {
+        name: $translate.instant('onboardModal.conferencing'),
+        state: 'user-overview.conferencing',
+        detail: $translate.instant('onboardModal.freeComm')
+      };
+
+      if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
+        if (getServiceDetails('MS')) {
+          msgState.detail = $translate.instant('onboardModal.paidMsg');
+        }
+        vm.services.push(msgState);
+      }
+      if (hasEntitlement('squared-syncup')) {
+        if (getServiceDetails('CF')) {
+          confState.detail = $translate.instant('onboardModal.paidConf');
+        }
+        vm.services.push(confState);
+      }
+      if (hasEntitlement('ciscouc')) {
+        if (getServiceDetails('CO')) {
+          commState.detail = $translate.instant('onboardModal.paidComm');
+        }
+        vm.services.push(commState);
+      }
+      updateUserTitleCard();
+    }
+
     var generateOtpLink = {
       name: 'generateAuthCode',
       text: $translate.instant('usersPreview.generateActivationCode'),
@@ -44,6 +86,19 @@
       return false;
     }
 
+    function getServiceDetails(license) {
+      var userLicenses = vm.currentUser.licenseID;
+      if (userLicenses) {
+        for (var l = userLicenses.length - 1; l >= 0; l--) {
+          var licensePrefix = userLicenses[l].substring(0, 2);
+          if (licensePrefix === license) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
     function getCurrentUser() {
       var scimUrl = Config.getScimUrl();
       var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]) + '/' + vm.currentUser.id;
@@ -55,37 +110,6 @@
           updateUserTitleCard();
           init();
         });
-    }
-
-    function init() {
-      vm.services = [];
-
-      var msgState = {
-        name: $translate.instant('onboardModal.messaging'),
-        state: 'user-overview.messaging'
-      };
-
-      var commState = {
-        name: $translate.instant('onboardModal.communications'),
-        state: 'user-overview.communication'
-      };
-
-      var confState = {
-        name: $translate.instant('onboardModal.conferencing'),
-        state: 'user-overview.conferencing'
-      };
-
-      if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
-        vm.services.push(msgState);
-      }
-      if (hasEntitlement('squared-syncup')) {
-        vm.services.push(confState);
-      }
-      if (hasEntitlement('ciscouc')) {
-        vm.services.push(commState);
-      }
-
-      updateUserTitleCard();
     }
 
     $scope.$on('USER_LIST_UPDATED', function () {

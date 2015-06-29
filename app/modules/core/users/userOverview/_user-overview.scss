@@ -1,0 +1,17 @@
+.feature-icon {
+  #Messaging & {
+    &:before {
+      content: $icon-circle-message;
+    }
+  }
+  #Communications & {
+    &:before {
+      content: $icon-circle-call;
+    }
+  }
+  #Conferencing & {
+    &:before {
+      content: $icon-circle-group;
+    }
+  }
+}
