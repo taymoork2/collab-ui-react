@@ -781,6 +781,23 @@ angular.module('Core')
         ]
       };
 
+      // These states are not allowed in specific views
+      // (i.e. devices are not allowed in partner)
+      config.restrictedStates = {
+        'customer': [
+          'partneroverview',
+          'partnerreports',
+          'newpartnerreports'
+        ],
+        'partner': [
+          'overview',
+          'reports',
+          'devices',
+          'fusion',
+          'mediafusionconnector'
+        ]
+      };
+
       // These states do not require a role/service check
       config.allowedStates = ['unauthorized', 'csadmin'];
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', '$translate',
-    function Authinfo($rootScope, $location, Utils, Config, $translate) {
+  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', 'SessionStorage', '$translate',
+    function Authinfo($rootScope, $location, Utils, Config, SessionStorage, $translate) {
       function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
@@ -37,7 +37,13 @@ angular.module('Core')
         return $translate.instant(title);
       };
       var isAllowedState = function (state) {
+        var view = (authData.roles.indexOf('PARTNER_ADMIN') > -1 || authData.roles.indexOf('PARTNER_USER') > -1 ? 'partner' : 'customer');
         if (state) {
+          for (var b in Config.restrictedStates[view]) {
+            if (state === Config.restrictedStates[view][b]) {
+              return false;
+            }
+          }
           // if nested state only check parent state
           var parentState = state.split('.');
           if (Config.allowedStates && Config.allowedStates.indexOf(parentState[0]) !== -1) {
