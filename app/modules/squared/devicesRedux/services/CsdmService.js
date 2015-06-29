@@ -3,67 +3,71 @@
 angular.module('Squared').service('CsdmService',
 
   /* @ngInject  */
-  function ($window, $rootScope, $http, Authinfo, Config, CsdmConfigService, CsdmCacheUpdater) {
+  function ($window, $rootScope, $http, Authinfo, Config, CsdmConfigService, CsdmCacheUpdater, CsdmConverter) {
 
     var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
 
-    var codesAndDevicesCache = {};
+    var codeCache = {};
+    var deviceCache = {};
 
-    var listDevices = function (callback) {
-      $http.get(devicesUrl)
-        .success(function (data) {
-          callback(null, data);
-        })
-        .error(function () {
-          callback(arguments);
-        });
-    };
-
-    var listCodes = function (callback) {
-      $http.get(codesUrl)
-        .success(function (data) {
-          callback(null, data);
-        })
-        .error(function () {
-          callback(arguments);
-        });
-    };
-
-    var fillCodesAndDevicesCache = function (callback) {
-      listCodes(function (err, codes) {
-        if (err) return callback(err);
-        CsdmCacheUpdater.addAndUpdate(codesAndDevicesCache, codes);
-        listDevices(function (err, devices) {
-          if (err) return callback(err);
-          CsdmCacheUpdater.addUpdateAndRemove(codesAndDevicesCache, _.extend(codes, devices));
-          callback(null, listCodesAndDevices());
-        });
+    function fetchDeviceList() {
+      return $http.get(devicesUrl).success(function (devices) {
+        var converted = CsdmConverter.convert(devices);
+        CsdmCacheUpdater.update(deviceCache, converted);
       });
-    };
+    }
 
-    var updateDeviceName = function (deviceUrl, newName, callback) {
-      $http.patch(deviceUrl, {
+    function fetchCodeList() {
+      return $http.get(codesUrl).success(function (codes) {
+        var converted = CsdmConverter.convert(codes);
+        CsdmCacheUpdater.update(codeCache, converted);
+      });
+    }
+
+    function getDeviceList() {
+      return deviceCache;
+    }
+
+    function getCodeList() {
+      return codeCache;
+    }
+
+    var updateDeviceName = function (deviceUrl, newName) {
+      return $http.patch(deviceUrl, {
           name: newName
         })
         .success(function (status) {
-          codesAndDevicesCache[deviceUrl].displayName = newName;
-          var device = codesAndDevicesCache[deviceUrl];
+          var device = codeCache[deviceUrl] || deviceCache[deviceUrl];
+          device.displayName = newName;
           if (device.status && device.status.webSocketUrl) {
-            notifyDevice(deviceUrl, {
+            return notifyDevice(deviceUrl, {
               command: "identityDataChanged",
               eventType: "room.identityDataChanged"
-            }, callback);
+            });
           }
-        })
-        .error(function () {
-          callback(arguments);
         });
     };
 
     var notifyDevice = function (deviceUrl, message, callback) {
-      $http.post(deviceUrl + '/notify', message)
+      return $http.post(deviceUrl + '/notify', message);
+    };
+
+    var uploadLogs = function (deviceUrl, feedbackId, email) {
+      return notifyDevice(deviceUrl, {
+        command: "logUpload",
+        eventType: "room.request_logs",
+        feedbackId: feedbackId,
+        email: email
+      });
+    };
+
+    // todo: promisify
+    var deleteUrl = function (url, callback) {
+      $http.delete(url)
         .success(function (status) {
+          delete codeCache[url];
+          delete deviceCache[url];
           callback(null, status);
         })
         .error(function () {
@@ -71,48 +75,32 @@ angular.module('Squared').service('CsdmService',
         });
     };
 
-    var uploadLogs = function (deviceUrl, feedbackId, email, callback) {
-      notifyDevice(deviceUrl, {
-        command: "logUpload",
-        eventType: "room.request_logs",
-        feedbackId: feedbackId,
-        email: email
-      }, callback);
-    };
-
-    var listCodesAndDevices = function () {
-      return _.values(codesAndDevicesCache);
+    // todo: promisify
+    var createCode = function (name, callback) {
+      $http.post(codesUrl, {
+          name: name
+        })
+        .success(function (data) {
+          codeCache[data.url] = data;
+          callback(null, data);
+        })
+        .error(function () {
+          callback(arguments);
+        });
     };
 
     return {
+      getCodeList: getCodeList,
+      getDeviceList: getDeviceList,
+
+      fetchCodeList: fetchCodeList,
+      fetchDeviceList: fetchDeviceList,
+
       uploadLogs: uploadLogs,
       updateDeviceName: updateDeviceName,
-      listCodesAndDevices: listCodesAndDevices,
-      fillCodesAndDevicesCache: fillCodesAndDevicesCache,
 
-      deleteUrl: function (url, callback) {
-        $http.delete(url)
-          .success(function (status) {
-            delete codesAndDevicesCache[url];
-            callback(null, status);
-          })
-          .error(function () {
-            callback(arguments);
-          });
-      },
-
-      createCode: function (name, callback) {
-        $http.post(codesUrl, {
-            name: name
-          })
-          .success(function (data) {
-            codesAndDevicesCache[data.url] = data;
-            callback(null, data);
-          })
-          .error(function () {
-            callback(arguments);
-          });
-      }
+      deleteUrl: deleteUrl,
+      createCode: createCode
     };
   }
 );

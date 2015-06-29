@@ -6,11 +6,11 @@
       </span>
 
       <cs-searchfilter
-        ng-model="count"
-        filters="filters"
         placeholder-text=""
-        search-item-fn="search(searchStr)"
-        set-filter-fn="setFilter(filter.filterValue)">
+        ng-model="sc.count"
+        filters="sc.deviceFilter.getFilters()"
+        search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)"
+        set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">
       </cs-searchfilter>
 
       <button
@@ -25,7 +25,7 @@
     </div>
   </div>
   
-  <div ng-if="sc.subscription.eventCount == 0">
+  <div ng-if="sc.codesListSubscription.eventCount + sc.deviceListSubscription.eventCount == 0">
     <div windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
       <div class="empty-devices-content">
         <i class="icon icon-2x icon-spinner" />
@@ -33,14 +33,14 @@
     </div>
   </div>
 
-  <div ng-if="sc.subscription.currentError">
+  <div ng-if="sc.codesListSubscription.currentError || sc.deviceListSubscription.currentError">
     <div class="error-spinner">
       <i class="icon icon-2x icon-spinner" />
     </div>
   </div>
 
-  <div ng-if="sc.subscription.eventCount > 0">
-    <div ng-hide="sc.roomData.length" windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
+  <div ng-if="sc.codesListSubscription.eventCount + sc.deviceListSubscription.eventCount > 0">
+    <div ng-hide="sc.updateListAndFilter().length" windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
       <div class="empty-devices-content">
         <img ng-src="images/devices/cisco_sx10.png" style="height: 60px; width: 60px" />
         <h2 class="empty-device-message">

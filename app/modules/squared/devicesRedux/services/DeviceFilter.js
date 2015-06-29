@@ -5,7 +5,7 @@ angular.module('Squared').service('DeviceFilter',
   /* @ngInject  */
   function () {
 
-    var currentSearch, currentFilter;
+    var currentSearch, currentFilter, arr = [];
 
     var filters = [{
       count: 0,
@@ -92,11 +92,16 @@ angular.module('Squared').service('DeviceFilter',
     };
 
     var getFilteredList = function (data) {
-      var filtered = _.filter(data, function (item) {
-        return matchesSearch(item) && matchesFilter(item);
-      });
+      arr.length = 0;
       updateFilters(data);
-      return filtered;
+
+      _.each(data, function (item) {
+        if (matchesSearch(item) && matchesFilter(item)) {
+          arr.push(item);
+        }
+      });
+
+      return arr;
     };
 
     var matchesSearch = function (item) {

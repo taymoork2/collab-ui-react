@@ -5,41 +5,26 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, $filter, CsdmEventStream, CsdmConverter, XhrNotificationService, DeviceFilter) {
+    function ($scope, $state, $templateCache, $filter, CsdmEventStream, CsdmConverter, XhrNotificationService, DeviceFilter, CodeListService, DeviceListService, CsdmCacheUpdater, CsdmService) {
       var vm = this;
 
-      // todo: this file is untested!!
-
-      $scope.count = '';
-      $scope.currentFilter = '';
-      $scope.filters = DeviceFilter.getFilters();
-
-      $scope.search = function (query) {
-        DeviceFilter.setCurrentSearch(query);
-        updateListAndFilter();
-      };
-
-      $scope.setFilter = function (filter) {
-        DeviceFilter.setCurrentFilter(filter);
-        updateListAndFilter();
-      };
-
-      var updateListAndFilter = function (data) {
-        var converted = CsdmConverter.convert(data);
-        vm.roomData = DeviceFilter.getFilteredList(converted);
-        vm.dataLoaded = true;
-      };
-
-      vm.subscription = CsdmEventStream.subscribe(updateListAndFilter, {
+      vm.count = '';
+      vm.deviceFilter = DeviceFilter;
+      vm.codesListSubscription = CodeListService.subscribe(angular.noop, {
+        scope: $scope
+      });
+      vm.deviceListSubscription = DeviceListService.subscribe(angular.noop, {
         scope: $scope
       });
 
-      var getTemplate = function (name) {
-        return $templateCache.get('modules/squared/devicesRedux/templates/' + name + '.html');
+      vm.updateListAndFilter = function () {
+        vm.dataLoaded = true;
+        var merged = _.extend({}, CsdmService.getCodeList(), CsdmService.getDeviceList());
+        return DeviceFilter.getFilteredList(merged);
       };
 
       vm.gridOptions = {
-        data: 'sc.roomData',
+        data: 'sc.updateListAndFilter()',
         rowHeight: 75,
         showFilter: false,
         multiSelect: false,
@@ -72,6 +57,10 @@ angular.module('Squared')
           currentDevice: device
         });
       };
+
+      function getTemplate(name) {
+        return $templateCache.get('modules/squared/devicesRedux/templates/' + name + '.html');
+      }
 
     }
   );

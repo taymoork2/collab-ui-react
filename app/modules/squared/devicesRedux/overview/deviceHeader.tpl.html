@@ -12,8 +12,8 @@
     <div class="header-info-wrap">
       <div class="header-title">
         <sq-editable-input
-          save="save"
-          value="deviceOverview.currentDevice.displayName">
+          sq-save="save(newText)"
+          ng-model="deviceOverview.currentDevice.displayName">
         </sq-editable-input>
       </div>
     </div>

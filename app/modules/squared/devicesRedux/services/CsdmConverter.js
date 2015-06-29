@@ -5,8 +5,8 @@ angular.module('Squared').service('CsdmConverter',
   /* @ngInject  */
   function ($translate) {
 
-    var convert = function (arr) {
-      return _.map(arr, function (obj) {
+    var convert = function (data) {
+      return _.mapValues(data, function (obj) {
         return {
           url: obj.url,
           mac: obj.mac,

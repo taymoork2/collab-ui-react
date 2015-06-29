@@ -38,10 +38,10 @@ angular.module('Hercules')
         notify: function (messageOrArgs, args) {
           var messages;
           if (args) {
-            messages = this.getMessages(args);
+            messages = getMessages.apply(null, args);
             messages.unshift(messageOrArgs);
           } else {
-            messages = this.getMessages(messageOrArgs);
+            messages = getMessages.apply(null, messageOrArgs);
           }
           return notification.notify(messages, 'error');
         },
