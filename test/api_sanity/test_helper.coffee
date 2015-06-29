@@ -17,6 +17,11 @@ auth =
     pass: 'C1sc0123!'
     org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
 
+  'partner-sales-user':
+    user: 'phtest77+salesadmin@gmail.com'
+    pass: 'C1sc0123!'
+    org:  '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
+
   'partner-squc-admin':
     user: 'atlaspartner_squc_admin@atlas.com'
     pass: 'C1sco123!'

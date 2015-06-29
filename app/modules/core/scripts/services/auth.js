@@ -55,7 +55,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
 
           //Figure out whether this user is allowed to access the /services API
           var doServicesRequest = (result.roles && _.isArray(result.roles)) ?
-            _.any(['Full_Admin', 'PARTNER_ADMIN', 'PARTNER_USER'], function (role) {
+            _.any(['Full_Admin', 'PARTNER_ADMIN'], function (role) {
               return result.roles.indexOf(role) > -1;
             }) : false;
 
