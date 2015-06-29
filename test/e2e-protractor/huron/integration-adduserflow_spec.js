@@ -48,7 +48,9 @@ describe('Squared UC Add User flow', function () {
     describe('Add a new Squared UC user', function () {
       it('should display input user email in results with success message', function () {
         utils.sendKeys(users.addUsersField, inputEmail);
-        utils.click(users.squaredUCCheckBox);
+        utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+        utils.click(users.nextButton);
+        utils.click(users.advancedCommunications);
         utils.click(users.onboardButton);
         notifications.assertSuccess(inputEmail, 'onboarded successfully');
         utils.click(users.closeAddUsers);
@@ -97,26 +99,30 @@ describe('Squared UC Add User flow', function () {
 
     describe('To remove Squared UC from the user', function () {
       it('should uncheck Squared UC checkbox', function () {
-        utils.click(users.messagingService);
-        utils.click(telephony.squaredUCCheckBox);
-        utils.click(telephony.saveEntitlements);
-        notifications.assertSuccess('entitlements were updated successfully');
+        utils.click(users.servicesActionButton);
+        utils.click(users.editServicesButton);
+        utils.click(users.advancedCommunications);
+        utils.click(users.saveButton);
+        notifications.assertSuccess('entitled successfully');
       });
       it('should not have communications visible', function () {
-        utils.clickLastBreadcrumb();
+        utils.clickUser(inputEmail);
+        utils.expectIsDisplayed(users.servicesPanel);
         utils.expectIsNotDisplayed(users.communicationsService);
       });
     });
 
     describe('To entitle Squared UC to the user again', function () {
       it('should check Squared UC checkbox and close the preview panel', function () {
-        utils.click(users.messagingService);
-        utils.click(telephony.squaredUCCheckBox);
-        utils.click(telephony.saveEntitlements);
-        notifications.assertSuccess('entitlements were updated successfully');
+        utils.click(users.servicesActionButton);
+        utils.click(users.editServicesButton);
+        utils.click(users.advancedCommunications);
+        utils.click(users.saveButton);
+        notifications.assertSuccess('entitled successfully');
       });
       it('should show the Communications service', function () {
-        utils.clickLastBreadcrumb();
+        utils.clickUser(inputEmail);
+        utils.expectIsDisplayed(users.servicesPanel);
         utils.expectIsDisplayed(users.communicationsService);
       });
       it('should have a line/directory number again', function () {

@@ -23,6 +23,10 @@ var UsersPage = function () {
     password: 'C1sc0123!',
   };
 
+  this.servicesPanel = element(by.cssContainingText('.section-title-row', 'Services'));
+  this.servicesActionButton = this.servicesPanel.element(by.css('button.actions-button'));
+  this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
+
   this.servicesPanelCommunicationsCheckbox = element(by.css('.bucket-row-inner .indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));
   this.manageDialog = element(by.id('modalContent'));
@@ -67,6 +71,8 @@ var UsersPage = function () {
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 
+  this.advancedCommunications = element(by.cssContainingText('label', 'Advanced Spark Call'));
+
   this.subTitleAdd = element(by.id('subTitleAdd'));
   this.subTitleEnable = element(by.id('subTitleEnable'));
 
@@ -76,8 +82,8 @@ var UsersPage = function () {
   this.addButton = element(by.id('btnAdd'));
   this.deleteUserButton = element(by.id('deleteUserButton'));
 
-  this.cancelButton = element(by.id('btn-cancel'));
-  this.saveButton = element(by.id('btn-save'));
+  this.cancelButton = element(by.buttonText('Cancel'));
+  this.saveButton = element(by.buttonText('Save'));
 
   this.clearButton = element(by.id('btnClear'));
   this.backButton = element(by.buttonText('Clear'));

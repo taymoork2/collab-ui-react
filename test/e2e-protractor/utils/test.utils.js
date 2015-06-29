@@ -312,13 +312,13 @@ exports.search = function (query) {
   }
 };
 
-exports.searchAndClick = function (query) {
-  this.search(query);
+exports.clickUser = function (query) {
   return this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
 };
 
-exports.convertUsersSearchAndClick = function (query) {
-  return this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
+exports.searchAndClick = function (query) {
+  this.search(query);
+  return this.clickUser(query);
 };
 
 exports.expectRowIsNotDisplayed = function (text) {

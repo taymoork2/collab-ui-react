@@ -1,11 +1,15 @@
 'use strict';
 
+var HttpsProxyAgent = require("https-proxy-agent");
+
+var agent = new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
+
 exports.config = {
   framework: "jasmine2",
 
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
-
+  agent: process.env.SAUCE_USERNAME ? agent : undefined,
   directConnect: process.env.SAUCE_USERNAME ? false : true,
 
   capabilities: {

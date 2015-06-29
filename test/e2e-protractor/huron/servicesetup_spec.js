@@ -24,6 +24,7 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
 
   it('should load views according to left navigation clicks', function () {
     wizard.clickServiceSetup();
+    utils.click(wizard.nextBtn);
     utils.expectText(wizard.mainviewTitle, 'Unified Communications');
     utils.expectIsDisplayed(servicesetup.timeZone);
     utils.expectIsDisplayed(servicesetup.steeringDigit);
@@ -39,12 +40,13 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
     utils.click(servicesetup.addNumberRange);
     utils.sendKeys(servicesetup.newBeginRange, pattern);
     utils.sendKeys(servicesetup.newEndRange, pattern);
-    utils.click(servicesetup.save);
+    utils.click(wizard.finishBtn);
     notifications.assertSuccess('saved successfully');
   });
 
   it('should delete the number range', function () {
     wizard.clickServiceSetup();
+    utils.click(wizard.nextBtn);
     servicesetup.deleteNumberRange(pattern);
     notifications.assertSuccess('Successfully deleted');
   });

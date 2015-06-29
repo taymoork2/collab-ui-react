@@ -9,9 +9,8 @@ describe('Telephony Info', function () {
     browser.ignoreSynchronization = false;
   });
 
-  var currentUser, currentUser2, token;
+  var currentUser, token;
   var user = utils.randomTestGmail();
-  var user2 = utils.randomTestGmail();
   var dropdownVariables = {
     'voicemail': 'Voicemail',
     'addNew': 'Add New'
@@ -34,27 +33,17 @@ describe('Telephony Info', function () {
     navigation.clickUsers();
   });
 
-  it('should create 2 users', function () {
+  it('should create user', function () {
     utils.click(users.addUsers);
     utils.click(users.addUsersField);
     utils.sendKeys(users.addUsersField, user);
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.sendKeys(users.addUsersField, user2);
-    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(users.squaredUCCheckBox);
+    utils.click(users.nextButton);
+    utils.click(users.advancedCommunications);
     utils.click(users.onboardButton);
     notifications.assertSuccess(user, 'onboarded successfully');
     utils.click(users.closeAddUsers);
 
-  });
-
-  it('should verify second added user', function (done) {
-    utils.searchAndClick(user2).then(function () {
-      users.retrieveCurrentUser().then(function (_currentUser) {
-        currentUser2 = _currentUser;
-        done();
-      });
-    });
   });
 
   it('should verify added user', function (done) {
@@ -67,6 +56,7 @@ describe('Telephony Info', function () {
   });
 
   it('should open the communcations panel', function () {
+    utils.expectIsDisplayed(users.servicesPanel);
     utils.click(users.communicationsService);
     utils.expectIsDisplayed(telephony.communicationPanel);
   });
@@ -239,30 +229,6 @@ describe('Telephony Info', function () {
       utils.expectIsDisabled(telephony.callerId);
     });
 
-    it('should add the second user to the first users shared line', function () {
-      utils.click(telephony.userInput);
-
-      utils.sendKeys(telephony.userInput, user2);
-      telephony.selectSharedLineOption(user2);
-
-      utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
-
-      utils.click(telephony.saveButton);
-      notifications.assertSuccess('Line configuration saved successfully');
-
-      utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
-    });
-
-    it('should find the added user and delete them from shared line', function () {
-      utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
-
-      telephony.selectSharedLineUser(user2);
-      utils.click(telephony.removeMemberLink);
-      utils.click(telephony.removeMemberBtn);
-
-      utils.expectIsNotDisplayed(telephony.userAccordionGroup(user2));
-    });
-
     it('should cancel a new directory number add', function () {
       utils.clickLastBreadcrumb();
       utils.expectIsDisplayed(telephony.communicationPanel);
@@ -342,121 +308,9 @@ describe('Telephony Info', function () {
     });
   });
 
-  describe('Voicemail', function () {
-
-    it('should cancel saving the disabled state', function () {
-      utils.expectText(telephony.voicemailStatus, 'On');
-      utils.click(telephony.voicemailFeature);
-      utils.expectSwitchState(telephony.voicemailSwitch, true);
-      utils.expectIsDisplayed(telephony.voicemailTitle);
-
-      utils.expectIsNotDisplayed(telephony.voicemailCancel);
-      utils.expectIsNotDisplayed(telephony.voicemailSave);
-
-      utils.click(telephony.voicemailSwitch);
-      utils.click(telephony.voicemailSave);
-      utils.expectIsDisplayed(telephony.disableVoicemailtitle);
-      utils.click(telephony.disableVoicemailCancel);
-      utils.expectIsNotDisplayed(telephony.disableVoicemailtitle);
-    });
-
-    it('should save the disabled state', function () {
-      utils.expectSwitchState(telephony.voicemailSwitch, true);
-      utils.click(telephony.voicemailSwitch);
-      utils.click(telephony.voicemailSave);
-      utils.click(telephony.disableVoicemailSave);
-
-      notifications.assertSuccess('Voicemail configuration saved successfully');
-      utils.expectSwitchState(telephony.voicemailSwitch, false);
-
-      utils.clickLastBreadcrumb();
-      utils.expectText(telephony.voicemailStatus, 'Off');
-    });
-
-    it('should cancel saving the enabled state', function () {
-      utils.click(telephony.voicemailFeature);
-      utils.expectSwitchState(telephony.voicemailSwitch, false);
-      utils.expectIsDisplayed(telephony.voicemailTitle);
-
-      utils.expectIsNotDisplayed(telephony.voicemailCancel);
-      utils.expectIsNotDisplayed(telephony.voicemailSave);
-
-      utils.click(telephony.voicemailSwitch);
-      utils.expectIsDisplayed(telephony.voicemailCancel);
-      utils.expectIsDisplayed(telephony.voicemailSave);
-
-      utils.click(telephony.voicemailCancel);
-      utils.expectIsNotDisplayed(telephony.voicemailCancel);
-      utils.expectIsNotDisplayed(telephony.voicemailSave);
-    });
-
-    it('should save the enabled state', function () {
-      utils.expectSwitchState(telephony.voicemailSwitch, false);
-      utils.click(telephony.voicemailSwitch);
-      utils.click(telephony.voicemailSave);
-
-      notifications.assertSuccess('Voicemail configuration saved successfully');
-      utils.expectSwitchState(telephony.voicemailSwitch, true);
-
-      utils.clickLastBreadcrumb();
-      utils.expectText(telephony.voicemailStatus, 'On');
-    });
-  });
-
-  describe('Single Number Reach', function () {
-
-    it('should save the enabled state', function () {
-      utils.expectText(telephony.snrStatus, 'Off');
-      utils.click(telephony.snrFeature);
-      utils.expectIsDisplayed(telephony.snrTitle);
-      utils.expectSwitchState(telephony.snrSwitch, false);
-      utils.expectIsNotDisplayed(telephony.snrNumber);
-
-      utils.click(telephony.snrSwitch);
-      utils.expectIsDisplayed(telephony.snrNumber);
-
-      utils.click(telephony.cancelButton);
-      utils.expectIsNotDisplayed(telephony.snrNumber);
-      utils.click(telephony.snrSwitch);
-
-      utils.sendKeys(telephony.snrNumber, snrLine);
-      utils.click(telephony.saveButton);
-      notifications.assertSuccess('Single Number Reach configuration saved successfully');
-
-      utils.clickLastBreadcrumb();
-      utils.expectText(telephony.snrStatus, 'On');
-    });
-
-    it('should save the disabled state', function () {
-      utils.click(telephony.snrFeature);
-      utils.expectIsDisplayed(telephony.snrTitle);
-      utils.expectSwitchState(telephony.snrSwitch, true);
-      utils.expectIsDisplayed(telephony.snrNumber);
-
-      utils.click(telephony.snrSwitch);
-      utils.expectIsNotDisplayed(telephony.snrNumber);
-
-      utils.click(telephony.cancelButton);
-      utils.expectIsDisplayed(telephony.snrNumber);
-      utils.expectValueToBeSet(telephony.snrNumber, snrLine);
-      utils.click(telephony.snrSwitch);
-
-      utils.click(telephony.saveButton);
-      notifications.assertSuccess('Single Number Reach configuration removed successfully');
-
-      utils.clickLastBreadcrumb();
-      utils.expectText(telephony.snrStatus, 'Off');
-    });
-  });
-
   it('should delete added user', function () {
     deleteUtils.deleteSquaredUCUser(currentUser.meta.organizationID, currentUser.id, token);
     deleteUtils.deleteUser(user);
-  });
-
-  it('should delete second added user', function () {
-    deleteUtils.deleteSquaredUCUser(currentUser2.meta.organizationID, currentUser2.id, token);
-    deleteUtils.deleteUser(user2);
   });
 
   it('should log out', function () {

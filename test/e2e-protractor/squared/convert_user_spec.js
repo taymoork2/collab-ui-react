@@ -33,7 +33,7 @@ describe('Convert Users', function () {
 
   describe('convert users', function () {
     it('convert user failed', function () {
-      utils.convertUsersSearchAndClick(testEmail);
+      utils.clickUser(testEmail);
       utils.scrollBottom('.modal');
       utils.click(landing.convertActionButton);
       notifications.assertError('not');
