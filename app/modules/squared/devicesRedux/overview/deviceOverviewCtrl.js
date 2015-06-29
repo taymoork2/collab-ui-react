@@ -32,7 +32,7 @@
           var appType = 'Atlas_' + $window.navigator.userAgent;
           FeedbackService.getFeedbackUrl(appType, feedbackId, function (data, status) {
             deferred.resolve();
-            //if (data.success) $window.open(data.url, '_blank');
+            if (data.success) $window.open(data.url, '_blank');
           });
         }
       });
