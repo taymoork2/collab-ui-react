@@ -725,12 +725,8 @@ angular.module('Core')
           'support',
           'editService'
         ],
-        Support: ['overview', 'reports', 'support'],
-        WX2_User: [
-          'overview',
-          'reports',
-          'support'
-        ],
+        Support: ['support', 'reports'],
+        WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         User: [],

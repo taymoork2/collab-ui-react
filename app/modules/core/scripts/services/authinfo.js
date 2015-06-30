@@ -268,6 +268,10 @@ angular.module('Core')
         getRoles: function () {
           return authData.roles;
         },
+        hasRole: function (role) {
+          var roles = this.getRoles();
+          return !!(roles && roles.length && (roles.indexOf(role) > -1));
+        },
         isSetupDone: function () {
           return authData.setupDone;
         },
@@ -284,48 +288,28 @@ angular.module('Core')
           return authData.isInitialized;
         },
         isAdmin: function () {
-          var roles = this.getRoles();
-          return roles.indexOf('Full_Admin') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
+          return this.hasRole('Full_Admin') || this.hasRole('PARTNER_ADMIN');
         },
         isCustomerAdmin: function () {
-          var roles = this.getRoles();
-          return roles.indexOf('Full_Admin') > -1;
+          return this.hasRole('Full_Admin');
         },
         isPartner: function () {
-          var roles = this.getRoles();
-          if (roles) {
-            return roles.indexOf('PARTNER_USER') > -1 || roles.indexOf('PARTNER_ADMIN') > -1;
-          } else {
-            return false;
-          }
+          return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');
         },
         isPartnerAdmin: function () {
-          var roles = this.getRoles();
-          if (roles) {
-            return roles.indexOf('PARTNER_ADMIN') > -1;
-          } else {
-            return false;
-          }
+          return this.hasRole('PARTNER_ADMIN');
         },
         isPartnerUser: function () {
-          var roles = this.getRoles();
-          if (roles) {
-            return roles.indexOf('PARTNER_USER') > -1;
-          } else {
-            return false;
-          }
+          return this.hasRole('PARTNER_USER');
         },
         isSquaredTeamMember: function () {
-          var roles = this.getRoles();
-          return roles.indexOf('WX2_User') > -1;
+          return this.hasRole('WX2_User');
         },
         isSquaredInviter: function () {
-          var roles = this.getRoles();
-          if (roles !== null && roles.length > 0) {
-            return roles.indexOf('WX2_SquaredInviter') > -1;
-          } else {
-            return null;
-          }
+          return this.hasRole('WX2_SquaredInviter');
+        },
+        isSupportUser: function () {
+          return this.hasRole('Support') && !this.isAdmin();
         },
         isServiceAllowed: function (service) {
           if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {

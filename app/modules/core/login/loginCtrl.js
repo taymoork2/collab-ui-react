@@ -55,6 +55,8 @@ angular.module('Core')
                 state = 'partneroverview';
               } else if (Authinfo.isPartnerUser()) {
                 state = 'partnercustomers.list';
+              } else if (Authinfo.isSupportUser()) {
+                state = 'support';
               }
               $rootScope.services = Authinfo.getServices();
 
