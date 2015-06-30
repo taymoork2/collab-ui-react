@@ -51,7 +51,7 @@ var LoginPage = function () {
       browser.refresh();
       navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
     });
-    browser.wait(function () {
+    return browser.wait(function () {
       return bearer;
     }, 10000, 'Could not retrieve bearer token to login');
   };
@@ -66,7 +66,7 @@ var LoginPage = function () {
       browser.refresh();
       navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/unauthorized');
     });
-    browser.wait(function () {
+    return browser.wait(function () {
       return bearer;
     }, 10000, 'Could not retrieve bearer token to login');
   };

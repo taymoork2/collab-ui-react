@@ -43,9 +43,9 @@ var UsersPage = function () {
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
-  this.messagingService = element(by.id('Messaging'));
-  this.communicationsService = element(by.id('Communications'));
-  this.conferencingService = element(by.css('#Conferencing'));
+  this.messagingService = element(by.css('#Messaging .feature-arrow'));
+  this.communicationsService = element(by.css('#Communications .feature-arrow'));
+  this.conferencingService = element(by.css('#Conferencing .feature-arrow'));
   this.serviceList = element.all(by.model('service in userOverview.services'));
 
   this.addUsers = element(by.id('addUsers'));

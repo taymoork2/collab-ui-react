@@ -3,26 +3,18 @@
 describe('Huron Call Routing', function () {
   var pattern = callrouting.getPattern();
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
-  afterEach(function () {
-    browser.ignoreSynchronization = false;
-  });
-
-  it('should login', function () {
+  beforeAll(function () {
     login.login('huron-e2e');
-  });
-
-  it('should navigate to the Call Park page', function () {
-    navigation.clickCallRouting();
-
-    utils.expectIsDisplayed(callrouting.callParkCount);
-    utils.click(callrouting.callParkSelect);
-  });
+  }, 120000);
 
   describe('Call Park feature', function () {
+    it('should navigate to the Call Park page', function () {
+      navigation.clickCallRouting();
+
+      utils.expectIsDisplayed(callrouting.callParkCount);
+      utils.click(callrouting.callParkSelect);
+    });
+
     it('should cancel creating a new call park', function () {
       utils.click(callrouting.addCallParkButton);
       utils.expectIsDisplayed(callrouting.cancelButton);
@@ -94,8 +86,4 @@ describe('Huron Call Routing', function () {
     });
   });
 
-  // Log Out
-  it('should log out', function () {
-    navigation.logout();
-  });
 });

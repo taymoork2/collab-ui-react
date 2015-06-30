@@ -377,3 +377,46 @@ exports.switchToNewWindow = function () {
 exports.getInnerElementByTagName = function (outerElement, tagName) {
   return outerElement.element(by.tagName(tagName));
 };
+
+exports.createHuronUser = function (name, name2) {
+  navigation.clickUsers();
+  this.click(users.addUsers);
+  this.click(users.addUsersField);
+  this.sendKeys(users.addUsersField, name);
+  this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+  if (name2) {
+    this.sendKeys(users.addUsersField, name2);
+    this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+  }
+  this.click(users.nextButton);
+  this.click(users.advancedCommunications);
+  this.click(users.onboardButton);
+  notifications.assertSuccess(name, 'onboarded successfully');
+  this.click(users.closeAddUsers);
+  this.searchAndClick(name);
+};
+
+exports.loginAndCreateHuronUser = function (loginName, userName, userName2) {
+  login.login(loginName, '#/users');
+  this.createHuronUser(userName, userName2);
+};
+
+exports.deleteUser = function (name, name2) {
+  this.clickEscape();
+  navigation.clickUsers();
+  this.searchAndClick(name);
+  this.click(users.closeSidePanel);
+  this.click(users.userListAction);
+  this.click(users.deleteUserOption);
+  this.expectIsDisplayed(users.deleteUserModal);
+  this.click(users.deleteUserButton);
+  notifications.assertSuccess(name, 'deleted successfully');
+  if (name2) {
+    this.search(name2);
+    this.click(users.userListAction);
+    this.click(users.deleteUserOption);
+    this.expectIsDisplayed(users.deleteUserModal);
+    this.click(users.deleteUserButton);
+    notifications.assertSuccess(name2, 'deleted successfully');
+  }
+};

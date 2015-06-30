@@ -1,7 +1,6 @@
 'use strict';
 
 var HttpsProxyAgent = require("https-proxy-agent");
-
 var agent = new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
 
 exports.config = {
@@ -9,7 +8,7 @@ exports.config = {
 
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
-  agent: process.env.SAUCE_USERNAME ? agent : undefined,
+  sauceAgent: process.env.SAUCE_USERNAME ? agent : undefined,
   directConnect: process.env.SAUCE_USERNAME ? false : true,
 
   capabilities: {
@@ -23,7 +22,7 @@ exports.config = {
       'args': ['--disable-extensions', '--start-fullscreen']
     },
     shardTestFiles: true,
-    maxInstances: process.env.SAUCE_USERNAME ? 8 : 1
+    maxInstances: process.env.MAX_INSTANCES ? process.env.MAX_INSTANCES : process.env.SAUCE_USERNAME ? 8 : 1
   },
 
   // A base URL for your application under test. Calls to protractor.get()
@@ -31,6 +30,8 @@ exports.config = {
   baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
 
   onPrepare: function() {
+    browser.ignoreSynchronization = true;
+
     var jasmineReporters = require('jasmine-reporters');
     jasmine.getEnv().addReporter(
       new jasmineReporters.JUnitXmlReporter({
@@ -44,18 +45,6 @@ exports.config = {
       new SpecReporter({
         displayStacktrace: true,
         displaySpecDuration: true
-      })
-    );
-
-    var ScreenShotReporter = require('protractor-jasmine2-screenshot-reporter');
-    jasmine.getEnv().addReporter(
-      new ScreenShotReporter({
-        dest: './screenshots',
-        ignoreSkippedSpecs: true,
-        captureOnlyFailedSpecs: true,
-        pathBuilder: function(currentSpec) {
-          return currentSpec.fullName;
-        }
       })
     );
 

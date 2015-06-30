@@ -3,17 +3,9 @@
 describe('First Time Wizard - CiscoUC Service Setup', function () {
   var pattern = servicesetup.getPattern();
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
-  afterEach(function () {
-    browser.ignoreSynchronization = false;
-  });
-
-  it('should login as an admin user', function () {
+  beforeAll(function () {
     login.login('huron-e2e');
-  });
+  }, 120000);
 
   it('clicking on gear icon should open first time wizard', function () {
     navigation.clickFirstTimeWizard();
@@ -51,9 +43,4 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
     notifications.assertSuccess('Successfully deleted');
   });
 
-  it('should close the first time wizard and log out', function () {
-    utils.clickEscape();
-
-    navigation.logout();
-  });
 });

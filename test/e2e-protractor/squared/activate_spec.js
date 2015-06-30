@@ -8,8 +8,13 @@
 
 describe('Self Registration Activation Page', function () {
 
+  beforeEach(function () {
+    browser.ignoreSynchronization = false;
+  });
+
   afterEach(function () {
     utils.dumpConsoleErrors();
+    browser.ignoreSynchronization = true;
   });
 
   describe('ios', function () {

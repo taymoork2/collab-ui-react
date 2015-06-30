@@ -32,6 +32,8 @@
     "afterEach": true,
     "beforeEach": true,
     "protractor": true,
+    "beforeAll": true,
+    "afterAll": true,
 
     "login": true,
     "users": true,

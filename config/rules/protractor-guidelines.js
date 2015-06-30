@@ -1,7 +1,7 @@
 module.exports = function(context) {
   var allowedIdentifiers = [
   // Jasmine
-  'describe', 'xdescribe', 'it', 'xit', 'beforeEach', 'afterEach', 'done',
+  'describe', 'xdescribe', 'it', 'xit', 'beforeEach', 'afterEach', 'done', 'beforeAll', 'afterAll',
   // utils
   'utils', 'deleteUtils', 'deleteTrialUtils',
   // page objects
