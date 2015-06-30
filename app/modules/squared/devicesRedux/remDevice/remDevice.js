@@ -7,12 +7,9 @@
       /* @ngInject */
       function ($scope, $state, CsdmService, XhrNotificationService) {
         $scope.deleteDevice = function (device) {
-          CsdmService.deleteUrl(device.url, function (err, data) {
-            if (err) {
-              return XhrNotificationService.notify(err);
-            }
-            $state.sidepanel.close();
-          });
+          CsdmService
+            .deleteUrl(device.url)
+            .then($state.sidepanel.close, XhrNotificationService.notify);
         };
       }
 

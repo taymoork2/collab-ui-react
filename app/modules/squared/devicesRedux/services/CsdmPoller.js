@@ -1,10 +1,10 @@
 (function () {
   'use strict';
-  /* @ngInject  */
 
-  function CsdmEventStream($injector) {
+  /* @ngInject  */
+  function CsdmPoller($injector) {
     function create(poller) {
-      return $injector.instantiate(CsdmEventStreamInstance, {
+      return $injector.instantiate(CsdmPollerInstance, {
         poller: poller
       });
     }
@@ -14,8 +14,7 @@
   }
 
   /* @ngInject  */
-  function CsdmEventStreamInstance($timeout, poller, $log) {
-
+  function CsdmPollerInstance($timeout, poller, $log) {
     var subscriptions = {};
     var subscriptionCount = 0;
     var activeSubscriptionsCount = 0;
@@ -78,19 +77,7 @@
     };
   }
 
-  /* @ngInject */
-  function CodeListService(CsdmEventStream, CsdmService) {
-    return CsdmEventStream.create(CsdmService.fetchCodeList);
-  }
-
-  /* @ngInject */
-  function DeviceListService(CsdmEventStream, CsdmService) {
-    return CsdmEventStream.create(CsdmService.fetchDeviceList);
-  }
-
   angular.module('Squared')
-    .service('CsdmEventStream', CsdmEventStream)
-    .service('CodeListService', CodeListService)
-    .service('DeviceListService', DeviceListService);
+    .service('CsdmPoller', CsdmPoller);
 
 })();

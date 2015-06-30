@@ -5,14 +5,15 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, $filter, CsdmEventStream, CsdmConverter, XhrNotificationService, DeviceFilter, CodeListService, DeviceListService, CsdmCacheUpdater, CsdmService) {
+    function ($scope, $state, $templateCache, DeviceFilter, CodeListService, DeviceListService, CsdmService) {
       var vm = this;
 
-      vm.count = '';
       vm.deviceFilter = DeviceFilter;
+
       vm.codesListSubscription = CodeListService.subscribe(angular.noop, {
         scope: $scope
       });
+
       vm.deviceListSubscription = DeviceListService.subscribe(angular.noop, {
         scope: $scope
       });
