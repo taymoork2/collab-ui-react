@@ -37,7 +37,7 @@ var Navigation = function () {
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
   this.addUsers = this.dropdownItems.filter(function (item) {
     return item.getText().then(function (text) {
-      return text === 'Add Users';
+      return text === 'Invite Users';
     });
   });
 

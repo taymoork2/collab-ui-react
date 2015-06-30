@@ -121,7 +121,7 @@ describe('Partner flow', function () {
         utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
         utils.click(wizard.nextBtn);
 
-        utils.expectText(wizard.mainviewTitle, 'Add Users');
+        utils.expectText(wizard.mainviewTitle, 'Invite Users');
         utils.click(wizard.nextBtn);
         utils.click(wizard.nextBtn);
         utils.click(wizard.finishBtn);

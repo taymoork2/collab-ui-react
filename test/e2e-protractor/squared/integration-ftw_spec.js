@@ -34,7 +34,7 @@ describe('First Time Wizard', function () {
     wizard.clickEnterpriseSettings();
     utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
     wizard.clickAddUsers();
-    utils.expectText(wizard.mainviewTitle, 'Add Users');
+    utils.expectText(wizard.mainviewTitle, 'Invite Users');
   });
 
   it('should complete custom sso provider flow', function () {
