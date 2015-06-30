@@ -11,17 +11,17 @@
       <thead>
         <tr>
           <td class="vertical-center col-md-4 bold" translate="registeredEndpoints.company"></td>
-          <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.registeredEndpoints"></td>
-          <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.pendingActivations"></td>
+          <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.maxRegisteredDevices"></td>
+          <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.totalRegistered"></td>
           <td class="vertical-center horizontal-center col-md-2 bold" translate="registeredEndpoints.trend"></td>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="customer in nav.regesteredEndpoints">
+        <tr ng-repeat="customer in nav.registeredEndpoints">
           <td class="vertical-center">{{customer.customer}}</td>
-          <td class="vertical-center horizontal-center">{{customer.endpoints}}</td>
-          <td class="vertical-center horizontal-center">{{customer.pending}}</td>
-          <td class="vertical-center horizontal-center {{customer.direction}}">{{customer.trend}}</td>
+          <td class="vertical-center horizontal-center">{{customer.yesterdaysMaxRegisteredDevices}}</td>
+          <td class="vertical-center horizontal-center">{{customer.yesterdaysDeviceRegistrationCount}}</td>
+          <td class="vertical-center horizontal-center {{customer.direction}}">{{customer.deviceRegistrationCountTrend}}%</td>
         </tr>
       </tbody>
     </table>

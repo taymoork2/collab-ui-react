@@ -319,7 +319,8 @@
   "registeredEndpoints": {
     "registeredEndpoints": "Registered Endpoints",
     "company": "Company",
-    "pendingActivations": "Pending Activations",
+    "maxRegisteredDevices": "Max Registered Devices Over Selected Time",
+    "totalRegistered": "Total New Devices Registered",
     "trend": "Trend (%)",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}."
   },

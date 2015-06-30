@@ -31,11 +31,13 @@ describe('Controller: Partner Reports', function () {
   }];
 
   var endpointResponse = [{
-    customer: 'Test Org One',
-    endpoints: 45,
-    trend: '+30',
-    direction: 'positive',
-    pending: ''
+    orgId: 'a7cba512-7b62-4f0a-a869-725b413680e4',
+    deviceRegistrationCountTrend: '+573',
+    yesterdaysDeviceRegistrationCount: '121',
+    maxRegisteredDevicesTrend: '3600',
+    yesterdaysMaxRegisteredDevices: '74',
+    company: 'Test Org One',
+    direction: 'positive'
   }];
 
   beforeEach(module('Core'));
@@ -62,7 +64,7 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
         data: dummycallMetricsData
       }));
-      spyOn(PartnerReportService, 'getRegesteredEndpoints').and.returnValue($q.when(endpointResponse));
+      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when(endpointResponse));
 
       spyOn(GraphService, 'updateActiveUsersGraph');
       spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
@@ -106,7 +108,7 @@ describe('Controller: Partner Reports', function () {
         expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
-        expect(PartnerReportService.getRegesteredEndpoints).toHaveBeenCalled();
+        expect(PartnerReportService.getRegisteredEndpoints).toHaveBeenCalled();
 
         expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
         expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
@@ -128,6 +130,8 @@ describe('Controller: Partner Reports', function () {
         expect(controller.customerOptions).toEqual(customerOptions);
         expect(controller.customerSelected).toEqual(customerOptions[0]);
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
+
+        expect(controller.registeredEndpoints).toEqual(endpointResponse);
       });
     });
 
@@ -269,7 +273,7 @@ describe('Controller: Partner Reports', function () {
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
         data: dummycallMetricsData
       }));
-      spyOn(PartnerReportService, 'getRegesteredEndpoints').and.returnValue($q.when([]));
+      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when([]));
 
       spyOn(GraphService, 'updateActiveUsersGraph');
       spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
@@ -303,7 +307,7 @@ describe('Controller: Partner Reports', function () {
         expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
-        expect(PartnerReportService.getRegesteredEndpoints).toHaveBeenCalled();
+        expect(PartnerReportService.getRegisteredEndpoints).toHaveBeenCalled();
 
         expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
         expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();

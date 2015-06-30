@@ -13,7 +13,7 @@ describe('Service: Partner Reports Service', function () {
 
   var adjustDates = function (detailedData) {
     detailedData.data[0].data.forEach(function (item, index) {
-      item.date = moment().subtract(index, 'day').format();
+      item.date = moment().subtract(index + 1, 'day').format();
     });
     return detailedData;
   };
@@ -40,7 +40,7 @@ describe('Service: Partner Reports Service', function () {
     label: ""
   };
   var customerDatapoint = {
-    modifiedDate: moment().subtract(6, 'day').format(dateFormat),
+    modifiedDate: moment().subtract(7, 'day').format(dateFormat),
     totalRegisteredUsers: 116,
     activeUsers: 111,
     percentage: 95
@@ -69,18 +69,22 @@ describe('Service: Partner Reports Service', function () {
     userName: 'havard.nigardsoy@vijugroup.com'
   };
   var posEndpointResponse = [{
-    customer: 'Test Org One',
-    endpoints: 45,
-    trend: '+30',
-    direction: 'positive',
-    pending: ''
+    orgId: 'a7cba512-7b62-4f0a-a869-725b413680e4',
+    deviceRegistrationCountTrend: '+573',
+    yesterdaysDeviceRegistrationCount: '121',
+    maxRegisteredDevicesTrend: '3600',
+    yesterdaysMaxRegisteredDevices: '74',
+    company: 'Test Org One',
+    direction: 'positive'
   }];
   var negEndpointResponse = [{
-    customer: 'Test Org One',
-    endpoints: 15,
-    trend: '-30',
-    direction: 'negative',
-    pending: ''
+    orgId: 'a7cba512-7b62-4f0a-a869-725b413680e4',
+    deviceRegistrationCountTrend: '-573',
+    yesterdaysDeviceRegistrationCount: '121',
+    maxRegisteredDevicesTrend: '-3600',
+    yesterdaysMaxRegisteredDevices: '74',
+    company: 'Test Org One',
+    direction: 'negative'
   }];
 
   var Authinfo = {
@@ -102,11 +106,11 @@ describe('Service: Partner Reports Service', function () {
     managedOrgsUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
-    activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
-    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
+    activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
+    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true&orgId=';
     mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
-    callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=false';
-    registeredEndpointsUrl = 'modules/core/partnerReports/registeredEndpoints/fakeData.json';
+    callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true&orgId=';
+    registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true&orgId=';
   }));
 
   afterEach(function () {
@@ -134,7 +138,7 @@ describe('Service: Partner Reports Service', function () {
 
     describe('should getActiveUserData', function () {
       beforeEach(function () {
-        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
+        $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(mostActiveUserData);
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
       });
 
@@ -155,7 +159,7 @@ describe('Service: Partner Reports Service', function () {
 
     describe('should notify an error for getActiveUserData', function () {
       it('and return empty table data', function () {
-        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
+        $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(500, error);
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
 
         PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
@@ -174,7 +178,7 @@ describe('Service: Partner Reports Service', function () {
       });
 
       it('and return empty graph data', function () {
-        $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
+        $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(mostActiveUserData);
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(500, error);
 
         PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
@@ -220,7 +224,7 @@ describe('Service: Partner Reports Service', function () {
     });
 
     it('getMostRecentUpdate should return the most recent update', function () {
-      $httpBackend.whenGET(mostActiveUsersUrl + "&orgId=" + customers[0].customerOrgId).respond(mostActiveUserData);
+      $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(mostActiveUserData);
       $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
 
       PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
@@ -239,7 +243,7 @@ describe('Service: Partner Reports Service', function () {
 
   describe('Call Metrics Services', function () {
     it('should get Call Metrics', function () {
-      $httpBackend.whenGET(callMetricsUrl + "&orgId=" + customers[0].customerOrgId).respond(callMetricsData);
+      $httpBackend.whenGET(callMetricsUrl + customers[0].customerOrgId).respond(callMetricsData);
       PartnerReportService.getCallMetricsData(customer, timeFilter).then(function (data) {
         expect(data.dataProvider.length).toBe(2);
       });
@@ -247,7 +251,7 @@ describe('Service: Partner Reports Service', function () {
     });
 
     it('should get empty array for GET failure', function () {
-      $httpBackend.whenGET(callMetricsUrl + "&orgId=" + customers[0].customerOrgId).respond(500, error);
+      $httpBackend.whenGET(callMetricsUrl + customers[0].customerOrgId).respond(500, error);
       PartnerReportService.getCallMetricsData(customer, timeFilter).then(function (data) {
         expect(data).toEqual([]);
       });
@@ -257,28 +261,28 @@ describe('Service: Partner Reports Service', function () {
 
   describe('Registered Endpoint Service', function () {
     it('should get registered endpoints for a customer with positive response', function () {
-      $httpBackend.whenGET(registeredEndpointsUrl).respond({
+      $httpBackend.whenGET(registeredEndpointsUrl + customers[0].customerOrgId).respond({
         data: [registeredEndpointsData.data[0]]
       });
-      PartnerReportService.getRegesteredEndpoints(customer).then(function (response) {
+      PartnerReportService.getRegisteredEndpoints(customer, timeFilter).then(function (response) {
         expect(response).toEqual(posEndpointResponse);
       });
       $httpBackend.flush();
     });
 
-    it('should get registered endpoints for a customer with positive response', function () {
-      $httpBackend.whenGET(registeredEndpointsUrl).respond({
+    it('should get registered endpoints for a customer with negative response', function () {
+      $httpBackend.whenGET(registeredEndpointsUrl + customers[0].customerOrgId).respond({
         data: [registeredEndpointsData.data[1]]
       });
-      PartnerReportService.getRegesteredEndpoints(customer).then(function (response) {
+      PartnerReportService.getRegisteredEndpoints(customer, timeFilter).then(function (response) {
         expect(response).toEqual(negEndpointResponse);
       });
       $httpBackend.flush();
     });
 
     it('should return an empty array on error response', function () {
-      $httpBackend.whenGET(registeredEndpointsUrl).respond(500);
-      PartnerReportService.getRegesteredEndpoints(customer).then(function (response) {
+      $httpBackend.whenGET(registeredEndpointsUrl + customers[0].customerOrgId).respond(500);
+      PartnerReportService.getRegisteredEndpoints(customer, timeFilter).then(function (response) {
         expect(response).toEqual([]);
       });
       $httpBackend.flush();

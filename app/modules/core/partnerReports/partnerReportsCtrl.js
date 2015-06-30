@@ -48,7 +48,7 @@
     var noCallMetricsRefreshDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
     var isCallMetricsRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="call-metrics-status icon icon-spinner icon-2x"></i>';
 
-    vm.regesteredEndpoints = [];
+    vm.registeredEndpoints = [];
     vm.endpointRefresh = REFRESH;
 
     vm.timeOptions = [{
@@ -132,7 +132,7 @@
       getCallMetricsReports();
 
       vm.endpointRefresh = REFRESH;
-      vm.regesteredEndpoints = [];
+      vm.registeredEndpoints = [];
       getRegisteredEndpoints();
     };
 
@@ -186,7 +186,7 @@
 
     function getActiveUserReports() {
       return PartnerReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
-        if (response.tableData !== ABORT) {
+        if (response.tableData !== ABORT && response.graphData !== ABORT) {
           var graphData = response.graphData;
           var populationGraph = response.populationGraph;
 
@@ -302,12 +302,14 @@
     }
 
     function getRegisteredEndpoints() {
-      PartnerReportService.getRegesteredEndpoints(vm.customerSelected).then(function (response) {
-        vm.regesteredEndpoints = response;
-        if (!angular.isArray(response) || response.length === 0) {
-          vm.endpointRefresh = EMPTY;
-        } else {
-          vm.endpointRefresh = SET;
+      PartnerReportService.getRegisteredEndpoints(vm.customerSelected, vm.timeSelected).then(function (response) {
+        if (response !== ABORT) {
+          vm.registeredEndpoints = response;
+          if (!angular.isArray(response) || response.length === 0) {
+            vm.endpointRefresh = EMPTY;
+          } else {
+            vm.endpointRefresh = SET;
+          }
         }
       });
     }

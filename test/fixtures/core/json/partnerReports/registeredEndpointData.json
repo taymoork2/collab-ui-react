@@ -1,19 +1,25 @@
 {
   "data": [{
-    "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-    "data": [{
-      "details": {
-        "previous": 15,
-        "current": 45
-      }
-    }]
+    "details": {
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+      "deviceRegistrationCountTrend": "573",
+      "yesterdaysDeviceRegistrationCount": "121",
+      "maxRegisteredDevicesTrend": "3600",
+      "yesterdaysMaxRegisteredDevices": "74"
+    }
   }, {
-    "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-    "data": [{
-      "details": {
-        "previous": 45,
-        "current": 15
-      }
-    }]
-  }]
+    "details": {
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+      "deviceRegistrationCountTrend": "-573",
+      "yesterdaysDeviceRegistrationCount": "121",
+      "maxRegisteredDevicesTrend": "-3600",
+      "yesterdaysMaxRegisteredDevices": "74"
+    }
+  }],
+  "type": "registeredEndpoints",
+  "date": "2015-06-30T19:25:30.299Z",
+  "spanCount": 1,
+  "spanType": "day",
+  "intervalCount": 1,
+  "intervalType": "week"
 }
