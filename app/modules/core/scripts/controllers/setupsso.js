@@ -8,10 +8,12 @@ angular.module('Core')
       var strEntityId = 'entityID="';
       var strEntityIdEnd = '">';
       var oldSSOValue = 1;
+
       $scope.showFinalSSOConfirmation = false;
       $scope.options = {
         configureSSO: 1,
-        enableSSO: 1
+        enableSSO: 1,
+        SSOSelfSigned: 0
       };
 
       $scope.configureSSOOptions = [{
@@ -24,6 +26,18 @@ angular.module('Core')
         value: 0,
         name: 'ssoOptions',
         id: 'ssoProvider'
+      }];
+
+      $scope.SSOSelfSignedOptions = [{
+        label: $translate.instant('ssoModal.requiredCertMetadata'),
+        value: 0,
+        name: 'ssoSelfSignedCert',
+        id: 'ssoNoSelfSigned'
+      }, {
+        label: $translate.instant('ssoModal.allowSelfCertMetadata'),
+        value: 1,
+        name: 'ssoSelfSignedCert',
+        id: 'ssoSelfSigned'
       }];
 
       $scope.enableSSOOptions = [{
@@ -157,7 +171,8 @@ angular.module('Core')
       };
 
       var reEnableSSO = function () {
-        SSOService.importRemoteIdp($rootScope.fileContents, function (data, status) {
+        var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+        SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, function (data, status) {
           if (data.success) {
             Log.debug('Single Sign-On (SSO) successfully enabled for all users');
             Notification.notify([$translate.instant('ssoModal.enableSSOSuccess', {
@@ -173,7 +188,8 @@ angular.module('Core')
       };
 
       var postRemoteIdp = function () {
-        SSOService.importRemoteIdp($rootScope.fileContents, function (data, status) {
+        var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+        SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, function (data, status) {
           if (data.success) {
             Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
             Notification.notify([$translate.instant('ssoModal.importSuccess', {
@@ -242,13 +258,9 @@ angular.module('Core')
             $scope.url = (window.URL || window.webkitURL).createObjectURL(blob);
           } else {
             Log.debug('Failed to Export Identity Broker SP Metadata. Status: ' + status);
-            // Notification.notify([$translate.instant('ssoModal.downloadMetaFailed', {
-            //   status: status
-            // })], 'error');
           }
         });
       };
-
     }
   ])
   .config([

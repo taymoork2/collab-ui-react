@@ -222,6 +222,10 @@
       }).finally(function () {
         angular.element('#wizardNext').button('reset');
       });
+
+      //if(getTab()==='enterpriseSetting'){
+      //call service setup. 
+      //}
     }
 
     function updateStep() {
