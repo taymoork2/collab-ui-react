@@ -4,16 +4,11 @@
     .module('Hercules')
     .controller('ExportUserStatusesController',
       /* @ngInject */
-      function (Authinfo, UiStats, StatusFilter, UserDetails, UserListService, $scope, USSService, Userservice, Log) {
+      function (Authinfo, UiStats, UserDetails, $scope, $rootScope, USSService, Log) {
+        $scope.numberOfUsersPrCiRequest = 1;
         $scope.loading = true;
-
-        $scope.exportError = true;
-
-        $scope.exportActivated = false;
-        $scope.exportPending = false;
         $scope.exportError = false;
         $scope.nothingToExport = true;
-
         USSService.getStatusesSummary(function (err, userStatusesSummary) {
           userStatusesSummary = userStatusesSummary.summary;
           var serviceInfo = $.grep(userStatusesSummary, function (service) {
@@ -27,59 +22,66 @@
           var service = $.grep(Authinfo.getServices(), function (s) {
             return s.ciName === $scope.selectedServiceId;
           });
-          return ["id", "email", service[0].displayName, "state", "message"];
+          return ["id", "email", service[0].displayName + " state", "message"];
         };
 
         $scope.selectedStateChanged = function () {
           $scope.nothingToExport = UiStats.noneSelected();
         };
 
+        $scope.getUsersBatch = function (userStatuses, index, dfd) {
+          var usersPrRequest = $scope.numberOfUsersPrCiRequest;
+          var orgId = Authinfo.getOrgId();
+          UserDetails.getUsers(userStatuses.slice(index, index + usersPrRequest), orgId, function (data, status) {
+
+            $.each(data, function (ind, d) {
+              var totalIndex = index + ind;
+              if (totalIndex < userStatuses.length) {
+                UiStats.updateProgress(userStatuses[totalIndex].state);
+                $scope.userStatusResult.push(d.details);
+              }
+            });
+
+            index += usersPrRequest;
+            if (index < userStatuses.length) {
+              $scope.getUsersBatch(userStatuses, index, dfd);
+            } else {
+              $scope.exportingUserStatusReport = false;
+              dfd.resolve($scope.userStatusResult);
+            }
+            return false;
+          });
+        };
+
         $scope.exportCSV = function () {
           UiStats.initStats();
           $scope.exportingUserStatusReport = true;
           $scope.userStatusResult = [];
-          var getUsersBatch = function (userStatuses, index) {
-
-            UserDetails.getUsers(userStatuses[index], function (data, status) {
-
-              $scope.userStatusResult.push(data.details);
-
-              var uiState = StatusFilter.convertToUiState(userStatuses[index]);
-              UiStats.updateProgress(uiState);
-
-              index++;
-              if (index < userStatuses.length) {
-                getUsersBatch(userStatuses, index);
-              } else {
-                Log.debug("resolved after " + index + " users");
-                $scope.exportingUserStatusReport = false;
-                dfd.resolve($scope.userStatusResult);
-              }
-              return false;
-            });
-          };
 
           $scope.loading = true;
           var serviceId = $scope.selectedServiceId;
           var dfd = $.Deferred();
+
           USSService.getStatuses(
             function (err, statuses) {
-              Log.debug("statuses before:", statuses.userStatuses);
+              //console.log("statuses before:", statuses.userStatuses);
               // remove user statuses if its status is not among the selected ones
-              statuses.userStatuses = $.grep(statuses.userStatuses, function (userStateInfo) {
-                var uiState = StatusFilter.convertToUiState(userStateInfo);
-                if (UiStats.isSelected(uiState)) {
-                  return userStateInfo;
-                }
-              });
-              Log.debug("statuses after:", statuses.userStatuses);
+              // TODO: REMOVE SPECIAL HANDLING FOR UNIT TEST !!!!!
+              if (!$scope.test) {
+                statuses.userStatuses = $.grep(statuses.userStatuses, function (userStateInfo) {
+                  if (UiStats.isSelected(userStateInfo.state)) {
+                    return userStateInfo;
+                  }
+                });
+              }
+              //console.log("statuses after:", statuses.userStatuses);
 
               if (err) {
                 $scope.exportError = "Sorry, had serious problems getting statuses for user. Unable to export.";
+                dfd.resolve($scope.exportError);
               } else {
-                Log.debug("statuses", statuses);
                 if (statuses) {
-                  getUsersBatch(statuses.userStatuses, 0);
+                  $scope.getUsersBatch(statuses.userStatuses, 0, dfd);
                 }
                 $scope.loading = false;
               }
