@@ -15,8 +15,8 @@
             <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-show="service.status">
               <i class="fa fa-circle status-icon" ng-class="service.status"/>
               <span class="feature-name">{{service.display_name}}</span>
-              <i class="feature-arrow"></i>
               <span class="feature-status" translate="{{'hercules.status.' + (service.state || 'unknown') }}"></span>
+              <i class="feature-arrow"></i>
             </a>
             <div class="clearfix status-info">
               Version: {{service.version}}

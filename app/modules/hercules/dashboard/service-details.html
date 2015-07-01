@@ -12,8 +12,8 @@
           <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: connector.host.serial})">
             <i class="fa fa-circle status-icon" ng-class="connector.status"/>
             <span class="feature-name">{{connector.host.host_name}}</span>
-            <i class="feature-arrow"></i>
             <span class="feature-status" translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
+            <i class="feature-arrow"></i>
           </a>
           <div class="clearfix status-info">
               Version: {{connector.version}}.
