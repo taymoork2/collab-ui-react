@@ -4,8 +4,8 @@
     .module('Hercules')
     .controller('ExportUserStatusesController',
       /* @ngInject */
-      function (Authinfo, UiStats, UserDetails, $scope, $rootScope, USSService, Log) {
-        $scope.numberOfUsersPrCiRequest = 1;
+      function (Authinfo, UiStats, UserDetails, $scope, $rootScope, USSService, ConnectorService, Log) {
+        $scope.numberOfUsersPrCiRequest = 25; // can probably go higher, depending on the CI backend...
         $scope.loading = true;
         $scope.exportError = false;
         $scope.nothingToExport = true;
@@ -22,7 +22,7 @@
           var service = $.grep(Authinfo.getServices(), function (s) {
             return s.ciName === $scope.selectedServiceId;
           });
-          return ["id", "email", service[0].displayName + " state", "message"];
+          return UserDetails.getCSVColumnHeaders(service[0].displayName);
         };
 
         $scope.selectedStateChanged = function () {
@@ -65,9 +65,10 @@
           USSService.getStatuses(
             function (err, statuses) {
               //console.log("statuses before:", statuses.userStatuses);
-              // remove user statuses if its status is not among the selected ones
+
               // TODO: REMOVE SPECIAL HANDLING FOR UNIT TEST !!!!!
               if (!$scope.test) {
+                //remove user statuses if its status is not among the selected ones
                 statuses.userStatuses = $.grep(statuses.userStatuses, function (userStateInfo) {
                   if (UiStats.isSelected(userStateInfo.state)) {
                     return userStateInfo;
@@ -76,16 +77,36 @@
               }
               //console.log("statuses after:", statuses.userStatuses);
 
-              if (err) {
-                $scope.exportError = "Sorry, had serious problems getting statuses for user. Unable to export.";
-                dfd.resolve($scope.exportError);
-              } else {
-                if (statuses) {
-                  $scope.getUsersBatch(statuses.userStatuses, 0, dfd);
+              var connectorIds = [];
+              $.each(statuses.userStatuses, function (ind, userStatus) {
+                if (userStatus.connectorId && !_.contains(connectorIds, userStatus.connectorId)) {
+                  connectorIds.push(userStatus.connectorId);
                 }
+              });
+
+              if (connectorIds.length === 0) {
+                $scope.getUsersBatch(statuses.userStatuses, 0, dfd);
                 $scope.loading = false;
               }
-            }, serviceId, null, 1000); // TODO: Hardcoded limit .... ups...
+              $.each(connectorIds, function (ind, connectorId) {
+                ConnectorService.getConnector(connectorId, function (err, connector) {
+                  if (connector) {
+                    _.forEach(statuses.userStatuses, function (userStatus) {
+                      if (userStatus.connectorId === connectorId) {
+                        userStatus.connector = connector.host_name;
+                      } else {
+                        userStatus.connector = "?";
+                      }
+                    });
+                  }
+                  if (ind + 1 == connectorIds.length) {
+                    $scope.getUsersBatch(statuses.userStatuses, 0, dfd);
+                    $scope.loading = false;
+                  }
+                });
+              });
+
+            }, serviceId, null, 2000); // TODO: Remove hardcoded limit .... ups...
 
           $scope.loading = false;
           return dfd.promise();

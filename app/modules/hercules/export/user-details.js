@@ -19,6 +19,10 @@ angular.module('Hercules').service('UserDetails',
       return Utils.sprintf(scimUrl, [orgId]);
     };
 
+    var getCSVColumnHeaders = function (serviceName) {
+      return ["id", "email", "connector", serviceName + " state", "message"];
+    };
+
     var getUsers = function (stateInfos, orgId, callback) {
 
       var userIds = $.map(stateInfos, function (stateInfo) {
@@ -41,7 +45,7 @@ angular.module('Hercules').service('UserDetails',
               result.details = {
                 id: userIds[index],
                 userName: foundUser[0].userName,
-                //entitled: stateInfos[index].entitled ? "Entitled" : "Not Entitled",
+                connector: stateInfos[index].connector,
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
                 message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "-"
               };
@@ -50,7 +54,7 @@ angular.module('Hercules').service('UserDetails',
               result.details = {
                 id: userIds[index],
                 userName: "username not found",
-                //entitled: stateInfos[index].entitled ? "Entitled" : "Not Entitled",
+                connector: stateInfos[index].connector,
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
                 message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "-"
               };
@@ -66,7 +70,8 @@ angular.module('Hercules').service('UserDetails',
     return {
       getUsers: getUsers,
       multipleUserFilter: multipleUserFilter,
-      userUrl: userUrl
+      userUrl: userUrl,
+      getCSVColumnHeaders: getCSVColumnHeaders
     };
 
   }
