@@ -27,6 +27,7 @@ angular.module('Hercules')
       };
 
       var getMessages = function (data, status) {
+        data = data && data.data ? data.data : data;
         if (data && data.error && data.error.message) {
           return findMessages(data);
         } else {
@@ -41,6 +42,7 @@ angular.module('Hercules')
             messages = getMessages.apply(null, args);
             messages.unshift(messageOrArgs);
           } else {
+            messageOrArgs = _.isArray(messageOrArgs) ? messageOrArgs : [messageOrArgs];
             messages = getMessages.apply(null, messageOrArgs);
           }
           return notification.notify(messages, 'error');

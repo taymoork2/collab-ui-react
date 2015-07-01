@@ -1,8 +1,6 @@
 'use strict';
 
 describe('XhrNotificationService', function () {
-
-  // load the service's module
   beforeEach(module('wx2AdminWebClientApp'));
 
   var notification;
@@ -89,6 +87,19 @@ describe('XhrNotificationService', function () {
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('msg');
     expect(notification.notify.args[0][0][1]).toBeTruthy();
+  });
+
+  it('should handle res object', function () {
+    Service.notify({
+      "data": {
+        "error": {
+          "key": 500,
+          "message": "foo"
+        }
+      }
+    });
+    expect(notification.notify.callCount).toBe(1);
+    expect(notification.notify.args[0][0][0]).toBe('foo');
   });
 
 });

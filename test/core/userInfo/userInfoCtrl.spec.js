@@ -3,77 +3,55 @@
 describe('UserInfoController', function () {
   beforeEach(module('Core'));
 
-  var controller, $window, $scope, $translate, Log, FeedbackService, Userservice, Utils;
+  var controller, $window, $scope, FeedbackService, Userservice, Utils, deferred, $rootScope;
 
-  beforeEach(inject(function ($rootScope, $controller, _$translate_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_$rootScope_, $controller, $q) {
+    $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
-    Log = {
-      debug: sinon.stub()
-    };
     Userservice = {
       getUser: sinon.stub()
     };
+    deferred = $q.defer();
     FeedbackService = {
-      getFeedbackUrl: sinon.stub()
+      getFeedbackUrl: sinon.stub().returns(deferred.promise)
     };
     Utils = {
-      getUUID: sinon.stub()
+      getUUID: sinon.stub().returns('awesome uuid')
     };
     $window = {
       open: sinon.stub(),
       navigator: {
-        userAgent: sinon.stub()
+        userAgent: 'some useragent'
       }
     };
     controller = $controller('UserInfoController', {
+      Utils: Utils,
       $scope: $scope,
       $window: $window,
-      $translate: $translate,
-      Log: Log,
-      Utils: Utils,
       Userservice: Userservice,
-      FeedbackService: FeedbackService,
+      FeedbackService: FeedbackService
     });
   }));
 
-  describe('sendFeedback', function () {
+  it('fetches url and opens new window', function () {
+    $scope.sendFeedback();
 
-    it('fetches url and opens new window', function () {
-      $window.navigator.userAgent = 'some useragent';
-      Utils.getUUID = function () {
-        return 'awesome uuid';
-      };
+    expect(FeedbackService.getFeedbackUrl.callCount).toBe(1);
+    expect(FeedbackService.getFeedbackUrl.args[0][0]).toBe('Atlas_some useragent');
+    expect(FeedbackService.getFeedbackUrl.args[0][1]).toBe('awesome uuid');
 
-      $scope.sendFeedback();
-
-      expect(FeedbackService.getFeedbackUrl.callCount).toBe(1);
-      expect(FeedbackService.getFeedbackUrl.args[0][0]).toBe('Atlas_some useragent');
-      expect(FeedbackService.getFeedbackUrl.args[0][1]).toBe('awesome uuid');
-
-      FeedbackService.getFeedbackUrl.callArgWith(2, {
-        success: true,
+    deferred.resolve({
+      data: {
         url: 'some url'
-      }, 'some status');
-
-      expect(Log.debug.callCount).toBe(1);
-      expect(Log.debug.args[0][0]).toBe('feedback status: some status');
-      expect($window.open.callCount).toBe(1);
-      expect($window.open.args[0][0]).toBe('some url');
-      expect($window.open.args[0][1]).toBe('_blank');
+      }
     });
 
-    it('logs if FeedbackService fails', function () {
-      $scope.sendFeedback();
+    $rootScope.$apply();
+    $rootScope.$apply();
 
-      FeedbackService.getFeedbackUrl.callArgWith(2, {
-        success: false
-      }, 'another status');
-
-      expect(Log.debug.callCount).toBe(2);
-      expect(Log.debug.args[1][0]).toBe('Cannot load feedback url: another status');
-    });
-
+    expect($window.open.callCount).toBe(1);
+    expect($window.open.args[0][0]).toBe('some url');
+    expect($window.open.args[0][1]).toBe('_blank');
   });
 
 });

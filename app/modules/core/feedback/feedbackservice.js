@@ -1,52 +1,32 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular
-  .module('Core')
-  .service('FeedbackService', ['$http', '$rootScope', '$location', 'Config', 'Log', '$translate', 'Auth',
-    function ($http, $rootScope, $location, Config, Log, $translate, Auth) {
-      var feedbackUrl = Config.feedbackUrl;
+  /* @ngInject */
+  function FeedbackService($http, $q, Config, $translate) {
+    return {
+      getFeedbackUrl: function (appType, feedbackId) {
+        var feedbackData = {
+          'appType': appType,
+          'appVersion': Config.getEnv(),
+          'feedbackId': feedbackId,
+          'languageCode': $translate.use()
+        };
 
-      return {
-        getFeedbackUrl: function (appType, feedbackId, callback) {
-          var feedbackData = {
-            'appType': appType,
-            'appVersion': Config.getEnv(),
-            'feedbackId': feedbackId,
-            'languageCode': $translate.use()
-          };
-          if (appType && feedbackId) {
-            $http({
-                method: 'POST',
-                url: feedbackUrl,
-                data: feedbackData
-              })
-              .success(function (data, status) {
-                data = data || {};
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                callback(data, status);
-              });
-          } else {
-            callback('get feedback url not valid - empty request.');
-          }
-        },
-
-        getUrlTemplate: function (url, callback) {
-          $http({
-              method: 'GET',
-              url: url
-            })
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
+        if (!appType || !feedbackId) {
+          return $q.reject('AppType and/or FeedbackId not set');
         }
-      };
-    }
-  ]);
+
+        return $http({
+          method: 'POST',
+          url: Config.feedbackUrl,
+          data: feedbackData
+        });
+      }
+    };
+  }
+
+  angular
+    .module('Core')
+    .service('FeedbackService', FeedbackService);
+
+}());

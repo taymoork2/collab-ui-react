@@ -28,13 +28,8 @@ angular.module('Squared')
         var appType = 'Atlas_' + $window.navigator.userAgent;
         var feedbackId = Utils.getUUID();
 
-        FeedbackService.getFeedbackUrl(appType, feedbackId, function (data, status) {
-          Log.debug('feedback status: ' + status);
-          if (data.success) {
-            $window.open(data.url, '_blank');
-          } else {
-            Log.debug('Cannot load feedback url: ' + status);
-          }
+        FeedbackService.getFeedbackUrl(appType, feedbackId).then(function (res) {
+          $window.open(res.data.url, '_blank');
         });
       };
 
