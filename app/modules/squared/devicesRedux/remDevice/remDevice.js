@@ -5,11 +5,17 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($scope, $state, CsdmService, XhrNotificationService) {
-        $scope.deleteDevice = function (device) {
-          CsdmService
-            .deleteUrl(device.url)
-            .then($state.sidepanel.close, XhrNotificationService.notify);
+      function ($scope, $state, CsdmCodeService, CsdmDeviceService, XhrNotificationService) {
+        $scope.deleteDeviceOrCode = function (deviceOrCode) {
+          if (deviceOrCode.needsActivation) {
+            CsdmCodeService
+              .deleteCode(deviceOrCode.url)
+              .then($state.sidepanel.close, XhrNotificationService.notify);
+          } else {
+            CsdmDeviceService
+              .deleteDevice(deviceOrCode.url)
+              .then($state.sidepanel.close, XhrNotificationService.notify);
+          }
         };
       }
 

@@ -5,7 +5,7 @@
     .controller('AddDeviceController',
 
       /* @ngInject */
-      function ($scope, $q, Notification, CsdmService, XhrNotificationService, $timeout) {
+      function ($scope, $q, Notification, CsdmCodeService, XhrNotificationService, $timeout) {
         $scope.showAdd = true;
         $scope.deviceName = '';
         $scope.activationCode = '';
@@ -57,7 +57,7 @@
             }
           }
 
-          return CsdmService
+          return CsdmCodeService
             .createCode($scope.deviceName)
             .then(success, XhrNotificationService.notify);
         };

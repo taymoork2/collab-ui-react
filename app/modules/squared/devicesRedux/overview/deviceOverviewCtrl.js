@@ -6,14 +6,20 @@
     .controller('DeviceOverviewCtrlRedux', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($scope, $q, XhrNotificationService, $stateParams, Authinfo, FeedbackService, CsdmService, Utils, $window) {
+  function DeviceOverviewCtrl($scope, $q, XhrNotificationService, $stateParams, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, Utils, $window) {
     var vm = this;
     vm.currentDevice = $stateParams.currentDevice;
 
     $scope.save = function (newName) {
-      return CsdmService
-        .updateDeviceName(vm.currentDevice.url, newName)
-        .then(undefined, XhrNotificationService.notify);
+      if (vm.currentDevice.needsActivation) {
+        return CsdmCodeService
+          .updateCodeName(vm.currentDevice.url, newName)
+          .then(undefined, XhrNotificationService.notify);
+      } else {
+        return CsdmDeviceService
+          .updateDeviceName(vm.currentDevice.url, newName)
+          .then(undefined, XhrNotificationService.notify);
+      }
     };
 
     $scope.reportProblem = function () {
@@ -33,7 +39,7 @@
         deferred.reject();
       }
 
-      CsdmService
+      CsdmDeviceService
         .uploadLogs(vm.currentDevice.url, feedbackId, Authinfo.getPrimaryEmail())
         .then(success, error);
 

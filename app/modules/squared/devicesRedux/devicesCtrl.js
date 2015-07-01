@@ -5,7 +5,7 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, DeviceFilter, CodeListService, DeviceListService, CsdmService) {
+    function ($scope, $state, $templateCache, DeviceFilter, CodeListService, DeviceListService, CsdmCodeService, CsdmDeviceService) {
       var vm = this;
 
       vm.deviceFilter = DeviceFilter;
@@ -20,7 +20,7 @@ angular.module('Squared')
 
       vm.updateListAndFilter = function () {
         vm.dataLoaded = true;
-        var merged = _.extend({}, CsdmService.getCodeList(), CsdmService.getDeviceList());
+        var merged = _.extend({}, CsdmCodeService.getCodeList(), CsdmDeviceService.getDeviceList());
         return DeviceFilter.getFilteredList(merged);
       };
 

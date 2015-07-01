@@ -2,11 +2,8 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmService($http, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter) {
-
-    var codeCache = {};
+  function CsdmDeviceService($http, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter) {
     var deviceCache = {};
-    var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
 
     function fetchDeviceList() {
@@ -16,19 +13,8 @@
       });
     }
 
-    function fetchCodeList() {
-      return $http.get(codesUrl).success(function (codes) {
-        var converted = CsdmConverter.convert(codes);
-        CsdmCacheUpdater.update(codeCache, converted);
-      });
-    }
-
     function getDeviceList() {
       return deviceCache;
-    }
-
-    function getCodeList() {
-      return codeCache;
     }
 
     function updateDeviceName(deviceUrl, newName) {
@@ -36,7 +22,7 @@
           name: newName
         })
         .success(function (status) {
-          var device = codeCache[deviceUrl] || deviceCache[deviceUrl];
+          var device = deviceCache[deviceUrl];
           device.displayName = newName;
           if (device.status && device.status.webSocketUrl) {
             return notifyDevice(deviceUrl, {
@@ -44,6 +30,13 @@
               eventType: "room.identityDataChanged"
             });
           }
+        });
+    }
+
+    function deleteDevice(url) {
+      return $http.delete(url)
+        .success(function (status) {
+          delete deviceCache[url];
         });
     }
 
@@ -60,11 +53,45 @@
       });
     }
 
-    function deleteUrl(url) {
+    return {
+      fetchDeviceList: fetchDeviceList,
+      getDeviceList: getDeviceList,
+      uploadLogs: uploadLogs,
+      deleteDevice: deleteDevice,
+      updateDeviceName: updateDeviceName
+    };
+  }
+
+  /* @ngInject  */
+  function CsdmCodeService($http, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter) {
+    var codeCache = {};
+    var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
+
+    function fetchCodeList() {
+      return $http.get(codesUrl).success(function (codes) {
+        var converted = CsdmConverter.convert(codes);
+        CsdmCacheUpdater.update(codeCache, converted);
+      });
+    }
+
+    function getCodeList() {
+      return codeCache;
+    }
+
+    function updateCodeName(deviceUrl, newName) {
+      return $http.patch(deviceUrl, {
+          name: newName
+        })
+        .success(function (status) {
+          var device = codeCache[deviceUrl];
+          device.displayName = newName;
+        });
+    }
+
+    function deleteCode(url) {
       return $http.delete(url)
         .success(function (status) {
           delete codeCache[url];
-          delete deviceCache[url];
         });
     }
 
@@ -80,27 +107,25 @@
     return {
       getCodeList: getCodeList,
       fetchCodeList: fetchCodeList,
-      getDeviceList: getDeviceList,
-      fetchDeviceList: fetchDeviceList,
-      deleteUrl: deleteUrl,
+      deleteCode: deleteCode,
       createCode: createCode,
-      uploadLogs: uploadLogs,
-      updateDeviceName: updateDeviceName
+      updateCodeName: updateCodeName
     };
   }
 
   /* @ngInject */
-  function CodeListService(CsdmPoller, CsdmService) {
-    return CsdmPoller.create(CsdmService.fetchCodeList);
+  function CodeListService(CsdmPoller, CsdmCodeService) {
+    return CsdmPoller.create(CsdmCodeService.fetchCodeList);
   }
 
   /* @ngInject */
-  function DeviceListService(CsdmPoller, CsdmService) {
-    return CsdmPoller.create(CsdmService.fetchDeviceList);
+  function DeviceListService(CsdmPoller, CsdmDeviceService) {
+    return CsdmPoller.create(CsdmDeviceService.fetchDeviceList);
   }
 
   angular.module('Squared')
-    .service('CsdmService', CsdmService)
+    .service('CsdmCodeService', CsdmCodeService)
+    .service('CsdmDeviceService', CsdmDeviceService)
     .service('CodeListService', CodeListService)
     .service('DeviceListService', DeviceListService);
 
