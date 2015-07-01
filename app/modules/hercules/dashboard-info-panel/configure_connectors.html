@@ -1,0 +1,25 @@
+<cs-accordion id="configureConnectorsAction"
+              ng-show="clustersWithNotConfiguredConnectors || clustersWithoutServiceConnectorsEnabled">
+  <cs-accordion-group
+    is-open="false"
+    show-caret="true"
+    display-status="warning">
+
+    <cs-accordion-heading style="background: white;">
+      <span class="badge badge-custom-warn">To-do</span>
+      <span>Configure and Enable Connectors on Cisco VCS</span>
+    </cs-accordion-heading>
+
+    <div style="margin: 0 0 10px;">
+      <p>Your Cisco VCS is registered for Cloud Extensions. Now configure settings for the service and enable the
+        connectors.</p>
+      <ol>
+        <li>On the Cisco VCS, explore the Applications > Cloud Extensions menu and fill in the new pages for the
+          service.
+        </li>
+        <li>Enable the connectors.</li>
+      </ol>
+    </div>
+
+  </cs-accordion-group>
+</cs-accordion>

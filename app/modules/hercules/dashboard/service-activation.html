@@ -17,7 +17,6 @@
         <span><cs-checkbox ckid="{{service.service_id}}" ng-model="service.enabled" label=""/></span> <i ng-class="serviceIcon(service.service_id)" style="font-size: 25px; vertical-align: middle;" /> <span translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 600; margin-left: 10px;"/>
         <p><span translate="hercules.serviceDescriptions.{{service.service_id}}"/></p>
       </div>
-      <p>Note! Deselecting a service (requires another confirm step) will remove any related functionality from your users. Additional steps to remove the service from your on-premises devices are required. See documentation for guidance and further instructions. </p>
     </div>
 
     <div ng-show="!loading && confirmRemove">

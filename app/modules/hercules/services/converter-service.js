@@ -80,6 +80,10 @@ angular.module('Hercules')
             cluster.any_service_connectors_enabled = true;
           }
 
+          if (connector.state == 'not_configured' && service.service_type != 'c_mgmt') {
+            cluster.any_service_connectors_not_configured = true;
+          }
+
         });
         if (service.running_hosts) {
           cluster.running_hosts = true;

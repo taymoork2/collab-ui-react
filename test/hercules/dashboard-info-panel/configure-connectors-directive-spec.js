@@ -13,9 +13,9 @@ describe('NoServiceConnectorsEnabledDirective', function () {
 
   it('hides the element when no clusters fused', function () {
     $scope.clusters = [];
-    var element = $compile("<hercules-no-service-connectors-enabled>")($scope);
+    var element = $compile("<hercules-configure-connectors>")($scope);
     $scope.$digest();
-    expect(element.find('#noServiceConnectorsEnabledAction').hasClass('ng-hide')).toBe(true);
+    expect(element.find('#configureConnectorsAction').hasClass('ng-hide')).toBe(true);
   });
 
   it('hides the element when service connectors are enabled', function () {
@@ -47,9 +47,9 @@ describe('NoServiceConnectorsEnabledDirective', function () {
         }]
       }]
     }]);
-    var element = $compile("<hercules-no-service-connectors-enabled>")($scope);
+    var element = $compile("<hercules-configure-connectors>")($scope);
     $scope.$digest();
-    expect(element.find('#noServiceConnectorsEnabledAction').hasClass('ng-hide')).toBe(true);
+    expect(element.find('#configureConnectorsAction').hasClass('ng-hide')).toBe(true);
   });
 
   it('replaces the element with the appropriate content when there are no service connectors fused', function () {
@@ -81,10 +81,10 @@ describe('NoServiceConnectorsEnabledDirective', function () {
         }]
       }]
     }]);
-    var element = $compile("<hercules-no-service-connectors-enabled>")($scope);
+    var element = $compile("<hercules-configure-connectors>")($scope);
     $scope.$digest();
-    expect(element.find('#noServiceConnectorsEnabledAction').hasClass('ng-hide')).toBe(false);
-    expect(element.html()).toContain("Add a Service Connector to Cisco VCS");
+    expect(element.find('#configureConnectorsAction').hasClass('ng-hide')).toBe(false);
+    expect(element.html()).toContain("Configure and Enable Connectors");
   });
 
   it('hides the element when not a c_mgmt cluster', function () {
@@ -116,8 +116,8 @@ describe('NoServiceConnectorsEnabledDirective', function () {
         }]
       }]
     }]);
-    var element = $compile("<hercules-no-service-connectors-enabled>")($scope);
+    var element = $compile("<hercules-configure-connectors>")($scope);
     $scope.$digest();
-    expect(element.find('#noServiceConnectorsEnabledAction').hasClass('ng-hide')).toBe(true);
+    expect(element.find('#configureConnectorsAction').hasClass('ng-hide')).toBe(true);
   });
 });
