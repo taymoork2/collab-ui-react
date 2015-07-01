@@ -16,7 +16,7 @@ angular
 
       $scope.writeConfig = function () {
         if ($scope.config.wx2users && !validator.isValidEmailCsv($scope.config.wx2users)) {
-          $scope.error = "Please enter a list of comma-separated E-Mail addresses";
+          $scope.error = "Please enter a list of comma-separated email addresses";
         } else {
           $scope.error = null;
           $scope.saving = true;
