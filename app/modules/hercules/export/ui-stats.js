@@ -38,9 +38,7 @@ angular.module('Hercules').service('UiStats',
     var initStats = function () {
       $.each(statuses, function (i, s) {
         s.progress = 0;
-        Log.debug(s.count);
         if (s.count === "0") {
-          Log.debug("SET TO TRUE");
           s.unselectable = true;
         }
       });

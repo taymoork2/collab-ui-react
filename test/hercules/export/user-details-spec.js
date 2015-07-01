@@ -4,23 +4,24 @@ describe('Service: UserDetails', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var UserDetails, $httpBackend;
-  beforeEach(inject(function (_UserDetails_, _$httpBackend_) {
-    UserDetails = _UserDetails_;
-    $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
-  }));
-
-  afterEach(function () {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
 
   describe('merge user details based on uss state and response from ci user info', function () {
 
+    beforeEach(inject(function (_UserDetails_, _$httpBackend_) {
+      UserDetails = _UserDetails_;
+      $httpBackend = _$httpBackend_;
+      $httpBackend
+        .when('GET', 'l10n/en_US.json')
+        .respond({});
+    }));
+
+    afterEach(function () {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
     it('when uss user entitled is true', function () {
-      var request = 'https://identity.webex.com/identity/scim/null/v1/Users?filter=id eq "111"';
+      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"';
 
       $httpBackend
         .when('GET', request)
@@ -32,27 +33,27 @@ describe('Service: UserDetails', function () {
         });
 
       var callback = sinon.stub();
-      var simulatedResponse = {
+      var simulatedResponse = [{
         "userId": "111",
         "entitled": true,
         "state": "whatever"
-      };
+      }];
 
-      var users = UserDetails.getUsers(simulatedResponse, callback);
+      var users = UserDetails.getUsers(simulatedResponse, "5632-f806-org", callback);
 
       $httpBackend.flush();
       expect(callback.callCount).toBe(1);
-      var data = callback.args[0][0];
+      var userDetails = callback.args[0][0];
 
-      expect(data.details.id).toBe('111');
-      expect(data.details.userName).toBe('sparkuser1@gmail.com');
-      expect(data.details.entitled).toBe('Entitled');
-      expect(data.details.state).toBe('whatever');
+      expect(userDetails[0].details.id).toBe('111');
+      expect(userDetails[0].details.userName).toBe('sparkuser1@gmail.com');
+      //expect(userDetails[0].details.entitled).toBe('Entitled');
+      expect(userDetails[0].details.state).toBe('whatever');
 
     });
 
     it('when uss user entitled is false', function () {
-      var request = 'https://identity.webex.com/identity/scim/null/v1/Users?filter=id eq "111"';
+      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"';
 
       $httpBackend
         .when('GET', request)
@@ -64,33 +65,39 @@ describe('Service: UserDetails', function () {
         });
 
       var callback = sinon.stub();
-      var simulatedResponse = {
+      var simulatedResponse = [{
         "userId": "111",
         "entitled": false,
         "state": "whatever"
-      };
+      }];
 
-      var users = UserDetails.getUsers(simulatedResponse, callback);
+      var users = UserDetails.getUsers(simulatedResponse, "5632-f806-org", callback);
 
       $httpBackend.flush();
       expect(callback.callCount).toBe(1);
-      var data = callback.args[0][0];
+      var userDetails = callback.args[0][0];
 
-      expect(data.details.id).toBe('111');
-      expect(data.details.userName).toBe('sparkuser1@gmail.com');
-      expect(data.details.entitled).toBe('Not Entitled');
-      expect(data.details.state).toBe('whatever');
+      expect(userDetails[0].details.id).toBe('111');
+      expect(userDetails[0].details.userName).toBe('sparkuser1@gmail.com');
+      //expect(userDetails[0].details.entitled).toBe('Not Entitled');
+      expect(userDetails[0].details.state).toBe('whatever');
 
     });
 
     it('when uss reports error for a user', function () {
-      var request = 'https://identity.webex.com/identity/scim/null/v1/Users?filter=id eq "111"';
+      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"';
 
       $httpBackend
         .when('GET', request)
-        .respond(404, '');
+        .respond({
+          "Resources": [{
+            "id": "111",
+            "userName": "sparkuser1@gmail.com"
+          }]
+        });
+
       var callback = sinon.stub();
-      var simulatedResponse = {
+      var simulatedResponse = [{
         "userId": "111",
         "entitled": true,
         "state": "error",
@@ -98,47 +105,110 @@ describe('Service: UserDetails', function () {
           "key": "987",
           "defaultMessage": "The request failed. The SMTP address has no mailbox associated with it."
         }
-      };
+      }];
 
-      var users = UserDetails.getUsers(simulatedResponse, callback);
+      var users = UserDetails.getUsers(simulatedResponse, "5632-f806-org", callback);
 
       $httpBackend.flush();
       expect(callback.callCount).toBe(1);
-      var data = callback.args[0][0];
+      var userDetails = callback.args[0][0];
 
-      expect(data.details.id).toBe('111');
-      expect(data.details.userName).toBe('username not found');
-      expect(data.details.entitled).toBe('Entitled');
-      expect(data.details.state).toBe('error');
-      expect(data.details.message).toBe('The request failed. The SMTP address has no mailbox associated with it.');
+      expect(userDetails[0].details.id).toBe('111');
+      expect(userDetails[0].details.userName).toBe('sparkuser1@gmail.com');
+      //expect(userDetails[0].details.entitled).toBe('Entitled');
+      expect(userDetails[0].details.state).toBe('error');
+      expect(userDetails[0].details.message).toBe('The request failed. The SMTP address has no mailbox associated with it.');
 
     });
 
     it('when ci user NOT found', function () {
-      var request = 'https://identity.webex.com/identity/scim/null/v1/Users?filter=id eq "111"';
+      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"';
 
       $httpBackend
         .when('GET', request)
-        .respond(404, '');
+        .respond({
+          "Resources": []
+        });
+
       var callback = sinon.stub();
-      var simulatedResponse = {
+      var simulatedResponse = [{
         "userId": "111",
         "entitled": true,
         "state": "whatever"
-      };
+      }];
 
-      var users = UserDetails.getUsers(simulatedResponse, callback);
+      var users = UserDetails.getUsers(simulatedResponse, "5632-f806-org", callback);
 
       $httpBackend.flush();
       expect(callback.callCount).toBe(1);
-      var data = callback.args[0][0];
+      var userDetails = callback.args[0][0];
 
-      expect(data.details.id).toBe('111');
-      expect(data.details.userName).toBe('username not found');
-      expect(data.details.entitled).toBe('Entitled');
-      expect(data.details.state).toBe('whatever');
+      expect(userDetails[0].details.id).toBe('111');
+      expect(userDetails[0].details.userName).toBe('username not found');
+      //expect(userDetails[0].details.entitled).toBe('Entitled');
+      expect(userDetails[0].details.state).toBe('whatever');
     });
 
+    it('fetching multiple users from CI in one request', function () {
+      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111" and id eq "222"';
+
+      $httpBackend
+        .when('GET', request)
+        .respond({
+          "Resources": [{
+            "id": "111",
+            "userName": "sparkuser1@gmail.com"
+          }, {
+            "id": "222",
+            "userName": "sparkuser2@gmail.com"
+          }]
+        });
+
+      var callback = sinon.stub();
+      var simulatedResponse = [{
+        "userId": "111",
+        "entitled": false,
+        "state": "whatever"
+      }, {
+        "userId": "222",
+        "entitled": true,
+        "state": "whenever"
+      }];
+
+      var users = UserDetails.getUsers(simulatedResponse, "5632-f806-org", callback);
+
+      $httpBackend.flush();
+      expect(callback.callCount).toBe(1);
+      var userDetails = callback.args[0][0];
+
+      expect(userDetails[0].details.id).toBe('111');
+      expect(userDetails[0].details.userName).toBe('sparkuser1@gmail.com');
+      //expect(userDetails[0].details.entitled).toBe('Not Entitled');
+      expect(userDetails[0].details.state).toBe('whatever');
+
+      expect(userDetails[1].details.id).toBe('222');
+      expect(userDetails[1].details.userName).toBe('sparkuser2@gmail.com');
+      //expect(userDetails[1].details.entitled).toBe('Entitled');
+      expect(userDetails[1].details.state).toBe('whenever');
+
+    });
+
+  });
+
+  it('creates a CI user API compatible filter string based on multiple userids', function () {
+
+    inject(function (_UserDetails_) {
+      UserDetails = _UserDetails_;
+    });
+
+    var usersIds = ["1111", "2222", "3333"];
+    var filter = UserDetails.multipleUserFilter(usersIds);
+    expect(filter).toEqual('id eq "1111" and id eq "2222" and id eq "3333"');
+  });
+
+  it('creates a user url', function () {
+    var url = UserDetails.userUrl(["1234"], "5632-f806-org");
+    expect(url).toEqual('https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "1234"');
   });
 
 });
