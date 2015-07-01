@@ -162,7 +162,7 @@ gulp.task('clean:karma', function (done) {
  ********************************************/
 gulp.task('clean:css', function (done) {
   var files = [
-    config.build + '/**/*.css'
+    config.build + 'styles/**/*.css'
   ];
   messageLogger('Cleaning CSS files', files);
   del(files, done);
@@ -302,7 +302,6 @@ gulp.task('copy:dist-appfiles', function () {
   var files = [].concat(
     '*.{txt,html}',
     '!index.html',
-    '!index2.html',
     '**/*.json',
     '**/*.csv',
     '.htaccess'
@@ -349,7 +348,7 @@ gulp.task('index:build', function () {
   );
   messageLogger('Injecting dependancies into index.html', jsFiles + ', ' + cssFiles);
   return gulp
-    .src(config.app + '/index2.html')
+    .src(config.app + '/index.html')
     .pipe($.if(args.verbose, $.print()))
     .pipe($.inject(gulp.src(jsFiles, {
       read: false

@@ -47,7 +47,7 @@ Project structure
   - html template files
   - javacript controllers
   - directive JS files
-  - less style sheets
+  - scss style sheets
   - images should not be stored in the modules directory
 * images should be placed in the images directory. They should organized with the same directory structure as the modules
 * We have decided to organize the folders based on component and feature to best manage functionality
@@ -143,7 +143,7 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 * Runs `gulp build` and starts a Browsersync server from the build folder
 * Starts a watch task that watches all of the files in the development (app) folder for changes
 * Changes to files triggers tasks that copy updated files to the build folder and reloads the browser
-* LESS file changes are compiled and injected into the browser WITHOUT reloading the app
+* SCSS file changes are compiled and injected into the browser WITHOUT reloading the app
 * The default browser is Google Chrome
 * When using the `--browserall` arg, all browsers will be kept in-sync (i.e. clicks, scrolls, typing, etc.)
 

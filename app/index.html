@@ -1,8 +1,9 @@
 <!doctype html>
 <html ng-app="wx2AdminWebClientApp">
   <head>
-    <!-- build:js({.tmp,app}) scripts/unsupported.js -->
-    <script type="text/javascript" src="scripts/unsupported.js"></script>
+    <!-- build:js scripts/unsupported.js -->
+    <!-- unsupported:js -->
+    <!-- endinject -->
     <!-- endbuild -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,9 +12,9 @@
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/png" href="images/sparkSm.png">
     <link type="image/x-icon" rel="shortcut icon" href="images/sparkSm.png"/>
-    <!-- build:css({.tmp,app}) styles/main.css -->
-    <% styles.forEach( function( file ) { %>
-    <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
+    <!-- build:css styles/main.css -->
+    <!-- inject:css -->
+    <!-- endinject -->
     <!-- endbuild -->
   </head>
   <body ng-cloak cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
@@ -22,11 +23,11 @@
 
     <script>
       var preload = new Image();
-      preload.src="images/bg_3515.jpg";
+      preload.src = "images/bg_3515.jpg";
     </script>
-    <!-- build:js({.tmp,app}) scripts/index.scripts.js -->
-    <% scripts.forEach( function( file ) { %>
-    <script type="text/javascript" src="<%= file %>"></script><% }); %>
+    <!-- build:js scripts/index.scripts.js -->
+    <!-- inject:js -->
+    <!-- endinject -->
     <!-- endbuild -->
   </body>
 </html>
