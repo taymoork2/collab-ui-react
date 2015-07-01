@@ -221,31 +221,31 @@
 
     function getQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
       } else if (filter.value === 1) {
-        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=week&cache=true';
+        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=week&cache=false';
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=true';
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=false';
       }
     }
 
     function getQueryForOnePeriod(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true';
+        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=false';
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=true';
+        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=false';
       } else {
-        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=true';
+        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=false';
       }
     }
 
     function getTrendQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
       } else if (filter.value === 1) {
-        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=day&cache=false';
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=day&cache=false';
       }
     }
 
@@ -279,16 +279,17 @@
     }
 
     function getActiveUserGraphData(customer) {
-      var graphData = getDateBase();
       if (angular.isArray(customer)) {
+        var graphData = [];
         angular.forEach(customer, function (org) {
           graphData = combineMatchingDates(graphData, getActiveUserGraphData(org));
         });
         return graphData.sort(dateSort);
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
-          var graph = combineMatchingDates(graphData, activeUserCustomerGraphs[customer.value].graphData).sort(dateSort);
-          return graph;
+          var customerData = activeUserCustomerGraphs[customer.value].graphData;
+          var graph = getDateBase(customerData[customerData.length - 1].modifiedDate);
+          return combineMatchingDates(graph, customerData).sort(dateSort);
         }
         return [];
       }
@@ -303,23 +304,33 @@
       return -1;
     }
 
-    function getDateBase() {
+    function getDateBase(mostRecent) {
       var graph = [];
       if (timeFilter === 0) {
+        var offset = 0;
+        if (mostRecent === moment().format(dateFormat)) {
+          offset = 1;
+        }
+
         for (var i = 7; i > 0; i--) {
           graph.push({
-            date: moment().subtract(i, 'day').format(),
-            modifiedDate: moment().subtract(i, 'day').format(dateFormat),
+            date: moment().subtract(i - offset, 'day').format(),
+            modifiedDate: moment().subtract(i - offset, 'day').format(dateFormat),
             totalRegisteredUsers: 0,
             activeUsers: 0,
             percentage: 0
           });
         }
       } else if (timeFilter === 1) {
+        var weekendDate = 0;
+        if (mostRecent === moment().day(-1).format(dateFormat)) {
+          weekendDate = 1;
+        }
+
         for (var x = 3; x >= 0; x--) {
           graph.push({
-            date: moment().day(0 - (x * 7) - 1).format(),
-            modifiedDate: moment().day(0 - (x * 7) - 1).format(dateFormat),
+            date: moment().day(0 - (x * 7) - weekendDate).format(),
+            modifiedDate: moment().day(0 - (x * 7) - weekendDate).format(dateFormat),
             totalRegisteredUsers: 0,
             activeUsers: 0,
             percentage: 0

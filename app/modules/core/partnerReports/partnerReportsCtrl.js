@@ -32,7 +32,10 @@
     vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
     vm.mostActiveUsers = [];
+    vm.displayMostActive = false;
     vm.populationDescription = "";
+    vm.activeUserDescription = "";
+    vm.mostActiveDescription = "";
 
     vm.recentUpdate = "";
     vm.customerOptions = [];
@@ -50,6 +53,7 @@
 
     vm.registeredEndpoints = [];
     vm.endpointRefresh = REFRESH;
+    vm.endpointDescription = "";
 
     vm.timeOptions = [{
       value: 0,
@@ -125,6 +129,8 @@
       vm.activeUsersRefresh = REFRESH;
       vm.activeUserPopulationRefresh = REFRESH;
       vm.populationDescription = "";
+      vm.activeUserDescription = "";
+      vm.mostActiveDescription = "";
       getActiveUserReports();
 
       vm.callMetricsRefresh = REFRESH;
@@ -133,6 +139,7 @@
 
       vm.endpointRefresh = REFRESH;
       vm.registeredEndpoints = [];
+      vm.endpointDescription = "";
       getRegisteredEndpoints();
     };
 
@@ -206,6 +213,10 @@
           }
 
           vm.mostActiveUsers = response.tableData;
+          vm.displayMostActive = false;
+          if (vm.mostActiveUsers.length > 0) {
+            vm.displayMostActive = true;
+          }
 
           if (vm.mostActiveUsers !== undefined && vm.mostActiveUsers !== null) {
             var totalUsers = vm.mostActiveUsers.length;
@@ -222,11 +233,20 @@
             vm.activeUsersRefresh = EMPTY;
           }
 
+          vm.activeUserDescription = $translate.instant('activeUsers.description', {
+            time: vm.timeSelected.description,
+            customer: vm.customerSelected.label
+          });
+          vm.mostActiveDescription = $translate.instant('activeUsers.mostActiveDescription', {
+            time: vm.timeSelected.description,
+            customer: vm.customerSelected.label
+          });
           vm.populationDescription = $translate.instant('activeUserPopulation.description', {
             percentage: vm.activeUserPopulationAverage,
             time: vm.timeSelected.description,
             customer: vm.customerSelected.label
           });
+
           vm.activeUserPopulationRefresh = EMPTY;
           if (populationGraph.length !== 0) {
             vm.activeUserPopulationRefresh = SET;
@@ -305,6 +325,9 @@
       PartnerReportService.getRegisteredEndpoints(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response !== ABORT) {
           vm.registeredEndpoints = response;
+          vm.endpointDescription = $translate.instant('registeredEndpoints.description', {
+            time: vm.timeSelected.description
+          });
           if (!angular.isArray(response) || response.length === 0) {
             vm.endpointRefresh = EMPTY;
           } else {

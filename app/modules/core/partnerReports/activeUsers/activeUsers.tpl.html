@@ -9,6 +9,8 @@
   </div>
   <hr class="title-break pull-left"/>
   <div class="row">
+    <br>
+    <p class="report-description graph-match">{{nav.activeUserDescription}}</p>
     <div class="timechart" ng-if="nav.isRefresh(nav.activeUsersRefresh)"></div>
     <div id="activeUsersdiv" class="barchart" ng-hide="nav.isRefresh(nav.activeUsersRefresh)"></div>
     <div id="activeUsersRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
@@ -18,10 +20,12 @@
       <h3 class="no-data" translate='reportsPage.noData'></h3>
     </div>
   </div>
-  <div ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh)">
+  <div ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
     <div ng-show="nav.showMostActiveUsers">
       <h4 class="sub-section-title graph-match" translate="activeUsers.mostActiveUsers"></h4>
       <div class="graph-match">
+        <br>
+        <p class="report-description">{{nav.mostActiveDescription}}</p>
         <table class="table table-bordered active-users-table">
           <thead>
             <tr>

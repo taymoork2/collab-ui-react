@@ -63,13 +63,13 @@
   #activeUsersdiv {
     position: relative;
     overflow: visible !important;
-    top: -40px;
+    top: -50px;
     .amcharts-main-div {
       height: 100% !important;
       .amcharts-chart-div {
         overflow: visible !important;
         svg {
-          top: 45px !important;
+          top: 55px !important;
           position: relative !important;
           overflow: visible;
         }
@@ -80,6 +80,6 @@
     top: 60px !important;
   }
   .amcharts-balloon-div {
-    margin-top: 65px !important;
+    margin-top: 55px !important;
   }
 }

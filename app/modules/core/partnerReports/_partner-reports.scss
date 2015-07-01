@@ -7,7 +7,9 @@
 .partner-reports {
   padding: 0px;
   height: auto;
-  min-width: 1150px;
+    min-width: 1150px;
+    overflow: hidden;
+
   .reports-header {
     @extend .row;
     @extend .page-header;
@@ -48,6 +50,11 @@
     }
     .tab-pane {
       padding: 40px 30px 60px;
+
+      .report-description {
+        margin-bottom: 15px;
+      }
+
       .section-title {
         font-family: "CiscoSansTT Light";
         font-size: 22px;
