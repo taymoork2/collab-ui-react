@@ -16,15 +16,17 @@
       },
       pattern: '',
       name: '',
-      patternOption: '',
+      patternOption: 'range',
       reversionOption: 'callparkInitLine',
       reversionPattern: ''
     };
+
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
+        scope.model.rangeMax = value;
         // we only validate this if rangeMin is valid or populated
-        if (angular.isUndefined(scope.model.rangeMin) || scope.model.rangeMin === "" || !ValidationService.numeric(viewValue, modelValue)) {
+        if (angular.isUndefined(scope.model.rangeMin) || scope.model.rangeMin === "") {
           return true;
         } else {
           return parseInt(value) >= parseInt(scope.model.rangeMin);
@@ -33,11 +35,25 @@
       lessThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
         // we only validate this if rangeMin is valid or populated
-        if (angular.isUndefined(scope.model.rangeMax) || scope.model.rangeMax === "" || !ValidationService.numeric(viewValue, modelValue)) {
+        if (angular.isUndefined(scope.model.rangeMax) || scope.model.rangeMax === "") {
           return true;
         } else {
           return parseInt(value) <= parseInt(scope.model.rangeMax);
         }
+      },
+      checkNumeric: function (viewValue, modelValue, scope) {
+        var value = modelValue || viewValue;
+        if (angular.isUndefined(value)) {
+          return true;
+        }
+        return ValidationService.numeric(viewValue, modelValue, scope);
+      },
+      checkRequired: function (viewValue, modelValue, scope) {
+        var value = modelValue || viewValue;
+        if (scope.model.patternOption !== 'range') {
+          return true;
+        }
+        return angular.isDefined(value) && value !== '';
       }
     };
     vm.nameFields = [{
@@ -49,7 +65,8 @@
         placeholder: $translate.instant('callPark.enterName'),
         labelClass: 'col-xs-1',
         inputClass: 'col-xs-10',
-        type: 'text'
+        type: 'text',
+        maxlength: 50
       }
     }];
 
@@ -84,8 +101,7 @@
         templateOptions: {
           label: $translate.instant('callPark.patternRange'),
           value: 'range',
-          model: 'patternOption',
-          required: true
+          model: 'patternOption'
         }
       }, {
         className: 'col-xs-3 align-number-input',
@@ -93,26 +109,38 @@
         type: 'input',
         templateOptions: {
           placeholder: 1200,
-          required: true
+          maxlength: 24
         },
         validators: {
-          numeric: {
-            expression: ValidationService.numeric,
+          lessThan: {
+            expression: vm.validations.lessThan,
+            message: function ($viewValue, $modelValue, scope) {
+              return $translate.instant('callPark.lessThan', {
+                'rangeMin': $viewValue,
+                'rangeMax': scope.model.rangeMax
+              });
+            }
+          },
+          checkNumeric: {
+            expression: vm.validations.checkNumeric,
             message: function () {
               return $translate.instant('validation.numeric');
             }
           },
-          lessThan: {
-            expression: vm.validations.lessThan,
-            message: function ($viewValue, $modelValue, scope) {
-              return $translate.instant('callPark.greaterThanLessThan', {
-                'rangeMax': scope.model.rangeMax,
-                'rangeMin': $viewValue
-              });
+          checkRequired: {
+            expression: vm.validations.checkRequired,
+            message: function () {
+              return $translate.instant('callPark.required');
             }
           }
         },
         expressionProperties: {
+          'data.validate': function (viewValue, modelValue, scope) {
+            if (!scope.fc.$invalid) {
+              return true;
+            }
+            return (scope.fc && scope.fc.$validate());
+          },
           'hide': function ($viewValue, $modelValue, scope) {
             return scope.model.patternOption !== 'range';
           }
@@ -132,11 +160,11 @@
         type: 'input',
         templateOptions: {
           placeholder: 1230,
-          required: true
+          maxlength: 24
         },
         validators: {
-          numeric: {
-            expression: ValidationService.numeric,
+          checkNumeric: {
+            expression: vm.validations.checkNumeric,
             message: function () {
               return $translate.instant('validation.numeric');
             }
@@ -144,17 +172,31 @@
           greaterThan: {
             expression: vm.validations.greaterThan,
             message: function ($viewValue, $modelValue, scope) {
-              return $translate.instant('callPark.greaterThanLessThan', {
+              return $translate.instant('callPark.greaterThan', {
                 'rangeMin': scope.model.rangeMin,
                 'rangeMax': $viewValue
               });
             }
+          },
+          checkRequired: {
+            expression: vm.validations.checkRequired,
+            message: function () {
+              return $translate.instant('callPark.required');
+            }
           }
         },
         expressionProperties: {
+          // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
+          // it retriggers validation
+          'data.validate': function (viewValue, modelValue, scope) {
+            if (!scope.fc.$invalid) {
+              return true;
+            }
+            return (scope.fc && scope.fc.$validate());
+          },
           'hide': function ($viewValue, $modelValue, scope) {
             return scope.model.patternOption !== 'range';
-          },
+          }
         }
       }]
     }, {
@@ -166,8 +208,7 @@
         templateOptions: {
           label: $translate.instant('callPark.patternSingle'),
           value: 'singleNumber',
-          model: 'patternOption',
-          required: true
+          model: 'patternOption'
         }
       }, {
         className: 'col-xs-6 align-number',
@@ -176,12 +217,13 @@
         templateOptions: {
           placeholder: $translate.instant('callPark.singleNumberPlaceholder'),
           type: 'text',
+          model: 'pattern',
           required: true,
-          model: 'pattern'
+          maxlength: 24
         },
         validators: {
-          numeric: {
-            expression: ValidationService.numeric,
+          checkNumeric: {
+            expression: vm.validations.checkNumeric,
             message: function () {
               return $translate.instant('validation.numeric');
             }
@@ -225,11 +267,12 @@
           horizontal: true,
           placeholder: $translate.instant('callPark.numberPlaceholder'),
           type: 'text',
-          model: 'reversionPattern'
+          model: 'reversionPattern',
+          maxlength: 24
         },
         validators: {
-          numeric: {
-            expression: ValidationService.numeric,
+          checkNumeric: {
+            expression: vm.validations.checkNumeric,
             message: function () {
               return $translate.instant('validation.numeric');
             }

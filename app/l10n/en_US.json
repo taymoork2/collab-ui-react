@@ -949,7 +949,7 @@
     "createDescription": "Allow users to place a call on hold so that it can be retrieved from another endpoint",
     "name": "Name",
     "enterName": "Enter Name",
-    "numbers": "Call Park Number(s)",
+    "numbers": "Number(s)",
     "numbersDescription": "Specific number(s) that can be used to park and retrieve a call.",
     "patternRange": "Number Range",
     "patternSingle": "Single Number",
@@ -962,8 +962,9 @@
     "numberPlaceholder": "Enter Number",
     "singleNumberPlaceholder": "Enter Single Number",
     "to": "to",
-    "greaterThanLessThan": "{{rangeMin}}  must be less than or equal to {{rangeMax}}."
-
+    "lessThan": "{{rangeMin}}  must be less than or equal to {{rangeMax}}.",
+    "greaterThan": "{{rangeMax}}  must be greater than or equal to {{rangeMin}}.",
+    "required": "This field is required"
   },
   "telephonyPreview": {
     "lines": "Lines",
