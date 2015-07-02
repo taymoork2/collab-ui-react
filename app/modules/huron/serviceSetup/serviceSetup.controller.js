@@ -449,18 +449,20 @@
     function initTimeZone() {
       return ServiceSetup.getTimeZones().then(function (timezones) {
         vm.timeZoneOptions = timezones;
-        return ServiceSetup.listVoicemailTimezone().then(function (usertemplates) {
-          if ((angular.isArray(usertemplates)) && (usertemplates.length > 0)) {
-            vm.timeZone = '' + usertemplates[0].timeZone;
-            vm.objectId = usertemplates[0].objectId;
-            var currentTimeZone = timezones.filter(function (timezone) {
-              return timezone.timezoneid === vm.timeZone;
-            });
-            if (currentTimeZone.length > 0) {
-              vm.model.site.timeZone = currentTimeZone[0];
+        if (vm.hasVoicemailService) {
+          return ServiceSetup.listVoicemailTimezone().then(function (usertemplates) {
+            if ((angular.isArray(usertemplates)) && (usertemplates.length > 0)) {
+              vm.timeZone = '' + usertemplates[0].timeZone;
+              vm.objectId = usertemplates[0].objectId;
+              var currentTimeZone = timezones.filter(function (timezone) {
+                return timezone.timezoneid === vm.timeZone;
+              });
+              if (currentTimeZone.length > 0) {
+                vm.model.site.timeZone = currentTimeZone[0];
+              }
             }
-          }
-        });
+          });
+        }
       });
     }
 
