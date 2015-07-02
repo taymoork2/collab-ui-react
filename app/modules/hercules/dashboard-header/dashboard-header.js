@@ -44,21 +44,7 @@
         });
 
         $scope.serviceIcon = function (serviceId) {
-          if (!serviceId) {
-            return 'icon icon-circle-question';
-          }
-          switch (serviceId) {
-          case 'squared-fusion-cal':
-            return 'icon icon-circle-calendar';
-          case 'squared-fusion-uc':
-            return 'icon icon-circle-call';
-          case 'squared-fusion-media':
-            return 'icon icon-circle-telepresence';
-          case 'contact-center-context':
-            return 'icon icon-circle-world';
-          default:
-            return 'icon icon-circle-question';
-          }
+          return ServiceDescriptor.serviceIcon(serviceId);
         };
 
         $scope.openUserStatusReportModal = function (serviceId) {

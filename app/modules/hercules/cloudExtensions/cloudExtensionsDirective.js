@@ -80,6 +80,10 @@ angular
           $timeout.cancel($scope.delayedUpdateTimer);
         }
       });
+
+      $scope.extensionIcon = function (id) {
+        return ServiceDescriptor.serviceIcon(id);
+      };
     }
   ])
   .directive('herculesCloudExtensions', [

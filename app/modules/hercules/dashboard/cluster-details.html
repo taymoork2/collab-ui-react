@@ -48,13 +48,13 @@
 
   <!-- hosts -->
   <cs-sp-section>
-    <div class="section-name" style="padding-top: 15px;">
+    <div class="section-name" style="padding: 15px 0;">
       Hosts
     </div>
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="host in cluster.hosts" ng-class="{'list-item': !$first}">
-          <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: host.serial})" style="padding-top: 1.4rem;">
+          <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: host.serial})">
             <i class="fa fa-circle status-icon" ng-class="host.status"/>
             <span class="feature-name">{{host.host_name}}</span>
             <span class="feature-status" translate="{{'hercules.status.' + (host.state || 'unknown') }}"></span>
