@@ -438,11 +438,10 @@
           var meetingTypesInfoJson = userSettingsModel.meetingTypesInfo.bodyJson;
 
           //console.log("HERE -------");
-          //var enablePMRSiteLevel = siteInfoJson.ns1_siteInstance.ns1_siteCommonOptions.ns1_enablePersonalMeetingRoom;
+          var enablePMRSiteLevel = siteInfoJson.ns1_siteInstance.ns1_siteCommonOptions.ns1_enablePersonalMeetingRoom;
           //console.log("ENABLE PMR SITE LEVEL=" + enablePMRSiteLevel);
           userSettingsModel.pmr.isSiteEnabled = (
-            //"true" == enablePMRSiteLevel
-            true
+            "true" == enablePMRSiteLevel
           ) ? true : false;
 
           userSettingsModel.pmr.value = (
