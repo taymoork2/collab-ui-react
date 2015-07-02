@@ -126,11 +126,8 @@
 
     function createCode(name) {
       return $http.post(codesUrl, {
-          name: name
-        })
-        .success(function (data) {
-          codeCache[data.url] = new CsdmConverter.Code(data);
-        });
+        name: name
+      });
     }
 
     return {

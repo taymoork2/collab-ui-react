@@ -30,6 +30,12 @@ angular.module('Core')
           prod: 'https://locus-a.wbx2.com'
         },
 
+        enrollmentServiceUrl: {
+          dev: 'http://localhost:8080/locus-mount/locus/api/v1',
+          integration: 'https://locus-integration.wbx2.com/locus/api/v1',
+          prod: 'https://locus-a.wbx2.com/locus/api/v1'
+        },
+
         meetingServiceUrl: {
           dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
           integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
@@ -483,6 +489,18 @@ angular.module('Core')
 
         getLocusServiceUrl: function () {
           return this.locusServiceUrl.integration;
+        },
+
+        getEnrollmentServiceUrl: function () {
+          if (this.isDev()) {
+            return this.enrollmentServiceUrl.integration;
+          } else if (this.isCfe()) {
+            return this.enrollmentServiceUrl.cfe;
+          } else if (this.isIntegration()) {
+            return this.enrollmentServiceUrl.integration;
+          } else {
+            return this.enrollmentServiceUrl.prod;
+          }
         },
 
         getMeetingServiceUrl: function () {
