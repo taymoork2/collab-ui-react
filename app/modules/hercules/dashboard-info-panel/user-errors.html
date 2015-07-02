@@ -15,11 +15,11 @@
       <p>Showing {{totalCount > limit ? limit : totalCount}} out of {{totalCount}} errors.</p>
       <p ng-repeat="status in userStatuses">
         <span style="text-decoration: underline;">{{status.displayName}}</span>
-        <br>
+        <br ng-show="status.connector"/>
         <span ng-show="status.connector">
           Host: <a href="https://{{status.connector.host_name}}" target="_blank" style="color: #3ca8e8">{{status.connector.host_name}}</a>
         </span>
-        <br>
+        <br/>
         <span class="error">{{status.description.defaultMessage}}</span>
       </p>
     </div>
