@@ -21,12 +21,22 @@
 
     <div ng-show="!loading && confirmRemove">
       <div class="alert alert-danger" role="alert" style="margin-left: 0px; margin-right: 0px;">
-        You are about to remove the following Cloud Extension services for your organization. Your users will no longer be able to use these services.
+        You are about to remove the following Cloud Extension services for your organization:
       </div>
-      <div ng-repeat="service in servicesToBeRemoved" style="margin-top: 20px;">
-        <p><i ng-class="serviceIcon(service.service_id)" style="font-size: 25px; vertical-align: middle;"/> <span translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 500; margin-left: 10px;"/></p>
+      <div ng-repeat="service in servicesToBeRemoved" style="margin-top: 15px;">
+        <p style="margin-bottom: 20px;"><i ng-class="serviceIcon(service.service_id)"
+                                           style="font-size: 25px; vertical-align: middle;"/> <span
+          translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 500; margin-left: 10px;"/></p>
       </div>
-      <p>Are you sure?</p>
+      <p>If you click Confirm, for each service you remove:</p>
+      <ul>
+        <li>All of your users will have the service deactivated.</li>
+        <li>Your Cisco VCS will uninstall the service connector.</li>
+        <li>Data for the service connector will be deleted.</li>
+      </ul>
+      <p style="margin-bottom: 0;">If your Cisco VCS has no other services installed, you will need to deregister it.
+        Log in and deregister from
+        Applications > Cloud Extensions > Connector Management.</p>
     </div>
   </div>
   <div class="modal-footer">
