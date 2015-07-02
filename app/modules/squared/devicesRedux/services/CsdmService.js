@@ -68,9 +68,23 @@
     var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
 
     function fetchCodeList() {
-      return $http.get(codesUrl).success(function (codes) {
-        var converted = CsdmConverter.convert(codes);
-        CsdmCacheUpdater.update(codeCache, converted);
+      var req = {
+        method: 'GET',
+        url: CsdmConfigService.getEnrollmentServiceUrl() + '/enrollment/entries/?organizationId=' + Authinfo.getOrgId(),
+        headers: {
+          'Cisco-Experimental': true
+        }
+      };
+      return $http(req).success(function (codes) {
+        var converted = CsdmConverter.convertCodes(codes);
+        var codesMap = {};
+        _.each(converted, function (d) {
+          codesMap[d.url] = d;
+        });
+        //        var codesMap =  _.indexBy(codes, function(d) {
+        //          d.url;
+        //        });
+        CsdmCacheUpdater.update(codeCache, codesMap);
       });
     }
 
@@ -88,11 +102,26 @@
         });
     }
 
-    function deleteCode(url) {
-      return $http.delete(url)
-        .success(function (status) {
-          delete codeCache[url];
-        });
+    function deleteCode(code) {
+      deleteFromCsdm(codesUrl + '/' + code.activationCode);
+      return deleteFromEnrollment(code.url).then(function () {
+        delete codeCache[code.url];
+      });
+    }
+
+    function deleteFromCsdm(url) {
+      return $http.delete(url);
+    }
+
+    function deleteFromEnrollment(url) {
+      var req = {
+        method: 'DELETE',
+        url: url,
+        headers: {
+          'Cisco-Experimental': true
+        }
+      };
+      return $http(req);
     }
 
     function createCode(name) {
@@ -100,7 +129,7 @@
           name: name
         })
         .success(function (data) {
-          codeCache[data.url] = data;
+          codeCache[data.url] = new CsdmConverter.Code(data);
         });
     }
 

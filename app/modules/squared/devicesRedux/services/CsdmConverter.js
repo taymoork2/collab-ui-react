@@ -5,24 +5,43 @@ angular.module('Squared').service('CsdmConverter',
   /* @ngInject  */
   function ($translate) {
 
-    var convert = function (data) {
+    function Device(obj) {
+      this.url = obj.url;
+      this.mac = obj.mac;
+      this.ip = getIp(obj);
+      this.serial = obj.serial;
+      this.product = getProduct(obj);
+      this.hasIssues = hasIssues(obj);
+      this.software = getSoftware(obj);
+      this.isOnline = getIsOnline(obj);
+      this.displayName = obj.displayName;
+      this.cssColorClass = getCssColorClass(obj);
+      this.readableState = getReadableState(obj);
+      this.needsActivation = getNeedsActivation(obj);
+      this.diagnosticsEvents = getDiagnosticsEvents(obj);
+      this.readableActivationCode = getReadableActivationCode(obj);
+    }
+
+    function Code(obj) {
+      obj.state = obj.status;
+      this.url = obj.url;
+      this.displayName = obj.displayName;
+      this.readableState = getReadableState(obj);
+      this.cssColorClass = getCssColorClass(obj);
+      this.needsActivation = getNeedsActivation(obj);
+      this.activationCode = obj.activationCode;
+      this.readableActivationCode = getReadableActivationCode(obj);
+    }
+
+    var convertCodes = function (data) {
       return _.mapValues(data, function (obj) {
-        return {
-          url: obj.url,
-          mac: obj.mac,
-          ip: getIp(obj),
-          serial: obj.serial,
-          product: getProduct(obj),
-          hasIssues: hasIssues(obj),
-          software: getSoftware(obj),
-          isOnline: getIsOnline(obj),
-          displayName: obj.displayName,
-          cssColorClass: getCssColorClass(obj),
-          readableState: getReadableState(obj),
-          needsActivation: getNeedsActivation(obj),
-          diagnosticsEvents: getDiagnosticsEvents(obj),
-          readableActivationCode: getReadableActivationCode(obj) // pyramidsort ftw!
-        };
+        return new Code(obj);
+      });
+    };
+
+    var convertDevices = function (data) {
+      return _.mapValues(data, function (obj) {
+        return new Device(obj);
       });
     };
 
@@ -163,7 +182,10 @@ angular.module('Squared').service('CsdmConverter',
     };
 
     return {
-      convert: convert
+      convert: convertDevices,
+      convertDevices: convertDevices,
+      convertCodes: convertCodes,
+      Code: Code
     };
 
   }

@@ -9,7 +9,7 @@
         $scope.deleteDeviceOrCode = function (deviceOrCode) {
           if (deviceOrCode.needsActivation) {
             CsdmCodeService
-              .deleteCode(deviceOrCode.url)
+              .deleteCode(deviceOrCode)
               .then($state.sidepanel.close, XhrNotificationService.notify);
           } else {
             CsdmDeviceService

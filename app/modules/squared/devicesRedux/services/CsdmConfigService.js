@@ -21,8 +21,13 @@ angular.module('Squared')
         }
       };
 
+      var getEnrollmentServiceUrl = function () {
+        return Config.getEnrollmentServiceUrl();
+      };
+
       return {
-        getUrl: getUrl
+        getUrl: getUrl,
+        getEnrollmentServiceUrl: getEnrollmentServiceUrl
       };
     }
   ]);
