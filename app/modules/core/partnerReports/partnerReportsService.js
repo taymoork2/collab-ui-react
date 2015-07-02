@@ -360,7 +360,7 @@
             if (graphData[i].modifiedDate.indexOf(dateData.modifiedDate) !== -1) {
               graphData[i].totalRegisteredUsers += dateData.totalRegisteredUsers;
               graphData[i].activeUsers += dateData.activeUsers;
-              graphData[i].percentage = Math.floor((graphData[i].activeUsers / graphData[i].totalRegisteredUsers) * 100);
+              graphData[i].percentage = Math.round((graphData[i].activeUsers / graphData[i].totalRegisteredUsers) * 100);
               updated = true;
               break;
             }

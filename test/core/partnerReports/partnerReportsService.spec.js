@@ -43,7 +43,7 @@ describe('Service: Partner Reports Service', function () {
     modifiedDate: moment().subtract(7, 'day').format(dateFormat),
     totalRegisteredUsers: 116,
     activeUsers: 111,
-    percentage: 95
+    percentage: 96
   };
   var customerPopulation = {
     customerName: 'Test Org One',
