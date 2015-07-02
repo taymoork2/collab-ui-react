@@ -36,6 +36,10 @@
     function deleteDevice(url) {
       return $http.delete(url)
         .success(function (status) {
+          notifyDevice(url, {
+            command: "identityDeleted",
+            eventType: "room.identityDeleted"
+          });
           delete deviceCache[url];
         });
     }
