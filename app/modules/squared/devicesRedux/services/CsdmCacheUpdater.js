@@ -31,6 +31,7 @@ angular.module('Squared').service('CsdmCacheUpdater',
       update: function (current, updated) {
         addAndUpdate(current, updated);
         removeDeleted(current, updated);
+        return current;
       }
     };
 

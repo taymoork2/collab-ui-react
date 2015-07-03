@@ -29,13 +29,11 @@
         <a target="_blank" ng-href="https://{{host.host_name}}/" class="btn btn-primary btn-sm" style="color: white;">
           Go to Host
         </a>
-        <button ng-disabled="deleteHostInflight" class="btn btn-danger btn-sm" ng-click="deleteHost(cluster.id, host.serial)" ng-show="host.state == 'offline'">
-          <span ng-hide="deleteHostInflight">
-            Remove
-          </span>
-          <span ng-show="deleteHostInflight">
-            <i class="icon icon-spinner icon-spin" />
-          </span>
+        <button
+          class="btn btn-danger btn-sm" 
+          sq-click-promise="deleteHost()"
+          ng-show="host.state == 'offline'">
+            <span>Remove</span>
         </button>
       </div>
 

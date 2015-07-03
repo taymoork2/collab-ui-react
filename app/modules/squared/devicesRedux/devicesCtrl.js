@@ -19,7 +19,6 @@ angular.module('Squared')
       });
 
       vm.updateListAndFilter = function () {
-        vm.dataLoaded = true;
         var merged = _.extend({}, CsdmCodeService.getCodeList(), CsdmDeviceService.getDeviceList());
         return DeviceFilter.getFilteredList(merged);
       };

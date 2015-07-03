@@ -4,31 +4,30 @@ angular.module('Hercules')
   .controller('HostDetailsController',
 
     /* @ngInject */
-    function ($scope, $state, $stateParams, ClusterProxy, XhrNotificationService) {
+    function ($scope, $state, $stateParams, ConnectorService, XhrNotificationService) {
+      var cluster = ConnectorService.getClusters()[$stateParams.clusterId];
 
-      $scope.$watch(ClusterProxy.getClusters, function (data) {
-        if (data.error) return $state.sidepanel.close();
-
-        var cluster = _.find(data.clusters || [], function (c) {
-          return c.id == $stateParams.clusterId;
-        });
-
-        if (!cluster) return $state.sidepanel.close();
-
-        $scope.host = _.find(cluster.hosts, function (h) {
-          return h.serial == $stateParams.hostSerial;
-        });
-
-        if (!$scope.host) return $state.sidepanel.close();
-      }, true);
-
-      $scope.deleteHost = function (clusterId, serial) {
-        $scope.deleteHostInflight = true;
-        ClusterProxy.deleteHost(clusterId, serial).then(function () {
-          $scope.deleteHostInflight = false;
-          $state.go('cluster-details', {
-            clusterId: clusterId
+      $scope.$watch(
+        function () {
+          var h = _.find(cluster.hosts, function (h) {
+            return h.serial == $stateParams.hostSerial;
           });
+          return h;
+        },
+        function (newVal, oldVal) {
+          $scope.host = newVal;
+        }
+      );
+
+      $scope.deleteHost = function () {
+        return ConnectorService.deleteHost(cluster.id, $scope.host.serial).then(function () {
+          if (ConnectorService.getClusters()[cluster.id]) {
+            $state.go('cluster-details', {
+              clusterId: cluster.id
+            });
+          } else {
+            $state.sidepanel.close();
+          }
         }, XhrNotificationService.notify);
       };
 

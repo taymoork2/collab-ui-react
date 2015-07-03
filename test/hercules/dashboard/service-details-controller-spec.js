@@ -9,9 +9,15 @@ describe('ServiceDetailsController', function () {
     service = {
       upgradeSoftware: sinon.stub()
     };
+    var stateParams = {
+      cluster: {
+        services: []
+      }
+    };
     $scope = $rootScope.$new();
     controller = _$controller_('ServiceDetailsController', {
-      $scope: $scope
+      $scope: $scope,
+      $stateParams: stateParams
     });
   }));
   it('shows modal software upgrade dialog with correct scope', function () {
@@ -31,7 +37,6 @@ describe('ServiceDetailsController', function () {
     $scope.showUpgradeDialog(upgradePackage, cluster, currentVersion);
     expect($scope.upgradeModal).toBeTruthy();
     expect($scope.upgradePackage).toBe(upgradePackage);
-    expect($scope.cluster).toBe(cluster);
     expect($scope.currentVersion).toBe(currentVersion);
   });
 });

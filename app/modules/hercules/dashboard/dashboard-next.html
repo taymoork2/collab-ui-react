@@ -31,24 +31,25 @@
   <div class="row">
     <div class="col-sm-12">
       <!-- loader -->
-      <div ng-show="loading || pollHasFailed" style="text-align: center; padding-top: 60px;">
-        <p ng-show="pollHasFailed">Disconnected. Trying to reconnect...</p>
+      <div ng-show="subscription.eventCount == 0 || subscription.currentError" style="text-align: center; padding-top: 60px;">
+        <p ng-show="subscription.currentError">Disconnected. Trying to reconnect...</p>
         <i class="icon icon-spinner icon-2x"></i>
       </div>
 
       <div ng-show="shouldShowWelcomeScreen()" style="padding: 20px 40px">
-        <hercules-fusion-welcome />
+        <hercules-fusion-welcome></hercules-fusion-welcome>
       </div>
 
-      <div ng-show="!loading && !pollHasFailed && !shouldShowWelcomeScreen()" style="padding-bottom: 60px">
+      <div ng-show="subscription.eventCount > 0 && !subscription.currentError && !shouldShowWelcomeScreen()" style="padding-bottom: 60px">
         <hercules-dashboard-info-panel> </hercules-dashboard-info-panel>
 
         <hercules-dashboard-header> </hercules-dashboard-header>
 
-        <div ng-show="clusters.length != 0">
-          <h3 style="padding-left: 20px">Cisco VCS Clusters: {{clusters.length}}</h3>
+        <div ng-show="clusterLength() != 0">
+          <h3 style="padding-left: 20px">Cisco VCS Clusters: {{clusterLength()}}</h3>
           <div class="container-fluid grid" style="margin-right: -30px;">
-            <div class="row" ng-repeat="cluster in clusters" ng-click="showClusterDetails(cluster)">
+            
+            <div class="row" ng-repeat="cluster in clusters | toArray | orderBy:['needs_attention','-any_service_connectors_enabled','name']" ng-click="showClusterDetails(cluster)">
               <div class="col-sm-4 col-xs-10">
                 <i class="icon icon-data icon-inverse-round" />
                 {{cluster.name}}
@@ -56,28 +57,28 @@
               <div class="col-sm-4 col-xs-1">
                 <span ng-show="cluster.needs_attention" class="red">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">Needs attention. </span>
+                  <span class="hidden-xs">Needs attention</span>
                 </span>
                 <span ng-hide="cluster.needs_attention || !cluster.any_service_connectors_enabled" class="green">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">Running. </span>
+                  <span class="hidden-xs">Running</span>
                 </span>
                 <span ng-hide="cluster.needs_attention || cluster.any_service_connectors_enabled" class="yellow">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">No service connectors enabled. </span>
+                  <span class="hidden-xs">No service connectors enabled</span>
                 </span>
               </div>
               <div class="col-sm-4 col-xs-1">
                 <span ng-show="cluster.software_upgrade_available" style="color: #00c1aa">
                   <i class="fa fa-cloud-upload" />
-                  <span class="hidden-xs">Software upgrade available.</span>
+                  <span class="hidden-xs">Software upgrade available</span>
                 </span>
               </div>
             </div>
           </div>
         </div>
 
-        <div ng-show="clusters.length == 0">
+        <div ng-show="clusterLength() == 0">
           <h3 style="padding-left: 20px">Cisco VCS Clusters</h3>
           <h4 style="padding-left: 20px; color: #ccc">
             No clusters connected to Spark

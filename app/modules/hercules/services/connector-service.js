@@ -2,8 +2,9 @@
   'use strict';
 
   /* @ngInject */
-  function ConnectorService($q, $http, $location, ConnectorMock, ConverterService, ConfigService, XhrNotificationService) {
+  function ConnectorService($q, $http, $location, CsdmCacheUpdater, ConnectorMock, ConverterService, ConfigService, XhrNotificationService) {
     var lastClusterResponse = [];
+    var clusterCache = {};
 
     function extractDataFromResponse(res) {
       return res.data;
@@ -26,7 +27,12 @@
       return $http
         .get(ConfigService.getUrl() + '/clusters')
         .then(extractDataFromResponse)
-        .then(ConverterService.convertClusters);
+        .then(ConverterService.convertClusters)
+        .then(_.partial(CsdmCacheUpdater.update, clusterCache));
+    };
+
+    var getClusters = function () {
+      return clusterCache;
     };
 
     var upgradeSoftware = function (clusterId, serviceType) {
@@ -38,7 +44,17 @@
 
     var deleteHost = function (clusterId, serial) {
       var url = ConfigService.getUrl() + '/clusters/' + clusterId + '/hosts/' + serial;
-      return $http.delete(url);
+      return $http.delete(url).then(function () {
+        var cluster = clusterCache[clusterId];
+        if (cluster && cluster.hosts) {
+          _.remove(cluster.hosts, {
+            serial: serial
+          });
+          if (cluster.hosts.length === 0) {
+            delete clusterCache[clusterId];
+          }
+        }
+      });
     };
 
     var getConnector = function (connectorId) {
@@ -49,13 +65,20 @@
     return {
       fetch: fetch,
       deleteHost: deleteHost,
-      upgradeSoftware: upgradeSoftware,
-      getConnector: getConnector
+      getClusters: getClusters,
+      getConnector: getConnector,
+      upgradeSoftware: upgradeSoftware
     };
+  }
+
+  /* @ngInject */
+  function ClusterPoller(CsdmPoller, ConnectorService) {
+    return CsdmPoller.create(ConnectorService.fetch);
   }
 
   angular
     .module('Hercules')
+    .service('ClusterPoller', ClusterPoller)
     .service('ConnectorService', ConnectorService);
 
 }());

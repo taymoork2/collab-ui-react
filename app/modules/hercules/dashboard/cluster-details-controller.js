@@ -1,20 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Hercules')
-  .controller('ClusterDetailsController',
+  /* @ngInject */
+  function ClusterDetailsController($scope, $stateParams, ConnectorService) {
+    $scope.cluster = ConnectorService.getClusters()[$stateParams.clusterId];
+  }
 
-    /* @ngInject */
-    function ($scope, $state, $stateParams, ClusterProxy) {
-      $scope.visibleAlarm = {};
-
-      $scope.$watch(ClusterProxy.getClusters, function (data) {
-        $scope.cluster = _.find(data.clusters || [], function (c) {
-          return c.id == $stateParams.clusterId;
-        });
-        if (data.error || !$scope.cluster) {
-          $state.sidepanel.close();
-        }
-      }, true);
-
-    }
-  );
+  angular
+    .module('Hercules')
+    .controller('ClusterDetailsController', ClusterDetailsController);
+}());

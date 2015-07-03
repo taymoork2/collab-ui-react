@@ -962,7 +962,7 @@ angular
             displayName: 'Overview'
           },
           params: {
-            clusterId: {}
+            clusterId: undefined
           }
         })
         .state('cluster-details.hosts', {
@@ -972,8 +972,8 @@ angular
             displayName: 'Hosts'
           },
           params: {
-            clusterId: {},
-            hostSerial: {}
+            clusterId: undefined,
+            hostSerial: undefined
           }
         })
         .state('cluster-details.service', {
@@ -983,8 +983,8 @@ angular
             displayName: 'Connectors'
           },
           params: {
-            clusterId: {},
-            serviceType: {}
+            clusterId: undefined,
+            serviceType: undefined
           }
         });
     }

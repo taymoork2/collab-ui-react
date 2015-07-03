@@ -212,9 +212,8 @@ angular.module('Hercules')
 
           return cluster;
         });
-        return _.sortBy(converted, function (obj) {
-          return !obj.needs_attention;
-        });
+
+        return _.indexBy(converted, 'id');
       };
 
       return {

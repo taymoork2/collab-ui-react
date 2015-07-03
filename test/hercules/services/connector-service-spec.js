@@ -36,17 +36,18 @@ describe('Service: ConnectorService', function () {
   it('should fetch and return data from the correct backend', function () {
     $httpBackend
       .when('GET', rootPath + '/clusters')
-      .respond({});
+      .respond('foo');
 
-    converter.convertClusters.returns('foo');
+    converter.convertClusters.returns({
+      id: 'foo'
+    });
 
     var callback = sinon.stub();
     Service.fetch().then(callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0]).toBe('foo');
-
+    expect(callback.args[0][0].id).toBe('foo');
   });
 
   it('should upgrade software using the correct backend', function () {

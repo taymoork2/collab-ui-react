@@ -4,14 +4,20 @@ angular.module('Hercules')
   .controller('DashboardNextController',
 
     /* @ngInject */
-    function ($scope, $state, $interval, $http, $modal, ClusterProxy, ServiceDescriptor) {
-      $scope.loading = true;
-      $scope.pollHasFailed = false;
+    function ($scope, $state, $interval, $http, $modal, ClusterPoller, ConnectorService, ServiceDescriptor) {
       $scope.showInfoPanel = false;
       $scope.noServicesSelected = false;
       $scope.startSetupClicked = false;
 
-      ClusterProxy.startPolling();
+      $scope.subscription = ClusterPoller.subscribe(angular.noop, {
+        scope: $scope
+      });
+
+      $scope.clusters = ConnectorService.getClusters();
+
+      $scope.clusterLength = function () {
+        return _.size($scope.clusters);
+      };
 
       $scope.$watch('services', function (services) {
         $scope.noServicesSelected = _.every(services.allExceptManagement, function (service) {
@@ -26,16 +32,6 @@ angular.module('Hercules')
         } else {
           $scope.setServices([]);
         }
-        $scope.loading = false;
-      });
-
-      $scope.$watch(ClusterProxy.getClusters, function (data) {
-        $scope.clusters = data.clusters || [];
-        $scope.pollHasFailed = data.error;
-      }, true);
-
-      $scope.$on('$destroy', function () {
-        ClusterProxy.stopPolling();
       });
 
       $scope.showClusterDetails = function (cluster) {
@@ -82,7 +78,11 @@ angular.module('Hercules')
       };
 
       $scope.shouldShowWelcomeScreen = function () {
-        return !$scope.loading && !$scope.pollHasFailed && $scope.noServicesSelected && $scope.clusters.length === 0 && !$scope.startSetupClicked;
+        return $scope.subscription.eventCount > 0 && !$scope.subscription.currentError && $scope.noServicesSelected && $scope.clusters.length === 0 && !$scope.startSetupClicked;
       };
     }
-  );
+  )
+  .filter('toArray', function() { return function(obj) {
+    if (!(obj instanceof Object)) return obj;
+    return _.toArray(obj);
+  }});
