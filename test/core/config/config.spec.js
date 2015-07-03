@@ -50,7 +50,6 @@ describe('App Configuration', function () {
     it('squared-fusion-mgmt should contain fusion states', function () {
       expect(Config.serviceStates['squared-fusion-mgmt'][0]).toBe('fusion');
       expect(Config.serviceStates['squared-fusion-mgmt'][1]).toBe('cluster-details');
-      expect(Config.serviceStates['squared-fusion-mgmt'][2]).toBe('mediafusionconnector');
     });
 
     it('squared-fusion-uc should contain devices state', function () {

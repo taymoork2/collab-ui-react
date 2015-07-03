@@ -771,9 +771,7 @@ angular.module('Core')
         ],
         'squared-fusion-mgmt': [
           'fusion',
-          'cluster-details',
-          'mediafusionconnector',
-          'connector-details'
+          'cluster-details'
         ],
         'squared-fusion-uc': [
           'devices',
@@ -791,7 +789,9 @@ angular.module('Core')
           'threshold',
           'fault',
           'alarms',
-          'events'
+          'events',
+          'mediafusionconnector',
+          'connector-details'
         ]
       };
 
