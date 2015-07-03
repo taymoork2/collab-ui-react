@@ -23,7 +23,7 @@
     };
 
     var deleteHost = function (clusterId, serial) {
-      return ConnectorService.deleteHost(clusterId, serial).then(function() {
+      return ConnectorService.deleteHost(clusterId, serial).then(function () {
         poll();
       });
     };
