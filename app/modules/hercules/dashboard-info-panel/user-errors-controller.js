@@ -36,7 +36,7 @@
             });
 
             _.forEach(connectorIds, function (connectorId) {
-              ConnectorService.getConnector(connectorId, function (err, connector) {
+              ConnectorService.getConnector(connectorId).then(function (connector) {
                 if (connector) {
                   _.forEach(statuses.userStatuses, function (userStatus) {
                     if (userStatus.connectorId === connectorId) {

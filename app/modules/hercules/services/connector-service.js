@@ -1,97 +1,61 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Hercules')
-  .service('ConnectorService', ['$http', '$location', 'ConnectorMock', 'ConverterService', 'ConfigService', 'XhrNotificationService',
-    function ConnectorService($http, $location, mock, converter, config, notification) {
-      var lastClusterResponse = [];
+  /* @ngInject */
+  function ConnectorService($q, $http, $location, ConnectorMock, ConverterService, ConfigService, XhrNotificationService) {
+    var lastClusterResponse = [];
 
-      var fetch = function (callback, opts) {
-        if ($location.absUrl().match(/hercules-backend=mock/)) {
-          return callback(null, converter.convertClusters(mock.mockData()));
-        }
-        if ($location.absUrl().match(/hercules-backend=nodata/)) {
-          return callback(null, []);
-        }
-
-        var errorCallback = (function () {
-          if (opts && opts.squelchErrors) {
-            return function () {
-              callback(arguments);
-            };
-          } else {
-            return createErrorHandler('Unable to fetch data from UC fusion backend', callback);
-          }
-        }());
-
-        $http
-          .get(config.getUrl() + '/clusters')
-          .success(function (data) {
-            var converted = converter.convertClusters(data);
-            lastClusterResponse = converted;
-            callback(null, converted);
-          })
-          .error(errorCallback);
-
-        return lastClusterResponse;
-      };
-
-      var upgradeSoftware = function (clusterId, serviceType, callback, opts) {
-        var url = config.getUrl() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
-
-        var errorCallback = (function () {
-          if (opts && opts.squelchErrors) {
-            return function () {
-              callback(arguments);
-            };
-          } else {
-            return createErrorHandler('Unable to upgrade software', callback);
-          }
-        }());
-
-        $http
-          .post(url, '{}')
-          .success(createSuccessCallback(callback))
-          .error(errorCallback);
-      };
-
-      var deleteHost = function (clusterId, serial, callback) {
-        var url = config.getUrl() + '/clusters/' + clusterId + '/hosts/' + serial;
-        $http
-          .delete(url)
-          .success(callback)
-          .error(createErrorHandler('Unable to delete host', callback));
-      };
-
-      var getConnector = function (connectorId, callback) {
-        var url = config.getUrl() + '/connectors/' + connectorId;
-        $http
-          .get(url)
-          .success(function (data) {
-            callback(null, data);
-          })
-          .error(function () {
-            callback(arguments, null);
-          });
-      };
-
-      var createSuccessCallback = function (callback) {
-        return function (data) {
-          callback(null, data);
-        };
-      };
-
-      var createErrorHandler = function (message, callback) {
-        return function () {
-          notification.notify(message, arguments);
-          callback(arguments);
-        };
-      };
-
-      return {
-        fetch: fetch,
-        deleteHost: deleteHost,
-        upgradeSoftware: upgradeSoftware,
-        getConnector: getConnector
-      };
+    function extractDataFromResponse(res) {
+      return res.data;
     }
-  ]);
+
+    var fetch = function () {
+      if ($location.absUrl().match(/hercules-backend=mock/)) {
+        var data = ConverterService.convertClusters(ConnectorMock.mockData());
+        var defer = $q.defer();
+        defer.resolve(data);
+        return defer.promise;
+      }
+
+      if ($location.absUrl().match(/hercules-backend=nodata/)) {
+        var defer2 = $q.defer();
+        defer2.resolve([]);
+        return defer2.promise;
+      }
+
+      return $http
+        .get(ConfigService.getUrl() + '/clusters')
+        .then(extractDataFromResponse)
+        .then(ConverterService.convertClusters);
+    };
+
+    var upgradeSoftware = function (clusterId, serviceType) {
+      var url = ConfigService.getUrl() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+      return $http
+        .post(url, '{}')
+        .then(extractDataFromResponse);
+    };
+
+    var deleteHost = function (clusterId, serial) {
+      var url = ConfigService.getUrl() + '/clusters/' + clusterId + '/hosts/' + serial;
+      return $http.delete(url);
+    };
+
+    var getConnector = function (connectorId) {
+      var url = ConfigService.getUrl() + '/connectors/' + connectorId;
+      return $http.get(url).then(extractDataFromResponse);
+    };
+
+    return {
+      fetch: fetch,
+      deleteHost: deleteHost,
+      upgradeSoftware: upgradeSoftware,
+      getConnector: getConnector
+    };
+  }
+
+  angular
+    .module('Hercules')
+    .service('ConnectorService', ConnectorService);
+
+}());

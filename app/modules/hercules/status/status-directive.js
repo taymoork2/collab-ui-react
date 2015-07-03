@@ -16,7 +16,7 @@
           $scope.isEnabled = true;
           $scope.className = 'fa fa-gear fa-spin';
 
-          ConnectorService.fetch(function (err, clusters) {
+          ConnectorService.fetch().then(function (clusters) {
             $scope.className = 'fa fa-circle';
 
             $scope.needs_attention = _.reduce(clusters, function (needs_attention, cluster) {
@@ -26,13 +26,14 @@
               return needs_attention;
             }, 0);
 
-            if ($scope.needs_attention !== 0 || err) {
+            if ($scope.needs_attention !== 0) {
               $scope.color = 'red';
             } else {
               $scope.color = 'green';
             }
-          }, {
-            squelchErrors: true
+          }, function () {
+            $scope.color = 'red';
+            $scope.className = 'fa fa-circle';
           });
         };
 

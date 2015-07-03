@@ -7,7 +7,9 @@ describe('SWUpgradeController', function () {
 
   beforeEach(inject(function (_$controller_, $rootScope) {
     service = {
-      upgradeSoftware: sinon.stub()
+      upgradeSoftware: sinon.stub().returns({
+        then: sinon.stub()
+      })
     };
     $scope = $rootScope.$new();
     $scope.cluster = {

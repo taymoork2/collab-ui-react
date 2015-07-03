@@ -4,7 +4,7 @@ angular.module('Hercules')
   .controller('HostDetailsController',
 
     /* @ngInject */
-    function ($scope, $state, $stateParams, ClusterProxy) {
+    function ($scope, $state, $stateParams, ClusterProxy, XhrNotificationService) {
 
       $scope.$watch(ClusterProxy.getClusters, function (data) {
         if (data.error) return $state.sidepanel.close();
@@ -24,12 +24,12 @@ angular.module('Hercules')
 
       $scope.deleteHost = function (clusterId, serial) {
         $scope.deleteHostInflight = true;
-        ClusterProxy.deleteHost(clusterId, serial, function () {
+        ClusterProxy.deleteHost(clusterId, serial).then(function () {
           $scope.deleteHostInflight = false;
           $state.go('cluster-details', {
             clusterId: clusterId
           });
-        });
+        }, XhrNotificationService.notify);
       };
 
     }

@@ -36,13 +36,13 @@ angular.module('Squared')
       var getHealthMetrics = function () {
         ReportsService.healthMonitor(function (data, status) {
           if (data.success) {
-            ConnectorService.fetch(function (err, clusters) {
+            ConnectorService.fetch().then(function (clusters) {
               $scope.healthMetrics = data.components;
               $scope.healthyStatus = true;
 
               // check Hercules for error
               for (var cluster in clusters) {
-                if (clusters[cluster].needs_attention === true || err) {
+                if (clusters[cluster].needs_attention === true) {
                   $scope.healthyStatus = false;
                   return;
                 }
@@ -55,8 +55,8 @@ angular.module('Squared')
                   return;
                 }
               }
-            }, {
-              squelchErrors: true
+            }, function () {
+              $scope.healthyStatus = false;
             });
 
           } else {

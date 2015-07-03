@@ -3,7 +3,7 @@
 describe('ClusterProxy', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var clusterProxy, connectorService, $interval;
+  var clusterProxy, connectorService, $interval, fetchDeferral, deleteDeferral, $rootScope;
 
   beforeEach(function () {
     module(function ($provide) {
@@ -16,11 +16,26 @@ describe('ClusterProxy', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _$interval_, _ClusterProxy_) {
+  beforeEach(inject(function ($q, $injector, _$interval_, _ClusterProxy_, _$rootScope_) {
+    $rootScope = _$rootScope_;
+    fetchDeferral = $q.defer();
+    deleteDeferral = $q.defer();
+    connectorService.fetch.returns(fetchDeferral.promise);
+    connectorService.deleteHost.returns(deleteDeferral.promise);
     $interval = _$interval_;
     clusterProxy = _ClusterProxy_;
     $injector.get('$httpBackend').when('GET', 'l10n/en_US.json').respond({});
   }));
+
+  function resolveFetch(data) {
+    fetchDeferral.resolve(data);
+    $rootScope.$apply();
+  }
+
+  function resolveDelete(data) {
+    deleteDeferral.resolve(data);
+    $rootScope.$apply();
+  }
 
   it('should start and stop polling', function () {
     expect(clusterProxy._isPolling()).toBeFalsy();
@@ -47,7 +62,8 @@ describe('ClusterProxy', function () {
     clusterProxy.startPolling();
     $interval.flush(10000);
     expect(connectorService.fetch.callCount).toBe(1);
-    connectorService.fetch.callArgWith(0, null, [{
+
+    resolveFetch([{
       id: 'foo'
     }]);
 
@@ -62,7 +78,8 @@ describe('ClusterProxy', function () {
     clusterProxy.startPolling();
     $interval.flush(2000);
     expect(connectorService.fetch.callCount).toBe(1);
-    connectorService.fetch.callArgWith(0, null, [{
+
+    resolveFetch([{
       id: 'foo'
     }]);
 
@@ -70,23 +87,17 @@ describe('ClusterProxy', function () {
     expect(connectorService.fetch.callCount).toBe(2);
   });
 
-  it('should upgrade software and poll', function () {
-    clusterProxy.startPolling();
-    var cb = sinon.stub();
-    clusterProxy.upgradeSoftware('clusterId', 'serviceType', cb);
-    connectorService.upgradeSoftware.callArg(2);
-    expect(connectorService.fetch.callCount).toBe(1);
-    connectorService.fetch.callArg(0);
-    expect(cb.callCount).toBe(1);
-  });
-
   it('should delete host and poll', function () {
     clusterProxy.startPolling();
     var cb = sinon.stub();
-    clusterProxy.deleteHost('clusterId', 'serial', cb);
-    connectorService.deleteHost.callArg(2);
+    clusterProxy.deleteHost('clusterId', 'serial').then(cb);
+
+    resolveDelete();
+
     expect(connectorService.fetch.callCount).toBe(1);
-    connectorService.fetch.callArg(0);
+
+    resolveFetch();
+
     expect(cb.callCount).toBe(1);
   });
 
@@ -95,7 +106,8 @@ describe('ClusterProxy', function () {
     clusterProxy.startPolling(cb);
 
     $interval.flush(2000);
-    connectorService.fetch.callArgWith(0, null, [{}]);
+
+    resolveFetch([{}]);
 
     expect(cb.callCount).toBe(1);
   });

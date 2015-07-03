@@ -31,7 +31,7 @@ angular.module('Hercules')
             return $scope.extension.id === status.serviceId;
           });
           if ($scope.extension.status && $scope.extension.status.connectorId) {
-            ConnectorService.getConnector($scope.extension.status.connectorId, function (err, connector) {
+            ConnectorService.getConnector($scope.extension.status.connectorId).then(function (connector) {
               $scope.extension.homedConnector = connector;
             });
           }

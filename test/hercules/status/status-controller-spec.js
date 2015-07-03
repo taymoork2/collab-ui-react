@@ -5,14 +5,16 @@ describe('StatusController', function () {
 
   describe('is enabled', function () {
 
-    var $scope, service, auth, descriptor;
+    var $scope, service, auth, descriptor, fetchDeferral, $rootScope;
 
-    beforeEach(inject(function (_$controller_) {
+    beforeEach(inject(function ($injector, _$controller_, $q, _$rootScope_) {
+      $rootScope = _$rootScope_;
       $scope = {
         $watch: sinon.stub()
       };
+      fetchDeferral = $q.defer();
       service = {
-        fetch: sinon.stub()
+        fetch: sinon.stub().returns(fetchDeferral.promise)
       };
       auth = {
         isFusion: function () {
@@ -28,7 +30,21 @@ describe('StatusController', function () {
         ConnectorService: service,
         ServiceDescriptor: descriptor
       });
+      var $httpBackend = $injector.get('$httpBackend');
+      $httpBackend
+        .when('GET', 'l10n/en_US.json')
+        .respond({});
     }));
+
+    function resolveFetch(data) {
+      fetchDeferral.resolve(data);
+      $rootScope.$apply();
+    }
+
+    function failFetch() {
+      fetchDeferral.reject();
+      $rootScope.$apply();
+    }
 
     it('defaults some scope vars', function () {
       descriptor.isFusionEnabled.callArgWith(0, true);
@@ -42,22 +58,16 @@ describe('StatusController', function () {
       expect(service.fetch.callCount).toEqual(1);
     });
 
-    it('calls fetch with squelchErrors flag set', function () {
-      descriptor.isFusionEnabled.callArgWith(0, true);
-      expect(service.fetch.callCount).toEqual(1);
-      expect(service.fetch.args[0][1].squelchErrors).toEqual(true);
-    });
-
     it('sets appropriate values when xhr fails', function () {
       descriptor.isFusionEnabled.callArgWith(0, true);
-      service.fetch.callArgWith(0, {}, {});
+      failFetch({});
       expect($scope.color).toEqual('red');
       expect($scope.className).toEqual('fa fa-circle');
     });
 
     it('sets appropriate values when there are clusters with errors', function () {
       descriptor.isFusionEnabled.callArgWith(0, true);
-      service.fetch.callArgWith(0, null, [{
+      resolveFetch([{
         needs_attention: true
       }, {
         needs_attention: true
@@ -71,7 +81,7 @@ describe('StatusController', function () {
 
     it('sets appropriate values when there are no clusters with errors', function () {
       descriptor.isFusionEnabled.callArgWith(0, true);
-      service.fetch.callArgWith(0, null, [{
+      resolveFetch([{
         needs_attention: false
       }, {
         needs_attention: false

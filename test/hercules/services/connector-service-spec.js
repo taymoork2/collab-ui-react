@@ -41,12 +41,11 @@ describe('Service: ConnectorService', function () {
     converter.convertClusters.returns('foo');
 
     var callback = sinon.stub();
-    Service.fetch(callback);
+    Service.fetch().then(callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0]).toBe(null);
-    expect(callback.args[0][1]).toBe('foo');
+    expect(callback.args[0][0]).toBe('foo');
 
   });
 
@@ -61,15 +60,14 @@ describe('Service: ConnectorService', function () {
       });
 
     var callback = sinon.stub();
-    Service.upgradeSoftware('foo', 'bar', callback);
+    Service.upgradeSoftware('foo', 'bar').then(callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0]).toBe(null);
-    expect(callback.args[0][1].foo).toBe('bar');
+    expect(callback.args[0][0].foo).toBe('bar');
   });
 
-  it('sw upgrade should log on 500 errors', function () {
+  it('sw upgrade should fail on 500 errors', function () {
     $httpBackend
       .when(
         'POST',
@@ -79,35 +77,12 @@ describe('Service: ConnectorService', function () {
         foo: 'bar'
       });
 
-    expect(notification.notify.callCount).toBe(0);
-
     var callback = sinon.stub();
-    Service.upgradeSoftware('foo', 'bar', callback);
+    Service.upgradeSoftware('foo', 'bar').then(undefined, callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0]).not.toBe(null);
-    expect(callback.args[0][1]).toBeFalsy();
-
-    expect(notification.notify.callCount).toBe(1);
-  });
-
-  it('should log when fetch fails', function () {
-    $httpBackend
-      .when('GET', rootPath + '/clusters')
-      .respond(500, {});
-
-    expect(notification.notify.callCount).toBe(0);
-
-    var callback = sinon.stub();
-    Service.fetch(callback);
-    $httpBackend.flush();
-
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0]).not.toBe(null);
-    expect(callback.args[0][1]).toBeFalsy();
-
-    expect(notification.notify.callCount).toBe(1);
   });
 
   it('should be possible to set mock backend', function () {
@@ -115,12 +90,11 @@ describe('Service: ConnectorService', function () {
     converter.convertClusters.returns('foo');
 
     var callback = sinon.stub();
-    Service.fetch(callback);
+    Service.fetch().then(callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0]).toBeFalsy();
-    expect(callback.args[0][1]).toBe('foo');
+    expect(callback.args[0][0]).toBe('foo');
 
     expect(converter.convertClusters.callCount).toBe(1);
     expect(converter.convertClusters.args[0][0].length).toBe(5);
@@ -130,12 +104,11 @@ describe('Service: ConnectorService', function () {
     $location.search('hercules-backend', 'nodata');
 
     var callback = sinon.stub();
-    Service.fetch(callback);
+    Service.fetch().then(callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0]).toBeFalsy();
-    expect(callback.args[0][1].length).toBe(0);
+    expect(callback.args[0][0].length).toBe(0);
   });
 
   it('should delete a host', function () {
@@ -147,7 +120,7 @@ describe('Service: ConnectorService', function () {
       .respond(200);
 
     var callback = sinon.stub();
-    Service.deleteHost('clusterid', 'serial', callback);
+    Service.deleteHost('clusterid', 'serial').then(callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
@@ -164,29 +137,22 @@ describe('Service: ConnectorService', function () {
     expect(notification.notify.callCount).toBe(0);
 
     var callback = sinon.stub();
-    Service.deleteHost('clusterid', 'serial', callback);
+    Service.deleteHost('clusterid', 'serial').then(undefined, callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
-    expect(notification.notify.callCount).toBe(1);
   });
 
-  it('should be possible to squelch errors when fetch fails', function () {
+  it('should call error callback on failure', function () {
     $httpBackend
       .when('GET', rootPath + '/clusters')
       .respond(500, null);
-    expect(notification.notify.callCount).toBe(0);
 
     var callback = sinon.stub();
-    Service.fetch(callback, {
-      squelchErrors: true
-    });
+    Service.fetch().then(null, callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
-    expect(notification.notify.callCount).toBe(0);
-
-    expect(callback.args[0][0]).toBeTruthy();
   });
 
 });
