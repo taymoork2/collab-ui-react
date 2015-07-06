@@ -13,7 +13,7 @@
     var CurrentDataRetentionPeriod = null;
     vm.msgIntegration = false;
     vm.dataShare = true;
-    vm.placeholder = 'Select retention time';
+    vm.placeholder = $translate.instant('firstTimeWizard.messagingSetupPlaceholder');
     vm.selected = {
       label: '',
       value: ''
