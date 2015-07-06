@@ -1,26 +1,53 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Hercules')
-  .service('ConverterService', [
-    function ConverterService() {
+  function Cluster(cluster) {
 
-      var getAvailableSoftwareUpgradeForService = function (service, cluster) {
-        if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
-          return _.find(cluster.provisioning_data.not_approved_packages, function (pkg) {
-            return pkg.service.service_type == service.service_type;
-          });
-        }
-      };
+    angular.copy(cluster, this);
 
-      var anyApprovedPackagesForService = function (service, cluster) {
-        if (cluster.provisioning_data && cluster.provisioning_data.approved_packages) {
-          return _.find(cluster.provisioning_data.approved_packages, function (pkg) {
-            return pkg.service.service_type == service.service_type;
-          });
-        }
-        return false;
-      };
+    this.services = getServices(cluster);
+    this.name = this.name || getName(cluster);
+    this.hosts = getHosts(cluster);
 
+    this.running_hosts = _.reduce(this.services, function (sum, num) {
+      return sum + num;
+    }, 0);
+
+    this.needs_attention = !!_.find(this.services, {
+      needs_attention: true
+    });
+
+    this.software_upgrade_available = !!_.find(this.services, {
+      software_upgrade_available: true
+    });
+
+    this.any_service_connectors_enabled = _.chain(cluster.services)
+      .filter(function (service) {
+        return service.service_type != 'c_mgmt';
+      })
+      .pluck('connectors')
+      .flatten()
+      .find(function (connector) {
+        return connector.state != 'disabled';
+      })
+      .value();
+
+    this.any_service_connectors_not_configured = _.chain(cluster.services)
+      .filter(function (service) {
+        return service.service_type != 'c_mgmt';
+      })
+      .pluck('connectors')
+      .flatten()
+      .find(function (connector) {
+        return connector.state == 'not_configured';
+      })
+      .value();
+
+    function sortBySeverity(alarms) {
+      return _.sortBy(alarms, 'severity');
+    }
+
+    function getServices(cluster) {
       var checkSoftwareUpgradePending = function (service, cluster) {
         if (cluster.provisioning_data && cluster.provisioning_data.approved_packages) {
           var expected_package = _.find(cluster.provisioning_data.approved_packages, function (pkg) {
@@ -32,6 +59,24 @@ angular.module('Hercules')
           _.each(service.connectors, function (connector) {
             connector.software_upgrade_pending = connector.version != expected_version && expected_version;
           });
+        }
+      };
+
+      var updateSoftwareUpgradeAvailableDetails = function (service, cluster) {
+        function getAvailableSoftwareUpgradeForService(service, cluster) {
+          if (cluster.provisioning_data && cluster.provisioning_data.not_approved_packages) {
+            return _.find(cluster.provisioning_data.not_approved_packages, function (pkg) {
+              return pkg.service.service_type == service.service_type;
+            });
+          }
+        }
+        if (cluster.provisioning_data) {
+          service.installed = service.connectors.length > 0;
+          var not_approved_package = getAvailableSoftwareUpgradeForService(service, cluster);
+          if (not_approved_package && service.installed) {
+            service.software_upgrade_available = true;
+            service.not_approved_package = not_approved_package;
+          }
         }
       };
 
@@ -58,7 +103,7 @@ angular.module('Hercules')
           service.alarm_count += connector.alarms ? connector.alarms.length : 0;
 
           if ((connector.alarms && connector.alarms.length) || (connector.state != 'running' && connector.state != 'disabled')) {
-            serviceAndClusterNeedsAttention(service, cluster);
+            service.needs_attention = true;
             service.status = 'needs_attention';
             connector.status = 'needs_attention';
           }
@@ -76,148 +121,122 @@ angular.module('Hercules')
             }
           }
 
-          if (connector.state != 'disabled' && service.service_type != 'c_mgmt') {
-            cluster.any_service_connectors_enabled = true;
-          }
-
-          if (connector.state == 'not_configured' && service.service_type != 'c_mgmt') {
-            cluster.any_service_connectors_not_configured = true;
-          }
-
         });
-        if (service.running_hosts) {
-          cluster.running_hosts = true;
+
+      };
+
+      _.each(cluster.services, function (service) {
+        updateServiceStatus(service, cluster);
+        updateSoftwareUpgradeAvailableDetails(service, cluster);
+        checkSoftwareUpgradePending(service, cluster);
+      });
+
+      cluster.services = _.sortBy(cluster.services, 'display_name');
+      cluster.services = _.sortBy(cluster.services, function (obj) {
+        if (obj.status == 'needs_attention') return 1;
+        if (obj.status == 'disabled') return 3;
+        return 2;
+      });
+
+      return cluster.services;
+    }
+
+    function getName(cluster) {
+      return _.chain(cluster.hosts)
+        .pluck('host_name')
+        .compact()
+        .first()
+        .value();
+    }
+
+    function getHosts(cluster) {
+      var connectors = _(cluster.services)
+        .map(function (service) {
+          return service.connectors;
+        })
+        .flatten()
+        .value();
+
+      var hostToConnectorState = _.reduce(connectors, function (map, connector) {
+        var host = connector.host ? connector.host.serial : 'null';
+        map[host] = map[host] || [];
+        map[host].push(connector.state);
+        return map;
+      }, {});
+
+      _.each(cluster.hosts, function (host) {
+        host.alarms = [];
+        host.services = [];
+        host.offline = false;
+
+        if (hostToConnectorState[host.serial]) {
+          host.offline = _.reduce(hostToConnectorState[host.serial], function (offline, status) {
+            return offline && status == 'offline';
+          }, true);
         }
-      };
+        _.each(cluster.services, function (service) {
+          _.each(service.connectors, function (connector) {
+            if (connector.host.serial == host.serial) {
 
-      var serviceAndClusterNeedsAttention = function (service, cluster) {
-        cluster.needs_attention = true;
-        service.needs_attention = true;
-      };
+              if ((host.state == 'running' && connector.state == 'disabled') || (host.state == 'disabled' && connector.state == 'running')) {
+                host.state = 'running';
+              } else if (host.state && connector.state != host.state) {
+                host.state = 'needs_attention';
+              } else {
+                host.state = connector.state;
+              }
 
-      var updateSoftwareUpgradeAvailableDetails = function (service, cluster) {
-        if (cluster.provisioning_data) {
-          service.installed = service.connectors.length > 0;
-          var not_approved_package = getAvailableSoftwareUpgradeForService(service, cluster);
-          if (not_approved_package && service.installed) {
-            service.software_upgrade_available = true;
-            cluster.software_upgrade_available = true;
-            service.not_approved_package = not_approved_package;
-          }
-        }
-      };
+              if (connector.status == 'needs_attention') {
+                host.status = 'needs_attention';
+              }
 
-      var updateClusterNameIfNotSet = function (cluster) {
-        if (!cluster.name) {
-          var host = _.find(cluster.hosts, function (host) {
-            if (host.host_name) {
-              return host.host_name;
-            }
-          });
-          if (host) {
-            cluster.name = host.host_name;
-          }
-        }
-      };
+              if (connector.status == 'disabled') {
+                host.status = host.status || connector.status;
+              }
 
-      var updateHostStatus = function (cluster) {
-        var connectors = _(cluster.services)
-          .map(function (service) {
-            return service.connectors;
-          })
-          .flatten()
-          .value();
-
-        var map = _.reduce(connectors, function (map, connector) {
-          var host = connector.host ? connector.host.serial : 'null';
-          map[host] = map[host] || [];
-          map[host].push(connector.state);
-          return map;
-        }, {});
-
-        _.each(cluster.hosts, function (host) {
-          host.alarms = [];
-          host.services = [];
-          host.offline = false;
-
-          if (map[host.serial]) {
-            host.offline = _.reduce(map[host.serial], function (offline, status) {
-              return offline && status == 'offline';
-            }, true);
-          }
-          _.each(cluster.services, function (service) {
-            _.each(service.connectors, function (connector) {
-              if (connector.host.serial == host.serial) {
-
-                if ((host.state == 'running' && connector.state == 'disabled') || (host.state == 'disabled' && connector.state == 'running')) {
-                  host.state = 'running';
-                } else if (host.state && connector.state != host.state) {
-                  host.state = 'needs_attention';
+              if (connector.status == 'running') {
+                if (host.status == 'disabled') {
+                  host.status = 'running';
                 } else {
-                  host.state = connector.state;
-                }
-
-                if (connector.status == 'needs_attention') {
-                  host.status = 'needs_attention';
-                }
-
-                if (connector.status == 'disabled') {
                   host.status = host.status || connector.status;
                 }
-
-                if (connector.status == 'running') {
-                  if (host.status == 'disabled') {
-                    host.status = 'running';
-                  } else {
-                    host.status = host.status || connector.status;
-                  }
-                }
-
-                host.alarms = sortBySeverity(host.alarms.concat(connector.alarms));
-
-                host.services.push({
-                  display_name: service.display_name,
-                  service_type: service.service_type,
-                  state: connector.state,
-                  status: connector.status,
-                  version: connector.version
-                });
               }
-            });
+
+              host.alarms = sortBySeverity(host.alarms.concat(connector.alarms));
+
+              host.services.push({
+                display_name: service.display_name,
+                service_type: service.service_type,
+                state: connector.state,
+                status: connector.status,
+                version: connector.version
+              });
+            }
           });
         });
-      };
-
-      var sortBySeverity = function (alarms) {
-        return _.sortBy(alarms, 'severity');
-      };
-
-      var convertClusters = function (data) {
-        var converted = _.map(data, function (origCluster) {
-          var cluster = _.cloneDeep(origCluster);
-          _.each(cluster.services, function (service) {
-            updateServiceStatus(service, cluster);
-            updateSoftwareUpgradeAvailableDetails(service, cluster);
-            checkSoftwareUpgradePending(service, cluster);
-          });
-          updateClusterNameIfNotSet(cluster);
-          updateHostStatus(cluster);
-
-          cluster.services = _.sortBy(cluster.services, 'display_name');
-          cluster.services = _.sortBy(cluster.services, function (obj) {
-            if (obj.status == 'needs_attention') return 1;
-            if (obj.status == 'disabled') return 3;
-            return 2;
-          });
-
-          return cluster;
-        });
-
-        return _.indexBy(converted, 'id');
-      };
-
-      return {
-        convertClusters: convertClusters
-      };
+      });
+      return cluster.hosts;
     }
-  ]);
+  }
+
+  function ConverterService() {
+
+    var convertClusters = function (data) {
+      return _.chain(data)
+        .map(function (cluster) {
+          return new Cluster(cluster);
+        })
+        .indexBy('id')
+        .value();
+    };
+
+    return {
+      convertClusters: convertClusters
+    };
+  }
+
+  angular
+    .module('Hercules')
+    .service('ConverterService', ConverterService);
+
+}());
