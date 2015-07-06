@@ -83,7 +83,6 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test": "gulp e2e",
-    "postinstall": "cd node_modules/grunt-protractor-coverage && npm install && cd - && ./node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update && ./node_modules/grunt-protractor-coverage/node_modules/protractor/bin/webdriver-manager update && ./node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager update"
+    "test": "gulp e2e"
   }
 }
