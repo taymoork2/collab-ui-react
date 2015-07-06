@@ -133,5 +133,28 @@ angular.module('Core')
           }]
         });
       }
+
+      var showSipUrl = false;
+      // angular.forEach(Authinfo.getServices(), function (service) {
+      //   // if it is not entitled, it wouldn't be in this list
+      //   if (service.serviceId === 'squaredFusionUC') {
+      //     showSipUrl = true;
+      //   }
+      // });
+
+      if (!showSipUrl) {
+        angular.forEach($scope.tabs, function (tab, index) {
+          angular.forEach(tab.steps, function (step, subIndex) {
+            if (step.name === 'claimSipUrl') {
+              tab.steps.splice(subIndex, 1);
+
+              // if there are no more steps then this page is blank, so remove it
+              if (tab.steps.length === 0) {
+                $scope.tabs.splice(index, 1);
+              }
+            }
+          });
+        });
+      }
     }
   ]);

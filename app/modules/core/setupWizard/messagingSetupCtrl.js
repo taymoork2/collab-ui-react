@@ -13,7 +13,7 @@
     var CurrentDataRetentionPeriod = null;
     vm.msgIntegration = false;
     vm.dataShare = true;
-    vm.placeholder = $translate.instant('firstTimeWizard.messagingSetupPlaceholder');
+    vm.placeholder = 'Select retention time';
     vm.selected = {
       label: '',
       value: ''
@@ -34,6 +34,7 @@
       label: 'Keep forever',
       value: 'indefinite'
     }];
+    $scope.showMessengerInterop = false;
 
     var orgId = Authinfo.getOrgId();
     AccountOrgService.getServices(orgId, null, function (data, status) {
@@ -99,7 +100,7 @@
 
         AccountOrgService.deleteMessengerInterop(orgId, function (data, status) {
           if (status === 204) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexSuccess')], 'success');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'success');
           } else {
             Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'error');
           }

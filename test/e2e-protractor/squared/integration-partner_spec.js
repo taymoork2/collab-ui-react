@@ -116,7 +116,6 @@ describe('Partner flow', function () {
         utils.expectText(wizard.mainviewTitle, 'Plan Review');
         utils.click(wizard.beginBtn);
         utils.click(wizard.saveBtn);
-        utils.click(wizard.saveBtn);
 
         utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
         utils.click(wizard.nextBtn);

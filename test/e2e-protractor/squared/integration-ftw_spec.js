@@ -41,7 +41,6 @@ describe('First Time Wizard', function () {
     wizard.clickPlanReview();
     utils.click(wizard.beginBtn);
     utils.click(wizard.saveBtn);
-    utils.click(wizard.saveBtn);
     utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
     utils.expectText(wizard.mainviewSubtitle, 'Single Sign-On');
     utils.click(wizard.radiobuttons.last());

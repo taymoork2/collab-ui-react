@@ -1,9 +1,11 @@
 <div class="messaging-setup">
-	<div class="title">
-		<h4 translate="firstTimeWizard.messengerSetupTitle"></h4>
-		<p translate="firstTimeWizard.messengerSetupDesc"></p>
+	<div ng-if="showMessengerInterop" id="messenger-interop-feature">
+		<div class="title">
+			<h4 translate="firstTimeWizard.messengerSetupTitle"></h4>
+			<p translate="firstTimeWizard.messengerSetupDesc"></p>
+		</div>
+		<cs-checkbox ckid="chk-messenger-int" ng-model="msgSetup.msgIntegration" label="{{'firstTimeWizard.messengerSetupLabel' | translate}}"></cs-checkbox>
 	</div>
-	<cs-checkbox ckid="chk-messenger-int" ng-model="msgSetup.msgIntegration" label="{{'firstTimeWizard.messengerSetupLabel' | translate}}"></cs-checkbox>
 	<div class="dr-content">
 		<h4 translate="firstTimeWizard.dataRetentionTitle"></h4>
 		<p translate="firstTimeWizard.dataRetentionDesc"></p>
