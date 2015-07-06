@@ -82,7 +82,9 @@ angular.module('Hercules')
       };
     }
   )
-  .filter('toArray', function() { return function(obj) {
-    if (!(obj instanceof Object)) return obj;
-    return _.toArray(obj);
-  }});
+  .filter('toArray', function () {
+    return function (obj) {
+      if (!(obj instanceof Object)) return obj;
+      return _.toArray(obj);
+    };
+  });
