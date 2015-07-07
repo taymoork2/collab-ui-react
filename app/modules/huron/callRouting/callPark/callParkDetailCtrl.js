@@ -109,7 +109,7 @@
         type: 'input',
         templateOptions: {
           placeholder: 1200,
-          maxlength: 24
+          maxlength: 11
         },
         validators: {
           lessThan: {
@@ -160,7 +160,7 @@
         type: 'input',
         templateOptions: {
           placeholder: 1230,
-          maxlength: 24
+          maxlength: 11
         },
         validators: {
           checkNumeric: {
@@ -219,7 +219,7 @@
           type: 'text',
           model: 'pattern',
           required: true,
-          maxlength: 24
+          maxlength: 11
         },
         validators: {
           checkNumeric: {
@@ -268,7 +268,7 @@
           placeholder: $translate.instant('callPark.numberPlaceholder'),
           type: 'text',
           model: 'reversionPattern',
-          maxlength: 24
+          maxlength: 11
         },
         validators: {
           checkNumeric: {
