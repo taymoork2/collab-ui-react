@@ -7,8 +7,10 @@
     @extend .row;
     display: flex;
     .col-sm-4 {
-      margin-right: 3px;
       padding-bottom: 10px;
+      &:not(:last-of-type){
+        margin-right: 3px;
+      }
     }
     .col-free {
       background: $gray-lightest;

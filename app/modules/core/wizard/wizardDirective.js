@@ -74,6 +74,7 @@
     vm.openTermsAndConditions = openTermsAndConditions;
     vm.closeModal = closeModal;
     vm.isCurrentTab = isCurrentTab;
+    vm.loadOverview = loadOverview;
 
     init();
 
@@ -170,6 +171,10 @@
           $scope: $scope
         });
       }
+    }
+
+    function loadOverview() {
+      $state.go('overview');
     }
 
     function previousTab() {
@@ -287,7 +292,9 @@
     }
 
     function getNextText() {
-      if (isFirstTab() && isFirstStep()) {
+      if (isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) {
+        return 'firstTimeWizard.startTrial';
+      } else if (isFirstTab() && isFirstStep()) {
         return 'firstTimeWizard.getStarted';
       } else if ((isLastStep() && !isFirstStep()) || (isFirstTime() && isLastTab() && isLastStep())) {
         return 'common.finish';
