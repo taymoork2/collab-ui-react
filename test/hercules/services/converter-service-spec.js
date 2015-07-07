@@ -787,6 +787,103 @@ describe('ConverterService', function () {
       expect(converted[0].hosts[0].state).toBe('running');
     });
 
+    it('determine if any connectors are disabled or not cofigured', function () {
+      var mockData = [{
+        id: 0,
+        hosts: [{
+          serial: 1
+        }],
+        services: [{
+          service_type: "foo",
+          connectors: [{
+            state: 'disabled',
+            host: {
+              serial: 1
+            },
+            alarms: [{}]
+          }]
+        }, {
+          service_type: "bar",
+          connectors: [{
+            state: 'not_configured',
+            host: {
+              serial: 1
+            },
+            alarms: [{}, {}]
+          }]
+        }]
+      }];
+      var converted = Service.convertClusters(mockData);
+      expect(converted[0].any_service_connectors_enabled).toBeTruthy();
+      expect(converted[0].any_service_connectors_not_configured).toBeTruthy();
+    });
+
+    it('determine if any connectors are disabled or not cofigured unless its mgmt service', function () {
+      var mockData = [{
+        id: 0,
+        hosts: [{
+          serial: 1
+        }],
+        services: [{
+          service_type: "c_mgmt",
+          connectors: [{
+            state: 'disabled',
+            host: {
+              serial: 1
+            },
+            alarms: [{}]
+          }]
+        }, {
+          service_type: "c_mgmt",
+          connectors: [{
+            state: 'not_configured',
+            host: {
+              serial: 1
+            },
+            alarms: [{}, {}]
+          }]
+        }]
+      }];
+      var converted = Service.convertClusters(mockData);
+      expect(converted[0].any_service_connectors_enabled).toBeFalsy();
+      expect(converted[0].any_service_connectors_not_configured).toBeFalsy();
+    });
+  });
+
+  it('running cluster has configured service connectors', function () {
+    var data = [{
+      "id": "d5b78711-b132-11e4-8a66-005056000340",
+      "cluster_type": "c_mgmt",
+      "name": "gwydlvm340",
+      "services": [{
+        "service_type": "c_mgmt",
+        "enabled": true,
+        "display_name": "Management Connector",
+        "connectors": [{
+          "host": {
+            "host_name": "hostname.cisco.com",
+            "serial": "12345"
+          },
+          "state": "running"
+        }]
+      }, {
+        "service_type": "c_cal",
+        "enabled": true,
+        "display_name": "Calendar Connector",
+        "connectors": [{
+          "host": {
+            "host_name": "hostname.cisco.com",
+            "serial": "12345"
+          },
+          "state": "running"
+        }]
+      }]
+    }];
+
+    var converted = Service.convertClusters(data);
+    expect(converted['d5b78711-b132-11e4-8a66-005056000340'].any_service_connectors_enabled).toBeTruthy();
+    expect(converted['d5b78711-b132-11e4-8a66-005056000340'].any_service_connectors_not_configured).toBeFalsy();
+
   });
 
 });
