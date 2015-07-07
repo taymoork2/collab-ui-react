@@ -48,7 +48,7 @@ auth =
     org:  '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79'
 
   'account-admin':
-    user: 'nkamboh+acc2@gmail.com'
+    user: 'phtest77+acc2@gmail.com'
     pass: 'C1sc0123!'
     org:  '58f01b76-2b3f-4c91-ad8a-e2af626fc7a5'
 

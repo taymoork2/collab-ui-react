@@ -99,7 +99,7 @@
 
         AccountOrgService.deleteMessengerInterop(orgId, function (data, status) {
           if (status === 204) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'success');
+            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexSuccess')], 'success');
           } else {
             Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'error');
           }
