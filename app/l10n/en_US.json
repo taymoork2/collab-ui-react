@@ -485,7 +485,11 @@
     "unlicensedDateText": "unlicensed users registered on",
     "unlicensedText": "Unlicensed Users",
     "convertText": "View and convert users currently using the free version",
-    "lastUpdated": "Last sync"
+    "lastUpdated": "Last sync",
+    "notifications": "Notifications",
+    "todo": "To-do",
+    "setUpYourTrial": "Set up Advanced Spark Call to start your trial.",
+    "beginTrial": "Begin Trial"
   },
   "inviteModal": {
     "title": "Service Entitlement",
