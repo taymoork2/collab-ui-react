@@ -81,6 +81,15 @@
           }
         });
       }
+      //check if the trial exists
+      if (vm.trialExists) {
+        vm.processing = true;
+        TrialService.getTrial(vm.trialId).then(function (trial) {
+          populateTrialData(trial);
+        }).finally(function () {
+          vm.processing = false;
+        });
+      }
 
       vm.cmrServices.services = Authinfo.getCmrServices();
 

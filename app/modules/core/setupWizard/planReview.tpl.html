@@ -48,7 +48,7 @@
     </div>
   </div>
 
-  <div class="flex-row">
+  <div class="flex-row row-licenses ">
     <div class="col-sm-4" ng-class="{'col-paid' : !planReview.messagingServices.isNewTrial, 'col-trial' : planReview.messagingServices.isNewTrial}">
       <div ng-if="planReview.messagingServices.isNewTrial" class="col-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
       <div class="item-paid" ng-repeat="service in planReview.messagingServices.services">
@@ -58,33 +58,31 @@
         <div class="quantity">
           <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
           <span ng-if="!service.license.isTrial || planReview.messagingServices.isNewTrial">{{service.license.volume}}</span>
-
           <span ng-if="service.license.isTrial && !planReview.messagingServices.isNewTrial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial" translate-values="{number: service.license.volume}"></span>
         </div>
       </div>
     </div>
 
     <div class="col-sm-4" ng-class="{'col-conf' : !planReview.confServices.isNewTrial, 'col-trial' : planReview.confServices.isNewTrial}">
-      <div ng-if="planReview.confServices.isNewTrial" class="col-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
+      <div ng-if="planReview.confServices.isNewTrial" class="col-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}">
+      </div>
       <div class="item-conf" ng-repeat="(siteUrl,services) in planReview.sites">
-      {{siteUrl}}
-      <div class="sub-item" ng-repeat="service in services">
-        <div>
-          {{service.label}}
-        </div>
-        <div class="quantity">
-          <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-          <span ng-if="!service.license.isTrial || planReview.confServices.isNewTrial">{{service.license.volume}}</span>
-
-          <span ng-if="service.license.isTrial && !planReview.confServices.isNewTrial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial" translate-values="{number: service.license.volume}"></span>
-              </div>
-            </div>
-
-          <div ng-class="{'sub-line':!$last}">
+        {{siteUrl}}
+        <div class="sub-item" ng-repeat="service in services">
+          <div>
+            {{service.label}}
+          </div>
+          <div class="quantity">
+            <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+            <span ng-if="!service.license.isTrial || planReview.confServices.isNewTrial">{{service.license.volume}}</span>
+            <span ng-if="service.license.isTrial && !planReview.confServices.isNewTrial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial" translate-values="{number: service.license.volume}"></span>
           </div>
         </div>
+        <div ng-class="{'sub-line':!$last}">
+        </div>
       </div>
-    
+    </div>
+
     <div class="col-sm-4" ng-class="{'col-paid' : !planReview.commServices.isNewTrial, 'col-trial' : planReview.commServices.isNewTrial}">
       <div ng-if="planReview.commServices.isNewTrial" class="col-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
       <div class="item-paid" ng-repeat="service in planReview.commServices.services">
@@ -94,19 +92,19 @@
         <div class="quantity">
           <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
           <span ng-if="!service.license.isTrial || planReview.commServices.isNewTrial">{{service.license.volume}}</span>
-          
           <span ng-if="service.license.isTrial && !planReview.commServices.isNewTrial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial" translate-values="{number: service.license.volume}"></span>
           </div>
         </div>
     </div>
   </div>
 
-<div ng-if="planReview.trialExists && !planReview.processing" class="wizard-trial-progress container-fluid">
-  <div class="row">
-    <div class="col-sm-12">
-      <progressbar class="progress" value="planReview.trialUsedPercentage" type="warning"></progressbar>
-      <div class="wizard-trial-progress-text">
-        <strong translate="firstTimeWizard.trialDaysRemaining" translate-values="{days: planReview.trialDaysRemaining}"></strong>
+  <div ng-if="planReview.trialExists && !planReview.processing" class="wizard-trial-progress container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <progressbar class="progress" value="planReview.trialUsedPercentage" type="warning"></progressbar>
+        <div class="wizard-trial-progress-text">
+          <strong translate="firstTimeWizard.trialDaysRemaining" translate-values="{days: planReview.trialDaysRemaining}"></strong>
+        </div>
       </div>
     </div>
   </div>

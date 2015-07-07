@@ -5,7 +5,7 @@
     </span>
   </div>
   <div class="wizard-main-content" ng-controller="wizard.getTabController">
-    <div ng-include="wizard.current.step.template" ng-controller="wizard.getSubTabController">
+    <div ng-include="wizard.current.step.template" class="wizard-main-wrapper" ng-controller="wizard.getSubTabController">
     </div>
   </div>
   <cr-wizard-buttons></cr-wizard-buttons>

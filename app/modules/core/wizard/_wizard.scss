@@ -10,6 +10,12 @@
   }
 }
 
+.wizard-main-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
 .wizard-side-item {
   margin-right: 5px;
   margin-left: 0px;

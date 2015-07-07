@@ -44,15 +44,16 @@ describe('Controller: PlanReviewCtrl', function () {
         data.startDate = moment().subtract(100, 'days');
         return [200, data, {}];
       });
+      $httpBackend.flush();
     });
 
     it('should calculate trial days remaining correctly', function () {
       // trial length is 180 days, so expecting 180 - 100 = 80 days.
-      expect(controller.trialDaysRemaining).toEqual(0);
+      expect(controller.trialDaysRemaining).toEqual(80);
     });
 
     it('should calculate trial used percentage correctly', function () {
-      expect(controller.trialUsedPercentage).toEqual(0);
+      expect(controller.trialUsedPercentage).toEqual(56);
     });
 
   });
