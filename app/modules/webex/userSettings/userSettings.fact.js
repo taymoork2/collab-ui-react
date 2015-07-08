@@ -260,14 +260,14 @@
                         supportCenterApplicable = true;
                       }
                     }
-                    if("RAS" == siteMtgProductCodePrefix){
+                    if ("RAS" === siteMtgProductCodePrefix) {
                       meetingCenterApplicable = false;
                       trainingCenterApplicable = false;
                       eventCenterApplicable = false;
                       supportCenterApplicable = false;
-                    }//filter out RAS
+                    } //filter out RAS
                   } // chkSiteMtgServiceType()
-                  
+
                 ); // siteMtgServiceTypes.forEach()
 
                 var sessionType = {
