@@ -294,6 +294,8 @@ exports.expectSwitchState = function (elem, value) {
   });
 };
 
+exports.expectCheckbox = exports.expectSwitchState;
+
 exports.findDirectoryNumber = function (message, lineNumber) {
   for (var i = 0; i < message.length; i++) {
     var line = message[i];

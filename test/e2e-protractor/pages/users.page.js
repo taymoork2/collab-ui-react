@@ -65,12 +65,14 @@ var UsersPage = function () {
   this.manageSquaredTeamMember = element(by.css('label[for="chk_squaredTeamMember"]'));
   this.callInitiationCheckbox = element(by.css('label[for="chk_squaredCallInitiation"]')); // on edit user
   this.messengerCheckBox = element(by.css('label[for="chk_jabberMessenger"]'));
+  this.messengerInteropCheckbox = element(by.css('label[for="chk_messengerInterop"]'));
   this.fusionCheckBox = element(by.css('label[for="chk_squaredFusionUC"]'));
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 
+  this.standardTeamRooms = element(by.cssContainingText('label', 'Standard Team Rooms'));
   this.advancedCommunications = element(by.cssContainingText('label', 'Advanced Spark Call'));
 
   this.subTitleAdd = element(by.id('subTitleAdd'));
