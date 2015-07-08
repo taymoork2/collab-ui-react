@@ -19,8 +19,13 @@ angular.module('Squared')
       });
 
       vm.updateListAndFilter = function () {
-        var merged = _.extend({}, CsdmCodeService.getCodeList(), CsdmDeviceService.getDeviceList());
-        return DeviceFilter.getFilteredList(merged);
+        var filtered = _.chain({})
+          .extend(CsdmDeviceService.getDeviceList())
+          .extend(CsdmCodeService.getCodeList())
+          .values()
+          .uniq('cisUuid')
+          .value();
+        return DeviceFilter.getFilteredList(filtered);
       };
 
       vm.gridOptions = {

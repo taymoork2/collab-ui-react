@@ -494,8 +494,6 @@ angular.module('Core')
         getEnrollmentServiceUrl: function () {
           if (this.isDev()) {
             return this.enrollmentServiceUrl.integration;
-          } else if (this.isCfe()) {
-            return this.enrollmentServiceUrl.cfe;
           } else if (this.isIntegration()) {
             return this.enrollmentServiceUrl.integration;
           } else {

@@ -16,7 +16,7 @@
         </div>
         <sq-editable-input
           ng-hide="deviceOverview.currentDevice.needsActivation"
-          sq-save="save(newText)"
+          sq-save="deviceOverview.save(newText)"
           ng-model="deviceOverview.currentDevice.displayName">
         </sq-editable-input>
       </div>

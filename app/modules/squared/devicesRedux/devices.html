@@ -23,7 +23,7 @@
     </div>
   </div>
   
-  <div ng-if="sc.codesListSubscription.eventCount + sc.deviceListSubscription.eventCount == 0">
+  <div ng-if="sc.codesListSubscription.eventCount == 0 || sc.deviceListSubscription.eventCount == 0">
     <div windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
       <div class="empty-devices-content">
         <i class="icon icon-2x icon-spinner" />
@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <div ng-if="sc.codesListSubscription.eventCount + sc.deviceListSubscription.eventCount > 0">
+  <div ng-if="sc.codesListSubscription.eventCount != 0 && sc.deviceListSubscription.eventCount != 0">
     <div ng-hide="sc.updateListAndFilter().length" windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
       <div class="empty-devices-content">
         <img ng-src="images/devices/cisco_sx10.png" style="height: 60px; width: 60px" />
@@ -52,5 +52,4 @@
   </div>
 
   <squared-add-device></squared-add-device>
-  <squared-rem-device></squared-rem-device>
 </div>

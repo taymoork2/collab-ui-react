@@ -10,6 +10,7 @@ angular.module('Squared').service('CsdmConverter',
       this.mac = obj.mac;
       this.ip = getIp(obj);
       this.serial = obj.serial;
+      this.cisUuid = obj.cisUuid;
       this.product = getProduct(obj);
       this.hasIssues = hasIssues(obj);
       this.software = getSoftware(obj);
@@ -24,12 +25,14 @@ angular.module('Squared').service('CsdmConverter',
 
     function Code(obj) {
       obj.state = obj.status;
+
       this.url = obj.url;
+      this.cisUuid = obj.id;
       this.displayName = obj.displayName;
+      this.activationCode = obj.activationCode;
       this.readableState = getReadableState(obj);
       this.cssColorClass = getCssColorClass(obj);
       this.needsActivation = getNeedsActivation(obj);
-      this.activationCode = obj.activationCode;
       this.readableActivationCode = getReadableActivationCode(obj);
     }
 
@@ -182,10 +185,11 @@ angular.module('Squared').service('CsdmConverter',
     };
 
     return {
+      Code: Code,
+      Device: Device,
       convert: convertDevices,
       convertDevices: convertDevices,
       convertCodes: convertCodes,
-      Code: Code
     };
 
   }

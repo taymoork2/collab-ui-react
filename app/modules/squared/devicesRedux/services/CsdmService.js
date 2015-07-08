@@ -79,16 +79,14 @@
           'Cisco-Experimental': true
         }
       };
-      return $http(req).success(function (codes) {
-        var converted = CsdmConverter.convertCodes(codes);
-        var codesMap = {};
-        _.each(converted, function (d) {
-          codesMap[d.url] = d;
+      return $http(req).then(function (res) {
+        var codes = res.data;
+        var filtered = _.filter(codes, function (c) {
+          return c.status != 'CLAIMED';
         });
-        //        var codesMap =  _.indexBy(codes, function(d) {
-        //          d.url;
-        //        });
-        CsdmCacheUpdater.update(codeCache, codesMap);
+        var converted = CsdmConverter.convertCodes(filtered);
+        var indexed = _.indexBy(converted, 'url');
+        CsdmCacheUpdater.update(codeCache, indexed);
       });
     }
 
