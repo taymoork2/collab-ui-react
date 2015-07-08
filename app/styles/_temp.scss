@@ -532,8 +532,8 @@ td a {
 #fileToUploadTextHolder,
 #fileToUploadBtnHolder {
   position: absolute;
-  opacity: 0;
-  -moz-opacity: 0;
+  opacity: 0.01;
+  -moz-opacity: 0.01;
   filter: alpha(opacity=0);
   width: 105px;
   display: inline;
