@@ -3,8 +3,8 @@
 /* global AmCharts, moment */
 
 angular.module('Core')
-  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService',
-    function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService) {
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
+    function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
 
       $scope.isAdmin = false;
       var callsChart, conversationsChart, contentSharedChart;
@@ -52,6 +52,17 @@ angular.module('Core')
       };
 
       $scope.reloadReports(true);
+
+      $scope.openFirstTimeSetupWiz = function () {
+        $state.go('firsttimewizard');
+      };
+
+      $scope.setupNotDone = function () {
+        if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
+          return true;
+        }
+        return false;
+      };
 
       var makeChart = function (id, colors) {
         return AmCharts.makeChart(id, {
