@@ -27,6 +27,27 @@ Pull the code from the repository
 * Once you have the repository you should be able to run `gulp serve` from the root directory of the repo.
   If that doesn't work, you can manually install the necessary components for gulp in the next step.
 
+Contribute
+----------
+
+We use pull requests, and consequentially the forking model.  To make a contribution, you will need to fork this repository, make some changes, and then create a pull request with your changes.
+
+1. From this web page, click **Fork** at the upper-right hand corner of the page
+2. Select your username (e.g. @zzatking)
+3. After your new fork is created, you'll want to pull the fork to your local environment, and add the upstream and jenkins remotes:
+ - `git clone git@sqbu-github.cisco.com:username/wx2-admin-web-client`
+ - `git remote add upstream git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client`
+ - `git remote add jenkins username@sqbu-jenkins.cisco.com:wx2-admin-web-client`
+
+When you're making changes to your fork, you'll push to your fork with `git push origin master`, and your pull request will get automatically updated with the latest pushes you've made.
+
+Keeping your fork up-to-date
+----------------------------
+
+When contributing, it's important to keep your fork up-to-date with the master. You can do so by running the following two commands:
+* `git fetch upstream`
+* `git rebase upstream/master`
+
 Setup the environment (If necessary)
 ------------------------------------
 
