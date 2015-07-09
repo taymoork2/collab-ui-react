@@ -219,6 +219,7 @@ angular.module('Squared')
         $scope.rolesObj.billingAdminValue = false;
         $scope.rolesObj.supportAdminValue = false;
         $scope.rolesObj.salesAdminValue = false;
+        $scope.isChecked = false;
       };
 
       $scope.radioHandler = function () {
@@ -226,5 +227,11 @@ angular.module('Squared')
           $scope.rolesObj.adminRadioValue = 2;
         }
       };
+
+      $scope.supportCheckboxes = function () {
+        $scope.rolesObj.supportAdminValue = true;
+        $scope.isChecked = true;
+      };
+
     }
   ]);
