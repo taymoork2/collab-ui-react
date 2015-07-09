@@ -7,12 +7,11 @@ angular.module('Core')
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
       var strEntityIdEnd = '">';
-      var oldSSOValue = 1;
+      var oldSSOValue = 0;
 
-      $scope.showFinalSSOConfirmation = false;
       $scope.options = {
         configureSSO: 1,
-        enableSSO: 1,
+        enableSSO: 0,
         SSOSelfSigned: 0
       };
 
@@ -41,15 +40,15 @@ angular.module('Core')
       }];
 
       $scope.enableSSOOptions = [{
-        label: $translate.instant('ssoModal.finalEnableSSO'),
-        value: 1,
-        name: 'finalssoOptions',
-        id: 'finalSsoProvider'
-      }, {
         label: $translate.instant('ssoModal.finalDisableSSO'),
         value: 0,
         name: 'finalssoOptions',
         id: 'finalSsoNoProvider'
+      }, {
+        label: $translate.instant('ssoModal.finalEnableSSO'),
+        value: 1,
+        name: 'finalssoOptions',
+        id: 'finalSsoProvider'
       }];
 
       $scope.$watch('options.enableSSO', function () {
@@ -152,7 +151,7 @@ angular.module('Core')
             }
             if (success === true) {
               Log.debug('Single Sign-On (SSO) successfully disabled for all users');
-              Notification.notify([$translate.instant('ssoModal.diableSuccess', {
+              Notification.notify([$translate.instant('ssoModal.disableSuccess', {
                 status: status
               })], 'success');
             } else {
@@ -179,7 +178,7 @@ angular.module('Core')
               status: status
             })], 'success');
           } else {
-            Log.debug('Failed to diable Single Sign-On (SSO). Status: ' + status);
+            Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
             Notification.notify([$translate.instant('ssoModal.enableSSOFailure', {
               status: status
             })], 'error');
@@ -243,7 +242,6 @@ angular.module('Core')
             })], 'error');
           }
         });
-        $scope.showFinalSSOConfirmation = true;
 
       };
 
