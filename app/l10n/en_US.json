@@ -65,7 +65,10 @@
     "emailSuccess": "Email sent successfully.",
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
-    "convertUserError": "Failed to convert"
+    "convertUserError": "Failed to convert",
+    "addtionalServiceSetupText": "Additional setup is required before this service can be enabled.",
+    "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
+    "setUpThisService": "Set up this service"
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -444,7 +447,9 @@
     "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
     "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
     "on": "On",
-    "off": "Off"
+    "off": "Off",
+    "yes": "Yes",
+    "no": "No"
   },
   "notifications": {
     "success": "Success notifications",
