@@ -29,6 +29,10 @@ describe('Partner flow', function () {
       login.login('partner-admin', '#/partner/overview');
     });
 
+    it('should display correct navigation colors', function () {
+      utils.expectClass(navigation.body, 'inverse');
+    });
+
     it('should display correct tabs for user based on role', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);

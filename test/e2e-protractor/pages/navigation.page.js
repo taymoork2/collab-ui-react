@@ -1,6 +1,7 @@
 'use strict';
 
 var Navigation = function () {
+  this.body = element(by.tagName('body'));
 
   this.tabs = element(by.css('cs-left-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
