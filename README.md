@@ -43,6 +43,17 @@ When you're making changes to your fork, you'll push to your fork with `git push
 
 When your pull request gets approved by someone, this means you're able to push to jenkins with `git push jenkins master`. Clicking the "Merge" button will not merge into master since we used gated builds. This means that Jenkins is the only one who is capable of pushing to master to ensure our repository stays clean.
 
+To summarize, this is the process:
+1. You fork the wx2-admin-web-client repository
+2. You make changes on your fork
+3. You commit and push your changes to your fork (`git add`, `git commit`)
+4. You create a pull request
+5. Someone reviews your code and gives you feedback
+6. Eventually, your code will get approved
+7. You pull the latest changes (`git fetch upstream && git merge upstream/master`)
+7. You push to Jenkins to start a build (`git push jenkins master`)
+8. Your code gets merged
+
 Keeping your fork up-to-date
 ----------------------------
 
