@@ -47,6 +47,18 @@ angular.module('Core')
         this.features = Config.getDefaultEntitlements();
       }
 
+      $scope.ConfirmAdditionalServiceSetup = function () {
+        var promise = (Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation')));
+        promise.then(function () {
+          $state.go('firsttimewizard');
+        });
+      };
+
+      $scope.disableCommFeatureAssignment = function () {
+        // disable the communication feature assignment unless the UserAdd is part of the First Time Setup Wizard work flow
+        return (!Authinfo.isSetupDone() && ((typeof $state.current.data === 'undefined') || (!$state.current.data.firstTimeSetup)));
+      };
+
       var userEnts = null;
       var userLicenseIds = null;
       $scope.cmrFeature = null;
