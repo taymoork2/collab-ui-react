@@ -4,6 +4,7 @@ angular.module('Squared')
   .controller('UserEntitlementsCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', '$log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', 'HttpUtils',
     function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, $log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, HttpUtils) {
       $scope.hasAccount = Authinfo.hasAccount();
+      $scope.entitlements = Utils.getSqEntitlements($scope.currentUser);
 
       //TODO: In the hasAccount case, come up with a better UX for a license category
       //that has no configurable entitlements, intead of an empty pane with a disabled
@@ -70,16 +71,6 @@ angular.module('Squared')
             $scope.saveDisabled = false;
           } else if (newEntitlements !== oldEntitlements) {
             $scope.saveDisabled = false;
-          }
-        });
-
-        $scope.$watch('currentUser', function (newUser, oldUser) {
-          if (newUser && oldUser) {
-            if (newUser.id !== oldUser.id) {
-              $timeout(function () {
-                $scope.saveDisabled = true;
-              }, 10);
-            }
           }
         });
       };
