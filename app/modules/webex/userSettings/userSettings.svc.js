@@ -89,7 +89,8 @@ angular.module('WebExUserSettings')
           },
 
           telephonyType: {
-            isWebExAudio: false
+            isWebExAudio: false,
+            isTspAudio: false
           },
 
           callInTeleconf: {

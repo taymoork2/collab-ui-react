@@ -88,6 +88,7 @@
             </cs-checkbox>
     
             <div class="indentedCheckbox">
+    <div ng-if="!WebExUserSettings2.userSettingsModel.telephonyPriviledge.telephonyType.isTspAudio">
               <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.value">
                 <cs-radio label="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label"
                           value="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].value"
@@ -127,6 +128,7 @@
                           ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled">
                 </cs-radio>
               </div>
+    			</div>
     
               <div ng-if="WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled">
                 <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.id}}
