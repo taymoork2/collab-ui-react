@@ -46,7 +46,7 @@ Keeping your fork up-to-date
 
 When contributing, it's important to keep your fork up-to-date with the master. You can do so by running the following two commands:
 * `git fetch upstream`
-* `git rebase upstream/master`
+* `git merge upstream/master`
 
 Setup the environment (If necessary)
 ------------------------------------
@@ -56,7 +56,7 @@ Setup the environment (If necessary)
 * Run package managers in the cloned project to pull dependencies:
 * `npm install && bower install`
 * Launch the app: `gulp serve`
-* Before pushing any code to jenkins, always use `git pull --rebase`
+* Before pushing any code to jenkins, always use `git fetch upstream && git merge upstream/master`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
 
 Project structure
