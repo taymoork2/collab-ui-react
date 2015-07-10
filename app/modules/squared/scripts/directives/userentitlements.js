@@ -73,16 +73,6 @@ angular.module('Squared')
             $scope.saveDisabled = false;
           }
         });
-
-        $scope.$watch('currentUser', function (newUser, oldUser) {
-          if (newUser && oldUser) {
-            if (newUser.id !== oldUser.id) {
-              $timeout(function () {
-                $scope.saveDisabled = true;
-              }, 10);
-            }
-          }
-        });
       };
 
       /**
