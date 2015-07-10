@@ -343,9 +343,15 @@ angular.module('Core')
         var user = [];
         if ($scope.currentUser) {
           usersList = [];
+          var familyName, givenName;
+          if (angular.isDefined($scope.currentUser.name)) {
+            familyName = $scope.currentUser.name.familyName;
+            givenName = $scope.currentUser.name.givenName;
+          }
           var userObj = {
             'address': $scope.currentUser.userName,
-            'name': ''
+            'familyName': familyName,
+            'givenName': givenName
           };
           user.push(userObj);
           usersList.push(user);
@@ -534,7 +540,8 @@ angular.module('Core')
                 var promise;
                 if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
                   var userData = {
-                    'email': data.userResponse[i].email
+                    'email': data.userResponse[i].email,
+                    'name': data.userResponse[i].name
                   };
                   promise = HuronUser.create(data.userResponse[i].uuid, userData)
                     .catch(function (response) {
