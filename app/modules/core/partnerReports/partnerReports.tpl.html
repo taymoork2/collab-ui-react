@@ -4,10 +4,10 @@
       <h2 class="title" translate="reportsPage.pageTitle"></h2>
       <span class="sync"><span translate="reportsPage.sync"></span>: {{nav.recentUpdate}}</span>
     </div>
-    <div class="page-title col-md-6">
-      <cs-select class="pull-right report-filter-two" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions"
+    <div class="page-title col-md-6 report-filters">
+      <cs-select class="pull-right filter-two" id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions"
       on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
-      <cs-select class="pull-right report-filter-one" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()"
+      <cs-select class="pull-right filter-one" id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()"
       is-disabled="nav.customersSet()"></cs-select>
     </div>
   </div>
@@ -34,8 +34,8 @@
           </cs-tab-heading>
           <div id="qualityReport" class="tab-report">
             <div class="row">
-              <uc-call-metrics class="report-section col-md-5"></uc-call-metrics>
-              <uc-media-quality class="report-section col-md-5"></uc-media-quality>
+              <uc-call-metrics class="report-section report-left col-md-5"></uc-call-metrics>
+              <uc-media-quality class="report-section report-right col-md-5"></uc-media-quality>
             </div>
           </div>
         </cs-tab>

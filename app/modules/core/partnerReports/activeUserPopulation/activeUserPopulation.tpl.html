@@ -20,7 +20,8 @@
           <span class="percent-large">{{nav.activeUserPopulationAverage}}%</span>
           <span class="percent-label" translate="activeUserPopulation.averageLabel"></span>
         </div>
-        <div id="activeUserPopulationChart" class="barchart" ng-class="{'invisible': nav.isRefresh(nav.activeUserPopulationRefresh)}"></div>
+        <div class="timechartDiv" ng-if="nav.isRefresh(nav.activeUserPopulationRefresh)"></div>
+        <div id="activeUserPopulationChart" class="barchart" ng-hide="nav.isRefresh(nav.activeUserPopulationRefresh)"></div>
       </div>
       <div id="activeUserPopulationRefreshDiv" class="spinner-position" ng-show="nav.isRefresh(nav.activeUserPopulationRefresh)">
         <i class='icon icon-spinner icon-2x'></i>

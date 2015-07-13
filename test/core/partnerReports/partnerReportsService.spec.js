@@ -72,10 +72,11 @@ describe('Service: Partner Reports Service', function () {
     orgId: 'a7cba512-7b62-4f0a-a869-725b413680e4',
     deviceRegistrationCountTrend: '+573',
     yesterdaysDeviceRegistrationCount: '121',
-    maxRegisteredDevicesTrend: '3600',
+    maxRegisteredDevicesTrend: '+3600',
     yesterdaysMaxRegisteredDevices: '74',
-    company: 'Test Org One',
-    direction: 'positive'
+    customer: 'Test Org One',
+    direction: 'positive',
+    maxDirection: 'positive'
   }];
   var negEndpointResponse = [{
     orgId: 'a7cba512-7b62-4f0a-a869-725b413680e4',
@@ -83,8 +84,9 @@ describe('Service: Partner Reports Service', function () {
     yesterdaysDeviceRegistrationCount: '121',
     maxRegisteredDevicesTrend: '-3600',
     yesterdaysMaxRegisteredDevices: '74',
-    company: 'Test Org One',
-    direction: 'negative'
+    customer: 'Test Org One',
+    direction: 'negative',
+    maxDirection: 'negative'
   }];
 
   var Authinfo = {
@@ -106,11 +108,11 @@ describe('Service: Partner Reports Service', function () {
     managedOrgsUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
-    activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
-    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=false&orgId=';
+    activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
+    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true&orgId=';
     mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
-    callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=false&orgId=';
-    registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false&orgId=';
+    callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true&orgId=';
+    registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true&orgId=';
   }));
 
   afterEach(function () {

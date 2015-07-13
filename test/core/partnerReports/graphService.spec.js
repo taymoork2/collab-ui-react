@@ -64,7 +64,7 @@ describe('Service: Graph Service', function () {
     });
   });
 
-  describe('Active User Population graph services', function () {
+  xdescribe('Active User Population graph services', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
         'dataProvider': dummyPopulationData,

@@ -11,10 +11,12 @@
       'type': 'column',
       'fillAlphas': 1,
       'lineAlpha': 0,
-      'balloonColor': Config.chartColors.grayLight
+      'balloonColor': Config.chartColors.grayLight,
+      'columnWidth': 0.6
     };
     var axis = {
       'axisColor': Config.chartColors.grayLight,
+      'gridColor': Config.chartColors.grayLight,
       'gridAlpha': 0,
       'axisAlpha': 1,
       'tickLength': 0,
@@ -108,7 +110,7 @@
       return AmCharts.makeChart(div, chartData);
     }
 
-    function dummyData(div) {
+    function dummyData(div, overallPopulation) {
       var dataPoint = {
         "modifiedDate": ""
       };
@@ -126,10 +128,17 @@
         dataPoint.totalCalls = 0;
       }
       if (div === activeUserPopulationChartId) {
-        dataPoint.customerName = "";
+        dataPoint.customerName = "  ";
         dataPoint.percentage = 0;
         dataPoint.color = Config.chartColors.brandWhite;
-        dataPoint.comparison = 0;
+        dataPoint.top = 0;
+        dataPoint.bottom = 0;
+        dataPoint.labelColorField = Config.chartColors.brandWhite;
+        if (overallPopulation !== null && overallPopulation !== undefined) {
+          dataPoint.overallPopulation = overallPopulation;
+        } else {
+          dataPoint.overallPopulation = 0;
+        }
       }
       return [dataPoint];
     }
@@ -145,7 +154,6 @@
       graphOne.colorField = Config.chartColors.brandSuccessLight;
       graphOne.valueField = 'totalRegisteredUsers';
       graphOne.balloonText = activeUsersBalloonText;
-      graphOne.columnWidth = 0.6;
 
       var graphTwo = angular.copy(columnBase);
       graphTwo.title = activeUsersTitle;
@@ -154,7 +162,6 @@
       graphTwo.valueField = 'activeUsers';
       graphTwo.balloonText = activeUsersBalloonText;
       graphTwo.clustered = false;
-      graphTwo.columnWidth = 0.6;
 
       var graphs = [graphOne, graphTwo];
       var valueAxes = [angular.copy(axis)];
@@ -194,10 +201,8 @@
       } else {
         data = data.data[0].data;
       }
-      var total = values.length;
-      var balloonText;
-      for (var i = 0; i < total; i++) {
-        balloonText = '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[value]]</span></span>';
+
+      for (var i = 0; i < values.length; i++) {
         graphs[i] = angular.copy(columnBase);
         graphs[i].title = $translate.instant(titles[i]);
         graphs[i].fillColors = colors[i];
@@ -206,9 +211,7 @@
         graphs[i].labelText = '[[value]]';
         graphs[i].fontSize = 14;
         graphs[i].legendColor = colors[i];
-        graphs[i].columnWidth = 0.6;
-        graphs[i].color = Config.chartColors.brandWhite;
-        graphs[i].balloonText = mediaQualityBalloonText + balloonText;
+        graphs[i].balloonText = mediaQualityBalloonText + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[value]]</span></span>';
         if (i) {
           graphs[i].clustered = false;
         }
@@ -249,7 +252,7 @@
 
     function createActiveUserPopulationGraph(data, overallPopulation) {
       if (data === null || data === 'undefined' || data.length === 0) {
-        data = dummyData(activeUserPopulationChartId);
+        data = dummyData(activeUserPopulationChartId, overallPopulation);
       } else {
         data = modifyPopulation(data, overallPopulation);
       }
@@ -262,34 +265,43 @@
       graph.labelText = '[[percentage]]%';
       graph.fontSize = 26;
       graph.balloonText = '<span class="graph-text"><span class="graph-population" style="color:[[color]];">[[absCompare]]%</span> [[balloonText]]</span>';
-      graph.valueField = 'comparison';
-      graph.columnWidth = 0.6;
+      graph.valueField = 'top';
+      graph.openField = 'bottom';
+      graph.columnWidth = 0.8;
+
+      var graphTwo = {
+        'type': 'step',
+        'valueField': 'overallPopulation',
+        'lineThickness': 1,
+        'lineColor': Config.chartColors.grayLight,
+        'balloonColor': Config.chartColors.grayLight
+      };
+
+      var graphs = [graph, graphTwo];
 
       var categoryAxis = angular.copy(axis);
       categoryAxis.axisAlpha = 0;
       categoryAxis.fontSize = 15;
       categoryAxis.autoWrap = true;
+      categoryAxis.labelColorField = "labelColorField";
 
       var valueAxes = [angular.copy(axis)];
       valueAxes[0].labelsEnabled = false;
-      valueAxes[0].axisAlpha = 0;
       valueAxes[0].autoGridCount = false;
-      valueAxes[0].minimum = -overallPopulation;
-      valueAxes[0].maximum = 100 - overallPopulation;
+      valueAxes[0].axisAlpha = 0;
+      valueAxes[0].minimum = 0;
+      valueAxes[0].maximum = 100;
 
-      return createGraph(data, activeUserPopulationChartId, [graph], valueAxes, categoryAxis, 'customerName', null, null);
+      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null);
     }
 
     function updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation) {
       if (activeUserPopulationChart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
-          activeUserPopulationChart.dataProvider = dummyData(activeUserPopulationChartId);
+          activeUserPopulationChart.dataProvider = dummyData(activeUserPopulationChartId, overallPopulation);
         } else {
           activeUserPopulationChart.dataProvider = modifyPopulation(data, overallPopulation);
         }
-
-        activeUserPopulationChart.valueAxes[0].maximum = 100 - overallPopulation;
-        activeUserPopulationChart.valueAxes[0].minimum = -overallPopulation;
         activeUserPopulationChart.validateData();
       }
 
@@ -297,18 +309,31 @@
     }
 
     function modifyPopulation(data, overallPopulation) {
+
       if (angular.isArray(data)) {
         angular.forEach(data, function (item) {
-          item.comparison = item.percentage - overallPopulation;
-          item.absCompare = Math.abs(item.comparison);
-          if (item.comparison >= 0) {
+          var comparison = item.percentage - overallPopulation;
+          item.absCompare = Math.abs(comparison);
+          item.labelColorField = Config.chartColors.grayDarkest;
+          item.overallPopulation = overallPopulation;
+          if (comparison >= 0) {
+            item.top = item.percentage;
+            item.bottom = overallPopulation;
             item.color = Config.chartColors.brandInfo;
             item.balloonText = $translate.instant('activeUserPopulation.aboveAverage');
           } else {
+            item.top = overallPopulation;
+            item.bottom = item.percentage;
             item.color = Config.chartColors.brandDanger;
             item.balloonText = $translate.instant('activeUserPopulation.belowAverage');
           }
         });
+
+        if (data.length === 1) {
+          var dummy = dummyData(activeUserPopulationChartId, overallPopulation);
+          data.unshift(angular.copy(dummy[0]));
+          data.push(angular.copy(dummy[0]));
+        }
       }
 
       return data;

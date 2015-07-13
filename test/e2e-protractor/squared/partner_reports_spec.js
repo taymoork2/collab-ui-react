@@ -3,103 +3,136 @@
 // Waiting for new page to go active before turning on tests
 describe('Partner Reports', function () {
   describe('Log In', function () {
-    var squaredPartner = {
-      'user': 'admin@squareduc-partner.com',
-      'pass': 'Cisco123!'
-    };
-
-    xit('should login', function () {
-      login.loginThroughGui(squaredPartner.user, squaredPartner.pass);
+    it('should login', function () {
+      login.login('partner-reports', '#/partner/overview');
     });
   });
 
   describe('Reports Page', function () {
-    xit('should navigate to partner reports page', function () {
-      navigation.clickNewReports();
+    it('should navigate to partner reports page', function () {
+      navigation.clickReports();
       utils.expectIsPresent(reports.pageTitle);
     });
 
-    xit('should verify report tabs', function () {
+    it('should verify report tabs', function () {
       reports.verifyReportTab('Engagement');
       reports.verifyReportTab('Quality');
     });
 
-    xit('should verify customer dropdown', function () {
-      utils.waitUntilEnabled(reports.customerSelect);
-      utils.click(reports.customerSelect);
+    it('should verify customer dropdown', function () {
+      reports.enabledFilters(reports.customerSelect);
+      reports.clickFilter(reports.customerSelect);
       reports.numOptions(reports.customerSelect).then(function (totalOptions) {
         utils.expectTruthy(totalOptions > 0);
-        if (totalOptions > 9) {
-          reports.verifyOption(reports.customerSelect, '5 Most Engaged');
-          reports.verifyOption(reports.customerSelect, '5 Least Engaged');
-          reports.verifyOption(reports.customerSelect, '5 Highest Quality');
-          reports.verifyOption(reports.customerSelect, '5 Lowest Quality');
-        }
       });
     });
 
-    xit('should verify time dropdown', function () {
-      utils.click(reports.timeSelect);
+    it('should verify time dropdown', function () {
+      reports.enabledFilters(reports.timeSelect);
+      reports.clickFilter(reports.timeSelect);
       reports.verifyOption(reports.timeSelect, 'Last Week');
       reports.verifyOption(reports.timeSelect, 'Last Month');
       reports.verifyOption(reports.timeSelect, 'Last 3 Months');
     });
   });
 
-  describe('Active Users', function () {
-    xit('should verify active users graph is visible', function () {
+  describe('Engagement Tab', function () {
+    it('should verify active users graph is visible', function () {
       utils.expectIsDisplayed(reports.activeUserGraph);
-      reports.verifyLegend('Users');
-      reports.verifyLegend('Active Users');
-      utils.expectIsNotPresent(reports.noData);
+      reports.verifyLegend('activeUsersdiv', 'Users');
+      reports.verifyLegend('activeUsersdiv', 'Active Users');
+      utils.expectIsDisplayed(reports.noActiveUserData);
       utils.expectIsNotDisplayed(reports.activeUserRefresh);
     });
 
-    xit('should Show Most Active Users', function () {
-      utils.expectText(reports.mostActiveButton, 'Show Most Active Users');
-      utils.click(reports.mostActiveButton);
-      utils.expectIsDisplayed(reports.activeUsersTable);
-      utils.expectCountToBeGreater(reports.activeUsersTableContent, 0);
-      utils.expectAllDisplayed(reports.activeCarousel);
-      utils.expectText(reports.mostActiveButton, 'Hide Most Active Users');
-    });
-
-    xit('should reload on time change', function () {
-      utils.click(reports.timeSelect);
-      utils.click(reports.getOptions(reports.timeSelect, 1));
+    it('should verify most active users is not visible', function () {
+      utils.expectIsNotDisplayed(reports.mostActiveButton);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
-      utils.expectIsDisplayed(reports.activeUserRefresh);
-      utils.waitUntilEnabled(reports.timeSelect);
-      utils.expectIsDisplayed(reports.activeUsersTable);
-      utils.expectCountToBeGreater(reports.activeUsersTableContent, 0);
-      utils.expectIsDisplayed(reports.activeUserGraph);
-      utils.expectIsNotDisplayed(reports.activeUserRefresh);
-      utils.expectAllDisplayed(reports.activeCarousel);
     });
 
-    xit('should reload on customer change', function () {
-      utils.click(reports.customerSelect);
-      utils.click(reports.getOptions(reports.customerSelect, 5));
-      utils.waitUntilEnabled(reports.timeSelect);
-      utils.expectIsDisplayed(reports.activeUsersTable);
-      utils.expectCount(reports.activeUsersTableContent, 0);
-      utils.expectIsDisplayed(reports.activeUserGraph);
-      utils.expectIsDisplayed(reports.activeUserRefresh);
-      utils.expectIsPresent(reports.noData);
-      utils.expectAllNotDisplayed(reports.activeCarousel);
+    it('should verify registered endpoints table is visible', function () {
+      utils.expectIsDisplayed(reports.registeredEndpointsTable);
+      utils.expectIsNotDisplayed(reports.noEndpointData);
+      utils.expectIsNotDisplayed(reports.noEndpointRefresh);
     });
 
-    xit('should Hide Most Active Users', function () {
+    it('should verify active users population graph is visible', function () {
+      utils.expectIsDisplayed(reports.activePopulationGraph);
+      utils.expectIsNotDisplayed(reports.noActivePopulationData);
+      utils.expectIsNotDisplayed(reports.activePopulationRefresh);
+    });
+
+    it('should not display quality tab graphs', function () {
+      utils.expectIsNotDisplayed(reports.callMetricsGraph);
+      utils.expectIsNotDisplayed(reports.mediaQualityGraph);
+    });
+  });
+
+  describe('Quality Tab', function () {
+    it('should change views to quality', function () {
+      reports.clickTab('quality');
+
+      utils.expectIsNotDisplayed(reports.activeUserGraph);
+      utils.expectIsNotDisplayed(reports.mostActiveButton);
+      utils.expectIsNotDisplayed(reports.registeredEndpointsTable);
+      utils.expectIsNotDisplayed(reports.activePopulationGraph);
+    });
+
+    it('should verify call quality graph is visible', function () {
+      utils.expectIsDisplayed(reports.callMetricsGraph);
+      //  utils.expectIsDisplayed(reports.noMetricsData);
+      //  utils.expectIsNotDisplayed(reports.metricsRefresh);
+    });
+
+    it('should verify call quality graph is visible', function () {
+      utils.expectIsDisplayed(reports.mediaQualityGraph);
+      //  utils.expectIsNotDisplayed(reports.noMediaData);
+      utils.expectIsNotDisplayed(reports.mediaRefresh);
+    });
+  });
+
+  describe('Filters', function () {
+    var customer = 'Huron Int Test 2';
+    var time = 'Last Month';
+
+    it('should be able to change customers', function () {
+      reports.clickFilter(reports.customerSelect);
+      utils.click(reports.getOption(reports.customerSelect, customer));
+      //  utils.expectIsDisplayed(reports.mediaRefresh);
+      utils.expectIsDisplayed(reports.metricsRefresh);
+    });
+
+    it('should be able to show/hide most active users', function () {
+      reports.clickTab('engagement');
+      utils.expectIsDisplayed(reports.mostActiveButton);
+      utils.expectText(reports.mostActiveButton, 'Show Most Active Users');
+      utils.expectIsNotDisplayed(reports.activeUsersTable);
+      utils.click(reports.mostActiveButton);
+
+      utils.expectIsDisplayed(reports.activeUsersTable);
+      //      utils.expectCountToBeGreater(reports.activeUsersTableContent, 0);
+      //      utils.expectAllDisplayed(reports.activeCarousel);
       utils.expectText(reports.mostActiveButton, 'Hide Most Active Users');
       utils.click(reports.mostActiveButton);
-      utils.expectIsNotDisplayed(reports.activeUsersTable);
+
+      utils.expectIsDisplayed(reports.mostActiveButton);
       utils.expectText(reports.mostActiveButton, 'Show Most Active Users');
+      utils.expectIsNotDisplayed(reports.activeUsersTable);
+    });
+
+    it('should be able to change time period', function () {
+      utils.scrollTop();
+      reports.clickFilter(reports.timeSelect);
+      utils.click(reports.getOption(reports.timeSelect, time));
+      utils.expectIsDisplayed(reports.activeUserRefresh);
+      utils.expectIsDisplayed(reports.noEndpointRefresh);
+      utils.expectIsDisplayed(reports.activePopulationRefresh);
     });
   });
 
   // Log Out
   describe('Log Out', function () {
-    xit('should log out', function () {
+    it('should log out', function () {
       navigation.logout();
     });
   });

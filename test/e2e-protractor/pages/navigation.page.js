@@ -12,7 +12,6 @@ var Navigation = function () {
   this.orgAddTab = element(by.css('a[href="#add-organization"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
-  this.newReportsTab = element(by.cssContainingText('span', 'New Reports'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
@@ -91,12 +90,6 @@ var Navigation = function () {
   this.clickReports = function () {
     utils.click(this.reportsTab);
     this.expectCurrentUrl('/reports');
-  };
-
-  this.clickNewReports = function () {
-    this.clickDevelopmentTab();
-    utils.click(this.newReportsTab);
-    this.expectCurrentUrl('/partner/newreports');
   };
 
   this.clickSupport = function () {

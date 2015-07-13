@@ -17,6 +17,11 @@ auth =
     pass: 'C1sc0123!'
     org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
 
+  'partner-reports':
+    user: 'partner-admin@huron-int.com'
+    pass: 'Cisco123!'
+    org:  '21e30827-4c16-4fed-b025-e1342508c380'
+
   'partner-sales-user':
     user: 'phtest77+salesadmin@gmail.com'
     pass: 'C1sc0123!'

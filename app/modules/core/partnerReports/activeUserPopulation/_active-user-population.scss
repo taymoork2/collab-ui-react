@@ -16,6 +16,7 @@
     padding-top: 10px;
     position: relative;
     z-index: 1000;
+    font-family: "CiscoSansTT Light";
   }
   .percent-large {
     font-size: 30px;
@@ -80,12 +81,13 @@
     svg {
       height: 460px !important;
       top: 50px !important;
+      overflow: visible !important;
     }
   } 
 
   .amcharts-balloon-div {
     margin-top: 50px !important;
-  } 
+  }
 }
 
 #activeUserPopulationRefreshDiv {

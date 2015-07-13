@@ -216,24 +216,6 @@ describe('Partner flow', function () {
     });
   });
 
-  describe('Reports Page', function () {
-
-    it('should load cached values into directive when switching tabs', function () {
-      navigation.clickReports();
-      utils.expectIsDisplayed(reports.refreshData);
-      utils.expectIsDisplayed(reports.reloadedTime);
-      utils.expectIsDisplayed(reports.calls);
-      utils.expectIsDisplayed(reports.conversations);
-      utils.expectIsDisplayed(reports.activeUsers);
-      utils.expectIsDisplayed(reports.convOneOnOne);
-      utils.expectIsDisplayed(reports.convGroup);
-      utils.expectIsDisplayed(reports.calls);
-      utils.expectIsDisplayed(reports.callsAvgDuration);
-      utils.expectIsDisplayed(reports.contentShared);
-      utils.expectIsDisplayed(reports.contentShareSizes);
-    });
-  });
-
   // Log Out
   describe('Log Out', function () {
     it('should log out', function () {
