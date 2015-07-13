@@ -20,13 +20,6 @@ Technology
 * End to end testing is based on the JS Selenium framework: Protractor
 * Build process is built and run with Gulp.js
 
-Pull the code from the repository
----------------------------------
-
-* `git clone git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git`
-* Once you have the repository you should be able to run `gulp serve` from the root directory of the repo.
-  If that doesn't work, you can manually install the necessary components for gulp in the next step.
-
 Contribute
 ----------
 
