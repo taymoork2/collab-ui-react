@@ -4,16 +4,16 @@ angular.module('Hercules')
   .controller('DashboardNextController',
 
     /* @ngInject */
-    function ($scope, $state, $interval, $http, $modal, ClusterPoller, ConnectorService, ServiceDescriptor) {
+    function ($scope, $state, $interval, $http, $modal, ClusterService, ServiceDescriptor) {
       $scope.showInfoPanel = false;
       $scope.noServicesSelected = false;
       $scope.startSetupClicked = false;
 
-      $scope.subscription = ClusterPoller.subscribe(angular.noop, {
+      $scope.subscription = ClusterService.subscribe(angular.noop, {
         scope: $scope
       });
 
-      $scope.clusters = ConnectorService.getClusters();
+      $scope.clusters = ClusterService.getClusters();
 
       $scope.clusterLength = function () {
         return _.size($scope.clusters);

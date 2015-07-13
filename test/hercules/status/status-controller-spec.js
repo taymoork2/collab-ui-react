@@ -27,7 +27,7 @@ describe('StatusController', function () {
       _$controller_('StatusController', {
         $scope: $scope,
         Authinfo: auth,
-        ConnectorService: service,
+        ClusterService: service,
         ServiceDescriptor: descriptor
       });
       var $httpBackend = $injector.get('$httpBackend');
@@ -113,7 +113,7 @@ describe('StatusController', function () {
       };
       _$controller_('StatusController', {
         $scope: $scope,
-        ConnectorService: service,
+        ClusterService: service,
         Authinfo: auth
       });
     }));

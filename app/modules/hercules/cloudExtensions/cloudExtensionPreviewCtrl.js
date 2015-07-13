@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Hercules')
-  .controller('CloudExtensionPreviewCtrl', ['$log', '$scope', '$rootScope', '$state', '$stateParams', 'Authinfo', 'Userservice', 'Notification', 'USSService', 'ConnectorService', '$timeout',
-    function ($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ConnectorService, $timeout) {
+  .controller('CloudExtensionPreviewCtrl', ['$log', '$scope', '$rootScope', '$state', '$stateParams', 'Authinfo', 'Userservice', 'Notification', 'USSService', 'ClusterService', '$timeout',
+    function ($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout) {
       $scope.entitlementNames = {
         'squared-fusion-cal': 'squaredFusionCal',
         'squared-fusion-uc': 'squaredFusionUC'
@@ -31,7 +31,7 @@ angular.module('Hercules')
             return $scope.extension.id === status.serviceId;
           });
           if ($scope.extension.status && $scope.extension.status.connectorId) {
-            ConnectorService.getConnector($scope.extension.status.connectorId).then(function (connector) {
+            ClusterService.getConnector($scope.extension.status.connectorId).then(function (connector) {
               $scope.extension.homedConnector = connector;
             });
           }
