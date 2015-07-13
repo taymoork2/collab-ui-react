@@ -598,6 +598,9 @@ angular.module('Core')
                 Notification.notify(errors, 'error');
                 deferred.resolve();
               }
+              if (successes.length === usersList.length) {
+                $scope.$dismiss();
+              }
             });
 
           } else {
