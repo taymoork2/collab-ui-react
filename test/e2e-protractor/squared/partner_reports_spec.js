@@ -98,8 +98,6 @@ describe('Partner Reports', function () {
     it('should be able to change customers', function () {
       reports.clickFilter(reports.customerSelect);
       utils.click(reports.getOption(reports.customerSelect, customer));
-      //  utils.expectIsDisplayed(reports.mediaRefresh);
-      utils.expectIsDisplayed(reports.metricsRefresh);
     });
 
     it('should be able to show/hide most active users', function () {
@@ -124,16 +122,6 @@ describe('Partner Reports', function () {
       utils.scrollTop();
       reports.clickFilter(reports.timeSelect);
       utils.click(reports.getOption(reports.timeSelect, time));
-      utils.expectIsDisplayed(reports.activeUserRefresh);
-      utils.expectIsDisplayed(reports.noEndpointRefresh);
-      utils.expectIsDisplayed(reports.activePopulationRefresh);
-    });
-  });
-
-  // Log Out
-  describe('Log Out', function () {
-    it('should log out', function () {
-      navigation.logout();
     });
   });
 });
