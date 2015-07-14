@@ -140,13 +140,13 @@
         cursor: pointer;
       }
       .graph-text {
-        font-family: "Arial";
+        font-family: $brand-font-cisco-TT-Regular;
         font-size: 15px;
         color: $gray-darkest;
         text-align: left;
         float: left;
         .graph-number {
-          font-family: "Arial";
+          font-family: $brand-font-cisco-TT-Regular;
           font-size: 18px;
           color: $brand-success;
           text-align: left;
