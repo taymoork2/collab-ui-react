@@ -2,11 +2,11 @@
   'use strict';
 
   /* @ngInject */
-  function SWUpgradeController($scope, ConnectorService, XhrNotificationService) {
+  function SWUpgradeController($scope, ClusterService, XhrNotificationService) {
     $scope.saving = false;
     $scope.upgradeSoftware = function () {
       $scope.saving = true;
-      ConnectorService
+      ClusterService
         .upgradeSoftware($scope.cluster.id, $scope.upgradePackage.service.service_type)
         .then(function () {
           $scope.upgradeModal.close();

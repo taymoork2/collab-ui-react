@@ -25,7 +25,7 @@ describe('SWUpgradeController', function () {
     };
     controller = _$controller_('SWUpgradeController', {
       $scope: $scope,
-      ConnectorService: service
+      ClusterService: service
     });
   }));
 

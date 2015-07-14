@@ -540,8 +540,8 @@
     "finalEnableSSO": "The test was successful. Enable Single Sign On.",
     "finalDisableSSO": "The test was unsuccessful. Disable Single Sign On.",
     "disableFailed": "Failed to disable Single Sign On",
-    "diableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
-    "enableSSOFailure": "Failed to diable Single Sign-On (SSO)."
+    "disableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
+    "enableSSOFailure": "Failed to enable Single Sign-On (SSO)."
   },
   "serviceSetupModal": {
     "timeZone": "Time Zone",

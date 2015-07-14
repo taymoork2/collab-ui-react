@@ -5,7 +5,7 @@
     .controller('StatusController',
 
       /* @ngInject */
-      function ($scope, ConnectorService, Authinfo, ServiceDescriptor) {
+      function ($scope, ClusterService, Authinfo, ServiceDescriptor) {
         if (!Authinfo.isFusion()) {
           $scope.isEnabled = false;
           return;
@@ -16,7 +16,7 @@
           $scope.isEnabled = true;
           $scope.className = 'fa fa-gear fa-spin';
 
-          ConnectorService.fetch().then(function (clusters) {
+          ClusterService.fetch().then(function (clusters) {
             $scope.className = 'fa fa-circle';
 
             $scope.needs_attention = _.reduce(clusters, function (needs_attention, cluster) {
