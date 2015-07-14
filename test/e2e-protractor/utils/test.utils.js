@@ -394,7 +394,6 @@ exports.createHuronUser = function (name, name2) {
   this.click(users.advancedCommunications);
   this.click(users.onboardButton);
   notifications.assertSuccess(name, 'onboarded successfully');
-  this.click(users.closeAddUsers);
   this.searchAndClick(name);
 };
 

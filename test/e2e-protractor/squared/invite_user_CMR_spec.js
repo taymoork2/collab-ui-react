@@ -39,7 +39,6 @@ describe('CMR shown under Enterprise Edition', function () {
     });
 
     it('clicking on cancel button should close the modal', function () {
-      utils.click(users.closeAddUsers);
       utils.expectIsNotDisplayed(users.manageDialog);
     });
     it('should log out', function () {

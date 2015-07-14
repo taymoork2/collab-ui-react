@@ -58,7 +58,6 @@ describe('Squared Invite User Flow', function () {
     });
 
     it('clicking on cancel button should close the modal', function () {
-      utils.click(users.closeAddUsers);
       utils.expectIsNotDisplayed(users.manageDialog);
     });
 

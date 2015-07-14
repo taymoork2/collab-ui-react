@@ -47,7 +47,6 @@ describe('Squared Add & Entitle User Flows', function () {
 
   describe('Delete user and log out', function () {
     it('clicking on cancel button should close the modal', function () {
-      utils.click(users.closeAddUsers);
       utils.expectIsNotDisplayed(users.manageDialog);
     });
 
