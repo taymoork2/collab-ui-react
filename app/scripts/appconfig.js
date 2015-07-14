@@ -609,12 +609,6 @@ angular
         .state('partnerreports', {
           parent: 'partner',
           url: '/reports',
-          templateUrl: 'modules/squared/views/partnerreports.html',
-          controller: 'PartnerReportsCtrl'
-        })
-        .state('newpartnerreports', {
-          parent: 'partner',
-          url: '/newreports',
           templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
           controller: 'PartnerReportCtrl',
           controllerAs: 'nav'

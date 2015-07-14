@@ -265,7 +265,6 @@ exports.expectCountToBeGreater = function (elems, num) {
 };
 
 exports.expectTruthy = function (elem) {
-  this.wait(elem);
   expect(elem).toBeTruthy();
 };
 

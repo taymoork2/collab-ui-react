@@ -1,6 +1,4 @@
 .registeredEndpoints {
-  margin-bottom: 30px;
-
   .endpointTable {
     padding: 0 15px;
   }
@@ -10,6 +8,22 @@
   .negative {
     color: $brand-danger;
   }
+  .table-data{
+    padding: 0;
+  }
+  .table-half {
+    display: inline-block;
+    width: 48%;
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+  .table-half:first-of-type {
+    border-right: 1px solid $gray-dark;
+  }
+  .customer-data {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
   .spinner-position {
     left: 50%;
     transform: translate(-50%, -50%);
@@ -17,7 +31,7 @@
   }
   .no-data {
     color: $gray-light;
-    font-family: $brand-font-light;
+    font-family: $brand-font-cisco-TT-Light;
     font-size: 46px;
     left: 50%;
     transform: translate(-50%, -50%);

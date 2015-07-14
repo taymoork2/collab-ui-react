@@ -16,6 +16,7 @@
     padding-top: 10px;
     position: relative;
     z-index: 1000;
+    font-family: $brand-font-cisco-TT-Light;
   }
   .percent-large {
     font-size: 30px;
@@ -30,12 +31,12 @@
   }
   .percent-label,
   .percent-large {
-    font-family: "Arial";
+    font-family: $brand-font-cisco-TT-Regular;
   }
 
   .graph-population{
     color: $gray-darkest;
-    font-family: "Arial";
+    font-family: $brand-font-cisco-TT-Regular;
     font-size: 20px;
     text-align: left;
   }
@@ -48,7 +49,7 @@
 
     .no-data {
       color: $gray-light;
-      font-family: "CiscoSansTT Light";
+      font-family: $brand-font-cisco-TT-Light;
       font-size: 46px;
     }
   }
@@ -80,12 +81,13 @@
     svg {
       height: 460px !important;
       top: 50px !important;
+      overflow: visible !important;
     }
   } 
 
   .amcharts-balloon-div {
     margin-top: 50px !important;
-  } 
+  }
 }
 
 #activeUserPopulationRefreshDiv {

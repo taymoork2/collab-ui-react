@@ -17,16 +17,29 @@
       position: relative;
       top: 17px;
       padding-left: 15px;
-      font-family: "CiscoSansTT Extra Light";
+      font-family: $brand-font-cisco-TT-Extra-Light;
       color: $gray-darker;
     }
-    .report-filter-one {
-      width: 200px;
-      margin: 5px;
-    }
-    .report-filter-two {
-      width: 240px;
-      margin: 5px;
+
+    .report-filters {
+      .filter-one {
+        width: 160px;
+        margin: 5px;
+      }
+      .filter-two {
+        width: 200px;
+        margin: 5px;
+      }
+      a {
+        width:100%;
+
+        i {
+          right: 5px;
+        }
+      }
+      .select-dropdown {
+        width: 100%;
+      }
     }
   }
   .report-tabs-container {
@@ -38,6 +51,7 @@
           margin-top: 0;
           background-color: $gray-lightest;
           border-color: rgb(234, 235, 238);
+          padding-top: 10px;
         }
       }
       li.active,
@@ -53,17 +67,22 @@
 
       .report-description {
         margin-bottom: 15px;
+        font-family: $brand-font-cisco-TT-Light;
+        font-size: 13px;
+        line-height: 18px;
+        color: $gray-darkest;
+        text-align: justify;
       }
 
       .section-title {
-        font-family: "CiscoSansTT Light";
+        font-family: $brand-font-cisco-TT-Light;
         font-size: 22px;
         color: $brand-primary;
         text-align: left;
         margin: 0 0 10px;
       }
       .sub-section-title {
-        font-family: "CiscoSansTT Light";
+        font-family: $brand-font-cisco-TT-Light;
         font-size: 18px;
         color: $gray-darkest;
         text-align: left;
@@ -103,6 +122,11 @@
         margin-left: auto;
         margin-right: auto;
       }
+
+      .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+        border-bottom-width: 1px;
+      }
+
       .horizontal-center {
         text-align: center;
       }
@@ -116,13 +140,13 @@
         cursor: pointer;
       }
       .graph-text {
-        font-family: "Arial";
+        font-family: $brand-font-cisco-TT-Regular;
         font-size: 15px;
         color: $gray-darkest;
         text-align: left;
         float: left;
         .graph-number {
-          font-family: "Arial";
+          font-family: $brand-font-cisco-TT-Regular;
           font-size: 18px;
           color: $brand-success;
           text-align: left;

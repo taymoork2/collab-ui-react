@@ -221,31 +221,31 @@
 
     function getQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
+        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
       } else if (filter.value === 1) {
-        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=week&cache=false';
+        return '?&intervalCount=1&intervalType=month&spanCount=7&spanType=day&cache=true';
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=false';
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=true';
       }
     }
 
     function getQueryForOnePeriod(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=false';
+        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true';
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=false';
+        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=true';
       } else {
-        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=false';
+        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=true';
       }
     }
 
     function getTrendQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=false';
+        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
       } else if (filter.value === 1) {
-        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=day&cache=false';
+        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=day&cache=true';
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=day&cache=false';
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=day&cache=true';
       }
     }
 
@@ -268,7 +268,7 @@
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
           var graph = activeUserCustomerGraphs[customer.value].populationData;
           graph[0].customerName = customer.label;
-          return graph;
+          return angular.copy(graph);
         }
         return [{
           customerName: customer.label,
@@ -322,15 +322,10 @@
           });
         }
       } else if (timeFilter === 1) {
-        var weekendDate = 0;
-        if (mostRecent === moment().day(-1).format(dateFormat)) {
-          weekendDate = 1;
-        }
-
         for (var x = 3; x >= 0; x--) {
           graph.push({
-            date: moment().day(0 - (x * 7) - weekendDate).format(),
-            modifiedDate: moment().day(0 - (x * 7) - weekendDate).format(dateFormat),
+            date: moment().subtract(2 + (x * 7), 'day').format(),
+            modifiedDate: moment().subtract(2 + (x * 7), 'day').format(dateFormat),
             totalRegisteredUsers: 0,
             activeUsers: 0,
             percentage: 0
@@ -540,12 +535,18 @@
         return getService(registeredUrl + getTrendQuery(time) + orgId + customer.value, endpointsCancelPromise).then(function (response) {
           if (Array.isArray(response.data.data) && response.data.data[0].details !== null && response.data.data[0].details !== undefined) {
             var data = response.data.data[0].details;
-            data.company = customer.label;
+            data.customer = customer.label;
+
+            data.direction = NEGATIVE;
             if (data.deviceRegistrationCountTrend > 0) {
               data.direction = POSITIVE;
               data.deviceRegistrationCountTrend = "+" + data.deviceRegistrationCountTrend;
-            } else {
-              data.direction = NEGATIVE;
+            }
+
+            data.maxDirection = NEGATIVE;
+            if (data.maxRegisteredDevicesTrend > 0) {
+              data.maxDirection = POSITIVE;
+              data.maxRegisteredDevicesTrend = "+" + data.maxRegisteredDevicesTrend;
             }
 
             return [data];
