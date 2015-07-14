@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Mediafusion')
-  .service('MediafusionProxy', ['$interval', 'MediafusionConnectorService',
-    function MediafusionProxy($interval, connectorService) {
+  .service('MediafusionProxy', ['$interval', 'MediafusionClusterService',
+    function MediafusionProxy($interval, clusterService) {
       var pollPromise,
         error = null,
         clusters = [],
@@ -23,7 +23,7 @@ angular.module('Mediafusion')
       };
 
       var deleteHost = function (clusterId, serial, callback) {
-        connectorService.deleteHost(clusterId, serial, function () {
+        clusterService.deleteHost(clusterId, serial, function () {
           var args = arguments;
           poll(function () {
             if (callback) callback.apply(args);
@@ -42,7 +42,7 @@ angular.module('Mediafusion')
       };
 
       var upgradeSoftware = function (clusterId, serviceType, callback, opts) {
-        connectorService.upgradeSoftware(clusterId, serviceType, function () {
+        clusterService.upgradeSoftware(clusterId, serviceType, function () {
           var args = arguments;
           poll(function () {
             if (callback) callback.apply(args);
@@ -70,7 +70,7 @@ angular.module('Mediafusion')
       };
 
       var poll = function (callback) {
-        connectorService.fetch(function (err, _clusters) {
+        clusterService.fetch(function (err, _clusters) {
           error = err;
           clusters = _clusters || [];
           pollInFlight = false;

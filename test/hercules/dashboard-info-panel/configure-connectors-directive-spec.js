@@ -1,14 +1,25 @@
 'use strict';
 
 describe('NoServiceConnectorsEnabledDirective', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  var $compile, $scope, converterService, clusters;
 
-  var $compile, $scope, converterService;
+  beforeEach(module('wx2AdminWebClientApp', function ($provide) {
+    $provide.decorator('ClusterService', function ($delegate) {
+      $delegate.getClusters = function () {
+        return clusters;
+      };
+      return $delegate;
+    });
+  }));
+
   beforeEach(inject(function ($injector, _$compile_, $rootScope, _ConverterService_) {
     $compile = _$compile_;
     $scope = $rootScope.$new();
-    $injector.get('$httpBackend').when('GET', 'l10n/en_US.json').respond({});
     converterService = _ConverterService_;
+    $injector
+      .get('$httpBackend')
+      .when('GET', 'l10n/en_US.json')
+      .respond({});
   }));
 
   it('hides the element when no clusters fused', function () {
@@ -19,7 +30,7 @@ describe('NoServiceConnectorsEnabledDirective', function () {
   });
 
   it('hides the element when service connectors are enabled', function () {
-    $scope.clusters = converterService.convertClusters([{
+    clusters = converterService.convertClusters([{
       "id": "d5b78711-b132-11e4-8a66-005056000340",
       "cluster_type": "c_mgmt",
       "name": "gwydlvm340",
@@ -53,7 +64,7 @@ describe('NoServiceConnectorsEnabledDirective', function () {
   });
 
   it('replaces the element with the appropriate content when there are no service connectors fused', function () {
-    $scope.clusters = converterService.convertClusters([{
+    clusters = converterService.convertClusters([{
       "id": "d5b78711-b132-11e4-8a66-005056000340",
       "cluster_type": "c_mgmt",
       "name": "gwydlvm340",
@@ -81,6 +92,7 @@ describe('NoServiceConnectorsEnabledDirective', function () {
         }]
       }]
     }]);
+
     var element = $compile("<hercules-configure-connectors>")($scope);
     $scope.$digest();
     expect(element.find('#configureConnectorsAction').hasClass('ng-hide')).toBe(false);
@@ -88,7 +100,7 @@ describe('NoServiceConnectorsEnabledDirective', function () {
   });
 
   it('hides the element when not a c_mgmt cluster', function () {
-    $scope.clusters = converterService.convertClusters([{
+    clusters = converterService.convertClusters([{
       "id": "d5b78711-b132-11e4-8a66-005056000340",
       "cluster_type": "mf_mgmt",
       "name": "gwydlvm340",

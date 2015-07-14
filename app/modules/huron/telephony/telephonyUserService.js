@@ -32,14 +32,24 @@
       var user = angular.copy(userPayload);
       user.userName = data.email;
 
-      if (data.familyName) {
-        user.lastName = data.familyName;
+      if (angular.isString(data.name)) {
+        var names = data.name.split(/\s+/);
+        if (names.length === 1) {
+          user.lastName = names[0];
+        } else {
+          user.firstName = names[0];
+          user.lastName = names[1];
+        }
       } else {
-        user.lastName = data.email.split('@')[0];
-      }
+        if (data.familyName) {
+          user.lastName = data.familyName;
+        } else {
+          user.lastName = data.email.split('@')[0];
+        }
 
-      if (data.givenName) {
-        user.firstName = data.givenName;
+        if (data.givenName) {
+          user.firstName = data.givenName;
+        }
       }
 
       if (angular.isDefined(uuid)) {

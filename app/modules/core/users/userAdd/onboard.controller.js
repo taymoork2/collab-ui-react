@@ -47,6 +47,18 @@ angular.module('Core')
         this.features = Config.getDefaultEntitlements();
       }
 
+      $scope.ConfirmAdditionalServiceSetup = function () {
+        var promise = (Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation')));
+        promise.then(function () {
+          $state.go('firsttimewizard');
+        });
+      };
+
+      $scope.disableCommFeatureAssignment = function () {
+        // disable the communication feature assignment unless the UserAdd is part of the First Time Setup Wizard work flow
+        return (!Authinfo.isSetupDone() && ((typeof $state.current.data === 'undefined') || (!$state.current.data.firstTimeSetup)));
+      };
+
       var userEnts = null;
       var userLicenseIds = null;
       $scope.cmrFeature = null;
@@ -331,9 +343,15 @@ angular.module('Core')
         var user = [];
         if ($scope.currentUser) {
           usersList = [];
+          var familyName, givenName;
+          if (angular.isDefined($scope.currentUser.name)) {
+            familyName = $scope.currentUser.name.familyName;
+            givenName = $scope.currentUser.name.givenName;
+          }
           var userObj = {
             'address': $scope.currentUser.userName,
-            'name': ''
+            'familyName': familyName,
+            'givenName': givenName
           };
           user.push(userObj);
           usersList.push(user);
@@ -522,7 +540,8 @@ angular.module('Core')
                 var promise;
                 if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
                   var userData = {
-                    'email': data.userResponse[i].email
+                    'email': data.userResponse[i].email,
+                    'name': data.userResponse[i].name
                   };
                   promise = HuronUser.create(data.userResponse[i].uuid, userData)
                     .catch(function (response) {
@@ -578,6 +597,9 @@ angular.module('Core')
                 Notification.notify(successes, 'success');
                 Notification.notify(errors, 'error');
                 deferred.resolve();
+              }
+              if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+                $scope.$dismiss();
               }
             });
 

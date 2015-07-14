@@ -7,11 +7,12 @@
     .service('Notification', NotificationFn);
 
   /* @ngInject */
-  function NotificationFn($translate) {
+  function NotificationFn($translate, $q) {
     return {
       notify: notify,
       errorResponse: errorResponse,
-      processErrorResponse: processErrorResponse
+      processErrorResponse: processErrorResponse,
+      confirmation: confirmation
     };
 
     function notify(notifications, type) {
@@ -58,6 +59,28 @@
         }
       }
       return errorMsg;
+    }
+
+    function confirmation(message) {
+      var deferred = $q.defer();
+
+      alertify.set({
+        labels: {
+          ok: $translate.instant('common.yes'),
+          cancel: $translate.instant('common.no')
+        },
+        buttonReverse: true,
+      });
+
+      alertify.confirm(message, function (e) {
+        if (e) {
+          deferred.resolve();
+        } else {
+          deferred.reject();
+        }
+      });
+
+      return deferred.promise;
     }
   }
 })();

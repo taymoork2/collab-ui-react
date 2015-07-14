@@ -55,10 +55,6 @@ describe('Squared Invite User Flow', function () {
       utils.click(users.nextButton);
       utils.click(users.onboardButton);
       notifications.assertSuccess('onboarded successfully');
-    });
-
-    it('clicking on cancel button should close the modal', function () {
-      utils.click(users.closeAddUsers);
       utils.expectIsNotDisplayed(users.manageDialog);
     });
 

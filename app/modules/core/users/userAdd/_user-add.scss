@@ -203,6 +203,16 @@
   vertical-align: middle;
 }
 
+.warning-icon {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.service-link-span-box {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .bucket-license {
   width: 32.93%;
   margin-left: 0px;
@@ -353,8 +363,21 @@
     .onboard-check {
       color: $brand-primary;
     }
+    .warning-icon {
+      @extend .icon;
+      @extend .icon-warning;
+      margin-top: -2px;
+      margin-right: 12px;
+      font-size: 15px;
+      color: $brand-warning;
+      float: left;
+    }
     .service-check {
       margin-left: -6px;
+    }
+    .service-link-span-box {
+      @extend .warning-icon;
+      visibility: hidden;
     }
   }
 }
