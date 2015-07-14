@@ -527,6 +527,12 @@ angular
           controller: 'SupportCtrl',
           parent: 'main'
         })
+        .state('billing', {
+          url: '/orderprovisioning?enc',
+          templateUrl: 'modules/squared/support/billing.tpl.html',
+          controller: 'BillingCtrl',
+          parent: 'main'
+        })
 
       /*
         devices

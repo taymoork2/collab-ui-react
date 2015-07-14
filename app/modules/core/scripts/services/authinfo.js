@@ -53,7 +53,7 @@ angular.module('Core')
           if (roles) {
             for (var i in roles) {
               var role = roles[i];
-              if (role && Config.roleStates[role] && Config.roleStates[role].indexOf(parentState[0]) !== -1) {
+              if (role && Config.roleStates[role] && Config.roleStates[role].indexOf(parentState[0]) !== -1 && isOnlyCiscoState(state)) {
                 return true;
               }
             }
@@ -70,6 +70,13 @@ angular.module('Core')
         }
         return false;
       };
+
+      var isOnlyCiscoState = function (state) {
+        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgid === Config.ciscoOrgId || authData.orgid === Config.ciscoMockOrgId)))
+          return true;
+        return false;
+      };
+
       //update the tabs when Authinfo data has been populated.
       var initializeTabs = function () {
         var tabs = angular.copy(Config.tabs);

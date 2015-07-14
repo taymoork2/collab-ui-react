@@ -94,3 +94,27 @@
 .health-card{
   cursor: pointer;
 }
+
+//--------- billing ---------//
+.order-list {
+  .ngCell.colt1 {
+    overflow: visible;
+    .dropdown-menu {
+      right: 315px;
+      left: auto;
+      top: 70%;
+    }
+  }
+  .btn-icon {
+    background: none;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    text-align: center;
+    &:hover, &:focus, &.active:focus {
+      border: none;
+      box-shadow: none;
+      outline: 0;
+    }
+  }
+}

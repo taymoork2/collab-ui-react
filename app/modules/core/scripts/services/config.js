@@ -112,6 +112,8 @@ angular.module('Core')
 
         ciscoOrgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
 
+        ciscoMockOrgId: 'd30a6828-dc35-4753-bab4-f9b468828688',
+
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
         oauthDeleteTokenUrl: 'https://idbroker.webex.com/idb/oauth2/v1/revoke',
@@ -259,8 +261,17 @@ angular.module('Core')
           tab: 'supportTab',
           icon: 'icon-support',
           title: 'tabs.supportTab',
-          state: 'support',
-          link: '/support'
+          subPages: [{
+            title: 'tabs.logsTab',
+            desc: 'tabs.logsTabDesc',
+            state: 'support',
+            link: '#support'
+          }, {
+            title: 'tabs.billingTab',
+            desc: 'tabs.billingTabDesc',
+            state: 'billing',
+            link: '#orderprovisioning'
+          }]
         }, {
           tab: 'accountTab',
           icon: 'icon-sliders',
@@ -747,7 +758,7 @@ angular.module('Core')
           'support',
           'editService'
         ],
-        Support: ['support', 'reports'],
+        Support: ['support', 'reports', 'billing'],
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
@@ -818,6 +829,8 @@ angular.module('Core')
 
       // These states do not require a role/service check
       config.allowedStates = ['unauthorized', 'csadmin'];
+
+      config.ciscoOnly = ['billing'];
 
       return config;
     }
