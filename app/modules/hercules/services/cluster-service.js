@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ConnectorService($q, $http, $location, CsdmCacheUpdater, ConnectorMock, ConverterService, ConfigService, XhrNotificationService) {
+  function ClusterService($q, $http, $location, CsdmPoller, CsdmCacheUpdater, ConnectorMock, ConverterService, ConfigService, XhrNotificationService) {
     var lastClusterResponse = [];
     var clusterCache = {};
 
@@ -62,23 +62,20 @@
       return $http.get(url).then(extractDataFromResponse);
     };
 
+    var clusterPoller = CsdmPoller.create(fetch);
+
     return {
       fetch: fetch,
       deleteHost: deleteHost,
       getClusters: getClusters,
       getConnector: getConnector,
-      upgradeSoftware: upgradeSoftware
+      upgradeSoftware: upgradeSoftware,
+      subscribe: clusterPoller.subscribe
     };
-  }
-
-  /* @ngInject */
-  function ClusterPoller(CsdmPoller, ConnectorService) {
-    return CsdmPoller.create(ConnectorService.fetch);
   }
 
   angular
     .module('Hercules')
-    .service('ClusterPoller', ClusterPoller)
-    .service('ConnectorService', ConnectorService);
+    .service('ClusterService', ClusterService);
 
 }());

@@ -2,8 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function ServiceDetailsController($scope, $modal, $stateParams, ConnectorService) {
-    $scope.cluster = ConnectorService.getClusters()[$stateParams.clusterId];
+  function ServiceDetailsController($scope, $modal, $stateParams, ClusterService) {
+    $scope.cluster = ClusterService.getClusters()[$stateParams.clusterId];
 
     $scope.$watch(
       function () {

@@ -4,8 +4,8 @@ angular.module('Hercules')
   .controller('HostDetailsController',
 
     /* @ngInject */
-    function ($scope, $state, $stateParams, ConnectorService, XhrNotificationService) {
-      var cluster = ConnectorService.getClusters()[$stateParams.clusterId];
+    function ($scope, $state, $stateParams, ClusterService, XhrNotificationService) {
+      var cluster = ClusterService.getClusters()[$stateParams.clusterId];
 
       $scope.$watch(
         function () {
@@ -20,8 +20,8 @@ angular.module('Hercules')
       );
 
       $scope.deleteHost = function () {
-        return ConnectorService.deleteHost(cluster.id, $scope.host.serial).then(function () {
-          if (ConnectorService.getClusters()[cluster.id]) {
+        return ClusterService.deleteHost(cluster.id, $scope.host.serial).then(function () {
+          if (ClusterService.getClusters()[cluster.id]) {
             $state.go('cluster-details', {
               clusterId: cluster.id
             });

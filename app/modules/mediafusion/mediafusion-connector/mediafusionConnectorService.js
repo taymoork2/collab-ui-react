@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Mediafusion')
-  .service('MediafusionConnectorService', ['$http', '$location', 'MediafusionConnectorMock', 'MediafusionConverterService', 'MediafusionConfigService', 'XhrNotificationService',
-    function MediafusionConnectorService($http, $location, mock, converter, config, notification) {
+  .service('MediafusionClusterService', ['$http', '$location', 'MediafusionConnectorMock', 'MediafusionConverterService', 'MediafusionConfigService', 'XhrNotificationService',
+    function MediafusionClusterService($http, $location, mock, converter, config, notification) {
       var lastClusterResponse = [];
 
       var fetch = function (callback, opts) {
