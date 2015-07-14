@@ -6,13 +6,13 @@
 
       /* @ngInject */
       function ($scope, $state, ServiceDescriptor, $modal) {
-        $scope.statusSummary = [];
+        var statusSummary = [];
         var updateSummary = function () {
           var userActivationNotComplete = false;
           var servicesWithUserErrors = false;
           if ($scope.clusters && $scope.clusters.length !== 0 && $scope.services && $scope.services.enabledOnly && $scope.services.enabledOnly.length !== 0) {
             $scope.xsummary = _.map($scope.services.enabledOnly, function (service) {
-              var summaryForService = _.find($scope.statusSummary, function (summary) {
+              var summaryForService = _.find(statusSummary, function (summary) {
                 return service.service_id == summary.serviceId;
               });
               var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
@@ -49,7 +49,7 @@
 
         $scope.$watch('userStatusesSummary', function (userStatusesSummary) {
           if (userStatusesSummary && userStatusesSummary.summary) {
-            $scope.statusSummary = userStatusesSummary.summary;
+            statusSummary = userStatusesSummary.summary;
             updateSummary();
           }
         });

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: ConnectorService', function () {
+describe('Service: ClusterService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $httpBackend, $location, Service, converter, notification;
@@ -19,8 +19,8 @@ describe('Service: ConnectorService', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _$location_, _ConnectorService_) {
-    Service = _ConnectorService_;
+  beforeEach(inject(function ($injector, _$location_, _ClusterService_) {
+    Service = _ClusterService_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend
       .when('GET', 'l10n/en_US.json')

@@ -4,7 +4,7 @@
     .module('Hercules')
     .controller('ExportUserStatusesController',
       /* @ngInject */
-      function (Authinfo, UiStats, UserDetails, $scope, $rootScope, USSService, ConnectorService, Log) {
+      function (Authinfo, UiStats, UserDetails, $scope, $rootScope, USSService, ClusterService, Log) {
         $scope.numberOfUsersPrCiRequest = 25; // can probably go higher, depending on the CI backend...
         $scope.loading = true;
         $scope.exportError = false;
@@ -89,7 +89,7 @@
                 $scope.loading = false;
               }
               $.each(connectorIds, function (ind, connectorId) {
-                ConnectorService.getConnector(connectorId).then(function (connector) {
+                ClusterService.getConnector(connectorId).then(function (connector) {
                   if (connector) {
                     _.forEach(statuses.userStatuses, function (userStatus) {
                       if (userStatus.connectorId === connectorId) {
