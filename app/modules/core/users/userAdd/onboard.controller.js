@@ -598,7 +598,7 @@ angular.module('Core')
                 Notification.notify(errors, 'error');
                 deferred.resolve();
               }
-              if (successes.length === usersList.length) {
+              if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
                 $scope.$dismiss();
               }
             });
