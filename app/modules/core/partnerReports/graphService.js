@@ -128,11 +128,9 @@
         dataPoint.totalCalls = 0;
       }
       if (div === activeUserPopulationChartId) {
-        dataPoint.customerName = "  ";
+        dataPoint.customerName = "";
         dataPoint.percentage = 0;
         dataPoint.color = Config.chartColors.brandWhite;
-        dataPoint.top = 0;
-        dataPoint.bottom = 0;
         dataPoint.labelColorField = Config.chartColors.brandWhite;
         if (overallPopulation !== null && overallPopulation !== undefined) {
           dataPoint.overallPopulation = overallPopulation;
@@ -265,16 +263,15 @@
       graph.labelText = '[[percentage]]%';
       graph.fontSize = 26;
       graph.balloonText = '<span class="graph-text"><span class="graph-population" style="color:[[color]];">[[absCompare]]%</span> [[balloonText]]</span>';
-      graph.valueField = 'top';
-      graph.openField = 'bottom';
+      graph.valueField = 'percentage';
       graph.columnWidth = 0.8;
 
       var graphTwo = {
         'type': 'step',
         'valueField': 'overallPopulation',
-        'lineThickness': 1,
-        'lineColor': Config.chartColors.grayLight,
-        'balloonColor': Config.chartColors.grayLight
+        'lineThickness': 2,
+        'lineColor': Config.chartColors.grayDarker,
+        'balloonColor': Config.chartColors.grayDarker
       };
 
       var graphs = [graph, graphTwo];
@@ -286,11 +283,12 @@
       categoryAxis.labelColorField = "labelColorField";
 
       var valueAxes = [angular.copy(axis)];
-      valueAxes[0].labelsEnabled = false;
       valueAxes[0].autoGridCount = false;
-      valueAxes[0].axisAlpha = 0;
       valueAxes[0].minimum = 0;
       valueAxes[0].maximum = 100;
+      valueAxes[0].labelFunction = function (value, valueText, valueAxis) {
+        return valueText + "%";
+      };
 
       return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null);
     }
@@ -317,13 +315,9 @@
           item.labelColorField = Config.chartColors.grayDarkest;
           item.overallPopulation = overallPopulation;
           if (comparison >= 0) {
-            item.top = item.percentage;
-            item.bottom = overallPopulation;
             item.color = Config.chartColors.brandInfo;
             item.balloonText = $translate.instant('activeUserPopulation.aboveAverage');
           } else {
-            item.top = overallPopulation;
-            item.bottom = item.percentage;
             item.color = Config.chartColors.brandDanger;
             item.balloonText = $translate.instant('activeUserPopulation.belowAverage');
           }

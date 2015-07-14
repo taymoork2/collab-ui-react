@@ -64,15 +64,11 @@ describe('Service: Graph Service', function () {
     });
   });
 
-  xdescribe('Active User Population graph services', function () {
+  describe('Active User Population graph services', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
         'dataProvider': dummyPopulationData,
-        validateData: validateService.validate,
-        valueAxes: [{
-          maximum: 63,
-          minimum: -37
-        }]
+        validateData: validateService.validate
       });
       activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(dummyPopulationData, 37);
     });
@@ -84,8 +80,6 @@ describe('Service: Graph Service', function () {
     it('should update graph when updateActiveUsersGraph is called', function () {
       GraphService.updateActiveUserPopulationGraph(dummyPopulationData, activeUserPopulationChart, 15);
       expect(validateService.validate).toHaveBeenCalled();
-      expect(activeUserPopulationChart.valueAxes[0].maximum).toEqual(85);
-      expect(activeUserPopulationChart.valueAxes[0].minimum).toEqual(-15);
     });
   });
 });

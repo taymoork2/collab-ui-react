@@ -17,7 +17,7 @@
       position: relative;
       top: 17px;
       padding-left: 15px;
-      font-family: "CiscoSansTT Extra Light";
+      font-family: $brand-font-cisco-TT-Extra-Light;
       color: $gray-darker;
     }
 
@@ -67,7 +67,7 @@
 
       .report-description {
         margin-bottom: 15px;
-        font-family: "CiscoSansTT Light";
+        font-family: $brand-font-cisco-TT-Light;
         font-size: 13px;
         line-height: 18px;
         color: $gray-darkest;
@@ -75,14 +75,14 @@
       }
 
       .section-title {
-        font-family: "CiscoSansTT Light";
+        font-family: $brand-font-cisco-TT-Light;
         font-size: 22px;
         color: $brand-primary;
         text-align: left;
         margin: 0 0 10px;
       }
       .sub-section-title {
-        font-family: "CiscoSansTT Light";
+        font-family: $brand-font-cisco-TT-Light;
         font-size: 18px;
         color: $gray-darkest;
         text-align: left;

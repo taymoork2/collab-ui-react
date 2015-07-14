@@ -26,7 +26,7 @@
     transform: translate(0%, 35%);
     .no-data {
       color: $gray-light;
-      font-family: "CiscoSansTT Light";
+      font-family: $brand-font-cisco-TT-Light;
       font-size: 46px;
     }
   }

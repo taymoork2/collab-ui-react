@@ -16,7 +16,7 @@
     padding-top: 10px;
     position: relative;
     z-index: 1000;
-    font-family: "CiscoSansTT Light";
+    font-family: $brand-font-cisco-TT-Light;
   }
   .percent-large {
     font-size: 30px;
@@ -49,7 +49,7 @@
 
     .no-data {
       color: $gray-light;
-      font-family: "CiscoSansTT Light";
+      font-family: $brand-font-cisco-TT-Light;
       font-size: 46px;
     }
   }
