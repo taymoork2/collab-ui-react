@@ -35,7 +35,7 @@ angular.module('Squared')
 
       var checkMainRoles = function (roles) {
         if ($scope.roles) {
-          if (isEqualArrays($scope.roles, roles)) {
+          if (isEqualArrays(roles, _.intersection($scope.roles, roles))) {
             return 1;
           } else {
             return 2;
