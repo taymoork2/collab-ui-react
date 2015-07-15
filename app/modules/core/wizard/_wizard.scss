@@ -123,11 +123,6 @@
   label {
     font-weight: normal;
   }
-  .wizard-main-flex {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
   .wizard-main-title {
     font-family: $brand-font-cisco-TT-Extra-Light;
     font-size: 34px;
@@ -157,16 +152,16 @@
         transition: none;
       }
       /* starting animations for enter */
-      
+
       &.ng-enter {}
       /* terminal animations for enter */
-      
+
       &.ng-enter.ng-enter-active {}
       /* starting animations for leave */
-      
+
       &.ng-leave {}
       /* terminal animations for leave */
-      
+
       &.ng-leave.ng-leave-active {}
       .icon {
         font-size: 75px;

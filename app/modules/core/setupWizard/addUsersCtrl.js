@@ -17,13 +17,13 @@ angular.module('Core')
       };
       $scope.syncUpload = {
         label: $translate.instant('firstTimeWizard.upload'),
-        value: 2,
+        value: 1,
         name: 'syncOptions',
         id: 'syncUpload'
       };
       $scope.syncAdvanced = {
         label: $translate.instant('firstTimeWizard.advanced'),
-        value: 1,
+        value: 2,
         name: 'syncOptions',
         id: 'syncAdvanced'
       };
@@ -35,6 +35,8 @@ angular.module('Core')
             $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[0]);
           } else if ($scope.options.addUsers === 1) {
             $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
+          } else if ($scope.options.addUsers === 2) {
+            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[2]);
           }
           deferred.resolve();
         } else {

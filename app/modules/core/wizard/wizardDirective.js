@@ -48,12 +48,14 @@
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
+    vm.hasDefaultButtons = hasDefaultButtons;
 
     vm.getTabController = getTabController;
     vm.getSubTabController = getSubTabController;
     vm.getSubTabTitle = getSubTabTitle;
 
     vm.setSubTab = setSubTab;
+    vm.resetSubTab = resetSubTab;
     vm.setTab = setTab;
 
     vm.previousTab = previousTab;
@@ -128,6 +130,11 @@
       if (angular.isDefined(subTab)) {
         setStep(getSteps()[0]);
       }
+    }
+
+    function resetSubTab(stepIndex) {
+      setSubTab(getSubTab());
+      setStep(getSteps()[stepIndex || 0]);
     }
 
     function getTabs() {
@@ -313,6 +320,10 @@
 
     function closeModal() {
       $state.modal.close();
+    }
+
+    function hasDefaultButtons() {
+      return angular.isUndefined(vm.current.step.buttons);
     }
 
   }

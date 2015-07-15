@@ -31,7 +31,8 @@ angular.module('Core', [
   'csDonut',
   'formly',
   'formlyCisco',
-  'cisco.ui'
+  'cisco.ui',
+  'timer'
 ]);
 
 angular.module('Squared', ['Core']);

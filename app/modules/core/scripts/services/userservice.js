@@ -6,6 +6,27 @@ angular.module('Core')
 
       var userUrl = Config.getAdminServiceUrl();
 
+      function onboardUsers(userData, callback, cancelPromise) {
+        if (userData && angular.isArray(userData.users) && userData.users.length > 0) {
+          $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userData, {
+              timeout: cancelPromise
+            }).success(function (data, status) {
+              data = data || {};
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data = data || {};
+              data.success = false;
+              data.status = status;
+
+              callback(data, status);
+            });
+        } else {
+          callback('No valid emails entered.');
+        }
+      }
+
       return {
 
         updateUsers: function (usersDataArray, userLicenses, entitlements, callback) {
@@ -319,7 +340,7 @@ angular.module('Core')
             });
         },
 
-        onboardUsers: function (usersDataArray, entitlements, userLicenses, callback) {
+        onboardUsers: function (usersDataArray, entitlements, userLicenses, callback, cancelPromise) {
           var userData = {
             'users': []
           };
@@ -341,25 +362,32 @@ angular.module('Core')
               userData.users.push(user);
             }
           }
+          onboardUsers(userData, callback, cancelPromise);
+        },
 
-          if (userData.users.length > 0) {
+        onboardLicenseUsers: function (usersDataArray, entitlements, licenses, callback, cancelPromise) {
+          var userData = {
+            'users': []
+          };
 
-            $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userData)
-              .success(function (data, status) {
-                data = data || {};
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                data = data || {};
-                data.success = false;
-                data.status = status;
-
-                callback(data, status);
-              });
-          } else {
-            callback('No valid emails entered.');
+          for (var i = 0; i < usersDataArray.length; i++) {
+            var userEmail = usersDataArray[i].address.trim();
+            var userName = usersDataArray[i].name.trim();
+            var user = {
+              'email': null,
+              'name': null,
+              'userEntitlements': entitlements,
+              'licenses': (licenses && licenses.length > i) ? licenses[i] : null
+            };
+            if (userEmail.length > 0) {
+              user.email = userEmail;
+              if (userName.length > 0 && userName !== false) {
+                user.name = userName;
+              }
+              userData.users.push(user);
+            }
           }
+          onboardUsers(userData, callback, cancelPromise);
         },
 
         deactivateUser: function (userData) {

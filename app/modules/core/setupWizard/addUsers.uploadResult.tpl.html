@@ -1,0 +1,24 @@
+<div class="users-upload-results" ng-init="wizard.hasErrors=false;">
+  <i ng-if="model.userErrorArray.length === 0" class="icon icon-check-mark-success"></i>
+  <div class="results-container">
+    <div class="result new-users" ng-class="{disabled: model.numNewUsers === 0}">
+      <div class="total">{{model.numNewUsers}}</div>
+      <h4 translate="firstTimeWizard.newUsers"></h4>
+    </div>
+    <div class="result existing-users" ng-class="{disabled: model.numExistingUsers === 0}">
+      <div class="total">{{model.numExistingUsers}}</div>
+      <h4 translate="firstTimeWizard.existingUsers"></h4>
+    </div>
+    <div class="result error-users" ng-class="{disabled: model.userErrorArray.length === 0}">
+      <div class="total">{{model.userErrorArray.length}}</div>
+      <h4 translate="firstTimeWizard.errorUsers"></h4>
+      <div class="action-link" ng-if="model.userErrorArray.length > 0" ng-init="wizard.hasErrors=true;">
+        <i class="icon icon-error"></i><a href ng-click="wizard.resetSubTab(1)" translate="firstTimeWizard.fixCsvErrors"></a>
+      </div>
+    </div>
+  </div>
+  <div class="results-total">{{model.numTotalUsers}} <span translate="firstTimeWizard.totalProcessed"></span></div>
+  <div class="grid" ng-if="model.userErrorArray.length > 0">
+    <div gridscrollbar class="gridStyle" ng-grid="gridOptions"></div>
+  </div>
+</div>
