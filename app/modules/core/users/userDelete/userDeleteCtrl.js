@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('UserDeleteCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'Log', 'Userservice', 'Notification', 'Config', '$translate', 'HuronUser',
-    function ($scope, $rootScope, $state, $stateParams, Log, Userservice, Notification, Config, $translate, HuronUser) {
+  .controller('UserDeleteCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$q', 'Log', 'Userservice', 'Notification', 'Config', '$translate', 'HuronUser',
+    function ($scope, $rootScope, $state, $stateParams, $q, Log, Userservice, Notification, Config, $translate, HuronUser) {
 
       $scope.deleteUserOrgId = $stateParams.deleteUserOrgId;
       $scope.deleteUserUuId = $stateParams.deleteUserUuId;
@@ -34,15 +34,41 @@ angular.module('Core')
       }
 
       $scope.deactivateUser = function () {
+        var userData = {
+          email: $scope.deleteUsername
+        };
         Log.debug('Deactivating user: ' + $scope.deleteUserUuId + ' with data: ');
-        Userservice.deactivateUser($scope.deleteUserOrgId, $scope.deleteUserUuId)
-          .success(function (data, status) {
+        Userservice.deactivateUser(userData, function (data, status) {
+          var deferred = $q.defer();
+          if (data.success) {
             deleteHuron();
-          })
-          .error(function (response) {
-            Notification.errorResponse(response);
-          });
-        $scope.$dismiss();
+            if (angular.isFunction($scope.$dismiss())) {
+              $scope.$dismiss();
+            }
+          } else {
+            Log.warn('Could not delete the user', data);
+            var error = null;
+            if (status) {
+              error = $translate.instant('usersPage.statusError', {
+                status: status
+              });
+              if (data && angular.isString(data.message)) {
+                error += ' ' + $translate.instant('usersPage.messageError', {
+                  message: data.message
+                });
+              }
+            } else {
+              error = 'Request failed.';
+              if (angular.isString(data)) {
+                error += ' ' + data;
+              }
+              Notification.notify(error, 'error');
+            }
+            Notification.notify([error], 'error');
+            angular.element('#deleteButton').button('reset');
+            deferred.reject();
+          }
+        });
       };
     }
   ]);

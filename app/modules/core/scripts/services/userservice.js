@@ -362,12 +362,19 @@ angular.module('Core')
           }
         },
 
-        deactivateUser: function (deleteUserOrgId, deleteUserUuId, userData, callback) {
-          var adminServiceUrl = Config.getAdminServiceUrl() + 'user?email=' + deleteUserUuId;
-          return $http({
-            method: 'DELETE',
-            url: adminServiceUrl
-          });
+        deactivateUser: function (userData, callback) {
+          return $http.delete(userUrl + 'user?email=' + userData.email.replace(/\+/g, "%2B"))
+            .success(function (data, status) {
+              data = data || {};
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data = data || {};
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
         }
       };
     }
