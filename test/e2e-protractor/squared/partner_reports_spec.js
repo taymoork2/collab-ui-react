@@ -2,6 +2,9 @@
 
 // Waiting for new page to go active before turning on tests
 describe('Partner Reports', function () {
+  var customer = 'Huron Int Test 2';
+  var time = 'Last Month';
+
   describe('Log In', function () {
     it('should login', function () {
       login.login('partner-reports', '#/partner/overview');
@@ -38,6 +41,9 @@ describe('Partner Reports', function () {
 
   describe('Engagement Tab', function () {
     it('should verify active users graph is visible', function () {
+      reports.verifyDescription(customer, reports.activeDescription, false);
+      reports.verifyDescription(time, reports.activeDescription, false);
+
       utils.expectIsDisplayed(reports.activeUserGraph);
       reports.verifyLegend('activeUsersdiv', 'Users');
       reports.verifyLegend('activeUsersdiv', 'Active Users');
@@ -51,12 +57,17 @@ describe('Partner Reports', function () {
     });
 
     it('should verify registered endpoints table is visible', function () {
+      reports.verifyDescription(time, reports.endpointDescription, false);
+
       utils.expectIsDisplayed(reports.registeredEndpointsTable);
       utils.expectIsNotDisplayed(reports.noEndpointData);
       utils.expectIsNotDisplayed(reports.noEndpointRefresh);
     });
 
     it('should verify active users population graph is visible', function () {
+      reports.verifyDescription(customer, reports.activePopulationDescription, false);
+      reports.verifyDescription(time, reports.activePopulationDescription, false);
+
       utils.expectIsDisplayed(reports.activePopulationGraph);
       utils.expectIsNotDisplayed(reports.noActivePopulationData);
       utils.expectIsNotDisplayed(reports.activePopulationRefresh);
@@ -78,13 +89,13 @@ describe('Partner Reports', function () {
       utils.expectIsNotDisplayed(reports.activePopulationGraph);
     });
 
-    it('should verify call quality graph is visible', function () {
+    it('should verify call metrics graph is visible', function () {
       utils.expectIsDisplayed(reports.callMetricsGraph);
       //  utils.expectIsDisplayed(reports.noMetricsData);
       //  utils.expectIsNotDisplayed(reports.metricsRefresh);
     });
 
-    it('should verify call quality graph is visible', function () {
+    it('should verify media quality graph is visible', function () {
       utils.expectIsDisplayed(reports.mediaQualityGraph);
       //  utils.expectIsNotDisplayed(reports.noMediaData);
       utils.expectIsNotDisplayed(reports.mediaRefresh);
@@ -92,9 +103,6 @@ describe('Partner Reports', function () {
   });
 
   describe('Filters', function () {
-    var customer = 'Huron Int Test 2';
-    var time = 'Last Month';
-
     it('should be able to change customers', function () {
       reports.clickFilter(reports.customerSelect);
       utils.click(reports.getOption(reports.customerSelect, customer));
@@ -102,14 +110,14 @@ describe('Partner Reports', function () {
 
     it('should be able to show/hide most active users', function () {
       reports.clickTab('engagement');
+
       utils.expectIsDisplayed(reports.mostActiveButton);
       utils.expectText(reports.mostActiveButton, 'Show Most Active Users');
       utils.expectIsNotDisplayed(reports.activeUsersTable);
       utils.click(reports.mostActiveButton);
 
       utils.expectIsDisplayed(reports.activeUsersTable);
-      //      utils.expectCountToBeGreater(reports.activeUsersTableContent, 0);
-      //      utils.expectAllDisplayed(reports.activeCarousel);
+      utils.expectCountToBeGreater(reports.activeUsersTableContent, 0);
       utils.expectText(reports.mostActiveButton, 'Hide Most Active Users');
       utils.click(reports.mostActiveButton);
 
@@ -118,10 +126,21 @@ describe('Partner Reports', function () {
       utils.expectIsNotDisplayed(reports.activeUsersTable);
     });
 
+    it('should display new customer in engagement descriptions', function () {
+      reports.verifyDescription(customer, reports.activeDescription, true);
+      reports.verifyDescription(customer, reports.activePopulationDescription, true);
+    });
+
     it('should be able to change time period', function () {
       utils.scrollTop();
       reports.clickFilter(reports.timeSelect);
       utils.click(reports.getOption(reports.timeSelect, time));
+    });
+
+    it('should display new time in engagement descriptions', function () {
+      reports.verifyDescription(time, reports.activeDescription, true);
+      reports.verifyDescription(time, reports.activePopulationDescription, true);
+      reports.verifyDescription(time, reports.endpointDescription, true);
     });
   });
 });
