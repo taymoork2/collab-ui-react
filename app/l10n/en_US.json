@@ -928,6 +928,7 @@
     "key": "Key",
     "keyPlaceholder": "Choose Key",
     "playAnnouncement": "Play Announcement",
+    "playPlaceholder": "http:// or text",
     "disconnect": "Disconnect",
     "announcementPlaceholder": "Add Announcement",
     "announcement": "Announcement",
