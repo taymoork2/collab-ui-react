@@ -363,11 +363,10 @@ angular.module('Core')
         },
 
         deactivateUser: function (deleteUserOrgId, deleteUserUuId, userData, callback) {
-          var scimUrl = Config.getScimUrl() + '/' + deleteUserUuId;
-          scimUrl = Utils.sprintf(scimUrl, [deleteUserOrgId]);
+          var adminServiceUrl = Config.getAdminServiceUrl() + 'user?email=' + deleteUserUuId;
           return $http({
             method: 'DELETE',
-            url: scimUrl
+            url: adminServiceUrl
           });
         }
       };
