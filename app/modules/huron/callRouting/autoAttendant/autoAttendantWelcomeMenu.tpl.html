@@ -88,7 +88,7 @@
               <!-- play annoucement-->
               <div ng-switch-when="play" class="form-group" ng-class="{ 'has-error has-feedback aa-validation': welcomeForm.playFileInput.$touched && welcomeForm.playFileInput.$invalid }">
                 <label class="control-label" for="playFileInput" translate="common.play"></label><span class="asterix"> *</span>
-                <input class="form-control" type="url" id="playFileInput" name="playFileInput" ng-model="aaWelcome.welcomeDialogMenuEntry.actions[0].value" required placeholder="http://" size="30"/>
+                <input class="form-control" type="text" id="playFileInput" name="playFileInput" ng-model="aaWelcome.welcomeDialogMenuEntry.actions[0].value" required placeholder="http:// or text" size="30"/>
                 <span class="form-control-feedback" ng-if="welcomeForm.playFileInput.$touched && welcomeForm.playFileInput.$error.required" popover-placement="top" popover="{{ 'common.invalidRequired' | translate }}"><i class="icon icon-warning"></i></span>
                 <span class="form-control-feedback" ng-if="welcomeForm.playFileInput.$touched && welcomeForm.playFileInput.$error.url" popover-placement="top" popover="{{ 'common.invalidUrl' | translate }}"><i class="icon icon-warning"></i></span>
               </div>
