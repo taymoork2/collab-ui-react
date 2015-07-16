@@ -1,7 +1,7 @@
 'use strict';
 
 // Waiting for new page to go active before turning on tests
-xdescribe('Partner Reports', function () {
+describe('Partner Reports', function () {
   var customer = 'Huron Int Test 2';
   var time = 'Last Month';
 
@@ -13,7 +13,7 @@ xdescribe('Partner Reports', function () {
 
   describe('Reports Page', function () {
     it('should navigate to partner reports page', function () {
-      navigation.clickReports();
+      navigation.clickDevReports();
       utils.expectIsPresent(reports.pageTitle);
     });
 
