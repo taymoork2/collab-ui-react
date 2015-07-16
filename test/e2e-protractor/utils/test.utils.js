@@ -296,6 +296,10 @@ exports.expectSwitchState = function (elem, value) {
 
 exports.expectCheckbox = exports.expectSwitchState;
 
+exports.expectRadioValue = function (elem, value) {
+  return elem.getAttribute('value') === value;
+};
+
 exports.findDirectoryNumber = function (message, lineNumber) {
   for (var i = 0; i < message.length; i++) {
     var line = message[i];

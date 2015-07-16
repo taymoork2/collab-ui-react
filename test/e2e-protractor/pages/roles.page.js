@@ -11,6 +11,8 @@ var RolesPage = function () {
   this.salesAdmin = element(by.id('sales-admin-options')).element(by.css('.ng-valid'));
   this.noAdmin = element(by.id('no-admin-options')).element(by.css('.ng-valid'));
 
+  this.adminRadio = element(by.model('rolesObj.adminRadioValue'));
+
   this.saveButton = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
   this.closeButton = element(by.css('.close-row'));
   this.sipAddressesInput = element(by.id('sipAddressesInput'));
@@ -47,6 +49,22 @@ var RolesPage = function () {
 
   this.getEmail = function () {
     return this.emailInput.getAttribute('value');
+  };
+
+  this.noAdminValue = function () {
+    return this.noAdmin.getAttribute('value');
+  };
+
+  this.salesAdminValue = function () {
+    return this.salesAdmin.getAttribute('value');
+  };
+
+  this.fullAdminValue = function () {
+    return this.fullAdmin.getAttribute('value');
+  };
+
+  this.getAdminRadioValue = function () {
+    return this.adminRadio.getAttribute('value');
   };
 };
 

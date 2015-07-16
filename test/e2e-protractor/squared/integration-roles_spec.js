@@ -57,6 +57,10 @@ describe('Org Entitlement flow', function () {
     notifications.clearNotifications();
   });
 
+  it('should have full admin selected', function () {
+    utils.expectRadioValue(roles.getAdminRadioValue, roles.fullAdminValue);
+  });
+
   it('should reverse role change', function () {
     utils.click(roles.noAdmin);
     utils.click(roles.saveButton);
