@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cisco Spark Management",
+    "title": "Cloud Collaboration Management",
     "login": "Login",
     "loading": "Loading"
   },
@@ -193,7 +193,7 @@
     "welcome": "Welcome!",
     "feedback": "Feedback",
     "logout": "Sign Out",
-    "appTitle": "Cisco Spark Management",
+    "appTitle": "Cloud Collaboration Management",
     "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
@@ -1500,7 +1500,7 @@
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Help & FAQ Location",
     "matchingTix": "Matching Trouble Tickets",
-    "matchingDescr": "To match trouble tickets with the logs that are uploaded to the Cisco Spark Management when reports are created, append your support URL with your logID parameter as \"%%logID%%\" (no quotes).",
+    "matchingDescr": "To match trouble tickets with the logs that are uploaded to the Cloud Collaboration Management when reports are created, append your support URL with your logID parameter as \"%%logID%%\" (no quotes).",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
