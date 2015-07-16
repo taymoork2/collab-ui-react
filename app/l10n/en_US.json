@@ -1,7 +1,7 @@
 
 {
   "loginPage": {
-    "title": "Cisco Spark Management",
+    "title": "Cloud Collaboration Management",
     "login": "Login",
     "loading": "Loading"
   },
@@ -197,7 +197,7 @@
     "welcome": "Welcome!",
     "feedback": "Feedback",
     "logout": "Sign Out",
-    "appTitle": "Cisco Spark Management",
+    "appTitle": "Cloud Collaboration Management",
     "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
