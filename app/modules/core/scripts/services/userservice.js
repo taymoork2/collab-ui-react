@@ -362,19 +362,8 @@ angular.module('Core')
           }
         },
 
-        deactivateUser: function (userData, callback) {
-          return $http.delete(userUrl + 'user?email=' + userData.email.replace(/\+/g, "%2B"))
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
+        deactivateUser: function (userData) {
+          return $http.delete(userUrl + 'user?email=' + encodeURIComponent(userData.email));
         }
       };
     }

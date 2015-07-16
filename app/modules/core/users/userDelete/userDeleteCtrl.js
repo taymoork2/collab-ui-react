@@ -37,15 +37,15 @@ angular.module('Core')
         var userData = {
           email: $scope.deleteUsername
         };
-        Log.debug('Deactivating user: ' + $scope.deleteUserUuId + ' with data: ');
-        Userservice.deactivateUser(userData, function (data, status) {
-          var deferred = $q.defer();
-          if (data.success) {
+        Log.debug('Deactivating user ' + $scope.deleteUsername);
+        Userservice.deactivateUser(userData)
+          .success(function (data, status) {
             deleteHuron();
-            if (angular.isFunction($scope.$dismiss())) {
+            if (angular.isFunction($scope.$dismiss)) {
               $scope.$dismiss();
             }
-          } else {
+          })
+          .error(function (data, status) {
             Log.warn('Could not delete the user', data);
             var error = null;
             if (status) {
@@ -67,8 +67,7 @@ angular.module('Core')
             Notification.notify([error], 'error');
             angular.element('#deleteButton').button('reset');
             deferred.reject();
-          }
-        });
+          });
       };
     }
   ]);
