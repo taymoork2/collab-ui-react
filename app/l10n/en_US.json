@@ -1499,7 +1499,7 @@
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Help Site",
     "matchingTix": "Matching Problem Reports",
-    "matchingDescr": "To match problem reports with the logs that are uploaded to the Cisco Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
+    "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
