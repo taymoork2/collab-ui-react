@@ -324,6 +324,11 @@ angular.module('Core')
             state: 'vts',
             link: '#vts'
           }, {
+            title: 'tabs.reportTab',
+            desc: 'New Reports',
+            state: 'newpartnerreports',
+            link: '#partner/newreports'
+          }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
             state: 'utilization',
@@ -765,7 +770,8 @@ angular.module('Core')
           'intercomgroups',
           'paginggroups',
           'huntgroups',
-          'didadd'
+          'didadd',
+          'newpartnerreports'
         ],
         'squared-fusion-mgmt': [
           'fusion',
@@ -798,7 +804,8 @@ angular.module('Core')
       config.restrictedStates = {
         'customer': [
           'partneroverview',
-          'partnerreports'
+          'partnerreports',
+          'newpartnerreports'
         ],
         'partner': [
           'overview',

@@ -260,11 +260,18 @@
       graph.fillColors = 'color';
       graph.colorField = 'color';
       graph.labelColorField = 'color';
-      graph.labelText = '[[percentage]]%';
+      graph.labelText = '[[percentage]]';
       graph.fontSize = 26;
       graph.balloonText = '<span class="graph-text"><span class="graph-population" style="color:[[color]];">[[absCompare]]%</span> [[balloonText]]</span>';
       graph.valueField = 'percentage';
       graph.columnWidth = 0.8;
+      graph.labelFunction = function (serialDataItem, valueText) {
+        if (valueText > 0) {
+          return valueText + "%";
+        } else {
+          return "";
+        }
+      };
 
       var graphTwo = {
         'type': 'step',
