@@ -58,7 +58,7 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should have full admin selected', function () {
-    utils.expectRadioValue(roles.getAdminRadioValue, roles.fullAdminValue);
+    utils.expectRadioSelected(roles.fullAdminDiv);
   });
 
   it('should reverse role change', function () {
@@ -70,6 +70,8 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should verify user name change', function () {
+    utils.expectRadioSelected(roles.noAdminDiv);
+
     roles.getDisplayName().then(function (userName) {
       utils.click(users.closeSidePanel);
       utils.search(searchStr);
