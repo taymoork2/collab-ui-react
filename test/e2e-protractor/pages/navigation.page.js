@@ -13,6 +13,7 @@ var Navigation = function () {
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
+  this.devReports = element(by.css('a[href="#partner/newreports"]'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
@@ -44,6 +45,11 @@ var Navigation = function () {
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
   };
+
+  this.clickDevReports = function () {
+    this.clickDevelopmentTab();
+    utils.click(this.devReports);
+  }
 
   this.clickServicesTab = function () {
     utils.click(this.servicesTab);

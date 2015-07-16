@@ -212,6 +212,22 @@ angular
           params: {
             deleteUserOrgId: null,
             deleteUserUuId: null,
+            deleteUsername: null,
+            deleteUserfamilyName: null,
+            Username: null
+          }
+        })
+        .state('users.deleteSelf', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'UserDeleteCtrl',
+              templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html'
+            }
+          },
+          params: {
+            deleteUserOrgId: null,
+            deleteUserUuId: null,
             deleteUsername: null
           }
         })
@@ -609,6 +625,12 @@ angular
         .state('partnerreports', {
           parent: 'partner',
           url: '/reports',
+          templateUrl: 'modules/squared/views/partnerreports.html',
+          controller: 'PartnerReportsCtrl'
+        })
+        .state('newpartnerreports', {
+          parent: 'partner',
+          url: '/newreports',
           templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
           controller: 'PartnerReportCtrl',
           controllerAs: 'nav'

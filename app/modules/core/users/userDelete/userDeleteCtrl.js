@@ -7,6 +7,21 @@ angular.module('Core')
       $scope.deleteUserOrgId = $stateParams.deleteUserOrgId;
       $scope.deleteUserUuId = $stateParams.deleteUserUuId;
       $scope.deleteUsername = $stateParams.deleteUsername;
+      $scope.deleteUserdisplayName = $stateParams.deleteUserdisplayName;
+      $scope.userName = $stateParams.userName;
+
+      $scope.inputstr = {
+        response: ""
+      };
+      $scope.patt = $translate.instant('usersPage.yes');
+
+      $scope.deleteCheck = function () {
+        if ($scope.inputstr.response.toUpperCase() === $scope.patt) {
+          return false;
+        } else {
+          return true;
+        }
+      };
 
       function deleteSuccess() {
         angular.element('#deleteButton').button('reset');

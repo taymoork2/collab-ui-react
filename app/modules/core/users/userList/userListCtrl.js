@@ -222,6 +222,15 @@ angular.module('Core')
         });
       };
 
+      $scope.setDeactivateSelf = function (deleteUserOrgId, deleteUserUuId, deleteUsername) {
+        $state.go('users.deleteSelf', {
+          deleteUserOrgId: deleteUserOrgId,
+          deleteUserUuId: deleteUserUuId,
+          deleteUsername: deleteUsername
+        });
+      };
+
+      $scope.userName = Authinfo.getUserName();
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showUserDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
         '<div ng-cell></div>' +
@@ -238,7 +247,8 @@ angular.module('Core')
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
         '<li ng-if="row.entity.userStatus === \'pending\' || isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';
 

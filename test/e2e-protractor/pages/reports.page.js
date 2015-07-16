@@ -36,16 +36,19 @@ var ReportsPage = function () {
   this.activeCarousel = element(by.id('activeCarousel')).all(by.css('button'));
   this.activeUserGraph = element(by.id('activeUsersdiv')).all(by.css('div')).first();
   this.activeUserRefresh = element(by.id('activeUsersRefreshDiv'));
+  this.activeDescription = '.active-user';
 
   // active user population
   this.activePopulationGraph = element(by.id('activeUserPopulationChart')).all(by.css('div')).first();
   this.noActivePopulationData = element(by.css('.active-user-population')).element(by.css('.no-data-center'));
   this.activePopulationRefresh = element(by.id('activeUserPopulationRefreshDiv'));
+  this.activePopulationDescription = '.active-user-population';
 
   // registered endpoints
   this.registeredEndpointsTable = element(by.css('.registeredEndpoints')).element(by.css('.table'));
   this.noEndpointData = element(by.css('.registeredEndpoints')).element(by.css('.no-data-center'));
   this.noEndpointRefresh = element(by.id('endpointRefreshDiv'));
+  this.endpointDescription = '.registeredEndpoints';
 
   // call metrics
   this.callMetricsGraph = element(by.id('callMetricsDiv')).all(by.css('div')).first();
@@ -97,6 +100,21 @@ var ReportsPage = function () {
 
   this.clickTab = function (tabName) {
     utils.click(element(by.id(tabName.toLowerCase() + "Tab")));
+  };
+
+  this.verifyDescription = function (text, location, present) {
+    var div = element(by.css(location)).all(by.css('.report-description')).first();
+
+    return browser.wait(function () {
+      return div.getText().then(function (response) {
+        if (response.length > 0) {
+          expect(response.toLowerCase().indexOf(text.toLowerCase()) > -1).toBe(present);
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }, TIMEOUT, 'Waiting for text');
   };
 };
 

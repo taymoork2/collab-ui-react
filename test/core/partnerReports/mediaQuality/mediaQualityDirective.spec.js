@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: ucRegisteredEndpoints', function () {
+describe('Directive: ucMediaQuality', function () {
   var $compile, $rootScope;
 
   beforeEach(module('Core'));
@@ -11,9 +11,9 @@ describe('Directive: ucRegisteredEndpoints', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<uc-registered-endpoints/>")($rootScope);
+    var element = $compile("<uc-media-quality/>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("registeredEndpoints");
+    expect(element.html()).toContain("media-quality");
   });
 });

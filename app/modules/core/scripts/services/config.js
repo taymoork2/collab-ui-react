@@ -114,6 +114,8 @@ angular.module('Core')
 
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
+        oauthDeleteTokenUrl: 'https://idbroker.webex.com/idb/oauth2/v1/revoke',
+
         ssoSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
 
         ssoTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
@@ -321,6 +323,11 @@ angular.module('Core')
             desc: 'tabs.vtsDetailsTabDesc',
             state: 'vts',
             link: '#vts'
+          }, {
+            title: 'tabs.reportTab',
+            desc: 'New Reports',
+            state: 'newpartnerreports',
+            link: '#partner/newreports'
           }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
@@ -629,6 +636,10 @@ angular.module('Core')
           return this.logoutUrl + encodeURIComponent(acu);
         },
 
+        getOauthDeleteTokenUrl: function () {
+          return this.oauthDeleteTokenUrl;
+        },
+
         getAdminPortalUrl: function () {
           return this.adminClientUrl[this.getEnv()];
         },
@@ -759,7 +770,8 @@ angular.module('Core')
           'intercomgroups',
           'paginggroups',
           'huntgroups',
-          'didadd'
+          'didadd',
+          'newpartnerreports'
         ],
         'squared-fusion-mgmt': [
           'fusion',
@@ -792,7 +804,8 @@ angular.module('Core')
       config.restrictedStates = {
         'customer': [
           'partneroverview',
-          'partnerreports'
+          'partnerreports',
+          'newpartnerreports'
         ],
         'partner': [
           'overview',
