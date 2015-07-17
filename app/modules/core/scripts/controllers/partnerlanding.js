@@ -100,9 +100,7 @@ angular.module('Core')
             isSquaredUcOffer: false
           };
 
-          if (data.isAllowedToManage) {
-            dataObj.isAllowedToManage = data.isAllowedToManage;
-          }
+          dataObj.isAllowedToManage = data.isAllowedToManage;
 
           if (data.offers) {
             dataObj.offers = data.offers;
