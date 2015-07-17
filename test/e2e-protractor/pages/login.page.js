@@ -82,6 +82,20 @@ var LoginPage = function () {
     this.clickLoginSubmit();
     navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
   };
+
+  this.loginWithParam = function (username, expectedUrl) {
+    var bearer;
+    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
+    helper.getBearerToken(username, function (_bearer) {
+      bearer = _bearer;
+      expect(bearer).not.toBeNull();
+      browser.executeScript("localStorage.accessToken='" + bearer + "'");
+      browser.refresh();
+    });
+    return browser.wait(function () {
+      return bearer;
+    }, 10000, 'Could not retrieve bearer token to login');
+  };
 };
 
 module.exports = LoginPage;

@@ -156,6 +156,10 @@
     "deviceTab": "Devices",
     "reportTab": "Reports",
     "supportTab": "Support",
+    "logsTab": "Logs",
+    "logsTabDesc": "View user logs",
+    "billingTab": "Order Provisioning",
+    "billingTabDesc": "Engineering support/operations",
     "accountTab": "Account",
     "developmentTab": "Development",
     "organizationTab": "Organization",
@@ -426,6 +430,19 @@
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Status"
   },
+  "billingPage": {
+    "title": "Order Provisioning",
+    "sendCustomer": "Resend Customer Email",
+    "sendPartner": "Resend Partner Email",
+    "orderId": "Order ID",
+    "sbpOrderId": "Order ID",
+    "action": "Action",
+    "customerEmailSuccess": "Email to Customer sent successfully",
+    "partnerEmailSuccess": "Email to Partner sent successfully",
+    "errOrderStatus": "Failed to retrieve order status",
+    "errCustomerEmail": "Failed to resend welcome email to customer admin",
+    "errPartnerEmail": "Failed to resend welcome email to partner admin"
+  },
   "common": {
     "delete": "Delete",
     "disable": "Disable",
@@ -582,7 +599,8 @@
     "lessThan": "{{beginNumber}} must be less than or equal to {{endNumber}}.",
     "rangeOverlap": "Extension Ranges must not overlap.",
     "rangeDuplicate": "Extension Ranges cannot have duplicates.",
-    "fieldValidationFailed": "Errors exist on the page.  Please correct and try again."
+    "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
+    "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",

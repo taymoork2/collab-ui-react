@@ -49,6 +49,9 @@ describe('Controller: ServiceSetup', function () {
       }, {
         beginNumber: '6000',
         endNumber: '6999'
+      }, {
+        beginNumber: '4000',
+        endNumber: '4000'
       }]
     };
     timeZone = [{
@@ -151,6 +154,17 @@ describe('Controller: ServiceSetup', function () {
       expect(controller.model.numberRanges).not.toContain(internalNumberRange);
     });
 
+    it('should remove singleNumberRange and not notify', function () {
+      var index = 2;
+      var internalNumberRange = model.numberRanges[index];
+      controller.deleteInternalNumberRange(internalNumberRange);
+      $scope.$apply();
+
+      expect(ServiceSetup.deleteInternalNumberRange).not.toHaveBeenCalled();
+      expect(Notification.notify).not.toHaveBeenCalled();
+      expect(controller.model.numberRanges).not.toContain(internalNumberRange);
+    });
+
     it('should notify error on error', function () {
       ServiceSetup.deleteInternalNumberRange.and.returnValue($q.reject());
 
@@ -170,6 +184,8 @@ describe('Controller: ServiceSetup', function () {
     it('should notify on success when not firstTimeSetup', function () {
       controller.firstTimeSetup = false;
       controller.pilotNumberSelected = externalNumberPool[0];
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
       controller.initNext();
       $scope.$apply();
 
@@ -183,6 +199,8 @@ describe('Controller: ServiceSetup', function () {
     it('should create site when firstTimeSetup', function () {
       controller.firstTimeSetup = true;
       controller.pilotNumberSelected = externalNumberPool[0];
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
       controller.initNext();
       $scope.$apply();
 
@@ -195,6 +213,8 @@ describe('Controller: ServiceSetup', function () {
 
     it('should notify error if createSite fails', function () {
       controller.firstTimeSetup = true;
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
       ServiceSetup.createSite.and.returnValue($q.reject());
 
       var promise = controller.initNext();

@@ -32,6 +32,10 @@ var SupportPage = function () {
 
   this.locusIdSort = element(by.css('.colt1'));
 
+  this.orderListAction = element(by.id('actionsButton'));
+  this.resendCustomerEmail = element(by.css('#resendCustomerEmail a'));
+  this.resendPartnerEmail = element(by.css('#resendPartnerEmail a'));
+
   this.getRowCount = function () {
     return this.rowCount.then(function (rows) {
       return rows.length;
