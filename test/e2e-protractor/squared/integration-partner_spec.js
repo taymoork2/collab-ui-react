@@ -108,8 +108,13 @@ describe('Partner flow', function () {
     it('Launch customer portal via preview panel and display first time wizard', function () {
       var appWindow = browser.getWindowHandle();
 
+      utils.click(navigation.homeTab);
+      utils.click(navigation.customersTab);
+
+
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
+      utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
 
@@ -145,10 +150,14 @@ describe('Partner flow', function () {
     it('Launch customer portal via dropdown and display partner managing org in partner filter', function () {
       var appWindow = browser.getWindowHandle();
 
+      utils.click(navigation.homeTab);
+      utils.click(navigation.customersTab);
+
       utils.click(partner.exitPreviewButton);
       utils.expectIsNotDisplayed(partner.previewPanel);
 
       utils.click(partner.actionsButton);
+      utils.expectIsDisplayed(partner.launchCustomerButton);
       utils.click(partner.launchCustomerButton);
       utils.switchToNewWindow().then(function () {
 
