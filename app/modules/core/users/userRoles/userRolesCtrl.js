@@ -1,7 +1,7 @@
 'use strict';
 angular.module('Squared')
-  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams',
-    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $log) {
+  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$sanitize',
+    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $sanitize) {
 
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
@@ -175,8 +175,8 @@ angular.module('Squared')
                 'schemas': Config.scimSchemas,
                 'title': $scope.currentUser.title,
                 'name': {
-                  'givenName': $scope.currentUser.name ? $scope.currentUser.name.givenName : '',
-                  'familyName': $scope.currentUser.name ? $scope.currentUser.name.familyName : ''
+                  'givenName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.givenName) : '',
+                  'familyName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.familyName) : ''
                 },
                 'displayName': $scope.currentUser.displayName,
               };

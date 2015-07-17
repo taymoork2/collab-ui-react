@@ -13,7 +13,7 @@
   }
   .spinner-position {
     position: relative;
-    top: 200px;
+    top: -250px;
   }
   .active-user-status {
     position: absolute;
@@ -21,20 +21,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  .most-active-btn {
-    font-family: "Arial";
+  .most-active {
+    font-family: $brand-font-cisco-TT-Regular;
     font-size: 13px;
     line-height: 18px;
-    color: $gray-darkest;
     text-align: left;
     padding: 0;
-  }
-  .most-active-btn:hover,
-  .most-active-btn:focus,
-  .most-active-btn:active,
-  .carousel-btn:hover {
-    border-color: transparent;
-    box-shadow: none;
   }
   .active-users-table {
     padding-bottom: 0;
@@ -56,7 +48,7 @@
     transform: translate(0%, 35%);
     .no-data {
       color: $gray-light;
-      font-family: "CiscoSansTT Light";
+      font-family: $brand-font-cisco-TT-Light;
       font-size: 46px;
     }
   }

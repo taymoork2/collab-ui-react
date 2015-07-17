@@ -30,13 +30,14 @@ We use pull requests, and consequentially the forking model.  To make a contribu
 3. After your new fork is created, you'll want to pull the fork to your local environment, and add the upstream and jenkins remotes:
  - `git clone git@sqbu-github.cisco.com:username/wx2-admin-web-client`
  - `git remote add upstream git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client`
- - `git remote add jenkins username@sqbu-jenkins.cisco.com:wx2-admin-web-client`
+ - `git remote add jenkins ssh://username@sqbu-jenkins.cisco.com:2022/wx2-admin-web-client`
 
 When you're making changes to your fork, you'll push to your fork with `git push origin master`, and your pull request will get automatically updated with the latest pushes you've made.
 
 When your pull request gets approved by someone, this means you're able to push to jenkins with `git push jenkins master`. Clicking the "Merge" button will not merge into master since we used gated builds. This means that Jenkins is the only one who is capable of pushing to master to ensure our repository stays clean.
 
 To summarize, this is the process:
+
 1. You fork the wx2-admin-web-client repository
 2. You make changes on your fork
 3. You commit and push your changes to your fork (`git add`, `git commit`)

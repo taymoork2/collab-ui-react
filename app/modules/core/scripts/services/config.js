@@ -114,6 +114,8 @@ angular.module('Core')
 
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
+        oauthDeleteTokenUrl: 'https://idbroker.webex.com/idb/oauth2/v1/revoke',
+
         ssoSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
 
         ssoTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
@@ -632,6 +634,10 @@ angular.module('Core')
         getLogoutUrl: function () {
           var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
           return this.logoutUrl + encodeURIComponent(acu);
+        },
+
+        getOauthDeleteTokenUrl: function () {
+          return this.oauthDeleteTokenUrl;
         },
 
         getAdminPortalUrl: function () {
