@@ -111,7 +111,6 @@ describe('Partner flow', function () {
       utils.click(navigation.homeTab);
       utils.click(navigation.customersTab);
 
-
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
