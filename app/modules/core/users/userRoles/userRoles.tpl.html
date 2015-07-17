@@ -47,7 +47,7 @@
               <cs-radio label="fullAdmin.label" value="fullAdmin.value" name="fullAdmin.name" id="fullAdmin.id" ng-click="clearCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
               <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-check'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
-            <cs-radio label="partialAdmin.label" value="partialAdmin.value" name="partialAdmin.name" id="partialAdmin.id" ng-click="supportCheckboxes();"ng-model="rolesObj.adminRadioValue"></cs-radio>
+            <cs-radio label="partialAdmin.label" value="partialAdmin.value" name="partialAdmin.name" id="partialAdmin.id" ng-click="supportCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
           </fieldset>
           <div ng-click="radioHandler()">
             <div class="admin-options" id="sales-admin-options" ng-show="isPartner()">

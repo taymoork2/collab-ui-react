@@ -8,8 +8,6 @@ angular.module('Squared')
         $scope.roles = $scope.currentUser.roles;
       }
 
-      //    $log.log($scope.currentUser);
-
       $scope.rolesObj = {};
 
       var inArray = function (array, el) {
