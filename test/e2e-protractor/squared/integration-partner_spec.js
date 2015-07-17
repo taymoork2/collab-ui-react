@@ -152,9 +152,6 @@ describe('Partner flow', function () {
       utils.click(navigation.homeTab);
       utils.click(navigation.customersTab);
 
-      utils.click(partner.exitPreviewButton);
-      utils.expectIsNotDisplayed(partner.previewPanel);
-
       utils.click(partner.actionsButton);
       utils.expectIsDisplayed(partner.launchCustomerButton);
       utils.click(partner.launchCustomerButton);
