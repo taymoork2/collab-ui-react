@@ -66,7 +66,6 @@ angular.module('Core')
             }
             Notification.notify([error], 'error');
             angular.element('#deleteButton').button('reset');
-            deferred.reject();
           });
       };
     }
