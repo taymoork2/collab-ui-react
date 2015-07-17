@@ -2,6 +2,8 @@
 
 describe('First Time Wizard - CiscoUC Service Setup', function () {
   var pattern = servicesetup.getPattern();
+  var pattern1 = parseInt(pattern) + 1;
+  var pattern2 = parseInt(pattern) + 2;
 
   beforeAll(function () {
     login.login('huron-e2e');
@@ -16,7 +18,6 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
 
   it('should load views according to left navigation clicks', function () {
     wizard.clickServiceSetup();
-    utils.click(wizard.nextBtn);
     utils.expectText(wizard.mainviewTitle, 'Unified Communications');
     utils.expectIsDisplayed(servicesetup.timeZone);
     utils.expectIsDisplayed(servicesetup.steeringDigit);
@@ -31,15 +32,23 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
   it('should add a number range', function () {
     utils.click(servicesetup.addNumberRange);
     utils.sendKeys(servicesetup.newBeginRange, pattern);
-    utils.sendKeys(servicesetup.newEndRange, pattern);
-    utils.click(wizard.finishBtn);
+    utils.sendKeys(servicesetup.newEndRange, pattern1);
+    utils.click(wizard.saveBtn);
     notifications.assertSuccess('saved successfully');
   });
 
+  it('should not add a single number range', function () {
+    utils.click(servicesetup.addNumberRange);
+    utils.sendKeys(servicesetup.newBeginRange, pattern2);
+    utils.sendKeys(servicesetup.newEndRange, pattern2);
+    utils.click(wizard.saveBtn);
+    notifications.assertError('Errors exist');
+  });
+
   it('should delete the number range', function () {
+    navigation.clickFirstTimeWizard();
     wizard.clickServiceSetup();
-    utils.click(wizard.nextBtn);
-    servicesetup.deleteNumberRange(pattern);
+    utils.click(servicesetup.deleteNumberRange(pattern));
     notifications.assertSuccess('Successfully deleted');
   });
 
