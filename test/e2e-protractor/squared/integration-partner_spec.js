@@ -108,9 +108,6 @@ describe('Partner flow', function () {
     it('Launch customer portal via preview panel and display first time wizard', function () {
       var appWindow = browser.getWindowHandle();
 
-      utils.click(navigation.homeTab);
-      utils.click(navigation.customersTab);
-
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
