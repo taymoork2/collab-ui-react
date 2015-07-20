@@ -44,8 +44,8 @@ describe('Service: DeviceService', function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/7a94bbdf-6df5-4240-ae68-b5fa9d25df51').respond(200, getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51.json'));
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/users/1/endpoints').respond(200, getJSONFixture('huron/json/device/devices.json'));
 
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/a61d770c-0f00-4251-b599-a10d49399ddb?status=true').respond(200, getJSONFixture('huron/json/device/devices/a61d770c-0f00-4251-b599-a10d49399ddb-With-Status.json'));
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/7a94bbdf-6df5-4240-ae68-b5fa9d25df51?status=true').respond(200, getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51-With-Status.json'));
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/a61d770c-0f00-4251-b599-a10d49399ddb?ipaddress=true&status=true').respond(200, getJSONFixture('huron/json/device/devices/a61d770c-0f00-4251-b599-a10d49399ddb-With-Status.json'));
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/7a94bbdf-6df5-4240-ae68-b5fa9d25df51?ipaddress=true&status=true').respond(200, getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51-With-Status.json'));
 
       DeviceService.loadDevices('1').then(function (data) {
         expect(data.length).toEqual(2);

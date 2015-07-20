@@ -53,10 +53,11 @@
 
             device.deviceStatus.progressStatus = true;
 
-            SipEndpointService.query({
+            SipEndpointService.get({
               customerId: Authinfo.getOrgId(),
               sipEndpointId: device.uuid,
-              status: true
+              status: true,
+              ipaddress: true
             }).$promise.then(function (endpoint) {
               if (angular.isDefined(endpoint.registrationStatus) && angular.lowercase(endpoint.registrationStatus) === 'registered') {
                 this.deviceStatus.status = 'Online';
