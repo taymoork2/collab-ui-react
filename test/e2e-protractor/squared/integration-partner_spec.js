@@ -146,6 +146,8 @@ describe('Partner flow', function () {
     it('Launch customer portal via dropdown and display partner managing org in partner filter', function () {
       var appWindow = browser.getWindowHandle();
 
+      utils.click(partner.exitPreviewButton);
+
       utils.click(partner.actionsButton);
       utils.expectIsDisplayed(partner.launchCustomerButton);
       utils.click(partner.launchCustomerButton);
