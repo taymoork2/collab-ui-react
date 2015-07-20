@@ -377,37 +377,6 @@ angular.module('Core')
         getUserList();
       });
 
-      $scope.updateUser = function () {
-        angular.element('#btn-save').button('loading');
-        var userData = {
-          'schemas': Config.scimSchemas,
-          'title': $scope.currentUser.title,
-          'name': {
-            'givenName': $scope.currentUser.name.givenName,
-            'familyName': $scope.currentUser.name.familyName
-          },
-        };
-
-        Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
-        Log.debug(userData);
-
-        Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
-          if (data.success) {
-            var successMessage = [];
-            successMessage.push($translate.instant('profilePage.success'));
-            Notification.notify(successMessage, 'success');
-            angular.element('#btn-save').button('reset');
-            $scope.user = data;
-          } else {
-            Log.debug('Update existing user failed. Status: ' + status);
-            var errorMessage = [];
-            errorMessage.push($translate.instant('profilePage.error'));
-            Notification.notify(errorMessage, 'error');
-            angular.element('#btn-save').button('reset');
-          }
-        });
-      };
-
       $scope.placeholder = {
         name: $translate.instant('usersPage.all'),
         filterValue: '',

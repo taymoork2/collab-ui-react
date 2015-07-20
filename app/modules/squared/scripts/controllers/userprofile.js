@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('UserProfileCtrl', ['$scope', '$location', '$route', '$stateParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config',
-    function ($scope, $location, $route, $stateParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config) {
+  .controller('UserProfileCtrl', ['$scope', '$location', '$route', '$stateParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config', '$sanitize',
+    function ($scope, $location, $route, $stateParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config, $sanitize) {
 
       var userid = $stateParams.uid;
       $scope.orgName = Authinfo.getOrgName();
@@ -32,11 +32,21 @@ angular.module('Squared')
           'schemas': Config.scimSchemas,
           'title': $scope.user.title,
           'name': {
-            'givenName': $scope.user.name.givenName,
-            'familyName': $scope.user.name.familyName
+            'givenName': $scope.user.name ? $sanitize($scope.user.name.givenName) : '',
+            'familyName': $scope.user.name ? $sanitize($scope.user.name.familyName) : ''
           },
           'displayName': $scope.user.displayName,
+          'meta': {
+            'attributes': []
+          }
         };
+        // If name properties don't exist, delete names using meta attributes
+        if (!userData.name.givenName) {
+          userData.meta.attributes.push('name.givenName');
+        }
+        if (!userData.name.familyName) {
+          userData.meta.attributes.push('name.familyName');
+        }
 
         Log.debug('Updating user: ' + userid + ' with data: ');
         Log.debug(userData);
