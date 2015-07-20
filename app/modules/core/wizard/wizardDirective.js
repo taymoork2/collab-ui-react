@@ -43,7 +43,6 @@
   /* @ngInject */
   function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams, $state) {
     var vm = this;
-    vm.planReview = $controller('PlanReviewCtrl');
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;
     vm.termsCheckbox = false;
