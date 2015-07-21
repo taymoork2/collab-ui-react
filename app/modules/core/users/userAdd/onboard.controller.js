@@ -790,9 +790,10 @@ angular.module('Core')
         var deferred = $q.defer();
 
         if (getUsersList().length === 0) {
-          $q.when($scope.finish()).then(function () {
-            deferred.resolve();
+          $q.when($scope.wizard.nextTab()).then(function () {
+            deferred.reject();
           });
+          return deferred.promise;
         }
 
         if (invalidcount === 0) {
