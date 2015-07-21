@@ -334,7 +334,7 @@ angular
             '': {
               templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
               controller: 'DeviceDetailCtrl',
-              controllerAs: 'ucDeviceDetail',
+              controllerAs: 'ucDeviceDetail'
             }
           }
         })
