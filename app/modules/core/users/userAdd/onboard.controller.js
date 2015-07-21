@@ -398,6 +398,7 @@ angular.module('Core')
       };
 
       var checkNextButtonStatus = function () {
+        wizardNextText();
         $scope.model.nextButtonDisabled = invalidcount > 0;
       };
 
@@ -429,7 +430,6 @@ angular.module('Core')
           }
           checkNextButtonStatus();
           checkPlaceholder();
-          wizardNextText();
         },
         edittoken: function (e) {
           if (!validateEmail(e.attrs.value)) {
@@ -442,7 +442,6 @@ angular.module('Core')
           }
           checkNextButtonStatus();
           checkPlaceholder();
-          wizardNextText();
         }
       };
 
