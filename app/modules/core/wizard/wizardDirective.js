@@ -77,7 +77,6 @@
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
 
-
     init();
 
     function init() {
