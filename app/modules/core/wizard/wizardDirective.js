@@ -70,7 +70,6 @@
     vm.isWizardModal = isWizardModal;
 
     vm.nextText = $translate.instant('common.next');
-    vm.nextDisabled = false;
 
     vm.openTermsAndConditions = openTermsAndConditions;
     vm.closeModal = closeModal;
