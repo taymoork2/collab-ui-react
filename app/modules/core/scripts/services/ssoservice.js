@@ -23,13 +23,14 @@ angular.module('Core')
             });
         },
 
-        importRemoteIdp: function (metadataXmlContent, callback) {
+        importRemoteIdp: function (metadataXmlContent, selfSigned, callback) {
           var remoteIdpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp';
           var payload = {
             schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
             metadataXml: metadataXmlContent,
             attributeMapping: ['uid=uid', 'mail=mail'],
             autofedAttribute: 'uid',
+            ignoreSignatureVerification: selfSigned,
             ssoEnabled: true
           };
 
@@ -126,6 +127,7 @@ angular.module('Core')
               data.status = status;
               callback(data, status);
             });
+
         }
       };
     }

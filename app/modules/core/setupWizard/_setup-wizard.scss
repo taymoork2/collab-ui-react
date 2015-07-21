@@ -7,8 +7,10 @@
     @extend .row;
     display: flex;
     .col-sm-4 {
-      margin-right: 3px;
       padding-bottom: 10px;
+      &:not(:last-of-type){
+        margin-right: 3px;
+      }
     }
     .col-free {
       background: $gray-lightest;
@@ -28,6 +30,7 @@
     .col-trial {
       background: $brand-warning;
       padding: 0;
+       
     }
     .col-trial-header {
       padding: 20px 15px 0 15px;
@@ -38,7 +41,7 @@
       line-height: 32px;
       color: $brand-white;
     }
-    &:last-child {
+    &.row-licenses {
       flex: 1;
     }
   }

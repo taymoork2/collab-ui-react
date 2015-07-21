@@ -27,11 +27,12 @@ angular.module('Hercules')
       };
 
       var getMessages = function (data, status) {
-        data = data && data.data ? data.data : data;
-        if (data && data.error && data.error.message) {
-          return findMessages(data);
+        var d = data && data.data ? data.data : data;
+        if (d) {
+          return findMessages(d);
         } else {
-          return [status ? 'Backend responded with status ' + status + '.' : 'Backend responded with an unknown status.'];
+          var s = data && data.status || status;
+          return [s ? 'Backend responded with status ' + s + '.' : 'Backend responded with an unknown status.'];
         }
       };
 
@@ -45,7 +46,7 @@ angular.module('Hercules')
             messageOrArgs = _.isArray(messageOrArgs) ? messageOrArgs : [messageOrArgs];
             messages = getMessages.apply(null, messageOrArgs);
           }
-          return notification.notify(messages, 'error');
+          return notification.notify(_.uniq(messages), 'error');
         },
         getMessages: function (args) {
           return getMessages.apply(null, args);

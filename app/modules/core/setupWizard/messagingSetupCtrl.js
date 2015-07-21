@@ -34,6 +34,7 @@
       label: 'Keep forever',
       value: 'indefinite'
     }];
+    $scope.showMessengerInterop = false;
 
     var orgId = Authinfo.getOrgId();
     AccountOrgService.getServices(orgId, null, function (data, status) {

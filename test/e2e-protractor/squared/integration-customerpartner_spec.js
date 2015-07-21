@@ -43,7 +43,7 @@ describe('CS Admin flow', function () {
     it('clicking on regular customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.customerNameHeader);
       utils.click(partner.regularCustomerOrgId);
-      utils.expectIsEnabled(partner.launchCustomerPanelButton);
+      utils.expectIsDisabled(partner.launchCustomerPanelButton);
     });
 
   });
@@ -88,7 +88,7 @@ describe('CS User flow', function () {
 
     it('clicking on admin customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.adminCustomerOrgId);
-      utils.expectIsEnabled(partner.launchCustomerPanelButton);
+      utils.expectIsDisabled(partner.launchCustomerPanelButton);
     });
 
     it('clicking on regular customer should enable/disable ability to launch appropriately', function () {

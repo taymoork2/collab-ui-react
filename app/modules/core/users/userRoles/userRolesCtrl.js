@@ -1,14 +1,12 @@
 'use strict';
 angular.module('Squared')
-  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams',
-    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $log) {
+  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$sanitize',
+    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $sanitize) {
 
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
         $scope.roles = $scope.currentUser.roles;
       }
-
-      //    $log.log($scope.currentUser);
 
       $scope.rolesObj = {};
 
@@ -35,7 +33,7 @@ angular.module('Squared')
 
       var checkMainRoles = function (roles) {
         if ($scope.roles) {
-          if (isEqualArrays($scope.roles, roles)) {
+          if (isEqualArrays(roles, _.intersection($scope.roles, roles))) {
             return 1;
           } else {
             return 2;
@@ -177,11 +175,21 @@ angular.module('Squared')
                 'schemas': Config.scimSchemas,
                 'title': $scope.currentUser.title,
                 'name': {
-                  'givenName': $scope.currentUser.name ? $scope.currentUser.name.givenName : '',
-                  'familyName': $scope.currentUser.name ? $scope.currentUser.name.familyName : ''
+                  'givenName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.givenName) : '',
+                  'familyName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.familyName) : ''
                 },
                 'displayName': $scope.currentUser.displayName,
+                'meta': {
+                  'attributes': []
+                }
               };
+              // If name properties don't exist, delete names using meta attributes
+              if (!userData.name.givenName) {
+                userData.meta.attributes.push('name.givenName');
+              }
+              if (!userData.name.familyName) {
+                userData.meta.attributes.push('name.familyName');
+              }
 
               Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
 
@@ -219,6 +227,7 @@ angular.module('Squared')
         $scope.rolesObj.billingAdminValue = false;
         $scope.rolesObj.supportAdminValue = false;
         $scope.rolesObj.salesAdminValue = false;
+        $scope.isChecked = false;
       };
 
       $scope.radioHandler = function () {
@@ -226,5 +235,11 @@ angular.module('Squared')
           $scope.rolesObj.adminRadioValue = 2;
         }
       };
+
+      $scope.supportCheckboxes = function () {
+        $scope.rolesObj.supportAdminValue = true;
+        $scope.isChecked = true;
+      };
+
     }
   ]);

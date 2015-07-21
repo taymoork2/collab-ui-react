@@ -17,6 +17,11 @@ auth =
     pass: 'C1sc0123!'
     org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
 
+  'partner-reports':
+    user: 'partner-admin@huron-int.com'
+    pass: 'Cisco123!'
+    org:  '21e30827-4c16-4fed-b025-e1342508c380'
+
   'partner-sales-user':
     user: 'phtest77+salesadmin@gmail.com'
     pass: 'C1sc0123!'
@@ -48,7 +53,7 @@ auth =
     org:  '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79'
 
   'account-admin':
-    user: 'nkamboh+acc2@gmail.com'
+    user: 'phtest77+acc2@gmail.com'
     pass: 'C1sc0123!'
     org:  '58f01b76-2b3f-4c91-ad8a-e2af626fc7a5'
 
@@ -91,6 +96,16 @@ auth =
     user: 'int-esub-1@mailinator.com'
     pass: 'C1sc0123!'
     org:  '9d173ec9-198e-430d-9363-688a333bdee7'
+
+  'selfsign-sso-admin':
+    user: 'phtest77+dontdeleteme@gmail.com'
+    pass: 'C1sc0123!'
+    org: 'e9e33cac-eb07-4c34-8240-d08a43d0adce'
+
+  'mockcisco-support-user':
+    user: 'phtest77+testbilling@gmail.com'
+    pass: 'C1sc0123!'
+    org:  'd30a6828-dc35-4753-bab4-f9b468828688'
 
 clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec'
 clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857'

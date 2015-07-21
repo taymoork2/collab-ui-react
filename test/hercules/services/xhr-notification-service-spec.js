@@ -102,4 +102,16 @@ describe('XhrNotificationService', function () {
     expect(notification.notify.args[0][0][0]).toBe('foo');
   });
 
+  it('should extract errors from message', function () {
+    Service.notify({
+      data: {
+        message: "Experimental Endpoint",
+        errors: Array[1],
+        trackingId: "ATLAS_12cd34b1-0f3a-756b-ba2a-9a59db7574bc"
+      }
+    });
+    expect(notification.notify.callCount).toBe(1);
+    expect(notification.notify.args[0][0][0]).toBe('Experimental Endpoint');
+  });
+
 });

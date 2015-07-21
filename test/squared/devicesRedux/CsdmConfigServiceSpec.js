@@ -24,7 +24,7 @@ describe('CsdmConfigService', function () {
   }));
 
   it('should return the correct url', function () {
-    expect(Service.getUrl()).toBe(rootPath + 'v1');
+    expect(Service.getUrl()).toBe(rootPath);
   });
 
   it('should be possible to override url', function () {

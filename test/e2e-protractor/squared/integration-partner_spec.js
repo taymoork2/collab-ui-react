@@ -29,6 +29,10 @@ describe('Partner flow', function () {
       login.login('partner-admin', '#/partner/overview');
     });
 
+    it('should display correct navigation colors', function () {
+      utils.expectClass(navigation.body, 'inverse');
+    });
+
     it('should display correct tabs for user based on role', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
@@ -106,6 +110,7 @@ describe('Partner flow', function () {
 
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
+      utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
 
@@ -115,7 +120,6 @@ describe('Partner flow', function () {
 
         utils.expectText(wizard.mainviewTitle, 'Plan Review');
         utils.click(wizard.beginBtn);
-        utils.click(wizard.saveBtn);
         utils.click(wizard.saveBtn);
 
         utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
@@ -143,9 +147,9 @@ describe('Partner flow', function () {
       var appWindow = browser.getWindowHandle();
 
       utils.click(partner.exitPreviewButton);
-      utils.expectIsNotDisplayed(partner.previewPanel);
 
       utils.click(partner.actionsButton);
+      utils.expectIsDisplayed(partner.launchCustomerButton);
       utils.click(partner.launchCustomerButton);
       utils.switchToNewWindow().then(function () {
 
@@ -210,24 +214,6 @@ describe('Partner flow', function () {
       utils.click(partner.contentSharedTab);
       utils.expectIsDisplayed(partner.contentSharedChart);
       utils.expectIsDisplayed(partner.contentSharedCount);
-    });
-  });
-
-  describe('Reports Page', function () {
-
-    it('should load cached values into directive when switching tabs', function () {
-      navigation.clickReports();
-      utils.expectIsDisplayed(reports.refreshData);
-      utils.expectIsDisplayed(reports.reloadedTime);
-      utils.expectIsDisplayed(reports.calls);
-      utils.expectIsDisplayed(reports.conversations);
-      utils.expectIsDisplayed(reports.activeUsers);
-      utils.expectIsDisplayed(reports.convOneOnOne);
-      utils.expectIsDisplayed(reports.convGroup);
-      utils.expectIsDisplayed(reports.calls);
-      utils.expectIsDisplayed(reports.callsAvgDuration);
-      utils.expectIsDisplayed(reports.contentShared);
-      utils.expectIsDisplayed(reports.contentShareSizes);
     });
   });
 

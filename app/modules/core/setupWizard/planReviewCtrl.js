@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate) {
+  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope) {
     /*jshint validthis: true */
     var vm = this;
     vm.messagingServices = {
@@ -81,6 +81,15 @@
           }
         });
       }
+      //check if the trial exists
+      if (vm.trialExists) {
+        vm.processing = true;
+        TrialService.getTrial(vm.trialId).then(function (trial) {
+          populateTrialData(trial);
+        }).finally(function () {
+          vm.processing = false;
+        });
+      }
 
       vm.cmrServices.services = Authinfo.getCmrServices();
 
@@ -116,6 +125,13 @@
           }
           cmrService.label = $translate.instant('onboardModal.cmr');
           vm.sites[cmrService.license.siteUrl].push(cmrService);
+        }
+      }
+
+      //set the parent property for showdoitlater button based on trial states
+      if (!vm.messagingServices.isNewTrial && vm.commServices.isNewTrial && !vm.confServices.isNewTrial) {
+        if (angular.isDefined($scope.wizard)) {
+          $scope.wizard.showDoItLater = true;
         }
       }
     }

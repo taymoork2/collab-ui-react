@@ -10,7 +10,7 @@ angular
       $scope.extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
 
       var hasEntitlement = function (entitlement) {
-        return $scope.currentUser.entitlements.indexOf(entitlement) > -1 ? true : false;
+        return $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf(entitlement) > -1;
       };
 
       if ($scope.extensionEntitlements.every(function (extensionEntitlement) {

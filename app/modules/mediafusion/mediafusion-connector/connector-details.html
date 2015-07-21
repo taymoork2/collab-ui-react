@@ -4,15 +4,29 @@
 
   <!-- cluster overview -->
   <cs-sp-section>
-    <div class="sw-upgrade" style="font-size: xs"> 
+    <div class="overview" style="font-size: xs"> 
       <div>Host Name / IP Address: {{connector.hosts[0].host_name}}</div>
       <div>Status: {{connector.needs_attention ? 'Offline' : 'Active'}}</div>
       <div>Version: {{connector.version}}</div>
     </div>
   </cs-sp-section> 
 
+  <!-- Show Media Service cluster name with type ahead suggesting existing clusters-->
+    <cs-sp-section>
+      <div class="form-horizontal " style="font-size: xs; padding: 15px 0;">
+        <div class="form-group form-group-sm" >
+            <div class="col-sm-2 control-label" style="margin-left: -12px;">
+              Cluster
+            </div>
+            <div class="col-sm-6">
+              <input class="form-control" type="text" id="sm" ng-model="selectedCluster" typeahead="cluster for cluster in clusters | filter:$viewValue | limitTo:8">
+            </div>
+        </div> 
+      </div>    
+    </cs-sp-section>
+
   <!-- Show alarms details if alarms present -->
-  <div class="clearfix" ng-show="connector.alarms_present">
+  <div class="alarms" ng-show="connector.alarms_present">
     <cs-sp-section>
       <div class="section-name" style="padding: 15px 0;">
         Alarms

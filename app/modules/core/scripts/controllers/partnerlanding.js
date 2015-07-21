@@ -100,6 +100,8 @@ angular.module('Core')
             isSquaredUcOffer: false
           };
 
+          dataObj.isAllowedToManage = isTrialData || data.isAllowedToManage;
+
           if (data.offers) {
             dataObj.offers = data.offers;
             var offerNames = [];

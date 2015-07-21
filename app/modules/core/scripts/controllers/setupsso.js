@@ -7,11 +7,12 @@ angular.module('Core')
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
       var strEntityIdEnd = '">';
-      var oldSSOValue = 1;
-      $scope.showFinalSSOConfirmation = false;
+      var oldSSOValue = 0;
+
       $scope.options = {
         configureSSO: 1,
-        enableSSO: 1
+        enableSSO: 0,
+        SSOSelfSigned: 0
       };
 
       $scope.configureSSOOptions = [{
@@ -26,16 +27,28 @@ angular.module('Core')
         id: 'ssoProvider'
       }];
 
-      $scope.enableSSOOptions = [{
-        label: $translate.instant('ssoModal.finalEnableSSO'),
-        value: 1,
-        name: 'finalssoOptions',
-        id: 'finalSsoProvider'
+      $scope.SSOSelfSignedOptions = [{
+        label: $translate.instant('ssoModal.requiredCertMetadata'),
+        value: 0,
+        name: 'ssoSelfSignedCert',
+        id: 'ssoNoSelfSigned'
       }, {
+        label: $translate.instant('ssoModal.allowSelfCertMetadata'),
+        value: 1,
+        name: 'ssoSelfSignedCert',
+        id: 'ssoSelfSigned'
+      }];
+
+      $scope.enableSSOOptions = [{
         label: $translate.instant('ssoModal.finalDisableSSO'),
         value: 0,
         name: 'finalssoOptions',
         id: 'finalSsoNoProvider'
+      }, {
+        label: $translate.instant('ssoModal.finalEnableSSO'),
+        value: 1,
+        name: 'finalssoOptions',
+        id: 'finalSsoProvider'
       }];
 
       $scope.$watch('options.enableSSO', function () {
@@ -138,7 +151,7 @@ angular.module('Core')
             }
             if (success === true) {
               Log.debug('Single Sign-On (SSO) successfully disabled for all users');
-              Notification.notify([$translate.instant('ssoModal.diableSuccess', {
+              Notification.notify([$translate.instant('ssoModal.disableSuccess', {
                 status: status
               })], 'success');
             } else {
@@ -157,14 +170,15 @@ angular.module('Core')
       };
 
       var reEnableSSO = function () {
-        SSOService.importRemoteIdp($rootScope.fileContents, function (data, status) {
+        var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+        SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, function (data, status) {
           if (data.success) {
             Log.debug('Single Sign-On (SSO) successfully enabled for all users');
             Notification.notify([$translate.instant('ssoModal.enableSSOSuccess', {
               status: status
             })], 'success');
           } else {
-            Log.debug('Failed to diable Single Sign-On (SSO). Status: ' + status);
+            Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
             Notification.notify([$translate.instant('ssoModal.enableSSOFailure', {
               status: status
             })], 'error');
@@ -173,7 +187,8 @@ angular.module('Core')
       };
 
       var postRemoteIdp = function () {
-        SSOService.importRemoteIdp($rootScope.fileContents, function (data, status) {
+        var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+        SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, function (data, status) {
           if (data.success) {
             Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
             Notification.notify([$translate.instant('ssoModal.importSuccess', {
@@ -227,7 +242,6 @@ angular.module('Core')
             })], 'error');
           }
         });
-        $scope.showFinalSSOConfirmation = true;
 
       };
 
@@ -242,13 +256,9 @@ angular.module('Core')
             $scope.url = (window.URL || window.webkitURL).createObjectURL(blob);
           } else {
             Log.debug('Failed to Export Identity Broker SP Metadata. Status: ' + status);
-            // Notification.notify([$translate.instant('ssoModal.downloadMetaFailed', {
-            //   status: status
-            // })], 'error');
           }
         });
       };
-
     }
   ])
   .config([

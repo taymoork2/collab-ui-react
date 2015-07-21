@@ -42,8 +42,19 @@
 
     <div class="widgets col-sm-12 col-md-5 col-lg-4 background-white">
       <div class="row">
+        <section class="monitoring-panel col-sm-3 col-md-12" ng-show="setupNotDone()">
+          <h4 class="monitoring-section" translate="homePage.notifications"></h4>
+          <div class="notification-style">
+            <span  class="badge badge-warning" translate="homePage.todo"></span>
+            <span class="notification-spacing">
+              <span translate="homePage.setUpYourTrial"></span>
+              <a ng-click="openFirstTimeSetupWiz()" translate="homePage.beginTrial"></a>
+            </span>
+          </div>
+        </section>
+
         <!-- TODO: To be removed when monitoring service is refactored-->
-        <section class="monitoring-panel col-sm-4 col-md-12">
+        <section class="monitoring-panel col-sm-3 col-md-12">
           <h4 class="monitoring-section" translate="homePage.monitoring"></h4>
           <div ng-repeat="health in healthMetrics">
             <a ng-href="{{statusPageUrl}}" target="_blank">
@@ -78,7 +89,7 @@
           <p class="no-cases">There are no open cases</p>
           <button class="btn btn-sm btn-default">Open a Case</button>
         </section> -->
-        <section class="quick-links col-sm-4 col-md-12" ng-controller="QuikLinksCtrl">
+        <section class="quick-links col-sm-3 col-md-12" ng-controller="QuikLinksCtrl">
           <h4 translate="homePage.quickLinksText"></h4>
           <div class="list-group">
 
@@ -89,7 +100,7 @@
             <a id="deviceLogsQuickLink" ui-sref="support" ng-if="isPageActive('support')" class="list-group-item">{{'homePage.searchLogsText' | translate}}</a>
           </div>
         </section>
-        <section class="unlicensed-users col-md-12 col-sm-4" ng-controller="LicensesCtrl" ng-show="isAdmin()">
+        <section class="unlicensed-users col-md-12 col-sm-3" ng-controller="LicensesCtrl" ng-show="isAdmin()">
           <div ng-if="isDomainClaimed()">
             <div class="users-info">
               <span class="number">{{licenses.unlicensed}}</span>

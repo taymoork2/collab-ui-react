@@ -20,12 +20,40 @@ Technology
 * End to end testing is based on the JS Selenium framework: Protractor
 * Build process is built and run with Gulp.js
 
-Pull the code from the repository
----------------------------------
+Contribute
+----------
 
-* `git clone git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git`
-* Once you have the repository you should be able to run `gulp serve` from the root directory of the repo.
-  If that doesn't work, you can manually install the necessary components for gulp in the next step.
+We use pull requests, and consequentially the forking model.  To make a contribution, you will need to fork this repository, make some changes, and then create a pull request with your changes.
+
+1. From this web page, click **Fork** at the upper-right hand corner of the page
+2. Select your username (e.g. @zzatking)
+3. After your new fork is created, you'll want to pull the fork to your local environment, and add the upstream and jenkins remotes:
+ - `git clone git@sqbu-github.cisco.com:username/wx2-admin-web-client`
+ - `git remote add upstream git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client`
+ - `git remote add jenkins ssh://username@sqbu-jenkins.cisco.com:2022/wx2-admin-web-client`
+
+When you're making changes to your fork, you'll push to your fork with `git push origin master`, and your pull request will get automatically updated with the latest pushes you've made.
+
+When your pull request gets approved by someone, this means you're able to push to jenkins with `git push jenkins master`. Clicking the "Merge" button will not merge into master since we used gated builds. This means that Jenkins is the only one who is capable of pushing to master to ensure our repository stays clean.
+
+To summarize, this is the process:
+
+1. You fork the wx2-admin-web-client repository
+2. You make changes on your fork
+3. You commit and push your changes to your fork (`git add`, `git commit`)
+4. You create a pull request
+5. Someone reviews your code and gives you feedback
+6. Eventually, your code will get approved
+7. You pull the latest changes (`git fetch upstream && git merge upstream/master`)
+7. You push to Jenkins to start a build (`git push jenkins master`)
+8. Your code gets merged
+
+Keeping your fork up-to-date
+----------------------------
+
+When contributing, it's important to keep your fork up-to-date with the master. You can do so by running the following two commands:
+* `git fetch upstream`
+* `git merge upstream/master`
 
 Setup the environment (If necessary)
 ------------------------------------
@@ -35,7 +63,7 @@ Setup the environment (If necessary)
 * Run package managers in the cloned project to pull dependencies:
 * `npm install && bower install`
 * Launch the app: `gulp serve`
-* Before pushing any code to jenkins, always use `git pull --rebase`
+* Before pushing any code to jenkins, always use `git fetch upstream && git merge upstream/master`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
 
 Project structure

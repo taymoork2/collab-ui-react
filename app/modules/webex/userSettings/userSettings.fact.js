@@ -260,7 +260,14 @@
                         supportCenterApplicable = true;
                       }
                     }
+                    if ("RAS" === siteMtgProductCodePrefix) {
+                      meetingCenterApplicable = false;
+                      trainingCenterApplicable = false;
+                      eventCenterApplicable = false;
+                      supportCenterApplicable = false;
+                    } //filter out RAS
                   } // chkSiteMtgServiceType()
+
                 ); // siteMtgServiceTypes.forEach()
 
                 var sessionType = {
@@ -327,6 +334,9 @@
           userSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "false" && //not TSP audio
             siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_meetingPlace.ns1_persistentTSP == "false") ? true : false; // not MP audio
           $log.log("WebEx audio = " + userSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio);
+
+          userSettingsModel.telephonyPriviledge.telephonyType.isTspAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "true") ? true : false;
+          $log.log("TSP audio = " + userSettingsModel.telephonyPriviledge.telephonyType.isTspAudio);
 
           // Start of call-in teleconf
           userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled = (

@@ -3,9 +3,9 @@
 
   /* @ngInject  */
   function CsdmPoller($injector) {
-    function create(poller) {
+    function create(service) {
       return $injector.instantiate(CsdmPollerInstance, {
-        poller: poller
+        service: service
       });
     }
     return {
@@ -14,22 +14,24 @@
   }
 
   /* @ngInject  */
-  function CsdmPollerInstance($timeout, poller, $log) {
+  function CsdmPollerInstance($timeout, service, $log) {
     var subscriptions = {};
     var subscriptionCount = 0;
     var activeSubscriptionsCount = 0;
     var pollPromise, pollDelay = 5000;
 
     function poll() {
-      $log.debug('polling', poller);
+      $log.debug('polling', service);
 
       function notifyAll(err, devices) {
         _.forEach(subscriptions, function (subscription) {
           subscription.doIt(err, devices);
         });
-        pollPromise = $timeout(poll, pollDelay);
+        if (activeSubscriptionsCount > 0) {
+          pollPromise = $timeout(poll, pollDelay);
+        }
       }
-      poller().then(_.partial(notifyAll, undefined), notifyAll);
+      service().then(_.partial(notifyAll, undefined), notifyAll);
     }
 
     function subscribe(callback, options) {
@@ -51,8 +53,8 @@
 
     function Subscription(id, callback) {
       this.id = id;
-      this.callback = callback;
       this.eventCount = 0;
+      this.callback = callback;
       this.currentError = null;
 
       this.doIt = function (err, devices) {

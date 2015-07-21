@@ -36,7 +36,6 @@
           </div>
         </cr-details-body>
       </form>
-      {{sally}}
       <div class="admin-roles-panel">
         <span class="edit-title" translate="rolesPanel.administratorRoles"></span>
         <span class="description" translate="rolesPanel.rolesDescription"></span>
@@ -48,24 +47,24 @@
               <cs-radio label="fullAdmin.label" value="fullAdmin.value" name="fullAdmin.name" id="fullAdmin.id" ng-click="clearCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
               <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-check'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
-            <cs-radio label="partialAdmin.label" value="partialAdmin.value" name="partialAdmin.name" id="partialAdmin.id" ng-model="rolesObj.adminRadioValue"></cs-radio>
+            <cs-radio label="partialAdmin.label" value="partialAdmin.value" name="partialAdmin.name" id="partialAdmin.id" ng-click="supportCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
           </fieldset>
           <div ng-click="radioHandler()">
             <div class="admin-options" id="sales-admin-options" ng-show="isPartner()">
-              <cs-checkbox ckid="salesAdminCkbx" class="indented-checkbox" label="{{'rolesPanel.salesAdmin' | translate}}" ng-model="rolesObj.salesAdminValue" isdisabled="false"></cs-checkbox>
+              <cs-checkbox ckid="salesAdminCkbx" class="indent-checkbox" label="{{'rolesPanel.salesAdmin' | translate}}" ng-model="rolesObj.salesAdminValue" isdisabled="false"></cs-checkbox>
               <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>Customer Management</li><li><i class='icon icon-check'></i>Overview & Reports</li><li><i class='icon icon-remove'></i>Organization Management</li><li><i class='icon icon-check'></i>Trials Management</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
             <div class="admin-options" ng-show="false">
-              <cs-checkbox ckid="userAdminCkbx" class="indented-checkbox" label="{{'rolesPanel.userAdmin' | translate}}" ng-model="rolesObj.userAdminValue" isdisabled="false"></cs-checkbox>
+              <cs-checkbox ckid="userAdminCkbx" class="indent-checkbox" label="{{'rolesPanel.userAdmin' | translate}}" ng-model="rolesObj.userAdminValue" isdisabled="false"></cs-checkbox>
               <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
             <div class="admin-options" ng-show="false">
-              <cs-checkbox ckid="billingAdminCkbx" class="indented-checkbox" label="{{'rolesPanel.billingAdmin' | translate}}" ng-model="rolesObj.billingAdminValue" isdisabled="false"></cs-checkbox>
+              <cs-checkbox ckid="billingAdminCkbx" class="indent-checkbox" label="{{'rolesPanel.billingAdmin' | translate}}" ng-model="rolesObj.billingAdminValue" isdisabled="false"></cs-checkbox>
               <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i class='icon icon-remove'></i>Analytics & Reports</li><li><i class='icon icon-remove'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
             <div class="admin-options">
-              <cs-checkbox ckid="supportAdminCkbx" class="indented-checkbox" label="{{'rolesPanel.supportAdmin' | translate}}" ng-model="rolesObj.supportAdminValue" isdisabled="false"></cs-checkbox>
-              <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-remove'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
+              <cs-checkbox ckid="supportAdminCkbx" class="indent-checkbox" label="{{'rolesPanel.supportAdmin' | translate}}" ng-model="rolesObj.supportAdminValue" ng-click="supportCheckboxes();" isdisabled="isChecked"></cs-checkbox>
+              <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i cass='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-remove'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
             </div>
           </div>
         <div ng-show="false">

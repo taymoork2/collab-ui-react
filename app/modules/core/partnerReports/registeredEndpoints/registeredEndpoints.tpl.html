@@ -1,13 +1,14 @@
 <div class="registeredEndpoints">
-  <h4 class="pull-left section-title" translate="registeredEndpoints.registeredEndpoints"></h4>
-  <div class="actions-menu dropdown pull-right report-threedot-button">
-    <button class="actions-button btn-none">
-      <i class="icon icon-three-dots"></i>
-    </button>
-  </div>
-  <hr class="title-break pull-left"/>
   <div class="row endpointTable">
-    <br>
+    <h4 class="pull-left section-title" translate="registeredEndpoints.registeredEndpoints"></h4>
+    <div class="actions-menu dropdown pull-right report-threedot-button">
+      <button class="actions-button btn-none">
+        <i class="icon icon-three-dots"></i>
+      </button>
+    </div>
+    <hr class="title-break pull-left"/>
+  </div>
+  <div class="row endpointTable">
     <p class="report-description">{{nav.endpointDescription}}</p>
     <table class="table table-bordered">
       <thead>
@@ -15,19 +16,23 @@
           <td class="vertical-center col-md-4 bold" translate="registeredEndpoints.company"></td>
           <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.maxRegisteredDevices"></td>
           <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.totalRegistered"></td>
-          <td class="vertical-center horizontal-center col-md-2 bold" translate="registeredEndpoints.trend"></td>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="customer in nav.registeredEndpoints">
-          <td class="vertical-center">{{customer.customer}}</td>
-          <td class="vertical-center horizontal-center">{{customer.yesterdaysMaxRegisteredDevices}}</td>
-          <td class="vertical-center horizontal-center">{{customer.yesterdaysDeviceRegistrationCount}}</td>
-          <td class="vertical-center horizontal-center {{customer.direction}}">{{customer.deviceRegistrationCountTrend}}%</td>
+          <td class="vertical-center customer-data">{{customer.customer}}</td>
+          <td class="table-data">
+            <div class="table-half vertical-center horizontal-center">{{customer.yesterdaysMaxRegisteredDevices}}</div>
+            <div class="table-half vertical-center horizontal-center {{customer.maxDirection}}">{{customer.maxRegisteredDevicesTrend}}</div>
+          </td>
+          <td class="table-data">
+            <div class="table-half vertical-center horizontal-center">{{customer.yesterdaysDeviceRegistrationCount}}</div>
+            <div class="table-half vertical-center horizontal-center {{customer.direction}}">{{customer.deviceRegistrationCountTrend}}</div>
+          </td>
         </tr>
       </tbody>
     </table>
-    <div id="activeUsersRefreshDiv" ng-show="nav.isRefresh(nav.endpointRefresh)">
+    <div id="endpointRefreshDiv" ng-show="nav.isRefresh(nav.endpointRefresh)">
       <i class='spinner-position icon icon-spinner icon-2x'></i>
     </div>
     <div ng-show="nav.isEmpty(nav.endpointRefresh)">

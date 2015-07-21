@@ -362,13 +362,8 @@ angular.module('Core')
           }
         },
 
-        deactivateUser: function (deleteUserOrgId, deleteUserUuId, userData, callback) {
-          var scimUrl = Config.getScimUrl() + '/' + deleteUserUuId;
-          scimUrl = Utils.sprintf(scimUrl, [deleteUserOrgId]);
-          return $http({
-            method: 'DELETE',
-            url: scimUrl
-          });
+        deactivateUser: function (userData) {
+          return $http.delete(userUrl + 'user?email=' + encodeURIComponent(userData.email));
         }
       };
     }

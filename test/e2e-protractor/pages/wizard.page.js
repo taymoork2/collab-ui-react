@@ -6,7 +6,10 @@ var Wizard = function () {
   this.leftNav = element(by.css('.wizard-nav'));
   this.reviewTab = element(by.id('wizard-planReview-link'));
   this.serviceSetupTab = element(by.id('wizard-serviceSetup-link'));
+  this.claimSipUrlFeature = element(by.id('sip-url-feature'));
   this.enterpriseTab = element(by.id('wizard-enterpriseSettings-link'));
+  this.messagingTab = element(by.id('wizard-messagingSetup-link'));
+  this.messageInteropFeature = element(by.id('messenger-interop-feature'));
   this.addusersTab = element(by.id('wizard-addUsers-link'));
   this.mainviewTitle = element(by.css('.wizard-main-title'));
   this.mainviewSubtitle = element(by.css('.wizard h3'));
@@ -42,6 +45,10 @@ var Wizard = function () {
 
   this.clickAddUsers = function () {
     utils.click(this.addusersTab);
+  };
+
+  this.clickMessagingSetup = function () {
+    utils.click(this.messagingTab);
   };
 };
 

@@ -4,7 +4,7 @@
     .module('Hercules')
     .controller('UserStatusesController',
       /* @ngInject */
-      function ($scope, USSService, XhrNotificationService, Userservice, Log, ConnectorService) {
+      function ($scope, USSService, XhrNotificationService, Userservice, Log, ClusterService) {
         $scope.saving = false;
         $scope.loading = true;
         $scope.limit = 5;
@@ -36,7 +36,7 @@
             });
 
             _.forEach(connectorIds, function (connectorId) {
-              ConnectorService.getConnector(connectorId).then(function (connector) {
+              ClusterService.getConnector(connectorId).then(function (connector) {
                 if (connector) {
                   _.forEach(statuses.userStatuses, function (userStatus) {
                     if (userStatus.connectorId === connectorId) {

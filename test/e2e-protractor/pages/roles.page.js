@@ -11,6 +11,10 @@ var RolesPage = function () {
   this.salesAdmin = element(by.id('sales-admin-options')).element(by.css('.ng-valid'));
   this.noAdmin = element(by.id('no-admin-options')).element(by.css('.ng-valid'));
 
+  this.fullAdminDiv = element(by.id('full-admin-options'));
+  this.salesAdminDiv = element(by.id('sales-admin-options'));
+  this.noAdminDiv = element(by.id('no-admin-options'));
+
   this.saveButton = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
   this.closeButton = element(by.css('.close-row'));
   this.sipAddressesInput = element(by.id('sipAddressesInput'));

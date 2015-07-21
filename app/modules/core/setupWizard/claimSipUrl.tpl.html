@@ -1,18 +1,16 @@
-<div class="sipurl-setup" ng-controller="CommunicationsCtrl as communicationsCtrl">
+<div class="sipurl-setup" id="sip-url-feature" ng-controller="CommunicationsCtrl as communicationsCtrl">
 	<div class="title">
-		<p>Customize your company’s SIP URI domain name. This domain will be used to
-create a universally reachable URI for each user in your company.</p>
-<p>This URI is used to receive calls from any standards-based SIP calling service.
-(e.g. myuser@mycompany.ciscospark.com).</p>
+		<p translate="firstTimeWizard.claimSipUriTitle"></p>
+<p translate="firstTimeWizard.claimSipUriDesc"></p>
 	</div>
 	<div class="sip-content" ng-show="communicationsCtrl.isTestOrg">
-		<h4 class="warning">This cannot be edited later.</h4>
-		<h4>SIP URI Domain</h4>
+		<h4 class="warning" translate="firstTimeWizard.claimSipUriWarning"></h4>
+		<h4 translate="firstTimeWizard.claimSipUriDomainTitle"></h4>
 		<div class="col-md-12 sip-field">
-		<input class="sip-input form-control" id="sip-url" type="text" placeholder="input a unique domain" ng-model="communicationsCtrl.cloudSipUriField" ng-disabled="communicationsCtrl.cloudSipFlag"/><span class="domain">.ciscospark.com</span>
+		<input class="sip-input form-control" id="sip-url" type="text" placeholder="input a unique domain" ng-model="communicationsCtrl.cloudSipUriField" ng-disabled="communicationsCtrl.cloudSipFlag"/><span class="domain" translate="firstTimeWizard.claimSipUriDomain"></span>
 		</div>
 	</div>
 	<div ng-show="!communicationsCtrl.isTestOrg">
-		<p>This feature is currently available only for test orgs. Please proceed to next step.</p>
+		<p translate="firstTimeWizard.claimSipUriTestOrg"></p>
 	</div>
 </div>

@@ -5,27 +5,37 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($scope, $state, CsdmCodeService, CsdmDeviceService, XhrNotificationService) {
-        $scope.deleteDeviceOrCode = function (deviceOrCode) {
+      function ($scope, $modalInstance, CsdmCodeService, CsdmDeviceService, XhrNotificationService, deviceOrCode) {
+        var rdc = this;
+
+        rdc.deleteDeviceOrCode = function () {
           if (deviceOrCode.needsActivation) {
-            CsdmCodeService
-              .deleteCode(deviceOrCode)
-              .then($state.sidepanel.close, XhrNotificationService.notify);
+            return CsdmCodeService.deleteCode(deviceOrCode)
+              .then($modalInstance.close, XhrNotificationService.notify);
           } else {
-            CsdmDeviceService
-              .deleteDevice(deviceOrCode.url)
-              .then($state.sidepanel.close, XhrNotificationService.notify);
+            return CsdmDeviceService.deleteDevice(deviceOrCode.url)
+              .then($modalInstance.close, XhrNotificationService.notify);
           }
         };
       }
 
     )
-    .directive('squaredRemDevice',
-      function () {
+    .service('RemDeviceModal',
+      /* @ngInject */
+      function ($modal) {
+        function open(deviceOrCode) {
+          return $modal.open({
+            resolve: {
+              deviceOrCode: _.constant(deviceOrCode)
+            },
+            controllerAs: 'rdc',
+            controller: 'RemDeviceController',
+            templateUrl: 'modules/squared/devicesRedux/remDevice/remDevice.html'
+          }).result;
+        }
+
         return {
-          restrict: 'E',
-          controller: 'RemDeviceController',
-          templateUrl: 'modules/squared/devicesRedux/remDevice/remDevice.html'
+          open: open
         };
       }
     );

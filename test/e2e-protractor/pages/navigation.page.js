@@ -1,6 +1,7 @@
 'use strict';
 
 var Navigation = function () {
+  this.body = element(by.tagName('body'));
 
   this.tabs = element(by.css('cs-left-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
@@ -11,9 +12,11 @@ var Navigation = function () {
   this.orgAddTab = element(by.css('a[href="#add-organization"]'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
-  this.newReportsTab = element(by.cssContainingText('span', 'New Reports'));
   this.reportsTab = element(by.css('li.reportTab > a'));
+  this.devReports = element(by.css('a[href="#partner/newreports"]'));
   this.supportTab = element(by.css('li.supportTab > a'));
+  this.logsTab = element(by.css('a[href="#support"]'));
+  this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
   this.developmentTab = element(by.css('li.developmentTab > a'));
@@ -44,6 +47,11 @@ var Navigation = function () {
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
   };
+
+  this.clickDevReports = function () {
+    this.clickDevelopmentTab();
+    utils.click(this.devReports);
+  }
 
   this.clickServicesTab = function () {
     utils.click(this.servicesTab);
@@ -90,12 +98,6 @@ var Navigation = function () {
   this.clickReports = function () {
     utils.click(this.reportsTab);
     this.expectCurrentUrl('/reports');
-  };
-
-  this.clickNewReports = function () {
-    this.clickDevelopmentTab();
-    utils.click(this.newReportsTab);
-    this.expectCurrentUrl('/partner/newreports');
   };
 
   this.clickSupport = function () {

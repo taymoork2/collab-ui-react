@@ -1,8 +1,8 @@
 'use strict';
 /* global $, Bloodhound, moment */
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'ConnectorService',
-    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, ConnectorService) {
+  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'ClusterService',
+    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, ClusterService) {
 
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
@@ -36,7 +36,7 @@ angular.module('Squared')
       var getHealthMetrics = function () {
         ReportsService.healthMonitor(function (data, status) {
           if (data.success) {
-            ConnectorService.fetch().then(function (clusters) {
+            ClusterService.fetch().then(function (clusters) {
               $scope.healthMetrics = data.components;
               $scope.healthyStatus = true;
 

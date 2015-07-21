@@ -34,10 +34,11 @@ describe('Controller: Partner Reports', function () {
     orgId: 'a7cba512-7b62-4f0a-a869-725b413680e4',
     deviceRegistrationCountTrend: '+573',
     yesterdaysDeviceRegistrationCount: '121',
-    maxRegisteredDevicesTrend: '3600',
+    maxRegisteredDevicesTrend: '+3600',
     yesterdaysMaxRegisteredDevices: '74',
-    company: 'Test Org One',
-    direction: 'positive'
+    customer: 'Test Org One',
+    direction: 'positive',
+    maxDirection: 'positive'
   }];
 
   beforeEach(module('Core'));

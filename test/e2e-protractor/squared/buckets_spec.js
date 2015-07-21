@@ -52,10 +52,6 @@ describe('Invite User and Check Buckets', function () {
         utils.click(users.onboardButton);
         notifications.assertSuccess(addEmail, 'onboarded successfully');
         notifications.clearNotifications();
-      });
-
-      it('clicking on cancel button should close the modal', function () {
-        utils.click(users.closeAddUsers);
         utils.expectIsNotDisplayed(users.manageDialog);
       });
     });

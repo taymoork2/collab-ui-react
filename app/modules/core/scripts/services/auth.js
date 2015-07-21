@@ -242,7 +242,28 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
 
   auth.logout = function () {
     Storage.clear();
-    $window.location.href = Config.getLogoutUrl();
+    var $http = $injector.get('$http');
+    var token = Utils.Base64.encode(Config.getClientId() + ':' + Config.getClientSecret());
+    var data = 'token=' + $rootScope.token;
+
+    $http({
+        method: 'POST',
+        url: Config.getOauthDeleteTokenUrl(),
+        data: data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + token
+        }
+      })
+      .success(function (data, status) {
+        Log.info('oAuth token deleted successfully. Status: ' + status);
+        $window.location.href = Config.getLogoutUrl();
+      })
+      .error(function (data, status) {
+        Log.error('Failed to delete the oAuth token.  Status: ' + status + ' Error: ' + data.error);
+        // Call CI logout even if delete oAuth token operation fails. This is consistent with other spark clients.
+        $window.location.href = Config.getLogoutUrl();
+      });
   };
 
   auth.isLoggedIn = function () {

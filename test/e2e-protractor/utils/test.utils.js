@@ -265,7 +265,6 @@ exports.expectCountToBeGreater = function (elems, num) {
 };
 
 exports.expectTruthy = function (elem) {
-  this.wait(elem);
   expect(elem).toBeTruthy();
 };
 
@@ -291,6 +290,23 @@ exports.expectSwitchState = function (elem, value) {
         });
       });
     }, TIMEOUT, 'Waiting for switch state to be ' + value + ': ' + elem.locator());
+  });
+};
+
+exports.expectCheckbox = exports.expectSwitchState;
+
+exports.expectRadioSelected = function (elem) {
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      var input = elem.element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        return input.evaluate(ngModel).then(function (model) {
+          return input.getAttribute('value').then(function (value) {
+            return value == model;
+          });
+        });
+      });
+    }, TIMEOUT, 'Waiting for radio to be selected: ' + elem.locator());
   });
 };
 
@@ -392,7 +408,7 @@ exports.createHuronUser = function (name, name2) {
   this.click(users.advancedCommunications);
   this.click(users.onboardButton);
   notifications.assertSuccess(name, 'onboarded successfully');
-  this.click(users.closeAddUsers);
+  this.expectIsNotDisplayed(users.manageDialog);
   this.searchAndClick(name);
 };
 

@@ -212,6 +212,22 @@ angular
           params: {
             deleteUserOrgId: null,
             deleteUserUuId: null,
+            deleteUsername: null,
+            deleteUserfamilyName: null,
+            Username: null
+          }
+        })
+        .state('users.deleteSelf', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'UserDeleteCtrl',
+              templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html'
+            }
+          },
+          params: {
+            deleteUserOrgId: null,
+            deleteUserUuId: null,
             deleteUsername: null
           }
         })
@@ -318,7 +334,7 @@ angular
             '': {
               templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
               controller: 'DeviceDetailCtrl',
-              controllerAs: 'ucDeviceDetail',
+              controllerAs: 'ucDeviceDetail'
             }
           }
         })
@@ -509,6 +525,12 @@ angular
           url: '/support?search',
           templateUrl: 'modules/squared/support/support.tpl.html',
           controller: 'SupportCtrl',
+          parent: 'main'
+        })
+        .state('billing', {
+          url: '/orderprovisioning?enc',
+          templateUrl: 'modules/squared/support/billing.tpl.html',
+          controller: 'BillingCtrl',
           parent: 'main'
         })
 

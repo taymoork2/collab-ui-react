@@ -10,6 +10,12 @@
   }
 }
 
+.wizard-main-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
 .wizard-side-item {
   margin-right: 5px;
   margin-left: 0px;
@@ -77,13 +83,13 @@
 }
 
 .wizard-nav-active {
-  background-color: $component-active-bg;
+  background-color: $brand-primary-dark;
   color: $brand-white;
   .wizard-menu-subtitle {
     color: $brand-white;
   }
   .icon {
-    background-color: $brand-primary-dark;
+    background-color: $component-active-bg;
     color: $component-active-color;
     border-radius: 50%;
     width: 50px;
@@ -192,11 +198,8 @@
 
 .wizard-main-btns {
   padding-top: 20px;
-  .btn-primary {
-    float: right;
-  }
-  .btn-default {
-    float: left;
+  .btn-link {
+    margin-right: 30px;
   }
 }
 

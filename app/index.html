@@ -10,14 +10,14 @@
     <title ng-bind="Localize.varTitle()"></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" type="image/png" href="images/sparkSm.png">
-    <link type="image/x-icon" rel="shortcut icon" href="images/sparkSm.png"/>
+    <link rel="icon" type="image/png" href="images/favicon.ico">
+    <link type="image/x-icon" rel="shortcut icon" href="images/favicon.ico"/>
     <!-- build:css styles/main.css -->
     <!-- inject:css -->
     <!-- endinject -->
     <!-- endbuild -->
   </head>
-  <body ng-cloak cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
+  <body ng-controller="BodyCtrl as bodyCtrl" ng-class="{inverse: bodyCtrl.partner}" ng-cloak cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
     <cr-notifications></cr-notifications>
     <div ui-view="main"></div>
 

@@ -80,10 +80,8 @@
     <cs-sp-section>
       <div style="margin-top: 10px">
         <button
-          data-toggle="modal"
-          id="deviceDeleteButton"
-          class="btn btn-primary"
-          data-target="#deleteDeviceModal">
+          ng-click="deviceOverview.deleteDevice()"
+          class="btn btn-primary">
           <span
             translate="spacesPage.delete">
           </span>
@@ -91,7 +89,7 @@
 
         <button
           class="btn btn-primary"
-          sq-click-promise="reportProblem()"
+          sq-click-promise="deviceOverview.reportProblem()"
           ng-if="!deviceOverview.currentDevice.needsActivation">
           <span translate="spacesPage.reportProblem"></span>
         </button>
