@@ -799,7 +799,7 @@ angular.module('Core')
           } else {
             var error = [$translate.instant('usersPage.validEmailInput')];
             Notification.notify(error, 'error');
-             deferred.reject();
+            deferred.reject();
           }
         }
         return deferred.promise;
