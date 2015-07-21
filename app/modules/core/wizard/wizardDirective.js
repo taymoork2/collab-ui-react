@@ -69,12 +69,14 @@
     vm.isFirstTime = isFirstTime;
     vm.isWizardModal = isWizardModal;
 
-    vm.getNextText = getNextText;
+    vm.nextText = $translate.instant('common.next');
+    vm.nextDisabled = false;
 
     vm.openTermsAndConditions = openTermsAndConditions;
     vm.closeModal = closeModal;
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
+
 
     init();
 
@@ -88,6 +90,8 @@
         vm.current.tab = getTabs()[0];
       }
       vm.current.step = getSteps()[0];
+
+      setNextText();
     }
 
     function getSteps() {
@@ -110,6 +114,7 @@
 
     function setStep(step) {
       vm.current.step = step;
+      setNextText();
     }
 
     function getStepName() {
@@ -291,17 +296,17 @@
       return true;
     }
 
-    function getNextText() {
+    function setNextText() {
       if (isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) {
-        return 'firstTimeWizard.startTrial';
+        vm.nextText = $translate.instant('firstTimeWizard.startTrial');
       } else if (isFirstTab() && isFirstStep()) {
-        return 'firstTimeWizard.getStarted';
+        vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if ((isLastStep() && !isFirstStep()) || (isFirstTime() && isLastTab() && isLastStep())) {
-        return 'common.finish';
+        vm.nextText = $translate.instant('common.finish');
       } else if (isLastStep() && isFirstStep()) {
-        return 'common.save';
+        vm.nextText = $translate.instant('common.save');
       } else {
-        return 'common.next';
+        vm.nextText = $translate.instant('common.next');
       }
     }
 
@@ -315,6 +320,13 @@
       $state.modal.close();
     }
 
+    $scope.$on('updateNextText', function (event, action) {
+      if (action == 'next') {
+        vm.nextText = $translate.instant('common.next');
+      } else if (action == 'finish') {
+        vm.nextText = $translate.instant('common.finish');
+      }
+    });
   }
 
   function crWizard() {

@@ -401,6 +401,15 @@ angular.module('Core')
         $scope.model.nextButtonDisabled = invalidcount > 0;
       };
 
+      var updateNextText = function () {
+        var userCount = angular.element('.token-label').length;
+        var action = 'finish';
+        if (userCount > 0) {
+          action = 'next';
+        }
+        $scope.$emit('updateNextText', action);
+      };
+
       $scope.tokenfieldid = "usersfield";
       $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
       $scope.tokenoptions = {
@@ -420,6 +429,7 @@ angular.module('Core')
           }
           checkNextButtonStatus();
           checkPlaceholder();
+          updateNextText();
         },
         edittoken: function (e) {
           if (!validateEmail(e.attrs.value)) {
@@ -432,6 +442,7 @@ angular.module('Core')
           }
           checkNextButtonStatus();
           checkPlaceholder();
+          updateNextText();
         }
       };
 
@@ -456,6 +467,7 @@ angular.module('Core')
       };
 
       $scope.validateTokens = function () {
+        updateNextText();
         $timeout(function () {
           var tokenfield = angular.element('#usersfield');
           //reset the invalid count
@@ -777,6 +789,10 @@ angular.module('Core')
       // Wizard hook for next button
       $scope.manualEntryNext = function () {
         var deferred = $q.defer();
+
+        if (getUsersList().length === 0) {
+          $scope.finish();
+        }
 
         if (invalidcount === 0) {
           deferred.resolve();
