@@ -33,10 +33,10 @@ angular.module('Core')
         if (angular.isDefined($scope.options.addUsers) && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
           if ($scope.options.addUsers === 0) {
             $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[0]);
-          } else if ($scope.options.addUsers === 1) {
-            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
+            // } else if ($scope.options.addUsers === 1) {
+            //   $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
           } else if ($scope.options.addUsers === 2) {
-            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[2]);
+            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
           }
           deferred.resolve();
         } else {
