@@ -401,13 +401,13 @@ angular.module('Core')
         $scope.model.nextButtonDisabled = invalidcount > 0;
       };
 
-      var updateNextText = function () {
+      var wizardNextText = function () {
         var userCount = angular.element('.token-label').length;
         var action = 'finish';
         if (userCount > 0) {
           action = 'next';
         }
-        $scope.$emit('updateNextText', action);
+        $scope.$emit('wizardNextText', action);
       };
 
       $scope.tokenfieldid = "usersfield";
@@ -429,7 +429,7 @@ angular.module('Core')
           }
           checkNextButtonStatus();
           checkPlaceholder();
-          updateNextText();
+          wizardNextText();
         },
         edittoken: function (e) {
           if (!validateEmail(e.attrs.value)) {
@@ -442,7 +442,7 @@ angular.module('Core')
           }
           checkNextButtonStatus();
           checkPlaceholder();
-          updateNextText();
+          wizardNextText();
         }
       };
 
@@ -467,7 +467,7 @@ angular.module('Core')
       };
 
       $scope.validateTokens = function () {
-        updateNextText();
+        wizardNextText();
         $timeout(function () {
           var tokenfield = angular.element('#usersfield');
           //reset the invalid count
@@ -791,7 +791,9 @@ angular.module('Core')
         var deferred = $q.defer();
 
         if (getUsersList().length === 0) {
-          $scope.finish();
+          $q.when($scope.finish()).then(function () {
+            deferred.resolve();
+          });
         }
 
         if (invalidcount === 0) {

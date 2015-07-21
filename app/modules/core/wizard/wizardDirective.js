@@ -320,7 +320,8 @@
       $state.modal.close();
     }
 
-    $scope.$on('updateNextText', function (event, action) {
+    $scope.$on('wizardNextText', function (event, action) {
+      event.stopPropagation();
       if (action == 'next') {
         vm.nextText = $translate.instant('common.next');
       } else if (action == 'finish') {
