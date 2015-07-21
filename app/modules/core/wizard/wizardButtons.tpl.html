@@ -5,7 +5,7 @@
     <div ng-if="wizard.isFirstTab()&&wizard.isFirstTime()&&!wizard.isCustomerPartner()&&!wizard.isFromPartnerLaunch()" id="terms-link"><cs-checkbox ckid="terms-checkbox" ng-model="wizard.termsCheckbox" cklabel="Terms and Conditions" ng-disabled></cs-checkbox> I have read and agree to these <a ng-click="wizard.openTermsAndConditions()">terms and conditions</a></div>
     <button type="button" class="btn btn-default" ng-if="!wizard.isFirstStep() || !wizard.isFirstTab()" ng-click="wizard.previousStep()" translate="common.back"></button>
     <div class="pull-right">
-      <button type="button" class="btn btn-link btn-none btn-sm" ng-if="wizard.isFirstTab()&&wizard.isFirstTime()" translate="firstTimeWizard.doLater" ng-click="wizard.loadOverview()"></button>
+      <button type="button" class="btn btn-link btn-none btn-sm" ng-if="wizard.isFirstTab()&&wizard.isFirstTime()&&wizard.showDoItLater" translate="firstTimeWizard.doLater" ng-click="wizard.loadOverview()"></button>
       <button type="button" id="wizardNext" class="btn btn-primary" ng-click="wizard.nextStep()" translate="{{::wizard.getNextText()}}" data-loading-text="<i class='icon icon-spinner'></i>" ng-disabled="!wizard.termsCheckbox &&!wizard.isFromPartnerLaunch()&&!wizard.isCustomerPartner()&&wizard.isFirstTime()"></button>
     </div>
   </div>

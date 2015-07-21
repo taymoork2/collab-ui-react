@@ -77,6 +77,7 @@
     vm.closeModal = closeModal;
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
+    vm.showDoItLater = false;
 
     init();
 
