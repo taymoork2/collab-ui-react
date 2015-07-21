@@ -400,10 +400,12 @@
     function link(scope, element) {
 
       var cancelStepWatch = scope.$watch('wizard.current.step', recompile);
+      var wizardNextTextWatch = scope.$watch('wizard.nextText', recompile);
 
       function recompile(newValue, oldValue) {
         if (newValue !== oldValue) {
           cancelStepWatch();
+          wizardNextTextWatch();
           $timeout(function () {
             var parentScope = scope.$parent;
             scope.$destroy();

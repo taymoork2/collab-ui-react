@@ -11,7 +11,7 @@
     });
 
     $scope.finish = function () {
-      Orgservice.setSetupDone().then(function () {
+      return Orgservice.setSetupDone().then(function () {
         Authinfo.setSetupDone(true);
       }).then(function () {
         if (Authinfo.isAdmin()) {
