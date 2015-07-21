@@ -377,7 +377,17 @@ angular.module('Core')
       };
 
       var checkNextButtonStatus = function () {
+        wizardNextText();
         $scope.model.nextButtonDisabled = invalidcount > 0;
+      };
+
+      var wizardNextText = function () {
+        var userCount = angular.element('.token-label').length;
+        var action = 'finish';
+        if (userCount > 0) {
+          action = 'next';
+        }
+        $scope.$emit('wizardNextText', action);
       };
 
       $scope.tokenfieldid = "usersfield";
@@ -435,6 +445,7 @@ angular.module('Core')
       };
 
       $scope.validateTokens = function () {
+        wizardNextText();
         $timeout(function () {
           var tokenfield = angular.element('#usersfield');
           //reset the invalid count
@@ -759,14 +770,19 @@ angular.module('Core')
       $scope.manualEntryNext = function () {
         var deferred = $q.defer();
 
-        if (invalidcount === 0) {
-          deferred.resolve();
+        if (getUsersList().length === 0) {
+          $q.when($scope.wizard.nextTab()).then(function () {
+            deferred.reject();
+          });
         } else {
-          var error = [$translate.instant('usersPage.validEmailInput')];
-          Notification.notify(error, 'error');
-          deferred.reject();
+          if (invalidcount === 0) {
+            deferred.resolve();
+          } else {
+            var error = [$translate.instant('usersPage.validEmailInput')];
+            Notification.notify(error, 'error');
+            deferred.reject();
+          }
         }
-
         return deferred.promise;
       };
       // Wizard hook for save button

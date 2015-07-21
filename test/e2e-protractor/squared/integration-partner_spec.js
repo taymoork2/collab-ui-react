@@ -127,7 +127,6 @@ describe('Partner flow', function () {
 
         utils.expectText(wizard.mainviewTitle, 'Invite Users');
         utils.click(wizard.nextBtn);
-        utils.click(wizard.nextBtn);
         utils.click(wizard.finishBtn);
         notifications.clearNotifications();
 

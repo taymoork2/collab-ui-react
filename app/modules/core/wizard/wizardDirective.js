@@ -71,7 +71,7 @@
     vm.isFirstTime = isFirstTime;
     vm.isWizardModal = isWizardModal;
 
-    vm.getNextText = getNextText;
+    vm.nextText = $translate.instant('common.next');
 
     vm.openTermsAndConditions = openTermsAndConditions;
     vm.closeModal = closeModal;
@@ -91,6 +91,8 @@
         vm.current.tab = getTabs()[0];
       }
       vm.current.step = getSteps()[0];
+
+      setNextText();
     }
 
     function getSteps() {
@@ -113,6 +115,7 @@
 
     function setStep(step) {
       vm.current.step = step;
+      setNextText();
     }
 
     function getStepName() {
@@ -237,7 +240,7 @@
       });
 
       //if(getTab()==='enterpriseSetting'){
-      //call service setup. 
+      //call service setup.
       //}
     }
 
@@ -299,17 +302,17 @@
       return true;
     }
 
-    function getNextText() {
+    function setNextText() {
       if (isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) {
-        return 'firstTimeWizard.startTrial';
+        vm.nextText = $translate.instant('firstTimeWizard.startTrial');
       } else if (isFirstTab() && isFirstStep()) {
-        return 'firstTimeWizard.getStarted';
+        vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if ((isLastStep() && !isFirstStep()) || (isFirstTime() && isLastTab() && isLastStep())) {
-        return 'common.finish';
+        vm.nextText = $translate.instant('common.finish');
       } else if (isLastStep() && isFirstStep()) {
-        return 'common.save';
+        vm.nextText = $translate.instant('common.save');
       } else {
-        return 'common.next';
+        vm.nextText = $translate.instant('common.next');
       }
     }
 
@@ -327,6 +330,14 @@
       return angular.isUndefined(vm.current.step.buttons);
     }
 
+    $scope.$on('wizardNextText', function (event, action) {
+      event.stopPropagation();
+      if (action == 'next') {
+        vm.nextText = $translate.instant('common.next');
+      } else if (action == 'finish') {
+        vm.nextText = $translate.instant('common.finish');
+      }
+    });
   }
 
   function crWizard() {
@@ -400,10 +411,12 @@
     function link(scope, element) {
 
       var cancelStepWatch = scope.$watch('wizard.current.step', recompile);
+      var wizardNextTextWatch = scope.$watch('wizard.nextText', recompile);
 
       function recompile(newValue, oldValue) {
         if (newValue !== oldValue) {
           cancelStepWatch();
+          wizardNextTextWatch();
           $timeout(function () {
             var parentScope = scope.$parent;
             scope.$destroy();
