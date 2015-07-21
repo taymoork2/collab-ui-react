@@ -793,17 +793,15 @@ angular.module('Core')
           $q.when($scope.wizard.nextTab()).then(function () {
             deferred.reject();
           });
-          return deferred.promise;
-        }
-
-        if (invalidcount === 0) {
-          deferred.resolve();
         } else {
-          var error = [$translate.instant('usersPage.validEmailInput')];
-          Notification.notify(error, 'error');
-          deferred.reject();
+          if (invalidcount === 0) {
+            deferred.resolve();
+          } else {
+            var error = [$translate.instant('usersPage.validEmailInput')];
+            Notification.notify(error, 'error');
+             deferred.reject();
+          }
         }
-
         return deferred.promise;
       };
       // Wizard hook for save button
