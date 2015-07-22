@@ -916,6 +916,7 @@ angular.module('Core')
         var tempUserArray = [];
         var tempLicenseArray = [];
         $scope.model.userErrorArray = [];
+        $scope.model.numMaxUsers = userArray.length;
         $scope.model.processProgress = $scope.model.numTotalUsers = $scope.model.numNewUsers = $scope.model.numExistingUsers = 0;
 
         function addUserError(row, errorMsg) {
