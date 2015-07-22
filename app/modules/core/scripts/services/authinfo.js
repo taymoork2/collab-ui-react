@@ -25,6 +25,7 @@ angular.module('Core')
         'tabs': [],
         'isInitialized': false,
         'setupDone': false,
+        'licenses': [],
         'messageServices': null,
         'conferenceServices': null,
         'communicationServices': null,
@@ -196,6 +197,9 @@ angular.module('Core')
                 var license = account.licenses[l];
                 var service = null;
 
+                // Store license before filtering
+                authData.licenses.push(license);
+
                 switch (license.licenseType) {
                 case 'CONFERENCING':
                   if (this.isCustomerAdmin() && license.siteUrl) {
@@ -259,6 +263,9 @@ angular.module('Core')
         },
         getManagedOrgs: function () {
           return authData.managedOrgs;
+        },
+        getLicenses: function () {
+          return authData.licenses;
         },
         getMessageServices: function () {
           return authData.messageServices;
