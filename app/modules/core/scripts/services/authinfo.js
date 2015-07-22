@@ -200,6 +200,11 @@ angular.module('Core')
                 // Store license before filtering
                 authData.licenses.push(license);
 
+                // Do not store invalid licenses in service buckets
+                if (license.status === 'CANCELLED' || license.status === 'SUSPENDED') {
+                  continue;
+                }
+
                 switch (license.licenseType) {
                 case 'CONFERENCING':
                   if (this.isCustomerAdmin() && license.siteUrl) {
