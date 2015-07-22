@@ -7,6 +7,7 @@
 describe('Squared Add & Entitle User Flows', function () {
 
   var inputEmail = utils.randomTestGmail();
+  var adminEmail = 'atlasmapservice+ll1@gmail.com';
 
   beforeEach(function () {
     browser.ignoreSynchronization = true;
@@ -59,6 +60,29 @@ describe('Squared Add & Entitle User Flows', function () {
       utils.expectRowIsNotDisplayed(inputEmail);
     });
 
+    it('should log out', function () {
+      navigation.logout();
+    });
+  });
+
+  describe('Login as users.testUser admin and launch add users modal', function () {
+    it('should login as users.testUser admin', function () {
+      login.login('test-user');
+    });
+
+    it('clicking on users tab should change the view', function () {
+      navigation.clickUsers();
+    });
+    it('admin should type Yes to delete themselves', function () {
+      utils.search(adminEmail);
+      utils.click(users.userListAction);
+      utils.click(users.deleteUserOption);
+      utils.expectIsDisplayed(users.deleteUserModal);
+      utils.expectIsDisabled(users.deleteUserButton);
+      utils.sendKeys(users.inputYes, 'yes');
+      utils.expectIsEnabled(users.deleteUserButton);
+      utils.click(users.cancelButton);
+    });
     it('should log out', function () {
       navigation.logout();
     });

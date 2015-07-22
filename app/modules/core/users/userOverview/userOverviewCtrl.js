@@ -37,13 +37,13 @@
       var commState = {
         name: $translate.instant('onboardModal.communications'),
         state: 'user-overview.communication',
-        detail: $translate.instant('onboardModal.freeConf')
+        detail: $translate.instant('onboardModal.freeComm')
       };
 
       var confState = {
         name: $translate.instant('onboardModal.conferencing'),
         state: 'user-overview.conferencing',
-        detail: $translate.instant('onboardModal.freeComm')
+        detail: $translate.instant('onboardModal.freeConf')
       };
 
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {

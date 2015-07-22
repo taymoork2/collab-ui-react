@@ -15,6 +15,8 @@ var Navigation = function () {
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.devReports = element(by.css('a[href="#partner/newreports"]'));
   this.supportTab = element(by.css('li.supportTab > a'));
+  this.logsTab = element(by.css('a[href="#support"]'));
+  this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
   this.developmentTab = element(by.css('li.developmentTab > a'));
@@ -39,6 +41,11 @@ var Navigation = function () {
   this.addUsers = this.dropdownItems.filter(function (item) {
     return item.getText().then(function (text) {
       return text === 'Invite Users';
+    });
+  });
+  this.communication = this.dropdownItems.filter(function (item) {
+    return item.getText().then(function (text) {
+      return text === 'Communication';
     });
   });
 
@@ -135,6 +142,11 @@ var Navigation = function () {
   this.clickAddUsers = function () {
     utils.click(this.settingsMenu);
     utils.click(this.addUsers);
+  };
+
+  this.clickCommunicationWizard = function () {
+    utils.click(this.settingsMenu);
+    utils.click(this.communication);
   };
 
   this.clickOrgProfile = function () {

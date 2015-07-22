@@ -48,6 +48,7 @@
     "gulp-util": "^3.0.4",
     "https-proxy-agent": "~0.3.5",
     "jasmine-core": "~2.3.0",
+    "jasmine-promise-matchers": "~1.1.2",
     "jasmine-reporters": "~2.0.7",
     "jasmine-spec-reporter": "~2.3.0",
     "jshint-stylish": "^1.0.2",

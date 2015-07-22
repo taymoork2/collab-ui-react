@@ -3,7 +3,7 @@
 angular.module('Core')
   .controller('HeaderCtrl', ['$scope', '$translate', 'Config',
     function ($scope, $translate, Config) {
-      $scope.icon = '/images/sparkSm.png';
+      $scope.icon = '/images/cisco_logo.png';
       $translate('loginPage.title').then(function (title) {
         $scope.headerTitle = title;
       });

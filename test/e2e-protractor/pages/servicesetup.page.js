@@ -17,7 +17,7 @@ var ServiceSetup = function () {
   this.newEndRange = this.newRange.element(by.id('endNumber'));
 
   this.getPattern = function () {
-    return (Math.floor(Math.random() * 9000) + 1000).toString(); // 4 digits
+    return (Math.floor(Math.random() * 997) + 1000).toString(); // Max of 1997
   };
 
   this.deleteNumberRange = function (testBeginNumber) {

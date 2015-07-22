@@ -14,6 +14,7 @@
     function activate() {
       // TODO: Change TelephonyInfoService to return directly from this instead of having
       // to call into service twice.
+      TelephonyInfoService.resetTelephonyInfo();
       TelephonyInfoService.getTelephonyUserInfo(vm.currentUser.id);
       TelephonyInfoService.getUserDnInfo(vm.currentUser.id);
       TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);

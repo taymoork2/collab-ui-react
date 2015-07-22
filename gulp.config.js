@@ -12,6 +12,7 @@ module.exports = function() {
   var test = 'test';
   var e2e = test + '/e2e-protractor';
   var vendor = 'bower_components';
+  var node_modules = 'node_modules';
   var now = new Date();
   var year = now.getFullYear();
 
@@ -76,7 +77,8 @@ module.exports = function() {
         vendor + '/angular-mocks/angular-mocks.js',
         vendor + '/jasmine-jquery/lib/jasmine-jquery.js',
         vendor + '/sinon-ng/sinon-ng.js',
-        vendor + '/es5-shim/es5-shim.js'
+        vendor + '/es5-shim/es5-shim.js',
+        node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
       ],
       global: [
         test + '/global.spec.js'
@@ -135,6 +137,7 @@ module.exports = function() {
         vendor + '/angular-translate/angular-translate.js',
         vendor + '/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
         vendor + '/messageformat/messageformat.js',
+        vendor + '/messageformat/locale/*.js',
         vendor + '/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.js',
         vendor + '/angular-ui-router/release/angular-ui-router.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.core.js',
@@ -152,7 +155,10 @@ module.exports = function() {
         vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
         vendor + '/ng-clip/src/ngClip.js',
         vendor + '/zeroclipboard/dist/ZeroClipboard.js',
-        vendor + '/d3/d3.min.js'
+        vendor + '/d3/d3.min.js',
+        vendor + '/jquery-csv/src/jquery.csv.js',
+        vendor + '/angular-timer/dist/angular-timer.js',
+        vendor + '/humanize-duration/humanize-duration.js'
       ],
       scss: [
         vendor + '/bootstrap-cisco/scss/**/*.scss'

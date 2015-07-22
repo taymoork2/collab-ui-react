@@ -110,6 +110,7 @@ describe('Partner flow', function () {
 
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
+      utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
 
@@ -125,7 +126,6 @@ describe('Partner flow', function () {
         utils.click(wizard.nextBtn);
 
         utils.expectText(wizard.mainviewTitle, 'Invite Users');
-        utils.click(wizard.nextBtn);
         utils.click(wizard.nextBtn);
         utils.click(wizard.finishBtn);
         notifications.clearNotifications();
@@ -146,9 +146,9 @@ describe('Partner flow', function () {
       var appWindow = browser.getWindowHandle();
 
       utils.click(partner.exitPreviewButton);
-      utils.expectIsNotDisplayed(partner.previewPanel);
 
       utils.click(partner.actionsButton);
+      utils.expectIsDisplayed(partner.launchCustomerButton);
       utils.click(partner.launchCustomerButton);
       utils.switchToNewWindow().then(function () {
 

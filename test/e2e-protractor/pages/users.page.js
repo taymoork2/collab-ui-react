@@ -83,6 +83,7 @@ var UsersPage = function () {
   this.entitleButton = element(by.id('btnEntitle'));
   this.addButton = element(by.id('btnAdd'));
   this.deleteUserButton = element(by.id('deleteUserButton'));
+  this.inputYes = element(by.id('inputYes'));
 
   this.cancelButton = element(by.buttonText('Cancel'));
   this.saveButton = element(by.buttonText('Save'));

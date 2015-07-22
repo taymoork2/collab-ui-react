@@ -33,6 +33,12 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(navigation.developmentTab);
     });
 
+    it('should not display billing tab when support tab is clicked', function () {
+      utils.click(navigation.supportTab);
+      utils.expectIsDisplayed(navigation.logsTab);
+      utils.expectIsNotDisplayed(navigation.billingTab);
+    });
+
     it('should not display results panel initially', function () {
       utils.expectIsNotDisplayed(support.logsPanel);
     });
@@ -115,6 +121,37 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(navigation.reportsTab);
       utils.expectIsDisplayed(navigation.supportTab);
       utils.expectCount(navigation.tabCount, 3);
+    });
+
+    it('should log out', function () {
+      navigation.logout();
+    });
+  });
+
+  describe('Billing page', function () {
+    it('should login as mock cisco support user', function () {
+      login.loginWithParam('mockcisco-support-user', '#/orderprovisioning?enc=VQTn2BCzyCmtO%2BcdZBNNXwtGx06uY4ce53gGZ%2FSwBJmD81xl9zWCln6pBM0pSv6N');
+    });
+
+    it('should display correct tabs for user based on role', function () {
+      utils.expectIsDisplayed(navigation.homeTab);
+      utils.expectIsDisplayed(navigation.reportsTab);
+      utils.expectIsDisplayed(navigation.supportTab);
+      utils.expectCount(navigation.tabCount, 3);
+    });
+
+    it('should display billing tab when support tab is clicked', function () {
+      utils.click(navigation.supportTab);
+      utils.expectIsDisplayed(navigation.logsTab);
+      utils.expectIsDisplayed(navigation.billingTab);
+    });
+
+    it('should be able to resend customer/partner email from the dropdown', function () {
+      utils.click(support.orderListAction);
+      utils.expectIsDisplayed(support.resendCustomerEmail);
+      utils.expectIsDisplayed(support.resendPartnerEmail);
+      utils.click(support.resendCustomerEmail);
+      notifications.assertSuccess('Email to Customer sent successfully');
     });
 
     it('should log out', function () {

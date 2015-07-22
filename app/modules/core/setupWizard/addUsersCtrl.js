@@ -17,13 +17,13 @@ angular.module('Core')
       };
       $scope.syncUpload = {
         label: $translate.instant('firstTimeWizard.upload'),
-        value: 2,
+        value: 1,
         name: 'syncOptions',
         id: 'syncUpload'
       };
       $scope.syncAdvanced = {
         label: $translate.instant('firstTimeWizard.advanced'),
-        value: 1,
+        value: 2,
         name: 'syncOptions',
         id: 'syncAdvanced'
       };
@@ -33,7 +33,9 @@ angular.module('Core')
         if (angular.isDefined($scope.options.addUsers) && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
           if ($scope.options.addUsers === 0) {
             $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[0]);
-          } else if ($scope.options.addUsers === 1) {
+            // } else if ($scope.options.addUsers === 1) {
+            //   $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
+          } else if ($scope.options.addUsers === 2) {
             $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
           }
           deferred.resolve();

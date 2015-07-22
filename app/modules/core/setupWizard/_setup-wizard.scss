@@ -286,3 +286,196 @@
     }
   }
 }
+
+.users-upload-csv {
+  label {
+    cursor: pointer;
+    color: $link-color;
+    &:hover {
+      color: $link-hover-color;
+    }
+  }
+  .file-drop {
+    border: 1px dashed $gray-light;
+    height : 300px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    &.dragover {
+      border-color: $link-hover-color;
+      background: $gray-lightest;
+    }
+  }
+
+  .file-drop-content {
+    align-self: center;
+    .icon-circle-attachment {
+      font-size: 100px;
+      margin-bottom: 20px;
+      color: $gray-light;
+    }
+  }
+
+  .file-drop-inactive {
+    @extend .file-drop;
+    border: 1px solid $gray-light;
+
+    .file-drop-content {
+      width: 50%;
+    }
+    .close {
+      align-self: center;
+      margin-left: 5px;
+    }
+    .file-name {
+      margin-top: -15px;
+    }
+  }
+
+  .download-link {
+    margin-top: 10px;
+  }
+
+  input {
+    display: none;
+  }
+}
+
+.users-process-csv {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .icon-circle-group {
+    font-size: 100px;
+    margin-bottom: 100px;
+    color: $gray-light;
+  }
+
+  .users-process-content {
+    width: 50%;
+    display: flex;
+
+    .progressbar {
+      flex: 1;
+    }
+    .close {
+      align-self: center;
+      margin-left: 5px;
+    }
+  }
+
+  .time-duration {
+    margin-top: -15px;
+  }
+}
+
+.users-upload-results {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .icon-check-mark-success {
+    font-size: 100px;
+    color: $gray-light;
+    align-self: center;
+    margin-bottom: 25px;
+  }
+
+  .results-container {
+    display: flex;
+
+    .result {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: $gray-lightest;
+      min-height: 150px;
+      position: relative;
+
+      .action-link {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        .icon-error {
+          color: $brand-danger;
+          vertical-align: middle;
+          margin-right: 5px;
+        }
+      }
+
+      & + .result {
+        margin-left: 3px;
+      }
+
+      .total {
+        font-size: 50px;
+        line-height: 1;
+      }
+
+      &.disabled {
+        color: $gray-light;
+      }
+
+      &.new-users:not(.disabled) .total {
+        color: $brand-success;
+      }
+      &.existing-users:not(.disabled) .total {
+        color: $brand-info;
+      }
+      &.error-users:not(.disabled) .total {
+        color: $brand-danger;
+      }
+    }
+  }
+
+  .results-total {
+    align-self: center;
+    margin: 20px 0;
+  }
+
+  .grid {
+    border: 1px solid $gray-lightest;
+    overflow-x: hidden;
+    .ngCanvas {
+      width: 100%;
+    }
+    .ngRow {
+      width: 100%;
+    }
+    div[gridscrollbar] {
+      height: auto;
+    }
+    .ngHeaderCell {
+      background-color: $gray-lightest;
+      text-align: center;
+    }
+    .selected .ngCellText {
+      color: $brand-white;
+    }
+    .ngCellText {
+      color: $brand-danger;
+    }
+
+    display: flex;
+    flex-direction: column;
+    .gridStyle {
+      display: flex;
+      flex-direction: column;
+      .ngTopPanel {
+        width: 100% !important;
+      }
+      .ngViewport {
+        max-height: 307px;
+        height: auto !important;
+        width: 100% !important;
+      }
+    }
+  }
+}

@@ -295,6 +295,21 @@ exports.expectSwitchState = function (elem, value) {
 
 exports.expectCheckbox = exports.expectSwitchState;
 
+exports.expectRadioSelected = function (elem) {
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      var input = elem.element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        return input.evaluate(ngModel).then(function (model) {
+          return input.getAttribute('value').then(function (value) {
+            return value == model;
+          });
+        });
+      });
+    }, TIMEOUT, 'Waiting for radio to be selected: ' + elem.locator());
+  });
+};
+
 exports.findDirectoryNumber = function (message, lineNumber) {
   for (var i = 0; i < message.length; i++) {
     var line = message[i];

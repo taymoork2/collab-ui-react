@@ -23,6 +23,7 @@ describe('Convert Users', function () {
     });
 
     it('click on convert button should pop up the convert user modal', function () {
+      utils.waitUntilEnabled(landing.convertButton);
       utils.click(landing.convertButton);
       utils.expectIsDisplayed(landing.convertDialog);
       utils.expectIsDisplayed(landing.convertModalClose);
