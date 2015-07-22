@@ -444,6 +444,22 @@ angular.module('Core')
         return $window.addressparser.parse($scope.model.userList);
       };
 
+      $scope.validateTokensBtn = function () {
+        var usersListLength = angular.element('.token-label').length;
+        $scope.validateTokens();
+        if (invalidcount === 0 && usersListLength > 0) {
+          $state.go('users.add.services');
+        } else if (usersListLength === 0) {
+          Log.debug('No users entered.');
+          var error = [$translate.instant('usersPage.noUsersInput')];
+          Notification.notify(error, 'error');
+        } else {
+          Log.debug('Invalid users entered.');
+          var error = [$translate.instant('usersPage.validEmailInput')];
+          Notification.notify(error, 'error');
+        }
+      };
+
       $scope.validateTokens = function () {
         wizardNextText();
         $timeout(function () {
