@@ -467,6 +467,8 @@ angular.module('Core')
         $scope.currentTrial = customer;
         if ($scope.currentTrial.isSquaredUcOffer) {
           updatePhoneNumberCount(customer.customerOrgId);
+        } else {
+          $scope.noOfPhoneNumbers = 0;
         }
         $state.go('partnercustomers.list.preview');
       };
@@ -479,9 +481,11 @@ angular.module('Core')
 
       function updatePhoneNumberCount(orgId) {
         ExternalNumberPool.getAll(orgId).then(function (results) {
-          if (angular.isDefined(results) && angular.isDefined(results.length) && results.length > 0) {
+          if (angular.isDefined(results) && angular.isDefined(results.length) && results.length >= 0) {
             $scope.noOfPhoneNumbers = results.length;
           }
+        }).catch(function () {
+          $scope.noOfPhoneNumbers = 0;
         });
       }
 
