@@ -43,6 +43,11 @@ var Navigation = function () {
       return text === 'Invite Users';
     });
   });
+  this.communication = this.dropdownItems.filter(function (item) {
+    return item.getText().then(function (text) {
+      return text === 'Communication';
+    });
+  });
 
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
@@ -137,6 +142,11 @@ var Navigation = function () {
   this.clickAddUsers = function () {
     utils.click(this.settingsMenu);
     utils.click(this.addUsers);
+  };
+
+  this.clickCommunicationWizard = function () {
+    utils.click(this.settingsMenu);
+    utils.click(this.communication);
   };
 
   this.clickOrgProfile = function () {

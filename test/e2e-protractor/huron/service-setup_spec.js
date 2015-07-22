@@ -9,15 +9,8 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
     login.login('huron-e2e');
   }, 120000);
 
-  it('clicking on gear icon should open first time wizard', function () {
-    navigation.clickFirstTimeWizard();
-    utils.expectIsDisplayed(wizard.wizard);
-    utils.expectIsDisplayed(wizard.leftNav);
-    utils.expectIsDisplayed(wizard.mainView);
-  });
-
-  it('should load views according to left navigation clicks', function () {
-    wizard.clickServiceSetup();
+  it('should open communication wizard', function () {
+    navigation.clickCommunicationWizard();
     utils.expectText(wizard.mainviewTitle, 'Unified Communications');
     utils.expectIsDisplayed(servicesetup.timeZone);
     utils.expectIsDisplayed(servicesetup.steeringDigit);
@@ -38,6 +31,7 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
   });
 
   it('should not add a single number range', function () {
+    wizard.clickServiceSetup();
     utils.click(servicesetup.addNumberRange);
     utils.sendKeys(servicesetup.newBeginRange, pattern2);
     utils.sendKeys(servicesetup.newEndRange, pattern2);
@@ -46,9 +40,7 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
   });
 
   it('should delete the number range', function () {
-    navigation.clickFirstTimeWizard();
-    wizard.clickServiceSetup();
-    utils.click(servicesetup.deleteNumberRange(pattern));
+    servicesetup.deleteNumberRange(pattern);
     notifications.assertSuccess('Successfully deleted');
   });
 

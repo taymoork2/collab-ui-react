@@ -136,9 +136,9 @@
 
         if (scope.index === 0) {
           beginNumber = value;
-          endNumber = scope.fields[2].formControl.$viewValue;
+          endNumber = scope.fields[2].value();
         } else {
-          beginNumber = scope.fields[0].formControl.$viewValue;
+          beginNumber = scope.fields[0].value();
           endNumber = value;
         }
 
@@ -505,7 +505,7 @@
       return ServiceSetup.listInternalNumberRanges().then(function () {
         vm.model.numberRanges = ServiceSetup.internalNumberRanges;
 
-        // do not show singlenumber intenalranges        
+        // do not show singlenumber intenalranges
         vm.model.displayNumberRanges = vm.model.numberRanges.filter(function (obj) {
           return obj.beginNumber != obj.endNumber;
         });
