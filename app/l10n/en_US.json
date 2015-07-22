@@ -487,6 +487,7 @@
     "language": "Language",
     "selectLanguage": "Select a language",
     "select": "Select",
+    "invalidPhoneNumber": "Incorrect Phone Number",
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
@@ -1205,13 +1206,16 @@
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "Enables users to answer incoming calls to their extension to another number",
+    "description": "Single Number Reach (SNR) enables you to have incoming calls ring the extension and other lines that you specify here at the same time.",
+    "description2": "Turn on Single Number Reach and specify the lines that you want to ring at the same time.",
+    "snrRemoteDestinationNumber": "When the line is called, the following phone number will ring at the same time:",
+    "snrRemoteDestinationNumberPlaceholder": "Enter Number",
+    "snrWaitSeconds": "Indicate how long you want all lines to ring before the call is forwarded to your work voicemail.",
     "toggle": "Single Number Reach",
-    "snrNote": "SNR can cover all the user's lines or limited to specific lines",
+    "snrSeconds": "Seconds",
     "success": "Single Number Reach configuration saved successfully",
     "removeSuccess": "Single Number Reach configuration removed successfully",
-    "error": "Single Number Reach configuration failed.",
-    "placeholder": "Enter SNR Number"
+    "error": "Single Number Reach configuration failed."
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",

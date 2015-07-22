@@ -4,7 +4,8 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
   var controller, $scope, $httpBackend, TelephonyInfoService, Notification, HuronConfig;
   var url;
   var currentUser = getJSONFixture('core/json/currentUser.json');
-  var telephonyInfoWithSnr = getJSONFixture('huron/json/telephonyInfo/snrEnabled.json');
+  var telephonyInfoWithDest = getJSONFixture('huron/json/telephonyInfo/snrEnabledWithDest.json');
+  var telephonyInfoWithoutDest = getJSONFixture('huron/json/telephonyInfo/snrEnabledWithoutDest.json');
 
   var $stateParams = {
     currentUser: currentUser
@@ -21,13 +22,9 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
 
     url = HuronConfig.getCmiUrl() + '/voice/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id + '/remotedestinations';
 
-    spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithSnr);
+    spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithDest);
     spyOn(TelephonyInfoService, 'getRemoteDestinationInfo');
     spyOn(Notification, 'notify');
-
-    $httpBackend.whenPOST(url).respond(201);
-    $httpBackend.whenPUT(url + '/' + telephonyInfoWithSnr.snrInfo.remoteDestinations[0].uuid).respond(200);
-    $httpBackend.whenDELETE(url + '/' + telephonyInfoWithSnr.snrInfo.remoteDestinations[0].uuid).respond(204);
 
     controller = $controller('SingleNumberReachInfoCtrl', {
       $scope: $scope,
@@ -46,13 +43,18 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
 
   describe('saveSingleNumberReach', function () {
     it('should notify on add', function () {
+      $httpBackend.whenPOST(url).respond(201);
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithoutDest);
+      $scope.$broadcast('telephonyInfoUpdated');
+      $scope.$apply();
       controller.saveSingleNumberReach();
       $httpBackend.flush();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
 
     it('should notify on update', function () {
-      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithSnr);
+      $httpBackend.whenPUT(url + '/' + telephonyInfoWithDest.snrInfo.remoteDestinations[0].uuid).respond(200);
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithDest);
       $scope.$broadcast('telephonyInfoUpdated');
       $scope.$apply();
       controller.saveSingleNumberReach();
@@ -61,7 +63,8 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
     });
 
     it('should notify on delete', function () {
-      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithSnr);
+      $httpBackend.whenDELETE(url + '/' + telephonyInfoWithDest.snrInfo.remoteDestinations[0].uuid).respond(204);
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithDest);
       $scope.$broadcast('telephonyInfoUpdated');
       $scope.$apply();
       controller.snrInfo.singleNumberReachEnabled = false;

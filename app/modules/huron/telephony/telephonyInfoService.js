@@ -185,6 +185,7 @@
             if (remoteDestinationInfo !== null && remoteDestinationInfo !== undefined && remoteDestinationInfo.length > 0) {
               snrInfo.singleNumberReachEnabled = true;
               snrInfo.destination = remoteDestinationInfo[0].destination;
+              snrInfo.answerTooLateTimer = remoteDestinationInfo[0].answerTooLateTimer;
             } else {
               snrInfo.singleNumberReachEnabled = false;
             }
