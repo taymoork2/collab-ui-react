@@ -445,12 +445,10 @@ angular.module('Core')
           $state.go('users.add.services');
         } else if (usersListLength === 0) {
           Log.debug('No users entered.');
-          var error = [$translate.instant('usersPage.noUsersInput')];
-          Notification.notify(error, 'error');
+          Notification.notify([$translate.instant('usersPage.noUsersInput')], 'error');
         } else {
           Log.debug('Invalid users entered.');
-          var error = [$translate.instant('usersPage.validEmailInput')];
-          Notification.notify(error, 'error');
+          Notification.notify([$translate.instant('usersPage.validEmailInput')], 'error');
         }
       };
 
