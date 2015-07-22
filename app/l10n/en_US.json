@@ -1295,7 +1295,6 @@
     "lastName": "Last Name",
     "emailAddress": "Email Address",
     "administratorRoles": "Administrator Roles",
-    "rolesDescription": "A user may have one or more roles in the system, and will be granted all permissions from selected roles.",
     "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Spark system from this portal.",
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",
