@@ -52,26 +52,16 @@
       font-size: 46px;
     }
   }
-  #activeUsersdiv {
-    position: relative;
+
+#activeUsersdiv{
+  overflow: visible !important;
+
+  .amcharts-chart-div{
     overflow: visible !important;
-    top: -50px;
-    .amcharts-main-div {
-      height: 100% !important;
-      .amcharts-chart-div {
-        overflow: visible !important;
-        svg {
-          top: 55px !important;
-          position: relative !important;
-          overflow: visible;
-        }
-      }
+
+    svg {
+      overflow: visible !important;
     }
   }
-  .amcharts-legend-div {
-    top: 60px !important;
-  }
-  .amcharts-balloon-div {
-    margin-top: 55px !important;
-  }
+}
 }

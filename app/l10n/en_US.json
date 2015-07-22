@@ -324,17 +324,17 @@
   "registeredEndpoints": {
     "registeredEndpoints": "Registered Endpoints",
     "company": "Company",
-    "maxRegisteredDevices": "Max Devices Over Time | Trend",
-    "totalRegistered": "Total Devices | Trend",
+    "maxRegisteredDevices": "Devices {{time}} (Min/Max)",
+    "totalRegistered": "Yesterday's Total",
+    "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "Registered Endpoints tracks the number of new devices registered during the {{time}}.  The maximum number of registered devices represents the day with the highest number of new registrations, the total new registrations represents yesterday's count of new devices registered, and the trend represents the percentage increase (or decrease) of newly registered devices since the start of the selected time period."
+    "description": "Registered Endpoints tracks the number of new devices registered during the {{time}}."
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
     "description": "Across all your customers, {{percentage}}% of their employees have placed at least one advanced Spark call over the {{time}}. Here is how {{customer}} compares to that average.",
     "averageLabel": "Average Engagement",
-    "belowAverage": "Below Average",
-    "aboveAverage": "Above Average"
+    "acrossCustomers": "Across All Customers"
   },
   "profilePage": {
     "userProfile": "User Profile",
