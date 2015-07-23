@@ -441,15 +441,17 @@ angular.module('Core')
       $scope.validateTokensBtn = function () {
         var usersListLength = angular.element('.token-label').length;
         $scope.validateTokens();
-        if (invalidcount === 0 && usersListLength > 0) {
-          $state.go('users.add.services');
-        } else if (usersListLength === 0) {
-          Log.debug('No users entered.');
-          Notification.notify([$translate.instant('usersPage.noUsersInput')], 'error');
-        } else {
-          Log.debug('Invalid users entered.');
-          Notification.notify([$translate.instant('usersPage.validEmailInput')], 'error');
-        }
+        $scope.$watch($scope.validateTokens(), function () {
+          if (invalidcount === 0 && usersListLength > 0) {
+            $state.go('users.add.services');
+          } else if (usersListLength === 0) {
+            Log.debug('No users entered.');
+            Notification.notify([$translate.instant('usersPage.noUsersInput')], 'error');
+          } else {
+            Log.debug('Invalid users entered.');
+            Notification.notify([$translate.instant('usersPage.validEmailInput')], 'error');
+          }
+        });
       };
 
       $scope.validateTokens = function () {
