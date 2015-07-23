@@ -1,25 +1,29 @@
 {
   "data": [{
     "details": {
-      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-      "deviceRegistrationCountTrend": "573",
-      "yesterdaysDeviceRegistrationCount": "121",
-      "maxRegisteredDevicesTrend": "3600",
-      "yesterdaysMaxRegisteredDevices": "74"
+      "orgId": "6f631c7b-04e5-4dfe-b359-47d5fa9f4837",
+      "deviceRegistrationCountTrend": "4",
+      "yesterdaysDeviceRegistrationCount": "2",
+      "registeredDevicesTrend": "5",
+      "yesterdaysRegisteredDevices": "2",
+      "maxRegisteredDevices": "3",
+      "minRegisteredDevices": "2"
     }
   }, {
     "details": {
-      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-      "deviceRegistrationCountTrend": "-573",
-      "yesterdaysDeviceRegistrationCount": "121",
-      "maxRegisteredDevicesTrend": "-3600",
-      "yesterdaysMaxRegisteredDevices": "74"
+      "orgId": "6f631c7b-04e5-4dfe-b359-47d5fa9f4837",
+      "deviceRegistrationCountTrend": "-4",
+      "yesterdaysDeviceRegistrationCount": "2",
+      "registeredDevicesTrend": "-5",
+      "yesterdaysRegisteredDevices": "2",
+      "maxRegisteredDevices": "3",
+      "minRegisteredDevices": "2"
     }
   }],
   "type": "registeredEndpoints",
-  "date": "2015-06-30T19:25:30.299Z",
+  "date": "2015-07-22T20:11:08.748Z",
   "spanCount": 1,
   "spanType": "day",
   "intervalCount": 1,
-  "intervalType": "week"
+  "intervalType": "month"
 }

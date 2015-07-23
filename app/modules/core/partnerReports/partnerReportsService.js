@@ -538,15 +538,9 @@
             data.customer = customer.label;
 
             data.direction = NEGATIVE;
-            if (data.deviceRegistrationCountTrend > 0) {
+            if (data.registeredDevicesTrend >= 0) {
               data.direction = POSITIVE;
-              data.deviceRegistrationCountTrend = "+" + data.deviceRegistrationCountTrend;
-            }
-
-            data.maxDirection = NEGATIVE;
-            if (data.maxRegisteredDevicesTrend > 0) {
-              data.maxDirection = POSITIVE;
-              data.maxRegisteredDevicesTrend = "+" + data.maxRegisteredDevicesTrend;
+              data.registeredDevicesTrend = "+" + data.registeredDevicesTrend;
             }
 
             return [data];

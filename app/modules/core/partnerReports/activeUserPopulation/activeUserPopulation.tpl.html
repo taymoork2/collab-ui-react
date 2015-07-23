@@ -16,10 +16,6 @@
         <div class="description-div" ng-hide="nav.isEmpty(nav.activeUserPopulationRefresh)">
           <span class="report-description">{{nav.populationDescription}}</span>
         </div>
-        <div class="average-div" ng-hide="nav.isEmpty(nav.activeUserPopulationRefresh) || nav.isRefresh(nav.activeUserPopulationRefresh)">
-          <span class="percent-large">{{nav.activeUserPopulationAverage}}%</span>
-          <span class="percent-label" translate="activeUserPopulation.averageLabel"></span>
-        </div>
         <div class="timechartDiv" ng-if="nav.isRefresh(nav.activeUserPopulationRefresh)"></div>
         <div id="activeUserPopulationChart" class="barchart" ng-hide="nav.isRefresh(nav.activeUserPopulationRefresh)"></div>
       </div>

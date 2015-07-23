@@ -31,7 +31,12 @@
       'markerLabelGap': 10,
       'markerType': 'square',
       'markerSize': 10,
-      'position': 'bottom'
+      'position': 'bottom',
+      'equalWidths': false,
+      'horizontalGap': 5,
+      'valueAlign': 'left',
+      'valueWidth': 0,
+      'verticalGap': 20
     };
     var numFormatBase = {
       'precision': 0,
@@ -49,6 +54,8 @@
     var mediaQualityDiv = 'mediaQualityDiv';
 
     var activeUserPopulationChartId = 'activeUserPopulationChart';
+    var customerPopBalloonText = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + "</span><br><span class='percent-large'>[[percentage]]%</span>";
+    var populationBalloonText = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + '<br>' + $translate.instant('activeUserPopulation.acrossCustomers') + "</span><br><span class='percent-large'>[[overallPopulation]]%</span>";
 
     return {
       createActiveUsersGraph: createActiveUsersGraph,
@@ -59,7 +66,7 @@
       updateActiveUserPopulationGraph: updateActiveUserPopulationGraph,
     };
 
-    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat) {
+    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor) {
 
       var chartData = {
         'type': 'serial',
@@ -67,9 +74,9 @@
         'fontFamily': 'Arial',
         'backgroundColor': Config.chartColors.brandWhite,
         'backgroundAlpha': 1,
-        "dataProvider": data,
-        "valueAxes": valueAxes,
-        "graphs": graphs,
+        'dataProvider': data,
+        'valueAxes': valueAxes,
+        'graphs': graphs,
         'balloon': {
           'adjustBorderColor': true,
           'borderThickness': 1,
@@ -78,8 +85,6 @@
           'fixedPosition': true,
           'shadowAlpha': 0
         },
-        'plotAreaBorderAlpha': 0,
-        'plotAreaBorderColor': Config.chartColors.grayLight,
         'autoMargins': false,
         'marginTop': 60,
         'categoryField': categoryField,
@@ -100,11 +105,15 @@
         }]
       };
 
-      if (legend != null) {
+      if (angular.isDefined(legend) && legend !== null) {
         chartData.legend = legend;
       }
-      if (numFormat != null) {
+      if (angular.isDefined(numFormat) && numFormat !== null) {
         chartData.numberFormatter = numFormat;
+      }
+
+      if (angular.isDefined(chartCursor) && chartCursor !== null) {
+        chartData.chartCursor = chartCursor;
       }
 
       return AmCharts.makeChart(div, chartData);
@@ -128,8 +137,6 @@
         dataPoint.totalCalls = 0;
       }
       if (div === activeUserPopulationChartId) {
-        dataPoint.customerName = "";
-        dataPoint.percentage = 0;
         dataPoint.color = Config.chartColors.brandWhite;
         dataPoint.labelColorField = Config.chartColors.brandWhite;
         if (overallPopulation !== null && overallPopulation !== undefined) {
@@ -225,12 +232,6 @@
       valueAxes[0].axisAlpha = 0;
 
       var legend = angular.copy(legendBase);
-      legend.autoMargins = false;
-      legend.equalWidths = false;
-      legend.horizontalGap = 5;
-      legend.valueAlign = 'left';
-      legend.valueWidth = 0;
-      legend.verticalGap = 20;
       legend.reversedOrder = true;
 
       var numFormat = angular.copy(numFormatBase);
@@ -259,26 +260,19 @@
       graph.type = 'column';
       graph.fillColors = 'color';
       graph.colorField = 'color';
-      graph.labelColorField = 'color';
-      graph.labelText = '[[percentage]]';
+      graph.balloonColor = Config.chartColors.grayLight;
       graph.fontSize = 26;
-      graph.balloonText = '<span class="graph-text"><span class="graph-population" style="color:[[color]];">[[absCompare]]%</span> [[balloonText]]</span>';
       graph.valueField = 'percentage';
       graph.columnWidth = 0.8;
-      graph.labelFunction = function (serialDataItem, valueText) {
-        if (valueText > 0) {
-          return valueText + "%";
-        } else {
-          return "";
-        }
-      };
+      graph.balloonText = customerPopBalloonText;
 
       var graphTwo = {
         'type': 'step',
         'valueField': 'overallPopulation',
         'lineThickness': 2,
-        'lineColor': Config.chartColors.grayDarker,
-        'balloonColor': Config.chartColors.grayDarker
+        'lineColor': Config.chartColors.blue,
+        'balloonColor': Config.chartColors.grayLight,
+        'balloonText': populationBalloonText
       };
 
       var graphs = [graph, graphTwo];
@@ -293,11 +287,17 @@
       valueAxes[0].autoGridCount = false;
       valueAxes[0].minimum = 0;
       valueAxes[0].maximum = 100;
-      valueAxes[0].labelFunction = function (value, valueText, valueAxis) {
-        return valueText + "%";
+      valueAxes[0].unit = "%";
+
+      var chartCursor = {
+        "cursorAlpha": 0,
+        "categoryBalloonEnabled": false,
+        "oneBalloonOnly": true,
+        "balloonPointerOrientation": "vertical",
+        "showNextAvailable": true
       };
 
-      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null);
+      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null, chartCursor);
     }
 
     function updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation) {
@@ -323,10 +323,8 @@
           item.overallPopulation = overallPopulation;
           if (comparison >= 0) {
             item.color = Config.chartColors.brandInfo;
-            item.balloonText = $translate.instant('activeUserPopulation.aboveAverage');
           } else {
             item.color = Config.chartColors.brandDanger;
-            item.balloonText = $translate.instant('activeUserPopulation.belowAverage');
           }
         });
 
