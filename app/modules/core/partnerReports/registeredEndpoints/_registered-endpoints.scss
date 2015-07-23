@@ -33,8 +33,11 @@
     color: $gray-light;
     font-family: $brand-font-cisco-TT-Light;
     font-size: 46px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
+    left: 40%;
+    top: -10px;
+    position: relative;
+  }
+  #endpointRefreshDiv {
+    height: 50px;
   }
 }
