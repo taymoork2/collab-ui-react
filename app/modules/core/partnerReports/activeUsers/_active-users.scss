@@ -53,15 +53,25 @@
     }
   }
 
-#activeUsersdiv{
-  overflow: visible !important;
-
-  .amcharts-chart-div{
+  #activeUsersdiv{
+    position: relative;
     overflow: visible !important;
+    top: -50px;
 
-    svg {
+    .amcharts-chart-div{
       overflow: visible !important;
+
+      svg {
+        top: 55px !important;
+        position: relative !important;
+        overflow: visible !important;
+      }
+    }
+    .amcharts-legend-div {
+      top: 60px !important;
+    }
+    .amcharts-balloon-div {
+      margin-top: 55px !important;
     }
   }
-}
 }

@@ -54,6 +54,8 @@
 
 #activeUserPopulationChart{
   overflow: visible !important;
+  position: relative;
+  top: -50px;
   height: 350px;
 
   .amcharts-chart-div{
@@ -61,8 +63,13 @@
 
     svg {
       height: 460px !important;
+      top: 50px !important;
       overflow: visible !important;
     }
+  } 
+
+  .amcharts-balloon-div {
+    margin-top: 50px !important;
   }
 }
 

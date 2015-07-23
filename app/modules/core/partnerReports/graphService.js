@@ -105,14 +105,14 @@
         }]
       };
 
-      if (legend !== null) {
+      if (angular.isDefined(legend) && legend !== null) {
         chartData.legend = legend;
       }
-      if (numFormat !== null) {
+      if (angular.isDefined(numFormat) && numFormat !== null) {
         chartData.numberFormatter = numFormat;
       }
 
-      if (chartCursor !== null) {
+      if (angular.isDefined(chartCursor) && chartCursor !== null) {
         chartData.chartCursor = chartCursor;
       }
 
@@ -180,7 +180,7 @@
       legend.labelText = '[[title]]';
       var numFormat = angular.copy(numFormatBase);
 
-      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat, null);
+      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat);
     }
 
     function updateActiveUsersGraph(data, activeUsersChart) {
@@ -235,7 +235,7 @@
       legend.reversedOrder = true;
 
       var numFormat = angular.copy(numFormatBase);
-      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat, null);
+      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat);
     }
 
     function updateMediaQualityGraph(data, mediaQualityChart) {
