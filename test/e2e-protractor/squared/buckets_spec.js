@@ -36,7 +36,7 @@ describe('Invite User and Check Buckets', function () {
         utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
         utils.click(users.clearButton);
         utils.expectTextToBeSet(users.addUsersField, '');
-        utils.expectIsDisabled(users.nextButton);
+        utils.expectIsEnabled(users.nextButton);
       });
 
       it('click on enable services individually', function () {
