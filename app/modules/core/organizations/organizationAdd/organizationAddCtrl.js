@@ -50,20 +50,6 @@
         class: 'col-xs-8 col-xs-offset-4'
       }
     }, {
-      key: 'partnerAdminEmail',
-      type: 'input',
-      className: 'last-field',
-      templateOptions: {
-        label: $translate.instant('organizationsPage.partnerAdminEmail'),
-        labelClass: 'col-xs-4',
-        inputClass: 'col-xs-7',
-        type: 'email',
-        required: true
-      },
-      expressionProperties: {
-        'hide': '!model.isPartner'
-      }
-    }, {
       key: 'beId',
       type: 'input',
       templateOptions: {
@@ -84,7 +70,7 @@
         labelClass: 'col-xs-4',
         inputClass: 'col-xs-7',
         type: 'text',
-        required: true
+        required: false
       },
       expressionProperties: {
         'hide': '!model.isPartner'
