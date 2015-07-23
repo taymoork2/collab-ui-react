@@ -477,6 +477,7 @@
     "advProv": "Provision users with a guided wizard to set up Directory Sync, Single Sign-on and customized reports",
     "launchBtn": "Launch",
     "convert": "Convert",
+    "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
     "convertUsersText": "Convert employees of your organization who have signed up for Project Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
     "cancel": "Cancel",

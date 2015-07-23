@@ -8,7 +8,7 @@ angular.module('Core')
 
       return {
 
-        updateUsers: function (usersDataArray, userLicenses, entitlements, callback) {
+        updateUsers: function (usersDataArray, userLicenses, entitlements, method, callback) {
           var userData = {
             'users': []
           };
@@ -45,21 +45,21 @@ angular.module('Core')
                   HuronUser.create(data.userResponse[0].uuid, userData)
                     .then(function () {
                       data.success = true;
-                      callback(data, status);
+                      callback(data, status, method);
                     }).catch(function (response) {
                       // Notify Huron error
                       Notification.errorResponse(response);
 
                       // Callback entitlement success
                       data.success = true;
-                      callback(data, status);
+                      callback(data, status, method);
                     });
                 } else {
                   if (data.userResponse[0].unentitled && data.userResponse[0].unentitled.indexOf(Config.entitlements.huron) !== -1) {
                     HuronUser.delete(data.userResponse[0].uuid)
                       .then(function () {
                         data.success = true;
-                        callback(data, status);
+                        callback(data, status, method);
                       }, function (response) {
                         // If the user does not exist in Squared UC do not report an error
                         if (response.status !== 404) {
@@ -69,11 +69,11 @@ angular.module('Core')
 
                         // Callback entitlement success
                         data.success = true;
-                        callback(data, status);
+                        callback(data, status, method);
                       });
                   } else {
                     data.success = true;
-                    callback(data, status);
+                    callback(data, status, method);
                   }
                   $rootScope.$broadcast('Userservice::updateUsers');
                 }
@@ -82,7 +82,7 @@ angular.module('Core')
                 data = data || {};
                 data.success = false;
                 data.status = status;
-                callback(data, status);
+                callback(data, status, method);
               });
           }
         },

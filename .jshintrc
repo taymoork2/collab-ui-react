@@ -22,7 +22,7 @@
   "strict": true,
   "maxparams": 20,
   "maxdepth": 6,
-  "maxstatements": 91,
+  "maxstatements": 200,
   "maxcomplexity": 24,
   "asi": false,
   "boss": false,

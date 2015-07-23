@@ -4,5 +4,12 @@
   }
   .gridStyle {
     width: 826px;
+    height: 271px;
+  }
+
+  .hoverStyle {
+	text-overflow : ellipsis !important;
+	white-space   : nowrap !important;
+	overflow      : hidden !important;
   }
 }

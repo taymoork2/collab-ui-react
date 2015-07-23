@@ -54,8 +54,10 @@ var LandingPage = function () {
   this.convertButton = element(by.css('#convertButton:not(:disabled)'));
   this.convertDialog = element(by.id('convertDialog'));
   this.convertModalClose = element(by.id('convertModalClose'));
-  this.convertCancelButton = element(by.id('convertModalClose'));
-  this.convertActionButton = element(by.id('convertActionButton'));
+  this.convertNextButton = element(by.id('convertNextButton'));
+  this.btnConvert = element(by.id('btnConvert'));
+  this.btnBack = element(by.id('btnBack'));
+  this.closeAddUser = element(by.id('closeAddUser'));
   this.unlicensedUserRow = element(by.css('.ngRow'));
 
   function convertUsersSearch(query) {
