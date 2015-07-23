@@ -48,7 +48,10 @@
         timeZone: DEFAULT_TZ,
         voicemailPilotNumber: undefined
       },
+      //var to hold ranges in sync with DB
       numberRanges: [],
+      //var to hold ranges in view display
+      displayNumberRanges: [],
       globalMOH: mohOptions[0]
     };
 
@@ -125,6 +128,26 @@
             return true;
           }
         }
+      },
+      singleNumberRangeCheck: function (viewValue, modelValue, scope) {
+        var value = modelValue || viewValue;
+        var result = true;
+        var beginNumber, endNumber;
+
+        if (scope.index === 0) {
+          beginNumber = value;
+          endNumber = scope.fields[2].value();
+        } else {
+          beginNumber = scope.fields[0].value();
+          endNumber = value;
+        }
+
+        if (beginNumber === endNumber) {
+          result = false;
+        } else {
+          result = true;
+        }
+        return result;
       }
     };
 
@@ -198,7 +221,7 @@
         }
       }]
     }, {
-      key: 'numberRanges',
+      key: 'displayNumberRanges',
       type: 'repeater',
       className: 'service-setup service-setup-extension',
       templateOptions: {
@@ -230,6 +253,12 @@
                 expression: vm.validations.duplicate,
                 message: function () {
                   return $translate.instant('serviceSetupModal.rangeDuplicate');
+                }
+              },
+              singleNumberRangeCheck: {
+                expression: vm.validations.singleNumberRangeCheck,
+                message: function () {
+                  return $translate.instant('serviceSetupModal.singleNumberRangeError');
                 }
               }
             },
@@ -277,6 +306,12 @@
                 expression: vm.validations.duplicate,
                 message: function () {
                   return $translate.instant('serviceSetupModal.rangeDuplicate');
+                }
+              },
+              singleNumberRangeCheck: {
+                expression: vm.validations.singleNumberRangeCheck,
+                message: function () {
+                  return $translate.instant('serviceSetupModal.singleNumberRangeError');
                 }
               }
             },
@@ -327,7 +362,7 @@
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return vm.form.$invalid;
         },
-        'hide': 'model.numberRanges.length > 9'
+        'hide': 'model.displayNumberRanges.length > 9'
       }
     }];
 
@@ -375,7 +410,7 @@
         return initTimeZone();
       }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
-        return listInternalExtentionRanges();
+        return listInternalExtensionRanges();
       }).catch(function (response) {
         errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
@@ -466,16 +501,22 @@
       });
     }
 
-    function listInternalExtentionRanges() {
+    function listInternalExtensionRanges() {
       return ServiceSetup.listInternalNumberRanges().then(function () {
         vm.model.numberRanges = ServiceSetup.internalNumberRanges;
+
+        // do not show singlenumber intenalranges
+        vm.model.displayNumberRanges = vm.model.numberRanges.filter(function (obj) {
+          return obj.beginNumber != obj.endNumber;
+        });
+
         // sort - order by beginNumber ascending
-        vm.model.numberRanges.sort(function (a, b) {
+        vm.model.displayNumberRanges.sort(function (a, b) {
           return a.beginNumber - b.beginNumber;
         });
 
-        if (vm.model.numberRanges.length === 0) {
-          vm.model.numberRanges.push({
+        if (vm.model.displayNumberRanges.length === 0) {
+          vm.model.displayNumberRanges.push({
             beginNumber: DEFAULT_FROM,
             endNumber: DEFAULT_TO
           });
@@ -484,7 +525,7 @@
     }
 
     function addInternalNumberRange() {
-      vm.model.numberRanges.push({
+      vm.model.displayNumberRanges.push({
         beginNumber: '',
         endNumber: ''
       });
@@ -494,16 +535,24 @@
       if (angular.isDefined(internalNumberRange.uuid)) {
         ServiceSetup.deleteInternalNumberRange(internalNumberRange)
           .then(function () {
+            // delete the range from DB list
             var index = _.findIndex(vm.model.numberRanges, function (chr) {
               return (chr.uuid == internalNumberRange.uuid);
             });
-
             if (index !== -1) {
               vm.model.numberRanges.splice(index, 1);
             }
+            //delete the range from display list
+            var index1 = _.findIndex(vm.model.displayNumberRanges, {
+              'beginNumber': internalNumberRange.beginNumber,
+              'endNumber': internalNumberRange.endNumber
+            });
+            if (index1 !== -1) {
+              vm.model.displayNumberRanges.splice(index1, 1);
+            }
 
-            if (vm.model.numberRanges.length === 0) {
-              vm.model.numberRanges.push({
+            if (vm.model.displayNumberRanges.length === 0) {
+              vm.model.displayNumberRanges.push({
                 beginNumber: DEFAULT_FROM,
                 endNumber: DEFAULT_TO
               });
@@ -518,13 +567,24 @@
             }));
           });
       } else {
-        var index = _.findIndex(vm.model.numberRanges, {
+        //delete the range from display list
+        var index = _.findIndex(vm.model.displayNumberRanges, {
           'beginNumber': internalNumberRange.beginNumber,
           'endNumber': internalNumberRange.endNumber
         });
         if (index !== -1) {
-          vm.model.numberRanges.splice(index, 1);
+          vm.model.displayNumberRanges.splice(index, 1);
         }
+
+        // delete the range from DB list too if there
+        var index1 = _.findIndex(vm.model.numberRanges, {
+          'beginNumber': internalNumberRange.beginNumber,
+          'endNumber': internalNumberRange.endNumber
+        });
+        if (index1 !== -1) {
+          vm.model.numberRanges.splice(index1, 1);
+        }
+
       }
     }
 
@@ -579,8 +639,8 @@
           deferreds.push(promise);
         }
 
-        if (angular.isArray(vm.model.numberRanges)) {
-          angular.forEach(vm.model.numberRanges, function (internalNumberRange) {
+        if (angular.isArray(vm.model.displayNumberRanges)) {
+          angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
             if (angular.isUndefined(internalNumberRange.uuid)) {
               promise = ServiceSetup.createInternalNumberRange(internalNumberRange)
                 .catch(function (response) {

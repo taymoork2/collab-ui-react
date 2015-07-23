@@ -1,5 +1,6 @@
 'use strict';
 
+//TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
   .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice',
     function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice) {
@@ -9,7 +10,8 @@ angular.module('Core')
       // model can be removed after switching to controllerAs
       $scope.model = {
         userInputOption: 0,
-        nextButtonDisabled: true
+        nextButtonDisabled: true,
+        uploadProgress: 0
       };
 
       $scope.strFirstName = $translate.instant('usersPage.firstNamePlaceHolder');
@@ -249,32 +251,9 @@ angular.module('Core')
 
       $scope.collabRadio = 1;
 
-      var isUCSelected = function (list) {
-        for (var x = 0; x < list.length; x++) {
-          var ent = list[x];
-          if (ent.entitlementName === 'ciscoUC' &&
-            ent.entitlementState === 'ACTIVE') {
-            return true;
-          }
-        }
-        return false;
-      };
-
       $scope.onboardUsers = onboardUsers;
 
       var usersList = [];
-
-      var getSqEntitlement = function (key) {
-        var sqEnt = null;
-        var orgServices = Authinfo.getServices();
-        for (var n = 0; n < orgServices.length; n++) {
-          var service = orgServices[n];
-          if (key === service.ciName) {
-            return service.serviceId;
-          }
-        }
-        return sqEnt;
-      };
 
       var getConfIdList = function () {
         var confId = [];
@@ -398,7 +377,17 @@ angular.module('Core')
       };
 
       var checkNextButtonStatus = function () {
+        wizardNextText();
         $scope.model.nextButtonDisabled = invalidcount > 0;
+      };
+
+      var wizardNextText = function () {
+        var userCount = angular.element('.token-label').length;
+        var action = 'finish';
+        if (userCount > 0) {
+          action = 'next';
+        }
+        $scope.$emit('wizardNextText', action);
       };
 
       $scope.tokenfieldid = "usersfield";
@@ -456,6 +445,7 @@ angular.module('Core')
       };
 
       $scope.validateTokens = function () {
+        wizardNextText();
         $timeout(function () {
           var tokenfield = angular.element('#usersfield');
           //reset the invalid count
@@ -767,19 +757,21 @@ angular.module('Core')
       //radio group
       $scope.entitlements = {};
       var setEntitlementList = function () {
-        for (var i = 0; i < $rootScope.services.length; i++) {
-          var svc = $rootScope.services[i].serviceId;
+        if (angular.isArray($rootScope.services)) {
+          for (var i = 0; i < $rootScope.services.length; i++) {
+            var svc = $rootScope.services[i].serviceId;
 
-          $scope.entitlements[svc] = false;
-          if (svc === 'webExSquared') {
-            $scope.entitlements[svc] = true;
+            $scope.entitlements[svc] = false;
+            if (svc === 'webExSquared') {
+              $scope.entitlements[svc] = true;
+            }
           }
         }
         $scope.entitlementsKeys = Object.keys($scope.entitlements).sort().reverse();
       };
 
       $scope.$on('AuthinfoUpdated', function () {
-        if (undefined !== $rootScope.services && $rootScope.services.length === 0) {
+        if (angular.isArray($rootScope.services) && $rootScope.services.length === 0) {
           $rootScope.services = Authinfo.getServices();
         }
         setEntitlementList();
@@ -789,14 +781,19 @@ angular.module('Core')
       $scope.manualEntryNext = function () {
         var deferred = $q.defer();
 
-        if (invalidcount === 0) {
-          deferred.resolve();
+        if (getUsersList().length === 0) {
+          $q.when($scope.wizard.nextTab()).then(function () {
+            deferred.reject();
+          });
         } else {
-          var error = [$translate.instant('usersPage.validEmailInput')];
-          Notification.notify(error, 'error');
-          deferred.reject();
+          if (invalidcount === 0) {
+            deferred.resolve();
+          } else {
+            var error = [$translate.instant('usersPage.validEmailInput')];
+            Notification.notify(error, 'error');
+            deferred.reject();
+          }
         }
-
         return deferred.promise;
       };
       // Wizard hook for save button
@@ -943,6 +940,227 @@ angular.module('Core')
           displayName: $translate.instant('homePage.emailAddress'),
           cellTemplate: emailTemplate,
           resizable: false,
+          }]
+      };
+
+      // Bulk CSV Onboarding logic
+      var userArray = [];
+      var isCsvValid = false;
+      var cancelDeferred;
+      var saveDeferred;
+      var MAX_USERS = 1000;
+
+      $scope.onFileSizeError = function () {
+        Notification.notify([$translate.instant('firstTimeWizard.csvMaxSizeError')], 'error');
+      };
+
+      $scope.onFileTypeError = function () {
+        Notification.notify([$translate.instant('firstTimeWizard.csvFileTypeError')], 'error');
+      };
+
+      $scope.$watch('model.file', function (value) {
+        $timeout(validateCsv);
+      });
+      $scope.resetFile = resetFile;
+
+      function validateCsv() {
+        if ($scope.model.file) {
+          setUploadProgress(0);
+          userArray = $.csv.toArrays($scope.model.file);
+          if (angular.isArray(userArray) && userArray.length > 0) {
+            if (userArray[0][0] === 'First Name') {
+              userArray.shift();
+            }
+            if (userArray.length > 0 && userArray.length <= MAX_USERS) {
+              isCsvValid = true;
+            }
+          }
+          setUploadProgress(100);
+        } else {
+          isCsvValid = false;
+        }
+      }
+
+      function setUploadProgress(percent) {
+        $scope.model.uploadProgress = percent;
+        $scope.$digest();
+      }
+
+      function resetFile() {
+        $scope.model.file = null;
+      }
+
+      // Wizard hook
+      $scope.csvUploadNext = function () {
+        var deferred = $q.defer();
+
+        if (isCsvValid) {
+          deferred.resolve();
+        } else {
+          var error;
+          if (userArray.length > MAX_USERS) {
+            error = [$translate.instant('firstTimeWizard.csvMaxLinesError')];
+          } else {
+            error = [$translate.instant('firstTimeWizard.uploadCsvEmpty')];
+          }
+          Notification.notify(error, 'error');
+          deferred.reject();
+        }
+
+        return deferred.promise;
+      };
+
+      // Wizard hook
+      $scope.csvProcessingNext = csvSave;
+
+      function csvSave() {
+        saveDeferred = $q.defer();
+        cancelDeferred = $q.defer();
+
+        var chunk = Config.batchSize;
+        var tempUserArray = [];
+        var tempLicenseArray = [];
+        $scope.model.userErrorArray = [];
+        $scope.model.numMaxUsers = userArray.length;
+        $scope.model.processProgress = $scope.model.numTotalUsers = $scope.model.numNewUsers = $scope.model.numExistingUsers = 0;
+
+        function addUserError(row, errorMsg) {
+          $scope.model.userErrorArray.push({
+            row: row,
+            error: errorMsg
+          });
+        }
+
+        function callback(data, status) {
+          /*jshint validthis:true */
+          var params = this;
+          if (data.success) {
+            if (angular.isArray(data.userResponse)) {
+              angular.forEach(data.userResponse, function (user, index) {
+                if (user.status === 200) {
+                  if (user.message === 'User Patched') {
+                    $scope.model.numExistingUsers++;
+                  } else {
+                    $scope.model.numNewUsers++;
+                  }
+                } else {
+                  addUserError(params.startIndex + index + 1, user.message);
+                }
+              });
+            } else {
+              for (var i = 0; i < params.length; i++) {
+                addUserError(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processCsvResponseError'));
+              }
+            }
+          } else {
+            for (var k = 0; k < params.length; k++) {
+              addUserError(params.startIndex + k + 1, $translate.instant('firstTimeWizard.processCsvError'));
+            }
+          }
+
+          calculateProcessProgress();
+        }
+
+        // Get license/entitlements
+        var entitleList = [];
+        var licenseList = [];
+        if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+          licenseList = getAccountLicenseIds() || [];
+        } else {
+          entitleList = getEntitlements('add');
+        }
+
+        function buildLicenseArray(internalExtension, directLine) {
+          return licenseList.map(function (license) {
+            var licenseObj = {
+              id: license,
+              properties: {}
+            };
+            if (license.indexOf("CO_") === 0) {
+              if (internalExtension) {
+                licenseObj.properties.internalExtension = internalExtension;
+              }
+              if (directLine) {
+                licenseObj.properties.directLine = directLine;
+              }
+            }
+            return licenseObj;
+          });
+        }
+
+        function onboardCsvUsers(startIndex) {
+          if (tempUserArray.length > 0) {
+            Userservice.onboardLicenseUsers(tempUserArray, entitleList, tempLicenseArray, callback.bind({
+              startIndex: startIndex - tempUserArray.length + 1,
+              length: tempUserArray.length
+            }), cancelDeferred.promise);
+            tempUserArray = [];
+            tempLicenseArray = [];
+          }
+        }
+
+        function calculateProcessProgress() {
+          $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
+          $scope.model.processProgress = Math.round($scope.model.numTotalUsers / userArray.length * 100);
+
+          if ($scope.model.numTotalUsers >= userArray.length) {
+            $scope.model.userErrorArray.sort(function (a, b) {
+              return a.row - b.row;
+            });
+            $rootScope.$broadcast('USER_LIST_UPDATED');
+            resetFile();
+            saveDeferred.resolve();
+          }
+        }
+
+        // Onboard users in chunks
+        // Separate chunks on invalid rows
+        for (var j = 0; j < userArray.length; j++) {
+          if (tempUserArray.length < chunk) {
+            if (userArray[j].length === 6) {
+              tempUserArray.push({
+                address: userArray[j][3],
+                name: userArray[j][2]
+              });
+              tempLicenseArray.push(buildLicenseArray(userArray[j][4], userArray[j][5]));
+            } else {
+              addUserError(j + 1, $translate.instant('firstTimeWizard.csvInvalidRow'));
+              onboardCsvUsers(j - 1);
+              continue;
+            }
+          }
+          if (tempUserArray.length === chunk || j === (userArray.length - 1)) {
+            onboardCsvUsers(j);
+          }
+        }
+
+        calculateProcessProgress();
+
+        return saveDeferred.promise;
+      }
+
+      $scope.cancelProcessCsv = function () {
+        cancelDeferred.resolve();
+        saveDeferred.resolve();
+      };
+
+      $scope.gridOptions = {
+        data: 'model.userErrorArray',
+        multiSelect: false,
+        showFilter: false,
+        rowHeight: 44,
+        // rowTemplate: rowTemplate,
+        headerRowHeight: 44,
+        useExternalSorting: false,
+        enableRowSelection: false,
+
+        columnDefs: [{
+          field: 'row',
+          displayName: $translate.instant('firstTimeWizard.resultRowHeader'),
+          sortable: true,
+        }, {
+          field: 'error',
+          displayName: $translate.instant('firstTimeWizard.resultErrorHeader'),
           sortable: true
         }]
       };

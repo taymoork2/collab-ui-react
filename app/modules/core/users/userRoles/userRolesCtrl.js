@@ -179,7 +179,17 @@ angular.module('Squared')
                   'familyName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.familyName) : ''
                 },
                 'displayName': $scope.currentUser.displayName,
+                'meta': {
+                  'attributes': []
+                }
               };
+              // If name properties don't exist, delete names using meta attributes
+              if (!userData.name.givenName) {
+                userData.meta.attributes.push('name.givenName');
+              }
+              if (!userData.name.familyName) {
+                userData.meta.attributes.push('name.familyName');
+              }
 
               Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
 

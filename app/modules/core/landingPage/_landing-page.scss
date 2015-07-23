@@ -7,6 +7,7 @@
 .landing-content {
   padding-left: 15px;
   padding-top: 15px;
+  padding-right: 30px;
 }
 
 // Analytics Charts
@@ -67,8 +68,14 @@
   }
   section {
     margin-bottom: 40px;
-    padding-left: 20px;
-    padding-right: 20px;
+
+  }
+
+  .widgets {
+    section {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
   }
   .background-white {
     background-color: rgb(255, 255, 255);
@@ -107,22 +114,15 @@
   }
 }
 
+.notification-style {
+  display:flex;
+  align-items: flex-start;
+}
+
 .notification-spacing {
-  padding-right: 0px;
-  margin-left: -12px;
+  margin-left: 15px;
   font-size: 14px;
-}
-
-@media (max-width: $screen-md-min) {
-  .notification-spacing {
-    margin-left: 1px;
-  }
-}
-
-@media (max-width: $screen-sm-min) {
-  .notification-spacing {
-    margin-left: 0px;
-  }
+  flex:1;
 }
 
 @media (min-width: $screen-md-min) {

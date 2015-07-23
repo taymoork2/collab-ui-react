@@ -41,14 +41,11 @@
           user.lastName = names[1];
         }
       } else {
-        if (data.familyName) {
-          user.lastName = data.familyName;
-        } else {
-          user.lastName = data.email.split('@')[0];
-        }
-
         if (data.givenName) {
           user.firstName = data.givenName;
+        }
+        if (data.familyName) {
+          user.lastName = data.familyName;
         }
       }
 
@@ -133,13 +130,13 @@
 
     function update(uuid, data) {
       var user = {};
-      if (data.name.givenName) {
-        user.firstName = data.name.givenName.trim();
-      }
-      if (data.name.familyName) {
-        user.lastName = data.name.familyName.trim();
-      } else {
-        user.lastName = data.userName.split('@')[0];
+      if (data.name) {
+        if (data.name.givenName) {
+          user.firstName = data.name.givenName.trim();
+        }
+        if (data.name.familyName) {
+          user.lastName = data.name.familyName.trim();
+        }
       }
 
       return UserServiceCommon.update({

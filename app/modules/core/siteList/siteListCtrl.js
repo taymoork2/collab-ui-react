@@ -35,9 +35,9 @@ angular.module('Core')
         '</div>';
 
       var siteUrlTemplate =
-        '<launch-site admin-email-param="siteList.siteLaunch.adminEmailParam"' +
-        'advanced-settings="siteList.siteLaunch.advancedSettings" user-email-param="siteList.siteLaunch.userEmailParam"' +
-        'webex-advanced-url="siteList.getWebexUrl(row.entity.license.siteUrl)">' +
+        '<launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' +
+        'advanced-settings="{{siteList.siteLaunch.advancedSettings}}" user-email-param="{{siteList.siteLaunch.userEmailParam}}"' +
+        'webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' +
         '</launch-site>';
 
       vm.gridOptions = {
