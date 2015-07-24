@@ -9,7 +9,7 @@ angular.module('Core')
       };
 
       $scope.getId = function (url) {
-        return url.match(/[0-9]+/)[0];
+        return url.match(/[0-9]+/) !== null ? url.match(/[0-9]+/)[0] : 0;
       };
 
       $scope.submitForm = function () {

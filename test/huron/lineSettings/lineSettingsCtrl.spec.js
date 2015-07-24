@@ -2,7 +2,9 @@
 
 describe('Controller: LineSettingsCtrl', function () {
   var controller, $scope, $state, $stateParams, $rootScope, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, ServiceSetup;
-  var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers, externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoSecondLine, modalDefer;
+  var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers,
+    externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoVoiceOnlyShared, telephonyInfoSecondLine,
+    modalDefer;
   var UserListService, SharedLineInfoService;
   var userList = [];
   var userData = [];
@@ -56,6 +58,8 @@ describe('Controller: LineSettingsCtrl', function () {
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
     telephonyInfoVoiceOnly = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
+    telephonyInfoVoiceOnlyShared = angular.copy(telephonyInfoVoiceOnly);
+    telephonyInfoVoiceOnlyShared.currentDirectoryNumber.dnSharedUsage = "Primary Shared";
     telephonyInfoSecondLine = getJSONFixture('huron/json/telephonyInfo/voiceEnabledSecondLine.json');
 
     //Sharedline
@@ -171,14 +175,6 @@ describe('Controller: LineSettingsCtrl', function () {
     });
   });
 
-  describe('callerId should be UserName', function () {
-    it('should set callerId as UserName', function () {
-      expect(controller.callerIdInfo).toBeDefined();
-      expect(controller.callerIdInfo.default).toBe("CurrentUser");
-    });
-
-  });
-
   describe('saveLineSettings', function () {
     beforeEach(function () {
       controller.callerIdInfo.selection = 'other';
@@ -283,6 +279,9 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('SharedLineUsers', function () {
     beforeEach(function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnlyShared);
+      controller.init();
+      $scope.$apply();
       controller.cfModel.forward = 'none';
       controller.selectedUsers.push(selectedUsers[0]);
       spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
@@ -324,7 +323,10 @@ describe('Controller: LineSettingsCtrl', function () {
 
   describe('update SharedLineDevices', function () {
     beforeEach(function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnlyShared);
       controller.cfModel.forward = 'none';
+      controller.init();
+      $scope.$apply();
       spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
       controller.selectedUsers = [];
       controller.devices = angular.copy(sharedLineEndpoints);
@@ -338,7 +340,7 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
     });
 
-    it('disassociateSharedLineDevice: should disassociate Shared Line endpoint', function () {
+    it('disassociateSharedLineDevice: should disassociate and associate Shared Line endpoint', function () {
       expect(controller.devices.length).toBe(3);
       expect(controller.devices[0].isSharedLine).toBeTruthy();
       expect(SharedLineInfoService.disassociateLineEndpoint).toHaveBeenCalled();
