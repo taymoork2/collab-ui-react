@@ -44,14 +44,17 @@
     }
 
     function loadSharedLineUsers(dnUuid, currentUserId) {
-      sharedLineUsers = [];
+      var sharedLineUsers = [];
+      var promises = [];
       return DirectoryNumberUserService.query({
           'customerId': Authinfo.getOrgId(),
           'directoryNumberId': dnUuid
         }).$promise
         .then(function (dnUserInfo) {
           if (angular.isDefined(dnUserInfo) && dnUserInfo.length > 1) {
+            var deferreds = [];
             for (var i = 0; i < dnUserInfo.length; i++) {
+              var promise;
               var dnUser = dnUserInfo[i];
               var userInfo = {
                 'uuid': dnUser.user.uuid,
@@ -66,19 +69,22 @@
               } else {
                 sharedLineUsers.push(userInfo);
               }
-              UserServiceCommon.get({
+              promise =
+                UserServiceCommon.get({
                   customerId: Authinfo.getOrgId(),
                   userId: dnUser.user.uuid
                 }).$promise
                 .then(function (commonUser) {
                   this.name = (commonUser && commonUser.firstName) ? (commonUser.firstName) : '';
                   this.name = (commonUser && commonUser.lastName) ? (this.name + ' ' + commonUser.lastName).trim() : this.name;
-
                 }.bind(userInfo));
+              promises.push(promise);
             }
+            return $q.all(promises)
+              .then(function () {
+                return sharedLineUsers;
+              });
           }
-          return sharedLineUsers;
-
         });
     }
 
