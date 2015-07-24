@@ -324,8 +324,8 @@
       } else if (timeFilter === 1) {
         for (var x = 3; x >= 0; x--) {
           graph.push({
-            date: moment().subtract(2 + (x * 7), 'day').format(),
-            modifiedDate: moment().subtract(2 + (x * 7), 'day').format(dateFormat),
+            date: moment(mostRecent).subtract(x * 7, 'day').format(),
+            modifiedDate: moment(mostRecent).subtract(x * 7, 'day').format(dateFormat),
             totalRegisteredUsers: 0,
             activeUsers: 0,
             percentage: 0
