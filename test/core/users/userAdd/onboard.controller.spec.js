@@ -3,23 +3,25 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice;
+  var controller, $scope, $timeout, GroupService, Notification, Userservice, Orgservice;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _Orgservice_) {
     $scope = $rootScope.$new();
     $timeout = _$timeout_;
     GroupService = _GroupService_;
     Notification = _Notification_;
     Userservice = _Userservice_;
+    Orgservice = _Orgservice_;
 
     spyOn(GroupService, 'getGroupList').and.callFake(function (callback) {
       callback({});
     });
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'onboardLicenseUsers');
+    spyOn(Orgservice, 'getUnlicensedUsers');
 
     controller = $controller('OnboardCtrl', {
       $scope: $scope

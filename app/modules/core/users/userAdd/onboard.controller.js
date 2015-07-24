@@ -940,7 +940,7 @@ angular.module('Core')
           displayName: $translate.instant('homePage.emailAddress'),
           cellTemplate: emailTemplate,
           resizable: false,
-          }]
+        }]
       };
 
       // Bulk CSV Onboarding logic
