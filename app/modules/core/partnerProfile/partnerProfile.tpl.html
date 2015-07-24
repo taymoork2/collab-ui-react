@@ -86,7 +86,7 @@
       <div class="col-xs-12 form-section">
         <h3 translate="partnerProfile.supportSetup"></h3>
         <!-- cisco problem reporting site form -->
-        <div class="row optional-row" id="troubleReportingCiscoPanel" ng-if="showCiscoSupport">
+        <div class="row optional-row" id="troubleReportingCiscoPanel" ng-if="(isCiscoSupport && isManaged)">
           <div class="col-xs-7">
             <div class="row">
               <div class="col-xs-2 radio-column">
@@ -104,7 +104,7 @@
           </div>
         </div>
         <!-- partner problem reporting site form -->
-        <div class="row" ng-if="!showCiscoSupport">
+        <div class="row" ng-if="!(isCiscoSupport && isManaged)">
           <div class="col-xs-7">
             <div class="row">
               <div class="col-xs-2 radio-column">
@@ -143,7 +143,7 @@
         <div class="form-section-last" id="helpPanel">
           <h3 translate="partnerProfile.helpFaq"></h3>
           <!-- cisco help site form -->
-          <div class="row optional-row" id="helpCiscoPanel" ng-if="showCiscoHelp">
+          <div class="row optional-row" id="helpCiscoPanel" ng-if="(isCiscoHelp && isManaged)">
             <div class="col-xs-2 radio-column">
               <input type="radio" value="0" ng-model="helpSiteRadioValue" >
               <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(0)">{{collabRadio2.label}}</span>
@@ -155,7 +155,7 @@
             </div>
           </div>
           <!-- partner help site form -->
-          <div class="row" id="helpPartnerPanel" ng-if="!showCiscoHelp">
+          <div class="row" id="helpPartnerPanel" ng-if="!(isCiscoHelp && isManaged)">
             <div class="col-xs-2 radio-column">
               <input type="radio" value="2" ng-model="helpSiteRadioValue" >
               <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(2)">{{collabRadio2.label}}</span>

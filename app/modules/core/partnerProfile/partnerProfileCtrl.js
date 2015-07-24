@@ -53,8 +53,6 @@ angular.module('Core')
         $scope.isManaged = false;
         $scope.isCiscoSupport = false;
         $scope.isCiscoHelp = false;
-        $scope.showCiscoSupport = false;
-        $scope.showCiscoHelp = false;
 
         UserListService.listPartners(Authinfo.getOrgId(), function (data) {
           for (var partner in data.partners) {
@@ -66,10 +64,6 @@ angular.module('Core')
               $scope.rep = currentPartner;
               $scope.isManaged = true;
             }
-          }
-          if ($scope.isManaged) {
-            $scope.showCiscoHelp = $scope.checkState(true);
-            $scope.showCiscoSupport = $scope.checkState(false);
           }
         });
 
@@ -102,11 +96,9 @@ angular.module('Core')
                 }
                 if (typeof (orgSettingsObj.isCiscoSupport) !== 'undefined') {
                   $scope.isCiscoSupport = orgSettingsObj.isCiscoSupport;
-                  $scope.showCiscoSupport = $scope.checkState(false);
                 }
                 if (typeof (orgSettingsObj.isCiscoHelp) !== 'undefined') {
                   $scope.isCiscoHelp = orgSettingsObj.isCiscoHelp;
-                  $scope.showCiscoHelp = $scope.checkState(true);
                 }
               }
             } else {
@@ -120,20 +112,6 @@ angular.module('Core')
       };
 
       $scope.init();
-
-      /**
-       * Currently only check isCiscoHelp and isCiscoSupport
-       * @param  {Boolean} isHelp isHelp or isSupport?
-       * @return {Boolean}         Show Cisco Help / Support vs Partner Help / Support
-       */
-      $scope.checkState = function (isHelp) {
-        if (isHelp) {
-          return ($scope.isCiscoHelp && $scope.isManaged);
-        } else if (!isHelp) {
-          return ($scope.isCiscoSupport && $scope.isManaged);
-        }
-        return false;
-      };
 
       $scope.validation = function () {
         angular.element('#orgProfileSaveBtn').button('loading');
