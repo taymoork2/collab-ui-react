@@ -69,24 +69,26 @@ describe('Service: Partner Reports Service', function () {
     userName: 'havard.nigardsoy@vijugroup.com'
   };
   var posEndpointResponse = [{
-    orgId: 'a7cba512-7b62-4f0a-a869-725b413680e4',
-    deviceRegistrationCountTrend: '+573',
-    yesterdaysDeviceRegistrationCount: '121',
-    maxRegisteredDevicesTrend: '+3600',
-    yesterdaysMaxRegisteredDevices: '74',
+    orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
+    deviceRegistrationCountTrend: '4',
+    yesterdaysDeviceRegistrationCount: '2',
+    registeredDevicesTrend: '+5',
+    yesterdaysRegisteredDevices: '2',
+    maxRegisteredDevices: '3',
+    minRegisteredDevices: '2',
     customer: 'Test Org One',
-    direction: 'positive',
-    maxDirection: 'positive'
+    direction: 'positive'
   }];
   var negEndpointResponse = [{
-    orgId: 'a7cba512-7b62-4f0a-a869-725b413680e4',
-    deviceRegistrationCountTrend: '-573',
-    yesterdaysDeviceRegistrationCount: '121',
-    maxRegisteredDevicesTrend: '-3600',
-    yesterdaysMaxRegisteredDevices: '74',
+    orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
+    deviceRegistrationCountTrend: '-4',
+    yesterdaysDeviceRegistrationCount: '2',
+    registeredDevicesTrend: '-5',
+    yesterdaysRegisteredDevices: '2',
+    maxRegisteredDevices: '3',
+    minRegisteredDevices: '2',
     customer: 'Test Org One',
-    direction: 'negative',
-    maxDirection: 'negative'
+    direction: 'negative'
   }];
 
   var Authinfo = {

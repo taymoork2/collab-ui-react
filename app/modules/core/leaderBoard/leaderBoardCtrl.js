@@ -42,12 +42,8 @@ angular.module('Core')
       ];
 
       var getLicenses = function () {
-        Orgservice.getAdminOrg(function (data, status) {
-          if (!data.success) {
-            Log.debug('Get existing admin org failed. Status: ' + status);
-            return;
-          }
-          if (data.licenses.length === 0) {
+        Orgservice.getValidLicenses().then(function (licenses) {
+          if (licenses.length === 0) {
             $scope.bucketKeys.forEach(function (bucket) {
               $scope.buckets[bucket].unlimited = true;
             });
@@ -56,7 +52,7 @@ angular.module('Core')
               $scope.buckets[bucket].totalCount = 0;
               $scope.buckets[bucket].currentCount = 0;
             });
-            data.licenses.forEach(function (license) {
+            licenses.forEach(function (license) {
               // skip CMR licenses; these should not contribute toward counts
               if (license.licenseId.lastIndexOf('CMR', 0) === 0) return;
               var bucket = license.licenseType.toLowerCase();

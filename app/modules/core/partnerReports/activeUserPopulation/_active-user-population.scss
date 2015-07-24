@@ -1,6 +1,6 @@
 .active-user-population {
   position: relative;
-  padding: 60px 15px 0px;
+  padding: 0 15px;
 
   .spinner-position {
     position: relative;
@@ -9,31 +9,14 @@
     padding: 15px 0px 0px;
     vertical-align: text-top;
   }
-  .average-div {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding-top: 10px;
-    position: relative;
-    z-index: 1000;
+  .percent-large {
+    font-size: 25px;
     font-family: $brand-font-cisco-TT-Light;
   }
-  .percent-large {
-    font-size: 30px;
-    display: relative;
-    top: 20px;
-    left: 0px;
-  }
   .percent-label {
-    font-size: 18px;
-    padding-left: 8px;
-    padding-top: 12px;
+    font-size: 15px;
+    font-family: $brand-font-cisco-TT-Light;
   }
-  .percent-label,
-  .percent-large {
-    font-family: $brand-font-cisco-TT-Regular;
-  }
-
   .graph-population{
     color: $gray-darkest;
     font-family: $brand-font-cisco-TT-Regular;

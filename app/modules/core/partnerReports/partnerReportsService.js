@@ -324,8 +324,8 @@
       } else if (timeFilter === 1) {
         for (var x = 3; x >= 0; x--) {
           graph.push({
-            date: moment().subtract(2 + (x * 7), 'day').format(),
-            modifiedDate: moment().subtract(2 + (x * 7), 'day').format(dateFormat),
+            date: moment(mostRecent).subtract(x * 7, 'day').format(),
+            modifiedDate: moment(mostRecent).subtract(x * 7, 'day').format(dateFormat),
             totalRegisteredUsers: 0,
             activeUsers: 0,
             percentage: 0
@@ -538,15 +538,9 @@
             data.customer = customer.label;
 
             data.direction = NEGATIVE;
-            if (data.deviceRegistrationCountTrend > 0) {
+            if (data.registeredDevicesTrend >= 0) {
               data.direction = POSITIVE;
-              data.deviceRegistrationCountTrend = "+" + data.deviceRegistrationCountTrend;
-            }
-
-            data.maxDirection = NEGATIVE;
-            if (data.maxRegisteredDevicesTrend > 0) {
-              data.maxDirection = POSITIVE;
-              data.maxRegisteredDevicesTrend = "+" + data.maxRegisteredDevicesTrend;
+              data.registeredDevicesTrend = "+" + data.registeredDevicesTrend;
             }
 
             return [data];
