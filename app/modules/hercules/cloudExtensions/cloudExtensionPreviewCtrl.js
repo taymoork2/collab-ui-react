@@ -51,7 +51,7 @@ angular.module('Hercules')
         }];
         angular.element('#btn-save').button('loading');
 
-        Userservice.updateUsers(user, null, entitlement, function (data) {
+        Userservice.updateUsers(user, null, entitlement, 'updateEntitlement', function (data) {
           var entitleResult = {
             msg: null,
             type: 'null'

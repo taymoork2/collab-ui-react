@@ -98,7 +98,7 @@ angular.module('Squared')
             'address': user.userName,
             'givenName': givenName,
             'familyName': familyName
-          }], null, getUserEntitlementList(), function (data) {
+          }], null, getUserEntitlementList(), 'changeEntitlement', function (data) {
             var entitleResult = {
               msg: null,
               type: 'null'
