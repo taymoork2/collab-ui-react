@@ -134,6 +134,10 @@ getSSOToken = (req, jar, creds, cb) ->
     cb()
 
 getAuthCode = (req, creds, cb) ->
+  rand_str = ""
+  rand_str += Math.random().toString(36).substr(2) while rand_str.length < 40
+  rand_str.substr 0, length
+
   opts =
     url: 'https://idbroker.webex.com/idb/oauth2/v1/authorize'
     headers:
@@ -144,7 +148,7 @@ getAuthCode = (req, creds, cb) ->
       client_id: clientId
       scope: 'webexsquare:admin Identity:SCIM Identity:Config Identity:Organization'
       realm: '/' + creds.org
-      state: 'this-should-be-a-random-string-for-security-purpose'
+      state: rand_str
 
   req.post opts, (err, res, body) ->
     if err
