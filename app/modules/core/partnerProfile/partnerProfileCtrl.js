@@ -115,7 +115,9 @@ angular.module('Core')
 
       $scope.validation = function () {
         angular.element('#orgProfileSaveBtn').button('loading');
-        updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl, $scope.supportText, $scope.helpUrl);
+        updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl,
+          $scope.supportText, $scope.helpUrl,
+          $scope.helpSiteRadioValue === 0, $scope.problemSiteRadioValue === 0);
       };
 
       $scope.setProblemRadio = function (value) {
@@ -132,8 +134,8 @@ angular.module('Core')
         return !($scope.radioModified || $scope.supportForm.$dirty);
       };
 
-      var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl) {
-        Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, function (data, status) {
+      var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
+        Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
           setTimeout(function () {
             angular.element('#orgProfileSaveBtn').button('reset');
           }, 3000);
