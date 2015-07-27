@@ -129,7 +129,10 @@
     }
 
     function update(uuid, data) {
-      var user = {};
+      var user = {
+        firstName: '',
+        lastName: ''
+      };
       if (data.name) {
         if (data.name.givenName) {
           user.firstName = data.name.givenName.trim();
