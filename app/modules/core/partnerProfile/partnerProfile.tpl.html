@@ -85,8 +85,8 @@
     <div class="row" id="troubleReportingPanel">
       <div class="col-xs-12 form-section">
         <h3 translate="partnerProfile.supportSetup"></h3>
-        <!-- cisco problem reporting site form -->
-        <div class="row optional-row" id="troubleReportingCiscoPanel" ng-if="(isCiscoSupport && isManaged)">
+        <!-- partner problem reporting site form -->
+        <div class="row optional-row" id="troubleReportingCiscoPanel">
           <div class="col-xs-7">
             <div class="row">
               <div class="col-xs-2 radio-column">
@@ -96,25 +96,9 @@
               <div class="col-xs-10 default-link-row">
                 <div class="partner-link">
                   <a href="" ng-click="sendFeedback()">
-                    <span translate="partnerProfile.ciscoProblem"></span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- partner problem reporting site form -->
-        <div class="row" ng-if="!(isCiscoSupport && isManaged)">
-          <div class="col-xs-7">
-            <div class="row">
-              <div class="col-xs-2 radio-column">
-                <input type="radio" name="collabRadio3" id="collabRadio3" value="2" ng-model="problemSiteRadioValue" >
-                <span id="collabRadioLabel2" class="onboard-radio" ng-click="setProblemRadio(2)">{{collabRadio2.label}}</span>
-              </div>
-              <div class="col-xs-10 default-link-row">
-                <div class="partner-link">
-                  <a href="" ng-click="sendFeedback()">
-                    <span translate="partnerProfile.partnerProblem"></span>
+                    <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
+                    <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoProblem"></span>
+                    <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerProblem"></span>
                   </a>
                 </div>
               </div>
@@ -125,7 +109,7 @@
     </div>
 
     <!-- trouble reporting site url -->
-    <div class="row" ng-click="setProblemRadio(1)" id="troubleReportingCustomerPanel">
+    <div class="row" ng-click="setProblemRadio(1)" id="troubleReportingPartnerPanel">
       <div class="col-xs-12 col-md-7">
         <div class="row">
           <div class="col-xs-2 radio-column">
@@ -139,30 +123,19 @@
             </div>
           </div>
         </div>
-
         <div class="form-section-last" id="helpPanel">
           <h3 translate="partnerProfile.helpFaq"></h3>
-          <!-- cisco help site form -->
-          <div class="row optional-row" id="helpCiscoPanel" ng-if="(isCiscoHelp && isManaged)">
+          <!-- partner help site form -->
+          <div class="row optional-row" id="helpCiscoPanel">
             <div class="col-xs-2 radio-column">
               <input type="radio" value="0" ng-model="helpSiteRadioValue" >
               <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(0)">{{collabRadio2.label}}</span>
             </div>
             <div class="col-xs-10 default-link-row">
               <a ng-href="{{profileHelpUrl}}" target="_blank">
-                <span translate="partnerProfile.ciscoHelp"></span>
-              </a>
-            </div>
-          </div>
-          <!-- partner help site form -->
-          <div class="row" id="helpPartnerPanel" ng-if="!(isCiscoHelp && isManaged)">
-            <div class="col-xs-2 radio-column">
-              <input type="radio" value="2" ng-model="helpSiteRadioValue" >
-              <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(2)">{{collabRadio2.label}}</span>
-            </div>
-            <div class="col-xs-10 default-link-row">
-              <a ng-href="{{profileHelpUrl}}" target="_blank">
-                <span translate="partnerProfile.partnerHelp"></span>
+                <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerHelp"></span>
               </a>
             </div>
           </div>
