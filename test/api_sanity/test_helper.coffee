@@ -28,9 +28,9 @@ auth =
     org:  '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
 
   'partner-squc-admin':
-    user: 'atlaspartner_squc_admin@atlas.com'
-    pass: 'C1sco123!'
-    org:  '1b6248c1-0d0c-4bd7-9640-c637483541fb'
+    user: 'admin@squareduc-partner.com'
+    pass: 'Cisco123!'
+    org:  '4e2befa3-9d82-4fdf-ad31-bb862133f078'
 
   'pbr-admin-test':
     user: 'pbr-org-admin-test@wx2.example.com'

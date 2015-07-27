@@ -10,7 +10,7 @@ var PartnerHomePage = function () {
   };
 
   this.newSqUCTrial = {
-    customerName: 'Atlas_Test_Squc_' + randomNumber.slice(0, 5),
+    customerName: 'Atlas_Test_1_Squc_' + randomNumber.slice(0, 5),
     customerEmail: 'collabctg+Atlas' + randomNumber.slice(0, 5) + '@gmail.com'
   };
 
@@ -55,7 +55,7 @@ var PartnerHomePage = function () {
   this.removeDidButton = element(by.id('removeDidButton'));
   this.addDidDismissButton = element(by.id('addDidDismissButton'));
   this.notifyCustLaterLink = element(by.id('notifyCustLaterLink'));
-  this.customerDidAddInput = element(by.id('didAddField'));
+  this.customerDidAdd = element(by.css('.did-input .tokenfield'));
   this.customerDidInput = element(by.id('didAddField-tokenfield'));
   this.customerEmailInput = element(by.id('customerEmail'));
   this.licenseCount = element(by.id('licenseCount'));
