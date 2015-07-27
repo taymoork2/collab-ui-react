@@ -117,15 +117,15 @@ angular.module('Core')
         var error = false;
 
         // if user is attempting to use a blank support url
-        if($scope.supportUrl === '' && $scope.problemSiteRadioValue !== $scope.problemSiteInfo.cisco){
+        if ($scope.supportUrl === '' && $scope.problemSiteRadioValue !== $scope.problemSiteInfo.cisco) {
           error = true;
         }
         // if user is attempting to use a blank help url
-        if($scope.helpUrl === '' && $scope.helpSiteRadioValue !== $scope.helpSiteInfo.cisco){
+        if ($scope.helpUrl === '' && $scope.helpSiteRadioValue !== $scope.helpSiteInfo.cisco) {
           error = true;
         }
 
-        if(!error){
+        if (!error) {
           updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl,
             $scope.supportText, $scope.helpUrl,
             $scope.helpSiteRadioValue === 0, $scope.problemSiteRadioValue === 0);
