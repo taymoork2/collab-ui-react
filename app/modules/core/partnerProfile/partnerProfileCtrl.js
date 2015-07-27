@@ -114,10 +114,24 @@ angular.module('Core')
       $scope.init();
 
       $scope.validation = function () {
-        angular.element('#orgProfileSaveBtn').button('loading');
-        updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl,
-          $scope.supportText, $scope.helpUrl,
-          $scope.helpSiteRadioValue === 0, $scope.problemSiteRadioValue === 0);
+        var error = false;
+
+        // if user is attempting to use a blank support url
+        if($scope.supportUrl === '' && $scope.problemSiteRadioValue !== $scope.problemSiteInfo.cisco){
+          error = true;
+        }
+        // if user is attempting to use a blank help url
+        if($scope.helpUrl === '' && $scope.helpSiteRadioValue !== $scope.helpSiteInfo.cisco){
+          error = true;
+        }
+
+        if(!error){
+          updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl,
+            $scope.supportText, $scope.helpUrl,
+            $scope.helpSiteRadioValue === 0, $scope.problemSiteRadioValue === 0);
+        } else {
+          Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
+        }
       };
 
       $scope.setProblemRadio = function (value) {
@@ -135,6 +149,7 @@ angular.module('Core')
       };
 
       var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
+        angular.element('#orgProfileSaveBtn').button('loading');
         Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
           setTimeout(function () {
             angular.element('#orgProfileSaveBtn').button('reset');
