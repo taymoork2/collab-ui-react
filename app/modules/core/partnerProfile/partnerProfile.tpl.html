@@ -134,8 +134,8 @@
             <div class="col-xs-10 default-link-row">
               <a ng-href="{{profileHelpUrl}}" target="_blank">
                 <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
-                <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoHelp"></span>
-                <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerHelp"></span>
+                <span ng-if="isCiscoHelp && isManaged" translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="!isCiscoHelp && isManaged" translate="partnerProfile.partnerHelp"></span>
               </a>
             </div>
           </div>
