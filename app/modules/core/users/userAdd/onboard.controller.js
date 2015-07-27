@@ -440,8 +440,7 @@ angular.module('Core')
 
       $scope.validateTokensBtn = function () {
         var usersListLength = angular.element('.token-label').length;
-        $scope.validateTokens();
-        $scope.$watch($scope.validateTokens(), function () {
+        $scope.validateTokens().then(function () {
           if (invalidcount === 0 && usersListLength > 0) {
             $state.go('users.add.services');
           } else if (usersListLength === 0) {
@@ -456,7 +455,7 @@ angular.module('Core')
 
       $scope.validateTokens = function () {
         wizardNextText();
-        $timeout(function () {
+        return $timeout(function () {
           var tokenfield = angular.element('#usersfield');
           //reset the invalid count
           invalidcount = 0;
