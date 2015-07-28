@@ -152,9 +152,8 @@ angular.module('Core')
         angular.element('#orgProfileSaveBtn').button('loading');
         Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
           if(status === 200){
-            setTimeout(function () {
               angular.element('#orgProfileSaveBtn').button('reset');
-            }, 3000);
+              Notification.notify([$translate.instant('partnerProfile.processing')],'success');
           } else {
             var error = $translate.instant('errors.statusError', {
               status: status
