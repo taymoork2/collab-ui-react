@@ -63,7 +63,6 @@
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
     "ciscoucError": "{{email}} did not successfully onboard Unified Communications.",
-    "statusError": "Request failed with status: {{status}}.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
     "emailSuccess": "Email sent successfully.",
@@ -665,7 +664,8 @@
     "serverDown": "Authorization failed. Server may be down, please contact system administrator. You will automatically be logged out in a few seconds.",
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
-    "status404": "Requested resource not found."
+    "status404": "Requested resource not found.",
+    "statusError": "Request failed with status: {{status}}."
   },
   "spacesPage": {
     "title": "Devices",

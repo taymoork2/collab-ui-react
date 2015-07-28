@@ -151,11 +151,19 @@ angular.module('Core')
       var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
         angular.element('#orgProfileSaveBtn').button('loading');
         Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
-          setTimeout(function () {
+          if(status === 200){
+            setTimeout(function () {
+              angular.element('#orgProfileSaveBtn').button('reset');
+            }, 3000);
+          } else {
+            var error = $translate.instant('errors.statusError', {
+              status: status
+            });
+
+            Notification.notify(error, 'error');
             angular.element('#orgProfileSaveBtn').button('reset');
-          }, 3000);
+          }
         });
       };
-
     }
   ]);

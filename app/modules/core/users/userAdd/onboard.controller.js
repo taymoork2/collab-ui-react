@@ -606,7 +606,7 @@ angular.module('Core')
             Log.warn('Could not onboard the user', data);
             var error = null;
             if (status) {
-              error = $translate.instant('usersPage.statusError', {
+              error = $translate.instant('errors.statusError', {
                 status: status
               });
               if (data && angular.isString(data.message)) {
@@ -731,7 +731,7 @@ angular.module('Core')
           Log.warn('Could not entitle the user', data);
           var error = null;
           if (status) {
-            error = $translate.instant('usersPage.statusError', {
+            error = $translate.instant('error.statusError', {
               status: status
             });
             if (data && angular.isString(data.message)) {
