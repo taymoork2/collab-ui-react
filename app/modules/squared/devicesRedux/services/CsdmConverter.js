@@ -21,7 +21,7 @@ angular.module('Squared').service('CsdmConverter',
       this.needsActivation = getNeedsActivation(obj);
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
-      this.update = function(updated) {
+      this.update = function (updated) {
         this.displayName = updated.displayName;
       };
     }
