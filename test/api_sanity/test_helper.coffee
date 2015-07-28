@@ -136,7 +136,7 @@ getSSOToken = (req, jar, creds, cb) ->
 getAuthCode = (req, creds, cb) ->
   rand_str = ""
   rand_str += Math.random().toString(36).substr(2) while rand_str.length < 40
-  rand_str.substr 0, length
+  rand_str.substr 0, 40
 
   opts =
     url: 'https://idbroker.webex.com/idb/oauth2/v1/authorize'
