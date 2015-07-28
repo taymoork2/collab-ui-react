@@ -17,6 +17,10 @@ xdescribe('List Resources Flow', function () {
     utils.scrollTop();
   });
 
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
+
   //////////////////// Login as super admin user test cases starts //////////////////////
 
   it('Login as super admin', function () {

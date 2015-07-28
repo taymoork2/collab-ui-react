@@ -6,13 +6,8 @@
 /* global expect */
 
 describe('CS Admin flow', function () {
-
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors();
   });
 
   it('should just login', function () {

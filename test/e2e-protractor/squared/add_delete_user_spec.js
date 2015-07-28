@@ -5,16 +5,10 @@
 /* global login,navigation,users,utils,notifications, protractor, deleteUtils */
 
 describe('Squared Add & Entitle User Flows', function () {
-
   var inputEmail = utils.randomTestGmail();
   var adminEmail = 'atlasmapservice+ll1@gmail.com';
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

@@ -5,12 +5,7 @@ var testuser = 'fakegmuser+test@gmail.com';
 var emailParams = '&forward=YWRtaW5UZXN0VXNlckB3eDIuZXhhbXBsZS5jb20&pwdResetSuccess=true';
 
 describe('Downloads page', function () {
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

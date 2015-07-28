@@ -13,12 +13,7 @@ describe('Partner flow', function () {
   var orgId;
   var accessToken;
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

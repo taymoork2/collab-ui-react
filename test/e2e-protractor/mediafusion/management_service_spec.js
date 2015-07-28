@@ -27,6 +27,10 @@ xdescribe('List Media Fusion Servers', function () {
     utils.scrollTop();
   });
 
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
+
   it('Should login as super admin', function () {
     login.login('pbr-admin');
   });

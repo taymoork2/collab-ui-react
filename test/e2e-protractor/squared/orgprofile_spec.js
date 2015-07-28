@@ -1,13 +1,8 @@
 'use strict';
 
 describe('Customer Profile Page', function () {
-
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors();
   });
 
   it('should login as squared team member admin user', function () {

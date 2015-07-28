@@ -5,12 +5,7 @@
 /* global login,navigation,users,utils,notifications, protractor, deleteUtils */
 
 describe('Invite User and Check Buckets', function () {
-
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

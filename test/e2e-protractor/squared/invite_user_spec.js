@@ -8,12 +8,7 @@ describe('Squared Invite User Flow', function () {
 
   var inviteEmail, inviteEmail2;
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

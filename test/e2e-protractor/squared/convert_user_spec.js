@@ -5,13 +5,7 @@
 /* global login,navigation,users,utils,notifications, protractor, deleteUtils */
 
 describe('Convert Users', function () {
-
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

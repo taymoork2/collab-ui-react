@@ -5,12 +5,7 @@
 /* global login,navigation,users,utils,notifications, protractor, deleteUtils */
 
 describe('CMR shown under Enterprise Edition', function () {
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

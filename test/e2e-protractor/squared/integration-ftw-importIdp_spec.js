@@ -7,13 +7,7 @@
 /* global element */
 
 describe('First Time Wizard EE selfsign-sso', function () {
-
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

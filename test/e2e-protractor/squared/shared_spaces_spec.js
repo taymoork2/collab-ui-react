@@ -4,12 +4,7 @@
 /* global describe, it, browser, login, spaces, navigation, utils, notifications */
 
 describe('Devices flow', function () {
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

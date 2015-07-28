@@ -10,12 +10,7 @@ describe('Org Entitlement flow', function () {
   var newDisplayName = 'John Doe ' + utils.randomId();
   var searchStr = 'sq-testpaiduser@atlas.test.com';
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 

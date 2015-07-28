@@ -5,6 +5,10 @@ describe('Partner Reports', function () {
   var customer = 'Huron Int Test 2';
   var time = 'Last Month';
 
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
+
   describe('Log In', function () {
     it('should login', function () {
       login.login('partner-reports', '#/partner/overview');

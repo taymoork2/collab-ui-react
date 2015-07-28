@@ -1,12 +1,7 @@
 'use strict';
 
 describe('Organization Permissions check', function () {
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 
