@@ -135,11 +135,18 @@ angular.module('Core')
       };
 
       $scope.setProblemRadio = function (value) {
+        if (value === $scope.problemSiteInfo.cisco) {
+          $scope.supportUrl = '';
+          $scope.supportText = '';
+        }
         $scope.radioModified = true;
         $scope.problemSiteRadioValue = value;
       };
 
       $scope.setHelpRadio = function (value) {
+        if (value === $scope.helpSiteInfo.cisco) {
+          $scope.helpUrl = '';
+        }
         $scope.radioModified = true;
         $scope.helpSiteRadioValue = value;
       };
