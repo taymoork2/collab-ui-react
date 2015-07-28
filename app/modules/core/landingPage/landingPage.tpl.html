@@ -103,7 +103,7 @@
         <section class="unlicensed-users col-md-12 col-sm-3" ng-controller="LicensesCtrl" ng-show="isAdmin()">
           <div ng-if="isDomainClaimed()">
             <div class="users-info">
-              <span class="number">{{licenses.unlicensed}}</span>
+              <span class="number">{{licenses.unlicensedUsersList.length}}</span>
               <span class="text">{{'homePage.unlicensedDateText' | translate}}</span>
             </div>
             <h4>{{licenses.domain}}</h4>

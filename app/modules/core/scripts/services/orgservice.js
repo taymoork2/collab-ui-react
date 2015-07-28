@@ -114,7 +114,7 @@ angular.module('Core')
           });
         },
 
-        setOrgSettings: function (orgId, reportingSiteUrl, reportingSiteDesc, helpUrl, callback) {
+        setOrgSettings: function (orgId, reportingSiteUrl, reportingSiteDesc, helpUrl, isCiscoHelp, isCiscoSupport, callback) {
           var orgUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings';
 
           var payload = {};
@@ -126,6 +126,12 @@ angular.module('Core')
           }
           if (helpUrl !== '') {
             payload['helpUrl'] = helpUrl;
+          }
+          if (isCiscoHelp !== '') {
+            payload['isCiscoHelp'] = isCiscoHelp;
+          }
+          if (isCiscoSupport !== '') {
+            payload['isCiscoSupport'] = isCiscoSupport;
           }
 
           $http({

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDeviceService($http, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter) {
+  function CsdmDeviceService($http, $log, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter) {
     var deviceCache = {};
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
 
@@ -21,25 +21,14 @@
       return $http.patch(deviceUrl, {
           name: newName
         })
-        .success(function (status) {
-          var device = deviceCache[deviceUrl];
-          device.displayName = newName;
-          if (device.status && device.status.webSocketUrl) {
-            return notifyDevice(deviceUrl, {
-              command: "identityDataChanged",
-              eventType: "room.identityDataChanged"
-            });
-          }
+        .success(function (updatedDevice) {
+          deviceCache[deviceUrl].update(updatedDevice);
         });
     }
 
     function deleteDevice(url) {
       return $http.delete(url)
         .success(function (status) {
-          notifyDevice(url, {
-            command: "identityDeleted",
-            eventType: "room.identityDeleted"
-          });
           delete deviceCache[url];
         });
     }

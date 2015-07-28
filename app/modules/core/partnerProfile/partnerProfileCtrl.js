@@ -50,14 +50,19 @@ angular.module('Core')
         $scope.supportUrl = '';
         $scope.supportText = '';
         $scope.helpUrl = '';
+        $scope.isManaged = false;
+        $scope.isCiscoSupport = false;
+        $scope.isCiscoHelp = false;
 
         UserListService.listPartners(Authinfo.getOrgId(), function (data) {
           for (var partner in data.partners) {
             var currentPartner = data.partners[partner];
             if (!$scope.isPartner && currentPartner.userName.indexOf('@cisco.com') === -1) {
               $scope.partner = currentPartner;
+              $scope.isManaged = true;
             } else if (currentPartner.userName.indexOf('@cisco.com') > -1) {
               $scope.rep = currentPartner;
+              $scope.isManaged = true;
             }
           }
         });
@@ -89,6 +94,12 @@ angular.module('Core')
                   $scope.helpUrl = orgSettingsObj.helpUrl;
                   $scope.oldHelpUrl = $scope.helpUrl;
                 }
+                if (typeof (orgSettingsObj.isCiscoSupport) !== 'undefined') {
+                  $scope.isCiscoSupport = orgSettingsObj.isCiscoSupport;
+                }
+                if (typeof (orgSettingsObj.isCiscoHelp) !== 'undefined') {
+                  $scope.isCiscoHelp = orgSettingsObj.isCiscoHelp;
+                }
               }
             } else {
               Log.debug('No orgSettings found for org: ' + data.id);
@@ -103,8 +114,24 @@ angular.module('Core')
       $scope.init();
 
       $scope.validation = function () {
-        angular.element('#orgProfileSaveBtn').button('loading');
-        updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl, $scope.supportText, $scope.helpUrl);
+        var error = false;
+
+        // if user is attempting to use a blank support url
+        if ($scope.supportUrl === '' && $scope.problemSiteRadioValue !== $scope.problemSiteInfo.cisco) {
+          error = true;
+        }
+        // if user is attempting to use a blank help url
+        if ($scope.helpUrl === '' && $scope.helpSiteRadioValue !== $scope.helpSiteInfo.cisco) {
+          error = true;
+        }
+
+        if (!error) {
+          updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl,
+            $scope.supportText, $scope.helpUrl,
+            $scope.helpSiteRadioValue === 0, $scope.problemSiteRadioValue === 0);
+        } else {
+          Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
+        }
       };
 
       $scope.setProblemRadio = function (value) {
@@ -128,41 +155,21 @@ angular.module('Core')
         return !($scope.radioModified || $scope.supportForm.$dirty);
       };
 
-      var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl) {
-        Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, function (data, status) {
-          if (data.success) {
-            var orgs = [];
-            var numOrgs = data.organizations.length;
-            var numFailed = 0;
-            var failedOrgs = [];
-            for (var i = 0; i < numOrgs; i++) {
-              if (!data.organizations[i].isSuccess) {
-                numFailed++;
-                failedOrgs.push('[orgId: ' + data.organizations[i].orgId + ', isPartnerOrg: ' + data.organizations[i].isPartnerOrg + '] <br/>');
-              } else {
-                orgs.push('[orgId: ' + data.organizations[i].orgId + ', isPartnerOrg: ' + data.organizations[i].isPartnerOrg + '] <br/>');
-              }
-            }
-
-            if (numOrgs === 1) {
-              if (numFailed === 0) {
-                Notification.notify([$translate.instant('partnerProfile.orgSettingsSuccess') + ':<br/>' + orgs.toString()], 'success');
-              } else {
-                Notification.notify([$translate.instant('partnerProfile.orgSettingsError') + ':<br/>' + failedOrgs.toString()], 'error');
-              }
-            } else {
-              if (numFailed === 0) {
-                Notification.notify([$translate.instant('partnerProfile.orgSettingsForPartnerSuccess') + ':<br/>' + orgs.toString()], 'success');
-              } else {
-                Notification.notify([$translate.instant('partnerProfile.orgSettingsForPartnerError') + ':<br/>' + failedOrgs.toString()], 'error');
-              }
-            }
+      var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
+        angular.element('#orgProfileSaveBtn').button('loading');
+        Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
+          if (status === 200) {
+            angular.element('#orgProfileSaveBtn').button('reset');
+            Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
           } else {
-            Notification.notify([$translate.instant('partnerProfile.orgSettingsForPartnerError') + ':<br/>' + orgId], 'error');
+            var error = $translate.instant('errors.statusError', {
+              status: status
+            });
+
+            Notification.notify(error, 'error');
+            angular.element('#orgProfileSaveBtn').button('reset');
           }
-          angular.element('#orgProfileSaveBtn').button('reset');
         });
       };
-
     }
   ]);

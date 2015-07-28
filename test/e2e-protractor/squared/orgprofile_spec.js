@@ -37,7 +37,7 @@ describe('Customer Profile Page', function () {
 
     utils.scrollTop();
     utils.click(orgprofile.orgProfileSaveBtn);
-    notifications.assertSuccess('orgSettings updated successfully');
+    utils.expectIsDisabled(orgprofile.orgProfileSaveBtn);
   });
 
   it('should log out', function () {

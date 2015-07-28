@@ -96,12 +96,11 @@
               <div class="col-xs-10 default-link-row">
                 <div class="partner-link">
                   <a href="" ng-click="sendFeedback()">
-                    <span translate="partnerProfile.ciscoProblem"></span>
+                    <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
+                    <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoProblem"></span>
+                    <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerProblem"></span>
                   </a>
                 </div>
-                  <div class="partner-text">
-                    <span ng-if="false">{{partnerProvidedText | translate}}</span>
-                  </div>
               </div>
             </div>
           </div>
@@ -134,7 +133,9 @@
             </div>
             <div class="col-xs-10 default-link-row">
               <a ng-href="{{profileHelpUrl}}" target="_blank">
-                <span translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="isCiscoHelp && isManaged" translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="!isCiscoHelp && isManaged" translate="partnerProfile.partnerHelp"></span>
               </a>
             </div>
           </div>
