@@ -8,6 +8,7 @@ angular.module('Squared')
       }
 
       $scope.rolesObj = {};
+      var validFormField = true;
 
       var inArray = function (array, el) {
         for (var i = array.length; i--;) {
@@ -117,6 +118,22 @@ angular.module('Squared')
         resetForm();
       };
 
+      // Validate form field.
+      // Currently only validate if input is empty/blank.
+      $scope.validateFormField = function (formFieldObj) {
+        if (formFieldObj.$invalid) {
+          if (validFormField) {
+            $rootScope.$broadcast("FORM_FIELD_INVALID");
+            validFormField = false;
+          }
+        } else {
+          if (!validFormField) {
+            $rootScope.$broadcast("FORM_FIELD_VALID");
+            validFormField = true;
+          }
+        }
+      };
+
       $scope.updateRoles = function () {
 
         var choice = $scope.rolesObj.adminRadioValue;
@@ -182,13 +199,13 @@ angular.module('Squared')
 
         Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
           if (data.success) {
-            if ($scope.currentUser) {
+            if ($scope.rolesObj.form.$dirty && $scope.currentUser) {
               var userData = {
                 'schemas': Config.scimSchemas,
                 'title': $scope.currentUser.title,
                 'name': {
-                  'givenName': $scope.currentUser.name ? $scope.currentUser.name.givenName : '',
-                  'familyName': $scope.currentUser.name ? $scope.currentUser.name.familyName : ''
+                  'givenName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.givenName) : '',
+                  'familyName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.familyName) : ''
                 },
                 'displayName': $scope.currentUser.displayName,
                 'meta': {
