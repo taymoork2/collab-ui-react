@@ -6,8 +6,6 @@
 
 describe('Convert Users', function () {
 
-  var testEmail = 'testuserone@squared.example.com';
-
   beforeEach(function () {
     browser.ignoreSynchronization = true;
   });
@@ -27,17 +25,26 @@ describe('Convert Users', function () {
       utils.click(landing.convertButton);
       utils.expectIsDisplayed(landing.convertDialog);
       utils.expectIsDisplayed(landing.convertModalClose);
-      utils.expectIsDisplayed(landing.convertCancelButton);
-      utils.expectIsDisplayed(landing.convertActionButton);
+      utils.expectIsDisplayed(landing.convertNextButton);
     });
   });
 
   describe('convert users', function () {
-    it('convert user failed', function () {
-      utils.clickUser(testEmail);
+    it('convert user operations', function () {
+      utils.expectIsDisabled(landing.convertNextButton);
+      //utils.clickUser(testEmail);
+      utils.click(landing.unlicensedUserRow);
+      utils.expectIsEnabled(landing.convertNextButton);
       utils.scrollBottom('.modal');
-      utils.click(landing.convertActionButton);
-      notifications.assertError('not');
+      utils.click(landing.convertNextButton);
+      utils.expectIsDisplayed(landing.btnConvert);
+      utils.expectIsDisplayed(landing.btnBack);
+      utils.click(landing.btnBack);
+      utils.expectIsEnabled(landing.convertNextButton);
+      utils.click(landing.convertNextButton);
+      utils.expectIsDisplayed(landing.closeAddUser);
+      utils.click(landing.closeAddUser);
+      utils.expectIsNotDisplayed(landing.btnConvert);
     });
   });
 

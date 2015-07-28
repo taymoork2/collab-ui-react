@@ -1222,7 +1222,7 @@
     "039007": "Votre adresse électronique n'est pas acceptée par notre site.",
     "039008": "039008",
     "039009": "039009",
-    "110055": "La limite du nombre d'utilisateurs a été dépassée pour le type de session \« {{sessionTypeName}}\ ».",
+    "110055": "La limite du nombre d'utilisateurs a été dépassée pour le type de session \u00AB {{sessionTypeName}} \u00BB.",
     "defaultProcessError": "Impossible de traiter la demande.",
     "defaultAccessError": "Impossible d'accéder au serveur pour le moment.",
     "defaultNotWebExAdminError": "Vous n'avez pas encore été désigné administrateur sur ce site. Ce processus peut prendre un moment."

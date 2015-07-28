@@ -1,8 +1,10 @@
 'use strict';
 
+/* global lodash */
+
 angular.module('Core')
-  .service('Orgservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth',
-    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth) {
+  .service('Orgservice', ['$http', '$rootScope', '$location', '$q', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth',
+    function ($http, $rootScope, $location, $q, Storage, Config, Authinfo, Log, Auth) {
 
       return {
 
@@ -48,6 +50,37 @@ angular.module('Core')
               data.status = status;
               callback(data, status);
             });
+        },
+
+        /**
+         * Compare the two lists of licenses and filter out invalid ones
+         */
+        getValidLicenses: function () {
+          var d = $q.defer();
+
+          this.getAdminOrg(function (data, status) {
+            var validLicenses;
+            var usageLicenses = data.licenses || [];
+            var statusLicenses = Authinfo.getLicenses();
+
+            if (!data.success) {
+              Log.debug('Get existing admin org failed. Status: ' + status);
+              d.reject(status);
+              return;
+            }
+
+            validLicenses = _.filter(usageLicenses, function (license) {
+              var match = _.find(statusLicenses, {
+                'licenseId': license.licenseId
+              });
+              // If the license is not valid do not add to list
+              return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
+            });
+
+            d.resolve(validLicenses);
+          });
+
+          return d.promise;
         },
 
         getUnlicensedUsers: function (callback, oid) {

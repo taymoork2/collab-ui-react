@@ -3,8 +3,8 @@
 
 angular.module('Core')
 
-.controller('LicensesCtrl', ['$scope', 'Authinfo', 'PartnerService', 'Orgservice', 'Log', 'Notification', '$modal',
-  function ($scope, Authinfo, PartnerService, Orgservice, Log, Notification, $modal) {
+.controller('LicensesCtrl', ['$scope', 'Authinfo', '$state', 'PartnerService', 'Orgservice', 'Log', 'Notification', '$modal',
+  function ($scope, Authinfo, $state, PartnerService, Orgservice, Log, Notification, $modal) {
 
     $scope.packageInfo = {
       name: '&nbsp;',
@@ -146,12 +146,7 @@ angular.module('Core')
     getUnlicensedUsers();
 
     $scope.openConvertModal = function () {
-      $scope.convertModalInstance = $modal.open({
-        templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
-        controller: 'ConvertUsersModalCtrl',
-        size: 'lg',
-        scope: $scope
-      });
+      $state.go('users.convert', {});
     };
 
   }

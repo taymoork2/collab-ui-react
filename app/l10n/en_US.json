@@ -132,7 +132,7 @@
     "entitlementsPreview": "Entitlements",
     "addNewLinePreview": "Add a New Line",
     "newLine": "New Line",
-    "devicesPreview": "Devices & Software",
+    "devicesPreview": "Devices",
     "activateNewDevice": "Activate New Device",
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generate Activation Code",
@@ -332,17 +332,17 @@
   "registeredEndpoints": {
     "registeredEndpoints": "Registered Endpoints",
     "company": "Company",
-    "maxRegisteredDevices": "Max Devices Over Time | Trend",
-    "totalRegistered": "Total Devices | Trend",
+    "maxRegisteredDevices": "Devices {{time}} (Min/Max)",
+    "totalRegistered": "Yesterday's Total",
+    "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "Registered Endpoints tracks the number of new devices registered during the {{time}}.  The maximum number of registered devices represents the day with the highest number of new registrations, the total new registrations represents yesterday's count of new devices registered, and the trend represents the percentage increase (or decrease) of newly registered devices since the start of the selected time period."
+    "description": "Registered Endpoints tracks the number of new devices registered during the {{time}}."
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
     "description": "Across all your customers, {{percentage}}% of their employees have placed at least one advanced Spark call over the {{time}}. Here is how {{customer}} compares to that average.",
     "averageLabel": "Average Engagement",
-    "belowAverage": "Below Average",
-    "aboveAverage": "Above Average"
+    "acrossCustomers": "Across All Customers"
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -500,6 +500,7 @@
     "advProv": "Provision users with a guided wizard to set up Directory Sync, Single Sign-on and customized reports",
     "launchBtn": "Launch",
     "convert": "Convert",
+    "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
     "convertUsersText": "Convert employees of your organization who have signed up for Project Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
     "cancel": "Cancel",
@@ -1296,7 +1297,6 @@
     "lastName": "Last Name",
     "emailAddress": "Email Address",
     "administratorRoles": "Administrator Roles",
-    "rolesDescription": "A user may have one or more roles in the system, and will be granted all permissions from selected roles.",
     "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Spark system from this portal.",
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",

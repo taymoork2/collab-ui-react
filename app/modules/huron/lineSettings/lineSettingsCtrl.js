@@ -57,7 +57,6 @@
     var name = getUserName(vm.currentUser.name, vm.currentUser.userName);
 
     vm.callerIdInfo = {
-      'default': name,
       'otherName': null,
       'selection': 'default'
     };
@@ -191,7 +190,7 @@
       key: 'callerIdDefault',
       type: 'radio',
       templateOptions: {
-        label: vm.callerIdInfo.default,
+        label: '',
         value: 'default',
         model: 'selection'
       }
@@ -388,11 +387,6 @@
           vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
         }
       }
-
-      if (directoryNumber.uuid && directoryNumber.uuid !== "") {
-        // line exists
-        listSharedLineUsers(directoryNumber.uuid);
-      }
     }
 
     function initDirectoryNumber(directoryNumber) {
@@ -406,7 +400,7 @@
           directoryNumber.altDnPattern = '';
         }
         TelephonyInfoService.updateAlternateDirectoryNumber(directoryNumber.altDnUuid, directoryNumber.altDnPattern);
-        TelephonyInfoService.updateCurrentDirectoryNumber(directoryNumber.uuid, directoryNumber.pattern, directoryNumber.dnUsage, directoryNumber.userDnUuid);
+        TelephonyInfoService.updateCurrentDirectoryNumber(directoryNumber.uuid, directoryNumber.pattern, directoryNumber.dnUsage, directoryNumber.userDnUuid, directoryNumber.dnSharedUsage);
       }
     }
 
@@ -526,7 +520,7 @@
         // fill in the {{line}} and {{user}} for directoryNumberPanel.deleteConfirmation
         vm.confirmationDialogue = $translate.instant('directoryNumberPanel.deleteConfirmation', {
           line: vm.telephonyInfo.currentDirectoryNumber.pattern,
-          user: vm.callerIdInfo.default
+          user: name
         });
 
         $modal.open({
@@ -561,6 +555,24 @@
     }
 
     function initCallerId() {
+      // Check if this is a shared line
+      if (vm.telephonyInfo.currentDirectoryNumber.dnSharedUsage && vm.telephonyInfo.currentDirectoryNumber.dnSharedUsage.indexOf('Shared') !== -1) {
+        // if the line is a primary line of a user, use primary line user's name,
+        // otherwise, user the current user's name as default label.
+        vm.callerIdFields[0].templateOptions.label = null;
+        listSharedLineUsers(vm.telephonyInfo.currentDirectoryNumber.uuid).then(function () {
+          angular.forEach(vm.sharedLineUsers, function (sharedLineUser) {
+            if (sharedLineUser.dnUsage === 'Primary') {
+              vm.callerIdFields[0].templateOptions.label = sharedLineUser.name;
+            }
+          });
+          if (!vm.callerIdFields[0].templateOptions.label) {
+            vm.callerIdFields[0].templateOptions.label = name;
+          }
+        });
+      } else {
+        vm.callerIdFields[0].templateOptions.label = name;
+      }
       if (vm.directoryNumber.hasCustomAlertingName === 'true') {
         vm.callerIdInfo.otherName = vm.directoryNumber.alertingName;
         vm.callerIdInfo.selection = 'other';
@@ -572,7 +584,7 @@
 
     function processCallerId() {
       if (vm.callerIdInfo.selection === 'default') {
-        vm.directoryNumber.alertingName = vm.callerIdInfo.default;
+        vm.directoryNumber.alertingName = vm.callerIdFields[0].templateOptions.label;
         vm.directoryNumber.hasCustomAlertingName = false;
       } else {
         vm.directoryNumber.alertingName = vm.callerIdInfo.otherName;

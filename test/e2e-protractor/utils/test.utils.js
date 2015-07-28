@@ -192,6 +192,18 @@ exports.expectInputValue = function (elem, value) {
   this.expectValueToBeSet(elem.element(by.tagName('input')), value);
 };
 
+exports.expectTokenInput = function (elem, value) {
+  this.wait(elem);
+  var input = elem.all(by.tagName('input')).first();
+  browser.wait(function () {
+    return input.getAttribute('value').then(function (result) {
+      return result !== undefined && result !== null && result.indexOf(value) > -1;
+    }, function () {
+      return false;
+    });
+  }, TIMEOUT, 'Waiting for token to contain value: ' + elem.locator());
+}
+
 exports.click = function (elem, maxRetry) {
   return this.wait(elem).then(function () {
     var deferred = protractor.promise.defer();

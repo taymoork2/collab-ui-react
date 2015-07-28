@@ -24,7 +24,6 @@
 
     vm.activeUsersRefresh = REFRESH;
     vm.activeUserPopulationRefresh = REFRESH;
-    vm.activeUserPopulationAverage = 0;
     vm.showMostActiveUsers = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
@@ -54,6 +53,8 @@
     vm.registeredEndpoints = [];
     vm.endpointRefresh = REFRESH;
     vm.endpointDescription = "";
+    vm.trend = "";
+    vm.devices = "";
 
     vm.timeOptions = [{
       value: 0,
@@ -139,13 +140,13 @@
 
       vm.endpointRefresh = REFRESH;
       vm.registeredEndpoints = [];
-      vm.endpointDescription = "";
       getRegisteredEndpoints();
     };
 
     init();
 
     function init() {
+      setRegisteredEndpointText();
       PartnerReportService.getOverallActiveUserData(vm.timeSelected);
       PartnerReportService.getCustomerList().then(function (response) {
         updateCustomerFilter(response);
@@ -204,11 +205,10 @@
             invalidateChartSize(activeUsersChart);
           }
 
-          vm.activeUserPopulationAverage = response.overallPopulation;
           if (activeUserPopulationChart === null || activeUserPopulationChart === undefined) {
-            activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(populationGraph, vm.activeUserPopulationAverage);
+            activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(populationGraph, response.overallPopulation);
           } else {
-            GraphService.updateActiveUserPopulationGraph(populationGraph, activeUserPopulationChart, vm.activeUserPopulationAverage);
+            GraphService.updateActiveUserPopulationGraph(populationGraph, activeUserPopulationChart, response.overallPopulation);
             invalidateChartSize(activeUserPopulationChart);
           }
 
@@ -242,7 +242,7 @@
             customer: vm.customerSelected.label
           });
           vm.populationDescription = $translate.instant('activeUserPopulation.description', {
-            percentage: vm.activeUserPopulationAverage,
+            percentage: response.overallPopulation,
             time: vm.timeSelected.description,
             customer: vm.customerSelected.label
           });
@@ -322,18 +322,28 @@
     }
 
     function getRegisteredEndpoints() {
+      setRegisteredEndpointText();
       PartnerReportService.getRegisteredEndpoints(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response !== ABORT) {
           vm.registeredEndpoints = response;
-          vm.endpointDescription = $translate.instant('registeredEndpoints.description', {
-            time: vm.timeSelected.description
-          });
           if (!angular.isArray(response) || response.length === 0) {
             vm.endpointRefresh = EMPTY;
           } else {
             vm.endpointRefresh = SET;
           }
         }
+      });
+    }
+
+    function setRegisteredEndpointText() {
+      vm.endpointDescription = $translate.instant('registeredEndpoints.description', {
+        time: vm.timeSelected.description
+      });
+      vm.trend = $translate.instant('registeredEndpoints.trend', {
+        time: vm.timeSelected.label
+      });
+      vm.devices = $translate.instant('registeredEndpoints.maxRegisteredDevices', {
+        time: vm.timeSelected.label
       });
     }
   }

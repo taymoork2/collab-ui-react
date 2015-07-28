@@ -13,22 +13,21 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <td class="vertical-center col-md-4 bold" translate="registeredEndpoints.company"></td>
-          <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.maxRegisteredDevices"></td>
-          <td class="vertical-center horizontal-center col-md-3 bold" translate="registeredEndpoints.totalRegistered"></td>
+          <td class="vertical-center col-md-3 bold" translate="registeredEndpoints.company"></td>
+          <td class="vertical-center horizontal-center col-md-3 bold">{{nav.devices}}</td>
+          <td class="vertical-center horizontal-center col-md-2 bold">{{nav.trend}}</td>
+          <td class="vertical-center horizontal-center col-md-2 bold" translate="registeredEndpoints.totalRegistered"></td>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="customer in nav.registeredEndpoints">
           <td class="vertical-center customer-data">{{customer.customer}}</td>
           <td class="table-data">
-            <div class="table-half vertical-center horizontal-center">{{customer.yesterdaysMaxRegisteredDevices}}</div>
-            <div class="table-half vertical-center horizontal-center {{customer.maxDirection}}">{{customer.maxRegisteredDevicesTrend}}</div>
+            <div class="table-half vertical-center horizontal-center">{{customer.minRegisteredDevices}}</div>
+            <div class="table-half vertical-center horizontal-center">{{customer.maxRegisteredDevices}}</div>
           </td>
-          <td class="table-data">
-            <div class="table-half vertical-center horizontal-center">{{customer.yesterdaysDeviceRegistrationCount}}</div>
-            <div class="table-half vertical-center horizontal-center {{customer.direction}}">{{customer.deviceRegistrationCountTrend}}</div>
-          </td>
+          <td class="vertical-center horizontal-center {{customer.direction}}">{{customer.registeredDevicesTrend}}%</td>
+          <td class="vertical-center horizontal-center">{{customer.yesterdaysRegisteredDevices}}</td>
         </tr>
       </tbody>
     </table>

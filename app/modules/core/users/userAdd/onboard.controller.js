@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils',
-    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice',
+    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice) {
 
       $scope.hasAccount = Authinfo.hasAccount();
 
@@ -336,7 +336,7 @@ angular.module('Core')
         }
         angular.element('#btnSaveEnt').button('loading');
 
-        Userservice.updateUsers(user, getAccountLicenseIds(), null, entitleUserCallback);
+        Userservice.updateUsers(user, getAccountLicenseIds(), null, 'updateUserLicense', entitleUserCallback);
       };
 
       //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -660,7 +660,7 @@ angular.module('Core')
         return deferred.promise;
       }
 
-      var entitleUserCallback = function (data, status) {
+      var entitleUserCallback = function (data, status, method) {
         $scope.results = {
           resultList: []
         };
@@ -715,9 +715,14 @@ angular.module('Core')
           }
 
           //Displaying notifications
-          if (successes.length + errors.length === usersList.length) {
-            angular.element('#btnOnboard').button('reset');
-            angular.element('#btnSaveEnt').button('reset');
+          if (method !== 'convertUser') {
+            if (successes.length + errors.length === usersList.length) {
+              angular.element('#btnOnboard').button('reset');
+              angular.element('#btnSaveEnt').button('reset');
+              Notification.notify(successes, 'success');
+              Notification.notify(errors, 'error');
+            }
+          } else {
             Notification.notify(successes, 'success');
             Notification.notify(errors, 'error');
           }
@@ -742,12 +747,18 @@ angular.module('Core')
           }
           Notification.notify([error], 'error');
           isComplete = false;
-          angular.element('#btnOnboard').button('reset');
-          angular.element('#btnSaveEnt').button('reset');
+          if (method !== 'convertUser') {
+            angular.element('#btnOnboard').button('reset');
+            angular.element('#btnSaveEnt').button('reset');
+          }
         }
 
-        if (isComplete) {
-          resetUsersfield();
+        if (method !== 'convertUser') {
+          if (isComplete) {
+            resetUsersfield();
+          }
+        } else {
+          $scope.$dismiss();
         }
 
       };
@@ -846,6 +857,100 @@ angular.module('Core')
       //on initial login the AuthinfoUpdated broadcast may not be caught if not on user page
       setEntitlementList();
       watchCheckboxes();
+
+      $scope.saveConvertList = function () {
+        $scope.convertSelectedList = $scope.convertGridOptions.$gridScope.selectedItems;
+        $scope.convertUsersFlow = true;
+        $state.go('users.convert.services', {});
+      };
+
+      $scope.convertUsers = function () {
+        Userservice.migrateUsers($scope.convertSelectedList, function (data, status) {
+          var errorMessages = [];
+          var successMessages = [];
+          var successMovedUsers = [];
+
+          for (var i = 0; i < data.userResponse.length; i++) {
+            if (data.userResponse[i].status !== 200) {
+              errorMessages.push(data.userResponse[i].email + ' could not be converted. Contact support for assistance converting this user.');
+            } else {
+              var user = {
+                'address': data.userResponse[i].email
+              };
+              successMovedUsers.push(user);
+            }
+          }
+
+          if (successMovedUsers.length > 0) {
+            var entitleList = [];
+            var licenseList = [];
+            if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+              licenseList = getAccountLicenseIds();
+            } else {
+              entitleList = getEntitlements('add');
+            }
+            Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
+          } else {
+            $scope.$dismiss();
+          }
+          Notification.notify(errorMessages, 'error');
+        });
+      };
+
+      var getUnlicensedUsers = function () {
+        Orgservice.getUnlicensedUsers(function (data) {
+          $scope.unlicensed = 0;
+          $scope.unlicensedUsersList = null;
+          if (data.success) {
+            if (data.totalResults) {
+              $scope.unlicensed = data.totalResults;
+              $scope.unlicensedUsersList = data.resources;
+            }
+          }
+        });
+      };
+
+      $scope.convertDisabled = function () {
+        return ($scope.convertGridOptions.$gridScope.selectedItems.length === 0) ? true : false;
+      };
+
+      getUnlicensedUsers();
+
+      var givenNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.name.givenName}}">{{row.entity.name.givenName}}</p></div>';
+      var familyNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.name.familyName}}">{{row.entity.name.familyName}}</p></div>';
+      var emailTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.userName}}">{{row.entity.userName}}</p></div>';
+
+      $scope.convertGridOptions = {
+        data: 'unlicensedUsersList',
+        rowHeight: 45,
+        headerRowHeight: 45,
+        enableHorizontalScrollbar: 0,
+        enableVerticalScrollbar: 2,
+        showSelectionCheckbox: true,
+        sortInfo: {
+          fields: ['userName'],
+          directions: ['desc']
+        },
+        selectedItems: [],
+        columnDefs: [{
+          field: 'name.givenName',
+          displayName: $translate.instant('usersPage.firstnameHeader'),
+          cellTemplate: givenNameTemplate,
+          resizable: false,
+          sortable: true
+        }, {
+          field: 'name.familyName',
+          displayName: $translate.instant('usersPage.lastnameHeader'),
+          cellTemplate: familyNameTemplate,
+          resizable: false,
+          sortable: true
+        }, {
+          field: 'userName',
+          displayName: $translate.instant('homePage.emailAddress'),
+          cellTemplate: emailTemplate,
+          resizable: false,
+        }]
+      };
 
       // Bulk CSV Onboarding logic
       var userArray = [];

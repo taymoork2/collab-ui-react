@@ -9,45 +9,22 @@
 /* global notifications */
 /* global deleteTrialUtils */
 
-xdescribe('Spark UC Partner flow', function () {
+describe('Spark UC Partner flow', function () {
   var orgId;
   var accessToken;
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-  afterEach(function () {
-    browser.ignoreSynchronization = false;
-  });
-
-  // Logging in. Write your tests after the login flow is complete.
-  describe('Login as partner admin user', function () {
-
-    it('should login', function () {
-      login.login('partner-squc-admin', '#/partner/overview');
+  beforeAll(function (done) {
+    login.login('partner-squc-admin', '#/partner/customers');
+    utils.retrieveToken().then(function (token) {
+      accessToken = token;
+      done();
     });
-
-    it('should have a partner token', function (done) {
-      utils.retrieveToken().then(function (token) {
-        accessToken = token;
-        done();
-      });
-    });
-
-    it('should display trials list', function () {
-      utils.expectIsDisplayed(partner.trialsPanel);
-    });
-  }); //State is logged-in
+  }, 120000);
 
   describe('Add Partner Trial', function () {
 
-    it('should view all trials', function () {
-      navigation.clickCustomers();
-      utils.expectIsDisplayed(partner.customerList);
-      utils.click(partner.trialFilter);
-    });
-
     it('should add a new trial', function () {
+      utils.click(partner.trialFilter);
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
 
@@ -103,13 +80,14 @@ xdescribe('Spark UC Partner flow', function () {
       utils.click(partner.editDidLink);
 
       utils.expectIsDisplayed(partner.customerDidInput);
-      utils.expectValueToBeSet(partner.customerDidAddInput, '+' + partner.dids.one);
+      utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.one);
 
       utils.sendKeys(partner.customerDidInput, partner.dids.two);
       utils.sendKeys(partner.customerDidInput, protractor.Key.ENTER);
       utils.click(partner.addDidButton);
       utils.click(partner.notifyCustLaterLink);
 
+      utils.click(partner.trialFilter);
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
@@ -120,8 +98,8 @@ xdescribe('Spark UC Partner flow', function () {
       utils.click(partner.editDidLink);
 
       utils.expectIsDisplayed(partner.customerDidInput);
-      utils.expectValueToContain(partner.customerDidAddInput, '+' + partner.dids.one);
-      utils.expectValueToContain(partner.customerDidAddInput, '+' + partner.dids.two);
+      utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.one);
+      utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.two);
 
       utils.click(partner.getDidTokenClose(partner.dids.two));
 
@@ -130,6 +108,7 @@ xdescribe('Spark UC Partner flow', function () {
       utils.click(partner.removeDidButton);
       utils.click(partner.notifyCustLaterLink);
 
+      utils.click(partner.trialFilter);
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
@@ -138,7 +117,7 @@ xdescribe('Spark UC Partner flow', function () {
       utils.click(partner.editDidLink);
 
       utils.expectIsDisplayed(partner.customerDidInput);
-      utils.expectValueToBeSet(partner.customerDidAddInput, '+' + partner.dids.one);
+      utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.one);
       utils.click(partner.addDidDismissButton);
     });
   });
@@ -148,10 +127,4 @@ xdescribe('Spark UC Partner flow', function () {
     deleteUtils.deleteSquaredUCCustomer(orgId, accessToken);
   });
 
-  // Log Out
-  describe('Log Out', function () {
-    it('should log out', function () {
-      navigation.logout();
-    });
-  });
 });

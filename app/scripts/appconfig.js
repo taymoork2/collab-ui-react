@@ -250,6 +250,25 @@ angular
             }
           }
         })
+        .state('users.convert', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              controller: 'OnboardCtrl',
+              template: '<div ui-view="usersConvert"></div>'
+            },
+            'usersConvert@users.convert': {
+              templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html'
+            }
+          }
+        })
+        .state('users.convert.services', {
+          views: {
+            'usersConvert@users.convert': {
+              templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html'
+            }
+          }
+        })
         .state('editService', {
           parent: 'modalLarge',
           views: {

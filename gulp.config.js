@@ -137,6 +137,7 @@ module.exports = function() {
         vendor + '/angular-translate/angular-translate.js',
         vendor + '/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
         vendor + '/messageformat/messageformat.js',
+        vendor + '/messageformat/locale/*.js',
         vendor + '/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.js',
         vendor + '/angular-ui-router/release/angular-ui-router.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.core.js',
