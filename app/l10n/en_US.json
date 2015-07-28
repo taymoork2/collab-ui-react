@@ -1542,7 +1542,7 @@
     "ciscoRep": "Cisco Representative",
     "supportSetup": "Problem Reports",
     "save": "Save",
-    "processing" : "This may take a few minutes to process...",
+    "processing": "This may take a few minutes to process...",
     "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the Spark application.",
     "supportOptions": "Cisco Support Options",
     "yourSupportOptions": "Your Support Options",
