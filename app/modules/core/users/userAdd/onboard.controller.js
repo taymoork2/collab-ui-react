@@ -10,7 +10,6 @@ angular.module('Core')
       // model can be removed after switching to controllerAs
       $scope.model = {
         userInputOption: 0,
-        nextButtonDisabled: true,
         uploadProgress: 0
       };
 
@@ -376,11 +375,6 @@ angular.module('Core')
         return valid;
       };
 
-      var checkNextButtonStatus = function () {
-        wizardNextText();
-        $scope.model.nextButtonDisabled = invalidcount > 0;
-      };
-
       var wizardNextText = function () {
         var userCount = angular.element('.token-label').length;
         var action = 'finish';
@@ -407,7 +401,7 @@ angular.module('Core')
             angular.element(e.relatedTarget).addClass('invalid');
             invalidcount++;
           }
-          checkNextButtonStatus();
+          wizardNextText();
           checkPlaceholder();
         },
         edittoken: function (e) {
@@ -419,7 +413,7 @@ angular.module('Core')
           if (!validateEmail(e.attrs.value)) {
             invalidcount--;
           }
-          checkNextButtonStatus();
+          wizardNextText();
           checkPlaceholder();
         }
       };
@@ -444,9 +438,24 @@ angular.module('Core')
         return $window.addressparser.parse($scope.model.userList);
       };
 
+      $scope.validateTokensBtn = function () {
+        var usersListLength = angular.element('.token-label').length;
+        $scope.validateTokens().then(function () {
+          if (invalidcount === 0 && usersListLength > 0) {
+            $state.go('users.add.services');
+          } else if (usersListLength === 0) {
+            Log.debug('No users entered.');
+            Notification.notify([$translate.instant('usersPage.noUsersInput')], 'error');
+          } else {
+            Log.debug('Invalid users entered.');
+            Notification.notify([$translate.instant('usersPage.validEmailInput')], 'error');
+          }
+        });
+      };
+
       $scope.validateTokens = function () {
         wizardNextText();
-        $timeout(function () {
+        return $timeout(function () {
           var tokenfield = angular.element('#usersfield');
           //reset the invalid count
           invalidcount = 0;

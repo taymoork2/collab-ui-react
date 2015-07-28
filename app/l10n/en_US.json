@@ -33,6 +33,7 @@
     "active": "Active",
     "inactive": "",
     "validEmailInput": "Please enter valid user email(s).",
+    "noUsersInput": "No users were entered.",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_users.csv",
     "emailSent": "{{email}} email sent successfully",
