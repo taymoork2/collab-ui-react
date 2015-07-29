@@ -9,11 +9,10 @@ describe('Devices flow', function () {
   });
 
   it('should login as squared team member admin user', function () {
-    login.login('pbr-admin');
+    login.login('pbr-admin', '#/devices');
   });
 
   it('clicking on devices tab should show the list of rooms', function () {
-    navigation.clickDevices();
     utils.expectIsDisplayed(spaces.roomsList);
   });
 

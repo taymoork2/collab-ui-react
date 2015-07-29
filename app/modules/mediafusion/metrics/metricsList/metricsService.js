@@ -51,7 +51,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         }
 
