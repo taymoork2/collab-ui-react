@@ -158,7 +158,7 @@ angular.module('Core')
       var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
         angular.element('#orgProfileSaveBtn').button('loading');
         Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
-          if (status === 200) {
+          if (data.success) {
             angular.element('#orgProfileSaveBtn').button('reset');
             Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
           } else {
