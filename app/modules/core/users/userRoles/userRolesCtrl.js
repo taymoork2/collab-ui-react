@@ -83,10 +83,8 @@ angular.module('Squared')
       };
 
       $scope.sipAddr = "";
-      //      $log.log($scope.currentUser);
       if ($scope.currentUser.sipAddresses) {
         for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
-          //         $log.log($scope.currentUser.sipAddresses[x]);
           if ($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
             $scope.sipAddr = $scope.currentUser.sipAddresses[x].value;
           }
@@ -108,9 +106,9 @@ angular.module('Squared')
       $scope.resetRoles = function () {
         $state.go('user-overview.userProfile');
         $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
-         if ($scope.rolesObj.adminRadioValue !== 2) {
-           $scope.clearCheckboxes();
-         }
+        if ($scope.rolesObj.adminRadioValue !== 2) {
+          $scope.clearCheckboxes();
+        }
         $scope.rolesEdit.form.$setPristine(true);
       };
 

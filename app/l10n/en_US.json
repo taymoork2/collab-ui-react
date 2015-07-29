@@ -18,6 +18,7 @@
     "lastnameHeader": "Last Name",
     "displayNameHeader": "Display Name",
     "emailHeader": "Email",
+    "sipUri": "Cloud SIP URI",
     "actionHeader": "Actions",
     "invite": "Send Invites",
     "addedHeader": "ADDED",
