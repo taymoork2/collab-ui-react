@@ -2,7 +2,7 @@ WebexSquared AdminWebClient
 ===========================
 
 Technology
------------
+__________
 
 * UI is developed using Angular JS:
   https://angularjs.org
