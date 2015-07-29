@@ -2,7 +2,6 @@
 angular.module('Squared')
   .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$sanitize', '$state',
     function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $sanitize, $state) {
-
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
         $scope.roles = $scope.currentUser.roles;
@@ -109,17 +108,17 @@ angular.module('Squared')
       $scope.resetRoles = function () {
         $state.go('user-overview.userProfile');
         $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
-        if($scope.rolesObj.adminRadioValue !== 2){
-          $scope.clearCheckboxes();
-        }
+         if ($scope.rolesObj.adminRadioValue !== 2) {
+           $scope.clearCheckboxes();
+         }
         $scope.rolesEdit.form.$setPristine(true);
       };
 
-
       $scope.updateRoles = function () {
 
+        var choice = $scope.rolesObj.adminRadioValue;
         var roles = [];
-        $scope.rolesEdit.form.$setUntouched(false);
+
         if ($scope.rolesObj.adminRadioValue === 0) {
           for (var roleNames in Config.roles) {
             var inactiveRoleState = {
@@ -180,7 +179,7 @@ angular.module('Squared')
 
         Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
           if (data.success) {
-            if ($scope.rolesEdit.form.$dirty && $scope.currentUser) {
+            if ($scope.currentUser) {
               var userData = {
                 'schemas': Config.scimSchemas,
                 'title': $scope.currentUser.title,
@@ -231,7 +230,9 @@ angular.module('Squared')
           }
 
         });
-        $scope.rolesEdit.form.$setPristine(true);
+
+        $scope.rolesObj.adminRadioValue = choice;
+
       };
 
       $scope.clearCheckboxes = function () {
@@ -241,8 +242,6 @@ angular.module('Squared')
         $scope.rolesObj.salesAdminValue = false;
         $scope.isChecked = false;
       };
-
-
 
       $scope.supportCheckboxes = function () {
         $scope.rolesObj.supportAdminValue = true;

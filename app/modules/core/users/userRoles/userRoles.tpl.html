@@ -1,10 +1,9 @@
 <form name="rolesEdit.form" role="form">
   <cs-sp-container>
     <cs-sp-buttons  ng-show="rolesEdit.form.$dirty" title="{{'rolesPanel.editUser' | translate}}">
-        <button class="btn-primary" translate="common.save" ng-click="updateRoles()" type="submit" ></button>
-        <button class="btn-default" translate="common.cancel" ng-click="resetRoles()"></button>
+        <button id="saveButton" class="btn-primary" translate="common.save" ng-click="updateRoles()" type="submit" ></button>
+        <button id="cancelButton" class="btn-default" translate="common.cancel" ng-click="resetRoles()"></button>
       </cs-sp-buttons>
-
     <div id="rolesDetailsPanel">
       <div class="edit-panel">
         <form name="rolesObj.form" role="form">

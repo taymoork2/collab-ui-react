@@ -49,9 +49,10 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should reverse role change', function () {
+    utils.click(roles.fullAdmin);
     utils.click(roles.noAdmin);
     utils.click(roles.saveButton);
-
+    
     notifications.assertSuccess('User successfully updated.');
     notifications.clearNotifications();
   });
