@@ -24,7 +24,7 @@ angular.module('Squared').service('CsdmConverter',
       this.update = function (updated) {
         this.displayName = updated.displayName;
       };
-      this.image = function () {
+      this.image = (function () {
         switch (obj.product.toUpperCase()) {
         case "SX10":
         case "SX20":
@@ -38,7 +38,7 @@ angular.module('Squared').service('CsdmConverter',
         default:
           return "images/devices/cisco_sx10.png";
         }
-      }();
+      }());
     }
 
     function Code(obj) {
@@ -207,7 +207,7 @@ angular.module('Squared').service('CsdmConverter',
       Device: Device,
       convert: convertDevices,
       convertDevices: convertDevices,
-      convertCodes: convertCodes,
+      convertCodes: convertCodes
     };
 
   }
