@@ -13,7 +13,7 @@
               <td>
                 <img
                   style="width: 60px; height: 60px"
-                  ng-src="images/devices/cisco_{{deviceOverview.currentDevice.product.toLowerCase()}}.png"
+                  ng-src="{{deviceOverview.currentDevice.image}}"
                 />
               </td>
             </tr>
@@ -59,15 +59,15 @@
         </h3>
       </div>
     </cs-sp-section>
-    
+
     <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
       <div class="section-name" style="padding: 15px 0;">
         Issues
-      </div>      
+      </div>
       <div>
         <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents" style="padding-bottom: 10px">
           <p>
-            <i 
+            <i
               class="fa fa-circle device-status device-status-red">
             </i>
             {{event.type}}
