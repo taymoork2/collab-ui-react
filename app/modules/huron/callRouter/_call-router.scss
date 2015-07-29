@@ -1,0 +1,83 @@
+.callRouter {
+  &.callrouting-content {
+    flex-direction: column;
+
+    .partner-profile {
+      height: 100vh;
+      display: flex;
+      flex-direction: row;
+      background-color: $brand-white;
+      flex: 1;
+    }
+  }
+}
+.callRouter-callerinfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: $gray-lightest;
+  background: $gray-light;
+  padding: 20px;
+  padding-left: 30px;
+  .callerinfo-title {
+    vertical-align: middle;
+  }
+  .form-wrapper {
+    padding-left: 30px;
+    flex: 0 0 85%;
+  }
+  label {
+    color: $gray-lightest;
+  }
+}
+.round-icon {
+  border-radius: 50%;
+  border: 1px solid $gray-lighter;
+  color: $gray-lighter;
+  font-size: 50px;
+  width: 75px;
+  height: 75px;
+  margin: 0 auto;
+  .icon-plus {
+      position: relative;
+      left: 13px;
+      top: 3px;
+  }
+}
+
+.callRouter-callerinfo.open {
+   padding-top: 0;
+   padding-bottom: 0;
+
+}
+.form-inline {
+  [ng-transclude] {
+    display: inline-block;
+  }
+}
+
+.custom-combobox {
+    width: calc(100% - 30px);
+    .dropdown-menu {
+      width: calc(100% - 30px);
+    }
+    .has-error & .input-group-btn > .btn {
+      box-shadow: 0 0 0 2px #f05d3b;
+      border-color: transparent;
+    }
+}
+
+
+.custom-combobox .input-group .form-control,.custom-combobox .input-group .input-group-btn>.btn,.custom-combobox .input-group .side-panel .button-container .input-group-btn>button,.side-panel .button-container .custom-combobox .input-group .input-group-btn>button {
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
+}
+
+.custom-combobox.open .input-group .form-control,.custom-combobox.open .input-group-btn>.btn,.custom-combobox.open .side-panel .button-container .input-group-btn>button,.side-panel .button-container .custom-combobox.open .input-group-btn>button,.custom-combobox .input-group .form-control:focus,.custom-combobox .input-group .form-control:focus+.input-group-btn>.btn,.custom-combobox .input-group .side-panel .button-container .form-control:focus+.input-group-btn>button,.side-panel .button-container .custom-combobox .input-group .form-control:focus+.input-group-btn>button {
+    box-shadow: 0 0 0 2px #1472aa;
+    border-color: transparent
+}
+
+.has-error .custom-combobox.open .input-group .form-control,.has-error .custom-combobox.open .input-group-btn>.btn,.has-error .custom-combobox.open .side-panel .button-container .input-group-btn>button,.side-panel .button-container .has-error .custom-combobox.open .input-group-btn>button,.has-error .custom-combobox .input-group .form-control:focus,.has-error .custom-combobox .input-group .form-control:focus+.input-group-btn>.btn,.has-error .custom-combobox .input-group .side-panel .button-container .form-control:focus+.input-group-btn>button,.side-panel .button-container .has-error .custom-combobox .input-group .form-control:focus+.input-group-btn>button {
+    box-shadow: 0 0 0 2px #f4846a;
+    border-color: transparent
+}

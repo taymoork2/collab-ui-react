@@ -1,0 +1,12 @@
+  <div class="modal-header">
+      <button type="button" class="close" ng-click="$dismiss()"></button>
+    <h3 class="modal-title ng-scope" translate="routingModal.title">modal!</h3>
+  </div>
+  <div class="modal-body">
+    <form name="CreateCompanyNumberform">
+    <formly-form model="model" fields="createCompanyNumber"></formly-form>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" ng-disabled="CreateCompanyNumberform.$invalid || CreateCompanyNumberform.$pristine" class="btn btn-sm btn-primary" translate="routingModal.create" ng-click= "saveCompanyNumber()">Create</button>
+  </div>

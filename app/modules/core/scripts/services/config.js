@@ -238,6 +238,10 @@ angular.module('Core')
             desc: 'tabs.MediafusionDetailsTabDesc',
             state: 'mediafusionconnector',
             link: '#mediafusionconnector'
+          }, {
+            title: 'tabs.callRoutingTab',
+            state: 'callRouter',
+            link: '#callRouter'
           }]
         }, {
           tab: 'deviceTab',
@@ -751,6 +755,7 @@ angular.module('Core')
         Full_Admin: [ // Customer Admin
           'overview',
           'users',
+          'callRouter',
           'user-overview',
           'device-overview',
           'devices2-overview',
@@ -770,17 +775,17 @@ angular.module('Core')
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
-        User: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
+        User: [],
+
         Site_Admin: ['site-list'],
         Application: ['organizationAdd']
       };
 
       config.serviceStates = {
         'ciscouc': [
-          'callrouting',
           'mediaonhold',
           'generateauthcode',
           'autoattendant',
