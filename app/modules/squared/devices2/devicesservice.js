@@ -82,7 +82,6 @@ angular.module('Squared')
                 data.success = false;
                 data.status = status;
                 callback(data, url, status);
-                Auth.handleStatus(status);
               });
           } else {
             callback('No valid device available.');
@@ -97,7 +96,6 @@ angular.module('Squared')
               })
               .error(function (data, status) {
                 callback(data, url, status, false);
-                Auth.handleStatus(status);
               });
           } else {
             callback('No valid url available.');
