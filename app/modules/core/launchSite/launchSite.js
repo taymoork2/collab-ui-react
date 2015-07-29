@@ -9,7 +9,8 @@ angular.module('Core')
       };
 
       $scope.getId = function (url) {
-        return url.match(/[0-9]+/) !== null ? url.match(/[0-9]+/)[0] : 0;
+        var domain = new URL($scope.webexAdvancedUrl).hostname;
+        return domain.replace(/\./g, '-');
       };
 
       $scope.submitForm = function () {
