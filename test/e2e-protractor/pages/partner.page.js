@@ -10,7 +10,7 @@ var PartnerHomePage = function () {
   };
 
   this.newSqUCTrial = {
-    customerName: 'Atlas_Test_1_Squc_' + randomNumber.slice(0, 5),
+    customerName: 'Atlas_Test_UC_' + randomNumber.slice(0, 5),
     customerEmail: 'collabctg+Atlas' + randomNumber.slice(0, 5) + '@gmail.com'
   };
 

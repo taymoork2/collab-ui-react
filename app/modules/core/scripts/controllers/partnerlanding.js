@@ -181,11 +181,11 @@ angular.module('Core')
               $scope.showExpired = $scope.expiredList.length > 0;
               Log.debug('active trial records found:' + $scope.activeList.length);
               Log.debug('total trial records found:' + $scope.trialsList.length);
-              $scope.totalTrials = $scope.trialsList.length;
             } else {
               $scope.getPending = false;
               Log.debug('No trial records found');
             }
+            $scope.totalTrials = $scope.trialsList.length;
           } else {
             Log.debug('Failed to retrieve trial information. Status: ' + status);
             $scope.getPending = false;
@@ -205,10 +205,10 @@ angular.module('Core')
             if (data.organizations.length > 0) {
               loadRetrievedDataToList(data.organizations, $scope.managedOrgsList, false);
               Log.debug('total managed orgs records found:' + $scope.managedOrgsList.length);
-              $scope.totalOrgs = $scope.managedOrgsList.length;
             } else {
               Log.debug('No managed orgs records found');
             }
+            $scope.totalOrgs = $scope.managedOrgsList.length;
           } else {
             Log.debug('Failed to retrieve managed orgs information. Status: ' + status);
             Notification.notify([$translate.instant('partnerHomePage.errGetTrialsQuery', {

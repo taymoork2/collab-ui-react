@@ -28,9 +28,9 @@ auth =
     org:  '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
 
   'partner-squc-admin':
-    user: 'admin@squareduc-partner.com'
-    pass: 'Cisco123!'
-    org:  '4e2befa3-9d82-4fdf-ad31-bb862133f078'
+    user: 'admin@ucpartner.e2e.huronalpha.com'
+    pass: 'Cisco123!!'
+    org:  '666a7b2f-f82e-4582-9672-7f22829e728d'
 
   'pbr-admin-test':
     user: 'pbr-org-admin-test@wx2.example.com'
