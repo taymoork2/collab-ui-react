@@ -243,7 +243,14 @@ angular.module('Squared')
 
       $scope.supportCheckboxes = function () {
         $scope.rolesObj.supportAdminValue = true;
-        $scope.isChecked = true;
+        $scope.rolesObj.adminRadioValue = 2;
+        $scope.rolesEdit.form.$dirty = true;
       };
+
+      $scope.partialCheckboxes = function () {
+        $scope.rolesObj.adminRadioValue = 2;
+        $scope.rolesEdit.form.$dirty = true;
+      };
+
     }
   ]);
