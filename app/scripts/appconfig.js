@@ -771,6 +771,12 @@ angular
           data: {
             firstTimeSetup: false
           }
+        })
+        .state('trialExtInterest', {
+          url: '/trialExtInterest?eqp',
+          templateUrl: 'modules/squared/views/trialExtInterest.html',
+          controller: 'trialExtInterestCtrl',
+          parent: 'main'
         });
     }
   ]);

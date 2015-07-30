@@ -828,7 +828,7 @@ angular.module('Core')
       };
 
       // These states do not require a role/service check
-      config.allowedStates = ['unauthorized', 'csadmin'];
+      config.allowedStates = ['unauthorized', 'csadmin', 'trialExtInterest'];
 
       config.ciscoOnly = ['billing'];
 

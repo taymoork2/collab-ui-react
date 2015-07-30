@@ -1,0 +1,14 @@
+<div id="notifyPartnerSuccess" ng-show="result.success">
+	<p>Thank you.</p>
+	<p>Your partner has been notified and will contact you soon.</p>
+</div>
+
+<div id="notifyPartnerBadLink" ng-show="result.badLink">
+	<p class="activate-error">The link you clicked is invalid or you are not entitled to see the page.</p>
+</div>
+
+<div id="notifyPartnerFailure" ng-show="result.error">
+  <br>
+	<p>Something went wrong.</p>
+	<p>We're sorry, something went wrong while trying to notify your partner.</p> 
+</div>
