@@ -6,7 +6,7 @@
 /* global by */
 /* global element */
 
-describe('First Time Wizard EE selfsign-sso', function () {
+xdescribe('First Time Wizard EE selfsign-sso', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
