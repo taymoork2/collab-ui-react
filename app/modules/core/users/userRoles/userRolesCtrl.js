@@ -103,13 +103,18 @@ angular.module('Squared')
         return SessionStorage.get('partnerOrgId');
       };
 
+      function resetForm () {
+        $scope.rolesEdit.form.$setPristine();
+        $scope.rolesEdit.form.$setUntouched();
+      }
+
       $scope.resetRoles = function () {
         $state.go('user-overview.userProfile');
         $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
         if ($scope.rolesObj.adminRadioValue !== 2) {
           $scope.clearCheckboxes();
         }
-        $scope.rolesEdit.form.$setPristine(true);
+        resetForm();
       };
 
       $scope.updateRoles = function () {
@@ -207,6 +212,7 @@ angular.module('Squared')
                   Notification.notify(successMessage, 'success');
                   $scope.user = data;
                   $rootScope.$broadcast('USER_LIST_UPDATED');
+                  resetForm();
                 } else {
                   Log.debug('Update existing user failed. Status: ' + status);
                   var errorMessage = [];
@@ -219,6 +225,7 @@ angular.module('Squared')
               var successMessage = [];
               successMessage.push($filter('translate')('profilePage.rolesSuccess'));
               Notification.notify(successMessage, 'success');
+              resetForm();
             }
           } else {
             Log.debug('Updating user\'s roles failed. Status: ' + status);
