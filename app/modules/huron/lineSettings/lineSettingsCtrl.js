@@ -817,6 +817,9 @@
 
       if (isValidSharedLineUser(userInfo)) {
         vm.selectedUsers.push(userInfo);
+        if (!angular.isDefined(vm.sharedLineUsers)) {
+          vm.sharedLineUsers = [];
+        }
         vm.sharedLineUsers.push(userInfo);
       }
     };
@@ -945,7 +948,9 @@
             vm.sharedLineUsers.splice(index, 1);
           }
         });
+
       }
+      listSharedLineUsers(vm.directoryNumber.uuid);
       return isRemoveLocal;
     }
 

@@ -39,6 +39,25 @@ describe('Shared Line', function () {
     utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
   });
 
+  it('should find the added user, delete from shared line and add back', function () {
+    utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
+
+    telephony.selectSharedLineUser(user2);
+    utils.click(telephony.removeMemberLink);
+    utils.click(telephony.removeMemberBtn);
+
+    utils.click(telephony.userInput);
+    utils.sendKeys(telephony.userInput, user2);
+    telephony.selectSharedLineOption(user2);
+
+    utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
+
+    utils.click(telephony.saveButton);
+    notifications.assertSuccess('Line configuration saved successfully');
+
+    utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
+  });
+
   it('should find the added user and delete them from shared line', function () {
     utils.expectIsDisplayed(telephony.userAccordionGroup(user2));
 
