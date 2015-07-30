@@ -817,9 +817,6 @@
 
       if (isValidSharedLineUser(userInfo)) {
         vm.selectedUsers.push(userInfo);
-        if (!angular.isDefined(vm.sharedLineUsers)) {
-          vm.sharedLineUsers = [];
-        }
         vm.sharedLineUsers.push(userInfo);
       }
     };
@@ -898,7 +895,7 @@
       vm.sharedLineUsers = [];
       var promise = SharedLineInfoService.loadSharedLineUsers(dnUuid, vm.currentUser.id)
         .then(function (users) {
-          vm.sharedLineUsers = users;
+          vm.sharedLineUsers = angular.isDefined(users) && users != null ? users : [];
           vm.sharedLineBtn = (vm.sharedLineUsers) ? true : false;
           vm.sharedLineEndpoints = SharedLineInfoService.loadSharedLineUserDevices(dnUuid);
         });
