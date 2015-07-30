@@ -1,8 +1,7 @@
 'use strict';
 angular.module('Squared')
-  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$sanitize',
-    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $sanitize) {
-
+  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$sanitize', '$state',
+    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $sanitize, $state) {
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
         $scope.roles = $scope.currentUser.roles;
@@ -84,10 +83,8 @@ angular.module('Squared')
       };
 
       $scope.sipAddr = "";
-      //      $log.log($scope.currentUser);
       if ($scope.currentUser.sipAddresses) {
         for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
-          //         $log.log($scope.currentUser.sipAddresses[x]);
           if ($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
             $scope.sipAddr = $scope.currentUser.sipAddresses[x].value;
           }
@@ -106,8 +103,18 @@ angular.module('Squared')
         return SessionStorage.get('partnerOrgId');
       };
 
+      $scope.resetRoles = function () {
+        $state.go('user-overview.userProfile');
+        $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
+        if ($scope.rolesObj.adminRadioValue !== 2) {
+          $scope.clearCheckboxes();
+        }
+        $scope.rolesEdit.form.$setPristine(true);
+      };
+
       $scope.updateRoles = function () {
 
+        var choice = $scope.rolesObj.adminRadioValue;
         var roles = [];
 
         if ($scope.rolesObj.adminRadioValue === 0) {
@@ -170,7 +177,7 @@ angular.module('Squared')
 
         Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
           if (data.success) {
-            if ($scope.rolesObj.form.$dirty && $scope.currentUser) {
+            if ($scope.currentUser) {
               var userData = {
                 'schemas': Config.scimSchemas,
                 'title': $scope.currentUser.title,
@@ -219,7 +226,11 @@ angular.module('Squared')
             errorMessage.push($filter('translate')('profilePage.rolesError'));
             Notification.notify(errorMessage, 'error');
           }
+
         });
+
+        $scope.rolesObj.adminRadioValue = choice;
+
       };
 
       $scope.clearCheckboxes = function () {
@@ -230,15 +241,15 @@ angular.module('Squared')
         $scope.isChecked = false;
       };
 
-      $scope.radioHandler = function () {
-        if ($scope.rolesObj.adminRadioValue === 0 || $scope.rolesObj.adminRadioValue === 1) {
-          $scope.rolesObj.adminRadioValue = 2;
-        }
-      };
-
       $scope.supportCheckboxes = function () {
         $scope.rolesObj.supportAdminValue = true;
-        $scope.isChecked = true;
+        $scope.rolesObj.adminRadioValue = 2;
+        $scope.rolesEdit.form.$dirty = true;
+      };
+
+      $scope.partialCheckboxes = function () {
+        $scope.rolesObj.adminRadioValue = 2;
+        $scope.rolesEdit.form.$dirty = true;
       };
 
     }

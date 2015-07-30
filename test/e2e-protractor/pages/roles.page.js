@@ -15,7 +15,7 @@ var RolesPage = function () {
   this.salesAdminDiv = element(by.id('sales-admin-options'));
   this.noAdminDiv = element(by.id('no-admin-options'));
 
-  this.saveButton = element(by.css('.ent-detail-panel')).element(by.id('btn-save'));
+  this.saveButton = element(by.id('saveButton'));
   this.closeButton = element(by.css('.close-row'));
   this.sipAddressesInput = element(by.id('sipAddressesInput'));
 

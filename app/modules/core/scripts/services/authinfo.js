@@ -191,8 +191,11 @@ angular.module('Core')
             if (accounts.length > 0) {
               authData.hasAccount = true;
             }
+
             for (var x = 0; x < accounts.length; x++) {
+
               var account = accounts[x];
+
               for (var l = 0; l < account.licenses.length; l++) {
                 var license = account.licenses[l];
                 var service = null;
@@ -226,7 +229,7 @@ angular.module('Core')
                   break;
                 case 'CMR':
                   service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
-                  cmrLicenses = service;
+                  cmrLicenses.push(service);
                 }
               } //end for
             } //end for

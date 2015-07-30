@@ -53,7 +53,7 @@ angular.module('Core')
       var currentDate = moment();
       var dummyChartVals = [];
       for (var i = 0; i < 5; i++) {
-        currentDate = currentDate.add(7, 'days');
+        currentDate = currentDate.subtract(7, 'days');
         var isoDate = currentDate.toISOString();
         var dummyObj = {
           data: [{
@@ -65,6 +65,7 @@ angular.module('Core')
 
         dummyChartVals.push(dummyObj);
       }
+      dummyChartVals = dummyChartVals.reverse();
 
       var currentDateSingle = moment();
       var singleDummyChartVals = [];
@@ -272,7 +273,6 @@ angular.module('Core')
           }
           formmatedData.push(chartSection);
         }
-        formmatedData.reverse();
         return formmatedData;
       };
 
