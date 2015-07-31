@@ -41,7 +41,6 @@ angular.module('Squared')
         rowTemplate: getTemplate('_rowTpl'),
 
         columnDefs: [{
-          width: 260,
           field: 'displayName',
           displayName: 'Belongs to',
           cellTemplate: getTemplate('_nameTpl')

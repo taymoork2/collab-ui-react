@@ -64,12 +64,15 @@
     }
 
     function setDirectoryNumber(resource) {
+      resource.number = resource.id;
+      /* workaround for Tropo-AA integraiton
       return DirectoryNumberService.get({
         customerId: Authinfo.getOrgId(),
         directoryNumberId: resource.id
       }).$promise.then(function (data) {
         resource.number = data.pattern;
       });
+      */
     }
 
     function listAutoAttendants() {
