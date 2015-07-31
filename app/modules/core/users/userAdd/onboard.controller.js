@@ -760,6 +760,8 @@ angular.module('Core')
           if (method !== 'convertUser') {
             angular.element('#btnOnboard').button('reset');
             angular.element('#btnSaveEnt').button('reset');
+          } else {
+            angular.element('#btnConvert').button('reset');
           }
         }
 
@@ -875,6 +877,7 @@ angular.module('Core')
       };
 
       $scope.convertUsers = function () {
+        angular.element('#btnConvert').button('loading');
         Userservice.migrateUsers($scope.convertSelectedList, function (data, status) {
           var errorMessages = [];
           var successMessages = [];
@@ -901,6 +904,7 @@ angular.module('Core')
             }
             Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
           } else {
+            angular.element('#btnConvert').button('reset');
             $scope.$dismiss();
           }
           Notification.notify(errorMessages, 'error');
