@@ -1,49 +1,58 @@
 {
   "data": [{
-    "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+    "orgId": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
+    "orgName": "Huron Int Test 1",
     "data": [{
-      "date": "2015-05-10T02:00:00.000-05:00",
+      "date": "2015-07-28T00:00:00.000-05:00",
       "details": {
-        "poor": 2,
-        "fair": 14,
-        "good": 5,
-        "excellent": 14
+        "totalCount": "2",
+        "totalDurationSum": "12",
+        "totalDurationAvg": "1",
+        "goodQualityCount": "2",
+        "goodQualityDurationSum": "12",
+        "goodQualityDurationAvg": "6",
+        "fairQualityCount": "0",
+        "fairQualityDurationSum": "0",
+        "fairQualityDurationAvg": "0",
+        "poorQualityCount": "0",
+        "poorQualityDurationSum": "0",
+        "poorQualityDurationAvg": "0"
       }
     }, {
-      "date": "2015-05-11T02:00:00.000-05:00",
+      "date": "2015-07-29T00:00:00.000-05:00",
       "details": {
-        "poor": 8,
-        "fair": 5,
-        "good": 10,
-        "excellent": 10
+        "totalCount": "118",
+        "totalDurationSum": "1576",
+        "totalDurationAvg": "1",
+        "goodQualityCount": "106",
+        "goodQualityDurationSum": "1532",
+        "goodQualityDurationAvg": "14.452830",
+        "fairQualityCount": "0",
+        "fairQualityDurationSum": "0",
+        "fairQualityDurationAvg": "0",
+        "poorQualityCount": "12",
+        "poorQualityDurationSum": "44",
+        "poorQualityDurationAvg": "3.666667"
       }
     }, {
-      "date": "2015-05-12T02:00:00.000-05:00",
+      "date": "2015-07-30T00:00:00.000-05:00",
       "details": {
-        "poor": 15,
-        "fair": 0,
-        "good": 12,
-        "excellent": 20
-      }
-    }, {
-      "date": "2015-05-13T02:00:00.000-05:00",
-      "details": {
-        "poor": 8,
-        "fair": 5,
-        "good": 10,
-        "excellent": 10
-      }
-    }, {
-      "date": "2015-05-14T02:00:00.000-05:00",
-      "details": {
-        "poor": 15,
-        "fair": 0,
-        "good": 12,
-        "excellent": 20
+        "totalCount": "195",
+        "totalDurationSum": "3595",
+        "totalDurationAvg": "1",
+        "goodQualityCount": "194",
+        "goodQualityDurationSum": "3585",
+        "goodQualityDurationAvg": "18.479381",
+        "fairQualityCount": "0",
+        "fairQualityDurationSum": "0",
+        "fairQualityDurationAvg": "0",
+        "poorQualityCount": "1",
+        "poorQualityDurationSum": "10",
+        "poorQualityDurationAvg": "10"
       }
     }]
   }],
-  "type": "mediaQuality",
+  "type": "callQuality",
   "date": "2015-04-20",
   "spanCount": 1,
   "spanType": "day",

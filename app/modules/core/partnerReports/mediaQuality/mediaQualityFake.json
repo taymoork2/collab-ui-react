@@ -1,60 +1,59 @@
 {
   "data": [{
-    "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-    "orgName": "Test Org One",
+    "orgId": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
+    "orgName": "Huron Int Test 1",
     "data": [{
-      "date": "2015-05-10T02:00:00.000-05:00",
+      "date": "2015-07-28T00:00:00.000-05:00",
       "details": {
-        "poor": 2,
-        "fair": 14,
-        "good": 5
+        "totalCount": "26",
+        "totalDurationSum": "144",
+        "totalDurationAvg": "17",
+        "goodQualityCount": "2",
+        "goodQualityDurationSum": "12",
+        "goodQualityDurationAvg": "6",
+        "fairQualityCount": "22",
+        "fairQualityDurationSum": "122",
+        "fairQualityDurationAvg": "6",
+        "poorQualityCount": "2",
+        "poorQualityDurationSum": "10",
+        "poorQualityDurationAvg": "5"
       }
     }, {
-      "date": "2015-05-11T02:00:00.000-05:00",
+      "date": "2015-07-29T00:00:00.000-05:00",
       "details": {
-        "poor": 8,
-        "fair": 5,
-        "good": 10
+        "totalCount": "118",
+        "totalDurationSum": "1576",
+        "totalDurationAvg": "1",
+        "goodQualityCount": "106",
+        "goodQualityDurationSum": "1532",
+        "goodQualityDurationAvg": "14.452830",
+        "fairQualityCount": "0",
+        "fairQualityDurationSum": "0",
+        "fairQualityDurationAvg": "0",
+        "poorQualityCount": "12",
+        "poorQualityDurationSum": "44",
+        "poorQualityDurationAvg": "3.666667"
       }
     }, {
-      "date": "2015-05-12T02:00:00.000-05:00",
+      "date": "2015-07-30T00:00:00.000-05:00",
       "details": {
-        "poor": 15,
-        "fair": 0,
-        "good": 12
-      }
-    }, {
-      "date": "2015-05-13T02:00:00.000-05:00",
-      "details": {
-        "poor": 8,
-        "fair": 5,
-        "good": 10
-      }
-    }, {
-      "date": "2015-05-14T02:00:00.000-05:00",
-      "details": {
-        "poor": 12,
-        "fair": 0,
-        "good": 2
-      }
-    }, {
-      "date": "2015-05-15T02:00:00.000-05:00",
-      "details": {
-        "poor": 8,
-        "fair": 5,
-        "good": 10
-      }
-    }, {
-      "date": "2015-05-16T02:00:00.000-05:00",
-      "details": {
-        "poor": 5,
-        "fair": 0,
-        "good": 12
+        "totalCount": "200",
+        "totalDurationSum": "3605",
+        "totalDurationAvg": "1",
+        "goodQualityCount": "194",
+        "goodQualityDurationSum": "3585",
+        "goodQualityDurationAvg": "18.479381",
+        "fairQualityCount": "5",
+        "fairQualityDurationSum": "10",
+        "fairQualityDurationAvg": "2",
+        "poorQualityCount": "1",
+        "poorQualityDurationSum": "10",
+        "poorQualityDurationAvg": "10"
       }
     }]
   }],
-  "type": "mediaQuality",
-  "date": "2015-05-14T15:26:43.486Z",
+  "type": "callQuality",
+  "date": "2015-07-31T20:43:29.074Z",
   "spanCount": 1,
   "spanType": "day",
   "intervalCount": 1,

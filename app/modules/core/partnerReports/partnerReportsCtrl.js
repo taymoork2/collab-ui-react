@@ -42,9 +42,8 @@
 
     vm.mediaQualityRefresh = REFRESH;
     vm.callMetricsRefresh = REFRESH;
-
-    vm.registeredEndpoints = [];
     vm.endpointRefresh = REFRESH;
+    vm.registeredEndpoints = [];
     vm.endpointDescription = "";
     vm.trend = "";
     vm.devices = "";
@@ -129,6 +128,9 @@
 
       vm.callMetricsRefresh = REFRESH;
       getCallMetricsReports();
+
+      vm.mediaQualityRefresh = REFRESH;
+      getMediaQualityReports();
 
       vm.endpointRefresh = REFRESH;
       vm.registeredEndpoints = [];
@@ -252,6 +254,8 @@
       angular.element('#engagementTab').on("click", function () {
         if (vm.activeUsersRefresh !== EMPTY) {
           invalidateChartSize(activeUsersChart);
+        }
+        if (vm.activeUserPopulationRefresh !== EMPTY) {
           invalidateChartSize(activeUserPopulationChart);
         }
       });

@@ -194,9 +194,11 @@
     }
 
     function createMediaQualityGraph(data) {
-      var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalCalls]]</span></span>';
+      window.console.log(data);
+
+      var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalCount]]</span></span>';
       var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
-      var values = ['poor', 'fair', 'good'];
+      var values = ['poorQualityCount', 'fairQualityCount', 'goodQualityCount'];
       var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue];
       var graphs = [];
 

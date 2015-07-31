@@ -304,6 +304,15 @@
 
     function getDateBase(mostRecent) {
       var graph = [];
+      var dataPoint = {
+        totalRegisteredUsers: 0,
+        activeUsers: 0,
+        percentage: 0,
+        totalCount: 0,
+        goodQualityCount: 0, 
+        fairQualityCount: 0,
+        poorQualityCount: 0
+      };
       if (timeFilter === 0) {
         var offset = 0;
         if (mostRecent === moment().format(dateFormat)) {
@@ -311,33 +320,24 @@
         }
 
         for (var i = 7; i > 0; i--) {
-          graph.push({
-            date: moment().subtract(i - offset, 'day').format(),
-            modifiedDate: moment().subtract(i - offset, 'day').format(dateFormat),
-            totalRegisteredUsers: 0,
-            activeUsers: 0,
-            percentage: 0
-          });
+          var option = angular.copy(dataPoint);
+          option.date = moment().subtract(i - offset, 'day').format();
+          option.modifiedDate = moment().subtract(i - offset, 'day').format(dateFormat);
+          graph.push(option);
         }
       } else if (timeFilter === 1) {
         for (var x = 3; x >= 0; x--) {
-          graph.push({
-            date: moment(mostRecent).subtract(x * 7, 'day').format(),
-            modifiedDate: moment(mostRecent).subtract(x * 7, 'day').format(dateFormat),
-            totalRegisteredUsers: 0,
-            activeUsers: 0,
-            percentage: 0
-          });
+          var option = angular.copy(dataPoint);
+          option.date = moment(mostRecent).subtract(x * 7, 'day').format();
+          option.modifiedDate = moment(mostRecent).subtract(x * 7, 'day').format(dateFormat);
+          graph.push(option);
         }
       } else {
         for (var y = 2; y >= 0; y--) {
-          graph.push({
-            date: moment().subtract(y, 'month').startOf('month').format(),
-            modifiedDate: moment().subtract(y, 'month').startOf('month').format(dateFormat),
-            totalRegisteredUsers: 0,
-            activeUsers: 0,
-            percentage: 0
-          });
+          var option = angular.copy(dataPoint);
+          option.date = moment().subtract(y, 'month').startOf('month').format();
+          option.modifiedDate = moment().subtract(y, 'month').startOf('month').format(dateFormat);
+          graph.push(option);
         }
       }
 
@@ -415,18 +415,25 @@
       }
       qualityCancelPromise = $q.defer();
 
-      // return getService(detailed + qualityURL + query + orgId + customer.value, qualityCancelPromise).then(function (response) {
+      //  return getService(detailed + qualityUrl + query + orgId + customer.value, qualityCancelPromise).then(function (response) {
       return $http.get('modules/core/partnerReports/mediaQuality/mediaQualityFake.json').then(function (response) {
-        if (response.data !== null && response.data !== undefined) {
-          var graphData = response.data.data[0].data;
-          angular.forEach(graphData, function (index) {
-            index.good = parseInt(index.details.good);
-            index.fair = parseInt(index.details.fair);
-            index.poor = parseInt(index.details.poor);
-            index.totalCalls = index.details.good + index.details.fair + index.details.poor;
-            index.modifiedDate = moment(index.date).format(dateFormat);
-          });
-          return graphData;
+        if (response !== null && response !== undefined) {
+          var graphData = [];
+          if (response.data.data.length > 0) {
+            graphData = response.data.data[0].data;
+            angular.forEach(graphData, function (index) {
+              index.totalCount = parseInt(index.details.totalCount);
+              index.goodQualityCount = parseInt(index.details.goodQualityCount);
+              index.fairQualityCount = parseInt(index.details.fairQualityCount);
+              index.poorQualityCount = parseInt(index.details.poorQualityCount);
+              index.modifiedDate = moment(index.date).format(dateFormat);
+            });
+            var graphBase = getDateBase(graphData[graphData.length - 1].modifiedDate);
+            angular.forEach(graphData, function (index) {
+              graphBase = combineQualityGraphs(graphBase, index);
+            });
+          }
+          return graphBase;
         }
       }, function (error) {
         var errorMessage = $translate.instant('mediaQuality.mediaError', {
@@ -436,8 +443,16 @@
       });
     }
 
-    function modifyMediaQualityGraphData(data) {
-      return data;
+    function combineQualityGraphs(graph, option) {
+      angular.forEach(graph, function (index) {
+        if (index.modifiedDate === option.modifiedDate) {
+          index.totalCount += option.totalCount;
+          index.goodQualityCount += option.goodQualityCount;
+          index.fairQualityCount += option.fairQualityCount;
+          index.poorQualityCount += option.poorQualityCount;
+        }
+      });
+      return graph;
     }
 
     function getCallMetricsData(customer, time) {
