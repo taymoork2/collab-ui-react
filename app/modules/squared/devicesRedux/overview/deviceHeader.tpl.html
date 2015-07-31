@@ -1,25 +1,21 @@
 <cs-sp-header>
   <div class="header-image">
     <div class="device-img">
-      <i 
-        style="top: 15px"
-        class="icon icon-3x icon-circle-telepresence" 
-        ng-class="{'needs-activation': deviceOverview.currentDevice.needsActivation}"
-      />
+      <i style="top: 15px"
+        class="icon icon-3x icon-circle-telepresence"
+        ng-class="{'needs-activation': deviceOverview.currentDevice.needsActivation}"></i>
     </div>
   </div>
   <div class="header-info">
     <div class="header-info-wrap">
-      <div class="header-title">
-        <div class="header-title" ng-show="deviceOverview.currentDevice.needsActivation">
-          {{deviceOverview.currentDevice.displayName}}
-        </div>
-        <sq-editable-input
-          ng-hide="deviceOverview.currentDevice.needsActivation"
-          sq-save="deviceOverview.save(newText)"
-          ng-model="deviceOverview.currentDevice.displayName">
-        </sq-editable-input>
+      <div class="header-title" ng-show="deviceOverview.currentDevice.needsActivation">
+        {{deviceOverview.currentDevice.displayName}}
       </div>
+      <sq-editable-input
+        ng-hide="deviceOverview.currentDevice.needsActivation"
+        sq-save="deviceOverview.save(newText)"
+        ng-model="deviceOverview.currentDevice.displayName">
+      </sq-editable-input>
     </div>
   </div>
 </cs-sp-header>
