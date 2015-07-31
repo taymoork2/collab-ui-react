@@ -41,14 +41,7 @@
     vm.customerSelected = null;
 
     vm.mediaQualityRefresh = REFRESH;
-    var mediaQualityRefreshDiv = 'mediaQualityRefreshDiv';
-    var noMediaQualityDataDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
-    var isMediaQualityRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="mediaQuality-status icon icon-spinner icon-2x"></i>';
-
     vm.callMetricsRefresh = REFRESH;
-    var callMetricsRefreshDiv = 'callMetricsRefreshDiv';
-    var noCallMetricsRefreshDiv = '<div class="no-data-center"><h3 class="no-data">' + $translate.instant('reportsPage.noData') + '</h3></div>';
-    var isCallMetricsRefreshDiv = '<div class="timechartDiv clear-graph"></div><i class="call-metrics-status icon icon-spinner icon-2x"></i>';
 
     vm.registeredEndpoints = [];
     vm.endpointRefresh = REFRESH;
@@ -135,7 +128,6 @@
       getActiveUserReports();
 
       vm.callMetricsRefresh = REFRESH;
-      angular.element('#' + callMetricsRefreshDiv).html(isCallMetricsRefreshDiv);
       getCallMetricsReports();
 
       vm.endpointRefresh = REFRESH;
@@ -276,8 +268,8 @@
     }
 
     function getMediaQualityReports() {
-      return PartnerReportService.getMediaQualityMetrics().then(function (response) {
-        var graphData = response.data;
+      return PartnerReportService.getMediaQualityMetrics(vm.customerSelected, vm.timeSelected).then(function (response) {
+        var graphData = response;
         if (mediaQualityChart === null) {
           mediaQualityChart = GraphService.createMediaQualityGraph(graphData);
         } else {
@@ -285,7 +277,6 @@
           invalidateChartSize(mediaQualityChart);
         }
         if (graphData.length === 0) {
-          angular.element('#' + mediaQualityRefreshDiv).html(noMediaQualityDataDiv);
           vm.mediaQualityRefresh = EMPTY;
         } else {
           vm.mediaQualityRefresh = SET;
@@ -305,7 +296,6 @@
           }
 
           if (angular.isArray(data) && data.length === 0) {
-            angular.element('#' + callMetricsRefreshDiv).html(noCallMetricsRefreshDiv);
             vm.callMetricsRefresh = EMPTY;
           } else {
             vm.callMetricsRefresh = SET;

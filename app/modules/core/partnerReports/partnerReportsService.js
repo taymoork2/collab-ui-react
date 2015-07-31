@@ -11,6 +11,7 @@
     var topn = 'topn';
     var activeUserUrl = '/managedOrgs/activeUsers';
     var callMetricsUrl = '/managedOrgs/callMetrics';
+    var qualityUrl = '/managedOrgs/callQuality';
     var registeredUrl = 'trend/managedOrgs/registeredEndpoints';
     var orgId = "&orgId=";
     var dateFormat = "MMM DD, YYYY";
@@ -20,9 +21,6 @@
     var overallPopulation = 0;
     var timeFilter = null;
     var activeUserCustomerGraphs = {};
-
-    var mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
-    var mediaQualityData = [];
 
     var callMetricsData = {
       dataProvider: [{
@@ -49,6 +47,7 @@
     var activeTableCancelPromise = null;
     var callMetricsCancelPromise = null;
     var endpointsCancelPromise = null;
+    var qualityCancelPromise = null;
 
     return {
       getOverallActiveUserData: getOverallActiveUserData,
@@ -72,6 +71,7 @@
       activeUserCancelPromise = $q.defer();
 
       activeUserDetailedPromise = getService(detailed + activeUserUrl + query, activeUserCancelPromise).then(function (response) {
+        setMostRecentUpdate(response);
         if (response.data !== null && response.data !== undefined && angular.isArray(response.data.data)) {
           var overallActive = 0;
           var overallRegistered = 0;
@@ -117,22 +117,29 @@
         }
         overallPopulation = 0;
       }, function (error) {
-        if (error.status !== 0) {
-          Log.debug('Loading overall active user population data failed.  Status: ' + error.status + ' Response: ' + error.message);
-          Notification.notify([$translate.instant('activeUsers.overallActiveUserGraphError')], 'error');
+        if (error.status !== 0 || error.config.timeout.$$state.status === 0) {
           timeFilter = null;
-          return;
-        } else if (error.config.timeout.$$state.status === 0) {
-          Log.debug('Loading overall active user population data failed.  Status: ' + error.status);
-          Notification.notify([$translate.instant('activeUsers.overallActiveUserGraphError')], 'error');
-          timeFilter = null;
-          return TIMEOUT;
-        } else {
-          return ABORT;
         }
+
+        var errorMessage = $translate.instant('activeUsers.overallActiveUserGraphError');
+        return returnErrorCheck(error, 'Loading overall active user population data failed.', errorMessage, TIMEOUT);
       });
 
       return activeUserDetailedPromise;
+    }
+
+    function returnErrorCheck(error, debug, message, returnItem) {
+      if (error.status !== 0) {
+        Log.debug(debug + '  Status: ' + error.status + ' Response: ' + error.message);
+        Notification.notify([message], 'error');
+        return returnItem;
+      } else if (error.config.timeout.$$state.status === 0) {
+        Log.debug(debug + '  Status: ' + error.status);
+        Notification.notify([message], 'error');
+        return returnItem;
+      } else {
+        return ABORT;
+      }
     }
 
     function getActiveUserData(customer, time) {
@@ -250,7 +257,7 @@
     }
 
     function setMostRecentUpdate(data) {
-      if (data.data !== undefined && data.data.date !== null && data.data.date !== undefined) {
+      if (data.data !== undefined && data.data.date !== null && data.data.date !== undefined && mostRecentUpdate === "") {
         mostRecentUpdate = moment(data.data.date).format(dateFormat);
       }
     }
@@ -284,24 +291,15 @@
         angular.forEach(customer, function (org) {
           graphData = combineMatchingDates(graphData, getActiveUserGraphData(org));
         });
-        return graphData.sort(dateSort);
+        return graphData;
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
           var customerData = activeUserCustomerGraphs[customer.value].graphData;
           var graph = getDateBase(customerData[customerData.length - 1].modifiedDate);
-          return combineMatchingDates(graph, customerData).sort(dateSort);
+          return combineMatchingDates(graph, customerData);
         }
         return [];
       }
-    }
-
-    function dateSort(a, b) {
-      if (a.date === b.date) {
-        return 0;
-      } else if (a.date > b.date) {
-        return 1;
-      }
-      return -1;
     }
 
     function getDateBase(mostRecent) {
@@ -388,64 +386,57 @@
       } else {
         return getService(topn + activeUserUrl + query + orgId + customer.value, canceler).then(function (response) {
           if (response !== null && response !== undefined) {
-            if (mostRecentUpdate === "") {
-              setMostRecentUpdate(response);
-            }
-            return modifyActiveUserTableData(response.data.data[0], customer);
+            setMostRecentUpdate(response);
+            var data = response.data.data[0].data;
+            angular.forEach(data, function (index) {
+              index.orgName = customer.label;
+              index.numCalls = parseInt(index.details.numCalls);
+              index.totalActivity = parseInt(index.details.totalActivity);
+              index.userId = index.details.userId;
+              index.userName = index.details.userName;
+            });
+            return data;
           }
           return [];
         }, function (error) {
-          if (error.status !== 0) {
-            Log.debug('Loading most active users for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
-            Notification.notify([$translate.instant('activeUsers.activeUserTableError', {
-              customer: customer.label
-            })], 'error');
-            return [];
-          } else if (error.config.timeout.$$state.status === 0) {
-            Log.debug('Loading most active users for customer ' + customer.label + ' failed.  Status: ' + error.status);
-            Notification.notify([$translate.instant('activeUsers.activeUserTableError', {
-              customer: customer.label
-            })], 'error');
-            return [];
-          } else {
-            return ABORT;
-          }
+          var errorMessage = $translate.instant('activeUsers.activeUserTableError', {
+            customer: customer.label
+          });
+          return returnErrorCheck(error, 'Loading most active users for customer ' + customer.label + ' failed.', errorMessage, []);
         });
       }
     }
 
-    function modifyActiveUserTableData(data, customer) {
-      angular.forEach(data.data, function (index) {
-        index.orgName = customer.label;
-        index.numCalls = parseInt(index.details.numCalls);
-        index.totalActivity = parseInt(index.details.totalActivity);
-        index.userId = index.details.userId;
-        index.userName = index.details.userName;
-      });
-      return data.data;
-    }
+    function getMediaQualityMetrics(customer, time) {
+      var query = getQuery(time);
 
-    function getMediaQualityMetrics() {
-      return $http.get(mediaQualityUrl).success(function (response) {
+      if (qualityCancelPromise !== null && qualityCancelPromise !== undefined) {
+        qualityCancelPromise.resolve(ABORT);
+      }
+      qualityCancelPromise = $q.defer();
+
+      // return getService(detailed + qualityURL + query + orgId + customer.value, qualityCancelPromise).then(function (response) {
+      return $http.get('modules/core/partnerReports/mediaQuality/mediaQualityFake.json').then(function (response) {
         if (response.data !== null && response.data !== undefined) {
-          var graphData = response.data;
+          var graphData = response.data.data[0].data;
           angular.forEach(graphData, function (index) {
-            index.data = modifyMediaQualityGraphData(index.data);
+            index.good = parseInt(index.details.good);
+            index.fair = parseInt(index.details.fair);
+            index.poor = parseInt(index.details.poor);
+            index.totalCalls = index.details.good + index.details.fair + index.details.poor;
+            index.modifiedDate = moment(index.date).format(dateFormat);
           });
-          return graphData.data;
+          return graphData;
         }
+      }, function (error) {
+        var errorMessage = $translate.instant('mediaQuality.mediaError', {
+          customer: customer.label
+        });
+        return returnErrorCheck(error, 'Loading call quality data for customer ' + customer.label + ' failed.', errorMessage, []);
       });
     }
 
     function modifyMediaQualityGraphData(data) {
-      angular.forEach(data, function (index) {
-        index.excellent = parseInt(index.details.excellent);
-        index.good = parseInt(index.details.good);
-        index.fair = parseInt(index.details.fair);
-        index.poor = parseInt(index.details.poor);
-        index.totalCalls = index.details.excellent + index.details.good + index.details.fair + index.details.poor;
-        index.modifiedDate = moment(index.date).format(dateFormat);
-      });
       return data;
     }
 
@@ -458,9 +449,7 @@
       callMetricsCancelPromise = $q.defer();
 
       return getService(detailed + callMetricsUrl + query + orgId + customer.value, callMetricsCancelPromise).then(function (response) {
-        if (mostRecentUpdate === "") {
-          setMostRecentUpdate(response);
-        }
+        setMostRecentUpdate(response);
 
         if (angular.isArray(response.data.data) && response.data.data.length !== 0) {
           return transformRawCallMetricsData(response.data.data[0]);
@@ -468,21 +457,10 @@
           return [];
         }
       }, function (error) {
-        if (error.status !== 0) {
-          Log.debug('Loading call metrics data for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
-          Notification.notify([$translate.instant('callMetrics.callMetricsChartError', {
-            customer: customer.label
-          })], 'error');
-          return [];
-        } else if (error.config.timeout.$$state.status === 0) {
-          Log.debug('Loading call metrics data for customer ' + customer.label + ' failed.  Status: ' + error.status);
-          Notification.notify([$translate.instant('activeUsers.callMetricsChartError', {
-            customer: customer.label
-          })], 'error');
-          return [];
-        } else {
-          return ABORT;
-        }
+        var errorMessage = $translate.instant('callMetrics.callMetricsChartError', {
+          customer: customer.label
+        });
+        return returnErrorCheck(error, 'Loading call metrics data for customer ' + customer.label + ' failed.', errorMessage, []);
       });
     }
 
@@ -533,6 +511,7 @@
         });
       } else {
         return getService(registeredUrl + getTrendQuery(time) + orgId + customer.value, endpointsCancelPromise).then(function (response) {
+          setMostRecentUpdate(response);
           if (Array.isArray(response.data.data) && response.data.data[0].details !== null && response.data.data[0].details !== undefined) {
             var data = response.data.data[0].details;
             data.customer = customer.label;
@@ -548,21 +527,10 @@
             return [];
           }
         }, function (error) {
-          if (error.status !== 0) {
-            Log.debug('Loading regestered endpoints for customer ' + customer.label + ' failed.  Status: ' + error.status + ' Response: ' + error.message);
-            Notification.notify([$translate.instant('registeredEndpoints.registeredEndpointsError', {
-              customer: customer.label
-            })], 'error');
-            return [];
-          } else if (error.config.timeout.$$state.status === 0) {
-            Log.debug('Loading regestered endpoints for customer ' + customer.label + ' failed.  Status: ' + error.status);
-            Notification.notify([$translate.instant('registeredEndpoints.registeredEndpointsError', {
-              customer: customer.label
-            })], 'error');
-            return [];
-          } else {
-            return ABORT;
-          }
+          var errorMessage = $translate.instant('registeredEndpoints.registeredEndpointsError', {
+            customer: customer.label
+          });
+          return returnErrorCheck(error, 'Loading registered endpoints for customer ' + customer.label + ' failed.', errorMessage, []);
         });
       }
     }

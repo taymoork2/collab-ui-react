@@ -130,7 +130,6 @@
         dataPoint.percentage = 0;
       }
       if (div === mediaQualityDiv) {
-        dataPoint.excellent = 0;
         dataPoint.good = 0;
         dataPoint.fair = 0;
         dataPoint.poor = 0;
@@ -196,15 +195,13 @@
 
     function createMediaQualityGraph(data) {
       var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalCalls]]</span></span>';
-      var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good', 'mediaQuality.excellent'];
-      var values = ['poor', 'fair', 'good', 'excellent'];
-      var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue, Config.chartColors.brandInfo];
+      var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
+      var values = ['poor', 'fair', 'good'];
+      var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue];
       var graphs = [];
 
-      if (data.data.length === 0) {
+      if (data.length === 0) {
         data = dummyData(mediaQualityDiv);
-      } else {
-        data = data.data[0].data;
       }
 
       for (var i = 0; i < values.length; i++) {
