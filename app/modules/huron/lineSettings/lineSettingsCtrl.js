@@ -895,7 +895,7 @@
       vm.sharedLineUsers = [];
       var promise = SharedLineInfoService.loadSharedLineUsers(dnUuid, vm.currentUser.id)
         .then(function (users) {
-          vm.sharedLineUsers = angular.isDefined(users) && users != null ? users : [];
+          vm.sharedLineUsers = users;
           vm.sharedLineBtn = (vm.sharedLineUsers) ? true : false;
           vm.sharedLineEndpoints = SharedLineInfoService.loadSharedLineUserDevices(dnUuid);
         });

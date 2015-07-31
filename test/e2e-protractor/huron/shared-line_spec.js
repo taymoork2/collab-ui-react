@@ -45,6 +45,7 @@ describe('Shared Line', function () {
     telephony.selectSharedLineUser(user2);
     utils.click(telephony.removeMemberLink);
     utils.click(telephony.removeMemberBtn);
+    utils.expectIsNotDisplayed(telephony.userAccordionGroup(user2));
 
     utils.click(telephony.userInput);
     utils.sendKeys(telephony.userInput, user2);
