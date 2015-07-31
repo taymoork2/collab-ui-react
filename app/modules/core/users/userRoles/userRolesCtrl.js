@@ -103,7 +103,7 @@ angular.module('Squared')
         return SessionStorage.get('partnerOrgId');
       };
 
-      function resetForm () {
+      function resetForm() {
         $scope.rolesEdit.form.$setPristine();
         $scope.rolesEdit.form.$setUntouched();
       }
