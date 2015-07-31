@@ -352,7 +352,10 @@ angular.module('Core')
 
             var user = {
               'email': null,
-              'displayName': null,
+              'name': {
+                'givenName': null,
+                'familyName': null,
+              },
               'userEntitlements': entitlements,
               'userLicenses': userLicenses
             };
@@ -360,7 +363,8 @@ angular.module('Core')
             if (userEmail.length > 0) {
               user.email = userEmail;
               if (userName.length > 0 && userName !== false) {
-                user.displayName = userName;
+                user.name.givenName = userName.split(' ').slice(0, -1).join(' ');
+                user.name.familyName = userName.split(' ').slice(-1).join(' ');
               }
               userData.users.push(user);
             }
