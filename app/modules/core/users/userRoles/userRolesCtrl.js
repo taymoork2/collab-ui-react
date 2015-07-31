@@ -187,8 +187,8 @@ angular.module('Squared')
                 'schemas': Config.scimSchemas,
                 'title': $scope.currentUser.title,
                 'name': {
-                  'givenName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.givenName) : '',
-                  'familyName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.familyName) : ''
+                  'givenName': $scope.currentUser.name ? $scope.currentUser.name.givenName : '',
+                  'familyName': $scope.currentUser.name ? $scope.currentUser.name.familyName : ''
                 },
                 'displayName': $scope.currentUser.displayName,
                 'meta': {
