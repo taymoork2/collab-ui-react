@@ -71,35 +71,28 @@ angular.module('Core')
           if (data.success) {
             if (data.orgSettings && data.orgSettings.length > 0) {
               var length = data.orgSettings.length;
-              for (var i = 0; i < length; i++) {
-                var orgSettingsObj;
-                try {
-                  orgSettingsObj = JSON.parse(data.orgSettings[i]);
-                } catch (e) {
-                  continue;
-                }
+              var orgSettingsObj = JSON.parse(data.orgSettings[length - 1]);
 
-                if (typeof (orgSettingsObj.reportingSiteUrl) !== 'undefined') {
-                  $scope.problemSiteRadioValue = 1;
-                  $scope.supportUrl = orgSettingsObj.reportingSiteUrl;
-                  $scope.oldSupportUrl = $scope.supportUrl;
-                }
-                if (typeof (orgSettingsObj.reportingSiteDesc) !== 'undefined') {
-                  $scope.problemSiteRadioValue = 1;
-                  $scope.supportText = orgSettingsObj.reportingSiteDesc;
-                  $scope.oldSupportText = $scope.supportText;
-                }
-                if (typeof (orgSettingsObj.helpUrl) !== 'undefined') {
-                  $scope.helpSiteRadioValue = 1;
-                  $scope.helpUrl = orgSettingsObj.helpUrl;
-                  $scope.oldHelpUrl = $scope.helpUrl;
-                }
-                if (typeof (orgSettingsObj.isCiscoSupport) !== 'undefined') {
-                  $scope.isCiscoSupport = orgSettingsObj.isCiscoSupport;
-                }
-                if (typeof (orgSettingsObj.isCiscoHelp) !== 'undefined') {
-                  $scope.isCiscoHelp = orgSettingsObj.isCiscoHelp;
-                }
+              if (typeof (orgSettingsObj.reportingSiteUrl) !== 'undefined') {
+                $scope.problemSiteRadioValue = 1;
+                $scope.supportUrl = orgSettingsObj.reportingSiteUrl;
+                $scope.oldSupportUrl = $scope.supportUrl;
+              }
+              if (typeof (orgSettingsObj.reportingSiteDesc) !== 'undefined') {
+                $scope.problemSiteRadioValue = 1;
+                $scope.supportText = orgSettingsObj.reportingSiteDesc;
+                $scope.oldSupportText = $scope.supportText;
+              }
+              if (typeof (orgSettingsObj.helpUrl) !== 'undefined') {
+                $scope.helpSiteRadioValue = 1;
+                $scope.helpUrl = orgSettingsObj.helpUrl;
+                $scope.oldHelpUrl = $scope.helpUrl;
+              }
+              if (typeof (orgSettingsObj.isCiscoSupport) !== 'undefined') {
+                $scope.isCiscoSupport = orgSettingsObj.isCiscoSupport;
+              }
+              if (typeof (orgSettingsObj.isCiscoHelp) !== 'undefined') {
+                $scope.isCiscoHelp = orgSettingsObj.isCiscoHelp;
               }
             } else {
               Log.debug('No orgSettings found for org: ' + data.id);
@@ -158,7 +151,7 @@ angular.module('Core')
       var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
         angular.element('#orgProfileSaveBtn').button('loading');
         Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
-          if (status === 200) {
+          if (data.success) {
             angular.element('#orgProfileSaveBtn').button('reset');
             Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
           } else {

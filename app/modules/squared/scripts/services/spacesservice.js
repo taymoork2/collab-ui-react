@@ -83,7 +83,6 @@ angular.module('Squared')
                 data.success = false;
                 data.status = status;
                 callback(data, i, status);
-                Auth.handleStatus(status);
               });
           } else {
             callback('No valid device available.');

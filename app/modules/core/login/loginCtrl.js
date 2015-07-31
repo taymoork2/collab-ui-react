@@ -32,7 +32,7 @@ angular.module('Core')
 
       var authorizeUser = function () {
         $scope.loading = true;
-        $scope.loginText = 'loginPage.loading';
+        var loadingDelayPromise = $timeout(function () {}, loadingDelay);
 
         Auth.authorize($rootScope.token)
           .then(function () {
@@ -68,9 +68,9 @@ angular.module('Core')
                 Auth.clearLoginMarker();
               }
 
-              $timeout(function () {
+              return loadingDelayPromise.then(function () {
                 $state.go(state, params);
-              }, loadingDelay);
+              });
             }
           }).catch(function (error) {
             if (error) {
@@ -95,7 +95,5 @@ angular.module('Core')
       } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
         Auth.redirectToLogin();
       }
-
-      $scope.loginText = 'loginPage.login';
     }
   ]);

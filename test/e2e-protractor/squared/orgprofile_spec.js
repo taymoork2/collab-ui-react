@@ -37,10 +37,7 @@ describe('Customer Profile Page', function () {
 
     utils.scrollTop();
     utils.click(orgprofile.orgProfileSaveBtn);
-    utils.expectIsDisabled(orgprofile.orgProfileSaveBtn);
+    notifications.assertSuccess('This may take a few minutes to process');
   });
 
-  it('should log out', function () {
-    navigation.logout();
-  });
-}); //State is logged-in
+});
