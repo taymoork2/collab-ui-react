@@ -84,8 +84,11 @@
               .then(function () {
                 return sharedLineUsers;
               });
+          } else {
+            return sharedLineUsers;
           }
         });
+
     }
 
     function loadUserDevices(userUuid, dnuuid, deviceList) {

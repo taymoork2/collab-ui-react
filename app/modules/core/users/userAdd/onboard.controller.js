@@ -80,15 +80,19 @@ angular.module('Core')
 
       var populateConf = function () {
         if (userLicenseIds) {
+
           for (var ids in userLicenseIds) {
             var currentId = userLicenseIds[ids];
+
             for (var conf in $scope.confChk) {
               var currentConf = $scope.confChk[conf];
+
               if (currentConf.confFeature) {
                 if (currentConf.confFeature.license.licenseId === currentId) {
                   currentConf.confModel = true;
                 }
               }
+
               if (currentConf.cmrFeature) {
                 if (currentConf.cmrFeature.license.licenseId === currentId) {
                   currentConf.cmrModel = true;
@@ -116,22 +120,28 @@ angular.module('Core')
         }
       }
 
-      var generateConfChk = function (conf, cmr) {
+      var generateConfChk = function (confs, cmrs) {
         $scope.confChk = [];
-        for (var i in conf) {
+        for (var i in confs) {
           var temp = {
-            confFeature: conf[i],
+            confFeature: confs[i],
             confModel: false,
             confId: 'conf-' + i
           };
 
-          if (cmr !== null && conf[i].license.siteUrl !== undefined && cmr.license.siteUrl === conf[i].license.siteUrl) {
-            temp.cmrFeature = cmr;
-            temp.cmrModel = false;
-            temp.cmrId = 'cmr-' + i;
+          for (var j in cmrs) {
+            if (!_.isUndefined(cmrs[j]) && !_.isNull(cmrs[j]) && !_.isUndefined(confs[i].license.siteUrl)) {
+              if (_.isEqual(confs[i].license.siteUrl, cmrs[j].license.siteUrl) && _.isEqual(confs[i].license.billingServiceId, cmrs[j].license.billingServiceId)) {
+                temp.cmrFeature = cmrs[j];
+                temp.cmrModel = false;
+                temp.cmrId = 'cmr-' + j;
+              }
+            }
           }
+
           $scope.confChk.push(temp);
         }
+
         populateConf();
       };
 
@@ -185,9 +195,9 @@ angular.module('Core')
           $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
         }
         if (services.conference) {
-          $scope.cmrFeature = Authinfo.getCmrServices();
+          $scope.cmrFeatures = Authinfo.getCmrServices();
           $scope.conferenceFeatures = $scope.conferenceFeatures.concat(services.conference);
-          generateConfChk($scope.conferenceFeatures, $scope.cmrFeature);
+          generateConfChk($scope.conferenceFeatures, $scope.cmrFeatures);
         }
         if (services.communication) {
           $scope.communicationFeatures = $scope.communicationFeatures.concat(services.communication);
@@ -750,6 +760,8 @@ angular.module('Core')
           if (method !== 'convertUser') {
             angular.element('#btnOnboard').button('reset');
             angular.element('#btnSaveEnt').button('reset');
+          } else {
+            angular.element('#btnConvert').button('reset');
           }
         }
 
@@ -865,6 +877,7 @@ angular.module('Core')
       };
 
       $scope.convertUsers = function () {
+        angular.element('#btnConvert').button('loading');
         Userservice.migrateUsers($scope.convertSelectedList, function (data, status) {
           var errorMessages = [];
           var successMessages = [];
@@ -891,6 +904,7 @@ angular.module('Core')
             }
             Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
           } else {
+            angular.element('#btnConvert').button('reset');
             $scope.$dismiss();
           }
           Notification.notify(errorMessages, 'error');

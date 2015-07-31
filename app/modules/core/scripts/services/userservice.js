@@ -7,6 +7,7 @@ angular.module('Core')
       var userUrl = Config.getAdminServiceUrl();
 
       function onboardUsers(userData, callback, cancelPromise) {
+
         if (userData && angular.isArray(userData.users) && userData.users.length > 0) {
           $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userData, {
               timeout: cancelPromise
@@ -348,16 +349,22 @@ angular.module('Core')
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
             var userName = usersDataArray[i].name.trim();
+
             var user = {
               'email': null,
-              'name': null,
+              'name': {
+                'givenName': null,
+                'familyName': null,
+              },
               'userEntitlements': entitlements,
               'userLicenses': userLicenses
             };
+
             if (userEmail.length > 0) {
               user.email = userEmail;
               if (userName.length > 0 && userName !== false) {
-                user.name = userName;
+                user.name.givenName = userName.split(' ').slice(0, -1).join(' ');
+                user.name.familyName = userName.split(' ').slice(-1).join(' ');
               }
               userData.users.push(user);
             }
