@@ -84,9 +84,7 @@
               .then(function () {
                 return sharedLineUsers;
               });
-          }
-          else
-          {
+          } else {
             return sharedLineUsers;
           }
         });
