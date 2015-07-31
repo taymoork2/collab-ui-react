@@ -127,6 +127,9 @@ getSSOToken = (req, jar, creds, cb) ->
     cookie = _.find res.headers['set-cookie'], (c) ->
       c.indexOf('cisPRODAMAuthCookie') isnt -1
 
+    if not cookie
+      throw new Error 'Failed to retrieve a cookie with org credentials. Status: ' + res?.statusCode
+
     token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1]
 
     jar.setCookie 'cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/'
