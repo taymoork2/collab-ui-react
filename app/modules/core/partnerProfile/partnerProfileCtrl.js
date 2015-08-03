@@ -119,9 +119,12 @@ angular.module('Core')
         }
 
         if (!error) {
+          var isCiscoHelp = $scope.isManaged ? $scope.isCiscoHelp : ($scope.helpSiteRadioValue === 0);
+          var isCiscoSupport = $scope.isManaged ? $scope.isCiscoSupport : ($scope.problemSiteRadioValue === 0);
+
           updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl,
             $scope.supportText, $scope.helpUrl,
-            $scope.helpSiteRadioValue === 0, $scope.problemSiteRadioValue === 0);
+            isCiscoHelp, isCiscoSupport);
         } else {
           Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
         }
