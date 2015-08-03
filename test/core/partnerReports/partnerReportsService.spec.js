@@ -247,15 +247,11 @@ describe('Service: Partner Reports Service', function () {
         expect(data[6].goodQualityCount).toEqual(qualityResponse.goodQualityCount);
         expect(data[6].fairQualityCount).toEqual(qualityResponse.fairQualityCount);
         expect(data[6].poorQualityCount).toEqual(qualityResponse.poorQualityCount);
-        expect(data[6].date).toEqual(qualityResponse.date);
-        expect(data[6].modifiedDate).toEqual(qualityResponse.modifiedDate);
 
         expect(data[0].totalCount).toBe(0);
         expect(data[0].goodQualityCount).toBe(0);
         expect(data[0].fairQualityCount).toBe(0);
         expect(data[0].poorQualityCount).toBe(0);
-        expect(data[0].date).toEqual(moment(qualityResponse.date).subtract(6, 'day').format());
-        expect(data[0].modifiedDate).toEqual(moment(qualityResponse.date).subtract(6, 'day').format(dateFormat));
       });
       $httpBackend.flush();
     });
