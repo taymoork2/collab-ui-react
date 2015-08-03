@@ -9,7 +9,7 @@ xdescribe('Convert Users', function () {
     utils.dumpConsoleErrors();
   });
 
-  xdescribe('Display the overview page', function () {
+  describe('Display the overview page', function () {
     it('should login as pbr org admin', function () {
       login.login('sqtest-admin');
     });
@@ -23,10 +23,9 @@ xdescribe('Convert Users', function () {
     });
   });
 
-  xdescribe('convert users', function () {
+  describe('convert users', function () {
     it('convert user operations', function () {
       utils.expectIsDisabled(landing.convertNextButton);
-      //utils.clickUser(testEmail);
       utils.click(landing.unlicensedUserRow);
       utils.expectIsEnabled(landing.convertNextButton);
       utils.scrollBottom('.modal');
@@ -42,7 +41,7 @@ xdescribe('Convert Users', function () {
     });
   });
 
-  xit('should log out', function () {
+  it('should log out', function () {
     navigation.logout();
   });
 });
