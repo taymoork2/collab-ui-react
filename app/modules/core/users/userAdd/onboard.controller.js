@@ -906,7 +906,7 @@ angular.module('Core')
 
           for (var i = 0; i < data.userResponse.length; i++) {
             if (data.userResponse[i].status !== 200) {
-              convertFailures.push(data.userResponse[i].email + ' could not be converted. Contact support for assistance converting this user.');
+              convertFailures.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
             } else {
               var user = {
                 'address': data.userResponse[i].email
