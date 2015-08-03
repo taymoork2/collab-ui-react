@@ -147,7 +147,7 @@ angular.module('Core')
     getAdminOrgInfo();
     getUnlicensedUsers();
 
-    $scope.$on('$stateChangeStart', function (e, to) {
+    $scope.$on('$stateChangeSuccess', function (e, to) {
       if (to.name === 'overview') {
         getUnlicensedUsers();
       }
