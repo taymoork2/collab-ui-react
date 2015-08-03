@@ -67,6 +67,8 @@ angular.module('Core')
       $scope.conferenceFeatures = [];
       $scope.communicationFeatures = [];
       $scope.licenses = [];
+      var convertSuccess = [];
+      var convertFailures = [];
 
       $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
       $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
@@ -706,7 +708,9 @@ angular.module('Core')
               isComplete = false;
             }
             $scope.results.resultList.push(userResult);
-            $scope.$dismiss();
+            if (method !== 'convertUser') {
+              $scope.$dismiss();
+            }
           }
 
           //concatenating the results in an array of strings for notify function
@@ -733,8 +737,12 @@ angular.module('Core')
               Notification.notify(errors, 'error');
             }
           } else {
-            Notification.notify(successes, 'success');
-            Notification.notify(errors, 'error');
+            if (count_s > 0) {
+              convertSuccess.push.apply(convertSuccess, successes);
+            }
+            if (count_e > 0) {
+              convertFailures.push.apply(convertFailures, errors);
+            }
           }
 
         } else {
@@ -755,13 +763,13 @@ angular.module('Core')
               error += ' ' + data;
             }
           }
-          Notification.notify([error], 'error');
-          isComplete = false;
           if (method !== 'convertUser') {
+            Notification.notify([error], 'error');
+            isComplete = false;
             angular.element('#btnOnboard').button('reset');
             angular.element('#btnSaveEnt').button('reset');
           } else {
-            angular.element('#btnConvert').button('reset');
+            convertFailures.push(error);
           }
         }
 
@@ -770,7 +778,14 @@ angular.module('Core')
             resetUsersfield();
           }
         } else {
-          $scope.$dismiss();
+          if ($scope.convertSelectedList.length > 0) {
+            convertUsersInBatch();
+          } else {
+            angular.element('#btnConvert').button('reset');
+            Notification.notify(convertSuccess, 'success');
+            Notification.notify(convertFailures, 'error');
+            $scope.$dismiss();
+          }
         }
 
       };
@@ -878,14 +893,20 @@ angular.module('Core')
 
       $scope.convertUsers = function () {
         angular.element('#btnConvert').button('loading');
-        Userservice.migrateUsers($scope.convertSelectedList, function (data, status) {
-          var errorMessages = [];
-          var successMessages = [];
+        convertSuccess = [];
+        convertFailures = [];
+        convertUsersInBatch();
+      };
+
+      var convertUsersInBatch = function () {
+        var batch = $scope.convertSelectedList.slice(0, Config.batchSize);
+        $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
+        Userservice.migrateUsers(batch, function (data, status) {
           var successMovedUsers = [];
 
           for (var i = 0; i < data.userResponse.length; i++) {
             if (data.userResponse[i].status !== 200) {
-              errorMessages.push(data.userResponse[i].email + ' could not be converted. Contact support for assistance converting this user.');
+              convertFailures.push(data.userResponse[i].email + ' could not be converted. Contact support for assistance converting this user.');
             } else {
               var user = {
                 'address': data.userResponse[i].email
@@ -904,10 +925,15 @@ angular.module('Core')
             }
             Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
           } else {
-            angular.element('#btnConvert').button('reset');
-            $scope.$dismiss();
+            if ($scope.convertSelectedList.length > 0) {
+              convertUsersInBatch();
+            } else {
+              angular.element('#btnConvert').button('reset');
+              Notification.notify(convertSuccess, 'success');
+              Notification.notify(convertFailures, 'error');
+              $scope.$dismiss();
+            }
           }
-          Notification.notify(errorMessages, 'error');
         });
       };
 

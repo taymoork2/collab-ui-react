@@ -116,8 +116,10 @@ angular.module('Core')
         $scope.licenses.unlicensed = 0;
         $scope.licenses.unlicensedUsersList = null;
         if (data.success) {
-          if (data.totalResults) {
-            $scope.licenses.unlicensed = data.totalResults;
+          if (data.totalResults > 0) {
+            // for now use the length to get the count as there is a bug in CI and totalResults
+            // is not accurate.
+            $scope.licenses.unlicensed = data.resources.length;
             $scope.licenses.unlicensedUsersList = data.resources;
           }
         }
@@ -144,6 +146,12 @@ angular.module('Core')
     getorgInfo();
     getAdminOrgInfo();
     getUnlicensedUsers();
+
+    $scope.$on('$stateChangeStart', function (e, to) {
+      if (to.name === 'overview') {
+        getUnlicensedUsers();
+      }
+    });
 
     $scope.openConvertModal = function () {
       $state.go('users.convert', {});
