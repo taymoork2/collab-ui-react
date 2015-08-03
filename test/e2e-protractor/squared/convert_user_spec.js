@@ -4,12 +4,12 @@
 /* global it */
 /* global login,navigation,users,utils,notifications, protractor, deleteUtils */
 
-describe('Convert Users', function () {
+xdescribe('Convert Users', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
 
-  describe('Display the overview page', function () {
+  xdescribe('Display the overview page', function () {
     it('should login as pbr org admin', function () {
       login.login('sqtest-admin');
     });
@@ -23,7 +23,7 @@ describe('Convert Users', function () {
     });
   });
 
-  describe('convert users', function () {
+  xdescribe('convert users', function () {
     it('convert user operations', function () {
       utils.expectIsDisabled(landing.convertNextButton);
       //utils.clickUser(testEmail);
@@ -42,7 +42,7 @@ describe('Convert Users', function () {
     });
   });
 
-  it('should log out', function () {
+  xit('should log out', function () {
     navigation.logout();
   });
 });
