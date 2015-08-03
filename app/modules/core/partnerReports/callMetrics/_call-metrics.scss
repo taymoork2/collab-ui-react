@@ -25,10 +25,10 @@
     color: $gray-darkest;
   }
   .no-data-center {
-    height: 450px;
     left: 35%;
-    position: absolute;
-    transform: translate(0%, 35%);
+    position: relative;
+    top: -300px;
+
     .no-data {
       color: $gray-light;
       font-family: $brand-font-cisco-TT-Light;

@@ -945,7 +945,9 @@
             vm.sharedLineUsers.splice(index, 1);
           }
         });
+
       }
+      listSharedLineUsers(vm.directoryNumber.uuid);
       return isRemoveLocal;
     }
 

@@ -6,13 +6,13 @@
 /* global by */
 /* global element */
 
-xdescribe('First Time Wizard EE selfsign-sso', function () {
+describe('First Time Wizard EE selfsign-sso', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
 
   it('should login as an admin user', function () {
-    login.login('selfsign-sso-admin');
+    login.login('pbr-admin');
   });
 
   it('clicking on gear icon should open first time wizard', function () {
