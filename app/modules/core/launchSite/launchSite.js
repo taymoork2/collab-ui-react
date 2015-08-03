@@ -9,7 +9,7 @@ angular.module('Core')
       };
 
       $scope.getId = function (url) {
-        var match = url.match(/^https?\:\/\/(([^:\/?#]*)(?:\:([0-9]+))?)/);
+        var match = url.match(/^https?\:\/\/([^:\/?#]*)/);
         return match[1].replace(/\./g, '-');
       };
 
