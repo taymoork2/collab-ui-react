@@ -4,7 +4,7 @@
 /* global it */
 /* global login,navigation,users,utils,notifications, protractor, deleteUtils */
 
-describe('Convert Users', function () {
+xdescribe('Convert Users', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
