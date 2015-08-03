@@ -14,7 +14,7 @@ angular.module('Core')
       };
 
       $scope.submitForm = function () {
-        $timeout(function() {
+        $timeout(function () {
           var id = '#hiddenButton-' + $scope.getId($scope.webexAdvancedUrl);
           angular.element(id).trigger('click');
         }, 0);
