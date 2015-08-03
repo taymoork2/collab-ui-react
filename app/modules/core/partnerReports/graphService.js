@@ -194,8 +194,6 @@
     }
 
     function createMediaQualityGraph(data) {
-      window.console.log(data);
-
       var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalCount]]</span></span>';
       var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
       var values = ['poorQualityCount', 'fairQualityCount', 'goodQualityCount'];

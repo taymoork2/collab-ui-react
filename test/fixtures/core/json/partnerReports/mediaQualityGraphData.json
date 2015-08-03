@@ -5,18 +5,18 @@
     "data": [{
       "date": "2015-07-28T00:00:00.000-05:00",
       "details": {
-        "totalCount": "2",
-        "totalDurationSum": "12",
-        "totalDurationAvg": "1",
+        "totalCount": "26",
+        "totalDurationSum": "144",
+        "totalDurationAvg": "17",
         "goodQualityCount": "2",
         "goodQualityDurationSum": "12",
         "goodQualityDurationAvg": "6",
-        "fairQualityCount": "0",
-        "fairQualityDurationSum": "0",
-        "fairQualityDurationAvg": "0",
-        "poorQualityCount": "0",
-        "poorQualityDurationSum": "0",
-        "poorQualityDurationAvg": "0"
+        "fairQualityCount": "22",
+        "fairQualityDurationSum": "122",
+        "fairQualityDurationAvg": "6",
+        "poorQualityCount": "2",
+        "poorQualityDurationSum": "10",
+        "poorQualityDurationAvg": "5"
       }
     }, {
       "date": "2015-07-29T00:00:00.000-05:00",
@@ -37,15 +37,15 @@
     }, {
       "date": "2015-07-30T00:00:00.000-05:00",
       "details": {
-        "totalCount": "195",
-        "totalDurationSum": "3595",
+        "totalCount": "200",
+        "totalDurationSum": "3605",
         "totalDurationAvg": "1",
         "goodQualityCount": "194",
         "goodQualityDurationSum": "3585",
         "goodQualityDurationAvg": "18.479381",
-        "fairQualityCount": "0",
-        "fairQualityDurationSum": "0",
-        "fairQualityDurationAvg": "0",
+        "fairQualityCount": "5",
+        "fairQualityDurationSum": "10",
+        "fairQualityDurationAvg": "2",
         "poorQualityCount": "1",
         "poorQualityDurationSum": "10",
         "poorQualityDurationAvg": "10"
@@ -53,7 +53,7 @@
     }]
   }],
   "type": "callQuality",
-  "date": "2015-04-20",
+  "date": "2015-07-31T20:43:29.074Z",
   "spanCount": 1,
   "spanType": "day",
   "intervalCount": 1,

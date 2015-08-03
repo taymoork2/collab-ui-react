@@ -273,17 +273,19 @@
 
     function getMediaQualityReports() {
       return PartnerReportService.getMediaQualityMetrics(vm.customerSelected, vm.timeSelected).then(function (response) {
-        var graphData = response;
-        if (mediaQualityChart === null) {
-          mediaQualityChart = GraphService.createMediaQualityGraph(graphData);
-        } else {
-          GraphService.updateMediaQualityGraph(graphData, mediaQualityChart);
-          invalidateChartSize(mediaQualityChart);
-        }
-        if (graphData.length === 0) {
-          vm.mediaQualityRefresh = EMPTY;
-        } else {
-          vm.mediaQualityRefresh = SET;
+        if (response !== ABORT) {
+          var graphData = response;
+          if (mediaQualityChart === null) {
+            mediaQualityChart = GraphService.createMediaQualityGraph(graphData);
+          } else {
+            GraphService.updateMediaQualityGraph(graphData, mediaQualityChart);
+            invalidateChartSize(mediaQualityChart);
+          }
+          if (graphData.length === 0) {
+            vm.mediaQualityRefresh = EMPTY;
+          } else {
+            vm.mediaQualityRefresh = SET;
+          }
         }
         return;
       });

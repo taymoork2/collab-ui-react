@@ -176,7 +176,7 @@
       return $q.all(promises).then(function () {
         if (overallStatus !== ABORT) {
           return {
-            graphData: getActiveUserGraphData(customer),
+            graphData: getActiveUserGraphData(customer, time),
             tableData: tableData,
             populationGraph: getPopulationGraph(customer),
             overallPopulation: overallPopulation
@@ -285,59 +285,52 @@
       }
     }
 
-    function getActiveUserGraphData(customer) {
+    function getActiveUserGraphData(customer, time) {
       if (angular.isArray(customer)) {
         var graphData = [];
         angular.forEach(customer, function (org) {
-          graphData = combineMatchingDates(graphData, getActiveUserGraphData(org));
+          graphData = combineMatchingDates(graphData, getActiveUserGraphData(org, time));
         });
         return graphData;
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
           var customerData = activeUserCustomerGraphs[customer.value].graphData;
-          var graph = getDateBase(customerData[customerData.length - 1].modifiedDate);
+          var graph = getDateBase(customerData[customerData.length - 1].modifiedDate, time);
           return combineMatchingDates(graph, customerData);
         }
         return [];
       }
     }
 
-    function getDateBase(mostRecent) {
+    function getDateBase(mostRecent, time) {
       var graph = [];
       var dataPoint = {
         totalRegisteredUsers: 0,
         activeUsers: 0,
         percentage: 0,
         totalCount: 0,
-        goodQualityCount: 0, 
+        goodQualityCount: 0,
         fairQualityCount: 0,
         poorQualityCount: 0
       };
-      if (timeFilter === 0) {
+      if (time.value === 0) {
         var offset = 0;
-        if (mostRecent === moment().format(dateFormat)) {
-          offset = 1;
+        for (var i = 6; i >= 0; i--) {
+          dataPoint.date = moment(mostRecent).subtract(i, 'day').format();
+          dataPoint.modifiedDate = moment(mostRecent).subtract(i, 'day').format(dateFormat);
+          graph.push(angular.copy(dataPoint));
         }
-
-        for (var i = 7; i > 0; i--) {
-          var option = angular.copy(dataPoint);
-          option.date = moment().subtract(i - offset, 'day').format();
-          option.modifiedDate = moment().subtract(i - offset, 'day').format(dateFormat);
-          graph.push(option);
-        }
-      } else if (timeFilter === 1) {
+      } else if (time.value === 1) {
         for (var x = 3; x >= 0; x--) {
-          var option = angular.copy(dataPoint);
-          option.date = moment(mostRecent).subtract(x * 7, 'day').format();
-          option.modifiedDate = moment(mostRecent).subtract(x * 7, 'day').format(dateFormat);
-          graph.push(option);
+          dataPoint.date = moment(mostRecent).subtract(x * 7, 'day').format();
+          dataPoint.modifiedDate = moment(mostRecent).subtract(x * 7, 'day').format(dateFormat);
+          graph.push(angular.copy(dataPoint));
         }
       } else {
         for (var y = 2; y >= 0; y--) {
-          var option = angular.copy(dataPoint);
-          option.date = moment().subtract(y, 'month').startOf('month').format();
-          option.modifiedDate = moment().subtract(y, 'month').startOf('month').format(dateFormat);
-          graph.push(option);
+          dataPoint.date = moment().subtract(y, 'month').startOf('month').format();
+          dataPoint.modifiedDate = moment().subtract(y, 'month').startOf('month').format(dateFormat);
+          graph.push(angular.copy(dataPoint));
         }
       }
 
@@ -409,18 +402,15 @@
 
     function getMediaQualityMetrics(customer, time) {
       var query = getQuery(time);
-
       if (qualityCancelPromise !== null && qualityCancelPromise !== undefined) {
         qualityCancelPromise.resolve(ABORT);
       }
       qualityCancelPromise = $q.defer();
 
-      //  return getService(detailed + qualityUrl + query + orgId + customer.value, qualityCancelPromise).then(function (response) {
-      return $http.get('modules/core/partnerReports/mediaQuality/mediaQualityFake.json').then(function (response) {
+      return getService(detailed + qualityUrl + query + orgId + customer.value, qualityCancelPromise).then(function (response) {
         if (response !== null && response !== undefined) {
-          var graphData = [];
           if (response.data.data.length > 0) {
-            graphData = response.data.data[0].data;
+            var graphData = response.data.data[0].data;
             angular.forEach(graphData, function (index) {
               index.totalCount = parseInt(index.details.totalCount);
               index.goodQualityCount = parseInt(index.details.goodQualityCount);
@@ -428,12 +418,13 @@
               index.poorQualityCount = parseInt(index.details.poorQualityCount);
               index.modifiedDate = moment(index.date).format(dateFormat);
             });
-            var graphBase = getDateBase(graphData[graphData.length - 1].modifiedDate);
+            var graphBase = getDateBase(graphData[graphData.length - 1].modifiedDate, time);
             angular.forEach(graphData, function (index) {
               graphBase = combineQualityGraphs(graphBase, index);
             });
+            return graphBase;
           }
-          return graphBase;
+          return [];
         }
       }, function (error) {
         var errorMessage = $translate.instant('mediaQuality.mediaError', {

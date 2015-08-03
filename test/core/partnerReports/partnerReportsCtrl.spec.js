@@ -7,18 +7,15 @@ describe('Controller: Partner Reports', function () {
   var dummyCustomers = getJSONFixture('core/json/partnerReports/customerResponse.json');
   var dummyGraphData = getJSONFixture('core/json/partnerReports/dummyGraphData.json');
   var dummyTableData = getJSONFixture('core/json/partnerReports/dummyTableData.json');
-  var dummyMediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
   var dummycallMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
   var dummyPopulationData = [{
     customerName: "Dummy Customer",
     customerId: "dummyId",
     percentage: 0
   }];
-
   var validateService = {
     invalidate: function () {}
   };
-
   var customerOptions = [{
     value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
     label: 'Test Org One'
@@ -29,7 +26,6 @@ describe('Controller: Partner Reports', function () {
     value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
     label: 'Test Org Two'
   }];
-
   var endpointResponse = [{
     orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
     deviceRegistrationCountTrend: '4',
@@ -41,6 +37,14 @@ describe('Controller: Partner Reports', function () {
     customer: 'Test Org One',
     direction: 'positive'
   }];
+  var dummyMediaQualityGraphData = {
+    totalCount: 200,
+    goodQualityCount: 194,
+    fairQualityCount: 5,
+    poorQualityCount: 1,
+    date: '2015-07-30T00:00:00-05:00',
+    modifiedDate: 'Jul 30, 2015'
+  };
 
   beforeEach(module('Core'));
 
