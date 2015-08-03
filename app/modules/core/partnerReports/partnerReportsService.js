@@ -427,7 +427,7 @@
           return [];
         }
       }, function (error) {
-        var errorMessage = $translate.instant('mediaQuality.mediaError', {
+        var errorMessage = $translate.instant('mediaQuality.mediaQualityGraphError', {
           customer: customer.label
         });
         return returnErrorCheck(error, 'Loading call quality data for customer ' + customer.label + ' failed.', errorMessage, []);
