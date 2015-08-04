@@ -30,25 +30,14 @@
     }
   }
 
-  DetailsBodyController.$inject = ['$state', '$rootScope', '$scope'];
-
-  function DetailsBodyController($state, $rootScope, $scope) {
+  /* @nginject */
+  function DetailsBodyController($state, $rootScope) {
     var vm = this;
     vm.closeDetails = closeDetails;
-
-    $scope.disableButton = false;
 
     function closeDetails() {
       $state.go('users.list');
       $rootScope.$broadcast('USER_LIST_UPDATED');
     }
-
-    $scope.$on('FORM_FIELD_INVALID', function () {
-      $scope.disableButton = true;
-    });
-
-    $scope.$on('FORM_FIELD_VALID', function () {
-      $scope.disableButton = false;
-    });
   }
 })();

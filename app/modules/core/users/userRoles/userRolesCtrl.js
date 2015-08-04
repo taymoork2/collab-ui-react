@@ -8,7 +8,6 @@ angular.module('Squared')
       }
 
       $scope.rolesObj = {};
-      var validFormField = true;
 
       var inArray = function (array, el) {
         for (var i = array.length; i--;) {
@@ -118,22 +117,6 @@ angular.module('Squared')
         resetForm();
       };
 
-      // Validate form field.
-      // Currently only validate if input is empty/blank.
-      $scope.validateFormField = function (formFieldObj) {
-        if (formFieldObj.$invalid) {
-          if (validFormField) {
-            $rootScope.$broadcast("FORM_FIELD_INVALID");
-            validFormField = false;
-          }
-        } else {
-          if (!validFormField) {
-            $rootScope.$broadcast("FORM_FIELD_VALID");
-            validFormField = true;
-          }
-        }
-      };
-
       $scope.updateRoles = function () {
 
         var choice = $scope.rolesObj.adminRadioValue;
@@ -199,25 +182,34 @@ angular.module('Squared')
 
         Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
           if (data.success) {
-            if ($scope.rolesObj.form.$dirty && $scope.currentUser) {
+            if ($scope.rolesObj.form.$dirty) {
               var userData = {
                 'schemas': Config.scimSchemas,
-                'title': $scope.currentUser.title,
-                'name': {
-                  'givenName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.givenName) : '',
-                  'familyName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.familyName) : ''
-                },
-                'displayName': $scope.currentUser.displayName,
+                'name': {},
                 'meta': {
                   'attributes': []
                 }
               };
-              // If name properties don't exist, delete names using meta attributes
-              if (!userData.name.givenName) {
-                userData.meta.attributes.push('name.givenName');
+              // Add or delete properties depending on whether or not their value is empty/blank.
+              // With property value set to "", the back-end will respond with a 400 error.
+              // Guidance from CI team is to not specify any property containing an empty string
+              // value. Instead, add the property to meta.attribute to have its value be deleted.
+              if ($scope.currentUser.name) {
+                if ($scope.currentUser.name.givenName) {
+                  userData.name["givenName"] = $sanitize($scope.currentUser.name.givenName);
+                } else {
+                  userData.meta.attributes.push('name.givenName');
+                }
+                if ($scope.currentUser.name.familyName) {
+                  userData.name["familyName"] = $sanitize($scope.currentUser.name.familyName);
+                } else {
+                  userData.meta.attributes.push('name.familyName');
+                }
               }
-              if (!userData.name.familyName) {
-                userData.meta.attributes.push('name.familyName');
+              if ($scope.currentUser.displayName) {
+                userData.displayName = $sanitize($scope.currentUser.displayName);
+              } else {
+                userData.meta.attributes.push('displayName');
               }
 
               Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');

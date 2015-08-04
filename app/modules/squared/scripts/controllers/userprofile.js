@@ -30,22 +30,36 @@ angular.module('Squared')
       $scope.updateUser = function () {
         var userData = {
           'schemas': Config.scimSchemas,
-          'title': $scope.user.title,
-          'name': {
-            'givenName': $scope.user.name ? $sanitize($scope.user.name.givenName) : '',
-            'familyName': $scope.user.name ? $sanitize($scope.user.name.familyName) : ''
-          },
-          'displayName': $scope.user.displayName,
+          'name': {},
           'meta': {
             'attributes': []
           }
         };
-        // If name properties don't exist, delete names using meta attributes
-        if (!userData.name.givenName) {
-          userData.meta.attributes.push('name.givenName');
+        // Add or delete properties depending on whether or not their value is empty/blank.
+        // With property value set to "", the back-end will respond with a 400 error.
+        // Guidance from CI team is to not specify any property containing an empty string
+        // value. Instead, add the property to meta.attribute to have its value be deleted.
+        if ($scope.user.name) {
+          if ($scope.user.name.givenName) {
+            userData.name["givenName"] = $sanitize($scope.user.name.givenName);
+          } else {
+            userData.meta.attributes.push('name.givenName');
+          }
+          if ($scope.user.name.familyName) {
+            userData.name["familyName"] = $sanitize($scope.user.name.familyName);
+          } else {
+            userData.meta.attributes.push('name.familyName');
+          }
         }
-        if (!userData.name.familyName) {
-          userData.meta.attributes.push('name.familyName');
+        if ($scope.user.displayName) {
+          userData.displayName = $sanitize($scope.user.displayName);
+        } else {
+          userData.meta.attributes.push('displayName');
+        }
+        if ($scope.user.title) {
+          userData.title = $sanitize($scope.user.title);
+        } else {
+          userData.meta.attributes.push('title');
         }
 
         Log.debug('Updating user: ' + userid + ' with data: ');
