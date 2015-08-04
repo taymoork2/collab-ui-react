@@ -310,7 +310,7 @@
   },
   "mediaQuality": {
     "mediaQuality": "Media Quality",
-    "totalCalls": "Total Calls",
+    "totalCalls": "Total Minutes",
     "good": "Good",
     "fair": "Fair",
     "poor": "Poor",

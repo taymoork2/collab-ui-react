@@ -15,6 +15,8 @@
     var registeredUrl = 'trend/managedOrgs/registeredEndpoints';
     var orgId = "&orgId=";
     var dateFormat = "MMM DD, YYYY";
+    var dayFormat = "MMM DD";
+    var monthFormat = "MMMM";
     var mostRecentUpdate = "";
     var customerList = null;
 
@@ -88,7 +90,11 @@
                 index.percentage = Math.round((parseInt(index.details.activeUsers) / parseInt(index.details.totalRegisteredUsers)) * 100);
                 index.activeUsers = parseInt(index.details.activeUsers);
                 index.totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
-                index.modifiedDate = moment(index.date).format(dateFormat);
+                if (time.value === 0 || time.value === 1) {
+                  index.modifiedDate = moment(index.date).format(dayFormat);
+                } else {
+                  index.modifiedDate = moment(index.date).format(monthFormat);
+                }
 
                 totalActive += index.activeUsers;
                 totalRegistered += index.totalRegisteredUsers;
@@ -295,7 +301,7 @@
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
           var customerData = activeUserCustomerGraphs[customer.value].graphData;
-          var graph = getDateBase(customerData[customerData.length - 1].modifiedDate, time);
+          var graph = getDateBase(customerData[customerData.length - 1].date, time);
           return combineMatchingDates(graph, customerData);
         }
         return [];
@@ -308,28 +314,28 @@
         totalRegisteredUsers: 0,
         activeUsers: 0,
         percentage: 0,
-        totalCount: 0,
-        goodQualityCount: 0,
-        fairQualityCount: 0,
-        poorQualityCount: 0
+        totalDurationSum: 0,
+        goodQualityDurationSum: 0,
+        fairQualityDurationSum: 0,
+        poorQualityDurationSum: 0
       };
       if (time.value === 0) {
         var offset = 0;
         for (var i = 6; i >= 0; i--) {
           dataPoint.date = moment(mostRecent).subtract(i, 'day').format();
-          dataPoint.modifiedDate = moment(mostRecent).subtract(i, 'day').format(dateFormat);
+          dataPoint.modifiedDate = moment(mostRecent).subtract(i, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
         for (var x = 3; x >= 0; x--) {
           dataPoint.date = moment(mostRecent).subtract(x * 7, 'day').format();
-          dataPoint.modifiedDate = moment(mostRecent).subtract(x * 7, 'day').format(dateFormat);
+          dataPoint.modifiedDate = moment(mostRecent).subtract(x * 7, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else {
         for (var y = 2; y >= 0; y--) {
           dataPoint.date = moment().subtract(y, 'month').startOf('month').format();
-          dataPoint.modifiedDate = moment().subtract(y, 'month').startOf('month').format(dateFormat);
+          dataPoint.modifiedDate = moment().subtract(y, 'month').startOf('month').format(monthFormat);
           graph.push(angular.copy(dataPoint));
         }
       }
@@ -412,15 +418,19 @@
           if (response.data.data.length > 0) {
             var graphData = response.data.data[0].data;
             angular.forEach(graphData, function (index) {
-              index.totalCount = parseInt(index.details.totalCount);
-              index.goodQualityCount = parseInt(index.details.goodQualityCount);
-              index.fairQualityCount = parseInt(index.details.fairQualityCount);
-              index.poorQualityCount = parseInt(index.details.poorQualityCount);
-              index.modifiedDate = moment(index.date).format(dateFormat);
+              index.totalDurationSum = parseInt(index.details.totalDurationSum);
+              index.goodQualityDurationSum = parseInt(index.details.goodQualityDurationSum);
+              index.fairQualityDurationSum = parseInt(index.details.fairQualityDurationSum);
+              index.poorQualityDurationSum = parseInt(index.details.poorQualityDurationSum);
+              if (time.value === 0 || time.value === 1) {
+                index.modifiedDate = moment(index.date).format(dayFormat);
+              } else {
+                index.modifiedDate = moment(index.date).format(monthFormat);
+              }
             });
-            var mostRecent = graphData[graphData.length - 1].modifiedDate;
-            if (mostRecent !== moment().format(dateFormat) && mostRecent !== moment().subtract(1, 'day').format(dateFormat)) {
-              mostRecent = moment().subtract(1, 'day').format(dateFormat);
+            var mostRecent = graphData[graphData.length - 1].date;
+            if (time.value === 0 && mostRecent !== moment() && mostRecent !== moment().subtract(1, 'day')) {
+              mostRecent = moment().subtract(1, 'day');
             }
             var graphBase = getDateBase(mostRecent, time);
             angular.forEach(graphData, function (index) {
@@ -441,10 +451,10 @@
     function combineQualityGraphs(graph, option) {
       angular.forEach(graph, function (index) {
         if (index.modifiedDate === option.modifiedDate) {
-          index.totalCount += option.totalCount;
-          index.goodQualityCount += option.goodQualityCount;
-          index.fairQualityCount += option.fairQualityCount;
-          index.poorQualityCount += option.poorQualityCount;
+          index.totalDurationSum += option.totalDurationSum;
+          index.goodQualityDurationSum += option.goodQualityDurationSum;
+          index.fairQualityDurationSum += option.fairQualityDurationSum;
+          index.poorQualityDurationSum += option.poorQualityDurationSum;
         }
       });
       return graph;

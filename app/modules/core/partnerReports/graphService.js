@@ -194,9 +194,9 @@
     }
 
     function createMediaQualityGraph(data) {
-      var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalCount]]</span></span>';
+      var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalDurationSum]]</span></span>';
       var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
-      var values = ['poorQualityCount', 'fairQualityCount', 'goodQualityCount'];
+      var values = ['poorQualityDurationSum', 'fairQualityDurationSum', 'goodQualityDurationSum'];
       var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue];
       var graphs = [];
 
@@ -210,7 +210,6 @@
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
         graphs[i].valueField = values[i];
-        graphs[i].labelText = '[[value]]';
         graphs[i].fontSize = 14;
         graphs[i].legendColor = colors[i];
         graphs[i].balloonText = mediaQualityBalloonText + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[value]]</span></span>';
@@ -224,9 +223,9 @@
 
       var valueAxes = [angular.copy(axis)];
       valueAxes[0].totalColor = Config.chartColors.brandWhite;
-      valueAxes[0].labelsEnabled = false;
       valueAxes[0].stackType = 'regular';
-      valueAxes[0].axisAlpha = 0;
+      valueAxes[0].integersOnly = true;
+      valueAxes[0].minimum = 0;
 
       var legend = angular.copy(legendBase);
       legend.reversedOrder = true;

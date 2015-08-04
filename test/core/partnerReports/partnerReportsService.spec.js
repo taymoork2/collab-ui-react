@@ -258,15 +258,15 @@ describe('Service: Partner Reports Service', function () {
     it('should get MediaQuality Metrics', function () {
       $httpBackend.whenGET(mediaQualityUrl + customers[0].customerOrgId).respond(mediaQualityGraphData);
       PartnerReportService.getMediaQualityMetrics(customer, timeFilter).then(function (data) {
-        expect(data[6].totalCount).toBe(parseInt(mediaQualityGraphData.data[0].data[0].details.totalCount));
-        expect(data[6].goodQualityCount).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.goodQualityCount));
-        expect(data[6].fairQualityCount).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.fairQualityCount));
-        expect(data[6].poorQualityCount).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.poorQualityCount));
+        expect(data[6].totalDurationSum).toBe(parseInt(mediaQualityGraphData.data[0].data[0].details.totalDurationSum));
+        expect(data[6].goodQualityDurationSum).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.goodQualityDurationSum));
+        expect(data[6].fairQualityDurationSum).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.fairQualityDurationSum));
+        expect(data[6].poorQualityDurationSum).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.poorQualityDurationSum));
 
-        expect(data[0].totalCount).toBe(0);
-        expect(data[0].goodQualityCount).toBe(0);
-        expect(data[0].fairQualityCount).toBe(0);
-        expect(data[0].poorQualityCount).toBe(0);
+        expect(data[0].totalDurationSum).toBe(0);
+        expect(data[0].goodQualityDurationSum).toBe(0);
+        expect(data[0].fairQualityDurationSum).toBe(0);
+        expect(data[0].poorQualityDurationSum).toBe(0);
       });
       $httpBackend.flush();
     });
