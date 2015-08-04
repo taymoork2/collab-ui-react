@@ -502,6 +502,7 @@
     "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
     "convertUsersText": "Convert employees of your organization who have signed up for Project Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
+    "convertError": " could not be converted. Contact support for assistance converting this user.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
     "name": "Name",
@@ -1171,6 +1172,7 @@
     "activeUsersTitle": "Daily Active Users",
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Files Shared",
+    "errGetPhoneNumberCount": "Failed to retrieve phone number count. Status: {{status}}",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
   },
   "trialModal": {
