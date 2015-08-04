@@ -55,7 +55,8 @@ describe('Spark UC Partner flow', function () {
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.click(partner.editLink);
+      utils.click(partner.termsActionButton);
+      utils.click(partner.editTermsButton);
 
       utils.expectIsDisplayed(partner.editTrialForm);
 
@@ -77,7 +78,8 @@ describe('Spark UC Partner flow', function () {
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.click(partner.editDidLink);
+      utils.click(partner.communicationActionButton);
+      utils.click(partner.editNumbersButton);
 
       utils.expectIsDisplayed(partner.customerDidInput);
       utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.one);
@@ -95,7 +97,8 @@ describe('Spark UC Partner flow', function () {
     });
 
     it('should delete extra did from the trial', function () {
-      utils.click(partner.editDidLink);
+      utils.click(partner.communicationActionButton);
+      utils.click(partner.editNumbersButton);
 
       utils.expectIsDisplayed(partner.customerDidInput);
       utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.one);
@@ -114,7 +117,8 @@ describe('Spark UC Partner flow', function () {
       utils.expectIsDisplayed(partner.previewPanel);
       utils.expectTextToBeSet(partner.didNumberSpan, '1');
 
-      utils.click(partner.editDidLink);
+      utils.click(partner.communicationActionButton);
+      utils.click(partner.editNumbersButton);
 
       utils.expectIsDisplayed(partner.customerDidInput);
       utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.one);

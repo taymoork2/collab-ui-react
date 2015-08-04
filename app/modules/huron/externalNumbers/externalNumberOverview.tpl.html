@@ -1,0 +1,37 @@
+<cs-sp-section ng-if="false">
+  <div class="section-title-row">
+    <span class="section-name" translate="customerPage.communications"></span>
+  </div>
+  <div class="feature-list">
+    <ul>
+      <li class="feature">
+        <a ui-sref="customer-overview.externalNumbers">
+          <span class="feature-name"><span translate="customerPage.phoneNumbers"></span> {{externalNumberOverview.noOfPhoneNumbers}}</span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+</cs-sp-section>
+
+<cs-sp-section>
+  <div class="section-title-row">
+    <span class="section-name" translate="customerPage.communications"></span>
+    <span class="actions-menu dropdown pull-right">
+      <button class="actions-button btn-none dropdown-toggle">
+        <i class="icon icon-three-dots"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-primary actions-services">
+        <li><a ui-sref="didadd({currentOrg: externalNumberOverview.currentCustomer})" translate="externalNumberPanel.editNumbers"></a></li>
+      </ul>
+    </span>
+  </div>
+  <div class="feature-list">
+    <ul>
+      <li class="feature">
+        <span class="feature-name" translate="customerPage.phoneNumbers"></span>
+        <span class="feature-details"><span id="didNumberSpan" ng-if="externalNumberOverview.noOfPhoneNumbers">{{externalNumberOverview.noOfPhoneNumbers}}</span><span ng-if="!externalNumberOverview.noOfPhoneNumbers" translate="customerPage.none"></span></span>
+      </li>
+    </ul>
+  </div>
+</cs-sp-section>

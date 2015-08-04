@@ -468,7 +468,9 @@
     "on": "On",
     "off": "Off",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "all": "All",
+    "pending": "Pending"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1132,6 +1134,11 @@
     "disableVoicemailTitle": "Disable Voicemail",
     "disableVoicemailDialogue": "Disabling voicemail will permanently remove all of the user's voicemail messages.  Do you want to disable this user's voicemail?"
   },
+  "externalNumberPanel": {
+    "phoneNumbers": "Phone Numbers",
+    "addNumbers": "Add Numbers",
+    "editNumbers": "Edit Phone Numbers"
+  },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",
     "noResults": "No Results",
@@ -1172,7 +1179,7 @@
     "activeUsersTitle": "Daily Active Users",
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Files Shared",
-    "errGetPhoneNumberCount": "Failed to retrieve phone number count. Status: {{status}}",
+    "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
   },
   "trialModal": {
@@ -1226,13 +1233,14 @@
     "contactEmail": "Email",
     "contactPhone": "Phone",
     "launchButton": "Launch Customer Portal",
-    "edit": "Edit",
+    "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
-    "licenses": "Number of licenses",
+    "trialOverview": "Trial",
+    "licenses": "Number of Licenses",
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
-    "daysLeft": "day(s) left",
+    "daysLeft": "Day(s) left",
     "allTrials": "All",
     "activeTrials": "Active Trials",
     "expiring": "Trial Expiring",
@@ -1240,7 +1248,6 @@
     "unused": "unused licenses",
     "uploadNumbers": "Upload Numbers",
     "overPlan": "over plan limit",
-    "communication": "Communication",
     "phoneNumbers": "Phone Numbers",
     "none": "None"
   },
