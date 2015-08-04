@@ -418,7 +418,11 @@
               index.poorQualityCount = parseInt(index.details.poorQualityCount);
               index.modifiedDate = moment(index.date).format(dateFormat);
             });
-            var graphBase = getDateBase(graphData[graphData.length - 1].modifiedDate, time);
+            var mostRecent = graphData[graphData.length - 1].modifiedDate;
+            if (mostRecent !== moment().format(dateFormat) && mostRecent !== moment().subtract(1, 'day').format(dateFormat)) {
+              mostRecent = moment().subtract(1, 'day').format(dateFormat);
+            }
+            var graphBase = getDateBase(mostRecent, time);
             angular.forEach(graphData, function (index) {
               graphBase = combineQualityGraphs(graphBase, index);
             });
