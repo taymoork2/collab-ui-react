@@ -7,6 +7,7 @@ describe('Service: Partner Reports Service', function () {
   beforeEach(module('Core'));
 
   var dateFormat = "MMM DD, YYYY";
+  var dayFormat = "MMM DD";
   var timeFilter = {
     value: 0
   };
@@ -32,7 +33,7 @@ describe('Service: Partner Reports Service', function () {
     label: ""
   };
   var customerDatapoint = {
-    modifiedDate: "Apr 10, 2015",
+    modifiedDate: "Apr 10",
     totalRegisteredUsers: 14,
     activeUsers: 14,
     percentage: 100

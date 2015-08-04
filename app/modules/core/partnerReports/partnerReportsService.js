@@ -428,11 +428,13 @@
                 index.modifiedDate = moment(index.date).format(monthFormat);
               }
             });
-            var mostRecent = graphData[graphData.length - 1].date;
-            if (time.value === 0 && mostRecent !== moment() && mostRecent !== moment().subtract(1, 'day')) {
-              mostRecent = moment().subtract(1, 'day');
+            var mostRecent = moment(graphData[graphData.length - 1].date).format(dateFormat);
+            var graphBase = [];
+            if (time.value === 0 && mostRecent !== moment().format(dateFormat) && mostRecent !== moment().subtract(1, 'day').format(dateFormat)) {
+              graphBase = getDateBase(moment().subtract(1, 'day'), time);
+            } else {
+              graphBase = getDateBase(graphData[graphData.length - 1].date, time);
             }
-            var graphBase = getDateBase(mostRecent, time);
             angular.forEach(graphData, function (index) {
               graphBase = combineQualityGraphs(graphBase, index);
             });

@@ -38,10 +38,10 @@ describe('Controller: Partner Reports', function () {
     direction: 'positive'
   }];
   var dummyMediaQualityGraphData = {
-    totalCount: 200,
-    goodQualityCount: 194,
-    fairQualityCount: 5,
-    poorQualityCount: 1,
+    totalDurationSum: 200,
+    goodQualityDurationSum: 194,
+    fairQualityDurationSum: 5,
+    poorQualityDurationSum: 1,
     date: '2015-07-30T00:00:00-05:00',
     modifiedDate: 'Jul 30, 2015'
   };

@@ -8,7 +8,14 @@ describe('Service: Graph Service', function () {
   };
 
   var dummyGraphData = getJSONFixture('core/json/partnerReports/dummyGraphData.json');
-  var mediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
+  var mediaQualityGraphData = {
+    totalDurationSum: 200,
+    goodQualityDurationSum: 194,
+    fairQualityDurationSum: 5,
+    poorQualityDurationSum: 1,
+    date: '2015-07-30T00:00:00-05:00',
+    modifiedDate: 'Jul 30, 2015'
+  };
   var dummyPopulationData = [{
     customerName: "Dummy Customer",
     percentage: 0
