@@ -104,6 +104,7 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(SharedLineInfoService, 'associateLineEndpoint').and.returnValue($q.when());
     spyOn(SharedLineInfoService, 'disassociateLineEndpoint').and.returnValue($q.when());
     spyOn(SharedLineInfoService, 'getSharedLineDevices').and.callThrough();
+    spyOn(SharedLineInfoService, 'updateLineEndpoint').and.returnValue($q.when());
 
     //Sharedline
 
@@ -274,6 +275,26 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(LineSettings.disassociateInternalLine).toHaveBeenCalledWith(currentUser.id, telephonyInfoSecondLine.currentDirectoryNumber.userDnUuid);
       expect(SharedLineInfoService.disassociateSharedLineUser).not.toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    });
+  });
+
+  describe('saveLineSettings', function () {
+    beforeEach(function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnlyShared);
+      controller.init();
+      $scope.$apply();
+      controller.cfModel.forward = 'none';
+      controller.selectedUsers.push(selectedUsers[0]);
+      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
+    });
+
+    it('should show error on updateLineEndpoint call failure', function () {
+      SharedLineInfoService.getSharedLineDevices.and.returnValue(sharedLineEndpoints);
+      SharedLineInfoService.updateLineEndpoint.and.returnValue($q.reject());
+      controller.saveLineSettings();
+      $scope.$apply();
+      expect(SharedLineInfoService.updateLineEndpoint).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 

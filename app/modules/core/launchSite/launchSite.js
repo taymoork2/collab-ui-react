@@ -1,21 +1,23 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LaunchSiteCtrl', ['$scope', '$sce',
-    function ($scope, $sce) {
+  .controller('LaunchSiteCtrl', ['$scope', '$sce', '$timeout',
+    function ($scope, $sce, $timeout) {
 
       $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);
       };
 
       $scope.getId = function (url) {
-        var domain = new URL($scope.webexAdvancedUrl).hostname;
-        return domain.replace(/\./g, '-');
+        var match = url.match(/^https?\:\/\/([^:\/?#]*)/);
+        return match[1].replace(/\./g, '-');
       };
 
       $scope.submitForm = function () {
-        var id = '#hiddenButton-' + $scope.getId($scope.webexAdvancedUrl);
-        angular.element(id).click();
+        $timeout(function () {
+          var id = '#hiddenButton-' + $scope.getId($scope.webexAdvancedUrl);
+          angular.element(id).trigger('click');
+        }, 0);
       };
 
     }
