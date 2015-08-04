@@ -484,8 +484,17 @@ angular.module('Core')
           if (angular.isDefined(results) && angular.isDefined(results.length) && results.length >= 0) {
             $scope.noOfPhoneNumbers = results.length;
           }
-        }).catch(function () {
+        }).catch(function (response) {
           $scope.noOfPhoneNumbers = 0;
+          if (angular.isDefined(response.data.errorMessage)) {
+            Notification.notify([$translate.instant('partnerHomePage.errGetPhoneNumberCount', {
+              status: response.data.errorMessage
+            })], 'error');
+          } else {
+            Notification.notify([$translate.instant('partnerHomePage.errGetPhoneNumberCount', {
+              status: response.statusText
+            })], 'error');
+          }
         });
       }
 

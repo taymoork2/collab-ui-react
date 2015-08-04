@@ -1172,6 +1172,7 @@
     "activeUsersTitle": "Daily Active Users",
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Files Shared",
+    "errGetPhoneNumberCount": "Failed to retrieve phone number count. Status: {{status}}",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
   },
   "trialModal": {

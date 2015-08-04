@@ -239,6 +239,10 @@
       customerId: '@customerId',
       sipendpointId: '@sipendpointId',
       endpointDnAssnId: '@endpointDnAssnId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   })
 
