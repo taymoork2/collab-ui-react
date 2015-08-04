@@ -44,15 +44,14 @@
             return $q.defer().reject();
           }
 
-          function success(res) {
-            var data = res.data;
+          function success(code) {
             $scope.showAdd = false;
 
-            if (data.activationCode && data.activationCode.length > 0) {
-              $scope.activationCode = formatActivationCode(data.activationCode);
+            if (code.activationCode && code.activationCode.length > 0) {
+              $scope.activationCode = formatActivationCode(code.activationCode);
             }
 
-            if (!data.emailConfCode && !data.conversationId) {
+            if (!code.emailConfCode && !code.conversationId) {
               $scope.notificationsFailed = true;
             }
           }

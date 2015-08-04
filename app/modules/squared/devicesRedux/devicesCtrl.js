@@ -5,16 +5,16 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, DeviceFilter, CodeListService, DeviceListService, CsdmCodeService, CsdmDeviceService) {
+    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmDeviceService) {
       var vm = this;
 
       vm.deviceFilter = DeviceFilter;
 
-      vm.codesListSubscription = CodeListService.subscribe(angular.noop, {
+      vm.codesListSubscription = CsdmCodeService.subscribe(angular.noop, {
         scope: $scope
       });
 
-      vm.deviceListSubscription = DeviceListService.subscribe(angular.noop, {
+      vm.deviceListSubscription = CsdmDeviceService.subscribe(angular.noop, {
         scope: $scope
       });
 
@@ -23,7 +23,6 @@ angular.module('Squared')
           .extend(CsdmDeviceService.getDeviceList())
           .extend(CsdmCodeService.getCodeList())
           .values()
-          .uniq('cisUuid')
           .value();
         return DeviceFilter.getFilteredList(filtered);
       };
@@ -36,22 +35,25 @@ angular.module('Squared')
         headerRowHeight: 44,
         sortInfo: {
           directions: ['asc'],
-          fields: ['readableState', 'displayName']
+          fields: ['displayName']
         },
         rowTemplate: getTemplate('_rowTpl'),
 
         columnDefs: [{
           field: 'displayName',
           displayName: 'Belongs to',
-          cellTemplate: getTemplate('_nameTpl')
+          cellTemplate: getTemplate('_nameTpl'),
+          sortFn: sortFn
         }, {
           field: 'readableState',
           displayName: 'Status',
-          cellTemplate: getTemplate('_statusTpl')
+          cellTemplate: getTemplate('_statusTpl'),
+          sortFn: sortFn
         }, {
           field: 'product',
           displayName: 'Type',
-          cellTemplate: getTemplate('_productTpl')
+          cellTemplate: getTemplate('_productTpl'),
+          sortFn: sortFn
         }]
       };
 
@@ -64,6 +66,13 @@ angular.module('Squared')
 
       function getTemplate(name) {
         return $templateCache.get('modules/squared/devicesRedux/templates/' + name + '.html');
+      }
+
+      function sortFn(a, b) {
+        if (a && a.localeCompare) {
+          return a.localeCompare(b);
+        }
+        return 1;
       }
 
     }
