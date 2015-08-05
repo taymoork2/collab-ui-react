@@ -13,21 +13,21 @@ describe('CsdmConverterSpec', function () {
     var arr = [{
       activationCode: '1111222233334444'
     }];
-    expect(converter.convert(arr)[0].readableActivationCode).toBe('1111 2222 3333 4444');
+    expect(converter.convertDevices(arr)[0].readableActivationCode).toBe('1111 2222 3333 4444');
   });
 
   it('should add needsActivation flag', function () {
     var arr = [{
       state: 'UNCLAIMED'
     }];
-    expect(converter.convert(arr)[0].needsActivation).toBeTruthy();
+    expect(converter.convertDevices(arr)[0].needsActivation).toBeTruthy();
   });
 
   it('unknown product should be cleared', function () {
     var arr = [{
       product: 'UNKNOWN'
     }];
-    expect(converter.convert(arr)[0].product).toBe('');
+    expect(converter.convertDevices(arr)[0].product).toBe('');
   });
 
   it('should set isOnline when status is CONNECTED', function () {
@@ -36,7 +36,7 @@ describe('CsdmConverterSpec', function () {
         connectionStatus: 'CONNECTED'
       }
     }];
-    expect(converter.convert(arr)[0].isOnline).toBeTruthy();
+    expect(converter.convertDevices(arr)[0].isOnline).toBeTruthy();
   });
 
   it('should not set isOnline when status isnt CONNECTED', function () {
@@ -45,7 +45,7 @@ describe('CsdmConverterSpec', function () {
         connectionStatus: 'foo'
       }
     }];
-    expect(converter.convert(arr)[0].isOnline).toBeFalsy();
+    expect(converter.convertDevices(arr)[0].isOnline).toBeFalsy();
   });
 
   describe('pass thru fields', function () {
@@ -54,35 +54,35 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         displayName: 'bar'
       }];
-      expect(converter.convert(arr)[0].displayName).toBe('bar');
+      expect(converter.convertDevices(arr)[0].displayName).toBe('bar');
     });
 
     it('mac', function () {
       var arr = [{
         mac: 'bar'
       }];
-      expect(converter.convert(arr)[0].mac).toBe('bar');
+      expect(converter.convertDevices(arr)[0].mac).toBe('bar');
     });
 
     it('product', function () {
       var arr = [{
         product: 'bar'
       }];
-      expect(converter.convert(arr)[0].product).toBe('bar');
+      expect(converter.convertDevices(arr)[0].product).toBe('bar');
     });
 
     it('serial', function () {
       var arr = [{
         serial: 'bar'
       }];
-      expect(converter.convert(arr)[0].serial).toBe('bar');
+      expect(converter.convertDevices(arr)[0].serial).toBe('bar');
     });
 
     it('url', function () {
       var arr = [{
         url: 'foo'
       }];
-      expect(converter.convert(arr)[0].url).toBe('foo');
+      expect(converter.convertDevices(arr)[0].url).toBe('foo');
     });
 
   }); // pass thru fields
@@ -96,16 +96,16 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convert(arr)[0].readableState).toBe('CsdmStatus.issuesDetected');
-      expect(converter.convert(arr)[0].cssColorClass).toBe('device-status-red');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.issuesDetected');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 
     it('should convert state UNCLAIMED to Needs Activation and yellow', function () {
       var arr = [{
         state: 'UNCLAIMED'
       }];
-      expect(converter.convert(arr)[0].readableState).toBe('CsdmStatus.NeedsActivation');
-      expect(converter.convert(arr)[0].cssColorClass).toBe('device-status-yellow');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.NeedsActivation');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
     });
 
     it('should convert state CLAIMED and connection status CONNECTED to Online and green', function () {
@@ -115,8 +115,8 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convert(arr)[0].readableState).toBe('CsdmStatus.Online');
-      expect(converter.convert(arr)[0].cssColorClass).toBe('device-status-green');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-green');
     });
 
     it('should convert state CLAIMED and connection status UNKNOWN to Offline and gray', function () {
@@ -126,22 +126,22 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN'
         }
       }];
-      expect(converter.convert(arr)[0].readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convert(arr)[0].cssColorClass).toBe('device-status-gray');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
     });
 
     it('should convert state CLAIMED and no connection status to Offline and gray', function () {
       var arr = [{
         state: 'CLAIMED'
       }];
-      expect(converter.convert(arr)[0].readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convert(arr)[0].cssColorClass).toBe('device-status-gray');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
     });
 
     it('should convert null state and null connection status to Unknown and yellow', function () {
       var arr = [{}];
-      expect(converter.convert(arr)[0].readableState).toBe('CsdmStatus.Unknown');
-      expect(converter.convert(arr)[0].cssColorClass).toBe('device-status-yellow');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Unknown');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
     });
 
   }); // aggregatedState & cssColorClass
@@ -157,14 +157,14 @@ describe('CsdmConverterSpec', function () {
           }]
         }
       }];
-      expect(converter.convert(arr)[0].software).toBe('sw_version');
+      expect(converter.convertDevices(arr)[0].software).toBe('sw_version');
     });
 
     it('should not fail when no software events', function () {
       var arr = [{
         status: {}
       }];
-      expect(converter.convert(arr)[0].software).toBeFalsy();
+      expect(converter.convertDevices(arr)[0].software).toBeFalsy();
     });
   });
 
@@ -179,7 +179,7 @@ describe('CsdmConverterSpec', function () {
           }]
         }
       }];
-      expect(converter.convert(arr)[0].ip).toBe('ip_addr');
+      expect(converter.convertDevices(arr)[0].ip).toBe('ip_addr');
     });
   });
 
@@ -194,8 +194,8 @@ describe('CsdmConverterSpec', function () {
           }]
         }
       }];
-      expect(converter.convert(arr)[0].diagnosticsEvents[0].type).toBe('Potential Loss of Video Quality');
-      expect(converter.convert(arr)[0].diagnosticsEvents[0].message).toBe('This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues.');
+      expect(converter.convertDevices(arr)[0].diagnosticsEvents[0].type).toBe('Potential Loss of Video Quality');
+      expect(converter.convertDevices(arr)[0].diagnosticsEvents[0].message).toBe('This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues.');
     });
 
     it('should show unknown error occured when not in translate file and no description', function () {
@@ -207,8 +207,8 @@ describe('CsdmConverterSpec', function () {
           }]
         }
       }];
-      expect(converter.convert(arr)[0].diagnosticsEvents[0].type).toBe('CsdmStatus.errorCodes.unknown.type');
-      expect(converter.convert(arr)[0].diagnosticsEvents[0].message).toBe('CsdmStatus.errorCodes.unknown.message');
+      expect(converter.convertDevices(arr)[0].diagnosticsEvents[0].type).toBe('CsdmStatus.errorCodes.unknown.type');
+      expect(converter.convertDevices(arr)[0].diagnosticsEvents[0].message).toBe('CsdmStatus.errorCodes.unknown.message');
     });
   });
 
@@ -219,7 +219,7 @@ describe('CsdmConverterSpec', function () {
           level: 'not_ok'
         }
       }];
-      expect(converter.convert(arr)[0].hasIssues).toBeTruthy();
+      expect(converter.convertDevices(arr)[0].hasIssues).toBeTruthy();
     });
 
     it('has does not have issues when status.level is ok', function () {
@@ -228,7 +228,7 @@ describe('CsdmConverterSpec', function () {
           level: 'OK'
         }
       }];
-      expect(converter.convert(arr)[0].hasIssues).toBeFalsy();
+      expect(converter.convertDevices(arr)[0].hasIssues).toBeFalsy();
     });
   });
 
@@ -239,7 +239,7 @@ describe('CsdmConverterSpec', function () {
           level: 'not_ok'
         }
       }];
-      expect(converter.convert(arr)[0].hasIssues).toBeTruthy();
+      expect(converter.convertDevices(arr)[0].hasIssues).toBeTruthy();
     });
 
     it('has does not have issues when status.level is ok', function () {
@@ -248,7 +248,7 @@ describe('CsdmConverterSpec', function () {
           level: 'OK'
         }
       }];
-      expect(converter.convert(arr)[0].hasIssues).toBeFalsy();
+      expect(converter.convertDevices(arr)[0].hasIssues).toBeFalsy();
     });
   });
 });

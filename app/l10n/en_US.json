@@ -310,7 +310,7 @@
   },
   "mediaQuality": {
     "mediaQuality": "Media Quality",
-    "totalCalls": "Total Calls",
+    "totalCalls": "Total Minutes",
     "good": "Good",
     "fair": "Fair",
     "poor": "Poor",
@@ -687,6 +687,8 @@
     "activationDateHeader": "Activation Date",
     "addDeviceStep1": "Where will this device be installed?",
     "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
+    "addDeviceStep2": "Your activation code has been created",
+    "addDeviceStep2Desc": "Once you use this activation code it will magically turn into a device and unicorns will sing.",
     "emptyDevices1": "Once you add a new device,",
     "emptyDevices2": "you'll see it listed here.",
     "deleteDevice": "Delete Device",

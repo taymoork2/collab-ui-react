@@ -407,6 +407,7 @@ angular.module('Core')
           yellow: '#EBC31C',
           green: '#50D71D',
           brandSuccessDark: '#6ab140',
+          brandSuccess: "#7cc153",
           brandSuccessLight: '#99cf78',
           brandWhite: '#fff',
           grayDarkest: '#444',

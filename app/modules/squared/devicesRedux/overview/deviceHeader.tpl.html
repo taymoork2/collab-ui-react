@@ -1,4 +1,5 @@
 <cs-sp-header>
+
   <div class="header-image">
     <div class="device-img">
       <i style="top: 15px"
@@ -6,16 +7,21 @@
         ng-class="{'needs-activation': deviceOverview.currentDevice.needsActivation}"></i>
     </div>
   </div>
+
   <div class="header-info">
     <div class="header-info-wrap">
-      <div class="header-title" ng-show="deviceOverview.currentDevice.needsActivation">
+      <div 
+        class="header-title" 
+        title="{{deviceOverview.currentDevice.displayName}}"
+        ng-show="deviceOverview.currentDevice.needsActivation">
         {{deviceOverview.currentDevice.displayName}}
       </div>
       <sq-editable-input
-        ng-hide="deviceOverview.currentDevice.needsActivation"
         sq-save="deviceOverview.save(newText)"
-        ng-model="deviceOverview.currentDevice.displayName">
+        ng-model="deviceOverview.currentDevice.displayName"
+        ng-hide="deviceOverview.currentDevice.needsActivation">
       </sq-editable-input>
     </div>
   </div>
+
 </cs-sp-header>

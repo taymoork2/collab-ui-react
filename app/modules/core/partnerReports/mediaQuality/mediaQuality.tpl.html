@@ -10,18 +10,16 @@
       <hr class="title-break pull-left"/>
     </div>
   </div>
-  <div>
-    <div class="row ">
-      <div class="graph-align">
-        <div class="report-description" translate="mediaQuality.description"></div>
-        <div id="mediaQualityDiv" class="media-timechartDiv"></div>
-        <div id="mediaQualityRefreshDiv" class="spinner-position" ng-show="nav.isRefresh(nav.mediaQualityRefresh)">
-          <div class="media-timechartDiv clear-graph"></div>
-          <i class='media-quality-status icon icon-spinner icon-2x'></i>
-        </div>
-        <div class="no-data-center" ng-show="nav.isEmpty(nav.mediaQualityRefresh)">
-          <h3 class="no-data" translate="reportsPage.noData"></h3>
-        </div>
+  <div class="row ">
+    <div class="graph-align">
+      <div class="report-description" translate="mediaQuality.description"></div>
+      <div id="mediaQualityDiv" class="barchart"></div>
+      <div id="mediaQualityRefreshDiv" class="spinner-position" ng-show="nav.isRefresh(nav.mediaQualityRefresh)">
+        <div class="clear-graph"></div>
+        <i class='media-quality-status icon icon-spinner icon-2x'></i>
+      </div>
+      <div class="no-data-center" ng-show="nav.isEmpty(nav.mediaQualityRefresh)">
+        <h3 class="no-data" translate="reportsPage.noData"></h3>
       </div>
     </div>
   </div> 

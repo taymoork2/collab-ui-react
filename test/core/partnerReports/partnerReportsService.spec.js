@@ -7,6 +7,7 @@ describe('Service: Partner Reports Service', function () {
   beforeEach(module('Core'));
 
   var dateFormat = "MMM DD, YYYY";
+  var dayFormat = "MMM DD";
   var timeFilter = {
     value: 0
   };
@@ -17,7 +18,6 @@ describe('Service: Partner Reports Service', function () {
   var customerData = {
     'organizations': getJSONFixture('core/json/partnerReports/customerResponse.json')
   };
-  var mediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
   var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
   var registeredEndpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
 
@@ -33,7 +33,7 @@ describe('Service: Partner Reports Service', function () {
     label: ""
   };
   var customerDatapoint = {
-    modifiedDate: "Apr 10, 2015",
+    modifiedDate: "Apr 10",
     totalRegisteredUsers: 14,
     activeUsers: 14,
     percentage: 100
@@ -83,13 +83,29 @@ describe('Service: Partner Reports Service', function () {
     customer: 'Test Org One',
     direction: 'negative'
   }];
-  var qualityResponse = {
-    totalCount: 200,
-    goodQualityCount: 194,
-    fairQualityCount: 5,
-    poorQualityCount: 1,
-    date: '2015-07-30T00:00:00-05:00',
-    modifiedDate: 'Jul 30, 2015'
+  var mediaQualityGraphData = {
+    "data": [{
+      "orgId": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
+      "orgName": "Huron Int Test 1",
+      "data": [{
+        "date": moment().format(),
+        "details": {
+          "totalCount": "200",
+          "totalDurationSum": "3605",
+          "totalDurationAvg": "1",
+          "goodQualityCount": "194",
+          "goodQualityDurationSum": "3585",
+          "goodQualityDurationAvg": "18.479381",
+          "fairQualityCount": "5",
+          "fairQualityDurationSum": "10",
+          "fairQualityDurationAvg": "2",
+          "poorQualityCount": "1",
+          "poorQualityDurationSum": "10",
+          "poorQualityDurationAvg": "10"
+        }
+      }]
+    }],
+    "date": "2015-04-20"
   };
 
   var Authinfo = {
@@ -243,15 +259,15 @@ describe('Service: Partner Reports Service', function () {
     it('should get MediaQuality Metrics', function () {
       $httpBackend.whenGET(mediaQualityUrl + customers[0].customerOrgId).respond(mediaQualityGraphData);
       PartnerReportService.getMediaQualityMetrics(customer, timeFilter).then(function (data) {
-        expect(data[6].totalCount).toBe(qualityResponse.totalCount);
-        expect(data[6].goodQualityCount).toEqual(qualityResponse.goodQualityCount);
-        expect(data[6].fairQualityCount).toEqual(qualityResponse.fairQualityCount);
-        expect(data[6].poorQualityCount).toEqual(qualityResponse.poorQualityCount);
+        expect(data[6].totalDurationSum).toBe(parseInt(mediaQualityGraphData.data[0].data[0].details.totalDurationSum));
+        expect(data[6].goodQualityDurationSum).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.goodQualityDurationSum));
+        expect(data[6].fairQualityDurationSum).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.fairQualityDurationSum));
+        expect(data[6].poorQualityDurationSum).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.poorQualityDurationSum));
 
-        expect(data[0].totalCount).toBe(0);
-        expect(data[0].goodQualityCount).toBe(0);
-        expect(data[0].fairQualityCount).toBe(0);
-        expect(data[0].poorQualityCount).toBe(0);
+        expect(data[0].totalDurationSum).toBe(0);
+        expect(data[0].goodQualityDurationSum).toBe(0);
+        expect(data[0].fairQualityDurationSum).toBe(0);
+        expect(data[0].poorQualityDurationSum).toBe(0);
       });
       $httpBackend.flush();
     });
