@@ -5,7 +5,7 @@ angular.module('Squared')
   .controller('DevicesCtrlRedux',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmDeviceService) {
+    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmDeviceService, AddDeviceModal) {
       var vm = this;
 
       vm.deviceFilter = DeviceFilter;
@@ -62,6 +62,10 @@ angular.module('Squared')
         $state.go('device-overview-redux', {
           currentDevice: device
         });
+      };
+
+      vm.showAddDeviceDialog = function () {
+        AddDeviceModal.open();
       };
 
       function getTemplate(name) {

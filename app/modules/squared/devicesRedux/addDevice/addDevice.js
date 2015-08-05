@@ -6,15 +6,13 @@
 
       /* @ngInject */
       function ($scope, $q, Notification, CsdmCodeService, XhrNotificationService, $timeout) {
-        $scope.showAdd = true;
-        $scope.deviceName = '';
-        $scope.activationCode = '';
+        var adc = this;
 
-        $('#addRoomDialog').on('shown.bs.modal', function () {
-          $('#newRoom').focus();
-        });
+        adc.showAdd = true;
+        adc.deviceName = '';
+        adc.activationCode = '';
 
-        $scope.$watch('showAdd', function (shown) {
+        $scope.$watch('adc.showAdd', function (shown) {
           if (shown) {
             $timeout(function () {
               $('#newRoom').focus();
@@ -26,49 +24,56 @@
           return activationCode ? activationCode.match(/.{4}/g).join(' ') : '';
         };
 
-        $scope.resetAddDevice = function () {
-          $scope.showAdd = true;
-          $scope.deviceName = '';
-          $scope.notificationsFailed = false;
+        adc.resetAddDevice = function () {
+          adc.showAdd = true;
+          adc.deviceName = '';
+          adc.notificationsFailed = false;
         };
 
-        $scope.showCopiedToClipboardMessage = function () {
+        adc.showCopiedToClipboardMessage = function () {
           $('#copyCodeToClipboardButton i').tooltip('show');
           setTimeout(function () {
             $('#copyCodeToClipboardButton i').tooltip('destroy');
           }, 3000);
         };
 
-        $scope.addDevice = function (callback) {
-          if (!$scope.deviceName) {
+        adc.addDevice = function (callback) {
+          if (!adc.deviceName) {
             return $q.defer().reject();
           }
 
           function success(code) {
-            $scope.showAdd = false;
+            adc.showAdd = false;
 
             if (code.activationCode && code.activationCode.length > 0) {
-              $scope.activationCode = formatActivationCode(code.activationCode);
+              adc.activationCode = formatActivationCode(code.activationCode);
             }
 
             if (!code.emailConfCode && !code.conversationId) {
-              $scope.notificationsFailed = true;
+              adc.notificationsFailed = true;
             }
           }
 
           return CsdmCodeService
-            .createCode($scope.deviceName)
+            .createCode(adc.deviceName)
             .then(success, XhrNotificationService.notify);
         };
       }
 
     )
-    .directive('squaredAddDevice',
-      function () {
+    .service('AddDeviceModal',
+      /* @ngInject */
+      function ($modal) {
+        function open() {
+          return $modal.open({
+            controllerAs: 'adc',
+            controller: 'AddDeviceController',
+            templateUrl: 'modules/squared/devicesRedux/addDevice/addDevice.html'
+          }).result;
+        }
+
         return {
-          restrict: 'E',
-          controller: 'AddDeviceController',
-          templateUrl: 'modules/squared/devicesRedux/addDevice/addDevice.html'
+          open: open
         };
       }
     );

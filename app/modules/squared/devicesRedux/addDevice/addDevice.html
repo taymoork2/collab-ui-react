@@ -1,108 +1,91 @@
-<div 
-  tabindex="-1" 
-  role="dialog" 
-  class="modal fade" 
-  id="addRoomDialog" 
-  aria-hidden="true"
-  aria-labelledby="addRoomTitle" >
+<div id="addDeviceModal">
 
-  <div class="modal-dialog add-device-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button id="device-modal-close" type="button" class="close" data-dismiss="modal">
-          
-          <span class="sr-only">Close</span>
-        </button>
-        <h3 class="modal-title" id="addRoomTitle" translate="spacesPage.modalTitle"></h3>
+  <div class="modal-header">
+    <button 
+      type="button" 
+      class="close" 
+      ng-click="$dismiss()">
+    </button>
+    <h3 
+      class="modal-title" 
+      translate="spacesPage.modalTitle">
+    </h3>
+  </div>
+
+  <div class="modal-body">
+    <div ng-show="notificationsFailed" class="alert alert-warning">
+      Activation Code created sucessfully, but notifications failed to transmit.
+    </div>
+
+    <form onsubmit="$('#create-code-button').click()" ng-show="adc.showAdd">
+      <h4 translate="spacesPage.addDeviceStep1"></h4>
+      <p translate="spacesPage.addDeviceStep1Desc"></p>
+      <div>
+        <input 
+          required
+          type="text"
+          id="newRoom"
+          name="roomName"
+          focus-on="adc.showAdd"
+          ng-model="adc.deviceName"
+          placeholder="Room or shared space name"
+          class="form-control">
+        </input>
+
       </div>
+    </form>
 
-      <div ng-show="notificationsFailed" class="alert alert-warning">
-        Activation Code created sucessfully, but notifications failed to transmit.
-      </div>
+    <div class="device-added clearfix" ng-show="!adc.showAdd">
+      <h4>
+        Activation code for <b>{{adc.deviceName}}</b> has been created:
+      </h4>
 
-      <div class="modal-body">
-
-        <h4 translate="spacesPage.addDeviceStep1" class="adddevice-stepheader"></h4>
-        <p translate="spacesPage.addDeviceStep1Desc" class="adddevice-desc"></p>
-
-        <form ng-submit="addDevice()">
-          <div ng-show="showAdd">
-
-            <input 
-              required
-              type="text"
-              id="newRoom"
-              name="roomName"
-              ng-model="deviceName"
-              placeholder="Room or shared space name"
-              class="form-control profile-input adddevice-desc add-device-textbox">
-            </input>
-
-            <button
-              sq-click-promise="addDevice()"
-              class="btn btn-primary btn-lg"
-              ng-disabled="!deviceName.length">
-              <span 
-                translate="spacesPage.add">
-              </span>
-            </sq-loader-button>
-
-          </div>
-        </form>
-
-        <div 
-          id="deviceAddCard" 
-          ng-show="!showAdd"
-          class="modal-deviceadd-card" >
-          <img 
-            src="images/SX10.png" 
-            class="pull-left"
-          />
-          <p 
-            class="adddevice-desc device-card-content-name pull-left">
-            SX10
-          </p>
-          <p 
-            id="confirmDeviceName" 
-            class="adddevice-desc device-card-content pull-left">
-            {{deviceName}}
-          </p>
-          <p 
-            class="adddevice-desc device-card-content pull-left">
-            {{activationCode}}
-          </p>
-          <a 
-            href="#"
-            clip-copy="activationCode"
+      <div class="clearfix">
+        <h3>
+          {{adc.activationCode}}
+          <button
             id="copyCodeToClipboardButton"
-            clip-click="showCopiedToClipboardMessage()"
-            class="adddevice-desc device-card-content pull-left">
+            class="btn btn-default btn-sm"
+            clip-copy="adc.activationCode"
+            clip-click="adc.showCopiedToClipboardMessage()">
             <i 
               class="fa fa-clipboard" 
               data-original-title="Copied to clipboard">
             </i>
-          </a>
-        </div>
+          </button>
+        </h3>
+      </div>
 
-      </div>
-      <div class="modal-footer">
-        <button 
-          type="button" 
-          class="btn" 
-          ng-hide="showAdd" 
-          focus-on="!showAdd"
-          ng-click="resetAddDevice()">
-          Add another
-        </button>
-        <button 
-          type="button" 
-          id="doneDevicesButton" 
-          class="btn btn-primary" 
-          data-dismiss="modal" 
-          ng-hide="showAdd" 
-          translate="spacesPage.done">
-        </button>
-      </div>
     </div>
+
   </div>
+
+  <div class="modal-footer">
+    <button 
+      type="button" 
+      class="btn" 
+      ng-if="!adc.showAdd" 
+      focus-on="!adc.showAdd"
+      ng-click="adc.resetAddDevice()">
+      Add another
+    </button>
+    <button 
+      type="button" 
+      class="btn btn-primary" 
+      ng-click="$dismiss()"
+      ng-if="!adc.showAdd" 
+      translate="spacesPage.done">
+    </button>
+    <button
+      ng-if="adc.showAdd" 
+      id="create-code-button"
+      class="btn btn-primary"
+      sq-click-promise="adc.addDevice()"
+      ng-disabled="!adc.deviceName.length">
+      <span 
+        translate="spacesPage.add">
+      </span>
+    </button>
+  </div>
+
 </div>

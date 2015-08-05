@@ -97,3 +97,15 @@
     max-width: 260px;
   }
 }
+
+#addDeviceModal {
+  .device-added {
+    h3 {
+      color: #00c1aa;
+      margin: 10px 0;
+    }
+  }
+  .btn {
+    transition: none;
+  }
+}
