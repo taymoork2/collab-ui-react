@@ -13,7 +13,6 @@
   function CsdmCache(opts, CsdmPoller, CsdmCacheUpdater) {
     var cache = {};
     var shouldUpdateCache;
-    var poller = CsdmPoller.create(fetch);
 
     function fetch() {
       shouldUpdateCache = true;
@@ -24,6 +23,8 @@
         return cache;
       });
     }
+
+    var poller = CsdmPoller.create(fetch);
 
     function list() {
       return cache;
