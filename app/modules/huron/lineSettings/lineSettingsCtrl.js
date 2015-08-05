@@ -410,12 +410,16 @@
             promise = processSharedLineUsers().then(function () {
               // Update display and label on devices
               return listSharedLineUsers(vm.directoryNumber.uuid).then(function () {
+                var lineTextLabel = (vm.directoryNumber.alertingName.length > 30 - vm.directoryNumber.pattern.length - 3) ?
+                  vm.directoryNumber.alertingName.substr(0, 30 - vm.directoryNumber.pattern.length - 3) :
+                  vm.directoryNumber.alertingName;
+                lineTextLabel = vm.directoryNumber.pattern + ' - ' + lineTextLabel;
                 var sharedLinePromises = [];
                 var devices = SharedLineInfoService.getSharedLineDevices();
                 angular.forEach(devices, function (device) {
                   var data = {
                     'display': vm.directoryNumber.alertingName,
-                    'label': vm.directoryNumber.pattern + ' - ' + vm.directoryNumber.alertingName
+                    'label': lineTextLabel
                   };
                   var sharedLinePromise = SharedLineInfoService.updateLineEndpoint(device.uuid, vm.directoryNumber.uuid, device.endpointDnUuid, data);
                   sharedLinePromises.push(sharedLinePromise);
