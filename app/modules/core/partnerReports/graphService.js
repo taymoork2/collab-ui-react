@@ -212,7 +212,7 @@
         graphs[i].valueField = values[i];
         graphs[i].fontSize = 14;
         graphs[i].legendColor = colors[i];
-        graphs[i].balloonText = mediaQualityBalloonText + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[value]]</span></span>';
+        graphs[i].balloonText = mediaQualityBalloonText + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[' + values[i] + ']]</span></span>';
         if (i) {
           graphs[i].clustered = false;
         }
