@@ -182,60 +182,52 @@ angular.module('Squared')
 
         Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
           if (data.success) {
-            if ($scope.rolesObj.form.$dirty) {
-              var userData = {
-                'schemas': Config.scimSchemas,
-                'name': {},
-                'meta': {
-                  'attributes': []
-                }
-              };
-              // Add or delete properties depending on whether or not their value is empty/blank.
-              // With property value set to "", the back-end will respond with a 400 error.
-              // Guidance from CI team is to not specify any property containing an empty string
-              // value. Instead, add the property to meta.attribute to have its value be deleted.
-              if ($scope.currentUser.name) {
-                if ($scope.currentUser.name.givenName) {
-                  userData.name["givenName"] = $sanitize($scope.currentUser.name.givenName);
-                } else {
-                  userData.meta.attributes.push('name.givenName');
-                }
-                if ($scope.currentUser.name.familyName) {
-                  userData.name["familyName"] = $sanitize($scope.currentUser.name.familyName);
-                } else {
-                  userData.meta.attributes.push('name.familyName');
-                }
+            var userData = {
+              'schemas': Config.scimSchemas,
+              'name': {},
+              'meta': {
+                'attributes': []
               }
-              if ($scope.currentUser.displayName) {
-                userData.displayName = $sanitize($scope.currentUser.displayName);
+            };
+            // Add or delete properties depending on whether or not their value is empty/blank.
+            // With property value set to "", the back-end will respond with a 400 error.
+            // Guidance from CI team is to not specify any property containing an empty string
+            // value. Instead, add the property to meta.attribute to have its value be deleted.
+            if ($scope.currentUser.name) {
+              if ($scope.currentUser.name.givenName) {
+                userData.name["givenName"] = $sanitize($scope.currentUser.name.givenName);
               } else {
-                userData.meta.attributes.push('displayName');
+                userData.meta.attributes.push('name.givenName');
               }
-
-              Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
-
-              Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
-                if (data.success) {
-                  var successMessage = [];
-                  successMessage.push($filter('translate')('profilePage.success'));
-                  Notification.notify(successMessage, 'success');
-                  $scope.user = data;
-                  $rootScope.$broadcast('USER_LIST_UPDATED');
-                  resetForm();
-                } else {
-                  Log.debug('Update existing user failed. Status: ' + status);
-                  var errorMessage = [];
-                  errorMessage.push($filter('translate')('profilePage.error'));
-                  Notification.notify(errorMessage, 'error');
-                }
-              });
-            } else {
-              $rootScope.$broadcast('USER_LIST_UPDATED');
-              var successMessage = [];
-              successMessage.push($filter('translate')('profilePage.rolesSuccess'));
-              Notification.notify(successMessage, 'success');
-              resetForm();
+              if ($scope.currentUser.name.familyName) {
+                userData.name["familyName"] = $sanitize($scope.currentUser.name.familyName);
+              } else {
+                userData.meta.attributes.push('name.familyName');
+              }
             }
+            if ($scope.currentUser.displayName) {
+              userData.displayName = $sanitize($scope.currentUser.displayName);
+            } else {
+              userData.meta.attributes.push('displayName');
+            }
+
+            Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
+
+            Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
+              if (data.success) {
+                var successMessage = [];
+                successMessage.push($filter('translate')('profilePage.success'));
+                Notification.notify(successMessage, 'success');
+                $scope.user = data;
+                $rootScope.$broadcast('USER_LIST_UPDATED');
+                resetForm();
+              } else {
+                Log.debug('Update existing user failed. Status: ' + status);
+                var errorMessage = [];
+                errorMessage.push($filter('translate')('profilePage.error'));
+                Notification.notify(errorMessage, 'error');
+              }
+            });
           } else {
             Log.debug('Updating user\'s roles failed. Status: ' + status);
             var errorMessage = [];
