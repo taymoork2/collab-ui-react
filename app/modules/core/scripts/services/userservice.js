@@ -61,8 +61,7 @@ angular.module('Core')
                 if (data.userResponse[0].entitled && data.userResponse[0].entitled.indexOf(Config.entitlements.huron) !== -1) {
                   var userData = {
                     'email': data.userResponse[0].email,
-                    'familyName': usersDataArray[0].familyName,
-                    'givenName': usersDataArray[0].givenName
+                    'name': usersDataArray[0].name
                   };
                   HuronUser.create(data.userResponse[0].uuid, userData)
                     .then(function () {
