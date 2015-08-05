@@ -7,7 +7,7 @@ describe('Huron Call Routing', function () {
     login.login('huron-e2e');
   }, 120000);
 
-  describe('Call Park feature', function () {
+  xdescribe('Call Park feature', function () {
     it('should navigate to the Call Park page', function () {
       navigation.clickCallRouting();
 
