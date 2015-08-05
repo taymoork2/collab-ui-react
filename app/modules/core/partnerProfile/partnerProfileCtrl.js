@@ -74,21 +74,21 @@ angular.module('Core')
               var orgSettingsObj = JSON.parse(data.orgSettings[length - 1]);
 
               if (typeof (orgSettingsObj.reportingSiteUrl) !== 'undefined') {
-                if(orgSettingsObj.reportingSiteUrl && orgSettingsObj.reportingSiteUrl !== ''){
+                if (orgSettingsObj.reportingSiteUrl && orgSettingsObj.reportingSiteUrl.length) {
                   $scope.problemSiteRadioValue = 1;
                   $scope.supportUrl = orgSettingsObj.reportingSiteUrl;
                   $scope.oldSupportUrl = $scope.supportUrl;
                 }
               }
               if (typeof (orgSettingsObj.reportingSiteDesc) !== 'undefined') {
-                if(orgSettingsObj.reportingSiteDesc && orgSettingsObj.reportingSiteDesc !== ''){
+                if (orgSettingsObj.reportingSiteDesc && orgSettingsObj.reportingSiteDesc.length) {
                   $scope.problemSiteRadioValue = 1;
                   $scope.supportText = orgSettingsObj.reportingSiteDesc;
                   $scope.oldSupportText = $scope.supportText;
                 }
               }
               if (typeof (orgSettingsObj.helpUrl) !== 'undefined') {
-                if(orgSettingsObj.helpUrl && orgSettingsObj.helpUrl !== ''){
+                if (orgSettingsObj.helpUrl && orgSettingsObj.helpUrl.length) {
                   $scope.helpSiteRadioValue = 1;
                   $scope.helpUrl = orgSettingsObj.helpUrl;
                   $scope.oldHelpUrl = $scope.helpUrl;
