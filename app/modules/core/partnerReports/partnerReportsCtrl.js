@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $translate, $q, PartnerReportService, GraphService, DonutChartService) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService) {
     var vm = this;
 
     var ABORT = 'ABORT';
@@ -119,6 +119,8 @@
     };
 
     vm.updateReports = function () {
+      setAllDummyData();
+      
       vm.activeUsersRefresh = REFRESH;
       vm.activeUserPopulationRefresh = REFRESH;
       vm.populationDescription = "";
@@ -140,6 +142,10 @@
     init();
 
     function init() {
+      $timeout(function () {
+        setAllDummyData();
+      }, 30);
+
       setRegisteredEndpointText();
       PartnerReportService.getOverallActiveUserData(vm.timeSelected);
       PartnerReportService.getCustomerList().then(function (response) {
@@ -186,18 +192,24 @@
       }
     }
 
+    function setAllDummyData() {
+      setActiveUserGraph(DummyReportService.dummyActiveUserData(vm.timeSelected));
+    }
+
+    function setActiveUserGraph(data) {
+      if (activeUsersChart === null || activeUsersChart === undefined) {
+        activeUsersChart = GraphService.createActiveUsersGraph(data);
+      } else {
+        GraphService.updateActiveUsersGraph(data, activeUsersChart);
+        invalidateChartSize(activeUsersChart);
+      }
+    }
+
     function getActiveUserReports() {
       return PartnerReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response.tableData !== ABORT && response.graphData !== ABORT) {
-          var graphData = response.graphData;
+          setActiveUserGraph(response.graphData);
           var populationGraph = response.populationGraph;
-
-          if (activeUsersChart === null || activeUsersChart === undefined) {
-            activeUsersChart = GraphService.createActiveUsersGraph(graphData);
-          } else {
-            GraphService.updateActiveUsersGraph(graphData, activeUsersChart);
-            invalidateChartSize(activeUsersChart);
-          }
 
           if (activeUserPopulationChart === null || activeUserPopulationChart === undefined) {
             activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(populationGraph, response.overallPopulation);
@@ -223,7 +235,7 @@
           vm.activeUserPredicate = activeUsersSort[3];
 
           vm.activeUsersRefresh = SET;
-          if (graphData.length === 0) {
+          if (response.graphData.length === 0) {
             vm.activeUsersRefresh = EMPTY;
           }
 

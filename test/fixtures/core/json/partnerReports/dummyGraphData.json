@@ -1,35 +1,35 @@
 [{
-  "date": "March 17, 2015",
+  "modifiedDate": "March 17",
   "totalRegisteredUsers": 14,
   "activeUsers": 4,
   "percentage": 29
 }, {
-  "date": "March 16, 2015",
+  "modifiedDate": "March 16",
   "totalRegisteredUsers": 57,
   "activeUsers": 16,
   "percentage": 28
 }, {
-  "date": "March 15, 2015",
+  "modifiedDate": "March 15",
   "totalRegisteredUsers": 71,
   "activeUsers": 71,
   "percentage": 100
 }, {
-  "date": "March 14, 2015",
+  "modifiedDate": "March 14",
   "totalRegisteredUsers": 81,
   "activeUsers": 78,
   "percentage": 96
 }, {
-  "date": "March 13, 2015",
+  "modifiedDate": "March 13",
   "totalRegisteredUsers": 98,
   "activeUsers": 52,
   "percentage": 53
 }, {
-  "date": "March 12, 2015",
+  "modifiedDate": "March 12",
   "totalRegisteredUsers": 90,
   "activeUsers": 15,
   "percentage": 17
 }, {
-  "date": "March 11, 2015",
+  "modifiedDate": "March 11",
   "totalRegisteredUsers": 90,
   "activeUsers": 44,
   "percentage": 49

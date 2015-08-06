@@ -11,13 +11,12 @@
   <div class="row">
     <br>
     <p class="report-description graph-match">{{nav.activeUserDescription}}</p>
-    <div class="timechartDiv" ng-if="nav.isRefresh(nav.activeUsersRefresh)"></div>
-    <div id="activeUsersdiv" class="barchart" ng-hide="nav.isRefresh(nav.activeUsersRefresh)"></div>
+    <div id="activeUsersdiv" class="barchart"></div>
     <div id="activeUsersRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
       <i class='active-user-status icon icon-spinner icon-2x'></i>
     </div>
     <div class="no-data-center" ng-if="nav.isEmpty(nav.activeUsersRefresh)">
-      <h3 class="no-data" translate='reportsPage.noData'></h3>
+      <h3 class="no-data" translate='reportsPage.noCustomerData'></h3>
     </div>
   </div>
   <div ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">

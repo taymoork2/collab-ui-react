@@ -412,7 +412,10 @@ angular.module('Core')
           brandWhite: '#fff',
           grayDarkest: '#444',
           grayDarker: '#666',
+          grayDark: '#999',
+          gray: '#aaa',
           grayLight: '#ccc',
+          grayLighter: '#ddd',
           brandInfo: '#00c1aa',
           brandDanger: '#f05d3b',
           brandWarning: '#f7c100'

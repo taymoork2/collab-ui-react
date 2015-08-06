@@ -279,6 +279,7 @@
     "avgConversations": "Average Conversations",
     "activeUsers": "Active Users",
     "noData": "No Data",
+    "noCustomerData": "No Customer Data",
     "week": "Last Week",
     "week2": "last week",
     "month": "Last Month",
@@ -341,7 +342,8 @@
     "titleByCompany": "Active User Population by Company",
     "description": "Across all your customers, {{percentage}}% of their employees have placed at least one advanced Spark call over the {{time}}. Here is how {{customer}} compares to that average.",
     "averageLabel": "Average Engagement",
-    "acrossCustomers": "Across All Customers"
+    "acrossCustomers": "Across All Customers",
+    "loadingCustomer": "Loading Customer Data"
   },
   "profilePage": {
     "userProfile": "User Profile",

@@ -67,7 +67,6 @@
     };
 
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor) {
-
       var chartData = {
         'type': 'serial',
         'addClassNames': true,
@@ -124,11 +123,6 @@
         "modifiedDate": ""
       };
 
-      if (div === activeUserDiv) {
-        dataPoint.totalRegisteredUsers = 0;
-        dataPoint.activeUsers = 0;
-        dataPoint.percentage = 0;
-      }
       if (div === mediaQualityDiv) {
         dataPoint.good = 0;
         dataPoint.fair = 0;
@@ -149,25 +143,11 @@
 
     function createActiveUsersGraph(data) {
       // if there are no active users for this user
-      if (data.length === 0) {
+      if (data === null || data === 'undefined' || data.length === 0) {
         data = dummyData(activeUserDiv);
       }
-      var graphOne = angular.copy(columnBase);
-      graphOne.title = usersTitle;
-      graphOne.fillColors = Config.chartColors.brandSuccessLight;
-      graphOne.colorField = Config.chartColors.brandSuccessLight;
-      graphOne.valueField = 'totalRegisteredUsers';
-      graphOne.balloonText = activeUsersBalloonText;
 
-      var graphTwo = angular.copy(columnBase);
-      graphTwo.title = activeUsersTitle;
-      graphTwo.fillColors = Config.chartColors.brandSuccessDark;
-      graphTwo.colorField = Config.chartColors.brandSuccessDark;
-      graphTwo.valueField = 'activeUsers';
-      graphTwo.balloonText = activeUsersBalloonText;
-      graphTwo.clustered = false;
-
-      var graphs = [graphOne, graphTwo];
+      var graphs = activeUserGraphs(data);
       var valueAxes = [angular.copy(axis)];
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
@@ -177,17 +157,40 @@
 
       var legend = angular.copy(legendBase);
       legend.labelText = '[[title]]';
-      var numFormat = angular.copy(numFormatBase);
 
-      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat);
+      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase));
+    }
+
+    function activeUserGraphs(data) {
+      var graphOne = angular.copy(columnBase);
+      graphOne.title = usersTitle;
+      graphOne.fillColors = 'colorOne';
+      graphOne.colorField = 'colorOne';
+      graphOne.legendColor = data[0].colorOne;
+      graphOne.valueField = 'totalRegisteredUsers';
+      graphOne.balloonText = activeUsersBalloonText;
+      graphOne.showBalloon = data[0].balloon;
+
+      var graphTwo = angular.copy(columnBase);
+      graphTwo.title = activeUsersTitle;
+      graphTwo.fillColors = 'colorTwo';
+      graphTwo.colorField = 'colorTwo';
+      graphTwo.legendColor = data[0].colorTwo;
+      graphTwo.valueField = 'activeUsers';
+      graphTwo.balloonText = activeUsersBalloonText;
+      graphTwo.showBalloon = data[0].balloon;
+      graphTwo.clustered = false;
+
+      return [graphOne, graphTwo];
     }
 
     function updateActiveUsersGraph(data, activeUsersChart) {
       if (activeUsersChart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
-          activeUsersChart.dataProvider = dummyData(activeUserDiv);
+          return;
         } else {
           activeUsersChart.dataProvider = data;
+          activeUsersChart.graphs = activeUserGraphs(data);
         }
         activeUsersChart.validateData();
       }
