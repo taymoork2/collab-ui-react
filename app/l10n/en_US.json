@@ -1286,6 +1286,15 @@
     "deviceStatusFailureMsg": "Failed to fetch device status",
     "deviceIpAddressFailureMsg": "Failed to fetch device IP"
   },
+  "deviceOverviewPage": {
+    "activationNoLongerNeeded" : "If this activation is no longer needed:",
+    "activationInstructions": "To activate a device for {{room}}, use this activation code during the setup:",
+    "ciscoSX10" : "Cisco SX10",
+    "software" : "Software",
+    "serial" : "Serial",
+    "ipAddr" : "IP Address",
+    "macAddr" : "MAC Address"
+  },
   "generateActivationCodeModal": {
     "title": "Activation Code",
     "activateBody": "Plug in your new Cisco desk phone or TelePresence device and enter the activation code when you are prompted or use the device camera to scan the QR code.",
