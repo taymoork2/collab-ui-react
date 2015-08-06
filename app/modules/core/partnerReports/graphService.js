@@ -197,30 +197,11 @@
     }
 
     function createMediaQualityGraph(data) {
-      var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalDurationSum]]</span></span>';
-      var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
-      var values = ['poorQualityDurationSum', 'fairQualityDurationSum', 'goodQualityDurationSum'];
-      var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue];
-      var graphs = [];
-
       if (data.length === 0) {
-        data = dummyData(mediaQualityDiv);
+        return;
       }
 
-      for (var i = 0; i < values.length; i++) {
-        graphs[i] = angular.copy(columnBase);
-        graphs[i].title = $translate.instant(titles[i]);
-        graphs[i].fillColors = colors[i];
-        graphs[i].colorField = colors[i];
-        graphs[i].valueField = values[i];
-        graphs[i].fontSize = 14;
-        graphs[i].legendColor = colors[i];
-        graphs[i].balloonText = mediaQualityBalloonText + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[' + values[i] + ']]</span></span>';
-        if (i) {
-          graphs[i].clustered = false;
-        }
-      }
-
+      var graphs = mediaQualityGraphs(data);
       var catAxis = angular.copy(axis);
       catAxis.gridPosition = 'start';
 
@@ -237,13 +218,42 @@
       return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat);
     }
 
+    function mediaQualityGraphs(data) {
+      var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
+      var values = ['poorQualityDurationSum', 'fairQualityDurationSum', 'goodQualityDurationSum'];
+      var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue];
+      if (data[0].colorOne !== null && data[0].colorOne !== undefined) {
+        colors = [data[0].colorOne, data[0].colorTwo, data[0].colorThree];
+      }
+      var graphs = [];
+
+      for (var i = 0; i < values.length; i++) {
+        graphs[i] = angular.copy(columnBase);
+        graphs[i].title = $translate.instant(titles[i]);
+        graphs[i].fillColors = colors[i];
+        graphs[i].colorField = colors[i];
+        graphs[i].valueField = values[i];
+        graphs[i].fontSize = 14;
+        graphs[i].legendColor = colors[i];
+        graphs[i].showBalloon = data[0].balloon;
+        graphs[i].balloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalDurationSum]]</span></span>'
+          + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[' + values[i] + ']]</span></span>';
+        if (i) {
+          graphs[i].clustered = false;
+        }
+      }
+
+      return graphs;
+    }
+
     function updateMediaQualityGraph(data, mediaQualityChart) {
       if (mediaQualityChart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
-          mediaQualityChart.dataProvider = dummyData(mediaQualityDiv);
-        } else {
-          mediaQualityChart.dataProvider = data;
+          return;
         }
+
+        mediaQualityChart.dataProvider = data;
+        mediaQualityChart.graphs = mediaQualityGraphs(data);
         mediaQualityChart.validateData();
       }
     }

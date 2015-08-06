@@ -195,6 +195,7 @@
 
     function setAllDummyData() {
       setActiveUserGraph(DummyReportService.dummyActiveUserData(vm.timeSelected));
+      setMediaQualityGraph(DummyReportService.dummyMediaQualityData(vm.timeSelected));
 
       if (vm.customerSelected === null) {
         setActivePopulationGraph(DummyReportService.dummyActivePopulationData({ label: $translate.instant('activeUserPopulation.loadingCustomer') }, 50), 50);
@@ -292,17 +293,21 @@
       });
     }
 
+    function setMediaQualityGraph(data) {
+      if (mediaQualityChart === null || mediaQualityChart === undefined) {
+        mediaQualityChart = GraphService.createMediaQualityGraph(data);
+      } else {
+        GraphService.updateMediaQualityGraph(data, mediaQualityChart);
+        invalidateChartSize(mediaQualityChart);
+      }
+    }
+
     function getMediaQualityReports() {
       return PartnerReportService.getMediaQualityMetrics(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response !== ABORT) {
-          var graphData = response;
-          if (mediaQualityChart === null) {
-            mediaQualityChart = GraphService.createMediaQualityGraph(graphData);
-          } else {
-            GraphService.updateMediaQualityGraph(graphData, mediaQualityChart);
-            invalidateChartSize(mediaQualityChart);
-          }
-          if (graphData.length === 0) {
+          setMediaQualityGraph(response);
+
+          if (response.length === 0) {
             vm.mediaQualityRefresh = EMPTY;
           } else {
             vm.mediaQualityRefresh = SET;

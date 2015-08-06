@@ -118,9 +118,9 @@
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
             poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: Config.chartColors.grayLighter,
+            colorOne: Config.chartColors.gray,
             colorTwo: Config.chartColors.grayLight,
-            colorThree: Config.chartColors.gray,
+            colorThree: Config.chartColors.grayLighter,
             balloon: false
           });
         }
@@ -133,9 +133,9 @@
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
             poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: Config.chartColors.grayLighter,
+            colorOne: Config.chartColors.gray,
             colorTwo: Config.chartColors.grayLight,
-            colorThree: Config.chartColors.gray,
+            colorThree: Config.chartColors.grayLighter,
             balloon: false
           });
         }
@@ -148,9 +148,9 @@
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
             poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: Config.chartColors.grayLighter,
+            colorOne: Config.chartColors.gray,
             colorTwo: Config.chartColors.grayLight,
-            colorThree: Config.chartColors.gray,
+            colorThree: Config.chartColors.grayLighter,
             balloon: false
           });
         }
