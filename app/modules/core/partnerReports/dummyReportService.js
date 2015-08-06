@@ -13,7 +13,8 @@
 
     return {
       dummyActiveUserData: dummyActiveUserData,
-      dummyActivePopulationData: dummyActivePopulationData
+      dummyActivePopulationData: dummyActivePopulationData,
+      dummyMediaQualityData: dummyMediaQualityData
     };
 
     function dummyActiveUserData(time) {
@@ -22,7 +23,7 @@
 
       if (time.value === 0) {
         for (var i = 6; i >= 0; i--) {
-          abs = Math.abs(i - 6);
+          abs = 6 - i;
           dummyGraph.push({
             modifiedDate: moment().subtract(i, 'day').format(dayFormat),
             totalRegisteredUsers: 25 + (25 * abs),
@@ -35,7 +36,7 @@
         }
       } else if (time.value === 1) {
         for (var x = 3; x >= 0; x--) {
-          abs = Math.abs(x - 3);
+          abs = 3 - x;
           dummyGraph.push({
             modifiedDate: moment().subtract(x * 7, 'day').startOf('week').format(dayFormat),
             totalRegisteredUsers: 25 + (25 * abs),
@@ -48,7 +49,7 @@
         }
       } else {
         for (var y = 2; y >= 0; y--) {
-          abs = Math.abs(y - 2);
+          abs = 2 - y;
           dummyGraph.push({
             modifiedDate: moment().subtract(y, 'month').format(monthFormat),
             totalRegisteredUsers: 25 + (25 * abs),
@@ -90,7 +91,7 @@
           dummyPopulation = dummyGraph;
         }
 
-        return dummyPopulation
+        return dummyPopulation;
       } else {
         dummyGraph = [{
           customerName: customer.label,
@@ -102,6 +103,60 @@
         }];
         return dummyGraph;
       }
+    }
+
+    function dummyMediaQualityData(time) {
+      var dummyGraph = [];
+      var abs = 0;
+
+      if (time.value === 0) {
+        for (var i = 6; i >= 0; i--) {
+          abs = 6 - i;
+          dummyGraph.push({
+            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
+            totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
+            goodQualityDurationSum: 25 + (15 * abs),
+            fairQualityDurationSum: 15 + (10 * abs),
+            poorQualityDurationSum: 5 + (5 * abs),
+            colorOne: Config.chartColors.grayLighter,
+            colorTwo: Config.chartColors.grayLight,
+            colorThree: Config.chartColors.gray,
+            balloon: false
+          });
+        }
+      } else if (time.value === 1) {
+        for (var x = 3; x >= 0; x--) {
+          abs = 3 - x;
+          dummyGraph.push({
+            modifiedDate: moment().subtract(x * 7, 'day').startOf('week').format(dayFormat),
+            totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
+            goodQualityDurationSum: 25 + (15 * abs),
+            fairQualityDurationSum: 15 + (10 * abs),
+            poorQualityDurationSum: 5 + (5 * abs),
+            colorOne: Config.chartColors.grayLighter,
+            colorTwo: Config.chartColors.grayLight,
+            colorThree: Config.chartColors.gray,
+            balloon: false
+          });
+        }
+      } else {
+        for (var y = 2; y >= 0; y--) {
+          abs = 2 - y;
+          dummyGraph.push({
+            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
+            totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
+            goodQualityDurationSum: 25 + (15 * abs),
+            fairQualityDurationSum: 15 + (10 * abs),
+            poorQualityDurationSum: 5 + (5 * abs),
+            colorOne: Config.chartColors.grayLighter,
+            colorTwo: Config.chartColors.grayLight,
+            colorThree: Config.chartColors.gray,
+            balloon: false
+          });
+        }
+      }
+
+      return dummyGraph;
     }
   }
 })();

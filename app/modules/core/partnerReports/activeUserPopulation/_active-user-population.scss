@@ -4,10 +4,14 @@
 
   .spinner-position {
     position: relative;
-  }
-  .description-div {
-    padding: 15px 0px 0px;
-    vertical-align: text-top;
+    top: -150px;
+
+    .icon-2x {
+      font-size: 4em;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
   .percent-large {
     font-size: 25px;
@@ -25,15 +29,14 @@
   }
 
   .no-data-center {
-    top: -250px;
-    left: 35%;
+    top: -200px;
     position: relative;
-    transform: translate(0%, 35%);
 
     .no-data {
-      color: $gray-light;
+      color: $gray-darkest;
       font-family: $brand-font-cisco-TT-Light;
       font-size: 46px;
+      text-align: center;
     }
   }
 
@@ -41,10 +44,6 @@
     margin: 0;
     padding: 0;
   }
-}
-
-#activeUserPopulationRefreshDiv, .full-width{
-  width: 100%;
 }
 
 #activeUserPopulationDiv{
@@ -65,20 +64,11 @@
       height: 460px !important;
       top: 50px !important;
       overflow: visible !important;
+      position: relative !important;
     }
   } 
 
   .amcharts-balloon-div {
     margin-top: 50px !important;
   }
-}
-
-#activeUserPopulationRefreshDiv {
-  height: 100%;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

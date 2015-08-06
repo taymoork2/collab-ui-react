@@ -17,13 +17,10 @@
 
     .icon-2x {
       font-size: 4em;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
-  }
-  .active-user-status {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
   }
   .most-active {
     font-family: $brand-font-cisco-TT-Regular;

@@ -120,7 +120,7 @@
 
     vm.updateReports = function () {
       setAllDummyData();
-      
+
       vm.activeUsersRefresh = REFRESH;
       vm.activeUserPopulationRefresh = REFRESH;
       vm.populationDescription = "";
@@ -150,6 +150,7 @@
       PartnerReportService.getOverallActiveUserData(vm.timeSelected);
       PartnerReportService.getCustomerList().then(function (response) {
         updateCustomerFilter(response);
+        setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected, 50), 50);
 
         getRegisteredEndpoints();
 
@@ -194,6 +195,12 @@
 
     function setAllDummyData() {
       setActiveUserGraph(DummyReportService.dummyActiveUserData(vm.timeSelected));
+
+      if (vm.customerSelected === null) {
+        setActivePopulationGraph(DummyReportService.dummyActivePopulationData({ label: $translate.instant('activeUserPopulation.loadingCustomer') }, 50), 50);
+      } else {
+        setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected, 50), 50);
+      }
     }
 
     function setActiveUserGraph(data) {
@@ -205,18 +212,20 @@
       }
     }
 
+    function setActivePopulationGraph(data, overallPopulation) {
+      if (activeUserPopulationChart === null || activeUserPopulationChart === undefined) {
+        activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(data, overallPopulation);
+      } else {
+        GraphService.updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
+        invalidateChartSize(activeUserPopulationChart);
+      }
+    }
+
     function getActiveUserReports() {
       return PartnerReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response.tableData !== ABORT && response.graphData !== ABORT) {
           setActiveUserGraph(response.graphData);
-          var populationGraph = response.populationGraph;
-
-          if (activeUserPopulationChart === null || activeUserPopulationChart === undefined) {
-            activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(populationGraph, response.overallPopulation);
-          } else {
-            GraphService.updateActiveUserPopulationGraph(populationGraph, activeUserPopulationChart, response.overallPopulation);
-            invalidateChartSize(activeUserPopulationChart);
-          }
+          setActivePopulationGraph(response.populationGraph, response.overallPopulation);
 
           vm.mostActiveUsers = response.tableData;
           vm.displayMostActive = false;
@@ -254,7 +263,7 @@
           });
 
           vm.activeUserPopulationRefresh = EMPTY;
-          if (populationGraph.length !== 0) {
+          if (response.populationGraph.length !== 0) {
             vm.activeUserPopulationRefresh = SET;
           }
         }

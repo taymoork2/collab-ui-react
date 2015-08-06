@@ -12,18 +12,13 @@
   <div class="row">
     <hr class="title-break pull-left"/>
     <div id="activeUserPopulationDiv">
-      <div class="graph-align full-width">
-        <div class="description-div" ng-hide="nav.isEmpty(nav.activeUserPopulationRefresh)">
-          <span class="report-description">{{nav.populationDescription}}</span>
-        </div>
-        <div class="timechartDiv" ng-if="nav.isRefresh(nav.activeUserPopulationRefresh)"></div>
-        <div id="activeUserPopulationChart" class="barchart" ng-hide="nav.isRefresh(nav.activeUserPopulationRefresh)"></div>
-      </div>
-      <div id="activeUserPopulationRefreshDiv" class="spinner-position" ng-show="nav.isRefresh(nav.activeUserPopulationRefresh)">
+      <p class="report-description">{{nav.populationDescription}}</p>
+      <div id="activeUserPopulationChart" class="barchart"></div>
+      <div id="activeUserPopulationRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.activeUserPopulationRefresh)">
         <i class='icon icon-spinner icon-2x'></i>
       </div>
-      <div class="no-data-center" ng-show="nav.isEmpty(nav.activeUserPopulationRefresh)">
-        <h3 class="no-data" translate='reportsPage.noData'></h3>
+      <div class="no-data-center" ng-if="nav.isEmpty(nav.activeUserPopulationRefresh)">
+        <h3 class="no-data" translate='reportsPage.noCustomerData'></h3>
       </div>
     </div>
   </div> 
