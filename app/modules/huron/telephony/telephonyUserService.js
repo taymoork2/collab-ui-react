@@ -105,10 +105,10 @@
           emailInfo.expiresOn = otpInfo.expiresOn;
           return HuronEmailService.save({}, emailInfo).$promise
             .then(function () {
-              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             })
             .catch(function (response) {
-              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), response.status || 409, moment(), 1);
+              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), response.status || 409, moment(), 1, null);
               //Notify email error, don't rethrow error
               Notification.errorResponse(response, 'usersPage.emailError');
             });
