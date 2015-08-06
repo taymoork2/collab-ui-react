@@ -118,9 +118,9 @@ angular.module('Core')
           var orgUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings';
 
           var payload = {};
-          payload['reportingSiteUrl'] = reportingSiteUrl;
-          payload['reportingSiteDesc'] = reportingSiteDesc;
-          payload['helpUrl'] = helpUrl;
+          payload['reportingSiteUrl'] = reportingSiteUrl.length ? reportingSiteUrl : null;
+          payload['reportingSiteDesc'] = reportingSiteDesc.length ? reportingSiteDesc : null;
+          payload['helpUrl'] = helpUrl.length ? helpUrl : null;
           payload['isCiscoHelp'] = isCiscoHelp;
           payload['isCiscoSupport'] = isCiscoSupport;
 
