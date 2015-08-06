@@ -7,14 +7,14 @@
         <table>
           <tbody>
             <tr ng-if="deviceOverview.currentDevice.product">
-              <td style="font-weight: bold">
-                {{deviceOverview.currentDevice.product}}
-              </td>
-              <td>
+              <td style="font-weight: bold" colspan="2">
+                <span>
+                  {{deviceOverview.currentDevice.product}}
+                </span>
                 <img
-                  style="width: 60px; height: 60px"
-                  ng-show="deviceOverview.currentDevice.image"
+                  ng-if="deviceOverview.currentDevice.image"
                   ng-src="{{deviceOverview.currentDevice.image}}"
+                  style="width: 60px; height: 60px; padding-left: 10px"
                 />
               </td>
             </tr>
