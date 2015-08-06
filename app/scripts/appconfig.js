@@ -587,6 +587,17 @@ angular
       /*
         devices redux
       */
+      .state('devices-cleanup', {
+        url: '/devices-cleanup',
+        templateUrl: 'modules/squared/devicesCleanup/cleanup.html',
+        controller: 'DevicesCleanupCtrl',
+        controllerAs: 'dc',
+        parent: 'main'
+      })
+
+      /*
+        devices redux
+      */
       .state('devices-redux', {
           url: '/devices-redux',
           templateUrl: 'modules/squared/devicesRedux/devices.html',
