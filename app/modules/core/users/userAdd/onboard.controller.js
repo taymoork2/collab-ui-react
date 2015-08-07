@@ -782,11 +782,11 @@ angular.module('Core')
             Notification.notify(convertFailures, 'error');
             $scope.$dismiss();
             var msg = 'Migrated ' + convertSuccess.length + ' users';
-            var data = {
-              totalUsers : convertUsersCount,
-              successfullyConverted : convertSuccess.length
+            var migratedata = {
+              totalUsers: convertUsersCount,
+              successfullyConverted: convertSuccess.length
             };
-            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, data);
+            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
           }
         }
 
@@ -937,11 +937,11 @@ angular.module('Core')
               Notification.notify(convertFailures, 'error');
               $scope.$dismiss();
               var msg = 'Migrated ' + convertSuccess.length + ' users';
-              var data = {
-                totalUsers : convertUsersCount,
-                successfullyConverted : convertSuccess.length
+              var migratedata = {
+                totalUsers: convertUsersCount,
+                successfullyConverted: convertSuccess.length
               };
-              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, data);
+              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
             }
           }
         });
