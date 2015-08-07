@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('UserProfileCtrl', ['$scope', '$location', '$route', '$stateParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config', '$sanitize',
-    function ($scope, $location, $route, $stateParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config, $sanitize) {
+  .controller('UserProfileCtrl', ['$scope', '$location', '$route', '$stateParams', 'Log', 'Utils', '$filter', 'Userservice', 'Authinfo', 'Notification', 'Config',
+    function ($scope, $location, $route, $stateParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config) {
 
       var userid = $stateParams.uid;
       $scope.orgName = Authinfo.getOrgName();
@@ -41,23 +41,23 @@ angular.module('Squared')
         // value. Instead, add the property to meta.attribute to have its value be deleted.
         if ($scope.user.name) {
           if ($scope.user.name.givenName) {
-            userData.name["givenName"] = $sanitize($scope.user.name.givenName);
+            userData.name["givenName"] = $scope.user.name.givenName;
           } else {
             userData.meta.attributes.push('name.givenName');
           }
           if ($scope.user.name.familyName) {
-            userData.name["familyName"] = $sanitize($scope.user.name.familyName);
+            userData.name["familyName"] = $scope.user.name.familyName;
           } else {
             userData.meta.attributes.push('name.familyName');
           }
         }
         if ($scope.user.displayName) {
-          userData.displayName = $sanitize($scope.user.displayName);
+          userData.displayName = $scope.user.displayName;
         } else {
           userData.meta.attributes.push('displayName');
         }
         if ($scope.user.title) {
-          userData.title = $sanitize($scope.user.title);
+          userData.title = $scope.user.title;
         } else {
           userData.meta.attributes.push('title');
         }

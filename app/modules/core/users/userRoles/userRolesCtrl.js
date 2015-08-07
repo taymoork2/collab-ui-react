@@ -1,7 +1,7 @@
 'use strict';
 angular.module('Squared')
-  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$sanitize', '$state',
-    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $sanitize, $state) {
+  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$state',
+    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $state) {
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
         $scope.roles = $scope.currentUser.roles;
@@ -195,18 +195,18 @@ angular.module('Squared')
             // value. Instead, add the property to meta.attribute to have its value be deleted.
             if ($scope.currentUser.name) {
               if ($scope.currentUser.name.givenName) {
-                userData.name["givenName"] = $sanitize($scope.currentUser.name.givenName);
+                userData.name["givenName"] = $scope.currentUser.name.givenName;
               } else {
                 userData.meta.attributes.push('name.givenName');
               }
               if ($scope.currentUser.name.familyName) {
-                userData.name["familyName"] = $sanitize($scope.currentUser.name.familyName);
+                userData.name["familyName"] = $scope.currentUser.name.familyName;
               } else {
                 userData.meta.attributes.push('name.familyName');
               }
             }
             if ($scope.currentUser.displayName) {
-              userData.displayName = $sanitize($scope.currentUser.displayName);
+              userData.displayName = $scope.currentUser.displayName;
             } else {
               userData.meta.attributes.push('displayName');
             }
