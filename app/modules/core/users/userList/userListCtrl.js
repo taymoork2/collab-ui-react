@@ -412,7 +412,7 @@ angular.module('Core')
       };
 
       if ($state.current.name === "users.list") {
-        LogMetricsService.logMetrics('In users list page', LogMetricsService.getEventType('customerUsersListPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+        LogMetricsService.logMetrics('In users list page', LogMetricsService.getEventType('customerUsersListPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
       }
     }
   ]);
