@@ -470,7 +470,8 @@
     "yes": "Yes",
     "no": "No",
     "all": "All",
-    "pending": "Pending"
+    "pending": "Pending",
+    "apply": "Apply"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1354,6 +1355,31 @@
     "metric": "Metrics",
     "action": "Action"
   },
+  "thresholdListPage": {
+    "systemType": "System Type",
+    "system": "System",
+    "metricType": "Metric Type",
+    "thresholdName": "Threshold Name",
+    "genericEvent": "Generic Event",
+    "add":"Add",
+    "title":"Threshold Management",
+    "apply":"Apply",
+    "cancel":"Cancel",
+    "eventManagement":"Event Management",
+    "eventName":"Event Name",
+    "eventSeverity":"Event Severity"
+  },
+  "thresholdCardInfoPage" : {
+    "thresholdDetails":"Threshold Details",
+    "thresholdRules":"Threshold Rules :",
+    "rule":"Rule : {{counter}}{{operator}}{{value}}",
+    "hostName":"HostName : {{hostName}}",
+    "Overridethreshold":"Override threshold",
+    "OverrideThreshold":"Override Threshold",
+    "thresholdName":"Threshold Name",
+    "systemType":"System Type",
+    "system":"System"
+  },
   "faultPage": {
     "systemType": "System Type",
     "system": "System",
@@ -1604,6 +1630,21 @@
   },
   "alarmsPage": {
     "alarms": "Alarms"
+  },
+  "alarmsInfoCardPage": {
+    "details":"Alarm Details",
+    "name":"Alarm Name:",
+    "severity":"Alarm Severity:",
+    "description":"Alarm Description:",
+    "time":"Creation time:",
+    "events":"Events:"
+  },
+  "meetingInfoCard" : {
+    "meetingNumber":"Meeting Number:",
+    "host":"Host:",
+    "duration":"Duration:",
+    "resource":"Resource:",
+    "site":"Site :"
   },
   "eventsPage": {
     "events": "Events"
