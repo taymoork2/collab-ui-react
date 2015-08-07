@@ -60,6 +60,8 @@ function ReportsService($http, $rootScope, $location, Storage, Config, Log, Auth
     healthMonitor: healthMonitor
   };
 
+  return service;
+
   function buildUrl(metricType, params) {
     var metricUrl = '';
 
@@ -210,13 +212,13 @@ function ReportsService($http, $rootScope, $location, Storage, Config, Log, Auth
     }
   }
 
-  function getLandingMetrics(useCache) {
+  function getLandingMetrics (useCache) {
     getCounts(useCache);
     var charts = ['calls', 'conversations', 'contentShared'];
     getTimeCharts(useCache, charts);
   }
 
-  function getAllMetrics(useCache) {
+  function getAllMetrics (useCache) {
     getCounts(useCache);
 
     var charts = ['calls', 'conversations', 'contentShareSizes', 'contentShared',
