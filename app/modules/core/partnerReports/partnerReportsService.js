@@ -318,9 +318,6 @@
         colorOne: colors[0],
         colorTwo: colors[1]
       };
-      if (colors.length === 3) {
-        dataPoint.colorThree = colors[2];
-      }
 
       if (time.value === 0) {
         for (var i = 6; i >= 0; i--) {

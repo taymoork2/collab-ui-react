@@ -121,7 +121,7 @@
     function createActiveUsersGraph(data) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
-        data = dummyData(activeUserDiv);
+        return;
       }
 
       var graphs = activeUserGraphs(data);
@@ -199,7 +199,7 @@
       var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
       var values = ['poorQualityDurationSum', 'fairQualityDurationSum', 'goodQualityDurationSum'];
       var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue];
-      if (data[0].colorOne !== null && data[0].colorOne !== undefined) {
+      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         colors = [data[0].colorOne, data[0].colorTwo, data[0].colorThree];
       }
       var graphs = [];

@@ -169,7 +169,7 @@
           callCondition: "Successful",
           numCalls: "800"
         }],
-        labelData: { 
+        labelData: {
           numTotalCalls: 1000,
           numTotalMinutes: 1800
         },
