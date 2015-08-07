@@ -14,7 +14,8 @@
     return {
       dummyActiveUserData: dummyActiveUserData,
       dummyActivePopulationData: dummyActivePopulationData,
-      dummyMediaQualityData: dummyMediaQualityData
+      dummyMediaQualityData: dummyMediaQualityData,
+      dummyCallMetricsData: dummyCallMetricsData
     };
 
     function dummyActiveUserData(time) {
@@ -157,6 +158,23 @@
       }
 
       return dummyGraph;
+    }
+
+    function dummyCallMetricsData() {
+      return {
+        dataProvider: [{
+          callCondition: "Fail",
+          numCalls: "200"
+        }, {
+          callCondition: "Successful",
+          numCalls: "800"
+        }],
+        labelData: { 
+          numTotalCalls: 1000,
+          numTotalMinutes: 1800
+        },
+        dummy: true
+      };
     }
   }
 })();

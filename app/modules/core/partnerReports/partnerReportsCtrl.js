@@ -32,7 +32,6 @@
     vm.activeButton = [1, 2, 3];
     vm.mostActiveUsers = [];
     vm.displayMostActive = false;
-    vm.populationDescription = "";
     vm.activeUserDescription = "";
     vm.mostActiveDescription = "";
 
@@ -42,6 +41,7 @@
 
     vm.mediaQualityRefresh = REFRESH;
     vm.callMetricsRefresh = REFRESH;
+    vm.callMetricsDescription = "";
     vm.endpointRefresh = REFRESH;
     vm.registeredEndpoints = [];
     vm.endpointDescription = "";
@@ -120,11 +120,10 @@
 
     vm.updateReports = function () {
       setAllDummyData();
+      setTimeBasedText();
 
       vm.activeUsersRefresh = REFRESH;
       vm.activeUserPopulationRefresh = REFRESH;
-      vm.populationDescription = "";
-      vm.activeUserDescription = "";
       vm.mostActiveDescription = "";
       getActiveUserReports();
 
@@ -146,7 +145,7 @@
         setAllDummyData();
       }, 30);
 
-      setRegisteredEndpointText();
+      setTimeBasedText();
       PartnerReportService.getOverallActiveUserData(vm.timeSelected);
       PartnerReportService.getCustomerList().then(function (response) {
         updateCustomerFilter(response);
@@ -196,9 +195,12 @@
     function setAllDummyData() {
       setActiveUserGraph(DummyReportService.dummyActiveUserData(vm.timeSelected));
       setMediaQualityGraph(DummyReportService.dummyMediaQualityData(vm.timeSelected));
+      setCallMetricsGraph(DummyReportService.dummyCallMetricsData());
 
       if (vm.customerSelected === null) {
-        setActivePopulationGraph(DummyReportService.dummyActivePopulationData({ label: $translate.instant('activeUserPopulation.loadingCustomer') }, 50), 50);
+        setActivePopulationGraph(DummyReportService.dummyActivePopulationData({
+          label: $translate.instant('activeUserPopulation.loadingCustomer')
+        }, 50), 50);
       } else {
         setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected, 50), 50);
       }
@@ -249,16 +251,7 @@
             vm.activeUsersRefresh = EMPTY;
           }
 
-          vm.activeUserDescription = $translate.instant('activeUsers.description', {
-            time: vm.timeSelected.description,
-            customer: vm.customerSelected.label
-          });
           vm.mostActiveDescription = $translate.instant('activeUsers.mostActiveDescription', {
-            time: vm.timeSelected.description,
-            customer: vm.customerSelected.label
-          });
-          vm.populationDescription = $translate.instant('activeUserPopulation.description', {
-            percentage: response.overallPopulation,
             time: vm.timeSelected.description,
             customer: vm.customerSelected.label
           });
@@ -317,17 +310,21 @@
       });
     }
 
-    function getCallMetricsReports() {
-      return PartnerReportService.getCallMetricsData(vm.customerSelected, vm.timeSelected).then(function (data) {
-        if (data !== ABORT) {
-          if (callMetricsDonutChart === null) {
-            callMetricsDonutChart = DonutChartService.createCallMetricsDonutChart(data);
-          } else {
-            DonutChartService.updateCallMetricsDonutChart(data, callMetricsDonutChart);
-            invalidateChartSize(callMetricsDonutChart);
-          }
+    function setCallMetricsGraph(data) {
+      if (callMetricsDonutChart === null || callMetricsDonutChart === undefined) {
+        callMetricsDonutChart = DonutChartService.createCallMetricsDonutChart(data);
+      } else {
+        DonutChartService.updateCallMetricsDonutChart(data, callMetricsDonutChart);
+        invalidateChartSize(callMetricsDonutChart);
+      }
+    }
 
-          if (angular.isArray(data) && data.length === 0) {
+    function getCallMetricsReports() {
+      return PartnerReportService.getCallMetricsData(vm.customerSelected, vm.timeSelected).then(function (response) {
+        if (response !== ABORT) {
+          setCallMetricsGraph(response);
+
+          if (angular.isArray(response) && response.length === 0) {
             vm.callMetricsRefresh = EMPTY;
           } else {
             vm.callMetricsRefresh = SET;
@@ -344,7 +341,6 @@
     }
 
     function getRegisteredEndpoints() {
-      setRegisteredEndpointText();
       PartnerReportService.getRegisteredEndpoints(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response !== ABORT) {
           vm.registeredEndpoints = response;
@@ -357,7 +353,7 @@
       });
     }
 
-    function setRegisteredEndpointText() {
+    function setTimeBasedText() {
       vm.endpointDescription = $translate.instant('registeredEndpoints.description', {
         time: vm.timeSelected.description
       });
@@ -366,6 +362,12 @@
       });
       vm.devices = $translate.instant('registeredEndpoints.maxRegisteredDevices', {
         time: vm.timeSelected.label
+      });
+      vm.activeUserDescription = $translate.instant('activeUsers.description', {
+        time: vm.timeSelected.description
+      });
+      vm.callMetricsDescription = $translate.instant("callMetrics.callMetricsDesc", {
+        time: vm.timeSelected.description
       });
     }
   }

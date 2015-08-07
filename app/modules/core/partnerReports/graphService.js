@@ -118,29 +118,6 @@
       return AmCharts.makeChart(div, chartData);
     }
 
-    function dummyData(div, overallPopulation) {
-      var dataPoint = {
-        "modifiedDate": ""
-      };
-
-      if (div === mediaQualityDiv) {
-        dataPoint.good = 0;
-        dataPoint.fair = 0;
-        dataPoint.poor = 0;
-        dataPoint.totalCalls = 0;
-      }
-      if (div === activeUserPopulationChartId) {
-        dataPoint.color = Config.chartColors.brandWhite;
-        dataPoint.labelColorField = Config.chartColors.brandWhite;
-        if (overallPopulation !== null && overallPopulation !== undefined) {
-          dataPoint.overallPopulation = overallPopulation;
-        } else {
-          dataPoint.overallPopulation = 0;
-        }
-      }
-      return [dataPoint];
-    }
-
     function createActiveUsersGraph(data) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
@@ -236,8 +213,7 @@
         graphs[i].fontSize = 14;
         graphs[i].legendColor = colors[i];
         graphs[i].showBalloon = data[0].balloon;
-        graphs[i].balloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalDurationSum]]</span></span>'
-          + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[' + values[i] + ']]</span></span>';
+        graphs[i].balloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalDurationSum]]</span></span>' + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[' + values[i] + ']]</span></span>';
         if (i) {
           graphs[i].clustered = false;
         }
@@ -352,7 +328,7 @@
             colorOne: Config.chartColors.brandWhite,
             colorTwo: data[0].colorTwo,
             balloon: data[0].balloon,
-            labelColorField: Config.chartColors.brandWhite, 
+            labelColorField: Config.chartColors.brandWhite,
             overallPopulation: overallPopulation
           };
           data.unshift(angular.copy(dummy));
