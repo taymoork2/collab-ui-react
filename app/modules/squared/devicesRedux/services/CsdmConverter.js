@@ -25,20 +25,10 @@ angular.module('Squared').service('CsdmConverter',
         this.displayName = updated.displayName;
       };
       this.image = (function () {
-        if (obj.product) {
-          switch (obj.product.toUpperCase()) {
-          case "SX10":
-            // case "SX20":
-            // case "SX80":
-            // case "MX200G2":
-            // case "MX300G2":
-            // case "MX700":
-            // case "MX800":
-            // case "MX800DUAL":
-            return "images/devices/cisco_" + obj.product.toLowerCase() + ".png";
-          }
+        switch (obj.product) {
+        case "Cisco TelePresence SX10":
+          return "images/devices/cisco_sx10.png";
         }
-        return '';
       }());
     }
 

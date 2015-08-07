@@ -795,6 +795,7 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'devices-redux',
+          'devices-cleanup',
           'devices2'
         ],
         'squared-team-member': [

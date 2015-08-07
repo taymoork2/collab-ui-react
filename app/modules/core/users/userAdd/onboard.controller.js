@@ -333,15 +333,9 @@ angular.module('Core')
         var user = [];
         if ($scope.currentUser) {
           usersList = [];
-          var familyName, givenName;
-          if (angular.isDefined($scope.currentUser.name)) {
-            familyName = $scope.currentUser.name.familyName;
-            givenName = $scope.currentUser.name.givenName;
-          }
           var userObj = {
             'address': $scope.currentUser.userName,
-            'familyName': familyName,
-            'givenName': givenName
+            'name': $scope.currentUser.name
           };
           user.push(userObj);
           usersList.push(user);

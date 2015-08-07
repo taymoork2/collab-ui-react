@@ -74,19 +74,25 @@ angular.module('Core')
               var orgSettingsObj = JSON.parse(data.orgSettings[length - 1]);
 
               if (typeof (orgSettingsObj.reportingSiteUrl) !== 'undefined') {
-                $scope.problemSiteRadioValue = 1;
-                $scope.supportUrl = orgSettingsObj.reportingSiteUrl;
-                $scope.oldSupportUrl = $scope.supportUrl;
+                if (orgSettingsObj.reportingSiteUrl && orgSettingsObj.reportingSiteUrl.length) {
+                  $scope.problemSiteRadioValue = 1;
+                  $scope.supportUrl = orgSettingsObj.reportingSiteUrl;
+                  $scope.oldSupportUrl = $scope.supportUrl;
+                }
               }
               if (typeof (orgSettingsObj.reportingSiteDesc) !== 'undefined') {
-                $scope.problemSiteRadioValue = 1;
-                $scope.supportText = orgSettingsObj.reportingSiteDesc;
-                $scope.oldSupportText = $scope.supportText;
+                if (orgSettingsObj.reportingSiteDesc && orgSettingsObj.reportingSiteDesc.length) {
+                  $scope.problemSiteRadioValue = 1;
+                  $scope.supportText = orgSettingsObj.reportingSiteDesc;
+                  $scope.oldSupportText = $scope.supportText;
+                }
               }
               if (typeof (orgSettingsObj.helpUrl) !== 'undefined') {
-                $scope.helpSiteRadioValue = 1;
-                $scope.helpUrl = orgSettingsObj.helpUrl;
-                $scope.oldHelpUrl = $scope.helpUrl;
+                if (orgSettingsObj.helpUrl && orgSettingsObj.helpUrl.length) {
+                  $scope.helpSiteRadioValue = 1;
+                  $scope.helpUrl = orgSettingsObj.helpUrl;
+                  $scope.oldHelpUrl = $scope.helpUrl;
+                }
               }
               if (typeof (orgSettingsObj.isCiscoSupport) !== 'undefined') {
                 $scope.isCiscoSupport = orgSettingsObj.isCiscoSupport;
@@ -119,9 +125,12 @@ angular.module('Core')
         }
 
         if (!error) {
+          var isCiscoHelp = $scope.isManaged ? $scope.isCiscoHelp : ($scope.helpSiteRadioValue === 0);
+          var isCiscoSupport = $scope.isManaged ? $scope.isCiscoSupport : ($scope.problemSiteRadioValue === 0);
+
           updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl,
             $scope.supportText, $scope.helpUrl,
-            $scope.helpSiteRadioValue === 0, $scope.problemSiteRadioValue === 0);
+            isCiscoHelp, isCiscoSupport);
         } else {
           Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
         }

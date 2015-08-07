@@ -40,7 +40,6 @@
               </div>
             </a>
           </div>
-          <hercules-status></hercules-status>
         </section>
       </div>
     </div>
@@ -71,11 +70,11 @@
   </div>
 </div>
 
-<div id="logs-panel" class="col-md-12 col-sm-12" ng-hide="callInfoActive">
+<div id="logs-panel" class="col-md-12 col-sm-12">
   <div id="userSupport" class="customer-list">
     <div class="page-header row">
       <label ng-show="userLogs.length === 0 || !userLogs"><span id="noResults" translate="supportPage.noResults"></label>
-      <div id="supportTable" gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
+      <div id="supportTable" gridscrollbar class="gridStyle col-md-12" ng-hide="callInfoActive" ng-grid="gridOptions"></div>
     </div>
   </div>
 </div>
