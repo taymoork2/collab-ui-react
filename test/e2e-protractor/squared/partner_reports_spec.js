@@ -73,8 +73,6 @@ describe('Partner Reports', function () {
       reports.verifyDescription(time, reports.activePopulationDescription, false);
 
       utils.expectIsDisplayed(reports.activePopulationGraph);
-      utils.expectIsNotDisplayed(reports.noActivePopulationData);
-      utils.expectIsNotDisplayed(reports.activePopulationRefresh);
     });
 
     it('should not display quality tab graphs', function () {
@@ -130,11 +128,6 @@ describe('Partner Reports', function () {
       utils.expectIsNotDisplayed(reports.activeUsersTable);
     });
 
-    it('should display new customer in engagement descriptions', function () {
-      reports.verifyDescription(customer, reports.activeDescription, true);
-      reports.verifyDescription(customer, reports.activePopulationDescription, true);
-    });
-
     it('should be able to change time period', function () {
       utils.scrollTop();
       reports.clickFilter(reports.timeSelect);
@@ -143,7 +136,6 @@ describe('Partner Reports', function () {
 
     it('should display new time in engagement descriptions', function () {
       reports.verifyDescription(time, reports.activeDescription, true);
-      reports.verifyDescription(time, reports.activePopulationDescription, true);
       reports.verifyDescription(time, reports.endpointDescription, true);
     });
   });
