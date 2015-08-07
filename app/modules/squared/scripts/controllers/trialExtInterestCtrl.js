@@ -1,56 +1,58 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Squared')
-  .controller('trialExtInterestCtrl', ['$scope', '$location', '$http', 'Log', 'TrialExtInterestService',
+  angular
+    .module('Squared')
+    .controller('TrialExtInterestCtrl', TrialExtInterestCtrl);
 
-    function ($scope, $location, $http, Log, TrialExtInterestService) {
+  /* @ngInject */
+  function TrialExtInterestCtrl($scope, $location, $http, $translate, Log, TrialExtInterestService) {
 
-      //initialize ng-show variables
-      $scope.result = {
-        success: false,
-        error: false
-      };
+    //initialize ng-show variables
+    $scope.result = {
+      success: false,
+      error: false
+    };
 
-      var showHide = function (success, badLink, error) {
-        $scope.result.success = success;
-        $scope.result.badLink = badLink;
-        $scope.result.error = error;
-      };
+    var showHide = function (success, badLink, error) {
+      $scope.result.success = success;
+      $scope.result.badLink = badLink;
+      $scope.result.error = error;
+    };
 
-      var notifyPartnerSuccess = function () {
-        showHide(true, false, false);
-      };
+    var notifyPartnerSuccess = function () {
+      showHide(true, false, false);
+    };
 
-      var notifyPartnerBadLink = function () {
-        showHide(false, true, false);
-      };
+    var notifyPartnerBadLink = function () {
+      showHide(false, true, false);
+    };
 
-      var notifyPartnerError = function () {
-        showHide(false, false, true);
-      };
+    var notifyPartnerError = function () {
+      showHide(false, false, true);
+    };
 
-      var notifyPartner = function (encryptedParam) {
-        TrialExtInterestService.notifyPartnerAdmin(encryptedParam, function (data, status) {
-          if (data.success) {
-            notifyPartnerSuccess();
+    var notifyPartner = function (encryptedParam) {
+      TrialExtInterestService.notifyPartnerAdmin(encryptedParam)
+        .success(function (data, status) {
+          notifyPartnerSuccess();
+        })
+        .error(function (data, status) {
+          if (status === 400 || status === 403 || status === 404) {
+            notifyPartnerBadLink();
           } else {
-            if (data.status === 400 || data.status === 403 || data.status === 404) {
-              notifyPartnerBadLink();
-            } else {
-              notifyPartnerError();
-            }
+            notifyPartnerError();
           }
         });
-      };
+    };
 
-      var encryptedParam = $location.search().eqp;
-
-      if (encryptedParam) {
-        notifyPartner(encryptedParam);
-      } else {
-        $scope.result.errmsg = 'Invalid link. no param';
-        notifyPartnerBadLink();
-        Log.error($scope.result.errmsg);
-      }
+    var encryptedParam = $location.search().eqp;
+    if (encryptedParam) {
+      notifyPartner(encryptedParam);
+    } else {
+      $scope.result.errmsg = $translate.instant('trialExtInterest.invalidLinkNoParam');
+      notifyPartnerBadLink();
+      Log.error($scope.result.errmsg);
     }
-  ]);
+  }
+})();

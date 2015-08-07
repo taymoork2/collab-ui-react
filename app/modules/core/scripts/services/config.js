@@ -745,7 +745,7 @@ angular.module('Core')
       };
 
       config.roleStates = {
-        Full_Admin: [
+        Full_Admin: [ // Customer Admin
           'overview',
           'users',
           'user-overview',
@@ -760,7 +760,8 @@ angular.module('Core')
           'profile',
           'customerprofile',
           'support',
-          'editService'
+          'editService',
+          'trialExtInterest'
         ],
         Support: ['support', 'reports', 'billing'],
         WX2_User: ['overview', 'reports', 'support'],
@@ -833,7 +834,7 @@ angular.module('Core')
       };
 
       // These states do not require a role/service check
-      config.allowedStates = ['unauthorized', 'csadmin', 'trialExtInterest'];
+      config.allowedStates = ['unauthorized', 'csadmin'];
 
       config.ciscoOnly = ['billing'];
 

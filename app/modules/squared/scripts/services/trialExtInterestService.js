@@ -1,29 +1,25 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Squared')
-  .service('TrialExtInterestService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
-    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
+  angular
+    .module('Squared')
+    .factory('TrialExtInterestService', TrialExtInterestService);
 
-      var trialExtInterestUrl = Config.getAdminServiceUrl() + 'users/email/notify/trialExtInterest';
+  /* @ngInject */
+  function TrialExtInterestService($http, Config) {
 
-      return {
-        notifyPartnerAdmin: function (encryptedParam, callback) {
-          var trialExtInterestData = {
+    var trialExtInterestUrl = Config.getAdminServiceUrl() + 'email';
+
+    return {
+      notifyPartnerAdmin: function (encryptedParam) {
+        var trialExtInterestData = {
+          'type': '15',
+          'eqp': {
             'encryptedQueryString': encryptedParam
-          };
-          $http.post(trialExtInterestUrl, trialExtInterestData)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
-        }
-      };
-    }
-  ]);
+          }
+        };
+        return $http.post(trialExtInterestUrl, trialExtInterestData);
+      }
+    };
+  }
+})();
