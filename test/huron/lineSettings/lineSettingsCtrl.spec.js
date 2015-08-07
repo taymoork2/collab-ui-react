@@ -186,7 +186,7 @@ describe('Controller: LineSettingsCtrl', function () {
     });
 
     it('should update dtmfAccessId with the external number pattern', function () {
-      expect(HuronUser.updateDtmfAccessId).toHaveBeenCalledWith(currentUser.id, telephonyInfoWithVoicemail.alternateDirectoryNumber.pattern);
+      expect(HuronUser.updateDtmfAccessId).toHaveBeenCalledWith(currentUser.id, telephonyInfoWithVoicemail.esn);
     });
 
     it('should update hasCustomAlertingName and alertingName', function () {

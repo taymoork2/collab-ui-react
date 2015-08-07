@@ -400,6 +400,8 @@
     }
 
     function saveLineSettings() {
+      //variable to set ESN for voicemail if the primary has changed
+      var esn = vm.telephonyInfo.esn;
       HttpUtils.setTrackingID().then(function () {
         processCallerId();
         var callForwardSet = processCallForward();
@@ -429,12 +431,13 @@
             });
             promises.push(promise);
 
-            if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line
+            if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line              
               promise = LineSettings.changeInternalLine(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.telephonyInfo.currentDirectoryNumber.dnUsage, vm.assignedInternalNumber.pattern, vm.directoryNumber)
                 .then(function () {
                   vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
                   vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
                   vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
+                  esn = vm.telephonyInfo.siteSteeringDigit + vm.telephonyInfo.siteCode + vm.assignedInternalNumber.pattern;
                   processInternalNumberList();
                 });
               promises.push(promise);
@@ -467,9 +470,9 @@
 
             $q.all(promises)
               .then(function () {
+                //Change dtmfid in voicemail if the primary line has changed
                 if (vm.telephonyInfo.currentDirectoryNumber.dnUsage === 'Primary' && vm.telephonyInfo.services.indexOf('VOICEMAIL') !== -1) {
-                  var dtmfAccessId = vm.telephonyInfo.alternateDirectoryNumber.pattern ? vm.telephonyInfo.alternateDirectoryNumber.pattern : vm.telephonyInfo.currentDirectoryNumber.pattern;
-                  return HuronUser.updateDtmfAccessId(vm.currentUser.id, dtmfAccessId);
+                  return HuronUser.updateDtmfAccessId(vm.currentUser.id, esn);
                 }
               })
               .then(function () {
