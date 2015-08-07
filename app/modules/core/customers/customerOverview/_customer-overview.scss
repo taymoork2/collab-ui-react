@@ -1,0 +1,39 @@
+.customer-overview {
+
+  #trial-info {
+    margin-top: 6px;
+  }
+
+  .trial-bar {
+    margin-top: 20px;
+  }
+
+  .trial-status {
+    font-family: $font-family-sans-serif;
+    font-size: 1.2rem;
+    color: $gray-dark;
+    margin-bottom: 7px;
+  }
+
+  .trial-danger {
+    font-family: $brand-font-cisco-TT-Extra-Light;
+    font-size: 13px;
+    color: $brand-danger;
+  }
+
+  .progress {
+    margin-bottom: auto;
+  }
+
+  .progress-bar {
+    max-width: 100%;
+  }
+
+  #launchCustomer {
+    margin-top: 2rem;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+}

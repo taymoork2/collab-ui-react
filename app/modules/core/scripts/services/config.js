@@ -407,11 +407,15 @@ angular.module('Core')
           yellow: '#EBC31C',
           green: '#50D71D',
           brandSuccessDark: '#6ab140',
+          brandSuccess: "#7cc153",
           brandSuccessLight: '#99cf78',
           brandWhite: '#fff',
           grayDarkest: '#444',
           grayDarker: '#666',
+          grayDark: '#999',
+          gray: '#aaa',
           grayLight: '#ccc',
+          grayLighter: '#ddd',
           brandInfo: '#00c1aa',
           brandDanger: '#f05d3b',
           brandWarning: '#f7c100'
@@ -763,9 +767,9 @@ angular.module('Core')
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         User: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
-        PARTNER_USER: ['partnercustomers', 'trialAdd', 'trialEdit'],
-        CUSTOMER_PARTNER: ['overview', 'partnercustomers'],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
+        PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
+        CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         Site_Admin: ['site-list'],
         Application: ['organizationAdd']
       };
@@ -791,6 +795,7 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'devices-redux',
+          'devices-cleanup',
           'devices2'
         ],
         'squared-team-member': [

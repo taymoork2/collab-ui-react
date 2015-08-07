@@ -10,8 +10,6 @@
     UserDirectoryNumberService, DirectoryNumberUserService, DirectoryNumber,
     SipEndpointDirectoryNumberService, UserEndpointService, SipEndpointService) {
 
-    var broadcastEvent = "SharedLineInfoUpdated";
-
     var sharedLineUsers = [];
     var userDeviceInfo = [];
     var sharedLineInfo = {
@@ -25,7 +23,8 @@
       getUserLineCount: getUserLineCount,
       associateLineEndpoint: associateLineEndpoint,
       disassociateLineEndpoint: disassociateLineEndpoint,
-      disassociateSharedLineUser: disassociateSharedLineUser
+      disassociateSharedLineUser: disassociateSharedLineUser,
+      updateLineEndpoint: updateLineEndpoint
     };
     return sharedLineInfo;
     /////////////////////
@@ -38,57 +37,50 @@
       return userDeviceInfo;
     }
 
-    function updateSharedLineDevices(deviceList) {
-      userDeviceInfo = deviceList;
-      $rootScope.$broadcast(broadcastEvent);
-    }
-
     function loadSharedLineUsers(dnUuid, currentUserId) {
-      var sharedLineUsers = [];
+      sharedLineUsers = [];
       var promises = [];
       return DirectoryNumberUserService.query({
           'customerId': Authinfo.getOrgId(),
           'directoryNumberId': dnUuid
         }).$promise
         .then(function (dnUserInfo) {
-          if (angular.isDefined(dnUserInfo) && dnUserInfo.length > 1) {
-            var deferreds = [];
-            for (var i = 0; i < dnUserInfo.length; i++) {
-              var promise;
-              var dnUser = dnUserInfo[i];
-              var userInfo = {
-                'uuid': dnUser.user.uuid,
-                'name': '',
-                'userName': dnUser.user.userId,
-                'userDnUuid': dnUser.uuid,
-                'dnUsage': dnUser.dnUsage,
-                'dnUuid': dnUuid
-              };
-              if (userInfo.uuid === currentUserId) {
-                sharedLineUsers.unshift(userInfo);
-              } else {
-                sharedLineUsers.push(userInfo);
-              }
-              promise =
-                UserServiceCommon.get({
-                  customerId: Authinfo.getOrgId(),
-                  userId: dnUser.user.uuid
-                }).$promise
-                .then(function (commonUser) {
-                  this.name = (commonUser && commonUser.firstName) ? (commonUser.firstName) : '';
-                  this.name = (commonUser && commonUser.lastName) ? (this.name + ' ' + commonUser.lastName).trim() : this.name;
-                }.bind(userInfo));
-              promises.push(promise);
+          for (var i = 0; i < dnUserInfo.length; i++) {
+            var promise;
+            var dnUser = dnUserInfo[i];
+            var userInfo = {
+              'uuid': dnUser.user.uuid,
+              'name': '',
+              'userName': dnUser.user.userId,
+              'userDnUuid': dnUser.uuid,
+              'dnUsage': dnUser.dnUsage,
+              'dnUuid': dnUuid
+            };
+            if (userInfo.uuid === currentUserId) {
+              sharedLineUsers.unshift(userInfo);
+            } else {
+              sharedLineUsers.push(userInfo);
             }
-            return $q.all(promises)
-              .then(function () {
-                return sharedLineUsers;
-              });
+            promise =
+              UserServiceCommon.get({
+                customerId: Authinfo.getOrgId(),
+                userId: dnUser.user.uuid
+              }).$promise
+              .then(function (commonUser) {
+                this.name = (commonUser && commonUser.firstName) ? (commonUser.firstName) : '';
+                this.name = (commonUser && commonUser.lastName) ? (this.name + ' ' + commonUser.lastName).trim() : this.name;
+                this.name = (this.name) ? this.name : commonUser.userName;
+              }.bind(userInfo));
+            promises.push(promise);
           }
+          return $q.all(promises)
+            .then(function () {
+              return sharedLineUsers;
+            });
         });
     }
 
-    function loadUserDevices(userUuid, dnuuid, deviceList) {
+    function loadUserDevices(userUuid, dnuuid) {
       var promises = [];
 
       return UserEndpointService.query({
@@ -96,60 +88,64 @@
           userId: userUuid
         }).$promise
         .then(function (devices) {
-          if (angular.isDefined(devices)) {
-            for (var i = 0; i < devices.length; i++) {
-              var promise;
-              var device = {
-                userUuid: userUuid,
-                dnUuid: dnuuid,
-                uuid: devices[i].endpoint.uuid,
-                name: devices[i].endpoint.name,
-                model: '',
-                description: '',
-                isSharedLine: false,
-                maxIndex: 1,
-                endpointDnUuid: ''
-              };
-              deviceList.push(device);
+          for (var i = 0; i < devices.length; i++) {
+            var promise;
+            var device = {
+              userUuid: userUuid,
+              dnUuid: dnuuid,
+              uuid: devices[i].endpoint.uuid,
+              name: devices[i].endpoint.name,
+              model: '',
+              description: '',
+              isSharedLine: false,
+              maxIndex: 1,
+              endpointDnUuid: ''
+            };
+            userDeviceInfo.push(device);
 
-              promise =
-                SipEndpointService.get({
-                  customerId: Authinfo.getOrgId(),
-                  sipEndpointId: device.uuid
-                }).$promise
-                .then(function (endpoint) {
-                  if (endpoint) {
-                    this.model = endpoint.model;
-                    this.description = endpoint.description;
-                  }
-                }.bind(device));
-              promises.push(promise);
+            promise =
+              SipEndpointService.get({
+                customerId: Authinfo.getOrgId(),
+                sipEndpointId: device.uuid
+              }).$promise
+              .then(function (endpoint) {
+                if (endpoint) {
+                  this.model = endpoint.model;
+                  this.description = endpoint.description;
+                }
+              }.bind(device));
+            promises.push(promise);
 
-              promise =
-                setDeviceSharedLine(device.uuid, dnuuid)
-                .then(function (info) {
-                  if (angular.isDefined(info)) {
-                    this.isSharedLine = info.isSharedLine;
-                    this.maxIndex = info.maxIndex;
-                    this.endpointDnUuid = info.endpointDnUuid;
-
-                  }
-                }.bind(device));
-              promises.push(promise);
-            }
-            return $q.all(promises)
-              .then(function () {
-                return deviceList;
-              });
+            promise =
+              setDeviceSharedLine(device.uuid, dnuuid)
+              .then(function (info) {
+                if (angular.isDefined(info)) {
+                  this.isSharedLine = info.isSharedLine;
+                  this.maxIndex = info.maxIndex;
+                  this.endpointDnUuid = info.endpointDnUuid;
+                }
+              }.bind(device));
+            promises.push(promise);
           }
+          return $q.all(promises)
+            .then(function () {
+              return userDeviceInfo;
+            });
         });
     }
 
     function loadSharedLineUserDevices(dnUuid) {
-      var deviceList = [];
+      userDeviceInfo = [];
+      var promises = [];
       angular.forEach(sharedLineUsers, function (user) {
-        loadUserDevices(user.uuid, dnUuid, deviceList).then(updateSharedLineDevices);
+        var promise;
+        promise = loadUserDevices(user.uuid, dnUuid);
+        promises.push(promise);
       });
+      return $q.all(promises)
+        .then(function () {
+          return userDeviceInfo;
+        });
     }
 
     function setDeviceSharedLine(deviceUuid, dnuuid) {
@@ -168,12 +164,9 @@
               if (d.directoryNumber.uuid === dnuuid) {
                 info.isSharedLine = true;
                 info.endpointDnUuid = d.uuid;
-
               }
               info.maxIndex = (info.maxIndex < d.index) ? d.index : info.maxIndex;
-
             });
-
           }
           return info;
         });
@@ -227,13 +220,21 @@
     }
 
     function disassociateLineEndpoint(deviceUuid, directoryNumberId, endpointDnAssnId) {
-      var promises = [];
-      var promise = SipEndpointDirectoryNumberService.delete({
+      return SipEndpointDirectoryNumberService.delete({
         'customerId': Authinfo.getOrgId(),
         'sipendpointId': deviceUuid,
         'endpointDnAssnId': endpointDnAssnId
       }).$promise;
     }
+
+    function updateLineEndpoint(deviceUuid, directoryNumberId, endpointDnAssnId, data) {
+      return SipEndpointDirectoryNumberService.update({
+        'customerId': Authinfo.getOrgId(),
+        'sipendpointId': deviceUuid,
+        'endpointDnAssnId': endpointDnAssnId
+      }, data).$promise;
+    }
+
   }
 
 })();

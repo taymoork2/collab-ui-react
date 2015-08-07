@@ -279,6 +279,7 @@
     "avgConversations": "Average Conversations",
     "activeUsers": "Active Users",
     "noData": "No Data",
+    "noCustomerData": "No Customer Data",
     "week": "Last Week",
     "week2": "last week",
     "month": "Last Month",
@@ -305,18 +306,17 @@
     "squaredActivity": "Spark Activity",
     "user": "User",
     "users": "Users",
-    "description": "Active Users tracks the number of users who have made calls or used Spark Chat for {{customer}} compared to the number of registered users over the {{time}}.",
-    "mostActiveDescription": "During the {{time}}, these are the top most active users for {{customer}}."
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
+    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}."
   },
   "mediaQuality": {
-    "mediaQuality": "Media Quality",
-    "totalCalls": "Total Calls",
-    "excellent": "Excellent",
+    "mediaQuality": "Device Media Quality",
+    "totalCalls": "Total Minutes",
     "good": "Good",
     "fair": "Fair",
     "poor": "Poor",
-    "description": "Media quality provides a breakdown of the quality of all connected calls during the selected period. For more information about media quality, see the {knowledge base}.",
-    "mediaQualityGraphError": "There was an error while loading media quality data."
+    "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
+    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}."
   },
   "callMetrics": {
     "calls": "Calls",
@@ -325,7 +325,7 @@
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
-    "callMetricsDesc": "Call metrics show the total number of calls made, and the number of minutes those calls totaled during the selected period.  Call metrics also breaks down the percentage of calls that were successfully connected and had good or excellent media throughout the duration, the percentage of calls that were connected but had poor media quality, and the percentage of calls that failed to connect.",
+    "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and fauled calls for the selected customers.",
     "totalCalls": "Total Calls",
     "totalCallMinutes": "Total Call Minutes"
   },
@@ -336,13 +336,14 @@
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "Registered Endpoints tracks the number of new devices registered during the {{time}}."
+    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level."
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
-    "description": "Across all your customers, {{percentage}}% of their employees have placed at least one advanced Spark call over the {{time}}. Here is how {{customer}} compares to that average.",
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
-    "acrossCustomers": "Across All Customers"
+    "acrossCustomers": "Across All Customers",
+    "loadingCustomer": "Loading Customer Data"
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -469,7 +470,9 @@
     "on": "On",
     "off": "Off",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "all": "All",
+    "pending": "Pending"
   },
   "notifications": {
     "success": "Success notifications",
@@ -503,6 +506,7 @@
     "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
     "convertUsersText": "Convert employees of your organization who have signed up for Project Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
+    "convertError": " could not be converted. Contact support for assistance converting this user.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
     "name": "Name",
@@ -685,6 +689,8 @@
     "activationDateHeader": "Activation Date",
     "addDeviceStep1": "Where will this device be installed?",
     "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
+    "addDeviceStep2": "Your activation code has been created",
+    "addDeviceStep2Desc": "Once you use this activation code it will magically turn into a device and unicorns will sing.",
     "emptyDevices1": "Once you add a new device,",
     "emptyDevices2": "you'll see it listed here.",
     "deleteDevice": "Delete Device",
@@ -1132,6 +1138,11 @@
     "disableVoicemailTitle": "Disable Voicemail",
     "disableVoicemailDialogue": "Disabling voicemail will permanently remove all of the user's voicemail messages.  Do you want to disable this user's voicemail?"
   },
+  "externalNumberPanel": {
+    "phoneNumbers": "Phone Numbers",
+    "addNumbers": "Add Numbers",
+    "editNumbers": "Edit Phone Numbers"
+  },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",
     "noResults": "No Results",
@@ -1172,6 +1183,7 @@
     "activeUsersTitle": "Daily Active Users",
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Files Shared",
+    "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
   },
   "trialModal": {
@@ -1225,13 +1237,14 @@
     "contactEmail": "Email",
     "contactPhone": "Phone",
     "launchButton": "Launch Customer Portal",
-    "edit": "Edit",
+    "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
-    "licenses": "Number of licenses",
+    "trialOverview": "Trial",
+    "licenses": "Number of Licenses",
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
-    "daysLeft": "day(s) left",
+    "daysLeft": "Day(s) left",
     "allTrials": "All",
     "activeTrials": "Active Trials",
     "expiring": "Trial Expiring",
@@ -1239,7 +1252,6 @@
     "unused": "unused licenses",
     "uploadNumbers": "Upload Numbers",
     "overPlan": "over plan limit",
-    "communication": "Communication",
     "phoneNumbers": "Phone Numbers",
     "none": "None"
   },

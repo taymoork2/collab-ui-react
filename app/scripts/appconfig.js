@@ -323,7 +323,7 @@ angular
             reloadToggle: false
           },
           data: {
-            displayName: 'Communication'
+            displayName: 'Communications'
           }
         })
         .state('user-overview.communication.directorynumber', {
@@ -587,6 +587,17 @@ angular
       /*
         devices redux
       */
+      .state('devices-cleanup', {
+        url: '/devices-cleanup',
+        templateUrl: 'modules/squared/devicesCleanup/cleanup.html',
+        controller: 'DevicesCleanupCtrl',
+        controllerAs: 'dc',
+        parent: 'main'
+      })
+
+      /*
+        devices redux
+      */
       .state('devices-redux', {
           url: '/devices-redux',
           templateUrl: 'modules/squared/devicesRedux/devices.html',
@@ -693,9 +704,41 @@ angular
             filter: null
           }
         })
-        .state('partnercustomers.list.preview', {
-          templateUrl: 'modules/core/customers/customerPreview/customerPreview.tpl.html',
-          controller: 'CustomerPreviewCtrl'
+        .state('customer-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'CustomerOverviewCtrl',
+              controllerAs: 'customerOverview',
+              templateUrl: 'modules/core/customers/customerOverview/customerOverview.tpl.html'
+            }
+          },
+          resolve: {
+            identityCustomer: /* @ngInject */ function ($stateParams, $q, Orgservice) {
+              var defer = $q.defer();
+              if ($stateParams.currentCustomer) {
+                Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId);
+              }
+
+              return defer.promise;
+
+              function orgCallback(data, status) {
+                defer.resolve(data);
+              }
+            }
+          },
+          params: {
+            currentCustomer: {}
+          },
+          data: {
+            displayName: 'Overview'
+          }
+        })
+        .state('customer-overview.externalNumbers', {
+          templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
+          data: {
+            displayName: 'Phone Numbers'
+          }
         })
         .state('modal', {
           abstract: true,

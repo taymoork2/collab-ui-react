@@ -1,0 +1,73 @@
+<div class="customer-overview">
+  <cs-sp-header>
+    <div class="header-info" id="customer-info">
+      <div class="header-info-wrap">
+        <div class="header-title">{{customerOverview.currentCustomer.customerName}}</div>
+        <div class="header-sub-info">
+          <span translate="customerPage.contactEmail"></span> {{customerOverview.currentCustomer.customerEmail}}
+        </div>
+      </div>
+    </div>
+  </cs-sp-header>
+
+  <cs-sp-container>
+
+    <cs-sp-section ng-if="customerOverview.currentCustomer.trialId">
+      <div class="section-title-row">
+        <span class="section-name" translate="customerPage.trialOverview"></span>
+      </div>
+      <div id="trial-info">
+        <div class="feature-name">
+          {{customerOverview.currentCustomer.offer}}
+        </div>
+
+        <div class="trial-bar">
+          <div class="trial-status">
+            <span>
+              <span>{{customerOverview.currentCustomer.duration}}</span> <span  translate="customerPage.dayTrial"></span>
+            </span>
+            <span class="pull-right">
+              <span ng-class="{'trial-danger': customerOverview.currentCustomer.daysLeft <= 5, 'user-title': customerOverview.currentCustomer.daysLeft > 5}">{{customerOverview.getDaysLeft(customerOverview.currentCustomer.daysLeft)}}</span>
+              <span ng-if="customerOverview.currentCustomer.daysLeft > 0" ng-class="{'trial-danger': customerOverview.currentCustomer.daysLeft <= 5, 'user-title': customerOverview.currentCustomer.daysLeft > 5}" translate="customerPage.daysLeft"></span>
+            </span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" ng-class="{'danger-bar': customerOverview.currentCustomer.daysLeft <= 5, 'warning-bar': (customerOverview.currentCustomer.daysLeft < customerOverview.currentCustomer.duration/2), 'success-bar': (customerOverview.currentCustomer.daysLeft >= customerOverview.currentCustomer.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(customerOverview.currentCustomer)}}" aria-valuemin="0" aria-valuemax="{{customerOverview.currentCustomer.duration}}" style="width: {{customerOverview.currentCustomer.percentUsed}}%;"></div>
+          </div>
+
+
+        </div>
+      </div>
+
+      <div class="section-title-row">
+        <span class="section-name" translate="customerPage.trialTerms"></span>
+        <span class="actions-menu dropdown pull-right">
+          <button class="actions-button btn-none dropdown-toggle">
+            <i class="icon icon-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-primary actions-services">
+            <li><a href ng-click="customerOverview.openEditTrialModal()" translate="customerPage.edit"></a></li>
+          </ul>
+        </span>
+      </div>
+
+      <div class="feature-list">
+        <ul>
+          <li class="feature">
+            <span class="feature-name" translate="customerPage.licenses"></span>
+            <span class="feature-details">{{customerOverview.currentCustomer.licenses}}</span>
+          </li>
+          <li class="feature">
+            <span class="feature-name" translate="customerPage.duration"></span>
+            <span class="feature-details">{{customerOverview.currentCustomer.duration}} <span translate="customerPage.days"></span></span>
+          </li>
+        </ul>
+      </div>
+    </cs-sp-section>
+
+    <uc-external-number-overview ng-if="customerOverview.isSquaredUC"></uc-external-number-overview>
+
+    <button ng-disabled="!customerOverview.currentCustomer.isAllowedToManage" id="launchCustomer" class="btn btn-lg btn-primary center" translate="customerPage.launchButton" ng-click="customerOverview.launchCustomerPortal()"></button>
+
+  </cs-sp-container>
+</div>

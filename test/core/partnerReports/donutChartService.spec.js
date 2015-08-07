@@ -6,19 +6,9 @@ describe('Service: Donut Chart Service', function () {
   var validateService = {
     validateNow: function (varOne, varTwo) {}
   };
-  var processedCallMetricsData = {
-    dataProvider: [{
-      "callCondition": "Fail",
-      "numCalls": 1
-    }, {
-      "callCondition": "Successful",
-      "numCalls": 99
-    }],
-    labelData: {
-      "numTotalCalls": 100,
-      "numTotalMinutes": 299
-    }
-  };
+  var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  var processedCallMetricsData = angular.copy(dummyData.callMetrics);
+  processedCallMetricsData.dummy = undefined;
 
   beforeEach(module('Core'));
 

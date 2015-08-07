@@ -5,13 +5,15 @@ angular.module('Core')
   .service('LogMetricsService', ['$rootScope', '$http', 'Authinfo', 'Config', 'Log', 'Storage', 'Auth',
     function ($rootScope, $http, Authinfo, Config, Log, Storage, Auth) {
 
-      function LogMetricEvent(eventAction, eventType, status, elapsedTime, units) {
+      function LogMetricEvent(eventAction, eventType, status, elapsedTime, units, data) {
         this.logStatus = status;
         this.eventAction = eventAction;
         this.eventType = eventType;
         this.units = units;
         this.time = moment().utc().format();
         this.elapsedTime = elapsedTime;
+        if (data !== null)
+          this.data = data;
       }
 
       return {
@@ -39,7 +41,8 @@ angular.module('Core')
           customerSupportPage: 'CUSTOMERSUPPORTPAGE',
           customerAccountPage: 'CUSTOMERACCOUNTPAGE',
           customerInviteUsersPage: 'CUSTOMERINVITEUSERSPAGE',
-          userOnboardEmailSent: 'USERONBOARDEMAILSENT'
+          userOnboardEmailSent: 'USERONBOARDEMAILSENT',
+          convertUsers: 'CONVERTUSERS'
         },
 
         getEventAction: function (eAction) {
@@ -50,7 +53,7 @@ angular.module('Core')
           return this.eventType[eType];
         },
 
-        logMetrics: function (msg, eType, eAction, status, startLog, units) {
+        logMetrics: function (msg, eType, eAction, status, startLog, units, data) {
           var metricUrl = Config.getLogMetricsUrl();
           var events = [];
           Log.debug(msg);
@@ -60,7 +63,7 @@ angular.module('Core')
             var timeDiff = moment(endLog, 'DD/MM/YYYY HH:mm:ss').diff(moment(startLog, 'DD/MM/YYYY HH:mm:ss'));
             var elapsedTime = moment().milliseconds(timeDiff).milliseconds();
 
-            events[0] = new LogMetricEvent(eAction, eType, status, elapsedTime, units);
+            events[0] = new LogMetricEvent(eAction, eType, status, elapsedTime, units, data);
             var logsMetricEvent = {
               metrics: events
             };
@@ -130,7 +133,7 @@ angular.module('Core')
           }
 
           if (stateFound && (msg !== null) && (eType !== null)) {
-            this.logMetrics(msg, eType, this.eventAction['buttonClick'], 200, moment(), 1);
+            this.logMetrics(msg, eType, this.eventAction['buttonClick'], 200, moment(), 1, null);
           }
         }
 

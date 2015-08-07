@@ -7,15 +7,9 @@ describe('Service: Partner Reports Service', function () {
   beforeEach(module('Core'));
 
   var dateFormat = "MMM DD, YYYY";
+  var dayFormat = "MMM DD";
   var timeFilter = {
     value: 0
-  };
-
-  var adjustDates = function (detailedData) {
-    detailedData.data[0].data.forEach(function (item, index) {
-      item.date = moment().subtract(index + 1, 'day').format();
-    });
-    return detailedData;
   };
 
   var customers = getJSONFixture('core/json/partnerReports/customerResponse.json');
@@ -24,7 +18,6 @@ describe('Service: Partner Reports Service', function () {
   var customerData = {
     'organizations': getJSONFixture('core/json/partnerReports/customerResponse.json')
   };
-  var mediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
   var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
   var registeredEndpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
 
@@ -40,10 +33,10 @@ describe('Service: Partner Reports Service', function () {
     label: ""
   };
   var customerDatapoint = {
-    modifiedDate: moment().subtract(7, 'day').format(dateFormat),
-    totalRegisteredUsers: 116,
-    activeUsers: 111,
-    percentage: 96
+    modifiedDate: "Apr 10",
+    totalRegisteredUsers: 14,
+    activeUsers: 14,
+    percentage: 100
   };
   var customerPopulation = {
     customerName: 'Test Org One',
@@ -90,6 +83,30 @@ describe('Service: Partner Reports Service', function () {
     customer: 'Test Org One',
     direction: 'negative'
   }];
+  var mediaQualityGraphData = {
+    "data": [{
+      "orgId": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
+      "orgName": "Huron Int Test 1",
+      "data": [{
+        "date": moment().format(),
+        "details": {
+          "totalCount": "200",
+          "totalDurationSum": "3605",
+          "totalDurationAvg": "1",
+          "goodQualityCount": "194",
+          "goodQualityDurationSum": "3585",
+          "goodQualityDurationAvg": "18.479381",
+          "fairQualityCount": "5",
+          "fairQualityDurationSum": "10",
+          "fairQualityDurationAvg": "2",
+          "poorQualityCount": "1",
+          "poorQualityDurationSum": "10",
+          "poorQualityDurationAvg": "10"
+        }
+      }]
+    }],
+    "date": "2015-04-20"
+  };
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
@@ -112,7 +129,7 @@ describe('Service: Partner Reports Service', function () {
     var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
     mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true&orgId=';
-    mediaQualityUrl = 'modules/core/partnerReports/mediaQuality/mediaQualityFake.json';
+    mediaQualityUrl = baseUrl + 'detailed/managedOrgs/callQuality?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true&orgId=';
     callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true&orgId=';
     registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true&orgId=';
   }));
@@ -129,7 +146,7 @@ describe('Service: Partner Reports Service', function () {
   describe('Active User Services', function () {
     describe('should getOverallActiveUserData', function () {
       beforeEach(function () {
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
       });
 
       it('just the detailed data', function () {
@@ -143,7 +160,7 @@ describe('Service: Partner Reports Service', function () {
     describe('should getActiveUserData', function () {
       beforeEach(function () {
         $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(mostActiveUserData);
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
       });
 
       it('for an existing customer', function () {
@@ -164,7 +181,7 @@ describe('Service: Partner Reports Service', function () {
     describe('should notify an error for getActiveUserData', function () {
       it('and return empty table data', function () {
         $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(500, error);
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
 
         PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
           expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -189,7 +206,7 @@ describe('Service: Partner Reports Service', function () {
           expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
           expect(response.graphData).toEqual([]);
           expect(response.tableData[0]).toEqual(customerTableDataPoint);
-          expect(response.populationGraph[0]).toEqual(zeroPopulation);
+          expect(response.populationGraph[0]).toEqual(undefined);
           expect(response.overallPopulation).toEqual(0);
         });
         $httpBackend.flush();
@@ -229,7 +246,7 @@ describe('Service: Partner Reports Service', function () {
 
     it('getMostRecentUpdate should return the most recent update', function () {
       $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(mostActiveUserData);
-      $httpBackend.whenGET(activeUsersDetailedUrl).respond(adjustDates(activeUserDetailedData));
+      $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
 
       PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
         expect(PartnerReportService.getMostRecentUpdate()).toEqual(moment(mostActiveUserData.date).format(dateFormat));
@@ -240,8 +257,27 @@ describe('Service: Partner Reports Service', function () {
 
   describe('Media Quality Services', function () {
     it('should get MediaQuality Metrics', function () {
-      $httpBackend.whenGET(mediaQualityUrl).respond(mediaQualityGraphData);
-      expect(mediaQualityGraphData).toBeDefined();
+      $httpBackend.whenGET(mediaQualityUrl + customers[0].customerOrgId).respond(mediaQualityGraphData);
+      PartnerReportService.getMediaQualityMetrics(customer, timeFilter).then(function (data) {
+        expect(data[6].totalDurationSum).toBe(parseInt(mediaQualityGraphData.data[0].data[0].details.totalDurationSum));
+        expect(data[6].goodQualityDurationSum).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.goodQualityDurationSum));
+        expect(data[6].fairQualityDurationSum).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.fairQualityDurationSum));
+        expect(data[6].poorQualityDurationSum).toEqual(parseInt(mediaQualityGraphData.data[0].data[0].details.poorQualityDurationSum));
+
+        expect(data[0].totalDurationSum).toBe(0);
+        expect(data[0].goodQualityDurationSum).toBe(0);
+        expect(data[0].fairQualityDurationSum).toBe(0);
+        expect(data[0].poorQualityDurationSum).toBe(0);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should get empty array for GET failure', function () {
+      $httpBackend.whenGET(mediaQualityUrl + customers[0].customerOrgId).respond(500, error);
+      PartnerReportService.getMediaQualityMetrics(customer, timeFilter).then(function (data) {
+        expect(data).toEqual([]);
+      });
+      $httpBackend.flush();
     });
   });
 

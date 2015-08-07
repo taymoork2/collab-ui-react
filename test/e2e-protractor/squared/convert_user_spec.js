@@ -4,7 +4,7 @@
 /* global it */
 /* global login,navigation,users,utils,notifications, protractor, deleteUtils */
 
-describe('Convert Users', function () {
+xdescribe('Convert Users', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
@@ -26,7 +26,6 @@ describe('Convert Users', function () {
   describe('convert users', function () {
     it('convert user operations', function () {
       utils.expectIsDisabled(landing.convertNextButton);
-      //utils.clickUser(testEmail);
       utils.click(landing.unlicensedUserRow);
       utils.expectIsEnabled(landing.convertNextButton);
       utils.scrollBottom('.modal');

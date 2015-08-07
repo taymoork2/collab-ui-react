@@ -7,11 +7,6 @@
 
   /* @ngInject */
   function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, UserOTPService, $q, LogMetricsService, Notification) {
-    var userPayload = {
-      'userName': null,
-      'firstName': null,
-      'lastName': null
-    };
 
     function deleteUser(uuid) {
       return UserServiceCommon.remove({
@@ -29,23 +24,15 @@
     }
 
     function create(uuid, data) {
-      var user = angular.copy(userPayload);
+      var user = {};
       user.userName = data.email;
 
-      if (angular.isString(data.name)) {
-        var names = data.name.split(/\s+/);
-        if (names.length === 1) {
-          user.lastName = names[0];
-        } else {
-          user.firstName = names[0];
-          user.lastName = names[1];
+      if (data.name) {
+        if (data.name.givenName) {
+          user.firstName = data.name.givenName.trim();
         }
-      } else {
-        if (data.givenName) {
-          user.firstName = data.givenName;
-        }
-        if (data.familyName) {
-          user.lastName = data.familyName;
+        if (data.name.familyName) {
+          user.lastName = data.name.familyName.trim();
         }
       }
 
@@ -118,10 +105,10 @@
           emailInfo.expiresOn = otpInfo.expiresOn;
           return HuronEmailService.save({}, emailInfo).$promise
             .then(function () {
-              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             })
             .catch(function (response) {
-              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), response.status || 409, moment(), 1);
+              LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), response.status || 409, moment(), 1, null);
               //Notify email error, don't rethrow error
               Notification.errorResponse(response, 'usersPage.emailError');
             });

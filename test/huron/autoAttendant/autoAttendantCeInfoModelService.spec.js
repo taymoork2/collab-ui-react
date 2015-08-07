@@ -9,7 +9,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
   var rawCeInfos = [{
     "name": "Oleg's Call Experience 1",
     "resources": [{
-      "id": "212b075f-0a54-4040-bd94-d2aa247bd9f9",
+      "id": "1111", //"212b075f-0a54-4040-bd94-d2aa247bd9f9", //workaround Tropo-AA integration
       "trigger": "incomingCall",
       "type": "directoryNumber",
       "number": "1111"
@@ -18,7 +18,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
   }, {
     "name": "AA2",
     "resources": [{
-      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
+      "id": "1112", //"00097a86-45ef-44a7-aa78-6d32a0ca1d3b", //workaround Tropo-AA integration
       "trigger": "incomingCall",
       "type": "directoryNumber",
       "number": "1112"
