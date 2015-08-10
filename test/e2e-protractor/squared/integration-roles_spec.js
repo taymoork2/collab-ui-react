@@ -14,14 +14,8 @@ describe('Org Entitlement flow', function () {
     utils.dumpConsoleErrors();
   });
 
-  it('should login as non-sso admin user', function () {
-    login.login('pbr-admin');
-  });
-
-  describe('without sync', function () {
-    it('clicking on users tab should change the view', function () {
-      navigation.clickUsers();
-    });
+  it('should login as non-sso admin user and view users', function () {
+    login.login('pbr-admin', '#/users');
   });
 
   it('should display conversations panel for test user', function () {
