@@ -13,12 +13,8 @@ describe('Invite User and Check Buckets', function () {
   describe('Account Add User', function () {
     var addEmail = utils.randomTestGmail();
 
-    it('should login', function () {
-      login.login('account-admin');
-    });
-
-    it('clicking on users tab should change the view', function () {
-      navigation.clickUsers();
+    it('should login and view users', function () {
+      login.login('account-admin', '#/users');
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function () {

@@ -109,6 +109,7 @@
     "getJSONFixture": true,
     "enterpriseResource": true,
     "orgprofile": true,
+    "trialextinterest": true,
     "TIMEOUT": true
   }
 }

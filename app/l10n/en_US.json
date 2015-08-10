@@ -1664,5 +1664,13 @@
         "message_with_description": "The device reported an unknown error. Error code is: {{errorCode}}. Description provided: {{description}}"
       }
     }
+  },
+  "trialExtInterest": {
+    "thank": "Thank you.",
+    "notifyPartnerSuccessMsg": "Your partner has been notified and will contact you soon.",
+    "invalidLink": "The link you clicked is invalid or you are not entitled to see the page.",
+    "invalidLinkNoParam": "Invalid link. no param",
+    "error": "Something went wrong.",
+    "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   }
 }

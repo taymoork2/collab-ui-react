@@ -10,12 +10,8 @@ describe('CMR shown under Enterprise Edition', function () {
   });
 
   describe('Display the invite page', function () {
-    it('should login as multiple-subscription-user', function () {
-      login.login('multiple-subscription-user');
-    });
-
-    it('clicking on users tab should change the view', function () {
-      navigation.clickUsers();
+    it('should login as multiple-subscription-user and view users', function () {
+      login.login('multiple-subscription-user', '#/users');
     });
 
     it('click on invite user button should pop up the page', function () {

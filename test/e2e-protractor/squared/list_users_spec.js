@@ -10,12 +10,8 @@ describe('List users flow', function () {
     utils.dumpConsoleErrors();
   });
 
-  it('should login as non-sso admin user', function () {
-    login.login('pbr-admin');
-  });
-
-  it('clicking on users tab should change the view', function () {
-    navigation.clickUsers();
+  it('should login as non-sso admin user and view users', function () {
+    login.login('pbr-admin', '#/users');
   });
 
   it('should search and click on user', function () {
