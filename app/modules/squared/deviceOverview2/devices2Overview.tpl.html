@@ -4,7 +4,7 @@
     <div class="feature-list">
       <p><i class="fa fa-circle device-status-yellow"></i>
       <a> {{devices2Overview.currentEntity.displayStatus}} </a></p>
-      <p translate="deviceOverviewPage.activationInstructions" translate-values="{room:device2Overview.currentDevice.room}"><p>
+      <p translate="deviceOverviewPage.activationInstructions" translate-values="{room:devices2Overview.currentEntity.room}"><p>
       <p>{{devices2Overview.currentEntity.formattedActivationCode}}<p>
       <!-- <p>If this activation is no longer needed:<p> -->
       <!-- <button id="deviceDeleteButton" class="btn btn-lg btn-default pull-left" ng-click="">
@@ -38,19 +38,19 @@
           </tr>
           <tr>
             <td style="border:none" translate="deviceOverviewPage.software"></td>
-            <td style="border:none">{{device2Overview.software}}</td>
+            <td style="border:none">{{devices2Overview.software}}</td>
           </tr>
           <tr>
             <td style="border:none" translate="deviceOverviewPage.serial"></td>
-            <td style="border:none">{{device2Overview.currentDevice.serial}}</td>
+            <td style="border:none">{{devices2Overview.currentEntity.serial}}</td>
           </tr>
           <tr>
             <td style="border:none" translate="deviceOverviewPage.ipAddr"></td>
-            <td style="border:none">{{device2Overview.ip}}</td>
+            <td style="border:none">{{devices2Overview.ip}}</td>
           </tr>
           <tr>
             <td style="border:none" translate="deviceOverviewPage.macAddr"></td>
-            <td style="border:none">{{device2Overview.currentDevice.mac}}</td>
+            <td style="border:none">{{devices2Overview.currentEntity.mac}}</td>
           </tr>
         </tbody>
       </table>
