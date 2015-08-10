@@ -15,6 +15,8 @@ function SpacesService($rootScope, $http, Storage, Config, Log, Auth, Authinfo) 
     getDeviceStatus: getDeviceStatus
   };
 
+  return service;
+
   function listDevices(callback) {
     $http.get(deviceUrl)
       .success(function (data, status) {
