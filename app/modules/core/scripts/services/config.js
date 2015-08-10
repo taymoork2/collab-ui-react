@@ -412,7 +412,10 @@ angular.module('Core')
           brandWhite: '#fff',
           grayDarkest: '#444',
           grayDarker: '#666',
+          grayDark: '#999',
+          gray: '#aaa',
           grayLight: '#ccc',
+          grayLighter: '#ddd',
           brandInfo: '#00c1aa',
           brandDanger: '#f05d3b',
           brandWarning: '#f7c100'
@@ -742,7 +745,7 @@ angular.module('Core')
       };
 
       config.roleStates = {
-        Full_Admin: [
+        Full_Admin: [ // Customer Admin
           'overview',
           'users',
           'user-overview',
@@ -757,7 +760,8 @@ angular.module('Core')
           'profile',
           'customerprofile',
           'support',
-          'editService'
+          'editService',
+          'trialExtInterest'
         ],
         Support: ['support', 'reports', 'billing'],
         WX2_User: ['overview', 'reports', 'support'],

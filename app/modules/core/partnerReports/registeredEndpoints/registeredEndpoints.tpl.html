@@ -31,11 +31,11 @@
         </tr>
       </tbody>
     </table>
-    <div id="endpointRefreshDiv" ng-show="nav.isRefresh(nav.endpointRefresh)">
-      <i class='spinner-position icon icon-spinner icon-2x'></i>
+    <div id="endpointRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.endpointRefresh)">
+      <i class='icon icon-spinner icon-2x'></i>
     </div>
-    <div ng-show="nav.isEmpty(nav.endpointRefresh)">
-      <h3 class="no-data" translate='reportsPage.noData'></h3>
+    <div ng-if="nav.isEmpty(nav.endpointRefresh)">
+      <h3 class="no-data" translate='reportsPage.noCustomerData'></h3>
     </div>
   </div>
 </div>
