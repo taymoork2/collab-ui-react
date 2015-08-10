@@ -6,11 +6,10 @@ describe('Customer Profile Page', function () {
   });
 
   it('should login as squared team member admin user', function () {
-    login.login('pbr-admin');
+    login.login('pbr-admin', '#/profile');
   });
 
   it('should display customer profile page', function () {
-    navigation.clickOrgProfile();
     utils.expectIsDisplayed(orgprofile.supportForm);
     utils.expectIsDisplayed(orgprofile.orgProfilePageTitle);
     utils.expectIsDisplayed(orgprofile.orgProfileSaveBtn);

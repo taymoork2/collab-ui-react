@@ -1,27 +1,33 @@
 'use strict';
 
 angular.module('Squared')
-  .service('Activateservice', ['$http', 'Config', 'Auth',
-    function Activateservice($http, Config, Auth) {
-      var userUrl = Config.getAdminServiceUrl();
+  .service('Activateservice', ActivateService);
 
-      return {
-        activateUser: function (encryptedParam) {
-          return Auth.setAccessToken().then(function () {
-            return $http.post(userUrl + 'users/email/activate', {
-              'encryptedQueryString': encryptedParam
-            });
-          });
-        },
+/* @ngInject */
+function ActivateService($http, Config, Auth) {
+  var userUrl = Config.getAdminServiceUrl();
 
-        resendCode: function (eqp) {
-          return Auth.setAccessToken().then(function () {
-            return $http.post(userUrl + 'users/email/reverify', {
-              'encryptedQueryString': eqp
-            });
-          });
-        }
+  var service = {
+    userUrl: userUrl,
+    activateUser: activateUser,
+    resendCode: resendCode
+  };
 
-      };
-    }
-  ]);
+  return service;
+
+  function activateUser(encryptedParam) {
+    return Auth.setAccessToken().then(function () {
+      return $http.post(userUrl + 'users/email/activate', {
+        'encryptedQueryString': encryptedParam
+      });
+    });
+  }
+
+  function resendCode(eqp) {
+    return Auth.setAccessToken().then(function () {
+      return $http.post(userUrl + 'users/email/reverify', {
+        'encryptedQueryString': eqp
+      });
+    });
+  }
+}
