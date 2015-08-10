@@ -30,10 +30,10 @@ angular.module('Core')
           if (customerOrgName.length > 0 && customerAdminEmail.length > 0 && offersList.length > 0) {
             return $http.post(accountUrl, accountRequest)
               .success(function (data, status) {
-                LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1);
+                LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
               })
               .error(function (data, status) {
-                LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1);
+                LogMetricsService.logMetrics('Start Organization', LogMetricsService.getEventType('organizationCreated'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
               });
           }
         },

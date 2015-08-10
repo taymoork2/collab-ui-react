@@ -52,7 +52,7 @@ angular.module('Core')
 
               } else if (Authinfo.isPartnerAdmin()) {
                 if (Auth.isLoginMarked()) {
-                  LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+                  LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                   Auth.clearLoginMarker();
                 }
                 state = 'partneroverview';
@@ -64,7 +64,7 @@ angular.module('Core')
               $rootScope.services = Authinfo.getServices();
 
               if (state !== 'partneroverview' && Auth.isLoginMarked()) {
-                LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+                LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                 Auth.clearLoginMarker();
               }
 

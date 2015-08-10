@@ -283,11 +283,7 @@
           graph[0].customerName = customer.label;
           return angular.copy(graph);
         }
-        return [{
-          customerName: customer.label,
-          customerId: customer.value,
-          percentage: 0
-        }];
+        return [];
       }
     }
 
@@ -301,14 +297,14 @@
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
           var customerData = activeUserCustomerGraphs[customer.value].graphData;
-          var graph = getDateBase(customerData[customerData.length - 1].date, time);
+          var graph = getDateBase(customerData[customerData.length - 1].date, time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark]);
           return combineMatchingDates(graph, customerData);
         }
         return [];
       }
     }
 
-    function getDateBase(mostRecent, time) {
+    function getDateBase(mostRecent, time, colors) {
       var graph = [];
       var dataPoint = {
         totalRegisteredUsers: 0,
@@ -317,24 +313,24 @@
         totalDurationSum: 0,
         goodQualityDurationSum: 0,
         fairQualityDurationSum: 0,
-        poorQualityDurationSum: 0
+        poorQualityDurationSum: 0,
+        balloon: true,
+        colorOne: colors[0],
+        colorTwo: colors[1]
       };
+
       if (time.value === 0) {
-        var offset = 0;
         for (var i = 6; i >= 0; i--) {
-          dataPoint.date = moment(mostRecent).subtract(i, 'day').format();
           dataPoint.modifiedDate = moment(mostRecent).subtract(i, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
         for (var x = 3; x >= 0; x--) {
-          dataPoint.date = moment(mostRecent).subtract(x * 7, 'day').format();
           dataPoint.modifiedDate = moment(mostRecent).subtract(x * 7, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else {
         for (var y = 2; y >= 0; y--) {
-          dataPoint.date = moment().subtract(y, 'month').startOf('month').format();
           dataPoint.modifiedDate = moment().subtract(y, 'month').startOf('month').format(monthFormat);
           graph.push(angular.copy(dataPoint));
         }
@@ -431,9 +427,9 @@
             var mostRecent = moment(graphData[graphData.length - 1].date).format(dateFormat);
             var graphBase = [];
             if (time.value === 0 && mostRecent !== moment().format(dateFormat) && mostRecent !== moment().subtract(1, 'day').format(dateFormat)) {
-              graphBase = getDateBase(moment().subtract(1, 'day'), time);
+              graphBase = getDateBase(moment().subtract(1, 'day'), time, []);
             } else {
-              graphBase = getDateBase(graphData[graphData.length - 1].date, time);
+              graphBase = getDateBase(graphData[graphData.length - 1].date, time, []);
             }
             angular.forEach(graphData, function (index) {
               graphBase = combineQualityGraphs(graphBase, index);

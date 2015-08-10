@@ -69,6 +69,8 @@ angular.module('Core')
       $scope.licenses = [];
       var convertSuccess = [];
       var convertFailures = [];
+      var convertUsersCount = 0;
+      var convertStartTime = 0;
 
       $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
       $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
@@ -528,7 +530,7 @@ angular.module('Core')
 
             if (numAddedUsers > 0) {
               var msg = 'Invited ' + numAddedUsers + ' users';
-              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers);
+              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers, null);
             }
 
             for (var i = 0; i < data.userResponse.length; i++) {
@@ -779,6 +781,12 @@ angular.module('Core')
             Notification.notify(convertSuccess, 'success');
             Notification.notify(convertFailures, 'error');
             $scope.$dismiss();
+            var msg = 'Migrated ' + convertSuccess.length + ' users';
+            var migratedata = {
+              totalUsers: convertUsersCount,
+              successfullyConverted: convertSuccess.length
+            };
+            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
           }
         }
 
@@ -881,6 +889,7 @@ angular.module('Core')
 
       $scope.saveConvertList = function () {
         $scope.convertSelectedList = $scope.convertGridOptions.$gridScope.selectedItems;
+        convertUsersCount = $scope.convertSelectedList.length;
         $scope.convertUsersFlow = true;
         $state.go('users.convert.services', {});
       };
@@ -889,6 +898,7 @@ angular.module('Core')
         angular.element('#btnConvert').button('loading');
         convertSuccess = [];
         convertFailures = [];
+        convertStartTime = moment();
         convertUsersInBatch();
       };
 
@@ -926,6 +936,12 @@ angular.module('Core')
               Notification.notify(convertSuccess, 'success');
               Notification.notify(convertFailures, 'error');
               $scope.$dismiss();
+              var msg = 'Migrated ' + convertSuccess.length + ' users';
+              var migratedata = {
+                totalUsers: convertUsersCount,
+                successfullyConverted: convertSuccess.length
+              };
+              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
             }
           }
         });

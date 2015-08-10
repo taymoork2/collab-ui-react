@@ -206,7 +206,7 @@ describe('Service: Partner Reports Service', function () {
           expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
           expect(response.graphData).toEqual([]);
           expect(response.tableData[0]).toEqual(customerTableDataPoint);
-          expect(response.populationGraph[0]).toEqual(zeroPopulation);
+          expect(response.populationGraph[0]).toEqual(undefined);
           expect(response.overallPopulation).toEqual(0);
         });
         $httpBackend.flush();

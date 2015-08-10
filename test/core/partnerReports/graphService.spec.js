@@ -7,19 +7,13 @@ describe('Service: Graph Service', function () {
     validate: function () {}
   };
 
-  var dummyGraphData = getJSONFixture('core/json/partnerReports/dummyGraphData.json');
-  var mediaQualityGraphData = {
-    totalDurationSum: 200,
-    goodQualityDurationSum: 194,
-    fairQualityDurationSum: 5,
-    poorQualityDurationSum: 1,
-    date: '2015-07-30T00:00:00-05:00',
-    modifiedDate: 'Jul 30, 2015'
-  };
-  var dummyPopulationData = [{
-    customerName: "Dummy Customer",
-    percentage: 0
-  }];
+  var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  var dummyGraphData = angular.copy(dummyData.activeUser.four);
+  var mediaQualityGraphData = angular.copy(dummyData.activeUser.four);
+  var dummyPopulationData = angular.copy(dummyData.activeUserPopulation);
+  dummyPopulationData.colorOne = undefined;
+  dummyPopulationData.colorTwo = undefined;
+  dummyPopulationData.balloon = true;
 
   beforeEach(module('Core'));
 

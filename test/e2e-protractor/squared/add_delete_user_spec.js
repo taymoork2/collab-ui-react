@@ -60,7 +60,8 @@ describe('Squared Add & Entitle User Flows', function () {
     });
 
     it('admin should type Yes to delete themselves', function () {
-      utils.search(adminEmail);
+      utils.searchAndClick(adminEmail);
+      utils.click(users.closeSidePanel);
       utils.click(users.userListAction);
       utils.click(users.deleteUserOption);
       utils.expectIsDisplayed(users.deleteUserModal);

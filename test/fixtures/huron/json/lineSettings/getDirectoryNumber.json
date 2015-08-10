@@ -3,6 +3,16 @@
   "pattern": "4000",
   "hasCustomAlertingName": "false",
   "alertingName": "currentUser@gmail.com",
+  "alternateNumbers": {
+    "enterpriseNumber": {
+      "pattern": "81004000",
+      "uuid": "271a303e-81c8-489d-9607-18d9ebc0c72d"
+    },
+    "externalNumber": {
+      "pattern": "+14442224000",
+      "uuid": "56b2f978-21ea-45f6-8dd9-9f4cac216443"
+    }
+  },
   "callForwardAll": {
     "voicemailEnabled": "false",
     "destination": null

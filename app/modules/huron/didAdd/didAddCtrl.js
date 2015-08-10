@@ -67,7 +67,7 @@
           DidService.addDid(e.attrs.value);
           if (!editMode && !firstValidDid) {
             firstValidDid = true;
-            LogMetricsService.logMetrics('First valid DID number entered', LogMetricsService.getEventType('trialDidEntered'), LogMetricsService.getEventAction('keyInputs'), 200, moment(), 1);
+            LogMetricsService.logMetrics('First valid DID number entered', LogMetricsService.getEventType('trialDidEntered'), LogMetricsService.getEventAction('keyInputs'), 200, moment(), 1, null);
           }
         }
         setPlaceholderText("");
