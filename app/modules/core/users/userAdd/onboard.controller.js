@@ -73,6 +73,7 @@ angular.module('Core')
       var convertStartTime = 0;
       var convertCancelled = false;
       var convertBacked = false;
+      var convertPending = false;
 
       $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
       $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
@@ -894,22 +895,32 @@ angular.module('Core')
       watchCheckboxes();
 
       $scope.cancelConvert = function () {
-        convertCancelled = true;
+        if (convertPending === true) {
+          convertCancelled = true;
+        } else {
+          $scope.$dismiss();
+        }
       };
 
       $scope.processBackButton = function () {
-        convertBacked = true;
+        if (convertPending === true) {
+          convertBacked = true;
+        } else {
+          $state.go('users.convert', {});
+        }
       };
 
       $scope.saveConvertList = function () {
         $scope.convertSelectedList = $scope.convertGridOptions.$gridScope.selectedItems;
         convertUsersCount = $scope.convertSelectedList.length;
         $scope.convertUsersFlow = true;
+        convertPending = false;
         $state.go('users.convert.services', {});
       };
 
       $scope.convertUsers = function () {
         angular.element('#btnConvert').button('loading');
+        convertPending = true;
         convertCancelled = false;
         convertBacked = false;
         convertSuccess = [];
