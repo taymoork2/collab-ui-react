@@ -66,9 +66,9 @@
       updateActiveUserPopulationGraph: updateActiveUserPopulationGraph,
     };
 
-    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor) {
+    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor, startDuration) {
       var chartData = {
-        'startDuration': 1,
+        'startDuration': startDuration,
         'type': 'serial',
         'addClassNames': true,
         'fontFamily': 'Arial',
@@ -136,7 +136,12 @@
       var legend = angular.copy(legendBase);
       legend.labelText = '[[title]]';
 
-      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase));
+      var startDuration = 1;
+      if (data[0].colorOne === Config.chartColors.grayLighter) {
+        startDuration = 0;
+      }
+
+      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase), startDuration);
     }
 
     function activeUserGraphs(data) {
@@ -167,9 +172,14 @@
         if (data === null || data === 'undefined' || data.length === 0) {
           return;
         }
+        var startDuration = 1;
+        if (data[0].colorOne === Config.chartColors.grayLighter) {
+          startDuration = 0;
+        }
 
         activeUsersChart.dataProvider = data;
         activeUsersChart.graphs = activeUserGraphs(data);
+        activeUsersChart.startDuration = startDuration;
         activeUsersChart.validateData();
       }
     }
@@ -192,8 +202,13 @@
       var legend = angular.copy(legendBase);
       legend.reversedOrder = true;
 
+      var startDuration = 1;
+      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        startDuration = 0;
+      }
+
       var numFormat = angular.copy(numFormatBase);
-      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat);
+      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat, startDuration);
     }
 
     function mediaQualityGraphs(data) {
@@ -229,8 +244,14 @@
           return;
         }
 
+        var startDuration = 1;
+        if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+          startDuration = 0;
+        }
+
         mediaQualityChart.dataProvider = data;
         mediaQualityChart.graphs = mediaQualityGraphs(data);
+        mediaQualityChart.startDuration = startDuration;
         mediaQualityChart.validateData();
       }
     }
@@ -263,7 +284,12 @@
         "showNextAvailable": true
       };
 
-      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null, chartCursor);
+      var startDuration = 1;
+      if (data[0].colorTwo === Config.chartColors.gray) {
+        startDuration = 0;
+      }
+
+      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null, chartCursor, startDuration);
     }
 
     function populationGraphs(data) {
@@ -285,7 +311,8 @@
         'lineColor': data[0].colorTwo,
         'balloonColor': Config.chartColors.grayLight,
         'balloonText': populationBalloonText,
-        'showBalloon': data[0].balloon
+        'showBalloon': data[0].balloon,
+        "animationPlayed": true
       };
 
       return [graph, graphTwo];
@@ -297,8 +324,14 @@
           return;
         }
 
+        var startDuration = 1;
+        if (data[0].colorTwo === Config.chartColors.gray) {
+          startDuration = 0;
+        }
+
         activeUserPopulationChart.dataProvider = modifyPopulation(data, overallPopulation);
         activeUserPopulationChart.graphs = populationGraphs(data);
+        activeUserPopulationChart.startDuration = startDuration
         activeUserPopulationChart.validateData();
       }
 

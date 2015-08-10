@@ -153,20 +153,14 @@
         setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected, 50), 50);
 
         getRegisteredEndpoints();
-
-        getMediaQualityReports().then(function () {
-          invalidateChartSize(mediaQualityChart);
-        });
+        getMediaQualityReports();
 
         getActiveUserReports().then(function () {
-          invalidateChartSize(activeUsersChart);
           vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
         });
 
         getCallMetricsReports();
       });
-
-      setGraphResizing();
     }
 
     function updateCustomerFilter(orgsData) {
@@ -217,7 +211,6 @@
         activeUsersChart = GraphService.createActiveUsersGraph(data);
       } else {
         GraphService.updateActiveUsersGraph(data, activeUsersChart);
-        invalidateChartSize(activeUsersChart);
       }
     }
 
@@ -226,7 +219,6 @@
         activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(data, overallPopulation);
       } else {
         GraphService.updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
-        invalidateChartSize(activeUserPopulationChart);
       }
     }
 
@@ -271,33 +263,11 @@
       });
     }
 
-    function setGraphResizing() {
-      angular.element('#engagementTab').on("click", function () {
-        if (vm.activeUsersRefresh !== EMPTY) {
-          invalidateChartSize(activeUsersChart);
-        }
-        if (vm.activeUserPopulationRefresh !== EMPTY) {
-          invalidateChartSize(activeUserPopulationChart);
-        }
-      });
-
-      angular.element('#qualityTab').on("click", function () {
-        if (vm.mediaQualityRefresh !== EMPTY) {
-          invalidateChartSize(mediaQualityChart);
-        }
-
-        if (vm.callMetricsRefresh !== EMPTY) {
-          invalidateChartSize(callMetricsDonutChart);
-        }
-      });
-    }
-
     function setMediaQualityGraph(data) {
       if (mediaQualityChart === null || mediaQualityChart === undefined) {
         mediaQualityChart = GraphService.createMediaQualityGraph(data);
       } else {
         GraphService.updateMediaQualityGraph(data, mediaQualityChart);
-        invalidateChartSize(mediaQualityChart);
       }
     }
 
@@ -321,7 +291,6 @@
         callMetricsDonutChart = DonutChartService.createCallMetricsDonutChart(data);
       } else {
         DonutChartService.updateCallMetricsDonutChart(data, callMetricsDonutChart);
-        invalidateChartSize(callMetricsDonutChart);
       }
     }
 
@@ -338,12 +307,6 @@
         }
         return;
       });
-    }
-
-    function invalidateChartSize(chart) {
-      if (chart !== null && chart !== undefined) {
-        chart.invalidateSize();
-      }
     }
 
     function getRegisteredEndpoints() {
