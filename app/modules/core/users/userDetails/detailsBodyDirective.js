@@ -30,8 +30,7 @@
     }
   }
 
-  DetailsBodyController.$inject = ['$state', '$rootScope'];
-
+  /* @nginject */
   function DetailsBodyController($state, $rootScope) {
     var vm = this;
     vm.closeDetails = closeDetails;

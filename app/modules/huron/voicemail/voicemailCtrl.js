@@ -64,16 +64,11 @@
             vm.telephonyInfo.services.push('VOICEMAIL');
           }
 
-          for (var i = 0; i < vm.telephonyInfo.directoryNumbers.length; i++) {
-            var dn = vm.telephonyInfo.directoryNumbers[i];
-            if (dn.dnUsage === 'Primary') {
-              voicemailPayload.voicemail = {
-                'dtmfAccessId': dn.altDnPattern ? dn.altDnPattern : dn.pattern
-              };
-              voicemailPayload.userName = vm.currentUser.userName;
-              break;
-            }
-          }
+          voicemailPayload.voicemail = {
+            'dtmfAccessId': vm.telephonyInfo.esn
+          };
+          voicemailPayload.userName = vm.currentUser.userName;
+
           updateVoicemail(voicemailPayload, result);
         } else {
           $modal.open({

@@ -7,12 +7,10 @@
   /* @ngInject */
   function DonutChartService($translate, Config) {
     // variables for the call metrics section
-    var callConditionFailColor = Config.chartColors.grayDarkest;
-    var callConditionSuccessfulColor = Config.chartColors.brandInfo;
-    var callMetricsColors = [callConditionFailColor, callConditionSuccessfulColor];
+    var callMetricsColors = [Config.chartColors.grayDarkest, Config.chartColors.brandInfo];
+    var callMetricsDummyColors = [Config.chartColors.grayLight, Config.chartColors.grayLighter];
     var callMetricsLabels = [{
       "align": "center",
-      "color": Config.chartColors.grayDarkest,
       "size": "42",
       "text": 0,
       "y": 150
@@ -24,7 +22,6 @@
     }, {
       "align": "center",
       "size": "30",
-      "color": Config.chartColors.grayDarkest,
       "text": 0,
       "y": 235
     }, {
@@ -50,17 +47,25 @@
         createDisplayData = data.dataProvider;
         createLabels = getLabels(data.labelData);
       } else {
-        createDisplayData = [];
-        createLabels = [];
+        return;
+      }
+
+      var colors = callMetricsColors;
+      var textColor = Config.chartColors.grayDarkest;
+      var balloonText = callMetricsBalloonText;
+      if (data.dummy) {
+        colors = callMetricsDummyColors;
+        textColor = Config.chartColors.grayLight;
+        balloonText = "";
       }
 
       return AmCharts.makeChart(callMetricsDiv, {
         "type": "pie",
-        "balloonText": callMetricsBalloonText,
+        "balloonText": balloonText,
         "innerRadius": "75%",
         "labelText": callMetricsLabelText,
-        "color": Config.chartColors.grayDarkest,
-        "colors": callMetricsColors,
+        "color": textColor,
+        "colors": colors,
         "titleField": "callCondition",
         "valueField": "numCalls",
         "fontFamily": "Arial",
@@ -84,13 +89,24 @@
     function updateCallMetricsDonutChart(data, donutChart) {
       if (donutChart !== null) {
         if (!angular.isArray(data) && data.length !== 0) {
+          var colors = callMetricsColors;
+          var textColor = Config.chartColors.grayDarkest;
+          var balloonText = callMetricsBalloonText;
+          if (data.dummy) {
+            colors = callMetricsDummyColors;
+            textColor = Config.chartColors.grayLight;
+            balloonText = "";
+          }
+
           donutChart.dataProvider = data.dataProvider;
           donutChart.allLabels = getLabels(data.labelData);
+          donutChart.color = textColor;
+          donutChart.colors = colors;
+          donutChart.balloonText = balloonText;
+
           donutChart.validateNow(true, false);
         } else {
-          donutChart.dataProvider = [];
-          donutChart.allLabels = [];
-          donutChart.validateNow(true, false);
+          return;
         }
       }
     }

@@ -14,12 +14,13 @@
   .spinner-position {
     position: relative;
     top: -250px;
-  }
-  .active-user-status {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+
+    .icon-2x {
+      font-size: 4em;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
   .most-active {
     font-family: $brand-font-cisco-TT-Regular;
@@ -42,14 +43,14 @@
     border-color: transparent;
   }
   .no-data-center {
-    top: -275px;
-    left: 35%;
     position: relative;
+    top: -300px;
     transform: translate(0%, 35%);
     .no-data {
-      color: $gray-light;
+      color: $gray-darkest;
       font-family: $brand-font-cisco-TT-Light;
       font-size: 46px;
+      text-align: center;
     }
   }
 

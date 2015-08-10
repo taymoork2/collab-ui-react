@@ -279,6 +279,7 @@
     "avgConversations": "Average Conversations",
     "activeUsers": "Active Users",
     "noData": "No Data",
+    "noCustomerData": "No Customer Data",
     "week": "Last Week",
     "week2": "last week",
     "month": "Last Month",
@@ -305,16 +306,16 @@
     "squaredActivity": "Spark Activity",
     "user": "User",
     "users": "Users",
-    "description": "Active Users tracks the number of users who have made calls or used Spark Chat for {{customer}} compared to the number of registered users over the {{time}}.",
-    "mostActiveDescription": "During the {{time}}, these are the top most active users for {{customer}}."
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
+    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}."
   },
   "mediaQuality": {
-    "mediaQuality": "Media Quality",
+    "mediaQuality": "Device Media Quality",
     "totalCalls": "Total Minutes",
     "good": "Good",
     "fair": "Fair",
     "poor": "Poor",
-    "description": "Media quality provides a breakdown of the quality of all connected calls during the selected period. For more information about media quality, see the {knowledge base}.",
+    "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}."
   },
   "callMetrics": {
@@ -324,7 +325,7 @@
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
-    "callMetricsDesc": "Call metrics show the total number of calls made, and the number of minutes those calls totaled during the selected period.  Call metrics also breaks down the percentage of calls that were successfully connected and had good or excellent media throughout the duration, the percentage of calls that were connected but had poor media quality, and the percentage of calls that failed to connect.",
+    "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and fauled calls for the selected customers.",
     "totalCalls": "Total Calls",
     "totalCallMinutes": "Total Call Minutes"
   },
@@ -335,13 +336,14 @@
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "Registered Endpoints tracks the number of new devices registered during the {{time}}."
+    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level."
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
-    "description": "Across all your customers, {{percentage}}% of their employees have placed at least one advanced Spark call over the {{time}}. Here is how {{customer}} compares to that average.",
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
-    "acrossCustomers": "Across All Customers"
+    "acrossCustomers": "Across All Customers",
+    "loadingCustomer": "Loading Customer Data"
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -1662,5 +1664,13 @@
         "message_with_description": "The device reported an unknown error. Error code is: {{errorCode}}. Description provided: {{description}}"
       }
     }
+  },
+  "trialExtInterest": {
+    "thank": "Thank you.",
+    "notifyPartnerSuccessMsg": "Your partner has been notified and will contact you soon.",
+    "invalidLink": "The link you clicked is invalid or you are not entitled to see the page.",
+    "invalidLinkNoParam": "Invalid link. no param",
+    "error": "Something went wrong.",
+    "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   }
 }
