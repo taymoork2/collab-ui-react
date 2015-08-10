@@ -103,14 +103,16 @@
                     date: index.date
                   });
 
-                  populationData.push({
-                    customerId: customer.orgId,
-                    percentage: Math.round((totalActive / totalRegistered) * 100)
-                  });
-
-                  totalActive += index.activeUsers;
-                  totalRegistered += index.totalRegisteredUsers;
+                  totalActive += activeUsers;
+                  totalRegistered += totalRegisteredUsers;
                 }
+              });
+            }
+
+            if (!isNaN(Math.round((totalActive / totalRegistered) * 100)) && Math.round((totalActive / totalRegistered) * 100) > 0) {
+              populationData.push({
+                customerId: customer.orgId,
+                percentage: Math.round((totalActive / totalRegistered) * 100)
               });
             }
 
@@ -421,8 +423,8 @@
           if (response.data.data.length > 0) {
             var graph = [];
             angular.forEach(response.data.data[0].data, function (index) {
-              if (parseInt(index.details.totalDurationSum) !== 0 &&  parseInt(index.details.goodQualityDurationSum) !== 0 && parseInt(index.details.fairQualityDurationSum) !== 0 && parseInt(index.details.poorQualityDurationSum) !== 0 ) {
-                var modifiedDate= moment(index.date).format(monthFormat);
+              if (parseInt(index.details.totalDurationSum) !== 0 && parseInt(index.details.goodQualityDurationSum) !== 0 && parseInt(index.details.fairQualityDurationSum) !== 0 && parseInt(index.details.poorQualityDurationSum) !== 0) {
+                var modifiedDate = moment(index.date).format(monthFormat);
                 if (time.value === 0 || time.value === 1) {
                   modifiedDate = moment(index.date).format(dayFormat);
                 }
