@@ -71,6 +71,8 @@ angular.module('Core')
       var convertFailures = [];
       var convertUsersCount = 0;
       var convertStartTime = 0;
+      var convertCancelled = false;
+      var convertBacked = false;
 
       $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
       $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
@@ -774,13 +776,17 @@ angular.module('Core')
             resetUsersfield();
           }
         } else {
-          if ($scope.convertSelectedList.length > 0) {
+          if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
             convertUsersInBatch();
           } else {
-            angular.element('#btnConvert').button('reset');
+            if (convertBacked === false) {
+              angular.element('#btnConvert').button('reset');
+              $scope.$dismiss();
+            } else {
+              $state.go('users.convert', {});
+            }
             Notification.notify(convertSuccess, 'success');
             Notification.notify(convertFailures, 'error');
-            $scope.$dismiss();
             var msg = 'Migrated ' + convertSuccess.length + ' users';
             var migratedata = {
               totalUsers: convertUsersCount,
@@ -887,6 +893,14 @@ angular.module('Core')
       setEntitlementList();
       watchCheckboxes();
 
+      $scope.cancelConvert = function () {
+        convertCancelled = true;
+      };
+
+      $scope.processBackButton = function () {
+        convertBacked = true;
+      };
+
       $scope.saveConvertList = function () {
         $scope.convertSelectedList = $scope.convertGridOptions.$gridScope.selectedItems;
         convertUsersCount = $scope.convertSelectedList.length;
@@ -896,6 +910,8 @@ angular.module('Core')
 
       $scope.convertUsers = function () {
         angular.element('#btnConvert').button('loading');
+        convertCancelled = false;
+        convertBacked = false;
         convertSuccess = [];
         convertFailures = [];
         convertStartTime = moment();
@@ -929,13 +945,17 @@ angular.module('Core')
             }
             Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
           } else {
-            if ($scope.convertSelectedList.length > 0) {
+            if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
               convertUsersInBatch();
             } else {
-              angular.element('#btnConvert').button('reset');
+              if (convertBacked === false) {
+                angular.element('#btnConvert').button('reset');
+                $scope.$dismiss();
+              } else {
+                $state.go('users.convert', {});
+              }
               Notification.notify(convertSuccess, 'success');
               Notification.notify(convertFailures, 'error');
-              $scope.$dismiss();
               var msg = 'Migrated ' + convertSuccess.length + ' users';
               var migratedata = {
                 totalUsers: convertUsersCount,
