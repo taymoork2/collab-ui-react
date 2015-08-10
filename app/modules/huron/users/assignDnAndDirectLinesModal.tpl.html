@@ -1,0 +1,24 @@
+
+
+<div id="modalContent" class="add-users">
+  
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()" id="closeAddUser">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h3 class="modal-title" translate="usersPage.assignDnAndDirectLines"></h3>
+  </div>
+
+  <div class="modal-body">
+    <div class="loading" ng-if="processing">
+      <i class="icon icon-spinner icon-5x"></i>
+    </div >
+    <cr-assign-dns-to-users ng-if="!processing"></cr-assign-dns-to-users>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" id="btnBack" class="btn btn-default" ui-sref="users.add.services"><span translate="common.back"></span></button>
+    <button type="button" id="btnOnboard" class="btn btn-primary" ng-disabled="isDnNotAvailable()" ng-click="assignDnAndDirectLinesNext()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="common.finish"></span></button>
+  </div>
+
+</div>

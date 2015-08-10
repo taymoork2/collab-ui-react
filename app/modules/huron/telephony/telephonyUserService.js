@@ -8,6 +8,14 @@
   /* @ngInject */
   function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, UserOTPService, $q, LogMetricsService, Notification) {
 
+    var userPayload = {
+      'userName': null,
+      'firstName': null,
+      'lastName': null,
+      'directoryNumber': null,
+      'externalNumber': null
+    };
+
     function deleteUser(uuid) {
       return UserServiceCommon.remove({
         customerId: Authinfo.getOrgId(),
@@ -38,6 +46,14 @@
 
       if (angular.isDefined(uuid)) {
         user.uuid = uuid;
+      }
+
+      if (data.directoryNumber) {
+        user.directoryNumber = data.directoryNumber;
+      }
+
+      if (data.externalNumber) {
+        user.externalNumber = data.externalNumber;
       }
 
       return UserServiceCommonV2.save({
