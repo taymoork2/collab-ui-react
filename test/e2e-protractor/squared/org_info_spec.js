@@ -15,7 +15,6 @@ describe('Org Info flow', function () {
   });
 
   it('clicking on orgs tab should show the org info', function () {
-    navigation.clickOrganization();
     utils.expectIsDisplayed(manage.displayName);
     utils.expectIsDisplayed(manage.estimatedSize);
     utils.expectIsDisplayed(manage.totalUsers);
