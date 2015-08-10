@@ -15,7 +15,8 @@
       dummyActiveUserData: dummyActiveUserData,
       dummyActivePopulationData: dummyActivePopulationData,
       dummyMediaQualityData: dummyMediaQualityData,
-      dummyCallMetricsData: dummyCallMetricsData
+      dummyCallMetricsData: dummyCallMetricsData,
+      dummyEndpointData: dummyEndpointData
     };
 
     function dummyActiveUserData(time) {
@@ -175,6 +176,19 @@
         },
         dummy: true
       };
+    }
+
+    function dummyEndpointData(customer) {
+      return [{
+        customer: customer.label,
+        deviceRegistrationCountTrend: "4",
+        yesterdaysDeviceRegistrationCount: "2",
+        registeredDevicesTrend: "+5",
+        yesterdaysRegisteredDevices: "2",
+        maxRegisteredDevices: "3",
+        minRegisteredDevices: "2",
+        direction: "positive"
+      }];
     }
   }
 })();

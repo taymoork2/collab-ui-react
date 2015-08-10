@@ -10,7 +10,7 @@
   </div>
   <div class="row endpointTable">
     <p class="report-description">{{nav.endpointDescription}}</p>
-    <table class="table table-bordered">
+    <table class="table table-bordered" ng-class="{'dummyTable': nav.dummyTable}">
       <thead>
         <tr>
           <td class="vertical-center col-md-4 bold customer-data" translate="registeredEndpoints.company"></td>
@@ -34,8 +34,8 @@
     <div id="endpointRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.endpointRefresh)">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
-    <div ng-if="nav.isEmpty(nav.endpointRefresh)">
-      <h3 class="no-data" translate='reportsPage.noCustomerData'></h3>
+    <div class="no-data" ng-if="nav.isEmpty(nav.endpointRefresh)">
+      <h3 translate='reportsPage.noCustomerData'></h3>
     </div>
   </div>
 </div>

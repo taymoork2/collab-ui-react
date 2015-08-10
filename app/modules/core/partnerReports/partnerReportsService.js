@@ -87,23 +87,30 @@
 
             if (angular.isArray(customer.data)) {
               angular.forEach(customer.data, function (index) {
-                index.percentage = Math.round((parseInt(index.details.activeUsers) / parseInt(index.details.totalRegisteredUsers)) * 100);
-                index.activeUsers = parseInt(index.details.activeUsers);
-                index.totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
-                if (time.value === 0 || time.value === 1) {
-                  index.modifiedDate = moment(index.date).format(dayFormat);
-                } else {
-                  index.modifiedDate = moment(index.date).format(monthFormat);
+                var activeUsers = parseInt(index.details.activeUsers);
+                var totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
+                if (activeUsers !== 0 && totalRegisteredUsers !== 0) {
+                  var modifiedDate = moment(index.date).format(monthFormat);
+                  if (time.value === 0 || time.value === 1) {
+                    modifiedDate = moment(index.date).format(dayFormat);
+                  }
+
+                  graphData.push({
+                    activeUsers: activeUsers,
+                    totalRegisteredUsers: totalRegisteredUsers,
+                    percentage: Math.round((activeUsers / totalRegisteredUsers) * 100),
+                    modifiedDate: modifiedDate,
+                    date: index.date
+                  });
+
+                  populationData.push({
+                    customerId: customer.orgId,
+                    percentage: Math.round((totalActive / totalRegistered) * 100)
+                  });
+
+                  totalActive += index.activeUsers;
+                  totalRegistered += index.totalRegisteredUsers;
                 }
-
-                totalActive += index.activeUsers;
-                totalRegistered += index.totalRegisteredUsers;
-              });
-              graphData = customer.data;
-
-              populationData.push({
-                customerId: customer.orgId,
-                percentage: Math.round((totalActive / totalRegistered) * 100)
               });
             }
 
@@ -278,7 +285,7 @@
       } else if (customer.value === 0) {
         return [];
       } else {
-        if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
+        if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined && activeUserCustomerGraphs[customer.value].populationData.length > 0) {
           var graph = activeUserCustomerGraphs[customer.value].populationData;
           graph[0].customerName = customer.label;
           return angular.copy(graph);
@@ -295,7 +302,7 @@
         });
         return graphData;
       } else {
-        if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined) {
+        if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined && activeUserCustomerGraphs[customer.value].graphData.length > 0) {
           var customerData = activeUserCustomerGraphs[customer.value].graphData;
           var graph = getDateBase(customerData[customerData.length - 1].date, time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark]);
           return combineMatchingDates(graph, customerData);
@@ -412,29 +419,38 @@
       return getService(detailed + qualityUrl + query + orgId + customer.value, qualityCancelPromise).then(function (response) {
         if (response !== null && response !== undefined) {
           if (response.data.data.length > 0) {
-            var graphData = response.data.data[0].data;
-            angular.forEach(graphData, function (index) {
-              index.totalDurationSum = parseInt(index.details.totalDurationSum);
-              index.goodQualityDurationSum = parseInt(index.details.goodQualityDurationSum);
-              index.fairQualityDurationSum = parseInt(index.details.fairQualityDurationSum);
-              index.poorQualityDurationSum = parseInt(index.details.poorQualityDurationSum);
-              if (time.value === 0 || time.value === 1) {
-                index.modifiedDate = moment(index.date).format(dayFormat);
-              } else {
-                index.modifiedDate = moment(index.date).format(monthFormat);
+            var graph = [];
+            angular.forEach(response.data.data[0].data, function (index) {
+              if (parseInt(index.details.totalDurationSum) !== 0 &&  parseInt(index.details.goodQualityDurationSum) !== 0 && parseInt(index.details.fairQualityDurationSum) !== 0 && parseInt(index.details.poorQualityDurationSum) !== 0 ) {
+                var modifiedDate= moment(index.date).format(monthFormat);
+                if (time.value === 0 || time.value === 1) {
+                  modifiedDate = moment(index.date).format(dayFormat);
+                }
+
+                graph.push({
+                  totalDurationSum: parseInt(index.details.totalDurationSum),
+                  goodQualityDurationSum: parseInt(index.details.goodQualityDurationSum),
+                  fairQualityDurationSum: parseInt(index.details.fairQualityDurationSum),
+                  poorQualityDurationSum: parseInt(index.details.poorQualityDurationSum),
+                  modifiedDate: modifiedDate,
+                  date: index.date
+                });
               }
             });
-            var mostRecent = moment(graphData[graphData.length - 1].date).format(dateFormat);
-            var graphBase = [];
-            if (time.value === 0 && mostRecent !== moment().format(dateFormat) && mostRecent !== moment().subtract(1, 'day').format(dateFormat)) {
-              graphBase = getDateBase(moment().subtract(1, 'day'), time, []);
-            } else {
-              graphBase = getDateBase(graphData[graphData.length - 1].date, time, []);
+
+            if (graph.length > 0) {
+              var mostRecent = moment(graph[graph.length - 1].date).format(dateFormat);
+              var graphBase = [];
+              if (time.value === 0 && mostRecent !== moment().format(dateFormat) && mostRecent !== moment().subtract(1, 'day').format(dateFormat)) {
+                graphBase = getDateBase(moment().subtract(1, 'day'), time, []);
+              } else {
+                graphBase = getDateBase(graph[graph.length - 1].date, time, []);
+              }
+              angular.forEach(graph, function (index) {
+                graphBase = combineQualityGraphs(graphBase, index);
+              });
+              return graphBase;
             }
-            angular.forEach(graphData, function (index) {
-              graphBase = combineQualityGraphs(graphBase, index);
-            });
-            return graphBase;
           }
           return [];
         }

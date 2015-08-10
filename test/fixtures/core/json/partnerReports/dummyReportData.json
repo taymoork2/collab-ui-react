@@ -1,4 +1,14 @@
 {
+  "endpoints": {
+    "customer": "Test Org One",
+    "deviceRegistrationCountTrend": "4",
+    "yesterdaysDeviceRegistrationCount": "2",
+    "registeredDevicesTrend": "+5",
+    "yesterdaysRegisteredDevices": "2",
+    "maxRegisteredDevices": "3",
+    "minRegisteredDevices": "2",
+    "direction": "positive"
+  },
   "callMetrics": {
     "dataProvider": [{
       "callCondition": "Fail",

@@ -13,6 +13,7 @@
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
+    var loadingCustomer = $translate.instant('activeUserPopulation.loadingCustomer');
 
     // variables for the active users section
     var activeUserRefreshDiv = 'activeUsersRefreshDiv';
@@ -44,6 +45,7 @@
     vm.callMetricsDescription = "";
     vm.endpointRefresh = REFRESH;
     vm.registeredEndpoints = [];
+    vm.dummyTable = true;
     vm.endpointDescription = "";
     vm.trend = "";
     vm.devices = "";
@@ -134,7 +136,6 @@
       getMediaQualityReports();
 
       vm.endpointRefresh = REFRESH;
-      vm.registeredEndpoints = [];
       getRegisteredEndpoints();
     };
 
@@ -197,12 +198,17 @@
       setMediaQualityGraph(DummyReportService.dummyMediaQualityData(vm.timeSelected));
       setCallMetricsGraph(DummyReportService.dummyCallMetricsData());
 
+      vm.dummyTable = true;
       if (vm.customerSelected === null) {
         setActivePopulationGraph(DummyReportService.dummyActivePopulationData({
-          label: $translate.instant('activeUserPopulation.loadingCustomer')
+          label: loadingCustomer
         }, 50), 50);
+        vm.registeredEndpoints = DummyReportService.dummyEndpointData({
+          label: loadingCustomer
+        });
       } else {
         setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected, 50), 50);
+        vm.registeredEndpoints = DummyReportService.dummyEndpointData(vm.customerSelected);
       }
     }
 
@@ -343,11 +349,12 @@
     function getRegisteredEndpoints() {
       PartnerReportService.getRegisteredEndpoints(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response !== ABORT) {
-          vm.registeredEndpoints = response;
           if (!angular.isArray(response) || response.length === 0) {
             vm.endpointRefresh = EMPTY;
           } else {
+            vm.registeredEndpoints = response;
             vm.endpointRefresh = SET;
+            vm.dummyTable = false;
           }
         }
       });
