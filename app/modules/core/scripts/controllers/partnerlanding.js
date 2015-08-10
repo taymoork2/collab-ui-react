@@ -563,7 +563,7 @@ angular.module('Core')
       };
 
       if ($state.current.name === "partnercustomers.list") {
-        LogMetricsService.logMetrics('Partner in customers page', LogMetricsService.getEventType('partnerCustomersPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+        LogMetricsService.logMetrics('Partner in customers page', LogMetricsService.getEventType('partnerCustomersPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
       }
     }
   ]);

@@ -24,6 +24,7 @@
         uuid: 'none',
         pattern: ''
       },
+      esn: '',
       directoryNumbers: [],
       voicemail: 'Off',
       singleNumberReach: 'Off',
@@ -215,6 +216,12 @@
                 'altDnPattern': '',
                 'dnSharedUsage': ''
               };
+
+              if (userLine.dnUsage === 'Primary') {
+                DirectoryNumber.getDirectoryNumberESN(userLine.uuid).then(function (lineEsn) {
+                  telephonyInfo.esn = lineEsn;
+                });
+              }
 
               // get External (alternate) number if exists
               DirectoryNumber.getAlternateNumbers(userLine.uuid).then(function (altNumList) {

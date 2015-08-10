@@ -67,7 +67,6 @@
     };
 
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor) {
-
       var chartData = {
         'type': 'serial',
         'addClassNames': true,
@@ -119,55 +118,13 @@
       return AmCharts.makeChart(div, chartData);
     }
 
-    function dummyData(div, overallPopulation) {
-      var dataPoint = {
-        "modifiedDate": ""
-      };
-
-      if (div === activeUserDiv) {
-        dataPoint.totalRegisteredUsers = 0;
-        dataPoint.activeUsers = 0;
-        dataPoint.percentage = 0;
-      }
-      if (div === mediaQualityDiv) {
-        dataPoint.good = 0;
-        dataPoint.fair = 0;
-        dataPoint.poor = 0;
-        dataPoint.totalCalls = 0;
-      }
-      if (div === activeUserPopulationChartId) {
-        dataPoint.color = Config.chartColors.brandWhite;
-        dataPoint.labelColorField = Config.chartColors.brandWhite;
-        if (overallPopulation !== null && overallPopulation !== undefined) {
-          dataPoint.overallPopulation = overallPopulation;
-        } else {
-          dataPoint.overallPopulation = 0;
-        }
-      }
-      return [dataPoint];
-    }
-
     function createActiveUsersGraph(data) {
       // if there are no active users for this user
-      if (data.length === 0) {
-        data = dummyData(activeUserDiv);
+      if (data === null || data === 'undefined' || data.length === 0) {
+        return;
       }
-      var graphOne = angular.copy(columnBase);
-      graphOne.title = usersTitle;
-      graphOne.fillColors = Config.chartColors.brandSuccessLight;
-      graphOne.colorField = Config.chartColors.brandSuccessLight;
-      graphOne.valueField = 'totalRegisteredUsers';
-      graphOne.balloonText = activeUsersBalloonText;
 
-      var graphTwo = angular.copy(columnBase);
-      graphTwo.title = activeUsersTitle;
-      graphTwo.fillColors = Config.chartColors.brandSuccessDark;
-      graphTwo.colorField = Config.chartColors.brandSuccessDark;
-      graphTwo.valueField = 'activeUsers';
-      graphTwo.balloonText = activeUsersBalloonText;
-      graphTwo.clustered = false;
-
-      var graphs = [graphOne, graphTwo];
+      var graphs = activeUserGraphs(data);
       var valueAxes = [angular.copy(axis)];
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
@@ -177,47 +134,51 @@
 
       var legend = angular.copy(legendBase);
       legend.labelText = '[[title]]';
-      var numFormat = angular.copy(numFormatBase);
 
-      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat);
+      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase));
+    }
+
+    function activeUserGraphs(data) {
+      var graphOne = angular.copy(columnBase);
+      graphOne.title = usersTitle;
+      graphOne.fillColors = 'colorOne';
+      graphOne.colorField = 'colorOne';
+      graphOne.legendColor = data[0].colorOne;
+      graphOne.valueField = 'totalRegisteredUsers';
+      graphOne.balloonText = activeUsersBalloonText;
+      graphOne.showBalloon = data[0].balloon;
+
+      var graphTwo = angular.copy(columnBase);
+      graphTwo.title = activeUsersTitle;
+      graphTwo.fillColors = 'colorTwo';
+      graphTwo.colorField = 'colorTwo';
+      graphTwo.legendColor = data[0].colorTwo;
+      graphTwo.valueField = 'activeUsers';
+      graphTwo.balloonText = activeUsersBalloonText;
+      graphTwo.showBalloon = data[0].balloon;
+      graphTwo.clustered = false;
+
+      return [graphOne, graphTwo];
     }
 
     function updateActiveUsersGraph(data, activeUsersChart) {
       if (activeUsersChart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
-          activeUsersChart.dataProvider = dummyData(activeUserDiv);
-        } else {
-          activeUsersChart.dataProvider = data;
+          return;
         }
+
+        activeUsersChart.dataProvider = data;
+        activeUsersChart.graphs = activeUserGraphs(data);
         activeUsersChart.validateData();
       }
     }
 
     function createMediaQualityGraph(data) {
-      var mediaQualityBalloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalDurationSum]]</span></span>';
-      var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
-      var values = ['poorQualityDurationSum', 'fairQualityDurationSum', 'goodQualityDurationSum'];
-      var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue];
-      var graphs = [];
-
       if (data.length === 0) {
-        data = dummyData(mediaQualityDiv);
+        return;
       }
 
-      for (var i = 0; i < values.length; i++) {
-        graphs[i] = angular.copy(columnBase);
-        graphs[i].title = $translate.instant(titles[i]);
-        graphs[i].fillColors = colors[i];
-        graphs[i].colorField = colors[i];
-        graphs[i].valueField = values[i];
-        graphs[i].fontSize = 14;
-        graphs[i].legendColor = colors[i];
-        graphs[i].balloonText = mediaQualityBalloonText + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[' + values[i] + ']]</span></span>';
-        if (i) {
-          graphs[i].clustered = false;
-        }
-      }
-
+      var graphs = mediaQualityGraphs(data);
       var catAxis = angular.copy(axis);
       catAxis.gridPosition = 'start';
 
@@ -234,44 +195,52 @@
       return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat);
     }
 
+    function mediaQualityGraphs(data) {
+      var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
+      var values = ['poorQualityDurationSum', 'fairQualityDurationSum', 'goodQualityDurationSum'];
+      var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue];
+      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        colors = [data[0].colorOne, data[0].colorTwo, data[0].colorThree];
+      }
+      var graphs = [];
+
+      for (var i = 0; i < values.length; i++) {
+        graphs[i] = angular.copy(columnBase);
+        graphs[i].title = $translate.instant(titles[i]);
+        graphs[i].fillColors = colors[i];
+        graphs[i].colorField = colors[i];
+        graphs[i].valueField = values[i];
+        graphs[i].fontSize = 14;
+        graphs[i].legendColor = colors[i];
+        graphs[i].showBalloon = data[0].balloon;
+        graphs[i].balloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalDurationSum]]</span></span>' + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[' + values[i] + ']]</span></span>';
+        if (i) {
+          graphs[i].clustered = false;
+        }
+      }
+
+      return graphs;
+    }
+
     function updateMediaQualityGraph(data, mediaQualityChart) {
       if (mediaQualityChart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
-          mediaQualityChart.dataProvider = dummyData(mediaQualityDiv);
-        } else {
-          mediaQualityChart.dataProvider = data;
+          return;
         }
+
+        mediaQualityChart.dataProvider = data;
+        mediaQualityChart.graphs = mediaQualityGraphs(data);
         mediaQualityChart.validateData();
       }
     }
 
     function createActiveUserPopulationGraph(data, overallPopulation) {
       if (data === null || data === 'undefined' || data.length === 0) {
-        data = dummyData(activeUserPopulationChartId, overallPopulation);
-      } else {
-        data = modifyPopulation(data, overallPopulation);
+        return;
       }
 
-      var graph = angular.copy(columnBase);
-      graph.type = 'column';
-      graph.fillColors = 'color';
-      graph.colorField = 'color';
-      graph.balloonColor = Config.chartColors.grayLight;
-      graph.fontSize = 26;
-      graph.valueField = 'percentage';
-      graph.columnWidth = 0.8;
-      graph.balloonText = customerPopBalloonText;
-
-      var graphTwo = {
-        'type': 'step',
-        'valueField': 'overallPopulation',
-        'lineThickness': 2,
-        'lineColor': Config.chartColors.blue,
-        'balloonColor': Config.chartColors.grayLight,
-        'balloonText': populationBalloonText
-      };
-
-      var graphs = [graph, graphTwo];
+      data = modifyPopulation(data, overallPopulation);
+      var graphs = populationGraphs(data);
 
       var categoryAxis = angular.copy(axis);
       categoryAxis.axisAlpha = 0;
@@ -296,13 +265,39 @@
       return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null, chartCursor);
     }
 
+    function populationGraphs(data) {
+      var graph = angular.copy(columnBase);
+      graph.type = 'column';
+      graph.fillColors = 'colorOne';
+      graph.colorField = 'colorOne';
+      graph.balloonColor = Config.chartColors.grayLight;
+      graph.fontSize = 26;
+      graph.valueField = 'percentage';
+      graph.columnWidth = 0.8;
+      graph.balloonText = customerPopBalloonText;
+      graph.showBalloon = data[0].balloon;
+
+      var graphTwo = {
+        'type': 'step',
+        'valueField': 'overallPopulation',
+        'lineThickness': 2,
+        'lineColor': data[0].colorTwo,
+        'balloonColor': Config.chartColors.grayLight,
+        'balloonText': populationBalloonText,
+        'showBalloon': data[0].balloon
+      };
+
+      return [graph, graphTwo];
+    }
+
     function updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation) {
       if (activeUserPopulationChart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
-          activeUserPopulationChart.dataProvider = dummyData(activeUserPopulationChartId, overallPopulation);
-        } else {
-          activeUserPopulationChart.dataProvider = modifyPopulation(data, overallPopulation);
+          return;
         }
+
+        activeUserPopulationChart.dataProvider = modifyPopulation(data, overallPopulation);
+        activeUserPopulationChart.graphs = populationGraphs(data);
         activeUserPopulationChart.validateData();
       }
 
@@ -317,17 +312,27 @@
           item.absCompare = Math.abs(comparison);
           item.labelColorField = Config.chartColors.grayDarkest;
           item.overallPopulation = overallPopulation;
-          if (comparison >= 0) {
-            item.color = Config.chartColors.brandInfo;
-          } else {
-            item.color = Config.chartColors.brandDanger;
+          if (item.colorOne === null || item.colorOne === undefined) {
+            if (comparison >= 0) {
+              item.colorOne = Config.chartColors.brandInfo;
+            } else {
+              item.colorOne = Config.chartColors.brandDanger;
+            }
+            item.balloon = true;
+            item.colorTwo = Config.chartColors.blue;
           }
         });
 
         if (data.length === 1) {
-          var dummy = dummyData(activeUserPopulationChartId, overallPopulation);
-          data.unshift(angular.copy(dummy[0]));
-          data.push(angular.copy(dummy[0]));
+          var dummy = {
+            colorOne: Config.chartColors.brandWhite,
+            colorTwo: data[0].colorTwo,
+            balloon: data[0].balloon,
+            labelColorField: Config.chartColors.brandWhite,
+            overallPopulation: overallPopulation
+          };
+          data.unshift(angular.copy(dummy));
+          data.push(angular.copy(dummy));
         }
       }
 

@@ -39,6 +39,7 @@
     var service = {
       getNewDirectoryNumber: getNewDirectoryNumber,
       getDirectoryNumber: getDirectoryNumber,
+      getDirectoryNumberESN: getDirectoryNumberESN,
       deleteDirectoryNumber: deleteDirectoryNumber,
       disassociateDirectoryNumber: disassociateDirectoryNumber,
       updateDirectoryNumber: updateDirectoryNumber,
@@ -56,6 +57,21 @@
       return angular.copy(directoryNumberPayload);
     }
 
+    function getDirectoryNumberESN(uuid) {
+      var esn;
+      return DirectoryNumberService.get({
+          customerId: Authinfo.getOrgId(),
+          directoryNumberId: uuid
+        }).$promise
+        .then(function (data) {
+          if (typeof data.alternateNumbers.enterpriseNumber.pattern !== 'undefined') {
+            esn = data.alternateNumbers.enterpriseNumber.pattern;
+          }
+
+          return esn;
+        });
+    }
+
     function getDirectoryNumber(uuid) {
       return DirectoryNumberService.get({
           customerId: Authinfo.getOrgId(),
@@ -66,6 +82,7 @@
           dn.uuid = data.uuid;
           dn.pattern = data.pattern;
           dn.alertingName = data.alertingName;
+
           dn.hasCustomAlertingName = data.hasCustomAlertingName;
           dn.callForwardAll.voicemailEnabled = data.callForwardAll.voicemailEnabled;
           if (typeof data.callForwardAll.destination !== 'undefined') {
