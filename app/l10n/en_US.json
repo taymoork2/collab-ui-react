@@ -450,6 +450,7 @@
     "disable": "Disable",
     "cancel": "Cancel",
     "save": "Save",
+    "status": "Status",
     "ok": "Ok",
     "next": "Next",
     "close": "Close",
@@ -1290,13 +1291,15 @@
     "deviceIpAddressFailureMsg": "Failed to fetch device IP"
   },
   "deviceOverviewPage": {
-    "activationNoLongerNeeded" : "If this activation is no longer needed:",
+    "activationNoLongerNeeded": "If this activation is no longer needed:",
     "activationInstructions": "To activate a device for {{room}}, use this activation code during the setup:",
-    "ciscoSX10" : "Cisco SX10",
-    "software" : "Software",
-    "serial" : "Serial",
-    "ipAddr" : "IP Address",
-    "macAddr" : "MAC Address"
+    "newDeviceActivation": "Activation code for new device:",
+    "ciscoSX10": "Cisco SX10",
+    "software": "Software",
+    "serial": "Serial",
+    "ipAddr": "IP Address",
+    "macAddr": "MAC Address",
+    "issues": "Issues"
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
@@ -1363,24 +1366,24 @@
     "metricType": "Metric Type",
     "thresholdName": "Threshold Name",
     "genericEvent": "Generic Event",
-    "add":"Add",
-    "title":"Threshold Management",
-    "apply":"Apply",
-    "cancel":"Cancel",
-    "eventManagement":"Event Management",
-    "eventName":"Event Name",
-    "eventSeverity":"Event Severity"
+    "add": "Add",
+    "title": "Threshold Management",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "eventManagement": "Event Management",
+    "eventName": "Event Name",
+    "eventSeverity": "Event Severity"
   },
-  "thresholdCardInfoPage" : {
-    "thresholdDetails":"Threshold Details",
-    "thresholdRules":"Threshold Rules :",
-    "rule":"Rule : {{counter}}{{operator}}{{value}}",
-    "hostName":"HostName : {{hostName}}",
-    "Overridethreshold":"Override threshold",
-    "OverrideThreshold":"Override Threshold",
-    "thresholdName":"Threshold Name",
-    "systemType":"System Type",
-    "system":"System"
+  "thresholdCardInfoPage": {
+    "thresholdDetails": "Threshold Details",
+    "thresholdRules": "Threshold Rules :",
+    "rule": "Rule : {{counter}}{{operator}}{{value}}",
+    "hostName": "HostName : {{hostName}}",
+    "Overridethreshold": "Override threshold",
+    "OverrideThreshold": "Override Threshold",
+    "thresholdName": "Threshold Name",
+    "systemType": "System Type",
+    "system": "System"
   },
   "faultPage": {
     "systemType": "System Type",
@@ -1634,19 +1637,19 @@
     "alarms": "Alarms"
   },
   "alarmsInfoCardPage": {
-    "details":"Alarm Details",
-    "name":"Alarm Name:",
-    "severity":"Alarm Severity:",
-    "description":"Alarm Description:",
-    "time":"Creation time:",
-    "events":"Events:"
+    "details": "Alarm Details",
+    "name": "Alarm Name:",
+    "severity": "Alarm Severity:",
+    "description": "Alarm Description:",
+    "time": "Creation time:",
+    "events": "Events:"
   },
-  "meetingInfoCard" : {
-    "meetingNumber":"Meeting Number:",
-    "host":"Host:",
-    "duration":"Duration:",
-    "resource":"Resource:",
-    "site":"Site :"
+  "meetingInfoCard": {
+    "meetingNumber": "Meeting Number:",
+    "host": "Host:",
+    "duration": "Duration:",
+    "resource": "Resource:",
+    "site": "Site :"
   },
   "eventsPage": {
     "events": "Events"

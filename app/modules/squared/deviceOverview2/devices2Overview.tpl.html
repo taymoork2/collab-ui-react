@@ -4,7 +4,7 @@
     <div class="feature-list">
       <p><i class="fa fa-circle device-status-yellow"></i>
       <a> {{devices2Overview.currentEntity.displayStatus}} </a></p>
-      <p>To activate a device for {{devices2Overview.currentEntity.displayName}}, use this activation code during the setup:<p>
+      <p translate="deviceOverviewPage.activationInstructions" translate-values="{room:device2Overview.currentDevice.room}"><p>
       <p>{{devices2Overview.currentEntity.formattedActivationCode}}<p>
       <!-- <p>If this activation is no longer needed:<p> -->
       <!-- <button id="deviceDeleteButton" class="btn btn-lg btn-default pull-left" ng-click="">
@@ -34,23 +34,23 @@
                 <img ng-src="images/SX10.png" />
               </div>
             </td>
-            <td style="border:none">Cisco SX10</td>
+            <td style="border:none" translate="deviceOverviewPage.ciscoSX10"></td>
           </tr>
           <tr>
-            <td style="border:none">Software</td>
-            <td style="border:none">{{devices2Overview.software}}</td>
+            <td style="border:none" translate="deviceOverviewPage.software"></td>
+            <td style="border:none">{{device2Overview.software}}</td>
           </tr>
           <tr>
-            <td style="border:none">Serial</td>
-            <td style="border:none">{{devices2Overview.currentEntity.serial}}</td>
+            <td style="border:none" translate="deviceOverviewPage.serial"></td>
+            <td style="border:none">{{device2Overview.currentDevice.serial}}</td>
           </tr>
           <tr>
-            <td style="border:none">IP Address</td>
-            <td style="border:none">{{devices2Overview.ip}}</td>
+            <td style="border:none" translate="deviceOverviewPage.ipAddr"></td>
+            <td style="border:none">{{device2Overview.ip}}</td>
           </tr>
           <tr>
-            <td style="border:none">MAC Address</td>
-            <td style="border:none">{{devices2Overview.currentEntity.mac}}</td>
+            <td style="border:none" translate="deviceOverviewPage.macAddr"></td>
+            <td style="border:none">{{device2Overview.currentDevice.mac}}</td>
           </tr>
         </tbody>
       </table>
