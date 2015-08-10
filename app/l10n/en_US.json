@@ -1125,7 +1125,12 @@
   },
   "callerIdPanel": {
     "title": "Caller ID",
-    "description": "<small>Change the display name for calls from this line</small>"
+    "description": "<small>Change the display name for calls from this line</small>",
+    "directLine": "Direct Line",
+    "blockedCallerId": "Blocked Outbound Caller ID",
+    "blockedCallerIdDescription": "Caller will not see any caller ID or number",
+    "companyCallerId": "Company Caller ID",
+    "companyNumberLoadError": "Company numbers failed to load."
   },
   "sharedLinePanel": {
     "title": "Shared Line",

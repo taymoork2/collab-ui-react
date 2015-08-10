@@ -1,0 +1,30 @@
+[
+  {
+    "pattern": "+13334445555",
+    "name": "Marketing",
+    "externalNumber": {
+      "pattern": "+13334445555",
+      "uuid": "a77c73cf-fa38-499c-96ad-76b0719fe0eb"
+    },
+    "uuid": "a7e560ea-95b4-49f9-a562-ee37e8c1586f",
+    "externalCallerIdType": "Company Number"
+  }, {
+    "pattern": "+23334445555",
+    "name": "Conference Room 1234",
+    "externalNumber": {
+    "pattern": "+23334445555",
+      "uuid": "250730ae-8ed7-4af2-9544-ee9043a04648"
+    },
+    "uuid": "1ecf1dfe-9d07-4739-92da-c2ccaa85bda6",
+    "externalCallerIdType": "Company Number"
+  }, {
+    "pattern": "+12223334444",
+    "name": "JP Unlimited Inc.,",
+    "externalNumber": {
+      "pattern": "+11112223333",
+      "uuid": "240ff656-1142-40ca-9c1a-e9eeb323b4a4"
+    },
+    "uuid": "56cbd4a4-8d7e-4902-a108-23a62fa9cb22",
+    "externalCallerIdType": "Company Caller ID"
+  }
+]
