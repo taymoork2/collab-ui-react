@@ -18,7 +18,7 @@ describe('Trial Ext Interest Flow', function () {
 
     it('should display a success message with validEncryptedQueryParam', function () {
       browser.get(trialExtInterestUrl + validEncryptedQueryParam);
-      utils.expectIsDisplayed(trialExtInterest.notifyPartnerSuccess);
+      utils.expectIsDisplayed(trialextinterest.notifyPartnerSuccess);
     });
 
     it('should log out', function () {
@@ -34,7 +34,7 @@ describe('Trial Ext Interest Flow', function () {
 
     it('should display an error message with invalidQueryParam', function () {
       browser.get(trialExtInterestUrl + invalidQueryParam);
-      utils.expectIsDisplayed(trialExtInterest.notifyPartnerBadLink);
+      utils.expectIsDisplayed(trialextinterest.notifyPartnerBadLink);
     });
 
     it('should log out', function () {
