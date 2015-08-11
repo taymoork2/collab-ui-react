@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('uc.callrouter', ['uc.callpark', 'uc.autoattendant'],
+    .module('uc.callrouter', [],
       function (formlyConfigProvider) {
         var commonWrappers = ['ciscoWrapper'];
         formlyConfigProvider.setType({

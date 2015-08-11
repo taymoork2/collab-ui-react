@@ -1,20 +1,20 @@
 'use strict';
 angular.module('uc.callrouter')
 
-.constant('customComboboxConfig', {
+.constant('CustomComboboxconfig', {
   openClass: 'open',
   focusClass: 'focus'
 })
 
 .controller('CustomComboboxCtrl', CustomComboboxCtrl);
 /* @ngInject */
-function CustomComboboxCtrl($scope, $attrs, $parse, customComboboxConfig, dropdownService, $animate) {
+function CustomComboboxCtrl($scope, $attrs, $parse, CustomComboboxconfig, dropdownService, $animate) {
   var self = this,
     scope = $scope.$new(), // create a child scope so we are not polluting original one
-    openClass = customComboboxConfig.openClass,
+    openClass = CustomComboboxconfig.openClass,
     getIsOpen,
     setIsOpen = angular.noop,
-    focusClass = customComboboxConfig.focusClass,
+    focusClass = CustomComboboxconfig.focusClass,
     getIsFocused,
     setIsFocused = angular.noop,
     toggleInvoker = $attrs.onToggle ? $parse($attrs.onToggle) : angular.noop;
@@ -158,7 +158,7 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
   return {
     restrict: 'E',
     // replace: true,
-    templateUrl: 'modules/huron/callRouter/CreateCompanyNumber/CustomCombobox.tpl.html',
+    templateUrl: 'modules/huron/callRouter/companyNumber/CustomCombobox.tpl.html',
     require: 'ngModel',
     controller: 'CustomComboboxCtrl',
     scope: {

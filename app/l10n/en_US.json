@@ -1267,7 +1267,10 @@
     "saveCallerIdSuccess": "Caller Id and number saved successfully.",
     "saveCallerIdError": "Caller Id and number failed to save.",
     "updateCallerIdSuccess": "Caller ID and number updated successfully",
-    "updateCallerIdError": "Caller ID and number failed to update."
+    "updateCallerIdError": "Caller ID and number failed to update.",
+    "companycallerID": "Company Caller ID",
+    "hide": "Hide",
+    "expand": "Expand"
   },
   "routingModal": {
     "title": "Company Number",

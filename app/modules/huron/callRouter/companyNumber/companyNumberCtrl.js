@@ -3,10 +3,10 @@
 
   angular
     .module('uc.callrouter')
-    .controller('createCompanyNumber', createCompanyNumber);
+    .controller('companyNumber', companyNumber);
 
   /* @ngInject */
-  function createCompanyNumber($scope, $modalInstance, $translate, CallRouterService, Authinfo) {
+  function companyNumber($scope, $modalInstance, $translate, CallRouterService, Authinfo) {
     var vm = $scope;
     vm.model = {};
     vm.saveCompanyNumber = saveCompanyNumber;
@@ -35,7 +35,7 @@
 
     }
 
-    vm.createCompanyNumber = [{
+    vm.companyNumber = [{
       key: 'name',
       type: 'input',
       templateOptions: {

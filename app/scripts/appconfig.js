@@ -843,7 +843,7 @@ angular
             },
             'nav': {
               templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
-              controller: 'CallRoutingNavCtrl',
+              controller: 'CallRoutingCtrl',
               controllerAs: 'nav'
             },
             'main': {
@@ -865,7 +865,7 @@ angular
             },
             'nav': {
               templateUrl: 'modules/huron/callRouter/callRouterNav.tpl.html',
-              controller: 'CallRouterNavCtrl',
+              controller: 'CallRouterCtrl',
               controllerAs: 'nav'
             },
             'main': {
