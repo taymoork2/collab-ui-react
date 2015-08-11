@@ -8,7 +8,6 @@
   padding: 0px;
   height: auto;
   overflow: hidden;
-
   .reports-header {
     @extend .row;
     @extend .page-header;
@@ -19,7 +18,6 @@
       font-family: $brand-font-cisco-TT-Extra-Light;
       color: $gray-darker;
     }
-
     .report-filters {
       .filter-one {
         width: 160px;
@@ -40,6 +38,12 @@
         width: 100%;
       }
     }
+  }
+  .no-data {
+    color: $gray-darkest;
+    font-family: $brand-font-cisco-TT-Light;
+    font-size: 30px;
+    text-align: center;
   }
   .report-tabs-container {
     padding: 5px;

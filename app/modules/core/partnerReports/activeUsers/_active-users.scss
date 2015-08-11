@@ -45,22 +45,13 @@
     position: relative;
     top: -300px;
     transform: translate(0%, 35%);
-    .no-data {
-      color: $gray-darkest;
-      font-family: $brand-font-cisco-TT-Light;
-      font-size: 46px;
-      text-align: center;
-    }
   }
-
   #activeUsersdiv{
     position: relative;
     overflow: visible !important;
     top: -50px;
-
     .amcharts-chart-div{
       overflow: visible !important;
-
       svg {
         top: 55px !important;
         position: relative !important;

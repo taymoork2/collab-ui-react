@@ -17,17 +17,17 @@
     var axis = {
       'axisColor': Config.chartColors.grayLight,
       'gridColor': Config.chartColors.grayLight,
+      'color': Config.chartColors.grayDarkest,
       'gridAlpha': 0,
       'axisAlpha': 1,
-      'tickLength': 0,
-      'color': Config.chartColors.grayDarkest
+      'tickLength': 0
     };
     var legendBase = {
+      'color': Config.chartColors.grayDarkest,
       'align': 'center',
       'autoMargins': false,
       'switchable': false,
       'fontSize': 13,
-      'color': Config.chartColors.grayDarkest,
       'markerLabelGap': 10,
       'markerType': 'square',
       'markerSize': 10,
@@ -138,7 +138,7 @@
       legend.labelText = '[[title]]';
 
       var startDuration = 1;
-      if (data[0].colorOne === Config.chartColors.grayLighter) {
+      if (data[0].colorOne === Config.chartColors.dummyGrayLight) {
         startDuration = 0;
       }
 
@@ -174,7 +174,7 @@
           return;
         }
         var startDuration = 1;
-        if (data[0].colorOne === Config.chartColors.grayLighter) {
+        if (data[0].colorOne === Config.chartColors.dummyGrayLight) {
           startDuration = 0;
         }
 
@@ -244,7 +244,6 @@
         if (data === null || data === 'undefined' || data.length === 0) {
           return;
         }
-
         var startDuration = 1;
         if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
           startDuration = 0;
@@ -286,7 +285,7 @@
       };
 
       var startDuration = 1;
-      if (data[0].colorTwo === Config.chartColors.gray) {
+      if (data[0].colorTwo === Config.chartColors.dummyGray) {
         startDuration = 0;
       }
 
@@ -326,7 +325,7 @@
         }
 
         var startDuration = 1;
-        if (data[0].colorTwo === Config.chartColors.gray) {
+        if (data[0].colorTwo === Config.chartColors.dummyGray) {
           startDuration = 0;
         }
 
@@ -340,14 +339,13 @@
     }
 
     function modifyPopulation(data, overallPopulation) {
-
       if (angular.isArray(data)) {
         angular.forEach(data, function (item) {
           var comparison = item.percentage - overallPopulation;
           item.absCompare = Math.abs(comparison);
-          item.labelColorField = Config.chartColors.grayDarkest;
           item.overallPopulation = overallPopulation;
           if (item.colorOne === null || item.colorOne === undefined) {
+            item.labelColorField = Config.chartColors.grayDarkest;
             if (comparison >= 0) {
               item.colorOne = Config.chartColors.brandInfo;
             } else {
@@ -355,6 +353,8 @@
             }
             item.balloon = true;
             item.colorTwo = Config.chartColors.blue;
+          } else {
+            item.labelColorField = Config.chartColors.grayLight;
           }
         });
 

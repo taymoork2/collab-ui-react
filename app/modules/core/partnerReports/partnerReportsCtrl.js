@@ -150,7 +150,6 @@
       PartnerReportService.getOverallActiveUserData(vm.timeSelected);
       PartnerReportService.getCustomerList().then(function (response) {
         updateCustomerFilter(response);
-        setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected, 50), 50);
 
         getRegisteredEndpoints();
         getMediaQualityReports();
@@ -193,17 +192,12 @@
       setCallMetricsGraph(DummyReportService.dummyCallMetricsData());
 
       vm.dummyTable = true;
-      if (vm.customerSelected === null) {
-        setActivePopulationGraph(DummyReportService.dummyActivePopulationData({
-          label: loadingCustomer
-        }, 50), 50);
-        vm.registeredEndpoints = DummyReportService.dummyEndpointData({
-          label: loadingCustomer
-        });
-      } else {
-        setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected, 50), 50);
-        vm.registeredEndpoints = DummyReportService.dummyEndpointData(vm.customerSelected);
-      }
+      setActivePopulationGraph(DummyReportService.dummyActivePopulationData({
+        label: loadingCustomer
+      }, 50), 50);
+      vm.registeredEndpoints = DummyReportService.dummyEndpointData({
+        label: loadingCustomer
+      });
     }
 
     function setActiveUserGraph(data) {

@@ -418,7 +418,10 @@ angular.module('Core')
           grayLighter: '#ddd',
           brandInfo: '#00c1aa',
           brandDanger: '#f05d3b',
-          brandWarning: '#f7c100'
+          brandWarning: '#f7c100',
+          dummyGray: '#ECECEC',
+          dummyGrayLight: '#F3F3F3',
+          dummyGrayLighter: '#FAFAFA'
         },
 
         confMap: {
