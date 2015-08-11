@@ -332,7 +332,7 @@
 
         activeUserPopulationChart.dataProvider = modifyPopulation(data, overallPopulation);
         activeUserPopulationChart.graphs = populationGraphs(data);
-        activeUserPopulationChart.startDuration = startDuration
+        activeUserPopulationChart.startDuration = startDuration;
         activeUserPopulationChart.validateData();
       }
 
