@@ -51,6 +51,11 @@ angular.module('Core')
         id: 'radioNamesAndEmail'
       }];
 
+      /****************************** Did to Dn Mapping START *******************************/
+      //***
+      //***
+      //***********************************************************************************/
+
       function activateDID() {
         loadInternalNumberPool().then(
           loadExternalNumberPool(),
@@ -62,25 +67,6 @@ angular.module('Core')
           $scope.processing = false;
         });
 
-      }
-
-      function clearNameAndEmailFields() {
-        $scope.model.firstName = '';
-        $scope.model.lastName = '';
-        $scope.model.emailAddress = '';
-        $scope.model.userInfoValid = false;
-      }
-
-      function ServiceFeature(label, value, name, license) {
-        this.label = label;
-        this.value = value;
-        this.name = name;
-        this.license = license;
-      }
-
-      function FakeLicense(type) {
-        this.licenseType = type;
-        this.features = Config.getDefaultEntitlements();
       }
 
       function returnInternalNumberlist(pattern) {
@@ -172,6 +158,73 @@ angular.module('Core')
           }
         }
 
+      }
+
+      function checkDidDnDupes() {
+        var didDnDupe = {
+          didDupe: false,
+          dnDupe: false
+        };
+        for (var i = 0; i < $scope.usrlist.length - 1; i++) {
+          for (var j = i + 1; j < $scope.usrlist.length; j++) {
+            if (($scope.usrlist[i].assignedDn.pattern !== "None") && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
+              didDnDupe.dnDupe = true;
+            }
+            if (($scope.usrlist[i].externalNumber.pattern !== "None") && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
+              didDnDupe.didDupe = true;
+            }
+            if (didDnDupe.dnDupe && didDnDupe.didDupe) {
+              break;
+            }
+          }
+          if (didDnDupe.dnDupe && didDnDupe.didDupe) {
+            break;
+          }
+        }
+        return didDnDupe;
+      }
+
+      $scope.isDnNotAvailable = function () {
+        for (var i = 0; i < $scope.usrlist.length; i++) {
+          if ($scope.usrlist[i].assignedDn === undefined) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      $scope.assignServicesSave = function () {
+        if ($scope.radioStates.commRadio) {
+          $scope.processing = true;
+          activateDID();
+          $state.go('users.add.services.dn');
+        } else {
+          onboardUsers(true);
+        }
+      };
+
+      /****************************** Did to Dn Mapping END *******************************/
+      //***
+      //***
+      //***********************************************************************************/
+
+      function clearNameAndEmailFields() {
+        $scope.model.firstName = '';
+        $scope.model.lastName = '';
+        $scope.model.emailAddress = '';
+        $scope.model.userInfoValid = false;
+      }
+
+      function ServiceFeature(label, value, name, license) {
+        this.label = label;
+        this.value = value;
+        this.name = name;
+        this.license = license;
+      }
+
+      function FakeLicense(type) {
+        this.licenseType = type;
+        this.features = Config.getDefaultEntitlements();
       }
 
       $scope.ConfirmAdditionalServiceSetup = function () {
@@ -957,30 +1010,6 @@ angular.module('Core')
         return deferred.promise;
       }
 
-      function checkDidDnDupes() {
-        var didDnDupe = {
-          didDupe: false,
-          dnDupe: false
-        };
-        for (var i = 0; i < $scope.usrlist.length - 1; i++) {
-          for (var j = i + 1; j < $scope.usrlist.length; j++) {
-            if (($scope.usrlist[i].assignedDn.pattern !== "None") && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
-              didDnDupe.dnDupe = true;
-            }
-            if (($scope.usrlist[i].externalNumber.pattern !== "None") && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
-              didDnDupe.didDupe = true;
-            }
-            if (didDnDupe.dnDupe && didDnDupe.didDupe) {
-              break;
-            }
-          }
-          if (didDnDupe.dnDupe && didDnDupe.didDupe) {
-            break;
-          }
-        }
-        return didDnDupe;
-      }
-
       var entitleUserCallback = function (data, status, method) {
         $scope.results = {
           resultList: []
@@ -1173,15 +1202,6 @@ angular.module('Core')
         return deferred.promise;
       };
 
-      $scope.isDnNotAvailable = function () {
-        for (var i = 0; i < $scope.usrlist.length; i++) {
-          if ($scope.usrlist[i].assignedDn === undefined) {
-            return true;
-          }
-        }
-        return false;
-      };
-
       $scope.getServicesNextText = function () {
         if ($scope.radioStates.commRadio) {
           return 'common.next';
@@ -1191,16 +1211,6 @@ angular.module('Core')
       };
 
       // Wizard hook for modal save button
-      $scope.assignServicesSave = function () {
-        if ($scope.radioStates.commRadio) {
-          $scope.processing = true;
-          activateDID();
-          $state.go('users.add.services.dn');
-        } else {
-          onboardUsers(true);
-        }
-      };
-
       $scope.assignDnAndDirectLinesNext = function () {
         return onboardUsers(true);
       };
