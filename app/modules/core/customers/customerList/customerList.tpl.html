@@ -1,23 +1,23 @@
 <div class="customer-list">
   <div class="row page-header">
     <div class="page-title col-md-8 col-sm-8">
-      <h2 class="title">{{'customerPage.title' | translate}}</h2>
+      <h2 class="title" translate="customerPage.title"></h2>
       <div dropdown class="grid-filter" ng-if="!isCustomerPartner" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
-          <span class="name" ng-if="activeFilter === 'all'">{{'customerPage.all' | translate}}</span>
-          <span class="name" ng-if="activeFilter === 'trials'">{{'customerPage.trial' | translate}}</span>
+          <span class="name" ng-if="activeFilter === 'all'" translate="customerPage.all"></span>
+          <span class="name" ng-if="activeFilter === 'trials'" translate="customerPage.trial"></span>
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
           <li class="filter" ng-class="{'active' : activeFilter === 'all'}" >
             <a href ng-click="setFilter('all')">
-              <span class="name">{{'customerPage.all' | translate}}</span>
+              <span class="name" translate="customerPage.all"></span>
               <span class="count">{{totalOrgs}}</span>
             </a>
           </li>
           <li class="filter" ng-class="{'active' : activeFilter === 'trials'}" >
             <a href ng-click="setFilter('trials')">
-              <span class="name">{{'customerPage.trial' | translate}}</span>
+              <span class="name" translate="customerPage.trial"></span>
               <span class="count">{{totalTrials}}</span>
             </a>
           </li>
