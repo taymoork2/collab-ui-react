@@ -1275,6 +1275,26 @@
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
   },
+  "callRouter": {
+    "popover": "Assign numbers for company routing and voicemail.",
+    "callerinfopopover": "Specify the default outbound Caller ID that can take an external or internal number.",
+    "title": "Manage company numbers and company caller ID",
+    "saveCallerIdSuccess": "Caller Id and number saved successfully.",
+    "saveCallerIdError": "Caller Id and number failed to save.",
+    "updateCallerIdSuccess": "Caller ID and number updated successfully",
+    "updateCallerIdError": "Caller ID and number failed to update.",
+    "companycallerID": "Company Caller ID",
+    "hide": "Hide",
+    "expand": "Expand"
+  },
+  "routingModal": {
+    "title": "Company Number",
+    "create": "Create",
+    "label": "Name",
+    "calleridnumber": "Number",
+    "companynumber": "Company Number",
+    "routeto": "Route To"
+  },
   "didManageModal": {
     "title": "Manage Phone Numbers",
     "instructionsText": "The company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers.",

@@ -850,7 +850,29 @@ angular
             },
             'nav': {
               templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
-              controller: 'CallRoutingNavCtrl',
+              controller: 'CallRoutingCtrl',
+              controllerAs: 'nav'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('callrouterBase', {
+          abstract: true,
+          parent: 'main',
+          templateUrl: 'modules/huron/callRouter/callRouter.tpl.html'
+        })
+        .state('callRouter', {
+          url: '/callRouter',
+          parent: 'callrouterBase',
+          views: {
+            'header': {
+              templateUrl: 'modules/huron/callRouter/callRouterHeader.tpl.html'
+            },
+            'nav': {
+              templateUrl: 'modules/huron/callRouter/callRouterNav.tpl.html',
+              controller: 'CallRouterCtrl',
               controllerAs: 'nav'
             },
             'main': {
