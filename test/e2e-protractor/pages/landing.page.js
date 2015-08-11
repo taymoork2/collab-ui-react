@@ -58,6 +58,7 @@ var LandingPage = function () {
   this.btnConvert = element(by.id('btnConvert'));
   this.btnBack = element(by.id('btnBack'));
   this.closeAddUser = element(by.id('closeAddUser'));
+  this.closeConvertUser = element(by.id('closeConvertUser'));
   this.unlicensedUserRow = element(by.css('.ngRow'));
 
   function convertUsersSearch(query) {
