@@ -900,6 +900,12 @@ angular
             }
           }
         })
+        .state('autoattendant.aalanding', {
+          parent: 'autoattendant',
+          templateUrl: 'modules/huron/callRouting/autoAttendant/aaLanding.tpl.html',
+          controller: 'AutoAttendantLandingCtrl',
+          controllerAs: 'aaLanding'
+        })
         .state('callpark', {
           url: '/callpark',
           parent: 'callrouting',

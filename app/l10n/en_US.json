@@ -1030,7 +1030,10 @@
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
     "errorAddNumberInUse": "Failed to add number: {{number}} already in use.",
     "errorAddNumberInUseOtherAA": "Failed to add number: {{number}} already in use by {{name}}.",
-    "errorAddNumberNotFound": "Failed to add number: {{number}} not found."
+    "errorAddNumberNotFound": "Failed to add number: {{number}} not found.",
+    "landingDevelopmentLink": "AA Development Link",
+    "landingInformation": "Auto attendants allow you to create a custom greeting, recordings, and phone menus that handle inbound calls to your business.  Choose from the following common Auto Attendant layouts, or you can build your own.",
+    "landingTitle": "Auto Attendants"
   },
   "callPark": {
     "newCallPark": "New Call Park",
