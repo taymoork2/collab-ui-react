@@ -829,23 +829,6 @@ angular.module('Core')
         };
         var isComplete = true;
         usersList = getUsersList();
-        var didDnDupes = checkDidDnDupes();
-        // check for DiD duplicates
-        if (didDnDupes.didDupe) {
-          Log.debug('Duplicate Direct Line entered.');
-          Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
-          isComplete = false;
-          deferred.reject();
-          return deferred.promise;
-        }
-        // check for Dn duplicates
-        if (didDnDupes.dnDupe) {
-          Log.debug('Duplicate Internal Extension entered.');
-          Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
-          isComplete = false;
-          deferred.reject();
-          return deferred.promise;
-        }
         Log.debug('Entitlements: ', usersList);
         var callback = function (data, status) {
           if (data.success) {
@@ -1212,6 +1195,22 @@ angular.module('Core')
 
       // Wizard hook for modal save button
       $scope.assignDnAndDirectLinesNext = function () {
+        var deferred = $q.defer();
+        var didDnDupes = checkDidDnDupes();
+        // check for DiD duplicates
+        if (didDnDupes.didDupe) {
+          Log.debug('Duplicate Direct Line entered.');
+          Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+          deferred.reject();
+          return deferred.promise;
+        }
+        // check for Dn duplicates
+        if (didDnDupes.dnDupe) {
+          Log.debug('Duplicate Internal Extension entered.');
+          Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+          deferred.reject();
+          return deferred.promise;
+        }
         return onboardUsers(true);
       };
 
