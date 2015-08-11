@@ -88,7 +88,7 @@
           }
         });
         data = {
-          data.name = vm.model.orgname;
+          name: vm.model.orgname,
           externalCallerIdType: "Company Caller ID",
           pattern: vm.model.extnum
         };
@@ -101,18 +101,19 @@
           data.pattern = vm.model.extnum;
         }
         if (vm.firstTimeCallerID) {
-          
           CallRouterFactory.saveCallerId(data).then(function (data) {
             Notification.notify([$translate.instant('callRouter.saveCallerIdSuccess', {})], 'success');
           }).catch(function (response) {
-            errors.push(Notification.processErrorResponse(response, 'callRouter.saveCallerIdError'));
+            Notification.errorResponse(response, 'callRouter.saveCallerIdError');
+            // errors.push(Notification.processErrorResponse(response, 'callRouter.saveCallerIdError'));
           });
         } else {
 
           CallRouterFactory.updateCallerId(data, vm.uuid).then(function (data) {
             Notification.notify([$translate.instant('callRouter.updateCallerIdSuccess', {})], 'success');
           }).catch(function (response) {
-            errors.push(Notification.processErrorResponse(response, 'callRouter.updateCallerIdError'));
+            // errors.push(Notification.processErrorResponse(response, 'callRouter.updateCallerIdError'));
+            Notification.errorResponse(response, 'callRouter.updateCallerIdError');
           });
         }
 
