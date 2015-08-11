@@ -15,7 +15,8 @@
       dummyActiveUserData: dummyActiveUserData,
       dummyActivePopulationData: dummyActivePopulationData,
       dummyMediaQualityData: dummyMediaQualityData,
-      dummyCallMetricsData: dummyCallMetricsData
+      dummyCallMetricsData: dummyCallMetricsData,
+      dummyEndpointData: dummyEndpointData
     };
 
     function dummyActiveUserData(time) {
@@ -30,8 +31,8 @@
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
-            colorOne: Config.chartColors.grayLighter,
-            colorTwo: Config.chartColors.grayLight,
+            colorOne: Config.chartColors.dummyGrayLight,
+            colorTwo: Config.chartColors.dummyGray,
             balloon: false
           });
         }
@@ -43,8 +44,8 @@
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
-            colorOne: Config.chartColors.grayLighter,
-            colorTwo: Config.chartColors.grayLight,
+            colorOne: Config.chartColors.dummyGrayLight,
+            colorTwo: Config.chartColors.dummyGray,
             balloon: false
           });
         }
@@ -56,8 +57,8 @@
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
-            colorOne: Config.chartColors.grayLighter,
-            colorTwo: Config.chartColors.grayLight,
+            colorOne: Config.chartColors.dummyGrayLight,
+            colorTwo: Config.chartColors.dummyGray,
             balloon: false
           });
         }
@@ -67,43 +68,14 @@
     }
 
     function dummyActivePopulationData(customer, overallPopulation) {
-      var dummyGraph = [];
-
-      if (angular.isArray(customer)) {
-        if (!angular.isArray(dummyPopulation) || customers !== customer) {
-          customers = customer;
-
-          angular.forEach(customer, function (index) {
-            var percentage = Math.floor((Math.random() * 100) + 50);
-            var color = Config.chartColors.grayLighter;
-            if (percentage < overallPopulation) {
-              color = Config.chartColors.grayLight;
-            }
-
-            dummyGraph.push({
-              customerName: index.label,
-              customerId: index.value,
-              percentage: percentage,
-              colorOne: color,
-              colorTwo: Config.chartColors.gray,
-              balloon: false
-            });
-          });
-          dummyPopulation = dummyGraph;
-        }
-
-        return dummyPopulation;
-      } else {
-        dummyGraph = [{
-          customerName: customer.label,
-          customerId: customer.value,
-          percentage: 85,
-          colorOne: Config.chartColors.grayLighter,
-          colorTwo: Config.chartColors.gray,
-          balloon: false
-        }];
-        return dummyGraph;
-      }
+      return [{
+        customerName: customer.label,
+        customerId: customer.value,
+        percentage: 85,
+        colorOne: Config.chartColors.dummyGrayLight,
+        colorTwo: Config.chartColors.dummyGray,
+        balloon: false
+      }];
     }
 
     function dummyMediaQualityData(time) {
@@ -119,9 +91,9 @@
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
             poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: Config.chartColors.gray,
-            colorTwo: Config.chartColors.grayLight,
-            colorThree: Config.chartColors.grayLighter,
+            colorOne: Config.chartColors.dummyGray,
+            colorTwo: Config.chartColors.dummyGrayLight,
+            colorThree: Config.chartColors.dummyGrayLighter,
             balloon: false
           });
         }
@@ -134,9 +106,9 @@
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
             poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: Config.chartColors.gray,
-            colorTwo: Config.chartColors.grayLight,
-            colorThree: Config.chartColors.grayLighter,
+            colorOne: Config.chartColors.dummyGray,
+            colorTwo: Config.chartColors.dummyGrayLight,
+            colorThree: Config.chartColors.dummyGrayLighter,
             balloon: false
           });
         }
@@ -149,9 +121,9 @@
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
             poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: Config.chartColors.gray,
-            colorTwo: Config.chartColors.grayLight,
-            colorThree: Config.chartColors.grayLighter,
+            colorOne: Config.chartColors.dummyGray,
+            colorTwo: Config.chartColors.dummyGrayLight,
+            colorThree: Config.chartColors.dummyGrayLighter,
             balloon: false
           });
         }
@@ -175,6 +147,19 @@
         },
         dummy: true
       };
+    }
+
+    function dummyEndpointData(customer) {
+      return [{
+        customer: customer.label,
+        deviceRegistrationCountTrend: "0",
+        yesterdaysDeviceRegistrationCount: "0",
+        registeredDevicesTrend: "0",
+        yesterdaysRegisteredDevices: "0",
+        maxRegisteredDevices: "0",
+        minRegisteredDevices: "0",
+        direction: "positive"
+      }];
     }
   }
 })();

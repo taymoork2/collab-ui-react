@@ -17,14 +17,14 @@ describe('Controller: Dummy Reports', function () {
   var activeUser = angular.copy(dummyData.activeUser);
   var mediaQuality = angular.copy(dummyData.mediaQuality);
 
-  var updateDates = function (data, time) {
+  var updateDates = function (data, filter) {
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
-    if (time.value === 0) {
+    if (filter.value === 0) {
       for (var i = 6; i >= 0; i--) {
         data[i].modifiedDate = moment().subtract(6 - i, 'day').format(dayFormat);
       }
-    } else if (time.value === 1) {
+    } else if (filter.value === 1) {
       for (var x = 0; x <= 3; x++) {
         data[x].modifiedDate = moment().subtract((3 - x) * 7, 'day').startOf('week').format(dayFormat);
       }
@@ -69,6 +69,10 @@ describe('Controller: Dummy Reports', function () {
 
     it('dummyCallMetricsData should return the expected response', function () {
       expect(DummyReportService.dummyCallMetricsData()).toEqual(angular.copy(dummyData.callMetrics));
+    });
+
+    it('dummyEndpointData should return the expected response', function () {
+      expect(DummyReportService.dummyEndpointData(customer)).toEqual([angular.copy(dummyData.endpoints)]);
     });
   });
 });

@@ -289,7 +289,7 @@
     "avgConversations": "Average Conversations",
     "activeUsers": "Active Users",
     "noData": "No Data",
-    "noCustomerData": "No Customer Data",
+    "noCustomerData": "No Data Available",
     "week": "Last Week",
     "week2": "last week",
     "month": "Last Month",
@@ -353,7 +353,7 @@
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
-    "loadingCustomer": "Loading Customer Data"
+    "loadingCustomer": "Sample Customer Data"
   },
   "profilePage": {
     "userProfile": "User Profile",

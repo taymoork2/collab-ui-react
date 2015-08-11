@@ -13,6 +13,7 @@
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
+    var loadingCustomer = $translate.instant('activeUserPopulation.loadingCustomer');
 
     // variables for the active users section
     var activeUserRefreshDiv = 'activeUsersRefreshDiv';
@@ -44,6 +45,7 @@
     vm.callMetricsDescription = "";
     vm.endpointRefresh = REFRESH;
     vm.registeredEndpoints = [];
+    vm.dummyTable = true;
     vm.endpointDescription = "";
     vm.trend = "";
     vm.devices = "";
@@ -134,7 +136,6 @@
       getMediaQualityReports();
 
       vm.endpointRefresh = REFRESH;
-      vm.registeredEndpoints = [];
       getRegisteredEndpoints();
     };
 
@@ -149,23 +150,16 @@
       PartnerReportService.getOverallActiveUserData(vm.timeSelected);
       PartnerReportService.getCustomerList().then(function (response) {
         updateCustomerFilter(response);
-        setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected, 50), 50);
 
         getRegisteredEndpoints();
-
-        getMediaQualityReports().then(function () {
-          invalidateChartSize(mediaQualityChart);
-        });
+        getMediaQualityReports();
 
         getActiveUserReports().then(function () {
-          invalidateChartSize(activeUsersChart);
           vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
         });
 
         getCallMetricsReports();
       });
-
-      setGraphResizing();
     }
 
     function updateCustomerFilter(orgsData) {
@@ -197,13 +191,13 @@
       setMediaQualityGraph(DummyReportService.dummyMediaQualityData(vm.timeSelected));
       setCallMetricsGraph(DummyReportService.dummyCallMetricsData());
 
-      if (vm.customerSelected === null) {
-        setActivePopulationGraph(DummyReportService.dummyActivePopulationData({
-          label: $translate.instant('activeUserPopulation.loadingCustomer')
-        }, 50), 50);
-      } else {
-        setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected, 50), 50);
-      }
+      vm.dummyTable = true;
+      setActivePopulationGraph(DummyReportService.dummyActivePopulationData({
+        label: loadingCustomer
+      }, 50), 50);
+      vm.registeredEndpoints = DummyReportService.dummyEndpointData({
+        label: loadingCustomer
+      });
     }
 
     function setActiveUserGraph(data) {
@@ -211,7 +205,6 @@
         activeUsersChart = GraphService.createActiveUsersGraph(data);
       } else {
         GraphService.updateActiveUsersGraph(data, activeUsersChart);
-        invalidateChartSize(activeUsersChart);
       }
     }
 
@@ -220,7 +213,6 @@
         activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(data, overallPopulation);
       } else {
         GraphService.updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
-        invalidateChartSize(activeUserPopulationChart);
       }
     }
 
@@ -265,33 +257,11 @@
       });
     }
 
-    function setGraphResizing() {
-      angular.element('#engagementTab').on("click", function () {
-        if (vm.activeUsersRefresh !== EMPTY) {
-          invalidateChartSize(activeUsersChart);
-        }
-        if (vm.activeUserPopulationRefresh !== EMPTY) {
-          invalidateChartSize(activeUserPopulationChart);
-        }
-      });
-
-      angular.element('#qualityTab').on("click", function () {
-        if (vm.mediaQualityRefresh !== EMPTY) {
-          invalidateChartSize(mediaQualityChart);
-        }
-
-        if (vm.callMetricsRefresh !== EMPTY) {
-          invalidateChartSize(callMetricsDonutChart);
-        }
-      });
-    }
-
     function setMediaQualityGraph(data) {
       if (mediaQualityChart === null || mediaQualityChart === undefined) {
         mediaQualityChart = GraphService.createMediaQualityGraph(data);
       } else {
         GraphService.updateMediaQualityGraph(data, mediaQualityChart);
-        invalidateChartSize(mediaQualityChart);
       }
     }
 
@@ -315,7 +285,6 @@
         callMetricsDonutChart = DonutChartService.createCallMetricsDonutChart(data);
       } else {
         DonutChartService.updateCallMetricsDonutChart(data, callMetricsDonutChart);
-        invalidateChartSize(callMetricsDonutChart);
       }
     }
 
@@ -334,20 +303,15 @@
       });
     }
 
-    function invalidateChartSize(chart) {
-      if (chart !== null && chart !== undefined) {
-        chart.invalidateSize();
-      }
-    }
-
     function getRegisteredEndpoints() {
       PartnerReportService.getRegisteredEndpoints(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response !== ABORT) {
-          vm.registeredEndpoints = response;
           if (!angular.isArray(response) || response.length === 0) {
             vm.endpointRefresh = EMPTY;
           } else {
+            vm.registeredEndpoints = response;
             vm.endpointRefresh = SET;
+            vm.dummyTable = false;
           }
         }
       });

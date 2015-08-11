@@ -1,16 +1,16 @@
 <div class="group-list">
   <div class="row page-header">
     <div class="page-title col-xs-12 col-sm-7 col-md-6">
-      <span class="title">{{'groupsPage.manageGroups' | translate}}</span>
+      <span class="title" translate="groupsPage.manageGroups"></span>
       <div dropdown class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" ng-show="Utils.isAdminPage()">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
-          <span class="name" ng-if="activeFilter === 'all'">{{'groupsPage.all' | translate}}</span>
+          <span class="name" ng-if="activeFilter === 'all'" translate="groupsPage.all"></span>
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
           <li class="filter" ng-class="{'active' : activeFilter === 'all'}" ng-click="setFilter('all')">
             <a href="">
-              <span class="name">{{'groupsPage.all' | translate}}</span>
+              <span class="name" translate="groupsPage.all"></span>
               <span class="count">{{filterTotals.all}}</span>
             </a>
           </li>

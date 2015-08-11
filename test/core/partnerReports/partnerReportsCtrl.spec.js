@@ -96,6 +96,7 @@ describe('Controller: Partner Reports', function () {
       spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
       spyOn(DummyReportService, 'dummyMediaQualityData').and.returnValue(dummyData.mediaQuality.one);
       spyOn(DummyReportService, 'dummyCallMetricsData').and.returnValue(dummyData.callMetrics);
+      spyOn(DummyReportService, 'dummyEndpointData').and.returnValue(dummyData.endpoints);
 
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,
@@ -297,6 +298,12 @@ describe('Controller: Partner Reports', function () {
       });
 
       spyOn(DonutChartService, 'createCallMetricsDonutChart');
+
+      spyOn(DummyReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
+      spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
+      spyOn(DummyReportService, 'dummyMediaQualityData').and.returnValue(dummyData.mediaQuality.one);
+      spyOn(DummyReportService, 'dummyCallMetricsData').and.returnValue(dummyData.callMetrics);
+      spyOn(DummyReportService, 'dummyEndpointData').and.returnValue(dummyData.endpoints);
 
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,

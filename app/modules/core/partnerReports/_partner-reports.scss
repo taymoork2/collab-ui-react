@@ -8,7 +8,6 @@
   padding: 0px;
   height: auto;
   overflow: hidden;
-
   .reports-header {
     @extend .row;
     @extend .page-header;
@@ -19,7 +18,6 @@
       font-family: $brand-font-cisco-TT-Extra-Light;
       color: $gray-darker;
     }
-
     .report-filters {
       .filter-one {
         width: 160px;
@@ -40,6 +38,16 @@
         width: 100%;
       }
     }
+  }
+  .no-data-warning {
+    color: #f7c100;
+    padding-right: 5px;
+  }
+  .no-data {
+    color: $gray-darkest;
+    font-family: $brand-font-cisco-TT-Light;
+    font-size: 16px;
+    text-align: center;
   }
   .report-tabs-container {
     padding: 5px;
@@ -63,16 +71,13 @@
     }
     .tab-pane {
       padding: 40px 30px 60px;
-
       .report-description {
         margin-bottom: 15px;
         font-family: $brand-font-cisco-TT-Light;
         font-size: 13px;
         line-height: 18px;
         color: $gray-darkest;
-        text-align: justify;
       }
-
       .section-title {
         font-family: $brand-font-cisco-TT-Light;
         font-size: 22px;
@@ -87,10 +92,6 @@
         text-align: left;
         margin-top: 40px;
         margin-bottom: 15px;
-      }
-      .report-threedot-button {
-        font-size: 15px;
-        padding-top: 5px;
       }
       .report-section {
         min-width: 520px;

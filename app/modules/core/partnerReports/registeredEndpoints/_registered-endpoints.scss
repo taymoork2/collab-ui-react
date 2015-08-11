@@ -26,21 +26,34 @@
     padding-left: 20px;
   }
   .spinner-position {
-    transform: translate(50%, 0);
-    position: relative;
     height: 75px;
-    top: -10px;
-
+    position: absolute;
+    top: 100px;
+    transform: translate(50%, 50%);
+    left: 360px;
     .icon-2x {
       font-size: 4em;
     }
   }
-  .no-data {
-    color: $gray-darkest;
-    font-family: $brand-font-cisco-TT-Light;
-    font-size: 46px;
-    text-align: center;
-    top: -10px;
-    position: relative;
+  .no-data-center {
+    position: absolute;
+    top: 125px;
+    width: 100%;
+  }
+  .dummyTable {
+    border-color: #ECECEC;
+    td {
+      border-color: #ECECEC;
+      color: #ECECEC;
+      .table-half:first-of-type {
+        border-right: 1px solid #ECECEC;
+      }
+      .positive {
+        color: #ECECEC;
+      }
+      .negative {
+        color: #ECECEC;
+      }
+    }
   }
 }

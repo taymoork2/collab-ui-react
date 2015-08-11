@@ -1,16 +1,11 @@
 <div class="registeredEndpoints">
   <div class="row endpointTable">
     <h4 class="pull-left section-title" translate="registeredEndpoints.registeredEndpoints"></h4>
-    <div class="actions-menu dropdown pull-right report-threedot-button">
-      <button class="actions-button btn-none">
-        <i class="icon icon-three-dots"></i>
-      </button>
-    </div>
     <hr class="title-break pull-left"/>
   </div>
   <div class="row endpointTable">
     <p class="report-description">{{nav.endpointDescription}}</p>
-    <table class="table table-bordered">
+    <table class="table table-bordered" ng-class="{'dummyTable': nav.dummyTable}">
       <thead>
         <tr>
           <td class="vertical-center col-md-4 bold customer-data" translate="registeredEndpoints.company"></td>
@@ -34,8 +29,11 @@
     <div id="endpointRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.endpointRefresh)">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
-    <div ng-if="nav.isEmpty(nav.endpointRefresh)">
-      <h3 class="no-data" translate='reportsPage.noCustomerData'></h3>
+    <div class="no-data-center" ng-if="nav.isEmpty(nav.endpointRefresh)">
+      <h3 class="no-data"> 
+        <i class='icon icon-warning no-data-warning'></i>
+        <span translate='reportsPage.noCustomerData'></span>
+      </h3>
     </div>
   </div>
 </div>

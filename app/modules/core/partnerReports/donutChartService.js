@@ -8,7 +8,7 @@
   function DonutChartService($translate, Config) {
     // variables for the call metrics section
     var callMetricsColors = [Config.chartColors.grayDarkest, Config.chartColors.brandInfo];
-    var callMetricsDummyColors = [Config.chartColors.grayLight, Config.chartColors.grayLighter];
+    var callMetricsDummyColors = [Config.chartColors.dummyGray, Config.chartColors.dummyGrayLight];
     var callMetricsLabels = [{
       "align": "center",
       "size": "42",
@@ -53,10 +53,12 @@
       var colors = callMetricsColors;
       var textColor = Config.chartColors.grayDarkest;
       var balloonText = callMetricsBalloonText;
+      var labelsEnabled = true;
       if (data.dummy) {
         colors = callMetricsDummyColors;
-        textColor = Config.chartColors.grayLight;
+        textColor = Config.chartColors.brandWhite;
         balloonText = "";
+        labelsEnabled = false;
       }
 
       return AmCharts.makeChart(callMetricsDiv, {
@@ -76,7 +78,8 @@
         "radius": "28%",
         "outlineAlpha": 1,
         "allLabels": createLabels,
-        "dataProvider": createDisplayData
+        "dataProvider": createDisplayData,
+        "labelsEnabled": labelsEnabled
       });
     }
 
@@ -92,10 +95,12 @@
           var colors = callMetricsColors;
           var textColor = Config.chartColors.grayDarkest;
           var balloonText = callMetricsBalloonText;
+          var labelsEnabled = true;
           if (data.dummy) {
             colors = callMetricsDummyColors;
-            textColor = Config.chartColors.grayLight;
+            textColor = Config.chartColors.brandWhite;
             balloonText = "";
+            labelsEnabled = false;
           }
 
           donutChart.dataProvider = data.dataProvider;
@@ -103,6 +108,7 @@
           donutChart.color = textColor;
           donutChart.colors = colors;
           donutChart.balloonText = balloonText;
+          donutChart.labelsEnabled = labelsEnabled;
 
           donutChart.validateNow(true, false);
         } else {
