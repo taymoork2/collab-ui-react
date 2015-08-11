@@ -69,6 +69,7 @@
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor, startDuration) {
       var chartData = {
         'startDuration': startDuration,
+        'startEffect': 'easeOutSine',
         'type': 'serial',
         'addClassNames': true,
         'fontFamily': 'Arial',
