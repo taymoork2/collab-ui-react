@@ -39,10 +39,14 @@
       }
     }
   }
+  .no-data-warning {
+    color: #f7c100;
+    padding-right: 5px;
+  }
   .no-data {
     color: $gray-darkest;
     font-family: $brand-font-cisco-TT-Light;
-    font-size: 30px;
+    font-size: 16px;
     text-align: center;
   }
   .report-tabs-container {
@@ -67,16 +71,13 @@
     }
     .tab-pane {
       padding: 40px 30px 60px;
-
       .report-description {
         margin-bottom: 15px;
         font-family: $brand-font-cisco-TT-Light;
         font-size: 13px;
         line-height: 18px;
         color: $gray-darkest;
-        text-align: justify;
       }
-
       .section-title {
         font-family: $brand-font-cisco-TT-Light;
         font-size: 22px;
