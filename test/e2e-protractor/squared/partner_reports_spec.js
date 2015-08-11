@@ -1,7 +1,7 @@
 'use strict';
 
-// Waiting for new page to go active before turning on tests
-describe('Partner Reports', function () {
+// Waiting for page refactor to complete before turning tests back on
+xdescribe('Partner Reports', function () {
   var customer = 'Huron Int Test 2';
   var time = 'Last Month';
 
