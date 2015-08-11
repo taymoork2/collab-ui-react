@@ -6,7 +6,7 @@
     .controller('CallRouterCtrl', CallRouterCtrl);
 
   /* @ngInject */
-  function CallRouterCtrl($scope, Config, Authinfo, CallRouterFactory, CallRouterService, ServiceSetup, Notification, $modal, $translate) {
+  function CallRouterCtrl($scope, Config, Authinfo, RouterCompanyNumber, CallRouterService, ServiceSetup, Notification, $modal, $translate) {
     var vm = this;
     vm.save = save;
     vm.addNew = addNew;
@@ -52,8 +52,8 @@
           label: $translate.instant('routingModal.calleridnumber'),
           required: true
         },
-        controller: function ($scope, CallRouterFactory) {
-          CallRouterFactory.loadExternalNumberPool('').then(function (data) {
+        controller: function ($scope, RouterCompanyNumber) {
+          RouterCompanyNumber.loadExternalNumberPool('').then(function (data) {
             vm.externalNumberPool = data.externalNumberPool;
             $scope.to.list = data.numbers;
           });
@@ -62,7 +62,7 @@
     }];
 
     function init() {
-      CallRouterFactory.getCallRouterId().then(function (companyNumbers) {
+      RouterCompanyNumber.listCompanyNumber().then(function (companyNumbers) {
         angular.forEach(companyNumbers, function (companyNumber) {
           if (companyNumber.externalCallerIdType == "Company Caller ID") {
             vm.model.orgname = companyNumber.name;
@@ -80,12 +80,12 @@
     function save() {
       var errors = [];
       var uuid;
-      var typed = false;
+      var found = false;
       var data;
       angular.forEach(vm.externalNumberPool, function (value, key) {
         if (vm.model.extnum === value.pattern) {
           uuid = value.uuid;
-          typed = true;
+          found = true;
         }
       });
       data = {
@@ -94,7 +94,7 @@
         pattern: vm.model.extnum
       };
       data.pattern = vm.model.extnum;
-      if (typed) {
+      if (found) {
         data.externalNumber = {
           pattern: vm.model.extnum,
           uuid: uuid
@@ -106,19 +106,15 @@
         };
       }
       if (vm.firstTimeCallerID) {
-
-        CallRouterFactory.saveCallerId(data).then(function (data) {
-          Notification.notify([$translate.instant('callRouter.saveCallerIdSuccess', {})], 'success');
+        RouterCompanyNumber.saveCompanyNumber(data).then(function (data) {
+          Notification.notify([$translate.instant('callRouter.saveCallerIdSuccess')], 'success');
         }).catch(function (response) {
           Notification.errorResponse(response, 'callRouter.saveCallerIdError');
-          // errors.push(Notification.processErrorResponse(response, 'callRouter.saveCallerIdError'));
         });
       } else {
-
-        CallRouterFactory.updateCallerId(data, vm.uuid).then(function (data) {
-          Notification.notify([$translate.instant('callRouter.updateCallerIdSuccess', {})], 'success');
+        RouterCompanyNumber.updateCompanyNumber(data, vm.uuid).then(function (data) {
+          Notification.notify([$translate.instant('callRouter.updateCallerIdSuccess')], 'success');
         }).catch(function (response) {
-          // errors.push(Notification.processErrorResponse(response, 'callRouter.updateCallerIdError'));
           Notification.errorResponse(response, 'callRouter.updateCallerIdError');
         });
       }
@@ -127,7 +123,7 @@
 
     function addNew() {
       var modalInstance = $modal.open({
-        templateUrl: 'modules/huron/callRouter/companyNumber/CompanyNumber.html',
+        templateUrl: 'modules/huron/callRouter/companyNumber/companyNumber.html',
         controller: 'companyNumber'
       });
     }

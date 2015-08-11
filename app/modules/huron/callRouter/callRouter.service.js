@@ -3,10 +3,10 @@
 
   angular
     .module('Huron')
-    .factory('CallRouterFactory', CallRouterFactory);
+    .factory('RouterCompanyNumber', RouterCompanyNumber);
 
   /* @ngInject */
-  function CallRouterFactory($q, Log, Notification, ServiceSetup, CallRouterService, UserServiceCommon, Authinfo) {
+  function RouterCompanyNumber($q, Log, Notification, ServiceSetup, CallRouterService, UserServiceCommon, Authinfo) {
     function loadExternalNumberPool(pattern) {
       var deferred = $q.defer();
       ServiceSetup.loadExternalNumberPool(pattern).then(function () {
@@ -14,7 +14,7 @@
         var externalNumberPool = ServiceSetup.externalNumberPool,
           numbers = [];
 
-        if (pattern === 'object') {
+        if (angular.isDefined(pattern) && angular.isObject(pattern)) {
           deferred.resolve(externalNumberPool);
         } else {
           angular.forEach(externalNumberPool, function (value, key) {
@@ -27,7 +27,6 @@
             }
           });
         }
-
       }).catch(function (response) {
         var externalNumberPool = [];
         Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
@@ -35,45 +34,37 @@
       return deferred.promise;
     }
 
-    function getCallRouterId() {
+    function listCompanyNumber() {
       return CallRouterService.query({
         customerId: Authinfo.getOrgId()
       }).$promise;
-
     }
 
-    function saveCallerId(data) {
+    function saveCompanyNumber(data) {
       return CallRouterService.save({
         customerId: Authinfo.getOrgId()
       }, data).$promise;
     }
 
-    function updateCallerId(data, companyNumberId) {
+    function updateCompanyNumber(data, companyNumberId) {
       return CallRouterService.update({
         customerId: Authinfo.getOrgId(),
         companyNumberId: companyNumberId
       }, data).$promise;
     }
 
-    function saveCompanyNumberModule() {
-      return CallRouterService.query({
-        customerId: Authinfo.getOrgId()
-      }).$promise;
-
-    }
-
-    function getCallRouterUsers() {
+    function listUsers() {
       return UserServiceCommon.query({
         customerId: Authinfo.getOrgId()
       }).$promise;
     }
+
     return {
       loadExternalNumberPool: loadExternalNumberPool,
-      getCallRouterId: getCallRouterId,
-      getCallRouterUsers: getCallRouterUsers,
-      saveCompanyNumberModule: saveCompanyNumberModule,
-      saveCallerId: saveCallerId,
-      updateCallerId: updateCallerId
+      listCompanyNumber: listCompanyNumber,
+      listUsers: listUsers,
+      saveCompanyNumber: saveCompanyNumber,
+      updateCompanyNumber: updateCompanyNumber
     };
   }
 

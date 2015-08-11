@@ -55,8 +55,8 @@
         valuefield: 'uuid',
         filter: true
       },
-      controller: function ($scope, CallRouterFactory) {
-        CallRouterFactory.loadExternalNumberPool('').then(function (data) {
+      controller: function ($scope, CallRouter) {
+        CallRouter.loadExternalNumberPool('').then(function (data) {
           vm.options = data;
           if (data.directoryNumber == null) {
             $scope.to.options = data;
@@ -74,8 +74,8 @@
         valuefield: 'userName',
         filter: true
       },
-      controller: function ($scope, CallRouterFactory) {
-        CallRouterFactory.getCallRouterUsers('', 'object').then(function (data) {
+      controller: function ($scope, CallRouter) {
+        CallRouter.listUsers('', 'object').then(function (data) {
           angular.forEach(data, function (value, key) {
             if (value.firstName && value.lastName) {
               value.fullName = value.firstName + ' ' + value.lastName;

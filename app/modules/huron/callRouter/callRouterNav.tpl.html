@@ -1,10 +1,10 @@
 <div class ="callRouter callrouting-content">
   <div class="callRouter-callerinfo" ng-class="{open: !nav.open}">
-    <div class="callerinfo-title" translate="callRouter.companycallerID">Company Caller ID
-      <span popover="{{ 'callRouter.callerinfopopover' | translate }}" class="ng-scope">
-        <i class="dn-help-icon"></i>
-      </span>
+    <div ><h4 class="callerinfo-title" translate="callRouter.companycallerID"></h4>
     </div>
+    <span popover="{{ 'callRouter.callerinfopopover' | translate }}" class="ng-scope">
+      <i class="dn-help-icon"></i>
+    </span>
     <div class="form-wrapper">
       <form name="nav.callrouterform" class="form-inline" collapse="nav.open" role="form">
         <formly-form model="nav.model" fields="nav.user">
@@ -12,7 +12,7 @@
         </formly-form>
       </form>
     </div>
-    <a ng-click="nav.open = !nav.open;" class="pull-right"><span ng-if="nav.open"translate="callRouter.expand">Expand</span><span ng-if="!nav.open" translate="callRouter.hide">Hide</span></a>
+    <a ng-click="nav.open = !nav.open;" class="pull-right"><span ng-if="nav.open"translate="callRouter.expand">Expand</span><span ng-if="!nav.open" translate="callRouter.hide"></span></a>
   </div>
 
   <!-- Commented out the company number tile for now. Will continue in US202802 -->

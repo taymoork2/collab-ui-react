@@ -779,13 +779,13 @@ angular.module('Core')
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
-
         Site_Admin: ['site-list'],
         Application: ['organizationAdd']
       };
 
       config.serviceStates = {
         'ciscouc': [
+          'callrouting',
           'mediaonhold',
           'generateauthcode',
           'autoattendant',
