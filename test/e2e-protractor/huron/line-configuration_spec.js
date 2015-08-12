@@ -35,16 +35,6 @@ describe('Line Configuration', function () {
     utils.expectIsNotDisplayed(telephony.lineConfigurationActionButton);
   });
 
-  it('should select the first caller id option and save', function () {
-    utils.expectIsDisplayed(telephony.callerId);
-    utils.click(telephony.callerId);
-    utils.click(telephony.callerIdOptionFirst);
-    telephony.retrieveCallerId().then(function () {
-      utils.click(telephony.saveButton);
-      notifications.assertSuccess('Line configuration saved successfully');
-    });
-  });
-
   it('should cancel a new directory number add', function () {
     utils.clickLastBreadcrumb();
     utils.expectIsDisplayed(telephony.communicationPanel);
