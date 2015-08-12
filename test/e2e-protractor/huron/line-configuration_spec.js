@@ -35,32 +35,14 @@ describe('Line Configuration', function () {
     utils.expectIsNotDisplayed(telephony.lineConfigurationActionButton);
   });
 
-  it('should change caller id to custom display', function () {
-    utils.expectIsDisabled(telephony.callerId);
-
-    utils.click(telephony.callerIdCustom);
-    utils.waitUntilEnabled(telephony.callerId);
-    utils.sendKeys(telephony.callerId, 'custom');
-    utils.click(telephony.saveButton);
-    notifications.assertSuccess('Line configuration saved successfully');
-
-    utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
-
-    utils.waitUntilEnabled(telephony.callerId);
-    utils.expectAttribute(telephony.callerId, 'value', 'custom');
-  });
-
-  it('should change caller id to default display', function () {
-    utils.click(telephony.callerIdDefault);
-    utils.expectIsDisabled(telephony.callerId);
-    utils.click(telephony.saveButton);
-    notifications.assertSuccess('Line configuration saved successfully');
-
-    utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
-
-    utils.expectIsDisabled(telephony.callerId);
+  it('should select the first caller id option and save', function () {
+    utils.expectIsDisplayed(telephony.callerId);
+    utils.click(telephony.callerId);
+    utils.click(telephony.callerIdOptionFirst);
+    telephony.retrieveCallerId().then(function () {
+      utils.click(telephony.saveButton);
+      notifications.assertSuccess('Line configuration saved successfully');
+    });
   });
 
   it('should cancel a new directory number add', function () {

@@ -6,7 +6,7 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, UserListService, SharedLineInfoService, ValidationService, CallerId) {
+  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, UserListService, SharedLineInfoService, ValidationService, CallerId, DeviceService) {
     var vm = this;
 
     vm.cfModel = {
@@ -190,7 +190,7 @@
     }];
 
     vm.callerIdInfo = {};
-
+    vm.hasDevice = true;
     vm.callerIdFields = [{
       key: 'callerIdSelection',
       type: 'select',
@@ -198,6 +198,11 @@
         options: [],
         labelfield: 'label',
         valuefield: 'name'
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return !vm.hasDevice;
+        }
       }
     }];
     ////////////
@@ -469,7 +474,28 @@
                           vm.directoryNumber.altDnUuid = vm.telephonyInfo.alternateDirectoryNumber.uuid;
                           vm.directoryNumber.altDnPattern = vm.telephonyInfo.alternateDirectoryNumber.pattern;
                         }).then(function () {
-                          return processSharedLineUsers();
+                          return processSharedLineUsers().then(function () {
+                            // Update display and label on devices
+                            return listSharedLineUsers(vm.directoryNumber.uuid).then(function () {
+                              var sharedLinePromises = [];
+                              var devices = SharedLineInfoService.getSharedLineDevices();
+                              var companyNumberObj = null;
+                              if (vm.callerIdInfo.callerIdSelection.value.uuid) {
+                                companyNumberObj = {
+                                  uuid: vm.callerIdInfo.callerIdSelection.value.uuid
+                                };
+                              }
+                              angular.forEach(devices, function (device) {
+                                var data = {
+                                  externalCallerIdType: vm.callerIdInfo.callerIdSelection.value.externalCallerIdType,
+                                  companyNumber: companyNumberObj
+                                };
+                                var sharedLinePromise = SharedLineInfoService.updateLineEndpoint(device.uuid, vm.directoryNumber.uuid, device.endpointDnUuid, data);
+                                sharedLinePromises.push(sharedLinePromise);
+                              });
+                              return $q.all(sharedLinePromises);
+                            });
+                          });
                         }).then(function () {
                           Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
                           $state.go('user-overview.communication.directorynumber', {
@@ -534,28 +560,46 @@
 
     function initCallerId() {
       vm.callerIdOptions = [];
+      var hasDirectLine = false,
+        hasCompanyCallerID = false,
+        isNewLine = true;
       if (angular.isDefined(vm.telephonyInfo.currentDirectoryNumber.uuid) && vm.telephonyInfo.currentDirectoryNumber.uuid !== 'new') {
-        // Get all users of the line, shared or no shared
-        listSharedLineUsers(vm.telephonyInfo.currentDirectoryNumber.uuid).then(function () {
-          // Construct callerIdOptions
-          CallerId.listCompanyNumbers().then(function (companyNumbers) {
+        isNewLine = false;
+      } else {
+        isNewLine = true;
+      }
+      // Get all users of the line, shared or no shared
+      listSharedLineUsers(vm.telephonyInfo.currentDirectoryNumber.uuid).then(function () {
+        // Construct callerIdOptions
+        CallerId.listCompanyNumbers().then(function (companyNumbers) {
             // Direct Line
-            if (angular.isDefined(vm.telephonyInfo.alternateDirectoryNumber.uuid) && vm.telephonyInfo.alternateDirectoryNumber.uuid !== '') {
-              vm.callerIdOptions.push(constructCallerIdOption(directLine_label, directLine_type, name, vm.telephonyInfo.alternateDirectoryNumber.pattern, null));
+            if (angular.isDefined(vm.telephonyInfo.alternateDirectoryNumber.uuid) && vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
+              hasDirectLine = true;
+              var directLineUserName = getSharedLinePrimaryUserName();
+              if (!directLineUserName) {
+                directLineUserName = name;
+              }
+              vm.callerIdOptions.push(constructCallerIdOption(directLine_label, directLine_type, directLineUserName, vm.telephonyInfo.alternateDirectoryNumber.pattern, null));
             }
             // Company Number
             companyNumbers.filter(function (companyNumber) {
-              return companyNumber.externalCallerIdType === companyNumber_type;
-            })
-            .forEach(function (companyNumber) {
-              vm.callerIdOptions.push(constructCallerIdOption(companyNumber.name, companyNumber_type, '', companyNumber.pattern, companyNumber.uuid));
-            });
+                return companyNumber.externalCallerIdType === companyNumber_type;
+              })
+              .forEach(function (companyNumber) {
+                vm.callerIdOptions.push(constructCallerIdOption(companyNumber.name, companyNumber_type, '', companyNumber.pattern, companyNumber.uuid));
+              });
             // Company Caller ID
             companyNumbers.filter(function (companyNumber) {
-              return companyNumber.externalCallerIdType === companyCallerId_type;
-            })
-            .forEach(function (companyNumber) { // there should be only one company caller ID record
-              vm.callerIdOptions.push(constructCallerIdOption(companyCallerId_label, companyCallerId_type, companyNumber.name, companyNumber.pattern, companyNumber.uuid));
+                return companyNumber.externalCallerIdType === companyCallerId_type;
+              })
+              .forEach(function (companyNumber) { // there should be only one company caller ID record
+                hasCompanyCallerID = true;
+                vm.callerIdOptions.push(constructCallerIdOption(companyCallerId_label, companyCallerId_type, companyNumber.name, companyNumber.pattern, companyNumber.uuid));
+              });
+          })
+          .then(function () {
+            return DeviceService.listDevices(vm.currentUser.id).then(function (devices) {
+              vm.hasDevice = devices.length !== 0 || (!isNewLine && SharedLineInfoService.getSharedLineDevices().length > 0);
             });
           })
           .catch(function (response) {
@@ -566,54 +610,39 @@
             vm.callerIdOptions.push(constructCallerIdOption(blockedCallerId_label, blockedCallerId_type, $translate.instant('callerIdPanel.blockedCallerIdDescription'), '', null));
             vm.callerIdFields[0].templateOptions.options = vm.callerIdOptions;
 
-            // Default the current caller ID to blocked first
-            vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[vm.callerIdOptions.length -1];
-            // Get the current caller ID option
-            var devices = SharedLineInfoService.getSharedLineDevices();
-            devices.forEach(function (device) {
-              if (device.userUuid === vm.currentUser.id && device.dnUuid === vm.telephonyInfo.currentDirectoryNumber.uuid) {
-                vm.callerIdOptions.forEach(function (option) {
-                  if (option.value.externalCallerIdType === device.externalCallerIdType) {
-                    if (option.value.externalCallerIdType === companyNumber_type) {
-                      if (option.label === device.companyNumber.name) {
+            if (!vm.hasDevice) {
+              // if no device, need a space in label to disable the select
+              vm.callerIdInfo.callerIdSelection = constructCallerIdOption(' ', '', $translate.instant('callerIdPanel.registerDeviceForCallerID'), '', null);
+            } else {
+              // Default the current caller ID to direct line, then company caller ID, then blocked
+              if (hasDirectLine) {
+                vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[0];
+              } else if (hasCompanyCallerID) {
+                vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[vm.callerIdOptions.length - 2];
+              } else {
+                vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[vm.callerIdOptions.length - 1];
+              }
+              // Get the current caller ID option
+              var sharedDevices = (isNewLine) ? [] : SharedLineInfoService.getSharedLineDevices();
+              // load the caller ID for the current line
+              sharedDevices.forEach(function (device) {
+                if (device.dnUuid === vm.telephonyInfo.currentDirectoryNumber.uuid) {
+                  vm.callerIdOptions.forEach(function (option) {
+                    if (option.value.externalCallerIdType === device.externalCallerIdType) {
+                      if (option.value.externalCallerIdType === companyNumber_type) {
+                        if (option.label === device.companyNumber.name) {
+                          vm.callerIdInfo.callerIdSelection = option;
+                        }
+                      } else {
                         vm.callerIdInfo.callerIdSelection = option;
                       }
-                    } else {
-                      vm.callerIdInfo.callerIdSelection = option;
                     }
-                  }
-                });
-              }
-            });
+                  });
+                }
+              });
+            }
           });
-        });
-      } else { //new line, default to blocked
-        CallerId.listCompanyNumbers().then(function (companyNumbers) {
-          // Company Number
-          companyNumbers.filter(function (companyNumber) {
-            return companyNumber.externalCallerIdType === companyNumber_type;
-          })
-          .forEach(function (companyNumber) {
-            vm.callerIdOptions.push(constructCallerIdOption(companyNumber.name, companyNumber_type, '', companyNumber.pattern, companyNumber.uuid));
-          });
-          // Company Caller ID
-          companyNumbers.filter(function (companyNumber) {
-            return companyNumber.externalCallerIdType === companyCallerId_type;
-          })
-          .forEach(function (companyNumber) { // there should be only one company caller ID record
-            vm.callerIdOptions.push(constructCallerIdOption(companyCallerId_label, companyCallerId_type, companyNumber.name, companyNumber.pattern, companyNumber.uuid));
-          });
-        })
-        .catch(function (response) {
-          Notification.errorResponse(response, 'callerIdPanel.companyNumberLoadError');
-        })
-        .finally(function () {
-          // Blocked Outbound Caller ID
-          vm.callerIdOptions.push(constructCallerIdOption(blockedCallerId_label, blockedCallerId_type, $translate.instant('callerIdPanel.blockedCallerIdDescription'), '', null));
-          vm.callerIdFields[0].templateOptions.options = vm.callerIdOptions;
-          vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[vm.callerIdOptions.length - 1];
-        });
-      }
+      });
     }
 
     function constructCallerIdOption(label, externalCallerIdType, name, pattern, uuid) {
@@ -936,24 +965,28 @@
       vm.sharedLineUsers = [];
       vm.sharedLineEndpoints = [];
       vm.devices = [];
-      return SharedLineInfoService.loadSharedLineUsers(dnUuid, vm.currentUser.id)
-        .then(function (users) {
-          // If more than 1 user in the list, then the line is shared
-          if (users.length > 1) {
-            vm.sharedLineUsers = users;
-          }
-          vm.sharedLineBtn = (vm.sharedLineUsers) ? true : false;
-          return users;
-        })
-        .then(function (users) {
-          return SharedLineInfoService.loadSharedLineUserDevices(dnUuid).then(function (devices) {
+      if (angular.isDefined(dnUuid) && dnUuid !== 'new') {
+        return SharedLineInfoService.loadSharedLineUsers(dnUuid, vm.currentUser.id)
+          .then(function (users) {
+            // If more than 1 user in the list, then the line is shared
             if (users.length > 1) {
-              vm.sharedLineEndpoints = devices;
-              vm.devices = angular.copy(vm.sharedLineEndpoints);
+              vm.sharedLineUsers = users;
             }
+            vm.sharedLineBtn = (vm.sharedLineUsers) ? true : false;
             return users;
+          })
+          .then(function (users) {
+            return SharedLineInfoService.loadSharedLineUserDevices(dnUuid).then(function (devices) {
+              if (users.length > 1) {
+                vm.sharedLineEndpoints = devices;
+                vm.devices = angular.copy(vm.sharedLineEndpoints);
+              }
+              return users;
+            });
           });
-        });
+      } else {
+        return $q.when([]);
+      }
     }
 
     function disassociateSharedLineUser(userInfo, batchDelete) {
@@ -1093,10 +1126,22 @@
       return false;
     }
 
-    function assignedExternalNumberChange () {
+    function getSharedLinePrimaryUserName () {
+      var sharedLinePrimaryUserName = '';
+      if (vm.telephonyInfo.currentDirectoryNumber.dnSharedUsage && vm.telephonyInfo.currentDirectoryNumber.dnSharedUsage.indexOf('Shared') !== -1) {
+        angular.forEach(vm.sharedLineUsers, function (sharedLineUser) {
+          if (sharedLineUser.dnUsage === 'Primary') {
+            sharedLinePrimaryUserName = sharedLineUser.name;
+          }
+        });
+      }
+      return sharedLinePrimaryUserName;
+    }
+
+    function assignedExternalNumberChange() {
       // Remove the direct line from caller ID options
       var index = -1;
-      for(var i = 0, len = vm.callerIdOptions.length; i < len; i++) {
+      for (var i = 0, len = vm.callerIdOptions.length; i < len; i++) {
         if (vm.callerIdOptions[i].value.externalCallerIdType === directLine_type) {
           index = i;
           break;
@@ -1106,8 +1151,12 @@
         vm.callerIdOptions.splice(index, 1);
       }
       // add the Direct Line to caller ID options
+      var directLineUserName = getSharedLinePrimaryUserName();
+      if (!directLineUserName) {
+        directLineUserName = name;
+      }
       if (vm.assignedExternalNumber.uuid !== "none") {
-        vm.callerIdOptions.unshift(constructCallerIdOption(directLine_label, directLine_type, name, vm.assignedExternalNumber.pattern, null));
+        vm.callerIdOptions.unshift(constructCallerIdOption(directLine_label, directLine_type, directLineUserName, vm.assignedExternalNumber.pattern, null));
       }
       // Set the current caller ID selection
       if (vm.callerIdInfo.callerIdSelection.value.externalCallerIdType === directLine_type) {

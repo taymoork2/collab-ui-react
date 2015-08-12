@@ -5,13 +5,14 @@ describe('Controller: LineSettingsCtrl', function () {
   var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers,
     externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoVoiceOnlyShared, telephonyInfoSecondLine,
     modalDefer;
-  var UserListService, SharedLineInfoService, CallerId, companyNumber;
+  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService;
   var userList = [];
   var userData = [];
   var sharedLineUsers = [];
   var sharedLineDevices = [];
   var sharedLineEndpoints = [];
   var selectedUsers = [];
+  var userDevices = [];
 
   var errorResponse = {
     message: 'error',
@@ -26,7 +27,7 @@ describe('Controller: LineSettingsCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$state_, _$httpBackend_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
-    _UserListService_, _SharedLineInfoService_, _CallerId_) {
+    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -42,6 +43,7 @@ describe('Controller: LineSettingsCtrl', function () {
     UserListService = _UserListService_;
     SharedLineInfoService = _SharedLineInfoService_;
     CallerId = _CallerId_;
+    DeviceService = _DeviceService_;
 
     $scope.sort = {
       by: 'name',
@@ -63,6 +65,7 @@ describe('Controller: LineSettingsCtrl', function () {
     telephonyInfoVoiceOnlyShared.currentDirectoryNumber.dnSharedUsage = "Primary Shared";
     telephonyInfoSecondLine = getJSONFixture('huron/json/telephonyInfo/voiceEnabledSecondLine.json');
     companyNumber = getJSONFixture('huron/json/lineSettings/companyNumber.json');
+    userDevices = getJSONFixture('huron/json/device/devices.json');
 
     //Sharedline
     userList = getJSONFixture('huron/json/user/users/usersList.json');
@@ -97,6 +100,7 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(HuronUser, 'updateDtmfAccessId').and.returnValue($q.when());
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
     spyOn(CallerId, 'listCompanyNumbers').and.returnValue($q.when(companyNumber));
+    spyOn(DeviceService, 'listDevices').and.returnValue($q.when(userDevices));
     //Sharedline
     spyOn(UserListService, 'listUsers').and.returnValue($q.when(userList));
     spyOn(SharedLineInfoService, 'loadSharedLineUsers').and.returnValue($q.when(sharedLineUsers));

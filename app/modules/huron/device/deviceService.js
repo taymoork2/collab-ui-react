@@ -10,6 +10,7 @@
     var currentDevice = {};
 
     var service = {
+      listDevices: listDevices,
       loadDevices: loadDevices,
       updateDevice: updateDevice,
       deleteDevice: deleteDevice,
@@ -19,6 +20,13 @@
 
     return service;
     /////////////////////
+
+    function listDevices(userUuid) {
+      return UserEndpointService.query({
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise;
+    }
 
     function loadDevices(userUuid) {
       return UserEndpointService.query({
