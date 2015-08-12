@@ -87,7 +87,7 @@ exports.config = {
     var EnterpriseResourcePage = require('./test/e2e-protractor/pages/enterpriseResource.page.js');
     var UtilizationPage = require('./test/e2e-protractor/pages/utilization.page.js');
     var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
-    var TrialExtInterestPage = require('./test/e2e-protractor/pages/trialextinterest.page.js');
+    var TrialExtInterestPage = require('./test/e2e-protractor/pages/trialExtInterest.page.js');
 
 
     global.notifications = new Notifications();
