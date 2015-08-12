@@ -35,6 +35,11 @@ describe('Line Configuration', function () {
     utils.expectIsNotDisplayed(telephony.lineConfigurationActionButton);
   });
 
+  it('the caller ID should be disabled', function () {
+    utils.expectIsDisplayed(telephony.callerId);
+    utils.expectIsDisabled(telephony.callerId);
+  });
+
   it('should cancel a new directory number add', function () {
     utils.clickLastBreadcrumb();
     utils.expectIsDisplayed(telephony.communicationPanel);
