@@ -1,0 +1,15 @@
+
+<div id="addDnAndExtToUserOptionButtons" class="page-option-buttons">
+  <i ng-if="isMapInProgress" class='icon icon-spinner did-map-spinner'></i>
+  <a id="mapDn" href="" translate="firstTimeWizard.mapDirectLineWithExt" ng-click="!isMapEnabled || mapDidToDn()"  ng-class="isMapEnabled ? 'primary' : 'disabled'" ></a>
+  <span class="option-separator-pipe">|</span>
+  <i ng-if="isResetInProgress" class='icon icon-spinner did-map-spinner'></i>
+  <a href="" translate="firstTimeWizard.reset" ng-click="!isResetEnabled || resetDns()" ng-class="isResetEnabled ? 'primary' : 'disabled'" ></a>
+</div>
+
+<div class="addDnToUser grid">
+  <div gridscrollbar class="gridStyle" ng-grid="addDnGridOptions"></div>
+  <div class="grid-refresh" ng-if="gridRefresh">
+    <i class='icon icon-spinner icon-2x'></i>
+  </div>
+</div>

@@ -37,7 +37,7 @@ angular.module('Core', [
 
 angular.module('Squared', ['Core']);
 
-angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview']);
+angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter']);
 
 angular.module('Hercules', ['Core']);
 

@@ -418,6 +418,7 @@ exports.createHuronUser = function (name, name2) {
   }
   this.click(users.nextButton);
   this.click(users.advancedCommunications);
+  this.click(users.nextButton);
   this.click(users.onboardButton);
   notifications.assertSuccess(name, 'onboarded successfully');
   this.expectIsNotDisplayed(users.manageDialog);
@@ -427,6 +428,20 @@ exports.createHuronUser = function (name, name2) {
 exports.loginAndCreateHuronUser = function (loginName, userName, userName2) {
   login.login(loginName, '#/users');
   this.createHuronUser(userName, userName2);
+};
+
+exports.getUserWithDn = function (name) {
+  navigation.clickUsers();
+  this.click(users.addUsers);
+  this.click(users.addUsersField);
+  this.sendKeys(users.addUsersField, name);
+  this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+  this.click(users.nextButton);
+
+};
+exports.loginToOnboardUsers = function (loginName, userName) {
+  login.login(loginName, '#/users');
+  this.getUserWithDn(userName);
 };
 
 exports.deleteUser = function (name, name2) {

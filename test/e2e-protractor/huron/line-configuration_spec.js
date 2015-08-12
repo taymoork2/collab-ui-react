@@ -35,31 +35,8 @@ describe('Line Configuration', function () {
     utils.expectIsNotDisplayed(telephony.lineConfigurationActionButton);
   });
 
-  it('should change caller id to custom display', function () {
-    utils.expectIsDisabled(telephony.callerId);
-
-    utils.click(telephony.callerIdCustom);
-    utils.waitUntilEnabled(telephony.callerId);
-    utils.sendKeys(telephony.callerId, 'custom');
-    utils.click(telephony.saveButton);
-    notifications.assertSuccess('Line configuration saved successfully');
-
-    utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
-
-    utils.waitUntilEnabled(telephony.callerId);
-    utils.expectAttribute(telephony.callerId, 'value', 'custom');
-  });
-
-  it('should change caller id to default display', function () {
-    utils.click(telephony.callerIdDefault);
-    utils.expectIsDisabled(telephony.callerId);
-    utils.click(telephony.saveButton);
-    notifications.assertSuccess('Line configuration saved successfully');
-
-    utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
-
+  it('the caller ID should be disabled', function () {
+    utils.expectIsDisplayed(telephony.callerId);
     utils.expectIsDisabled(telephony.callerId);
   });
 

@@ -72,6 +72,7 @@
     vm.isWizardModal = isWizardModal;
 
     vm.nextText = $translate.instant('common.next');
+    vm.isNextDisabled = false;
 
     vm.openTermsAndConditions = openTermsAndConditions;
     vm.closeModal = closeModal;
@@ -93,6 +94,7 @@
       vm.current.step = getSteps()[0];
 
       setNextText();
+      vm.isNextDisabled = false;
     }
 
     function getSteps() {
@@ -116,6 +118,7 @@
     function setStep(step) {
       vm.current.step = step;
       setNextText();
+      vm.isNextDisabled = false;
     }
 
     function getStepName() {
@@ -316,6 +319,11 @@
       }
     }
 
+    $scope.$on('wizardNextButtonDisable', function (event, status) {
+      event.stopPropagation();
+      vm.isNextDisabled = status;
+    });
+
     function openTermsAndConditions() {
       var modalInstance = $modal.open({
         templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html'
@@ -338,6 +346,7 @@
         vm.nextText = $translate.instant('common.finish');
       }
     });
+
   }
 
   function crWizard() {

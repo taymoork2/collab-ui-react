@@ -15,7 +15,7 @@
 
   <div class="modal-footer" ng-if="!convertUsersFlow">
     <button type="button" id="btnBack" class="btn btn-default" ui-sref="users.add"><span translate="common.back"></span></button>
-    <button type="button" id="btnOnboard" class="btn btn-primary" ng-click="onboardUsers()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="common.save"></span></button>
+    <button type="button" id="btnOnboard" class="btn btn-primary" ng-click="assignServicesSave()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="{{getServicesNextText()}}"></span></button>
   </div>
 
   <div class="modal-footer" ng-if="convertUsersFlow">

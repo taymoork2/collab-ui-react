@@ -40,6 +40,14 @@
         user.uuid = uuid;
       }
 
+      if (data.directoryNumber) {
+        user.directoryNumber = data.directoryNumber;
+      }
+
+      if (data.externalNumber) {
+        user.externalNumber = data.externalNumber;
+      }
+
       return UserServiceCommonV2.save({
           customerId: Authinfo.getOrgId()
         }, user).$promise
