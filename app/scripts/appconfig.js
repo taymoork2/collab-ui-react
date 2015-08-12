@@ -742,6 +742,8 @@ angular
           }
         })
         .state('customer-overview.externalNumbers', {
+          controller: 'ExternalNumberDetailCtrl',
+          controllerAs: 'externalNumbers',
           templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
           data: {
             displayName: 'Phone Numbers'

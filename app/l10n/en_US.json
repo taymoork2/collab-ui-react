@@ -484,13 +484,17 @@
     "no": "No",
     "all": "All",
     "pending": "Pending",
-    "apply": "Apply"
+    "apply": "Apply",
+    "unassigned": "Unassigned",
+    "modal": "Modal"
   },
   "notifications": {
     "success": "Success notifications",
     "error": "Error notifications",
     "successTotal": "{total, plural, one{# success} other{# successes}}",
-    "errorTotal": "{total, plural, one{# error} other{# errors}}"
+    "errorTotal": "{total, plural, one{# error} other{# errors}}",
+    "successDelete": "Successfully deleted {{item}}.",
+    "errorDelete": "Failed to delete {{item}}."
   },
   "time": {
     "seconds": "{time, plural, one{# second} other{# seconds}}",
@@ -1164,7 +1168,15 @@
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
     "addNumbers": "Add Numbers",
-    "editNumbers": "Edit Phone Numbers"
+    "editNumbers": "Edit Phone Numbers",
+    "listError": "Failed to load phone number list.",
+    "deleteNumber": "Delete Number",
+    "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
+    "deleteWarning": "This cannot be reversed.  You will lose this number indefinitely.",
+    "allNumbers": "{count, plural, one{# Number} other{# Numbers}}",
+    "pendingNumbers": "{count, plural, one{# Pending Number} other{# Pending Numbers}}",
+    "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
+    "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",
