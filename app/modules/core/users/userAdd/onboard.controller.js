@@ -1525,7 +1525,7 @@ angular.module('Core')
         saveDeferred = $q.defer();
         cancelDeferred = $q.defer();
 
-        var chunk = Config.batchSize;
+        var chunk = 5;
         var tempUserArray = [];
         var tempLicenseArray = [];
         $scope.model.userErrorArray = [];
@@ -1650,7 +1650,8 @@ angular.module('Core')
             if (userArray[j].length === 6) {
               tempUserArray.push({
                 address: userArray[j][3],
-                name: userArray[j][2]
+                name: userArray[j][0] + ' ' + userArray[j][1],
+                displayName: userArray[j][2]
               });
               tempLicenseArray.push(buildLicenseArray(userArray[j][4], userArray[j][5]));
             } else {
