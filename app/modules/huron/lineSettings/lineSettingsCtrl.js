@@ -1126,7 +1126,7 @@
       return false;
     }
 
-    function getSharedLinePrimaryUserName () {
+    function getSharedLinePrimaryUserName() {
       var sharedLinePrimaryUserName = '';
       if (vm.telephonyInfo.currentDirectoryNumber.dnSharedUsage && vm.telephonyInfo.currentDirectoryNumber.dnSharedUsage.indexOf('Shared') !== -1) {
         angular.forEach(vm.sharedLineUsers, function (sharedLineUser) {
