@@ -1,0 +1,80 @@
+.external-number-overview {
+  .icon-spinner {
+    vertical-align: middle;
+  }
+}
+
+.external-number-detail {
+
+  $close-button-size: 20px;
+
+  .tab-content {
+    border: 0;
+  }
+
+  .nav-tabs + .tab-content {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .total-count {
+    .icon {
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    .icon-refresh {
+      cursor: pointer;
+    }
+  }
+
+  .filter {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 2px;
+
+    input {
+      flex: 1;
+    }
+    .icon-search {
+      font-size: 20px;
+      right: 30px;
+      width: 0;
+      color: $gray-dark;
+    }
+  }
+
+  .filter-count {
+    margin-bottom: 15px;
+    color: $gray-dark;
+  }
+
+  .list-group-item {
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 35px;
+    background-color: $brand-primary;
+    color: $brand-white;
+    display: flex;
+    align-items: center;
+    span {
+      flex: 1;
+      text-align: center;
+      font-size: 16px;
+      font-family: $brand-font-light;
+    }
+    .close {
+      color: $brand-white;
+      font-size: inherit;
+      margin-left: -$close-button-size;
+      &:before {
+        font-size: $close-button-size;
+      }
+    }
+    + .list-group-item {
+      margin-top: 10px;
+    }
+  }
+
+}

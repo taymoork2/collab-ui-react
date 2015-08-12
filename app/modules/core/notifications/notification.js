@@ -9,11 +9,21 @@
   /* @ngInject */
   function NotificationFn($translate, $q) {
     return {
+      success: success,
+      error: error,
       notify: notify,
       errorResponse: errorResponse,
       processErrorResponse: processErrorResponse,
       confirmation: confirmation
     };
+
+    function success(messageKey, messageParams) {
+      notify($translate.instant(messageKey, messageParams), 'success');
+    }
+
+    function error(messageKey, messageParams) {
+      notify($translate.instant(messageKey, messageParams), 'error');
+    }
 
     function notify(notifications, type) {
       if (!notifications) {

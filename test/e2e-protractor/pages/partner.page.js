@@ -31,7 +31,8 @@ var PartnerHomePage = function () {
 
   this.dids = {
     one: utils.randomDid(),
-    two: utils.randomDid()
+    two: utils.randomDid(),
+    three: utils.randomDid()
   };
 
   this.getDidTokenClose = function (did) {
@@ -48,7 +49,6 @@ var PartnerHomePage = function () {
   this.startTrialWithSqUCButton = element(by.id('startTrial'));
   this.trialDoneButton = element(by.id('trialDone'));
   this.customerNameInput = element(by.id('customerName'));
-  this.didNumberSpan = element(by.id('didNumberSpan'));
   this.didAddModal = element(by.id('didAddModal'));
   this.addDidButton = element(by.id('addDidButton'));
   this.removeDidPanel = element(by.id('removeDidPanel'));
@@ -110,9 +110,20 @@ var PartnerHomePage = function () {
   this.termsActionButton = this.termsOfTrialSection.element(by.css('button.actions-button'));
   this.editTermsButton = this.termsOfTrialSection.element(by.cssContainingText('a', 'Edit Terms of Trial'));
 
-  this.communicationSection = element(by.cssContainingText('.section-title-row', 'Communications'));
-  this.communicationActionButton = this.communicationSection.element(by.css('button.actions-button'));
-  this.editNumbersButton = this.communicationSection.element(by.cssContainingText('a', 'Edit Phone Numbers'));
+  this.communicationSection = element(by.css('.external-number-overview .side-panel-section'));
+  this.communicationPhoneNumbers = element(by.cssContainingText('.feature', 'Phone Numbers'));
+  this.communicationPhoneNumbersCount = this.communicationPhoneNumbers.element(by.css('.feature-status'));
+
+  this.phoneNumbersSection = element(by.cssContainingText('.section-title-row', 'Phone Numbers'));
+  this.phoneNumbersActionButton = this.phoneNumbersSection.element(by.css('button.actions-button'));
+  this.addNumbersButton = this.phoneNumbersSection.element(by.cssContainingText('a', 'Add Numbers'));
+  this.phoneNumbersTab = element(by.css('.external-number-detail .tab-pane.active'));
+  this.phoneNumbersCount = this.phoneNumbersTab.element(by.css('.total-count'));
+  this.clickPhoneNumberDelete = function (number) {
+    utils.click(this.phoneNumbersTab.element(by.cssContainingText('.list-group-item', number)).element(by.css('.close')));
+  };
+  this.deleteNumberModal = element(by.cssContainingText('.modal-header', 'Delete Number'));
+  this.deleteNumberYes = element(by.buttonText('Yes'));
 
   this.assertDisabled = function (id) {
     expect(element(by.id(id)).isEnabled()).toBeFalsy();
