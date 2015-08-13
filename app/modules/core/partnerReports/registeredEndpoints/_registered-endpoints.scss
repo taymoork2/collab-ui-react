@@ -1,6 +1,10 @@
 .registeredEndpoints {
   .endpointTable {
     padding: 0 15px;
+    position: relative;
+  }
+  .no-data {
+    margin-right: 32px;
   }
   .positive {
     color: $brand-success;
@@ -24,21 +28,6 @@
     text-overflow: ellipsis;
     overflow: hidden;
     padding-left: 20px;
-  }
-  .spinner-position {
-    height: 75px;
-    position: absolute;
-    top: 100px;
-    transform: translate(50%, 50%);
-    left: 360px;
-    .icon-2x {
-      font-size: 4em;
-    }
-  }
-  .no-data-center {
-    position: absolute;
-    top: 125px;
-    width: 100%;
   }
   .dummyTable {
     border-color: #ECECEC;

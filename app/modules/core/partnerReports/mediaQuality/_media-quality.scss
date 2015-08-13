@@ -4,21 +4,6 @@
   .graph-align {
     padding: 0 15px;
   }
-  .spinner-position {
-    position: relative;
-    top: -250px;
-
-    .icon-2x {
-      font-size: 4em;
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-  .no-data-center {
-    position: relative;
-    top: -300px;
-  }
   .graph-text-balloon {
     font-family: $brand-font-cisco-TT-Regular;
     font-size: 15px;
@@ -34,6 +19,8 @@
   }
   #mediaQualityDiv{
     overflow: visible !important;
+    position: relative;
+    top: -25px;
     .amcharts-chart-div{
       overflow: visible !important;
       svg {

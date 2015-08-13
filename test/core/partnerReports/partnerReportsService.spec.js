@@ -243,16 +243,6 @@ describe('Service: Partner Reports Service', function () {
       });
       $httpBackend.flush();
     });
-
-    it('getMostRecentUpdate should return the most recent update', function () {
-      $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(mostActiveUserData);
-      $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
-
-      PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
-        expect(PartnerReportService.getMostRecentUpdate()).toEqual(moment(mostActiveUserData.date).format(dateFormat));
-      });
-      $httpBackend.flush();
-    });
   });
 
   describe('Media Quality Services', function () {

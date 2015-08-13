@@ -1,17 +1,6 @@
 .active-user-population {
   position: relative;
   padding: 0 15px;
-  .spinner-position {
-    position: relative;
-    top: -150px;
-
-    .icon-2x {
-      font-size: 4em;
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
   .percent-large {
     font-size: 25px;
     font-family: $brand-font-cisco-TT-Light;
@@ -26,10 +15,6 @@
     font-size: 20px;
     text-align: left;
   }
-  .no-data-center {
-    top: -200px;
-    position: relative;
-  }
 }
 #activeUserPopulationDiv{
   position: relative;
@@ -43,13 +28,12 @@
   .amcharts-chart-div{
     overflow: visible !important;
     svg {
-      height: 460px !important;
-      top: 50px !important;
+      top: 20px !important;
       overflow: visible !important;
       position: relative !important;
     }
   } 
   .amcharts-balloon-div {
-    margin-top: 50px !important;
+    margin-top: 20px !important;
   }
 }

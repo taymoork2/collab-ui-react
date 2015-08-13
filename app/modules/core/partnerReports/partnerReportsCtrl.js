@@ -23,9 +23,11 @@
     var callMetricsDonutChart = null;
     var activeUserPopulationChart = null;
 
+    vm.showEngagement = true;
+    vm.showQuality = true;
+
     vm.activeUsersRefresh = REFRESH;
     vm.activeUserPopulationRefresh = REFRESH;
-    vm.showMostActiveUsers = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
@@ -33,13 +35,12 @@
     vm.activeButton = [1, 2, 3];
     vm.mostActiveUsers = [];
     vm.displayMostActive = false;
+    vm.showMostActiveUsers = false;
     vm.activeUserDescription = "";
     vm.mostActiveDescription = "";
 
-    vm.recentUpdate = "";
     vm.customerOptions = [];
     vm.customerSelected = null;
-
     vm.mediaQualityRefresh = REFRESH;
     vm.callMetricsRefresh = REFRESH;
     vm.callMetricsDescription = "";
@@ -150,14 +151,9 @@
       PartnerReportService.getOverallActiveUserData(vm.timeSelected);
       PartnerReportService.getCustomerList().then(function (response) {
         updateCustomerFilter(response);
-
         getRegisteredEndpoints();
         getMediaQualityReports();
-
-        getActiveUserReports().then(function () {
-          vm.recentUpdate = PartnerReportService.getMostRecentUpdate();
-        });
-
+        getActiveUserReports();
         getCallMetricsReports();
       });
     }

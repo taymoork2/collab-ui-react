@@ -271,9 +271,9 @@
   "reportsPage": {
     "title": "ORGANIZATION REPORTS",
     "pageTitle": "Reports",
-    "sync": "Last sync",
-    "engagementTab": "Engagement",
-    "qualityTab": "Quality",
+    "all": "All",
+    "engagement": "Engagement",
+    "quality": "Quality",
     "avgEntitlements": "Entitlements",
     "avgCalls": "Average Calls",
     "avgConversations": "Average Conversations",

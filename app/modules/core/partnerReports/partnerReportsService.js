@@ -17,7 +17,6 @@
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
-    var mostRecentUpdate = "";
     var customerList = null;
 
     var overallPopulation = 0;
@@ -55,7 +54,6 @@
       getOverallActiveUserData: getOverallActiveUserData,
       getActiveUserData: getActiveUserData,
       getCustomerList: getCustomerList,
-      getMostRecentUpdate: getMostRecentUpdate,
       getMediaQualityMetrics: getMediaQualityMetrics,
       getCallMetricsData: getCallMetricsData,
       getRegisteredEndpoints: getRegisteredEndpoints
@@ -73,7 +71,6 @@
       activeUserCancelPromise = $q.defer();
 
       activeUserDetailedPromise = getService(detailed + activeUserUrl + query, activeUserCancelPromise).then(function (response) {
-        setMostRecentUpdate(response);
         if (response.data !== null && response.data !== undefined && angular.isArray(response.data.data)) {
           var overallActive = 0;
           var overallRegistered = 0;
@@ -207,10 +204,6 @@
       });
     }
 
-    function getMostRecentUpdate() {
-      return mostRecentUpdate;
-    }
-
     function getCustomerList() {
       var orgPromise = $q.defer();
       if (customerList === null) {
@@ -268,12 +261,6 @@
         return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=day&cache=true';
       } else {
         return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=day&cache=true';
-      }
-    }
-
-    function setMostRecentUpdate(data) {
-      if (data.data !== undefined && data.data.date !== null && data.data.date !== undefined && mostRecentUpdate === "") {
-        mostRecentUpdate = moment(data.data.date).format(dateFormat);
       }
     }
 
@@ -390,7 +377,6 @@
       } else {
         return getService(topn + activeUserUrl + query + orgId + customer.value, canceler).then(function (response) {
           if (response !== null && response !== undefined) {
-            setMostRecentUpdate(response);
             var data = response.data.data[0].data;
             angular.forEach(data, function (index) {
               index.orgName = customer.label;
@@ -485,8 +471,6 @@
       callMetricsCancelPromise = $q.defer();
 
       return getService(detailed + callMetricsUrl + query + orgId + customer.value, callMetricsCancelPromise).then(function (response) {
-        setMostRecentUpdate(response);
-
         if (angular.isArray(response.data.data) && response.data.data.length !== 0) {
           return transformRawCallMetricsData(response.data.data[0]);
         } else {
@@ -547,7 +531,6 @@
         });
       } else {
         return getService(registeredUrl + getTrendQuery(time) + orgId + customer.value, endpointsCancelPromise).then(function (response) {
-          setMostRecentUpdate(response);
           if (Array.isArray(response.data.data) && response.data.data[0].details !== null && response.data.data[0].details !== undefined) {
             var data = response.data.data[0].details;
             data.customer = customer.label;

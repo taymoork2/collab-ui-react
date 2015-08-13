@@ -2,44 +2,37 @@
   <div class="reports-header row page-header">
     <div class="page-title col-md-6">
       <h2 class="title" translate="reportsPage.pageTitle"></h2>
-      <span class="sync"><span translate="reportsPage.sync"></span>: {{nav.recentUpdate}}</span>
+      <span class="sync">
+        <div class="report-filter-link">
+          <a id="allReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = true;" translate="reportsPage.all"
+            ng-class="{'selected-link': nav.showEngagement === true && nav.showQuality === true, 'not-selected': nav.showEngagement === false || nav.showQuality === false}"></a>
+        </div>
+        <div class="report-filter-link">
+          <a id="engagementReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = false;" translate="reportsPage.engagement"
+            ng-class="{'selected-link': nav.showEngagement === true && nav.showQuality === false, 'not-selected': !(nav.showEngagement === true && nav.showQuality === false)}"></a>
+        </div>
+        <div class="report-filter-link">
+          <a id="qualityReports" class="report-link" ng-click="nav.showEngagement = false; nav.showQuality = true;" translate="reportsPage.quality"
+            ng-class="{'selected-link': nav.showEngagement === false && nav.showQuality === true, 'not-selected': !(nav.showEngagement === false && nav.showQuality === true)}"></a>
+        </div>
+      </span>
     </div>
     <div class="page-title col-md-6 report-filters">
       <cs-select class="pull-right filter-two" id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions"
       on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
-      <cs-select class="pull-right filter-one" id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()"
-      is-disabled="nav.customersSet()"></cs-select>
+      <cs-select class="pull-right filter-one" id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions"
+        on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
     </div>
   </div>
-  <div class="report-tabs-container">
-    <section class="tab-reports background-white">
-      <cs-tabset>
-        <cs-tab id="engagementTab" ui-sref-active="current">
-          <cs-tab-heading>
-            <h4 translate="reportsPage.engagementTab"></h4>
-          </cs-tab-heading>
-          <div id="engagementReport" class="tab-report">
-            <div class="row">
-              <uc-active-user class="report-section report-left col-md-5"></uc-active-user>
-              <div class="report-section report-right col-md-5">
-                <uc-registered-endpoints></uc-registered-endpoints>
-                <uc-active-user-population></uc-active-user-population>
-              </div>
-            </div>
-          </div>
-        </cs-tab>
-        <cs-tab id="qualityTab" ui-sref-active="current">
-          <cs-tab-heading>
-            <h4 translate="reportsPage.qualityTab"></h4>
-          </cs-tab-heading>
-          <div id="qualityReport" class="tab-report">
-            <div class="row">
-              <uc-call-metrics class="report-section report-left col-md-5"></uc-call-metrics>
-              <uc-media-quality class="report-section report-right col-md-5"></uc-media-quality>
-            </div>
-          </div>
-        </cs-tab>
-      </cs-tabset>
-    </section>
+  <div class="row reports-container">
+    <div class="col-md-6 report-space">
+      <div class="report-box" ng-show="nav.showEngagement"><uc-active-user></uc-active-user></div>
+      <div class="report-box" ng-show="nav.showEngagement"><uc-registered-endpoints></uc-registered-endpoints></div>
+      <div class="report-box" ng-show="nav.showQuality"><uc-call-metrics></uc-call-metrics></div>
+    </div>
+    <div class="col-md-6 report-space">
+      <div class="report-box" ng-show="nav.showEngagement"><uc-active-user-population></uc-active-user-population></div>
+      <div class="report-box" ng-show="nav.showQuality"><uc-media-quality></uc-media-quality></div>
+    </div>
   </div>
 </div>
