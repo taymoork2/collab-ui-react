@@ -62,7 +62,7 @@
     }];
 
     function init() {
-      RouterCompanyNumber.listCompanyNumber().then(function (companyNumbers) {
+      RouterCompanyNumber.listCompanyNumbers().then(function (companyNumbers) {
         angular.forEach(companyNumbers, function (companyNumber) {
           if (companyNumber.externalCallerIdType == "Company Caller ID") {
             vm.model.orgname = companyNumber.name;
