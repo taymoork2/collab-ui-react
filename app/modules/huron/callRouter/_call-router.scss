@@ -75,6 +75,8 @@
     width: calc(100% - 20px);
     .dropdown-menu {
       width: calc(100% - 20px);
+      overflow-y: scroll;
+      max-height: 261px;
     }
     .has-error & .input-group-btn > .btn {
       box-shadow: 0 0 0 2px #f05d3b;

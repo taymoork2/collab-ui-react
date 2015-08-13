@@ -154,6 +154,20 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
   };
 })
 
+.directive('customComboSearch', function () {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function (scope, elem, attrs, ngModel) {
+      scope.newValue = ngModel.$viewValue;
+      ngModel.$parsers.push(function (value) {
+        scope.newValue = value;
+        return value;
+      });
+    }
+  };
+})
+
 .directive('csCustomCombobox', function () {
   return {
     restrict: 'E',
