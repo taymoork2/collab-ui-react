@@ -6,7 +6,7 @@
     .factory('HuronUser', HuronUser);
 
   /* @ngInject */
-  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, UserOTPService, $q, LogMetricsService, Notification) {
+  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, UserOTPService, $q, LogMetricsService, Notification, CallerId) {
 
     function deleteUser(uuid) {
       return UserServiceCommon.remove({
@@ -128,19 +128,23 @@
         firstName: '',
         lastName: ''
       };
-      if (data.name) {
-        if (data.name.givenName) {
-          user.firstName = data.name.givenName.trim();
-        }
-        if (data.name.familyName) {
-          user.lastName = data.name.familyName.trim();
-        }
+      if (data.name && data.name.givenName) {
+        user.firstName = data.name.givenName.trim();
+      }
+      if (data.name && data.name.familyName) {
+        user.lastName = data.name.familyName.trim();
       }
 
       return UserServiceCommon.update({
         customerId: Authinfo.getOrgId(),
         userId: uuid
-      }, user).$promise;
+      }, user).$promise.then(function () {
+        var userName = '';
+        userName = (user.firstName) ? user.firstName : '';
+        userName = (user.lastName) ? (userName + ' ' + user.lastName) : userName;
+        userName = (userName) ? userName : data.userName;
+        return CallerId.updateInternalCallerId(uuid, userName);
+      });
     }
 
     function updateDtmfAccessId(uuid, dtmfAccessId) {
