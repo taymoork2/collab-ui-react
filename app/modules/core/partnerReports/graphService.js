@@ -276,6 +276,10 @@
       valueAxes[0].maximum = 100;
       valueAxes[0].unit = "%";
 
+      if (overallPopulation > 100) {
+        valueAxes[0].maximum = overallPopulation;
+      }
+
       var chartCursor = {
         "cursorAlpha": 0,
         "categoryBalloonEnabled": false,
@@ -329,9 +333,20 @@
           startDuration = 0;
         }
 
+        var valueAxes = [angular.copy(axis)];
+        valueAxes[0].autoGridCount = false;
+        valueAxes[0].minimum = 0;
+        valueAxes[0].maximum = 100;
+        valueAxes[0].unit = "%";
+
+        if (overallPopulation > 100) {
+          valueAxes[0].maximum = overallPopulation;
+        }
+
         activeUserPopulationChart.dataProvider = modifyPopulation(data, overallPopulation);
         activeUserPopulationChart.graphs = populationGraphs(data);
         activeUserPopulationChart.startDuration = startDuration;
+        activeUserPopulationChart.valueAxes = valueAxes;
         activeUserPopulationChart.validateData();
       }
 
