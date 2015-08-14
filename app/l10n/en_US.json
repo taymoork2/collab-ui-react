@@ -335,7 +335,7 @@
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
-    "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and fauled calls for the selected customers.",
+    "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
     "totalCalls": "Total Calls",
     "totalCallMinutes": "Total Call Minutes"
   },
