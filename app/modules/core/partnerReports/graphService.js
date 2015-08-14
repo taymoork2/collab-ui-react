@@ -276,9 +276,11 @@
       valueAxes[0].maximum = 100;
       valueAxes[0].unit = "%";
 
-      if (overallPopulation > 100) {
-        valueAxes[0].maximum = overallPopulation;
-      }
+        if (data[1].percentage > overallPopulation && data[1].percentage > 100) {
+          valueAxes[0].maximum = data[1].percentage;
+        } else if (overallPopulation > 100) {
+          valueAxes[0].maximum = overallPopulation;
+        }
 
       var chartCursor = {
         "cursorAlpha": 0,
@@ -339,7 +341,9 @@
         valueAxes[0].maximum = 100;
         valueAxes[0].unit = "%";
 
-        if (overallPopulation > 100) {
+        if (data[0].percentage > overallPopulation && data[0].percentage > 100) {
+          valueAxes[0].maximum = data[0].percentage;
+        } else if (overallPopulation > 100) {
           valueAxes[0].maximum = overallPopulation;
         }
 
