@@ -128,7 +128,7 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
 
         var input = element.find('input');
 
-        if (!element.hasClass('disabled') && !attrs.disabled) {
+        if (!element.hasClass('disabled') && !attrs.disabled && !cbCtrl.isOpen()) {
           scope.$apply(function () {
             cbCtrl.toggle();
             input[0].focus();
@@ -149,6 +149,20 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
 
       scope.$on('$destroy', function () {
         element.unbind('click', toggleCombobox);
+      });
+    }
+  };
+})
+
+.directive('customComboSearch', function () {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function (scope, element, attrs, ngModel) {
+      scope.newValue = ngModel.$viewValue;
+      ngModel.$parsers.push(function (value) {
+        scope.newValue = value;
+        return value;
       });
     }
   };
@@ -178,9 +192,17 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
           scope.options = scope.myOptions || {
             validation: {}
           };
+
+          scope.$watch('value', function (newValue) {
+            scope.newValue = newValue;
+          });
         },
         post: function postLink(scope, element, attrs, cbCtrl) {
           var input = element.find('input');
+
+          scope.$watch('value', function (newValue) {
+            scope.newValue = newValue;
+          });
 
           scope.selectItem = function () {
             cbCtrl.$setViewValue(this.item);

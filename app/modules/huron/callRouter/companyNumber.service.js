@@ -34,7 +34,7 @@
       return deferred.promise;
     }
 
-    function listCompanyNumber() {
+    function listCompanyNumbers() {
       return CallRouterService.query({
         customerId: Authinfo.getOrgId()
       }).$promise;
@@ -61,7 +61,7 @@
 
     return {
       loadExternalNumberPool: loadExternalNumberPool,
-      listCompanyNumber: listCompanyNumber,
+      listCompanyNumbers: listCompanyNumbers,
       listUsers: listUsers,
       saveCompanyNumber: saveCompanyNumber,
       updateCompanyNumber: updateCompanyNumber

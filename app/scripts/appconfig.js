@@ -873,7 +873,7 @@ angular
               templateUrl: 'modules/huron/callRouter/callRouterHeader.tpl.html'
             },
             'nav': {
-              templateUrl: 'modules/huron/callRouter/callRouterNav.tpl.html',
+              templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
               controller: 'CallRouterCtrl',
               controllerAs: 'nav'
             },
