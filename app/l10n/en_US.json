@@ -6,6 +6,7 @@
   },
   "usersPage": {
     "assignServices": "Assign Services",
+    "assignDnAndDirectLines": "Assign Numbers",
     "inviteModalBtn": "Invite Users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",
@@ -34,6 +35,8 @@
     "active": "Active",
     "inactive": "",
     "validEmailInput": "Please enter valid user email(s).",
+    "duplicateDnFound": "Duplicate Internal Extension entered.",
+    "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_users.csv",
@@ -72,7 +75,14 @@
     "convertUserError": "Failed to convert",
     "addtionalServiceSetupText": "Additional setup is required before this service can be enabled.",
     "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
-    "setUpThisService": "Set up this service"
+    "setUpThisService": "Set up this service",
+    "nameHeader": "Name",
+    "directLineHeader": "Direct Line",
+    "extensionHeader": "Internal Extension",
+    "notApplicable": "N/A",
+    "noExtensionInPool": "No Extension in pool.",
+    "noExternalNumberAvail": "No DID available for mapping.",
+    "noExtMappingAvail": "No DID mapping available."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -474,13 +484,17 @@
     "no": "No",
     "all": "All",
     "pending": "Pending",
-    "apply": "Apply"
+    "apply": "Apply",
+    "unassigned": "Unassigned",
+    "modal": "Modal"
   },
   "notifications": {
     "success": "Success notifications",
     "error": "Error notifications",
     "successTotal": "{total, plural, one{# success} other{# successes}}",
-    "errorTotal": "{total, plural, one{# error} other{# errors}}"
+    "errorTotal": "{total, plural, one{# error} other{# errors}}",
+    "successDelete": "Successfully deleted {{item}}.",
+    "errorDelete": "Failed to delete {{item}}."
   },
   "time": {
     "seconds": "{time, plural, one{# second} other{# seconds}}",
@@ -886,7 +900,11 @@
     "trial": "Trial {{number}}",
     "startYourTrial": "Start your new {{days}}-day trial.",
     "trialDaysRemaining": "{{days}} Days left in current trial.",
-    "messagingSetupPlaceholder": "Select retention time"
+    "messagingSetupPlaceholder": "Select retention time",
+    "assignDnAndDirectLines": "Assign Numbers",
+    "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
+    "mapDirectLineWithExt": "Map Direct Line With Extension",
+    "reset": "Reset"
   },
   "reports": {
     "title": "Reports",
@@ -1030,7 +1048,10 @@
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
     "errorAddNumberInUse": "Failed to add number: {{number}} already in use.",
     "errorAddNumberInUseOtherAA": "Failed to add number: {{number}} already in use by {{name}}.",
-    "errorAddNumberNotFound": "Failed to add number: {{number}} not found."
+    "errorAddNumberNotFound": "Failed to add number: {{number}} not found.",
+    "landingDevelopmentLink": "AA Development Link",
+    "landingInformation": "Auto attendants allow you to create a custom greeting, recordings, and phone menus that handle inbound calls to your business.  Choose from the following common Auto Attendant layouts, or you can build your own.",
+    "landingTitle": "Auto Attendants"
   },
   "callPark": {
     "newCallPark": "New Call Park",
@@ -1080,6 +1101,7 @@
     "externalNumberLabel": "Direct Line",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
+    "externalNumberMappingError": "Direct line Mappings failed to load.",
     "chooseNumber": "Choose a Number",
     "searchNumber": "Search for a number...",
     "addNewNumber": "Add a New Number",
@@ -1110,7 +1132,13 @@
   },
   "callerIdPanel": {
     "title": "Caller ID",
-    "description": "<small>Change the display name for calls from this line</small>"
+    "description": "<small>Change the display name for calls from this line</small>",
+    "directLine": "Direct Line",
+    "blockedCallerId": "Blocked Outbound Caller ID",
+    "blockedCallerIdDescription": "Caller will not see any caller ID or number",
+    "companyCallerId": "Company Caller ID",
+    "companyNumberLoadError": "Company numbers failed to load.",
+    "registerDeviceForCallerID": "Register your device to enable caller ID"
   },
   "sharedLinePanel": {
     "title": "Shared Line",
@@ -1143,7 +1171,15 @@
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
     "addNumbers": "Add Numbers",
-    "editNumbers": "Edit Phone Numbers"
+    "editNumbers": "Edit Phone Numbers",
+    "listError": "Failed to load phone number list.",
+    "deleteNumber": "Delete Number",
+    "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
+    "deleteWarning": "This cannot be reversed.  You will lose this number indefinitely.",
+    "allNumbers": "{count, plural, one{# Number} other{# Numbers}}",
+    "pendingNumbers": "{count, plural, one{# Pending Number} other{# Pending Numbers}}",
+    "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
+    "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",
@@ -1259,6 +1295,26 @@
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
+  },
+  "callRouter": {
+    "popover": "Assign numbers for company routing and voicemail.",
+    "callerinfopopover": "Specify the default outbound Caller ID that can take an external or internal number.",
+    "title": "Manage company numbers and company caller ID",
+    "saveCallerIdSuccess": "Caller Id and number saved successfully.",
+    "saveCallerIdError": "Caller Id and number failed to save.",
+    "updateCallerIdSuccess": "Caller ID and number updated successfully",
+    "updateCallerIdError": "Caller ID and number failed to update.",
+    "companycallerID": "Company Caller ID",
+    "hide": "Hide",
+    "expand": "Expand"
+  },
+  "routingModal": {
+    "title": "Company Number",
+    "create": "Create",
+    "label": "Name",
+    "calleridnumber": "Number",
+    "companynumber": "Company Number",
+    "routeto": "Route To"
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",

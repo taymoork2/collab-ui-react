@@ -135,12 +135,6 @@
   margin-bottom: 0px;
 }
 
-.invisible {
-  background: transparent;
-  border: none !important;
-  font-size: 0;
-}
-
 .select-grp {
   position: absolute;
   top: 55px;
@@ -211,6 +205,10 @@
 .service-link-span-box {
   display: inline-block;
   vertical-align: middle;
+}
+
+.warning {
+  color: $brand-warning-dark;
 }
 
 .bucket-license {
@@ -285,11 +283,35 @@
   US196818 | Atlas - Add User Modal Update
 -------------------------------------------------------------------*/
 
+
 .add-users, .edit-services {
   .modal-body {
     background-color: $brand-white;
     margin-bottom: 0;
     padding: 0;
+    .loading {
+      width: 100%;
+      text-align: center;
+      margin: 40px auto;
+      &.ng-enter, &.ng-leave {
+        transition: none;
+      }
+      /* starting animations for enter */
+
+      &.ng-enter {}
+      /* terminal animations for enter */
+
+      &.ng-enter.ng-enter-active {}
+      /* starting animations for leave */
+
+      &.ng-leave {}
+      /* terminal animations for leave */
+
+      &.ng-leave.ng-leave-active {}
+      .icon {
+        font-size: 75px;
+      }
+    }
   }
 }
 
@@ -395,5 +417,202 @@
   }
   .wizard-main-title {
     color: $gray-darkest;
+  }
+}
+
+.option-separator-pipe {
+  color: $gray-light;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.page-option-buttons {
+  padding-top: 20px;
+  text-align: right;
+  float: none;
+
+  a {
+    font-family: $brand-font-regular;
+    font-size: 14px;
+    text-align: right;
+    &.primary {
+      color: $brand-primary;
+    }
+    &.disabled {
+      color: $gray;
+      cursor: default;
+    }
+    &:focus, &:active{
+      outline: none;
+      box-shadow: none;
+    }
+  }
+}
+
+.did-map-error {
+  display: inline-block;
+}
+
+.did-map-spinner {
+    margin-bottom: -3px;
+}
+
+.addDnToUser{
+  .gridStyle{
+     margin-top: 20px;
+     margin-bottom: 5px;
+     border: solid;
+     border-color: $gray-light;
+     border-width: 1px;
+     padding-left: 0px;
+     padding-right: 0px;
+     height: calc(100vh - 370px);
+     width: 100%;
+
+    .ngTopPanel {
+      width: 100% !important;
+      background-color: $gray-lightest;
+      border-bottom: 1px solid $gray-light;
+      box-sizing: content-box;
+    }
+    .ngHeaderContainer {
+      width: 100% !important;
+    }
+    .ngHeaderRow {
+      width: 100%;
+    }
+    .ngHeaderCell {
+      width: 100%;
+    }
+    .ngHeaderText {
+      padding-left: 20px;
+    }
+    .ngViewport {
+      width: 100% !important;
+    }
+    .ngCanvas {
+      margin-top: 10px;
+      width: 100% !important;
+    }
+    .ngRow {
+      border-width: 0px; /* affects borders around grid rows */
+      width: 100%;
+    }
+    .ngRow:hover {
+      background-color: transparent;
+    }
+    .ngCell {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    .ngCellText {
+      padding-top: 0px;
+      padding-bottom: 0px;
+      padding-left: 20px;
+    }
+    .name-display-style {
+      font-size: 14px;
+      color: $gray-darkest;
+      text-align: left;
+      line-height: 1.0;
+      display: block;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+
+    .email-display-style {
+      font-family: Arial;
+      font-size: 12px;
+      color: $gray-dark;
+      text-align: left;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    .error, .warning {
+      font-family: Arial;
+      font-size: 12px;
+      text-align: left; 
+    }
+  }
+  .select-list {
+    padding-top:0px;
+    padding-left:0px;
+  }
+  .select-list.colt1 {
+    width: 200px;
+  }
+  .select-list.colt2 {
+    width: 90px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .selected {
+    a {
+      background-color: transparent;
+    }
+    a .icon {
+      background-color: transparent;
+    }
+  }
+  .form-control.select-toggle {
+    padding-top: 8px;
+  }
+  .form-control[disabled].select-toggle  {
+      border: 1px solid $brand-danger;
+      background-color: transparent;
+      .icon-arrow-down {
+       &:after {
+          /*this is the X icon that appears when no DNs are available*/
+          content: $icon-error;
+          top: 0;
+          left: -12px;
+          position: absolute;
+          font-size: 18px;
+          line-height: 35px;
+          height: 17px;
+          width: 17px;
+          color: $brand-danger;
+        }
+      }
+  }
+
+  .select-warning .select-toggle  {
+      border: 1px solid $brand-warning-dark;
+      background-color: transparent;
+      .icon-arrow-down {
+       &:after {
+          /*this is the X icon that appears when no DNs are available*/
+          content: $icon-warning;
+          top: 0;
+          left: -12px;
+          position: absolute;
+          font-size: 18px;
+          line-height: 35px;
+          height: 17px;
+          width: 17px;
+          color: $brand-warning-dark;
+        }
+      }
+  }
+  .icon-arrow-down {
+    padding-top: 0;
+  }
+  .ngHeaderText.colt2 {
+    text-align: center;
+  }
+  .ngCell.colt2 {
+    overflow: visible;
+    padding-left: 20px;
+    .dropdown-menu {
+      right: 25px;
+      left: auto;
+      top: 70%;
+    }
+  }
+  .ngCell.colt1 {
+    overflow: visible;
+    padding-left: 20px;
+    .dropdown-menu {
+      top: 70%;
+    }
   }
 }

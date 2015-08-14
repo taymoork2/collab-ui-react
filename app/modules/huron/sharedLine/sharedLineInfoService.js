@@ -99,7 +99,9 @@
               description: '',
               isSharedLine: false,
               maxIndex: 1,
-              endpointDnUuid: ''
+              endpointDnUuid: '',
+              companyNumber: null,
+              externalCallerIdType: null
             };
             userDeviceInfo.push(device);
 
@@ -123,6 +125,8 @@
                   this.isSharedLine = info.isSharedLine;
                   this.maxIndex = info.maxIndex;
                   this.endpointDnUuid = info.endpointDnUuid;
+                  this.companyNumber = info.companyNumber;
+                  this.externalCallerIdType = info.externalCallerIdType;
                 }
               }.bind(device));
             promises.push(promise);
@@ -152,7 +156,9 @@
       var info = {
         isSharedLine: false,
         maxIndex: 1,
-        endpointDnUuid: ''
+        endpointDnUuid: '',
+        companyNumber: null,
+        externalCallerIdType: null
       };
       return SipEndpointDirectoryNumberService.query({
           'customerId': Authinfo.getOrgId(),
@@ -164,6 +170,8 @@
               if (d.directoryNumber.uuid === dnuuid) {
                 info.isSharedLine = true;
                 info.endpointDnUuid = d.uuid;
+                info.companyNumber = d.companyNumber;
+                info.externalCallerIdType = d.externalCallerIdType;
               }
               info.maxIndex = (info.maxIndex < d.index) ? d.index : info.maxIndex;
             });

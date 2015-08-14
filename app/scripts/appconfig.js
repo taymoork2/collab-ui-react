@@ -250,6 +250,13 @@ angular
             }
           }
         })
+        .state('users.add.services.dn', {
+          views: {
+            'usersAdd@users.add': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
+          }
+        })
         .state('users.convert', {
           parent: 'modalLarge',
           views: {
@@ -735,6 +742,8 @@ angular
           }
         })
         .state('customer-overview.externalNumbers', {
+          controller: 'ExternalNumberDetailCtrl',
+          controllerAs: 'externalNumbers',
           templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
           data: {
             displayName: 'Phone Numbers'
@@ -851,6 +860,28 @@ angular
             }
           }
         })
+        .state('callrouterBase', {
+          abstract: true,
+          parent: 'main',
+          templateUrl: 'modules/huron/callRouter/callRouter.tpl.html'
+        })
+        .state('callRouter', {
+          url: '/callRouter',
+          parent: 'callrouterBase',
+          views: {
+            'header': {
+              templateUrl: 'modules/huron/callRouter/callRouterHeader.tpl.html'
+            },
+            'nav': {
+              templateUrl: 'modules/huron/callRouter/callRouterNav.tpl.html',
+              controller: 'CallRouterCtrl',
+              controllerAs: 'nav'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
         .state('autoattendant', {
           url: '/autoattendant',
           abstract: false,
@@ -899,6 +930,12 @@ angular
               controllerAs: 'aaMenu'
             }
           }
+        })
+        .state('autoattendant.aalanding', {
+          parent: 'autoattendant',
+          templateUrl: 'modules/huron/callRouting/autoAttendant/aaLanding.tpl.html',
+          controller: 'AutoAttendantLandingCtrl',
+          controllerAs: 'aaLanding'
         })
         .state('callpark', {
           url: '/callpark',

@@ -1,16 +1,17 @@
 'use strict';
 
 describe('Controller: ExternalNumberOverviewCtrl', function () {
-  var controller, $controller, $scope, $stateParams, $q, ExternalNumberPool;
+  var controller, $controller, $scope, $stateParams, $q, ExternalNumberService, ExternalNumberPool;
 
   var externalNumbers;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ExternalNumberPool_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ExternalNumberService_, _ExternalNumberPool_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
+    ExternalNumberService = _ExternalNumberService_;
     ExternalNumberPool = _ExternalNumberPool_;
     $q = _$q_;
 
@@ -34,16 +35,18 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
   }));
 
   it('should calculate number of phone numbers', function () {
-    expect(controller.noOfPhoneNumbers).toEqual(2);
+    expect(controller.allNumbersCount).toEqual(2);
   });
 
   it('should update number of phone numbers', function () {
-    externalNumbers.push({
+    var newNumbers = externalNumbers.concat([{
       'pattern': '789'
-    });
-    $scope.$broadcast('DIDS_UPDATED');
+    }, {
+      'pattern': '000'
+    }]);
+    ExternalNumberService.setAllNumbers(newNumbers);
     $scope.$apply();
-    expect(controller.noOfPhoneNumbers).toEqual(3);
+    expect(controller.allNumbersCount).toEqual(4);
   });
 
   it('should show 0 numbers on error', function () {
@@ -52,7 +55,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
       $scope: $scope
     });
     $scope.$apply();
-    expect(controller.noOfPhoneNumbers).toEqual(0);
+    expect(controller.allNumbersCount).toEqual(0);
   });
 
   it('should show 0 numbers if no customer found', function () {
@@ -61,7 +64,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
       $scope: $scope
     });
     $scope.$apply();
-    expect(controller.noOfPhoneNumbers).toEqual(0);
+    expect(controller.allNumbersCount).toEqual(0);
   });
 
 });

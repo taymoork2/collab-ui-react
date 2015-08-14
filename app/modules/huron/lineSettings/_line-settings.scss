@@ -1,10 +1,5 @@
 /*****  _line-settings  *****/
 
-.caller-id-other {
-  display: inline-block;
-  width: 90%;
-}
-
 .call-forward-all {
   margin-bottom: 20px;
 }
@@ -40,5 +35,10 @@
   .esn-extension {
     color: $text-color;
   }
+}
+
+.caller-id-description {
+  margin-top: 10px;
+  color: $gray-dark;
 }
 /*****  _line-settings  *****/
