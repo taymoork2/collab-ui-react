@@ -87,7 +87,7 @@
                 var activeUsers = parseInt(index.details.activeUsers);
                 var totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
                 if (activeUsers !== 0 && totalRegisteredUsers !== 0) {
-                  var modifiedDate = moment(index.date).format(monthFormat);
+                  var modifiedDate = moment(index.date).add(1, 'day').format(monthFormat);
                   if (time.value === 0 || time.value === 1) {
                     modifiedDate = moment(index.date).format(dayFormat);
                   }
