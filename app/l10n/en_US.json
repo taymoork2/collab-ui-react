@@ -210,6 +210,7 @@
   "index": {
     "welcome": "Welcome!",
     "feedback": "Feedback",
+    "support": "Help",
     "logout": "Sign Out",
     "appTitle": "Cloud Collaboration Management",
     "genericTitle": "Spark",
