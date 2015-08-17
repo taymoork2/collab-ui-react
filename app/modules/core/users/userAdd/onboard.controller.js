@@ -1406,7 +1406,7 @@ angular.module('Core')
       var isCsvValid = false;
       var cancelDeferred;
       var saveDeferred;
-      var MAX_USERS = 1000;
+      var MAX_USERS = 100;
 
       $scope.onFileSizeError = function () {
         Notification.notify([$translate.instant('firstTimeWizard.csvMaxSizeError')], 'error');
