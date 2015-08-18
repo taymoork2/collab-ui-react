@@ -5,7 +5,7 @@ angular
   .service('AccountOrgService', AccountOrgService);
 
 /* @ngInject */
-function AccountOrgService ($http, $rootScope, Config, Auth) {
+function AccountOrgService($http, $rootScope, Config, Auth) {
   var accountUrl = Config.getAdminServiceUrl();
 
   var service = {
@@ -22,13 +22,13 @@ function AccountOrgService ($http, $rootScope, Config, Auth) {
 
   return service;
 
-  function getAccount (org) {
+  function getAccount(org) {
     var url = accountUrl + 'organization/' + org + '/accounts';
 
     return $http.get(url);
   }
 
-  function getServices (org, filter) {
+  function getServices(org, filter) {
     var url = accountUrl + 'organizations/' + org + '/services';
     if (!_.isUndefined(filter) && !_.isNull(filter)) {
       url += '?filter=' + filter;
@@ -37,20 +37,20 @@ function AccountOrgService ($http, $rootScope, Config, Auth) {
     return $http.get(url);
   }
 
-  function addMessengerInterop (org) {
+  function addMessengerInterop(org) {
     var url = accountUrl + 'organizations/' + org + '/services/messengerInterop';
     var request = {};
 
     return $http.post(url, request);
   }
 
-  function deleteMessengerInterop (org) {
+  function deleteMessengerInterop(org) {
     var url = accountUrl + 'organizations/' + org + '/services/messengerInterop';
 
     return $http.delete(url);
   }
 
-  function addOrgCloudSipUri (org, cloudSipUri) {
+  function addOrgCloudSipUri(org, cloudSipUri) {
     var url = accountUrl + 'organization/' + org + '/settings';
     var request = {
       'id': org,
@@ -63,7 +63,7 @@ function AccountOrgService ($http, $rootScope, Config, Auth) {
     return $http.put(url, request);
   }
 
-  function addOrgDataRetentionPeriodDays (org, dataRetentionPeriodDays) {
+  function addOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
     var url = accountUrl + 'organization/' + org + '/settings';
     var request = {
       'id': org,
@@ -76,7 +76,7 @@ function AccountOrgService ($http, $rootScope, Config, Auth) {
     return $http.put(url, request);
   }
 
-  function modifyOrgDataRetentionPeriodDays (org, dataRetentionPeriodDays) {
+  function modifyOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
     var url = accountUrl + 'organization/' + org + '/settings';
     var request = {
       'id': org,
@@ -89,13 +89,13 @@ function AccountOrgService ($http, $rootScope, Config, Auth) {
     return $http.patch(url, request);
   }
 
-  function deleteOrgSettings (org) {
+  function deleteOrgSettings(org) {
     var url = accountUrl + 'organization/' + org + '/settings/' + org;
 
     return $http.delete(url);
   }
 
-  function getOrgSettings (org) {
+  function getOrgSettings(org) {
     var url = accountUrl + 'organization/' + org + '/settings/' + org;
 
     return $http.get(url);
