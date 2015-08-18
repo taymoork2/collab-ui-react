@@ -63,6 +63,7 @@ Let's say you've been assigned to fix a defect (#123) where users aren't being s
 4. Fix the defect by modifying the appropriate code
 5. Once you've finished fixing the defect, add your changes and commit: `git add file1 file2 ...`, `git commit -m "DE123: Users weren't being saved properly"`
 6. Push the changes on the `de123` branch to your local account: `git push origin de123`. You'll notice that when you visit your GitHub account's fork (https://github-sqbu.cisco.com/username/wx2-admin-web-client), it will have a new branch in the drop down menu. You might also see a highlighted pop-up that asks you if you want to Compare & create a pull request.
+7. When your pull request gets accepted and you need to push to Jenkins, you'll want to push your specific branch: `git push jenkins de123:master`
 
 What's really nice about this process is that you can create many branches that have a separate set of changes associated with them. When you want to start working on fixing a defect, you don't have to worry about mixing up the changes for one defect with the changes of another.
 
