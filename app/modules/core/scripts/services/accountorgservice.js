@@ -2,129 +2,102 @@
 
 angular
   .module('Core')
-  .service('AccountOrgService', ['$http', '$rootScope', 'Config', 'Auth',
-    function ($http, $rootScope, Config, Auth) {
-      var accountUrl = Config.getAdminServiceUrl();
-      return {
-        getAccount: function (org, callback) {
-          var url = accountUrl + 'organization/' + org + '/accounts';
-          return $http.get(url);
-        },
-        getServices: function (org, filter, callback) {
-          var url = accountUrl + 'organizations/' + org + '/services';
-          if (!_.isUndefined(filter) && !_.isNull(filter)) {
-            url += '?filter=' + filter;
-          }
-          $http.get(url)
-            .success(function (data, status) {
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        },
-        addMessengerInterop: function (org, callback) {
-          var url = accountUrl + 'organizations/' + org + '/services/messengerInterop';
-          var request = {};
-          $http.post(url, request)
-            .success(function (data, status) {
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        },
-        deleteMessengerInterop: function (org, callback) {
-          var url = accountUrl + 'organizations/' + org + '/services/messengerInterop';
+  .service('AccountOrgService', AccountOrgService);
 
-          $http.delete(url)
-            .success(function (data, status) {
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        },
-        addOrgCloudSipUri: function (org, cloudSipUri, callback) {
-          var url = accountUrl + 'organization/' + org + '/settings';
-          var request = {
-            'id': org,
-            'settings': [{
-              'key': 'orgCloudSipUri',
-              'value': cloudSipUri + '.ciscospark.com'
-            }]
-          };
+/* @ngInject */
+function AccountOrgService ($http, $rootScope, Config, Auth) {
+  var accountUrl = Config.getAdminServiceUrl();
 
-          $http.put(url, request)
-            .success(function (data, status) {
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        },
+  var service = {
+    getAccount: getAccount,
+    getServices: getServices,
+    addMessengerInterop: addMessengerInterop,
+    deleteMessengerInterop: deleteMessengerInterop,
+    addOrgCloudSipUrl: addOrgCloudSipUrl,
+    addOrgDataRetentionPeriodDays: addOrgDataRetentionPeriodDays,
+    modifyOrgDataRetentionPeriodDays: modifyOrgDataRetentionPeriodDays,
+    deleteOrgSettings: deleteOrgSettings,
+    getOrgSettings: getOrgSettings
+  };
 
-        addOrgDataRetentionPeriodDays: function (org, dataRetentionPeriodDays, callback) {
-          var url = accountUrl + 'organization/' + org + '/settings';
-          var request = {
-            'id': org,
-            'settings': [{
-              'key': 'dataRetentionPeriodDays',
-              'value': dataRetentionPeriodDays
-            }]
-          };
+  return service;
 
-          $http.put(url, request)
-            .success(function (data, status) {
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        },
+  function getAccount (org) {
+    var url = accountUrl + 'organization/' + org + '/accounts';
 
-        modifyOrgDataRetentionPeriodDays: function (org, dataRetentionPeriodDays, callback) {
-          var url = accountUrl + 'organization/' + org + '/settings';
-          var request = {
-            'id': org,
-            'settings': [{
-              'key': 'dataRetentionPeriodDays',
-              'value': dataRetentionPeriodDays
-            }]
-          };
+    return $http.get(url);
+  }
 
-          $http.patch(url, request)
-            .success(function (data, status) {
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        },
-
-        deleteOrgSettings: function (org, callback) {
-          var url = accountUrl + 'organization/' + org + '/settings/' + org;
-
-          $http.delete(url)
-            .success(function (data, status) {
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        },
-
-        getOrgSettings: function (org, callback) {
-          var url = accountUrl + 'organization/' + org + '/settings/' + org;
-
-          $http.get(url)
-            .success(function (data, status) {
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        }
-      };
+  function getServices (org, filter) {
+    var url = accountUrl + 'organizations/' + org + '/services';
+    if (!_.isUndefined(filter) && !_.isNull(filter)) {
+      url += '?filter=' + filter;
     }
-  ]);
+
+    return $http.get(url);
+  }
+
+  function addMessengerInterop (org) {
+    var url = accountUrl + 'organizations/' + org + '/services/messengerInterop';
+    var request = {};
+
+    return $http.post(url, request);
+  }
+
+  function deleteMessengerInterop (org) {
+    var url = accountUrl + 'organizations/' + org + '/services/messengerInterop';
+
+    return $http.delete(url);
+  }
+
+  function addOrgCloudSipUri (org, cloudSipUri) {
+    var url = accountUrl + 'organization/' + org + '/settings';
+    var request = {
+      'id': org,
+      'settings': [{
+        'key': 'orgCloudSipUri',
+        'value': cloudSipUri + '.ciscospark.com'
+      }]
+    };
+
+    return $http.put(url, request);
+  }
+
+  function addOrgDataRetentionPeriodDays (org, dataRetentionPeriodDays) {
+    var url = accountUrl + 'organization/' + org + '/settings';
+    var request = {
+      'id': org,
+      'settings': [{
+        'key': 'dataRetentionPeriodDays',
+        'value': dataRetentionPeriodDays
+      }]
+    };
+
+    return $http.put(url, request);
+  }
+
+  function modifyOrgDataRetentionPeriodDays (org, dataRetentionPeriodDays) {
+    var url = accountUrl + 'organization/' + org + '/settings';
+    var request = {
+      'id': org,
+      'settings': [{
+        'key': 'dataRetentionPeriodDays',
+        'value': dataRetentionPeriodDays
+      }]
+    };
+
+    return $http.patch(url, request);
+  }
+
+  function deleteOrgSettings (org) {
+    var url = accountUrl + 'organization/' + org + '/settings/' + org;
+
+    return $http.delete(url);
+  }
+
+  function getOrgSettings (org) {
+    var url = accountUrl + 'organization/' + org + '/settings/' + org;
+
+    return $http.get(url);
+  }
+}
