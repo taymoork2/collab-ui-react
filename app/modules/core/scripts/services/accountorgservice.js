@@ -13,7 +13,7 @@ function AccountOrgService ($http, $rootScope, Config, Auth) {
     getServices: getServices,
     addMessengerInterop: addMessengerInterop,
     deleteMessengerInterop: deleteMessengerInterop,
-    addOrgCloudSipUrl: addOrgCloudSipUrl,
+    addOrgCloudSipUri: addOrgCloudSipUri,
     addOrgDataRetentionPeriodDays: addOrgDataRetentionPeriodDays,
     modifyOrgDataRetentionPeriodDays: modifyOrgDataRetentionPeriodDays,
     deleteOrgSettings: deleteOrgSettings,
@@ -50,7 +50,7 @@ function AccountOrgService ($http, $rootScope, Config, Auth) {
     return $http.delete(url);
   }
 
-  function addOrgCloudSipUrl (org, cloudSipUri) {
+  function addOrgCloudSipUri (org, cloudSipUri) {
     var url = accountUrl + 'organization/' + org + '/settings';
     var request = {
       'id': org,
