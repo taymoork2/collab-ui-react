@@ -28,6 +28,7 @@ var Navigation = function () {
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
+  this.supportLink = element(by.id('support-lnk'));
   this.username = element(by.binding('username'));
   this.orgname = element(by.binding('orgname'));
   this.userInfoButton = element(by.css('.user-info button'));
@@ -203,6 +204,11 @@ var Navigation = function () {
     utils.click(this.userInfoButton);
     utils.click(this.feedbackLink);
   };
+
+  this.support = function () {
+    utils.click(this.userInfoButton);
+    utils.click(this.supportLink);
+  }
 
   this.launchPartnerOrgPortal = function () {
     utils.click(this.userInfoButton);
