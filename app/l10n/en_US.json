@@ -210,6 +210,7 @@
   "index": {
     "welcome": "Welcome!",
     "feedback": "Feedback",
+    "support": "Help",
     "logout": "Sign Out",
     "appTitle": "Cloud Collaboration Management",
     "genericTitle": "Spark",
@@ -814,7 +815,8 @@
     "downloadSub": "Download CSV template",
     "downloadCSVTemplate": "Download CSV Template",
     "advancedSub": "Synchronize users from Active Directory.",
-    "needHelp": "Need help?",
+    "needHelp": "Need help? ",
+    "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
     "messaging": "Messaging",
     "conferencing": "Conferencing",

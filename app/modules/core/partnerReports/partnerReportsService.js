@@ -89,7 +89,7 @@
                 if (activeUsers !== 0 && totalRegisteredUsers !== 0) {
                   var modifiedDate = moment(index.date).add(1, 'day').format(monthFormat);
                   if (time.value === 0 || time.value === 1) {
-                    modifiedDate = moment(index.date).format(dayFormat);
+                    modifiedDate = moment(index.date).add(1, 'day').format(dayFormat);
                   }
 
                   graphData.push({
@@ -236,9 +236,9 @@
 
     function getQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true';
       } else if (filter.value === 1) {
-        return '?&intervalCount=1&intervalType=month&spanCount=7&spanType=day&cache=true';
+        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=true';
       } else {
         return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=true';
       }
@@ -256,11 +256,11 @@
 
     function getTrendQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true';
       } else if (filter.value === 1) {
-        return '?&intervalCount=1&intervalType=month&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=31&intervalType=day&spanCount=1&spanType=day&cache=true';
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=92&intervalType=day&spanCount=1&spanType=day&cache=true';
       }
     }
 
@@ -293,14 +293,14 @@
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined && activeUserCustomerGraphs[customer.value].graphData.length > 0) {
           var customerData = activeUserCustomerGraphs[customer.value].graphData;
-          var graph = getDateBase(customerData[customerData.length - 1].date, time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark]);
+          var graph = getDateBase(time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark]);
           return combineMatchingDates(graph, customerData);
         }
         return [];
       }
     }
 
-    function getDateBase(mostRecent, time, colors) {
+    function getDateBase(time, colors) {
       var graph = [];
       var dataPoint = {
         totalRegisteredUsers: 0,
@@ -317,12 +317,12 @@
 
       if (time.value === 0) {
         for (var i = 6; i >= 0; i--) {
-          dataPoint.modifiedDate = moment(mostRecent).subtract(i, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().subtract(i + 1, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
         for (var x = 3; x >= 0; x--) {
-          dataPoint.modifiedDate = moment(mostRecent).subtract(x * 7, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else {
@@ -409,17 +409,22 @@
           if (response.data.data.length > 0) {
             var graph = [];
             angular.forEach(response.data.data[0].data, function (index) {
-              if (parseInt(index.details.totalDurationSum) !== 0 && parseInt(index.details.goodQualityDurationSum) !== 0 && parseInt(index.details.fairQualityDurationSum) !== 0 && parseInt(index.details.poorQualityDurationSum) !== 0) {
+              var totalSum = parseInt(index.details.totalDurationSum);
+              var goodSum = parseInt(index.details.goodQualityDurationSum);
+              var fairSum = parseInt(index.details.fairQualityDurationSum);
+              var poorSum = parseInt(index.details.poorQualityDurationSum);
+
+              if (totalSum > 0 || goodSum > 0 || fairSum > 0 || poorSum > 0) {
                 var modifiedDate = moment(index.date).format(monthFormat);
                 if (time.value === 0 || time.value === 1) {
                   modifiedDate = moment(index.date).format(dayFormat);
                 }
 
                 graph.push({
-                  totalDurationSum: parseInt(index.details.totalDurationSum),
-                  goodQualityDurationSum: parseInt(index.details.goodQualityDurationSum),
-                  fairQualityDurationSum: parseInt(index.details.fairQualityDurationSum),
-                  poorQualityDurationSum: parseInt(index.details.poorQualityDurationSum),
+                  totalDurationSum: totalSum,
+                  goodQualityDurationSum: goodSum,
+                  fairQualityDurationSum: fairSum,
+                  poorQualityDurationSum: poorSum,
                   modifiedDate: modifiedDate,
                   date: index.date
                 });
@@ -427,13 +432,7 @@
             });
 
             if (graph.length > 0) {
-              var mostRecent = moment(graph[graph.length - 1].date).format(dateFormat);
-              var graphBase = [];
-              if (time.value === 0 && mostRecent !== moment().format(dateFormat) && mostRecent !== moment().subtract(1, 'day').format(dateFormat)) {
-                graphBase = getDateBase(moment().subtract(1, 'day'), time, []);
-              } else {
-                graphBase = getDateBase(graph[graph.length - 1].date, time, []);
-              }
+              var graphBase = getDateBase(time, []);
               angular.forEach(graph, function (index) {
                 graphBase = combineQualityGraphs(graphBase, index);
               });
