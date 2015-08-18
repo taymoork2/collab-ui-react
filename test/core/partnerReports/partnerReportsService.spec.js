@@ -6,10 +6,18 @@ describe('Service: Partner Reports Service', function () {
 
   beforeEach(module('Core'));
 
-  var dateFormat = "MMM DD, YYYY";
   var dayFormat = "MMM DD";
   var timeFilter = {
     value: 0
+  };
+
+  var updateDates = function (response) {
+    var data = response.data[0].data;
+    for (var i = data.length - 1; i >= 0; i--) {
+      data[i].date = moment().subtract(data.length + 1 - i, 'day').format();
+    }
+    response.data[0].data = data;
+    return response;
   };
 
   var customers = getJSONFixture('core/json/partnerReports/customerResponse.json');
@@ -33,7 +41,7 @@ describe('Service: Partner Reports Service', function () {
     label: ""
   };
   var customerDatapoint = {
-    modifiedDate: "Apr 10",
+    modifiedDate: moment().subtract(7, 'day').format(dayFormat),
     totalRegisteredUsers: 14,
     activeUsers: 14,
     percentage: 100
@@ -88,7 +96,7 @@ describe('Service: Partner Reports Service', function () {
       "orgId": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
       "orgName": "Huron Int Test 1",
       "data": [{
-        "date": moment().format(),
+        "date": moment().subtract(1, 'day').format(),
         "details": {
           "totalCount": "200",
           "totalDurationSum": "3605",
@@ -127,11 +135,11 @@ describe('Service: Partner Reports Service', function () {
     managedOrgsUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
-    activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true';
+    activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true';
     mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true&orgId=';
-    mediaQualityUrl = baseUrl + 'detailed/managedOrgs/callQuality?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true&orgId=';
+    mediaQualityUrl = baseUrl + 'detailed/managedOrgs/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true&orgId=';
     callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true&orgId=';
-    registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=1&intervalType=week&spanCount=1&spanType=day&cache=true&orgId=';
+    registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true&orgId=';
   }));
 
   afterEach(function () {
@@ -146,7 +154,7 @@ describe('Service: Partner Reports Service', function () {
   describe('Active User Services', function () {
     describe('should getOverallActiveUserData', function () {
       beforeEach(function () {
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(updateDates(activeUserDetailedData));
       });
 
       it('just the detailed data', function () {
@@ -160,7 +168,7 @@ describe('Service: Partner Reports Service', function () {
     describe('should getActiveUserData', function () {
       beforeEach(function () {
         $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(mostActiveUserData);
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(updateDates(activeUserDetailedData));
       });
 
       it('for an existing customer', function () {
@@ -181,7 +189,7 @@ describe('Service: Partner Reports Service', function () {
     describe('should notify an error for getActiveUserData', function () {
       it('and return empty table data', function () {
         $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(500, error);
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedData);
+        $httpBackend.whenGET(activeUsersDetailedUrl).respond(updateDates(activeUserDetailedData));
 
         PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
           expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');

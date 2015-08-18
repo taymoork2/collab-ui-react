@@ -210,6 +210,7 @@
   "index": {
     "welcome": "Welcome!",
     "feedback": "Feedback",
+    "support": "Help",
     "logout": "Sign Out",
     "appTitle": "Cloud Collaboration Management",
     "genericTitle": "Spark",
@@ -486,7 +487,10 @@
     "pending": "Pending",
     "apply": "Apply",
     "unassigned": "Unassigned",
-    "modal": "Modal"
+    "modal": "Modal",
+    "add": "Add",
+    "and": "and",
+    "or": "or"
   },
   "notifications": {
     "success": "Success notifications",
@@ -811,7 +815,8 @@
     "downloadSub": "Download CSV template",
     "downloadCSVTemplate": "Download CSV Template",
     "advancedSub": "Synchronize users from Active Directory.",
-    "needHelp": "Need help?",
+    "needHelp": "Need help? ",
+    "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
     "messaging": "Messaging",
     "conferencing": "Conferencing",
@@ -1180,6 +1185,25 @@
     "pendingNumbers": "{count, plural, one{# Pending Number} other{# Pending Numbers}}",
     "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
+  },
+  "pstnSetup": {
+    "setupService": "Set Up PSTN Service",
+    "setupNumbers": "Set Up PSTN Numbers",
+    "placeOrder": "Place Order",
+    "orderBlock": "Order Block Numbers",
+    "areaCode": "Area Code",
+    "quantity": "Quantity",
+    "reviewAndOrder": "Review and Place Order",
+    "package": "Package",
+    "adding": "Adding",
+    "newNumbers": "{count, plural, one{# New Number} other{# New Numbers}}",
+    "thankYou": "Thank you",
+    "setupSuccess": "You have set up the PSTN service successfully.",
+    "nextStep": "Next Step",
+    "notifyCustomer": "If you want to Notify customer:",
+    "addUsers": "If you want to Add users:",
+    "sendMessage": "Send Message",
+    "launchPortal": "Launch Compnay Portal"
   },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",
@@ -1754,7 +1778,8 @@
     "nonPrintable": "This entry contains nonprintable characters.",
     "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
     "specialCharacters": "This entry contains special characters.",
-    "numeric": "Field can contain digits 0 to 9."
+    "numeric": "Field can contain digits 0 to 9.",
+    "positiveNumber": "Must enter a positive number."
   },
   "CsdmStatus": {
     "Online": "Online",

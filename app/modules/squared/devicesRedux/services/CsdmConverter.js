@@ -43,6 +43,9 @@ angular.module('Squared').service('CsdmConverter',
       this.cssColorClass = getCssColorClass(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
+      this.updateName = function (newName) {
+        this.displayName = newName;
+      };
     }
 
     var convertCodes = function (data) {

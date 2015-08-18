@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('UserInfoController', ['$scope', 'Authinfo', 'Auth', 'Log', '$window', '$location', 'Userservice', '$modal', 'Notification', '$filter', 'FeedbackService', 'Utils',
-    function ($scope, Authinfo, Auth, Log, $window, $location, Userservice, $modal, Notification, $filter, FeedbackService, Utils) {
+  .controller('UserInfoController', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', 'Userservice', '$modal', 'Notification', '$filter', 'FeedbackService', 'Utils',
+    function ($scope, Authinfo, Auth, Log, Config, $window, $location, Userservice, $modal, Notification, $filter, FeedbackService, Utils) {
       var getAuthinfoData = function () {
         $scope.username = Authinfo.getUserName();
         $scope.orgname = Authinfo.getOrgName();
@@ -70,5 +70,7 @@ angular.module('Core')
           $scope.loggedIn = true;
         }
       });
+
+      $scope.supportUrl = Config.supportUrl;
     }
   ]);
