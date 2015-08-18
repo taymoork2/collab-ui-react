@@ -50,7 +50,7 @@ function AccountOrgService ($http, $rootScope, Config, Auth) {
     return $http.delete(url);
   }
 
-  function addOrgCloudSipUri (org, cloudSipUri) {
+  function addOrgCloudSipUrl (org, cloudSipUri) {
     var url = accountUrl + 'organization/' + org + '/settings';
     var request = {
       'id': org,
