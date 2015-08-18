@@ -1,0 +1,29 @@
+<div class="pstn-review">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()"><span class="sr-only" translate="common.close"></span></button>
+    <h3 class="modal-title" translate="pstnSetup.setupService"></h3>
+  </div>
+  <div class="modal-body">
+    <div class="review-container">
+      <i class="icon icon-circle-call"></i>
+      <h1 class="title" translate="pstnSetup.reviewAndOrder"></h1>
+      <div class="review-details">
+        <div class="logo">
+          <img ng-src="{{::pstnSetup.provider.logoSrc}}" alt="{{::pstnSetup.provider.logoAlt}}">
+        </div>
+        <div class="package-detail-label">
+          <div translate="pstnSetup.package"></div>
+          <div translate="pstnSetup.adding"></div>
+        </div>
+        <div class="package-detail-text">
+          <div>{{::pstnSetup.provider.title}}</div>
+          <div class="detail-text" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnSetup.blockOrderTotals}}" translate-interpolation="messageformat"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" ui-sref="pstnSetup.orderNumbers" translate="common.back"></button>
+    <button class="btn btn-primary" ui-sref="pstnSetup.nextSteps" translate="pstnSetup.placeOrder"></button>
+  </div>
+</div>

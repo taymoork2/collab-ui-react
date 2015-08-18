@@ -1,0 +1,255 @@
+.pstn-providers, .pstn-numbers, .pstn-review, .pstn-next-steps {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  > .modal-body {
+    flex: 1
+  }
+}
+
+.pstn-providers {
+  .modal-body {
+    margin-bottom: 30px;
+  }
+  .pstn-provider-cards {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .pstn-provider-card {
+    width: calc(33.3333% - 20px);
+    background-color: $brand-white;
+    border-radius: 5px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+
+    .logo {
+      height: 55px;
+      padding: 7.5px;
+      text-align: center;
+      border-bottom: 1px solid $gray-lighter;
+      img {
+        height: 40px;
+        width: 235px;
+      }
+    }
+
+    .features {
+      flex: 1;
+      padding: 0 20px;
+      .feature-title {
+        font-family: $brand-font-light;
+        font-size: 18px;
+        color: $gray-darkest;
+        text-align: center;
+        margin-top: 18px;
+        margin-bottom: 30px;
+      }
+      .feature {
+        display: flex;
+      }
+      .icon-check {
+        font-size: 24px;
+        color: $brand-success;
+      }
+      .feature-text {
+        font-family: $brand-font-light;
+        font-size: 18px;
+        line-height: 24px;
+        color: $gray-darkest;
+      }
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 30px;
+    }
+  }
+}
+
+.pstn-numbers {
+  .badge {
+    background-color: $gray;
+  }
+
+  .flex-container {
+    padding-left: 30px;
+    padding-right: 30px;
+    flex: 1;
+    display: flex;
+  }
+
+  .flex-2 {
+    flex: 2;
+  }
+
+  .flex-1 {
+    flex: 1;
+    margin-left: 30px;
+  }
+
+  .modal-body {
+    margin: 0;
+  }
+
+  .form-horizontal {
+    width: 60%;
+
+    .has-feedback .form-control-feedback {
+      right: 7px;
+    }
+  }
+
+  .formly-field-inline {
+    align-items: flex-end;
+  }
+  .label-height-offset {
+      padding-bottom: calc((#{$input-height-base} - #{$font-size-base})/2);
+      margin-right: 25px;
+  }
+  .form-horizontal .form-group, .form-horizontal .formly-field-group {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.pstn-review {
+  .review-container {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .icon-circle-call {
+    font-size: 100px;
+    color: $gray-dark;
+    align-self: center;
+    margin-top: 20px;
+  }
+
+  .title {
+    font-family: $brand-font-regular;
+    color: $brand-info;
+    align-self: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
+  .review-details {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    min-width: 700px;
+
+    .logo {
+      border-right: 1px solid $gray-lighter;
+      img {
+        height: 40px;
+        width: 235px;
+        margin: 50px;
+      }
+    }
+
+    .package-detail-label, .package-detail-text {
+      line-height: 34px;
+      font-family: $brand-font-regular;
+    }
+
+    .package-detail-label {
+      color: $gray-darker;
+      font-size: 14px;
+      margin-left: 25px;
+      margin-right: 25px;
+    }
+    .package-detail-text {
+      color: $gray-darkest;
+      font-size: 18px;
+      margin-right: 50px;
+    }
+  }
+}
+
+.pstn-next-steps {
+  .flex-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .icon-check-mark-success {
+    font-size: 100px;
+    color: $gray-dark;
+    margin-top: 20px;
+  }
+  .title {
+    font-family: $brand-font-regular;
+    color: $brand-info;
+    margin-top: 25px;
+    margin-bottom: 35px;
+  }
+  .success-message {
+    font-family: $brand-font-light;
+    font-size: 16px;
+    color: $gray-darkest;
+  }
+  .next-step-title {
+    font-family: $brand-font-light;
+    font-size: 20px;
+    color: $gray-darkest;
+    margin-top: 45px;
+    margin-bottom: 25px;
+  }
+  .next-steps {
+    display: flex;
+    align-items: flex-end;
+
+    .step {
+      width: 220px;
+      div {
+        font-family: $brand-font-light;
+        font-size: 16px;
+        line-height: 18px;
+        color: $gray-darkest;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+    }
+    .conjunction {
+      font-family: $brand-font-light-Oblique;
+      font-size: 16px;
+      color: $gray-darkest;
+      margin: 0 20px;
+      text-align: center;
+      padding-bottom: 5px;
+    }
+  }
+}
+
+.modal-full {
+  .modal-dialog {
+    min-height: calc(100vh - 100px);
+    width: calc(100vw - 100px);
+    min-width: 1180px;
+    margin: 50px;
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-content {
+    top: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    div[ui-view] {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
