@@ -248,7 +248,7 @@ angular.module('Core')
           icon: 'icon-devices',
           title: 'tabs.deviceTab',
           state: 'devices',
-          link: '/devices'
+          link: '/devices-redux'
         }, {
           tab: 'reportTab',
           icon: 'icon-bars',
