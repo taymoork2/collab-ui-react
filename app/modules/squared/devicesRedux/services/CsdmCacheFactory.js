@@ -39,8 +39,10 @@
 
     function update(url, data) {
       return opts.update(url, data).then(function (obj) {
-        CsdmCacheUpdater.updateOne(cache, url, obj);
-        shouldUpdateCache = false;
+        if (obj) {
+          CsdmCacheUpdater.updateOne(cache, url, obj);
+          shouldUpdateCache = false;
+        }
         return cache[url];
       });
     }
@@ -61,6 +63,7 @@
       subscribe: poller.subscribe
     };
   }
+
   angular
     .module('Squared')
     .service('CsdmCacheFactory', CsdmCacheFactory);
