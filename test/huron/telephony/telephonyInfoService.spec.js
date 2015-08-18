@@ -77,10 +77,14 @@ describe('Service: TelephonyInfoService', function () {
   describe('getUserDnInfo function', function () {
     beforeEach(function () {
       var userDirectoryNumbers = getJSONFixture('huron/json/user/userDirectoryNumbers.json');
+      var directoryNumber = getJSONFixture('huron/json/lineSettings/getDirectoryNumber.json');
+
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/users/2/directorynumbers').respond(userDirectoryNumbers);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/directorynumbers/1234567890').respond(directoryNumber);
+
       userDirectoryNumbers.forEach(function (userDn) {
-        $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/directorynumbers/' + userDn.directoryNumber.uuid + '/users').respond([]);
+        $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/directorynumbers/' + userDn.directoryNumber.uuid + '/users').respond([]);
       });
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/users/2/directorynumbers').respond(userDirectoryNumbers);
 
       TelephonyInfoService.getUserDnInfo(2);
       $httpBackend.flush();

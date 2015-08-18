@@ -8,21 +8,12 @@ describe('Squared Invite User Flow', function () {
 
   var inviteEmail, inviteEmail2;
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 
-  it('should login as pbr org admin', function () {
-    login.login('pbr-admin');
-  });
-
-  it('clicking on users tab should change the view', function () {
-    navigation.clickUsers();
+  it('should login as pbr org admin and view users', function () {
+    login.login('pbr-admin', '#/users');
   });
 
   describe('Invite users through modal', function () {

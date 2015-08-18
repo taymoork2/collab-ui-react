@@ -37,7 +37,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -64,7 +63,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -94,7 +92,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -124,7 +121,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -153,7 +149,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -179,7 +174,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -209,7 +203,6 @@ angular.module('Mediafusion')
               if (errors) {
                 description = errors[0].description;
               }
-              Auth.handleStatus(status, description);
             });
         },
 
@@ -229,7 +222,6 @@ angular.module('Mediafusion')
               //data.success = false;
               //data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 
@@ -250,7 +242,6 @@ angular.module('Mediafusion')
               //data.status = status;
 
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 
@@ -274,7 +265,6 @@ angular.module('Mediafusion')
               //data.success = false;
               //data.status = status;
               callback(data, status);
-              Auth.handleStatus(status);
             });
         },
 

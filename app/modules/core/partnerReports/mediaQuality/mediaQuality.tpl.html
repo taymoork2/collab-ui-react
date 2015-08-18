@@ -2,23 +2,21 @@
   <div class="row header">
     <div class="graph-align">
       <h4 class="pull-left section-title" translate="mediaQuality.mediaQuality"></h4>
-      <div class="actions-menu dropdown pull-right report-threedot-button">
-        <button class="actions-button btn-none">
-          <i class="icon icon-three-dots"></i>
-        </button>
-      </div>
       <hr class="title-break pull-left"/>
     </div>
   </div>
-  <div>
-    <div class="row ">
-      <div class="graph-align">
-        <div class="report-description" translate="mediaQuality.description"></div>
-        <div id="mediaQualityDiv" class="media-timechartDiv"></div>
-        <div id="mediaQualityRefreshDiv" class="spinner-position" ng-show="nav.isRefresh(nav.mediaQualityRefresh) || nav.isEmpty(nav.mediaQualityRefresh)">
-          <div class="media-timechartDiv clear-graph"></div>
-          <i class='media-quality-status icon icon-spinner icon-2x'></i>
-        </div>
+  <div class="row ">
+    <div class="graph-align">
+      <div class="report-description" translate="mediaQuality.description"></div>
+      <div id="mediaQualityDiv" class="barchart"></div>
+      <div id="mediaQualityRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.mediaQualityRefresh)">
+        <i class='icon icon-spinner icon-2x'></i>
+      </div>
+      <div class="no-data-center" ng-if="nav.isEmpty(nav.mediaQualityRefresh)">
+        <h3 class="no-data"> 
+          <i class='icon icon-warning no-data-warning'></i>
+          <span translate='reportsPage.noCustomerData'></span>
+        </h3>
       </div>
     </div>
   </div> 

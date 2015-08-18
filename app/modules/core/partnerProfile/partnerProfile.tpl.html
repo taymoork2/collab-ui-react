@@ -50,8 +50,8 @@
           <div ng-show="rep !== null">
             <h3 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h3>
             <span class="rep-info">{{rep.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
-            <span class="rep-info">{{rep.displayName | translate}}</span>
-            <span class="rep-info">{{rep.userName | translate}}</span>
+            <span class="rep-info" translate="rep.displayName"></span>
+            <span class="rep-info" translate="rep.userName"></span>
 
             <!-- grant cisco access checkbox -->
             <div class="row grant-row" ng-show="false">
@@ -64,8 +64,8 @@
           <div ng-if="!isPartner && partner !== null">
             <h3 translate="customerProfile.partnerAdmin"></h3>
               <span class="rep-info">{{partner.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
-              <span class="rep-info">{{partner.displayName | translate}}</span>
-              <span class="rep-info">{{partner.userName | translate}}</span>
+              <span class="rep-info" translate="parter.displayName"></span>
+              <span class="rep-info" translate="partner.userName"></span>
             </div>
         </div>
       </div>
@@ -96,12 +96,11 @@
               <div class="col-xs-10 default-link-row">
                 <div class="partner-link">
                   <a href="" ng-click="sendFeedback()">
-                    <span translate="partnerProfile.ciscoProblem"></span>
+                    <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
+                    <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoProblem"></span>
+                    <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerProblem"></span>
                   </a>
                 </div>
-                  <div class="partner-text">
-                    <span ng-if="false">{{partnerProvidedText | translate}}</span>
-                  </div>
               </div>
             </div>
           </div>
@@ -110,12 +109,12 @@
     </div>
 
     <!-- trouble reporting site url -->
-    <div class="row" ng-click="setProblemRadio(1)" id="troubleReportingPartnerPanel">
+    <div class="row" id="troubleReportingPartnerPanel">
       <div class="col-xs-12 col-md-7">
         <div class="row">
           <div class="col-xs-2 radio-column">
             <input type="radio" name="collabRadio" value="1" ng-model="problemSiteRadioValue" >
-            <span id="troubleReportingPartnerPanelRadio" class="onboard-radio">{{collabRadio2.label}}</span>
+            <span id="troubleReportingPartnerPanelRadio" ng-click="setProblemRadio(1)" class="onboard-radio">{{collabRadio2.label}}</span>
           </div>
           <div class="col-xs-10">
             <div class="input-group" >
@@ -134,7 +133,9 @@
             </div>
             <div class="col-xs-10 default-link-row">
               <a ng-href="{{profileHelpUrl}}" target="_blank">
-                <span translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="isCiscoHelp && isManaged" translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="!isCiscoHelp && isManaged" translate="partnerProfile.partnerHelp"></span>
               </a>
             </div>
           </div>

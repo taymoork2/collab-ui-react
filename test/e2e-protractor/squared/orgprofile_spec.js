@@ -1,21 +1,15 @@
 'use strict';
 
 describe('Customer Profile Page', function () {
-
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors();
   });
 
   it('should login as squared team member admin user', function () {
-    login.login('pbr-admin');
+    login.login('pbr-admin', '#/profile');
   });
 
   it('should display customer profile page', function () {
-    navigation.clickOrgProfile();
     utils.expectIsDisplayed(orgprofile.supportForm);
     utils.expectIsDisplayed(orgprofile.orgProfilePageTitle);
     utils.expectIsDisplayed(orgprofile.orgProfileSaveBtn);
@@ -42,10 +36,7 @@ describe('Customer Profile Page', function () {
 
     utils.scrollTop();
     utils.click(orgprofile.orgProfileSaveBtn);
-    notifications.assertSuccess('orgSettings updated successfully');
+    notifications.assertSuccess('This may take a few minutes to process');
   });
 
-  it('should log out', function () {
-    navigation.logout();
-  });
-}); //State is logged-in
+});

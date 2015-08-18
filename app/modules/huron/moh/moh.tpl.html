@@ -1,8 +1,8 @@
 <div class="moh-content">
   <div class="modal-header">
-    <button type="button" class="close" ng-click="moh.close()"><span class="sr-only">{{'common.close' | translate}}</span></button>
-    <h3 class="modal-title">{{'mohManagement.title' | translate}}</h3>
-    <p class="modal-subtitle">{{'mohManagement.subtitle' | translate}}</p>
+    <button type="button" class="close" ng-click="moh.close()"><span class="sr-only" translate="common.close"></span></button>
+    <h3 class="modal-title" translate="mohManagement.title"></h3>
+    <p class="modal-subtitle" translate="mohManagement.subtitle"></p>
   </div>
   <div class="loading" ng-if="!moh.playlists[0]">
     <i class="icon icon-spinner"></i>
@@ -10,7 +10,7 @@
   <div class="modal-body no-bkgd" ng-if="moh.playlists[0]">
     <div class="row">
       <div class="col-xs-4 playlist-list">
-        <a class="btn btn-sm btn-info new-playlist">{{'mohManagement.newPlaylistButton' | translate}}</a>
+        <a class="btn btn-sm btn-info new-playlist" translate="mohManagement.newPlaylistButton"></a>
         <ul>
           <li ng-repeat="playlist in moh.playlists" ng-class="{selected: playlist.uuid === moh.selectedUuid}" class="playlist-item" ng-click="moh.selectPlaylist(playlist.uuid, playlist.name)">
             <span class="playlist-name">{{playlist.name}}</span>
@@ -19,9 +19,9 @@
             <i class="icon icon-three-dots"></i>
             </button>
             <ul class="dropdown-menu dropdown-primary actions-playlist">
-              <li><a href="">{{'mohManagement.setActive' | translate}}</a></li>
-              <li ng-if="!playlist.systemOwned"><a href="">{{'common.rename' | translate}}</a></li>
-              <li ng-if="!playlist.systemOwned"><a href="">{{'common.delete' | translate}}</a></li>
+              <li><a href="" translate="mohManagement.setActive"></a></li>
+              <li ng-if="!playlist.systemOwned"><a href="" translate="common.rename"></a></li>
+              <li ng-if="!playlist.systemOwned"><a href="" translate="common.delete"></a></li>
             </ul>
             </span>
           </li>
@@ -43,8 +43,8 @@
         </div>
         <div class="row">
           <div class="col-md-12 tracklist-header">
-            <span class="title">{{'mohManagement.tracks' | translate}}</span>
-            <span class="description">{{'mohManagement.draganddrop' | translate}}</span>
+            <span class="title" translate="mohManagement.tracks"></span>
+            <span class="description" translate="mohManagement.draganddrop"></span>
             <span class="add-track pull-right"><i class="icon icon-plus"></i></span>
           </div>
         </div>
@@ -58,9 +58,9 @@
               <i class="icon icon-three-dots"></i>
               </button>
               <ul class="dropdown-menu dropdown-primary actions-tracklist">
-                <li><a href="">{{'common.play' | translate}}</a></li>
-                <li><a href="">{{'common.rename' | translate}}</a></li>
-                <li><a href="">{{'common.delete' | translate}}</a></li>
+                <li><a href="" translate="common.play"></a></li>
+                <li><a href="" translate="common.rename"></a></li>
+                <li><a href="" translate="common.delete"></a></li>
               </ul>
               </span>
             </li>

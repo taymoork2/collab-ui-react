@@ -64,7 +64,7 @@ angular.module('Core')
             Log.warn('Could not delete the user', data);
             var error = null;
             if (status) {
-              error = $translate.instant('usersPage.statusError', {
+              error = $translate.instant('errors.statusError', {
                 status: status
               });
               if (data && angular.isString(data.message)) {

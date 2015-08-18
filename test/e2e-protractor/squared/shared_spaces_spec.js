@@ -4,21 +4,15 @@
 /* global describe, it, browser, login, spaces, navigation, utils, notifications */
 
 describe('Devices flow', function () {
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 
   it('should login as squared team member admin user', function () {
-    login.login('pbr-admin');
+    login.login('pbr-admin', '#/devices');
   });
 
   it('clicking on devices tab should show the list of rooms', function () {
-    navigation.clickDevices();
     utils.expectIsDisplayed(spaces.roomsList);
   });
 

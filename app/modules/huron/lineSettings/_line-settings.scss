@@ -1,16 +1,7 @@
 /*****  _line-settings  *****/
 
-.caller-id-other {
-  display: inline-block;
-  width: 90%;
-}
-
 .call-forward-all {
   margin-bottom: 20px;
-}
-
-.inline {
-  display: inline-flex;
 }
 
 .confirmation-body {
@@ -44,5 +35,10 @@
   .esn-extension {
     color: $text-color;
   }
+}
+
+.caller-id-description {
+  margin-top: 10px;
+  color: $gray-dark;
 }
 /*****  _line-settings  *****/

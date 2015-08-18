@@ -6,13 +6,8 @@
 /* global expect */
 
 describe('CS Admin flow', function () {
-
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
+    utils.dumpConsoleErrors();
   });
 
   it('should just login', function () {
@@ -38,6 +33,7 @@ describe('CS Admin flow', function () {
     it('clicking on admin customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.adminCustomerOrgId);
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
+      utils.click(partner.exitPreviewButton);
     });
 
     it('clicking on regular customer should enable/disable ability to launch appropriately', function () {
@@ -89,6 +85,7 @@ describe('CS User flow', function () {
     it('clicking on admin customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.adminCustomerOrgId);
       utils.expectIsDisabled(partner.launchCustomerPanelButton);
+      utils.click(partner.exitPreviewButton);
     });
 
     it('clicking on regular customer should enable/disable ability to launch appropriately', function () {

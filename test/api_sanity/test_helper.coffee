@@ -4,7 +4,7 @@ request = require 'request'
 auth =
   'sqtest-admin':
     user: 'sqtest-admin@squared.example.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
 
   'pbr-admin':
@@ -28,9 +28,9 @@ auth =
     org:  '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
 
   'partner-squc-admin':
-    user: 'admin@squareduc-partner.com'
-    pass: 'Cisco123!'
-    org:  '4e2befa3-9d82-4fdf-ad31-bb862133f078'
+    user: 'admin@ucpartner.e2e.huronalpha.com'
+    pass: 'Cisco123!!'
+    org:  '666a7b2f-f82e-4582-9672-7f22829e728d'
 
   'pbr-admin-test':
     user: 'pbr-org-admin-test@wx2.example.com'
@@ -59,7 +59,7 @@ auth =
 
   'non-trial-admin':
     user: 'pbr-test-admin@squared2webex.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '4214d345-7caf-4e32-b015-34de878d1158'
 
   'invite-admin':
@@ -69,7 +69,7 @@ auth =
 
   'support-admin':
     user: 'sqtest-admin-support@squared.example.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
 
   'media-super-admin':
@@ -127,6 +127,9 @@ getSSOToken = (req, jar, creds, cb) ->
     cookie = _.find res.headers['set-cookie'], (c) ->
       c.indexOf('cisPRODAMAuthCookie') isnt -1
 
+    if not cookie
+      throw new Error 'Failed to retrieve a cookie with org credentials. Status: ' + res?.statusCode
+
     token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1]
 
     jar.setCookie 'cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/'
@@ -134,6 +137,10 @@ getSSOToken = (req, jar, creds, cb) ->
     cb()
 
 getAuthCode = (req, creds, cb) ->
+  rand_str = ""
+  rand_str += Math.random().toString(36).substr(2) while rand_str.length < 40
+  rand_str.substr 0, 40
+
   opts =
     url: 'https://idbroker.webex.com/idb/oauth2/v1/authorize'
     headers:
@@ -144,7 +151,7 @@ getAuthCode = (req, creds, cb) ->
       client_id: clientId
       scope: 'webexsquare:admin Identity:SCIM Identity:Config Identity:Organization'
       realm: '/' + creds.org
-      state: 'this-should-be-a-random-string-for-security-purpose'
+      state: rand_str
 
   req.post opts, (err, res, body) ->
     if err

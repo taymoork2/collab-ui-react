@@ -88,16 +88,9 @@ angular.module('Squared')
         Log.debug('Entitling user.', user);
         HttpUtils.setTrackingID().then(function () {
           angular.element('#btn-save').button('loading');
-          var givenName = null;
-          var familyName = null;
-          if (user.name !== undefined && user.name !== null) {
-            givenName = user.name.givenName;
-            familyName = user.name.familyName;
-          }
           Userservice.updateUsers([{
             'address': user.userName,
-            'givenName': givenName,
-            'familyName': familyName
+            'name': user.name
           }], null, getUserEntitlementList(), 'changeEntitlement', function (data) {
             var entitleResult = {
               msg: null,

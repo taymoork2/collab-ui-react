@@ -1,8 +1,7 @@
 'use strict';
 angular.module('Squared')
-  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$sanitize',
-    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $sanitize) {
-
+  .controller('UserRolesCtrl', ['$scope', '$timeout', '$location', '$window', 'SessionStorage', 'Userservice', 'UserListService', 'Log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', '$stateParams', '$state',
+    function ($scope, $timeout, $location, $window, SessionStorage, Userservice, UserListService, Log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, $stateParams, $state) {
       $scope.currentUser = $stateParams.currentUser;
       if ($scope.currentUser) {
         $scope.roles = $scope.currentUser.roles;
@@ -84,10 +83,8 @@ angular.module('Squared')
       };
 
       $scope.sipAddr = "";
-      //      $log.log($scope.currentUser);
       if ($scope.currentUser.sipAddresses) {
         for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
-          //         $log.log($scope.currentUser.sipAddresses[x]);
           if ($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
             $scope.sipAddr = $scope.currentUser.sipAddresses[x].value;
           }
@@ -106,8 +103,23 @@ angular.module('Squared')
         return SessionStorage.get('partnerOrgId');
       };
 
+      function resetForm() {
+        $scope.rolesEdit.form.$setPristine();
+        $scope.rolesEdit.form.$setUntouched();
+      }
+
+      $scope.resetRoles = function () {
+        $state.go('user-overview.userProfile');
+        $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
+        if ($scope.rolesObj.adminRadioValue !== 2) {
+          $scope.clearCheckboxes();
+        }
+        resetForm();
+      };
+
       $scope.updateRoles = function () {
 
+        var choice = $scope.rolesObj.adminRadioValue;
         var roles = [];
 
         if ($scope.rolesObj.adminRadioValue === 0) {
@@ -170,56 +182,63 @@ angular.module('Squared')
 
         Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
           if (data.success) {
-            if ($scope.rolesObj.form.$dirty && $scope.currentUser) {
-              var userData = {
-                'schemas': Config.scimSchemas,
-                'title': $scope.currentUser.title,
-                'name': {
-                  'givenName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.givenName) : '',
-                  'familyName': $scope.currentUser.name ? $sanitize($scope.currentUser.name.familyName) : ''
-                },
-                'displayName': $scope.currentUser.displayName,
-                'meta': {
-                  'attributes': []
-                }
-              };
-              // If name properties don't exist, delete names using meta attributes
-              if (!userData.name.givenName) {
+            var userData = {
+              'schemas': Config.scimSchemas,
+              'name': {},
+              'meta': {
+                'attributes': []
+              }
+            };
+            // Add or delete properties depending on whether or not their value is empty/blank.
+            // With property value set to "", the back-end will respond with a 400 error.
+            // Guidance from CI team is to not specify any property containing an empty string
+            // value. Instead, add the property to meta.attribute to have its value be deleted.
+            if ($scope.currentUser.name) {
+              if ($scope.currentUser.name.givenName) {
+                userData.name["givenName"] = $scope.currentUser.name.givenName;
+              } else {
                 userData.meta.attributes.push('name.givenName');
               }
-              if (!userData.name.familyName) {
+              if ($scope.currentUser.name.familyName) {
+                userData.name["familyName"] = $scope.currentUser.name.familyName;
+              } else {
                 userData.meta.attributes.push('name.familyName');
               }
-
-              Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
-
-              Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
-                if (data.success) {
-                  var successMessage = [];
-                  successMessage.push($filter('translate')('profilePage.success'));
-                  Notification.notify(successMessage, 'success');
-                  $scope.user = data;
-                  $rootScope.$broadcast('USER_LIST_UPDATED');
-                } else {
-                  Log.debug('Update existing user failed. Status: ' + status);
-                  var errorMessage = [];
-                  errorMessage.push($filter('translate')('profilePage.error'));
-                  Notification.notify(errorMessage, 'error');
-                }
-              });
-            } else {
-              $rootScope.$broadcast('USER_LIST_UPDATED');
-              var successMessage = [];
-              successMessage.push($filter('translate')('profilePage.rolesSuccess'));
-              Notification.notify(successMessage, 'success');
             }
+            if ($scope.currentUser.displayName) {
+              userData.displayName = $scope.currentUser.displayName;
+            } else {
+              userData.meta.attributes.push('displayName');
+            }
+
+            Log.debug('Updating user: ' + $scope.currentUser.id + ' with data: ');
+
+            Userservice.updateUserProfile($scope.currentUser.id, userData, function (data, status) {
+              if (data.success) {
+                var successMessage = [];
+                successMessage.push($filter('translate')('profilePage.success'));
+                Notification.notify(successMessage, 'success');
+                $scope.user = data;
+                $rootScope.$broadcast('USER_LIST_UPDATED');
+                resetForm();
+              } else {
+                Log.debug('Update existing user failed. Status: ' + status);
+                var errorMessage = [];
+                errorMessage.push($filter('translate')('profilePage.error'));
+                Notification.notify(errorMessage, 'error');
+              }
+            });
           } else {
             Log.debug('Updating user\'s roles failed. Status: ' + status);
             var errorMessage = [];
             errorMessage.push($filter('translate')('profilePage.rolesError'));
             Notification.notify(errorMessage, 'error');
           }
+
         });
+
+        $scope.rolesObj.adminRadioValue = choice;
+
       };
 
       $scope.clearCheckboxes = function () {
@@ -230,15 +249,15 @@ angular.module('Squared')
         $scope.isChecked = false;
       };
 
-      $scope.radioHandler = function () {
-        if ($scope.rolesObj.adminRadioValue === 0 || $scope.rolesObj.adminRadioValue === 1) {
-          $scope.rolesObj.adminRadioValue = 2;
-        }
-      };
-
       $scope.supportCheckboxes = function () {
         $scope.rolesObj.supportAdminValue = true;
-        $scope.isChecked = true;
+        $scope.rolesObj.adminRadioValue = 2;
+        $scope.rolesEdit.form.$dirty = true;
+      };
+
+      $scope.partialCheckboxes = function () {
+        $scope.rolesObj.adminRadioValue = 2;
+        $scope.rolesEdit.form.$dirty = true;
       };
 
     }

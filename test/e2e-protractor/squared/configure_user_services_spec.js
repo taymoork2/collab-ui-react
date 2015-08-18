@@ -5,7 +5,6 @@
 /* global it */
 
 describe('Configuring services per-user', function () {
-
   var testUser = utils.randomTestGmail();
 
   afterEach(function () {

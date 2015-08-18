@@ -460,7 +460,7 @@ angular.module('Core')
           }
 
           var msg = 'inviting ' + usersList.length + ' users...';
-          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), status, startLog, usersList.length);
+          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), status, startLog, usersList.length, null);
 
           if (isComplete) {
             resetUsersfield();

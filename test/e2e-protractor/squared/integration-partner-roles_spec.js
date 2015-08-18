@@ -10,12 +10,7 @@ describe('Org Entitlement flow', function () {
   var newDisplayName = 'John Doe ' + utils.randomId();
   var searchStr = 'sq-testpaiduser@atlas.test.com';
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 
@@ -54,6 +49,7 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should reverse role change', function () {
+    utils.click(roles.fullAdmin);
     utils.click(roles.noAdmin);
     utils.click(roles.saveButton);
 

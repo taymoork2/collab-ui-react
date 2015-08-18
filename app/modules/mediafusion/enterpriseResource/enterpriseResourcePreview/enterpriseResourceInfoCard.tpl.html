@@ -3,8 +3,9 @@
 		<div class="info-card-image col-xs-10">
 			<h2 class="user-title-bold">{{currentVts.ipAddress}}</h2>
 		</div>
-		<div class="cancel cancel-btn info-card-image col-xs-2 icon icon-close" ng-click="closePreview()" id="exitPreviewButton">
-		</div>
+		<button type="button" class="close" ng-click="closePreview()" id="exitPreviewButton">
+			<span class="sr-only" translate="common.close"></span>
+		</button>
 	</div>
 	<div class="info-card-name">
 		<div class="info-card-image col-xs-2">

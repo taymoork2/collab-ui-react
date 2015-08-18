@@ -63,7 +63,6 @@
               </div>
             </a>
           </div>
-          <hercules-status></hercules-status>
         </section>
 
         <!-- TODO: Replacement for when monitoring service is refactored
@@ -93,24 +92,24 @@
           <h4 translate="homePage.quickLinksText"></h4>
           <div class="list-group">
 
-            <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" ng-if="isPageActive('users')" class="list-group-item">{{'homePage.addUserText' | translate}}</a>
-            <a id="installDeviceQuickLink" ng-if="false" class="list-group-item">{{'homePage.installDeviceText' | translate}}</a>
-            <a id="installDeviceSharedSpaceQuickLink" ui-sref="devices" ng-if="isPageActive('devices')" class="list-group-item">{{'homePage.installSharedSpaceText' | translate}}</a>
-            <a id="autoAttendantQuickLink" ng-if="false" class="list-group-item">{{'homePage.autoAttendantText' | translate}}</a>
-            <a id="deviceLogsQuickLink" ui-sref="support" ng-if="isPageActive('support')" class="list-group-item">{{'homePage.searchLogsText' | translate}}</a>
+            <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" ng-if="isPageActive('users')" class="list-group-item" translate="homePage.addUserText"></a>
+            <a id="installDeviceQuickLink" ng-if="false" class="list-group-item" translate="homePage.installDeviceText"></a>
+            <a id="installDeviceSharedSpaceQuickLink" ui-sref="devices" ng-if="isPageActive('devices')" class="list-group-item" translate="homePage.installSharedSpaceText"></a>
+            <a id="autoAttendantQuickLink" ng-if="false" class="list-group-item" translate="homePage.autoAttendantText"></a>
+            <a id="deviceLogsQuickLink" ui-sref="support" ng-if="isPageActive('support')" class="list-group-item" translate="homePage.searchLogsText"></a>
           </div>
         </section>
         <section class="unlicensed-users col-md-12 col-sm-3" ng-controller="LicensesCtrl" ng-show="isAdmin()">
           <div ng-if="isDomainClaimed()">
             <div class="users-info">
               <span class="number">{{licenses.unlicensed}}</span>
-              <span class="text">{{'homePage.unlicensedDateText' | translate}}</span>
+              <span class="text" translate="homePage.unlicensedDateText"></span>
             </div>
             <h4>{{licenses.domain}}</h4>
           </div>
           <div class="unlicensed-users-unclaimeddomain" ng-if="isDomainClaimed()===false">
             <h4>{{licenses.unlicensed}} {{'homePage.unlicensedText' | translate}}</h4>
-            <p class="no-cases">{{'homePage.convertText' | translate}}</p>
+            <p class="no-cases" translate="homePage.convertText"></p>
           </div>
           <button id="convertButton" class="btn btn-sm btn-default" translate="homePage.convert" ng-click="openConvertModal()" ng-disabled="licenses.unlicensed === 0"></button>
         </section>

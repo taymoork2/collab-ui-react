@@ -1,9 +1,14 @@
 'use strict';
 
-// Waiting for new page to go active before turning on tests
+// Waiting for page refactor to complete before turning tests back on
 describe('Partner Reports', function () {
   var customer = 'Huron Int Test 2';
+  var sampleCustomer = 'Sample Customer Data';
   var time = 'Last Month';
+
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
 
   describe('Log In', function () {
     it('should login', function () {
@@ -17,9 +22,10 @@ describe('Partner Reports', function () {
       utils.expectIsPresent(reports.pageTitle);
     });
 
-    it('should verify report tabs', function () {
-      reports.verifyReportTab('Engagement');
-      reports.verifyReportTab('Quality');
+    it('should verify report type buttons', function () {
+      utils.expectText(reports.allTypes, 'All');
+      utils.expectText(reports.engagement, 'Engagement');
+      utils.expectText(reports.quality, 'Quality');
     });
 
     it('should verify customer dropdown', function () {
@@ -35,82 +41,54 @@ describe('Partner Reports', function () {
       reports.clickFilter(reports.timeSelect);
       reports.verifyOption(reports.timeSelect, 'Last Week');
       reports.verifyOption(reports.timeSelect, 'Last Month');
-      reports.verifyOption(reports.timeSelect, 'Last 3 Months');
+      reports.verifyOption(reports.timeSelect, 'Last Three Months');
     });
-  });
 
-  describe('Engagement Tab', function () {
-    it('should verify active users graph is visible', function () {
-      reports.verifyDescription(customer, reports.activeDescription, false);
+    it('should show all reports', function () {
+      // active users
       reports.verifyDescription(time, reports.activeDescription, false);
-
       utils.expectIsDisplayed(reports.activeUserGraph);
       reports.verifyLegend('activeUsersdiv', 'Users');
       reports.verifyLegend('activeUsersdiv', 'Active Users');
-      utils.expectIsDisplayed(reports.noActiveUserData);
-      utils.expectIsNotDisplayed(reports.activeUserRefresh);
-    });
-
-    it('should verify most active users is not visible', function () {
       utils.expectIsNotDisplayed(reports.mostActiveButton);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
-    });
+      reports.verifyNoData(reports.activeDescription);
 
-    it('should verify registered endpoints table is visible', function () {
-      reports.verifyDescription(time, reports.endpointDescription, false);
-
-      utils.expectIsDisplayed(reports.registeredEndpointsTable);
-      utils.expectIsNotDisplayed(reports.noEndpointData);
-      utils.expectIsNotDisplayed(reports.noEndpointRefresh);
-    });
-
-    it('should verify active users population graph is visible', function () {
-      reports.verifyDescription(customer, reports.activePopulationDescription, false);
-      reports.verifyDescription(time, reports.activePopulationDescription, false);
-
+      // active user population
       utils.expectIsDisplayed(reports.activePopulationGraph);
-      utils.expectIsNotDisplayed(reports.noActivePopulationData);
-      utils.expectIsNotDisplayed(reports.activePopulationRefresh);
-    });
+      reports.verifyNoData(reports.activePopulationDescription);
 
-    it('should not display quality tab graphs', function () {
-      utils.expectIsNotDisplayed(reports.callMetricsGraph);
-      utils.expectIsNotDisplayed(reports.mediaQualityGraph);
-    });
-  });
+      // registered endpoints
+      reports.scrollToElement(reports.registeredEndpointsTable);
+      reports.verifyDescription(time, reports.endpointDescription, false);
+      reports.confirmCustomerInTable(sampleCustomer, reports.registeredEndpointsTable, true);
+      utils.expectIsDisplayed(reports.registeredEndpointsTable);
+      reports.verifyNoData(reports.endpointDescription);
 
-  describe('Quality Tab', function () {
-    it('should change views to quality', function () {
-      reports.clickTab('quality');
-
-      utils.expectIsNotDisplayed(reports.activeUserGraph);
-      utils.expectIsNotDisplayed(reports.mostActiveButton);
-      utils.expectIsNotDisplayed(reports.registeredEndpointsTable);
-      utils.expectIsNotDisplayed(reports.activePopulationGraph);
-    });
-
-    it('should verify call metrics graph is visible', function () {
+      // call metrics
+      reports.verifyDescription(time, reports.metricsDescription, false);
       utils.expectIsDisplayed(reports.callMetricsGraph);
-      //  utils.expectIsDisplayed(reports.noMetricsData);
-      //  utils.expectIsNotDisplayed(reports.metricsRefresh);
-    });
+      reports.verifyNoData(reports.metricsDescription);
 
-    it('should verify media quality graph is visible', function () {
+      // device media quality
+      reports.scrollToElement(reports.mediaQualityGraph);
       utils.expectIsDisplayed(reports.mediaQualityGraph);
-      //  utils.expectIsNotDisplayed(reports.noMediaData);
-      utils.expectIsNotDisplayed(reports.mediaRefresh);
+      reports.verifyNoData(reports.mediaDescription);
     });
-  });
 
-  describe('Filters', function () {
     it('should be able to change customers', function () {
+      utils.scrollTop();
       reports.clickFilter(reports.customerSelect);
       utils.click(reports.getOption(reports.customerSelect, customer));
     });
 
-    it('should be able to show/hide most active users', function () {
-      reports.clickTab('engagement');
+    it('should be able to change time period', function () {
+      utils.scrollTop();
+      reports.clickFilter(reports.timeSelect);
+      utils.click(reports.getOption(reports.timeSelect, time));
+    });
 
+    it('should be able to show/hide most active users', function () {
       utils.expectIsDisplayed(reports.mostActiveButton);
       utils.expectText(reports.mostActiveButton, 'Show Most Active Users');
       utils.expectIsNotDisplayed(reports.activeUsersTable);
@@ -126,21 +104,56 @@ describe('Partner Reports', function () {
       utils.expectIsNotDisplayed(reports.activeUsersTable);
     });
 
-    it('should display new customer in engagement descriptions', function () {
-      reports.verifyDescription(customer, reports.activeDescription, true);
-      reports.verifyDescription(customer, reports.activePopulationDescription, true);
-    });
-
-    it('should be able to change time period', function () {
-      utils.scrollTop();
-      reports.clickFilter(reports.timeSelect);
-      utils.click(reports.getOption(reports.timeSelect, time));
-    });
-
-    it('should display new time in engagement descriptions', function () {
+    it('should display new time and customer in engagement descriptions', function () {
       reports.verifyDescription(time, reports.activeDescription, true);
-      reports.verifyDescription(time, reports.activePopulationDescription, true);
       reports.verifyDescription(time, reports.endpointDescription, true);
+      reports.verifyDescription(time, reports.metricsDescription, true);
+      reports.confirmCustomerInTable(customer, reports.registeredEndpointsTable, false);
+    });
+
+    it('should change to display only engagement reports', function () {
+      utils.scrollTop();
+      utils.click(reports.engagement);
+
+      // engagement graphs
+      utils.expectIsDisplayed(reports.activeUserGraph);
+      utils.expectIsDisplayed(reports.activePopulationGraph);
+      reports.scrollToElement(reports.registeredEndpointsTable);
+      utils.expectIsDisplayed(reports.registeredEndpointsTable);
+
+      // quality graphs
+      utils.expectIsNotDisplayed(reports.callMetricsGraph);
+      utils.expectIsNotDisplayed(reports.mediaQualityGraph);
+    });
+
+    it('should change to display only quality reports', function () {
+      utils.scrollTop();
+      utils.click(reports.quality);
+
+      // engagement graphs
+      utils.expectIsNotDisplayed(reports.activeUserGraph);
+      utils.expectIsNotDisplayed(reports.activePopulationGraph);
+      utils.expectIsNotDisplayed(reports.registeredEndpointsTable);
+
+      // quality graphs
+      utils.expectIsDisplayed(reports.callMetricsGraph);
+      utils.expectIsDisplayed(reports.mediaQualityGraph);
+    });
+
+    it('should change to display all reports', function () {
+      utils.scrollTop();
+      utils.click(reports.allTypes);
+
+      // engagement graphs
+      utils.expectIsDisplayed(reports.activeUserGraph);
+      utils.expectIsDisplayed(reports.activePopulationGraph);
+      reports.scrollToElement(reports.registeredEndpointsTable);
+      utils.expectIsDisplayed(reports.registeredEndpointsTable);
+
+      // quality graphs
+      utils.expectIsDisplayed(reports.callMetricsGraph);
+      reports.scrollToElement(reports.mediaQualityGraph);
+      utils.expectIsDisplayed(reports.mediaQualityGraph);
     });
   });
 });

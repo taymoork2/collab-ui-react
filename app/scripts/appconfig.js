@@ -253,6 +253,13 @@ angular
             }
           }
         })
+        .state('users.add.services.dn', {
+          views: {
+            'usersAdd@users.add': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
+          }
+        })
         .state('users.convert', {
           parent: 'modalLarge',
           views: {
@@ -326,7 +333,7 @@ angular
             reloadToggle: false
           },
           data: {
-            displayName: 'Communication'
+            displayName: 'Communications'
           }
         })
         .state('user-overview.communication.directorynumber', {
@@ -590,6 +597,17 @@ angular
       /*
         devices redux
       */
+      .state('devices-cleanup', {
+        url: '/devices-cleanup',
+        templateUrl: 'modules/squared/devicesCleanup/cleanup.html',
+        controller: 'DevicesCleanupCtrl',
+        controllerAs: 'dc',
+        parent: 'main'
+      })
+
+      /*
+        devices redux
+      */
       .state('devices-redux', {
           url: '/devices-redux',
           templateUrl: 'modules/squared/devicesRedux/devices.html',
@@ -696,9 +714,43 @@ angular
             filter: null
           }
         })
-        .state('partnercustomers.list.preview', {
-          templateUrl: 'modules/core/customers/customerPreview/customerPreview.tpl.html',
-          controller: 'CustomerPreviewCtrl'
+        .state('customer-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'CustomerOverviewCtrl',
+              controllerAs: 'customerOverview',
+              templateUrl: 'modules/core/customers/customerOverview/customerOverview.tpl.html'
+            }
+          },
+          resolve: {
+            identityCustomer: /* @ngInject */ function ($stateParams, $q, Orgservice) {
+              var defer = $q.defer();
+              if ($stateParams.currentCustomer) {
+                Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId);
+              }
+
+              return defer.promise;
+
+              function orgCallback(data, status) {
+                defer.resolve(data);
+              }
+            }
+          },
+          params: {
+            currentCustomer: {}
+          },
+          data: {
+            displayName: 'Overview'
+          }
+        })
+        .state('customer-overview.externalNumbers', {
+          controller: 'ExternalNumberDetailCtrl',
+          controllerAs: 'externalNumbers',
+          templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
+          data: {
+            displayName: 'Phone Numbers'
+          }
         })
         .state('modal', {
           abstract: true,
@@ -774,6 +826,12 @@ angular
           data: {
             firstTimeSetup: false
           }
+        })
+        .state('trialExtInterest', {
+          url: '/trialExtInterest?eqp',
+          templateUrl: 'modules/squared/views/trialExtInterest.html',
+          controller: 'TrialExtInterestCtrl',
+          parent: 'main'
         });
     }
   ]);
@@ -798,6 +856,28 @@ angular
             'nav': {
               templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
               controller: 'CallRoutingNavCtrl',
+              controllerAs: 'nav'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('callrouterBase', {
+          abstract: true,
+          parent: 'main',
+          templateUrl: 'modules/huron/callRouter/callRouter.tpl.html'
+        })
+        .state('callRouter', {
+          url: '/callRouter',
+          parent: 'callrouterBase',
+          views: {
+            'header': {
+              templateUrl: 'modules/huron/callRouter/callRouterHeader.tpl.html'
+            },
+            'nav': {
+              templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
+              controller: 'CallRouterCtrl',
               controllerAs: 'nav'
             },
             'main': {
@@ -853,6 +933,12 @@ angular
               controllerAs: 'aaMenu'
             }
           }
+        })
+        .state('autoattendant.aalanding', {
+          parent: 'autoattendant',
+          templateUrl: 'modules/huron/callRouting/autoAttendant/aaLanding.tpl.html',
+          controller: 'AutoAttendantLandingCtrl',
+          controllerAs: 'aaLanding'
         })
         .state('callpark', {
           url: '/callpark',

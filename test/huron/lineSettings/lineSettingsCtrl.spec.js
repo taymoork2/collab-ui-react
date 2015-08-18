@@ -5,13 +5,14 @@ describe('Controller: LineSettingsCtrl', function () {
   var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers,
     externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoVoiceOnlyShared, telephonyInfoSecondLine,
     modalDefer;
-  var UserListService, SharedLineInfoService;
+  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService;
   var userList = [];
   var userData = [];
   var sharedLineUsers = [];
   var sharedLineDevices = [];
   var sharedLineEndpoints = [];
   var selectedUsers = [];
+  var userDevices = [];
 
   var errorResponse = {
     message: 'error',
@@ -26,7 +27,7 @@ describe('Controller: LineSettingsCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$state_, _$httpBackend_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
-    _UserListService_, _SharedLineInfoService_) {
+    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -41,6 +42,8 @@ describe('Controller: LineSettingsCtrl', function () {
     ServiceSetup = _ServiceSetup_;
     UserListService = _UserListService_;
     SharedLineInfoService = _SharedLineInfoService_;
+    CallerId = _CallerId_;
+    DeviceService = _DeviceService_;
 
     $scope.sort = {
       by: 'name',
@@ -61,6 +64,8 @@ describe('Controller: LineSettingsCtrl', function () {
     telephonyInfoVoiceOnlyShared = angular.copy(telephonyInfoVoiceOnly);
     telephonyInfoVoiceOnlyShared.currentDirectoryNumber.dnSharedUsage = "Primary Shared";
     telephonyInfoSecondLine = getJSONFixture('huron/json/telephonyInfo/voiceEnabledSecondLine.json');
+    companyNumber = getJSONFixture('huron/json/lineSettings/companyNumber.json');
+    userDevices = getJSONFixture('huron/json/device/devices.json');
 
     //Sharedline
     userList = getJSONFixture('huron/json/user/users/usersList.json');
@@ -93,8 +98,9 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(LineSettings, 'deleteExternalLine').and.returnValue($q.when());
 
     spyOn(HuronUser, 'updateDtmfAccessId').and.returnValue($q.when());
-
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
+    spyOn(CallerId, 'listCompanyNumbers').and.returnValue($q.when(companyNumber));
+    spyOn(DeviceService, 'listDevices').and.returnValue($q.when(userDevices));
     //Sharedline
     spyOn(UserListService, 'listUsers').and.returnValue($q.when(userList));
     spyOn(SharedLineInfoService, 'loadSharedLineUsers').and.returnValue($q.when(sharedLineUsers));
@@ -104,6 +110,7 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(SharedLineInfoService, 'associateLineEndpoint').and.returnValue($q.when());
     spyOn(SharedLineInfoService, 'disassociateLineEndpoint').and.returnValue($q.when());
     spyOn(SharedLineInfoService, 'getSharedLineDevices').and.callThrough();
+    spyOn(SharedLineInfoService, 'updateLineEndpoint').and.returnValue($q.when());
 
     //Sharedline
 
@@ -125,6 +132,16 @@ describe('Controller: LineSettingsCtrl', function () {
       UserListService: UserListService,
       SharedLineInfoService: SharedLineInfoService
     });
+
+    controller.callerIdInfo.callerIdSelection = {
+      label: 'Direct Line',
+      value: {
+        externalCallerIdType: 'Direct Line',
+        name: 'John Doe',
+        pattern: '+12223334444',
+        uuid: ''
+      }
+    };
 
     $scope.$apply();
   }));
@@ -173,24 +190,34 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
+
+    it('should call listCompanyNumbers during init', function () {
+      controller.init();
+      $scope.$apply();
+      expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
+      expect(Notification.errorResponse).not.toHaveBeenCalled();
+      expect(controller.callerIdOptions.length).toEqual(5);
+    });
+
+    it('should notify an error when listCompanyNumbers fails', function () {
+      CallerId.listCompanyNumbers.and.returnValue($q.reject());
+      controller.init();
+      $scope.$apply();
+      expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalled();
+    });
+
   });
 
   describe('saveLineSettings', function () {
     beforeEach(function () {
-      controller.callerIdInfo.selection = 'other';
-      controller.callerIdInfo.otherName = 'Custom Name';
       controller.cfModel.forward = 'none';
       controller.saveLineSettings();
       $scope.$apply();
     });
 
     it('should update dtmfAccessId with the external number pattern', function () {
-      expect(HuronUser.updateDtmfAccessId).toHaveBeenCalledWith(currentUser.id, telephonyInfoWithVoicemail.alternateDirectoryNumber.pattern);
-    });
-
-    it('should update hasCustomAlertingName and alertingName', function () {
-      expect(controller.directoryNumber.hasCustomAlertingName).toBe(true);
-      expect(controller.directoryNumber.alertingName).toBe('Custom Name');
+      expect(HuronUser.updateDtmfAccessId).toHaveBeenCalledWith(currentUser.id, telephonyInfoWithVoicemail.esn);
     });
   });
 
@@ -274,6 +301,26 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(LineSettings.disassociateInternalLine).toHaveBeenCalledWith(currentUser.id, telephonyInfoSecondLine.currentDirectoryNumber.userDnUuid);
       expect(SharedLineInfoService.disassociateSharedLineUser).not.toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    });
+  });
+
+  describe('saveLineSettings', function () {
+    beforeEach(function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnlyShared);
+      controller.init();
+      $scope.$apply();
+      controller.cfModel.forward = 'none';
+      controller.selectedUsers.push(selectedUsers[0]);
+      spyOn(SharedLineInfoService, 'getUserLineCount').and.returnValue($q.when(2));
+    });
+
+    it('should show error on updateLineEndpoint call failure', function () {
+      SharedLineInfoService.getSharedLineDevices.and.returnValue(sharedLineEndpoints);
+      SharedLineInfoService.updateLineEndpoint.and.returnValue($q.reject());
+      controller.saveLineSettings();
+      $scope.$apply();
+      expect(SharedLineInfoService.updateLineEndpoint).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 

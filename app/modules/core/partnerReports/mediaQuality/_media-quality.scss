@@ -4,40 +4,6 @@
   .graph-align {
     padding: 0 15px;
   }
-  .media-quality-status {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-  }
-  .spinner-position {
-    position: relative;
-    top: -450px;
-  }
-  .clear-graph {
-    background-color: $brand-white;
-  }
-  .no-data-center {
-    height: 450px;
-    left: 35%;
-    position: absolute;
-    transform: translate(0%, 35%);
-    .no-data {
-      color: $gray-light;
-      font-family: $brand-font-cisco-TT-Light;
-      font-size: 46px;
-    }
-  }
-  .media-timechartDiv {
-    font-size: 11px;
-    height: 450px;
-    width: 85%;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
   .graph-text-balloon {
     font-family: $brand-font-cisco-TT-Regular;
     font-size: 15px;
@@ -49,6 +15,17 @@
       font-size: 15px;
       color: $gray-darkest;
       text-align: left;
+    }
+  }
+  #mediaQualityDiv{
+    overflow: visible !important;
+    position: relative;
+    top: -25px;
+    .amcharts-chart-div{
+      overflow: visible !important;
+      svg {
+        overflow: visible !important;
+      }
     }
   }
 }

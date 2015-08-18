@@ -32,7 +32,7 @@ angular.module('Core')
 
       var authorizeUser = function () {
         $scope.loading = true;
-        $scope.loginText = 'loginPage.loading';
+        var loadingDelayPromise = $timeout(function () {}, loadingDelay);
 
         Auth.authorize($rootScope.token)
           .then(function () {
@@ -52,7 +52,7 @@ angular.module('Core')
 
               } else if (Authinfo.isPartnerAdmin()) {
                 if (Auth.isLoginMarked()) {
-                  LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+                  LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                   Auth.clearLoginMarker();
                 }
                 state = 'partneroverview';
@@ -64,13 +64,13 @@ angular.module('Core')
               $rootScope.services = Authinfo.getServices();
 
               if (state !== 'partneroverview' && Auth.isLoginMarked()) {
-                LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+                LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                 Auth.clearLoginMarker();
               }
 
-              $timeout(function () {
+              return loadingDelayPromise.then(function () {
                 $state.go(state, params);
-              }, loadingDelay);
+              });
             }
           }).catch(function (error) {
             if (error) {
@@ -95,7 +95,5 @@ angular.module('Core')
       } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
         Auth.redirectToLogin();
       }
-
-      $scope.loginText = 'loginPage.login';
     }
   ]);

@@ -174,11 +174,13 @@ describe('orgService', function () {
     var payload = {
       reportingSiteUrl: 'http://example.com',
       reportingSiteDesc: 'Description',
-      helpUrl: 'http://example.com/help'
+      helpUrl: 'http://example.com/help',
+      isCiscoHelp: true,
+      isCiscoSupport: false
     };
     var reportingSiteUrl = 'http://example.com';
     httpBackend.when('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(200, {});
-    Orgservice.setOrgSettings(orgId, payload.reportingSiteUrl, payload.reportingSiteDesc, payload.helpUrl, callback);
+    Orgservice.setOrgSettings(orgId, payload.reportingSiteUrl, payload.reportingSiteDesc, payload.helpUrl, payload.isCiscoHelp, payload.isCiscoSupport, callback);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
@@ -190,11 +192,13 @@ describe('orgService', function () {
     var payload = {
       reportingSiteUrl: 'http://example.com',
       reportingSiteDesc: 'Description',
-      helpUrl: 'http://example.com/help'
+      helpUrl: 'http://example.com/help',
+      isCiscoHelp: true,
+      isCiscoSupport: false
     };
     var reportingSiteUrl = 'http://example.com';
     httpBackend.when('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(500, {});
-    Orgservice.setOrgSettings(orgId, payload.reportingSiteUrl, payload.reportingSiteDesc, payload.helpUrl, callback);
+    Orgservice.setOrgSettings(orgId, payload.reportingSiteUrl, payload.reportingSiteDesc, payload.helpUrl, payload.isCiscoHelp, payload.isCiscoSupport, callback);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].success).toBe(false);

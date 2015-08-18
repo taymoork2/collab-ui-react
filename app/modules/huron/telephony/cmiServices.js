@@ -121,6 +121,17 @@
     });
   })
 
+  .factory('CallRouterService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/companynumbers/:companyNumberId', {
+      customerId: '@customerId',
+      companyNumberId: '@companyNumberId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  })
+
   .factory('CallParkService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directedcallparks/:callParkId', {
       customerId: '@customerId',
@@ -239,6 +250,10 @@
       customerId: '@customerId',
       sipendpointId: '@sipendpointId',
       endpointDnAssnId: '@endpointDnAssnId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   })
 

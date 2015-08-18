@@ -21,6 +21,15 @@ angular.module('Squared').service('CsdmConverter',
       this.needsActivation = getNeedsActivation(obj);
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
+      this.update = function (updated) {
+        this.displayName = updated.displayName;
+      };
+      this.image = (function () {
+        switch (obj.product) {
+        case "Cisco TelePresence SX10":
+          return "images/devices/cisco_sx10.png";
+        }
+      }());
     }
 
     function Code(obj) {
@@ -34,18 +43,25 @@ angular.module('Squared').service('CsdmConverter',
       this.cssColorClass = getCssColorClass(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
+      this.updateName = function (newName) {
+        this.displayName = newName;
+      };
     }
 
     var convertCodes = function (data) {
-      return _.mapValues(data, function (obj) {
-        return new Code(obj);
-      });
+      return _.mapValues(data, convertCode);
     };
 
     var convertDevices = function (data) {
-      return _.mapValues(data, function (obj) {
-        return new Device(obj);
-      });
+      return _.mapValues(data, convertDevice);
+    };
+
+    var convertDevice = function (data) {
+      return new Device(data);
+    };
+
+    var convertCode = function (data) {
+      return new Code(data);
     };
 
     var getProduct = function (obj) {
@@ -185,11 +201,10 @@ angular.module('Squared').service('CsdmConverter',
     };
 
     return {
-      Code: Code,
-      Device: Device,
-      convert: convertDevices,
-      convertDevices: convertDevices,
+      convertCode: convertCode,
       convertCodes: convertCodes,
+      convertDevice: convertDevice,
+      convertDevices: convertDevices,
     };
 
   }

@@ -55,7 +55,8 @@ describe('Spark UC Partner flow', function () {
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.click(partner.editLink);
+      utils.click(partner.termsActionButton);
+      utils.click(partner.editTermsButton);
 
       utils.expectIsDisplayed(partner.editTrialForm);
 
@@ -72,17 +73,21 @@ describe('Spark UC Partner flow', function () {
       notifications.assertSuccess(partner.newSqUCTrial.customerName, 'You have successfully edited a trial for');
     }, 60000);
 
-    it('should add new did to the trial', function () {
+    it('should add two new did to the trial', function () {
       utils.click(partner.trialFilter);
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.click(partner.editDidLink);
+      utils.click(partner.communicationPhoneNumbers);
+      utils.click(partner.phoneNumbersActionButton);
+      utils.click(partner.addNumbersButton);
 
       utils.expectIsDisplayed(partner.customerDidInput);
       utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.one);
 
       utils.sendKeys(partner.customerDidInput, partner.dids.two);
+      utils.sendKeys(partner.customerDidInput, protractor.Key.ENTER);
+      utils.sendKeys(partner.customerDidInput, partner.dids.three);
       utils.sendKeys(partner.customerDidInput, protractor.Key.ENTER);
       utils.click(partner.addDidButton);
       utils.click(partner.notifyCustLaterLink);
@@ -91,15 +96,19 @@ describe('Spark UC Partner flow', function () {
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.expectTextToBeSet(partner.didNumberSpan, '2');
+      utils.expectTextToBeSet(partner.communicationPhoneNumbersCount, '3');
     });
 
-    it('should delete extra did from the trial', function () {
-      utils.click(partner.editDidLink);
+    it('should delete second did from the trial', function () {
+      utils.click(partner.communicationPhoneNumbers);
+      utils.expectText(partner.phoneNumbersCount, '3 Numbers');
+      utils.click(partner.phoneNumbersActionButton);
+      utils.click(partner.addNumbersButton);
 
       utils.expectIsDisplayed(partner.customerDidInput);
       utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.one);
       utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.two);
+      utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.three);
 
       utils.click(partner.getDidTokenClose(partner.dids.two));
 
@@ -112,13 +121,18 @@ describe('Spark UC Partner flow', function () {
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.expectTextToBeSet(partner.didNumberSpan, '1');
+      utils.expectTextToBeSet(partner.communicationPhoneNumbersCount, '2');
+    });
 
-      utils.click(partner.editDidLink);
-
-      utils.expectIsDisplayed(partner.customerDidInput);
-      utils.expectTokenInput(partner.customerDidAdd, '+' + partner.dids.one);
-      utils.click(partner.addDidDismissButton);
+    it('should delete third did from manage numbers list', function () {
+      utils.click(partner.communicationPhoneNumbers);
+      utils.expectIsDisplayed(partner.phoneNumbersSection);
+      utils.expectText(partner.phoneNumbersCount, '2 Numbers');
+      partner.clickPhoneNumberDelete(partner.dids.three);
+      utils.expectIsDisplayed(partner.deleteNumberModal);
+      utils.click(partner.deleteNumberYes);
+      notifications.assertSuccess('Successfully deleted', partner.dids.three);
+      utils.expectTextToBeSet(partner.phoneNumbersCount, '1 Number');
     });
   });
 

@@ -23,6 +23,10 @@ xdescribe('utilization flow', function () {
     utils.scrollTop();
   });
 
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
+
   it('Should login as super admin', function () {
     login.login('media-super-admin');
   });

@@ -5,33 +5,22 @@
 /* global login,navigation,users,utils,notifications, protractor, deleteUtils */
 
 describe('Squared Add & Entitle User Flows', function () {
-
   var inputEmail = utils.randomTestGmail();
   var adminEmail = 'atlasmapservice+ll1@gmail.com';
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 
   describe('Login as users.testUser admin and launch add users modal', function () {
     it('should login as users.testUser admin', function () {
-      login.login('test-user');
-    });
-
-    it('clicking on users tab should change the view', function () {
-      navigation.clickUsers();
+      login.login('test-user', '#/users');
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function () {
       utils.click(users.addUsers);
       utils.expectIsDisplayed(users.manageDialog);
     });
-
   });
 
   describe('Add a new user', function () {
@@ -67,14 +56,12 @@ describe('Squared Add & Entitle User Flows', function () {
 
   describe('Login as users.testUser admin and launch add users modal', function () {
     it('should login as users.testUser admin', function () {
-      login.login('test-user');
+      login.login('test-user', '#/users');
     });
 
-    it('clicking on users tab should change the view', function () {
-      navigation.clickUsers();
-    });
     it('admin should type Yes to delete themselves', function () {
-      utils.search(adminEmail);
+      utils.searchAndClick(adminEmail);
+      utils.click(users.closeSidePanel);
       utils.click(users.userListAction);
       utils.click(users.deleteUserOption);
       utils.expectIsDisplayed(users.deleteUserModal);
@@ -83,6 +70,7 @@ describe('Squared Add & Entitle User Flows', function () {
       utils.expectIsEnabled(users.deleteUserButton);
       utils.click(users.cancelButton);
     });
+
     it('should log out', function () {
       navigation.logout();
     });

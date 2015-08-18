@@ -13,12 +13,7 @@ describe('Partner flow', function () {
   var orgId;
   var accessToken;
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 
@@ -90,7 +85,8 @@ describe('Partner flow', function () {
       utils.click(partner.newTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.click(partner.editLink);
+      utils.click(partner.termsActionButton);
+      utils.click(partner.editTermsButton);
 
       utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
 

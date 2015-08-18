@@ -44,16 +44,14 @@ To summarize, this is the process:
 4. You create a pull request
 5. Someone reviews your code and gives you feedback
 6. Eventually, your code will get approved
-7. You pull the latest changes (`git fetch upstream && git merge upstream/master`)
-7. You push to Jenkins to start a build (`git push jenkins master`)
-8. Your code gets merged
+7. You pull the latest changes (`git pull upstream master`)
+8. You push to Jenkins to start a build (`git push jenkins master`)
+9. Your code gets merged
 
 Keeping your fork up-to-date
 ----------------------------
 
-When contributing, it's important to keep your fork up-to-date with the master. You can do so by running the following two commands:
-* `git fetch upstream`
-* `git merge upstream/master`
+When contributing, it's important to keep your fork up-to-date with the master. You can do so by running the following command: `git pull upstream master`
 
 Setup the environment (If necessary)
 ------------------------------------

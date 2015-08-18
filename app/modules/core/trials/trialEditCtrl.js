@@ -154,7 +154,7 @@
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function () {
                 angular.element('#saveUpdateButton').button('reset');
-                Notification.notify([$translate.instant('trialModal.squareducError')], 'error');
+                Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject();
               });
           }

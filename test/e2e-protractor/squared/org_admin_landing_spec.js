@@ -9,12 +9,7 @@
 /* global utils */
 
 describe('Customer Admin Landing Page License Info', function () {
-
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
   afterEach(function () {
-    browser.ignoreSynchronization = false;
     utils.dumpConsoleErrors();
   });
 
