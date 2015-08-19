@@ -99,7 +99,7 @@ describe('Controller: LineSettingsCtrl', function () {
 
     spyOn(HuronUser, 'updateDtmfAccessId').and.returnValue($q.when());
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
-    spyOn(CallerId, 'listCompanyNumbers').and.returnValue($q.when(companyNumber));
+    spyOn(CallerId, 'loadCompanyNumbers').and.returnValue($q.when(companyNumber));
     spyOn(DeviceService, 'listDevices').and.returnValue($q.when(userDevices));
     //Sharedline
     spyOn(UserListService, 'listUsers').and.returnValue($q.when(userList));
@@ -191,19 +191,19 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
 
-    it('should call listCompanyNumbers during init', function () {
+    it('should call loadCompanyNumbers during init', function () {
       controller.init();
       $scope.$apply();
-      expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
+      expect(CallerId.loadCompanyNumbers).toHaveBeenCalled();
       expect(Notification.errorResponse).not.toHaveBeenCalled();
-      expect(controller.callerIdOptions.length).toEqual(5);
+      expect(controller.callerIdOptions.length).toEqual(4);
     });
 
-    it('should notify an error when listCompanyNumbers fails', function () {
-      CallerId.listCompanyNumbers.and.returnValue($q.reject());
+    it('should notify an error when loadCompanyNumbers fails', function () {
+      CallerId.loadCompanyNumbers.and.returnValue($q.reject());
       controller.init();
       $scope.$apply();
-      expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
+      expect(CallerId.loadCompanyNumbers).toHaveBeenCalled();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
 

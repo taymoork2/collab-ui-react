@@ -35,6 +35,7 @@ describe('Service: HuronUser', function () {
         'firstName': '',
         'lastName': ''
       }).respond(200);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       HuronUser.update(userUuid, userData);
       $httpBackend.flush();
     });
@@ -49,6 +50,7 @@ describe('Service: HuronUser', function () {
         'firstName': userData.name.givenName,
         'lastName': userData.name.familyName
       }).respond(200);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       HuronUser.update(userUuid, userData);
       $httpBackend.flush();
     });
