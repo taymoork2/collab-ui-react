@@ -22,11 +22,11 @@ describe('Controller: Dummy Reports', function () {
     var monthFormat = "MMMM";
     if (filter.value === 0) {
       for (var i = 6; i >= 0; i--) {
-        data[i].modifiedDate = moment().subtract(6 - i, 'day').format(dayFormat);
+        data[i].modifiedDate = moment().subtract(7 - i, 'day').format(dayFormat);
       }
     } else if (filter.value === 1) {
       for (var x = 0; x <= 3; x++) {
-        data[x].modifiedDate = moment().subtract((3 - x) * 7, 'day').startOf('week').format(dayFormat);
+        data[x].modifiedDate = moment().startOf('week').subtract(1 + (3 - x) * 7, 'day').format(dayFormat);
       }
     } else {
       for (var y = 0; y <= 2; y++) {
