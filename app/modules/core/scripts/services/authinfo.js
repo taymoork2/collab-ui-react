@@ -29,6 +29,7 @@ angular.module('Core')
         'messageServices': null,
         'conferenceServices': null,
         'communicationServices': null,
+        'conferenceServicesWithoutSiteUrl': null,
         'cmrServices': null,
         'hasAccount': false,
         'email': null
@@ -186,6 +187,7 @@ angular.module('Core')
             var confLicenses = [];
             var commLicenses = [];
             var cmrLicenses = [];
+            var confLicensesWithoutSiteUrl = [];
             var accounts = data.accounts;
 
             if (accounts.length > 0) {
@@ -217,6 +219,9 @@ angular.module('Core')
                   service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
                     capacity: license.capacity
                   }), x + 1, 'confRadio', license);
+                  if (license.siteUrl) {
+                    confLicensesWithoutSiteUrl.push(service);
+                  }
                   confLicenses.push(service);
                   break;
                 case 'MESSAGING':
@@ -244,6 +249,9 @@ angular.module('Core')
             }
             if (cmrLicenses.length !== 0) {
               authData.cmrServices = cmrLicenses;
+            }
+            if (confLicensesWithoutSiteUrl.length !== 0) {
+              authData.conferenceServicesWithoutSiteUrl = confLicensesWithoutSiteUrl;
             }
             $rootScope.$broadcast('AccountinfoUpdated');
           } //end if
@@ -286,6 +294,9 @@ angular.module('Core')
         },
         getCmrServices: function () {
           return authData.cmrServices;
+        },
+        getConferenceServicesWithoutSiteUrl: function () {
+          return authData.conferenceServicesWithoutSiteUrl;
         },
         getRoles: function () {
           return authData.roles;
