@@ -3,23 +3,16 @@
   <div class="header-image">
     <div class="device-img">
       <i style="top: 15px"
-        class="icon icon-3x icon-circle-telepresence"
-        ng-class="{'needs-activation': deviceOverview.currentDevice.needsActivation}"></i>
+         class="icon icon-3x icon-circle-telepresence"
+         ng-class="{'needs-activation': deviceOverview.currentDevice.needsActivation}"></i>
     </div>
   </div>
 
   <div class="header-info">
     <div class="header-info-wrap">
-      <div 
-        class="header-title" 
-        title="{{deviceOverview.currentDevice.displayName}}"
-        ng-show="deviceOverview.currentDevice.needsActivation">
-        {{deviceOverview.currentDevice.displayName}}
-      </div>
       <sq-editable-input
         sq-save="deviceOverview.save(newText)"
-        ng-model="deviceOverview.currentDevice.displayName"
-        ng-hide="deviceOverview.currentDevice.needsActivation">
+        ng-model="deviceOverview.currentDevice.displayName">
       </sq-editable-input>
     </div>
   </div>

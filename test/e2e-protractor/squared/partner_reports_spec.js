@@ -41,7 +41,7 @@ describe('Partner Reports', function () {
       reports.clickFilter(reports.timeSelect);
       reports.verifyOption(reports.timeSelect, 'Last Week');
       reports.verifyOption(reports.timeSelect, 'Last Month');
-      reports.verifyOption(reports.timeSelect, 'Last 3 Months');
+      reports.verifyOption(reports.timeSelect, 'Last Three Months');
     });
 
     it('should show all reports', function () {

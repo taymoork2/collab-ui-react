@@ -19,7 +19,7 @@
   </div>
   <div ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
     <div class="active-table" ng-show="nav.showMostActiveUsers">
-      <h4 class="sub-section-title graph-match" translate="activeUsers.mostActiveUsers"></h4>
+      <h4 class="sub-section-title graph-match">{{nav.mostActiveTitle}}</h4>
       <div class="graph-match">
         <p class="report-description">{{nav.mostActiveDescription}}</p>
         <table class="table table-bordered active-users-table">

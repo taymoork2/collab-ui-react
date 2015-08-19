@@ -66,7 +66,7 @@
       Function to inspect dnUsage from Huron and change the display
       value to what UX team wants.
     **/
-    function getDnType(dnUsage, uuid) {
+    function getDnType(dnUsage) {
       return (dnUsage === 'Primary') ? 'Primary' : '';
     }
 
@@ -209,7 +209,7 @@
             var userDnList = [];
             for (var i = 0; i < userDnInfo.length; i++) {
               var userLine = {
-                'dnUsage': getDnType(userDnInfo[i].dnUsage, userDnInfo[i].directoryNumber.uuid),
+                'dnUsage': getDnType(userDnInfo[i].dnUsage),
                 'uuid': userDnInfo[i].directoryNumber.uuid,
                 'pattern': userDnInfo[i].directoryNumber.pattern,
                 'userDnUuid': userDnInfo[i].uuid,

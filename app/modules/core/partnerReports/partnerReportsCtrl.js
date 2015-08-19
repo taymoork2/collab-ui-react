@@ -34,6 +34,7 @@
     vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
     vm.mostActiveUsers = [];
+    vm.mostActiveTitle = "";
     vm.displayMostActive = false;
     vm.showMostActiveUsers = false;
     vm.activeUserDescription = "";
@@ -328,6 +329,9 @@
       });
       vm.callMetricsDescription = $translate.instant("callMetrics.callMetricsDesc", {
         time: vm.timeSelected.description
+      });
+      vm.mostActiveTitle = $translate.instant("activeUsers.mostActiveUsers", {
+        time: vm.timeSelected.label
       });
     }
   }
