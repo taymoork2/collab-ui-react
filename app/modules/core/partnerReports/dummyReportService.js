@@ -24,8 +24,8 @@
       var abs = 0;
 
       if (time.value === 0) {
-        for (var i = 6; i >= 0; i--) {
-          abs = 6 - i;
+        for (var i = 7; i >= 1; i--) {
+          abs = 7 - i;
           dummyGraph.push({
             modifiedDate: moment().subtract(i, 'day').format(dayFormat),
             totalRegisteredUsers: 25 + (25 * abs),
@@ -40,7 +40,7 @@
         for (var x = 3; x >= 0; x--) {
           abs = 3 - x;
           dummyGraph.push({
-            modifiedDate: moment().subtract(x * 7, 'day').startOf('week').format(dayFormat),
+            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
@@ -83,8 +83,8 @@
       var abs = 0;
 
       if (time.value === 0) {
-        for (var i = 6; i >= 0; i--) {
-          abs = 6 - i;
+        for (var i = 7; i >= 1; i--) {
+          abs = 7 - i;
           dummyGraph.push({
             modifiedDate: moment().subtract(i, 'day').format(dayFormat),
             totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
@@ -101,7 +101,7 @@
         for (var x = 3; x >= 0; x--) {
           abs = 3 - x;
           dummyGraph.push({
-            modifiedDate: moment().subtract(x * 7, 'day').startOf('week').format(dayFormat),
+            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
             totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),

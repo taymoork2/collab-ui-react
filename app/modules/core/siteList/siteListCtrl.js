@@ -22,7 +22,7 @@ angular.module('Core')
         });
       }
 
-      vm.gridData = Authinfo.getConferenceServices();
+      vm.gridData = Authinfo.getConferenceServicesWithoutSiteUrl();
 
       vm.getWebexUrl = function (url) {
         return Config.getWebexAdvancedHomeUrl(url);

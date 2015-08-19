@@ -293,14 +293,14 @@
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined && activeUserCustomerGraphs[customer.value].graphData.length > 0) {
           var customerData = activeUserCustomerGraphs[customer.value].graphData;
-          var graph = getDateBase(customerData[customerData.length - 1].date, time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark]);
+          var graph = getDateBase(time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark]);
           return combineMatchingDates(graph, customerData);
         }
         return [];
       }
     }
 
-    function getDateBase(mostRecent, time, colors) {
+    function getDateBase(time, colors) {
       var graph = [];
       var dataPoint = {
         totalRegisteredUsers: 0,
@@ -317,12 +317,12 @@
 
       if (time.value === 0) {
         for (var i = 6; i >= 0; i--) {
-          dataPoint.modifiedDate = moment().subtract(i, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().subtract(i + 1, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
         for (var x = 3; x >= 0; x--) {
-          dataPoint.modifiedDate = moment().subtract(2 + (x * 7), 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else {
@@ -432,13 +432,7 @@
             });
 
             if (graph.length > 0) {
-              var mostRecent = moment(graph[graph.length - 1].date).format(dateFormat);
-              var graphBase = [];
-              if (time.value === 0 && mostRecent !== moment().format(dateFormat) && mostRecent !== moment().subtract(1, 'day').format(dateFormat)) {
-                graphBase = getDateBase(moment().subtract(1, 'day'), time, []);
-              } else {
-                graphBase = getDateBase(graph[graph.length - 1].date, time, []);
-              }
+              var graphBase = getDateBase(time, []);
               angular.forEach(graph, function (index) {
                 graphBase = combineQualityGraphs(graphBase, index);
               });
