@@ -213,23 +213,4 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
-  describe('newAARecord', function () {
-    it('should return an AARecord object', function () {
-      var _aaRecord = AutoAttendantCeMenuModelService.newAARecord();
-      expect(_aaRecord.callExperienceName).toBe("");
-      expect(_aaRecord.assignedResources.length).toBe(0);
-      expect(_aaRecord.actionSets.length).toBe(1);
-      expect(_aaRecord.actionSets[0].actions.length).toBe(0);
-      expect(_aaRecord.actionSets[0].name).toBe("regularOpenActions");
-    });
-  });
-
-  describe('newAAModel', function () {
-    it('should return an AAModel object', function () {
-      var _aaModel = AutoAttendantCeMenuModelService.newAAModel();
-      expect(_aaModel.aaRecord.constructor.name).toBe('AARecord');
-      expect(_aaModel.aaRecords.length).toBe(0);
-    });
-  });
-
 });

@@ -55,7 +55,7 @@ describe('Controller: AutoAttendantLandingCtrl', function () {
     AAModelService = _AAModelService_;
 
     spyOn(Authinfo, 'getOrgId').and.returnValue('1');
-    spyOn(AutoAttendantCeMenuModelService, 'newAAModel').and.returnValue(aaModel);
+    spyOn(AAModelService, 'newAAModel').and.returnValue(aaModel);
 
     dnI = 0;
     spyOn(DirectoryNumberService, 'get').and.callFake(function () {
@@ -146,7 +146,7 @@ describe('Controller: AutoAttendantLandingCtrl', function () {
 
     it('should create new aaRecord when aaName is blank', function () {
       controller.selectAA('');
-      expect(angular.equals(aaModel.aaRecord, AutoAttendantCeMenuModelService.newAARecord())).toEqual(true);
+      expect(angular.equals(aaModel.aaRecord, AAModelService.newAARecord())).toEqual(true);
     });
   });
 

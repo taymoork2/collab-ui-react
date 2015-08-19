@@ -52,7 +52,7 @@
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;
       if (aaName === '') {
-        vm.aaModel.aaRecord = AutoAttendantCeMenuModelService.newAARecord();
+        vm.aaModel.aaRecord = AAModelService.newAARecord();
       } else {
         for (var i = 0; i < vm.aaModel.aaRecords.length; i++) {
           if (vm.aaModel.aaRecords[i].callExperienceName === aaName) {
@@ -113,7 +113,7 @@
     }
 
     function activate() {
-      vm.aaModel = AutoAttendantCeMenuModelService.newAAModel();
+      vm.aaModel = AAModelService.newAAModel();
       AAModelService.setAAModel(vm.aaModel);
       vm.aaModel.ceInfos = [];
       listAutoAttendants();
