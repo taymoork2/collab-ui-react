@@ -458,6 +458,7 @@
             SharedLineInfoService.getUserLineCount(vm.currentUser.id)
               .then(function (totalLines) {
                 if (totalLines < vm.maxLines) {
+                  vm.directoryNumber.alertingName = name;
                   return LineSettings.addNewLine(vm.currentUser.id, getDnUsage(), vm.assignedInternalNumber.pattern, vm.directoryNumber, vm.assignedExternalNumber)
                     .then(function () {
                       return TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
