@@ -237,7 +237,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
     beforeEach(installPromiseMatchers);
     it('mapDidToDn', function () {
-      var promise = $scope.mapDidToDn();
+      $scope.mapDidToDn();
       $scope.$apply();
       expect($scope.externalNumberMapping.length).toEqual(2);
       expect($scope.usrlist[0].externalNumber.pattern).toEqual('+14084744532');
@@ -247,9 +247,17 @@ describe('OnboardCtrl: Ctrl', function () {
     });
     it('assignServicesNext', function () {
 
+      expect($scope.usrlist[0].externalNumber).not.toBeDefined();
+      expect($scope.usrlist[0].assignedDn).not.toBeDefined();
+      expect($scope.usrlist[1].externalNumber).not.toBeDefined();
+      expect($scope.usrlist[1].assignedDn).not.toBeDefined();
       var promise = $scope.assignServicesNext();
       $scope.$apply();
       expect(promise).toBeResolved();
+      expect($scope.usrlist[0].externalNumber).toBeDefined();
+      expect($scope.usrlist[0].assignedDn.pattern).toEqual('4000');
+      expect($scope.usrlist[1].externalNumber).toBeDefined();
+      expect($scope.usrlist[1].assignedDn.pattern).toEqual('4001');
     });
 
     it('assignDNForUserList', function () {

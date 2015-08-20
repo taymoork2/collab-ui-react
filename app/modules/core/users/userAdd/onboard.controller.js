@@ -57,10 +57,8 @@ angular.module('Core')
       //***********************************************************************************/
 
       function activateDID() {
-        loadInternalNumberPool()
-          .then(function () {
-            return loadExternalNumberPool();
-          }).finally(function () {
+        $q.all([loadInternalNumberPool(), loadExternalNumberPool()])
+          .finally(function () {
             assignDNForUserList();
             $scope.processing = false;
           });
