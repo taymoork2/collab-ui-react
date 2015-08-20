@@ -2,6 +2,7 @@
   &.callrouting-content {
     flex-direction: column;
     .partner-profile {
+      height: 100vh;
       display: flex;
       flex-direction: row;
       background-color: $brand-white;
@@ -73,7 +74,7 @@
 .custom-combobox {
     width: calc(100% - 20px);
     .dropdown-menu {
-      width: calc(100% - 20px);
+      min-width: calc(100% - 20px);
       overflow-y: scroll;
       max-height: 261px;
     }
