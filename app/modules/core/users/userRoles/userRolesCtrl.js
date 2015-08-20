@@ -3,7 +3,7 @@ angular.module('Squared')
   .controller('UserRolesCtrl', UserRolesCtrl);
 
 /* @ngInject */
-function UserRolesCtrl ($scope, $translate, $stateParams, $state, SessionStorage, Userservice, Log, Config, $rootScope, Notification, Orgservice) {
+function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage, Userservice, Log, Config, $rootScope, Notification, Orgservice) {
   $scope.currentUser = $stateParams.currentUser;
   if ($scope.currentUser) {
     $scope.roles = $scope.currentUser.roles;
