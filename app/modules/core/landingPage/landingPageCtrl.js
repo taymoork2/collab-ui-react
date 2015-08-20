@@ -82,8 +82,9 @@ angular.module('Core')
           }],
           'plotAreaBorderAlpha': 1,
           'plotAreaBorderColor': '#DDDDDD',
-          'marginTop': 10,
-          'marginLeft': 0,
+          'marginTop': 0,
+          'marginLeft': 16,
+          'marginRight': 16,
           'marginBottom': 0,
           'categoryField': 'date',
           'categoryAxis': {
