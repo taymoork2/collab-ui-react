@@ -1352,8 +1352,8 @@
     "on": "Açık",
     "off": "Kapalı",
     "calendarService": "Takvim Hizmeti",
-    "sparkDesc": "@spark\'ın toplantı davetinize dahil edilmesi, otomatik olarak bir Spark Odası oluşturur.",
-    "webexDesc": "@webex\'in toplantı davetine dahil edilmesi, WebEx toplantısı oluşturur ve bilgileri davete ekler."
+    "sparkDesc": "@spark'ın toplantı davetinize dahil edilmesi, otomatik olarak bir Spark Odası oluşturur.",
+    "webexDesc": "@webex'in toplantı davetine dahil edilmesi, WebEx toplantısı oluşturur ve bilgileri davete ekler."
   },
   "validation": {
     "nonPrintable": "Bu giriş yazdırılamayan karakterler içeriyor.",
