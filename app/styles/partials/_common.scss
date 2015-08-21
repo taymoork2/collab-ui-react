@@ -58,7 +58,8 @@ body {
 }
 
 .content-view {
-  //overflow-x: hidden;
+  overflow-x: hidden;
+  min-height: 50vh;
 }
 
 .user-img {
