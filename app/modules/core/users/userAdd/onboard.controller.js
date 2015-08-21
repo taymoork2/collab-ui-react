@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService',
-    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService',
+    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService) {
 
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
@@ -26,6 +26,8 @@ angular.module('Core')
 
       $scope.isReset = false;
       $scope.isResetEnabled = false;
+
+      $scope.gsxFeature = false;
 
       // model can be removed after switching to controllerAs
       $scope.model = {
@@ -263,6 +265,16 @@ angular.module('Core')
         userEnts = $scope.currentUser.entitlements;
         userLicenseIds = $scope.currentUser.licenseID;
       }
+
+      Userservice.getUser('me', function (data, status) {
+        FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
+          _.each(data.developer, function (element) {
+            if (element.key === 'gsxdemo' && element.val === 'true') {
+              $scope.gsxFeature = true;
+            }
+          });
+        });
+      });
 
       var populateConf = function () {
         if (userLicenseIds) {

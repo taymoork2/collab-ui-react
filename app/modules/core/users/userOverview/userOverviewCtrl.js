@@ -6,12 +6,13 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils) {
+  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice) {
     /*jshint validthis: true */
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
+    vm.gsxFeature = false;
     vm.services = [];
     vm.dropDownItems = [];
     vm.titleCard = '';
@@ -23,25 +24,34 @@
     vm.isFusion = Authinfo.isFusion();
     vm.isFusionCal = Authinfo.isFusionCal();
 
-    init();
+    Userservice.getUser('me', function (data, status) {
+      FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
+        _.each(data.developer, function (element) {
+          if (element.key === 'gsxdemo' && element.val === 'true') {
+            vm.gsxFeature = true;
+          }
+        });
+        init();
+      });
+    });
 
     function init() {
       vm.services = [];
 
       var msgState = {
-        name: $translate.instant('onboardModal.messaging'),
+        name: $translate.instant(vm.gsxFeature ? 'onboardModal.spark' : 'onboardModal.messaging'),
         state: 'user-overview.messaging',
         detail: $translate.instant('onboardModal.freeMsg')
       };
 
       var commState = {
-        name: $translate.instant('onboardModal.communications'),
+        name: $translate.instant(vm.gsxFeature ? 'onboardModal.webex' : 'onboardModal.communications'),
         state: 'user-overview.communication',
         detail: $translate.instant('onboardModal.freeComm')
       };
 
       var confState = {
-        name: $translate.instant('onboardModal.conferencing'),
+        name: $translate.instant(vm.gsxFeature ? 'onboardModal.calling' : 'onboardModal.conferencing'),
         state: 'user-overview.conferencing',
         detail: $translate.instant('onboardModal.freeConf')
       };

@@ -3,15 +3,17 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice;
+  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
   var externalNumberPoolMap;
+  var getUserMe;
+  var getMyFeatureToggles;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $timeout = _$timeout_;
     $q = _$q_;
@@ -20,6 +22,7 @@ describe('OnboardCtrl: Ctrl', function () {
     Userservice = _Userservice_;
     Orgservice = _Orgservice_;
     TelephonyInfoService = _TelephonyInfoService_;
+    FeatureToggleService = _FeatureToggleService_;
     var current = {
       step: {
         name: 'fakeStep'
@@ -36,6 +39,8 @@ describe('OnboardCtrl: Ctrl', function () {
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
     externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
+    getUserMe = getJSONFixture('core/json/users/me.json');
+    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
 
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'onboardLicenseUsers');
@@ -46,6 +51,8 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(TelephonyInfoService, 'getExternalNumberPool').and.returnValue(externalNumbers);
     spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
     spyOn(TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue($q.when(externalNumberPoolMap));
+    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
 
     controller = $controller('OnboardCtrl', {
       $scope: $scope

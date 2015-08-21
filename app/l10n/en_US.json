@@ -91,6 +91,9 @@
     "membersCountHeader": "Members"
   },
   "onboardModal": {
+    "spark": "Spark",
+    "webex": "WebEx",
+    "calling": "Calling",
     "onboardUsers": "Invite Users",
     "cancel": "Cancel",
     "clear": "Clear",
@@ -813,6 +816,9 @@
     "advancedSub": "Synchronize users from Active Directory.",
     "needHelp": "Need help?",
     "planReview": "Plan Review",
+    "spark": "Spark",
+    "webex": "WebEx",
+    "calling": "Calling",
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",

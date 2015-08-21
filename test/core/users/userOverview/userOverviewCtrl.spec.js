@@ -1,20 +1,25 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, Config, Authinfo, Utils;
+  var controller, $scope, $httpBackend, Config, Authinfo, Utils, Userservice, FeatureToggleService;
 
-  var $stateParams, currentUser, updatedUser;
+  var $stateParams, currentUser, updatedUser, getUserMe, getMyFeatureToggles;
 
   beforeEach(module('Core'));
+  beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Authinfo_, _Utils_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     Config = _Config_;
     Authinfo = _Authinfo_;
     Utils = _Utils_;
+    Userservice = _Userservice_;
+    FeatureToggleService = _FeatureToggleService_;
 
     currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
+    getUserMe = getJSONFixture('core/json/users/me.json');
+    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
     updatedUser = angular.copy(currentUser);
     updatedUser.entitlements.push('ciscouc');
 
@@ -23,6 +28,12 @@ describe('Controller: UserOverviewCtrl', function () {
     };
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
+    spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
+      callback(currentUser, 200);
+    });
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.callFake(function (uid, callback) {
+      callback(getMyFeatureToggles, 200);
+    });
 
     // eww
     var userUrl = Utils.sprintf(Config.getScimUrl(), [Authinfo.getOrgId()]) + '/' + currentUser.id;
@@ -33,7 +44,8 @@ describe('Controller: UserOverviewCtrl', function () {
       $stateParams: $stateParams,
       Config: Config,
       Authinfo: Authinfo,
-      Utils: Utils
+      Userservice: Userservice,
+      FeatureToggleService: FeatureToggleService
     });
 
     $scope.$apply();

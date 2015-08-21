@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope) {
+  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope, FeatureToggleService, Userservice) {
     /*jshint validthis: true */
     var vm = this;
     vm.messagingServices = {
@@ -37,6 +37,17 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.processing = false;
+    vm.gsxFeature = false;
+
+    Userservice.getUser('me', function (data, status) {
+      FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
+        _.each(data.developer, function (element) {
+          if (element.key === 'gsxdemo' && element.val === 'true') {
+            vm.gsxFeature = true;
+          }
+        });
+      });
+    });
 
     function activate() {
       vm.messagingServices.services = Authinfo.getMessageServices();
