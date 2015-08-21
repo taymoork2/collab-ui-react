@@ -2,9 +2,10 @@
 
   <!-- header -->
   <div class="page-header row">
-    <div class="page-title clearfix">
+    <div class="page-title small-7 columns">
       <span class="title" translate="hercules.page_title" />
-      <div ng-hide="shouldShowWelcomeScreen()" style="float: right; white-space: nowrap">
+      </div>
+      <div ng-hide="shouldShowWelcomeScreen()" class="small-5 columns page-option-buttons" style="white-space: nowrap">
         <div  style="border-right: solid 1px #dddddd; padding-right: 15px; margin-right: 10px; display: inline-block;">
           <button
             class="btn btn-info"
@@ -23,13 +24,12 @@
           <i class="icon icon-settings" />
         </button>
       </div>
-    </div>
   </div>
 
 
   <!-- content -->
   <div class="row">
-    <div class="col-sm-12">
+    <div class="small-12 columns">
       <!-- loader -->
       <div ng-show="subscription.eventCount == 0 || subscription.currentError" style="text-align: center; padding-top: 60px;">
         <p ng-show="subscription.currentError">Disconnected. Trying to reconnect...</p>
@@ -45,9 +45,9 @@
 
         <hercules-dashboard-header> </hercules-dashboard-header>
 
-        <div ng-show="clusterLength() != 0">
+        <div class="row" ng-show="clusterLength() != 0">
           <h3 style="padding-left: 20px">Cisco VCS Clusters: {{clusterLength()}}</h3>
-          <div class="container-fluid grid" style="margin-right: -30px;">
+          <div class="grid" style="margin-right: -30px;">
             
             <div class="row" ng-repeat="cluster in clusters | toArray | orderBy:['needs_attention','-any_service_connectors_enabled','name']" ng-click="showClusterDetails(cluster)">
               <div class="col-sm-4 col-xs-10">
