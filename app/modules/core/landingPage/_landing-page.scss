@@ -245,13 +245,10 @@ li.monitoring-cell {
 }
 
 .quick-links {
-  .list-group-item {
-    font-size: 13px;
-    color: $brand-primary;
-    padding: 5px 0;
-    border: none;
-    border-radius: 0;
-    background-color: transparent;
+  ul {
+    list-style-type: none;
+
+    @extend %ui-ml0;
   }
 }
 

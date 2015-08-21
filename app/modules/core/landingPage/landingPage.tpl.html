@@ -90,14 +90,23 @@
         </section> -->
         <section class="quick-links small-12 column" ng-controller="QuikLinksCtrl">
           <h4 translate="homePage.quickLinksText"></h4>
-          <div class="list-group">
-
-            <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" ng-if="isPageActive('users')" class="list-group-item" translate="homePage.addUserText"></a>
-            <a id="installDeviceQuickLink" ng-if="false" class="list-group-item" translate="homePage.installDeviceText"></a>
-            <a id="installDeviceSharedSpaceQuickLink" ui-sref="devices" ng-if="isPageActive('devices')" class="list-group-item" translate="homePage.installSharedSpaceText"></a>
-            <a id="autoAttendantQuickLink" ng-if="false" class="list-group-item" translate="homePage.autoAttendantText"></a>
-            <a id="deviceLogsQuickLink" ui-sref="support" ng-if="isPageActive('support')" class="list-group-item" translate="homePage.searchLogsText"></a>
-          </div>
+          <ul class="list-group">
+            <li ng-if="isPageActive('users')" >
+              <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" class="list-group-item" translate="homePage.addUserText"></a>
+            </li>
+            <li ng-if="false">
+              <a id="installDeviceQuickLink" class="list-group-item" translate="homePage.installDeviceText"></a>
+            </li>
+            <li ng-if="isPageActive('devices')">
+              <a id="installDeviceSharedSpaceQuickLink" ui-sref="devices" class="list-group-item" translate="homePage.installSharedSpaceText"></a>
+            </li>
+            <li ng-if="false">
+              <a id="autoAttendantQuickLink" class="list-group-item" translate="homePage.autoAttendantText"></a>
+            </li>
+            <li ng-if="isPageActive('support')">
+              <a id="deviceLogsQuickLink" ui-sref="support" class="list-group-item" translate="homePage.searchLogsText"></a>
+            </li>
+          </ul>
         </section>
         <section class="unlicensed-users small-12 column" ng-controller="LicensesCtrl" ng-show="isAdmin()">
           <div ng-if="isDomainClaimed()">
