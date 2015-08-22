@@ -10,7 +10,7 @@
     return {
 
       getFeaturesForUser: function (uid, callback) {
-        var server = Config.getLocusServiceUrl();
+        var server = Config.getFeatureToggleUrl();
         var featureToggleURL = server + '/locus/api/v1/features/users/' + uid;
 
         $http.get(featureToggleURL, null)
