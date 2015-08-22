@@ -68,4 +68,14 @@ describe('UConfigController', function () {
     expect($scope.saving).toBe(false);
   });
 
+  it('error on empty sipDomain', function () {
+    expect($scope.error).toBeFalsy();
+    $scope.org = {
+      id: 'foo',
+      sipDomain: ''
+    };
+    $scope.update();
+    expect($scope.error).toBeTruthy();
+  });
+
 });

@@ -15,16 +15,20 @@ angular
       });
 
       $scope.update = function () {
-        $scope.error = null;
-        $scope.saving = true;
-        ussService.updateOrg($scope.org, function (err) {
-          $scope.saving = false;
-          if (err) {
-            $scope.error = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
-          } else {
-            $scope.$parent.modal.close();
-          }
-        });
+        if (!$scope.org.sipDomain || $scope.org.sipDomain.length === 0) {
+          $scope.error = "Please enter a SIP domain or IP address";
+        } else {
+          $scope.error = null;
+          $scope.saving = true;
+          ussService.updateOrg($scope.org, function (err) {
+            $scope.saving = false;
+            if (err) {
+              $scope.error = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
+            } else {
+              $scope.$parent.modal.close();
+            }
+          });
+        }
       };
     }
   ]);
