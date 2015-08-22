@@ -40,18 +40,21 @@
 
       var msgState = {
         name: $translate.instant(vm.gsxFeature ? 'onboardModal.spark' : 'onboardModal.messaging'),
+        icon: $translate.instant('onboardModal.messaging'),
         state: 'user-overview.messaging',
         detail: $translate.instant('onboardModal.freeMsg')
       };
 
       var commState = {
-        name: $translate.instant(vm.gsxFeature ? 'onboardModal.webex' : 'onboardModal.communications'),
+        name: $translate.instant(vm.gsxFeature ? 'onboardModal.calling' : 'onboardModal.communications'),
+        icon: $translate.instant('onboardModal.communications'),
         state: 'user-overview.communication',
         detail: $translate.instant('onboardModal.freeComm')
       };
 
       var confState = {
-        name: $translate.instant(vm.gsxFeature ? 'onboardModal.calling' : 'onboardModal.conferencing'),
+        name: $translate.instant(vm.gsxFeature ? 'onboardModal.webex' : 'onboardModal.conferencing'),
+        icon: $translate.instant('onboardModal.conferencing'),
         state: 'user-overview.conferencing',
         detail: $translate.instant('onboardModal.freeConf')
       };
