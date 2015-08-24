@@ -105,13 +105,13 @@ angular.module('Core')
         value: 'it_IT',
         label: $translate.instant('languages.italian')
       }, {
-        value: 'jp_JA',
+        value: 'ja_JP',
         label: $translate.instant('languages.japanese')
       }, {
         value: 'ko_KR',
         label: $translate.instant('languages.korean')
       }, {
-        value: 'nb_NO',
+        value: 'no_NO',
         label: $translate.instant('languages.norwegian')
       }, {
         value: 'nl_NL',

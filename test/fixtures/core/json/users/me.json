@@ -1,0 +1,9 @@
+{
+  "userName": "CurrentUser",
+  "displayName": "Display Name",
+  "entitlements": ["squared-call-initiation", "squared-fusion-mgmt", "webex-squared"],
+  "id": "111",
+  "meta": {
+    "organizationID": "222"
+  }
+}

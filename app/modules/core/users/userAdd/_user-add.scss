@@ -378,6 +378,10 @@
         color: $gray-darkest;
       }
     }
+    .bucket-row {
+      background: $gray-lightest;
+      min-height: 150px;
+    }
     .onboard-radio {
       margin-top: 0;
       margin-bottom: 0;
@@ -530,7 +534,7 @@
     .error, .warning {
       font-family: Arial;
       font-size: 12px;
-      text-align: left; 
+      text-align: left;
     }
   }
   .select-list {

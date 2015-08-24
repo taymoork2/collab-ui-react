@@ -516,6 +516,10 @@ angular.module('Core')
           return this.locusServiceUrl.integration;
         },
 
+        getFeatureToggleUrl: function () {
+          return this.locusServiceUrl.prod;
+        },
+
         getEnrollmentServiceUrl: function () {
           if (this.isDev()) {
             return this.enrollmentServiceUrl.integration;
