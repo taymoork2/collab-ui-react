@@ -98,3 +98,36 @@
     box-shadow: 0 0 0 3px #f4846a;
     border-color: transparent
 }
+
+.custom-combobox {
+  display:inline;
+}
+
+form[name="nav.callrouterform"] .validation {
+  position: absolute;
+  right: -68px;
+  top: 4px;
+}
+
+form[name="nav.callrouterform"] button[type="submit"] {
+  margin-left: 77px;
+  position: relative;
+  top: 6px;
+}
+
+.has-error .custom-combobox .input-group .form-control {
+  box-shadow: 0 0 0 3px #EF5E3C;
+  border-color: transparent;
+}
+
+.custom-combobox .input-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.custom-combobox .input-group .input-group-btn > .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  z-index: 10000;
+  position: relative;
+}
