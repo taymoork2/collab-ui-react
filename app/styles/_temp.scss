@@ -802,7 +802,10 @@ a:active.ftwNavLink {
   font-size: 24px;
   color: $navbar-inverse-link-disabled-color;
   height: 55px;
-  padding-top: 15px;
+
+  @extend %ui-pl;
+
+  @extend %ui-pt;
 }
 
 .trialHeading {
@@ -841,6 +844,7 @@ a:active.ftwNavLink {
   color: $pagination-color;
   text-align: right;
   padding-top: 0px;
+  top: -3px;
 }
 
 .trialDays {

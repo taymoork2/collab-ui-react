@@ -6,7 +6,9 @@
   font-family: Arial;
   color: $gray-darker;
   line-height: 40px;
-  padding-left: 20px;
+
+  @extend %ui-pl;
+
   display: inline-block;
 
   .icon-refresh {

@@ -10,7 +10,7 @@ body {
 }
 
 .app-container {
-  padding: 51px 0 0 0;
+  padding: 0;
 }
 
 .container {
@@ -21,6 +21,7 @@ body {
 
 .page-content-wrapper {
   padding-left: 0;
+
   //width: ~"calc(100% - 100px)";
 }
 
@@ -39,7 +40,7 @@ body {
     font-size: 40px;
     line-height: 40px;
     margin: 0;
-    float: left
+    float: left;
   }
 
   small {
@@ -53,12 +54,10 @@ body {
   float: right;
 }
 
-.page-options-bar {
-
-}
+.page-options-bar {}
 
 .content-view {
-  overflow-x: hidden;
+  //overflow-x: hidden;
 }
 
 .user-img {
@@ -73,8 +72,8 @@ body {
   overflow: hidden;
 
   .icon {
-      color: $brand-white;
-    }
+    color: $brand-white;
+  }
 }
 
 #export-icon .icon {
@@ -85,7 +84,7 @@ body {
 // Common ngGrid Styles
 
 div[gridscrollbar] {
-  height: calc(100vh - 150px);
+  //height: calc(100vh - 150px);
 }
 
 .ngCellText,
@@ -100,18 +99,22 @@ div[gridscrollbar] {
     display: none;
   }
 }
+
 @media print {
   body * {
-    display:none;
+    display: none;
   }
+
   #printSection, #printSection * {
-    display:block;
+    display: block;
   }
+
   #printSection {
-    position:absolute;
-    left:0;
-    top:0;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
+
   .modal {
     overflow: hidden;
     background: none;
@@ -123,6 +126,7 @@ div[gridscrollbar] {
 }
 
 .grid {
+  flex: 1;
   position: relative;
 
   .grid-refresh {
